@@ -47,6 +47,41 @@ In terms of modern languages, the closest in terms of targets and level of
 abstraction are probably [C++](https://fr.wikipedia.org/wiki/C%2B%2B)
 and [Rust](https://www.rust-lang.org/en-US/).
 
+## Philosophy
+
+A word should be said about Ada's philosophy, because it is very different from
+the one of a lot of other languages. In Ada it is considered that:
+
+- Readability is more important than conciseness. Syntactically this shows
+  through the fact that keywords are prefered to symbols, that no keyword is an
+  abbreviation, etc.
+
+- Very strong typing. It is very easy to introduce new types in Ada, sometimes
+  more than reusing existing ones. It is in the same ball-park as many
+  functional languages in that regard, except that the programmer has to be
+  much more explicit about typing, because there is almost no type inference.
+
+- Explicit is better than implicit: Although weirdly this is a
+  [Python](www.TODOpython.com) commandment, Ada takes it way further than any
+  language I know of:
+
+    * There is mostly no structural typing, and most types need to be
+      explicitly named by the programmer.
+
+    * As previously said, mostly no type inference.
+
+    * Semantics are very well defined, and undefined behavior is limited to an
+      absolute minimum.
+
+    * The programmer can generally give a *lot* of information about what his
+      program means to the compiler (and other programmers). This allows the
+      compiler to be extremely helpful (read: strict) with the programmer.
+
+We will, during this course, indicate which individual language features are
+building blocks for that philosophy, and, in as honest a fashion as possible,
+indicate where some language design choices diverged from that philosophy -
+because no language is perfect, not even Ada :-).
+
 # Imperative language
 
 Ada is a multi-paradigm language, but at it's core, it contains a simple,
@@ -64,6 +99,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 procedure Greet is
 begin
+  --  Print "Hello, World!" to the screen
   Put_Line("Hello, World!");
 end Greet;
 ```
@@ -73,7 +109,7 @@ unsurprising result.
 
 ```bash
  $ gprbuild greet.adb
-using project file /home/amiard/libadalang/sandbox/x86_64-linux/gnat/install/share/gpr/_default.gpr
+using project file [...]_default.gpr
 Compile
    [Ada]          greet.adb
 Bind
@@ -87,30 +123,241 @@ Hello, World!
  %
 ```
 
+There are several note worthy things in the above program:
+
+- A procedure is like a C/C++ function returning `void`. We'll see later how to
+  declare proper functions.
+
+- `with` and `use` are roughly like includes. We'll see later how they work in
+  detail. Here, we are requesting a standard library module which contains a
+  procedure to print text on the screen, `Put_Line`.
+
+- `Greet` is a procedure, and the main entry point for our first program.
+  Unlike in C or C++, it can be named anything you prefer. The builder will
+  determine the entry point. In our simple example, `gprbuild`, GNAT's builder,
+  will use the file you passed as parameter.
+
+- `Put_Line` is a procedure, just like `Greet`, except it is imported from the
+  `Ada.Text_IO` module. It is the Ada equivalent of C's `printf`.
+
+- Comments start with `--` and go to the end of the line. There is no
+  multi-line comment syntax.
+
 ## Imperative language - Loops
 
-Let's go over a very simple imperative Ada program:
+Ada has a lot of loops. None of them behave like the C/Java/Javascript for loop
+though. Their semantic is much more restricted, in line with Ada's philosophy.
+
+
+### For loops
+
+The first kind of loop is the for loop. It allows to iterate through a discrete
+range.
+
+```ada
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Greet is
+begin
+   for I in 1 .. 10 loop
+      Put_Line ("Hello, World!"); -- Procedure call
+      --        ^ Procedure parameters
+   end loop;
+end Greet;
+```
+
+A few things to note:
+
+- `1 .. 10` is a discrete range, from `1` to `10` included.
+
+- It is bound to the name `I` in the body of the loop.
+
+- Here, `I` is like a variable declaration, so you cannot refer to I after the
+  loop.
+
+- `I` is constant. You cannot change its value.
+
+You cannot change the "step" of the loop (iterate two by two for example), and
+if you want to iterate from `10` to `1`, you have to use the reverse keyword.
 
 ```ada
 with Ada.Text_IO; use Ada.Text_IO;
 procedure Greet is
 begin
-   for I in 1 .. 10 loop
-      Put_Line("Hello, World!");
+   for I in reverse 1 .. 10 loop --  10 .. 1 would not work.
+      Put_Line ("Hello, World!");
    end loop;
 end Greet;
 ```
 
-There are several note-worthy
+For loops are more powerful and complicated than what we showcased here, more
+on that later.
 
-- I here denotes a constant that is only accessible in the
-  loop.
-- "1 .. 10" is a range.
-- Put_Line is a procedure call. procedure is like a fn
-  returning void in C/C++.
+### Bare loops
+
+Even though we started with the for loop, for familiarity, the purest, nakedest
+form of loop in Ada is the bare loop. In some sense, every other loop kind
+builds up on this one.
+
+```ada
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Greet is
+   I : Integer := 1; -- Variable declaration
+   --  ^ Type
+   --             ^ Default value
+begin
+   loop
+      Put_Line ("Hello, World!");
+      exit when I = 5; --  Exit statement
+      --        ^ Boolean condition
+      I := I + 1;
+   end loop;
+end Greet;
+```
+
+This example introduces a few new concepts and Ada specificities:
+
+- We see that we declared a variable, between the `is` and the `begin`. This
+  constitutes a declarative region. In Ada, you can only declare objects,
+  types, and anything that is considered a declaration, in a declarative
+  region. Trying to declare a variable inline in the middle of your statements
+  will result in a compile error. More on that later.
+
+- The bare loop statement is introduced by the keyword `loop` on its own, and,
+  like every kind of loop statement, terminated by the combination of keywords
+  `end loop`. On its own, it is an infinite loop. You can break out of it with
+  an `exit` statement.
+
+- The operator for assignment is `:=`, and the one for equality is `=`. There
+  is no way to confuse them, because as previously said, in Ada, statements and
+  expressions are distincts, and expressions are not valid statements.
+
+### While loops
+
+Ada has a last loop kind, while loops.
+
+```ada
+with Ada.Text_IO; use Ada.Text_IO;
+procedure Greet is
+begin
+   --  Condition. *Must* be of type boolean (no Integers). Operator < returns a
+   --  Boolean
+   while I < 10 loop
+      Put_Line("Hello, World!");
+
+      --  Assignment
+      I := I + 1;
+   end loop;
+end Greet;
+```
+
+Here we see what assignment to a variable looks like. There is no `I++` short form to
+increment, as there is in many languages.
+
+Something important to note: Trying to treat any value other than a boolean as
+a boolean condition will result in a compile time error. This is a result of
+Ada's static strong typing.
 
 ## Imperative language - If/Else
+
+Ada has an if statement. It is pretty unsurprising in form and function:
+
+```ada
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Greet is
+   I : Integer := 1;
+begin
+   loop
+      if I = 5 then
+        Put_Line("Hello, World!");
+      end if;
+      I := I + 1;
+   end loop;
+end Greet;
+```
+
+As for the while loop, the boolean condition must be of strict type `Boolean`.
+Every relational operator in Ada returns a `Boolean` by default.
+
+```ada
+with Ada.Text_IO; use Ada.Text_IO;
+procedure Greet is
+   I : Integer := 0;
+begin
+   loop
+      if I = 5 then
+         exit;
+         --  Exit can be unconditional
+      elsif I = 0 then
+         Put_Line ("Starting...");
+      else
+         Put_Line ("Hello, World!");
+      end if;
+      I := I + 1;
+   end loop;
+end Greet;
+```
+
+What we can see here is that Ada features an `elsif` keyword. For those
+interested, this is a way of avoiding the classical [dangling
+else](https://fr.wikipedia.org/wiki/Dangling_else) problem.
+
 ## Imperative language - Case statement
+
+Ada has a case statement, which is a very interesting beast, as it quite
+differs from, for example, C/C++'s case statement.
+
+```ada
+procedure Greet is
+   I : Integer := 0;
+begin
+   loop
+      -- Expression must be of a discrete type. All the
+      -- values must be covered.
+      case I is
+         when 0 =>
+            Put_Line ("Starting...");
+            Put_Line ("No really");
+            --  You can put several statements in a branch. There is no break.
+
+         when 3 .. 5 =>
+            Put_Line ("Hello");
+
+         when 7 | 9 =>
+            Put_Line ("World");
+
+        when 10 =>
+            exit;  -- This exits out of the loop ! Not equivalent to break !
+
+         when others => Put_Line ("I in (1, 2, 6, 8)");
+         -- ‘when others’ must be the last one and alone (if
+         -- present)
+      end case;
+      I := I + 1;
+   end loop;
+end Greet;
+```
+
+Notable points about Ada's case statement:
+
+- The parameter of the case statement needs to be of a discrete type.
+  More later about what [discrete types](TODO: link to discrete types)
+  are, but for the moment, it is enough to know that they cover integer and
+  enum types.
+
+- Every possible value needs to be covered by the case statement. This will be
+  checked at compile time. When using it on a value which has a cumbersome
+  number of possible values, you will use the special `others` branch to cover
+  the default case.
+
+-
+
+- There are syntactic sugars that you can use to cover several values
+  in a branch, such as ranges (`3 .. 5`) and disjoint sets (`7 | 9`).
+
+## Imperative language - Declarative regions
 
 # Strongly typed language
 ## What is a type?
