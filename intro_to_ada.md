@@ -352,17 +352,260 @@ Notable points about Ada's case statement:
   number of possible values, you will use the special `others` branch to cover
   the default case.
 
--
+- A value cannot be covered twice. This will also result in a compile time
+  error.
 
 - There are syntactic sugars that you can use to cover several values
   in a branch, such as ranges (`3 .. 5`) and disjoint sets (`7 | 9`).
 
 ## Imperative language - Declarative regions
 
+We mentionned declarative regions before. Those are very important in Ada. What
+is important to know at this stage:
+
+- In any subprogram (procedures for the moment), the region between the `is`
+  and the `begin` is a declarative region.
+
+- You can potentially declare anything there: Variables, constants, types,
+  other subprograms. This is valid for example:
+
+```ada
+procedure Main is
+    procedure Nested is
+    begin
+        Put_Line ("Hello World");
+    end Nested;
+begin
+    Nested;
+    --  Call to Nested
+end Main;
+```
+
+- You cannot declare anything outside of a declarative region. If you need to
+  scope variables in a subprogram, you can introduce a new declarative region
+  with the `declare` block
+
+```ada
+procedure Main is
+begin
+    declare
+        I : Integer := 0;
+    begin
+        loop
+            exit when I = 0;
+        end loop;
+    end;
+
+    --  I is undefined here
+end Main;
+```
+
+## Imperative language - control expressions
+
+Ada, since the 2012 revision, features equivalent expressions for most
+control statements except loops. We will go over those here because they're
+control-flow, albeit not in the traditional form.
+
+### If expressions
+
+```ada
+procedure Main is
+    A : Integer := 12;
+    B : Integer := (if A = 12 then 15
+                    elsif A = 13 then 15
+                    else 18);
+begin
+    null;  --  When a subprogram is empty, null statement is mandatory
+end Main;
+```
+
+Ada's if expression looks amazing, to be honest - and almost exactly like the
+if statement. There are a few differences that stems from the fact that it is
+an expression:
+
+- All branches' expressions must be of the same type
+- An else branch is mandatory.
+- They *must* be surrounded by parentheses, but only if the surrounding
+  expression does not already contain them
+
+```ada
+procedure Main is
+begin
+    for I in 1 .. 10 loop
+        --  Syntactically correct
+        Put_Line (if I mod 2 = 0 then "Even" else "Odd");
+    end loop;
+end Main;
+```
+
+### Case expressions
+
+Even more of a rarity, Ada also has case expressions. They work just as you
+would expect.
+
+```ada
+procedure Main is
+begin
+    for I in 1 .. 10 loop
+        Put_Line (case I is
+                  when 1 | 3 | 5 | 7 | 9 => "Odd",
+                  when 2 | 4 | 6 | 8 | 10 => "Even",
+                  when others => "Cannot happen")
+    end loop;
+end Main;
+```
+
+The syntax differs from case statements, because branches are separated by
+commas. Also, something to note in the above example is that the compiler does
+not know that `I` can only take values between 1 and 10, so we still need to
+have an `others` branch. We will delve into why when talking about
+[types](TODO: put link about types) in more detail.
+
 # Strongly typed language
+
+Ada is a seriously typed language. It is interestingly modern in that aspect:
+Strong static typing is going through a popularity rise, due to multiple
+factors: Popularity of statically typed functional programming, a big push from
+the academic community in the typing domain, many practical languages with
+strong type systems emerging, etc.
+
+However, due to the requirements it arised from, and the philosophy that we
+stated above, Ada was kind of a hipster language, in that it was strongly typed
+before it was cool.
+
 ## What is a type?
+
+In statically typed languages, a type is mainly (but not only) a *compile time*
+construct. It is a construct commonly used in programming languages to enforce
+invariants about the behavior of a program.
+
+A type is used to reason about *values* a program manipulates. The aim is to
+classify values by what you can accomplish with them, and this way you can
+reason about the correctness of your values.
+
+TODO: expand/clarify
+
 ## Integers
+
+A nice feature of Ada is that the user can define its own integer types. In
+fact, the Integer types provided by the language are defined with the same
+mechanisms. There is no "magical" built-in type in that regard, which is unlike
+most languages, and arguably very elegant.
+
+```ada
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Greet is
+   --  Declare a signed integer type, and give the bounds
+   type My_Int is range -1 .. 20;
+   --                         ^ High bound
+   --                   ^ Low bound
+
+   --  Like variables, type declarations can only happen in
+   --  declarative regions
+begin
+   for I in My_Int loop
+      Put_Line (My_Int'Image (I));
+      --              ^ 'Image attribute, converts a value to a
+      --                 String
+   end loop;
+end Greet;
+```
+
+In this example, we showcase the creation of a signed integer type, and several
+things we can do with them.
+
+Every type definition in Ada ([well almost](TODOTASKTYPES)) starts with the
+`type` keyword. After the type, we can see a range that looks a lot like the
+ranges that we use in for loops, that defines the low and high bound of the
+type. Every integer in the inclusive range of the bounds is a valid value for
+the type.
+
+> In Ada, Integer types are not specified with regards to their machine
+> representation, but with regards to their range. The compiler will then
+> choose the most appropriate representation.
+
+Another interesting thing that we can notice in the above example is the
+`My_Int'Image (I)` expresssion. In Ada, the `Expr'Attribute (optional params)`
+notation is used for what is called [attributes](TODOLINKATTRS) in Ada.
+Attributes are built-in operations on types or on values. Their notation is a
+bit quirky by modern standards, using `'`.
+
+Ada makes a few types available as "built-ins". `Integer` is one of them. Here
+is how `Integer` is defined:
+
+```ada
+type Integer is range -(2 ** 31) .. +(2 ** 31 - 1);
+```
+
+`**` is the exponent operator, which means that the first valid value for
+`Integer` is $-2^31$, and the last valid value is $2^31-1$. In a fit of luck,
+this coincides with what you can fit in a 32 bit signed integer on modern
+platforms :).
+
+### Operational semantics
+
+Unlike in unsafe languages like C and C++, Ada specifies that operations on
+integers should be checked for overflows.
+
+```ada
+procedure Main is
+   A : Integer := Integer'Last;
+   B : Integer;
+begin
+   B := A + 5;
+   --  This operation will overflow, eg. it will
+   --  raise an exception at runtime.
+end Main;
+```
+
+However, mainly for efficiency reasons, overflow only happens at specific
+boundaries, like assignment.
+
+```ada
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Main is
+   type My_Int is range 1 .. 20;
+   A : My_Int := 12;
+   B : My_Int := 15;
+   M : My_Int := (A + B) / 2;
+   --  No overflow here, overflow checks are done at
+   --  specific boundaries.
+begin
+   for I in 1 .. M loop
+      Put_Line("Hello, World!");
+   end loop;
+end Main;
+```
+
+## Unsigned types
+
 ## Enumerations
+
+```ada
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Greet is
+   type Days is (Monday, Tuesday, Wednesday,
+                 Thursday, Friday, Saturday, Sunday);
+   --  An enumeration type
+begin
+   for I in Days loop
+      case I is
+         when Saturday .. Sunday =>
+            Put_Line ("Week end!");
+
+         --  Completeness checking on enums
+         when others =>
+            Put_Line ("Hello on " & Days'Image (I));
+            --  'Image attribute, converts a value to a
+            --  String
+      end case;
+   end loop;
+end Greet;
+```
+
 ## Strong typing
 ## Subtypes
 
