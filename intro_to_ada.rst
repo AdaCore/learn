@@ -623,8 +623,46 @@ specific boundaries, like assignment.
 Unsigned types
 --------------
 
+Ada also features unsigned Integer types. They're called modular types in Ada
+parlance. The reason for this designation is due to their behavior in case of
+overflow: They simply "wrap around", as if a modulo operation was applied.
+
+For machine sized modular types, this mimics the most common implementation
+defined behavior of unsigned types. However, the neat thing is that this will
+work for any modular type.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       type Mod_Int is mod 2 ** 4;
+       --                  ^ Max value is 32
+
+       A : Mod_Int := 20;
+       B : Mod_Int := 15;
+       M : Mod_Int := A + B;
+       --  No overflow here, M = 20 + 15 mod 32 = 3
+    begin
+       for I in 1 .. M loop
+          Put_Line("Hello, World!");
+       end loop;
+    end Main;
+
+Unlike in C/C++, since this behavior is guaranteed by the Ada specification,
+you can rely on it to implement portable code. Also, being able to leverage the
+wrapping on arbitrary bounds is very useful to implement certain algorithms and
+data structures, such as
+`ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`__.
+
 Enumerations
 ------------
+
+Enumeration types are another nicety of Ada's type system. Unlike C's enims,
+they are *not* integers, and each new enum type is incompatible with other enum
+types. Enum types are part of the bigger family of discrete types, which makes
+them usable in certain situations that we will disclose later, but one that we
+already know is that you can use them as a target to a case expression.
 
 .. code-block:: ada
 
@@ -643,11 +681,20 @@ Enumerations
              --  Completeness checking on enums
              when others =>
                 Put_Line ("Hello on " & Days'Image (I));
-                --  'Image attribute, converts a value to a
-                --  String
+                --  'Image attribute, works on enums too
           end case;
        end loop;
     end Greet;
+
+Enum types are powerful enough that they're used to represent the standard
+boolean type, that is so defined:
+
+.. code-block:: ada
+
+    type Boolean is (True, False);
+
+As promised previously, every "built-in" type in Ada is done so with facilities
+generally available to the user.
 
 Strong typing
 -------------
