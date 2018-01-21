@@ -375,7 +375,7 @@ Notable points about Ada's case statement:
 
 -  The parameter of the case statement needs to be of a discrete type.
    More later about what `discrete
-   types <TODO:%20link%20to%20discrete%20types>`__ are, but for the
+   types <TODO:linktodiscretetypes>`__ are, but for the
    moment, it is enough to know that they cover integer and enum types.
 
 -  Every possible value needs to be covered by the case statement. This
@@ -495,7 +495,7 @@ The syntax differs from case statements, because branches are separated
 by commas. Also, something to note in the above example is that the
 compiler does not know that ``I`` can only take values between 1 and 10,
 so we still need to have an ``others`` branch. We will delve into why
-when talking about `types <TODO:%20put%20link%20about%20types>`__ in
+when talking about `types <TODO:putlinkabouttypes>`__ in
 more detail.
 
 Strongly typed language
