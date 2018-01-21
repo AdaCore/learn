@@ -47,8 +47,7 @@ great language for other applications in those abstract categories, such
 as:
 
 -  `Video game programming <https://github.com/AdaDoom3/AdaDoom3>`__
--  `Real-time
-   audio <http://www.electronicdesign.com/embedded-revolution/assessing-ada-language-audio-applications>`__
+-  `Real-time audio <http://www.electronicdesign.com/embedded-revolution/assessing-ada-language-audio-applications>`__
 -  `Kernel modules <http://www.nihamkin.com/tag/kernel.html>`__
 
 This is a non-comprehensive list, that hopefully sheds light on which
@@ -270,8 +269,8 @@ Ada has a last loop kind, while loops.
     with Ada.Text_IO; use Ada.Text_IO;
     procedure Greet is
     begin
-       --  Condition. *Must* be of type boolean (no Integers). Operator < returns a
-       --  Boolean
+       --  Condition. *Must* be of type boolean (no Integers). Operator <
+       --  returns a Boolean
        while I < 10 loop
           Put_Line("Hello, World!");
 
@@ -390,7 +389,7 @@ Notable points about Ada's case statement:
    in a branch, such as ranges (``3 .. 5``) and disjoint sets
    (``7 | 9``).
 
- Imperative language - Declarative regions
+Imperative language - Declarative regions
 ------------------------------------------
 
 We mentionned declarative regions before. Those are very important in
@@ -440,7 +439,7 @@ Ada, since the 2012 revision, features equivalent expressions for most
 control statements except loops. We will go over those here because
 they're control-flow, albeit not in the traditional form.
 
- If expressions
+If expressions
 ~~~~~~~~~~~~~~~
 
 .. code-block:: ada
@@ -473,7 +472,7 @@ fact that it is an expression:
         end loop;
     end Main;
 
- Case expressions
+Case expressions
 ~~~~~~~~~~~~~~~~~
 
 Even more of a rarity, Ada also has case expressions. They work just as
@@ -584,7 +583,7 @@ for ``Integer`` is :math:`-2^31`, and the last valid value is
 :math:`2^31-1`. In a fit of luck, this coincides with what you can fit
 in a 32 bit signed integer on modern platforms :).
 
- Operational semantics
+Operational semantics
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Unlike in unsafe languages like C and C++, Ada specifies that operations
