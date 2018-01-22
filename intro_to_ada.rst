@@ -699,6 +699,61 @@ generally available to the user.
 Strong typing
 -------------
 
+One thing that we have hinted at so far is that Ada is strongly typed. One
+corollary of that is that different types of the same family are incompatible
+with each other, as we can see in the following example:
+
+.. code-block:: ada
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       --  Declare two signed types
+       type Meters is range 0 .. 10_000;
+       type Miles is range 0 .. 5_000;
+
+       Dist_Us : Miles;
+       --  Declare a constant
+       Dist_Eu : constant Meters := 100;
+    begin
+       --  Not correct: types mismatch
+       Dist_Us := Dist_Eu * 1609 / 1000;
+       Put_Line (Miles'Image (Dist_Us));
+    end Greet;
+
+This is true for every distinct type. It also means that, in the general case,
+an expression like ``2 * 3.0`` will trigger a compilation error. In a language
+like C or Python, those expressions are made valid by implicit conversions. In
+Ada, such conversions must be made explicit:
+
+.. code-block:: ada
+    with Ada.Text_IO; use Ada.Text_IO;
+    procedure Conv is
+       type Meters is range 0 .. 10_000;
+       type Miles is range 0 .. 5_000;
+       Dist_Us : Miles;
+       Dist_Eu : constant Meters := 100;
+    begin
+       Dist_Us := Miles (Dist_Eu * 1609 / 1000);
+       --         ^ Type conversion, from Meters to Miles
+       --  Now the code is correct
+
+       Put_Line (Miles'Image (Dist_Us));
+    end;
+
+.. code-block:: ada
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       C : Character;
+       --  ^ Built-in character type (it's an enum)
+    begin
+       C := '?';
+       --   ^ Character literal (enumeration literal)
+
+       C := 64;
+       --   ^ Invalid: 64 is not an enumeration literal
+    end Greet;
+
 Subtypes
 --------
 
