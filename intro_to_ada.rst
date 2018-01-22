@@ -704,6 +704,7 @@ corollary of that is that different types of the same family are incompatible
 with each other, as we can see in the following example:
 
 .. code-block:: ada
+
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
@@ -726,6 +727,7 @@ like C or Python, those expressions are made valid by implicit conversions. In
 Ada, such conversions must be made explicit:
 
 .. code-block:: ada
+
     with Ada.Text_IO; use Ada.Text_IO;
     procedure Conv is
        type Meters is range 0 .. 10_000;
@@ -741,6 +743,7 @@ Ada, such conversions must be made explicit:
     end;
 
 .. code-block:: ada
+
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
