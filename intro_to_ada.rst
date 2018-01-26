@@ -658,7 +658,7 @@ data structures, such as
 Enumerations
 ------------
 
-Enumeration types are another nicety of Ada's type system. Unlike C's enims,
+Enumeration types are another nicety of Ada's type system. Unlike C's enums,
 they are *not* integers, and each new enum type is incompatible with other enum
 types. Enum types are part of the bigger family of discrete types, which makes
 them usable in certain situations that we will disclose later, but one that we
