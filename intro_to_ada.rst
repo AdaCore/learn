@@ -742,20 +742,57 @@ Ada, such conversions must be made explicit:
        Put_Line (Miles'Image (Dist_Us));
     end;
 
+If you write a lot of numeric code, this might seem painful at first, because
+your code might end up containing a lot of conversions. But if you are like me,
+you will probably end up seeing this as a very good thing:
+
+- You can rely on the fact that no implicit conversion will ever happen in your
+  numeric code. In C for example, the rules for implicit conversions are very
+  non-obvious. In Ada the code will always do exactly what it seems to do.
+
+- You can use Ada's strong typing to help you enforce invariants in your code,
+  as in the example above: Since Miles and Meters are two different types, you
+  cannot mistakenly convert an instance of one to an instance of the other.
+
+Character types
+---------------
+
+But Ada's strong typing is not only helpful with numeric types. As we said
+before for enumeration types, each enumeration type is distinct and
+incompatible with every other enumeration type. However, what we did not
+mention is that Ada has character literals, that can be used as enumeration
+literals too. This allows Ada to define its own strongly typed character types,
+but also allows the user to define its own, as in the example below:
+
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
+       type My_Char is ('a', 'b', 'c');
+       --  Our custom character type, an enum, with only 3 valid values.
+
        C : Character;
        --  ^ Built-in character type (it's an enum)
+
+       M : My_Char;
     begin
        C := '?';
        --   ^ Character literal (enumeration literal)
 
+       A := 'a';
+
        C := 64;
        --   ^ Invalid: 64 is not an enumeration literal
+
+       A := C;
+       --   ^ Invalid: C is of invalid type for A
+
+       A := 'd';
+       --   ^ Invalid: 'd' is not a valid literal for type My_Char
     end Greet;
+
+
 
 Subtypes
 --------
