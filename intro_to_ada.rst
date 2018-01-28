@@ -16,7 +16,7 @@ In the seventies, the American department of Defense suffered from an
 explosion of the number of languages, each team using a different set of
 idioms/scripts. The DOD decided to solve this by issuing a request for
 proposal to big companies of the time. The proposal that was selected by
-the DOD in the end was Jean Ichbiah's proposal, on behalf on HoneyWell
+the DOD in the end was Jean Ichbiah's proposal, on behalf of HoneyWell
 bull.
 
 The first standard for the language was issued in 1983, with revisions
@@ -34,15 +34,15 @@ general focus on embedded systems. While Ada is and can be used as a
 general purpose language, it will really shine in low level
 applications:
 
--  Embedded systems with low memory requirements/no garbage collector
-   allowed.
+-  Embedded systems with low memory requirements (no garbage collector
+   allowed).
 -  Direct interfacing with hardware.
 -  Soft or hard real-time systems.
 -  Low level systems programming.
 
 This list is intentionally abstract. While today Ada has certain
-domains/niches where it is used a lot, like Aerospace & Defense, civil
-aviation, public transportation, etc. it also means that Ada can be a
+domains/niches where it is used a lot ---like Aerospace & Defense, civil
+aviation, public transportation, etc.--- it also means that Ada can be a
 great language for other applications in those abstract categories, such
 as:
 
@@ -50,7 +50,7 @@ as:
 -  `Real-time audio <http://www.electronicdesign.com/embedded-revolution/assessing-ada-language-audio-applications>`__
 -  `Kernel modules <http://www.nihamkin.com/tag/kernel.html>`__
 
-This is a non-comprehensive list, that hopefully sheds light on which
+This is a non-comprehensive list that hopefully sheds light on which
 kind of programming Ada is good at.
 
 In terms of modern languages, the closest in terms of targets and level
@@ -66,7 +66,7 @@ different from the one of a lot of other languages. In Ada it is
 considered that:
 
 -  Readability is more important than conciseness. Syntactically this
-   shows through the fact that keywords are prefered to symbols, that no
+   shows through the fact that keywords are preferred to symbols, that no
    keyword is an abbreviation, etc.
 
 -  Very strong typing. It is very easy to introduce new types in Ada,
@@ -77,7 +77,7 @@ considered that:
 
 -  Explicit is better than implicit: Although weirdly this is a
    `Python <www.TODOpython.com>`__ commandment, Ada takes it way further
-   than any language I know of:
+   than any language we know of:
 
    -  There is mostly no structural typing, and most types need to be
       explicitly named by the programmer.
@@ -194,7 +194,7 @@ A few things to note:
 
 -  It is bound to the name ``I`` in the body of the loop.
 
--  Here, ``I`` is like a variable declaration, so you cannot refer to I
+-  Here, ``I`` is like a variable declaration, so you cannot refer to ``I``
    after the loop.
 
 -  ``I`` is constant. You cannot change its value.
@@ -246,17 +246,17 @@ This example introduces a few new concepts and Ada specificities:
    ``begin``. This constitutes a declarative region. In Ada, you can
    only declare objects, types, and anything that is considered a
    declaration, in a declarative region. Trying to declare a variable
-   inline in the middle of your statements will result in a compile
+   inline in the middle of your statements will result in a compilation
    error. More on that later.
 
 -  The bare loop statement is introduced by the keyword ``loop`` on its
-   own, and, like every kind of loop statement, terminated by the
+   own and, like every kind of loop statement, terminated by the
    combination of keywords ``end loop``. On its own, it is an infinite
    loop. You can break out of it with an ``exit`` statement.
 
 -  The operator for assignment is ``:=``, and the one for equality is
    ``=``. There is no way to confuse them, because as previously said,
-   in Ada, statements and expressions are distincts, and expressions are
+   in Ada, statements and expressions are distinct, and expressions are
    not valid statements.
 
 While loops
@@ -331,7 +331,7 @@ default.
 
 What we can see here is that Ada features an ``elsif`` keyword. For
 those interested, this is a way of avoiding the classical `dangling
-else <https://fr.wikipedia.org/wiki/Dangling_else>`__ problem.
+else <https://en.wikipedia.org/wiki/Dangling_else>`__ problem.
 
 Imperative language - Case statement
 ------------------------------------
@@ -375,7 +375,7 @@ Notable points about Ada's case statement:
 -  The parameter of the case statement needs to be of a discrete type.
    More later about what `discrete
    types <TODO:linktodiscretetypes>`__ are, but for the
-   moment, it is enough to know that they cover integer and enum types.
+   moment, it is enough to know that they cover integer and enumeration types.
 
 -  Every possible value needs to be covered by the case statement. This
    will be checked at compile time. When using it on a value which has a
@@ -392,7 +392,7 @@ Notable points about Ada's case statement:
 Imperative language - Declarative regions
 ------------------------------------------
 
-We mentionned declarative regions before. Those are very important in
+We mentioned declarative regions before. Those are very important in
 Ada. What is important to know at this stage:
 
 -  In any subprogram (procedures for the moment), the region between the
@@ -495,7 +495,7 @@ by commas. Also, something to note in the above example is that the
 compiler does not know that ``I`` can only take values between 1 and 10,
 so we still need to have an ``others`` branch. We will delve into why
 when talking about `types <TODO:putlinkabouttypes>`__ in
-more detail.
+more details.
 
 Strongly typed language
 =======================
@@ -693,7 +693,7 @@ boolean type, that is so defined:
 
     type Boolean is (True, False);
 
-As promised previously, every "built-in" type in Ada is done so with facilities
+As mentioned previously, every "built-in" type in Ada is defined with facilities
 generally available to the user.
 
 Strong typing
@@ -750,7 +750,7 @@ you will probably end up seeing this as a very good thing:
   numeric code. In C for example, the rules for implicit conversions are very
   non-obvious. In Ada the code will always do exactly what it seems to do.
 
-- You can use Ada's strong typing to help you enforce invariants in your code,
+- You can use Ada's strong typing to help enforce invariants in your code,
   as in the example above: Since Miles and Meters are two different types, you
   cannot mistakenly convert an instance of one to an instance of the other.
 
