@@ -866,9 +866,9 @@ but also allows the user to define its own, as in the example below:
 New types
 ---------
 
-One particularity of Ada is that you can create new types from existing ones.
-This is very useful to define that a type is statically incompatible with
-another type, to enforce strong typing.
+One particularity of Ada is that you can create new types based on existing
+ones. This is very useful to define that a type is statically incompatible
+with another type, to enforce strong typing.
 
 .. code-block:: ada
 
