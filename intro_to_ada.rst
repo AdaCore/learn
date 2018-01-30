@@ -748,6 +748,12 @@ generally available to the user.
 
 .. gusthoff: maybe add a link to where this is mentioned? What else can the user achieve with these facilities? Maybe a link to a section that explains how these facilities can be used?
 
+=======
+Decimal types
+-------------
+
+TODO: Add section on Floating point and fixed point numbers
+
 Strong typing
 -------------
 
@@ -854,11 +860,131 @@ but also allows the user to define its own, as in the example below:
        --   ^ Invalid: 'd' is not a valid literal for type My_Char
     end Greet;
 
+
 .. gusthoff: This sounds like an interesting feature in Ada. However, the example above looks a little bit artificial, so the reader might not get an idea where this can be used in the "real world".
 
+New types
+---------
+
+One particularity of Ada is that you can create new types from existing ones.
+This is very useful to define that a type is statically incompatible with
+another type, to enforce strong typing.
+
+.. code-block:: ada
+
+   procedure Main is
+      --  ID card number type, incompatible with Integer.
+      type Social_Security_Number
+      is new Integer range 0 .. 999_99_9999;
+      --                   ^ Since a SSN has 9 digits max, and cannot be
+      --                     negative, we enforce a validity constraint.
+
+      SSN : Social_Security_Number := 323_44_9847;
+      --                              ^ You can put underscores as formatting in
+      --                                any number.
+
+      Invalid : Social_Security_Number := -1;
+      --                                  ^ This will cause a runtime error
+      --                                    (and a compile time warning with
+      --                                     GNAT)
+   begin
+      null;
+   end Main;
+
+You can redefine the range of validity of any type family: Floating point,
+fixed point, enumerations ...
+
+The syntax for enumerations uses the ``range <range>`` syntax:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    procedure Greet is
+       type Days is (Monday, Tuesday, Wednesday, Thursday,
+                     Friday, Saturday, Sunday);
+
+       type Weekend_Days is new Days range Saturday .. Sunday;
+       --  New type, where only Saturday and Sunday are valid literals.
+    begin
+       null;
+    end Greet;
+
+One question you may be asking yourself is, why would somebody define a new
+type from an existing one rather than define it from scratch ?
+
+One reason that we can see already is that, for some types, like enums, the
+type definition will be more concise, because you don't need to redefine
+everything.
+
+It is part of a bigger reason: You can inherit things from the type you derive
+from. The representation of the data is one part, but you can also inherit
+behavior.
+
+    WARNING: While we use the term inheritance, it is different enough from
+    inheritance in object oriented languages that you would be better off
+    considering it a different concept entirely.
+
+    Something similar to what is called inheritance in Java/C++ will be seen
+    when we talk about `tagged types <TODOLINKABOUTTAGGEDTYPES>`__.
+
+When you inherit a type, what we call primitive operations are inherited. While
+we will at some point get into the nitty-gritty of what a `primitive operation
+<TODOLINKPRIM>`__ is, for the moment, we will use a very simple definition: A
+primitive is a subprogram attached to a type. Ada knows a primitive because it
+is a subprogram defined in the same scope with the type.
+
+.. code-block:: ada
+
+    procedure Primitives is
+       type Days is (Monday, Tuesday, Wednesday, Thursday,
+                     Friday, Saturday, Sunday);
+
+        procedure Print_Day (D : Days) is
+        begin
+           Put_Line (Days'Image (D))
+        end Print_Day;
+        --  Print day is a primitive of the type Days
+
+       type Weekend_Days is new Days range Saturday .. Sunday;
+
+       --  A procedure Print_Day is automatically inherited here. It is like
+       --  the procedure
+       --
+       --  procedure Print_Day (D : Weekend_Days);
+       --
+       --  Has been declared
+
+       Sat : Weekend_Days := Saturday;
+    begin
+       Print_Day (Sat);
+    end Primitives;
 
 Subtypes
 --------
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    procedure Greet is
+       type Days is (Monday, Tuesday, Wednesday, Thursday,
+                     Friday, Saturday, Sunday);
+
+       --  Declaration of a subtype
+       subtype Weekend_Days is Days range Saturday .. Sunday;
+       --                           ^ Constraint of the subtype
+    begin
+       for I in Days loop
+          case I is
+             --  Just like a type, a subtype can be used as a
+             --  range
+             when Weekend_Days =>
+                Put_Line ("Week end!");
+             when others =>
+                Put_Line ("Hello on " & Days'Image (I));
+          end case;
+       end loop;
+    end Greet;
+
 
 Arrays
 ======
