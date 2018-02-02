@@ -611,8 +611,6 @@ Operational semantics
 Unlike in unsafe languages like C and C++, Ada specifies that operations
 on integers should be checked for overflows.
 
-.. gusthoff: As I've suggested in Issue #1, we should avoid language wars...
-
 .. code-block:: ada
 
     procedure Main is
