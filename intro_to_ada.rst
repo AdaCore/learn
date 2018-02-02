@@ -535,8 +535,9 @@ What is a type?
 In statically typed languages, a type is mainly (but not only) a
 *compile time* construct. It is a construct commonly used in programming
 languages to enforce invariants about the behavior of a program.
-
-.. gusthoff: What if readers don't know what invariants are? Shouldn't we explain what is meant by that and what's the advantage of "enforcing invariants"?
+Invariants can be described as unchangeable properties that hold true for
+all variable of a given type. Enforcing them allows for ensuring that
+variables of a data type never have invalid values.
 
 A type is used to reason about *values* a program manipulates. The aim
 is to classify values by what you can accomplish with them, and this way
