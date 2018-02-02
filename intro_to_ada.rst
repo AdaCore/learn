@@ -649,10 +649,8 @@ parlance. The reason for this designation is due to their behavior in case of
 overflow: They simply "wrap around", as if a modulo operation was applied.
 
 For machine sized modular types, this mimics the most common implementation
-defined behavior of unsigned types. However, the neat thing is that this will
-work for any modular type.
-
-.. gusthoff: "neat" ;-) (see other comments on informal style above)
+defined behavior of unsigned types. However, the main advantage is that
+this works for any modular type:
 
 .. code-block:: ada
 
