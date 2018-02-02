@@ -523,19 +523,11 @@ more details.
 Strongly typed language
 =======================
 
-Ada is a seriously typed language. It is interestingly modern in that
+Ada is a strongly typed language. It is interestingly modern in that
 aspect: Strong static typing is going through a popularity rise, due to
 multiple factors: Popularity of statically typed functional programming,
 a big push from the academic community in the typing domain, many
 practical languages with strong type systems emerging, etc.
-
-.. gusthoff: "seriously typed"? Seriously?! ;-)
-
-However, due to the requirements it arised from, and the philosophy that
-we stated above, Ada was kind of a hipster language, in that it was
-strongly typed before it was cool.
-
-.. gusthoff: I thought we've agreed that Ada is uncool! ;-) Now seriously, I'd rather remove the whole paragraph above, since it is out of scope for an "intro to Ada."
 
 What is a type?
 ---------------
