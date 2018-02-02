@@ -61,8 +61,6 @@ of abstraction are probably
 `C++ <https://fr.wikipedia.org/wiki/C%2B%2B>`__ and
 `Rust <https://www.rust-lang.org/en-US/>`__.
 
-.. gusthoff: Do we need to mention these languages? I'd just ignore them instead!
-
 Philosophy
 ----------
 
@@ -349,8 +347,6 @@ default.
 What we can see here is that Ada features an ``elsif`` keyword. For
 those interested, this is a way of avoiding the classical `dangling
 else <https://en.wikipedia.org/wiki/Dangling_else>`__ problem.
-
-.. gusthoff: I guess I would rather show an example here or in a separate page (but within our learning website) instead of pointing to Wikipedia.
 
 Imperative language - Case statement
 ------------------------------------
@@ -695,8 +691,6 @@ you can rely on it to implement portable code. Also, being able to leverage the
 wrapping on arbitrary bounds is very useful to implement certain algorithms and
 data structures, such as
 `ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`__.
-
-.. gusthoff: instead of pointing to Wikipedia, we could have an example of ring buffers implemented in Ada...
 
 Enumerations
 ------------
