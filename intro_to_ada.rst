@@ -237,10 +237,8 @@ Bare loops
 ~~~~~~~~~~
 
 Even though we started with the for loop, for familiarity, the purest,
-nakedest form of loop in Ada is the bare loop. In some sense, every
-other loop kind builds up on this one.
-
-.. gusthoff: "nakedest" form?! It sounds funny, but I'd rather avoid this kind of language here...
+form of loop in Ada is the bare loop. In some sense, every other loop kind
+builds up on this one.
 
 .. code-block:: ada
 
