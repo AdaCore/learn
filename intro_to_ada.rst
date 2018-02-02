@@ -147,10 +147,10 @@ unsurprising result.
 
 There are several note worthy things in the above program:
 
--  A procedure is like a C/C++ function returning ``void``. We'll see
-   later how to declare proper functions.
-
-.. gusthoff: This paragraph does not really explain what a procedure actually is.
+-  A subprogram in Ada can be either a procedure or a function. A
+   procedure, as used above, does not return a value when called. This is
+   similar to functions in C/C++ that return ``void``. We'll see later how
+   to declare functions in Ada.
 
 -  ``with`` and ``use`` are roughly like includes. We'll see later how
    they work in detail. Here, we are requesting a standard library
