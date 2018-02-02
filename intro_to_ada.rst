@@ -286,7 +286,7 @@ Ada has a last loop kind, while loops.
     with Ada.Text_IO; use Ada.Text_IO;
     procedure Greet is
     begin
-       --  Condition. *Must* be of type boolean (no Integers). Operator <
+       --  Condition. *Must* be of type Boolean (no Integers). Operator <
        --  returns a Boolean
        while I < 10 loop
           Put_Line("Hello, World!");
@@ -300,10 +300,8 @@ Here we see what assignment to a variable looks like. There is no
 ``I++`` short form to increment, as there is in many languages.
 
 Something important to note: Trying to treat any value other than a
-boolean as a boolean condition will result in a compile time error. This
+Boolean as a Boolean condition will result in a compile time error. This
 is a result of Ada's static strong typing.
-
-.. gusthoff: as far as I know, "Boolean" should always be spelled with upper-case "B".
 
 Imperative language - If/Else
 -----------------------------
@@ -325,7 +323,7 @@ Ada has an if statement. It is pretty unsurprising in form and function:
        end loop;
     end Greet;
 
-As for the while loop, the boolean condition must be of strict type
+As for the while loop, the Boolean condition must be of strict type
 ``Boolean``. Every relational operator in Ada returns a ``Boolean`` by
 default.
 
@@ -734,7 +732,7 @@ already know is that you can use them as a target to a case expression.
     end Greet;
 
 Enum types are powerful enough that they're used to represent the standard
-boolean type, that is so defined:
+Boolean type, that is so defined:
 
 .. gusthoff: explain why this is considered "powerful"
 
