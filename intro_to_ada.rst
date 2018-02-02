@@ -472,11 +472,8 @@ If expressions
         null;  --  When a subprogram is empty, null statement is mandatory
     end Main;
 
-Ada's if expression looks amazing, to be honest - and almost exactly
-like the if statement. There are a few differences that stems from the
-fact that it is an expression:
-
-.. gusthoff: Again, this sounds too informal. It might be "amazing" to us, but I'd rather refrain from giving an opinion here.
+Ada's if expression are similar to if statements. However, there are a few
+differences that stems from the fact that it is an expression:
 
 -  All branches' expressions must be of the same type
 -  An else branch is mandatory.
