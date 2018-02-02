@@ -34,25 +34,24 @@ general focus on embedded systems. While Ada is and can be used as a
 general purpose language, it will really shine in low level
 applications:
 
-.. gusthoff: Why should we say that Ada "really shines" in low-level applications to the detriment of the high-level applications, where Ada can be (and should!) be used as well? What's the intention here? This paragraph makes it sound like you should use something different than Ada if you're not working especially in software development for embedded devices...
-
 -  Embedded systems with low memory requirements (no garbage collector
    allowed).
 -  Direct interfacing with hardware.
 -  Soft or hard real-time systems.
 -  Low level systems programming.
 
-This list is intentionally abstract. While today Ada has certain
-domains/niches where it is used a lot ---like Aerospace & Defense, civil
-aviation, public transportation, etc.--- it also means that Ada can be a
-great language for other applications in those abstract categories, such
-as:
+This list is intentionally abstract. Today,  Ada has certain domains /
+niches where it is used a lot, like Aerospace & Defense, civil aviation,
+public transportation, etc. These are domains that require a high degree
+of safety: a software defect in this kind of applications are not just an
+annoyance, but may have severe consequences. Ada provides safety features
+that allow for detecting defects at an early stage --- usually, at
+compilation time or using static analysis tools. In addition, Ada can also
+be used in to create applications in varied categories, such as:
 
 -  `Video game programming <https://github.com/AdaDoom3/AdaDoom3>`__
 -  `Real-time audio <http://www.electronicdesign.com/embedded-revolution/assessing-ada-language-audio-applications>`__
 -  `Kernel modules <http://www.nihamkin.com/tag/kernel.html>`__
-
-.. gusthoff: It's great to find our article on the list. However, isn't the fact that Ada is being used for applications where safety is a requirement much more interesting that multimedia applications? Shouldn't we stress the fact that, in these time where so many security issues are found on a daily basis, Ada provides means to avoid whole classes of bugs and detect errors in an early stage? I mean, these were some of the reasons why I got interested in the language in the first place...
 
 This is a non-comprehensive list that hopefully sheds light on which
 kind of programming Ada is good at.
