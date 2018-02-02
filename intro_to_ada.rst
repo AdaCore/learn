@@ -590,10 +590,8 @@ Another interesting thing that we can notice in the above example is the
 ``My_Int'Image (I)`` expresssion. In Ada, the
 ``Expr'Attribute (optional params)`` notation is used for what is called
 `attributes <TODOLINKATTRS>`__ in Ada. Attributes are built-in
-operations on types or on values. Their notation is a bit quirky by
-modern standards, using ``'``.
-
-.. gusthoff: "Quirky"? I wouldn't use this book to criticize the Ada language, especially because not everyone might agree with this opinion.
+operations on types or on values. They are accessed by using a ``'`` (the
+tick sign).
 
 Ada makes a few types available as "built-ins". ``Integer`` is one of
 them. Here is how ``Integer`` is defined:
