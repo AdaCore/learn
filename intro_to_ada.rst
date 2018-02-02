@@ -152,10 +152,12 @@ There are several note worthy things in the above program:
    similar to functions in C/C++ that return ``void``. We'll see later how
    to declare functions in Ada.
 
--  ``with`` and ``use`` are roughly like includes. We'll see later how
-   they work in detail. Here, we are requesting a standard library
-   module which contains a procedure to print text on the screen,
-   ``Put_Line``.
+-  ``with`` and ``use`` are used to reference external packages in the
+   procedure. This is similar to ``import`` in various languages or
+   roughly similar to ``#include`` in C/C++.
+   We'll see later how they work in detail. Here, we are requesting a
+   standard library module which contains a procedure to print text on the
+   screen: ``Put_Line``.
 
 -  ``Greet`` is a procedure, and the main entry point for our first
    program. Unlike in C or C++, it can be named anything you prefer. The
