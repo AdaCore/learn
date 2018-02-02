@@ -99,12 +99,8 @@ considered that:
       This allows the compiler to be extremely helpful (read: strict)
       with the programmer.
 
-We will, during this course, indicate which individual language features
-are building blocks for that philosophy, and, in as honest a fashion as
-possible, indicate where some language design choices diverged from that
-philosophy - because no language is perfect, not even Ada :-).
-
-.. gusthoff: This paragraph sounds too informal in my opinion ("in as honest a fashion as possible", "no language is perfect, not even Ada :-)").
+During this course, we will explain the individual language features that
+are building blocks for that philosophy.
 
 Imperative language
 ===================
