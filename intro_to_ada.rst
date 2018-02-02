@@ -785,10 +785,8 @@ Ada, such conversions must be made explicit:
 .. gusthoff: maybe we should mention that the "Adaïste way" usually is to create a function called To_Miles that does this conversion...
 
 If you write a lot of numeric code, this might seem painful at first, because
-your code might end up containing a lot of conversions. But if you are like me,
-you will probably end up seeing this as a very good thing:
-
-.. gusthoff: "if you are like me"? Who are you? Why should I be like you? ;-) Again, I'd be more formal and simply say something like this: "However, the advantages of this approach are:"
+your code might end up containing a lot of conversions. However, this
+approach has some advantages. For example:
 
 - You can rely on the fact that no implicit conversion will ever happen in your
   numeric code. In C for example, the rules for implicit conversions are very
