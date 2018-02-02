@@ -183,11 +183,9 @@ There are several note worthy things in the above program:
 Imperative language - Loops
 ---------------------------
 
-Ada has a lot of loops. None of them behave like the C/Java/Javascript
-for loop though. Their semantic is much more restricted, in line with
-Ada's philosophy.
-
-.. gusthoff: "a lot of" sounds a little bit exaggerated...
+Ada has three ways of specifying loops. None of them behave like the
+C/Java/Javascript for-loop though. Their semantic is much more restricted,
+which is in line with Ada's philosophy.
 
 For loops
 ~~~~~~~~~
