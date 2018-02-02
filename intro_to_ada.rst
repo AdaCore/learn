@@ -168,9 +168,15 @@ There are several note worthy things in the above program:
    C's ``printf``.
 
 -  Comments start with ``--`` and go to the end of the line. There is no
-   multi-line comment syntax.
+   multi-line comment syntax, that is, it is not possible to start a
+   comment in one line and continue it in the next line. The only way to
+   create multiple lines of comments in Ada is by using ``--`` on each
+   line. For example:
 
-.. gusthoff: Does the reader know what the multi-line comment syntax actually is?
+.. code-block:: ada
+
+    --  We start a comment in this line...
+    --  and we continue on the second line...
 
 Imperative language - Loops
 ---------------------------
