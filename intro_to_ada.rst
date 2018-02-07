@@ -429,6 +429,7 @@ Ada. What is important to know at this stage:
     end Main;
 
 .. gusthoff: Is this really the best place to mention nested procedures? I'd leave them for later...
+.. amiard: I think it's fine to mention they exist. we will talk about those in more detail later.
 
 -  You cannot declare anything outside of a declarative region. If you
    need to scope variables in a subprogram, you can introduce a new
@@ -438,18 +439,16 @@ Ada. What is important to know at this stage:
 
     procedure Main is
     begin
+        Put_Line ("In statements");
+
         declare
-            I : Integer := 0;
+            I : Integer := 12;
         begin
-            loop
-                exit when I = 0;
-            end loop;
+            Put_Line ("In declare block, I = " & Integer'Image (I));
         end;
 
         --  I is undefined here
     end Main;
-
-.. gusthoff: This might be confusing to the readers, because they've just seen that the declarative region comes *before* the "begin" keyword. I'd put some code between the first "begin" and the "declare" block, e.g. a call to Put_Line, just to make it clear that the "declare block" is a separate block.
 
 Imperative language - control expressions
 -----------------------------------------
@@ -514,8 +513,6 @@ compiler does not know that ``I`` can only take values between 1 and 10,
 so we still need to have an ``others`` branch. We will delve into why
 when talking about `types <TODO:putlinkabouttypes>`__ in
 more details.
-
-.. gusthoff: I assume the link above (TODO) will be a link to a section in this document.
 
 Strongly typed language
 =======================
@@ -620,9 +617,7 @@ on integers should be checked for overflows.
     end Main;
 
 However, mainly for efficiency reasons, overflow only happens at
-specific boundaries, like assignment.
-
-.. gusthoff: When you say "overflow only happens at specific boundaries", readers may get lost. What kind of boundary does an assignment represent? What's the effect of this boundary on overflow checking? I think we could have more examples on overflow in this section...
+specific boundaries, like assignment:
 
 .. code-block:: ada
 
@@ -640,6 +635,12 @@ specific boundaries, like assignment.
           Put_Line("Hello, World!");
        end loop;
     end Main;
+
+Overflow will only be checked by the compiler at specific points in the
+execution. The result, as we see above, is that you might have an operation
+that overflows in an intermediate computation, but no error will be raised
+because the final result does not overflow. For more information, see `the
+detailed rules here <TODOLINKOVERFLOW>`__.
 
 Unsigned types
 --------------
@@ -709,10 +710,8 @@ already know is that you can use them as a target to a case expression.
        end loop;
     end Greet;
 
-Enum types are powerful enough that they're used to represent the standard
-Boolean type, that is so defined:
-
-.. gusthoff: explain why this is considered "powerful"
+Enum types are powerful enough that, unlike in most languages, they're used to
+represent the standard Boolean type, that is so defined:
 
 .. code-block:: ada
 
@@ -723,7 +722,8 @@ generally available to the user.
 
 .. gusthoff: maybe add a link to where this is mentioned? What else can the user achieve with these facilities? Maybe a link to a section that explains how these facilities can be used?
 
-=======
+.. amiard: This is actually the whole section about types: we mention in integer types that the std int is defined with the facilities we're showing. We can put a link but it's 2 pages above. what do you think ?
+
 Decimal types
 -------------
 
@@ -777,11 +777,38 @@ Ada, such conversions must be made explicit:
        Put_Line (Miles'Image (Dist_Us));
     end;
 
-.. gusthoff: maybe we should mention that the "Adaïste way" usually is to create a function called To_Miles that does this conversion...
+Of course, we probably do not want to write the conversion code every time we
+convert from meters to miles. The idiomatic Ada way in that case would be to
+introduce conversion functions along with the types.
 
-If you write a lot of numeric code, this might seem painful at first, because
-your code might end up containing a lot of conversions. However, this
-approach has some advantages. For example:
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    procedure Conv is
+       type Meters is range 0 .. 10_000;
+       type Miles is range 0 .. 5_000;
+
+       --  Function declaration, like procedure but returns a value.
+       function To_Miles (M : Meters) return Miles is
+       --                             ^ Return type
+       begin
+          return M * 1609 / 1000;
+       end Miles;
+
+       Dist_Us : Miles;
+       Dist_Eu : constant Meters := 100;
+    begin
+       Dist_Us := To_Miles (Dist_Eu);
+       Put_Line (Miles'Image (Dist_Us));
+    end;
+
+This is also the first time we use a function. We will study `functions and
+procedures <TODOSUBPROGRAMS>`__ in more details soon.
+
+If you write a lot of numeric code, having to explicitly specify your
+conversions all the time might seem painful at first, because your code might
+end up containing a lot of conversions. However, this approach has some
+advantages. For example:
 
 - You can rely on the fact that no implicit conversion will ever happen in your
   numeric code. In C for example, the rules for implicit conversions are very
@@ -789,11 +816,12 @@ approach has some advantages. For example:
 
 .. gusthoff: I personally know what you mean, but the paragraph above is not really convincing. Maybe add some examples?
 
-- You can use Ada's strong typing to help enforce invariants in your code,
-  as in the example above: Since Miles and Meters are two different types, you
-  cannot mistakenly convert an instance of one to an instance of the other.
+.. amiard: I think it is pretty convincing! Please feel free to make it more convincing for you ;) I think it is one of the rare occurences where we can put a C code snippet, what do you think ?
 
-.. gusthoff: What does "enforce invariants" mean? Why is this a good thing? Again, I personally know what you mean, but this might not be clear to the reader...
+- You can use Ada's strong typing to help `enforce invariants
+  <TODOLINKINVARIANTS>`__ in your code, as in the example above: Since Miles
+  and Meters are two different types, you cannot mistakenly convert an instance
+  of one to an instance of the other.
 
 Character types
 ---------------
@@ -899,6 +927,10 @@ behavior.
 
     Something similar to what is called inheritance in Java/C++ will be seen
     when we talk about `tagged types <TODOLINKABOUTTAGGEDTYPES>`__.
+
+.. gusthoff: This sounds like an interesting feature in Ada. However, the example above looks a little bit artificial, so the reader might not get an idea where this can be used in the "real world".
+
+.. amiard: That's arguably the problem with synthetic examples in courses like this. If you have a better idea involving the concepts we've already seen in this class, feel free to add it. One other option that we have is to wait after the section on subprograms to talk about this. Or even bztter, revisit after subprograms, in the "more about types" section, and put a link to that here.
 
 When you inherit a type, what we call primitive operations are inherited. While
 we will at some point get into the nitty-gritty of what a `primitive operation
