@@ -967,6 +967,15 @@ is a subprogram defined in the same scope with the type.
 Subtypes
 --------
 
+As we are starting to see, types are often used in Ada to enforce constraints
+about the range of validity of values. However, sometimes it is desirable to
+enforce constraints on some values, but one may not desire the static
+enforcement brought by Ada types. This is where subtypes come into play.
+
+Subtypes allow you to declare additional constraints on a type, but entities of
+that subtype are still of the type the subtype derives from, and thus are valid
+where an instance of the type is expected.
+
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -977,6 +986,11 @@ Subtypes
        --  Declaration of a subtype
        subtype Weekend_Days is Days range Saturday .. Sunday;
        --                           ^ Constraint of the subtype
+
+       M : Days := Sunday;
+
+       S : Weekend_Days := M;
+       --  No error here, Days and Weekend_Days are of the same type.
     begin
        for I in Days loop
           case I is
@@ -990,21 +1004,228 @@ Subtypes
        end loop;
     end Greet;
 
+Some subtypes are declared as part of the standard package in Ada, and are
+available to you all the time:
+
+.. code-block:: ada
+
+    -- TODO: add definition of Integer Natural and Positive
+
+While subtypes of a type are statically compatible with each others,
+constraints are enforced at runtime: If you violate the constraints of the
+subtype, an exception will be raised at runtime, when the running program
+detects the violation.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       type Days is (Monday, Tuesday, Wednesday, Thursday,
+                     Friday, Saturday, Sunday);
+
+       subtype Weekend_Days is Days range Saturday .. Sunday;
+       Day : Days := Saturday;
+       Weekend : Weekend_Days;
+    begin
+       Weekend := Day;
+       --         ^ Correct: Same type, subtype constraints are respected
+       Weekend := Monday;
+       --         ^ Wrong value for the subtype
+       --           Compiles, but exception at runtime
+    end Greet;
 
 Arrays
 ======
 
+Now that we have been over definiton of fundamental types, let's tackle our
+first composite type: arrays.
+
 Array type declaration
 ----------------------
 
-Array index
------------
+Arrays in Ada are both pretty complex and pretty powerful. We will go over
+their characteristics in detail, but let's start with one way of declaring one.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       type My_Int is range 0 .. 1000;
+       type Index is range 1 .. 5;
+
+       type My_Int_Array is array (Index) of My_Int;
+       --                                    ^ Type of elements
+       --                          ^ Bounds of the array
+       Arr : My_Int_Array := (2, 3, 5, 7, 11);
+       --                    ^ Array literal, called aggregate in Ada
+    begin
+       for I in Index loop
+          Put (My_Int'Image (Arr (I)));
+          --                     ^ Take the Ith element
+       end loop;
+       New_Line;
+    end Greet;
+
+The first peculiarity that we can see in the above example is that we specify
+the indexing type of the array, not its size. Here we declared an ``Index``
+type ranging from ``1`` to ``5`` so the array will have 5 elements - that is,
+bounds are inclusive.
+
+This feature is pretty unique to Ada, and has interesting repercussions: You
+can use any discrete type to index an array, including `Enum types
+<TODOLINKENUMTYPES>`. We will soon see what that means.
+
+The second thing that we might notice is that querying an element of the array
+at a given syntax uses the same syntax as the subprogram calls syntax, that is
+the array followed by the index in parens.
+
+What this means is that, in Ada, when you see an expression such as ``A (B)``,
+whether it is a function call or an array subscript depends on what ``A``
+designates.
+
+Finally, the last thing of notice is how we initialize the array, with the
+``(2, 3, 5, 7, 11)`` expression. This expression is called an aggregate in Ada,
+and is a literal expression for an array, the same way that ``3`` is a literal
+expression for an Integer. The notation is very powerful and has many
+subtleties that we will gradually introduce. You can also have a detailed
+overview of the notation `here <TODODETAILEDAGGREGATESADVANCED>__`.
+
+Let's now delve into what it means exactly to be able to use any discrete type
+to index into the array.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       type My_Int is range 0 .. 1000;
+       type Index is range 11 .. 15;
+       --                  ^ Low bound can be any value
+       type My_Int_Array is array (Index) of My_Int;
+       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+    begin
+       for I in Index loop
+          Put (My_Int'Image (Tab (I)));
+       end loop;
+       New_Line;
+    end Greet;
+
+The first repercussion is that the low bound of your array can be any value: In
+the first example we constructed an array type whose first index is ``1``, but
+in the example above we declare an array type whose first index is ``11``.
+
+That's perfectly fine in Ada, and moreover you can see that since we use the
+index type as a range to iterate on the array indices, the code using the array
+does not need to change.
+
+That leads us to an important consequence with regards to code dealing with
+arrays: Since the lower bound can vary, it is considered best practice to never
+assume/hard-code a low bound when iterating/using arrays in general. That means
+the code above is good, because it uses the index type, but a for loop as
+showcased below is bad practice:
+
+.. code-block:: ada
+
+    for I in 0 .. 20 loop
+       Tab (I) := Tab (I) * 2;
+    end loop;
+
+Since we said above that you can use any discrete type to index an array, it
+means that you can use enum types to index arrays.
+
+.. code-block:: ada
+
+   procedure Greet is
+      type Month_Duration is range 1 .. 31;
+      type Month is (Jan, Feb, Mar, Apr, May, Jun,
+                     Jul, Aug, Sep, Oct, Nov, Dec);
+
+      type My_Int_Array is array (Month) of Month_Duration;
+      --                          ^ Can use an enum as the
+      --                            index
+
+      Tab : constant My_Int_Array :=
+      --    ^ constant is like a variable but cannot be
+      --      modified
+        (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+      --  Maps months to number of days
+
+      Feb_Days : Month_Duration := Tab (Feb);
+      --  Number of days in February
+   begin
+      for M in Month loop
+         Put_Line
+           (Month'Image (M) & " has "
+            & Month_Duration'Image (Tab (I))  & " days.");
+            --                                ^ Concatenation operator
+      end loop;
+   end Greet;
+
+
+In the example above, we are:
+
+- Creating an array type mapping months to month durations in days.
+
+- Creating an array, and instanciating it with an aggregate mapping months to
+  their actual durations in days.
+
+- Iterating on the array, printing out the months, and the number of days for
+  each.
+
+Being able to use enums as indices is very useful to create mappings such as
+this one, and is an often used feature in Ada.
 
 Indexation
 ----------
 
-Shortcut for index
-------------------
+We have already seen the syntax to get the elements of an array. There are
+however a few more things to say about it.
+
+First of all, as many things in Ada, this operation is strongly typed. If you
+use a value of the wrong type to index the array, you will get a compile time
+error.
+
+.. code-block:: ada
+
+    procedure Greet is
+       type My_Int is range 0 .. 1000;
+       type Index is range 1 .. 5;
+       type My_Int_Array is array (Index) of My_Int;
+       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+    begin
+       for I in Integer range 1 .. 5 loop
+       --       ^ I is of type Integer, ranges between 1 and 5
+          Put (My_Int'Image (Tab (I)));
+       --                         ^ Compile time error
+       end loop;
+       New_Line;
+    end Greet;
+
+Second, arrays in Ada are bounds checked. This means that if you try to access
+an element outside of the bounds of the array, you will get a runtime error
+instead of accessing random memory as in unsafe languages.
+
+.. code-block:: ada
+
+    procedure Greet is
+       type My_Int is range 0 .. 1000;
+       type Index is range 1 .. 5;
+       type My_Int_Array is array (Index) of My_Int;
+       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+    begin
+       Indexation
+       for I in 2 .. 6 loop
+          Put (My_Int'Image (Tab (I)));
+          --                      ^ Will raise an exception when
+          --                      I = 6
+       end loop;
+       New_Line;
+    end Greet;
+
+Simpler array declarations
+--------------------------
 
 Range attribute
 ---------------
