@@ -688,6 +688,8 @@ already know is that you can use them as a target to a case expression.
 
 .. gusthoff: when the rest of the book is ready, we should have links to other sections instead of just saying "in certain situations that we will disclose later." We might trigger the reader's curiosity, but we're not disclosing where this information can be found. It probably makes sense to add a TODO item here.
 
+.. amiard: I agree with you on this, in this case it's not clear for me how to do it though: The information probably will be in multiple sections. Should we link to all of them ?
+
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -755,6 +757,8 @@ with each other, as we can see in the following example:
     end Greet;
 
 .. gusthoff: there is more to the world than the EU and the USA... ;-) Maybe we should rather indicate that one of the units comes from the Imperial system, and the other one from the SI (e.g. rename to "Dist_Imperial" and "Dist_SI").
+
+.. amiard: Ok fine by me. Can I let you take care of that ?
 
 This is true for every distinct type. It also means that, in the general case,
 an expression like ``2 * 3.0`` will trigger a compilation error. In a language
@@ -930,7 +934,7 @@ behavior.
 
 .. gusthoff: This sounds like an interesting feature in Ada. However, the example above looks a little bit artificial, so the reader might not get an idea where this can be used in the "real world".
 
-.. amiard: That's arguably the problem with synthetic examples in courses like this. If you have a better idea involving the concepts we've already seen in this class, feel free to add it. One other option that we have is to wait after the section on subprograms to talk about this. Or even bztter, revisit after subprograms, in the "more about types" section, and put a link to that here.
+.. amiard: That's arguably the problem with synthetic examples in courses like this. If you have a better idea involving the concepts we've already seen in this class, feel free to add it. One other option that we have is to wait after the section on subprograms to talk about this. Or even better, revisit after subprograms, in the "more about types" section, and put a link to that here.
 
 When you inherit a type, what we call primitive operations are inherited. While
 we will at some point get into the nitty-gritty of what a `primitive operation
