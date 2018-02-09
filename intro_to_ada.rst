@@ -722,6 +722,234 @@ Decimal types
 
 .. AI for gusthoff: Add section on Floating point and fixed point numbers
 
+Floating-point types
+--------------------
+
+As in most languages, Ada support floating-point types. The default
+floating-point type is ``Float``:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Floating_Point_Demo is
+      A : Float := 2.1;
+   begin
+      Put_Line("The value of A is " & Float'Image(A));
+   end Floating_Point_Demo;
+
+The application will show that the value of ``A`` is 2.1.
+
+All common operations that could be expected for floating-point types are
+available, including retrieving the absolute-value and the power function.
+For example:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Floating_Point_Operations is
+      A : Float := 2.1;
+   begin
+      A := abs(A - 4.1);
+      Put_Line("The value of A is " & Float'Image(A));
+      A := A**2 + 1.0;
+      Put_Line("The value of A is " & Float'Image(A));
+   end Floating_Point_Operations;
+
+The value of ``A`` is 2.0 after the first operation and 5.0 after the
+second operation.
+
+In addition to ``Float``, Ada offers data types with higher precision:
+``Long_Float`` and ``Long_Long_Float``. However, the standard does not
+indicate the exact precision of these types: it only guarantees that the
+type ``Long_Float``, for example, has at least the same precision of
+``Float`` or higher. In order to guarantee that a certain precision
+requirement is met, we can define custom floating-point types, as we will
+see in the next section.
+
+Precision of floating-point types
+---------------------------------
+
+Ada allows for specifying the exact precision required for a
+floating-point type. The precision is expressed in terms of decimal
+digits. This guarantees that the operations on these custom types will
+have at least the specified precision. The syntax for this is
+``type T is digits <number_of_decimal_digits>``. In the background, the
+compiler will choose a floating-point representation that matches the
+required precision. For example:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Custom_Floating_Types is
+      type T3  is digits 3;
+      type T15 is digits 15;
+      type T18 is digits 18;
+   begin
+      Put_Line("T3  requires " & Integer'Image(T3'Size) & " bits");
+      Put_Line("T15 requires " & Integer'Image(T15'Size) & " bits");
+      Put_Line("T18 requires " & Integer'Image(T18'Size) & " bits");
+   end Custom_Floating_Types;
+
+In this example, the attribute ``'Size`` is used to retrieve the number of
+bits used for the specified data type. As we can see by running this
+example, the compiler allocates 32 bits for ``T3``, 64 bits for ``T15``
+and 128 bits for ``T18``.
+
+The number of digits specified in the data type is also used in the format
+when displaying floating-point variables. For example:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Display_Custom_Floating_Types is
+      type T3  is digits 3;
+      type T18 is digits 18;
+
+      C1 : constant := 1.0e-4;
+
+      A : T3  := 1.0 + C1;
+      B : T18 := 1.0 + C1;
+   begin
+      Put_Line("The value of A is " & T3'Image(A));
+      Put_Line("The value of B is " & T18'Image(B));
+   end Display_Custom_Floating_Types;
+
+As expected, the application will display the variables according to
+specified precision (1.00E+00 and 1.00010000000000000E+00).
+
+Range of floating-point types
+-----------------------------
+
+Ranges can also be specified floating-point types. The syntax is similar
+to the one used for integer data types --- using the ``range`` keyword.
+This simple example creates a new floating-point type based on the
+``Float`` for a normalized range between -1.0 and 1.0:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Floating_Point_Range is
+      type T_Norm  is new Float range -1.0 .. 1.0;
+      A  : T_Norm;
+   begin
+      A := 1.0;
+      Put_Line("The value of A is " & T_Norm'Image(A));
+   end Floating_Point_Range;
+
+The application makes sure that the normalized range is observed for all
+variables of this type. If the value is out of range, an exception is
+raised. In this example, an exception (``CONSTRAINT_ERROR``) is raised
+when assigning 2.0 to the variable ``A``:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Floating_Point_Range_Exception is
+      type T_Norm  is new Float range -1.0 .. 1.0;
+      A  : T_Norm;
+   begin
+      A := 2.0;
+      Put_Line("The value of A is " & T_Norm'Image(A));
+   end Floating_Point_Range_Exception;
+
+Ranges can also be specified for custom floating-point types. For example:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+   with Ada.Numerics; use Ada.Numerics;
+
+   procedure Custom_Range_Types is
+      type T6_Inv_Trig  is digits 6 range -Pi/2.0 .. Pi/2.0;
+   begin
+      null;
+   end Custom_Range_Types;
+
+In this example, we are defining a type called ``T6_Inv_Trig``, which has
+a range from ``-Pi/2`` to ``Pi/2`` with a minimum precision of 6 digits.
+
+Decimal fixed-point types
+-------------------------
+
+In addition to specifying the least required precision of a floating-point
+type, it is also possible to go one step further and specify the exact
+accuracy of a floating-point type. This category of data types is called
+decimal fixed-point types.
+
+The syntax for decimal fixed-point types is
+``type T is delta <smallest_value> digits <number_of_decimal_digits>``.
+In this case, the ``delta`` and the ``digits`` will be used by the
+compiler to derive a range. This will become clear in the next example.
+
+We will use three attributes of the language in our example:
+
++------------------------+----------------------------------------------+
+| Attribute Name         | Documentation                                |
++========================+==============================================+
+| First                  | Returns the first value of the type          |
++------------------------+----------------------------------------------+
+| Last                   | Returns the last value of the type           |
++------------------------+----------------------------------------------+
+| Small                  | Returns the smallest value of the type       |
++------------------------+----------------------------------------------+
+
+The example declares two data types: ``T3_D3`` and ``T6_D3``. For both
+types, the smallest value is the same: 0.001.
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Decimal_Fixed_Point_Types is
+      type T3_D3 is delta 10.0**(-3) digits 3;
+      type T6_D3 is delta 10.0**(-3) digits 6;
+   begin
+      Put_Line("The smallest value of T3_D3 is " & T3_D3'Image(T3_D3'Small));
+      Put_Line("The maximum  value of T3_D3 is " & T3_D3'Image(T3_D3'First));
+      Put_Line("The maximum  value of T3_D3 is " & T3_D3'Image(T3_D3'Last));
+      New_Line;
+      Put_Line("The smallest value of T6_D3 is " & T6_D3'Image(T6_D3'Small));
+      Put_Line("The maximum  value of T6_D3 is " & T6_D3'Image(T6_D3'First));
+      Put_Line("The maximum  value of T6_D3 is " & T6_D3'Image(T6_D3'Last));
+   end Decimal_Fixed_Point_Types;
+
+When running the application, we see that the smallest number for both
+types is indeed the same: 0.001. However, because ``T3_D3`` is restricted
+to 3 digits, its range is -0.999 to 0.999. For the ``T6_D3``, we have
+defined a precision of 6 digits, so the range is -999.999 to 999.999.
+
+Similar to the type definition using the ``range`` syntax, because we have
+an implicit range, the application will check that the variables contain
+values that are not out-of-range. Also, if the result of a multiplication
+or division on decimal fixed-point types is smaller than the smallest
+value specified for the data type, the actual result will be zero. For
+example:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Decimal_Fixed_Point_Smaller is
+      type T3_D3 is delta 10.0**(-3) digits 3;
+      A : T3_D3 := T3_D3'Small;
+      B : T3_D3 := 0.5;
+   begin
+      Put_Line("The value of A is " & T3_D3'Image(A));
+      A := A * B;
+      Put_Line("The value of A is " & T3_D3'Image(A));
+   end Decimal_Fixed_Point_Smaller;
+
+In this example, the result of the operation ``0.001 * 0.5`` is 0.0005.
+Since this value is not representable for the ``T3_D3`` type because the
+smallest value is 0.001, the actual value stored in variable ``A`` is
+zero.
+
 Strong typing
 -------------
 
