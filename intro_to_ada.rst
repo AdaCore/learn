@@ -950,6 +950,93 @@ Since this value is not representable for the ``T3_D3`` type because the
 smallest value is 0.001, the actual value stored in variable ``A`` is
 zero.
 
+Fixed-point types
+-----------------
+
+Ordinary fixed-point types are similar to decimal fixed-point types.
+The difference between them is in the definition of the smallest
+representable value: for decimal fixed-point types, it is based on the
+power of ten, whereas for ordinary fixed-point types, it is based on the
+power of two. Therefore, they are also called binary fixed-point types.
+
+.. Probably remove this:
+
+   Ordinary fixed-point types can be thought of being closer to the actual
+   representation on the machine, since hardware support for decimal
+   fixed-point arithmetic is not widespread, while ordinary fixed-point types
+   make use of the available integer arithmetic in the background.
+
+The syntax for binary fixed-point types is
+``type T is delta <smallest_value> range <lower_bound> .. <upper_bound>``.
+For example, we may define a normalized range between -1.0 and 1.0 as
+following:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Normalized_Fixed_Point_Type is
+      type TQ31 is delta 2.0**(-31) range -1.0 .. 1.0;
+   begin
+      Put_Line("TQ31 requires " & Integer'Image(TQ31'Size) & " bits");
+      Put_Line("The smallest value of TQ31 is " & TQ31'Image(TQ31'Small));
+      Put_Line("The maximum  value of TQ31 is " & TQ31'Image(TQ31'First));
+      Put_Line("The maximum  value of TQ31 is " & TQ31'Image(TQ31'Last));
+   end Normalized_Fixed_Point_Type;
+
+In this example, we are defining a 32-bit fixed-point data type for our
+normalized range. When running the application, we notice that the upper
+bound is close to one, but not exact one. This is a typical effect of
+fixed-point data types --- you can find more details in this discussion
+about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
+We may also rewrite this code with an exact type definition:
+
+.. code-block:: ada
+
+   procedure Normalized_Adapted_Fixed_Point_Type is
+      type TQ31 is delta 2.0**(-31) range -1.0 .. 1.0 - 2.0**(-31);
+   begin
+      null;
+   end Normalized_Adapted_Fixed_Point_Type;
+
+We may also use any other range. For example:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+   with Ada.Numerics; use Ada.Numerics;
+
+   procedure Custom_Fixed_Point_Range is
+      type T_Inv_Trig is delta 2.0**(-15)*Pi range -Pi/2.0 .. Pi/2.0;
+   begin
+      Put_Line("T_Inv_Trig requires " & Integer'Image(T_Inv_Trig'Size) & " bits");
+      Put_Line("The smallest value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'Small));
+      Put_Line("The maximum  value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'First));
+      Put_Line("The maximum  value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'Last));
+   end Custom_Fixed_Point_Range;
+
+In this example, we are defining a 16-bit type called ``T_Inv_Trig``,
+which has a range from ``-Pi/2`` to ``Pi/2``.
+
+All standard operations are available for fixed-point types. For example:
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Fixed_Point_Op is
+      type TQ31 is delta 2.0**(-31) range -1.0 .. 1.0 - 2.0**(-31);
+
+      A, B, R : TQ31;
+   begin
+      A := 0.25;
+      B := 0.50;
+      R := A + B;
+      Put_Line("R is " & TQ31'Image(R));
+   end Fixed_Point_Op;
+
+As expected, ``R`` contains 0.75 after the addition of ``A`` and ``B``.
+
 Strong typing
 -------------
 
