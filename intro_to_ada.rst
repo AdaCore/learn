@@ -717,13 +717,13 @@ represent the standard Boolean type, that is so defined:
 As mentioned previously, every "built-in" type in Ada is defined with facilities
 generally available to the user.
 
-Decimal types
--------------
+Floating-point and fixed-point types
+------------------------------------
 
 .. AI for gusthoff: Add section on Floating point and fixed point numbers
 
 Floating-point types
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 As in most languages, Ada support floating-point types. The default
 floating-point type is ``Float``:
@@ -769,7 +769,7 @@ requirement is met, we can define custom floating-point types, as we will
 see in the next section.
 
 Precision of floating-point types
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Ada allows for specifying the exact precision required for a
 floating-point type. The precision is expressed in terms of decimal
@@ -822,7 +822,7 @@ As expected, the application will display the variables according to
 specified precision (1.00E+00 and 1.00010000000000000E+00).
 
 Range of floating-point types
------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Ranges can also be specified floating-point types. The syntax is similar
 to the one used for integer data types --- using the ``range`` keyword.
@@ -875,7 +875,7 @@ In this example, we are defining a type called ``T6_Inv_Trig``, which has
 a range from ``-Pi/2`` to ``Pi/2`` with a minimum precision of 6 digits.
 
 Decimal fixed-point types
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In addition to specifying the least required precision of a floating-point
 type, it is also possible to go one step further and specify the exact
@@ -951,7 +951,7 @@ smallest value is 0.001, the actual value stored in variable ``A`` is
 zero.
 
 Fixed-point types
------------------
+~~~~~~~~~~~~~~~~~
 
 Ordinary fixed-point types are similar to decimal fixed-point types.
 The difference between them is in the definition of the smallest
