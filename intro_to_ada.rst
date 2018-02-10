@@ -1115,10 +1115,10 @@ end up containing a lot of conversions. However, this approach has some
 advantages. For example:
 
 - You can rely on the fact that no implicit conversion will ever happen in your
-  numeric code. In C for example, the rules for implicit conversions are very
-  non-obvious. In Ada the code will always do exactly what it seems to do.
-
-.. AI for gusthoff: Do something more explicit about that
+  numeric code. In C for example, the rules for implicit conversions may not
+  always be completely obvious. In Ada, however the code will always do exactly
+  what it seems to do. You can find more details on a separate discussion about
+  `implicit vs. explicit conversions <TODOLINKCONVERSIONS>`__
 
 - You can use Ada's strong typing to help `enforce invariants
   <TODOLINKINVARIANTS>`__ in your code, as in the example above: Since Miles
