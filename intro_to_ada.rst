@@ -720,8 +720,6 @@ generally available to the user.
 Floating-point and fixed-point types
 ------------------------------------
 
-.. AI for gusthoff: Add section on Floating point and fixed point numbers
-
 Floating-point types
 ~~~~~~~~~~~~~~~~~~~~
 
