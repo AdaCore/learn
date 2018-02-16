@@ -957,12 +957,11 @@ representable value: for decimal fixed-point types, it is based on the
 power of ten, whereas for ordinary fixed-point types, it is based on the
 power of two. Therefore, they are also called binary fixed-point types.
 
-.. Probably remove this:
-
-   Ordinary fixed-point types can be thought of being closer to the actual
-   representation on the machine, since hardware support for decimal
-   fixed-point arithmetic is not widespread, while ordinary fixed-point types
-   make use of the available integer arithmetic in the background.
+   FURTHERINFO: Ordinary fixed-point types can be thought of being closer
+   to the actual representation on the machine, since hardware support for
+   decimal fixed-point arithmetic is not widespread, while ordinary
+   fixed-point types make use of the available integer arithmetic in the
+   background.
 
 The syntax for binary fixed-point types is
 ``type T is delta <smallest_value> range <lower_bound> .. <upper_bound>``.
