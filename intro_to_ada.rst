@@ -1393,6 +1393,11 @@ overview of the notation `here <TODODETAILEDAGGREGATESADVANCED>__`.
 Let's now delve into what it means exactly to be able to use any discrete type
 to index into the array.
 
+    LANGCOMP: Ada arrays have by-value semantics, which means that when you
+    pass one, in terms of semantics you pass the whole array, not just a handle
+    to it, unlike in a language like Python or Java. It also means that unlike
+    in C or C++, arrays are not naked pointers in disguise.
+
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1525,14 +1530,144 @@ instead of accessing random memory as in unsafe languages.
 Simpler array declarations
 --------------------------
 
+In the previous examples, we have always showcased the creation of a dedicated
+index type for the array. While this can be useful, for typing and readability
+purposes, sometimes you just want an anonymous range that you can use in that
+context. Ada allows you to do that too.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       type My_Int is range 0 .. 1000;
+       type My_Int_Array is array (1 .. 5) of My_Int;
+       --                          ^ Subtype of Integer
+       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+    begin
+       for I in 1 .. 5 loop
+       --       ^ Likewise
+          Put (My_Int'Image (Tab (I)));
+       end loop;
+       New_Line;
+    end Greet;
+
+In the preceding example, we declare the range of the array via the range
+syntax, which will declare an anonymous subtype of integer and 8se it to index
+the array.
+
+This means that the type of the index is ``Integer``. Coincidently, when you
+use an anonymous range in a for loop as in the example above, the type of the
+iteration variable is also ``Integer``, which is why you can use ``I`` to index
+``Tab``.
+
+You can also use a named subtype as bounds for an array.
+
 Range attribute
 ---------------
+
+We have said before that hard coding bounds (especially the lower bound) when
+accessing or iterating on an array is generally a bad idea, and showcased how
+to use the type/subtype of the array to iterate on its range in a for loop. The
+problem with the above feature where we declare an anonymous range for the
+array is that suddenly we have no name to refer to the range. Ada fixes that
+via an attribute on array objects:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       type My_Int is range 0 .. 1000;
+       type My_Int_Array is array (1 .. 5) of My_Int;
+       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+    begin
+       for I in Tab'Range loop
+       --          ^ Gets the range of Tab
+          Put (My_Int'Image (Tab (I)));
+       end loop;
+       New_Line;
+    end Greet;
+
+If you want more fine grained control, you can use the separate attributes
+``'First`` and ``'Last``.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       type My_Int is range 0 .. 1000;
+       type My_Int_Array is array (1 .. 5) of My_Int;
+       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+    begin
+       for I in Tab'First .. Tab'Last - 1 loop
+       --          ^ Iterate on every index except the last
+          Put (My_Int'Image (Tab (I)));
+       end loop;
+       New_Line;
+    end Greet;
+
+Of note, all those attributes, ``'Range``, ``'First`` and ``'Last``, will work
+on array instances just as well as they work on discrete types and subtypes
+themselves, enumerations included.
 
 Unconstrained arrays
 --------------------
 
-Declaring arrays
-----------------
+Let's enter in one of the most complex and powerful areas of arrays in Ada.
+Every array type we defined so far has a fixed size: Every instance of this
+type will have the same size, and the same number of elements.
+
+However, Ada also allows you to declare array types whose bounds are not fixed:
+In that case, the bounds will need to be provided when instanciating the type.
+
+.. code-block:: ada
+
+    procedure Greet is
+       type Days is (Monday, Tuesday, Wednesday,
+                     Thursday, Friday, Saturday, Sunday);
+
+       type Workload_Type is array (Days range <>) of Natural;
+       --  Indefinite array type
+       --                           ^ Bounds are of type Days,
+       --                             but not known
+
+       Workload : constant Workload_Type (Monday .. Friday) :=
+       --                                 ^ Specify the bounds
+       --                                   when declaring
+          (Friday => 7, others => 8);
+       --               ^ Default value
+       --  ^ Specify element by name of index
+    begin
+       for I in Workload'Range loop
+          Put_Line (Integer'Image (Workload (I)));
+       end loop;
+    end Greet;
+
+The fact that the bounds of the array are not known is indicated by the ``Days
+range <>`` syntax. Given a discrete type ``Discrete_Type``, while using
+``Discrete_Type`` for the index specifies that we are going to use
+this type as the type and the index and for the bounds, using ``Discrete_Type
+range <>`` means that we use this type for the type of the index but that the
+bounds are not yet constrained.
+
+Those array types are thus called unconstrained, and the bounds need to be
+provided at the moment of instantiation, as we can see in the example above.
+
+The above example also shows more of the aggregate syntax: You can specify
+associations by name, by giving the value of the index on the left side of an
+arrow association. ``1 => 2`` hence means "assign value 2 to spot at index 1 in
+my array". ``others => 8`` means "assign value 8 to every spot that wasn't
+previously assigned in this aggregate".
+
+    LANGCOMP: While superficially unconstrained arrays in Ada might look
+    similar to variable length arrays in C, they are in reality much more
+    powerful, because they're truly first class values in the language. You can
+    pass them as parameters or return values in subprograms, and they carry
+    their bounds inside the data type. This means that it is useless to pass
+    the length of an array explictly along with the array, because it is
+    accessible via the attributes demonstrated in the previous paragraph.
 
 Predefined array type: String
 -----------------------------
@@ -1587,6 +1722,11 @@ Array slices
 
 Records
 -------
+
+.. amiard: I think records, at least the simple stuff, should be much earlier, maybe even before arrays. What do you think ?
+
+Aggregates: A primer
+--------------------
 
 - default values
 ~~~~~~~~~~~~~~~~
