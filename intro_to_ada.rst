@@ -841,7 +841,7 @@ This simple example creates a new floating-point type based on the
 
 The application makes sure that the normalized range is observed for all
 variables of this type. If the value is out of range, an exception is
-raised. In this example, an exception (``CONSTRAINT_ERROR``) is raised
+raised. In this example, an exception (``Constraint_Error``) is raised
 when assigning 2.0 to the variable ``A``:
 
 .. code-block:: ada
