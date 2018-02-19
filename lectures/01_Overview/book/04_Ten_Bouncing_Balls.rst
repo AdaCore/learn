@@ -1,6 +1,9 @@
 Lesson 4: 10 Bouncing Balls
 =====================================================================
 
+.. role:: ada(code)
+   :language: ada
+
 Welcome to the AdaCore University!
 
 In this lesson, we are going to look into a program that manipulates ten balls on the screen and makes them bounce on the edges of the screen. Let's get started!
@@ -73,7 +76,7 @@ If we run the application, we can see those 10 balls bouncing on the edges of th
 Bouncing balls
 ---------------------------------------------------------------------
 
-As in the previous example, the movement of the objects is going to be taken care of by a procedure called *Iterate*. You'll see the same kind of constructions here, in particular, the **in out** parameter:
+As in the previous example, the movement of the objects is going to be taken care of by a procedure called *Iterate*. You'll see the same kind of constructions here, in particular, the :ada:`in out` parameter:
 
 .. code:: ada
 
@@ -93,9 +96,9 @@ However, in this case, the semantics are going to be different, since we're not 
 
 As you can see, we're extracting the value of *x* axis of the shape, then we're comparing it to the range. There are two new Ada constructions here:
 
-- the **not in** operator, which checks if a given value is not in the range
-   - (as you may imagine, there is a **in** operator as well, which checks that a value is in the range).
-- and a way to denote a range, which is *number* (or lower bound), followed by **..** and then upper bound.
+- the :ada:`not in` operator, which checks if a given value is not in the range
+   - (as you may imagine, there is a :ada:`in` operator as well, which checks that a value is in the range).
+- and a way to denote a range, which is *number* (or lower bound), followed by :ada:`..` and then upper bound.
 
 Once we have *Dx* and *Dy*, the movement operation is pretty simple:
 
@@ -110,7 +113,7 @@ We're just retrieving the current X or Y of the shape, and then adding the value
 Randomization
 ---------------------------------------------------------------------
 
-We're now going to do something more complicated, which is random number generation. As a matter of fact, if you're already accustomed to doing that in other languages, such as C, C++ or Java, it will be very similar. We want to construct a random number and, for doing so, we are going to use a function that returns a value from 0 to 1, and then manipulate this value to create something that looks like our expectation. In Ada, there is a standard library that provides such a function, which is called *Ada.Numerics.Float_Random*. This is why we're adding a dependency on our program using these **with** and **use** clauses:
+We're now going to do something more complicated, which is random number generation. As a matter of fact, if you're already accustomed to doing that in other languages, such as C, C++ or Java, it will be very similar. We want to construct a random number and, for doing so, we are going to use a function that returns a value from 0 to 1, and then manipulate this value to create something that looks like our expectation. In Ada, there is a standard library that provides such a function, which is called *Ada.Numerics.Float_Random*. This is why we're adding a dependency on our program using these :ada:`with` and :ada:`use` clauses:
 
 .. code:: ada
 
@@ -213,7 +216,7 @@ The next step is to initialize all the 10 elements of the array. For this, we're
           Dx    => (Random (Seed) * 0.05 + 0.02) * (if Random (Seed) > 0.5 then 1.0 else -1.0),
           Dy    => (Random (Seed) * 0.05 + 0.02) * (if Random (Seed) > 0.5 then 1.0 else -1.0)));
 
-With the **others** reserved word in the aggregate, we're specifying that the initialization expression we're going to provide is going to be the same expression for every single element of the array:
+With the :ada:`others` reserved word in the aggregate, we're specifying that the initialization expression we're going to provide is going to be the same expression for every single element of the array:
 
 .. code:: ada
 
@@ -243,7 +246,7 @@ In other words, this expression is going to be evaluated for each single element
 For loop
 ---------------------------------------------------------------------
 
-The last step of this program is to call *Iterate* for every single ball at each cycle. In order to iterate through all elements of the *Balls*, we're going to use the **for ... of** loop:
+The last step of this program is to call *Iterate* for every single ball at each cycle. In order to iterate through all elements of the *Balls*, we're going to use the :ada:`for ... of` loop:
 
 .. code:: ada
 

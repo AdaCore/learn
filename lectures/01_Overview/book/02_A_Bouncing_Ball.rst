@@ -1,6 +1,9 @@
 Lesson 2: A Bouncing Ball
 =====================================================================
 
+.. role:: ada(code)
+   :language: ada
+
 Welcome again to the AdaCore University!
 
 In this lesson, we will going to look into something that is a little bit more interesting than the previous lesson, which is a ball that bounces from one end of the screen to the other one. Let's get started!
@@ -66,7 +69,7 @@ The library that provides the services to interact with the graphical environmen
    with Display;       use Display;
    with Display.Basic; use Display.Basic;
 
-Note that, in this case, we've written the **with** to declare a dependency between my program and the graphical environment, and we've written **use** as well on those same packages of the same libraries. We will see why this **use** clause might be useful.
+Note that, in this case, we've written the :ada:`with` to declare a dependency between my program and the graphical environment, and we've written :ada:`use` as well on those same packages of the same libraries. We will see why this :ada:`use` clause might be useful.
 
 In this declaration, we're creating a new variable called *Ball*, which is of type *Shape_Id*:
 
@@ -78,13 +81,13 @@ In this declaration, we're creating a new variable called *Ball*, which is of ty
          Radius => 10.0,
          Color  => Blue);
 
-*Shape_Id* is a type that is declared in the library Display.Basic, and it allows us to refer to an element on the screen. If you remember from the previous lesson, what we should have written here is *Display.Basic.Shape_Id*. Fortunately, we have the **use** clause next to it, which allows us to omit the prefix, so that we can directly refer to *Shape_Id*.
+*Shape_Id* is a type that is declared in the library Display.Basic, and it allows us to refer to an element on the screen. If you remember from the previous lesson, what we should have written here is *Display.Basic.Shape_Id*. Fortunately, we have the :ada:`use` clause next to it, which allows us to omit the prefix, so that we can directly refer to *Shape_Id*.
 
 What we do in the code above is to initialize this object with a default value, and this value is computed from the call to *New_Circle*. What *New_Circle* does is to create a Ball in the environment and to return a handle to this Ball for further manipulation.
 
-If you need to know more about how *New_Circle* can be called, from GPS, you can go on the *New_Circle* name, click on it and then right-click to open a context menu, and hit *Goto declaration of New_Circle*. If we click there, we jump right to the declaration of *New_Circle*, and we can see that *New_Circle* is a function that takes four parameters: *X* and *Y* (the coordinates), *Radius* (the radius of the circle), and *Color* (of *Color_Type*). *X*, *Y*, and *Radius* are of type **Float**, so it's easy enough to get what this may look like. However, *Color_Type* is a bit obscure here, so again, we're going to click on the *Color_Type*, right-click, hit *Goto declaration of *Color_Type*, and then we can see that *Color_Type* is a type that has several values, such as *Black*, *Blue*, *Green*, etc. We will dive into all the details of this typing system and this subprogram declarations later on. For now, let's get back to our example.
+If you need to know more about how *New_Circle* can be called, from GPS, you can go on the *New_Circle* name, click on it and then right-click to open a context menu, and hit *Goto declaration of New_Circle*. If we click there, we jump right to the declaration of *New_Circle*, and we can see that *New_Circle* is a function that takes four parameters: *X* and *Y* (the coordinates), *Radius* (the radius of the circle), and *Color* (of *Color_Type*). *X*, *Y*, and *Radius* are of type :ada:`Float`, so it's easy enough to get what this may look like. However, *Color_Type* is a bit obscure here, so again, we're going to click on the *Color_Type*, right-click, hit *Goto declaration of *Color_Type*, and then we can see that *Color_Type* is a type that has several values, such as *Black*, *Blue*, *Green*, etc. We will dive into all the details of this typing system and this subprogram declarations later on. For now, let's get back to our example.
 
-We're going to provide a value for each parameter of this call to *New_Circle*. In this very case, we're using the name notation for parameter passing. This means that we're going to write the name of the parameter, then **=>** and then its value:
+We're going to provide a value for each parameter of this call to *New_Circle*. In this very case, we're using the name notation for parameter passing. This means that we're going to write the name of the parameter, then :ada:`=>` and then its value:
 
 .. code:: ada
 
@@ -96,7 +99,7 @@ This lets us know very easily which parameter we are using on every call. One im
 
         (X      => 0,  --  This won't compile!
 
-This brings us to the sequence of statements. What we're doing is an infinite loop, which will update the position of the ball at each step. In Ada, such a loop is introduced by the **loop** reserved word, and closed by **end loop**:
+This brings us to the sequence of statements. What we're doing is an infinite loop, which will update the position of the ball at each step. In Ada, such a loop is introduced by the :ada:`loop` reserved word, and closed by :ada:`end loop`:
 
 .. code:: ada
 
