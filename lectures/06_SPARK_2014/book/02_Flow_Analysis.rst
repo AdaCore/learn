@@ -448,7 +448,7 @@ This example is not correct. Flow analysis will emit a message on the call to *T
 Example #5
 ~~~~~~~~~~
 
-Permutations are modeled as arrays where the element at index *I* is the position of the *I*th element in the permutation. The procedure *Init* initializes a permutation to be the identity, the *I*th elements is at the *I*th position. *Cyclic_Permuation* calls *Init* and then swaps the elements until it has constructed a cyclic permutation.
+Permutations are modeled as arrays where the element at index *I* is the position of the *I* th element in the permutation. The procedure *Init* initializes a permutation to be the identity, the *I* th elements is at the *I* th position. *Cyclic_Permuation* calls *Init* and then swaps the elements until it has constructed a cyclic permutation.
 
 .. code:: ada
 
