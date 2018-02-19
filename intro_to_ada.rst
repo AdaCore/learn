@@ -1116,53 +1116,55 @@ advantages. For example:
 - You can rely on the fact that no implicit conversion will ever happen in your
   numeric code.
 
-  LANGCOMP: In C, for example, the rules for implicit conversions may not
-  always be completely obvious. In Ada, however, the code will always do
-  exactly what it seems to do. For example:
+.. admonition:: In other languages
 
-  .. code-block:: c
+    In C, for example, the rules for implicit conversions may not
+    always be completely obvious. In Ada, however, the code will always do
+    exactly what it seems to do. For example:
 
-      int a = 3, b = 2;
-      float f = a / b;
+    .. code-block:: c
 
-  This code will compile fine, but the result of ``f`` will be 1.0 instead
-  of 1.5, because the compiler will generate an integer division (three
-  divided by two) that results in one. The software developer must be
-  aware of data conversion issues and use an appropriate casting:
+        int a = 3, b = 2;
+        float f = a / b;
 
-  .. code-block:: c
+    This code will compile fine, but the result of ``f`` will be 1.0 instead
+    of 1.5, because the compiler will generate an integer division (three
+    divided by two) that results in one. The software developer must be
+    aware of data conversion issues and use an appropriate casting:
 
-      int a = 3, b = 2;
-      float f = (float)a / b;
+    .. code-block:: c
 
-  In the corrected example, the compiler will convert both variables to
-  their corresponding floating-point representation before performing the
-  division. This will produce the expected result.
+        int a = 3, b = 2;
+        float f = (float)a / b;
 
-  This example is very simple and experienced C developers will probably
-  notice this specific issue and correct it before it creates bigger
-  problems. However, in more complex applications where the type
-  declaration is not always visible --- e.g. when referring to elements of
-  a ``struct`` --- this situation might not always be evident and quickly
-  lead to software defects that can be harder to find.
+    In the corrected example, the compiler will convert both variables to
+    their corresponding floating-point representation before performing the
+    division. This will produce the expected result.
 
-  The Ada compiler, in contrast, will always refuse to compile code that
-  mixes floating-point and integer variables without explicit conversion.
-  The following Ada code, based on the erroneous example in C, will not
-  compile:
+    This example is very simple and experienced C developers will probably
+    notice this specific issue and correct it before it creates bigger
+    problems. However, in more complex applications where the type
+    declaration is not always visible --- e.g. when referring to elements of
+    a ``struct`` --- this situation might not always be evident and quickly
+    lead to software defects that can be harder to find.
 
-  .. code-block:: ada
+    The Ada compiler, in contrast, will always refuse to compile code that
+    mixes floating-point and integer variables without explicit conversion.
+    The following Ada code, based on the erroneous example in C, will not
+    compile:
 
-      procedure Main is
-         A : Integer := 3;
-         B : Integer := 2;
-         F : Float;
-      begin
-         F := A / B;
-      end Main;
+    .. code-block:: ada
 
-   The offending line must be changed to ``F := Float(A) / Float(B);``
-   in order to be accepted by the compiler.
+        procedure Main is
+           A : Integer := 3;
+           B : Integer := 2;
+           F : Float;
+        begin
+           F := A / B;
+        end Main;
+
+    The offending line must be changed to ``F := Float(A) / Float(B);``
+    in order to be accepted by the compiler.
 
 - You can use Ada's strong typing to help `enforce invariants
   <TODOLINKINVARIANTS>`__ in your code, as in the example above: Since Miles
