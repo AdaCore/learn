@@ -39,13 +39,13 @@ Some examples:
 Comments
 ~~~~~~~~
 
-Ada comments are written with two dashes (**:ada:`--`**) followed up by comments that will be written up until the end of the line:
+Ada comments are written with two dashes (:ada:`--`) followed up by comments that will be written up until the end of the line:
 
 .. code:: ada
 
    -- Some comments here...
 
-This is equivalent to the C++ two-slashes comments (**:code:`//`**). Note that, in Ada, there is no block comment as you would have in Java or C++:
+This is equivalent to the C++ two-slashes comments (:code:`//`). Note that, in Ada, there is no block comment as you would have in Java or C++:
 
 .. code:: ada
 
@@ -103,7 +103,7 @@ This is the corresponding declaration in C:
 
    int B = 5;        /* C equivalent */
 
-A constant can be declared with the **:ada:`constant`** modifier coming right before the type name. In the case of a constant, an initialization is required. For example:
+A constant can be declared with the :ada:`constant` modifier coming right before the type name. In the case of a constant, an initialization is required. For example:
 
 .. code:: ada
 
@@ -146,7 +146,7 @@ Elaboration of variables is done sequentially. This means that you cannot refer 
    C : Integer := D; -- COMPILATION ERROR
    D : Integer := 0;
 
-One last note: although we're using the assignment symbol (**:ada:`:=`**) in these examples, what we're really doing is called an initialization. The properties of assignments and initializations are slightly different. We will see the details in farther lessons.
+One last note: although we're using the assignment symbol (:ada:`:=`) in these examples, what we're really doing is called an initialization. The properties of assignments and initializations are slightly different. We will see the details in farther lessons.
 
 
 Simple Scalar Types
@@ -204,7 +204,7 @@ Scalar types are single-valued types. They are divided into two categories:
    - They are related to the precision.
    - Example: floating-point.
 
-Some of the scalar types are associated with numerical operations: **:ada:`+`**, **:ada:`/`**, etc. We will list those a little bit later.
+Some of the scalar types are associated with numerical operations: :ada:`+`, :ada:`/`, etc. We will list those a little bit later.
 
 Standard Types
 ~~~~~~~~~~~~~~
@@ -302,16 +302,16 @@ Signed integers and floating-point types share a lot of operators in common. Bas
 
 .. image:: operators-01.png
 
-Note that the comparison ---the inequality in particular--- is different in Ada than for languages such as C++ or Java: it's **:ada:`/=`** instead of **:code:`!=`**.
+Note that the comparison ---the inequality in particular--- is different in Ada than for languages such as C++ or Java: it's :ada:`/=` instead of :code:`!=`.
 
-Signed integer types have two additional operators: **:ada:`mod`** and **:ada:`rem`**. Both of them compute the modulus of an integer number. The difference is that, when computing the modulus of a negative number, **:ada:`mod`** will look for the closest positive number, whereas **:ada:`rem`** will look for the closest negative number.
+Signed integer types have two additional operators: :ada:`mod` and :ada:`rem`. Both of them compute the modulus of an integer number. The difference is that, when computing the modulus of a negative number, :ada:`mod` will look for the closest positive number, whereas :ada:`rem` will look for the closest negative number.
 
 .. image:: operators-02.png
 
 Attributes
 ~~~~~~~~~~
 
-Let's now introduce attributes. Attributes are really useful in Ada: they are properties of Ada entities. Entities could be a variable, a subprogram and, of course, a type. You probably already know about the **:ada:`Image`** and **:ada:`Value`** attributes that can convert back-and-forth a value to a string.
+Let's now introduce attributes. Attributes are really useful in Ada: they are properties of Ada entities. Entities could be a variable, a subprogram and, of course, a type. You probably already know about the :ada:`Image` and :ada:`Value` attributes that can convert back-and-forth a value to a string.
 
 .. code:: ada
 
@@ -343,11 +343,11 @@ Depending on the category of a type, you will have access to different attribute
 
 These are the attribute groups:
 
-   - **:ada:`First`** will be providing the first value that can be represented with this type and **:ada:`Last`** will provide the biggest value.
-   - **:ada:`Image`** and **:ada:`Value`** have already been mentioned: they convert a value back-and-forth to a string. This is available for all scalar types.
-   - **:ada:`Min`** and **:ada:`Max`** will return conveniently the minimum and maximum between two values.
-   - **:ada:`Pred`** and **:ada:`Succ`** will return the previous value and the successor (the next) value. It's interesting here that this notion of previous and next values is available for floating-point numbers as well. Of course, it will take into account the number of significant digits to computer the previous or next value available.
-   - Range is an interesting attribute that you will see a lot later on as well when we talk about arrays. It's equivalent to defining a range using the **:ada:`First`** to the **:ada:`Last`** attributes.
+   - :ada:`First` will be providing the first value that can be represented with this type and :ada:`Last` will provide the biggest value.
+   - :ada:`Image` and :ada:`Value` have already been mentioned: they convert a value back-and-forth to a string. This is available for all scalar types.
+   - :ada:`Min` and :ada:`Max` will return conveniently the minimum and maximum between two values.
+   - :ada:`Pred` and :ada:`Succ` will return the previous value and the successor (the next) value. It's interesting here that this notion of previous and next values is available for floating-point numbers as well. Of course, it will take into account the number of significant digits to computer the previous or next value available.
+   - Range is an interesting attribute that you will see a lot later on as well when we talk about arrays. It's equivalent to defining a range using the :ada:`First` to the :ada:`Last` attributes.
 
 Attributes specific to Discrete Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -362,7 +362,7 @@ Discrete types have two interesting attributes:
 | Val (X)                | Returns a value according to its position      |
 +------------------------+------------------------------------------------+
 
-**:ada:`Pos`** will be take a value as a parameter the position of the value in the list of values. **:ada:`Val`** will do the other way around: it will create a value according to a position.
+:ada:`Pos` will be take a value as a parameter the position of the value in the list of values. :ada:`Val` will do the other way around: it will create a value according to a position.
 
 This is an example of usage:
 
@@ -371,7 +371,7 @@ This is an example of usage:
    V : Character := Character’Val (0);
    W : Next_Character := Character’Val (Character’Pos (V) + 1);
 
-Here, we want to retrieve the first character, so we use the position zero. Then we want to retrieve the character next to it, so we're retrieving the position, adding one, and then converting it back to a character. Of course, to do this specific task, we could use **:ada:`Pred`** and **:ada:`Succ`**, which have been presented in the previous section. But there are situations where those two attributes make a lot of sense.
+Here, we want to retrieve the first character, so we use the position zero. Then we want to retrieve the character next to it, so we're retrieving the position, adding one, and then converting it back to a character. Of course, to do this specific task, we could use :ada:`Pred` and :ada:`Succ`, which have been presented in the previous section. But there are situations where those two attributes make a lot of sense.
 
 Attributes specific to Floating-Point
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -455,13 +455,14 @@ Let's look at this example:
 
 .. code:: ada
 
+   procedure Example is
       F   : Float   := 7.6;
       Div : Integer := 10;
    begin
       F := Float (Integer (F) / Div);
       Put_Line (Float’Image (F));
 
-What we're doing here is first converting the floating-point value 7.6 into an integer. We're doing a rounding here, so this conversion is equal to 8. We're then doing a division between 8 and 10. What we're doing is an integer division that, in most machines, will be perfomed as a truncation. The actual result of this integer division is zero, which is then converted into floating-point.
+What we're doing here is first converting the floating-point value 7.6 into an integer. We're doing a rounding here, so this conversion is equal to 8. We're then doing a division between 8 and 10. What we're doing is an integer division that, in most machines, will be performed as a truncation. The actual result of this integer division is zero, which is then converted into floating-point.
 
 Mix-up of Val and Value
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -475,7 +476,7 @@ Let's look at this example:
    V1 : T := T'Val ("A");
    V2 : T := T'Value (2);
 
-This is a very typical mix-up of the **:ada:`Val`** and **:ada:`Value`** attributes. **:ada:`Val`** takes a position and creates a value out of it. **:ada:`Value`** takes a string and creates a value out of it. So, in this example, what we really need to do is replace **:ada:`Val`** by **:ada:`Value`** for *V1* and **:ada:`Value`** by **:ada:`Val`** for *V2*.
+This is a very typical mix-up of the :ada:`Val` and :ada:`Value` attributes. :ada:`Val` takes a position and creates a value out of it. :ada:`Value` takes a string and creates a value out of it. So, in this example, what we really need to do is replace :ada:`Val` by :ada:`Value` for *V1* and :ada:`Value` by :ada:`Val` for *V2*.
 
 Trimming and case-sensitiveness for Value
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -490,7 +491,7 @@ This code is perfectly fine:
    V2 : T := T'Value ("a");
    V3 : T := T'Value (" a ");
 
-The first two calls to Value are acceptable: Ada is case-insensitive, so "A" and "a" are equivalent. The last line is a nice flexibility of the **:ada:`Value`** attribute, which automatically trims extra spaces.
+The first two calls to Value are acceptable: Ada is case-insensitive, so "A" and "a" are equivalent. The last line is a nice flexibility of the :ada:`Value` attribute, which automatically trims extra spaces.
 
 Type with no valid value
 ~~~~~~~~~~~~~~~~~~~~~~~~
