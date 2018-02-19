@@ -1718,6 +1718,87 @@ previously assigned in this aggregate".
 Predefined array type: String
 -----------------------------
 
+A recurring theme in our introduction to Ada types has been the way important
+built-in types like ``Boolean`` or ``Integer`` have been built with the same
+facilities that are available to the user. This is also true for strings: The
+string type in Ada is a simple array.
+
+Here is how the string type is defined in Ada:
+
+.. amiard: TODO add definition of built in string type
+
+The only built-in feature Ada adds to make strings more ergonomic is custom
+literals, as we can see in the example below.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       Message : String (1 .. 11) := "dlroW olleH";
+       --        ^ Pre-defined array type.
+       --          Component type is Character
+    begin
+       for I in reverse 1 .. 11 loop
+          --    ^ Iterate in reverse order
+          Put (Message (I));
+       end loop;
+       New_Line;
+    end Greet;
+
+However, what we can notice is that having to declare the bounds of the object
+explicitly is a bit of a hassle: One needs to manually calculate the size of
+the literal. Luckily Ada allows you to not do it.
+
+Ada allows the user to omit the bounds when instanciating an unconstrained
+array type, if the bounds can be deduced from the initialization expression.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       Message : constant String := "Hello World";
+       --                 ^ Bounds are automatically computed
+       --                   from initialization value
+    begin
+       for I in reverse Message'Range loop
+          Put (Message (I));
+       end loop;
+       New_Line;
+    end Greet;
+
+Restrictions
+------------
+
+A very important point about arrays: Bounds *have* to be known when
+instantiating the object. It is for example illegal to do the following.
+
+.. code-block:: ada
+
+    declare
+       A : String;
+    begin
+       ...
+    end;
+
+Also, while you of course change elements in the array, you cannot change its
+size after it has been initialized, so this is also illegal:
+
+.. code-block:: ada
+
+    declare
+       A : String := "Hello";
+    begin
+       A := "World"; --  Legal: Same size
+       A := "Hello World"; --  Illegal: Different size
+    end;
+
+Also, while you can expect a warning for this kind of errors in very simple
+cases like this one, it is impossible for a compiler to know in the general
+case if you are assigning a value of the correct length, so this viola5ion will
+generally result in a runtime error.
+
 Declaring arrays (2)
 --------------------
 
