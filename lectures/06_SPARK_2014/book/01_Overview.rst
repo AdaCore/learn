@@ -70,9 +70,9 @@ Several properties can be specified on this subprogram using the shown contracts
 
 - The SPARK 2014 Depend aspect is especially interesting for the security of this subprogram, as it specifies that the value of the parameter *X* after the call only depends on the value of *X* before the call.
 
-- Functional properties of Increment are specified using the **`Pre`** and **`Post`** aspects of Ada 2012.
+- Functional properties of Increment are specified using the :ada:`Pre` and :ada:`Post` aspects of Ada 2012.
 
-   - Increment can only be called if the value of *X* before the call is smaller that **`Integer’Last`**.
+   - Increment can only be called if the value of *X* before the call is smaller that :ada:`Integer’Last`.
 
       - It is necessary to ensure that the addition operation performed in the subprogram body will also not overflow.
 
@@ -106,7 +106,7 @@ The SPARK language does not support side-effects in expressions, that is, evalua
    G := F (G) + F (G); --  ??
 
 
-To aid the static verification of expressions and because function calls are themselves expressions, they must also be free of side effects. Potential side effects of a function include updates of parameters and global variables. As a consequence, SPARK 2014 forbids subprograms that are functions with **`out`** or **`in out`** parameters, like the function *F*, as well as functions updating a global variable.
+To aid the static verification of expressions and because function calls are themselves expressions, they must also be free of side effects. Potential side effects of a function include updates of parameters and global variables. As a consequence, SPARK 2014 forbids subprograms that are functions with :ada:`out` or :ada:`in out` parameters, like the function *F*, as well as functions updating a global variable.
 
 .. code:: ada
 
@@ -149,7 +149,7 @@ However, *Incr* is valid SPARK while *Incr_And_Log* is not as it attempts to upd
 No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Another restriction imposed in the SPARK subset concerns aliasing. We say that two names are aliased if they refer to the same object. Since access types are not allowed in SPARK, aliasing can only occur as part of the parameter passing in a procedure call. As a consequence, when a procedure is called, SPARK makes sure that no **`out`** or **`in out`** parameter is aliased with either an other parameter of the procedure or a global variable updated in the procedure’s body.
+Another restriction imposed in the SPARK subset concerns aliasing. We say that two names are aliased if they refer to the same object. Since access types are not allowed in SPARK, aliasing can only occur as part of the parameter passing in a procedure call. As a consequence, when a procedure is called, SPARK makes sure that no :ada:`out` or :ada:`in out` parameter is aliased with either an other parameter of the procedure or a global variable updated in the procedure’s body.
 
 There are two reasons to forbid aliasing in SPARK:
 
@@ -188,9 +188,9 @@ Identifying SPARK Code
 
 The SPARK language has been restricted to only allow easily specifiable and verifiable constructs. However, sometimes, a user cannot or does not want to abide by these limitations on all her code base. Therefore, the SPARK 2014 tools only check conformance to the SPARK subset on code which identified as being in SPARK.
 
-This can be done using an aspect named **`SPARK_Mode`**. If not explicitly specified, **`SPARK_Mode`** is `Off`, which means, the code is in full Ada. This default can be changed using a configuration pragma also. To allow easy reuse of existing Ada library, entities declared in withed units with no explicit **`SPARK_Mode`** can still be used from SPARK code. The tool will only check for SPARK conformance on the declaration of those which are effectively used within the SPARK code.
+This can be done using an aspect named :ada:`SPARK_Mode`. If not explicitly specified, :ada:`SPARK_Mode` is `Off`, which means, the code is in full Ada. This default can be changed using a configuration pragma also. To allow easy reuse of existing Ada library, entities declared in withed units with no explicit :ada:`SPARK_Mode` can still be used from SPARK code. The tool will only check for SPARK conformance on the declaration of those which are effectively used within the SPARK code.
 
-Here is a common case of use of the **`SPARK_Mode`** aspect.
+Here is a common case of use of the :ada:`SPARK_Mode` aspect.
 
 .. code:: ada
 
@@ -209,11 +209,11 @@ Here is a common case of use of the **`SPARK_Mode`** aspect.
       -- be full Ada
    end P;
 
-The package *P* only defines entities whose specifications are in the SPARK subset. However, it uses full Ada features in its body which, therefore, should not be analyzed and have the  **`SPARK_Mode`** aspect set to `Off`.
+The package *P* only defines entities whose specifications are in the SPARK subset. However, it uses full Ada features in its body which, therefore, should not be analyzed and have the  :ada:`SPARK_Mode` aspect set to `Off`.
 
-**`SPARK_Mode`** can be specified in a fine-grained manner on a per-unit basis. More precisely, a package has four different parts: the visible and private parts of its specification, as well as the declarative and statement part of its body. On each of these parts, **`SPARK_Mode`** can be specified to be either `On` or `Off`. In the same way, a subprogram has two parts: its specification and its body.
+:ada:`SPARK_Mode` can be specified in a fine-grained manner on a per-unit basis. More precisely, a package has four different parts: the visible and private parts of its specification, as well as the declarative and statement part of its body. On each of these parts, :ada:`SPARK_Mode` can be specified to be either `On` or `Off`. In the same way, a subprogram has two parts: its specification and its body.
 
-A general rule in SPARK is that when **`SPARK_Mode`** has been set to `Off`, it can never be switched to `On` again. This prevents both setting **`SPARK_Mode`** to `On` on subunits of a unit with **`SPARK_Mode`** `Off` and switching back to **`SPARK_Mode`** `On` on a part of a given unit when a previous part had been set to `Off`.
+A general rule in SPARK is that when :ada:`SPARK_Mode` has been set to `Off`, it can never be switched to `On` again. This prevents both setting :ada:`SPARK_Mode` to `On` on subunits of a unit with :ada:`SPARK_Mode` `Off` and switching back to :ada:`SPARK_Mode` `On` on a part of a given unit when a previous part had been set to `Off`.
 
 
 Code Examples / Pitfalls
@@ -378,7 +378,7 @@ Here is a package declaring a type *Dictionary*, which is an array containing a 
       end Store;
    end P;
 
-This code is not correct, as access types are not part of the SPARK subset. In this case, they are really useful though, as, without them, we cannot store arbitrarily long strings into an array. The solution here is to use **`SPARK_Mode`** to separate parts of the access type from the rest of the code in a fine grained manner.
+This code is not correct, as access types are not part of the SPARK subset. In this case, they are really useful though, as, without them, we cannot store arbitrarily long strings into an array. The solution here is to use :ada:`SPARK_Mode` to separate parts of the access type from the rest of the code in a fine grained manner.
 
 
 Example #7
@@ -438,7 +438,7 @@ Now let us consider P’s body, with the definition of Store, again.
       end Store;
    end P;
 
-Though the body of *Store* really uses no construct that are out of the SPARK subset, it is not possible to set **`SPARK_Mode`** to `On` on *P*’s body. Indeed, even if we don’t use it, we have the visibility here on *P*’s private part which is in full Ada.
+Though the body of *Store* really uses no construct that are out of the SPARK subset, it is not possible to set :ada:`SPARK_Mode` to `On` on *P*’s body. Indeed, even if we don’t use it, we have the visibility here on *P*’s private part which is in full Ada.
 
 
 Example #9

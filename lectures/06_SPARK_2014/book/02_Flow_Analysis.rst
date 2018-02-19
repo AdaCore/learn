@@ -72,7 +72,7 @@ What is more, they are often caused by errors in the program, which may be diffi
 Incorrect Parameter Mode
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Parameter modes influence the behavior of the compiler and are a key point for documenting the usage of a subprogram. Flow analysis will check that specified parameter modes always correspond to their usage in the subprogram’s body. More precisely, it will check that an **`in`** parameter is never updated, either directly or through a subprogram call. It will also check that the initial value of an **`out`** parameter will never be read in the subprogram, as it may not be copied on subprogram entry. Finally, flow analysis will also warn when an **`in out`** parameter is not updated or when its initial value is not used in the subprogram, as it may be the sign of an error. An example is shown below in the subprogram called *Swap*.
+Parameter modes influence the behavior of the compiler and are a key point for documenting the usage of a subprogram. Flow analysis will check that specified parameter modes always correspond to their usage in the subprogram’s body. More precisely, it will check that an :ada:`in` parameter is never updated, either directly or through a subprogram call. It will also check that the initial value of an :ada:`out` parameter will never be read in the subprogram, as it may not be copied on subprogram entry. Finally, flow analysis will also warn when an :ada:`in out` parameter is not updated or when its initial value is not used in the subprogram, as it may be the sign of an error. An example is shown below in the subprogram called *Swap*.
 
 .. code:: ada
 
@@ -83,7 +83,7 @@ Parameter modes influence the behavior of the compiler and are a key point for d
       X := Tmp;  -- Y is computed to be out
    end Swap;
 
-Note that, in SPARK, a parameter which is not read but not updated on every path should be declared as **`in out`** as its final value may depend on its initial value.
+Note that, in SPARK, a parameter which is not read but not updated on every path should be declared as :ada:`in out` as its final value may depend on its initial value.
 
 +--------------------+----------------------+-----------------------+----------------+
 | Initial value read | Updated on some path | Updated on every path | Parameter mode |
@@ -104,9 +104,9 @@ Additional Verifications
 Global Contracts
 ~~~~~~~~~~~~~~~~
 
-Until now, we have seen verifications which do not require any additional annotations from the developer. Flow analysis will also check user-written flow annotations when supplied. In SPARK, it is possible to specify the global and scoped variables accessed or modified by a subprogram. This is done using an Ada 2012 like contract named **`Global`**.
+Until now, we have seen verifications which do not require any additional annotations from the developer. Flow analysis will also check user-written flow annotations when supplied. In SPARK, it is possible to specify the global and scoped variables accessed or modified by a subprogram. This is done using an Ada 2012 like contract named :ada:`Global`.
 
-When a **`Global`** contract is supplied by the user for a subprogram, flow analysis will check that it is correct and complete, that is, no other variable than those stated in the contract are accessed or modified, either directly or through a subprogram call. For example, we may want to specify that the function *Get_Value_Of_X* reads the value of the global variable *X* and does not access any other global variable.
+When a :ada:`Global` contract is supplied by the user for a subprogram, flow analysis will check that it is correct and complete, that is, no other variable than those stated in the contract are accessed or modified, either directly or through a subprogram call. For example, we may want to specify that the function *Get_Value_Of_X* reads the value of the global variable *X* and does not access any other global variable.
 
 .. code:: ada
 
@@ -116,9 +116,9 @@ When a **`Global`** contract is supplied by the user for a subprogram, flow anal
    -- Get_Value_Of_X reads the value of the global variable X
 
 
-Global contracts are provided as part of the subprogram specification. Indeed, they provide useful information to users of a subprogram. The value specified for the **`Global`** aspect is an aggregate-like list of global variables’ names, grouped together depending on their mode.
+Global contracts are provided as part of the subprogram specification. Indeed, they provide useful information to users of a subprogram. The value specified for the :ada:`Global` aspect is an aggregate-like list of global variables’ names, grouped together depending on their mode.
 
-In the example shown below, the procedure *Set_X_To_Y_Plus_Z* reads both *Y* and *Z*, listed as **`Input`**, and updates *X*, listed as **`Output`**. As *Set_X_To_X_Plus_Y* both updates *X* and reads its initial value, *X*’s mode is **`In_Out`**. Like for parameters, if no mode is specified, then the default is **`Input`**. That is the case in the declaration of *Get_Value_Of_X*. Finally, if a subprogram, like *Incr_Parameter_X*, does not reference any global variable, the value of the global contract should be set to **`null`**.
+In the example shown below, the procedure *Set_X_To_Y_Plus_Z* reads both *Y* and *Z*, listed as :ada:`Input`, and updates *X*, listed as :ada:`Output`. As *Set_X_To_X_Plus_Y* both updates *X* and reads its initial value, *X*’s mode is :ada:`In_Out`. Like for parameters, if no mode is specified, then the default is :ada:`Input`. That is the case in the declaration of *Get_Value_Of_X*. Finally, if a subprogram, like *Incr_Parameter_X*, does not reference any global variable, the value of the global contract should be set to :ada:`null`.
 
 .. code:: ada
 
@@ -141,7 +141,7 @@ In the example shown below, the procedure *Set_X_To_Y_Plus_Z* reads both *Y* and
 Depends Contracts
 ~~~~~~~~~~~~~~~~~
 
-A user may also supply a **`Depends`** contract for a subprogram to specify dependencies between its outputs and its inputs. Here, not only global variables are considered but also parameters and function results. When a **`Depends`** contract is supplied for a subprogram, flow analysis checks that it is correct and complete, that is, that each subprogram output is related to all of its inputs.
+A user may also supply a :ada:`Depends` contract for a subprogram to specify dependencies between its outputs and its inputs. Here, not only global variables are considered but also parameters and function results. When a :ada:`Depends` contract is supplied for a subprogram, flow analysis checks that it is correct and complete, that is, that each subprogram output is related to all of its inputs.
 
 For example, a user may want to check that, on return of *Swap* shown below, each parameter only depends on the initial value of the other parameter or that the value of *X* on return of *Set_X_To_Zero* does not depend on any global variable.
 
@@ -156,9 +156,9 @@ For example, a user may want to check that, on return of *Swap* shown below, eac
    -- The value of X after the call depends on no input
 
 
-Like **`Global`** contracts, a **`Depends`** contract is specified on subprogram declarations using an aspect. Its value is a list of one or more dependency relations between outputs and inputs of the program. Each such relation is represented as two lists of variable names separated by an arrow. At the left of the arrow are the variables whose final value depends on the initial value of the variables on the right.
+Like :ada:`Global` contracts, a :ada:`Depends` contract is specified on subprogram declarations using an aspect. Its value is a list of one or more dependency relations between outputs and inputs of the program. Each such relation is represented as two lists of variable names separated by an arrow. At the left of the arrow are the variables whose final value depends on the initial value of the variables on the right.
 
-For example, the final value of each parameter of *Swap* only depends on the initial value of the other parameter. If the subprogram is a function, its result must be listed as an output, as we did for *Get_Value_Of_X* using the **`Result`** attribute.
+For example, the final value of each parameter of *Swap* only depends on the initial value of the other parameter. If the subprogram is a function, its result must be listed as an output, as we did for *Get_Value_Of_X* using the :ada:`Result` attribute.
 
 .. code:: ada
 
@@ -182,9 +182,9 @@ For example, the final value of each parameter of *Swap* only depends on the ini
      Depends => (X => null);        -- X depends on no input
 
 
-It is often the case that the final value of a variable depends on its own initial value. This can be specified in a concise way using the **`+`** character, like in the specification of *Set_X_To_X_Plus_Y*. Note that, if there are more than one variable on the left of the arrow, a **`+`** means that each variables depends on itself, and not that they all depend on each other.
+It is often the case that the final value of a variable depends on its own initial value. This can be specified in a concise way using the :ada:`+` character, like in the specification of *Set_X_To_X_Plus_Y*. Note that, if there are more than one variable on the left of the arrow, a :ada:`+` means that each variables depends on itself, and not that they all depend on each other.
 
-It can also be the case that an input is not used to compute the final value of any output. This can be expressed by putting **`null`** at the left of the dependency relation, like we have for the *Do_Nothing* subprogram shown here. Note that there can only be one such dependency relation, listing all the unused inputs of the subprogram, and that it must be declared last. Also note that such an annotation will silence flow analysis’ warning about unused parameters. Finally, **`null`** can also be used at the right of a dependency relation to state that an output depends on no input. It is the case for the procedure *Set_X_To_Zero*.
+It can also be the case that an input is not used to compute the final value of any output. This can be expressed by putting :ada:`null` at the left of the dependency relation, like we have for the *Do_Nothing* subprogram shown here. Note that there can only be one such dependency relation, listing all the unused inputs of the subprogram, and that it must be declared last. Also note that such an annotation will silence flow analysis’ warning about unused parameters. Finally, :ada:`null` can also be used at the right of a dependency relation to state that an output depends on no input. It is the case for the procedure *Set_X_To_Zero*.
 
 
 Shortcomings
@@ -197,7 +197,7 @@ Flow analysis is a sound analysis, which means that, if it does not output any m
 
 To improve efficiency on large projects, verifications are in general done on a per subprogram basis. It is in particular the case for detection of uninitialized variables. For this detection to be done modularly, flow analysis needs to assume initialization of inputs on subprogram entry and initialization of outputs after subprogram execution. Therefore, every time a subprogram is called, flow analysis will check that global and parameter inputs are initialized, and every time a subprogram returns, it will check that global and parameter outputs are also initialized.
 
-This may lead to messages being issued on perfectly correct subprograms like *Set_X_To_Y_Plus_Z* which only sets its **`out`** parameter *X* when *Overflow* is **`False`**.
+This may lead to messages being issued on perfectly correct subprograms like *Set_X_To_Y_Plus_Z* which only sets its :ada:`out` parameter *X* when *Overflow* is :ada:`False`.
 
 .. code:: ada
 
@@ -214,7 +214,7 @@ This may lead to messages being issued on perfectly correct subprograms like *Se
    end Set_X_To_Y_Plus_Z;
 
 
-This simply means that, in that case, flow analysis was not able to verify that no uninitialized variable could be read. To solve this problem, *X* can either be set to a dummy value when there is an overflow or the user can verify by her own means that *X* is never used after a call to *Set_X_To_Y_Plus_Z* if *Overflow* is **`True`**.
+This simply means that, in that case, flow analysis was not able to verify that no uninitialized variable could be read. To solve this problem, *X* can either be set to a dummy value when there is an overflow or the user can verify by her own means that *X* is never used after a call to *Set_X_To_Y_Plus_Z* if *Overflow* is :ada:`True`.
 
 
 Composite Types
@@ -318,11 +318,11 @@ To avoid this problem, it is better to make the control flow explicit, as in the
 Contract Computation
 ~~~~~~~~~~~~~~~~~~~~
 
-Finally, unexpected flow messages may come from inaccuracy in flow contract computations. Why does flow analysis compute contracts? As we have explained earlier, both **`Global`** and **`Depends`** contracts are optional. But GNATprove still needs them for some of its analysis.
+Finally, unexpected flow messages may come from inaccuracy in flow contract computations. Why does flow analysis compute contracts? As we have explained earlier, both :ada:`Global` and :ada:`Depends` contracts are optional. But GNATprove still needs them for some of its analysis.
 
-For example, knowing the set of global variables accessed by a subprogram is necessary for detecting the use of uninitialized variables. As for **`Depends`** contracts on a subprogram, they are necessary to be able to check user-supplied dependency contracts on callers of this subprogram. As each flow contract on a subprogram depends on the flow contracts of all the subprograms called inside its body, this computation can easily be quite time-consuming. Therefore, flow analysis sometimes trades-off precision of this computation for efficiency.
+For example, knowing the set of global variables accessed by a subprogram is necessary for detecting the use of uninitialized variables. As for :ada:`Depends` contracts on a subprogram, they are necessary to be able to check user-supplied dependency contracts on callers of this subprogram. As each flow contract on a subprogram depends on the flow contracts of all the subprograms called inside its body, this computation can easily be quite time-consuming. Therefore, flow analysis sometimes trades-off precision of this computation for efficiency.
 
-That is in particular the case for **`Depends`** contracts, for which flow analysis simply assumes the worst: it assumes that each subprogram output depends on all of the subprogram’s inputs. To solve this issue, it is enough to manually supply contracts when computed ones are not precise enough. Note that supplying **`Global`** contracts may also be a good idea to speed up flow analysis on larger projects in general.
+That is in particular the case for :ada:`Depends` contracts, for which flow analysis simply assumes the worst: it assumes that each subprogram output depends on all of the subprogram’s inputs. To solve this issue, it is enough to manually supply contracts when computed ones are not precise enough. Note that supplying :ada:`Global` contracts may also be a good idea to speed up flow analysis on larger projects in general.
 
 
 Code Examples / Pitfalls
@@ -331,7 +331,7 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-The procedure *Search_Array* searches for a particular element *E* in an array *A*. If the element is found, then it is stored in *Result*. Otherwise, *Found* is set to **`False`**.
+The procedure *Search_Array* searches for a particular element *E* in an array *A*. If the element is found, then it is stored in *Result*. Otherwise, *Found* is set to :ada:`False`.
 
 .. code:: ada
 
@@ -478,7 +478,7 @@ This program is correct. Flow analysis will still emit a message though, because
 Example #6
 ~~~~~~~~~~
 
-This program is the same as the previous one except that, to avoid the flow warning at the array assignment, the mode of *A* in the specification of *Init* has been changed to **`in out`**.
+This program is the same as the previous one except that, to avoid the flow warning at the array assignment, the mode of *A* in the specification of *Init* has been changed to :ada:`in out`.
 
 .. code:: ada
 
@@ -502,7 +502,7 @@ This program is the same as the previous one except that, to avoid the flow warn
    end Cyclic_Permutation;
 
 
-This program is not correct. Changing the mode of a parameter that should really be **`out`** to **`in out`** to silence a false alarm is not a good idea. Other than this obfuscates the specification of *Init*, now a message will be emitted on every call to the procedure for which *A* is not initialized.
+This program is not correct. Changing the mode of a parameter that should really be :ada:`out` to :ada:`in out` to silence a false alarm is not a good idea. Other than this obfuscates the specification of *Init*, now a message will be emitted on every call to the procedure for which *A* is not initialized.
 
 
 Example #7
@@ -537,13 +537,13 @@ Example #7
    end Incr_Step_Function;
 
 
-Everything is fine here. The *Global* contract, in particular, is correct. It mentions both *Threshold*, which is read but not updated in the procedure, and *A*, which is both read and updated. The fact that *A* is a parameter of an enclosing unit does not prevent its usage inside the **`Global`** contract as it really is global to *Incr_Until_Threshold*. Remark that we did not mention *Increment* as it is a static constant.
+Everything is fine here. The *Global* contract, in particular, is correct. It mentions both *Threshold*, which is read but not updated in the procedure, and *A*, which is both read and updated. The fact that *A* is a parameter of an enclosing unit does not prevent its usage inside the :ada:`Global` contract as it really is global to *Incr_Until_Threshold*. Remark that we did not mention *Increment* as it is a static constant.
 
 
 Example #8
 ~~~~~~~~~~
 
-We are back to the procedure *Test_Index* from example #4. We have corrected the missing initializations and are now interested into the **`Global`** contract of *Test_Index*. Is it correct?
+We are back to the procedure *Test_Index* from example #4. We have corrected the missing initializations and are now interested into the :ada:`Global` contract of *Test_Index*. Is it correct?
 
 .. code:: ada
 
@@ -570,13 +570,13 @@ We are back to the procedure *Test_Index* from example #4. We have corrected the
    end Test_Index;
 
 
-This example is not correct. *Current_Index* is a parameter of *Test_Index*, it should not be referenced as a global variable. Also, if *A* is not a constant, it should be mentioned as an **`Input`** in the **`Global`** contract.
+This example is not correct. *Current_Index* is a parameter of *Test_Index*, it should not be referenced as a global variable. Also, if *A* is not a constant, it should be mentioned as an :ada:`Input` in the :ada:`Global` contract.
 
 
 Example #9
 ~~~~~~~~~~
 
-We have changed the **`Global`** contract of *Test_Index* to a **`Depends`** contract. Note that we do not in general need both as global variables accessed can be deduced from the **`Depends`** contract.
+We have changed the :ada:`Global` contract of *Test_Index* to a :ada:`Depends` contract. Note that we do not in general need both as global variables accessed can be deduced from the :ada:`Depends` contract.
 
 .. code:: ada
 
@@ -609,7 +609,7 @@ This example is correct. Some of the dependencies, such as *Size_Of_Seq* dependi
 Example #10
 ~~~~~~~~~~~
 
-The subprogram *Identity* swaps the value of its parameter twice. Its **`Depends`** contract states that *X* the final value of *X* only depends on its initial value and the same for *Y*.
+The subprogram *Identity* swaps the value of its parameter twice. Its :ada:`Depends` contract states that *X* the final value of *X* only depends on its initial value and the same for *Y*.
 
 .. code:: ada
 
@@ -633,5 +633,5 @@ The subprogram *Identity* swaps the value of its parameter twice. Its **`Depends
    end Identity;
 
 
-This code is correct, but flow analysis cannot verify the **`Depends`** contract of *Identity*. Indeed, *Swap* has no user-specified **`Depends`** contract. As a consequence, flow analysis assumes that all outputs of *Swap*, that is *X* and *Y*, depend on all its inputs, that is both *X* and *Y*’s initial values. To solve this problem, it is enough to manually specify a more precise **`Depends`** contract on *Swap*.
+This code is correct, but flow analysis cannot verify the :ada:`Depends` contract of *Identity*. Indeed, *Swap* has no user-specified :ada:`Depends` contract. As a consequence, flow analysis assumes that all outputs of *Swap*, that is *X* and *Y*, depend on all its inputs, that is both *X* and *Y*’s initial values. To solve this problem, it is enough to manually specify a more precise :ada:`Depends` contract on *Swap*.
 
