@@ -1439,10 +1439,12 @@ overview of the notation `here <TODODETAILEDAGGREGATESADVANCED>__`.
 Let's now delve into what it means exactly to be able to use any discrete type
 to index into the array.
 
-    LANGCOMP: Ada arrays have by-value semantics, which means that when you
-    pass one, in terms of semantics you pass the whole array, not just a handle
-    to it, unlike in a language like Python or Java. It also means that unlike
-    in C or C++, arrays are not naked pointers in disguise.
+.. admonition:: In other languages
+
+    Ada arrays have by-value semantics, which means that when you pass one, in
+    terms of semantics you pass the whole array, not just a handle to it,
+    unlike in a language like Python or Java. It also means that unlike in C or
+    C++, arrays are not naked pointers in disguise.
 
 .. code-block:: ada
 
@@ -1707,13 +1709,15 @@ arrow association. ``1 => 2`` hence means "assign value 2 to spot at index 1 in
 my array". ``others => 8`` means "assign value 8 to every spot that wasn't
 previously assigned in this aggregate".
 
-    LANGCOMP: While superficially unconstrained arrays in Ada might look
-    similar to variable length arrays in C, they are in reality much more
-    powerful, because they're truly first class values in the language. You can
-    pass them as parameters or return values in subprograms, and they carry
-    their bounds inside the data type. This means that it is useless to pass
-    the length of an array explictly along with the array, because it is
-    accessible via the attributes demonstrated in the previous paragraph.
+.. admonition:: In other languages
+
+    While superficially unconstrained arrays in Ada might look similar to
+    variable length arrays in C, they are in reality much more powerful,
+    because they're truly first class values in the language. You can pass them
+    as parameters or return values in subprograms, and they carry their bounds
+    inside the data type. This means that it is useless to pass the length of
+    an array explictly along with the array, because it is accessible via the
+    attributes demonstrated in the previous paragraph.
 
 Predefined array type: String
 -----------------------------
