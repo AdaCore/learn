@@ -5,7 +5,7 @@ Abstracting definitions into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this section and in the next ones, we will reuse the generic
-reversing algorithm that we discussed in the previous section.  In that
+reversing algorithm that we discussed in the introductory course.  In that
 example, we were declaring three formal types for the
 ``Generic_Reverse_Array`` procedure. However, we could abstract the array
 definition into a separate package and reuse it for the generic procedure.
@@ -58,10 +58,11 @@ algorithm:
 
        generic
           type T is private;
-          with package P is new Simple_Generic_Array_Pkg (T => T, Index => Integer);
+          with package P is new Simple_Generic_Array_Pkg (T => T, others => <>);
        procedure Reverse_Array (X : in out P.Array_T);
 
        procedure Reverse_Array (X : in out P.Array_T) is
+          use P;
        begin
           for I in X'First .. (X'Last + X'First) / 2 loop
              declare
@@ -110,7 +111,7 @@ Abstracting procedures into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the previous example, we moved the array type definition into a
-separate package, but leaved the generic procedure (``Reverse_Array``) in
+separate package, but left the generic procedure (``Reverse_Array``) in
 the test application. Another approach would have been to also move the
 generic procedure into the generic package. The advantage of this approach
 is that we don't need to repeat the formal declaration for the
@@ -228,7 +229,7 @@ This is a version of the test application that makes use of the generic
     procedure Test_Reverse_Colors_Pkg is
 
        generic
-          S : in String;
+          S : String;
           with package Array_Pkg is new Generic_Array_Pkg (<>);
           use Array_Pkg;
           with function Image (E : in T) return String is <>;
