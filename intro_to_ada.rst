@@ -1907,24 +1907,6 @@ Abstract data types
 Generics
 ========
 
-Generic declaration
--------------------
-
-Generic body
-------------
-
-Generic instantiation
----------------------
-
-Formal types
-------------
-
-Formal objects
---------------
-
-Formal subprograms
-------------------
-
 Exceptions
 ==========
 
