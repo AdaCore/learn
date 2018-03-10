@@ -1914,41 +1914,83 @@ Generics are used for metaprogramming in Ada. They are useful for abstract
 algorithms that share common properties.
 
 Generics can be used for subprograms or packages. A generic is declared
-by using the following format:
+by using the keyword ``generic``. For example:
 
 .. code-block:: ada
 
-    generic
-       --  Formal types and objects
-       --  <procedure | function | package> ...
+    procedure Show_Simple_Generic is
+
+       generic
+          type T is private;
+          --  Declaration of formal types and objects
+       procedure Operator (X : in out T);
+       --  This could be one of the following:
+       --  <procedure | function | package>
+
+       procedure Operator (X : in out T) is null;
+
+    begin
+       null;
+    end Show_Simple_Generic;
 
 Formal type declaration
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Formal types are abstractions of a specific type. For example, we may
+Formal types are abstractions of a specific type. We may, for example,
 want to create an algorithm that works on any integer type, or even on
-any type at all, independently of being a numeric type or not. For
-example:
+any type at all, independently of being a numeric type or not. The
+following example declares a formal type ``T`` for the ``Set`` procedure.
 
 .. code-block:: ada
 
-    generic
-       type T is private;
-       --  T is a formal type that indicates that any type can be used,
-       --  be it a numeric type or, for example, a record.
-    procedure Generic_Swap (X, Y : in out T);
+    procedure Show_Formal_Type_Declaration is
+
+       generic
+          type T is private;
+          --  T is a formal type that indicates that any type can be used,
+          --  be it a numeric type or, for example, a record.
+       procedure Set (E : in T);
+
+       procedure Set (E : in T) is null;
+
+    begin
+       null;
+    end Show_Formal_Type_Declaration;
+
+The declaration of ``T`` as ``private`` indicates that any type can be
+mapped to it. These are some examples of formal types:
+
++-------------------------+---------------------------------------------+
+| Formal Type             | Format                                      |
++=========================+=============================================+
+| Any type                | ``type T is private;``                      |
++-------------------------+---------------------------------------------+
+| Any discrete type       | ``type T is (<>);``                         |
++-------------------------+---------------------------------------------+
+| Any floating-point type | ``type T is digits <>;``                    |
++-------------------------+---------------------------------------------+
 
 Formal object declaration
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Formal objects are similar to subprogram parameters. But they can make use
-of the formal types declared in the formal specification. For example:
+Formal objects are similar to subprogram parameters. Also, they can make
+use of formal types declared in the formal specification. For example:
 
 .. code-block:: ada
 
-    generic
-       type T is private;
-       X : in out T;
+    procedure Show_Formal_Object_Declaration is
+
+       generic
+          type T is private;
+          X : in out T;
+          --  X can be used in the Set procedure
+       procedure Set (E : in T);
+
+       procedure Set (E : in T) is null;
+
+    begin
+       null;
+    end Show_Formal_Object_Declaration;
 
 Formal objects can be either just input parameters or use the ``in out``
 mode.
@@ -1963,57 +2005,119 @@ declared. For example:
 
 .. code-block:: ada
 
-    procedure Generic_Swap (X, Y : in out T) is
+    procedure Show_Generic_Body_Definition is
+
+       generic
+          type T is private;
+          X : in out T;
+       procedure Set (E : T);
+
+       procedure Set (E : T) is
+       --  Body definition: "generic" keyword is not used
+       begin
+          X := E;
+       end Set;
     begin
        null;
-       --  procedure definition...
-    end Generic_Swap;
+    end Show_Generic_Body_Definition;
 
 Generic instantiation
 ~~~~~~~~~~~~~~~~~~~~~
 
 Generic subprograms or packages cannot be used directly. Instead, they
 need to be instantiated. The instantiation is done by using the ``new``
-keyword, as illustrated in the following format:
+keyword, as illustrated in the following example:
 
 .. code-block:: ada
 
-    <procedure|function|package> Name is new Generic_Name (<formal parameters>);
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
 
-For example:
+    procedure Show_Generic_Instantiation is
 
-.. code-block:: ada
+       generic
+          type T is private;
+          X : in out T;
+          --  X can be used in the Set procedure
+       procedure Set (E : T);
 
-    procedure Swap_Colors is new Generic_Swap (T => Color);
+       procedure Set (E : T) is
+       begin
+          X := E;
+       end Set;
 
-In the instantiation, we map the formal parameters to actual existing
-elements (e.g. types or variables).
+       Main    : Integer := 0;
+       Current : Integer;
 
-Formal subprograms and packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       procedure Set_Main is new Set (T => Integer,
+                                      X => Main);
+       --  Here, we map the formal parameters to actual types and objects.
+       --
+       --  The same approach can be used to instantiate functions or
+       --  packages, e.g.:
+       --  function Get_Main is new ...
+       --  package Integer_Queue is new ...
+
+    begin
+       Current := 10;
+
+       Set_Main (Current);
+       Put_Line ("Value of Main is " & Integer'Image (Main));
+    end Show_Generic_Instantiation;
+
+In the example above, we instantiate the procedure ``Set`` by mapping the
+formal parameters ``T`` and ``X`` to actual existing elements: the
+``Integer`` type and the ``Main`` variable.
+
+Formal subprograms
+~~~~~~~~~~~~~~~~~~
 
 In addition to formal types and objects, we can also declare formal
-subprograms or packages.
+subprograms or packages. This course only describes formal subprograms.
+Formal packages are discussed in the advanced course.
 
 In order to declare a formal subprogram, we make use of the ``with``
-keyword using the following format:
+keyword. In the example below, we declare a formal function
+(``Comparison``) that is used by the generic procedure ``Check``.
 
 .. code-block:: ada
 
-   generic
-      with function F return Some_Type;
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
 
-Formal package declarations are a little bit more complicated. In addition
-to the ``with`` keyword, they require the ``new`` keyword because they
-are essentially generic package instantiations as we've seen above. This
-is the format:
+    procedure Show_Formal_Subprogram is
 
-.. code-block:: ada
+       generic
+          Description : String;
+          type T is private;
+          with function Comparison (X, Y : T) return Boolean;
+       procedure Check (X, Y : T);
 
-   generic
-      with package P is new Generic_Pkg (<formal parameters>);
+       procedure Check (X, Y : T) is
+          Result : Boolean;
+       begin
+          Result := Comparison (X, Y);
+          if Result then
+             Put_Line ("Comparison (" & Description &
+                       ") between arguments is OK!");
+          else
+             Put_Line ("Comparison (" & Description &
+                       ") between arguments is not OK!");
+          end if;
+       end Check;
 
-We will see examples of formal package declarations in the next section.
+       A, B : Integer;
+
+       procedure Check_Is_Equal is new Check (Description => "equality",
+                                              T           => Integer,
+                                              Comparison  => Standard."=");
+       --  Here, we are mapping the standard equality operator for Integer
+       --  types to the Comparison function
+    begin
+       A := 0;
+       B := 1;
+       Check_Is_Equal (A, B);
+    end Show_Formal_Subprogram;
 
 Examples of using generics
 --------------------------
