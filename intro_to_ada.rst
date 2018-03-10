@@ -2119,86 +2119,6 @@ keyword. In the example below, we declare a formal function
        Check_Is_Equal (A, B);
     end Show_Formal_Subprogram;
 
-Application: ADTs
-~~~~~~~~~~~~~~~~~
-
-An important application of generics is to model abstract data types
-(ADTs). In fact, Ada includes a library with all sorts of ADTs using
-generics: ``Ada.Containers``.
-
-A typical example of an ADT is a stack:
-
-.. code-block:: ada
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
-
-    procedure Show_Stack is
-
-       generic
-          Max : Positive;
-          type T is private;
-       package Stacks is
-
-          type Stack is limited private;
-
-          function Is_Empty (S : Stack) return Boolean;
-
-          function Pop (S : in out Stack) return T;
-
-          procedure Push (S : in out Stack;
-                          V : T);
-
-       private
-
-          type Stack_Array is array (Natural range <>) of T;
-
-          type Stack is record
-             Container : Stack_Array (1 .. Max);
-             Top       : Natural := 0;
-          end record;
-
-       end Stacks;
-
-       package body Stacks is
-
-          function Is_Empty (S : Stack) return Boolean is
-            (S.Top < S.Container'First);
-
-          function Pop (S : in out Stack) return T is
-          begin
-             return X : T do
-                X     := S.Container (S.Top);
-                S.Top := S.Top - 1;
-             end return;
-          end Pop;
-
-          procedure Push (S : in out Stack;
-                          V : T) is
-          begin
-             S.Top               := S.Top + 1;
-             S.Container (S.Top) := V;
-          end Push;
-
-       end Stacks;
-
-       package Integer_Stacks is new Stacks (Max => 10,
-                                             T   => Integer);
-       use Integer_Stacks;
-
-       Values : Integer_Stacks.Stack;
-
-    begin
-       Push (Values, 10);
-       Push (Values, 20);
-
-       Put_Line ("Last value was " & Integer'Image (Pop (Values)));
-    end Show_Stack;
-
-In this example, we first create a generic stack package (``Stacks``).
-Then, we instantiate it in order to create a stack for 10 positions of
-integer values.
-
 Examples of using generics
 --------------------------
 
@@ -2548,6 +2468,85 @@ procedure (``Perform_Test``). Note that:
     - For the formal ``Test`` procedure, we reference the
       ``Reverse_Array`` procedure from the package.
 
+Application: ADTs
+~~~~~~~~~~~~~~~~~
+
+An important application of generics is to model abstract data types
+(ADTs). In fact, Ada includes a library with all sorts of ADTs using
+generics: ``Ada.Containers``.
+
+A typical example of an ADT is a stack:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    procedure Show_Stack is
+
+       generic
+          Max : Positive;
+          type T is private;
+       package Stacks is
+
+          type Stack is limited private;
+
+          function Is_Empty (S : Stack) return Boolean;
+
+          function Pop (S : in out Stack) return T;
+
+          procedure Push (S : in out Stack;
+                          V : T);
+
+       private
+
+          type Stack_Array is array (Natural range <>) of T;
+
+          type Stack is record
+             Container : Stack_Array (1 .. Max);
+             Top       : Natural := 0;
+          end record;
+
+       end Stacks;
+
+       package body Stacks is
+
+          function Is_Empty (S : Stack) return Boolean is
+            (S.Top < S.Container'First);
+
+          function Pop (S : in out Stack) return T is
+          begin
+             return X : T do
+                X     := S.Container (S.Top);
+                S.Top := S.Top - 1;
+             end return;
+          end Pop;
+
+          procedure Push (S : in out Stack;
+                          V : T) is
+          begin
+             S.Top               := S.Top + 1;
+             S.Container (S.Top) := V;
+          end Push;
+
+       end Stacks;
+
+       package Integer_Stacks is new Stacks (Max => 10,
+                                             T   => Integer);
+       use Integer_Stacks;
+
+       Values : Integer_Stacks.Stack;
+
+    begin
+       Push (Values, 10);
+       Push (Values, 20);
+
+       Put_Line ("Last value was " & Integer'Image (Pop (Values)));
+    end Show_Stack;
+
+In this example, we first create a generic stack package (``Stacks``).
+Then, we instantiate it in order to create a stack for 10 positions of
+integer values.
 
 Exceptions
 ==========
