@@ -2253,6 +2253,117 @@ As mentioned above, we're abstracting three components of the algorithm:
     - the ``Array_T`` type abstracts the array type and makes use of the
       formal declarations of the ``T`` and ``Index`` types.
 
+Abstracting the test application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous example, we've focused only on abstracting the reversing
+algorithm. However, we could have decided to also abstract our little
+test application. This could be useful if we, for example, decide to
+test other procedures that change elements of an array.
+
+In order to achieve this, we have to abstract some elements. We
+will therefore declare the following formal parameters:
+
+    - ``S``: the string containing the array name
+
+    - a function ``Image`` that converts an element of type ``T`` to a
+      string
+
+    - a procedure ``Test`` that performs some operation on the array
+
+Note that ``Image`` and ``Test`` are examples of formal subprograms.
+Also, note that ``S`` is an example of a formal object.
+
+This is a version of the test application that makes use of the generic
+``Perform_Test`` procedure:
+
+.. code-block:: ada
+
+    --% run_file: Test_Reverse_Colors.adb
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    procedure Test_Reverse_Colors is
+
+       generic
+          type T is private;
+          type Index is range <>;
+          type Array_T is array (Index range <>) of T;
+       procedure Generic_Reverse_Array (X : in out Array_T);
+
+       generic
+          type T is private;
+          type Index is range <>;
+          type Array_T is array (Index range <>) of T;
+          S : String;
+          with function Image (E : in T) return String is <>;
+          with procedure Test (X : in out Array_T);
+       procedure Perform_Test (X : in out Array_T);
+
+       procedure Generic_Reverse_Array (X : in out Array_T) is
+       begin
+          for I in X'First .. (X'Last + X'First) / 2 loop
+             declare
+                Tmp     : T;
+                X_Left  : T renames X (I);
+                X_Right : T renames X (X'Last + X'First - I);
+             begin
+                Tmp     := X_Left;
+                X_Left  := X_Right;
+                X_Right := Tmp;
+             end;
+          end loop;
+       end Generic_Reverse_Array;
+
+       procedure Perform_Test (X : in out Array_T) is
+       begin
+          for C of X loop
+             Put_Line (S & ": " & Image (C));
+          end loop;
+
+          New_Line;
+          Put_Line ("Testing " & S & "...");
+          New_Line;
+          Test (X);
+
+          for C of X loop
+             Put_Line (S & ": " & Image (C));
+          end loop;
+       end Perform_Test;
+
+       type Color is (Black, Red, Green, Blue, White);
+       type Color_Array is array (Integer range <>) of Color;
+
+       procedure Reverse_Color_Array is new
+         Generic_Reverse_Array (T       => Color,
+                                Index   => Integer,
+                                Array_T => Color_Array);
+
+       procedure Perform_Test_Reverse_Color_Array is new
+         Perform_Test (T       => Color,
+                       Index   => Integer,
+                       Array_T => Color_Array,
+                       S       => "My_Color",
+                       Image   => Color'Image,
+                       Test    => Reverse_Color_Array);
+
+       My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
+
+    begin
+       Perform_Test_Reverse_Color_Array (My_Colors);
+    end Test_Reverse_Colors;
+
+In this example, we create the procedure
+``Perform_Test_Reverse_Color_Array`` as an instance of the generic
+procedure (``Perform_Test``). Note that:
+
+    - For the formal ``Image`` function, we make use of the ``'Image``
+      attribute of the ``Color`` type
+
+    - For the formal ``Test`` procedure, we reference the
+      ``Reverse_Array`` procedure from the package.
+
 
 Exceptions
 ==========
