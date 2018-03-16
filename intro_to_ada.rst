@@ -2734,3 +2734,121 @@ Files and streams
 
 Dynamic allocation and reclamation
 ----------------------------------
+
+Appendices
+==========
+
+Appendix A: Generic Formal Types
+--------------------------------
+
+The following reference tables contain examples of available formal types
+for generics.
+
++-------------------------+---------------------------------------------+-------------------------+
+| Formal Type             | Format                                      | Actual type             |
++=========================+=============================================+=========================+
+| Discrete type           | ``type T is (<>);``                         | Any integer, modular or |
+|                         |                                             | enumeration type        |
++-------------------------+---------------------------------------------+-------------------------+
+| Range type              | ``type T is range <>;``                     | Any signed integer type |
++-------------------------+---------------------------------------------+-------------------------+
+| Modular type            | ``type T is mod <>;``                       | Any modular type        |
++-------------------------+---------------------------------------------+-------------------------+
+| Floating-point type     | ``type T is digits <>;``                    | Any floating-point type |
++-------------------------+---------------------------------------------+-------------------------+
+| Binary fixed-point type | ``type T is delta <>;``                     | Any binary fixed-point  |
+|                         |                                             | type                    |
++-------------------------+---------------------------------------------+-------------------------+
+| Decimal fixed-point     | ``type T is delta <> digits <>;``           | Any decimal fixed-point |
+| type                    |                                             | type                    |
++-------------------------+---------------------------------------------+-------------------------+
+| Definite unlimited      | ``type T is private;``                      | Any unlimited, definite |
+| private type            |                                             | type                    |
++-------------------------+---------------------------------------------+-------------------------+
+| Indefinite unlimited    | ``type T (<>) is private;``                 | Any unlimited type      |
+| private type            |                                             | indefinite or definite  |
+|                         |                                             |                         |
++-------------------------+---------------------------------------------+-------------------------+
+| Unlimited private type  | ``type T (D : DT) is private;``             | Any unlimited type with |
+| with discriminant       |                                             | discriminant            |
++-------------------------+---------------------------------------------+-------------------------+
+| Access type             | ``type A is access T;``                     | Any access type for     |
+|                         |                                             | type T                  |
++-------------------------+---------------------------------------------+-------------------------+
+| Definite derived        | ``type T is new B;``                        | Any concrete type       |
+| type                    |                                             | derived from base type  |
+|                         |                                             | B                       |
++-------------------------+---------------------------------------------+-------------------------+
+| Limited private type    | ``type T is limited private;``              | Any definite type,      |
+|                         |                                             | limited or not          |
++-------------------------+---------------------------------------------+-------------------------+
+| Definite                | ``type T is tagged private;``               | Any concrete, definite, |
+| tagged private type     |                                             | tagged type             |
+|                         |                                             |                         |
++-------------------------+---------------------------------------------+-------------------------+
+| Definite                | ``type T is tagged limited private;``       | Any concrete definite   |
+| tagged limited private  |                                             | tagged type, limited or |
+| type                    |                                             | not                     |
++-------------------------+---------------------------------------------+-------------------------+
+| Definite abstract       | ``type T is abstract tagged private;``      | Any unlimited, definite |
+| tagged private type     |                                             | tagged type, abstract   |
+|                         |                                             | or concrete             |
++-------------------------+---------------------------------------------+-------------------------+
+| Definite abstract       | ``type T is abstract tagged limited         | Any definite tagged     |
+| tagged limited private  | private;``                                  | type, limited or not,   |
+| type                    |                                             | abstract or concrete    |
++-------------------------+---------------------------------------------+-------------------------+
+| Definite derived        | ``type T is new B with private;``           | Any concrete tagged     |
+| tagged type             |                                             | type derived from base  |
+|                         |                                             | type B                  |
++-------------------------+---------------------------------------------+-------------------------+
+| Definite abstract       | ``type T is abstract new B with private;``  | Any tagged              |
+| derived tagged type     |                                             | type derived from base  |
+|                         |                                             | type B                  |
+|                         |                                             | abstract or concrete    |
++-------------------------+---------------------------------------------+-------------------------+
+| Array type              | ``type A is array (R) of T;``               | Any array type with     |
+|                         |                                             | range R containing      |
+|                         |                                             | elements of type T      |
++-------------------------+---------------------------------------------+-------------------------+
+
+Indefinite version
+~~~~~~~~~~~~~~~~~~
+
+Many of the examples above can be used for formal indefinite types:
+
++-------------------------+---------------------------------------------+-------------------------+
+| Indefinite limited      | ``type T (<>) is limited private;``         | Any type, limited or    |
+| private type            |                                             | not, indefinite or      |
+|                         |                                             | definite                |
++-------------------------+---------------------------------------------+-------------------------+
+| Indefinite              | ``type T (<>) is tagged private;``          | Any concrete, limited   |
+| tagged private type     |                                             | tagged type,            |
+|                         |                                             | indefinite or definite  |
++-------------------------+---------------------------------------------+-------------------------+
+| Indefinite              | ``type T (<>) is tagged limited private;``  | Any concrete tagged     |
+| tagged limited private  |                                             | type, limited or not,   |
+| type                    |                                             | indefinite or definite  |
++-------------------------+---------------------------------------------+-------------------------+
+| Indefinite abstract     | ``type T (<>) is abstract tagged private;`` | Any unlimited tagged    |
+| tagged private type     |                                             | type, indefinite or     |
+|                         |                                             | definite, abstract or   |
+|                         |                                             | concrete                |
++-------------------------+---------------------------------------------+-------------------------+
+| Indefinite abstract     | ``type T (<>) is abstract tagged limited    | Any tagged type,        |
+| tagged limited private  | private;``                                  | limited or not,         |
+| type                    |                                             | indefinite or definite  |
+|                         |                                             | abstract or concrete    |
++-------------------------+---------------------------------------------+-------------------------+
+| Indefinite derived      | ``type T (<>) is new B with private;``      | Any tagged type derived |
+| tagged type             |                                             | from base type B,       |
+|                         |                                             | indefinite or definite  |
++-------------------------+---------------------------------------------+-------------------------+
+| Indefinite abstract     | ``type T (<>) is abstract new B with        | Any tagged type derived |
+| derived tagged type     |  private;``                                 | from base type B,       |
+|                         |                                             | indefinite or definite  |
+|                         |                                             | abstract or concrete    |
++-------------------------+---------------------------------------------+-------------------------+
+
+The same examples could also contain discriminants. In this case, ``(<>)``
+is replaced by a list of discriminants, e.g.: ``(D: DT)``.
