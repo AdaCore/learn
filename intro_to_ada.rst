@@ -2766,15 +2766,15 @@ for generics.
 | Decimal fixed-point     | ``type T is delta <> digits <>;``           | Any decimal fixed-point |
 | type                    |                                             | type                    |
 +-------------------------+---------------------------------------------+-------------------------+
-| Definite unlimited      | ``type T is private;``                      | Any unlimited, definite |
-| private type            |                                             | type                    |
+| Definite nonlimited     | ``type T is private;``                      | Any nonlimited,         |
+| private type            |                                             | definite type           |
 +-------------------------+---------------------------------------------+-------------------------+
-| Indefinite unlimited    | ``type T (<>) is private;``                 | Any unlimited type      |
+| Indefinite nonlimited   | ``type T (<>) is private;``                 | Any nonlimited type     |
 | private type            |                                             | indefinite or definite  |
 |                         |                                             |                         |
 +-------------------------+---------------------------------------------+-------------------------+
-| Unlimited private type  | ``type T (D : DT) is private;``             | Any unlimited type with |
-| with discriminant       |                                             | discriminant            |
+| Unlimited private type  | ``type T (D : DT) is private;``             | Any nonlimited type     |
+| with discriminant       |                                             | with discriminant       |
 +-------------------------+---------------------------------------------+-------------------------+
 | Access type             | ``type A is access T;``                     | Any access type for     |
 |                         |                                             | type T                  |
@@ -2797,9 +2797,9 @@ for generics.
 | tagged limited private  |                                             | tagged type, limited or |
 | type                    |                                             | not                     |
 +-------------------------+---------------------------------------------+-------------------------+
-| Definite abstract       | ``type T is abstract tagged private;``      | Any unlimited, definite |
-| tagged private type     |                                             | tagged type, abstract   |
-|                         |                                             | or concrete             |
+| Definite abstract       | ``type T is abstract tagged private;``      | Any nonlimited,         |
+| tagged private type     |                                             | definite tagged type,   |
+|                         |                                             | abstract or concrete    |
 +-------------------------+---------------------------------------------+-------------------------+
 | Definite abstract       | ``type T is abstract tagged limited         | Any definite tagged     |
 | tagged limited private  | private;``                                  | type, limited or not,   |
@@ -2843,7 +2843,7 @@ Many of the examples above can be used for formal indefinite types:
 | tagged limited private  |                                             | type, limited or not,   |
 | type                    |                                             | indefinite or definite  |
 +-------------------------+---------------------------------------------+-------------------------+
-| Indefinite abstract     | ``type T (<>) is abstract tagged private;`` | Any unlimited tagged    |
+| Indefinite abstract     | ``type T (<>) is abstract tagged private;`` | Any nonlimited tagged   |
 | tagged private type     |                                             | type, indefinite or     |
 |                         |                                             | definite, abstract or   |
 |                         |                                             | concrete                |
