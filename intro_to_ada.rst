@@ -2747,6 +2747,10 @@ for generics.
 +-------------------------+---------------------------------------------+-------------------------+
 | Formal Type             | Format                                      | Actual type             |
 +=========================+=============================================+=========================+
+| Incomplete type         | ``type T;``                                 | Any type                |
++-------------------------+---------------------------------------------+-------------------------+
+| Incomplete type         | ``type T (<>);``                            | Any type                |
++-------------------------+---------------------------------------------+-------------------------+
 | Discrete type           | ``type T is (<>);``                         | Any integer, modular or |
 |                         |                                             | enumeration type        |
 +-------------------------+---------------------------------------------+-------------------------+
@@ -2781,6 +2785,9 @@ for generics.
 +-------------------------+---------------------------------------------+-------------------------+
 | Limited private type    | ``type T is limited private;``              | Any definite type,      |
 |                         |                                             | limited or not          |
++-------------------------+---------------------------------------------+-------------------------+
+| Incomplete tagged       | ``type T is tagged;``                       | Any concrete, definite, |
+| type                    |                                             | tagged type             |
 +-------------------------+---------------------------------------------+-------------------------+
 | Definite                | ``type T is tagged private;``               | Any concrete, definite, |
 | tagged private type     |                                             | tagged type             |
@@ -2823,6 +2830,10 @@ Many of the examples above can be used for formal indefinite types:
 | Indefinite limited      | ``type T (<>) is limited private;``         | Any type, limited or    |
 | private type            |                                             | not, indefinite or      |
 |                         |                                             | definite                |
++-------------------------+---------------------------------------------+-------------------------+
+| Incomplete indefinite   | ``type T (<>) is tagged;``                  | Any concrete tagged     |
+| tagged private type     |                                             | type,                   |
+|                         |                                             | indefinite or definite  |
 +-------------------------+---------------------------------------------+-------------------------+
 | Indefinite              | ``type T (<>) is tagged private;``          | Any concrete, limited   |
 | tagged private type     |                                             | tagged type,            |
