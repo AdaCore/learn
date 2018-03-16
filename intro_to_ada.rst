@@ -2818,6 +2818,8 @@ Indefinite version
 Many of the examples above can be used for formal indefinite types:
 
 +-------------------------+---------------------------------------------+-------------------------+
+| Formal Type             | Format                                      | Actual type             |
++=========================+=============================================+=========================+
 | Indefinite limited      | ``type T (<>) is limited private;``         | Any type, limited or    |
 | private type            |                                             | not, indefinite or      |
 |                         |                                             | definite                |
