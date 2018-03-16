@@ -2818,6 +2818,49 @@ for generics.
 |                         |                                             | range R containing      |
 |                         |                                             | elements of type T      |
 +-------------------------+---------------------------------------------+-------------------------+
+| Interface type          | ``type T is interface;``                    | Any interface type T    |
++-------------------------+---------------------------------------------+-------------------------+
+| Limited                 | ``type T is limited interface;``            | Any limited interface   |
+| interface type          |                                             | type T                  |
++-------------------------+---------------------------------------------+-------------------------+
+| Task interface type     | ``type T is task interface;``               | Any task interface      |
+|                         |                                             | type T                  |
++-------------------------+---------------------------------------------+-------------------------+
+| Synchronized interface  | ``type T is synchronized interface;``       | Any synchronized        |
+| type                    |                                             | interface type T        |
++-------------------------+---------------------------------------------+-------------------------+
+| Protected interface     | ``type T is protected interface;``          | Any protected           |
+| type                    |                                             | interface type T        |
++-------------------------+---------------------------------------------+-------------------------+
+| Derived interface type  | ``type T is new B and I with private;``     | Any type T derived from |
+|                         |                                             | base type B and         |
+|                         |                                             | interface I             |
++-------------------------+---------------------------------------------+-------------------------+
+| Derived type            | ``type T is new B and I1 and I2             | Any type T derived from |
+| with multiple           | with private;``                             | base type B and         |
+| interfaces              |                                             | interfaces I1 and I2    |
++-------------------------+---------------------------------------------+-------------------------+
+| Abstract derived        | ``type T is abstract new B and I            | Any type T derived from |
+| interface type          | with private;``                             | abstract base type B    |
+|                         |                                             | and interface I         |
++-------------------------+---------------------------------------------+-------------------------+
+| Limited derived         | ``type T is limited new B and I             | Any type T derived from |
+| interface type          | with private;``                             | limited base type B and |
+|                         |                                             | limited interface I     |
++-------------------------+---------------------------------------------+-------------------------+
+| Abstract limited        | ``type T is abstract limited new B and I    | Any type T derived from |
+| derived interface type  | with private;``                             | abstract limited base   |
+|                         |                                             | type B and limited      |
+|                         |                                             | interface I             |
++-------------------------+---------------------------------------------+-------------------------+
+| Synchronized interface  | ``type T is synchronized new SI             | Any type T derived from |
+| type                    | with private;``                             | synchronized interface  |
+|                         |                                             | SI                      |
++-------------------------+---------------------------------------------+-------------------------+
+| Abstract synchronized   | ``type T is abstract synchronized new SI    | Any type T derived from |
+| interface type          | with private;``                             | synchronized interface  |
+|                         |                                             | SI                      |
++-------------------------+---------------------------------------------+-------------------------+
 
 Indefinite version
 ~~~~~~~~~~~~~~~~~~
