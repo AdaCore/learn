@@ -2750,6 +2750,76 @@ making use of the corresponding data types in C (``int``, ``long``,
 Foreign subprograms
 -------------------
 
+A similar approach is used when interfacing with subprograms written in C.
+In this case, an additional aspect is required: ``Import``. For example:
+
+.. code-block:: ada
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    procedure Show_C_Func is
+
+       function my_func (a : int) return int
+         with
+           Import        => True,
+           Convention    => C;
+       --  Imports function 'my_func' from C.
+       --  You can now call it from Ada.
+
+    begin
+       null;
+    end Show_C_Func;
+
+This code interfaces with the following declaration in the C header file:
+
+.. code-block:: c
+
+    int my_func (int a);
+
+This is the corresponding implementation:
+
+.. code-block:: c
+
+    #include "my_func.h"
+
+    int my_func (int a)
+    {
+        return a * 2;
+    }
+
+It is possible to use a different subprogram name in the Ada code. For
+example, we could rename the original C function to ``Get_Value`` in the
+Ada code:
+
+.. code-block:: ada
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    procedure Show_C_Func is
+
+       function Get_Value (a : int) return int
+         with
+           Import        => True,
+           Convention    => C,
+           External_Name => "my_func";
+
+       --  Imports function 'my_func' from C and
+       --  rename it to 'Get_Value'
+
+       V : int;
+    begin
+       V := Get_Value (2);
+       Put_Line("Result is " & int'Image(V));
+    end Show_C_Func;
+
+As the example shows, we can make use of the ``Get_Value`` function and
+retrieve information without additional efforts.
+
 Foreign variables
 -----------------
 
