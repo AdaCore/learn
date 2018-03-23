@@ -2750,6 +2750,9 @@ making use of the corresponding data types in C (``int``, ``long``,
 Foreign subprograms
 -------------------
 
+Calling C subprograms in Ada
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 A similar approach is used when interfacing with subprograms written in C.
 In this case, an additional aspect is required: ``Import``. For example:
 
@@ -2819,6 +2822,60 @@ Ada code:
 
 As the example shows, we can make use of the ``Get_Value`` function and
 retrieve information without additional efforts.
+
+Calling Ada subprograms in C
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is also possible to call Ada subprograms in C applications. This
+requires the use of the ``Export`` aspect. For example:
+
+.. code-block:: ada
+
+    --% filename: c_api.ads
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    package C_API is
+
+       function My_Func (a : int) return int
+         with
+           Export        => True,
+           Convention    => C,
+           External_Name => "my_func";
+
+    end C_API;
+
+This is the corresponding implementation:
+
+.. code-block:: ada
+
+    --% filename: c_api.adb
+    package body C_API is
+
+       function My_Func (a : int) return int is
+       begin
+          return a * 2;
+       end My_Func;
+
+    end C_API;
+
+In the C code, we simply have to declare the function using the ``extern``
+keyword. For example:
+
+.. code-block:: c
+
+    #include <stdio.h>
+
+    extern int my_func (int a);
+
+    int main (int argc, char **argv) {
+
+      int v = my_func(2);
+
+      printf("Result is %d\n", v);
+
+      return 0;
+    }
 
 Foreign variables
 -----------------
