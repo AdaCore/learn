@@ -2687,8 +2687,65 @@ Protected types
 Interfacing with C and C++
 ==========================
 
+Ada allows for interfacing with existing code in C and C++. In order to
+achieve this, a few recommendations need to be observed. This section will
+discuss them.
+
 Type convention
 ---------------
+
+In order to interface with data types declared in a C application, the
+convention aspect needs to be specified. In the following example, we
+interface with the ``C_Enum`` enumeration declared in a C source-code
+file:
+
+.. code-block:: ada
+
+    procedure Show_C_Enum is
+
+       type C_Enum is (A, B, C)
+         with Convention => C;
+       -- Use C convention for C_Enum
+    begin
+       null;
+    end Show_C_Enum;
+
+In order to interface with C built-in types, we need to reference to the
+``Interfaces.C`` package, which contains all type definitions that we
+need. For example:
+
+.. code-block:: ada
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    procedure Show_C_Struct is
+
+       type c_struct is record
+          a : int;
+          b : long;
+          c : unsigned;
+          d : double;
+       end record
+         with Convention => C;
+
+    begin
+       null;
+    end Show_C_Struct;
+
+In this example, we're interfacing with a C struct (``C_Struct``) and
+making use of the corresponding data types in C (``int``, ``long``,
+``unsigned`` and ``double``). This is the original declaration:
+
+.. code-block:: c
+
+    struct c_struct
+    {
+        int         a;
+        long        b;
+        unsigned    c;
+        double      d;
+    };
 
 Foreign subprograms
 -------------------
