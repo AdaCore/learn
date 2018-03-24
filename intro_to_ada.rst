@@ -3034,6 +3034,23 @@ will contain the correct number of times that ``my_func`` was called.
 Multi-language project
 ----------------------
 
+When using ``gprbuild``, we can only compile Ada source-code files by
+default. In order to compile C files in addition to Ada files, we need to
+adapt the project file used by ``gprbuild``. This can be achieved by
+using the ``Languages`` entry, as in the following example:
+
+.. code-block:: ada
+
+    project Multilang is
+
+       for Languages use ("ada", "c");
+
+       for Source_Dirs use ("src");
+       for Main use ("main.adb");
+       for Object_Dir use "obj";
+
+    end Multilang;
+
 Object oriented programming
 ===========================
 
