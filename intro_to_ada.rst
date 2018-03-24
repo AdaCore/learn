@@ -3031,6 +3031,60 @@ In the C application, we just need to declare the variable and use it:
 Again, by running the application, we see that the value from the counter
 will contain the correct number of times that ``my_func`` was called.
 
+Using unconstrained types
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous examples, we're being careful about the data types: all of
+them are coming from the ``Interfaces.C`` package. Using Ada built-in
+types when interfacing with C can be problematic, especially in case of
+unconstrained types. For example:
+
+.. code-block:: c
+
+    /*% filename: test.h */
+
+    char * my_func (void);
+
+This is the function implementation:
+
+.. code-block:: c
+
+    #include <stdio.h>
+    #include "test.h"
+
+    char * my_func (void)
+    {
+      return "hello";
+    }
+
+In the Ada application, we try to import this as a ``String`` type:
+
+.. code-block:: ada
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    procedure Show_C_Func is
+
+       function my_func return String
+         with
+           Import        => True,
+           Convention    => C;
+
+       S : String := my_func;
+
+    begin
+       Put_Line (S);
+    end Show_C_Func;
+
+When running this application, we'll get a ``STORAGE_ERROR`` exception.
+Therefore, the recommendation is to be very careful about the data types
+and use the ``Interfaces.C`` package whenever possible for interfacing
+with C.
+
 Multi-language project
 ----------------------
 
