@@ -2778,6 +2778,8 @@ This code interfaces with the following declaration in the C header file:
 
 .. code-block:: c
 
+    /*% filename: test.h */
+
     int my_func (int a);
 
 This is the corresponding implementation:
@@ -2879,6 +2881,155 @@ keyword. For example:
 
 Foreign variables
 -----------------
+
+Using C variables in Ada
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to use global variables from C code, we can apply the same method
+as for subprograms: we just specify the ``Import`` and ``Convention``
+aspects for the variable we want to import.
+
+Let's reuse an example from the previous section. We'll add a global
+variable (``func_cnt``) that counts the number of times that a the
+function (``my_func``) was called:
+
+.. code-block:: c
+
+    /*% filename: test.h */
+
+    extern int func_cnt;
+
+    int my_func (int a);
+
+The variable is then declared in the C file and increment in ``my_func``:
+
+.. code-block:: c
+
+    #include "test.h"
+
+    int func_cnt = 0;
+
+    int my_func (int a)
+    {
+      func_cnt++;
+
+      return a * 2;
+    }
+
+In the Ada application, we just need to reference the foreign variable:
+
+.. code-block:: ada
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    procedure Show_C_Func is
+
+       function my_func (a : int) return int
+         with
+           Import        => True,
+           Convention    => C;
+
+       V : int;
+
+       func_cnt : int
+         with
+           Import        => True,
+           Convention    => C;
+       --  We can access the func_cnt variable from test.c
+
+    begin
+       V := my_func (1);
+       V := my_func (2);
+       V := my_func (3);
+       Put_Line ("Result is " & int'Image (V));
+
+       Put_Line ("Function was called " & int'Image (func_cnt) & " times");
+    end Show_C_Func;
+
+As we can see by running the application, the value from the counter will
+contain the correct number of times that ``my_func`` was called.
+
+Similar to subprograms, we could use the ``External_Name`` aspect to
+rename the variable in the Ada application.
+
+Using Ada variables in C
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is also possible to use variables declared in Ada files in C
+applications. Similarly to subprogram, this requires the use of the
+``Export`` aspect.
+
+Let's reuse the previous example and add a counter, as we did in the
+previous example:
+
+.. code-block:: ada
+
+    --% filename: c_api.ads
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    package C_API is
+
+       func_cnt : int := 0
+         with
+           Export     => True,
+           Convention => C;
+
+       function My_Func (a : int) return int
+         with
+           Export        => True,
+           Convention    => C,
+           External_Name => "my_func";
+
+    end C_API;
+
+The variable is then increment in ``My_Func``:
+
+.. code-block:: ada
+
+    --% filename: c_api.adb
+    package body C_API is
+
+       function My_Func (a : int) return int is
+       begin
+          func_cnt := func_cnt + 1;
+          return a * 2;
+       end My_Func;
+
+    end C_API;
+
+In the C application, we just need to declare the variable and use it:
+
+.. code-block:: c
+
+    #include <stdio.h>
+
+    extern int my_func (int a);
+
+    extern int func_cnt;
+
+    int main (int argc, char **argv) {
+
+      int v;
+
+      v = my_func(1);
+      v = my_func(2);
+      v = my_func(3);
+
+      printf("Result is %d\n", v);
+
+      printf("Function was called %d times\n", func_cnt);
+
+      return 0;
+    }
+
+Again, by running the application, we see that the value from the counter
+will contain the correct number of times that ``my_func`` was called.
 
 Multi-language project
 ----------------------
