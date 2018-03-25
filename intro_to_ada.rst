@@ -3105,6 +3105,343 @@ using the ``Languages`` entry, as in the following example:
 
     end Multilang;
 
+Generating bindings
+-------------------
+
+In the examples above, we have manually created the Ada bindings for the
+C source-code we wanted to interface with. It is possible to automate this
+process by using the *Ada spec dump* compiler option:
+``-fdump-ada-spec``. We'll discuss details by revisiting our previous
+example.
+
+This was the C header file that we had:
+
+.. code-block:: c
+
+    extern int func_cnt;
+
+    int my_func (int a);
+
+In order to create bindings, we'll call the compiler like this:
+
+.. code-block:: sh
+
+    gcc -c -fdump-ada-spec -C ./test.h
+
+This will create an Ada specification file called ``test_h.ads``:
+
+.. code-block:: ada
+
+    pragma Ada_2005;
+    pragma Style_Checks (Off);
+
+    with Interfaces.C; use Interfaces.C;
+
+    package test_h is
+
+       func_cnt : aliased int;  -- ./test.h:3
+       pragma Import (C, func_cnt, "func_cnt");
+
+       function my_func (arg1 : int) return int;  -- ./test.h:5
+       pragma Import (C, my_func, "my_func");
+
+    end test_h;
+
+Now, we can simply refer to ``test_h`` package in the Ada application:
+
+.. code-block:: ada
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    with test_h;
+    use  test_h;
+
+    procedure Show_C_Func is
+       V : int;
+    begin
+       V := my_func (1);
+       V := my_func (2);
+       V := my_func (3);
+       Put_Line ("Result is " & int'Image (V));
+
+       Put_Line ("Function was called " & int'Image (func_cnt) & " times");
+    end Show_C_Func;
+
+Note that, in addition to ``fdump-ada-spec``, you can also specify the
+parent unit for the bindings you're creating. For example:
+
+.. code-block:: sh
+
+    gcc -c -fdump-ada-spec -fada-spec-parent=Ext_C_Code -C ./test.h
+
+This will create the file ``ext_c_code-test_h.ads``:
+
+.. code-block:: ada
+
+    package Ext_C_Code.test_h is
+
+       -- automatic generated bindings...
+
+    end Ext_C_Code.test_h;
+
+Adapting bindings
+~~~~~~~~~~~~~~~~~
+
+When creating bindings for a C header file, the compiler tries to do the
+best guess it can. However, the generated bindings do not always match the
+expectations we might have. This can happen, for example, when creating
+bindings for functions that deal with pointers. In this case, the compiler
+may just use ``System.Address`` for the pointers. Although this approach
+works fine (as we'll see later), this is not necessarily how developers
+would interpret the C header file. The following example will clarify this
+problem.
+
+Let's start with the following C header file:
+
+.. code-block:: c
+
+    /*% filename: test.h */
+
+    struct test;
+
+    struct test * test_create(void);
+
+    void test_destroy(struct test *t);
+
+    void test_reset(struct test *t);
+
+    void test_set_name(struct test *t, char *name);
+
+    void test_set_address(struct test *t, char *address);
+
+    void test_display(const struct test *t);
+
+This is the corresponding implementation:
+
+.. code-block:: c
+
+    #include <stdlib.h>
+    #include <string.h>
+    #include <stdio.h>
+
+    #include "test.h"
+
+    struct test {
+      char name[80];
+      char address[120];
+    };
+
+    static size_t
+    strlcpy(char *dst, const char *src, size_t dstsize)
+    {
+      size_t len = strlen(src);
+      if (dstsize) {
+        size_t bl = (len < dstsize-1 ? len : dstsize-1);
+        ((char*)memcpy(dst, src, bl))[bl] = 0;
+      }
+      return len;
+    }
+
+    struct test * test_create(void)
+    {
+      return malloc (sizeof (struct test));
+    }
+
+    void test_destroy(struct test *t)
+    {
+      if (t != NULL) {
+        free(t);
+      }
+    }
+
+    void test_reset(struct test *t)
+    {
+      t->name[0]    = '\0';
+      t->address[0] = '\0';
+    }
+
+    void test_set_name(struct test *t, char *name)
+    {
+      strlcpy(t->name, name, sizeof(t->name));
+    }
+
+    void test_set_address(struct test *t, char *address)
+    {
+      strlcpy(t->address, address, sizeof(t->address));
+    }
+
+    void test_display(const struct test *t)
+    {
+      printf("Name:    %s\n", t->name);
+      printf("Address: %s\n", t->address);
+    }
+
+Next, we'll create our bindings by running gcc:
+
+.. code-block:: sh
+
+    gcc -c -fdump-ada-spec -C ./test.h
+
+This creates the following specification in ``test_h.ads``:
+
+.. code-block:: ada
+
+    pragma Ada_2005;
+    pragma Style_Checks (Off);
+
+    with Interfaces.C; use Interfaces.C;
+    with System;
+    with Interfaces.C.Strings;
+
+    package test_h is
+
+       --  skipped empty struct test
+
+       function test_create return System.Address;  -- ./test.h:5
+       pragma Import (C, test_create, "test_create");
+
+       procedure test_destroy (arg1 : System.Address);  -- ./test.h:7
+       pragma Import (C, test_destroy, "test_destroy");
+
+       procedure test_reset (arg1 : System.Address);  -- ./test.h:9
+       pragma Import (C, test_reset, "test_reset");
+
+       procedure test_set_name (arg1 : System.Address; arg2 : Interfaces.C.Strings.chars_ptr);  -- ./test.h:11
+       pragma Import (C, test_set_name, "test_set_name");
+
+       procedure test_set_address (arg1 : System.Address; arg2 : Interfaces.C.Strings.chars_ptr);  -- ./test.h:13
+       pragma Import (C, test_set_address, "test_set_address");
+
+       procedure test_display (arg1 : System.Address);  -- ./test.h:15
+       pragma Import (C, test_display, "test_display");
+
+    end test_h;
+
+As we can see, the bindings generator completely ignores the specification
+of ``struct test``. Also, all references to the ``test`` are replaced by
+simple addresses (``System.Address``). Of course, these bindings are good
+enough for creating a test application in Ada:
+
+.. code-block:: ada
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    with Interfaces.C.Strings;
+    use  Interfaces.C.Strings;
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    with test_h;
+    use  test_h;
+
+    with System;
+
+    procedure Show_Automatic_C_Struct_Bindings is
+
+       Name    : constant chars_Ptr := New_string ("John Doe");
+       Address : constant chars_Ptr := New_string ("Small Town");
+
+       T : System.Address := test_create;
+
+    begin
+       test_reset (T);
+       test_set_name (T, Name);
+       test_set_address (T, Address);
+
+       test_display (T);
+       test_destroy (T);
+    end Show_Automatic_C_Struct_Bindings;
+
+Even though we can successfully bind our C code with Ada using the
+automatic generated bindings, they are not ideal. Instead, we would like
+to have Ada bindings that match our (human) interpretation of the C header
+file. This will require manual analysis of the header file. The good news
+are that, at least, we can use the automatic generated bindings as a
+starting point and adapt them to our needs. For example, we can:
+
+    #. Define a ``Test`` type based on ``System.Address`` and use it in
+       all relevant function.
+
+    #. Remove the ``test_`` prefix in all operations on the ``Test``
+       type.
+
+This would be the resulting specification:
+
+.. code-block:: ada
+
+    with Interfaces.C; use Interfaces.C;
+    with System;
+    with Interfaces.C.Strings;
+
+    package adapted_test_h is
+
+       type Test is new System.Address;
+
+       function Create return Test;
+       pragma Import (C, Create, "test_create");
+
+       procedure Destroy (T : Test);
+       pragma Import (C, Destroy, "test_destroy");
+
+       procedure Reset (T : Test);
+       pragma Import (C, Reset, "test_reset");
+
+       procedure Set_Name (T    : Test;
+                           Name : Interfaces.C.Strings.chars_ptr);  -- ./test.h:11
+       pragma Import (C, Set_Name, "test_set_name");
+
+       procedure Set_Address (T       : Test;
+                              Address : Interfaces.C.Strings.chars_ptr);  -- ./test.h:13
+       pragma Import (C, Set_Address, "test_set_address");
+
+       procedure Display (T : Test);  -- ./test.h:15
+       pragma Import (C, Display, "test_display");
+
+    end adapted_test_h;
+
+This would be the corresponding Ada application:
+
+.. code-block:: ada
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    with Interfaces.C.Strings;
+    use  Interfaces.C.Strings;
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    with adapted_test_h;
+    use  adapted_test_h;
+
+    with System;
+
+    procedure Show_Adapted_C_Struct_Bindings is
+
+       Name    : constant chars_Ptr := New_string ("John Doe");
+       Address : constant chars_Ptr := New_string ("Small Town");
+
+       T : Test := Create;
+
+    begin
+       Reset (T);
+       Set_Name (T, Name);
+       Set_Address (T, Address);
+
+       Display (T);
+       Destroy (T);
+    end Show_Adapted_C_Struct_Bindings;
+
+Now, we're able to use the ``Test`` type and its operations in a clean,
+readable way.
+
 Object oriented programming
 ===========================
 
