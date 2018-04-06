@@ -3487,10 +3487,15 @@ However, since GNAT is based on gcc, we can build applications using Ada
 and C++ code without issues --- as long as we use the same compiler.
 
 In order to retrieved the mangled symbol names, we can simply generate
-bindings automatically by using gcc with the ``-fdump-ada-spec`` option,
-as explained in the previous section. Alternatively, we can use binary
-examination tools (such as ``nm`` and ``objdump`` on Linux) to retrieve
-the symbol names from a library.
+bindings automatically by using ``g++`` with the ``-fdump-ada-spec``
+option:
+
+.. code-block:: sh
+
+    g++ -c -fdump-ada-spec -C ./test.hh
+
+Alternatively, we can use binary examination tools (such as ``nm`` and
+``objdump`` on Linux) to retrieve the symbol names from a library.
 
 C++ classes
 ~~~~~~~~~~~~~~~~~~~
@@ -3536,8 +3541,14 @@ And this is the corresponding implementation:
     }
 
 Because of the more complex structure, the recommendation is to generate
-bindings using ``gcc`` and, if needed, adapt the file. The generated
-bindings look like this:
+bindings using ``g++`` and, if needed, adapt the file. Let's first run
+``g++``:
+
+.. code-block:: sh
+
+    g++ -c -fdump-ada-spec -C ./test.hh
+
+The generated bindings look like this:
 
 .. code-block:: ada
 
