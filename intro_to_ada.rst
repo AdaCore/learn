@@ -2882,8 +2882,8 @@ keyword. For example:
 Foreign variables
 -----------------
 
-Using C variables in Ada
-~~~~~~~~~~~~~~~~~~~~~~~~
+Using C global variables in Ada
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In order to use global variables from C code, we can apply the same method
 as for subprograms: we just specify the ``Import`` and ``Convention``
