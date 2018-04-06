@@ -2691,6 +2691,26 @@ Ada allows for interfacing with existing code in C and C++. In order to
 achieve this, a few recommendations need to be observed. This section will
 discuss them.
 
+Multi-language project
+----------------------
+
+When using ``gprbuild``, we can only compile Ada source-code files by
+default. In order to compile C files in addition to Ada files, we need to
+adapt the project file used by ``gprbuild``. This can be achieved by
+using the ``Languages`` entry, as in the following example:
+
+.. code-block:: ada
+
+    project Multilang is
+
+       for Languages use ("ada", "c");
+
+       for Source_Dirs use ("src");
+       for Main use ("main.adb");
+       for Object_Dir use "obj";
+
+    end Multilang;
+
 Type convention
 ---------------
 
@@ -3084,26 +3104,6 @@ When running this application, we'll get a ``STORAGE_ERROR`` exception.
 Therefore, the recommendation is to be very careful about the data types
 and use the ``Interfaces.C`` package whenever possible for interfacing
 with C.
-
-Multi-language project
-----------------------
-
-When using ``gprbuild``, we can only compile Ada source-code files by
-default. In order to compile C files in addition to Ada files, we need to
-adapt the project file used by ``gprbuild``. This can be achieved by
-using the ``Languages`` entry, as in the following example:
-
-.. code-block:: ada
-
-    project Multilang is
-
-       for Languages use ("ada", "c");
-
-       for Source_Dirs use ("src");
-       for Main use ("main.adb");
-       for Object_Dir use "obj";
-
-    end Multilang;
 
 Generating bindings
 -------------------
