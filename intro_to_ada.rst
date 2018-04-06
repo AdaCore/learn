@@ -3494,8 +3494,9 @@ option:
 
     g++ -c -fdump-ada-spec -C ./test.hh
 
-Alternatively, we can use binary examination tools (such as ``nm`` and
-``objdump`` on Linux) to retrieve the symbol names from a library.
+Alternatively, we could use binary examination tools to retrieve the
+symbol names from a library. Examples of such tools are ``nm`` for Mac and
+Linux, and ``dumpbin.exe`` for Windows.
 
 C++ classes
 ~~~~~~~~~~~~~~~~~~~
