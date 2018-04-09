@@ -1825,7 +1825,7 @@ size after it has been initialized, so this is also illegal:
 
 Also, while you can expect a warning for this kind of errors in very simple
 cases like this one, it is impossible for a compiler to know in the general
-case if you are assigning a value of the correct length, so this viola5ion will
+case if you are assigning a value of the correct length, so this violation will
 generally result in a runtime error.
 
 Declaring arrays (2)
