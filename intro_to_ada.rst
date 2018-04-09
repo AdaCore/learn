@@ -1828,6 +1828,33 @@ cases like this one, it is impossible for a compiler to know in the general
 case if you are assigning a value of the correct length, so this violation will
 generally result in a runtime error.
 
+.. attention::
+    While we will learn more about this later, it is important to know right
+    away that arrays are not the only types whose instances might be of unknown
+    size at compile-time.
+
+    Those objects are said to be of an *indefinite subtype*. Which means that
+    the subtype size is not known at compile-time, but is dynamically computed
+    at run-time.
+
+    .. code-block:: ada
+
+        function Get_Number return Integer; --  Code not shown here
+
+        declare
+           A : String := "Hello";
+           --  Indefinite subtype
+
+           B : String (1 .. 5) := "Hello";
+           --  Definite subtype
+
+           C : String (1 .. Get_Number);
+           --  Indefinite subtype (Get_Number's value is computed at run-time)
+        begin
+           A := "World"; --  Legal: Same size
+           A := "Hello World"; --  Illegal: Different size
+        end;
+
 Declaring arrays (2)
 --------------------
 
