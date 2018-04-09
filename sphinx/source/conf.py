@@ -168,3 +168,6 @@ texinfo_documents = [
 todo_include_todos = True
 
 html_theme = "sphinx_rtd_theme"
+
+def setup(app):
+    app.add_stylesheet('css/custom.css')
