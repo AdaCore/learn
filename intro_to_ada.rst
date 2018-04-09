@@ -1734,6 +1734,17 @@ Here is how the string type is defined in Ada:
 The only built-in feature Ada adds to make strings more ergonomic is custom
 literals, as we can see in the example below.
 
+.. hint::
+    String literals are just sugar on top of aggregates, so that in the
+    following example, A and B are exactly similar declarations
+
+    .. code-block:: ada
+
+        --  Those two declarations produce the same thing
+        A : String (1 .. 11) := "Hello World";
+        B : String (1 .. 11) := ('H', 'e', 'l', 'l', 'o', ' ',
+                                 'W', 'o', 'r', 'l', 'd');
+
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
