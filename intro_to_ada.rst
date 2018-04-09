@@ -1916,6 +1916,8 @@ algorithms that share common properties.
 Generics can be used for subprograms or packages. A generic is declared
 by using the keyword ``generic``. For example:
 
+.. raph-amiard: We are lacking a definition/link of metaprogramming.
+
 .. code-block:: ada
 
     procedure Show_Simple_Generic is
