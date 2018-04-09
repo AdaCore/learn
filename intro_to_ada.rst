@@ -1858,11 +1858,108 @@ generally result in a runtime error.
 Declaring arrays (2)
 --------------------
 
+While we can have, as we saw, array types whose exact representation is not
+known at compile-time - which means, in effect, that their size and bounds are
+determined at runtime - the component type of arrays needs to be of a definite
+and constrained type.
+
+Hence, if you need to declare, for example, and array of strings, the string
+subtype used as component will need to have a fixed size.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Days is
+       type Days is (Monday, Tuesday, Wednesday,
+                     Thursday, Friday, Saturday, Sunday);
+
+       subtype Day_Name is String (1 .. 2);
+       --  Subtype of string with known size
+
+       type Days_Name_Type
+       is array (Days) of Day_Name;
+       --        ^ Type of the index
+       --                 ^ Type of the element. Must be
+       --                   definite
+
+       Names : constant Days_Name_Type :=
+         ("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su");
+       --  Initial value given by aggregate
+    begin
+       for I in Names'Range loop
+          Put_Line (Names (I));
+       end loop;
+    end Show_Days;
+
 Modular/Structured programming
 ==============================
 
+So far, we manager to put our examples in the body of a procedure. Ada is
+helpful in that regard, since it allows you to put any declaration in any
+declarative part, which allowed us to declare our types and instances in the
+body of the main procedure of our examples.
+
+However, it is easy to see that this is not going to scale forever, and that
+before long, we will need a better way to structure our programs into modular
+and distinct units.
+
+Ada encourages the separation of programs into multiple packages and
+sub-packages, providing many tools to the programmer trying to fullfil his
+quest of a perfectly organized code-base.
+
 Packages
 --------
+
+Here is how you declare a package in Ada:
+
+.. code-block:: ada
+
+    package Week is
+
+       --  This is a declarative part. You can put only
+       --  declarations here, no statements
+
+       type Days is (Monday, Tuesday, Wednesday,
+          Thursday, Friday, Saturday, Sunday);
+
+       type WorkLoad_Type is array (Days range <>) of Natural;
+
+       Workload : constant Workload_Type :=
+          (Monday .. Thursday => 8,
+           Friday => 7,
+           Saturday | Sunday => 0);
+
+    end Week;
+
+And here is how you use it
+
+.. code-block:: ada
+
+    with Week;
+
+    procedure Main is
+    begin
+       for D in Week.Days loop
+          Put_Line
+            ("Workload for day " & Week.Days'Image (D)
+             & " is " & Workload (D));
+       end loop;
+    end Main;
+
+Packages are a way to make your code modular, separating your programs into
+semantically significant units. Additionally they will allow the programmer to
+generally compile his program faster by leveraging separate compilation.
+
+.. admonition:: In other languages
+    Packages are different from header files in C/C++ because:
+
+    - Language level mechanism (not a preprocessor)
+    - Not text based
+    - With'ing a package does not "copy/paste" the content of
+      the spec into your file
+    - With GNAT, packages specs go in .ads files (here, it
+        would be week.ads)
 
 With-ing a package
 ------------------
