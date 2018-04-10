@@ -4,7 +4,7 @@ function Int_To_String (Int : Integer) return String is
    Start_Index : Positive;
 begin
    for I in reverse Buffer'Range loop
-      Buffer (I) := Character'Val(Character'Pos ('0') + Temp mod 10);
+      Buffer (I) := Character'Val (Character'Pos ('0') + Temp mod 10);
       Temp := Temp / 10;
       if Temp = 0 then
          Start_Index := I;
