@@ -1932,18 +1932,22 @@ Here is how you declare a package in Ada:
 
     end Week;
 
-And here is how you use it
+And here is how you use it:
 
 .. code-block:: ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
     with Week;
+    --  References the Week package, and adds a dependency from the main unit
+    --  to the week unit.
 
     procedure Main is
     begin
        for D in Week.Days loop
+       --       ^ Reference to Week.Days enum type
           Put_Line
             ("Workload for day " & Week.Days'Image (D)
-             & " is " & Workload (D));
+             & " is " & Week.Workload (D));
        end loop;
     end Main;
 
@@ -1951,24 +1955,129 @@ Packages are a way to make your code modular, separating your programs into
 semantically significant units. Additionally they will allow the programmer to
 generally compile his program faster by leveraging separate compilation.
 
+While the ``with`` clause indicates a dependency, you can see in the example
+above that you still need to prefix the use of entities from the week package
+by the name of the package.
+
+A ``with`` clause *has* to happen in the prelude of a compilation unit. It is
+not allowed anywhere else.
+
 .. admonition:: In other languages
-    Packages are different from header files in C/C++ because:
+    Packages look similar to, but are underneath very different from header
+    files in C/C++.
 
-    - Language level mechanism (not a preprocessor)
-    - Not text based
-    - With'ing a package does not "copy/paste" the content of
-      the spec into your file
-    - With GNAT, packages specs go in .ads files (here, it
-        would be week.ads)
+    - The first and most important distinction is that packages are a language
+      level mechanism, by opposition to includes, which are a functionality of the
+      C preprocessor.
 
-With-ing a package
-------------------
+    - The first corollary of this design divergence is that the mechanism is a
+      semantic inclusion mechanism, not a text inclusion mechanism. Hence, when
+      you with a package, you say "I'm depending on this semantic unit" to the
+      compiler, not "include this bunch of text in place here".
+
+    - The consequences for the user, is that the content of a package cannot
+      *vary* depending on where it has been included from, unlike in C/C++,
+      where the existence of the preprocessor makes the exact content of what
+      is included undecidable.
+
+      This allows compilation/recompilation to be more efficient. It also
+      allows tooling like IDEs to have correct information about the semantics
+      of a program. In turn, this allows better tooling in general, and code
+      that is more analyzable, even by humans.
+
+.. admonition:: In the GNAT toolchain
+
+    While the design of the Ada language does not mandate anything regarding the
+    organization of files with regards to packages, eg. in theory you can put all
+    your code in one file, or use your own scheme of organization, in practice in
+    GNAT, you're supposed to put each top-level compilation unit in a separate
+    file. In the example above, the ``Week`` package will go in a ``.ads`` file
+    (for Ada specification), and the ``Main`` procedure will go in a ``.adb`` file
+    (for Ada body).
 
 Using a package
 ---------------
 
+As we have seen above, we use the ``with`` clause to indicate a dependency on
+another package. However, every use of entities coming from the ``Week``
+package had to be prefixed by the full name of the package. It is possible to
+make every entity of a package visible directly in the current scope, using the
+``use`` clause.
+
+In fact, we have been using the ``use`` clause since almost the beginning of
+this tutorial.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    --                    ^ Make every entity of the Ada.Text_IO package
+    --                      directly visible.
+    with Week;
+
+    procedure Main is
+       use Week;
+       --  Make every entity of the Week package directly visible.
+    begin
+       for D in Week.Days loop
+       --       ^ Reference to Week.Days enum type
+          Put_Line  -- Put_Line comes from Ada.Text_IO.
+            ("Workload for day " & Week.Days'Image (D)
+             & " is " & Week.Workload (D));
+       end loop;
+    end Main;
+
+As you can see in the example above:
+
+- ``Put_Line`` is a subprogram that comes from the ``Ada.Text_IO``
+  package. We can use it directly because we have used the package at the top
+  of the ``Main`` unit.
+
+- Unlike ``with`` clauses, ``use`` clause can happen either in the prelude, or
+  in any declarative zone. If used in a declarative zone, the ``use`` clause
+  will have an effect in it's containing lexical scope.
+
 Package body
 ------------
+
+In the somewhat artificial example above, the ``Week`` package only has
+declarations and no body. That's not a mistake: In a package specification,
+which is what is showcased above, you cannot declare bodies. Those have to be
+in the package body.
+
+.. code-block:: ada
+
+    --  week.ads
+    package Week is
+
+       type Days is (Monday, Tuesday, Wednesday,
+          Thursday, Friday, Saturday, Sunday);
+
+       function Get_Workload (Day : Days) return Natural;
+
+    end Week;
+
+    --  week.adb
+    package body Week is
+
+       --  The body contains additional declarations, not visible from the
+       --  spec, or anywhere outside of the body
+       type WorkLoad_Type is array (Days range <>) of Natural;
+       Workload : constant Workload_Type :=
+          (Monday .. Friday => 8, Friday => 7, Saturday | Sunday => 0);
+
+       function Get_Workload (Day : Days) return Natural is
+       begin
+          return Workload (Day);
+       end;
+    end Week;
+
+Here we can see that the body of the ``Get_Workload`` function has to be
+declared in the body. Coincidentally, introducing a body allows us to put the
+``Workload_Type`` array type and the constant ``Workload`` in the body, and
+make them inaccessible to the user of the ``Week`` package, providing a first
+form of encapsulation.
+
+This works because entities of the body are *only* visible in the body.
 
 Subprograms
 ===========
