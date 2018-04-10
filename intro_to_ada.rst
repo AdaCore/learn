@@ -593,8 +593,8 @@ them. Here is how ``Integer`` is defined:
     type Integer is range -(2 ** 31) .. +(2 ** 31 - 1);
 
 ``**`` is the exponent operator, which means that the first valid value
-for ``Integer`` is :math:`-2^31`, and the last valid value is
-:math:`2^31-1`. In a fit of luck, this coincides with what you can fit
+for ``Integer`` is :math:`-2^{31}`, and the last valid value is
+:math:`2^{31-1}`. In a fit of luck, this coincides with what you can fit
 in a 32 bit signed integer on modern platforms :).
 
 Operational semantics
