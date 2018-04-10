@@ -499,8 +499,8 @@ you would expect.
     begin
         for I in 1 .. 10 loop
             Put_Line (case I is
-                      when 1 | 3 | 5 | 7 | 9 => "Odd",
-                      when 2 | 4 | 6 | 8 | 10 => "Even",
+                      when 1 | 3 | 5 | 7 | 9 => "Odd",
+                      when 2 | 4 | 6 | 8 | 10 => "Even",
                       when others => "Cannot happen")
         end loop;
     end Main;
