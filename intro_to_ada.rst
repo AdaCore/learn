@@ -1963,6 +1963,7 @@ A ``with`` clause *has* to happen in the prelude of a compilation unit. It is
 not allowed anywhere else.
 
 .. admonition:: In other languages
+
     Packages look similar to, but are underneath very different from header
     files in C/C++.
 
