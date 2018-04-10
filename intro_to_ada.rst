@@ -2174,16 +2174,182 @@ Subprograms
 Subprograms
 -----------
 
+So far, we used procedures a bit, mostly so we have a main body of code to
+execute, and showed one function or two. Those entities belong to a category
+called subprograms.
+
+There are two kinds of subprograms in Ada, functions and procedures. The main
+useful distinction between the two is that functions return a value, and
+procedures don't.
+
+.. code-block:: ada
+
+    package Week is
+       type Days is (Monday, Tuesday, Wednesday,
+                     Thursday, Friday, Saturday, Sunday);
+
+       function Get_Workload (Day : Days) return Natural;
+       --  We declare (but don't define) a function with one
+       --  parameter, returning a Natural integer
+    end Week;
+
+As we saw before in the packages section, if you want to declare a subprogram
+declaration to the package declaration. This declaration will not define the
+function's body, only its name and profile (and hopefully some documentation),
+so that clients of the package know how to use it.
+
+Subprograms in Ada can expectedly have parameters. One syntactically important
+note is that a subprogram which has no parameters does not have a parameter
+section at all, following the form ``procedure [name]`` or ``function [name]
+return [type]``.
+
+.. code-block:: ada
+
+    package Week is
+       type Days is (Monday, Tuesday, Wednesday,
+                     Thursday, Friday, Saturday, Sunday);
+
+       function Get_Day_Name
+          (Day : Days := Monday) return String;
+       --                             ^ We can return any type,
+       --                               even indefinite ones
+       --           ^ Default value for parameter
+    end Week;
+
+We learn two interesting things in the example above:
+
+- Parameters can also have default values. When calling the subprogram, you can
+  then omit parameters if they have a default value. A call to a subprogram
+  without parameters does not need parentheses, similarly to when it is
+  declared.
+
+- The return type of a function can be anything. objects of size unknown at
+  compile time are fine. Note that this also true for parameters.
+
+.. admonition:: In other languages
+
+    Returning variable size objects in languages lacking a garbage collector is
+    a bit complicated implementation-wize, which is why C and C++ don't allow
+    it, prefering to ressort to explicit dynamic allocation from the user.
+
+    The problem is that explicit dynamic allocation is unsafe as soon as you
+    want to collect unused memory. Ada's ability to return variable size
+    objects will remove one use case for dynamic allocation, and hence, remove
+    one potential source of bugs from your programs.
+
+    Rust follows the C/C++ model, but with it's safe pointer semantics, allows
+    for safety. However, dynamic allocation is still used. Ada can benefit from
+    an eventual performance edge because it can use any model.
+
+    .. amiard: TODO: say less or say more
+
+As we showed briefly above, a subprogram declaration in a package declaration
+must be completed by a subprogram body in the package body. For the ``Week``
+package above, we could have the following body:
+
+.. code-block:: ada
+
+    package body Week is
+       --  Implementation of the Get_Day_Name function
+       function Get_Day_Name (Day : Days := Monday) return String is
+       begin
+          return
+            (case Day is
+             when Monday => "Monday";
+             when Tuesday => "Tuesday";
+             when Wednesday => "Wednesday";
+             when Thursday => "Thursday";
+             when Friday => "Friday";
+             when Sunday => "Sunday");
+       end Get_Day_Name;
+    end Week;
+
+That we could then use thusly:
+
+.. code-block:: ada
+
+    with Week;
+
+    procedure Show_Days is
+    begin
+       Put_Line (Week.Get_Day_Name);
+       --             ^ Paramless call, value of Day parameter is Monday
+       for Day in Week.Days loop
+          Put_Line (Week.Get_Day_Name (Day));
+          --                           ^ Regular param passing
+       end loop;
+
+       Put_Line (Week.Get_Day_Name (Day => Friday));
+       --                           ^ Named param passing
+    end Show_Days;
+
+Ada allows you to name the parameters when you pass them, whether they have a
+default or not. There are some rules:
+
+- Positional parameters come first.
+- A positional parameter cannot follow a named parameter.
+
+As a convention, people usually name parameters at the call site if the
+function's corresponding parameters has a default value. However, it is also
+perfectly acceptable to name every parameter if it makes the code clearer.
+
+.. code-block:: ada
+
+    package Week is
+       type Days is (Monday, Tuesday, Wednesday,
+                     Thursday, Friday, Saturday, Sunday);
+
+       type Language is (English, Italian);
+
+       function Get_Day_Name (Day : Days; Lang : Language := English) return String;
+    end Week;
+
+    with Week; use Week
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+    begin
+       Put_Line (Get_Day_Name (Monday, Lang => Italian));
+    end Main;
+
 Parameters modes
 ----------------
-
-.. amiard: The first part is missing because I already wrote it on another
-    computer.
 
 .. amiard TODO: Talk about early returns from procedures, and grouping
    parameters.
    Talk about the fact that order is unimportant with named parameters (with example)
 
+So far we have seen that Ada is a safety focused language. There are many ways
+this focus surfaces, but two important points are:
+
+- Ada makes the user specify as much as possible about the behavior he expects
+  out of his program, so that the compiler can warn or error-out if there is an
+  inconsistency.
+
+- Ada tries to discourage as much as possible the use of pointers and dynamic
+  memory allocation, giving other ways to achieve goals that would have been
+  accomplished this way in other languages.
+
+Parameters modes are a feature that helps achieve the two design goals above. A
+function parameter necessarily has a mode, that is one of the three following modes.
+
++------------+--------------------------------------------+
+| ``in``     | Parameter can only be read, not written    |
++------------+--------------------------------------------+
+| ``out``    | Parameter can only be written to, not read |
++------------+--------------------------------------------+
+| ``in out`` | Parameter can be both read and written     |
++------------+--------------------------------------------+
+
+The default mode for parameters is ``in``, so, so far, every example we have
+been showing has been using ``in`` parameters.
+
+.. admonition:: Historically
+    Functions and procedures were originally more different in philosophy.
+    Before Ada 2005, one wasn't able to
+
+Subprogram calls
+----------------
 In parameters
 ~~~~~~~~~~~~~
 
