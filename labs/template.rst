@@ -8,9 +8,15 @@ A standard lab needs to be constituted of the following files
     lab.yaml               # Config file. For the moment contains eventual output
                            # file if output should be checked.
 
-    src/*.ad(s|b)          # Base source files for the lab
+    common/*.ad(s|b)       # Base source files for the lab,
+                           # shared between problem and solution. Read-only.
+                           # Will typically contain the main.adb that is the
+                           # driver for the lab.
 
-    solution/*.ad(s|b)     # Source files for the solution
+    problem/*.ad(s|b)      # User's solution. Might have some code present from
+                           # the start
+
+    solution/*.ad(s|b)     # Source files for the solution. Read-only
 
     problem_statement.rst  # File containing the problem statement for the lab,
                            # + eventual hints, guidance, code snippets.

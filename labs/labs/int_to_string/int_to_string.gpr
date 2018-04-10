@@ -1,0 +1,20 @@
+project Int_To_String is
+    type Mode_Type is ("problem", "solution");
+
+    Mode : Mode_Type := external ("ADA_LAB_MODE", "problem");
+
+    case Mode is
+    when "problem" =>
+       for Source_Dirs use ("problem", "common");
+    when "solution" =>
+       for Source_Dirs use ("solution", "common");
+    end case;
+
+    for Object_Dir use "obj";
+    for Main use ("main.adb");
+
+    package Compiler is
+       for Default_Switches ("Ada")
+       use ("-g", "-O0", "-gnata");
+    end Compiler;
+end Int_To_String;
