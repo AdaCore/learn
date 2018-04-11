@@ -1379,11 +1379,98 @@ detects the violation.
        --           Compiles, but exception at runtime
     end Greet;
 
+Records
+=======
+
+So far, all the types we have seen are what we can call base types: each
+instance of one of those types represents a single piece of data. Now we are
+going to study our first class of composite types: The record.
+
+Records are a way to piece together several instances of other types. Each of
+those instances will be given a name. The pair of a name to an instance of a
+specific type is called a field, or a component.
+
+Here is an example of a simple record declaration:
+
+.. code-block:: ada
+
+    type Date is record
+       --  The following declarations are components of the record
+       Day   : Integer range 1 .. 31;
+       Month : Month_Type;
+       Year  : Integer range 1 .. 3000; --  You can add custom constraints on fields
+    end record;
+
+One thing we can notice is that fields look a lot like variable declarations,
+except that they are inside of a record definition.
+
+As with objects declarations, it is possible to specify additional constraints
+when indicating the subtype of the field.
+
+.. code-block:: ada
+
+    type Date is record
+       Day   : Integer range 1 .. 31;
+       Month : Month_Type := January;
+       --  This component has a default value
+       Year  : Integer range 1 .. 3000 := 2012;
+       --                                 ^ Default value
+    end record;
+
+Record components can also have default values. When declaring an instance of
+the record, fields will be automatically set to this value. The value can be
+any expression that is valid in the scope of definition of the record.
+
+..code-block:: ada
+
+    Today    : Date := (31, November, 2012);
+    Birthday : Date := (Day => 30, Month => February, Year => 2010);
+    --                  ^ By name
+
+Records also have a literal notation that you can use, and that is showcased
+above. This notation is called aggregate notation, and the literals are called
+aggregates. They can be used in a variety of contexts that we will disclose
+throughout the course, and one of those is to initalize records.
+
+An aggregate is a list of values separated by commas and enclosed in
+parentheses. It is a valid expression in any context where a value of the
+record can be expected.
+
+Values for the components can be specified positionally, as in the first
+example, or by name, as in the second example. A mixture of positional and
+named vamues is possible, but you cannot use a positional association after a
+named one.
+
+To access components of a record instance, an operation that is called
+component selection, you use the following syntax:
+
+.. code-block:: ada
+
+    procedure Record_Selection is
+
+       type Month_Type is
+         (January, February, March, April, May, June, July,
+          August, September, October, November, December);
+
+       type Date is record
+          Day   : Integer range 1 .. 31;
+          Month : Month_Type;
+          Year  : Integer range 1 .. 3000 := 2012;
+       end record;
+
+       Today    : Date := (31, November, 2012);
+
+    begin
+       Today.Day := 29;
+       Put_Line ("Today is the " & Integer'Image (Today.Day)
+                 & " of " & Month_Type'Image (Today.Month)
+                 & ", " & Integer'Image (Today.Year));
+    end Record_Selection;
+
 Arrays
 ======
 
-Now that we have been over definiton of fundamental types, let's tackle our
-first composite type: arrays.
+Another very important family of composite types is arrays.
 
 Array type declaration
 ----------------------
@@ -2089,17 +2176,226 @@ Subprograms
 Parameters modes
 ----------------
 
-Subprogram calls
-----------------
+.. amiard: The first part is missing because I already wrote it on another
+    computer.
+
+.. amiard TODO: Talk about early returns from procedures, and grouping
+   parameters.
+   Talk about the fact that order is unimportant with named parameters (with example)
+
+In parameters
+~~~~~~~~~~~~~
+
+The first mode for parameter is the one we have been implicitly using so far.
+Parameters passed using this mode cannot be modified, so that the following
+program will cause an error:
+
+.. code-block:: ada
+
+    procedure Swap (A, B : Integer) is
+       Tmp : Integer;
+    begin
+       Tmp := A;
+
+       -- Error: assignment to "in" mode parameter not allowed
+       A := B;
+       -- Error: assignment to "in" mode parameter not allowed
+       B := Tmp;
+    end Swap;
+
+The fact that this is the default mode in Ada is in itself very important. It
+means that mutation on parameters will not happen unless you explicitly change
+the mode.
+
+In-out parameters
+~~~~~~~~~~~~~~~~~
+
+To fix our code above, we can use an in-out parameter.
+
+.. code-block:: ada
+
+    procedure In_Out_Params is
+       procedure Swap (A, B : in out Integer) is
+          Tmp : Integer;
+       begin
+          Tmp := A;
+          A := B;
+          B := Tmp;
+       end Swap;
+
+       A : Integer := 12;
+       B : Integer := 44;
+    begin
+        Swap (A, B)
+        Put_Line (Integer'Image (A)); --  Prints 44
+    end In_Out_Params;
+
+An in out parameter will allow read and write access to the object passed as
+parameter, so in the example above, we can see that A is modified after the
+call to multiply.
+
+.. attention::
+
+    While in-out parameters look a bit like references in C++, or regular
+    parameters in Java that are passed by-reference, the ARM does not mandate
+    by reference passing for in out parameters in general.
+
+    In general, it is better to think of modes as higher level than by-value
+    versus by-reference semantics. For the compiler, it means that an array
+    passed as an in parameter might be passed by reference under the covers,
+    because it is more efficient (which does not change anything for the user
+    since he cannot modify the original object anyway).  Conversely, an in-out
+    parameter of a discrete type might be passed by copy because it is more
+    efficient.
+
+Out parameters
+~~~~~~~~~~~~~~
+
+Finally, the last mode is reserved for the cases where you only want to write
+to a parameter. This allows to have parameters that behave a bit like return
+values act for functions.
+
+.. admonition:: In other languages
+
+    Ada doesn't have a tuple construct, or by another means allows to return
+    multiple values from a subprogram (except by declaring a full blown record
+    type). Hence, a way to return multiple values from a subprogram is to use
+    out parameters.
+
+For example, a procedure reading integers from the network could have one of
+the following prototypes:
+
+.. code-block:: ada
+
+    procedure Read_Int
+       (Stream : Network_Stream; Success : out Boolean; Result : out Integer)
+
+    function Read_Int
+       (Stream : Network_Stream; Result : out Integer) return Boolean;
+
+While ideally reading an out variable before writing to it would trigger an
+error, doing that in an exhaustive and precise fashion is hard. So the ARM just
+mandates that out parameter be treated like uninitialized variables.
+
+.. admonition:: In GNAT
+
+    GNAT will warn you in simple cases of erroneous use of out parameters,
+    emitting a warning. For example, the following program will emit a warning
+
+    .. code-block:: ada
+
+        procedure Outp is
+           procedure Foo (A : out Integer) is
+              B : Integer := A;
+           begin
+              A := B;
+           end Foo;
+        begin
+           null;
+        end Outp;
 
 Function calls
---------------
+~~~~~~~~~~~~~~
 
-Mutually recursive subprograms
-------------------------------
+.. amiard TODO: Move up to before parameters
+
+An important thing about function calls is that the return value of a function call cannot be ignored in Ada.
+
+If you want to call a function and do not need it's result, you will still need to explicitly store it in a local variable.
+
+.. code-block:: ada
+
+    function Double (I : Integer) return Integer is
+    begin
+       return I * 2;
+    end Double;
+
+    function Quadruple (I : Integer) return Integer is
+       Res : Integer := Double (Double (I));
+       --               ^ Calling the double function
+    begin
+       Double (I);
+       --  ILLEGAL: You cannot ignore a function's return value
+
+       return Res;
+    end Quadruple;
+
+.. admonition:: In GNAT
+
+    In GNAT, with all warnings activated, it becomes even harder to ignore the
+    result of a function, because unused variables will be flagged, so for
+    example this code would not be valid:
+
+    .. code-block:: ada
+        function Read_Int
+           (Stream : Network_Stream; Result : out Integer) return Boolean;
+
+        procedure Main is
+            Stream : Network_Stream := Get_Stream;
+            My_Int : Integer;
+            B : Boolean := Read_Int (Stream, My_Int);  -- Warning here, B is never read
+        begin
+           null;
+        end Main;
+
+    You then have two solutions to silence this warning:
+
+    - Either annotate the variable with a Unreferenced pragma, thusly:
+
+    .. code-block:: ada
+        B : Boolean := Read_Int (Stream, My_Int);
+        pragma Unreferenced (B);
+
+    - Either give the variable a name that contains any of the strings ``discard``
+      ``dummy`` ``ignore`` ``junk`` ``unused`` (case insensitive)
+
+Forward declaration of subprograms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we saw before, a subprogram can be declared without being defined, for
+example in a package specification. This is possible in general, and can be
+useful if you need subprograms to be mutually recursive, as in the example
+below:
+
+.. code-block:: ada
+
+    procedure Compute_A (V : Natural);
+    --  Forward declaration of Compute_A
+
+    procedure Compute_B (V : Natural) is
+    begin
+       if V > 5 then
+          Compute_A (V - 1);
+       -- ^ Call to Compute_A
+       end if;
+    end Compute_B;
+
+    procedure Compute_A (V : Natural) is
+    begin
+       if V > 2 then
+          Compute_B (V - 1);
+       -- ^ Call to Compute_B
+       end if;
+    end Compute_A;
 
 Nested subprograms
-------------------
+~~~~~~~~~~~~~~~~~~
+
+A very useful functionality that is available for the programmer in Ada, and
+that we already briefly mentioned, is that you can declare subprogram inside of
+other subprograms.
+
+This is a facility that is useful for two reasons:
+
+- It allows you to organize your programs in a cleaner fashion: If you need a
+  subprogram only as an helper for another subprogram, then the good practice
+  is to nest it inside it.
+
+- It allows you to share state easily in a controlled fashion, because the
+  nested functions will have access to the parameters, and any local variables
+  declared before them.
+
+
 
 More about types
 ================
@@ -2109,86 +2405,6 @@ Array
 
 Array slices
 ------------
-
-Records
--------
-
-So far, all the types we have seen are what we can call base types: each
-instance of one of those types represents a single piece of data. Now we are
-going to study our first class of composite types: The record.
-
-Records are a way to piece together several instances of other types. Each of
-those instances will be given a name. The pair of a name to an instance of a
-specific type is called a field, or a component.
-
-Here is an example of a simple record declaration:
-
-..code-block:: ada
-
-    type Date is record
-       --  The following declarations are components of the record
-       Day   : Integer range 1 .. 31;
-       Month : Month_Name;
-       Year  : Integer range 1 .. 3000; --  You can add custom constraints on fields
-    end record;
-
-One thing we can notice is that fields look a lot like variable declarations,
-except that they are inside of a record definition.
-
-As with objects declarations, it is possible to specify additional constraints
-when indicating the subtype of the field.
-
-..code-block:: ada
-
-    type Date is record
-       Day   : Integer range 1 .. 31;
-       Month : Month_Name := January;
-
-       --  This component has a default value
-       Year  : Integer range 1 .. 3000 := 2012;
-       --                                 ^ Default value
-    end record;
-
-Record components can also have default values. When declaring an instance of
-the record, fields will be automatically set to this value. The value can be
-any expression that is valid in the scope of definition of the record.
-
-..code-block:: ada
-
-    Today    : Date := (31, November, 2012);
-    Birthday : Date := (Day => 30, Month => February, Year => 2010);
-    --                  ^ By name
-
-Records also have a literal notation that you can use, and that is showcased
-above. This notation is called aggregate notation, and the literals are called
-aggregates. They can be used in a variety of contexts that we will disclose
-throughout the course, and one of those is to initalize records.
-
-An aggregate is a list of values separated by commas and enclosed in
-parentheses. It is a valid expression in any context where a value of the
-record can be expected.
-
-Values for the components can be specified positionally, as in the first
-example, or by name, as in the second example. A mixture of positional and
-named vamues is possible, but you cannot use a positional association after a
-named one.
-
-To access components of a record instance, an operation that is called component selection, you use the following syntax:
-
-..code-block:: ada
-
-    procedure Record_Selection is
-
-       type Date is record
-          Day   : Integer range 1 .. 31;
-          Month : Month_Name;
-       end record;
-
-       Today    : Date := (31, November, 2012);
-    begin
-       Today.Day := 29;
-       Put_Line ("Today is the "
-    end Record_Selection;
 
 Aggregates: A primer
 --------------------
@@ -2235,8 +2451,8 @@ Private part
 Abstract data types
 -------------------
 
- Limited types
---------------
+Limited types
+-------------
 
 Generics
 ========
