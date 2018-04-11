@@ -2113,7 +2113,82 @@ Array slices
 Records
 -------
 
-.. amiard: I think records, at least the simple stuff, should be much earlier, maybe even before arrays. What do you think ?
+So far, all the types we have seen are what we can call base types: each
+instance of one of those types represents a single piece of data. Now we are
+going to study our first class of composite types: The record.
+
+Records are a way to piece together several instances of other types. Each of
+those instances will be given a name. The pair of a name to an instance of a
+specific type is called a field, or a component.
+
+Here is an example of a simple record declaration:
+
+..code-block:: ada
+
+    type Date is record
+       --  The following declarations are components of the record
+       Day   : Integer range 1 .. 31;
+       Month : Month_Name;
+       Year  : Integer range 1 .. 3000; --  You can add custom constraints on fields
+    end record;
+
+One thing we can notice is that fields look a lot like variable declarations,
+except that they are inside of a record definition.
+
+As with objects declarations, it is possible to specify additional constraints
+when indicating the subtype of the field.
+
+..code-block:: ada
+
+    type Date is record
+       Day   : Integer range 1 .. 31;
+       Month : Month_Name := January;
+
+       --  This component has a default value
+       Year  : Integer range 1 .. 3000 := 2012;
+       --                                 ^ Default value
+    end record;
+
+Record components can also have default values. When declaring an instance of
+the record, fields will be automatically set to this value. The value can be
+any expression that is valid in the scope of definition of the record.
+
+..code-block:: ada
+
+    Today    : Date := (31, November, 2012);
+    Birthday : Date := (Day => 30, Month => February, Year => 2010);
+    --                  ^ By name
+
+Records also have a literal notation that you can use, and that is showcased
+above. This notation is called aggregate notation, and the literals are called
+aggregates. They can be used in a variety of contexts that we will disclose
+throughout the course, and one of those is to initalize records.
+
+An aggregate is a list of values separated by commas and enclosed in
+parentheses. It is a valid expression in any context where a value of the
+record can be expected.
+
+Values for the components can be specified positionally, as in the first
+example, or by name, as in the second example. A mixture of positional and
+named vamues is possible, but you cannot use a positional association after a
+named one.
+
+To access components of a record instance, an operation that is called component selection, you use the following syntax:
+
+..code-block:: ada
+
+    procedure Record_Selection is
+
+       type Date is record
+          Day   : Integer range 1 .. 31;
+          Month : Month_Name;
+       end record;
+
+       Today    : Date := (31, November, 2012);
+    begin
+       Today.Day := 29;
+       Put_Line ("Today is the "
+    end Record_Selection;
 
 Aggregates: A primer
 --------------------
