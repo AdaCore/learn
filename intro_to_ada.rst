@@ -3593,11 +3593,25 @@ Predefined exceptions
 Tasking
 =======
 
+Tasks and protected objects allow for implementing concurrency in Ada. This
+following sections explain those concepts in more details.
+
 Tasks
 -----
 
+A task can be thought as an application that runs *concurrently* with
+the main application. In other programming languages, a task may also be
+called a *thread*, and tasking may be called *multithreading*.
+
+Tasks may synchronize with the main application, but they also may process
+information completely independent from the main application. This section
+will show how this is accomplished.
+
 Simple task
 ~~~~~~~~~~~
+
+Tasks can be declared by using the keyword :ada:`task`. The task
+implementation is defined in a :ada:`task body` block. For example:
 
 .. code-block:: ada
 
@@ -3612,13 +3626,57 @@ Simple task
        task body T is
        begin
           Put_Line ("In task T");
-       end;
+       end T;
     begin
        Put_Line ("In main");
     end Show_Simple_Task;
 
+Here, we're declaring and implementing the task ``T``. As soon as the
+main application starts, task ``T`` will also start automatically --- it's
+not necessary to manually start this task. By running the application
+above, we can see that both calls to :ada:`Put_Line` are performed.
+
+Note that the number of tasks is not limited to one: we could include a
+task ``T2`` in the example above. This task would also start
+automatically and run *concurrently* with task ``T`` and the main
+application. For example:
+
+.. code-block:: ada
+
+    --% run_file: Show_Simple_Tasks.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_Tasks is
+       task T;
+       task T2;
+
+       task body T is
+       begin
+          Put_Line ("In task T");
+       end T;
+
+       task body T2 is
+       begin
+          Put_Line ("In task T2");
+       end T2;
+
+    begin
+       Put_Line ("In main");
+    end Show_Simple_Tasks;
+
 Simple synchronization
 ~~~~~~~~~~~~~~~~~~~~~~
+
+As we've just seen, as soon as the main application starts, its tasks
+also start automatically. The main application will continue its
+processing until it reaches the end of its implementation. At this point,
+however, it will not finish. Instead, the main application will wait until
+its tasks have finished before it finishes itself. In other words, after
+this waiting process, a synchronization between the main application and
+its tasks occurs. After this final synchronization, the main application
+may finish. For example:
 
 .. code-block:: ada
 
@@ -3640,6 +3698,9 @@ Simple synchronization
        --  Will wait here until all tasks have terminated
     end Show_Simple_Sync;
 
+A synchronization is also achieved if we move the task to a separate
+package. In the example below, we declare a task ``T`` in the package
+``Simple_Sync_Pkg``.
 
 .. code-block:: ada
 
@@ -3649,6 +3710,8 @@ Simple synchronization
     package Simple_Sync_Pkg is
        task T;
     end Simple_Sync_Pkg;
+
+This is the corresponding package implementation:
 
 .. code-block:: ada
 
@@ -3666,6 +3729,10 @@ Simple synchronization
        end T;
     end Simple_Sync_Pkg;
 
+As soon as the package is :ada:`with`'ed for the main procedure, the task
+``T`` defined in the package will be part of the main application. For
+example:
+
 .. code-block:: ada
 
     --% run_file: Test_Simple_Sync_Pkg.adb
@@ -3679,8 +3746,15 @@ Simple synchronization
        --  Will wait here until all tasks have terminated
     end Test_Simple_Sync_Pkg;
 
+Again, as soon as the main application reaches its end, it will
+synchronize with task ``T`` from ``Simple_Sync_Pkg`` before finishing.
+
 Delay
 ~~~~~
+
+A delay may be introduced by using the keyword :ada:`delay`. This will
+put the task to sleep for the amount of seconds specified in the delay
+statement. For example:
 
 .. code-block:: ada
 
@@ -3705,8 +3779,33 @@ Delay
        null;
     end Show_Delay;
 
+In this example, we're making the task ``T`` wait one second after each
+time it displays the "hello" message.
+
 Synchronization: rendez-vous
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous examples, the only kind of synchronization we've seen was
+the one that happens automatically at the end of the main application. In
+addition to that, it is possible to define custom synchronization points
+(or entry points) using the keyword :ada:`entry`.
+
+In the task implementation, we shall define in which part of the task the
+entries will be accepted by using the keyword :ada:`accept`. A task will
+process its statements until it reaches an :ada:`accept` statement. At
+this point, it will wait for the main task or application to synchronize
+with the task. In other words:
+
+- the task will :ada:`accept` a synchronization to happen and it will be
+  waiting in that :ada:`entry` point.
+
+- the main application will call the :ada:`entry` point in order to
+  synchronize with the task.
+
+This synchronization between an application and a task via an :ada:`entry`
+point is called rendez-vous. In the application that synchronizes with the
+task, the rendez-vous is triggered by a call to the :ada:`entry` point ---
+similar to a procedure call.
 
 .. code-block:: ada
 
@@ -3732,6 +3831,25 @@ Synchronization: rendez-vous
        T.Start; --  Calling T's entry
     end Show_Rendezvous;
 
+In this example, we declare an entry point ``Start`` for the task ``T``.
+In the task body, we use this entry point by using :ada:`accept Start`.
+When the task reaches this point, it will wait for the main application to
+synchronize. This synchronization happens in the ``T.Start`` statement.
+After the synchronization is finished, the main application and task ``T``
+will run concurrently until they synchronize again when the main
+application reaches its end.
+
+Note that the entry point may be used to perform more than just a simple
+task synchronization: we may also perform multiple statements during
+the time both tasks are synchronized. This is achieved by using a
+:ada:`do ... end` block. For the previous example, we would simply write
+:ada:`accept Start do <statements>; end;`. We will use this kind of block
+in the next example.
+
+There is no limit for the amount of times an entry point might be
+accepted. In fact, we could create a loop and accept the same entry point
+over and over. For example:
+
 .. code-block:: ada
 
     --% run_file: Show_Rendezvous_Loop.adb
@@ -3746,27 +3864,174 @@ Synchronization: rendez-vous
        end T;
 
        task body T is
-          Cnt : Integer := 1;
+          Cnt : Integer := 0;
        begin
           loop
-             accept Start;
+             accept Start do
+                Cnt := Cnt + 1;
+             end Start;
              Put_Line ("In T's loop (" & Integer'Image (Cnt) & ")");
-             Cnt := Cnt + 1;
           end loop;
        end T;
 
     begin
        Put_Line ("In Main");
-       T.Start; --  Calling T's entry
-       T.Start; --  Calling T's entry: 2nd time
-       T.Start; --  Calling T's entry: 3rd time
-       T.Start; --  Calling T's entry: 4th time
+
+       for I in 1 .. 4 loop
+          T.Start; --  Calling T's entry multiple times
+       end loop;
 
        abort T; --  Aborting T in order to exit loop
     end Show_Rendezvous_Loop;
 
+In this example, the task body implements an infinite loop that accepts
+the ``Start`` entry point. We can make the following observations:
+
+- In this case, an :ada:`accept E do ... end` block is used, where a
+  counter is incremented.
+
+    - As long as task ``T`` is performing the :ada:`do ... end` block, the
+      main application will wait for the block to finish.
+
+- In addition, the main application is calling the ``Start`` entry point
+  multiple times in the loop from ``1 .. 4``.
+
+    - Because task ``T`` uses an infinite loop, it will never finish, so
+      that the task ``T`` and the main application will never synchronize
+      at the end. Therefore, we need to interrupt the processing of task
+      ``T``. One way       of achieving this is by aborting task ``T`` in
+      the main application using the keyword :ada:`abort`
+
 Cycling tasks
 ~~~~~~~~~~~~~
+
+In a previous example, we've seen that we can delay a task by a given
+amount of seconds using :ada:`delay` keyword. When using delay statements
+in a loop, however, we cannot expect to have regular interval between the
+delay statements. For example, we may have a call to a computationally
+intensive procedure between the delay statements:
+
+.. code-block:: ada
+
+          while True loop
+             delay 1.0;
+             --    ^ Wait 1.0 seconds
+             Computational_Intensive_App;
+          end loop;
+
+In this case, we cannot guarantee that, after 10 calls to the delay
+statement, the time span is just 10 seconds. In fact, a time drift may be
+introduced by the ``Computational_Intensive_App`` procedure. In many
+cases, this time drift is not relevant, so that using the :ada:`delay`
+keyword is good enough.
+
+There are situations, however, where a time drift is not acceptable. In
+this case, we need to use the :ada:`delay until` statement, which accepts
+a precise time for the next execution, so that a regular interval can be
+defined. This is useful, for example, in real-time applications.
+
+We will see an example of how this time drift may be introduced, and how
+the :ada:`delay until` statement circumvents the problem. Before we do
+that, we will look into an auxiliary package containing a procedure that
+allows for measuring the elapsed time (``Show_Elapsed_Time``) and a dummy
+``Computational_Intensive_App`` procedure using a simple delay. This is
+the package specification:
+
+.. code-block:: ada
+
+    --% src_file: Delay_Aux_Pkg.ads
+    --% cflags: -gnaty
+
+    with Ada.Real_Time; use Ada.Real_Time;
+
+    package Delay_Aux_Pkg is
+
+       function Get_Start_Time return Time
+         with Inline;
+
+       procedure Show_Elapsed_Time
+         with Inline;
+
+       procedure Computational_Intensive_App;
+    private
+       Start_Time   : Time := Clock;
+
+       function Get_Start_Time return Time is (Start_Time);
+
+    end Delay_Aux_Pkg;
+
+This is the package definition:
+
+.. code-block:: ada
+
+    --% src_file: Delay_Aux_Pkg.adb
+    --% cflags: -gnaty
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    package body Delay_Aux_Pkg is
+
+       procedure Show_Elapsed_Time is
+          Now_Time     : Time;
+          Elapsed_Time : Time_Span;
+       begin
+          Now_Time     := Clock;
+          Elapsed_Time := Now_Time - Start_Time;
+          Put_Line ("Elapsed time "
+                    & Duration'Image (To_Duration (Elapsed_Time))
+                    & " seconds");
+       end Show_Elapsed_Time;
+
+       procedure Computational_Intensive_App is
+       begin
+          delay 0.5;
+       end Computational_Intensive_App;
+
+    end Delay_Aux_Pkg;
+
+Using this auxiliary package, we're now ready to write our time-drifting
+application:
+
+.. code-block:: ada
+
+    --% run_file: Show_Time_Drifting_Task.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Ada.Real_Time; use Ada.Real_Time;
+
+    with Delay_Aux_Pkg;
+
+    procedure Show_Time_Drifting_Task is
+       package Aux renames Delay_Aux_Pkg;
+
+       task T;
+
+       task body T is
+          Cnt   : Integer := 1;
+       begin
+          while True loop
+             delay 1.0;
+
+             Aux.Show_Elapsed_Time;
+             Aux.Computational_Intensive_App;
+
+             Put_Line ("Cycle # " & Integer'Image (Cnt));
+             Cnt  := Cnt + 1;
+          end loop;
+       end T;
+
+    begin
+       delay 5.0;
+       abort T;
+       Put_Line ("Finished time-drifting application");
+    end Show_Time_Drifting_Task;
+
+As we can see by running the application, due to the drift introduced by
+``Computational_Intensive_App``, after three iterations of the loop, we
+already have a time span of about four seconds. Using the
+:ada:`delay until` statement, however, we'll be able to avoid this time
+drift and have a regular interval of one second:
 
 .. code-block:: ada
 
@@ -3776,27 +4041,43 @@ Cycling tasks
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
 
+    with Delay_Aux_Pkg;
+
     procedure Show_Cycling_Task is
+       package Aux renames Delay_Aux_Pkg;
+
        task T;
 
        task body T is
-          Next  : Time := Clock;
-          Cycle : constant Time_Span := Milliseconds (500);
+          Cycle : constant Time_Span := Milliseconds (1000);
+          Next  : Time := Aux.Get_Start_Time + Cycle;
+
           Cnt   : Integer := 1;
        begin
           while True loop
              delay until Next;
+
+             Aux.Show_Elapsed_Time;
+             Aux.Computational_Intensive_App;
+
+             --  Calculate next execution time using a
+             --  cycle of one seconds
              Next := Next + Cycle;
-             Put_Line ("Cycle # " & Integer'Image (Cnt)
-                      );
+
+             Put_Line ("Cycle # " & Integer'Image (Cnt));
              Cnt  := Cnt + 1;
           end loop;
        end T;
+
     begin
-       delay 5.0;
+       delay 5.5;
        abort T;
        Put_Line ("Finished cycling");
     end Show_Cycling_Task;
+
+As we can see by running the application, the :ada:`delay until` statement
+makes sure that the ``Computational_Intensive_App`` does not affect the
+regular interval of one second between the iterations.
 
 Protected objects
 -----------------
