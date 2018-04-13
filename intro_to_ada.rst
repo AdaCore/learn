@@ -3599,17 +3599,203 @@ Tasks
 Simple task
 ~~~~~~~~~~~
 
+.. code-block:: ada
+
+    --% run_file: Show_Simple_Task.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_Task is
+       task T;
+
+       task body T is
+       begin
+          Put_Line ("In task T");
+       end;
+    begin
+       Put_Line ("In main");
+    end Show_Simple_Task;
+
 Simple synchronization
 ~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: ada
+
+    --% run_file: Show_Simple_Sync.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_Sync is
+       task T;
+       task body T is
+       begin
+          for I in 1 .. 10 loop
+             Put_Line ("hello");
+          end loop;
+       end;
+    begin
+       null;
+       --  Will wait here until all tasks have terminated
+    end Show_Simple_Sync;
+
+
+.. code-block:: ada
+
+    --% src_file: Simple_Sync_Pkg.ads
+    --% cflags: -gnaty
+
+    package Simple_Sync_Pkg is
+       task T;
+    end Simple_Sync_Pkg;
+
+.. code-block:: ada
+
+    --% src_file: Simple_Sync_Pkg.adb
+    --% cflags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Sync_Pkg is
+       task body T is
+       begin
+          for I in 1 .. 10 loop
+             Put_Line ("hello");
+          end loop;
+       end T;
+    end Simple_Sync_Pkg;
+
+.. code-block:: ada
+
+    --% run_file: Test_Simple_Sync_Pkg.adb
+    --% make_flags: -gnaty
+
+    with Simple_Sync_Pkg;
+
+    procedure Test_Simple_Sync_Pkg is
+    begin
+       null;
+       --  Will wait here until all tasks have terminated
+    end Test_Simple_Sync_Pkg;
 
 Delay
 ~~~~~
 
+.. code-block:: ada
+    --% run_file: Show_Delay.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Delay is
+
+       task T;
+
+       task body T is
+       begin
+          for I in 1 .. 10 loop
+             Put_Line ("hello");
+             delay 1.0;
+             --    ^ Wait 1.0 seconds
+          end loop;
+       end T;
+    begin
+       null;
+    end Show_Delay;
+
 Synchronization: rendez-vous
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. code-block:: ada
+
+    --% run_file: Show_Rendezvous.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Rendezvous is
+
+       task T is
+          entry Start;
+       end T;
+
+       task body T is
+       begin
+          accept Start; -- Waiting for somebody to call the entry
+          Put_Line ("In T");
+       end T;
+
+    begin
+       Put_Line ("In Main");
+       T.Start; --  Calling T's entry
+    end Show_Rendezvous;
+
+.. code-block:: ada
+
+    --% run_file: Show_Rendezvous_Loop.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Rendezvous_Loop is
+
+       task T is
+          entry Start;
+       end T;
+
+       task body T is
+          Cnt : Integer := 1;
+       begin
+          loop
+             accept Start;
+             Put_Line ("In T's loop (" & Integer'Image (Cnt) & ")");
+             Cnt := Cnt + 1;
+          end loop;
+       end T;
+
+    begin
+       Put_Line ("In Main");
+       T.Start; --  Calling T's entry
+       T.Start; --  Calling T's entry: 2nd time
+       T.Start; --  Calling T's entry: 3rd time
+       T.Start; --  Calling T's entry: 4th time
+
+       abort T; --  Aborting T in order to exit loop
+    end Show_Rendezvous_Loop;
+
 Cycling tasks
 ~~~~~~~~~~~~~
+
+.. code-block:: ada
+
+    --% run_file: Show_Cycling_Task.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Ada.Real_Time; use Ada.Real_Time;
+
+    procedure Show_Cycling_Task is
+       task T;
+
+       task body T is
+          Next  : Time := Clock;
+          Cycle : constant Time_Span := Milliseconds (500);
+          Cnt   : Integer := 1;
+       begin
+          while True loop
+             delay until Next;
+             Next := Next + Cycle;
+             Put_Line ("Cycle # " & Integer'Image (Cnt)
+                      );
+             Cnt  := Cnt + 1;
+          end loop;
+       end T;
+    begin
+       delay 5.0;
+       abort T;
+       Put_Line ("Finished cycling");
+    end Show_Cycling_Task;
 
 Protected objects
 -----------------
@@ -3617,8 +3803,90 @@ Protected objects
 Simple object
 ~~~~~~~~~~~~~
 
+.. code-block:: ada
+
+    --% run_file: Show_Protected_Objects.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Protected_Objects is
+
+       protected Obj is
+          --  Operations go here (only subprograms)
+          procedure Set (V : Integer);
+          function Get return Integer;
+       private
+          --  Data goes here
+          Local : Integer := 0;
+       end Obj;
+
+       protected body Obj is
+          --  procedures can modify the data
+          procedure Set (V : Integer) is
+          begin
+             Local := V;
+          end Set;
+
+          --  functions cannot modify the data
+          function Get return Integer is
+          begin
+             return Local;
+          end Get;
+       end Obj;
+
+    begin
+       Obj.Set (5);
+       Put_Line ("Number is: " & Integer'Image (Obj.Get));
+    end Show_Protected_Objects;
+
 Entries
 ~~~~~~~
+
+.. code-block:: ada
+
+    --% run_file: Show_Protected_Objects_Entries.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Protected_Objects_Entries is
+
+       protected Obj is
+          procedure Set (V : Integer);
+          entry Get (V : out Integer);
+       private
+          Local  : Integer;
+          Is_Set : Boolean := False;
+       end Obj;
+
+       protected body Obj is
+          procedure Set (V : Integer) is
+          begin
+             Local := V;
+             Is_Set := True;
+          end Set;
+
+          entry Get (V : out Integer)
+            when Is_Set is
+             --  Entry will be blocked until the condition is true.
+             --  Barrier is evaluated at call of entry, and at exit of
+             --  procedures and entries.
+             --  Calling task will sleep until the barrier is relieved.
+          begin
+             V := Local;
+             Is_Set := False;
+          end Get;
+       end Obj;
+
+       N : Integer := 0;
+    begin
+       Obj.Set (5);
+       Obj.Get (N);
+
+       Put_Line ("Number is: " & Integer'Image (N));
+
+    end Show_Protected_Objects_Entries;
 
 Task and protected types
 ------------------------
@@ -3626,8 +3894,90 @@ Task and protected types
 Task types
 ~~~~~~~~~~
 
+.. code-block:: ada
+
+    --% run_file: Show_Simple_Task_Type.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_Task_Type is
+       task type TT;
+
+       task body TT is
+       begin
+          Put_Line ("In task T");
+       end TT;
+
+       A_Task : TT;
+    begin
+       Put_Line ("In main");
+    end Show_Simple_Task_Type;
+
+.. code-block:: ada
+
+    --% run_file: Show_Task_Type_Array.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Task_Type_Array is
+       task type TT is
+          entry Start (N : Integer);
+       end TT;
+
+       task body TT is
+       begin
+          accept Start (N : Integer) do
+             Put_Line ("In task T: " & Integer'Image (N));
+          end Start;
+       end TT;
+
+       My_Tasks : array (1 .. 5) of TT;
+    begin
+       Put_Line ("In main");
+
+       for I in My_Tasks'Range loop
+          My_Tasks (I).Start (I);
+       end loop;
+    end Show_Task_Type_Array;
+
 Protected types
 ~~~~~~~~~~~~~~~
+
+.. code-block:: ada
+
+    --% run_file: Show_Protected_Object_Type.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Protected_Object_Type is
+
+       protected type Obj_Type is
+          procedure Set (V : Integer);
+          function Get return Integer;
+       private
+          Local : Integer := 0;
+       end Obj_Type;
+
+       protected body Obj_Type is
+          procedure Set (V : Integer) is
+          begin
+             Local := V;
+          end Set;
+
+          function Get return Integer is
+          begin
+             return Local;
+          end Get;
+       end Obj_Type;
+
+       Obj : Obj_Type;
+    begin
+       Obj.Set (5);
+       Put_Line ("Number is: " & Integer'Image (Obj.Get));
+    end Show_Protected_Object_Type;
 
 Interfacing with C and C++
 ==========================
