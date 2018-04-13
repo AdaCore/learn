@@ -877,7 +877,8 @@ Ranges can also be specified for custom floating-point types. For example:
    end Custom_Range_Types;
 
 In this example, we are defining a type called ``T6_Inv_Trig``, which has
-a range from ``-Pi/2`` to ``Pi/2`` with a minimum precision of 6 digits.
+a range from :math:`-\pi/2` to :math:`\pi/2` with a minimum precision of 6
+digits.
 
 Decimal fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -950,10 +951,10 @@ zero. For example:
       Put_Line("The value of A is " & T3_D3'Image(A));
    end Decimal_Fixed_Point_Smaller;
 
-In this example, the result of the operation ``0.001 * 0.5`` is 0.0005.
-Since this value is not representable for the ``T3_D3`` type because the
-smallest value is 0.001, the actual value stored in variable ``A`` is
-zero.
+In this example, the result of the operation :math:`0.001 * 0.5` is
+0.0005. Since this value is not representable for the ``T3_D3`` type
+because the smallest value is 0.001, the actual value stored in variable
+``A`` is zero.
 
 Fixed-point types
 ~~~~~~~~~~~~~~~~~
@@ -1020,7 +1021,7 @@ We may also use any other range. For example:
    end Custom_Fixed_Point_Range;
 
 In this example, we are defining a 16-bit type called ``T_Inv_Trig``,
-which has a range from ``-Pi/2`` to ``Pi/2``.
+which has a range from :math:`-\pi/2` to :math:`\pi/2`.
 
 All standard operations are available for fixed-point types. For example:
 
@@ -1067,7 +1068,7 @@ with each other, as we can see in the following example:
     end Greet;
 
 This is true for every distinct type. It also means that, in the general case,
-an expression like ``2 * 3.0`` will trigger a compilation error. In a language
+an expression like :ada:`2 * 3.0` will trigger a compilation error. In a language
 like C or Python, those expressions are made valid by implicit conversions. In
 Ada, such conversions must be made explicit:
 
