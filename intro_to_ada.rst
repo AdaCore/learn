@@ -2010,7 +2010,7 @@ Here is how you declare a package in Ada:
        type Days is (Monday, Tuesday, Wednesday,
           Thursday, Friday, Saturday, Sunday);
 
-       type WorkLoad_Type is array (Days range <>) of Natural;
+       type Workload_Type is array (Days range <>) of Natural;
 
        Workload : constant Workload_Type :=
           (Monday .. Thursday => 8,
