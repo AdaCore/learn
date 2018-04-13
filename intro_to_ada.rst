@@ -2419,23 +2419,102 @@ This is a facility that is useful for two reasons:
 More about types
 ================
 
-Array
------
-
 Array slices
 ------------
 
 Aggregates: A primer
 --------------------
 
-default values
-~~~~~~~~~~~~~~~~
+So far, we have talked about, and showcased aggregates quite a bit. Now we will
+try and be more comprehensive about them.
 
-Literals
-~~~~~~~~~~
+Aggregates are the mean by which you will describe literal values for composite
+types in Ada. They are a very powerful notation that will allow you to avoid
+writing  procedural code for the instantiation of your data structures in many
+cases.
 
-Selection
-~~~~~~~~~~~
+A basic rule that has to be followed wh3n writing aggregates is that *every
+component* of the described data type has to be specified, even components that
+have a default value.
+
+This means that the following code is incorrect:
+
+.. code-block:: ada
+
+    package Incorrect is
+       type Point is record
+          X, Y : Integer := 0;
+       end record;
+
+       Origin : Point := (X => 0);
+    end Incorrect;
+
+There are a few shortcuts that you can use to make the notation more user
+friendly:
+
+- To tell the compiler to use the default value for a field, you can use the
+  ``<>`` notation.
+
+- You can also use the ``|`` operator to mention several disjoint components
+  together.
+
+- You can use the ``others`` qualifier to refer to every field that has not yet
+  been mentionned, provided all those fields have the same type.
+
+- You can use ranges to refer to ranges of indices in arrays.
+
+.. code-block:: ada
+
+    package Points is
+       type Point is record
+          X, Y : Integer := 0;
+       end record;
+
+       type Point_Array is array (Positive range <>) of Point;
+
+       Origin : Point := (X | Y => <>);
+       Origin_2 : Point := (others => <>);
+
+       Points : Point_Array := ((1, 2), (3, 4), 3 .. 20 => <>);
+    end Points;
+
+Overloading and qualified expressions
+-------------------------------------
+
+While we have mentioned it in the enumerations section TODOPUTLINK there is a
+general concept of Ada which is the notion of overloading of names.
+
+Let's take a simple example: It is possible in Ada to have functions that have
+the same name, but different arguments.
+
+.. code-block:: ada
+
+    package Pkg is
+       function F (A : Integer) return Integer;
+       function F (A : Character) return Integer;
+    end Pkg;
+
+This is a common concept in programming languages, that is called
+`overloading <https://en.m.wikipedia.org/wiki/Function_overloading>`_, or name
+overloading.
+
+One of the pecularities of Ada is that it allows overloading on the return type
+of a function.
+
+.. code-block:: ada
+
+    package Pkg is
+       type SSID is new Integer;
+
+       function Convert (Self : SSID) return Integer;
+       function Convert (Self : SSID) return String;
+    end Pkg;
+
+.. attention::
+    This explains why you can have multiple enumeration literals with the same
+    name: Return type overloading is allowed on both functions and enumerations
+    in Ada. Actually, the ARM says that enumeration literals are treated like
+    null-arity functions.
 
 Access types (pointers)
 -----------------------
