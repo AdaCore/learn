@@ -3593,32 +3593,41 @@ Predefined exceptions
 Tasking
 =======
 
-Simple task
------------
-
-Simple synchronization
-----------------------
-
-Delay
+Tasks
 -----
 
+Simple task
+~~~~~~~~~~~
+
+Simple synchronization
+~~~~~~~~~~~~~~~~~~~~~~
+
+Delay
+~~~~~
+
 Synchronization: rendez-vous
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Cycling tasks
--------------
+~~~~~~~~~~~~~
 
 Protected objects
 -----------------
 
-Protected objects: body
------------------------
+Simple object
+~~~~~~~~~~~~~
 
-Protected objects: entries
---------------------------
+Entries
+~~~~~~~
+
+Task and protected types
+------------------------
+
+Task types
+~~~~~~~~~~
 
 Protected types
----------------
+~~~~~~~~~~~~~~~
 
 Interfacing with C and C++
 ==========================
