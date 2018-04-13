@@ -1,6 +1,12 @@
 Introduction to Ada
 ===================
 
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
 This document is a concise introduction to the Ada language, for people
 who already have some experience with programming. It will go over the
 important concepts of Ada in the order that made the most sense writing
@@ -148,15 +154,15 @@ There are several note worthy things in the above program:
 
 -  A subprogram in Ada can be either a procedure or a function. A
    procedure, as used above, does not return a value when called. This is
-   similar to functions in C/C++ that return ``void``. We'll see later how
+   similar to functions in C/C++ that return :c:`void`. We'll see later how
    to declare functions in Ada.
 
--  ``with`` and ``use`` are used to reference external packages in the
-   procedure. This is similar to ``import`` in various languages or
-   roughly similar to ``#include`` in C/C++.
+-  :ada:`with` and :ada:`use` are used to reference external packages in
+   the procedure. This is similar to ``import`` in various languages or
+   roughly similar to :c:`#include` in C/C++.
    We'll see later how they work in detail. Here, we are requesting a
    standard library module which contains a procedure to print text on the
-   screen: ``Put_Line``.
+   screen: :ada:`Put_Line`.
 
 -  ``Greet`` is a procedure, and the main entry point for our first
    program. Unlike in C or C++, it can be named anything you prefer. The
@@ -164,14 +170,14 @@ There are several note worthy things in the above program:
    ``gprbuild``, GNAT's builder, will use the file you passed as
    parameter.
 
--  ``Put_Line`` is a procedure, just like ``Greet``, except it is
-   imported from the ``Ada.Text_IO`` module. It is the Ada equivalent of
-   C's ``printf``.
+-  :ada:`Put_Line` is a procedure, just like ``Greet``, except it is
+   imported from the :ada:`Ada.Text_IO` module. It is the Ada equivalent
+   of C's :c:`printf`.
 
--  Comments start with ``--`` and go to the end of the line. There is no
-   multi-line comment syntax, that is, it is not possible to start a
+-  Comments start with :ada:`--` and go to the end of the line. There is
+   no multi-line comment syntax, that is, it is not possible to start a
    comment in one line and continue it in the next line. The only way to
-   create multiple lines of comments in Ada is by using ``--`` on each
+   create multiple lines of comments in Ada is by using :ada:`--` on each
    line. For example:
 
 .. code-block:: ada
@@ -258,20 +264,20 @@ builds up on this one.
 
 This example introduces a few new concepts and Ada specificities:
 
--  We see that we declared a variable, between the ``is`` and the
-   ``begin``. This constitutes a declarative region. In Ada, you can
+-  We see that we declared a variable, between the :ada:`is` and the
+   :ada:`begin`. This constitutes a declarative region. In Ada, you can
    only declare objects, types, and anything that is considered a
    declaration, in a declarative region. Trying to declare a variable
    inline in the middle of your statements will result in a compilation
    error. More on that later.
 
--  The bare loop statement is introduced by the keyword ``loop`` on its
-   own and, like every kind of loop statement, terminated by the
-   combination of keywords ``end loop``. On its own, it is an infinite
-   loop. You can break out of it with an ``exit`` statement.
+-  The bare loop statement is introduced by the keyword :ada:`loop` on
+   its own and, like every kind of loop statement, terminated by the
+   combination of keywords :ada:`end loop`. On its own, it is an infinite
+   loop. You can break out of it with an :ada:`exit` statement.
 
--  The operator for assignment is ``:=``, and the one for equality is
-   ``=``. There is no way to confuse them, because as previously said,
+-  The operator for assignment is :ada:`:=`, and the one for equality is
+   :ada:`=`. There is no way to confuse them, because as previously said,
    in Ada, statements and expressions are distinct, and expressions are
    not valid statements.
 
@@ -323,8 +329,8 @@ Ada has an if statement. It is pretty unsurprising in form and function:
     end Greet;
 
 As for the while loop, the Boolean condition must be of strict type
-``Boolean``. Every relational operator in Ada returns a ``Boolean`` by
-default.
+:ada:`Boolean`. Every relational operator in Ada returns a :ada:`Boolean`
+by default.
 
 .. code-block:: ada
 
@@ -345,7 +351,7 @@ default.
        end loop;
     end Greet;
 
-What we can see here is that Ada features an ``elsif`` keyword. For
+What we can see here is that Ada features an :ada:`elsif` keyword. For
 those interested, this is a way of avoiding the classical `dangling
 else <https://en.wikipedia.org/wiki/Dangling_else>`__ problem.
 
@@ -397,7 +403,7 @@ Notable points about Ada's case statement:
 -  Every possible value needs to be covered by the case statement. This
    will be checked at compile time. When using it on a value which has a
    cumbersome number of possible values, you will use the special
-   ``others`` branch to cover the default case.
+   :ada:`others` branch to cover the default case.
 
 -  A value cannot be covered twice. This will also result in a compile
    time error.
@@ -413,7 +419,7 @@ We mentioned declarative regions before. Those are very important in
 Ada. What is important to know at this stage:
 
 -  In any subprogram (procedures for the moment), the region between the
-   ``is`` and the ``begin`` is a declarative region.
+   :ada:`is` and the :ada:`begin` is a declarative region.
 
 -  You can potentially declare anything there: Variables, constants,
    types, other subprograms. This is valid for example:
@@ -432,7 +438,7 @@ Ada. What is important to know at this stage:
 
 -  You cannot declare anything outside of a declarative region. If you
    need to scope variables in a subprogram, you can introduce a new
-   declarative region with the ``declare`` block
+   declarative region with the :ada:`declare` block
 
 .. code-block:: ada
 
@@ -509,8 +515,8 @@ you would expect.
 The syntax differs from case statements, because branches are separated
 by commas. Also, something to note in the above example is that the
 compiler does not know that ``I`` can only take values between 1 and 10,
-so we still need to have an ``others`` branch. We will delve into why
-when talking about `types <TODO:putlinkabouttypes>`__ in
+so we still need to have an :ada:`others` branch. We will delve into
+why when talking about `types <TODO:putlinkabouttypes>`__ in
 more details.
 
 Strongly typed language
@@ -570,31 +576,31 @@ In this example, we showcase the creation of a signed integer type, and
 several things we can do with them.
 
 Every type definition in Ada (`well almost <TODOTASKTYPES>`__) starts
-with the ``type`` keyword. After the type, we can see a range that looks
-a lot like the ranges that we use in for loops, that defines the low and
-high bound of the type. Every integer in the inclusive range of the
-bounds is a valid value for the type.
+with the :ada:`type` keyword. After the type, we can see a range that
+looks a lot like the ranges that we use in for loops, that defines the
+low and high bound of the type. Every integer in the inclusive range of
+the bounds is a valid value for the type.
 
     In Ada, Integer types are not specified with regards to their
     machine representation, but with regards to their range. The
     compiler will then choose the most appropriate representation.
 
 Another interesting thing that we can notice in the above example is the
-``My_Int'Image (I)`` expresssion. In Ada, the
-``Expr'Attribute (optional params)`` notation is used for what is called
-`attributes <TODOLINKATTRS>`__ in Ada. Attributes are built-in
-operations on types or on values. They are accessed by using a ``'`` (the
-tick sign).
+:ada:`My_Int'Image (I)` expresssion. In Ada, the
+:ada:`Expr'Attribute (optional params)` notation is used for what is
+called `attributes <TODOLINKATTRS>`__ in Ada. Attributes are built-in
+operations on types or on values. They are accessed by using a :ada:`'`
+(the tick sign).
 
-Ada makes a few types available as "built-ins". ``Integer`` is one of
-them. Here is how ``Integer`` is defined:
+Ada makes a few types available as "built-ins". :ada:`Integer` is one of
+them. Here is how :ada:`Integer` is defined:
 
 .. code-block:: ada
 
     type Integer is range -(2 ** 31) .. +(2 ** 31 - 1);
 
-``**`` is the exponent operator, which means that the first valid value
-for ``Integer`` is :math:`-2^{31}`, and the last valid value is
+:ada:`**` is the exponent operator, which means that the first valid
+value for :ada:`Integer` is :math:`-2^{31}`, and the last valid value is
 :math:`2^{31-1}`. In a fit of luck, this coincides with what you can fit
 in a 32 bit signed integer on modern platforms :).
 
@@ -725,7 +731,7 @@ Floating-point types
 ~~~~~~~~~~~~~~~~~~~~
 
 As in most languages, Ada support floating-point types. The default
-floating-point type is ``Float``:
+floating-point type is :ada:`Float`:
 
 .. code-block:: ada
 
@@ -759,11 +765,11 @@ For example:
 The value of ``A`` is 2.0 after the first operation and 5.0 after the
 second operation.
 
-In addition to ``Float``, Ada offers data types with higher precision:
-``Long_Float`` and ``Long_Long_Float``. However, the standard does not
-indicate the exact precision of these types: it only guarantees that the
-type ``Long_Float``, for example, has at least the same precision of
-``Float`` or higher. In order to guarantee that a certain precision
+In addition to :ada:`Float`, Ada offers data types with higher precision:
+:ada:`Long_Float` and :ada:`Long_Long_Float`. However, the standard does
+not indicate the exact precision of these types: it only guarantees that
+the type :ada:`Long_Float`, for example, has at least the same precision
+of :ada:`Float` or higher. In order to guarantee that a certain precision
 requirement is met, we can define custom floating-point types, as we will
 see in the next section.
 
@@ -774,8 +780,8 @@ Ada allows for specifying the exact precision required for a
 floating-point type. The precision is expressed in terms of decimal
 digits. This guarantees that the operations on these custom types will
 have at least the specified precision. The syntax for this is
-``type T is digits <number_of_decimal_digits>``. In the background, the
-compiler will choose a floating-point representation that matches the
+:ada:`type T is digits <number_of_decimal_digits>`. In the background,
+the compiler will choose a floating-point representation that matches the
 required precision. For example:
 
 .. code-block:: ada
@@ -792,8 +798,8 @@ required precision. For example:
       Put_Line("T18 requires " & Integer'Image(T18'Size) & " bits");
    end Custom_Floating_Types;
 
-In this example, the attribute ``'Size`` is used to retrieve the number of
-bits used for the specified data type. As we can see by running this
+In this example, the attribute :ada:`'Size` is used to retrieve the number
+of bits used for the specified data type. As we can see by running this
 example, the compiler allocates 32 bits for ``T3``, 64 bits for ``T15``
 and 128 bits for ``T18``.
 
@@ -824,9 +830,9 @@ Range of floating-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Ranges can also be specified floating-point types. The syntax is similar
-to the one used for integer data types --- using the ``range`` keyword.
+to the one used for integer data types --- using the :ada:`range` keyword.
 This simple example creates a new floating-point type based on the
-``Float`` for a normalized range between -1.0 and 1.0:
+:ada:`Float` for a normalized range between -1.0 and 1.0:
 
 .. code-block:: ada
 
@@ -842,7 +848,7 @@ This simple example creates a new floating-point type based on the
 
 The application makes sure that the normalized range is observed for all
 variables of this type. If the value is out of range, an exception is
-raised. In this example, an exception (``Constraint_Error``) is raised
+raised. In this example, an exception (:ada:`Constraint_Error`) is raised
 when assigning 2.0 to the variable ``A``:
 
 .. code-block:: ada
@@ -882,8 +888,8 @@ accuracy of a floating-point type. This category of data types is called
 decimal fixed-point types.
 
 The syntax for decimal fixed-point types is
-``type T is delta <smallest_value> digits <number_of_decimal_digits>``.
-In this case, the ``delta`` and the ``digits`` will be used by the
+:ada:`type T is delta <smallest_value> digits <number_of_decimal_digits>`.
+In this case, the :ada:`delta` and the :ada:`digits` will be used by the
 compiler to derive a range. This will become clear in the next example.
 
 We will use three attributes of the language in our example:
@@ -923,12 +929,12 @@ types is indeed the same: 0.001. However, because ``T3_D3`` is restricted
 to 3 digits, its range is -0.999 to 0.999. For the ``T6_D3``, we have
 defined a precision of 6 digits, so the range is -999.999 to 999.999.
 
-Similar to the type definition using the ``range`` syntax, because we have
-an implicit range, the application will check that the variables contain
-values that are not out-of-range. Also, if the result of a multiplication
-or division on decimal fixed-point types is smaller than the smallest
-value specified for the data type, the actual result will be zero. For
-example:
+Similar to the type definition using the :ada:`range` syntax, because we
+have an implicit range, the application will check that the variables
+contain values that are not out-of-range. Also, if the result of a
+multiplication or division on decimal fixed-point types is smaller than
+the smallest value specified for the data type, the actual result will be
+zero. For example:
 
 .. code-block:: ada
 
@@ -965,7 +971,7 @@ power of two. Therefore, they are also called binary fixed-point types.
    background.
 
 The syntax for binary fixed-point types is
-``type T is delta <smallest_value> range <lower_bound> .. <upper_bound>``.
+:ada:`type T is delta <smallest_value> range <lower_bound> .. <upper_bound>`.
 For example, we may define a normalized range between -1.0 and 1.0 as
 following:
 
@@ -1146,7 +1152,7 @@ advantages. For example:
     notice this specific issue and correct it before it creates bigger
     problems. However, in more complex applications where the type
     declaration is not always visible --- e.g. when referring to elements of
-    a ``struct`` --- this situation might not always be evident and quickly
+    a :c:`struct` --- this situation might not always be evident and quickly
     lead to software defects that can be harder to find.
 
     The Ada compiler, in contrast, will always refuse to compile code that
@@ -1164,7 +1170,7 @@ advantages. For example:
            F := A / B;
         end Main;
 
-    The offending line must be changed to ``F := Float(A) / Float(B);``
+    The offending line must be changed to :ada:`F := Float(A) / Float(B);`
     in order to be accepted by the compiler.
 
 - You can use Ada's strong typing to help `enforce invariants
@@ -1244,7 +1250,7 @@ with another type, to enforce strong typing.
 You can redefine the range of validity of any type family: Floating point,
 fixed point, enumerations ...
 
-The syntax for enumerations uses the ``range <range>`` syntax:
+The syntax for enumerations uses the :ada:`range <range>` syntax:
 
 .. code-block:: ada
 
@@ -1692,10 +1698,10 @@ In the preceding example, we declare the range of the array via the range
 syntax, which will declare an anonymous subtype of integer and 8se it to index
 the array.
 
-This means that the type of the index is ``Integer``. Coincidently, when you
+This means that the type of the index is :ada:`Integer`. Coincidently, when you
 use an anonymous range in a for loop as in the example above, the type of the
-iteration variable is also ``Integer``, which is why you can use ``I`` to index
-``Tab``.
+iteration variable is also :ada:`Integer`, which is why you can use ``I`` to
+index ``Tab``.
 
 You can also use a named subtype as bounds for an array.
 
@@ -1726,7 +1732,7 @@ via an attribute on array objects:
     end Greet;
 
 If you want more fine grained control, you can use the separate attributes
-``'First`` and ``'Last``.
+:ada:`'First` and :ada:`'Last`.
 
 .. code-block:: ada
 
@@ -1744,9 +1750,9 @@ If you want more fine grained control, you can use the separate attributes
        New_Line;
     end Greet;
 
-Of note, all those attributes, ``'Range``, ``'First`` and ``'Last``, will work
-on array instances just as well as they work on discrete types and subtypes
-themselves, enumerations included.
+Of note, all those attributes, :ada:`'Range`, :ada:`'First` and :ada:`'Last`,
+will work on array instances just as well as they work on discrete types and
+subtypes themselves, enumerations included.
 
 Unconstrained arrays
 --------------------
@@ -1811,9 +1817,9 @@ Predefined array type: String
 -----------------------------
 
 A recurring theme in our introduction to Ada types has been the way important
-built-in types like ``Boolean`` or ``Integer`` have been built with the same
-facilities that are available to the user. This is also true for strings: The
-string type in Ada is a simple array.
+built-in types like :ada:`Boolean` or :ada:`Integer` have been built with the
+same facilities that are available to the user. This is also true for strings:
+The string type in Ada is a simple array.
 
 Here is how the string type is defined in Ada:
 
@@ -2043,12 +2049,12 @@ Packages are a way to make your code modular, separating your programs into
 semantically significant units. Additionally they will allow the programmer to
 generally compile his program faster by leveraging separate compilation.
 
-While the ``with`` clause indicates a dependency, you can see in the example
+While the :ada:`with` clause indicates a dependency, you can see in the example
 above that you still need to prefix the use of entities from the week package
 by the name of the package.
 
-A ``with`` clause *has* to happen in the prelude of a compilation unit. It is
-not allowed anywhere else.
+A :ada:`with` clause *has* to happen in the prelude of a compilation unit. It
+is not allowed anywhere else.
 
 .. admonition:: In other languages
 
@@ -2087,13 +2093,13 @@ not allowed anywhere else.
 Using a package
 ---------------
 
-As we have seen above, we use the ``with`` clause to indicate a dependency on
+As we have seen above, we use the :ada:`with` clause to indicate a dependency on
 another package. However, every use of entities coming from the ``Week``
 package had to be prefixed by the full name of the package. It is possible to
 make every entity of a package visible directly in the current scope, using the
-``use`` clause.
+:ada:`use` clause.
 
-In fact, we have been using the ``use`` clause since almost the beginning of
+In fact, we have been using the :ada:`use` clause since almost the beginning of
 this tutorial.
 
 .. code-block:: ada
@@ -2117,12 +2123,12 @@ this tutorial.
 
 As you can see in the example above:
 
-- ``Put_Line`` is a subprogram that comes from the ``Ada.Text_IO``
+- :ada:`Put_Line` is a subprogram that comes from the :ada:`Ada.Text_IO`
   package. We can use it directly because we have used the package at the top
   of the ``Main`` unit.
 
-- Unlike ``with`` clauses, ``use`` clause can happen either in the prelude, or
-  in any declarative zone. If used in a declarative zone, the ``use`` clause
+- Unlike :ada:`with` clauses, :ada:`use` clause can happen either in the prelude, or
+  in any declarative zone. If used in a declarative zone, the :ada:`use` clause
   will have an effect in it's containing lexical scope.
 
 Package body
@@ -2200,8 +2206,8 @@ so that clients of the package know how to use it.
 
 Subprograms in Ada can expectedly have parameters. One syntactically important
 note is that a subprogram which has no parameters does not have a parameter
-section at all, following the form ``procedure [name]`` or ``function [name]
-return [type]``.
+section at all, following the form :ada:`procedure [name]` or
+:ada:`function [name] return [type]`.
 
 .. code-block:: ada
 
@@ -2333,16 +2339,16 @@ this focus surfaces, but two important points are:
 Parameters modes are a feature that helps achieve the two design goals above. A
 function parameter necessarily has a mode, that is one of the three following modes.
 
-+------------+--------------------------------------------+
-| ``in``     | Parameter can only be read, not written    |
-+------------+--------------------------------------------+
-| ``out``    | Parameter can only be written to, not read |
-+------------+--------------------------------------------+
-| ``in out`` | Parameter can be both read and written     |
-+------------+--------------------------------------------+
++---------------+--------------------------------------------+
+| :ada:`in`     | Parameter can only be read, not written    |
++---------------+--------------------------------------------+
+| :ada:`out`    | Parameter can only be written to, not read |
++---------------+--------------------------------------------+
+| :ada:`in out` | Parameter can be both read and written     |
++---------------+--------------------------------------------+
 
-The default mode for parameters is ``in``, so, so far, every example we have
-been showing has been using ``in`` parameters.
+The default mode for parameters is :ada:`in`, so, so far, every example we have
+been showing has been using :ada:`in` parameters.
 
 .. admonition:: Historically
     Functions and procedures were originally more different in philosophy.
@@ -2621,12 +2627,12 @@ There are a few shortcuts that you can use to make the notation more user
 friendly:
 
 - To tell the compiler to use the default value for a field, you can use the
-  ``<>`` notation.
+  :ada:`<>` notation.
 
-- You can also use the ``|`` operator to mention several disjoint components
+- You can also use the :ada:`|` operator to mention several disjoint components
   together.
 
-- You can use the ``others`` qualifier to refer to every field that has not yet
+- You can use the :ada:`others` qualifier to refer to every field that has not yet
   been mentionned, provided all those fields have the same type.
 
 - You can use ranges to refer to ranges of indices in arrays.
@@ -2730,7 +2736,7 @@ Generics are used for metaprogramming in Ada. They are useful for abstract
 algorithms that share common properties.
 
 Generics can be used for subprograms or packages. A generic is declared
-by using the keyword ``generic``. For example:
+by using the keyword :ada:`generic`. For example:
 
 .. raph-amiard: We are lacking a definition/link of metaprogramming.
 
@@ -2775,17 +2781,17 @@ following example declares a formal type ``T`` for the ``Set`` procedure.
        null;
     end Show_Formal_Type_Declaration;
 
-The declaration of ``T`` as ``private`` indicates that any type can be
+The declaration of ``T`` as :ada:`private` indicates that any type can be
 mapped to it. These are some examples of formal types:
 
 +-------------------------+---------------------------------------------+
 | Formal Type             | Format                                      |
 +=========================+=============================================+
-| Any type                | ``type T is private;``                      |
+| Any type                | :ada:`type T is private;`                   |
 +-------------------------+---------------------------------------------+
-| Any discrete type       | ``type T is (<>);``                         |
+| Any discrete type       | :ada:`type T is (<>);`                      |
 +-------------------------+---------------------------------------------+
-| Any floating-point type | ``type T is digits <>;``                    |
+| Any floating-point type | :ada:`type T is digits <>;`                 |
 +-------------------------+---------------------------------------------+
 
 Formal object declaration
@@ -2810,14 +2816,14 @@ use of formal types declared in the formal specification. For example:
        null;
     end Show_Formal_Object_Declaration;
 
-Formal objects can be either just input parameters or use the ``in out``
-mode.
+Formal objects can be either just input parameters or use the
+:ada:`in out` mode.
 
 Generic body definition
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 For the body declaration of a generic subprogram or package, we don't
-repeat the ``generic`` keyword: we simply start with the actual
+repeat the :ada:`generic` keyword: we simply start with the actual
 declaration and make use of the generic types and objects that we
 declared. For example:
 
@@ -2843,7 +2849,7 @@ Generic instantiation
 ~~~~~~~~~~~~~~~~~~~~~
 
 Generic subprograms or packages cannot be used directly. Instead, they
-need to be instantiated. The instantiation is done by using the ``new``
+need to be instantiated. The instantiation is done by using the :ada:`new`
 keyword, as illustrated in the following example:
 
 .. code-block:: ada
@@ -2885,7 +2891,7 @@ keyword, as illustrated in the following example:
 
 In the example above, we instantiate the procedure ``Set`` by mapping the
 formal parameters ``T`` and ``X`` to actual existing elements: the
-``Integer`` type and the ``Main`` variable.
+:ada:`Integer` type and the ``Main`` variable.
 
 
 Generic packages
@@ -2893,9 +2899,9 @@ Generic packages
 
 The previous examples focused on generic subprograms. In this section, we
 will look into generic packages. In general, the syntax is not different
-from the one used for generic subprograms: it starts with the ``generic``
+from the one used for generic subprograms: it starts with the :ada:`generic`
 keyword and continues with formal declarations. The only difference is
-that a ``package`` is specified instead of a subprogram.
+that a :ada:`package` is specified instead of a subprogram.
 
 This is an example:
 
@@ -2985,7 +2991,7 @@ In addition to formal types and objects, we can also declare formal
 subprograms or packages. This course only describes formal subprograms.
 Formal packages are discussed in the advanced course.
 
-In order to declare a formal subprogram, we make use of the ``with``
+In order to declare a formal subprogram, we make use of the :ada:`with`
 keyword. In the example below, we declare a formal function
 (``Comparison``) that is used by the generic procedure ``Check``.
 
@@ -3039,7 +3045,7 @@ Application: ADTs
 
 An important application of generics is to model abstract data types
 (ADTs). In fact, Ada includes a library with all sorts of ADTs using
-generics: ``Ada.Containers``.
+generics: :ada:`Ada.Containers`.
 
 A typical example of an ADT is a stack:
 
@@ -3161,7 +3167,7 @@ In this example, ``Swap_Colors`` can only be used for the ``Color`` type.
 However, a swapping algorithm can theoretically be used for any type, be
 it an enumeration or a complex record type with many elements. The
 algorithm itself is the same, just the types are different. Also, we don't
-want to duplicate the implementation for swapping variables of ``Integer``
+want to duplicate the implementation for swapping variables of :ada:`Integer`
 type, for example. Therefore, such an algorithm is an perfect candidate
 for abstraction using generics.
 
@@ -3549,7 +3555,7 @@ file:
     end Show_C_Enum;
 
 In order to interface with C built-in types, we need to reference to the
-``Interfaces.C`` package, which contains all type definitions that we
+:ada:`Interfaces.C` package, which contains all type definitions that we
 need. For example:
 
 .. code-block:: ada
@@ -3572,8 +3578,8 @@ need. For example:
     end Show_C_Struct;
 
 In this example, we're interfacing with a C struct (``C_Struct``) and
-making use of the corresponding data types in C (``int``, ``long``,
-``unsigned`` and ``double``). This is the original declaration:
+making use of the corresponding data types in C (:c:`int`, :c:`long`,
+:c:`unsigned` and :c:`double`). This is the original declaration:
 
 .. code-block:: c
 
@@ -3592,7 +3598,7 @@ Calling C subprograms in Ada
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A similar approach is used when interfacing with subprograms written in C.
-In this case, an additional aspect is required: ``Import``. For example:
+In this case, an additional aspect is required: :ada:`Import`. For example:
 
 .. code-block:: ada
 
@@ -3667,7 +3673,7 @@ Calling Ada subprograms in C
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is also possible to call Ada subprograms in C applications. This
-requires the use of the ``Export`` aspect. For example:
+requires the use of the :ada:`Export` aspect. For example:
 
 .. code-block:: ada
 
@@ -3699,7 +3705,7 @@ This is the corresponding implementation:
 
     end C_API;
 
-In the C code, we simply have to declare the function using the ``extern``
+In the C code, we simply have to declare the function using the :c:`extern`
 keyword. For example:
 
 .. code-block:: c
@@ -3724,7 +3730,7 @@ Using C global variables in Ada
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In order to use global variables from C code, we can apply the same method
-as for subprograms: we just specify the ``Import`` and ``Convention``
+as for subprograms: we just specify the :ada:`Import` and :ada:`Convention`
 aspects for the variable we want to import.
 
 Let's reuse an example from the previous section. We'll add a global
@@ -3791,7 +3797,7 @@ In the Ada application, we just need to reference the foreign variable:
 As we can see by running the application, the value from the counter will
 contain the correct number of times that ``my_func`` was called.
 
-Similar to subprograms, we could use the ``External_Name`` aspect to
+Similar to subprograms, we could use the :ada:`External_Name` aspect to
 rename the variable in the Ada application.
 
 Using Ada variables in C
@@ -3799,7 +3805,7 @@ Using Ada variables in C
 
 It is also possible to use variables declared in Ada files in C
 applications. Similarly to subprogram, this requires the use of the
-``Export`` aspect.
+:ada:`Export` aspect.
 
 Let's reuse the previous example and add a counter, as we did in the
 previous example:
@@ -3959,7 +3965,7 @@ When creating bindings for a C header file, the compiler tries to do the
 best guess it can. However, the generated bindings do not always match the
 expectations we might have. This can happen, for example, when creating
 bindings for functions that deal with pointers. In this case, the compiler
-may just use ``System.Address`` for the pointers. Although this approach
+may just use :ada:`System.Address` for the pointers. Although this approach
 works fine (as we'll see later), this is not necessarily how developers
 would interpret the C header file. The following example will clarify this
 problem.
@@ -4086,8 +4092,8 @@ This creates the following specification in ``test_h.ads``:
     end test_h;
 
 As we can see, the bindings generator completely ignores the specification
-of ``struct test``. Also, all references to the ``test`` are replaced by
-simple addresses (``System.Address``). Of course, these bindings are good
+of :c:`struct test`. Also, all references to the ``test`` are replaced by
+simple addresses (:ada:`System.Address`). Of course, these bindings are good
 enough for creating a test application in Ada:
 
 .. code-block:: ada
@@ -4129,7 +4135,7 @@ file. This will require manual analysis of the header file. The good news
 are that, at least, we can use the automatic generated bindings as a
 starting point and adapt them to our needs. For example, we can:
 
-    #. Define a ``Test`` type based on ``System.Address`` and use it in
+    #. Define a ``Test`` type based on :ada:`System.Address` and use it in
        all relevant function.
 
     #. Remove the ``test_`` prefix in all operations on the ``Test``
@@ -4214,7 +4220,7 @@ same methods apply. However, there are a few differences that we need to
 take into account:
 
 - When importing or exporting variables and subprograms, we replace 'C'
-  by 'Cpp' in the ``Convention`` aspect of their declaration.
+  by 'Cpp' in the :ada:`Convention` aspect of their declaration.
 
 - In the project file for ``gprbuild``, we replace 'C' by 'C++' in the
   ``Languages`` entry.
@@ -4253,7 +4259,7 @@ And this is the corresponding implementation:
     }
 
 In the Ada application, as mentioned before, we need to replace 'C' by
-'Cpp' in the ``Convention`` of the declarations:
+'Cpp' in the :ada:`Convention` of the declarations:
 
 .. code-block:: ada
 
@@ -4289,7 +4295,7 @@ In the Ada application, as mentioned before, we need to replace 'C' by
     end Show_Cpp_Func;
 
 Also, in the declaration of ``my_func``, we need to include a reference to
-the original name using ``External_Name``. If we leave this out, the
+the original name using :ada:`External_Name`. If we leave this out, the
 linker won't be able to find the original implementation of ``my_func``,
 so it won't build the application. Note that the function name is not
 ``my_func`` anymore (as it was the case for the C version). Instead, it is
@@ -4434,7 +4440,7 @@ Note that, in the Ada application, we cannot use the prefixed notation.
 This notation would be more similar to the corresponding syntax in C++.
 This restriction is caused by the fact that the automatic generated
 bindings don't use tagged types. However, if we adapt the declaration of
-``Test`` and replace it by ``type Test is tagged limited record ...``,
+``Test`` and replace it by :ada:`type Test is tagged limited record ...`,
 we'll be able to write ``TA.my_func(1)`` and ``TA.get_cnt`` in our
 application.
 
@@ -4445,7 +4451,7 @@ generated bindings, this element has been exposed, so it could be accessed
 directly in our application. In order to correct that, we can simply move
 the type declaration to the private part of the ``Class_Test`` package and
 indicate that in the public part of the package (by using
-``type Test is limited private;``).
+:ada:`type Test is limited private;`).
 
 After these adaptations, we get the following bindings:
 
@@ -4554,167 +4560,167 @@ Appendix A: Generic Formal Types
 The following reference tables contain examples of available formal types
 for generics.
 
-+-------------------------+---------------------------------------------+-------------------------+
-| Formal Type             | Format                                      | Actual type             |
-+=========================+=============================================+=========================+
-| Incomplete type         | ``type T;``                                 | Any type                |
-+-------------------------+---------------------------------------------+-------------------------+
-| Incomplete type         | ``type T (<>);``                            | Any type                |
-+-------------------------+---------------------------------------------+-------------------------+
-| Discrete type           | ``type T is (<>);``                         | Any integer, modular or |
-|                         |                                             | enumeration type        |
-+-------------------------+---------------------------------------------+-------------------------+
-| Range type              | ``type T is range <>;``                     | Any signed integer type |
-+-------------------------+---------------------------------------------+-------------------------+
-| Modular type            | ``type T is mod <>;``                       | Any modular type        |
-+-------------------------+---------------------------------------------+-------------------------+
-| Floating-point type     | ``type T is digits <>;``                    | Any floating-point type |
-+-------------------------+---------------------------------------------+-------------------------+
-| Binary fixed-point type | ``type T is delta <>;``                     | Any binary fixed-point  |
-|                         |                                             | type                    |
-+-------------------------+---------------------------------------------+-------------------------+
-| Decimal fixed-point     | ``type T is delta <> digits <>;``           | Any decimal fixed-point |
-| type                    |                                             | type                    |
-+-------------------------+---------------------------------------------+-------------------------+
-| Definite nonlimited     | ``type T is private;``                      | Any nonlimited,         |
-| private type            |                                             | definite type           |
-+-------------------------+---------------------------------------------+-------------------------+
-| Indefinite nonlimited   | ``type T (<>) is private;``                 | Any nonlimited type     |
-| private type            |                                             | indefinite or definite  |
-|                         |                                             |                         |
-+-------------------------+---------------------------------------------+-------------------------+
-| Unlimited private type  | ``type T (D : DT) is private;``             | Any nonlimited type     |
-| with discriminant       |                                             | with discriminant       |
-+-------------------------+---------------------------------------------+-------------------------+
-| Access type             | ``type A is access T;``                     | Any access type for     |
-|                         |                                             | type T                  |
-+-------------------------+---------------------------------------------+-------------------------+
-| Definite derived        | ``type T is new B;``                        | Any concrete type       |
-| type                    |                                             | derived from base type  |
-|                         |                                             | B                       |
-+-------------------------+---------------------------------------------+-------------------------+
-| Limited private type    | ``type T is limited private;``              | Any definite type,      |
-|                         |                                             | limited or not          |
-+-------------------------+---------------------------------------------+-------------------------+
-| Incomplete tagged       | ``type T is tagged;``                       | Any concrete, definite, |
-| type                    |                                             | tagged type             |
-+-------------------------+---------------------------------------------+-------------------------+
-| Definite                | ``type T is tagged private;``               | Any concrete, definite, |
-| tagged private type     |                                             | tagged type             |
-|                         |                                             |                         |
-+-------------------------+---------------------------------------------+-------------------------+
-| Definite                | ``type T is tagged limited private;``       | Any concrete definite   |
-| tagged limited private  |                                             | tagged type, limited or |
-| type                    |                                             | not                     |
-+-------------------------+---------------------------------------------+-------------------------+
-| Definite abstract       | ``type T is abstract tagged private;``      | Any nonlimited,         |
-| tagged private type     |                                             | definite tagged type,   |
-|                         |                                             | abstract or concrete    |
-+-------------------------+---------------------------------------------+-------------------------+
-| Definite abstract       | ``type T is abstract tagged limited         | Any definite tagged     |
-| tagged limited private  | private;``                                  | type, limited or not,   |
-| type                    |                                             | abstract or concrete    |
-+-------------------------+---------------------------------------------+-------------------------+
-| Definite derived        | ``type T is new B with private;``           | Any concrete tagged     |
-| tagged type             |                                             | type derived from base  |
-|                         |                                             | type B                  |
-+-------------------------+---------------------------------------------+-------------------------+
-| Definite abstract       | ``type T is abstract new B with private;``  | Any tagged              |
-| derived tagged type     |                                             | type derived from base  |
-|                         |                                             | type B                  |
-|                         |                                             | abstract or concrete    |
-+-------------------------+---------------------------------------------+-------------------------+
-| Array type              | ``type A is array (R) of T;``               | Any array type with     |
-|                         |                                             | range R containing      |
-|                         |                                             | elements of type T      |
-+-------------------------+---------------------------------------------+-------------------------+
-| Interface type          | ``type T is interface;``                    | Any interface type T    |
-+-------------------------+---------------------------------------------+-------------------------+
-| Limited                 | ``type T is limited interface;``            | Any limited interface   |
-| interface type          |                                             | type T                  |
-+-------------------------+---------------------------------------------+-------------------------+
-| Task interface type     | ``type T is task interface;``               | Any task interface      |
-|                         |                                             | type T                  |
-+-------------------------+---------------------------------------------+-------------------------+
-| Synchronized interface  | ``type T is synchronized interface;``       | Any synchronized        |
-| type                    |                                             | interface type T        |
-+-------------------------+---------------------------------------------+-------------------------+
-| Protected interface     | ``type T is protected interface;``          | Any protected           |
-| type                    |                                             | interface type T        |
-+-------------------------+---------------------------------------------+-------------------------+
-| Derived interface type  | ``type T is new B and I with private;``     | Any type T derived from |
-|                         |                                             | base type B and         |
-|                         |                                             | interface I             |
-+-------------------------+---------------------------------------------+-------------------------+
-| Derived type            | ``type T is new B and I1 and I2             | Any type T derived from |
-| with multiple           | with private;``                             | base type B and         |
-| interfaces              |                                             | interfaces I1 and I2    |
-+-------------------------+---------------------------------------------+-------------------------+
-| Abstract derived        | ``type T is abstract new B and I            | Any type T derived from |
-| interface type          | with private;``                             | abstract base type B    |
-|                         |                                             | and interface I         |
-+-------------------------+---------------------------------------------+-------------------------+
-| Limited derived         | ``type T is limited new B and I             | Any type T derived from |
-| interface type          | with private;``                             | limited base type B and |
-|                         |                                             | limited interface I     |
-+-------------------------+---------------------------------------------+-------------------------+
-| Abstract limited        | ``type T is abstract limited new B and I    | Any type T derived from |
-| derived interface type  | with private;``                             | abstract limited base   |
-|                         |                                             | type B and limited      |
-|                         |                                             | interface I             |
-+-------------------------+---------------------------------------------+-------------------------+
-| Synchronized interface  | ``type T is synchronized new SI             | Any type T derived from |
-| type                    | with private;``                             | synchronized interface  |
-|                         |                                             | SI                      |
-+-------------------------+---------------------------------------------+-------------------------+
-| Abstract synchronized   | ``type T is abstract synchronized new SI    | Any type T derived from |
-| interface type          | with private;``                             | synchronized interface  |
-|                         |                                             | SI                      |
-+-------------------------+---------------------------------------------+-------------------------+
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Formal Type             | Format                                                       | Actual type             |
++=========================+==============================================================+=========================+
+| Incomplete type         | :ada:`type T;`                                               | Any type                |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Incomplete type         | :ada:`type T (<>);`                                          | Any type                |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Discrete type           | :ada:`type T is (<>);`                                       | Any integer, modular or |
+|                         |                                                              | enumeration type        |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Range type              | :ada:`type T is range <>;`                                   | Any signed integer type |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Modular type            | :ada:`type T is mod <>;`                                     | Any modular type        |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Floating-point type     | :ada:`type T is digits <>;`                                  | Any floating-point type |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Binary fixed-point type | :ada:`type T is delta <>;`                                   | Any binary fixed-point  |
+|                         |                                                              | type                    |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Decimal fixed-point     | :ada:`type T is delta <> digits <>;`                         | Any decimal fixed-point |
+| type                    |                                                              | type                    |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Definite nonlimited     | :ada:`type T is private;`                                    | Any nonlimited,         |
+| private type            |                                                              | definite type           |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Indefinite nonlimited   | :ada:`type T (<>) is private;`                               | Any nonlimited type     |
+| private type            |                                                              | indefinite or definite  |
+|                         |                                                              |                         |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Unlimited private type  | :ada:`type T (D : DT) is private;`                           | Any nonlimited type     |
+| with discriminant       |                                                              | with discriminant       |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Access type             | :ada:`type A is access T;`                                   | Any access type for     |
+|                         |                                                              | type T                  |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Definite derived        | :ada:`type T is new B;`                                      | Any concrete type       |
+| type                    |                                                              | derived from base type  |
+|                         |                                                              | B                       |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Limited private type    | :ada:`type T is limited private;`                            | Any definite type,      |
+|                         |                                                              | limited or not          |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Incomplete tagged       | :ada:`type T is tagged;`                                     | Any concrete, definite, |
+| type                    |                                                              | tagged type             |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Definite                | :ada:`type T is tagged private;`                             | Any concrete, definite, |
+| tagged private type     |                                                              | tagged type             |
+|                         |                                                              |                         |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Definite                | :ada:`type T is tagged limited private;`                     | Any concrete definite   |
+| tagged limited private  |                                                              | tagged type, limited or |
+| type                    |                                                              | not                     |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Definite abstract       | :ada:`type T is abstract tagged private;`                    | Any nonlimited,         |
+| tagged private type     |                                                              | definite tagged type,   |
+|                         |                                                              | abstract or concrete    |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Definite abstract       | :ada:`type T is abstract tagged limited private;`            | Any definite tagged     |
+| tagged limited private  |                                                              | type, limited or not,   |
+| type                    |                                                              | abstract or concrete    |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Definite derived        | :ada:`type T is new B with private;`                         | Any concrete tagged     |
+| tagged type             |                                                              | type derived from base  |
+|                         |                                                              | type B                  |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Definite abstract       | :ada:`type T is abstract new B with private;`                | Any tagged              |
+| derived tagged type     |                                                              | type derived from base  |
+|                         |                                                              | type B                  |
+|                         |                                                              | abstract or concrete    |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Array type              | :ada:`type A is array (R) of T;`                             | Any array type with     |
+|                         |                                                              | range R containing      |
+|                         |                                                              | elements of type T      |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Interface type          | :ada:`type T is interface;`                                  | Any interface type T    |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Limited                 | :ada:`type T is limited interface;`                          | Any limited interface   |
+| interface type          |                                                              | type T                  |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Task interface type     | :ada:`type T is task interface;`                             | Any task interface      |
+|                         |                                                              | type T                  |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Synchronized interface  | :ada:`type T is synchronized interface;`                     | Any synchronized        |
+| type                    |                                                              | interface type T        |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Protected interface     | :ada:`type T is protected interface;`                        | Any protected           |
+| type                    |                                                              | interface type T        |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Derived interface type  | :ada:`type T is new B and I with private;`                   | Any type T derived from |
+|                         |                                                              | base type B and         |
+|                         |                                                              | interface I             |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Derived type            | :ada:`type T is new B and I1 and I2 with private;`           | Any type T derived from |
+| with multiple           |                                                              | base type B and         |
+| interfaces              |                                                              | interfaces I1 and I2    |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Abstract derived        | :ada:`type T is abstract new B and I with private;`          | Any type T derived from |
+| interface type          |                                                              | abstract base type B    |
+|                         |                                                              | and interface I         |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Limited derived         | :ada:`type T is limited new B and I with private;`           | Any type T derived from |
+| interface type          |                                                              | limited base type B and |
+|                         |                                                              | limited interface I     |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Abstract limited        | :ada:`type T is abstract limited new B and I with private;`  | Any type T derived from |
+| derived interface type  |                                                              | abstract limited base   |
+|                         |                                                              | type B and limited      |
+|                         |                                                              | interface I             |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Synchronized interface  | :ada:`type T is synchronized new SI with private;`           | Any type T derived from |
+| type                    |                                                              | synchronized interface  |
+|                         |                                                              | SI                      |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Abstract synchronized   | :ada:`type T is abstract synchronized new SI with private;`  | Any type T derived from |
+| interface type          |                                                              | synchronized interface  |
+|                         |                                                              | SI                      |
++-------------------------+--------------------------------------------------------------+-------------------------+
 
 Indefinite version
 ~~~~~~~~~~~~~~~~~~
 
 Many of the examples above can be used for formal indefinite types:
 
-+-------------------------+---------------------------------------------+-------------------------+
-| Formal Type             | Format                                      | Actual type             |
-+=========================+=============================================+=========================+
-| Indefinite limited      | ``type T (<>) is limited private;``         | Any type, limited or    |
-| private type            |                                             | not, indefinite or      |
-|                         |                                             | definite                |
-+-------------------------+---------------------------------------------+-------------------------+
-| Incomplete indefinite   | ``type T (<>) is tagged;``                  | Any concrete tagged     |
-| tagged private type     |                                             | type,                   |
-|                         |                                             | indefinite or definite  |
-+-------------------------+---------------------------------------------+-------------------------+
-| Indefinite              | ``type T (<>) is tagged private;``          | Any concrete, limited   |
-| tagged private type     |                                             | tagged type,            |
-|                         |                                             | indefinite or definite  |
-+-------------------------+---------------------------------------------+-------------------------+
-| Indefinite              | ``type T (<>) is tagged limited private;``  | Any concrete tagged     |
-| tagged limited private  |                                             | type, limited or not,   |
-| type                    |                                             | indefinite or definite  |
-+-------------------------+---------------------------------------------+-------------------------+
-| Indefinite abstract     | ``type T (<>) is abstract tagged private;`` | Any nonlimited tagged   |
-| tagged private type     |                                             | type, indefinite or     |
-|                         |                                             | definite, abstract or   |
-|                         |                                             | concrete                |
-+-------------------------+---------------------------------------------+-------------------------+
-| Indefinite abstract     | ``type T (<>) is abstract tagged limited    | Any tagged type,        |
-| tagged limited private  | private;``                                  | limited or not,         |
-| type                    |                                             | indefinite or definite  |
-|                         |                                             | abstract or concrete    |
-+-------------------------+---------------------------------------------+-------------------------+
-| Indefinite derived      | ``type T (<>) is new B with private;``      | Any tagged type derived |
-| tagged type             |                                             | from base type B,       |
-|                         |                                             | indefinite or definite  |
-+-------------------------+---------------------------------------------+-------------------------+
-| Indefinite abstract     | ``type T (<>) is abstract new B with        | Any tagged type derived |
-| derived tagged type     |  private;``                                 | from base type B,       |
-|                         |                                             | indefinite or definite  |
-|                         |                                             | abstract or concrete    |
-+-------------------------+---------------------------------------------+-------------------------+
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Formal Type             | Format                                                       | Actual type             |
++=========================+==============================================================+=========================+
+| Indefinite limited      | :ada:`type T (<>) is limited private;`                       | Any type, limited or    |
+| private type            |                                                              | not, indefinite or      |
+|                         |                                                              | definite                |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Incomplete indefinite   | :ada:`type T (<>) is tagged;`                                | Any concrete tagged     |
+| tagged private type     |                                                              | type,                   |
+|                         |                                                              | indefinite or definite  |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Indefinite              | :ada:`type T (<>) is tagged private;`                        | Any concrete, limited   |
+| tagged private type     |                                                              | tagged type,            |
+|                         |                                                              | indefinite or definite  |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Indefinite              | :ada:`type T (<>) is tagged limited private;`                | Any concrete tagged     |
+| tagged limited private  |                                                              | type, limited or not,   |
+| type                    |                                                              | indefinite or definite  |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Indefinite abstract     | :ada:`type T (<>) is abstract tagged private;`               | Any nonlimited tagged   |
+| tagged private type     |                                                              | type, indefinite or     |
+|                         |                                                              | definite, abstract or   |
+|                         |                                                              | concrete                |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Indefinite abstract     | :ada:`type T (<>) is abstract tagged limited private;`       | Any tagged type,        |
+| tagged limited private  |                                                              | limited or not,         |
+| type                    |                                                              | indefinite or definite  |
+|                         |                                                              | abstract or concrete    |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Indefinite derived      | :ada:`type T (<>) is new B with private;`                    | Any tagged type derived |
+| tagged type             |                                                              | from base type B,       |
+|                         |                                                              | indefinite or definite  |
++-------------------------+--------------------------------------------------------------+-------------------------+
+| Indefinite abstract     | :ada:`type T (<>) is abstract new B with private;`           | Any tagged type derived |
+| derived tagged type     |                                                              | from base type B,       |
+|                         |                                                              | indefinite or definite  |
+|                         |                                                              | abstract or concrete    |
++-------------------------+--------------------------------------------------------------+-------------------------+
 
-The same examples could also contain discriminants. In this case, ``(<>)``
-is replaced by a list of discriminants, e.g.: ``(D: DT)``.
+The same examples could also contain discriminants. In this case, :ada:`(<>)`
+is replaced by a list of discriminants, e.g.: :ada:`(D: DT)`.
