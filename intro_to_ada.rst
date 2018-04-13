@@ -367,7 +367,8 @@ differs from, for example, C/C++'s case statement.
              when 0 =>
                 Put_Line ("Starting...");
                 Put_Line ("No really");
-                --  You can put several statements in a branch. There is no break.
+                --  You can put several statements in a branch.
+                --  There is no break.
 
              when 3 .. 5 =>
                 Put_Line ("Hello");
