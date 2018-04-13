@@ -2396,7 +2396,25 @@ This is a facility that is useful for two reasons:
   nested functions will have access to the parameters, and any local variables
   declared before them.
 
+.. code-block:: ada
 
+    type String_Array is array (Positive range <>) of Unbounded_String;
+
+    procedure Show_List (Strings : String_Array) is
+       Item_Number : Positive := 1;
+
+       procedure Show_Item (Item : Unbounded_String) is
+       begin
+          Put_Line (Positive'Image (Item_Number)
+                    & ". " & To_String (Item));
+          Item_Number := Item_Number + 1;
+       end Show_Item;
+
+    begin
+       for Item in Strings loop
+          Show_Item (Item);
+       end loop;
+    end Show_List;
 
 More about types
 ================
