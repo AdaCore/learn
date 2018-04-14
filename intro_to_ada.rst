@@ -735,13 +735,13 @@ floating-point type is :ada:`Float`:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Floating_Point_Demo is
-      A : Float := 2.1;
-   begin
-      Put_Line("The value of A is " & Float'Image(A));
-   end Floating_Point_Demo;
+    procedure Floating_Point_Demo is
+       A : Float := 2.1;
+    begin
+       Put_Line ("The value of A is " & Float'Image (A));
+    end Floating_Point_Demo;
 
 The application will show that the value of ``A`` is 2.1.
 
@@ -751,16 +751,16 @@ For example:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Floating_Point_Operations is
-      A : Float := 2.1;
-   begin
-      A := abs(A - 4.1);
-      Put_Line("The value of A is " & Float'Image(A));
-      A := A**2 + 1.0;
-      Put_Line("The value of A is " & Float'Image(A));
-   end Floating_Point_Operations;
+    procedure Floating_Point_Operations is
+       A : Float := 2.1;
+    begin
+       A := abs (A - 4.1);
+       Put_Line ("The value of A is " & Float'Image (A));
+       A := A ** 2 + 1.0;
+       Put_Line ("The value of A is " & Float'Image (A));
+    end Floating_Point_Operations;
 
 The value of ``A`` is 2.0 after the first operation and 5.0 after the
 second operation.
@@ -786,17 +786,17 @@ required precision. For example:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Custom_Floating_Types is
-      type T3  is digits 3;
-      type T15 is digits 15;
-      type T18 is digits 18;
-   begin
-      Put_Line("T3  requires " & Integer'Image(T3'Size) & " bits");
-      Put_Line("T15 requires " & Integer'Image(T15'Size) & " bits");
-      Put_Line("T18 requires " & Integer'Image(T18'Size) & " bits");
-   end Custom_Floating_Types;
+    procedure Custom_Floating_Types is
+       type T3  is digits 3;
+       type T15 is digits 15;
+       type T18 is digits 18;
+    begin
+       Put_Line ("T3  requires " & Integer'Image (T3'Size) & " bits");
+       Put_Line ("T15 requires " & Integer'Image (T15'Size) & " bits");
+       Put_Line ("T18 requires " & Integer'Image (T18'Size) & " bits");
+    end Custom_Floating_Types;
 
 In this example, the attribute :ada:`'Size` is used to retrieve the number
 of bits used for the specified data type. As we can see by running this
@@ -808,20 +808,20 @@ when displaying floating-point variables. For example:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Display_Custom_Floating_Types is
-      type T3  is digits 3;
-      type T18 is digits 18;
+    procedure Display_Custom_Floating_Types is
+       type T3  is digits 3;
+       type T18 is digits 18;
 
-      C1 : constant := 1.0e-4;
+       C1 : constant := 1.0e-4;
 
-      A : T3  := 1.0 + C1;
-      B : T18 := 1.0 + C1;
-   begin
-      Put_Line("The value of A is " & T3'Image(A));
-      Put_Line("The value of B is " & T18'Image(B));
-   end Display_Custom_Floating_Types;
+       A : T3  := 1.0 + C1;
+       B : T18 := 1.0 + C1;
+    begin
+       Put_Line ("The value of A is " & T3'Image (A));
+       Put_Line ("The value of B is " & T18'Image (B));
+    end Display_Custom_Floating_Types;
 
 As expected, the application will display the variables according to
 specified precision (1.00E+00 and 1.00010000000000000E+00).
@@ -836,15 +836,15 @@ This simple example creates a new floating-point type based on the
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Floating_Point_Range is
-      type T_Norm  is new Float range -1.0 .. 1.0;
-      A  : T_Norm;
-   begin
-      A := 1.0;
-      Put_Line("The value of A is " & T_Norm'Image(A));
-   end Floating_Point_Range;
+    procedure Floating_Point_Range is
+       type T_Norm  is new Float range -1.0 .. 1.0;
+       A  : T_Norm;
+    begin
+       A := 1.0;
+       Put_Line ("The value of A is " & T_Norm'Image (A));
+    end Floating_Point_Range;
 
 The application makes sure that the normalized range is observed for all
 variables of this type. If the value is out of range, an exception is
@@ -853,28 +853,28 @@ when assigning 2.0 to the variable ``A``:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Floating_Point_Range_Exception is
-      type T_Norm  is new Float range -1.0 .. 1.0;
-      A  : T_Norm;
-   begin
-      A := 2.0;
-      Put_Line("The value of A is " & T_Norm'Image(A));
-   end Floating_Point_Range_Exception;
+    procedure Floating_Point_Range_Exception is
+       type T_Norm  is new Float range -1.0 .. 1.0;
+       A  : T_Norm;
+    begin
+       A := 2.0;
+       Put_Line ("The value of A is " & T_Norm'Image (A));
+    end Floating_Point_Range_Exception;
 
 Ranges can also be specified for custom floating-point types. For example:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
-   with Ada.Numerics; use Ada.Numerics;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics; use Ada.Numerics;
 
-   procedure Custom_Range_Types is
-      type T6_Inv_Trig  is digits 6 range -Pi/2.0 .. Pi/2.0;
-   begin
-      null;
-   end Custom_Range_Types;
+    procedure Custom_Range_Types is
+       type T6_Inv_Trig  is digits 6 range -Pi / 2.0 .. Pi / 2.0;
+    begin
+       null;
+    end Custom_Range_Types;
 
 In this example, we are defining a type called ``T6_Inv_Trig``, which has
 a range from :math:`-\pi/2` to :math:`\pi/2` with a minimum precision of 6
@@ -910,20 +910,20 @@ For both types, the delta value is the same: 0.001.
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Decimal_Fixed_Point_Types is
-      type T3_D3 is delta 10.0**(-3) digits 3;
-      type T6_D3 is delta 10.0**(-3) digits 6;
-   begin
-      Put_Line("The delta    value of T3_D3 is " & T3_D3'Image(T3_D3'Delta));
-      Put_Line("The minimum  value of T3_D3 is " & T3_D3'Image(T3_D3'First));
-      Put_Line("The maximum  value of T3_D3 is " & T3_D3'Image(T3_D3'Last));
-      New_Line;
-      Put_Line("The delta    value of T6_D3 is " & T6_D3'Image(T6_D3'Delta));
-      Put_Line("The minimum  value of T6_D3 is " & T6_D3'Image(T6_D3'First));
-      Put_Line("The maximum  value of T6_D3 is " & T6_D3'Image(T6_D3'Last));
-   end Decimal_Fixed_Point_Types;
+    procedure Decimal_Fixed_Point_Types is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+       type T6_D3 is delta 10.0 ** (-3) digits 6;
+    begin
+       Put_Line ("The delta    value of T3_D3 is " & T3_D3'Image (T3_D3'Delta));
+       Put_Line ("The minimum  value of T3_D3 is " & T3_D3'Image (T3_D3'First));
+       Put_Line ("The maximum  value of T3_D3 is " & T3_D3'Image (T3_D3'Last));
+       New_Line;
+       Put_Line ("The delta    value of T6_D3 is " & T6_D3'Image (T6_D3'Delta));
+       Put_Line ("The minimum  value of T6_D3 is " & T6_D3'Image (T6_D3'First));
+       Put_Line ("The maximum  value of T6_D3 is " & T6_D3'Image (T6_D3'Last));
+    end Decimal_Fixed_Point_Types;
 
 When running the application, we see that the delta value of both
 types is indeed the same: 0.001. However, because ``T3_D3`` is restricted
@@ -939,17 +939,17 @@ zero. For example:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Decimal_Fixed_Point_Smaller is
-      type T3_D3 is delta 10.0**(-3) digits 3;
-      A : T3_D3 := T3_D3'Delta;
-      B : T3_D3 := 0.5;
-   begin
-      Put_Line("The value of A     is " & T3_D3'Image(A));
-      A := A * B;
-      Put_Line("The value of A * B is " & T3_D3'Image(A));
-   end Decimal_Fixed_Point_Smaller;
+    procedure Decimal_Fixed_Point_Smaller is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+       A : T3_D3 := T3_D3'Delta;
+       B : T3_D3 := 0.5;
+    begin
+       Put_Line ("The value of A     is " & T3_D3'Image (A));
+       A := A * B;
+       Put_Line ("The value of A * B is " & T3_D3'Image (A));
+    end Decimal_Fixed_Point_Smaller;
 
 In this example, the result of the operation :math:`0.001 * 0.5` is
 0.0005. Since this value is not representable for the ``T3_D3`` type
@@ -978,16 +978,16 @@ following:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Normalized_Fixed_Point_Type is
-      type TQ31 is delta 2.0**(-31) range -1.0 .. 1.0;
-   begin
-      Put_Line("TQ31 requires " & Integer'Image(TQ31'Size) & " bits");
-      Put_Line("The delta    value of TQ31 is " & TQ31'Image(TQ31'Delta));
-      Put_Line("The minimum  value of TQ31 is " & TQ31'Image(TQ31'First));
-      Put_Line("The maximum  value of TQ31 is " & TQ31'Image(TQ31'Last));
-   end Normalized_Fixed_Point_Type;
+    procedure Normalized_Fixed_Point_Type is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0;
+    begin
+       Put_Line ("TQ31 requires " & Integer'Image (TQ31'Size) & " bits");
+       Put_Line ("The delta    value of TQ31 is " & TQ31'Image (TQ31'Delta));
+       Put_Line ("The minimum  value of TQ31 is " & TQ31'Image (TQ31'First));
+       Put_Line ("The maximum  value of TQ31 is " & TQ31'Image (TQ31'Last));
+    end Normalized_Fixed_Point_Type;
 
 In this example, we are defining a 32-bit fixed-point data type for our
 normalized range. When running the application, we notice that the upper
@@ -998,27 +998,31 @@ We may also rewrite this code with an exact type definition:
 
 .. code-block:: ada
 
-   procedure Normalized_Adapted_Fixed_Point_Type is
-      type TQ31 is delta 2.0**(-31) range -1.0 .. 1.0 - 2.0**(-31);
-   begin
-      null;
-   end Normalized_Adapted_Fixed_Point_Type;
+    procedure Normalized_Adapted_Fixed_Point_Type is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+    begin
+       null;
+    end Normalized_Adapted_Fixed_Point_Type;
 
 We may also use any other range. For example:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
-   with Ada.Numerics; use Ada.Numerics;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics; use Ada.Numerics;
 
-   procedure Custom_Fixed_Point_Range is
-      type T_Inv_Trig is delta 2.0**(-15)*Pi range -Pi/2.0 .. Pi/2.0;
-   begin
-      Put_Line("T_Inv_Trig requires " & Integer'Image(T_Inv_Trig'Size) & " bits");
-      Put_Line("The delta    value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'Delta));
-      Put_Line("The minimum  value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'First));
-      Put_Line("The maximum  value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'Last));
-   end Custom_Fixed_Point_Range;
+    procedure Custom_Fixed_Point_Range is
+       type T_Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
+    begin
+       Put_Line ("T_Inv_Trig requires " & Integer'Image (T_Inv_Trig'Size)
+                 & " bits");
+       Put_Line ("The delta    value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Delta));
+       Put_Line ("The minimum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'First));
+       Put_Line ("The maximum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Last));
+    end Custom_Fixed_Point_Range;
 
 In this example, we are defining a 16-bit type called ``T_Inv_Trig``,
 which has a range from :math:`-\pi/2` to :math:`\pi/2`.
@@ -1027,18 +1031,18 @@ All standard operations are available for fixed-point types. For example:
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Fixed_Point_Op is
-      type TQ31 is delta 2.0**(-31) range -1.0 .. 1.0 - 2.0**(-31);
+    procedure Fixed_Point_Op is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
 
-      A, B, R : TQ31;
-   begin
-      A := 0.25;
-      B := 0.50;
-      R := A + B;
-      Put_Line("R is " & TQ31'Image(R));
-   end Fixed_Point_Op;
+       A, B, R : TQ31;
+    begin
+       A := 0.25;
+       B := 0.50;
+       R := A + B;
+       Put_Line ("R is " & TQ31'Image (R));
+    end Fixed_Point_Op;
 
 As expected, ``R`` contains 0.75 after the addition of ``A`` and ``B``.
 
