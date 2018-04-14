@@ -4082,8 +4082,26 @@ regular interval of one second between the iterations.
 Protected objects
 -----------------
 
+In situations where multiple tasks are accessing shared data, data
+corruption may happen. For example, data will be inconsistent when one
+task overwrites parts of the information that is being read by another
+task. In order to avoid this kind of problems and ensure that the
+information is accessed in a coordinated way, we can use protected
+objects.
+
+Protected objects encapsulate data and provide access to this data by
+means of protected operations. These protected operations may be
+subprograms or protected entries. Using protected objects ensures that the
+data will not be corrupted by race conditions.
+
 Simple object
 ~~~~~~~~~~~~~
+
+A protected object is declared by using the :ada:`protected` keyword. The
+syntax is similar to the one used for packages: we can declare operations
+(e.g.: procedures and functions) in the public part, and data in the
+private part. The corresponding implementation of the operations is
+included in the :ada:`protected body` of the object. For example:
 
 .. code-block:: ada
 
@@ -4122,8 +4140,35 @@ Simple object
        Put_Line ("Number is: " & Integer'Image (Obj.Get));
     end Show_Protected_Objects;
 
+In this example, we are defining two operations for ``Obj``: ``Set`` and
+``Get``. The implementation of these operations can be found in the
+``Obj`` body. The syntax used for implementing these operations is the
+same as the one used for common procedures and functions. Therefore  the
+implementation of protected objects is straightforward --- we simply
+access and update ``Local`` in these subprograms. In order to call these
+operations in the main application, we use the prefixed notation, e.g.:
+``Obj.Get``.
+
 Entries
 ~~~~~~~
+
+In addition to protected procedures and functions, we may also define
+protected entry points. This is achieved by using the :ada:`entry`
+keyword. Protected entry points allow for defining barriers using the
+:ada:`when` keyword. Barriers are conditions that must be fulfilled before
+the actual processing defined in the entry can start.
+
+In the previous example, we've used procedures and functions to define
+our operations on the protected objects. However, this implementation
+allows for reading the protected information (via ``Obj.Get``) before the
+information is set (via ``Obj.Set``). In that case, we have defined a
+default value (0). By rewriting ``Obj.Get`` and using an entry instead of
+a function, we may implement a barrier: this ensures that no task will
+read the information before it has been first set.
+
+The following example implements the barrier for the ``Obj.Get``
+operation. Also, it contains two concurrent subprograms (main application
+and task ``T``) that try to access the protected object.
 
 .. code-block:: ada
 
@@ -4162,13 +4207,33 @@ Entries
        end Obj;
 
        N : Integer := 0;
-    begin
-       Obj.Set (5);
-       Obj.Get (N);
 
+       task T;
+
+       task body T is
+       begin
+          Put_Line ("Task T will delay for 4 seconds...");
+          delay 4.0;
+          Put_Line ("Task T will set Obj...");
+          Obj.Set (5);
+          Put_Line ("Task T has just set Obj...");
+       end T;
+    begin
+       Put_Line ("Main application will get Obj...");
+       Obj.Get (N);
+       Put_Line ("Main application has just retrieved Obj...");
        Put_Line ("Number is: " & Integer'Image (N));
 
     end Show_Protected_Objects_Entries;
+
+As we can see by running the application, the main application waits until
+the protected object is set (by the call to ``Obj.Set`` in task ``T``)
+before it reads the information (via ``Obj.Get``). Because a 4-second
+delay has been added in task ``T``, the main application will also be
+delayed by 4 seconds. Only after this delay, task ``T`` will set the
+object and release the barrier set by ``Obj.Get``, so that the main
+application can then restore processing (after the information from the
+protected object is retrieved).
 
 Task and protected types
 ------------------------
