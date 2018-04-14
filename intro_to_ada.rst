@@ -889,7 +889,7 @@ accuracy of a floating-point type. This category of data types is called
 decimal fixed-point types.
 
 The syntax for decimal fixed-point types is
-:ada:`type T is delta <smallest_value> digits <number_of_decimal_digits>`.
+:ada:`type T is delta <delta_value> digits <number_of_decimal_digits>`.
 In this case, the :ada:`delta` and the :ada:`digits` will be used by the
 compiler to derive a range. This will become clear in the next example.
 
@@ -902,11 +902,11 @@ We will use three attributes of the language in our example:
 +------------------------+----------------------------------------------+
 | Last                   | Returns the last value of the type           |
 +------------------------+----------------------------------------------+
-| Small                  | Returns the smallest value of the type       |
+| Delta                  | Returns the delta value of the type          |
 +------------------------+----------------------------------------------+
 
-The example declares two data types: ``T3_D3`` and ``T6_D3``. For both
-types, the smallest value is the same: 0.001.
+In the example below, we declare two data types: ``T3_D3`` and ``T6_D3``.
+For both types, the delta value is the same: 0.001.
 
 .. code-block:: ada
 
@@ -916,16 +916,16 @@ types, the smallest value is the same: 0.001.
       type T3_D3 is delta 10.0**(-3) digits 3;
       type T6_D3 is delta 10.0**(-3) digits 6;
    begin
-      Put_Line("The smallest value of T3_D3 is " & T3_D3'Image(T3_D3'Small));
-      Put_Line("The maximum  value of T3_D3 is " & T3_D3'Image(T3_D3'First));
+      Put_Line("The delta    value of T3_D3 is " & T3_D3'Image(T3_D3'Delta));
+      Put_Line("The minimum  value of T3_D3 is " & T3_D3'Image(T3_D3'First));
       Put_Line("The maximum  value of T3_D3 is " & T3_D3'Image(T3_D3'Last));
       New_Line;
-      Put_Line("The smallest value of T6_D3 is " & T6_D3'Image(T6_D3'Small));
-      Put_Line("The maximum  value of T6_D3 is " & T6_D3'Image(T6_D3'First));
+      Put_Line("The delta    value of T6_D3 is " & T6_D3'Image(T6_D3'Delta));
+      Put_Line("The minimum  value of T6_D3 is " & T6_D3'Image(T6_D3'First));
       Put_Line("The maximum  value of T6_D3 is " & T6_D3'Image(T6_D3'Last));
    end Decimal_Fixed_Point_Types;
 
-When running the application, we see that the smallest number for both
+When running the application, we see that the delta value of both
 types is indeed the same: 0.001. However, because ``T3_D3`` is restricted
 to 3 digits, its range is -0.999 to 0.999. For the ``T6_D3``, we have
 defined a precision of 6 digits, so the range is -999.999 to 999.999.
@@ -934,7 +934,7 @@ Similar to the type definition using the :ada:`range` syntax, because we
 have an implicit range, the application will check that the variables
 contain values that are not out-of-range. Also, if the result of a
 multiplication or division on decimal fixed-point types is smaller than
-the smallest value specified for the data type, the actual result will be
+the delta value specified for the data type, the actual result will be
 zero. For example:
 
 .. code-block:: ada
@@ -943,25 +943,25 @@ zero. For example:
 
    procedure Decimal_Fixed_Point_Smaller is
       type T3_D3 is delta 10.0**(-3) digits 3;
-      A : T3_D3 := T3_D3'Small;
+      A : T3_D3 := T3_D3'Delta;
       B : T3_D3 := 0.5;
    begin
-      Put_Line("The value of A is " & T3_D3'Image(A));
+      Put_Line("The value of A     is " & T3_D3'Image(A));
       A := A * B;
-      Put_Line("The value of A is " & T3_D3'Image(A));
+      Put_Line("The value of A * B is " & T3_D3'Image(A));
    end Decimal_Fixed_Point_Smaller;
 
 In this example, the result of the operation :math:`0.001 * 0.5` is
 0.0005. Since this value is not representable for the ``T3_D3`` type
-because the smallest value is 0.001, the actual value stored in variable
+because the delta value is 0.001, the actual value stored in variable
 ``A`` is zero.
 
 Fixed-point types
 ~~~~~~~~~~~~~~~~~
 
 Ordinary fixed-point types are similar to decimal fixed-point types.
-The difference between them is in the definition of the smallest
-representable value: for decimal fixed-point types, it is based on the
+The difference between them is in the delta value:
+for decimal fixed-point types, it is based on the
 power of ten, whereas for ordinary fixed-point types, it is based on the
 power of two. Therefore, they are also called binary fixed-point types.
 
@@ -972,7 +972,7 @@ power of two. Therefore, they are also called binary fixed-point types.
    background.
 
 The syntax for binary fixed-point types is
-:ada:`type T is delta <smallest_value> range <lower_bound> .. <upper_bound>`.
+:ada:`type T is delta <delta_value> range <lower_bound> .. <upper_bound>`.
 For example, we may define a normalized range between -1.0 and 1.0 as
 following:
 
@@ -984,8 +984,8 @@ following:
       type TQ31 is delta 2.0**(-31) range -1.0 .. 1.0;
    begin
       Put_Line("TQ31 requires " & Integer'Image(TQ31'Size) & " bits");
-      Put_Line("The smallest value of TQ31 is " & TQ31'Image(TQ31'Small));
-      Put_Line("The maximum  value of TQ31 is " & TQ31'Image(TQ31'First));
+      Put_Line("The delta    value of TQ31 is " & TQ31'Image(TQ31'Delta));
+      Put_Line("The minimum  value of TQ31 is " & TQ31'Image(TQ31'First));
       Put_Line("The maximum  value of TQ31 is " & TQ31'Image(TQ31'Last));
    end Normalized_Fixed_Point_Type;
 
@@ -1015,8 +1015,8 @@ We may also use any other range. For example:
       type T_Inv_Trig is delta 2.0**(-15)*Pi range -Pi/2.0 .. Pi/2.0;
    begin
       Put_Line("T_Inv_Trig requires " & Integer'Image(T_Inv_Trig'Size) & " bits");
-      Put_Line("The smallest value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'Small));
-      Put_Line("The maximum  value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'First));
+      Put_Line("The delta    value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'Delta));
+      Put_Line("The minimum  value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'First));
       Put_Line("The maximum  value of T_Inv_Trig is " & T_Inv_Trig'Image(T_Inv_Trig'Last));
    end Custom_Fixed_Point_Range;
 
