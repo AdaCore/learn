@@ -4238,8 +4238,43 @@ protected object is retrieved).
 Task and protected types
 ------------------------
 
+In the previous examples, we have defined single tasks and protected
+objects. It is possible, however, to generalize tasks and protected
+objects using type definitions. This allows, for example, for creating
+multiple tasks based on just a single task type.
+
 Task types
 ~~~~~~~~~~
+
+A task type is a generalization of a task. The declaration is similar to
+simple tasks: you just have to replace :ada:`task` by :ada:`task type`.
+The main difference between simple tasks and task types is that task types
+don't create actual tasks that automatically start. Instead, a task
+declaration is needed for that --- similar to variable declarations.
+
+For example, we may reuse our first example:
+
+.. code-block:: ada
+
+    --% run_file: Show_Simple_Task.adb
+    --% make_flags: -gnaty
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_Task is
+       task T;
+
+       task body T is
+       begin
+          Put_Line ("In task T");
+       end T;
+    begin
+       Put_Line ("In main");
+    end Show_Simple_Task;
+
+We can rewrite the example and replace ``task T`` by ``task type TT``.
+After the type definition is complete, we declare a task (``A_Task``)
+based on the task type ``TT``:
 
 .. code-block:: ada
 
@@ -4253,13 +4288,19 @@ Task types
 
        task body TT is
        begin
-          Put_Line ("In task T");
+          Put_Line ("In task type TT");
        end TT;
 
        A_Task : TT;
     begin
        Put_Line ("In main");
     end Show_Simple_Task_Type;
+
+We may extend this example and create an array of tasks. Since we're using
+the same syntax as for variable declarations, we can simply use a similar
+syntax for task types: :ada:`array (<>) of Task_Type`. Also, we may pass
+information to the individual tasks by defining a ``Start`` entry. This
+is the updated example:
 
 .. code-block:: ada
 
@@ -4274,10 +4315,12 @@ Task types
        end TT;
 
        task body TT is
+          Task_N : Integer;
        begin
           accept Start (N : Integer) do
-             Put_Line ("In task T: " & Integer'Image (N));
+             Task_N := N;
           end Start;
+          Put_Line ("In task T: " & Integer'Image (Task_N));
        end TT;
 
        My_Tasks : array (1 .. 5) of TT;
@@ -4289,8 +4332,23 @@ Task types
        end loop;
     end Show_Task_Type_Array;
 
+In the example above, we're declaring five tasks in the array
+``My_Tasks``. We pass the array index to the individual tasks in the
+start entry point (``Start``). After the synchronization with the
+individual tasks in the main application, each task will proceed to call
+``Put_Line`` concurrently.
+
 Protected types
 ~~~~~~~~~~~~~~~
+
+A protected type is a generalization of a protected object. The
+declaration is similar to protected objects: you just have to replace
+:ada:`protected` by :ada:`protected type`. However, similar to task types,
+protected types require an object declaration in order to create actual
+objects. Again, this is similar to variable declarations and allows for
+creating arrays of protected objects, for example.
+
+We can reuse a previous example and rewrite it to use a protected type:
 
 .. code-block:: ada
 
@@ -4325,6 +4383,12 @@ Protected types
        Obj.Set (5);
        Put_Line ("Number is: " & Integer'Image (Obj.Get));
     end Show_Protected_Object_Type;
+
+In this example, instead of directly defining the protected object
+``Obj``, we first define a protected type ``Obj_Type`` and then declare
+``Obj`` based on that protected type. Note that the main application
+hasn't change: we still use ``Obj.Set`` and ``Obj.Get`` to access the
+protected object as in the original example.
 
 Interfacing with C and C++
 ==========================
