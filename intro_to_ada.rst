@@ -3593,7 +3593,7 @@ Predefined exceptions
 Tasking
 =======
 
-Tasks and protected objects allow for implementing concurrency in Ada. This
+Tasks and protected objects allow for implementing concurrency in Ada. The
 following sections explain those concepts in more details.
 
 Tasks
