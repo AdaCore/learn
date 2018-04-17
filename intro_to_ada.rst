@@ -4012,7 +4012,7 @@ application:
        task body T is
           Cnt   : Integer := 1;
        begin
-          while True loop
+          for I in 1 .. 5 loop
              delay 1.0;
 
              Aux.Show_Elapsed_Time;
@@ -4021,12 +4021,11 @@ application:
              Put_Line ("Cycle # " & Integer'Image (Cnt));
              Cnt  := Cnt + 1;
           end loop;
+          Put_Line ("Finished time-drifting loop");
        end T;
 
     begin
-       delay 5.0;
-       abort T;
-       Put_Line ("Finished time-drifting application");
+       null;
     end Show_Time_Drifting_Task;
 
 As we can see by running the application, due to the drift introduced by
@@ -4053,7 +4052,7 @@ drift and have a regular interval of one second:
 
           Cnt   : Integer := 1;
        begin
-          while True loop
+          for I in 1 .. 5 loop
              delay until Next;
 
              Aux.Show_Elapsed_Time;
@@ -4066,12 +4065,11 @@ drift and have a regular interval of one second:
              Put_Line ("Cycle # " & Integer'Image (Cnt));
              Cnt  := Cnt + 1;
           end loop;
+          Put_Line ("Finished cycling");
        end T;
 
     begin
-       delay 5.5;
-       abort T;
-       Put_Line ("Finished cycling");
+       null;
     end Show_Cycling_Task;
 
 As we can see by running the application, the :ada:`delay until` statement
