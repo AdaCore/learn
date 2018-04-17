@@ -3635,32 +3635,46 @@ main application starts, task ``T`` will also start automatically --- it's
 not necessary to manually start this task. By running the application
 above, we can see that both calls to :ada:`Put_Line` are performed.
 
-Note that the number of tasks is not limited to one: we could include a
-task ``T2`` in the example above. This task would also start
-automatically and run *concurrently* with task ``T`` and the main
-application. For example:
+Note that:
 
-.. code-block:: ada
+- The main application is a task itself.
 
-    with Ada.Text_IO; use Ada.Text_IO;
+  - In this case, the subprogram ``Show_Simple_Task`` is the main task of
+    the application.
 
-    procedure Show_Simple_Tasks is
-       task T;
-       task T2;
+- Task ``T`` is a subtask.
 
-       task body T is
-       begin
-          Put_Line ("In task T");
-       end T;
+  - Each subtask has a master task.
 
-       task body T2 is
-       begin
-          Put_Line ("In task T2");
-       end T2;
+  - Therefore, the main task is also the master task of task ``T``.
 
-    begin
-       Put_Line ("In main");
-    end Show_Simple_Tasks;
+- The number of tasks is not limited to one: we could include a
+  task ``T2`` in the example above.
+
+  - This task would also start automatically and run *concurrently* with
+    task ``T`` and the main task. For example:
+
+    .. code-block:: ada
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Simple_Tasks is
+           task T;
+           task T2;
+
+           task body T is
+           begin
+              Put_Line ("In task T");
+           end T;
+
+           task body T2 is
+           begin
+              Put_Line ("In task T2");
+           end T2;
+
+        begin
+           Put_Line ("In main");
+        end Show_Simple_Tasks;
 
 Simple synchronization
 ~~~~~~~~~~~~~~~~~~~~~~
