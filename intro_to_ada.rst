@@ -3770,17 +3770,19 @@ statement. For example:
        task body T is
        begin
           for I in 1 .. 10 loop
-             Put_Line ("hello");
+             Put_Line ("hello from task T");
              delay 1.0;
              --    ^ Wait 1.0 seconds
           end loop;
        end T;
     begin
-       null;
+       delay 1.5;
+       Put_Line ("hello from main");
     end Show_Delay;
 
 In this example, we're making the task ``T`` wait one second after each
-time it displays the "hello" message.
+time it displays the "hello" message. Also, the main task is waiting 1.5
+seconds and displaying another "hello" message
 
 Synchronization: rendez-vous
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
