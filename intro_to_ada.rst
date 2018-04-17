@@ -3615,9 +3615,6 @@ implementation is defined in a :ada:`task body` block. For example:
 
 .. code-block:: ada
 
-    --% run_file: Show_Simple_Task.adb
-    --% make_flags: -gnaty
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Simple_Task is
@@ -3642,9 +3639,6 @@ automatically and run *concurrently* with task ``T`` and the main
 application. For example:
 
 .. code-block:: ada
-
-    --% run_file: Show_Simple_Tasks.adb
-    --% make_flags: -gnaty
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3680,9 +3674,6 @@ may finish. For example:
 
 .. code-block:: ada
 
-    --% run_file: Show_Simple_Sync.adb
-    --% make_flags: -gnaty
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Simple_Sync is
@@ -3704,9 +3695,6 @@ package. In the example below, we declare a task ``T`` in the package
 
 .. code-block:: ada
 
-    --% src_file: Simple_Sync_Pkg.ads
-    --% cflags: -gnaty
-
     package Simple_Sync_Pkg is
        task T;
     end Simple_Sync_Pkg;
@@ -3714,9 +3702,6 @@ package. In the example below, we declare a task ``T`` in the package
 This is the corresponding package implementation:
 
 .. code-block:: ada
-
-    --% src_file: Simple_Sync_Pkg.adb
-    --% cflags: -gnaty
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3734,9 +3719,6 @@ As soon as the package is :ada:`with`'ed for the main procedure, the task
 example:
 
 .. code-block:: ada
-
-    --% run_file: Test_Simple_Sync_Pkg.adb
-    --% make_flags: -gnaty
 
     with Simple_Sync_Pkg;
 
@@ -3757,9 +3739,6 @@ put the task to sleep for the amount of seconds specified in the delay
 statement. For example:
 
 .. code-block:: ada
-
-    --% run_file: Show_Delay.adb
-    --% make_flags: -gnaty
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3809,9 +3788,6 @@ similar to a procedure call.
 
 .. code-block:: ada
 
-    --% run_file: Show_Rendezvous.adb
-    --% make_flags: -gnaty
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Rendezvous is
@@ -3851,9 +3827,6 @@ accepted. In fact, we could create a loop and accept the same entry point
 over and over. For example:
 
 .. code-block:: ada
-
-    --% run_file: Show_Rendezvous_Loop.adb
-    --% make_flags: -gnaty
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3939,9 +3912,6 @@ the package specification:
 
 .. code-block:: ada
 
-    --% src_file: Delay_Aux_Pkg.ads
-    --% cflags: -gnaty
-
     with Ada.Real_Time; use Ada.Real_Time;
 
     package Delay_Aux_Pkg is
@@ -3963,9 +3933,6 @@ the package specification:
 This is the package definition:
 
 .. code-block:: ada
-
-    --% src_file: Delay_Aux_Pkg.adb
-    --% cflags: -gnaty
 
     with Ada.Text_IO;   use Ada.Text_IO;
 
@@ -3993,9 +3960,6 @@ Using this auxiliary package, we're now ready to write our time-drifting
 application:
 
 .. code-block:: ada
-
-    --% run_file: Show_Time_Drifting_Task.adb
-    --% make_flags: -gnaty
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -4034,9 +3998,6 @@ already have a time span of about four seconds. Using the
 drift and have a regular interval of one second:
 
 .. code-block:: ada
-
-    --% run_file: Show_Cycling_Task.adb
-    --% make_flags: -gnaty
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -4105,9 +4066,6 @@ included in the :ada:`protected body` of the object. For example:
 
 .. code-block:: ada
 
-    --% run_file: Show_Protected_Objects.adb
-    --% make_flags: -gnaty
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Protected_Objects is
@@ -4171,9 +4129,6 @@ operation. Also, it contains two concurrent subprograms (main application
 and task ``T``) that try to access the protected object.
 
 .. code-block:: ada
-
-    --% run_file: Show_Protected_Objects_Entries.adb
-    --% make_flags: -gnaty
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4256,9 +4211,6 @@ For example, we may reuse our first example:
 
 .. code-block:: ada
 
-    --% run_file: Show_Simple_Task.adb
-    --% make_flags: -gnaty
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Simple_Task is
@@ -4277,9 +4229,6 @@ After the type definition is complete, we declare a task (``A_Task``)
 based on the task type ``TT``:
 
 .. code-block:: ada
-
-    --% run_file: Show_Simple_Task_Type.adb
-    --% make_flags: -gnaty
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4303,9 +4252,6 @@ information to the individual tasks by defining a ``Start`` entry. This
 is the updated example:
 
 .. code-block:: ada
-
-    --% run_file: Show_Task_Type_Array.adb
-    --% make_flags: -gnaty
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4351,9 +4297,6 @@ creating arrays of protected objects, for example.
 We can reuse a previous example and rewrite it to use a protected type:
 
 .. code-block:: ada
-
-    --% run_file: Show_Protected_Object_Type.adb
-    --% make_flags: -gnaty
 
     with Ada.Text_IO; use Ada.Text_IO;
 
