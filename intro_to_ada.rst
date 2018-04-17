@@ -4091,6 +4091,16 @@ means of protected operations. These protected operations may be
 subprograms or protected entries. Using protected objects ensures that the
 data will not be corrupted by race conditions.
 
+.. admonition:: Important
+
+    It is possible to implement protected objects using Ada tasks. In
+    fact, this was the only possible way of implementing them in Ada 83
+    (the first version of the Ada language). However, the use of protected
+    objects greatly simplify the implementation when compared to similar
+    mechanisms implemented strictly with tasks. Therefore, the
+    recommendation is to use protected objects when the main goal is to
+    just protect data.
+
 Simple object
 ~~~~~~~~~~~~~
 
