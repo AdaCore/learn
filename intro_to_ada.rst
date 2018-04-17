@@ -3790,7 +3790,9 @@ Synchronization: rendez-vous
 In the previous examples, the only kind of synchronization we've seen was
 the one that happens automatically at the end of the main task. In
 addition to that, it is possible to define custom synchronization points
-(or entry points) using the keyword :ada:`entry`.
+using the keyword :ada:`entry`. An entry can be viewed as a special kind
+of subprogram, and it be called by the master task using a similar syntax,
+as we will see later.
 
 In the task implementation, we shall define in which part of the task the
 entries will be accepted by using the keyword :ada:`accept`. A task will
@@ -3798,16 +3800,14 @@ process its statements until it reaches an :ada:`accept` statement. At
 this point, it will wait for the master task to synchronize with the it.
 In other words:
 
-- the subtask will :ada:`accept` a synchronization to happen and it will
-  be waiting in that :ada:`entry` point.
+- The subtask will wait at this point (in the :ada:`accept` statement),
+  ready to accept a call from the master task to the corresponding entry.
 
-- the master task will call the :ada:`entry` point in order to
-  synchronize with the subtask.
+- The master task will call the task entry in order to synchronize with
+  the subtask --- similar to a procedure call.
 
-This synchronization between an master task and a subtask via an :ada:`entry`
-point is called rendez-vous. In the master task that synchronizes with the
-subtask, the rendez-vous is triggered by a call to the :ada:`entry` point
---- similar to a procedure call.
+The synchronization between tasks is called rendez-vous. Let's see an
+example:
 
 .. code-block:: ada
 
@@ -3830,15 +3830,15 @@ subtask, the rendez-vous is triggered by a call to the :ada:`entry` point
        T.Start; --  Calling T's entry
     end Show_Rendezvous;
 
-In this example, we declare an entry point ``Start`` for the task ``T``.
-In the task body, we use this entry point by using :ada:`accept Start`.
+In this example, we declare an entry ``Start`` for the task ``T``.
+In the task body, we implement this entry by using :ada:`accept Start`.
 When the task ``T`` reaches this point, it will wait for the master task
 to synchronize. This synchronization happens in the ``T.Start`` statement.
 After the synchronization is finished, the main task and task ``T``
 will run concurrently until they synchronize again when the main
 task reaches its end.
 
-Note that the entry point may be used to perform more than just a simple
+Note that an entry may be used to perform more than just a simple
 task synchronization: we may also perform multiple statements during
 the time both tasks are synchronized. This is achieved by using a
 :ada:`do ... end` block. For the previous example, we would simply write
