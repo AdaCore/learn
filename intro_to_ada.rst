@@ -3679,14 +3679,14 @@ Note that:
 Simple synchronization
 ~~~~~~~~~~~~~~~~~~~~~~
 
-As we've just seen, as soon as the main application starts, its tasks
-also start automatically. The main application will continue its
+As we've just seen, as soon as the main task starts, its subtasks
+also start automatically. The main task will continue its
 processing until it reaches the end of its implementation. At this point,
-however, it will not finish. Instead, the main application will wait until
-its tasks have finished before it finishes itself. In other words, after
-this waiting process, a synchronization between the main application and
-its tasks occurs. After this final synchronization, the main application
-may finish. For example:
+however, it will not finish. Instead, the main task will wait until its
+subtasks have finished before it finishes itself. In other words, after
+this waiting process, a synchronization between the main task and its
+subtasks occurs. After this final synchronization, the main task may
+finish. For example:
 
 .. code-block:: ada
 
@@ -3704,6 +3704,12 @@ may finish. For example:
        null;
        --  Will wait here until all tasks have terminated
     end Show_Simple_Sync;
+
+Note that the same mechanism is used for other subprograms that contain
+subtasks: the subprogram's master task will wait for its subtasks to
+finish. In other words, this mechanism is not limited to the main
+application, but is also applied to any subprogram called by the main
+application or its subprograms.
 
 A synchronization is also achieved if we move the task to a separate
 package. In the example below, we declare a task ``T`` in the package
@@ -3731,8 +3737,7 @@ This is the corresponding package implementation:
     end Simple_Sync_Pkg;
 
 As soon as the package is :ada:`with`'ed for the main procedure, the task
-``T`` defined in the package will be part of the main application. For
-example:
+``T`` defined in the package will be part of the main task. For example:
 
 .. code-block:: ada
 
@@ -3744,8 +3749,8 @@ example:
        --  Will wait here until all tasks have terminated
     end Test_Simple_Sync_Pkg;
 
-Again, as soon as the main application reaches its end, it will
-synchronize with task ``T`` from ``Simple_Sync_Pkg`` before finishing.
+Again, as soon as the main task reaches its end, it will synchronize with
+task ``T`` from ``Simple_Sync_Pkg`` before finishing.
 
 Delay
 ~~~~~
