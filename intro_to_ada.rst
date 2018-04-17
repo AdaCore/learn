@@ -3786,26 +3786,26 @@ Synchronization: rendez-vous
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the previous examples, the only kind of synchronization we've seen was
-the one that happens automatically at the end of the main application. In
+the one that happens automatically at the end of the main task. In
 addition to that, it is possible to define custom synchronization points
 (or entry points) using the keyword :ada:`entry`.
 
 In the task implementation, we shall define in which part of the task the
 entries will be accepted by using the keyword :ada:`accept`. A task will
 process its statements until it reaches an :ada:`accept` statement. At
-this point, it will wait for the main task or application to synchronize
-with the task. In other words:
+this point, it will wait for the master task to synchronize with the it.
+In other words:
 
-- the task will :ada:`accept` a synchronization to happen and it will be
-  waiting in that :ada:`entry` point.
+- the subtask will :ada:`accept` a synchronization to happen and it will
+  be waiting in that :ada:`entry` point.
 
-- the main application will call the :ada:`entry` point in order to
-  synchronize with the task.
+- the master task will call the :ada:`entry` point in order to
+  synchronize with the subtask.
 
-This synchronization between an application and a task via an :ada:`entry`
-point is called rendez-vous. In the application that synchronizes with the
-task, the rendez-vous is triggered by a call to the :ada:`entry` point ---
-similar to a procedure call.
+This synchronization between an master task and a subtask via an :ada:`entry`
+point is called rendez-vous. In the master task that synchronizes with the
+subtask, the rendez-vous is triggered by a call to the :ada:`entry` point
+--- similar to a procedure call.
 
 .. code-block:: ada
 
@@ -3830,11 +3830,11 @@ similar to a procedure call.
 
 In this example, we declare an entry point ``Start`` for the task ``T``.
 In the task body, we use this entry point by using :ada:`accept Start`.
-When the task reaches this point, it will wait for the main application to
-synchronize. This synchronization happens in the ``T.Start`` statement.
-After the synchronization is finished, the main application and task ``T``
+When the task ``T`` reaches this point, it will wait for the master task
+to synchronize. This synchronization happens in the ``T.Start`` statement.
+After the synchronization is finished, the main task and task ``T``
 will run concurrently until they synchronize again when the main
-application reaches its end.
+task reaches its end.
 
 Note that the entry point may be used to perform more than just a simple
 task synchronization: we may also perform multiple statements during
@@ -3885,16 +3885,16 @@ the ``Start`` entry point. We can make the following observations:
   counter is incremented.
 
     - As long as task ``T`` is performing the :ada:`do ... end` block, the
-      main application will wait for the block to finish.
+      main task will wait for the block to finish.
 
-- In addition, the main application is calling the ``Start`` entry point
+- In addition, the main task is calling the ``Start`` entry point
   multiple times in the loop from ``1 .. 4``.
 
     - Because task ``T`` uses an infinite loop, it will never finish, so
-      that the task ``T`` and the main application will never synchronize
+      that the task ``T`` and the main task will never synchronize
       at the end. Therefore, we need to interrupt the processing of task
       ``T``. One way       of achieving this is by aborting task ``T`` in
-      the main application using the keyword :ada:`abort`
+      the main task using the keyword :ada:`abort`
 
 Cycling tasks
 ~~~~~~~~~~~~~
@@ -4146,7 +4146,7 @@ a function, we may implement a barrier: this ensures that no task will
 read the information before it has been first set.
 
 The following example implements the barrier for the ``Obj.Get``
-operation. Also, it contains two concurrent subprograms (main application
+operation. Also, it contains two concurrent subprograms (main task
 and task ``T``) that try to access the protected object.
 
 .. code-block:: ada
@@ -4302,7 +4302,7 @@ is the updated example:
 In the example above, we're declaring five tasks in the array
 ``My_Tasks``. We pass the array index to the individual tasks in the
 start entry point (``Start``). After the synchronization with the
-individual tasks in the main application, each task will proceed to call
+individual subtasks in the main task, each subtask will proceed to call
 ``Put_Line`` concurrently.
 
 Protected types
