@@ -3845,9 +3845,19 @@ the time both tasks are synchronized. This is achieved by using a
 :ada:`accept Start do <statements>; end;`. We will use this kind of block
 in the next example.
 
-There is no limit for the amount of times an entry point might be
-accepted. In fact, we could create a loop and accept the same entry point
-over and over. For example:
+Select loop
+~~~~~~~~~~~
+
+There is no limit for the amount of times an entry might be accepted in
+the task implementation. In fact, we could create an infinite loop in the
+task implementation and accept calls to the same entry over and over. An
+infinite loop, however, would prevent the subtask from finishing, so it
+would also block the master task when it reaches the end of its
+processing. Therefore, a loop containing :ada:`accept` statements in a
+task body is normally implemented together with a
+:ada:`select ... or terminate` statement. In simple terms, this statement
+allows the master task to terminate the subtask when the end of the master
+task is reached. For example:
 
 .. code-block:: ada
 
@@ -3863,10 +3873,14 @@ over and over. For example:
           Cnt : Integer := 0;
        begin
           loop
-             accept Start do
-                Cnt := Cnt + 1;
-             end Start;
-             Put_Line ("In T's loop (" & Integer'Image (Cnt) & ")");
+             select
+                accept Start do
+                   Cnt := Cnt + 1;
+                end Start;
+                Put_Line ("In T's loop (" & Integer'Image (Cnt) & ")");
+             or
+                terminate;
+             end select;
           end loop;
        end T;
 
@@ -3877,11 +3891,10 @@ over and over. For example:
           T.Start; --  Calling T's entry multiple times
        end loop;
 
-       abort T; --  Aborting T in order to exit loop
     end Show_Rendezvous_Loop;
 
 In this example, the task body implements an infinite loop that accepts
-the ``Start`` entry point. We can make the following observations:
+calls to the ``Start`` entry. We can make the following observations:
 
 - In this case, an :ada:`accept E do ... end` block is used, where a
   counter is incremented.
@@ -3889,14 +3902,16 @@ the ``Start`` entry point. We can make the following observations:
     - As long as task ``T`` is performing the :ada:`do ... end` block, the
       main task will wait for the block to finish.
 
-- In addition, the main task is calling the ``Start`` entry point
-  multiple times in the loop from ``1 .. 4``.
+- In addition, the main task is calling the ``Start`` entry  multiple
+  times in the loop from ``1 .. 4``.
 
-    - Because task ``T`` uses an infinite loop, it will never finish, so
-      that the task ``T`` and the main task will never synchronize
-      at the end. Therefore, we need to interrupt the processing of task
-      ``T``. One way       of achieving this is by aborting task ``T`` in
-      the main task using the keyword :ada:`abort`
+    - Because task ``T`` uses an infinite loop, it will always accept
+      calls to the ``Start`` entry.
+
+    - When the main task reaches the end, it will check the status of the
+      ``T`` task. Even though task ``T`` could accept new calls to the
+      ``Start`` entry, the master task is allowed to terminate task ``T``
+      due to the :ada:`or terminate` part of the :ada:`select` statement.
 
 Cycling tasks
 ~~~~~~~~~~~~~
