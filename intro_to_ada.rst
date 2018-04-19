@@ -181,6 +181,7 @@ There are several note worthy things in the above program:
    line. For example:
 
 .. code-block:: ada
+    :class: ada-nocheck
 
     --  We start a comment in this line...
     --  and we continue on the second line...
@@ -289,7 +290,9 @@ Ada has a last loop kind, while loops.
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Greet is
+        I : Natural := 0;
     begin
        --  Condition. *Must* be of type Boolean (no Integers). Operator <
        --  returns a Boolean
@@ -363,6 +366,8 @@ differs from, for example, C/C++'s case statement.
 
 .. code-block:: ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Greet is
        I : Integer := 0;
     begin
@@ -426,6 +431,8 @@ Ada. What is important to know at this stage:
 
 .. code-block:: ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
         procedure Nested is
         begin
@@ -441,6 +448,8 @@ Ada. What is important to know at this stage:
    declarative region with the :ada:`declare` block
 
 .. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
     begin
@@ -467,6 +476,8 @@ If expressions
 
 .. code-block:: ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
         A : Integer := 12;
         B : Integer := (if A = 12 then 15
@@ -486,6 +497,8 @@ differences that stems from the fact that it is an expression:
 
 .. code-block:: ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
     begin
         for I in 1 .. 10 loop
@@ -502,13 +515,15 @@ you would expect.
 
 .. code-block:: ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
     begin
         for I in 1 .. 10 loop
             Put_Line (case I is
                       when 1 | 3 | 5 | 7 | 9 => "Odd",
                       when 2 | 4 | 6 | 8 | 10 => "Even",
-                      when others => "Cannot happen")
+                      when others => "Cannot happen");
         end loop;
     end Main;
 
@@ -596,6 +611,7 @@ Ada makes a few types available as "built-ins". :ada:`Integer` is one of
 them. Here is how :ada:`Integer` is defined:
 
 .. code-block:: ada
+    :class: ada-nocheck
 
     type Integer is range -(2 ** 31) .. +(2 ** 31 - 1);
 
@@ -663,7 +679,7 @@ this works for any modular type:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
-       type Mod_Int is mod 2 ** 4;
+       type Mod_Int is mod 2 ** 5;
        --                  ^ Max value is 32
 
        A : Mod_Int := 20;
@@ -718,6 +734,7 @@ Enum types are powerful enough that, unlike in most languages, they're used to
 represent the standard Boolean type, that is so defined:
 
 .. code-block:: ada
+    :class: ada-nocheck
 
     type Boolean is (True, False);
 
@@ -1054,6 +1071,7 @@ corollary of that is that different types of the same family are incompatible
 with each other, as we can see in the following example:
 
 .. code-block:: ada
+    :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1099,6 +1117,7 @@ introduce conversion functions along with the types.
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Conv is
        type Meters is range 0 .. 10_000;
        type Miles is range 0 .. 5_000;
@@ -1107,15 +1126,15 @@ introduce conversion functions along with the types.
        function To_Miles (M : Meters) return Miles is
        --                             ^ Return type
        begin
-          return M * 1609 / 1000;
-       end Miles;
+          return Miles (M * 1609 / 1000);
+       end To_Miles;
 
        Dist_Imperial : Miles;
        Dist_SI : constant Meters := 100;
     begin
        Dist_Imperial := To_Miles (Dist_SI);
        Put_Line (Miles'Image (Dist_Imperial));
-    end;
+    end Conv;
 
 This is also the first time we use a function. We will study `functions and
 procedures <TODOSUBPROGRAMS>`__ in more details soon.
@@ -1166,6 +1185,7 @@ advantages. For example:
     compile:
 
     .. code-block:: ada
+        :class: ada-expect-compile-error
 
         procedure Main is
            A : Integer := 3;
@@ -1194,6 +1214,7 @@ literals too. This allows Ada to define its own strongly typed character types,
 but also allows the user to define its own, as in the example below:
 
 .. code-block:: ada
+    :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1209,15 +1230,15 @@ but also allows the user to define its own, as in the example below:
        C := '?';
        --   ^ Character literal (enumeration literal)
 
-       A := 'a';
+       M := 'a';
 
        C := 64;
        --   ^ Invalid: 64 is not an enumeration literal
 
-       A := C;
+       M := C;
        --   ^ Invalid: C is of invalid type for A
 
-       A := 'd';
+       M := 'd';
        --   ^ Invalid: 'd' is not a valid literal for type My_Char
     end Greet;
 
@@ -1260,6 +1281,7 @@ The syntax for enumerations uses the :ada:`range <range>` syntax:
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Greet is
        type Days is (Monday, Tuesday, Wednesday, Thursday,
                      Friday, Saturday, Sunday);
@@ -1294,28 +1316,33 @@ we will at some point get into the nitty-gritty of what a `primitive operation
 primitive is a subprogram attached to a type. Ada knows a primitive because it
 is a subprogram defined in the same scope with the type.
 
+.. amiard: TODO, this example does not work in GNAT for some reason, investigate.
+
 .. code-block:: ada
+    :class: ada-nocheck
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Primitives is
-       type Days is (Monday, Tuesday, Wednesday, Thursday,
-                     Friday, Saturday, Sunday);
+      type Days is (Monday, Tuesday, Wednesday, Thursday,
+                    Friday, Saturday, Sunday);
 
-        procedure Print_Day (D : Days) is
-        begin
-           Put_Line (Days'Image (D))
-        end Print_Day;
-        --  Print day is a primitive of the type Days
+       --  Print day is a primitive of the type Days
+      procedure Print_Day (D : Days) is
+      begin
+         Put_Line (Days'Image (D));
+      end Print_Day;
 
-       type Weekend_Days is new Days range Saturday .. Sunday;
+      type Weekend_Days is new Days range Saturday .. Sunday;
 
-       --  A procedure Print_Day is automatically inherited here. It is like
-       --  the procedure
-       --
-       --  procedure Print_Day (D : Weekend_Days);
-       --
-       --  Has been declared
+      --  A procedure Print_Day is automatically inherited here. It is like
+      --  the procedure
+      --
+      --  procedure Print_Day (D : Weekend_Days);
+      --
+      --  Has been declared
 
-       Sat : Weekend_Days := Saturday;
+      Sat : Weekend_Days := Saturday;
     begin
        Print_Day (Sat);
     end Primitives;
@@ -1333,8 +1360,10 @@ that subtype are still of the type the subtype derives from, and thus are valid
 where an instance of the type is expected.
 
 .. code-block:: ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Greet is
        type Days is (Monday, Tuesday, Wednesday, Thursday,
                      Friday, Saturday, Sunday);
@@ -1364,8 +1393,10 @@ Some subtypes are declared as part of the standard package in Ada, and are
 available to you all the time:
 
 .. code-block:: ada
+    :class: ada-nocheck
 
-    -- TODO: add definition of Integer Natural and Positive
+    subtype Natural  is Integer range 0 .. Integer'Last;
+    subtype Positive is Integer range 1 .. Integer'Last;
 
 While subtypes of a type are statically compatible with each others,
 constraints are enforced at runtime: If you violate the constraints of the
@@ -1373,6 +1404,7 @@ subtype, an exception will be raised at runtime, when the running program
 detects the violation.
 
 .. code-block:: ada
+    :class: ada-run, ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1405,6 +1437,7 @@ specific type is called a field, or a component.
 Here is an example of a simple record declaration:
 
 .. code-block:: ada
+    :class: ada-nocheck
 
     type Date is record
        --  The following declarations are components of the record
@@ -1420,6 +1453,7 @@ As with objects declarations, it is possible to specify additional constraints
 when indicating the subtype of the field.
 
 .. code-block:: ada
+    :class: ada-nocheck
 
     type Date is record
        Day   : Integer range 1 .. 31;
@@ -1433,7 +1467,8 @@ Record components can also have default values. When declaring an instance of
 the record, fields will be automatically set to this value. The value can be
 any expression that is valid in the scope of definition of the record.
 
-..code-block:: ada
+.. code-block:: ada
+    :class: ada-nocheck
 
     Today    : Date := (31, November, 2012);
     Birthday : Date := (Day => 30, Month => February, Year => 2010);
@@ -1457,6 +1492,9 @@ To access components of a record instance, an operation that is called
 component selection, you use the following syntax:
 
 .. code-block:: ada
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Record_Selection is
 
@@ -1491,6 +1529,7 @@ Arrays in Ada are both pretty complex and pretty powerful. We will go over
 their characteristics in detail, but let's start with one way of declaring one.
 
 .. code-block:: ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1546,6 +1585,7 @@ to index into the array.
     C++, arrays are not naked pointers in disguise.
 
 .. code-block:: ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1577,6 +1617,7 @@ the code above is good, because it uses the index type, but a for loop as
 showcased below is bad practice:
 
 .. code-block:: ada
+    :class: ada-nocheck
 
     for I in 0 .. 20 loop
        Tab (I) := Tab (I) * 2;
@@ -1586,32 +1627,35 @@ Since we said above that you can use any discrete type to index an array, it
 means that you can use enum types to index arrays.
 
 .. code-block:: ada
+    :class: ada-run
 
-   procedure Greet is
-      type Month_Duration is range 1 .. 31;
-      type Month is (Jan, Feb, Mar, Apr, May, Jun,
-                     Jul, Aug, Sep, Oct, Nov, Dec);
+    with Ada.Text_IO; use Ada.Text_IO;
 
-      type My_Int_Array is array (Month) of Month_Duration;
-      --                          ^ Can use an enum as the
-      --                            index
+    procedure Greet is
+       type Month_Duration is range 1 .. 31;
+       type Month is (Jan, Feb, Mar, Apr, May, Jun,
+                      Jul, Aug, Sep, Oct, Nov, Dec);
 
-      Tab : constant My_Int_Array :=
-      --    ^ constant is like a variable but cannot be
-      --      modified
-        (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-      --  Maps months to number of days
+       type My_Int_Array is array (Month) of Month_Duration;
+       --                          ^ Can use an enum as the
+       --                            index
 
-      Feb_Days : Month_Duration := Tab (Feb);
-      --  Number of days in February
-   begin
-      for M in Month loop
-         Put_Line
-           (Month'Image (M) & " has "
-            & Month_Duration'Image (Tab (I))  & " days.");
-            --                                ^ Concatenation operator
-      end loop;
-   end Greet;
+       Tab : constant My_Int_Array :=
+       --    ^ constant is like a variable but cannot be
+       --      modified
+         (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+       --  Maps months to number of days
+
+       Feb_Days : Month_Duration := Tab (Feb);
+       --  Number of days in February
+    begin
+       for M in Month loop
+          Put_Line
+            (Month'Image (M) & " has "
+             & Month_Duration'Image (Tab (M))  & " days.");
+             --                                ^ Concatenation operator
+       end loop;
+    end Greet;
 
 
 In the example above, we are:
@@ -1638,6 +1682,9 @@ use a value of the wrong type to index the array, you will get a compile time
 error.
 
 .. code-block:: ada
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
        type My_Int is range 0 .. 1000;
@@ -1645,8 +1692,8 @@ error.
        type My_Int_Array is array (Index) of My_Int;
        Tab : My_Int_Array := (2, 3, 5, 7, 11);
     begin
-       for I in Integer range 1 .. 5 loop
-       --       ^ I is of type Integer, ranges between 1 and 5
+       for I in Index range 1 .. 5 loop
+       --       ^ I is of type Index, ranges between 1 and 5
           Put (My_Int'Image (Tab (I)));
        --                         ^ Compile time error
        end loop;
@@ -1658,6 +1705,9 @@ an element outside of the bounds of the array, you will get a runtime error
 instead of accessing random memory as in unsafe languages.
 
 .. code-block:: ada
+    :class: ada-run, ada-run-expect-failure
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
        type My_Int is range 0 .. 1000;
@@ -1665,8 +1715,7 @@ instead of accessing random memory as in unsafe languages.
        type My_Int_Array is array (Index) of My_Int;
        Tab : My_Int_Array := (2, 3, 5, 7, 11);
     begin
-       Indexation
-       for I in 2 .. 6 loop
+       for I in Index range 2 .. 6 loop
           Put (My_Int'Image (Tab (I)));
           --                      ^ Will raise an exception when
           --                      I = 6
@@ -1770,6 +1819,9 @@ However, Ada also allows you to declare array types whose bounds are not fixed:
 In that case, the bounds will need to be provided when instanciating the type.
 
 .. code-block:: ada
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
        type Days is (Monday, Tuesday, Wednesday,
@@ -1839,12 +1891,15 @@ literals, as we can see in the example below.
 
     .. code-block:: ada
 
-        --  Those two declarations produce the same thing
-        A : String (1 .. 11) := "Hello World";
-        B : String (1 .. 11) := ('H', 'e', 'l', 'l', 'o', ' ',
-                                 'W', 'o', 'r', 'l', 'd');
+        package String_Literals is
+            --  Those two declarations produce the same thing
+            A : String (1 .. 11) := "Hello World";
+            B : String (1 .. 11) := ('H', 'e', 'l', 'l', 'o', ' ',
+                                     'W', 'o', 'r', 'l', 'd');
+        end String_Literals;
 
 .. code-block:: ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1868,6 +1923,7 @@ Ada allows the user to omit the bounds when instanciating an unconstrained
 array type, if the bounds can be deduced from the initialization expression.
 
 .. code-block:: ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1889,7 +1945,7 @@ array type, if the bounds can be deduced from the initialization expression.
     procedure Main is
        type Integer_Array is array (Natural range <>) of Integer;
 
-       My_Array : constant Integer := (1, 2, 3, 4);
+       My_Array : constant Integer_Array := (1, 2, 3, 4);
        --                  ^ Bounds are automatically computed
        --                    from initialization value
     begin
@@ -1903,17 +1959,19 @@ A very important point about arrays: Bounds *have* to be known when
 instantiating the object. It is for example illegal to do the following.
 
 .. code-block:: ada
+   :class: ada-nocheck
 
     declare
        A : String;
     begin
-       ...
+       A := "World";
     end;
 
 Also, while you of course change elements in the array, you cannot change its
 size after it has been initialized, so this is also illegal:
 
 .. code-block:: ada
+    :class: ada-nocheck
 
     declare
        A : String := "Hello";
@@ -1938,9 +1996,14 @@ generally result in a runtime error.
 
     .. code-block:: ada
 
-        function Get_Number return Integer; --  Code not shown here
+        with Ada.Text_IO; use Ada.Text_IO;
 
-        declare
+        procedure Indefinite_Subtypes is
+            function Get_Number return Integer is
+            begin
+                return Integer'Value(Get_Line);
+            end Get_Number;
+
            A : String := "Hello";
            --  Indefinite subtype
 
@@ -1950,9 +2013,8 @@ generally result in a runtime error.
            C : String (1 .. Get_Number);
            --  Indefinite subtype (Get_Number's value is computed at run-time)
         begin
-           A := "World"; --  Legal: Same size
-           A := "Hello World"; --  Illegal: Different size
-        end;
+           null;
+        end Indefinite_Subtypes;
 
 Declaring arrays (2)
 --------------------
@@ -2034,6 +2096,7 @@ Here is how you declare a package in Ada:
 And here is how you use it:
 
 .. code-block:: ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Week;
@@ -2046,7 +2109,7 @@ And here is how you use it:
        --       ^ Reference to Week.Days enum type
           Put_Line
             ("Workload for day " & Week.Days'Image (D)
-             & " is " & Week.Workload (D));
+             & " is " & Natural'Image (Week.Workload (D)));
        end loop;
     end Main;
 
@@ -2057,6 +2120,9 @@ generally compile his program faster by leveraging separate compilation.
 While the :ada:`with` clause indicates a dependency, you can see in the example
 above that you still need to prefix the use of entities from the week package
 by the name of the package.
+
+Accessing entities from a package uses the dot notation, :ada:`A.B`, which is
+the same notation as the one to access records fields.
 
 A :ada:`with` clause *has* to happen in the prelude of a compilation unit. It
 is not allowed anywhere else.
@@ -2108,6 +2174,7 @@ In fact, we have been using the :ada:`use` clause since almost the beginning of
 this tutorial.
 
 .. code-block:: ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
     --                    ^ Make every entity of the Ada.Text_IO package
@@ -2121,8 +2188,8 @@ this tutorial.
        for D in Week.Days loop
        --       ^ Reference to Week.Days enum type
           Put_Line  -- Put_Line comes from Ada.Text_IO.
-            ("Workload for day " & Week.Days'Image (D)
-             & " is " & Week.Workload (D));
+            ("Workload for day " & Days'Image (D)
+             & " is " & Natural'Image (Workload (D)));
        end loop;
     end Main;
 
@@ -2163,7 +2230,7 @@ in the package body.
        --  spec, or anywhere outside of the body
        type WorkLoad_Type is array (Days range <>) of Natural;
        Workload : constant Workload_Type :=
-          (Monday .. Friday => 8, Friday => 7, Saturday | Sunday => 0);
+          (Monday .. Thursday => 8, Friday => 7, Saturday | Sunday => 0);
 
        function Get_Workload (Day : Days) return Natural is
        begin
@@ -2222,9 +2289,9 @@ section at all, following the form :ada:`procedure [name]` or
 
        function Get_Day_Name
           (Day : Days := Monday) return String;
-       --                             ^ We can return any type,
-       --                               even indefinite ones
-       --           ^ Default value for parameter
+       --                               ^ We can return any type,
+       --                                 even indefinite ones
+       --             ^ Default value for parameter
     end Week;
 
 We learn two interesting things in the example above:
@@ -2266,19 +2333,25 @@ package above, we could have the following body:
        begin
           return
             (case Day is
-             when Monday => "Monday";
-             when Tuesday => "Tuesday";
-             when Wednesday => "Wednesday";
-             when Thursday => "Thursday";
-             when Friday => "Friday";
+             when Monday => "Monday",
+             when Tuesday => "Tuesday",
+             when Wednesday => "Wednesday",
+             when Thursday => "Thursday",
+             when Friday => "Friday",
+             when Saturday => "Saturday",
              when Sunday => "Sunday");
        end Get_Day_Name;
     end Week;
 
-That we could then use thusly:
+Subprogram calls
+~~~~~~~~~~~~~~~~
+
+We can then call our subprogram this way:
 
 .. code-block:: ada
+    :class: ada-run
 
+    with Ada.Text_IO; use Ada.Text_IO;
     with Week;
 
     procedure Show_Days is
@@ -2290,7 +2363,7 @@ That we could then use thusly:
           --                           ^ Regular param passing
        end loop;
 
-       Put_Line (Week.Get_Day_Name (Day => Friday));
+       Put_Line (Week.Get_Day_Name (Day => Week.Friday));
        --                           ^ Named param passing
     end Show_Days;
 
@@ -2315,7 +2388,7 @@ perfectly acceptable to name every parameter if it makes the code clearer.
        function Get_Day_Name (Day : Days; Lang : Language := English) return String;
     end Week;
 
-    with Week; use Week
+    with Week; use Week;
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
@@ -2333,7 +2406,7 @@ If you want to call a function and do not need it's result, you will still need
 to explicitly store it in a local variable.
 
 .. code-block:: ada
-    :class: expect-compile-error
+    :class: ada-expect-compile-error
 
     function Quadruple (I : Integer) return Integer is
         function Double (I : Integer) return Integer is
@@ -2357,7 +2430,7 @@ to explicitly store it in a local variable.
     example this code would not be valid:
 
     .. code-block:: ada
-        :class: syntax-only
+        :class: ada-syntax-only
 
         function Read_Int
            (Stream : Network_Stream; Result : out Integer) return Boolean;
@@ -2375,7 +2448,7 @@ to explicitly store it in a local variable.
     - Either annotate the variable with a Unreferenced pragma, thusly:
 
     .. code-block:: ada
-        :class: nocheck
+        :class: ada-nocheck
 
         B : Boolean := Read_Int (Stream, My_Int);
         pragma Unreferenced (B);
@@ -2416,6 +2489,7 @@ The default mode for parameters is :ada:`in`, so, so far, every example we have
 been showing has been using :ada:`in` parameters.
 
 .. admonition:: Historically
+
     Functions and procedures were originally more different in philosophy.
     Before Ada 2005, one wasn't able to
 
@@ -2429,6 +2503,7 @@ Parameters passed using this mode cannot be modified, so that the following
 program will cause an error:
 
 .. code-block:: ada
+    :class: ada-expect-compile-error
 
     procedure Swap (A, B : Integer) is
        Tmp : Integer;
@@ -2451,6 +2526,9 @@ In-out parameters
 To fix our code above, we can use an in-out parameter.
 
 .. code-block:: ada
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure In_Out_Params is
        procedure Swap (A, B : in out Integer) is
@@ -2464,7 +2542,7 @@ To fix our code above, we can use an in-out parameter.
        A : Integer := 12;
        B : Integer := 44;
     begin
-        Swap (A, B)
+        Swap (A, B);
         Put_Line (Integer'Image (A)); --  Prints 44
     end In_Out_Params;
 
@@ -2504,9 +2582,10 @@ For example, a procedure reading integers from the network could have one of
 the following prototypes:
 
 .. code-block:: ada
+    :class: ada-syntax-only
 
     procedure Read_Int
-       (Stream : Network_Stream; Success : out Boolean; Result : out Integer)
+       (Stream : Network_Stream; Success : out Boolean; Result : out Integer);
 
     function Read_Int
        (Stream : Network_Stream; Result : out Integer) return Boolean;
@@ -2541,25 +2620,30 @@ useful if you need subprograms to be mutually recursive, as in the example
 below:
 
 .. code-block:: ada
+    :class: ada-run
 
-    procedure Compute_A (V : Natural);
-    --  Forward declaration of Compute_A
+    procedure Mutually_Recursive_Subprograms is
+        procedure Compute_A (V : Natural);
+        --  Forward declaration of Compute_A
 
-    procedure Compute_B (V : Natural) is
+        procedure Compute_B (V : Natural) is
+        begin
+           if V > 5 then
+              Compute_A (V - 1);
+           -- ^ Call to Compute_A
+           end if;
+        end Compute_B;
+
+        procedure Compute_A (V : Natural) is
+        begin
+           if V > 2 then
+              Compute_B (V - 1);
+           -- ^ Call to Compute_B
+           end if;
+        end Compute_A;
     begin
-       if V > 5 then
-          Compute_A (V - 1);
-       -- ^ Call to Compute_A
-       end if;
-    end Compute_B;
-
-    procedure Compute_A (V : Natural) is
-    begin
-       if V > 2 then
-          Compute_B (V - 1);
-       -- ^ Call to Compute_B
-       end if;
-    end Compute_A;
+       Compute_A (15);
+    end Mutually_Recursive_Subprograms;
 
 Nested subprograms
 ~~~~~~~~~~~~~~~~~~
@@ -2579,24 +2663,39 @@ This is a facility that is useful for two reasons:
   declared before them.
 
 .. code-block:: ada
+    :class: ada-run
 
-    type String_Array is array (Positive range <>) of Unbounded_String;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Show_List (Strings : String_Array) is
-       Item_Number : Positive := 1;
+    procedure Lists is
 
-       procedure Show_Item (Item : Unbounded_String) is
+       type String_Array is array (Positive range <>) of Unbounded_String;
+
+       procedure Show_List (Strings : String_Array) is
+          Item_Number : Positive := 1;
+
+          procedure Show_Item (Item : Unbounded_String) is
+          begin
+             Put_Line (Positive'Image (Item_Number)
+                       & ". " & To_String (Item));
+             Item_Number := Item_Number + 1;
+          end Show_Item;
+
        begin
-          Put_Line (Positive'Image (Item_Number)
-                    & ". " & To_String (Item));
-          Item_Number := Item_Number + 1;
-       end Show_Item;
+          for Item of Strings loop
+             Show_Item (Item);
+          end loop;
+       end Show_List;
 
+       List : String_Array :=
+         (To_Unbounded_String ("This"),
+          To_Unbounded_String ("is"),
+          To_Unbounded_String ("a"),
+          To_Unbounded_String ("list"));
     begin
-       for Item in Strings loop
-          Show_Item (Item);
-       end loop;
-    end Show_List;
+       Show_List (List);
+    end Lists;
 
 More about types
 ================
@@ -2622,6 +2721,7 @@ have a default value.
 This means that the following code is incorrect:
 
 .. code-block:: ada
+    :class: ada-expect-compile-error
 
     package Incorrect is
        type Point is record
@@ -2645,6 +2745,9 @@ friendly:
 
 - You can use ranges to refer to ranges of indices in arrays.
 
+However, beware, for array aggregates, as soon as you used named associations,
+all associations have to be named !
+
 .. code-block:: ada
 
     package Points is
@@ -2657,7 +2760,8 @@ friendly:
        Origin : Point := (X | Y => <>);
        Origin_2 : Point := (others => <>);
 
-       Points : Point_Array := ((1, 2), (3, 4), 3 .. 20 => <>);
+       Points_1 : Point_Array := ((1, 2), (3, 4));
+       Points_2 : Point_Array := (1 => (1, 2), 2 => (3, 4), 3 .. 20 => <>);
     end Points;
 
 Overloading and qualified expressions
@@ -3532,6 +3636,7 @@ adapt the project file used by ``gprbuild``. This can be achieved by
 using the ``Languages`` entry, as in the following example:
 
 .. code-block:: ada
+    :class: ada-nocheck
 
     project Multilang is
 
@@ -3959,6 +4064,7 @@ parent unit for the bindings you're creating. For example:
 This will create the file ``ext_c_code-test_h.ads``:
 
 .. code-block:: ada
+    :class: ada-syntax-only
 
     package Ext_C_Code.test_h is
 
