@@ -2323,6 +2323,66 @@ perfectly acceptable to name every parameter if it makes the code clearer.
        Put_Line (Get_Day_Name (Monday, Lang => Italian));
     end Main;
 
+Function calls
+~~~~~~~~~~~~~~
+
+An important thing about function calls is that the return value of a function
+call cannot be ignored in Ada.
+
+If you want to call a function and do not need it's result, you will still need
+to explicitly store it in a local variable.
+
+.. code-block:: ada
+    :class: expect-compile-error
+
+    function Quadruple (I : Integer) return Integer is
+        function Double (I : Integer) return Integer is
+        begin
+           return I * 2;
+        end Double;
+
+       Res : Integer := Double (Double (I));
+       --               ^ Calling the double function
+    begin
+       Double (I);
+       --  ERROR: cannot use call to function "Double" as a statement
+
+       return Res;
+    end Quadruple;
+
+.. admonition:: In GNAT
+
+    In GNAT, with all warnings activated, it becomes even harder to ignore the
+    result of a function, because unused variables will be flagged, so for
+    example this code would not be valid:
+
+    .. code-block:: ada
+        :class: syntax-only
+
+        function Read_Int
+           (Stream : Network_Stream; Result : out Integer) return Boolean;
+
+        procedure Main is
+            Stream : Network_Stream := Get_Stream;
+            My_Int : Integer;
+            B : Boolean := Read_Int (Stream, My_Int);  -- Warning here, B is never read
+        begin
+           null;
+        end Main;
+
+    You then have two solutions to silence this warning:
+
+    - Either annotate the variable with a Unreferenced pragma, thusly:
+
+    .. code-block:: ada
+        :class: nocheck
+
+        B : Boolean := Read_Int (Stream, My_Int);
+        pragma Unreferenced (B);
+
+    - Either give the variable a name that contains any of the strings ``discard``
+      ``dummy`` ``ignore`` ``junk`` ``unused`` (case insensitive)
+
 Parameters modes
 ----------------
 
@@ -2471,63 +2531,6 @@ mandates that out parameter be treated like uninitialized variables.
         begin
            null;
         end Outp;
-
-Function calls
-~~~~~~~~~~~~~~
-
-.. amiard TODO: Move up to before parameters
-
-An important thing about function calls is that the return value of a function call cannot be ignored in Ada.
-
-If you want to call a function and do not need it's result, you will still need to explicitly store it in a local variable.
-
-.. code-block:: ada
-
-    function Double (I : Integer) return Integer is
-    begin
-       return I * 2;
-    end Double;
-
-    function Quadruple (I : Integer) return Integer is
-       Res : Integer := Double (Double (I));
-       --               ^ Calling the double function
-    begin
-       Double (I);
-       --  ILLEGAL: You cannot ignore a function's return value
-
-       return Res;
-    end Quadruple;
-
-.. admonition:: In GNAT
-
-    In GNAT, with all warnings activated, it becomes even harder to ignore the
-    result of a function, because unused variables will be flagged, so for
-    example this code would not be valid:
-
-    .. code-block:: ada
-
-        function Read_Int
-           (Stream : Network_Stream; Result : out Integer) return Boolean;
-
-        procedure Main is
-            Stream : Network_Stream := Get_Stream;
-            My_Int : Integer;
-            B : Boolean := Read_Int (Stream, My_Int);  -- Warning here, B is never read
-        begin
-           null;
-        end Main;
-
-    You then have two solutions to silence this warning:
-
-    - Either annotate the variable with a Unreferenced pragma, thusly:
-
-    .. code-block:: ada
-
-        B : Boolean := Read_Int (Stream, My_Int);
-        pragma Unreferenced (B);
-
-    - Either give the variable a name that contains any of the strings ``discard``
-      ``dummy`` ``ignore`` ``junk`` ``unused`` (case insensitive)
 
 Forward declaration of subprograms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
