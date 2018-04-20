@@ -30,16 +30,27 @@ Flow analysis is responsible for ensuring that this requirement is always fulfil
 
 .. code:: ada
 
-   function Max_Array (A : Array_Of_Naturals) return Natural is
-      Max : Natural;
-   begin
-      for I in A’Range loop
-         if A (I) > Max then    -- Here Max may not be initialized
-            Max := A (I);
-         end if;
-      end loop;
-      return Max;
-   end Max_Array;
+    procedure Show_Uninitialized_Warning
+       with SPARK_Mode => On
+    is
+       type Array_Of_Naturals is array (Integer range <>) of Natural;
+
+       function Max_Array (A : Array_Of_Naturals) return Natural;
+
+       function Max_Array (A : Array_Of_Naturals) return Natural is
+          Max : Natural;
+       begin
+          for I in A'Range loop
+             if A (I) > Max then    -- Here Max may not be initialized
+                Max := A (I);
+             end if;
+          end loop;
+          return Max;
+       end Max_Array;
+
+    begin
+       null;
+    end Show_Uninitialized_Warning;
 
 
 Ineffective Statements
@@ -51,22 +62,33 @@ What is more, they are often caused by errors in the program, which may be diffi
 
 .. code:: ada
 
-   procedure Swap1 (X, Y : in out T) is
-      Tmp : T;
-   begin
-      Tmp := X;             -- This statement is ineffective
-      X   := Y;
-      Y   := X;
-   end Swap1;
+    procedure Show_Ineffective_Statements
+       with SPARK_Mode => On
+    is
+       type T is new Integer;
 
-   Tmp : T;
+       procedure Swap1 (X, Y : in out T);
+       procedure Swap2 (X, Y : in out T);
 
-   procedure Swap2 (X, Y : in out T) is
-      Temp : T := X;        -- This variable is unused
-   begin
-      X := Y;
-      Y := Tmp;
-   end Swap2;
+       procedure Swap1 (X, Y : in out T) is
+          Tmp : T;
+       begin
+          Tmp := X;             -- This statement is ineffective
+          X   := Y;
+          Y   := X;
+       end Swap1;
+
+       Tmp : T;
+
+       procedure Swap2 (X, Y : in out T) is
+          Temp : T := X;        -- This variable is unused
+       begin
+          X := Y;
+          Y := Tmp;
+       end Swap2;
+    begin
+       null;
+    end Show_Ineffective_Statements;
 
 
 Incorrect Parameter Mode
@@ -76,12 +98,22 @@ Parameter modes influence the behavior of the compiler and are a key point for d
 
 .. code:: ada
 
-   procedure Swap (X, Y : in out T) is
-      Tmp : T := X;
-   begin
-      Y := X;    -- The initial value of Y is not used
-      X := Tmp;  -- Y is computed to be out
-   end Swap;
+    procedure Show_Incorrect_Param_Mode
+       with SPARK_Mode => On
+    is
+       type T is new Integer;
+
+       procedure Swap (X, Y : in out T);
+
+       procedure Swap (X, Y : in out T) is
+          Tmp : T := X;
+       begin
+          Y := X;    -- The initial value of Y is not used
+          X := Tmp;  -- Y is computed to be out
+       end Swap;
+    begin
+       null;
+    end Show_Incorrect_Param_Mode;
 
 Note that, in SPARK, a parameter which is not read but not updated on every path should be declared as :ada:`in out` as its final value may depend on its initial value.
 
@@ -110,10 +142,14 @@ When a :ada:`Global` contract is supplied by the user for a subprogram, flow ana
 
 .. code:: ada
 
-   X : Natural := 0;
+    package Show_Global_Contracts_Proto is
 
-   function Get_Value_Of_X return Natural;
-   -- Get_Value_Of_X reads the value of the global variable X
+       X : Natural := 0;
+
+       function Get_Value_Of_X return Natural;
+       -- Get_Value_Of_X reads the value of the global variable X
+
+    end Show_Global_Contracts_Proto;
 
 
 Global contracts are provided as part of the subprogram specification. Indeed, they provide useful information to users of a subprogram. The value specified for the :ada:`Global` aspect is an aggregate-like list of global variables’ names, grouped together depending on their mode.
@@ -122,20 +158,27 @@ In the example shown below, the procedure ``Set_X_To_Y_Plus_Z`` reads both ``Y``
 
 .. code:: ada
 
-  procedure Set_X_To_Y_Plus_Z with
-     Global => (Input  => (Y, Z), -- reads values of Y and Z
-                Output => X);     -- modifies value of X
+    package Show_Global_Contracts
+       with SPARK_Mode => On
+    is
+       X, Y, Z : Natural := 0;
 
-   procedure Set_X_To_X_Plus_Y with
-     Global => (Input  => Y,  -- reads value of Y
-                In_Out => X); -- modifies value of X
-   -- also reads its initial value
+       procedure Set_X_To_Y_Plus_Z with
+         Global => (Input  => (Y, Z), -- reads values of Y and Z
+                    Output => X);     -- modifies value of X
 
-   function Get_Value_Of_X return Natural with
-     Global => X;  -- reads the value of the global variable X
+       procedure Set_X_To_X_Plus_Y with
+         Global => (Input  => Y,  -- reads value of Y
+                    In_Out => X); -- modifies value of X
+       -- also reads its initial value
 
-   procedure Incr_Parameter_X (X : in out Natural) with
-     Global => null; -- do not reference any global variable
+       function Get_Value_Of_X return Natural with
+         Global => X;  -- reads the value of the global variable X
+
+       procedure Incr_Parameter_X (X : in out Natural) with
+         Global => null; -- do not reference any global variable
+
+    end Show_Global_Contracts;
 
 
 Depends Contracts
@@ -147,13 +190,19 @@ For example, a user may want to check that, on return of ``Swap`` shown below, e
 
 .. code:: ada
 
-  procedure Swap (X, Y : in out T);
-   -- The value of X (resp. Y) after the call depends only
-   -- on the value of Y (resp. X) before the call
+    package Show_Depends_Contracts_Proto is
 
-   X : Natural;
-   procedure Set_X_To_Zero;
-   -- The value of X after the call depends on no input
+       type T is new Integer;
+
+       procedure Swap (X, Y : in out T);
+       -- The value of X (resp. Y) after the call depends only
+       -- on the value of Y (resp. X) before the call
+
+       X : Natural;
+       procedure Set_X_To_Zero;
+       -- The value of X after the call depends on no input
+
+    end Show_Depends_Contracts_Proto;
 
 
 Like :ada:`Global` contracts, a :ada:`Depends` contract is specified on subprogram declarations using an aspect. Its value is a list of one or more dependency relations between outputs and inputs of the program. Each such relation is represented as two lists of variable names separated by an arrow. At the left of the arrow are the variables whose final value depends on the initial value of the variables on the right.
@@ -162,24 +211,31 @@ For example, the final value of each parameter of ``Swap`` only depends on the i
 
 .. code:: ada
 
-   procedure Swap (X, Y : in out T) with
-     Depends => (X => Y,            -- X depends on the initial value of Y
-                 Y => X);           -- Y depends on the initial value of X
+    package Show_Depends_Contracts
+       with SPARK_Mode => On
+    is
+       X, Y, Z : Natural := 0;
 
-   function Get_Value_Of_X return Natural with
-     Depends => (Get_Value_Of_X’Result => X);    -- result depends on X
+       procedure Swap (X, Y : in out T) with
+         Depends => (X => Y,            -- X depends on the initial value of Y
+                     Y => X);           -- Y depends on the initial value of X
 
-   procedure Set_X_To_Y_Plus_Z with
-     Depends => (X => (Y, Z));      -- X depends on Y and Z
+       function Get_Value_Of_X return Natural with
+         Depends => (Get_Value_Of_X'Result => X);    -- result depends on X
 
-   procedure Set_X_To_X_Plus_Y with
-     Depends => (X => + Y);          -- X depends on Y and X’s initial value
+       procedure Set_X_To_Y_Plus_Z with
+         Depends => (X => (Y, Z));      -- X depends on Y and Z
 
-   procedure Do_Nothing (X : T) with
-     Depends => (null => X);        -- No output is affected by X
+       procedure Set_X_To_X_Plus_Y with
+         Depends => (X => + Y);          -- X depends on Y and X’s initial value
 
-   procedure Set_X_To_Zero with
-     Depends => (X => null);        -- X depends on no input
+       procedure Do_Nothing (X : T) with
+         Depends => (null => X);        -- No output is affected by X
+
+       procedure Set_X_To_Zero with
+         Depends => (X => null);        -- X depends on no input
+
+    end Show_Depends_Contracts;
 
 
 It is often the case that the final value of a variable depends on its own initial value. This can be specified in a concise way using the :ada:`+` character, like in the specification of ``Set_X_To_X_Plus_Y``. Note that, if there are more than one variable on the left of the arrow, a :ada:`+` means that each variables depends on itself, and not that they all depend on each other.
@@ -201,17 +257,24 @@ This may lead to messages being issued on perfectly correct subprograms like ``S
 
 .. code:: ada
 
-   procedure Set_X_To_Y_Plus_Z (Y, Z     :     Natural;
-                                X        : out Natural;
-                                Overflow : out Boolean) is
-   begin
-      if Natural’Last – Z < Y then
-         Overflow := True; -- X should be initialized on every path
-      else
-         Overflow := False;
-         X := Y + Z;
-      end if;
-   end Set_X_To_Y_Plus_Z;
+    procedure Show_Modularity_Shortcoming
+       with SPARK_Mode => On
+    is
+       procedure Set_X_To_Y_Plus_Z (Y, Z     :     Natural;
+                                    X        : out Natural;
+                                    Overflow : out Boolean) is
+       begin
+          if Natural'Last - Z < Y then
+             Overflow := True; -- X should be initialized on every path
+          else
+             Overflow := False;
+             X := Y + Z;
+          end if;
+       end Set_X_To_Y_Plus_Z;
+
+    begin
+       null;
+    end Show_Modularity_Shortcoming;
 
 
 This simply means that, in that case, flow analysis was not able to verify that no uninitialized variable could be read. To solve this problem, ``X`` can either be set to a dummy value when there is an overflow or the user can verify by her own means that ``X`` is never used after a call to ``Set_X_To_Y_Plus_Z`` if ``Overflow`` is :ada:`True`.
@@ -228,45 +291,75 @@ Indeed, it is often impossible for flow analysis to decide if the entire object 
 
 .. code:: ada
 
-  for I in A’Range loop
-      A (I) := 0;
-   end loop;
-   -- flow analysis does not know that A is initialized
+    procedure Show_Composite_Types_Shortcoming
+       with SPARK_Mode => On
+    is
+       type T is array (Natural range <>) of Integer;
 
-   A := (others => 0);
-   -- flow analysis knows that A is initialized
+       procedure Test (A : out T);
+
+       procedure Test (A : out T) is
+       begin
+          for I in A'Range loop
+             A (I) := 0;
+          end loop;
+          --  flow analysis does not know that A is initialized
+
+          A := (others => 0);
+          --  flow analysis knows that A is initialized
+       end Test;
+    begin
+       null;
+    end Show_Composite_Types_Shortcoming;
 
 
 Flow analysis is more precise on record objects, in the sense that it tracks separately the value of each component inside a single subprogram. As a consequence, when a record object is initialized by successive assignments of its components, flow analysis can make sure that the whole object is initialized. Note that record objects are still treated as entire objects when taken as input or output of subprograms.
 
 .. code:: ada
 
-   type Rec is record
-      F1 : Natural;
-      F2 : Natural;
-   end record;
+    procedure Show_Record_Flow_Analysis
+       with SPARK_Mode => On
+    is
+       type Rec is record
+          F1 : Natural;
+          F2 : Natural;
+       end record;
 
-   R : Rec;
-
-   R.F1 := 0;
-   R.F2 := 0;
-   --  R is initialized
-
+       R : Rec;
+    begin
+       R.F1 := 0;
+       R.F2 := 0;
+       --  R is initialized
+    end Show_Record_Flow_Analysis;
 
 For example, using a procedure call to initialize only some components of a record object will result in flow analysis complaining about non-initialization of to-be initialized components in entry of the subprogram, like for ``Init_F2``.
 
 .. code:: ada
 
-   procedure Init_F2
-     (R : in out Rec) is
-   begin
-      R.F2 := 0;
-   end Init_F2;
+    procedure Show_Record_Flow_Analysis_Issue
+       with SPARK_Mode => On
+    is
+       type Rec is record
+          F1 : Natural;
+          F2 : Natural;
+       end record;
 
-   R.F1 := 0;
-   Init_F2 (R);
-   -- R should be initialized
-   -- before this call
+       procedure Init_F2 (R : in out Rec);
+
+       procedure Init_F2
+         (R : in out Rec) is
+       begin
+          R.F2 := 0;
+       end Init_F2;
+
+       R : Rec;
+    begin
+       R.F1 := 0;
+       Init_F2 (R);
+       --  R should be initialized
+       --  before this call
+
+    end Show_Record_Flow_Analysis_Issue;
 
 
 Value Dependency
@@ -278,41 +371,53 @@ On the first version of ``Absolute_Value``, for example, flow analysis computes 
 
 .. code:: ada
 
-  procedure Absolute_Value
-     (X :     Integer;
-      R : out Natural)
-   is
-   begin
-      if X < 0 then
-         R := -X;
-      end if;
-      if X >= 0 then
-         R := X;
-      end if;
-   end Absolute_Value;
+    procedure Show_Value_Dependency_Shortcoming
+       with SPARK_Mode => On
+    is
+       procedure Absolute_Value
+         (X :     Integer;
+          R : out Natural)
+       is
+       begin
+          if X < 0 then
+             R := -X;
+          end if;
+          if X >= 0 then
+             R := X;
+          end if;
+       end Absolute_Value;
 
-   -- Flow analysis does not
-   -- know that R is initialized
+       --  Flow analysis does not
+       --  know that R is initialized
+    begin
+       null;
+    end Show_Value_Dependency_Shortcoming;
 
 
 To avoid this problem, it is better to make the control flow explicit, as in the second version of ``Absolute_Value``:
 
 .. code:: ada
 
-   procedure Absolute_Value
-     (X :     Integer;
-      R : out Natural)
-   is
-   begin
-      if X < 0 then
-         R := -X;
-      else
-         R := X;
-      end if;
-   end Absolute_Value;
+    procedure Show_Corrected_Value_Dependency
+       with SPARK_Mode => On
+    is
+       procedure Absolute_Value
+         (X :     Integer;
+          R : out Natural)
+       is
+       begin
+          if X < 0 then
+             R := -X;
+          else
+             R := X;
+          end if;
+       end Absolute_Value;
 
-   -- Flow analysis knows that R
-   -- is initialized
+       --  Flow analysis knows that R
+       --  is initialized
+    begin
+       null;
+    end Show_Corrected_Value_Dependency;
 
 
 Contract Computation
@@ -335,21 +440,29 @@ The procedure ``Search_Array`` searches for a particular element ``E`` in an arr
 
 .. code:: ada
 
-  procedure Search_Array ( A      :     Array_Of_Positives;
-                           E      :     Positive;
-                           Result : out Integer;
-                           Found  : out Boolean
-                          ) is
-   begin
-      for I in A’Range loop
-         if A (I) = E then
-            Result := I;
-            Found  := True;
-            return;
-         end if;
-      end loop;
-      Found := False;
-   end Search_Array;
+    procedure Show_Search_Array_1
+      with SPARK_Mode => On
+    is
+       type Array_Of_Positives is array (Natural range <>) of Positive;
+
+       procedure Search_Array (A      :     Array_Of_Positives;
+                               E      :     Positive;
+                               Result : out Integer;
+                               Found  : out Boolean
+                              ) is
+       begin
+          for I in A'Range loop
+             if A (I) = E then
+                Result := I;
+                Found  := True;
+                return;
+             end if;
+          end loop;
+          Found := False;
+       end Search_Array;
+    begin
+       null;
+    end Show_Search_Array_1;
 
 This example is not correct. Though there clearly are legal uses of the function ``Search_Array``, flow analysis will complain that ``Result`` is not initialized on the path that does not exit inside the loop. Note that, even if this program is not incorrect, the flow message cannot necessarily be discarded. Indeed, it means that flow analysis cannot guaranty that ``Result`` will never be read when uninitialized, which is an assumption to further analysis performed by GNATprove. Therefore, the user should either initialize ``Result`` when ``Found`` is false, which will silence flow analysis, or verify this assumption by other means.
 
@@ -361,20 +474,29 @@ Here, to avoid the flow message from previous slide, ``Search_Array`` raises an 
 
 .. code:: ada
 
-   Not_Found : exception;
+    procedure Show_Search_Array_2
+      with SPARK_Mode => On
+    is
+       type Array_Of_Positives is array (Natural range <>) of Positive;
 
-   procedure Search_Array (A      :     Array_Of_Positives;
-                           E      :     Positive;
-                           Result : out Integer) is
-   begin
-      for I in A‘Range loop
-         if A (I) = E then
-            Result := I;
-            return;
-         end if;
-      end loop;
-      raise Not_Found;
-   end Search_Array;
+       Not_Found : exception;
+
+       procedure Search_Array (A      :     Array_Of_Positives;
+                               E      :     Positive;
+                               Result : out Integer) is
+       begin
+          for I in A'Range loop
+             if A (I) = E then
+                Result := I;
+                return;
+             end if;
+          end loop;
+          raise Not_Found;
+       end Search_Array;
+
+    begin
+       null;
+    end Show_Search_Array_2;
 
 This example is correct. Flow analysis won’t emit any message here, which means that it can make sure that ``Result`` cannot be read uninitialized in SPARK code. Why is it, since ``Result`` is still not initialized when ``E`` is not in ``A``? In fact, it comes from the fact that the exception ``Not_Found`` can never be caught inside SPARK code. Therefore, the burden of insuring that ``Result`` is never read when uninitialized is still on the user. However, it is no longer stated explicitly by the tool, as it now falls into a general category of assumptions documented in the user guide. Also note that the GNATprove tool as a whole will try to make sure that ``Not_Found`` is never raised in this program as part of ensuring absence of runtime errors in SPARK code.
 
@@ -386,27 +508,36 @@ Instead of raising an exception, we have chosen to use a discriminant record for
 
 .. code:: ada
 
-  type Search_Result (Found : Boolean := False) is record
-      case Found is
-      when True =>
-         Content : Integer;
-      when False => null;
-      end case;
-   end record;
+    procedure Show_Search_Array_3
+      with SPARK_Mode => On
+    is
+       type Array_Of_Positives is array (Natural range <>) of Positive;
 
-   procedure Search_Array (A      :     Array_Of_Positives;
-                           E      :     Positive;
-                           Result : out Search_Result) is
-   begin
-      for I in A’Range loop
-         if A (I) = E then
-            Result := (Found   => True,
-                       Content => I);
-            return;
-         end if;
-      end loop;
-      Result := (Found => False);
-   end Search_Array;
+       type Search_Result (Found : Boolean := False) is record
+          case Found is
+          when True =>
+             Content : Integer;
+          when False => null;
+          end case;
+       end record;
+
+       procedure Search_Array (A      :     Array_Of_Positives;
+                               E      :     Positive;
+                               Result : out Search_Result) is
+       begin
+          for I in A'Range loop
+             if A (I) = E then
+                Result := (Found   => True,
+                           Content => I);
+                return;
+             end if;
+          end loop;
+          Result := (Found => False);
+       end Search_Array;
+
+    begin
+       null;
+    end Show_Search_Array_3;
 
 
 This example is correct. No flow message will be emitted here, as flow analysis indeed can make sure both that no uninitialized variable will be read in ``Search_Array``’s body, and that all its outputs are initialized on return.
@@ -419,27 +550,47 @@ The function ``Size_Of_Biggest_Increasing_Sequence`` goes over all the sequences
 
 .. code:: ada
 
-  function Size_Of_Biggest_Increasing_Sequence return Natural is
-      Max         : Natural;
-      End_Of_Seq  : Boolean;
-      Size_Of_Seq : Natural;
-      Beginning   : Integer;
-      procedure Test_Index (Current_Index : Integer) is
-      begin
-         if A (Current_Index) >= Max then
-            Max := A (Current_Index);
-            End_Of_Seq := False;
-         else
-            Max         := 0;
-            End_Of_Seq  := True;
-            Size_Of_Seq := Current_Index - Beginning;
-            Beginning   := Current_Index;
-         end if;
-      end Test_Index;
-   begin
-      for I in A’Range loop
-         Test_Index (I);
-         --  ...
+    procedure Show_Biggest_Increasing_Sequence
+      with SPARK_Mode => On
+    is
+       A : array (1 .. 10) of Natural;
+
+       function Size_Of_Biggest_Increasing_Sequence
+         return Natural
+       is
+          Max         : Natural;
+          End_Of_Seq  : Boolean;
+          Size_Of_Seq : Natural;
+          Beginning   : Integer;
+
+          procedure Test_Index (Current_Index : Integer) is
+          begin
+             if A (Current_Index) >= Max then
+                Max := A (Current_Index);
+                End_Of_Seq := False;
+             else
+                Max         := 0;
+                End_Of_Seq  := True;
+                Size_Of_Seq := Current_Index - Beginning;
+                Beginning   := Current_Index;
+             end if;
+          end Test_Index;
+
+       begin
+          for I in A'Range loop
+             Test_Index (I);
+             --  ...
+          end loop;
+
+          --  not implemented
+          return 0;
+       end Size_Of_Biggest_Increasing_Sequence;
+
+    begin
+       for I in A'Range loop
+          A (I) := I;
+       end loop;
+    end Show_Biggest_Increasing_Sequence;
 
 
 This example is not correct. Flow analysis will emit a message on the call to ``Test_Index`` stating that ``Max``, ``Beginning``, and ``Size_Of_Seq`` should be initialized before the call. Indeed, both ``Max`` and ``Beginning`` need an initial value as they are read in ``Test_Index``. As for ``Size_Of_Seq``, if we only read its value when ``End_Of_Seq`` is true, which is probably meant so by design, then there can be no problem. Flow analysis can simply not verify its initialization modularly.
@@ -452,24 +603,39 @@ Permutations are modeled as arrays where the element at index ``I`` is the posit
 
 .. code:: ada
 
-   type Permutation is array (Positive range <>) of Positive;
+    procedure Show_Permutation
+      with SPARK_Mode => On
+    is
+       type Permutation is array (Positive range <>) of Positive;
 
-   procedure Init (A : out Permutation) is
-   begin
-      for I in A'Range loop
-         A (I) := I;
-      end loop;
-   end Init;
+       procedure Swap (A    : in out Permutation;
+                       I, J : Positive) is
+          Tmp : Positive := A (I);
+       begin
+          A (I) := A (J);
+          A (J) := Tmp;
+       end Swap;
 
-   function Cyclic_Permutation (N : Natural) return Permutation is
-      A : Permutation (1 .. N);
-   begin
-      Init (A);
-      for I in A'First .. A'Last - 1 loop
-         Swap (A, I, I + 1);
-      end loop;
-      return A;
-   end Cyclic_Permutation;
+       procedure Init (A : out Permutation) is
+       begin
+          for I in A'Range loop
+             A (I) := I;
+          end loop;
+       end Init;
+
+       function Cyclic_Permutation (N : Natural) return Permutation is
+          A : Permutation (1 .. N);
+       begin
+          Init (A);
+          for I in A'First .. A'Last - 1 loop
+             Swap (A, I, I + 1);
+          end loop;
+          return A;
+       end Cyclic_Permutation;
+
+    begin
+       null;
+    end Show_Permutation;
 
 
 This program is correct. Flow analysis will still emit a message though, because it cannot make sure that every element of ``A`` is initialized during the loop. This message is a false alarm and can be discarded safely.
@@ -482,24 +648,39 @@ This program is the same as the previous one except that, to avoid the flow warn
 
 .. code:: ada
 
-  type Permutation is array (Positive range <>) of Positive;
+    procedure Show_Permutation_2
+      with SPARK_Mode => On
+    is
+       type Permutation is array (Positive range <>) of Positive;
 
-   procedure Init (A : in out Permutation) is
-   begin
-      for I in A'Range loop
-         A (I) := I;
-      end loop;
-   end Init;
+       procedure Swap (A    : in out Permutation;
+                       I, J : Positive) is
+          Tmp : Positive := A (I);
+       begin
+          A (I) := A (J);
+          A (J) := Tmp;
+       end Swap;
 
-   function Cyclic_Permutation (N : Natural) return Permutation is
-      A : Permutation (1 .. N);
-   begin
-      Init (A);
-      for I in A'First .. A'Last - 1 loop
-         Swap (A, I, I + 1);
-      end loop;
-      return A;
-   end Cyclic_Permutation;
+       procedure Init (A : in out Permutation) is
+       begin
+          for I in A'Range loop
+             A (I) := I;
+          end loop;
+       end Init;
+
+       function Cyclic_Permutation (N : Natural) return Permutation is
+          A : Permutation (1 .. N);
+       begin
+          Init (A);
+          for I in A'First .. A'Last - 1 loop
+             Swap (A, I, I + 1);
+          end loop;
+          return A;
+       end Cyclic_Permutation;
+
+    begin
+       null;
+    end Show_Permutation_2;
 
 
 This program is not correct. Changing the mode of a parameter that should really be :ada:`out` to :ada:`in out` to silence a false alarm is not a good idea. Other than this obfuscates the specification of ``Init``, now a message will be emitted on every call to the procedure for which ``A`` is not initialized.
@@ -512,29 +693,38 @@ Example #7
 
 .. code:: ada
 
-  Increment : constant Natural := 10;
+    procedure Show_Increments
+      with SPARK_Mode => On
+    is
+       type Array_Of_Positives is array (Natural range <>) of Positive;
 
-   procedure Incr_Step_Function (A : in out Array_Of_Positives) is
-      Threshold : Positive := Positive’Last;
-      procedure Incr_Until_Threshold (I : Integer) with
-        Global => (Input  => Threshold,
-                   In_Out => A);
+       Increment : constant Natural := 10;
 
-      procedure Incr_Until_Threshold (I : Integer) is
-      begin
-         if Threshold – Increment <= A (I) then
-            A (I) := Threshold;
-         else
-            A (I) := A (I) + Increment;
-         end if;
-      end Incr_Until_Threshold;
+       procedure Incr_Step_Function (A : in out Array_Of_Positives) is
+          Threshold : Positive := Positive'Last;
+          procedure Incr_Until_Threshold (I : Integer) with
+            Global => (Input  => Threshold,
+                       In_Out => A);
 
-   begin
-      for I in A’Range loop
-         .. .
-           Incr_Until_Threshold (I);
-      end loop;
-   end Incr_Step_Function;
+          procedure Incr_Until_Threshold (I : Integer) is
+          begin
+             if Threshold - Increment <= A (I) then
+                A (I) := Threshold;
+             else
+                A (I) := A (I) + Increment;
+             end if;
+          end Incr_Until_Threshold;
+
+       begin
+          for I in A'Range loop
+             --  ...
+             Incr_Until_Threshold (I);
+          end loop;
+       end Incr_Step_Function;
+
+    begin
+       null;
+    end Show_Increments;
 
 
 Everything is fine here. The ``Global`` contract, in particular, is correct. It mentions both ``Threshold``, which is read but not updated in the procedure, and ``A``, which is both read and updated. The fact that ``A`` is a parameter of an enclosing unit does not prevent its usage inside the :ada:`Global` contract as it really is global to ``Incr_Until_Threshold``. Remark that we did not mention ``Increment`` as it is a static constant.
@@ -547,27 +737,37 @@ We are back to the procedure ``Test_Index`` from example #4. We have corrected t
 
 .. code:: ada
 
-   Max         : Natural := 0;
-   End_Of_Seq  : Boolean;
-   Size_Of_Seq : Natural := 0;
-   Beginning   : Integer := A’First - 1;
-   procedure Test_Index (Current_Index : Integer) with
-     Global => (In_Out => (Beginning, Max, Size_Of_Seq),
-                Output => End_Of_Seq,
-                Input  => Current_Index);
+    procedure Show_Test_Index
+      with SPARK_Mode => On
+    is
+       A : array (1 .. 10) of Natural;
 
-   procedure Test_Index (Current_Index : Integer) is
-   begin
-      if A (Current_Index) >= Max then
-         Max := A (Current_Index);
-         End_Of_Seq := False;
-      else
-         Max         := 0;
-         End_Of_Seq  := True;
-         Size_Of_Seq := Current_Index - Beginning;
-         Beginning   := Current_Index;
-      end if;
-   end Test_Index;
+       Max         : Natural := 0;
+       End_Of_Seq  : Boolean;
+       Size_Of_Seq : Natural := 0;
+       Beginning   : Integer := A'First - 1;
+
+       procedure Test_Index (Current_Index : Integer) with
+         Global => (In_Out => (Beginning, Max, Size_Of_Seq),
+                    Output => End_Of_Seq,
+                    Input  => Current_Index);
+
+       procedure Test_Index (Current_Index : Integer) is
+       begin
+          if A (Current_Index) >= Max then
+             Max := A (Current_Index);
+             End_Of_Seq := False;
+          else
+             Max         := 0;
+             End_Of_Seq  := True;
+             Size_Of_Seq := Current_Index - Beginning;
+             Beginning   := Current_Index;
+          end if;
+       end Test_Index;
+
+    begin
+       null;
+    end Show_Test_Index;
 
 
 This example is not correct. ``Current_Index`` is a parameter of ``Test_Index``, it should not be referenced as a global variable. Also, if ``A`` is not a constant, it should be mentioned as an :ada:`Input` in the :ada:`Global` contract.
@@ -580,27 +780,38 @@ We have changed the :ada:`Global` contract of ``Test_Index`` to a :ada:`Depends`
 
 .. code:: ada
 
-   Max         : Natural := 0;
-   End_Of_Seq  : Boolean;
-   Size_Of_Seq : Natural := 0;
-   Beginning   : Integer := A’First - 1;
-   procedure Test_Index (Current_Index : Integer) with
-     Depends => ((Max, End_Of_Seq)        => (A, Current_Index, Max),
-                 (Size_Of_Seq, Beginning) =>
-                     +(A, Current_Index, Max, Beginning))
+    procedure Show_Test_Index_2
+      with SPARK_Mode => On
+    is
+       A : array (1 .. 10) of Natural;
 
-   procedure Test_Index (Current_Index : Integer) is
-   begin
-      if A (Current_Index) >= Max then
-         Max := A (Current_Index);
-         End_Of_Seq := False;
-      else
-         Max         := 0;
-         End_Of_Seq  := True;
-         Size_Of_Seq := Current_Index - Beginning;
-         Beginning   := Current_Index;
-      end if;
-   end Test_Index;
+       Max         : Natural := 0;
+       End_Of_Seq  : Boolean;
+       Size_Of_Seq : Natural := 0;
+       Beginning   : Integer := A'First - 1;
+
+       procedure Test_Index (Current_Index : Integer) with
+         Depends => ((Max, End_Of_Seq)        =>
+                         (A, Current_Index, Max),
+                     (Size_Of_Seq, Beginning) =>
+                       + (A, Current_Index, Max, Beginning));
+
+       procedure Test_Index (Current_Index : Integer) is
+       begin
+          if A (Current_Index) >= Max then
+             Max := A (Current_Index);
+             End_Of_Seq := False;
+          else
+             Max         := 0;
+             End_Of_Seq  := True;
+             Size_Of_Seq := Current_Index - Beginning;
+             Beginning   := Current_Index;
+          end if;
+       end Test_Index;
+
+    begin
+       null;
+    end Show_Test_Index_2;
 
 
 This example is correct. Some of the dependencies, such as ``Size_Of_Seq`` depending on ``Beginning``, come directly from the assignments in the subprogram. As the control flow influences the final value of all of the outputs, variables read in the condition, that is, ``A``, ``Current_Index``, and ``Max``, are present in every dependency relation. Finally, the dependencies of ``Size_Of_Eq`` and ``Beginning`` on themselves come from the fact that they may not be modified by the subprogram execution.
@@ -613,24 +824,31 @@ The subprogram ``Identity`` swaps the value of its parameter twice. Its :ada:`De
 
 .. code:: ada
 
-   procedure Swap (X, Y : in out Positive);
+    procedure Show_Swap
+      with SPARK_Mode => On
+    is
+       procedure Swap (X, Y : in out Positive);
 
-   procedure Swap (X, Y : in out Positive) is
-      Tmp : constant Positive := X;
-   begin
-      X := Y;
-      Y := Tmp;
-   end Swap;
+       procedure Swap (X, Y : in out Positive) is
+          Tmp : constant Positive := X;
+       begin
+          X := Y;
+          Y := Tmp;
+       end Swap;
 
-   procedure Identity (X, Y : in out Positive) with
-     Depends => (X => X,
-                 Y => Y);
+       procedure Identity (X, Y : in out Positive) with
+         Depends => (X => X,
+                     Y => Y);
 
-   procedure Identity (X, Y : in out Positive) is
-   begin
-      Swap (X, Y);
-      Swap (Y, X);
-   end Identity;
+       procedure Identity (X, Y : in out Positive) is
+       begin
+          Swap (X, Y);
+          Swap (Y, X);
+       end Identity;
+
+    begin
+       null;
+    end Show_Swap;
 
 
 This code is correct, but flow analysis cannot verify the :ada:`Depends` contract of ``Identity``. Indeed, ``Swap`` has no user-specified :ada:`Depends` contract. As a consequence, flow analysis assumes that all outputs of ``Swap``, that is ``X`` and ``Y``, depend on all its inputs, that is both ``X`` and ``Y``’s initial values. To solve this problem, it is enough to manually specify a more precise :ada:`Depends` contract on ``Swap``.
