@@ -91,7 +91,7 @@ So, if you will, it's the other around compared to languages such as C, C++ or J
 
    int A;            /* C equivalent */
 
-It is possible to have initialization at declaration time. In the Ada example below, we are saying that *B* is initialized with 5.
+It is possible to have initialization at declaration time. In the Ada example below, we are saying that ``B`` is initialized with 5.
 
 .. code:: ada
 
@@ -115,7 +115,7 @@ This is the corresponding declaration in C:
 
    const int C = 78; /* C equivalent */
 
-In Ada, it is possible to declare several variables at the same declaration point. If this declaration point has a default value or a default expression, this default expression will be evaluated separately for every single variable. In the example below, we have *D* and *E* being initialized with the expression :ada:`F(5)`. Even though :ada:`F(5)` is written only once, it will be called twice (once for *D* and once for *E*):
+In Ada, it is possible to declare several variables at the same declaration point. If this declaration point has a default value or a default expression, this default expression will be evaluated separately for every single variable. In the example below, we have ``D`` and ``E`` being initialized with the expression :ada:`F(5)`. Even though :ada:`F(5)` is written only once, it will be called twice (once for ``D`` and once for ``E``):
 
 .. code:: ada
 
@@ -137,7 +137,7 @@ Another example:
    A : Float := Compute_New_Random;
    B : Float := Compute_New_Random;
 
-Elaboration of variables is done sequentially. This means that you cannot refer to a variable before it has been declared. In the example below, we're trying to access *D* before it is created. This will result in a compilation error:
+Elaboration of variables is done sequentially. This means that you cannot refer to a variable before it has been declared. In the example below, we're trying to access ``D`` before it is created. This will result in a compilation error:
 
 .. code:: ada
 
@@ -262,14 +262,14 @@ Types that were presented in the previous section were brand-new types. But, in 
 
    type Math_Score is new Score;
 
-Here, we're saying that *Math_Score* is a new type based on the implementation of *Score*. *Math_Score* and *Score* are two completely independent types, but they share the same implementation. In addition to that, when creating a new type, if it's an integer type, it will be possible to reduce the range of values. For example:
+Here, we're saying that ``Math_Score`` is a new type based on the implementation of ``Score``. ``Math_Score`` and ``Score`` are two completely independent types, but they share the same implementation. In addition to that, when creating a new type, if it's an integer type, it will be possible to reduce the range of values. For example:
 
 .. code:: ada
 
    type Math_Score is new Score range 0 .. 10;
    type Primary_Color is new Color range Red .. Blue;
 
-In this example, being bad in maths, it may be impossible to get a grade above 10. So we create this new type *Math_Score* and declare it to be of a range from 0 to 10, which is a smaller range than the one of *Score*. We could do that with pretty much any discrete type. For example, we have the type *Primary_Color*, which is based on the implementation of *Color*, but just accepting values from *Red* to *Blue*.
+In this example, being bad in maths, it may be impossible to get a grade above 10. So we create this new type ``Math_Score`` and declare it to be of a range from 0 to 10, which is a smaller range than the one of ``Score``. We could do that with pretty much any discrete type. For example, we have the type ``Primary_Color``, which is based on the implementation of ``Color``, but just accepting values from ``Red`` to ``Blue``.
 
 Type Conversion
 ~~~~~~~~~~~~~~~
@@ -281,7 +281,7 @@ Although it is impossible to mix different types by default, if they share commo
    V1 : Float := 0.0;
    V2 : Integer := Integer (V1);
 
-In this example, we have *V1* and *V2*. *V1* is of type *Float*, and the compiler knows how to convert a floating-point value to an integer, so we can convert it by writing the name of the type and the value in parantheses.
+In this example, we have ``V1`` and ``V2``. ``V1`` is of type ``Float``, and the compiler knows how to convert a floating-point value to an integer, so we can convert it by writing the name of the type and the value in parantheses.
 
 Note that a conversion may introduce an additional verification (a check). For example:
 
@@ -293,7 +293,7 @@ Note that a conversion may introduce an additional verification (a check). For e
    V1 : T1 := 0;
    V2 : T2 := T2 (V1); -- Run-time error!
 
-Here, we have *V1* and *V2*, which are variables of two types that are integer types. So, although we cannot mix them up, we will be able to convert one type into the other. However, the valid range of values is different. If *V1* equals 0, when we convert *V1* into the type *T2* (which does not accept the value 0), we will have a run-time error ---an exception--- and the program will stop.
+Here, we have ``V1`` and ``V2``, which are variables of two types that are integer types. So, although we cannot mix them up, we will be able to convert one type into the other. However, the valid range of values is different. If ``V1`` equals 0, when we convert ``V1`` into the type ``T2`` (which does not accept the value 0), we will have a run-time error ---an exception--- and the program will stop.
 
 Ada Operators
 ~~~~~~~~~~~~~
@@ -446,7 +446,7 @@ Let's look at this example:
 
    type T2 is new T1 range -100 .. 100;
 
-Ada allows us to restrict the range of a given type, which is what we're doing on *T1*. However, we cannot extend this range when declaring a new type, so *T1* is between -10 and 10, but we cannot create a *T2* based on the implementation of *T1* will a larger range.
+Ada allows us to restrict the range of a given type, which is what we're doing on ``T1``. However, we cannot extend this range when declaring a new type, so ``T1`` is between -10 and 10, but we cannot create a ``T2`` based on the implementation of ``T1`` will a larger range.
 
 Rounding and truncation
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -476,7 +476,7 @@ Let's look at this example:
    V1 : T := T'Val ("A");
    V2 : T := T'Value (2);
 
-This is a very typical mix-up of the :ada:`Val` and :ada:`Value` attributes. :ada:`Val` takes a position and creates a value out of it. :ada:`Value` takes a string and creates a value out of it. So, in this example, what we really need to do is replace :ada:`Val` by :ada:`Value` for *V1* and :ada:`Value` by :ada:`Val` for *V2*.
+This is a very typical mix-up of the :ada:`Val` and :ada:`Value` attributes. :ada:`Val` takes a position and creates a value out of it. :ada:`Value` takes a string and creates a value out of it. So, in this example, what we really need to do is replace :ada:`Val` by :ada:`Value` for ``V1`` and :ada:`Value` by :ada:`Val` for ``V2``.
 
 Trimming and case-sensitiveness for Value
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -503,6 +503,6 @@ This type definition is peculiar:
    type T is range 1 .. 0;
    V : T;
 
-Indeed, the range of *T* goes from 1 to 0. So far, we've only seen incremental ranges for good reasons: Ada always expects the range of a value to be even in a growing number. So what this created is a type that has no valid value. However, this is legal, and it is legal to declare a variable of that type as well. Of course, the minute we're assigning a value to this variable, we're going to have an exception.
+Indeed, the range of ``T`` goes from 1 to 0. So far, we've only seen incremental ranges for good reasons: Ada always expects the range of a value to be even in a growing number. So what this created is a type that has no valid value. However, this is legal, and it is legal to declare a variable of that type as well. Of course, the minute we're assigning a value to this variable, we're going to have an exception.
 
 There are situations where this construction is quite useful. We will see that later on.

@@ -76,7 +76,7 @@ If we run the application, we can see those 10 balls bouncing on the edges of th
 Bouncing balls
 ---------------------------------------------------------------------
 
-As in the previous example, the movement of the objects is going to be taken care of by a procedure called *Iterate*. You'll see the same kind of constructions here, in particular, the :ada:`in out` parameter:
+As in the previous example, the movement of the objects is going to be taken care of by a procedure called ``Iterate``. You'll see the same kind of constructions here, in particular, the :ada:`in out` parameter:
 
 .. code:: ada
 
@@ -94,26 +94,26 @@ However, in this case, the semantics are going to be different, since we're not 
             V.Dy := -V.Dy;
          end if;
 
-As you can see, we're extracting the value of *x* axis of the shape, then we're comparing it to the range. There are two new Ada constructions here:
+As you can see, we're extracting the value of ``x`` axis of the shape, then we're comparing it to the range. There are two new Ada constructions here:
 
 - the :ada:`not in` operator, which checks if a given value is not in the range
    - (as you may imagine, there is a :ada:`in` operator as well, which checks that a value is in the range).
-- and a way to denote a range, which is *number* (or lower bound), followed by :ada:`..` and then upper bound.
+- and a way to denote a range, which is ``number`` (or lower bound), followed by :ada:`..` and then upper bound.
 
-Once we have *Dx* and *Dy*, the movement operation is pretty simple:
+Once we have ``Dx`` and ``Dy``, the movement operation is pretty simple:
 
 .. code:: ada
 
          Set_X (V.Shape, Get_X (V.Shape) + V.Dx);
          Set_Y (V.Shape, Get_Y (V.Shape) + V.Dy);
 
-We're just retrieving the current X or Y of the shape, and then adding the value of *Dx* or *Dy* to it.
+We're just retrieving the current X or Y of the shape, and then adding the value of ``Dx`` or ``Dy`` to it.
 
 
 Randomization
 ---------------------------------------------------------------------
 
-We're now going to do something more complicated, which is random number generation. As a matter of fact, if you're already accustomed to doing that in other languages, such as C, C++ or Java, it will be very similar. We want to construct a random number and, for doing so, we are going to use a function that returns a value from 0 to 1, and then manipulate this value to create something that looks like our expectation. In Ada, there is a standard library that provides such a function, which is called *Ada.Numerics.Float_Random*. This is why we're adding a dependency on our program using these :ada:`with` and :ada:`use` clauses:
+We're now going to do something more complicated, which is random number generation. As a matter of fact, if you're already accustomed to doing that in other languages, such as C, C++ or Java, it will be very similar. We want to construct a random number and, for doing so, we are going to use a function that returns a value from 0 to 1, and then manipulate this value to create something that looks like our expectation. In Ada, there is a standard library that provides such a function, which is called ``Ada.Numerics.Float_Random``. This is why we're adding a dependency on our program using these :ada:`with` and :ada:`use` clauses:
 
 .. code:: ada
 
@@ -192,7 +192,7 @@ Finally, the last information that needs to be defined on an array type is the t
 
       type ... of Ball_Type;
 
-One important point to understand ---in particular if you're coming from reference-based languages, such as Java--- is that, in Ada, all components of the array need to have the same size. But here, it's fine: *Ball_Type* is a record with three fields, so all objects of *Ball_Type* are of the same size, and we can use that for the array elements.
+One important point to understand ---in particular if you're coming from reference-based languages, such as Java--- is that, in Ada, all components of the array need to have the same size. But here, it's fine: ``Ball_Type`` is a record with three fields, so all objects of ``Ball_Type`` are of the same size, and we can use that for the array elements.
 
 Once the type is declared, we can use it in an array declaration, such as this one:
 
@@ -200,7 +200,7 @@ Once the type is declared, we can use it in an array declaration, such as this o
 
       Balls : Ball_Array (1 .. 10);
 
-Because the type isn't constrained, we need to provide a size for the array at variable declaration time. Again, we're not providing the actual size. Instead, we are providing the boundaries: the inclusive lower bound and upper bound. So this array (*Balls*) is indexed between 1 and 10, so it contains 10 elements. We could also have decided to index it from 0 to 9, or from 100 to 109: this would have given the same size, but different indices. There is no requirement in Ada to index an array from a specific number.
+Because the type isn't constrained, we need to provide a size for the array at variable declaration time. Again, we're not providing the actual size. Instead, we are providing the boundaries: the inclusive lower bound and upper bound. So this array (``Balls``) is indexed between 1 and 10, so it contains 10 elements. We could also have decided to index it from 0 to 9, or from 100 to 109: this would have given the same size, but different indices. There is no requirement in Ada to index an array from a specific number.
 
 
 Array aggregate
@@ -240,13 +240,13 @@ One important thing to realize here is that what we're saying is that the same e
 
            Dx    => (Random (Seed) * 0.05 + 0.02) * (if Random (Seed) > 0.5 then 1.0 else -1.0),
 
-In other words, this expression is going to be evaluated for each single element: *Random* is going to be called for each single element --- 40 times overall, since we call *Random* four times per element. Therefore, this will create 10 different objects, each of them going into a separate direction.
+In other words, this expression is going to be evaluated for each single element: ``Random`` is going to be called for each single element --- 40 times overall, since we call ``Random`` four times per element. Therefore, this will create 10 different objects, each of them going into a separate direction.
 
 
 For loop
 ---------------------------------------------------------------------
 
-The last step of this program is to call *Iterate* for every single ball at each cycle. In order to iterate through all elements of the *Balls*, we're going to use the :ada:`for ... of` loop:
+The last step of this program is to call ``Iterate`` for every single ball at each cycle. In order to iterate through all elements of the ``Balls``, we're going to use the :ada:`for ... of` loop:
 
 .. code:: ada
 
@@ -254,4 +254,4 @@ The last step of this program is to call *Iterate* for every single ball at each
             Iterate (B);
          end loop;
 
-By saying this, we'll iterate over every element of *Balls* and store each successive value into the variable *B*.
+By saying this, we'll iterate over every element of ``Balls`` and store each successive value into the variable ``B``.

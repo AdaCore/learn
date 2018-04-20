@@ -38,13 +38,13 @@ This is a very simple Ada application. It will query some numbers on the console
 Building the application
 ---------------------------------------------------------------------
 
-You may use the GPS IDE to build the application. In order to do that, you click on *Build* menu, then *Project*, and then select the executable that you want to build --- in this case, *hello.adb*. This opens a window that provides multiple options for compilation. In this case, the default options are fine, so you can simply hit *Execute*. This triggers various commands in the background, eventually creating the program *hello.exe* (or *hello* on Linux).
+You may use the GPS IDE to build the application. In order to do that, you click on ``Build`` menu, then ``Project``, and then select the executable that you want to build --- in this case, ``hello.adb``. This opens a window that provides multiple options for compilation. In this case, the default options are fine, so you can simply hit ``Execute``. This triggers various commands in the background, eventually creating the program ``hello.exe`` (or ``hello`` on Linux).
 
 
 Running the application
 ---------------------------------------------------------------------
 
-After building the application, you can run it on the console. If you're using GPS, you can click on the *Build* menu again, and, this time, select *Run* and then select the executable name (*hello* in this case). You'll get a window with options. Again, the default options are fine, so you can simple click on *Execute*. Now, you'll be able to interact with the application in a console within GPS. Alternatively, you may run the application on a standalone console.
+After building the application, you can run it on the console. If you're using GPS, you can click on the ``Build`` menu again, and, this time, select ``Run`` and then select the executable name (``hello`` in this case). You'll get a window with options. Again, the default options are fine, so you can simple click on ``Execute``. Now, you'll be able to interact with the application in a console within GPS. Alternatively, you may run the application on a standalone console.
 
 If you enter two positive numbers, you expect a positive result and have the according caption in the console. For instance:
 
@@ -80,7 +80,7 @@ Let's now dive into more details. The first thing that we are looking at here is
 
    procedure Hello is
 
-It's a procedure --- which is an equivalent to void functions in languages such as C and C++. In Ada, the name of the entry point or, if you will, the name of the main subprogram, can be anything. It doesn't have to be called *main* necessarily, which is why, in this case, we decided to called it *Hello*.
+It's a procedure --- which is an equivalent to void functions in languages such as C and C++. In Ada, the name of the entry point or, if you will, the name of the main subprogram, can be anything. It doesn't have to be called ``main`` necessarily, which is why, in this case, we decided to called it ``Hello``.
 
 Note that repeating the name of the procedure at the end of the definition is optional:
 
@@ -146,27 +146,27 @@ One of Ada particularities is the notion of attributes. An attribute is a proper
 Input/output to the console
 ---------------------------------------------------------------------
 
-With this, we're going to do some input/output on the console. In order to be able to interact with the console, we will need to use a library unit. In Ada, the standard library unit that provides access to the input/output on the console is called *Ada.Text_IO*. In order to use it, we need to declare a dependency between my program and this library unit. This dependency is introduced by the standard keyword :ada:`with` at the beginning of the program, followed by the name of the library unit (in this case, *Ada.Text_IO*):
+With this, we're going to do some input/output on the console. In order to be able to interact with the console, we will need to use a library unit. In Ada, the standard library unit that provides access to the input/output on the console is called :ada:`Ada.Text_IO`. In order to use it, we need to declare a dependency between my program and this library unit. This dependency is introduced by the standard keyword :ada:`with` at the beginning of the program, followed by the name of the library unit (in this case, :ada:`Ada.Text_IO`):
 
 .. code:: ada
 
    with Ada.Text_IO;
 
-Once this is done, we can use services and functionalities from this library. Here, we're interested in two things in particular: *Get_Line* and *Put_Line*. As you can see in the example, to have access to *Get_Line* (contained in *Ada.Text_IO*), we have to write *Ada.Text_IO.Get_Line*:
+Once this is done, we can use services and functionalities from this library. Here, we're interested in two things in particular: :ada:`Get_Line` and :ada:`Put_Line`. As you can see in the example, to have access to :ada:`Get_Line` (contained in :ada:`Ada.Text_IO`), we have to write :ada:`Ada.Text_IO.Get_Line`:
 
 .. code:: ada
 
       A := Integer'Value (Ada.Text_IO.Get_Line);
 
-What this will do is call the subprogram *Get_Line*, which reads a string on the command-line up until you hit the enter key and returns the string to the program.
+What this will do is call the subprogram :ada:`Get_Line`, which reads a string on the command-line up until you hit the enter key and returns the string to the program.
 
-The *Put_Line* service is going to do the things the other way around, that is to say, it takes a string as parameter and it displays the string on the console:
+The :ada:`Put_Line` service is going to do the things the other way around, that is to say, it takes a string as parameter and it displays the string on the console:
 
 .. code:: ada
 
          Ada.Text_IO.Put_Line ("RESULT IS 0");
 
-With the following line, what we want to do is to display a caption and the value, that is to say, a literal *POSITIVE RESULT* and the result of the call to the :ada:`Image` attribute converting the value of the C variable into a string:
+With the following line, what we want to do is to display a caption and the value, that is to say, a literal ``POSITIVE RESULT`` and the result of the call to the :ada:`Image` attribute converting the value of the C variable into a string:
 
 .. code:: ada
 
@@ -218,6 +218,6 @@ This is the complete block:
 
 So what this block does is:
 
-   - checking if C is zero and, if that is the case, putting *RESULT IS 0*.
-   - if not, it will check if C is greater than zero and then put *POSITIVE RESULT* on the screen if that's the case
-   - and in all other cases, it will display *NEGATIVE RESULT*.
+   - checking if C is zero and, if that is the case, putting ``RESULT IS 0``.
+   - if not, it will check if C is greater than zero and then put ``POSITIVE RESULT`` on the screen if that's the case
+   - and in all other cases, it will display ``NEGATIVE RESULT``.

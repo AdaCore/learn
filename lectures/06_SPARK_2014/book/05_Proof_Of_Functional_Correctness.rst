@@ -24,11 +24,11 @@ For example:
        then Find’Result = 0
        else Find’Result in A’Range and then A (Find’Result) = E);
 
-To ensure no runtime error is raised when using the result of function *Find*, it may be enough to know that, whenever it is not 0, then it is in *A*’s range. However, for the program to be meaningful, we may want *Find* to verify more complex properties. For example that it only returns 0 if *E* is not in *A* and that, otherwise, it returns an index of *A* where *E* is stored. If, like we did for *Find*, these specifications are expressed as contracts in subprograms or packages, then GNATprove can be used to statically verify them.
+To ensure no runtime error is raised when using the result of function ``Find``, it may be enough to know that, whenever it is not 0, then it is in ``A``’s range. However, for the program to be meaningful, we may want ``Find`` to verify more complex properties. For example that it only returns 0 if ``E`` is not in ``A`` and that, otherwise, it returns an index of ``A`` where ``E`` is stored. If, like we did for ``Find``, these specifications are expressed as contracts in subprograms or packages, then GNATprove can be used to statically verify them.
 
 Writing at least part of the program’s specification in the form of contracts has certain advantages. First, these contracts can be executed during test campaigns. This improves the maintainability of the code by detecting earlier discrepancies between the program and its specification. If they are precise enough, these contracts may be used as oracles to decide whether a given test passed or failed. As such, they may serve to verify the outputs of specific units while running the complete code. This may, in certain context, replace the need for unit testing by running integration tests with assertions enabled. Subsequently, if the code is in SPARK, these contracts can also be formally proven using GNATprove.
 
-Formal proof has the advantage of verifying all possible executions, something which is not always possible using dynamic verification. For example, during a test campaign, the postcondition of the subprogram *Find* shown below will be checked dynamically on every set of inputs on which *Find* is called:
+Formal proof has the advantage of verifying all possible executions, something which is not always possible using dynamic verification. For example, during a test campaign, the postcondition of the subprogram ``Find`` shown below will be checked dynamically on every set of inputs on which ``Find`` is called:
 
 .. code:: ada
 
@@ -40,7 +40,7 @@ Formal proof has the advantage of verifying all possible executions, something w
       Find (A, E);
     ...
 
-However, if *Find* is formally verified, then its postcondition is checked for all possible inputs as well. Static verification can also be attempted earlier than testing in the development as it works modularly on a per subprogram basis. For example, in the code shown above, *Use_Find* can be formally verified even before the subprogram *Find* has a body.
+However, if ``Find`` is formally verified, then its postcondition is checked for all possible inputs as well. Static verification can also be attempted earlier than testing in the development as it works modularly on a per subprogram basis. For example, in the code shown above, ``Use_Find`` can be formally verified even before the subprogram ``Find`` has a body.
 
 
 Advanced Contracts
@@ -63,7 +63,7 @@ Finally, some properties that are more invariants over data than properties of s
       Dynamic_Predicate => Is_Sorted (Sorted_Nat_Array);
     --  Elements of type Sorted_Nat_Array are all sorted.
 
-Here, the subtype *Sorted_Nat_Array* can be used to type an array variable that should remain sorted throughout the program. As specifying that an array is sorted requires a rather complex expression involving quantifiers, this property is abstracted away as an expression function in our example to improve readability. The fact that *Is_Sorted*’s body remains in the package’s specification allows users of the package to retain a precise knowledge of its exact meaning when necessary.
+Here, the subtype ``Sorted_Nat_Array`` can be used to type an array variable that should remain sorted throughout the program. As specifying that an array is sorted requires a rather complex expression involving quantifiers, this property is abstracted away as an expression function in our example to improve readability. The fact that ``Is_Sorted``’s body remains in the package’s specification allows users of the package to retain a precise knowledge of its exact meaning when necessary.
 
 
 Ghost Code
@@ -88,9 +88,9 @@ As an example:
       --  Compilation error:
       --     Ghost entity cannot appear in this context.
 
-Here, the *Do_Something* subprogram stores the initial value of *X* in a ghost constant called *X_Init*. We can then reference this variable from assertions to check that the computation performed by the call to the *Do_Some_Complex_Stuff* subprogram modified the value of *X* in the expected manner. However *X_Init* should not be used in normal code, for example to restore the initial value of *X*.
+Here, the ``Do_Something`` subprogram stores the initial value of ``X`` in a ghost constant called ``X_Init``. We can then reference this variable from assertions to check that the computation performed by the call to the ``Do_Some_Complex_Stuff`` subprogram modified the value of ``X`` in the expected manner. However ``X_Init`` should not be used in normal code, for example to restore the initial value of ``X``.
 
-When compiling this example, you'll see that the use of *X_Init* will be flagged as illegal by the compiler. Note that more complex cases of interference between ghost and normal code may only be detected by running GNATprove.
+When compiling this example, you'll see that the use of ``X_Init`` will be flagged as illegal by the compiler. Note that more complex cases of interference between ghost and normal code may only be detected by running GNATprove.
 
 
 Ghost Functions
@@ -119,7 +119,7 @@ Let's look at the following example:
       (Get_Model (S) (I));
     -- Get_Model cannot be used in this context.
 
-In our example, the type *Stack* is private. To be able to specify the expected behavior of the procedure *Push*, we need to disclose this abstraction and access the values of the elements stored in *S*. For this, we introduce a function *Get_Model* that returns an array as a model of the stack. Still, we don’t want user code of the *Stack* package to use *Get_Model* to break our stack’s abstraction from normal code, as is done in the subprogram *Peek*. Marking the function as :ada:`Ghost` will achieve this goal. What is more, it will ensure that the subprogram *Get_Model* is never used in production code.
+In our example, the type ``Stack`` is private. To be able to specify the expected behavior of the procedure ``Push``, we need to disclose this abstraction and access the values of the elements stored in ``S``. For this, we introduce a function ``Get_Model`` that returns an array as a model of the stack. Still, we don’t want user code of the ``Stack`` package to use ``Get_Model`` to break our stack’s abstraction from normal code, as is done in the subprogram ``Peek``. Marking the function as :ada:`Ghost` will achieve this goal. What is more, it will ensure that the subprogram ``Get_Model`` is never used in production code.
 
 
 Global Ghost Variables
@@ -144,11 +144,11 @@ Global variables can also store information about previous runs of subprograms i
       Post => (First_Thing_Done (V’Old, V_Interm)
            and Second_Thing_Done (V_Interm, V));
 
-In our example, we have two procedures, one to access a state *A* and the other to access a state *B*. The global variable *Last_Accessed_Is_A* is used to specify that *B* cannot be accessed twice without accessing *A* in between.
+In our example, we have two procedures, one to access a state ``A`` and the other to access a state ``B``. The global variable ``Last_Accessed_Is_A`` is used to specify that ``B`` cannot be accessed twice without accessing ``A`` in between.
 
 It can be the case that the requirements of a subprogram expresses its expected behavior as a sequence of actions to be performed. To write this kind of specification more easily, global ghost variables may be used to store intermediate values of variables in the program.
 
-For example, we specify here the subprogram *Do_Two_Things* in two steps using the global variable *V_Interm* to store the intermediate value of *V* between the two things to be done. Note that, conceptually, this usage could be expressed using an existential quantification on the variable *V_Interm*. This cannot always be done in SPARK as quantification in Ada is restricted to :ada:`for ... loop` patterns. What is more, supplying the value of the variable may help the prover to effectively verify the contracts.
+For example, we specify here the subprogram ``Do_Two_Things`` in two steps using the global variable ``V_Interm`` to store the intermediate value of ``V`` between the two things to be done. Note that, conceptually, this usage could be expressed using an existential quantification on the variable ``V_Interm``. This cannot always be done in SPARK as quantification in Ada is restricted to :ada:`for ... loop` patterns. What is more, supplying the value of the variable may help the prover to effectively verify the contracts.
 
 
 Guide Proof
@@ -197,9 +197,9 @@ For example:
       Permutation : Index_Array := (1 => 1, 2 => 2, ...) with
         Ghost;
 
-In the example shown here, to help GNATprove discharge the postcondition of *P*, we want to assert that it holds separately in every branch of an :ada:`if` statement. Since in these assertions, unlike in *P*’s postconditions, we cannot use the :ada:`‘Old` attribute to access the initial value of the parameter *X*, we must resort to introducing a local ghost constant *X_Init* for this value.
+In the example shown here, to help GNATprove discharge the postcondition of ``P``, we want to assert that it holds separately in every branch of an :ada:`if` statement. Since in these assertions, unlike in ``P``’s postconditions, we cannot use the :ada:`‘Old` attribute to access the initial value of the parameter ``X``, we must resort to introducing a local ghost constant ``X_Init`` for this value.
 
-Local ghost variables can also be used for more complex things such as building a data-structure that serves as witness of a complex property of the subprogram. In our example, we want to prove that the *Sort* procedure do not create new elements, that is, all the elements that are in *A* after the sort were already in *A* before the sort. Note that this property is not enough to ensure that, after a call to *Sort*, *A* is a permutation of its value before the call. Still, it is already complex for a prover to verify as it involves an alternation of quantifiers. To help GNATprove, it may be interesting to store, for each index *I*, an index *J* that has the expected property.
+Local ghost variables can also be used for more complex things such as building a data-structure that serves as witness of a complex property of the subprogram. In our example, we want to prove that the ``Sort`` procedure do not create new elements, that is, all the elements that are in ``A`` after the sort were already in ``A`` before the sort. Note that this property is not enough to ensure that, after a call to ``Sort``, ``A`` is a permutation of its value before the call. Still, it is already complex for a prover to verify as it involves an alternation of quantifiers. To help GNATprove, it may be interesting to store, for each index ``I``, an index ``J`` that has the expected property.
 
 
 Ghost Procedures
@@ -209,7 +209,7 @@ Ghost procedures cannot affect the value of normal variables. Therefore, they ar
 
 Abstracting away treatment of ghost variables or assertions inside a ghost procedure has several advantages. First, it enhances expressivity as, to simplify the removal of ghost code by the compiler: the only ghost statements that are allowed to appear in normal code are assignments to ghost variables and ghost procedure calls.
 
-As an example, the :ada:`for` loop contained in *Increase_A* could not appear by itself in normal code:
+As an example, the :ada:`for` loop contained in ``Increase_A`` could not appear by itself in normal code:
 
 .. code:: ada
 
@@ -227,7 +227,7 @@ As an example, the :ada:`for` loop contained in *Increase_A* could not appear by
 
 Then, it improves readability by hiding away complex code that is of no use for the functional behavior of the subprogram. Finally, it can help GNATprove by abstracting away assertions that would otherwise pollute its context.
 
-For the example above, calling *Prove_P* on *X* will only add *P (X)* to the proof context instead of the possible important set of assertions that are required to verify it. What is more, the proof of *P* will only be done once and may be made easier by the fact that no unnecessary information is present in the context while verifying it. Also, if *Prove_P* happens to not be fully verified, the remaining assumptions will be reviewed more easily if they are in a small context.
+For the example above, calling ``Prove_P`` on ``X`` will only add ``P (X)`` to the proof context instead of the possible important set of assertions that are required to verify it. What is more, the proof of ``P`` will only be done once and may be made easier by the fact that no unnecessary information is present in the context while verifying it. Also, if ``Prove_P`` happens to not be fully verified, the remaining assumptions will be reviewed more easily if they are in a small context.
 
 
 Handling of Loops
@@ -276,7 +276,7 @@ For example:
       return 0;
     end Find;
 
-Here, in our function *Find*, we iterate over the array *A* searching for an index where *E* is stored in *A*. Though, at each loop iteration, GNATprove knows that, for the loop to continue, the value stored in *A* at index *I* must not be *E*, it will not be able to accumulate this information to deduce that it is true for all the indexes smaller than *I*.
+Here, in our function ``Find``, we iterate over the array ``A`` searching for an index where ``E`` is stored in ``A``. Though, at each loop iteration, GNATprove knows that, for the loop to continue, the value stored in ``A`` at index ``I`` must not be ``E``, it will not be able to accumulate this information to deduce that it is true for all the indexes smaller than ``I``.
 
 
 Loop Invariants
@@ -286,7 +286,7 @@ To overcome these limitations, users can provide additional information to the t
 
 The specificity of a loop invariant in comparison to other assertions lies in the way it is handled for proof. The proof of a loop invariant is done in two steps: first the GNATprove checks that it holds in the first iteration of the loop, and then, it checks that it holds in an arbitrary iteration assuming it held in the previous one.
 
-As an example, let us add a loop invariant to our *Find* function stating that the first element of *A* is not *E*:
+As an example, let us add a loop invariant to our ``Find`` function stating that the first element of ``A`` is not ``E``:
 
 .. code:: ada
 
@@ -301,11 +301,11 @@ As an example, let us add a loop invariant to our *Find* function stating that t
         end if;
       end loop;
 
-To verify this invariant, GNATprove will generate two checks. The first one, that checks whether the assertion holds in the first iteration of the loop, will not be verified by the tool. Indeed, there is no reason for the first element of *A* to be different from *E* in this iteration. However, the second check will succeed. Indeed, it is easy to deduce that, if the first element of *A* was not *E* in a given iteration, then it is still not *E* in the next one. Note that, if we move the invariant to the end of the loop, then it will be successfully verified by GNATprove.
+To verify this invariant, GNATprove will generate two checks. The first one, that checks whether the assertion holds in the first iteration of the loop, will not be verified by the tool. Indeed, there is no reason for the first element of ``A`` to be different from ``E`` in this iteration. However, the second check will succeed. Indeed, it is easy to deduce that, if the first element of ``A`` was not ``E`` in a given iteration, then it is still not ``E`` in the next one. Note that, if we move the invariant to the end of the loop, then it will be successfully verified by GNATprove.
 
 Not only do loop invariants allow to verify complex properties over loops, they are also used by GNATprove to verify other properties, such as the absence of runtime errors over the loop’s body and the statements following the loop. More precisely, when verifying runtime checks or other assertions from the loop’s body or from statements following the loop, the last occurrence of the loop invariant preceding this check is assumed to hold.
 
-Let's look again at this version of the *Find* example:
+Let's look again at this version of the ``Find`` example:
 
 .. code:: ada
 
@@ -323,7 +323,7 @@ Let's look again at this version of the *Find* example:
       pragma Assert (for all I in A’Range => A (I) /= E);
       --  info: assertion proved
 
-In our *Find* function, GNATprove can verify that, after the loop, all the elements of *A* are different from *E* by assuming that the loop invariant holds in the last iteration of the loop.
+In our ``Find`` function, GNATprove can verify that, after the loop, all the elements of ``A`` are different from ``E`` by assuming that the loop invariant holds in the last iteration of the loop.
 
 Coming up with a good loop invariant can turn out to be quite a challenge. To make this task easier, let us review the four good properties of a good loop invariant:
 
@@ -350,7 +350,7 @@ Next, the loop invariant should be precise enough to allow proving absence of ru
 
 Finally, the loop invariant should be precise enough to prove that it is preserved through successive iterations of the loop. This is generally the trickiest part. To understand why the preservation of a loop invariant is not proved by GNATprove, it is often useful to repeat it into local assertions throughout the loop’s body to determine at which point the proof is lost.
 
-As an example, let us look at a loop that iterates through an array *A* and applies a function *F* to each of its elements:
+As an example, let us look at a loop that iterates through an array ``A`` and applies a function ``F`` to each of its elements:
 
 .. code:: ada
 
@@ -365,10 +365,10 @@ As an example, let us look at a loop that iterates through an array *A* and appl
     pragma Assert (for all K in A’Range => A (K) = F (A_I (K)));
     --  info: assertion proved
 
-We want to prove that, after the loop, each element of the array is the result of applying *F* to the value that was stored in *A* at the same index before the loop. To specify this property, we copy the value of *A* before the loop in a ghost variable *A_I*. As a loop invariant, we state that, for every index smaller than *K*, the array has been modified in the expected way.
+We want to prove that, after the loop, each element of the array is the result of applying ``F`` to the value that was stored in ``A`` at the same index before the loop. To specify this property, we copy the value of ``A`` before the loop in a ghost variable ``A_I``. As a loop invariant, we state that, for every index smaller than ``K``, the array has been modified in the expected way.
 
 Does our loop invariant has the four good properties of a good loop-invariant? When launching GNATprove on it, we see that ``INIT`` is fulfilled, the invariant’s initialization is proved. So are ``INSIDE`` and ``AFTER``, no potential runtime errors are reported and the assertion following the loop is successfully verified.
-However, we are missing the ``PRESERVE`` property, as GNATprove reports that it was unable to prove that the invariant holds after the first iteration. Investigating this failed proof attempt, we'll see that the problem lies in the fact that GNATprove is unable to verify that at the beginning of the loop iteration: :ada:`A (K) = A_I (K)`. Indeed, *A* is modified in the loop. All that is known after the first iteration is what is stated in the invariant. Unfortunately, nothing is stated in the invariant about values of *A* after the current index. Here, we are missing the loop's frame condition. We should add to the invariant that, for every index *J* bigger than *K*, *A (J)* is still equal to *A_I (J)*.
+However, we are missing the ``PRESERVE`` property, as GNATprove reports that it was unable to prove that the invariant holds after the first iteration. Investigating this failed proof attempt, we'll see that the problem lies in the fact that GNATprove is unable to verify that at the beginning of the loop iteration: :ada:`A (K) = A_I (K)`. Indeed, ``A`` is modified in the loop. All that is known after the first iteration is what is stated in the invariant. Unfortunately, nothing is stated in the invariant about values of ``A`` after the current index. Here, we are missing the loop's frame condition. We should add to the invariant that, for every index ``J`` bigger than ``K``, ``A (J)`` is still equal to ``A_I (J)``.
 
 Alternatively, we could use the :ada:`Loop_Entry` attribute, which is used to refer to values on entry of the loop:
 
@@ -424,7 +424,7 @@ Let's review this code:
         Result : Nat_Array (1 .. Length);
       begin
 
-This is correct as *Get_Model* is used for specification only. Note that calls to *Get_Model* cause copies of the buffer’s content. They can be automatically removed from production code by the compiler.
+This is correct as ``Get_Model`` is used for specification only. Note that calls to ``Get_Model`` cause copies of the buffer’s content. They can be automatically removed from production code by the compiler.
 
 
 Example #2
@@ -457,7 +457,7 @@ Let's review this code:
       function Valid_Model return Boolean is
         (Length = Model.Length and then ...);
 
-This example is not correct. *Model*, which is a ghost variable, cannot influence the return value of the normal function *Valid_Model*. As *Valid_Model* is only used in specifications, it could be marked as ghost.
+This example is not correct. ``Model``, which is a ghost variable, cannot influence the return value of the normal function ``Valid_Model``. As ``Valid_Model`` is only used in specifications, it could be marked as ghost.
 
 
 Example #3
@@ -486,7 +486,7 @@ Let's review this code:
       end if;
     end Pop_When_Available;
 
-This example is correct. *Model*, though it is marked as :ada:`Ghost`, can be referenced from the body of the non-ghost procedure *Pop_When_Available* as long as it is only used in ghost statements.
+This example is correct. ``Model``, though it is marked as :ada:`Ghost`, can be referenced from the body of the non-ghost procedure ``Pop_When_Available`` as long as it is only used in ghost statements.
 
 
 Example #4
@@ -519,7 +519,7 @@ Let's review this code:
       end if;
     end Pop_When_Available;
 
-This example is not correct. The test on *Model* is not allowed even though it is only used to update its own value. Indeed, to simplify removal of ghost code by the compiler, the only statements considered as ghost in normal code are assignments to ghost variables and ghost procedure calls.
+This example is not correct. The test on ``Model`` is not allowed even though it is only used to update its own value. Indeed, to simplify removal of ghost code by the compiler, the only statements considered as ghost in normal code are assignments to ghost variables and ghost procedure calls.
 
 
 Example #5
@@ -550,7 +550,7 @@ Let's review this code:
       end if;
     end Pop_When_Available;
 
-Everything is fine here. *Model* is only accessed inside *Update_Model* which is itself a ghost procedure. Moreover, we don’t need to add any contract to *Update_Model*. Indeed, as it is a local procedure, it will be inlined by GNATprove.
+Everything is fine here. ``Model`` is only accessed inside ``Update_Model`` which is itself a ghost procedure. Moreover, we don’t need to add any contract to ``Update_Model``. Indeed, as it is a local procedure, it will be inlined by GNATprove.
 
 
 Example #6
@@ -578,7 +578,7 @@ Let's review this code:
       return R;
     end Max_Array;
 
-This program is correct. Unfortunately, GNATprove will fail to verify that *J* stays in the index range of *B*. Indeed, when checking the body of the loop, GNATprove forgets everything about the current value of *J* as it will have been modified by previous iterations of the loop. To get more precise results, we need to provide a loop invariant.
+This program is correct. Unfortunately, GNATprove will fail to verify that ``J`` stays in the index range of ``B``. Indeed, when checking the body of the loop, GNATprove forgets everything about the current value of ``J`` as it will have been modified by previous iterations of the loop. To get more precise results, we need to provide a loop invariant.
 
 
 Example #7
@@ -607,7 +607,7 @@ Let's review this code:
       return R;
     end Max_Array;
 
-This example is correct. The loop invariant now allows verifying that no runtime error can occur in the loop’s body. Unfortunately, GNATprove will fail to verify that the invariant stays valid after the first iteration of the loop. Indeed, knowing that *J* is in *B*’Range in a given iteration is not enough to show that it will remain so in the next iteration. We need a more precise invariant, linking *J* to the value of the loop index *I*, like :ada:`J = I – A’First + B’First`.
+This example is correct. The loop invariant now allows verifying that no runtime error can occur in the loop’s body. Unfortunately, GNATprove will fail to verify that the invariant stays valid after the first iteration of the loop. Indeed, knowing that ``J`` is in ``B``’Range in a given iteration is not enough to show that it will remain so in the next iteration. We need a more precise invariant, linking ``J`` to the value of the loop index ``I``, like :ada:`J = I – A’First + B’First`.
 
 
 Example #8
@@ -638,7 +638,7 @@ Let's review this code:
       return R;
     end Max_Array;
 
-This example is not correct. The program itself is correct but the invariant is not, as can be checked by executing the function *Max_Array* with assertions enabled. Indeed, at each loop iteration, *R* contains the maximum of *A* and *B* only until :ada:`I – 1` as the *I*th index was not handled yet.
+This example is not correct. The program itself is correct but the invariant is not, as can be checked by executing the function ``Max_Array`` with assertions enabled. Indeed, at each loop iteration, ``R`` contains the maximum of ``A`` and ``B`` only until :ada:`I – 1` as the ``I``th index was not handled yet.
 
 
 Example #9
@@ -666,7 +666,7 @@ Let's review this code:
       end loop;
     end Max_Array;
 
-The program is correct. GNATprove can verify that the loop invariant stays valid after the first iteration thanks to the provided frame condition: it knows that the values stored in *A* after *I* were preserved in the previous iterations.
+The program is correct. GNATprove can verify that the loop invariant stays valid after the first iteration thanks to the provided frame condition: it knows that the values stored in ``A`` after ``I`` were preserved in the previous iterations.
 
 
 Example #10
@@ -692,4 +692,4 @@ Let's review this code:
       end loop;
     end Max_Array;
 
-The program is correct. GNATprove can verify that the loop invariant stays valid after the first iteration thanks to its generation of the frame condition: it knows that the values stored in *A* after *I* were preserved in the previous iterations.
+The program is correct. GNATprove can verify that the loop invariant stays valid after the first iteration thanks to its generation of the frame condition: it knows that the values stored in ``A`` after ``I`` were preserved in the previous iterations.

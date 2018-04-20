@@ -42,7 +42,7 @@ The tool for formal verification of the SPARK 2014 language is called GNATprove.
 A trivial example
 ---------------------------------------------------------------------
 
-We will now look at a simple example of Ada 2012 subprogram that has also used SPARK 2014 aspects to specify a verifiable subprogram contract. The subprogram called *Increment* adds 1 to the value of its parameter *X*:
+We will now look at a simple example of Ada 2012 subprogram that has also used SPARK 2014 aspects to specify a verifiable subprogram contract. The subprogram called ``Increment`` adds 1 to the value of its parameter ``X``:
 
 .. code:: ada
 
@@ -66,19 +66,19 @@ We will now look at a simple example of Ada 2012 subprogram that has also used S
 
 Several properties can be specified on this subprogram using the shown contracts:
 
-- The SPARK 2014 Global aspect specifies that *Increment* does not read and does not write any global variable.
+- The SPARK 2014 Global aspect specifies that ``Increment`` does not read and does not write any global variable.
 
-- The SPARK 2014 Depend aspect is especially interesting for the security of this subprogram, as it specifies that the value of the parameter *X* after the call only depends on the value of *X* before the call.
+- The SPARK 2014 Depend aspect is especially interesting for the security of this subprogram, as it specifies that the value of the parameter ``X`` after the call only depends on the value of ``X`` before the call.
 
 - Functional properties of Increment are specified using the :ada:`Pre` and :ada:`Post` aspects of Ada 2012.
 
-   - Increment can only be called if the value of *X* before the call is smaller that :ada:`Integer’Last`.
+   - Increment can only be called if the value of ``X`` before the call is smaller that :ada:`Integer’Last`.
 
       - It is necessary to ensure that the addition operation performed in the subprogram body will also not overflow.
 
-   - Finally, we specify that *Increment* does indeed perform an increment of *X*, that is, the value of *X* after a call is one more than its value before the call.
+   - Finally, we specify that ``Increment`` does indeed perform an increment of ``X``, that is, the value of ``X`` after a call is one more than its value before the call.
 
-The SPARK 2014 verification tools can verify all of these contracts. It additionally makes sure that no error may be raised at runtime when executing *Increment*’s body.
+The SPARK 2014 verification tools can verify all of these contracts. It additionally makes sure that no error may be raised at runtime when executing ``Increment``’s body.
 
 
 The Programming Language
@@ -95,7 +95,7 @@ Limitations
 No side-effects in expressions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The SPARK language does not support side-effects in expressions, that is, evaluating a SPARK expression cannot update any object. This limitation is necessary to avoid unpredictable behavior depending on order of evaluation, parameter passing mechanism, or compiler optimizations. The expression below for *G* is non-deterministic due to the order in which the two calls to F are evaluated, and is therefore not legal SPARK 2014.
+The SPARK language does not support side-effects in expressions, that is, evaluating a SPARK expression cannot update any object. This limitation is necessary to avoid unpredictable behavior depending on order of evaluation, parameter passing mechanism, or compiler optimizations. The expression below for ``G`` is non-deterministic due to the order in which the two calls to F are evaluated, and is therefore not legal SPARK 2014.
 
 .. code:: ada
 
@@ -106,7 +106,7 @@ The SPARK language does not support side-effects in expressions, that is, evalua
    G := F (G) + F (G); --  ??
 
 
-To aid the static verification of expressions and because function calls are themselves expressions, they must also be free of side effects. Potential side effects of a function include updates of parameters and global variables. As a consequence, SPARK 2014 forbids subprograms that are functions with :ada:`out` or :ada:`in out` parameters, like the function *F*, as well as functions updating a global variable.
+To aid the static verification of expressions and because function calls are themselves expressions, they must also be free of side effects. Potential side effects of a function include updates of parameters and global variables. As a consequence, SPARK 2014 forbids subprograms that are functions with :ada:`out` or :ada:`in out` parameters, like the function ``F``, as well as functions updating a global variable.
 
 .. code:: ada
 
@@ -122,7 +122,7 @@ In most cases, these functions can easily be replaced by procedures.
 No side-effects in expressions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When it has access to their body, the SPARK tool verifies which are functions are indeed free from side effects. Here for example, the two functions *Incr* and *Incr_And_Log* have the same signature.
+When it has access to their body, the SPARK tool verifies which are functions are indeed free from side effects. Here for example, the two functions ``Incr`` and ``Incr_And_Log`` have the same signature.
 
 .. code:: ada
 
@@ -130,7 +130,7 @@ When it has access to their body, the SPARK tool verifies which are functions ar
 
    function Incr_And_Log (X : Integer) return Integer;  -- OK?
 
-However, *Incr* is valid SPARK while *Incr_And_Log* is not as it attempts to update the global variable *Call_Count*.
+However, ``Incr`` is valid SPARK while ``Incr_And_Log`` is not as it attempts to update the global variable ``Call_Count``.
 
 .. code:: ada
 
@@ -173,7 +173,7 @@ What is more, most of the time, possibility of aliasing was not even taken into 
       Source := 0;
    end Move_To_Total;
 
-The example subprogram *Move_To_Total* shown here increases the global variable *Total* of the value of its input parameter *Source*. It then resets *Source* to 0. Here obviously, the programmer has not taken into account the possibility of an aliasing between *Total* and *Source*. This is common practice. This subprogram is valid SPARK, and, for its verification, the SPARK 2014 tools assume, like the programmer, non-aliasing between *Total* and *Source*. To ensure that this assumption is correct, the tool will then check for non-aliasing on every call to *Move_To_Total*.
+The example subprogram ``Move_To_Total`` shown here increases the global variable ``Total`` of the value of its input parameter ``Source``. It then resets ``Source`` to 0. Here obviously, the programmer has not taken into account the possibility of an aliasing between ``Total`` and ``Source``. This is common practice. This subprogram is valid SPARK, and, for its verification, the SPARK 2014 tools assume, like the programmer, non-aliasing between ``Total`` and ``Source``. To ensure that this assumption is correct, the tool will then check for non-aliasing on every call to ``Move_To_Total``.
 
 .. code:: ada
 
@@ -209,7 +209,7 @@ Here is a common case of use of the :ada:`SPARK_Mode` aspect.
       -- be full Ada
    end P;
 
-The package *P* only defines entities whose specifications are in the SPARK subset. However, it uses full Ada features in its body which, therefore, should not be analyzed and have the  :ada:`SPARK_Mode` aspect set to `Off`.
+The package ``P`` only defines entities whose specifications are in the SPARK subset. However, it uses full Ada features in its body which, therefore, should not be analyzed and have the  :ada:`SPARK_Mode` aspect set to `Off`.
 
 :ada:`SPARK_Mode` can be specified in a fine-grained manner on a per-unit basis. More precisely, a package has four different parts: the visible and private parts of its specification, as well as the declarative and statement part of its body. On each of these parts, :ada:`SPARK_Mode` can be specified to be either `On` or `Off`. In the same way, a subprogram has two parts: its specification and its body.
 
@@ -222,7 +222,7 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-Here is a package defining a private *Stack* type containing elements of type *Element* and along with some subprograms providing the usual functionalities over stacks. It is marked to be in the SPARK subset.
+Here is a package defining a private ``Stack`` type containing elements of type ``Element`` and along with some subprograms providing the usual functionalities over stacks. It is marked to be in the SPARK subset.
 
 .. code:: ada
 
@@ -240,13 +240,13 @@ Here is a package defining a private *Stack* type containing elements of type *E
       --  ...
    end Stack_Package;
 
-Side effects in expressions are not allowed in SPARK. Therefore, *Pop* is not allowed to modify its parameter *S*.
+Side effects in expressions are not allowed in SPARK. Therefore, ``Pop`` is not allowed to modify its parameter ``S``.
 
 
 Example #2
 ~~~~~~~~~~
 
-Here we are interested in a package body providing a single instance stack. *Content* and *Top* are the global variables used to register the stack’s state. Once again, this package is identified to be in the SPARK subset.
+Here we are interested in a package body providing a single instance stack. ``Content`` and ``Top`` are the global variables used to register the stack’s state. Once again, this package is identified to be in the SPARK subset.
 
 .. code:: ada
 
@@ -268,13 +268,13 @@ Here we are interested in a package body providing a single instance stack. *Con
 
    end Global_Stack;
 
-Like previously, functions should be free from side effects. Here, *Pop* updates the global variable *Top*, which is not allowed in SPARK.
+Like previously, functions should be free from side effects. Here, ``Pop`` updates the global variable ``Top``, which is not allowed in SPARK.
 
 
 Example #3
 ~~~~~~~~~~
 
-We now consider two procedures *Permute* and *Swap*. *Permute* applies a circular permutation to the value of its three parameters. *Swap* then uses *Permute* to swap the value of *X* and *Y*.
+We now consider two procedures ``Permute`` and ``Swap``. ``Permute`` applies a circular permutation to the value of its three parameters. ``Swap`` then uses ``Permute`` to swap the value of ``X`` and ``Y``.
 
 .. code:: ada
 
@@ -295,13 +295,13 @@ We now consider two procedures *Permute* and *Swap*. *Permute* applies a circula
       end Swap;
    end P;
 
-Here, in the call to *Permute*, actual values for parameters *Y* and *Z* are aliased, which is not allowed in SPARK. On this example, we see the reason why aliasing is not allowed in SPARK. Indeed, since *Y* and *Z* are `Positive`, they are passed by copy, and the result of the call to *Permute* therefore depends on the order in which they are copied back after the call.
+Here, in the call to ``Permute``, actual values for parameters ``Y`` and ``Z`` are aliased, which is not allowed in SPARK. On this example, we see the reason why aliasing is not allowed in SPARK. Indeed, since ``Y`` and ``Z`` are :ada:`Positive`, they are passed by copy, and the result of the call to ``Permute`` therefore depends on the order in which they are copied back after the call.
 
 
 Example #4
 ~~~~~~~~~~
 
-Here, the *Swap* procedure is used to swap the value of the two record components of *R*.
+Here, the ``Swap`` procedure is used to swap the value of the two record components of ``R``.
 
 .. code:: ada
 
@@ -323,13 +323,13 @@ Here, the *Swap* procedure is used to swap the value of the two record component
       --  ...
    end P;
 
-This code is correct. The call to *Swap* is safe, as two different components of the same record object cannot refer to the same object.
+This code is correct. The call to ``Swap`` is safe, as two different components of the same record object cannot refer to the same object.
 
 
 Example #5
 ~~~~~~~~~~
 
-Here is a slight modification of the previous example using an array instead of a record. *Swap_Indexes* uses *Swap* on values stored in the array *A*.
+Here is a slight modification of the previous example using an array instead of a record. ``Swap_Indexes`` uses ``Swap`` on values stored in the array ``A``.
 
 .. code:: ada
 
@@ -348,13 +348,13 @@ Here is a slight modification of the previous example using an array instead of 
       --  ...
    end P;
 
-This code is not valid. Unlike the previous example, we have no way here to know that the two elements *A (I)* and *A (J)* really are distinct when we call *Swap*.
+This code is not valid. Unlike the previous example, we have no way here to know that the two elements ``A (I)`` and ``A (J)`` really are distinct when we call ``Swap``.
 
 
 Example #6
 ~~~~~~~~~~
 
-Here is a package declaring a type *Dictionary*, which is an array containing a word per letter. The procedure *Store* allows to insert a word at the correct index in a dictionary.
+Here is a package declaring a type ``Dictionary``, which is an array containing a word per letter. The procedure ``Store`` allows to insert a word at the correct index in a dictionary.
 
 .. code:: ada
 
@@ -384,7 +384,7 @@ This code is not correct, as access types are not part of the SPARK subset. In t
 Example #7
 ~~~~~~~~~~
 
-Here is a modified version of the previous example. It has been adapted to hide the access type inside the private part of *P*.
+Here is a modified version of the previous example. It has been adapted to hide the access type inside the private part of ``P``.
 
 .. code:: ada
 
@@ -438,13 +438,13 @@ Now let us consider P’s body, with the definition of Store, again.
       end Store;
    end P;
 
-Though the body of *Store* really uses no construct that are out of the SPARK subset, it is not possible to set :ada:`SPARK_Mode` to `On` on *P*’s body. Indeed, even if we don’t use it, we have the visibility here on *P*’s private part which is in full Ada.
+Though the body of ``Store`` really uses no construct that are out of the SPARK subset, it is not possible to set :ada:`SPARK_Mode` to ``On`` on ``P``’s body. Indeed, even if we don’t use it, we have the visibility here on ``P``’s private part which is in full Ada.
 
 
 Example #9
 ~~~~~~~~~~
 
-Here, we have moved the declaration and the body of the procedure *Store* to another package named *Q*.
+Here, we have moved the declaration and the body of the procedure ``Store`` to another package named ``Q``.
 
 .. code:: ada
 
@@ -477,7 +477,7 @@ Here everything is fine. We have managed to retain the use of the access type wh
 Example #10
 ~~~~~~~~~~~
 
-Here, we have two functions which are searching for 0 inside an array *A*. The first one raises an exception if 0 is not found in *A* while the other simply returns 0 in that case.
+Here, we have two functions which are searching for 0 inside an array ``A``. The first one raises an exception if 0 is not found in ``A`` while the other simply returns 0 in that case.
 
 .. code:: ada
 
@@ -504,4 +504,4 @@ Here, we have two functions which are searching for 0 inside an array *A*. The f
       end Search_Zero_N;
    end P;
 
-This code is perfectly correct. Remark that GNATprove will try to demonstrate that *Not_Found* will never be raised in *Search_Zero_P*. Looking at *Search_Zero_N*, it is likely that such a property is not true, which means that the user will need to verify that *Not_Found* will only be raised when appropriate by her own means.
+This code is perfectly correct. Remark that GNATprove will try to demonstrate that ``Not_Found`` will never be raised in ``Search_Zero_P``. Looking at ``Search_Zero_N``, it is likely that such a property is not true, which means that the user will need to verify that ``Not_Found`` will only be raised when appropriate by her own means.
