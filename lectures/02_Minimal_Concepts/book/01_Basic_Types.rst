@@ -421,7 +421,7 @@ In this example:
 
    type N is range -2 ** 256 .. 2 ** 256;
 
-the compiler will verify that the requirement we have on the new type cannot be implemented on the target architecture. This type goes from :math:`-2^256` to :math:`2^256`. It is very unlikely that any architecture will support this range of values. So, in all likeness, the compiler will refuse to compile this type because it cannot be represented.
+the compiler will verify that the requirement we have on the new type cannot be implemented on the target architecture. This type goes from :math:`-2^{256}` to :math:`2^{256}`. It is very unlikely that any architecture will support this range of values. So, in all likeness, the compiler will refuse to compile this type because it cannot be represented.
 
 Coding style for variables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

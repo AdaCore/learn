@@ -97,7 +97,9 @@ However, in this case, the semantics are going to be different, since we're not 
 As you can see, we're extracting the value of ``x`` axis of the shape, then we're comparing it to the range. There are two new Ada constructions here:
 
 - the :ada:`not in` operator, which checks if a given value is not in the range
+
    - (as you may imagine, there is a :ada:`in` operator as well, which checks that a value is in the range).
+
 - and a way to denote a range, which is ``number`` (or lower bound), followed by :ada:`..` and then upper bound.
 
 Once we have ``Dx`` and ``Dy``, the movement operation is pretty simple:
