@@ -2796,11 +2796,83 @@ of a function.
        function Convert (Self : SSID) return String;
     end Pkg;
 
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Pkg;         use Pkg;
+
+    procedure Main is
+       S : String := Convert (123_145_299);
+       --            ^ Valid, will choose the proper Convert
+    begin
+       Put_Line (S);
+    end Main;
+
 .. attention::
     This explains why you can have multiple enumeration literals with the same
     name: Return type overloading is allowed on both functions and enumerations
     in Ada. Actually, the ARM says that enumeration literals are treated like
     null-arity functions.
+
+The problem is that, sometimes, there is an ambiguity such that the compiler
+cannot actually resolve the names of an expression. This is where the qualified
+expression becomes useful.
+
+.. code-block:: ada
+
+    package Pkg is
+       type SSID is new Integer;
+
+       function Convert (Self : SSID) return Integer;
+       function Convert (Self : SSID) return String;
+       function Convert (Self : Integer) return String;
+    end Pkg;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Pkg;         use Pkg;
+
+    procedure Main is
+       S : String := Convert (123_145_299);
+       --            ^ Invalid, which convert should we call?
+
+       S2 : String := Convert (SSID'(123_145_299));
+       --                     ^ We specify that the type of the expression is
+       --                       SSID.
+
+       -- We could also have declared a temporary
+
+       I : SSID := 123_145_299;
+
+       S3 : String := Convert (I);
+    begin
+       Put_Line (S);
+    end Main;
+
+Syntactically the target of a qualified expression can be either any expression
+in parentheses, either an aggregate:
+
+.. code-block:: ada
+
+    package Qual_Expr is
+       type Point is record
+          A, B : Integer;
+       end record;
+
+       P : Point := Point'(12, 15);
+
+       A : Integer := Integer'(12);
+    end Qual_Expr;
+
+This illustrates that qualified expressions are a convenient (and sometimes
+necessary) way for the programmer to make the type of an expression explicit,
+for the compiler of course, but also for other programmers.
+
+.. attention::
+    While they look and feel similar, type conversions and qualified
+    expressions are *not* the same.
+
+    Qualified expressions need the type of the target expression that will be
+    resolved to be exactly that specified, whereas type conversions will try to
+    convert the target, issuing a run-time error if the conversion is deemed
+    invalid at run-time.
 
 Access types (pointers)
 -----------------------
