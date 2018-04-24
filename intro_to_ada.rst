@@ -2877,14 +2877,172 @@ for the compiler of course, but also for other programmers.
 Access types (pointers)
 -----------------------
 
-Dereferencing
--------------
+Pointers are a potentially dangerous construct with regards to safety in
+programming languages, which is in opposition with Ada's stated goal.
+
+There are two ways in which Ada does its best to shield programmers from the
+dangers of pointers:
+
+1. The first one, that we have already been studying all along, is to enable
+   the programmer to not use them. Parameter modes, arrays, varying size types,
+   are all constructs which allows the programmer to not use pointers, where he
+   would have used them in C.
+
+2. The second one is by making pointers construct as safe and restricted as
+   possible, by default, allowing escape hatches when the programmer tells the
+   language that he really knows what he is doing.
+
+In this class, we will only teach the very basics of Ada pointers, which are
+called accesses, because there are almost always better ways than to resort to
+the advanced features directly.
+
+If you need the unsafe features, you can learn more about those
+`here <TODO_ACCESS_TYPES_ADVANCED_LINK>__`.
+
+Here is how you declare a simple access type in Ada:
+
+.. code-block:: ada
+    :class: ada-syntax-only
+
+    package Access_Types is
+        --  Declare an access type
+        type Date_Acc is access Date;
+        --                      ^ Type you want to access/point to.
+
+        D : Date_Acc := null;
+        --              ^ Literal for "access to nothing"
+        --  ^ Access to date
+    end Access_Types;
+
+So far we know how to:
+
+- Declare an access type to a specific type
+- Declare an instance of it
+- Give it a value of :ada:`null`
+
+In line with Ada's strong typing philosophy, if you declare a second access
+type to the date type, the two access types will be incompatible with each
+other, and you will need an explicit type conversion to convert from one to the
+other:
+
+.. code-block:: ada
+    :class: ada-syntax-only
+
+    package Access_Types is
+        --  Declare an access type
+        type Date_Acc is access Date;
+        type Date_Acc_2 is access Date;
+
+        D  : Date_Acc := null;
+        D2 : Date_Acc_2 := D;
+        --                 ^ Invalid! Different types
+
+        D3 : Date_Acc_2 := Date_Acc_2 (D);
+        --                 ^ Valid with type conversion
+    end Access_Types;
+
+.. admonition:: In other languages
+
+    In most other languages, pointer types are structurally, not nominally
+    typed, like they are in Ada, which means that two pointer types will be the
+    same as long as they share the same target type and accessibility rules.
+
+    Not so in Ada, which takes some time getting used to. A seemingly simple
+    problem that can cause pain is, if you want to have a canonical access to a
+    type, where to declare it ? A very commonly used pattern is that if you
+    need an access type to a specific type you 'own', you will declare it along
+    with the type:
+
+    .. code-block:: ada
+        :class: ada-syntax-only
+
+        package Access_Types is
+           type Point is record
+              X, Y : Natural;
+           end record;
+
+           type Point_Access is access Point;
+        end Access_Types;
 
 Allocation (by type)
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
-Allocation (by expression)
---------------------------
+Declaring access types is well, but we need a way to give instances of those
+access types a meaningful value! You can allocate a value of an access type
+with the :ada:`new` keyword in Ada.
+
+.. code-block:: ada
+
+    package Access_Types is
+        type Date_Acc is access Date;
+
+        D : Date_Acc := new Date;
+        --              ^ Allocate a new Date record
+    end Access_Types;
+
+If the type you want to allocate needs constraints, you can put them in the
+subtype indication, just like you would do in a variable declaration:
+
+.. code-block:: ada
+
+    package Access_Types is
+       type String_Acc is access String;
+       --                        ^ Access to unconstrained array type
+       Msg : String_Acc;
+       --    ^ Default value is null
+
+       Buffer : String_Acc := new String (1 .. 10);
+       --                                ^ Constraint required
+    end Access_Types;
+
+In some cases, allocating just by specifiying the type is not ideal though, so
+Ada also allows you to allocate by value directly, specifying an expression via
+a qualified expression:
+
+.. code-block:: ada
+
+    package Access_Types is
+       type Date_Acc is access Date;
+       type String_Acc is access String;
+
+       D   : Date_Acc := new Date'(30, November, 2011);
+       Msg : String_Acc := new String'("Hello");
+    end Access_Types;
+
+
+Dereferencing
+~~~~~~~~~~~~~
+
+The last missing piece to be able to use access types is how to use their
+value. For that we need to dereference the pointer. Dereferencing a pointer
+uses the :ada:`.all` syntax in Ada, but is only rarely necessary - in most
+cases, the access wil be implicitly dereferenced for you:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+    package Access_Types is
+       type Date_Acc is access Date;
+
+       D     : Date_Acc := new Date'(30, November, 2011);
+
+       Today : Date := D.all;
+       --              ^ Access dereference
+       J     : Day := D.Day
+       --             ^ Implicit dereference for record and array components
+       --               Equivalent to D.all.day
+    end Access_Types;
+
+Other features
+~~~~~~~~~~~~~~
+
+As you might know if you have used pointers in C or C++, we are still missing
+features that are considered fundamental to pointers, such as:
+
+- Pointers arithmetic (being able to dynamically change what a pointer is
+  pointing to)
+
+-
 
 Mutually recursive types
 ------------------------
