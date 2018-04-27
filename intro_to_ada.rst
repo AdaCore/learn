@@ -5615,7 +5615,7 @@ symbol names from a library. Examples of such tools are ``nm`` for Mac and
 Linux, and ``dumpbin.exe`` for Windows.
 
 C++ classes
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
 
 We'll now focus on binding object-oriented features of C++ into Ada.
 Let's adapt the previous example to make use of classes. This is adapted
@@ -5825,8 +5825,8 @@ Interfaces
 Standard library
 ================
 
- Standard package
------------------
+Standard package
+----------------
 
 Containers
 ----------
@@ -5834,7 +5834,7 @@ Containers
 Dates & Times
 -------------
 
- Strings
+Strings
 --------
 
 Files and streams
