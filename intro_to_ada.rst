@@ -3149,13 +3149,15 @@ compile time. This is a feature that is showcased in the example below:
         Max_Len : constant Natural := Compute_Max_Len;
         --                            ^ Not known at compile time
 
-        type Person is record
-           First_Name : String (1 .. Max_Len);
-           Last_Name  : String (1 .. Max_Len);
+        type Items_Array is array (Positive range <>) of Integer;
+
+        type Growable_Stack is record
+           Items : Items_Array (Positive'First .. Max_Len);
+           Len   : Natural;
         end record;
         --  Person is a definite type, but size is not known at compile time.
 
-        P : Person;
+        G : Growable_Stack;
     end Var_Size_Record;
 
 The consequence of this is that it is completely fine to determine the size of
@@ -3177,12 +3179,14 @@ discriminant:
 .. code-block:: ada
 
     package Var_Size_Record_2 is
-       type Person (Max_Len : Natural) is record
-       --           ^ Discriminant. Cannot be modified once initialized.
-          First_Name : String (1 .. Max_Len);
-          Last_Name  : String (1 .. Max_Len);
-       end record;
-       --  Person is an indefinite type (like an array)
+        type Items_Array is array (Positive range <>) of Integer;
+
+        type Growable_Stack (Max_Len : Natural) is record
+        --                   ^ Discriminant. Cannot be modified once initialized.
+           Items : Items_Array (Positive'First .. Max_Len);
+           Len   : Natural := 0;
+        end record;
+        --  Growable_Stack is an indefinite type (like an array)
     end Var_Size_Record_2;
 
 Discriminants, in their simple forms, are constant: You cannot modify them once
