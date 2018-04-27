@@ -1239,9 +1239,6 @@ but also allows the user to define its own, as in the example below:
        --   ^ Invalid: 'd' is not a valid literal for type My_Char
     end Greet;
 
-
-.. gusthoff: This sounds like an interesting feature in Ada. However, the example above looks a little bit artificial, so the reader might not get an idea where this can be used in the "real world".
-
 New types
 ---------
 
