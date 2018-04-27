@@ -3340,11 +3340,115 @@ Here is how you could write an evaluator for expressions above:
 Privacy
 =======
 
-Private part
-------------
+One of the main principles in modular programming, that has later become one of
+the main principles behind the dominant interpretation of object oriented
+programming, is `encapsulation
+ <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`__.
+
+Encapsulation, briefly, is the concept that the implementer of a piece of
+computer software will distinguish between the public interface and the private
+implementation for his code.
+
+This is not only applicable to software libraries but can happen everywhere
+inside of a project where you want to have some abstraction.
+
+In Ada, the granularity of encapsulation is a bit different from most object
+oriented languages, because privacy is generally specified at the package
+level.
+
+Basic encapsulation
+-------------------
+
+.. code-block:: ada
+    package Encapsulate is
+       procedure Hello;
+
+    private
+
+       procedure Hello2;
+       --  Not visible from external units
+    end Encapsulate;
+
+    with Encapsulate;
+
+    procedure Main is
+    begin
+       Encapsulate.Hello;
+       Encapsulate.Hello2;
+       --  Invalid: Hello2 is not visible
+    end Main;
 
 Abstract data types
 -------------------
+
+With this high level granularity, it might not seem obvious how to hide the
+implementation details of a type. Here is how it is done in Ada:
+
+.. code-block:: ada
+    package Stacks is
+       type Stack is private;
+       --  Declare a private type: You cannot depend on its
+       --  implementation. You can only assign and test for
+       --  equality.
+
+       procedure Push (S : in out Stack; Val : Integer);
+       procedure Pop (S : in out Stack; Val : out Integer);
+    private
+
+       subtype Stack_Index is Natural range 1 .. 10;
+       type Content_Type is array (Stack_Index) of Natural;
+
+       type Stack is record
+          Top : Stack_Index;
+          Content : Content_Type;
+       end record;
+    end Stacks;
+
+In the above example, we define a stack type in the public part, but say that
+the exact representation of that type is private.
+
+Then, in the private part, we define the exact representation of that type. We
+can also declare other types that will be used as helpers for our main public
+type. This is useful since declaring helper types is so common in Ada.
+
+A few words about terminology:
+
+- The Stack type as viewed from the public part is called the partial view of
+  the type. This is what clients have access to.
+
+- The Stack type as viewed from the private part or the body of the package is
+  called the full view of the type. This is what implementers have access to.
+
+From the point of view of the client, only the public part is important, and
+the private part could as well not exist. It makes it very easy to read
+linearly the part of the package that is important for you.
+
+.. code-block:: ada
+    :class: nocheck
+    --  No need to read the private part to use the package
+    package Stacks is
+       type Stack is private;
+
+       procedure Push (S : in out Stack; Val : Integer);
+       procedure Pop (S : in out Stack; Val : out Integer);
+    private
+       ...
+    end Stacks;
+
+Here is how the ``Stacks`` package would be used:
+
+.. code-block:: ada
+    --  Example of use
+    with Stacks; use Stacks;
+
+    procedure Test_Stack is
+       S : Stack;
+       Res : Integer;
+    begin
+       Push (S, 5);
+       Push (S, 7);
+       Pop (S, Res);
+    end Test_Stack;
 
 Limited types
 -------------
