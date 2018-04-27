@@ -1431,6 +1431,9 @@ Records are a way to piece together several instances of other types. Each of
 those instances will be given a name. The pair of a name to an instance of a
 specific type is called a field, or a component.
 
+Record type declaration
+-----------------------
+
 Here is an example of a simple record declaration:
 
 .. code-block:: ada
@@ -1464,6 +1467,9 @@ Record components can also have default values. When declaring an instance of
 the record, fields will be automatically set to this value. The value can be
 any expression that is valid in the scope of definition of the record.
 
+Aggregates
+----------
+
 .. code-block:: ada
     :class: ada-nocheck
 
@@ -1484,6 +1490,9 @@ Values for the components can be specified positionally, as in the first
 example, or by name, as in the second example. A mixture of positional and
 named vamues is possible, but you cannot use a positional association after a
 named one.
+
+Component selection
+-------------------
 
 To access components of a record instance, an operation that is called
 component selection, you use the following syntax:
