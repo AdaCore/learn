@@ -2817,6 +2817,7 @@ cannot actually resolve the names of an expression. This is where the qualified
 expression becomes useful.
 
 .. code-block:: ada
+    :class: ada-expect-compile-error
 
     package Pkg is
        type SSID is new Integer;
