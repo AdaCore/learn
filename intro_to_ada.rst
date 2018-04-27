@@ -3100,6 +3100,25 @@ management <TODO_ACCESS_TYPES_ADVANCED_LINK>__`.
 Mutually recursive types
 ------------------------
 
+It is sometimes needed to implement loops in data structures, for example to
+implement linked lists. This is doable in Ada, by forward declaring a type,
+such as in the example below:
+
+.. code-block:: ada
+
+    package Simple_List is
+       type Node;
+       --  This is an incomplete type declaration, it must be
+       --  completed in the same declarative region.
+
+       type Node_Acc is access Node;
+
+       type Node is record
+          Content    : Natural;
+          Prev, Next : Node_Acc;
+       end record;
+    end Simple_List;
+
 More about records
 ------------------
 
