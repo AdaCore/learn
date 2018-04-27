@@ -5498,8 +5498,8 @@ enough for creating a test application in Ada:
 
     procedure Show_Automatic_C_Struct_Bindings is
 
-       Name    : constant chars_Ptr := New_string ("John Doe");
-       Address : constant chars_Ptr := New_string ("Small Town");
+       Name    : constant chars_ptr := New_String ("John Doe");
+       Address : constant chars_ptr := New_String ("Small Town");
 
        T : System.Address := test_create;
 
@@ -5579,8 +5579,8 @@ This would be the corresponding Ada application:
 
     procedure Show_Adapted_C_Struct_Bindings is
 
-       Name    : constant chars_Ptr := New_string ("John Doe");
-       Address : constant chars_Ptr := New_string ("Small Town");
+       Name    : constant chars_ptr := New_String ("John Doe");
+       Address : constant chars_ptr := New_String ("Small Town");
 
        T : Test := Create;
 
@@ -5816,7 +5816,7 @@ The Ada application can then use the bindings:
        V := my_func (TA, 3);
        Put_Line ("Result is " & int'Image (V));
 
-       Put_Line ("Function was called " & int'Image (get_cnt(TA)) & " times");
+       Put_Line ("Function was called " & int'Image (get_cnt (TA)) & " times");
 
     end Show_Cpp_Class;
 
@@ -5890,9 +5890,9 @@ And this is the adapted Ada application:
        TA : access Test := T'Access;
 
     begin
-       V := TA.my_func(1);
-       V := TA.my_func(2);
-       V := TA.my_func(3);
+       V := TA.my_func (1);
+       V := TA.my_func (2);
+       V := TA.my_func (3);
        Put_Line ("Result is " & int'Image (V));
 
        Put_Line ("Function was called " & int'Image (TA.get_cnt) & " times");
