@@ -12,9 +12,6 @@ who already have some experience with programming. It will go over the
 important concepts of Ada in the order that made the most sense writing
 it.
 
-Introduction
-============
-
 History
 -------
 
