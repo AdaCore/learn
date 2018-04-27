@@ -1563,7 +1563,7 @@ bounds are inclusive.
 
 This feature is pretty unique to Ada, and has interesting repercussions: You
 can use any discrete type to index an array, including `Enum types
-<TODOLINKENUMTYPES>`. We will soon see what that means.
+<TODOLINKENUMTYPES>`__. We will soon see what that means.
 
 The second thing that we might notice is that querying an element of the array
 at a given syntax uses the same syntax as the subprogram calls syntax, that is
