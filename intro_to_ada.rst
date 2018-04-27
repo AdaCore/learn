@@ -3084,12 +3084,18 @@ Other features
 ~~~~~~~~~~~~~~
 
 As you might know if you have used pointers in C or C++, we are still missing
-features that are considered fundamental to pointers, such as:
+features that are considered fundamental to the use of pointers, such as:
 
 - Pointers arithmetic (being able to dynamically change what a pointer is
   pointing to)
 
--
+- Manual deallocation - what is called ``free`` or ``delete`` in C. This is
+  considered an unsafe operation. It means that to stay into the realm of safe
+  Ada, you need to never deallocate manually.
+
+Those features exist in Ada, but are hidden behind specific standard library
+APIs. You can read more about those in the `advanced course on memory
+management <TODO_ACCESS_TYPES_ADVANCED_LINK>__`.
 
 Mutually recursive types
 ------------------------
