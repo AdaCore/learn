@@ -3198,6 +3198,7 @@ not to change the size of the object, a type with a discriminant will be
 indefinite if the discriminant is not specified:
 
 .. code-block:: ada
+    :class: ada-expect-compile-error
 
     package Test_Discriminants is
        type Point (X, Y : Natural) is record
@@ -3214,38 +3215,113 @@ indefinite if the discriminant is not specified:
 
     end Test_Discriminants;
 
-.. note::
-    As you can see above,
+This also means that, in the example above, you cannot declare an array of
+points as Point is defined above, because the size of a Point is not known.
 
+In most other regards, discriminants behave like regular fields: You have to
+specify their values in aggregates, as seen above, and you can access their
+values via the dot-notation.
+
+.. code-block:: ada
+    :class: ada-run
+
+    with Var_Size_Record_2; use Var_Size_Record_2;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       procedure Print_Stack (G : Growable_Stack) is
+       begin
+          Put ("<Stack, items: [");
+          for I in G.Items'Range loop
+             exit when I > G.Len;
+             Put (" " & Integer'Image (G.Items (I)));
+          end loop;
+          Put_Line ("]>");
+       end Print_Stack;
+
+       S : Growable_Stack := (Max_Len => 128, Items => (1, 2, 3, 4, others => <>), Len => 4);
+    begin
+       Print_Stack (S);
+    end Main;
+
+.. note:
+    In the examples above, we used a discriminant to determine the size of an
+    array, but it is not limited to that, and could be used, for example, to
+    determine the size of another discriminated record.
 
 Records with variant
 ~~~~~~~~~~~~~~~~~~~~
 
+We introduced the concept of discriminants, and showcased how it enables people
+to have records of varying size, by having components whose size vary depending
+on the discriminant.
+
+However, discriminants can also be used to make the shape of a record vary:
+
 .. code-block:: ada
 
     package Variant_Record is
-       type Node;
+       type Expr;                       --  Forward declaration of Expr
+       type Expr_Access is access Expr; --  Access to a Expr
 
-       type Node_Acc is access Node;
-
-       type Op_Kind is (Bin_Op, Un_Op);
+       type Expr_Kind_Type is (Bin_Op_Plus, Bin_Op_Minus, Num);
        --  A regular enum
 
-       type Node (Op : Op_Kind) is record
+       type Expr (Kind : Expr_Kind_Type) is record
           --      ^ The discriminant is an enum
-          Id : Natural;
-          case Op is
-             when Un_Op =>
-                Operand : Node_Acc;
-             when Bin_Op =>
-                Left, Right : Node_Acc;
-             --  Those fields only exist when Op is Bin_Op
+          case Kind is
+             when Bin_Op_Plus | Bin_Op_Minus =>
+                Left, Right : Expr_Access;
+             when Num =>
+                Val : Integer;
           end case;
           --  Variant part. Only one, at the end of the record
-          --  definition
+          --  definition, but can be nested
        end record;
     end Variant_Record;
 
+The fields that are in a :ada:`when` branch will be only available when the
+value of the discriminant is covered by the branch. In the example above, it
+means that you will only be able to access the fields :ada:`Left` and
+:ada:`Right` when the :ada:`Kind` is :ada:`Bin_Op_Plus` or :ada:`Bin_Op_Minus`.
+
+If you try to access a field that is not valid for your record, a
+:ada:`Constraint_Error` will be raised.
+
+.. code-block:: ada
+    :class: ada-run-expect-failure
+
+    with Variant_Record; use Variant_Record;
+
+    procedure Main is
+       E : Expr := (Num, 12);
+    begin
+       E.Left := new Expr'(Num, 15);
+       --  Illegal, will compile but fail at runtime
+    end Main;
+
+Here is how you could write an evaluator for expressions above:
+
+.. code-block:: ada
+    :class: ada-run
+
+    with Variant_Record; use Variant_Record;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       function Eval_Expr (E : Expr) return Integer is
+         (case E.Kind is
+          when Bin_Op_Plus => Eval_Expr (E.Left.all) + Eval_Expr (E.Right.all),
+          when Bin_Op_Minus => Eval_Expr (E.Left.all) - Eval_Expr (E.Right.all),
+          when Num => E.Val);
+
+       E : Expr := (Bin_Op_Plus,
+                    new Expr'(Bin_Op_Minus,
+                              new Expr'(Num, 12), new Expr'(Num, 15)),
+                    new Expr'(Num, 3));
+    begin
+       Put_Line (Integer'Image (Eval_Expr (E)));
+    end Main;
 
 .. admonition:: In other languages
 
@@ -3257,6 +3333,9 @@ Records with variant
     There are other differences (you can have several discriminants in a
     variant record in Ada). Nevertheless, they allow the same kind of type
     modeling than sum types in functional languages.
+
+    Compared to C/C++ unions, Ada variant records are more powerful in what
+    they allow to express, and also checked at runtime, which makes them safer.
 
 Privacy
 =======
