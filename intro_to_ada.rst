@@ -1289,61 +1289,6 @@ The syntax for enumerations uses the :ada:`range <range>` syntax:
        null;
     end Greet;
 
-One question you may be asking yourself is, why would somebody define a new
-type from an existing one rather than define it from scratch ?
-
-One reason that we can see already is that, for some types, like enums, the
-type definition will be more concise, because you don't need to redefine
-everything.
-
-It is part of a bigger reason: You can inherit things from the type you derive
-from. The representation of the data is one part, but you can also inherit
-behavior.
-
-    WARNING: While we use the term inheritance, it is different enough from
-    inheritance in object oriented languages that you would be better off
-    considering it a different concept entirely.
-
-    Something similar to what is called inheritance in Java/C++ will be seen
-    when we talk about `tagged types <TODOLINKABOUTTAGGEDTYPES>`__.
-
-When you inherit a type, what we call primitive operations are inherited. While
-we will at some point get into the nitty-gritty of what a `primitive operation
-<TODOLINKPRIM>`__ is, for the moment, we will use a very simple definition: A
-primitive is a subprogram attached to a type. Ada knows a primitive because it
-is a subprogram defined in the same scope with the type.
-
-.. amiard: TODO, this example does not work in GNAT for some reason, investigate.
-
-.. code-block:: ada
-    :class: ada-nocheck
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Primitives is
-      type Days is (Monday, Tuesday, Wednesday, Thursday,
-                    Friday, Saturday, Sunday);
-
-       --  Print day is a primitive of the type Days
-      procedure Print_Day (D : Days) is
-      begin
-         Put_Line (Days'Image (D));
-      end Print_Day;
-
-      type Weekend_Days is new Days range Saturday .. Sunday;
-
-      --  A procedure Print_Day is automatically inherited here. It is like
-      --  the procedure
-      --
-      --  procedure Print_Day (D : Weekend_Days);
-      --
-      --  Has been declared
-
-      Sat : Weekend_Days := Saturday;
-    begin
-       Print_Day (Sat);
-    end Primitives;
-
 Subtypes
 --------
 
@@ -5023,8 +4968,7 @@ file:
 
     procedure Show_C_Enum is
 
-       type C_Enum is (A, B, C)
-         with Convention => C;
+       type C_Enum is (A, B, C) with Convention => C;
        -- Use C convention for C_Enum
     begin
        null;
@@ -5943,6 +5887,118 @@ And this is the adapted Ada application:
 
 Object oriented programming
 ===========================
+
+Object oriented programming is a large and blurrily defined concept in
+programming languages that tends to encompass many different things. This is
+due to the fact that many different languages implemented their own vision of
+it, with similarities and differences.
+
+However, there is a model that mostly "won" the battle of what object oriented
+means, if only by sheer popularity. It's the model of the Java programming
+language, which is very similar to the one of the C++ language. Here are some
+defining characteristics:
+
+- Type derivation and extension: Most object oriented languages allow the user
+  to add fields to derived types.
+
+- Subtyping: Objects of a type derived from a base type are, in some instances,
+  substitutable to objects from the base type - in terms of static typing.
+
+- Runtime polymorphism: Calling a subprogram attached to an object type, which
+  is usually called a method, can dispatch at runtime depending on the exact
+  type of the object.
+
+- Encapsulation: Objects can hide some of their data.
+
+- Extensibility: People from the "outside" - of your package, or even your
+  whole library - can derive from your object types, and define their own
+  behaviors.
+
+Ada predates the popularity of object orientation, and since it aimed to be a
+complete language from the start, has many mechanisms and concepts to fullfill
+the above requirements.
+
+- As we saw, encapsulation is not implemented at the type level in Ada, but at
+  the package level.
+
+- Subtyping can be implemented using, well, subtypes, which have a full and
+  permissive static substitability model. The substitution will fail at runtime
+  if the dynamic constraints of the subtype are not fulfilled.
+
+- Runtime polymorphism can be implemented using variant records.
+
+However, this lists leaves out type extension - if you don't consider variant
+records - and extensibility.
+
+In the 1995 revision of Ada, a feature filling the gaps was added, so that
+people can program following the object oriented paradigm in an easier fashion,
+which is called tagged types.
+
+.. note::
+    It is possible to program in Ada without ever creating tagged types. If
+    that's your prefered style of programming, or you have no specific use for
+    tagged types, feel free to not use them, as for every feature of Ada.
+
+    However, they can be the best way to express solutions to certain problems.
+    If that's the case, read on!
+
+Newtypes
+--------
+
+Before going into tagged types, we should go into a topic we have brushed on,
+but not really covered so far:
+
+For every type in Ada, you can create a new type from it. Type derivation is
+built-in into the language.
+
+.. code-block:: ada
+
+    type Point is record
+        X, Y : Integer;
+    end record;
+
+    type New_Point is new Point;
+
+It is useful to enforce strong typing, because the type system will treat the
+two types as incompatible.
+
+But it is not limited to that: You can inherit things from the type you derive
+from. The representation of the data is one part, but you can also inherit
+behavior.
+
+When you inherit a type, what we call primitive operations are inherited. A
+primitive is a subprogram attached to a type. Ada knows a primitive because it
+is a subprogram defined in the same scope with the type.
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Primitives is
+      type Days is (Monday, Tuesday, Wednesday, Thursday,
+                    Friday, Saturday, Sunday);
+
+       --  Print day is a primitive of the type Days
+      procedure Print_Day (D : Days) is
+      begin
+         Put_Line (Days'Image (D));
+      end Print_Day;
+
+      type Weekend_Days is new Days range Saturday .. Sunday;
+
+      --  A procedure Print_Day is automatically inherited here. It is like
+      --  the procedure
+      --
+      --  procedure Print_Day (D : Weekend_Days);
+      --
+      --  Has been declared
+
+      Sat : Weekend_Days := Saturday;
+    begin
+       Print_Day (Sat);
+    end Primitives;
+
 
 Tagged types
 ------------
