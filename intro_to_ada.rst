@@ -2902,7 +2902,19 @@ If you need the unsafe features, you can learn more about those
 Here is how you declare a simple access type in Ada:
 
 .. code-block:: ada
-    :class: ada-syntax-only
+
+    package Dates is
+       type Month_Type is (January, February, March, April, May, June, July,
+                           August, September, October, November, December);
+
+       type Date is record
+          Day   : Integer range 1 .. 31;
+          Month : Month_Type;
+          Year  : Integer;
+       end record;
+    end Dates;
+
+    with Dates; use Dates;
 
     package Access_Types is
         --  Declare an access type
@@ -2926,7 +2938,9 @@ other, and you will need an explicit type conversion to convert from one to the
 other:
 
 .. code-block:: ada
-    :class: ada-syntax-only
+    :class: ada-expect-compile-error
+
+    with Dates; use Dates;
 
     package Access_Types is
         --  Declare an access type
@@ -2973,6 +2987,8 @@ with the :ada:`new` keyword in Ada.
 
 .. code-block:: ada
 
+    with Dates; use Dates;
+
     package Access_Types is
         type Date_Acc is access Date;
 
@@ -2984,6 +3000,8 @@ If the type you want to allocate needs constraints, you can put them in the
 subtype indication, just like you would do in a variable declaration:
 
 .. code-block:: ada
+
+    with Dates; use Dates;
 
     package Access_Types is
        type String_Acc is access String;
@@ -3000,6 +3018,8 @@ Ada also allows you to allocate by value directly, specifying an expression via
 a qualified expression:
 
 .. code-block:: ada
+
+    with Dates; use Dates;
 
     package Access_Types is
        type Date_Acc is access Date;
@@ -3019,7 +3039,8 @@ uses the :ada:`.all` syntax in Ada, but is only rarely necessary - in most
 cases, the access wil be implicitly dereferenced for you:
 
 .. code-block:: ada
-    :class: ada-nocheck
+
+    with Dates; use Dates;
 
     package Access_Types is
        type Date_Acc is access Date;
@@ -3028,9 +3049,9 @@ cases, the access wil be implicitly dereferenced for you:
 
        Today : Date := D.all;
        --              ^ Access dereference
-       J     : Day := D.Day
-       --             ^ Implicit dereference for record and array components
-       --               Equivalent to D.all.day
+       J     : Integer := D.Day;
+       --                 ^ Implicit dereference for record and array components
+       --                 Equivalent to D.all.day
     end Access_Types;
 
 Other features
