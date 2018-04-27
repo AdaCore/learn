@@ -3122,11 +3122,128 @@ such as in the example below:
 More about records
 ------------------
 
+We have studied records, although not in-depth. Let's now detail a few
+peculiarities of record types.
+
+The first one is that the size of a record type does not need to be known at
+compile time. This is a feature that is showcased in the example below:
+
+.. code-block:: ada
+
+    package Runtime_Length is
+       function Compute_Max_Len return Natural;
+    end Runtime_Length;
+
+    with Runtime_Length; use Runtime_Length;
+
+    package Var_Size_Record is
+        Max_Len : constant Natural := Compute_Max_Len;
+        --                            ^ Not known at compile time
+
+        type Person is record
+           First_Name : String (1 .. Max_Len);
+           Last_Name  : String (1 .. Max_Len);
+        end record;
+        --  Person is a definite type, but size is not known at compile time.
+
+        P : Person;
+    end Var_Size_Record;
+
+The consequence of this is that it is completely fine to determine the size of
+your records at run-time, the only enforced constraint being that this size
+cannot change after the creation of the type.
+
 Records with discriminant
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the section above, the size of the first name and last name fields is
+determined once, at run-time, but every ``Person`` instance will be exactly the
+same size. But maybe that's not what you as a user want to do. We saw that for
+arrays in general, it is already possible to do that: An unconstrained array
+type can designate any instance of such an array regardless of the size.
+
+You can do that for records too, using a special kind of field that is called a
+discriminant:
+
+.. code-block:: ada
+
+    package Var_Size_Record_2 is
+       type Person (Max_Len : Natural) is record
+       --           ^ Discriminant. Cannot be modified once initialized.
+          First_Name : String (1 .. Max_Len);
+          Last_Name  : String (1 .. Max_Len);
+       end record;
+       --  Person is an indefinite type (like an array)
+    end Var_Size_Record_2;
+
+Discriminants, in their simple forms, are constant: You cannot modify them once
+you have initialized the object. This intuitively makes sense since they
+determine the size of the object.
+
+Also, they make a type indefinite: Whether or not the discriminant is used or
+not to change the size of the object, a type with a discriminant will be
+indefinite if the discriminant is not specified:
+
+.. code-block:: ada
+
+    package Test_Discriminants is
+       type Point (X, Y : Natural) is record
+          null;
+       end record;
+
+       P : Point;
+       --  ERROR: Point is indefinite, so you need to specify the discriminants
+       --  or give a default value
+
+       P2 : Point (1, 2);
+       P3 : Point := (1, 2);
+       --  Those two declarations are equivalent.
+
+    end Test_Discriminants;
+
+.. note::
+    As you can see above,
+
 
 Records with variant
---------------------
+~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: ada
+
+    package Variant_Record is
+       type Node;
+
+       type Node_Acc is access Node;
+
+       type Op_Kind is (Bin_Op, Un_Op);
+       --  A regular enum
+
+       type Node (Op : Op_Kind) is record
+          --      ^ The discriminant is an enum
+          Id : Natural;
+          case Op is
+             when Un_Op =>
+                Operand : Node_Acc;
+             when Bin_Op =>
+                Left, Right : Node_Acc;
+             --  Those fields only exist when Op is Bin_Op
+          end case;
+          --  Variant part. Only one, at the end of the record
+          --  definition
+       end record;
+    end Variant_Record;
+
+
+.. admonition:: In other languages
+
+    Ada's variant records are very similar to Sum types in functional languages
+    such as OCaml or Haskell. The big difference is that the discriminant is a
+    separate field in Ada, and that you can have several, whereas the 'tag' of
+    the sum type is kind of built-in, and only accessible with pattern matching.
+
+    There are other differences (you can have several discriminants in a
+    variant record in Ada). Nevertheless, they allow the same kind of type
+    modeling than sum types in functional languages.
 
 Privacy
 =======
