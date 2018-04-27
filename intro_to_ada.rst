@@ -653,7 +653,7 @@ specific boundaries, like assignment:
        --  specific boundaries.
     begin
        for I in 1 .. M loop
-          Put_Line("Hello, World!");
+          Put_Line ("Hello, World!");
        end loop;
     end Main;
 
@@ -688,7 +688,7 @@ this works for any modular type:
        --  No overflow here, M = 20 + 15 mod 32 = 3
     begin
        for I in 1 .. M loop
-          Put_Line("Hello, World!");
+          Put_Line ("Hello, World!");
        end loop;
     end Main;
 
