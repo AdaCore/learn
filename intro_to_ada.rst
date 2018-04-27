@@ -2164,18 +2164,16 @@ in the package body.
 
 .. code-block:: ada
 
-    --  week.ads
-    package Week is
+    package Week_2 is
 
        type Days is (Monday, Tuesday, Wednesday,
           Thursday, Friday, Saturday, Sunday);
 
        function Get_Workload (Day : Days) return Natural;
 
-    end Week;
+    end Week_2;
 
-    --  week.adb
-    package body Week is
+    package body Week_2 is
 
        --  The body contains additional declarations, not visible from the
        --  spec, or anywhere outside of the body
@@ -2187,7 +2185,7 @@ in the package body.
        begin
           return Workload (Day);
        end;
-    end Week;
+    end Week_2;
 
 Here we can see that the body of the ``Get_Workload`` function has to be
 declared in the body. Coincidentally, introducing a body allows us to put the
@@ -2213,14 +2211,14 @@ procedures don't.
 
 .. code-block:: ada
 
-    package Week is
+    package Week_3 is
        type Days is (Monday, Tuesday, Wednesday,
                      Thursday, Friday, Saturday, Sunday);
 
        function Get_Workload (Day : Days) return Natural;
        --  We declare (but don't define) a function with one
        --  parameter, returning a Natural integer
-    end Week;
+    end Week_3;
 
 As we saw before in the packages section, if you want to declare a subprogram
 declaration to the package declaration. This declaration will not define the
@@ -2234,7 +2232,7 @@ section at all, following the form :ada:`procedure [name]` or
 
 .. code-block:: ada
 
-    package Week is
+    package Week_4 is
        type Days is (Monday, Tuesday, Wednesday,
                      Thursday, Friday, Saturday, Sunday);
 
@@ -2243,7 +2241,7 @@ section at all, following the form :ada:`procedure [name]` or
        --                               ^ We can return any type,
        --                                 even indefinite ones
        --             ^ Default value for parameter
-    end Week;
+    end Week_4;
 
 We learn two interesting things in the example above:
 
@@ -2278,7 +2276,7 @@ package above, we could have the following body:
 
 .. code-block:: ada
 
-    package body Week is
+    package body Week_4 is
        --  Implementation of the Get_Day_Name function
        function Get_Day_Name (Day : Days := Monday) return String is
        begin
@@ -2292,7 +2290,7 @@ package above, we could have the following body:
              when Saturday => "Saturday",
              when Sunday => "Sunday");
        end Get_Day_Name;
-    end Week;
+    end Week_4;
 
 Subprogram calls
 ~~~~~~~~~~~~~~~~
@@ -2303,18 +2301,18 @@ We can then call our subprogram this way:
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
-    with Week;
+    with Week_4;
 
     procedure Show_Days is
     begin
-       Put_Line (Week.Get_Day_Name);
+       Put_Line (Week_4.Get_Day_Name);
        --             ^ Paramless call, value of Day parameter is Monday
-       for Day in Week.Days loop
-          Put_Line (Week.Get_Day_Name (Day));
+       for Day in Week_4.Days loop
+          Put_Line (Week_4.Get_Day_Name (Day));
           --                           ^ Regular param passing
        end loop;
 
-       Put_Line (Week.Get_Day_Name (Day => Week.Friday));
+       Put_Line (Week_4.Get_Day_Name (Day => Week_4.Friday));
        --                           ^ Named param passing
     end Show_Days;
 
@@ -2330,16 +2328,16 @@ perfectly acceptable to name every parameter if it makes the code clearer.
 
 .. code-block:: ada
 
-    package Week is
+    package Week_5 is
        type Days is (Monday, Tuesday, Wednesday,
                      Thursday, Friday, Saturday, Sunday);
 
        type Language is (English, Italian);
 
        function Get_Day_Name (Day : Days; Lang : Language := English) return String;
-    end Week;
+    end Week_5;
 
-    with Week; use Week;
+    with Week_5; use Week_5;
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
@@ -3305,6 +3303,8 @@ Basic encapsulation
 -------------------
 
 .. code-block:: ada
+    :class: ada-expect-compile-error
+
     package Encapsulate is
        procedure Hello;
 
@@ -3330,6 +3330,7 @@ With this high level granularity, it might not seem obvious how to hide the
 implementation details of a type. Here is how it is done in Ada:
 
 .. code-block:: ada
+
     package Stacks is
        type Stack is private;
        --  Declare a private type: You cannot depend on its
@@ -3369,7 +3370,8 @@ the private part could as well not exist. It makes it very easy to read
 linearly the part of the package that is important for you.
 
 .. code-block:: ada
-    :class: nocheck
+    :class: ada-nocheck
+
     --  No need to read the private part to use the package
     package Stacks is
        type Stack is private;
@@ -3383,6 +3385,7 @@ linearly the part of the package that is important for you.
 Here is how the ``Stacks`` package would be used:
 
 .. code-block:: ada
+
     --  Example of use
     with Stacks; use Stacks;
 
@@ -4472,6 +4475,7 @@ delay statements. For example, we may have a call to a computationally
 intensive procedure between the delay statements:
 
 .. code-block:: ada
+    :class: ada-nocheck
 
           while True loop
              delay 1.0;
@@ -5953,11 +5957,13 @@ built-in into the language.
 
 .. code-block:: ada
 
-    type Point is record
-        X, Y : Integer;
-    end record;
+    package Newtypes is
+       type Point is record
+           X, Y : Integer;
+       end record;
 
-    type New_Point is new Point;
+       type New_Point is new Point;
+    end Newtypes;
 
 It is useful to enforce strong typing, because the type system will treat the
 two types as incompatible.

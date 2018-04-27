@@ -38,11 +38,14 @@ import colors as C
 import shutil
 import re
 
+
 def header(strn):
     return C.col("{}\n{}\n".format(strn, '*' * len(strn)), C.Colors.BLUE)
 
+
 def error(loc, strn):
     print "{} {}: {}".format(C.col("ERROR", C.Colors.RED), loc, strn)
+
 
 def get_line(block):
     """
@@ -73,6 +76,8 @@ parser.add_argument('--build-dir', '-B', type=str, default="build",
 parser.add_argument('--verbose', '-v', type=bool, default=False,
                     help='Show more information')
 
+parser.add_argument('--code-block', '-b', type=str, default=0)
+
 args = parser.parse_args()
 
 with open(args.rst_file) as f:
@@ -80,36 +85,52 @@ with open(args.rst_file) as f:
 
 doctree = publish_doctree(content)
 
+
 def is_ada_code_block(node):
     return (node.tagname == 'literal_block'
             and 'code' in node.attributes['classes']
             and 'ada' in node.attributes['classes'])
 
-code_blocks = doctree.traverse(condition=is_ada_code_block)
 
-if os.path.exists(args.build_dir):
+code_blocks = list(enumerate(doctree.traverse(condition=is_ada_code_block)))
+
+# Remove the build dir, but only if the user didn't ask for a specific subset
+# of code_blocks
+if os.path.exists(args.build_dir) and not args.code_block:
     shutil.rmtree(args.build_dir)
 
-os.makedirs(args.build_dir)
+if not os.path.exists(args.build_dir):
+    os.makedirs(args.build_dir)
+
 os.chdir(args.build_dir)
 
-for b in code_blocks:
+
+def run(*run_args):
+    if args.verbose:
+        print "Running \"{}\"".format(" ".join(run_args))
+    try:
+        output = S.check_output(run_args, stderr=S.STDOUT)
+        all_output.append(output)
+    except S.CalledProcessError as e:
+        all_output.append(e.output)
+        raise e
+
+    return output
+
+
+if args.code_block:
+    expr = "code_blocks[{}]".format(args.code_block)
+    code_blocks = eval(expr, globals(), locals())
+    if not isinstance(code_blocks, list):
+        code_blocks = [code_blocks]
+
+for i, b in code_blocks:
     has_error = False
     precise, b_line = get_line(b)
     qualifier = "at" if precise else "around"
-    loc = "{} {}:{}".format(qualifier, args.rst_file, b_line)
+    loc = "{} {}:{} (code block #{})".format(qualifier, args.rst_file, b_line, i)
 
     all_output = []
-
-    def run(*args):
-        try:
-            output = S.check_output(args, stderr=S.STDOUT)
-            all_output.append(output)
-        except S.CalledProcessError as e:
-            all_output.append(e.output)
-            raise e
-
-        return output
 
     def print_error(*args):
         print error(*args)
@@ -144,37 +165,38 @@ for b in code_blocks:
 
     compile_error = False
 
-    if 'ada-run' in b.attributes['classes']:
+    if 'ada-run' in b.attributes['classes'] or 'ada-run-expect-failure' in b.attributes['classes']:
         if len(source_files) == 1:
             main_file = source_files[0]
         else:
             main_file = 'main.adb'
 
         try:
-            run("gnatmake", "-f", main_file)
+            run("gprbuild", "-f", main_file)
         except S.CalledProcessError:
             print_error(loc, "Compiling of example failed")
             has_error = True
 
-        try:
-            run("./{}".format(P.splitext(main_file)[0]))
+        if not has_error:
+            try:
+                run("./{}".format(P.splitext(main_file)[0]))
 
-            if 'ada-run-expect-failure' in b.attributes['classes']:
-                print_error(loc, "Running of example should have failed")
-                has_error = True
+                if 'ada-run-expect-failure' in b.attributes['classes']:
+                    print_error(loc, "Running of example should have failed")
+                    has_error = True
 
-        except S.CalledProcessError:
-            if 'ada-run-expect-failure' in b.attributes['classes']:
-                if args.verbose:
-                    print "Running of example expectedly failed"
-            else:
-                print_error(loc, "Running of example failed")
-                has_error = True
+            except S.CalledProcessError:
+                if 'ada-run-expect-failure' in b.attributes['classes']:
+                    if args.verbose:
+                        print "Running of example expectedly failed"
+                else:
+                    print_error(loc, "Running of example failed")
+                    has_error = True
 
     else:
         for source_file in source_files:
             try:
-                run("gcc", "-c", "-gnatc", source_file)
+                run("gcc", "-c", "-gnatc", "-gnaty", source_file)
             except S.CalledProcessError:
                 if 'ada-expect-compile-error' in b.attributes['classes']:
                     compile_error = True
