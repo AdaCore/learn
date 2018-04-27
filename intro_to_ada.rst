@@ -3128,6 +3128,9 @@ such as in the example below:
 More about records
 ------------------
 
+Dynamically sized record types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 We have studied records, although not in-depth. Let's now detail a few
 peculiarities of record types.
 
