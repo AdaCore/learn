@@ -3581,8 +3581,7 @@ keyword, as illustrated in the following example:
 
 .. code-block:: ada
 
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Generic_Instantiation is
 
@@ -3634,8 +3633,7 @@ This is an example:
 
 .. code-block:: ada
 
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Generic_Package is
 
@@ -3724,8 +3722,7 @@ keyword. In the example below, we declare a formal function
 
 .. code-block:: ada
 
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Formal_Subprogram is
 
@@ -3778,8 +3775,7 @@ A typical example of an ADT is a stack:
 
 .. code-block:: ada
 
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Stack is
 
@@ -3855,8 +3851,7 @@ Let's first look into a simple procedure that swaps variables of the type
 
 .. code-block:: ada
 
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Test_Non_Generic_Swap_Colors is
        type Color is (Black, Red, Green, Blue, White);
@@ -3904,8 +3899,7 @@ This is achieved by the declaration of the formal type ``T``.
 
 .. code-block:: ada
 
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Test_Swap_Colors is
        generic
@@ -3959,8 +3953,7 @@ version of the algorithm that works specifically for the ``Color`` type:
 
 .. code-block:: ada
 
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Test_Non_Generic_Reverse_Colors is
        type Color is (Black, Red, Green, Blue, White);
@@ -4021,8 +4014,7 @@ This is a generic version of the algorithm:
 
 .. code-block:: ada
 
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Test_Reverse_Colors is
        generic
@@ -4105,10 +4097,7 @@ This is a version of the test application that makes use of the generic
 
 .. code-block:: ada
 
-    --% run_file: Test_Reverse_Colors.adb
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Test_Reverse_Colors is
 
@@ -4587,7 +4576,7 @@ This is the package definition:
 
 .. code-block:: ada
 
-    with Ada.Text_IO;   use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     package body Delay_Aux_Pkg is
 
@@ -5047,8 +5036,7 @@ need. For example:
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
+    with Interfaces.C; use Interfaces.C;
 
     procedure Show_C_Struct is
 
@@ -5089,8 +5077,7 @@ In this case, an additional aspect is required: :ada:`Import`. For example:
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
+    with Interfaces.C; use Interfaces.C;
 
     procedure Show_C_Func is
 
@@ -5108,8 +5095,6 @@ In this case, an additional aspect is required: :ada:`Import`. For example:
 This code interfaces with the following declaration in the C header file:
 
 .. code-block:: c
-
-    /*% filename: test.h */
 
     int my_func (int a);
 
@@ -5130,11 +5115,8 @@ Ada code:
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Interfaces.C; use Interfaces.C;
+    with Ada.Text_IO;  use Ada.Text_IO;
 
     procedure Show_C_Func is
 
@@ -5164,9 +5146,7 @@ requires the use of the :ada:`Export` aspect. For example:
 
 .. code-block:: ada
 
-    --% filename: c_api.ads
-    with Interfaces.C;
-    use  Interfaces.C;
+    with Interfaces.C; use Interfaces.C;
 
     package C_API is
 
@@ -5182,7 +5162,6 @@ This is the corresponding implementation:
 
 .. code-block:: ada
 
-    --% filename: c_api.adb
     package body C_API is
 
        function My_Func (a : int) return int is
@@ -5251,11 +5230,8 @@ In the Ada application, we just need to reference the foreign variable:
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Interfaces.C; use Interfaces.C;
+    with Ada.Text_IO;  use Ada.Text_IO;
 
     procedure Show_C_Func is
 
@@ -5299,10 +5275,7 @@ previous example:
 
 .. code-block:: ada
 
-    --% filename: c_api.ads
-
-    with Interfaces.C;
-    use  Interfaces.C;
+    with Interfaces.C; use Interfaces.C;
 
     package C_API is
 
@@ -5408,14 +5381,9 @@ Now, we can simply refer to ``test_h`` package in the Ada application:
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
-
-    with test_h;
-    use  test_h;
+    with Interfaces.C; use Interfaces.C;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with test_h;       use test_h;
 
     procedure Show_C_Func is
        V : int;
@@ -5586,17 +5554,10 @@ enough for creating a test application in Ada:
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
-
-    with Interfaces.C.Strings;
-    use  Interfaces.C.Strings;
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
-
-    with test_h;
-    use  test_h;
+    with Interfaces.C;         use Interfaces.C;
+    with Interfaces.C.Strings; use Interfaces.C.Strings;
+    with Ada.Text_IO;          use Ada.Text_IO;
+    with test_h;               use test_h;
 
     with System;
 
@@ -5667,17 +5628,10 @@ This would be the corresponding Ada application:
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
-
-    with Interfaces.C.Strings;
-    use  Interfaces.C.Strings;
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
-
-    with adapted_test_h;
-    use  adapted_test_h;
+    with Interfaces.C;         use Interfaces.C;
+    with Interfaces.C.Strings; use Interfaces.C.Strings;
+    with Ada.Text_IO;          use  Ada.Text_IO;
+    with adapted_test_h;       use  adapted_test_h;
 
     with System;
 
@@ -5725,10 +5679,7 @@ header file is still basically the same:
 
 .. code-block:: c
 
-    /*% filename: test.hh */
-
     extern int func_cnt;
-
     int my_func (int a);
 
 And this is the corresponding implementation:
@@ -5751,11 +5702,8 @@ In the Ada application, as mentioned before, we need to replace 'C' by
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
+    with Interfaces.C; use Interfaces.C;
+    with Ada.Text_IO;  use Ada.Text_IO;
 
     procedure Show_Cpp_Func is
 
@@ -5897,21 +5845,16 @@ The Ada application can then use the bindings:
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
-
-    with test_hh;
-    use  test_hh;
+    with Interfaces.C; use Interfaces.C;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with test_hh;      use test_hh;
 
     procedure Show_Cpp_Class is
        use Class_Test;
 
        V : int;
 
-       T : aliased Test := New_Test;
+       T  : aliased Test := New_Test;
        TA : access Test := T'Access;
 
     begin
@@ -5976,14 +5919,9 @@ And this is the adapted Ada application:
 
 .. code-block:: ada
 
-    with Interfaces.C;
-    use  Interfaces.C;
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
-
-    with test_hh;
-    use  test_hh;
+    with Interfaces.C; use Interfaces.C;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with test_hh;      use test_hh;
 
     procedure Show_Cpp_Class is
        use Class_Test;
