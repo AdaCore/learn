@@ -6397,8 +6397,8 @@ Vectors
 
 This section presents a general overview on vectors.
 
-Instantiating vectors
-^^^^^^^^^^^^^^^^^^^^^
+Instantiation
+^^^^^^^^^^^^^
 
 The following example shows the instantiation and declaration of a vector
 ``V``:
@@ -6439,8 +6439,8 @@ Also, by setting ``Index_Type`` to ``Natural``, we specify that the
 allowed range includes all natural numbers. We could, instead, use a more
 restrict range if we wanted to.
 
-Initializing vectors
-^^^^^^^^^^^^^^^^^^^^
+Initialization
+^^^^^^^^^^^^^^
 
 In order to initialize a vector, we can use a concatenation of elements.
 This is achieved by using the :ada:`&` operator, as shown in the following
@@ -7165,7 +7165,7 @@ sorted merging operations:
     end Show_Vector_Ops;
 
 Sets
-~~~~~~~
+~~~~
 
 Sets are another class of containers. While vectors allow for duplicated
 elements to be inserted, sets ensure that no duplicated elements exist at
