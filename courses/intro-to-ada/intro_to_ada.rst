@@ -7164,6 +7164,90 @@ sorted merging operations:
 
     end Show_Vector_Ops;
 
+Sets
+~~~~~~~
+
+Sets are another class of containers. While vectors allow for duplicated
+elements to be inserted, sets ensure that no duplicated elements exist at
+any moment.
+
+In the following subsections, we'll look into operations that can be
+performed on sets. However, since many of the operations on vectors are
+similar to the ones used for sets, we'll cover them more quickly here.
+Please refer to the section on vectors for a more detailed discussion.
+
+Initialization and iteration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In order to initialize a set, we can call the ``Insert`` procedure.
+However, we need to make sure that no duplicated element is being
+inserted. Otherwise, we'll get an exception. If we have less control
+about the elements to be inserted (e.g.: when elements are being passed
+as arguments and inserted into a set), we might want to use one of the
+following options
+
+- use a version of ``Insert`` that provides an output Boolean value
+  indicating whether the insertion was successful;
+
+- use the ``Include`` procedure, which silently ignores any attempt to
+  insert a duplicated element.
+
+In order to iterate over a set, we can use a :ada:`for E of S` loop, as
+we did for vectors. This will give us a reference to each element from
+the set.
+
+Let's see an example:
+
+.. code-block:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Containers.Ordered_Sets;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Set_Init is
+
+       package Integer_Sets is new Ada.Containers.Ordered_Sets
+         (Element_Type => Integer);
+
+       use Integer_Sets;
+
+       S : Set;
+       C : Cursor;
+       Ins : Boolean;
+    begin
+       S.Insert (20);
+       S.Insert (10);
+       S.Insert (0);
+       S.Insert (13);
+
+       --  Calling S.Insert(0) now would raise Constraint_Error exception
+       --  because this element is already in the set
+       --  We can call a version of Insert that does not raise an exception,
+       --  but returns a Boolean indicating the status
+
+       S.Insert (0, C, Ins);
+       if not Ins then
+          Put_Line ("Inserting 0 into set was not successful");
+       end if;
+
+       --  We can also call S.Include instead
+       --  If the element is already available, the set remains the same
+       S.Include (0);
+       S.Include (13);
+       S.Include (14);
+
+       Put_Line ("Set has " & Count_Type'Image (S.Length) & " elements");
+
+       --
+       --  Iterate over set using for .. of loop
+       --
+       Put_Line ("Elements:");
+       for E of S loop
+           Put_Line("- " & Integer'Image(E));
+       end loop;
+    end Show_Set_Init;
+
 Dates & Times
 -------------
 
