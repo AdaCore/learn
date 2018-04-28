@@ -6572,3 +6572,51 @@ Many of the examples above can be used for formal indefinite types:
 
 The same examples could also contain discriminants. In this case, :ada:`(<>)`
 is replaced by a list of discriminants, e.g.: :ada:`(D: DT)`.
+
+Appendix B: Containers
+----------------------
+
+The following reference tables contains all containers available in Ada,
+including their versions (standard, bounded, unbounded, indefinite).
+
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Category  | Container                      | Std | Bounded | Unbounded | Indefinite |
++===========+================================+=====+=========+===========+============+
+| Vector    | Vectors                        |  Y  |    Y    |           |     Y      |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| List      | Doubly_Linked_Lists            |  Y  |    Y    |           |     Y      |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Map       | Hashed_Maps                    |  Y  |    Y    |           |     Y      |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Map       | Ordered_Maps                   |  Y  |    Y    |           |     Y      |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Set       | Hashed_Sets                    |  Y  |    Y    |           |     Y      |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Set       | Ordered_Sets                   |  Y  |    Y    |           |     Y      |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Tree      | Multiway_Trees                 |  Y  |    Y    |           |     Y      |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Generic   | Holders                        |     |         |           |     Y      |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Queue     | Synchronized_Queue_Interfaces  |  Y  |         |           |            |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Queue     | Synchronized_Queues            |     |    Y    |     Y     |            |
++-----------+--------------------------------+-----+---------+-----------+------------+
+| Queue     | Priority_Queues                |     |    Y    |     Y     |            |
++-----------+--------------------------------+-----+---------+-----------+------------+
+
+The following table presents the prefixing applied to the container name
+according to its version. As indicated in the table, the standard version
+does not have a prefix associated with it.
+
++-------------+--------------------------------+
+| Version     | Naming prefix                  |
++=============+================================+
+| Std         |                                |
++-------------+--------------------------------+
+| Bounded     | ``Bounded_``                   |
++-------------+--------------------------------+
+| Unbounded   | ``Unbounded_``                 |
++-------------+--------------------------------+
+| Indefinite  | ``Indefinite_``                |
++-------------+--------------------------------+
