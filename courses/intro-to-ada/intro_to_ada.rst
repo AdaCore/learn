@@ -6383,6 +6383,68 @@ calling ``V.First``) and then call ``Next (C)`` to retrieve a cursor for
 the next positions. ``Next (C)`` returns ``No_Element`` when the cursor
 reaches the end of the vector.
 
+Finding elements in a vector
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can find a certain element in a vector by retrieving its index. This
+can be achieved by using ``Find_Index``, which retrieves the index of the
+first element that matches the element we're looking for. Alternatively,
+we could use ``Find`` to retrieve the cursor for that element. For
+example:
+
+.. code-block:: ada
+
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Find_Vector_Element is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       V : Vector := 20 & 10 & 0 & 13;
+       Idx : Extended_Index;
+       C   : Cursor;
+    begin
+       --  Using Find_Index to retrieve index of element with value 10
+       Idx := V.Find_Index (10);
+       Put_Line ("Index of element with value 10 is "
+                 & Extended_Index'Image (Idx));
+
+       --  Using Find to retrieve cursor for element with value 13
+       C   := V.Find (13);
+       Idx := To_Index (C);
+       Put_Line ("Index of element with value 13 is "
+                 & Extended_Index'Image (Idx));
+    end Show_Find_Vector_Element;
+
+As shown in the previous section about iteration, we can directly access
+vector elements by using either an index or cursor. However, before
+doing that, we should check whether the index or cursor is valid, since
+``Find_Index`` or ``Find`` might not have found the element in the vector.
+An exception will be raised if we try to access an element with an invalid
+index or cursor. We do this check by comparing the index to ``No_Index``
+and the cursor to ``No_Element``. For example:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+       --  Modify vector element using index
+       if Idx /= No_Index then
+          V (Idx) := 11;
+       end if;
+
+       --  Modify vector element using cursor
+       if C /= No_Element then
+          V (C) := 14;
+       end if;
+
+
+
 Dates & Times
 -------------
 
