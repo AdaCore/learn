@@ -6519,6 +6519,78 @@ example:
 This example fills the vector with elements in the following sequence:
 (100, 40, 30, 20, 10, 0, 13).
 
+Accessing first and last elements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can access the first and last elements of a vector by using the
+functions ``First_Element`` and ``Last_Element``. For example:
+
+.. code-block:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_First_Last_Element is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       function Img (I : Integer)    return String renames Integer'Image;
+       function Img (I : Count_Type) return String renames Count_Type'Image;
+
+       V : Vector := 20 & 10 & 0 & 13;
+    begin
+       Put_Line ("Vector has " & Img (V.Length) & " elements");
+
+       --  Using V.First_Element to retrieve first element
+       Put_Line ("First element is " & Img (V.First_Element));
+
+       --  Using V.Last_Element to retrieve last element
+       Put_Line ("Last element is " & Img (V.Last_Element));
+    end Show_Vector_First_Last_Element;
+
+Also, we can swap elements by calling the procedure ``Swap``. In addition,
+we can retrieve a reference (cursor) for the first and last elements of
+the vector by calling the functions ``First`` and ``Last``. A cursor
+allows for iterating over a container and processing elements from the
+container.
+
+With these operations, we're able to write some code that swaps the first
+and last elements of a vector:
+
+.. code-block:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_First_Last_Element is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       function Img (I : Integer) return String renames Integer'Image;
+
+       V : Vector := 20 & 10 & 0 & 13;
+    begin
+       --  Using V.First and V.Last to retrieve cursor for first and
+       --  last elements.
+       --  Using V.Swap to swap elements.
+       V.Swap (V.First, V.Last);
+
+       Put_Line ("First element is now " & Img (V.First_Element));
+       Put_Line ("Last element is now " & Img (V.Last_Element));
+    end Show_Vector_First_Last_Element;
+
 Dates & Times
 -------------
 
