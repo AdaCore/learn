@@ -6024,6 +6024,138 @@ Standard package
 Containers
 ----------
 
+Ada includes support for containers (such as vectors and sets) in its
+standard library. This section presents an introduction to the topic. An
+exhaustive overview is out-of-scope for this section. For a list of all
+containers available in Ada, please refer to Appendix B.
+
+Vectors
+~~~~~~~
+
+This section presents a general overview on vectors.
+
+Instantiating vectors
+^^^^^^^^^^^^^^^^^^^^^
+
+The following example shows the instantiation and declaration of a vector
+``V``:
+
+.. code-block:: ada
+
+    with Ada.Containers.Vectors;
+
+    procedure Show_Vector_Inst is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       V : Integer_Vectors.Vector;
+    begin
+       null;
+    end Show_Vector_Inst;
+
+After including the container package (:ada:`Ada.Containers.Vectors` in
+this case), we need to instantiate it. This is due to the fact that
+containers are based on generic packages. Therefore, we cannot simply
+declare a vector as we would declare an array of a specific type, e.g.:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+       A : array (1 .. 10) of Integer;
+
+Instead, we need to first create an instance of the generic package for
+the specific type and declare it using the corresponding type from the
+instantiated package. As indicated above, this instantiation needs to be
+done for any container type from the standard library.
+
+In the instantiation of ``Integer_Vectors``, we define that the vector
+contains elements of ``Integer`` type by specifying the ``Element_Type``.
+Also, by setting ``Index_Type`` to ``Natural``, we specify that the
+allowed range includes all natural numbers. We could, instead, use a more
+restrict range if we wanted to.
+
+Initializing vectors
+^^^^^^^^^^^^^^^^^^^^
+
+In order to initialize a vector, we can use a concatenation of elements.
+This is achieved by using the :ada:`&` operator, as shown in the following
+example:
+
+.. code-block:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_Init is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       V : Vector := 20 & 10 & 0 & 13;
+    begin
+       Put_Line ("Vector has "
+                 & Count_Type'Image (V.Length) & " elements");
+    end Show_Vector_Init;
+
+Note that the example specifies :ada:`use Integer_Vectors`, so that we
+have direct access to the types and operations from the instantiated
+package. Also, the example introduces another operation on the vector:
+``Length``, which retrieves the number of elements in the vector. Note
+that the dot notation is possible because ``Vector`` is a tagged type,
+so that we can simply write ``V.Length`` instead of ``Length(V)``.
+
+Appending and prepending elements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can also add elements to a vector by using the ``Prepend`` and
+``Append`` operations. As the name suggests, these operations add
+elements to the beginning or to the end of the vector, respectively. For
+example:
+
+.. code-block:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_Append is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       V : Vector;
+    begin
+       Put_Line ("Appending some elements to the vector...");
+       V.Append (20);
+       V.Append (10);
+       V.Append (0);
+       V.Append (13);
+       Put_Line ("Finished appending.");
+
+       Put_Line ("Prepending some elements to the vector...");
+       V.Prepend (30);
+       V.Prepend (40);
+       V.Prepend (100);
+       Put_Line ("Finished prepending.");
+
+       Put_Line ("Vector has "
+                 & Count_Type'Image (V.Length) & " elements");
+    end Show_Vector_Append;
+
+This example fills the vector with elements in the following sequence:
+(100, 40, 30, 20, 10, 0, 13).
+
 Dates & Times
 -------------
 
