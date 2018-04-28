@@ -6806,6 +6806,128 @@ and the cursor to ``No_Element``. For example:
           V (C) := 14;
        end if;
 
+Removing elements from a vector
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can remove elements from a vector by using the ``Delete`` procedure
+with either a valid index or cursor. If we combine this with the functions
+``Find_Index`` and ``Find`` from the previous section, we'll be able to
+write a program that searches for a specific element and deletes it:
+
+.. code-block:: ada
+
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Remove_Vector_Element is
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       V : Vector := 20 & 10 & 0 & 13 & 10 & 13;
+       Idx : Extended_Index;
+       C   : Cursor;
+    begin
+       --  Using Find_Index to retrieve index of element with value 10
+       Idx := V.Find_Index (10);
+
+       --  Checking whether index is valid
+       if Idx /= No_Index then
+          --  Removing element using V.Delete
+          V.Delete (Idx);
+       end if;
+
+       --  Using Find to retrieve cursor for element with value 13
+       C := V.Find (13);
+
+       --  Checking whether index is valid
+       if C /= No_Element then
+          --  Removing element using V.Delete
+          V.Delete (C);
+       end if;
+
+    end Show_Remove_Vector_Element;
+
+This approach can be extended to delete all elements that match a certain
+value. We just need to keep searching for the element in a loop until we
+get an invalid index or cursor. For example:
+
+.. code-block:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Remove_Vector_Elements is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       procedure Show_Elements (V : Vector) is
+       begin
+          New_Line;
+          Put_Line ("Vector has " & Count_Type'Image (V.Length) & " elements");
+
+          if not V.Is_Empty then
+             Put_Line ("Vector elements are: ");
+             for E of V loop
+                Put_Line ("- " & Integer'Image (E));
+             end loop;
+          end if;
+       end Show_Elements;
+
+       V : Vector := 20 & 10 & 0 & 13 & 10 & 14 & 13;
+    begin
+       Show_Elements (V);
+
+       --
+       --  Removing elements using an index
+       --
+       declare
+          E : constant Integer := 10;
+          I : Extended_Index;
+       begin
+          New_Line;
+          Put_Line ("Removing all elements with value of "
+                    & Integer'Image (E) & "...");
+          loop
+             I := V.Find_Index (E);
+             exit when I = No_Index;
+             V.Delete (I);
+          end loop;
+       end;
+
+       --
+       --  Removing elements using a cursor
+       --
+       declare
+          E : constant Integer := 13;
+          C : Cursor;
+       begin
+          New_Line;
+          Put_Line ("Removing all elements with value of "
+                    & Integer'Image (E) & "...");
+          loop
+             C := V.Find (E);
+             exit when C = No_Element;
+             V.Delete (C);
+          end loop;
+       end;
+
+       Show_Elements (V);
+    end Show_Remove_Vector_Elements;
+
+In this example, we remove all elements from the vector that have the
+value 10 by retrieving their index. Likewise,  we remove all elements with
+the value 13 by retrieving their cursor.
+
 Dates & Times
 -------------
 
