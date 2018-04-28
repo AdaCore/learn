@@ -6443,8 +6443,6 @@ and the cursor to ``No_Element``. For example:
           V (C) := 14;
        end if;
 
-
-
 Dates & Times
 -------------
 
