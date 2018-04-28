@@ -6591,6 +6591,161 @@ and last elements of a vector:
        Put_Line ("Last element is now " & Img (V.Last_Element));
     end Show_Vector_First_Last_Element;
 
+Iterating over vectors
+^^^^^^^^^^^^^^^^^^^^^^
+
+The easiest way for iterating over a container is by using a
+:ada:`for E of Our_Container` loop. This will give us a reference to the
+element of the current position (``E``). We can then use ``E`` directly.
+For example:
+
+.. code-block:: ada
+
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_Iteration is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       function Img (I : Integer) return String renames Integer'Image;
+
+       V : Vector := 20 & 10 & 0 & 13;
+    begin
+       Put_Line ("Vector elements are: ");
+
+       --
+       --  Using for ... of loop to iterate:
+       --
+       for E of V loop
+          Put_Line ("- " & Img (E));
+       end loop;
+
+    end Show_Vector_Iteration;
+
+This code will display each element from the vector ``V``.
+
+In case of vectors, we can also use indices to access elements. The format
+is similar to a loop over array elements: we use a :ada:`for I in <range>`
+loop in this case. We can access the current element by using it as an
+array index: ``V (I)``. For example:
+
+.. code-block:: ada
+
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_Index_Iteration is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       V : Vector := 20 & 10 & 0 & 13;
+    begin
+       Put_Line ("Vector elements are: ");
+
+       --
+       --  Using indices in a "for I in ..." loop to iterate:
+       --
+       for I in V.First_Index .. V.Last_Index loop
+          --  Displaying current index I
+          Put ("- ["
+               & Extended_Index'Image (I)
+               & "] ");
+
+          Put (Integer'Image (V (I)));
+
+          --  We could also use V.Element (I) function to retrieve the
+          --  element for the current index I
+
+          New_Line;
+       end loop;
+
+    end Show_Vector_Index_Iteration;
+
+Note that, in addition to displaying the vector elements, we're also
+displaying the index ``I`` itself, similar to what we can do with array
+indices. Also, we can access the element by using the short form ``V (I)``
+or the longer form ``V.Element (I)``.
+
+As mentioned in the previous section, we can use cursors to iterate over
+containers. For this, we use the function ``Iterate``, which retrieves
+a cursor for each position of the vector. The corresponding loop has the
+format :ada:`for C in V.Iterate loop`. Similar to the previous example
+using indices, we can again access the current element by using the cursor
+as an array index: ``V (C)``. For example:
+
+.. code-block:: ada
+
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_Cursor_Iteration is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       V : Vector := 20 & 10 & 0 & 13;
+    begin
+       Put_Line ("Vector elements are: ");
+
+       --
+       --  Using cursor in a loop to iterate:
+       --
+       for C in V.Iterate loop
+          --  Using To_Index function in order to retrieve index
+          --  for the cursor position
+          Put ("- ["
+               & Extended_Index'Image (To_Index (C))
+               & "] ");
+
+          Put (Integer'Image (V (C)));
+
+          --  We could use Element (C) to retrieve the vector
+          --  element for the cursor position
+
+          New_Line;
+       end loop;
+
+       --  Alternatively, we could iterate with a while-loop:
+       --
+       --  declare
+       --     C : Cursor := V.First;
+       --  begin
+       --     while C /= No_Element loop
+       --        some processing here...
+       --
+       --        C := Next (C);
+       --     end loop;
+       --  end;
+
+    end Show_Vector_Cursor_Iteration;
+
+Note that, instead of accessing an element in the loop using ``V (C)``,
+we could also have used the longer form ``Element (C)``. Also, we're using
+the function ``To_Index`` to retrieve the corresponding index for the
+current cursor.
+
+Moreover, as indicated above in the comments after the iteration loop, we
+could also use a :ada:`while ... loop` to iterate over the vector. In this
+case, we would start with a cursor for the first element (retrieved by
+calling ``V.First``) and then call ``Next (C)`` to retrieve a cursor for
+the next positions. ``Next (C)`` returns ``No_Element`` when the cursor
+reaches the end of the vector.
+
 Dates & Times
 -------------
 
