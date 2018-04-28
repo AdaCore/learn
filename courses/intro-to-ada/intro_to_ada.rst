@@ -6708,7 +6708,7 @@ is replaced by a list of discriminants, e.g.: :ada:`(D: DT)`.
 Appendix B: Containers
 ----------------------
 
-The following reference tables contains all containers available in Ada,
+The following reference table shows all containers available in Ada,
 including their versions (standard, bounded, unbounded, indefinite).
 
 +-----------+--------------------------------+-----+---------+-----------+------------+
