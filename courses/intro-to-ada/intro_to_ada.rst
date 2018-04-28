@@ -6267,6 +6267,17 @@ For example:
 
 This code will display each element from the vector ``V``.
 
+Note that, in addition to displaying the value of an element, we can also
+modify its value. For example, we could easily write a loop to add one to
+each element of vector ``V``:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+       for E of V loop
+          E := E + 1;
+       end loop;
+
 In case of vectors, we can also use indices to access elements. The format
 is similar to a loop over array elements: we use a :ada:`for I in <range>`
 loop in this case. We can access the current element by using it as an
@@ -6382,6 +6393,22 @@ case, we would start with a cursor for the first element (retrieved by
 calling ``V.First``) and then call ``Next (C)`` to retrieve a cursor for
 the next positions. ``Next (C)`` returns ``No_Element`` when the cursor
 reaches the end of the vector.
+
+As mentioned above, we can directly modify the elements using a reference.
+This is how it looks like when dealing with indices and cursors:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+       --  Modify vector elements using index
+       for I in V.First_Index .. V.Last_Index loop
+          V (I) := V (I) + 1;
+       end loop;
+
+       --  Modify vector elements using cursor
+       for C in V.Iterate loop
+          V (C) := V (C) + 1;
+       end loop;
 
 Finding and changing elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
