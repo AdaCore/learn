@@ -6410,6 +6410,41 @@ This is how it looks like when dealing with indices and cursors:
           V (C) := V (C) + 1;
        end loop;
 
+Another approach to modify elements of a vector is to use a process
+procedure, which takes the individual elements and does some processing on
+them. In this case, we can call ``Update_Element`` and pass a cursor
+and an access to the process procedure. For example:
+
+.. code-block:: ada
+
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_Update is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       procedure Add_One (I : in out Integer) is
+       begin
+          I := I + 1;
+       end Add_One;
+
+       V : Vector := 20 & 10 & 12;
+    begin
+       --
+       --  Using V.Update_Element to process elements
+       --
+       for C in V.Iterate loop
+          V.Update_Element (C, Add_One'Access);
+       end loop;
+
+    end Show_Vector_Update;
+
 Finding and changing elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
