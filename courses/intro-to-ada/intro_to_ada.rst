@@ -6869,7 +6869,7 @@ and the cursor to ``No_Element``. For example:
        end if;
 
 Alternatively, instead of writing ``V (C) := 14``, we could use the longer
-form :ada:``V.Replace_Element (C, 14)``.
+form :ada:`V.Replace_Element (C, 14)`.
 
 Inserting elements
 ^^^^^^^^^^^^^^^^^^
