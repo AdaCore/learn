@@ -7248,8 +7248,8 @@ Let's see an example:
        end loop;
     end Show_Set_Init;
 
-Operations
-^^^^^^^^^^
+Operations on elements
+^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we will briefly look into the following operations on
 sets:
@@ -7323,6 +7323,106 @@ Let's look at an example that makes use of these operations:
 
        Show_Elements (S);
     end Show_Set_Element_Ops;
+
+Other Operations
+^^^^^^^^^^^^^^^^
+
+The previous sections dealt with operations on individual elements of a
+set. We'll now look into typical set operations: union, intersection,
+difference and symmetric difference. In contrast to some vector
+operations we've seen before (e.g. ``Merge``), we can use built-in
+operators, such as :ada:`-`. The following table lists the operations and
+the associated operator:
+
++-----------------------+--------------------------------+
+| Set Operation         | Operator                       |
++=======================+================================+
+| Union                 | :ada:`and`                     |
++-----------------------+--------------------------------+
+| Intersection          | :ada:`or`                      |
++-----------------------+--------------------------------+
+| Difference            | :ada:`-`                       |
++-----------------------+--------------------------------+
+| Symmetric difference  | :ada:`xor`                     |
++-----------------------+--------------------------------+
+
+The following example makes use of these operators:
+
+.. code-block:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Containers.Ordered_Sets;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Set_Ops is
+
+       package Integer_Sets is new Ada.Containers.Ordered_Sets
+         (Element_Type => Integer);
+
+       use Integer_Sets;
+
+       procedure Show_Elements (S : Set) is
+       begin
+          Put_Line ("Elements:");
+          for E of S loop
+             Put_Line ("- " & Integer'Image (E));
+          end loop;
+       end Show_Elements;
+
+       procedure Show_Op (S       : Set;
+                          Op_Name : String) is
+       begin
+          New_Line;
+          Put_Line (Op_Name & "(set #1, set #2) has "
+                    & Count_Type'Image (S.Length) & " elements");
+       end Show_Op;
+
+       S1, S2, S3 : Set;
+    begin
+       S1.Insert (0);
+       S1.Insert (10);
+       S1.Insert (13);
+
+       S2.Insert (0);
+       S2.Insert (10);
+       S2.Insert (14);
+
+       S3.Insert (0);
+       S3.Insert (10);
+
+       New_Line; Put_Line ("---- Set #1 ----");
+       Show_Elements (S1);
+       New_Line; Put_Line ("---- Set #2 ----");
+       Show_Elements (S2);
+       New_Line; Put_Line ("---- Set #3 ----");
+       Show_Elements (S3);
+
+       New_Line;
+       if S3.Is_Subset (S1) then
+          Put_Line ("S3 is a subset of S1");
+       else
+          Put_Line ("S3 is not a subset of S1");
+       end if;
+
+       S3 := S1 and S2;
+       Show_Op (S3, "Union");
+       Show_Elements (S3);
+
+       S3 := S1 or S2;
+       Show_Op (S3, "Intersection");
+       Show_Elements (S3);
+
+       S3 := S1 - S2;
+       Show_Op (S3, "Difference");
+       Show_Elements (S3);
+
+       S3 := S1 xor S2;
+       Show_Op (S3, "Symmetric difference");
+       Show_Elements (S3);
+
+    end Show_Set_Ops;
+
 
 Dates & Times
 -------------
