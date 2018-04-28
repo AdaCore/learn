@@ -7060,7 +7060,109 @@ In this example, we remove all elements from the vector that have the
 value 10 by retrieving their index. Likewise,  we remove all elements with
 the value 13 by retrieving their cursor.
 
+Other Operations
+^^^^^^^^^^^^^^^^
 
+We've already seen some operations on vector elements in the last
+sections. In this section, we'll see operations on the vector as a
+whole. The most prominent example is the concatenation of multiple
+vectors. Also, we'll see operations on a vector as a sequence of elements,
+i.e. considering their relation to each other. Examples are sorting and
+sorted merging operations.
+
+Vector concatenation is done by using the :ada:`&` operator on vectors.
+Let's consider two vectors ``V1`` and ``V2``. We can concatenate them with
+the following statement: :ada:`V := V1 & V2`. ``V`` will contain the
+resulting vector.
+
+The generic package ``Generic_Sorting`` is a child package of
+``Ada.Containers.Vectors``. It contains sorting and merging operations.
+Because it's a generic package, we cannot use it directly, but have to
+instantiate it, too. Also, in order to use these operations in our vector
+of integer values (``Integer_Vectors``), we need to instantiate it
+directly as a child from ``Integer_Vectors``. The next example will make
+this clear.
+
+After the instantiation of ``Generic_Sorting`` is done, we can make all
+operations available with the :ada:`use` statement. We can then proceed to
+call ``Sort`` in order to sort the vector and ``Merge`` in order to merge
+one vector into another one.
+
+The following code example presents an application that operates on three
+vectors (``V1``, ``V2``, ``V3``) and uses the concatenation, sorting and
+sorted merging operations:
+
+.. code-block:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_Ops is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       package Integer_Vectors_Sorting is new Integer_Vectors.Generic_Sorting;
+
+       use Integer_Vectors;
+       use Integer_Vectors_Sorting;
+
+       procedure Show_Elements (V : Vector) is
+       begin
+          New_Line;
+          Put_Line ("Vector has " & Count_Type'Image (V.Length) & " elements");
+
+          if not V.Is_Empty then
+             Put_Line ("Vector elements are: ");
+             for E of V loop
+                Put_Line ("- " & Integer'Image (E));
+             end loop;
+          end if;
+       end Show_Elements;
+
+       V, V1, V2, V3 : Vector;
+    begin
+       V1 := 10 & 12 & 18;
+       V2 := 11 & 13 & 19;
+       V3 := 15 & 19;
+
+       New_Line;
+       Put_Line ("---- V1 ----");
+       Show_Elements (V1);
+
+       New_Line;
+       Put_Line ("---- V2 ----");
+       Show_Elements (V2);
+
+       New_Line;
+       Put_Line ("---- V3 ----");
+       Show_Elements (V3);
+
+       New_Line;
+       Put_Line ("Concatenating V1, V2 and V3 into V:");
+
+       V := V1 & V2 & V3;
+
+       Show_Elements (V);
+
+       New_Line;
+       Put_Line ("Sorting V:");
+
+       Sort (V);
+
+       Show_Elements (V);
+
+       New_Line;
+       Put_Line ("Merging V2 into V1:");
+
+       Merge (V1, V2);
+
+       Show_Elements (V1);
+
+    end Show_Vector_Ops;
 
 Dates & Times
 -------------
