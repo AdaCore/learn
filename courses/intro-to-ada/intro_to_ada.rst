@@ -6746,8 +6746,8 @@ calling ``V.First``) and then call ``Next (C)`` to retrieve a cursor for
 the next positions. ``Next (C)`` returns ``No_Element`` when the cursor
 reaches the end of the vector.
 
-Finding elements
-^^^^^^^^^^^^^^^^
+Finding and changing elements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We can find a certain element in a vector by retrieving its index. This
 can be achieved by using ``Find_Index``, which retrieves the index of the
@@ -6805,6 +6805,9 @@ and the cursor to ``No_Element``. For example:
        if C /= No_Element then
           V (C) := 14;
        end if;
+
+Alternatively, instead of writing ``V (C) := 14``, we could use the longer
+form :ada:``V.Replace_Element (C, 14)``.
 
 Removing elements
 ^^^^^^^^^^^^^^^^^
