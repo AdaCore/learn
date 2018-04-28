@@ -6508,6 +6508,73 @@ and the cursor to ``No_Element``. For example:
 Alternatively, instead of writing ``V (C) := 14``, we could use the longer
 form :ada:``V.Replace_Element (C, 14)``.
 
+Inserting elements
+^^^^^^^^^^^^^^^^^^
+
+In the previous sections, we've seen examples of how to insert elements
+into a vector:
+
+- using the concatenation operator (:ada:`&`) at the vector declaration,
+  or
+
+- calling the ``Prepend`` and ``Append`` procedures.
+
+In some cases, we want to insert an element at a specific position, e.g.
+before a certain element in the vector. We can do this by calling
+``Insert``. For example:
+
+.. code-block:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Containers.Vectors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Vector_Insert is
+
+       package Integer_Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Integer);
+
+       use Integer_Vectors;
+
+       procedure Show_Elements (V : Vector) is
+       begin
+          New_Line;
+          Put_Line ("Vector has "
+                    & Count_Type'Image (V.Length) & " elements");
+
+          if not V.Is_Empty then
+             Put_Line ("Vector elements are: ");
+             for E of V loop
+                Put_Line ("- " & Integer'Image (E));
+             end loop;
+          end if;
+       end Show_Elements;
+
+       V : Vector := 20 & 10 & 12;
+       C : Cursor;
+    begin
+       Show_Elements (V);
+
+       New_Line;
+       Put_Line ("Adding element with value 9 (before 10)...");
+
+       --
+       --  Using V.Insert to insert element into vector
+       --
+       C := V.Find (10);
+       if C /= No_Element then
+          V.Insert (C, 9);
+       end if;
+
+       Show_Elements (V);
+
+    end Show_Vector_Insert;
+
+In this example, we're looking for an element with value 10. If we find
+it, we then insert an element with value 9 before it.
+
 Removing elements
 ^^^^^^^^^^^^^^^^^
 
@@ -6629,6 +6696,8 @@ get an invalid index or cursor. For example:
 In this example, we remove all elements from the vector that have the
 value 10 by retrieving their index. Likewise,  we remove all elements with
 the value 13 by retrieving their cursor.
+
+
 
 Dates & Times
 -------------
