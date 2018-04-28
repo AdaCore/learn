@@ -6228,8 +6228,8 @@ and last elements of a vector:
        Put_Line ("Last element is now " & Img (V.Last_Element));
     end Show_Vector_First_Last_Element;
 
-Iterating over vectors
-^^^^^^^^^^^^^^^^^^^^^^
+Iterating
+^^^^^^^^^
 
 The easiest way for iterating over a container is by using a
 :ada:`for E of Our_Container` loop. This will give us a reference to the
@@ -6383,8 +6383,8 @@ calling ``V.First``) and then call ``Next (C)`` to retrieve a cursor for
 the next positions. ``Next (C)`` returns ``No_Element`` when the cursor
 reaches the end of the vector.
 
-Finding elements in a vector
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Finding elements
+^^^^^^^^^^^^^^^^
 
 We can find a certain element in a vector by retrieving its index. This
 can be achieved by using ``Find_Index``, which retrieves the index of the
@@ -6443,8 +6443,8 @@ and the cursor to ``No_Element``. For example:
           V (C) := 14;
        end if;
 
-Removing elements from a vector
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Removing elements
+^^^^^^^^^^^^^^^^^
 
 We can remove elements from a vector by using the ``Delete`` procedure
 with either a valid index or cursor. If we combine this with the functions
