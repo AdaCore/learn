@@ -7522,6 +7522,68 @@ Let's see an example:
 
     end Show_Hashed_Map;
 
+Ordered maps
+^^^^^^^^^^^^
+
+Ordered maps share many features with hashed maps. The main differences
+are:
+
+- Hash calculation is not needed because elements are inserted and
+  accessed in their order.
+
+- We need to specify a function to determine the order of the elements
+  (``<``).
+
+  - If the type specified in ``Key_Type`` has a standard operator, we
+    might use it.
+
+Let's see an example:
+
+.. code-block:: ada
+
+    with Ada.Containers.Indefinite_Ordered_Maps;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Ordered_Map is
+
+       package Integer_Ordered_Maps is new
+         Ada.Containers.Indefinite_Ordered_Maps
+           (Key_Type        => String,
+            Element_Type    => Integer);
+
+       use Integer_Ordered_Maps;
+
+       M : Map;
+    begin
+       M.Include ("Alice", 24);
+       M.Include ("John",  40);
+       M.Include ("Bob",   28);
+
+       if M.Contains ("Alice") then
+          Put_Line ("Alice's age is "
+                    & Integer'Image (M ("Alice")));
+       end if;
+
+       --  Update Alice's age
+       --  Key must already exist in M
+       M ("Alice") := 25;
+
+       New_Line; Put_Line ("Name & Age:");
+       for C in M.Iterate loop
+          Put_Line (Key (C) & ": " & Integer'Image (M (C)));
+       end loop;
+
+    end Show_Ordered_Map;
+
+There is a great similarity between the example above and the one from the
+previous section. In fact, since maps share many operations, we
+don't need to make extensive adaptations in order to change our example
+to use ordered maps instead of hashed maps. The main difference we notice
+here is when we run the applications: while the output of a hashed map
+is usually unordered, the output of a ordered map is always ordered, as
+its name implies.
+
 Dates & Times
 -------------
 
