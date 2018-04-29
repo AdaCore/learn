@@ -7060,6 +7060,104 @@ The following example makes use of these operators:
 
     end Show_Set_Ops;
 
+Indefinite maps
+~~~~~~~~~~~~~~~
+
+In the previous sections, we dealt with containers for elements of
+definite types. In the source-code examples of the those sections, we've
+mostly seen :ada:`Ìnteger` types. An example of indefinite type is a
+:ada:`String` type. For this kind of types, we need a different kind of
+containers specially designed for indefinite types.
+
+Also, we will be looking into a different class of containers: maps. They
+allow for associating a key to a specific value. An example of a map is
+the one-to-one association between a person and its age. If we consider
+a person's name to be the key, the value would be the person's age.
+
+Hashed maps
+^^^^^^^^^^^
+
+Hashed maps are maps that make use of a hash as a key. The hash itself is
+calculated by a function indicated by the programmer.
+
+.. admonition:: In other languages
+
+    Hashed maps are similar to dictionaries in Python and hashes in Perl.
+    One of the main differences is that, while these scripting languages
+    allow for using different types for the values contained in a map, in
+    Ada, the type of both key and value is specified in the package
+    instantiation and cannot be changed for that specific map. In order
+    to have multiple types, different maps need to be specified.
+
+When instantiating a hashed map from
+``Ada.Containers.Indefinite_Hashed_Maps``, we need to specify following
+elements:
+
+- ``Key_Type``: type of the key
+
+- ``Element_Type``: type of the element
+
+- ``Hash``: hash function for the ``Key_Type``
+
+- ``Equivalent_Keys``: an equality operator (e.g. ``=``) that is used
+  to determine if two keys are equal.
+
+  - If the type specified in ``Key_Type`` has a standard operator, we
+    might use it.
+
+In the next example, we'll use a string as a key type. Also, we'll use the
+``Hash`` function provided by the standard library for strings (in the
+``Ada.Strings`` package).
+
+We can include elements into a hashed map by calling ``Insert``. If an
+element is already contained in a map ``M``, we can access it directly by
+using its key. For example, we may change the value of an element by
+calling :ada:`M ("My_Key") := 10;`. If the key is not found, however, an
+exception is raised. In order to verify if a key is available, we can use
+the function ``Contains`` (as we've seen in the section about sets).
+
+Let's see an example:
+
+.. code-block:: ada
+
+    with Ada.Containers.Indefinite_Hashed_Maps;
+    with Ada.Strings.Hash;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Hashed_Map is
+
+       package Integer_Hashed_Maps is new
+         Ada.Containers.Indefinite_Hashed_Maps
+           (Key_Type        => String,
+            Element_Type    => Integer,
+            Hash            => Ada.Strings.Hash,
+            Equivalent_Keys => "=");
+
+       use Integer_Hashed_Maps;
+
+       M : Map;
+    begin
+       M.Include ("Alice", 24);
+       M.Include ("John",  40);
+       M.Include ("Bob",   28);
+
+       if M.Contains ("Alice") then
+          Put_Line ("Alice's age is "
+                    & Integer'Image (M ("Alice")));
+       end if;
+
+       --  Update Alice's age
+       --  Key must already exist in M.
+       --  Otherwise, an exception will be raised.
+       M ("Alice") := 25;
+
+       New_Line; Put_Line ("Name & Age:");
+       for C in M.Iterate loop
+          Put_Line (Key (C) & ": " & Integer'Image (M (C)));
+       end loop;
+
+    end Show_Hashed_Map;
 
 Dates & Times
 -------------
