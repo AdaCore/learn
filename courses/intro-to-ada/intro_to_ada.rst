@@ -6645,7 +6645,8 @@ each element of vector ``V``:
 
 In case of vectors, we can also use indices to access elements. The format
 is similar to a loop over array elements: we use a :ada:`for I in <range>`
-loop in this case. We can access the current element by using it as an
+loop in this case. The range is provided by ``V.First_Index`` and
+``V.Last_Index``. We can access the current element by using it as an
 array index: ``V (I)``. For example:
 
 .. code-block:: ada
@@ -7186,7 +7187,7 @@ However, we need to make sure that no duplicated element is being
 inserted. Otherwise, we'll get an exception. If we have less control
 about the elements to be inserted (e.g.: when elements are being passed
 as arguments and inserted into a set), we might want to use one of the
-following options
+following options:
 
 - use a version of ``Insert`` that provides an output Boolean value
   indicating whether the insertion was successful;
@@ -7261,8 +7262,8 @@ sets:
 - ``Contains`` and ``Find`` to verify the existence of elements.
 
 In order to delete elements, we can call the procedure ``Delete``.
-However, similarly to the situation we've seen with the ``Insert``
-procedure in the previous section, ``Delete`` raises an exception when
+However, similarly to the situation we've seen with ``Insert``
+in the previous section, ``Delete`` raises an exception when
 the element to be deleted doesn't exist in the set. Therefore, in case
 an element might not exist in a set, we can call ``Exclude``, which
 silently ignores any attempt to delete a non-existent element.
@@ -7429,10 +7430,10 @@ Indefinite maps
 ~~~~~~~~~~~~~~~
 
 In the previous sections, we dealt with containers for elements of
-definite types. In the source-code examples of the those sections, we've
-mostly seen :ada:`Ìnteger` types. An example of indefinite type is a
-:ada:`String` type. For this kind of types, we need a different kind of
-containers specially designed for indefinite types.
+definite types. In most source-code examples of those sections, we've
+seen :ada:`Integer` types as element type of the containers. An
+example of indefinite type is a :ada:`String` type. Indefinite types
+require a different kind of containers specially designed for them.
 
 Also, we will be looking into a different class of containers: maps. They
 allow for associating a key to a specific value. An example of a map is
@@ -7448,11 +7449,11 @@ calculated by a function indicated by the programmer.
 .. admonition:: In other languages
 
     Hashed maps are similar to dictionaries in Python and hashes in Perl.
-    One of the main differences is that, while these scripting languages
-    allow for using different types for the values contained in a map, in
+    One of the main differences is that these scripting languages allow
+    for using different types for the values contained in a map, while in
     Ada, the type of both key and value is specified in the package
     instantiation and cannot be changed for that specific map. In order
-    to have multiple types, different maps need to be specified.
+    to use multiple types, different maps need to be specified.
 
 When instantiating a hashed map from
 ``Ada.Containers.Indefinite_Hashed_Maps``, we need to specify following
@@ -7477,7 +7478,7 @@ In the next example, we'll use a string as a key type. Also, we'll use the
 We can include elements into a hashed map by calling ``Insert``. If an
 element is already contained in a map ``M``, we can access it directly by
 using its key. For example, we may change the value of an element by
-calling :ada:`M ("My_Key") := 10;`. If the key is not found, however, an
+calling :ada:`M ("My_Key") := 10`. If the key is not found, however, an
 exception is raised. In order to verify if a key is available, we can use
 the function ``Contains`` (as we've seen in the section about sets).
 
