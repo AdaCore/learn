@@ -6032,7 +6032,9 @@ containers available in Ada, please refer to Appendix B.
 Vectors
 ~~~~~~~
 
-This section presents a general overview on vectors.
+The following subsections present a general overview of vectors,
+including instantiation, initialization, operations on vector elements
+and operation on vectors.
 
 Instantiation
 ^^^^^^^^^^^^^
