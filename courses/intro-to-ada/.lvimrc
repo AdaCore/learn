@@ -1,0 +1,71 @@
+" This script is meant to be used in combination with the vim-localvimrc
+" plug-in, see https://github.com/embear/vim-localvimrc
+" It will run stylechecks on relevant files on file save in vim, and show the
+" results in the command window.
+" The code is inspired from the vim-flake8 plug-in:
+" https://github.com/nvie/vim-flake8
+
+if g:localvimrc_sourced_once
+  finish
+endif
+
+let s:local_path = expand('<sfile>:p:h')
+let s:cmd=s:local_path . '/utils/compile_blocks.py'
+
+function Rstcheck()
+    let x=line(".")
+    let s:cmdcmd = s:cmd . ' --code-block-at ' . x . ' -A '
+    call Stylechecks(s:cmdcmd, 1)
+endfunction
+
+
+function Stylechecks(cmd, file_specific)
+    hi Green ctermfg=green
+
+    set lazyredraw   " delay redrawing
+    cclose           " close any existing cwindows
+
+    " store old grep settings (to restore later)
+    let l:old_gfm=&grepformat
+    let l:old_gp=&grepprg
+
+    " write any changes before continuing
+    if &readonly == 0
+        update
+    endif
+
+    " perform the grep itself
+    let &grepformat="%f:%l:%c: %m\,%f:%l: %m"
+    let &grepprg=a:cmd
+    if a:file_specific
+        silent! grep! %
+    else
+        silent! grep!
+    endif
+
+    " restore grep settings
+    let &grepformat=l:old_gfm
+    let &grepprg=l:old_gp
+
+    " open cwindow
+    let has_results=getqflist() != []
+    if has_results
+        execute 'belowright copen'
+        setlocal wrap
+        nnoremap <buffer> <silent> c :cclose<CR>
+        nnoremap <buffer> <silent> q :cclose<CR>
+    endif
+
+    set nolazyredraw
+    redraw!
+    set lazyredraw
+
+    if has_results == 0
+        " Show OK status
+        echohl Green
+        echon "Style checks OK"
+        echohl
+    endif
+endfunction
+
+map <F4> :call Rstcheck()<CR>
