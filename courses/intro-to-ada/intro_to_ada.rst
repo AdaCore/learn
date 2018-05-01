@@ -3283,8 +3283,7 @@ Privacy
 
 One of the main principles in modular programming, that has later become one of
 the main principles behind the dominant interpretation of object oriented
-programming, is `encapsulation
- <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`__.
+programming, is `encapsulation <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`__.
 
 Encapsulation, briefly, is the concept that the implementer of a piece of
 computer software will distinguish between the public interface and the private
