@@ -6025,9 +6025,8 @@ Containers
 ----------
 
 Ada includes support for containers (such as vectors and sets) in its
-standard library. This section presents an introduction to the topic. An
-exhaustive overview is out-of-scope for this section. For a list of all
-containers available in Ada, please refer to Appendix B.
+standard library. This section presents an introduction to the topic. For
+a list of all containers available in Ada, please refer to Appendix B.
 
 Vectors
 ~~~~~~~
