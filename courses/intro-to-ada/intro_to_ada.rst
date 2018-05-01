@@ -4170,9 +4170,10 @@ or other libraries. The neat thing in Ada is that you can add an exception
 handler to any statement block, the following way:
 
 .. code-block:: ada
+
     --  Block (sequence of statements)
     begin
-       Open (File, In_File, “input.txt”);
+       Open (File, In_File, "input.txt");
     exception
        when E : Name_Error =>
        --       ^ Exception to be handled
@@ -4186,13 +4187,14 @@ But you don't need to introduce a block just to handle an exception, you can
 add it even to the statements block of your current subprogram:
 
 .. code-block:: ada
+
     procedure Main is
     begin
-       Open (File, In_File, “input.txt”);
+       Open (File, In_File, "input.txt");
     --  Exception block can be added to any block
     exception
        when Name_Error =>
-          Put (“Cannot open input file“);
+          Put ("Cannot open input file");
     end;
 
 Predefined exceptions
