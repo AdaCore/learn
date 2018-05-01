@@ -7339,6 +7339,24 @@ Let's look at an example that makes use of these operations:
        Show_Elements (S);
     end Show_Set_Element_Ops;
 
+In addition to ordered sets used in the examples above, the standard
+library also offers hashed sets. According to the Reference Manual, this
+is the average complexity of some operations:
+
++-----------------------+------------------+-----------------+
+| Operations            | ``Ordered_Sets`` | ``Hashed_Sets`` |
++=======================+==================+=================+
+| - Insert              | O((log N)**2)    | O(log N)        |
+| - Include             | or better        |                 |
+| - Replace             |                  |                 |
+| - Delete              |                  |                 |
+| - Exclude             |                  |                 |
+| - Find                |                  |                 |
++-----------------------+------------------+-----------------+
+| Subprogram using      | O(1)             | O(1)            |
+| cursor                |                  |                 |
++-----------------------+------------------+-----------------+
+
 Other Operations
 ^^^^^^^^^^^^^^^^
 
@@ -7602,6 +7620,31 @@ to use ordered maps instead of hashed maps. The main difference we notice
 here is when we run the applications: while the output of a hashed map
 is usually unordered, the output of a ordered map is always ordered, as
 its name implies.
+
+Complexity
+^^^^^^^^^^
+
+Hashed maps are generally the fastest data structure available to you in
+Ada if you need to associate heterogeneous keys to values and search for
+them quickly. In most cases, they are slightly faster than ordered maps.
+Therefore, if you don't need ordering, prefer hashed maps.
+
+According to the Reference Manual, this is the average complexity of some
+operations:
+
++-----------------------+------------------+-----------------+
+| Operations            | ``Ordered_Maps`` | ``Hashed_Maps`` |
++=======================+==================+=================+
+| - Insert              | O((log N)**2)    | O(log N)        |
+| - Include             | or better        |                 |
+| - Replace             |                  |                 |
+| - Delete              |                  |                 |
+| - Exclude             |                  |                 |
+| - Find                |                  |                 |
++-----------------------+------------------+-----------------+
+| Subprogram using      | O(1)             | O(1)            |
+| cursor                |                  |                 |
++-----------------------+------------------+-----------------+
 
 Dates & Times
 -------------
