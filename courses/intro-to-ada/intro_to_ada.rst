@@ -7393,11 +7393,16 @@ The following example makes use of these operators:
        S3.Insert (0);
        S3.Insert (10);
 
-       New_Line; Put_Line ("---- Set #1 ----");
+       New_Line;
+       Put_Line ("---- Set #1 ----");
        Show_Elements (S1);
-       New_Line; Put_Line ("---- Set #2 ----");
+
+       New_Line;
+       Put_Line ("---- Set #2 ----");
        Show_Elements (S2);
-       New_Line; Put_Line ("---- Set #3 ----");
+
+       New_Line;
+       Put_Line ("---- Set #3 ----");
        Show_Elements (S3);
 
        New_Line;
