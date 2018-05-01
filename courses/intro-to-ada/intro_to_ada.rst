@@ -124,8 +124,8 @@ Let's go over a very simple imperative Ada program:
 
     procedure Greet is
     begin
-      --  Print "Hello, World!" to the screen
-      Put_Line("Hello, World!");
+       --  Print "Hello, World!" to the screen
+       Put_Line ("Hello, World!");
     end Greet;
 
 If you compile that source with the GNAT compiler, you will get a pretty
@@ -289,12 +289,12 @@ Ada has a last loop kind, while loops.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
-        I : Natural := 0;
+       I : Natural := 0;
     begin
        --  Condition. *Must* be of type Boolean (no Integers). Operator <
        --  returns a Boolean
        while I < 10 loop
-          Put_Line("Hello, World!");
+          Put_Line ("Hello, World!");
 
           --  Assignment
           I := I + 1;
@@ -322,7 +322,7 @@ Ada has an if statement. It is pretty unsurprising in form and function:
     begin
        loop
           if I = 5 then
-            Put_Line("Hello, World!");
+             Put_Line ("Hello, World!");
           end if;
           I := I + 1;
        end loop;
@@ -369,8 +369,8 @@ differs from, for example, C/C++'s case statement.
        I : Integer := 0;
     begin
        loop
-          -- Expression must be of a discrete type. All the
-          -- values must be covered.
+          --  Expression must be of a discrete type. All the
+          --  values must be covered.
           case I is
              when 0 =>
                 Put_Line ("Starting...");
@@ -384,12 +384,12 @@ differs from, for example, C/C++'s case statement.
              when 7 | 9 =>
                 Put_Line ("World");
 
-            when 10 =>
+             when 10 =>
                 exit;  -- This exits out of the loop ! Not equivalent to break !
 
              when others => Put_Line ("I in (1, 2, 6, 8)");
-             -- ‘when others’ must be the last one and alone (if
-             -- present)
+             --  ‘when others’ must be the last one and alone (if
+             --  present)
           end case;
           I := I + 1;
        end loop;
@@ -431,13 +431,13 @@ Ada. What is important to know at this stage:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
-        procedure Nested is
-        begin
-            Put_Line ("Hello World");
-        end Nested;
+       procedure Nested is
+       begin
+          Put_Line ("Hello World");
+       end Nested;
     begin
-        Nested;
-        --  Call to Nested
+       Nested;
+       --  Call to Nested
     end Main;
 
 -  You cannot declare anything outside of a declarative region. If you
@@ -450,15 +450,15 @@ Ada. What is important to know at this stage:
 
     procedure Main is
     begin
-        Put_Line ("In statements");
+       Put_Line ("In statements");
 
-        declare
-            I : Integer := 12;
-        begin
-            Put_Line ("In declare block, I = " & Integer'Image (I));
-        end;
+       declare
+          I : Integer := 12;
+       begin
+          Put_Line ("In declare block, I = " & Integer'Image (I));
+       end;
 
-        --  I is undefined here
+       --  I is undefined here
     end Main;
 
 Imperative language - control expressions
@@ -476,12 +476,12 @@ If expressions
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
-        A : Integer := 12;
-        B : Integer := (if A = 12 then 15
-                        elsif A = 13 then 15
-                        else 18);
+       A : Integer := 12;
+       B : Integer := (if A = 12 then 15
+                       elsif A = 13 then 15
+                       else 18);
     begin
-        null;  --  When a subprogram is empty, null statement is mandatory
+       null;  --  When a subprogram is empty, null statement is mandatory
     end Main;
 
 Ada's if expression are similar to if statements. However, there are a few
@@ -498,10 +498,10 @@ differences that stems from the fact that it is an expression:
 
     procedure Main is
     begin
-        for I in 1 .. 10 loop
-            --  Syntactically correct
-            Put_Line (if I mod 2 = 0 then "Even" else "Odd");
-        end loop;
+       for I in 1 .. 10 loop
+          --  Syntactically correct
+          Put_Line (if I mod 2 = 0 then "Even" else "Odd");
+       end loop;
     end Main;
 
 Case expressions
@@ -516,12 +516,12 @@ you would expect.
 
     procedure Main is
     begin
-        for I in 1 .. 10 loop
-           Put_Line (case I is
-                     when 1 | 3 | 5 | 7 | 9 => "Odd",
-                     when 2 | 4 | 6 | 8 | 10 => "Even",
-                     when others => "Cannot happen");
-        end loop;
+       for I in 1 .. 10 loop
+          Put_Line (case I is
+                    when 1 | 3 | 5 | 7 | 9 => "Odd",
+                    when 2 | 4 | 6 | 8 | 10 => "Even",
+                    when others => "Cannot happen");
+       end loop;
     end Main;
 
 The syntax differs from case statements, because branches are separated
@@ -2331,7 +2331,8 @@ perfectly acceptable to name every parameter if it makes the code clearer.
 
        type Language is (English, Italian);
 
-       function Get_Day_Name (Day : Days; Lang : Language := English) return String;
+       function Get_Day_Name
+         (Day : Days; Lang : Language := English) return String;
     end Week_5;
 
     with Week_5; use Week_5;
@@ -2456,9 +2457,9 @@ program will cause an error:
     begin
        Tmp := A;
 
-       -- Error: assignment to "in" mode parameter not allowed
+       --  Error: assignment to "in" mode parameter not allowed
        A := B;
-       -- Error: assignment to "in" mode parameter not allowed
+       --  Error: assignment to "in" mode parameter not allowed
        B := Tmp;
     end Swap;
 
@@ -2578,7 +2579,7 @@ below:
               Compute_A (V - 1);
            -- ^ Call to Compute_A
            end if;
-        end Compute_B;
+    end Compute_B;
 
         procedure Compute_A (V : Natural) is
         begin
@@ -2784,7 +2785,7 @@ expression becomes useful.
        --                     ^ We specify that the type of the expression is
        --                       SSID.
 
-       -- We could also have declared a temporary
+       --  We could also have declared a temporary
 
        I : SSID := 123_145_299;
 
