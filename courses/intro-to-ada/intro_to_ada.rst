@@ -6522,9 +6522,9 @@ This example fills the vector with elements in the following sequence:
 
 According to the Reference Manual, the worst-case complexity should be:
 
-- O(log N) for the ``Append`` operation, and
+- O(:math:`log N`) for the ``Append`` operation, and
 
-- O(N log N) for the ``Prepend`` operation.
+- O(:math:`N log N`) for the ``Prepend`` operation.
 
 Accessing first and last elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -6782,7 +6782,7 @@ This is how it looks like when dealing with indices and cursors:
        end loop;
 
 According to the Reference Manual, the worst-case complexity of accessing
-an element should be O(log N).
+an element should be O(:math:`log N`).
 
 Another approach to modify elements of a vector is to use a process
 procedure, which takes the individual elements and does some processing on
@@ -7176,8 +7176,8 @@ sorted merging operations:
     end Show_Vector_Ops;
 
 According to the Reference Manual, the worst-case complexity of a call to
-``Sort`` should be O(N**2), and the average complexity should be better
-than O(N**2).
+``Sort`` should be O(:math:`N^2`), and the average complexity should be better
+than O(:math:`N^2`).
 
 Sets
 ~~~~
@@ -7343,19 +7343,19 @@ In addition to ordered sets used in the examples above, the standard
 library also offers hashed sets. According to the Reference Manual, this
 is the average complexity of some operations:
 
-+-----------------------+------------------+-----------------+
-| Operations            | ``Ordered_Sets`` | ``Hashed_Sets`` |
-+=======================+==================+=================+
-| - Insert              | O((log N)**2)    | O(log N)        |
-| - Include             | or better        |                 |
-| - Replace             |                  |                 |
-| - Delete              |                  |                 |
-| - Exclude             |                  |                 |
-| - Find                |                  |                 |
-+-----------------------+------------------+-----------------+
-| Subprogram using      | O(1)             | O(1)            |
-| cursor                |                  |                 |
-+-----------------------+------------------+-----------------+
++-----------------------+----------------------+------------------+
+| Operations            | ``Ordered_Sets``     | ``Hashed_Sets``  |
++=======================+======================+==================+
+| - Insert              | O(:math:`(log N)^2)` | :math:`O(log N)` |
+| - Include             | or better            |                  |
+| - Replace             |                      |                  |
+| - Delete              |                      |                  |
+| - Exclude             |                      |                  |
+| - Find                |                      |                  |
++-----------------------+----------------------+------------------+
+| Subprogram using      | O(:math:`1`)         | O(:math:`1`)     |
+| cursor                |                      |                  |
++-----------------------+----------------------+------------------+
 
 Other Operations
 ^^^^^^^^^^^^^^^^
@@ -7632,19 +7632,19 @@ Therefore, if you don't need ordering, prefer hashed maps.
 According to the Reference Manual, this is the average complexity of some
 operations:
 
-+-----------------------+------------------+-----------------+
-| Operations            | ``Ordered_Maps`` | ``Hashed_Maps`` |
-+=======================+==================+=================+
-| - Insert              | O((log N)**2)    | O(log N)        |
-| - Include             | or better        |                 |
-| - Replace             |                  |                 |
-| - Delete              |                  |                 |
-| - Exclude             |                  |                 |
-| - Find                |                  |                 |
-+-----------------------+------------------+-----------------+
-| Subprogram using      | O(1)             | O(1)            |
-| cursor                |                  |                 |
-+-----------------------+------------------+-----------------+
++-----------------------+----------------------+------------------+
+| Operations            | ``Ordered_Maps``     | ``Hashed_Maps``  |
++=======================+======================+==================+
+| - Insert              | O(:math:`(log N)^2)` | :math:`O(log N)` |
+| - Include             | or better            |                  |
+| - Replace             |                      |                  |
+| - Delete              |                      |                  |
+| - Exclude             |                      |                  |
+| - Find                |                      |                  |
++-----------------------+----------------------+------------------+
+| Subprogram using      | O(:math:`1`)         | O(:math:`1`)     |
+| cursor                |                      |                  |
++-----------------------+----------------------+------------------+
 
 Dates & Times
 -------------
