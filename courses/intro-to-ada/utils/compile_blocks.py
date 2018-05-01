@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 """
 This program will extract every Ada code block in an Ada source file, and try
 to compile and execute them.
@@ -38,6 +40,77 @@ import colors as C
 import shutil
 import re
 
+class CodeBlock():
+    def __init__(self, line_start, line_end, text, language, classes):
+        self.line_start = line_start
+        self.line_end = line_end
+        self.text = text
+        self.language = language
+        self.classes = classes
+        self.run = True
+
+    def dump(self):
+        print self.line_start
+        print self.line_end
+        print self.text
+        print self.language
+        print self.classes
+
+    @staticmethod
+    def get_code_blocks(input_text):
+        lang_re = re.compile("\s*.. code-block::\s*(\w+)?\s*")
+        classes_re = re.compile("\s*:class:\s*(.+)")
+
+        code_blocks = []
+        lines = input_text.splitlines()
+
+        def first_nonws(line):
+            for i, c in enumerate(line):
+                if not c.isspace():
+                    return i
+            return 0
+
+        indents = map(first_nonws, lines)
+
+        classes = []
+        cb_start = -1
+        cb_indent = -1
+        lang = ""
+
+        def is_empty(line):
+            return (not line) or line.isspace()
+
+        for i, (line, indent) in enumerate(zip(lines, indents)):
+            if cb_start != -1:
+
+                if cb_indent == -1 and not is_empty(line):
+                    cb_indent = indent
+
+                if indent < cb_indent and not is_empty(line):
+                    code_blocks.append(CodeBlock(
+                        cb_start,
+                        i,
+                        "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
+                        lang,
+                        classes
+                    ))
+
+                    classes, cb_start, cb_indent, lang = [], -1, -1, ""
+
+                m = classes_re.match(line)
+
+                if m:
+                    classes = map(str.strip, m.groups()[0].split(","))
+                    cb_start = i + 1
+            else:
+                if line[indent:].startswith(".. code-block::"):
+                    cb_start, lang = (
+                        i + 1,
+                        lang_re.match(line).groups()[0]
+                    )
+
+        return code_blocks
+
 
 def header(strn):
     return C.col("{}\n{}\n".format(strn, '*' * len(strn)), C.Colors.BLUE)
@@ -77,22 +150,18 @@ parser.add_argument('--verbose', '-v', type=bool, default=False,
                     help='Show more information')
 
 parser.add_argument('--code-block', '-b', type=str, default=0)
+parser.add_argument('--all-diagnostics', '-A', action='store_true')
+parser.add_argument('--code-block-at', type=int, default=0)
 
 args = parser.parse_args()
 
 with open(args.rst_file) as f:
     content = f.read()
 
-doctree = publish_doctree(content)
 
-
-def is_ada_code_block(node):
-    return (node.tagname == 'literal_block'
-            and 'code' in node.attributes['classes']
-            and 'ada' in node.attributes['classes'])
-
-
-code_blocks = list(enumerate(doctree.traverse(condition=is_ada_code_block)))
+code_blocks = list(enumerate(filter(
+    lambda cb: cb.language == "ada", CodeBlock.get_code_blocks(content)
+)))
 
 # Remove the build dir, but only if the user didn't ask for a specific subset
 # of code_blocks
@@ -110,33 +179,73 @@ def run(*run_args):
         print "Running \"{}\"".format(" ".join(run_args))
     try:
         output = S.check_output(run_args, stderr=S.STDOUT)
-        all_output.append(output)
+        all_output.extend(output.splitlines())
     except S.CalledProcessError as e:
-        all_output.append(e.output)
+        all_output.extend(e.output.splitlines())
         raise e
 
     return output
 
+if args.code_block_at:
+    for i, code_block in code_blocks:
+        code_block.run = False
+        if code_block.line_start < args.code_block_at < code_block.line_end:
+            code_block.run = True
 
 if args.code_block:
     expr = "code_blocks[{}]".format(args.code_block)
-    code_blocks = eval(expr, globals(), locals())
+    subset = eval(expr, globals(), locals())
     if not isinstance(code_blocks, list):
-        code_blocks = [code_blocks]
+        subset = [subset]
 
-for i, b in code_blocks:
+    for i, code_block in code_blocks:
+        code_block.run = False
+
+    for i, code_block in subset:
+        code_block.run = True
+
+
+class Diag(object):
+    def __init__(self, file, line, col, msg):
+        self.file = file
+        self.line = line
+        self.col = col
+        self.msg = msg
+
+    def __repr__(self):
+        return "{}:{}:{}: {}".format(self.file, self.line, self.col, self.msg)
+
+
+def extract_diagnostics(lines):
+    diags = []
+    r = re.compile("(.+?):(\d+):(\d+): (.+)")
+    for l in lines:
+        m = r.match(l)
+        if m:
+            f, l, c, t = m.groups()
+            diags.append(Diag(f, int(l), int(c), t))
+    return diags
+
+
+for i, code_block in code_blocks:
     has_error = False
-    precise, b_line = get_line(b)
-    qualifier = "at" if precise else "around"
-    loc = "{} {}:{} (code block #{})".format(qualifier, args.rst_file, b_line, i)
+    loc = "at {}:{} (code block #{})".format(args.rst_file, code_block.line_start, i)
 
     all_output = []
 
-    def print_error(*args):
-        print error(*args)
-        print "\n".join(all_output)
+    def print_diags():
+        diags = extract_diagnostics(all_output)
+        for diag in diags:
+            diag.line = diag.line + code_block.line_start
+            diag.file = args.rst_file
+            print diag
 
-    if 'ada-nocheck' in b.attributes['classes']:
+    def print_error(*error_args):
+        error(*error_args)
+        if not args.all_diagnostics:
+            print_diags()
+
+    if 'ada-nocheck' in code_block.classes:
         if args.verbose:
             print "Skipping code block {}".format(loc)
         continue
@@ -145,15 +254,15 @@ for i, b in code_blocks:
         print header("Checking code block {}".format(loc))
 
     with open(u"code.ada", u"w") as code_file:
-        code_file.write(b.astext().encode('utf-8'))
+        code_file.write(code_block.text)
 
     try:
-        out = run("gnatchop", "-w", "code.ada").splitlines()
+        out = run("gnatchop", "-r", "-w", "code.ada").splitlines()
     except S.CalledProcessError:
         print_error(loc, "Failed to chop example, skipping\n")
         continue
 
-    if 'ada-syntax-only' in b.attributes['classes']:
+    if 'ada-syntax-only' in code_block.classes or not code_block.run:
         continue
 
     for i, line in enumerate(out):
@@ -165,7 +274,7 @@ for i, b in code_blocks:
 
     compile_error = False
 
-    if 'ada-run' in b.attributes['classes'] or 'ada-run-expect-failure' in b.attributes['classes']:
+    if 'ada-run' in code_block.classes or 'ada-run-expect-failure' in code_block.classes:
         if len(source_files) == 1:
             main_file = source_files[0]
         else:
@@ -174,19 +283,19 @@ for i, b in code_blocks:
         try:
             run("gprbuild", "-f", main_file)
         except S.CalledProcessError:
-            print_error(loc, "Compiling of example failed")
+            print_error(loc, "Failed to compile example")
             has_error = True
 
         if not has_error:
             try:
                 run("./{}".format(P.splitext(main_file)[0]))
 
-                if 'ada-run-expect-failure' in b.attributes['classes']:
+                if 'ada-run-expect-failure' in code_block.classes:
                     print_error(loc, "Running of example should have failed")
                     has_error = True
 
             except S.CalledProcessError:
-                if 'ada-run-expect-failure' in b.attributes['classes']:
+                if 'ada-run-expect-failure' in code_block.classes:
                     if args.verbose:
                         print "Running of example expectedly failed"
                 else:
@@ -198,15 +307,18 @@ for i, b in code_blocks:
             try:
                 run("gcc", "-c", "-gnatc", "-gnaty", source_file)
             except S.CalledProcessError:
-                if 'ada-expect-compile-error' in b.attributes['classes']:
+                if 'ada-expect-compile-error' in code_block.classes:
                     compile_error = True
                 else:
                     print_error(loc, "Failed to compile example")
                     has_error = True
 
-    if 'ada-expect-compile-error' in b.attributes['classes'] and not compile_error:
+    if 'ada-expect-compile-error' in code_block.classes and not compile_error:
         print_error(loc, "Expected compile error, got none!")
         has_error = True
 
     if not has_error and args.verbose:
         print C.col("SUCCESS", C.Colors.GREEN)
+
+    if args.all_diagnostics:
+        print_diags()
