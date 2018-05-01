@@ -6157,6 +6157,12 @@ example:
 This example fills the vector with elements in the following sequence:
 (100, 40, 30, 20, 10, 0, 13).
 
+According to the Reference Manual, the worst-case complexity should be:
+
+- O(log N) for the ``Append`` operation, and
+
+- O(N log N) for the ``Prepend`` operation.
+
 Accessing first and last elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -6411,6 +6417,9 @@ This is how it looks like when dealing with indices and cursors:
        for C in V.Iterate loop
           V (C) := V (C) + 1;
        end loop;
+
+According to the Reference Manual, the worst-case complexity of accessing
+an element should be O(log N).
 
 Another approach to modify elements of a vector is to use a process
 procedure, which takes the individual elements and does some processing on
@@ -6802,6 +6811,10 @@ sorted merging operations:
        Show_Elements (V1);
 
     end Show_Vector_Ops;
+
+According to the Reference Manual, the worst-case complexity of a call to
+``Sort`` should be O(N**2), and the average complexity should be better
+than O(N**2).
 
 Sets
 ~~~~
