@@ -7535,14 +7535,13 @@ Ordered maps
 Ordered maps share many features with hashed maps. The main differences
 are:
 
-- Hash calculation is not needed because elements are inserted and
-  accessed in their order.
+- A hash function is not needed. Instead, you need to provide an ordering
+  function (``<`` operator). The ordered map will then use it to order
+  elements, and allow pretty fast access --- O (log n) using a binary
+  search.
 
-- We need to specify a function to determine the order of the elements
-  (``<``).
-
-  - If the type specified in ``Key_Type`` has a standard operator, we
-    might use it.
+  - If the type specified in ``Key_Type`` has a standard ``<`` operator,
+    we might use it.
 
 Let's see an example:
 
