@@ -1,2 +1,3 @@
-# university
-AdaCore U sources
+# learn.adacore.com
+
+Sources for AdaCore's upcoming learning website
