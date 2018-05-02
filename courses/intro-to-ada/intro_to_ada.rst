@@ -554,7 +554,7 @@ A type is used to reason about *values* a program manipulates. The aim
 is to classify values by what you can accomplish with them, and this way
 you can reason about the correctness of your values.
 
-TODO: expand/clarify
+.. todo: expand/clarify
 
 Integers
 --------
@@ -757,7 +757,7 @@ floating-point type is :ada:`Float`:
        Put_Line ("The value of A is " & Float'Image (A));
     end Floating_Point_Demo;
 
-The application will show that the value of ``A`` is 2.1.
+The application will show that the value of ``A`` is ``2.1``.
 
 All common operations that could be expected for floating-point types are
 available, including retrieving the absolute-value and the power function.
@@ -799,6 +799,7 @@ the compiler will choose a floating-point representation that matches the
 required precision. For example:
 
 .. code-block:: ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2001,6 +2002,39 @@ subtype used as component will need to have a fixed size.
        end loop;
     end Show_Days;
 
+Array slices
+------------
+
+One last interesting feature of Ada arrays that we're going to cover is array
+slices: It is possible to take and use a slice of an array in an expression.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+        Buf : String := "Hello ...";
+
+        Full_Name : String := "John Smith";
+    begin
+        Buf (7 .. 9) := "Bob";
+        --  Careful! This works because the string on the right side is the
+        --  same size as the replaced slice!
+
+        Put_Line (Buf);  --  Prints "Hello Bob"
+
+        Put_Line ("Hi " & Full_Name (1 .. 4)); --  Prints "Hi John"
+    end;
+
+As we can see above, you can also use a slice on the left side of an
+assignment, to replace only part of an array.
+
+A slice of an array is of the same type as the array, but has a different
+subtype, constrained by the bounds of the slice.
+
+.. attention::
+    Slices will only work on one dimensional arrays.
+
 Modular/Structured programming
 ==============================
 
@@ -2646,9 +2680,6 @@ This is a facility that is useful for two reasons:
 
 More about types
 ================
-
-Array slices
-------------
 
 Aggregates: A primer
 --------------------
@@ -3398,6 +3429,50 @@ Here is how the ``Stacks`` package would be used:
 Limited types
 -------------
 
+Ada has a facility called limited types. The particularity of limited types is that they cannot be copied or compared.
+
+.. code-block:: ada
+
+    package Stacks is
+       type Stack is limited private;
+       --  Limited type. Cannot assign nor compare.
+
+       procedure Push (S : in out Stack; Val : Integer);
+       procedure Pop (S : in out Stack; Val : out Integer);
+    private
+       subtype Stack_Index is Natural range 1 .. 10;
+       type Content_Type is array (Stack_Index) of Natural;
+
+       type Stack is limited record
+          Top     : Stack_Index;
+          Content : Content_Type;
+       end record;
+    end Stacks;
+
+    with Stacks; use Stacks;
+
+    procedure Main is
+       S, S2 : Stack;
+    begin
+       S := S2;
+       --  Illegal: S is limited.
+    end Main;
+
+This is useful because for some complex data types, copy is a complicated
+operation: You might have data inside your record that needs to be treated
+specially when you copy it (for example doing a deep copy).
+
+Ada allows you to implement special semantics for those operations via
+`controlled types <todo_link_to_controlled_types>`__. However, controlled types
+are complicated to get right and, in some cases, to simplify the problem, and
+the way people will use your API, you can sidestep the issue entirely and say
+"Users are not allowed to copy this data type".
+
+One example is the ``File_Type`` from the ``Ada.Text_IO`` package. The
+designers of the standard library decided that rather than allow people to copy
+instances of File_Type, making it limited was actually easier, and did fit the
+semantics of the API quite well.
+
 Generics
 ========
 
@@ -4140,8 +4215,10 @@ declare an exception:
 
 .. code-block:: ada
 
-    My_Except : exception;
-    -- Like an object. *NOT* a type !
+    package Exceptions is
+        My_Except : exception;
+        -- Like an object. *NOT* a type !
+    end Exceptions;
 
 Even though they're objects, you're going to use each declared exception object
 as a "kind" or "family" of exceptions.
@@ -4154,13 +4231,19 @@ it:
 
 .. code-block:: ada
 
-    raise My_Except;
-    --  Execution of current control flow abandoned, an exception of kind
-    --  "My_Except" will bubble up until it is caught.
+    with Exceptions; use Exceptions;
 
-    raise My_Except with "My exception message";
-    --  Execution of current control flow abandoned, an exception of kind
-    --  "My_Except" with associated string will bubble up until it is caught.
+    procedure Main is
+    begin
+        raise My_Except;
+        --  Execution of current control flow abandoned, an exception of kind
+        --  "My_Except" will bubble up until it is caught.
+
+        raise My_Except with "My exception message";
+        --  Execution of current control flow abandoned, an exception of kind
+        --  "My_Except" with associated string will bubble up until it is caught.
+    end Main;
+
 
 Handling an exception
 ---------------------
@@ -4171,31 +4254,42 @@ handler to any statement block, the following way:
 
 .. code-block:: ada
 
-    --  Block (sequence of statements)
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Exceptions;  use Ada.Exceptions;
+
+    procedure Open_File is
+       File : File_Type;
     begin
-       Open (File, In_File, "input.txt");
-    exception
-       when E : Name_Error =>
-       --       ^ Exception to be handled
-          Put ("Cannot open input file : ");
-          Put_Line (Exception_Message (E));
-          raise;
-          --  Reraise current occurence
-    end;
+       --  Block (sequence of statements)
+       begin
+          Open (File, In_File, "input.txt");
+       exception
+          when E : Name_Error =>
+          --       ^ Exception to be handled
+             Put ("Cannot open input file : ");
+             Put_Line (Exception_Message (E));
+             raise;
+             --  Reraise current occurence
+       end;
+    end Open_File;
 
 But you don't need to introduce a block just to handle an exception, you can
 add it even to the statements block of your current subprogram:
 
 .. code-block:: ada
 
-    procedure Main is
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Exceptions;  use Ada.Exceptions;
+
+    procedure Open_File is
+       File : File_Type;
     begin
        Open (File, In_File, "input.txt");
     --  Exception block can be added to any block
     exception
        when Name_Error =>
           Put ("Cannot open input file");
-    end;
+    end Open_File;
 
 Predefined exceptions
 ---------------------
@@ -6190,6 +6284,7 @@ programming as soon as you need polymorphism. For example, you cannot do the
 following:
 
 .. code-block:: ada
+    :class: ada-expect-compile-error
 
     with P; use P;
 
