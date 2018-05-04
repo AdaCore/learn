@@ -7746,6 +7746,164 @@ operations:
 Dates & Times
 -------------
 
+Date and time handling
+~~~~~~~~~~~~~~~~~~~~~~
+
+The standard library provides support for representing and handling date
+and time. This is part of the :ada:`Ada.Calendar` package. Let's look at
+a simple example:
+
+.. code-block:: ada
+
+    with Ada.Calendar;            use Ada.Calendar;
+    with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+    with Ada.Text_IO;             use Ada.Text_IO;
+
+    procedure Display_Current_Time is
+       Now : Time := Clock;
+    begin
+       Put_Line ("Current time: " & Image (Now));
+    end Display_Current_Time;
+
+This application displays the current date and time, which is retrieved
+by a call to the ``Clock`` function. We call the function ``Image`` from
+the :ada:`Ada.Calendar.Formatting` package in order to get a ``String``
+for the current date and time. We could, instead, retrieve each component
+using the ``Split`` function. For example:
+
+.. code-block:: ada
+
+    with Ada.Calendar;            use Ada.Calendar;
+    with Ada.Text_IO;             use Ada.Text_IO;
+
+    procedure Display_Current_Year is
+       Now         : Time := Clock;
+
+       Now_Year    : Year_Number;
+       Now_Month   : Month_Number;
+       Now_Day     : Day_Number;
+       Now_Seconds : Day_Duration;
+    begin
+       Split (Now,
+              Now_Year,
+              Now_Month,
+              Now_Day,
+              Now_Seconds);
+
+       Put_Line ("Current year  is: " & Year_Number'Image (Now_Year));
+       Put_Line ("Current month is: " & Month_Number'Image (Now_Month));
+       Put_Line ("Current day   is: " & Day_Number'Image (Now_Day));
+    end Display_Current_Year;
+
+Here, we're retrieving each element and displaying it separately.
+
+Delaying using date
+^^^^^^^^^^^^^^^^^^^
+
+We can delay an application, so that it restarts at a specific date and
+time. This is achieved by using a :ada:`delay until` statement. For
+example:
+
+.. code-block:: ada
+
+    with Ada.Calendar;            use Ada.Calendar;
+    with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+    with Ada.Calendar.Time_Zones; use Ada.Calendar.Time_Zones;
+    with Ada.Text_IO;             use Ada.Text_IO;
+
+    procedure Display_Delay_Next_Specific_Time is
+       TZ   : Time_Offset := UTC_Time_Offset;
+       Next : Time        := Ada.Calendar.Formatting.Time_Of
+         (Year        => 2018,
+          Month       => 5,
+          Day         => 1,
+          Hour        => 15,
+          Minute      => 0,
+          Second      => 0,
+          Sub_Second  => 0.0,
+          Leap_Second => False,
+          Time_Zone   => TZ);
+
+       --  Next = 2018-05-01 15:00:00.00 (local time-zone)
+    begin
+       Put_Line ("Let's wait until...");
+       Put_Line (Image (Next, True, TZ));
+
+       delay until Next;
+
+       Put_Line ("Enough waiting!");
+    end Display_Delay_Next_Specific_Time;
+
+In this application, the date and time is specified by initializing
+``Next`` with a call to ``Time_Of``. This function takes the various
+components of a date (year, month, etc) and returns an element of ``Time``
+type. Because the date specified in the application is in the past, the
+:ada:`delay until` statement won't produce any noticeable effect. However,
+if we'd use a date in the future, the application would be waiting until
+that specific date and time would have arrived.
+
+Note that, in the application above, we're taking care of adapting the
+time to the local time-zone. By default, *Coordinated Universal Time*
+(abbreviated to UTC) is used. By retrieving the time offset to UTC with a
+call to ``UTC_Time_Offset`` from the :ada:`Ada.Calendar.Time_Zones`
+package, we can initialize ``TZ`` and use it in the call to ``Time_Of``.
+This is all we need in order to make the information provided to
+``Time_Of`` relative to the local time zone.
+
+We could achieve a similar result by initializing ``Next`` with a
+``String``. This can be done by a call to ``Value`` from the
+:ada:`Àda.Calendar.Formatting` package. This is the adapted application:
+
+.. code-block:: ada
+
+    with Ada.Calendar;            use Ada.Calendar;
+    with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+    with Ada.Calendar.Time_Zones; use Ada.Calendar.Time_Zones;
+    with Ada.Text_IO;             use Ada.Text_IO;
+
+    procedure Display_Delay_Next_Specific_Time is
+       TZ   : Time_Offset := UTC_Time_Offset;
+       Next : Time        := Ada.Calendar.Formatting.Value
+         ("2018-05-01 15:00:00.00", TZ);
+
+       --  Next = 2018-05-01 15:00:00.00 (local time-zone)
+    begin
+       Put_Line ("Let's wait until...");
+       Put_Line (Image (Next, True, TZ));
+
+       delay until Next;
+
+       Put_Line ("Enough waiting!");
+    end Display_Delay_Next_Specific_Time;
+
+In this example, we're again using ``TZ`` in the call to ``Value`` in
+order to adjust the input time to the current time zone.
+
+In the examples above, we were delaying the application to a specific
+date and time. We could, however, delay the application relatively to the
+current time. For example, we could delay the application by 5 seconds
+using the current time:
+
+.. code-block:: ada
+
+    with Ada.Calendar;            use Ada.Calendar;
+    with Ada.Text_IO;             use Ada.Text_IO;
+
+    procedure Display_Delay_Next is
+       D    : Duration := 5.0;       --  seconds
+       Now  : Time     := Clock;
+       Next : Time     := Now + D;   --  use duration to
+                                     --  specify next point in time
+    begin
+       Put_Line ("Let's wait " & Duration'Image (D) & " seconds...");
+       delay until Next;
+       Put_Line ("Enough waiting!");
+    end Display_Delay_Next;
+
+Here, we're specifying a duration of 5 seconds in ``D``, adding it to
+the current time from ``Now`` and storing the sum in ``Next``. This will
+then be used for the :ada:`delay until` statement.
+
 Strings
 --------
 
