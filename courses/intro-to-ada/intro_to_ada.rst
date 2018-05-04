@@ -7895,7 +7895,8 @@ using the current time:
        Next : Time     := Now + D;   --  use duration to
                                      --  specify next point in time
     begin
-       Put_Line ("Let's wait " & Duration'Image (D) & " seconds...");
+       Put_Line ("Let's wait "
+                 & Duration'Image (D) & " seconds...");
        delay until Next;
        Put_Line ("Enough waiting!");
     end Display_Delay_Next;
@@ -7903,6 +7904,197 @@ using the current time:
 Here, we're specifying a duration of 5 seconds in ``D``, adding it to
 the current time from ``Now`` and storing the sum in ``Next``. This will
 then be used for the :ada:`delay until` statement.
+
+Real-time
+~~~~~~~~~
+
+In addition to :ada:`Ada.Calendar`, the standard library also supports
+time operations for real-time applications. This is implemented by the
+:ada:`Ada.Real_Time` package. This package also include a ``Time`` type.
+However, in the :ada:`Ada.Real_Time` package, the ``Time`` type is used
+to represent an absolute clock and handle time span. This contrasts with
+the :ada:`Ada.Calendar`, which uses the ``Time`` type to represent dates
+and times.
+
+In the previous section, we used the ``Time`` type from the
+:ada:`Ada.Calendar` and the :ada:`delay until` statement to delay an
+application by 5 seconds. We could have used the :ada:`Ada.Real_Time`
+package instead. Let's adapt that example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Ada.Real_Time; use Ada.Real_Time;
+
+    procedure Display_Delay_Next_Real_Time is
+       D     : Time_Span := Seconds (5);
+       Next  : Time      := Clock + D;
+    begin
+       Put_Line ("Let's wait "
+                 & Duration'Image (To_Duration (D)) & " seconds...");
+       delay until Next;
+       Put_Line ("Enough waiting!");
+    end Display_Delay_Next_Real_Time;
+
+The main difference is that ``D`` is now a variable of type ``Time_Span``,
+which is defined in the :ada:`Ada.Real_Time` package. We call the function
+``Seconds`` to initialize ``D``. We could have a finer granularity by
+calling ``Nanoseconds`` instead. Also, we need to first convert ``D`` to
+the ``Duration`` type using ``To_Duration`` before we can display it.
+
+Benchmarking
+^^^^^^^^^^^^
+
+One interesting application using the :ada:`Ada.Real_Time` package is
+benchmarking. We've used it before in a previous section when discussed
+tasking. Let's look at an example of benchmarking:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Ada.Real_Time; use Ada.Real_Time;
+
+    procedure Display_Benchmarking is
+
+       procedure Computational_Intensive_App is
+       begin
+          delay 0.5;
+       end Computational_Intensive_App;
+
+       Start_Time, Stop_Time : Time;
+       Elapsed_Time          : Time_Span;
+
+    begin
+       Start_Time := Clock;
+
+       Computational_Intensive_App;
+
+       Stop_Time    := Clock;
+       Elapsed_Time := Stop_Time - Start_Time;
+
+       Put_Line ("Elapsed time: "
+                 & Duration'Image (To_Duration (Elapsed_Time))
+                 & " seconds");
+    end Display_Benchmarking;
+
+This example defines a dummy ``Computational_Intensive_App`` that is
+implemented using a simple :ada:`delay` statement. We initialize
+``Start_Time`` and ``Stop_Time`` with the current clock and calculate the
+elapsed time. By running this application, we see that the elapsed time is
+roughly 5 seconds, as expected due to the :ada:`delay` statement.
+
+A similar application is benchmarking of CPU time. This can be implemented
+by using the :ada:`Execution_Time`. Let's adapt the previous example to
+measure CPU time:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;        use Ada.Text_IO;
+    with Ada.Real_Time;      use Ada.Real_Time;
+    with Ada.Execution_Time; use Ada.Execution_Time;
+
+    procedure Display_Benchmarking_CPU_Time is
+
+       procedure Computational_Intensive_App is
+       begin
+          delay 0.5;
+       end Computational_Intensive_App;
+
+       Start_Time, Stop_Time : CPU_Time;
+       Elapsed_Time          : Time_Span;
+
+    begin
+       Start_Time := Clock;
+
+       Computational_Intensive_App;
+
+       Stop_Time    := Clock;
+       Elapsed_Time := Stop_Time - Start_Time;
+
+       Put_Line ("CPU time: "
+                 & Duration'Image (To_Duration (Elapsed_Time))
+                 & " seconds");
+    end Display_Benchmarking_CPU_Time;
+
+In this example, ``Start_Time`` and ``Stop_Time`` are of type ``CPU_Time``
+instead of ``Time``. However, we still call the ``Clock`` function to
+initialize both variables and calculate the elapsed time in the same way
+as before. By running this application, we see that the CPU time is
+significantly lower than the 5 seconds we've seen before. This is caused
+by the fact that the :ada:`delay` statement doesn't require much CPU time.
+Results are different if we adapt the implementation of
+``Computational_Intensive_App`` to make use of mathematical functions in
+a long loop. For example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;        use Ada.Text_IO;
+    with Ada.Real_Time;      use Ada.Real_Time;
+    with Ada.Execution_Time; use Ada.Execution_Time;
+
+    with Ada.Numerics.Generic_Elementary_Functions;
+
+    procedure Display_Benchmarking_Math is
+
+       procedure Computational_Intensive_App is
+          package Funcs is new Ada.Numerics.Generic_Elementary_Functions
+            (Float_Type => Long_Long_Float);
+          use Funcs;
+
+          X : Long_Long_Float;
+       begin
+          for I in 0 .. 5_000_000 loop
+             X := Tan (Arctan
+                       (Tan (Arctan
+                          (Tan (Arctan
+                             (Tan (Arctan
+                                (Tan (Arctan
+                                   (Tan (Arctan
+                                      (0.577))))))))))));
+          end loop;
+       end Computational_Intensive_App;
+
+       procedure Benchm_Elapsed_Time is
+          Start_Time, Stop_Time : Time;
+          Elapsed_Time          : Time_Span;
+
+       begin
+          Start_Time := Clock;
+
+          Computational_Intensive_App;
+
+          Stop_Time    := Clock;
+          Elapsed_Time := Stop_Time - Start_Time;
+
+          Put_Line ("Elapsed time: "
+                    & Duration'Image (To_Duration (Elapsed_Time))
+                    & " seconds");
+       end Benchm_Elapsed_Time;
+
+       procedure Benchm_CPU_Time is
+          Start_Time, Stop_Time : CPU_Time;
+          Elapsed_Time          : Time_Span;
+
+       begin
+          Start_Time := Clock;
+
+          Computational_Intensive_App;
+
+          Stop_Time    := Clock;
+          Elapsed_Time := Stop_Time - Start_Time;
+
+          Put_Line ("CPU time: "
+                    & Duration'Image (To_Duration (Elapsed_Time))
+                    & " seconds");
+       end Benchm_CPU_Time;
+    begin
+       Benchm_Elapsed_Time;
+       Benchm_CPU_Time;
+    end Display_Benchmarking_Math;
+
+Now that our dummy ``Computational_Intensive_App`` makes use of
+mathematical operations that require significant CPU time, the measured
+elapsed and CPU time should be much closer to each other than before.
 
 Strings
 --------
