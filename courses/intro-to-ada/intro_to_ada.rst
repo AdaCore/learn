@@ -1973,7 +1973,7 @@ known at compile-time - which means, in effect, that their size and bounds are
 determined at runtime - the component type of arrays needs to be of a definite
 and constrained type.
 
-Hence, if you need to declare, for example, and array of strings, the string
+Hence, if you need to declare, for example, an array of strings, the string
 subtype used as component will need to have a fixed size.
 
 .. code-block:: ada
@@ -2038,7 +2038,7 @@ subtype, constrained by the bounds of the slice.
 Modular/Structured programming
 ==============================
 
-So far, we manager to put our examples in the body of a procedure. Ada is
+So far, we managed to put our examples in the body of a procedure. Ada is
 helpful in that regard, since it allows you to put any declaration in any
 declarative part, which allowed us to declare our types and instances in the
 body of the main procedure of our examples.
@@ -2692,7 +2692,7 @@ types in Ada. They are a very powerful notation that will allow you to avoid
 writing  procedural code for the instantiation of your data structures in many
 cases.
 
-A basic rule that has to be followed wh3n writing aggregates is that *every
+A basic rule that has to be followed when writing aggregates is that *every
 component* of the described data type has to be specified, even components that
 have a default value.
 
