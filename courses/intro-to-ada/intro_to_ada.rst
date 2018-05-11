@@ -8103,7 +8103,7 @@ In previous sections, we've used strings in many source-code examples. In
 this section, we will discuss them in more details.
 
 String operations
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 Operations on standard strings are available in the
 :ada:`Ada.Strings.Fixed` package. As mentioned in previous sections,
@@ -8302,6 +8302,220 @@ applied on the right side of the string (``Right``). For the ``Delete``
 procedure, we specify the range of the substring, which is substituted by
 whitespaces. For the function version of ``Delete``, we call ``Trim`` in
 addition, which trims the trailing whitespaces.
+
+Bounded and unbounded strings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Using fixed-length strings is usually good enough for strings that are
+initialized at declaration time. However, as seen in the previous section
+with procedural operations on strings, we might encounter difficulties
+when performing operations on fixed-length strings. This is mainly due
+to the fact that fixed-length strings are essentially arrays of
+characters. The following example shows how cumbersome the initialization
+of fixed-length strings can be when it's not performed at declaration
+time:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;         use Ada.Text_IO;
+
+    procedure Show_Char_Array is
+       S : String (1 .. 15);
+       --  Strings are arrays of Character
+    begin
+       S := "Hello          ";
+       --  Alternatively:
+       --
+       --  #1:
+       --      S (1 .. 5)      := "Hello";
+       --      S (6 .. S'Last) := (others => ' ');
+       --
+       --  #2:
+       --      S := ('H', 'e', 'l', 'l', 'o', others => ' ');
+
+       Put_Line ("String: " & S);
+       Put_Line ("String Length: " & Integer'Image (S'Length));
+    end Show_Char_Array;
+
+In this case, we cannot simply write :ada:`S := "Hello"`, because the
+resulting array of characters for the ``Hello`` string would have a
+different length than the ``S`` string. Therefore, we need to include the
+trailing whitespaces in order to match the length of ``S``. As indicated
+in the example, we could use an exact range for the initialization (
+:ada:`S (1 .. 5)`) or use an explicit array of individual characters.
+
+When strings are initialized or manipulated at run-time, it's usually
+better to use bounded or unbounded strings. An important feature of these
+types is that they are not arrays, so that they are not affected by the
+difficulties presented in the previous example. Let's start by looking
+into bounded strings.
+
+Bounded strings
+^^^^^^^^^^^^^^^
+
+Bounded strings are defined in the
+:ada:`Ada.Strings.Bounded.Generic_Bounded_Length` package. Because this is
+a generic package, we need to instantiate it first and set the maximum
+length of the bounded strings. We can then declare bounded strings using
+the ``Bounded_String`` type.
+
+Both bounded strings and fixed-length strings have a maximum length that
+they can store. However, because bounded strings are not arrays,
+initializing them at run-time is much easier. For example:
+
+.. code-block:: ada
+
+    with Ada.Strings;         use Ada.Strings;
+    with Ada.Strings.Bounded;
+    with Ada.Text_IO;         use Ada.Text_IO;
+
+    procedure Show_Bounded_String is
+       package B_Str is new
+         Ada.Strings.Bounded.Generic_Bounded_Length (Max => 15);
+       use B_Str;
+
+       S1, S2 : Bounded_String;
+
+       procedure Display_String_Info (S : Bounded_String) is
+       begin
+          Put_Line ("String: " & To_String (S));
+          Put_Line ("String Length: " & Integer'Image (Length (S)));
+          --  String:         S'Length => ok
+          --  Bounded_String: S'Length => compilation error
+          --                              bounded strings are not arrays!
+
+          Put_Line ("Max.   Length: " & Integer'Image (Max_Length));
+       end Display_String_Info;
+    begin
+       S1 := To_Bounded_String ("Hello");
+       Display_String_Info (S1);
+
+       S2 := To_Bounded_String ("Hello World");
+       Display_String_Info (S2);
+
+       S1 := To_Bounded_String ("Something longer to say here...",
+                                Right);
+       Display_String_Info (S1);
+    end Show_Bounded_String;
+
+By using bounded strings, we can easily initialize ``S1`` and ``S2``
+multiple times at run-time. We use the ``To_Bounded_String`` and
+``To_String`` functions to convert back-and-forth between fixed-length
+strings and bounded strings. In case of ``To_Bounded_String``, if the
+length of the input string is greater than the maximum capacity of the
+bounded string, an exception will be raised. In order to avoid this, we
+can use the truncation parameter (``Right`` in our example).
+
+Also note that, because bounded strings are not arrays, we cannot use the
+:ada:`'Length` attribute as we did for fixed-length strings. In this case,
+we call the ``Length`` function, which returns the length of the string
+stored in the bounded string. In order to get the maximum length of the
+bounded string, we can use the ``Max_Length`` constant.
+
+After initializing bounded strings, we may manipulate them. For example,
+we may append a string to a bounded string using ``Append`` or concatenate
+bounded strings using the :ada:`&`  operator. For example:
+
+.. code-block:: ada
+
+    with Ada.Strings;         use Ada.Strings;
+    with Ada.Strings.Bounded;
+    with Ada.Text_IO;         use Ada.Text_IO;
+
+    procedure Show_Bounded_String_Op is
+       package B_Str is new
+         Ada.Strings.Bounded.Generic_Bounded_Length (Max => 30);
+       use B_Str;
+
+       S1, S2 : Bounded_String;
+    begin
+       S1 := To_Bounded_String ("Hello");
+       --  Alternatively: A := Null_Bounded_String & "Hello";
+       Append (S1, " World");
+       --  Alternatively: Append (A, " World", Right);
+       Put_Line ("String: " & To_String (S1));
+
+       S2 := To_Bounded_String ("Hello!");
+       S1 := S1 & " " & S2;
+       Put_Line ("String: " & To_String (S1));
+    end Show_Bounded_String_Op;
+
+Note that we may initialize a bounded string with an empty string using
+the ``Null_Bounded_String`` constant. Also note that the ``Append``
+procedure allows for specifying the truncation mode --- similar to the
+``To_Bounded_String`` function.
+
+Unbounded strings
+^^^^^^^^^^^^^^^^^
+
+Unbounded strings are defined in the :ada:`Ada.Strings.Unbounded` package.
+Since this is not a generic package, we don't need to instantiate a
+package before using the ``Unbounded_String`` type. As you may recall from
+the previous section, bounded strings require a package instantiation.
+
+In general, unbounded strings are similar to bounded strings. The main
+difference is that they can hold strings of any size and adapt according
+to the input string: if we initialize an unbounded string with e.g. a
+10-character string and then with a 50-character string, internal
+operations in the container will make sure that memory is allocated to
+store the new string. In most cases, developers don't need to worry about
+these operations. Also, no truncation is necessary in this case.
+
+Initialization of unbounded strings is very similar to bounded strings.
+Let's look at the example:
+
+.. code-block:: ada
+
+    with Ada.Strings;           use Ada.Strings;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Text_IO;           use Ada.Text_IO;
+
+    procedure Show_Unbounded_String is
+       S1, S2 : Unbounded_String;
+
+       procedure Display_String_Info (S : Unbounded_String) is
+       begin
+          Put_Line ("String: " & To_String (S));
+          Put_Line ("String Length: " & Integer'Image (Length (S)));
+       end Display_String_Info;
+    begin
+       S1 := To_Unbounded_String ("Hello");
+       --  Alternatively: A := Null_Unbounded_String & "Hello";
+       Display_String_Info (S1);
+
+       S2 := To_Unbounded_String ("Hello World");
+       Display_String_Info (S2);
+
+       S1 := To_Unbounded_String ("Something longer to say here...");
+       Display_String_Info (S1);
+    end Show_Unbounded_String;
+
+Similar to bounded strings, we can easily initialize ``S1`` and ``S2``
+multiple times at run-time and use the ``To_Unbounded_String`` and
+``To_String`` functions to convert back-and-forth between fixed-length
+strings and unbounded strings. However, in this case, truncation is not
+needed.
+
+Similar to bounded strings, we can use the ``Append`` function and the
+:ada:`&` operator for unbounded strings. For example:
+
+.. code-block:: ada
+
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Text_IO;           use Ada.Text_IO;
+
+    procedure Show_Unbounded_String_Op is
+       S1, S2 : Unbounded_String := Null_Unbounded_String;
+    begin
+       S1 := S1 & "Hello";
+       S2 := S2 & "Hello!";
+
+       Append (S1, " World");
+       Put_Line ("String: " & To_String (S1));
+
+       S1 := S1 & " " & S2;
+       Put_Line ("String: " & To_String (S1));
+    end Show_Unbounded_String_Op;
 
 Files and streams
 -----------------
