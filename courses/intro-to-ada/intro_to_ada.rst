@@ -8099,6 +8099,210 @@ elapsed and CPU time should be much closer to each other than before.
 Strings
 --------
 
+In previous sections, we've used strings in many source-code examples. In
+this section, we will discuss them in more details.
+
+String operations
+^^^^^^^^^^^^^^^^^
+
+Operations on standard strings are available in the
+:ada:`Ada.Strings.Fixed` package. As mentioned in previous sections,
+standard strings are arrays of elements of :ada:`Character` type with *a
+fixed-length*. That's why this child package is called ``Fixed``.
+
+One of the most simple operations available is counting the number of
+substrings available in a string (using ``Count``) and finding their
+corresponding indices (using ``Index``). Let's look at an example:
+
+.. code-block:: ada
+
+    with Ada.Strings.Fixed; use Ada.Strings.Fixed;
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    procedure Show_Find_Substring is
+
+       S   : String := "Hello" & 3 * " World";
+       P   : constant String := "World";
+       Idx : Natural;
+       Cnt : Natural;
+    begin
+       Cnt := Ada.Strings.Fixed.Count
+         (Source  => S,
+          Pattern => P);
+
+       Put_Line ("String: " & S);
+       Put_Line ("Count for '" & P & "': " & Natural'Image (Cnt));
+
+       Idx := 0;
+       for I in 1 .. Cnt loop
+          Idx := Index
+            (Source  => S,
+             Pattern => P,
+             From    => Idx + 1);
+
+          Put_Line ("Found instance of '" & P & "' at position: "
+                    & Natural'Image (Idx));
+       end loop;
+
+    end Show_Find_Substring;
+
+Notice that we initialize the string ``S`` using a multiplication. Writing
+:ada:`"Hello" & 3 * " World"` creates the string
+``Hello World World World``. We then use the function ``Count`` to get the
+number of instances of the word ``World`` in ``S``.  Next, we use the
+function ``Index`` in a loop to find the index of each instance of
+``World`` in ``S``.
+
+In the previous example, we looked for instances of a specific substring.
+In the next example, we will retrieve all the words in the string. We can
+do this by using ``Find_Token`` and using whitespaces as separators. For
+example:
+
+.. code-block:: ada
+
+    with Ada.Strings;       use Ada.Strings;
+    with Ada.Strings.Fixed; use Ada.Strings.Fixed;
+    with Ada.Strings.Maps;  use Ada.Strings.Maps;
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    procedure Show_Find_Words is
+
+       S   : String := "Hello" & 3 * " World";
+       F   : Positive;
+       L   : Natural;
+       I   : Natural := 1;
+
+       Whitespace : constant Character_Set :=
+         To_Set (' ');
+    begin
+       Put_Line ("String: " & S);
+       Put_Line ("String length: " & Integer'Image (S'Length));
+
+       while I in S'Range loop
+          Find_Token
+            (Source  => S,
+             Set     => Whitespace,
+             From    => I,
+             Test    => Outside,
+             First   => F,
+             Last    => L);
+
+          exit when L = 0;
+
+          Put_Line ("Found word instance at position "
+                    & Natural'Image (F)
+                    & ": '" & S (F .. L) & "'");
+          --   & "-" & F'Img & "-" & L'Img
+
+          I := L + 1;
+       end loop;
+    end Show_Find_Words;
+
+The procedure ``Find_Token`` requires a set of characters that will be
+used as delimitators. This is represented by the ``Character_Set`` from
+the :ada:`Ada.Strings.Maps` package. We use the ``To_Set`` function (from
+the same package) to initialize the set in ``Whitespace``. We then call
+``Find_Token`` in a loop over valid indices to find the starting index of
+each word. For the ``Test`` parameter of the ``Find_Token`` procedure, we
+pass ``Outside`` as an argument, which indicates that we're looking for
+indices that are outside the ``Whitespace`` set, i.e. actual words. The
+``First`` and ``Last`` parameters of ``Find_Token`` are output parameters
+that indicate the valid range of the substring. We can use this
+information to display the string (:ada:`S (F .. L)`).
+
+The operations that we've looked so far only iterate over strings, but
+don't modify them. We will now look into following operations that change
+the content of strings:
+
++-----------------------+-----------------------------------------+
+| Operation             | Description                             |
++=======================+=========================================+
+| Insert                | Insert substring in a string            |
++-----------------------+-----------------------------------------+
+| Overwrite             | Overwrite a string with a substring     |
++-----------------------+-----------------------------------------+
+| Delete                | Delete a substring                      |
++-----------------------+-----------------------------------------+
+| Trim                  | Remove whitespaces from a string        |
++-----------------------+-----------------------------------------+
+
+Note that all these operations are available as functions or procedures.
+In case functions are used, a new string is created. If we use a
+procedure, however, the operations are performed in place. In this case,
+we need to make sure that the string constraints are respected. Otherwise,
+the procedure might raise an exception. For example, let's say we have a
+string ``S`` containing 10 characters. Inserting a string with two
+characters  (e.g. ``"!!"``) into ``S`` would require a string containing
+12 characters. Since ``S`` has a fixed length, we cannot increase its
+size. The easiest solution in this case is to specify that truncation
+should be applied while inserting the substring, so that the length of
+``S`` remains fixed. Let's see an example that makes use of both function
+and procedure version of ``Insert``, ``Overwrite`` and ``Delete``:
+
+.. code-block:: ada
+
+    with Ada.Strings;       use Ada.Strings;
+    with Ada.Strings.Fixed; use Ada.Strings.Fixed;
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    procedure Show_Adapted_Strings is
+
+       S   : String := "Hello World";
+       P   : constant String := "World";
+       N   : constant String := "Beautiful";
+
+       procedure Display_Adapted_String
+         (Source   : String;
+          Before   : Positive;
+          New_Item : String;
+          Pattern  : String)
+       is
+          S_Ins_In : String := Source;
+          S_Ovr_In : String := Source;
+          S_Del_In : String := Source;
+
+          S_Ins : String := Insert (Source, Before, New_Item & " ");
+          S_Ovr : String := Overwrite (Source, Before, New_Item);
+          S_Del : String := Trim (Delete (Source,
+                                          Before,
+                                          Before + Pattern'Length - 1),
+                                  Ada.Strings.Right);
+       begin
+          Insert (S_Ins_In,    Before, New_Item, Right);
+          Overwrite (S_Ovr_In, Before, New_Item, Right);
+          Delete (S_Del_In,    Before, Before + Pattern'Length - 1);
+
+          Put_Line ("Original:  '" & Source & "'");
+
+          Put_Line ("Insert:    '" & S_Ins  & "'");
+          Put_Line ("Overwrite: '" & S_Ovr  & "'");
+          Put_Line ("Delete:    '" & S_Del  & "'");
+
+          Put_Line ("Insert    (in-place): '" & S_Ins_In & "'");
+          Put_Line ("Overwrite (in-place): '" & S_Ovr_In & "'");
+          Put_Line ("Delete    (in-place): '" & S_Del_In & "'");
+       end Display_Adapted_String;
+
+       Idx : Natural;
+    begin
+       Idx := Index
+         (Source  => S,
+          Pattern => P);
+
+       if Idx > 0 then
+          Display_Adapted_String (S, Idx, N, P);
+       end if;
+    end Show_Adapted_Strings;
+
+In this example, we look for the index of the substring ``World`` and
+perform operations on this substring. The procedure
+``Display_Adapted_String`` makes use of both versions of the operations.
+For the procedural version of ``Insert`` and ``Overwrite``, truncation is
+applied on the right side of the string (``Right``). For the ``Delete``
+procedure, we specify the range of the substring, which is substituted by
+whitespaces. For the function version of ``Delete``, we call ``Trim`` in
+addition, which trims the trailing whitespaces.
+
 Files and streams
 -----------------
 
