@@ -8102,6 +8102,128 @@ Strings
 Files and streams
 -----------------
 
+This section presents the different options available in Ada for file
+input/output (I/O).
+
+Text I/O
+~~~~~~~~
+
+In many sections of this course, the ``Put_Line`` procedure was used to
+display information on the console. However, this procedure also accepts
+a ``File_Type`` parameter. For example, we may select between the standard
+output and the standard error by setting this parameter explicitly:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Std_Text_Out is
+    begin
+       Put_Line (Standard_Output, "Hello World #1");
+       Put_Line (Standard_Error,  "Hello World #2");
+    end Show_Std_Text_Out;
+
+In addition, this parameter can be used to write information to any
+text file. In order to create a new file for writing, we use the
+``Create`` procedure. This procedure initializes a ``File_Type`` element
+that can be used as argument for ``Put_Line`` (instead of e.g.
+``Standard_Output``). After we finish writing information, we have to
+close the file by calling the ``Close`` procedure.
+
+A similar method is used for retrieving information from a text file.
+However, when opening the file, we need to specify that it's an input
+file (``In_File``) instead of an output file. Also, instead of calling the
+``Put_Line`` procedure, we call the ``Get_Line`` function to retrieve
+information from the file.
+
+Let's see an example that writes information into a new text file and then
+reads information from the same file:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_Text_File_IO is
+       F         : File_Type;
+       File_Name : constant String := "simple.txt";
+    begin
+       Create (F, Out_File, File_Name);
+       Put_Line (F, "Hello World #1");
+       Put_Line (F, "Hello World #2");
+       Put_Line (F, "Hello World #3");
+       Close (F);
+
+       Open (F, In_File, File_Name);
+       while not End_Of_File (F) loop
+          Put_Line (Get_Line (F));
+       end loop;
+       Close (F);
+    end Show_Simple_Text_File_IO;
+
+In addition to the ``Create`` and ``Close`` procedures, the standard
+library also includes a ``Reset`` procedure, which, as the name implies,
+resets all the information from the file. For example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Text_File_Reset is
+       F         : File_Type;
+       File_Name : constant String := "simple.txt";
+    begin
+       Create (F, Out_File, File_Name);
+       Put_Line (F, "Hello World #1");
+       Reset (F);
+       Put_Line (F, "Hello World #2");
+       Close (F);
+
+       Open (F, In_File, File_Name);
+       while not End_Of_File (F) loop
+          Put_Line (Get_Line (F));
+       end loop;
+       Close (F);
+    end Show_Text_File_Reset;
+
+By running this application, we notice that, although we've written the
+first string (``Hello World #1``) to the file, it has been erased because
+of the call to ``Reset``.
+
+When calling the ``Open`` procedure, we need to be aware that, if the
+specified file is not found, an exception will be raised. Therefore, we
+should handle exceptions in this context. The following application
+deletes a file and then tries to open the same file for reading:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Text_File_Input_Except is
+       F         : File_Type;
+       File_Name : constant String := "simple.txt";
+    begin
+       --  Open output file and delete it
+       Create (F, Out_File, File_Name);
+       Delete (F);
+
+       --  Try to open deleted file
+       Open (F, In_File, File_Name);
+       Close (F);
+    exception
+       when Name_Error =>
+          Put_Line ("File does not exist");
+       when others =>
+          Put_Line ("Error while processing input file");
+    end Show_Text_File_Input_Except;
+
+Note that, in this example, we create the file by calling ``Create`` and
+then delete it by calling the ``Delete`` procedure. After a call to
+``Delete``, we cannot use the ``File_Type`` element --- for this reason,
+we don't have a call to ``Close`` after the call to ``Create``. After
+deleting the file, we try to open the non-existant file, which raises a
+``Name_Error`` exception.
+
+
 Dynamic allocation and reclamation
 ----------------------------------
 
