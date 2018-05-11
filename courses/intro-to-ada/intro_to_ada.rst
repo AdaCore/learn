@@ -8223,6 +8223,104 @@ we don't have a call to ``Close`` after the call to ``Create``. After
 deleting the file, we try to open the non-existant file, which raises a
 ``Name_Error`` exception.
 
+Sequential I/O
+~~~~~~~~~~~~~~
+
+The previous section presented details about text file I/O. In this
+section, we will discuss file I/O in binary format. The first package
+we'll see is the :ada:`Ada.Sequential_IO` package. Because this package is
+a generic package, we need to instantiate it for the data type we want to
+use for file I/O. Apart from that, we can make use of the same
+procedures we've seen in the previous section: ``Create``, ``Open``,
+``Close``, ``Reset`` and ``Delete``. However, instead of calling the
+``Get_Line`` and ``Put_Line`` procedures, we'll call the ``Read`` and
+``Write`` procedures.
+
+In the following example, we instantiate the :ada:`Ada.Sequential_IO`
+package for floating-point types:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;
+    with Ada.Sequential_IO;
+
+    procedure Show_Seq_Float_IO is
+       package Float_IO is new Ada.Sequential_IO (Float);
+       use Float_IO;
+
+       F         : Float_IO.File_Type;
+       File_Name : constant String := "float_file.bin";
+    begin
+       Create (F, Out_File, File_Name);
+       Write (F,  1.5);
+       Write (F,  2.4);
+       Write (F,  6.7);
+       Close (F);
+
+       declare
+          Value : Float;
+       begin
+          Open (F, In_File, File_Name);
+          while not End_Of_File (F) loop
+             Read (F, Value);
+             Ada.Text_IO.Put_Line (Float'Image (Value));
+          end loop;
+          Close (F);
+       end;
+    end Show_Seq_Float_IO;
+
+We can use the same approach to read and write complex information. The
+following example makes use of a record that includes a Boolean and a
+floating-point element:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;
+    with Ada.Sequential_IO;
+
+    procedure Show_Seq_Rec_IO is
+       type Num_Info is record
+          Valid : Boolean := False;
+          Value : Float;
+       end record;
+
+       procedure Put_Line (N : Num_Info) is
+       begin
+          if N.Valid then
+             Ada.Text_IO.Put_Line ("(ok,     " & Float'Image (N.Value) & ")");
+          else
+             Ada.Text_IO.Put_Line ("(not ok,  -----------)");
+          end if;
+       end Put_Line;
+
+       package Num_Info_IO is new Ada.Sequential_IO (Num_Info);
+       use Num_Info_IO;
+
+       F         : Num_Info_IO.File_Type;
+       File_Name : constant String := "float_file.bin";
+    begin
+       Create (F, Out_File, File_Name);
+       Write (F,  (True,  1.5));
+       Write (F,  (False, 2.4));
+       Write (F,  (True,  6.7));
+       Close (F);
+
+       declare
+          Value : Num_Info;
+       begin
+          Open (F, In_File, File_Name);
+          while not End_Of_File (F) loop
+             Read (F, Value);
+             Put_Line (Value);
+          end loop;
+          Close (F);
+       end;
+    end Show_Seq_Rec_IO;
+
+As the example clearly shows, the same approach used for floating-point
+types can be used to generate file I/O for this record. As soon as we
+instantiate the :ada:`Ada.Sequential_IO` package for the record type, all
+file I/O operations are the same.
 
 Dynamic allocation and reclamation
 ----------------------------------
