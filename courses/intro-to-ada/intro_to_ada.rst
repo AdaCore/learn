@@ -8517,6 +8517,142 @@ Similar to bounded strings, we can use the ``Append`` function and the
        Put_Line ("String: " & To_String (S1));
     end Show_Unbounded_String_Op;
 
+String encoding and wide strings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For applications that deal with characters other than the Latin alphabet,
+we need to make use of wider precision for character types and encodings
+that are suitable for these characters. The following sections will
+discuss these topics.
+
+Wide strings
+^^^^^^^^^^^^
+
+Standard characters are represented by the :ada:`Character` type and its
+corresponding array format (:ada:`String`). In order to represent
+characters with wider precision, we need to make use of the
+:ada:`Wide_Character` and :ada:`Wide_Wide_Character` types. The
+corresponding string types are :ada:`Wide_String` and
+:ada:`Wide_Wide_String`, respectively. The following example shows that,
+although strings using wider precision have the same length, their sizes
+are different due to the precision used for each character:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;
+    with Ada.Wide_Text_IO;
+    with Ada.Wide_Wide_Text_IO;
+
+    procedure Show_Wide_String is
+       package TI   renames Ada.Text_IO;
+       package WTI  renames Ada.Wide_Text_IO;
+       package WWTI renames Ada.Wide_Wide_Text_IO;
+
+       S   : String           := "hello";
+       WS  : Wide_String      := "hello";
+       WWS : Wide_Wide_String := "hello";
+    begin
+       TI.Put_Line ("String:           " & S);
+       TI.Put_Line ("Length:           " & Integer'Image (S'Length));
+       TI.Put_Line ("Size:             " & Integer'Image (S'Size));
+       TI.New_Line;
+
+       WTI.Put_Line ("Wide string:      " & WS);
+       TI.Put_Line ("Length:           " & Integer'Image (WS'Length));
+       TI.Put_Line ("Size:             " & Integer'Image (WS'Size));
+       TI.New_Line;
+
+       WWTI.Put_Line ("Wide-wide string: " & WWS);
+       TI.Put_Line ("Length:           " & Integer'Image (WWS'Length));
+       TI.Put_Line ("Size:             " & Integer'Image (WWS'Size));
+       TI.New_Line;
+    end Show_Wide_String;
+
+UTF encoding
+^^^^^^^^^^^^
+
+Unicode is one of the most widespread standards for encoding writing
+systems other than the Latin alphabet. It defines a format called
+Unicode Transformation Format (UTF) in various versions, which vary
+according to the underlying precision, support for backwards-compatibility
+and other requirements.
+
+A common UTF format is UTF-8, which encodes strings using up to four
+(8-bit) bytes and is backwards-compatible with the ASCII format. While
+encoding of ASCII characters requires only one byte, Chinese characters
+require three bytes.
+
+In Ada applications, UTF-8 strings are indicated by using the
+:ada:`UTF_8_String` from the :ada:`Ada.Strings.UTF_Encoding` package.
+In order to encode from and to UTF-8 strings, we can use the ``Encode``
+and ``Decode`` functions from the child packages
+:ada:`Strings`, :ada:`Wide_Strings` and :ada:`Wide_Wide_Strings`,
+depending on the precision of the string type that we're using. Let's look
+at an example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;                       use Ada.Text_IO;
+    with Ada.Strings.UTF_Encoding;          use Ada.Strings.UTF_Encoding;
+    with Ada.Strings.UTF_Encoding.Strings;  use Ada.Strings.UTF_Encoding.Strings;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    with Ada.Wide_Wide_Text_IO;
+
+    procedure Show_WW_UTF_String is
+       package WWT_IO renames Ada.Wide_Wide_Text_IO;
+
+       S8       : UTF_8_String := "World: العالَم";
+       WWS      : Wide_Wide_String := Decode (S8);
+    begin
+       Put_Line ("Encoding: " & Encoding (S8)'Image);
+
+       WWT_IO.Put_Line ("String (Wide_Wide): " & WWS);
+       Put_Line ("Length: " & Integer'Image (WWS'Length));
+       New_Line;
+
+       Put_Line ("String (UTF-8):     " & S8);
+       Put_Line ("Length: " & Integer'Image (S8'Length));
+       New_Line;
+
+       Put_Line ("Converting Wide_Wide_String to UTF-8...");
+       New_Line;
+       declare
+          S8 : UTF_8_String := Encode (WWS);
+       begin
+          Put_Line ("String (UTF-8):     " & S8);
+          Put_Line ("Length: " & Integer'Image (S8'Length));
+       end;
+       New_Line;
+
+       --  Display individual characters from string
+       Put ("String:     ");
+       for I in WWS'Range loop
+          declare
+             S8 : UTF_8_String := Encode (WWS (I .. I));
+          begin
+             Put (S8 & " ");
+          end;
+       end loop;
+       New_Line;
+
+    end Show_WW_UTF_String;
+
+By running this application, we notice that, although our input string
+has 14 characters in total, the corresponding UTF-8 string encoding
+requires 21 bytes. The 8-bit character representation used by the
+:ada:`UTF_8_String` type is good enough for storing information. However,
+it is not suitable for direct string manipulation. In this case, we need
+to use the :ada:`Wide_String` and :ada:`Wide_Wide_String` types. In our
+example, when converting ``S8`` to ``WWS`` with a call to ``Decode``, we
+create a new string that correctly stores the individual characters. Also,
+we can convert back-and-forth between :ada:`UTF_8_String` and
+:ada:`Wide_Wide_String` types. In the last block of our example, we
+display the individual characters from the string by encoding each
+character into UTF-8 format and displaying it.
+
 Files and streams
 -----------------
 
