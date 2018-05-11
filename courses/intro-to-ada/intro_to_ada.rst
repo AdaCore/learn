@@ -8189,6 +8189,10 @@ By running this application, we notice that, although we've written the
 first string (``Hello World #1``) to the file, it has been erased because
 of the call to ``Reset``.
 
+In addition to opening a file for reading or writing, we may also open an
+existing file and append information to it. This can be done by calling
+the ``Open`` procedure with the ``Append_File`` option.
+
 When calling the ``Open`` procedure, we need to be aware that, if the
 specified file is not found, an exception will be raised. Therefore, we
 should handle exceptions in this context. The following application
