@@ -8220,7 +8220,7 @@ Note that, in this example, we create the file by calling ``Create`` and
 then delete it by calling the ``Delete`` procedure. After a call to
 ``Delete``, we cannot use the ``File_Type`` element --- for this reason,
 we don't have a call to ``Close`` after the call to ``Create``. After
-deleting the file, we try to open the non-existant file, which raises a
+deleting the file, we try to open the non-existent file, which raises a
 ``Name_Error`` exception.
 
 Sequential I/O
