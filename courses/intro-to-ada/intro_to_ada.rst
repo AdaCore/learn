@@ -8540,9 +8540,9 @@ different lengths and floating-point values:
 
     end Show_String_Stream;
 
-We need to be aware that, when reading a file that contains different
-data types, we should make sure that the same order is used as the one
-used when the file was written. Otherwise, the information we'll get will
+We need to be aware that, when reading a file that contains information
+from different data types, we should make sure that the same order is used
+as when the file was written. Otherwise, the information we'll get will
 be corrupted. Unfortunately, strong data typing cannot directly help
 software developers in this case. Writing simple procedures for file I/O
 (as in the example above) may help ensuring that the file format is
