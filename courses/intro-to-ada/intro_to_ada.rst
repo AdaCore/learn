@@ -8326,6 +8326,103 @@ types can be used to generate file I/O for this record. As soon as we
 instantiate the :ada:`Ada.Sequential_IO` package for the record type, all
 file I/O operations are the same.
 
+Direct I/O
+~~~~~~~~~~
+
+Direct I/O is available in the :ada:`Ada.Direct_IO` package. This file I/O
+approach is similar to the sequential I/O approach presented in the
+previous section. For example, the package instantiation and most
+operations are very similar. If we want to rewrite the
+``Show_Seq_Float_IO`` application presented in the previous section to
+make use of the :ada:`Ada.Direct_IO` package, we basically just need to
+replace the instances of the :ada:`Ada.Sequential_IO` package by the
+:ada:`Ada.Direct_IO` package. This is the adapted source-code:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;
+    with Ada.Direct_IO;
+
+    procedure Show_Dir_Float_IO is
+       package Float_IO is new Ada.Direct_IO (Float);
+       use Float_IO;
+
+       F         : Float_IO.File_Type;
+       File_Name : constant String := "float_file.bin";
+    begin
+       Create (F, Out_File, File_Name);
+       Write (F,  1.5);
+       Write (F,  2.4);
+       Write (F,  6.7);
+       Close (F);
+
+       declare
+          Value : Float;
+       begin
+          Open (F, In_File, File_Name);
+          while not End_Of_File (F) loop
+             Read (F, Value);
+             Ada.Text_IO.Put_Line (Float'Image (Value));
+          end loop;
+          Close (F);
+       end;
+    end Show_Dir_Float_IO;
+
+The main difference between sequential I/O and direct I/O is that direct
+I/O allows for accessing any position in the file. Also, it doesn't offer
+an option to append information to a file. Instead, it has an
+``Inout_File`` mode that allows for reading and writing to a file using
+the same ``File_Type`` element.
+
+In order to access any position in the file, we call the ``Set_Index``
+procedure to set the new position / index. Also, we may use the ``Index``
+function to retrieve the current index. Let's see an example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;
+    with Ada.Direct_IO;
+
+    procedure Show_Dir_Float_In_Out_File is
+       package Float_IO is new Ada.Direct_IO (Float);
+       use Float_IO;
+
+       F         : Float_IO.File_Type;
+       File_Name : constant String := "float_file.bin";
+    begin
+       --  Open file for input / output
+       Create (F, Inout_File, File_Name);
+       Write (F,  1.5);
+       Write (F,  2.4);
+       Write (F,  6.7);
+
+       --  Set index to previous position again and overwrite value
+       Set_Index (F, Index (F) - 1);
+       Write (F,  7.7);
+
+       declare
+          Value : Float;
+       begin
+          --  Set index to start of file
+          Set_Index (F, 1);
+
+          while not End_Of_File (F) loop
+             Read (F, Value);
+             Ada.Text_IO.Put_Line (Float'Image (Value));
+          end loop;
+          Close (F);
+       end;
+    end Show_Dir_Float_In_Out_File;
+
+By running this example, we see that, although we've written ``6.7`` to
+the file, this information was overwritten with the ``7.7`` value after
+we changed the index to the previous position.
+
+Note that, in this example, we make use of the ``Inout_File`` mode.
+Instead of closing the file and reopening it for reading, we simply change
+the index to the initial position before reading information from the
+file (:ada:`Set_Index (F, 1)`)
+
 Dynamic allocation and reclamation
 ----------------------------------
 
