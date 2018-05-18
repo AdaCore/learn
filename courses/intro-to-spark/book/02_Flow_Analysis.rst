@@ -11,9 +11,9 @@ This lecture presents the static flow analysis capability provided by the GNATpr
 What does flow analysis do?
 ---------------------------------------------------------------------
 
-Flow analysis concentrates primarily on variables. It models how information flows through them during a subprogram’s execution, linking the final values of variables to their initial values. It also takes into account global variables declared at library level, as well as local variables defined inside subprograms and formal parameters.
+Flow analysis concentrates primarily on variables. It models how information flows through them during a subprogram's execution, linking the final values of variables to their initial values. It also takes into account global variables declared at library level, as well as local variables defined inside subprograms and formal parameters.
 
-For a nested subprogram, we call *scope variables* variables that are declared locally to an enclosing unit. Scope variables really are global variables from the nested subprogram’s point of view.
+For a nested subprogram, we call *scope variables* variables that are declared locally to an enclosing unit. Scope variables really are global variables from the nested subprogram's point of view.
 
 Flow analysis is usually fast, it takes approximatively the same time as compilation. It permits the detection of kinds of errors, as well as violations of some SPARK requirements, including the absence of aliasing and side-effect freedom in expressions. Note that flow analysis is sound: if it does not detect any errors of a supported kind, then it is guaranteed that there are no errors.
 
@@ -24,7 +24,7 @@ Errors Detected
 Uninitialized Variables
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-We will now present each class of error which can be detected by flow analysis, starting with reading an uninitialized variable which is nearly always an error. It introduces non-determinism and breaks the type system as the value of an uninitialized variable may be outside that of its subtype’s range. For these reasons, GNATprove has resorted to requiring every read variable to be initialized.
+We will now present each class of error which can be detected by flow analysis, starting with reading an uninitialized variable which is nearly always an error. It introduces non-determinism and breaks the type system as the value of an uninitialized variable may be outside that of its subtype's range. For these reasons, GNATprove has resorted to requiring every read variable to be initialized.
 
 Flow analysis is responsible for ensuring that this requirement is always fulfilled by SPARK code. For example, in the function ``Max_Array`` shown on this example, we have forgotten to initialize the value of ``Max`` prior to entering the loop. As a consequence, the value read in the condition of the if statement may be uninitialized. Flow analysis will detect and report this error.
 
@@ -56,7 +56,7 @@ Flow analysis is responsible for ensuring that this requirement is always fulfil
 Ineffective Statements
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Ineffective statements are different from dead code as they are executed, even usually modifying the value of variables. Only, they have no effect on any of the subprogram’s outputs, be they parameters, global variables or function result. Ineffective statements, like unused variables, should be avoided, as they make the code less readable and more difficult to maintain.
+Ineffective statements are different from dead code as they are executed, even usually modifying the value of variables. Only, they have no effect on any of the subprogram's outputs, be they parameters, global variables or function result. Ineffective statements, like unused variables, should be avoided, as they make the code less readable and more difficult to maintain.
 
 What is more, they are often caused by errors in the program, which may be difficult to detect. It is the case in the subprograms ``Swap1`` and ``Swap2`` shown below, which do not properly swap their two parameters ``X`` and ``Y``. Though they are not considered as errors in themselves, flow analysis warns both on ineffective statements and unused variables.
 
@@ -94,7 +94,7 @@ What is more, they are often caused by errors in the program, which may be diffi
 Incorrect Parameter Mode
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Parameter modes influence the behavior of the compiler and are a key point for documenting the usage of a subprogram. Flow analysis will check that specified parameter modes always correspond to their usage in the subprogram’s body. More precisely, it will check that an :ada:`in` parameter is never updated, either directly or through a subprogram call. It will also check that the initial value of an :ada:`out` parameter will never be read in the subprogram, as it may not be copied on subprogram entry. Finally, flow analysis will also warn when an :ada:`in out` parameter is not updated or when its initial value is not used in the subprogram, as it may be the sign of an error. An example is shown below in the subprogram called ``Swap``.
+Parameter modes influence the behavior of the compiler and are a key point for documenting the usage of a subprogram. Flow analysis will check that specified parameter modes always correspond to their usage in the subprogram's body. More precisely, it will check that an :ada:`in` parameter is never updated, either directly or through a subprogram call. It will also check that the initial value of an :ada:`out` parameter will never be read in the subprogram, as it may not be copied on subprogram entry. Finally, flow analysis will also warn when an :ada:`in out` parameter is not updated or when its initial value is not used in the subprogram, as it may be the sign of an error. An example is shown below in the subprogram called ``Swap``.
 
 .. code:: ada
 
@@ -152,9 +152,9 @@ When a :ada:`Global` contract is supplied by the user for a subprogram, flow ana
     end Show_Global_Contracts_Proto;
 
 
-Global contracts are provided as part of the subprogram specification. Indeed, they provide useful information to users of a subprogram. The value specified for the :ada:`Global` aspect is an aggregate-like list of global variables’ names, grouped together depending on their mode.
+Global contracts are provided as part of the subprogram specification. Indeed, they provide useful information to users of a subprogram. The value specified for the :ada:`Global` aspect is an aggregate-like list of global variables' names, grouped together depending on their mode.
 
-In the example shown below, the procedure ``Set_X_To_Y_Plus_Z`` reads both ``Y`` and ``Z``, listed as :ada:`Input`, and updates ``X``, listed as :ada:`Output`. As ``Set_X_To_X_Plus_Y`` both updates ``X`` and reads its initial value, ``X``’s mode is :ada:`In_Out`. Like for parameters, if no mode is specified, then the default is :ada:`Input`. That is the case in the declaration of ``Get_Value_Of_X``. Finally, if a subprogram, like ``Incr_Parameter_X``, does not reference any global variable, the value of the global contract should be set to :ada:`null`.
+In the example shown below, the procedure ``Set_X_To_Y_Plus_Z`` reads both ``Y`` and ``Z``, listed as :ada:`Input`, and updates ``X``, listed as :ada:`Output`. As ``Set_X_To_X_Plus_Y`` both updates ``X`` and reads its initial value, ``X``'s mode is :ada:`In_Out`. Like for parameters, if no mode is specified, then the default is :ada:`Input`. That is the case in the declaration of ``Get_Value_Of_X``. Finally, if a subprogram, like ``Incr_Parameter_X``, does not reference any global variable, the value of the global contract should be set to :ada:`null`.
 
 .. code:: ada
 
@@ -227,7 +227,7 @@ For example, the final value of each parameter of ``Swap`` only depends on the i
          Depends => (X => (Y, Z));      -- X depends on Y and Z
 
        procedure Set_X_To_X_Plus_Y with
-         Depends => (X => + Y);          -- X depends on Y and X’s initial value
+         Depends => (X => + Y);          -- X depends on Y and X's initial value
 
        procedure Do_Nothing (X : T) with
          Depends => (null => X);        -- No output is affected by X
@@ -240,7 +240,7 @@ For example, the final value of each parameter of ``Swap`` only depends on the i
 
 It is often the case that the final value of a variable depends on its own initial value. This can be specified in a concise way using the :ada:`+` character, like in the specification of ``Set_X_To_X_Plus_Y``. Note that, if there are more than one variable on the left of the arrow, a :ada:`+` means that each variables depends on itself, and not that they all depend on each other.
 
-It can also be the case that an input is not used to compute the final value of any output. This can be expressed by putting :ada:`null` at the left of the dependency relation, like we have for the ``Do_Nothing`` subprogram shown here. Note that there can only be one such dependency relation, listing all the unused inputs of the subprogram, and that it must be declared last. Also note that such an annotation will silence flow analysis’ warning about unused parameters. Finally, :ada:`null` can also be used at the right of a dependency relation to state that an output depends on no input. It is the case for the procedure ``Set_X_To_Zero``.
+It can also be the case that an input is not used to compute the final value of any output. This can be expressed by putting :ada:`null` at the left of the dependency relation, like we have for the ``Do_Nothing`` subprogram shown here. Note that there can only be one such dependency relation, listing all the unused inputs of the subprogram, and that it must be declared last. Also note that such an annotation will silence flow analysis' warning about unused parameters. Finally, :ada:`null` can also be used at the right of a dependency relation to state that an output depends on no input. It is the case for the procedure ``Set_X_To_Zero``.
 
 
 Shortcomings
@@ -427,7 +427,7 @@ Finally, unexpected flow messages may come from inaccuracy in flow contract comp
 
 For example, knowing the set of global variables accessed by a subprogram is necessary for detecting the use of uninitialized variables. As for :ada:`Depends` contracts on a subprogram, they are necessary to be able to check user-supplied dependency contracts on callers of this subprogram. As each flow contract on a subprogram depends on the flow contracts of all the subprograms called inside its body, this computation can easily be quite time-consuming. Therefore, flow analysis sometimes trades-off precision of this computation for efficiency.
 
-That is in particular the case for :ada:`Depends` contracts, for which flow analysis simply assumes the worst: it assumes that each subprogram output depends on all of the subprogram’s inputs. To solve this issue, it is enough to manually supply contracts when computed ones are not precise enough. Note that supplying :ada:`Global` contracts may also be a good idea to speed up flow analysis on larger projects in general.
+That is in particular the case for :ada:`Depends` contracts, for which flow analysis simply assumes the worst: it assumes that each subprogram output depends on all of the subprogram's inputs. To solve this issue, it is enough to manually supply contracts when computed ones are not precise enough. Note that supplying :ada:`Global` contracts may also be a good idea to speed up flow analysis on larger projects in general.
 
 
 Code Examples / Pitfalls
@@ -498,7 +498,7 @@ Here, to avoid the flow message from previous slide, ``Search_Array`` raises an 
        null;
     end Show_Search_Array_2;
 
-This example is correct. Flow analysis won’t emit any message here, which means that it can make sure that ``Result`` cannot be read uninitialized in SPARK code. Why is it, since ``Result`` is still not initialized when ``E`` is not in ``A``? In fact, it comes from the fact that the exception ``Not_Found`` can never be caught inside SPARK code. Therefore, the burden of insuring that ``Result`` is never read when uninitialized is still on the user. However, it is no longer stated explicitly by the tool, as it now falls into a general category of assumptions documented in the user guide. Also note that the GNATprove tool as a whole will try to make sure that ``Not_Found`` is never raised in this program as part of ensuring absence of runtime errors in SPARK code.
+This example is correct. Flow analysis won't emit any message here, which means that it can make sure that ``Result`` cannot be read uninitialized in SPARK code. Why is it, since ``Result`` is still not initialized when ``E`` is not in ``A``? In fact, it comes from the fact that the exception ``Not_Found`` can never be caught inside SPARK code. Therefore, the burden of insuring that ``Result`` is never read when uninitialized is still on the user. However, it is no longer stated explicitly by the tool, as it now falls into a general category of assumptions documented in the user guide. Also note that the GNATprove tool as a whole will try to make sure that ``Not_Found`` is never raised in this program as part of ensuring absence of runtime errors in SPARK code.
 
 
 Example #3
@@ -540,7 +540,7 @@ Instead of raising an exception, we have chosen to use a discriminant record for
     end Show_Search_Array_3;
 
 
-This example is correct. No flow message will be emitted here, as flow analysis indeed can make sure both that no uninitialized variable will be read in ``Search_Array``’s body, and that all its outputs are initialized on return.
+This example is correct. No flow message will be emitted here, as flow analysis indeed can make sure both that no uninitialized variable will be read in ``Search_Array``'s body, and that all its outputs are initialized on return.
 
 
 Example #4
@@ -851,5 +851,5 @@ The subprogram ``Identity`` swaps the value of its parameter twice. Its :ada:`De
     end Show_Swap;
 
 
-This code is correct, but flow analysis cannot verify the :ada:`Depends` contract of ``Identity``. Indeed, ``Swap`` has no user-specified :ada:`Depends` contract. As a consequence, flow analysis assumes that all outputs of ``Swap``, that is ``X`` and ``Y``, depend on all its inputs, that is both ``X`` and ``Y``’s initial values. To solve this problem, it is enough to manually specify a more precise :ada:`Depends` contract on ``Swap``.
+This code is correct, but flow analysis cannot verify the :ada:`Depends` contract of ``Identity``. Indeed, ``Swap`` has no user-specified :ada:`Depends` contract. As a consequence, flow analysis assumes that all outputs of ``Swap``, that is ``X`` and ``Y``, depend on all its inputs, that is both ``X`` and ``Y``'s initial values. To solve this problem, it is enough to manually specify a more precise :ada:`Depends` contract on ``Swap``.
 
