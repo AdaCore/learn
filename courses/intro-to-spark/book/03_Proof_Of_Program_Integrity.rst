@@ -14,52 +14,63 @@ There is always the potential for errors which can occur at program's execution 
 
 .. code:: ada
 
-    type Nat_Array is array (Integer range <>) of Natural;
+    procedure Show_Run_Time_Errors
+      with SPARK_Mode => On
+    is
+       type Nat_Array is array (Integer range <>) of Natural;
 
-    A : Nat_Array (1 .. 10);
-    I, J, P, Q : Integer;
-
-    A (I + J) := P / Q;
+       A          : Nat_Array (1 .. 10);
+       I, J, P, Q : Integer;
+    begin
+       A (I + J) := P / Q;
+    end Show_Run_Time_Errors;
 
 If we don't know the values of ``I``, ``J``, ``P``, and ``Q``, then there is a question of what are the errors which may occur when executing this code. In fact, there are quite an important number of them.
 
 First, the computation of ``I`` + ``J`` may overflow, for example if ``I`` is :ada:`Integer'Last` and ``J`` is positive.
 
 .. code:: ada
+    :class: ada-nocheck
 
     A (I + J) := P / Q;
 
 .. code:: ada
+    :class: ada-nocheck
 
     A (Integer'Last + 1) := P / Q;
 
 Then, its result may not be in the range of the array ``A``.
 
 .. code:: ada
+    :class: ada-nocheck
 
     A (A'Last + 1) := P / Q;
 
 On the other side of the assignment, the division may also overflow, but only in the very special case where ``P`` is :ada:`Integer'First` and ``Q`` is -1 because of the asymmetric range of signed integer types.
 
 .. code:: ada
+    :class: ada-nocheck
 
     A (I + J) := Integer'First / -1;
 
 As the array contains natural numbers, it is also an error to store a negative value in it.
 
 .. code:: ada
+    :class: ada-nocheck
 
     A (I + J) := 1 / -1;
 
 Finally, the division is not allowed if ``Q`` is 0.
 
 .. code:: ada
+    :class: ada-nocheck
 
     A (I + J) := P / 0;
 
 For all those runtime errors, the compiler will generate checks in the executable code to make sure that no inconsistent state can be reached, raising an exception if those checks fail. You can see the type of exceptions raised due to failed checks for each of the different assignment statements below:
 
 .. code:: ada
+    :class: ada-nocheck
 
     A (Integer'Last + 1) := P / Q;
     --  raised CONSTRAINT_ERROR : overflow check failed
@@ -81,6 +92,7 @@ Note that these runtime checks are costly, both in terms of program size and exe
 This is where analysis using GNATprove can be used to demonstrate statically that none of these errors will ever occur at runtime. More precisely, GNATprove logically interprets the meaning of every instruction in the program. Using this interpretation, GNATprove generates a logical formula and named verification condition for each possible check that implies the validity of the code.
 
 .. code:: ada
+    :class: ada-nocheck
 
     A (Integer'Last + 1) := P / Q;
     medium: overflow check might fail
@@ -109,19 +121,25 @@ For example, the following code shows the body of ``Increment`` can be successfu
 
 .. code:: ada
 
-    procedure Increment (X : in out Integer) with
-       Pre => X < Integer'Last is
+    procedure Show_Modularity
+      with SPARK_Mode => On
+    is
+       procedure Increment (X : in out Integer) with
+         Pre => X < Integer'Last is
+       begin
+          X := X + 1;
+          --  info: overflow check proved
+       end Increment;
+
+       X : Integer;
     begin
+       X := Integer'Last - 2;
+       Increment (X);
+       --  Here GNATprove does not know the value of X
+
        X := X + 1;
-       -- info: overflow check proved
-    end;
-
-    X := Integer'Last - 2;
-    Increment (X);
-    -- Here GNATprove does not know the value of X
-
-    X := X + 1;
-    -- medium: overflow check might fail
+       --  medium: overflow check might fail
+    end Show_Modularity;
 
 In the same way, when a subprogram is called, GNATprove assumes its :ada:`out` and :ada:`in out` parameters and the global variables it writes can be modified in any way compatible with its postcondition. For example, since ``Increment`` has no postcondition, GNATprove does not know that ``X`` is smaller than :ada:`Integer'Last` after the call. Therefore, it cannot prove that the following addition cannot overflow.
 
@@ -133,16 +151,22 @@ There are two cases where modularity is not enforced by GNATprove. First, local 
 
 .. code:: ada
 
-    procedure Increment (X : in out Integer) is
-    begin
-       X := X + 1;
-       -- info: overflow check proved, in call inlined at line 7
-    end Increment;
+    procedure Show_Modularity_Exceptions
+      with SPARK_Mode => On
+    is
+       procedure Increment (X : in out Integer) is
+       begin
+          X := X + 1;
+          --  info: overflow check proved, in call inlined at...
+       end Increment;
 
-    X := Integer'Last - 2;
-    Increment (X);
-    X := X + 1;
-    -- info: overflow check proved
+       X : Integer;
+    begin
+       X := Integer'Last - 2;
+       Increment (X);
+       X := X + 1;
+       --  info: overflow check proved
+    end Show_Modularity_Exceptions;
 
 As GNATprove sees the call to ``Increment`` exactly as if the increment on ``X`` was done directly, it can verify successfully that no overflow may occur on either of the subsequent additions. The other case concerns expression functions. If a function is defined as an expression function, with or without contracts, then it is handled as if it had a postcondition stating the value of its result.
 
@@ -150,15 +174,21 @@ In our example, replacing ``Increment`` with an expression function allows GNATp
 
 .. code:: ada
 
-    function Increment (X : Integer) return Integer is
-       (X + 1)
-       -- info: overflow check proved
-       with Pre => X < Integer'Last;
+    procedure Show_Modularity_Expression
+      with SPARK_Mode => On
+    is
+       function Increment (X : Integer) return Integer is
+         (X + 1)
+         --  info: overflow check proved
+         with Pre => X < Integer'Last;
 
-    X := Integer'Last - 2;
-    X := Increment (X);
-    X := X + 1;
-    -- info: overflow check proved
+       X : Integer;
+    begin
+       X := Integer'Last - 2;
+       X := Increment (X);
+       X := X + 1;
+       --  info: overflow check proved
+    end Show_Modularity_Expression;
 
 
 Contracts
@@ -170,24 +200,34 @@ For example, given the following code:
 
 .. code:: ada
 
-    procedure Increment (X : in out Integer) with
-       Pre => X < Integer'Last;
+    procedure Show_Contracts_1
+      with SPARK_Mode => On
+    is
+       procedure Increment (X : in out Integer) with
+         Pre => X < Integer'Last  is
+       begin
+          X := X + 1;
+       end Increment;
 
-    X := Integer'Last;
-    Increment (X);
-    -- raised ASSERT_FAILURE : failed precondition
+       procedure Absolute (X : in out Integer) with
+         Post => X >= 0 is
+       begin
+          if X > 0 then
+             X := -X;
+          end if;
+       end Absolute;
 
-    procedure Absolute (X : in out Integer) with
-       Post => X >= 0 is
+       X : Integer;
+
     begin
-       if X > 0 then
-          X := - X;
-       end if;
-    end Absolute;
+       X := Integer'Last;
+       Increment (X);
+       --  raised ASSERT_FAILURE : failed precondition
 
-    X := 1;
-    Absolute (X);
-    -- raised ASSERT_FAILURE : failed postcondition
+       X := 1;
+       Absolute (X);
+       --  raised ASSERT_FAILURE : failed postcondition
+    end Show_Contracts_1;
 
 If called on :ada:`Integer'Last`, ``Increment`` will fail before its body is even started, possibly avoiding an inconsistent modification of the global state of the program. In the same way, any call to the badly implemented ``Absolute`` function on anything else than 0 will fail before the caller can be badly impacted by receiving a negative value. This early failure detection allows an easier recovery and facilitates debugging.
 
@@ -197,24 +237,34 @@ In the following example, GNATprove will detect both the identified errors as so
 
 .. code:: ada
 
-    procedure Increment (X : in out Integer) with
-       Pre => X < Integer'Last;
+    procedure Show_Contracts_2
+      with SPARK_Mode => On
+    is
+       procedure Increment (X : in out Integer) with
+         Pre => X < Integer'Last  is
+       begin
+          X := X + 1;
+       end Increment;
 
-    X := Integer'Last;
-    Increment (X);
-    -- medium: precondition might fail
+       procedure Absolute (X : in out Integer) with
+         Post => X >= 0 is
+          --  medium: postcondition might fail, requires X >= 0
+       begin
+          if X > 0 then
+             X := -X;
+          end if;
+       end Absolute;
 
-    procedure Absolute (X : in out Integer) with
-       Post => X >= 0 is
-       -- medium: postcondition might fail, requires X >= 0
+       X : Integer;
+
     begin
-       if X > 0 then
-          X := - X;
-       end if;
-    end Absolute;
+       X := Integer'Last;
+       Increment (X);
+       --  medium: precondition might fail
 
-    X := 1;
-    Absolute (X);
+       X := 1;
+       Absolute (X);
+    end Show_Contracts_2;
 
 For the precondition, it has to wait until ``Increment`` is improperly called, as a precondition is really a contract for the caller. On the other hand, it does not need ``Absolute`` to be called to detect that its postcondition does not hold on all its possible inputs.
 
@@ -228,12 +278,18 @@ During proof of programs, it makes sure that no error will ever be raised during
 
 .. code:: ada
 
-    function Add (X, Y : Integer) return Integer with
-       Pre => X + Y in Integer;
-       -- medium: overflow check might fail
+    procedure Show_Executable_Semantics
+      with SPARK_Mode => On
+    is
+       function Add (X, Y : Integer) return Integer is (X + Y)
+         with Pre => X + Y in Integer;
+       --  medium: overflow check might fail
 
-    X := Add (Integer'Last, 1);
-    -- raised CONSTRAINT_ERROR : overflow check failed
+       X : Integer;
+    begin
+       X := Add (Integer'Last, 1);
+       --  raised CONSTRAINT_ERROR : overflow check failed
+    end Show_Executable_Semantics;
 
 Unfortunately, as expressions in assertions have the regular Ada semantics, GNATprove complains that an errors may be raised while checking ``Add``'s precondition. This is legitimate, as we may see by calling ``Add`` on :ada:`Integer'Last` and 1.
 
@@ -251,17 +307,29 @@ Another construct introduced for GNATprove is the :ada:`Contract_Cases` aspect. 
 
 .. code:: ada
 
-    procedure Absolute (X : in out Integer) with
-       Pre            =>  X > Integer'First,
-       Contract_Cases => (X <  0 => X = - X'Old,
-                         X >= 0 => X =   X'Old);
-       -- info: disjoint contract cases proved
-       -- info: complete contract cases proved
-       -- info: contract case proved
+    procedure Show_Additional_Contracts
+      with SPARK_Mode => On
+    is
+       procedure Absolute (X : in out Integer) with
+         Pre            =>  X > Integer'First,
+         Contract_Cases => (X <  0 => X = -X'Old,
+                            X >= 0 => X =  X'Old) is
+       begin
+          if X < 0 then
+             X := -X;
+          end if;
+       end Absolute;
 
-    pragma Assume (X < Integer'Last);
+       --  info: disjoint contract cases proved
+       --  info: complete contract cases proved
+       --  info: contract case proved
 
-    X := X + 1;
+       X : Integer := 0;
+    begin
+       pragma Assume (X < Integer'Last);
+
+       X := X + 1;
+    end Show_Additional_Contracts;
 
 In GNATprove, validity --- as well as disjointness and completeness of the :ada:`Contract_Cases` --- are verified only once in the context of the subprogram's precondition.
 
@@ -283,43 +351,64 @@ First, let us look at the case where there is indeed an error in the program. Th
 
 .. code:: ada
 
-    procedure Incr_Until (X : in out Natural) with
-       Contract_Cases =>
-          (Incremented => X > X'Old,
-          -- medium: contract case might fail
-           others      => X = X'Old) is
-          -- medium: contract case might fail
+    procedure Show_Failed_Proof_Attempt_1
+      with SPARK_Mode => On
+    is
+       Incremented : Boolean;
+
+       procedure Incr_Until (X : in out Natural) with
+         Contract_Cases =>
+           (Incremented => X > X'Old,
+            --  medium: contract case might fail
+            others      => X = X'Old) is
+          --  medium: contract case might fail
+       begin
+          if X < 1000 then
+             X := X + 1;
+             Incremented := True;
+          else
+             Incremented := False;
+          end if;
+       end Incr_Until;
     begin
-       if X < 1000 then
-          X := X + 1;
-          Incremented := True;
-       else
-          Incremented := False;
-       end if;
-    end Incr_Until;
+       null;
+    end Show_Failed_Proof_Attempt_1;
 
 As assertions can be executed, it may help to test the program on a representative set of inputs with assertions enabled. This allows bugs to be found both in the code and in its contracts. For example, testing ``Incr_Until`` on an input bigger than 1000 will raise an exception at runtime.
 
 .. code:: ada
 
-    procedure Incr_Until (X : in out Natural) with
-       Contract_Cases =>
-          (Incremented => X > X'Old,
-           others      => X = X'Old) is
+    procedure Show_Failed_Proof_Attempt_2
+      with SPARK_Mode => On
+    is
+       Incremented : Boolean := False;
+
+       procedure Incr_Until (X : in out Natural) with
+         Contract_Cases =>
+           (Incremented => X > X'Old,
+            others      => X = X'Old) is
+       begin
+          if X < 1000 then
+             X := X + 1;
+             Incremented := True;
+          else
+             Incremented := False;
+          end if;
+       end Incr_Until;
+
+       X : Integer;
     begin
-       -- ...
-    end Incr_Until;
+       X := 0;
+       Incr_Until (X);
 
-    X := 0;
-    Incr_Until (X);
+       X := 1000;
+       Incr_Until (X);
+       --  raised ASSERT_FAILURE : failed contract case at line...
 
-    X := 1000;
-    Incr_Until (X);
-    -- raised ASSERT_FAILURE : failed contract case at line 3
-
-    -- Incremented is True when evaluating the
-    -- Contract_Cases' guards?
-    -- That is because they are evaluated before the call!
+       --  Incremented is True when evaluating the
+       --  Contract_Cases' guards?
+       --  That is because they are evaluated before the call!
+    end Show_Failed_Proof_Attempt_2;
 
 It specifies that the first contract case is failing, which means that ``Incremented`` is :ada:`True`. Still, if we print the value of ``Incremented`` after the call, we will see that it is :ada:`False`, as expected for such an input. Indeed, guards of contract cases are evaluated before the call, and our specification is erroneous. To correct this, we should either put ``X`` < 1000 as a guard of the first contract case or use a standard postcondition with an if expression instead.
 
@@ -335,37 +424,44 @@ This is especially likely for difficult to support features such as floating-poi
 
 .. code:: ada
 
-    C : Natural := 100;
+    procedure Show_Failed_Proof_Attempt_3
+      with SPARK_Mode => On
+    is
+       C : Natural := 100;
 
-    procedure Increase (X : in out Natural) with
-       Post => (if X < C then X > X'Old else X = C) is
-       -- medium: postcondition might fail
+       procedure Increase (X : in out Natural) with
+          Post => (if X < C then X > X'Old else X = C) is
+          --  medium: postcondition might fail
+       begin
+          if X < 90 then
+             X := X + 10;
+          elsif X >= C then
+             X := C;
+          else
+             X := X + 1;
+          end if;
+       end Increase;
     begin
-       if X < 90 then
-          X := X + 10;
-       elsif X >= C then
-          X := C;
-       else
-          X := X + 1;
-       end if;
-    end Increase;
+       null;
+    end Show_Failed_Proof_Attempt_3;
 
 It states that, if its parameter ``X`` is smaller than a certain value ``C``, then its value will be increased by the procedure, whereas if it is bigger, its value will be saturated to ``C``.
 
 When used with the appropriate options, GNATprove can provide additional information on a failed verification condition. In particular, if the condition is complex, it can locate precisely the part of the condition which is failing. For the example shown here, GNATprove states that it cannot prove that ``X`` = ``C``, which means that we are in a case where ``X`` is greater than ``C``.
 
 .. code:: ada
+    :class: ada-nocheck
 
-    C : Natural := 100; -- Requires C >= 90
+       C : Natural := 100;  --  Requires C >= 90
 
-    procedure Increase (X : in out Natural) with
-       Post => (if X < C then X > X'Old else X = C) is
-       -- medium: postcondition might fail, requires X = C
-    begin
-       if X < 90 then
-          X := X + 10;
-       elsif X >= C then
-          X := C;
+       procedure Increase (X : in out Natural) with
+          Post => (if X < C then X > X'Old else X = C) is
+          --  medium: postcondition might fail, requires X = C
+       begin
+          if X < 90 then
+             X := X + 10;
+          elsif X >= C then
+             X := C;
 
 Another additional information may help the code review. If it is used inside GNATbench or GPS, GNATprove can highlight the path in the program leading to a fail condition. Here, it is the first branch of the if statement. As a consequence, we know that GNATprove cannot prove the postcondition of ``Increase`` when both ``X`` is greater than ``C`` and ``X`` is smaller than 90. Indeed, in this case, our postcondition does not hold. But maybe we did not expect the value of ``C`` to change, or at least not to go below 90. In this case, we should simply state so by either declaring ``C`` to be constant or adding a precondition to the ``Increase`` subprogram.
 
@@ -375,36 +471,61 @@ For example, the postcondition of our ``GCD`` function --- which calculates the 
 
 .. code:: ada
 
-    function GCD (A, B : Positive) return Positive with
-    Post => A mod GCD'Result = 0
-        and B mod GCD'Result = 0 is
-    -- medium: postcondition might fail
+    procedure Show_Failed_Proof_Attempt_4
+      with SPARK_Mode => On
+    is
+       function GCD (A, B : Positive) return Positive with
+         Post =>
+           A mod GCD'Result = 0
+           and B mod GCD'Result = 0 is
+          --  medium: postcondition might fail
+       begin
+          if A > B then
+             return GCD (A - B, B);
+          elsif B > A then
+             return GCD (A, B - A);
+          else
+             return A;
+          end if;
+       end GCD;
     begin
-       if A > B then
-          return GCD (A - B, B);
-       elsif B > A then
-          return GCD (A, B - A);
-       else
-          return A;
-       end if;
-    end GCD;
+       null;
+    end Show_Failed_Proof_Attempt_4;
 
 The first thing to try is to increase the maximal amount of time that the prover is allowed to spend on each verification condition using the option ``--timeout`` of GNATprove or the dialog box inside GPS. In our example, bumping it to one minute, which is relatively high, does not help. We can also specify an alternative automatic prover --- if we have one --- using the option ``--prover`` of GNATprove or the dialog box. For our postcondition, we have tried both z3, Alt-ergo, and CVC4 without any luck.
 
 .. code:: ada
 
-    function GCD (A, B : Positive) return Positive with
-    Post => A mod GCD'Result = 0
-        and B mod GCD'Result = 0 is
+    procedure Show_Failed_Proof_Attempt_5
+      with SPARK_Mode => On
+    is
+       function GCD (A, B : Positive) return Positive with
+         Post =>
+           A mod GCD'Result = 0
+           and B mod GCD'Result = 0
+       is
+          Result : Positive;
+       begin
+          if A > B then
+             Result := GCD (A - B, B);
+             pragma Assert ((A - B) mod Result = 0);
+             --  info: assertion proved
+             pragma Assert (B mod Result = 0);
+             --  info: assertion proved
+             pragma Assert (A mod Result = 0);
+             --  medium: assertion might fail
+          elsif B > A then
+             Result := GCD (A, B - A);
+             pragma Assert ((B - A) mod Result = 0);
+             --  info: assertion proved
+          else
+             Result := A;
+          end if;
+          return Result;
+       end GCD;
     begin
-       if A > B then
-          Result := GCD (A - B, B);
-          pragma Assert ((A – B) mod Result = 0);
-       -- info: assertion proved
-          pragma Assert (B mod Result = 0);
-       -- info: assertion proved
-          pragma Assert (A mod Result = 0);
-       -- medium: assertion might fail
+       null;
+    end Show_Failed_Proof_Attempt_5;
 
 To better understand the problem, we have added intermediate assertions to simplify the proof and pin down the part that was causing the problem. This is often a good idea when trying to understand by review why a property is not proved. Here, provers cannot verify that, if ``A`` - ``B`` and ``B`` can be divided by ``Result``, then so does ``A``. This may seem surprising, but non-linear arithmetic, involving multiplication, modulo, or exponentiation for example, is a difficult topic for provers and is not handled very well in practice by any of the general-purpose ones like Alt-Ergo, Z3, or CVC4.
 
@@ -422,11 +543,21 @@ Let's review this code:
 .. code:: ada
 
     package Lists with SPARK_Mode is
+       type Index is new Integer;
+
        function Goes_To (I, J : Index) return Boolean;
 
        procedure Link (I, J : Index) with Post => Goes_To (I, J);
     private
-       type Cell (Is_Set : Boolean := True) is record …
+       type Cell (Is_Set : Boolean := True) is record
+          case Is_Set is
+          when True =>
+             Next : Index;
+          when False =>
+             null;
+          end case;
+       end record;
+
        type Cell_Array is array (Index) of Cell;
 
        Memory : Cell_Array;
@@ -458,17 +589,27 @@ Let's review this code:
 .. code:: ada
 
     package Lists with SPARK_Mode is
+       type Index is new Integer;
+
        function Goes_To (I, J : Index) return Boolean;
 
        procedure Link (I, J : Index) with Post => Goes_To (I, J);
     private
-       type Cell (Is_Set : Boolean := True) is record …
+       type Cell (Is_Set : Boolean := True) is record
+          case Is_Set is
+          when True =>
+             Next : Index;
+          when False =>
+             null;
+          end case;
+       end record;
+
        type Cell_Array is array (Index) of Cell;
 
        Memory : Cell_Array;
 
        function Goes_To (I, J : Index) return Boolean is
-             (Memory (I).Is_Set and then Memory (I).Next = J);
+         (Memory (I).Is_Set and then Memory (I).Next = J);
     end Lists;
 
     package body Lists with SPARK_Mode is
@@ -493,11 +634,19 @@ Let's review this code:
 
        function  Peek (S : Stack) return Natural;
        procedure Push (S : in out Stack; E : Natural) with
-          Post => Peek (S) = E;
+         Post => Peek (S) = E;
     private
-       type Stack is record ...
+       Max : constant := 10;
+
+       type Stack_Array is array (1 .. Max) of Natural;
+
+       type Stack is record
+          Top     : Positive;
+          Content : Stack_Array;
+       end record;
+
        function Peek (S : Stack) return Natural is
-          (if S.Top in S.Content'Range then S.Content (S.Top) else 0);
+         (if S.Top in S.Content'Range then S.Content (S.Top) else 0);
     end Stacks;
 
     package body Stacks with SPARK_Mode is
@@ -525,13 +674,23 @@ Let's review this code:
     package Stacks with SPARK_Mode is
        type Stack is private;
 
+       Is_Full_E : exception;
+
        function  Peek (S : Stack) return Natural;
        procedure Push (S : in out Stack; E : Natural) with
-          Post => Peek (S) = E;
+         Post => Peek (S) = E;
     private
-       type Stack is record ...
+       Max : constant := 10;
+
+       type Stack_Array is array (1 .. Max) of Natural;
+
+       type Stack is record
+          Top     : Positive;
+          Content : Stack_Array;
+       end record;
+
        function Peek (S : Stack) return Natural is
-          (if S.Top in S.Content'Range then S.Content (S.Top) else 0);
+         (if S.Top in S.Content'Range then S.Content (S.Top) else 0);
     end Stacks;
 
     package body Stacks with SPARK_Mode is
@@ -559,16 +718,26 @@ Let's review this code:
     package Stacks with SPARK_Mode is
        type Stack is private;
 
+       Is_Full_E : exception;
+
        function  Peek (S : Stack) return Natural;
-       function  Is_Full (S : Stack) return Natural;
+       function  Is_Full (S : Stack) return Boolean;
        procedure Push (S : in out Stack; E : Natural) with
-          Pre  => not Is_Full (S),
-          Post => Peek (S) = E;
+         Pre  => not Is_Full (S),
+         Post => Peek (S) = E;
     private
-       type Stack is record ...
+       Max : constant := 10;
+
+       type Stack_Array is array (1 .. Max) of Natural;
+
+       type Stack is record
+          Top     : Positive;
+          Content : Stack_Array;
+       end record;
+
        function Peek (S : Stack) return Natural is
-          (if S.Top in S.Content'Range then S.Content (S.Top) else 0);
-       function Is_Full (S : Stack) return Natural is (S.Top >= Max);
+         (if S.Top in S.Content'Range then S.Content (S.Top) else 0);
+       function Is_Full (S : Stack) return Boolean is (S.Top >= Max);
     end Stacks;
 
     package body Stacks with SPARK_Mode is
@@ -592,12 +761,26 @@ Let's review this code:
 
 .. code:: ada
 
-    procedure Read_Record (From : Integer) is
+    package Memories is
+       Memory  : array (Integer'First .. Integer'Last) of
+         Integer := (others => 0);
+
+       function Is_Too_Coarse (V : Integer) return Boolean;
+
+       procedure Treat_Value (V : out Integer);
+    end Memories;
+
+
+    with Memories; use Memories;
+
+    procedure Read_Record (From : Integer)
+      with SPARK_Mode => On
+    is
        function Read_One (First : Integer; Offset : Integer)
-          return Integer
-       with
-          Pre => Memory (First) + Offset in Memory'Range
-       is
+                              return Integer
+         with
+           Pre => Memory (First) + Offset in Memory'Range
+        is
           Value : Integer := Memory (Memory (First) + Offset);
        begin
           if Is_Too_Coarse (Value) then
@@ -605,15 +788,22 @@ Let's review this code:
           end if;
           return Value;
        end Read_One;
+
+       Size, Data1, Data2, Addr : Integer;
     begin
        Size := Read_One (From, 0);
        pragma Assume (Size in 1 .. 10
                       and then Memory (From) < Integer'Last - 2 * Size);
+
        Data1 := Read_One (From, 1);
+
        Addr  := Read_One (From, Size + 1);
        pragma Assume (Memory (Addr) > Memory (From) + Size);
+
        Data2 := Read_One (Addr, -Size);
     end Read_Record;
+
+
 
 It is correct, but it cannot be verified with GNATprove. GNATprove analyses ``Read_One`` on its own and notices that an overflow may occur in its precondition in certain contexts.
 
@@ -625,11 +815,25 @@ Let's review this code:
 
 .. code:: ada
 
-    procedure Read_Record (From : Integer) is
+    package Memories is
+       Memory  : array (Integer'First .. Integer'Last) of
+         Integer := (others => 0);
+
+       function Is_Too_Coarse (V : Integer) return Boolean;
+
+       procedure Treat_Value (V : out Integer);
+    end Memories;
+
+
+    with Memories; use Memories;
+
+    procedure Read_Record (From : Integer)
+      with SPARK_Mode => On
+    is
        function Read_One (First : Integer; Offset : Integer)
-          return Integer
-       with
-          Pre => Memory (First) <= Memory'Last – Offset
+                             return Integer
+         with
+           Pre => Memory (First) <= Memory'Last - Offset
        is
           Value : Integer := Memory (Memory (First) + Offset);
        begin
@@ -638,15 +842,22 @@ Let's review this code:
           end if;
           return Value;
        end Read_One;
+
+       Size, Data1, Data2, Addr : Integer;
+
     begin
        Size := Read_One (From, 0);
        pragma Assume (Size in 1 .. 10
                       and then Memory (From) < Integer'Last - 2 * Size);
+
        Data1 := Read_One (From, 1);
+
        Addr  := Read_One (From, Size + 1);
        pragma Assume (Memory (Addr) > Memory (From) + Size);
+
        Data2 := Read_One (Addr, -Size);
     end Read_Record;
+
 
 This example is not correct. Unfortunately, our attempt to correct ``Read_One``'s precondition failed. For example, an overflow will occur at runtime when ``Memory (First)`` is :ada:`Integer'Last` and ``Offset`` is negative.
 
@@ -658,9 +869,23 @@ Let's review this code:
 
 .. code:: ada
 
-    procedure Read_Record (From : Integer) is
+    package Memories is
+       Memory  : array (Integer'First .. Integer'Last) of
+         Integer := (others => 0);
+
+       function Is_Too_Coarse (V : Integer) return Boolean;
+
+       procedure Treat_Value (V : out Integer);
+    end Memories;
+
+
+    with Memories; use Memories;
+
+    procedure Read_Record (From : Integer)
+      with SPARK_Mode => On
+    is
        function Read_One (First : Integer; Offset : Integer)
-          return Integer
+                          return Integer
        is
           Value : Integer := Memory (Memory (First) + Offset);
        begin
@@ -669,13 +894,19 @@ Let's review this code:
           end if;
           return Value;
        end Read_One;
+
+       Size, Data1, Data2, Addr : Integer;
+
     begin
        Size := Read_One (From, 0);
        pragma Assume (Size in 1 .. 10
                       and then Memory (From) < Integer'Last - 2 * Size);
+
        Data1 := Read_One (From, 1);
+
        Addr  := Read_One (From, Size + 1);
        pragma Assume (Memory (Addr) > Memory (From) + Size);
+
        Data2 := Read_One (Addr, -Size);
     end Read_Record;
 
@@ -690,11 +921,11 @@ Let's review this code:
 .. code:: ada
 
     procedure Compute (X : in out Integer) with
-       Contract_Cases => ((X in -100 .. 100) => X = X'Old * 2,
-                          (X in    0 .. 199) => X = X'Old + 1,
-                          (X in -199 .. 0)   => X = X'Old - 1,
-                           X >=  200         => X =  200,
-                           others            => X = -200)
+      Contract_Cases => ((X in -100 .. 100) => X = X'Old * 2,
+                         (X in    0 .. 199) => X = X'Old + 1,
+                         (X in -199 .. 0)   => X = X'Old - 1,
+                          X >=  200          => X =  200,
+                          others             => X = -200)
     is
     begin
        if X in -100 .. 100 then
@@ -721,10 +952,10 @@ Let's review this code:
 .. code:: ada
 
     procedure Compute (X : in out Integer) with
-       Contract_Cases => ((X in    1 ..  199) => X >= X'Old,
-                          (X in -199 ..   -1) => X <= X'Old,
-                           X >=  200          => X =  200,
-                           X <= -200          => X = -200)
+      Contract_Cases => ((X in    1 ..  199) => X >= X'Old,
+                         (X in -199 ..   -1) => X <= X'Old,
+                          X >=  200           => X =  200,
+                          X <= -200           => X = -200)
     is
     begin
        if X in -100 .. 100 then
