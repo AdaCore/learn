@@ -9,24 +9,24 @@ This course is dedicated to functional correctness of programs. It considers and
 Beyond Program Integrity
 ---------------------------------------------------------------------
 
-The correctness of a program is the fact that it complies with its specification. In functional correctness, we are specifically concerned with relations between the subprogram’s inputs and outputs, as opposed to, for example, time or memory consumption. The properties specified for a program are usually stronger than what is required for program integrity. In certification processes, the properties should be derived from the requirements of the system. They can also come from more informal sources, like the program’s documentation, comments in the code, or test oracles.
+The correctness of a program is the fact that it complies with its specification. In functional correctness, we are specifically concerned with relations between the subprogram's inputs and outputs, as opposed to, for example, time or memory consumption. The properties specified for a program are usually stronger than what is required for program integrity. In certification processes, the properties should be derived from the requirements of the system. They can also come from more informal sources, like the program's documentation, comments in the code, or test oracles.
 
 For example:
 
 .. code:: ada
 
     function Find (A : Nat_Array; E : Natural) return Natural with
-      Post => Find’Result in 0 | A’Range;
+      Post => Find'Result in 0 | A'Range;
 
     function Find (A : Nat_Array; E : Natural) return Natural with
       Post =>
-      (if (for all I in A’Range => A (I) /= E)
-       then Find’Result = 0
-       else Find’Result in A’Range and then A (Find’Result) = E);
+      (if (for all I in A'Range => A (I) /= E)
+       then Find'Result = 0
+       else Find'Result in A'Range and then A (Find'Result) = E);
 
-To ensure no runtime error is raised when using the result of function ``Find``, it may be enough to know that, whenever it is not 0, then it is in ``A``’s range. However, for the program to be meaningful, we may want ``Find`` to verify more complex properties. For example that it only returns 0 if ``E`` is not in ``A`` and that, otherwise, it returns an index of ``A`` where ``E`` is stored. If, like we did for ``Find``, these specifications are expressed as contracts in subprograms or packages, then GNATprove can be used to statically verify them.
+To ensure no runtime error is raised when using the result of function ``Find``, it may be enough to know that, whenever it is not 0, then it is in ``A``'s range. However, for the program to be meaningful, we may want ``Find`` to verify more complex properties. For example that it only returns 0 if ``E`` is not in ``A`` and that, otherwise, it returns an index of ``A`` where ``E`` is stored. If, like we did for ``Find``, these specifications are expressed as contracts in subprograms or packages, then GNATprove can be used to statically verify them.
 
-Writing at least part of the program’s specification in the form of contracts has certain advantages. First, these contracts can be executed during test campaigns. This improves the maintainability of the code by detecting earlier discrepancies between the program and its specification. If they are precise enough, these contracts may be used as oracles to decide whether a given test passed or failed. As such, they may serve to verify the outputs of specific units while running the complete code. This may, in certain context, replace the need for unit testing by running integration tests with assertions enabled. Subsequently, if the code is in SPARK, these contracts can also be formally proven using GNATprove.
+Writing at least part of the program's specification in the form of contracts has certain advantages. First, these contracts can be executed during test campaigns. This improves the maintainability of the code by detecting earlier discrepancies between the program and its specification. If they are precise enough, these contracts may be used as oracles to decide whether a given test passed or failed. As such, they may serve to verify the outputs of specific units while running the complete code. This may, in certain context, replace the need for unit testing by running integration tests with assertions enabled. Subsequently, if the code is in SPARK, these contracts can also be formally proven using GNATprove.
 
 Formal proof has the advantage of verifying all possible executions, something which is not always possible using dynamic verification. For example, during a test campaign, the postcondition of the subprogram ``Find`` shown below will be checked dynamically on every set of inputs on which ``Find`` is called:
 
@@ -48,22 +48,22 @@ Advanced Contracts
 
 As contracts for functional correctness are usually more involved than contracts for program integrity, they more often require the use of the new forms of expressions introduced by the Ada 2012 standard. In particular, quantified expressions, which allow to specify properties that should hold for all or for at least one element of a range, come in handy when specifying properties for arrays.
 
-As contracts become more complex, it can be useful to introduce new abstractions in order to improve their readability. Expression functions are a good means to this end as their body can stay in the package’s specification.
+As contracts become more complex, it can be useful to introduce new abstractions in order to improve their readability. Expression functions are a good means to this end as their body can stay in the package's specification.
 
-Finally, some properties that are more invariants over data than properties of subprograms, may be cumbersome to express as subprogram’s contracts. Type predicates, which should hold for every object of a given type, are usually a better match for this purpose. As an example:
+Finally, some properties that are more invariants over data than properties of subprograms, may be cumbersome to express as subprogram's contracts. Type predicates, which should hold for every object of a given type, are usually a better match for this purpose. As an example:
 
 .. code:: ada
 
     function Is_Sorted (A : Nat_Array) return Boolean is
-      (for all I in A’Range =>
-        (if I < A’Last then A (I) <= A (I + 1)));
+      (for all I in A'Range =>
+        (if I < A'Last then A (I) <= A (I + 1)));
     --  Returns True if A is sorted in increasing order.
 
     subtype Sorted_Nat_Array is Nat_Array with
       Dynamic_Predicate => Is_Sorted (Sorted_Nat_Array);
     --  Elements of type Sorted_Nat_Array are all sorted.
 
-Here, the subtype ``Sorted_Nat_Array`` can be used to type an array variable that should remain sorted throughout the program. As specifying that an array is sorted requires a rather complex expression involving quantifiers, this property is abstracted away as an expression function in our example to improve readability. The fact that ``Is_Sorted``’s body remains in the package’s specification allows users of the package to retain a precise knowledge of its exact meaning when necessary.
+Here, the subtype ``Sorted_Nat_Array`` can be used to type an array variable that should remain sorted throughout the program. As specifying that an array is sorted requires a rather complex expression involving quantifiers, this property is abstracted away as an expression function in our example to improve readability. The fact that ``Is_Sorted``'s body remains in the package's specification allows users of the package to retain a precise knowledge of its exact meaning when necessary.
 
 
 Ghost Code
@@ -71,7 +71,7 @@ Ghost Code
 
 As the properties we want to specify grow more complex, the need can arise for entities that are only used for the purpose of specification. In a qualification process, it may be important to make sure that these new entities cannot affect the behavior of the program, or even to ensure they are removed from production code. This concept, usually called ghost code, is supported in SPARK 2014 by the new :ada:`Ghost` aspect.
 
-The :ada:`Ghost` aspect can be used to annotate any normal entity, such as variables, types, subprograms, or packages. If an entity is marked as :ada:`Ghost`, GNATprove will make sure that it cannot affect the program’s behavior. To be able to dynamically test the contracts using it, ghost code will be executed like normal code when the program is compiled with assertions enabled. The compiler can also be instructed not to generate code for ghost entities.
+The :ada:`Ghost` aspect can be used to annotate any normal entity, such as variables, types, subprograms, or packages. If an entity is marked as :ada:`Ghost`, GNATprove will make sure that it cannot affect the program's behavior. To be able to dynamically test the contracts using it, ghost code will be executed like normal code when the program is compiled with assertions enabled. The compiler can also be instructed not to generate code for ghost entities.
 
 As an example:
 
@@ -98,7 +98,7 @@ Ghost Functions
 
 Functions only used in specifications is a rather common occurrence when writing contracts for functional correctness. For example, expression functions used to simplify or factor out common patterns in contracts can usually be marked as ghost.
 
-But ghost functions can do more than improve readability. In real world programs, it is often the case that, because of abstraction, some information necessary for functional specification is not accessible in the package’s specification.
+But ghost functions can do more than improve readability. In real world programs, it is often the case that, because of abstraction, some information necessary for functional specification is not accessible in the package's specification.
 
 Making this information available to users of the packages is generally out of the question as it would break the abstraction principle. Ghost functions come in handy here as they provide a way to give access to information that will not be available to normal client code.
 
@@ -112,14 +112,14 @@ Let's look at the following example:
     --  Returns an array as a model of a stack.
 
     procedure Push (S : in out Stack; E : Natural) with
-      Pre  => Get_Model (S)’Length < Max,
-      Post => Get_Model (S) = Get_Model (S)’Old & E;
+      Pre  => Get_Model (S)'Length < Max,
+      Post => Get_Model (S) = Get_Model (S)'Old & E;
 
     function Peek (S : Stack; I : Positive) return Natural is
       (Get_Model (S) (I));
     -- Get_Model cannot be used in this context.
 
-In our example, the type ``Stack`` is private. To be able to specify the expected behavior of the procedure ``Push``, we need to disclose this abstraction and access the values of the elements stored in ``S``. For this, we introduce a function ``Get_Model`` that returns an array as a model of the stack. Still, we don’t want user code of the ``Stack`` package to use ``Get_Model`` to break our stack’s abstraction from normal code, as is done in the subprogram ``Peek``. Marking the function as :ada:`Ghost` will achieve this goal. What is more, it will ensure that the subprogram ``Get_Model`` is never used in production code.
+In our example, the type ``Stack`` is private. To be able to specify the expected behavior of the procedure ``Push``, we need to disclose this abstraction and access the values of the elements stored in ``S``. For this, we introduce a function ``Get_Model`` that returns an array as a model of the stack. Still, we don't want user code of the ``Stack`` package to use ``Get_Model`` to break our stack's abstraction from normal code, as is done in the subprogram ``Peek``. Marking the function as :ada:`Ghost` will achieve this goal. What is more, it will ensure that the subprogram ``Get_Model`` is never used in production code.
 
 
 Global Ghost Variables
@@ -141,7 +141,7 @@ Global variables can also store information about previous runs of subprograms i
 
     V_Interm : T with Ghost;
     procedure Do_Two_Things (V : in out T) with
-      Post => (First_Thing_Done (V’Old, V_Interm)
+      Post => (First_Thing_Done (V'Old, V_Interm)
            and Second_Thing_Done (V_Interm, V));
 
 In our example, we have two procedures, one to access a state ``A`` and the other to access a state ``B``. The global variable ``Last_Accessed_Is_A`` is used to specify that ``B`` cannot be accessed twice without accessing ``A`` in between.
@@ -154,7 +154,7 @@ For example, we specify here the subprogram ``Do_Two_Things`` in two steps using
 Guide Proof
 ---------------------------------------------------------------------
 
-As properties of interest for functional correctness are more complex than those involved in proof of program integrity, it is expected that GNATprove may not be able to verify them right away even though they are valid. Techniques for debugging failed proof attempts explained in the proof of program integrity course will come in handy here (see :doc:`03_Proof_Of_Program_Integrity`). We don’t go over them again in this course, but rather focus on improving results on the remaining cases where the property is valid but is not proved by GNATprove in a reasonable amount of time.
+As properties of interest for functional correctness are more complex than those involved in proof of program integrity, it is expected that GNATprove may not be able to verify them right away even though they are valid. Techniques for debugging failed proof attempts explained in the proof of program integrity course will come in handy here (see :doc:`03_Proof_Of_Program_Integrity`). We don't go over them again in this course, but rather focus on improving results on the remaining cases where the property is valid but is not proved by GNATprove in a reasonable amount of time.
 
 In these cases, users may want to try and guide GNATprove in order either to complete the proof or strip it down to a small number of easily reviewable assumptions. For this purpose, assertions can be added to break complex proofs into smaller steps:
 
@@ -177,13 +177,13 @@ It can be the case that some intermediate assertions are not discharged by GNATp
 Local Ghost Variables
 ~~~~~~~~~~~~~~~~~~~~~
 
-Just like for specifications, ghost code can be used to enhance what can be expressed inside intermediate assertions. In particular, local variables or constants whose only purpose is to serve in assertions are a common occurrence. Most of the time, these variables are used to store previous values of variables or expressions to which we want to refer in our assumptions. They are especially useful to refer to initial values of parameters and expressions which cannot be accessed using the :ada:`‘Old` attribute outside of the subprogram’s postcondition.
+Just like for specifications, ghost code can be used to enhance what can be expressed inside intermediate assertions. In particular, local variables or constants whose only purpose is to serve in assertions are a common occurrence. Most of the time, these variables are used to store previous values of variables or expressions to which we want to refer in our assumptions. They are especially useful to refer to initial values of parameters and expressions which cannot be accessed using the :ada:`‘Old` attribute outside of the subprogram's postcondition.
 
 For example:
 
 .. code:: ada
 
-    procedure P (X : in out T) with Post => F (X, X’Old) is
+    procedure P (X : in out T) with Post => F (X, X'Old) is
       X_Init : constant T := X with Ghost;
     begin
       if Condition (X) then
@@ -192,12 +192,12 @@ For example:
     ...
 
     procedure Sort (A : in out Nat_Array) with
-      Post => (for all I in A’Range =>
-                 (for some J in A’Range => A (I) = A’Old (J))) is
+      Post => (for all I in A'Range =>
+                 (for some J in A'Range => A (I) = A'Old (J))) is
       Permutation : Index_Array := (1 => 1, 2 => 2, ...) with
         Ghost;
 
-In the example shown here, to help GNATprove discharge the postcondition of ``P``, we want to assert that it holds separately in every branch of an :ada:`if` statement. Since in these assertions, unlike in ``P``’s postconditions, we cannot use the :ada:`‘Old` attribute to access the initial value of the parameter ``X``, we must resort to introducing a local ghost constant ``X_Init`` for this value.
+In the example shown here, to help GNATprove discharge the postcondition of ``P``, we want to assert that it holds separately in every branch of an :ada:`if` statement. Since in these assertions, unlike in ``P``'s postconditions, we cannot use the :ada:`‘Old` attribute to access the initial value of the parameter ``X``, we must resort to introducing a local ghost constant ``X_Init`` for this value.
 
 Local ghost variables can also be used for more complex things such as building a data-structure that serves as witness of a complex property of the subprogram. In our example, we want to prove that the ``Sort`` procedure do not create new elements, that is, all the elements that are in ``A`` after the sort were already in ``A`` before the sort. Note that this property is not enough to ensure that, after a call to ``Sort``, ``A`` is a permutation of its value before the call. Still, it is already complex for a prover to verify as it involves an alternation of quantifiers. To help GNATprove, it may be interesting to store, for each index ``I``, an index ``J`` that has the expected property.
 
@@ -216,7 +216,7 @@ As an example, the :ada:`for` loop contained in ``Increase_A`` could not appear 
     A : Nat_Array := ... with Ghost;
     procedure Increase_A with Ghost is
     begin
-      for I in A’Range loop
+      for I in A'Range loop
         A (I) := A (I) + 1;
       end loop;
     end Increase_A;
@@ -233,7 +233,7 @@ For the example above, calling ``Prove_P`` on ``X`` will only add ``P (X)`` to t
 Handling of Loops
 ~~~~~~~~~~~~~~~~~
 
-A case in which user annotations are almost always required for GNATprove to complete a proof is when the program involves a loop. Indeed, the verification techniques used by GNATprove do not handle cycles in a subprogram’s control flow. As a consequence, loops are flattened by dividing them into several acyclic parts.
+A case in which user annotations are almost always required for GNATprove to complete a proof is when the program involves a loop. Indeed, the verification techniques used by GNATprove do not handle cycles in a subprogram's control flow. As a consequence, loops are flattened by dividing them into several acyclic parts.
 
 As an example, let us look at a simple loop statement with an exit condition:
 
@@ -251,11 +251,11 @@ As shown on the schema, the control flow will be divided into three parts:
 
 .. image:: 05_loop.png
 
-The first one, in yellow, starts from the beginning of the subprogram to the loop statement. Then, the loop itself is divided into two parts. The red one stands for a complete execution of the loop’s body, that is, an execution in which the exit condition is not satisfied. The blue one stands for the last execution of the loop. The exit condition is assumed to hold and the rest of the subprogram can be accessed. The red and blue parts obviously always happen after the yellow one.
+The first one, in yellow, starts from the beginning of the subprogram to the loop statement. Then, the loop itself is divided into two parts. The red one stands for a complete execution of the loop's body, that is, an execution in which the exit condition is not satisfied. The blue one stands for the last execution of the loop. The exit condition is assumed to hold and the rest of the subprogram can be accessed. The red and blue parts obviously always happen after the yellow one.
 
 Still, as there is no way to know how the loop may have modified the variables it accesses, GNATprove simply forgets everything it knows about them when entering these parts. Values of constants and variables that are not modified in the loop are of course preserved.
 
-The consequence of this particular handling is that GNATprove suffers from imprecision when verifying a subprogram involving a loop. More precisely, it won’t be able to verify a property relying on values of variables modified inside the loop. Also, though it will not forget any information it had on the value of constants or unmodified variables, it still won’t be able to deduce new information about them using the loop.
+The consequence of this particular handling is that GNATprove suffers from imprecision when verifying a subprogram involving a loop. More precisely, it won't be able to verify a property relying on values of variables modified inside the loop. Also, though it will not forget any information it had on the value of constants or unmodified variables, it still won't be able to deduce new information about them using the loop.
 
 For example:
 
@@ -263,9 +263,9 @@ For example:
 
     function Find (A : Nat_Array; E : Natural) return Natural is
     begin
-      for I in A’Range loop
+      for I in A'Range loop
         pragma Assert
-              (for all J in A’First .. I – 1 => A (J) /= E);
+              (for all J in A'First .. I – 1 => A (J) /= E);
         --  medium: assertion might fail
         if A (I) = E then
           return I;
@@ -292,8 +292,8 @@ As an example, let us add a loop invariant to our ``Find`` function stating that
 
     function Find (A : Nat_Array; E : Natural) return Natural is
     begin
-      for I in A’Range loop
-        pragma Loop_Invariant (A (A’First) /= E);
+      for I in A'Range loop
+        pragma Loop_Invariant (A (A'First) /= E);
         --  medium: loop invariant might fail in first iteration
         --  info: loop invariant preservation proved
         if A (I) = E then
@@ -303,7 +303,7 @@ As an example, let us add a loop invariant to our ``Find`` function stating that
 
 To verify this invariant, GNATprove will generate two checks. The first one, that checks whether the assertion holds in the first iteration of the loop, will not be verified by the tool. Indeed, there is no reason for the first element of ``A`` to be different from ``E`` in this iteration. However, the second check will succeed. Indeed, it is easy to deduce that, if the first element of ``A`` was not ``E`` in a given iteration, then it is still not ``E`` in the next one. Note that, if we move the invariant to the end of the loop, then it will be successfully verified by GNATprove.
 
-Not only do loop invariants allow to verify complex properties over loops, they are also used by GNATprove to verify other properties, such as the absence of runtime errors over the loop’s body and the statements following the loop. More precisely, when verifying runtime checks or other assertions from the loop’s body or from statements following the loop, the last occurrence of the loop invariant preceding this check is assumed to hold.
+Not only do loop invariants allow to verify complex properties over loops, they are also used by GNATprove to verify other properties, such as the absence of runtime errors over the loop's body and the statements following the loop. More precisely, when verifying runtime checks or other assertions from the loop's body or from statements following the loop, the last occurrence of the loop invariant preceding this check is assumed to hold.
 
 Let's look again at this version of the ``Find`` example:
 
@@ -311,16 +311,16 @@ Let's look again at this version of the ``Find`` example:
 
     function Find (A : Nat_Array; E : Natural) return Natural is
     begin
-      for I in A’Range loop
+      for I in A'Range loop
         pragma Loop_Invariant
-              (for all J in A’First .. I – 1 => A (J) /= E);
+              (for all J in A'First .. I – 1 => A (J) /= E);
         --  info: loop invariant initialization proved
         --  info: loop invariant preservation proved
         if A (I) = E then
           return I;
         end if;
       end loop;
-      pragma Assert (for all I in A’Range => A (I) /= E);
+      pragma Assert (for all I in A'Range => A (I) /= E);
       --  info: assertion proved
 
 In our ``Find`` function, GNATprove can verify that, after the loop, all the elements of ``A`` are different from ``E`` by assuming that the loop invariant holds in the last iteration of the loop.
@@ -344,30 +344,30 @@ Coming up with a good loop invariant can turn out to be quite a challenge. To ma
 |             | loop                                                    |
 +-------------+---------------------------------------------------------+
 
-First, the loop invariant should be provable in the first iteration of the loop. To achieve this property, the loop invariant’s initialization can be debugged like any failing proof attempt using strategies from the Proof of Program Integrity course (see :doc:`03_Proof_Of_Program_Integrity`).
+First, the loop invariant should be provable in the first iteration of the loop. To achieve this property, the loop invariant's initialization can be debugged like any failing proof attempt using strategies from the Proof of Program Integrity course (see :doc:`03_Proof_Of_Program_Integrity`).
 
-Next, the loop invariant should be precise enough to allow proving absence of runtime errors both in statements from the loop’s body and in statements following the loop. To achieve this, users should remember that every information concerning a variable modified in the loop that is not stated in the invariant will be forgotten by the tool. In particular, users should take care to include in their invariant what is usually called the loop's frame condition. It consists in stating the preservation of parts of composite variables that have not been modified by the loop.
+Next, the loop invariant should be precise enough to allow proving absence of runtime errors both in statements from the loop's body and in statements following the loop. To achieve this, users should remember that every information concerning a variable modified in the loop that is not stated in the invariant will be forgotten by the tool. In particular, users should take care to include in their invariant what is usually called the loop's frame condition. It consists in stating the preservation of parts of composite variables that have not been modified by the loop.
 
-Finally, the loop invariant should be precise enough to prove that it is preserved through successive iterations of the loop. This is generally the trickiest part. To understand why the preservation of a loop invariant is not proved by GNATprove, it is often useful to repeat it into local assertions throughout the loop’s body to determine at which point the proof is lost.
+Finally, the loop invariant should be precise enough to prove that it is preserved through successive iterations of the loop. This is generally the trickiest part. To understand why the preservation of a loop invariant is not proved by GNATprove, it is often useful to repeat it into local assertions throughout the loop's body to determine at which point the proof is lost.
 
 As an example, let us look at a loop that iterates through an array ``A`` and applies a function ``F`` to each of its elements:
 
 .. code:: ada
 
     A_I : constant Nat_Array := A with Ghost;
-    for K in A’Range loop
+    for K in A'Range loop
      A (K) := F (A (K));
      pragma Loop_Invariant
-       (for all J in A’First .. K => A (J) = F (A_I(J)));
+       (for all J in A'First .. K => A (J) = F (A_I(J)));
       --  info: loop invariant initialization proved
       --  medium: loop invariant might fail after first iteration
     end loop;
-    pragma Assert (for all K in A’Range => A (K) = F (A_I (K)));
+    pragma Assert (for all K in A'Range => A (K) = F (A_I (K)));
     --  info: assertion proved
 
 We want to prove that, after the loop, each element of the array is the result of applying ``F`` to the value that was stored in ``A`` at the same index before the loop. To specify this property, we copy the value of ``A`` before the loop in a ghost variable ``A_I``. As a loop invariant, we state that, for every index smaller than ``K``, the array has been modified in the expected way.
 
-Does our loop invariant has the four good properties of a good loop-invariant? When launching GNATprove on it, we see that ``INIT`` is fulfilled, the invariant’s initialization is proved. So are ``INSIDE`` and ``AFTER``, no potential runtime errors are reported and the assertion following the loop is successfully verified.
+Does our loop invariant has the four good properties of a good loop-invariant? When launching GNATprove on it, we see that ``INIT`` is fulfilled, the invariant's initialization is proved. So are ``INSIDE`` and ``AFTER``, no potential runtime errors are reported and the assertion following the loop is successfully verified.
 However, we are missing the ``PRESERVE`` property, as GNATprove reports that it was unable to prove that the invariant holds after the first iteration. Investigating this failed proof attempt, we'll see that the problem lies in the fact that GNATprove is unable to verify that at the beginning of the loop iteration: :ada:`A (K) = A_I (K)`. Indeed, ``A`` is modified in the loop. All that is known after the first iteration is what is stated in the invariant. Unfortunately, nothing is stated in the invariant about values of ``A`` after the current index. Here, we are missing the loop's frame condition. We should add to the invariant that, for every index ``J`` bigger than ``K``, ``A (J)`` is still equal to ``A_I (J)``.
 
 Alternatively, we could use the :ada:`Loop_Entry` attribute, which is used to refer to values on entry of the loop:
@@ -375,14 +375,14 @@ Alternatively, we could use the :ada:`Loop_Entry` attribute, which is used to re
 .. code:: ada
 
     A_I : constant Nat_Array := A with Ghost;
-    for K in A’Range loop
+    for K in A'Range loop
      A (K) := F (A (K));
      pragma Loop_Invariant
-       (for all J in A’First .. K => A (J) = F (A’Loop_Entry (J)));
+       (for all J in A'First .. K => A (J) = F (A'Loop_Entry (J)));
       --  info: loop invariant initialization proved
       --  info: loop invariant preservation proved
     end loop;
-    pragma Assert (for all K in A’Range => A (K) = F (A_I (K)));
+    pragma Assert (for all K in A'Range => A (K) = F (A_I (K)));
     --  info: assertion proved
 
 In this case, thanks to the automatic generation of frame conditions in GNATprove, we also get ``PRESERVE`` property.
@@ -404,13 +404,13 @@ Let's review this code:
       function Valid_Model (M : Nat_Array) return Boolean;
 
       function Get_Model return Nat_Array with Ghost,
-        Post => Valid_Model (Get_Model’Result)
-        and Get_Model’Result’First = 1
-        and Get_Model’Result’Length in Length_Range;
+        Post => Valid_Model (Get_Model'Result)
+        and Get_Model'Result'First = 1
+        and Get_Model'Result'Length in Length_Range;
 
       procedure Push_Last (E : Natural) with
-        Pre  => Get_Model’Length < Max_Size,
-        Post => Get_Model = Get_Model’Old & E;
+        Pre  => Get_Model'Length < Max_Size,
+        Post => Get_Model = Get_Model'Old & E;
 
       ...
     end Ring_Buffer;
@@ -424,7 +424,7 @@ Let's review this code:
         Result : Nat_Array (1 .. Length);
       begin
 
-This is correct as ``Get_Model`` is used for specification only. Note that calls to ``Get_Model`` cause copies of the buffer’s content. They can be automatically removed from production code by the compiler.
+This is correct as ``Get_Model`` is used for specification only. Note that calls to ``Get_Model`` cause copies of the buffer's content. They can be automatically removed from production code by the compiler.
 
 
 Example #2
@@ -444,7 +444,7 @@ Let's review this code:
 
       procedure Push_Last (E : Natural) with
         Pre  => Valid_Model and Model.Length < Max_Size,
-        Post => Valid_Model and Model.Content = Model.Content’Old & E;
+        Post => Valid_Model and Model.Content = Model.Content'Old & E;
 
       ...
     end Ring_Buffer;
@@ -473,7 +473,7 @@ Let's review this code:
       Post           => Valid_Model,
       Contract_Cases =>
         (Model.Length > 0 => E & Model.Content = Model.Content'Old,
-         others           => Model = Model’Old and E = E’Old);
+         others           => Model = Model'Old and E = E'Old);
 
     procedure Pop_When_Available (E : in out Natural) is
     begin
@@ -503,7 +503,7 @@ Let's review this code:
       Post           => Valid_Model,
       Contract_Cases =>
         (Model.Length > 0 => E & Model.Content = Model.Content'Old,
-         others           => Model = Model’Old and E = E’Old);
+         others           => Model = Model'Old and E = E'Old);
 
     procedure Pop_When_Available (E : in out Natural) is
     begin
@@ -550,7 +550,7 @@ Let's review this code:
       end if;
     end Pop_When_Available;
 
-Everything is fine here. ``Model`` is only accessed inside ``Update_Model`` which is itself a ghost procedure. Moreover, we don’t need to add any contract to ``Update_Model``. Indeed, as it is a local procedure, it will be inlined by GNATprove.
+Everything is fine here. ``Model`` is only accessed inside ``Update_Model`` which is itself a ghost procedure. Moreover, we don't need to add any contract to ``Update_Model``. Indeed, as it is a local procedure, it will be inlined by GNATprove.
 
 
 Example #6
@@ -561,13 +561,13 @@ Let's review this code:
 .. code:: ada
 
     function Max_Array (A, B : Nat_Array) return Nat_Array with
-      Pre => A’Length = B’Length;
+      Pre => A'Length = B'Length;
 
     function Max_Array (A, B : Nat_Array) return Nat_Array is
-      R : Nat_Array (A’Range) := (others => 0);
-      J : Integer := B’First;
+      R : Nat_Array (A'Range) := (others => 0);
+      J : Integer := B'First;
     begin
-      for I in A’Range loop
+      for I in A'Range loop
         if A (I) > B (J) then
           R (I) := A (I);
         else
@@ -589,14 +589,14 @@ Let's review this code:
 .. code:: ada
 
     function Max_Array (A, B : Nat_Array) return Nat_Array with
-      Pre => A’Length = B’Length;
+      Pre => A'Length = B'Length;
 
     function Max_Array (A, B : Nat_Array) return Nat_Array is
-      R : Nat_Array (A’Range) := (others => 0);
-      J : Integer := B’First;
+      R : Nat_Array (A'Range) := (others => 0);
+      J : Integer := B'First;
     begin
-      for I in A’Range loop
-        pragma Loop_Invariant (J in B’Range);
+      for I in A'Range loop
+        pragma Loop_Invariant (J in B'Range);
         if A (I) > B (J) then
           R (I) := A (I);
         else
@@ -607,7 +607,7 @@ Let's review this code:
       return R;
     end Max_Array;
 
-This example is correct. The loop invariant now allows verifying that no runtime error can occur in the loop’s body. Unfortunately, GNATprove will fail to verify that the invariant stays valid after the first iteration of the loop. Indeed, knowing that ``J`` is in ``B``’Range in a given iteration is not enough to show that it will remain so in the next iteration. We need a more precise invariant, linking ``J`` to the value of the loop index ``I``, like :ada:`J = I – A’First + B’First`.
+This example is correct. The loop invariant now allows verifying that no runtime error can occur in the loop's body. Unfortunately, GNATprove will fail to verify that the invariant stays valid after the first iteration of the loop. Indeed, knowing that ``J`` is in ``B``'Range in a given iteration is not enough to show that it will remain so in the next iteration. We need a more precise invariant, linking ``J`` to the value of the loop index ``I``, like :ada:`J = I – A'First + B'First`.
 
 
 Example #8
@@ -618,17 +618,17 @@ Let's review this code:
 .. code:: ada
 
     function Max_Array (A, B : Nat_Array) return Nat_Array with
-      Pre  => A’First = B’First and A’Last = B’Last,
+      Pre  => A'First = B'First and A'Last = B'Last,
       Post =>
-       (for all K in A’Range =>
-             Max_Array’Result (K) = Natural’Max (A (K), B (K)));
+       (for all K in A'Range =>
+             Max_Array'Result (K) = Natural'Max (A (K), B (K)));
 
     function Max_Array (A, B : Nat_Array) return Nat_Array is
-      R : Nat_Array (A’Range) := (others => 0);
+      R : Nat_Array (A'Range) := (others => 0);
     begin
-      for I in A’Range loop
-        pragma Loop_Invariant (for all K in A’First .. I =>
-                   R (K) = Natural’Max (A (K), B (K)));
+      for I in A'Range loop
+        pragma Loop_Invariant (for all K in A'First .. I =>
+                   R (K) = Natural'Max (A (K), B (K)));
         if A (I) > B (I) then
           R (I) := A (I);
         else
@@ -649,17 +649,17 @@ Let's review this code:
 .. code:: ada
 
     procedure Max_Array (A : in out Nat_Array, B : Nat_Array) with
-      Pre  => A’First = B’First and A’Last = B’Last,
-      Post => (for all K in A’Range =>
-                  A (K) = Natural’Max (A’Old (K), B (K)));
+      Pre  => A'First = B'First and A'Last = B'Last,
+      Post => (for all K in A'Range =>
+                  A (K) = Natural'Max (A'Old (K), B (K)));
 
     procedure Max_Array (A : in out Nat_Array, B : Nat_Array) is
     begin
-      for I in A’Range loop
-        pragma Loop_Invariant (for all K in A’First .. I - 1 =>
-                   A (K) = Natural’Max (A’Loop_Entry (K), B (K)));
+      for I in A'Range loop
+        pragma Loop_Invariant (for all K in A'First .. I - 1 =>
+                   A (K) = Natural'Max (A'Loop_Entry (K), B (K)));
         pragma Loop_Invariant
-          (for all K in I .. A’Last => A (K) = A’Loop_Entry (K));
+          (for all K in I .. A'Last => A (K) = A'Loop_Entry (K));
         if A (I) <= B (I) then
           A (I) := B (I);
         end if;
@@ -677,15 +677,15 @@ Let's review this code:
 .. code:: ada
 
     procedure Max_Array (A : in out Nat_Array, B : Nat_Array) with
-      Pre  => A’First = B’First and A’Last = B’Last,
-      Post => (for all K in A’Range =>
-                  A (K) = Natural’Max (A’Old (K), B (K)));
+      Pre  => A'First = B'First and A'Last = B'Last,
+      Post => (for all K in A'Range =>
+                  A (K) = Natural'Max (A'Old (K), B (K)));
 
     procedure Max_Array (A : in out Nat_Array, B : Nat_Array) is
     begin
-      for I in A’Range loop
-        pragma Loop_Invariant (for all K in A’First .. I - 1 =>
-                   A (K) = Natural’Max (A’Loop_Entry (K), B (K)));
+      for I in A'Range loop
+        pragma Loop_Invariant (for all K in A'First .. I - 1 =>
+                   A (K) = Natural'Max (A'Loop_Entry (K), B (K)));
         if A (I) <= B (I) then
           A (I) := B (I);
         end if;

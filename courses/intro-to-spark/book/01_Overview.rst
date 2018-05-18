@@ -76,13 +76,13 @@ Several properties can be specified on this subprogram using the shown contracts
 
 - Functional properties of Increment are specified using the :ada:`Pre` and :ada:`Post` aspects of Ada 2012.
 
-   - Increment can only be called if the value of ``X`` before the call is smaller that :ada:`Integer’Last`.
+   - Increment can only be called if the value of ``X`` before the call is smaller that :ada:`Integer'Last`.
 
       - It is necessary to ensure that the addition operation performed in the subprogram body will also not overflow.
 
    - Finally, we specify that ``Increment`` does indeed perform an increment of ``X``, that is, the value of ``X`` after a call is one more than its value before the call.
 
-The SPARK 2014 verification tools can verify all of these contracts. It additionally makes sure that no error may be raised at runtime when executing ``Increment``’s body.
+The SPARK 2014 verification tools can verify all of these contracts. It additionally makes sure that no error may be raised at runtime when executing ``Increment``'s body.
 
 
 The Programming Language
@@ -175,7 +175,7 @@ However, ``Incr`` is valid SPARK while ``Incr_And_Log`` is not as it attempts to
 No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Another restriction imposed in the SPARK subset concerns aliasing. We say that two names are aliased if they refer to the same object. Since access types are not allowed in SPARK, aliasing can only occur as part of the parameter passing in a procedure call. As a consequence, when a procedure is called, SPARK makes sure that no :ada:`out` or :ada:`in out` parameter is aliased with either an other parameter of the procedure or a global variable updated in the procedure’s body.
+Another restriction imposed in the SPARK subset concerns aliasing. We say that two names are aliased if they refer to the same object. Since access types are not allowed in SPARK, aliasing can only occur as part of the parameter passing in a procedure call. As a consequence, when a procedure is called, SPARK makes sure that no :ada:`out` or :ada:`in out` parameter is aliased with either an other parameter of the procedure or a global variable updated in the procedure's body.
 
 There are two reasons to forbid aliasing in SPARK:
 
@@ -285,7 +285,7 @@ Side effects in expressions are not allowed in SPARK. Therefore, ``Pop`` is not 
 Example #2
 ~~~~~~~~~~
 
-Here we are interested in a package body providing a single instance stack. ``Content`` and ``Top`` are the global variables used to register the stack’s state. Once again, this package is identified to be in the SPARK subset.
+Here we are interested in a package body providing a single instance stack. ``Content`` and ``Top`` are the global variables used to register the stack's state. Once again, this package is identified to be in the SPARK subset.
 
 .. code:: ada
 
@@ -506,7 +506,7 @@ As the access type is defined and used inside of a part in full Ada, this code i
 Example #8
 ~~~~~~~~~~
 
-Now let us consider ``P``’s body, with the definition of ``Store``, again.
+Now let us consider ``P``'s body, with the definition of ``Store``, again.
 
 .. code:: ada
 
@@ -542,7 +542,7 @@ Now let us consider ``P``’s body, with the definition of ``Store``, again.
        end Store;
     end P;
 
-Though the body of ``Store`` really uses no construct that are out of the SPARK subset, it is not possible to set :ada:`SPARK_Mode` to ``On`` on ``P``’s body. Indeed, even if we don’t use it, we have the visibility here on ``P``’s private part which is in full Ada.
+Though the body of ``Store`` really uses no construct that are out of the SPARK subset, it is not possible to set :ada:`SPARK_Mode` to ``On`` on ``P``'s body. Indeed, even if we don't use it, we have the visibility here on ``P``'s private part which is in full Ada.
 
 
 Example #9
