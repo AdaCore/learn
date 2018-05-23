@@ -662,8 +662,14 @@ on integers should be checked for overflows.
        --  raise an exception at runtime.
     end Main;
 
-However, mainly for efficiency reasons, overflow only happens at
-specific boundaries, like assignment:
+There are two types of overflow checks: When there is a machine level overflow,
+eg. you go past the last value that can be represented on the machine for the
+corresponding machine type, or type level overflow, when you go past the range
+that is defined for your type.
+
+Mainly for efficiency reasons, while machine level overflow always results in
+an exception, type level overflows will only be checked at specific boundaries,
+like assignment:
 
 .. code-block:: ada
 
@@ -682,11 +688,10 @@ specific boundaries, like assignment:
        end loop;
     end Main;
 
-Overflow will only be checked by the compiler at specific points in the
-execution. The result, as we see above, is that you might have an operation
+Type level overflow will only be checked by the compiler at specific points in
+the execution. The result, as we see above, is that you might have an operation
 that overflows in an intermediate computation, but no error will be raised
-because the final result does not overflow. For more information, see `the
-detailed rules here <TODOLINKOVERFLOW>`__.
+because the final result does not overflow.
 
 Unsigned types
 --------------
