@@ -183,6 +183,53 @@ There are several note worthy things in the above program:
     --  We start a comment in this line...
     --  and we continue on the second line...
 
+Imperative language - If/Else
+-----------------------------
+
+Ada has an if statement. It is pretty unsurprising in form and function:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       I : Integer := 1;
+    begin
+       loop
+          if I = 5 then
+             Put_Line ("Hello, World!");
+          end if;
+          I := I + 1;
+       end loop;
+    end Greet;
+
+As for the while loop, the Boolean condition must be of strict type
+:ada:`Boolean`. Every relational operator in Ada returns a :ada:`Boolean`
+by default.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    procedure Greet is
+       I : Integer := 0;
+    begin
+       loop
+          if I = 5 then
+             exit;
+             --  Exit can be unconditional
+          elsif I = 0 then
+             Put_Line ("Starting...");
+          else
+             Put_Line ("Hello, World!");
+          end if;
+          I := I + 1;
+       end loop;
+    end Greet;
+
+What we can see here is that Ada features an :ada:`elsif` keyword. For
+those interested, this is a way of avoiding the classical `dangling
+else <https://en.wikipedia.org/wiki/Dangling_else>`__ problem.
+
 Imperative language - Loops
 ---------------------------
 
@@ -307,53 +354,6 @@ Here we see what assignment to a variable looks like. There is no
 Something important to note: Trying to treat any value other than a
 Boolean as a Boolean condition will result in a compile time error. This
 is a result of Ada's static strong typing.
-
-Imperative language - If/Else
------------------------------
-
-Ada has an if statement. It is pretty unsurprising in form and function:
-
-.. code-block:: ada
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Greet is
-       I : Integer := 1;
-    begin
-       loop
-          if I = 5 then
-             Put_Line ("Hello, World!");
-          end if;
-          I := I + 1;
-       end loop;
-    end Greet;
-
-As for the while loop, the Boolean condition must be of strict type
-:ada:`Boolean`. Every relational operator in Ada returns a :ada:`Boolean`
-by default.
-
-.. code-block:: ada
-
-    with Ada.Text_IO; use Ada.Text_IO;
-    procedure Greet is
-       I : Integer := 0;
-    begin
-       loop
-          if I = 5 then
-             exit;
-             --  Exit can be unconditional
-          elsif I = 0 then
-             Put_Line ("Starting...");
-          else
-             Put_Line ("Hello, World!");
-          end if;
-          I := I + 1;
-       end loop;
-    end Greet;
-
-What we can see here is that Ada features an :ada:`elsif` keyword. For
-those interested, this is a way of avoiding the classical `dangling
-else <https://en.wikipedia.org/wiki/Dangling_else>`__ problem.
 
 Imperative language - Case statement
 ------------------------------------
@@ -1756,6 +1756,8 @@ If you want more fine grained control, you can use the separate attributes
 Of note, all those attributes, :ada:`'Range`, :ada:`'First` and :ada:`'Last`,
 will work on array instances just as well as they work on discrete types and
 subtypes themselves, enumerations included.
+
+.. _UnconstrainedArrayTypes:
 
 Unconstrained arrays
 --------------------
