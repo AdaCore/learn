@@ -448,18 +448,34 @@ Ada. What is important to know at this stage:
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Main is
+    procedure Greet is
     begin
-       Put_Line ("In statements");
+       loop
+          Put_Line ("Please enter your name: ");
 
-       declare
-          I : Integer := 12;
-       begin
-          Put_Line ("In declare block, I = " & Integer'Image (I));
-       end;
+          declare
+             Name : String := Get_Line;
+             --               ^ Call to the Get_Line function
+          begin
+             exit when Name = "";
+             Put_Line ("Hi " & Name & "!");
+          end;
 
-       --  I is undefined here
-    end Main;
+      --  Name is undefined here
+       end loop;
+
+      Put_Line ("Bye!");
+    end Greet;
+
+.. attention::
+    The Get_Line function allows you to query input from the user, and get the
+    result as a string. It is more or less equivalent to the :c:`scanf` C
+    function.
+
+    It returns a String, which, as we will see later, is an :ref:`Unconstrained
+    array type <UnconstrainedArrayTypes>`. For the moment, it is sufficient to
+    understand that you must declare the ``Name`` string variable and
+    initialize it at the same time.
 
 Imperative language - control expressions
 -----------------------------------------
