@@ -104,6 +104,23 @@ considered that:
 During this course, we will explain the individual language features that
 are building blocks for that philosophy.
 
+SPARK
+-----
+
+While this class is solely about the Ada language, it is worth mentionning that
+another language, extremely close, and completely interoperable with Ada,
+exists: The SPARK language.
+
+SPARK is a subset of Ada, that is designed so that the code written in SPARK is
+amenable to automatic proof, which provides a level of insurance with regards
+to the correctness of your code that is much higher than with a regular
+programming language.
+
+There is a `dedicated class for the SPARK language
+<https://TODOLINKTOSPARKCOURSE>`__, but keep in mind that everytime we speak
+about the specification power of Ada during this course, it is power that you
+can leverage in SPARK to help proving your programs correct.
+
 Imperative language
 ===================
 
