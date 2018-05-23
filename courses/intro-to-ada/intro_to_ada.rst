@@ -520,9 +520,10 @@ Ada's if expression are similar to if statements. However, there are a few
 differences that stems from the fact that it is an expression:
 
 -  All branches' expressions must be of the same type
--  An else branch is mandatory.
 -  They *must* be surrounded by parentheses, but only if the surrounding
    expression does not already contain them
+-  If an :ada:`else` branch is not given, the expression defaults to an
+  implicit :ada:`else True`.
 
 .. code-block:: ada
 
