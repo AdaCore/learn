@@ -1985,6 +1985,10 @@ is not allowed anywhere else.
       of a program. In turn, this allows better tooling in general, and code
       that is more analyzable, even by humans.
 
+    A very neat feature of Ada packages when compared to an include system, is
+    that it is stateless: The order of with and use clauses does not matter,
+    and can be changed without side effects.
+
 .. admonition:: In the GNAT toolchain
 
     While the design of the Ada language does not mandate anything regarding the
