@@ -1638,9 +1638,9 @@ provided at the moment of instantiation, as we can see in the example above.
 
 The above example also shows more of the aggregate syntax: You can specify
 associations by name, by giving the value of the index on the left side of an
-arrow association. ``1 => 2`` hence means "assign value 2 to spot at index 1 in
-my array". ``others => 8`` means "assign value 8 to every spot that wasn't
-previously assigned in this aggregate".
+arrow association. :ada:`1 => 2` hence means "assign value 2 to spot at index 1
+in my array". :ada:`others => 8` means "assign value 8 to every spot that
+wasn't previously assigned in this aggregate".
 
 .. attention::
     The box notation (``<>``) is commonly used as a wildcard or placeholder in
