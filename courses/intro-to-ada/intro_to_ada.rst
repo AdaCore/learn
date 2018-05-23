@@ -2398,8 +2398,8 @@ call to multiply.
     passed as an in parameter might be passed by reference under the covers,
     because it is more efficient (which does not change anything for the user
     since he cannot modify the original object anyway).  Conversely, an in-out
-    parameter of a discrete type might be passed by copy because it is more
-    efficient.
+    parameter of a discrete type will always be passed by copy (which is more
+    efficient on most architectures).
 
 Out parameters
 ~~~~~~~~~~~~~~
