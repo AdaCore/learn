@@ -1051,8 +1051,8 @@ advantages. For example:
   and Meters are two different types, you cannot mistakenly convert an instance
   of one to an instance of the other.
 
-New types
----------
+Derived types
+-------------
 
 One particularity of Ada is that you can create new types based on existing
 ones. This is very useful to define that a type is statically incompatible
@@ -5833,8 +5833,8 @@ which is called tagged types.
     However, they can be the best way to express solutions to certain problems.
     If that's the case, read on!
 
-Newtypes
---------
+Derived types
+-------------
 
 Before going into tagged types, we should go into a topic we have brushed on,
 but not really covered so far:
