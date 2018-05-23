@@ -7,6 +7,9 @@ Introduction to Ada
 .. role:: c(code)
    :language: c
 
+.. role:: cpp(code)
+   :language: c++
+
 This document is a concise introduction to the Ada language, for people
 who already have some experience with programming. It will go over the
 important concepts of Ada in the order that made the most sense writing
@@ -1735,6 +1738,17 @@ array type, if the bounds can be deduced from the initialization expression.
     begin
         null;
     end Main;
+
+.. attention::
+    As you can see above, the standard String type in Ada is an array. As such,
+    it shares the qualities and drawbacks of arrays: It's stack allocated,
+    fast, and immutable.
+
+    If you want something akin to C++'s :cpp:`std::string`, you can use
+    :ref:`Unbounded Strings <UnboundedStrings>` from Ada's standard library.
+
+    This type is more like a mutable, automatically managed string buffer to
+    which you can add content.
 
 Restrictions
 ------------
@@ -8179,6 +8193,8 @@ Note that we may initialize a bounded string with an empty string using
 the ``Null_Bounded_String`` constant. Also note that the ``Append``
 procedure allows for specifying the truncation mode --- similar to the
 ``To_Bounded_String`` function.
+
+.. _UnboundedStrings:
 
 Unbounded strings
 ^^^^^^^^^^^^^^^^^
