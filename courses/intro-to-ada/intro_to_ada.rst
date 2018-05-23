@@ -1667,7 +1667,10 @@ The string type in Ada is a simple array.
 
 Here is how the string type is defined in Ada:
 
-.. amiard: TODO add definition of built in string type
+.. code-block:: ada
+   :class: ada-nocheck
+
+    type String is array (Positive range <>) of Character;
 
 The only built-in feature Ada adds to make strings more ergonomic is custom
 literals, as we can see in the example below.
