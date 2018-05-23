@@ -552,17 +552,12 @@ you would expect.
        for I in 1 .. 10 loop
           Put_Line (case I is
                     when 1 | 3 | 5 | 7 | 9 => "Odd",
-                    when 2 | 4 | 6 | 8 | 10 => "Even",
-                    when others => "Cannot happen");
+                    when 2 | 4 | 6 | 8 | 10 => "Even");
        end loop;
     end Main;
 
 The syntax differs from case statements, because branches are separated
-by commas. Also, something to note in the above example is that the
-compiler does not know that ``I`` can only take values between 1 and 10,
-so we still need to have an :ada:`others` branch. We will delve into
-why when talking about `types <TODO:putlinkabouttypes>`__ in
-more details.
+by commas.
 
 Strongly typed language
 =======================
