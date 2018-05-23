@@ -2448,40 +2448,6 @@ mandates that out parameter be treated like uninitialized variables.
            null;
         end Outp;
 
-Forward declaration of subprograms
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-As we saw before, a subprogram can be declared without being defined, for
-example in a package specification. This is possible in general, and can be
-useful if you need subprograms to be mutually recursive, as in the example
-below:
-
-.. code-block:: ada
-    :class: ada-run
-
-    procedure Mutually_Recursive_Subprograms is
-        procedure Compute_A (V : Natural);
-        --  Forward declaration of Compute_A
-
-        procedure Compute_B (V : Natural) is
-        begin
-           if V > 5 then
-              Compute_A (V - 1);
-           -- ^ Call to Compute_A
-           end if;
-    end Compute_B;
-
-        procedure Compute_A (V : Natural) is
-        begin
-           if V > 2 then
-              Compute_B (V - 1);
-           -- ^ Call to Compute_B
-           end if;
-        end Compute_A;
-    begin
-       Compute_A (15);
-    end Mutually_Recursive_Subprograms;
-
 Nested subprograms
 ~~~~~~~~~~~~~~~~~~
 
@@ -2533,6 +2499,40 @@ This is a facility that is useful for two reasons:
     begin
        Show_List (List);
     end Lists;
+
+Forward declaration of subprograms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we saw before, a subprogram can be declared without being defined, for
+example in a package specification. This is possible in general, and can be
+useful if you need subprograms to be mutually recursive, as in the example
+below:
+
+.. code-block:: ada
+    :class: ada-run
+
+    procedure Mutually_Recursive_Subprograms is
+        procedure Compute_A (V : Natural);
+        --  Forward declaration of Compute_A
+
+        procedure Compute_B (V : Natural) is
+        begin
+           if V > 5 then
+              Compute_A (V - 1);
+           -- ^ Call to Compute_A
+           end if;
+    end Compute_B;
+
+        procedure Compute_A (V : Natural) is
+        begin
+           if V > 2 then
+              Compute_B (V - 1);
+           -- ^ Call to Compute_B
+           end if;
+        end Compute_A;
+    begin
+       Compute_A (15);
+    end Mutually_Recursive_Subprograms;
 
 More about types
 ================
