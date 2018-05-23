@@ -766,7 +766,7 @@ represent the standard Boolean type, that is so defined:
 .. code-block:: ada
     :class: ada-nocheck
 
-    type Boolean is (True, False);
+    type Boolean is (False, True);
 
 As mentioned previously, every "built-in" type in Ada is defined with facilities
 generally available to the user.
