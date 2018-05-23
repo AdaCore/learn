@@ -1639,6 +1639,11 @@ arrow association. ``1 => 2`` hence means "assign value 2 to spot at index 1 in
 my array". ``others => 8`` means "assign value 8 to every spot that wasn't
 previously assigned in this aggregate".
 
+.. attention::
+    The box notation (``<>``) is commonly used as a wildcard or placeholder in
+    Ada. You will often see it when the meaning is "what is expected here can
+    be anything".
+
 .. admonition:: In other languages
 
     While superficially unconstrained arrays in Ada might look similar to
