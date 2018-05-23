@@ -754,8 +754,8 @@ represent the standard Boolean type, that is so defined:
 As mentioned previously, every "built-in" type in Ada is defined with facilities
 generally available to the user.
 
-Floating-point and fixed-point types
-------------------------------------
+Floating-point types
+--------------------
 
 Floating-point types
 ~~~~~~~~~~~~~~~~~~~~
@@ -911,172 +911,6 @@ In this example, we are defining a type called ``T6_Inv_Trig``, which has
 a range from :math:`-\pi/2` to :math:`\pi/2` with a minimum precision of 6
 digits.
 
-Decimal fixed-point types
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In addition to specifying the least required precision of a floating-point
-type, it is also possible to go one step further and specify the exact
-accuracy of a floating-point type. This category of data types is called
-decimal fixed-point types.
-
-The syntax for decimal fixed-point types is
-:ada:`type T is delta <delta_value> digits <number_of_decimal_digits>`.
-In this case, the :ada:`delta` and the :ada:`digits` will be used by the
-compiler to derive a range. This will become clear in the next example.
-
-We will use three attributes of the language in our example:
-
-+------------------------+----------------------------------------------+
-| Attribute Name         | Documentation                                |
-+========================+==============================================+
-| First                  | Returns the first value of the type          |
-+------------------------+----------------------------------------------+
-| Last                   | Returns the last value of the type           |
-+------------------------+----------------------------------------------+
-| Delta                  | Returns the delta value of the type          |
-+------------------------+----------------------------------------------+
-
-In the example below, we declare two data types: ``T3_D3`` and ``T6_D3``.
-For both types, the delta value is the same: 0.001.
-
-.. code-block:: ada
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Decimal_Fixed_Point_Types is
-       type T3_D3 is delta 10.0 ** (-3) digits 3;
-       type T6_D3 is delta 10.0 ** (-3) digits 6;
-    begin
-       Put_Line ("The delta    value of T3_D3 is " & T3_D3'Image (T3_D3'Delta));
-       Put_Line ("The minimum  value of T3_D3 is " & T3_D3'Image (T3_D3'First));
-       Put_Line ("The maximum  value of T3_D3 is " & T3_D3'Image (T3_D3'Last));
-       New_Line;
-       Put_Line ("The delta    value of T6_D3 is " & T6_D3'Image (T6_D3'Delta));
-       Put_Line ("The minimum  value of T6_D3 is " & T6_D3'Image (T6_D3'First));
-       Put_Line ("The maximum  value of T6_D3 is " & T6_D3'Image (T6_D3'Last));
-    end Decimal_Fixed_Point_Types;
-
-When running the application, we see that the delta value of both
-types is indeed the same: 0.001. However, because ``T3_D3`` is restricted
-to 3 digits, its range is -0.999 to 0.999. For the ``T6_D3``, we have
-defined a precision of 6 digits, so the range is -999.999 to 999.999.
-
-Similar to the type definition using the :ada:`range` syntax, because we
-have an implicit range, the application will check that the variables
-contain values that are not out-of-range. Also, if the result of a
-multiplication or division on decimal fixed-point types is smaller than
-the delta value specified for the data type, the actual result will be
-zero. For example:
-
-.. code-block:: ada
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Decimal_Fixed_Point_Smaller is
-       type T3_D3 is delta 10.0 ** (-3) digits 3;
-       A : T3_D3 := T3_D3'Delta;
-       B : T3_D3 := 0.5;
-    begin
-       Put_Line ("The value of A     is " & T3_D3'Image (A));
-       A := A * B;
-       Put_Line ("The value of A * B is " & T3_D3'Image (A));
-    end Decimal_Fixed_Point_Smaller;
-
-In this example, the result of the operation :math:`0.001 * 0.5` is
-0.0005. Since this value is not representable for the ``T3_D3`` type
-because the delta value is 0.001, the actual value stored in variable
-``A`` is zero.
-
-Fixed-point types
-~~~~~~~~~~~~~~~~~
-
-Ordinary fixed-point types are similar to decimal fixed-point types.
-The difference between them is in the delta value:
-for decimal fixed-point types, it is based on the
-power of ten, whereas for ordinary fixed-point types, it is based on the
-power of two. Therefore, they are also called binary fixed-point types.
-
-   FURTHERINFO: Ordinary fixed-point types can be thought of being closer
-   to the actual representation on the machine, since hardware support for
-   decimal fixed-point arithmetic is not widespread, while ordinary
-   fixed-point types make use of the available integer arithmetic in the
-   background.
-
-The syntax for binary fixed-point types is
-:ada:`type T is delta <delta_value> range <lower_bound> .. <upper_bound>`.
-For example, we may define a normalized range between -1.0 and 1.0 as
-following:
-
-.. code-block:: ada
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Normalized_Fixed_Point_Type is
-       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0;
-    begin
-       Put_Line ("TQ31 requires " & Integer'Image (TQ31'Size) & " bits");
-       Put_Line ("The delta    value of TQ31 is " & TQ31'Image (TQ31'Delta));
-       Put_Line ("The minimum  value of TQ31 is " & TQ31'Image (TQ31'First));
-       Put_Line ("The maximum  value of TQ31 is " & TQ31'Image (TQ31'Last));
-    end Normalized_Fixed_Point_Type;
-
-In this example, we are defining a 32-bit fixed-point data type for our
-normalized range. When running the application, we notice that the upper
-bound is close to one, but not exact one. This is a typical effect of
-fixed-point data types --- you can find more details in this discussion
-about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
-We may also rewrite this code with an exact type definition:
-
-.. code-block:: ada
-
-    procedure Normalized_Adapted_Fixed_Point_Type is
-       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
-    begin
-       null;
-    end Normalized_Adapted_Fixed_Point_Type;
-
-We may also use any other range. For example:
-
-.. code-block:: ada
-
-    with Ada.Text_IO;  use Ada.Text_IO;
-    with Ada.Numerics; use Ada.Numerics;
-
-    procedure Custom_Fixed_Point_Range is
-       type T_Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
-    begin
-       Put_Line ("T_Inv_Trig requires " & Integer'Image (T_Inv_Trig'Size)
-                 & " bits");
-       Put_Line ("The delta    value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'Delta));
-       Put_Line ("The minimum  value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'First));
-       Put_Line ("The maximum  value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'Last));
-    end Custom_Fixed_Point_Range;
-
-In this example, we are defining a 16-bit type called ``T_Inv_Trig``,
-which has a range from :math:`-\pi/2` to :math:`\pi/2`.
-
-All standard operations are available for fixed-point types. For example:
-
-.. code-block:: ada
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Fixed_Point_Op is
-       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
-
-       A, B, R : TQ31;
-    begin
-       A := 0.25;
-       B := 0.50;
-       R := A + B;
-       Put_Line ("R is " & TQ31'Image (R));
-    end Fixed_Point_Op;
-
-As expected, ``R`` contains 0.75 after the addition of ``A`` and ``B``.
-
 Strong typing
 -------------
 
@@ -1216,45 +1050,6 @@ advantages. For example:
   <TODOLINKINVARIANTS>`__ in your code, as in the example above: Since Miles
   and Meters are two different types, you cannot mistakenly convert an instance
   of one to an instance of the other.
-
-Character types
----------------
-
-But Ada's strong typing is not only helpful with numeric types. As we said
-before for enumeration types, each enumeration type is distinct and
-incompatible with every other enumeration type. However, what we did not
-mention is that Ada has character literals, that can be used as enumeration
-literals too. This allows Ada to define its own strongly typed character types,
-but also allows the user to define its own, as in the example below:
-
-.. code-block:: ada
-    :class: ada-expect-compile-error
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Greet is
-       type My_Char is ('a', 'b', 'c');
-       --  Our custom character type, an enum, with only 3 valid values.
-
-       C : Character;
-       --  ^ Built-in character type (it's an enum)
-
-       M : My_Char;
-    begin
-       C := '?';
-       --   ^ Character literal (enumeration literal)
-
-       M := 'a';
-
-       C := 64;
-       --   ^ Invalid: 64 is not an enumeration literal
-
-       M := C;
-       --   ^ Invalid: C is of invalid type for A
-
-       M := 'd';
-       --   ^ Invalid: 'd' is not a valid literal for type My_Char
-    end Greet;
 
 New types
 ---------
@@ -3301,6 +3096,217 @@ Here is how you could write an evaluator for expressions above:
 
     Compared to C/C++ unions, Ada variant records are more powerful in what
     they allow to express, and also checked at runtime, which makes them safer.
+
+Fixed-point types
+-----------------
+
+Decimal fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We have seen how to specify regular floating point types before.  In addition
+to specifying the least required precision of a floating-point type, it is also
+possible to go one step further and specify the exact accuracy of a
+floating-point type. This category of data types is called decimal fixed-point
+types.
+
+The syntax for decimal fixed-point types is
+:ada:`type T is delta <delta_value> digits <number_of_decimal_digits>`.
+In this case, the :ada:`delta` and the :ada:`digits` will be used by the
+compiler to derive a range. This will become clear in the next example.
+
+We will use three attributes of the language in our example:
+
++------------------------+----------------------------------------------+
+| Attribute Name         | Documentation                                |
++========================+==============================================+
+| First                  | Returns the first value of the type          |
++------------------------+----------------------------------------------+
+| Last                   | Returns the last value of the type           |
++------------------------+----------------------------------------------+
+| Delta                  | Returns the delta value of the type          |
++------------------------+----------------------------------------------+
+
+In the example below, we declare two data types: ``T3_D3`` and ``T6_D3``.
+For both types, the delta value is the same: 0.001.
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Decimal_Fixed_Point_Types is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+       type T6_D3 is delta 10.0 ** (-3) digits 6;
+    begin
+       Put_Line ("The delta    value of T3_D3 is " & T3_D3'Image (T3_D3'Delta));
+       Put_Line ("The minimum  value of T3_D3 is " & T3_D3'Image (T3_D3'First));
+       Put_Line ("The maximum  value of T3_D3 is " & T3_D3'Image (T3_D3'Last));
+       New_Line;
+       Put_Line ("The delta    value of T6_D3 is " & T6_D3'Image (T6_D3'Delta));
+       Put_Line ("The minimum  value of T6_D3 is " & T6_D3'Image (T6_D3'First));
+       Put_Line ("The maximum  value of T6_D3 is " & T6_D3'Image (T6_D3'Last));
+    end Decimal_Fixed_Point_Types;
+
+When running the application, we see that the delta value of both
+types is indeed the same: 0.001. However, because ``T3_D3`` is restricted
+to 3 digits, its range is -0.999 to 0.999. For the ``T6_D3``, we have
+defined a precision of 6 digits, so the range is -999.999 to 999.999.
+
+Similar to the type definition using the :ada:`range` syntax, because we
+have an implicit range, the application will check that the variables
+contain values that are not out-of-range. Also, if the result of a
+multiplication or division on decimal fixed-point types is smaller than
+the delta value specified for the data type, the actual result will be
+zero. For example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Decimal_Fixed_Point_Smaller is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+       A : T3_D3 := T3_D3'Delta;
+       B : T3_D3 := 0.5;
+    begin
+       Put_Line ("The value of A     is " & T3_D3'Image (A));
+       A := A * B;
+       Put_Line ("The value of A * B is " & T3_D3'Image (A));
+    end Decimal_Fixed_Point_Smaller;
+
+In this example, the result of the operation :math:`0.001 * 0.5` is
+0.0005. Since this value is not representable for the ``T3_D3`` type
+because the delta value is 0.001, the actual value stored in variable
+``A`` is zero.
+
+Fixed-point types
+~~~~~~~~~~~~~~~~~
+
+Ordinary fixed-point types are similar to decimal fixed-point types.
+The difference between them is in the delta value:
+for decimal fixed-point types, it is based on the
+power of ten, whereas for ordinary fixed-point types, it is based on the
+power of two. Therefore, they are also called binary fixed-point types.
+
+   FURTHERINFO: Ordinary fixed-point types can be thought of being closer
+   to the actual representation on the machine, since hardware support for
+   decimal fixed-point arithmetic is not widespread, while ordinary
+   fixed-point types make use of the available integer arithmetic in the
+   background.
+
+The syntax for binary fixed-point types is
+:ada:`type T is delta <delta_value> range <lower_bound> .. <upper_bound>`.
+For example, we may define a normalized range between -1.0 and 1.0 as
+following:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Normalized_Fixed_Point_Type is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0;
+    begin
+       Put_Line ("TQ31 requires " & Integer'Image (TQ31'Size) & " bits");
+       Put_Line ("The delta    value of TQ31 is " & TQ31'Image (TQ31'Delta));
+       Put_Line ("The minimum  value of TQ31 is " & TQ31'Image (TQ31'First));
+       Put_Line ("The maximum  value of TQ31 is " & TQ31'Image (TQ31'Last));
+    end Normalized_Fixed_Point_Type;
+
+In this example, we are defining a 32-bit fixed-point data type for our
+normalized range. When running the application, we notice that the upper
+bound is close to one, but not exact one. This is a typical effect of
+fixed-point data types --- you can find more details in this discussion
+about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
+We may also rewrite this code with an exact type definition:
+
+.. code-block:: ada
+
+    procedure Normalized_Adapted_Fixed_Point_Type is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+    begin
+       null;
+    end Normalized_Adapted_Fixed_Point_Type;
+
+We may also use any other range. For example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics; use Ada.Numerics;
+
+    procedure Custom_Fixed_Point_Range is
+       type T_Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
+    begin
+       Put_Line ("T_Inv_Trig requires " & Integer'Image (T_Inv_Trig'Size)
+                 & " bits");
+       Put_Line ("The delta    value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Delta));
+       Put_Line ("The minimum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'First));
+       Put_Line ("The maximum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Last));
+    end Custom_Fixed_Point_Range;
+
+In this example, we are defining a 16-bit type called ``T_Inv_Trig``,
+which has a range from :math:`-\pi/2` to :math:`\pi/2`.
+
+All standard operations are available for fixed-point types. For example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Fixed_Point_Op is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+
+       A, B, R : TQ31;
+    begin
+       A := 0.25;
+       B := 0.50;
+       R := A + B;
+       Put_Line ("R is " & TQ31'Image (R));
+    end Fixed_Point_Op;
+
+As expected, ``R`` contains 0.75 after the addition of ``A`` and ``B``.
+
+Character types
+---------------
+
+As we said before for enumeration types, each enumeration type is distinct and
+incompatible with every other enumeration type. However, what we did not
+mention is that Ada has character literals, that can be used as enumeration
+literals too. This allows Ada to define its own strongly typed character types,
+but also allows the user to define its own, as in the example below:
+
+.. code-block:: ada
+    :class: ada-expect-compile-error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Greet is
+       type My_Char is ('a', 'b', 'c');
+       --  Our custom character type, an enum, with only 3 valid values.
+
+       C : Character;
+       --  ^ Built-in character type (it's an enum)
+
+       M : My_Char;
+    begin
+       C := '?';
+       --   ^ Character literal (enumeration literal)
+
+       M := 'a';
+
+       C := 64;
+       --   ^ Invalid: 64 is not an enumeration literal
+
+       C := Character'Val (64);
+       --  Assign the character at position 64 in the enum (which is 'A')
+
+       M := C;
+       --   ^ Invalid: C is of invalid type for A
+
+       M := 'd';
+       --   ^ Invalid: 'd' is not a valid literal for type My_Char
+    end Greet;
 
 Privacy
 =======
