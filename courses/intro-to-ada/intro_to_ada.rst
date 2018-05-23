@@ -243,9 +243,8 @@ by default.
        end loop;
     end Greet;
 
-What we can see here is that Ada features an :ada:`elsif` keyword. For
-those interested, this is a way of avoiding the classical `dangling
-else <https://en.wikipedia.org/wiki/Dangling_else>`__ problem.
+What we can see here is that Ada features an :ada:`elsif` keyword, unlike C or
+C++ where you will use nested ``else .. if`` blocks.
 
 Imperative language - Loops
 ---------------------------
