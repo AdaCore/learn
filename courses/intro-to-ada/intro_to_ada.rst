@@ -1848,8 +1848,8 @@ subtype, constrained by the bounds of the slice.
 .. attention::
     Slices will only work on one dimensional arrays.
 
-Modular/Structured programming
-==============================
+Modular programming
+===================
 
 So far, we managed to put our examples in the body of a procedure. Ada is
 helpful in that regard, since it allows you to put any declaration in any
