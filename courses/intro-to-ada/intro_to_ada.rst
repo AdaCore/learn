@@ -3051,31 +3051,6 @@ cases, the access wil be implicitly dereferenced for you:
        --                 Equivalent to D.all.day
     end Access_Types;
 
-Automatic deallocation
-~~~~~~~~~~~~~~~~~~~~~~
-
-Values of an access type can only stay alive as long as the access type. This
-means that when the access type goes out of scope, every allocated instance of
-an object of the accessed type will be deallocated:
-
-.. code-block:: ada
-    :class: ada-run
-
-    with Dates; use Dates;
-
-    procedure Automatic_Deallocation is
-        procedure Allocate_Date is
-           type Date_Access is access Date;
-           D : Date_Access := new Date'(30, January, 2012);
-        begin
-           null;
-           --  D will be deallocated here.
-        end Allocate_Date;
-    begin
-       Allocate_Date;
-    end Automatic_Deallocation;
-
-
 Other features
 ~~~~~~~~~~~~~~
 
