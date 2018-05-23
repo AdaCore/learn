@@ -785,12 +785,12 @@ floating-point type is :ada:`Float`:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Floating_Point_Demo is
-       A : Float := 2.1;
+       A : Float := 2.5;
     begin
        Put_Line ("The value of A is " & Float'Image (A));
     end Floating_Point_Demo;
 
-The application will show that the value of ``A`` is ``2.1``.
+The application will show that the value of ``A`` is ``2.5``.
 
 All common operations that could be expected for floating-point types are
 available, including retrieving the absolute-value and the power function.
@@ -801,9 +801,9 @@ For example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Floating_Point_Operations is
-       A : Float := 2.1;
+       A : Float := 2.5;
     begin
-       A := abs (A - 4.1);
+       A := abs (A - 4.5);
        Put_Line ("The value of A is " & Float'Image (A));
        A := A ** 2 + 1.0;
        Put_Line ("The value of A is " & Float'Image (A));
