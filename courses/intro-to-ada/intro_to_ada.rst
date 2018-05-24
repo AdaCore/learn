@@ -2709,6 +2709,15 @@ for the compiler of course, but also for other programmers.
     convert the target, issuing a run-time error if the conversion is deemed
     invalid at run-time.
 
+    Note that you can use qualified expressions to convert from a *subtype* to
+    another at a specific point, raising potential errors if constraints are
+    violated.
+
+    .. code-block:: ada
+        :class: ada-nocheck
+
+        X : Integer := Natural'(1);
+
 Access types (pointers)
 -----------------------
 
