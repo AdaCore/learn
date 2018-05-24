@@ -3866,7 +3866,7 @@ Application: ADTs
 
 An important application of generics is to model abstract data types
 (ADTs). In fact, Ada includes a library with all sorts of ADTs using
-generics: :ada:`Ada.Containers`.
+generics: :ada:`Ada.Containers` (described :ref:`here <Containers>`).
 
 A typical example of an ADT is a stack:
 
