@@ -2904,7 +2904,33 @@ features that are considered fundamental to the use of pointers, such as:
 
 Those features exist in Ada, but are hidden behind specific standard library
 APIs. You can read more about those in the `advanced course on memory
-management <TODO_ACCESS_TYPES_ADVANCED_LINK>__`.
+management <TODO_ACCESS_TYPES_ADVANCED_LINK>`__.
+
+.. attention::
+
+    The guideline in Ada is that most of the time you can avoid manual
+    allocation, and you should.
+
+    You have many ways of avoiding manual allocation, some of them have been
+    already covered, such as parameter modes. You have library abstractions
+    available to avoid pointers:
+
+    1. The first one is the use of :ref:`containers <Containers>`. Containers
+       will allow users to not use pointers very often, because their
+       memory is automatically managed.
+
+    2. A container of specific interest in that context is the
+       `Indefinite holder 
+        <http://www.ada-auth.org/standards/12rat/html/Rat12-8-5.html>__`. This
+        container allows you to store a value of an indefinite type just as if
+        it was of a definite type.
+
+    3. GNATCOLL has a library for smart pointers, called
+       `Refcount <https://github.com/AdaCore/gnatcoll-core/blob/master/src/gnatcoll-refcount.ads>__`
+       Those pointers' memory is automatically managed, so that when your
+       pointer has no more references to it, the memory is automatically
+       deallocated.
+
 
 Mutually recursive types
 ------------------------
@@ -6236,6 +6262,8 @@ Standard library
 
 Standard package
 ----------------
+
+.. _Containers:
 
 Containers
 ----------
