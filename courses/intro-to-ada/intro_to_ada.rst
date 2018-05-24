@@ -3887,8 +3887,7 @@ A typical example of an ADT is a stack:
 
           function Pop (S : in out Stack) return T;
 
-          procedure Push (S : in out Stack;
-                          V : T);
+          procedure Push (S : in out Stack; V : T);
 
        private
 
