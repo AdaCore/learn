@@ -4367,6 +4367,36 @@ add it even to the statements block of your current subprogram:
           Put ("Cannot open input file");
     end Open_File;
 
+.. attention::
+    Exception handlers have an important drawback that users need to be careful
+    about: Exceptions raised in the declarative section are not caught. So for
+    example, in the following code, the exception will not be caught.
+
+    .. code-block:: ada
+
+        with Ada.Text_IO; use Ada.Text_IO;
+        with Ada.Exceptions;  use Ada.Exceptions;
+
+        procedure Be_Careful is
+            function Dangerous return Integer is
+            begin
+               raise Constraint_Error;
+            end Dangerous;
+
+        begin
+           declare
+               A : Integer := Dangerous;
+            begin
+               Put_Line (Integer'Image (A));
+            exception
+                when Constraint_Error => Put_Line ("error!");
+            end;
+        end Be_Careful;
+
+    This is also true for the top-level exception block that is part of the
+    current subprogram.
+
+
 Predefined exceptions
 ---------------------
 
