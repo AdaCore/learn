@@ -2929,7 +2929,7 @@ management <TODO_ACCESS_TYPES_ADVANCED_LINK>`__.
        memory is automatically managed.
 
     2. A container of specific interest in that context is the
-       `Indefinite holder 
+       `Indefinite holder
         <http://www.ada-auth.org/standards/12rat/html/Rat12-8-5.html>__`. This
         container allows you to store a value of an indefinite type just as if
         it was of a definite type.
