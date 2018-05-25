@@ -64,7 +64,7 @@ kind of programming Ada is good at.
 
 In terms of modern languages, the closest in terms of targets and level
 of abstraction are probably
-`C++ <https://fr.wikipedia.org/wiki/C%2B%2B>`_ and
+`C++ <https://en.wikipedia.org/wiki/C%2B%2B>`_ and
 `Rust <https://www.rust-lang.org/en-US/>`_.
 
 Philosophy
@@ -6043,7 +6043,7 @@ Tagged types are much like regular records, except that some functionalities are
 added:
 
 - Types have a tag, that is stored inside instances, and that identifies the
-  `runtime type <https://fr.wikipedia.org/wiki/Run-time_type_information>`_ of
+  `runtime type <https://en.wikipedia.org/wiki/Run-time_type_information>`_ of
   an object.
 
 - Primitives can dispatch. A primitive on a tagged type is what you would call
