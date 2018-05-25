@@ -523,10 +523,12 @@ Ada's if expression are similar to if statements. However, there are a few
 differences that stems from the fact that it is an expression:
 
 -  All branches' expressions must be of the same type
+
 -  They *must* be surrounded by parentheses, but only if the surrounding
    expression does not already contain them
+
 -  If an :ada:`else` branch is not given, the expression defaults to an
-  implicit :ada:`else True`.
+   implicit :ada:`else True`.
 
 .. code-block:: ada
 
@@ -2929,10 +2931,9 @@ management <TODO_ACCESS_TYPES_ADVANCED_LINK>`__.
        memory is automatically managed.
 
     2. A container of specific interest in that context is the
-       `Indefinite holder
-        <http://www.ada-auth.org/standards/12rat/html/Rat12-8-5.html>__`. This
-        container allows you to store a value of an indefinite type just as if
-        it was of a definite type.
+       `Indefinite holder <http://www.ada-auth.org/standards/12rat/html/Rat12-8-5.html>__`.
+       This container allows you to store a value of an indefinite type
+       just as if it was of a definite type.
 
     3. GNATCOLL has a library for smart pointers, called
        `Refcount <https://github.com/AdaCore/gnatcoll-core/blob/master/src/gnatcoll-refcount.ads>__`
