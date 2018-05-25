@@ -55,17 +55,17 @@ that allow for detecting defects at an early stage --- usually, at
 compilation time or using static analysis tools. In addition, Ada can also
 be used in to create applications in varied categories, such as:
 
--  `Video game programming <https://github.com/AdaDoom3/AdaDoom3>`__
--  `Real-time audio <http://www.electronicdesign.com/embedded-revolution/assessing-ada-language-audio-applications>`__
--  `Kernel modules <http://www.nihamkin.com/tag/kernel.html>`__
+-  `Video game programming <https://github.com/AdaDoom3/AdaDoom3>`_
+-  `Real-time audio <http://www.electronicdesign.com/embedded-revolution/assessing-ada-language-audio-applications>`_
+-  `Kernel modules <http://www.nihamkin.com/tag/kernel.html>`_
 
 This is a non-comprehensive list that hopefully sheds light on which
 kind of programming Ada is good at.
 
 In terms of modern languages, the closest in terms of targets and level
 of abstraction are probably
-`C++ <https://fr.wikipedia.org/wiki/C%2B%2B>`__ and
-`Rust <https://www.rust-lang.org/en-US/>`__.
+`C++ <https://fr.wikipedia.org/wiki/C%2B%2B>`_ and
+`Rust <https://www.rust-lang.org/en-US/>`_.
 
 Philosophy
 ----------
@@ -88,7 +88,7 @@ considered that:
 .. AI for amiard: Develop a little bit. Put in the proper format when we have decided about it (issue #4)
 
 -  Explicit is better than implicit: Although weirdly this is a
-   `Python <www.TODOpython.com>`__ commandment, Ada takes it way further
+   `Python <www.TODOpython.com>`_ commandment, Ada takes it way further
    than any language we know of:
 
    -  There is mostly no structural typing, and most types need to be
@@ -119,8 +119,9 @@ amenable to automatic proof, which provides a level of insurance with regards
 to the correctness of your code that is much higher than with a regular
 programming language.
 
-There is a `dedicated class for the SPARK language
-<https://TODOLINKTOSPARKCOURSE>`__, but keep in mind that everytime we speak
+There is a
+`dedicated class for the SPARK language <https://TODOLINKTOSPARKCOURSE>`_,
+but keep in mind that everytime we speak
 about the specification power of Ada during this course, it is power that you
 can leverage in SPARK to help proving your programs correct.
 
@@ -417,9 +418,9 @@ differs from, for example, C/C++'s case statement.
 Notable points about Ada's case statement:
 
 -  The parameter of the case statement needs to be of a discrete type.
-   More later about what `discrete
-   types <TODO:linktodiscretetypes>`__ are, but for the
-   moment, it is enough to know that they cover integer and enumeration types.
+   More later about what `discrete types <TODO:linktodiscretetypes>`_ are,
+   but for the moment, it is enough to know that they cover integer and
+   enumeration types.
 
 -  Every possible value needs to be covered by the case statement. This
    will be checked at compile time. When using it on a value which has a
@@ -491,10 +492,10 @@ Ada. What is important to know at this stage:
     result as a string. It is more or less equivalent to the :c:`scanf` C
     function.
 
-    It returns a String, which, as we will see later, is an :ref:`Unconstrained
-    array type <UnconstrainedArrayTypes>`. For the moment, it is sufficient to
-    understand that you must declare the ``Name`` string variable and
-    initialize it at the same time.
+    It returns a String, which, as we will see later, is an
+    :ref:`Unconstrained array type <UnconstrainedArrayTypes>`. For the moment,
+    it is sufficient to understand that you must declare the ``Name`` string
+    variable and initialize it at the same time.
 
 Imperative language - control expressions
 -----------------------------------------
@@ -620,7 +621,7 @@ which is unlike most languages, and arguably very elegant.
 In this example, we showcase the creation of a signed integer type, and
 several things we can do with them.
 
-Every type definition in Ada (`well almost <TODOTASKTYPES>`__) starts
+Every type definition in Ada (`well almost <TODOTASKTYPES>`_) starts
 with the :ada:`type` keyword. After the type, we can see a range that
 looks a lot like the ranges that we use in for loops, that defines the
 low and high bound of the type. Every integer in the inclusive range of
@@ -633,7 +634,7 @@ the bounds is a valid value for the type.
 Another interesting thing that we can notice in the above example is the
 :ada:`My_Int'Image (I)` expresssion. In Ada, the
 :ada:`Expr'Attribute (optional params)` notation is used for what is
-called `attributes <TODOLINKATTRS>`__ in Ada. Attributes are built-in
+called `attributes <TODOLINKATTRS>`_ in Ada. Attributes are built-in
 operations on types or on values. They are accessed by using a :ada:`'`
 (the tick sign).
 
@@ -731,7 +732,7 @@ Unlike in C/C++, since this behavior is guaranteed by the Ada specification,
 you can rely on it to implement portable code. Also, being able to leverage the
 wrapping on arbitrary bounds is very useful to implement certain algorithms and
 data structures, such as
-`ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`__.
+`ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`_.
 
 Enumerations
 ------------
@@ -739,9 +740,9 @@ Enumerations
 Enumeration types are another nicety of Ada's type system. Unlike C's enums,
 they are *not* integers, and each new enum type is incompatible with other enum
 types. Enum types are part of the bigger family of discrete types, which makes
-them usable in certain situations that we will disclose later (`here
-<TODOLINKTODISCRETEFEATURES`__, here and here) but one that we already know is
-that you can use them as a target to a case expression.
+them usable in certain situations that we will disclose later (
+`discrete features <TODOLINKTODISCRETEFEATURES>`_) but one that we already
+know is that you can use them as a target to a case expression.
 
 .. code-block:: ada
 
@@ -1006,8 +1007,8 @@ introduce conversion functions along with the types.
        Put_Line (Miles'Image (Dist_Imperial));
     end Conv;
 
-This is also the first time we use a function. We will study `functions and
-procedures <TODOSUBPROGRAMS>`__ in more details soon.
+This is also the first time we use a function. We will study
+`functions and procedures <TODOSUBPROGRAMS>`_ in more details soon.
 
 If you write a lot of numeric code, having to explicitly specify your
 conversions all the time might seem painful at first, because your code might
@@ -1068,10 +1069,10 @@ advantages. For example:
     The offending line must be changed to :ada:`F := Float(A) / Float(B);`
     in order to be accepted by the compiler.
 
-- You can use Ada's strong typing to help `enforce invariants
-  <TODOLINKINVARIANTS>`__ in your code, as in the example above: Since Miles
-  and Meters are two different types, you cannot mistakenly convert an instance
-  of one to an instance of the other.
+- You can use Ada's strong typing to help
+  `enforce invariants <TODOLINKINVARIANTS>`_ in your code, as in the example
+  above: Since Miles and Meters are two different types, you cannot mistakenly
+  convert an instance of one to an instance of the other.
 
 Derived types
 -------------
@@ -1338,8 +1339,8 @@ type ranging from ``1`` to ``5`` so the array will have 5 elements - that is,
 bounds are inclusive.
 
 This feature is pretty unique to Ada, and has interesting repercussions: You
-can use any discrete type to index an array, including `Enum types
-<TODOLINKENUMTYPES>`__. We will soon see what that means.
+can use any discrete type to index an array, including
+`Enum types <TODOLINKENUMTYPES>`_. We will soon see what that means.
 
 The second thing that we might notice is that querying an element of the array
 at a given syntax uses the same syntax as the subprogram calls syntax, that is
@@ -1354,7 +1355,7 @@ Finally, the last thing of notice is how we initialize the array, with the
 and is a literal expression for an array, the same way that ``3`` is a literal
 expression for an Integer. The notation is very powerful and has many
 subtleties that we will gradually introduce. You can also have a detailed
-overview of the notation `here <TODODETAILEDAGGREGATESADVANCED>__`.
+overview of the `notation of aggregate types <TODODETAILEDAGGREGATESADVANCED>`_.
 
 Let's now delve into what it means exactly to be able to use any discrete type
 to index into the array.
@@ -2743,7 +2744,7 @@ called accesses, because there are almost always better ways than to resort to
 the advanced features directly.
 
 If you need the unsafe features, you can learn more about those
-`here <TODO_ACCESS_TYPES_ADVANCED_LINK>__`.
+`unsafe features <TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
 
 Here is how you declare a simple access type in Ada:
 
@@ -2914,8 +2915,8 @@ features that are considered fundamental to the use of pointers, such as:
   Ada, you need to never deallocate manually.
 
 Those features exist in Ada, but are hidden behind specific standard library
-APIs. You can read more about those in the `advanced course on memory
-management <TODO_ACCESS_TYPES_ADVANCED_LINK>`__.
+APIs. You can read more about those in the
+`advanced course on memory management <TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
 
 .. attention::
 
@@ -2931,12 +2932,12 @@ management <TODO_ACCESS_TYPES_ADVANCED_LINK>`__.
        memory is automatically managed.
 
     2. A container of specific interest in that context is the
-       `Indefinite holder <http://www.ada-auth.org/standards/12rat/html/Rat12-8-5.html>__`.
+       `Indefinite holder <http://www.ada-auth.org/standards/12rat/html/Rat12-8-5.html>`_.
        This container allows you to store a value of an indefinite type
        just as if it was of a definite type.
 
     3. GNATCOLL has a library for smart pointers, called
-       `Refcount <https://github.com/AdaCore/gnatcoll-core/blob/master/src/gnatcoll-refcount.ads>__`
+       `Refcount <https://github.com/AdaCore/gnatcoll-core/blob/master/src/gnatcoll-refcount.ads>`_
        Those pointers' memory is automatically managed, so that when your
        pointer has no more references to it, the memory is automatically
        deallocated.
@@ -3392,7 +3393,7 @@ Privacy
 
 One of the main principles in modular programming, that has later become one of
 the main principles behind the dominant interpretation of object oriented
-programming, is `encapsulation <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`__.
+programming, is `encapsulation <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`_.
 
 Encapsulation, briefly, is the concept that the implementer of a piece of
 computer software will distinguish between the public interface and the private
@@ -3541,7 +3542,7 @@ operation: You might have data inside your record that needs to be treated
 specially when you copy it (for example doing a deep copy).
 
 Ada allows you to implement special semantics for those operations via
-`controlled types <todo_link_to_controlled_types>`__. However, controlled types
+`controlled types <todo_link_to_controlled_types>`_. However, controlled types
 are complicated to get right and, in some cases, to simplify the problem, and
 the way people will use your API, you can sidestep the issue entirely and say
 "Users are not allowed to copy this data type".
@@ -3867,7 +3868,8 @@ Application: ADTs
 
 An important application of generics is to model abstract data types
 (ADTs). In fact, Ada includes a library with all sorts of ADTs using
-generics: :ada:`Ada.Containers` (described :ref:`here <Containers>`).
+generics: :ada:`Ada.Containers` (described in the
+:ref:`containers section <Containers>`).
 
 A typical example of an ADT is a stack:
 
@@ -6041,7 +6043,7 @@ Tagged types are much like regular records, except that some functionalities are
 added:
 
 - Types have a tag, that is stored inside instances, and that identifies the
-  `runtime type <https://fr.wikipedia.org/wiki/Run-time_type_information>`__ of
+  `runtime type <https://fr.wikipedia.org/wiki/Run-time_type_information>`_ of
   an object.
 
 - Primitives can dispatch. A primitive on a tagged type is what you would call
