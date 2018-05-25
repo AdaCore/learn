@@ -8932,6 +8932,339 @@ any index in the file. Therefore, when changing the index, we need to make
 sure that the new index is correctly aligned with the data types that
 we're expecting.
 
+Numerics
+--------
+
+The standard library provides support for common numeric operations on
+floating-point types, as well as complex types and matrices. This section
+presents a brief introduction into the topic.
+
+Elementary Functions
+~~~~~~~~~~~~~~~~~~~~
+
+The :ada:`Ada.Numerics.Generic_Elementary_Functions` package provides
+common operations for floating-point types, such as square-root,
+logarithm, cosine, etc. Because it's a generic package, it needs to be
+instantiated for the desired precision.
+
+The following example shows some of the operations from the package:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics; use Ada.Numerics;
+    with Ada.Numerics.Generic_Elementary_Functions;
+
+    procedure Show_Elem_Math is
+
+       package Elementary_Functions is new
+         Ada.Numerics.Generic_Elementary_Functions (Float);
+       use Elementary_Functions;
+
+       X : Float;
+    begin
+       X := 2.0;
+       Put_Line ("Square-root of " & Float'Image (X)
+                 & " is " & Float'Image (Sqrt (X)));
+
+       X := e;
+       Put_Line ("Natural log of " & Float'Image (X)
+                 & " is " & Float'Image (Log (X)));
+
+       X := 10.0 ** 6.0;
+       Put_Line ("Log_10      of " & Float'Image (X)
+                 & " is " & Float'Image (Log (X, 10.0)));
+
+       X := 2.0 ** 8.0;
+       Put_Line ("Log_2       of " & Float'Image (X)
+                 & " is " & Float'Image (Log (X, 2.0)));
+
+       X := Pi;
+       Put_Line ("Cos         of " & Float'Image (X)
+                 & " is " & Float'Image (Cos (X)));
+
+       X := -1.0;
+       Put_Line ("Arccos      of " & Float'Image (X)
+                 & " is " & Float'Image (Arccos (X)));
+    end Show_Elem_Math;
+
+In this example, the package was instantiated for the :ada:`Float` type.
+Had we required better precision in our application, we could have
+instantiated the package using the :ada:`Long_Float` type or a custom
+floating-point type instead. For example:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+       package Elementary_Functions is new
+         Ada.Numerics.Generic_Elementary_Functions (Long_Float);
+
+Also note that, in the example above, we make use of the standard ``e``
+and ``Pi`` constants from the :ada:`Ada.Numerics` package.
+
+Random Number Generation
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The :ada:`Ada.Numerics.Float_Random` package provides a simple random
+number generator for the range between 0 and 1. In order to use it, we
+need to declare a generator ``G``, which can then be used in calls to
+``Random``. For example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
+
+    procedure Show_Float_Random_Num is
+       G : Generator;
+       X : Uniformly_Distributed;
+    begin
+       Reset (G);
+
+       Put_Line ("Some random numbers between "
+                 & Float'Image (Uniformly_Distributed'First) & " and "
+                 & Float'Image (Uniformly_Distributed'Last)  & ":");
+       for I in 1 .. 15 loop
+          X := Random (G);
+          Put_Line (Float'Image (X));
+       end loop;
+    end Show_Float_Random_Num;
+
+The standard library also includes a random number generator for discrete
+numbers. This is part of the :ada:`Ada.Numerics.Discrete_Random` package.
+Since it's a generic package, we have to instantiate it for the desired
+discrete type. This allows us to specify a range for the generator. In
+the following example, we create an application that displays random
+numbers between 1 and 10:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics.Discrete_Random;
+
+    procedure Show_Discrete_Random_Num is
+
+       subtype Random_Range is Integer range 1 .. 10;
+
+       package R is new Ada.Numerics.Discrete_Random (Random_Range);
+       use R;
+
+       G : Generator;
+       X : Random_Range;
+    begin
+       Reset (G);
+
+       Put_Line ("Some random numbers between "
+                 & Integer'Image (Random_Range'First) & " and "
+                 & Integer'Image (Random_Range'Last)  & ":");
+       for I in 1 .. 15 loop
+          X := Random (G);
+          Put_Line (Integer'Image (X));
+       end loop;
+    end Show_Discrete_Random_Num;
+
+In this example, package ``R`` is instantiated with the ``Random_Range``
+type, which has a constrained range between 1 and 10. This allows us for
+controlling the range used for the random numbers. We could easily modify
+the application to display random numbers between 0 and 20 by changing the
+specification of the ``Random_Range`` type.
+
+Complex Types
+~~~~~~~~~~~~~
+
+The :ada:`Ada.Numerics.Generic_Complex_Types` package provides support for
+complex number types. In addition, the
+:ada:`Ada.Numerics.Generic_Complex_Elementary_Functions` package provides
+support for common operations on complex number types --- similar to the
+:ada:`Ada.Numerics.Generic_Elementary_Functions` package for
+floating-point types. Finally, the
+:ada:`Ada.Text_IO.Complex_IO` package can be used to display complex
+numbers.
+
+Because the :ada:`Ada.Numerics.Generic_Complex_Types` package is a generic
+package, we need to instantiate it for the required floating-point
+precision. After instantiating the package, we can declare variables of
+``Complex`` type and initialize them using an aggregate. For example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics; use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+    with Ada.Numerics.Generic_Complex_Elementary_Functions;
+    with Ada.Text_IO.Complex_IO;
+
+    procedure Show_Elem_Math is
+
+       package Complex_Types is new
+         Ada.Numerics.Generic_Complex_Types (Float);
+       use Complex_Types;
+
+       package Elementary_Functions is new
+         Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
+       use Elementary_Functions;
+
+       package C_IO is new Ada.Text_IO.Complex_IO (Complex_Types);
+       use C_IO;
+
+       X, Y  : Complex;
+       R, Th : Float;
+    begin
+       X := (2.0, -1.0);
+       Y := (3.0,  4.0);
+
+       Put (X);
+       Put (" * ");
+       Put (Y);
+       Put (" is ");
+       Put (X * Y);
+       New_Line;
+       New_Line;
+
+       R  := 3.0;
+       Th := Pi / 2.0;
+       X  := Compose_From_Polar (R, Th);
+       --  Alternatively:
+       --  X := R * Exp ((0.0, Th));
+       --  X := R * e ** Complex'(0.0, Th);
+
+       Put ("Polar form:    "
+            & Float'Image (R)  & " * e**(i * "
+            & Float'Image (Th) & ")");
+       New_Line;
+
+       Put ("Modulus     of ");
+       Put (X);
+       Put (" is ");
+       Put (Float'Image (abs (X)));
+       New_Line;
+
+       Put ("Argument    of ");
+       Put (X);
+       Put (" is ");
+       Put (Float'Image (Argument (X)));
+       New_Line;
+       New_Line;
+
+       Put ("Sqrt        of ");
+       Put (X);
+       Put (" is ");
+       Put (Sqrt (X));
+       New_Line;
+    end Show_Elem_Math;
+
+As we can see in this example, all common operators, such as :ada:`*` and
+:ada:`+`, are available for complex number types. Moreover, we have
+typical operations on complex numbers, such as ``Argument`` and ``Exp``.
+Also, in addition to initializing complex numbers in the cartesian form
+using aggregates, we can use the polar form by calling the
+``Compose_From_Polar`` function.
+
+Vector and Matrix Manipulation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The :ada:`Ada.Numerics.Generic_Real_Arrays` package provides support for
+vectors and matrices. Since it's a generic package, we need to instantiate
+it for the required floating-point precision. After instantiating the
+package, we can declare vectors and matrices using the ``Real_Vector`` and
+``Real_Matrix`` types, respectively. The package provides common matrix
+operations --- such as inverse, determinant, eigenvalues --- in addition
+to typical operators such as matrix addition and multiplication.
+
+The following example makes use of some of the operations from the
+:ada:`Ada.Numerics.Generic_Real_Arrays` package:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics.Generic_Real_Arrays;
+
+    procedure Show_Matrix is
+
+       package Real_Arrays is new
+         Ada.Numerics.Generic_Real_Arrays (Float);
+       use Real_Arrays;
+
+       procedure Put_Vector (V : Real_Vector) is
+       begin
+          Put ("    (");
+          for I in V'Range loop
+             Put (Float'Image (V (I)) & " ");
+          end loop;
+          Put_Line (")");
+       end Put_Vector;
+
+       procedure Put_Matrix (M : Real_Matrix) is
+       begin
+          for I in M'Range (1) loop
+             Put ("    (");
+             for J in M'Range (2) loop
+                Put (Float'Image (M (I, J)) & " ");
+             end loop;
+             Put_Line (")");
+          end loop;
+       end Put_Matrix;
+
+       V1       : Real_Vector := (1.0, 3.0);
+       V2       : Real_Vector := (75.0, 11.0);
+
+       M1       : Real_Matrix :=
+                    ((1.0, 5.0, 1.0),
+                     (2.0, 2.0, 1.0));
+       M2       : Real_Matrix :=
+                    ((31.0, 11.0, 10.0),
+                     (34.0, 16.0, 11.0),
+                     (32.0, 12.0, 10.0),
+                     (31.0, 13.0, 10.0));
+       M3       : Real_Matrix := ((1.0, 2.0),
+                                  (2.0, 3.0));
+    begin
+       Put_Line ("V1");
+       Put_Vector (V1);
+       Put_Line ("V2");
+       Put_Vector (V2);
+       Put_Line ("V1 * V2 =");
+       Put_Line ("    "
+                 & Float'Image (V1 * V2));
+       Put_Line ("V1 * V2 =");
+       Put_Matrix (V1 * V2);
+       New_Line;
+
+       Put_Line ("M1");
+       Put_Matrix (M1);
+       Put_Line ("M2");
+       Put_Matrix (M2);
+       Put_Line ("M2 * Transpose(M1) =");
+       Put_Matrix (M2 * Transpose (M1));
+       New_Line;
+
+       Put_Line ("M3");
+       Put_Matrix (M3);
+       Put_Line ("Inverse (M3) =");
+       Put_Matrix (Inverse (M3));
+       Put_Line ("abs Inverse (M3) =");
+       Put_Matrix (abs Inverse (M3));
+       Put_Line ("Determinant (M3) =");
+       Put_Line ("    "
+                 & Float'Image (Determinant (M3)));
+       Put_Line ("Solve (M3, V1) =");
+       Put_Vector (Solve (M3, V1));
+       Put_Line ("Eigenvalues (M3) =");
+       Put_Vector (Eigenvalues (M3));
+       New_Line;
+    end Show_Matrix;
+
+When not specified, matrix dimensions will automatically be determined
+from the aggregate used for initialization. We could, however, make use of
+explicit ranges. For example:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+       M1       : Real_Matrix (1 .. 2, 1 .. 3) :=
+                    ((1.0, 5.0, 1.0),
+                     (2.0, 2.0, 1.0));
+
 Dynamic allocation and reclamation
 ----------------------------------
 
