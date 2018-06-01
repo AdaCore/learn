@@ -1,5 +1,5 @@
 language: python
 python:
   - "2.7"
-install: "pip install -q -r requirements.txt --use-mirrors"
+install: "pip install -q -r requirements.txt"
 script: make -C courses/intro-to-ada/sphinx html
