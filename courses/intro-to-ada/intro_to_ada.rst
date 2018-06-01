@@ -9076,37 +9076,29 @@ specification of the ``Random_Range`` type.
 Complex Types
 ~~~~~~~~~~~~~
 
-The :ada:`Ada.Numerics.Generic_Complex_Types` package provides support for
+The :ada:`Ada.Numerics.Complex_Types` package provides support for
 complex number types. In addition, the
-:ada:`Ada.Numerics.Generic_Complex_Elementary_Functions` package provides
+:ada:`Ada.Numerics.Complex_Elementary_Functions` package provides
 support for common operations on complex number types --- similar to the
-:ada:`Ada.Numerics.Generic_Elementary_Functions` package for
-floating-point types. Finally, the
+:ada:`Ada.Numerics.Elementary_Functions` package. Finally, the
 :ada:`Ada.Text_IO.Complex_IO` package can be used to display complex
-numbers.
-
-Because the :ada:`Ada.Numerics.Generic_Complex_Types` package is a generic
-package, we need to instantiate it for the required floating-point
-precision. After instantiating the package, we can declare variables of
-``Complex`` type and initialize them using an aggregate. For example:
+numbers. In the following example, we declare variables of ``Complex``
+type and initialize them using an aggregate:
 
 .. code-block:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
-    with Ada.Numerics.Generic_Complex_Types;
-    with Ada.Numerics.Generic_Complex_Elementary_Functions;
+
+    with Ada.Numerics.Complex_Types;
+    use  Ada.Numerics.Complex_Types;
+
+    with Ada.Numerics.Complex_Elementary_Functions;
+    use  Ada.Numerics.Complex_Elementary_Functions;
+
     with Ada.Text_IO.Complex_IO;
 
     procedure Show_Elem_Math is
-
-       package Complex_Types is new
-         Ada.Numerics.Generic_Complex_Types (Float);
-       use Complex_Types;
-
-       package Elementary_Functions is new
-         Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
-       use Elementary_Functions;
 
        package C_IO is new Ada.Text_IO.Complex_IO (Complex_Types);
        use C_IO;
@@ -9163,6 +9155,38 @@ typical operations on complex numbers, such as ``Argument`` and ``Exp``.
 Also, in addition to initializing complex numbers in the cartesian form
 using aggregates, we can use the polar form by calling the
 ``Compose_From_Polar`` function.
+
+The :ada:`Ada.Numerics.Generic_Complex_Types` and
+:ada:`Ada.Numerics.Complex_Elementary_Functions` packages target the
+:ada:`Float` type. Similar packages are available for :ada:`Long_Float`
+and  :ada:`Long_Long_Float` types. In addition, the
+:ada:`Ada.Numerics.Generic_Complex_Types` and
+:ada:`Ada.Numerics.Generic_Complex_Elementary_Functions` packages are
+generic versions that can be instantiated for custom or pre-defined
+floating-point types. For example:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+    with Ada.Numerics.Generic_Complex_Types;
+    with Ada.Numerics.Generic_Complex_Elementary_Functions;
+    with Ada.Text_IO.Complex_IO;
+
+    procedure Show_Elem_Math is
+
+       package Complex_Types is new
+         Ada.Numerics.Generic_Complex_Types (Float);
+       use Complex_Types;
+
+       package Elementary_Functions is new
+         Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
+       use Elementary_Functions;
+
+       package C_IO is new Ada.Text_IO.Complex_IO (Complex_Types);
+       use C_IO;
+
+       X, Y  : Complex;
+       R, Th : Float;
 
 Vector and Matrix Manipulation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
