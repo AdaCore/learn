@@ -8942,25 +8942,19 @@ presents a brief introduction into the topic.
 Elementary Functions
 ~~~~~~~~~~~~~~~~~~~~
 
-The :ada:`Ada.Numerics.Generic_Elementary_Functions` package provides
+The :ada:`Ada.Numerics.Elementary_Functions` package provides
 common operations for floating-point types, such as square-root,
-logarithm, cosine, etc. Because it's a generic package, it needs to be
-instantiated for the desired precision.
-
-The following example shows some of the operations from the package:
+logarithm, cosine, etc. For example:
 
 .. code-block:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
-    with Ada.Numerics.Generic_Elementary_Functions;
+
+    with Ada.Numerics.Elementary_Functions;
+    use  Ada.Numerics.Elementary_Functions;
 
     procedure Show_Elem_Math is
-
-       package Elementary_Functions is new
-         Ada.Numerics.Generic_Elementary_Functions (Float);
-       use Elementary_Functions;
-
        X : Float;
     begin
        X := 2.0;
@@ -8988,19 +8982,29 @@ The following example shows some of the operations from the package:
                  & " is " & Float'Image (Arccos (X)));
     end Show_Elem_Math;
 
-In this example, the package was instantiated for the :ada:`Float` type.
-Had we required better precision in our application, we could have
-instantiated the package using the :ada:`Long_Float` type or a custom
-floating-point type instead. For example:
+Note that, in the example above, we make use of the standard ``e``
+and ``Pi`` constants from the :ada:`Ada.Numerics` package.
+
+The :ada:`Ada.Numerics.Elementary_Functions` package targets the
+:ada:`Float` type. Similar packages are available for :ada:`Long_Float`
+and  :ada:`Long_Long_Float` types. For example, the
+:ada:`Ada.Numerics.Long_Elementary_Functions` package offers the same set
+of operations for the :ada:`Long_Float` type. In addition, the
+:ada:`Ada.Numerics.Generic_Elementary_Functions` package is a generic
+version of the package that can be instantiated for custom
+floating-point types. In fact, the
+:ada:`Elementary_Functions` package can be defined as
+follows:
 
 .. code-block:: ada
     :class: ada-nocheck
 
        package Elementary_Functions is new
-         Ada.Numerics.Generic_Elementary_Functions (Long_Float);
+         Ada.Numerics.Generic_Elementary_Functions (Float);
 
-Also note that, in the example above, we make use of the standard ``e``
-and ``Pi`` constants from the :ada:`Ada.Numerics` package.
+As expected, we can instantiate the
+:ada:`Generic_Elementary_Functions` package for any custom
+floating-point type definition.
 
 Random Number Generation
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -9072,37 +9076,29 @@ specification of the ``Random_Range`` type.
 Complex Types
 ~~~~~~~~~~~~~
 
-The :ada:`Ada.Numerics.Generic_Complex_Types` package provides support for
+The :ada:`Ada.Numerics.Complex_Types` package provides support for
 complex number types. In addition, the
-:ada:`Ada.Numerics.Generic_Complex_Elementary_Functions` package provides
+:ada:`Ada.Numerics.Complex_Elementary_Functions` package provides
 support for common operations on complex number types --- similar to the
-:ada:`Ada.Numerics.Generic_Elementary_Functions` package for
-floating-point types. Finally, the
+:ada:`Ada.Numerics.Elementary_Functions` package. Finally, the
 :ada:`Ada.Text_IO.Complex_IO` package can be used to display complex
-numbers.
-
-Because the :ada:`Ada.Numerics.Generic_Complex_Types` package is a generic
-package, we need to instantiate it for the required floating-point
-precision. After instantiating the package, we can declare variables of
-``Complex`` type and initialize them using an aggregate. For example:
+numbers. In the following example, we declare variables of ``Complex``
+type and initialize them using an aggregate:
 
 .. code-block:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
-    with Ada.Numerics.Generic_Complex_Types;
-    with Ada.Numerics.Generic_Complex_Elementary_Functions;
+
+    with Ada.Numerics.Complex_Types;
+    use  Ada.Numerics.Complex_Types;
+
+    with Ada.Numerics.Complex_Elementary_Functions;
+    use  Ada.Numerics.Complex_Elementary_Functions;
+
     with Ada.Text_IO.Complex_IO;
 
     procedure Show_Elem_Math is
-
-       package Complex_Types is new
-         Ada.Numerics.Generic_Complex_Types (Float);
-       use Complex_Types;
-
-       package Elementary_Functions is new
-         Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
-       use Elementary_Functions;
 
        package C_IO is new Ada.Text_IO.Complex_IO (Complex_Types);
        use C_IO;
@@ -9160,30 +9156,59 @@ Also, in addition to initializing complex numbers in the cartesian form
 using aggregates, we can use the polar form by calling the
 ``Compose_From_Polar`` function.
 
+The :ada:`Ada.Numerics.Complex_Types` and
+:ada:`Ada.Numerics.Complex_Elementary_Functions` packages target the
+:ada:`Float` type. Similar packages are available for :ada:`Long_Float`
+and  :ada:`Long_Long_Float` types. In addition, the
+:ada:`Ada.Numerics.Generic_Complex_Types` and
+:ada:`Ada.Numerics.Generic_Complex_Elementary_Functions` packages are
+generic versions that can be instantiated for custom or pre-defined
+floating-point types. For example:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+    with Ada.Numerics.Generic_Complex_Types;
+    with Ada.Numerics.Generic_Complex_Elementary_Functions;
+    with Ada.Text_IO.Complex_IO;
+
+    procedure Show_Elem_Math is
+
+       package Complex_Types is new
+         Ada.Numerics.Generic_Complex_Types (Float);
+       use Complex_Types;
+
+       package Elementary_Functions is new
+         Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
+       use Elementary_Functions;
+
+       package C_IO is new Ada.Text_IO.Complex_IO (Complex_Types);
+       use C_IO;
+
+       X, Y  : Complex;
+       R, Th : Float;
+
 Vector and Matrix Manipulation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ada:`Ada.Numerics.Generic_Real_Arrays` package provides support for
-vectors and matrices. Since it's a generic package, we need to instantiate
-it for the required floating-point precision. After instantiating the
-package, we can declare vectors and matrices using the ``Real_Vector`` and
-``Real_Matrix`` types, respectively. The package provides common matrix
-operations --- such as inverse, determinant, eigenvalues --- in addition
-to typical operators such as matrix addition and multiplication.
+The :ada:`Ada.Numerics.Real_Arrays` package provides support for
+vectors and matrices. It includes common matrix operations --- such as
+inverse, determinant, eigenvalues --- in addition to typical operators
+such as matrix addition and multiplication. We can declare vectors and
+matrices using the ``Real_Vector`` and ``Real_Matrix`` types,
+respectively.
 
 The following example makes use of some of the operations from the
-:ada:`Ada.Numerics.Generic_Real_Arrays` package:
+:ada:`Ada.Numerics.Real_Arrays` package:
 
 .. code-block:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
-    with Ada.Numerics.Generic_Real_Arrays;
+
+    with Ada.Numerics.Real_Arrays;
+    use  Ada.Numerics.Real_Arrays;
 
     procedure Show_Matrix is
-
-       package Real_Arrays is new
-         Ada.Numerics.Generic_Real_Arrays (Float);
-       use Real_Arrays;
 
        procedure Put_Vector (V : Real_Vector) is
        begin
@@ -9264,6 +9289,19 @@ explicit ranges. For example:
        M1       : Real_Matrix (1 .. 2, 1 .. 3) :=
                     ((1.0, 5.0, 1.0),
                      (2.0, 2.0, 1.0));
+
+The :ada:`Ada.Numerics.Real_Arrays` package targets the
+:ada:`Float` type. Similar packages are available for :ada:`Long_Float`
+and  :ada:`Long_Long_Float` types. In addition, the
+:ada:`Ada.Numerics.Generic_Real_Arrays` package is a generic
+version that can be instantiated for custom floating-point types. For
+example, the :ada:`Real_Arrays` package can be defined as follows:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+       package Real_Arrays is new
+         Ada.Numerics.Generic_Real_Arrays (Float);
 
 Dynamic allocation and reclamation
 ----------------------------------
