@@ -128,29 +128,40 @@ can leverage in SPARK to help proving your programs correct.
 Imperative language
 ===================
 
-Ada is a multi-paradigm language, but at it's core, it contains a
-simple, coherent procedural/imperative language akin to C or Pascal.
+Ada is a multi-paradigm language with support for object orientation
+and some elements of functional programming, but its core is a simple, coherent
+procedural/imperative language akin to C or Pascal.
 
-    One important distinction with a language like C is that statements
-    and expressions are very clearly distinguished.
+.. admonition:: In other languages
+
+    One important distinction between Ada and a language like C is that
+    statements and expressions are very clearly distinguished.  In Ada, If you
+    try to use an expression where a statement is required then your program
+    will fail to compile.  This rule supports a useful stylistic principle:
+    expressions are intended to deliver values, not to have side effects. It
+    can also prevent some programming errors, such as mistakenly using the
+    equality operator "=" instead of the assignment operation ":=" in an
+    assignment statement.
 
 Hello world
 -----------
 
-Let's go over a very simple imperative Ada program:
+Here's a very simple imperative Ada program:
 
 .. code-block:: ada
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO;
 
     procedure Greet is
     begin
        --  Print "Hello, World!" to the screen
-       Put_Line ("Hello, World!");
+       Ada.Text_IO.Put_Line ("Hello, World!");
     end Greet;
 
-If you compile that source with the GNAT compiler, you will get a pretty
-unsurprising result.
+which we'll assume is in the source file :file:`greet.adb`.
+
+If you compile that source with the GNAT compiler and run the executable,
+you will get an unsurprising result.
 
 .. code-block:: sh
 
@@ -168,19 +179,17 @@ unsurprising result.
     Hello, World!
      %
 
-There are several note worthy things in the above program:
+There are several noteworthy things in the above program:
 
 -  A subprogram in Ada can be either a procedure or a function. A
-   procedure, as used above, does not return a value when called. This is
-   similar to functions in C/C++ that return :c:`void`. We'll see later how
-   to declare functions in Ada.
+   procedure, as illustrated above, does not return a value when called.
 
--  :ada:`with` and :ada:`use` are used to reference external packages in
+-  :ada:`with` is used to reference external modules that are needed in
    the procedure. This is similar to ``import`` in various languages or
-   roughly similar to :c:`#include` in C/C++.
+   roughly similar to :c:`#include` in C and C++.
    We'll see later how they work in detail. Here, we are requesting a
-   standard library module which contains a procedure to print text on the
-   screen: :ada:`Put_Line`.
+   standard library module, the :ada:`Ada.Text_IO` package,
+   which contains a procedure to print text on the screen: :ada:`Put_Line`.
 
 -  ``Greet`` is a procedure, and the main entry point for our first
    program. Unlike in C or C++, it can be named anything you prefer. The
@@ -189,7 +198,7 @@ There are several note worthy things in the above program:
    parameter.
 
 -  :ada:`Put_Line` is a procedure, just like ``Greet``, except it is
-   imported from the :ada:`Ada.Text_IO` module. It is the Ada equivalent
+   declared in the :ada:`Ada.Text_IO` module. It is the Ada equivalent
    of C's :c:`printf`.
 
 -  Comments start with :ada:`--` and go to the end of the line. There is
@@ -198,253 +207,427 @@ There are several note worthy things in the above program:
    create multiple lines of comments in Ada is by using :ada:`--` on each
    line. For example:
 
+.. admonition:: In other languages
+
+    Procedures ares similar to functions in C or C++ that return :c:`void`.
+    We'll see later how to declare functions in Ada.
+
 .. code-block:: ada
     :class: ada-nocheck
 
     --  We start a comment in this line...
     --  and we continue on the second line...
 
-Imperative language - If/Else
------------------------------
-
-Ada has an if statement. It is pretty unsurprising in form and function:
+Here is a minor variant of the "Hello, World" example:
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
-       I : Integer := 1;
     begin
-       loop
-          if I = 5 then
-             Put_Line ("Hello, World!");
-          end if;
-          I := I + 1;
-       end loop;
+       --  Print "Hello, World!" to the screen
+       Put_Line ("Hello, World!");
     end Greet;
 
-As for the while loop, the Boolean condition must be of strict type
-:ada:`Boolean`. Every relational operator in Ada returns a :ada:`Boolean`
-by default.
+This version utilizes an Ada feature known as a :ada:`use` clause, which has
+the the form ``use`` *package-name*. As illustrated by the call on
+:ada:`Put_Line`, the effect is that entities from the named package can be
+referenced directly, without the *package-name.* prefix.
+
+Imperative language - If/Then/Else
+----------------------------------
+
+This section describes Ada's ``if`` statement and introduces several other
+fundamental language facilities including integer I/O, data declarations,
+and subprogram parameter modes.
+
+Ada's ``if`` statementis pretty unsurprising in form and function:
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
-    procedure Greet is
-       I : Integer := 0;
-    begin
-       loop
-          if I = 5 then
-             exit;
-             --  Exit can be unconditional
-          elsif I = 0 then
-             Put_Line ("Starting...");
-          else
-             Put_Line ("Hello, World!");
-          end if;
-          I := I + 1;
-       end loop;
-    end Greet;
+    with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
-What we can see here is that Ada features an :ada:`elsif` keyword, unlike C or
-C++ where you will use nested ``else .. if`` blocks.
+    procedure Check_Positive is
+       N : Integer;
+    begin
+       Put ("Enter an integer value: ");  -- Put a String
+       Get (N);  -- Read in an integer value
+       if N>0 then
+          Put (N);  --Put an Integer
+          Put_Line (" is a positive number");
+       end if;
+    end Check_Positive;
+
+The ``if`` statement minimally consists of the reserved word :ada:`if`, a condition
+(which must be a boolean value), the reserved word :ada:`then` and a non-empty
+sequence of statements (the ``then`` part) which is executed if the condition
+evaluates to True, and a terminating :ada:`end if`.
+
+This example declares an Integer variable N, prompts the user for an Integer,
+checks if the value is positive and, if so, displays the integer's value
+followed by the string " is a positive number". If the value is not positive,
+the procedure does not display any output.
+
+The type Integer is a predefined signed type, and its range depends on the
+computer architecture. On typical current processors Integer is 32-bit signed.
+
+The example illustrates some of the basic functionality for integer input-output.
+The relevant subprograms are in the predefined package Ada.Integer_Text_IO and
+include the :ada:`Get` procedure (which reads in a number from the keyboard)
+and the :ada:`Put` procedure (which displays an integer value).
+
+Here's a slight variation on the example, which illustrates an :ada:`if` statement
+with an :ada:`else` part:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+
+    procedure Check_Positive is
+       N : Integer;
+    begin
+       Put ("Enter an integer value: ");  -- Put a String
+       Get (N);  -- Reads in an integer value
+       Put (N);  --Put an Integer
+       if N>0 then
+          Put_Line (" is a positive number");
+       else
+          Put_Line (" is not a positive number");
+       end if;
+    end Check_Positive;
+
+In this example, if the input value is not positive then the program
+displays the value followed by the String " is not a positive number".
+
+Our final variation illustrates an :ada:`if` statement with :ada:`elsif`
+sections:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+
+    procedure Check_Direction is
+       N : Integer;
+    begin
+       Put ("Enter an integer value: ");  -- Puts a String
+       Get (N);  -- Reads an Integer
+       Put (N);  --Puts an Integer
+       if N=0 or N=360 then
+          Put_Line (" is due east");
+       elsif N in 1..89 then
+          Put_Line (" is in the northeast quadrant");
+       elsif N=90 then
+          Put_Line (" is due north");
+       elsif N in 91..179 then
+          Put_Line (" is in the northwest quadrant");
+       elsif N=180 then
+          Put_Line (" is due west");
+       elsif N in 181..269 then
+          Put_Line (" is in the southwest quadrant");
+       elsif N=270 then
+          Put_Line (" is due south");
+       elsif N in 271..359 then
+          Put_Line (" is in the southeast quadrant");
+       else
+          Put_Line (" is not in the range 0..360");
+       end if;
+    end Check_Direction;
+
+This example expects the user to input an integer between 0 and 360
+inclusive, and displays which quadrant or axis the value corresponds
+to.  The :ada:`in` operator in Ada tests whether a scalar value is
+within a specified range and returns a Boolean result.
+The effect of the program should be self-explanatory; later we'll see an
+alternative and more efficient style to accomplish the same effect,
+through a :ada:`case` statement.
+
+Ada's :ada:`elsif` keyword differes from C or
+C++, where nested ``else .. if`` blocks would be used instead.
+And another difference is the presence of the :ada:`end if` in Ada,
+which avoids the problem known as the "dangling else".
+
 
 Imperative language - Loops
 ---------------------------
 
-Ada has three ways of specifying loops. None of them behave like the
-C/Java/Javascript for-loop though. Their semantic is much more restricted,
-which is in line with Ada's philosophy.
+Ada has three ways of specifying loops. They differ from the
+C / Java / Javascript for-loop, however, with simpler syntax and semantics
+in line with Ada's philosophy.
 
 For loops
 ~~~~~~~~~
 
-The first kind of loop is the for loop. It allows to iterate through a
+The first kind of loop is the ``for`` loop, which allows iteration through a
 discrete range.
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Greet_5a is
     begin
-       for I in 1 .. 10 loop
-          Put_Line ("Hello, World!"); -- Procedure call
-          --        ^ Procedure parameters
+       for I in 1 .. 5 loop
+          Put_Line ("Hello, World!" & Integer'Image(I)); -- Procedure call
+          --        ^ Procedure parameter
        end loop;
-    end Greet;
+    end Greet_5a;
+
+Executing this procedure yields the following output:
+
+.. code-block:: sh
+
+   Hello, World! 1
+   Hello, World! 2
+   Hello, World! 3
+   Hello, World! 4
+   Hello, World! 5
+
 
 A few things to note:
 
--  ``1 .. 10`` is a discrete range, from ``1`` to ``10`` included.
+-  ``1 .. 5`` is a discrete range, from ``1`` to ``5`` inclusive.
 
--  It is bound to the name ``I`` in the body of the loop.
+-  The loop parameter ``I`` (the name is arbitrary) in the body of the
+   loop has a value within this range.
 
--  Here, ``I`` is like a variable declaration, so you cannot refer to ``I``
-   after the loop.
+-  ``I`` is local to the loop, so you cannot refer to ``I``
+   outside the loop.
 
--  ``I`` is constant. You cannot change its value.
+-  Although the value of `I`` is incremented at each iteration, from the
+   program's perspective it is constant. An attempt to modify its value
+   is illegal; the compiler would reject the program.
 
-You cannot change the "step" of the loop (iterate two by two for
-example), and if you want to iterate from ``10`` to ``1``, you have to
-use the reverse keyword.
+-  Integer'Image is a function that takes an Integer and converts it to a
+   String.  It is an example of a language construct known as an *attribute*,
+   indicated by the "'" syntax, which will be covered in more detail later.
+
+-  The ``&`` symbol is the concatenation operator for String values
+
+-  The :ada:`end loop` marks the end of the loop
+
+The "step" of the loop is limited to 1 (forward direction) and -1 (backward).
+To iterate backwards over a range, use the :ada:`reverse` keyword:
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
-    procedure Greet is
-    begin
-       for I in reverse 1 .. 10 loop --  10 .. 1 would not work.
-          Put_Line ("Hello, World!");
-       end loop;
-    end Greet;
 
-For loops are more powerful and complicated than what we showcased here,
+    procedure Greet_5a_Reverse is
+    begin
+       for I in reverse 1 .. 5 loop
+          Put_Line ("Hello, World!" & Integer'Image(I));
+       end loop;
+    end Greet_5a_Reverse;
+
+Executing this procedure yields the following output:
+
+.. code-block:: sh
+
+   Hello, World! 5
+   Hello, World! 4
+   Hello, World! 3
+   Hello, World! 2
+   Hello, World! 1
+
+The bounds of a :ada:`for` loop may be computed at run-time; they
+are evaluated once, before the loop body is executed.  If the value of the
+upper bound is less than the value of the lower bound, then the
+loop is not executed at all.  This is the case also for :ada:`reverse` loops.
+Thus no output is produced in the following example:
+
+.. code-block:: ada
+
+    procedure Greet_No_Op is
+    begin
+       for I in reverse 5 .. 1 loop
+          Put_Line ("Hello, World!" & Integer'Image(I));
+       end loop;
+    end Greet_No_Op;
+
+
+The :ada:`for` loop is more general than what we illustrated here;
 more on that later.
 
 Bare loops
 ~~~~~~~~~~
 
-Even though we started with the for loop, for familiarity, the purest,
-form of loop in Ada is the bare loop. In some sense, every other loop kind
-builds up on this one.
+The simplest loop in Ada is the bare loop, which forms the foundation of
+the other kinds of Ada loops.
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Greet_5b is
        I : Integer := 1; -- Variable declaration
        --  ^ Type
-       --             ^ Default value
+       --             ^ Initial value
     begin
        loop
-          Put_Line ("Hello, World!");
+          Put_Line ("Hello, World!" & Integer'Image(I));
           exit when I = 5; --  Exit statement
           --        ^ Boolean condition
-          I := I + 1;
+
+          --  Assignment
+          I := I + 1; -- There is no I++ short form to increment a variable
        end loop;
-    end Greet;
+    end Greet_5b;
 
-This example introduces a few new concepts and Ada specificities:
+This example has the same effect as ``Greet_5a`` shown earlier.
 
--  We see that we declared a variable, between the :ada:`is` and the
-   :ada:`begin`. This constitutes a declarative region. In Ada, you can
-   only declare objects, types, and anything that is considered a
-   declaration, in a declarative region. Trying to declare a variable
-   inline in the middle of your statements will result in a compilation
-   error. More on that later.
+It illustrates several concepts:
+
+-  We have declared a variable named ``I`` between the :ada:`is` and the
+   :ada:`begin`. This constitutes a *declarative region*.  Ada clearly
+   separates the declarative region from the statement part of a
+   subprogram. A declaration can appear in a declarative region but is
+   not allowed as a statement.
 
 -  The bare loop statement is introduced by the keyword :ada:`loop` on
-   its own and, like every kind of loop statement, terminated by the
+   its own and, like every kind of loop statement, is terminated by the
    combination of keywords :ada:`end loop`. On its own, it is an infinite
    loop. You can break out of it with an :ada:`exit` statement.
 
--  The operator for assignment is :ada:`:=`, and the one for equality is
-   :ada:`=`. There is no way to confuse them, because as previously said,
+-  The syntax for assignment is :ada:`:=`, and the one for equality is
+   :ada:`=`. There is no way to confuse them, because as previously noted,
    in Ada, statements and expressions are distinct, and expressions are
    not valid statements.
+
 
 While loops
 ~~~~~~~~~~~
 
-Ada has a last loop kind, while loops.
+The last kind of loop in Ada is the :ada:`while` loop.
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
-       I : Natural := 0;
+    procedure Greet_5c is
+       I : Integer := 1;
     begin
-       --  Condition. *Must* be of type Boolean (no Integers). Operator <
-       --  returns a Boolean
-       while I < 10 loop
-          Put_Line ("Hello, World!");
+       --  Condition must be a boolean value (no Integers).
+       --  Operator "<=" returns a Boolean
+       while I <= 5 loop
+          Put_Line ("Hello, World!" & Integer'Image(I));
 
-          --  Assignment
           I := I + 1;
        end loop;
-    end Greet;
+    end Greet_5c;
 
-Here we see what assignment to a variable looks like. There is no
-``I++`` short form to increment, as there is in many languages.
+The condition is evaluated before each iteration. If it is False,
+then the loop is terminated.
 
-Something important to note: Trying to treat any value other than a
-Boolean as a Boolean condition will result in a compile time error. This
-is a result of Ada's static strong typing.
+This program has the same effect as the previous examples.
+
+.. admonition:: In other languages
+
+    Note that Ada has different semantics than C-based languages with respect
+    to the condition in a while loop.  In Ada the condition has to be a boolean
+    value or the compiler will reject the program; the condition is not an
+    integer that is treated as either True or False depending on whether it is
+    non-zero or zero.
+
 
 Imperative language - Case statement
 ------------------------------------
 
-Ada has a case statement, which is a very interesting beast, as it quite
-differs from, for example, C/C++'s case statement.
+Ada's :ada:`case` statement is similar to the C and C++ :c:`switch` statement,
+but with some important differences.
+
+Here's an example, a variation of a program that was shown earlier
+with an :ada:`if` statement:
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
-    procedure Greet is
-       I : Integer := 0;
+    procedure Check_Direction is
+       N : Integer;
     begin
        loop
-          --  Expression must be of a discrete type. All the
-          --  values must be covered.
-          case I is
-             when 0 =>
-                Put_Line ("Starting...");
-                Put_Line ("No really");
-                --  You can put several statements in a branch.
-                --  There is no break.
-
-             when 3 .. 5 =>
-                Put_Line ("Hello");
-
-             when 7 | 9 =>
-                Put_Line ("World");
-
-             when 10 =>
-                exit;  -- This exits out of the loop ! Not equivalent to break !
-
-             when others => Put_Line ("I in (1, 2, 6, 8)");
-             --  ‘when others’ must be the last one and alone (if
-             --  present)
+          Put ("Enter an integer value: ");  -- Puts a String
+          Get (N);  -- Reads an Integer
+          Put (N);  --Puts an Integer
+          case N is
+             when 0 | 360 =>
+                Put_Line (" is due east");
+             when 1..89 =>
+                Put_Line (" is in the northeast quadrant");
+             when 90 =>
+                Put_Line (" is due north");
+             when 91..179 =>
+                Put_Line (" is in the northwest quadrant");
+             when 180 =>
+                Put_Line (" is due west");
+             when 181..269 =>
+                Put_Line (" is in the southwest quadrant");
+             when 270 =>
+                Put_Line (" is due south");
+             when 271..359 =>
+                Put_Line (" is in the southeast quadrant");
+             when others =>
+                Put_Line (" Au revoir");
+                exit;
           end case;
-          I := I + 1;
        end loop;
-    end Greet;
+    end Check_Direction;
+
+This program repeatedly prompts for an Integer value and then, if the value is
+in the range 0..360, displays the associated quadrant or axis.  If the
+value is an Integer outside this range, the loop (and the program) terminate
+after outputting a farewell message.
+
+The effect of the case statement is similar to the if statement in an earlier
+example, but the case statement can be more efficient because it does not involve
+multiple range tests.
 
 Notable points about Ada's case statement:
 
--  The parameter of the case statement needs to be of a discrete type.
-   More later about what `discrete types <TODO:linktodiscretetypes>`_ are,
-   but for the moment, it is enough to know that they cover integer and
-   enumeration types.
+-  The case expression (here the variable N) must be of a discrete type, i.e.
+   either an integer type or an enumeration type.  Discrete types will
+   be covered in more detail later
+   `discrete types <TODO:linktodiscretetypes>`__.
 
--  Every possible value needs to be covered by the case statement. This
-   will be checked at compile time. When using it on a value which has a
-   cumbersome number of possible values, you will use the special
-   :ada:`others` branch to cover the default case.
+-  Every possible value for the case expression needs to be covered by a unique
+   branch of the case statement. This will be checked at compile time.
 
--  A value cannot be covered twice. This will also result in a compile
-   time error.
+-  A branch can specify a single value, such as ``0``; a range of values,
+   such as ``1..89``; or any combination of the two (separated by a "|"
+   character).
 
--  There are syntactic sugars that you can use to cover several values
-   in a branch, such as ranges (``3 .. 5``) and disjoint sets
-   (``7 | 9``).
+-  As a special case, an optional final branch can specify :ada:`others`,
+   which covers all values not included in the earlier branches.
+
+-  Execution consists of the evaluation of the case expression and then
+   a transfer of control to the statement sequence in the unique branch
+   that covers that value.
+
+-  When execution of the statements in the selected branch has completed,
+   control resumes after the :ada:`end case`.  Unlike C, execution does
+   not fall through to the next branch. So Ada doesn't need (and doesn't
+   have) a ``break`` statement.
+
 
 Imperative language - Declarative regions
 ------------------------------------------
 
-We mentioned declarative regions before. Those are very important in
-Ada. What is important to know at this stage:
+As mentioned earlier, Ada draws a clear syntactic separation between
+declarations, which introduce names for entities that will be used
+in the program, and statements, which perform the processing.
+The areas in the program where declarations may appear are known
+as declarative regions.
 
--  In any subprogram (procedures for the moment), the region between the
+-  In any subprogram, the section between the
    :ada:`is` and the :ada:`begin` is a declarative region.
 
--  You can potentially declare anything there: Variables, constants,
-   types, other subprograms. This is valid for example:
+-  You can variables, constants, types, inner subprograms, and
+   other entities there. For example:
 
 .. code-block:: ada
 
@@ -460,9 +643,10 @@ Ada. What is important to know at this stage:
        --  Call to Nested
     end Main;
 
--  You cannot declare anything outside of a declarative region. If you
-   need to scope variables in a subprogram, you can introduce a new
-   declarative region with the :ada:`declare` block
+-  A declaration cannot appear as a statement If you
+   need to declare a local variable amidst the statements,
+   you can introduce a new declarative region with a :ada:`block`
+   statement:
 
 .. code-block:: ada
 
@@ -488,48 +672,66 @@ Ada. What is important to know at this stage:
     end Greet;
 
 .. attention::
-    The Get_Line function allows you to query input from the user, and get the
-    result as a string. It is more or less equivalent to the :c:`scanf` C
-    function.
+
+    The Get_Line function allows you to receive input from the user, and get
+    the result as a string. It is more or less equivalent to the :c:`scanf`
+    C function.
 
     It returns a String, which, as we will see later, is an
-    :ref:`Unconstrained array type <UnconstrainedArrayTypes>`. For the moment,
-    it is sufficient to understand that you must declare the ``Name`` string
-    variable and initialize it at the same time.
+    :ref:`Unconstrained array type <UnconstrainedArrayTypes>`.
+    For now we simply note that, if you wish to declare a String
+    variable and do not know its size in advance, then you need
+    to initialize the variable during its declaration.
 
 Imperative language - control expressions
 -----------------------------------------
 
-Ada, since the 2012 revision, features equivalent expressions for most
-control statements except loops. We will go over those here because
-they're control-flow, albeit not in the traditional form.
+Ada 2012 introduced an expression analog for conditional statements
+(:ada:`if` and :ada:`case`).
 
 If expressions
 ~~~~~~~~~~~~~~~
 
+Here's an alternative version of an example we saw earlier; the :ada:`if`
+statement has been replaced by an :ada:`if` expression:
+
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
-    procedure Main is
-       A : Integer := 12;
-       B : Integer := (if A = 12 then 15
-                       elsif A = 13 then 15
-                       else 18);
+    procedure Check_Positive is
+       N : Integer;
     begin
-       null;  --  When a subprogram is empty, null statement is mandatory
-    end Main;
+       Put ("Enter an integer value: ");  -- Put a String
+       Get (N);  -- Reads in an integer value
+       Put (N);  --Put an Integer
+       declare
+          S : String := ( if N>0 then
+                             " is a positive number"
+                          else
+                             " is not a positive number" );
+       begin
+          Put_Line (S);
+       end;
+    end Check_Positive;
 
-Ada's if expression are similar to if statements. However, there are a few
-differences that stems from the fact that it is an expression:
+The :ada:`if` expression evaluates to one of the two Strings depending
+on N, and assigns that value to the local variable S.
+
+Ada's :ada:`if` expressions are similar to :ada:`if` statements. However,
+there are a few differences that stem from the fact that it is an expression:
 
 -  All branches' expressions must be of the same type
 
--  They *must* be surrounded by parentheses, but only if the surrounding
+-  It *must* be surrounded by parentheses if the surrounding
    expression does not already contain them
 
--  If an :ada:`else` branch is not given, the expression defaults to an
-   implicit :ada:`else True`.
+-  An :ada:`else` branch is mandatory unless the expression following
+   :ada:`then` has a boolean value.  In that case an :ada:`else` branch
+   is optional and, if not present, defaults to :ada:`else True`.
+
+Here's another example:
 
 .. code-block:: ada
 
@@ -538,16 +740,18 @@ differences that stems from the fact that it is an expression:
     procedure Main is
     begin
        for I in 1 .. 10 loop
-          --  Syntactically correct
           Put_Line (if I mod 2 = 0 then "Even" else "Odd");
        end loop;
     end Main;
 
+This program produces 10 lines of output, alternating between "Odd" and "Even".
+
+
 Case expressions
 ~~~~~~~~~~~~~~~~~
 
-Even more of a rarity, Ada also has case expressions. They work just as
-you would expect.
+Analogous to :ada:`if` expressions, Ada also has :ada:`case` expressions.
+They work just as you would expect.
 
 .. code-block:: ada
 
@@ -562,7 +766,9 @@ you would expect.
        end loop;
     end Main;
 
-The syntax differs from case statements, because branches are separated
+This program has the same effect as the preceding example.
+
+The syntax differs from :ada:`case` statements, with branches separated
 by commas.
 
 Strongly typed language
