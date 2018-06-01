@@ -9191,27 +9191,24 @@ floating-point types. For example:
 Vector and Matrix Manipulation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ada:`Ada.Numerics.Generic_Real_Arrays` package provides support for
-vectors and matrices. Since it's a generic package, we need to instantiate
-it for the required floating-point precision. After instantiating the
-package, we can declare vectors and matrices using the ``Real_Vector`` and
-``Real_Matrix`` types, respectively. The package provides common matrix
-operations --- such as inverse, determinant, eigenvalues --- in addition
-to typical operators such as matrix addition and multiplication.
+The :ada:`Ada.Numerics.Real_Arrays` package provides support for
+vectors and matrices. It includes common matrix operations --- such as
+inverse, determinant, eigenvalues --- in addition to typical operators
+such as matrix addition and multiplication. We can declare vectors and
+matrices using the ``Real_Vector`` and ``Real_Matrix`` types,
+respectively.
 
 The following example makes use of some of the operations from the
-:ada:`Ada.Numerics.Generic_Real_Arrays` package:
+:ada:`Ada.Numerics.Real_Arrays` package:
 
 .. code-block:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
-    with Ada.Numerics.Generic_Real_Arrays;
+
+    with Ada.Numerics.Real_Arrays;
+    use  Ada.Numerics.Real_Arrays;
 
     procedure Show_Matrix is
-
-       package Real_Arrays is new
-         Ada.Numerics.Generic_Real_Arrays (Float);
-       use Real_Arrays;
 
        procedure Put_Vector (V : Real_Vector) is
        begin
@@ -9292,6 +9289,19 @@ explicit ranges. For example:
        M1       : Real_Matrix (1 .. 2, 1 .. 3) :=
                     ((1.0, 5.0, 1.0),
                      (2.0, 2.0, 1.0));
+
+The :ada:`Ada.Numerics.Real_Arrays` package targets the
+:ada:`Float` type. Similar packages are available for :ada:`Long_Float`
+and  :ada:`Long_Long_Float` types. In addition, the
+:ada:`Ada.Numerics.Generic_Real_Arrays` package is a generic
+version that can be instantiated for custom floating-point types. For
+example, the :ada:`Real_Arrays` package can be defined as follows:
+
+.. code-block:: ada
+    :class: ada-nocheck
+
+       package Real_Arrays is new
+         Ada.Numerics.Generic_Real_Arrays (Float);
 
 Dynamic allocation and reclamation
 ----------------------------------
