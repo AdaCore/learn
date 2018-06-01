@@ -8942,25 +8942,19 @@ presents a brief introduction into the topic.
 Elementary Functions
 ~~~~~~~~~~~~~~~~~~~~
 
-The :ada:`Ada.Numerics.Generic_Elementary_Functions` package provides
+The :ada:`Ada.Numerics.Elementary_Functions` package provides
 common operations for floating-point types, such as square-root,
-logarithm, cosine, etc. Because it's a generic package, it needs to be
-instantiated for the desired precision.
-
-The following example shows some of the operations from the package:
+logarithm, cosine, etc. For example:
 
 .. code-block:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
-    with Ada.Numerics.Generic_Elementary_Functions;
+
+    with Ada.Numerics.Elementary_Functions;
+    use  Ada.Numerics.Elementary_Functions;
 
     procedure Show_Elem_Math is
-
-       package Elementary_Functions is new
-         Ada.Numerics.Generic_Elementary_Functions (Float);
-       use Elementary_Functions;
-
        X : Float;
     begin
        X := 2.0;
@@ -8988,19 +8982,29 @@ The following example shows some of the operations from the package:
                  & " is " & Float'Image (Arccos (X)));
     end Show_Elem_Math;
 
-In this example, the package was instantiated for the :ada:`Float` type.
-Had we required better precision in our application, we could have
-instantiated the package using the :ada:`Long_Float` type or a custom
-floating-point type instead. For example:
+Note that, in the example above, we make use of the standard ``e``
+and ``Pi`` constants from the :ada:`Ada.Numerics` package.
+
+The :ada:`Ada.Numerics.Elementary_Functions` package targets the
+:ada:`Float` type. Similar packages are available for :ada:`Long_Float`
+and  :ada:`Long_Long_Float` types. For example, the
+:ada:`Ada.Numerics.Long_Elementary_Functions` package offers the same set
+of operations for the :ada:`Long_Float` type. In addition, the
+:ada:`Ada.Numerics.Generic_Elementary_Functions` package is a generic
+version of the package that can be instantiated for custom
+floating-point types. In fact, the
+:ada:`Elementary_Functions` package can be defined as
+follows:
 
 .. code-block:: ada
     :class: ada-nocheck
 
        package Elementary_Functions is new
-         Ada.Numerics.Generic_Elementary_Functions (Long_Float);
+         Ada.Numerics.Generic_Elementary_Functions (Float);
 
-Also note that, in the example above, we make use of the standard ``e``
-and ``Pi`` constants from the :ada:`Ada.Numerics` package.
+As expected, we can instantiate the
+:ada:`Generic_Elementary_Functions` package for any custom
+floating-point type definition.
 
 Random Number Generation
 ~~~~~~~~~~~~~~~~~~~~~~~~
