@@ -58,6 +58,7 @@ detect and report this error.
        type Array_Of_Naturals is array (Integer range <>) of Natural;
 
        function Max_Array (A : Array_Of_Naturals) return Natural;
+       pragma Unreferenced (Max_Array);
 
        function Max_Array (A : Array_Of_Naturals) return Natural is
           Max : Natural;
@@ -99,7 +100,10 @@ flow analysis warns both on ineffective statements and unused variables.
        type T is new Integer;
 
        procedure Swap1 (X, Y : in out T);
+       pragma Unreferenced (Swap1);
+
        procedure Swap2 (X, Y : in out T);
+       pragma Unreferenced (Swap2);
 
        procedure Swap1 (X, Y : in out T) is
           Tmp : T;
@@ -109,7 +113,7 @@ flow analysis warns both on ineffective statements and unused variables.
           Y   := X;
        end Swap1;
 
-       Tmp : T;
+       Tmp : T := 0;
 
        procedure Swap2 (X, Y : in out T) is
           Temp : T := X;        -- This variable is unused
@@ -145,6 +149,7 @@ in the subprogram called ``Swap``.
        type T is new Integer;
 
        procedure Swap (X, Y : in out T);
+       pragma Unreferenced (Swap);
 
        procedure Swap (X, Y : in out T) is
           Tmp : T := X;
@@ -293,7 +298,9 @@ using the :ada:`Result` attribute.
     package Show_Depends_Contracts
        with SPARK_Mode => On
     is
-       X, Y, Z : Natural := 0;
+       type T is new Integer;
+
+       X, Y, Z : T := 0;
 
        procedure Swap (X, Y : in out T) with
          Depends => (X => Y,
@@ -301,7 +308,7 @@ using the :ada:`Result` attribute.
                      Y => X);
                      -- Y depends on the initial value of X
 
-       function Get_Value_Of_X return Natural with
+       function Get_Value_Of_X return T with
          Depends => (Get_Value_Of_X'Result => X);
                      -- result depends on X
 
@@ -384,6 +391,8 @@ when ``Overflow`` is :ada:`False`.
           end if;
        end Set_X_To_Y_Plus_Z;
 
+       pragma Unreferenced (Set_X_To_Y_Plus_Z);
+
     begin
        null;
     end Show_Modularity_Shortcoming;
@@ -424,6 +433,7 @@ the object by other means.
        type T is array (Natural range <>) of Integer;
 
        procedure Test (A : out T);
+       pragma Unreferenced (Test);
 
        procedure Test (A : out T) is
        begin
@@ -529,6 +539,8 @@ cannot know that such a case can never happen.
           end if;
        end Absolute_Value;
 
+       pragma Unreferenced (Absolute_Value);
+
        --  Flow analysis does not
        --  know that R is initialized
     begin
@@ -555,6 +567,8 @@ in the second version of ``Absolute_Value``:
              R := X;
           end if;
        end Absolute_Value;
+
+       pragma Unreferenced (Absolute_Value);
 
        --  Flow analysis knows that R
        --  is initialized
@@ -835,6 +849,8 @@ and then swaps the elements until it has constructed a cyclic permutation.
           return A;
        end Cyclic_Permutation;
 
+       pragma Unreferenced (Cyclic_Permutation);
+
     begin
        null;
     end Show_Permutation;
@@ -884,6 +900,8 @@ specification of ``Init`` has been changed to :ada:`in out`.
           end loop;
           return A;
        end Cyclic_Permutation;
+
+       pragma Unreferenced (Cyclic_Permutation);
 
     begin
        null;
@@ -937,6 +955,8 @@ for ``Incr_Until_Threshold``.
           end loop;
        end Incr_Step_Function;
 
+       pragma Unreferenced (Incr_Step_Function);
+
     begin
        null;
     end Show_Increments;
@@ -974,6 +994,8 @@ corrected the missing initializations and are now interested into the
          Global => (In_Out => (Beginning, Max, Size_Of_Seq),
                     Output => End_Of_Seq,
                     Input  => Current_Index);
+
+       pragma Unreferenced (Test_Index);
 
        procedure Test_Index (Current_Index : Integer) is
        begin
@@ -1023,6 +1045,8 @@ global variables accessed can be deduced from the :ada:`Depends` contract.
                          (A, Current_Index, Max),
                      (Size_Of_Seq, Beginning) =>
                        + (A, Current_Index, Max, Beginning));
+
+       pragma Unreferenced (Test_Index);
 
        procedure Test_Index (Current_Index : Integer) is
        begin
@@ -1076,6 +1100,8 @@ depends on its initial value and the same for ``Y``.
        procedure Identity (X, Y : in out Positive) with
          Depends => (X => X,
                      Y => Y);
+
+       pragma Unreferenced (Identity);
 
        procedure Identity (X, Y : in out Positive) is
        begin
