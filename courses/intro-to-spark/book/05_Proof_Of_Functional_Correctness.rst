@@ -213,6 +213,8 @@ As an example:
           pragma Assert (Is_Correct (X_Init, X));
           --  It is OK to use X_Init inside an assertion.
        end Do_Something;
+
+       pragma Unreferenced (Do_Something);
     begin
        null;
     end Show_Ghost;
@@ -888,9 +890,10 @@ Let's review this code:
     end Ring_Buffer;
 
     package body Ring_Buffer with SPARK_Mode is
-       Content : Nat_Array (1 .. Max_Size);
-       First   : Index_Range;
-       Length  : Length_Range;
+       Content : Nat_Array (1 .. Max_Size) := (others => 0);
+       First   : Index_Range               := 1;
+       Length  : Length_Range              := 0;
+
 
        function Get_Model return Nat_Array is
           Result : Nat_Array (1 .. Length);
@@ -900,6 +903,7 @@ Let's review this code:
        end Get_Model;
 
        function Valid_Model (M : Nat_Array) return Boolean is
+          pragma Unreferenced (M);
        begin
           return True;
           --  missing implementation
@@ -1051,9 +1055,9 @@ Let's review this code:
        subtype Length_Range is Natural range 0 .. Max_Size;
        subtype Index_Range  is Natural range 1 .. Max_Size;
 
-       Content : Nat_Array (1 .. Max_Size);
-       First   : Index_Range;
-       Length  : Length_Range;
+       Content : Nat_Array (1 .. Max_Size) := (others => 0);
+       First   : Index_Range               := 1;
+       Length  : Length_Range              := 0;
 
        type Model_Type (Length : Length_Range := 0) is record
           Content : Nat_Array (1 .. Length);
@@ -1110,9 +1114,9 @@ Let's review this code:
        subtype Length_Range is Natural range 0 .. Max_Size;
        subtype Index_Range  is Natural range 1 .. Max_Size;
 
-       Content : Nat_Array (1 .. Max_Size);
-       First   : Index_Range;
-       Length  : Length_Range;
+       Content : Nat_Array (1 .. Max_Size) := (others => 0);
+       First   : Index_Range               := 1;
+       Length  : Length_Range              := 0;
 
        type Model_Type (Length : Length_Range := 0) is record
           Content : Nat_Array (1 .. Length);

@@ -73,6 +73,8 @@ snippet shown below, it means that the loop is bound to terminate.
       Pre    => X <= 100,
       Post   => X'Old < X;
 
+.. code:: ada
+
     with Increase;
     procedure Show_Abstraction_2 is
        X : Integer := 0;
@@ -196,6 +198,19 @@ that we have introduced to the whole hidden state of the package,
 including both ``Content`` and ``Top``.
 
 .. code:: ada
+
+    package Stack with
+      Abstract_State => The_Stack
+    is
+       type Element is new Integer;
+
+       function Is_Empty return Boolean;
+       function Is_Full  return Boolean;
+
+       procedure Push (E : Element) with
+         Pre  => not Is_Full,
+         Post => not Is_Empty;
+    end Stack;
 
     package body Stack with
       Refined_State => (The_Stack => (Content, Top))
@@ -494,6 +509,17 @@ For our ``Stack`` example, we could add refined contracts like this:
 
 .. code:: ada
 
+    package Stack with
+      Abstract_State => The_Stack
+    is
+       type Element is new Integer;
+
+       procedure Pop  (E : out Element) with
+         Global  => (In_Out => The_Stack),
+         Depends => ((The_Stack, E) => The_Stack);
+
+    end Stack;
+
     package body Stack with
       Refined_State => (The_Stack => (Content, Top))
     is
@@ -585,6 +611,17 @@ For our ``Stack`` example, we could add a refined post condition like
 this:
 
 .. code:: ada
+
+    package Stack is
+       type Element is new Integer;
+
+       function Is_Empty return Boolean;
+       function Is_Full  return Boolean;
+
+       procedure Push (E : Element) with
+         Pre  => not Is_Full,
+         Post => not Is_Empty;
+    end Stack;
 
     package body Stack is
        type Element_Array is array (Natural range <>) of Element;
