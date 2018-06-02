@@ -775,46 +775,47 @@ Strongly typed language
 =======================
 
 Ada is a strongly typed language. It is interestingly modern in that
-aspect: Strong static typing is going through a popularity rise, due to
-multiple factors: Popularity of statically typed functional programming,
-a big push from the academic community in the typing domain, many
-practical languages with strong type systems emerging, etc.
+respect: strong static typing has been increasing in popularity in programming
+language design, owing to factors such as the growth of statically typed
+functional programming, a big push from the research community in the typing
+domain, and many practical languages with strong type systems.
 
 What is a type?
 ---------------
 
-In statically typed languages, a type is mainly (but not only) a
-*compile time* construct. It is a construct commonly used in programming
-languages to enforce invariants about the behavior of a program.
-Invariants can be described as unchangeable properties that hold true for
-all variable of a given type. Enforcing them allows for ensuring that
-variables of a data type never have invalid values.
+In statically typed languages, a type is mainly (but not only) a *compile time*
+construct. It is a construct to enforce invariants about the behavior of a
+program.  Invariants are unchangeable properties that hold for all variables of
+a given type. Enforcing them ensures, for example, that variables of a data
+type never have invalid values.
 
-A type is used to reason about *values* a program manipulates. The aim
-is to classify values by what you can accomplish with them, and this way
-you can reason about the correctness of your values.
+A type is used to reason about the *objects* a program manipulates (an object
+is a variable or a constant). The aim is to classify objects by what you can
+accomplish with them (i.e., the operations that are permitted), and this way
+you can reason about the correctness of the objects' values.
 
 .. todo: expand/clarify
 
 Integers
 --------
 
-A nice feature of Ada is that the user can define its own integer types.
-In fact, the Integer types provided by the language are defined with the
-same mechanisms. There is no "magical" built-in type in that regard,
-which is unlike most languages, and arguably very elegant.
+A nice feature of Ada is that you can define your own integer types, based on
+the requirements of your program (i.e., the range of values that makes sense).
+In fact, the definitional mechanism that Ada provides forms the semantic basis
+for the predefined integer types.  There is no "magical" built-in type in that
+regard, which is unlike most languages, and arguably very elegant.
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Integer_Type_Example is
        --  Declare a signed integer type, and give the bounds
        type My_Int is range -1 .. 20;
        --                         ^ High bound
        --                   ^ Low bound
 
-       --  Like variables, type declarations can only happen in
+       --  Like variables, type declarations can only appear in
        --  declarative regions
     begin
        for I in My_Int loop
@@ -822,30 +823,29 @@ which is unlike most languages, and arguably very elegant.
           --              ^ 'Image attribute, converts a value to a
           --                 String
        end loop;
-    end Greet;
+    end Integer_Type_Example;
 
-In this example, we showcase the creation of a signed integer type, and
+This example illustrates the declaration of a signed integer type, and
 several things we can do with them.
 
-Every type definition in Ada (`well almost <TODOTASKTYPES>`_) starts
-with the :ada:`type` keyword. After the type, we can see a range that
-looks a lot like the ranges that we use in for loops, that defines the
-low and high bound of the type. Every integer in the inclusive range of
-the bounds is a valid value for the type.
+Every type declaration in Ada (`well almost <TODOTASKTYPES>`_) starts with the
+:ada:`type` keyword. After the type, we can see a range that looks a lot like
+the ranges that we use in for loops, that defines the low and high bound of the
+type. Every integer in the inclusive range of the bounds is a valid value for
+the type.
 
-    In Ada, Integer types are not specified with regards to their
-    machine representation, but with regards to their range. The
+    In Ada, an integer type is not specified in terms of its
+    machine representation, but rather by its range. The
     compiler will then choose the most appropriate representation.
 
-Another interesting thing that we can notice in the above example is the
-:ada:`My_Int'Image (I)` expresssion. In Ada, the
-:ada:`Expr'Attribute (optional params)` notation is used for what is
-called `attributes <TODOLINKATTRS>`_ in Ada. Attributes are built-in
-operations on types or on values. They are accessed by using a :ada:`'`
-(the tick sign).
+Another point to note in the above example is the :ada:`My_Int'Image (I)`
+expression. The :ada:`Name'Attribute (optional params)` notation is used for
+what is called an `attribute <TODOLINKATTRS>`_ in Ada. An attribute is a
+built-in operation on a type, a value, or some other program entity.  It is
+accessed by using a :ada:`'` symbol (the ASCII apostrophe).
 
-Ada makes a few types available as "built-ins". :ada:`Integer` is one of
-them. Here is how :ada:`Integer` is defined:
+Ada has several types available as "built-ins"; :ada:`Integer` is one of
+them. Here is how :ada:`Integer` might be defined for a typical processor:
 
 .. code-block:: ada
     :class: ada-nocheck
@@ -854,14 +854,18 @@ them. Here is how :ada:`Integer` is defined:
 
 :ada:`**` is the exponent operator, which means that the first valid
 value for :ada:`Integer` is :math:`-2^{31}`, and the last valid value is
-:math:`2^{31-1}`. In a fit of luck, this coincides with what you can fit
-in a 32 bit signed integer on modern platforms :).
+:math:`2^{31-1}`.
+
+Ada does not mandate the range of the built-in type Integer. An implementation
+for a 16-bit target would likely  choose the range :math:`-2^{15}` through
+:math:`2^{31-1}`.
+
 
 Operational semantics
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Unlike in unsafe languages like C and C++, Ada specifies that operations
-on integers should be checked for overflows.
+Unlike some other languages, Ada requires that operations on integers should be
+checked for overflow.
 
 .. code-block:: ada
 
@@ -871,13 +875,17 @@ on integers should be checked for overflows.
     begin
        B := A + 5;
        --  This operation will overflow, eg. it will
-       --  raise an exception at runtime.
+       --  raise an exception at run time.
     end Main;
 
-There are two types of overflow checks: When there is a machine level overflow,
-eg. you go past the last value that can be represented on the machine for the
-corresponding machine type, or type level overflow, when you go past the range
-that is defined for your type.
+There are two types of overflow checks:
+
+* Machine-level overflow, when the result of an operation exceeds the maximum
+  value (or is less than the minimum value) that can be represented in the
+  storage reserved for an object of the type, and
+
+* Type-level overflow, when the result of an operation is outside the range
+  defined for the type.
 
 Mainly for efficiency reasons, while machine level overflow always results in
 an exception, type level overflows will only be checked at specific boundaries,
@@ -898,23 +906,24 @@ like assignment:
        for I in 1 .. M loop
           Put_Line ("Hello, World!");
        end loop;
+       -- Loop body executed 13 times
     end Main;
 
-Type level overflow will only be checked by the compiler at specific points in
-the execution. The result, as we see above, is that you might have an operation
-that overflows in an intermediate computation, but no error will be raised
-because the final result does not overflow.
+Type level overflow will only be checked at specific points in the execution.
+The result, as we see above, is that you might have an operation that overflows
+in an intermediate computation, but no exception will be raised because the
+final result does not overflow.
 
 Unsigned types
 --------------
 
-Ada also features unsigned Integer types. They're called modular types in Ada
+Ada also features unsigned Integer types. They're called *modular* types in Ada
 parlance. The reason for this designation is due to their behavior in case of
 overflow: They simply "wrap around", as if a modulo operation was applied.
 
-For machine sized modular types, this mimics the most common implementation
-defined behavior of unsigned types. However, the main advantage is that
-this works for any modular type:
+For machine sized modular types, for example a modulus of 2**32, this mimics
+the most common implementation behavior of unsigned types. However, an
+advantage of Ada is that the modulus is more general:
 
 .. code-block:: ada
 
@@ -922,39 +931,41 @@ this works for any modular type:
 
     procedure Main is
        type Mod_Int is mod 2 ** 5;
-       --                  ^ Max value is 32
+       --              ^ Range is 0 .. 31
 
        A : Mod_Int := 20;
        B : Mod_Int := 15;
        M : Mod_Int := A + B;
-       --  No overflow here, M = 20 + 15 mod 32 = 3
+       --  No overflow here, M = (20 + 15) mod 32 = 3
     begin
        for I in 1 .. M loop
           Put_Line ("Hello, World!");
        end loop;
     end Main;
 
+.. ?? WHICH BEHAVIOR?
+
 Unlike in C/C++, since this behavior is guaranteed by the Ada specification,
 you can rely on it to implement portable code. Also, being able to leverage the
-wrapping on arbitrary bounds is very useful to implement certain algorithms and
-data structures, such as
+wrapping on arbitrary bounds is very useful -- the modulus does not need to be
+a power of 2 -- to implement certain algorithms and data structures, such as
 `ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`_.
 
 Enumerations
 ------------
 
 Enumeration types are another nicety of Ada's type system. Unlike C's enums,
-they are *not* integers, and each new enum type is incompatible with other enum
-types. Enum types are part of the bigger family of discrete types, which makes
-them usable in certain situations that we will disclose later (
-`discrete features <TODOLINKTODISCRETEFEATURES>`_) but one that we already
-know is that you can use them as a target to a case expression.
+they are *not* integers, and each new enumeration type is incompatible with
+other enumeration types. Enumeration types are part of the bigger family of
+discrete types, which makes them usable in certain situations that we will
+describe later (`discrete features <TODOLINKTODISCRETEFEATURES>`_) but one
+context that we have already seen is a case statement.
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Enumeration_Example is
        type Days is (Monday, Tuesday, Wednesday,
                      Thursday, Friday, Saturday, Sunday);
        --  An enumeration type
@@ -964,16 +975,15 @@ know is that you can use them as a target to a case expression.
              when Saturday .. Sunday =>
                 Put_Line ("Week end!");
 
-             --  Completeness checking on enums
-             when others =>
+             when Monday .. Friday =>
                 Put_Line ("Hello on " & Days'Image (I));
                 --  'Image attribute, works on enums too
           end case;
        end loop;
-    end Greet;
+    end Enumeration_Example;
 
-Enum types are powerful enough that, unlike in most languages, they're used to
-represent the standard Boolean type, that is so defined:
+Enumeration types are powerful enough that, unlike in most languages, they're
+used to define the standard Boolean type:
 
 .. code-block:: ada
     :class: ada-nocheck
