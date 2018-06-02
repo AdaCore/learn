@@ -208,11 +208,6 @@ functions ``Incr`` and ``Incr_And_Log`` have the same signature.
 
     end Test_Spark_Side_Effect;
 
-However, ``Incr`` is valid SPARK while ``Incr_And_Log`` is not as it
-attempts to update the global variable ``Call_Count``.
-
-.. code:: ada
-
     package body Test_Spark_Side_Effect
        with SPARK_Mode => On
     is
@@ -230,6 +225,8 @@ attempts to update the global variable ``Call_Count``.
 
     end Test_Spark_Side_Effect;
 
+However, ``Incr`` is valid SPARK while ``Incr_And_Log`` is not as it
+attempts to update the global variable ``Call_Count``.
 
 No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -403,8 +400,6 @@ SPARK subset.
 
     end Global_Stack;
 
-.. code:: ada
-
     package body Global_Stack
        with SPARK_Mode => On
     is
@@ -444,8 +439,6 @@ applies a circular permutation to the value of its three parameters.
        procedure Swap (X, Y : in out Positive);
     end P;
 
-.. code:: ada
-
     package body P
        with SPARK_Mode => On
     is
@@ -484,8 +477,6 @@ components of ``R``.
     is
        procedure Swap (X, Y : in out Positive);
     end P;
-
-.. code:: ada
 
     package body P
        with SPARK_Mode => On
@@ -530,8 +521,6 @@ the array ``A``.
     is
        procedure Swap (X, Y : in out Positive);
     end P;
-
-.. code:: ada
 
     package body P
        with SPARK_Mode => On
@@ -578,8 +567,6 @@ word at the correct index in a dictionary.
 
        procedure Store (D : in out Dictionary; W : String);
     end P;
-
-.. code:: ada
 
     package body P
        with SPARK_Mode => On
@@ -657,8 +644,6 @@ Now let us consider ``P``'s body, with the definition of ``Store``, again.
        --  ...
     end P;
 
-.. code:: ada
-
     package body P
        with SPARK_Mode => On
     is
@@ -702,16 +687,12 @@ Here, we have moved the declaration and the body of the procedure
        --  ...
     end P;
 
-.. code:: ada
-
     with P; use P;
     package Q
        with SPARK_Mode => On
     is
        procedure Store (D : in out Dictionary; W : String);
     end Q;
-
-.. code:: ada
 
     package body Q
        with SPARK_Mode => On
@@ -748,8 +729,6 @@ the other simply returns 0 in that case.
        function Search_Zero_N (A : N_Array) return Natural;
 
     end P;
-
-.. code:: ada
 
     package body P
        with SPARK_Mode => On
