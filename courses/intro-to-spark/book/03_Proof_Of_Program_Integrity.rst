@@ -460,8 +460,8 @@ different reasons:
 
 - the property may not be provable because of some missing information, or
 
-- the prover used by GNATprove may be unable to discharge a perfectly
-valid verification condition.
+- the prover used by GNATprove may be unable to discharge a perfectly valid
+  verification condition.
 
 The remainder of this lecture is dedicated to the sometimes tricky task of
 debugging failed proof attempts.
@@ -549,14 +549,14 @@ Even if both the code and the assertions are correct, GNATprove may still
 generate an unprovable verification condition for a property. This may
 happen for two reasons:
 
-- First, the property may be unprovable because some assertion is missing
-in the code.
+- First, the property may be unprovable because some assertion is missing in
+  the code.
 
-   - In particular, this can be induced by the modularity of the analysis
-which causes the tool to only retain explicitly annotated properties.
+   - In particular, this can be induced by the modularity of the analysis which
+     causes the tool to only retain explicitly annotated properties.
 
-- Second, there may also be some missing information in the logical model
-of the program used by GNATprove.
+- Second, there may also be some missing information in the logical model of
+  the program used by GNATprove.
 
 This is especially likely for difficult to support features such as
 floating-point arithmetic or string literals. As an example, the

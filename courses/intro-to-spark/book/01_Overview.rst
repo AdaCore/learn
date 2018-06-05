@@ -15,7 +15,7 @@ What is it?
 SPARK 2014 refers to two different things:
 
 - a programming language targeted at functional specification and static
-verification, plus
+  verification, plus
 - a set of development and verification tools.
 
 The SPARK 2014 language is based on a subset of the Ada language, which is
@@ -41,15 +41,15 @@ compiler, as well as more complex reasoning, such as abstract
 interpretation, as done by a tool like CodePeer from AdaCore. The tools
 perform two different forms of static analysis:
 
-- The first one is called flow analysis and, in general, it is the fastest
-form of analysis and it checks in particular initialization of variables
-and data dependencies between inputs and outputs of subprograms.
+- The first one is called flow analysis and, in general, it is the fastest form
+  of analysis and it checks in particular initialization of variables and data
+  dependencies between inputs and outputs of subprograms.
 
-   - It can also find unused assignments and unmodified variables.
+- It can also find unused assignments and unmodified variables.
 
-- The second one is called formal proof and it checks in particular
-absence of runtime error in program execution as well as conformance with
-Ada 2012 contracts.
+- The second one is called formal proof and it checks in particular absence of
+  runtime error in program execution as well as conformance with Ada 2012
+  contracts.
 
 Key Tools
 ---------------------------------------------------------------------
@@ -98,24 +98,24 @@ Several properties can be specified on this subprogram using the shown
 contracts:
 
 - The SPARK 2014 Global aspect specifies that ``Increment`` does not read
-and does not write any global variable.
+  and does not write any global variable.
 
-- The SPARK 2014 Depend aspect is especially interesting for the security
-of this subprogram, as it specifies that the value of the parameter ``X``
-after the call only depends on the value of ``X`` before the call.
+- The SPARK 2014 Depend aspect is especially interesting for the security of
+  this subprogram, as it specifies that the value of the parameter ``X`` after
+  the call only depends on the value of ``X`` before the call.
 
-- Functional properties of Increment are specified using the :ada:`Pre`
-and :ada:`Post` aspects of Ada 2012.
+- Functional properties of Increment are specified using the :ada:`Pre` and
+  :ada:`Post` aspects of Ada 2012.
 
    - Increment can only be called if the value of ``X`` before the call is
-smaller that :ada:`Integer'Last`.
+     smaller that :ada:`Integer'Last`.
 
-      - It is necessary to ensure that the addition operation performed in
-the subprogram body will also not overflow.
+      - It is necessary to ensure that the addition operation performed in the
+        subprogram body will also not overflow.
 
-   - Finally, we specify that ``Increment`` does indeed perform an
-increment of ``X``, that is, the value of ``X`` after a call is one more
-than its value before the call.
+   - Finally, we specify that ``Increment`` does indeed perform an increment of
+     ``X``, that is, the value of ``X`` after a call is one more than its value
+     before the call.
 
 The SPARK 2014 verification tools can verify all of these contracts. It
 additionally makes sure that no error may be raised at runtime when
@@ -244,14 +244,14 @@ There are two reasons to forbid aliasing in SPARK:
 
 - First, it makes verification more difficult
 
-   - as it requires taking into account the fact that updates to two
-variables with different names may in fact update the same object.
+   - as it requires taking into account the fact that updates to two variables
+     with different names may in fact update the same object.
 
 - Then, results may seem unexpected from a user point of view.
 
-   - Indeed, when its parameters are aliased, the results of a subprogram
-call may depend on compiler specific treatment, like parameter passing
-mechanisms.
+   - Indeed, when its parameters are aliased, the results of a subprogram call
+     may depend on compiler specific treatment, like parameter passing
+     mechanisms.
 
 What is more, most of the time, possibility of aliasing was not even taken
 into account by the programmer. For example:
