@@ -3508,7 +3508,8 @@ Here is how the ``Stacks`` package would be used:
 Limited types
 -------------
 
-Ada has a facility called limited types. The particularity of limited types is that they cannot be copied or compared.
+Ada has a facility called limited types. The particularity of limited types is
+that they cannot be copied or compared.
 
 .. code-block:: ada
 
