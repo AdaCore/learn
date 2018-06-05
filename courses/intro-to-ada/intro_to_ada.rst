@@ -3529,6 +3529,9 @@ that they cannot be copied or compared.
        end record;
     end Stacks;
 
+.. code-block:: ada
+    :class: ada-expect-compile-error
+
     with Stacks; use Stacks;
 
     procedure Main is
