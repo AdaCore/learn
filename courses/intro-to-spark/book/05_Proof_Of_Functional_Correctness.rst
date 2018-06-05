@@ -452,7 +452,7 @@ variables or constants whose only purpose is to serve in assertions are a
 common occurrence. Most of the time, these variables are used to store
 previous values of variables or expressions to which we want to refer in
 our assumptions. They are especially useful to refer to initial values of
-parameters and expressions which cannot be accessed using the :ada:`‘Old`
+parameters and expressions which cannot be accessed using the :ada:`'Old`
 attribute outside of the subprogram's postcondition.
 
 For example:
@@ -501,7 +501,7 @@ For example:
 In the example shown here, to help GNATprove discharge the postcondition
 of ``P``, we want to assert that it holds separately in every branch of an
 :ada:`if` statement. Since in these assertions, unlike in ``P``'s
-postconditions, we cannot use the :ada:`‘Old` attribute to access the
+postconditions, we cannot use the :ada:`'Old` attribute to access the
 initial value of the parameter ``X``, we must resort to introducing a
 local ghost constant ``X_Init`` for this value.
 
@@ -1239,7 +1239,7 @@ fail to verify that the invariant stays valid after the first iteration of
 the loop. Indeed, knowing that ``J`` is in ``B``'Range in a given
 iteration is not enough to show that it will remain so in the next
 iteration. We need a more precise invariant, linking ``J`` to the value of
-the loop index ``I``, like :ada:`J = I – A'First + B'First`.
+the loop index ``I``, like :ada:`J = I - A'First + B'First`.
 
 
 Example #8
@@ -1280,7 +1280,7 @@ Let's review this code:
 This example is not correct. The program itself is correct but the
 invariant is not, as can be checked by executing the function
 ``Max_Array`` with assertions enabled. Indeed, at each loop iteration,
-``R`` contains the maximum of ``A`` and ``B`` only until :ada:`I – 1` as
+``R`` contains the maximum of ``A`` and ``B`` only until :ada:`I - 1` as
 the ``I`` th index was not handled yet.
 
 
