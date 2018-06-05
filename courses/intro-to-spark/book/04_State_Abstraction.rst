@@ -654,7 +654,7 @@ initialized during the package's elaboration.
 The :ada:`Initializes` aspect can be used to specify the set of visible
 variables and state abstractions of a package that are initialized during
 its elaboration. Note that an :ada:`Initializes` aspect cannot refer to a
-variable that is not defined in the unit as, in SPARK 2014, a package
+variable that is not defined in the unit as, in SPARK, a package
 shall only initialize variables declared immediately within the package.
 
 :ada:`Initializes` aspects are optional. If they are not supplied by the
@@ -1251,4 +1251,3 @@ This example is correct. Since ``Data`` has no :ada:`Initializes` aspect,
 GNATprove will compute the set of variables initialized during its
 elaboration. Thereby, it can ensure that ``Data_1`` is always initialized
 in ``Use_Data``.
-

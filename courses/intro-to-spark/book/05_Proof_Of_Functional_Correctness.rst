@@ -185,7 +185,7 @@ for entities that are only used for the purpose of specification. In a
 qualification process, it may be important to make sure that these new
 entities cannot affect the behavior of the program, or even to ensure they
 are removed from production code. This concept, usually called ghost code,
-is supported in SPARK 2014 by the new :ada:`Ghost` aspect.
+is supported in SPARK by the new :ada:`Ghost` aspect.
 
 The :ada:`Ghost` aspect can be used to annotate any normal entity, such as
 variables, types, subprograms, or packages. If an entity is marked as
@@ -653,7 +653,7 @@ Loop Invariants
 ~~~~~~~~~~~~~~~
 
 To overcome these limitations, users can provide additional information to
-the tool in the form of a loop invariant. In SPARK 2014, a loop invariant
+the tool in the form of a loop invariant. In SPARK, a loop invariant
 is a Boolean expression which should hold at every iteration of the loop.
 Like every other assertion, it can be checked at runtime by compiling the
 program with assertions enabled.

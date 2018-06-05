@@ -6,7 +6,7 @@ Lesson 2: Flow Analysis
 
 
 This lecture presents the static flow analysis capability provided by the
-GNATprove tool supporting SPARK 2014.
+GNATprove tool supporting SPARK.
 
 
 What does flow analysis do?
@@ -1121,4 +1121,3 @@ outputs of ``Swap``, that is ``X`` and ``Y``, depend on all its inputs,
 that is both ``X`` and ``Y``'s initial values. To solve this problem, it
 is enough to manually specify a more precise :ada:`Depends` contract on
 ``Swap``.
-
