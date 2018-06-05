@@ -6,9 +6,10 @@ Lesson 1: SPARK Overview
 .. role:: ada(code)
    :language: ada
 
-Welcome to the first lesson of the AdaCore University on SPARK!
-During this lecture, you'll be provided with an overview of the SPARK
-technology and toolset.
+This document is an interactive introduction to the SPARK programming language
+and formal verification tools. It does not require you to know any specific
+programming language (although going over the introduction to Ada first may
+help) or to have experience in formal verification.
 
 
 What is it?
@@ -25,95 +26,88 @@ particularly suited to formal verification, as it is designed for critical
 software development.
 
 .. image:: 01_spark_ada.png
+   :align: center
 
-Ada 2012 introduced the use of aspects that can be used for subprogram
-contracts, and SPARK added its own aspects in order to aid static
-analysis.
+Version 2012 of the Ada programming language introduced the use of aspects that
+can be used for subprogram contracts, and version 2014 of SPARK added its own
+aspects in order to aid static analysis.
 
 
 What do the tools do?
 ---------------------------------------------------------------------
 
-We shall start by reviewing static verification of your programs, meaning
-the verification of the source code directly without compiling or
-executing it. This verification involves tools that perform static
-analysis and this, in general, can take various forms. It includes, for
-example, type checking and visibility rules enforcement, as done by the
-compiler, as well as more complex reasoning, such as abstract
-interpretation, as done by a tool like CodePeer from AdaCore. The tools
-perform two different forms of static analysis:
+We shall start by reviewing static verification of your programs, meaning the
+verification of the source code directly without compiling or executing
+it. This verification involves tools that perform static analysis and this, in
+general, can take various forms. It includes, for example, type checking and
+visibility rules enforcement, as done by the compiler, as well as more complex
+reasoning, such as abstract interpretation, as done by a tool like `CodePeer
+<https://www.adacore.com/codepeer>`_ from AdaCore. The tools perform two
+different forms of static analysis:
 
-- The first one is called flow analysis and, in general, it is the fastest form
-  of analysis and it checks in particular initialization of variables and data
-  dependencies between inputs and outputs of subprograms.
+- The first one is called `flow analysis` and, in general, it is the fastest
+  form of analysis. It checks in particular initialization of variables and
+  data dependencies between inputs and outputs of subprograms. It can also find
+  unused assignments and unmodified variables.
 
-- It can also find unused assignments and unmodified variables.
+- The second one is called `proof` and it checks in particular absence
+  of runtime errors in program execution as well as conformance with
+  specifications.
 
-- The second one is called formal proof and it checks in particular absence of
-  runtime error in program execution as well as conformance with Ada 2012
-  contracts.
 
 Key Tools
 ---------------------------------------------------------------------
 
-The tool for formal verification of the SPARK language is called
-GNATprove. It checks for conformance with the SPARK subset and performs
-flow analysis and functional verification of the source code. The SPARK
-2014 language is also supported by several other tools. In particular, it
-is fully supported by the GNAT compiler and by the GPS integrated
-development environment.
+The tool for formal verification of the SPARK language is called GNATprove. It
+checks for conformance with the SPARK subset and performs flow analysis and
+proof of the source code. The SPARK language is also supported by several other
+tools. In particular, it is fully supported by the `GNAT compiler
+<https://www.adacore.com/gnatpro>`_ and by the `GPS integrated development
+environment <https://www.adacore.com/gnatpro/toolsuite/gps>`_.
 
 
 A trivial example
 ---------------------------------------------------------------------
 
-We will now look at a simple example of Ada 2012 subprogram that has also
-used SPARK aspects to specify a verifiable subprogram contract. The
-subprogram called ``Increment`` adds 1 to the value of its parameter
-``X``:
+We will now look at a simple example of subprogram in Ada that has also used
+SPARK aspects to specify a verifiable subprogram contract. The subprogram
+called ``Increment`` adds 1 to the value of its parameter ``X``:
 
-.. code:: ada
+.. code-block:: ada
 
-    procedure Show_Trivial_Example is
+   procedure Increment
+     (X : in out Integer)
+   with
+     Global  => null,
+     Depends => (X => X),
+     Pre     => X < Integer'Last,
+     Post    => X = X'Old + 1;
 
-       procedure Increment
-         (X : in out Integer)
-         with
-           Global  => null,
-           Depends => (X => X),
-           Pre     => X < Integer'Last,
-           Post    => X = X'Old + 1;
-
-       procedure Increment
-         (X : in out Integer)
-       is
-       begin
-          X := X + 1;
-       end Increment;
-
-    begin
-       null;
-    end Show_Trivial_Example;
+   procedure Increment
+     (X : in out Integer)
+   is
+   begin
+     X := X + 1;
+   end Increment;
 
 
-Several properties can be specified on this subprogram using the shown
-contracts:
+Several properties can be specified on this subprogram using the contracts
+shown:
 
 - The SPARK Global aspect specifies that ``Increment`` does not read
   and does not write any global variable.
 
-- The SPARK Depend aspect is especially interesting for the security of
-  this subprogram, as it specifies that the value of the parameter ``X`` after
-  the call only depends on the value of ``X`` before the call.
+- The SPARK Depend aspect is especially interesting for the security of this
+  subprogram, as it specifies that the value of the parameter ``X`` after the
+  call only depends on the value of ``X`` before the call.
 
 - Functional properties of Increment are specified using the :ada:`Pre` and
-  :ada:`Post` aspects of Ada 2012.
+  :ada:`Post` aspects of Ada.
 
    - Increment can only be called if the value of ``X`` before the call is
-     smaller that :ada:`Integer'Last`.
-
-      - It is necessary to ensure that the addition operation performed in the
-        subprogram body will also not overflow.
+     smaller that :ada:`Integer'Last`. It is necessary to ensure that the
+     addition operation performed in the subprogram body will also not
+     overflow.
 
    - Finally, we specify that ``Increment`` does indeed perform an increment of
      ``X``, that is, the value of ``X`` after a call is one more than its value
@@ -154,34 +148,53 @@ evaluation, parameter passing mechanism, or compiler optimizations. The
 expression below for ``G`` is non-deterministic due to the order in which
 the two calls to F are evaluated, and is therefore not legal SPARK.
 
-.. code:: ada
+.. code-block:: ada
 
-    procedure Show_Illegal_Code is
-
-       function F (X : in out Integer) return Integer;
+    procedure Show_Illegal_Ada_Code is
 
        function F (X : in out Integer) return Integer is
+          Tmp : constant Integer := X;
        begin
-          X := 0;
-          return X + 1;
+          X := X + 1;
+          return Tmp;
        end F;
 
-       G : Integer;
+       G : Integer := 0;
 
     begin
-       G := F (G) + F (G); --  ??
-    end Show_Illegal_Code;
+       G := F (G) - F (G);  --  ??
+    end Show_Illegal_Ada_Code;
 
+In fact, the code above is not even legal Ada, so the same error is generated
+by the GNAT compiler. But SPARK goes further and GNATprove issues also an error
+on the following equivalent code that is accepted by the compiler:
 
-To aid the static verification of expressions and because function calls
-are themselves expressions, they must also be free of side effects.
-Potential side effects of a function include updates of parameters and
-global variables. As a consequence, SPARK forbids subprograms that
-are functions with :ada:`out` or :ada:`in out` parameters, like the
-function ``F``, as well as functions updating a global variable.
+.. code-block:: ada
 
-.. code:: ada
-    :class: ada-nocheck
+    procedure Show_Illegal_SPARK_Code is
+
+       G : Integer := 0;
+
+       function F return Integer is
+          Tmp : constant Integer := G;
+       begin
+          G := G + 1;
+          return Tmp;
+       end F;
+
+    begin
+       G := F - F;  --  ??
+    end Show_Illegal_SPARK_Code;
+
+In SPARK, functions must be free of side-effects, which include updates to
+parameters and global variables. As a consequence, SPARK forbids functions with
+:ada:`out` or :ada:`in out` parameters, as well as functions updating a global
+variable. Thus function ``F`` below is illegal in SPARK, while function
+``Incr`` might be legal if it does not update any global variables, and
+function ``Incr_And_Log`` might be illegal if it updates global variables for
+logging.
+
+.. code-block:: ada
 
     function F (X : in out Integer) return Integer;      -- Illegal
 
@@ -189,31 +202,26 @@ function ``F``, as well as functions updating a global variable.
 
     function Incr_And_Log (X : Integer) return Integer;  -- OK?
 
-In most cases, these functions can easily be replaced by procedures.
+In most cases, these functions can easily be replaced by procedures with an
+:ada:`out` parameter for returning the computed value.
 
+When it has access to their body, GNATprove verifies which functions are indeed
+free from side-effects. Here for example, the two functions ``Incr`` and
+``Incr_And_Log`` have the same signature, but only ``Incr`` is legal in SPARK
+while ``Incr_And_Log`` is not as it attempts to update the global variable
+``Call_Count``.
 
-No side-effects in expressions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: ada
 
-When it has access to their body, the SPARK tool verifies which are
-functions are indeed free from side effects. Here for example, the two
-functions ``Incr`` and ``Incr_And_Log`` have the same signature.
-
-.. code:: ada
-
-    package Test_Spark_Side_Effect
-       with SPARK_Mode => On
-    is
+    package Side_Effects is
 
        function Incr (X : Integer) return Integer;          -- OK?
 
        function Incr_And_Log (X : Integer) return Integer;  -- OK?
 
-    end Test_Spark_Side_Effect;
+    end Side_Effects;
 
-    package body Test_Spark_Side_Effect
-       with SPARK_Mode => On
-    is
+    package body Side_Effects is
 
        function Incr (X : in Integer) return Integer
        is (X + 1); -- OK
@@ -226,7 +234,7 @@ functions ``Incr`` and ``Incr_And_Log`` have the same signature.
           return X + 1;
        end Incr_And_Log;
 
-    end Test_Spark_Side_Effect;
+    end Side_Effects;
 
 However, ``Incr`` is valid SPARK while ``Incr_And_Log`` is not as it
 attempts to update the global variable ``Call_Count``.
@@ -234,42 +242,36 @@ attempts to update the global variable ``Call_Count``.
 No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Another restriction imposed in the SPARK subset concerns aliasing. We say
-that two names are aliased if they refer to the same object. Since access
-types are not allowed in SPARK, aliasing can only occur as part of the
-parameter passing in a procedure call. As a consequence, when a procedure
-is called, SPARK makes sure that no :ada:`out` or :ada:`in out` parameter
-is aliased with either an other parameter of the procedure or a global
-variable updated in the procedure's body.
+Another restriction imposed in the SPARK subset concerns aliasing. We say that
+two names are aliased if they refer to the same object. Since access types
+(pointers in Ada) are not allowed in SPARK, aliasing can only occur as part of
+the parameter passing in a procedure call. As a consequence, when a procedure
+is called, SPARK makes sure that no :ada:`out` or :ada:`in out` parameter is
+aliased with either another parameter of the procedure or a global variable
+updated in the procedure's body.
 
 There are two reasons to forbid aliasing in SPARK:
 
-- First, it makes verification more difficult
+- First, it makes verification more difficult as it requires taking into
+  account the fact that updates to two variables with different names may in
+  fact update the same object.
 
-   - as it requires taking into account the fact that updates to two variables
-     with different names may in fact update the same object.
-
-- Then, results may seem unexpected from a user point of view.
-
-   - Indeed, when its parameters are aliased, the results of a subprogram call
-     may depend on compiler specific treatment, like parameter passing
-     mechanisms.
+- Then, results may seem unexpected from a user point of view. Indeed, when its
+  parameters are aliased, the results of a subprogram call may depend on
+  compiler specific treatment, like parameter passing mechanisms.
 
 What is more, most of the time, possibility of aliasing was not even taken
 into account by the programmer. For example:
 
-.. code:: ada
+.. code-block:: ada
 
-    procedure Show_No_Aliasing_Of_Names
-      with SPARK_Mode => On
-    is
+    procedure No_Aliasing is
 
        Total : Natural := 0;
 
        procedure Move_To_Total (Source : in out Natural)
-           with Post => Source = 0;
-
-       procedure Move_To_Total (Source : in out Natural) is
+         with Post => Total = Total'Old + Source'Old and Source = 0
+       is
        begin
           Total  := Total + Source;
           Source := 0;
@@ -278,20 +280,18 @@ into account by the programmer. For example:
        X : Natural := 3;
 
     begin
-
        Move_To_Total (X);     -- OK
        Move_To_Total (Total); -- Error
-
-    end Show_No_Aliasing_Of_Names;
+    end No_Aliasing;
 
 The example subprogram ``Move_To_Total`` shown here increases the global
 variable ``Total`` of the value of its input parameter ``Source``. It then
 resets ``Source`` to 0. Here obviously, the programmer has not taken into
 account the possibility of an aliasing between ``Total`` and ``Source``.
 This is common practice. This subprogram is valid SPARK, and, for its
-verification, the SPARK tools assume, like the programmer,
+verification, GNATprove assumes, like the programmer,
 non-aliasing between ``Total`` and ``Source``. To ensure that this
-assumption is correct, the tool will then check for non-aliasing on every
+assumption is correct, GNATprove will then check for non-aliasing on every
 call to ``Move_To_Total``.
 
 
@@ -307,14 +307,15 @@ identified as being in SPARK.
 This can be done using an aspect named :ada:`SPARK_Mode`. If not
 explicitly specified, :ada:`SPARK_Mode` is `Off`, which means, the code is
 in full Ada. This default can be changed using a configuration pragma
-also. To allow easy reuse of existing Ada library, entities declared in
+also, like we're doing in this interactive introduction.
+To allow easy reuse of existing Ada library, entities declared in
 withed units with no explicit :ada:`SPARK_Mode` can still be used from
 SPARK code. The tool will only check for SPARK conformance on the
 declaration of those which are effectively used within the SPARK code.
 
 Here is a common case of use of the :ada:`SPARK_Mode` aspect.
 
-.. code:: ada
+.. code-block:: ada
 
    package P
       with SPARK_Mode => On
@@ -322,7 +323,6 @@ Here is a common case of use of the :ada:`SPARK_Mode` aspect.
       -- package spec is SPARK, so can be used
       -- by SPARK clients
    end P;
-
 
    package body P
       with SPARK_Mode => Off
@@ -360,10 +360,10 @@ Here is a package defining a private ``Stack`` type containing elements of
 type ``Element`` and along with some subprograms providing the usual
 functionalities over stacks. It is marked to be in the SPARK subset.
 
-.. code:: ada
+.. code-block:: ada
 
     package Stack_Package
-    with SPARK_Mode => On
+       with SPARK_Mode => On
     is
        type Element is new Natural;
        type Stack is private;
@@ -380,7 +380,7 @@ functionalities over stacks. It is marked to be in the SPARK subset.
 
     end Stack_Package;
 
-Side effects in expressions are not allowed in SPARK. Therefore, ``Pop``
+Side-effects in expressions are not allowed in SPARK. Therefore, ``Pop``
 is not allowed to modify its parameter ``S``.
 
 
@@ -392,7 +392,7 @@ stack. ``Content`` and ``Top`` are the global variables used to register
 the stack's state. Once again, this package is identified to be in the
 SPARK subset.
 
-.. code:: ada
+.. code-block:: ada
 
     package Global_Stack
        with SPARK_Mode => On
@@ -421,7 +421,7 @@ SPARK subset.
 
     end Global_Stack;
 
-Like previously, functions should be free from side effects. Here, ``Pop``
+Like previously, functions should be free from side-effects. Here, ``Pop``
 updates the global variable ``Top``, which is not allowed in SPARK.
 
 
@@ -432,7 +432,7 @@ We now consider two procedures ``Permute`` and ``Swap``. ``Permute``
 applies a circular permutation to the value of its three parameters.
 ``Swap`` then uses ``Permute`` to swap the value of ``X`` and ``Y``.
 
-.. code:: ada
+.. code-block:: ada
 
     package P
        with SPARK_Mode => On
@@ -473,10 +473,10 @@ Example #4
 Here, the ``Swap`` procedure is used to swap the value of the two record
 components of ``R``.
 
-.. code:: ada
+.. code-block:: ada
 
     package P
-    with SPARK_Mode => On
+       with SPARK_Mode => On
     is
        procedure Swap (X, Y : in out Positive);
     end P;
@@ -517,10 +517,10 @@ Here is a slight modification of the previous example using an array
 instead of a record. ``Swap_Indexes`` uses ``Swap`` on values stored in
 the array ``A``.
 
-.. code:: ada
+.. code-block:: ada
 
     package P
-    with SPARK_Mode => On
+       with SPARK_Mode => On
     is
        procedure Swap (X, Y : in out Positive);
     end P;
@@ -547,9 +547,9 @@ the array ``A``.
        --  ...
     end P;
 
-This code is not valid. Unlike the previous example, we have no way here
-to know that the two elements ``A (I)`` and ``A (J)`` really are distinct
-when we call ``Swap``.
+GNATprove detects a possible aliasing. Unlike the previous example, we have no
+way here to know that the two elements ``A (I)`` and ``A (J)`` really are
+distinct when we call ``Swap``.
 
 
 Example #6
@@ -559,7 +559,7 @@ Here is a package declaring a type ``Dictionary``, which is an array
 containing a word per letter. The procedure ``Store`` allows to insert a
 word at the correct index in a dictionary.
 
-.. code:: ada
+.. code-block:: ada
 
     package P
        with SPARK_Mode => On
@@ -594,10 +594,10 @@ Example #7
 Here is a modified version of the previous example. It has been adapted to
 hide the access type inside the private part of ``P``.
 
-.. code:: ada
+.. code-block:: ada
 
     package P
-    with SPARK_Mode => On
+       with SPARK_Mode => On
     is
        subtype Letter is Character range 'a' .. 'z';
        type String_Access is private;
@@ -625,7 +625,7 @@ Example #8
 
 Now let us consider ``P``'s body, with the definition of ``Store``, again.
 
-.. code:: ada
+.. code-block:: ada
 
     package P
        with SPARK_Mode => On
@@ -642,7 +642,7 @@ Now let us consider ``P``'s body, with the definition of ``Store``, again.
        type String_Access is access String;
 
        function New_String_Access (W : String) return String_Access is
-           (new String'(W));
+         (new String'(W));
 
        --  ...
     end P;
@@ -669,7 +669,7 @@ Example #9
 Here, we have moved the declaration and the body of the procedure
 ``Store`` to another package named ``Q``.
 
-.. code:: ada
+.. code-block:: ada
 
     package P
        with SPARK_Mode => On
@@ -685,7 +685,7 @@ Here, we have moved the declaration and the body of the procedure
        type String_Access is access String;
 
        function New_String_Access (W : String) return String_Access is
-           (new String'(W));
+         (new String'(W));
 
        --  ...
     end P;
@@ -719,7 +719,7 @@ Here, we have two functions which are searching for 0 inside an array
 ``A``. The first one raises an exception if 0 is not found in ``A`` while
 the other simply returns 0 in that case.
 
-.. code:: ada
+.. code-block:: ada
 
     package P
        with SPARK_Mode => On
@@ -730,7 +730,6 @@ the other simply returns 0 in that case.
        function Search_Zero_P (A : N_Array) return Positive;
 
        function Search_Zero_N (A : N_Array) return Natural;
-
     end P;
 
     package body P
@@ -753,8 +752,6 @@ the other simply returns 0 in that case.
        exception
           when Not_Found => return 0;
        end Search_Zero_N;
-    begin
-       null;
     end P;
 
 This code is perfectly correct. Remark that GNATprove will try to
