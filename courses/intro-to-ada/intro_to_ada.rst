@@ -4385,19 +4385,20 @@ add it even to the statements block of your current subprogram:
         with Ada.Exceptions;  use Ada.Exceptions;
 
         procedure Be_Careful is
-            function Dangerous return Integer is
-            begin
-               raise Constraint_Error;
-            end Dangerous;
+           function Dangerous return Integer is
+           begin
+              raise Constraint_Error;
+              return 42;
+           end Dangerous;
 
         begin
            declare
-               A : Integer := Dangerous;
-            begin
-               Put_Line (Integer'Image (A));
-            exception
-                when Constraint_Error => Put_Line ("error!");
-            end;
+              A : Integer := Dangerous;
+           begin
+              Put_Line (Integer'Image (A));
+           exception
+              when Constraint_Error => Put_Line ("error!");
+           end;
         end Be_Careful;
 
     This is also true for the top-level exception block that is part of the
