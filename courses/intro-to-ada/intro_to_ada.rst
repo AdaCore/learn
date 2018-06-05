@@ -7960,7 +7960,7 @@ This is all we need in order to make the information provided to
 
 We could achieve a similar result by initializing ``Next`` with a
 ``String``. This can be done by a call to ``Value`` from the
-:ada:`Àda.Calendar.Formatting` package. This is the adapted application:
+:ada:`Ada.Calendar.Formatting` package. This is the adapted application:
 
 .. code:: ada
 
