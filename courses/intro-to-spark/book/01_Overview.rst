@@ -1,33 +1,33 @@
 :code-config:`run_button=False;prove_button=True;accumulate_code=False`
 
-Lesson 1: SPARK 2014 Overview
+Lesson 1: SPARK Overview
 =====================================================================
 
 .. role:: ada(code)
    :language: ada
 
-Welcome to the first lesson of the AdaCore University on SPARK 2014!
-During this lecture, you'll be provided with an overview of the SPARK 2014
+Welcome to the first lesson of the AdaCore University on SPARK!
+During this lecture, you'll be provided with an overview of the SPARK
 technology and toolset.
 
 
 What is it?
 ---------------------------------------------------------------------
 
-SPARK 2014 refers to two different things:
+SPARK refers to two different things:
 
 - a programming language targeted at functional specification and static
   verification, plus
 - a set of development and verification tools.
 
-The SPARK 2014 language is based on a subset of the Ada language, which is
+The SPARK language is based on a subset of the Ada language, which is
 particularly suited to formal verification, as it is designed for critical
 software development.
 
 .. image:: 01_spark_ada.png
 
 Ada 2012 introduced the use of aspects that can be used for subprogram
-contracts, and SPARK 2014 added its own aspects in order to aid static
+contracts, and SPARK added its own aspects in order to aid static
 analysis.
 
 
@@ -56,7 +56,7 @@ perform two different forms of static analysis:
 Key Tools
 ---------------------------------------------------------------------
 
-The tool for formal verification of the SPARK 2014 language is called
+The tool for formal verification of the SPARK language is called
 GNATprove. It checks for conformance with the SPARK subset and performs
 flow analysis and functional verification of the source code. The SPARK
 2014 language is also supported by several other tools. In particular, it
@@ -68,7 +68,7 @@ A trivial example
 ---------------------------------------------------------------------
 
 We will now look at a simple example of Ada 2012 subprogram that has also
-used SPARK 2014 aspects to specify a verifiable subprogram contract. The
+used SPARK aspects to specify a verifiable subprogram contract. The
 subprogram called ``Increment`` adds 1 to the value of its parameter
 ``X``:
 
@@ -99,10 +99,10 @@ subprogram called ``Increment`` adds 1 to the value of its parameter
 Several properties can be specified on this subprogram using the shown
 contracts:
 
-- The SPARK 2014 Global aspect specifies that ``Increment`` does not read
+- The SPARK Global aspect specifies that ``Increment`` does not read
   and does not write any global variable.
 
-- The SPARK 2014 Depend aspect is especially interesting for the security of
+- The SPARK Depend aspect is especially interesting for the security of
   this subprogram, as it specifies that the value of the parameter ``X`` after
   the call only depends on the value of ``X`` before the call.
 
@@ -119,7 +119,7 @@ contracts:
      ``X``, that is, the value of ``X`` after a call is one more than its value
      before the call.
 
-The SPARK 2014 verification tools can verify all of these contracts. It
+The SPARK verification tools can verify all of these contracts. It
 additionally makes sure that no error may be raised at runtime when
 executing ``Increment``'s body.
 
@@ -152,7 +152,7 @@ evaluating a SPARK expression cannot update any object. This limitation is
 necessary to avoid unpredictable behavior depending on order of
 evaluation, parameter passing mechanism, or compiler optimizations. The
 expression below for ``G`` is non-deterministic due to the order in which
-the two calls to F are evaluated, and is therefore not legal SPARK 2014.
+the two calls to F are evaluated, and is therefore not legal SPARK.
 
 .. code:: ada
 
@@ -176,7 +176,7 @@ the two calls to F are evaluated, and is therefore not legal SPARK 2014.
 To aid the static verification of expressions and because function calls
 are themselves expressions, they must also be free of side effects.
 Potential side effects of a function include updates of parameters and
-global variables. As a consequence, SPARK 2014 forbids subprograms that
+global variables. As a consequence, SPARK forbids subprograms that
 are functions with :ada:`out` or :ada:`in out` parameters, like the
 function ``F``, as well as functions updating a global variable.
 
@@ -289,7 +289,7 @@ variable ``Total`` of the value of its input parameter ``Source``. It then
 resets ``Source`` to 0. Here obviously, the programmer has not taken into
 account the possibility of an aliasing between ``Total`` and ``Source``.
 This is common practice. This subprogram is valid SPARK, and, for its
-verification, the SPARK 2014 tools assume, like the programmer,
+verification, the SPARK tools assume, like the programmer,
 non-aliasing between ``Total`` and ``Source``. To ensure that this
 assumption is correct, the tool will then check for non-aliasing on every
 call to ``Move_To_Total``.
@@ -301,7 +301,7 @@ Identifying SPARK Code
 The SPARK language has been restricted to only allow easily specifiable
 and verifiable constructs. However, sometimes, a user cannot or does not
 want to abide by these limitations on all her code base. Therefore, the
-SPARK 2014 tools only check conformance to the SPARK subset on code which
+SPARK tools only check conformance to the SPARK subset on code which
 identified as being in SPARK.
 
 This can be done using an aspect named :ada:`SPARK_Mode`. If not
