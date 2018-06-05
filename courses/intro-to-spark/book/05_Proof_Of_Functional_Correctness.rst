@@ -1277,7 +1277,7 @@ This example is not correct. The program itself is correct but the
 invariant is not, as can be checked by executing the function
 ``Max_Array`` with assertions enabled. Indeed, at each loop iteration,
 ``R`` contains the maximum of ``A`` and ``B`` only until :ada:`I – 1` as
-the ``I``th index was not handled yet.
+the ``I`` th index was not handled yet.
 
 
 Example #9
