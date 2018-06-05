@@ -179,6 +179,7 @@ are functions with :ada:`out` or :ada:`in out` parameters, like the
 function ``F``, as well as functions updating a global variable.
 
 .. code:: ada
+    :class: ada-nocheck
 
     function F (X : in out Integer) return Integer;      -- Illegal
 
