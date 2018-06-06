@@ -1,3 +1,5 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 Lesson 1: SPARK 2014 Overview
 =====================================================================
 
