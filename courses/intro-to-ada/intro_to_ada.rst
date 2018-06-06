@@ -1,5 +1,8 @@
+:code-config:`run_button=True;prove_button=False;accumulate_code=True`
+
 Introduction to Ada
 ===================
+:code-config:`reset_accumulator=True`
 
 .. role:: ada(code)
    :language: ada
@@ -127,6 +130,7 @@ can leverage in SPARK to help proving your programs correct.
 
 Imperative language
 ===================
+:code-config:`reset_accumulator=True`
 
 Ada is a multi-paradigm language with support for object orientation
 and some elements of functional programming, but its core is a simple, coherent
@@ -148,7 +152,7 @@ Hello world
 
 Here's a very simple imperative Ada program:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
 
@@ -212,7 +216,7 @@ There are several noteworthy things in the above program:
     Procedures ares similar to functions in C or C++ that return :c:`void`.
     We'll see later how to declare functions in Ada.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     --  We start a comment in this line...
@@ -220,7 +224,7 @@ There are several noteworthy things in the above program:
 
 Here is a minor variant of the "Hello, World" example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -244,7 +248,7 @@ and subprogram parameter modes.
 
 Ada's :ada:`if` statementis pretty unsurprising in form and function:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -282,7 +286,7 @@ integer value).
 Here's a slight variation on the example, which illustrates an :ada:`if` statement
 with an :ada:`else` part:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -306,7 +310,7 @@ displays the value followed by the String " is not a positive number".
 Our final variation illustrates an :ada:`if` statement with :ada:`elsif`
 sections:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -365,7 +369,7 @@ For loops
 The first kind of loop is the ``for`` loop, which allows iteration through a
 discrete range.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -413,7 +417,7 @@ A few things to note:
 The "step" of the loop is limited to 1 (forward direction) and -1 (backward).
 To iterate backwards over a range, use the :ada:`reverse` keyword:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -440,7 +444,7 @@ upper bound is less than the value of the lower bound, then the
 loop is not executed at all.  This is the case also for :ada:`reverse` loops.
 Thus no output is produced in the following example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -461,7 +465,7 @@ Bare loops
 The simplest loop in Ada is the bare loop, which forms the foundation of
 the other kinds of Ada loops.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -506,7 +510,7 @@ While loops
 
 The last kind of loop in Ada is the :ada:`while` loop.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -545,7 +549,7 @@ but with some important differences.
 Here's an example, a variation of a program that was shown earlier
 with an :ada:`if` statement:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -631,7 +635,7 @@ as declarative regions.
 -  You can variables, constants, types, inner subprograms, and
    other entities there. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -650,7 +654,7 @@ as declarative regions.
    you can introduce a new declarative region with a block
    statement:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -697,7 +701,7 @@ If expressions
 Here's an alternative version of an example we saw earlier; the :ada:`if`
 statement has been replaced by an :ada:`if` expression:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -735,7 +739,7 @@ there are a few differences that stem from the fact that it is an expression:
 
 Here's another example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -755,7 +759,7 @@ Case expressions
 Analogous to :ada:`if` expressions, Ada also has :ada:`case` expressions.
 They work just as you would expect.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -775,6 +779,7 @@ by commas.
 
 Strongly typed language
 =======================
+:code-config:`reset_accumulator=True`
 
 Ada is a strongly typed language. It is interestingly modern in that
 respect: strong static typing has been increasing in popularity in programming
@@ -807,7 +812,7 @@ In fact, the definitional mechanism that Ada provides forms the semantic basis
 for the predefined integer types.  There is no "magical" built-in type in that
 regard, which is unlike most languages, and arguably very elegant.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -849,7 +854,7 @@ accessed by using a :ada:`'` symbol (the ASCII apostrophe).
 Ada has several types available as "built-ins"; :ada:`Integer` is one of
 them. Here is how :ada:`Integer` might be defined for a typical processor:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     type Integer is range -(2 ** 31) .. +(2 ** 31 - 1);
@@ -869,7 +874,7 @@ Operational semantics
 Unlike some other languages, Ada requires that operations on integers should be
 checked for overflow.
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Main is
        A : Integer := Integer'Last;
@@ -893,7 +898,7 @@ Mainly for efficiency reasons, while machine level overflow always results in
 an exception, type level overflows will only be checked at specific boundaries,
 like assignment:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -927,7 +932,7 @@ For machine sized modular types, for example a modulus of 2**32, this mimics
 the most common implementation behavior of unsigned types. However, an
 advantage of Ada is that the modulus is more general:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -963,7 +968,7 @@ discrete types, which makes them usable in certain situations that we will
 describe later (`discrete features <TODOLINKTODISCRETEFEATURES>`_) but one
 context that we have already seen is a case statement.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -987,7 +992,7 @@ context that we have already seen is a case statement.
 Enumeration types are powerful enough that, unlike in most languages, they're
 used to define the standard Boolean type:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     type Boolean is (False, True);
@@ -1004,7 +1009,7 @@ Basic properties
 Like most languages, Ada supports floating-point types. The most commonly used
 floating-point type is :ada:`Float`:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1022,7 +1027,7 @@ the mantissa) for Float; on a typical 32-bit machine the precision will be 6.
 All common operations that could be expected for floating-point types are
 available, including absolute value and exponentiation.  For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1054,14 +1059,14 @@ expressed in terms of decimal digits. Operations on these custom types will
 then have at least the specified precision. The syntax for a simple
 floating-point type declaration is:
 
-.. code-block:: ada
+.. code:: ada
 
     type T is digits <number_of_decimal_digits>;
 
 The compiler will choose a floating-point representation that supports the
 required precision. For example:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1084,7 +1089,7 @@ bits for :ada:`T18`.  This includes both the mantissa and the exponent.
 The number of digits specified in the data type is also used in the format
 when displaying floating-point variables. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1113,7 +1118,7 @@ types --- using the :ada:`range` keyword.  This simple example creates a new
 floating-point type based on the type :ada:`Float`, for a normalized range
 between :ada:`-1.0` and :ada:`1.0`:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1130,7 +1135,7 @@ within this range; otherwise an exception is raised. In this example, the
 exception :ada:`Constraint_Error` is raised when assigning :ada:`2.0` to the
 variable :ada:`A`:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1144,7 +1149,7 @@ variable :ada:`A`:
 
 Ranges can also be specified for custom floating-point types. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -1167,7 +1172,7 @@ same family are incompatible with each other; a value of one type cannot be
 assigned to a variable from the other type. For example:
 
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1192,7 +1197,7 @@ expression like :ada:`2 * 3.0` will trigger a compilation error. In a language
 like C or Python, such expressions are made valid by implicit conversions. In
 Ada, such conversions must be made explicit:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
     procedure Conv is
@@ -1212,7 +1217,7 @@ Of course, we probably do not want to write the conversion code every time we
 convert from meters to miles. The idiomatic Ada way in that case would be to
 introduce conversion functions along with the types.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1279,7 +1284,7 @@ will in turn prevent some subtle errors.
     The following Ada code, based on the erroneous example in C, will not
     compile:
 
-    .. code-block:: ada
+    .. code:: ada
         :class: ada-expect-compile-error
 
         procedure Main is
@@ -1305,7 +1310,7 @@ In Ada you can create new types based on existing ones. This is very useful:
 you get a type that has the same properties as some existing type but is
 treated as a distinct type in the interest of strong typing.
 
-.. code-block:: ada
+.. code:: ada
 
    procedure Main is
       --  ID card number type, incompatible with Integer.
@@ -1342,7 +1347,7 @@ derived scalar type (such as integer, floating-point and enumeration).
 
 The syntax for enumerations uses the :ada:`range <range>` syntax:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1364,7 +1369,7 @@ the valid range of values. However, we sometimes want to enforce constraints on
 some values while staying within a single type.  This is where subtypes come
 into play.  A subtype does not introduce a new type.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1397,7 +1402,7 @@ into play.  A subtype does not introduce a new type.
 Several subtypes are predefined in the standard package in Ada, and are
 automatically available to you:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     subtype Natural  is Integer range 0 .. Integer'Last;
@@ -1407,7 +1412,7 @@ While subtypes of a type are statically compatible with each other,
 constraints are enforced at run time: if you violate a subtype constraint,
 an exception will be raised.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run, ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1429,6 +1434,7 @@ an exception will be raised.
 
 Records
 =======
+:code-config:`reset_accumulator=True`
 
 So far, all the types we have encountered have values that are not
 decomposable: each instance represents a single piece of data. Now we are going
@@ -1443,7 +1449,7 @@ Record type declaration
 
 Here is an example of a simple record declaration:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     type Date is record
@@ -1457,7 +1463,7 @@ Fields look a lot like variable declarations, except that they are inside of a
 record definition.  And as with variable declarations, you can specify
 additional constraints when supplying the subtype of the field.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     type Date is record
@@ -1476,7 +1482,7 @@ may be run-time computable.
 Aggregates
 ----------
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     Ada_Birthday    : Date := (10, December, 1815);
@@ -1503,7 +1509,7 @@ Component selection
 To access components of a record instance, you use an operation that is
 called component selection:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1540,7 +1546,7 @@ Array type declaration
 Arrays in Ada are used to define contiguous collections of elements that can be
 selected by indexing. Here's a simple example:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1600,7 +1606,7 @@ to index into the array.
     not simply a handle or pointer.  Unlike C and C++, there is no implicit
     equivalence between an array and a pointer to its initial element.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1632,7 +1638,7 @@ bounds when iterating / using arrays. That means the code above is good,
 because it uses the index type, but a for loop as shown below is bad practice
 even though it works correctly:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     for I in 11 .. 15 loop
@@ -1642,7 +1648,7 @@ even though it works correctly:
 Since you can use any discrete type to index an array, enumeration types
 are permitted.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1697,7 +1703,7 @@ First, as is true in general in Ada, the indexing operation is strongly typed.
 If you use a value of the wrong type to index the array, you will get a
 compile-time error.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1722,7 +1728,7 @@ Second, arrays in Ada are bounds checked. This means that if you try to access
 an element outside of the bounds of the array, you will get a run-time error
 instead of accessing random memory as in unsafe languages.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run, ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1749,7 +1755,7 @@ the array. While this can be useful for typing and readability purposes,
 sometimes you simply want to express a range of values.  Ada allows you to do
 that, too.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1785,7 +1791,7 @@ range in a for loop.  That raises the question of how to write an iteration
 when the array has an anonymous range for its bounds, since there is no name to
 refer to the range.  Ada solves that via several attributes of array objects:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1804,7 +1810,7 @@ refer to the range.  Ada solves that via several attributes of array objects:
 If you want more fine grained control, you can use the separate attributes
 :ada:`'First` and :ada:`'Last`.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1847,7 +1853,7 @@ However, Ada also allows you to declare array types whose bounds are not fixed:
 In that case, the bounds will need to be provided when creating instances of
 the type.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1924,7 +1930,7 @@ The String type in Ada is a simple array.
 
 Here is how the string type is defined in Ada:
 
-.. code-block:: ada
+.. code:: ada
    :class: ada-nocheck
 
     type String is array (Positive range <>) of Character;
@@ -1936,7 +1942,7 @@ literals, as we can see in the example below.
     String literals are a syntactic sugar for aggregates, so that in the
     following example, A and B have the same value.
 
-    .. code-block:: ada
+    .. code:: ada
 
         package String_Literals is
             --  Those two declarations are equivalent
@@ -1945,7 +1951,7 @@ literals, as we can see in the example below.
                                      'W', 'o', 'r', 'l', 'd');
         end String_Literals;
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1970,7 +1976,7 @@ You can omit the bounds when creating an instance of an unconstrained array
 type if you supply an initialization, since the bounds can be deduced from the
 initialization expression.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1986,7 +1992,7 @@ initialization expression.
        New_Line;
     end Greet;
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2016,7 +2022,7 @@ Restrictions
 A very important point about arrays: bounds *have* to be known when instances
 are created. It is for example illegal to do the following.
 
-.. code-block:: ada
+.. code:: ada
    :class: ada-nocheck
 
     declare
@@ -2029,7 +2035,7 @@ Also, while you of course can change the values of elements in an array, you
 cannot change the array's bounds (and therefore its size) after it has been
 initialized.  So this is also illegal:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     declare
@@ -2053,7 +2059,7 @@ generally result in a run-time error.
     the subtype size is not known at compile time, but is dynamically computed
     (at run time).
 
-    .. code-block:: ada
+    .. code:: ada
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2084,7 +2090,7 @@ the array's component type needs to be of a definite and constrained type.
 Thus, if you need to declare, for example, an array of Strings, the String
 subtype used as component will need to have a fixed size.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2117,7 +2123,7 @@ One last feature of Ada arrays that we're going to cover is array slices. It is
 possible to take and use a slice of an array (a contiguous sequence of
 elements) as a name or a value.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2153,6 +2159,7 @@ subtype, constrained by the bounds of the slice.
 
 Modular programming
 ===================
+:code-config:`reset_accumulator=True`
 
 So far, we managed to put our examples in the body of a procedure. Ada is
 helpful in that regard, since it allows you to put any declaration in any
@@ -2172,7 +2179,7 @@ Packages
 
 Here is how you declare a package in Ada:
 
-.. code-block:: ada
+.. code:: ada
 
     package Week is
 
@@ -2193,7 +2200,7 @@ Here is how you declare a package in Ada:
 
 And here is how you use it:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -2275,7 +2282,7 @@ make every entity of a package visible directly in the current scope, using the
 In fact, we have been using the :ada:`use` clause since almost the beginning of
 this tutorial.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -2313,7 +2320,7 @@ declarations and no body. That's not a mistake: In a package specification,
 which is what is showcased above, you cannot declare bodies. Those have to be
 in the package body.
 
-.. code-block:: ada
+.. code:: ada
 
     package Week_2 is
 
@@ -2348,6 +2355,7 @@ This works because entities of the body are *only* visible in the body.
 
 Subprograms
 ===========
+:code-config:`reset_accumulator=True`
 
 Subprograms
 -----------
@@ -2360,7 +2368,7 @@ There are two kinds of subprograms in Ada, functions and procedures. The main
 useful distinction between the two is that functions return a value, and
 procedures don't.
 
-.. code-block:: ada
+.. code:: ada
 
     package Week_3 is
        type Days is (Monday, Tuesday, Wednesday,
@@ -2381,7 +2389,7 @@ note is that a subprogram which has no parameters does not have a parameter
 section at all, following the form :ada:`procedure [name]` or
 :ada:`function [name] return [type]`.
 
-.. code-block:: ada
+.. code:: ada
 
     package Week_4 is
        type Days is (Monday, Tuesday, Wednesday,
@@ -2425,7 +2433,7 @@ As we showed briefly above, a subprogram declaration in a package declaration
 must be completed by a subprogram body in the package body. For the ``Week``
 package above, we could have the following body:
 
-.. code-block:: ada
+.. code:: ada
 
     package body Week_4 is
        --  Implementation of the Get_Day_Name function
@@ -2448,7 +2456,7 @@ Subprogram calls
 
 We can then call our subprogram this way:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -2477,7 +2485,7 @@ As a convention, people usually name parameters at the call site if the
 function's corresponding parameters has a default value. However, it is also
 perfectly acceptable to name every parameter if it makes the code clearer.
 
-.. code-block:: ada
+.. code:: ada
 
     package Week_5 is
        type Days is (Monday, Tuesday, Wednesday,
@@ -2506,7 +2514,7 @@ call cannot be ignored in Ada.
 If you want to call a function and do not need it's result, you will still need
 to explicitly store it in a local variable.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     function Quadruple (I : Integer) return Integer is
@@ -2530,7 +2538,7 @@ to explicitly store it in a local variable.
     result of a function, because unused variables will be flagged, so for
     example this code would not be valid:
 
-    .. code-block:: ada
+    .. code:: ada
         :class: ada-syntax-only
 
         function Read_Int
@@ -2548,7 +2556,7 @@ to explicitly store it in a local variable.
 
     - Either annotate the variable with a Unreferenced pragma, thusly:
 
-    .. code-block:: ada
+    .. code:: ada
         :class: ada-nocheck
 
         B : Boolean := Read_Int (Stream, My_Int);
@@ -2603,7 +2611,7 @@ The first mode for parameter is the one we have been implicitly using so far.
 Parameters passed using this mode cannot be modified, so that the following
 program will cause an error:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     procedure Swap (A, B : Integer) is
@@ -2626,7 +2634,7 @@ In-out parameters
 
 To fix our code above, we can use an in-out parameter.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -2682,7 +2690,7 @@ values act for functions.
 For example, a procedure reading integers from the network could have one of
 the following prototypes:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-syntax-only
 
     procedure Read_Int
@@ -2700,7 +2708,7 @@ mandates that out parameter be treated like uninitialized variables.
     GNAT will warn you in simple cases of erroneous use of out parameters,
     emitting a warning. For example, the following program will emit a warning
 
-    .. code-block:: ada
+    .. code:: ada
 
         procedure Outp is
            procedure Foo (A : out Integer) is
@@ -2729,7 +2737,7 @@ This is a facility that is useful for two reasons:
   nested functions will have access to the parameters, and any local variables
   declared before them.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -2772,7 +2780,7 @@ example in a package specification. This is possible in general, and can be
 useful if you need subprograms to be mutually recursive, as in the example
 below:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     procedure Mutually_Recursive_Subprograms is
@@ -2800,6 +2808,7 @@ below:
 
 More about types
 ================
+:code-config:`reset_accumulator=True`
 
 Aggregates: A primer
 --------------------
@@ -2818,7 +2827,7 @@ have a default value.
 
 This means that the following code is incorrect:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     package Incorrect is
@@ -2846,7 +2855,7 @@ friendly:
 However, beware, for array aggregates, as soon as you used named associations,
 all associations have to be named !
 
-.. code-block:: ada
+.. code:: ada
 
     package Points is
        type Point is record
@@ -2871,7 +2880,7 @@ general concept of Ada which is the notion of overloading of names.
 Let's take a simple example: It is possible in Ada to have functions that have
 the same name, but different arguments.
 
-.. code-block:: ada
+.. code:: ada
 
     package Pkg is
        function F (A : Integer) return Integer;
@@ -2885,7 +2894,7 @@ overloading.
 One of the pecularities of Ada is that it allows overloading on the return type
 of a function.
 
-.. code-block:: ada
+.. code:: ada
 
     package Pkg is
        type SSID is new Integer;
@@ -2914,7 +2923,7 @@ The problem is that, sometimes, there is an ambiguity such that the compiler
 cannot actually resolve the names of an expression. This is where the qualified
 expression becomes useful.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     package Pkg is
@@ -2948,7 +2957,7 @@ expression becomes useful.
 Syntactically the target of a qualified expression can be either any expression
 in parentheses, either an aggregate:
 
-.. code-block:: ada
+.. code:: ada
 
     package Qual_Expr is
        type Point is record
@@ -2977,7 +2986,7 @@ for the compiler of course, but also for other programmers.
     another at a specific point, raising potential errors if constraints are
     violated.
 
-    .. code-block:: ada
+    .. code:: ada
         :class: ada-nocheck
 
         X : Integer := Natural'(1);
@@ -3009,7 +3018,7 @@ If you need the unsafe features, you can learn more about those
 
 Here is how you declare a simple access type in Ada:
 
-.. code-block:: ada
+.. code:: ada
 
     package Dates is
        type Month_Type is (January, February, March, April, May, June, July,
@@ -3045,7 +3054,7 @@ type to the date type, the two access types will be incompatible with each
 other, and you will need an explicit type conversion to convert from one to the
 other:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     with Dates; use Dates;
@@ -3075,7 +3084,7 @@ other:
     need an access type to a specific type you 'own', you will declare it along
     with the type:
 
-    .. code-block:: ada
+    .. code:: ada
         :class: ada-syntax-only
 
         package Access_Types is
@@ -3093,7 +3102,7 @@ Declaring access types is well, but we need a way to give instances of those
 access types a meaningful value! You can allocate a value of an access type
 with the :ada:`new` keyword in Ada.
 
-.. code-block:: ada
+.. code:: ada
 
     with Dates; use Dates;
 
@@ -3107,7 +3116,7 @@ with the :ada:`new` keyword in Ada.
 If the type you want to allocate needs constraints, you can put them in the
 subtype indication, just like you would do in a variable declaration:
 
-.. code-block:: ada
+.. code:: ada
 
     with Dates; use Dates;
 
@@ -3125,7 +3134,7 @@ In some cases, allocating just by specifiying the type is not ideal though, so
 Ada also allows you to allocate by value directly, specifying an expression via
 a qualified expression:
 
-.. code-block:: ada
+.. code:: ada
 
     with Dates; use Dates;
 
@@ -3146,7 +3155,7 @@ value. For that we need to dereference the pointer. Dereferencing a pointer
 uses the :ada:`.all` syntax in Ada, but is only rarely necessary - in most
 cases, the access wil be implicitly dereferenced for you:
 
-.. code-block:: ada
+.. code:: ada
 
     with Dates; use Dates;
 
@@ -3211,7 +3220,7 @@ It is sometimes needed to implement loops in data structures, for example to
 implement linked lists. This is doable in Ada, by forward declaring a type,
 such as in the example below:
 
-.. code-block:: ada
+.. code:: ada
 
     package Simple_List is
        type Node;
@@ -3238,7 +3247,7 @@ peculiarities of record types.
 The first one is that the size of a record type does not need to be known at
 compile time. This is a feature that is showcased in the example below:
 
-.. code-block:: ada
+.. code:: ada
 
     package Runtime_Length is
        function Compute_Max_Len return Natural;
@@ -3277,7 +3286,7 @@ type can designate any instance of such an array regardless of the size.
 You can do that for records too, using a special kind of field that is called a
 discriminant:
 
-.. code-block:: ada
+.. code:: ada
 
     package Var_Size_Record_2 is
         type Items_Array is array (Positive range <>) of Integer;
@@ -3298,7 +3307,7 @@ Also, they make a type indefinite: Whether or not the discriminant is used or
 not to change the size of the object, a type with a discriminant will be
 indefinite if the discriminant is not specified:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     package Test_Discriminants is
@@ -3323,7 +3332,7 @@ In most other regards, discriminants behave like regular fields: You have to
 specify their values in aggregates, as seen above, and you can access their
 values via the dot-notation.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Var_Size_Record_2; use Var_Size_Record_2;
@@ -3359,7 +3368,7 @@ on the discriminant.
 
 However, discriminants can also be used to make the shape of a record vary:
 
-.. code-block:: ada
+.. code:: ada
 
     package Variant_Record is
        type Expr;                       --  Forward declaration of Expr
@@ -3389,7 +3398,7 @@ means that you will only be able to access the fields :ada:`Left` and
 If you try to access a field that is not valid for your record, a
 :ada:`Constraint_Error` will be raised.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run-expect-failure
 
     with Variant_Record; use Variant_Record;
@@ -3403,7 +3412,7 @@ If you try to access a field that is not valid for your record, a
 
 Here is how you could write an evaluator for expressions above:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with Variant_Record; use Variant_Record;
@@ -3470,7 +3479,7 @@ We will use three attributes of the language in our example:
 In the example below, we declare two data types: ``T3_D3`` and ``T6_D3``.
 For both types, the delta value is the same: 0.001.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3499,7 +3508,7 @@ multiplication or division on decimal fixed-point types is smaller than
 the delta value specified for the data type, the actual result will be
 zero. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3538,7 +3547,7 @@ The syntax for binary fixed-point types is
 For example, we may define a normalized range between -1.0 and 1.0 as
 following:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3558,7 +3567,7 @@ fixed-point data types --- you can find more details in this discussion
 about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 We may also rewrite this code with an exact type definition:
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Normalized_Adapted_Fixed_Point_Type is
        type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
@@ -3568,7 +3577,7 @@ We may also rewrite this code with an exact type definition:
 
 We may also use any other range. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -3591,7 +3600,7 @@ which has a range from :math:`-\pi/2` to :math:`\pi/2`.
 
 All standard operations are available for fixed-point types. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3617,7 +3626,7 @@ mention is that Ada has character literals, that can be used as enumeration
 literals too. This allows Ada to define its own strongly typed character types,
 but also allows the user to define its own, as in the example below:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -3651,6 +3660,7 @@ but also allows the user to define its own, as in the example below:
 
 Privacy
 =======
+:code-config:`reset_accumulator=True`
 
 One of the main principles in modular programming, that has later become one of
 the main principles behind the dominant interpretation of object oriented
@@ -3670,7 +3680,7 @@ level.
 Basic encapsulation
 -------------------
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     package Encapsulate is
@@ -3697,7 +3707,7 @@ Abstract data types
 With this high level granularity, it might not seem obvious how to hide the
 implementation details of a type. Here is how it is done in Ada:
 
-.. code-block:: ada
+.. code:: ada
 
     package Stacks is
        type Stack is private;
@@ -3737,7 +3747,7 @@ From the point of view of the client, only the public part is important, and
 the private part could as well not exist. It makes it very easy to read
 linearly the part of the package that is important for you.
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     --  No need to read the private part to use the package
@@ -3752,7 +3762,7 @@ linearly the part of the package that is important for you.
 
 Here is how the ``Stacks`` package would be used:
 
-.. code-block:: ada
+.. code:: ada
 
     --  Example of use
     with Stacks; use Stacks;
@@ -3772,7 +3782,7 @@ Limited types
 Ada has a facility called limited types. The particularity of limited types is
 that they cannot be copied or compared.
 
-.. code-block:: ada
+.. code:: ada
 
     package Stacks is
        type Stack is limited private;
@@ -3790,7 +3800,7 @@ that they cannot be copied or compared.
        end record;
     end Stacks;
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     with Stacks; use Stacks;
@@ -3819,6 +3829,7 @@ semantics of the API quite well.
 
 Generics
 ========
+:code-config:`reset_accumulator=True`
 
 Introduction
 ------------
@@ -3831,7 +3842,7 @@ by using the keyword :ada:`generic`. For example:
 
 .. raph-amiard: We are lacking a definition/link of metaprogramming.
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Show_Simple_Generic is
 
@@ -3856,7 +3867,7 @@ want to create an algorithm that works on any integer type, or even on
 any type at all, independently of being a numeric type or not. The
 following example declares a formal type ``T`` for the ``Set`` procedure.
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Show_Formal_Type_Declaration is
 
@@ -3891,7 +3902,7 @@ Formal object declaration
 Formal objects are similar to subprogram parameters. Also, they can make
 use of formal types declared in the formal specification. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Show_Formal_Object_Declaration is
 
@@ -3918,7 +3929,7 @@ repeat the :ada:`generic` keyword: we simply start with the actual
 declaration and make use of the generic types and objects that we
 declared. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Show_Generic_Body_Definition is
 
@@ -3943,7 +3954,7 @@ Generic subprograms or packages cannot be used directly. Instead, they
 need to be instantiated. The instantiation is done by using the :ada:`new`
 keyword, as illustrated in the following example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3995,7 +4006,7 @@ that a :ada:`package` is specified instead of a subprogram.
 
 This is an example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4084,7 +4095,7 @@ In order to declare a formal subprogram, we make use of the :ada:`with`
 keyword. In the example below, we declare a formal function
 (``Comparison``) that is used by the generic procedure ``Check``.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4138,7 +4149,7 @@ generics: :ada:`Ada.Containers` (described in the
 
 A typical example of an ADT is a stack:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4213,7 +4224,7 @@ Abstracting a swap algorithm
 Let's first look into a simple procedure that swaps variables of the type
 ``Color``:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4261,7 +4272,7 @@ In the example below, we create a generic version of the ``Swap_Colors``
 and name it ``Generic_Swap``. This generic version can work on any type.
 This is achieved by the declaration of the formal type ``T``.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4315,7 +4326,7 @@ examples of generic algorithms. Now, we will look into an algorithm for
 reversing elements of an array. First, let's start with a non-generic
 version of the algorithm that works specifically for the ``Color`` type:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4376,7 +4387,7 @@ three components of the algorithm:
 
 This is a generic version of the algorithm:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4459,7 +4470,7 @@ Also, note that ``S`` is an example of a formal object.
 This is a version of the test application that makes use of the generic
 ``Perform_Test`` procedure:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4545,6 +4556,7 @@ procedure (``Perform_Test``). Note that:
 
 Exceptions
 ==========
+:code-config:`reset_accumulator=True`
 
 Ada uses exceptions for error handling. Ada's exceptions are not checked, which
 means that a subprogram does not have to declare every exception kind that it
@@ -4557,7 +4569,7 @@ Ada exceptions are not types, they're objects, which is something peculiar
 about them if you're used to the way Java or Python does it. Here is how you
 declare an exception:
 
-.. code-block:: ada
+.. code:: ada
 
     package Exceptions is
         My_Except : exception;
@@ -4573,7 +4585,7 @@ Raising an exception
 To raise an exception of our newly declared exception kind, here is how you do
 it:
 
-.. code-block:: ada
+.. code:: ada
 
     with Exceptions; use Exceptions;
 
@@ -4596,7 +4608,7 @@ Now we need to tackle how to actually handle exceptions that were raised by us,
 or other libraries. The neat thing in Ada is that you can add an exception
 handler to any statement block, the following way:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Exceptions;  use Ada.Exceptions;
@@ -4620,7 +4632,7 @@ handler to any statement block, the following way:
 But you don't need to introduce a block just to handle an exception, you can
 add it even to the statements block of your current subprogram:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Exceptions;  use Ada.Exceptions;
@@ -4640,7 +4652,7 @@ add it even to the statements block of your current subprogram:
     about: Exceptions raised in the declarative section are not caught. So for
     example, in the following code, the exception will not be caught.
 
-    .. code-block:: ada
+    .. code:: ada
 
         with Ada.Text_IO; use Ada.Text_IO;
         with Ada.Exceptions;  use Ada.Exceptions;
@@ -4693,6 +4705,7 @@ language operation.
 
 Tasking
 =======
+:code-config:`reset_accumulator=True`
 
 Tasks and protected objects allow for implementing concurrency in Ada. The
 following sections explain those concepts in more details.
@@ -4716,7 +4729,7 @@ Simple task
 Tasks can be declared by using the keyword :ada:`task`. The task
 implementation is defined in a :ada:`task body` block. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4755,7 +4768,7 @@ Note that:
   - This task would also start automatically and run *concurrently* with
     task ``T`` and the main task. For example:
 
-    .. code-block:: ada
+    .. code:: ada
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4789,7 +4802,7 @@ this waiting process, a synchronization between the main task and its
 subtasks occurs. After this final synchronization, the main task may
 finish. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4816,7 +4829,7 @@ A synchronization is also achieved if we move the task to a separate
 package. In the example below, we declare a task ``T`` in the package
 ``Simple_Sync_Pkg``.
 
-.. code-block:: ada
+.. code:: ada
 
     package Simple_Sync_Pkg is
        task T;
@@ -4824,7 +4837,7 @@ package. In the example below, we declare a task ``T`` in the package
 
 This is the corresponding package implementation:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4840,7 +4853,7 @@ This is the corresponding package implementation:
 As soon as the package is :ada:`with`'ed for the main procedure, the task
 ``T`` defined in the package will be part of the main task. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Simple_Sync_Pkg;
 
@@ -4860,7 +4873,7 @@ A delay may be introduced by using the keyword :ada:`delay`. This will
 put the task to sleep for the amount of seconds specified in the delay
 statement. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4910,7 +4923,7 @@ In other words:
 The synchronization between tasks is called rendez-vous. Let's see an
 example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4960,7 +4973,7 @@ task body is normally implemented together with a
 allows the master task to terminate the subtask when the end of the master
 task is reached. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5023,7 +5036,7 @@ in a loop, however, we cannot expect to have regular interval between the
 delay statements. For example, we may have a call to a computationally
 intensive procedure between the delay statements:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
           while True loop
@@ -5050,7 +5063,7 @@ allows for measuring the elapsed time (``Show_Elapsed_Time``) and a dummy
 ``Computational_Intensive_App`` procedure using a simple delay. This is
 the package specification:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Real_Time; use Ada.Real_Time;
 
@@ -5072,7 +5085,7 @@ the package specification:
 
 This is the package definition:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5099,7 +5112,7 @@ This is the package definition:
 Using this auxiliary package, we're now ready to write our time-drifting
 application:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -5136,7 +5149,7 @@ already have a time span of about four seconds. Using the
 :ada:`delay until` statement, however, we'll be able to avoid this time
 drift and have a regular interval of one second:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -5212,7 +5225,7 @@ syntax is similar to the one used for packages: we can declare operations
 private part. The corresponding implementation of the operations is
 included in the :ada:`protected body` of the object. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5276,7 +5289,7 @@ The following example implements the barrier for the ``Obj.Get``
 operation. Also, it contains two concurrent subprograms (main task
 and task ``T``) that try to access the protected object.
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5357,7 +5370,7 @@ declaration is needed for that --- similar to variable declarations.
 
 For example, we may reuse our first example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5376,7 +5389,7 @@ We can rewrite the example and replace ``task T`` by ``task type TT``.
 After the type definition is complete, we declare a task (``A_Task``)
 based on the task type ``TT``:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5399,7 +5412,7 @@ syntax for task types: :ada:`array (<>) of Task_Type`. Also, we may pass
 information to the individual tasks by defining a ``Start`` entry. This
 is the updated example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5444,7 +5457,7 @@ creating arrays of protected objects, for example.
 
 We can reuse a previous example and rewrite it to use a protected type:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5483,6 +5496,7 @@ protected object as in the original example.
 
 Interfacing with C
 ==================
+:code-config:`reset_accumulator=True`
 
 Ada allows for interfacing with existing code in C and C++. This section will
 discuss how to interface with C specifically.
@@ -5497,7 +5511,7 @@ default. In order to compile C files in addition to Ada files, we need to
 adapt the project file used by ``gprbuild``. This can be achieved by
 using the ``Languages`` entry, as in the following example:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     project Multilang is
@@ -5518,7 +5532,7 @@ convention aspect needs to be specified. In the following example, we
 interface with the ``C_Enum`` enumeration declared in a C source-code
 file:
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Show_C_Enum is
 
@@ -5532,7 +5546,7 @@ In order to interface with C built-in types, we need to reference to the
 :ada:`Interfaces.C` package, which contains all type definitions that we
 need. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C; use Interfaces.C;
 
@@ -5573,7 +5587,7 @@ Calling C subprograms in Ada
 A similar approach is used when interfacing with subprograms written in C.
 In this case, an additional aspect is required: :ada:`Import`. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C; use Interfaces.C;
 
@@ -5611,7 +5625,7 @@ It is possible to use a different subprogram name in the Ada code. For
 example, we could rename the original C function to ``Get_Value`` in the
 Ada code:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -5642,7 +5656,7 @@ Calling Ada subprograms in C
 It is also possible to call Ada subprograms in C applications. This
 requires the use of the :ada:`Export` aspect. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C; use Interfaces.C;
 
@@ -5658,7 +5672,7 @@ requires the use of the :ada:`Export` aspect. For example:
 
 This is the corresponding implementation:
 
-.. code-block:: ada
+.. code:: ada
 
     package body C_API is
 
@@ -5726,7 +5740,7 @@ The variable is then declared in the C file and increment in ``my_func``:
 
 In the Ada application, we just need to reference the foreign variable:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -5771,7 +5785,7 @@ applications. Similarly to subprogram, this requires the use of the
 Let's reuse the previous example and add a counter, as we did in the
 previous example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C; use Interfaces.C;
 
@@ -5792,7 +5806,7 @@ previous example:
 
 The variable is then increment in ``My_Func``:
 
-.. code-block:: ada
+.. code:: ada
 
     --% filename: c_api.adb
     package body C_API is
@@ -5858,7 +5872,7 @@ In order to create bindings, we'll call the compiler like this:
 
 This will create an Ada specification file called ``test_h.ads``:
 
-.. code-block:: ada
+.. code:: ada
 
     pragma Ada_2005;
     pragma Style_Checks (Off);
@@ -5877,7 +5891,7 @@ This will create an Ada specification file called ``test_h.ads``:
 
 Now, we can simply refer to ``test_h`` package in the Ada application:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -5903,7 +5917,7 @@ parent unit for the bindings you're creating. For example:
 
 This will create the file ``ext_c_code-test_h.ads``:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-syntax-only
 
     package Ext_C_Code.test_h is
@@ -6012,7 +6026,7 @@ Next, we'll create our bindings by running gcc:
 
 This creates the following specification in ``test_h.ads``:
 
-.. code-block:: ada
+.. code:: ada
 
     pragma Ada_2005;
     pragma Style_Checks (Off);
@@ -6050,7 +6064,7 @@ of :c:`struct test`. Also, all references to the ``test`` are replaced by
 simple addresses (:ada:`System.Address`). Of course, these bindings are good
 enough for creating a test application in Ada:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C;         use Interfaces.C;
     with Interfaces.C.Strings; use Interfaces.C.Strings;
@@ -6090,7 +6104,7 @@ starting point and adapt them to our needs. For example, we can:
 
 This would be the resulting specification:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C; use Interfaces.C;
     with System;
@@ -6124,7 +6138,7 @@ This would be the resulting specification:
 
 This would be the corresponding Ada application:
 
-.. code-block:: ada
+.. code:: ada
 
     with Interfaces.C;         use Interfaces.C;
     with Interfaces.C.Strings; use Interfaces.C.Strings;
@@ -6154,6 +6168,7 @@ readable way.
 
 Object oriented programming
 ===========================
+:code-config:`reset_accumulator=True`
 
 Object oriented programming is a large and blurrily defined concept in
 programming languages that tends to encompass many different things. This is
@@ -6218,7 +6233,7 @@ but not really covered so far:
 For every type in Ada, you can create a new type from it. Type derivation is
 built-in into the language.
 
-.. code-block:: ada
+.. code:: ada
 
     package Newtypes is
        type Point is record
@@ -6245,7 +6260,7 @@ is a subprogram defined in the same scope with the type.
     1. The subprogram is declared in the same scope as the type
     2. The type and its subprograms are declared in a package
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -6323,7 +6338,7 @@ added:
 
 Let's see our first tagged type declaration:
 
-.. code-block:: ada
+.. code:: ada
 
     package P is
        type My_Class is tagged null record;
@@ -6372,7 +6387,7 @@ In Ada, this is called the classwide type. It is used in object oriented
 programming as soon as you need polymorphism. For example, you cannot do the
 following:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-expect-compile-error
 
     with P; use P;
@@ -6397,7 +6412,7 @@ exactly of the type ``T``. What you want to say as a programmer is "I want O3
 to be able to hold an object of type ``My_Class``, or any type descending from
 ``My_Class``". Here is how you do that:
 
-.. code-block:: ada
+.. code:: ada
 
     with P; use P;
 
@@ -6443,7 +6458,7 @@ It follows that, to make a dispatching call, you first have to have an object
 that can be of a type, or any type derived from this type, that is, a classwide
 type.
 
-.. code-block:: ada
+.. code:: ada
 
     with P; use P;
 
@@ -6478,7 +6493,7 @@ type.
     by reference, you can use this kind of conversion to modify the state of an
     object: Mutations of the converted object will affect the original one.
 
-    .. code-block:: ada
+    .. code:: ada
         :class: ada-run
 
         with P; use P;
@@ -6507,7 +6522,7 @@ Primitives of tagged types can be called with a notation that is more familiar
 to object oriented programmers. Given the Foo primitive above, you can also
 write the above program as such:
 
-.. code-block:: ada
+.. code:: ada
 
     with P; use P;
 
@@ -6537,7 +6552,7 @@ case in our examples, then you can call the primitive via the dot notation. Any
 extra parameter will be passed normally:
 
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-run
 
     with P; use P;
@@ -6566,6 +6581,7 @@ extra parameter will be passed normally:
 
 Standard library
 ================
+:code-config:`reset_accumulator=True`
 
 Standard package
 ----------------
@@ -6592,7 +6608,7 @@ Instantiation
 The following example shows the instantiation and declaration of a vector
 ``V``:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers.Vectors;
 
@@ -6612,7 +6628,7 @@ this case), we need to instantiate it. This is due to the fact that
 containers are based on generic packages. Therefore, we cannot simply
 declare a vector as we would declare an array of a specific type, e.g.:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
        A : array (1 .. 10) of Integer;
@@ -6635,7 +6651,7 @@ In order to initialize a vector, we can use a concatenation of elements.
 This is achieved by using the :ada:`&` operator, as shown in the following
 example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -6671,7 +6687,7 @@ We can also add elements to a vector by using the ``Prepend`` and
 elements to the beginning or to the end of the vector, respectively. For
 example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -6720,7 +6736,7 @@ Accessing first and last elements
 We can access the first and last elements of a vector by using the
 functions ``First_Element`` and ``Last_Element``. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -6758,7 +6774,7 @@ container.
 With these operations, we're able to write some code that swaps the first
 and last elements of a vector:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -6794,7 +6810,7 @@ The easiest way for iterating over a container is by using a
 element of the current position (``E``). We can then use ``E`` directly.
 For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers.Vectors;
 
@@ -6829,7 +6845,7 @@ Note that, in addition to displaying the value of an element, we can also
 modify its value. For example, we could easily write a loop to add one to
 each element of vector ``V``:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
        for E of V loop
@@ -6842,7 +6858,7 @@ loop in this case. The range is provided by ``V.First_Index`` and
 ``V.Last_Index``. We can access the current element by using it as an
 array index: ``V (I)``. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers.Vectors;
 
@@ -6891,7 +6907,7 @@ format :ada:`for C in V.Iterate loop`. Similar to the previous example
 using indices, we can again access the current element by using the cursor
 as an array index: ``V (C)``. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers.Vectors;
 
@@ -6956,7 +6972,7 @@ reaches the end of the vector.
 As mentioned above, we can directly modify the elements using a reference.
 This is how it looks like when dealing with indices and cursors:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
        --  Modify vector elements using index
@@ -6977,7 +6993,7 @@ procedure, which takes the individual elements and does some processing on
 them. In this case, we can call ``Update_Element`` and pass a cursor
 and an access to the process procedure. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers.Vectors;
 
@@ -7016,7 +7032,7 @@ first element that matches the element we're looking for. Alternatively,
 we could use ``Find`` to retrieve the cursor for that element. For
 example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers.Vectors;
 
@@ -7054,7 +7070,7 @@ An exception will be raised if we try to access an element with an invalid
 index or cursor. We do this check by comparing the index to ``No_Index``
 and the cursor to ``No_Element``. For example:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
        --  Modify vector element using index
@@ -7085,7 +7101,7 @@ In some cases, we want to insert an element at a specific position, e.g.
 before a certain element in the vector. We can do this by calling
 ``Insert``. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -7145,7 +7161,7 @@ with either a valid index or cursor. If we combine this with the functions
 ``Find_Index`` and ``Find`` from the previous section, we'll be able to
 write a program that searches for a specific element and deletes it:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers.Vectors;
 
@@ -7186,7 +7202,7 @@ This approach can be extended to delete all elements that match a certain
 value. We just need to keep searching for the element in a loop until we
 get an invalid index or cursor. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -7291,7 +7307,7 @@ The following code example presents an application that operates on three
 vectors (``V1``, ``V2``, ``V3``) and uses the concatenation, sorting and
 sorted merging operations:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -7401,7 +7417,7 @@ the set.
 
 Let's see an example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Ordered_Sets;
@@ -7476,7 +7492,7 @@ elements in a set.
 
 Let's look at an example that makes use of these operations:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Ordered_Sets;
@@ -7569,7 +7585,7 @@ the associated operator:
 
 The following example makes use of these operators:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Ordered_Sets;
@@ -7707,7 +7723,7 @@ the function ``Contains`` (as we've seen in the section about sets).
 
 Let's see an example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers.Indefinite_Hashed_Maps;
     with Ada.Strings.Hash;
@@ -7764,7 +7780,7 @@ are:
 
 Let's see an example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Containers.Indefinite_Ordered_Maps;
 
@@ -7844,7 +7860,7 @@ The standard library provides support for representing and handling date
 and time. This is part of the :ada:`Ada.Calendar` package. Let's look at
 a simple example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
@@ -7862,7 +7878,7 @@ the :ada:`Ada.Calendar.Formatting` package in order to get a ``String``
 for the current date and time. We could, instead, retrieve each component
 using the ``Split`` function. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Text_IO;             use Ada.Text_IO;
@@ -7895,7 +7911,7 @@ We can delay an application, so that it restarts at a specific date and
 time. This is achieved by using a :ada:`delay until` statement. For
 example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
@@ -7945,7 +7961,7 @@ We could achieve a similar result by initializing ``Next`` with a
 ``String``. This can be done by a call to ``Value`` from the
 :ada:`Àda.Calendar.Formatting` package. This is the adapted application:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
@@ -7975,7 +7991,7 @@ date and time. We could, however, delay the application relatively to the
 current time. For example, we could delay the application by 5 seconds
 using the current time:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Text_IO;             use Ada.Text_IO;
@@ -8012,7 +8028,7 @@ In the previous section, we used the ``Time`` type from the
 application by 5 seconds. We could have used the :ada:`Ada.Real_Time`
 package instead. Let's adapt that example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -8040,7 +8056,7 @@ One interesting application using the :ada:`Ada.Real_Time` package is
 benchmarking. We've used it before in a previous section when discussed
 tasking. Let's look at an example of benchmarking:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -8078,7 +8094,7 @@ A similar application is benchmarking of CPU time. This can be implemented
 by using the :ada:`Execution_Time`. Let's adapt the previous example to
 measure CPU time:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;        use Ada.Text_IO;
     with Ada.Real_Time;      use Ada.Real_Time;
@@ -8117,7 +8133,7 @@ Results are different if we adapt the implementation of
 ``Computational_Intensive_App`` to make use of mathematical functions in
 a long loop. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;        use Ada.Text_IO;
     with Ada.Real_Time;      use Ada.Real_Time;
@@ -8205,7 +8221,7 @@ One of the most simple operations available is counting the number of
 substrings available in a string (using ``Count``) and finding their
 corresponding indices (using ``Index``). Let's look at an example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
     with Ada.Text_IO;       use Ada.Text_IO;
@@ -8249,7 +8265,7 @@ In the next example, we will retrieve all the words in the string. We can
 do this by using ``Find_Token`` and using whitespaces as separators. For
 example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Strings;       use Ada.Strings;
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
@@ -8330,7 +8346,7 @@ should be applied while inserting the substring, so that the length of
 ``S`` remains fixed. Let's see an example that makes use of both function
 and procedure version of ``Insert``, ``Overwrite`` and ``Delete``:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Strings;       use Ada.Strings;
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
@@ -8406,7 +8422,7 @@ characters. The following example shows how cumbersome the initialization
 of fixed-length strings can be when it's not performed at declaration
 time:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;         use Ada.Text_IO;
 
@@ -8454,7 +8470,7 @@ Both bounded strings and fixed-length strings have a maximum length that
 they can store. However, because bounded strings are not arrays,
 initializing them at run-time is much easier. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Strings;         use Ada.Strings;
     with Ada.Strings.Bounded;
@@ -8507,7 +8523,7 @@ After initializing bounded strings, we may manipulate them. For example,
 we may append a string to a bounded string using ``Append`` or concatenate
 bounded strings using the :ada:`&`  operator. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Strings;         use Ada.Strings;
     with Ada.Strings.Bounded;
@@ -8557,7 +8573,7 @@ these operations. Also, no truncation is necessary in this case.
 Initialization of unbounded strings is very similar to bounded strings.
 Let's look at the example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Strings;           use Ada.Strings;
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -8592,7 +8608,7 @@ needed.
 Similar to bounded strings, we can use the ``Append`` function and the
 :ada:`&` operator for unbounded strings. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Ada.Text_IO;           use Ada.Text_IO;
@@ -8624,7 +8640,7 @@ display information on the console. However, this procedure also accepts
 a ``File_Type`` parameter. For example, we may select between the standard
 output and the standard error by setting this parameter explicitly:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -8650,7 +8666,7 @@ information from the file.
 Let's see an example that writes information into a new text file and then
 reads information from the same file:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -8675,7 +8691,7 @@ In addition to the ``Create`` and ``Close`` procedures, the standard
 library also includes a ``Reset`` procedure, which, as the name implies,
 resets all the information from the file. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -8709,7 +8725,7 @@ specified file is not found, an exception will be raised. Therefore, we
 should handle exceptions in this context. The following application
 deletes a file and then tries to open the same file for reading:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -8754,7 +8770,7 @@ procedures we've seen in the previous section: ``Create``, ``Open``,
 In the following example, we instantiate the :ada:`Ada.Sequential_IO`
 package for floating-point types:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     with Ada.Sequential_IO;
@@ -8788,7 +8804,7 @@ We can use the same approach to read and write complex information. The
 following example makes use of a record that includes a Boolean and a
 floating-point element:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     with Ada.Sequential_IO;
@@ -8849,7 +8865,7 @@ make use of the :ada:`Ada.Direct_IO` package, we basically just need to
 replace the instances of the :ada:`Ada.Sequential_IO` package by the
 :ada:`Ada.Direct_IO` package. This is the adapted source-code:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     with Ada.Direct_IO;
@@ -8889,7 +8905,7 @@ In order to access any position in the file, we call the ``Set_Index``
 procedure to set the new position / index. Also, we may use the ``Index``
 function to retrieve the current index. Let's see an example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     with Ada.Direct_IO;
@@ -8954,7 +8970,7 @@ attributes of the data types.
 Let's look at an adaptation of the ``Show_Dir_Float_IO`` procedure from
 the previous section that makes use of stream I/O instead of direct I/O:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
@@ -9006,7 +9022,7 @@ discriminants in the file.
 The following example shows file I/O that intercalates strings of
 different lengths and floating-point values:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
@@ -9076,7 +9092,7 @@ The :ada:`Ada.Numerics.Elementary_Functions` package provides
 common operations for floating-point types, such as square-root,
 logarithm, cosine, etc. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -9126,7 +9142,7 @@ floating-point types. In fact, the
 :ada:`Elementary_Functions` package can be defined as
 follows:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
        package Elementary_Functions is new
@@ -9144,7 +9160,7 @@ number generator for the range between 0 and 1. In order to use it, we
 need to declare a generator ``G``, which can then be used in calls to
 ``Random``. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
@@ -9171,7 +9187,7 @@ discrete type. This allows us to specify a range for the generator. In
 the following example, we create an application that displays random
 numbers between 1 and 10:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics.Discrete_Random;
@@ -9215,7 +9231,7 @@ support for common operations on complex number types --- similar to the
 numbers. In the following example, we declare variables of ``Complex``
 type and initialize them using an aggregate:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -9295,7 +9311,7 @@ and  :ada:`Long_Long_Float` types. In addition, the
 generic versions that can be instantiated for custom or pre-defined
 floating-point types. For example:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
     with Ada.Numerics.Generic_Complex_Types;
@@ -9331,7 +9347,7 @@ respectively.
 The following example makes use of some of the operations from the
 :ada:`Ada.Numerics.Real_Arrays` package:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
 
@@ -9413,7 +9429,7 @@ When not specified, matrix dimensions will automatically be determined
 from the aggregate used for initialization. We could, however, make use of
 explicit ranges. For example:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
        M1       : Real_Matrix (1 .. 2, 1 .. 3) :=
@@ -9427,7 +9443,7 @@ and  :ada:`Long_Long_Float` types. In addition, the
 version that can be instantiated for custom floating-point types. For
 example, the :ada:`Real_Arrays` package can be defined as follows:
 
-.. code-block:: ada
+.. code:: ada
     :class: ada-nocheck
 
        package Real_Arrays is new
@@ -9438,6 +9454,7 @@ Dynamic allocation and reclamation
 
 Appendices
 ==========
+:code-config:`reset_accumulator=True`
 
 Appendix A: Generic Formal Types
 --------------------------------
