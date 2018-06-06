@@ -6,7 +6,7 @@ Lesson 4: State Abstraction
 
 Abstraction is a key concept in programming as it can drastically simplify
 both implementation and code maintenance. It is particularly well suited
-to SPARK and its modular analysis. This course explains what state
+to SPARK and its modular analysis. This section explains what state
 abstraction is and how it can be specified in SPARK. We will provide
 details on how it impacts GNATprove's analysis both in terms of
 information flow and in terms of proof of program properties.
@@ -20,10 +20,10 @@ consists in having two views of the same object: an abstract one and a
 refined one. The abstract one --- usually called specification --- only
 describes what the object does in a coarse way. A subprogram's
 specification usually explains how it should be called, how many
-parameters it has, of which type, etc, as well as what it will do, return
+parameters it has, of which type, etc., as well as what it will do, return
 a result, modify one of its parameters, etc.
 
-Contract based programming, supported in Ada 2012, allows contracts to be
+Contract based programming as supported in Ada allows contracts to be
 added to a subprogram's specification. Contracts can be used to describe
 the subprogram's behavior in a more fine-grained manner. All the details
 of how the subprogram actually works are left to its refined view, that
@@ -33,19 +33,15 @@ Take a look at the example code shown below:
 
 .. code:: ada
 
-    procedure Show_Abstraction is
-       procedure Increase (X : in out Integer) with
-         Global => null,
-         Pre    => X <= 100,
-         Post   => X'Old < X;
+    procedure Increase (X : in out Integer) with
+      Global => null,
+      Pre    => X <= 100,
+      Post   => X'Old < X;
 
-       procedure Increase (X : in out Integer) is
-       begin
-          X := X + 1;
-       end Increase;
+    procedure Increase (X : in out Integer) is
     begin
-       null;
-    end Show_Abstraction;
+       X := X + 1;
+    end Increase;
 
 
 The specification of the subprogram ``Increase`` states that it should be
@@ -73,17 +69,15 @@ snippet shown below, it means that the loop is bound to terminate.
       Pre    => X <= 100,
       Post   => X'Old < X;
 
-.. code:: ada
-
     with Increase;
-    procedure Show_Abstraction_2 is
+    procedure Client is
        X : Integer := 0;
     begin
        while X <= 100 loop      --  The loop will terminate
-          Increase (X);          --  Increase can be called safely
+          Increase (X);         --  Increase can be called safely
        end loop;
        pragma Assert (X = 101); --  Will this hold?
-    end Show_Abstraction_2;
+    end Client;
 
 
 They can also assume that the implementation of ``Increase`` won't cause
@@ -98,6 +92,8 @@ its actual implementation. It also makes maintenance and code reuse that
 much easier, as changes to the implementation of an object won't affect
 the code using this object.
 
+GNATprove respects the abstraction defined by subprogram contracts, and as a
+result does not prove the assertion after the loop in ``Client`` above.
 
 Abstraction of a Package's State
 ---------------------------------------------------------------------
@@ -115,13 +111,15 @@ which can be modified using the ``Pop`` and ``Push`` procedures.
     :class: ada-nocheck
 
     package Stack is
-      procedure Pop  (E : out Element);
-      procedure Push (E : in  Element);
+       procedure Pop  (E : out Element);
+       procedure Push (E : in  Element);
     end Stack;
 
     package body Stack is
-      Content : Element_Array (1 .. Max);
-      Top     : Natural;
+       Content : Element_Array (1 .. Max);
+       Top     : Natural;
+       ...
+    end Stack;
 
 The fact that it is implemented using an array is irrelevant to the user
 and could be changed without impacting user code.
@@ -141,25 +139,18 @@ concrete variables. Note also that a state abstraction is not a variable,
 it does not have a type and cannot be used inside expressions, be it in
 bodies or in contracts.
 
-For example of the ``Stack`` package, we can, optionally, define either a
-state abstraction for the whole hidden state of the package like this:
+For example, we can optionally define a state abstraction for the whole hidden
+state of the ``Stack`` package like this:
 
 .. code:: ada
+    :class: ada-nocheck
 
     package Stack with
       Abstract_State => The_Stack
     is
-       type Element is new Integer;
+      ...
 
-       function Is_Empty return Boolean;
-       function Is_Full  return Boolean;
-
-       procedure Push (E : Element) with
-         Pre  => not Is_Full,
-         Post => not Is_Empty;
-    end Stack;
-
-Alternative, we can define a state abstraction for each hidden variable:
+Alternatively, we can define a state abstraction for each hidden variable:
 
 .. code:: ada
     :class: ada-nocheck
@@ -179,7 +170,6 @@ cannot be used inside expressions. For example:
     --  Compilation error: Top_State is not a variable
 
 
-
 Refining an Abstract State
 ---------------------------------------------------------------------
 
@@ -197,19 +187,16 @@ abstraction. For example, on our ``Stack`` package's body, we must add a
 that we have introduced to the whole hidden state of the package,
 including both ``Content`` and ``Top``.
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Stack with
-      Abstract_State => The_Stack
+       Abstract_State => The_Stack
     is
        type Element is new Integer;
 
-       function Is_Empty return Boolean;
-       function Is_Full  return Boolean;
+       procedure Pop  (E : out Element);
+       procedure Push (E : in  Element);
 
-       procedure Push (E : Element) with
-         Pre  => not Is_Full,
-         Post => not Is_Empty;
     end Stack;
 
     package body Stack with
@@ -224,17 +211,18 @@ including both ``Content`` and ``Top``.
        --  Both Content and Top must be listed in the list of
        --  constituents of The_Stack
 
-       function Is_Empty return Boolean is
-         (Top < Content'First);
+       procedure Pop (E : out Element) is
+       begin
+          E   := Content (Top);
+          Top := Top - 1;
+       end Pop;
 
-       function Is_Full return Boolean is
-         (Top >= Content'Last);
-
-       procedure Push (E : Element) is
+       procedure Push (E : in Element) is
        begin
           Top           := Top + 1;
           Content (Top) := E;
        end Push;
+
     end Stack;
 
 
@@ -251,22 +239,15 @@ declarations.
 state annotation, then all the hidden states defined in its private part
 must be linked to a state abstraction. For example:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Stack with
-      Abstract_State => The_Stack
+       Abstract_State => The_Stack
     is
        type Element is new Integer;
 
-       function Is_Empty return Boolean;
-       function Is_Full  return Boolean;
-
-       procedure Pop  (E : out Element) with
-         Pre  => not Is_Empty;
-
-       procedure Push (E : Element) with
-         Pre  => not Is_Full,
-         Post => not Is_Empty;
+       procedure Pop  (E : out Element);
+       procedure Push (E : in Element);
 
     private
        type Element_Array is array (Natural range <>) of Element;
@@ -306,30 +287,30 @@ As a consequence, if the nested package is hidden, its state is part of
 This is the case in our example shown below, where the package
 ``Hidden_Nested``'s hidden state is part of ``P``'s hidden state:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package P with
-      Abstract_State => State
+       Abstract_State => State
     is
        package Visible_Nested with
-         Abstract_State => Visible_State
+          Abstract_State => Visible_State
        is
           procedure Get (E : out Integer);
        end Visible_Nested;
     end P;
 
     package body P with
-      Refined_State => (State => Hidden_Nested.Hidden_State)
+       Refined_State => (State => Hidden_Nested.Hidden_State)
     is
        package Hidden_Nested with
-         Abstract_State => Hidden_State,
-         Initializes    => Hidden_State
+          Abstract_State => Hidden_State,
+          Initializes    => Hidden_State
        is
           function Get return Integer;
        end Hidden_Nested;
 
        package body Hidden_Nested with
-         Refined_State => (Hidden_State => Cnt)
+          Refined_State => (Hidden_State => Cnt)
        is
           Cnt : Integer := 0;
 
@@ -337,7 +318,7 @@ This is the case in our example shown below, where the package
        end Hidden_Nested;
 
        package body Visible_Nested with
-         Refined_State => (Visible_State => Checked)
+          Refined_State => (Visible_State => Checked)
        is
           Checked : Boolean := False;
 
@@ -376,29 +357,25 @@ therefore cannot appear in a state refinement.
 
 Let's look at this example:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Stack with
       Abstract_State => The_Stack
     is
        type Element is new Integer;
 
-       function Is_Empty return Boolean;
-       function Is_Full  return Boolean;
-
-       procedure Push (E : Element) with
-         Pre  => not Is_Full,
-         Post => not Is_Empty;
+       procedure Pop  (E : out Element);
+       procedure Push (E : in Element);
     end Stack;
 
-
-    package External_Configuration
+    package Configuration with
+       Initializes => External_Variable
     is
-       Max : Positive := 100;
-    end External_Configuration;
+       External_Variable : Positive with Volatile;
+    end Configuration;
 
-
-    with External_Configuration;
+    with Configuration;
+    pragma Elaborate (Configuration);
 
     package body Stack with
       Refined_State => (The_Stack => (Content, Top, Max))
@@ -407,21 +384,23 @@ Let's look at this example:
     is
        type Element_Array is array (Natural range <>) of Element;
 
-       Max : constant Positive := External_Configuration.Max;
+       Max : constant Positive := Configuration.External_Variable;
 
        Content : Element_Array (1 .. Max) := (others => 0);
        Top     : Natural := 0;
-       --  Both Content and Top must be listed in the list of
-       --  constituents of The_Stack
 
-       function Is_Empty return Boolean is (Top = 0);
-       function Is_Full  return Boolean is (Top >= Max);
+       procedure Pop (E : out Element) is
+       begin
+          E   := Content (Top);
+          Top := Top - 1;
+       end Pop;
 
-       procedure Push (E : Element) is
+       procedure Push (E : in Element) is
        begin
           Top           := Top + 1;
           Content (Top) := E;
        end Push;
+
     end Stack;
 
 Here, ``Max`` --- the maximal number of elements that can be stored in the
@@ -449,18 +428,19 @@ collapsed into a single mode.
 
 Let's look at this example:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Stack with
-      Abstract_State => (Top_State, Content_State)
+       Abstract_State => (Top_State, Content_State)
     is
        type Element is new Integer;
 
-       procedure Pop  (E : out Element) with
+       procedure Pop (E : out Element) with
          Global  => (Input  => Content_State,
                      In_Out => Top_State),
          Depends => (Top_State => Top_State,
                      E         => (Content_State, Top_State));
+
     end Stack;
 
 In this example, the ``Pop`` procedure only modifies the value of the
@@ -470,7 +450,7 @@ preserved.
 
 Let's contrast this example with another example:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Stack with
       Abstract_State => The_Stack
@@ -507,10 +487,10 @@ tool will compute them to check the package's implementation.
 
 For our ``Stack`` example, we could add refined contracts like this:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Stack with
-      Abstract_State => The_Stack
+       Abstract_State => The_Stack
     is
        type Element is new Integer;
 
@@ -518,10 +498,14 @@ For our ``Stack`` example, we could add refined contracts like this:
          Global  => (In_Out => The_Stack),
          Depends => ((The_Stack, E) => The_Stack);
 
+       procedure Push (E : in Element) with
+         Global  => (In_Out    => The_Stack),
+         Depends => (The_Stack => (The_Stack, E));
+
     end Stack;
 
     package body Stack with
-      Refined_State => (The_Stack => (Content, Top))
+       Refined_State => (The_Stack => (Content, Top))
     is
        type Element_Array is array (Natural range <>) of Element;
 
@@ -536,9 +520,18 @@ For our ``Stack`` example, we could add refined contracts like this:
                              E   => (Content, Top))
        is
        begin
-          E     := Content (Top);
-          Top   := Top - 1;
+          E   := Content (Top);
+          Top := Top - 1;
        end Pop;
+
+       procedure Push (E : in Element) with
+         Refined_Global  => (In_Out => (Content, Top)),
+         Refined_Depends => (Content => + (Content, Top, E),
+                             Top     => Top) is
+       begin
+         Top := Top + 1;
+         Content (Top) := E;
+       end Push;
 
     end Stack;
 
@@ -546,12 +539,12 @@ For our ``Stack`` example, we could add refined contracts like this:
 Pre and Postconditions
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Functional properties of subprogram's are usually expressed using pre and
-postconditions. As these contracts are standard Boolean expressions, they
-cannot refer directly to state abstractions. To work around this
-restriction, functions can be defined to query the value of hidden
-variables. These functions can then be used in place of the state
-abstraction in other subprogram's contracts.
+Functional properties of subprogram's are usually expressed using preconditions
+and postconditions. As these contracts are standard Boolean expressions, they
+cannot refer directly to state abstractions. To work around this restriction,
+functions can be defined to query the value of hidden variables. These
+functions can then be used in place of the state abstraction in other
+subprogram's contracts.
 
 That is what is done in this example:
 
@@ -563,9 +556,14 @@ That is what is done in this example:
        function Is_Empty return Boolean;
        function Is_Full  return Boolean;
 
-       procedure Push (E : Element) with
+       procedure Pop (E : out Element) with
+         Pre  => not Is_Empty,
+         Post => not Is_Full;
+
+       procedure Push (E : in Element) with
          Pre  => not Is_Full,
          Post => not Is_Empty;
+
     end Stack;
 
     package body Stack is
@@ -578,11 +576,18 @@ That is what is done in this example:
        function Is_Empty return Boolean is (Top = 0);
        function Is_Full  return Boolean is (Top >= Max);
 
-       procedure Push (E : Element) is
+       procedure Pop (E : out Element) is
+       begin
+          E   := Content (Top);
+          Top := Top - 1;
+       end Pop;
+
+       procedure Push (E : in Element) is
        begin
           Top           := Top + 1;
           Content (Top) := E;
        end Push;
+
     end Stack;
 
 Here, we define two functions accessing the state of the stack:
@@ -618,9 +623,14 @@ this:
        function Is_Empty return Boolean;
        function Is_Full  return Boolean;
 
-       procedure Push (E : Element) with
+       procedure Pop (E : out Element) with
+         Pre  => not Is_Empty,
+         Post => not Is_Full;
+
+       procedure Push (E : in Element) with
          Pre  => not Is_Full,
          Post => not Is_Empty;
+
     end Stack;
 
     package body Stack is
@@ -633,14 +643,22 @@ this:
        function Is_Empty return Boolean is (Top = 0);
        function Is_Full  return Boolean is (Top >= Max);
 
-       procedure Push (E : Element) with
+       procedure Pop (E : out Element) with
+         Refined_Post => not Is_Full and E = Content (Top)'Old
+       is
+       begin
+          E   := Content (Top);
+          Top := Top - 1;
+       end Pop;
+
+       procedure Push (E : in Element) with
          Refined_Post => not Is_Empty and E = Content (Top)
-         --  Using refined postcondition
        is
        begin
           Top           := Top + 1;
           Content (Top) := E;
        end Push;
+
     end Stack;
 
 
@@ -663,18 +681,17 @@ user, they will be computed by GNATprove.
 For our ``Stack`` example, we could add an :ada:`Initializes` aspect like
 this:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Stack with
       Abstract_State => The_Stack,
       Initializes    => The_Stack
     is
+       pragma Elaborate_Body;
+
        type Element is new Integer;
 
-       function Is_Empty return Boolean;
-
-       --  Flow analysis will make sure both Top and Content are
-       --  initialized at package elaboration
+       -- ...
     end Stack;
 
     package body Stack with
@@ -686,7 +703,7 @@ this:
        Content : Element_Array (1 .. Max) := (others => 0);
        Top     : Natural := 0;
 
-       function Is_Empty return Boolean is (Top = 0);
+       -- ...
     end Stack;
 
 As flow analysis can also check for dependencies between variables, it
@@ -712,9 +729,6 @@ Let's look at this example:
     is
        V1 : Integer := 0;
        V2 : Integer := Q.External_Variable;
-
-       --  The association for V1 is omitted, it does not depend
-       --  on any external state.
     end P;
 
 In our example, we stated in the :ada:`Initializes` aspect of ``P`` that
@@ -740,7 +754,7 @@ Example #1
 
 Let's review this code:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Configuration
     is
@@ -779,7 +793,7 @@ Example #2
 
 Let's review this code:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Configuration
     is
@@ -821,7 +835,7 @@ Example #3
 
 Let's review this code:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Counting with
       Abstract_State => State
@@ -848,11 +862,11 @@ Let's review this code:
 
     with Counting; use Counting;
 
-    procedure Example_3 is
+    procedure Main is
     begin
        Reset_Black_Count;
        Reset_Red_Count;
-    end Example_3;
+    end Main;
 
 This example is correct. This program does not read uninitialized data,
 but GNATprove will fail to verify this fact. As we have provided a state
@@ -866,7 +880,7 @@ Example #4
 
 Let's review this code:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Counting is
        procedure Reset_Black_Count;
@@ -905,7 +919,7 @@ Example #5
 
 Let's review this code:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Counting with Abstract_State => State is
        procedure Reset_Black_Count with Global => (In_Out => State);
@@ -950,7 +964,9 @@ Let's review this code:
 .. code:: ada
     :class: ada-expect-compile-error
 
-    package Stack with Abstract_State => The_Stack is
+    package Stack with
+      Abstract_State => The_Stack
+    is
        pragma Unevaluated_Use_Of_Old (Allow);
 
        type Element is new Integer;
@@ -973,7 +989,7 @@ Let's review this code:
       Refined_State => (The_Stack => (Top, Content))
     is
        Top     : Length_Type := 0;
-       Content : Element_Array (1 .. Max);
+       Content : Element_Array (1 .. Max) := (others => 0);
 
        procedure Push (E : Element) is
        begin
@@ -1016,30 +1032,38 @@ Let's review this code:
 
        procedure Push (E : Element) with
          Post => not Is_Empty and
-         (if Is_Full'Old then Get_Stack = Get_Stack'Old else Peek = E);
+           (if Is_Full'Old then Get_Stack = Get_Stack'Old else Peek = E);
+
     private
+
        type Stack_Model is record
           Top     : Length_Type := 0;
           Content : Element_Array (1 .. Max) := (others => 0);
        end record;
+
     end Stack;
 
     package body Stack with
-      Refined_State => (The_Stack => S)
+      Refined_State => (The_Stack => (Top, Content))
     is
-       S : Stack_Model;
+       Top     : Length_Type := 0;
+       Content : Element_Array (1 .. Max) := (others => 0);
 
        procedure Push (E : Element) is
        begin
-          S.Top             := S.Top + 1;
-          S.Content (S.Top) := E;
+          if Top >= Max then
+             return;
+          end if;
+          Top             := Top + 1;
+          Content (Top) := E;
        end Push;
 
-       function  Peek     return Element is (S.Content (S.Top));
-       function  Is_Full  return Boolean is (S.Top >= Max);
-       function  Is_Empty return Boolean is (S.Top = 0);
+       function Peek     return Element is (Content (Top));
+       function Is_Full  return Boolean is (Top >= Max);
+       function Is_Empty return Boolean is (Top = 0);
 
-       function Get_Stack return Stack_Model is (S);
+       function Get_Stack return Stack_Model is (Stack_Model'(Top, Content));
+
     end Stack;
 
     with Stack; use Stack;
@@ -1068,19 +1092,14 @@ Let's review this code:
     package Stack with
       Abstract_State => The_Stack
     is
-       pragma Elaborate_Body;
        pragma Unevaluated_Use_Of_Old (Allow);
 
-       type Element is new Integer;
+       type Stack_Model is private;
 
+       type Element is new Integer;
        type Element_Array is array (Positive range <>) of Element;
        Max : constant Natural := 100;
        subtype Length_Type is Natural range 0 .. Max;
-
-       type Stack_Model is record
-          Top     : Length_Type;
-          Content : Element_Array (1 .. Max);
-       end record;
 
        function Peek      return Element with Pre => not Is_Empty;
        function Is_Full   return Boolean;
@@ -1088,38 +1107,47 @@ Let's review this code:
        function Get_Stack return Stack_Model;
 
        procedure Push (E : Element) with
-         Pre  => not Is_Full,
-         Post =>
-           not Is_Empty and
+         Post => not Is_Empty and
            (if Is_Full'Old then Get_Stack = Get_Stack'Old else Peek = E);
 
     private
-       Top     : Length_Type              with Part_Of => The_Stack;
-       Content : Element_Array (1 .. Max) with Part_Of => The_Stack;
+
+       Top     : Length_Type              := 0 with Part_Of => The_Stack;
+       Content : Element_Array (1 .. Max) := (others => 0) with
+         Part_Of => The_Stack;
+
+       type Stack_Model is record
+          Top     : Length_Type := 0;
+          Content : Element_Array (1 .. Max) := (others => 0);
+       end record;
 
        function Peek      return Element     is (Content (Top));
        function Is_Full   return Boolean     is (Top >= Max);
        function Is_Empty  return Boolean     is (Top = 0);
-       function Get_Stack return Stack_Model is ((Top, Content));
+
+       function Get_Stack return Stack_Model is (Stack_Model'(Top, Content));
+
     end Stack;
 
     package body Stack with
       Refined_State => (The_Stack => (Top, Content))
     is
+
        procedure Push (E : Element) is
        begin
-          Top           := Top + 1;
+          if Top >= Max then
+             return;
+          end if;
+          Top             := Top + 1;
           Content (Top) := E;
        end Push;
-    begin
-       Top     := 0;
-       Content := (others => 0);
+
     end Stack;
 
     with Stack; use Stack;
 
     procedure Use_Stack (E : Element) with
-      Pre => not Is_Empty and not Is_Full
+      Pre => not Is_Empty
     is
        F : Element := Peek;
     begin
@@ -1136,7 +1164,7 @@ Example #9
 
 Let's review this code:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package External_Interface with
       Abstract_State => File_System,
@@ -1193,7 +1221,7 @@ Example #10
 
 Let's review this code:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package External_Interface with
       Abstract_State => File_System,
