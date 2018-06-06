@@ -135,7 +135,7 @@ procedural/imperative language akin to C or Pascal.
 .. admonition:: In other languages
 
     One important distinction between Ada and a language like C is that
-    statements and expressions are very clearly distinguished.  In Ada, If you
+    statements and expressions are very clearly distinguished.  In Ada, if you
     try to use an expression where a statement is required then your program
     will fail to compile.  This rule supports a useful stylistic principle:
     expressions are intended to deliver values, not to have side effects. It
@@ -238,11 +238,11 @@ referenced directly, without the *package-name.* prefix.
 Imperative language - If/Then/Else
 ----------------------------------
 
-This section describes Ada's ``if`` statement and introduces several other
+This section describes Ada's :ada:`if` statement and introduces several other
 fundamental language facilities including integer I/O, data declarations,
 and subprogram parameter modes.
 
-Ada's ``if`` statementis pretty unsurprising in form and function:
+Ada's :ada:`if` statementis pretty unsurprising in form and function:
 
 .. code-block:: ada
 
@@ -260,12 +260,12 @@ Ada's ``if`` statementis pretty unsurprising in form and function:
        end if;
     end Check_Positive;
 
-The ``if`` statement minimally consists of the reserved word :ada:`if`, a condition
-(which must be a boolean value), the reserved word :ada:`then` and a non-empty
-sequence of statements (the ``then`` part) which is executed if the condition
-evaluates to True, and a terminating :ada:`end if`.
+The :ada:`if` statement minimally consists of the reserved word :ada:`if`, a
+condition (which must be a Boolean value), the reserved word :ada:`then` and a
+non-empty sequence of statements (the :ada:`then` part) which is executed if the
+condition evaluates to True, and a terminating :ada:`end if`.
 
-This example declares an Integer variable N, prompts the user for an Integer,
+This example declares an integer variable N, prompts the user for an integer,
 checks if the value is positive and, if so, displays the integer's value
 followed by the string " is a positive number". If the value is not positive,
 the procedure does not display any output.
@@ -274,9 +274,10 @@ The type Integer is a predefined signed type, and its range depends on the
 computer architecture. On typical current processors Integer is 32-bit signed.
 
 The example illustrates some of the basic functionality for integer input-output.
-The relevant subprograms are in the predefined package Ada.Integer_Text_IO and
-include the :ada:`Get` procedure (which reads in a number from the keyboard)
-and the :ada:`Put` procedure (which displays an integer value).
+The relevant subprograms are in the predefined package
+:ada:`Ada.Integer_Text_IO` and include the :ada:`Get` procedure (which reads in
+a number from the keyboard) and the :ada:`Put` procedure (which displays an
+integer value).
 
 Here's a slight variation on the example, which illustrates an :ada:`if` statement
 with an :ada:`else` part:
@@ -316,21 +317,21 @@ sections:
        Put ("Enter an integer value: ");  -- Puts a String
        Get (N);  -- Reads an Integer
        Put (N);  --Puts an Integer
-       if N=0 or N=360 then
+       if N = 0 or N = 360 then
           Put_Line (" is due east");
-       elsif N in 1..89 then
+       elsif N in 1 .. 89 then
           Put_Line (" is in the northeast quadrant");
-       elsif N=90 then
+       elsif N = 90 then
           Put_Line (" is due north");
-       elsif N in 91..179 then
+       elsif N in 91 .. 179 then
           Put_Line (" is in the northwest quadrant");
-       elsif N=180 then
+       elsif N = 180 then
           Put_Line (" is due west");
-       elsif N in 181..269 then
+       elsif N in 181 .. 269 then
           Put_Line (" is in the southwest quadrant");
-       elsif N=270 then
+       elsif N = 270 then
           Put_Line (" is due south");
-       elsif N in 271..359 then
+       elsif N in 271 .. 359 then
           Put_Line (" is in the southeast quadrant");
        else
           Put_Line (" is not in the range 0..360");
@@ -512,7 +513,7 @@ The last kind of loop in Ada is the :ada:`while` loop.
     procedure Greet_5c is
        I : Integer := 1;
     begin
-       --  Condition must be a boolean value (no Integers).
+       --  Condition must be a Boolean value (no Integers).
        --  Operator "<=" returns a Boolean
        while I <= 5 loop
           Put_Line ("Hello, World!" & Integer'Image(I));
@@ -521,18 +522,18 @@ The last kind of loop in Ada is the :ada:`while` loop.
        end loop;
     end Greet_5c;
 
-The condition is evaluated before each iteration. If it is False,
-then the loop is terminated.
+The condition is evaluated before each iteration. If the result is false, then
+the loop is terminated.
 
 This program has the same effect as the previous examples.
 
 .. admonition:: In other languages
 
     Note that Ada has different semantics than C-based languages with respect
-    to the condition in a while loop.  In Ada the condition has to be a boolean
+    to the condition in a while loop.  In Ada the condition has to be a Boolean
     value or the compiler will reject the program; the condition is not an
-    integer that is treated as either True or False depending on whether it is
-    non-zero or zero.
+    integer that is treated as either :ada:`True` or :ada:`False` depending on
+    whether it is non-zero or zero.
 
 
 Imperative language - Case statement
@@ -559,19 +560,19 @@ with an :ada:`if` statement:
           case N is
              when 0 | 360 =>
                 Put_Line (" is due east");
-             when 1..89 =>
+             when 1 .. 89 =>
                 Put_Line (" is in the northeast quadrant");
              when 90 =>
                 Put_Line (" is due north");
-             when 91..179 =>
+             when 91 .. 179 =>
                 Put_Line (" is in the northwest quadrant");
              when 180 =>
                 Put_Line (" is due west");
-             when 181..269 =>
+             when 181 .. 269 =>
                 Put_Line (" is in the southwest quadrant");
              when 270 =>
                 Put_Line (" is due south");
-             when 271..359 =>
+             when 271 .. 359 =>
                 Put_Line (" is in the southeast quadrant");
              when others =>
                 Put_Line (" Au revoir");
@@ -580,7 +581,7 @@ with an :ada:`if` statement:
        end loop;
     end Check_Direction;
 
-This program repeatedly prompts for an Integer value and then, if the value is
+This program repeatedly prompts for an integer value and then, if the value is
 in the range 0..360, displays the associated quadrant or axis.  If the
 value is an Integer outside this range, the loop (and the program) terminate
 after outputting a farewell message.
@@ -599,9 +600,8 @@ Notable points about Ada's case statement:
 -  Every possible value for the case expression needs to be covered by a unique
    branch of the case statement. This will be checked at compile time.
 
--  A branch can specify a single value, such as ``0``; a range of values,
-   such as ``1..89``; or any combination of the two (separated by a "|"
-   character).
+-  A branch can specify a single value, such as :ada:`0`; a range of values,
+   such as :ada:`1 .. 89`; or any combination of the two (separated by a `|`).
 
 -  As a special case, an optional final branch can specify :ada:`others`,
    which covers all values not included in the earlier branches.
@@ -613,7 +613,7 @@ Notable points about Ada's case statement:
 -  When execution of the statements in the selected branch has completed,
    control resumes after the :ada:`end case`.  Unlike C, execution does
    not fall through to the next branch. So Ada doesn't need (and doesn't
-   have) a ``break`` statement.
+   have) a :c:`break` statement.
 
 
 Imperative language - Declarative regions
@@ -645,9 +645,9 @@ as declarative regions.
        --  Call to Nested
     end Main;
 
--  A declaration cannot appear as a statement If you
+-  A declaration cannot appear as a statement if you
    need to declare a local variable amidst the statements,
-   you can introduce a new declarative region with a :ada:`block`
+   you can introduce a new declarative region with a block
    statement:
 
 .. code-block:: ada
@@ -680,10 +680,10 @@ as declarative regions.
     C function.
 
     It returns a String, which, as we will see later, is an
-    :ref:`Unconstrained array type <UnconstrainedArrayTypes>`.
-    For now we simply note that, if you wish to declare a String
-    variable and do not know its size in advance, then you need
-    to initialize the variable during its declaration.
+    :ref:`Unconstrained array type <UnconstrainedArrayTypes>`. For now we
+    simply note that, if you wish to declare a :ada:`String` variable and do
+    not know its size in advance, then you need to initialize the variable
+    during its declaration.
 
 Imperative language - control expressions
 -----------------------------------------
@@ -705,9 +705,9 @@ statement has been replaced by an :ada:`if` expression:
     procedure Check_Positive is
        N : Integer;
     begin
-       Put ("Enter an integer value: ");  -- Put a String
-       Get (N);  -- Reads in an integer value
-       Put (N);  --Put an Integer
+       Put ("Enter an integer value: ");  --  Put a String
+       Get (N);  --  Reads in an integer value
+       Put (N);  --  Put an Integer
        declare
           S : String := ( if N>0 then
                              " is a positive number"
@@ -730,7 +730,7 @@ there are a few differences that stem from the fact that it is an expression:
    expression does not already contain them
 
 -  An :ada:`else` branch is mandatory unless the expression following
-   :ada:`then` has a boolean value.  In that case an :ada:`else` branch
+   :ada:`then` has a Boolean value.  In that case an :ada:`else` branch
    is optional and, if not present, defaults to :ada:`else True`.
 
 Here's another example:
@@ -1571,7 +1571,7 @@ designates.
 Finally, the last thing of notice is how we initialize the array, with the
 ``(2, 3, 5, 7, 11)`` expression. This expression is called an aggregate in Ada,
 and is a literal expression for an array, the same way that ``3`` is a literal
-expression for an Integer. The notation is very powerful and has many
+expression for an integer. The notation is very powerful and has many
 subtleties that we will gradually introduce. You can also have a detailed
 overview of the `notation of aggregate types <TODODETAILEDAGGREGATESADVANCED>`_.
 
