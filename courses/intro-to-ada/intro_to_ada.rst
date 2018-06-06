@@ -998,10 +998,10 @@ generally available to the user.
 Floating-point types
 --------------------
 
-Floating-point types
-~~~~~~~~~~~~~~~~~~~~
+Basic properties
+~~~~~~~~~~~~~~~~
 
-As in most languages, Ada support floating-point types. The default
+Like most languages, Ada supports floating-point types. The most commonly used
 floating-point type is :ada:`Float`:
 
 .. code-block:: ada
@@ -1014,11 +1014,13 @@ floating-point type is :ada:`Float`:
        Put_Line ("The value of A is " & Float'Image (A));
     end Floating_Point_Demo;
 
-The application will show that the value of ``A`` is ``2.5``.
+The application will display :ada:`2.5` as the value of :ada:`A`.
+
+The Ada language does not specify the precision (number of decimal digits in
+the mantissa) for Float; on a typical 32-bit machine the precision will be 6.
 
 All common operations that could be expected for floating-point types are
-available, including retrieving the absolute-value and the power function.
-For example:
+available, including absolute value and exponentiation.  For example:
 
 .. code-block:: ada
 
@@ -1033,26 +1035,30 @@ For example:
        Put_Line ("The value of A is " & Float'Image (A));
     end Floating_Point_Operations;
 
-The value of ``A`` is 2.0 after the first operation and 5.0 after the
-second operation.
+The value of :ada:`A` is :ada:`2.0` after the first operation and :ada:`5.0`
+after the second operation.
 
-In addition to :ada:`Float`, Ada offers data types with higher precision:
-:ada:`Long_Float` and :ada:`Long_Long_Float`. However, the standard does
-not indicate the exact precision of these types: it only guarantees that
-the type :ada:`Long_Float`, for example, has at least the same precision
-of :ada:`Float` or higher. In order to guarantee that a certain precision
-requirement is met, we can define custom floating-point types, as we will
-see in the next section.
+In addition to :ada:`Float`, an Ada implementation may offer data types with
+higher precision such as :ada:`Long_Float` and :ada:`Long_Long_Float`. Like
+Float, the standard does not indicate the exact precision of these types: it
+only guarantees that the type :ada:`Long_Float`, for example, has at least the
+precision of :ada:`Float`. In order to guarantee that a certain precision
+requirement is met, we can define custom floating-point types, as we will see
+in the next section.
 
 Precision of floating-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ada allows for specifying the exact precision required for a
-floating-point type. The precision is expressed in terms of decimal
-digits. This guarantees that the operations on these custom types will
-have at least the specified precision. The syntax for this is
-:ada:`type T is digits <number_of_decimal_digits>`. In the background,
-the compiler will choose a floating-point representation that matches the
+Ada allows the user to specify the precision for a floating-point type,
+expressed in terms of decimal digits. Operations on these custom types will
+then have at least the specified precision. The syntax for a simple
+floating-point type declaration is:
+
+.. code-block:: ada
+
+    type T is digits <number_of_decimal_digits>;
+
+The compiler will choose a floating-point representation that supports the
 required precision. For example:
 
 .. code-block:: ada
@@ -1070,10 +1076,10 @@ required precision. For example:
        Put_Line ("T18 requires " & Integer'Image (T18'Size) & " bits");
     end Custom_Floating_Types;
 
-In this example, the attribute :ada:`'Size` is used to retrieve the number
-of bits used for the specified data type. As we can see by running this
-example, the compiler allocates 32 bits for ``T3``, 64 bits for ``T15``
-and 128 bits for ``T18``.
+In this example, the attribute :ada:`'Size` is used to retrieve the number of
+bits used for the specified data type. As we can see by running this example,
+the compiler allocates 32 bits for :ada:`T3`, 64 bits for :ada:`T15` and 128
+bits for :ada:`T18`.  This includes both the mantissa and the exponent.
 
 The number of digits specified in the data type is also used in the format
 when displaying floating-point variables. For example:
@@ -1101,10 +1107,11 @@ specified precision (1.00E+00 and 1.00010000000000000E+00).
 Range of floating-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ranges can also be specified floating-point types. The syntax is similar
-to the one used for integer data types --- using the :ada:`range` keyword.
-This simple example creates a new floating-point type based on the
-:ada:`Float` for a normalized range between -1.0 and 1.0:
+In addition to the precision, a range can also be specified for a
+floating-point type. The syntax is similar to the one used for integer data
+types --- using the :ada:`range` keyword.  This simple example creates a new
+floating-point type based on the type :ada:`Float`, for a normalized range
+between :ada:`-1.0` and :ada:`1.0`:
 
 .. code-block:: ada
 
@@ -1118,10 +1125,10 @@ This simple example creates a new floating-point type based on the
        Put_Line ("The value of A is " & T_Norm'Image (A));
     end Floating_Point_Range;
 
-The application makes sure that the normalized range is observed for all
-variables of this type. If the value is out of range, an exception is
-raised. In this example, an exception (:ada:`Constraint_Error`) is raised
-when assigning 2.0 to the variable ``A``:
+The application is responsible for ensuring that variables of this type stay
+within this range; otherwise an exception is raised. In this example, the
+exception :ada:`Constraint_Error` is raised when assigning :ada:`2.0` to the
+variable :ada:`A`:
 
 .. code-block:: ada
 
@@ -1148,56 +1155,58 @@ Ranges can also be specified for custom floating-point types. For example:
        null;
     end Custom_Range_Types;
 
-In this example, we are defining a type called ``T6_Inv_Trig``, which has
-a range from :math:`-\pi/2` to :math:`\pi/2` with a minimum precision of 6
-digits.
+In this example, we are defining a type called :ada:`T6_Inv_Trig`, which has a
+range from :math:`-\pi/2` to :math:`\pi/2` with a minimum precision of 6
+digits. (:ada:`Pi` is defined in the predefined package :ada:`Ada.Numerics`.)
 
 Strong typing
 -------------
 
-One thing that we have hinted at so far is that Ada is strongly typed. One
-corollary of that is that different types of the same family are incompatible
-with each other, as we can see in the following example:
+As noted earlier, Ada is strongly typed. As a result, different types of the
+same family are incompatible with each other; a value of one type cannot be
+assigned to a variable from the other type. For example:
+
 
 .. code-block:: ada
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
-       --  Declare two signed types
-       type Meters is range 0 .. 10_000;
-       type Miles is range 0 .. 5_000;
+    procedure Illegal_Example is
+       --  Declare two different floating point types
+       type Meters is new Float;
+       type Miles is new Float;
 
        Dist_Imperial : Miles;
+
        --  Declare a constant
-       Dist_SI : constant Meters := 100;
+       Dist_Metric : constant Meters := 100.0;
     begin
        --  Not correct: types mismatch
-       Dist_Imperial := Dist_SI * 1609 / 1000;
+       Dist_Imperial := (Dist_Metric * 1609.0) / 1000.0;
        Put_Line (Miles'Image (Dist_Imperial));
-    end Greet;
+    end Illegal_Example;
 
-This is true for every distinct type. It also means that, in the general case,
-an expression like :ada:`2 * 3.0` will trigger a compilation error. In a language
-like C or Python, those expressions are made valid by implicit conversions. In
+A consequence of these rules is that, in the general case, a "mixed mode"
+expression like :ada:`2 * 3.0` will trigger a compilation error. In a language
+like C or Python, such expressions are made valid by implicit conversions. In
 Ada, such conversions must be made explicit:
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
     procedure Conv is
-       type Meters is range 0 .. 10_000;
-       type Miles is range 0 .. 5_000;
+       type Meters is new Float;
+       type Miles is new Float;
        Dist_Imperial : Miles;
-       Dist_SI : constant Meters := 100;
+       Dist_Metric : constant Meters := 100.0;
     begin
-       Dist_Imperial := Miles (Dist_SI * 1609 / 1000);
-       --               ^ Type conversion, from Meters to Miles
+       Dist_Imperial := (Miles (Dist_Metric) * 1609.0) / 1000.0;
+       --                ^ Type conversion, from Meters to Miles
        --  Now the code is correct
 
        Put_Line (Miles'Image (Dist_Imperial));
-    end;
+    end Conv;
 
 Of course, we probably do not want to write the conversion code every time we
 convert from meters to miles. The idiomatic Ada way in that case would be to
@@ -1208,33 +1217,30 @@ introduce conversion functions along with the types.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Conv is
-       type Meters is range 0 .. 10_000;
-       type Miles is range 0 .. 5_000;
+       type Meters is new Float;
+       type Miles is new Float;
 
        --  Function declaration, like procedure but returns a value.
        function To_Miles (M : Meters) return Miles is
        --                             ^ Return type
        begin
-          return Miles (M * 1609 / 1000);
+          return (Miles (M) * 1609.0) / 1000.0;
        end To_Miles;
 
        Dist_Imperial : Miles;
-       Dist_SI : constant Meters := 100;
+       Dist_Metric   : constant Meters := 100.0;
     begin
-       Dist_Imperial := To_Miles (Dist_SI);
+       Dist_Imperial := To_Miles (Dist_Metric);
        Put_Line (Miles'Image (Dist_Imperial));
     end Conv;
 
-This is also the first time we use a function. We will study
-`functions and procedures <TODOSUBPROGRAMS>`_ in more details soon.
+This is the first example of a function declaration. We will see
+`functions and procedures <TODOSUBPROGRAMS>`_ in more detail soon.
 
-If you write a lot of numeric code, having to explicitly specify your
-conversions all the time might seem painful at first, because your code might
-end up containing a lot of conversions. However, this approach has some
-advantages. For example:
-
-- You can rely on the fact that no implicit conversion will ever happen in your
-  numeric code.
+If you write a lot of numeric code, having to explicitly provide such
+conversions might seem painful at first. However, this approach brings some
+advantages. Notably, you can rely on the absence of implicit conversions, which
+will in turn prevent some subtle errors.
 
 .. admonition:: In other languages
 
@@ -1261,14 +1267,14 @@ advantages. For example:
     their corresponding floating-point representation before performing the
     division. This will produce the expected result.
 
-    This example is very simple and experienced C developers will probably
-    notice this specific issue and correct it before it creates bigger
+    This example is very simple, and experienced C developers will probably
+    notice and correct it before it creates bigger
     problems. However, in more complex applications where the type
     declaration is not always visible --- e.g. when referring to elements of
     a :c:`struct` --- this situation might not always be evident and quickly
     lead to software defects that can be harder to find.
 
-    The Ada compiler, in contrast, will always refuse to compile code that
+    The Ada compiler, in contrast, will always reject code that
     mixes floating-point and integer variables without explicit conversion.
     The following Ada code, based on the erroneous example in C, will not
     compile:
@@ -1287,17 +1293,17 @@ advantages. For example:
     The offending line must be changed to :ada:`F := Float(A) / Float(B);`
     in order to be accepted by the compiler.
 
-- You can use Ada's strong typing to help
+- You can use Ada's strong typing to help 
   `enforce invariants <TODOLINKINVARIANTS>`_ in your code, as in the example
   above: Since Miles and Meters are two different types, you cannot mistakenly
-  convert an instance of one to an instance of the other.
+  convert an instance of one to an instance of the other. 
 
 Derived types
 -------------
 
-One particularity of Ada is that you can create new types based on existing
-ones. This is very useful to define that a type is statically incompatible
-with another type, to enforce strong typing.
+In Ada you can create new types based on existing ones. This is very useful:
+you get a type that has the same properties as some existing type but is
+treated as a distinct type in the interest of strong typing.
 
 .. code-block:: ada
 
@@ -1308,20 +1314,31 @@ with another type, to enforce strong typing.
       --                   ^ Since a SSN has 9 digits max, and cannot be
       --                     negative, we enforce a validity constraint.
 
-      SSN : Social_Security_Number := 323_44_9847;
+      SSN : Social_Security_Number := 555_55_5555;
       --                              ^ You can put underscores as formatting in
       --                                any number.
+
+      I   : Integer;
 
       Invalid : Social_Security_Number := -1;
       --                                  ^ This will cause a runtime error
       --                                    (and a compile time warning with
       --                                     GNAT)
    begin
-      null;
+      I   := SSN ;                        -- Illegal, they have different types
+      SSN := I;                           -- Likewise illegal
+      I   := Integer (SSN);               -- OK with explicit conversion
+      SSN := Social_Security_Number (I);  -- Likewise OK
    end Main;
 
-You can redefine the range of validity of any type family: Floating point,
-fixed point, enumerations ...
+The type Social_Security is said to be a *derived type*; its *parent type* is
+Integer.
+
+As illustrated in this example, you can refine the valid range when defining a
+derived scalar type (such as integer, floating-point and enumeration).
+
+.. ?? The enumeration example looks rather artificial and would not be likely
+.. ?? in real code.  I suggest deleting it
 
 The syntax for enumerations uses the :ada:`range <range>` syntax:
 
@@ -1342,14 +1359,10 @@ The syntax for enumerations uses the :ada:`range <range>` syntax:
 Subtypes
 --------
 
-As we are starting to see, types are often used in Ada to enforce constraints
-about the range of validity of values. However, sometimes it is desirable to
-enforce constraints on some values, but one may not desire the static
-enforcement brought by Ada types. This is where subtypes come into play.
-
-Subtypes allow you to declare additional constraints on a type, but entities of
-that subtype are still of the type the subtype derives from, and thus are valid
-where an instance of the type is expected.
+As we are starting to see, types may be used in Ada to enforce constraints on
+the valid range of values. However, we sometimes want to enforce constraints on
+some values while staying within a single type.  This is where subtypes come
+into play.  A subtype does not introduce a new type.
 
 .. code-block:: ada
     :class: ada-run
@@ -1381,8 +1394,8 @@ where an instance of the type is expected.
        end loop;
     end Greet;
 
-Some subtypes are declared as part of the standard package in Ada, and are
-available to you all the time:
+Several subtypes are predefined in the standard package in Ada, and are
+automatically available to you:
 
 .. code-block:: ada
     :class: ada-nocheck
@@ -1390,10 +1403,9 @@ available to you all the time:
     subtype Natural  is Integer range 0 .. Integer'Last;
     subtype Positive is Integer range 1 .. Integer'Last;
 
-While subtypes of a type are statically compatible with each others,
-constraints are enforced at runtime: If you violate the constraints of the
-subtype, an exception will be raised at runtime, when the running program
-detects the violation.
+While subtypes of a type are statically compatible with each other,
+constraints are enforced at run time: if you violate a subtype constraint,
+an exception will be raised.
 
 .. code-block:: ada
     :class: ada-run, ada-run-expect-failure
@@ -1418,13 +1430,13 @@ detects the violation.
 Records
 =======
 
-So far, all the types we have seen are what we can call base types: each
-instance of one of those types represents a single piece of data. Now we are
-going to study our first class of composite types: The record.
+So far, all the types we have encountered have values that are not
+decomposable: each instance represents a single piece of data. Now we are going
+to see our first class of composite types: records.
 
-Records are a way to piece together several instances of other types. Each of
-those instances will be given a name. The pair of a name to an instance of a
-specific type is called a field, or a component.
+Records allow composing a value out of instances of other types. Each of
+those instances will be given a name. The pair consisting of a name and
+an instance of a specific type is called a field, or a component.
 
 Record type declaration
 -----------------------
@@ -1441,11 +1453,9 @@ Here is an example of a simple record declaration:
        Year  : Integer range 1 .. 3000; --  You can add custom constraints on fields
     end record;
 
-One thing we can notice is that fields look a lot like variable declarations,
-except that they are inside of a record definition.
-
-As with objects declarations, it is possible to specify additional constraints
-when indicating the subtype of the field.
+Fields look a lot like variable declarations, except that they are inside of a
+record definition.  And as with variable declarations, you can specify
+additional constraints when supplying the subtype of the field.
 
 .. code-block:: ada
     :class: ada-nocheck
@@ -1458,9 +1468,10 @@ when indicating the subtype of the field.
        --                                 ^ Default value
     end record;
 
-Record components can also have default values. When declaring an instance of
-the record, fields will be automatically set to this value. The value can be
-any expression that is valid in the scope of definition of the record.
+Record components can have default values. When a variable having the record
+type is declared, a field with a default initialization will be automatically
+set to this value. The value can be any expression of the component type, and
+may be run-time computable.
 
 Aggregates
 ----------
@@ -1468,29 +1479,29 @@ Aggregates
 .. code-block:: ada
     :class: ada-nocheck
 
-    Today    : Date := (31, November, 2012);
-    Birthday : Date := (Day => 30, Month => February, Year => 2010);
-    --                  ^ By name
+    Ada_Birthday    : Date := (10, December, 1815);
+    Leap_Day_2020   : Date := (Day => 29, Month => February, Year => 2020);
+    --                ^ By name
 
-Records also have a literal notation that you can use, and that is showcased
-above. This notation is called aggregate notation, and the literals are called
-aggregates. They can be used in a variety of contexts that we will disclose
-throughout the course, and one of those is to initalize records.
+Records have a convenient notation for expressing values, illustrated above.
+This notation is called aggregate notation, and the literals are called
+aggregates. They can be used in a variety of contexts that we will see
+throughout the course, one of which is to initalize records.
 
 An aggregate is a list of values separated by commas and enclosed in
-parentheses. It is a valid expression in any context where a value of the
-record can be expected.
+parentheses. It is allowed in any context where a value of the record is
+expected.
 
-Values for the components can be specified positionally, as in the first
-example, or by name, as in the second example. A mixture of positional and
-named vamues is possible, but you cannot use a positional association after a
-named one.
+Values for the components can be specified positionally, as in Ada_Birthday
+example, or by name, as in Leap_Day_2020. A mixture of positional and named
+values is permitted, but you cannot use a positional notation after a named
+one.
 
 Component selection
 -------------------
 
-To access components of a record instance, an operation that is called
-component selection, you use the following syntax:
+To access components of a record instance, you use an operation that is
+called component selection:
 
 .. code-block:: ada
     :class: ada-run
@@ -1506,28 +1517,28 @@ component selection, you use the following syntax:
        type Date is record
           Day   : Integer range 1 .. 31;
           Month : Month_Type;
-          Year  : Integer range 1 .. 3000 := 2012;
+          Year  : Integer range 1 .. 3000 := 2032;
        end record;
 
-       Today    : Date := (31, November, 2012);
+       Some_Day : Date := (1, January, 2000);
 
     begin
-       Today.Day := 29;
-       Put_Line ("Today is the " & Integer'Image (Today.Day)
-                 & " of " & Month_Type'Image (Today.Month)
-                 & ", " & Integer'Image (Today.Year));
+       Some_Day.Year := 2001;
+       Put_Line ("Day:" & Integer'Image (Some_Day.Day)
+                 & ", Month: " & Month_Type'Image (Some_Day.Month)
+                 & ", Year:" & Integer'Image (Some_Day.Year));
     end Record_Selection;
 
 Arrays
 ======
 
-Another very important family of composite types is arrays.
+Arrays provide another fundamental family of composite types in Ada.
 
 Array type declaration
 ----------------------
 
-Arrays in Ada are both pretty complex and pretty powerful. We will go over
-their characteristics in detail, but let's start with one way of declaring one.
+Arrays in Ada are used to define contiguous collections of elements that can be
+selected by indexing. Here's a simple example:
 
 .. code-block:: ada
     :class: ada-run
@@ -1551,46 +1562,50 @@ their characteristics in detail, but let's start with one way of declaring one.
        New_Line;
     end Greet;
 
-The first peculiarity that we can see in the above example is that we specify
-the indexing type of the array, not its size. Here we declared an ``Index``
-type ranging from ``1`` to ``5`` so the array will have 5 elements - that is,
-bounds are inclusive.
+The first point to note is that we specify the index type for the array,
+rather than its size. Here we declared an integer type named :ada:`Index`
+ranging from :ada:`1` to :ada:`5`, so each array instance will have 5 elements,
+with the initial element at index 1 and the last element at index 5.
 
-This feature is pretty unique to Ada, and has interesting repercussions: You
-can use any discrete type to index an array, including
+Although this example used an integer type for the index, Ada is more general:
+any discrete type is permitted to index an array, including
 `Enum types <TODOLINKENUMTYPES>`_. We will soon see what that means.
 
-The second thing that we might notice is that querying an element of the array
-at a given syntax uses the same syntax as the subprogram calls syntax, that is
-the array followed by the index in parens.
+Another point to note is that querying an element of the array at a given index
+uses the same syntax as for function calls: that is, the array object followed
+by the index in parentheses.
 
-What this means is that, in Ada, when you see an expression such as ``A (B)``,
-whether it is a function call or an array subscript depends on what ``A``
-designates.
+Thus when you see an expression such as :ada:`A (B)`, whether it is a function
+call or an array subscript depends on what :ada:`A` refers to.
 
-Finally, the last thing of notice is how we initialize the array, with the
-``(2, 3, 5, 7, 11)`` expression. This expression is called an aggregate in Ada,
-and is a literal expression for an array, the same way that ``3`` is a literal
-expression for an integer. The notation is very powerful and has many
-subtleties that we will gradually introduce. You can also have a detailed
-overview of the `notation of aggregate types <TODODETAILEDAGGREGATESADVANCED>`_.
+Finally, notice how we initialize the array with the :ada:`(2, 3, 5, 7, 11)`
+expression. This is another kind of aggregate in Ada, and is in a sense a
+literal expression for an array, in the same way that :ada:`3` is a literal
+expression for an integer. The notation is very powerful, with a number of
+properties that we will introduce later. A detailed overview appears in the
+`notation of aggregate types <TODODETAILEDAGGREGATESADVANCED>`_.
 
-Let's now delve into what it means exactly to be able to use any discrete type
+Unrelated to arrays, the example also illustrated two procedures from Ada.Text_IO:
+
+*  :ada:`Put`, which displays a string without a terminating end of line
+
+*  :ada:`New_Line`, which outputs an end of line
+
+Let's now delve into what it means to be able to use any discrete type
 to index into the array.
 
 .. admonition:: In other languages
 
-    Ada arrays have by-value semantics, which means that when you pass one, in
-    terms of semantics you pass the whole array, not just a handle to it,
-    unlike in a language like Python or Java. It also means that unlike in C or
-    C++, arrays are not naked pointers in disguise.
+    Semantically, an array object in Ada is the entire data structure, and
+    not simply a handle or pointer.  Unlike C and C++, there is no implicit
+    equivalence between an array and a pointer to its initial element.
 
 .. code-block:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Array_Bounds_Example is
        type My_Int is range 0 .. 1000;
        type Index is range 11 .. 15;
        --                  ^ Low bound can be any value
@@ -1601,51 +1616,51 @@ to index into the array.
           Put (My_Int'Image (Tab (I)));
        end loop;
        New_Line;
-    end Greet;
+    end Array_Bounds_Example;
 
-The first repercussion is that the low bound of your array can be any value: In
-the first example we constructed an array type whose first index is ``1``, but
-in the example above we declare an array type whose first index is ``11``.
+One effect is that the bounds of an array can be any values. In the first
+example we constructed an array type whose first index is :ada:`1`, but in the
+example above we declare an array type whose first index is :ada:`11`.
 
-That's perfectly fine in Ada, and moreover you can see that since we use the
-index type as a range to iterate on the array indices, the code using the array
-does not need to change.
+That's perfectly fine in Ada, and moreover since we use the index type as a
+range to iterate over the array indices, the code using the array does not need
+to change.
 
-That leads us to an important consequence with regards to code dealing with
-arrays: Since the lower bound can vary, it is considered best practice to never
-assume/hard-code a low bound when iterating/using arrays in general. That means
-the code above is good, because it uses the index type, but a for loop as
-showcased below is bad practice:
+That leads us to an important consequence with regard to code dealing with
+arrays. Since the bounds can vary, you should not assume / hard-code specific
+bounds when iterating / using arrays. That means the code above is good,
+because it uses the index type, but a for loop as shown below is bad practice
+even though it works correctly:
 
 .. code-block:: ada
     :class: ada-nocheck
 
-    for I in 0 .. 20 loop
+    for I in 11 .. 15 loop
        Tab (I) := Tab (I) * 2;
     end loop;
 
-Since we said above that you can use any discrete type to index an array, it
-means that you can use enum types to index arrays.
+Since you can use any discrete type to index an array, enumeration types
+are permitted.
 
 .. code-block:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Month_Example is
        type Month_Duration is range 1 .. 31;
        type Month is (Jan, Feb, Mar, Apr, May, Jun,
                       Jul, Aug, Sep, Oct, Nov, Dec);
 
        type My_Int_Array is array (Month) of Month_Duration;
-       --                          ^ Can use an enum as the
+       --                          ^ Can use an enumeration type as the
        --                            index
 
        Tab : constant My_Int_Array :=
        --    ^ constant is like a variable but cannot be
        --      modified
          (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-       --  Maps months to number of days
+       --  Maps months to number of days (ignoring leap years)
 
        Feb_Days : Month_Duration := Tab (Feb);
        --  Number of days in February
@@ -1656,31 +1671,31 @@ means that you can use enum types to index arrays.
              & Month_Duration'Image (Tab (M))  & " days.");
              --                                ^ Concatenation operator
        end loop;
-    end Greet;
+    end Month_Example;
 
 
 In the example above, we are:
 
 - Creating an array type mapping months to month durations in days.
 
-- Creating an array, and instanciating it with an aggregate mapping months to
+- Creating an array, and instantiating it with an aggregate mapping months to
   their actual durations in days.
 
-- Iterating on the array, printing out the months, and the number of days for
+- Iterating over the array, printing out the months, and the number of days for
   each.
 
-Being able to use enums as indices is very useful to create mappings such as
-this one, and is an often used feature in Ada.
+Being able to use enumeration values as indices is very helpful in creating
+mappings such as shown above one, and is an often used feature in Ada.
 
-Indexation
-----------
+Indexing
+--------
 
-We have already seen the syntax to get the elements of an array. There are
-however a few more things to say about it.
+We have already seen the syntax for selecting elements of an array. There are
+however a few more points to note.
 
-First of all, as many things in Ada, this operation is strongly typed. If you
-use a value of the wrong type to index the array, you will get a compile time
-error.
+First, as is true in general in Ada, the indexing operation is strongly typed.
+If you use a value of the wrong type to index the array, you will get a
+compile-time error.
 
 .. code-block:: ada
     :class: ada-run
@@ -1689,12 +1704,14 @@ error.
 
     procedure Greet is
        type My_Int is range 0 .. 1000;
-       type Index is range 1 .. 5;
-       type My_Int_Array is array (Index) of My_Int;
+
+       type My_Index   is range 1 .. 5;
+       type Your_Index is range 1 .. 5;
+
+       type My_Int_Array is array (My_Index) of My_Int;
        Tab : My_Int_Array := (2, 3, 5, 7, 11);
     begin
-       for I in Index range 1 .. 5 loop
-       --       ^ I is of type Index, ranges between 1 and 5
+       for I in Your_Index loop
           Put (My_Int'Image (Tab (I)));
        --                         ^ Compile time error
        end loop;
@@ -1702,7 +1719,7 @@ error.
     end Greet;
 
 Second, arrays in Ada are bounds checked. This means that if you try to access
-an element outside of the bounds of the array, you will get a runtime error
+an element outside of the bounds of the array, you will get a run-time error
 instead of accessing random memory as in unsafe languages.
 
 .. code-block:: ada
@@ -1727,16 +1744,16 @@ instead of accessing random memory as in unsafe languages.
 Simpler array declarations
 --------------------------
 
-In the previous examples, we have always showcased the creation of a dedicated
-index type for the array. While this can be useful, for typing and readability
-purposes, sometimes you just want an anonymous range that you can use in that
-context. Ada allows you to do that too.
+In the previous examples, we have always explicitly created an index type for
+the array. While this can be useful for typing and readability purposes,
+sometimes you simply want to express a range of values.  Ada allows you to do
+that, too.
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Simple_Array_Bounds is
        type My_Int is range 0 .. 1000;
        type My_Int_Array is array (1 .. 5) of My_Int;
        --                          ^ Subtype of Integer
@@ -1747,34 +1764,32 @@ context. Ada allows you to do that too.
           Put (My_Int'Image (Tab (I)));
        end loop;
        New_Line;
-    end Greet;
+    end Simple_Array_Bounds;
 
-In the preceding example, we declare the range of the array via the range
-syntax, which will declare an anonymous subtype of integer and 8se it to index
-the array.
+This example defines the range of the array via the range syntax, which
+specifies an anonymous subtype of Integer and uses it to index the array.
 
-This means that the type of the index is :ada:`Integer`. Coincidently, when you
+This means that the type of the index is :ada:`Integer`. Similarly, when you
 use an anonymous range in a for loop as in the example above, the type of the
-iteration variable is also :ada:`Integer`, which is why you can use ``I`` to
-index ``Tab``.
+iteration variable is also :ada:`Integer`, so you can use :ada:`I` to index
+:ada:`Tab`.
 
-You can also use a named subtype as bounds for an array.
+You can also use a named subtype for the bounds for an array.
 
 Range attribute
 ---------------
 
-We have said before that hard coding bounds (especially the lower bound) when
-accessing or iterating on an array is generally a bad idea, and showcased how
-to use the type/subtype of the array to iterate on its range in a for loop. The
-problem with the above feature where we declare an anonymous range for the
-array is that suddenly we have no name to refer to the range. Ada fixes that
-via an attribute on array objects:
+We noted earlier that hard coding bounds when iterating over an array is a bad
+idea, and showed how to use the array's index type/subtype to iterate over its
+range in a for loop.  That raises the question of how to write an iteration
+when the array has an anonymous range for its bounds, since there is no name to
+refer to the range.  Ada solves that via several attributes of array objects:
 
 .. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Range_Example is
        type My_Int is range 0 .. 1000;
        type My_Int_Array is array (1 .. 5) of My_Int;
        Tab : My_Int_Array := (2, 3, 5, 7, 11);
@@ -1784,7 +1799,7 @@ via an attribute on array objects:
           Put (My_Int'Image (Tab (I)));
        end loop;
        New_Line;
-    end Greet;
+    end Range_Example;
 
 If you want more fine grained control, you can use the separate attributes
 :ada:`'First` and :ada:`'Last`.
@@ -1793,7 +1808,7 @@ If you want more fine grained control, you can use the separate attributes
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Array_Attributes_Example is
        type My_Int is range 0 .. 1000;
        type My_Int_Array is array (1 .. 5) of My_Int;
        Tab : My_Int_Array := (2, 3, 5, 7, 11);
@@ -1803,30 +1818,41 @@ If you want more fine grained control, you can use the separate attributes
           Put (My_Int'Image (Tab (I)));
        end loop;
        New_Line;
-    end Greet;
+    end Array_Attributes_Example;
 
-Of note, all those attributes, :ada:`'Range`, :ada:`'First` and :ada:`'Last`,
-will work on array instances just as well as they work on discrete types and
-subtypes themselves, enumerations included.
+The :ada:`'Range`, :ada:`'First` and :ada:`'Last` attributes in these examples
+could also have been applied to the array type name, and not just the array
+instances.
+
+Although not illustrated in the above examples, another useful attribute for an
+array instance :ada:`A`  is :ada:`A'Length`, which is the number of elements that A
+contains.
+
+It is legal and sometimes useful to have a "null array", which contains no
+elements.  To get this effect, define an index range whose upper bound is less
+than the lower bound.
 
 .. _UnconstrainedArrayTypes:
 
 Unconstrained arrays
 --------------------
 
-Let's enter in one of the most complex and powerful areas of arrays in Ada.
-Every array type we defined so far has a fixed size: Every instance of this
-type will have the same size, and the same number of elements.
+Let's now consider one of the most powerful aspects of Ada's array facility.
+
+Every array type we have defined so far has a fixed size: every instance of
+this type will have the same bounds and therefore the same number of elements
+and the same size.
 
 However, Ada also allows you to declare array types whose bounds are not fixed:
-In that case, the bounds will need to be provided when instanciating the type.
+In that case, the bounds will need to be provided when creating instances of
+the type.
 
 .. code-block:: ada
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Unconstrained_Array_Example is
        type Days is (Monday, Tuesday, Wednesday,
                      Thursday, Friday, Saturday, Sunday);
 
@@ -1845,46 +1871,56 @@ In that case, the bounds will need to be provided when instanciating the type.
        for I in Workload'Range loop
           Put_Line (Integer'Image (Workload (I)));
        end loop;
-    end Greet;
+    end Unconstrained_Array_Example;
 
-The fact that the bounds of the array are not known is indicated by the ``Days
-range <>`` syntax. Given a discrete type ``Discrete_Type``, while using
-``Discrete_Type`` for the index specifies that we are going to use
-this type as the type and the index and for the bounds, using ``Discrete_Type
-range <>`` means that we use this type for the type of the index but that the
-bounds are not yet constrained.
+The fact that the bounds of the array are not known is indicated by the
+:ada:`Days range <>` syntax. Given a discrete type :ada:`Discrete_Type`, if we
+use :ada:`Discrete_Type` for the index in an array type then
+:ada:`Discrete_Type` serves as the type of the index and comprises the range of
+index values for each array instance.
 
-Those array types are thus called unconstrained, and the bounds need to be
-provided at the moment of instantiation, as we can see in the example above.
+If we define the index as :ada:`Discrete_Type range <>` then
+:ada:`Discrete_Type` serves as the type of the index, but different array
+instances may have different bounds from this type
 
-The above example also shows more of the aggregate syntax: You can specify
+An array type that is defined with the :ada:`Discrete_Type range <>` syntax
+for its index is referred to as an unconstrained array type, and, as
+illustrated above, the bounds need to be provided when an instance is created.
+
+The above example also shows other forms of the aggregate syntax. You can specify
 associations by name, by giving the value of the index on the left side of an
-arrow association. :ada:`1 => 2` hence means "assign value 2 to spot at index 1
-in my array". :ada:`others => 8` means "assign value 8 to every spot that
-wasn't previously assigned in this aggregate".
+arrow association. :ada:`1 => 2` thus means
+"assign value 2 to the element at index 1 in my array". :ada:`others => 8` means
+"assign value 8 to every element that wasn't previously assigned in this aggregate".
 
 .. attention::
-    The box notation (``<>``) is commonly used as a wildcard or placeholder in
-    Ada. You will often see it when the meaning is "what is expected here can
-    be anything".
+    The so-called "box" notation (:ada:`<>`) is commonly used as a wildcard or
+    placeholder in Ada. You will often see it when the meaning is "what is
+    expected here can be anything".
 
 .. admonition:: In other languages
 
-    While superficially unconstrained arrays in Ada might look similar to
-    variable length arrays in C, they are in reality much more powerful,
-    because they're truly first class values in the language. You can pass them
-    as parameters or return values in subprograms, and they carry their bounds
-    inside the data type. This means that it is useless to pass the length of
-    an array explictly along with the array, because it is accessible via the
-    attributes demonstrated in the previous paragraph.
+    While unconstrained arrays in Ada might seem similar to variable length
+    arrays in C, they are in reality much more powerful, because they're truly
+    first-class values in the language. You can pass them as parameters to
+    subprograms or return them from functions, and they implicitly contain
+    their bounds as part of their value.  This means that it is useless to pass
+    the bounds or length of an array explictly along with the array, because
+    they are accessible via the 'First, 'Last, 'Range and 'Length attributes
+    explained earlier.
+
+Although different instances of the same unconstrained array type can have different
+bounds, a specific instance has the same bounds throughout its lifetime.
+This allows Ada to implement unbounded arrays efficiently; instances can be
+stored on the stack and do not require heap allocation as in languages like Java.
 
 Predefined array type: String
 -----------------------------
 
 A recurring theme in our introduction to Ada types has been the way important
-built-in types like :ada:`Boolean` or :ada:`Integer` have been built with the
+built-in types like :ada:`Boolean` or :ada:`Integer` are defined through the
 same facilities that are available to the user. This is also true for strings:
-The string type in Ada is a simple array.
+The String type in Ada is a simple array.
 
 Here is how the string type is defined in Ada:
 
@@ -1897,13 +1933,13 @@ The only built-in feature Ada adds to make strings more ergonomic is custom
 literals, as we can see in the example below.
 
 .. hint::
-    String literals are just sugar on top of aggregates, so that in the
-    following example, A and B are exactly similar declarations
+    String literals are a syntactic sugar for aggregates, so that in the
+    following example, A and B have the same value.
 
     .. code-block:: ada
 
         package String_Literals is
-            --  Those two declarations produce the same thing
+            --  Those two declarations are equivalent
             A : String (1 .. 11) := "Hello World";
             B : String (1 .. 11) := ('H', 'e', 'l', 'l', 'o', ' ',
                                      'W', 'o', 'r', 'l', 'd');
@@ -1919,19 +1955,20 @@ literals, as we can see in the example below.
        --        ^ Pre-defined array type.
        --          Component type is Character
     begin
-       for I in reverse 1 .. 11 loop
+       for I in reverse Message'Range loop
           --    ^ Iterate in reverse order
           Put (Message (I));
        end loop;
        New_Line;
     end Greet;
 
-However, what we can notice is that having to declare the bounds of the object
-explicitly is a bit of a hassle: One needs to manually calculate the size of
-the literal. Luckily Ada allows you to not do it.
+However, specifying the bounds of the object explicitly is a bit of a hassle;
+you have to manually count the number of characters in the literal.
+Fortunately, Ada gives you an easier way.
 
-Ada allows the user to omit the bounds when instanciating an unconstrained
-array type, if the bounds can be deduced from the initialization expression.
+You can omit the bounds when creating an instance of an unconstrained array
+type if you supply an initialization, since the bounds can be deduced from the
+initialization expression.
 
 .. code-block:: ada
     :class: ada-run
@@ -1939,7 +1976,7 @@ array type, if the bounds can be deduced from the initialization expression.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
-       Message : constant String := "Hello World";
+       Message : constant String := "dlroW olleH";
        --                 ^ Bounds are automatically computed
        --                   from initialization value
     begin
@@ -1965,20 +2002,19 @@ array type, if the bounds can be deduced from the initialization expression.
 
 .. attention::
     As you can see above, the standard String type in Ada is an array. As such,
-    it shares the qualities and drawbacks of arrays: It's stack allocated,
-    fast, and immutable.
+    it shares the advantages and drawbacks of arrays: a String value is stack
+    allocated, it is accessed efficiently, and its bounds are immutable.
 
     If you want something akin to C++'s :cpp:`std::string`, you can use
     :ref:`Unbounded Strings <UnboundedStrings>` from Ada's standard library.
-
     This type is more like a mutable, automatically managed string buffer to
     which you can add content.
 
 Restrictions
 ------------
 
-A very important point about arrays: Bounds *have* to be known when
-instantiating the object. It is for example illegal to do the following.
+A very important point about arrays: bounds *have* to be known when instances
+are created. It is for example illegal to do the following.
 
 .. code-block:: ada
    :class: ada-nocheck
@@ -1989,8 +2025,9 @@ instantiating the object. It is for example illegal to do the following.
        A := "World";
     end;
 
-Also, while you of course change elements in the array, you cannot change its
-size after it has been initialized, so this is also illegal:
+Also, while you of course can change the values of elements in an array, you
+cannot change the array's bounds (and therefore its size) after it has been
+initialized.  So this is also illegal:
 
 .. code-block:: ada
     :class: ada-nocheck
@@ -1998,23 +2035,23 @@ size after it has been initialized, so this is also illegal:
     declare
        A : String := "Hello";
     begin
-       A := "World"; --  Legal: Same size
-       A := "Hello World"; --  Illegal: Different size
+       A := "World";       --  OK: Same size
+       A := "Hello World"; --  Not OK: Different size
     end;
 
-Also, while you can expect a warning for this kind of errors in very simple
+Also, while you can expect a warning for this kind of error in very simple
 cases like this one, it is impossible for a compiler to know in the general
 case if you are assigning a value of the correct length, so this violation will
-generally result in a runtime error.
+generally result in a run-time error.
 
 .. attention::
-    While we will learn more about this later, it is important to know right
-    away that arrays are not the only types whose instances might be of unknown
+    While we will learn more about this later, it is important to know
+    that arrays are not the only types whose instances might be of unknown
     size at compile-time.
 
-    Those objects are said to be of an *indefinite subtype*. Which means that
-    the subtype size is not known at compile-time, but is dynamically computed
-    at run-time.
+    Such objects are said to be of an *indefinite subtype*, which means that
+    the subtype size is not known at compile time, but is dynamically computed
+    (at run time).
 
     .. code-block:: ada
 
@@ -2041,12 +2078,10 @@ generally result in a runtime error.
 Declaring arrays (2)
 --------------------
 
-While we can have, as we saw, array types whose exact representation is not
-known at compile-time - which means, in effect, that their size and bounds are
-determined at runtime - the component type of arrays needs to be of a definite
-and constrained type.
+While we can have array types whose size and bounds are determined at run time,
+the array's component type needs to be of a definite and constrained type.
 
-Hence, if you need to declare, for example, an array of strings, the string
+Thus, if you need to declare, for example, an array of Strings, the String
 subtype used as component will need to have a fixed size.
 
 .. code-block:: ada
@@ -2078,8 +2113,9 @@ subtype used as component will need to have a fixed size.
 Array slices
 ------------
 
-One last interesting feature of Ada arrays that we're going to cover is array
-slices: It is possible to take and use a slice of an array in an expression.
+One last feature of Ada arrays that we're going to cover is array slices. It is
+possible to take and use a slice of an array (a contiguous sequence of
+elements) as a name or a value.
 
 .. code-block:: ada
 
@@ -2092,21 +2128,28 @@ slices: It is possible to take and use a slice of an array in an expression.
     begin
         Buf (7 .. 9) := "Bob";
         --  Careful! This works because the string on the right side is the
-        --  same size as the replaced slice!
+        --  same length as the replaced slice!
 
         Put_Line (Buf);  --  Prints "Hello Bob"
 
         Put_Line ("Hi " & Full_Name (1 .. 4)); --  Prints "Hi John"
     end;
 
-As we can see above, you can also use a slice on the left side of an
-assignment, to replace only part of an array.
+As we can see above, you can use a slice on the left side of an assignment, to
+replace only part of an array.
 
 A slice of an array is of the same type as the array, but has a different
 subtype, constrained by the bounds of the slice.
 
 .. attention::
-    Slices will only work on one dimensional arrays.
+    Ada has `multidimensional arrays
+    <http://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-6.html>`_,
+    which are not covered in this course. Slices will only work on one
+    dimensional arrays.
+
+.. ?? Somewhere it should be noted that Ada allows multidimensional arrays
+.. ?? The 'attention' note is the 1st implication that Ada supports more
+.. ?? than one-dimensional arrays
 
 Modular programming
 ===================
