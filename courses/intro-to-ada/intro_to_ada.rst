@@ -1060,6 +1060,7 @@ then have at least the specified precision. The syntax for a simple
 floating-point type declaration is:
 
 .. code:: ada
+    :class: ada-nocheck
 
     type T is digits <number_of_decimal_digits>;
 
