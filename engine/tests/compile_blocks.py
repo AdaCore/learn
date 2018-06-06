@@ -58,7 +58,7 @@ class CodeBlock():
 
     @staticmethod
     def get_code_blocks(input_text):
-        lang_re = re.compile("\s*.. code-block::\s*(\w+)?\s*")
+        lang_re = re.compile("\s*.. code::\s*(\w+)?\s*")
         classes_re = re.compile("\s*:class:\s*(.+)")
 
         code_blocks = []
@@ -103,7 +103,7 @@ class CodeBlock():
                     classes = map(str.strip, m.groups()[0].split(","))
                     cb_start = i + 1
             else:
-                if line[indent:].startswith(".. code-block::"):
+                if line[indent:].startswith(".. code::"):
                     cb_start, lang = (
                         i + 1,
                         lang_re.match(line).groups()[0]
@@ -229,7 +229,8 @@ def extract_diagnostics(lines):
 
 for i, code_block in code_blocks:
     has_error = False
-    loc = "at {}:{} (code block #{})".format(args.rst_file, code_block.line_start, i)
+    loc = "at {}:{} (code block #{})".format(
+        args.rst_file, code_block.line_start, i)
 
     all_output = []
 
