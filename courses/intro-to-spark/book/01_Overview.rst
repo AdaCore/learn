@@ -244,9 +244,10 @@ No aliasing of names
 
 Another restriction imposed in the SPARK subset concerns aliasing. We say that
 two names are aliased if they refer to the same object. Since access types
-(pointers in Ada) are not allowed in SPARK, aliasing can only occur as part of
-the parameter passing in a procedure call. As a consequence, when a procedure
-is called, SPARK makes sure that no :ada:`out` or :ada:`in out` parameter is
+(`pointers <https://en.m.wikipedia.org/wiki/Pointer_(computer_programming)>`_
+in Ada) are not allowed in SPARK, aliasing can only occur as part of the
+parameter passing in a procedure call. As a consequence, when a procedure is
+called, SPARK makes sure that no :ada:`out` or :ada:`in out` parameter is
 aliased with either another parameter of the procedure or a global variable
 updated in the procedure's body.
 
