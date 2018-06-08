@@ -11,7 +11,7 @@ When the specification of subprogram ``Op`` declares a parameter using
 won't be changed by ``Op``. In other words, the caller expects that ``Op``
 doesn't modify the argument it's providing, but rather just read the
 information stored in the argument. Constraints and subtypes are other
-examples of contracts. In summary, these elements allow for improve the
+examples of contracts. In summary, these elements allow for improving the
 consistency of the application.
 
 In general, design-by-contract programming refers to techniques that
@@ -57,13 +57,13 @@ The following code shows an example of preconditions:
        DB_Entry ("",     21);  --  Precondition will fail!
     end Show_Simple_Precondition;
 
-In this example, we want to ensure that the name field in database doesn't
-contain an empty string. We can implement that by using a precondition
-that ensures that the length of the string used for the :ada:`Name`
-parameter in the :ada:`DB_Entry` procedure is greater than zero. If
-another subprogram attempts to call the :ada:`DB_Entry` procedure with an
-empty string for the :ada:`Name` parameter, the call will fail because the
-precondition is not met.
+In this example, we want to ensure that the name field in our database
+doesn't contain an empty string. We can implement this requirement by
+using a precondition that ensures that the length of the string used for
+the :ada:`Name` parameter of the :ada:`DB_Entry` procedure is greater than
+zero. If another subprogram attempts to call the :ada:`DB_Entry` procedure
+with an empty string for the :ada:`Name` parameter, the call will fail
+because the precondition is not met.
 
 Note that the :ada:`pragma Assertion_Policy` statement is used to force
 the compiler to generate a check for the precondition. The same
@@ -115,16 +115,17 @@ The following code shows an example of a postcondition:
 
 In this example, we declare a signed 8-bit type :ada:`Int_8` and an array
 of that type (:ada:`Int_8_Array`). We want to ensure that, when calling
-the procedure :ada:`Double` for a :ada:`Int_8_Array`, each element of the
-array will be doubled. This is implemented by a postcondition that uses
-a :ada:`for all` expression. The postcondition also makes use of the
-original value of the parameter before the call. The :ada:`'Old` attribute
-is used in this case to retrieve the original value.
+the procedure :ada:`Double` for an object of :ada:`Int_8_Array` type, each
+element of the array will be doubled. This is implemented by a
+postcondition that uses a :ada:`for all` expression. The postcondition
+also makes use of the original value of the parameter before the call.
+The :ada:`'Old` attribute is used in this case to retrieve the original
+value.
 
 Also, we want to ensure that, in calls to the
 :ada:`Double` function for the :ada:`Int_8` type, the result will be
 greater than the input value. This is implemented by a postcondition that
-uses the :ada:`'Result` attribute of the function and compares to the
+uses the :ada:`'Result` attribute of the function and compares it to the
 input value.
 
 We can use pre and postconditions at the same time in the declaration of
@@ -137,8 +138,8 @@ a subprogram. For example:
     with Ada.Numerics.Elementary_Functions;
 
     procedure Show_Simple_Contract is
-       pragma Assertion_Policy (Pre  => Check);
-       pragma Assertion_Policy (Post => Check);
+       pragma Assertion_Policy (Pre  => Check,
+                                Post => Check);
 
        type Int_8 is range -2 ** 7 .. 2 ** 7 - 1
          with Size => 8;
@@ -161,10 +162,11 @@ a subprogram. For example:
 
 In this example, we want to ensure  that, in calls to the
 :ada:`Double` function for the :ada:`Int_8` type, the input value will not
-overflow when calling the function. This is implemented by converting
+overflow in the call to the function. This is implemented by converting
 the input value to the :ada:`Integer` type, which is used to store the
 temporary calculation, and check if the result is still in the appropriate
-range. The postcondition is still the same as in the previous example.
+range for the :ada:`Int_8` type. The postcondition in this example is the
+same as in the previous example.
 
 Type invariants
 ---------------
@@ -172,8 +174,8 @@ Type invariants
 Type invariants are used to define expectations regarding private types
 declared in a package. For example, if a type ``T`` from a package ``P``
 has a type invariant, this ensures that operations on objects of type
-``T`` will always be consistent. They can be viewed as a kind of
-post-condition for types.
+``T`` will always be consistent. Type invariants can be viewed as a sort
+of post-condition for types.
 
 Type invariants are specified by using a
 :ada:`with Type_Invariant => <property>` clause. Similarly to pre and
@@ -262,13 +264,15 @@ Let's look at an example:
 
 In this example, the package :ada:`Courses` defines a type :ada:`Course`
 for individual courses, and a type :ada:`Course_Container` that contains
-all courses. We want to ensure that the start date for every course is not
-set to a date after the end date. This is implemented in the function
-:ada:`Check`. In order to enforce this rule, we declare a type invariant
-for the :ada:`Course` that calls the :ada:`Check` for every object. For
-example, in the call to the :ada:`Init` function, :ada:`Check` will be
-called during the object creation to ensure that they meet our
-requirements.
+all courses. We want to ensure that the start date of every course is not
+set to a date after the end date of the same course. In other words, we
+want to check that the start and end dates are consistent to each other.
+This is implemented by the function :ada:`Check`. In order to enforce this
+rule, we declare a type invariant for the :ada:`Course` type that calls
+the :ada:`Check` function for every object. For example, in the call to
+the :ada:`Init` function, :ada:`Check` will be called during the object
+creation to ensure that the object that is being created matches our
+expectations.
 
 Predicates
 ----------
@@ -407,8 +411,8 @@ Let's look now at a complete example:
 
     procedure Show_Predicates is
 
-       pragma Assertion_Policy (Static_Predicate  => Check);
-       pragma Assertion_Policy (Dynamic_Predicate => Check);
+       pragma Assertion_Policy (Static_Predicate  => Check,
+                                Dynamic_Predicate => Check);
 
        type Week is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
 
