@@ -65,6 +65,11 @@ another subprogram attempts to call the :ada:`DB_Entry` procedure with an
 empty string for the :ada:`Name` parameter, the call will fail because the
 precondition is not met.
 
+Note that the :ada:`pragma Assertion_Policy` statement is used to force
+the compiler to generate a check for the precondition. The same
+:ada:`pragma` will be used for other kinds of contracts in the remaining
+examples from this section.
+
 The following code shows an example of a postcondition:
 
 .. code:: ada
