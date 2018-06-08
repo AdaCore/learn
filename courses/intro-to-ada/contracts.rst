@@ -264,3 +264,213 @@ for the :ada:`Course` that calls the :ada:`Check` for every object. For
 example, in the call to the :ada:`Init` function, :ada:`Check` will be
 called during the object creation to ensure that they meet our
 requirements.
+
+Predicates
+----------
+
+Predicates are also used to define expectations regarding types. However,
+while type invariants are used for private types in packages, predicates
+are used for all remaining (*non-private*) types.
+
+Predicates are similar to type invariants. However, there are some
+differences in terms of checks. The following table summarizes the
+differences:
+
++------------+-----------------------------+-----------------------------+
+| Element    | Subprogram parameter checks | Assignment checks           |
++==========================================+=============================+
+| Predicates | On all :ada:`in` and        | On assignments and explicit |
+|            | :ada:`out` parameters       | initializations             |
++------------+-----------------------------+-----------------------------+
+| Type       | On :ada:`out` parameters    | On all initializations      |
+| invariants | returned from subprograms   |                             |
+|            | declared in the same public |                             |
+|            | scope                       |                             |
++------------+-----------------------------+-----------------------------+
+
+There are two kinds of predicates: static and dynamic predicates. In
+simple terms, static predicates are used to check types at compile-time,
+whereas dynamic predicates are used for checks at run-time. We can also
+say that static predicates are used for scalar types, whereas dynamic
+predicates are used for all remaining (more complex) types.
+
+Let's look at an example of dynamic predicates. We could rewrite our
+previous example and replace type invariants by dynamic predicates. This
+would be the outcome:
+
+.. code:: ada
+    :class: ada-run-expect-failure
+
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Calendar;          use Ada.Calendar;
+    with Ada.Containers.Vectors;
+
+    procedure Show_Dynamic_Predicate_Courses is
+
+       pragma Assertion_Policy (Dynamic_Predicate => Check);
+
+       package Courses is
+          type Course_Container is private;
+
+          type Course is record
+             Name       : Unbounded_String;
+             Start_Date : Time;
+             End_Date   : Time;
+          end record
+            with Dynamic_Predicate => Course.Start_Date <= Course.End_Date;
+
+          procedure Add (CC         : in out Course_Container;
+                         C          : Course);
+       private
+          package Course_Vectors is new Ada.Containers.Vectors
+            (Index_Type   => Natural,
+             Element_Type => Course);
+
+          type Course_Container is record
+             V : Course_Vectors.Vector;
+          end record;
+       end Courses;
+
+       package body Courses is
+          procedure Add (CC : in out Course_Container;
+                         C  : Course) is
+          begin
+             CC.V.Append (C);
+          end Add;
+       end Courses;
+
+       use Courses;
+
+       CC : Course_Container;
+    begin
+       Add (CC,
+            Course'(
+              Name       => To_Unbounded_String ("Intro to Photography"),
+              Start_Date => Time_Of (2018, 5, 1),
+              End_Date   => Time_Of (2018, 5, 10)));
+
+       --  This should trigger an error in the dynamic predicate check
+       Add (CC,
+            Course'(
+              Name       => To_Unbounded_String ("Intro to Video Recording"),
+              Start_Date => Time_Of (2019, 5, 1),
+              End_Date   => Time_Of (2018, 5, 10)));
+
+    end Show_Dynamic_Predicate_Courses;
+
+Note that, in this example, the :ada:`Course` type is a visible (public)
+type of the :ada:`Courses` package, whereas, in the previous example, it
+was a private type.
+
+Static predicates, as mentioned above, are used for scalar types and
+checked during compilation time. They are particularly useful for
+representing non-contiguous elements of an enumeration. A classic example
+is a list of week days:
+
+.. code:: ada
+    :class: ada-nocheck
+
+    type Week is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+We can easily create a sub-list of working days in the week by specifying
+a :ada:`subtype` with a range based on :ada:`Week`. For example:
+
+.. code:: ada
+    :class: ada-nocheck
+
+    subtype Work_Week is Week range Mon .. Fri;
+
+However, ranges in Ada can only be specified for contiguous lists: they
+won't allow us to pick specific days. For example, we may want to create a
+list containing the first, middle and last day of the working week to
+make some checks in our application. In that case, we can use a static
+predicate to specify this list:
+
+.. code:: ada
+    :class: ada-nocheck
+
+   subtype Check_Days is Work_Week
+     with Static_Predicate => Check_Days in Mon | Wed | Fri;
+
+Let's look now at a complete example:
+
+.. code:: ada
+    :class: ada-run-expect-failure
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Predicates is
+
+       pragma Assertion_Policy (Static_Predicate  => Check);
+       pragma Assertion_Policy (Dynamic_Predicate => Check);
+
+       type Week is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+       subtype Work_Week is Week range Mon .. Fri;
+
+       subtype Test_Days is Work_Week
+         with Static_Predicate => Test_Days in Mon | Wed | Fri;
+
+       type Tests_Week is array (Week) of Natural
+         with Dynamic_Predicate =>
+           (for all I in Tests_Week'Range =>
+              (case I is
+                     when Test_Days => Tests_Week (I) > 0,
+                   when others    => Tests_Week (I) = 0));
+
+       Num_Tests : Tests_Week :=
+                     (Mon => 3, Tue => 0,
+                      Wed => 4, Thu => 0,
+                      Fri => 2, Sat => 0, Sun => 0);
+
+       procedure Display_Tests (N : Tests_Week) is
+       begin
+          for I in Test_Days loop
+             Put_Line ("# tests on " & Test_Days'Image (I)
+                       & " => "      & Integer'Image (N (I)));
+          end loop;
+       end Display_Tests;
+
+    begin
+       Display_Tests (Num_Tests);
+
+       --  Assigning non-conformant values to individual elements of
+       --  the Tests_Week type does not trigger a predicate check:
+       Num_Tests (Tue) := 2;
+
+       --  However, assignments with the "complete" Tests_Week type
+       --  trigger a predicate check. For example:
+       --
+       --  Num_Tests := (others => 0);
+
+       --  Also, calling any subprogram with parameters of Tests_Week
+       --  type triggers a predicate check.
+       --  Therefore, the following line will fail:
+       Display_Tests (Num_Tests);
+    end Show_Predicates;
+
+In this example, we want to have tests in our application that happen
+three days in the working week. These days are specified in
+:ada:`Test_Days` subtype. Also, we want to track the number of tests
+that happen each day. Therefore, we declare the type :ada:`Tests_Week` as
+an array containing the number of tests. According to our requirements,
+these tests should happen only in the aforementioned three days; in other
+days, no test should be performed. This requirement is implemented as a
+dynamic predicate of the type :ada:`Tests_Week`. Finally, in our
+application, the actual information about these tests is stored in
+the array :ada:`Num_Tests` based on the :ada:`Tests_Week` type.
+
+In the initialization of :ada:`Num_Tests`, the dynamic predicate of the
+:ada:`Tests_Week` type is verified. If we have a non-conformant value
+there, the predicate check will fail. However, as we can see in our
+example, individual assignments to elements of the array do not trigger a
+check. The reason is that, in the case of complex data structures such as
+arrays or records, the initialization of the complete structure may not be
+performed with a single assignment. Therefore, we cannot check for
+consistency at this point. However, as soon as this data structure is
+passed as an argument to a subprogram, the dynamic predicate will be
+checked because the subprogram expects the data structure to be
+consistent. This is what happens in the last call to :ada:`Display_Tests`
+in our example. Here, the predicate check fails because of the previous
+assignment with a non-conformant value.
