@@ -195,7 +195,7 @@ def analyze_file(rst_file):
         Block.get_blocks(content)
     )))
 
-    code_blocks = filter(lambda b: isinstance(b, CodeBlock), blocks)
+    code_blocks = [(i, b) for i, b in blocks if isinstance(b, CodeBlock)]
 
     def run(*run_args):
         if args.verbose:
@@ -239,7 +239,6 @@ def analyze_file(rst_file):
 
     for i, block in blocks:
         if isinstance(block, ConfigBlock):
-            print "Updating config", block._opts
             current_config.update(block)
             continue
 
@@ -258,8 +257,7 @@ def analyze_file(rst_file):
 
         def print_error(*error_args):
             error(*error_args)
-            if args.all_diagnostics:
-                print_diags()
+            print_diags()
 
         if 'ada-nocheck' in block.classes:
             if args.verbose:
@@ -331,7 +329,7 @@ def analyze_file(rst_file):
         else:
             for source_file in source_files:
                 try:
-                    run("gcc", "-c", "-gnatc", "-gnaty-s", source_file)
+                    run("gcc", "-c", "-gnatc", "-gnatyg0-s", source_file)
                 except S.CalledProcessError:
                     if 'ada-expect-compile-error' in block.classes:
                         compile_error = True
