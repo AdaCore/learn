@@ -10,7 +10,7 @@ if g:localvimrc_sourced_once
 endif
 
 let s:local_path = expand('<sfile>:p:h')
-let s:cmd=s:local_path . '/utils/compile_blocks.py'
+let s:cmd=s:local_path . '/../engine/tests/compile_blocks.py'
 
 function Rstcheck()
     let x=line(".")
