@@ -276,9 +276,6 @@ def analyze_file(rst_file):
             print_error(loc, "Failed to chop example, skipping\n")
             continue
 
-        if 'ada-syntax-only' in block.classes or not block.run:
-            continue
-
         idx = -1
         for i, line in enumerate(out):
             if line.endswith("into:"):
@@ -290,6 +287,21 @@ def analyze_file(rst_file):
             continue
 
         source_files = [s.strip() for s in out[idx:]]
+
+        for source_file in source_files:
+            try:
+                out = run("gcc", "-c", "-gnats", "-gnatyg0-s", source_file)
+            except S.CalledProcessError:
+                print_error(loc, "Failed to syntax check example")
+                has_error = True
+
+            if out:
+                print_error(loc, "Failed to syntax check example")
+                has_error = True
+
+
+        if 'ada-syntax-only' in block.classes or not block.run:
+            continue
 
         compile_error = False
 
