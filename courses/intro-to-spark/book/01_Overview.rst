@@ -73,7 +73,7 @@ We will now look at a simple example of subprogram in Ada that has also used
 SPARK aspects to specify a verifiable subprogram contract. The subprogram
 called ``Increment`` adds 1 to the value of its parameter ``X``:
 
-.. code-block:: ada
+.. code:: ada
 
    procedure Increment
      (X : in out Integer)
@@ -148,7 +148,7 @@ evaluation, parameter passing mechanism, or compiler optimizations. The
 expression below for ``G`` is non-deterministic due to the order in which
 the two calls to F are evaluated, and is therefore not legal SPARK.
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Show_Illegal_Ada_Code is
 
@@ -169,7 +169,7 @@ In fact, the code above is not even legal Ada, so the same error is generated
 by the GNAT compiler. But SPARK goes further and GNATprove issues also an error
 on the following equivalent code that is accepted by the compiler:
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Show_Illegal_SPARK_Code is
 
@@ -194,7 +194,7 @@ variable. Thus function ``F`` below is illegal in SPARK, while function
 function ``Incr_And_Log`` might be illegal if it updates global variables for
 logging.
 
-.. code-block:: ada
+.. code:: ada
 
     function F (X : in out Integer) return Integer;      -- Illegal
 
@@ -211,7 +211,7 @@ free from side-effects. Here for example, the two functions ``Incr`` and
 while ``Incr_And_Log`` is not as it attempts to update the global variable
 ``Call_Count``.
 
-.. code-block:: ada
+.. code:: ada
 
     package Side_Effects is
 
@@ -264,7 +264,7 @@ There are two reasons to forbid aliasing in SPARK:
 What is more, most of the time, possibility of aliasing was not even taken
 into account by the programmer. For example:
 
-.. code-block:: ada
+.. code:: ada
 
     procedure No_Aliasing is
 
@@ -316,7 +316,7 @@ declaration of those which are effectively used within the SPARK code.
 
 Here is a common case of use of the :ada:`SPARK_Mode` aspect.
 
-.. code-block:: ada
+.. code:: ada
 
    package P
       with SPARK_Mode => On
@@ -361,7 +361,7 @@ Here is a package defining a private ``Stack`` type containing elements of
 type ``Element`` and along with some subprograms providing the usual
 functionalities over stacks. It is marked to be in the SPARK subset.
 
-.. code-block:: ada
+.. code:: ada
 
     package Stack_Package
        with SPARK_Mode => On
@@ -393,7 +393,7 @@ stack. ``Content`` and ``Top`` are the global variables used to register
 the stack's state. Once again, this package is identified to be in the
 SPARK subset.
 
-.. code-block:: ada
+.. code:: ada
 
     package Global_Stack
        with SPARK_Mode => On
@@ -433,7 +433,7 @@ We now consider two procedures ``Permute`` and ``Swap``. ``Permute``
 applies a circular permutation to the value of its three parameters.
 ``Swap`` then uses ``Permute`` to swap the value of ``X`` and ``Y``.
 
-.. code-block:: ada
+.. code:: ada
 
     package P
        with SPARK_Mode => On
@@ -474,7 +474,7 @@ Example #4
 Here, the ``Swap`` procedure is used to swap the value of the two record
 components of ``R``.
 
-.. code-block:: ada
+.. code:: ada
 
     package P
        with SPARK_Mode => On
@@ -518,7 +518,7 @@ Here is a slight modification of the previous example using an array
 instead of a record. ``Swap_Indexes`` uses ``Swap`` on values stored in
 the array ``A``.
 
-.. code-block:: ada
+.. code:: ada
 
     package P
        with SPARK_Mode => On
@@ -560,7 +560,7 @@ Here is a package declaring a type ``Dictionary``, which is an array
 containing a word per letter. The procedure ``Store`` allows to insert a
 word at the correct index in a dictionary.
 
-.. code-block:: ada
+.. code:: ada
 
     package P
        with SPARK_Mode => On
@@ -595,7 +595,7 @@ Example #7
 Here is a modified version of the previous example. It has been adapted to
 hide the access type inside the private part of ``P``.
 
-.. code-block:: ada
+.. code:: ada
 
     package P
        with SPARK_Mode => On
@@ -626,7 +626,7 @@ Example #8
 
 Now let us consider ``P``'s body, with the definition of ``Store``, again.
 
-.. code-block:: ada
+.. code:: ada
 
     package P
        with SPARK_Mode => On
@@ -670,7 +670,7 @@ Example #9
 Here, we have moved the declaration and the body of the procedure
 ``Store`` to another package named ``Q``.
 
-.. code-block:: ada
+.. code:: ada
 
     package P
        with SPARK_Mode => On
@@ -720,7 +720,7 @@ Here, we have two functions which are searching for 0 inside an array
 ``A``. The first one raises an exception if 0 is not found in ``A`` while
 the other simply returns 0 in that case.
 
-.. code-block:: ada
+.. code:: ada
 
     package P
        with SPARK_Mode => On
