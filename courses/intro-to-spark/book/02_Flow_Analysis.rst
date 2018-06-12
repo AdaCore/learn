@@ -50,7 +50,7 @@ prior to entering the loop. As a consequence, the value read in the
 condition of the if statement may be uninitialized. Flow analysis will
 detect and report this error.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Uninitialized is
 
@@ -92,7 +92,7 @@ difficult to detect. It is the case in the subprograms ``Swap1`` and
 ``X`` and ``Y``. Though they are not considered as errors in themselves,
 flow analysis warns both on ineffective statements and unused variables.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Ineffective_Statements is
 
@@ -140,7 +140,7 @@ parameter is not updated or when its initial value is not used in the
 subprogram, as it may be the sign of an error. An example is shown below
 in the subprogram called ``Swap``.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Incorrect_Param_Mode is
 
@@ -198,7 +198,7 @@ either directly or through a subprogram call. For example, we may want to
 specify that the function ``Get_Value_Of_X`` reads the value of the global
 variable ``X`` and does not access any other global variable.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Global_Contracts is
 
@@ -224,7 +224,7 @@ the declaration of ``Get_Value_Of_X``. Finally, if a subprogram, like
 ``Incr_Parameter_X``, does not reference any global variable, the value of
 the global contract should be set to :ada:`null`.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Global_Contracts is
 
@@ -263,7 +263,7 @@ below, each parameter only depends on the initial value of the other
 parameter or that the value of ``X`` on return of ``Set_X_To_Zero`` does
 not depend on any global variable.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Depends_Contracts is
 
@@ -292,7 +292,7 @@ the initial value of the other parameter. If the subprogram is a function,
 its result must be listed as an output, as we did for ``Get_Value_Of_X``
 using the :ada:`Result` attribute.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Depends_Contracts is
 
@@ -372,7 +372,7 @@ This may lead to messages being issued on perfectly correct subprograms
 like ``Set_X_To_Y_Plus_Z`` which only sets its :ada:`out` parameter ``X``
 when ``Overflow`` is :ada:`False`.
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Set_X_To_Y_Plus_Z (Y, Z     :     Natural;
                                  X        : out Natural;
@@ -414,7 +414,7 @@ array is not initialized. To solve this issue, a user can either use an
 aggregate assignment, or, if it is not possible, verify initialization of
 the object by other means.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Composite_Types_Shortcoming is
 
@@ -447,7 +447,7 @@ assignments of its components, flow analysis can make sure that the whole
 object is initialized. Note that record objects are still treated as
 entire objects when taken as input or output of subprograms.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Record_Flow_Analysis is
 
@@ -462,7 +462,7 @@ entire objects when taken as input or output of subprograms.
 
     package body Show_Record_Flow_Analysis is
 
-       procedure Init (R : out Rec);
+       procedure Init (R : out Rec) is
        begin
           R.F1 := 0;
           R.F2 := 0;
@@ -476,7 +476,7 @@ a record object will result in flow analysis complaining about
 non-initialization of to-be initialized components in entry of the
 subprogram, like for ``Init_F2``.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Record_Flow_Analysis is
 
@@ -498,7 +498,7 @@ subprogram, like for ``Init_F2``.
           R.F2 := 0;
        end Init_F2;
 
-       procedure Init (R : out Rec);
+       procedure Init (R : out Rec) is
        begin
           R.F1 := 0;
           Init_F2 (R); --  R should be initialized before this call
@@ -521,7 +521,7 @@ computes that, on a path entering none of the two conditional statements,
 ``R`` is uninitialized. As it does not consider values of expressions, it
 cannot know that such a case can never happen.
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Absolute_Value
       (X :     Integer;
@@ -540,7 +540,7 @@ cannot know that such a case can never happen.
 To avoid this problem, it is better to make the control flow explicit, as
 in the second version of ``Absolute_Value``:
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Absolute_Value
       (X :     Integer;
@@ -591,26 +591,27 @@ The procedure ``Search_Array`` searches for a particular element ``E`` in
 an array ``A``. If the element is found, then it is stored in ``Result``.
 Otherwise, ``Found`` is set to :ada:`False`.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Search_Array is
 
        type Array_Of_Positives is array (Natural range <>) of Positive;
 
-       procedure Search_Array (A      :     Array_Of_Positives;
-                               E      :     Positive;
-                               Result : out Integer;
-                               Found  : out Boolean)
+       procedure Search_Array
+         (A      :     Array_Of_Positives;
+          E      :     Positive;
+          Result : out Integer;
+          Found  : out Boolean);
 
     end Show_Search_Array;
 
     package body Show_Search_Array is
 
-       procedure Search_Array (A      :     Array_Of_Positives;
-                               E      :     Positive;
-                               Result : out Integer;
-                               Found  : out Boolean)
-       is
+       procedure Search_Array
+         (A      :     Array_Of_Positives;
+          E      :     Positive;
+          Result : out Integer;
+          Found  : out Boolean) is
        begin
           for I in A'Range loop
              if A (I) = E then
@@ -642,7 +643,7 @@ Example #2
 Here, to avoid the flow message from previous slide, ``Search_Array``
 raises an exception when ``E`` is not found in ``A``.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Search_Array is
 
@@ -650,18 +651,18 @@ raises an exception when ``E`` is not found in ``A``.
 
        Not_Found : exception;
 
-       procedure Search_Array (A      :     Array_Of_Positives;
-                               E      :     Positive;
-                               Result : out Integer)
-
+       procedure Search_Array
+         (A      :     Array_Of_Positives;
+          E      :     Positive;
+          Result : out Integer);
     end Show_Search_Array;
 
     package body Show_Search_Array is
 
-       procedure Search_Array (A      :     Array_Of_Positives;
-                               E      :     Positive;
-                               Result : out Integer)
-       is
+       procedure Search_Array
+         (A      :     Array_Of_Positives;
+          E      :     Positive;
+          Result : out Integer) is
        begin
           for I in A'Range loop
              if A (I) = E then
@@ -692,9 +693,9 @@ record for that result of ``Search_Array``. This way, the index at
 which ``E`` was found in ``A`` can be set only when ``E`` was indeed
 found.
 
-.. code-block:: ada
+.. code:: ada
 
-    package Show_Search_Array
+    package Show_Search_Array is
 
        type Array_Of_Positives is array (Natural range <>) of Positive;
 
@@ -706,18 +707,19 @@ found.
           end case;
        end record;
 
-       procedure Search_Array (A      :     Array_Of_Positives;
-                               E      :     Positive;
-                               Result : out Search_Result);
+       procedure Search_Array
+         (A      :     Array_Of_Positives;
+          E      :     Positive;
+          Result : out Search_Result);
 
     end Show_Search_Array;
 
-    package body Show_Search_Array
+    package body Show_Search_Array is
 
-       procedure Search_Array (A      :     Array_Of_Positives;
-                               E      :     Positive;
-                               Result : out Search_Result)
-       is
+       procedure Search_Array
+         (A      :     Array_Of_Positives;
+          E      :     Positive;
+          Result : out Search_Result) is
        begin
           for I in A'Range loop
              if A (I) = E then
@@ -750,7 +752,7 @@ case, it updates the current maximal value read so far. Otherwise, it has
 found the end of an increasing sequence. It therefore computes the size of
 this sequence and stores it in ``Size_Of_Seq``.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -821,7 +823,7 @@ position of the ``I``th element in the permutation. The procedure
 elements is at the ``I``th position. ``Cyclic_Permuation`` calls ``Init``
 and then swaps the elements until it has constructed a cyclic permutation.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Permutation is
 
@@ -880,7 +882,7 @@ This program is the same as the previous one except that, to avoid the
 flow warning at the array assignment, the mode of ``A`` in the
 specification of ``Init`` has been changed to :ada:`in out`.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Permutation is
 
@@ -944,7 +946,7 @@ iterates through ``A`` to increment every element by the value of
 not be exceeded after the increment. A global contract has been specified
 for ``Incr_Until_Threshold``.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Increments is
 
@@ -1001,7 +1003,7 @@ We are back to the procedure ``Test_Index`` from example #4. We have
 corrected the missing initializations and are now interested into the
 :ada:`Global` contract of ``Test_Index``. Is it correct?
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -1067,7 +1069,7 @@ We have changed the :ada:`Global` contract of ``Test_Index`` to a
 :ada:`Depends` contract. Note that we do not in general need both as
 global variables accessed can be deduced from the :ada:`Depends` contract.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -1091,7 +1093,7 @@ global variables accessed can be deduced from the :ada:`Depends` contract.
           procedure Test_Index (Current_Index : Integer) with
             Depends => ((Max, End_Of_Seq)        => (A, Current_Index, Max),
                         (Size_Of_Seq, Beginning) =>
-                           + (A, Current_Index, Max, Beginning));
+                           + (A, Current_Index, Max, Beginning))
           is
           begin
              if A (Current_Index) >= Max then
@@ -1137,7 +1139,7 @@ The subprogram ``Identity`` swaps the value of its parameter twice. Its
 :ada:`Depends` contract states that ``X`` the final value of ``X`` only
 depends on its initial value and the same for ``Y``.
 
-.. code-block:: ada
+.. code:: ada
 
     package Show_Swap is
 

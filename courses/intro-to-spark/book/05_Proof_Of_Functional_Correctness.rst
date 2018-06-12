@@ -963,7 +963,7 @@ the automatic generation of frame conditions. What happens is that GNATprove
 completes the provided loop invariant with the following property called `frame
 condition` stating what part of the array has not been modified so far:
 
-.. code-block:: ada
+.. code:: ada
 
              pragma Loop_Invariant
                (for all J in K + 1 .. A'Last => A (J) = A'Loop_Entry (J));
