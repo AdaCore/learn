@@ -3,7 +3,7 @@ Intro To SPARK
 
 .. toctree::
    :maxdepth: 1
-   
+ 
    Overview <book/01_Overview>
    Flow Analysis <book/02_Flow_Analysis>
    Proof Of Program Integrity <book/03_Proof_Of_Program_Integrity>
