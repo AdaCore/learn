@@ -149,6 +149,7 @@ expression below for ``G`` is non-deterministic due to the order in which
 the two calls to F are evaluated, and is therefore not legal SPARK.
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
     procedure Show_Illegal_Ada_Code is
 
@@ -317,20 +318,21 @@ declaration of those which are effectively used within the SPARK code.
 Here is a common case of use of the :ada:`SPARK_Mode` aspect.
 
 .. code:: ada
+    :class: ada-nocheck
 
-   package P
-      with SPARK_Mode => On
-   is
-      -- package spec is SPARK, so can be used
-      -- by SPARK clients
-   end P;
+    package P
+       with SPARK_Mode => On
+    is
+       -- package spec is SPARK, so can be used
+       -- by SPARK clients
+    end P;
 
-   package body P
-      with SPARK_Mode => Off
-   is
-      -- body is NOT SPARK, so assumed to
-      -- be full Ada
-   end P;
+    package body P
+       with SPARK_Mode => Off
+    is
+       -- body is NOT SPARK, so assumed to
+       -- be full Ada
+    end P;
 
 The package ``P`` only defines entities whose specifications are in the
 SPARK subset. However, it uses full Ada features in its body which,
