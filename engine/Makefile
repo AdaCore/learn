@@ -3,7 +3,6 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = learnadacorecom
 SPHINXCONF    = sphinx
-SOURCEDIR     = ..
 BUILDDIR      = _build
 TEST_DRIVER = python tests/compile_blocks.py
 
@@ -28,7 +27,9 @@ tests: test_ada_intro test_spark_intro
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" \
+	@$(SPHINXBUILD) -M $@ "../courses/intro-to-ada" \
+                        "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@$(SPHINXBUILD) -M $@ "../courses/intro-to-spark" \
                         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 .PHONY: Makefile help tests
