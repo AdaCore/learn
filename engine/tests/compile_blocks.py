@@ -30,15 +30,14 @@ Here are the available classes for annotation:
   runtime error is expected.
 """
 
-from docutils.core import publish_doctree
 import argparse
 import os
 import subprocess as S
-from IPython import embed
 from os import path as P
 import colors as C
 import shutil
 import re
+
 
 class CodeBlock():
     def __init__(self, line_start, line_end, text, language, classes):
@@ -140,6 +139,17 @@ def get_line(block):
     return precise, line
 
 
+class Diag(object):
+    def __init__(self, file, line, col, msg):
+        self.file = file
+        self.line = line
+        self.col = col
+        self.msg = msg
+
+    def __repr__(self):
+        return "{}:{}:{}: {}".format(self.file, self.line, self.col, self.msg)
+
+
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('rst_file', type=str,
                     help="The rst file from which to extract doc")
@@ -155,171 +165,166 @@ parser.add_argument('--code-block-at', type=int, default=0)
 
 args = parser.parse_args()
 
-with open(args.rst_file) as f:
-    content = f.read()
 
+def analyze_file(rst_file):
+    with open(args.rst_file) as f:
+        content = f.read()
 
-code_blocks = list(enumerate(filter(
-    lambda cb: cb.language == "ada", CodeBlock.get_code_blocks(content)
-)))
+    code_blocks = list(enumerate(filter(
+        lambda cb: cb.language == "ada", CodeBlock.get_code_blocks(content)
+    )))
 
-# Remove the build dir, but only if the user didn't ask for a specific subset
-# of code_blocks
-if os.path.exists(args.build_dir) and not args.code_block:
-    shutil.rmtree(args.build_dir)
+    # Remove the build dir, but only if the user didn't ask for a specific
+    # subset of code_blocks
+    if os.path.exists(args.build_dir) and not args.code_block:
+        shutil.rmtree(args.build_dir)
 
-if not os.path.exists(args.build_dir):
-    os.makedirs(args.build_dir)
+    if not os.path.exists(args.build_dir):
+        os.makedirs(args.build_dir)
 
-os.chdir(args.build_dir)
+    os.chdir(args.build_dir)
 
+    def run(*run_args):
+        if args.verbose:
+            print "Running \"{}\"".format(" ".join(run_args))
+        try:
+            output = S.check_output(run_args, stderr=S.STDOUT)
+            all_output.extend(output.splitlines())
+        except S.CalledProcessError as e:
+            all_output.extend(e.output.splitlines())
+            raise e
 
-def run(*run_args):
-    if args.verbose:
-        print "Running \"{}\"".format(" ".join(run_args))
-    try:
-        output = S.check_output(run_args, stderr=S.STDOUT)
-        all_output.extend(output.splitlines())
-    except S.CalledProcessError as e:
-        all_output.extend(e.output.splitlines())
-        raise e
+        return output
 
-    return output
+    if args.code_block_at:
+        for i, block in code_blocks:
+            block.run = False
+            if block.line_start < args.code_block_at < block.line_end:
+                block.run = True
 
-if args.code_block_at:
-    for i, code_block in code_blocks:
-        code_block.run = False
-        if code_block.line_start < args.code_block_at < code_block.line_end:
+    if args.code_block:
+        expr = "code_blocks[{}]".format(args.code_block)
+        subset = eval(expr, globals(), locals())
+        if not isinstance(code_blocks, list):
+            subset = [subset]
+
+        for i, code_block in code_blocks:
+            code_block.run = False
+
+        for i, code_block in subset:
             code_block.run = True
 
-if args.code_block:
-    expr = "code_blocks[{}]".format(args.code_block)
-    subset = eval(expr, globals(), locals())
-    if not isinstance(code_blocks, list):
-        subset = [subset]
+    def extract_diagnostics(lines):
+        diags = []
+        r = re.compile("(.+?):(\d+):(\d+): (.+)")
+        for l in lines:
+            m = r.match(l)
+            if m:
+                f, l, c, t = m.groups()
+                diags.append(Diag(f, int(l), int(c), t))
+        return diags
 
-    for i, code_block in code_blocks:
-        code_block.run = False
+    for i, block in code_blocks:
+        has_error = False
+        loc = "at {}:{} (code block #{})".format(
+            args.rst_file, block.line_start, i)
 
-    for i, code_block in subset:
-        code_block.run = True
+        all_output = []
 
+        def print_diags():
+            diags = extract_diagnostics(all_output)
+            for diag in diags:
+                diag.line = diag.line + block.line_start
+                diag.file = args.rst_file
+                print diag
 
-class Diag(object):
-    def __init__(self, file, line, col, msg):
-        self.file = file
-        self.line = line
-        self.col = col
-        self.msg = msg
+        def print_error(*error_args):
+            error(*error_args)
+            if args.all_diagnostics:
+                print_diags()
 
-    def __repr__(self):
-        return "{}:{}:{}: {}".format(self.file, self.line, self.col, self.msg)
+        if 'ada-nocheck' in block.classes:
+            if args.verbose:
+                print "Skipping code block {}".format(loc)
+            continue
 
-
-def extract_diagnostics(lines):
-    diags = []
-    r = re.compile("(.+?):(\d+):(\d+): (.+)")
-    for l in lines:
-        m = r.match(l)
-        if m:
-            f, l, c, t = m.groups()
-            diags.append(Diag(f, int(l), int(c), t))
-    return diags
-
-
-for i, code_block in code_blocks:
-    has_error = False
-    loc = "at {}:{} (code block #{})".format(
-        args.rst_file, code_block.line_start, i)
-
-    all_output = []
-
-    def print_diags():
-        diags = extract_diagnostics(all_output)
-        for diag in diags:
-            diag.line = diag.line + code_block.line_start
-            diag.file = args.rst_file
-            print diag
-
-    def print_error(*error_args):
-        error(*error_args)
-        if not args.all_diagnostics:
-            print_diags()
-
-    if 'ada-nocheck' in code_block.classes:
         if args.verbose:
-            print "Skipping code block {}".format(loc)
-        continue
+            print header("Checking code block {}".format(loc))
 
-    if args.verbose:
-        print header("Checking code block {}".format(loc))
-
-    with open(u"code.ada", u"w") as code_file:
-        code_file.write(code_block.text)
-
-    try:
-        out = run("gnatchop", "-r", "-w", "code.ada").splitlines()
-    except S.CalledProcessError:
-        print_error(loc, "Failed to chop example, skipping\n")
-        continue
-
-    if 'ada-syntax-only' in code_block.classes or not code_block.run:
-        continue
-
-    for i, line in enumerate(out):
-        if line.endswith("into:"):
-            idx = i + 1
-            break
-
-    source_files = [s.strip() for s in out[idx:]]
-
-    compile_error = False
-
-    if 'ada-run' in code_block.classes or 'ada-run-expect-failure' in code_block.classes:
-        if len(source_files) == 1:
-            main_file = source_files[0]
-        else:
-            main_file = 'main.adb'
+        with open(u"code.ada", u"w") as code_file:
+            code_file.write(block.text)
 
         try:
-            run("gprbuild", "-f", main_file)
+            out = run("gnatchop", "-r", "-w", "code.ada").splitlines()
         except S.CalledProcessError:
-            print_error(loc, "Failed to compile example")
+            print_error(loc, "Failed to chop example, skipping\n")
+            continue
+
+        if 'ada-syntax-only' in block.classes or not block.run:
+            continue
+
+        for i, line in enumerate(out):
+            if line.endswith("into:"):
+                idx = i + 1
+                break
+
+        source_files = [s.strip() for s in out[idx:]]
+
+        compile_error = False
+
+        if (
+            'ada-run' in block.classes
+            or 'ada-run-expect-failure' in block.classes
+        ):
+            if len(source_files) == 1:
+                main_file = source_files[0]
+            else:
+                main_file = 'main.adb'
+
+            try:
+                run("gprbuild", "-f", main_file)
+            except S.CalledProcessError:
+                print_error(loc, "Failed to compile example")
+                has_error = True
+
+            if not has_error:
+                try:
+                    run("./{}".format(P.splitext(main_file)[0]))
+
+                    if 'ada-run-expect-failure' in block.classes:
+                        print_error(
+                            loc, "Running of example should have failed"
+                        )
+                        has_error = True
+
+                except S.CalledProcessError:
+                    if 'ada-run-expect-failure' in block.classes:
+                        if args.verbose:
+                            print "Running of example expectedly failed"
+                    else:
+                        print_error(loc, "Running of example failed")
+                        has_error = True
+
+        else:
+            for source_file in source_files:
+                try:
+                    run("gcc", "-c", "-gnatc", "-gnaty", source_file)
+                except S.CalledProcessError:
+                    if 'ada-expect-compile-error' in block.classes:
+                        compile_error = True
+                    else:
+                        print_error(loc, "Failed to compile example")
+                        has_error = True
+
+        if 'ada-expect-compile-error' in block.classes and not compile_error:
+            print_error(loc, "Expected compile error, got none!")
             has_error = True
 
-        if not has_error:
-            try:
-                run("./{}".format(P.splitext(main_file)[0]))
+        if not has_error and args.verbose:
+            print C.col("SUCCESS", C.Colors.GREEN)
 
-                if 'ada-run-expect-failure' in code_block.classes:
-                    print_error(loc, "Running of example should have failed")
-                    has_error = True
+        if args.all_diagnostics:
+            print_diags()
 
-            except S.CalledProcessError:
-                if 'ada-run-expect-failure' in code_block.classes:
-                    if args.verbose:
-                        print "Running of example expectedly failed"
-                else:
-                    print_error(loc, "Running of example failed")
-                    has_error = True
 
-    else:
-        for source_file in source_files:
-            try:
-                run("gcc", "-c", "-gnatc", "-gnaty", source_file)
-            except S.CalledProcessError:
-                if 'ada-expect-compile-error' in code_block.classes:
-                    compile_error = True
-                else:
-                    print_error(loc, "Failed to compile example")
-                    has_error = True
-
-    if 'ada-expect-compile-error' in code_block.classes and not compile_error:
-        print_error(loc, "Expected compile error, got none!")
-        has_error = True
-
-    if not has_error and args.verbose:
-        print C.col("SUCCESS", C.Colors.GREEN)
-
-    if args.all_diagnostics:
-        print_diags()
+analyze_file(args.rst_file)
