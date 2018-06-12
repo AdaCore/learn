@@ -254,7 +254,7 @@ Ada's :ada:`if` statementis pretty unsurprising in form and function:
     begin
        Put ("Enter an integer value: ");  -- Put a String
        Get (N);  -- Read in an integer value
-       if N>0 then
+       if N > 0 then
           Put (N);  --Put an Integer
           Put_Line (" is a positive number");
        end if;
@@ -1308,30 +1308,31 @@ you get a type that has the same properties as some existing type but is
 treated as a distinct type in the interest of strong typing.
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
-   procedure Main is
-      --  ID card number type, incompatible with Integer.
-      type Social_Security_Number
-      is new Integer range 0 .. 999_99_9999;
-      --                   ^ Since a SSN has 9 digits max, and cannot be
-      --                     negative, we enforce a validity constraint.
+    procedure Main is
+       --  ID card number type, incompatible with Integer.
+       type Social_Security_Number
+       is new Integer range 0 .. 999_99_9999;
+       --                   ^ Since a SSN has 9 digits max, and cannot be
+       --                     negative, we enforce a validity constraint.
 
-      SSN : Social_Security_Number := 555_55_5555;
-      --                              ^ You can put underscores as formatting in
-      --                                any number.
+       SSN : Social_Security_Number := 555_55_5555;
+       --                              ^ You can put underscores as formatting in
+       --                                any number.
 
-      I   : Integer;
+       I   : Integer;
 
-      Invalid : Social_Security_Number := -1;
-      --                                  ^ This will cause a runtime error
-      --                                    (and a compile time warning with
-      --                                     GNAT)
-   begin
-      I   := SSN ;                        -- Illegal, they have different types
-      SSN := I;                           -- Likewise illegal
-      I   := Integer (SSN);               -- OK with explicit conversion
-      SSN := Social_Security_Number (I);  -- Likewise OK
-   end Main;
+       Invalid : Social_Security_Number := -1;
+       --                                  ^ This will cause a runtime error
+       --                                    (and a compile time warning with
+       --                                     GNAT)
+    begin
+       I   := SSN ;                        -- Illegal, they have different types
+       SSN := I;                           -- Likewise illegal
+       I   := Integer (SSN);               -- OK with explicit conversion
+       SSN := Social_Security_Number (I);  -- Likewise OK
+    end Main;
 
 The type Social_Security is said to be a *derived type*; its *parent type* is
 Integer.
@@ -1701,7 +1702,7 @@ If you use a value of the wrong type to index the array, you will get a
 compile-time error.
 
 .. code:: ada
-    :class: ada-run
+    :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
 
