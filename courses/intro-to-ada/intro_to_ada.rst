@@ -1,7 +1,5 @@
 :code-config:`run_button=True;prove_button=False;accumulate_code=True`
 
-Introduction to Ada
-===================
 :code-config:`reset_accumulator=True`
 
 .. role:: ada(code)
@@ -13,10 +11,8 @@ Introduction to Ada
 .. role:: cpp(code)
    :language: c++
 
-This document is a concise introduction to the Ada language, for people
-who already have some experience with programming. It will go over the
-important concepts of Ada in the order that made the most sense writing
-it.
+Introduction
+============
 
 History
 -------
