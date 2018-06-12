@@ -39,28 +39,14 @@ import shutil
 import re
 
 
-class CodeBlock():
-    def __init__(self, line_start, line_end, text, language, classes):
-        self.line_start = line_start
-        self.line_end = line_end
-        self.text = text
-        self.language = language
-        self.classes = classes
-        self.run = True
-
-    def dump(self):
-        print self.line_start
-        print self.line_end
-        print self.text
-        print self.language
-        print self.classes
-
+class Block(object):
     @staticmethod
-    def get_code_blocks(input_text):
+    def get_blocks(input_text):
         lang_re = re.compile("\s*.. code::\s*(\w+)?\s*")
+        code_config_re = re.compile(":code-config:`(.*)?`")
         classes_re = re.compile("\s*:class:\s*(.+)")
 
-        code_blocks = []
+        blocks = []
         lines = input_text.splitlines()
 
         def first_nonws(line):
@@ -86,7 +72,7 @@ class CodeBlock():
                     cb_indent = indent
 
                 if indent < cb_indent and not is_empty(line):
-                    code_blocks.append(CodeBlock(
+                    blocks.append(CodeBlock(
                         cb_start,
                         i,
                         "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
@@ -107,8 +93,39 @@ class CodeBlock():
                         i + 1,
                         lang_re.match(line).groups()[0]
                     )
+                elif line[indent:].startswith(":code-config:"):
+                    blocks.append(ConfigBlock(**dict(
+                        kv.split('=')
+                        for kv
+                        in code_config_re.findall(line)[0].split(";")
+                    )))
 
-        return code_blocks
+        return blocks
+
+
+class CodeBlock(Block):
+    def __init__(self, line_start, line_end, text, language, classes):
+        self.line_start = line_start
+        self.line_end = line_end
+        self.text = text
+        self.language = language
+        self.classes = classes
+        self.run = True
+
+
+class ConfigBlock(Block):
+    def __init__(self, **opts):
+        self._opts = opts
+        for k, v in opts.items():
+            setattr(self, k, False if v == "False" else True)
+
+    def update(self, other_config):
+        self.__init__(**other_config._opts)
+
+
+current_config = ConfigBlock(
+    run_button=False, prove_button=True, accumulate_code=False
+)
 
 
 def header(strn):
@@ -151,7 +168,7 @@ class Diag(object):
 
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('rst_file', type=str,
+parser.add_argument('rst_files', type=str, nargs="+",
                     help="The rst file from which to extract doc")
 parser.add_argument('--build-dir', '-B', type=str, default="build",
                     help='Dir in which to build code')
@@ -165,24 +182,20 @@ parser.add_argument('--code-block-at', type=int, default=0)
 
 args = parser.parse_args()
 
+args.rst_files = map(os.path.abspath, args.rst_files)
+
 
 def analyze_file(rst_file):
-    with open(args.rst_file) as f:
+
+    with open(rst_file) as f:
         content = f.read()
 
-    code_blocks = list(enumerate(filter(
-        lambda cb: cb.language == "ada", CodeBlock.get_code_blocks(content)
+    blocks = list(enumerate(filter(
+        lambda b: b.language == "ada" if isinstance(b, CodeBlock) else True,
+        Block.get_blocks(content)
     )))
 
-    # Remove the build dir, but only if the user didn't ask for a specific
-    # subset of code_blocks
-    if os.path.exists(args.build_dir) and not args.code_block:
-        shutil.rmtree(args.build_dir)
-
-    if not os.path.exists(args.build_dir):
-        os.makedirs(args.build_dir)
-
-    os.chdir(args.build_dir)
+    code_blocks = filter(lambda b: isinstance(b, CodeBlock), blocks)
 
     def run(*run_args):
         if args.verbose:
@@ -224,10 +237,15 @@ def analyze_file(rst_file):
                 diags.append(Diag(f, int(l), int(c), t))
         return diags
 
-    for i, block in code_blocks:
+    for i, block in blocks:
+        if isinstance(block, ConfigBlock):
+            print "Updating config", block._opts
+            current_config.update(block)
+            continue
+
         has_error = False
         loc = "at {}:{} (code block #{})".format(
-            args.rst_file, block.line_start, i)
+            rst_file, block.line_start, i)
 
         all_output = []
 
@@ -235,7 +253,7 @@ def analyze_file(rst_file):
             diags = extract_diagnostics(all_output)
             for diag in diags:
                 diag.line = diag.line + block.line_start
-                diag.file = args.rst_file
+                diag.file = rst_file
                 print diag
 
         def print_error(*error_args):
@@ -263,10 +281,15 @@ def analyze_file(rst_file):
         if 'ada-syntax-only' in block.classes or not block.run:
             continue
 
+        idx = -1
         for i, line in enumerate(out):
             if line.endswith("into:"):
                 idx = i + 1
                 break
+
+        if idx == -1:
+            print_error(loc, "Failed to chop example, skipping\n")
+            continue
 
         source_files = [s.strip() for s in out[idx:]]
 
@@ -308,7 +331,7 @@ def analyze_file(rst_file):
         else:
             for source_file in source_files:
                 try:
-                    run("gcc", "-c", "-gnatc", "-gnaty", source_file)
+                    run("gcc", "-c", "-gnatc", "-gnaty-s", source_file)
                 except S.CalledProcessError:
                     if 'ada-expect-compile-error' in block.classes:
                         compile_error = True
@@ -326,5 +349,20 @@ def analyze_file(rst_file):
         if args.all_diagnostics:
             print_diags()
 
+        if source_files and not current_config.accumulate_code:
+            for source_file in source_files:
+                os.remove(source_file)
 
-analyze_file(args.rst_file)
+
+# Remove the build dir, but only if the user didn't ask for a specific
+# subset of code_blocks
+if os.path.exists(args.build_dir) and not args.code_block:
+    shutil.rmtree(args.build_dir)
+
+if not os.path.exists(args.build_dir):
+    os.makedirs(args.build_dir)
+
+os.chdir(args.build_dir)
+
+for f in args.rst_files:
+    analyze_file(f)
