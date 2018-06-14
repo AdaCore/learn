@@ -2385,7 +2385,8 @@ in a package, and have that subprogram available to be invoked from client
 ("with"ing) units, you need to do two things:
 
 * Put its specification (name, parameters, result type if a function) in the
-  package specifciation, along with any comments / documentation you wish to provide
+  package specifciation, along with any comments / documentation you wish to
+  provide
 
 * Put the full declaration of the subprogram (its body, or implementation) in
   the package body
@@ -2442,9 +2443,9 @@ This example illustrates several points:
 
     .. amiard: TODO: say less or say more
 
-As we showed briefly above, if a subprogram declaration appears in a package declaration
-then a subprogram body needs to be supplied in the package body. For the ``Week``
-package above, we could have the following body:
+As we showed briefly above, if a subprogram declaration appears in a package
+declaration then a subprogram body needs to be supplied in the package body.
+For the ``Week`` package above, we could have the following body:
 
 .. code:: ada
 
@@ -2606,12 +2607,13 @@ this is realized, but two important points are:
   for the program, so that the compiler can warn or reject if there is an
   inconsistency.
 
-- Ada provides a variety of techniques for achieving the generality and flexibility of
-  pointers and dynamic memory management, but without the latter's drawbacks
-  (such as memory leakage and dangling references).
+- Ada provides a variety of techniques for achieving the generality and
+  flexibility of pointers and dynamic memory management, but without the
+  latter's drawbacks (such as memory leakage and dangling references).
 
 Parameters modes are a feature that helps achieve the two design goals above. A
-subprogram parameter can be specified with a mode, which is one of the following:
+subprogram parameter can be specified with a mode, which is one of the
+following:
 
 +---------------+--------------------------------------------+
 | :ada:`in`     | Parameter can only be read, not written    |
@@ -2756,7 +2758,9 @@ acts like an uninitialized variable when the subprogram is invoked.
 Nested subprograms
 ~~~~~~~~~~~~~~~~~~
 
-As briefly mentioned earlier, Ada allows you to declare one subprogram inside of another.
+As briefly mentioned earlier, Ada allows you to declare one subprogram inside
+of another.
+
 This is useful for two reasons:
 
 - It lets you organize your programs in a cleaner fashion. If you need a
@@ -2764,8 +2768,8 @@ This is useful for two reasons:
   localization indicates that the helper subprogram should be declared nested.
 
 - It allows you to share state easily in a controlled fashion, because the
-  nested subprograms have access to the parameters, as well as any local variables,
-  declared in the outer scope.
+  nested subprograms have access to the parameters, as well as any local
+  variables, declared in the outer scope.
 
 .. code:: ada
     :class: ada-run
@@ -2805,8 +2809,8 @@ This is useful for two reasons:
 Forward declaration of subprograms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As we saw earlier, a subprogram can be declared without being fully defined, for
-example in a package specification. This is possible in general, and can be
+As we saw earlier, a subprogram can be declared without being fully defined,
+for example in a package specification. This is possible in general, and can be
 useful if you need subprograms to be mutually recursive, as in the example
 below:
 
@@ -2847,16 +2851,15 @@ More about types
 Aggregates: A primer
 --------------------
 
-So far, we have talked about aggregates quite a bit and have seen a number of examples.
-Now we will revisit this feature in some more detail.
+So far, we have talked about aggregates quite a bit and have seen a number of
+examples.  Now we will revisit this feature in some more detail.
 
-An Ada aggregate is, in effect, a literal value for a composite
-type. It's a very powerful notation that helps you to avoid
-writing procedural code for the initialization of your data structures in many
-cases.
+An Ada aggregate is, in effect, a literal value for a composite type. It's a
+very powerful notation that helps you to avoid writing procedural code for the
+initialization of your data structures in many cases.
 
-A basic rule when writing aggregates is that *every component* of the array or record
-has to be specified, even components that have a default value.
+A basic rule when writing aggregates is that *every component* of the array or
+record has to be specified, even components that have a default value.
 
 This means that the following code is incorrect:
 
@@ -2871,21 +2874,22 @@ This means that the following code is incorrect:
        Origin : Point := (X => 0);
     end Incorrect;
 
-There are a few shortcuts that you can use to make the notation more convenient:
+There are a few shortcuts that you can use to make the notation more
+convenient:
 
 - To specify the default value for a component, you can use the
   :ada:`<>` notation.
 
 - You can use the :ada:`|` symbol to give several components the same value.
 
-- You can use the :ada:`others` choice to refer to every component that has not yet
-  been specified, provided all those fields have the same type.
+- You can use the :ada:`others` choice to refer to every component that has not
+  yet been specified, provided all those fields have the same type.
 
 - You can use the range notation :ada:`..` to refer to specify a contiguous
   sequence of indices in an array.
 
-However, note that as soon as you used a named association,
-all subsequent components likewise need to be specified with names associations.
+However, note that as soon as you used a named association, all subsequent
+components likewise need to be specified with names associations.
 
 .. code:: ada
 
@@ -2923,8 +2927,8 @@ This is a common concept in programming languages, called
 `overloading <https://en.m.wikipedia.org/wiki/Function_overloading>`_, or name
 overloading.
 
-One of the novel aspects of Ada's overloading facility is the ability to resolve overloading
-based on the return type of a function.
+One of the novel aspects of Ada's overloading facility is the ability to
+resolve overloading based on the return type of a function.
 
 .. code:: ada
 
@@ -3076,7 +3080,8 @@ Here is how you declare a simple pointer type, or access type, in Ada:
 
 This illustrates how to:
 
-- Declare an access type whose values point to ("designate") objects from a specific type
+- Declare an access type whose values point to ("designate") objects from a
+  specific type
 - Declare a variable (access value) from this access type
 - Give it a value of :ada:`null`
 
@@ -3214,8 +3219,8 @@ features that are considered fundamental to the use of pointers, such as:
   a potentially unsafe operation. To keep within the realm of safe
   Ada, you need to never deallocate manually.
 
-Those features exist in Ada, but are only available through specific standard library
-APIs. You can read more about those in the
+Those features exist in Ada, but are only available through specific standard
+library APIs. You can read more about those in the
 `advanced course on memory management <TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
 
 .. attention::
@@ -3224,21 +3229,22 @@ APIs. You can read more about those in the
     allocation, and you should.
 
     There are many ways to avoid manual allocation, some of which have been
-    covered (such as parameter modes). The language also provides library abstractions
-    to avoid pointers:
+    covered (such as parameter modes). The language also provides library
+    abstractions to avoid pointers:
 
-    1. One is the use of :ref:`containers <Containers>`. Containers
-       help users avoid pointers, because container memory is automatically managed.
+    1. One is the use of :ref:`containers <Containers>`. Containers help users
+       avoid pointers, because container memory is automatically managed.
 
     2. A container to note in this context is the
        `Indefinite holder <http://www.ada-auth.org/standards/12rat/html/Rat12-8-5.html>`_.
-       This container allows you to store a value of an indefinite type such as String.
+       This container allows you to store a value of an indefinite type such as
+       String.
 
     3. GNATCOLL has a library for smart pointers, called
        `Refcount <https://github.com/AdaCore/gnatcoll-core/blob/master/src/gnatcoll-refcount.ads>`_
-       Those pointers' memory is automatically managed, so that when an allocated
-       object has no more references to it, the memory is automatically
-       deallocated.
+       Those pointers' memory is automatically managed, so that when an
+       allocated object has no more references to it, the memory is
+       automatically deallocated.
 
 Mutually recursive types
 ------------------------
@@ -3303,21 +3309,20 @@ known at compile time. This is illustrated in the example below:
         G : Growable_Stack;
     end Var_Size_Record;
 
-It is completely fine to determine the size of
-your records at run time, but note that all objects of this type
-will have the same size.
+It is completely fine to determine the size of your records at run time, but
+note that all objects of this type will have the same size.
 
 Records with discriminant
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the example above, the size of the Items field is
-determined once, at run-time, but every ``Growable_Stack`` instance will be exactly the
-same size. But maybe that's not what you want to do. We saw that
-arrays in general offer this flexibility: for an unconstrained array
-type, different objects can have different sizes.
+In the example above, the size of the Items field is determined once, at
+run-time, but every ``Growable_Stack`` instance will be exactly the same size.
+But maybe that's not what you want to do. We saw that arrays in general offer
+this flexibility: for an unconstrained array type, different objects can have
+different sizes.
 
-You can get analogous functionality for records, too, using a special kind of field that is called a
-discriminant:
+You can get analogous functionality for records, too, using a special kind of
+field that is called a discriminant:
 
 .. code:: ada
 
@@ -3336,9 +3341,9 @@ Discriminants, in their simple forms, are constant: You cannot modify them once
 you have initialized the object. This intuitively makes sense since they
 determine the size of the object.
 
-Also, they make a type indefinite: Whether or not the discriminant is used
-to specify the size of an object, a type with a discriminant will be
-indefinite if the discriminant is not declared with an initialization:
+Also, they make a type indefinite: Whether or not the discriminant is used to
+specify the size of an object, a type with a discriminant will be indefinite if
+the discriminant is not declared with an initialization:
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -3396,9 +3401,9 @@ values via the dot notation.
 Variant records
 ~~~~~~~~~~~~~~~
 
-The examples of discriminants thus far have illustrated the
-declaration of records of varying size, by having components whose size depends
-on the discriminant.
+The examples of discriminants thus far have illustrated the declaration of
+records of varying size, by having components whose size depends on the
+discriminant.
 
 However, discriminants can also be used to obtain the functionality of what are
 sometimes called "variant records": records that can contain different sets of
@@ -3427,9 +3432,9 @@ fields.
     end Variant_Record;
 
 The fields that are in a :ada:`when` branch will be only available when the
-value of the discriminant is covered by the branch. In the example above,
-you will only be able to access the fields :ada:`Left` and
-:ada:`Right` when the :ada:`Kind` is :ada:`Bin_Op_Plus` or :ada:`Bin_Op_Minus`.
+value of the discriminant is covered by the branch. In the example above, you
+will only be able to access the fields :ada:`Left` and :ada:`Right` when the
+:ada:`Kind` is :ada:`Bin_Op_Plus` or :ada:`Bin_Op_Minus`.
 
 If you try to access a field that is not valid for your record, a
 :ada:`Constraint_Error` will be raised.
@@ -3490,15 +3495,14 @@ Decimal fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We have already seen how to specify floating-point types.  However, in some
-applications floating-point is not appropriate since, for example, the roundoff error
-from binary arithmetic may be unacceptable or perhaps the hardware does not
-support floating-point instructions.  Ada provides a category
-of types, the decimal fixed-point types, that allows the programmer to specify
-the required decimal precision (number of digits) as well as the scalaing factor
-(a power of ten) and, optionally, a range.
-In effect the values will be represented as integers implicitly scaled by
-the specified power of 10. This is useful, for example, for financial applications.
-
+applications floating-point is not appropriate since, for example, the roundoff
+error from binary arithmetic may be unacceptable or perhaps the hardware does
+not support floating-point instructions.  Ada provides a category of types, the
+decimal fixed-point types, that allows the programmer to specify the required
+decimal precision (number of digits) as well as the scalaing factor (a power of
+ten) and, optionally, a range.  In effect the values will be represented as
+integers implicitly scaled by the specified power of 10. This is useful, for
+example, for financial applications.
 
 The syntax for a simple decimal fixed-point type is
 
@@ -3584,15 +3588,15 @@ Fixed-point types
 .. ?? Ordinary fixed-point types distinguish between the 'delta and the 'small
 .. ?? This is somewhat complex but needs to be mentioned
 
-Ordinary fixed-point types are similar to decimal fixed-point types
-in that the values are, in effect, scaled integers.
-The difference between them is in the scale factor:
-for a decimal fixed-point type, the scaling, given explicitly by the type's
-``delta``, is always a power of ten.
+Ordinary fixed-point types are similar to decimal fixed-point types in that the
+values are, in effect, scaled integers.  The difference between them is in the
+scale factor: for a decimal fixed-point type, the scaling, given explicitly by
+the type's ``delta``, is always a power of ten.
+
 In contrast, for an ordinary fixed-point type, the scaling is defined by the
 type's ``small``, which is derived from the specified ``delta`` and, by
-default, is a power of two. Therefore, ordinary fixed-point types are
-sometimes called binary fixed-point types.
+default, is a power of two. Therefore, ordinary fixed-point types are sometimes
+called binary fixed-point types.
 
 .. note::
    Ordinary fixed-point types can be thought of being closer to the actual
@@ -3604,9 +3608,11 @@ sometimes called binary fixed-point types.
 The syntax for an ordinary fixed-point type is
 
 .. code-block:: ada
+
     type <type-name> is delta <delta-value> range <lower-bound> .. <upper-bound>;
 
-By default the compiler will choose a scale factor, or ``small``, that is a power of 2 no greater than <delta-value>.
+By default the compiler will choose a scale factor, or ``small``, that is a
+power of 2 no greater than <delta-value>.
 
 For example, we may define a normalized range between -1.0 and 1.0 as
 following:
@@ -3681,14 +3687,14 @@ All standard operations are available for fixed-point types. For example:
 
 As expected, ``R`` contains 0.75 after the addition of ``A`` and ``B``.
 
-In fact the language is more general that these examples imply, since in practice it
-is typical to need to multiply or divide values from different fixed-point types, and
-obtain a result that may be of a third fixed-point type.  The details are outside
-the scope of this introductory course.
+In fact the language is more general that these examples imply, since in
+practice it is typical to need to multiply or divide values from different
+fixed-point types, and obtain a result that may be of a third fixed-point type.
+The details are outside the scope of this introductory course.
 
-It is also worth noting, although again the details are outside the scope of this course,
-that you can explicitly specify a value for an ordinary fixed-point type's ``small``.
-This allows non-binary scaling, for example:
+It is also worth noting, although again the details are outside the scope of
+this course, that you can explicitly specify a value for an ordinary
+fixed-point type's ``small``.  This allows non-binary scaling, for example:
 
 .. code-block:: ada
 
@@ -3749,12 +3755,12 @@ Encapsulation, briefly, is the concept that the implementer of a piece of
 software will distinguish between the code's public interface and its private
 implementation.
 
-This is not only applicable to software libraries but wherever
-abstraction is used.
+This is not only applicable to software libraries but wherever abstraction is
+used.
 
-In Ada, the granularity of encapsulation is a bit different from most object-oriented
-languages, because privacy is generally specified at the package
-level.
+In Ada, the granularity of encapsulation is a bit different from most
+object-oriented languages, because privacy is generally specified at the
+package level.
 
 Basic encapsulation
 -------------------
@@ -3811,8 +3817,8 @@ In the above example, we define a stack type in the public part (known as the
 "visible part" of the package spec in Ada), but the exact representation
 of that type is private.
 
-Then, in the private part, we define the representation of that type. We
-can also declare other types that will be used as "helpers" for our main public
+Then, in the private part, we define the representation of that type. We can
+also declare other types that will be used as "helpers" for our main public
 type. This is useful since declaring helper types is common in Ada.
 
 A few words about terminology:
@@ -3823,9 +3829,10 @@ A few words about terminology:
 - The Stack type as viewed from the private part or the body of the package is
   called the full view of the type. This is what implementers have access to.
 
-From the point of view of the client (the "with"ing unit), only the public (visible) part is important, and
-the private part could as well not exist. It makes it very easy to read
-linearly the part of the package that is important for you.
+From the point of view of the client (the "with"ing unit), only the public
+(visible) part is important, and the private part could as well not exist. It
+makes it very easy to read linearly the part of the package that is important
+for you.
 
 .. code:: ada
     :class: ada-nocheck
