@@ -253,9 +253,9 @@ Ada's :ada:`if` statementis pretty unsurprising in form and function:
        N : Integer;
     begin
        Put ("Enter an integer value: ");  -- Put a String
-       Get (N);  -- Read in an integer value
+       Get (N);  --  Read in an integer value
        if N > 0 then
-          Put (N);  --Put an Integer
+          Put (N);  --  Put an Integer
           Put_Line (" is a positive number");
        end if;
     end Check_Positive;
@@ -291,9 +291,9 @@ with an :ada:`else` part:
        N : Integer;
     begin
        Put ("Enter an integer value: ");  -- Put a String
-       Get (N);  -- Reads in an integer value
-       Put (N);  --Put an Integer
-       if N>0 then
+       Get (N);  --  Reads in an integer value
+       Put (N);  --  Put an Integer
+       if N > 0 then
           Put_Line (" is a positive number");
        else
           Put_Line (" is not a positive number");
@@ -315,8 +315,8 @@ sections:
        N : Integer;
     begin
        Put ("Enter an integer value: ");  -- Puts a String
-       Get (N);  -- Reads an Integer
-       Put (N);  --Puts an Integer
+       Get (N);  --  Reads an Integer
+       Put (N);  --  Puts an Integer
        if N = 0 or N = 360 then
           Put_Line (" is due east");
        elsif N in 1 .. 89 then
@@ -372,7 +372,7 @@ discrete range.
     procedure Greet_5a is
     begin
        for I in 1 .. 5 loop
-          Put_Line ("Hello, World!" & Integer'Image(I)); -- Procedure call
+          Put_Line ("Hello, World!" & Integer'Image (I)); --  Procedure call
           --        ^ Procedure parameter
        end loop;
     end Greet_5a;
@@ -420,7 +420,7 @@ To iterate backwards over a range, use the :ada:`reverse` keyword:
     procedure Greet_5a_Reverse is
     begin
        for I in reverse 1 .. 5 loop
-          Put_Line ("Hello, World!" & Integer'Image(I));
+          Put_Line ("Hello, World!" & Integer'Image (I));
        end loop;
     end Greet_5a_Reverse;
 
@@ -451,7 +451,6 @@ Thus no output is produced in the following example:
        end loop;
     end Greet_No_Op;
 
-
 The :ada:`for` loop is more general than what we illustrated here;
 more on that later.
 
@@ -471,7 +470,7 @@ the other kinds of Ada loops.
        --             ^ Initial value
     begin
        loop
-          Put_Line ("Hello, World!" & Integer'Image(I));
+          Put_Line ("Hello, World!" & Integer'Image (I));
           exit when I = 5; --  Exit statement
           --        ^ Boolean condition
 
@@ -516,7 +515,7 @@ The last kind of loop in Ada is the :ada:`while` loop.
        --  Condition must be a Boolean value (no Integers).
        --  Operator "<=" returns a Boolean
        while I <= 5 loop
-          Put_Line ("Hello, World!" & Integer'Image(I));
+          Put_Line ("Hello, World!" & Integer'Image (I));
 
           I := I + 1;
        end loop;
@@ -555,8 +554,8 @@ with an :ada:`if` statement:
     begin
        loop
           Put ("Enter an integer value: ");  -- Puts a String
-          Get (N);  -- Reads an Integer
-          Put (N);  --Puts an Integer
+          Get (N);  --  Reads an Integer
+          Put (N);  --  Puts an Integer
           case N is
              when 0 | 360 =>
                 Put_Line (" is due east");
@@ -709,10 +708,9 @@ statement has been replaced by an :ada:`if` expression:
        Get (N);  --  Reads in an integer value
        Put (N);  --  Put an Integer
        declare
-          S : String := ( if N>0 then
-                             " is a positive number"
-                          else
-                             " is not a positive number" );
+          S : String :=
+            (if N > 0 then " is a positive number"
+             else " is not a positive number");
        begin
           Put_Line (S);
        end;
@@ -909,7 +907,7 @@ like assignment:
        for I in 1 .. M loop
           Put_Line ("Hello, World!");
        end loop;
-       -- Loop body executed 13 times
+       --  Loop body executed 13 times
     end Main;
 
 Type level overflow will only be checked at specific points in the execution.
@@ -1328,9 +1326,9 @@ treated as a distinct type in the interest of strong typing.
        --                                    (and a compile time warning with
        --                                     GNAT)
     begin
-       I   := SSN ;                        -- Illegal, they have different types
+       I := SSN;                           -- Illegal, they have different types
        SSN := I;                           -- Likewise illegal
-       I   := Integer (SSN);               -- OK with explicit conversion
+       I := Integer (SSN);                 -- OK with explicit conversion
        SSN := Social_Security_Number (I);  -- Likewise OK
     end Main;
 
@@ -1676,7 +1674,6 @@ are permitted.
              --                                ^ Concatenation operator
        end loop;
     end Month_Example;
-
 
 In the example above, we are:
 
@@ -2064,7 +2061,7 @@ generally result in a run-time error.
         procedure Indefinite_Subtypes is
             function Get_Number return Integer is
             begin
-                return Integer'Value(Get_Line);
+                return Integer'Value (Get_Line);
             end Get_Number;
 
            A : String := "Hello";
@@ -2137,7 +2134,7 @@ elements) as a name or a value.
         Put_Line (Buf);  --  Prints "Hello Bob"
 
         Put_Line ("Hi " & Full_Name (1 .. 4)); --  Prints "Hi John"
-    end;
+    end Main;
 
 As we can see above, you can use a slice on the left side of an assignment, to
 replace only part of an array.
