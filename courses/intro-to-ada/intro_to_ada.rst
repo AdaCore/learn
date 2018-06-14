@@ -2946,17 +2946,14 @@ based on the return type of a function.
     end Main;
 
 .. attention::
-    Note that overload resolution based on the type required by a given context
-    is allowed for both functions and enumeration literals in Ada. Semantically,
-    an enumeration literal is treated like a function that has no parameters.
+    Note that overload resolution based on the type is allowed for both
+    functions and enumeration literals in Ada - which is why you can have
+    multiple enumeration literals with the same name. Semantically, an
+    enumeration literal is treated like a function that has no parameters.
 
-However, sometimes an ambiguity makes it impossible to
-resolve which declaration of an overloaded name a given occurrence of
-the name refers to. This is where a qualified expression becomes useful.
-
-.. ?? This example raises the issue of how to determine the type of an integer literal,
-.. ?? which is a complex subject that was not treated earlier.
-.. ?? See below for an alternative example based on enumeration tyes
+However, sometimes an ambiguity makes it impossible to resolve which
+declaration of an overloaded name a given occurrence of the name refers to.
+This is where a qualified expression becomes useful.
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -2989,42 +2986,8 @@ the name refers to. This is where a qualified expression becomes useful.
        Put_Line (S);
     end Main;
 
-.. ?? Here's the example
-
-.. code:: ada
-
-   procedure Overloading_Example is
-
-      type Color is (Red, Orange, Yellow, Green, Blue, Violet, Brown, Black);
-      type Fruit is (Grape, Cherry, Lemon, Orange, Lime, Banana);
-
-      function Temperature (C : Color) return Integer is ...;
-      function Temperature (F : Fruit) return Integer is ...;
-      N : Integer;
-   begin
-      ...
-      N := Temperature (Orange); --Illegal / ambiguous
-      ...
-   end Overloading_Example;
-
-The invocation :ada:`Temperature (Orange)` is ambiguous, since :ada;`Orange`
-could be either the Color or the Fruit.  We can resolve this by making the type
-explicit in a qualified expression:
-
-.. code:: ada
-
-      N := Temperature (Color'(Orange));
-
- or
-
-.. code:: ada
-
-       N := Temperature (Fruit'(Orange));
-
-
-
 Syntactically the target of a qualified expression can be either any expression
-in parentheses, including an aggregate:
+in parentheses, or an aggregate:
 
 .. code:: ada
 
@@ -3046,9 +3009,10 @@ for the compiler of course, but also for other programmers.
     While they look and feel similar, type conversions and qualified
     expressions are *not* the same.
 
-    A qualified expression specifies the exact type that the target expression will be
-    resolved to, whereas a type conversion will try to
-    convert the target and issue a run-time error if the target value cannot be so converted.
+    A qualified expression specifies the exact type that the target expression
+    will be resolved to, whereas a type conversion will try to convert the
+    target and issue a run-time error if the target value cannot be so
+    converted.
 
     Note that you can use a qualified expression to convert from one subtype to
     another, with an exception raised if a constraint is violated.
@@ -3061,23 +3025,26 @@ for the compiler of course, but also for other programmers.
 Access types (pointers)
 -----------------------
 
-Pointers are a potentially dangerous construct, which conflicts with Ada's underlying philosophy.
+Pointers are a potentially dangerous construct, which conflicts with Ada's
+underlying philosophy.
 
-There are two ways in which Ada helps shield programmers from the
-dangers of pointers:
+There are two ways in which Ada helps shield programmers from the dangers of
+pointers:
 
 1. One approach, which we have already seen, is to provide alternative features
-   so that the programmer does not need to use pointers. Parameter modes, arrays, and varying size types
-   are all constructs that can replace typical pointer usages in C.
+   so that the programmer does not need to use pointers. Parameter modes,
+   arrays, and varying size types are all constructs that can replace typical
+   pointer usages in C.
 
-2. Second, Ada has made pointers as safe and restricted as
-   possible, but allows "escape hatches" when the programmer explicitly requests them
-   and presumably will be exercising such features with appropriate care.
+2. Second, Ada has made pointers as safe and restricted as possible, but allows
+   "escape hatches" when the programmer explicitly requests them and presumably
+   will be exercising such features with appropriate care.
 
-This course covers the basics of Ada pointers, which are
-known as "access values". There are generally better ways than to resort to
-the advanced features directly but if you need to use features that are potentially unsafe,
-you can learn more about those `unsafe features <TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
+This course covers the basics of Ada pointers, which are known as "access
+values". There are generally better ways than to resort to the advanced
+features directly but if you need to use features that are potentially unsafe,
+you can learn more about those `unsafe features
+<TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
 
 Here is how you declare a simple pointer type, or access type, in Ada:
 
@@ -3114,9 +3081,9 @@ This illustrates how to:
 - Give it a value of :ada:`null`
 
 In line with Ada's strong typing philosophy, if you declare a second access
-type whose designated type is Date, the two access types will be incompatible with each
-other, and you will need an explicit type conversion to convert from one to the
-other:
+type whose designated type is Date, the two access types will be incompatible
+with each other, and you will need an explicit type conversion to convert from
+one to the other:
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -3143,10 +3110,9 @@ other:
     same as long as they share the same target type and accessibility rules.
 
     Not so in Ada, which takes some time getting used to. A seemingly simple
-    problem is, if you want to have a canonical access to a
-    type, where should it be declared? A commonly used pattern is that if you
-    need an access type to a specific type you "own", you will declare it along
-    with the type:
+    problem is, if you want to have a canonical access to a type, where should
+    it be declared? A commonly used pattern is that if you need an access type
+    to a specific type you "own", you will declare it along with the type:
 
     .. code:: ada
         :class: ada-syntax-only
@@ -3210,15 +3176,14 @@ the qualified expression syntax:
        Msg : String_Acc := new String'("Hello");
     end Access_Types;
 
-
 Dereferencing
 ~~~~~~~~~~~~~
 
-The last important piece of Ada's access type facility is how to get from
-an access value to the object that is pointed to, that is, how
-to dereference the pointer. Dereferencing a pointer
-uses the :ada:`.all` syntax in Ada, but is often not needed - in many
-cases, the access value will be implicitly dereferenced for you:
+The last important piece of Ada's access type facility is how to get from an
+access value to the object that is pointed to, that is, how to dereference the
+pointer. Dereferencing a pointer uses the :ada:`.all` syntax in Ada, but is
+often not needed - in many cases, the access value will be implicitly
+dereferenced for you:
 
 .. code:: ada
 
@@ -3275,13 +3240,13 @@ APIs. You can read more about those in the
        object has no more references to it, the memory is automatically
        deallocated.
 
-
 Mutually recursive types
 ------------------------
 
 The linked list is a common idiom in data structures; in Ada this would be most
-naturally defined through two types, a record type and an access type, that are mutually
-dependent.  To declare mutually dependent types, you can use an incomplete type declaration:
+naturally defined through two types, a record type and an access type, that are
+mutually dependent.  To declare mutually dependent types, you can use an
+incomplete type declaration:
 
 .. code:: ada
 
@@ -3298,19 +3263,17 @@ dependent.  To declare mutually dependent types, you can use an incomplete type 
        end record;
     end Simple_List;
 
-
 More about records
 ------------------
 
 Dynamically sized record types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We have previously seen some simple examples of record types.
-Let's now look at some of the more advanced properties of this fundamental
-language feature.
+We have previously seen some simple examples of record types.  Let's now look
+at some of the more advanced properties of this fundamental language feature.
 
-One point to note is that object size for a record type does not need to be known at
-compile time. This is illustrated in the example below:
+One point to note is that object size for a record type does not need to be
+known at compile time. This is illustrated in the example below:
 
 .. ?? The example code may have elaboration order problems unless
 .. ?? an elaboration pragma is used.
