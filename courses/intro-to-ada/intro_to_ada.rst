@@ -2342,7 +2342,7 @@ in the package body.
        function Get_Workload (Day : Days) return Natural is
        begin
           return Workload (Day);
-       end;
+       end Get_Workload;
     end Week_2;
 
 Here we can see that the body of the :ada:`Get_Workload` function has to be
@@ -2723,7 +2723,7 @@ For example, a procedure reading integers from the network could have one of
 the following specifications:
 
 .. code:: ada
-    :class: ada-syntax-only
+    :class: ada-nocheck
 
     procedure Read_Int
        (Stream : Network_Stream; Success : out Boolean; Result : out Integer);
@@ -2825,7 +2825,7 @@ below:
         begin
            if V > 5 then
               Compute_A (V - 1);
-           -- ^ Call to Compute_A
+              --  Call to Compute_A
            end if;
         end Compute_B;
 
@@ -2833,12 +2833,12 @@ below:
         begin
            if V > 2 then
               Compute_B (V - 1);
-           -- ^ Call to Compute_B
+              --  Call to Compute_B
            end if;
         end Compute_A;
     begin
        Compute_A (15);
-    end Mutually_Recursive_Subprograms; 
+    end Mutually_Recursive_Subprograms;
 
 More about types
 ================
@@ -3334,7 +3334,8 @@ compile time. This is illustrated in the example below:
            Items : Items_Array (1 .. Max_Len);
            Len   : Natural;
         end record;
-        --  Growable_Stack is a definite type, but size is not known at compile time.
+        --  Growable_Stack is a definite type, but size is not known at compile
+        --  time.
 
         G : Growable_Stack;
     end Var_Size_Record;
@@ -3418,7 +3419,8 @@ values via the dot notation.
           Put_Line ("]>");
        end Print_Stack;
 
-       S : Growable_Stack := (Max_Len => 128, Items => (1, 2, 3, 4, others => <>), Len => 4);
+       S : Growable_Stack :=
+         (Max_Len => 128, Items => (1, 2, 3, 4, others => <>), Len => 4);
     begin
        Print_Stack (S);
     end Main;
@@ -3537,9 +3539,9 @@ the specified power of 10. This is useful, for example, for financial applicatio
 
 The syntax for a simple decimal fixed-point type is
 
-.. code:: ada
+.. code-block:: ada
 
-   type <type-name> is delta <delta-value> digits <digits-value>;
+    type <type-name> is delta <delta-value> digits <digits-value>;
 
 In this case, the :ada:`delta` and the :ada:`digits` will be used by the
 compiler to derive a range.
@@ -3589,6 +3591,7 @@ the delta value required for the context, the actual result will be
 zero. For example:
 
 .. code:: ada
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Decimal_Fixed_Point_Smaller is
        type T3_D3 is delta 10.0 ** (-3) digits 3;
@@ -3628,17 +3631,17 @@ type's ``small``, which is derived from the specified ``delta`` and, by
 default, is a power of two. Therefore, ordinary fixed-point types are
 sometimes called binary fixed-point types.
 
-   FURTHERINFO: Ordinary fixed-point types can be thought of being closer
-   to the actual representation on the machine, since hardware support for
-   decimal fixed-point arithmetic is not widespread (rescalings by a
-   power of ten), while ordinary fixed-point types make use of the available
-   integer shift instructions.
+.. note::
+   Ordinary fixed-point types can be thought of being closer to the actual
+   representation on the machine, since hardware support for decimal
+   fixed-point arithmetic is not widespread (rescalings by a power of ten),
+   while ordinary fixed-point types make use of the available integer shift
+   instructions.
 
 The syntax for an ordinary fixed-point type is
 
-.. code:: ada
-
-   type <type-name> is delta <delta-value> range <lower-bound> .. <upper-bound>;
+.. code-block:: ada
+    type <type-name> is delta <delta-value> range <lower-bound> .. <upper-bound>;
 
 By default the compiler will choose a scale factor, or ``small``, that is a power of 2 no greater than <delta-value>.
 
@@ -3724,10 +3727,10 @@ It is also worth noting, although again the details are outside the scope of thi
 that you can explicitly specify a value for an ordinary fixed-point type's ``small``.
 This allows non-binary scaling, for example:
 
-.. code:: ada
+.. code-block:: ada
 
-   type Angle is delta 1.0/3600.0 range 0.0 .. 360.0 - 1.0/3600.0;
-   for Angle'Small use Angle'Delta;
+    type Angle is delta 1.0/3600.0 range 0.0 .. 360.0 - 1.0/3600.0;
+    for Angle'Small use Angle'Delta;
 
 
 Character types
@@ -3986,9 +3989,9 @@ following example declares a formal type ``T`` for the ``Set`` procedure.
           type T is private;
           --  T is a formal type that indicates that any type can be used,
           --  be it a numeric type or, for example, a record.
-       procedure Set (E : in T);
+       procedure Set (E : T);
 
-       procedure Set (E : in T) is null;
+       procedure Set (E : T) is null;
 
     begin
        null;
@@ -4021,9 +4024,9 @@ use of formal types declared in the formal specification. For example:
           type T is private;
           X : in out T;
           --  X can be used in the Set procedure
-       procedure Set (E : in T);
+       procedure Set (E : T);
 
-       procedure Set (E : in T) is null;
+       procedure Set (E : T) is null;
 
     begin
        null;
@@ -4158,7 +4161,7 @@ This is an example:
                 raise Invalid_Element;
              end if;
              return Value;
-          end;
+          end Get;
 
           function Is_Valid return Boolean is (Valid);
 
@@ -4527,8 +4530,8 @@ This is a generic version of the algorithm:
        type Color is (Black, Red, Green, Blue, White);
        type Color_Array is array (Integer range <>) of Color;
 
-       procedure Reverse_Color_Array is new
-         Generic_Reverse_Array (T => Color, Index => Integer, Array_T => Color_Array);
+       procedure Reverse_Color_Array is new Generic_Reverse_Array
+         (T => Color, Index => Integer, Array_T => Color_Array);
 
        My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
 
@@ -4598,7 +4601,7 @@ This is a version of the test application that makes use of the generic
           type Index is range <>;
           type Array_T is array (Index range <>) of T;
           S : String;
-          with function Image (E : in T) return String is <>;
+          with function Image (E : T) return String is <>;
           with procedure Test (X : in out Array_T);
        procedure Perform_Test (X : in out Array_T);
 
@@ -4684,7 +4687,7 @@ declare an exception:
 
     package Exceptions is
         My_Except : exception;
-        -- Like an object. *NOT* a type !
+        --  Like an object. *NOT* a type !
     end Exceptions;
 
 Even though they're objects, you're going to use each declared exception object
@@ -4710,7 +4713,6 @@ it:
         --  Execution of current control flow abandoned, an exception of kind
         --  "My_Except" with associated string will bubble up until it is caught.
     end Main;
-
 
 Handling an exception
 ---------------------
@@ -4924,7 +4926,7 @@ finish. For example:
           for I in 1 .. 10 loop
              Put_Line ("hello");
           end loop;
-       end;
+       end T;
     begin
        null;
        --  Will wait here until all tasks have terminated
@@ -5648,7 +5650,7 @@ file:
     procedure Show_C_Enum is
 
        type C_Enum is (A, B, C) with Convention => C;
-       -- Use C convention for C_Enum
+       --  Use C convention for C_Enum
     begin
        null;
     end Show_C_Enum;
@@ -5755,7 +5757,7 @@ Ada code:
        V : int;
     begin
        V := Get_Value (2);
-       Put_Line("Result is " & int'Image(V));
+       Put_Line ("Result is " & int'Image (V));
     end Show_C_Func;
 
 As the example shows, we can make use of the ``Get_Value`` function and
@@ -6033,7 +6035,7 @@ This will create the file ``ext_c_code-test_h.ads``:
 
     package Ext_C_Code.test_h is
 
-       -- automatic generated bindings...
+       --  automatic generated bindings...
 
     end Ext_C_Code.test_h;
 
@@ -6239,7 +6241,7 @@ This would be the resulting specification:
        pragma Import (C, Set_Name, "test_set_name");
 
        procedure Set_Address (T       : Test;
-                              Address : Interfaces.C.Strings.chars_ptr);  -- ./test.h:13
+                              Address : Interfaces.C.Strings.chars_ptr);
        pragma Import (C, Set_Address, "test_set_address");
 
        procedure Display (T : Test);  -- ./test.h:15
@@ -7574,7 +7576,7 @@ Let's see an example:
        --
        Put_Line ("Elements:");
        for E of S loop
-           Put_Line("- " & Integer'Image(E));
+           Put_Line ("- " & Integer'Image (E));
        end loop;
     end Show_Set_Init;
 
