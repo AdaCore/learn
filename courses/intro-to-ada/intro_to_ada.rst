@@ -212,8 +212,7 @@ There are several noteworthy things in the above program:
     Procedures ares similar to functions in C or C++ that return :c:`void`.
     We'll see later how to declare functions in Ada.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     --  We start a comment in this line...
     --  and we continue on the second line...
@@ -848,8 +847,7 @@ accessed by using a :ada:`'` symbol (the ASCII apostrophe).
 Ada has several types available as "built-ins"; :ada:`Integer` is one of
 them. Here is how :ada:`Integer` might be defined for a typical processor:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     type Integer is range -(2 ** 31) .. +(2 ** 31 - 1);
 
@@ -986,8 +984,7 @@ context that we have already seen is a case statement.
 Enumeration types are powerful enough that, unlike in most languages, they're
 used to define the standard Boolean type:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     type Boolean is (False, True);
 
@@ -1053,8 +1050,7 @@ expressed in terms of decimal digits. Operations on these custom types will
 then have at least the specified precision. The syntax for a simple
 floating-point type declaration is:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     type T is digits <number_of_decimal_digits>;
 
@@ -1398,8 +1394,7 @@ into play.  A subtype does not introduce a new type.
 Several subtypes are predefined in the standard package in Ada, and are
 automatically available to you:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     subtype Natural  is Integer range 0 .. Integer'Last;
     subtype Positive is Integer range 1 .. Integer'Last;
@@ -1445,8 +1440,7 @@ Record type declaration
 
 Here is an example of a simple record declaration:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     type Date is record
        --  The following declarations are components of the record
@@ -1459,8 +1453,7 @@ Fields look a lot like variable declarations, except that they are inside of a
 record definition.  And as with variable declarations, you can specify
 additional constraints when supplying the subtype of the field.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     type Date is record
        Day   : Integer range 1 .. 31;
@@ -1478,8 +1471,7 @@ may be run-time computable.
 Aggregates
 ----------
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     Ada_Birthday    : Date := (10, December, 1815);
     Leap_Day_2020   : Date := (Day => 29, Month => February, Year => 2020);
@@ -1634,8 +1626,7 @@ bounds when iterating / using arrays. That means the code above is good,
 because it uses the index type, but a for loop as shown below is bad practice
 even though it works correctly:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     for I in 11 .. 15 loop
        Tab (I) := Tab (I) * 2;
@@ -1925,8 +1916,7 @@ The String type in Ada is a simple array.
 
 Here is how the string type is defined in Ada:
 
-.. code:: ada
-   :class: ada-nocheck
+.. code-block:: ada
 
     type String is array (Positive range <>) of Character;
 
@@ -2017,8 +2007,7 @@ Restrictions
 A very important point about arrays: bounds *have* to be known when instances
 are created. It is for example illegal to do the following.
 
-.. code:: ada
-   :class: ada-nocheck
+.. code-block:: ada
 
     declare
        A : String;
@@ -2030,8 +2019,7 @@ Also, while you of course can change the values of elements in an array, you
 cannot change the array's bounds (and therefore its size) after it has been
 initialized.  So this is also illegal:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     declare
        A : String := "Hello";
@@ -2395,7 +2383,7 @@ Subprograms in Ada can, of course, have parameters. One syntactically important
 note is that a subprogram which has no parameters does not have a parameter
 section at all, for example:
 
-.. code:: ada
+.. code-block:: ada
 
    procedure Proc;
 
@@ -2584,8 +2572,7 @@ to explicitly store it in a local variable.
 
     - Either annotate the variable with pragma Unreferenced, thus:
 
-    .. code:: ada
-        :class: ada-nocheck
+    .. code-block:: ada
 
         B : Boolean := Read_Int (Stream, My_Int);
         pragma Unreferenced (B);
@@ -2724,8 +2711,7 @@ values for functions.  When the subprogram returns, the actual parameter
 For example, a procedure reading integers from the network could have one of
 the following specifications:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     procedure Read_Int
        (Stream : Network_Stream; Success : out Boolean; Result : out Integer);
@@ -3021,8 +3007,7 @@ for the compiler of course, but also for other programmers.
     Note that you can use a qualified expression to convert from one subtype to
     another, with an exception raised if a constraint is violated.
 
-    .. code:: ada
-        :class: ada-nocheck
+    .. code-block:: ada
 
         X : Integer := Natural'(1);
 
@@ -3834,8 +3819,7 @@ From the point of view of the client (the "with"ing unit), only the public
 makes it very easy to read linearly the part of the package that is important
 for you.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     --  No need to read the private part to use the package
     package Stacks is
@@ -5119,8 +5103,7 @@ in a loop, however, we cannot expect to have regular interval between the
 delay statements. For example, we may have a call to a computationally
 intensive procedure between the delay statements:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
           while True loop
              delay 1.0;
@@ -5594,8 +5577,7 @@ default. In order to compile C files in addition to Ada files, we need to
 adapt the project file used by ``gprbuild``. This can be achieved by
 using the ``Languages`` entry, as in the following example:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     project Multilang is
 
@@ -6711,8 +6693,7 @@ this case), we need to instantiate it. This is due to the fact that
 containers are based on generic packages. Therefore, we cannot simply
 declare a vector as we would declare an array of a specific type, e.g.:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
        A : array (1 .. 10) of Integer;
 
@@ -6928,8 +6909,7 @@ Note that, in addition to displaying the value of an element, we can also
 modify its value. For example, we could easily write a loop to add one to
 each element of vector ``V``:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
        for E of V loop
           E := E + 1;
@@ -7055,8 +7035,7 @@ reaches the end of the vector.
 As mentioned above, we can directly modify the elements using a reference.
 This is how it looks like when dealing with indices and cursors:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
        --  Modify vector elements using index
        for I in V.First_Index .. V.Last_Index loop
@@ -7153,8 +7132,7 @@ An exception will be raised if we try to access an element with an invalid
 index or cursor. We do this check by comparing the index to ``No_Index``
 and the cursor to ``No_Element``. For example:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
        --  Modify vector element using index
        if Idx /= No_Index then
@@ -9225,8 +9203,7 @@ floating-point types. In fact, the
 :ada:`Elementary_Functions` package can be defined as
 follows:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
        package Elementary_Functions is new
          Ada.Numerics.Generic_Elementary_Functions (Float);
@@ -9394,8 +9371,7 @@ and  :ada:`Long_Long_Float` types. In addition, the
 generic versions that can be instantiated for custom or pre-defined
 floating-point types. For example:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     with Ada.Numerics.Generic_Complex_Types;
     with Ada.Numerics.Generic_Complex_Elementary_Functions;
@@ -9512,8 +9488,7 @@ When not specified, matrix dimensions will automatically be determined
 from the aggregate used for initialization. We could, however, make use of
 explicit ranges. For example:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
        M1       : Real_Matrix (1 .. 2, 1 .. 3) :=
                     ((1.0, 5.0, 1.0),
@@ -9526,8 +9501,7 @@ and  :ada:`Long_Long_Float` types. In addition, the
 version that can be instantiated for custom floating-point types. For
 example, the :ada:`Real_Arrays` package can be defined as follows:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
        package Real_Arrays is new
          Ada.Numerics.Generic_Real_Arrays (Float);
