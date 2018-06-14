@@ -3,3 +3,8 @@
     padding: 12px;
     margin-bottom: 24px;
 }
+
+#sidebarfooter {
+  position: absolute;
+  bottom: 0px;
+}
