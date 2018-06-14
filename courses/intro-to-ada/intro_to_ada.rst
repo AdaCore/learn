@@ -2156,23 +2156,23 @@ Modular programming
 ===================
 :code-config:`reset_accumulator=True`
 
-So far, we managed to put our examples in the body of a procedure. Ada is
-helpful in that regard, since it allows you to put any declaration in any
-declarative part, which allowed us to declare our types and instances in the
-body of the main procedure of our examples.
+So far, our examples have been simple standalone procedures.  Ada is helpful in
+that regard, since it allows arbitrary declarations in a declarative part. We
+were thus able to declare our types and variables in the bodies of main
+procedures.
 
-However, it is easy to see that this is not going to scale forever, and that
-before long, we will need a better way to structure our programs into modular
-and distinct units.
+However, it is easy to see that this is not going to scale up for real-world
+applications.  We need a better way to structure our programs into modular and
+distinct units.
 
 Ada encourages the separation of programs into multiple packages and
-sub-packages, providing many tools to the programmer trying to fullfil his
-quest of a perfectly organized code-base.
+sub-packages, providing many tools to a programmer on a quest for a perfectly
+organized code-base.
 
 Packages
 --------
 
-Here is how you declare a package in Ada:
+Here is an example of a package declaration in Ada:
 
 .. code:: ada
 
@@ -2182,14 +2182,14 @@ Here is how you declare a package in Ada:
        --  declarations here, no statements
 
        type Days is (Monday, Tuesday, Wednesday,
-          Thursday, Friday, Saturday, Sunday);
+                     Thursday, Friday, Saturday, Sunday);
 
        type Workload_Type is array (Days range <>) of Natural;
 
        Workload : constant Workload_Type :=
           (Monday .. Thursday => 8,
-           Friday => 7,
-           Saturday | Sunday => 0);
+           Friday             => 7,
+           Saturday | Sunday  => 0);
 
     end Week;
 
@@ -2200,78 +2200,83 @@ And here is how you use it:
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Week;
-    --  References the Week package, and adds a dependency from the main unit
-    --  to the week unit.
+    --  References the Week package, and adds a dependency from Main
+    --  to Week
 
     procedure Main is
     begin
        for D in Week.Days loop
-       --       ^ Reference to Week.Days enum type
+       --       ^ Reference to Week.Days enumeration type
           Put_Line
             ("Workload for day " & Week.Days'Image (D)
              & " is " & Natural'Image (Week.Workload (D)));
        end loop;
     end Main;
 
-Packages are a way to make your code modular, separating your programs into
-semantically significant units. Additionally they will allow the programmer to
-generally compile his program faster by leveraging separate compilation.
+Packages let you make your code modular, separating your programs into
+semantically significant units. Additionally the separation of a package's
+specification from its body (which we will see below) can reduce compilation
+time.
 
 While the :ada:`with` clause indicates a dependency, you can see in the example
-above that you still need to prefix the use of entities from the week package
-by the name of the package.
+above that you still need to prefix the referencing of entities from the Week
+package by the name of the package. (If we had included a "use Week" clause,
+then such a prefix would not have been necessary.)
 
 Accessing entities from a package uses the dot notation, :ada:`A.B`, which is
-the same notation as the one to access records fields.
+the same notation as the one used to access record fields.
 
-A :ada:`with` clause *has* to happen in the prelude of a compilation unit. It
-is not allowed anywhere else.
+A :ada:`with` clause can *only* appear in the prelude of a compilation unit
+(i.e., before the reserved word, such as ``procedure``, that marks the
+beginning of the unit). It is not allowed anywhere else.  This rule is only
+needed for methodological reasons: the person reading your code should be able
+to see immediately which units the code depends on.
 
 .. admonition:: In other languages
 
-    Packages look similar to, but are underneath very different from header
+    Packages look similar to, but are semantically very different from, header
     files in C/C++.
 
-    - The first and most important distinction is that packages are a language
-      level mechanism, by opposition to includes, which are a functionality of the
-      C preprocessor.
+    - The first and most important distinction is that packages are a language-level
+      mechanism. This is in contrast to a #include'd header file, which is a
+      functionality of the C preprocessor.
 
-    - The first corollary of this design divergence is that the mechanism is a
-      semantic inclusion mechanism, not a text inclusion mechanism. Hence, when
-      you with a package, you say "I'm depending on this semantic unit" to the
-      compiler, not "include this bunch of text in place here".
+    - An immediate consequence is that the "with" construct is a semantic
+      inclusion mechanism, not a text inclusion mechanism. Hence, when you
+      "with" a package, you are saying to the compiler "I'm depending on this
+      semantic unit", and not "include this bunch of text in place here".
 
-    - The consequences for the user, is that the content of a package cannot
-      *vary* depending on where it has been included from, unlike in C/C++,
-      where the existence of the preprocessor makes the exact content of what
-      is included undecidable.
+    - The effect of a package thus does not vary depending on where it has been
+      "with"ed from. Contrast this with C/C++, where the meaning of the
+      included text depends on the context in which the #include appears.
 
       This allows compilation/recompilation to be more efficient. It also
-      allows tooling like IDEs to have correct information about the semantics
+      allows tools like IDEs to have correct information about the semantics
       of a program. In turn, this allows better tooling in general, and code
       that is more analyzable, even by humans.
 
-    A very neat feature of Ada packages when compared to an include system, is
-    that it is stateless: The order of with and use clauses does not matter,
+    An important benefit of Ada "with" clauses when compared to #include is
+    that it is stateless. The order of "with" and "use" clauses does not matter,
     and can be changed without side effects.
 
 .. admonition:: In the GNAT toolchain
 
-    While the design of the Ada language does not mandate anything regarding the
-    organization of files with regards to packages, eg. in theory you can put all
-    your code in one file, or use your own scheme of organization, in practice in
-    GNAT, you're supposed to put each top-level compilation unit in a separate
-    file. In the example above, the ``Week`` package will go in a ``.ads`` file
-    (for Ada specification), and the ``Main`` procedure will go in a ``.adb`` file
+    The Ada language standard does not mandate any particular relationship
+    between source files and packages; for example, in theory you can put all
+    your code in one file, or use your own file naming conventions. In
+    practice, however, an implementation will have specific rules. With GNAT,
+    each top-level compilation unit needs to go into a separate file. In the
+    example above, the ``Week`` package will be in an ``.ads`` file (for Ada
+    specification), and the ``Main`` procedure will be in an ``.adb`` file
     (for Ada body).
 
 Using a package
 ---------------
 
-As we have seen above, we use the :ada:`with` clause to indicate a dependency on
-another package. However, every use of entities coming from the ``Week``
-package had to be prefixed by the full name of the package. It is possible to
-make every entity of a package visible directly in the current scope, using the
+As we have seen above, the :ada:`with` clause indicates a dependency on another
+package. However, every reference to an entity coming from the ``Week`` package
+had to be prefixed by the full name of the package. It is possible to make
+every entity of a package visible directly in the current scope, using the
 :ada:`use` clause.
 
 In fact, we have been using the :ada:`use` clause since almost the beginning of
@@ -2289,7 +2294,7 @@ this tutorial.
        use Week;
        --  Make every entity of the Week package directly visible.
     begin
-       for D in Week.Days loop
+       for D in Days loop
        --       ^ Reference to Week.Days enum type
           Put_Line  -- Put_Line comes from Ada.Text_IO.
             ("Workload for day " & Days'Image (D)
@@ -2300,19 +2305,19 @@ this tutorial.
 As you can see in the example above:
 
 - :ada:`Put_Line` is a subprogram that comes from the :ada:`Ada.Text_IO`
-  package. We can use it directly because we have used the package at the top
-  of the ``Main`` unit.
+  package. We can reference it directly because we have "use"d the package at
+  the top of the :ada:`Main` unit.
 
-- Unlike :ada:`with` clauses, :ada:`use` clause can happen either in the prelude, or
-  in any declarative zone. If used in a declarative zone, the :ada:`use` clause
-  will have an effect in it's containing lexical scope.
+- Unlike :ada:`with` clauses, a :ada:`use` clause can be placed either in the
+  prelude, or in any declarative region. In the latter case the :ada:`use`
+  clause will have an effect in its containing lexical scope.
 
 Package body
 ------------
 
-In the somewhat artificial example above, the ``Week`` package only has
-declarations and no body. That's not a mistake: In a package specification,
-which is what is showcased above, you cannot declare bodies. Those have to be
+In the somewhat artificial example above, the :ada:`Week` package only has
+declarations and no body. That's not a mistake: in a package specification,
+which is what is illustrated above, you cannot declare bodies. Those have to be
 in the package body.
 
 .. code:: ada
@@ -2340,13 +2345,14 @@ in the package body.
        end;
     end Week_2;
 
-Here we can see that the body of the ``Get_Workload`` function has to be
+Here we can see that the body of the :ada:`Get_Workload` function has to be
 declared in the body. Coincidentally, introducing a body allows us to put the
-``Workload_Type`` array type and the constant ``Workload`` in the body, and
-make them inaccessible to the user of the ``Week`` package, providing a first
-form of encapsulation.
+:ada:`Workload_Type` array type and the constant :ada:`Workload` in the body,
+and make them inaccessible to the user of the :ada:`Week` package, providing a
+first form of encapsulation.
 
-This works because entities of the body are *only* visible in the body.
+This works because entities declared in the body are *only* visible in the
+body.
 
 Subprograms
 ===========
@@ -2355,13 +2361,13 @@ Subprograms
 Subprograms
 -----------
 
-So far, we used procedures a bit, mostly so we have a main body of code to
-execute, and showed one function or two. Those entities belong to a category
-called subprograms.
+So far, we have used procedures extensively, mostly to have a main body of code
+to execute, and we have also seen a function or two. Those entities are
+collectively known as *subprograms*.
 
-There are two kinds of subprograms in Ada, functions and procedures. The main
-useful distinction between the two is that functions return a value, and
-procedures don't.
+There are two kinds of subprograms in Ada, *functions* and *procedures*. The
+distinction between the two is that a function returns a value, and a procedure
+does not.
 
 .. code:: ada
 
@@ -2371,18 +2377,30 @@ procedures don't.
 
        function Get_Workload (Day : Days) return Natural;
        --  We declare (but don't define) a function with one
-       --  parameter, returning a Natural integer
+       --  parameter, returning a Natural value (a non-negative Integer)
     end Week_3;
 
-As we saw before in the packages section, if you want to declare a subprogram
-declaration to the package declaration. This declaration will not define the
-function's body, only its name and profile (and hopefully some documentation),
-so that clients of the package know how to use it.
+As we saw earlier in the packages section, if you want to declare a subprogram
+in a package, and have that subprogram available to be invoked from client
+("with"ing) units, you need to do two things:
 
-Subprograms in Ada can expectedly have parameters. One syntactically important
+* Put its specification (name, parameters, result type if a function) in the
+  package specifciation, along with any comments / documentation you wish to provide
+
+* Put the full declaration of the subprogram (its body, or implementation) in
+  the package body
+
+Subprograms in Ada can, of course, have parameters. One syntactically important
 note is that a subprogram which has no parameters does not have a parameter
-section at all, following the form :ada:`procedure [name]` or
-:ada:`function [name] return [type]`.
+section at all, for example:
+
+.. code:: ada
+
+   procedure Proc;
+
+   function Func return Integer;
+
+Here's another variation on the Week example:
 
 .. code:: ada
 
@@ -2397,35 +2415,35 @@ section at all, following the form :ada:`procedure [name]` or
        --             ^ Default value for parameter
     end Week_4;
 
-We learn two interesting things in the example above:
+This example illustrates several points:
 
-- Parameters can also have default values. When calling the subprogram, you can
-  then omit parameters if they have a default value. A call to a subprogram
-  without parameters does not need parentheses, similarly to when it is
-  declared.
+- Parameters can have default values. When calling the subprogram, you can
+  then omit parameters if they have a default value. Unlike C/C++, a call to
+  a subprogram without parameters does not include parentheses.
 
-- The return type of a function can be anything. objects of size unknown at
-  compile time are fine. Note that this also true for parameters.
+- The return type of a function can be any type; a function can return a value
+  whose size is unknown at compile time. Likewise the parameters can be of
+  any type.
 
 .. admonition:: In other languages
 
     Returning variable size objects in languages lacking a garbage collector is
-    a bit complicated implementation-wize, which is why C and C++ don't allow
-    it, prefering to ressort to explicit dynamic allocation from the user.
+    a bit complicated implementation-wise, which is why C and C++ don't allow
+    it, prefering to depend on explicit dynamic allocation / free from the user.
 
-    The problem is that explicit dynamic allocation is unsafe as soon as you
+    The problem is that explicit storage management is unsafe as soon as you
     want to collect unused memory. Ada's ability to return variable size
     objects will remove one use case for dynamic allocation, and hence, remove
     one potential source of bugs from your programs.
 
-    Rust follows the C/C++ model, but with it's safe pointer semantics, allows
-    for safety. However, dynamic allocation is still used. Ada can benefit from
+    Rust follows the C/C++ model, but with safe pointer semantics.
+    However, dynamic allocation is still used. Ada can benefit from
     an eventual performance edge because it can use any model.
 
     .. amiard: TODO: say less or say more
 
-As we showed briefly above, a subprogram declaration in a package declaration
-must be completed by a subprogram body in the package body. For the ``Week``
+As we showed briefly above, if a subprogram declaration appears in a package declaration
+then a subprogram body needs to be supplied in the package body. For the ``Week``
 package above, we could have the following body:
 
 .. code:: ada
@@ -2446,6 +2464,11 @@ package above, we could have the following body:
        end Get_Day_Name;
     end Week_4;
 
+(This example is for illustrative purposes only.  There is a built-in mechanism,
+the 'Image attribute for scalar types, that returns the name (as a String) of
+any element of an enumeration type.  For example Days'Image(Monday) is "MONDAY".)
+
+
 Subprogram calls
 ~~~~~~~~~~~~~~~~
 
@@ -2460,14 +2483,14 @@ We can then call our subprogram this way:
     procedure Show_Days is
     begin
        Put_Line (Week_4.Get_Day_Name);
-       --             ^ Paramless call, value of Day parameter is Monday
+       --             ^ Parameterless call, value of Day parameter is Monday
        for Day in Week_4.Days loop
           Put_Line (Week_4.Get_Day_Name (Day));
-          --                           ^ Regular param passing
+          --                           ^ Regular parameter passing
        end loop;
 
        Put_Line (Week_4.Get_Day_Name (Day => Week_4.Friday));
-       --                           ^ Named param passing
+       --                           ^ Named parameter passing
     end Show_Days;
 
 Ada allows you to name the parameters when you pass them, whether they have a
@@ -2475,6 +2498,10 @@ default or not. There are some rules:
 
 - Positional parameters come first.
 - A positional parameter cannot follow a named parameter.
+
+.. ?? I don't understand the following sentence.  If the param has a
+.. ?? default value then you can omit the parameter, it has nothing
+.. ?? to do with the use of positional versus named
 
 As a convention, people usually name parameters at the call site if the
 function's corresponding parameters has a default value. However, it is also
@@ -2503,10 +2530,10 @@ perfectly acceptable to name every parameter if it makes the code clearer.
 Function calls
 ~~~~~~~~~~~~~~
 
-An important thing about function calls is that the return value of a function
-call cannot be ignored in Ada.
+An important feature of function calls in Ada is that the return value at a
+call cannot be ignored; that is, a function call cannot be used as a statement.
 
-If you want to call a function and do not need it's result, you will still need
+If you want to call a function and do not need its result, you will still need
 to explicitly store it in a local variable.
 
 .. code:: ada
@@ -2530,8 +2557,13 @@ to explicitly store it in a local variable.
 .. admonition:: In GNAT
 
     In GNAT, with all warnings activated, it becomes even harder to ignore the
-    result of a function, because unused variables will be flagged, so for
-    example this code would not be valid:
+    result of a function, because unused variables will be flagged. For
+    example, this code would not be valid:
+
+.. ?? This example might be confusing since out parameters have not been covered.
+.. ?? It would be better to show an example where the function's side effect is on
+.. ?? a non-local variable.  Maybe for the next version of the course.
+
 
     .. code:: ada
         :class: ada-syntax-only
@@ -2549,7 +2581,7 @@ to explicitly store it in a local variable.
 
     You then have two solutions to silence this warning:
 
-    - Either annotate the variable with a Unreferenced pragma, thusly:
+    - Either annotate the variable with pragma Unreferenced, thus:
 
     .. code:: ada
         :class: ada-nocheck
@@ -2557,7 +2589,7 @@ to explicitly store it in a local variable.
         B : Boolean := Read_Int (Stream, My_Int);
         pragma Unreferenced (B);
 
-    - Either give the variable a name that contains any of the strings ``discard``
+    - Or give the variable a name that contains any of the strings ``discard``
       ``dummy`` ``ignore`` ``junk`` ``unused`` (case insensitive)
 
 Parameters modes
@@ -2567,42 +2599,43 @@ Parameters modes
    parameters.
    Talk about the fact that order is unimportant with named parameters (with example)
 
-So far we have seen that Ada is a safety focused language. There are many ways
-this focus surfaces, but two important points are:
+So far we have seen that Ada is a safety-focused language. There are many ways
+this is realized, but two important points are:
 
-- Ada makes the user specify as much as possible about the behavior he expects
-  out of his program, so that the compiler can warn or error-out if there is an
+- Ada makes the user specify as much as possible about the behavior expected
+  for the program, so that the compiler can warn or reject if there is an
   inconsistency.
 
-- Ada tries to discourage as much as possible the use of pointers and dynamic
-  memory allocation, giving other ways to achieve goals that would have been
-  accomplished this way in other languages.
+- Ada provides a variety of techniques for achieving the generality and flexibility of
+  pointers and dynamic memory management, but without the latter's drawbacks
+  (such as memory leakage and dangling references).
 
 Parameters modes are a feature that helps achieve the two design goals above. A
-function parameter necessarily has a mode, that is one of the three following modes.
+subprogram parameter can be specified with a mode, which is one of the following:
 
 +---------------+--------------------------------------------+
 | :ada:`in`     | Parameter can only be read, not written    |
 +---------------+--------------------------------------------+
-| :ada:`out`    | Parameter can only be written to, not read |
+| :ada:`out`    | Parameter can be written to, then read     |
 +---------------+--------------------------------------------+
 | :ada:`in out` | Parameter can be both read and written     |
 +---------------+--------------------------------------------+
 
-The default mode for parameters is :ada:`in`, so, so far, every example we have
-been showing has been using :ada:`in` parameters.
+The default mode for parameters is :ada:`in`; so far, most of the examples
+have been using :ada:`in` parameters.
 
 .. admonition:: Historically
 
     Functions and procedures were originally more different in philosophy.
-    Before Ada 2005, one wasn't able to
+    Before Ada 2012, functions could only take "in" parameters.
 
 Subprogram calls
 ----------------
+
 In parameters
 ~~~~~~~~~~~~~
 
-The first mode for parameter is the one we have been implicitly using so far.
+The first mode for parameters is the one we have been implicitly using so far.
 Parameters passed using this mode cannot be modified, so that the following
 program will cause an error:
 
@@ -2620,14 +2653,14 @@ program will cause an error:
        B := Tmp;
     end Swap;
 
-The fact that this is the default mode in Ada is in itself very important. It
-means that mutation on parameters will not happen unless you explicitly change
-the mode.
+The fact that this is the default mode is in itself very important. It
+means that a parameter will not be modified unless you explicitly specify
+a mode in which modification is allowed.
 
-In-out parameters
+In out parameters
 ~~~~~~~~~~~~~~~~~
 
-To fix our code above, we can use an in-out parameter.
+To correct our code above, we can use an "in out" parameter.
 
 .. code:: ada
     :class: ada-run
@@ -2652,38 +2685,42 @@ To fix our code above, we can use an in-out parameter.
 
 An in out parameter will allow read and write access to the object passed as
 parameter, so in the example above, we can see that A is modified after the
-call to multiply.
+call to Swap.
 
 .. attention::
 
-    While in-out parameters look a bit like references in C++, or regular
-    parameters in Java that are passed by-reference, the ARM does not mandate
-    by reference passing for in out parameters in general.
+    While in out parameters look a bit like references in C++, or regular
+    parameters in Java that are passed by-reference, the Ada language standard
+    does not mandate "by reference" passing for in out parameters except for
+    certain categories of types as will be explained later.
 
     In general, it is better to think of modes as higher level than by-value
     versus by-reference semantics. For the compiler, it means that an array
-    passed as an in parameter might be passed by reference under the covers,
-    because it is more efficient (which does not change anything for the user
-    since he cannot modify the original object anyway).  Conversely, an in-out
-    parameter of a discrete type will always be passed by copy (which is more
-    efficient on most architectures).
+    passed as an in parameter might be passed by reference, because it is more
+    efficient (which does not change anything for the user since the parameter
+    is not assignable). However, a parameter of a discrete type will always be
+    passed by copy, regardless of its mode (which is more efficient on most
+    architectures).
 
 Out parameters
 ~~~~~~~~~~~~~~
 
-Finally, the last mode is reserved for the cases where you only want to write
-to a parameter. This allows to have parameters that behave a bit like return
-values act for functions.
+The "out" mode applies when the subprogram needs to write to a parameter that
+might be uninitialized at the point of call. Reading the value of an out
+parameter is permitted, but it should only be done after the subprogram has
+assigned a value to the parameter. Out parameters behave a bit like return
+values for functions.  When the subprogram returns, the actual parameter
+(a variable) will have the value of the out parameter at the point of return.
 
 .. admonition:: In other languages
 
-    Ada doesn't have a tuple construct, or by another means allows to return
-    multiple values from a subprogram (except by declaring a full blown record
-    type). Hence, a way to return multiple values from a subprogram is to use
-    out parameters.
+    Ada doesn't have a tuple construct and does not allow returning multiple
+    values from a subprogram (except by declaring a full-fledged record type).
+    Hence, a way to return multiple values from a subprogram is to use out
+    parameters.
 
 For example, a procedure reading integers from the network could have one of
-the following prototypes:
+the following specifications:
 
 .. code:: ada
     :class: ada-syntax-only
@@ -2694,20 +2731,21 @@ the following prototypes:
     function Read_Int
        (Stream : Network_Stream; Result : out Integer) return Boolean;
 
-While ideally reading an out variable before writing to it would trigger an
-error, doing that in an exhaustive and precise fashion is hard. So the ARM just
-mandates that out parameter be treated like uninitialized variables.
+While reading an out variable before writing to it should, ideally, trigger an
+error, imposing that as a rule would cause either inefficient run-time checks
+or complex compile-time rules. So from the user's perspective an out parameter
+acts like an uninitialized variable when the subprogram is invoked.
 
 .. admonition:: In GNAT
 
-    GNAT will warn you in simple cases of erroneous use of out parameters,
-    emitting a warning. For example, the following program will emit a warning
+    GNAT will detect simple cases of incorrect use of out parameters.
+    For example, the compiler will emit a warning for the following program:
 
     .. code:: ada
 
         procedure Outp is
            procedure Foo (A : out Integer) is
-              B : Integer := A;
+              B : Integer := A; -- Warning on reference to uninitialized A
            begin
               A := B;
            end Foo;
@@ -2718,19 +2756,16 @@ mandates that out parameter be treated like uninitialized variables.
 Nested subprograms
 ~~~~~~~~~~~~~~~~~~
 
-A very useful functionality that is available for the programmer in Ada, and
-that we already briefly mentioned, is that you can declare subprogram inside of
-other subprograms.
+As briefly mentioned earlier, Ada allows you to declare one subprogram inside of another.
+This is useful for two reasons:
 
-This is a facility that is useful for two reasons:
-
-- It allows you to organize your programs in a cleaner fashion: If you need a
-  subprogram only as an helper for another subprogram, then the good practice
-  is to nest it inside it.
+- It lets you organize your programs in a cleaner fashion. If you need a
+  subprogram only as a "helper" for another subprogram, then the principle of
+  localization indicates that the helper subprogram should be declared nested.
 
 - It allows you to share state easily in a controlled fashion, because the
-  nested functions will have access to the parameters, and any local variables
-  declared before them.
+  nested subprograms have access to the parameters, as well as any local variables,
+  declared in the outer scope.
 
 .. code:: ada
     :class: ada-run
@@ -2770,10 +2805,14 @@ This is a facility that is useful for two reasons:
 Forward declaration of subprograms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As we saw before, a subprogram can be declared without being defined, for
+As we saw earlier, a subprogram can be declared without being fully defined, for
 example in a package specification. This is possible in general, and can be
 useful if you need subprograms to be mutually recursive, as in the example
 below:
+
+.. ?? This example is rather contrived but I suspect that any realistic
+.. ?? example would be in the context of recursive data structures and
+.. ?? mutually dependent types, which have not been covered yet.
 
 .. code:: ada
     :class: ada-run
@@ -2788,7 +2827,7 @@ below:
               Compute_A (V - 1);
            -- ^ Call to Compute_A
            end if;
-    end Compute_B;
+        end Compute_B;
 
         procedure Compute_A (V : Natural) is
         begin
@@ -2799,7 +2838,7 @@ below:
         end Compute_A;
     begin
        Compute_A (15);
-    end Mutually_Recursive_Subprograms;
+    end Mutually_Recursive_Subprograms; 
 
 More about types
 ================
@@ -3140,7 +3179,6 @@ a qualified expression:
        D   : Date_Acc := new Date'(30, November, 2011);
        Msg : String_Acc := new String'("Hello");
     end Access_Types;
-
 
 Dereferencing
 ~~~~~~~~~~~~~
