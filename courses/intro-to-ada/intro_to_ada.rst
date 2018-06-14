@@ -2847,17 +2847,16 @@ More about types
 Aggregates: A primer
 --------------------
 
-So far, we have talked about, and showcased aggregates quite a bit. Now we will
-try and be more comprehensive about them.
+So far, we have talked about aggregates quite a bit and have seen a number of examples.
+Now we will revisit this feature in some more detail.
 
-Aggregates are the mean by which you will describe literal values for composite
-types in Ada. They are a very powerful notation that will allow you to avoid
-writing  procedural code for the instantiation of your data structures in many
+An Ada aggregate is, in effect, a literal value for a composite
+type. It's a very powerful notation that helps you to avoid
+writing procedural code for the initialization of your data structures in many
 cases.
 
-A basic rule that has to be followed when writing aggregates is that *every
-component* of the described data type has to be specified, even components that
-have a default value.
+A basic rule when writing aggregates is that *every component* of the array or record
+has to be specified, even components that have a default value.
 
 This means that the following code is incorrect:
 
@@ -2872,22 +2871,21 @@ This means that the following code is incorrect:
        Origin : Point := (X => 0);
     end Incorrect;
 
-There are a few shortcuts that you can use to make the notation more user
-friendly:
+There are a few shortcuts that you can use to make the notation more convenient:
 
-- To tell the compiler to use the default value for a field, you can use the
+- To specify the default value for a component, you can use the
   :ada:`<>` notation.
 
-- You can also use the :ada:`|` operator to mention several disjoint components
-  together.
+- You can use the :ada:`|` symbol to give several components the same value.
 
-- You can use the :ada:`others` qualifier to refer to every field that has not yet
-  been mentionned, provided all those fields have the same type.
+- You can use the :ada:`others` choice to refer to every component that has not yet
+  been specified, provided all those fields have the same type.
 
-- You can use ranges to refer to ranges of indices in arrays.
+- You can use the range notation :ada:`..` to refer to specify a contiguous
+  sequence of indices in an array.
 
-However, beware, for array aggregates, as soon as you used named associations,
-all associations have to be named !
+However, note that as soon as you used a named association,
+all subsequent components likewise need to be specified with names associations.
 
 .. code:: ada
 
@@ -2898,8 +2896,8 @@ all associations have to be named !
 
        type Point_Array is array (Positive range <>) of Point;
 
-       Origin : Point := (X | Y => <>);
-       Origin_2 : Point := (others => <>);
+       Origin   : Point := (X | Y => <>);   -- use the default values
+       Origin_2 : Point := (others => <>);  -- likewise use the defaults
 
        Points_1 : Point_Array := ((1, 2), (3, 4));
        Points_2 : Point_Array := (1 => (1, 2), 2 => (3, 4), 3 .. 20 => <>);
@@ -2908,11 +2906,11 @@ all associations have to be named !
 Overloading and qualified expressions
 -------------------------------------
 
-While we have mentioned it in the enumerations section TODOPUTLINK there is a
-general concept of Ada which is the notion of overloading of names.
+Ada has a general concept of name overloading, which we saw earlier
+in the section on enumeration types TODOPUTLINK.
 
-Let's take a simple example: It is possible in Ada to have functions that have
-the same name, but different arguments.
+Let's take a simple example: it is possible in Ada to have functions that have
+the same name, but different types for their parameters.
 
 .. code:: ada
 
@@ -2921,12 +2919,12 @@ the same name, but different arguments.
        function F (A : Character) return Integer;
     end Pkg;
 
-This is a common concept in programming languages, that is called
+This is a common concept in programming languages, called
 `overloading <https://en.m.wikipedia.org/wiki/Function_overloading>`_, or name
 overloading.
 
-One of the pecularities of Ada is that it allows overloading on the return type
-of a function.
+One of the novel aspects of Ada's overloading facility is the ability to resolve overloading
+based on the return type of a function.
 
 .. code:: ada
 
@@ -2948,14 +2946,17 @@ of a function.
     end Main;
 
 .. attention::
-    This explains why you can have multiple enumeration literals with the same
-    name: Return type overloading is allowed on both functions and enumerations
-    in Ada. Actually, the ARM says that enumeration literals are treated like
-    null-arity functions.
+    Note that overload resolution based on the type required by a given context
+    is allowed for both functions and enumeration literals in Ada. Semantically,
+    an enumeration literal is treated like a function that has no parameters.
 
-The problem is that, sometimes, there is an ambiguity such that the compiler
-cannot actually resolve the names of an expression. This is where the qualified
-expression becomes useful.
+However, sometimes an ambiguity makes it impossible to
+resolve which declaration of an overloaded name a given occurrence of
+the name refers to. This is where a qualified expression becomes useful.
+
+.. ?? This example raises the issue of how to determine the type of an integer literal,
+.. ?? which is a complex subject that was not treated earlier.
+.. ?? See below for an alternative example based on enumeration tyes
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -2988,8 +2989,42 @@ expression becomes useful.
        Put_Line (S);
     end Main;
 
+.. ?? Here's the example
+
+.. code:: ada
+
+   procedure Overloading_Example is
+
+      type Color is (Red, Orange, Yellow, Green, Blue, Violet, Brown, Black);
+      type Fruit is (Grape, Cherry, Lemon, Orange, Lime, Banana);
+
+      function Temperature (C : Color) return Integer is ...;
+      function Temperature (F : Fruit) return Integer is ...;
+      N : Integer;
+   begin
+      ...
+      N := Temperature (Orange); --Illegal / ambiguous
+      ...
+   end Overloading_Example;
+
+The invocation :ada:`Temperature (Orange)` is ambiguous, since :ada;`Orange`
+could be either the Color or the Fruit.  We can resolve this by making the type
+explicit in a qualified expression:
+
+.. code:: ada
+
+      N := Temperature (Color'(Orange));
+
+ or
+
+.. code:: ada
+
+       N := Temperature (Fruit'(Orange));
+
+
+
 Syntactically the target of a qualified expression can be either any expression
-in parentheses, either an aggregate:
+in parentheses, including an aggregate:
 
 .. code:: ada
 
@@ -3011,14 +3046,12 @@ for the compiler of course, but also for other programmers.
     While they look and feel similar, type conversions and qualified
     expressions are *not* the same.
 
-    Qualified expressions need the type of the target expression that will be
-    resolved to be exactly that specified, whereas type conversions will try to
-    convert the target, issuing a run-time error if the conversion is deemed
-    invalid at run-time.
+    A qualified expression specifies the exact type that the target expression will be
+    resolved to, whereas a type conversion will try to
+    convert the target and issue a run-time error if the target value cannot be so converted.
 
-    Note that you can use qualified expressions to convert from a *subtype* to
-    another at a specific point, raising potential errors if constraints are
-    violated.
+    Note that you can use a qualified expression to convert from one subtype to
+    another, with an exception raised if a constraint is violated.
 
     .. code:: ada
         :class: ada-nocheck
@@ -3028,29 +3061,25 @@ for the compiler of course, but also for other programmers.
 Access types (pointers)
 -----------------------
 
-Pointers are a potentially dangerous construct with regards to safety in
-programming languages, which is in opposition with Ada's stated goal.
+Pointers are a potentially dangerous construct, which conflicts with Ada's underlying philosophy.
 
-There are two ways in which Ada does its best to shield programmers from the
+There are two ways in which Ada helps shield programmers from the
 dangers of pointers:
 
-1. The first one, that we have already been studying all along, is to enable
-   the programmer to not use them. Parameter modes, arrays, varying size types,
-   are all constructs which allows the programmer to not use pointers, where he
-   would have used them in C.
+1. One approach, which we have already seen, is to provide alternative features
+   so that the programmer does not need to use pointers. Parameter modes, arrays, and varying size types
+   are all constructs that can replace typical pointer usages in C.
 
-2. The second one is by making pointers construct as safe and restricted as
-   possible, by default, allowing escape hatches when the programmer tells the
-   language that he really knows what he is doing.
+2. Second, Ada has made pointers as safe and restricted as
+   possible, but allows "escape hatches" when the programmer explicitly requests them
+   and presumably will be exercising such features with appropriate care.
 
-In this class, we will only teach the very basics of Ada pointers, which are
-called accesses, because there are almost always better ways than to resort to
-the advanced features directly.
+This course covers the basics of Ada pointers, which are
+known as "access values". There are generally better ways than to resort to
+the advanced features directly but if you need to use features that are potentially unsafe,
+you can learn more about those `unsafe features <TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
 
-If you need the unsafe features, you can learn more about those
-`unsafe features <TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
-
-Here is how you declare a simple access type in Ada:
+Here is how you declare a simple pointer type, or access type, in Ada:
 
 .. code:: ada
 
@@ -3070,21 +3099,22 @@ Here is how you declare a simple access type in Ada:
     package Access_Types is
         --  Declare an access type
         type Date_Acc is access Date;
-        --                      ^ Type you want to access/point to.
+        --                      ^ "Designated type"
+        --                      ^ Date_Acc values point to Date objects
 
         D : Date_Acc := null;
         --              ^ Literal for "access to nothing"
         --  ^ Access to date
     end Access_Types;
 
-So far we know how to:
+This illustrates how to:
 
-- Declare an access type to a specific type
-- Declare an instance of it
+- Declare an access type whose values point to ("designate") objects from a specific type
+- Declare a variable (access value) from this access type
 - Give it a value of :ada:`null`
 
 In line with Ada's strong typing philosophy, if you declare a second access
-type to the date type, the two access types will be incompatible with each
+type whose designated type is Date, the two access types will be incompatible with each
 other, and you will need an explicit type conversion to convert from one to the
 other:
 
@@ -3095,10 +3125,10 @@ other:
 
     package Access_Types is
         --  Declare an access type
-        type Date_Acc is access Date;
+        type Date_Acc   is access Date;
         type Date_Acc_2 is access Date;
 
-        D  : Date_Acc := null;
+        D  : Date_Acc   := null;
         D2 : Date_Acc_2 := D;
         --                 ^ Invalid! Different types
 
@@ -3113,9 +3143,9 @@ other:
     same as long as they share the same target type and accessibility rules.
 
     Not so in Ada, which takes some time getting used to. A seemingly simple
-    problem that can cause pain is, if you want to have a canonical access to a
-    type, where to declare it ? A very commonly used pattern is that if you
-    need an access type to a specific type you 'own', you will declare it along
+    problem is, if you want to have a canonical access to a
+    type, where should it be declared? A commonly used pattern is that if you
+    need an access type to a specific type you "own", you will declare it along
     with the type:
 
     .. code:: ada
@@ -3132,8 +3162,8 @@ other:
 Allocation (by type)
 ~~~~~~~~~~~~~~~~~~~~
 
-Declaring access types is well, but we need a way to give instances of those
-access types a meaningful value! You can allocate a value of an access type
+Once we have declared an access type, we need a way to give variables of the
+types a meaningful value! You can allocate a value of an access type
 with the :ada:`new` keyword in Ada.
 
 .. code:: ada
@@ -3148,7 +3178,7 @@ with the :ada:`new` keyword in Ada.
     end Access_Types;
 
 If the type you want to allocate needs constraints, you can put them in the
-subtype indication, just like you would do in a variable declaration:
+subtype indication, just as you would do in a variable declaration:
 
 .. code:: ada
 
@@ -3164,9 +3194,9 @@ subtype indication, just like you would do in a variable declaration:
        --                                ^ Constraint required
     end Access_Types;
 
-In some cases, allocating just by specifiying the type is not ideal though, so
-Ada also allows you to allocate by value directly, specifying an expression via
-a qualified expression:
+In some cases, though, allocating just by specifiying the type is not ideal, so
+Ada also allows you to initialize along with the allocation. This is done via
+the qualified expression syntax:
 
 .. code:: ada
 
@@ -3176,17 +3206,19 @@ a qualified expression:
        type Date_Acc is access Date;
        type String_Acc is access String;
 
-       D   : Date_Acc := new Date'(30, November, 2011);
+       D   : Date_Acc   := new Date'(30, November, 2011);
        Msg : String_Acc := new String'("Hello");
     end Access_Types;
+
 
 Dereferencing
 ~~~~~~~~~~~~~
 
-The last missing piece to be able to use access types is how to use their
-value. For that we need to dereference the pointer. Dereferencing a pointer
-uses the :ada:`.all` syntax in Ada, but is only rarely necessary - in most
-cases, the access wil be implicitly dereferenced for you:
+The last important piece of Ada's access type facility is how to get from
+an access value to the object that is pointed to, that is, how
+to dereference the pointer. Dereferencing a pointer
+uses the :ada:`.all` syntax in Ada, but is often not needed - in many
+cases, the access value will be implicitly dereferenced for you:
 
 .. code:: ada
 
@@ -3198,7 +3230,7 @@ cases, the access wil be implicitly dereferenced for you:
        D     : Date_Acc := new Date'(30, November, 2011);
 
        Today : Date := D.all;
-       --              ^ Access dereference
+       --              ^ Access value dereference
        J     : Integer := D.Day;
        --                 ^ Implicit dereference for record and array components
        --                 Equivalent to D.all.day
@@ -3210,14 +3242,14 @@ Other features
 As you might know if you have used pointers in C or C++, we are still missing
 features that are considered fundamental to the use of pointers, such as:
 
-- Pointers arithmetic (being able to dynamically change what a pointer is
-  pointing to)
+- Pointer arithmetic (being able to increment or decrement a pointer in order
+  to point to the next or previous object)
 
 - Manual deallocation - what is called ``free`` or ``delete`` in C. This is
-  considered an unsafe operation. It means that to stay into the realm of safe
+  a potentially unsafe operation. To keep within the realm of safe
   Ada, you need to never deallocate manually.
 
-Those features exist in Ada, but are hidden behind specific standard library
+Those features exist in Ada, but are only available through specific standard library
 APIs. You can read more about those in the
 `advanced course on memory management <TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
 
@@ -3226,38 +3258,36 @@ APIs. You can read more about those in the
     The guideline in Ada is that most of the time you can avoid manual
     allocation, and you should.
 
-    You have many ways of avoiding manual allocation, some of them have been
-    already covered, such as parameter modes. You have library abstractions
-    available to avoid pointers:
+    There are many ways to avoid manual allocation, some of which have been
+    covered (such as parameter modes). The language also provides library abstractions
+    to avoid pointers:
 
-    1. The first one is the use of :ref:`containers <Containers>`. Containers
-       will allow users to not use pointers very often, because their
-       memory is automatically managed.
+    1. One is the use of :ref:`containers <Containers>`. Containers
+       help users avoid pointers, because container memory is automatically managed.
 
-    2. A container of specific interest in that context is the
+    2. A container to note in this context is the
        `Indefinite holder <http://www.ada-auth.org/standards/12rat/html/Rat12-8-5.html>`_.
-       This container allows you to store a value of an indefinite type
-       just as if it was of a definite type.
+       This container allows you to store a value of an indefinite type such as String.
 
     3. GNATCOLL has a library for smart pointers, called
        `Refcount <https://github.com/AdaCore/gnatcoll-core/blob/master/src/gnatcoll-refcount.ads>`_
-       Those pointers' memory is automatically managed, so that when your
-       pointer has no more references to it, the memory is automatically
+       Those pointers' memory is automatically managed, so that when an allocated
+       object has no more references to it, the memory is automatically
        deallocated.
 
 
 Mutually recursive types
 ------------------------
 
-It is sometimes needed to implement loops in data structures, for example to
-implement linked lists. This is doable in Ada, by forward declaring a type,
-such as in the example below:
+The linked list is a common idiom in data structures; in Ada this would be most
+naturally defined through two types, a record type and an access type, that are mutually
+dependent.  To declare mutually dependent types, you can use an incomplete type declaration:
 
 .. code:: ada
 
     package Simple_List is
        type Node;
-       --  This is an incomplete type declaration, it must be
+       --  This is an incomplete type declaration, which is
        --  completed in the same declarative region.
 
        type Node_Acc is access Node;
@@ -3268,17 +3298,23 @@ such as in the example below:
        end record;
     end Simple_List;
 
+
 More about records
 ------------------
 
 Dynamically sized record types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We have studied records, although not in-depth. Let's now detail a few
-peculiarities of record types.
+We have previously seen some simple examples of record types.
+Let's now look at some of the more advanced properties of this fundamental
+language feature.
 
-The first one is that the size of a record type does not need to be known at
-compile time. This is a feature that is showcased in the example below:
+One point to note is that object size for a record type does not need to be known at
+compile time. This is illustrated in the example below:
+
+.. ?? The example code may have elaboration order problems unless
+.. ?? an elaboration pragma is used.
+.. ?? Consider simplfying or restructuring the example to avoid this issue
 
 .. code:: ada
 
@@ -3295,28 +3331,28 @@ compile time. This is a feature that is showcased in the example below:
         type Items_Array is array (Positive range <>) of Integer;
 
         type Growable_Stack is record
-           Items : Items_Array (Positive'First .. Max_Len);
+           Items : Items_Array (1 .. Max_Len);
            Len   : Natural;
         end record;
-        --  Person is a definite type, but size is not known at compile time.
+        --  Growable_Stack is a definite type, but size is not known at compile time.
 
         G : Growable_Stack;
     end Var_Size_Record;
 
-The consequence of this is that it is completely fine to determine the size of
-your records at run-time, the only enforced constraint being that this size
-cannot change after the creation of the type.
+It is completely fine to determine the size of
+your records at run time, but note that all objects of this type
+will have the same size.
 
 Records with discriminant
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the section above, the size of the first name and last name fields is
-determined once, at run-time, but every ``Person`` instance will be exactly the
-same size. But maybe that's not what you as a user want to do. We saw that for
-arrays in general, it is already possible to do that: An unconstrained array
-type can designate any instance of such an array regardless of the size.
+In the example above, the size of the Items field is
+determined once, at run-time, but every ``Growable_Stack`` instance will be exactly the
+same size. But maybe that's not what you want to do. We saw that
+arrays in general offer this flexibility: for an unconstrained array
+type, different objects can have different sizes.
 
-You can do that for records too, using a special kind of field that is called a
+You can get analogous functionality for records, too, using a special kind of field that is called a
 discriminant:
 
 .. code:: ada
@@ -3326,7 +3362,7 @@ discriminant:
 
         type Growable_Stack (Max_Len : Natural) is record
         --                   ^ Discriminant. Cannot be modified once initialized.
-           Items : Items_Array (Positive'First .. Max_Len);
+           Items : Items_Array (1 .. Max_Len);
            Len   : Natural := 0;
         end record;
         --  Growable_Stack is an indefinite type (like an array)
@@ -3336,9 +3372,9 @@ Discriminants, in their simple forms, are constant: You cannot modify them once
 you have initialized the object. This intuitively makes sense since they
 determine the size of the object.
 
-Also, they make a type indefinite: Whether or not the discriminant is used or
-not to change the size of the object, a type with a discriminant will be
-indefinite if the discriminant is not specified:
+Also, they make a type indefinite: Whether or not the discriminant is used
+to specify the size of an object, a type with a discriminant will be
+indefinite if the discriminant is not declared with an initialization:
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -3359,11 +3395,11 @@ indefinite if the discriminant is not specified:
     end Test_Discriminants;
 
 This also means that, in the example above, you cannot declare an array of
-points as Point is defined above, because the size of a Point is not known.
+Point values, because the size of a Point is not known.
 
-In most other regards, discriminants behave like regular fields: You have to
+In most other respects discriminants behave like regular fields: You have to
 specify their values in aggregates, as seen above, and you can access their
-values via the dot-notation.
+values via the dot notation.
 
 .. code:: ada
     :class: ada-run
@@ -3390,16 +3426,18 @@ values via the dot-notation.
 .. note:
     In the examples above, we used a discriminant to determine the size of an
     array, but it is not limited to that, and could be used, for example, to
-    determine the size of another discriminated record.
+    determine the size of a nested discriminated record.
 
-Records with variant
-~~~~~~~~~~~~~~~~~~~~
+Variant records
+~~~~~~~~~~~~~~~
 
-We introduced the concept of discriminants, and showcased how it enables people
-to have records of varying size, by having components whose size vary depending
+The examples of discriminants thus far have illustrated the
+declaration of records of varying size, by having components whose size depends
 on the discriminant.
 
-However, discriminants can also be used to make the shape of a record vary:
+However, discriminants can also be used to obtain the functionality of what are
+sometimes called "variant records": records that can contain different sets of
+fields.
 
 .. code:: ada
 
@@ -3408,10 +3446,10 @@ However, discriminants can also be used to make the shape of a record vary:
        type Expr_Access is access Expr; --  Access to a Expr
 
        type Expr_Kind_Type is (Bin_Op_Plus, Bin_Op_Minus, Num);
-       --  A regular enum
+       --  A regular enumeration type
 
        type Expr (Kind : Expr_Kind_Type) is record
-          --      ^ The discriminant is an enum
+          --      ^ The discriminant is an enumeration value
           case Kind is
              when Bin_Op_Plus | Bin_Op_Minus =>
                 Left, Right : Expr_Access;
@@ -3424,8 +3462,8 @@ However, discriminants can also be used to make the shape of a record vary:
     end Variant_Record;
 
 The fields that are in a :ada:`when` branch will be only available when the
-value of the discriminant is covered by the branch. In the example above, it
-means that you will only be able to access the fields :ada:`Left` and
+value of the discriminant is covered by the branch. In the example above,
+you will only be able to access the fields :ada:`Left` and
 :ada:`Right` when the :ada:`Kind` is :ada:`Bin_Op_Plus` or :ada:`Bin_Op_Minus`.
 
 If you try to access a field that is not valid for your record, a
@@ -3440,10 +3478,10 @@ If you try to access a field that is not valid for your record, a
        E : Expr := (Num, 12);
     begin
        E.Left := new Expr'(Num, 15);
-       --  Illegal, will compile but fail at runtime
+       --  Will compile but fail at runtime
     end Main;
 
-Here is how you could write an evaluator for expressions above:
+Here is how you could write an evaluator for expressions:
 
 .. code:: ada
     :class: ada-run
@@ -3469,16 +3507,16 @@ Here is how you could write an evaluator for expressions above:
 .. admonition:: In other languages
 
     Ada's variant records are very similar to Sum types in functional languages
-    such as OCaml or Haskell. The big difference is that the discriminant is a
-    separate field in Ada, and that you can have several, whereas the 'tag' of
-    the sum type is kind of built-in, and only accessible with pattern matching.
+    such as OCaml or Haskell. A major difference is that the discriminant is a
+    separate field in Ada, whereas the 'tag' of
+    a Sum type is kind of built in, and only accessible with pattern matching.
 
     There are other differences (you can have several discriminants in a
     variant record in Ada). Nevertheless, they allow the same kind of type
-    modeling than sum types in functional languages.
+    modeling as sum types in functional languages.
 
     Compared to C/C++ unions, Ada variant records are more powerful in what
-    they allow to express, and also checked at runtime, which makes them safer.
+    they allow, and are also checked at run time, which makes them safer.
 
 Fixed-point types
 -----------------
@@ -3486,27 +3524,36 @@ Fixed-point types
 Decimal fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We have seen how to specify regular floating point types before.  In addition
-to specifying the least required precision of a floating-point type, it is also
-possible to go one step further and specify the exact accuracy of a
-floating-point type. This category of data types is called decimal fixed-point
-types.
+We have already seen how to specify floating-point types.  However, in some
+applications floating-point is not appropriate since, for example, the roundoff error
+from binary arithmetic may be unacceptable or perhaps the hardware does not
+support floating-point instructions.  Ada provides a category
+of types, the decimal fixed-point types, that allows the programmer to specify
+the required decimal precision (number of digits) as well as the scalaing factor
+(a power of ten) and, optionally, a range.
+In effect the values will be represented as integers implicitly scaled by
+the specified power of 10. This is useful, for example, for financial applications.
 
-The syntax for decimal fixed-point types is
-:ada:`type T is delta <delta_value> digits <number_of_decimal_digits>`.
+
+The syntax for a simple decimal fixed-point type is
+
+.. code:: ada
+
+   type <type-name> is delta <delta-value> digits <digits-value>;
+
 In this case, the :ada:`delta` and the :ada:`digits` will be used by the
-compiler to derive a range. This will become clear in the next example.
+compiler to derive a range.
 
-We will use three attributes of the language in our example:
+Several attributes are useful for dealing with decimal types:
 
 +------------------------+----------------------------------------------+
-| Attribute Name         | Documentation                                |
+| Attribute Name         | Meaning                                      |
 +========================+==============================================+
-| First                  | Returns the first value of the type          |
+| First                  | The first value of the type                  |
 +------------------------+----------------------------------------------+
-| Last                   | Returns the last value of the type           |
+| Last                   | The last value of the type                   |
 +------------------------+----------------------------------------------+
-| Delta                  | Returns the delta value of the type          |
+| Delta                  | The delta value of the type                  |
 +------------------------+----------------------------------------------+
 
 In the example below, we declare two data types: ``T3_D3`` and ``T6_D3``.
@@ -3535,48 +3582,66 @@ to 3 digits, its range is -0.999 to 0.999. For the ``T6_D3``, we have
 defined a precision of 6 digits, so the range is -999.999 to 999.999.
 
 Similar to the type definition using the :ada:`range` syntax, because we
-have an implicit range, the application will check that the variables
+have an implicit range, the compiled code will check that the variables
 contain values that are not out-of-range. Also, if the result of a
 multiplication or division on decimal fixed-point types is smaller than
-the delta value specified for the data type, the actual result will be
+the delta value required for the context, the actual result will be
 zero. For example:
 
 .. code:: ada
 
-    with Ada.Text_IO; use Ada.Text_IO;
-
     procedure Decimal_Fixed_Point_Smaller is
        type T3_D3 is delta 10.0 ** (-3) digits 3;
+       type T6_D6 is delta 10.0 ** (-6) digits 6;
        A : T3_D3 := T3_D3'Delta;
        B : T3_D3 := 0.5;
+       C : T6_D6;
     begin
        Put_Line ("The value of A     is " & T3_D3'Image (A));
        A := A * B;
        Put_Line ("The value of A * B is " & T3_D3'Image (A));
+       A := T3_D3'Delta;
+       C := A * B;
+       Put_Line ("The value of A * B is " & T6_D6'Image (C));
     end Decimal_Fixed_Point_Smaller;
 
 In this example, the result of the operation :math:`0.001 * 0.5` is
 0.0005. Since this value is not representable for the ``T3_D3`` type
 because the delta value is 0.001, the actual value stored in variable
-``A`` is zero.
+``A`` is zero. However, accuracy is preserved during the arithmetic
+operations if the target has sufficient precision, and the value
+displayed for C is 0.000500.
 
 Fixed-point types
 ~~~~~~~~~~~~~~~~~
 
-Ordinary fixed-point types are similar to decimal fixed-point types.
-The difference between them is in the delta value:
-for decimal fixed-point types, it is based on the
-power of ten, whereas for ordinary fixed-point types, it is based on the
-power of two. Therefore, they are also called binary fixed-point types.
+.. ?? Ordinary fixed-point types distinguish between the 'delta and the 'small
+.. ?? This is somewhat complex but needs to be mentioned
+
+Ordinary fixed-point types are similar to decimal fixed-point types
+in that the values are, in effect, scaled integers.
+The difference between them is in the scale factor:
+for a decimal fixed-point type, the scaling, given explicitly by the type's
+``delta``, is always a power of ten.
+In contrast, for an ordinary fixed-point type, the scaling is defined by the
+type's ``small``, which is derived from the specified ``delta`` and, by
+default, is a power of two. Therefore, ordinary fixed-point types are
+sometimes called binary fixed-point types.
 
    FURTHERINFO: Ordinary fixed-point types can be thought of being closer
    to the actual representation on the machine, since hardware support for
-   decimal fixed-point arithmetic is not widespread, while ordinary
-   fixed-point types make use of the available integer arithmetic in the
-   background.
+   decimal fixed-point arithmetic is not widespread (rescalings by a
+   power of ten), while ordinary fixed-point types make use of the available
+   integer shift instructions.
 
-The syntax for binary fixed-point types is
-:ada:`type T is delta <delta_value> range <lower_bound> .. <upper_bound>`.
+The syntax for an ordinary fixed-point type is
+
+.. code:: ada
+
+   type <type-name> is delta <delta-value> range <lower-bound> .. <upper-bound>;
+
+By default the compiler will choose a scale factor, or ``small``, that is a power of 2 no greater than <delta-value>.
+
 For example, we may define a normalized range between -1.0 and 1.0 as
 following:
 
@@ -3650,26 +3715,42 @@ All standard operations are available for fixed-point types. For example:
 
 As expected, ``R`` contains 0.75 after the addition of ``A`` and ``B``.
 
+In fact the language is more general that these examples imply, since in practice it
+is typical to need to multiply or divide values from different fixed-point types, and
+obtain a result that may be of a third fixed-point type.  The details are outside
+the scope of this introductory course.
+
+It is also worth noting, although again the details are outside the scope of this course,
+that you can explicitly specify a value for an ordinary fixed-point type's ``small``.
+This allows non-binary scaling, for example:
+
+.. code:: ada
+
+   type Angle is delta 1.0/3600.0 range 0.0 .. 360.0 - 1.0/3600.0;
+   for Angle'Small use Angle'Delta;
+
+
 Character types
 ---------------
 
-As we said before for enumeration types, each enumeration type is distinct and
+As noted earlier, each enumeration type is distinct and
 incompatible with every other enumeration type. However, what we did not
-mention is that Ada has character literals, that can be used as enumeration
-literals too. This allows Ada to define its own strongly typed character types,
-but also allows the user to define its own, as in the example below:
+mention previously is that character literals are permitted as
+enumeration literals. This means that in addition to the language's
+strongly typed character types,
+user-defined character types are also permitted:
 
 .. code:: ada
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Greet is
+    procedure Character_Example is
        type My_Char is ('a', 'b', 'c');
-       --  Our custom character type, an enum, with only 3 valid values.
+       --  Our custom character type, an enumeration type with 3 valid values.
 
        C : Character;
-       --  ^ Built-in character type (it's an enum)
+       --  ^ Built-in character type (it's an enumeration type)
 
        M : My_Char;
     begin
@@ -3679,35 +3760,34 @@ but also allows the user to define its own, as in the example below:
        M := 'a';
 
        C := 64;
-       --   ^ Invalid: 64 is not an enumeration literal
+       --   ^ Invalid: 64 is not a Character value
 
        C := Character'Val (64);
-       --  Assign the character at position 64 in the enum (which is 'A')
+       --  Assign the character at position 64 in the enumeration (which is 'A')
 
        M := C;
-       --   ^ Invalid: C is of invalid type for A
+       --   ^ Invalid: C is of type Character, and M is a My_Char
 
        M := 'd';
        --   ^ Invalid: 'd' is not a valid literal for type My_Char
-    end Greet;
+    end Character_Example;
 
 Privacy
 =======
 :code-config:`reset_accumulator=True`
 
-One of the main principles in modular programming, that has later become one of
-the main principles behind the dominant interpretation of object oriented
+One of the main principles of modular programming, as well as object oriented
 programming, is `encapsulation <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`_.
 
 Encapsulation, briefly, is the concept that the implementer of a piece of
-computer software will distinguish between the public interface and the private
-implementation for his code.
+software will distinguish between the code's public interface and its private
+implementation.
 
-This is not only applicable to software libraries but can happen everywhere
-inside of a project where you want to have some abstraction.
+This is not only applicable to software libraries but wherever
+abstraction is used.
 
-In Ada, the granularity of encapsulation is a bit different from most object
-oriented languages, because privacy is generally specified at the package
+In Ada, the granularity of encapsulation is a bit different from most object-oriented
+languages, because privacy is generally specified at the package
 level.
 
 Basic encapsulation
@@ -3737,8 +3817,8 @@ Basic encapsulation
 Abstract data types
 -------------------
 
-With this high level granularity, it might not seem obvious how to hide the
-implementation details of a type. Here is how it is done in Ada:
+With this high-level granularity, it might not seem obvious how to hide the
+implementation details of a type. Here is how it can be done in Ada:
 
 .. code:: ada
 
@@ -3756,17 +3836,18 @@ implementation details of a type. Here is how it is done in Ada:
        type Content_Type is array (Stack_Index) of Natural;
 
        type Stack is record
-          Top : Stack_Index;
+          Top     : Stack_Index;
           Content : Content_Type;
        end record;
     end Stacks;
 
-In the above example, we define a stack type in the public part, but say that
-the exact representation of that type is private.
+In the above example, we define a stack type in the public part (known as the
+"visible part" of the package spec in Ada), but the exact representation
+of that type is private.
 
-Then, in the private part, we define the exact representation of that type. We
-can also declare other types that will be used as helpers for our main public
-type. This is useful since declaring helper types is so common in Ada.
+Then, in the private part, we define the representation of that type. We
+can also declare other types that will be used as "helpers" for our main public
+type. This is useful since declaring helper types is common in Ada.
 
 A few words about terminology:
 
@@ -3776,7 +3857,7 @@ A few words about terminology:
 - The Stack type as viewed from the private part or the body of the package is
   called the full view of the type. This is what implementers have access to.
 
-From the point of view of the client, only the public part is important, and
+From the point of view of the client (the "with"ing unit), only the public (visible) part is important, and
 the private part could as well not exist. It makes it very easy to read
 linearly the part of the package that is important for you.
 
@@ -3812,8 +3893,8 @@ Here is how the ``Stacks`` package would be used:
 Limited types
 -------------
 
-Ada has a facility called limited types. The particularity of limited types is
-that they cannot be copied or compared.
+Ada's "limited type" facility allows you to declare a type for which
+assignment and comparison operations are not automatically provided.
 
 .. code:: ada
 
@@ -3845,20 +3926,17 @@ that they cannot be copied or compared.
        --  Illegal: S is limited.
     end Main;
 
-This is useful because for some complex data types, copy is a complicated
-operation: You might have data inside your record that needs to be treated
-specially when you copy it (for example doing a deep copy).
+This is useful because, for example, for some data types the built-in assignment
+operation might be incorrect (for example when a deep copy is required).
 
-Ada allows you to implement special semantics for those operations via
-`controlled types <todo_link_to_controlled_types>`_. However, controlled types
-are complicated to get right and, in some cases, to simplify the problem, and
-the way people will use your API, you can sidestep the issue entirely and say
-"Users are not allowed to copy this data type".
+Ada does allow you to overload the comparison operators "=" and "/" for limited
+types (and to override the built-in declarations for non-limited types).
 
-One example is the ``File_Type`` from the ``Ada.Text_IO`` package. The
-designers of the standard library decided that rather than allow people to copy
-instances of File_Type, making it limited was actually easier, and did fit the
-semantics of the API quite well.
+Ada also allows you to implement special semantics for assignment via
+`controlled types <todo_link_to_controlled_types>`_. However, in some cases
+assignment is simply inappropriate; one example is the ``File_Type`` from the
+``Ada.Text_IO`` package, which is declared as a limited type and thus
+attempts to assign one file to another would be detected as illegal. 
 
 Generics
 ========
