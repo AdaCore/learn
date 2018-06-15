@@ -54,15 +54,13 @@ code. In fact, there are quite an important number of them.
 First, the computation of ``I`` + ``J`` may overflow, for example if ``I``
 is :ada:`Integer'Last` and ``J`` is positive.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     A (Integer'Last + 1) := P / Q;
 
 Then, its result may not be in the range of the array ``A``.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     A (A'Last + 1) := P / Q;
 
@@ -70,23 +68,20 @@ On the other side of the assignment, the division may also overflow, but
 only in the very special case where ``P`` is :ada:`Integer'First` and
 ``Q`` is -1 because of the asymmetric range of signed integer types.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     A (I + J) := Integer'First / -1;
 
 As the array contains natural numbers, it is also an error to store a
 negative value in it.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     A (I + J) := 1 / -1;
 
 Finally, the division is not allowed if ``Q`` is 0.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     A (I + J) := P / 0;
 
@@ -96,23 +91,22 @@ raising an exception if those checks fail. You can see the type of
 exceptions raised due to failed checks for each of the different
 assignment statements below:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     A (Integer'Last + 1) := P / Q;
-    --  raised CONSTRAINT_ERROR : overflow check failed
+    -- raised CONSTRAINT_ERROR : overflow check failed
 
     A (A'Last + 1) := P / Q;
-    --  raised CONSTRAINT_ERROR : index check failed
+    -- raised CONSTRAINT_ERROR : index check failed
 
     A (I + J) := Integer'First / (-1);
-    --  raised CONSTRAINT_ERROR : overflow check failed
+    -- raised CONSTRAINT_ERROR : overflow check failed
 
     A (I + J) := 1 / (-1);
-    --  raised CONSTRAINT_ERROR : range check failed
+    -- raised CONSTRAINT_ERROR : range check failed
 
     A (I + J) := P / 0;
-    --  raised CONSTRAINT_ERROR : divide by zero
+    -- raised CONSTRAINT_ERROR : divide by zero
 
 Note that these runtime checks are costly, both in terms of program size
 and execution time. They do not come at zero cost and therefore, depending
@@ -126,23 +120,22 @@ in the program. Using this interpretation, GNATprove generates a logical
 formula called verification condition for each possible check required
 for the validity of the code.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     A (Integer'Last + 1) := P / Q;
-    medium: overflow check might fail
+    -- medium: overflow check might fail
 
     A (A'Last + 1) := P / Q;
-    medium: array index check might fail
+    -- medium: array index check might fail
 
     A (I + J) := Integer'First / (-1);
-    medium: overflow check might fail
+    -- medium: overflow check might fail
 
     A (I + J) := 1 / (-1);
-    medium: range check might fail
+    -- medium: range check might fail
 
     A (I + J) := P / 0;
-    medium: divide by zero might fail
+    -- medium: divide by zero might fail
 
 The verification conditions are then given to an automatic prover. If
 every verification condition generated for a program can be validated by a
@@ -584,7 +577,7 @@ it will set it to 100 for ``X`` greater or equal to 100. It does respect the
 postcondition, so why is the postcondition not provable?
 
 The values in the counterexample returned by GNATprove in its message give a
-clue: ``C = 0 and X = 10 and X'Old = 0``. Indeed, if ``C`` is not equal to 100,
+clue: :ada:`C = 0 and X = 10 and X'Old = 0`. Indeed, if ``C`` is not equal to 100,
 out reasoning above breaks! And the values 0 for ``C`` and ``X`` on entry
 indeed result in ``X`` being 10 on exit, which violates the postcondition!
 

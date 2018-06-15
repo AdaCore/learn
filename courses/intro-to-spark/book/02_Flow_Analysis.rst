@@ -752,10 +752,12 @@ found.
     end Show_Search_Array;
 
 
-This example is correct. No flow message will be emitted here, as flow
-analysis indeed can make sure both that no uninitialized variable will be
-read in ``Search_Array``'s body, and that all its outputs are initialized
-on return.
+This example is correct. No flow message will be emitted here, as flow analysis
+indeed can make sure both that no uninitialized variable will be read in
+``Search_Array``'s body, and that all its outputs are initialized on
+return. Note the use of attribute ``Constrained`` in the precondition of
+``Search_Array`` to indicate that the variable ``Result`` passed in argument
+can be reassigned to any variant of the record type ``Search_Result``.
 
 .. _Example #4:
 
@@ -839,7 +841,7 @@ Example #5
 Permutations are modeled as arrays where the element at index ``I`` is the
 position of the ``I`` th element in the permutation. The procedure ``Init``
 initializes a permutation to be the identity, where the ``I`` th elements is at
-the ``I`` th position. ``Cyclic_Permuation`` calls ``Init`` and then swaps the
+the ``I`` th position. ``Cyclic_Permutation`` calls ``Init`` and then swaps the
 elements until it has constructed a cyclic permutation.
 
 .. code:: ada spark-flow
