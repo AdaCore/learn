@@ -107,8 +107,7 @@ can only be accessed through subprogram calls. For example, our ``Stack``
 package shown below provides an abstraction for a unique ``Stack`` object
 which can be modified using the ``Pop`` and ``Push`` procedures.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     package Stack is
        procedure Pop  (E : out Element);
@@ -142,8 +141,7 @@ bodies or in contracts.
 For example, we can optionally define a state abstraction for the whole hidden
 state of the ``Stack`` package like this:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     package Stack with
       Abstract_State => The_Stack
@@ -152,8 +150,7 @@ state of the ``Stack`` package like this:
 
 Alternatively, we can define a state abstraction for each hidden variable:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     package Stack with
       Abstract_State => (Top_State, Content_State)
@@ -163,8 +160,7 @@ Alternatively, we can define a state abstraction for each hidden variable:
 Note that a state abstraction is not a variable (it has no type), and
 cannot be used inside expressions. For example:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     pragma Assert (Stack.Top_State = ...);
     -- compilation error: Top_State is not a variable
@@ -267,8 +263,7 @@ their declarations, associating them with the state abstraction
 ``Stack``. Note that they still need to be listed in the
 :ada:`Refined_State` aspect in the ``Stack``'s body:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     package body Stack with
       Refined_State => (The_Stack => (Content, Top))
