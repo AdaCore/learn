@@ -76,7 +76,31 @@ behavior globally via a configuration pragma or via a command-line switch
 `configuration pragmas <http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#configuration-pragmas>`_
 for details.
 
-The following code shows an example of a postcondition:
+Before we look into our next example, let's discuss briefly quantified
+expressions, which are quite useful to specify pre and postconditions in a
+concise way. Quantified expressions return a Boolean value indicating
+whether an array or container matches the expected condition. They have
+the following form:
+:ada:`(for all I in A'Range => <condition on A(I)>`, where :ada:`A` is an
+array and :ada:`I` is the current index. In other words, quantified
+expressions using :ada:`for all` check each element of the array or
+container in order to assess whether the condition is true. For example:
+
+.. code:: ada
+    :class: ada-nocheck
+
+    (for all I in A'Range => A (I) = 0)
+
+This quantified expression will verify whether all elements of the array
+:ada:`A` have a value of zero.
+
+Another kind of quantified expressions makes use of :ada:`for some`. The
+form is basically the same:
+:ada:`(for some I in A'Range => <condition on A(I)>`. However, in this
+case, finding a single element that matches the condition is sufficient to
+determine that the expression is valid for the whole array :ada:`A`.
+
+Let's now discuss postconditions using the following example:
 
 .. code:: ada
     :class: ada-run-expect-failure
