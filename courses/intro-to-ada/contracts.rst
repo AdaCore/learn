@@ -26,7 +26,10 @@ parameters of subprograms, and return value of functions. If we say that
 certain requirements should be met before calling a subprogram ``Op``,
 we're talking about preconditions. Similarly, if certain requirements
 should be met after a call to the subprogram ``Op``, we're talking about
-postconditions.
+postconditions. We can think of precondition and postconditions as
+promisses between the subprogram caller and the callee: a precondition is
+a promise from the caller to the callee, and a postcondition is a promise
+from the callee to the caller.
 
 Pre and postconditions are specified by using a :ada:`with` clause in the
 subprogram declaration. A :ada:`with Pre => <condition>` clause
