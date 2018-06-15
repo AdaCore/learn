@@ -1,4 +1,4 @@
-Lesson 5: Proof of Functional Correctness
+Proof of Functional Correctness
 =====================================================================
 
 .. role:: ada(code)
@@ -25,7 +25,7 @@ function ``Find``, it may be enough to know that, whenever it is not 0, then it
 is in ``A``'s range. This can be expressed as a postcondition of ``Find``, and
 proved automatically by GNATprove:
 
-.. code:: ada
+.. code:: ada spark-report-all
 
     package Show_Find is
 
@@ -136,9 +136,12 @@ which ``Find`` is called:
 
     end Show_Find;
 
+    with Ada.Text_IO; use Ada.Text_IO;
     with Show_Find; use Show_Find;
 
-    procedure Use_Find is
+    procedure Use_Find with
+      SPARK_Mode => Off
+    is
        Seq : constant Nat_Array (1 .. 3) := (1, 5, 3);
        Res : Natural;
     begin
@@ -173,7 +176,7 @@ properties of subprograms, may be cumbersome to express as subprogram's
 contracts. Type predicates, which should hold for every object of a given
 type, are usually a better match for this purpose. As an example:
 
-.. code:: ada
+.. code:: ada spark-report-all
 
     package Show_Sort is
 
@@ -218,7 +221,9 @@ code will be executed like normal code when the program is compiled with
 assertions enabled. The compiler can also be instructed not to generate
 code for ghost entities.
 
-As an example:
+Consider the procedure ``Do_Something`` which calls a first complex treatment
+on its input ``X`` and wants to check afterwards that the input and modified
+values of ``X`` are related in some way:
 
 .. code:: ada spark-report-all
 
@@ -312,7 +317,7 @@ GNATprove.
 Ghost Functions
 ~~~~~~~~~~~~~~~
 
-Functions only used in specifications is a rather common occurrence when
+Functions only used in specifications are a rather common occurrence when
 writing contracts for functional correctness. For example, expression
 functions used to simplify or factor out common patterns in contracts can
 usually be marked as ghost.
@@ -332,6 +337,7 @@ Let's look at the following example:
 .. code:: ada
 
     package Stacks is
+
        pragma Unevaluated_Use_Of_Old (Allow);
 
        type Stack is private;
@@ -348,12 +354,14 @@ Let's look at the following example:
          Post => Get_Model (S) = Get_Model (S)'Old & E;
 
     private
+
        subtype Length_Type is Natural range 0 .. Max;
 
        type Stack is record
           Top     : Length_Type := 0;
           Content : Element_Array (1 .. Max) := (others => 0);
        end record;
+
     end Stacks;
 
 In our example, the type ``Stack`` is private. To be able to specify the
@@ -369,6 +377,7 @@ be done in the subprogram ``Peek``:
 .. code:: ada
 
     package Stacks is
+
        pragma Unevaluated_Use_Of_Old (Allow);
 
        type Stack is private;
@@ -384,16 +393,18 @@ be done in the subprogram ``Peek``:
          Pre  => Get_Model (S)'Length < Max,
          Post => Get_Model (S) = Get_Model (S)'Old & E;
 
-       function Peek (S : Stack; I : Positive) return Natural is
+       function Peek (S : Stack; I : Positive) return Element is
          (Get_Model (S) (I)); -- ERROR
 
     private
+
        subtype Length_Type is Natural range 0 .. Max;
 
        type Stack is record
           Top     : Length_Type := 0;
           Content : Element_Array (1 .. Max) := (others => 0);
        end record;
+
     end Stacks;
 
 
@@ -405,13 +416,13 @@ production code.
 Global Ghost Variables
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Though it happens less often, specification may require storing additional
+Though it happens less often, specifications may require storing additional
 information into global variables. As this information is not needed in
 normal code, these global variables should be marked as ghost, so that
 they can be erased by the compiler. These variables can be used for
 various reasons, and a rather common case is to specify programs modifying
-a complex or private global data-structure by providing a model for it,
-that is updated by the program along with the data-structure.
+a complex or private global data structure by providing a model for it,
+that is updated by the program along with the data structure.
 
 Global variables can also store information about previous runs of subprograms
 in order to specify simple temporal properties. In the following example, we
@@ -420,18 +431,13 @@ state ``B``. The global variable ``Last_Accessed_Is_A`` is used to specify that
 ``B`` cannot be accessed twice without accessing ``A`` in between.
 
 .. code:: ada run_button
+   :class: ada-run-expect-failure
 
     package Call_Sequence is
 
        type T is new Integer;
 
        Last_Accessed_Is_A : Boolean := False with Ghost;
-
-       function First_Thing_Done (V_Old, V_Interm : T) return Boolean
-       with Ghost;
-
-       function Second_Thing_Done (V_Old, V_Interm : T) return Boolean
-       with Ghost;
 
        procedure Access_A with
          Post => Last_Accessed_Is_A;
@@ -468,7 +474,7 @@ state ``B``. The global variable ``Last_Accessed_Is_A`` is used to specify that
        Access_B; -- ERROR
     end Client;
 
-As another example, it can be the case that the requirements of a subprogram
+As another example, it can be the case that the requirement of a subprogram
 expresses its expected behavior as a sequence of actions to be performed. To
 write this kind of specification more easily, global ghost variables may be
 used to store intermediate values of variables in the program.
@@ -504,22 +510,18 @@ Guide Proof
 ---------------------------------------------------------------------
 
 As properties of interest for functional correctness are more complex than
-those involved in proof of program integrity, it is expected that
-GNATprove may not be able to verify them right away even though they are
-valid. Techniques for debugging failed proof attempts explained in the
-proof of program integrity course will come in handy here (see
-:doc:`03_Proof_Of_Program_Integrity`). We don't go over them again in this
-course, but rather focus on improving results on the remaining cases where
-the property is valid but is not proved by GNATprove in a reasonable
-amount of time.
+those involved in proof of program integrity, it is expected that GNATprove may
+not be able to verify them right away even though they are valid. Techniques
+for :ref:`Debugging Failed Proof Attempts` will come in handy here. Here, we
+focus on improving results on the remaining cases where the property is valid
+but is not proved by GNATprove in a reasonable amount of time.
 
 In these cases, users may want to try and guide GNATprove in order either
 to complete the proof or strip it down to a small number of easily
 reviewable assumptions. For this purpose, assertions can be added to break
 complex proofs into smaller steps:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     pragma Assert (Assertion_Checked_By_The_Tool);
     --  info: assertion proved
@@ -555,7 +557,7 @@ be expressed inside intermediate assertions. In particular, local
 variables or constants whose only purpose is to serve in assertions are a
 common occurrence. Most of the time, these variables are used to store
 previous values of variables or expressions to which we want to refer in
-our assumptions. They are especially useful to refer to initial values of
+assertions. They are especially useful to refer to initial values of
 parameters and expressions which cannot be accessed using the :ada:`'Old`
 attribute outside of the subprogram's postcondition.
 
@@ -610,8 +612,7 @@ complex for a prover to verify as it involves an alternation of
 quantifiers. To help GNATprove, it may be interesting to store, for each
 index ``I``, an index ``J`` that has the expected property.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     procedure Sort (A : in out Nat_Array) with
       Post => (for all I in A'Range =>
@@ -639,7 +640,7 @@ ghost variables and ghost procedure calls.
 As an example, the :ada:`for` loop contained in ``Increase_A`` could not
 appear by itself in normal code:
 
-.. code:: ada
+.. code:: ada spark-report-all
 
     package Show_Ghost_Proc is
 
@@ -647,7 +648,9 @@ appear by itself in normal code:
 
        A : Nat_Array (1 .. 100) with Ghost;
 
-       procedure Increase_A with Ghost;
+       procedure Increase_A with
+         Ghost,
+         Pre => (for all I in A'Range => A (I) < Natural'Last);
 
     end Show_Ghost_Proc;
 
@@ -675,8 +678,7 @@ unnecessary information is present in the context while verifying it.
 Also, if ``Prove_P`` happens to not be fully verified, the remaining
 assumptions will be reviewed more easily if they are in a small context.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     procedure Prove_P (X : T) with Ghost,
       Global => null,
@@ -720,7 +722,7 @@ to hold and the rest of the subprogram can be accessed. The red and blue
 parts obviously always happen after the yellow one.
 
 Still, as there is no way to know how the loop may have modified the
-variables it accesses, GNATprove simply forgets everything it knows about
+variables it updates, GNATprove simply forgets everything it knows about
 them when entering these parts. Values of constants and variables that are
 not modified in the loop are of course preserved.
 
@@ -731,7 +733,8 @@ modified inside the loop. Also, though it will not forget any information
 it had on the value of constants or unmodified variables, it still won't
 be able to deduce new information about them using the loop.
 
-For example:
+For example, consider function ``Find`` which iterates over the array ``A``
+searching for an index where ``E`` is stored in ``A``:
 
 .. code:: ada spark-report-all
 
@@ -761,8 +764,7 @@ For example:
 
     end Show_Find;
 
-Here, in our function ``Find``, we iterate over the array ``A`` searching for
-an index where ``E`` is stored in ``A``. Though, at each loop iteration,
+Though, at each loop iteration,
 GNATprove knows that, for the loop to continue, the value stored in ``A`` at
 index ``I`` must not be ``E`` (the second assertion which is proved), it will
 not be able to accumulate this information to deduce that it is true for all
@@ -782,11 +784,11 @@ program with assertions enabled.
 
 The specificity of a loop invariant in comparison to other assertions lies
 in the way it is handled for proof. The proof of a loop invariant is done
-in two steps: first the GNATprove checks that it holds in the first
+in two steps: first GNATprove checks that it holds in the first
 iteration of the loop, and then, it checks that it holds in an arbitrary
-iteration assuming it held in the previous one.
+iteration assuming it held in the previous iteration.
 
-As an example, let us add a loop invariant to our ``Find`` function
+As an example, let us add a loop invariant to the ``Find`` function
 stating that the first element of ``A`` is not ``E``:
 
 .. code:: ada spark-report-all
@@ -892,9 +894,8 @@ loop invariant:
 
 First, the loop invariant should be provable in the first iteration of the loop
 (INIT). To achieve this property, the loop invariant's initialization can be
-debugged like any failing proof attempt using strategies from the Proof of
-Program Integrity course (see
-:doc:`03_Proof_Of_Program_Integrity#debug-failed-proof-attempts`).
+debugged like any failing proof attempt using strategies for :ref:`Debugging
+Failed Proof Attempts`.
 
 Next, the loop invariant should be precise enough to allow proving absence of
 runtime errors both in statements from the loop's body (INSIDE) and in
@@ -963,7 +964,7 @@ the automatic generation of frame conditions. What happens is that GNATprove
 completes the provided loop invariant with the following property called `frame
 condition` stating what part of the array has not been modified so far:
 
-.. code:: ada
+.. code-block:: ada
 
              pragma Loop_Invariant
                (for all J in K + 1 .. A'Last => A (J) = A'Loop_Entry (J));
@@ -1247,8 +1248,7 @@ Let's move the code updating ``Model`` inside a local ghost procedure
 ``Update_Model``, still using a local variable ``New_Length`` to compute the
 new length.
 
-.. code:: ada
-    :class: ada-expect-compile-error
+.. code:: ada spark-report-all
 
     package Ring_Buffer is
 
@@ -1351,7 +1351,7 @@ of the maximum values between its arguments at each index.
     end Array_Util;
 
 This program is correct, but GNATprove cannot prove that ``J`` stays in the
-index range of ``B`` (the unproved range check) or even that it stays in the
+index range of ``B`` (the unproved index check) or even that it stays in the
 bounds of its type (the unproved overflow check). Indeed, when checking the
 body of the loop, GNATprove forgets everything about the current value of ``J``
 as it has been modified by previous iterations of the loop. To get more precise
@@ -1416,7 +1416,8 @@ We now consider a version of ``Max_Array`` which takes arguments starting and
 ending at the same indexes. We want to prove that ``Max_Array`` returns an
 array of the maximum values between its arguments at each index.
 
-.. code:: ada
+.. code:: ada run_button
+   :class: ada-run-expect-failure
 
     package Array_Util is
 
@@ -1447,6 +1448,8 @@ array of the maximum values between its arguments at each index.
        end Max_Array;
 
     end Array_Util;
+
+    with Array_Util; use Array_Util;
 
     procedure Test_Max_Array is
        A : Nat_Array := (1, 1, 2);
