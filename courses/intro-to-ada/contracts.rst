@@ -168,134 +168,13 @@ temporary calculation, and check if the result is still in the appropriate
 range for the :ada:`Int_8` type. The postcondition in this example is the
 same as in the previous example.
 
-Type invariants
----------------
-
-Type invariants are used to define expectations regarding private types
-declared in a package. For example, if a type ``T`` from a package ``P``
-has a type invariant, this ensures that operations on objects of type
-``T`` will always be consistent. Type invariants can be viewed as a sort
-of post-condition for types.
-
-Type invariants are specified by using a
-:ada:`with Type_Invariant => <property>` clause. Similarly to pre and
-postconditions, the *property* defines a condition that allows us to check
-if an element of type ``T`` is conformant to the requirements.
-
-Let's look at an example:
-
-.. code:: ada
-    :class: ada-run-expect-failure
-
-    with Ada.Text_IO;           use Ada.Text_IO;
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Ada.Calendar;          use Ada.Calendar;
-    with Ada.Containers.Vectors;
-
-    procedure Show_Type_Invariant is
-       pragma Assertion_Policy (Type_Invariant => Check);
-
-       package Courses is
-          type Course is private
-            with Type_Invariant => Check (Course);
-
-          type Course_Container is private;
-
-          procedure Add (CC         : in out Course_Container;
-                         C          : Course);
-
-          function Init (Name       : String;
-                         Start_Date : Time;
-                         End_Date   : Time)   return Course;
-
-          function Check (C         : Course) return Boolean;
-
-       private
-          type Course is record
-             Name       : Unbounded_String;
-             Start_Date : Time;
-             End_Date   : Time;
-          end record;
-
-          function Check (C         : Course) return Boolean is
-            (C.Start_Date <= C.End_Date);
-
-          package Course_Vectors is new Ada.Containers.Vectors
-            (Index_Type   => Natural,
-             Element_Type => Course);
-
-          type Course_Container is record
-             V : Course_Vectors.Vector;
-          end record;
-       end Courses;
-
-       package body Courses is
-          procedure Add (CC : in out Course_Container;
-                         C  : Course) is
-          begin
-             CC.V.Append (C);
-          end Add;
-
-          function Init (Name       : String;
-                         Start_Date : Time;
-                         End_Date   : Time) return Course is
-          begin
-             return Course'(Name       => To_Unbounded_String (Name),
-                            Start_Date => Start_Date,
-                            End_Date   => End_Date);
-          end Init;
-       end Courses;
-
-       use Courses;
-
-       CC : Course_Container;
-    begin
-       Add (CC,
-            Init (Name       => "Intro to Photography",
-                  Start_Date => Time_Of (2018, 5, 1),
-                  End_Date   => Time_Of (2018, 5, 10)));
-
-       --  This should trigger an error in the type-invariant check
-       Add (CC,
-            Init (Name       => "Intro to Video Recording",
-                  Start_Date => Time_Of (2019, 5, 1),
-                  End_Date   => Time_Of (2018, 5, 10)));
-    end Show_Type_Invariant;
-
-In this example, the package :ada:`Courses` defines a type :ada:`Course`
-for individual courses, and a type :ada:`Course_Container` that contains
-all courses. We want to ensure that the start date of every course is not
-set to a date after the end date of the same course. In other words, we
-want to check that the start and end dates are consistent to each other.
-This is implemented by the function :ada:`Check`. In order to enforce this
-rule, we declare a type invariant for the :ada:`Course` type that calls
-the :ada:`Check` function for every object. For example, in the call to
-the :ada:`Init` function, :ada:`Check` will be called during the object
-creation to ensure that the object that is being created matches our
-expectations.
-
 Predicates
 ----------
 
-Predicates are also used to define expectations regarding types. However,
-while type invariants are used for private types in packages, predicates
-are used for all remaining (*non-private*) types.
-
-Predicates are similar to type invariants. However, there are some
-differences in terms of checks. The following table summarizes the
-differences:
-
-+------------+-----------------------------+-----------------------------+
-| Element    | Subprogram parameter checks | Assignment checks           |
-+==========================================+=============================+
-| Predicates | On all :ada:`in` and        | On assignments and explicit |
-|            | :ada:`out` parameters       | initializations             |
-+------------+-----------------------------+-----------------------------+
-| Type       | On :ada:`out` parameters    | On all initializations      |
-| invariants | returned from subprograms   |                             |
-|            | declared in the same public |                             |
-|            | scope                       |                             |
-+------------+-----------------------------+-----------------------------+
+Predicates are used to define expectations regarding types. They are
+similar to pre and postconditions, and can be viewed as conditions that
+are verified for a given type. This allows for checking if an element of
+type ``T`` is conformant to the requirements.
 
 There are two kinds of predicates: static and dynamic predicates. In
 simple terms, static predicates are used to check types at compile-time,
@@ -303,9 +182,14 @@ whereas dynamic predicates are used for checks at run-time. We can also
 say that static predicates are used for scalar types, whereas dynamic
 predicates are used for all remaining (more complex) types.
 
-Let's look at an example of dynamic predicates. We could rewrite our
-previous example and replace type invariants by dynamic predicates. This
-would be the outcome:
+Static and dynamic predicates are specified by using the following
+clauses, respectively:
+
+- :ada:`with Static_Predicate => <property>`
+
+- :ada:`with Dynamic_Predicate => <property>`
+
+Let's discuss dynamic predicates with the following example:
 
 .. code:: ada
     :class: ada-run-expect-failure
@@ -368,9 +252,17 @@ would be the outcome:
 
     end Show_Dynamic_Predicate_Courses;
 
-Note that, in this example, the :ada:`Course` type is a visible (public)
-type of the :ada:`Courses` package, whereas, in the previous example, it
-was a private type.
+In this example, the package :ada:`Courses` defines a type :ada:`Course`
+for individual courses, and a type :ada:`Course_Container` that contains
+all courses. We want to ensure that the start date of every course is not
+set to a date after the end date of the same course. In other words, we
+want to check that the start and end dates are consistent to each other.
+This is implemented by the function :ada:`Check`. In order to enforce this
+rule, we declare a dynamic predicate for the :ada:`Course` type that calls
+the :ada:`Check` function for every object. For example, when we enter our
+course using the procedure :ada:`Add`, :ada:`Check` will be called during
+the object creation to ensure that the object that is being created
+matches our expectations.
 
 Static predicates, as mentioned above, are used for scalar types and
 checked during compilation time. They are particularly useful for
@@ -483,3 +375,121 @@ checked because the subprogram expects the data structure to be
 consistent. This is what happens in the last call to :ada:`Display_Tests`
 in our example. Here, the predicate check fails because of the previous
 assignment with a non-conformant value.
+
+Type invariants
+---------------
+
+Type invariants are also used to define expectations regarding types.
+However, while predicates are used for all *non-private* types,
+type invariants are used exclusively to define expectations regarding
+private types declared in a package. If a type ``T`` from a
+package ``P`` has a type invariant, this ensures that operations on
+objects of type ``T`` will always be consistent.
+
+Type invariants are specified by using a
+:ada:`with Type_Invariant => <property>` clause. Similarly to
+postconditions, the *property* defines a condition that allows us to check
+if an element of type ``T`` is conformant to the requirements. In this
+sense, type invariants can be viewed as a sort of postcondition for
+private types.
+
+Type invariants are similar to predicates. However, there are some
+differences in terms of checks. The following table summarizes the
+differences:
+
++------------+-----------------------------+-----------------------------+
+| Element    | Subprogram parameter checks | Assignment checks           |
++==========================================+=============================+
+| Predicates | On all :ada:`in` and        | On assignments and explicit |
+|            | :ada:`out` parameters       | initializations             |
++------------+-----------------------------+-----------------------------+
+| Type       | On :ada:`out` parameters    | On all initializations      |
+| invariants | returned from subprograms   |                             |
+|            | declared in the same public |                             |
+|            | scope                       |                             |
++------------+-----------------------------+-----------------------------+
+
+We could rewrite our previous example and replace dynamic predicates by
+type invariants. This would be the outcome:
+
+.. code:: ada
+    :class: ada-run-expect-failure
+
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Calendar;          use Ada.Calendar;
+    with Ada.Containers.Vectors;
+
+    procedure Show_Type_Invariant is
+       pragma Assertion_Policy (Type_Invariant => Check);
+
+       package Courses is
+          type Course is private
+            with Type_Invariant => Check (Course);
+
+          type Course_Container is private;
+
+          procedure Add (CC         : in out Course_Container;
+                         C          : Course);
+
+          function Init (Name       : String;
+                         Start_Date : Time;
+                         End_Date   : Time)   return Course;
+
+          function Check (C         : Course) return Boolean;
+
+       private
+          type Course is record
+             Name       : Unbounded_String;
+             Start_Date : Time;
+             End_Date   : Time;
+          end record;
+
+          function Check (C         : Course) return Boolean is
+            (C.Start_Date <= C.End_Date);
+
+          package Course_Vectors is new Ada.Containers.Vectors
+            (Index_Type   => Natural,
+             Element_Type => Course);
+
+          type Course_Container is record
+             V : Course_Vectors.Vector;
+          end record;
+       end Courses;
+
+       package body Courses is
+          procedure Add (CC : in out Course_Container;
+                         C  : Course) is
+          begin
+             CC.V.Append (C);
+          end Add;
+
+          function Init (Name       : String;
+                         Start_Date : Time;
+                         End_Date   : Time) return Course is
+          begin
+             return Course'(Name       => To_Unbounded_String (Name),
+                            Start_Date => Start_Date,
+                            End_Date   => End_Date);
+          end Init;
+       end Courses;
+
+       use Courses;
+
+       CC : Course_Container;
+    begin
+       Add (CC,
+            Init (Name       => "Intro to Photography",
+                  Start_Date => Time_Of (2018, 5, 1),
+                  End_Date   => Time_Of (2018, 5, 10)));
+
+       --  This should trigger an error in the type-invariant check
+       Add (CC,
+            Init (Name       => "Intro to Video Recording",
+                  Start_Date => Time_Of (2019, 5, 1),
+                  End_Date   => Time_Of (2018, 5, 10)));
+    end Show_Type_Invariant;
+
+Note that, in the previous example, the :ada:`Course` type was a visible
+(public) type of the :ada:`Courses` package, whereas, in this example, it
+is a private type.
