@@ -70,7 +70,11 @@ because the precondition is not met.
 Note that the :ada:`pragma Assertion_Policy` statement is used to force
 the compiler to generate a check for the precondition. The same
 :ada:`pragma` will be used for other kinds of contracts in the remaining
-examples from this section.
+examples from this section. When using GNAT, it's possible to trigger that
+behavior globally via a configuration pragma or via a command-line switch
+--- please consult the GNAT documentation on
+`configuration pragmas <http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#configuration-pragmas>`_
+for details.
 
 The following code shows an example of a postcondition:
 
