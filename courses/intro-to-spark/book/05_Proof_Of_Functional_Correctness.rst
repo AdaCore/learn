@@ -375,6 +375,7 @@ Still, we don't want user code of the ``Stack`` package to use
 be done in the subprogram ``Peek``:
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
     package Stacks is
 
