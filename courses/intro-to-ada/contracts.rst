@@ -44,8 +44,7 @@ The following code shows an example of preconditions:
     procedure Show_Simple_Precondition is
        pragma Assertion_Policy (Pre  => Check);
 
-       procedure DB_Entry (Name : String;
-                           Age  : Natural)
+       procedure DB_Entry (Name : String; Age  : Natural)
          with Pre => Name'Length > 0
        is
        begin
@@ -81,8 +80,7 @@ The following code shows an example of a postcondition:
     procedure Show_Simple_Postcondition is
        pragma Assertion_Policy (Post => Check);
 
-       type Int_8 is range -2 ** 7 .. 2 ** 7 - 1
-         with Size => 8;
+       type Int_8 is range -2 ** 7 .. 2 ** 7 - 1;
 
        type Int_8_Array is array (Integer range <>) of Int_8;
 
@@ -141,8 +139,7 @@ a subprogram. For example:
        pragma Assertion_Policy (Pre  => Check,
                                 Post => Check);
 
-       type Int_8 is range -2 ** 7 .. 2 ** 7 - 1
-         with Size => 8;
+       type Int_8 is range -2 ** 7 .. 2 ** 7 - 1;
 
        function Double (A : Int_8) return Int_8 is
          (A * A)
@@ -213,8 +210,7 @@ Let's discuss dynamic predicates with the following example:
           end record
             with Dynamic_Predicate => Course.Start_Date <= Course.End_Date;
 
-          procedure Add (CC         : in out Course_Container;
-                         C          : Course);
+          procedure Add (CC : in out Course_Container; C : Course);
        private
           package Course_Vectors is new Ada.Containers.Vectors
             (Index_Type   => Natural,
@@ -226,8 +222,7 @@ Let's discuss dynamic predicates with the following example:
        end Courses;
 
        package body Courses is
-          procedure Add (CC : in out Course_Container;
-                         C  : Course) is
+          procedure Add (CC : in out Course_Container; C : Course) is
           begin
              CC.V.Append (C);
           end Add;
@@ -317,7 +312,7 @@ Let's look now at a complete example:
          with Dynamic_Predicate =>
            (for all I in Tests_Week'Range =>
               (case I is
-                     when Test_Days => Tests_Week (I) > 0,
+                   when Test_Days => Tests_Week (I) > 0,
                    when others    => Tests_Week (I) = 0));
 
        Num_Tests : Tests_Week :=
@@ -429,14 +424,12 @@ type invariants. This would be the outcome:
 
           type Course_Container is private;
 
-          procedure Add (CC         : in out Course_Container;
-                         C          : Course);
+          procedure Add (CC : in out Course_Container; C : Course);
 
-          function Init (Name       : String;
-                         Start_Date : Time;
-                         End_Date   : Time)   return Course;
+          function Init
+            (Name : String; Start_Date, End_Date : Time) return Course;
 
-          function Check (C         : Course) return Boolean;
+          function Check (C : Course) return Boolean;
 
        private
           type Course is record
@@ -458,15 +451,13 @@ type invariants. This would be the outcome:
        end Courses;
 
        package body Courses is
-          procedure Add (CC : in out Course_Container;
-                         C  : Course) is
+          procedure Add (CC : in out Course_Container; C : Course) is
           begin
              CC.V.Append (C);
           end Add;
 
-          function Init (Name       : String;
-                         Start_Date : Time;
-                         End_Date   : Time) return Course is
+          function Init
+            (Name : String; Start_Date, End_Date : Time) return Course is
           begin
              return Course'(Name       => To_Unbounded_String (Name),
                             Start_Date => Start_Date,
