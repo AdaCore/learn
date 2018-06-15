@@ -1,4 +1,4 @@
-Lesson 4: State Abstraction
+State Abstraction
 =====================================================================
 
 .. role:: ada(code)
@@ -9,7 +9,7 @@ both implementation and code maintenance. It is particularly well suited
 to SPARK and its modular analysis. This section explains what state
 abstraction is and how it can be specified in SPARK. We will provide
 details on how it impacts GNATprove's analysis both in terms of
-information flow and in terms of proof of program properties.
+information flow and proof of program properties.
 
 
 What is an Abstraction?
@@ -167,7 +167,7 @@ cannot be used inside expressions. For example:
     :class: ada-nocheck
 
     pragma Assert (Stack.Top_State = ...);
-    --  Compilation error: Top_State is not a variable
+    -- compilation error: Top_State is not a variable
 
 
 Refining an Abstract State
@@ -190,7 +190,7 @@ including both ``Content`` and ``Top``.
 .. code:: ada spark-flow
 
     package Stack with
-       Abstract_State => The_Stack
+      Abstract_State => The_Stack
     is
        type Element is new Integer;
 
@@ -202,12 +202,12 @@ including both ``Content`` and ``Top``.
     package body Stack with
       Refined_State => (The_Stack => (Content, Top))
     is
-       type Element_Array is array (Natural range <>) of Element;
-
        Max : constant := 100;
 
-       Content : Element_Array (1 .. Max) := (others => 0);
-       Top     : Natural := 0;
+       type Element_Array is array (1 .. Max) of Element;
+
+       Content : Element_Array := (others => 0);
+       Top     : Natural range 0 .. Max := 0;
        --  Both Content and Top must be listed in the list of
        --  constituents of The_Stack
 
@@ -242,7 +242,7 @@ must be linked to a state abstraction. For example:
 .. code:: ada spark-flow
 
     package Stack with
-       Abstract_State => The_Stack
+      Abstract_State => The_Stack
     is
        type Element is new Integer;
 
@@ -250,12 +250,14 @@ must be linked to a state abstraction. For example:
        procedure Push (E : in Element);
 
     private
-       type Element_Array is array (Natural range <>) of Element;
 
        Max : constant := 100;
 
-       Content : Element_Array (1 .. Max) with Part_Of => The_Stack;
-       Top     : Natural                  with Part_Of => The_Stack;
+       type Element_Array is array (1 .. Max) of Element;
+
+       Content : Element_Array          with Part_Of => The_Stack;
+       Top     : Natural range 0 .. Max with Part_Of => The_Stack;
+
     end Stack;
 
 If we choose to define ``Content`` and ``Top`` in ``Stack``'s private part
@@ -278,7 +280,7 @@ Additional State
 Nested Packages
 ~~~~~~~~~~~~~~~
 
-Until now, we have only spoken of hidden variables. But variables are not
+Until now, we have only seen hidden variables. But variables are not
 the only constituents of a package's state. If a package ``P`` contains a
 nested package, then the nested package's state is part of ``P``'s state.
 As a consequence, if the nested package is hidden, its state is part of
@@ -369,7 +371,7 @@ Let's look at this example:
     end Stack;
 
     package Configuration with
-       Initializes => External_Variable
+      Initializes => External_Variable
     is
        External_Variable : Positive with Volatile;
     end Configuration;
@@ -382,12 +384,12 @@ Let's look at this example:
       --  Max has variable inputs. It must appear as a
       --  constituent of The_Stack
     is
-       type Element_Array is array (Natural range <>) of Element;
-
        Max : constant Positive := Configuration.External_Variable;
 
-       Content : Element_Array (1 .. Max) := (others => 0);
-       Top     : Natural := 0;
+       type Element_Array is array (1 .. Max) of Element;
+
+       Content : Element_Array := (others => 0);
+       Top     : Natural range 0 .. Max := 0;
 
        procedure Pop (E : out Element) is
        begin
@@ -416,7 +418,7 @@ Global and Depends
 ~~~~~~~~~~~~~~~~~~
 
 As hidden variables can only be accessed through subprogram calls,
-subprogram's contract are the proper way of documenting how state
+subprogram's contracts are the proper way of documenting how state
 abstractions can be modified during the program's execution. First off,
 :ada:`Global` and :ada:`Depends` contracts can be used to specify which of
 the state abstractions are accessed by a subprogram and how their values
@@ -426,7 +428,8 @@ precise than contracts referring to visible variables, as the different
 modes of the hidden variables aggregated in a state abstraction are
 collapsed into a single mode.
 
-Let's look at this example:
+Let's add :ada:`Global` and :ada:`Depends` contracts to the ``Pop`` procedure
+in our stack:
 
 .. code:: ada spark-flow
 
@@ -448,7 +451,8 @@ hidden variable ``Top`` and keeps ``Content`` unchanged. If two distinct
 state abstractions are used for the two variables, then this contract is
 preserved.
 
-Let's contrast this example with another example:
+Let's contrast this example with a different expression of :ada:`Global` and
+:ada:`Depends` contracts using a unique abstract state:
 
 .. code:: ada spark-flow
 
@@ -490,7 +494,7 @@ For our ``Stack`` example, we could add refined contracts like this:
 .. code:: ada spark-flow
 
     package Stack with
-       Abstract_State => The_Stack
+      Abstract_State => The_Stack
     is
        type Element is new Integer;
 
@@ -505,13 +509,14 @@ For our ``Stack`` example, we could add refined contracts like this:
     end Stack;
 
     package body Stack with
-       Refined_State => (The_Stack => (Content, Top))
+      Refined_State => (The_Stack => (Content, Top))
     is
-       type Element_Array is array (Natural range <>) of Element;
+       Max : constant := 100;
 
-       Max     : constant := 100;
-       Content : Element_Array (1 .. Max) := (others => 0);
-       Top     : Natural := 0;
+       type Element_Array is array (1 .. Max) of Element;
+
+       Content : Element_Array := (others => 0);
+       Top     : Natural range 0 .. Max := 0;
 
        procedure Pop (E : out Element) with
          Refined_Global  => (Input  => Content,
@@ -536,19 +541,21 @@ For our ``Stack`` example, we could add refined contracts like this:
     end Stack;
 
 
-Pre and Postconditions
-~~~~~~~~~~~~~~~~~~~~~~
+Preconditions and Postconditions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Functional properties of subprogram's are usually expressed using preconditions
+Functional properties of subprograms are usually expressed using preconditions
 and postconditions. As these contracts are standard Boolean expressions, they
 cannot refer directly to state abstractions. To work around this restriction,
 functions can be defined to query the value of hidden variables. These
 functions can then be used in place of the state abstraction in other
-subprogram's contracts.
+subprograms's contracts.
 
-That is what is done in this example:
+For example, we can query the state of the stack with functions ``Is_Empty``
+and ``Is_Full``, and call these in the contracts of procedures ``Pop`` and
+``Push``:
 
-.. code:: ada
+.. code:: ada spark-report-all
 
     package Stack is
        type Element is new Integer;
@@ -567,14 +574,16 @@ That is what is done in this example:
     end Stack;
 
     package body Stack is
-       type Element_Array is array (Natural range <>) of Element;
 
-       Max     : constant := 100;
-       Content : Element_Array (1 .. Max) := (others => 0);
-       Top     : Natural := 0;
+       Max : constant := 100;
+
+       type Element_Array is array (1 .. Max) of Element;
+
+       Content : Element_Array := (others => 0);
+       Top     : Natural range 0 .. Max := 0;
 
        function Is_Empty return Boolean is (Top = 0);
-       function Is_Full  return Boolean is (Top >= Max);
+       function Is_Full  return Boolean is (Top = Max);
 
        procedure Pop (E : out Element) is
        begin
@@ -590,32 +599,27 @@ That is what is done in this example:
 
     end Stack;
 
-Here, we define two functions accessing the state of the stack:
-``Is_Empty`` and ``Is_Full``. We use them to specify the procedure
-``Push``.
-
-As for :ada:`Global` and :ada:`Depends` contracts, it is often useful to
-have a more precise view of functional contracts when the hidden variables
-are visible. This can be achieved using expression functions. As
-expression function bodies act as contracts for GNATprove, they
-automatically give a more precise version of the contracts when their
-implementation is visible.
+Similarly to :ada:`Global` and :ada:`Depends` contracts, it is often useful to
+have a more precise view of functional contracts when the hidden variables are
+visible. This can be achieved using expression functions like we did for
+functions ``Is_Empty`` and ``Is_Full`` above. As expression function bodies act
+as contracts for GNATprove, they automatically give a more precise version of
+the contracts when their implementation is visible.
 
 It may be the case that we need a more constraining contract to verify the
-package's implementation than we want to ensure outside the abstraction.
-This can be achieved using the :ada:`Refined_Post` aspect. This aspect,
-when placed on a subprogram's body, is used to provide stronger guaranties
-to internal callers of a subprogram. If provided, the refined post
-condition must imply the subprogram's postcondition. This is checked by
-GNATprove, who will report a failing postcondition if the refined
-postcondition is too weak, even if it is actually implied by the
-subprogram's body. Note that SPARK does not supply a similar notation for
-preconditions.
+package's implementation than we want to ensure outside the abstraction.  This
+can be achieved using the :ada:`Refined_Post` aspect. This aspect, when placed
+on a subprogram's body, is used to provide stronger guaranties to internal
+callers of a subprogram. If provided, the refined postcondition must imply the
+subprogram's postcondition. This is checked by GNATprove, who will report a
+failing postcondition if the refined postcondition is too weak, even if it is
+actually implied by the subprogram's body. Note that SPARK does not supply a
+similar notation for preconditions.
 
-For our ``Stack`` example, we could add a refined post condition like
-this:
+For example, we can refine the postconditions stated previously for procedures
+``Pop`` and ``Push``, inside their respective refined postconditions:
 
-.. code:: ada
+.. code:: ada spark-report-all
 
     package Stack is
        type Element is new Integer;
@@ -634,14 +638,16 @@ this:
     end Stack;
 
     package body Stack is
-       type Element_Array is array (Natural range <>) of Element;
 
-       Max     : constant := 100;
-       Content : Element_Array (1 .. Max) := (others => 0);
-       Top     : Natural := 0;
+       Max : constant := 100;
+
+       type Element_Array is array (1 .. Max) of Element;
+
+       Content : Element_Array := (others => 0);
+       Top     : Natural range 0 .. Max := 0;
 
        function Is_Empty return Boolean is (Top = 0);
-       function Is_Full  return Boolean is (Top >= Max);
+       function Is_Full  return Boolean is (Top = Max);
 
        procedure Pop (E : out Element) with
          Refined_Post => not Is_Full and E = Content (Top)'Old
@@ -687,23 +693,28 @@ this:
       Abstract_State => The_Stack,
       Initializes    => The_Stack
     is
-       pragma Elaborate_Body;
-
        type Element is new Integer;
 
-       -- ...
+       procedure Pop  (E : out Element);
+
     end Stack;
 
     package body Stack with
       Refined_State => (The_Stack => (Content, Top))
     is
-       type Element_Array is array (Natural range <>) of Element;
+       Max : constant := 100;
 
-       Max     : constant := 100;
-       Content : Element_Array (1 .. Max) := (others => 0);
-       Top     : Natural := 0;
+       type Element_Array is array (1 .. Max) of Element;
 
-       -- ...
+       Content : Element_Array := (others => 0);
+       Top     : Natural range 0 .. Max := 0;
+
+       procedure Pop (E : out Element) is
+       begin
+          E   := Content (Top);
+          Top := Top - 1;
+       end Pop;
+
     end Stack;
 
 As flow analysis can also check for dependencies between variables, it
@@ -717,7 +728,7 @@ using an arrow.
 
 Let's look at this example:
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Q is
        External_Variable : Integer := 2;
@@ -752,34 +763,45 @@ This section contains some code examples and pitfalls.
 Example #1
 ~~~~~~~~~~
 
-Let's review this code:
+Package ``Communication`` defines a hidden ``Ring_Buffer`` local package whose
+capacity is initialized at elaboration from an external configuration.
 
 .. code:: ada spark-flow
+   :class: ada-expect-compile-error
 
-    package Configuration
-    is
+    package Configuration is
+
        External_Variable : Natural := 1;
+
     end Configuration;
 
     with Configuration;
+
     package Communication with
       Abstract_State => State,
       Initializes    => (State => Configuration.External_Variable)
     is
        function Get_Capacity return Natural;
+
     private
-       package Ring_Buffer is
+
+       package Ring_Buffer with
+         Initializes => (Capacity => Configuration.External_Variable)
+       is
           Capacity : constant Natural := Configuration.External_Variable;
        end Ring_Buffer;
+
     end Communication;
 
     package body Communication with
       Refined_State => (State => Ring_Buffer.Capacity)
     is
+
        function Get_Capacity return Natural is
        begin
           return Ring_Buffer.Capacity;
        end Get_Capacity;
+
     end Communication;
 
 
@@ -791,49 +813,58 @@ declaration using the :ada:`Part_Of` aspect.
 Example #2
 ~~~~~~~~~~
 
-Let's review this code:
+Let's add ``Part_Of`` to the state of hidden local package ``Ring_Buffer``, but
+this time we hide variable ``Capacity`` inside the private part of
+``Ring_Buffer``.
 
 .. code:: ada spark-flow
 
-    package Configuration
-    is
+    package Configuration is
+
        External_Variable : Natural := 1;
+
     end Configuration;
 
     with Configuration;
+
     package Communication with
       Abstract_State => State
     is
     private
+
        package Ring_Buffer with
          Abstract_State => (B_State with Part_Of => State),
          Initializes    => (B_State => Configuration.External_Variable)
        is
           function Get_Capacity return Natural;
        private
-          Capacity : constant Natural :=
-            Configuration.External_Variable
-              with Part_Of => B_State;
+          Capacity : constant Natural := Configuration.External_Variable
+            with Part_Of => B_State;
        end Ring_Buffer;
+
     end Communication;
 
     package body Communication with
       Refined_State => (State => Ring_Buffer.B_State)
     is
+
        package body Ring_Buffer with
           Refined_State => (B_State => Capacity)
        is
           function Get_Capacity return Natural is (Capacity);
        end Ring_Buffer;
+
     end Communication;
 
-This program is correct and GNATprove will be able to verify it.
+This program is correct and GNATprove is able to verify it.
 
 
 Example #3
 ~~~~~~~~~~
 
-Let's review this code:
+Package ``Counting`` defines two counters ``Black_Counter`` and
+``Red_Counter``, and provides separate initialization procedures for each, that
+are called from the main procedure.
 
 .. code:: ada spark-flow
 
@@ -868,17 +899,20 @@ Let's review this code:
        Reset_Red_Count;
     end Main;
 
-This example is correct. This program does not read uninitialized data,
-but GNATprove will fail to verify this fact. As we have provided a state
-abstraction, flow analysis will compute subprogram's effects in terms of
-this state abstraction, and thus, will count the call to
-``Reset_Black_Count`` as a read of ``State``.
+Although this program does not read uninitialized data, GNATprove fails to
+verify this fact. As we have provided a state abstraction for package
+``Counting``, flow analysis computes subprograms's effects in terms of this
+state abstraction, and thus, will consider ``State`` as an in-out global of
+both ``Reset_Black_Counter`` and ``Reset_Red_Counter``. Hence the message
+issued by GNATprove requiring that ``State`` be initialized after elaboration,
+as well as the warning that no procedure in package ``Counting`` can initialize
+its state.
 
 
 Example #4
 ~~~~~~~~~~
 
-Let's review this code:
+Let's remove the abstract state on package ``Counting``.
 
 .. code:: ada spark-flow
 
@@ -903,11 +937,11 @@ Let's review this code:
 
     with Counting; use Counting;
 
-    procedure Example_4 is
+    procedure Main is
     begin
        Reset_Black_Count;
        Reset_Red_Count;
-    end Example_4;
+    end Main;
 
 This example is correct. Here, no state abstraction is provided. GNATprove
 will reason in terms of variables and will prove data initialization
@@ -917,11 +951,15 @@ without any problem.
 Example #5
 ~~~~~~~~~~
 
-Let's review this code:
+Let's restore the abstract state on package ``Counting``, but this time
+providing a procedure ``Reset_All`` calling the initialization procedures
+``Reset_Black_Counter`` and ``Reset_Red_Counter``.
 
 .. code:: ada spark-flow
 
-    package Counting with Abstract_State => State is
+    package Counting with
+      Abstract_State => State
+    is
        procedure Reset_Black_Count with Global => (In_Out => State);
        procedure Reset_Red_Count   with Global => (In_Out => State);
        procedure Reset_All         with Global => (Output => State);
@@ -959,9 +997,9 @@ they can also be computed by the tool.
 Example #6
 ~~~~~~~~~~
 
-Let's review this code:
+Let's consider yet another version of our abstract stack unit.
 
-.. code:: ada
+.. code:: ada spark-flow
     :class: ada-expect-compile-error
 
     package Stack with
@@ -996,6 +1034,7 @@ Let's review this code:
           Top           := Top + 1;
           Content (Top) := E;
        end Push;
+
        function  Peek     return Element is (Content (Top));
        function  Is_Full  return Boolean is (Top >= Max);
        function  Is_Empty return Boolean is (Top = 0);
@@ -1009,7 +1048,12 @@ variable and cannot be mentioned in an expression.
 Example #7
 ~~~~~~~~~~
 
-Let's review this code:
+In this version of our abstract stack unit, a model of the stack is returned by
+function ``Get_Model``, which can be called from the postcondition of ``Push``
+to specify that the stack should not be modified if it is full. Then, we can
+assert in ``Use_Stack`` that after pushing an element on the stack, either the
+top of the stack is unchanged (if the stack was full already) or it is equal to
+the element just pushed.
 
 .. code:: ada
 
@@ -1077,17 +1121,18 @@ Let's review this code:
        pragma Assert (Peek = E or Peek = F);
     end Use_Stack;
 
-This program is correct, but GNATprove won't be able to verify the
+This program is correct, but GNATprove cannot prove the
 assertion in ``Use_Stack``. Indeed, even if ``Get_Stack`` is an expression
-function, its body is not visible outside of ``Stack``'s body.
+function, its body is not visible outside of ``Stack``'s body where it is defined.
 
 
 Example #8
 ~~~~~~~~~~
 
-Let's review this code:
+Let's move the definition of ``Get_Stack`` and other expression functions
+inside the private part of the spec of ``Stack``.
 
-.. code:: ada
+.. code:: ada spark-report-all
 
     package Stack with
       Abstract_State => The_Stack
@@ -1155,14 +1200,16 @@ Let's review this code:
        pragma Assert (Peek = E or Peek = F);
     end Use_Stack;
 
-This example is correct. GNATprove will be able to verify the assertion in
-``Use_Stack`` since it has visibility of ``Get_Stack``'s body.
+This example is correct. GNATprove is able to verify the assertion in
+``Use_Stack`` since it has visibility over ``Get_Stack``'s body.
 
 
 Example #9
 ~~~~~~~~~~
 
-Let's review this code:
+Package ``Data`` defines three variables ``Data_1``, ``Data_2`` and ``Data_3``
+that are initialized at elaboration (in ``Data``'s package body) from an
+external interface reading the file system.
 
 .. code:: ada spark-flow
 
@@ -1190,6 +1237,7 @@ Let's review this code:
       Initializes => (Data_1, Data_2, Data_3)
     is
        pragma Elaborate_Body;
+
        Data_1 : Data_Type_1;
        Data_2 : Data_Type_2;
        Data_3 : Data_Type_3;
@@ -1219,7 +1267,7 @@ aspect.
 Example #10
 ~~~~~~~~~~~
 
-Let's review this code:
+Let's remove the ``Initializes`` contract on package ``Data``.
 
 .. code:: ada spark-flow
 
@@ -1245,6 +1293,7 @@ Let's review this code:
 
     package Data is
        pragma Elaborate_Body;
+
        Data_1 : Data_Type_1;
        Data_2 : Data_Type_2;
        Data_3 : Data_Type_3;
@@ -1266,16 +1315,7 @@ Let's review this code:
        end;
     end Data;
 
-    with Data;               use Data;
-    with External_Interface; use External_Interface;
-
-    procedure Use_Data is
-       X : Data_Type_1 := Data_1;
-    begin
-       null;
-    end Use_Data;
 
 This example is correct. Since ``Data`` has no :ada:`Initializes` aspect,
-GNATprove will compute the set of variables initialized during its
-elaboration. Thereby, it can ensure that ``Data_1`` is always initialized
-in ``Use_Data``.
+GNATprove computes the set of variables initialized during its elaboration, as
+well as their dependencies.
