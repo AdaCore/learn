@@ -421,6 +421,8 @@ In GNATprove, validity --- as well as disjointness and completeness of the
 subprogram's precondition.
 
 
+.. _Debugging Failed Proof Attempts:
+
 Debugging Failed Proof Attempts
 ---------------------------------------------------------------------
 
