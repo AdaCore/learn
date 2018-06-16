@@ -75,7 +75,6 @@ may be uninitialized. Flow analysis will detect and report this error.
 
     end Show_Uninitialized;
 
-
 Ineffective Statements
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -123,7 +122,6 @@ flow analysis warns both on ineffective statements and unused variables.
        end Swap2;
 
     end Show_Ineffective_Statements;
-
 
 Incorrect Parameter Mode
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -213,10 +211,9 @@ that the code complies with this specification:
        X : Natural := 0;
 
        function Get_Value_Of_X return Natural;
-       -- Get_Value_Of_X reads the value of the global variable X
+       --  Get_Value_Of_X reads the value of the global variable X
 
     end Show_Global_Contracts;
-
 
 Global contracts are provided as part of the subprogram specification.
 Indeed, they provide useful information to users of a subprogram. The
@@ -239,13 +236,13 @@ the global contract should be set to :ada:`null`.
        X, Y, Z : Natural := 0;
 
        procedure Set_X_To_Y_Plus_Z with
-         Global => (Input  => (Y, Z), -- reads values of Y and Z
-                    Output => X);     -- modifies value of X
+         Global => (Input  => (Y, Z), --  reads values of Y and Z
+                    Output => X);     --  modifies value of X
 
        procedure Set_X_To_X_Plus_Y with
-         Global => (Input  => Y,  -- reads value of Y
-                    In_Out => X); -- modifies value of X and
-                                  -- also reads its initial value
+         Global => (Input  => Y,  --  reads value of Y
+                    In_Out => X); --  modifies value of X and
+                                  --  also reads its initial value
 
        function Get_Value_Of_X return Natural with
          Global => X;  -- reads the value of the global variable X
@@ -254,7 +251,6 @@ the global contract should be set to :ada:`null`.
          Global => null; -- do not reference any global variable
 
     end Show_Global_Contracts;
-
 
 Depends Contracts
 ~~~~~~~~~~~~~~~~~
@@ -280,15 +276,14 @@ that the code complies with this specification:
        type T is new Integer;
 
        procedure Swap (X, Y : in out T);
-       -- The value of X (resp. Y) after the call depends only
-       -- on the value of Y (resp. X) before the call
+       --  The value of X (resp. Y) after the call depends only
+       --  on the value of Y (resp. X) before the call
 
        X : Natural;
        procedure Set_X_To_Zero;
-       -- The value of X after the call depends on no input
+       --  The value of X after the call depends on no input
 
     end Show_Depends_Contracts;
-
 
 Like :ada:`Global` contracts, a :ada:`Depends` contract is specified on
 subprogram declarations using an aspect. Its value is a list of one or
@@ -312,32 +307,31 @@ using the :ada:`Result` attribute.
 
        procedure Swap (X, Y : in out T) with
          Depends => (X => Y,
-                     -- X depends on the initial value of Y
+                     --  X depends on the initial value of Y
                      Y => X);
-                     -- Y depends on the initial value of X
+                     --  Y depends on the initial value of X
 
        function Get_Value_Of_X return T with
          Depends => (Get_Value_Of_X'Result => X);
-                     -- result depends on X
+                     --  result depends on X
 
        procedure Set_X_To_Y_Plus_Z with
          Depends => (X => (Y, Z));
-                     -- X depends on Y and Z
+                     --  X depends on Y and Z
 
        procedure Set_X_To_X_Plus_Y with
-         Depends => (X => + Y);
-                     -- X depends on Y and X's initial value
+         Depends => (X =>+ Y);
+                 --  X depends on Y and X's initial value
 
        procedure Do_Nothing (X : T) with
          Depends => (null => X);
-                     -- no output is affected by X
+                     --  no output is affected by X
 
        procedure Set_X_To_Zero with
          Depends => (X => null);
-                     -- X depends on no input
+                     --  X depends on no input
 
     end Show_Depends_Contracts;
-
 
 It is often the case that the final value of a variable depends on its own
 initial value. This can be specified in a concise way using the :ada:`+`
@@ -398,7 +392,6 @@ when ``Overflow`` is :ada:`False`.
        end if;
     end Set_X_To_Y_Plus_Z;
 
-
 This simply means that, in that case, flow analysis was not able to verify
 that no uninitialized variable could be read. To solve this problem, ``X``
 can either be set to a dummy value when there is an overflow or the user
@@ -444,17 +437,16 @@ the object by other means.
           for I in A'Range loop
              A (I) := 0;
           end loop;
-          -- flow analysis does not know that A is initialized
+          --  flow analysis does not know that A is initialized
        end Init_Loop;
 
        procedure Init_Aggregate (A : out T) is
        begin
           A := (others => 0);
-          -- flow analysis knows that A is initialized
+          --  flow analysis knows that A is initialized
        end Init_Aggregate;
 
     end Show_Composite_Types_Shortcoming;
-
 
 Flow analysis is more precise on record objects, in the sense that it
 tracks separately the value of each component inside a single subprogram.
@@ -482,7 +474,7 @@ entire objects when taken as input or output of subprograms.
        begin
           R.F1 := 0;
           R.F2 := 0;
-          -- R is initialized
+          --  R is initialized
        end Init;
 
     end Show_Record_Flow_Analysis;
@@ -521,7 +513,6 @@ subprogram, like for ``Init_F2``.
        end Init;
 
     end Show_Record_Flow_Analysis;
-
 
 Value Dependency
 ~~~~~~~~~~~~~~~~
@@ -570,7 +561,6 @@ in the second version of ``Absolute_Value``:
        end if;
        --  flow analysis knows that R is initialized
     end Absolute_Value;
-
 
 Contract Computation
 ~~~~~~~~~~~~~~~~~~~~
@@ -751,7 +741,6 @@ found.
 
     end Show_Search_Array;
 
-
 This example is correct. No flow message will be emitted here, as flow analysis
 indeed can make sure both that no uninitialized variable will be read in
 ``Search_Array``'s body, and that all its outputs are initialized on
@@ -821,7 +810,6 @@ this sequence and stores it in ``Size_Of_Seq``.
 
     end Show_Biggest_Increasing_Sequence;
 
-
 This example is not correct. Flow analysis emits messages inside ``Test_Index``
 stating that ``Max``, ``Beginning``, and ``Size_Of_Seq`` should be initialized
 before being read. Indeed, both ``Max`` and ``Beginning`` need an initial value
@@ -889,7 +877,6 @@ elements until it has constructed a cyclic permutation.
 
     end Show_Permutation;
 
-
 This program is correct. Flow analysis will still emit messages though, because
 it cannot make sure that every element of ``A`` is initialized by the loop in
 ``Init``. This message is a false alarm and can be ignored or justified safely.
@@ -947,7 +934,6 @@ of ``Init`` has been changed to :ada:`in out`.
 
     end Show_Permutation;
 
-
 This program is not correct. Changing the mode of a parameter that should
 really be :ada:`out` to :ada:`in out` to silence a false alarm is not a
 good idea. Other than this obfuscates the specification of ``Init``, now a
@@ -1004,7 +990,6 @@ for ``Incr_Until_Threshold``.
        end Incr_Step_Function;
 
     end Show_Increments;
-
 
 Everything is fine here. The ``Global`` contract, in particular, is
 correct. It mentions both ``Threshold``, which is read but not updated in
@@ -1075,7 +1060,6 @@ corrected the missing initializations and are now interested in the
 
     end Show_Biggest_Increasing_Sequence;
 
-
 This example is not correct. ``Current_Index`` is a parameter of
 ``Test_Index``, it should not be referenced as a global variable. Also, scope
 variable ``A`` should be mentioned as an :ada:`Input` in the :ada:`Global`
@@ -1141,7 +1125,6 @@ variables accessed can be deduced from the :ada:`Depends` contract.
 
     end Show_Biggest_Increasing_Sequence;
 
-
 This example is correct. Some of the dependencies, such as ``Size_Of_Seq``
 depending on ``Beginning``, come directly from the assignments in the
 subprogram. As the control flow influences the final value of all of the
@@ -1187,7 +1170,6 @@ its initial value and the same for ``Y``.
        end Identity;
 
     end Show_Swap;
-
 
 This code is correct, but flow analysis cannot verify the :ada:`Depends`
 contract of ``Identity``. Indeed, ``Swap`` has no user-specified :ada:`Depends`

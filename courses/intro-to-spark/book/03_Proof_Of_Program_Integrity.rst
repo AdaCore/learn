@@ -186,7 +186,6 @@ addition following the call to ``Increment`` cannot overflow.
        --  medium: overflow check might fail
     end Show_Modularity;
 
-
 Exceptions
 ~~~~~~~~~~
 
@@ -241,7 +240,6 @@ addition.
        X := X + 1;
        --  info: overflow check proved
     end Show_Modularity;
-
 
 Contracts
 ---------------------------------------------------------------------
@@ -408,7 +406,6 @@ of this case is the one that should hold on exit.
        end if;
     end Absolute;
 
-
 In GNATprove, validity --- as well as disjointness and completeness of the
 :ada:`Contract_Cases` --- is verified only once in the context of the
 subprogram's precondition.
@@ -504,7 +501,7 @@ runtime.
 
     with Show_Failed_Proof_Attempt; use Show_Failed_Proof_Attempt;
 
-    procedure Test_Incr_Until is
+    procedure Main is
        X : Integer;
     begin
        X := 0;
@@ -512,7 +509,7 @@ runtime.
 
        X := 1000;
        Incr_Until (X);
-    end Test_Incr_Until;
+    end Main;
 
 It shows a case where the first contract case is failing, which means that
 ``Incremented`` is :ada:`True`. Still, if we print the value of ``Incremented``
@@ -972,7 +969,6 @@ into the array. The procedure ``Read_Record`` reads two pieces of data from its
 
     end Memories;
 
-
     with Memories; use Memories;
 
     procedure Read_Record (Memory : Chunk; From : Integer)
@@ -1026,7 +1022,6 @@ Let's rewrite the precondition of ``Read_One`` to avoid any possible overflow.
 
     end Memories;
 
-
     with Memories; use Memories;
 
     procedure Read_Record (Memory : Chunk; From : Integer)
@@ -1058,7 +1053,6 @@ Let's rewrite the precondition of ``Read_One`` to avoid any possible overflow.
        Data2 := Read_One (Addr, -Size);
     end Read_Record;
 
-
 This example is not correct. Unfortunately, our attempt to correct
 ``Read_One``'s precondition failed. For example, an overflow will occur at
 runtime when ``Memory (First)`` is :ada:`Integer'Last` and ``Offset`` is
@@ -1081,7 +1075,6 @@ Let's remove completely the precondition of ``Read_One``.
        procedure Treat_Value (V : out Integer);
 
     end Memories;
-
 
     with Memories; use Memories;
 
