@@ -1,5 +1,22 @@
 language: python
+
 python:
   - "2.7"
-install: "pip install -q -r requirements.txt"
-script: make -C courses/intro-to-ada/sphinx html
+
+env:
+  global:
+    - TOOLS_DIR=$HOME/build_tools
+    - GNAT_TAR_PATH=$TOOLS_DIR/gnat-gpl-2017-x86_64-linux-bin.tar.gz
+    - GNAT_PATH=$TOOLS_DIR/gnat-gpl-2017-x86_64-linux-bin
+
+os:
+  - linux
+
+cache:
+  directories:
+  - $HOME/build_tools
+  - $HOME/.cache/pip
+
+install: cd engine && ./travis_install.sh
+
+script: ./travis_script.sh
