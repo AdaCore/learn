@@ -314,9 +314,10 @@ def analyze_file(rst_file):
                 main_file = 'main.adb'
 
             try:
-                run("gprbuild", "-gnata", "-gnatyg0-s", "-f", main_file)
-            except S.CalledProcessError:
+                out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f", main_file)
+            except S.CalledProcessError as e:
                 print_error(loc, "Failed to compile example")
+                print e.output
                 has_error = True
 
             if not has_error:
