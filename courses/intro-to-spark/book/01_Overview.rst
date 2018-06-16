@@ -268,7 +268,7 @@ There are two reasons to forbid aliasing in SPARK:
 What is more, most of the time, possibility of aliasing was not even taken
 into account by the programmer. For example:
 
-.. code:: ada run_button
+.. code:: ada run_button spark-flow
     :class: ada-run-expect-failure
 
     procedure No_Aliasing is
@@ -286,8 +286,10 @@ into account by the programmer. For example:
        X : Natural := 3;
 
     begin
-       Move_To_Total (X);     -- OK
-       Move_To_Total (Total); -- Error
+       Move_To_Total (X);         -- OK
+       pragma Assert (Total = 3); -- OK
+       Move_To_Total (Total);     -- flow analysis error
+       pragma Assert (Total = 6); -- runtime error
     end No_Aliasing;
 
 The example subprogram ``Move_To_Total`` shown here increases the global
@@ -299,8 +301,9 @@ GNATprove assumes, like the programmer, non-aliasing between ``Total`` and
 ``Source``. To ensure that this assumption is correct, GNATprove will then
 check for non-aliasing on every call to ``Move_To_Total``. The final call to
 ``Move_To_Total`` in procedure ``No_Aliasing`` violates this property, which
-leads to both a message from GNATprove and a runtime error (postcondition
-violation) when compiling and running.
+leads to both a message from GNATprove and a runtime error (assertion violation
+corresponding to the expected increase in ``Total`` from calling
+``Move_To_Total``) when compiling and running.
 
 
 Identifying SPARK Code
