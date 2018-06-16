@@ -1,3 +1,5 @@
+:code-config:`run_button=True;prove_button=False;accumulate_code=True`
+
 Design by contracts
 ===================
 
