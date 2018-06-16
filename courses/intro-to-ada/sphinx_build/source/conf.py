@@ -169,5 +169,105 @@ todo_include_todos = True
 
 html_theme = "sphinx_rtd_theme"
 
+# -- Dummy code for "code-config" directives ---------------------------------
+
+from docutils import nodes
+from docutils.parsers.rst import Directive, directives
+
+class WidgetCodeDirective(Directive):
+    has_content = True
+    required_arguments = 0
+    optional_arguments = 1
+    final_argument_whitespace = True
+    option_spec = {
+        'class': directives.class_option,
+        'name': directives.unchanged,
+    }
+
+    def run(self):
+
+        extra_attribs = ""
+
+        # Make sure code-config exists in the document
+        if not codeconfig_found:
+            raise Exception("you need to add a :code-config: role")
+
+        if 'class' in self.options and (
+                'ada-nocheck' in self.options['class'] or
+                'ada-syntax-only' in self.options['class']):
+            # TODO: display it in an editor with no buttons
+            return [nodes.raw('',
+                              '<pre>{}</pre>'.format('\n'.join(self.content)),
+                              format='html')]
+        else:
+            files = real_gnatchop(self.content)
+
+        if config.accumulate_code:
+            # We are accumulating code: store the new code in the
+            # accumulated_files
+            global accumulated_files
+            for f in files:
+                accumulated_files[f[0]] = f[1]
+
+        if config.run_button:
+            # We have a run button: try to find the main!
+            # Current heuristics: find the .adb that doesn't have a .ads.
+            names = [f[0] for f in files]
+            bases = set([b[:-4] for b in names])
+            main = [b + '.adb' for b in bases if b + '.ads' not in names]
+            if main:
+                extra_attribs += ' main="{}"'.format(main[0])
+
+        try:
+            shadow_files_divs = ""
+            if config.accumulate_code:
+                editor_files = set([f[0] for f in files])
+                for k, v in accumulated_files.iteritems():
+                    if k not in editor_files:
+                        shadow_files_divs += (
+                           u'<div class="shadow_file"'
+                           'style="display:none" basename="{}">'
+                           '{}</div>').format(k, v)
+
+            divs = "\n".join(
+                [u'<div class="file" basename="{}">{}</div>'.format(
+                    f[0], f[1]) for f in files]
+                )
+        except Exception:
+            # If we have an exception here, it's probably a codec error
+            print files
+            raise
+
+        editor_base = "SPARK Main" if config.prove_button else "Ada Main"
+
+        if config.run_button:
+            extra_attribs += ' run_button="True"'
+        if config.prove_button:
+            extra_attribs += ' prove_button="True"'
+
+        return [
+            nodes.raw('',
+                      template.format(server_url=WIDGETS_SERVER_URL,
+                                      files_divs=divs,
+                                      shadow_files_divs=shadow_files_divs,
+                                      editor_base=editor_base,
+                                      extra_attribs=extra_attribs),
+                      format='html')
+        ]
+
+
+def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
+    """Support the code-config role.
+    """
+    return [], []
+
+
+def on_builder_inited(app):
+    # Connect to the "code" directive
+    app.add_directive('code', WidgetCodeDirective)
+
+# ----------------------------------------------------------------------------
+
 def setup(app):
+    app.add_role('code-config', codeconfig)
     app.add_stylesheet('css/custom.css')
