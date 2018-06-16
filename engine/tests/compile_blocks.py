@@ -299,7 +299,6 @@ def analyze_file(rst_file):
                 print_error(loc, "Failed to syntax check example")
                 has_error = True
 
-
         if 'ada-syntax-only' in block.classes or not block.run:
             continue
 
@@ -315,7 +314,7 @@ def analyze_file(rst_file):
                 main_file = 'main.adb'
 
             try:
-                run("gprbuild", "-f", main_file)
+                run("gprbuild", "-gnata", "-gnatyg0-s", "-f", main_file)
             except S.CalledProcessError:
                 print_error(loc, "Failed to compile example")
                 has_error = True
