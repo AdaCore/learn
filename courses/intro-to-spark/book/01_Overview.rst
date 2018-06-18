@@ -13,6 +13,20 @@ and formal verification tools. It does not require you to know any specific
 programming language (although going over the :doc:`../../intro-to-ada/index`
 first may help) or to have experience in formal verification.
 
+For some of the code snippets presented, you will be able to compile and run
+the program and/or run the formal verification tool on the program. These are
+available through the buttons labelled:
+
+- `Run`: compile the code with assertions enabled and run the executable just
+  produced.
+- `Examine`: perform the `flow analysis` stage of formal verification
+- `Prove`: perform the `proof` stage of formal verification (which includes
+  `flow analysis`)
+
+These code snippets are editable, so you can modify the code and rerun the
+tools to see the effect on compilation or analysis. Use the button `Reset` to
+restore the initial version of the example.
+
 
 What is it?
 ---------------------------------------------------------------------
