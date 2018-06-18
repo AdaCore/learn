@@ -12,7 +12,7 @@ help:
 
 test_ada_intro:
 	@echo "===== INTRO TO ADA ====="
-	@$(TEST_DRIVER) ../courses/intro-to-ada/intro_to_ada.rst
+	@$(TEST_DRIVER) ../courses/intro-to-ada/chapters/*.rst
 	@echo ""
 
 test_spark_intro:

@@ -105,8 +105,6 @@ determine that the expression is valid for the whole array :ada:`A`.
 Let's now discuss postconditions using the following example:
 
 .. code:: ada
-    :class: ada-run-expect-failure
-
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Numerics.Elementary_Functions;
 
