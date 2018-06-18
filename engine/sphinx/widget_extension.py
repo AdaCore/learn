@@ -50,6 +50,9 @@ config = Config()
 accumulated_files = {}
 # The accumulated files. Key: basename, value: lastest content seen
 
+ALLOWED_EXTRA_ARGS = ('spark-flow', 'spark-report-all')
+# Known "extra args" parameters
+
 
 def cheapo_gnatchop(lines):
     """Performs a cheapo gnatchop on the given text.
@@ -126,6 +129,9 @@ class WidgetCodeDirective(Directive):
     def run(self):
 
         extra_attribs = ""
+        argument_list = []
+        if self.arguments:
+            argument_list = self.arguments[0].split(' ')
 
         # Make sure code-config exists in the document
         if not codeconfig_found:
@@ -182,6 +188,10 @@ class WidgetCodeDirective(Directive):
             raise
 
         editor_base = "SPARK Main" if config.prove_button else "Ada Main"
+
+        for arg in ALLOWED_EXTRA_ARGS:
+            if arg in argument_list:
+                extra_attribs += ' extra_args="{}"'.format(arg)
 
         if config.run_button:
             extra_attribs += ' run_button="True"'
