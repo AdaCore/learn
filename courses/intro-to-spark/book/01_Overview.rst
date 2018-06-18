@@ -470,6 +470,17 @@ applies a circular permutation to the value of its three parameters.
        end Swap;
     end P;
 
+    with P; use P;
+
+    procedure Test_Swap
+      with SPARK_Mode => On
+    is
+       A : Integer := 1;
+       B : Integer := 2;
+    begin
+       Swap (A, B);
+    end Test_Swap;
+
 Here, in the call to ``Permute``, actual values for parameters ``Y`` and ``Z``
 are aliased, which is not allowed in SPARK. In fact, in this particular case,
 this is even a violation of Ada rules so the same error is issued by the
