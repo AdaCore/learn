@@ -17,8 +17,8 @@
 .. toctree::
    :maxdepth: 2
 
-   Intro to ada <intro-to-ada/index>
-   Intro to ada <intro-to-spark/index>
+   Introduction to Ada <intro-to-ada/index>
+   Introduction to SPARK <intro-to-spark/index>
 
 .. raw:: html
 

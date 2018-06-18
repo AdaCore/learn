@@ -92,7 +92,6 @@ called ``Increment`` adds 1 to the value of its parameter ``X``:
      X := X + 1;
    end Increment;
 
-
 Several properties can be specified on this subprogram using the contracts
 shown:
 
@@ -225,12 +224,12 @@ while ``Incr_And_Log`` is not as it attempts to update the global variable
 
     package body Side_Effects is
 
-       function Incr (X : in Integer) return Integer
+       function Incr (X : Integer) return Integer
        is (X + 1); -- OK
 
        Call_Count : Natural := 0;
 
-       function Incr_And_Log (X : in Integer) return Integer is
+       function Incr_And_Log (X : Integer) return Integer is
        begin
           Call_Count := Call_Count + 1; -- Illegal
           return X + 1;
@@ -386,7 +385,7 @@ functionalities over stacks. It is marked to be in the SPARK subset.
     private
        type Stack is record
           Top : Integer;
-          -- ...
+          --  ...
        end record;
 
     end Stack_Package;

@@ -18,6 +18,11 @@ function Rstcheck()
     call Stylechecks(s:cmdcmd, 1)
 endfunction
 
+function RstcheckAllFile()
+    let x=line(".")
+    let s:cmdcmd = s:cmd
+    call Stylechecks(s:cmdcmd, 1)
+endfunction
 
 function Stylechecks(cmd, file_specific)
     hi Green ctermfg=green
@@ -69,3 +74,4 @@ function Stylechecks(cmd, file_specific)
 endfunction
 
 map <F4> :call Rstcheck()<CR>
+map <F7> :call RstcheckAllFile()<CR>

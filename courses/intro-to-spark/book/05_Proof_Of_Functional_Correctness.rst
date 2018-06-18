@@ -50,7 +50,6 @@ proved automatically by GNATprove:
 
     end Show_Find;
 
-
 However, for the program to be meaningful, we may want ``Find`` to verify more
 complex properties. For example that it only returns 0 if ``E`` is not in ``A``
 and that, otherwise, it returns an index of ``A`` where ``E`` is stored. This
@@ -307,7 +306,6 @@ restore the initial value of ``X``:
 
     end Show_Ghost;
 
-
 When compiling this example, the use of ``X_Init`` is
 flagged as illegal by the compiler. Note that more complex cases of
 interference between ghost and normal code may only be detected by running
@@ -408,11 +406,9 @@ be done in the subprogram ``Peek``:
 
     end Stacks;
 
-
 Marking the function as :ada:`Ghost` achieves this goal. What is more,
 it ensures that the subprogram ``Get_Model`` is never used in
 production code.
-
 
 Global Ghost Variables
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -454,13 +450,13 @@ state ``B``. The global variable ``Last_Accessed_Is_A`` is used to specify that
 
        procedure Access_A is
        begin
-          -- ...
+          --  ...
           Last_Accessed_Is_A := True;
        end Access_A;
 
        procedure Access_B is
        begin
-          -- ...
+          --  ...
           Last_Accessed_Is_A := False;
        end Access_B;
 
@@ -468,12 +464,12 @@ state ``B``. The global variable ``Last_Accessed_Is_A`` is used to specify that
 
     with Call_Sequence; use Call_Sequence;
 
-    procedure Client is
+    procedure Main is
     begin
        Access_A;
        Access_B;
        Access_B; -- ERROR
-    end Client;
+    end Main;
 
 As another example, it can be the case that the requirement of a subprogram
 expresses its expected behavior as a sequence of actions to be performed. To
@@ -505,7 +501,6 @@ effectively verify the contracts.
            and then Second_Thing_Done (V_Interm, V);
 
     end Action_Sequence;
-
 
 Guide Proof
 ---------------------------------------------------------------------
@@ -601,7 +596,6 @@ local ghost constant ``X_Init`` for this value.
 
     end Show_Local_Ghost;
 
-
 Local ghost variables can also be used for more complex things such as
 building a data-structure that serves as witness of a complex property of
 the subprogram. In our example, we want to prove that the ``Sort``
@@ -623,7 +617,6 @@ index ``I``, an index ``J`` that has the expected property.
     begin
        ...
     end Sort;
-
 
 Ghost Procedures
 ~~~~~~~~~~~~~~~~
@@ -753,7 +746,7 @@ searching for an index where ``E`` is stored in ``A``:
        begin
           for I in A'Range loop
              pragma Assert (for all J in A'First .. I - 1 => A (J) /= E);
-             -- assertion is not proved
+             --  assertion is not proved
              if A (I) = E then
                 return I;
              end if;
@@ -1106,7 +1099,6 @@ ring buffer, we're now using a global ghost variable ``Model``.
 
     end Ring_Buffer;
 
-
 This example is not correct. ``Model``, which is a ghost variable, cannot
 influence the return value of the normal function ``Valid_Model``. As
 ``Valid_Model`` is only used in specifications, it should be marked as
@@ -1168,7 +1160,6 @@ Let's mark ``Valid_Model`` as :ada:`Ghost` and update ``Model`` inside
        end Push_Last;
 
     end Ring_Buffer;
-
 
 This example is correct. The ghost variable ``Model`` can be referenced both
 from the body of the ghost function ``Valid_Model`` and from the body of the
@@ -1232,7 +1223,6 @@ between the operational code and the ghost code.
        end Push_Last;
 
     end Ring_Buffer;
-
 
 This example is not correct. Local constant ``New_Length`` is not marked as
 :ada:`Ghost`, hence it cannot be computed from the value of ghost variable
@@ -1305,14 +1295,12 @@ new length.
 
     end Ring_Buffer;
 
-
 Everything is fine here. ``Model`` is only accessed inside ``Update_Model``
 which is itself a ghost procedure, so it's fine to declare local variable
 ``New_Length`` without the :ada:`Ghost` aspect as everything inside a ghost
 procedure body is ghost. Moreover, we don't need to add any contract to
 ``Update_Model``. Indeed, as it is a local procedure without contract, it is
 inlined by GNATprove.
-
 
 Example #6
 ~~~~~~~~~~
@@ -1399,7 +1387,6 @@ already the maximal integer value.
 
     end Array_Util;
 
-
 The loop invariant now allows verifying that no runtime error can occur in the
 loop's body (property INSIDE seen in section :ref:`Loop
 Invariants`). Unfortunately, GNATprove will fail to verify that the invariant
@@ -1452,14 +1439,13 @@ array of the maximum values between its arguments at each index.
 
     with Array_Util; use Array_Util;
 
-    procedure Test_Max_Array is
+    procedure Main is
        A : Nat_Array := (1, 1, 2);
        B : Nat_Array := (2, 1, 0);
        R : Nat_Array (1 .. 3);
     begin
        R := Max_Array (A, B);
-    end Test_Max_Array;
-
+    end Main;
 
 Here, GNATprove does not manage to prove the loop invariant even in the first
 loop iteration (property INIT seen in section :ref:`Loop Invariants`). In fact,
@@ -1508,7 +1494,6 @@ index.
 
     end Array_Util;
 
-
 Everything is proved. The first loop invariant states that ``A`` before the
 loop index contains the maximum values between the arguments of ``Max_Array``
 (referring to the input value of ``A`` with ``A'Loop_Entry``). The second loop
@@ -1549,7 +1534,6 @@ Let's remove the frame condition from the previous example.
        end Max_Array;
 
     end Array_Util;
-
 
 Everything is still proved. In fact, GNATprove internally generates the frame
 condition for the loop, so it's sufficient here to state that ``A`` before the

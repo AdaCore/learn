@@ -195,7 +195,7 @@ def analyze_file(rst_file):
         Block.get_blocks(content)
     )))
 
-    code_blocks = filter(lambda b: isinstance(b, CodeBlock), blocks)
+    code_blocks = [(i, b) for i, b in blocks if isinstance(b, CodeBlock)]
 
     def run(*run_args):
         if args.verbose:
@@ -239,7 +239,6 @@ def analyze_file(rst_file):
 
     for i, block in blocks:
         if isinstance(block, ConfigBlock):
-            print "Updating config", block._opts
             current_config.update(block)
             continue
 
@@ -258,8 +257,7 @@ def analyze_file(rst_file):
 
         def print_error(*error_args):
             error(*error_args)
-            if args.all_diagnostics:
-                print_diags()
+            print_diags()
 
         if 'ada-nocheck' in block.classes:
             if args.verbose:
@@ -278,9 +276,6 @@ def analyze_file(rst_file):
             print_error(loc, "Failed to chop example, skipping\n")
             continue
 
-        if 'ada-syntax-only' in block.classes or not block.run:
-            continue
-
         idx = -1
         for i, line in enumerate(out):
             if line.endswith("into:"):
@@ -292,6 +287,20 @@ def analyze_file(rst_file):
             continue
 
         source_files = [s.strip() for s in out[idx:]]
+
+        for source_file in source_files:
+            try:
+                out = run("gcc", "-c", "-gnats", "-gnatyg0-s", source_file)
+            except S.CalledProcessError:
+                print_error(loc, "Failed to syntax check example")
+                has_error = True
+
+            if out:
+                print_error(loc, "Failed to syntax check example")
+                has_error = True
+
+        if 'ada-syntax-only' in block.classes or not block.run:
+            continue
 
         compile_error = False
 
@@ -305,9 +314,10 @@ def analyze_file(rst_file):
                 main_file = 'main.adb'
 
             try:
-                run("gprbuild", "-f", main_file)
-            except S.CalledProcessError:
+                out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f", main_file)
+            except S.CalledProcessError as e:
                 print_error(loc, "Failed to compile example")
+                print e.output
                 has_error = True
 
             if not has_error:
@@ -331,7 +341,7 @@ def analyze_file(rst_file):
         else:
             for source_file in source_files:
                 try:
-                    run("gcc", "-c", "-gnatc", "-gnaty-s", source_file)
+                    run("gcc", "-c", "-gnatc", "-gnatyg0-s", source_file)
                 except S.CalledProcessError:
                     if 'ada-expect-compile-error' in block.classes:
                         compile_error = True

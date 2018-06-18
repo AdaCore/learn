@@ -43,7 +43,6 @@ Take a look at the example code shown below:
        X := X + 1;
     end Increase;
 
-
 The specification of the subprogram ``Increase`` states that it should be
 called on a unique argument, which should be a variable of type
 :ada:`Integer` smaller than 100. Via this contract, it ensures that its
@@ -78,7 +77,6 @@ snippet shown below, it means that the loop is bound to terminate.
        end loop;
        pragma Assert (X = 101); --  Will this hold?
     end Client;
-
 
 They can also assume that the implementation of ``Increase`` won't cause
 any runtime error when called in the loop. However, on the other hand, the
@@ -191,7 +189,7 @@ including both ``Content`` and ``Top``.
        type Element is new Integer;
 
        procedure Pop  (E : out Element);
-       procedure Push (E : in  Element);
+       procedure Push (E : Element);
 
     end Stack;
 
@@ -213,14 +211,13 @@ including both ``Content`` and ``Top``.
           Top := Top - 1;
        end Pop;
 
-       procedure Push (E : in Element) is
+       procedure Push (E : Element) is
        begin
           Top           := Top + 1;
           Content (Top) := E;
        end Push;
 
     end Stack;
-
 
 Representing Private Variables
 ---------------------------------------------------------------------
@@ -243,7 +240,7 @@ must be linked to a state abstraction. For example:
        type Element is new Integer;
 
        procedure Pop  (E : out Element);
-       procedure Push (E : in Element);
+       procedure Push (E : Element);
 
     private
 
@@ -362,7 +359,7 @@ Let's look at this example:
        type Element is new Integer;
 
        procedure Pop  (E : out Element);
-       procedure Push (E : in Element);
+       procedure Push (E : Element);
     end Stack;
 
     package Configuration with
@@ -392,7 +389,7 @@ Let's look at this example:
           Top := Top - 1;
        end Pop;
 
-       procedure Push (E : in Element) is
+       procedure Push (E : Element) is
        begin
           Top           := Top + 1;
           Content (Top) := E;
@@ -497,7 +494,7 @@ For our ``Stack`` example, we could add refined contracts like this:
          Global  => (In_Out => The_Stack),
          Depends => ((The_Stack, E) => The_Stack);
 
-       procedure Push (E : in Element) with
+       procedure Push (E : Element) with
          Global  => (In_Out    => The_Stack),
          Depends => (The_Stack => (The_Stack, E));
 
@@ -524,9 +521,9 @@ For our ``Stack`` example, we could add refined contracts like this:
           Top := Top - 1;
        end Pop;
 
-       procedure Push (E : in Element) with
+       procedure Push (E : Element) with
          Refined_Global  => (In_Out => (Content, Top)),
-         Refined_Depends => (Content => + (Content, Top, E),
+         Refined_Depends => (Content =>+ (Content, Top, E),
                              Top     => Top) is
        begin
          Top := Top + 1;
@@ -534,7 +531,6 @@ For our ``Stack`` example, we could add refined contracts like this:
        end Push;
 
     end Stack;
-
 
 Preconditions and Postconditions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -562,7 +558,7 @@ and ``Is_Full``, and call these in the contracts of procedures ``Pop`` and
          Pre  => not Is_Empty,
          Post => not Is_Full;
 
-       procedure Push (E : in Element) with
+       procedure Push (E : Element) with
          Pre  => not Is_Full,
          Post => not Is_Empty;
 
@@ -586,7 +582,7 @@ and ``Is_Full``, and call these in the contracts of procedures ``Pop`` and
           Top := Top - 1;
        end Pop;
 
-       procedure Push (E : in Element) is
+       procedure Push (E : Element) is
        begin
           Top           := Top + 1;
           Content (Top) := E;
@@ -626,7 +622,7 @@ For example, we can refine the postconditions stated previously for procedures
          Pre  => not Is_Empty,
          Post => not Is_Full;
 
-       procedure Push (E : in Element) with
+       procedure Push (E : Element) with
          Pre  => not Is_Full,
          Post => not Is_Empty;
 
@@ -652,7 +648,7 @@ For example, we can refine the postconditions stated previously for procedures
           Top := Top - 1;
        end Pop;
 
-       procedure Push (E : in Element) with
+       procedure Push (E : Element) with
          Refined_Post => not Is_Empty and E = Content (Top)
        is
        begin
@@ -661,7 +657,6 @@ For example, we can refine the postconditions stated previously for procedures
        end Push;
 
     end Stack;
-
 
 Initialization of Local Variables
 ---------------------------------------------------------------------
@@ -798,7 +793,6 @@ capacity is initialized at elaboration from an external configuration.
        end Get_Capacity;
 
     end Communication;
-
 
 This example is not correct. Here, ``Capacity`` is declared in the private
 part of ``Communication``. Therefore, it should be linked to ``State`` at
@@ -1309,7 +1303,6 @@ Let's remove the ``Initializes`` contract on package ``Data``.
           Data_3 := Data_Read.Field_3;
        end;
     end Data;
-
 
 This example is correct. Since ``Data`` has no :ada:`Initializes` aspect,
 GNATprove computes the set of variables initialized during its elaboration, as

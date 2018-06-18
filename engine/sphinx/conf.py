@@ -90,7 +90,7 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'learn_theme'
+html_theme = 'learn_theme_2'
 
 html_theme_path = ['.'] # make sphinx search for themes in current dir
 
@@ -209,3 +209,5 @@ def setup(app):
 
     for css in css_paths:
         app.add_stylesheet(css)
+
+    app.add_stylesheet('css/custom.css')

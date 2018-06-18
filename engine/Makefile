@@ -12,12 +12,12 @@ help:
 
 test_ada_intro:
 	@echo "===== INTRO TO ADA ====="
-	@$(TEST_DRIVER) -A ../courses/intro-to-ada/intro_to_ada.rst
+	@$(TEST_DRIVER) ../courses/intro-to-ada/intro_to_ada.rst
 	@echo ""
 
 test_spark_intro:
 	@echo "===== INTRO TO SPARK ====="
-	@$(TEST_DRIVER) -A ../courses/intro-to-spark/book/*.rst
+	@$(TEST_DRIVER) ../courses/intro-to-spark/book/*.rst
 	@echo ""
 
 tests: test_ada_intro test_spark_intro

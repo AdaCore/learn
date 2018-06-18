@@ -102,11 +102,7 @@ def real_gnatchop(lines):
         with codecs.open(gnatchop_file, 'wb', encoding='utf-8') as f:
             f.write('\n'.join(lines))
         cmd = ['gnatchop', gnatchop_file]
-        try:
-            subprocess.check_call(cmd, cwd=wd)
-        except subprocess.CalledProcessError:
-            print "could not gnatchop:\n" + '\n'.join(lines)
-            raise
+        subprocess.check_call(cmd, cwd=wd)
         os.remove(gnatchop_file)
         results = []
         for file in glob.glob(os.path.join(wd, '*')):
@@ -133,7 +129,8 @@ class WidgetCodeDirective(Directive):
 
         # Make sure code-config exists in the document
         if not codeconfig_found:
-            raise Exception("you need to add a :code-config: role")
+            print self.lineno, dir(self)
+            raise self.error("you need to add a :code-config: role")
 
         if 'class' in self.options and (
                 'ada-nocheck' in self.options['class'] or
@@ -143,7 +140,10 @@ class WidgetCodeDirective(Directive):
                               '<pre>{}</pre>'.format('\n'.join(self.content)),
                               format='html')]
         else:
-            files = real_gnatchop(self.content)
+            try:
+                files = real_gnatchop(self.content)
+            except subprocess.CalledProcessError:
+                raise self.error("could not gnatchop example")
 
         if config.accumulate_code:
             # We are accumulating code: store the new code in the
@@ -214,7 +214,7 @@ def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
     for d in directives:
         key, value = d.strip().split('=')
         if not hasattr(config, key):
-            raise Exception("wrong key for code-config: {}".format(key))
+            raise inliner.error("wrong key for code-config: {}".format(key))
         setattr(config, key, value.lower() == "true")
 
     if config.reset_accumulator:
