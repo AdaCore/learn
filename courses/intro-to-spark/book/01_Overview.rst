@@ -13,6 +13,20 @@ and formal verification tools. It does not require you to know any specific
 programming language (although going over the :doc:`../../intro-to-ada/index`
 first may help) or to have experience in formal verification.
 
+For some of the code snippets presented, you will be able to compile and run
+the program and/or run the formal verification tool on the program. These are
+available through the buttons labelled:
+
+- `Run`: compile the code with assertions enabled and run the executable just
+  produced.
+- `Examine`: perform the `flow analysis` stage of formal verification
+- `Prove`: perform the `proof` stage of formal verification (which includes
+  `flow analysis`)
+
+These code snippets are editable, so you can modify the code and rerun the
+tools to see the effect on compilation or analysis. Use the button `Reset` to
+restore the initial version of the example.
+
 
 What is it?
 ---------------------------------------------------------------------
@@ -469,6 +483,17 @@ applies a circular permutation to the value of its three parameters.
           Permute (X, Y, Y);
        end Swap;
     end P;
+
+    with P; use P;
+
+    procedure Test_Swap
+      with SPARK_Mode => On
+    is
+       A : Integer := 1;
+       B : Integer := 2;
+    begin
+       Swap (A, B);
+    end Test_Swap;
 
 Here, in the call to ``Permute``, actual values for parameters ``Y`` and ``Z``
 are aliased, which is not allowed in SPARK. In fact, in this particular case,

@@ -306,6 +306,14 @@ restore the initial value of ``X``:
 
     end Show_Ghost;
 
+    with Show_Ghost; use Show_Ghost;
+
+    procedure Use_Ghost is
+       X : T := (True, True, False, False, True);
+    begin
+       Do_Something (X);
+    end Use_Ghost;
+
 When compiling this example, the use of ``X_Init`` is
 flagged as illegal by the compiler. Note that more complex cases of
 interference between ghost and normal code may only be detected by running
@@ -564,7 +572,7 @@ postconditions, we cannot use the :ada:`'Old` attribute to access the
 initial value of the parameter ``X``, we must resort to introducing a
 local ghost constant ``X_Init`` for this value.
 
-.. code:: ada spark-prove-all
+.. code:: ada spark-report-all
 
     package Show_Local_Ghost is
 
@@ -832,7 +840,7 @@ hold.
 Let's look at a version of ``Find`` where we use a loop invariant instead of an
 assertion to state that all array elements seen so far are not equal to ``E``:
 
-.. code:: ada spark-prove-all
+.. code:: ada spark-report-all
 
     package Show_Find is
 
