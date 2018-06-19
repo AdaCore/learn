@@ -50,6 +50,9 @@ config = Config()
 accumulated_files = {}
 # The accumulated files. Key: basename, value: lastest content seen
 
+ALLOWED_EXTRA_ARGS = ('spark-flow', 'spark-report-all')
+# Known "extra args" parameters
+
 
 def cheapo_gnatchop(lines):
     """Performs a cheapo gnatchop on the given text.
@@ -126,6 +129,11 @@ class WidgetCodeDirective(Directive):
     def run(self):
 
         extra_attribs = ""
+        argument_list = []
+        if self.arguments:
+            argument_list = self.arguments[0].split(' ')
+
+        has_run_button = config.run_button or 'run_button' in argument_list
 
         # Make sure code-config exists in the document
         if not codeconfig_found:
@@ -152,7 +160,7 @@ class WidgetCodeDirective(Directive):
             for f in files:
                 accumulated_files[f[0]] = f[1]
 
-        if config.run_button:
+        if has_run_button:
             # We have a run button: try to find the main!
             # Current heuristics: find the .adb that doesn't have a .ads.
             names = [f[0] for f in files]
@@ -181,9 +189,13 @@ class WidgetCodeDirective(Directive):
             print files
             raise
 
-        editor_base = "SPARK Main" if config.prove_button else "Ada Main"
+        editor_base = "Ada Main" if has_run_button else "SPARK Main"
 
-        if config.run_button:
+        for arg in ALLOWED_EXTRA_ARGS:
+            if arg in argument_list:
+                extra_attribs += ' extra_args="{}"'.format(arg)
+
+        if has_run_button:
             extra_attribs += ' run_button="True"'
         if config.prove_button:
             extra_attribs += ' prove_button="True"'
