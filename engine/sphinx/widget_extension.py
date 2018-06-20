@@ -105,10 +105,12 @@ def real_gnatchop(lines):
         with codecs.open(gnatchop_file, 'wb', encoding='utf-8') as f:
             f.write('\n'.join(lines))
         cmd = ['gnatchop', gnatchop_file]
-        subprocess.check_call(cmd, cwd=wd)
+        output = subprocess.check_output(cmd, cwd=wd)
+        files = [os.path.join(wd, f.strip()) for f in output.splitlines()
+                 if not f.startswith("splitting ")]
         os.remove(gnatchop_file)
         results = []
-        for file in glob.glob(os.path.join(wd, '*')):
+        for file in files:
             with codecs.open(file, 'rb', encoding='utf-8') as f:
                 results.append((os.path.basename(file), f.read().strip()))
         return results
