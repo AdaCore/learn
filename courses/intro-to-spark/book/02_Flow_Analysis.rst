@@ -297,7 +297,7 @@ the initial value of the other parameter. If the subprogram is a function,
 its result must be listed as an output, as we did for ``Get_Value_Of_X``
 using the :ada:`Result` attribute.
 
-.. code:: ada
+.. code:: ada spark-flow
 
     package Show_Depends_Contracts is
 
@@ -343,7 +343,7 @@ on each other.
 It can also be the case that an input is not used to compute the final
 value of any output. This can be expressed by putting :ada:`null` at the
 left of the dependency relation, like we have for the ``Do_Nothing``
-subprogram shown here. Note that there can only be one such dependency
+subprogram shown above. Note that there can only be one such dependency
 relation, listing all the unused inputs of the subprogram, and that it
 must be declared last. Also note that such an annotation will silence flow
 analysis' warning about unused parameters. Finally, :ada:`null` can also

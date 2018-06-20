@@ -85,7 +85,7 @@ environment <https://www.adacore.com/gnatpro/toolsuite/gps>`_.
 A trivial example
 ---------------------------------------------------------------------
 
-We will now look at a simple example of subprogram in Ada that has also used
+We will now look at a simple example of subprogram in Ada that also uses
 SPARK aspects to specify a verifiable subprogram contract. The subprogram
 called ``Increment`` adds 1 to the value of its parameter ``X``:
 
@@ -106,15 +106,15 @@ called ``Increment`` adds 1 to the value of its parameter ``X``:
      X := X + 1;
    end Increment;
 
-Several properties can be specified on this subprogram using the contracts
+Several properties are specified on this subprogram using the contracts
 shown:
 
 - The SPARK Global aspect specifies that ``Increment`` does not read
   and does not write any global variable.
 
-- The SPARK Depend aspect is especially interesting for the security of this
-  subprogram, as it specifies that the value of the parameter ``X`` after the
-  call only depends on the value of ``X`` before the call.
+- The SPARK Depend aspect is especially interesting for security, as it
+  specifies that the value of the parameter ``X`` after the call only depends
+  on the value of ``X`` before the call.
 
 - Functional properties of Increment are specified using the :ada:`Pre` and
   :ada:`Post` aspects of Ada.
@@ -140,7 +140,7 @@ between the SPARK and Ada languages. The aim while designing the SPARK
 subset of Ada was to create the biggest possible subset still amenable to
 easy specification and sound verification.
 
-The most notable exclusions include access type and allocators, as well as
+The most notable exclusions include access types and allocators, as well as
 handling of exceptions, which are both known to increase considerably the
 amount of required user-written annotations. Goto statements and
 controlled types are also not supported as they introduce non-trivial
@@ -251,24 +251,11 @@ while ``Incr_And_Log`` is not as it attempts to update the global variable
 
     end Side_Effects;
 
-However, ``Incr`` is valid SPARK while ``Incr_And_Log`` is not as it
-attempts to update the global variable ``Call_Count``.
-
 No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Another restriction imposed in the SPARK subset concerns aliasing. We say that
-two names are aliased if they refer to the same object. Since access types
-(`pointers <https://en.m.wikipedia.org/wiki/Pointer_(computer_programming)>`_
-in Ada) are not allowed in SPARK, aliasing can only occur as part of the
-parameter passing in a subprogram call. As functions have no side-effects in
-SPARK, aliasing of parameters in function calls is not problematic, so we only
-need to consider procedure calls. When a procedure is called, SPARK makes sure
-that no :ada:`out` or :ada:`in out` parameter is aliased with either another
-parameter of the procedure or a global variable updated in the procedure's
-body.
-
-There are two reasons to forbid aliasing in SPARK:
+Another restriction imposed in the SPARK subset concerns aliasing. There are
+two reasons to forbid aliasing in SPARK:
 
 - First, it makes verification more difficult as it requires taking into
   account the fact that updates to two variables with different names may in
@@ -278,8 +265,18 @@ There are two reasons to forbid aliasing in SPARK:
   parameters are aliased, the results of a subprogram call may depend on
   compiler specific treatment, like parameter passing mechanisms.
 
-What is more, most of the time, possibility of aliasing was not even taken
-into account by the programmer. For example:
+We say that two names are aliased if they refer to the same object. Since
+access types (`pointers
+<https://en.m.wikipedia.org/wiki/Pointer_(computer_programming)>`_ in Ada) are
+not allowed in SPARK, aliasing can only occur as part of the parameter passing
+in a subprogram call. As functions have no side-effects in SPARK, aliasing of
+parameters in function calls is not problematic, so we only need to consider
+procedure calls. When a procedure is called, SPARK makes sure that no
+:ada:`out` or :ada:`in out` parameter is aliased with either another parameter
+of the procedure or a global variable updated in the procedure's body.
+
+Procedure ``Move_To_Total`` shows an example where the possibility of aliasing
+was not taken into account by the programmer:
 
 .. code:: ada run_button spark-flow
     :class: ada-run-expect-failure
@@ -316,8 +313,10 @@ check for non-aliasing on every call to ``Move_To_Total``. The final call to
 ``Move_To_Total`` in procedure ``No_Aliasing`` violates this property, which
 leads to both a message from GNATprove and a runtime error (assertion violation
 corresponding to the expected increase in ``Total`` from calling
-``Move_To_Total``) when compiling and running.
-
+``Move_To_Total``) when compiling and running. Note that the postcondition of
+``Move_To_Total`` is not violated on this second call, as integer parameters
+are passes by copy, and the postcondition is checked here before the copy-back
+from formal parameters to actual arguments.
 
 Identifying SPARK Code
 ---------------------------------------------------------------------

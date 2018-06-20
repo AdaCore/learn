@@ -167,12 +167,12 @@ cannot be used inside expressions. For example:
 Refining an Abstract State
 ---------------------------------------------------------------------
 
-Once an abstract state has been declared in a package, it must be refined
-into its constituents using a :ada:`Refined_State` aspect. The
-:ada:`Refined_State` aspect must be placed on the package's body even if
-the package previously did not require a body. For each state abstraction
-declared for the package, the refined state lists the set of variables
-which are represented by this state abstraction.
+Once an abstract state has been declared in a package, it must be refined into
+its constituents using a :ada:`Refined_State` aspect. The :ada:`Refined_State`
+aspect must be placed on the package's body even if the package previously did
+not require a body before the addition of :ada:`Abstract_State`. For each state
+abstraction declared for the package, the refined state lists the set of
+variables which are represented by this state abstraction.
 
 If an abstract state is specified for a package, then it must be complete,
 in the sense that every hidden variable must be part of a state
@@ -976,12 +976,11 @@ providing a procedure ``Reset_All`` calling the initialization procedures
        end Reset_All;
     end Counting;
 
-This example is correct. Flow analysis uses the refined version of
-:ada:`Global` contracts for internal calls and thus can verify that
+This example is correct.  Flow analysis computes refined versions of
+:ada:`Global` contracts for internal calls which are used to verify that
 ``Reset_All`` indeed properly initializes ``State``. Note that
-:ada:`Refined_Global` and :ada:`Global` annotations are not mandatory,
-they can also be computed by the tool.
-
+:ada:`Refined_Global` and :ada:`Global` annotations are not mandatory, they can
+also be computed by the tool.
 
 Example #6
 ~~~~~~~~~~
@@ -1038,11 +1037,11 @@ Example #7
 ~~~~~~~~~~
 
 In this version of our abstract stack unit, a model of the stack is returned by
-function ``Get_Model``, which can be called from the postcondition of ``Push``
+function ``Get_Stack``, which can be called from the postcondition of ``Push``
 to specify that the stack should not be modified if it is full. Then, we can
 assert in ``Use_Stack`` that after pushing an element on the stack, either the
-top of the stack is unchanged (if the stack was full already) or it is equal to
-the element just pushed.
+stack is unchanged (if the stack was full already) or its top element is equal
+to the element just pushed.
 
 .. code:: ada
 

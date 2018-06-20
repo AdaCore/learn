@@ -485,13 +485,13 @@ write this kind of specification more easily, global ghost variables may be
 used to store intermediate values of variables in the program.
 
 For example, we specify below the subprogram ``Do_Two_Things`` in two steps
-using the global variable ``V_Interm`` to store the intermediate value of
-``V`` between the two things to be done. Note that, conceptually, this
-usage could be expressed using an existential quantification on the
-variable ``V_Interm``. This cannot always be done in SPARK as
-quantification in Ada is restricted to :ada:`for ... loop` patterns. What
-is more, supplying the value of the variable may help the prover to
-effectively verify the contracts.
+using the global variable ``V_Interm`` to store the intermediate value of ``V``
+between the two things to be done. Note that this usage could be expressed
+using an existential quantification on the variable ``V_Interm``, although this
+would be very inefficient at runtime to iterate over all integers. Besides,
+this cannot always be done in SPARK as quantification in Ada is restricted to
+:ada:`for ... loop` patterns. What is more, supplying the value of the variable
+may help the prover to effectively verify the contracts.
 
 .. code:: ada
 
