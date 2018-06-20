@@ -23,7 +23,7 @@ WIDGETS_SERVER_URL = "https://cloudchecker-staging.r53.adacore.com"
 # TODO: make this a configuration parameter
 
 template = u"""
-<div example_editor="{editor_base}"
+<div example_editor="Inline Code"
      example_server="{server_url}"
      {extra_attribs}
      inline="true">
@@ -191,8 +191,6 @@ class WidgetCodeDirective(Directive):
             print files
             raise
 
-        editor_base = "Ada Main" if has_run_button else "SPARK Main"
-
         for arg in ALLOWED_EXTRA_ARGS:
             if arg in argument_list:
                 extra_attribs += ' extra_args="{}"'.format(arg)
@@ -207,7 +205,6 @@ class WidgetCodeDirective(Directive):
                       template.format(server_url=WIDGETS_SERVER_URL,
                                       files_divs=divs,
                                       shadow_files_divs=shadow_files_divs,
-                                      editor_base=editor_base,
                                       extra_attribs=extra_attribs),
                       format='html')
         ]
