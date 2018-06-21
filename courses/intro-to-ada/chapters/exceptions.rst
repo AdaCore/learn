@@ -2,16 +2,16 @@ Exceptions
 ==========
 :code-config:`reset_accumulator=True`
 
-Ada uses exceptions for error handling. Ada's exceptions are not checked, which
-means that a subprogram does not have to declare every exception kind that it
-can potentially raise.
+Ada uses exceptions for error handling.  Unlike many other languages,
+Ada speaks about ``raising``, not ``throwing``, an exception and
+``handling``, not ``catching``, an exception.
 
 Exception declaration
 ---------------------
 
-Ada exceptions are not types, they're objects, which is something peculiar
-about them if you're used to the way Java or Python does it. Here is how you
-declare an exception:
+Ada exceptions are not types, but instead objects, which may be
+peculiar to you if you're used to the way Java or Python support
+exceptions. Here's how you declare an exception:
 
 .. code:: ada
 
@@ -20,14 +20,15 @@ declare an exception:
         --  Like an object. *NOT* a type !
     end Exceptions;
 
-Even though they're objects, you're going to use each declared exception object
-as a "kind" or "family" of exceptions.
+Even though they're objects, you're going to use each declared
+exception object as a "kind" or "family" of exceptions.  Ada does not
+require that a subprogram declare every exception it can potentially
+raise.
 
 Raising an exception
 --------------------
 
-To raise an exception of our newly declared exception kind, here is how you do
-it:
+To raise an exception of our newly declared exception kind, do the following:
 
 .. code:: ada
 
@@ -36,20 +37,21 @@ it:
     procedure Main is
     begin
         raise My_Except;
-        --  Execution of current control flow abandoned, an exception of kind
+        --  Execution of current control flow abandoned; an exception of kind
         --  "My_Except" will bubble up until it is caught.
 
         raise My_Except with "My exception message";
-        --  Execution of current control flow abandoned, an exception of kind
-        --  "My_Except" with associated string will bubble up until it is caught.
+        --  Execution of current control flow abandoned; an exception of
+        --  kind "My_Except" with associated string will bubble up until
+	--  it is caught.
     end Main;
 
 Handling an exception
 ---------------------
 
-Now we need to tackle how to actually handle exceptions that were raised by us,
-or other libraries. The neat thing in Ada is that you can add an exception
-handler to any statement block, the following way:
+Next, we address how to handle exceptions that were raised by us or
+libraries that we call. The neat thing in Ada is that you can add an
+exception handler to any statement block as follows:
 
 .. code:: ada
 
@@ -72,8 +74,8 @@ handler to any statement block, the following way:
        end;
     end Open_File;
 
-But you don't need to introduce a block just to handle an exception, you can
-add it even to the statements block of your current subprogram:
+You don't need to introduce a block just to handle an exception: you
+can add it to the statements block of your current subprogram:
 
 .. code:: ada
 
@@ -91,8 +93,9 @@ add it even to the statements block of your current subprogram:
     end Open_File;
 
 .. attention::
-    Exception handlers have an important drawback that users need to be careful
-    about: Exceptions raised in the declarative section are not caught. So for
+    Exception handlers have an important restriction that
+    you need to be careful about: Exceptions raised in the declarative
+    section are not caught by the handlers of that block. So for
     example, in the following code, the exception will not be caught.
 
     .. code:: ada
@@ -117,8 +120,8 @@ add it even to the statements block of your current subprogram:
            end;
         end Be_Careful;
 
-    This is also true for the top-level exception block that is part of the
-    current subprogram.
+    This is also the case for the top-level exception block that is
+    part of the current subprogram.
 
 
 Predefined exceptions
@@ -127,13 +130,14 @@ Predefined exceptions
 Ada has a very small number of predefined exceptions:
 
 - `Constraint_Error` is the main one you might see. It is raised:
-    - When bounds or subtype doesn’t match/in general any violation of constraints.
-    - In case of overflow (-gnato for GNAT)
+    - When bounds or subtype doesn't match or, in general, any violation of
+      constraints.
+    - In case of overflow
     - In case of null dereferences
     - In case of division by 0
 
 - `Program_Error` might appear but probably less often. It is used for more
-  arcane stuff, such as elaboration issues, or erroneous execution.
+  arcane things, such as order of elaboration issues or erroneous execution.
 
 - `Storage_Error` will happen because of memory issues, such as:
      - Not enough memory (allocator)
@@ -142,6 +146,6 @@ Ada has a very small number of predefined exceptions:
 - `Tasking_Error` will happen with task related errors, such as any error
   happening during task activation.
 
-You should generally not reuse predefined exceptions, because it is then
-obvious when they happen that it is because something went wrong in a built-in
-language operation.
+You should not reuse predefined exceptions.  If you do then, it won't
+be obvious when one is raised that it is because something went wrong
+in a built-in language operation.
