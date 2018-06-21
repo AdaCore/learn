@@ -5,10 +5,10 @@ Generics
 Introduction
 ------------
 
-Generics are used for metaprogramming in Ada. They are useful for abstract
-algorithms that share common properties.
+Generics are used for metaprogramming in Ada. They are useful for
+abstract algorithms that share common properties with each other.
 
-Generics can be used for subprograms or packages. A generic is declared
+Either a subprogram or a package can be generic. A generic is declared
 by using the keyword :ada:`generic`. For example:
 
 .. raph-amiard: We are lacking a definition/link of metaprogramming.
@@ -33,10 +33,10 @@ by using the keyword :ada:`generic`. For example:
 Formal type declaration
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Formal types are abstractions of a specific type. We may, for example,
+Formal types are abstractions of a specific type. For example, we may
 want to create an algorithm that works on any integer type, or even on
-any type at all, independently of being a numeric type or not. The
-following example declares a formal type ``T`` for the ``Set`` procedure.
+any type at all, whether a numeric type or not. The following example
+declares a formal type ``T`` for the ``Set`` procedure.
 
 .. code:: ada
 
@@ -45,7 +45,7 @@ following example declares a formal type ``T`` for the ``Set`` procedure.
        generic
           type T is private;
           --  T is a formal type that indicates that any type can be used,
-          --  be it a numeric type or, for example, a record.
+          --  possibly a numeric type or possibly even a record type.
        procedure Set (E : T);
 
        procedure Set (E : T) is null;
@@ -54,8 +54,10 @@ following example declares a formal type ``T`` for the ``Set`` procedure.
        null;
     end Show_Formal_Type_Declaration;
 
-The declaration of ``T`` as :ada:`private` indicates that any type can be
-mapped to it. These are some examples of formal types:
+The declaration of ``T`` as :ada:`private` indicates that you can map
+any type to it. But you can also restrict the declaration to allow
+only some types to be mapped to that formal type.  Here are some
+examples:
 
 +-------------------------+---------------------------------------------+
 | Formal Type             | Format                                      |
@@ -70,8 +72,8 @@ mapped to it. These are some examples of formal types:
 Formal object declaration
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Formal objects are similar to subprogram parameters. Also, they can make
-use of formal types declared in the formal specification. For example:
+Formal objects are similar to subprogram parameters. They can reference
+formal types declared in the formal specification. For example:
 
 .. code:: ada
 
@@ -89,16 +91,15 @@ use of formal types declared in the formal specification. For example:
        null;
     end Show_Formal_Object_Declaration;
 
-Formal objects can be either just input parameters or use the
+Formal objects can be either input parameters or specified using the
 :ada:`in out` mode.
 
 Generic body definition
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-For the body declaration of a generic subprogram or package, we don't
-repeat the :ada:`generic` keyword: we simply start with the actual
-declaration and make use of the generic types and objects that we
-declared. For example:
+We don't repeat the :ada:`generic` keyword for the body declaration of a
+generic subprogram or package.  Instead, we start with the actual
+declaration and use the generic types and objects we declared. For example:
 
 .. code:: ada
 
@@ -121,9 +122,9 @@ declared. For example:
 Generic instantiation
 ~~~~~~~~~~~~~~~~~~~~~
 
-Generic subprograms or packages cannot be used directly. Instead, they
-need to be instantiated. The instantiation is done by using the :ada:`new`
-keyword, as illustrated in the following example:
+Generic subprograms or packages can't be used directly. Instead, they
+need to be instantiated, which we do using the :ada:`new` keyword, as
+shown in the following example:
 
 .. code:: ada
 
@@ -162,20 +163,20 @@ keyword, as illustrated in the following example:
     end Show_Generic_Instantiation;
 
 In the example above, we instantiate the procedure ``Set`` by mapping the
-formal parameters ``T`` and ``X`` to actual existing elements: the
-:ada:`Integer` type and the ``Main`` variable.
+formal parameters ``T`` and ``X`` to actual existing elements, in this case
+the :ada:`Integer` type and the ``Main`` variable.
 
 
 Generic packages
 ~~~~~~~~~~~~~~~~
 
-The previous examples focused on generic subprograms. In this section, we
-will look into generic packages. In general, the syntax is not different
-from the one used for generic subprograms: it starts with the :ada:`generic`
-keyword and continues with formal declarations. The only difference is
-that a :ada:`package` is specified instead of a subprogram.
+The previous examples focused on generic subprograms. In this section,
+we look at generic packages. The syntax is similar to that used for
+generic subprograms: we starts with the :ada:`generic` keyword and
+continue with formal declarations. The only difference is that
+:ada:`package` is specified instead of a subprogram keyword.
 
-This is an example:
+Here's an example:
 
 .. code:: ada
 
@@ -249,22 +250,24 @@ This is an example:
 
     end Show_Generic_Package;
 
-In the example above, we create a very simple container named ``Element``
-for just a single element. This container keeps track whether the element
-has been initialized or not. After the package definition, we create the
-instance ``I`` of the ``Element``. We can then use the instance by calling
-the package subprograms (e.g.: ``Set``, ``Get`` and ``Reset``).
+In the example above, we created a simple container named ``Element``,
+with just one single element. This container tracks whether the
+element has been initialized or not.
+
+After writing package definition, we create the instance ``I`` of the
+``Element``. We use the instance by calling the package subprograms
+(``Set``, ``Reset``, and ``Get``).
 
 Formal subprograms
 ~~~~~~~~~~~~~~~~~~
 
 In addition to formal types and objects, we can also declare formal
-subprograms or packages. This course only describes formal subprograms.
-Formal packages are discussed in the advanced course.
+subprograms or packages. This course only describes formal subprograms;
+formal packages are discussed in the advanced course.
 
-In order to declare a formal subprogram, we make use of the :ada:`with`
-keyword. In the example below, we declare a formal function
-(``Comparison``) that is used by the generic procedure ``Check``.
+We use the :ada:`with` keyword to declare a formal subprogram. In the
+example below, we declare a formal function (``Comparison``) to be
+used by the generic procedure ``Check``.
 
 .. code:: ada
 
@@ -297,7 +300,7 @@ keyword. In the example below, we declare a formal function
                                               T           => Integer,
                                               Comparison  => Standard."=");
        --  Here, we are mapping the standard equality operator for Integer
-       --  types to the Comparison function
+       --  types to the Comparison formal function
     begin
        A := 0;
        B := 1;
@@ -307,16 +310,16 @@ keyword. In the example below, we declare a formal function
 Examples of using generics
 --------------------------
 
-In this section, we will look into examples and strategies for abstracting
+In this section, we look at examples and strategies for abstracting
 algorithms using generics.
 
 Application: ADTs
 ~~~~~~~~~~~~~~~~~
 
 An important application of generics is to model abstract data types
-(ADTs). In fact, Ada includes a library with all sorts of ADTs using
-generics: :ada:`Ada.Containers` (described in the
-:ref:`containers section <Containers>`).
+(ADTs). In fact, Ada includes a library with numerous ADTs using
+generics: :ada:`Ada.Containers` (described in the :ref:`containers
+section <Containers>`).
 
 A typical example of an ADT is a stack:
 
@@ -385,14 +388,13 @@ A typical example of an ADT is a stack:
        Put_Line ("Last value was " & Integer'Image (Pop (Values)));
     end Show_Stack;
 
-In this example, we first create a generic stack package (``Stacks``).
-Then, we instantiate it in order to create a stack for 10 positions of
-integer values.
+In this example, we first create a generic stack package (``Stacks``)
+and then instantiate it to create a stack of 10 integer values.
 
 Abstracting a swap algorithm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let's first look into a simple procedure that swaps variables of the type
+Let's look at a simple procedure that swaps variables of type
 ``Color``:
 
 .. code:: ada
@@ -431,17 +433,17 @@ Let's first look into a simple procedure that swaps variables of the type
        Put_Line ("Value of C is " & Color'Image (C));
     end Test_Non_Generic_Swap_Colors;
 
-In this example, ``Swap_Colors`` can only be used for the ``Color`` type.
-However, a swapping algorithm can theoretically be used for any type, be
-it an enumeration or a complex record type with many elements. The
-algorithm itself is the same, just the types are different. Also, we don't
-want to duplicate the implementation for swapping variables of :ada:`Integer`
-type, for example. Therefore, such an algorithm is an perfect candidate
-for abstraction using generics.
+In this example, ``Swap_Colors`` can only be used for the ``Color``
+type.  However, this algorithm can theoretically be used for any type,
+whether an enumeration type or a complex record type with many
+elements.  The algorithm itself is the same: it's only the type that
+differs.  If, for example, we want to swap variables of:ada:`Integer`
+type, we don't want to duplicate the implementation. Therefore, such
+an algorithm is a perfect candidate for abstraction using generics.
 
-In the example below, we create a generic version of the ``Swap_Colors``
-and name it ``Generic_Swap``. This generic version can work on any type.
-This is achieved by the declaration of the formal type ``T``.
+In the example below, we create a generic version of ``Swap_Colors``
+and name it ``Generic_Swap``. This generic version can operate on any
+type due to the declaration of formal type ``T``.
 
 .. code:: ada
 
@@ -485,17 +487,18 @@ This is achieved by the declaration of the formal type ``T``.
 
 As we can see in the example, we can create the same ``Swap_Colors``
 procedure as we had in the non-generic version of the algorithm by
-declaring it as an instance of generic ``Generic_Swap`` procedure. As an
-argument to the ``Generic_Swap`` procedure, we define that the ``T`` type
-will be mapped to the ``Color`` type.
+declaring it as an instance of the generic ``Generic_Swap`` procedure. We
+specify that the generic ``T`` type will be mapped to the ``Color`` type by
+passing it as an argument to the ``Generic_Swap`` instantiation,
 
 Abstracting a reversing algorithm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The previous example using a swapping algorithm is one of the simplest
-examples of generic algorithms. Now, we will look into an algorithm for
+The previous example, with an algorithm to swap two values, is one of the
+simplest examples of using generics.  Next we study an algorithm for
 reversing elements of an array. First, let's start with a non-generic
-version of the algorithm that works specifically for the ``Color`` type:
+version of the algorithm, one that works specifically for the ``Color``
+type:
 
 .. code:: ada
 
@@ -541,14 +544,14 @@ version of the algorithm that works specifically for the ``Color`` type:
 
     end Test_Non_Generic_Reverse_Colors;
 
-The procedure ``Reverse_Color_Array`` takes an array of colors and starts
-by swapping the first and last elements of the array, and continues doing
-that with the next elements until the middle of array. At this point, the
-whole array has been reversed, as we can see in the text output of the
-test application.
+The procedure ``Reverse_Color_Array`` takes an array of colors, starts by
+swapping the first and last elements of the array, and continues doing that
+with successive elements until it reaches the middle of array. At that
+point, the entire array has been reversed, as we see from the output of the
+test program.
 
-In order to abstract this procedure, we will declare formal types for
-three components of the algorithm:
+To abstract this procedure, we declare formal types for three components of
+the algorithm:
 
     - the elements of the array (``Color`` type in the example)
 
@@ -614,19 +617,19 @@ As mentioned above, we're abstracting three components of the algorithm:
 
     - the ``Index`` type abstracts the range used for the array
 
-    - the ``Array_T`` type abstracts the array type and makes use of the
+    - the ``Array_T`` type abstracts the array type and uses the
       formal declarations of the ``T`` and ``Index`` types.
 
 Abstracting the test application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the previous example, we've focused only on abstracting the reversing
-algorithm. However, we could have decided to also abstract our little
-test application. This could be useful if we, for example, decide to
-test other procedures that change elements of an array.
+In the previous example we've focused only on abstracting the reversing
+algorithm itself. However, we could have decided to also abstract our small
+test application. This could be useful if we, for example, decide to test
+other procedures that change elements of an array.
 
-In order to achieve this, we have to abstract some elements. We
-will therefore declare the following formal parameters:
+In order to do this, we again have to choose the elements to abstract. We
+therefore declare the following formal parameters:
 
     - ``S``: the string containing the array name
 
@@ -635,10 +638,10 @@ will therefore declare the following formal parameters:
 
     - a procedure ``Test`` that performs some operation on the array
 
-Note that ``Image`` and ``Test`` are examples of formal subprograms.
-Also, note that ``S`` is an example of a formal object.
+Note that ``Image`` and ``Test`` are examples of formal subprograms and
+``S`` is an example of a formal object.
 
-This is a version of the test application that makes use of the generic
+Here is a version of the test application making use of the generic
 ``Perform_Test`` procedure:
 
 .. code:: ada
@@ -719,8 +722,8 @@ In this example, we create the procedure
 ``Perform_Test_Reverse_Color_Array`` as an instance of the generic
 procedure (``Perform_Test``). Note that:
 
-    - For the formal ``Image`` function, we make use of the ``'Image``
-      attribute of the ``Color`` type
+    - For the formal ``Image`` function, we use the ``'Image`` attribute of
+      the ``Color`` type
 
     - For the formal ``Test`` procedure, we reference the
       ``Reverse_Array`` procedure from the package.
