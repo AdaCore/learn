@@ -160,7 +160,7 @@ which is not read:
 
     end Show_Incorrect_Param_Mode;
 
-Note that, in SPARK, a parameter which is not read but not updated on
+Note that, in SPARK, an :ada:`out` parameter which is not updated on
 every path should be declared as :ada:`in out` as its final value may
 depend on its initial value. SPARK is stricter here than Ada, in order
 to support static detection of errors. The table below summarizes the
@@ -335,10 +335,11 @@ using the :ada:`Result` attribute.
 
 It is often the case that the final value of a variable depends on its own
 initial value. This can be specified in a concise way using the :ada:`+`
-character, like in the specification of ``Set_X_To_X_Plus_Y``. Note that,
-if there are more than one variable on the left of the arrow, a :ada:`+`
-means that each variables depends on itself, and not that they all depend
-on each other.
+character, like in the specification of ``Set_X_To_X_Plus_Y``. Note that, if
+there are more than one variable on the left of the arrow, a :ada:`+` means
+that each variables depends on itself, and not that they all depend on each
+other. The corresponding dependency may be written with space :ada:`=> +` or
+without space :ada:`=>+`.
 
 It can also be the case that an input is not used to compute the final
 value of any output. This can be expressed by putting :ada:`null` at the
@@ -412,7 +413,7 @@ global variables accessed and dependencies less precise. But it also
 affects detection of reads of uninitialized variables.
 
 Indeed, it is often impossible for flow analysis to decide if the entire
-object has been initialized, and so, even in really simple cases. For
+object has been initialized, even in really simple cases. For
 example, after initializing every element of an unconstrained array ``A``
 with zero in a loop, we may still have a flow message stating that the
 array is not initialized. To solve this issue, a user can either use an

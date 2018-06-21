@@ -565,12 +565,12 @@ assertions. They are especially useful to refer to initial values of
 parameters and expressions which cannot be accessed using the :ada:`'Old`
 attribute outside of the subprogram's postcondition.
 
-In the example shown below, to help GNATprove discharge the postcondition
-of ``P``, we want to assert that it holds separately in every branch of an
-:ada:`if` statement. Since in these assertions, unlike in ``P``'s
-postconditions, we cannot use the :ada:`'Old` attribute to access the
-initial value of the parameter ``X``, we must resort to introducing a
-local ghost constant ``X_Init`` for this value.
+In the example shown below, to help GNATprove discharge the postcondition of
+``P``, we want to assert that it holds separately in every branch of an
+:ada:`if` statement. Since in these assertions we cannot use the :ada:`'Old`
+attribute to access the initial value of the parameter ``X`` (unlike in ``P``'s
+postcondition), we must resort to introducing a local ghost constant ``X_Init``
+for this value.
 
 .. code:: ada spark-report-all
 
@@ -605,7 +605,7 @@ local ghost constant ``X_Init`` for this value.
     end Show_Local_Ghost;
 
 Local ghost variables can also be used for more complex things such as
-building a data-structure that serves as witness of a complex property of
+building a data-structure that serves as witness for a complex property of
 the subprogram. In our example, we want to prove that the ``Sort``
 procedure do not create new elements, that is, all the elements that are
 in ``A`` after the sort were already in ``A`` before the sort. Note that
@@ -633,11 +633,11 @@ Ghost procedures cannot affect the value of normal variables. Therefore,
 they are mostly used to perform treatments on ghost variables or to group
 together a set of intermediate assertions.
 
-Abstracting away treatment of ghost variables or assertions inside a ghost
-procedure has several advantages. First, it enhances expressivity as, to
-simplify the removal of ghost code by the compiler, the only ghost
-statements that are allowed to appear in normal code are assignments to
-ghost variables and ghost procedure calls.
+Abstracting away the treatment of ghost variables or assertions inside a ghost
+procedure has several advantages. First, it allows to use any code inside the
+ghost procedure. This is not the case outside ghost procedures, where the only
+ghost statements allowed are assignments to ghost variables and calls to ghost
+procedures.
 
 As an example, the :ada:`for` loop contained in ``Increase_A`` could not
 appear by itself in normal code:
@@ -779,7 +779,7 @@ Loop Invariants
 ~~~~~~~~~~~~~~~
 
 To overcome these limitations, users can provide additional information to
-the tool in the form of a loop invariant. In SPARK, a loop invariant
+GNATprove in the form of a loop invariant. In SPARK, a loop invariant
 is a Boolean expression which should hold at every iteration of the loop.
 Like every other assertion, it can be checked at runtime by compiling the
 program with assertions enabled.
@@ -820,14 +820,14 @@ stating that the first element of ``A`` is not ``E``:
 
     end Show_Find;
 
-To verify this invariant, GNATprove will generate two checks. The first
+To verify this invariant, GNATprove generates two checks. The first
 one, that checks whether the assertion holds in the first iteration of the
-loop, will not be verified by the tool. Indeed, there is no reason for the
+loop, is not verified by GNATprove. Indeed, there is no reason for the
 first element of ``A`` to be different from ``E`` in this iteration.
-However, the second check will succeed. Indeed, it is easy to deduce that,
+However, the second check succeeds. Indeed, it is easy to deduce that,
 if the first element of ``A`` was not ``E`` in a given iteration, then it
 is still not ``E`` in the next one. Note that, if we move the invariant to
-the end of the loop, then it will be successfully verified by GNATprove.
+the end of the loop, then it is successfully verified by GNATprove.
 
 Not only do loop invariants allow to verify complex properties over loops,
 they are also used by GNATprove to verify other properties, such as the
@@ -903,7 +903,7 @@ Next, the loop invariant should be precise enough to allow proving absence of
 runtime errors both in statements from the loop's body (INSIDE) and in
 statements following the loop (AFTER). To achieve this, users should remember
 that every information concerning a variable modified in the loop that is not
-stated in the invariant will be forgotten by the tool. In particular, users
+stated in the invariant will be forgotten by GNATprove. In particular, users
 should take care to include in their invariant what is usually called the
 loop's frame condition. It consists in stating the preservation of parts of
 composite variables that have not been modified by the loop.
@@ -969,7 +969,7 @@ condition` stating what part of the array has not been modified so far:
 .. code-block:: ada
 
              pragma Loop_Invariant
-               (for all J in K + 1 .. A'Last => A (J) = A'Loop_Entry (J));
+               (for all J in K .. A'Last => A (J) = (if J > K then A'Loop_Entry (J)));
 
 The user-provided and the internally-generated loop invariants are then used to
 prove ``PRESERVE``. In more complex cases, the heuristics used by GNATprove to
@@ -1090,7 +1090,7 @@ This is correct as ``Get_Model`` is used only in contracts. Note that calls to
 efficient. This is fine because ``Get_Model`` is only used for verification,
 not in the final production code. This is enforced by making it a ghost
 function and producing the final production code with appropriate compiler
-switches (not using ``-gnata``).
+switches (not using ``-gnata``) that ensure that assertions are ignored.
 
 
 Example #2
