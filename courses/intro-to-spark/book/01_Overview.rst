@@ -254,8 +254,9 @@ while ``Incr_And_Log`` is not as it attempts to update the global variable
 No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Another restriction imposed in the SPARK subset concerns aliasing. There are
-two reasons to forbid aliasing in SPARK:
+Another restriction imposed in the SPARK subset concerns aliasing. We say that
+two names are aliased if they refer to the same object. There are two reasons
+to forbid aliasing in SPARK:
 
 - First, it makes verification more difficult as it requires taking into
   account the fact that updates to two variables with different names may in
@@ -265,8 +266,7 @@ two reasons to forbid aliasing in SPARK:
   parameters are aliased, the results of a subprogram call may depend on
   compiler specific treatment, like parameter passing mechanisms.
 
-We say that two names are aliased if they refer to the same object. Since
-access types (`pointers
+Since access types (`pointers
 <https://en.m.wikipedia.org/wiki/Pointer_(computer_programming)>`_ in Ada) are
 not allowed in SPARK, aliasing can only occur as part of the parameter passing
 in a subprogram call. As functions have no side-effects in SPARK, aliasing of

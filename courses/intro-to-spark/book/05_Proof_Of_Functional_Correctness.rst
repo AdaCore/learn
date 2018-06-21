@@ -635,7 +635,7 @@ together a set of intermediate assertions.
 
 Abstracting away treatment of ghost variables or assertions inside a ghost
 procedure has several advantages. First, it enhances expressivity as, to
-simplify the removal of ghost code by the compiler: the only ghost
+simplify the removal of ghost code by the compiler, the only ghost
 statements that are allowed to appear in normal code are assignments to
 ghost variables and ghost procedure calls.
 
@@ -972,7 +972,47 @@ condition` stating what part of the array has not been modified so far:
                (for all J in K + 1 .. A'Last => A (J) = A'Loop_Entry (J));
 
 The user-provided and the internally-generated loop invariants are then used to
-prove ``PRESERVE``.
+prove ``PRESERVE``. In more complex cases, the heuristics used by GNATprove to
+generate the frame condition are not sufficient, and a user must provide one as
+loop invariant. For example, consider a version of ``Map`` where the result of
+applying ``F`` to an element at index ``K`` is stored at index ``K-1``:
+
+.. code:: ada spark-report-all
+
+    package Show_Map is
+
+       type Nat_Array is array (Positive range <>) of Natural;
+
+       function F (V : Natural) return Natural is
+         (if V /= Natural'Last then V + 1 else V);
+
+       procedure Map (A : in out Nat_Array);
+
+    end Show_Map;
+
+    package body Show_Map is
+
+       procedure Map (A : in out Nat_Array) is
+          A_I : constant Nat_Array := A with Ghost;
+       begin
+          for K in A'Range loop
+             if K /= A'First then
+                A (K-1) := F (A (K));
+             end if;
+             pragma Loop_Invariant
+               (for all J in A'First .. K =>
+                 (if J /= A'First then A (J-1) = F (A'Loop_Entry (J))));
+             -- pragma Loop_Invariant
+             --  (for all J in K .. A'Last => A (J) = A'Loop_Entry (J));
+          end loop;
+          pragma Assert (for all K in A'Range =>
+                          (if K /= A'First then A (K-1) = F (A_I (K))));
+       end Map;
+
+    end Show_Map;
+
+You need to uncomment the second loop invariant containing the frame condition
+in order to prove the assertion after the loop.
 
 
 Code Examples / Pitfalls

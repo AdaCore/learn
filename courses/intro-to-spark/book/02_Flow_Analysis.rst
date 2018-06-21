@@ -204,7 +204,7 @@ variable ``X`` and does not access any other global variable. If we do this
 through a comment as usually done in other languages, GNATprove cannot verify
 that the code complies with this specification:
 
-.. code:: ada spark-flow
+.. code-block:: ada
 
     package Show_Global_Contracts is
 
@@ -269,7 +269,7 @@ not depend on any global variable. If we do this
 through a comment as usually done in other languages, GNATprove cannot verify
 that the code complies with this specification:
 
-.. code:: ada spark-flow
+.. code-block:: ada
 
     package Show_Depends_Contracts is
 
