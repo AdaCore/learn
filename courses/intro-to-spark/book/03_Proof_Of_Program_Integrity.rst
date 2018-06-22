@@ -180,7 +180,7 @@ addition following the call to ``Increment`` cannot overflow.
     begin
        X := Integer'Last - 2;
        Increment (X);
-       --  Here GNATprove does not know the value of X
+       --  After the call, GNATprove no longer knows the value of X
 
        X := X + 1;
        --  medium: overflow check might fail
@@ -357,10 +357,11 @@ On the other hand, depending on the context, we may have preferred to have
 GNATprove use the mathematical semantics of addition and properly verify that
 no error will ever be raised at runtime in the body of ``Add``. This behavior
 may be obtained by using the compiler switch ``-gnato??`` (for example
-``--gnato13``) which allows to independently set the overflow mode in code and
-assertions to either reduce the number of overflow checks or to completely
-eliminate them. Note that this switch will also make the compiler avoid
-overflows at runtime.
+``-gnato13``) which allows to independently set the overflow mode in code (the
+first figure) and assertions (the second figure) to either reduce the number of
+overflow checks (using value 2) or to completely eliminate them (using value
+3), while the default Ada mechanism can also be preserved (using value 1). Note
+that this switch will also make the compiler avoid overflows at runtime.
 
 
 Additional Assertions and Contracts
@@ -373,7 +374,7 @@ postconditions, as well as assertions introduced by the pragma :ada:`Assert`.
 New contracts have also been introduced for the process of formal
 verification. For example, the new pragma :ada:`Assume` is handled as an
 assertion at execution but introduces an assumption for proof of program,
-that is, a Boolean expression which is assumed to be true by the tool
+that is, a Boolean expression which is assumed to be true by GNATprove
 without any verification. This feature is useful but must be used with
 great care.
 
@@ -528,7 +529,7 @@ happen for two reasons:
 
 - First, the property may be unprovable because some assertion is missing in
   the code. In particular, this can be induced by the modularity of the
-  analysis which causes the tool to only know explicitly written properties
+  analysis which causes GNATprove to only know explicitly written properties
   about some data.
 
 - Second, there may also be some missing information in the logical model of

@@ -11,6 +11,17 @@ abstraction is and how it can be specified in SPARK. We will provide
 details on how it impacts GNATprove's analysis both in terms of
 information flow and proof of program properties.
 
+State abstraction allows to:
+
+- express data dependencies (:ada:`Global` contract) and flow dependencies
+  (:ada:`Depends` contract) that would not be expressible otherwise, as some
+  data read/written is not visible at the point where the subprogram is
+  declared;
+
+- reduce the number of variables that need to be considered in flow analysis
+  and proof, which may be critical for scaling the analysis to programs with
+  thousands of global variables.
+
 
 What is an Abstraction?
 ---------------------------------------------------------------------
@@ -475,11 +486,11 @@ subprograms, where state refinements are visible. These contracts are
 exactly like normal :ada:`Global` and :ada:`Depends` contracts, except
 they refer directly to the hidden state of the package.
 
-When a subprogram is called inside the package's body, these refined
-contracts are used instead of the general ones, so that the verification
-can be as precise as possible. Note that refined :ada:`Global` and
-:ada:`Depends` are optional: if they are not specified by the user, the
-tool will compute them to check the package's implementation.
+When a subprogram is called inside the package's body, these refined contracts
+are used instead of the general ones, so that the verification can be as
+precise as possible. Note that refined :ada:`Global` and :ada:`Depends` are
+optional: if they are not specified by the user, GNATprove will compute them to
+check the package's implementation.
 
 For our ``Stack`` example, we could add refined contracts like this:
 
@@ -738,7 +749,7 @@ Note that we omitted the dependency for ``V1``, as its initial value does
 not depend on any external variable. This dependency could also have been
 stated explicitly, writing :ada:`V1 => null`.
 
-Dependencies of initial values can be computed by the tool if no
+Dependencies of initial values can be computed by GNATprove if no
 :ada:`Initializes` aspect is supplied. On the other hand, if an
 :ada:`Initializes` aspect is provided for a package, then it should be
 complete, that is, every initialized state of the package should be
@@ -980,7 +991,7 @@ This example is correct.  Flow analysis computes refined versions of
 :ada:`Global` contracts for internal calls which are used to verify that
 ``Reset_All`` indeed properly initializes ``State``. Note that
 :ada:`Refined_Global` and :ada:`Global` annotations are not mandatory, they can
-also be computed by the tool.
+also be computed by GNATprove.
 
 Example #6
 ~~~~~~~~~~
