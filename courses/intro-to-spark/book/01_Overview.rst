@@ -254,9 +254,10 @@ while ``Incr_And_Log`` is not as it attempts to update the global variable
 No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Another restriction imposed in the SPARK subset concerns aliasing. We say that
-two names are aliased if they refer to the same object. There are two reasons
-to forbid aliasing in SPARK:
+Another restriction imposed in the SPARK subset concerns `aliasing
+<https://en.wikipedia.org/wiki/Aliasing_(computing)>`_. We say that two names
+are aliased if they refer to the same object. There are two reasons to forbid
+aliasing in SPARK:
 
 - First, it makes verification more difficult as it requires taking into
   account the fact that updates to two variables with different names may in
