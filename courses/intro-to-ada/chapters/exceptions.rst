@@ -3,8 +3,8 @@ Exceptions
 :code-config:`reset_accumulator=True`
 
 Ada uses exceptions for error handling.  Unlike many other languages,
-Ada speaks about ``raising``, not ``throwing``, an exception and
-``handling``, not ``catching``, an exception.
+Ada speaks about *raising*, not *throwing*, an exception and
+*handling*, not *catching*, an exception.
 
 Exception declaration
 ---------------------
