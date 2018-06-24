@@ -6,37 +6,36 @@ Design by contracts
 .. role:: ada(code)
    :language: ada
 
-Contracts are used in programming to specify expectations. For example,
-parameter modes of a subprogram can be viewed as a form of contract.
-When the specification of subprogram ``Op`` declares a parameter using
-:ada:`in` mode, the caller of ``Op`` knows that the :ada:`in` argument
-won't be changed by ``Op``. In other words, the caller expects that ``Op``
-doesn't modify the argument it's providing, but rather just read the
-information stored in the argument. Constraints and subtypes are other
-examples of contracts. In summary, these elements allow for improving the
-consistency of the application.
+Contracts are used in programming to codify expectations.  Parameter modes
+of a subprogram can be viewed as a simple of form of contracts.  When the
+specification of subprogram ``Op`` declares a parameter using :ada:`in`
+mode, the caller of ``Op`` knows that the :ada:`in` argument won't be
+changed by ``Op``. In other words, the caller expects that ``Op`` doesn't
+modify the argument it's providing, but just reads the information stored
+in the argument. Constraints and subtypes are other examples of
+contracts. In general, these specification improve the consistency of the
+application.
 
-In general, design-by-contract programming refers to techniques that
-include pre- and postconditions, type invariants, and subtype predicates.
-We will look into those topics in this section.
+*Design-by-contract* programming refers to techniques that include pre- and
+postconditions, subtype predicates, and type invariants.  We study those
+topics in this chapter.
 
-Pre and postconditions
+Pre- and postconditions
 ----------------------
 
-Pre and postconditions refer to expectations regarding input and output
-parameters of subprograms, and return value of functions. If we say that
-certain requirements should be met before calling a subprogram ``Op``,
-we're talking about preconditions. Similarly, if certain requirements
-should be met after a call to the subprogram ``Op``, we're talking about
-postconditions. We can think of precondition and postconditions as
-promisses between the subprogram caller and the callee: a precondition is
-a promise from the caller to the callee, and a postcondition is a promise
-from the callee to the caller.
+Pre- and postconditions provide expectations regarding input and output
+parameters of subprograms and return value of functions. If we say that
+certain requirements must be met before calling a subprogram ``Op``, those
+are preconditions. Similarly, if certain requirements must be met after a
+call to the subprogram ``Op``, those are postconditions. We can think of
+preconditions and postconditions as promises between the subprogram caller
+and the callee: a precondition is a promise from the caller to the callee,
+and a postcondition is a promise in the other direction.
 
-Pre and postconditions are specified by using a :ada:`with` clause in the
-subprogram declaration. A :ada:`with Pre => <condition>` clause
-specifies a precondition, whereas a :ada:`with Post => <condition>` clause
-specifies a postcondition.
+Pre- and postconditions are specified using a :ada:`with` clause in the
+subprogram declaration. A :ada:`with Pre => <condition>` clause specifies a
+precondition and a :ada:`with Post => <condition>` clause specifies a
+postcondition.
 
 The following code shows an example of preconditions:
 
@@ -61,48 +60,47 @@ The following code shows an example of preconditions:
        DB_Entry ("",     21);  --  Precondition will fail!
     end Show_Simple_Precondition;
 
-In this example, we want to ensure that the name field in our database
-doesn't contain an empty string. We can implement this requirement by
-using a precondition that ensures that the length of the string used for
-the :ada:`Name` parameter of the :ada:`DB_Entry` procedure is greater than
-zero. If another subprogram attempts to call the :ada:`DB_Entry` procedure
-with an empty string for the :ada:`Name` parameter, the call will fail
-because the precondition is not met.
+In this example, we want to prevent the name field in our database from
+containing an empty string. We implement this requirement by using a
+precondition requiring that the length of the string used for the
+:ada:`Name` parameter of the :ada:`DB_Entry` procedure is greater than
+zero. If the :ada:`DB_Entry` procedure is called with an empty string for
+the :ada:`Name` parameter, the call will fail because the precondition is
+not met.
 
-Note that the :ada:`pragma Assertion_Policy` statement is used to force
-the compiler to generate a check for the precondition. The same
-:ada:`pragma` will be used for other kinds of contracts in the remaining
-examples from this section. When using GNAT, it's possible to trigger that
-behavior globally via a configuration pragma or via a command-line switch
---- please consult the GNAT documentation on
-`configuration pragmas <http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#configuration-pragmas>`_
+The :ada:`pragma Assertion_Policy` statement is used to force the compiler
+to generate code to check the precondition. The same :ada:`pragma` is used
+similarly for the other kinds of contracts shown in the rest of this
+chapter. When using GNAT, you can get that behavior globally via a
+configuration pragma or a command-line switch --- please consult the GNAT
+documentation on `configuration pragmas
+<http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#configuration-pragmas>`_
 for details.
 
-Before we look into our next example, let's discuss briefly quantified
-expressions, which are quite useful to specify pre and postconditions in a
-concise way. Quantified expressions return a Boolean value indicating
-whether an array or container matches the expected condition. They have
-the following form:
-:ada:`(for all I in A'Range => <condition on A(I)>`, where :ada:`A` is an
-array and :ada:`I` is the current index. In other words, quantified
-expressions using :ada:`for all` check each element of the array or
-container in order to assess whether the condition is true. For example:
+Before we get to our next example, let's briefly discuss quantified
+expressions, which are quite useful in concisely writing pre- and
+postconditions. Quantified expressions return a Boolean value indicating
+whether elements of an array or container matches the expected
+condition. They have the form: :ada:`(for all I in A'Range => <condition on
+A(I)>`, where :ada:`A` is an array and :ada:`I` is an index.  Quantified
+expressions using :ada:`for all` check whether the condition of true for
+every element. For example:
 
 .. code:: ada
     :class: ada-nocheck
 
     (for all I in A'Range => A (I) = 0)
 
-This quantified expression will verify whether all elements of the array
+This quantified expression is only true when all elements of the array
 :ada:`A` have a value of zero.
 
-Another kind of quantified expressions makes use of :ada:`for some`. The
-form is basically the same:
-:ada:`(for some I in A'Range => <condition on A(I)>`. However, in this
-case, finding a single element that matches the condition is sufficient to
-determine that the expression is valid for the whole array :ada:`A`.
+Another kind of quantified expressions uses :ada:`for some`. The form is
+looks similar: :ada:`(for some I in A'Range => <condition on
+A(I)>`. However, in this case the qualified expression tests whether the
+condition is true only on *some* elements (hence the name) instead of all
+elements.
 
-Let's now discuss postconditions using the following example:
+We illustrate postconditions using the following example:
 
 .. code:: ada
     with Ada.Text_IO; use Ada.Text_IO;
@@ -142,23 +140,20 @@ Let's now discuss postconditions using the following example:
        end loop;
     end Show_Simple_Postcondition;
 
-In this example, we declare a signed 8-bit type :ada:`Int_8` and an array
-of that type (:ada:`Int_8_Array`). We want to ensure that, when calling
-the procedure :ada:`Double` for an object of :ada:`Int_8_Array` type, each
-element of the array will be doubled. This is implemented by a
-postcondition that uses a :ada:`for all` expression. The postcondition
-also makes use of the original value of the parameter before the call.
-The :ada:`'Old` attribute is used in this case to retrieve the original
-value.
+We declare a signed 8-bit type :ada:`Int_8` and an array of that type
+(:ada:`Int_8_Array`). We want to ensure each element of the array is
+doubled after calling the procedure :ada:`Double` for an object of the
+:ada:`Int_8_Array` type. We do this with a postcondition using a :ada:`for
+all` expression. This postcondition also uses the :ada:`'Old` attribute to
+refer to the original value of the parameter (before the call).
 
-Also, we want to ensure that, in calls to the
-:ada:`Double` function for the :ada:`Int_8` type, the result will be
-greater than the input value. This is implemented by a postcondition that
-uses the :ada:`'Result` attribute of the function and compares it to the
-input value.
+We also want to ensure that the result of calls to the :ada:`Double`
+function for the :ada:`Int_8` type are greater than the input to that call.
+To do that, we write a postcondition using the :ada:`'Result` attribute of
+the function and comparing it to the input value.
 
-We can use pre and postconditions at the same time in the declaration of
-a subprogram. For example:
+We can use both pre- and postconditions in the declaration of a single
+subprogram. For example:
 
 .. code:: ada
     :class: ada-run-expect-failure
@@ -188,36 +183,35 @@ a subprogram. For example:
        Put_Line ("Double of 12 is " & Int_8'Image (V));
     end Show_Simple_Contract;
 
-In this example, we want to ensure  that, in calls to the
-:ada:`Double` function for the :ada:`Int_8` type, the input value will not
-overflow in the call to the function. This is implemented by converting
-the input value to the :ada:`Integer` type, which is used to store the
-temporary calculation, and check if the result is still in the appropriate
-range for the :ada:`Int_8` type. The postcondition in this example is the
-same as in the previous example.
+In this example, we want to ensure that the input value of calls to the
+:ada:`Double` function for the :ada:`Int_8` type won't cause overflow in
+that function. We do this by converting the input value to the
+:ada:`Integer` type, which is used for the temporary calculation, and check
+if the result is in the appropriate range for the :ada:`Int_8` type. We
+have the same postcondition in this example as in the previous one.
 
 Predicates
 ----------
 
-Predicates are used to define expectations regarding types. They are
-similar to pre and postconditions, and can be viewed as conditions that
-are verified for a given type. This allows for checking if an element of
-type ``T`` is conformant to the requirements.
+Predicates specify expectations regarding types. They're similar to pre-
+and postconditions, but apply to types instead of subprograms.  Their
+conditions are checked for each object of a given type, which allows
+verifying that an object of type ``T`` is conformant to the requirements of
+its type.
 
-There are two kinds of predicates: static and dynamic predicates. In
-simple terms, static predicates are used to check types at compile-time,
-whereas dynamic predicates are used for checks at run-time. We can also
-say that static predicates are used for scalar types, whereas dynamic
-predicates are used for all remaining (more complex) types.
+There are two kinds of predicates: static and dynamic. In simple terms,
+static predicates are used to check objects at compile-time, while dynamic
+predicates are used for checks at run time. Normally, static predicates are
+used for scalar types and dynamic predicates for the more complex types.
 
-Static and dynamic predicates are specified by using the following
-clauses, respectively:
+Static and dynamic predicates are specified using the following clauses,
+respectively:
 
 - :ada:`with Static_Predicate => <property>`
 
 - :ada:`with Dynamic_Predicate => <property>`
 
-Let's discuss dynamic predicates with the following example:
+Let's use the following example to illustrate dynamic predicates:
 
 .. code:: ada
     :class: ada-run-expect-failure
@@ -279,40 +273,36 @@ Let's discuss dynamic predicates with the following example:
     end Show_Dynamic_Predicate_Courses;
 
 In this example, the package :ada:`Courses` defines a type :ada:`Course`
-for individual courses, and a type :ada:`Course_Container` that contains
-all courses. We want to ensure that the start date of every course is not
-set to a date after the end date of the same course. In other words, we
-want to check that the start and end dates are consistent to each other.
-This is implemented by the function :ada:`Check`. In order to enforce this
-rule, we declare a dynamic predicate for the :ada:`Course` type that calls
-the :ada:`Check` function for every object. For example, when we enter our
-course using the procedure :ada:`Add`, :ada:`Check` will be called during
-the object creation to ensure that the object that is being created
-matches our expectations.
+and a type :ada:`Course_Container`, an object of which contains all
+courses. We want to ensure that the dates of each course are consistent,
+specifically that the start date is no later than the end date. To enforce
+this rule, we declare a dynamic predicate for the :ada:`Course` type that
+performs the check for each object.  The predicate uses the type name where
+a variable of that type would normally be used: this is a reference to the
+instance of the object being tested.
 
-Static predicates, as mentioned above, are used for scalar types and
-checked during compilation time. They are particularly useful for
-representing non-contiguous elements of an enumeration. A classic example
-is a list of week days:
+Static predicates, as mentioned above, are mostly used for scalar types and
+checked during compilation. They're particularly useful for representing
+non-contiguous elements of an enumeration. A classic example is a list of
+week days:
 
 .. code:: ada
     :class: ada-nocheck
 
     type Week is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
 
-We can easily create a sub-list of working days in the week by specifying
-a :ada:`subtype` with a range based on :ada:`Week`. For example:
+We can easily create a sub-list of work days in the week by specifying a
+:ada:`subtype` with a range based on :ada:`Week`. For example:
 
 .. code:: ada
     :class: ada-nocheck
 
     subtype Work_Week is Week range Mon .. Fri;
 
-However, ranges in Ada can only be specified for contiguous lists: they
-won't allow us to pick specific days. For example, we may want to create a
-list containing the first, middle and last day of the working week to
-make some checks in our application. In that case, we can use a static
-predicate to specify this list:
+Ranges in Ada can only be specified as contiguous lists: they don't allow
+us to pick specific days. However, we may want to create a list containing
+just the first, middle and last day of the work week. To do that, we use a
+static predicate:
 
 .. code:: ada
     :class: ada-nocheck
@@ -320,7 +310,7 @@ predicate to specify this list:
    subtype Check_Days is Work_Week
      with Static_Predicate => Check_Days in Mon | Wed | Fri;
 
-Let's look now at a complete example:
+Let's look at a complete example:
 
 .. code:: ada
     :class: ada-run-expect-failure
@@ -377,51 +367,44 @@ Let's look now at a complete example:
        Display_Tests (Num_Tests);
     end Show_Predicates;
 
-In this example, we want to have tests in our application that happen
-three days in the working week. These days are specified in
-:ada:`Test_Days` subtype. Also, we want to track the number of tests
-that happen each day. Therefore, we declare the type :ada:`Tests_Week` as
-an array containing the number of tests. According to our requirements,
-these tests should happen only in the aforementioned three days; in other
-days, no test should be performed. This requirement is implemented as a
-dynamic predicate of the type :ada:`Tests_Week`. Finally, in our
-application, the actual information about these tests is stored in
-the array :ada:`Num_Tests` based on the :ada:`Tests_Week` type.
+Here we have an application that wants to perform tests only on three days
+of the work week. These days are specified in the :ada:`Test_Days`
+subtype. We want to track the number of tests that occur each day. We
+declare the type :ada:`Tests_Week` as an array, an object of which will
+contain the number of tests done each day. According to our requirements,
+these tests should happen only in the aforementioned three days; on other
+days, no tests should be performed. This requirement is implemented with a
+dynamic predicate of the type :ada:`Tests_Week`. Finally, the actual
+information about these tests is stored in the array :ada:`Num_Tests`,
+which is an instance of the :ada:`Tests_Week` type.
 
-In the initialization of :ada:`Num_Tests`, the dynamic predicate of the
-:ada:`Tests_Week` type is verified. If we have a non-conformant value
-there, the predicate check will fail. However, as we can see in our
-example, individual assignments to elements of the array do not trigger a
-check. The reason is that, in the case of complex data structures such as
-arrays or records, the initialization of the complete structure may not be
-performed with a single assignment. Therefore, we cannot check for
-consistency at this point. However, as soon as this data structure is
-passed as an argument to a subprogram, the dynamic predicate will be
-checked because the subprogram expects the data structure to be
-consistent. This is what happens in the last call to :ada:`Display_Tests`
-in our example. Here, the predicate check fails because of the previous
-assignment with a non-conformant value.
+The dynamic predicate of the :ada:`Tests_Week` type is verified during the
+initialization of :ada:`Num_Tests`. If we have a non-conformant value
+there, the check will fail. However, as we can see in our example,
+individual assignments to elements of the array do not trigger a check. We
+can't check for consistency at this point because the initialization of the
+a complex data structure (such as arrays or records) may not be performed
+with a single assignment. However, as soon as the object is passed as an
+argument to a subprogram, the dynamic predicate is checked because the
+subprogram requires the object to be consistent. This happens in the last
+call to :ada:`Display_Tests` in our example. Here, the predicate check
+fails because the previous assignment has a non-conformant value.
 
 Type invariants
 ---------------
 
-Type invariants are also used to define expectations regarding types.
-However, while predicates are used for all *non-private* types,
-type invariants are used exclusively to define expectations regarding
-private types declared in a package. If a type ``T`` from a
-package ``P`` has a type invariant, this ensures that operations on
-objects of type ``T`` will always be consistent.
+Type invariants are another way of specifying expectations regarding types.
+While predicates are used for *non-private* types, type invariants are used
+exclusively to define expectations about private types. If a type ``T``
+from a package ``P`` has a type invariant, the results of operations on
+objects of type ``T`` are always consistent with that invariant.
 
-Type invariants are specified by using a
-:ada:`with Type_Invariant => <property>` clause. Similarly to
-postconditions, the *property* defines a condition that allows us to check
-if an element of type ``T`` is conformant to the requirements. In this
-sense, type invariants can be viewed as a sort of postcondition for
-private types.
-
-Type invariants are similar to predicates. However, there are some
-differences in terms of checks. The following table summarizes the
-differences:
+Type invariants are specified with a :ada:`with Type_Invariant =>
+<property>` clause. Like predicates, the *property* defines a condition
+that allows us to check if an object of type ``T`` is conformant to its
+requirements. In this sense, type invariants can be viewed as a sort of
+predicate for private types.  However, there are some differences in terms
+of checks. The following table summarizes the differences:
 
 +------------+-----------------------------+-----------------------------+
 | Element    | Subprogram parameter checks | Assignment checks           |
@@ -436,7 +419,7 @@ differences:
 +------------+-----------------------------+-----------------------------+
 
 We could rewrite our previous example and replace dynamic predicates by
-type invariants. This would be the outcome:
+type invariants. It would look like this:
 
 .. code:: ada
     :class: ada-run-expect-failure
@@ -512,6 +495,6 @@ type invariants. This would be the outcome:
                   End_Date   => Time_Of (2018, 5, 10)));
     end Show_Type_Invariant;
 
-Note that, in the previous example, the :ada:`Course` type was a visible
-(public) type of the :ada:`Courses` package, whereas, in this example, it
-is a private type.
+The major difference is that the :ada:`Course` type was a visible (public)
+type of the :ada:`Courses` package in the previous example, but in this
+example is a private type.
