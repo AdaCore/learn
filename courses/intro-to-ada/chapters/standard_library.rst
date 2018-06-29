@@ -94,7 +94,7 @@ types and operations from the instantiated package. Also, the example
 introduces another operation on the vector: ``Length``, which
 retrieves the number of elements in the vector. We can use the dot
 notation because ``Vector`` is a tagged type, allowing us to write
-either ``V.Length`` or ``Length(V)``.
+either ``V.Length`` or ``Length (V)``.
 
 Appending and prepending elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -220,7 +220,7 @@ elements of a vector:
 Iterating
 ^^^^^^^^^
 
-The easiest way to iterate over a container to use a :ada:`for E of
+The easiest way to iterate over a container is to use a :ada:`for E of
 Our_Container` loop. This gives us a reference (``E``) to the element
 at the current position. We can then use ``E`` directly.  For example:
 
@@ -928,7 +928,7 @@ Let's look at an example that makes use of these operations:
        S.Delete (13);
 
        --  Calling S.Delete (13) again raises Constraint_Error
-       --  because the element not longer is present
+       --  because the element is no longer present
        --  in the set, so it can't be deleted.
        --  We can call V.Exclude instead:
        S.Exclude (13);
@@ -1073,7 +1073,7 @@ Indefinite maps
 The previous sections presented containers for elements of definite
 types. Although most examples in those sections presented :ada:`Integer`
 types as element type of the containers, containers can also be used with
-indefinite types, an example of which is a :ada:`String` type. However,
+indefinite types, an example of which is the :ada:`String` type. However,
 indefinite types require a different kind of containers designed specially
 for them.
 
@@ -1109,7 +1109,7 @@ When instantiating a hashed map from
 - ``Hash``: hash function for the ``Key_Type``
 
 - ``Equivalent_Keys``: an equality operator (e.g. ``=``) that indicates
-  whether two keys are to be considerd equal.
+  whether two keys are to be considered equal.
 
   - If the type specified in ``Key_Type`` has a standard operator, you can
     use it, which you do by specifing using that operator as the value of
@@ -1345,12 +1345,12 @@ using a :ada:`delay until` statement. For example:
     end Display_Delay_Next_Specific_Time;
 
 In this example, we specify the date and time by initializing ``Next``
-using a call to ``Time_Of``, a function taking the various components of a
-date (year, month, etc) and returning an element of the ``Time``
-type. Because the date specified is in the past, the :ada:`delay until`
-statement won't produce any noticeable effect. However, if we'd passed a
-date in the future, the program would be waiting until that specific date
-and time arrived.
+using a call to ``Time_Of``, a function taking the various components
+of a date (year, month, etc) and returning an element of the ``Time``
+type. Because the date specified is in the past, the :ada:`delay
+until` statement won't produce any noticeable effect. However, if we
+passed a date in the future, the program would wait until that
+specific date and time arrived.
 
 Here we're converting the time to the local timezone. If we don't specify a
 timezone, *Coordinated Universal Time* (abbreviated to UTC) is used by
@@ -1389,10 +1389,10 @@ We could achieve a similar result by initializing ``Next`` with a
 In this example, we're again using ``TZ`` in the call to ``Value`` to
 adjust the input time to the current time zone.
 
-In the examples above, we were delaying to a specific date and time.  Just
-like we saw in the tasking chapter, we could instead delay relative to the
-current time. For example, we could delay by 5 seconds, using the current
-time:
+In the examples above, we were delaying to a specific date and time.
+Just like we saw in the tasking chapter, we could instead specify the
+delay relative to the current time. For example, we could delay by 5
+seconds, using the current time:
 
 .. code:: ada
 
@@ -1742,7 +1742,7 @@ it produces a string containing 12 characters. Since it has a fixed length,
 we can't increase its size. One possible solution in this case is to
 specify that truncation should be applied while inserting the substring.
 This keeps the length of ``S`` fixed. Let's see an example that makes use
-of both function and procedure version of ``Insert``, ``Overwrite``, and
+of both function and procedure versions of ``Insert``, ``Overwrite``, and
 ``Delete``:
 
 .. code:: ada
@@ -1857,10 +1857,10 @@ Bounded strings
 ^^^^^^^^^^^^^^^
 
 Bounded strings are defined in the
-:ada:`Ada.Strings.Bounded.Generic_Bounded_Length` package. Because this is
-a generic package, you need to instantiate it and set the maximum length of
-the bounded strings you we can use it. you can then declare bounded strings
-of the ``Bounded_String`` type.
+:ada:`Ada.Strings.Bounded.Generic_Bounded_Length` package. Because
+this is a generic package, you need to instantiate it and set the
+maximum length of the bounded string. You can then declare bounded
+strings of the ``Bounded_String`` type.
 
 Both bounded and fixed-length strings have a maximum length that they
 can hold. However, bounded strings are not arrays, so initializing
@@ -2287,10 +2287,10 @@ package. This is the new source code:
        end;
     end Show_Dir_Float_IO;
 
-Unlike sequential I/O, direct I/O allows you to access any position in the
-file. However, it doesn't offer an option to append information to a
-file. Instead, it provides an ``Inout_File`` mode allow reading and writing
-to a file via the same ``File_Type`` element.
+Unlike sequential I/O, direct I/O allows you to access any position in
+the file. However, it doesn't offer an option to append information to
+a file. Instead, it provides an ``Inout_File`` mode allowing reading
+and writing to a file via the same ``File_Type`` element.
 
 To access any position in the file, call the ``Set_Index`` procedure to set
 the new position / index.  You can use the ``Index`` function to retrieve

@@ -136,8 +136,8 @@ Ada has a very small number of predefined exceptions:
     - In case of division by 0
 
 - `Program_Error` might appear, but probably less often. It's raised
-  in more arcane situations, such as when order of elaboration issues
-  exist or for case of erroneous execution.
+  in more arcane situations, such as for order of elaboration issues
+  and some cases of detectable erroneous execution.
 
 - `Storage_Error` will happen because of memory issues, such as:
      - Not enough memory (allocator)
