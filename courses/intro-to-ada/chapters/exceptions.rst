@@ -137,7 +137,7 @@ Ada has a very small number of predefined exceptions:
 
 - `Program_Error` might appear, but probably less often. It's raised
   in more arcane situations, such as when order of elaboration issues
-  are or present or for erroneous execution.
+  exist or for case of erroneous execution.
 
 - `Storage_Error` will happen because of memory issues, such as:
      - Not enough memory (allocator)
