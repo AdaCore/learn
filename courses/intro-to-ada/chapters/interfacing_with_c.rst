@@ -180,8 +180,9 @@ This is the corresponding body that implements that function:
 
     end C_API;
 
-In C, we simply declare the function using the :c:`extern` keyword, just
-like we would if it were a function in C. For example:
+On the C side, we do the same as we would do if the function were
+written in C: simply declare it using the :c:`extern` keyword.  For
+example:
 
 .. code-block:: c
 
@@ -427,12 +428,12 @@ This creates the file ``ext_c_code-test_h.ads``:
 Adapting bindings
 ~~~~~~~~~~~~~~~~~
 
-The does the best it can when creating bindings for a C header
+The compiler does the best it can when creating bindings for a C header
 file. However, sometimes it has to guess about the translation and the
 generated bindings don't always match our expectations. For example,
 this can happen when creating bindings for functions that have
 pointers as arguments. In this case, the compiler may use
-:ada:`System.Address` as the type of one of more pointers. Although
+:ada:`System.Address` as the type of one or more pointers. Although
 this approach works fine (as we'll see later), this is usually not how
 a human would interpret the C header file. The following example
 illustrates this issue.

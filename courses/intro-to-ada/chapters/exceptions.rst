@@ -129,15 +129,15 @@ Predefined exceptions
 
 Ada has a very small number of predefined exceptions:
 
-- `Constraint_Error` is the main one you might see. It is raised:
-    - When bounds or subtype doesn't match or, in general, any violation of
-      constraints.
+- `Constraint_Error` is the main one you might see. It's raised:
+    - When bounds don't match or, in general, any violation of constraints.
     - In case of overflow
     - In case of null dereferences
     - In case of division by 0
 
-- `Program_Error` might appear but probably less often. It is used for more
-  arcane things, such as order of elaboration issues or erroneous execution.
+- `Program_Error` might appear, but probably less often. It's raised
+  in more arcane situations, such as when order of elaboration issues
+  are or present or for erroneous execution.
 
 - `Storage_Error` will happen because of memory issues, such as:
      - Not enough memory (allocator)
