@@ -6,8 +6,8 @@ Design by contracts
 .. role:: ada(code)
    :language: ada
 
-Contracts are used in programming to codify expectations.  Parameter modes
-of a subprogram can be viewed as a simple of form of contracts.  When the
+Contracts are used in programming to codify expectations. Parameter modes
+of a subprogram can be viewed as a simple of form of contracts. When the
 specification of subprogram ``Op`` declares a parameter using :ada:`in`
 mode, the caller of ``Op`` knows that the :ada:`in` argument won't be
 changed by ``Op``. In other words, the caller expects that ``Op`` doesn't
@@ -17,7 +17,7 @@ contracts. In general, these specification improve the consistency of the
 application.
 
 *Design-by-contract* programming refers to techniques that include pre- and
-postconditions, subtype predicates, and type invariants.  We study those
+postconditions, subtype predicates, and type invariants. We study those
 topics in this chapter.
 
 Pre- and postconditions
@@ -80,10 +80,10 @@ for details.
 Before we get to our next example, let's briefly discuss quantified
 expressions, which are quite useful in concisely writing pre- and
 postconditions. Quantified expressions return a Boolean value indicating
-whether elements of an array or container matches the expected
+whether elements of an array or container match the expected
 condition. They have the form: :ada:`(for all I in A'Range => <condition on
 A(I)>`, where :ada:`A` is an array and :ada:`I` is an index.  Quantified
-expressions using :ada:`for all` check whether the condition of true for
+expressions using :ada:`for all` check whether the condition is true for
 every element. For example:
 
 .. code:: ada
@@ -94,7 +94,7 @@ every element. For example:
 This quantified expression is only true when all elements of the array
 :ada:`A` have a value of zero.
 
-Another kind of quantified expressions uses :ada:`for some`. The form is
+Another kind of quantified expressions uses :ada:`for some`. The form
 looks similar: :ada:`(for some I in A'Range => <condition on
 A(I)>`. However, in this case the qualified expression tests whether the
 condition is true only on *some* elements (hence the name) instead of all
@@ -194,7 +194,7 @@ Predicates
 ----------
 
 Predicates specify expectations regarding types. They're similar to pre-
-and postconditions, but apply to types instead of subprograms.  Their
+and postconditions, but apply to types instead of subprograms. Their
 conditions are checked for each object of a given type, which allows
 verifying that an object of type ``T`` is conformant to the requirements of
 its type.
@@ -277,7 +277,7 @@ and a type :ada:`Course_Container`, an object of which contains all
 courses. We want to ensure that the dates of each course are consistent,
 specifically that the start date is no later than the end date. To enforce
 this rule, we declare a dynamic predicate for the :ada:`Course` type that
-performs the check for each object.  The predicate uses the type name where
+performs the check for each object. The predicate uses the type name where
 a variable of that type would normally be used: this is a reference to the
 instance of the object being tested.
 
