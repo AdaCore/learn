@@ -46,7 +46,7 @@ Abstract data types
 With this high-level granularity, it might not seem obvious how to hide the
 implementation details of a type. Here is how it can be done in Ada:
 
-.. code:: ada
+.. code:: ada no_button
 
     package Stacks is
        type Stack is private;
@@ -102,7 +102,7 @@ for you.
 
 Here is how the ``Stacks`` package would be used:
 
-.. code:: ada
+.. code-block:: ada
 
     --  Example of use
     with Stacks; use Stacks;
@@ -122,7 +122,7 @@ Limited types
 Ada's "limited type" facility allows you to declare a type for which
 assignment and comparison operations are not automatically provided.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Stacks is
        type Stack is limited private;

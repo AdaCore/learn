@@ -17,7 +17,7 @@ record has to be specified, even components that have a default value.
 
 This means that the following code is incorrect:
 
-.. code:: ada
+.. code:: ada no_button
     :class: ada-expect-compile-error
 
     package Incorrect is
@@ -45,7 +45,7 @@ convenient:
 However, note that as soon as you used a named association, all subsequent
 components likewise need to be specified with names associations.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Points is
        type Point is record
@@ -70,7 +70,7 @@ in the section on enumeration types TODOPUTLINK.
 Let's take a simple example: it is possible in Ada to have functions that have
 the same name, but different types for their parameters.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Pkg is
        function F (A : Integer) return Integer;
@@ -84,7 +84,7 @@ overloading.
 One of the novel aspects of Ada's overloading facility is the ability to
 resolve overloading based on the return type of a function.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Pkg is
        type SSID is new Integer;
@@ -113,7 +113,7 @@ However, sometimes an ambiguity makes it impossible to resolve which
 declaration of an overloaded name a given occurrence of the name refers to.
 This is where a qualified expression becomes useful.
 
-.. code:: ada
+.. code:: ada no_button
     :class: ada-expect-compile-error
 
     package Pkg is
@@ -147,7 +147,7 @@ This is where a qualified expression becomes useful.
 Syntactically the target of a qualified expression can be either any expression
 in parentheses, or an aggregate:
 
-.. code:: ada
+.. code:: ada no_button
 
     package Qual_Expr is
        type Point is record
@@ -205,7 +205,7 @@ you can learn more about those `unsafe features
 
 Here is how you declare a simple pointer type, or access type, in Ada:
 
-.. code:: ada
+.. code:: ada no_button
 
     package Dates is
        type Month_Type is (January, February, March, April, May, June, July,
@@ -243,7 +243,7 @@ type whose designated type is Date, the two access types will be incompatible
 with each other, and you will need an explicit type conversion to convert from
 one to the other:
 
-.. code:: ada
+.. code:: ada no_button
     :class: ada-expect-compile-error
 
     with Dates; use Dates;
@@ -272,7 +272,7 @@ one to the other:
     it be declared? A commonly used pattern is that if you need an access type
     to a specific type you "own", you will declare it along with the type:
 
-    .. code:: ada
+    .. code:: ada no_button
         :class: ada-syntax-only
 
         package Access_Types is
@@ -290,7 +290,7 @@ Once we have declared an access type, we need a way to give variables of the
 types a meaningful value! You can allocate a value of an access type
 with the :ada:`new` keyword in Ada.
 
-.. code:: ada
+.. code:: ada no_button
 
     with Dates; use Dates;
 
@@ -304,7 +304,7 @@ with the :ada:`new` keyword in Ada.
 If the type you want to allocate needs constraints, you can put them in the
 subtype indication, just as you would do in a variable declaration:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Dates; use Dates;
 
@@ -322,7 +322,7 @@ In some cases, though, allocating just by specifiying the type is not ideal, so
 Ada also allows you to initialize along with the allocation. This is done via
 the qualified expression syntax:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Dates; use Dates;
 
@@ -343,7 +343,7 @@ pointer. Dereferencing a pointer uses the :ada:`.all` syntax in Ada, but is
 often not needed - in many cases, the access value will be implicitly
 dereferenced for you:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Dates; use Dates;
 
@@ -407,7 +407,7 @@ naturally defined through two types, a record type and an access type, that are
 mutually dependent.  To declare mutually dependent types, you can use an
 incomplete type declaration:
 
-.. code:: ada
+.. code:: ada no_button
 
     package Simple_List is
        type Node;
@@ -438,7 +438,7 @@ known at compile time. This is illustrated in the example below:
 .. ?? an elaboration pragma is used.
 .. ?? Consider simplfying or restructuring the example to avoid this issue
 
-.. code:: ada
+.. code:: ada no_button
 
     package Runtime_Length is
        function Compute_Max_Len return Natural;
@@ -477,7 +477,7 @@ different sizes.
 You can get analogous functionality for records, too, using a special kind of
 field that is called a discriminant:
 
-.. code:: ada
+.. code:: ada no_button
 
     package Var_Size_Record_2 is
         type Items_Array is array (Positive range <>) of Integer;
@@ -498,7 +498,7 @@ Also, they make a type indefinite: Whether or not the discriminant is used to
 specify the size of an object, a type with a discriminant will be indefinite if
 the discriminant is not declared with an initialization:
 
-.. code:: ada
+.. code:: ada no_button
     :class: ada-expect-compile-error
 
     package Test_Discriminants is
@@ -562,7 +562,7 @@ However, discriminants can also be used to obtain the functionality of what are
 sometimes called "variant records": records that can contain different sets of
 fields.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Variant_Record is
        type Expr;                       --  Forward declaration of Expr
@@ -711,6 +711,7 @@ the delta value required for the context, the actual result will be
 zero. For example:
 
 .. code:: ada
+
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Decimal_Fixed_Point_Smaller is
