@@ -13,7 +13,7 @@ There are two kinds of subprograms in Ada, *functions* and *procedures*. The
 distinction between the two is that a function returns a value, and a procedure
 does not.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Week_3 is
        type Days is (Monday, Tuesday, Wednesday,
@@ -47,7 +47,7 @@ section at all, for example:
 
 Here's another variation on the Week example:
 
-.. code:: ada
+.. code:: ada no_button
 
     package Week_4 is
        type Days is (Monday, Tuesday, Wednesday,
@@ -91,7 +91,7 @@ As we showed briefly above, if a subprogram declaration appears in a package
 declaration then a subprogram body needs to be supplied in the package body.
 For the ``Week`` package above, we could have the following body:
 
-.. code:: ada
+.. code:: ada no_button
 
     package body Week_4 is
        --  Implementation of the Get_Day_Name function
@@ -152,7 +152,7 @@ As a convention, people usually name parameters at the call site if the
 function's corresponding parameters has a default value. However, it is also
 perfectly acceptable to name every parameter if it makes the code clearer.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Week_5 is
        type Days is (Monday, Tuesday, Wednesday,

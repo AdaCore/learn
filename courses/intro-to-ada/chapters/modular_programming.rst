@@ -20,7 +20,7 @@ Packages
 
 Here is an example of a package declaration in Ada:
 
-.. code:: ada
+.. code:: ada no_button
 
     package Week is
 
@@ -166,7 +166,7 @@ declarations and no body. That's not a mistake: in a package specification,
 which is what is illustrated above, you cannot declare bodies. Those have to be
 in the package body.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Week_2 is
 

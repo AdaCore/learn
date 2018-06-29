@@ -117,7 +117,7 @@ and subprogram parameter modes.
 
 Ada's :ada:`if` statementis pretty unsurprising in form and function:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -155,7 +155,7 @@ integer value).
 Here's a slight variation on the example, which illustrates an :ada:`if` statement
 with an :ada:`else` part:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -179,7 +179,7 @@ displays the value followed by the String " is not a positive number".
 Our final variation illustrates an :ada:`if` statement with :ada:`elsif`
 sections:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -417,7 +417,7 @@ but with some important differences.
 Here's an example, a variation of a program that was shown earlier
 with an :ada:`if` statement:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -522,7 +522,7 @@ as declarative regions.
    you can introduce a new declarative region with a block
    statement:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -569,7 +569,7 @@ If expressions
 Here's an alternative version of an example we saw earlier; the :ada:`if`
 statement has been replaced by an :ada:`if` expression:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
