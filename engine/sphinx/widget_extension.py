@@ -8,6 +8,14 @@ for instance
 See doc in the function codeconfig.
 
 Code accumulation: cancel it with an empty :code-config: directive
+
+This plugin interprets the folloging parameters to the code:: directive:
+
+    * run_button  - forces the existence of a run button
+    * no_button   - removes all buttons
+
+these override the code-config setting.
+
 """
 import codecs
 import glob
@@ -18,6 +26,7 @@ import subprocess
 import tempfile
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
+from xml.sax.saxutils import escape
 
 WIDGETS_SERVER_URL = "https://cloudchecker-staging.r53.adacore.com"
 # TODO: make this a configuration parameter
@@ -135,7 +144,13 @@ class WidgetCodeDirective(Directive):
         if self.arguments:
             argument_list = self.arguments[0].split(' ')
 
-        has_run_button = config.run_button or 'run_button' in argument_list
+        if 'no_button' in argument_list:
+            has_run_button = False
+            has_prove_button = False
+        else:
+            has_run_button = config.run_button or \
+                'run_button' in argument_list
+            has_prove_button = config.prove_button
 
         # Make sure code-config exists in the document
         if not codeconfig_found:
@@ -180,11 +195,11 @@ class WidgetCodeDirective(Directive):
                         shadow_files_divs += (
                            u'<div class="shadow_file"'
                            'style="display:none" basename="{}">'
-                           '{}</div>').format(k, v)
+                           '{}</div>').format(k, escape(v))
 
             divs = "\n".join(
                 [u'<div class="file" basename="{}">{}</div>'.format(
-                    f[0], f[1]) for f in files]
+                    f[0], escape(f[1])) for f in files]
                 )
         except Exception:
             # If we have an exception here, it's probably a codec error
@@ -197,7 +212,7 @@ class WidgetCodeDirective(Directive):
 
         if has_run_button:
             extra_attribs += ' run_button="True"'
-        if config.prove_button:
+        if has_prove_button:
             extra_attribs += ' prove_button="True"'
 
         return [
