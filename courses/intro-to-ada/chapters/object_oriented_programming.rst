@@ -1,39 +1,41 @@
-Object oriented programming
+Object-oriented programming
 ===========================
 :code-config:`reset_accumulator=True`
 
-Object oriented programming is a large and blurrily defined concept in
-programming languages that tends to encompass many different things. This is
-due to the fact that many different languages implemented their own vision of
-it, with similarities and differences.
+Object-oriented programming (OOP) is a large and ill-defined concept
+in programming languages and one that tends to encompass many
+different meanings because different languages often implement their
+own vision of it, with similarities and differences from the
+implementations in other languages.
 
-However, there is a model that mostly "won" the battle of what object oriented
-means, if only by sheer popularity. It's the model of the Java programming
-language, which is very similar to the one of the C++ language. Here are some
-defining characteristics:
+However, one model mostly "won" the battle of what object-oriented
+means, if only by sheer popularity. It's the model used in the Java
+programming language, which is very similar to the one used by C++.
+Here are some defining characteristics:
 
 - Type derivation and extension: Most object oriented languages allow the user
   to add fields to derived types.
 
-- Subtyping: Objects of a type derived from a base type are, in some instances,
-  substitutable to objects from the base type - in terms of static typing.
+- Subtyping: Objects of a type derived from a base type can, in some
+  instances, be substituted for objects of the base type.
 
-- Runtime polymorphism: Calling a subprogram attached to an object type, which
-  is usually called a method, can dispatch at runtime depending on the exact
-  type of the object.
+- Runtime polymorphism: Calling a subprogram, usually called a
+  *method*, attached to an object type can dispatch at runtime
+  depending on the exact type of the object.
 
 - Encapsulation: Objects can hide some of their data.
 
-- Extensibility: People from the "outside" - of your package, or even your
-  whole library - can derive from your object types, and define their own
-  behaviors.
+- Extensibility: People from the "outside" of your package, or even
+  your whole library, can derive from your object types and define
+  their own behaviors.
 
-Ada predates the popularity of object orientation, and since it aimed to be a
-complete language from the start, has many mechanisms and concepts to fullfill
-the above requirements.
+Ada dates from before object-oriented programming was as popular as it
+is today. Some of the mechanisms and concepts from the above list were
+in the earliest version of Ada even before what we would call OOP was
+added:
 
-- As we saw, encapsulation is not implemented at the type level in Ada, but at
-  the package level.
+- As we saw, encapsulation is not implemented at the type level in
+  Ada, but instead at the package level.
 
 - Subtyping can be implemented using, well, subtypes, which have a full and
   permissive static substitability model. The substitution will fail at runtime
@@ -41,29 +43,30 @@ the above requirements.
 
 - Runtime polymorphism can be implemented using variant records.
 
-However, this lists leaves out type extension - if you don't consider variant
-records - and extensibility.
+However, this lists leaves out type extensions, if you don't consider
+variant records, and extensibility.
 
-In the 1995 revision of Ada, a feature filling the gaps was added, so that
-people can program following the object oriented paradigm in an easier fashion,
-which is called tagged types.
+The 1995 revision of Ada added a feature filling the gaps, which
+allowed people to program following the object-oriented paradigm in an
+easier fashion.  This feature is called *tagged types*.
 
-.. note::
-    It is possible to program in Ada without ever creating tagged types. If
-    that's your prefered style of programming, or you have no specific use for
-    tagged types, feel free to not use them, as for every feature of Ada.
+.. note:: It's possible to program in Ada without ever creating tagged
+    types. If that's your prefered style of programming or you have
+    no specific use for tagged types, feel free to not use them, as is
+    the case for many features of Ada.
 
-    However, they can be the best way to express solutions to certain problems.
-    If that's the case, read on!
+    However, they can be the best way to express solutions to certain
+    problems and they may be the best way to solve your problem. If
+    that's the case, read on!
 
 Derived types
 -------------
 
-Before going into tagged types, we should go into a topic we have brushed on,
-but not really covered so far:
+Before presenting tagged types, we should discuss a topic we have
+brushed on, but not really covered, up to now:
 
-For every type in Ada, you can create a new type from it. Type derivation is
-built-in into the language.
+You can create one or more new types from every type in Ada. Type
+derivation is built into the language.
 
 .. code:: ada
 
@@ -75,22 +78,23 @@ built-in into the language.
        type New_Point is new Point;
     end Newtypes;
 
-It is useful to enforce strong typing, because the type system will treat the
-two types as incompatible.
+Type derivation is useful to enforce strong typing because the type
+system treats the two types as incompatible.
 
-But it is not limited to that: You can inherit things from the type you derive
-from. The representation of the data is one part, but you can also inherit
-behavior.
+But the benefits are not limited to that: you can inherit things from
+the type you derive from. You not only inherit the representation of
+the data, but you can also inherit behavior.
 
-When you inherit a type, what we call primitive operations are inherited. A
-primitive is a subprogram attached to a type. Ada knows a primitive because it
-is a subprogram defined in the same scope with the type.
+When you inherit a type you also inherit what are called *primitive
+operations*. A primitive operation (or just a *primitive*) is a
+subprogram attached to a type. Ada defines primitives as subprograms
+defined in the same scope as the type.
 
 .. attention::
     A subprogram will only become a primitive of the type if:
 
-    1. The subprogram is declared in the same scope as the type
-    2. The type and its subprograms are declared in a package
+    1. The subprogram is declared in the same scope as the type and
+    2. The type and the subprogram are declared in a package
 
 .. code:: ada
 
@@ -115,60 +119,62 @@ is a subprogram defined in the same scope with the type.
       use Week;
       type Weekend_Days is new Days range Saturday .. Sunday;
 
-      --  A procedure Print_Day is automatically inherited here. It is like
+      --  A procedure Print_Day is automatically inherited here. It is as if
       --  the procedure
       --
       --  procedure Print_Day (D : Weekend_Days);
       --
-      --  Has been declared
+      --  has been declared with the same body
 
       Sat : Weekend_Days := Saturday;
     begin
        Print_Day (Sat);
     end Primitives;
 
-While this kind of inheritance can be very useful, and has the advantage of not
-being limited to record types (you can use it on discrete types as in the
-example above), it is only superficially similar to object oriented
+This kind of inheritance can be very useful, and is not limited to
+record types (you can use it on discrete types, as in the example
+above), but it's only superficially similar to object-oriented
 inheritance:
 
-- Records cannot be extended this way. In general, it is imposible to specify a
-  new representation for the new type, it will **always** have the same
-  representation as the base type.
+- Records can't be extended using this mechanism alone.  You also
+  can't specify a new representation for the new type: it will
+  **always** have the same representation as the base type.
 
-- There is no facility for dynamic dispatch or polymorphism. Objects are of a
-  fixed, static type.
+- There's no facility for dynamic dispatch or polymorphism. Objects
+  are of a fixed, static type.
 
-The differences are more numerous, but it is not very useful to list them here.
-Just remember that this is a kind of inheritance you can use if you just want
-to statically inherit behavior without duplicating code or using composition,
-but that you cannot use if you want any dynamic features that we usually
-associate with OOP.
+There are other differences, but it's not useful to list them all
+here. Just remember that this is a kind of inheritance you can use if
+you only want to statically inherit behavior without duplicating code
+or using composition, but a kind you can't use if you want any dynamic
+features that are usually associated with OOP.
 
 Tagged types
 ------------
 
-In the 1995 revision of the Ada language, tagged types were introduced to
-fullfil the need for an unified solution to program in an object oriented style
-similar to the one described at the beginning of this section.
+The 1995 revision of the Ada language introduced tagged types to
+fullfil the need for an unified solution that allows programming in an
+object-oriented style similar to the one described at the beginning of
+this chaper.
 
-Tagged types are much like regular records, except that some functionalities are
-added:
+Tagged types are very similar to normal records except that some
+functionality is added:
 
-- Types have a tag, that is stored inside instances, and that identifies the
-  `runtime type <https://en.wikipedia.org/wiki/Run-time_type_information>`_ of
-  an object.
-
-- Primitives can dispatch. A primitive on a tagged type is what you would call
-  a method in Java or C++. If you derive a base type, and override a primitive
-  of it, then in some instances it will be possible to call it on an object
-  such that which primitive is called depends on the exact runtime type of the
+- Types have a *tag*, stored inside each object, that identifies the
+  `runtime type
+  <https://en.wikipedia.org/wiki/Run-time_type_information>`_ of that
   object.
 
-- Subtyping rules are introduced, such that a tagged type derived from a base
-  type is statically compatible with the base type.
+- Primitives can dispatch. A primitive on a tagged type is what you
+  would call a *method* in Java or C++. If you derive a base type and
+  override a primitive of it, you can often call it on an object with
+  the result that which primitive is called depends on the exact
+  runtime type of the object.
 
-Let's see our first tagged type declaration:
+- Subtyping rules are introduced allowing a tagged type derived from a
+  base type to be statically compatible with the base type.
+
+Let's see our first tagged type declarations:
 
 .. code:: ada
 
@@ -179,18 +185,18 @@ Let's see our first tagged type declaration:
        --  Methods are outside of the type definition:
 
        procedure Foo (Self : in out My_Class);
-       --  If you define a procedure taking a My_Class argument,
+       --  If you define a procedure taking a My_Class argument
        --  in the same package, it will be a method.
 
-       --  Here is how you derive a tagged type:
+       --  Here's how you derive a tagged type:
 
        type Derived is new My_Class with record
            A : Integer;
-           --  You can add field in derived types.
+           --  You can add fields in derived types.
        end record;
 
        overriding procedure Foo (Self : in out Derived);
-       --  Overriding qualifier is optional, but if it is here,
+       --  The "overriding" qualifier is optional, but if it is present,
        --  it must be valid.
     end P;
 
@@ -211,13 +217,12 @@ Let's see our first tagged type declaration:
 Classwide types
 ---------------
 
-In order to stay coherent with the rest of the language, a new notation needs
-to be introduced to be able to say: This object is of this type or any
-descendent tagged type.
+To remain consistent with the rest of the language, a new notation
+needed to be introduced to say "This object is of this type or any
+descendent derives tagged type".
 
-In Ada, this is called the classwide type. It is used in object oriented
-programming as soon as you need polymorphism. For example, you cannot do the
-following:
+In Ada, we call this the *classwide type*. It's used in OOP as soon as
+you need polymorphism. For example, you can't do the following:
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -239,10 +244,11 @@ following:
        null;
     end Main;
 
-Because, with tagged types as with other types, an object of a type ``T`` is
-exactly of the type ``T``. What you want to say as a programmer is "I want O3
-to be able to hold an object of type ``My_Class``, or any type descending from
-``My_Class``". Here is how you do that:
+This is because an object of a type ``T`` is exactly of the type
+``T``, whether ``T`` is tagged or not. What you want to say as a
+programmer is "I want O3 to be able to hold an object of type
+``My_Class`` or any type descending from ``My_Class``". Here's how you
+do that:
 
 .. code:: ada
 
@@ -250,10 +256,10 @@ to be able to hold an object of type ``My_Class``, or any type descending from
 
     procedure Main is
        O1 : My_Class;
-       --  Declaring an object of type My_Class
+       --  Declare an object of type My_Class
 
        O2 : Derived := (A => 12);
-       --  Declaring an object of type Derived
+       --  Declare an object of type Derived
 
        O3 : My_Class'Class := O2;
        --  Now valid: My_Class'Class designates the classwide type for
@@ -264,31 +270,31 @@ to be able to hold an object of type ``My_Class``, or any type descending from
     end Main;
 
 .. attention::
-    An object of a classwide type is hence of an unknown size, since it can be of
-    the size of any descendent of the base type. It is thus an indefinite type,
-    with the expected corollaries:
+    Because an object of a classwide type can be the size of any
+    descendent of its base type, it has an unknown size. It's therefore
+    an indefinite type, with the expected restrictions:
 
-        - It cannot be stored as a field/component of a record
-        - An object of a classwide type needs to be initialized right away (you
-          cannot specify the constraints of the type in this case by any other
-          way than by initializing it).
+        - It can't be stored as a field/component of a record
+        - An object of a classwide type needs to be initialized immediately
+          (you can't specify the constraints of such a type in
+	  any way other than by initializing it).
 
 Dispatching operations
 ----------------------
 
-We saw above that it is possible to override operations in types derived from
-another tagged type. The aim eventually is to be able to make a dispatching
-call, that is, a call to the primitive/method that depends on the exact type of
-the object.
+We saw that you can override operations in types derived from another
+tagged type. The eventual goal of OOP is to make a dispatching call: a
+call to a primitive (method) that depends on the exact type of the
+object.
 
-But, if you think carefully about what is stated in the above paragraph, a
-variable of type ``My_Class`` will always contain an object of exactly this
-type. If you want to have a variable that can contain a ``My_Class`` or
-any derived type, it has to be of type ``My_Class'Class``.
+But, if you think carefully about it, a variable of type ``My_Class``
+always contains an object of exactly that type. If you want to have a
+variable that can contain a ``My_Class`` or any derived type, it has
+to be of type ``My_Class'Class``.
 
-It follows that, to make a dispatching call, you first have to have an object
-that can be of a type, or any type derived from this type, that is, a classwide
-type.
+In other words, to make a dispatching call, you must first have an
+object that can be either of a type or any type derived from this
+type, namely an object of a classwide type.
 
 .. code:: ada
 
@@ -296,10 +302,10 @@ type.
 
     procedure Main is
        O1 : My_Class;
-       --  Declaring an object of type My_Class
+       --  Declare an object of type My_Class
 
        O2 : Derived := (A => 12);
-       --  Declaring an object of type Derived
+       --  Declare an object of type Derived
 
        O3 : My_Class'Class := O2;
 
@@ -315,15 +321,16 @@ type.
        --  Dispatching: Calls My_Class.Foo
     end Main;
 
-.. attention::
-    It is possible to convert an object of type ``Derived`` to an object of
-    type ``My_Class``. This is called a view conversion in Ada parlance, and is
-    useful, if you want to call a parent method for example.
+.. attention:: You can convert an object of type ``Derived`` to an
+    object of type ``My_Class``. This is called a *view conversion* in
+    Ada parlance and is useful, for example, if you want to call a
+    parent method.
 
-    In that case, the object is really converted to a ``My_Class`` object,
-    which means that its tag is changed. Since tagged objects are always passed
-    by reference, you can use this kind of conversion to modify the state of an
-    object: Mutations of the converted object will affect the original one.
+    In that case, the object really is converted to a ``My_Class``
+    object, which means its tag is changed. Since tagged objects are
+    always passed by reference, you can use this kind of conversion to
+    modify the state of an object: changes to converted object will
+    affect the original one.
 
     .. code:: ada
         :class: ada-run
@@ -332,7 +339,7 @@ type.
 
         procedure Main is
            O1 : Derived := (A => 12);
-           --  Declaring an object of type Derived
+           --  Declare an object of type Derived
 
            O2 : My_Class := My_Class (O1);
 
@@ -350,9 +357,9 @@ type.
 Dot notation
 ------------
 
-Primitives of tagged types can be called with a notation that is more familiar
-to object oriented programmers. Given the Foo primitive above, you can also
-write the above program as such:
+You can also call primitives of tagged types with a notation that's
+more familiar to object oriented programmers. Given the Foo primitive
+above, you can also write the above program this way:
 
 .. code:: ada
 
@@ -360,10 +367,10 @@ write the above program as such:
 
     procedure Main is
        O1 : My_Class;
-       --  Declaring an object of type My_Class
+       --  Declare an object of type My_Class
 
        O2 : Derived := (A => 12);
-       --  Declaring an object of type Derived
+       --  Declare an object of type Derived
 
        O3 : My_Class'Class := O2;
 
@@ -379,9 +386,9 @@ write the above program as such:
        --  Dispatching: Calls My_Class.Foo
     end Main;
 
-If the dispatching parameter of a primitive is the first parameter, as is the
-case in our examples, then you can call the primitive via the dot notation. Any
-extra parameter will be passed normally:
+If the dispatching parameter of a primitive is the first parameter,
+which is the case in our examples, you can call the primitive using
+the dot notation. Any remaining parameter are passed normally:
 
 
 .. code:: ada
