@@ -146,6 +146,6 @@ Ada has a very small number of predefined exceptions:
 - `Tasking_Error` will happen with task related errors, such as any error
   happening during task activation.
 
-You should not reuse predefined exceptions.  If you do then, it won't
+You should not reuse predefined exceptions. If you do then, it won't
 be obvious when one is raised that it is because something went wrong
 in a built-in language operation.

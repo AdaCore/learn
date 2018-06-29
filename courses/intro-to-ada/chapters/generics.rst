@@ -172,7 +172,7 @@ Generic packages
 
 The previous examples focused on generic subprograms. In this section,
 we look at generic packages. The syntax is similar to that used for
-generic subprograms: we starts with the :ada:`generic` keyword and
+generic subprograms: we start with the :ada:`generic` keyword and
 continue with formal declarations. The only difference is that
 :ada:`package` is specified instead of a subprogram keyword.
 
@@ -436,8 +436,8 @@ Let's look at a simple procedure that swaps variables of type
 In this example, ``Swap_Colors`` can only be used for the ``Color``
 type.  However, this algorithm can theoretically be used for any type,
 whether an enumeration type or a complex record type with many
-elements.  The algorithm itself is the same: it's only the type that
-differs.  If, for example, we want to swap variables of:ada:`Integer`
+elements. The algorithm itself is the same: it's only the type that
+differs. If, for example, we want to swap variables of:ada:`Integer`
 type, we don't want to duplicate the implementation. Therefore, such
 an algorithm is a perfect candidate for abstraction using generics.
 
@@ -495,7 +495,7 @@ Abstracting a reversing algorithm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The previous example, with an algorithm to swap two values, is one of the
-simplest examples of using generics.  Next we study an algorithm for
+simplest examples of using generics. Next we study an algorithm for
 reversing elements of an array. First, let's start with a non-generic
 version of the algorithm, one that works specifically for the ``Color``
 type:

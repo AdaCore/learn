@@ -150,7 +150,7 @@ example, we could call the C function ``Get_Value``:
 Calling Ada subprograms in C
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also call Ada subprograms from C applications.  You do this with
+You can also call Ada subprograms from C applications. You do this with
 the :ada:`Export` aspect. For example:
 
 .. code:: ada
@@ -350,7 +350,7 @@ Generating bindings
 
 In the examples above, we manually added aspects to our Ada code to
 correspond to the C source-code we're interfacing with. This is called
-creating a *binding*.  We can automate this process by using the *Ada spec
+creating a *binding*. We can automate this process by using the *Ada spec
 dump* compiler option: ``-fdump-ada-spec``. We illustrate this by
 revisiting our previous example.
 

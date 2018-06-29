@@ -9,7 +9,7 @@ Tasks
 -----
 
 A task can be thought as an application that runs *concurrently* with the
-main application. In other programming languages, a task is can be called a
+main application. In other programming languages, a task can be called a
 `thread <https://en.wikipedia.org/wiki/Thread_(computing)>`_, and tasking
 can be called `multithreading
 <https://en.wikipedia.org/wiki/Thread_(computing)#Multithreading>`_.
@@ -91,7 +91,7 @@ Simple synchronization
 As we've just seen, as soon as the main task starts, its subtasks also
 start automatically. The main task continues its processing until it has
 nothing more to do. At that point, however, it will not terminate. Instead,
-it task waits until its subtasks have finished before it allows itself to
+the task waits until its subtasks have finished before it allows itself to
 terminate. In other words, this waiting process provides synchronization
 between the main task and its subtasks.  After this synchronization, the
 main task will terminate. For example:
@@ -195,7 +195,7 @@ Synchronization: rendez-vous
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The only type of synchronization we've seen so far is the one that happens
-automatically at the end of the main task.  You can also define custom
+automatically at the end of the main task. You can also define custom
 synchronization points using the keyword :ada:`entry`. An *entry* can be
 viewed as a special kind of subprogram, which is called by the master task
 using a similar syntax, as we will see later.
@@ -203,7 +203,7 @@ using a similar syntax, as we will see later.
 In the task definition, you define which part of the task will accept the
 entries by using the keyword :ada:`accept`. A task proceeds until it
 reaches an :ada:`accept` statement and then waits for the master task to
-synchronize with the it.  Specifically,
+synchronize with the it. Specifically,
 
 - The subtask waits at that point (in the :ada:`accept` statement),
   ready to accept a call to the corresponding entry from the master task.
@@ -236,9 +236,9 @@ example:
     end Show_Rendezvous;
 
 In this example, we declare an entry ``Start`` for task ``T``.  In the task
-body, we implement this entry using :ada:`accept Start`.  When task ``T``
+body, we implement this entry using :ada:`accept Start`. When task ``T``
 reaches this point, it waits for the master task. This synchronization
-occurs in the ``T.Start`` statement.  After the synchronization completes,
+occurs in the ``T.Start`` statement. After the synchronization completes,
 the main task and task ``T`` again run concurrently until they synchronize
 one final time when the main task finishes.
 
@@ -251,7 +251,7 @@ end;`. We use this kind of block in the next example.
 Select loop
 ~~~~~~~~~~~
 
-There's no limit to the number of times an entry can be accepted.  We could
+There's no limit to the number of times an entry can be accepted. We could
 even create an infinite loop in the task and accept calls to the same entry
 over and over again. An infinite loop, however, prevents the subtask from
 finishing, so it blocks the master task when it reaches the end of its
@@ -309,7 +309,7 @@ calls to the ``Start`` entry. We make the following observations:
     - Because task ``T`` contains an infinite loop, it always accepts calls
       to the ``Start`` entry.
 
-    - When the main task finishes end, it checks the status of the ``T``
+    - When the main task finishes, it checks the status of the ``T``
       task. Even though task ``T`` could accept new calls to the ``Start``
       entry, the master task is allowed to terminate task ``T`` due to the
       :ada:`or terminate` part of the :ada:`select` statement.
@@ -545,7 +545,7 @@ part. The corresponding implementation of the operations is included in the
 In this example, we define two operations for ``Obj``: ``Set`` and
 ``Get``. The implementation of these operations is in the ``Obj`` body. The
 syntax used for writing these operations is the same as that for normal
-procedures and functions.  The implementation of protected objects is
+procedures and functions. The implementation of protected objects is
 straightforward --- we simply access and update ``Local`` in these
 subprograms.  To call these operations in the main application, we use
 prefixed notation, e.g., ``Obj.Get``.
@@ -557,8 +557,8 @@ In addition to protected procedures and functions, you can also define
 protected entry points. Do this using the :ada:`entry` keyword. Protected
 entry points allow you to define barriers using the :ada:`when`
 keyword. Barriers are conditions that must be fulfilled before the entry
-can start performing its actual processing.  (We speak of *releasing* the
-barrier when the condition is fulfilled.)
+can start performing its actual processing --- we speak of *releasing* the
+barrier when the condition is fulfilled.
 
 The previous example used procedures and functions to define operations on
 the protected objects. However, doing so permits reading protected
@@ -645,10 +645,10 @@ Task types
 ~~~~~~~~~~
 
 A task type is a generalization of a task. The declaration is similar to
-simple tasks: you replace :ada:`task` with :ada:`task type`.  The
+simple tasks: you replace :ada:`task` with :ada:`task type`. The
 difference between simple tasks and task types is that task types don't
 create actual tasks that automatically start. Instead, a task declaration
-is needed.  This is exactly the way normal variables and types work:
+is needed. This is exactly the way normal variables and types work:
 objects are only created by variable definitions, not type definitions.
 
 To illustrate this, we repeat our first example:

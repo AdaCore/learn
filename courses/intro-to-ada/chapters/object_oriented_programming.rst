@@ -56,7 +56,7 @@ easier fashion.  This feature is called *tagged types*.
     the case for many features of Ada.
 
     However, they can be the best way to express solutions to certain
-    problems and they may be the best way to solve your problem.  If
+    problems and they may be the best way to solve your problem. If
     that's the case, read on!
 
 Derived types
@@ -82,7 +82,7 @@ Type derivation is useful to enforce strong typing because the type
 system treats the two types as incompatible.
 
 But the benefits are not limited to that: you can inherit things from
-the type you derive from.  You not only inherit the representation of
+the type you derive from. You not only inherit the representation of
 the data, but you can also inherit behavior.
 
 When you inherit a type you also inherit what are called *primitive
@@ -144,7 +144,7 @@ inheritance:
   are of a fixed, static type.
 
 There are other differences, but it's not useful to list them all
-here.  Just remember that this is a kind of inheritance you can use if
+here. Just remember that this is a kind of inheritance you can use if
 you only want to statically inherit behavior without duplicating code
 or using composition, but a kind you can't use if you want any dynamic
 features that are usually associated with OOP.
@@ -276,7 +276,7 @@ do that:
 
         - It can't be stored as a field/component of a record
         - An object of a classwide type needs to be initialized immediately
-          (you can't specify the constraints of such a type in 
+          (you can't specify the constraints of such a type in
 	  any way other than by initializing it).
 
 Dispatching operations
