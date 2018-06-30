@@ -180,9 +180,8 @@ This is the corresponding body that implements that function:
 
     end C_API;
 
-On the C side, we do the same as we would do if the function were
-written in C: simply declare it using the :c:`extern` keyword.  For
-example:
+On the C side, we do the same as we would if the function were written
+in C: simply declare it using the :c:`extern` keyword.  For example:
 
 .. code-block:: c
 
