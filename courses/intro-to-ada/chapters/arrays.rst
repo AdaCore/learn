@@ -1,5 +1,7 @@
 Arrays
 ======
+:code-config:`run_button=True;prove_button=False;accumulate_code=True`
+:code-config:`reset_accumulator=True`
 
 Arrays provide another fundamental family of composite types in Ada.
 
@@ -402,7 +404,7 @@ literals, as we can see in the example below.
     String literals are a syntactic sugar for aggregates, so that in the
     following example, A and B have the same value.
 
-    .. code:: ada
+    .. code:: ada no_button
 
         package String_Literals is
             --  Those two declarations are equivalent
@@ -517,7 +519,7 @@ generally result in a run-time error.
     the subtype size is not known at compile time, but is dynamically computed
     (at run time).
 
-    .. code:: ada
+    .. code:: ada no_button
 
         with Ada.Text_IO; use Ada.Text_IO;
 

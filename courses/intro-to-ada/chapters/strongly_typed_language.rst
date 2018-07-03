@@ -514,7 +514,7 @@ will in turn prevent some subtle errors.
            F := A / B;
         end Main;
 
-    The offending line must be changed to :ada:`F := Float(A) / Float(B);`
+    The offending line must be changed to :ada:`F := Float (A) / Float (B);`
     in order to be accepted by the compiler.
 
 - You can use Ada's strong typing to help

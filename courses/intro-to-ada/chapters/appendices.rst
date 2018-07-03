@@ -5,8 +5,8 @@ Appendices
 Appendix A: Generic Formal Types
 --------------------------------
 
-The following reference tables contain examples of available formal types
-for generics.
+The following tables contain examples of available formal types
+for generics:
 
 +-------------------------+--------------------------------------------------------------+-------------------------+
 | Formal Type             | Format                                                       | Actual type             |
@@ -176,8 +176,8 @@ is replaced by a list of discriminants, e.g.: :ada:`(D: DT)`.
 Appendix B: Containers
 ----------------------
 
-The following reference table shows all containers available in Ada,
-including their versions (standard, bounded, unbounded, indefinite).
+The following table shows all containers available in Ada,
+including their versions (standard, bounded, unbounded, indefinite):
 
 +-----------+------------------------------------+-----+---------+-----------+------------+
 | Category  | Container                          | Std | Bounded | Unbounded | Indefinite |
@@ -205,9 +205,9 @@ including their versions (standard, bounded, unbounded, indefinite).
 | Queue     | ``Priority_Queues``                |     |    Y    |     Y     |            |
 +-----------+------------------------------------+-----+---------+-----------+------------+
 
-The following table presents the prefixing applied to the container name
-according to its version. As indicated in the table, the standard version
-does not have a prefix associated with it.
+The following table presents the prefixing applied to the container
+name that depends on its version. As indicated in the table, the
+standard version does not have a prefix associated with it.
 
 +-------------+--------------------------------+
 | Version     | Naming prefix                  |

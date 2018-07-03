@@ -2,18 +2,17 @@ Interfacing with C
 ==================
 :code-config:`reset_accumulator=True`
 
-Ada allows for interfacing with existing code in C and C++. This section will
-discuss how to interface with C specifically.
+Ada allows us to interface with code in many languages, including C
+and C++. This section discusses how to interface with C.
 
 .. TODO: Add link to advanced course on C++
 
 Multi-language project
 ----------------------
 
-When using ``gprbuild``, we can only compile Ada source-code files by
-default. In order to compile C files in addition to Ada files, we need to
-adapt the project file used by ``gprbuild``. This can be achieved by
-using the ``Languages`` entry, as in the following example:
+By default, when using ``gprbuild`` we only compile Ada source files.  To
+compile C files as well, we need to modify the project file used by
+``gprbuild``. We use the ``Languages`` entry, as in the following example:
 
 .. code-block:: ada
 
@@ -30,10 +29,10 @@ using the ``Languages`` entry, as in the following example:
 Type convention
 ---------------
 
-In order to interface with data types declared in a C application, the
-convention aspect needs to be specified. In the following example, we
-interface with the ``C_Enum`` enumeration declared in a C source-code
-file:
+To interface with data types declared in a C application, you specify
+the :ada:`Convention` aspect on the corresponding Ada type
+declaration. In the following example, we interface with the
+``C_Enum`` enumeration declared in a C source file:
 
 .. code:: ada
 
@@ -45,9 +44,8 @@ file:
        null;
     end Show_C_Enum;
 
-In order to interface with C built-in types, we need to reference to the
-:ada:`Interfaces.C` package, which contains all type definitions that we
-need. For example:
+To interface with C's built-in types, we use the :ada:`Interfaces.C`
+package, which contains most of the type definitions we need. For example:
 
 .. code:: ada
 
@@ -67,9 +65,9 @@ need. For example:
        null;
     end Show_C_Struct;
 
-In this example, we're interfacing with a C struct (``C_Struct``) and
-making use of the corresponding data types in C (:c:`int`, :c:`long`,
-:c:`unsigned` and :c:`double`). This is the original declaration:
+Here, we're interfacing with a C struct (``C_Struct``) and using the
+corresponding data types in C (:c:`int`, :c:`long`, :c:`unsigned` and
+:c:`double`). This is the declaration in C:
 
 .. code-block:: c
 
@@ -87,7 +85,7 @@ Foreign subprograms
 Calling C subprograms in Ada
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A similar approach is used when interfacing with subprograms written in C.
+We use a similar approach when interfacing with subprograms written in C.
 In this case, an additional aspect is required: :ada:`Import`. For example:
 
 .. code:: ada
@@ -113,7 +111,7 @@ This code interfaces with the following declaration in the C header file:
 
     int my_func (int a);
 
-This is the corresponding implementation:
+Here's the corresponding C definition:
 
 .. code-block:: c
 
@@ -124,9 +122,8 @@ This is the corresponding implementation:
         return a * 2;
     }
 
-It is possible to use a different subprogram name in the Ada code. For
-example, we could rename the original C function to ``Get_Value`` in the
-Ada code:
+If you want, you can use a different subprogram name in the Ada code. For
+example, we could call the C function ``Get_Value``:
 
 .. code:: ada
 
@@ -150,14 +147,11 @@ Ada code:
        Put_Line ("Result is " & int'Image (V));
     end Show_C_Func;
 
-As the example shows, we can make use of the ``Get_Value`` function and
-retrieve information without additional efforts.
-
 Calling Ada subprograms in C
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is also possible to call Ada subprograms in C applications. This
-requires the use of the :ada:`Export` aspect. For example:
+You can also call Ada subprograms from C applications. You do this with
+the :ada:`Export` aspect. For example:
 
 .. code:: ada
 
@@ -173,7 +167,7 @@ requires the use of the :ada:`Export` aspect. For example:
 
     end C_API;
 
-This is the corresponding implementation:
+This is the corresponding body that implements that function:
 
 .. code:: ada
 
@@ -186,8 +180,8 @@ This is the corresponding implementation:
 
     end C_API;
 
-In the C code, we simply have to declare the function using the :c:`extern`
-keyword. For example:
+On the C side, we do the same as we would if the function were written
+in C: simply declare it using the :c:`extern` keyword.  For example:
 
 .. code-block:: c
 
@@ -210,13 +204,13 @@ Foreign variables
 Using C global variables in Ada
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to use global variables from C code, we can apply the same method
-as for subprograms: we just specify the :ada:`Import` and :ada:`Convention`
-aspects for the variable we want to import.
+To use global variables from C code, we use the same method as
+subprograms: we specify the :ada:`Import` and :ada:`Convention`
+aspects for each variable we want to import.
 
 Let's reuse an example from the previous section. We'll add a global
-variable (``func_cnt``) that counts the number of times that a the
-function (``my_func``) was called:
+variable (``func_cnt``) to count the number of times the function
+(``my_func``) is called:
 
 .. code-block:: c
 
@@ -226,7 +220,7 @@ function (``my_func``) was called:
 
     int my_func (int a);
 
-The variable is then declared in the C file and increment in ``my_func``:
+The variable is declared in the C file and incremented in ``my_func``:
 
 .. code-block:: c
 
@@ -241,7 +235,7 @@ The variable is then declared in the C file and increment in ``my_func``:
       return a * 2;
     }
 
-In the Ada application, we just need to reference the foreign variable:
+In the Ada application, we just reference the foreign variable:
 
 .. code:: ada
 
@@ -272,21 +266,22 @@ In the Ada application, we just need to reference the foreign variable:
        Put_Line ("Function was called " & int'Image (func_cnt) & " times");
     end Show_C_Func;
 
-As we can see by running the application, the value from the counter will
-contain the correct number of times that ``my_func`` was called.
+As we see by running the application, the value of the counter is the
+number of times ``my_func`` was called.
 
-Similar to subprograms, we could use the :ada:`External_Name` aspect to
-rename the variable in the Ada application.
+We can use the :ada:`External_Name` aspect to give a different name
+for the variable in the Ada application in the same we do for
+subprograms.
 
 Using Ada variables in C
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is also possible to use variables declared in Ada files in C
-applications. Similarly to subprogram, this requires the use of the
+You can also use variables declared in Ada files in C applications. In
+the same way as we did for subprograms, you do this with the
 :ada:`Export` aspect.
 
-Let's reuse the previous example and add a counter, as we did in the
-previous example:
+Let's reuse a past example and add a counter, as in the previous
+example, but this time have the counter incremented in Ada code:
 
 .. code:: ada
 
@@ -348,18 +343,18 @@ In the C application, we just need to declare the variable and use it:
     }
 
 Again, by running the application, we see that the value from the counter
-will contain the correct number of times that ``my_func`` was called.
+is the number of times that ``my_func`` was called.
 
 Generating bindings
 -------------------
 
-In the examples above, we have manually created the Ada bindings for the
-C source-code we wanted to interface with. It is possible to automate this
-process by using the *Ada spec dump* compiler option:
-``-fdump-ada-spec``. We'll discuss details by revisiting our previous
-example.
+In the examples above, we manually added aspects to our Ada code to
+correspond to the C source-code we're interfacing with. This is called
+creating a *binding*. We can automate this process by using the *Ada spec
+dump* compiler option: ``-fdump-ada-spec``. We illustrate this by
+revisiting our previous example.
 
-This was the C header file that we had:
+This was our C header file:
 
 .. code-block:: c
 
@@ -367,13 +362,13 @@ This was the C header file that we had:
 
     int my_func (int a);
 
-In order to create bindings, we'll call the compiler like this:
+To create Ada bindings, we'll call the compiler like this:
 
 .. code-block:: sh
 
     gcc -c -fdump-ada-spec -C ./test.h
 
-This will create an Ada specification file called ``test_h.ads``:
+The result is an Ada spec file called ``test_h.ads``:
 
 .. code:: ada
 
@@ -392,7 +387,7 @@ This will create an Ada specification file called ``test_h.ads``:
 
     end test_h;
 
-Now, we can simply refer to ``test_h`` package in the Ada application:
+Now we simply refer to this ``test_h`` package in our Ada application:
 
 .. code:: ada
 
@@ -411,14 +406,14 @@ Now, we can simply refer to ``test_h`` package in the Ada application:
        Put_Line ("Function was called " & int'Image (func_cnt) & " times");
     end Show_C_Func;
 
-Note that, in addition to ``fdump-ada-spec``, you can also specify the
-parent unit for the bindings you're creating. For example:
+You can specify the name of the parent unit for the bindings you're
+creating as the operand to ``fdump-ada-spec``:
 
 .. code-block:: sh
 
     gcc -c -fdump-ada-spec -fada-spec-parent=Ext_C_Code -C ./test.h
 
-This will create the file ``ext_c_code-test_h.ads``:
+This creates the file ``ext_c_code-test_h.ads``:
 
 .. code:: ada
     :class: ada-syntax-only
@@ -432,16 +427,17 @@ This will create the file ``ext_c_code-test_h.ads``:
 Adapting bindings
 ~~~~~~~~~~~~~~~~~
 
-When creating bindings for a C header file, the compiler tries to do the
-best guess it can. However, the generated bindings do not always match the
-expectations we might have. This can happen, for example, when creating
-bindings for functions that deal with pointers. In this case, the compiler
-may just use :ada:`System.Address` for the pointers. Although this approach
-works fine (as we'll see later), this is not necessarily how developers
-would interpret the C header file. The following example will clarify this
-problem.
+The compiler does the best it can when creating bindings for a C header
+file. However, sometimes it has to guess about the translation and the
+generated bindings don't always match our expectations. For example,
+this can happen when creating bindings for functions that have
+pointers as arguments. In this case, the compiler may use
+:ada:`System.Address` as the type of one or more pointers. Although
+this approach works fine (as we'll see later), this is usually not how
+a human would interpret the C header file. The following example
+illustrates this issue.
 
-Let's start with the following C header file:
+Let's start with this C header file:
 
 .. code-block:: c
 
@@ -461,7 +457,7 @@ Let's start with the following C header file:
 
     void test_display(const struct test *t);
 
-This is the corresponding implementation:
+And the corresponding C implementation:
 
 .. code-block:: c
 
@@ -521,7 +517,7 @@ This is the corresponding implementation:
       printf("Address: %s\n", t->address);
     }
 
-Next, we'll create our bindings by running gcc:
+Next, we'll create our bindings:
 
 .. code-block:: sh
 
@@ -562,10 +558,11 @@ This creates the following specification in ``test_h.ads``:
 
     end test_h;
 
-As we can see, the bindings generator completely ignores the specification
-of :c:`struct test`. Also, all references to the ``test`` are replaced by
-simple addresses (:ada:`System.Address`). Of course, these bindings are good
-enough for creating a test application in Ada:
+As we can see, the binding generator completely ignores the
+declaration :c:`struct test` and all references to the ``test`` struct
+are replaced by addresses (:ada:`System.Address`). Nevertheless, these
+bindings are good enough to allow us to create a test application in
+Ada:
 
 .. code:: ada
 
@@ -592,20 +589,20 @@ enough for creating a test application in Ada:
        test_destroy (T);
     end Show_Automatic_C_Struct_Bindings;
 
-Even though we can successfully bind our C code with Ada using the
-automatic generated bindings, they are not ideal. Instead, we would like
-to have Ada bindings that match our (human) interpretation of the C header
-file. This will require manual analysis of the header file. The good news
-are that, at least, we can use the automatic generated bindings as a
-starting point and adapt them to our needs. For example, we can:
+We can successfully bind our C code with Ada using the
+automatically-generated bindings, but they aren't ideal. Instead, we would
+prefer Ada bindings that match our (human) interpretation of the C header
+file. This requires manual analysis of the header file. The good news is
+that we can use the automatic generated bindings as a starting point and
+adapt them to our needs. For example, we can:
 
     #. Define a ``Test`` type based on :ada:`System.Address` and use it in
-       all relevant function.
+       all relevant functions.
 
     #. Remove the ``test_`` prefix in all operations on the ``Test``
        type.
 
-This would be the resulting specification:
+This is the resulting specification:
 
 .. code:: ada
 
@@ -639,7 +636,7 @@ This would be the resulting specification:
 
     end adapted_test_h;
 
-This would be the corresponding Ada application:
+And this is the corresponding Ada body:
 
 .. code:: ada
 
@@ -666,5 +663,5 @@ This would be the corresponding Ada application:
        Destroy (T);
     end Show_Adapted_C_Struct_Bindings;
 
-Now, we're able to use the ``Test`` type and its operations in a clean,
-readable way.
+Now we can use the ``Test`` type and its operations in a clean, readable
+way.
