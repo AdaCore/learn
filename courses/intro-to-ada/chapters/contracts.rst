@@ -86,7 +86,7 @@ A(I)>`, where :ada:`A` is an array and :ada:`I` is an index.  Quantified
 expressions using :ada:`for all` check whether the condition is true for
 every element. For example:
 
-.. code:: ada
+.. code-block:: ada
     :class: ada-nocheck
 
     (for all I in A'Range => A (I) = 0)
@@ -103,6 +103,7 @@ elements.
 We illustrate postconditions using the following example:
 
 .. code:: ada
+
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Numerics.Elementary_Functions;
 
@@ -286,7 +287,7 @@ checked during compilation. They're particularly useful for representing
 non-contiguous elements of an enumeration. A classic example is a list of
 week days:
 
-.. code:: ada
+.. code-block:: ada
     :class: ada-nocheck
 
     type Week is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
@@ -294,7 +295,7 @@ week days:
 We can easily create a sub-list of work days in the week by specifying a
 :ada:`subtype` with a range based on :ada:`Week`. For example:
 
-.. code:: ada
+.. code-block:: ada
     :class: ada-nocheck
 
     subtype Work_Week is Week range Mon .. Fri;
@@ -304,7 +305,7 @@ us to pick specific days. However, we may want to create a list containing
 just the first, middle and last day of the work week. To do that, we use a
 static predicate:
 
-.. code:: ada
+.. code-block:: ada
     :class: ada-nocheck
 
    subtype Check_Days is Work_Week
