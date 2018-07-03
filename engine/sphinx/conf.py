@@ -90,7 +90,7 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'learn_theme'
+html_theme = 'learn_theme_2'
 
 html_title = "learn.adacore.com"
 
@@ -103,6 +103,8 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 html_theme_options = {
 
 }
+
+html_logo = "learn_theme_2/static/img/logo.svg"
 
 html_show_sourcelink = False
 
@@ -197,7 +199,7 @@ def setup(app):
         WIDGETS_SERVER_URL + "/static/ace-builds/src/ace.js",
         WIDGETS_SERVER_URL + "/static/jquery-3.2.1.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js",
-        WIDGETS_SERVER_URL + "/static/editors.js" 
+        WIDGETS_SERVER_URL + "/static/editors.js"
     ]
 
     css_paths = [
@@ -212,3 +214,4 @@ def setup(app):
 
     app.add_stylesheet('css/custom.css')
     app.add_javascript('js/theme.js')
+    app.add_javascript('js/custom.js')

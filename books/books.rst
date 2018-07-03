@@ -1,3 +1,8 @@
+.. meta::
+  :author: AdaCore
+
+:nextprev_state: False
+
 Books
 =========================
 

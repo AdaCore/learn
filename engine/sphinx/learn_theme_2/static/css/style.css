@@ -1,0 +1,58 @@
+@import url("theme.css"); /* make sure to sync this with the base theme's css filename */
+
+img.logo { 
+    width: 120px !important; 
+    height: auto; 
+/*    margin: 10px 20px !important;  */
+    text-align: right !important;
+}
+
+.wy-side-nav-search { 
+    background-color: #F56F23;
+}
+
+.wy-side-nav-search a { 
+   text-align: right !important;
+   float: right;
+}
+
+#sidebarfooter { 
+    padding: 20px; 
+    color: #878B9A; 
+    font-size: 12px; 
+    text-align: center; 
+}
+
+#sidebarfooter a { 
+    color: #878B9A; 
+}
+
+div.download-button.docutils.container { float: right; width: 300px; margin: 20px; }
+div.download-button.docutils.container img { width: 100%; height: auto; }
+
+div.content-blocks.docutils.container { margin: 0; padding: 0; }
+
+div.content-blocks.docutils.container li { list-style-type: none; }
+
+div.content-blocks.docutils.container li.toctree-l2 {
+	float: left; 
+    width: 33.333%; 
+    padding: 20px; 
+    height: 150px; 
+	border: 10px solid #FFF; 
+    background-color: #4A90E2; 
+    position: relative;
+	-webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box; 
+    box-sizing: border-box;
+}
+
+div.content-blocks.docutils.container .toctree-l1 > a {
+    display: none;
+}
+
+div.content-blocks.docutils.container .toctree-l2.course { background-color: #4A90E2; }
+div.content-blocks.docutils.container .toctree-l2.labs { background-color: #D91E5B; }
+div.content-blocks.docutils.container .toctree-l2.books { background-color: #F56F23; }
+
+div.content-blocks.docutils.container .toctree-l2 a { color: #FFF; position: absolute; font-size: 20px; bottom: 20px; }

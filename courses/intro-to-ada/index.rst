@@ -3,6 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. meta::
+  :author: AdaCore
+
+:nextprev_state: False
+
 Introduction to Ada
 ===================
 
