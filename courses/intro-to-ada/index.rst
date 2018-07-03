@@ -27,11 +27,3 @@ Introduction to Ada
     Object Oriented Programming <chapters/object_oriented_programming>
     Standard Library <chapters/standard_library>
     Appendices <chapters/appendices>
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
