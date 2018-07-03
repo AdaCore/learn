@@ -79,7 +79,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -92,6 +92,8 @@ pygments_style = 'sphinx'
 #
 html_theme = 'learn_theme_2'
 
+html_title = "learn.adacore.com"
+
 html_theme_path = ['.'] # make sphinx search for themes in current dir
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -101,6 +103,8 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 html_theme_options = {
 
 }
+
+html_logo = "learn_theme_2/static/img/logo.svg"
 
 html_show_sourcelink = False
 
@@ -195,13 +199,11 @@ def setup(app):
         WIDGETS_SERVER_URL + "/static/ace-builds/src/ace.js",
         WIDGETS_SERVER_URL + "/static/jquery-3.2.1.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js",
-#        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js",
-        WIDGETS_SERVER_URL + "/static/editors.js",
+        WIDGETS_SERVER_URL + "/static/editors.js"
     ]
 
     css_paths = [
-         WIDGETS_SERVER_URL + "/static/common.css",
-#        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
+         WIDGETS_SERVER_URL + "/static/common.css"
     ]
 
     for js in js_paths:
@@ -211,3 +213,5 @@ def setup(app):
         app.add_stylesheet(css)
 
     app.add_stylesheet('css/custom.css')
+    app.add_javascript('js/theme.js')
+    app.add_javascript('js/custom.js')

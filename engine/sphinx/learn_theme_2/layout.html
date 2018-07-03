@@ -144,16 +144,6 @@
         </div>
 
          <div class="wy-menu wy-menu-horiz" id="sidebarfooter">
-            <div class="social">
-               <a href="http://twitter.com/AdaCoreCompany"><span class="ss-social-circle ss-icon">Twitter</span></a>
-               <a href="https://www.linkedin.com/company/39996"><span class="ss-social-circle ss-icon">LinkedIn</span></a>
-               <a href="https://www.youtube.com/user/AdaCore05"><span class="ss-social-circle ss-icon">YouTube</span></a>
-               <a href="https://github.com/AdaCore"><span class="ss-social-circle ss-icon">GitHub</span></a>
-               <a href="https://www.adacore.com/rss"><span class="ss-social-circle ss-icon">RSS</span></a>
-            </div>
-
-            <div class="legal">Copyright &copy; 2018 AdaCore. All rights reserved. &nbsp;&nbsp;<a href="https://www.adacore.com/company/legal">Legal</a> &nbsp; |  &nbsp;<a href="https://www.adacore.com/company/privacy">Privacy Policy</a></div>
-
          </div>
       </div>
     </nav>
@@ -164,7 +154,19 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         {% block mobile_nav %}
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="{{ pathto(master_doc) }}">{{ project }}</a>
+            {% if logo and theme_logo_only %}
+              <a href="{{ pathto(master_doc) }}">
+            {% else %}
+              <a href="{{ pathto(master_doc) }}" class="icon icon-home"> {{ project }}
+            {% endif %}
+
+            {% if logo %}
+              {# Not strictly valid HTML, but it's the only way to display/scale
+                 it properly, without weird scripting or heaps of work
+              #}
+              <img src="{{ pathto('_static/' + logo, 1) }}" class="logo" alt="Logo"/>
+            {% endif %}
+          </a>
         {% endblock %}
       </nav>
 
@@ -176,7 +178,7 @@
         {% else %}
         <div class="rst-content">
         {% endif %}
-          {% include "breadcrumbs.html" %}
+          <!--{% include "breadcrumbs.html" %}-->
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
           {%- block document %}
            <div itemprop="articleBody">
