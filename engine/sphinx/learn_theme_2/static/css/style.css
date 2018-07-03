@@ -30,7 +30,13 @@ img.logo {
 div.download-button.docutils.container { float: right; width: 300px; margin: 20px; }
 div.download-button.docutils.container img { width: 100%; height: auto; }
 
-div.content-blocks.docutils.container { margin: 0; padding: 0; }
+div.content-blocks.docutils.container { 
+    margin: 10px; 
+    padding: 0px;
+
+    display: inline-block;
+    width: 100%; 
+}
 
 div.content-blocks.docutils.container li { list-style-type: none; }
 

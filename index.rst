@@ -8,14 +8,17 @@
   :alt: "Fork me on GitHub"
   :align: right
 
+Learn.adacore.com
+===================
+
+**Learn.adacore.com is an interactive learning platform designed to teach the Ada and SPARK programming languages.**
+With courses featuring hands-on labs and easy to understand code snippets, you will have the opportunity to see, understand and experiment with the language capabilities.
+
 .. container:: download-button
 
     .. image:: _static/img/download.png
         :target: https://www.adacore.com/download
         :alt: Download GNAT Community Edition
-
-**Learn.adacore.com is an interactive learning platform designed to teach the Ada and SPARK programming languages.**
-With courses featuring hands-on labs and easy to understand code snippets, you will have the opportunity to see, understand and experiment with the language capabilities.
 
 .. code:: ada
 
