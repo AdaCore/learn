@@ -144,13 +144,6 @@
         </div>
 
          <div class="wy-menu wy-menu-horiz" id="sidebarfooter">
-            <div class="legal">
-              Copyright &copy; 2018 AdaCore. All rights reserved. &nbsp;&nbsp;
-              <a href="https://www.adacore.com/company/legal">Legal</a>
-              &nbsp; |  &nbsp;
-              <a href="https://www.adacore.com/company/privacy">Privacy Policy</a>
-            </div>
-
          </div>
       </div>
     </nav>
@@ -161,7 +154,19 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         {% block mobile_nav %}
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="{{ pathto(master_doc) }}">{{ project }}</a>
+            {% if logo and theme_logo_only %}
+              <a href="{{ pathto(master_doc) }}">
+            {% else %}
+              <a href="{{ pathto(master_doc) }}" class="icon icon-home"> {{ project }}
+            {% endif %}
+
+            {% if logo %}
+              {# Not strictly valid HTML, but it's the only way to display/scale
+                 it properly, without weird scripting or heaps of work
+              #}
+              <img src="{{ pathto('_static/' + logo, 1) }}" class="logo" alt="Logo"/>
+            {% endif %}
+          </a>
         {% endblock %}
       </nav>
 
