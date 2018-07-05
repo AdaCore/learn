@@ -43,9 +43,10 @@ The Ada programming language was designed from its inception to be used in appli
 
 .. container:: download-button
 
-    .. image:: _static/img/download.png
+    .. image:: http://blog.adacore.com/uploads/_1800xAUTO_crop_center-center/GNAT-Community-2018-download.png
         :target: https://www.adacore.com/download
-        :alt: Download GNAT Community Edition
+        :alt: Gnatcommunity Download
+        :width: 100pc
 
 The SPARK programming language is a formally verifiable subset of the Ada language which allows developers to mathematically prove program correctness through static means. This is accomplished by exploiting the strengths of the Ada syntax while eliminating the features of the language that introduce ambiguity and non-deterministic behavior. The language put together with a verification toolset and a design methodology ensures the development and deployment of low-defect software for high reliability applications.
 
@@ -54,3 +55,8 @@ About AdaCore
 
 Founded in 1994, AdaCore is the leading provider of commercial and open-source software solutions for Ada, a state-of-the-art programming language designed for large, long-lived applications where safety, security, and reliability are critical. AdaCore is committed to being an active member of the software development community providing the GNAT Ada compiler and SPARK formal methods technologies as open-source projects to the world to advocate their use in the future of safe and reliable computing.
 
+.. container:: mwac-banner
+
+    .. image:: http://blog.adacore.com/uploads/_1800xAUTO_crop_center-center/MWAC-banner.png
+        :target: https://www.makewithada.org
+        :width: 100pc
