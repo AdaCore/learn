@@ -197,7 +197,7 @@ todo_include_todos = False
 def setup(app):
     js_paths = [
         WIDGETS_SERVER_URL + "/static/ace-builds/src/ace.js",
-        WIDGETS_SERVER_URL + "/static/jquery-3.2.1.min.js",
+ #       WIDGETS_SERVER_URL + "/static/jquery-3.2.1.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js",
         WIDGETS_SERVER_URL + "/static/editors.js"
     ]
