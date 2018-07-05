@@ -1,10 +1,17 @@
-:code-config:`run_button=True;prove_button=False;accumulate_code=True`
-
 Design by contracts
 ===================
 
+:code-config:`run_button=True;prove_button=False;accumulate_code=True`
+
 .. role:: ada(code)
    :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Contracts are used in programming to codify expectations. Parameter modes
 of a subprogram can be viewed as a simple of form of contracts. When the
