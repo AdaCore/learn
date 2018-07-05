@@ -59,11 +59,6 @@ div.download-button.docutils.container {
     margin: 20px; 
 }
 
-div.download-button.docutils.container img { 
-    width: 100%; 
-    height: auto; 
-}
-
 div.content-blocks.docutils.container { 
     margin: 10px; 
     padding: 0px;
