@@ -69,7 +69,7 @@ the type.
 
 Another point to note in the above example is the :ada:`My_Int'Image (I)`
 expression. The :ada:`Name'Attribute (optional params)` notation is used for
-what is called an `attribute <TODOLINKATTRS>`_ in Ada. An attribute is a
+what is called an attribute in Ada. An attribute is a
 built-in operation on a type, a value, or some other program entity.  It is
 accessed by using a :ada:`'` symbol (the ASCII apostrophe).
 
