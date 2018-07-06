@@ -1,7 +1,7 @@
 @import url("theme.css"); /* make sure to sync this with the base theme's css filename */
 
 img.logo { 
-    width: 120px !important; 
+    width: 150px !important; 
     height: auto; 
     /*    margin: 10px 20px !important;  */
     text-align: right !important;
