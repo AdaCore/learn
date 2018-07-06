@@ -310,9 +310,8 @@ Example #1
        when Assertion_Error => return;
     end Fail;
 
-This code is not correct.
+This code is not correct. The exception from the recursive call is always caught in the handler, but not the exception raised if caller of ``Fail`` passes :ada:`False` as value for ``Condition``.
 
-The exception from the recursive call is always caught in the handler, but not the exception raised if caller of ``Fail`` passes :ada:`False` as value for ``Condition``.
 
 Example #2
 ~~~~~~~~~~
@@ -334,9 +333,8 @@ Example #2
                   else
                     B (Idx) = B'Old (Idx)));
 
-This code is correct.
+This code is correct. GNAT will create a wrapper for checking the precondition and postcondition of ``Memset``, calling the imported ``memset`` from ``libc``.
 
-GNAT will create a wrapper for checking the precondition and postcondition of ``Memset``, calling the imported ``memset`` from ``libc``.
 
 Example #3
 ~~~~~~~~~~
@@ -353,9 +351,7 @@ Example #3
        ...
     end Sqrt;
 
-This code is not correct.
-
-Although GNAT inserts precondition checks in the subprogram body instead of its caller, it is the value of :ada:`Pre` assertion policy at the declaration of the subprogram that decides if preconditions are activated.
+This code is not correct. Although GNAT inserts precondition checks in the subprogram body instead of its caller, it is the value of :ada:`Pre` assertion policy at the declaration of the subprogram that decides if preconditions are activated.
 
 
 Example #4
@@ -373,9 +369,7 @@ Example #4
        ...
     end Sqrt;
 
-This code is not correct.
-
-Contract is allowed only on the spec of a subprogram. Hence it is not allowed on the body when a separate spec is available.
+This code is not correct. Contract is allowed only on the spec of a subprogram. Hence it is not allowed on the body when a separate spec is available.
 
 
 Example #5
@@ -394,9 +388,7 @@ Example #5
     end Add;
 
 
-This code is not correct.
-
-Postcondition is only relevant for normal returns.
+This code is not correct. Postcondition is only relevant for normal returns.
 
 
 Example #6
@@ -412,9 +404,7 @@ Example #6
        Z := X + Y;
     end Add;
 
-This code is correct.
-
-Procedure may raise an exception, but postcondition correctly describes normal returns.
+This code is correct. Procedure may raise an exception, but postcondition correctly describes normal returns.
 
 
 Example #7
@@ -430,11 +420,7 @@ Example #7
        Z := X + Y;
     end Add;
 
-This code is correct.
-
-Precondition prevents exception inside ``Add``.
-
-Postcondition is always satisfied.
+This code is correct. Precondition prevents exception inside ``Add``. Postcondition is always satisfied.
 
 
 Example #8
@@ -454,9 +440,7 @@ Example #8
                   else
                     B (Idx) = B (Idx)'Old));
 
-This code is not correct.
-
-:ada:`'Old` on expression including a quantified variable is not allowed.
+This code is not correct. :ada:`'Old` on expression including a quantified variable is not allowed.
 
 
 Example #9
@@ -473,9 +457,7 @@ Example #9
        Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)
          and then B (B'First + N) = B (B'First + N)'Old;
 
-This code is not correct.
-
-:ada:`Expr'Old` on potentially unevaluated expression is allowed only when :ada:`Expr` is a variable.
+This code is not correct. :ada:`Expr'Old` on potentially unevaluated expression is allowed only when :ada:`Expr` is a variable.
 
 
 Example #10
@@ -492,9 +474,4 @@ Example #10
        Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)
          and B (B'First + N) = B (B'First + N)'Old;
 
-This code is correct.
-
-:ada:`Expr'Old` does not appear anymore in a potentially unevaluated expression.
-
-Another solution would have been to apply :ada:`'Old` on ``B`` or to use
-:ada:`pragma Unevaluated_Use_Of_Old (Allow)`;
+This code is correct. :ada:`Expr'Old` does not appear anymore in a potentially unevaluated expression. Another solution would have been to apply :ada:`'Old` on ``B`` or to use :ada:`pragma Unevaluated_Use_Of_Old (Allow)`.

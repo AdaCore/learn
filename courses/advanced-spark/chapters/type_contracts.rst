@@ -290,9 +290,7 @@ Example #1
     subtype Weekend is Day range Saturday .. Sunday;
     subtype Day_Off is Day range Wednesday | Weekend;
 
-This code is not correct.
-
-The syntax of range constraints does not allow sets of values. A predicate should be used instead.
+This code is not correct. The syntax of range constraints does not allow sets of values. A predicate should be used instead.
 
 
 Example #2
@@ -305,9 +303,7 @@ Example #2
     subtype Day_Off is Weekend with
       Static_Predicate => Day_Off in Wednesday | Weekend;
 
-This code is not correct.
-
-This is accepted by GNAT, but result is not the one expected by the user. ``Day_Off`` has the same constraint as ``Weekend``.
+This code is not correct. This is accepted by GNAT, but result is not the one expected by the user. ``Day_Off`` has the same constraint as ``Weekend``.
 
 
 Example #3
@@ -320,9 +316,7 @@ Example #3
     subtype Day_Off is Day with
       Dynamic_Predicate => Day_Off in Wednesday | Weekend;
 
-This code is correct.
-
-It is valid to use a :ada:`Dynamic_Predicate` where a :ada:`Static_Predicate` would be allowed.
+This code is correct. It is valid to use a :ada:`Dynamic_Predicate` where a :ada:`Static_Predicate` would be allowed.
 
 
 Example #4
@@ -339,9 +333,7 @@ Example #4
        end case;
     end Next_Day_Off;
 
-This code is correct.
-
-It is valid to use a type with :ada:`Static_Predicate` for the value tested in a case statement. This is not true for :ada:`Dynamic_Predicate`.
+This code is correct. It is valid to use a type with :ada:`Static_Predicate` for the value tested in a case statement. This is not true for :ada:`Dynamic_Predicate`.
 
 
 Example #5
@@ -359,11 +351,7 @@ Example #5
        function Valid (WS : Week_Schedule) return Boolean is
           (WS.Day_Off /= WS.Day_On_Duty);
 
-This code is correct.
-
-It is valid in Ada because the type invariant is not checked on entry or return from ``Valid``. Also, function ``Valid`` is visible from the type invariant (special visibility in contracts).
-
-But it is invalid in SPARK, where private declaration cannot hold a type invariant. The reason is that the type invariant is assumed in the precondition of public functions for proof. That would lead to circular reasoning if ``Valid`` could be public.
+This code is correct. It is valid in Ada because the type invariant is not checked on entry or return from ``Valid``. Also, function ``Valid`` is visible from the type invariant (special visibility in contracts). But it is invalid in SPARK, where private declaration cannot hold a type invariant. The reason is that the type invariant is assumed in the precondition of public functions for proof. That would lead to circular reasoning if ``Valid`` could be public.
 
 
 Example #6
@@ -381,9 +369,7 @@ Example #6
        function Valid (WS : Week_Schedule) return Boolean is
           (WS.Day_Off /= WS.Day_On_Duty);
 
-This code is correct.
-
-This version is valid in both Ada and SPARK.
+This code is correct. This version is valid in both Ada and SPARK.
 
 
 Example #7
@@ -406,15 +392,13 @@ Example #7
         Unique_Sorted_String in Sorted_String and then
         Unique_Sorted_String in Unique_String;
 
-This code is not correct.
+This code is not correct. There are 3 problems in this code:
 
-There are 3 problems in this code:
+- there is a run-time error on the array access in ``Sorted_String``;
 
-- there is a run-time error on the array access in ``Sorted_String``
+- quantified expression defines only one variable;
 
-- quantified expression defines only one variable
-
-- the property in ``Unique_String`` is true only for the empty string
+- the property in ``Unique_String`` is true only for the empty string.
 
 
 Example #8
@@ -440,9 +424,7 @@ Example #8
         Unique_Sorted_String in Sorted_String and then
         Unique_Sorted_String in Unique_String;
 
-This code is correct.
-
-This is a correct version in Ada. For proving AoRTE in SPARK, one will need to change slightly the property of ``Sorted_String``.
+This code is correct. This is a correct version in Ada. For proving AoRTE in SPARK, one will need to change slightly the property of ``Sorted_String``.
 
 
 Example #9
@@ -462,9 +444,7 @@ Example #9
        function Valid (WS : Week_Schedule) return Boolean is
           (WS.Day_Off /= WS.Day_On_Duty);
 
-This code is not correct.
-
-The default initial condition is not satisfied.
+This code is not correct. The default initial condition is not satisfied.
 
 
 Example #10
@@ -485,6 +465,4 @@ Example #10
        function Valid (WS : Week_Schedule) return Boolean is
           (WS.Day_Off /= WS.Day_On_Duty);
 
-This code is correct.
-
-This is a correct version, which can be proved with SPARK.
+This code is correct. This is a correct version, which can be proved with SPARK.

@@ -119,6 +119,7 @@ Concurrency – A trivial example
 
 - Id can be written by ``T1`` and ``T2`` at the same time
 
+
 Setup for using concurrency in SPARK
 ---------------------------------------------------------------------
 
@@ -141,7 +142,6 @@ Setup for using concurrency in SPARK
 - ... which are checked by GNAT partition-wide
 
     - pragmas needed for verification even it not for compilation
-
 
 
 Tasks in Ravenscar
@@ -180,6 +180,7 @@ Tasks in Ravenscar
        A, B : TT;
     end record;
 
+
 Communication Between Tasks in Ravenscar
 ---------------------------------------------------------------------
 
@@ -211,6 +212,7 @@ Communication Between Tasks in Ravenscar
          (The_Data);
     end P;
 
+
 Protected Objects in Ravenscar
 ---------------------------------------------------------------------
 
@@ -231,6 +233,7 @@ Protected Objects in Ravenscar
        A, B : PT;
     end record with Volatile;
     PR : PRT;
+
 
 Protected Communication with Procedures & Functions
 ---------------------------------------------------------------------
@@ -287,7 +290,6 @@ Blocking Communication with Entries
     end P;
 
 
-
 Relaxed Constraints on Entries with Extended Ravenscar
 ---------------------------------------------------------------------
 
@@ -312,6 +314,7 @@ Relaxed Constraints on Entries with Extended Ravenscar
        entry Publish when Num_Messages < Max is ...
        entry Retrieve when Num_Messages > 0 is ...
     end P;
+
 
 Interrupt Handlers in Ravenscar
 ---------------------------------------------------------------------
@@ -411,7 +414,6 @@ State Abstraction over Synchronized Variables
     - tasks are not volatile and can be part of regular abstract state
 
 
-
 Synchronized Abstract State in the Standard Library
 ---------------------------------------------------------------------
 
@@ -440,7 +442,6 @@ Synchronized Abstract State in the Standard Library
 - API of these units refer to :ada:`Tasking_State` and :ada:`Clock_Time`
 
 
-
 Code Examples / Pitfalls
 ---------------------------------------------------------------------
 
@@ -463,11 +464,8 @@ Example #1
        T1.Start;
     end Rendezvous;
 
-This code is not correct.
+This code is not correct. Task rendezvous is not allowed; violation of restriction :ada:`Max_Task_Entries = 0`. A local task is not allowed; violation of restriction :ada:`No_Task_Hierarchy`
 
-Task rendezvous is not allowed; violation of restriction :ada:`Max_Task_Entries = 0`
-
-Local task is not allowed; violation of restriction :ada:`No_Task_Hierarchy`
 
 Example #2
 ~~~~~~~~~~
@@ -487,10 +485,8 @@ Example #2
        end Reset;
     end P;
 
-This code is not correct.
+This code is not correct. Global data in entry guard is not allowed. Violation of restriction :ada:`Simple_Barriers` (for Ravenscar) or :ada:`Pure_Barriers` (for Extended Ravenscar)
 
-Global data in entry guard is not allowed.
-violation of restriction :ada:`Simple_Barriers` (for Ravenscar) or :ada:`Pure_Barriers` (for Extended Ravenscar)
 
 Example #3
 ~~~~~~~~~~
@@ -520,9 +516,8 @@ Example #3
        end loop;
     end TT;
 
-This code is not correct.
+This code is not correct. Global unprotected data accessed in protected object shared between tasks
 
-Global unprotected data accessed in protected object shared between tasks
 
 Example #4
 ~~~~~~~~~~
@@ -551,9 +546,8 @@ Example #4
        end loop;
     end TT;
 
-This code is correct.
+This code is correct. ``Data`` is part of the protected object state. The only accesses to ``Data`` are through ``P``.
 
-``Data`` is part of the protected object state. The only accesses to ``Data`` are through ``P``.
 
 Example #5
 ~~~~~~~~~~
@@ -586,11 +580,8 @@ Example #5
     end TT;
 
 
-This code is correct.
+This code is correct. :ada:`Ceiling_Priority` policy is respected. Task never accesses a protected object with lower priority than its active priority. Note that PO can call procedure or function from another PO, but not an entry (possibly blocking).
 
-:ada:`Ceiling_Priority` policy is respected. Task never accesses a protected object with lower priority than its active priority.
-
-Note that PO can call procedure or function from another PO, but not an entry (possibly blocking).
 
 Example #6
 ~~~~~~~~~~
@@ -619,9 +610,8 @@ Example #6
        entry Retrieve when Not_Empty is ...
     end Mailbox;
 
-This code is not correct.
+This code is not correct. Integer range cannot be proved correct.
 
-integer range cannot be proved correct
 
 Example #7
 ~~~~~~~~~~
@@ -648,9 +638,8 @@ Example #7
        end Retrieve;
     end Mailbox;
 
-This code is correct.
+This code is correct. Precise range obtained from entry guards allows to prove checks.
 
-Precise range obtained from entry guards allows to prove checks.
 
 Example #8
 ~~~~~~~~~~
@@ -679,9 +668,8 @@ Example #8
           C := (True, Not_Full, Num_Messages);
        end Publish;
 
-This code is correct.
+This code is correct. Precise range obtained from predicate allows to prove checks. Predicate is preserved.
 
-Precise range obtained from predicate allows to prove checks. Predicate is preserved.
 
 Example #9
 ~~~~~~~~~~
@@ -705,9 +693,8 @@ Example #9
        end loop;
     end T;
 
-This code is not correct.
+This code is not correct. Unsynchronized state cannot be accessed from multiple tasks or protected objects.
 
-Unsynchronized state cannot be accessed from multiple tasks or protected objects.
 
 Example #10
 ~~~~~~~~~~~
@@ -731,6 +718,4 @@ Example #10
        end loop;
     end T;
 
-This code is correct.
-
-Abstract state is synchronized, hence can be accessed from multiple tasks and protected objects.
+This code is correct. Abstract state is synchronized, hence can be accessed from multiple tasks and protected objects.

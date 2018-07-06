@@ -94,7 +94,6 @@ Methods in SPARK
 
     not overriding procedure Blur (Arg : in out Approx_Int);
 
-
 - Method called depends on static type
 
 .. code:: ada
@@ -103,11 +102,9 @@ Methods in SPARK
     Bump (I); -- call to Int.Bump
     I.Bump; -- call to Int.Bump (object.method notation)
 
-
     AI : Approx_Int;
     Bump (AI); -- call to Approx_Int.Bump
     Bump (Int(AI)); -- call to Int.Bump
-
 
 
 Dynamic dispatching in SPARK
@@ -138,7 +135,6 @@ Dynamic dispatching in SPARK
     procedure Call_Bump (Arg : in out Int'Class);
     Call_Bump (Int'Class(I)); -- calls Int.Bump(I)
     Call_Bump (Int'Class(AI)); -- calls Approx_Int.Bump(AI)
-
 
 
 Dynamic dispatching – A trivial example
@@ -196,20 +192,17 @@ LSP – the SPARK solution to dynamic dispatching problems
        Pre'Class  => Arg.Value < Arg.Max - 10,
        Post'Class => Arg.Value > Arg.Value'Old;
 
-
 .. code:: ada
 
     procedure Bump (Arg : in out Approx_Int) with
        Pre'Class  => Arg.Value > 100,
        Post'Class => Arg.Value = Arg.Value'Old;
 
-
 .. code:: ada
 
     procedure Bump (Arg : in out Approx_Int) with
        Pre'Class  => True,
        Post'Class => Arg.Value = Arg.Value'Old + 10;
-
 
 .. code:: ada
 
@@ -233,8 +226,6 @@ LSP – verification of dynamic dispatching calls
        Arg.Bump;
     end Call_Bump;
 
-
-
 - LSP applies to data dependencies too
 
     - overriding method cannot read more global variables
@@ -244,7 +235,6 @@ LSP – verification of dynamic dispatching calls
     - overriding method cannot have new input-output flows
 
     - SPARK RM defines :ada:`Global'Class` and :ada:`Depends'Class` (not yet implemented ⟶ use :ada:`Global` and :ada:`Depends` instead)
-
 
 
 LSP – class-wide contracts and data abstraction
@@ -262,10 +252,6 @@ LSP – class-wide contracts and data abstraction
        Pre'Class  => Arg.Small,
        Post'Class => Arg.Get_Value > Arg.Get_Value'Old;
 
-
-
-
-
 - Typically use expression functions for abstraction
 
 .. code:: ada
@@ -277,8 +263,6 @@ LSP – class-wide contracts and data abstraction
          (Arg.Value);
        function Small (Arg : Int) return Boolean is
          (Arg.Value < Arg.Max - 10);
-
-
 
 
 LSP – class-wide contracts, data abstraction and overriding
@@ -299,10 +283,6 @@ LSP – class-wide contracts, data abstraction and overriding
     function Small (Arg : Approx_Int) return Boolean is
       (Arg.Value in 1 .. 100);
 
-
-
-
-
 - Inherited contract reinterpreted for derived class
 
 .. code:: ada
@@ -310,8 +290,6 @@ LSP – class-wide contracts, data abstraction and overriding
     overriding procedure Bump (Arg : in out Approx_Int);
       --  inherited Pre'Class uses Approx_Int.Small
       --  inherited Post'Class uses Approx_Int.Get_Value
-
-
 
 
 Dynamic semantics of class-wide contracts
@@ -336,7 +314,6 @@ Dynamic semantics of class-wide contracts
     - LSP guarantees stronger than dynamic semantics
 
 
-
 Redispatching and Extensions_Visible aspect
 ---------------------------------------------------------------------
 
@@ -345,14 +322,12 @@ Redispatching and Extensions_Visible aspect
     - formal parameter cannot be converted to class-wide type when
 :ada:`Extensions_Visible` is :ada:`False`
 
-
 .. code:: ada
 
     procedure Re_Call_Bump (Arg : in out Int) is
     begin
        Int'Class(Arg).Bump;
     end Re_Call_Bump;
-
 
 - Aspect :ada:`Extensions_Visible` allows class-wide conversion
 
@@ -384,9 +359,7 @@ Example #1
        Pre'Class  => Arg.Value < Arg.Max - 10,
        Post'Class => Arg.Value > Arg.Value'Old;
 
-This code is not correct.
-
-Class-wide contracts are only allowed on tagged records.
+This code is not correct. Class-wide contracts are only allowed on tagged records.
 
 Example #2
 ~~~~~~~~~~
@@ -401,9 +374,7 @@ Example #2
        Pre  => Arg.Value < Arg.Max - 10,
        Post => Arg.Value > Arg.Value'Old;
 
-This code is not correct.
-
-Plain precondition on dispatching subprogram is not allowed in SPARK. Otherwise it would have to be both weaker and stronger than the class-wide precondition (because they are both checked dynamically on both plain calls and dispatching calls).
+This code is not correct. Plain precondition on dispatching subprogram is not allowed in SPARK. Otherwise it would have to be both weaker and stronger than the class-wide precondition (because they are both checked dynamically on both plain calls and dispatching calls).
 
 Plain postcondition is allowed, and should be stronger than class-wide postcondition (plain postcondition used for plain calls).
 
@@ -424,9 +395,7 @@ Example #3
        Arg.Value := Arg.Value + 10;
     end Bump;
 
-This code is correct.
-
-Class-wide precondition of ``Int.Bump`` is inherited by ``Approx_Int.Bump``. Class-wide postcondition of ``Approx_Int.Bump`` is stronger than the one of ``Int.Bump``.
+This code is correct. Class-wide precondition of ``Int.Bump`` is inherited by ``Approx_Int.Bump``. Class-wide postcondition of ``Approx_Int.Bump`` is stronger than the one of ``Int.Bump``.
 
 
 Example #4
@@ -448,9 +417,7 @@ Example #4
 
     -- inherited function “+”
 
-This code is not correct.
-
-type must be declared abstract or :ada:`"+"` overridden
+This code is not correct. A type must be declared abstract or :ada:`"+"` overridden.
 
 
 Example #5
@@ -471,10 +438,7 @@ Example #5
     -- inherited procedure Reset
 
 
-This code is not correct.
-
-type must be declared abstract or ``Reset`` overridden
-``Reset`` is subject to :ada:`Extensions_Visible:ada:` :ada:`False`
+This code is not correct. A type must be declared abstract or ``Reset`` overridden ``Reset`` is subject to :ada:`Extensions_Visible:ada:` :ada:`False`.
 
 
 Example #6
@@ -495,9 +459,7 @@ Example #6
 
     -- inherited procedure Reset
 
-This code is not correct.
-
-high: extension of ``Arg`` is not initialized in ``Reset``
+This code is not correct. High: extension of ``Arg`` is not initialized in ``Reset``.
 
 
 Example #7
@@ -518,9 +480,7 @@ Example #7
 
     -- inherited procedure Reset
 
-This code is correct.
-
-Redispatching ensures that ``Arg`` is fully initialized on return.
+This code is correct. Redispatching ensures that ``Arg`` is fully initialized on return.
 
 
 Example #8
@@ -546,9 +506,7 @@ Example #8
        F.Close;
     end Use_File_System;
 
-This code is correct.
-
-State automaton encoded in class-wide contracts is respected.
+This code is correct. State automaton encoded in class-wide contracts is respected.
 
 
 Example #9
@@ -574,9 +532,7 @@ Example #9
        F.Close;
     end Use_File_System;
 
-This code is not correct.
-
-medium: class-wide precondition might be stronger than overridden one
+This code is not correct. Medium: class-wide precondition might be stronger than overridden one
 
 
 Example #10
@@ -603,7 +559,4 @@ Example #10
           Predicate => File_System.File (File).Closed
                     or In_Synch;
 
-This code is correct.
-
-Predicate encodes the additional constraint on opened files.
-Type invariants are not yet supported on tagged types in SPARK.
+This code is correct. Predicate encodes the additional constraint on opened files. Type invariants are not yet supported on tagged types in SPARK.

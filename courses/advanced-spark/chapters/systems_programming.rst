@@ -314,7 +314,6 @@ Constraints on Address Attribute
     --  assertion wrongly proved
 
 
-
 Can something be known of volatile variables?
 ---------------------------------------------------------------------
 
@@ -342,7 +341,6 @@ Can something be known of volatile variables?
     end Read_Value;
 
 
-
 Other Concerns in Systems Programming
 ---------------------------------------------------------------------
 
@@ -367,8 +365,6 @@ Other Concerns in Systems Programming
     - Ravenscar and Extended_Ravenscar profiles supported in SPARK
 
 
-
-
 Code Examples / Pitfalls
 ---------------------------------------------------------------------
 
@@ -389,9 +385,8 @@ Example #1
        Val := X;
     end Get;
 
-This code is not correct.
+This code is not correct. ``X`` has :ada:`Effective_Reads` set by default, hence it is also an output.
 
-``X`` has :ada:`Effective_Reads` set by default, hence it is also an output
 
 Example #2
 ~~~~~~~~~~
@@ -410,9 +405,8 @@ Example #2
        Val := X;
     end Get;
 
-This code is correct.
+This code is correct. ``X`` has :ada:`Effective_Reads = False`, hence it is only an input.
 
-``X`` has :ada:`Effective_Reads = False`, hence it is only an input
 
 Example #3
 ~~~~~~~~~~
@@ -432,10 +426,8 @@ Example #3
        end if;
     end Adjust;
 
-This code is correct.
+This code is correct. ``Speed`` is an input only, ``Motor`` is both an input and output. Note how the current value of ``Speed`` is first copied to be tested in a larger expression.
 
-``Speed`` is an input only, ``Motor`` is both an input and output.
-Note how the current value of ``Speed`` is first copied to be tested in a larger expression.
 
 Example #4
 ~~~~~~~~~~
@@ -458,9 +450,7 @@ Example #4
        Data := Data2;
     end Smooth;
 
-This code is not correct.
-
-``Raw_Data`` has :ada:`Effective_Reads` set, hence it is also an output
+This code is not correct. ``Raw_Data`` has :ada:`Effective_Reads` set, hence it is also an output.
 
 Example #5
 ~~~~~~~~~~
@@ -477,9 +467,8 @@ Example #5
       (Integer (Regs (R)))
       with Volatile_Function;
 
-This code is not correct.
+This code is not correct. ``Regs`` has :ada:`Async_Writers` set, hence it cannot appear as the expression in an expression function.
 
-``Regs`` has :ada:`Async_Writers` set, hence it cannot appear as the expression in an expression function
 
 Example #6
 ~~~~~~~~~~
@@ -500,9 +489,8 @@ Example #6
        return Integer (V);
     end Reg;
 
-This code is not correct.
+This code is not correct. ``Regval`` is a volatile type, hence variable ``V`` is volatile and cannot be declared locally.
 
-``Regval`` is a volatile type, hence variable ``V`` is volatile and cannot be declared locally
 
 Example #7
 ~~~~~~~~~~
@@ -522,11 +510,8 @@ Example #7
        return Integer (Regs (R));
     end Reg;
 
-This code is correct.
+This code is correct. ``Regs`` has :ada:`Effective_Reads = False` hence can be read in a function. Function ``Reg`` is marked as volatile with aspect :ada:`Volatile_Function`. No volatile variable is declared locally.
 
-``Regs`` has :ada:`Effective_Reads = False` hence can be read in a function.
-Function ``Reg`` is marked as volatile with aspect :ada:`Volatile_Function`.
-No volatile variable is declared locally.
 
 Example #8
 ~~~~~~~~~~
@@ -546,11 +531,8 @@ Example #8
        Z : Integer := 0;
     end P;
 
-This code is not correct.
+This code is not correct. ``X`` has :ada:`Async_Writers = False`, hence is not considered as always initialized. As aspect :ada:`Initializes` specifies that ``State`` should be initialized after elaboration, this is an error. Note that is allowed to bundle volatile and non-volatile variables in an external abstract state.
 
-``X`` has :ada:`Async_Writers = False`, hence is not considered as always initialized. As aspect :ada:`Initializes` specifies that ``State`` should be initialized after elaboration, this is an error.
-
-Note that is allowed to bundle volatile and non-volatile variables in an external abstract state.
 
 Example #9
 ~~~~~~~~~~
@@ -574,9 +556,8 @@ Example #9
        return Natural'Max (Val1, Val2);
     end Max;
 
-This code is not correct.
+This code is not correct. ``X`` has :ada:`Async_Writers` set, hence it may have been written between the successive reads of ``X.U`` and ``X.V``.
 
-``X`` has :ada:`Async_Writers` set, hence it may have been written between the successive reads of ``X.U`` and ``X.V``
 
 Example #10
 ~~~~~~~~~~~
@@ -601,6 +582,4 @@ Example #10
        return Natural'Max (Val1, Val2);
     end Max;
 
-This code is correct.
-
-Values of ``P.U`` and ``P.V`` are provably different, and the postcondition is proved.
+This code is correct. Values of ``P.U`` and ``P.V`` are provably different, and the postcondition is proved.
