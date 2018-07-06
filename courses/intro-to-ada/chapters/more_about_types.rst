@@ -749,8 +749,7 @@ displayed for C is 0.000500.
 Fixed-point types
 ~~~~~~~~~~~~~~~~~
 
-.. ?? Ordinary fixed-point types distinguish between the 'delta and the 'small
-.. ?? This is somewhat complex but needs to be mentioned
+.. TODO: add link to advanced lesson that discusses 'Delta vs. 'Small
 
 Ordinary fixed-point types are similar to decimal fixed-point types in that the
 values are, in effect, scaled integers.  The difference between them is in the
