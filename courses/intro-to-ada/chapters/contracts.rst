@@ -408,7 +408,7 @@ of checks. The following table summarizes the differences:
 
 +------------+-----------------------------+-----------------------------+
 | Element    | Subprogram parameter checks | Assignment checks           |
-+==========================================+=============================+
++============+=============================+=============================+
 | Predicates | On all :ada:`in` and        | On assignments and explicit |
 |            | :ada:`out` parameters       | initializations             |
 +------------+-----------------------------+-----------------------------+
