@@ -8,6 +8,8 @@ language design, owing to factors such as the growth of statically typed
 functional programming, a big push from the research community in the typing
 domain, and many practical languages with strong type systems.
 
+.. _WhatIsAType:
+
 What is a type?
 ---------------
 
@@ -56,8 +58,7 @@ regard, which is unlike most languages, and arguably very elegant.
 This example illustrates the declaration of a signed integer type, and
 several things we can do with them.
 
-Every type declaration in Ada (`well almost <TODOTASKTYPES>`_) starts with the
-:ada:`type` keyword. After the type, we can see a range that looks a lot like
+Every type declaration in Ada starts with the :ada:`type` keyword (except for :ref:`task types <TaskTypes>`). After the type, we can see a range that looks a lot like
 the ranges that we use in for loops, that defines the low and high bound of the
 type. Every integer in the inclusive range of the bounds is a valid value for
 the type.
@@ -177,6 +178,8 @@ you can rely on it to implement portable code. Also, being able to leverage the
 wrapping on arbitrary bounds is very useful -- the modulus does not need to be
 a power of 2 -- to implement certain algorithms and data structures, such as
 `ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`_.
+
+.. _EnumTypes:
 
 Enumerations
 ------------

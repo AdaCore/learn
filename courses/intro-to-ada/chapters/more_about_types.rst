@@ -2,6 +2,8 @@ More about types
 ================
 :code-config:`reset_accumulator=True`
 
+.. _Aggregates:
+
 Aggregates: A primer
 --------------------
 
@@ -65,7 +67,7 @@ Overloading and qualified expressions
 -------------------------------------
 
 Ada has a general concept of name overloading, which we saw earlier
-in the section on enumeration types TODOPUTLINK.
+in the section on :ref:`enumeration types <EnumTypes>`.
 
 Let's take a simple example: it is possible in Ada to have functions that have
 the same name, but different types for their parameters.
