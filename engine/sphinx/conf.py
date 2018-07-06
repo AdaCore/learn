@@ -199,12 +199,17 @@ def setup(app):
         WIDGETS_SERVER_URL + "/static/ace-builds/src/ace.js",
  #       WIDGETS_SERVER_URL + "/static/jquery-3.2.1.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js",
-        WIDGETS_SERVER_URL + "/static/editors.js"
+        WIDGETS_SERVER_URL + "/static/editors.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"
     ]
 
     css_paths = [
-         WIDGETS_SERVER_URL + "/static/common.css"
+         WIDGETS_SERVER_URL + "/static/common.css",
+         "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css",
+         "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css"
     ]
+
+    app.add_javascript('js/customizer.js')
 
     for js in js_paths:
         app.add_javascript(js)
@@ -212,6 +217,5 @@ def setup(app):
     for css in css_paths:
         app.add_stylesheet(css)
 
+    app.add_javascript('js/carousel.js')
     app.add_stylesheet('css/custom.css')
-    app.add_javascript('js/theme.js')
-    app.add_javascript('js/custom.js')

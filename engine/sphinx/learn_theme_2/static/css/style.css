@@ -3,7 +3,7 @@
 img.logo { 
     width: 120px !important; 
     height: auto; 
-/*    margin: 10px 20px !important;  */
+    /*    margin: 10px 20px !important;  */
     text-align: right !important;
 }
 
@@ -21,8 +21,8 @@ img.logo {
 } 
 
 .wy-side-nav-search a { 
-   text-align: right !important;
-   float: right;
+ text-align: right !important;
+ float: right;
 }
 
 .legal { 
@@ -59,44 +59,39 @@ div.download-button.docutils.container {
     margin: 20px; 
 }
 
-div.content-blocks.docutils.container { 
-    margin: 10px; 
-    padding: 0px;
-
-    display: inline-block;
-    width: 100%; 
+.slider {
+    width: 50%;
+    margin: 100px auto;
+}
+.slick-slide {
+  margin: 0px 20px;
+}
+.slick-slide img {
+  width: 100%;
+}
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+}
+.slick-slide {
+  transition: all ease-in-out .3s;
+  opacity: .2;
+}
+.slick-active {
+  opacity: .5;
+}
+.slick-current {
+  opacity: 1;
 }
 
-div.content-blocks.docutils.container li { 
-    list-style-type: none; 
+.slider.courses {
+    background-color: #4A90E2;
 }
 
-div.content-blocks.docutils.container li.toctree-l2 {
-	float: left; 
-    min-width: 15em;
-    width: 33.333%; 
-    padding: 20px; 
-    height: 150px; 
-	border: 10px solid #FFF; 
-    background-color: #4A90E2; 
-    position: relative;
-	-webkit-box-sizing: border-box; 
-    -moz-box-sizing: border-box; 
-    box-sizing: border-box;
-    display: inline-block;
+.slider.labs {
+    background-color: #D91E5B;
 }
 
-div.content-blocks.docutils.container .toctree-l1 > a {
-    display: none;
-}
-
-div.content-blocks.docutils.container .toctree-l2.course { background-color: #4A90E2; }
-div.content-blocks.docutils.container .toctree-l2.labs { background-color: #D91E5B; }
-div.content-blocks.docutils.container .toctree-l2.books { background-color: #F56F23; }
-
-div.content-blocks.docutils.container .toctree-l2 a { 
-    color: #FFF; 
-    position: absolute; 
-    font-size: 20px; 
-    bottom: 20px; 
+.slider.books {
+    background-color: #F56F23;
 }
