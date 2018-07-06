@@ -522,9 +522,11 @@ will in turn prevent some subtle errors.
     in order to be accepted by the compiler.
 
 - You can use Ada's strong typing to help
-  `enforce invariants <TODOLINKINVARIANTS>`_ in your code, as in the example
+  enforce invariants in your code, as in the example
   above: Since Miles and Meters are two different types, you cannot mistakenly
   convert an instance of one to an instance of the other.
+
+.. TODO: Add link to invariants
 
 Derived types
 -------------

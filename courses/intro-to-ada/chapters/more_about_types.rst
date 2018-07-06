@@ -199,11 +199,14 @@ pointers:
    "escape hatches" when the programmer explicitly requests them and presumably
    will be exercising such features with appropriate care.
 
-This course covers the basics of Ada pointers, which are known as "access
-values". There are generally better ways than to resort to the advanced
-features directly but if you need to use features that are potentially unsafe,
-you can learn more about those `unsafe features
-<TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
+.. TODO: Add paragraph and link below when advanced course is ready
+
+..
+   This course covers the basics of Ada pointers, which are known as "access
+   values". There are generally better ways than to resort to the advanced
+   features directly but if you need to use features that are potentially unsafe,
+   you can learn more about those unsafe features
+   ACCESS_TYPES_ADVANCED_LINK.
 
 Here is how you declare a simple pointer type, or access type, in Ada:
 
@@ -375,8 +378,13 @@ features that are considered fundamental to the use of pointers, such as:
   Ada, you need to never deallocate manually.
 
 Those features exist in Ada, but are only available through specific standard
-library APIs. You can read more about those in the
-`advanced course on memory management <TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
+library APIs.
+
+.. TODO: Add paragraph and link below when advanced course is ready
+
+..
+   You can read more about those in the
+   advanced course on memory management ACCESS_TYPES_ADVANCED_LINK.
 
 .. attention::
 
