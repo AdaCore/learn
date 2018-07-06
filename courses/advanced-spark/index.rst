@@ -10,7 +10,7 @@ Advanced SPARK
     Systems Programming <chapters/systems_programming>
     Concurrency <chapters/concurrency>
     Object-oriented Programming <chapters/object_oriented_programming>
-    Object-oriented Programming <chapters/ghost_code>
+    Ghost code <chapters/ghost_code>
 
 
 Indices and tables
