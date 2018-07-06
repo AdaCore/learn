@@ -119,7 +119,8 @@ to the correctness of your code that is much higher than with a regular
 programming language.
 
 There is a
-`dedicated class for the SPARK language <https://TODOLINKTOSPARKCOURSE>`_,
+dedicated class for the SPARK language
+(:doc:`../../intro-to-spark/index`),
 but keep in mind that everytime we speak
 about the specification power of Ada during this course, it is power that you
 can leverage in SPARK to help proving your programs correct.
