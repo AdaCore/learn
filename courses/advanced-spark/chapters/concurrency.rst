@@ -117,7 +117,7 @@ Concurrency – A trivial example
 
     T1, T2 : T;
 
-- Id can be written by T1 and T2 at the same time
+- Id can be written by ``T1`` and ``T2`` at the same time
 
 Setup for using concurrency in SPARK
 ---------------------------------------------------------------------
@@ -261,7 +261,7 @@ Blocking Communication with Entries
 
 - Only protected objects have entries in Ravenscar
 
-- Entry = procedure with “entry” guard condition
+- Entry = procedure with :ada:`entry` guard condition
 
     - second level of queues, one for each entry, on a given PO
 
@@ -269,7 +269,7 @@ Blocking Communication with Entries
 
     - at most one entry in Ravenscar
 
-    - guard is a Boolean component of PO in Ravenscar
+    - guard is a :ada:`Boolean` component of PO in Ravenscar
 
 .. code:: ada
 
@@ -318,9 +318,9 @@ Interrupt Handlers in Ravenscar
 
 - Interrupt handlers are parameterless procedures of PO
 
-    - with aspect Attach_Handler specifying the corresponding signal
+    - with aspect :ada:`Attach_Handler` specifying the corresponding signal
 
-    - with aspect Interrupt_Priority on the PO specifying the priority
+    - with aspect :ada:`Interrupt_Priority` on the PO specifying the priority
 
 .. code:: ada
 
@@ -332,11 +332,11 @@ Interrupt Handlers in Ravenscar
          Attach_Handler => SIGHUP;
        ...
 
-- Priority of the PO should be in System.Interrupt_Priority
+- Priority of the PO should be in :ada:`System.Interrupt_Priority`
 
-    - default is OK – in the range of System.Interrupt_Priority
+    - default is OK – in the range of :ada:`System.Interrupt_Priority`
 
-    - checked by proof (default or value of Priority or Interrupt_Priority)
+    - checked by proof (default or value of :ada:`Priority` or :ada:`Interrupt_Priority`)
 
 
 Other Communications Between Tasks in SPARK
@@ -348,15 +348,15 @@ Other Communications Between Tasks in SPARK
 
     - protected objects
 
-    - suspension objects (standard “Boolean” protected objects)
+    - suspension objects (standard :ada:`Boolean` protected objects)
 
 - Constants are considered as synchronized
 
-    - this includes variables constant after elaboration (specified with aspect Constant_After_Elaboration)
+    - this includes variables constant after elaboration (specified with aspect :ada:`Constant_After_Elaboration`)
 
 - Single task or PO can access an unsynchronized object
 
-    - exclusive relation between object and task/PO must be specified with aspect Part_Of
+    - exclusive relation between object and task/PO must be specified with aspect :ada:`Part_Of`
 
 
 Data and Flow Dependencies of Tasks
@@ -368,7 +368,7 @@ Data and Flow Dependencies of Tasks
 
     - task itself is both an input and an output
 
-    - implicit In_Out => T
+    - implicit :ada:`In_Out => T`
 
     - explicit dependency
 
@@ -388,7 +388,7 @@ Data and Flow Dependencies of Tasks
 State Abstraction over Synchronized Variables
 ---------------------------------------------------------------------
 
-- Synchronized objects can be abstracted in synchronized abstract state with aspect Synchronous
+- Synchronized objects can be abstracted in synchronized abstract state with aspect :ada:`Synchronous`
 
 .. code:: ada
 
@@ -406,7 +406,7 @@ State Abstraction over Synchronized Variables
 
 - Synchronized state is a form of external state
 
-    - Synchronous same as External => (Async_Readers, Async_Writers)
+    - :ada:`Synchronous` same as :ada:`External => (Async_Readers, Async_Writers)`
 
     - tasks are not volatile and can be part of regular abstract state
 
@@ -437,7 +437,7 @@ Synchronized Abstract State in the Standard Library
            External => (Async_Readers, Async_Writers)),
       Initializes    => Clock_Time
 
-- API of these units refer to Tasking_State and Clock_Time
+- API of these units refer to :ada:`Tasking_State` and :ada:`Clock_Time`
 
 
 
@@ -465,9 +465,9 @@ Example #1
 
 This code is not correct.
 
-Task rendezvous is not allowed; violation of restriction “Max_Task_Entries = 0”
+Task rendezvous is not allowed; violation of restriction :ada:`Max_Task_Entries = 0`
 
-Local task is not allowed; violation of restriction “No_Task_Hierarchy”
+Local task is not allowed; violation of restriction :ada:`No_Task_Hierarchy`
 
 Example #2
 ~~~~~~~~~~
@@ -490,7 +490,7 @@ Example #2
 This code is not correct.
 
 Global data in entry guard is not allowed.
-violation of restriction “Simple_Barriers” (for Ravenscar) or “Pure_Barriers” (for Extended Ravenscar)
+violation of restriction :ada:`Simple_Barriers` (for Ravenscar) or :ada:`Pure_Barriers` (for Extended Ravenscar)
 
 Example #3
 ~~~~~~~~~~
@@ -553,7 +553,7 @@ Example #4
 
 This code is correct.
 
-Data is part of the protected object state. The only accesses to Data are through P.
+``Data`` is part of the protected object state. The only accesses to ``Data`` are through ``P``.
 
 Example #5
 ~~~~~~~~~~
@@ -588,7 +588,7 @@ Example #5
 
 This code is correct.
 
-Ceiling_Priority policy is respected. Task never accesses a protected object with lower priority than its active priority.
+:ada:`Ceiling_Priority` policy is respected. Task never accesses a protected object with lower priority than its active priority.
 
 Note that PO can call procedure or function from another PO, but not an entry (possibly blocking).
 

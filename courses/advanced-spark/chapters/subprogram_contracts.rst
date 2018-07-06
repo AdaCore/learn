@@ -52,7 +52,7 @@ Dynamic Execution of Subprogram Contracts
 
 - Contracts are not enabled by default
 
-    - Switch -gnata enables dynamic checking of contracts in GNAT
+    - Switch ``-gnata`` enables dynamic checking of contracts in GNAT
 
 
 Dynamic Behavior when Subprogram Contracts Fail
@@ -60,7 +60,7 @@ Dynamic Behavior when Subprogram Contracts Fail
 
 - Violation of contract raises an exception
 
-    - Standard exception Assertion_Error is raised (same as for pragma Assert and all other assertions)
+    - Standard exception :ada:`Assertion_Error` is raised (same as for pragma :ada:`Assert` and all other assertions)
 
     - Exception cannot be caught by subprogram's own exception handler implementation choice caller/callee has no effect
 
@@ -121,13 +121,13 @@ Postcondition
 
 - Can relate input and output values
 
-    - Special attribute X'Old for referring to input value of variable X
+    - Special attribute :ada:`X'Old` for referring to input value of variable :ada:`X`
 
-    - Special attribute Func'Result for referring to result of function Func
+    - Special attribute :ada:`Func'Result` for referring to result of function :ada:`Func`
 
-    - Special attribute Rec'Update or Arr'Update for referring to modified value of record Rec or array Arr
+    - Special attribute :ada:`Rec'Update` or :ada:`Arr'Update` for referring to modified value of record :ada:`Rec` or array :ada:`Arr`
 
-        - replaced by delta aggregate syntax in Ada 202X: (Rec with delta Comp => Value)
+        - replaced by delta aggregate syntax in Ada 202X: (:ada:`Rec with delta Comp => Value`)
 
 
 Contract Cases
@@ -139,7 +139,7 @@ Contract Cases
 
     - Introduced in SPARK, planned for inclusion in Ada 202X
 
-    - Case is (guard => consequence) with 'Old/'Result in consequence
+    - Case is (guard => consequence) with :ada:`'Old` / :ada:`'Result` in consequence
 
     - Can be used in combination with precondition/postcondition
 
@@ -159,16 +159,16 @@ Contract Cases
     - On subprogram exit, the corresponding consequence must hold
 
 
-Attribute 'Old
+Attribute :ada:`'Old`
 ---------------------------------------------------------------------
 
-- X'Old expresses the input value of X in postconditions
+- :ada:`X'Old` expresses the input value of :ada:`X` in postconditions
 
-    - Same as X when variable not modified in the subprogram
+    - Same as :ada:`X` when variable not modified in the subprogram
 
-    - Compiler inserts a copy of X on subprogram entry if X is large, copy can be expensive in memory footprint!
+    - Compiler inserts a copy of :ada:`X` on subprogram entry if :ada:`X` is large, copy can be expensive in memory footprint!
 
-    - X can be a variable, a function call, a qualification (but not limited!)
+    - :ada:`X` can be a variable, a function call, a qualification (but not limited!)
 
 .. code:: ada
 
@@ -178,9 +178,9 @@ Attribute 'Old
     with
       Post => (if J in A'Range then V = A(J)'Old and A(J) = 0);
 
-- Expr'Old is rejected in potentially unevaluated context
+- :ada:`Expr'Old` is rejected in potentially unevaluated context
 
-    - Pragma Unevaluated_Use_Of_Old(Allow) allows it
+    - :ada:`Pragma Unevaluated_Use_Of_Old (Allow)` allows it
 
     - In Ada, user is responsible – in SPARK, user can rely on proof
 
@@ -190,23 +190,23 @@ Implication and Equivalence
 
 - If-expression can be used to express an implication
 
-    - (if A then B) expresses the logical implication
+    - :ada:`(if A then B)` expresses the logical implication
 
-        - A → B
+        - ``A → B``
 
-    - (if A then B else C) expresses the formula
+    - :ada:`(if A then B else C)` expresses the formula
 
-        - (A → B)  (¬A → C)
+        - ``(A → B)  (¬A → C)``
 
-    - (if A then B else C) can also be used with B, C not of Boolean type
+    - :ada:`(if A then B else C)` can also be used with B, C not of Boolean type
 
-    - (A <= B) should not be used for expressing implication (same dynamic semantics, but less readable, and harmful in SPARK)
+    - :ada:`(A <= B)` should not be used for expressing implication (same dynamic semantics, but less readable, and harmful in SPARK)
 
 - Equality can be used to express an equivalence
 
-    - (A = B) expresses the logical equivalence
+    - :ada:`(A = B)` expresses the logical equivalence
 
-        - (A ↔ B)
+        - ``(A ↔ B)``
 
     - A double implication should not be used for expressing equivalence (same semantics, but less readable and maintainable)
 
@@ -246,13 +246,13 @@ Universal and Existential Quantification
 
 - Quantified expressions can be used to express a property over a collection of values
 
-    - (for all X in A .. B => C) expresses the universally quantified property
+    - :ada:`(for all X in A .. B => C)` expresses the universally quantified property
 
-        -  (∀ X . X ≥ A ⋀ X ≤ B → C)
+        - ``(∀ X . X ≥ A ⋀ X ≤ B → C)``
 
-    - (for some X in A .. B => C) expresses the universally quantified property
+    - :ada:`(for some X in A .. B => C)` expresses the universally quantified property
 
-        - (∃ X . X ≥ A ⋀ X ≤ B ⋀ C)
+        - ``(∃ X . X ≥ A ⋀ X ≤ B ⋀ C)``
 
 - Quantified expressions translated as loops at run time
 
@@ -260,7 +260,7 @@ Universal and Existential Quantification
 
 - Quantification forms over array and collection content
 
-    - Syntax uses (for all/some V of ... => C)
+    - Syntax uses :ada:`(for all/some V of ... => C)`
 
 
 Expression Functions
@@ -312,7 +312,7 @@ Example #1
 
 This code is not correct.
 
-The exception from the recursive call is always caught in the handler, but not the exception raised if caller of Fail passes False as value for Condition.
+The exception from the recursive call is always caught in the handler, but not the exception raised if caller of ``Fail`` passes :ada:`False` as value for ``Condition``.
 
 Example #2
 ~~~~~~~~~~
@@ -336,7 +336,7 @@ Example #2
 
 This code is correct.
 
-GNAT will create a wrapper for checking the precondition and postcondition of Memset, calling the imported memset from libc.
+GNAT will create a wrapper for checking the precondition and postcondition of ``Memset``, calling the imported ``memset`` from ``libc``.
 
 Example #3
 ~~~~~~~~~~
@@ -355,7 +355,7 @@ Example #3
 
 This code is not correct.
 
-Although GNAT inserts precondition checks in the subprogram body instead of its caller, it is the value of Pre assertion policy at the declaration of the subprogram that decides if preconditions are activated.
+Although GNAT inserts precondition checks in the subprogram body instead of its caller, it is the value of :ada:`Pre` assertion policy at the declaration of the subprogram that decides if preconditions are activated.
 
 
 Example #4
@@ -432,7 +432,7 @@ Example #7
 
 This code is correct.
 
-Precondition prevents exception inside Add.
+Precondition prevents exception inside ``Add``.
 
 Postcondition is always satisfied.
 
@@ -456,7 +456,7 @@ Example #8
 
 This code is not correct.
 
-'Old on expression including a quantified variable is not allowed.
+:ada:`'Old` on expression including a quantified variable is not allowed.
 
 
 Example #9
@@ -475,7 +475,7 @@ Example #9
 
 This code is not correct.
 
-Expr'Old on potentially unevaluated expression is allowed only when Expr is a variable.
+:ada:`Expr'Old` on potentially unevaluated expression is allowed only when :ada:`Expr` is a variable.
 
 
 Example #10
@@ -494,7 +494,7 @@ Example #10
 
 This code is correct.
 
-Expr'Old does not appear anymore in a potentially unevaluated expression.
+:ada:`Expr'Old` does not appear anymore in a potentially unevaluated expression.
 
-Another solution would have been to apply 'Old on B or to use
-pragma Unevaluated_Use_Of_Old(Allow);
+Another solution would have been to apply :ada:`'Old` on ``B`` or to use
+:ada:`pragma Unevaluated_Use_Of_Old (Allow)`;

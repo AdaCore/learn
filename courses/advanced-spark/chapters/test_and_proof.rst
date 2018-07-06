@@ -30,17 +30,17 @@ Test (be)for(e) Proof – Activating Run-time Checks
 
 - Need to activate run-time checks in executable
 
-- Constraint_Error exceptions activated by default
+- :ada:`Constraint_Error` exceptions activated by default
 
-    - Use -gnat-p to revert effect of previous -gnatp (say in project file)
+    - Use ``-gnat-p`` to revert effect of previous ``-gnatp`` (say in project file)
 
-    - Use -gnato to activate overflow checking (default since GNAT 7.3)
+    - Use ``-gnato`` to activate overflow checking (default since GNAT 7.3)
 
 - Special handling of floating-point computations
 
-    - Use -gnateF to activate bound checking on standard float types
+    - Use ``-gnateF`` to activate bound checking on standard float types
 
-    - Use -msse2 -mfpmath=sse to forbid use of 80bits registers and FMA on x86 processors
+    - Use ``-msse2 -mfpmath=sse`` to forbid use of 80bits registers and FMA on x86 processors
 
     - Runtime/BSP should enforce use of Round-Nearest-tie-to-Even (RNE) rounding mode
 
@@ -50,23 +50,23 @@ Test (be)for(e) Proof – Activating Assertions
 
 - Need to activate assertions in executable
 
-- Assertion_Error exceptions deactivated by default
+- :ada:`Assertion_Error` exceptions deactivated by default
 
-    - Use -gnata to activate globally
+    - Use ``-gnata`` to activate globally
 
-    - Use pragma Assertion_Policy to activate file-by-file
+    - Use pragma :ada:`Assertion_Policy` to activate file-by-file
 
-    - Use -gnateE to get more precise error messages (Contract_Cases)
+    - Use ``-gnateE`` to get more precise error messages (:ada:`Contract_Cases`)
 
 - Special assertions checked at run time
 
-    - Contract_Cases ⟶ checks one and only one case activated
+    - :ada:`Contract_Cases` ⟶ checks one and only one case activated
 
-    - Loop_Invariant ⟶ checks assertion holds (even if not inductive)
+    - :ada:`Loop_Invariant` ⟶ checks assertion holds (even if not inductive)
 
-    - Assume ⟶ checks assertion holds (even if not subject to proof)
+    - :ada:`Assume` ⟶ checks assertion holds (even if not subject to proof)
 
-    - Loop_Variant ⟶ checks variant decreases wrt previous iteration
+    - :ada:`Loop_Variant` ⟶ checks variant decreases wrt previous iteration
 
 
 Test (be)for(e) Proof – Activating Ghost Code
@@ -76,9 +76,9 @@ Test (be)for(e) Proof – Activating Ghost Code
 
 - Ghost code, like assertions, is deactivated by default
 
-    - Use -gnata to activate globally
+    - Use ``-gnata`` to activate globally
 
-    - Use pragma Assertion_Policy (Ghost => Check) to activate locally
+    - Use pragma :ada:`Assertion_Policy (Ghost => Check)` to activate locally
 
 - Inconsistent combinations will be rejected by GNAT
 
@@ -104,9 +104,9 @@ Test for Proof – Overflow Checking Mode
 
 - Two ways to activate unbounded arithmetic
 
-    - Use -gnato13 compiler switch
+    - Use ``-gnato13`` compiler switch
 
-    - Use pragma Overflow_Mode with arguments (General => Strict, Assertions => Eliminated) in configuration pragma file
+    - Use pragma :ada:`Overflow_Mode` with arguments :ada:`(General => Strict, Assertions => Eliminated)` in configuration pragma file
 
 
 Test alongside Proof – Checking Proof Assumptions
@@ -128,31 +128,31 @@ Test alongside Proof – Checking Proof Assumptions
 
 - GNATprove can list assumptions used in proof
 
-    - Switch --assumptions adds info in gnatprove.out file
+    - Switch ``--assumptions`` adds info in ``gnatprove.out`` file
 
-- See Explicit Assumptions - A Prenup for Marrying Static and Dynamic Program Verification
+- See "Explicit Assumptions - A Prenup for Marrying Static and Dynamic Program Verification"
 
 
 Test alongside Proof – Rules for Defining the Boundary
 ---------------------------------------------------------------------
 
-- SPARK_Mode defines a simple boundary test vs. proof
+- :ada:`SPARK_Mode` defines a simple boundary test vs. proof
 
-    - Subprograms with SPARK_Mode(On) should be proved
+    - Subprograms with :ada:`SPARK_Mode (On)` should be proved
 
-    - Subprograms with SPARK_Mode(Off) should be tested
+    - Subprograms with :ada:`SPARK_Mode (Off)` should be tested
 
-- SPARK_Mode can be used at different levels
+- :ada:`SPARK_Mode` can be used at different levels
 
-    - Project-wise switch in configuration pragma file (with value On) ⟶ explicit exemptions of units/subprograms in the code
+    - Project-wise switch in configuration pragma file (with value :ada:`On`) ⟶ explicit exemptions of units/subprograms in the code
 
-    - Distinct GNAT project with SPARK_Mode(On) for proof on subset of units
+    - Distinct GNAT project with :ada:`SPARK_Mode (On)` for proof on subset of units
 
-    - Explicit SPARK_Mode(On) on units that should be proved
+    - Explicit :ada:`SPARK_Mode (On)` on units that should be proved
 
 - Unproved checks inside proved subprograms are justified
 
-    - Use of pragma Annotate inside the code
+    - Use of pragma :ada:`Annotate` inside the code
 
 
 Test alongside Proof – Special Compilation Switches
@@ -160,15 +160,15 @@ Test alongside Proof – Special Compilation Switches
 
 - Validity checking for reads of uninitialized data
 
-    - Compilation switch -gnatVa enables validity checking
+    - Compilation switch ``-gnatVa`` enables validity checking
 
-    - pragma Initialize_Scalars uses invalid default values
+    - pragma :ada:`Initialize_Scalars` uses invalid default values
 
-    - Compilation switch -gnateV enables validity checking for composite types (records, arrays) ⟶ extra checks to detect violation of SPARK stronger data initialization policy
+    - Compilation switch ``-gnateV`` enables validity checking for composite types (records, arrays) ⟶ extra checks to detect violation of SPARK stronger data initialization policy
 
 - Non-aliasing checks for parameters
 
-    - Compilation switch -gnateA enables non-aliasing checks between parameters
+    - Compilation switch ``-gnateA`` enables non-aliasing checks between parameters
 
     - Does not apply to aliasing between parameters and globals
 
@@ -251,7 +251,7 @@ Example #3
 
 Assertions need to be activated explicitly at compilation for getting the corresponding run-time checks.
 
-This approach is correct. Use switch -gnata to activate assertions.
+This approach is correct. Use switch ``-gnata`` to activate assertions.
 
 
 Example #4
@@ -265,23 +265,23 @@ This approach is not correct. Loop invariants are checked dynamically exactly li
 Example #5
 ~~~~~~~~~~
 
-Procedure P which is proved calls function T which is tested. To make sure the assumptions used in the proof of P are verified, we should check dynamically the precondition of T.
+Procedure ``P`` which is proved calls function ``T`` which is tested. To make sure the assumptions used in the proof of ``P`` are verified, we should check dynamically the precondition of ``T``.
 
-This approach is not correct. The precondition is proved at the call site of T in P. But we should check dynamically the postcondition of T.
+This approach is not correct. The precondition is proved at the call site of ``T`` in ``P``. But we should check dynamically the postcondition of ``T``.
 
 
 Example #6
 ~~~~~~~~~~
 
-Function T which is tested calls procedure P which is proved. To make sure the assumptions used in the proof of P are verified, we should check dynamically the precondition of P.
+Function ``T`` which is tested calls procedure ``P`` which is proved. To make sure the assumptions used in the proof of ``P`` are verified, we should check dynamically the precondition of ``P``.
 
-This approach is correct. The proof of P depends on its precondition being satisfied at every call.
+This approach is correct. The proof of ``P`` depends on its precondition being satisfied at every call.
 
 
 Example #7
 ~~~~~~~~~~
 
-However procedure P (proved) and function T (tested) call each other, we can verify the assumptions of proof by checking dynamically all preconditions and postconditions during tests of T.
+However procedure ``P`` (proved) and function ``T`` (tested) call each other, we can verify the assumptions of proof by checking dynamically all preconditions and postconditions during tests of ``T``.
 
 This approach is not correct. That covers only functional contracts. There are other assumptions made in proof, related to initialization, effects and non-aliasing.
 
@@ -291,7 +291,7 @@ Example #8
 
 Proof is superior to test in every aspect.
 
-This approach is not correct. Maybe for the aspects Pre and Post. But not in other aspects of verification: non-functional verification (memory footprint, execution time), match with hardware, integration in environment... And testing can even be exhaustive sometimes!
+This approach is not correct. Maybe for the aspects :ada:`Pre` and :ada:`Post`. But not in other aspects of verification: non-functional verification (memory footprint, execution time), match with hardware, integration in environment... And testing can even be exhaustive sometimes!
 
 
 Example #9

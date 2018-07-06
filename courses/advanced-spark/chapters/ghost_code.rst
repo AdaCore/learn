@@ -21,11 +21,11 @@ What is ghost code?
 
 - Examples of ghost code:
 
-    - contracts (Pre, Post, Contract_Cases, etc.)
+    - contracts (:ada:`Pre`, :ada:`Post`, :ada:`Contract_Cases`, etc.)
 
-    - assertions (pragma Assert, loop (in)variants, etc.)
+    - assertions (:ada:`pragma Assert`, loop (in)variants, etc.)
 
-    - special values Func'Result, Var'Old, Var'Loop_Entry
+    - special values :ada:`Func'Result`, :ada:`Var'Old`, :ada:`Var'Loop_Entry`
 
 - Is it enough?
 
@@ -50,7 +50,7 @@ Ghost code – A trivial example
 Ghost variables – aka auxiliary variables
 ---------------------------------------------------------------------
 
-- Variables declared with aspect Ghost
+- Variables declared with aspect :ada:`Ghost`
 
     - declaration is discarded by compiler when ghost code ignored
 
@@ -149,7 +149,7 @@ Ghost procedures
        end if;
     end Assign_Cond;
 
-- Can have Global (including Proof_In) & Depends contracts
+- Can have :ada:`Global` (including :ada:`Proof_In`) & :ada:`Depends` contracts
 
 
 Ghost functions
@@ -193,7 +193,7 @@ Imported ghost functions
 
 - Typically used with abstract ghost private types
 
-    - definition in SPARK_Mode(Off)  type is abstract for GNATprove
+    - definition in :ada:`SPARK_Mode(Off)`  type is abstract for GNATprove
 
 .. code:: ada
 
@@ -206,7 +206,7 @@ Imported ghost functions
 
 - Definition of ghost types/functions given in proof
 
-    - either in Why3 using External_Axiomatization
+    - either in Why3 using :ada:`External_Axiomatization`
 
     - or in an interactive prover (Coq, Isabelle, etc.)
 
@@ -240,11 +240,11 @@ Executing ghost code
 
 - Ghost code can be enabled globally
 
-    - using compilation switch -gnata (for all assertions)
+    - using compilation switch ``-gnata`` (for all assertions)
 
 - Ghost code can be enabled selectively
 
-    - using pragma Assertion_Policy (Ghost => Check)
+    - using :ada:`pragma Assertion_Policy (Ghost => Check)`
 
     - SPARK rules enforce consistency – in particular no write disabled
 
@@ -265,7 +265,7 @@ Example of use – encoding a state automaton
 
 - Tetris in SPARK
 
-    - at http://blog.adacore.com/tetris-in-spark-on-arm-cortex-m4
+    - at `Tetris <http://blog.adacore.com/tetris-in-spark-on-arm-cortex-m4>`_
 
 - Global state encoded in global ghost variable
 
@@ -292,7 +292,7 @@ Example of use – expressing useful lemmas
 
 - GCD in SPARK
 
-    - at http://www.spark-2014.org/entries/detail/gnatprove-tips-and-tricks-proving-the-ghost-common-denominator-gcd
+    - at `GCD <http://www.spark-2014.org/entries/detail/gnatprove-tips-and-tricks-proving-the-ghost-common-denominator-gcd>`_
 
 - Lemmas expressed as ghost procedures
 
@@ -314,15 +314,15 @@ Example of use – specifying an API through a model
 
 - Red black trees in SPARK
 
-    - at http://www.spark-2014.org/entries/detail/research-corner-auto-active-verification-in-spark
+    - at `Red black trees <http://www.spark-2014.org/entries/detail/research-corner-auto-active-verification-in-spark>`_
 
 - Invariants of data structures expressed as ghost functions
 
-    - using Type_Invariant on private types
+    - using :ada:`Type_Invariant` on private types
 
 - Model of data structures expressed as ghost functions
 
-    - called from Pre/Post of subprograms from the API
+    - called from :ada:`Pre` / :ada:`Post` of subprograms from the API
 
 - Lemmas expressed as ghost procedures
 
@@ -394,7 +394,7 @@ Example #2
 
 This code is correct.
 
-Note that procedure Check is inlined for proof (no contract).
+Note that procedure ``Check`` is inlined for proof (no contract).
 
 
 Example #3
@@ -440,7 +440,7 @@ Example #4
 
 This code is not correct.
 
-No postcondition on Free_Memory that would allow proving the postcondition on Alloc.
+No postcondition on ``Free_Memory`` that would allow proving the postcondition on ``Alloc``.
 
 
 Example #5
@@ -464,7 +464,7 @@ Example #5
 
 This code is correct.
 
-Free_Memory has an implicit postcondition as an expression function.
+``Free_Memory`` has an implicit postcondition as an expression function.
 
 
 Example #6
@@ -494,7 +494,7 @@ Example #6
 This code is not correct.
 
 info: expression function body not available for proof
-("Sum" may not return)
+(``Sum`` may not return)
 
 
 Example #7
@@ -523,7 +523,7 @@ Example #7
 
 This code is correct.
 
-Note that GNATprove does not prove the termination of Sum here.
+Note that GNATprove does not prove the termination of ``Sum`` here.
 
 
 Example #8
@@ -552,8 +552,8 @@ Example #8
 
 This code is correct.
 
-The loop is unrolled by GNATprove here, as D'Range is 0..6.
-The automatic prover unrolls the recursive definition of Sum.
+The loop is unrolled by GNATprove here, as :ada:`D'Range` is :ada:`0 .. 6`.
+The automatic prover unrolls the recursive definition of ``Sum``.
 
 
 Example #9

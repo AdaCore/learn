@@ -186,9 +186,9 @@ LSP – the SPARK solution to dynamic dispatching problems
 
 - Class-wide contracts on methods
 
-    - Pre'Class specifies strongest precondition for the hierarchy
+    - :ada:`Pre'Class` specifies strongest precondition for the hierarchy
 
-    - Post'Class specifies weakest postcondition for the hierarchy
+    - :ada:`Post'Class` specifies weakest postcondition for the hierarchy
 
 .. code:: ada
 
@@ -243,7 +243,7 @@ LSP – verification of dynamic dispatching calls
 
     - overriding method cannot have new input-output flows
 
-    - SPARK RM defines Global'Class and Depends'Class (not yet implemented ⟶ use Global and Depends instead)
+    - SPARK RM defines :ada:`Global'Class` and :ada:`Depends'Class` (not yet implemented ⟶ use :ada:`Global` and :ada:`Depends` instead)
 
 
 
@@ -329,7 +329,7 @@ Dynamic semantics of class-wide contracts
 
     - class-wide postconditions of all overridden methods
 
-- Plain Post + class-wide Pre/Post can be used together
+- Plain :ada:`Post` + class-wide :ada:`Pre` / :ada:`Post` can be used together
 
 - Proof guarantees no violation of contracts at runtime
 
@@ -343,7 +343,7 @@ Redispatching and Extensions_Visible aspect
 - Redispatching is dispatching after class-wide conversion
 
     - formal parameter cannot be converted to class-wide type when
-Extensions_Visible is False
+:ada:`Extensions_Visible` is :ada:`False`
 
 
 .. code:: ada
@@ -354,7 +354,7 @@ Extensions_Visible is False
     end Re_Call_Bump;
 
 
-- Aspect Extensions_Visible allows class-wide conversion
+- Aspect :ada:`Extensions_Visible` allows class-wide conversion
 
     - parameter mode used also for hidden components
 
@@ -426,7 +426,7 @@ Example #3
 
 This code is correct.
 
-Class-wide precondition of Int.Bump is inherited by Approx_Int.Bump. Class-wide postcondition of Approx_Int.Bump is stronger than the one of Int.Bump.
+Class-wide precondition of ``Int.Bump`` is inherited by ``Approx_Int.Bump``. Class-wide postcondition of ``Approx_Int.Bump`` is stronger than the one of ``Int.Bump``.
 
 
 Example #4
@@ -450,7 +450,7 @@ Example #4
 
 This code is not correct.
 
-type must be declared abstract or "+" overridden
+type must be declared abstract or :ada:`"+"` overridden
 
 
 Example #5
@@ -473,8 +473,8 @@ Example #5
 
 This code is not correct.
 
-type must be declared abstract or "Reset" overridden
-"Reset" is subject to Extensions_Visible False
+type must be declared abstract or ``Reset`` overridden
+``Reset`` is subject to :ada:`Extensions_Visible:ada:` :ada:`False`
 
 
 Example #6
@@ -497,7 +497,7 @@ Example #6
 
 This code is not correct.
 
-high: extension of "Arg" is not initialized in "Reset"
+high: extension of ``Arg`` is not initialized in ``Reset``
 
 
 Example #7
@@ -520,7 +520,7 @@ Example #7
 
 This code is correct.
 
-Redispatching ensures that Arg is fully initialized on return.
+Redispatching ensures that ``Arg`` is fully initialized on return.
 
 
 Example #8

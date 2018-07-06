@@ -76,11 +76,11 @@ Systems Programming – A trivial example
 
 - Comments:
 
-    - X is volatile
+    - ``X`` is volatile
 
-    - X is also an output; output X depends on input X
+    - ``X`` is also an output; output ``X`` depends on input ``X``
 
-    - X is only read
+    - ``X`` is only read
 
 
 Volatile Variables and Volatile Types
@@ -90,19 +90,19 @@ Volatile Variables and Volatile Types
 
 - Identified through multiple aspects (or pragmas)
 
-    - aspect Volatile
+    - aspect :ada:`Volatile`
 
-    - but also aspect Atomic
+    - but also aspect :ada:`Atomic`
 
-    - and GNAT aspect Volatile_Full_Access
+    - and GNAT aspect :ada:`Volatile_Full_Access`
 
     - all the above aspects can be set on type or object
 
 - Other aspects are useful on volatile variables
 
-    - aspect Address to specify location in memory
+    - aspect :ada:`Address` to specify location in memory
 
-    - aspect Import to skip definition/initialization
+    - aspect :ada:`Import` to skip definition/initialization
 
 .. code:: ada
 
@@ -111,18 +111,18 @@ Volatile Variables and Volatile Types
     X : Integer with Atomic, Import, Address => ... ;
 
 
-Flavors of Volatile Variables – Async_Readers / Async_Writers
+Flavors of Volatile Variables – :ada:`Async_Readers` / :ada:`Async_Writers`
 ---------------------------------------------------------------------
 
 - Boolean aspects describing asynchronous behavior
 
-    - Async_Readers if variable may be read asynchronously
+    - :ada:`Async_Readers` if variable may be read asynchronously
 
-    - Async_Writers if variable may be written asynchronously
+    - :ada:`Async_Writers` if variable may be written asynchronously
 
-- Effect of Async_Readers on flow analysis
+- Effect of :ada:`Async_Readers` on flow analysis
 
-- Effect of Async_Writers on flow analysis & proof
+- Effect of :ada:`Async_Writers` on flow analysis & proof
 
     - always initialized,  always has an unknown value
 
@@ -139,14 +139,14 @@ Flavors of Volatile Variables – Async_Readers / Async_Writers
     end Set;
 
 
-Flavors of Volatile Variables – Effective_Reads / Effective_Writes
+Flavors of Volatile Variables – :ada:`Effective_Reads` / :ada:`Effective_Writes`
 ---------------------------------------------------------------------
 
 - Boolean aspects distinguishing values & sequences
 
-    - Effective_Reads if reading the variable has an effect on its value
+    - :ada:`Effective_Reads` if reading the variable has an effect on its value
 
-    - Effective_Writes if writing the variable has an effect on its value
+    - :ada:`Effective_Writes` if writing the variable has an effect on its value
 
 - Effect of both on proof and flow dependencies
 
@@ -171,25 +171,25 @@ Combinations of Flavors of Volatile Variables
 
 - All four flavors can be set independently
 
-    - Default for Volatile/Atomic is all four True
+    - Default for Volatile/Atomic is all four :ada:`True`
 
-    - When some aspects set, all others default to False
+    - When some aspects set, all others default to :ada:`False`
 
 - Only half the possible combinations are legal
 
-    - Async_Readers and/or Async_Writers is set
+    - :ada:`Async_Readers` and/or :ada:`Async_Writers` is set
 
-    - Effective_Reads = True forces Async_Writers = True
+    - :ada:`Effective_Reads = True` forces :ada:`Async_Writers = True`
 
-    - Effective_Writes = True forces Async_Readers = True
+    - :ada:`Effective_Writes = True` forces :ada:`Async_Readers = True`
 
-    - sensor: AW=True
+    - sensor: :ada:`AW=True`
 
-    - actuator: AR=True
+    - actuator: :ada:`AR=True`
 
-    - input port: AW=True, ER=True
+    - input port: :ada:`AW=True`, :ada:`ER=True`
 
-    - output port: AR=True, EW=True
+    - output port: :ada:`AR=True`, :ada:`EW=True`
 
 
 Constraints on Volatile Variables
@@ -199,9 +199,9 @@ Constraints on Volatile Variables
 
 - Expressions (and functions) cannot have side-effects
 
-    - read of variable with AW=True must appear alone on rhs of assign
+    - read of variable with :ada:`AW=True` must appear alone on *rhs* of assign
 
-    - a function cannot read a variable with ER=True
+    - a function cannot read a variable with :ada:`ER=True`
 
 .. code:: ada
 
@@ -234,9 +234,9 @@ Constraints on Volatile Functions
 
 - Functions should have mathematical interpretation
 
-    - a function reading a variable with AW=True is marked as volatile with aspect Volatile_Function
+    - a function reading a variable with :ada:`AW=True` is marked as volatile with aspect :ada:`Volatile_Function`
 
-    - calls to volatile functions are restricted like reads of Async_Writers
+    - calls to volatile functions are restricted like reads of :ada:`Async_Writers`
 
 .. code:: ada
 
@@ -261,7 +261,7 @@ Constraints on Volatile Functions
 State Abstraction on Volatile Variables
 ---------------------------------------------------------------------
 
-- Abstract state needs to be identified as “External”
+- Abstract state needs to be identified as :ada:`External`
 
 - Flavors of volatility can be specified
 
@@ -290,6 +290,8 @@ Constraints on Address Attribute
 
 - Address of volatile variable can be specified
 
+.. code:: ada
+
     X : Integer with Volatile, Address => ... ;
 
     Y : Integer with Volatile;
@@ -316,17 +318,17 @@ Constraints on Address Attribute
 Can something be known of volatile variables?
 ---------------------------------------------------------------------
 
-- Variables with Async_Writers have no known value
+- Variables with :ada:`Async_Writers` have no known value
 
 - ... but they have a known type!
 
-    - type range, ex: 0 .. 360
+    - type range, ex: :ada:`0 .. 360`
 
-    - type predicate, ex: 0 .. 15 | 17 .. 42 | 43 .. 360
+    - type predicate, ex: :ada:`0 .. 15 | 17 .. 42 | 43 .. 360`
 
-- Variables without Async_Writers have a known value
+- Variables without :ada:`Async_Writers` have a known value
 
-- GNATprove also assumes all values are valid (X'Valid)
+- GNATprove also assumes all values are valid (:ada:`X'Valid`)
 
 .. code:: ada
 
@@ -356,7 +358,7 @@ Other Concerns in Systems Programming
 
     - raising exceptions is allowed in SPARK
 
-    - ... but exception handlers are SPARK_Mode=>Off
+    - ... but exception handlers are :ada:`SPARK_Mode => Off`
 
     - ... typically the last-chance-handler is used instead
 
@@ -389,7 +391,7 @@ Example #1
 
 This code is not correct.
 
-X has Effective_Reads set by default, hence it is also an output
+``X`` has :ada:`Effective_Reads` set by default, hence it is also an output
 
 Example #2
 ~~~~~~~~~~
@@ -410,7 +412,7 @@ Example #2
 
 This code is correct.
 
-X has Effective_Reads=False, hence it is only an input
+``X`` has :ada:`Effective_Reads = False`, hence it is only an input
 
 Example #3
 ~~~~~~~~~~
@@ -432,8 +434,8 @@ Example #3
 
 This code is correct.
 
-Speed is an input only, Motor is both an input and output.
-Note how the current value of Speed is first copied to be tested in a larger expression.
+``Speed`` is an input only, ``Motor`` is both an input and output.
+Note how the current value of ``Speed`` is first copied to be tested in a larger expression.
 
 Example #4
 ~~~~~~~~~~
@@ -458,7 +460,7 @@ Example #4
 
 This code is not correct.
 
-Raw_Data has Effective_Reads set, hence it is also an output
+``Raw_Data`` has :ada:`Effective_Reads` set, hence it is also an output
 
 Example #5
 ~~~~~~~~~~
@@ -477,7 +479,7 @@ Example #5
 
 This code is not correct.
 
-Regs has Async_Writers set, hence it cannot appear as the expression in an expression function
+``Regs`` has :ada:`Async_Writers` set, hence it cannot appear as the expression in an expression function
 
 Example #6
 ~~~~~~~~~~
@@ -500,7 +502,7 @@ Example #6
 
 This code is not correct.
 
-Regval is a volatile type, hence variable V is volatile and cannot be declared locally
+``Regval`` is a volatile type, hence variable ``V`` is volatile and cannot be declared locally
 
 Example #7
 ~~~~~~~~~~
@@ -522,8 +524,8 @@ Example #7
 
 This code is correct.
 
-Regs has Effective_Reads=False hence can be read in a function.
-Function Reg is marked as volatile with aspect Volatile_Function.
+``Regs`` has :ada:`Effective_Reads = False` hence can be read in a function.
+Function ``Reg`` is marked as volatile with aspect :ada:`Volatile_Function`.
 No volatile variable is declared locally.
 
 Example #8
@@ -546,7 +548,7 @@ Example #8
 
 This code is not correct.
 
-X has Async_Writers=False, hence is not considered as always initialized. As aspect Initializes specifies that State should be initialized after elaboration, this is an error.
+``X`` has :ada:`Async_Writers = False`, hence is not considered as always initialized. As aspect :ada:`Initializes` specifies that ``State`` should be initialized after elaboration, this is an error.
 
 Note that is allowed to bundle volatile and non-volatile variables in an external abstract state.
 
@@ -574,7 +576,7 @@ Example #9
 
 This code is not correct.
 
-X has Async_Writers set, hence it may have been written between the successive reads of X.U and X.V
+``X`` has :ada:`Async_Writers` set, hence it may have been written between the successive reads of ``X.U`` and ``X.V``
 
 Example #10
 ~~~~~~~~~~~
@@ -601,4 +603,4 @@ Example #10
 
 This code is correct.
 
-Values of P.U and P.V are provably different, and the postcondition is proved.
+Values of ``P.U`` and ``P.V`` are provably different, and the postcondition is proved.

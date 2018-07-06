@@ -47,7 +47,7 @@ Static Predicate
 
 - Typical use case on scalar types for holes in range
 
-    - e.g. floats without 0.0
+    - e.g. floats without :ada:`0.0`
 
 - Types with static predicate are restricted
 
@@ -70,11 +70,11 @@ Dynamic Predicate
 
 - Various typical use cases on scalar and composite types
 
-    - Strings that start at index 1 (My_String'First = 1)
+    - Strings that start at index 1 (:ada:`My_String'First = 1`)
 
-    - Upper bound on record component that depends on the discriminant value (Length <= Capacity)
+    - Upper bound on record component that depends on the discriminant value (:ada:`Length <= Capacity`)
 
-    - Ordering property on array values (Is_Sorted (My_Array))
+    - Ordering property on array values (:ada:`Is_Sorted (My_Array)`)
 
 
 Restrictions on Types With Dynamic Predicate
@@ -90,7 +90,7 @@ Restrictions on Types With Dynamic Predicate
 
 - No restriction on the property in Ada
 
-    - Property can read the value of global variable (e.g. Check_Is_Off_In_Calendar)
+    - Property can read the value of global variable (e.g. ``Check_Is_Off_In_Calendar``)
 
         - what if global variable is updated?
 
@@ -110,9 +110,9 @@ Dynamic Checking of Predicates
 
     - Checked everywhere a range/discriminant check would be issued: assignment, parameter passing, type conversion, type qualification
 
-    - ...but exception Assertion_Error is raised in case of violation
+    - ...but exception :ada:`Assertion_Error` is raised in case of violation
 
-    - ...but predicates not checked by default, activated with -gnata
+    - ...but predicates not checked by default, activated with ``-gnata``
 
 - Static predicate does not mean verification at compile time!
 
@@ -186,13 +186,13 @@ Dynamic Checking of Type Invariants
 
     - Checked on results of public functions
 
-    - Checked on (in) out parameters of public subprograms
+    - Checked on (:ada:`in`) :ada:`out` parameters of public subprograms
 
     - Checked on variables of the type, or having a part of the type
 
-    - Exception Assertion_Error is raised in case of violation
+    - Exception :ada:`Assertion_Error` is raised in case of violation
 
-    - Not checked by default, activated with -gnata
+    - Not checked by default, activated with ``-gnata``
 
 - No checking on internal subprograms!
 
@@ -228,23 +228,23 @@ Inheritance of Predicates and Type Invariants
 
     - A private type cannot be derived unless it is tagged
 
-    - Special aspect Type_Invariant'Class preferred for tagged types
+    - Special aspect :ada:`Type_Invariant'Class` preferred for tagged types
 
 
 Other Useful Gotchas on Predicates and Type Invariants
 ---------------------------------------------------------------------
 
-- GNAT defines its own aspects Predicate and Invariant
+- GNAT defines its own aspects :ada:`Predicate` and :ada:`Invariant`
 
-    - Predicate is the same as Static_Predicate if property allows it
+    - Predicate is the same as :ada:`Static_Predicate` if property allows it
 
-    - Otherwise Predicate is the same as Dynamic_Predicate
+    - Otherwise :ada:`Predicate` is the same as :ada:`Dynamic_Predicate`
 
-    - Invariant is the same as Type_Invariant
+    - :ada:`Invariant` is the same as :ada:`Type_Invariant`
 
-- Referring to the “current object” in the property
+- Referring to the *current object* in the property
 
-    - The name of the type acts as the “current object” of that type
+    - The name of the type acts as the *current object* of that type
 
     - Components of records can be mentioned directly
 
@@ -262,7 +262,7 @@ Default Initial Condition
 
     - Introduced for proof in SPARK
 
-    - GNAT introduces a dynamic check when -gnata is used
+    - GNAT introduces a dynamic check when ``-gnata`` is used
 
     - Used in the formal containers library to state that containers are initially empty
 
@@ -307,7 +307,7 @@ Example #2
 
 This code is not correct.
 
-This is accepted by GNAT, but result is not the one expected by the user. Day_Off has the same constraint as Weekend.
+This is accepted by GNAT, but result is not the one expected by the user. ``Day_Off`` has the same constraint as ``Weekend``.
 
 
 Example #3
@@ -322,7 +322,7 @@ Example #3
 
 This code is correct.
 
-It is valid to use a Dynamic_Predicate where a Static_Predicate would be allowed.
+It is valid to use a :ada:`Dynamic_Predicate` where a :ada:`Static_Predicate` would be allowed.
 
 
 Example #4
@@ -341,7 +341,7 @@ Example #4
 
 This code is correct.
 
-It is valid to use a type with Static_Predicate for the value tested in a case statement. This is not true for Dynamic_Predicate.
+It is valid to use a type with :ada:`Static_Predicate` for the value tested in a case statement. This is not true for :ada:`Dynamic_Predicate`.
 
 
 Example #5
@@ -361,9 +361,9 @@ Example #5
 
 This code is correct.
 
-It is valid in Ada because the type invariant is not checked on entry or return from Valid. Also, function Valid is visible from the type invariant (special visibility in contracts).
+It is valid in Ada because the type invariant is not checked on entry or return from ``Valid``. Also, function ``Valid`` is visible from the type invariant (special visibility in contracts).
 
-But it is invalid in SPARK, where private declaration cannot hold a type invariant. The reason is that the type invariant is assumed in the precondition of public functions for proof. That would lead to circular reasoning if Valid could be public.
+But it is invalid in SPARK, where private declaration cannot hold a type invariant. The reason is that the type invariant is assumed in the precondition of public functions for proof. That would lead to circular reasoning if ``Valid`` could be public.
 
 
 Example #6
@@ -410,11 +410,11 @@ This code is not correct.
 
 There are 3 problems in this code:
 
-- there is a run-time error on the array access in Sorted_String
+- there is a run-time error on the array access in ``Sorted_String``
 
 - quantified expression defines only one variable
 
-- the property in Unique_String is true only for the empty string
+- the property in ``Unique_String`` is true only for the empty string
 
 
 Example #8
@@ -442,7 +442,7 @@ Example #8
 
 This code is correct.
 
-This is a correct version in Ada. For proving AoRTE in SPARK, one will need to change slightly the property of Sorted_String.
+This is a correct version in Ada. For proving AoRTE in SPARK, one will need to change slightly the property of ``Sorted_String``.
 
 
 Example #9
