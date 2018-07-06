@@ -103,6 +103,7 @@ elements.
 We illustrate postconditions using the following example:
 
 .. code:: ada
+
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Numerics.Elementary_Functions;
 
