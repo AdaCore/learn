@@ -8,6 +8,7 @@ Advanced SPARK
     Subprogram Contracts <chapters/subprogram_contracts>
     Type Contracts <chapters/type_contracts>
     Systems Programming <chapters/systems_programming>
+    Concurrency <chapters/concurrency>
 
 
 Indices and tables
