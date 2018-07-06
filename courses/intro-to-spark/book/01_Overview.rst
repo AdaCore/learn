@@ -162,7 +162,7 @@ evaluation, parameter passing mechanism, or compiler optimizations. The
 expression below for ``G`` is non-deterministic due to the order in which
 the two calls to F are evaluated, and is therefore not legal SPARK.
 
-.. code:: ada run_button
+.. code:: ada spark-flow run_button
     :class: ada-expect-compile-error
 
     procedure Show_Illegal_Ada_Code is
@@ -184,7 +184,7 @@ In fact, the code above is not even legal Ada, so the same error is generated
 by the GNAT compiler. But SPARK goes further and GNATprove issues also an error
 on the following equivalent code that is accepted by the compiler:
 
-.. code:: ada run_button
+.. code:: ada spark-flow run_button
 
     procedure Show_Illegal_SPARK_Code is
 
