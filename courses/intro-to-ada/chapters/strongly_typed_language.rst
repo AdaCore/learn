@@ -462,7 +462,8 @@ introduce conversion functions along with the types.
     end Conv;
 
 This is the first example of a function declaration. We will see
-`functions and procedures <TODOSUBPROGRAMS>`_ in more detail soon.
+:ref:`functions and procedures <Subprograms>`
+in more detail soon.
 
 If you write a lot of numeric code, having to explicitly provide such
 conversions might seem painful at first. However, this approach brings some

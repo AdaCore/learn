@@ -2,6 +2,8 @@ Subprograms
 ===========
 :code-config:`reset_accumulator=True`
 
+.. _Subprograms:
+
 Subprograms
 -----------
 
