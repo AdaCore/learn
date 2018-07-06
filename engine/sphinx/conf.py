@@ -90,7 +90,7 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'learn_theme_2'
+html_theme = 'learn_theme'
 
 html_title = "learn.adacore.com"
 
@@ -104,7 +104,7 @@ html_theme_options = {
 
 }
 
-html_logo = "learn_theme_2/static/img/logo.svg"
+html_logo = "learn_theme/static/img/logo.svg"
 
 html_show_sourcelink = False
 
