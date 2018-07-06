@@ -12,7 +12,7 @@ Introduction to Ada
 ===================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 4
     :caption: Contents:
 
     Introduction <chapters/introduction>
