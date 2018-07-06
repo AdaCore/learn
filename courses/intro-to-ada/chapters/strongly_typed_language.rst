@@ -188,8 +188,9 @@ Enumeration types are another nicety of Ada's type system. Unlike C's enums,
 they are *not* integers, and each new enumeration type is incompatible with
 other enumeration types. Enumeration types are part of the bigger family of
 discrete types, which makes them usable in certain situations that we will
-describe later (`discrete features <TODOLINKTODISCRETEFEATURES>`_) but one
-context that we have already seen is a case statement.
+describe later but one context that we have already seen is a case statement.
+
+.. TODO: add link to section on discrete features
 
 .. code:: ada
 
