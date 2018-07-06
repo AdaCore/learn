@@ -9,6 +9,7 @@ Advanced SPARK
     Type Contracts <chapters/type_contracts>
     Systems Programming <chapters/systems_programming>
     Concurrency <chapters/concurrency>
+    Object-oriented Programming <chapters/object_oriented_programming>
 
 
 Indices and tables
