@@ -11,6 +11,7 @@ Advanced SPARK
     Concurrency <chapters/concurrency>
     Object-oriented Programming <chapters/object_oriented_programming>
     Ghost code <chapters/ghost_code>
+    Test and Proof <chapters/test_and_proof>
 
 
 Indices and tables
