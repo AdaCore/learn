@@ -86,3 +86,7 @@ div.download-button.docutils.container {
 .slider.books {
     background-color: #F56F23;
 }
+
+div.content-description.docutils.container {
+  padding: 20px;
+}
