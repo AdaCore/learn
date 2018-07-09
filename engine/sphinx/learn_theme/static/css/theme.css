@@ -5315,7 +5315,7 @@ color: #9e9e9e;
 }
 
 .wy-menu-vertical li.toctree-l2.current > a {
-    background: rgba(0, 0, 0, 0.2);
+	background: #4A90E2;
     padding: .4045em 2.427em;
     color:#fff; font-weight: 900;
 }

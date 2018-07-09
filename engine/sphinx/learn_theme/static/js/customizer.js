@@ -1,5 +1,5 @@
 $( function() {
-    var new_node_string ="";
+    var new_node_string ="<div class='responsiveCarousel courses'>";
 
     // Get each top level node which will be a carousel if it has inside nodes
     $( "div.content-blocks li.toctree-l1" ).each( function() {
@@ -7,25 +7,24 @@ $( function() {
             var name = $( this ).children( "a" ).text();
             var type = $( this ).children( "a" ).text().toLowerCase();
 
-            new_node_string += "<h3>" + name + "</h3><section class='slider " + type + "'>";
-
             $( this ).find( "li.toctree-l2" ).each( function() {
-                new_node_string += "<div class='slider-element'>";
+                new_node_string += "<div class='" + type + "'>";
                 
                 var title = $( this ).children( "a" ).text();
                 var link = $( this ).children( "a" ).attr( "href" );
 
-                new_node_string += "<a href=" + link + "></a>";
-                new_node_string += "<span>" + title + "</span>";
-                new_node_string += "</div>";
+                new_node_string += "<a href=" + link + ">";
+                new_node_string += "<div class='inner'>"
+                new_node_string += "<em>" + name + "</em>";
+                new_node_string += "<strong>" + title + "</strong>";
+                new_node_string += "</div></a></div>";
             });
-
-            new_node_string += "</section>";
         }
 
         
     });
 
+    new_node_string += "</div>";
 
     // remove all elements inside top div
     $( "div.content-blocks" ).empty();

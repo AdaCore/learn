@@ -26,6 +26,8 @@ With courses featuring hands-on labs and easy to understand code snippets, you w
        Ada.Text_IO.Put_Line ("Hello, World!");
     end Hello;
 
+
+
 .. container:: content-blocks
 
     .. toctree::
@@ -41,12 +43,15 @@ With courses featuring hands-on labs and easy to understand code snippets, you w
 
 .. container:: download-button
 
-    .. image:: https://www.adacore.com/uploads/page_content/GNAT-Community-2018-download.png
+    .. image:: images/GNAT-Community-download.png
         :target: https://www.adacore.com/download
         :alt: Gnatcommunity Download
         :width: 100pc
 
-Learn more about Ada resources on our `getting started <https://www.makewithada.org/getting-started>`_ page and `download GNAT Community <https://www.adacore.com/download>`_. We also have the Ada source code and a complete sample of GNAT projects for selected bare-board platforms supported by GNAT in the `Ada Driver's Library <https://github.com/AdaCore/Ada_Drivers_Library>`_.
+Try Ada and SPARK now with GNAT Community edition.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+GNAT Community includes the Ada compiler and toolchain, the SPARK verifier and provers, and the GNAT Programming Studio IDE.
 
 --------------
 
