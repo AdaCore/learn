@@ -25,6 +25,14 @@ img.logo {
  float: right;
 }
 
+div.github-tag a:before {
+    content: url("../img/github.svg");
+    width: 13px;
+    height: 13px;
+    display: inline-block;
+    padding: 5px;
+}
+
 .legal { 
     padding: 20px; 
     color: #878B9A; 
@@ -35,23 +43,6 @@ img.logo {
 .legal a { 
     color: #878B9A; 
 }
-
-div.github-tag.docutils.container {
-    position: relative;
-}
-
-div.github-tag.docutils.container img {
-    position: absolute;
-    top: -1.618em;
-    right: -3.236em;
-}
-
-@media screen and (max-width: 768px) {
-    div.github-tag.docutils.container img {
-        right: -1.618em;
-    }
-}
-
 
 div.download-button.docutils.container { 
     float: right; 

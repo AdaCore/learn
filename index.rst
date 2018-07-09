@@ -5,16 +5,10 @@
 
 .. container:: github-tag
 
-  .. image:: https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png
-    :target: https://github.com/AdaCore/learn
-    :alt: Fork me on GitHub
-    :align: right
+  `Edit on GitHub <https://github.com/AdaCore/learn>`_
 
-Learn.adacore.com
-===================
 
 **Learn.adacore.com is an interactive learning platform designed to teach the Ada and SPARK programming languages.**
-With courses featuring hands-on labs and easy to understand code snippets, you will have the opportunity to see, understand and experiment with the language capabilities.
 
 .. code:: ada
 
@@ -48,8 +42,7 @@ With courses featuring hands-on labs and easy to understand code snippets, you w
         :alt: Gnatcommunity Download
         :width: 100pc
 
-Try Ada and SPARK now with GNAT Community edition.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Try Ada and SPARK now with GNAT Community edition.**
 
 GNAT Community includes the Ada compiler and toolchain, the SPARK verifier and provers, and the GNAT Programming Studio IDE.
 
