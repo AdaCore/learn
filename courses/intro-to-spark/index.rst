@@ -6,6 +6,10 @@
 Intro To SPARK
 ===============
 
+.. container:: content-description
+
+    This tutorial is an interactive introduction to the SPARK programming language and its formal verification tools. You will learn the difference between Ada and SPARK and how to use the various analysis tools that come with SPARK.
+
 .. toctree::
    :maxdepth: 1
  

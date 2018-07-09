@@ -15,7 +15,7 @@ The Ada programming language was designed from its inception to be used in appli
 
 .. container:: download-button
 
-    .. image:: https://www.adacore.com/uploads/page_content/GNAT-Community-2018-download.png
+    .. image:: images/GNAT-Community-download.png
         :target: https://www.adacore.com/download
         :alt: Gnatcommunity Download
         :width: 100pc
