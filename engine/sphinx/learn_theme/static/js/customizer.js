@@ -32,10 +32,13 @@ $( function() {
 
     $( "div.content-blocks" ).append( new_node_string );
 
+    // get content descriptions from other pages and populate description section of carousel divs
     $( "div.responsiveCarousel > div" ).each( function() {
         var link = $( this ).children( "a" ).attr( "href" );
         var desc = $( this ).find( "p" );
-        desc.load( link + " div.content-description.docutils.container" );
+        desc.load( link + " div.content-description.docutils.container", function() {
+            $( this ).find( "div" ).removeClass( "content-description docutils container" ).addClass( "carousel-description" );
+        });
     });
 
 });
