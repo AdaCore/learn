@@ -1,6 +1,17 @@
 Standard library
 ================
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Standard package
 ----------------
@@ -2832,5 +2843,3 @@ you can instantiate with custom floating-point types. For example, the
        package Real_Arrays is new
          Ada.Numerics.Generic_Real_Arrays (Float);
 
-Dynamic allocation and reclamation
-----------------------------------

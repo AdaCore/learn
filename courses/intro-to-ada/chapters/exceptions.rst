@@ -1,6 +1,17 @@
 Exceptions
 ==========
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Ada uses exceptions for error handling.  Unlike many other languages,
 Ada speaks about *raising*, not *throwing*, an exception and
@@ -14,6 +25,7 @@ peculiar to you if you're used to the way Java or Python support
 exceptions. Here's how you declare an exception:
 
 .. code:: ada
+    :class: ada-syntax-only
 
     package Exceptions is
         My_Except : exception;
