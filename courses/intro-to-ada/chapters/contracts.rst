@@ -103,6 +103,7 @@ elements.
 We illustrate postconditions using the following example:
 
 .. code:: ada
+
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Numerics.Elementary_Functions;
 
@@ -408,7 +409,7 @@ of checks. The following table summarizes the differences:
 
 +------------+-----------------------------+-----------------------------+
 | Element    | Subprogram parameter checks | Assignment checks           |
-+==========================================+=============================+
++============+=============================+=============================+
 | Predicates | On all :ada:`in` and        | On assignments and explicit |
 |            | :ada:`out` parameters       | initializations             |
 +------------+-----------------------------+-----------------------------+
