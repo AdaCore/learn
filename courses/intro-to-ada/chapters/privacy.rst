@@ -1,6 +1,17 @@
 Privacy
 =======
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 One of the main principles of modular programming, as well as object oriented
 programming, is `encapsulation <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`_.

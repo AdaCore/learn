@@ -1,17 +1,46 @@
-<footer>
+{%- macro nextprev() %}
   {% if (theme_prev_next_buttons_location == 'bottom' or theme_prev_next_buttons_location == 'both') and (next or prev) %}
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      {% if next %}
-        <a href="{{ next.link|e }}" class="btn btn-neutral float-right" title="{{ next.title|striptags|e }}" accesskey="n" rel="next">{{ _('Next') }} <span class="fa fa-arrow-circle-right"></span></a>
-      {% endif %}
-      {% if prev %}
-        <a href="{{ prev.link|e }}" class="btn btn-neutral" title="{{ prev.title|striptags|e }}" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> {{ _('Previous') }}</a>
-      {% endif %}
-    </div>
+          {% if next %}
+            <a href="{{ next.link|e }}" class="btn btn-neutral float-right" title="{{ next.title|striptags|e }}" accesskey="n" rel="next">{{ _('Next') }} <span class="fa fa-arrow-circle-right"></span></a>
+          {% endif %}
+          {% if prev %}
+            <a href="{{ prev.link|e }}" class="btn btn-neutral" title="{{ prev.title|striptags|e }}" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> {{ _('Previous') }}</a>
+          {% endif %}
+        </div>
   {% endif %}
+{%- endmacro %}
+
+
+<footer>
+  {%- set nextprev_state = '' %}
+  {%- set nextprev_state_key = 'nextprev_state' %}
+
+  {%- if meta is defined %}
+      {%- if nextprev_state_key in meta.viewkeys() %}
+
+      {%- else %}
+        {{ nextprev() }}
+      {%- endif %}
+  {%- else %}
+    {{ nextprev() }}
+  {%- endif %}
+
 
   <hr/>
 
+  <div class="legal">
+              Copyright &copy; 2018 AdaCore. All rights reserved. 
+              &nbsp;&nbsp;
+              <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+              <br>
+              <a href="https://www.adacore.com/company/legal">Legal</a>
+              &nbsp; |  &nbsp;
+              <a href="https://www.adacore.com/company/privacy">Privacy Policy</a>
+              &nbsp; |  &nbsp;
+              <a href="https://github.com/AdaCore/learn/issues">Report an Issue</a>
+            </div>
+<!--
   <div role="contentinfo">
     <p>
     {%- if show_copyright %}
@@ -45,7 +74,7 @@
   {%- if show_sphinx %}
   {% trans %}Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>{% endtrans %}.
   {%- endif %}
-
+-->
   {%- block extrafooter %} {% endblock %}
 
 </footer>

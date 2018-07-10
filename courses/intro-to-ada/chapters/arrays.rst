@@ -1,7 +1,18 @@
 Arrays
 ======
+
 :code-config:`run_button=True;prove_button=False;accumulate_code=True`
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Arrays provide another fundamental family of composite types in Ada.
 
