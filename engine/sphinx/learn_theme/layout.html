@@ -13,14 +13,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="{{ lang_attr }}" > <!--<![endif]-->
 <head>
   <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117428-14"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+  <script src="{{ pathto('_static/js/adacore_analytics.js', 1) }}"></script>
 
-    gtag('config', 'UA-117428-14');
-  </script>
   <meta charset="utf-8">
   {{ metatags }}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
