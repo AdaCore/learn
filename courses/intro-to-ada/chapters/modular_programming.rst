@@ -1,6 +1,17 @@
 Modular programming
 ===================
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 So far, our examples have been simple standalone procedures.  Ada is helpful in
 that regard, since it allows arbitrary declarations in a declarative part. We

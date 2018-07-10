@@ -1,6 +1,17 @@
 Tasking
 =======
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Tasks and protected objects allow the implementation of concurrency in
 Ada. The following sections explain these concepts in more details.
