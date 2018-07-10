@@ -1,8 +1,19 @@
 Subprograms
 ===========
+
 :code-config:`reset_accumulator=True`
 
 .. _Subprograms:
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Subprograms
 -----------

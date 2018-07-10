@@ -1,6 +1,17 @@
 Imperative language
 ===================
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Ada is a multi-paradigm language with support for object orientation
 and some elements of functional programming, but its core is a simple, coherent

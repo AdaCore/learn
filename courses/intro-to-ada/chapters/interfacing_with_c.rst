@@ -1,6 +1,17 @@
 Interfacing with C
 ==================
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Ada allows us to interface with code in many languages, including C
 and C++. This section discusses how to interface with C.

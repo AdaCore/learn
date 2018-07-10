@@ -1,8 +1,18 @@
 More about types
 ================
+
 :code-config:`reset_accumulator=True`
 
 .. _Aggregates:
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
 
 Aggregates: A primer
 --------------------
@@ -785,7 +795,8 @@ following:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Normalized_Fixed_Point_Type is
-       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0;
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
     begin
        Put_Line ("TQ31 requires " & Integer'Image (TQ31'Size) & " bits");
        Put_Line ("The delta    value of TQ31 is " & TQ31'Image (TQ31'Delta));

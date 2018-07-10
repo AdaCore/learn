@@ -1,6 +1,17 @@
 Strongly typed language
 =======================
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Ada is a strongly typed language. It is interestingly modern in that
 respect: strong static typing has been increasing in popularity in programming
