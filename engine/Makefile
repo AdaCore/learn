@@ -22,6 +22,37 @@ test_spark_intro:
 
 tests: test_ada_intro test_spark_intro
 
+publish-staging:
+	@echo "Publishing current branch to learn-staging..."
+	@if [ ! -d learn-staging-html-pages ] ;\
+	then \
+		git clone -b gh-pages git@github.com:AdaCore/learn-staging-html-pages.git; \
+		cd learn-staging-html-pages; \
+	else \
+		cd learn-staging-html-pages; \
+		git checkout gh-pages; \
+		git pull; \
+	fi \
+
+	# remove all files from the repo to get rid of stale copies
+	@rm -rf *
+
+	# reset files that are needed that won't be copied from the build
+	@git reset CNAME
+
+	# copy build files to learn-staging-html-pages
+	@cp -R $(BUILDDIR)/html/. .
+
+	# commit and push new changes
+#	@git add -A
+#	@git commit -m "Regenerate"
+#	@git push origin/gh-pages gh-pages
+
+	# remove learn-staging-html-pages
+#	@cd ../
+#	@rm -rf learn-staging-html-pages
+
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
@@ -29,4 +60,3 @@ tests: test_ada_intro test_spark_intro
                         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 .PHONY: Makefile help tests
-
