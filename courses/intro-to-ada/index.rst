@@ -11,8 +11,13 @@
 Introduction to Ada
 ===================
 
+.. container:: content-description
+
+    This course will teach you the basics of the Ada programming language and is intended for those who already have a basic understanding of programming techniques. You will learn how to apply those techniques to programming in Ada.
+
+
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 4
     :caption: Contents:
 
     Introduction <chapters/introduction>

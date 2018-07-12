@@ -1,5 +1,27 @@
 /* sphinx_rtd_theme version 0.4.0 | MIT license */
 /* Built 20180606 11:06 */
+
+/*
+
+Style Attribute {
+}
+theme.css:5972.rst-content pre.literal-block div[class^='highlight'], .rst-content div[class^='highlight'] div[class^='highlight'] {
+padding: 0px;
+border: none;
+margin: 0;
+}
+theme.css:5966.rst-content pre.literal-block, .rst-content div[class^='highlight'] {
+border: 1px solid #e1e4e5;
+overflow-x: auto;
+margin: 1px 0 24px 0;
+}
+*/
+
+.rst-content .highlight {
+background: #ebf4f9;
+}
+
+
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -3789,7 +3811,7 @@ button[disabled] {
     padding: 6px 12px 8px 12px;
     color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: #27AE60;
+    background-color: #F56F23;
     text-decoration: none;
     font-weight: normal;
     font-family: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
@@ -3809,17 +3831,17 @@ button[disabled] {
 }
 
 .btn-hover {
-    background: #2e8ece;
+    background: #f88745;
     color: #fff
 }
 
 .btn:hover {
-    background: #2cc36b;
+    background: #f88745;
     color: #fff
 }
 
 .btn:focus {
-    background: #2cc36b;
+    background: #f88745;
     outline: 0
 }
 
@@ -4853,17 +4875,17 @@ input[type="radio"][disabled], input[type="checkbox"][disabled] {
 }
 
 a {
-    color: #2980B9;
+    color: #e1641b;
     text-decoration: none;
     cursor: pointer
 }
 
 a:hover {
-    color: #3091d1
+    color: #bc4600
 }
 
 a:visited {
-    color: #9B59B6
+    color: #eba177
 }
 
 html {
@@ -5207,25 +5229,25 @@ article ol li ul li {
 }
 
 .wy-menu-vertical li.divide-top {
-    border-top: solid 1px #404040
+    border-top: solid 1px #666060;
 }
 
 .wy-menu-vertical li.divide-bottom {
-    border-bottom: solid 1px #404040
+    border-bottom: solid 1px #666060;
 }
 
 .wy-menu-vertical li.current {
-    background: #e3e3e3
+    background: #4e4a4a;
 }
 
 .wy-menu-vertical li.current a {
-    color: gray;
-    border-right: solid 1px #c9c9c9;
+    color: #F56F23;
+/*     border-right: solid 1px #c9c9c9; */
     padding: .4045em 2.427em
 }
 
 .wy-menu-vertical li.current a:hover {
-    background: #d6d6d6
+    background: rgba(255, 255, 255, 0.06)
 }
 
 .wy-menu-vertical li code, .wy-menu-vertical li .rst-content tt, .rst-content .wy-menu-vertical li tt {
@@ -5246,17 +5268,17 @@ article ol li ul li {
 }
 
 .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
-    color: #404040;
+    color: #FFF;
     padding: .4045em 1.618em;
     font-weight: bold;
     position: relative;
-    background: #fcfcfc;
+    background: rgba(0, 0, 0, 0.2);
     border: none;
     padding-left: 1.618em -4px
 }
 
 .wy-menu-vertical li.on a:hover, .wy-menu-vertical li.current > a:hover {
-    background: #fcfcfc
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .wy-menu-vertical li.on a:hover span.toctree-expand, .wy-menu-vertical li.current > a:hover span.toctree-expand {
@@ -5271,13 +5293,16 @@ article ol li ul li {
 }
 
 .wy-menu-vertical li.toctree-l1.current > a {
+/*
     border-bottom: solid 1px #c9c9c9;
     border-top: solid 1px #c9c9c9
+*/
+color: #9e9e9e;
 }
 
 .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a,
 .wy-menu-vertical li.toctree-l4 a {
-    color: #404040
+    color: #e8e8e8
 }
 
 .wy-menu-vertical li.toctree-l1.current li.toctree-l2 > ul, .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > ul {
@@ -5290,13 +5315,14 @@ article ol li ul li {
 }
 
 .wy-menu-vertical li.toctree-l2.current > a {
-    background: #c9c9c9;
-    padding: .4045em 2.427em
+	background: #4A90E2;
+    padding: .4045em 2.427em;
+    color:#fff; font-weight: 900;
 }
 
 .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
     display: block;
-    background: #c9c9c9;
+    background: rgba(0, 0, 0, 0.4);
     padding: .4045em 4.045em
 }
 
@@ -5308,18 +5334,26 @@ article ol li ul li {
     color: #a3a3a3
 }
 
+.wy-menu-vertical li.toctree-l3.current,
+.wy-menu-vertical li.toctree-l2.current {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
 .wy-menu-vertical li.toctree-l3 {
+	
     font-size: .9em
 }
 
 .wy-menu-vertical li.toctree-l3.current > a {
-    background: #bdbdbd;
-    padding: .4045em 4.045em
+    background: rgba(0, 0, 0, 0.6);
+    padding: .4045em 4.045em;
+    color: #ff9252;
 }
 
 .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
     display: block;
-    background: #bdbdbd;
+    background: rgba(0, 0, 0, 0.6);
     padding: .4045em 5.663em
 }
 
@@ -5397,7 +5431,7 @@ article ol li ul li {
     width: 100%;
     border-radius: 50px;
     padding: 6px 12px;
-    border-color: #2472a4
+    border-color: #bc5011
 }
 
 .wy-side-nav-search img {

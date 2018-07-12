@@ -216,11 +216,6 @@ to explicitly store it in a local variable.
     result of a function, because unused variables will be flagged. For
     example, this code would not be valid:
 
-.. ?? This example might be confusing since out parameters have not been covered.
-.. ?? It would be better to show an example where the function's side effect is on
-.. ?? a non-local variable.  Maybe for the next version of the course.
-
-
     .. code:: ada
         :class: ada-syntax-only
 
@@ -246,6 +241,10 @@ to explicitly store it in a local variable.
 
     - Or give the variable a name that contains any of the strings ``discard``
       ``dummy`` ``ignore`` ``junk`` ``unused`` (case insensitive)
+
+.. ?? This example might be confusing since out parameters have not been covered.
+.. ?? It would be better to show an example where the function's side effect is on
+.. ?? a non-local variable.  Maybe for the next version of the course.
 
 Parameters modes
 ----------------
