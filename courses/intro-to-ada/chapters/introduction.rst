@@ -87,7 +87,7 @@ considered that:
 .. AI for amiard: Develop a little bit. Put in the proper format when we have decided about it (issue #4)
 
 -  Explicit is better than implicit: Although weirdly this is a
-   `Python <www.TODOpython.com>`_ commandment, Ada takes it way further
+   `Python <https://www.python.org>`_ commandment, Ada takes it way further
    than any language we know of:
 
    -  There is mostly no structural typing, and most types need to be
@@ -119,7 +119,8 @@ to the correctness of your code that is much higher than with a regular
 programming language.
 
 There is a
-`dedicated class for the SPARK language <https://TODOLINKTOSPARKCOURSE>`_,
+dedicated class for the SPARK language
+(:doc:`../../intro-to-spark/index`),
 but keep in mind that everytime we speak
 about the specification power of Ada during this course, it is power that you
 can leverage in SPARK to help proving your programs correct.

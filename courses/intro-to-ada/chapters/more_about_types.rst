@@ -3,6 +3,8 @@ More about types
 
 :code-config:`reset_accumulator=True`
 
+.. _Aggregates:
+
 .. role:: ada(code)
    :language: ada
 
@@ -11,7 +13,6 @@ More about types
 
 .. role:: cpp(code)
    :language: c++
-
 
 Aggregates: A primer
 --------------------
@@ -76,7 +77,7 @@ Overloading and qualified expressions
 -------------------------------------
 
 Ada has a general concept of name overloading, which we saw earlier
-in the section on enumeration types TODOPUTLINK.
+in the section on :ref:`enumeration types <EnumTypes>`.
 
 Let's take a simple example: it is possible in Ada to have functions that have
 the same name, but different types for their parameters.
@@ -208,11 +209,14 @@ pointers:
    "escape hatches" when the programmer explicitly requests them and presumably
    will be exercising such features with appropriate care.
 
-This course covers the basics of Ada pointers, which are known as "access
-values". There are generally better ways than to resort to the advanced
-features directly but if you need to use features that are potentially unsafe,
-you can learn more about those `unsafe features
-<TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
+.. TODO: Add paragraph and link below when advanced course is ready
+
+..
+   This course covers the basics of Ada pointers, which are known as "access
+   values". There are generally better ways than to resort to the advanced
+   features directly but if you need to use features that are potentially unsafe,
+   you can learn more about those unsafe features
+   ACCESS_TYPES_ADVANCED_LINK.
 
 Here is how you declare a simple pointer type, or access type, in Ada:
 
@@ -384,8 +388,13 @@ features that are considered fundamental to the use of pointers, such as:
   Ada, you need to never deallocate manually.
 
 Those features exist in Ada, but are only available through specific standard
-library APIs. You can read more about those in the
-`advanced course on memory management <TODO_ACCESS_TYPES_ADVANCED_LINK>`_.
+library APIs.
+
+.. TODO: Add paragraph and link below when advanced course is ready
+
+..
+   You can read more about those in the
+   advanced course on memory management ACCESS_TYPES_ADVANCED_LINK.
 
 .. attention::
 
@@ -750,8 +759,7 @@ displayed for C is 0.000500.
 Fixed-point types
 ~~~~~~~~~~~~~~~~~
 
-.. ?? Ordinary fixed-point types distinguish between the 'delta and the 'small
-.. ?? This is somewhat complex but needs to be mentioned
+.. TODO: add link to advanced lesson that discusses 'Delta vs. 'Small
 
 Ordinary fixed-point types are similar to decimal fixed-point types in that the
 values are, in effect, scaled integers.  The difference between them is in the

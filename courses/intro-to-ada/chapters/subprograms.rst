@@ -3,6 +3,8 @@ Subprograms
 
 :code-config:`reset_accumulator=True`
 
+.. _Subprograms:
+
 .. role:: ada(code)
    :language: ada
 
