@@ -1,6 +1,7 @@
 Object-oriented programming
 ===========================
 
+:code-config:`run_button=True;prove_button=False;accumulate_code=True`
 :code-config:`reset_accumulator=True`
 
 .. role:: ada(code)
@@ -79,7 +80,7 @@ brushed on, but not really covered, up to now:
 You can create one or more new types from every type in Ada. Type
 derivation is built into the language.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Newtypes is
        type Point is record
@@ -187,7 +188,7 @@ functionality is added:
 
 Let's see our first tagged type declarations:
 
-.. code:: ada
+.. code:: ada no_button
 
     package P is
        type My_Class is tagged null record;

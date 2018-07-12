@@ -133,7 +133,7 @@ Synchronization also occurs if we move the task to a separate package. In
 the example below, we declare a task ``T`` in the package
 ``Simple_Sync_Pkg``.
 
-.. code:: ada
+.. code:: ada no_button
 
     package Simple_Sync_Pkg is
        task T;
@@ -141,7 +141,7 @@ the example below, we declare a task ``T`` in the package
 
 This is the corresponding package body:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -359,7 +359,7 @@ the elapsed time (``Show_Elapsed_Time``) and a dummy
 ``Computational_Intensive_App`` procedure which is simulated by using a
 simple delay. This is the package specification:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Ada.Real_Time; use Ada.Real_Time;
 
@@ -381,7 +381,7 @@ simple delay. This is the package specification:
 
 And this is the package body:
 
-.. code:: ada
+.. code:: ada no_button
 
     with Ada.Text_IO; use Ada.Text_IO;
 
