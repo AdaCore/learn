@@ -3,9 +3,9 @@
 
 :nextprev_state: False
 
-.. container:: github-tag
+.. raw:: html
 
-  `Edit on GitHub <https://github.com/AdaCore/learn>`_
+  <a href="https://github.com/AdaCore/learn"><i class="fab fa-github"></i> Edit on GitHub</a>
 
 
 **Learn.adacore.com is an interactive learning platform designed to teach the Ada and SPARK programming languages.**

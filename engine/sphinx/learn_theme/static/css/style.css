@@ -25,14 +25,6 @@ img.logo {
  float: right;
 }
 
-div.github-tag a:before {
-    content: url("../img/github.svg");
-    width: 13px;
-    height: 13px;
-    display: inline-block;
-    padding: 5px;
-}
-
 .legal { 
     padding: 20px; 
     color: #878B9A; 
