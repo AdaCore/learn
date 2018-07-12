@@ -44,7 +44,7 @@
     {% endif %}
 
   {% endif %}
-
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ pathto('_static/' + style, 1) }}" type="text/css" />
   <link rel="stylesheet" href="{{ pathto('_static/pygments.css', 1) }}" type="text/css" />
   {%- for css in css_files %}
@@ -158,7 +158,7 @@
       {# MOBILE NAV, TRIGGLES SIDE NAV ON TOGGLE #}
       <nav class="wy-nav-top" aria-label="top navigation">
         {% block mobile_nav %}
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <i data-toggle="wy-nav-top" class="fas fa-bars"></i>
             {% if logo and theme_logo_only %}
               <a href="{{ pathto(master_doc) }}">
             {% else %}
