@@ -6,6 +6,9 @@ img.logo {
     /*    margin: 10px 20px !important;  */
     text-align: right !important;
 }
+.widget_editor {
+    padding-bottom: 30px;
+}
 
 .wy-side-nav-search { 
     background-color: #F56F23;
