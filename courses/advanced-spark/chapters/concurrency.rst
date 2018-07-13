@@ -105,18 +105,25 @@ Concurrency – A trivial example
 
 .. code:: ada
 
-    task type T;
+    procedure Show_Trivial_Task is
+       task type T;
 
-    Id : Task_Id;
+       type Task_Id is new Integer;
 
-    task body T is
+       Id : Task_Id;
+
+       task body T is
+          Current_Task : Task_Id := Id + 1;
+       begin
+          loop
+             Id := Current_Task;
+          end loop;
+       end T;
+
+       T1, T2 : T;
     begin
-       loop
-          Id := Current_Task;
-       end loop;
-    end T;
-
-    T1, T2 : T;
+       null;
+    end Show_Trivial_Task;
 
 - Id can be written by ``T1`` and ``T2`` at the same time
 
@@ -127,7 +134,7 @@ Setup for using concurrency in SPARK
 - Any unit using concurrency features (tasks, protected objects, etc.)
   must set the profile
 
-.. code:: ada
+.. code-block:: ada
 
     pragma Profile (Ravenscar);
     --  or
@@ -137,7 +144,7 @@ Setup for using concurrency in SPARK
 
     - that ensures tasks start after the end of elaboration
 
-.. code:: ada
+.. code-block:: ada
 
     pragma Partition_Elaboration_Policy (Sequential);
 
@@ -153,7 +160,7 @@ Tasks in Ravenscar
 
     - no declarations of entries for rendez-vous
 
-.. code:: ada
+.. code-block:: ada
 
     task T;
     task type TT;
@@ -162,7 +169,7 @@ Tasks in Ravenscar
 
     - infinite loop to prevent termination
 
-.. code:: ada
+.. code-block:: ada
 
     task body T is
     begin
@@ -175,7 +182,7 @@ Tasks in Ravenscar
 
 - ... as standalone objects or inside records/arrays
 
-.. code:: ada
+.. code-block:: ada
 
     type TA is array (1 .. 3) of TT;
     type TR is record
@@ -194,25 +201,33 @@ Communication Between Tasks in Ravenscar
 
 .. code:: ada
 
-    protected (type) P is
-       procedure Set (V : Natural);
-       function Get return Natural;
-    private
-       The_Data : Natural := 0;
-    end P;
+    package Show_Protected_Object is
+
+       protected P is
+          procedure Set (V : Natural);
+          function Get return Natural;
+       private
+          The_Data : Natural := 0;
+       end P;
+
+    end Show_Protected_Object;
 
 - ... completed by a body
 
 .. code:: ada
 
-    protected body P is
-       procedure Set (V : Natural) is
-       begin
-          The_Data := V;
-       end Set;
-       function Get return Natural is
-         (The_Data);
-    end P;
+    package body Show_Protected_Object is
+
+       protected body P is
+          procedure Set (V : Natural) is
+          begin
+             The_Data := V;
+          end Set;
+          function Get return Natural is
+            (The_Data);
+       end P;
+
+    end Show_Protected_Object;
 
 
 Protected Objects in Ravenscar
@@ -228,15 +243,41 @@ Protected Objects in Ravenscar
 
 .. code:: ada
 
-    P : PT;
+    package Show_Protected_Object_Ravenscar is
 
-    type PAT is array (1 .. 3) of PT;
-    PA : PAT;
+       protected type PT is
+          procedure Set (V : Natural);
+          function Get return Natural;
+       private
+          The_Data : Natural := 0;
+       end PT;
 
-    type PRT is record
-       A, B : PT;
-    end record with Volatile;
-    PR : PRT;
+       P : PT;
+
+       type PAT is array (1 .. 3) of PT;
+       PA : PAT;
+
+       type PRT is record
+          A, B : PT;
+       end record with Volatile;
+       PR : PRT;
+
+    end Show_Protected_Object_Ravenscar;
+
+.. code:: ada
+
+    package body Show_Protected_Object_Ravenscar is
+
+       protected body PT is
+          procedure Set (V : Natural) is
+          begin
+             The_Data := V;
+          end Set;
+          function Get return Natural is
+            (The_Data);
+       end PT;
+
+    end Show_Protected_Object_Ravenscar;
 
 
 Protected Communication with Procedures & Functions
@@ -280,18 +321,29 @@ Blocking Communication with Entries
 
 .. code:: ada
 
-    protected (type) P is
-       entry Reset;
-    private
-       Is_Not_Null : Boolean := False;
-       ...
+    package Show_Blocking_Communication is
 
-    protected body P is
-       entry Reset when Is_Not_Null is
-       begin
-          The_Data := 0;
-       end Reset;
-    end P;
+       protected type PT is
+          entry Reset;
+       private
+          Is_Not_Null : Boolean := False;
+          The_Data    : Integer := 1000;
+       end PT;
+
+    end Show_Blocking_Communication;
+
+.. code:: ada
+
+    package body Show_Blocking_Communication is
+
+       protected body PT is
+          entry Reset when Is_Not_Null is
+          begin
+             The_Data := 0;
+          end Reset;
+       end PT;
+
+    end Show_Blocking_Communication;
 
 
 Relaxed Constraints on Entries with Extended Ravenscar
@@ -307,17 +359,36 @@ Relaxed Constraints on Entries with Extended Ravenscar
 
 .. code:: ada
 
-    protected type Mailbox is
-       entry Publish;
-       entry Retrieve;
-    private
-       Num_Messages : Natural := 0;
-       ...
+    package Show_Relaxed_Constraints_On_Entries is
 
-    protected body Mailbox is
-       entry Publish when Num_Messages < Max is ...
-       entry Retrieve when Num_Messages > 0 is ...
-    end P;
+       protected type Mailbox is
+          entry Publish;
+          entry Retrieve;
+       private
+          Num_Messages : Natural := 0;
+       end Mailbox;
+
+    end Show_Relaxed_Constraints_On_Entries;
+
+.. code:: ada
+
+    package body Show_Relaxed_Constraints_On_Entries is
+
+       Max : constant := 100;
+
+       protected body Mailbox is
+          entry Publish when Num_Messages < Max is
+          begin
+             Num_Messages := Num_Messages + 1;
+          end Publish;
+
+          entry Retrieve when Num_Messages > 0 is
+          begin
+             Num_Messages := Num_Messages - 1;
+          end Retrieve;
+       end Mailbox;
+
+    end Show_Relaxed_Constraints_On_Entries;
 
 
 Interrupt Handlers in Ravenscar
@@ -333,13 +404,20 @@ Interrupt Handlers in Ravenscar
 
 .. code:: ada
 
-    protected P with
-      Interrupt_Priority =>
-        System.Interrupt_Priority'First
-    is
-       procedure Signal with
-         Attach_Handler => SIGHUP;
-       ...
+    with System; use System;
+    with Ada.Interrupts.Names; use Ada.Interrupts.Names;
+
+    package Show_Interrupt_Handlers is
+
+        protected P with
+          Interrupt_Priority =>
+            System.Interrupt_Priority'First
+        is
+           procedure Signal with
+             Attach_Handler => SIGHUP;
+        end P;
+
+    end Show_Interrupt_Handlers;
 
 - Priority of the PO should be in :ada:`System.Interrupt_Priority`
 
@@ -386,15 +464,19 @@ Data and Flow Dependencies of Tasks
 
 .. code:: ada
 
-    task T with
-       Global => (Input => X,
-                  Output => Y,
-                  In_Out => Z),
-       Depends => (T => T,
-                   Z => Y,
-                   Y => X)
-    is
-       ...
+    package Show_Data_And_Flow_Dependencies is
+
+       X, Y, Z : Integer;
+
+       task T with
+         Global => (Input  => X,
+                    Output => Y,
+                    In_Out => Z),
+         Depends => (T    => T,
+                     Z    => X,
+                     Y    => X,
+                     null => Z);
+    end Show_Data_And_Flow_Dependencies;
 
 
 State Abstraction over Synchronized Variables
@@ -405,17 +487,43 @@ State Abstraction over Synchronized Variables
 
 .. code:: ada
 
-    package P with
-       Abstract_State => (State with Synchronous)
-    is ...
+    package Show_State_Abstraction with
+      Abstract_State => (State with Synchronous, External)
+    is
 
-    package body P with
-       Refined_State => (State => (A, P, T))
+       protected type Protected_Type is
+          procedure Reset;
+       private
+          Data : Natural := 0;
+       end Protected_Type;
+
+       task type Task_Type;
+
+    end Show_State_Abstraction;
+
+.. code:: ada
+
+    package body Show_State_Abstraction with
+      Refined_State => (State => (A, P, T))
     is
        A : Integer with Atomic, Async_Readers, Async_Writers;
        P : Protected_Type;
        T : Task_Type;
-    end P;
+
+       protected body Protected_Type is
+          procedure Reset is
+          begin
+             Data := 0;
+          end Reset;
+       end Protected_Type;
+
+       task body Task_Type is
+       begin
+          P.Reset;
+          A := 0;
+       end Task_Type;
+
+    end Show_State_Abstraction;
 
 - Synchronized state is a form of external state
 
@@ -434,7 +542,7 @@ Synchronized Abstract State in the Standard Library
 
     - the real-time runtime maintains state about current time
 
-.. code:: ada
+.. code-block:: ada
 
     package Ada.Task_Identification with
       SPARK_Mode,
@@ -485,18 +593,28 @@ Example #2
 
 .. code:: ada
 
-    protected P is
-       entry Reset;
-    end P;
+    package Example_02 is
 
-    Data : Boolean := False;
+       protected P is
+          entry Reset;
+       end P;
 
-    protected body P is
-       entry Reset when Data is
-       begin
-          null;
-       end Reset;
-    end P;
+    private
+       Data : Boolean := False;
+    end Example_02;
+
+.. code:: ada
+
+    package body Example_02 is
+
+       protected body P is
+          entry Reset when Data is
+          begin
+             null;
+          end Reset;
+       end P;
+
+    end Example_02;
 
 This code is not correct. Global data in entry guard is not allowed.
 Violation of restriction :ada:`Simple_Barriers` (for Ravenscar) or
@@ -508,28 +626,42 @@ Example #3
 
 .. code:: ada
 
-    protected P is
-       procedure Set (Value : Integer);
-    end P;
-    task type TT;
-    T1, T2 : TT;
+    package Example_03 is
 
+       protected P is
+          procedure Set (Value : Integer);
+       end P;
 
-    Data : Integer := 0;
-    protected body P is
-       procedure Set (Value : Integer) is
+    private
+       task type TT;
+
+       T1, T2 : TT;
+
+    end Example_03;
+
+.. code:: ada
+
+    package body Example_03 is
+
+       Data : Integer := 0;
+
+       protected body P is
+          procedure Set (Value : Integer) is
+          begin
+             Data := Value;
+          end Set;
+       end P;
+
+       task body TT is
+          Local : Integer := 0;
        begin
-          Data := Value;
-       end Set;
-    end P;
-    task body TT is
-       Local : Integer := 0;
-    begin
-       loop
-          Local := (Local + 1) mod 100;
-          P.Set (Local);
-       end loop;
-    end TT;
+          loop
+             Local := (Local + 1) mod 100;
+             P.Set (Local);
+          end loop;
+       end TT;
+
+    end Example_03;
 
 This code is not correct. Global unprotected data accessed in protected
 object shared between tasks
@@ -540,27 +672,42 @@ Example #4
 
 .. code:: ada
 
-    protected P is
-       procedure Set (Value : Integer);
-    end P;
-    Data : Integer := 0 with Part_Of => P;
-    task type TT;
-    T1, T2 : TT;
+    package Example_04 is
 
-    protected body P is
-       procedure Set (Value : Integer) is
+       protected P is
+          procedure Set (Value : Integer);
+       end P;
+
+    private
+       Data : Integer := 0 with Part_Of => P;
+
+       task type TT;
+
+       T1, T2 : TT;
+
+    end Example_04;
+
+.. code:: ada
+
+    package body Example_04 is
+
+       protected body P is
+          procedure Set (Value : Integer) is
+          begin
+             Data := Value;
+          end Set;
+       end P;
+
+       task body TT is
+          Local : Integer := 0;
        begin
-          Data := Value;
-       end Set;
-    end P;
-    task body TT is
-       Local : Integer := 0;
-    begin
-       loop
-          Local := (Local + 1) mod 100;
-          P.Set (Local);
-       end loop;
-    end TT;
+          loop
+             Local := (Local + 1) mod 100;
+             P.Set (Local);
+          end loop;
+       end TT;
+
+    end Example_04;
 
 This code is correct. ``Data`` is part of the protected object state. The
 only accesses to ``Data`` are through ``P``.
@@ -571,31 +718,52 @@ Example #5
 
 .. code:: ada
 
-    protected P1 with Priority => 3 is
-       procedure Set (Value : Integer);
-    end P1;
+    package Example_05 is
 
-    protected P2 with Priority => 2 is
-       procedure Set (Value : Integer);
-    end P2;
+       protected P1 with Priority => 3 is
+          procedure Set (Value : Integer);
+       private
+          Data : Integer := 0;
+       end P1;
 
-    task type TT with Priority => 1;
-    T1, T2 : TT;
+       protected P2 with Priority => 2 is
+          procedure Set (Value : Integer);
+       end P2;
 
-    protected body P2 is
-       procedure Set (Value : Integer) is
+    private
+       task type TT with Priority => 1;
+
+       T1, T2 : TT;
+
+    end Example_05;
+
+.. code:: ada
+
+    package body Example_05 is
+
+       protected body P1 is
+          procedure Set (Value : Integer) is
+          begin
+             Data := Value;
+          end Set;
+       end P1;
+
+       protected body P2 is
+          procedure Set (Value : Integer) is
+          begin
+             P1.Set (Value);
+          end Set;
+       end P2;
+
+       task body TT is
+          Local : constant Integer := 0;
        begin
-          P1.Set (Value);
-       end Set;
-    end P2;
+          loop
+             P2.Set (Local);
+          end loop;
+       end TT;
 
-    task body TT is
-    begin
-       loop
-          P2.Set (Local);
-       end loop;
-    end TT;
-
+    end Example_05;
 
 This code is correct. :ada:`Ceiling_Priority` policy is respected. Task
 never accesses a protected object with lower priority than its active
@@ -608,27 +776,46 @@ Example #6
 
 .. code:: ada
 
-    protected type Mailbox is
-       entry Publish;
-       entry Retrieve;
-    private
-       Not_Empty    : Boolean := True;
-       Not_Full     : Boolean := False;
-       Num_Messages : Natural := 0;
-    end Mailbox;
+    package Example_06 is
 
-    Max : constant := 100;
-    protected body Mailbox is
-       entry Publish when Not_Full is
-       begin
-          Num_Messages := Num_Messages + 1;
-          Not_Empty := True;
-          if Num_Messages = Max then
-             Not_Full := False;
-          end if;
-       end Publish;
-       entry Retrieve when Not_Empty is ...
-    end Mailbox;
+       protected type Mailbox is
+          entry Publish;
+          entry Retrieve;
+       private
+          Not_Empty    : Boolean := True;
+          Not_Full     : Boolean := False;
+          Num_Messages : Natural := 0;
+       end Mailbox;
+
+    end Example_06;
+
+.. code:: ada
+
+    package body Example_06 is
+
+       Max : constant := 100;
+
+       protected body Mailbox is
+          entry Publish when Not_Full is
+          begin
+             Num_Messages := Num_Messages + 1;
+             Not_Empty := True;
+             if Num_Messages = Max then
+                Not_Full := False;
+             end if;
+          end Publish;
+
+          entry Retrieve when Not_Empty is
+          begin
+             Num_Messages := Num_Messages - 1;
+             Not_Full := True;
+             if Num_Messages = 0 then
+                Not_Empty := False;
+             end if;
+          end Retrieve;
+       end Mailbox;
+
+    end Example_06;
 
 This code is not correct. Integer range cannot be proved correct.
 
@@ -638,25 +825,36 @@ Example #7
 
 .. code:: ada
 
-    protected type Mailbox is
-       entry Publish;
-       entry Retrieve;
-    private
-       Num_Messages : Natural := 0;
-    end Mailbox;
+    package Example_07 is
 
-    Max : constant := 100;
-    protected body Mailbox is
-       entry Publish when Num_Messages < Max is
-       begin
-          Num_Messages := Num_Messages + 1;
-       end Publish;
+       protected type Mailbox is
+          entry Publish;
+          entry Retrieve;
+       private
+          Num_Messages : Natural := 0;
+       end Mailbox;
 
-       entry Retrieve when Num_Messages > 0 is
-       begin
-          Num_Messages := Num_Messages - 1;
-       end Retrieve;
-    end Mailbox;
+    end Example_07;
+
+.. code:: ada
+
+    package body Example_07 is
+
+       Max : constant := 100;
+
+       protected body Mailbox is
+          entry Publish when Num_Messages < Max is
+          begin
+             Num_Messages := Num_Messages + 1;
+          end Publish;
+
+          entry Retrieve when Num_Messages > 0 is
+          begin
+             Num_Messages := Num_Messages - 1;
+          end Retrieve;
+       end Mailbox;
+
+    end Example_07;
 
 This code is correct. Precise range obtained from entry guards allows to
 prove checks.
@@ -667,27 +865,57 @@ Example #8
 
 .. code:: ada
 
-    type Content is record
-       Not_Empty ... Not_Full ... Num_Messages ...
-    end record with Predicate =>
-       Num_Messages in 0 .. Max
-       and Not_Empty = (Num_Messages > 0)
-       and Not_Full = (Num_Messages < Max);
-    protected type Mailbox is
-       ... C : Content;
-    end Mailbox;
+    package Example_08 is
 
-    protected body Mailbox is
-       entry Publish when C.Not_Full is
-          Not_Full     : Boolean := C.Not_Full;
-          Num_Messages : Natural := C.Num_Messages;
-       begin
-          Num_Messages := Num_Messages + 1;
-          if Num_Messages = Max then
-             Not_Full := False;
-          end if;
-          C := (True, Not_Full, Num_Messages);
-       end Publish;
+       Max : constant := 100;
+
+       type Content is record
+          Not_Empty    : Boolean := False;
+          Not_Full     : Boolean := True;
+          Num_Messages : Natural := 0;
+       end record with Predicate =>
+         Num_Messages in 0 .. Max
+         and Not_Empty = (Num_Messages > 0)
+         and Not_Full = (Num_Messages < Max);
+
+       protected type Mailbox is
+          entry Publish;
+          entry Retrieve;
+       private
+          C : Content;
+       end Mailbox;
+
+    end Example_08;
+
+.. code:: ada
+
+    package body Example_08 is
+
+       protected body Mailbox is
+          entry Publish when C.Not_Full is
+             Not_Full     : Boolean := C.Not_Full;
+             Num_Messages : Natural := C.Num_Messages;
+          begin
+             Num_Messages := Num_Messages + 1;
+             if Num_Messages = Max then
+                Not_Full := False;
+             end if;
+             C := (True, Not_Full, Num_Messages);
+          end Publish;
+
+          entry Retrieve when C.Not_Empty is
+             Not_Empty    : Boolean := C.Not_Empty;
+             Num_Messages : Natural := C.Num_Messages;
+          begin
+             Num_Messages := Num_Messages - 1;
+             if Num_Messages = 0 then
+                Not_Empty := False;
+             end if;
+             C := (Not_Empty, True, Num_Messages);
+          end Retrieve;
+       end Mailbox;
+
+    end Example_08;
 
 This code is correct. Precise range obtained from predicate allows to
 prove checks. Predicate is preserved.
@@ -698,22 +926,55 @@ Example #9
 
 .. code:: ada
 
-    package Service with
-      Abstract_State => (State with External)
-    is
-       procedure Extract (Data : out Integer) with
-         Global => (In_Out => State);
+    --% src_file: Example_09.ads
+    --% cflags: -gnaty
+    --% make_flags: -gnaty -gnata
 
-    task type T;
-    T1, T2 : T;
+    package Example_09 is
 
-    task body T is
-       X : Integer;
-    begin
-       loop
-          Extract (X);
-       end loop;
-    end T;
+       package Service with
+         Abstract_State => (State with External)
+       is
+          procedure Extract (Data : out Integer) with
+            Global => (In_Out => State);
+       end Service;
+
+    private
+       task type T;
+       T1, T2 : T;
+
+    end Example_09;
+
+.. code:: ada
+
+    package body Example_09 is
+
+       package body Service with
+         Refined_State => (State => Extracted)
+       is
+          Local_Data : constant Integer := 100;
+          Extracted  : Boolean := False;
+
+          procedure Extract (Data : out Integer) is
+          begin
+             if not Extracted then
+                Data := Local_Data;
+                Extracted := True;
+             else
+                Data := Integer'First;
+             end if;
+          end Extract;
+       end Service;
+
+       task body T is
+          X : Integer;
+       begin
+          loop
+             Service.Extract (X);
+          end loop;
+       end T;
+
+    end Example_09;
 
 This code is not correct. Unsynchronized state cannot be accessed from
 multiple tasks or protected objects.
@@ -724,22 +985,70 @@ Example #10
 
 .. code:: ada
 
-    package Service with
-      Abstract_State => (State with Synchronous, External)
-    is
-       procedure Extract (Data : out Integer) with
-         Global => (In_Out => State);
+    package Example_10 is
 
-    task type T;
-    T1, T2 : T;
+       package Service with
+         Abstract_State => (State with Synchronous, External)
+       is
+          procedure Extract (Data : out Integer) with
+            Global => (In_Out => State);
+       private
+          protected type Service_Extracted is
+             procedure Set;
+             function Get return Boolean;
+          private
+             Extracted : Boolean := False;
+          end Service_Extracted;
+       end Service;
 
-    task body T is
-       X : Integer;
-    begin
-       loop
-          Extract (X);
-       end loop;
-    end T;
+    private
+       task type T;
+       T1, T2 : T;
+
+    end Example_10;
+
+.. code:: ada
+
+    package body Example_10 is
+
+       package body Service with
+         Refined_State => (State => Extracted)
+       is
+          Local_Data : constant Integer := 100;
+
+          Extracted : Service_Extracted;
+
+          protected body Service_Extracted is
+             procedure Set is
+             begin
+                Extracted := True;
+             end Set;
+
+            function Get return Boolean is
+               (Extracted);
+          end Service_Extracted;
+
+          procedure Extract (Data : out Integer) is
+             Is_Extracted : constant Boolean := Extracted.Get;
+          begin
+             if not Is_Extracted then
+                Data := Local_Data;
+                Extracted.Set;
+             else
+                Data := Integer'First;
+             end if;
+          end Extract;
+       end Service;
+
+       task body T is
+          X : Integer;
+       begin
+          loop
+             Service.Extract (X);
+          end loop;
+       end T;
+
+    end Example_10;
 
 This code is correct. Abstract state is synchronized, hence can be
 accessed from multiple tasks and protected objects.
