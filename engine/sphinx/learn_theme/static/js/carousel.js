@@ -13,7 +13,7 @@ $( function() {
               speed: 300,
               slidesToShow: 2,
               slidesToScroll: 1,
-              autoplay: true,
+              autoplay: false,
               autoplaySpeed: 2000,
               responsive: [
                 {

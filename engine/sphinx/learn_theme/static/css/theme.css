@@ -1032,7 +1032,8 @@ input[type="tel"], input[type="color"], select, textarea, .wy-menu-vertical li.o
 .fa-exclamation-circle:before, .wy-inline-validate.wy-inline-validate-warning .wy-input-context:before,
 .wy-inline-validate.wy-inline-validate-info .wy-input-context:before,
 .rst-content .admonition-title:before {
-    content: ""
+    font-family: "Font Awesome 5 Free";
+    content: "/f06a";
 }
 
 .fa-gift:before {

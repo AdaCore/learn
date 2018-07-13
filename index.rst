@@ -5,7 +5,7 @@
 
 .. raw:: html
 
-  <a href="https://github.com/AdaCore/learn"><i class="fab fa-github"></i> Edit on GitHub</a>
+  <a href="https://github.com/AdaCore/learn"><i class="fab fa-github"></i> Edit on GitHub</a><br><br>
 
 
 **Learn.adacore.com is an interactive learning platform designed to teach the Ada and SPARK programming languages.**
