@@ -22,7 +22,8 @@ Concurrency ≠ Parallelism
 
 - What about Ada and SPARK?
 
-    - GNAT runtimes for concurrency available on single core & multicore (for SMP platforms)
+    - GNAT runtimes for concurrency available on single core & multicore
+      (for SMP platforms)
 
     - parallel features scheduled for inclusion in Ada and SPARK 202x
 
@@ -123,7 +124,8 @@ Concurrency – A trivial example
 Setup for using concurrency in SPARK
 ---------------------------------------------------------------------
 
-- Any unit using concurrency features (tasks, protected objects, etc.) must set the profile
+- Any unit using concurrency features (tasks, protected objects, etc.)
+  must set the profile
 
 .. code:: ada
 
@@ -220,7 +222,9 @@ Protected Objects in Ravenscar
 
 - ... as standalone objects or inside records/arrays
 
-    - The record type needs to be volatile, as a non-volatile type cannot contain a volatile component. The array type is implicitly volatile when its component type is volatile.
+    - The record type needs to be volatile, as a non-volatile type cannot
+      contain a volatile component. The array type is implicitly volatile
+      when its component type is volatile.
 
 .. code:: ada
 
@@ -321,9 +325,11 @@ Interrupt Handlers in Ravenscar
 
 - Interrupt handlers are parameterless procedures of PO
 
-    - with aspect :ada:`Attach_Handler` specifying the corresponding signal
+    - with aspect :ada:`Attach_Handler` specifying the corresponding
+      signal
 
-    - with aspect :ada:`Interrupt_Priority` on the PO specifying the priority
+    - with aspect :ada:`Interrupt_Priority` on the PO specifying the
+      priority
 
 .. code:: ada
 
@@ -339,7 +345,8 @@ Interrupt Handlers in Ravenscar
 
     - default is OK – in the range of :ada:`System.Interrupt_Priority`
 
-    - checked by proof (default or value of :ada:`Priority` or :ada:`Interrupt_Priority`)
+    - checked by proof (default or value of :ada:`Priority` or
+      :ada:`Interrupt_Priority`)
 
 
 Other Communications Between Tasks in SPARK
@@ -355,11 +362,13 @@ Other Communications Between Tasks in SPARK
 
 - Constants are considered as synchronized
 
-    - this includes variables constant after elaboration (specified with aspect :ada:`Constant_After_Elaboration`)
+    - this includes variables constant after elaboration (specified with
+      aspect :ada:`Constant_After_Elaboration`)
 
 - Single task or PO can access an unsynchronized object
 
-    - exclusive relation between object and task/PO must be specified with aspect :ada:`Part_Of`
+    - exclusive relation between object and task/PO must be specified with
+      aspect :ada:`Part_Of`
 
 
 Data and Flow Dependencies of Tasks
@@ -391,7 +400,8 @@ Data and Flow Dependencies of Tasks
 State Abstraction over Synchronized Variables
 ---------------------------------------------------------------------
 
-- Synchronized objects can be abstracted in synchronized abstract state with aspect :ada:`Synchronous`
+- Synchronized objects can be abstracted in synchronized abstract state
+  with aspect :ada:`Synchronous`
 
 .. code:: ada
 
@@ -409,7 +419,8 @@ State Abstraction over Synchronized Variables
 
 - Synchronized state is a form of external state
 
-    - :ada:`Synchronous` same as :ada:`External => (Async_Readers, Async_Writers)`
+    - :ada:`Synchronous` same as
+      :ada:`External => (Async_Readers, Async_Writers)`
 
     - tasks are not volatile and can be part of regular abstract state
 
@@ -464,7 +475,9 @@ Example #1
        T1.Start;
     end Rendezvous;
 
-This code is not correct. Task rendezvous is not allowed; violation of restriction :ada:`Max_Task_Entries = 0`. A local task is not allowed; violation of restriction :ada:`No_Task_Hierarchy`
+This code is not correct. Task rendezvous is not allowed; violation of
+restriction :ada:`Max_Task_Entries = 0`. A local task is not allowed;
+violation of restriction :ada:`No_Task_Hierarchy`
 
 
 Example #2
@@ -485,7 +498,9 @@ Example #2
        end Reset;
     end P;
 
-This code is not correct. Global data in entry guard is not allowed. Violation of restriction :ada:`Simple_Barriers` (for Ravenscar) or :ada:`Pure_Barriers` (for Extended Ravenscar)
+This code is not correct. Global data in entry guard is not allowed.
+Violation of restriction :ada:`Simple_Barriers` (for Ravenscar) or
+:ada:`Pure_Barriers` (for Extended Ravenscar)
 
 
 Example #3
@@ -516,7 +531,8 @@ Example #3
        end loop;
     end TT;
 
-This code is not correct. Global unprotected data accessed in protected object shared between tasks
+This code is not correct. Global unprotected data accessed in protected
+object shared between tasks
 
 
 Example #4
@@ -546,7 +562,8 @@ Example #4
        end loop;
     end TT;
 
-This code is correct. ``Data`` is part of the protected object state. The only accesses to ``Data`` are through ``P``.
+This code is correct. ``Data`` is part of the protected object state. The
+only accesses to ``Data`` are through ``P``.
 
 
 Example #5
@@ -580,7 +597,10 @@ Example #5
     end TT;
 
 
-This code is correct. :ada:`Ceiling_Priority` policy is respected. Task never accesses a protected object with lower priority than its active priority. Note that PO can call procedure or function from another PO, but not an entry (possibly blocking).
+This code is correct. :ada:`Ceiling_Priority` policy is respected. Task
+never accesses a protected object with lower priority than its active
+priority. Note that PO can call procedure or function from another PO, but
+not an entry (possibly blocking).
 
 
 Example #6
@@ -638,7 +658,8 @@ Example #7
        end Retrieve;
     end Mailbox;
 
-This code is correct. Precise range obtained from entry guards allows to prove checks.
+This code is correct. Precise range obtained from entry guards allows to
+prove checks.
 
 
 Example #8
@@ -668,7 +689,8 @@ Example #8
           C := (True, Not_Full, Num_Messages);
        end Publish;
 
-This code is correct. Precise range obtained from predicate allows to prove checks. Predicate is preserved.
+This code is correct. Precise range obtained from predicate allows to
+prove checks. Predicate is preserved.
 
 
 Example #9
@@ -693,7 +715,8 @@ Example #9
        end loop;
     end T;
 
-This code is not correct. Unsynchronized state cannot be accessed from multiple tasks or protected objects.
+This code is not correct. Unsynchronized state cannot be accessed from
+multiple tasks or protected objects.
 
 
 Example #10
@@ -718,4 +741,5 @@ Example #10
        end loop;
     end T;
 
-This code is correct. Abstract state is synchronized, hence can be accessed from multiple tasks and protected objects.
+This code is correct. Abstract state is synchronized, hence can be
+accessed from multiple tasks and protected objects.

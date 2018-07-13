@@ -20,7 +20,8 @@ Type Contracts in Ada 2012 and SPARK 2014
 
     - Part of Design by Contract ™
 
-    - Type invariant is checked dynamically when an object is created, and when an exported routine of the class returns
+    - Type invariant is checked dynamically when an object is created, and
+      when an exported routine of the class returns
 
 - Ada 2012 / SPARK 2014 support strong and weak invariants
 
@@ -39,7 +40,8 @@ Static Predicate
 
     - Supporting non-contiguous subtypes of enumerations
 
-    - Removes the constraint to define enumeration values in an order that allows defining interesting subtypes
+    - Removes the constraint to define enumeration values in an order that
+      allows defining interesting subtypes
 
 .. code:: ada
 
@@ -54,7 +56,8 @@ Static Predicate
 
 - Types with static predicate are restricted
 
-    - Cannot be used for the index of a loop or for array index (but OK for value tested in case statement)
+    - Cannot be used for the index of a loop or for array index (but OK
+      for value tested in case statement)
 
 
 Dynamic Predicate
@@ -62,7 +65,8 @@ Dynamic Predicate
 
 - Extension of static predicate for any property
 
-    - Property for static predicate must compare value to static expressions
+    - Property for static predicate must compare value to static
+      expressions
 
     - Property for dynamic predicate can be anything
 
@@ -75,7 +79,8 @@ Dynamic Predicate
 
     - Strings that start at index 1 (:ada:`My_String'First = 1`)
 
-    - Upper bound on record component that depends on the discriminant value (:ada:`Length <= Capacity`)
+    - Upper bound on record component that depends on the discriminant
+      value (:ada:`Length <= Capacity`)
 
     - Ordering property on array values (:ada:`Is_Sorted (My_Array)`)
 
@@ -93,7 +98,8 @@ Restrictions on Types With Dynamic Predicate
 
 - No restriction on the property in Ada
 
-    - Property can read the value of global variable (e.g. ``Check_Is_Off_In_Calendar``)
+    - Property can read the value of global variable (e.g.
+      ``Check_Is_Off_In_Calendar``)
 
         - what if global variable is updated?
 
@@ -111,9 +117,11 @@ Dynamic Checking of Predicates
 
 - Partly similar to other type constraints
 
-    - Checked everywhere a range/discriminant check would be issued: assignment, parameter passing, type conversion, type qualification
+    - Checked everywhere a range/discriminant check would be issued:
+      assignment, parameter passing, type conversion, type qualification
 
-    - ...but exception :ada:`Assertion_Error` is raised in case of violation
+    - ...but exception :ada:`Assertion_Error` is raised in case of
+      violation
 
     - ...but predicates not checked by default, activated with ``-gnata``
 
@@ -125,7 +133,8 @@ Dynamic Checking of Predicates
 
 - Property should not contain calls to functions of the type
 
-    - These functions will check the predicate on entry, leading to an infinite loop
+    - These functions will check the predicate on entry, leading to an
+      infinite loop
 
     - GNAT compiler warns about such cases
 
@@ -135,7 +144,8 @@ Temporary Violations of the Dynamic Predicate
 
 - Sometimes convenient to locally violate the property
 
-    - Inside subprogram, to assign components of a record without an aggregate assignment
+    - Inside subprogram, to assign components of a record without an
+      aggregate assignment
 
     - Violation even if no run-time check on component assignment
 
@@ -170,7 +180,8 @@ Type Invariant
 
     - Either on the private declaration
 
-    - Or on the completion of the type in the private part of the package (makes more sense in general, only option in SPARK)
+    - Or on the completion of the type in the private part of the package
+      (makes more sense in general, only option in SPARK)
 
 .. code:: ada
 
@@ -199,14 +210,15 @@ Dynamic Checking of Type Invariants
 
 - No checking on internal subprograms!
 
+    - Choice between predicate and type invariants depends on the need for
+      such internal subprograms without checking
+
 .. code:: ada
 
     procedure Internal_Adjust (WS : in out Week_Schedule) is
     begin
        WS.Day_Off := WS.Day_On_Duty;
     end Internal_Adjust;
-
-    - Choice between predicate and type invariants depends on the need for such internal subprograms without checking
 
 
 Inheritance of Predicates and Type Invariants
@@ -216,7 +228,8 @@ Inheritance of Predicates and Type Invariants
 
     - Similar to other type constraints like bounds
 
-    - Allows to structure a hierarchy of subtypes, from least to most constrained
+    - Allows to structure a hierarchy of subtypes, from least to most
+      constrained
 
 .. code:: ada
 
@@ -231,7 +244,8 @@ Inheritance of Predicates and Type Invariants
 
     - A private type cannot be derived unless it is tagged
 
-    - Special aspect :ada:`Type_Invariant'Class` preferred for tagged types
+    - Special aspect :ada:`Type_Invariant'Class` preferred for tagged
+      types
 
 
 Other Useful Gotchas on Predicates and Type Invariants
@@ -239,7 +253,8 @@ Other Useful Gotchas on Predicates and Type Invariants
 
 - GNAT defines its own aspects :ada:`Predicate` and :ada:`Invariant`
 
-    - Predicate is the same as :ada:`Static_Predicate` if property allows it
+    - Predicate is the same as :ada:`Static_Predicate` if property allows
+      it
 
     - Otherwise :ada:`Predicate` is the same as :ada:`Dynamic_Predicate`
 
@@ -255,19 +270,22 @@ Other Useful Gotchas on Predicates and Type Invariants
 
     - Ada/SPARK do not define type invariants on protected objects
 
-    - Idiom is to use a record type as unique component of the PO, and use a predicate for that record type
+    - Idiom is to use a record type as unique component of the PO, and use
+      a predicate for that record type
 
 
 Default Initial Condition
 ---------------------------------------------------------------------
 
-- Aspect defined in GNAT to state a property on default initial values of a private type
+- Aspect defined in GNAT to state a property on default initial values of
+  a private type
 
     - Introduced for proof in SPARK
 
     - GNAT introduces a dynamic check when ``-gnata`` is used
 
-    - Used in the formal containers library to state that containers are initially empty
+    - Used in the formal containers library to state that containers are
+      initially empty
 
 .. code:: ada
 
@@ -293,7 +311,8 @@ Example #1
     subtype Weekend is Day range Saturday .. Sunday;
     subtype Day_Off is Day range Wednesday | Weekend;
 
-This code is not correct. The syntax of range constraints does not allow sets of values. A predicate should be used instead.
+This code is not correct. The syntax of range constraints does not allow
+sets of values. A predicate should be used instead.
 
 
 Example #2
@@ -306,7 +325,9 @@ Example #2
     subtype Day_Off is Weekend with
       Static_Predicate => Day_Off in Wednesday | Weekend;
 
-This code is not correct. This is accepted by GNAT, but result is not the one expected by the user. ``Day_Off`` has the same constraint as ``Weekend``.
+This code is not correct. This is accepted by GNAT, but result is not the
+one expected by the user. ``Day_Off`` has the same constraint as
+``Weekend``.
 
 
 Example #3
@@ -319,7 +340,8 @@ Example #3
     subtype Day_Off is Day with
       Dynamic_Predicate => Day_Off in Wednesday | Weekend;
 
-This code is correct. It is valid to use a :ada:`Dynamic_Predicate` where a :ada:`Static_Predicate` would be allowed.
+This code is correct. It is valid to use a :ada:`Dynamic_Predicate` where
+a :ada:`Static_Predicate` would be allowed.
 
 
 Example #4
@@ -336,7 +358,9 @@ Example #4
        end case;
     end Next_Day_Off;
 
-This code is correct. It is valid to use a type with :ada:`Static_Predicate` for the value tested in a case statement. This is not true for :ada:`Dynamic_Predicate`.
+This code is correct. It is valid to use a type with
+:ada:`Static_Predicate` for the value tested in a case statement. This is
+not true for :ada:`Dynamic_Predicate`.
 
 
 Example #5
@@ -354,7 +378,13 @@ Example #5
        function Valid (WS : Week_Schedule) return Boolean is
           (WS.Day_Off /= WS.Day_On_Duty);
 
-This code is correct. It is valid in Ada because the type invariant is not checked on entry or return from ``Valid``. Also, function ``Valid`` is visible from the type invariant (special visibility in contracts). But it is invalid in SPARK, where private declaration cannot hold a type invariant. The reason is that the type invariant is assumed in the precondition of public functions for proof. That would lead to circular reasoning if ``Valid`` could be public.
+This code is correct. It is valid in Ada because the type invariant is not
+checked on entry or return from ``Valid``. Also, function ``Valid`` is
+visible from the type invariant (special visibility in contracts). But it
+is invalid in SPARK, where private declaration cannot hold a type
+invariant. The reason is that the type invariant is assumed in the
+precondition of public functions for proof. That would lead to circular
+reasoning if ``Valid`` could be public.
 
 
 Example #6
@@ -427,7 +457,9 @@ Example #8
         Unique_Sorted_String in Sorted_String and then
         Unique_Sorted_String in Unique_String;
 
-This code is correct. This is a correct version in Ada. For proving AoRTE in SPARK, one will need to change slightly the property of ``Sorted_String``.
+This code is correct. This is a correct version in Ada. For proving AoRTE
+in SPARK, one will need to change slightly the property of
+``Sorted_String``.
 
 
 Example #9
@@ -468,4 +500,5 @@ Example #10
        function Valid (WS : Week_Schedule) return Boolean is
           (WS.Day_Off /= WS.Day_On_Duty);
 
-This code is correct. This is a correct version, which can be proved with SPARK.
+This code is correct. This is a correct version, which can be proved with
+SPARK.

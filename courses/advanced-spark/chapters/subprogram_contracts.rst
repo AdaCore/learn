@@ -1,4 +1,4 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:'run_button=False;prove_button=True;accumulate_code=False'
 
 Subprogram Contracts
 =====================================================================
@@ -60,9 +60,11 @@ Dynamic Behavior when Subprogram Contracts Fail
 
 - Violation of contract raises an exception
 
-    - Standard exception :ada:`Assertion_Error` is raised (same as for pragma :ada:`Assert` and all other assertions)
+    - Standard exception :ada:`Assertion_Error` is raised (same as for
+      pragma :ada:`Assert` and all other assertions)
 
-    - Exception cannot be caught by subprogram's own exception handler implementation choice caller/callee has no effect
+    - Exception cannot be caught by subprogram's own exception handler
+      implementation choice caller/callee has no effect
 
     - Idiom allows to select another exception
 
@@ -75,7 +77,8 @@ Dynamic Behavior when Subprogram Contracts Fail
 
     - Typical pre/post is a conjunction of Boolean conditions
 
-    - Use and when no possible RTE, and then otherwise (recommended for SPARK)
+    - Use and when no possible RTE, and then otherwise (recommended for
+      SPARK)
 
 
 Precondition
@@ -121,13 +124,17 @@ Postcondition
 
 - Can relate input and output values
 
-    - Special attribute :ada:`X'Old` for referring to input value of variable :ada:`X`
+    - Special attribute :ada:`X'Old` for referring to input value of
+      variable :ada:`X`
 
-    - Special attribute :ada:`Func'Result` for referring to result of function :ada:`Func`
+    - Special attribute :ada:`Func'Result` for referring to result of
+      function :ada:`Func`
 
-    - Special attribute :ada:`Rec'Update` or :ada:`Arr'Update` for referring to modified value of record :ada:`Rec` or array :ada:`Arr`
+    - Special attribute :ada:`Rec'Update` or :ada:`Arr'Update` for
+      referring to modified value of record :ada:`Rec` or array :ada:`Arr`
 
-        - replaced by delta aggregate syntax in Ada 202X: (:ada:`Rec with delta Comp => Value`)
+        - replaced by delta aggregate syntax in Ada 202X: (
+          :ada:`Rec with delta Comp => Value`)
 
 
 Contract Cases
@@ -139,7 +146,8 @@ Contract Cases
 
     - Introduced in SPARK, planned for inclusion in Ada 202X
 
-    - Case is (guard => consequence) with :ada:`'Old` / :ada:`'Result` in consequence
+    - Case is (guard => consequence) with :ada:`'Old` / :ada:`'Result` in
+      consequence
 
     - Can be used in combination with precondition/postcondition
 
@@ -159,16 +167,18 @@ Contract Cases
     - On subprogram exit, the corresponding consequence must hold
 
 
-Attribute :ada:`'Old`
+Attribute ``'Old``
 ---------------------------------------------------------------------
 
 - :ada:`X'Old` expresses the input value of :ada:`X` in postconditions
 
     - Same as :ada:`X` when variable not modified in the subprogram
 
-    - Compiler inserts a copy of :ada:`X` on subprogram entry if :ada:`X` is large, copy can be expensive in memory footprint!
+    - Compiler inserts a copy of :ada:`X` on subprogram entry if :ada:`X`
+      is large, copy can be expensive in memory footprint!
 
-    - :ada:`X` can be a variable, a function call, a qualification (but not limited!)
+    - :ada:`X` can be a variable, a function call, a qualification (but
+      not limited!)
 
 .. code:: ada
 
@@ -198,9 +208,11 @@ Implication and Equivalence
 
         - ``(A → B)  (¬A → C)``
 
-    - :ada:`(if A then B else C)` can also be used with B, C not of Boolean type
+    - :ada:`(if A then B else C)` can also be used with B, C not of
+      Boolean type
 
-    - :ada:`(A <= B)` should not be used for expressing implication (same dynamic semantics, but less readable, and harmful in SPARK)
+    - :ada:`(A <= B)` should not be used for expressing implication (same
+      dynamic semantics, but less readable, and harmful in SPARK)
 
 - Equality can be used to express an equivalence
 
@@ -208,7 +220,8 @@ Implication and Equivalence
 
         - ``(A ↔ B)``
 
-    - A double implication should not be used for expressing equivalence (same semantics, but less readable and maintainable)
+    - A double implication should not be used for expressing equivalence
+      (same semantics, but less readable and maintainable)
 
 
 Reasoning by Cases
@@ -244,19 +257,23 @@ Reasoning by Cases
 Universal and Existential Quantification
 ---------------------------------------------------------------------
 
-- Quantified expressions can be used to express a property over a collection of values
+- Quantified expressions can be used to express a property over a
+  collection of values
 
-    - :ada:`(for all X in A .. B => C)` expresses the universally quantified property
+    - :ada:`(for all X in A .. B => C)` expresses the universally
+      quantified property
 
         - ``(∀ X . X ≥ A ⋀ X ≤ B → C)``
 
-    - :ada:`(for some X in A .. B => C)` expresses the universally quantified property
+    - :ada:`(for some X in A .. B => C)` expresses the universally
+      quantified property
 
         - ``(∃ X . X ≥ A ⋀ X ≤ B ⋀ C)``
 
 - Quantified expressions translated as loops at run time
 
-    - Control exits the loop as soon as the condition becomes false (resp. true) for a universally (resp. existentially) quantified expression
+    - Control exits the loop as soon as the condition becomes false (resp.
+      true) for a universally (resp. existentially) quantified expression
 
 - Quantification forms over array and collection content
 
@@ -276,7 +293,8 @@ Expression Functions
 
     - Definition can complete a previous declaration
 
-    - Definition is allowed in a package spec! (crucial for proof with SPARK)
+    - Definition is allowed in a package spec! (crucial for proof with
+      SPARK)
 
 .. code:: ada
 
@@ -310,7 +328,9 @@ Example #1
        when Assertion_Error => return;
     end Fail;
 
-This code is not correct. The exception from the recursive call is always caught in the handler, but not the exception raised if caller of ``Fail`` passes :ada:`False` as value for ``Condition``.
+This code is not correct. The exception from the recursive call is always
+caught in the handler, but not the exception raised if caller of ``Fail``
+passes :ada:`False` as value for ``Condition``.
 
 
 Example #2
@@ -333,7 +353,9 @@ Example #2
                   else
                     B (Idx) = B'Old (Idx)));
 
-This code is correct. GNAT will create a wrapper for checking the precondition and postcondition of ``Memset``, calling the imported ``memset`` from ``libc``.
+This code is correct. GNAT will create a wrapper for checking the
+precondition and postcondition of ``Memset``, calling the imported
+``memset`` from ``libc``.
 
 
 Example #3
@@ -351,7 +373,10 @@ Example #3
        ...
     end Sqrt;
 
-This code is not correct. Although GNAT inserts precondition checks in the subprogram body instead of its caller, it is the value of :ada:`Pre` assertion policy at the declaration of the subprogram that decides if preconditions are activated.
+This code is not correct. Although GNAT inserts precondition checks in the
+subprogram body instead of its caller, it is the value of :ada:`Pre`
+assertion policy at the declaration of the subprogram that decides if
+preconditions are activated.
 
 
 Example #4
@@ -369,7 +394,9 @@ Example #4
        ...
     end Sqrt;
 
-This code is not correct. Contract is allowed only on the spec of a subprogram. Hence it is not allowed on the body when a separate spec is available.
+This code is not correct. Contract is allowed only on the spec of a
+subprogram. Hence it is not allowed on the body when a separate spec is
+available.
 
 
 Example #5
@@ -388,7 +415,8 @@ Example #5
     end Add;
 
 
-This code is not correct. Postcondition is only relevant for normal returns.
+This code is not correct. Postcondition is only relevant for normal
+returns.
 
 
 Example #6
@@ -404,7 +432,8 @@ Example #6
        Z := X + Y;
     end Add;
 
-This code is correct. Procedure may raise an exception, but postcondition correctly describes normal returns.
+This code is correct. Procedure may raise an exception, but postcondition
+correctly describes normal returns.
 
 
 Example #7
@@ -420,7 +449,8 @@ Example #7
        Z := X + Y;
     end Add;
 
-This code is correct. Precondition prevents exception inside ``Add``. Postcondition is always satisfied.
+This code is correct. Precondition prevents exception inside ``Add``.
+Postcondition is always satisfied.
 
 
 Example #8
@@ -440,7 +470,8 @@ Example #8
                   else
                     B (Idx) = B (Idx)'Old));
 
-This code is not correct. :ada:`'Old` on expression including a quantified variable is not allowed.
+This code is not correct. :ada:`'Old` on expression including a quantified
+variable is not allowed.
 
 
 Example #9
@@ -457,7 +488,8 @@ Example #9
        Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)
          and then B (B'First + N) = B (B'First + N)'Old;
 
-This code is not correct. :ada:`Expr'Old` on potentially unevaluated expression is allowed only when :ada:`Expr` is a variable.
+This code is not correct. :ada:`Expr'Old` on potentially unevaluated
+expression is allowed only when :ada:`Expr` is a variable.
 
 
 Example #10
@@ -474,4 +506,7 @@ Example #10
        Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)
          and B (B'First + N) = B (B'First + N)'Old;
 
-This code is correct. :ada:`Expr'Old` does not appear anymore in a potentially unevaluated expression. Another solution would have been to apply :ada:`'Old` on ``B`` or to use :ada:`pragma Unevaluated_Use_Of_Old (Allow)`.
+This code is correct. :ada:`Expr'Old` does not appear anymore in a
+potentially unevaluated expression. Another solution would have been to
+apply :ada:`'Old` on ``B`` or to use
+:ada:`pragma Unevaluated_Use_Of_Old (Allow)`.

@@ -25,7 +25,8 @@ What is ghost code?
 
     - assertions (:ada:`pragma Assert`, loop (in)variants, etc.)
 
-    - special values :ada:`Func'Result`, :ada:`Var'Old`, :ada:`Var'Loop_Entry`
+    - special values :ada:`Func'Result`, :ada:`Var'Old`,
+      :ada:`Var'Loop_Entry`
 
 - Is it enough?
 
@@ -147,7 +148,8 @@ Ghost procedures
        end if;
     end Assign_Cond;
 
-- Can have :ada:`Global` (including :ada:`Proof_In`) & :ada:`Depends` contracts
+- Can have :ada:`Global` (including :ada:`Proof_In`) & :ada:`Depends`
+  contracts
 
 
 Ghost functions
@@ -191,7 +193,8 @@ Imported ghost functions
 
 - Typically used with abstract ghost private types
 
-    - definition in :ada:`SPARK_Mode(Off)`  type is abstract for GNATprove
+    - definition in :ada:`SPARK_Mode(Off)`  type is abstract for
+      GNATprove
 
 .. code:: ada
 
@@ -293,7 +296,7 @@ Expressing useful lemmas
 
 - GCD in SPARK
 
-    - at `GCD <http://www.spark-2014.org/entries/detail/gnatprove-tips-and-tricks-proving-the-ghost-common-denominator-gcd>`_
+    - at `GCD <http://www.spark-2014.org/entries/detail/gnatprove-tips-and-tricks- proving-the-ghost-common-denominator-gcd>`_
 
 - Lemmas expressed as ghost procedures
 
@@ -391,7 +394,8 @@ Example #2
        Check;
     end Alloc;
 
-This code is correct. Note that procedure ``Check`` is inlined for proof (no contract).
+This code is correct. Note that procedure ``Check`` is inlined for proof
+(no contract).
 
 
 Example #3
@@ -406,7 +410,9 @@ Example #3
 
     function Free_Memory return Natural with Ghost;
 
-This code is not correct. Incompatible ghost policies in effect during compilation, as ghost code is ignored by default. Note that GNATprove accepts this code as it enables all ghost code and assertions.
+This code is not correct. Incompatible ghost policies in effect during
+compilation, as ghost code is ignored by default. Note that GNATprove
+accepts this code as it enables all ghost code and assertions.
 
 
 Example #4
@@ -431,7 +437,8 @@ Example #4
        Free := Free + 10;
     end Alloc;
 
-This code is not correct. No postcondition on ``Free_Memory`` that would allow proving the postcondition on ``Alloc``.
+This code is not correct. No postcondition on ``Free_Memory`` that would
+allow proving the postcondition on ``Alloc``.
 
 
 Example #5
@@ -453,7 +460,8 @@ Example #5
        Free := Free + 10;
     end Alloc;
 
-This code is correct. ``Free_Memory`` has an implicit postcondition as an expression function.
+This code is correct. ``Free_Memory`` has an implicit postcondition as an
+expression function.
 
 
 Example #6
@@ -480,8 +488,8 @@ Example #6
        end loop;
     end Create;
 
-This code is not correct. Info: expression function body not available for proof
-(``Sum`` may not return).
+This code is not correct. Info: expression function body not available for
+proof (``Sum`` may not return).
 
 
 Example #7
@@ -508,7 +516,8 @@ Example #7
        end loop;
     end Create;
 
-This code is correct. Note that GNATprove does not prove the termination of ``Sum`` here.
+This code is correct. Note that GNATprove does not prove the termination
+of ``Sum`` here.
 
 
 Example #8
@@ -535,7 +544,9 @@ Example #8
     end Create;
 
 
-This code is correct. The loop is unrolled by GNATprove here, as :ada:`D'Range` is :ada:`0 .. 6`. The automatic prover unrolls the recursive definition of ``Sum``.
+This code is correct. The loop is unrolled by GNATprove here, as
+:ada:`D'Range` is :ada:`0 .. 6`. The automatic prover unrolls the
+recursive definition of ``Sum``.
 
 
 Example #9
@@ -561,7 +572,8 @@ Example #9
        return S;
     end Create;
 
-This code is not correct. Loop requires a loop invariant to prove the postcondition.
+This code is not correct. Loop requires a loop invariant to prove the
+postcondition.
 
 
 Example #10
