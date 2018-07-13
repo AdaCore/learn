@@ -29,8 +29,11 @@ Type Contracts in Ada 2012 and SPARK 2014
     - A weak invariant must hold outside of the scope of the type
 
 
-Static Predicate
+Static and Dynamic Predicates
 ---------------------------------------------------------------------
+
+Static Predicate
+~~~~~~~~~~~~~~~~
 
 - Original use case for type predicates in Ada 2012
 
@@ -55,7 +58,7 @@ Static Predicate
 
 
 Dynamic Predicate
----------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~
 
 - Extension of static predicate for any property
 
@@ -78,7 +81,7 @@ Dynamic Predicate
 
 
 Restrictions on Types With Dynamic Predicate
----------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Types with dynamic predicate are restricted
 
@@ -104,7 +107,7 @@ Restrictions on Types With Dynamic Predicate
 
 
 Dynamic Checking of Predicates
----------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Partly similar to other type constraints
 
@@ -128,7 +131,7 @@ Dynamic Checking of Predicates
 
 
 Temporary Violations of the Dynamic Predicate
----------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Sometimes convenient to locally violate the property
 
@@ -180,7 +183,7 @@ Type Invariant
 
 
 Dynamic Checking of Type Invariants
----------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Checked on outputs of public subprograms of the package
 

@@ -25,8 +25,11 @@ Various Combinations of Tests and Proofs
     - Test on top of Proof – proof at unit level completed with test at integration level, also using contracts
 
 
-Test (be)for(e) Proof – Activating Run-time Checks
+Test (be)for(e) Proof
 ---------------------------------------------------------------------
+
+Activating Run-time Checks
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Need to activate run-time checks in executable
 
@@ -45,8 +48,8 @@ Test (be)for(e) Proof – Activating Run-time Checks
     - Runtime/BSP should enforce use of Round-Nearest-tie-to-Even (RNE) rounding mode
 
 
-Test (be)for(e) Proof – Activating Assertions
----------------------------------------------------------------------
+Activating Assertions
+~~~~~~~~~~~~~~~~~~~~~
 
 - Need to activate assertions in executable
 
@@ -69,8 +72,8 @@ Test (be)for(e) Proof – Activating Assertions
     - :ada:`Loop_Variant` ⟶ checks variant decreases wrt previous iteration
 
 
-Test (be)for(e) Proof – Activating Ghost Code
----------------------------------------------------------------------
+Activating Ghost Code
+~~~~~~~~~~~~~~~~~~~~~
 
 - Need to activate ghost code in executable
 
@@ -87,8 +90,11 @@ Test (be)for(e) Proof – Activating Ghost Code
     - Ignored ghost assignment to activated ghost variable
 
 
-Test for Proof – Overflow Checking Mode
+Test for Proof
 ---------------------------------------------------------------------
+
+Overflow Checking Mode
+~~~~~~~~~~~~~~~~~~~~~~
 
 - Problem: ignore overflow checks in assertions/contracts
 
@@ -109,8 +115,11 @@ Test for Proof – Overflow Checking Mode
     - Use pragma :ada:`Overflow_Mode` with arguments :ada:`(General => Strict, Assertions => Eliminated)` in configuration pragma file
 
 
-Test alongside Proof – Checking Proof Assumptions
+Test alongside Proof
 ---------------------------------------------------------------------
+
+Checking Proof Assumptions
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Need to check dynamically the assumptions done in proof
 
@@ -133,8 +142,8 @@ Test alongside Proof – Checking Proof Assumptions
 - See "Explicit Assumptions - A Prenup for Marrying Static and Dynamic Program Verification"
 
 
-Test alongside Proof – Rules for Defining the Boundary
----------------------------------------------------------------------
+Rules for Defining the Boundary
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - :ada:`SPARK_Mode` defines a simple boundary test vs. proof
 
@@ -155,8 +164,8 @@ Test alongside Proof – Rules for Defining the Boundary
     - Use of pragma :ada:`Annotate` inside the code
 
 
-Test alongside Proof – Special Compilation Switches
----------------------------------------------------------------------
+Special Compilation Switches
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Validity checking for reads of uninitialized data
 
@@ -173,8 +182,11 @@ Test alongside Proof – Special Compilation Switches
     - Does not apply to aliasing between parameters and globals
 
 
-Test as Proof – Feasibility of Exhaustive Testing
+Test as Proof
 ---------------------------------------------------------------------
+
+Feasibility of Exhaustive Testing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Exhaustive testing covers all possible input values
 
@@ -197,8 +209,11 @@ Test as Proof – Feasibility of Exhaustive Testing
     - Relies on continuous/linear behavior inside a partition
 
 
-Test on top of Proof – Combining Unit Proof and Integration Test
+Test on top of Proof
 ---------------------------------------------------------------------
+
+Combining Unit Proof and Integration Test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Unit Proof of AoRTE combined with Integration Test
 

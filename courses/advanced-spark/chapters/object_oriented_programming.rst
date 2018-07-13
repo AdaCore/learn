@@ -137,8 +137,8 @@ Dynamic dispatching in SPARK
     Call_Bump (Int'Class(AI)); -- calls Approx_Int.Bump(AI)
 
 
-Dynamic dispatching – A trivial example
----------------------------------------------------------------------
+A trivial example
+~~~~~~~~~~~~~~~~~
 
 - what is called here?
 
@@ -158,7 +158,7 @@ Dynamic dispatching – A trivial example
 
 
 The problems with dynamic dispatching
----------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Control and data flow are not known statically
 
@@ -211,8 +211,8 @@ LSP – the SPARK solution to dynamic dispatching problems
        -- inherited Post'Class from Int.Bump
 
 
-LSP – verification of dynamic dispatching calls
----------------------------------------------------------------------
+Verification of dynamic dispatching calls
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Class-wide contracts used for dynamic dispatching calls
 
@@ -237,8 +237,8 @@ LSP – verification of dynamic dispatching calls
     - SPARK RM defines :ada:`Global'Class` and :ada:`Depends'Class` (not yet implemented ⟶ use :ada:`Global` and :ada:`Depends` instead)
 
 
-LSP – class-wide contracts and data abstraction
----------------------------------------------------------------------
+Class-wide contracts and data abstraction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Abstraction can be used in class-wide contracts
 
@@ -265,8 +265,8 @@ LSP – class-wide contracts and data abstraction
          (Arg.Value < Arg.Max - 10);
 
 
-LSP – class-wide contracts, data abstraction and overriding
----------------------------------------------------------------------
+Class-wide contracts, data abstraction and overriding
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Abstraction functions can be overridden freely
 

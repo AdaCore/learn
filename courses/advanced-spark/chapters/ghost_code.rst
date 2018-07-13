@@ -258,8 +258,11 @@ Executing ghost code
 - GNATprove analyzes all ghost code and assertions
 
 
-Example of use – encoding a state automaton
+Examples of use
 ---------------------------------------------------------------------
+
+Encoding a state automaton
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Tetris in SPARK
 
@@ -285,8 +288,8 @@ Example of use – encoding a state automaton
     with Ghost;
 
 
-Example of use – expressing useful lemmas
----------------------------------------------------------------------
+Expressing useful lemmas
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 - GCD in SPARK
 
@@ -307,8 +310,8 @@ Example of use – expressing useful lemmas
     - code in procedure body used to guide proof (e.g. for induction)
 
 
-Example of use – specifying an API through a model
----------------------------------------------------------------------
+Specifying an API through a model
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Red black trees in SPARK
 

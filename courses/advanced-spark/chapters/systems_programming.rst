@@ -111,8 +111,11 @@ Volatile Variables and Volatile Types
     X : Integer with Atomic, Import, Address => ... ;
 
 
-Flavors of Volatile Variables – :ada:`Async_Readers` / :ada:`Async_Writers`
+Flavors of Volatile Variables
 ---------------------------------------------------------------------
+
+:ada:`Async_Readers` / :ada:`Async_Writers`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Boolean aspects describing asynchronous behavior
 
@@ -139,8 +142,8 @@ Flavors of Volatile Variables – :ada:`Async_Readers` / :ada:`Async_Writers`
     end Set;
 
 
-Flavors of Volatile Variables – :ada:`Effective_Reads` / :ada:`Effective_Writes`
----------------------------------------------------------------------
+:ada:`Effective_Reads` / :ada:`Effective_Writes`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Boolean aspects distinguishing values & sequences
 
@@ -167,7 +170,7 @@ Flavors of Volatile Variables – :ada:`Effective_Reads` / :ada:`Effective_Write
 
 
 Combinations of Flavors of Volatile Variables
----------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - All four flavors can be set independently
 
