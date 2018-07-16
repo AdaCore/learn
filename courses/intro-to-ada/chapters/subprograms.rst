@@ -218,9 +218,8 @@ to explicitly store it in a local variable.
     result of a function, because unused variables will be flagged. For
     example, this code would not be valid:
 
-    .. code:: ada
-        :class: ada-syntax-only
-
+    .. code-block:: ada
+    
         function Read_Int
            (Stream : Network_Stream; Result : out Integer) return Boolean;
 
