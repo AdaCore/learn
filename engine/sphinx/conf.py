@@ -84,15 +84,18 @@ exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content']
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+nitpicky = True
+
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'learn_theme_2'
+html_theme = 'learn_theme'
 
 html_title = "learn.adacore.com"
+smartquotes = False
 
 html_theme_path = ['.'] # make sphinx search for themes in current dir
 
@@ -104,7 +107,7 @@ html_theme_options = {
 
 }
 
-html_logo = "learn_theme_2/static/img/logo.svg"
+html_logo = "learn_theme/static/img/logo.svg"
 
 html_show_sourcelink = False
 
@@ -197,14 +200,19 @@ todo_include_todos = False
 def setup(app):
     js_paths = [
         WIDGETS_SERVER_URL + "/static/ace-builds/src/ace.js",
-        WIDGETS_SERVER_URL + "/static/jquery-3.2.1.min.js",
+ #       WIDGETS_SERVER_URL + "/static/jquery-3.2.1.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js",
-        WIDGETS_SERVER_URL + "/static/editors.js"
+        WIDGETS_SERVER_URL + "/static/editors.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"
     ]
 
     css_paths = [
-         WIDGETS_SERVER_URL + "/static/common.css"
+         WIDGETS_SERVER_URL + "/static/common.css",
+         "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css",
+         "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css"
     ]
+
+    app.add_javascript('js/customizer.js')
 
     for js in js_paths:
         app.add_javascript(js)
@@ -212,6 +220,5 @@ def setup(app):
     for css in css_paths:
         app.add_stylesheet(css)
 
+    app.add_javascript('js/carousel.js')
     app.add_stylesheet('css/custom.css')
-    app.add_javascript('js/theme.js')
-    app.add_javascript('js/custom.js')

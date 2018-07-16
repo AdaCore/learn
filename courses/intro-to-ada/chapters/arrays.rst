@@ -1,7 +1,18 @@
 Arrays
 ======
+
 :code-config:`run_button=True;prove_button=False;accumulate_code=True`
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Arrays provide another fundamental family of composite types in Ada.
 
@@ -40,7 +51,7 @@ with the initial element at index 1 and the last element at index 5.
 
 Although this example used an integer type for the index, Ada is more general:
 any discrete type is permitted to index an array, including
-`Enum types <TODOLINKENUMTYPES>`_. We will soon see what that means.
+:ref:`Enum types <EnumTypes>`. We will soon see what that means.
 
 Another point to note is that querying an element of the array at a given index
 uses the same syntax as for function calls: that is, the array object followed
@@ -54,7 +65,7 @@ expression. This is another kind of aggregate in Ada, and is in a sense a
 literal expression for an array, in the same way that :ada:`3` is a literal
 expression for an integer. The notation is very powerful, with a number of
 properties that we will introduce later. A detailed overview appears in the
-`notation of aggregate types <TODODETAILEDAGGREGATESADVANCED>`_.
+notation of :ref:`aggregate types <Aggregates>`.
 
 Unrelated to arrays, the example also illustrated two procedures from Ada.Text_IO:
 

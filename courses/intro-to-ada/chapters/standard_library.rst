@@ -1,6 +1,17 @@
 Standard library
 ================
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Standard package
 ----------------
@@ -1553,7 +1564,7 @@ loop. For example:
 
           X : Long_Long_Float;
        begin
-          for I in 0 .. 5_000_000 loop
+          for I in 0 .. 1_000_000 loop
              X := Tan (Arctan
                        (Tan (Arctan
                           (Tan (Arctan
@@ -2832,5 +2843,3 @@ you can instantiate with custom floating-point types. For example, the
        package Real_Arrays is new
          Ada.Numerics.Generic_Real_Arrays (Float);
 
-Dynamic allocation and reclamation
-----------------------------------

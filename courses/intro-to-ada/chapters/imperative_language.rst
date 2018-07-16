@@ -1,6 +1,17 @@
 Imperative language
 ===================
+
 :code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 
 Ada is a multi-paradigm language with support for object orientation
 and some elements of functional programming, but its core is a simple, coherent
@@ -467,7 +478,7 @@ Notable points about Ada's case statement:
 -  The case expression (here the variable N) must be of a discrete type, i.e.
    either an integer type or an enumeration type.  Discrete types will
    be covered in more detail later
-   `discrete types <TODO:linktodiscretetypes>`__.
+   :ref:`discrete types <WhatIsAType>`.
 
 -  Every possible value for the case expression needs to be covered by a unique
    branch of the case statement. This will be checked at compile time.
