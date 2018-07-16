@@ -3254,7 +3254,6 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
 }
 
 .rst-content.style-external-links a.reference.external:after {
-    font-family: "Font Awesome 5 Free";
     content: "\f08e";
     color: #b3b3b3;
     vertical-align: super;
