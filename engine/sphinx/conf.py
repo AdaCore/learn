@@ -95,6 +95,7 @@ nitpicky = True
 html_theme = 'learn_theme'
 
 html_title = "learn.adacore.com"
+smartquotes = False
 
 html_theme_path = ['.'] # make sphinx search for themes in current dir
 

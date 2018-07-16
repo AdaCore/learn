@@ -32,7 +32,8 @@ WIDGETS_SERVER_URL = "https://cloudchecker-staging.r53.adacore.com"
 # TODO: make this a configuration parameter
 
 template = u"""
-<div example_editor="Inline Code"
+<div class="widget_editor"
+     example_editor="Inline Code"
      example_server="{server_url}"
      {extra_attribs}
      inline="true">

@@ -19,6 +19,8 @@ language design, owing to factors such as the growth of statically typed
 functional programming, a big push from the research community in the typing
 domain, and many practical languages with strong type systems.
 
+.. _WhatIsAType:
+
 What is a type?
 ---------------
 
@@ -67,8 +69,7 @@ regard, which is unlike most languages, and arguably very elegant.
 This example illustrates the declaration of a signed integer type, and
 several things we can do with them.
 
-Every type declaration in Ada (`well almost <TODOTASKTYPES>`_) starts with the
-:ada:`type` keyword. After the type, we can see a range that looks a lot like
+Every type declaration in Ada starts with the :ada:`type` keyword (except for :ref:`task types <TaskTypes>`). After the type, we can see a range that looks a lot like
 the ranges that we use in for loops, that defines the low and high bound of the
 type. Every integer in the inclusive range of the bounds is a valid value for
 the type.
@@ -79,7 +80,7 @@ the type.
 
 Another point to note in the above example is the :ada:`My_Int'Image (I)`
 expression. The :ada:`Name'Attribute (optional params)` notation is used for
-what is called an `attribute <TODOLINKATTRS>`_ in Ada. An attribute is a
+what is called an attribute in Ada. An attribute is a
 built-in operation on a type, a value, or some other program entity.  It is
 accessed by using a :ada:`'` symbol (the ASCII apostrophe).
 
@@ -189,6 +190,8 @@ wrapping on arbitrary bounds is very useful -- the modulus does not need to be
 a power of 2 -- to implement certain algorithms and data structures, such as
 `ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`_.
 
+.. _EnumTypes:
+
 Enumerations
 ------------
 
@@ -196,8 +199,9 @@ Enumeration types are another nicety of Ada's type system. Unlike C's enums,
 they are *not* integers, and each new enumeration type is incompatible with
 other enumeration types. Enumeration types are part of the bigger family of
 discrete types, which makes them usable in certain situations that we will
-describe later (`discrete features <TODOLINKTODISCRETEFEATURES>`_) but one
-context that we have already seen is a case statement.
+describe later but one context that we have already seen is a case statement.
+
+.. TODO: add link to section on discrete features
 
 .. code:: ada
 
@@ -470,7 +474,8 @@ introduce conversion functions along with the types.
     end Conv;
 
 This is the first example of a function declaration. We will see
-`functions and procedures <TODOSUBPROGRAMS>`_ in more detail soon.
+:ref:`functions and procedures <Subprograms>`
+in more detail soon.
 
 If you write a lot of numeric code, having to explicitly provide such
 conversions might seem painful at first. However, this approach brings some
@@ -529,9 +534,11 @@ will in turn prevent some subtle errors.
     in order to be accepted by the compiler.
 
 - You can use Ada's strong typing to help
-  `enforce invariants <TODOLINKINVARIANTS>`_ in your code, as in the example
+  enforce invariants in your code, as in the example
   above: Since Miles and Meters are two different types, you cannot mistakenly
   convert an instance of one to an instance of the other.
+
+.. TODO: Add link to invariants
 
 Derived types
 -------------

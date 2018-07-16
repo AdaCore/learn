@@ -6,6 +6,9 @@ img.logo {
     /*    margin: 10px 20px !important;  */
     text-align: right !important;
 }
+.widget_editor {
+    padding-bottom: 30px;
+}
 
 .wy-side-nav-search { 
     background-color: #F56F23;
@@ -23,14 +26,6 @@ img.logo {
 .wy-side-nav-search a { 
  text-align: right !important;
  float: right;
-}
-
-div.github-tag a:before {
-    content: url("../img/github.svg");
-    width: 13px;
-    height: 13px;
-    display: inline-block;
-    padding: 5px;
 }
 
 .legal { 

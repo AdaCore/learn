@@ -13,13 +13,6 @@ Learn.adacore.com is an interactive learning platform designed to teach the Ada 
 
 The Ada programming language was designed from its inception to be used in applications where safety and security are of the utmost importance. Its feature set and programming paradigms, by design, allow software developers to develop applications more effectively and efficiently. It encourages a “think first, code later” principle which produces more readable, reliable, and maintainable software.
 
-.. container:: download-button
-
-    .. image:: images/GNAT-Community-download.png
-        :target: https://www.adacore.com/download
-        :alt: Gnatcommunity Download
-        :width: 100pc
-
 The SPARK programming language is a formally verifiable subset of the Ada language which allows developers to mathematically prove program correctness through static means. This is accomplished by exploiting the strengths of the Ada syntax while eliminating the features of the language that introduce ambiguity and non-deterministic behavior. The language put together with a verification toolset and a design methodology ensures the development and deployment of low-defect software for high reliability applications.
 
 .. rubric:: About AdaCore

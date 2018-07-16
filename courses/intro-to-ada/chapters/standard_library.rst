@@ -1564,7 +1564,7 @@ loop. For example:
 
           X : Long_Long_Float;
        begin
-          for I in 0 .. 5_000_000 loop
+          for I in 0 .. 1_000_000 loop
              X := Tan (Arctan
                        (Tan (Arctan
                           (Tan (Arctan
