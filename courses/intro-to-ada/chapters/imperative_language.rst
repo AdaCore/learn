@@ -478,7 +478,7 @@ Notable points about Ada's case statement:
 -  The case expression (here the variable N) must be of a discrete type, i.e.
    either an integer type or an enumeration type.  Discrete types will
    be covered in more detail later
-   `discrete types <TODO:linktodiscretetypes>`__.
+   :ref:`discrete types <WhatIsAType>`.
 
 -  Every possible value for the case expression needs to be covered by a unique
    branch of the case statement. This will be checked at compile time.

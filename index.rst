@@ -10,15 +10,19 @@
 
 **Learn.adacore.com is an interactive learning platform designed to teach the Ada and SPARK programming languages.**
 
-.. code:: ada
+.. code:: ada run_button
 
-    with Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Hello is
+    procedure Learn is
+
+       subtype Alphabet is Character range 'A' .. 'Z';
+
     begin
-       --  Print "Hello, World!" to the screen
-       Ada.Text_IO.Put_Line ("Hello, World!");
-    end Hello;
+
+       Put_Line ("Learning Ada from " & Alphabet'First & " to " & Alphabet'Last);
+
+    end Learn;
 
 
 

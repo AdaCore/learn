@@ -24,7 +24,7 @@ Ada exceptions are not types, but instead objects, which may be
 peculiar to you if you're used to the way Java or Python support
 exceptions. Here's how you declare an exception:
 
-.. code:: ada
+.. code:: ada no_button
     :class: ada-syntax-only
 
     package Exceptions is
