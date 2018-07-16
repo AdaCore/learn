@@ -24,8 +24,6 @@
 
     end Learn;
 
-
-
 .. container:: content-blocks
 
     .. toctree::
