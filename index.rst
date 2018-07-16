@@ -29,7 +29,7 @@
 .. container:: content-blocks
 
     .. toctree::
-       :maxdepth: 2
+       :maxdepth: 4
 
        About <about>
        Courses <courses/courses>

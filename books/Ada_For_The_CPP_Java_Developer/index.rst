@@ -14,7 +14,7 @@ Ada for the C++ or Java Developer
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 4
  
    Preface <chapters/01_Preface>
    Basics <chapters/02_Basics>
