@@ -219,7 +219,7 @@ The effect of the program should be self-explanatory; later we'll see an
 alternative and more efficient style to accomplish the same effect,
 through a :ada:`case` statement.
 
-Ada's :ada:`elsif` keyword differes from C or
+Ada's :ada:`elsif` keyword differs from C or
 C++, where nested ``else .. if`` blocks would be used instead.
 And another difference is the presence of the :ada:`end if` in Ada,
 which avoids the problem known as the "dangling else".
