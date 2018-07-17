@@ -626,7 +626,6 @@ input[type="tel"], input[type="color"], select, textarea, .wy-menu-vertical li.o
 .fa-exclamation-circle:before, .wy-inline-validate.wy-inline-validate-warning .wy-input-context:before,
 .wy-inline-validate.wy-inline-validate-info .wy-input-context:before,
 .rst-content .admonition-title:before {
-    font-family: "Font Awesome 5 Free";
     content: "\f06a";
 }
 
@@ -636,12 +635,10 @@ input[type="tel"], input[type="color"], select, textarea, .wy-menu-vertical li.o
 
 .fa-minus-square-o:before, .wy-menu-vertical li.on a span.toctree-expand:before,
 .wy-menu-vertical li.current > a span.toctree-expand:before {
-    font-family: "Font Awesome 5 Free";
     content: "\f146";
 }
 
 .fa-plus-square-o:before, .wy-menu-vertical li span.toctree-expand:before {
-    font-family: "Font Awesome 5 Free";
     content: "\f0fe";
 }
 
@@ -3257,7 +3254,6 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
 }
 
 .rst-content.style-external-links a.reference.external:after {
-    font-family: "Font Awesome 5 Free";
     content: "\f08e";
     color: #b3b3b3;
     vertical-align: super;
@@ -3419,7 +3415,6 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
 .rst-content h4 .headerlink:after, .rst-content h5 .headerlink:after,
 .rst-content h6 .headerlink:after, .rst-content dl dt .headerlink:after,
 .rst-content p.caption .headerlink:after, .rst-content table > caption .headerlink:after {
-    font-family: "Font Awesome 5 Free";
     content: "\f0c1";
 }
 

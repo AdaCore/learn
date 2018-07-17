@@ -44,7 +44,9 @@
     {% endif %}
 
   {% endif %}
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/solid.css" integrity="sha384-TbilV5Lbhlwdyc4RuIV/JhD8NR+BfMrvz4BL5QFa2we1hQu6wvREr3v6XSRfCTRp" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/brands.css" integrity="sha384-7xAnn7Zm3QC1jFjVc1A6v/toepoG3JXboQYzbM0jrPzou9OFXm/fY6Z/XiIebl/k" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/fontawesome.css" integrity="sha384-ozJwkrqb90Oa3ZNb+yKFW2lToAWYdTiF1vt8JiH5ptTGHTGcN7qdoR1F95e0kYyG" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ pathto('_static/' + style, 1) }}" type="text/css" />
   <link rel="stylesheet" href="{{ pathto('_static/pygments.css', 1) }}" type="text/css" />
   {%- for css in css_files %}
@@ -204,6 +206,9 @@
     </section>
 
   </div>
+  
+  <button onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="fas fa-caret-square-up"></i></button>
+  
   {% include "versions.html" %}
 
   {% if not embedded %}

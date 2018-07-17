@@ -21,6 +21,6 @@ Founded in 1994, AdaCore is the leading provider of commercial and open-source s
 
 .. container:: mwac-banner
 
-    .. image:: http://blog.adacore.com/uploads/_1800xAUTO_crop_center-center/MWAC-banner.png
+    .. image:: https://www.adacore.com/uploads/page_content/MWAC-banner.png
         :target: https://www.makewithada.org
         :width: 100pc
