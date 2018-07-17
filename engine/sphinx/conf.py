@@ -45,7 +45,6 @@ import sys
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 import widget_extension
-from widget_extension import WIDGETS_SERVER_URL
 
 extensions = [
 #    'sphinx.ext.intersphinx',
@@ -198,27 +197,14 @@ todo_include_todos = False
 
 
 def setup(app):
-    js_paths = [
-        WIDGETS_SERVER_URL + "/static/ace-builds/src/ace.js",
- #       WIDGETS_SERVER_URL + "/static/jquery-3.2.1.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js",
-        WIDGETS_SERVER_URL + "/static/editors.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"
-    ]
-
-    css_paths = [
-         WIDGETS_SERVER_URL + "/static/common.css",
-         "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css",
-         "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css"
-    ]
-
-    app.add_javascript('js/customizer.js')
-
-    for js in js_paths:
-        app.add_javascript(js)
-
-    for css in css_paths:
+    for css in ["https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css",
+                "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css",
+                'css/custom.css',
+                'css/common.css']:
         app.add_stylesheet(css)
 
-    app.add_javascript('js/carousel.js')
-    app.add_stylesheet('css/custom.css')
+    for j in ['js/customizer.js',
+              'js/carousel.js',
+              'js/editors.js',
+              'ace-builds/src/ace.js']:
+        app.add_javascript(j)

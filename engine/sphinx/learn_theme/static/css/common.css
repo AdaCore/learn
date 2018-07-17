@@ -1,0 +1,82 @@
+div.file{
+   display: none;
+}
+
+div.editor_container{
+   height: 30em;
+   border: 1px solid #ddd;
+   border-top: 0px;
+}
+
+div.editor_container.inline{
+   height: 20em;
+   border: 1px solid #ddd;
+   margin: .5em 0;
+}
+
+div.output_line{
+   color: #666;
+   padding-left:15px;
+   padding-right:3px;
+}
+
+div.output_msg{
+   color: #944;
+   padding-left:15px;
+   padding-right:3px;
+}
+
+div.output_msg:hover{
+   background-color:#fdd;
+}
+
+div.output_msg_info{
+   color: #449;
+   padding-left:15px;
+   padding-right:3px;
+}
+
+div.output_msg_info:hover{
+   background-color:#ddf;
+}
+
+
+div.output_info{
+   color: #222;
+   padding-left:3px;
+   padding-right:3px;
+}
+
+div.output_error{
+   color: #822;
+   padding-left:3px;
+   padding-right:3px;
+}
+
+div.output_success{
+   color: #070;
+   padding-left:3px;
+   padding-right:3px;
+   font-weight:bold;
+}
+
+div.output_area{
+   font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+   margin-top: 10px;
+   background: #f3f3f3;
+}
+
+div.output_row{
+   margin-right: 0px;
+}
+
+div.output_row button{
+   margin-right:4px;
+   margin-top:2px;
+}
+
+.read-only {
+    background-color: #c0c0c0;
+    opacity: 0.2;
+    position: absolute;
+}
