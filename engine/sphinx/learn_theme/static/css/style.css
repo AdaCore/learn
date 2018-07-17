@@ -28,6 +28,10 @@ img.logo {
  float: right;
 }
 
+.wy-nav-content {
+    margin: 0 auto;
+}
+
 .legal { 
     padding: 20px; 
     color: #878B9A; 
