@@ -3,6 +3,9 @@
 
 :nextprev_state: False
 
+LEARN.ADACORE.COM
+===================
+
 .. raw:: html
 
   <a href="https://github.com/AdaCore/learn"><i class="fab fa-github"></i> Edit on GitHub</a><br><br>
