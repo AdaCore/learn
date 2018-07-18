@@ -110,6 +110,7 @@ function get_output_from_identifier(container, editors, output_area, identifier)
             type: "POST",
             dataType: "json",
             contentType: 'application/json; charset=UTF-8',
+            timeout: 4000
         })
         .done(function (json) {
             read_lines = process_check_output(
@@ -126,7 +127,7 @@ function get_output_from_identifier(container, editors, output_area, identifier)
             }
         })
         .fail(function (xhr, status, errorThrown) {
-            output_error(output_area, "could not download output")
+            output_error(output_area, "the machine running the examples is not responding, please try again later")
             console.log("Error: " + errorThrown);
             console.log("Status: " + status);
             console.dir(xhr);
@@ -176,6 +177,7 @@ function query_operation_result(container, example_name, editors, output_area, o
             type: "POST",
             dataType: "json",
             contentType: 'application/json; charset=UTF-8',
+            timeout: 4000,
         })
         .done(function (json) {
             if (json.identifier == "") {
@@ -186,8 +188,8 @@ function query_operation_result(container, example_name, editors, output_area, o
             }
         })
         .fail(function (xhr, status, errorThrown) {
-            //
-            alert("could not run the example");
+            reset(container, editors);
+            output_error(output_area, "the machine running the examples is not available, please try again later")
             console.log("Error: " + errorThrown);
             console.log("Status: " + status);
             console.dir(xhr);
