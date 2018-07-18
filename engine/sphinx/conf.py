@@ -206,5 +206,7 @@ def setup(app):
     for j in ['js/customizer.js',
               'js/carousel.js',
               'js/editors.js',
+              'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js',
+              'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js',
               'ace-builds/src/ace.js']:
         app.add_javascript(j)
