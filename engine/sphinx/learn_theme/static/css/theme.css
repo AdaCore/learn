@@ -3415,6 +3415,7 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
 .rst-content h4 .headerlink:after, .rst-content h5 .headerlink:after,
 .rst-content h6 .headerlink:after, .rst-content dl dt .headerlink:after,
 .rst-content p.caption .headerlink:after, .rst-content table > caption .headerlink:after {
+    font-family: "Font Awesome 5 Free";
     content: "\f0c1";
 }
 
