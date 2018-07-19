@@ -219,7 +219,7 @@ to explicitly store it in a local variable.
     example, this code would not be valid:
 
     .. code-block:: ada
-    
+
         function Read_Int
            (Stream : Network_Stream; Result : out Integer) return Boolean;
 

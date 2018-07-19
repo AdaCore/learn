@@ -46,7 +46,7 @@ the :ada:`Convention` aspect on the corresponding Ada type
 declaration. In the following example, we interface with the
 ``C_Enum`` enumeration declared in a C source file:
 
-.. code:: ada
+.. code-block:: ada
 
     procedure Show_C_Enum is
 
@@ -59,7 +59,7 @@ declaration. In the following example, we interface with the
 To interface with C's built-in types, we use the :ada:`Interfaces.C`
 package, which contains most of the type definitions we need. For example:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C; use Interfaces.C;
 
@@ -100,7 +100,7 @@ Calling C subprograms in Ada
 We use a similar approach when interfacing with subprograms written in C.
 In this case, an additional aspect is required: :ada:`Import`. For example:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C; use Interfaces.C;
 
@@ -137,7 +137,7 @@ Here's the corresponding C definition:
 If you want, you can use a different subprogram name in the Ada code. For
 example, we could call the C function ``Get_Value``:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -165,7 +165,7 @@ Calling Ada subprograms in C
 You can also call Ada subprograms from C applications. You do this with
 the :ada:`Export` aspect. For example:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C; use Interfaces.C;
 
@@ -181,7 +181,7 @@ the :ada:`Export` aspect. For example:
 
 This is the corresponding body that implements that function:
 
-.. code:: ada
+.. code-block:: ada
 
     package body C_API is
 
@@ -249,7 +249,7 @@ The variable is declared in the C file and incremented in ``my_func``:
 
 In the Ada application, we just reference the foreign variable:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -295,7 +295,7 @@ the same way as we did for subprograms, you do this with the
 Let's reuse a past example and add a counter, as in the previous
 example, but this time have the counter incremented in Ada code:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C; use Interfaces.C;
 
@@ -316,7 +316,7 @@ example, but this time have the counter incremented in Ada code:
 
 The variable is then increment in ``My_Func``:
 
-.. code:: ada
+.. code-block:: ada
 
     --% filename: c_api.adb
     package body C_API is
@@ -382,7 +382,7 @@ To create Ada bindings, we'll call the compiler like this:
 
 The result is an Ada spec file called ``test_h.ads``:
 
-.. code:: ada
+.. code-block:: ada
 
     pragma Ada_2005;
     pragma Style_Checks (Off);
@@ -401,7 +401,7 @@ The result is an Ada spec file called ``test_h.ads``:
 
 Now we simply refer to this ``test_h`` package in our Ada application:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -537,7 +537,7 @@ Next, we'll create our bindings:
 
 This creates the following specification in ``test_h.ads``:
 
-.. code:: ada
+.. code-block:: ada
 
     pragma Ada_2005;
     pragma Style_Checks (Off);
@@ -576,7 +576,7 @@ are replaced by addresses (:ada:`System.Address`). Nevertheless, these
 bindings are good enough to allow us to create a test application in
 Ada:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C;         use Interfaces.C;
     with Interfaces.C.Strings; use Interfaces.C.Strings;
@@ -616,7 +616,7 @@ adapt them to our needs. For example, we can:
 
 This is the resulting specification:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C; use Interfaces.C;
     with System;
@@ -650,7 +650,7 @@ This is the resulting specification:
 
 And this is the corresponding Ada body:
 
-.. code:: ada
+.. code-block:: ada
 
     with Interfaces.C;         use Interfaces.C;
     with Interfaces.C.Strings; use Interfaces.C.Strings;

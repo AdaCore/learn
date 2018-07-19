@@ -93,11 +93,11 @@ them. Here is how :ada:`Integer` might be defined for a typical processor:
 
 :ada:`**` is the exponent operator, which means that the first valid
 value for :ada:`Integer` is :math:`-2^{31}`, and the last valid value is
-:math:`2^{31-1}`.
+:math:`2^{31}-1`.
 
 Ada does not mandate the range of the built-in type Integer. An implementation
 for a 16-bit target would likely  choose the range :math:`-2^{15}` through
-:math:`2^{31-1}`.
+:math:`2^{15}-1`.
 
 
 Operational semantics
@@ -574,8 +574,8 @@ treated as a distinct type in the interest of strong typing.
        SSN := Social_Security_Number (I);  -- Likewise OK
     end Main;
 
-The type Social_Security is said to be a *derived type*; its *parent type* is
-Integer.
+The type :ada:`Social_Security` is said to be a *derived type*;
+its *parent type* is Integer.
 
 As illustrated in this example, you can refine the valid range when defining a
 derived scalar type (such as integer, floating-point and enumeration).
