@@ -208,7 +208,7 @@ function create_editor(resource, container, content, editors, counter) {
    div.appendTo(content);
 
    // ACE editors...
-   var editor = ace.edit(resource.basename + the_id + '_editor');
+   editor = ace.edit(resource.basename + the_id + '_editor');
    editor.session.setMode("ace/mode/ada");
 
    // ... and their contents
@@ -220,7 +220,9 @@ function create_editor(resource, container, content, editors, counter) {
    editor.unique_id = the_id;
 
    editor.setOptions({
-       "highlightActiveLine": false,
+       highlightActiveLine: false,
+       fontSize: 13,
+       theme: "ace/theme/tomorrow"
    });
 
    // check if we are overriding db content with inline content
@@ -275,15 +277,18 @@ function create_editor(resource, container, content, editors, counter) {
    // Inline? set the editor to use exactly the vertical space it needs
    if (is_inline){
        editor.setOptions({
-            maxLines: editor.session.getLength()
+            minLines: editor.session.doc.getLength(),
+            maxLines: editor.session.doc.getLength()
        })
    }
-
+    editor.resize()
    // place the cursor at 1,1
    editor.selection.moveTo(0, 0);
 
    // clear undo stack to avoid undoing everything we just did
    editor.getSession().getUndoManager().reset();
+
+    editor.renderer.setScrollMargin(5, 5, 0, 0);
 
    return editor;
 }
@@ -333,7 +338,7 @@ function fill_editor_from_contents(container, example_name, example_server,
 
    resources.forEach(function (resource) {
        counter++;
-       editor = create_editor(resource, container, content, editors, counter)
+       var editor = create_editor(resource, container, content, editors, counter)
        // Append the editor to the list of editors
        editors.push(editor)
    })
