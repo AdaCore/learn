@@ -448,7 +448,7 @@ In this example, ``Swap_Colors`` can only be used for the ``Color``
 type.  However, this algorithm can theoretically be used for any type,
 whether an enumeration type or a complex record type with many
 elements. The algorithm itself is the same: it's only the type that
-differs. If, for example, we want to swap variables of:ada:`Integer`
+differs. If, for example, we want to swap variables of :ada:`Integer`
 type, we don't want to duplicate the implementation. Therefore, such
 an algorithm is a perfect candidate for abstraction using generics.
 
