@@ -62,7 +62,7 @@ you will get an unsurprising result.
 
      $ ./greet
     Hello, World!
-     %
+     $
 
 There are several noteworthy things in the above program:
 
@@ -92,15 +92,15 @@ There are several noteworthy things in the above program:
    create multiple lines of comments in Ada is by using :ada:`--` on each
    line. For example:
 
-.. admonition:: In other languages
-
-    Procedures ares similar to functions in C or C++ that return :c:`void`.
-    We'll see later how to declare functions in Ada.
-
 .. code-block:: ada
 
     --  We start a comment in this line...
     --  and we continue on the second line...
+
+.. admonition:: In other languages
+
+    Procedures are similar to functions in C or C++ that return :c:`void`.
+    We'll see later how to declare functions in Ada.
 
 Here is a minor variant of the "Hello, World" example:
 
@@ -126,7 +126,7 @@ This section describes Ada's :ada:`if` statement and introduces several other
 fundamental language facilities including integer I/O, data declarations,
 and subprogram parameter modes.
 
-Ada's :ada:`if` statementis pretty unsurprising in form and function:
+Ada's :ada:`if` statement is pretty unsurprising in form and function:
 
 .. code:: ada no_button
 
@@ -511,8 +511,8 @@ as declarative regions.
 -  In any subprogram, the section between the
    :ada:`is` and the :ada:`begin` is a declarative region.
 
--  You can variables, constants, types, inner subprograms, and
-   other entities there. For example:
+-  You can have variables, constants, types, inner subprograms, and other
+   entities there. For example:
 
 .. code:: ada
 

@@ -72,10 +72,10 @@ An aggregate is a list of values separated by commas and enclosed in
 parentheses. It is allowed in any context where a value of the record is
 expected.
 
-Values for the components can be specified positionally, as in Ada_Birthday
-example, or by name, as in Leap_Day_2020. A mixture of positional and named
-values is permitted, but you cannot use a positional notation after a named
-one.
+Values for the components can be specified positionally, as in
+:ada:`Ada_Birthday` example, or by name, as in :ada:`Leap_Day_2020`. A mixture
+of positional and named values is permitted, but you cannot use a positional
+notation after a named one.
 
 Component selection
 -------------------
