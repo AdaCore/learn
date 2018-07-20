@@ -104,7 +104,7 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 #
 html_theme_options = {
     "beta": True,
-    'sticky_navigation': False,
+#    'sticky_navigation': False,
 }
 
 html_logo = "learn_theme/static/img/logo.svg"
