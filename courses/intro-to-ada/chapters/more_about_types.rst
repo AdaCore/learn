@@ -287,8 +287,7 @@ one to the other:
     it be declared? A commonly used pattern is that if you need an access type
     to a specific type you "own", you will declare it along with the type:
 
-    .. code:: ada no_button
-        :class: ada-syntax-only
+    .. code-block:: ada
 
         package Access_Types is
            type Point is record
