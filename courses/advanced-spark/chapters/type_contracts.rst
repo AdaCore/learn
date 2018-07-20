@@ -45,10 +45,17 @@ Static Predicate
 
 .. code:: ada
 
-    type Day is (Monday, Tuesday, ... Sunday);
-    subtype Weekend is Day range Saturday .. Sunday;
-    subtype Day_Off is Day with
-      Static_Predicate => Day_Off in Wednesday | Weekend;
+    package Show_Static_Predicate is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
+       subtype Weekend is Day range Saturday .. Sunday;
+       subtype Day_Off is Day with
+         Static_Predicate => Day_Off in Wednesday | Weekend;
+
+    end Show_Static_Predicate;
 
 - Typical use case on scalar types for holes in range
 
@@ -72,8 +79,18 @@ Dynamic Predicate
 
 .. code:: ada
 
-    subtype Day_Off is Day with
-      Dynamic_Predicate => Check_Is_Off_In_Calendar (Day_Off);
+    package Show_Dynamic_Predicate is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
+       function Check_Is_Off_In_Calendar (D : Day) return Boolean;
+
+       subtype Day_Off is Day with
+         Dynamic_Predicate => Check_Is_Off_In_Calendar (Day_Off);
+
+    end Show_Dynamic_Predicate;
 
 - Various typical use cases on scalar and composite types
 
@@ -129,7 +146,33 @@ Dynamic Checking of Predicates
 
 .. code:: ada
 
-    My_Day_Off : Day_Off := This_Day;
+    package Show_Static_Predicate_Verified_At_Runtime is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
+       subtype Weekend is Day range Saturday .. Sunday;
+       subtype Day_Off is Day with
+         Static_Predicate => Day_Off in Wednesday | Weekend;
+
+       procedure Process_Day (This_Day : Day);
+
+    end Show_Static_Predicate_Verified_At_Runtime;
+
+.. code:: ada
+
+    package body Show_Static_Predicate_Verified_At_Runtime is
+
+       procedure Process_Day (This_Day : Day) is
+          --  Predicate cannot be verified at compile time
+          My_Day_Off : Day_Off := This_Day;
+       begin
+          --  missing implementation
+          null;
+       end Process_Day;
+
+    end Show_Static_Predicate_Verified_At_Runtime;
 
 - Property should not contain calls to functions of the type
 
@@ -159,12 +202,21 @@ Temporary Violations of the Dynamic Predicate
 
 .. code:: ada
 
-    type Raw_Week_Schedule is record
-      Day_Off, Day_On_Duty : Day;
-    end record;
+    package Show_Temp_Violation_Dyn_Predicate is
 
-    subtype Week_Schedule is Raw_Week_Schedule with
-      Dynamic_Predicate => Day_Off /= Day_On_Duty;
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
+       type Raw_Week_Schedule is record
+          Day_Off, Day_On_Duty : Day;
+       end record;
+
+       subtype Week_Schedule is Raw_Week_Schedule with
+         Dynamic_Predicate =>
+           Week_Schedule.Day_Off /= Week_Schedule.Day_On_Duty;
+
+    end Show_Temp_Violation_Dyn_Predicate;
 
 
 Type Invariant
@@ -185,12 +237,23 @@ Type Invariant
 
 .. code:: ada
 
+    package Show_Type_Invariant is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
        type Week_Schedule is private;
     private
+
        type Week_Schedule is record
           Day_Off, Day_On_Duty : Day;
        end record with
-          Type_Invariant => Day_Off /= Day_On_Duty;
+         Type_Invariant => Day_Off /= Day_On_Duty;
+
+       procedure Internal_Adjust (WS : in out Week_Schedule);
+
+    end Show_Type_Invariant;
 
 
 Dynamic Checking of Type Invariants
@@ -215,10 +278,14 @@ Dynamic Checking of Type Invariants
 
 .. code:: ada
 
-    procedure Internal_Adjust (WS : in out Week_Schedule) is
-    begin
-       WS.Day_Off := WS.Day_On_Duty;
-    end Internal_Adjust;
+    package body Show_Type_Invariant is
+
+       procedure Internal_Adjust (WS : in out Week_Schedule) is
+       begin
+          WS.Day_Off := WS.Day_On_Duty;
+       end Internal_Adjust;
+
+    end Show_Type_Invariant;
 
 
 Inheritance of Predicates and Type Invariants
@@ -233,12 +300,18 @@ Inheritance of Predicates and Type Invariants
 
 .. code:: ada
 
-    subtype String_Start_At_1 is String with
-      Dynamic_Predicate => String_Start_At_1'First = 1;
-    subtype String_Normalized is String_Start_At_1 with
-      Dynamic_Predicate => String_Normalized'Last >= 0;
-    subtype String_Not_Empty is String_Normalized with
-      Dynamic_Predicate => String_Not_Empty'Length >= 1;
+    package Show_Predicate_Inheritance is
+
+       subtype String_Start_At_1 is String with
+         Dynamic_Predicate => String_Start_At_1'First = 1;
+
+       subtype String_Normalized is String_Start_At_1 with
+         Dynamic_Predicate => String_Normalized'Last >= 0;
+
+       subtype String_Not_Empty is String_Normalized with
+         Dynamic_Predicate => String_Not_Empty'Length >= 1;
+
+    end Show_Predicate_Inheritance;
 
 - Type invariants are typically not inherited
 
@@ -289,8 +362,23 @@ Default Initial Condition
 
 .. code:: ada
 
-    type List (Capacity : Count_Type) is private with
-      Default_Initial_Condition => Is_Empty (List);
+    with Ada.Containers;
+
+    package Show_Default_Init_Cond is
+
+       type Count_Type is new Ada.Containers.Count_Type;
+
+       type List (Capacity : Count_Type) is private with
+          Default_Initial_Condition => Is_Empty (List);
+
+       function Is_Empty (L : List) return Boolean;
+
+    private
+
+       type List (Capacity : Count_Type) is null record;
+       --  missing implementation...
+
+    end Show_Default_Init_Cond;
 
 - Can also be used without a property for SPARK analysis
 
@@ -307,9 +395,17 @@ Example #1
 
 .. code:: ada
 
-    type Day is (Monday, Tuesday, ... Sunday);
-    subtype Weekend is Day range Saturday .. Sunday;
-    subtype Day_Off is Day range Wednesday | Weekend;
+    package Example_01 is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
+       subtype Weekend is Day range Saturday .. Sunday;
+
+       subtype Day_Off is Day range Wednesday | Weekend;
+
+    end Example_01;
 
 This code is not correct. The syntax of range constraints does not allow
 sets of values. A predicate should be used instead.
@@ -320,10 +416,18 @@ Example #2
 
 .. code:: ada
 
-    type Day is (Monday, Tuesday, ... Sunday);
-    subtype Weekend is Day range Saturday .. Sunday;
-    subtype Day_Off is Weekend with
-      Static_Predicate => Day_Off in Wednesday | Weekend;
+    package Example_02 is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
+       subtype Weekend is Day range Saturday .. Sunday;
+
+       subtype Day_Off is Weekend with
+         Static_Predicate => Day_Off in Wednesday | Weekend;
+
+    end Example_02;
 
 This code is not correct. This is accepted by GNAT, but result is not the
 one expected by the user. ``Day_Off`` has the same constraint as
@@ -335,10 +439,18 @@ Example #3
 
 .. code:: ada
 
-    type Day is (Monday, Tuesday, ... Sunday);
-    subtype Weekend is Day range Saturday .. Sunday;
-    subtype Day_Off is Day with
-      Dynamic_Predicate => Day_Off in Wednesday | Weekend;
+    package Example_03 is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
+       subtype Weekend is Day range Saturday .. Sunday;
+
+       subtype Day_Off is Day with
+         Dynamic_Predicate => Day_Off in Wednesday | Weekend;
+
+    end Example_03;
 
 This code is correct. It is valid to use a :ada:`Dynamic_Predicate` where
 a :ada:`Static_Predicate` would be allowed.
@@ -349,14 +461,37 @@ Example #4
 
 .. code:: ada
 
-    function Next_Day_Off (D : Day_Off) return Day_Off is
+    package Week is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
+       subtype Weekend is Day range Saturday .. Sunday;
+
+       subtype Day_Off is Day with
+         Static_Predicate => Day_Off in Wednesday | Weekend;
+
+    end Week;
+
+.. code:: ada
+
+    with Week; use Week;
+
+    procedure Example_04 is
+
+       function Next_Day_Off (D : Day_Off) return Day_Off is
+       begin
+          case D is
+             when Wednesday => return Saturday;
+             when Saturday  => return Sunday;
+             when Sunday    => return Wednesday;
+          end case;
+       end Next_Day_Off;
+
     begin
-       case D is
-          when Wednesday => return Saturday;
-          when Saturday  => return Sunday;
-          when Sunday    => return Wednesday;
-       end case;
-    end Next_Day_Off;
+       null;
+    end Example_04;
 
 This code is correct. It is valid to use a type with
 :ada:`Static_Predicate` for the value tested in a case statement. This is
@@ -368,15 +503,26 @@ Example #5
 
 .. code:: ada
 
+    package Example_05 is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
        type Week_Schedule is private with
-          Type_Invariant => Valid (Week_Schedule);
+         Type_Invariant => Valid (Week_Schedule);
+
        function Valid (WS : Week_Schedule) return Boolean;
+
     private
        type Week_Schedule is record
           Day_Off, Day_On_Duty : Day;
        end record;
+
        function Valid (WS : Week_Schedule) return Boolean is
-          (WS.Day_Off /= WS.Day_On_Duty);
+         (WS.Day_Off /= WS.Day_On_Duty);
+
+    end Example_05;
 
 This code is correct. It is valid in Ada because the type invariant is not
 checked on entry or return from ``Valid``. Also, function ``Valid`` is
@@ -392,15 +538,25 @@ Example #6
 
 .. code:: ada
 
+    package Example_06 is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
        type Week_Schedule is private;
+
     private
+
        type Week_Schedule is record
           Day_Off, Day_On_Duty : Day;
        end record with
-          Type_Invariant => Valid (Week_Schedule);
+         Type_Invariant => Valid (Week_Schedule);
 
        function Valid (WS : Week_Schedule) return Boolean is
-          (WS.Day_Off /= WS.Day_On_Duty);
+         (WS.Day_Off /= WS.Day_On_Duty);
+
+    end Example_06;
 
 This code is correct. This version is valid in both Ada and SPARK.
 
@@ -410,20 +566,24 @@ Example #7
 
 .. code:: ada
 
-    subtype Sorted_String is String with
-      Dynamic_Predicate =>
-        (for all Pos in Sorted_String'Range =>
-           Sorted_String (Pos) <= Sorted_String (Pos + 1));
+    package Example_07 is
 
-    subtype Unique_String is String with
-      Dynamic_Predicate =>
-        (for all Pos1, Pos2 in Unique_String'Range =>
-           Unique_String (Pos1) /= Unique_String (Pos2));
+       subtype Sorted_String is String with
+         Dynamic_Predicate =>
+           (for all Pos in Sorted_String'Range =>
+              Sorted_String (Pos) <= Sorted_String (Pos + 1));
 
-    subtype Unique_Sorted_String is String with
-      Dynamic_Predicate =>
-        Unique_Sorted_String in Sorted_String and then
-        Unique_Sorted_String in Unique_String;
+       subtype Unique_String is String with
+         Dynamic_Predicate =>
+           (for all Pos1, Pos2 in Unique_String'Range =>
+              Unique_String (Pos1) /= Unique_String (Pos2));
+
+       subtype Unique_Sorted_String is String with
+         Dynamic_Predicate =>
+           Unique_Sorted_String in Sorted_String and then
+           Unique_Sorted_String in Unique_String;
+
+    end Example_07;
 
 This code is not correct. There are 3 problems in this code:
 
@@ -439,23 +599,27 @@ Example #8
 
 .. code:: ada
 
-    subtype Sorted_String is String with
-      Dynamic_Predicate =>
-        (for all Pos in Sorted_String'First ..
-                        Sorted_String'Last – 1 =>
-           Sorted_String (Pos) <= Sorted_String (Pos + 1));
+    package Example_08 is
 
-    subtype Unique_String is String with
-      Dynamic_Predicate =>
-        (for all Pos1 in Unique_String'Range =>
-          (for all Pos2 in Unique_String'Range =>
-             (if Pos1 /= Pos2 then
-                Unique_String (Pos1) /= Unique_String (Pos2))));
+       subtype Sorted_String is String with
+         Dynamic_Predicate =>
+           (for all Pos in Sorted_String'First ..
+              Sorted_String'Last - 1 =>
+                Sorted_String (Pos) <= Sorted_String (Pos + 1));
 
-    subtype Unique_Sorted_String is String with
-      Dynamic_Predicate =>
-        Unique_Sorted_String in Sorted_String and then
-        Unique_Sorted_String in Unique_String;
+       subtype Unique_String is String with
+         Dynamic_Predicate =>
+           (for all Pos1 in Unique_String'Range =>
+              (for all Pos2 in Unique_String'Range =>
+                 (if Pos1 /= Pos2 then
+                      Unique_String (Pos1) /= Unique_String (Pos2))));
+
+       subtype Unique_Sorted_String is String with
+         Dynamic_Predicate =>
+           Unique_Sorted_String in Sorted_String and then
+           Unique_Sorted_String in Unique_String;
+
+    end Example_08;
 
 This code is correct. This is a correct version in Ada. For proving AoRTE
 in SPARK, one will need to change slightly the property of
@@ -467,17 +631,27 @@ Example #9
 
 .. code:: ada
 
+    package Example_09 is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
        type Week_Schedule is private with
-          Default_Initial_Condition => Valid (Week_Schedule);
+         Default_Initial_Condition => Valid (Week_Schedule);
 
        function Valid (WS : Week_Schedule) return Boolean;
+
     private
+
        type Week_Schedule is record
           Day_Off, Day_On_Duty : Day;
        end record;
 
        function Valid (WS : Week_Schedule) return Boolean is
-          (WS.Day_Off /= WS.Day_On_Duty);
+         (WS.Day_Off /= WS.Day_On_Duty);
+
+    end Example_09;
 
 This code is not correct. The default initial condition is not satisfied.
 
@@ -487,18 +661,28 @@ Example #10
 
 .. code:: ada
 
+    package Example_10 is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
        type Week_Schedule is private with
-          Default_Initial_Condition => Valid (Week_Schedule);
+         Default_Initial_Condition => Valid (Week_Schedule);
 
        function Valid (WS : Week_Schedule) return Boolean;
+
     private
+
        type Week_Schedule is record
           Day_Off     : Day := Wednesday;
           Day_On_Duty : Day := Friday;
        end record;
 
        function Valid (WS : Week_Schedule) return Boolean is
-          (WS.Day_Off /= WS.Day_On_Duty);
+         (WS.Day_Off /= WS.Day_On_Duty);
+
+    end Example_10;
 
 This code is correct. This is a correct version, which can be proved with
 SPARK.
