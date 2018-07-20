@@ -2071,7 +2071,7 @@ information from the file.
 Let's see an example that writes information into a new text file and then
 reads it back from the same file:
 
-.. code:: ada
+.. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2096,7 +2096,7 @@ In addition to the ``Create`` and ``Close`` procedures, the standard
 library also includes a ``Reset`` procedure, which, as the name implies,
 resets (erases) all the information from the file. For example:
 
-.. code:: ada
+.. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2130,7 +2130,7 @@ specified file isn't found.  Therefore, you should handle exceptions in
 that context. The following example deletes a file and then tries to open
 the same file for reading:
 
-.. code:: ada
+.. code-block:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2173,7 +2173,7 @@ procedures, you'd call the ``Read`` and ``Write`` procedures.
 In the following example, we instantiate the :ada:`Ada.Sequential_IO`
 package for floating-point types:
 
-.. code:: ada
+.. code-block:: ada
 
     with Ada.Text_IO;
     with Ada.Sequential_IO;
@@ -2207,7 +2207,7 @@ We use the same approach to read and write complex information. The
 following example uses a record that includes a Boolean and a
 floating-point value:
 
-.. code:: ada
+.. code-block:: ada
 
     with Ada.Text_IO;
     with Ada.Sequential_IO;
@@ -2268,7 +2268,7 @@ the :ada:`Ada.Direct_IO` package, we just need to replace the instances of
 the :ada:`Ada.Sequential_IO` package by the :ada:`Ada.Direct_IO`
 package. This is the new source code:
 
-.. code:: ada
+.. code-block:: ada
 
     with Ada.Text_IO;
     with Ada.Direct_IO;
@@ -2307,7 +2307,7 @@ To access any position in the file, call the ``Set_Index`` procedure to set
 the new position / index.  You can use the ``Index`` function to retrieve
 the current index. Let's see an example:
 
-.. code:: ada
+.. code-block:: ada
 
     with Ada.Text_IO;
     with Ada.Direct_IO;
@@ -2373,7 +2373,7 @@ or writing.
 Let's look at a version of the ``Show_Dir_Float_IO`` procedure from the
 previous section that makes use of stream I/O instead of direct I/O:
 
-.. code:: ada
+.. code-block:: ada
 
     with Ada.Text_IO;
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
@@ -2424,7 +2424,7 @@ addition to the object's actual data.
 The following example shows file I/O that mixes both strings of
 different lengths and floating-point values:
 
-.. code:: ada
+.. code-block:: ada
 
     with Ada.Text_IO;
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
