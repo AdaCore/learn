@@ -97,6 +97,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search">
           {% block sidebartitle %}
+          
+          {% if theme_beta %}
+              <div class="beta-ribbon">BETA</div>
+          {% endif %}
 
           {% if logo and theme_logo_only %}
             <a href="{{ pathto(master_doc) }}">
