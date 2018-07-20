@@ -6,6 +6,11 @@ img.logo {
     /*    margin: 10px 20px !important;  */
     text-align: right !important;
 }
+
+div#learn-adacore-com > h1 {
+    display: none;
+}
+
 .widget_editor {
     padding-bottom: 30px;
 }
@@ -33,6 +38,25 @@ img.logo {
     color: #878B9A; 
     font-size: 12px; 
     text-align: center; 
+}
+
+.beta-ribbon {
+    position: absolute;
+    width: 80px;
+    height: 25px;
+    background: black;
+    top: 7px;
+    left: -20px;
+    text-align: center;
+    font-size: 13px;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #fff;
+    line-height: 27px;
+    -ms-transform:rotate(-45deg);
+    -webkit-transform:rotate(-45deg);
+    transform:rotate(-45deg);
 }
 
 .legal a { 

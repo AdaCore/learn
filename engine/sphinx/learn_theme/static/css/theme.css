@@ -2994,6 +2994,10 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
     .wy-nav-side {
         left: -300px
     }
+    
+    .beta-ribbon {
+        left: -300px;
+    }
 
     .wy-nav-side.shift {
         width: 85%;
