@@ -12,7 +12,7 @@ div#learn-adacore-com > h1 {
 }
 
 .widget_editor {
-    padding-bottom: 30px;
+    padding-bottom: 10px;
 }
 
 .wy-side-nav-search { 
@@ -128,4 +128,8 @@ div.download-button.docutils.container {
 
 div.content-description.docutils.container {
   padding: 20px;
+}
+
+.responsiveCarousel {
+    padding-top: 20px;
 }
