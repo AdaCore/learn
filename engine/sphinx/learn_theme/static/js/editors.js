@@ -169,6 +169,8 @@ function query_operation_result(container, example_name, editors, output_area, o
         "extra_args": container.attr("extra_args"),
     }
 
+    // reset the number of lines already read
+    container.already_read = 0;
 
     // request the examples
     $.ajax({
