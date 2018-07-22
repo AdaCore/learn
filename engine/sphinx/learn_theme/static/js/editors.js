@@ -183,8 +183,8 @@ function query_operation_result(container, example_name, editors, output_area, o
         })
         .done(function (json) {
             if (json.identifier == "") {
-                reset(container, editors)
-                output_error(output_area, json.message)
+                reset(container, editors);
+                output_error(output_area, json.message);
             } else {
                 get_output_from_identifier(container, editors, output_area, json.identifier)
             }
