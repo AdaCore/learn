@@ -224,6 +224,8 @@ function create_editor(resource, container, content, editors, counter) {
    editor.setOptions({
        highlightActiveLine: false,
        fontSize: 13,
+       tabSize: 3,
+       useSoftTabs: true,
        theme: "ace/theme/tomorrow"
    });
 
