@@ -105,24 +105,24 @@ Concurrency – A trivial example
 
 .. code:: ada
 
-    procedure Show_Trivial_Task is
-       task type T;
+    package Show_Trivial_Task is
 
        type Task_Id is new Integer;
 
-       Id : Task_Id;
+       task type T (Id : Task_Id);
 
+       T1 : T (0);
+       T2 : T (1);
+    end Show_Trivial_Task;
+
+    package body Show_Trivial_Task is
        task body T is
-          Current_Task : Task_Id := Id + 1;
+          Current_Task : Task_Id := Id;
        begin
           loop
-             Id := Current_Task;
+             delay 1.0;
           end loop;
        end T;
-
-       T1, T2 : T;
-    begin
-       null;
     end Show_Trivial_Task;
 
 - Id can be written by ``T1`` and ``T2`` at the same time

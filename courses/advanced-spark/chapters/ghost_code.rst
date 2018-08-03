@@ -38,12 +38,20 @@ Ghost code – A trivial example
 
 .. code:: ada
 
-    procedure Show_Trivial_Example is
+    package Show_Trivial_Example is
 
        type Data_Array is array (1 .. 10) of Integer;
 
        Data : Data_Array;
        Free : Natural;
+
+       procedure Alloc;
+
+    end Show_Trivial_Example;
+
+.. code:: ada
+
+    package body Show_Trivial_Example is
 
        procedure Alloc is
        begin
@@ -53,8 +61,6 @@ Ghost code – A trivial example
           null;
        end Alloc;
 
-    begin
-       null;
     end Show_Trivial_Example;
 
 
@@ -71,12 +77,20 @@ Ghost variables – aka auxiliary variables
 
 .. code:: ada
 
-    procedure Show_Ghost_Variable is
+    package Show_Ghost_Variable is
 
        type Data_Array is array (1 .. 10) of Integer;
 
        Data : Data_Array;
        Free : Natural;
+
+       procedure Alloc;
+
+    end Show_Ghost_Variable;
+
+.. code:: ada
+
+    package body Show_Ghost_Variable is
 
        procedure Alloc is
           Free_Init : Natural with Ghost;
@@ -86,8 +100,6 @@ Ghost variables – aka auxiliary variables
           pragma Assert (Free > Free_Init);
        end Alloc;
 
-    begin
-       null;
     end Show_Ghost_Variable;
 
 
