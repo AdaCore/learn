@@ -6,7 +6,8 @@
 .. meta::
   :author: AdaCore
 
-:nextprev_state: False
+:prev_state: False
+:next_state: False
 
 Introduction to Ada
 ===================
