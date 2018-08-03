@@ -271,9 +271,8 @@ I am stuck with an unproved assertion. My options are:
 
     - justify the unproved check manually
 
-
-This approach is not correct. Why not, but only after checking this last
-option:
+**Evaluation**: This approach is not correct. Why not, but only after
+checking this last option:
 
     - run tests to see if the assertion actually holds
 
@@ -284,10 +283,9 @@ Example #2
 The same contracts are useful for test and for proof, so it’s useful to
 develop them for test initially.
 
-
-This approach is not correct. In fact, proof requires more contracts that
-test, as each subprogram is analyzed separately. But these are a superset
-of the contracts used for test.
+**Evaluation**: This approach is not correct. In fact, proof requires more
+contracts that test, as each subprogram is analyzed separately. But these
+are a superset of the contracts used for test.
 
 
 Example #3
@@ -296,8 +294,8 @@ Example #3
 Assertions need to be activated explicitly at compilation for getting the
 corresponding run-time checks.
 
-
-This approach is correct. Use switch ``-gnata`` to activate assertions.
+**Evaluation**: This approach is correct. Use switch ``-gnata`` to
+activate assertions.
 
 
 Example #4
@@ -306,10 +304,9 @@ Example #4
 When assertions are activated, loop invariants are checked to be inductive
 on specific executions.
 
-
-This approach is not correct. Loop invariants are checked dynamically
-exactly like assertions. The inductive property is not something that can
-be tested.
+**Evaluation**: This approach is not correct. Loop invariants are checked
+dynamically exactly like assertions. The inductive property is not
+something that can be tested.
 
 
 Example #5
@@ -319,10 +316,9 @@ Procedure ``P`` which is proved calls function ``T`` which is tested. To
 make sure the assumptions used in the proof of ``P`` are verified, we
 should check dynamically the precondition of ``T``.
 
-
-This approach is not correct. The precondition is proved at the call site
-of ``T`` in ``P``. But we should check dynamically the postcondition of
-``T``.
+**Evaluation**: This approach is not correct. The precondition is proved
+at the call site of ``T`` in ``P``. But we should check dynamically the
+postcondition of ``T``.
 
 
 Example #6
@@ -332,9 +328,8 @@ Function ``T`` which is tested calls procedure ``P`` which is proved. To
 make sure the assumptions used in the proof of ``P`` are verified, we
 should check dynamically the precondition of ``P``.
 
-
-This approach is correct. The proof of ``P`` depends on its precondition
-being satisfied at every call.
+**Evaluation**: This approach is correct. The proof of ``P`` depends on
+its precondition being satisfied at every call.
 
 
 Example #7
@@ -344,10 +339,9 @@ However procedure ``P`` (proved) and function ``T`` (tested) call each
 other, we can verify the assumptions of proof by checking dynamically all
 preconditions and postconditions during tests of ``T``.
 
-
-This approach is not correct. That covers only functional contracts. There
-are other assumptions made in proof, related to initialization, effects
-and non-aliasing.
+**Evaluation**: This approach is not correct. That covers only functional
+contracts. There are other assumptions made in proof, related to
+initialization, effects and non-aliasing.
 
 
 Example #8
@@ -355,11 +349,10 @@ Example #8
 
 Proof is superior to test in every aspect.
 
-
-This approach is not correct. Maybe for the aspects :ada:`Pre` and
-:ada:`Post`. But not in other aspects of verification: non-functional
-verification (memory footprint, execution time), match with hardware,
-integration in environment... And testing can even be exhaustive
+**Evaluation**: This approach is not correct. Maybe for the aspects
+:ada:`Pre` and :ada:`Post`. But not in other aspects of verification:
+non-functional verification (memory footprint, execution time), match with
+hardware, integration in environment... And testing can even be exhaustive
 sometimes!
 
 
@@ -369,11 +362,10 @@ Example #9
 When mixing test and proof at different levels, proof should be done at
 unit level and test at integration level.
 
-
-This approach is not correct. This is only one possibility that has been
-used in practice. The opposite could be envisioned: test low-level
-functionalities (e.g. crypto in hardware), and prove correct integration
-of low-level functionalities.
+**Evaluation**: This approach is not correct. This is only one possibility
+that has been used in practice. The opposite could be envisioned: test
+low-level functionalities (e.g. crypto in hardware), and prove correct
+integration of low-level functionalities.
 
 
 Example #10
@@ -382,5 +374,4 @@ Example #10
 There are many ways to mix test and proof, and yours may not be in these
 slides.
 
-
-This approach is correct. YES! (and show me yours)
+**Evaluation**: This approach is correct. YES! (and show me yours)

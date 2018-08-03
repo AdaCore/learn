@@ -62,18 +62,32 @@ Systems Programming – A trivial example
 
 .. code:: ada
 
-    X : Integer with Volatile,
-      Address => Ext_Address;
+    package Show_Trivial_Sys_Prog is
 
-    procedure Get (Val : out Integer)
-      with Global  => (In_Out => X),
-           Depends => (Val => X,
-                       X   => X);
+       Y : Integer;
 
-    procedure Get (Val : out Integer) is
-    begin
-       Val := X;
-    end Get;
+       --  Y'Address could be replaced by any
+       --  external address
+       X : Integer with Volatile,
+         Address => Y'Address;
+
+       procedure Get (Val : out Integer)
+         with Global  => (In_Out => X),
+         Depends => (Val => X,
+                     X   => X);
+
+    end Show_Trivial_Sys_Prog;
+
+.. code:: ada
+
+    package body Show_Trivial_Sys_Prog is
+
+       procedure Get (Val : out Integer) is
+       begin
+          Val := X;
+       end Get;
+
+    end Show_Trivial_Sys_Prog;
 
 - Comments:
 
@@ -105,7 +119,7 @@ Volatile Variables and Volatile Types
 
     - aspect :ada:`Import` to skip definition/initialization
 
-.. code:: ada
+.. code-block:: ada
 
     type T is new Integer with Volatile;
 
@@ -132,16 +146,46 @@ Using ``Async_Readers`` / ``Async_Writers``
 
 .. code:: ada
 
-    X : Integer with ... Async_Readers;
-    Y : Integer with ... Async_Writers;
+    package Volatile_Vars is
 
-    procedure Set is
-       U, V : constant Integer := Y;
+       pragma Elaborate_Body;
+
+       Ext : array (1 .. 2) of Integer;
+
+       X : Integer with Volatile,
+         Address => Ext (1)'Address,
+         Async_Readers;
+
+       Y : Integer with Volatile,
+         Address => Ext (2)'Address,
+         Async_Writers;
+
+       procedure Set;
+    end Volatile_Vars;
+
+.. code:: ada
+
+    package body Volatile_Vars is
+
+       procedure Set is
+          U, V : constant Integer := Y;
+       begin
+          pragma Assert (U = V);
+          X := 0;
+          X := 1;
+       end Set;
     begin
-       pragma Assert (U = V);
-       X := 0;
-       X := 1;
-    end Set;
+       Ext := (others => 0);
+    end Volatile_Vars;
+
+.. code:: ada
+
+    with Volatile_Vars;
+
+    procedure Show_Volatile_Vars is
+    begin
+       Volatile_Vars.Set;
+    end Show_Volatile_Vars;
 
 
 Using ``Effective_Reads`` / ``Effective_Writes``
@@ -161,17 +205,51 @@ Using ``Effective_Reads`` / ``Effective_Writes``
 
 .. code:: ada
 
-    X : Integer with ... Effective_Writes;
-    Y : Integer with ... Effective_Reads;
+    package Volatile_Vars is
 
-    procedure Set with
-      Depends => (X => Y,
-                  Y => Y)
-    is
+       pragma Elaborate_Body;
+
+       Ext : array (1 .. 2) of Integer;
+
+       X : Integer with Volatile,
+         Address => Ext (1)'Address,
+         Async_Readers,
+         Effective_Writes;
+
+       Y : Integer with Volatile,
+         Address => Ext (2)'Address,
+         Async_Writers,
+         Effective_Reads;
+
+       procedure Set with
+          Depends => (X => Y,
+                      Y => Y);
+    end Volatile_Vars;
+
+
+.. code:: ada
+
+    package body Volatile_Vars is
+
+       procedure Set is
+       begin
+          X := Y;
+          X := 0;
+       end Set;
+
     begin
-       X := Y;
-       X := 0;
-    end Set;
+       Ext := (others => 0);
+    end Volatile_Vars;
+
+
+.. code:: ada
+
+    with Volatile_Vars;
+
+    procedure Show_Volatile_Vars is
+    begin
+       Volatile_Vars.Set;
+    end Show_Volatile_Vars;
 
 
 Combinations of Flavors of Volatile Variables
@@ -214,20 +292,76 @@ Constraints on Volatile Variables
 
 .. code:: ada
 
-    procedure Read_All is
-       Tmp : Integer := 0;
-    begin
-       Tmp := Tmp + AR;
-       Tmp := Tmp + AW;
-       EW := Tmp;
-       Set (ER);
-    end Read_All;
+    package Volatile_Vars is
 
-    function Read_ER return Integer is
-       Tmp : Integer := ER;
+       pragma Elaborate_Body;
+
+       Ext : array (1 .. 4) of Integer;
+
+       AR : Integer with Volatile,
+         Address => Ext (1)'Address,
+         Async_Readers;
+
+       AW : Integer with Volatile,
+         Address => Ext (2)'Address,
+         Async_Writers;
+
+       ER : Integer with Volatile,
+         Address => Ext (3)'Address,
+         Async_Writers,
+         Effective_Reads;
+
+       EW : Integer with Volatile,
+         Address => Ext (4)'Address,
+         Async_Readers,
+         Effective_Writes;
+
+       procedure Read_All;
+
+       function Read_ER return Integer;
+
+       procedure Set (V : Integer);
+
+    end Volatile_Vars;
+
+.. code:: ada
+
+    package body Volatile_Vars is
+
+       procedure Read_All is
+          Tmp : Integer := 0;
+       begin
+          Tmp := Tmp + AR;
+          Tmp := Tmp + AW;
+          EW := Tmp;
+          Set (ER);
+       end Read_All;
+
+       function Read_ER return Integer is
+          Tmp : Integer := ER;
+       begin
+          return Tmp;
+       end Read_ER;
+
+       procedure Set (V : Integer) is
+       begin
+          AW := V;
+       end Set;
+
     begin
-       return Tmp;
-    end Read_ER;
+       Ext := (others => 0);
+    end Volatile_Vars;
+
+.. code:: ada
+
+    with Volatile_Vars;
+
+    procedure Show_Volatile_Vars is
+       V : Integer;
+    begin
+       Volatile_Vars.Read_All;
+       V := Volatile_Vars.Read_ER;
+    end Show_Volatile_Vars;
 
 - Comments:
 
@@ -251,22 +385,99 @@ Constraints on Volatile Functions
 
 .. code:: ada
 
-    function Read_Non_Volatile
-      return Integer;
-    --  reads AR, AW, EW
-    --  ERROR: not a volatile function
+    package Volatile_Vars is
 
-    function Read_Volatile
-      return Integer
-      with Volatile_Function;
-    --  reads AR, AW, EW
-    --  OK for volatile function
+       pragma Elaborate_Body;
 
-    function Read_ER
-      return Integer
-      with Volatile_Function;
-    --  reads ER
-    --  ERROR: ER output of Read_ER
+       Ext : array (1 .. 4) of Integer;
+
+       AR : Integer with Volatile,
+         Address => Ext (1)'Address,
+         Async_Readers;
+
+       AW : Integer with Volatile,
+         Address => Ext (2)'Address,
+         Async_Writers;
+
+       ER : Integer with Volatile,
+         Address => Ext (3)'Address,
+         Async_Writers,
+         Effective_Reads;
+
+       EW : Integer with Volatile,
+         Address => Ext (4)'Address,
+         Async_Readers,
+         Effective_Writes;
+
+       function Read_Non_Volatile
+         return Integer;
+
+       function Read_Volatile
+         return Integer
+         with Volatile_Function;
+
+       function Read_ER
+         return Integer
+         with Volatile_Function;
+
+    end Volatile_Vars;
+
+
+.. code:: ada
+
+    package body Volatile_Vars is
+
+       function Read_Non_Volatile
+         return Integer is
+          Tmp : Integer := 0;
+       begin
+          --  reads AR, AW, EW
+          --  ERROR: not a volatile function
+          Tmp := Tmp + AR;
+          Tmp := Tmp + AW;
+          Tmp := Tmp + EW;
+
+          return Tmp;
+       end Read_Non_Volatile;
+
+       function Read_Volatile
+         return Integer is
+          Tmp : Integer := 0;
+       begin
+          --  reads AR, AW, EW
+          --  OK for volatile function
+          Tmp := Tmp + AR;
+          Tmp := Tmp + AW;
+          Tmp := Tmp + EW;
+
+          return Tmp;
+       end Read_Volatile;
+
+       function Read_ER
+         return Integer is
+          Tmp : Integer := ER;
+       begin
+          --  reads ER
+          --  ERROR: ER output of Read_ER
+          return Tmp;
+       end Read_ER;
+
+    begin
+       Ext := (others => 0);
+    end Volatile_Vars;
+
+
+.. code:: ada
+
+    with Volatile_Vars;
+
+    procedure Show_Volatile_Vars is
+       V : Integer;
+    begin
+       V := Volatile_Vars.Read_Non_Volatile;
+       V := Volatile_Vars.Read_Volatile;
+       V := Volatile_Vars.Read_ER;
+    end Show_Volatile_Vars;
 
 
 State Abstraction on Volatile Variables
@@ -281,19 +492,27 @@ State Abstraction on Volatile Variables
 .. code:: ada
 
     package P1 with
-      Abstract_State =>
-       (S with External)
-    is ...
-    --  always OK
+      Abstract_State => (S with External)
+    is
+       procedure Process (Data : out Integer) with
+         Global => (In_Out => S);
+
+    end P1;
+
+.. code:: ada
 
     package P2 with
-      Abstract_State =>
-       (S with External =>
-         (Async_Writers,
-          --  OK if refined into AW, ER
-          Effective_Reads))
-          --  not OK if refined into AR, EW
-    is ...
+      Abstract_State => (S with External =>
+                           (Async_Writers,
+                            --  OK if refined into AW, ER
+                            Effective_Reads)
+                            --  not OK if refined into AR, EW
+                        )
+    is
+       procedure Process (Data : out Integer) with
+         Global => (In_Out => S);
+
+    end P2;
 
 
 Constraints on Address Attribute
@@ -303,10 +522,17 @@ Constraints on Address Attribute
 
 .. code:: ada
 
-    X : Integer with Volatile, Address => ... ;
+    package Show_Address_Attribute is
 
-    Y : Integer with Volatile;
-    for X'Address use ... ;
+       Ext : array (1 .. 2) of Integer;
+
+       X : Integer with Volatile,
+         Address => Ext (1)'Address;
+
+       Y : Integer with Volatile;
+       for Y'Address use Ext (2)'Address;
+
+    end Show_Address_Attribute;
 
 - Address attribute not allowed in expressions
 
@@ -318,11 +544,18 @@ Constraints on Address Attribute
 
 .. code:: ada
 
-    X : Integer := 1;
-    Y : Integer := 0
-      with Address => X'Address;
-    pragma Assert (X = 1);
-    --  assertion wrongly proved
+    procedure Show_Address_Overlay is
+
+       X : Integer := 1;
+       Y : Integer := 0
+         with Address => X'Address;
+
+       pragma Assert (X = 1);
+       --  assertion wrongly proved
+    begin
+       null;
+
+    end Show_Address_Overlay;
 
 
 Can something be known of volatile variables?
@@ -342,14 +575,26 @@ Can something be known of volatile variables?
 
 .. code:: ada
 
-    X : Integer with Volatile, Async_Readers;
+    package Show_Provable_Volatile_Var is
 
-    procedure Read_Value is
-    begin
-       X := 42;
-       pragma Assert (X = 42);
-       --  proved!
-    end Read_Value;
+       X : Integer with Volatile, Async_Readers;
+
+       procedure Read_Value;
+
+    end Show_Provable_Volatile_Var;
+
+.. code:: ada
+
+    package body Show_Provable_Volatile_Var is
+
+       procedure Read_Value is
+       begin
+          X := 42;
+          pragma Assert (X = 42);
+          --  proved!
+       end Read_Value;
+
+    end Show_Provable_Volatile_Var;
 
 
 Other Concerns in Systems Programming
@@ -384,17 +629,29 @@ Example #1
 
 .. code:: ada
 
-    X : Integer with Volatile,
-      Address => Ext_Address;
+    package Example_01 is
 
-    procedure Get (Val : out Integer)
-      with Global  => (Input => X),
-           Depends => (Val => X);
+       Ext : Integer;
 
-    procedure Get (Val : out Integer) is
-    begin
-       Val := X;
-    end Get;
+       X   : Integer with Volatile,
+         Address => Ext'Address;
+
+       procedure Get (Val : out Integer)
+         with Global  => (Input => X),
+         Depends => (Val => X);
+
+    end Example_01;
+
+.. code:: ada
+
+    package body Example_01 is
+
+       procedure Get (Val : out Integer) is
+       begin
+          Val := X;
+       end Get;
+
+    end Example_01;
 
 This code is not correct. ``X`` has :ada:`Effective_Reads` set by default,
 hence it is also an output.
@@ -405,17 +662,29 @@ Example #2
 
 .. code:: ada
 
-    X : Integer with Volatile, Address => Ext_Address,
-      Async_Readers, Async_Writers, Effective_Writes;
+    package Example_02 is
 
-    procedure Get (Val : out Integer)
-      with Global  => (Input => X),
-           Depends => (Val => X);
+       Ext : Integer;
 
-    procedure Get (Val : out Integer) is
-    begin
-       Val := X;
-    end Get;
+       X : Integer with Volatile, Address => Ext'Address,
+         Async_Readers, Async_Writers, Effective_Writes;
+
+       procedure Get (Val : out Integer)
+         with Global  => (Input => X),
+         Depends => (Val => X);
+
+    end Example_02;
+
+.. code:: ada
+
+    package body Example_02 is
+
+       procedure Get (Val : out Integer) is
+       begin
+          Val := X;
+       end Get;
+
+    end Example_02;
 
 This code is correct. ``X`` has :ada:`Effective_Reads = False`, hence it
 is only an input.
@@ -426,18 +695,29 @@ Example #3
 
 .. code:: ada
 
-    Speed : Float with Volatile, Async_Writers;
-    Motor : Float with Volatile, Async_Readers;
+    package Example_03 is
 
-    procedure Adjust with
-       Depends => (Motor =>+ Speed)
-    is
-       Cur_Speed : constant Float := Speed;
-    begin
-       if abs (Cur_Speed) > 100.0 then
-          Motor := Motor - 1.0;
-       end if;
-    end Adjust;
+       Speed : Float with Volatile, Async_Writers;
+       Motor : Float with Volatile, Async_Readers;
+
+       procedure Adjust with
+         Depends => (Motor =>+ Speed);
+
+    end Example_03;
+
+.. code:: ada
+
+    package body Example_03 is
+
+       procedure Adjust is
+          Cur_Speed : constant Float := Speed;
+       begin
+          if abs (Cur_Speed) > 100.0 then
+             Motor := Motor - 1.0;
+          end if;
+       end Adjust;
+
+    end Example_03;
 
 This code is correct. ``Speed`` is an input only, ``Motor`` is both an
 input and output. Note how the current value of ``Speed`` is first copied
@@ -449,21 +729,32 @@ Example #4
 
 .. code:: ada
 
-    Raw_Data : Float with Volatile,
-      Async_Writers, Effective_Reads;
-    Data     : Float with Volatile,
-      Async_Readers, Effective_Writes;
+    package Example_04 is
 
-    procedure Smooth with
-       Depends => (Data => Raw_Data)
-    is
-       Data1 : constant Float := Raw_Data;
-       Data2 : constant Float := Raw_Data;
-    begin
-       Data := Data1;
-       Data := (Data1 + Data2) / 2.0;
-       Data := Data2;
-    end Smooth;
+       Raw_Data : Float with Volatile,
+         Async_Writers, Effective_Reads;
+       Data     : Float with Volatile,
+         Async_Readers, Effective_Writes;
+
+       procedure Smooth with
+         Depends => (Data => Raw_Data);
+
+    end Example_04;
+
+.. code:: ada
+
+    package body Example_04 is
+
+       procedure Smooth is
+          Data1 : constant Float := Raw_Data;
+          Data2 : constant Float := Raw_Data;
+       begin
+          Data := Data1;
+          Data := (Data1 + Data2) / 2.0;
+          Data := Data2;
+       end Smooth;
+
+    end Example_04;
 
 This code is not correct. ``Raw_Data`` has :ada:`Effective_Reads` set,
 hence it is also an output.
@@ -473,15 +764,18 @@ Example #5
 
 .. code:: ada
 
-    type Regval is new Integer with Volatile;
-    type Regnum is range 1 .. 32;
-    type Registers is array (Regnum) of Regval;
+    package Example_05 is
 
-    Regs : Registers with Async_Writers, Async_Readers;
+       type Regval is new Integer with Volatile;
+       type Regnum is range 1 .. 32;
+       type Registers is array (Regnum) of Regval;
 
-    function Reg (R : Regnum) return Integer is
-      (Integer (Regs (R)))
-      with Volatile_Function;
+       Regs : Registers with Async_Writers, Async_Readers;
+
+       function Reg (R : Regnum) return Integer is
+         (Integer (Regs (R))) with Volatile_Function;
+
+    end Example_05;
 
 This code is not correct. ``Regs`` has :ada:`Async_Writers` set, hence it
 cannot appear as the expression in an expression function.
@@ -492,19 +786,30 @@ Example #6
 
 .. code:: ada
 
-    type Regval is new Integer with Volatile;
-    type Regnum is range 1 .. 32;
-    type Registers is array (Regnum) of Regval;
+    package Example_06 is
 
-    Regs : Registers with Async_Writers, Async_Readers;
+       type Regval is new Integer with Volatile;
+       type Regnum is range 1 .. 32;
+       type Registers is array (Regnum) of Regval;
 
-    function Reg (R : Regnum) return Integer
-      with Volatile_Function
-    is
-       V : Regval := Regs (R);
-    begin
-       return Integer (V);
-    end Reg;
+       Regs : Registers with Async_Writers, Async_Readers;
+
+       function Reg (R : Regnum) return Integer
+         with Volatile_Function;
+
+    end Example_06;
+
+.. code:: ada
+
+    package body Example_06 is
+
+       function Reg (R : Regnum) return Integer is
+          V : Regval := Regs (R);
+       begin
+          return Integer (V);
+       end Reg;
+
+    end Example_06;
 
 This code is not correct. ``Regval`` is a volatile type, hence variable
 ``V`` is volatile and cannot be declared locally.
@@ -515,18 +820,29 @@ Example #7
 
 .. code:: ada
 
-    type Regval is new Integer with Volatile;
-    type Regnum is range 1 .. 32;
-    type Registers is array (Regnum) of Regval;
+    package Example_07 is
 
-    Regs : Registers with Async_Writers, Async_Readers;
+       type Regval is new Integer with Volatile;
+       type Regnum is range 1 .. 32;
+       type Registers is array (Regnum) of Regval;
 
-    function Reg (R : Regnum) return Integer
-      with Volatile_Function
-    is
-    begin
-       return Integer (Regs (R));
-    end Reg;
+       Regs : Registers with Async_Writers, Async_Readers;
+
+       function Reg (R : Regnum) return Integer
+         with Volatile_Function;
+
+    end Example_07;
+
+.. code:: ada
+
+    package body Example_07 is
+
+       function Reg (R : Regnum) return Integer is
+       begin
+          return Integer (Regs (R));
+       end Reg;
+
+    end Example_07;
 
 This code is correct. ``Regs`` has :ada:`Effective_Reads = False` hence
 can be read in a function. Function ``Reg`` is marked as volatile with
@@ -538,18 +854,28 @@ Example #8
 
 .. code:: ada
 
-    package P with
+    package Example_08 with
       Abstract_State => (State with External),
-      Initializes => State
-    is ...
+        Initializes => State
+    is
+       procedure Dummy;
+    end Example_08;
 
-    package body P with
+.. code:: ada
+
+    package body Example_08 with
       Refined_State => (State => (X, Y, Z))
     is
        X : Integer with Volatile, Async_Readers;
        Y : Integer with Volatile, Async_Writers;
        Z : Integer := 0;
-    end P;
+
+       procedure Dummy is
+       begin
+          null;
+       end Dummy;
+
+    end Example_08;
 
 This code is not correct. ``X`` has :ada:`Async_Writers = False`, hence is
 not considered as always initialized. As aspect :ada:`Initializes`
@@ -563,22 +889,33 @@ Example #9
 
 .. code:: ada
 
-    type Pair is record
-       U, V : Natural;
-    end record
-      with Predicate => U /= V;
+    package Example_09 is
 
-    X : Pair with Atomic, Async_Readers, Async_Writers;
+       type Pair is record
+          U, V : Natural;
+       end record
+         with Predicate => U /= V;
 
-    function Max return Integer with
-      Volatile_Function,
-      Post => Max'Result /= 0
-    is
-       Val1 : constant Natural := X.U;
-       Val2 : constant Natural := X.V;
-    begin
-       return Natural'Max (Val1, Val2);
-    end Max;
+       X : Pair with Atomic, Async_Readers, Async_Writers;
+
+       function Max return Integer with
+         Volatile_Function,
+         Post => Max'Result /= 0;
+
+    end Example_09;
+
+.. code:: ada
+
+    package body Example_09 is
+
+       function Max return Integer is
+          Val1 : constant Natural := X.U;
+          Val2 : constant Natural := X.V;
+       begin
+          return Natural'Max (Val1, Val2);
+       end Max;
+
+    end Example_09;
 
 This code is not correct. ``X`` has :ada:`Async_Writers` set, hence it may
 have been written between the successive reads of ``X.U`` and ``X.V``.
@@ -589,23 +926,34 @@ Example #10
 
 .. code:: ada
 
-    type Pair is record
-       U, V : Natural;
-    end record
-      with Predicate => U /= V;
+    package Example_10 is
 
-    X : Pair with Atomic, Async_Readers, Async_Writers;
+       type Pair is record
+          U, V : Natural;
+       end record
+         with Predicate => U /= V;
 
-    function Max return Integer with
-      Volatile_Function,
-      Post => Max'Result /= 0
-    is
-       P    : constant Pair := X;
-       Val1 : constant Natural := P.U;
-       Val2 : constant Natural := P.V;
-    begin
-       return Natural'Max (Val1, Val2);
-    end Max;
+       X : Pair with Atomic, Async_Readers, Async_Writers;
+
+       function Max return Integer with
+         Volatile_Function,
+         Post => Max'Result /= 0;
+
+    end Example_10;
+
+.. code:: ada
+
+    package body Example_10 is
+
+       function Max return Integer is
+          P    : constant Pair := X;
+          Val1 : constant Natural := P.U;
+          Val2 : constant Natural := P.V;
+       begin
+          return Natural'Max (Val1, Val2);
+       end Max;
+
+    end Example_10;
 
 This code is correct. Values of ``P.U`` and ``P.V`` are provably
 different, and the postcondition is proved.

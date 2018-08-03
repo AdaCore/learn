@@ -70,8 +70,14 @@ Dynamic Behavior when Subprogram Contracts Fail
 
 .. code:: ada
 
-    function Sqrt (X : Float) return Float with
-      Pre => X >= 0.0 or else raise Argument_Error;
+    with Ada.Numerics; use Ada.Numerics;
+
+    package Show_Dynamic_Behavior is
+
+       function Sqrt (X : Float) return Float with
+          Pre => X >= 0.0 or else raise Argument_Error;
+
+    end Show_Dynamic_Behavior;
 
 - Control over sequencing of checks
 
@@ -88,25 +94,48 @@ Precondition
 
 .. code:: ada
 
-    function Sqrt (X : Float) return Float with
-      Pre => X >= 0.0 or else raise Argument_Error;
+    package Show_Precondition is
+
+       function Sqrt (X : Float) return Float with
+          Pre => X >= 0.0 or else raise Argument_Error;
+
+    end Show_Precondition;
 
 and
 
 .. code:: ada
 
-    --  X should be non-negative or Argument_Error is raised
-    function Sqrt (X : Float) return Float;
+    with Ada.Numerics; use Ada.Numerics;
 
-    function Sqrt (X : Float) return Float is
-    begin
-       if X >= 0.0 then
-          raise Argument_Error;
-       end if;
+    package Show_Precondition is
+
+       --  X should be non-negative or Argument_Error is raised
+       function Sqrt (X : Float) return Float;
+
+    end Show_Precondition;
+
+
+.. code:: ada
+
+    package body Show_Precondition is
+
+       function Sqrt (X : Float) return Float is
+          Res : Float := 0.0;
+       begin
+          if X >= 0.0 then
+             raise Argument_Error;
+          end if;
+
+          --  [...]
+
+          return Res;
+       end Sqrt;
+
+    end Show_Precondition;
 
 - Preconditions can be activated alone
 
-.. code:: ada
+.. code-block:: ada
 
     pragma Assertion_Policy (Pre => Check);
 
@@ -153,12 +182,16 @@ Contract Cases
 
 .. code:: ada
 
-    function Sqrt (X : Float) return Float with
-      Contract_Cases =>
-         (X > 1.0             => Sqrt'Result <= X,
-          X = 1.0             => Sqrt'Result = 1.0,
-          X < 1.0 and X > 0.0 => Sqrt'Result >= X,
-          X = 0.0             => Sqrt'Result = 0.0);
+    package Show_Contract_Cases is
+
+       function Sqrt (X : Float) return Float with
+         Contract_Cases =>
+           (X > 1.0             => Sqrt'Result <= X,
+            X = 1.0             => Sqrt'Result = 1.0,
+            X < 1.0 and X > 0.0 => Sqrt'Result >= X,
+            X = 0.0             => Sqrt'Result = 0.0);
+
+    end Show_Contract_Cases;
 
 - Both a precondition and a postcondition
 
@@ -182,15 +215,25 @@ Attribute ``'Old``
 
 .. code:: ada
 
-    procedure Extract (A : in out My_Array;
-                       J : in     Integer;
-                       V :    out Value)
-    with
-      Post => (if J in A'Range then V = A(J)'Old and A(J) = 0);
+    package Show_Attribute_Old is
+
+       type Value is new Integer;
+
+       type My_Range is range 1 .. 10;
+
+       type My_Array is array (My_Range) of Value;
+
+       procedure Extract (A : in out My_Array;
+                          J : in     My_Range;
+                          V :    out Value)
+         with
+           Post => (if J in A'Range then V = A (J)'Old and A (J) = 0);
+
+    end Show_Attribute_Old;
 
 - :ada:`Expr'Old` is rejected in potentially unevaluated context
 
-    - :ada:`Pragma Unevaluated_Use_Of_Old (Allow)` allows it
+    - :ada:`pragma Unevaluated_Use_Of_Old (Allow)` allows it
 
     - In Ada, user is responsible – in SPARK, user can rely on proof
 
@@ -235,23 +278,36 @@ Reasoning by Cases
 
 .. code:: ada
 
-    procedure Open (F : in out File; Success : out Boolean) with
-      Post =>
-         (case F.Mode'Old is
-            when Open   => Success,
-            when Active => not Success,
-            when Closed => Success = (F.Mode = Open));
+    with Ada.Text_IO;
+
+    package Show_Case_Expression is
+
+       type File_Mode is (Open, Active, Closed);
+
+       type File is record
+          F_Type : Ada.Text_IO.File_Type;
+          Mode   : File_Mode;
+       end record;
+
+       procedure Open (F : in out File; Success : out Boolean) with
+         Post =>
+           (case F.Mode'Old is
+              when Open   => Success,
+              when Active => not Success,
+              when Closed => Success = (F.Mode = Open));
+
+    end Show_Case_Expression;
 
     - Can sometimes be used at different levels in the expression
 
-.. code:: ada
+.. code-block:: ada
 
-    procedure Open (F : in out File; Success : out Boolean) with
-      Post =>
-         Success = (case F.Mode'Old is
-                      when Open   => True,
-                      when Active => False,
-                      when Closed => F.Mode = Open);
+       procedure Open (F : in out File; Success : out Boolean) with
+         Post =>
+           Success = (case F.Mode'Old is
+                        when Open   => True,
+                        when Active => False,
+                        when Closed => F.Mode = Open);
 
 
 Universal and Existential Quantification
@@ -296,7 +352,7 @@ Expression Functions
     - Definition is allowed in a package spec! (crucial for proof with
       SPARK)
 
-.. code:: ada
+.. code-block:: ada
 
     function Valid_Configuration return Boolean is
        (case Cur_State is
@@ -315,18 +371,25 @@ Example #1
 
 .. code:: ada
 
-    --  Fail systematically fails a precondition and catches the
-    --  resulting exception.
+    with Ada.Assertions; use Ada.Assertions;
 
-    procedure Fail (Condition : Boolean) with
-       Pre => Condition
-    is
-       Bad_Condition : Boolean := False;
+    procedure Example_01 is
+
+       --  Fail systematically fails a precondition and catches the
+       --  resulting exception.
+
+       procedure Fail (Condition : Boolean) with
+         Pre => Condition
+       is
+          Bad_Condition : Boolean := False;
+       begin
+          Fail (Bad_Condition);
+       exception
+          when Assertion_Error => return;
+       end Fail;
     begin
-       Fail (Bad_Condition);
-    exception
-       when Assertion_Error => return;
-    end Fail;
+       null;
+    end Example_01;
 
 This code is not correct. The exception from the recursive call is always
 caught in the handler, but not the exception raised if caller of ``Fail``
@@ -340,18 +403,23 @@ Example #2
 
     with Interfaces.C; use Interfaces.C;
 
-    procedure Memset
-       (B  : in out char_array;
-        Ch : in     int;
-        N  : in     size_t)
-    with
-       Import,
-       Pre  => N <= B'Length,
-       Post => (for all Idx in B'Range =>
-                 (if Idx < B'First + N then
-                    B (Idx) = Ch
-                  else
-                    B (Idx) = B'Old (Idx)));
+    procedure Example_02 is
+
+       procedure Memset
+         (B  : in out char_array;
+          Ch : in     char;
+          N  : in     size_t)
+         with
+           Import,
+           Pre  => N <= B'Length,
+           Post => (for all Idx in B'Range =>
+                      (if Idx < B'First + N then
+                             B (Idx) = Ch
+                           else
+                             B (Idx) = B'Old (Idx)));
+    begin
+       null;
+    end Example_02;
 
 This code is correct. GNAT will create a wrapper for checking the
 precondition and postcondition of ``Memset``, calling the imported
@@ -363,15 +431,23 @@ Example #3
 
 .. code:: ada
 
-    pragma Assertion_Policy (Pre => Ignore);
-    function Sqrt (X : Float) return Float with
-      Pre => X >= 0.0;
+    procedure Example_03 is
 
-    pragma Assertion_Policy (Pre => Check);
-    function Sqrt (X : Float) return Float is
+       pragma Assertion_Policy (Pre => Ignore);
+       function Sqrt (X : Float) return Float with
+         Pre => X >= 0.0;
+
+       pragma Assertion_Policy (Pre => Check);
+       function Sqrt (X : Float) return Float is
+          Ret : Float := 0.0;
+       begin
+          --  missing implementation...
+          return Ret;
+       end Sqrt;
+
     begin
-       ...
-    end Sqrt;
+       null;
+    end Example_03;
 
 This code is not correct. Although GNAT inserts precondition checks in the
 subprogram body instead of its caller, it is the value of :ada:`Pre`
@@ -384,15 +460,23 @@ Example #4
 
 .. code:: ada
 
-    function Sqrt (X : Float) return Float with
-      Pre => X >= 0.0;
+    procedure Example_04 is
 
-    function Sqrt (X : Float) return Float with
-      Pre => X >= 0.0
-    is
+       function Sqrt (X : Float) return Float with
+         Pre => X >= 0.0;
+
+       function Sqrt (X : Float) return Float with
+         Pre => X >= 0.0
+       is
+          Ret : Float := 0.0;
+       begin
+          --  missing implementation...
+          return Ret;
+       end Sqrt;
+
     begin
-       ...
-    end Sqrt;
+       null;
+    end Example_04;
 
 This code is not correct. Contract is allowed only on the spec of a
 subprogram. Hence it is not allowed on the body when a separate spec is
@@ -404,15 +488,21 @@ Example #5
 
 .. code:: ada
 
-    procedure Add (X, Y : Natural; Z : out Integer) with
-      Contract_Cases =>
-        (X <= Integer'Last – Y => Z = X + Y,
-         others                => Z = 0)
-    is
+    procedure Example_05 is
+
+       procedure Add (X, Y : Natural; Z : out Integer) with
+         Contract_Cases =>
+           (X <= Integer'Last - Y => Z = X + Y,
+            others                => Z = 0)
+       is
+       begin
+          Z := 0;
+          Z := X + Y;
+       end Add;
+
     begin
-       Z := 0;
-       Z := X + Y;
-    end Add;
+       null;
+    end Example_05;
 
 
 This code is not correct. Postcondition is only relevant for normal
@@ -424,13 +514,18 @@ Example #6
 
 .. code:: ada
 
-    procedure Add (X, Y : Natural; Z : out Integer) with
-      Post => Z = X + Y
-    is
+    procedure Example_06 is
+
+       procedure Add (X, Y : Natural; Z : out Integer) with
+         Post => Z = X + Y
+       is
+       begin
+          Z := 0;
+          Z := X + Y;
+       end Add;
     begin
-       Z := 0;
-       Z := X + Y;
-    end Add;
+       null;
+    end Example_06;
 
 This code is correct. Procedure may raise an exception, but postcondition
 correctly describes normal returns.
@@ -441,13 +536,18 @@ Example #7
 
 .. code:: ada
 
-    procedure Add (X, Y : Natural; Z : out Integer) with
-      Pre  => X <= Integer'Last – Y,
-      Post => Z = X + Y
-    is
+    procedure Example_07 is
+
+       procedure Add (X, Y : Natural; Z : out Integer) with
+         Pre  => X <= Integer'Last - Y,
+         Post => Z = X + Y
+       is
+       begin
+          Z := X + Y;
+       end Add;
     begin
-       Z := X + Y;
-    end Add;
+       null;
+    end Example_07;
 
 This code is correct. Precondition prevents exception inside ``Add``.
 Postcondition is always satisfied.
@@ -458,17 +558,20 @@ Example #8
 
 .. code:: ada
 
-    procedure Memset
-       (B  : in out String;
-        Ch : in     Character;
-        N  : in     Natural)
-    with
-       Pre  => N <= B'Length,
-       Post => (for all Idx in B'Range =>
-                 (if Idx < B'First + N then
-                    B (Idx) = Ch
-                  else
-                    B (Idx) = B (Idx)'Old));
+    package Example_08 is
+
+       procedure Memset
+         (B  : in out String;
+          Ch : in     Character;
+          N  : in     Natural)
+         with
+           Pre  => N <= B'Length,
+           Post => (for all Idx in B'Range =>
+                      (if Idx < B'First + N then
+                          B (Idx) = Ch
+                       else
+                          B (Idx) = B (Idx)'Old));
+    end Example_08;
 
 This code is not correct. :ada:`'Old` on expression including a quantified
 variable is not allowed.
@@ -479,14 +582,18 @@ Example #9
 
 .. code:: ada
 
-    procedure Memset
-       (B  : in out String;
-        Ch : in     Character;
-        N  : in     Natural)
-    with
-       Pre  => N <= B'Length - 1,
-       Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)
-         and then B (B'First + N) = B (B'First + N)'Old;
+    package Example_09 is
+
+       procedure Memset
+         (B  : in out String;
+          Ch : in     Character;
+          N  : in     Natural)
+         with
+           Pre  => N <= B'Length - 1,
+           Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)
+                    and then B (B'First + N) = B (B'First + N)'Old;
+
+    end Example_09;
 
 This code is not correct. :ada:`Expr'Old` on potentially unevaluated
 expression is allowed only when :ada:`Expr` is a variable.
@@ -497,14 +604,18 @@ Example #10
 
 .. code:: ada
 
-    procedure Memset
-       (B  : in out String;
-        Ch : in     Character;
-        N  : in     Natural)
-    with
-       Pre  => N <= B'Length - 1,
-       Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)
-         and B (B'First + N) = B (B'First + N)'Old;
+    package Example_10 is
+
+       procedure Memset
+         (B  : in out String;
+          Ch : in     Character;
+          N  : in     Natural)
+         with
+           Pre  => N <= B'Length - 1,
+           Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)
+                    and B (B'First + N) = B (B'First + N)'Old;
+
+    end Example_10;
 
 This code is correct. :ada:`Expr'Old` does not appear anymore in a
 potentially unevaluated expression. Another solution would have been to

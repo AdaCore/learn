@@ -38,14 +38,30 @@ Ghost code – A trivial example
 
 .. code:: ada
 
-    Data : Data_Array;
-    Free : Natural;
+    package Show_Trivial_Example is
 
-    procedure Alloc is
-    begin
-       -- some computations here
-       assert that Free “increases”
-    end Alloc;
+       type Data_Array is array (1 .. 10) of Integer;
+
+       Data : Data_Array;
+       Free : Natural;
+
+       procedure Alloc;
+
+    end Show_Trivial_Example;
+
+.. code:: ada
+
+    package body Show_Trivial_Example is
+
+       procedure Alloc is
+       begin
+          --  some computations here
+          --
+          --  assert that Free “increases”
+          null;
+       end Alloc;
+
+    end Show_Trivial_Example;
 
 
 Ghost variables – aka auxiliary variables
@@ -61,16 +77,30 @@ Ghost variables – aka auxiliary variables
 
 .. code:: ada
 
-    Data : Data_Array;
-    Free : Natural;
+    package Show_Ghost_Variable is
 
-    procedure Alloc is
-       Free_Init : Natural with Ghost;
-    begin
-       Free_Init := Free;
-       -- some computations here
-       pragma Assert (Free > Free_Init);
-    end Alloc;
+       type Data_Array is array (1 .. 10) of Integer;
+
+       Data : Data_Array;
+       Free : Natural;
+
+       procedure Alloc;
+
+    end Show_Ghost_Variable;
+
+.. code:: ada
+
+    package body Show_Ghost_Variable is
+
+       procedure Alloc is
+          Free_Init : Natural with Ghost;
+       begin
+          Free_Init := Free;
+          --  some computations here
+          pragma Assert (Free > Free_Init);
+       end Alloc;
+
+    end Show_Ghost_Variable;
 
 
 Ghost variables – non-interference rules
@@ -78,24 +108,43 @@ Ghost variables – non-interference rules
 
 - Ghost variable cannot be assigned to non-ghost one
 
-    Free := Free_Init;
+    - :ada:`Free := Free_Init;`
 
 - Ghost variable cannot indirectly influence assignment to non-ghost one
 
-.. code:: ada
+.. code-block:: ada
 
     if Free_Init < Max then
        Free := Free + 1;
     end if;
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
-    procedure Assign (From : Natural; To : out Natural) is
+    procedure Show_Non_Interference is
+
+       type Data_Array is array (1 .. 10) of Integer;
+
+       Data : Data_Array;
+       Free : Natural;
+
+       Free_Init : Natural with Ghost;
+
+       procedure Alloc is
+       begin
+          Free_Init := Free;
+          --  some computations here
+          pragma Assert (Free > Free_Init);
+       end Alloc;
+
+       procedure Assign (From : Natural; To : out Natural) is
+       begin
+          To := From;
+       end Assign;
+
     begin
-       To := From;
-    end Assign;
-
-    Assign (From => Free_Init, To => Free);
+       Assign (From => Free_Init, To => Free);
+    end Show_Non_Interference;
 
 
 Ghost statements
@@ -111,16 +160,41 @@ Ghost statements
 
 .. code:: ada
 
-    procedure Assign (From : Natural; To : out Natural)
-       with Ghost
-    is
+    procedure Show_Ghost_Statements is
+
+       type Data_Array is array (1 .. 10) of Integer;
+
+       Data : Data_Array;
+       Free : Natural;
+
+       Free_Init : Natural with Ghost;
+
+       procedure Alloc is
+       begin
+          Free_Init := Free;
+          --  some computations here
+          pragma Assert (Free > Free_Init);
+       end Alloc;
+
+       procedure Assign (From : Natural; To : out Natural)
+         with Ghost
+       is
+       begin
+          To := From;
+       end Assign;
+
     begin
-       To := From;
-    end Assign;
+       Assign (From => Free, To => Free_Init);
+    end Show_Ghost_Statements;
 
-    Assign (From => Free, To => Free_Init);
+.. code-block:: ada
 
-    Assign (From => Free_Init, To => Free);
+    procedure Show_Ghost_Statements is
+    begin
+       --  Non-ghost variable "Free" cannot appear as actual in
+       --  call to ghost procedure
+       Assign (From => Free_Init, To => Free);
+    end Show_Ghost_Statements;
 
 
 Ghost procedures
@@ -128,10 +202,11 @@ Ghost procedures
 
 - Ghost procedures cannot write into non-ghost variables
 
-.. code:: ada
+.. code-block:: ada
 
     procedure Assign (Value : Natural) with Ghost is
     begin
+       --  "Free" is a non-ghost variable
        Free := Value;
     end Assign;
 
@@ -139,7 +214,7 @@ Ghost procedures
 
     - in particular statements not allowed in non-ghost procedures
 
-.. code:: ada
+.. code-block:: ada
 
     procedure Assign_Cond (Value : Natural) with Ghost is
     begin
@@ -157,14 +232,6 @@ Ghost functions
 
 - Functions for queries used only in contracts
 
-.. code:: ada
-
-    procedure Alloc with
-       Pre  => Free_Memory > 0,
-       Post => Free_Memory < Free_Memory'Old;
-
-    function Free_Memory return Natural with Ghost;
-
 - Typically implemented as expression functions
 
     - in private part – proof of client code can use expression
@@ -173,11 +240,33 @@ Ghost functions
 
 .. code:: ada
 
-    function Free_Memory return Natural is (...);
-    -- if completion of ghost function declaration
+    package Show_Ghost_Function is
 
-    function Free_Memory return Natural is (...) with Ghost;
-    -- if function body as declaration
+       type Data_Array is array (1 .. 10) of Integer;
+
+       Data : Data_Array;
+       Free : Natural;
+
+       Free_Init : Natural with Ghost;
+
+       procedure Alloc with
+         Pre  => Free_Memory > 0,
+         Post => Free_Memory < Free_Memory'Old;
+
+       function Free_Memory return Natural with Ghost;
+
+    private
+
+       --  Completion of ghost function declaration
+       function Free_Memory return Natural is
+         (0); -- dummy implementation
+
+       --  If function body as declaration:
+       --
+       --     function Free_Memory return Natural is (...) with Ghost;
+
+
+    end Show_Ghost_Function;
 
 
 Imported ghost functions
@@ -187,23 +276,34 @@ Imported ghost functions
 
     - cannot be executed
 
-.. code:: ada
+.. code-block:: ada
 
     function Free_Memory return Natural with Ghost, Import;
 
 - Typically used with abstract ghost private types
 
-    - definition in :ada:`SPARK_Mode(Off)`  type is abstract for
-      GNATprove
+    - definition in :ada:`SPARK_Mode(Off)`
+
+        - type is abstract for GNATprove
 
 .. code:: ada
 
+    package Show_Imported_Ghost_Function
+      with SPARK_Mode => On is
+
        type Memory_Chunks is private;
+
+       function Free_Memory return Natural with Ghost;
+
        function Free_Memory return Memory_Chunks
-         with Ghost, Import;
+          with Ghost, Import;
+
     private
        pragma SPARK_Mode (Off);
+
        type Memory_Chunks is null record;
+
+    end Show_Imported_Ghost_Function;
 
 - Definition of ghost types/functions given in proof
 
@@ -225,13 +325,29 @@ Ghost packages and ghost abstract state
 
 .. code:: ada
 
-    package Mem with
-       Abstract_State => (State with Ghost)
-    is
+    package Show_Ghost_Package
+      with Abstract_State => (State with Ghost) is
 
-    package body Mem with
-       Refined_State => (State => (Data, Free, Free_Init))
-    is
+       function Free_Memory return Natural with Ghost;
+
+    end Show_Ghost_Package;
+
+.. code:: ada
+
+    package body Show_Ghost_Package
+      with Refined_State => (State => (Data, Free, Free_Init)) is
+
+       type Data_Array is array (1 .. 10) of Integer;
+
+       Data : Data_Array with Ghost;
+       Free : Natural with Ghost;
+
+       Free_Init : Natural with Ghost;
+
+       function Free_Memory return Natural is
+         (0);  --  dummy implementation
+
+    end Show_Ghost_Package;
 
 - Non-ghost abstract state can contain both ghost and non-ghost variables
 
@@ -251,12 +367,17 @@ Executing ghost code
 
 .. code:: ada
 
-    pragma Assertion_Policy (Ghost => Ignore, Pre => Check);
+    package Show_Exec_Ghost_Code is
 
-    procedure Alloc with
-       Pre => Free_Memory > 0;
+       pragma Assertion_Policy (Ghost => Check);
+       --  pragma Assertion_Policy (Ghost => Ignore, Pre => Check);
 
-    function Free_Memory return Natural with Ghost;
+       procedure Alloc with
+         Pre => Free_Memory > 0;
+
+       function Free_Memory return Natural with Ghost;
+
+    end Show_Exec_Ghost_Code;
 
 - GNATprove analyzes all ghost code and assertions
 
@@ -275,14 +396,14 @@ Encoding a state automaton
 
     - updated at the end of procedures of the API
 
-.. code:: ada
+.. code-block:: ada
 
     type State is (Piece_Falling, ...) with Ghost;
     Cur_State : State with Ghost;
 
 - Properties encoded in ghost functions
 
-.. code:: ada
+.. code-block:: ada
 
     function Valid_Configuration return Boolean is
        (case Cur_State is
@@ -300,7 +421,7 @@ Expressing useful lemmas
 
 - Lemmas expressed as ghost procedures
 
-.. code:: ada
+.. code-block:: ada
 
     procedure Lemma_Not_Divisor (Arg1, Arg2 : Positive) with
        Ghost,
@@ -355,18 +476,27 @@ Example #1
 
 .. code:: ada
 
-    Data : Data_Array;
-    Free : Natural;
+    procedure Example_01 is
 
-    procedure Alloc is
-       Free_Init : Natural with Ghost;
+       type Data_Array is array (1 .. 10) of Integer;
+
+
+       Data : Data_Array;
+       Free : Natural;
+
+       procedure Alloc is
+          Free_Init : Natural with Ghost;
+       begin
+          Free_Init := Free;
+          -- some computations here
+          if Free <= Free_Init then
+             raise Program_Error;
+          end if;
+       end Alloc;
     begin
-       Free_Init := Free;
-       -- some computations here
-       if Free <= Free_Init then
-          raise Program_Error;
-       end if;
-    end Alloc;
+       null;
+
+    end Example_01;
 
 This code is not correct. A ghost entity cannot appear in this context.
 
@@ -376,23 +506,31 @@ Example #2
 
 .. code:: ada
 
-    Data : Data_Array;
-    Free : Natural;
+    procedure Example_02 is
 
-    procedure Alloc is
-       Free_Init : Natural with Ghost;
+       type Data_Array is array (1 .. 10) of Integer;
 
-       procedure Check with Ghost is
+       Data : Data_Array;
+       Free : Natural;
+
+       procedure Alloc is
+          Free_Init : Natural with Ghost;
+
+          procedure Check with Ghost is
+          begin
+             if Free <= Free_Init then
+                raise Program_Error;
+             end if;
+          end Check;
        begin
-          if Free <= Free_Init then
-             raise Program_Error;
-          end if;
-       end Check;
+          Free_Init := Free;
+          --  some computations here
+          Check;
+       end Alloc;
     begin
-       Free_Init := Free;
-       -- some computations here
-       Check;
-    end Alloc;
+       null;
+
+    end Example_02;
 
 This code is correct. Note that procedure ``Check`` is inlined for proof
 (no contract).
@@ -403,12 +541,21 @@ Example #3
 
 .. code:: ada
 
-    pragma Assertion_Policy (Pre => Check);
+    package Example_03 is
 
-    procedure Alloc with
-       Pre => Free_Memory > 0;
+       type Data_Array is array (1 .. 10) of Integer;
 
-    function Free_Memory return Natural with Ghost;
+       Data : Data_Array;
+       Free : Natural;
+
+       pragma Assertion_Policy (Pre => Check);
+
+       procedure Alloc with
+         Pre => Free_Memory > 0;
+
+       function Free_Memory return Natural with Ghost;
+
+    end Example_03;
 
 This code is not correct. Incompatible ghost policies in effect during
 compilation, as ghost code is ignored by default. Note that GNATprove
@@ -420,22 +567,34 @@ Example #4
 
 .. code:: ada
 
-    procedure Alloc with
-       Post => Free_Memory < Free_Memory'Old;
+    package Example_04 is
 
-    function Free_Memory return Natural with Ghost;
+       procedure Alloc with
+         Post => Free_Memory < Free_Memory'Old;
 
-    Max : constant := 1000;
+       function Free_Memory return Natural with Ghost;
 
-    function Free_Memory return Natural is
-    begin
-       return Max - Free + 1;
-    end Free_Memory;
+    end Example_04;
 
-    procedure Alloc is
-    begin
-       Free := Free + 10;
-    end Alloc;
+.. code:: ada
+
+    package body Example_04 is
+
+       Free : Natural;
+
+       Max : constant := 1000;
+
+       function Free_Memory return Natural is
+       begin
+          return Max - Free + 1;
+       end Free_Memory;
+
+       procedure Alloc is
+       begin
+          Free := Free + 10;
+       end Alloc;
+
+    end Example_04;
 
 This code is not correct. No postcondition on ``Free_Memory`` that would
 allow proving the postcondition on ``Alloc``.
@@ -446,19 +605,31 @@ Example #5
 
 .. code:: ada
 
-    procedure Alloc with
-       Post => Free_Memory < Free_Memory'Old;
+    package Example_05 is
 
-    function Free_Memory return Natural with Ghost;
+       procedure Alloc with
+         Post => Free_Memory < Free_Memory'Old;
 
-    Max : constant := 1000;
+       function Free_Memory return Natural with Ghost;
 
-    function Free_Memory return Natural is (Max - Free + 1);
+    end Example_05;
 
-    procedure Alloc is
-    begin
-       Free := Free + 10;
-    end Alloc;
+.. code:: ada
+
+    package body Example_05 is
+
+       Free : Natural;
+
+       Max : constant := 1000;
+
+       function Free_Memory return Natural is (Max - Free + 1);
+
+       procedure Alloc is
+       begin
+          Free := Free + 10;
+       end Alloc;
+
+    end Example_05;
 
 This code is correct. ``Free_Memory`` has an implicit postcondition as an
 expression function.
@@ -469,24 +640,30 @@ Example #6
 
 .. code:: ada
 
-    subtype Resource is Natural range 0 .. 1000;
-    subtype Num is Natural range 0 .. 6;
-    subtype Index is Num range 1 .. 6;
-    type Data is array (Index) of Resource;
+    procedure Example_06 is
 
-    function Sum (D : Data; To : Num) return Natural is
-      (if To = 0 then 0 else D(To) + Sum(D,To-1))
-    with Ghost;
+       subtype Resource is Natural range 0 .. 1000;
+       subtype Num is Natural range 0 .. 6;
+       subtype Index is Num range 1 .. 6;
+       type Data is array (Index) of Resource;
 
-    procedure Create (D : out Data) with
-       Post => Sum (D, D'Last) < 42
-    is
+       function Sum (D : Data; To : Num) return Natural is
+         (if To = 0 then 0 else D (To) + Sum (D, To - 1))
+           with Ghost;
+
+       procedure Create (D : out Data) with
+         Post => Sum (D, D'Last) < 42
+       is
+       begin
+          for J in D'Range loop
+             D (J) := J;
+             pragma Loop_Invariant (2 * Sum (D, J) <= J * (J + 1));
+          end loop;
+       end Create;
+
     begin
-       for J in D'Range loop
-          D(J) := J;
-          pragma Loop_Invariant (2 * Sum(D,J) <= J * (J+1));
-       end loop;
-    end Create;
+       null;
+    end Example_06;
 
 This code is not correct. Info: expression function body not available for
 proof (``Sum`` may not return).
@@ -497,24 +674,30 @@ Example #7
 
 .. code:: ada
 
-    subtype Resource is Natural range 0 .. 1000;
-    subtype Num is Natural range 0 .. 6;
-    subtype Index is Num range 1 .. 6;
-    type Data is array (Index) of Resource;
+    procedure Example_07 is
 
-    function Sum (D : Data; To : Num) return Natural is
-      (if To = 0 then 0 else D(To) + Sum(D,To-1))
-    with Ghost, Annotate => (GNATprove, Terminating);
+       subtype Resource is Natural range 0 .. 1000;
+       subtype Num is Natural range 0 .. 6;
+       subtype Index is Num range 1 .. 6;
+       type Data is array (Index) of Resource;
 
-    procedure Create (D : out Data) with
-       Post => Sum (D, D'Last) < 42
-    is
+       function Sum (D : Data; To : Num) return Natural is
+         (if To = 0 then 0 else D (To) + Sum (D, To - 1))
+           with Ghost, Annotate => (GNATprove, Terminating);
+
+       procedure Create (D : out Data) with
+         Post => Sum (D, D'Last) < 42
+       is
+       begin
+          for J in D'Range loop
+             D (J) := J;
+             pragma Loop_Invariant (2 * Sum (D, J) <= J * (J + 1));
+          end loop;
+       end Create;
+
     begin
-       for J in D'Range loop
-          D(J) := J;
-          pragma Loop_Invariant (2 * Sum(D,J) <= J * (J+1));
-       end loop;
-    end Create;
+       null;
+    end Example_07;
 
 This code is correct. Note that GNATprove does not prove the termination
 of ``Sum`` here.
@@ -525,24 +708,29 @@ Example #8
 
 .. code:: ada
 
-    subtype Resource is Natural range 0 .. 1000;
-    subtype Num is Natural range 0 .. 6;
-    subtype Index is Num range 1 .. 6;
-    type Data is array (Index) of Resource;
+    procedure Example_08 is
 
-    function Sum (D : Data; To : Num) return Natural is
-      (if To = 0 then 0 else D(To) + Sum(D,To-1))
-    with Ghost, Annotate => (GNATprove, Terminating);
+       subtype Resource is Natural range 0 .. 1000;
+       subtype Num is Natural range 0 .. 6;
+       subtype Index is Num range 1 .. 6;
+       type Data is array (Index) of Resource;
 
-    procedure Create (D : out Data) with
-       Post => Sum (D, D'Last) < 42
-    is
+       function Sum (D : Data; To : Num) return Natural is
+         (if To = 0 then 0 else D (To) + Sum (D, To - 1))
+           with Ghost, Annotate => (GNATprove, Terminating);
+
+       procedure Create (D : out Data) with
+         Post => Sum (D, D'Last) < 42
+       is
+       begin
+          for J in D'Range loop
+             D (J) := J;
+          end loop;
+       end Create;
+
     begin
-       for J in D'Range loop
-          D(J) := J;
-       end loop;
-    end Create;
-
+       null;
+    end Example_08;
 
 This code is correct. The loop is unrolled by GNATprove here, as
 :ada:`D'Range` is :ada:`0 .. 6`. The automatic prover unrolls the
@@ -554,23 +742,32 @@ Example #9
 
 .. code:: ada
 
-    subtype Resource is Natural range 0 .. 1000;
-    subtype Index is Natural range 1 .. 42;
+    with Ada.Containers.Functional_Vectors;
 
-    package Seqs is new
-      Ada.Containers.Functional_Vectors (Index, Resource);   use Seqs;
+    procedure Example_09 is
 
-    function Create return Sequence with
-       Post => (for all K in 1 .. Last (Create'Result) =>
-                  Get (Create'Result, K) = K)
-    is
-       S : Sequence;
+       subtype Resource is Natural range 0 .. 1000;
+       subtype Index is Natural range 1 .. 42;
+
+       package Seqs is new
+         Ada.Containers.Functional_Vectors (Index, Resource);
+       use Seqs;
+
+       function Create return Sequence with
+         Post => (for all K in 1 .. Last (Create'Result) =>
+                      Get (Create'Result, K) = K)
+       is
+          S : Sequence;
+       begin
+          for K in 1 .. 42 loop
+             S := Add (S, K);
+          end loop;
+          return S;
+       end Create;
+
     begin
-       for K in 1 .. 42 loop
-          S := Add (S, K);
-       end loop;
-       return S;
-    end Create;
+       null;
+    end Example_09;
 
 This code is not correct. Loop requires a loop invariant to prove the
 postcondition.
@@ -581,25 +778,34 @@ Example #10
 
 .. code:: ada
 
-    subtype Resource is Natural range 0 .. 1000;
-    subtype Index is Natural range 1 .. 42;
+    with Ada.Containers.Functional_Vectors;
 
-    package Seqs is new
-      Ada.Containers.Functional_Vectors (Index, Resource);   use Seqs;
+    procedure Example_10 is
 
-    function Create return Sequence with
-       Post => (for all K in 1 .. Last (Create'Result) =>
-                  Get (Create'Result, K) = K)
-    is
-       S : Sequence;
+       subtype Resource is Natural range 0 .. 1000;
+       subtype Index is Natural range 1 .. 42;
+
+       package Seqs is new
+         Ada.Containers.Functional_Vectors (Index, Resource);
+       use Seqs;
+
+       function Create return Sequence with
+         Post => (for all K in 1 .. Last (Create'Result) =>
+                      Get (Create'Result, K) = K)
+       is
+          S : Sequence;
+       begin
+          for K in 1 .. 42 loop
+             S := Add (S, K);
+             pragma Loop_Invariant (Integer (Length (S)) = K);
+             pragma Loop_Invariant
+               (for all J in 1 .. K => Get (S, J) = J);
+          end loop;
+          return S;
+       end Create;
+
     begin
-       for K in 1 .. 42 loop
-          S := Add (S, K);
-          pragma Loop_Invariant (Integer (Length (S)) = K);
-          pragma Loop_Invariant
-            (for all J in 1 .. K => Get (S, J) = J);
-       end loop;
-       return S;
-    end Create;
+       null;
+    end Example_10;
 
 This code is correct.

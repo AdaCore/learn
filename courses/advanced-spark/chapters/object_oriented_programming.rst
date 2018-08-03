@@ -39,13 +39,16 @@ Prototypes and Scopes in SPARK
 
 .. code:: ada
 
-    type Int is range 1 .. 10;
-    function Equal (Arg1, Arg2 : Int) return Boolean;
-    procedure Bump (Arg : in out Int);
+    package Show_Type_Primitives is
 
-    type Approx_Int is new Int;
-    --  implicit definition of Equal and Bump for Approx_Int
+       type Int is range 1 .. 10;
+       function Equal (Arg1, Arg2 : Int) return Boolean;
+       procedure Bump (Arg : in out Int);
 
+       type Approx_Int is new Int;
+       --  implicit definition of Equal and Bump for Approx_Int
+
+    end Show_Type_Primitives;
 
 - Scope for the prototype is current declarative region
 
@@ -62,17 +65,21 @@ Classes in SPARK
 
 .. code:: ada
 
-    type Int is tagged record
-       Min, Max, Value : Integer;
-    end record;
+    package Show_Classes is
 
-    function Equal (Arg1, Arg2 : Int) return Boolean;
-    procedure Bump (Arg : in out Int);
+       type Int is tagged record
+          Min, Max, Value : Integer;
+       end record;
 
-    type Approx_Int is new Int with record
-       Precision : Natural;
-    end record;
-    --  implicit definition of Equal and Bump for Approx_Int
+       function Equal (Arg1, Arg2 : Int) return Boolean;
+       procedure Bump (Arg : in out Int);
+
+       type Approx_Int is new Int with record
+          Precision : Natural;
+       end record;
+       --  implicit definition of Equal and Bump for Approx_Int
+
+    end Show_Classes;
 
 - Derived types are specializations of the root type
 
@@ -90,23 +97,83 @@ Methods in SPARK
 
 .. code:: ada
 
-    overriding function Equal (Arg1, Arg2 : Approx_Int)
-      return Boolean;
-    overriding procedure Bump (Arg : in out Approx_Int);
+    package Show_Derived_Methods is
 
-    not overriding procedure Blur (Arg : in out Approx_Int);
+       pragma Elaborate_Body;
+
+       type Int is tagged record
+          Min, Max, Value : Integer := 0;
+       end record;
+
+       function Equal (Arg1, Arg2 : Int) return Boolean;
+       procedure Bump (Arg : in out Int);
+
+       type Approx_Int is new Int with record
+          Precision : Natural := 0;
+       end record;
+
+       overriding function Equal (Arg1, Arg2 : Approx_Int)
+                                  return Boolean;
+       overriding procedure Bump (Arg : in out Approx_Int);
+
+       not overriding procedure Blur (Arg : in out Approx_Int);
+
+    end Show_Derived_Methods;
+
+.. code:: ada
+
+    package body Show_Derived_Methods is
+
+       function Equal (Arg1, Arg2 : Int) return Boolean is
+         (Arg1 = Arg2);
+
+       procedure Bump (Arg : in out Int) is
+          Next : constant Integer := (if Arg.Value < Integer'Last
+                                      then Arg.Value + 1
+                                      else Integer'Last);
+       begin
+          if Next <= Arg.Max then
+             Arg.Value := Next;
+          end if;
+       end Bump;
+
+       overriding function Equal (Arg1, Arg2 : Approx_Int)
+                                  return Boolean is
+         (Arg1 = Arg2);
+
+       overriding procedure Bump (Arg : in out Approx_Int) is
+       begin
+          Bump (Int (Arg));
+       end Bump;
+
+       not overriding procedure Blur (Arg : in out Approx_Int) is
+          Prev : constant Integer := (if Arg.Value > Integer'First
+                                      then Arg.Value - 1
+                                      else Integer'First);
+       begin
+          if Arg.Value >= Prev then
+             Arg.Value := Prev;
+          end if;
+       end Blur;
+
+    end Show_Derived_Methods;
 
 - Method called depends on static type
 
 .. code:: ada
 
-    I : Int;
-    Bump (I); -- call to Int.Bump
-    I.Bump; -- call to Int.Bump (object.method notation)
+    with Show_Derived_Methods; use Show_Derived_Methods;
 
-    AI : Approx_Int;
-    Bump (AI); -- call to Approx_Int.Bump
-    Bump (Int(AI)); -- call to Int.Bump
+    procedure Use_Derived_Methods is
+       I  : Int;
+       AI : Approx_Int;
+    begin
+       Bump (I); -- call to Int.Bump
+       I.Bump; -- call to Int.Bump (object.method notation)
+
+       Bump (AI); -- call to Approx_Int.Bump
+       Bump (Int (AI)); -- call to Int.Bump
+    end Use_Derived_Methods;
 
 
 Dynamic dispatching in SPARK
@@ -120,11 +187,25 @@ Dynamic dispatching in SPARK
 
 .. code:: ada
 
-    IC : Int'Class := Int'Class(I);
-    IC.Bump; -- call to Int.Bump
+    with Show_Derived_Methods; use Show_Derived_Methods;
 
-    IC : Int'Class := Int'Class(AI);
-    IC.Bump; -- call to Approx_Int.Bump
+    procedure Use_Dynamic_Dispatching is
+
+       I  : Int;
+       AI : Approx_Int;
+    begin
+       declare
+          IC : Int'Class := Int'Class (I);
+       begin
+          IC.Bump; -- call to Int.Bump
+       end;
+
+       declare
+          IC : Int'Class := Int'Class (AI);
+       begin
+          IC.Bump; -- call to Approx_Int.Bump
+       end;
+    end Use_Dynamic_Dispatching;
 
 - Class-wide views of objects
 
@@ -134,9 +215,22 @@ Dynamic dispatching in SPARK
 
 .. code:: ada
 
-    procedure Call_Bump (Arg : in out Int'Class);
-    Call_Bump (Int'Class(I)); -- calls Int.Bump(I)
-    Call_Bump (Int'Class(AI)); -- calls Approx_Int.Bump(AI)
+    with Show_Derived_Methods; use Show_Derived_Methods;
+
+    procedure Use_Classwide_Dispatching is
+
+       procedure Call_Bump (Arg : in out Int'Class) is
+       begin
+          Arg.Bump;
+       end Call_Bump;
+
+       I  : Int;
+       AI : Approx_Int;
+
+    begin
+       Call_Bump (Int'Class (I));  -- calls Int.Bump(I)
+       Call_Bump (Int'Class (AI)); -- calls Approx_Int.Bump(AI)
+    end Use_Classwide_Dispatching;
 
 
 A trivial example
@@ -146,17 +240,27 @@ A trivial example
 
 .. code:: ada
 
-    type Int is tagged record
-       Min, Max, Value : Integer;
-    end record;
+    procedure Show_Trivial_Example is
 
-    procedure Bump (Arg : in out Int);
+       package Pkg_Trivial is
+          type Int is tagged record
+             Min, Max, Value : Integer;
+          end record;
 
-    procedure Call_Bump
-      (Arg : in out Int'Class) is
+          procedure Bump (Arg : in out Int) is null;
+       end Pkg_Trivial;
+
+       use Pkg_Trivial;
+
+       procedure Call_Bump
+         (Arg : in out Int'Class) is
+       begin
+          Arg.Bump;
+       end Call_Bump;
+
     begin
-       Arg.Bump;
-    end Call_Bump;
+       null;
+    end Show_Trivial_Example;
 
 
 The problems with dynamic dispatching
@@ -190,27 +294,71 @@ LSP – the SPARK solution to dynamic dispatching problems
 
 .. code:: ada
 
-    procedure Bump (Arg : in out Int) with
-       Pre'Class  => Arg.Value < Arg.Max - 10,
-       Post'Class => Arg.Value > Arg.Value'Old;
+    package Show_LSP is
+
+       type Int is tagged record
+          Min, Max, Value : Integer := 0;
+       end record;
+
+       procedure Bump (Arg : in out Int) with
+         Pre'Class  => Arg.Value < Arg.Max - 10,
+         Post'Class => Arg.Value > Arg.Value'Old;
+
+       type Approx_Int is new Int with record
+          Precision : Natural := 0;
+       end record;
+
+       overriding procedure Bump (Arg : in out Approx_Int) with
+         Pre'Class  => Arg.Value > 100,
+         Post'Class => Arg.Value = Arg.Value'Old;
+
+    end Show_LSP;
+
 
 .. code:: ada
 
-    procedure Bump (Arg : in out Approx_Int) with
-       Pre'Class  => Arg.Value > 100,
-       Post'Class => Arg.Value = Arg.Value'Old;
+    package Show_LSP is
+
+       type Int is tagged record
+          Min, Max, Value : Integer := 0;
+       end record;
+
+       procedure Bump (Arg : in out Int) with
+         Pre'Class  => Arg.Value < Arg.Max - 10,
+         Post'Class => Arg.Value > Arg.Value'Old;
+
+       type Approx_Int is new Int with record
+          Precision : Natural := 0;
+       end record;
+
+       overriding procedure Bump (Arg : in out Approx_Int) with
+         Pre'Class  => True,
+         Post'Class => Arg.Value = Arg.Value'Old + 10;
+
+    end Show_LSP;
+
 
 .. code:: ada
 
-    procedure Bump (Arg : in out Approx_Int) with
-       Pre'Class  => True,
-       Post'Class => Arg.Value = Arg.Value'Old + 10;
+    package Show_LSP is
 
-.. code:: ada
+       type Int is tagged record
+          Min, Max, Value : Integer := 0;
+       end record;
 
-    procedure Bump (Arg : in out Approx_Int);
-       -- inherited Pre'Class from Int.Bump
-       -- inherited Post'Class from Int.Bump
+       procedure Bump (Arg : in out Int) with
+         Pre'Class  => Arg.Value < Arg.Max - 10,
+         Post'Class => Arg.Value > Arg.Value'Old;
+
+       type Approx_Int is new Int with record
+          Precision : Natural := 0;
+       end record;
+
+       overriding procedure Bump (Arg : in out Approx_Int);
+       --  inherited Pre'Class from Int.Bump
+       --  inherited Post'Class from Int.Bump
+
+    end Show_LSP;
 
 
 Verification of dynamic dispatching calls
@@ -220,13 +368,21 @@ Verification of dynamic dispatching calls
 
 .. code:: ada
 
-    procedure Call_Bump (Arg : in out Int'Class) with
-       Pre  => Arg.Value < Arg.Max - 10,
-       Post => Arg.Value > Arg.Value'Old
-    is
+    with Show_LSP; use Show_LSP;
+
+    procedure Show_Dynamic_Dispatching_Verification is
+
+       procedure Call_Bump (Arg : in out Int'Class) with
+         Pre  => Arg.Value < Arg.Max - 10,
+         Post => Arg.Value > Arg.Value'Old
+       is
+       begin
+          Arg.Bump;
+       end Call_Bump;
+
     begin
-       Arg.Bump;
-    end Call_Bump;
+       null;
+    end Show_Dynamic_Dispatching_Verification;
 
 - LSP applies to data dependencies too
 
@@ -245,29 +401,34 @@ Class-wide contracts and data abstraction
 
 - Abstraction can be used in class-wide contracts
 
-.. code:: ada
-
-    type Int is tagged private;
-
-    function Get_Value (Arg : Int) return Integer;
-
-    function Small (Arg : Int) return Boolean with Ghost;
-
-    procedure Bump (Arg : in out Int) with
-       Pre'Class  => Arg.Small,
-       Post'Class => Arg.Get_Value > Arg.Get_Value'Old;
-
 - Typically use expression functions for abstraction
 
 .. code:: ada
 
+    package Show_Classwide_Contracts is
+
+       type Int is tagged private;
+
+       function Get_Value (Arg : Int) return Integer;
+
+       function Small (Arg : Int) return Boolean with Ghost;
+
+       procedure Bump (Arg : in out Int) with
+         Pre'Class  => Arg.Small,
+         Post'Class => Arg.Get_Value > Arg.Get_Value'Old;
+
     private
-       type Int is tagged record ... end record;
+
+       type Int is tagged record
+          Min, Max, Value : Integer := 0;
+       end record;
 
        function Get_Value (Arg : Int) return Integer is
          (Arg.Value);
        function Small (Arg : Int) return Boolean is
          (Arg.Value < Arg.Max - 10);
+
+    end Show_Classwide_Contracts;
 
 
 Class-wide contracts, data abstraction and overriding
@@ -279,22 +440,67 @@ Class-wide contracts, data abstraction and overriding
 
 .. code:: ada
 
-    function Small (Arg : Int) return Boolean is
-      (Arg.Value < Arg.Max - 10);
+    package Show_Contract_Override is
 
-    function Small (Arg : Approx_Int) return Boolean is
-      (True);
+       type Int is tagged record
+          Min, Max, Value : Integer := 0;
+       end record;
 
-    function Small (Arg : Approx_Int) return Boolean is
-      (Arg.Value in 1 .. 100);
+       function Small (Arg : Int) return Boolean is
+         (Arg.Value < Arg.Max - 10);
+
+       type Approx_Int is new Int with record
+          Precision : Natural := 0;
+       end record;
+
+       overriding function Small (Arg : Approx_Int) return Boolean is
+         (True);
+
+    end Show_Contract_Override;
+
+.. code:: ada
+
+    package Show_Contract_Override is
+
+       type Int is tagged record
+          Min, Max, Value : Integer := 0;
+       end record;
+
+       function Small (Arg : Int) return Boolean is
+         (Arg.Value < Arg.Max - 10);
+
+       type Approx_Int is new Int with record
+          Precision : Natural := 0;
+       end record;
+
+       function Small (Arg : Approx_Int) return Boolean is
+         (Arg.Value in 1 .. 100);
+
+    end Show_Contract_Override;
 
 - Inherited contract reinterpreted for derived class
 
 .. code:: ada
 
-    overriding procedure Bump (Arg : in out Approx_Int);
-      --  inherited Pre'Class uses Approx_Int.Small
-      --  inherited Post'Class uses Approx_Int.Get_Value
+    package Show_Contract_Override is
+
+       type Int is tagged record
+          Min, Max, Value : Integer := 0;
+       end record;
+
+       procedure Bump (Arg : in out Int) with
+         Pre'Class  => Arg.Value < Arg.Max - 10,
+         Post'Class => Arg.Value > Arg.Value'Old;
+
+       type Approx_Int is new Int with record
+          Precision : Natural := 0;
+       end record;
+
+       overriding procedure Bump (Arg : in out Approx_Int);
+       --  inherited Pre'Class uses Approx_Int.Small
+       --  inherited Post'Class uses Approx_Int.Get_Value
+
+    end Show_Contract_Override;
 
 
 Dynamic semantics of class-wide contracts
@@ -330,10 +536,18 @@ Redispatching and Extensions_Visible aspect
 
 .. code:: ada
 
-    procedure Re_Call_Bump (Arg : in out Int) is
+    with Show_Contract_Override; use Show_Contract_Override;
+
+    procedure Show_Redispatching is
+
+       procedure Re_Call_Bump (Arg : in out Int) is
+       begin
+          Int'Class (Arg).Bump;
+       end Re_Call_Bump;
     begin
-       Int'Class(Arg).Bump;
-    end Re_Call_Bump;
+       null;
+
+    end Show_Redispatching;
 
 - Aspect :ada:`Extensions_Visible` allows class-wide conversion
 
@@ -341,12 +555,19 @@ Redispatching and Extensions_Visible aspect
 
 .. code:: ada
 
-    procedure Re_Call_Bump (Arg : in out Int) with
-       Extensions_Visible
-    is
+    with Show_Contract_Override; use Show_Contract_Override;
+
+    procedure Show_Redispatching is
+
+       procedure Re_Call_Bump (Arg : in out Int)
+         with Extensions_Visible is
+       begin
+          Int'Class (Arg).Bump;
+       end Re_Call_Bump;
     begin
-       Int'Class(Arg).Bump;
-    end Re_Call_Bump;
+       null;
+
+    end Show_Redispatching;
 
 
 Code Examples / Pitfalls
@@ -357,13 +578,17 @@ Example #1
 
 .. code:: ada
 
-    type Int is record
-       Min, Max, Value : Integer;
-    end record;
+    package Example_01 is
 
-    procedure Bump (Arg : in out Int) with
-       Pre'Class  => Arg.Value < Arg.Max - 10,
-       Post'Class => Arg.Value > Arg.Value'Old;
+       type Int is record
+          Min, Max, Value : Integer;
+       end record;
+
+       procedure Bump (Arg : in out Int) with
+         Pre'Class  => Arg.Value < Arg.Max - 10,
+         Post'Class => Arg.Value > Arg.Value'Old;
+
+    end Example_01;
 
 This code is not correct. Class-wide contracts are only allowed on tagged
 records.
@@ -373,13 +598,17 @@ Example #2
 
 .. code:: ada
 
-    type Int is tagged record
-       Min, Max, Value : Integer;
-    end record;
+    package Example_02 is
 
-    procedure Bump (Arg : in out Int) with
-       Pre  => Arg.Value < Arg.Max - 10,
-       Post => Arg.Value > Arg.Value'Old;
+       type Int is tagged record
+          Min, Max, Value : Integer;
+       end record;
+
+       procedure Bump (Arg : in out Int) with
+         Pre  => Arg.Value < Arg.Max - 10,
+         Post => Arg.Value > Arg.Value'Old;
+
+    end Example_02;
 
 This code is not correct. Plain precondition on dispatching subprogram is
 not allowed in SPARK. Otherwise it would have to be both weaker and
@@ -395,16 +624,42 @@ Example #3
 
 .. code:: ada
 
-    procedure Bump (Arg : in out Int) with
-       Pre'Class  => Arg.Value < Arg.Max - 10,
-       Post'Class => Arg.Value > Arg.Value'Old;
+    package Example_03 is
 
-    overriding procedure Bump (Arg : in out Approx_Int) with
-       Post'Class => Arg.Value = Arg.Value'Old + 10
-    is
-    begin
-       Arg.Value := Arg.Value + 10;
-    end Bump;
+       pragma Elaborate_Body;
+
+       type Int is tagged record
+          Min, Max, Value : Integer;
+       end record;
+
+       procedure Bump (Arg : in out Int) with
+         Pre'Class  => Arg.Value < Arg.Max - 10,
+         Post'Class => Arg.Value > Arg.Value'Old;
+
+       type Approx_Int is new Int with record
+          Precision : Natural := 0;
+       end record;
+
+       overriding procedure Bump (Arg : in out Approx_Int) with
+         Post'Class => Arg.Value = Arg.Value'Old + 10;
+
+    end Example_03;
+
+.. code:: ada
+
+    package body Example_03 is
+
+       procedure Bump (Arg : in out Int) is
+       begin
+          Arg.Value := Arg.Value + 10;
+       end Bump;
+
+       overriding procedure Bump (Arg : in out Approx_Int) is
+       begin
+          Arg.Value := Arg.Value + 10;
+       end Bump;
+
+    end Example_03;
 
 This code is correct. Class-wide precondition of ``Int.Bump`` is inherited
 by ``Approx_Int.Bump``. Class-wide postcondition of ``Approx_Int.Bump`` is
@@ -416,19 +671,23 @@ Example #4
 
 .. code:: ada
 
-    type Int is tagged record
-       Min, Max, Value : Integer;
-    end record;
+    package Example_04 is
 
-    function "+" (Arg1, Arg2 : Int) return Int with
-       Pre'Class => Arg1.Min = Arg2.Min
-                and Arg1.Max = Arg2.Max;
+       type Int is tagged record
+          Min, Max, Value : Integer;
+       end record;
 
-    type Approx_Int is new Int with record
-       Precision : Natural;
-    end record;
+       function "+" (Arg1, Arg2 : Int) return Int with
+         Pre'Class => Arg1.Min = Arg2.Min
+                      and Arg1.Max = Arg2.Max;
 
-    -- inherited function “+”
+       type Approx_Int is new Int with record
+          Precision : Natural;
+       end record;
+
+       --  inherited function “+”
+
+    end Example_04;
 
 This code is not correct. A type must be declared abstract or :ada:`"+"`
 overridden.
@@ -439,18 +698,21 @@ Example #5
 
 .. code:: ada
 
-    type Int is tagged record
-       Min, Max, Value : Integer;
-    end record;
+    package Example_05 is
 
-    procedure Reset (Arg : out Int);
+       type Int is tagged record
+          Min, Max, Value : Integer;
+       end record;
 
-    type Approx_Int is new Int with record
-       Precision : Natural;
-    end record;
+       procedure Reset (Arg : out Int);
 
-    -- inherited procedure Reset
+       type Approx_Int is new Int with record
+          Precision : Natural;
+       end record;
 
+       --  inherited procedure Reset
+
+    end Example_05;
 
 This code is not correct. A type must be declared abstract or ``Reset``
 overridden ``Reset`` is subject to :ada:`Extensions_Visible`
@@ -462,18 +724,34 @@ Example #6
 
 .. code:: ada
 
-    type Int is tagged record ... end record;
+    package Example_06 is
 
-    procedure Reset (Arg : out Int) with Extensions_Visible is
-    begin
-       Arg := Int'(Min   => -100,
-                   Max   => 100,
-                   Value => 0);
-    end Reset;
+       type Int is tagged record
+          Min, Max, Value : Integer;
+       end record;
 
-    type Approx_Int is new Int with record ... end record;
+       procedure Reset (Arg : out Int) with Extensions_Visible;
 
-    -- inherited procedure Reset
+       type Approx_Int is new Int with record
+          Precision : Natural;
+       end record;
+
+       --  inherited procedure Reset
+
+    end Example_06;
+
+.. code:: ada
+
+    package body Example_06 is
+
+       procedure Reset (Arg : out Int) is
+       begin
+          Arg := Int'(Min   => -100,
+                      Max   => 100,
+                      Value => 0);
+       end Reset;
+
+    end Example_06;
 
 This code is not correct. High: extension of ``Arg`` is not initialized in
 ``Reset``.
@@ -484,18 +762,44 @@ Example #7
 
 .. code:: ada
 
-    type Int is tagged record ... end record;
-    function Zero return Int;
+    package Example_07 is
 
-    procedure Reset (Arg : out Int) with Extensions_Visible is
-    begin
-       Int'Class(Arg) := Zero;
-    end Reset;
+       pragma Elaborate_Body;
 
-    type Approx_Int is new Int with record ... end record;
-    overriding function Zero return Approx_Int;
+       type Int is tagged record
+          Min, Max, Value : Integer;
+       end record;
 
-    -- inherited procedure Reset
+       function Zero return Int;
+
+       procedure Reset (Arg : out Int) with Extensions_Visible;
+
+       type Approx_Int is new Int with record
+          Precision : Natural;
+       end record;
+
+       overriding function Zero return Approx_Int;
+
+       --  inherited procedure Reset
+
+    end Example_07;
+
+.. code:: ada
+
+    package body Example_07 is
+
+       function Zero return Int is
+          ((0, 0, 0));
+
+       procedure Reset (Arg : out Int) is
+       begin
+          Int'Class (Arg) := Zero;
+       end Reset;
+
+       function Zero return Approx_Int is
+           ((0, 0, 0, 0));
+
+    end Example_07;
 
 This code is correct. Redispatching ensures that ``Arg`` is fully
 initialized on return.
@@ -506,23 +810,76 @@ Example #8
 
 .. code:: ada
 
-    type File is tagged private;
+    package File_System is
 
-    procedure Create (F : out File) with
-       Post'Class => F.Closed;
-    procedure Open_Read (F : in out File) with
-       Pre'Class  => F.Closed,
-       Post'Class => F.Is_Open;
-    procedure Close (F : in out File) with
-       Pre'Class  => F.Is_Open,
-       Post'Class => F.Closed;
+       type File is tagged private;
 
-    procedure Use_File_System (F : out File'Class) is
+       function Closed (F : File) return Boolean;
+       function Is_Open (F : File) return Boolean;
+
+       procedure Create (F : out File) with
+         Post'Class => F.Closed;
+
+       procedure Open_Read (F : in out File) with
+         Pre'Class  => F.Closed,
+         Post'Class => F.Is_Open;
+
+       procedure Close (F : in out File) with
+         Pre'Class  => F.Is_Open,
+         Post'Class => F.Closed;
+
+    private
+       type File is tagged record
+          Closed  : Boolean := True;
+          Is_Open : Boolean := False;
+       end record;
+
+       function Closed (F : File) return Boolean is
+         (F.Closed);
+
+       function Is_Open (F : File) return Boolean is
+         (F.Is_Open);
+
+    end File_System;
+
+.. code:: ada
+
+    package body File_System is
+
+       procedure Create (F : out File) is
+       begin
+          F.Closed  := True;
+          F.Is_Open := False;
+       end Create;
+
+       procedure Open_Read (F : in out File) is
+       begin
+          F.Is_Open := True;
+       end Open_Read;
+
+       procedure Close (F : in out File) is
+       begin
+          F.Closed := True;
+       end Close;
+
+    end File_System;
+
+.. code:: ada
+
+    with File_System; use File_System;
+
+    procedure Example_08 is
+
+       procedure Use_File_System (F : out File'Class) is
+       begin
+          F.Create;
+          F.Open_Read;
+          F.Close;
+       end Use_File_System;
+
     begin
-       F.Create;
-       F.Open_Read;
-       F.Close;
-    end Use_File_System;
+       null;
+    end Example_08;
 
 This code is correct. State automaton encoded in class-wide contracts is
 respected.
@@ -533,23 +890,73 @@ Example #9
 
 .. code:: ada
 
-    type File is new File_System.File with private;
+    package File_System.Sync is
 
-    procedure Create (F : out File) with
-       Post'Class => F.Closed;
-    procedure Open_Read (F : in out File) with
-       Pre'Class  => F.Closed,
-       Post'Class => F.Is_Open and F.Is_Synchronized;
-    procedure Close (F : in out File) with
-       Pre'Class  => F.Is_Open and F.Is_Synchronized;
-       Post'Class => F.Closed;
+       type File is new File_System.File with private;
 
-    procedure Use_File_System (F : out File'Class) is
+       function Is_Synchronized (F : File) return Boolean;
+
+       procedure Create (F : out File) with
+         Post'Class => F.Closed;
+
+       procedure Open_Read (F : in out File) with
+         Pre'Class  => F.Closed,
+         Post'Class => F.Is_Open and F.Is_Synchronized;
+
+       procedure Close (F : in out File) with
+         Pre'Class  => F.Is_Open and F.Is_Synchronized,
+         Post'Class => F.Closed;
+
+    private
+       type File is new File_System.File with record
+          In_Synch : Boolean := True;
+       end record;
+
+       function Is_Synchronized (F : File) return Boolean is
+         (F.In_Synch);
+
+    end File_System.Sync;
+
+.. code:: ada
+
+    package body File_System.Sync is
+
+       procedure Create (F : out File) is
+       begin
+          File_System.File (F).Create;
+          F.In_Synch := True;
+       end Create;
+
+       procedure Open_Read (F : in out File) is
+       begin
+          File_System.File (F).Open_Read;
+          F.In_Synch := True;
+       end Open_Read;
+
+       procedure Close (F : in out File) is
+       begin
+          File_System.File (F).Close;
+          F.Closed := True;
+       end Close;
+
+    end File_System.Sync;
+
+.. code:: ada
+
+    with File_System.Sync; use File_System.Sync;
+
+    procedure Example_09 is
+
+       procedure Use_File_System (F : out File'Class) is
+       begin
+          F.Create;
+          F.Open_Read;
+          F.Close;
+       end Use_File_System;
+
     begin
-       F.Create;
-       F.Open_Read;
-       F.Close;
-    end Use_File_System;
+       null;
+    end Example_09;
 
 This code is not correct. Medium: class-wide precondition might be
 stronger than overridden one
@@ -560,24 +967,75 @@ Example #10
 
 .. code:: ada
 
-    type File is new File_System.File with private;
+    package File_System.Sync is
 
-    procedure Create (F : out File) with
-       Post'Class => F.Closed;
-    procedure Open_Read (F : in out File) with
-       Pre'Class  => F.Closed,
-       Post'Class => F.Is_Open;
-    procedure Close (F : in out File) with
-       Pre'Class  => F.Is_Open;
-       Post'Class => F.Closed;
+       type File is new File_System.File with private;
 
+       function Is_Synchronized (F : File) return Boolean;
+
+       procedure Create (F : out File) with
+         Post'Class => F.Closed;
+
+       procedure Open_Read (F : in out File) with
+         Pre'Class  => F.Closed,
+         Post'Class => F.Is_Open;
+
+       procedure Close (F : in out File) with
+         Pre'Class  => F.Is_Open,
+         Post'Class => F.Closed;
 
     private
        type File is new File_System.File with record
           In_Synch : Boolean;
        end record with
-          Predicate => File_System.File (File).Closed
-                    or In_Synch;
+         Predicate => File_System.File (File).Closed
+                      or In_Synch;
+
+       function Is_Synchronized (F : File) return Boolean is
+         (F.In_Synch);
+
+    end File_System.Sync;
+
+.. code:: ada
+
+    package body File_System.Sync is
+
+       procedure Create (F : out File) is
+       begin
+          File_System.File (F).Create;
+          F.In_Synch := True;
+       end Create;
+
+       procedure Open_Read (F : in out File) is
+       begin
+          File_System.File (F).Open_Read;
+          F.In_Synch := True;
+       end Open_Read;
+
+       procedure Close (F : in out File) is
+       begin
+          File_System.File (F).Close;
+          F.Closed := True;
+       end Close;
+
+    end File_System.Sync;
+
+.. code:: ada
+
+    with File_System.Sync; use File_System.Sync;
+
+    procedure Example_10 is
+
+       procedure Use_File_System (F : out File'Class) is
+       begin
+          F.Create;
+          F.Open_Read;
+          F.Close;
+       end Use_File_System;
+
+    begin
+       null;
+    end Example_10;
 
 This code is correct. Predicate encodes the additional constraint on
 opened files. Type invariants are not yet supported on tagged types in
