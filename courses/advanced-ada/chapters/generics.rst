@@ -5,7 +5,8 @@ Abstracting definitions into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this section and in the next ones, we will reuse the generic
-reversing algorithm that we discussed in the introductory course.  In that
+reversing algorithm that we discussed in the chapter about generics
+from the introductory course (:doc:`../../intro-to-ada/generics`). In that
 example, we were declaring three formal types for the
 ``Generic_Reverse_Array`` procedure. However, we could abstract the array
 definition into a separate package and reuse it for the generic procedure.
@@ -112,17 +113,8 @@ Abstracting procedures into packages
 
 In the previous example, we moved the array type definition into a
 separate package, but left the generic procedure (``Reverse_Array``) in
-the test application. Another approach would have been to also move the
-generic procedure into the generic package. The advantage of this approach
-is that we don't need to repeat the formal declaration for the
-``Reverse_Array`` procedure. Also, this simplifies the instantiation in
-the test application.
-
-First, we need to extend the previous package by adding the declaration of
-the ``Reverse_Array`` procedure. Note that we've just renamed the
-``Simple_Generic_Array_Pkg`` package to ``Generic_Array_Pkg`` in order to
-avoid confusion with the previous example. This is the resulting
-specification:
+the test application. We can also move the generic procedure into the
+generic package:
 
 .. code-block:: ada
 
@@ -135,62 +127,26 @@ specification:
        procedure Reverse_Array (X : in out Array_T);
     end Generic_Array_Pkg;
 
-Because we have a procedure declaration, we need a package body for the
-procedure implementation. Here, we haven't changed the previous algorithm
--- we're simply moving the existing code into the new package body:
+The advantage of this approach is that we don't need to repeat the formal
+declaration for the ``Reverse_Array`` procedure. Also, this simplifies the
+instantiation in the test application.
+
+However, the disadvantage of this approach is that it also increases code
+size: every instantiation of the generic package generates code for each
+subprogram from the package. Also, compilation time tends to increase
+significantly. Therefore, developers must be careful when considering
+this approach.
+
+Because we have a procedure declaration in the generic package, we need a
+corresponding package body. Here, we can simply reuse the existing code
+and move the procedure into the package body. In the test application, we
+just instantiate the ``Generic_Array_Pkg`` package and make use of the
+array type (``Array_T``) and the procedure (``Reverse_Array``):
 
 .. code-block:: ada
+    :class: ada-nocheck
 
-    package body Generic_Array_Pkg is
-       procedure Reverse_Array (X : in out Array_T) is
-       begin
-          for I in X'First .. (X'Last + X'First) / 2 loop
-             declare
-                Tmp     : T;
-                X_Left  : T renames X (I);
-                X_Right : T renames X (X'Last + X'First - I);
-             begin
-                Tmp     := X_Left;
-                X_Left  := X_Right;
-                X_Right := Tmp;
-             end;
-          end loop;
-       end Reverse_Array;
-    end Generic_Array_Pkg;
-
-In the test application, we just need to instantiate the
-``Generic_Array_Pkg`` package and make use of the array type (``Array_T``)
-and the procedure (``Reverse_Array``):
-
-.. code-block:: ada
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
-
-    with Generic_Array_Pkg;
-
-    procedure Test_Reverse_Colors_Pkg is
-       type Color is (Black, Red, Green, Blue, White);
-
-       package Color_Pkg is new Generic_Array_Pkg (T => Color, Index => Integer);
-
-       My_Colors : Color_Pkg.Array_T (1 .. 5) := (Black, Red, Green, Blue, White);
-    begin
-       for C of My_Colors loop
-          Put_Line ("My_Color: " & Color'Image (C));
-       end loop;
-
-       New_Line;
-       Put_Line ("Reversing My_Color...");
-       New_Line;
        Color_Pkg.Reverse_Array (My_Colors);
-
-       for C of My_Colors loop
-          Put_Line ("My_Color: " & Color'Image (C));
-       end loop;
-
-    end Test_Reverse_Colors_Pkg;
-
 
 Abstracting the test application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
