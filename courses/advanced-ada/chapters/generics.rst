@@ -383,6 +383,135 @@ Formal tagged types
 Formal interfaces
 ~~~~~~~~~~~~~~~~~
 
+Generic interfaces can be used to generate a collection of pre-defined
+subprograms for new types. For example, let's suppose that, for a given
+type T, we need at least a pair of subprograms that set and get variables
+of type T based on another type. For example, we might want to convert
+back and forth between the types T and :ada:`Integer`. Also, we might want
+to convert not only from :ada:`Integer` types, but also from other types
+(e.g., :ada:`Float`). To implement this, we can define the following
+generic interface:
+
+.. code:: ada
+
+    package Gen_Interface is
+
+       generic
+          type TD is private;
+          type TI is interface;
+       package Set_Get is
+          type T is interface and TI;
+
+          procedure Set (E : in out T; D : TD) is abstract;
+          function Get (E : T) return TD is abstract;
+       end Set_Get;
+
+    end Gen_Interface;
+
+In this example, the package :ada:`Set_Get` defines subprograms that allow
+converting from any definite type (:ada:`TD`) and the interface type
+(:ada:`TI`).
+
+We then proceed to declare packages for converting between :ada:`Integer`
+and :ada:`Float` types and the interface type. Also, we declare an actual
+tagged type that combines these conversion subprograms into a single type:
+
+.. code:: ada
+
+    with Gen_Interface;
+
+    package My_Type_Pkg is
+
+       type My_Type_Interface is interface;
+
+       package Set_Get_Integer is new
+         Gen_Interface.Set_Get (TD => Integer,
+                                TI => My_Type_Interface);
+       use Set_Get_Integer;
+
+       package Set_Get_Float   is new
+         Gen_Interface.Set_Get (TD => Float,
+                                TI => My_Type_Interface);
+       use Set_Get_Float;
+
+       type My_Type is
+         new Set_Get_Integer.T and Set_Get_Float.T with private;
+
+       procedure Set (E : in out My_Type; D : Integer);
+       function Get (E : My_Type) return Integer;
+
+       procedure Set (E : in out My_Type; D : Float);
+       function Get (E : My_Type) return Float;
+
+    private
+       type My_Type is
+         new Set_Get_Integer.T and Set_Get_Float.T with record
+          I : Integer;
+          F : Float;
+       end record;
+
+    end My_Type_Pkg;
+
+First, we declare the packages :ada:`Set_Get_Integer` and
+:ada:`Set_Get_Float` based on the generic :ada:`Set_Get` package. Next,
+we declare :ada:`My_Type` based on the interface type from these two
+packages. By doing this, :ada:`My_Type` now needs to implement the actual
+conversion from and to :ada:`Integer` and :ada:`Float` types.
+
+Note that, in the private part of :ada:`My_Type`, we're storing the
+floating-point and integer representations. However, we could have complex
+data as well and just use conversion subprograms to provide a
+simplified representation of the complex data.
+
+This is just an example on how we could implement these :ada:`Set` and
+:ada:`Get` subprograms:
+
+.. code:: ada
+
+    package body My_Type_Pkg is
+
+       procedure Set (E : in out My_Type; D : Integer) is
+       begin
+          E.I := D;
+          E.F := Float (D);
+       end Set;
+
+       function Get (E : My_Type) return Integer is
+       begin
+          return E.I;
+       end;
+
+       procedure Set (E : in out My_Type; D : Float) is
+       begin
+          E.F := D;
+          E.I := Integer (D);
+       end Set;
+
+       function Get (E : My_Type) return Float is
+       begin
+          return E.F;
+       end;
+
+    end My_Type_Pkg;
+
+As expected, declaring and using variable of :ada:`My_Type` is
+straightforward:
+
+.. code:: ada
+
+    with My_Type_Pkg; use My_Type_Pkg;
+
+    procedure Show_Gen_Interface is
+       C : My_Type;
+    begin
+       C.Set (2);
+       C.Set (2.1);
+    end Show_Gen_Interface;
+
+Discussion: Formal interfaces vs. other approaches
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO: Add discussion about interfaces vs. types & formal subprograms
 
 Formal synchronized interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
