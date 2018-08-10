@@ -438,11 +438,11 @@ tagged type that combines these conversion subprograms into a single type:
        type My_Type is
          new Set_Get_Integer.T and Set_Get_Float.T with private;
 
-       procedure Set (E : in out My_Type; D : Integer);
-       function Get (E : My_Type) return Integer;
+       overriding procedure Set (E : in out My_Type; D : Integer);
+       overriding function Get (E : My_Type) return Integer;
 
-       procedure Set (E : in out My_Type; D : Float);
-       function Get (E : My_Type) return Float;
+       overriding procedure Set (E : in out My_Type; D : Float);
+       overriding function Get (E : My_Type) return Float;
 
     private
        type My_Type is
