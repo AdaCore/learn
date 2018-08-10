@@ -364,3 +364,26 @@ two:
 We could go even further and move ``Perform_Test`` into a separate
 package. However, this will be left as an exercise for the reader.
 
+Formal objects
+~~~~~~~~~~~~~~
+
+
+Formal numeric types
+~~~~~~~~~~~~~~~~~~~~
+
+
+Formal access types
+~~~~~~~~~~~~~~~~~~~
+
+
+Formal tagged types
+~~~~~~~~~~~~~~~~~~~
+
+
+Formal interfaces
+~~~~~~~~~~~~~~~~~
+
+
+Formal synchronized interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
