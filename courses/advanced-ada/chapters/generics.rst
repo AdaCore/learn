@@ -373,20 +373,20 @@ Formal objects
 --------------
 
 
-Formal numeric types
---------------------
+Generic numeric types
+---------------------
 
 
 Formal access types
 -------------------
 
 
-Formal tagged types
--------------------
+Generic tagged types
+--------------------
 
 
-Formal interfaces
------------------
+Generic interfaces
+------------------
 
 Generic interfaces can be used to generate a collection of pre-defined
 subprograms for new types. For example, let's suppose that, for a given
@@ -513,11 +513,11 @@ straightforward:
        C.Set (2.1);
     end Show_Gen_Interface;
 
-Discussion: Formal interfaces vs. other approaches
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Discussion: Generic interfaces vs. other approaches
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. TODO: Add discussion about interfaces vs. types & formal subprograms
 
-Formal synchronized interfaces
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Generic synchronized interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
