@@ -16,7 +16,7 @@ procedures for the same array.
 In order to achieve this, we start by first specifying a generic package
 that contains the generic array type definition:
 
-.. code-block:: ada
+.. code:: ada
 
     generic
        type T is private;
@@ -48,7 +48,7 @@ This will allow us to reuse definitions from the generic package.
 This is the updated version of the our test application for the reversing
 algorithm:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -116,7 +116,7 @@ separate package, but left the generic procedure (``Reverse_Array``) in
 the test application. We can also move the generic procedure into the
 generic package:
 
-.. code-block:: ada
+.. code:: ada
 
     generic
        type T is private;
@@ -144,7 +144,6 @@ just instantiate the ``Generic_Array_Pkg`` package and make use of the
 array type (``Array_T``) and the procedure (``Reverse_Array``):
 
 .. code-block:: ada
-    :class: ada-nocheck
 
        Color_Pkg.Reverse_Array (My_Colors);
 
@@ -175,7 +174,7 @@ Also, note that ``S`` is an example of a formal object.
 This is a version of the test application that makes use of the generic
 ``Perform_Test`` procedure:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -278,7 +277,7 @@ First, let us define the new ``Generic_Array_Bundle`` package, which
 references the ``Generic_Array_Pkg`` package and the two formal elements
 (``S`` and ``Image``) mentioned previously:
 
- .. code-block:: ada
+.. code:: ada
 
     with Generic_Array_Pkg;
 
@@ -291,7 +290,7 @@ references the ``Generic_Array_Pkg`` package and the two formal elements
 
 Then, we update the definition of ``Perform_Test``:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -352,3 +351,4 @@ two:
 
 We could go even further and move ``Perform_Test`` into a separate
 package. However, this will be left as an exercise for the reader.
+
