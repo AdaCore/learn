@@ -390,12 +390,11 @@ Generic interfaces
 
 Generic interfaces can be used to generate a collection of pre-defined
 subprograms for new types. For example, let's suppose that, for a given
-type T, we need at least a pair of subprograms that set and get variables
-of type T based on another type. For example, we might want to convert
-back and forth between the types T and :ada:`Integer`. Also, we might want
-to convert not only from :ada:`Integer` types, but also from other types
-(e.g., :ada:`Float`). To implement this, we can define the following
-generic interface:
+type T, we need at least a pair of subprograms that set and get elements
+of type T based on another type. We might want to convert back and forth
+between the types T and :ada:`Integer`. In addition, we might want to
+convert from and to other types (e.g., :ada:`Float`). To implement this,
+we can define the following generic interface:
 
 .. code:: ada
 
@@ -464,9 +463,10 @@ packages. By doing this, :ada:`My_Type` now needs to implement the actual
 conversion from and to :ada:`Integer` and :ada:`Float` types.
 
 Note that, in the private part of :ada:`My_Type`, we're storing the
-floating-point and integer representations. However, we could have complex
-data as well and just use conversion subprograms to provide a
-simplified representation of the complex data.
+floating-point and integer representations that we receive in the calls to
+the :ada:`Set` procedures. However, we could have complex data as well and
+just use conversion subprograms to provide a simplified representation of
+the complex data.
 
 This is just an example on how we could implement these :ada:`Set` and
 :ada:`Get` subprograms:
