@@ -4,6 +4,8 @@
 Generics
 ========
 
+:code-config:`reset_accumulator=True`
+
 .. role:: ada(code)
    :language: ada
 
