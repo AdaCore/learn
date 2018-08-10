@@ -518,3 +518,116 @@ Discussion: Generic interfaces vs. other approaches
 Generic synchronized interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Generic synchronized interfaces are a specialized case of generic
+interfaces that can be used for task types and protected types. Since
+generic synchronized interfaces are similar to generic interfaces,
+we can reuse the previous source-code example with minimal adaptations.
+
+When adapting the :ada:`Gen_Interface` package, we just need to make use
+of the :ada:`synchronized` keyword:
+
+.. code:: ada
+
+    package Gen_Sync_Interface is
+
+       generic
+          type TD is private;
+          type TI is synchronized interface;
+       package Set_Get is
+          type T is synchronized interface and TI;
+
+          procedure Set (E : in out T; D : TD) is abstract;
+          function Get (E : T) return TD is abstract;
+       end Set_Get;
+
+    end Gen_Sync_Interface;
+
+Note that we're also renaming some packages (e.g., renaming
+:ada:`Gen_Interface` to :ada:`Gen_Sync_Interface`) to better differentiate
+between them. This approach is used in the adaptations below as well.
+
+When adapting the :ada:`My_Type_Pkg`, we again need to make use of
+the :ada:`synchronized` keyword. Also, we need to declare :ada:`My_Type`
+as a protected type and adapt the subprogram and component declarations.
+Note that we could have used a task type instead. This is the adapted
+package:
+
+.. code:: ada
+
+    with Gen_Sync_Interface;
+
+    package My_Sync_Type_Pkg is
+
+       type My_Type_Interface is synchronized interface;
+
+       package Set_Get_Integer is
+         new Gen_Sync_Interface.Set_Get (TD => Integer,
+                                         TI => My_Type_Interface);
+       use Set_Get_Integer;
+
+       package Set_Get_Float is
+         new Gen_Sync_Interface.Set_Get (TD => Float,
+                                         TI => My_Type_Interface);
+       use Set_Get_Float;
+
+       protected type My_Type is
+            new Set_Get_Integer.T and Set_Get_Float.T with
+
+          overriding procedure Set (D : Integer);
+          function Get return Integer;
+
+          overriding procedure Set (D : Float);
+          function Get return Float;
+       private
+          I : Integer;
+          F : Float;
+       end My_Type;
+
+    end My_Sync_Type_Pkg;
+
+In the package body, we just need to adapt the access to components in the
+subprograms:
+
+.. code:: ada
+
+    package body My_Sync_Type_Pkg is
+
+       protected body My_Type is
+          procedure Set (D : Integer) is
+          begin
+             I := D;
+             F := Float (D);
+          end Set;
+
+          function Get return Integer is
+          begin
+             return I;
+          end;
+
+          procedure Set (D : Float) is
+          begin
+             F := D;
+             I := Integer (D);
+          end Set;
+
+          function Get return Float is
+          begin
+             return F;
+          end;
+       end My_Type;
+
+    end My_Sync_Type_Pkg;
+
+Finally, the main application doesn't require adaptations:
+
+.. code:: ada
+
+    with My_Sync_Type_Pkg; use My_Sync_Type_Pkg;
+
+    procedure Show_Gen_Sync_Interface is
+       C : My_Type;
+    begin
+       C.Set (2);
+       C.Set (2.1);
+    end Show_Gen_Sync_Interface;
+
