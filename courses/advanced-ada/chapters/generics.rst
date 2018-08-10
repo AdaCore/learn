@@ -15,6 +15,9 @@ Generics
 .. role:: cpp(code)
    :language: c++
 
+Formal packages
+---------------
+
 Abstracting definitions into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -367,23 +370,23 @@ We could go even further and move ``Perform_Test`` into a separate
 package. However, this will be left as an exercise for the reader.
 
 Formal objects
-~~~~~~~~~~~~~~
+--------------
 
 
 Formal numeric types
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 
 Formal access types
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 
 Formal tagged types
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 
 Formal interfaces
-~~~~~~~~~~~~~~~~~
+-----------------
 
 Generic interfaces can be used to generate a collection of pre-defined
 subprograms for new types. For example, let's suppose that, for a given
