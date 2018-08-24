@@ -1,11 +1,26 @@
 Generics
 ========
 
+:code-config:`reset_accumulator=True`
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
+Formal packages
+---------------
+
 Abstracting definitions into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this section and in the next ones, we will reuse the generic
-reversing algorithm that we discussed in the introductory course.  In that
+reversing algorithm that we discussed in the chapter about generics
+from the introductory course (:doc:`../../intro-to-ada/generics`). In that
 example, we were declaring three formal types for the
 ``Generic_Reverse_Array`` procedure. However, we could abstract the array
 definition into a separate package and reuse it for the generic procedure.
@@ -15,7 +30,7 @@ procedures for the same array.
 In order to achieve this, we start by first specifying a generic package
 that contains the generic array type definition:
 
-.. code-block:: ada
+.. code:: ada
 
     generic
        type T is private;
@@ -47,7 +62,7 @@ This will allow us to reuse definitions from the generic package.
 This is the updated version of the our test application for the reversing
 algorithm:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -112,19 +127,10 @@ Abstracting procedures into packages
 
 In the previous example, we moved the array type definition into a
 separate package, but left the generic procedure (``Reverse_Array``) in
-the test application. Another approach would have been to also move the
-generic procedure into the generic package. The advantage of this approach
-is that we don't need to repeat the formal declaration for the
-``Reverse_Array`` procedure. Also, this simplifies the instantiation in
-the test application.
+the test application. We can also move the generic procedure into the
+generic package:
 
-First, we need to extend the previous package by adding the declaration of
-the ``Reverse_Array`` procedure. Note that we've just renamed the
-``Simple_Generic_Array_Pkg`` package to ``Generic_Array_Pkg`` in order to
-avoid confusion with the previous example. This is the resulting
-specification:
-
-.. code-block:: ada
+.. code:: ada
 
     generic
        type T is private;
@@ -135,62 +141,25 @@ specification:
        procedure Reverse_Array (X : in out Array_T);
     end Generic_Array_Pkg;
 
-Because we have a procedure declaration, we need a package body for the
-procedure implementation. Here, we haven't changed the previous algorithm
--- we're simply moving the existing code into the new package body:
+The advantage of this approach is that we don't need to repeat the formal
+declaration for the ``Reverse_Array`` procedure. Also, this simplifies the
+instantiation in the test application.
+
+However, the disadvantage of this approach is that it also increases code
+size: every instantiation of the generic package generates code for each
+subprogram from the package. Also, compilation time tends to increase
+significantly. Therefore, developers must be careful when considering
+this approach.
+
+Because we have a procedure declaration in the generic package, we need a
+corresponding package body. Here, we can simply reuse the existing code
+and move the procedure into the package body. In the test application, we
+just instantiate the ``Generic_Array_Pkg`` package and make use of the
+array type (``Array_T``) and the procedure (``Reverse_Array``):
 
 .. code-block:: ada
 
-    package body Generic_Array_Pkg is
-       procedure Reverse_Array (X : in out Array_T) is
-       begin
-          for I in X'First .. (X'Last + X'First) / 2 loop
-             declare
-                Tmp     : T;
-                X_Left  : T renames X (I);
-                X_Right : T renames X (X'Last + X'First - I);
-             begin
-                Tmp     := X_Left;
-                X_Left  := X_Right;
-                X_Right := Tmp;
-             end;
-          end loop;
-       end Reverse_Array;
-    end Generic_Array_Pkg;
-
-In the test application, we just need to instantiate the
-``Generic_Array_Pkg`` package and make use of the array type (``Array_T``)
-and the procedure (``Reverse_Array``):
-
-.. code-block:: ada
-
-    with Ada.Text_IO;
-    use  Ada.Text_IO;
-
-    with Generic_Array_Pkg;
-
-    procedure Test_Reverse_Colors_Pkg is
-       type Color is (Black, Red, Green, Blue, White);
-
-       package Color_Pkg is new Generic_Array_Pkg (T => Color, Index => Integer);
-
-       My_Colors : Color_Pkg.Array_T (1 .. 5) := (Black, Red, Green, Blue, White);
-    begin
-       for C of My_Colors loop
-          Put_Line ("My_Color: " & Color'Image (C));
-       end loop;
-
-       New_Line;
-       Put_Line ("Reversing My_Color...");
-       New_Line;
        Color_Pkg.Reverse_Array (My_Colors);
-
-       for C of My_Colors loop
-          Put_Line ("My_Color: " & Color'Image (C));
-       end loop;
-
-    end Test_Reverse_Colors_Pkg;
-
 
 Abstracting the test application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -219,7 +188,7 @@ Also, note that ``S`` is an example of a formal object.
 This is a version of the test application that makes use of the generic
 ``Perform_Test`` procedure:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -322,7 +291,7 @@ First, let us define the new ``Generic_Array_Bundle`` package, which
 references the ``Generic_Array_Pkg`` package and the two formal elements
 (``S`` and ``Image``) mentioned previously:
 
- .. code-block:: ada
+.. code:: ada
 
     with Generic_Array_Pkg;
 
@@ -335,7 +304,7 @@ references the ``Generic_Array_Pkg`` package and the two formal elements
 
 Then, we update the definition of ``Perform_Test``:
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -396,3 +365,269 @@ two:
 
 We could go even further and move ``Perform_Test`` into a separate
 package. However, this will be left as an exercise for the reader.
+
+Formal objects
+--------------
+
+
+Generic numeric types
+---------------------
+
+
+Formal access types
+-------------------
+
+
+Generic tagged types
+--------------------
+
+
+Generic interfaces
+------------------
+
+Generic interfaces can be used to generate a collection of pre-defined
+subprograms for new types. For example, let's suppose that, for a given
+type T, we need at least a pair of subprograms that set and get elements
+of type T based on another type. We might want to convert back and forth
+between the types T and :ada:`Integer`. In addition, we might want to
+convert from and to other types (e.g., :ada:`Float`). To implement this,
+we can define the following generic interface:
+
+.. code:: ada
+
+    package Gen_Interface is
+
+       generic
+          type TD is private;
+          type TI is interface;
+       package Set_Get is
+          type T is interface and TI;
+
+          procedure Set (E : in out T; D : TD) is abstract;
+          function Get (E : T) return TD is abstract;
+       end Set_Get;
+
+    end Gen_Interface;
+
+In this example, the package :ada:`Set_Get` defines subprograms that allow
+converting from any definite type (:ada:`TD`) and the interface type
+(:ada:`TI`).
+
+We then proceed to declare packages for converting between :ada:`Integer`
+and :ada:`Float` types and the interface type. Also, we declare an actual
+tagged type that combines these conversion subprograms into a single type:
+
+.. code:: ada
+
+    with Gen_Interface;
+
+    package My_Type_Pkg is
+
+       type My_Type_Interface is interface;
+
+       package Set_Get_Integer is new
+         Gen_Interface.Set_Get (TD => Integer,
+                                TI => My_Type_Interface);
+       use Set_Get_Integer;
+
+       package Set_Get_Float   is new
+         Gen_Interface.Set_Get (TD => Float,
+                                TI => My_Type_Interface);
+       use Set_Get_Float;
+
+       type My_Type is
+         new Set_Get_Integer.T and Set_Get_Float.T with private;
+
+       overriding procedure Set (E : in out My_Type; D : Integer);
+       overriding function Get (E : My_Type) return Integer;
+
+       overriding procedure Set (E : in out My_Type; D : Float);
+       overriding function Get (E : My_Type) return Float;
+
+    private
+       type My_Type is
+         new Set_Get_Integer.T and Set_Get_Float.T with record
+          I : Integer;
+          F : Float;
+       end record;
+
+    end My_Type_Pkg;
+
+First, we declare the packages :ada:`Set_Get_Integer` and
+:ada:`Set_Get_Float` based on the generic :ada:`Set_Get` package. Next,
+we declare :ada:`My_Type` based on the interface type from these two
+packages. By doing this, :ada:`My_Type` now needs to implement the actual
+conversion from and to :ada:`Integer` and :ada:`Float` types.
+
+Note that, in the private part of :ada:`My_Type`, we're storing the
+floating-point and integer representations that we receive in the calls to
+the :ada:`Set` procedures. However, we could have complex data as well and
+just use conversion subprograms to provide a simplified representation of
+the complex data.
+
+This is just an example on how we could implement these :ada:`Set` and
+:ada:`Get` subprograms:
+
+.. code:: ada
+
+    package body My_Type_Pkg is
+
+       procedure Set (E : in out My_Type; D : Integer) is
+       begin
+          E.I := D;
+          E.F := Float (D);
+       end Set;
+
+       function Get (E : My_Type) return Integer is
+       begin
+          return E.I;
+       end;
+
+       procedure Set (E : in out My_Type; D : Float) is
+       begin
+          E.F := D;
+          E.I := Integer (D);
+       end Set;
+
+       function Get (E : My_Type) return Float is
+       begin
+          return E.F;
+       end;
+
+    end My_Type_Pkg;
+
+As expected, declaring and using variable of :ada:`My_Type` is
+straightforward:
+
+.. code:: ada
+
+    with My_Type_Pkg; use My_Type_Pkg;
+
+    procedure Show_Gen_Interface is
+       C : My_Type;
+    begin
+       C.Set (2);
+       C.Set (2.1);
+    end Show_Gen_Interface;
+
+Discussion: Generic interfaces vs. other approaches
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO: Add discussion about interfaces vs. types & formal subprograms
+
+Generic synchronized interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Generic synchronized interfaces are a specialized case of generic
+interfaces that can be used for task types and protected types. Since
+generic synchronized interfaces are similar to generic interfaces,
+we can reuse the previous source-code example with minimal adaptations.
+
+When adapting the :ada:`Gen_Interface` package, we just need to make use
+of the :ada:`synchronized` keyword:
+
+.. code:: ada
+
+    package Gen_Sync_Interface is
+
+       generic
+          type TD is private;
+          type TI is synchronized interface;
+       package Set_Get is
+          type T is synchronized interface and TI;
+
+          procedure Set (E : in out T; D : TD) is abstract;
+          function Get (E : T) return TD is abstract;
+       end Set_Get;
+
+    end Gen_Sync_Interface;
+
+Note that we're also renaming some packages (e.g., renaming
+:ada:`Gen_Interface` to :ada:`Gen_Sync_Interface`) to better differentiate
+between them. This approach is used in the adaptations below as well.
+
+When adapting the :ada:`My_Type_Pkg`, we again need to make use of
+the :ada:`synchronized` keyword. Also, we need to declare :ada:`My_Type`
+as a protected type and adapt the subprogram and component declarations.
+Note that we could have used a task type instead. This is the adapted
+package:
+
+.. code:: ada
+
+    with Gen_Sync_Interface;
+
+    package My_Sync_Type_Pkg is
+
+       type My_Type_Interface is synchronized interface;
+
+       package Set_Get_Integer is
+         new Gen_Sync_Interface.Set_Get (TD => Integer,
+                                         TI => My_Type_Interface);
+       use Set_Get_Integer;
+
+       package Set_Get_Float is
+         new Gen_Sync_Interface.Set_Get (TD => Float,
+                                         TI => My_Type_Interface);
+       use Set_Get_Float;
+
+       protected type My_Type is
+            new Set_Get_Integer.T and Set_Get_Float.T with
+
+          overriding procedure Set (D : Integer);
+          function Get return Integer;
+
+          overriding procedure Set (D : Float);
+          function Get return Float;
+       private
+          I : Integer;
+          F : Float;
+       end My_Type;
+
+    end My_Sync_Type_Pkg;
+
+In the package body, we just need to adapt the access to components in the
+subprograms:
+
+.. code:: ada
+
+    package body My_Sync_Type_Pkg is
+
+       protected body My_Type is
+          procedure Set (D : Integer) is
+          begin
+             I := D;
+             F := Float (D);
+          end Set;
+
+          function Get return Integer is
+          begin
+             return I;
+          end;
+
+          procedure Set (D : Float) is
+          begin
+             F := D;
+             I := Integer (D);
+          end Set;
+
+          function Get return Float is
+          begin
+             return F;
+          end;
+       end My_Type;
+
+    end My_Sync_Type_Pkg;
+
+Finally, the main application doesn't require adaptations:
+
+.. code:: ada
+
+    with My_Sync_Type_Pkg; use My_Sync_Type_Pkg;
+
+    procedure Show_Gen_Sync_Interface is
+       C : My_Type;
+    begin
+       C.Set (2);
+       C.Set (2.1);
+    end Show_Gen_Sync_Interface;
+
