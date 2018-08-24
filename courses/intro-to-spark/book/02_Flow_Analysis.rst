@@ -7,29 +7,30 @@ Flow Analysis
    :language: ada
 
 
-This section presents the flow analysis capability provided by the GNATprove
-tool supporting SPARK.
+In this section we present the flow analysis capability provided by the
+GNATprove tool, a critical tool for using SPARK.
 
 
 What does flow analysis do?
 ---------------------------------------------------------------------
 
 Flow analysis concentrates primarily on variables. It models how
-information flows through them during a subprogram's execution, linking
-the final values of variables to their initial values. It also takes into
-account global variables declared at library level, as well as local
-variables defined inside subprograms and formal parameters.
+information flows through them during a subprogram's execution, connecting
+the final values of variables to their initial values. It analyzes global
+variables declared at library level, local variables, and formal parameters
+of subprograms.
 
-For a nested subprogram, we call *scope variables* variables that are
-declared locally to an enclosing unit. Scope variables really are global
-variables from the nested subprogram's point of view.
+Nesting of subprograms creates what we call *scope variables*: variables
+declared locally to an enclosing unit. From the perspective of a nested
+subprogram, scope variables look very much like global variables
 
-Flow analysis is usually fast, it takes approximatively the same time as
-compilation. It permits the detection of various kinds of errors, as well as
-violations of some SPARK legality rules, including the absence of aliasing and
-side-effect freedom in expressions seen in the :ref:`SPARK Overview`. Note that
-flow analysis is sound: if it does not detect any errors of a supported kind,
-then it is guaranteed that there are no errors.
+Flow analysis is usually fast, roughly as fast as compilation. It detects
+various types of errors and finds violations of some SPARK legality rules,
+such as the absence of aliasing and freedom of expressions from
+side-effects.  We discussed these rules in the :ref:`SPARK Overview`.
+
+Flow analysis is *sound*: if it doesn't detect any errors of a type it's
+supposed to detect, we know for sure there are no such errors.
 
 
 Errors Detected
@@ -38,17 +39,18 @@ Errors Detected
 Uninitialized Variables
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-We will now present each class of error which can be detected by flow analysis,
-starting with reading an uninitialized variable which is nearly always an
-error. It introduces non-determinism and breaks the type system as the value of
-an uninitialized variable may be outside that of its subtype's range. For these
-reasons, SPARK requires every variable read to be initialized.
+We now present each class of errors detected by flow analysis.  The first
+is the reading of an uninitialized variable.  This is nearly always an
+error: it introduces non-determinism and breaks the type system because the
+value of an uninitialized variable may be outside the range of its subtype.
+For these reasons, SPARK requires every variable to be initialized before
+being read.
 
-Flow analysis is responsible for ensuring that this requirement is always
-fulfilled by SPARK code. For example, in the function ``Max_Array`` shown
-below, we have forgotten to initialize the value of ``Max`` prior to entering
-the loop. As a consequence, the value read in the condition of the if statement
-may be uninitialized. Flow analysis will detect and report this error.
+Flow analysis is responsible for ensuring that SPARK code always fulfills
+this requirement. For example, in the function ``Max_Array`` shown below,
+we've neglected to initialize the value of ``Max`` prior to entering the
+loop. As a consequence, the value read by the condition of the if statement
+may be uninitialized. Flow analysis detects and reports this error.
 
 .. code:: ada spark-flow
 
@@ -78,18 +80,22 @@ may be uninitialized. Flow analysis will detect and report this error.
 Ineffective Statements
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Ineffective statements are different from dead code as they are executed,
-even usually modifying the value of variables. Only, they have no effect
-on any of the subprogram's outputs, be they parameters, global variables
-or function result. Ineffective statements, like unused variables, should
-be avoided, as they make the code less readable and more difficult to
-maintain.
+Ineffective statements are different than dead code: they're executed, and
+often even modify the value of variables, but have no effect on any of the
+subprogram's visible outputs: parameters, global variables or the function
+result. Ineffective statements should be avoided because they make the code
+less readable and more difficult to maintain.
 
-What is more, they are often caused by errors in the program, which may be
-difficult to detect. It is the case in the subprograms ``Swap1`` and
-``Swap2`` shown below, which do not properly swap their two parameters
-``X`` and ``Y``. Though they are not considered as errors in themselves,
-flow analysis warns both on ineffective statements and unused variables.
+More importantly, they're often caused by errors in the program: the
+statement may have been written for some purpose, but isn't accomplishing
+that purpose.  These kinds of errors can be difficult to detect in other
+ways.
+
+For example, the subprograms ``Swap1`` and ``Swap2`` shown below don't
+properly swap their two parameters ``X`` and ``Y``.  This error caused a
+statement to be ineffective.  That ineffective statement is not an error in
+itself, but flow analysis produces a warning since it can be indicative of
+an error, as it is here.
 
 .. code:: ada spark-flow
 
@@ -123,21 +129,25 @@ flow analysis warns both on ineffective statements and unused variables.
 
     end Show_Ineffective_Statements;
 
+So far, we've seen examples where flow analysis warns about ineffective
+statements and unused variables.
+
+
 Incorrect Parameter Mode
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Parameter modes influence the behavior of the compiler and are a key point
-for documenting the usage of a subprogram. Flow analysis will check that
-specified parameter modes always correspond to their usage in the
-subprogram's body. More precisely, it will check that an :ada:`in`
-parameter is never updated, either directly or through a subprogram call.
-It will also check that the initial value of an :ada:`out` parameter will
-never be read in the subprogram, as it may not be copied on subprogram
-entry. Finally, flow analysis will also warn when an :ada:`in out`
-parameter is not updated or when its initial value is not used in the
-subprogram, as it may be the sign of an error. An example is shown below
-for the incorrect subprogram ``Swap`` where GNATprove warns about an input
-which is not read:
+Parameter modes are an important part of documenting the usage of a
+subprogram and affect the code generated for that subprogram. Flow analysis
+checks that each specified parameter mode corresponds to the usage of that
+parameter in the subprogram's body.  It checks that an :ada:`in` parameter
+is never modified, either directly or through a subprogram call, checks
+that the initial value of an :ada:`out` parameter is never read in the
+subprogram (since it may not be defined on subprogram entry), and warn
+whens an :ada:`in out` parameter isn't modified or when its initial value
+isn't used.  All of these may be signs of an error.
+
+We see an example below. The subprogram ``Swap`` is incorrect and GNATprove
+warns about an input which isn't read:
 
 .. code:: ada
 
@@ -160,15 +170,14 @@ which is not read:
 
     end Show_Incorrect_Param_Mode;
 
-Note that, in SPARK, an :ada:`out` parameter which is not updated on
-every path should be declared as :ada:`in out` as its final value may
-depend on its initial value. SPARK is stricter here than Ada, in order
-to support static detection of errors. The table below summarizes the
-valid cases of parameter modes in SPARK depending on reads and writes to
-the parameter.
+In SPARK, unlike Ada, you should declare an :ada:`out` parameter to be
+:ada:`in out` if it's not modified on every path, in which case its value
+may depend on its initial value. SPARK is stricter than Ada to allow more
+static detection of errors. This table summarizes SPARK's valid parameter
+modes as a function of whether reads and writes are done to the parameter.
 
 +---------------+------------+------------+----------------+
-| Initial value | Updated on | Updated on | Parameter mode |
+| Initial value | Written on | Written on | Parameter mode |
 | read          | some path  | every path |                |
 +===============+============+============+================+
 | X             |            |            | in             |
@@ -189,20 +198,21 @@ Additional Verifications
 Global Contracts
 ~~~~~~~~~~~~~~~~
 
-Until now, we have seen verifications which do not require any additional
-annotations from the developer. Flow analysis will also check user-written
-flow annotations when supplied. In SPARK, it is possible to specify the
-global and scoped variables accessed or modified by a subprogram. This is
-done using a contract named :ada:`Global`.
+So far, none of the verifications we've seen require you to write any
+additional annotations. However, flow analysis also checks flow annotations
+that you write. In SPARK, you can specify the set of global and scoped
+variables accessed or modified by a subprogram.  You do this using a
+contract named :ada:`Global`.
 
-When a :ada:`Global` contract is supplied by the user for a subprogram,
-flow analysis will check that it is correct and complete, that is, no
-other variables than those stated in the contract are accessed or modified,
-either directly or through a subprogram call. For example, we may want to
-specify that the function ``Get_Value_Of_X`` reads the value of the global
-variable ``X`` and does not access any other global variable. If we do this
-through a comment as usually done in other languages, GNATprove cannot verify
-that the code complies with this specification:
+When you specify a :ada:`Global` contract for a subprogram, flow analysis
+checks that it's both correct and complete, meaning that no variables other
+than those stated in the contract are accessed or modified, either directly
+or through a subprogram call, and that all those listed are accessed or
+modified. For example, we may want to specify that the function
+``Get_Value_Of_X`` reads the value of the global variable ``X`` and doesn't
+access any other global variable. If we do this through a comment, as is
+usually done in other languages, GNATprove can't verify that the code
+complies with this specification:
 
 .. code-block:: ada
 
@@ -215,19 +225,21 @@ that the code complies with this specification:
 
     end Show_Global_Contracts;
 
-Global contracts are provided as part of the subprogram specification.
-Indeed, they provide useful information to users of a subprogram. The
-value specified for the :ada:`Global` aspect is an aggregate-like list of
-global variables' names, grouped together depending on their mode.
+You write global contracts as part of the subprogram specification.  In
+addition to their value in flow analysis, they also provide useful
+information to users of a subprogram. The value you specify for the
+:ada:`Global` aspect is an aggregate-like list of global variable names,
+grouped together according to their mode.
 
-In the example shown below, the procedure ``Set_X_To_Y_Plus_Z`` reads both
-``Y`` and ``Z``, listed as :ada:`Input`, and updates ``X``, listed as
-:ada:`Output`. As ``Set_X_To_X_Plus_Y`` both updates ``X`` and reads its
-initial value, ``X``'s mode is :ada:`In_Out`. Like for parameters, if no
-mode is specified, then the default is :ada:`Input`. That is the case in
-the declaration of ``Get_Value_Of_X``. Finally, if a subprogram, like
-``Incr_Parameter_X``, does not reference any global variable, the value of
-the global contract should be set to :ada:`null`.
+In the example below, the procedure ``Set_X_To_Y_Plus_Z`` reads both ``Y``
+and ``Z``.  We indicate this by specifying them as the value for
+:ada:`Input`.  It also writes ``X``, which we specify using
+:ada:`Output`. Since ``Set_X_To_X_Plus_Y`` both writes ``X`` and reads its
+initial value, ``X``'s mode is :ada:`In_Out`. Like parameters, if no mode
+is specified in a :ada:`Global` aspect, the default is :ada:`Input`.  We
+see this in the case of the declaration of ``Get_Value_Of_X``. Finally, if
+a subprogram, such as ``Incr_Parameter_X``, doesn't reference any global
+variables, you set the value of the global contract to :ada:`null`.
 
 .. code:: ada spark-flow
 
@@ -255,19 +267,19 @@ the global contract should be set to :ada:`null`.
 Depends Contracts
 ~~~~~~~~~~~~~~~~~
 
-A user may also supply a :ada:`Depends` contract for a subprogram to
-specify dependencies between its inputs and its outputs. Here, not only
-global variables are considered but also parameters and function result.
-When a :ada:`Depends` contract is supplied for a subprogram, flow analysis
-checks that it is correct and complete, that is, that each subprogram
-output is related to all of its inputs.
+You may also supply a :ada:`Depends` contract for a subprogram to specify
+dependencies between its inputs and outputs. These dependencies include not
+only global variables but also parameters and the function's result.  When
+you supply a :ada:`Depends` contract for a subprogram, flow analysis checks
+that it's correct and complete, that is, for each dependency you list, the
+variable depends on those listed and on no others.
 
-For example, a user may want to check that, on return of ``Swap`` shown
-below, each parameter only depends on the initial value of the other
-parameter or that the value of ``X`` on return of ``Set_X_To_Zero`` does
-not depend on any global variable. If we do this
-through a comment as usually done in other languages, GNATprove cannot verify
-that the code complies with this specification:
+For example, you may want to say that the new value of each parameter of
+``Swap``, shown below, depends only on the initial value of the other
+parameter and that the value of ``X`` after the return of ``Set_X_To_Zero``
+doesn't depend on any global variables. If you indicate this through a
+comment, as you often do in other languages, GNATprove can't verify that
+this is actually the case.
 
 .. code-block:: ada
 
@@ -285,17 +297,17 @@ that the code complies with this specification:
 
     end Show_Depends_Contracts;
 
-Like :ada:`Global` contracts, a :ada:`Depends` contract is specified on
-subprogram declarations using an aspect. Its value is a list of one or
-more dependency relations between outputs and inputs of the program. Each
-such relation is represented as two lists of variable names separated by
-an arrow. At the left of the arrow are the variables whose final value
-depends on the initial value of the variables on the right.
+Like :ada:`Global` contracts, you specify a :ada:`Depends` contract in
+subprogram declarations using an aspect. Its value is a list of one or more
+dependency relations between the outputs and inputs of the subprogram. Each
+relation is represented as two lists of variable names separated by an
+arrow. On the left of each arrow are variables whose final value
+depends on the initial value of the variables you list on the right.
 
-For example, the final value of each parameter of ``Swap`` only depends on
-the initial value of the other parameter. If the subprogram is a function,
-its result must be listed as an output, as we did for ``Get_Value_Of_X``
-using the :ada:`Result` attribute.
+For example, here we indicate that the final value of each parameter of
+``Swap`` depends only on the initial value of the other parameter. If the
+subprogram is a function, we list its result as an output, using the
+:ada:`Result` attribute, as we do for ``Get_Value_Of_X`` below.
 
 .. code:: ada spark-flow
 
@@ -313,11 +325,11 @@ using the :ada:`Result` attribute.
 
        function Get_Value_Of_X return T with
          Depends => (Get_Value_Of_X'Result => X);
-                     --  result depends on X
+                     --  result depends on the initial value of X
 
        procedure Set_X_To_Y_Plus_Z with
          Depends => (X => (Y, Z));
-                     --  X depends on Y and Z
+                     --  X depends on the initial values of Y and Z
 
        procedure Set_X_To_X_Plus_Y with
          Depends => (X =>+ Y);
@@ -333,24 +345,23 @@ using the :ada:`Result` attribute.
 
     end Show_Depends_Contracts;
 
-It is often the case that the final value of a variable depends on its own
-initial value. This can be specified in a concise way using the :ada:`+`
-character, like in the specification of ``Set_X_To_X_Plus_Y``. Note that, if
-there are more than one variable on the left of the arrow, a :ada:`+` means
-that each variables depends on itself, and not that they all depend on each
-other. The corresponding dependency may be written with space :ada:`=> +` or
-without space :ada:`=>+`.
+Often, the final value of a variable depends on its own initial value.  You
+can specify this in a concise way using the :ada:`+` character, as we did
+in the specification of ``Set_X_To_X_Plus_Y`` above. If there's more than
+one variable on the left of the arrow, a :ada:`+` means each variables
+depends on itself, not that they all depend on each other.  You can write
+the corresponding dependency with (:ada:`=> +`) or without (:ada:`=>+`)
+whitespace.
 
-It can also be the case that an input is not used to compute the final
-value of any output. This can be expressed by putting :ada:`null` at the
-left of the dependency relation, like we have for the ``Do_Nothing``
-subprogram shown above. Note that there can only be one such dependency
-relation, listing all the unused inputs of the subprogram, and that it
-must be declared last. Also note that such an annotation will silence flow
-analysis' warning about unused parameters. Finally, :ada:`null` can also
-be used at the right of a dependency relation to state that an output
-depends on no input. It is the case for the procedure ``Set_X_To_Zero``.
-
+If you have a program where an input isn't used to compute the final value
+of any output, you express that by writting :ada:`null` on the left of the
+dependency relation, as we did for the ``Do_Nothing`` subprogram above.
+You can only write one such dependency relation, which lists all unused
+inputs of the subprogram, and it must be written last.  Such an annotation
+also silences flow analysis' warning about unused parameters. You can also
+write :ada:`null` on the right of a dependency relation to indicate that an
+output doesn't depend on any input. We do that above for the procedure
+``Set_X_To_Zero``.
 
 Shortcomings
 ---------------------------------------------------------------------
@@ -358,24 +369,24 @@ Shortcomings
 Modularity
 ~~~~~~~~~~
 
-Flow analysis is a sound analysis, which means that, if it does not output
-any message on some analyzed SPARK code, then none of the supported errors
-may occur in this code. On the other hand, there are cases where flow
-analysis will issue a message when there are in fact no errors. The first
----and maybe most common reason for this--- has to do with modularity.
+Flow analysis is sound, meaning that if it doesn't output a message on some
+analyzed SPARK code, you can be assured that none of the errors it tests
+for can occur in that code. On the other hand, flow analysis often issues
+messages when there are, in fact, no errors. The first, and probably most
+common reason for this relates to modularity.
 
-In order to scale to large projects, verifications are in general done
-on a per subprogram basis. It is in particular the case for detection of
-uninitialized variables. For this detection to be done modularly, flow
-analysis needs to assume initialization of inputs on subprogram entry and
-initialization of outputs after subprogram execution. Therefore, every
-time a subprogram is called, flow analysis will check that global and
-parameter inputs are initialized, and every time a subprogram returns, it
-will check that global and parameter outputs are also initialized.
+To scale flow analysis to large projects, verifications are usually done on
+a per-subprogram basis, including detection of uninitialized variables.  To
+analyze this modularly, flow analysis needs to assume the initialization of
+inputs on subprogram entry and modification of outputs during subprogram
+execution. Therefore, each time a subprogram is called, flow analysis
+checks that global and parameter inputs are initialized and each time a
+subprogram returns, it checks that global and parameter outputs were
+modified.
 
-This may lead to messages being issued on perfectly correct subprograms
-like ``Set_X_To_Y_Plus_Z`` which only sets its :ada:`out` parameter ``X``
-when ``Overflow`` is :ada:`False`.
+This can produce error messages on perfectly correct subprograms .  An
+example is ``Set_X_To_Y_Plus_Z`` below, which only sets its :ada:`out`
+parameter ``X`` when ``Overflow`` is :ada:`False`.
 
 .. code:: ada spark-flow
 
@@ -393,32 +404,33 @@ when ``Overflow`` is :ada:`False`.
        end if;
     end Set_X_To_Y_Plus_Z;
 
-This simply means that, in that case, flow analysis was not able to verify
-that no uninitialized variable could be read. To solve this problem, ``X``
-can either be set to a dummy value when there is an overflow or the user
-can verify by her own means that ``X`` is never used after a call to
-``Set_X_To_Y_Plus_Z`` if ``Overflow`` is :ada:`True`.
+The message means that flow analysis wasn't able to verify that the program
+didn't read an uninitialized variable. To solve this problem, you can
+either set ``X`` to a dummy value when there's an overflow or manually
+verify that ``X`` is never used after a call to ``Set_X_To_Y_Plus_Z`` that
+returned :ada:`True` as the value of ``Overflow``.
 
 
 Composite Types
 ~~~~~~~~~~~~~~~
 
-Another common cause for false alarms is the way composite types are
-handled in flow analysis. Let us first look at arrays in particular.
+Another common cause of false alarms is caused by the way flow analysis
+handles composite types. Let's start with arrays.
 
-In flow analysis, array objects are treated as single, entire objects.
-This means that an update to an element of the array is handled as an
-update of the entire array object. Obviously, this makes reasoning about
-global variables accessed and dependencies less precise. But it also
-affects detection of reads of uninitialized variables.
+Flow analysis treats an entire array as single object instead of one object
+per element, so it considers modifying a single element to be a
+modification of the array as a whole.  Obviously, this makes reasoning
+about which global variables are accessed less precise and hence the
+dependencies of those variables are also less precise. This also affects
+the ability to accurately detect reads of uninitialized data.
 
-Indeed, it is often impossible for flow analysis to decide if the entire
-object has been initialized, even in really simple cases. For
-example, after initializing every element of an unconstrained array ``A``
-with zero in a loop, we may still have a flow message stating that the
-array is not initialized. To solve this issue, a user can either use an
-aggregate assignment, or, if it is not possible, verify initialization of
-the object by other means.
+It's often impossible for flow analysis to determine if an entire array
+object has been initialized, even in very simple cases. For example, after
+we write a loop to initialize every element of an unconstrained array ``A``,
+we may still receive a message from flow analysis claiming that the array
+isn't initialized. To resolve this issue, you can either use an aggregate
+assignment, or, if that's not possible, verify initialization of the object
+manually.
 
 .. code:: ada spark-flow
 
@@ -438,7 +450,7 @@ the object by other means.
           for I in A'Range loop
              A (I) := 0;
           end loop;
-          --  flow analysis does not know that A is initialized
+          --  flow analysis doesn't know that A is initialized
        end Init_Loop;
 
        procedure Init_Aggregate (A : out T) is
@@ -449,12 +461,12 @@ the object by other means.
 
     end Show_Composite_Types_Shortcoming;
 
-Flow analysis is more precise on record objects, in the sense that it
-tracks separately the value of each component inside a single subprogram.
-As a consequence, when a record object is initialized by successive
-assignments of its components, flow analysis can make sure that the whole
-object is initialized. Note that record objects are still treated as
-entire objects when taken as input or output of subprograms.
+Flow analysis is more precise on record objects because it tracks the value
+of each component of a record separately within a single subprogram.  So
+when a record object is initialized by successive assignments of its
+components, flow analysis knows that the entire object is initialized.
+However, record objects are still treated as single objects when analyzed
+as an input or output of a subprogram.
 
 .. code:: ada spark-flow
 
@@ -480,10 +492,9 @@ entire objects when taken as input or output of subprograms.
 
     end Show_Record_Flow_Analysis;
 
-For example, using a procedure call to initialize only some components of
-a record object will result in flow analysis complaining about
-non-initialization of yet-to-be initialized components in entry of the
-subprogram, like for ``Init_F2``.
+Flow analysis complains when a procedure call initializes only some
+components of a record object.  It'll notify you of uninitialized
+components, as we see in subprogram ``Init_F2`` below.
 
 .. code:: ada spark-flow
 
@@ -518,16 +529,18 @@ subprogram, like for ``Init_F2``.
 Value Dependency
 ~~~~~~~~~~~~~~~~
 
-It is also worth noting that flow analysis is not value dependent, in the
-sense that it never reasons about values of expressions. As a consequence,
-if some path of execution in the subprogram is impossible due to values of
-expressions, it will still consider them feasible and therefore may emit
-unnecessary messages concerning them.
+Flow analysis is not value-dependent: it never reasons about the values of
+expressions, only whether they have been set to some value or not. As a
+consequence, if some execution path in a subprogram is impossible, but the
+impossibility can only be determined by looking at the values of
+expressions, flow analysis still considers that path feasible and may emit
+messages based on it believing that execution along such a path is
+possible.
 
-On the first version of ``Absolute_Value``, for example, flow analysis
-computes that, on a path entering none of the two conditional statements,
-``R`` is uninitialized. As it does not consider values of expressions, it
-cannot know that such a case can never happen.
+For example, in the version of ``Absolute_Value`` below, flow analysis
+computes that ``R`` is uninitialized on a path that enters neither of the
+two conditional statements. Because it doesn't consider values of
+expressions, it can't know that such a path is impossible.
 
 .. code:: ada spark-flow
 
@@ -542,11 +555,11 @@ cannot know that such a case can never happen.
        if X >= 0 then
           R := X;
        end if;
-       --  flow analysis does not know that R is initialized
+       --  flow analysis doesn't know that R is initialized
     end Absolute_Value;
 
-To avoid this problem, it is better to make the control flow explicit, as
-in the second version of ``Absolute_Value``:
+To avoid this problem, you should make the control flow explicit, as in
+this second version of ``Absolute_Value``:
 
 .. code:: ada spark-flow
 
@@ -566,26 +579,26 @@ in the second version of ``Absolute_Value``:
 Contract Computation
 ~~~~~~~~~~~~~~~~~~~~
 
-Finally, unexpected flow messages may come from inaccuracy in flow
-contract computations. Why does flow analysis compute contracts? As we
-have explained earlier, both :ada:`Global` and :ada:`Depends` contracts
-are optional. But GNATprove still needs them for some of its analysis.
+The final cause of unexpected flow messages that we'll discuss also comes
+from inaccuracy in computations of contracts. As we explained earlier, both
+:ada:`Global` and :ada:`Depends` contracts are optional, but GNATprove uses
+their data for some of its analysis.
 
-For example, knowing the set of global variables accessed by a subprogram
-is necessary for detecting the use of uninitialized variables. As for
-:ada:`Depends` contracts on a subprogram, they are necessary to be able to
-check user-supplied dependency contracts on callers of this subprogram. As
-each flow contract on a subprogram depends on the flow contracts of all
-the subprograms called inside its body, this computation can easily be
-quite time-consuming. Therefore, flow analysis sometimes trades-off
-precision of this computation for efficiency.
+For example, flow analysis can't detect reads from uninitialized variables
+without knowing the set of variables accessed. It needs to analyze and
+check both the :ada:`Depends` contracts you wrote for a subprogram and
+those you wrote for callers of that subprogram. Since each flow contract on
+a subprogram depends on the flow contracts of all the subprograms called
+inside its body, this computation can often be quite
+time-consuming. Therefore, flow analysis sometimes trades-off the precision
+of this computation against the time a more precise computation would take.
 
-That is in particular the case for :ada:`Depends` contracts, for which
-flow analysis simply assumes the worst: it assumes that each subprogram
-output depends on all of the subprogram's inputs. To solve this issue, it
-is enough to manually supply contracts when computed ones are not precise
-enough. Note that supplying :ada:`Global` contracts may also be a good
-idea to speed up flow analysis on larger projects in general.
+This is the case for :ada:`Depends` contracts, where flow analysis simply
+assumes the worst, that each subprogram's output depends on all of that
+subprogram's inputs. To avoid this assumption, all you have to do is supply
+contracts when default ones are not precise enough.  You may also want to
+supply :ada:`Global` contracts to further speed up flow analysis on larger
+programs.
 
 
 Code Examples / Pitfalls
@@ -594,9 +607,9 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-The procedure ``Search_Array`` searches for a particular element ``E`` in
-an array ``A``. If the element is found, then it is stored in ``Result``.
-Otherwise, ``Found`` is set to :ada:`False`.
+The procedure ``Search_Array`` searches for an occurrence of element ``E``
+in an array ``A``. If it finds one, it stores the index of the element in
+``Result``.  Otherwise, it sets ``Found`` to :ada:`False`.
 
 .. code:: ada spark-flow
 
@@ -632,24 +645,23 @@ Otherwise, ``Found`` is set to :ada:`False`.
 
     end Show_Search_Array;
 
-GNATprove issues a message about possible uninitialized ``Result`` on return.
-Though there clearly are legal uses of the
-function ``Search_Array``, flow analysis detects that ``Result`` is
-not initialized on the path that does not return inside the loop. Note that,
-even if this program is not incorrect, the flow message should not
-be ignored. Indeed, it means that flow analysis cannot guaranty that
-``Result`` will always be initialized at the call site, while GNATprove
-assumes any read of ``Result`` at the call site will read initialized data.
-Therefore, the user should
-either initialize ``Result`` when ``Found`` is false, which will comply with
-flow analysis, or verify this assumption at call site by other means.
+GNATprove produces a message saying that ``Result`` is possibly
+uninitialized on return.  There are perfectly legal uses of the function
+``Search_Array``, but flow analysis detects that ``Result`` is not
+initialized on the path that falls through from the loop. Even though this
+program is correct, you shouldn't ignore the message: it means flow
+analysis cannot guarantee that ``Result`` is always initialized at the call
+site and so assumes any read of ``Result`` at the call site will read
+initialized data.  Therefore, you should either initialize ``Result`` when
+``Found`` is false, which silences flow analysis, or verify this assumption
+at each call site by other means.
 
 
 Example #2
 ~~~~~~~~~~
 
-To avoid the message previously issued by GNATprove, ``Search_Array`` is
-modified to raise an exception when ``E`` is not found in ``A``.
+To avoid the message previously issued by GNATprove, we modify
+``Search_Array`` to raise an exception when ``E`` isn't found in ``A``:
 
 .. code:: ada
 
@@ -683,23 +695,23 @@ modified to raise an exception when ``E`` is not found in ``A``.
 
     end Show_Search_Array;
 
-Flow analysis does not emit messages anymore, which means
-that it can make sure that ``Result`` cannot be read uninitialized in SPARK
-code. Why is it, since ``Result`` is still not initialized when ``E`` is not in
-``A``? In fact, it comes from the fact that the exception ``Not_Found`` can
-never be caught inside SPARK code.  Also note that the GNATprove tool as a
-whole tries to make sure that ``Not_Found`` is never raised in this program
-as part of ensuring absence of runtime errors in SPARK code, leading to a
-message from proof here.
-
+Flow analysis doesn't emit any messages in this case, meaning it can verify
+that ``Result`` can't be read in SPARK code while uninitialized. But why is
+that, since ``Result`` is still not initialized when ``E`` is not in ``A``?
+This is because the exception, ``Not_Found``, can never be caught within
+SPARK code (SPAK doesn't allow exception handlers).  However, the GNATprove
+tool also tries to ensure the absence of runtime errors in SPARK code, so
+tries to prove that ``Not_Found`` is never raised.  When it can't do that
+here, it produces a different message.
 
 Example #3
 ~~~~~~~~~~
 
-Instead of raising an exception, we have chosen to use a discriminant
-record for that result of ``Search_Array``. This way, the index at
-which ``E`` was found in ``A`` can be set only when ``E`` was indeed
-found.
+In this example, we're using a discriminated record for the result of
+``Search_Array`` instead of conditionally raising an exception.  By using
+such a structure, the place to store the index at which ``E`` was found
+exists only when ``E`` was indeed found.  So if it wasn't found, there's
+nothing to be initialized.
 
 .. code:: ada
 
@@ -742,26 +754,27 @@ found.
 
     end Show_Search_Array;
 
-This example is correct. No flow message will be emitted here, as flow analysis
-indeed can make sure both that no uninitialized variable will be read in
-``Search_Array``'s body, and that all its outputs are initialized on
-return. Note the use of attribute ``Constrained`` in the precondition of
-``Search_Array`` to indicate that the variable ``Result`` passed in argument
-can be reassigned to any variant of the record type ``Search_Result``.
+This example is correct and flow analysis doesn't issue any message: it can
+verify both that no uninitialized variables are read in ``Search_Array``'s
+body, and that all its outputs are set on return.  We've used the attribute
+``Constrained`` in the precondition of ``Search_Array`` to indicate that
+the value of the ``Result`` in argument can be set to any variant of the
+record type ``Search_Result``, specifically to either the variant where
+``E`` was found and where it wasn't.
 
 .. _Example #4:
 
 Example #4
 ~~~~~~~~~~
 
-The function ``Size_Of_Biggest_Increasing_Sequence`` goes over all the
-sequences of parameter ``A`` which contain increasing elements to
-compute the length of the biggest one. For this, a nested procedure
-``Test_Index`` is called iteratively on all the elements of ``A``.
-``Test_Index`` checks if the sequence is still increasing. If it is the
-case, it updates the current maximal value read so far. Otherwise, it has
-found the end of an increasing sequence. It therefore computes the size of
-this sequence and stores it in ``Size_Of_Seq``.
+The function ``Size_Of_Biggest_Increasing_Sequence`` is supposed to find
+all sequences within its parameter ``A`` that contain elements with
+increasing values and returns the length of the longest one. To do this, it
+calls a nested procedure ``Test_Index`` iteratively on all the elements of
+``A``.  ``Test_Index`` checks if the sequence is still increasing. If so,
+it updates the largest value seen so far in this sequence.  If not, it
+means it's found the end of a sequence, so it computes the size of that
+sequence and stores it in ``Size_Of_Seq``.
 
 .. code:: ada spark-flow
 
@@ -811,27 +824,30 @@ this sequence and stores it in ``Size_Of_Seq``.
 
     end Show_Biggest_Increasing_Sequence;
 
-This example is not correct. Flow analysis emits messages inside ``Test_Index``
-stating that ``Max``, ``Beginning``, and ``Size_Of_Seq`` should be initialized
-before being read. Indeed, both ``Max`` and ``Beginning`` need an initial value
-as they are read in ``Test_Index``. As for ``Size_Of_Seq``, as we only read its
-value when ``End_Of_Seq`` is true, then there can be no problem, but flow
-analysis can simply not verify such initialization depending on values.
+However, this example is not correct. Flow analysis emits messages for
+``Test_Index`` stating that ``Max``, ``Beginning``, and ``Size_Of_Seq``
+should be initialized before being read. Indeed, when you look carefully,
+you see that both ``Max`` and ``Beginning`` are missing initializations
+because they are read in ``Test_Index`` before being written. As for
+``Size_Of_Seq``, we only read its value when ``End_Of_Seq`` is true, so it
+actually can't be read before being written, but flow analysis isn't able
+to verify its initialization by using just flow information.
 
-Note that the call to ``Test_Index`` is automatically inlined by GNATprove,
-which leads to the messages above. In a context where GNATprove could not
-inline the call to ``Test_Index``, for example if it was defined in another
-unit, the same messages would be issued on the call to ``Test_Index``.
+The call to ``Test_Index`` is automatically inlined by GNATprove, which
+leads to another messages above. If GNATprove couldn't inline the call to
+``Test_Index``, for example if it was defined in another unit, the same
+messages would be issued on the call to ``Test_Index``.
 
 
 Example #5
 ~~~~~~~~~~
 
-Permutations are modeled as arrays where the element at index ``I`` is the
-position of the ``I`` th element in the permutation. The procedure ``Init``
-initializes a permutation to be the identity, where the ``I`` th elements is at
-the ``I`` th position. ``Cyclic_Permutation`` calls ``Init`` and then swaps the
-elements until it has constructed a cyclic permutation.
+In the following example, we model permutations as arrays where the element
+at index ``I`` is the position of the ``I``'th element in the
+permutation. The procedure ``Init`` initializes a permutation to the
+identity, where the ``I``'th elements is at the ``I``'th
+position. ``Cyclic_Permutation`` calls ``Init`` and then swaps elements to
+construct a cyclic permutation.
 
 .. code:: ada spark-flow
 
@@ -878,17 +894,18 @@ elements until it has constructed a cyclic permutation.
 
     end Show_Permutation;
 
-This program is correct. Flow analysis will still emit messages though, because
-it cannot make sure that every element of ``A`` is initialized by the loop in
-``Init``. This message is a false alarm and can be ignored or justified safely.
+This program is correct. However, flow analysis will nevertheless still
+emit messages because it can't verify that every element of ``A`` is
+initialized by the loop in ``Init``. This message is a false alarm.  You
+can either ignore it or justify it safely.
 
 
 Example #6
 ~~~~~~~~~~
 
-This program is the same as the previous one except that, to avoid the message
-from flow analysis on array assignment, the mode of ``A`` in the specification
-of ``Init`` has been changed to :ada:`in out`.
+This program is the same as the previous one except that we've changed the
+mode of ``A`` in the specification of ``Init`` to :ada:`in out` to avoid
+the message from flow analysis on array assignment.
 
 .. code:: ada spark-flow
 
@@ -937,18 +954,18 @@ of ``Init`` has been changed to :ada:`in out`.
 
 This program is not correct. Changing the mode of a parameter that should
 really be :ada:`out` to :ada:`in out` to silence a false alarm is not a
-good idea. Other than this obfuscates the specification of ``Init``, now a
-message will be emitted on every call to the procedure for which ``A`` is
-not initialized, as shown by the message in ``Cyclic_Permutation``.
+good idea. Not only does this obfuscate the specification of ``Init``, but
+flow analysis emits a message on the procedure where ``A`` is not
+initialized, as shown by the message in ``Cyclic_Permutation``.
 
 
 Example #7
 ~~~~~~~~~~
 
-``Incr_Step_Function`` takes an array ``A`` as an argument. It then iterates
+``Incr_Step_Function`` takes an array ``A`` as an argument and iterates
 through ``A`` to increment every element by the value of ``Increment``,
-saturating at a given threshold value. A ``Global`` contract has been specified
-for ``Incr_Until_Threshold``.
+saturating at a specified threshold value. We specified a ``Global``
+contract for ``Incr_Until_Threshold``.
 
 .. code:: ada spark-flow
 
@@ -992,21 +1009,21 @@ for ``Incr_Until_Threshold``.
 
     end Show_Increments;
 
-Everything is fine here. The ``Global`` contract, in particular, is
-correct. It mentions both ``Threshold``, which is read but not updated in
-the procedure, and ``A``, which is both read and updated. The fact that
-``A`` is a parameter of an enclosing unit does not prevent its usage
-inside the :ada:`Global` contract as it really is global to
-``Incr_Until_Threshold``. Remark that we did not mention ``Increment`` as
-it is a static constant.
+Everything is fine here.  Specifically, the ``Global`` contract is
+correct. It mentions both ``Threshold``, which is read but not written in
+the procedure, and ``A``, which is both read and written.  The fact that
+``A`` is a parameter of an enclosing unit doesn't prevent us from using it
+inside the :ada:`Global` contract; it really is global to
+``Incr_Until_Threshold``. We didn't mention ``Increment`` since it's a
+static constant.
 
 
 Example #8
 ~~~~~~~~~~
 
-We are back to the procedure ``Test_Index`` from :ref:`Example #4`. We have
-corrected the missing initializations and are now interested in the
-:ada:`Global` contract of ``Test_Index``. Is it correct?
+We now go back to the procedure ``Test_Index`` from :ref:`Example #4` and
+correct the missing initializations.  We want to know if the :ada:`Global`
+contract of ``Test_Index`` is correct.
 
 .. code:: ada spark-flow
     :class: ada-expect-compile-error
@@ -1061,18 +1078,19 @@ corrected the missing initializations and are now interested in the
 
     end Show_Biggest_Increasing_Sequence;
 
-This example is not correct. ``Current_Index`` is a parameter of
-``Test_Index``, it should not be referenced as a global variable. Also, scope
-variable ``A`` should be mentioned as an :ada:`Input` in the :ada:`Global`
-contract.
+The contract in this example is not correct: ``Current_Index`` is a
+parameter of ``Test_Index``, so we shouldn't reference it as a global
+variable. Also, we should have listed variable ``A`` from the outer scope
+as an :ada:`Input` in the :ada:`Global` contract.
 
 
 Example #9
 ~~~~~~~~~~
 
-We have changed the :ada:`Global` contract of ``Test_Index`` into a
-:ada:`Depends` contract. Note that we do not in general need both as global
-variables accessed can be deduced from the :ada:`Depends` contract.
+Next, we change the :ada:`Global` contract of ``Test_Index`` into a
+:ada:`Depends` contract. In general, we don't need both contracts because
+the set of global variables accessed can be deduced from the :ada:`Depends`
+contract.
 
 .. code:: ada spark-flow
 
@@ -1128,20 +1146,19 @@ variables accessed can be deduced from the :ada:`Depends` contract.
 
 This example is correct. Some of the dependencies, such as ``Size_Of_Seq``
 depending on ``Beginning``, come directly from the assignments in the
-subprogram. As the control flow influences the final value of all of the
-outputs, variables read in the condition, that is, ``A``,
-``Current_Index``, and ``Max``, are present in every dependency relation.
-Finally, the dependencies of ``Size_Of_Eq`` and ``Beginning`` on
-themselves come from the fact that they may not be modified by the
-subprogram execution.
+subprogram. Since the control flow influences the final value of all of the
+outputs, the variables that are being read, ``A``, ``Current_Index``, and
+``Max``, are present in every dependency relation.  Finally, the
+dependencies of ``Size_Of_Eq`` and ``Beginning`` on themselves are because
+they may not be modified by the subprogram execution.
 
 
 Example #10
 ~~~~~~~~~~~
 
-The subprogram ``Identity`` swaps the value of its parameter twice. Its
-:ada:`Depends` contract states that the final value of ``X`` only depends on
-its initial value and the same for ``Y``.
+The subprogram ``Identity`` swaps the value of its parameter two times. Its
+:ada:`Depends` contract says that the final value of ``X`` only depends on
+its initial value and likewise for ``Y``.
 
 .. code:: ada spark-flow
 
@@ -1172,9 +1189,9 @@ its initial value and the same for ``Y``.
 
     end Show_Swap;
 
-This code is correct, but flow analysis cannot verify the :ada:`Depends`
-contract of ``Identity``. Indeed, ``Swap`` has no user-specified :ada:`Depends`
-contract. As a consequence, flow analysis assumes that all outputs of ``Swap``,
-that is ``X`` and ``Y``, depend on all its inputs, that is both ``X`` and
-``Y``'s initial values. To avoid this problem, one should manually specify a
-more precise :ada:`Depends` contract on ``Swap``.
+This code is correct, but flow analysis can't verify the :ada:`Depends`
+contract of ``Identity`` because we didn't supply a :ada:`Depends` contract
+for ``Swap``. Therefore, flow analysis assumes that all outputs of
+``Swap``, ``X`` and ``Y``, depend on all its inputs, both ``X`` and ``Y``'s
+initial values. To prevent this, we should manually specify a
+:ada:`Depends` contract for ``Swap``.
