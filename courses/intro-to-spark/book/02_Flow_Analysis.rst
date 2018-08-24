@@ -83,9 +83,8 @@ Ineffective Statements
 Ineffective statements are different than dead code: they're executed, and
 often even modify the value of variables, but have no effect on any of the
 subprogram's visible outputs: parameters, global variables or the function
-result. Ineffective statements, like unused variables, should be avoided,
-in this case because they make the code less readable and more difficult to
-maintain.
+result. Ineffective statements should be avoided because they make the code
+less readable and more difficult to maintain.
 
 More importantly, they're often caused by errors in the program: the
 statement may have been written for some purpose, but isn't accomplishing
@@ -233,7 +232,7 @@ information to users of a subprogram. The value you specify for the
 grouped together according to their mode.
 
 In the example below, the procedure ``Set_X_To_Y_Plus_Z`` reads both ``Y``
-and ``Z``.  We indicate this by specified them as the value for
+and ``Z``.  We indicate this by specifying them as the value for
 :ada:`Input`.  It also writes ``X``, which we specify using
 :ada:`Output`. Since ``Set_X_To_X_Plus_Y`` both writes ``X`` and reads its
 initial value, ``X``'s mode is :ada:`In_Out`. Like parameters, if no mode
@@ -382,7 +381,7 @@ analyze this modularly, flow analysis needs to assume the initialization of
 inputs on subprogram entry and modification of outputs during subprogram
 execution. Therefore, each time a subprogram is called, flow analysis
 checks that global and parameter inputs are initialized and each time a
-subprogram returns, it check that global and parameter outputs were
+subprogram returns, it checks that global and parameter outputs were
 modified.
 
 This can produce error messages on perfectly correct subprograms .  An
@@ -423,11 +422,11 @@ per element, so it considers modifying a single element to be a
 modification of the array as a whole.  Obviously, this makes reasoning
 about which global variables are accessed less precise and hence the
 dependencies of those variables are also less precise. This also affects
-the ability to accurately detect of reads of uninitialized data.
+the ability to accurately detect reads of uninitialized data.
 
 It's often impossible for flow analysis to determine if an entire array
 object has been initialized, even in very simple cases. For example, after
-we write a loop to initialize every element of an unconstrained array ``A`,
+we write a loop to initialize every element of an unconstrained array ``A``,
 we may still receive a message from flow analysis claiming that the array
 isn't initialized. To resolve this issue, you can either use an aggregate
 assignment, or, if that's not possible, verify initialization of the object
@@ -651,7 +650,7 @@ uninitialized on return.  There are perfectly legal uses of the function
 ``Search_Array``, but flow analysis detects that ``Result`` is not
 initialized on the path that falls through from the loop. Even though this
 program is correct, you shouldn't ignore the message: it means flow
-analysis cannot guaranty that ``Result`` is always initialized at the call
+analysis cannot guarantee that ``Result`` is always initialized at the call
 site and so assumes any read of ``Result`` at the call site will read
 initialized data.  Therefore, you should either initialize ``Result`` when
 ``Found`` is false, which silences flow analysis, or verify this assumption
@@ -712,7 +711,7 @@ In this example, we're using a discriminated record for the result of
 ``Search_Array`` instead of conditionally raising an exception.  By using
 such a structure, the place to store the index at which ``E`` was found
 exists only when ``E`` was indeed found.  So if it wasn't found, there's
-nothing to be uninitialized.
+nothing to be initialized.
 
 .. code:: ada
 
