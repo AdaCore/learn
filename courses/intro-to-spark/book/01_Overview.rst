@@ -207,7 +207,7 @@ forbidding side-effects in functions, which include modifications to either
 parameters or global variables. As a consequence, SPARK forbids functions
 with :ada:`out` or :ada:`in out` parameters in addition to functions
 modifying a global variable. Function ``F`` below is illegal in
-SPARK. while Function ``Incr`` might be legal if it doesn't modify any
+SPARK, while Function ``Incr`` might be legal if it doesn't modify any
 global variables and function ``Incr_And_Log`` might be illegal if it
 modifies global variables to perform logging.
 
@@ -592,7 +592,7 @@ of a record: ``Swap_Indexes`` calls ``Swap`` on values stored in the array
 GNATprove detects a possible case of aliasing. Unlike the previous example,
 it has no way of knowing that the two elements ``A (I)`` and ``A (J)`` are
 actually distinct when we call ``Swap``.  GNATprove issues a check message
-here instead of an error giving you the possibility of justifying the
+here instead of an error, giving you the possibility of justifying the
 message after review (meaning that you've verified manually that this
 can't, in fact, occur).
 
