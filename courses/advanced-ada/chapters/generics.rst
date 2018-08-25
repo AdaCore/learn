@@ -372,17 +372,1445 @@ package. However, this will be left as an exercise for the reader.
 Formal objects
 --------------
 
+-----------------------------------------------------------------------
+
+**Simple example**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    procedure Show_Formal_In_Out_Object is
+       generic
+          K : in out Integer;
+       procedure Increment;
+
+       procedure Increment is
+       begin
+          K := K + 1;
+       end Increment;
+
+       A : Integer := 2;
+
+       procedure Incr_Int is new Increment (K => A);
+
+    begin
+       Put_Line ("A: " & Integer'Image (A));
+       Incr_Int;
+       Put_Line ("A: " & Integer'Image (A));
+    end Show_Formal_In_Out_Object;
+
+
+-----------------------------------------------------------------------
+
+**Simple example without generics**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    procedure Show_Alternative_Formal_Object is
+       procedure Increment (K : in out Integer);
+
+       procedure Increment (K : in out Integer) is
+       begin
+          K := K + 1;
+       end Increment;
+
+       A : Integer := 2;
+
+    begin
+       Put_Line ("A: " & Integer'Image (A));
+       Increment (A);
+       Put_Line ("A: " & Integer'Image (A));
+    end Show_Alternative_Formal_Object;
+
+
+-----------------------------------------------------------------------
+
+**Generic package with formal object**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    generic
+       K : in out Integer;
+    package Integer_Op_Cnt is
+
+       procedure Increment;
+       procedure Decrement;
+
+       function Get_Increment_Count return Natural;
+       function Get_Decrement_Count return Natural;
+
+    end Integer_Op_Cnt;
+
+.. code:: ada
+
+    package body Integer_Op_Cnt is
+
+       Incr_Cnt : Natural := 0;
+       Decr_Cnt : Natural := 0;
+
+       function Get_Increment_Count return Natural is (Incr_Cnt);
+       function Get_Decrement_Count return Natural is (Decr_Cnt);
+
+       procedure Increment is
+       begin
+          K := K + 1;
+          Incr_Cnt := Incr_Cnt + 1;
+       end Increment;
+
+       procedure Decrement is
+       begin
+          K := K - 1;
+          Decr_Cnt := Decr_Cnt + 1;
+       end Decrement;
+
+    end Integer_Op_Cnt;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Integer_Op_Cnt;
+
+    procedure Show_Formal_In_Out_Object_Pkg is
+
+       A, B : Integer := 2;
+
+       --  A is now bound to A_Op
+       package A_Op is new Integer_Op_Cnt (K => A);
+       package B_Op is new Integer_Op_Cnt (K => B);
+
+    begin
+       Put_Line ("A: " & Integer'Image (A));
+       Put_Line ("B: " & Integer'Image (B));
+       A_Op.Increment;
+       B_Op.Decrement;
+       Put_Line ("A: " & Integer'Image (A));
+       Put_Line ("B: " & Integer'Image (B));
+       Put_Line ("# Incr A: " & Natural'Image (A_Op.Get_Increment_Count));
+       Put_Line ("# Decr A: " & Natural'Image (A_Op.Get_Decrement_Count));
+       Put_Line ("# Incr B: " & Natural'Image (B_Op.Get_Increment_Count));
+       Put_Line ("# Decr B: " & Natural'Image (B_Op.Get_Decrement_Count));
+    end Show_Formal_In_Out_Object_Pkg;
+
+
+-----------------------------------------------------------------------
+
+**Generic package with formal object: container and operations**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    package Data_Elements is
+       type Data_Element is private;
+
+    private
+       type Data_Element is record
+          Name : String (1 .. 100);
+          Age  : Natural;
+       end record;
+    end Data_Elements;
+
+
+.. code:: ada
+
+    with Ada.Containers;
+    with Ada.Containers.Vectors;
+
+    with Data_Elements; use Data_Elements;
+
+    package Data is
+
+       type Data_Container is private;
+
+       procedure Insert (C : in out Data_Container;
+                         V : Data_Element);
+       procedure Get (C     : Data_Container;
+                      V     : out Data_Element;
+                      Found : out Boolean);
+
+    private
+
+       package Vectors is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Data_Element);
+
+       type Data_Container is record
+          V : Vectors.Vector;
+       end record;
+
+    end Data;
+
+.. code:: ada
+
+    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+
+    with Data; use Data;
+
+    generic
+       Container : in out Data_Container;
+    package File_Ops is
+
+       procedure Read (S : Stream_Access);
+
+    end File_Ops;
+
+.. code:: ada
+
+    with Data; use Data;
+
+    generic
+       Container : in out Data_Container;
+       Fast      : Boolean := True;
+    package Proc_Ops is
+
+       procedure Process;
+
+    end Proc_Ops;
+
+.. code:: ada
+
+    with Data;     use Data;
+    with File_Ops;
+    with Proc_Ops;
+
+    package App is
+
+       C : Data_Container;
+
+       package File is new File_Ops (Container => C);
+       package Fast_Proc is new Proc_Ops (Container => C,
+                                          Fast      => True);
+       package Slow_Proc is new Proc_Ops (Container => C,
+                                          Fast      => False);
+
+    end App;
+
 
 Generic numeric types
 ---------------------
+
+-----------------------------------------------------------------------
+
+**Floating-point**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    generic
+       type F is digits <>;
+    package Gen_Float_Ops is
+       procedure Saturate (V : in out F);
+    end Gen_Float_Ops;
+
+.. code:: ada
+
+    package body Gen_Float_Ops is
+
+       procedure Saturate (V : in out F) is
+       begin
+          if V > 1.0 then
+             V := 1.0;
+          elsif V < -1.0 then
+             V := -1.0;
+          end if;
+       end Saturate;
+
+    end Gen_Float_Ops;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Gen_Float_Ops;
+
+    procedure Show_Float_Ops is
+
+       package Float_Ops is new Gen_Float_Ops (F => Float);
+       use Float_Ops;
+
+       package Long_Float_Ops is new Gen_Float_Ops (F => Long_Float);
+       use Long_Float_Ops;
+
+       F  : Float := 0.5;
+       LF : Long_Float := -0.5;
+
+    begin
+       F  := F + 0.7;
+       LF := LF - 0.7;
+
+       Put_Line ("F:  " & Float'Image (F));
+       Put_Line ("LF: " & Long_Float'Image (LF));
+
+       Saturate (F);
+       Saturate (LF);
+
+       Put_Line ("F:  " & Float'Image (F));
+       Put_Line ("LF: " & Long_Float'Image (LF));
+
+    end Show_Float_Ops;
+
+-----------------------------------------------------------------------
+
+**Fixed-point**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    generic
+       type F is delta <>;
+    package Gen_Fixed_Ops is
+       function Saturate_Add (V1, V2 : F) return F;
+    end Gen_Fixed_Ops;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    package body Gen_Fixed_Ops is
+
+       Ovhd_Depth : constant Positive := 64;
+       Ovhd_Bits  : constant := 32;
+       Ovhd_Delta : constant := 2.0 ** Ovhd_Bits / 2.0 ** (Ovhd_Depth - 1);
+
+       type Ovhd_Fixed is delta Ovhd_Delta range
+         -2.0 ** Ovhd_Bits .. 2.0 ** Ovhd_Bits - Ovhd_Delta
+         with Size => Ovhd_Depth;
+
+       procedure Saturate (V : in out Ovhd_Fixed)
+          with Inline;
+
+       procedure Saturate (V : in out Ovhd_Fixed) is
+          First : constant Ovhd_Fixed := Ovhd_Fixed (F'First);
+          Last  : constant Ovhd_Fixed := Ovhd_Fixed (F'Last);
+       begin
+          Put_Line ("First: " & Ovhd_Fixed'Image (First));
+          Put_Line ("Last:  " & Ovhd_Fixed'Image (Last));
+          New_Line;
+
+          if V > Last then
+             V := Last;
+          elsif V < First then
+             V := First;
+          end if;
+       end Saturate;
+
+       function Saturate_Add (V1, V2 : F) return F is
+          pragma Assert (Ovhd_Fixed'Size >= F'Size * 2);
+
+          VC1 : Ovhd_Fixed := Ovhd_Fixed (V1);
+          VC2 : Ovhd_Fixed := Ovhd_Fixed (V2);
+          VC  : Ovhd_Fixed;
+       begin
+          VC := VC1 + VC2;
+
+          Put_Line ("VC'First: " & Ovhd_Fixed'Image (Ovhd_Fixed'First));
+          Put_Line ("VC'Last:  " & Ovhd_Fixed'Image (Ovhd_Fixed'Last));
+          New_Line;
+
+          Put_Line ("VC1:  " & Ovhd_Fixed'Image (VC1));
+          Put_Line ("VC2:  " & Ovhd_Fixed'Image (VC2));
+          New_Line;
+          Put_Line ("VC:   " & Ovhd_Fixed'Image (VC));
+          New_Line;
+
+          Saturate (VC);
+
+          return F (VC);
+       end Saturate_Add;
+
+    end Gen_Fixed_Ops;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Gen_Fixed_Ops;
+
+    procedure Show_Fixed_Ops is
+
+       Fixed_Depth      : constant Positive := 16;
+       Long_Fixed_Depth : constant Positive := 32;
+
+       Fixed_Delta      : constant := 1.0 / 2.0 ** (Fixed_Depth - 1);
+       Long_Fixed_Delta : constant := 1.0 / 2.0 ** (Long_Fixed_Depth - 1);
+
+       type Fixed is delta
+         Fixed_Delta range -1.0 .. 1.0 - Fixed_Delta
+         with Size => Fixed_Depth;
+
+       type Long_Fixed is delta
+         Long_Fixed_Delta range -1.0 .. 1.0 - Long_Fixed_Delta
+         with Size => Long_Fixed_Depth;
+
+       package Fixed_Ops is new Gen_Fixed_Ops (F => Fixed);
+       use Fixed_Ops;
+
+       package Long_Fixed_Ops is new Gen_Fixed_Ops (F => Long_Fixed);
+       use Long_Fixed_Ops;
+
+       F  : Fixed      :=  0.5;
+       LF : Long_Fixed := -0.5;
+
+    begin
+       Put_Line ("F:  " & Fixed'Image (F));
+       Put_Line ("LF: " & Long_Fixed'Image (LF));
+
+       F  := Saturate_Add (F,   0.75);
+       LF := Saturate_Add (LF, -0.75);
+
+       Put_Line ("F:  " & Fixed'Image (F));
+       Put_Line ("LF: " & Long_Fixed'Image (LF));
+
+    end Show_Fixed_Ops;
+
+-----------------------------------------------------------------------
+
+**Generic numeric types and operator overriding: floating-point**
+
+**Example of scaling**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    package Float_Types is
+
+       type My_Float is new Float;
+       function "*" (A, B : My_Float) return My_Float;
+
+    end Float_Types;
+
+.. code:: ada
+
+    package body Float_Types is
+
+       procedure Saturate (V : in out My_Float) is
+       begin
+          if V > 1.0 then
+             V := 1.0;
+          elsif V < -1.0 then
+             V := -1.0;
+          end if;
+       end Saturate;
+
+       overriding function "*" (A, B : My_Float) return My_Float is
+       begin
+          return R : My_Float do
+             R := My_Float (Float (A) * Float (B));
+             Saturate (R);
+          end return;
+       end "*";
+
+    end Float_Types;
+
+.. code:: ada
+
+    generic
+       type F is digits <>;
+       with function "*" (A, B : F) return F is <>;
+    package Gen_Float_Scale is
+       procedure Scale (V : in out F; S : F);
+    end Gen_Float_Scale;
+
+.. code:: ada
+
+    with Float_Types; use Float_Types;
+
+    generic
+       type F is new My_Float;
+       with function "*" (A : F; B : F) return F is <>;
+    package Gen_Float_Scale is
+       procedure Scale (V : in out F; S : F);
+    end Gen_Float_Scale;
+
+.. code:: ada
+
+    package body Gen_Float_Scale is
+
+       procedure Scale (V : in out F; S : F) is
+       begin
+          V := V * S;
+       end Scale;
+
+    end Gen_Float_Scale;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    with Float_Types; use Float_Types;
+    with Gen_Float_Scale;
+
+    procedure Show_Float_Overriding is
+
+       package Float_Ops is new Gen_Float_Scale (F => My_Float);
+       use Float_Ops;
+
+       F1, F2 : My_Float := 0.5;
+
+    begin
+       Put_Line ("F1:  " & My_Float'Image (F1));
+       Put_Line ("F2:  " & My_Float'Image (F2));
+
+       Scale (F1, 3.0);
+       F2 := F2 * 3.0;
+
+       Put_Line ("F1:  " & My_Float'Image (F1));
+       Put_Line ("F2:  " & My_Float'Image (F2));
+
+    end Show_Float_Overriding;
+
+-----------------------------------------------------------------------
+
+**Generic numeric types and operator overriding: fixed-point**
+
+**Example of scaling**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    generic
+       type F is delta <>;
+    package Gen_Fixed_Ops is
+       function Sat_Mult (V1, V2 : F) return F;
+    end Gen_Fixed_Ops;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    package body Gen_Fixed_Ops is
+
+       Ovhd_Depth : constant Positive := 64;
+       Ovhd_Bits  : constant := 32;
+       Ovhd_Delta : constant := 2.0 ** Ovhd_Bits / 2.0 ** (Ovhd_Depth - 1);
+
+       type Ovhd_Fixed is delta Ovhd_Delta range
+         -2.0 ** Ovhd_Bits .. 2.0 ** Ovhd_Bits - Ovhd_Delta
+         with Size => Ovhd_Depth;
+
+       procedure Saturate (V : in out Ovhd_Fixed)
+          with Inline;
+
+       procedure Saturate (V : in out Ovhd_Fixed) is
+          First : constant Ovhd_Fixed := Ovhd_Fixed (F'First);
+          Last  : constant Ovhd_Fixed := Ovhd_Fixed (F'Last);
+       begin
+          Put_Line ("First: " & Ovhd_Fixed'Image (First));
+          Put_Line ("Last:  " & Ovhd_Fixed'Image (Last));
+          New_Line;
+
+          if V > Last then
+             V := Last;
+          elsif V < First then
+             V := First;
+          end if;
+       end Saturate;
+
+       function Sat_Mult (V1, V2 : F) return F is
+          pragma Assert (Ovhd_Fixed'Size >= F'Size * 2);
+
+          VC1 : Ovhd_Fixed := Ovhd_Fixed (V1);
+          VC2 : Ovhd_Fixed := Ovhd_Fixed (V2);
+          VC  : Ovhd_Fixed;
+       begin
+          VC := VC1 * VC2;
+
+          Put_Line ("VC'First: " & Ovhd_Fixed'Image (Ovhd_Fixed'First));
+          Put_Line ("VC'Last:  " & Ovhd_Fixed'Image (Ovhd_Fixed'Last));
+          New_Line;
+
+          Put_Line ("VC1:  " & Ovhd_Fixed'Image (VC1));
+          Put_Line ("VC2:  " & Ovhd_Fixed'Image (VC2));
+          New_Line;
+          Put_Line ("VC:   " & Ovhd_Fixed'Image (VC));
+          New_Line;
+
+          Saturate (VC);
+
+          return F (VC);
+       end Sat_Mult;
+
+    end Gen_Fixed_Ops;
+
+.. code:: ada
+
+    package Fixed_Types is
+
+       Fixed_Depth      : constant Positive := 16;
+       Fixed_Delta      : constant := 1.0 / 2.0 ** (Fixed_Depth - 1);
+
+       type Fixed is delta
+         Fixed_Delta range -1.0 .. 1.0 - Fixed_Delta
+         with Size => Fixed_Depth;
+
+       function "*" (A, B : Fixed) return Fixed;
+
+    end Fixed_Types;
+
+.. code:: ada
+
+    with Gen_Fixed_Ops;
+
+    package body Fixed_Types is
+
+       package Fixed_Ops is new Gen_Fixed_Ops (F => Fixed);
+       use Fixed_Ops;
+
+       function "*" (A, B : Fixed) return Fixed is
+       begin
+          return R : Fixed do
+             R := Sat_Mult (A, B);
+          end return;
+       end "*";
+
+    end Fixed_Types;
+
+.. code:: ada
+
+    with Fixed_Types; use Fixed_Types;
+
+    generic
+       type F is new Fixed;
+    package Gen_Fixed_Scale is
+       procedure Scale (V : in out F; S : F);
+    end Gen_Fixed_Scale;
+
+.. code:: ada
+
+    with Fixed_Types; use Fixed_Types;
+
+    generic
+       type F is delta <>;
+       with function "*" (A : F; B : F) return F is <>;
+    package Gen_Fixed_Scale is
+       procedure Scale (V : in out F; S : F);
+    end Gen_Fixed_Scale;
+
+.. code:: ada
+
+    package body Gen_Fixed_Scale is
+
+       procedure Scale (V : in out F; S : F) is
+       begin
+          V := V * S;
+       end Scale;
+
+    end Gen_Fixed_Scale;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    with Fixed_Types; use Fixed_Types;
+    with Gen_Fixed_Scale;
+
+    procedure Show_Fixed_Overriding is
+
+       package Fixed_Ops is new Gen_Fixed_Scale (F => Fixed);
+       use Fixed_Ops;
+
+       F1, F2 : Fixed := -1.0;
+
+    begin
+       Put_Line ("F1:  " & Fixed'Image (F1));
+       Put_Line ("F2:  " & Fixed'Image (F2));
+
+       Scale (F1, -1.0);
+       F2 := F2 * (-1.0);
+
+       Put_Line ("F1:  " & Fixed'Image (F1));
+       Put_Line ("F2:  " & Fixed'Image (F2));
+
+    end Show_Fixed_Overriding;
+
+
+-----------------------------------------------------------------------
+
+**Generic numeric types and operator overriding: floating-point**
+
+**Example of accumulator**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    package Float_Types is
+
+       type My_Float is new Float;
+       function "+" (A, B : My_Float) return My_Float;
+
+    end Float_Types;
+
+.. code:: ada
+
+    package body Float_Types is
+
+       procedure Saturate (V : in out My_Float) is
+       begin
+          if V > 1.0 then
+             V := 1.0;
+          elsif V < -1.0 then
+             V := -1.0;
+          end if;
+       end Saturate;
+
+       overriding function "+" (A, B : My_Float) return My_Float is
+       begin
+          return R : My_Float do
+             R := My_Float (Float (A) + Float (B));
+             Saturate (R);
+          end return;
+       end "+";
+
+    end Float_Types;
+
+.. code:: ada
+
+    generic
+       type F is digits <>;
+       with function "+" (A, B : F) return F is <>;
+    package Gen_Float_Acc is
+       procedure Acc (V : in out F; S : F);
+    end Gen_Float_Acc;
+
+.. code:: ada
+
+    with Float_Types; use Float_Types;
+
+    generic
+       type F is new My_Float;
+       with function "+" (A : F; B : F) return F is <>;
+    package Gen_Float_Acc is
+       procedure Acc (V : in out F; S : F);
+    end Gen_Float_Acc;
+
+.. code:: ada
+
+    package body Gen_Float_Acc is
+
+       procedure Acc (V : in out F; S : F) is
+       begin
+          V := V + S;
+       end Acc;
+
+    end Gen_Float_Acc;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    with Float_Types; use Float_Types;
+    with Gen_Float_Acc;
+
+    procedure Show_Float_Overriding is
+
+       package Float_Ops is new Gen_Float_Acc (F => My_Float);
+       use Float_Ops;
+
+       F1, F2 : My_Float := 0.5;
+
+    begin
+       Put_Line ("F1:  " & My_Float'Image (F1));
+       Put_Line ("F2:  " & My_Float'Image (F2));
+
+       Acc (F1, 3.0);
+       F2 := F2 + 3.0;
+
+       Put_Line ("F1:  " & My_Float'Image (F1));
+       Put_Line ("F2:  " & My_Float'Image (F2));
+
+    end Show_Float_Overriding;
+
+-----------------------------------------------------------------------
+
+**Generic numeric types and operator overriding: fixed-point**
+
+**Example of accumulator**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    generic
+       type F is delta <>;
+    package Gen_Fixed_Ops is
+       function Sat_Add (V1, V2 : F) return F;
+    end Gen_Fixed_Ops;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    package body Gen_Fixed_Ops is
+
+       Ovhd_Depth : constant Positive := 64;
+       Ovhd_Bits  : constant := 32;
+       Ovhd_Delta : constant := 2.0 ** Ovhd_Bits / 2.0 ** (Ovhd_Depth - 1);
+
+       type Ovhd_Fixed is delta Ovhd_Delta range
+         -2.0 ** Ovhd_Bits .. 2.0 ** Ovhd_Bits - Ovhd_Delta
+         with Size => Ovhd_Depth;
+
+       procedure Saturate (V : in out Ovhd_Fixed)
+          with Inline;
+
+       procedure Saturate (V : in out Ovhd_Fixed) is
+          First : constant Ovhd_Fixed := Ovhd_Fixed (F'First);
+          Last  : constant Ovhd_Fixed := Ovhd_Fixed (F'Last);
+       begin
+          Put_Line ("First: " & Ovhd_Fixed'Image (First));
+          Put_Line ("Last:  " & Ovhd_Fixed'Image (Last));
+          New_Line;
+
+          if V > Last then
+             V := Last;
+          elsif V < First then
+             V := First;
+          end if;
+       end Saturate;
+
+       function Sat_Add (V1, V2 : F) return F is
+          pragma Assert (Ovhd_Fixed'Size >= F'Size * 2);
+
+          VC1 : Ovhd_Fixed := Ovhd_Fixed (V1);
+          VC2 : Ovhd_Fixed := Ovhd_Fixed (V2);
+          VC  : Ovhd_Fixed;
+       begin
+          VC := VC1 + VC2;
+
+          Put_Line ("VC'First: " & Ovhd_Fixed'Image (Ovhd_Fixed'First));
+          Put_Line ("VC'Last:  " & Ovhd_Fixed'Image (Ovhd_Fixed'Last));
+          New_Line;
+
+          Put_Line ("VC1:  " & Ovhd_Fixed'Image (VC1));
+          Put_Line ("VC2:  " & Ovhd_Fixed'Image (VC2));
+          New_Line;
+          Put_Line ("VC:   " & Ovhd_Fixed'Image (VC));
+          New_Line;
+
+          Saturate (VC);
+
+          return F (VC);
+       end Sat_Add;
+
+    end Gen_Fixed_Ops;
+
+.. code:: ada
+
+    package Fixed_Types is
+
+       Fixed_Depth      : constant Positive := 16;
+       Fixed_Delta      : constant := 1.0 / 2.0 ** (Fixed_Depth - 1);
+
+       type Fixed is delta
+         Fixed_Delta range -1.0 .. 1.0 - Fixed_Delta
+         with Size => Fixed_Depth;
+
+       function "+" (A, B : Fixed) return Fixed;
+
+    end Fixed_Types;
+
+.. code:: ada
+
+    with Gen_Fixed_Ops;
+
+    package body Fixed_Types is
+
+       package Fixed_Ops is new Gen_Fixed_Ops (F => Fixed);
+       use Fixed_Ops;
+
+       function "+" (A, B : Fixed) return Fixed is
+       begin
+          return R : Fixed do
+             R := Sat_Add (A, B);
+          end return;
+       end "+";
+
+    end Fixed_Types;
+
+.. code:: ada
+
+    with Fixed_Types; use Fixed_Types;
+
+    generic
+       type F is new Fixed;
+    package Gen_Fixed_Acc is
+       procedure Acc (V : in out F; S : F);
+    end Gen_Fixed_Acc;
+
+.. code:: ada
+
+    with Fixed_Types; use Fixed_Types;
+
+    generic
+       type F is delta <>;
+       with function "+" (A : F; B : F) return F is <>;
+    package Gen_Fixed_Acc is
+       procedure Acc (V : in out F; S : F);
+    end Gen_Fixed_Acc;
+
+.. code:: ada
+
+    package body Gen_Fixed_Acc is
+
+       procedure Acc (V : in out F; S : F) is
+       begin
+          V := V + S;
+       end Acc;
+
+    end Gen_Fixed_Acc;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    with Fixed_Types; use Fixed_Types;
+    with Gen_Fixed_Acc;
+
+    procedure Show_Fixed_Overriding is
+
+       package Fixed_Ops is new Gen_Fixed_Acc (F => Fixed);
+       use Fixed_Ops;
+
+       F1, F2 : Fixed := -1.0;
+
+    begin
+       Put_Line ("F1:  " & Fixed'Image (F1));
+       Put_Line ("F2:  " & Fixed'Image (F2));
+
+       Acc (F1, -1.0);
+    --   F2 := F2 - 1.0;
+
+       Put_Line ("F1:  " & Fixed'Image (F1));
+       Put_Line ("F2:  " & Fixed'Image (F2));
+
+    end Show_Fixed_Overriding;
 
 
 Formal access types
 -------------------
 
+-----------------------------------------------------------------------
+
+**Access to objects**
+
+**Adapted from formal object example**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    generic
+       K : access Integer;
+    package Integer_Op_Cnt is
+
+       procedure Increment;
+       procedure Decrement;
+
+       function Get_Increment_Count return Natural;
+       function Get_Decrement_Count return Natural;
+
+    end Integer_Op_Cnt;
+
+.. code:: ada
+
+    package body Integer_Op_Cnt is
+
+       Incr_Cnt : Natural := 0;
+       Decr_Cnt : Natural := 0;
+
+       function Get_Increment_Count return Natural is (Incr_Cnt);
+       function Get_Decrement_Count return Natural is (Decr_Cnt);
+
+       procedure Increment is
+       begin
+          K.all := K.all + 1;
+          Incr_Cnt := Incr_Cnt + 1;
+       end Increment;
+
+       procedure Decrement is
+       begin
+          K.all := K.all - 1;
+          Decr_Cnt := Decr_Cnt + 1;
+       end Decrement;
+
+    end Integer_Op_Cnt;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Integer_Op_Cnt;
+
+    procedure Show_Formal_Access_Pkg is
+
+       A, B : Integer := 2;
+
+       --  A is now bound to A_Op
+       package A_Op is new Integer_Op_Cnt (K => A'Access);
+       package B_Op is new Integer_Op_Cnt (K => B'Access);
+
+    begin
+       Put_Line ("A: " & Integer'Image (A));
+       Put_Line ("B: " & Integer'Image (B));
+       A_Op.Increment;
+       B_Op.Decrement;
+       Put_Line ("A: " & Integer'Image (A));
+       Put_Line ("B: " & Integer'Image (B));
+       Put_Line ("# Incr A: " & Natural'Image (A_Op.Get_Increment_Count));
+       Put_Line ("# Decr A: " & Natural'Image (A_Op.Get_Decrement_Count));
+       Put_Line ("# Incr B: " & Natural'Image (B_Op.Get_Increment_Count));
+       Put_Line ("# Decr B: " & Natural'Image (B_Op.Get_Decrement_Count));
+    end Show_Formal_Access_Pkg;
+
+-----------------------------------------------------------------------
+
+**Access to subprograms**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+
+    package Read_File_Pkg is
+
+       generic
+          type Index_Type is (<>);
+          type Element_Type is private;
+          type Array_Type is array (Index_Type) of Element_Type;
+          Sort : access procedure (A : in out Array_Type);
+       procedure Gen_Read_Sorted_File (A : Array_Type; S : Stream_Access);
+
+    end Read_File_Pkg;
+
+.. code:: ada
+
+    package body Read_File_Pkg is
+
+       procedure Gen_Read_Sorted_File (A : Array_Type; S : Stream_Access) is
+       begin
+          --  Missing implementation
+          null;
+       end Gen_Read_Sorted_File;
+
+    end Read_File_Pkg;
+
+.. code:: ada
+
+    with Ada.Containers.Generic_Constrained_Array_Sort;
+
+    with Read_File_Pkg;
+
+    package Show_Procedure_Access is
+
+       type A_Range is range 0 .. 10;
+       type A is array (A_Range) of Integer;
+
+       procedure Sort is new Ada.Containers.Generic_Constrained_Array_Sort
+         (Index_Type   => A_Range,
+          Element_Type => Integer,
+          Array_Type   => A);
+
+       procedure Read_Sorted_File is new Read_File_Pkg.Gen_Read_Sorted_File
+         (Index_Type   => A_Range,
+          Element_Type => Integer,
+          Array_Type   => A,
+          Sort         => Sort'Access);
+
+    end Show_Procedure_Access;
+
+-----------------------------------------------------------------------
+
+**Implementation of the packages above using formal subprograms**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+
+    package Read_File_Pkg is
+
+       generic
+          type Index_Type is (<>);
+          type Element_Type is private;
+          type Array_Type is array (Index_Type) of Element_Type;
+          with procedure Sort (A : in out Array_Type) is <>;
+       procedure Gen_Read_Sorted_File (A : Array_Type; S : Stream_Access);
+
+    end Read_File_Pkg;
+
+.. code:: ada
+
+    package body Read_File_Pkg is
+
+       procedure Gen_Read_Sorted_File (A : Array_Type; S : Stream_Access) is
+       begin
+          --  Missing implementation
+          null;
+       end Gen_Read_Sorted_File;
+
+    end Read_File_Pkg;
+
+.. code:: ada
+
+    with Ada.Containers.Generic_Constrained_Array_Sort;
+
+    with Read_File_Pkg;
+
+    package Show_Procedure_Access is
+
+       type A_Range is range 0 .. 10;
+       type A is array (A_Range) of Integer;
+
+       procedure Sort is new Ada.Containers.Generic_Constrained_Array_Sort
+         (Index_Type   => A_Range,
+          Element_Type => Integer,
+          Array_Type   => A);
+
+       procedure Read_Sorted_File is new Read_File_Pkg.Gen_Read_Sorted_File
+         (Index_Type   => A_Range,
+          Element_Type => Integer,
+          Array_Type   => A);
+
+    end Show_Procedure_Access;
+
+
 
 Generic tagged types
 --------------------
+
+-----------------------------------------------------------------------
+
+**Simple example**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    generic
+       type T is tagged private;
+       Proc : access procedure (E : in out T'Class);
+    package Show_Gen_Tagged_Type is
+
+       --  Some processing on type T
+
+    end Show_Gen_Tagged_Type;
+
+
+-----------------------------------------------------------------------
+
+**Example using "people database" and database analysis**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    with Ada.Containers.Vectors;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    generic
+       with package P is new Ada.Containers.Vectors (<>);
+       type T is new P.Vector with private;
+    package Vector_Analysis is
+
+       type Meets_Criteria is not null access
+         function (E : P.Element_Type) return Boolean;
+
+       type Analysis_Set is record
+          Check       : Meets_Criteria;
+          Description : Unbounded_String;
+       end record;
+
+       procedure Analyze (V : T'Class;
+                          A : Analysis_Set);
+
+       procedure Display_Results;
+
+    end Vector_Analysis;
+
+.. code:: ada
+
+    with Ada.Containers;          use Ada.Containers;
+    with Ada.Containers.Vectors;
+    with Ada.Calendar;            use Ada.Calendar;
+    with Ada.Calendar.Time_Zones; use Ada.Calendar.Time_Zones;
+    with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+    with Ada.Text_IO;             use Ada.Text_IO;
+
+    package body Vector_Analysis is
+
+       package Analysis_Pkg is
+          type Analysis_Entry is record
+             Timestamp   : Time;
+             Description : Unbounded_String;
+             Total       : Natural;
+             Passed      : Natural;
+          end record;
+
+          package Analysis_Vec is new Ada.Containers.Vectors
+            (Index_Type   => Natural,
+             Element_Type => Analysis_Entry);
+
+          use Analysis_Vec;
+
+          Ana_DB : Vector;
+       end Analysis_Pkg;
+
+       use Analysis_Pkg;
+
+       function Get_Passed (V : T'Class;
+                            C : Meets_Criteria) return Natural is
+          Passed : Natural := 0;
+       begin
+          for E of V loop
+             if C (E) then
+                Passed := Passed + 1;
+             end if;
+          end loop;
+
+          return Passed;
+       end Get_Passed;
+
+       procedure Analyze (V : T'Class;
+                          A : Analysis_Set)
+       is
+          Passed : Natural := 0;
+       begin
+          Passed := Get_Passed (V, A.Check);
+
+          Ana_DB.Append ((Timestamp   => Clock,
+                          Description => A.Description,
+                          Total       => Natural (V.Length),
+                          Passed      => Passed));
+       end Analyze;
+
+       procedure Display_Results is
+          TZ   : Time_Offset := UTC_Time_Offset;
+       begin
+          for A of Ana_DB loop
+             Put_Line ("Date:  "  & Image (A.Timestamp, True, TZ));
+             Put_Line ("Test:  "  & To_String (A.Description));
+             Put_Line ("Total: "  & Natural'Image (A.Total));
+             Put_Line ("Passed: " & Natural'Image (A.Passed));
+             New_Line;
+          end loop;
+       end Display_Results;
+
+    end Vector_Analysis;
+
+.. code:: ada
+
+    with Ada.Containers.Vectors;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    with Vector_Analysis;
+
+    procedure Show_Vector_Processing is
+
+       type Person is record
+          Name : Unbounded_String;
+          Age  : Natural;
+       end record;
+
+       package People_DB_Pkg is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Person);
+
+       package People_Ana is new Vector_Analysis
+         (P => People_DB_Pkg,
+          T => People_DB_Pkg.Vector);
+       use People_Ana;
+
+       function Older_Than_18 (E : Person) return Boolean is
+         (E.Age >= 18);
+
+       function To_US (S : String) return Unbounded_String renames
+         To_Unbounded_String;
+
+       Older_Than_18_Test : constant Analysis_Set
+         := (Check       => Older_Than_18'Access,
+             Description => To_US ("Count people older than 18 years"));
+
+       People_DB : People_DB_Pkg.Vector;
+
+    begin
+       People_DB.Append ((Name => To_US ("John"),
+                          Age  => 35));
+       People_DB.Append ((Name => To_US ("Bob"),
+                          Age  => 24));
+       People_DB.Append ((Name => To_US ("Alice"),
+                          Age  => 16));
+
+       Analyze (People_DB, Older_Than_18_Test);
+
+       People_DB.Append ((Name => To_US ("Sara"),
+                          Age  => 26));
+
+       Analyze (People_DB, Older_Than_18_Test);
+
+       Display_Results;
+
+    end Show_Vector_Processing;
+
+-----------------------------------------------------------------------
+
+**Example using "people database" and database analysis**
+
+**Formal subprogram**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    with Ada.Containers.Vectors;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    package Vector_Analysis is
+
+       generic
+          with package P is new Ada.Containers.Vectors (<>);
+          type T is new P.Vector with private;
+          V : access T'Class;
+          with function Check (E : P.Element_Type) return Boolean;
+          Description : String;
+       package Gen is
+          procedure Analyze;
+          procedure Display_Results;
+       end Gen;
+
+    end Vector_Analysis;
+
+.. code:: ada
+
+    with Ada.Containers;          use Ada.Containers;
+    with Ada.Containers.Vectors;
+    with Ada.Calendar;            use Ada.Calendar;
+    with Ada.Calendar.Time_Zones; use Ada.Calendar.Time_Zones;
+    with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+    with Ada.Text_IO;             use Ada.Text_IO;
+
+    package body Vector_Analysis is
+
+       package Analysis_Pkg is
+          type Analysis_Entry is record
+             Timestamp   : Time;
+             Description : Unbounded_String;
+             Total       : Natural;
+             Passed      : Natural;
+          end record;
+
+          package Analysis_Vec is new Ada.Containers.Vectors
+            (Index_Type   => Natural,
+             Element_Type => Analysis_Entry);
+
+          use Analysis_Vec;
+
+          Ana_DB : Vector;
+       end Analysis_Pkg;
+
+       package body Gen is
+          use Analysis_Pkg;
+
+          procedure Analyze
+          is
+             Passed : Natural := 0;
+          begin
+             for E of V.all loop
+                if Check (E) then
+                   Passed := Passed + 1;
+                end if;
+             end loop;
+
+             Ana_DB.Append
+               (Analysis_Entry'(Timestamp   => Clock,
+                                Description => To_Unbounded_String (Description),
+                                Total       => Natural (V.Length),
+                                Passed      => Passed));
+          end Analyze;
+
+
+          procedure Display_Results is
+             TZ   : Time_Offset := UTC_Time_Offset;
+          begin
+             for A of Ana_DB loop
+                Put_Line ("Date:  "  & Image (A.Timestamp, True, TZ));
+                Put_Line ("Test:  "  & To_String (A.Description));
+                Put_Line ("Total: "  & Natural'Image (A.Total));
+                Put_Line ("Passed: " & Natural'Image (A.Passed));
+                New_Line;
+             end loop;
+          end Display_Results;
+
+       end Gen;
+
+    end Vector_Analysis;
+
+.. code:: ada
+
+    with Ada.Containers.Vectors;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    with Vector_Analysis;
+
+    procedure Show_Vector_Processing is
+
+       type Person is record
+          Name : Unbounded_String;
+          Age  : Natural;
+       end record;
+
+       package People_DB_Pkg is new Ada.Containers.Vectors
+         (Index_Type   => Natural,
+          Element_Type => Person);
+
+       function Older_Than_18 (E : Person) return Boolean is
+         (E.Age >= 18);
+
+       function To_US (S : String) return Unbounded_String renames
+         To_Unbounded_String;
+
+       People_DB : People_DB_Pkg.Vector;
+
+       package People_Ana is new Vector_Analysis.Gen
+         (P           => People_DB_Pkg,
+          T           => People_DB_Pkg.Vector,
+          V           => People_DB'Access,
+          Check       => Older_Than_18,
+          Description => "Count people older than 18 years");
+       use People_Ana;
+
+    begin
+       People_DB.Append ((Name => To_US ("John"),
+                          Age  => 35));
+       People_DB.Append ((Name => To_US ("Bob"),
+                          Age  => 24));
+       People_DB.Append ((Name => To_US ("Alice"),
+                          Age  => 16));
+
+       Analyze;
+
+       People_DB.Append ((Name => To_US ("Sara"),
+                          Age  => 26));
+
+       Analyze;
+
+       Display_Results;
+
+    end Show_Vector_Processing;
 
 
 Generic interfaces
