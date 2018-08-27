@@ -4,29 +4,31 @@ Proof of Program Integrity
 .. role:: ada(code)
    :language: ada
 
-This section presents the proof capability provided by the GNATprove tool
-supporting SPARK. In this section, we focus on the simpler proofs that are
-needed for program integrity.
+This section presents the proof capability of GNATprove, a major tool for
+the SPARK language. We focus here on the simpler proofs that you'll need to
+write to verify your program's integrity.  The primary objective of
+performing proof of your program's integrity is to ensure the absence of
+runtime errors during its execution.
 
-For its soundness, this analysis relies on the prerequisite of having performed
-:ref:`Flow Analysis` and a user should not proceed further if there are still
-unjustified flow analysis messages for her program. The primary objective of
-performing proof of program integrity is to ensure the absence of any runtime
-error during the program's execution.
+The analysis steps discussed here are only sound if you've previously
+performed :ref:`Flow Analysis`.  You shouldn't proceed further if there you
+still have unjustified flow analysis messages for your program.
 
 
 Runtime Errors
 ---------------------------------------------------------------------
 
-There is always the potential for errors which can occur at program's execution
-but will not be detected during compilation. These errors, called runtime
-errors, are those targeted by proof in GNATprove. There are various kinds of
-runtime errors, the most common being array out of range access (`buffer
-overflow <https://en.wikipedia.org/wiki/Buffer_overflow>`_ in Ada), subtype
-range violation, overflows in computations, and division by zero. Taking a look
-at the code below to give an example, let us look at a simple assignment
-statement setting the value of the ``I`` + ``J`` th cell of an array of
-naturals ``A`` to ``P`` / ``Q``.
+There's always the potential for errors that aren't detected during
+compilation to occur during a program's execution. These errors, called
+runtime errors, are those targeted by GNATprove.
+
+There are various kinds of runtime errors, the most common being references
+that are out of the range of an array (`buffer overflow
+<https://en.wikipedia.org/wiki/Buffer_overflow>`_ in Ada), subtype range
+violations, overflows in computations, and divisions by zero. The code
+below illustrates many examples of possible runtime errors, all within a
+single statement.  Look at the assignment statement setting the ``I`` +
+``J``'th cell of an array ``A`` to the value ``P`` / ``Q``.
 
 .. code:: ada
 
@@ -47,49 +49,50 @@ naturals ``A`` to ``P`` / ``Q``.
 
     end Show_Runtime_Errors;
 
-If we don't know the values of ``I``, ``J``, ``P``, and ``Q``, then there
-is a question of what are the errors which may occur when executing this
-code. In fact, there are quite an important number of them.
 
-First, the computation of ``I`` + ``J`` may overflow, for example if ``I``
+There are quite a number of errors that may occur when executing this code.
+If we don't know anything about the values of ``I``, ``J``, ``P``, and
+``Q``, we can't rule out any of those errors.
+
+First, the computation of ``I`` + ``J`` can overflow, for example if ``I``
 is :ada:`Integer'Last` and ``J`` is positive.
 
 .. code-block:: ada
 
     A (Integer'Last + 1) := P / Q;
 
-Then, its result may not be in the range of the array ``A``.
+Next, the sum, which is used as an array index, may not be in the range of
+the index of the array.
 
 .. code-block:: ada
 
     A (A'Last + 1) := P / Q;
 
-On the other side of the assignment, the division may also overflow, but
-only in the very special case where ``P`` is :ada:`Integer'First` and
-``Q`` is -1 because of the asymmetric range of signed integer types.
+On the other side of the assignment, the division may also overflow, though
+only in the very special case where ``P`` is :ada:`Integer'First` and ``Q``
+is -1 because of the asymmetric range of signed integer types.
 
 .. code-block:: ada
 
     A (I + J) := Integer'First / -1;
 
-As the array contains natural numbers, it is also an error to store a
-negative value in it.
-
-.. code-block:: ada
-
-    A (I + J) := 1 / -1;
-
-Finally, the division is not allowed if ``Q`` is 0.
+The division is also not allowed if ``Q`` is 0.
 
 .. code-block:: ada
 
     A (I + J) := P / 0;
 
-For all those runtime errors, the compiler will generate checks in the
-executable code to make sure that no inconsistent state can be reached,
-raising an exception if those checks fail. You can see the type of
-exceptions raised due to failed checks for each of the different
-assignment statements below:
+Finally, since the array contains natural numbers, it's also an error to
+store a negative value in it.
+
+.. code-block:: ada
+
+    A (I + J) := 1 / -1;
+
+The compiler generates checks in the executable code corresponding to each
+of those runtime errors.  Each check raises an exception if it fails.  For
+the above asssignment statement, we can see examples of exceptions raised
+due to failed checks for each of the different cases above.
 
 .. code-block:: ada
 
@@ -108,17 +111,18 @@ assignment statements below:
     A (I + J) := P / 0;
     -- raised CONSTRAINT_ERROR : divide by zero
 
-Note that these runtime checks are costly, both in terms of program size
-and execution time. They do not come at zero cost and therefore, depending
-on the context, it may be appropriate to remove them if we can statically
-ensure that they can never be needed at runtime.
+These runtime checks are costly, both in terms of program size and
+execution time. It may be appropriate to remove them if we can statically
+ensure they aren't needed at runtime, in other words if we can prove that
+the condition tested for can never occur.
 
-This is where analysis using GNATprove can be used to demonstrate
-statically that none of these errors will ever occur at runtime. More
-precisely, GNATprove logically interprets the meaning of every instruction
-in the program. Using this interpretation, GNATprove generates a logical
-formula called verification condition for each possible check required
-for the validity of the code.
+This is where the analysis done by GNATprove comes in.  It can be used to
+demonstrate statically that none of these errors can ever occur at
+runtime. Specifically, GNATprove logically interprets the meaning of every
+instruction in the program. Using this interpretation, GNATprove generates
+a logical formula called a *verification condition* for each check that
+would otherwise be required by the Ada (and hence SPARK) language.
+
 
 .. code-block:: ada
 
@@ -137,33 +141,37 @@ for the validity of the code.
     A (I + J) := P / 0;
     -- medium: divide by zero might fail
 
-The verification conditions are then given to an automatic prover. If
-every verification condition generated for a program can be validated by a
-prover, it means that no error will ever be raised at runtime when
-executing this program.
+GNATprove then passes these verification conditions to an automatic prover,
+stated as conditions that must be true to avoid the error. If every such
+condition can be validated by a prover (meaning that it can be
+mathematically shown to always be true), we've been able to prove that no
+error can ever be raised at runtime when executing that program.
 
 
 Modularity
 ---------------------------------------------------------------------
 
-For scalability reasons, GNATprove performs proof of program modularly on a per
-subprogram basis. To do this, it relies on preconditions and postconditions to
-properly summarize the input and output state of each subprogram. More
-precisely, when verifying the body of a subprogram, GNATprove assumes it knows
-nothing about the possible initial values of its parameters and of the global
-variables it accesses except what is stated in the subprogram's
-precondition. If no precondition is given, then no assumptions can be made.
+To scale to large programs, GNATprove performs proofs on a per-subprogram
+basis by relying on preconditions and postconditions to properly summarize
+the input and output state of each subprogram. More precisely, when
+verifying the body of a subprogram, GNATprove assumes it knows nothing
+about the possible initial values of its parameters and of the global
+variables it accesses except what you state in the subprogram's
+precondition. If you don't specify a precondition, it can't make any
+assumptions.
 
-For example, the following code shows the body of ``Increment`` can be
-successfully verified as its precondition constrains the value of its
-parameter ``X`` to be less than :ada:`Integer'Last`.
+For example, the following code shows that the body of ``Increment`` can be
+successfully verified: its precondition constrains the value of its
+parameter ``X`` to be less than :ada:`Integer'Last` so we know the overflow
+check is always false.
 
-In the same way, when a subprogram is called, GNATprove assumes its :ada:`out`
-and :ada:`in out` parameters and the global variables it writes can be modified
-in any way compatible with its postcondition. For example, since ``Increment``
-has no postcondition, GNATprove does not know that ``X`` is smaller than
-:ada:`Integer'Last` after the call. Therefore, it cannot prove that the
-addition following the call to ``Increment`` cannot overflow.
+In the same way, when a subprogram is called, GNATprove assumes its
+:ada:`out` and :ada:`in out` parameters and the global variables it writes
+can be modified in any way compatible with their postconditions. For
+example, since ``Increment`` has no postcondition, GNATprove doesn't know
+that the value of ``X`` after the call is always less than
+:ada:`Integer'Last`. Therefore, it can't prove that the addition following
+the call to ``Increment`` can't overflow.
 
 .. code:: ada spark-report-all
 
@@ -189,11 +197,11 @@ addition following the call to ``Increment`` cannot overflow.
 Exceptions
 ~~~~~~~~~~
 
-There are two cases where modularity is not enforced by GNATprove. First,
-local subprograms without contracts can be inlined if they are simple
-enough. In particular, they should not be recursive or have multiple return
-points. If we remove the contract from ``Increment`` then it fits the
-criteria for inlining.
+There are two cases where GNATprove doesn't require modularity and hence
+doesn't make the above assumptions. First, local subprograms without
+contracts can be inlined if they're simple enough and are neither recursive
+nor have multiple return points. If we remove the contract from
+``Increment``, it fits the criteria for inlining.
 
 .. code:: ada spark-report-all
 
@@ -213,16 +221,16 @@ criteria for inlining.
        --  info: overflow check proved
     end Show_Modularity;
 
-As GNATprove sees the call to ``Increment`` exactly as if the increment on
-``X`` was done directly, it can verify successfully that no overflow may
-occur on either of the subsequent additions. The other case concerns
-expression functions. If a function is defined as an expression function,
-with or without contracts, then it is handled as if it had a postcondition
-stating the value of its result.
+GNATprove now sees the call to ``Increment`` exactly as if the increment on
+``X`` was done outside that call, so it can successfully verify that
+neither addition can overflow.
+
+The other case involves functions. If we define a function as an expression
+function, with or without contracts, GNATprove uses the expression itself
+as the postcondition on the result of the function.
 
 In our example, replacing ``Increment`` with an expression function allows
-GNATprove to verify successfully the overflow check in the following
-addition.
+GNATprove to successfully verify the overflow check in the addition.
 
 .. code:: ada spark-report-all
 
@@ -244,21 +252,20 @@ addition.
 Contracts
 ---------------------------------------------------------------------
 
-Though they are perfectly suited for formal verification, Ada
-contracts are primarily designed to be checked at runtime. Code that
-verifies the contracts at runtime can be generated by the compiler using
-the switch ``-gnata``. If an Ada contract does
-not hold at a given subprogram call, the exception
-:ada:`Assert_Failure` will be raised. This is particularly convenient
-during development and testing, but execution of assertions, and in
-particular of preconditions, may also be retained during the program's
-deployment to avoid reaching an inconsistent state.
+Ada contracts are perfectly suited for formal verification, but are
+primarily designed to be checked at runtime.  When you specify the
+``-gnata`` switch, the compiler generates code that verifies the contracts
+at runtime. If an Ada contract isn't satisfied for a given subprogram call,
+the program raises the :ada:`Assert_Failure` exception. This switch is
+particularly useful during development and testing, but you may also retain
+run-time execution of assertions, and specifically preconditions, during
+the program's deployment to avoid an inconsistent state.
 
 Consider the incorrect call to ``Increment`` below, which violates its
-precondition. One way to detect this error is by compiling the function with
-assertions enabled and testing is on suitable inputs that trigger the
-violation. Another way which does not require guessing suitable inputs is to
-run GNATprove.
+precondition. One way to detect this error is by compiling the function
+with assertions enabled and testing it with inputs that trigger the
+violation. Another way, one that doesn't require guessing the needed
+inputs, is to run GNATprove.
 
 .. code:: ada run_button
    :class: ada-run-expect-failure
@@ -278,11 +285,12 @@ run GNATprove.
        Increment (X);
     end Show_Precondition_Violation;
 
-Similarly, consider the incorrect implementation for function ``Absolute``
-below, which violates its postcondition. One way to detect this error is by
-compiling the function with assertions enabled and testing is on suitable
-inputs that trigger the violation. Another way which does not require guessing
-suitable inputs is to run GNATprove.
+Similarly, consider the incorrect implementation of function ``Absolute``
+below, which violates its postcondition. Likewise, one way to detect this
+error is by compiling the function with assertions enabled and testing with
+inputs that trigger the violation. Another way, one which again doesn't
+require finding the inputs needed to demonstrate the error, is to run
+GNATprove.
 
 .. code:: ada run_button
    :class: ada-run-expect-failure
@@ -304,34 +312,34 @@ suitable inputs is to run GNATprove.
        Absolute (X);
     end Show_Postcondition_Violation;
 
-The benefits of dynamically checking contracts extends beyond testing. It can
-be profitable to enable these checks at runtime to stop execution before some
-damaging event. This early failure detection allows an easier recovery and
-facilitates debugging.
+The benefits of dynamically checking contracts extends beyond making
+testing easier.  Early failure detection also allows an easier recovery and
+facilitates debugging, so you may want to enable these checks at runtime to
+terminate execution before some damaging or hard-to-debug action occurs.
 
-GNATprove analyses preconditions and postcondition statically. Like in the
-runtime semantics of contracts, preconditions are verified every time a
-subprogram is called.  Postconditions, on the other hand, are verified
-modularly once and for all as part of the verification of the subprogram's
-body. For example, it has to wait until ``Increment`` is improperly called to
-detect the precondition violation, as a precondition is really a contract for
-the caller. On the other hand, it does not need ``Absolute`` to be called to
-detect that its postcondition does not hold on all its possible inputs.
+GNATprove statically analyses preconditions and postcondition. It verifies
+preconditions every time a subprogram is called, which is the runtime
+semantics of contracts.  Postconditions, on the other hand, are verified
+once as part of the verification of the subprogram's body. For example,
+GNATprove must wait until ``Increment`` is improperly called to detect the
+precondition violation, since a precondition is really a contract for the
+caller. On the other hand, it doesn't need ``Absolute`` to be called to
+detect that its postcondition doesn't hold for all its possible inputs.
 
 
 Executable Semantics
 ~~~~~~~~~~~~~~~~~~~~
 
-In Ada, expressions in contracts have the regular semantics of
-Boolean expressions. In particular, runtime errors may occur during their
-computation. To facilitate both debugging of assertions and combining
-testing and static verification, the same semantics is used by GNATprove.
+Expressions in Ada contracts have the same semantics as Boolean expressions
+elsewhere, so runtime errors can occur during their computation. To
+simplify both debugging of assertions and combining testing and static
+verification, the same semantics are used by GNATprove.
 
-During proof of programs, it makes sure that no error will ever be raised
-during the execution of the contracts. This semantic may sometimes be
-considered too heavy, in particular regarding overflow checks. For example, it
-makes it harder to specify an appropriate precondition for the function ``Add``
-below:
+While proving programs, GNATprove verifies that no error an ever be raised
+during the execution of the contracts. However, you may sometimes find
+those semantics too heavy, in particular with respect to overflow checks,
+because they can make it harder to specify an appropriate precondition.  We
+see this in the function ``Add`` below.
 
 .. code:: ada run_button
    :class: ada-run-expect-failure
@@ -347,36 +355,37 @@ below:
        X := Add (Integer'Last, 1);
     end Show_Executable_Semantics;
 
-GNATprove issues a message on this code about a possible overflow when
-computing the addition of ``X`` and ``Y`` in the precondition. Indeed, as
-expressions in assertions have the regular Ada semantics, this addition may
-overflow, as one can see immediately by compiling and running the code that
+GNATprove issues a message on this code warning about a possible overflow
+when computing the sum of ``X`` and ``Y`` in the precondition. Indeed,
+since expressions in assertions have normal Ada semantics, this addition
+can overflow, as you can easily see by compiling and running the code that
 calls ``Add`` with arguments :ada:`Integer'Last` and 1.
 
-On the other hand, depending on the context, we may have preferred to have
-GNATprove use the mathematical semantics of addition and properly verify that
-no error will ever be raised at runtime in the body of ``Add``. This behavior
-may be obtained by using the compiler switch ``-gnato??`` (for example
-``-gnato13``) which allows to independently set the overflow mode in code (the
-first figure) and assertions (the second figure) to either reduce the number of
-overflow checks (using value 2) or to completely eliminate them (using value
-3), while the default Ada mechanism can also be preserved (using value 1). Note
-that this switch will also make the compiler avoid overflows at runtime.
+On the other hand, you sometimes may prefer GNATprove to use the
+mathematical semantics of addition in contracts while the generated code
+still properly verifies that no error is ever raised at runtime in the body
+of the program. You can get this behavior by using the compiler switch
+``-gnato??`` (for example ``-gnato13``), which allows you to independently
+set the overflow mode in code (the first digit) and assertions (the second
+digit).  For both, you can either reduce the number of overflow checks (the
+value 2), completely eliminate them (the value 3), or preserve the default
+Ada semantics (the value 1).
 
 
 Additional Assertions and Contracts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As we have seen, the ability to state properties to check in assertions and
-contracts is a key feature of SPARK. It supports preconditions and
-postconditions, as well as assertions introduced by the pragma :ada:`Assert`.
+As we've seen, a key feature of SPARK is that is allows us to state
+properties to check using assertions and contracts. SPARK supports
+preconditions and postconditions as well as assertions introduced by the
+:ada:`Assert` pragma.
 
-New contracts have also been introduced for the process of formal
-verification. For example, the new pragma :ada:`Assume` is handled as an
-assertion at execution but introduces an assumption for proof of program,
-that is, a Boolean expression which is assumed to be true by GNATprove
-without any verification. This feature is useful but must be used with
-great care.
+The SPARK language also includes new contract types used to assist formal
+verification. The new pragma :ada:`Assume` is treated as an assertion
+during execution but introduces an assumption when proving programs.  It's
+value is a Boolean expression which GNATprove assumes to be true without
+any attempt to verify that it's true. You'll find this feature useful, but
+you must use it with great care.  Here's an example of using it.
 
 .. code:: ada spark-report-all
 
@@ -386,13 +395,15 @@ great care.
        X := X + 1;
     end Incr;
 
-Another construct introduced for GNATprove is the :ada:`Contract_Cases`
-aspect. It allows to specify the behavior of a subprogram with a disjunction of
-cases. Each element of a contract-cases is in fact a small contract made of a
-guard, which may only reference subprogram's inputs and is evaluated before the
-call, and of a consequence. At each call of the subprogram, there must be one
-and only one case for which the guard evaluates to :ada:`True`. The consequence
-of this case is the one that should hold on exit.
+The :ada:`Contract_Cases` aspect is another construct introduced for
+GNATprove, but which also acts as an assertion during execution. It allows
+you to specify the behavior of a subprogram using a disjunction of
+cases. Each element of a :ada:`Contract-Cases` aspect is a *guard*, which
+is evaluated before the call and may only reference the subprogram's
+inputs, and a *consequence*. At each call of the subprogram, one and only
+one guard is permitted to evaluate to :ada:`True`. The consequence of that
+case is a contract that's required to be satisfied when the subprogram
+returns.
 
 .. code:: ada spark-report-all
 
@@ -407,9 +418,11 @@ of this case is the one that should hold on exit.
        end if;
     end Absolute;
 
-In GNATprove, validity --- as well as disjointness and completeness of the
-:ada:`Contract_Cases` --- is verified only once in the context of the
-subprogram's precondition.
+Similarly to how it analyzes a subprogram's precondition, GNATprove
+verifies the :ada:`Contract_Cases` only once.  It verifies the validity of
+each consequence (given the truth of its guard) and the disjointness and
+completeness of the guard conditions (meaning that exactly one guard must
+be true for each possible set of input values).
 
 
 .. _Debugging Failed Proof Attempts:
@@ -417,27 +430,28 @@ subprogram's precondition.
 Debugging Failed Proof Attempts
 ---------------------------------------------------------------------
 
-If GNATprove reports an error while verifying a program, it may be for
-different reasons:
+GNATprove may report an error while verifying a program for any of the
+following reasons:
 
-- there might be an error in the program, or
+- there might be an error in the program; or
 
-- the property may not be provable because of some missing information, or
+- the property may not be provable as written because more information is
+  required; or
 
 - the prover used by GNATprove may be unable to prove a perfectly valid
   property.
 
-The remainder of this section is dedicated to the sometimes tricky task of
-debugging failed proof attempts.
+We spend the remainder of this section discussing the sometimes tricky task
+of debugging failed proof attempts.
 
 Debugging Errors in Code or Specification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First, let us look at the case where there is indeed an error in the
-program. There are two possibilities: the code may be incorrect, or, and
-it is equally likely, the specification may be incorrect. As an example,
-there is an error in our procedure ``Incr_Until`` which makes its
-:ada:`Contract_Cases` unprovable.
+First, let's discuss the case where there's indeed an error in the program.
+There are two possibilities: the code may be incorrect or, equally likely,
+the specification may be incorrect. As an example, there's an error in our
+procedure ``Incr_Until`` below which makes its :ada:`Contract_Cases`
+unprovable.
 
 .. code:: ada
 
@@ -466,11 +480,11 @@ there is an error in our procedure ``Incr_Until`` which makes its
 
     end Show_Failed_Proof_Attempt;
 
-As assertions can be executed, it may help to test the program on a
-representative set of inputs with assertions enabled. This allows bugs to
-be found both in the code and in its contracts. For example, testing
-``Incr_Until`` on an input bigger than 1000 will raise an exception at
-runtime.
+Since this is an assertion that can be executed, it may help you find the
+problem if you run the program with assertions enabled on representative
+sets of inputs . This allows you to find bugs in both the code and its
+contracts. In this case, testing ``Incr_Until`` with an input greater than
+1000 raises an exception at runtime.
 
 .. code:: ada run_button
    :class: ada-run-expect-failure
@@ -512,33 +526,33 @@ runtime.
        Incr_Until (X);
     end Main;
 
-It shows a case where the first contract case is failing, which means that
-``Incremented`` is :ada:`True`. Still, if we print the value of ``Incremented``
-before returning, we will see that it is :ada:`False`, as expected for such an
-input. What occurs here is that guards of contract cases are evaluated before
-the call, so our specification is wrong! To correct this, we should either put
-``X < 1000`` as a guard of the first case or use a standard postcondition with
-an if-expression instead.
+The error message shows that the first contract case is failing, which
+means that ``Incremented`` is :ada:`True`. However, if we print the value
+of ``Incremented`` before returning, we see that it's :ada:`False`, as
+expected for the input we provided. The error here is that guards of
+contract cases are evaluated before the call, so our specification is
+wrong! To correct this, we should either write ``X < 1000`` as the guard of
+the first case or use a standard postcondition with an if-expression.
 
-Debugging Missing Information Causes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Debugging Cases where more Information is Required
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Even if both the code and the assertions are correct, GNATprove may still
-generate an unprovable verification condition for a property. This may
-happen for two reasons:
+report that it can't prove a verification condition for a property. This
+can happen for two reasons:
 
-- First, the property may be unprovable because some assertion is missing in
-  the code. In particular, this can be induced by the modularity of the
-  analysis which causes GNATprove to only know explicitly written properties
-  about some data.
+- The property may be unprovable because the code is missing some
+  assertion. One category of these cases is due to the modularity of the
+  analysis which, as we disussed above, means that GNATprove only knows
+  about the properties of your subprograms that you have explicitly
+  written.
 
-- Second, there may also be some missing information in the logical model of
-  the program used by GNATprove. This is the case for example for the content
-  of string literals.
+- There may be some information missing in the logical model of the program
+  used by GNATprove.
 
-Let's look at the case where the code and the specification are correct, but
-there is some missing information. As an example, the verification generated by
-GNATprove for the postcondition of ``Increase`` is unprovable.
+Let's look at the case where the code and the specification are correct but
+there's some information missing. As an example, GNATprove finds the
+postcondition of ``Increase`` to be unprovable.
 
 .. code:: ada
 
@@ -566,40 +580,43 @@ GNATprove for the postcondition of ``Increase`` is unprovable.
 
     end Show_Failed_Proof_Attempt;
 
-This postcondition states that, if the parameter ``X`` is smaller than a
-certain value ``C``, then its value will be increased by the procedure, whereas
-if it is bigger, its value will be saturated to ``C``. Indeed, using 100 for
-value of ``C``, the code of ``Increases`` will bump the value ``X`` by 10 for
-``X`` less than 90, it will bump its value by 1 for ``X`` between 90 and 99 and
-it will set it to 100 for ``X`` greater or equal to 100. It does respect the
-postcondition, so why is the postcondition not provable?
+This postcondition is a conditional.  It says that if the parameter (``X``)
+is less than a certain value (``C``), its value will be increased by the
+procedure while if it's greater, its value will be set to ``C``
+(saturated). When ``C`` has the value 100, the code of ``Increases`` adds
+10 to the value of ``X`` if it was initially less than 90, increments ``X``
+by 1 if it was between 90 and 99, and sets ``X`` to 100 if it was greater
+or equal to 100.  This behavior does satisfy the postcondition, so why is
+the postcondition not provable?
 
-The values in the counterexample returned by GNATprove in its message give a
-clue: :ada:`C = 0 and X = 10 and X'Old = 0`. Indeed, if ``C`` is not equal to 100,
-out reasoning above breaks! And the values 0 for ``C`` and ``X`` on entry
-indeed result in ``X`` being 10 on exit, which violates the postcondition!
+The values in the counterexample returned by GNATprove in its message gives
+us a clue: :ada:`C = 0 and X = 10 and X'Old = 0`. Indeed, if ``C`` is not
+equal to 100, our reasoning above is incorrect: the values of 0 for ``C``
+and ``X`` on entry indeed result in ``X`` being 10 on exit, which violates
+the postcondition!
 
-Maybe we did not expect the value of ``C`` to change, or at least not to go
-below 90. In this case, we should simply state so by either declaring ``C`` to
-be constant or by adding a precondition to the ``Increase`` subprogram. In both
-cases, GNATprove is able to prove the postcondition.
+We probably didn't expect the value of ``C`` to change, or at least not to
+go below 90.  But, in that case, we should have stated so by either
+declaring ``C`` to be constant or by adding a precondition to the
+``Increase`` subprogram. If we do either of those, GNATprove is able to
+prove the postcondition.
 
 Debugging Prover Limitations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Finally, there are cases where GNATprove provides a perfectly valid
-verification condition for a property, but it is not proved by the
-automatic prover in latter stages of the tool execution. This is quite a
-common occurrence. Indeed, GNATprove produces its verification conditions
-in first order logic, which is not decidable, especially in combination
-with arithmetic. Sometimes, the automatic prover just needs more time. But
-also sometimes, the prover will abandon the search almost immediately or
-loop forever without reaching a conclusive answer.
+verification condition for a property, but it's neverthless not proved by
+the automatic prover that runs in the later stages of the tool's
+execution. This is quite common. Indeed, GNATprove produces its
+verification conditions in first-order logic, which is not decidable,
+especially in combination with the rules of arithmetic. Sometimes, the
+automatic prover just needs more time.  Other times, the prover will
+abandon the search almost immediately or loop forever without reaching a
+conclusive answer (either a proof or a counterexample).
 
-For example, the postcondition of our ``GCD`` function --- which
-calculates the value of the ``GCD`` of two positive numbers using
-Euclide's algorithm --- cannot be verified with GNATprove's default
-settings.
+For example, the postcondition of our ``GCD`` function below --- which
+calculates the value of the ``GCD`` of two positive numbers using Euclide's
+algorithm --- can't be verified with GNATprove's default settings.
 
 .. code:: ada
 
@@ -627,13 +644,13 @@ settings.
 
     end Show_Failed_Proof_Attempt;
 
-The first thing to try is to increase the maximal amount of time that the
-prover is allowed to spend on each verification condition using the option
-``--timeout`` of GNATprove or the dialog box inside GPS. In our example,
-bumping it to one minute, which is relatively high, does not help. We can
-also specify an alternative automatic prover --- if we have one --- using
-the option ``--prover`` of GNATprove or the dialog box. For our
-postcondition, we have tried both Alt-Ergo, CVC4 and Z3 without any luck.
+The first thing we try is increasing the amount of time the prover is
+allowed to spend on each verification condition using the ``--timeout``
+option of GNATprove (e.g., by using the dialog box in GPS). In this
+example, increasing it to one minute, which is relatively high, doesn't
+help. We can also specify an alternative automatic prover --- if we have
+one --- using the option ``--prover`` of GNATprove (or the dialog box). For
+our postcondition, we tried Alt-Ergo, CVC4, and Z3 without any luck.
 
 .. code:: ada spark-report-all
 
@@ -672,30 +689,30 @@ postcondition, we have tried both Alt-Ergo, CVC4 and Z3 without any luck.
 
     end Show_Failed_Proof_Attempt;
 
-To better understand the problem, we have added intermediate assertions to
-simplify the proof and pin down the part that was causing the problem.
-This is often a good idea when trying to understand by review why a
-property is not proved. Here, provers cannot verify that, if ``A`` - ``B``
-and ``B`` can be divided by ``Result``, then so does ``A``. This may seem
-surprising, but non-linear arithmetic, involving multiplication, modulo,
-or exponentiation for example, is a difficult topic for provers and is not
-handled very well in practice by any of the general-purpose ones like
-Alt-Ergo, CVC4 or Z3.
+To better understand the reason for the failure, we added intermediate
+assertions to simplify the proof and pin down the part that's causing the
+problem.  Adding such assertions is often a good idea when trying to
+understand why a property is not proved. Here, provers can't verify that if
+both ``A`` - ``B`` and ``B`` can be divided by ``Result``so can ``A``. This
+may seem surprising, but non-linear arithmetic, involving, for example,
+multiplication, modulo, or exponentiation, is a difficult topic for provers
+and is not handled very well in practice by any of the general-purpose ones
+like Alt-Ergo, CVC4, or Z3.
 
 
 Code Examples / Pitfalls
 ---------------------------------------------------------------------
 
-This section contains some code examples and pitfalls.
+We end with some code examples and pitfalls.
 
 Example #1
 ~~~~~~~~~~
 
-The package ``Lists`` defines a linked-list data structure that can be updated
-by calling ``Link(I,J)`` to insert a link from index ``I`` to index ``J``, and
-queried by calling ``Goes_To(I,J)`` to know if there is a link from index ``I``
-to index ``J``. The postcondition of ``Link`` states that there should be a
-link between its arguments using ``Goes_To``.
+The package ``Lists`` defines a linked-list data structure.  We call
+``Link(I,J)`` to make a link from index ``I`` to index ``J`` and call
+``Goes_To(I,J)`` to determine if we've created a link from index ``I`` to
+index ``J``. The postcondition of ``Link`` uses ``Goes_To`` to state that
+there must be a link between its arguments once ``Link`` completes.
 
 .. code:: ada
 
@@ -741,8 +758,9 @@ link between its arguments using ``Goes_To``.
 
     end Lists;
 
-This example is correct, but it cannot be verified with GNATprove. As
-``Goes_To`` itself has no postcondition, nothing is known about its result.
+This example is correct, but can't be verified by GNATprove.  This is
+because ``Goes_To`` itself has no postcondition, so nothing is known about
+its result.
 
 
 Example #2
@@ -789,16 +807,18 @@ We now redefine ``Goes_To`` as an expression function.
 
     end Lists;
 
-GNATprove can fully prove this version. As ``Goes_To`` is an expression
-function, its body is available for proof.
+GNATprove can fully prove this version: ``Goes_To`` is an expression
+function, so its body is available for proof (specifically, for creating
+the postcondition needed for the proof).
 
 
 Example #3
 ~~~~~~~~~~
 
-The package ``Stacks`` defines an abstract stack type with a ``Push`` procedure
-to add an element at the top of the stack, and a function ``Peek`` to peek at
-the element at the top of the stack.
+The package ``Stacks`` defines an abstract stack type with a ``Push``
+procedure that adds an element at the top of the stack and a function
+``Peek`` that returns the content of the element at the top of the stack
+(without removing it).
 
 .. code:: ada
 
@@ -840,15 +860,15 @@ the element at the top of the stack.
 
     end Stacks;
 
-This example is not correct. The postcondition of ``Push`` is only true if
-the stack is not full when ``Push`` is called.
+This example isn't correct. The postcondition of ``Push`` is only satisfied
+if the stack isn't full when we call ``Push``.
 
 
 Example #4
 ~~~~~~~~~~
 
-We now change the behavior of ``Push`` to raise an exception instead of
-returning when the stack is full.
+We now change the behavior of ``Push`` so it raises an exception when the
+stack is full instead of returning.
 
 .. code:: ada
 
@@ -892,15 +912,16 @@ returning when the stack is full.
 
     end Stacks;
 
-The postcondition of ``Push`` is now proved, as it only concerns execution
-paths leading to normal termination. But GNATprove issues a message warning
-that exception ``Is_Full_E`` may be raised at runtime.
+The postcondition of ``Push`` is now proved because GNATprove only
+considers execution paths leading to normal termination. But it issues a
+message warning that exception ``Is_Full_E`` may be raised at runtime.
 
 
 Example #5
 ~~~~~~~~~~
 
-Let's add a precondition to ``Push`` stating that the stack should not be full.
+Let's add a precondition to ``Push`` stating that the stack shouldn't be
+full.
 
 .. code:: ada spark-report-all
 
@@ -946,17 +967,18 @@ Let's add a precondition to ``Push`` stating that the stack should not be full.
 
     end Stacks;
 
-This example is correct. In the context of the precondition, GNATprove can
-now verify that ``Is_Full_E`` can never be raised at runtime.
+This example is correct. With the addition of the precondition, GNATprove
+can now verify that ``Is_Full_E`` can never be raised at runtime.
 
 
 Example #6
 ~~~~~~~~~~
 
-The package ``Memories`` defines a type ``Chunk`` representing chunks of
-memory, where some distinguished data elements can be interpreted as indexes
-into the array. The procedure ``Read_Record`` reads two pieces of data from its
-``Memory`` chunk passed in parameter starting at index ``From``.
+The package ``Memories`` defines a type ``Chunk`` that models chunks of
+memory.  Each element of the array, represented by its index, corresponds
+to one data element.  The procedure ``Read_Record`` reads two pieces of
+data starting at index ``From`` out of the chunk represented by the value
+of ``Memory``.
 
 .. code:: ada
 
@@ -1001,7 +1023,7 @@ into the array. The procedure ``Read_Record`` reads two pieces of data from its
        Data2 := Read_One (Addr, -Size);
     end Read_Record;
 
-It is correct, but it cannot be verified with GNATprove. GNATprove
+This example is correct, but it can't be verified by GNATprove, which
 analyses ``Read_One`` on its own and notices that an overflow may occur in
 its precondition in certain contexts.
 
@@ -1054,16 +1076,16 @@ Let's rewrite the precondition of ``Read_One`` to avoid any possible overflow.
        Data2 := Read_One (Addr, -Size);
     end Read_Record;
 
-This example is not correct. Unfortunately, our attempt to correct
+This example is also not correct: unfortunately, our attempt to correct
 ``Read_One``'s precondition failed. For example, an overflow will occur at
-runtime when ``Memory (First)`` is :ada:`Integer'Last` and ``Offset`` is
+runtime if ``Memory (First)`` is :ada:`Integer'Last` and ``Offset`` is
 negative.
 
 
 Example #8
 ~~~~~~~~~~
 
-Let's remove completely the precondition of ``Read_One``.
+Let's completely remove the precondition of ``Read_One``.
 
 .. code:: ada spark-report-all
 
@@ -1106,18 +1128,18 @@ Let's remove completely the precondition of ``Read_One``.
        Data2 := Read_One (Addr, -Size);
     end Read_Record;
 
-This example is correct and fully proved. We could have fixed the contract on
-``Read_One`` to handle correctly positive and negative values of
-``Offset``. However, we found it simpler to let the function be inlined for
+This example is correct and fully proved. We could have fixed the contract
+of ``Read_One`` to correctly handle both positive and negative values of
+``Offset``, but we found it simpler to let the function be inlined for
 proof by removing its precondition.
 
 
 Example #9
 ~~~~~~~~~~
 
-The procedure ``Compute`` does various computations on its argument depending
-on its input range, that are reflected in its contract expressed using a
-``Contract_Cases`` aspect.
+The procedure ``Compute`` performs various computations on its argument.
+The computation performed depends on its input range and is reflected in
+its contract, which we express using a ``Contract_Cases`` aspect.
 
 .. code:: ada
 
@@ -1142,10 +1164,10 @@ on its input range, that are reflected in its contract expressed using a
        end if;
     end Compute;
 
-This example is not correct. We duplicated in ``Compute``'s contract the
-content of its body. This is not correct with respect to the semantics of
-:ada:`Contract_Cases` which expects disjoint cases, like a case statement. The
-counterexample returned by GNATprove points out the case of ``X = 0`` which is
+This example isn't correct. We duplicated the content of ``Compute``'s body
+in its contract. This is incorrect because the semantics of
+:ada:`Contract_Cases` require disjoint cases, just like a case
+statement. The counterexample returned by GNATprove shows that ``X = 0`` is
 covered by two different case-guards (the first and the second).
 
 
@@ -1176,8 +1198,8 @@ Let's rewrite the contract of ``Compute`` to avoid overlapping cases.
        end if;
     end Compute;
 
-This example is still not correct. Here, GNATprove can successfully check that
-the different cases are disjoint. It can also successfully verify each case on
-its own. This is not enough though, as a :ada:`Contract_Cases` must also be
-total. Here, we forgot the value 0, which is reported by GNATprove in its
-counterexample.
+This example is still not correct.  GNATprove can successfully prove the
+different cases are disjoint and also successfully verify each case
+individually. This isn't enough, though: a :ada:`Contract_Cases` must cover
+all cases. Here, we forgot the value 0, which is what GNATprove reports in
+its counterexample.
