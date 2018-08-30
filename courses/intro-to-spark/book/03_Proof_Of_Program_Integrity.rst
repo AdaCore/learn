@@ -335,7 +335,7 @@ elsewhere, so runtime errors can occur during their computation. To
 simplify both debugging of assertions and combining testing and static
 verification, the same semantics are used by GNATprove.
 
-While proving programs, GNATprove verifies that no error an ever be raised
+While proving programs, GNATprove verifies that no error can ever be raised
 during the execution of the contracts. However, you may sometimes find
 those semantics too heavy, in particular with respect to overflow checks,
 because they can make it harder to specify an appropriate precondition.  We
@@ -382,7 +382,7 @@ preconditions and postconditions as well as assertions introduced by the
 
 The SPARK language also includes new contract types used to assist formal
 verification. The new pragma :ada:`Assume` is treated as an assertion
-during execution but introduces an assumption when proving programs.  It's
+during execution but introduces an assumption when proving programs.  Its
 value is a Boolean expression which GNATprove assumes to be true without
 any attempt to verify that it's true. You'll find this feature useful, but
 you must use it with great care.  Here's an example of using it.
@@ -398,7 +398,7 @@ you must use it with great care.  Here's an example of using it.
 The :ada:`Contract_Cases` aspect is another construct introduced for
 GNATprove, but which also acts as an assertion during execution. It allows
 you to specify the behavior of a subprogram using a disjunction of
-cases. Each element of a :ada:`Contract-Cases` aspect is a *guard*, which
+cases. Each element of a :ada:`Contract_Cases` aspect is a *guard*, which
 is evaluated before the call and may only reference the subprogram's
 inputs, and a *consequence*. At each call of the subprogram, one and only
 one guard is permitted to evaluate to :ada:`True`. The consequence of that
@@ -482,7 +482,7 @@ unprovable.
 
 Since this is an assertion that can be executed, it may help you find the
 problem if you run the program with assertions enabled on representative
-sets of inputs . This allows you to find bugs in both the code and its
+sets of inputs. This allows you to find bugs in both the code and its
 contracts. In this case, testing ``Incr_Until`` with an input greater than
 1000 raises an exception at runtime.
 
