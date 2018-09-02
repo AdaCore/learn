@@ -4,43 +4,44 @@ State Abstraction
 .. role:: ada(code)
    :language: ada
 
-Abstraction is a key concept in programming as it can drastically simplify
-both implementation and code maintenance. It is particularly well suited
-to SPARK and its modular analysis. This section explains what state
-abstraction is and how it can be specified in SPARK. We will provide
-details on how it impacts GNATprove's analysis both in terms of
-information flow and proof of program properties.
+Abstraction is a key concept in programming that can drastically simplify
+both the implementation and maintenance of code. It's particularly well
+suited to SPARK and its modular analysis. This section explains what state
+abstraction is and how you use it in SPARK. We explain how it impacts
+GNATprove's analysis both in terms of information flow and proof of program
+properties.
 
-State abstraction allows to:
+State abstraction allows us to:
 
-- express data dependencies (:ada:`Global` contract) and flow dependencies
-  (:ada:`Depends` contract) that would not be expressible otherwise, as some
-  data read/written is not visible at the point where the subprogram is
-  declared;
+- express dependencies that wouldn't otherwise be expressible because some
+  data that's read or written isn't visible at the point where a subprogram
+  is declared --- examples are dependencies on data, for which we use the
+  :ada:`Global` contract, and on flow, for which we use the :ada:`Depends`
+  contract.
 
-- reduce the number of variables that need to be considered in flow analysis
-  and proof, which may be critical for scaling the analysis to programs with
-  thousands of global variables.
+- reduce the number of variables that need to be considered in flow
+  analysis and proof, a reduction which may be critical in order to scale
+  the analysis to programs with thousands of global variables.
 
 
-What is an Abstraction?
+What's an Abstraction?
 ---------------------------------------------------------------------
 
-The abstraction principle is commonly used in programming languages. It
-consists in having two views of the same object: an abstract one and a
-refined one. The abstract one --- usually called specification --- only
-describes what the object does in a coarse way. A subprogram's
-specification usually explains how it should be called, how many
-parameters it has, of which type, etc., as well as what it will do, return
-a result, modify one of its parameters, etc.
+Abstraction is an important part of programming language design. It
+provides two views of the same object: an abstract one and a refined
+one. The abstract one --- usually called *specification* --- describes what
+the object does in a coarse way. A subprogram's specification usually
+describes how it should be called (e.g., parameter information such as how
+many and of what types) as well as what it does (e.g., returns a result or
+modifies one or more of its parameters).
 
-Contract based programming as supported in Ada allows contracts to be
-added to a subprogram's specification. Contracts can be used to describe
-the subprogram's behavior in a more fine-grained manner. All the details
-of how the subprogram actually works are left to its refined view, that
-is, its implementation.
+Contract-based programming, as supported in Ada, allows contracts to be
+added to a subprogram's specification. You use contracts to describe the
+subprogram's behavior in a more fine-grained manner, but all the details of
+how the subprogram actually works are left to its refined view, its
+implementation.
 
-Take a look at the example code shown below:
+Take a look at the example code shown below.
 
 .. code:: ada
 
@@ -54,23 +55,24 @@ Take a look at the example code shown below:
        X := X + 1;
     end Increase;
 
-The specification of the subprogram ``Increase`` states that it should be
-called on a unique argument, which should be a variable of type
-:ada:`Integer` smaller than 100. Via this contract, it ensures that its
-only effect will be to strictly increase the value of its argument.
+We've written a specification of the subprogram ``Increase`` to say that it's
+called with a single argument, a variable of type :ada:`Integer` whose
+initial value is less than 100. Our contract says that the only effect of
+the subproram is to increase the value of its argument.
 
 
 Why is Abstraction Useful?
 ---------------------------------------------------------------------
 
-To obtain a good abstraction of a subprogram's implementation, its
-specification should summarize exactly what users of an object can rely
-on. In other words, user code should not rely on a behavior of an object's
-implementation if it is not documented in its specification.
+A good abstraction of a subprogram's implementation is one whose
+specification precisely and completely summarizes what its callers can rely
+on. In other words, a caller of that subprogram shouldn't rely on any
+behavior of its implementation if that behavior isn't documented in its
+specification.
 
 For example, callers of the subprogram ``Increase`` can assume that it
-will always strictly increase the value of its argument. On our user code
-snippet shown below, it means that the loop is bound to terminate.
+always strictly increases the value of its argument. In the code snippet
+shown below, this means the loop must terminate.
 
 .. code:: ada
 
@@ -89,32 +91,34 @@ snippet shown below, it means that the loop is bound to terminate.
        pragma Assert (X = 101); --  Will this hold?
     end Client;
 
-They can also assume that the implementation of ``Increase`` won't cause
-any runtime error when called in the loop. However, on the other hand, the
-assertion may fail if ``Increase``'s implementation is changed.
+Callers can also assume that the implementation of ``Increase`` won't cause
+any runtime errors when called in the loop. On the other hand, nothing in
+the specification guarantees that the assertion show above is correct: it
+may fail if ``Increase``'s implementation is changed.
 
-If this basic principle is followed, abstraction can bring significant
-advantages. First, it simplifies both the program's implementation and its
-verification. Often, it is enough to understand the specification of an
-object to use it, which is in general simpler than trying to understand
-its actual implementation. It also makes maintenance and code reuse that
-much easier, as changes to the implementation of an object won't affect
-the code using this object.
+If you follow this basic principle, abstraction can bring you significant
+benefits. It simplifies both your program's implementation and
+verification. It also makes maintenance and code reuse much easier since
+changes to the implementation of an object shouldn't affect the code using
+this object.  Your goal in using it is that it should be enough to
+understand the specification of an object in order to use that object,
+since understanding the specification is usually much simpler than
+understanding the implementation.
 
-GNATprove respects the abstraction defined by subprogram contracts, and as a
-result does not prove the assertion after the loop in ``Client`` above.
+GNATprove relies on the abstraction defined by subprogram contracts and
+therefore doesn't prove the assertion after the loop in ``Client`` above.
 
 Abstraction of a Package's State
 ---------------------------------------------------------------------
 
-Subprograms are not the only objects that can benefit from abstraction.
-The state of a package --- that is, the set of persistent variables
-defined in it --- can also be hidden from external users. This form of
-abstraction --- called state abstraction --- is usually achieved by
-defining variables in the body or private part of a package, so that they
-can only be accessed through subprogram calls. For example, our ``Stack``
-package shown below provides an abstraction for a unique ``Stack`` object
-which can be modified using the ``Pop`` and ``Push`` procedures.
+Subprograms aren't the only objects that benefit from abstraction.  The
+state of a package --- the set of persistent variables defined in it ---
+can also be hidden from external users. You achieve this form of
+abstraction --- called *state abstraction* --- by defining variables in the
+body or private part of a package so they can only be accessed through
+subprogram calls. For example, our ``Stack`` package shown below provides
+an abstraction for a ``Stack`` object which can only be modified using the
+``Pop`` and ``Push`` procedures.
 
 .. code-block:: ada
 
@@ -129,26 +133,25 @@ which can be modified using the ``Pop`` and ``Push`` procedures.
        ...
     end Stack;
 
-The fact that it is implemented using an array is irrelevant to the user
-and could be changed without impacting user code.
+The fact that we implemented it using an array is irrelevant to the caller.
+We could change that without impacting our callers' code.
 
 
 Declaring a State Abstraction
 ---------------------------------------------------------------------
 
-As the hidden state influences the program's behavior, SPARK allows it to
-be declared. For this, a named state abstraction can be introduced using
-the :ada:`Abstract_State` aspect. This is not mandatory even for a package
-which has hidden state. Several state abstractions can also be introduced
-for the hidden state of a single package or for a package with no hidden
-state at all. Note however that, as SPARK does not allow aliasing,
-different state abstractions must always refer to disjoint sets of
-concrete variables. Note also that a state abstraction is not a variable,
-it does not have a type and cannot be used inside expressions, be it in
-bodies or in contracts.
+Hidden state influences a program's behavior, so SPARK allows that state to
+be declared.  You can use the :ada:`Abstract_State` aspect, an abstraction
+that names a state, to do this, but you aren't required to use it even for
+a package with hidden state.  You can use several state abstractions to
+declare the hidden state of a single package or you can use it for a
+package with no hidden state at all. However, since SPARK doesn't allow
+aliasing, different state abstractions must always refer to disjoint sets
+of variables.  A state abstraction isn't a variable: it doesn't have a type
+and can't be used inside expressions, either those in bodies or contracts.
 
-For example, we can optionally define a state abstraction for the whole hidden
-state of the ``Stack`` package like this:
+As an example of the use of this aspect, we can optionally define a state
+abstraction for the entire hidden state of the ``Stack`` package like this:
 
 .. code-block:: ada
 
@@ -166,8 +169,8 @@ Alternatively, we can define a state abstraction for each hidden variable:
     is
       ...
 
-Note that a state abstraction is not a variable (it has no type), and
-cannot be used inside expressions. For example:
+Remember: a state abstraction isn't a variable (it has no type) and can't
+be used inside expressions. For example:
 
 .. code-block:: ada
 
@@ -178,19 +181,19 @@ cannot be used inside expressions. For example:
 Refining an Abstract State
 ---------------------------------------------------------------------
 
-Once an abstract state has been declared in a package, it must be refined into
-its constituents using a :ada:`Refined_State` aspect. The :ada:`Refined_State`
-aspect must be placed on the package's body even if the package previously did
-not require a body before the addition of :ada:`Abstract_State`. For each state
-abstraction declared for the package, the refined state lists the set of
-variables which are represented by this state abstraction.
+Once you've declared an abstract state in a package, you must refine it
+into its constituents using a :ada:`Refined_State` aspect. You must place
+the :ada:`Refined_State` aspect on the package body even if the package
+wouldn't otherwise have required a body. For each state abstraction you've
+declared for the package, you list the set of variables represented by that
+state abstraction in its refined state.
 
-If an abstract state is specified for a package, then it must be complete,
-in the sense that every hidden variable must be part of a state
-abstraction. For example, on our ``Stack`` package's body, we must add a
-:ada:`Refined_State` aspect linking the state abstraction ``The_Stack``
-that we have introduced to the whole hidden state of the package,
-including both ``Content`` and ``Top``.
+If you specify an abstract state for a package, it must be complete,
+meaning you must have listed every hidden variable as part of some state
+abstraction. For example, we must add a :ada:`Refined_State` aspect on our
+``Stack`` package's body linking the state abstraction (``The_Stack``) to
+the entire hidden state of the package, which consists of both ``Content``
+and ``Top``.
 
 .. code:: ada spark-flow
 
@@ -233,15 +236,15 @@ including both ``Content`` and ``Top``.
 Representing Private Variables
 ---------------------------------------------------------------------
 
-State abstractions are always refined in the package's body, where all the
+You can refine state abstractions in the package body, where all the
 variables are visible. When only the package's specification is available,
-we need a way to specify to which state abstraction private variables
-belong. This is done using the :ada:`Part_Of` aspect on the variable's
-declarations.
+you need a way to specify which state abstraction each private variable
+belongs to. You do this by adding the :ada:`Part_Of` aspect to the
+variable's declaration.
 
-:ada:`Part_Of` annotations are mandatory: if a package has an abstract
-state annotation, then all the hidden states defined in its private part
-must be linked to a state abstraction. For example:
+:ada:`Part_Of` annotations are mandatory: if you gave a package an abstract
+state annotation, you must link all the hidden variables defined in its
+private part to a state abstraction. For example:
 
 .. code:: ada spark-flow
 
@@ -264,12 +267,12 @@ must be linked to a state abstraction. For example:
 
     end Stack;
 
-If we choose to define ``Content`` and ``Top`` in ``Stack``'s private part
-instead of its body, then we must add a :ada:`Part_Of` aspect to both
+Since we chose to define ``Content`` and ``Top`` in ``Stack``'s private
+part instead of its body, we had to add a :ada:`Part_Of` aspect to both of
 their declarations, associating them with the state abstraction
-``The_Stack``, even though it is the only state abstraction defined in
-``Stack``. Note that they still need to be listed in the
-:ada:`Refined_State` aspect in the ``Stack``'s body:
+``The_Stack``, even though it's the only state abstraction. However, we
+still need to list them in the :ada:`Refined_State` aspect in ``Stack``'s
+body.
 
 .. code-block:: ada
 
@@ -283,14 +286,14 @@ Additional State
 Nested Packages
 ~~~~~~~~~~~~~~~
 
-Until now, we have only seen hidden variables. But variables are not
-the only constituents of a package's state. If a package ``P`` contains a
-nested package, then the nested package's state is part of ``P``'s state.
-As a consequence, if the nested package is hidden, its state is part of
-``P``'s hidden state and must be listed in ``P``'s state refinement.
+So far, we've only discussed hidden variables. But variables aren't the
+only component of a package's state. If a package ``P`` contains a nested
+package, the nested package's state is also part of ``P``'s state.  If the
+nested package is hidden, its state is part of ``P``'s hidden state and
+must be listed in ``P``'s state refinement.
 
-This is the case in our example shown below, where the package
-``Hidden_Nested``'s hidden state is part of ``P``'s hidden state:
+We see this in the example below, where the package ``Hidden_Nested``'s
+hidden state is part of ``P``'s hidden state.
 
 .. code:: ada spark-flow
 
@@ -335,32 +338,30 @@ This is the case in our example shown below, where the package
        end Visible_Nested;
     end P;
 
-Note that a visible state of ``Hidden_Nested`` would also have been part
-of ``P``'s hidden state. Also note that, if ``P`` contains a visible
-nested package, then the nested package's state is not part of ``P``'s
-hidden state. In particular, its hidden state should be declared in a
-separate state abstraction on its own declaration, like it is done on our
-example for ``Visible_Nested``.
+Any visible state of ``Hidden_Nested`` would also have been part of ``P``'s
+hidden state.  However, if ``P`` contains a visible nested package, that
+nested package's state isn't part of ``P``'s hidden state.  Instead, you
+should declare that package's hidden state in a separate state abstraction
+on its own declaration, like we did above for ``Visible_Nested``.
 
 
-Constants with Variable Inputs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Constants that Depend on Variables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Other possible constituents of a state abstraction are constants with
-variable inputs. We call constants with variable inputs constants whose
-value depends on either a variable or a subprogram parameter. Those are
-usually handled as variables in flow analysis, as they participate to the
-flow of information between variables throughout the program. Thus,
-constants with variable inputs, just like variables, are considered to be
-part of a package's state.
+Some constants are also possible components of a state abstraction. These
+are constants whose value depends either on a variable or a subprogram
+parameter.  They're handled as variables during flow analysis because they
+participate in the flow of information between variables throughout the
+program. Therefore, GNATprove considers these constants to be part of a
+package's state just like it does for variables.
 
-If a state abstraction is specified for a package, then hidden constants
-with variable inputs declared in this package must be listed in the state
-abstraction refinement. Note that, on the other hand, constants without
-variable inputs do not participate to the flow of information and
-therefore cannot appear in a state refinement.
+If you've specified a state abstraction for a package, you must list such
+hidden constants declared in that package in the state abstraction
+refinement. However, constants that don't depend on variables don't
+participate in the flow of information and must not appear in a state
+refinement.
 
-Let's look at this example:
+Let's look at this example.
 
 .. code:: ada spark-flow
 
@@ -408,10 +409,10 @@ Let's look at this example:
 
     end Stack;
 
-Here, ``Max`` --- the maximal number of elements that can be stored in the
-stack --- is initialized with a variable from an external package. Since
-it now has variable inputs, ``Max`` must be a part of the state
-abstraction ``The_Stack``.
+Here, ``Max`` --- the maximum number of elements that can be stored in the
+stack --- is initialized from a variable in an external package. Because of
+this, we must include ``Max`` as part of the state abstraction
+``The_Stack``.
 
 
 Subprogram Contracts
@@ -420,19 +421,19 @@ Subprogram Contracts
 Global and Depends
 ~~~~~~~~~~~~~~~~~~
 
-As hidden variables can only be accessed through subprogram calls,
-subprogram's contracts are the proper way of documenting how state
-abstractions can be modified during the program's execution. First off,
-:ada:`Global` and :ada:`Depends` contracts can be used to specify which of
-the state abstractions are accessed by a subprogram and how their values
-flow through the different variables. Note that :ada:`Global` and
-:ada:`Depends` contracts referring to state abstractions may be less
-precise than contracts referring to visible variables, as the different
-modes of the hidden variables aggregated in a state abstraction are
-collapsed into a single mode.
+Hidden variables can only be accessed through subprogram calls, so you
+document how state abstractions are modified during the program's execution
+via the contracts of those subprograms.  You use :ada:`Global` and
+:ada:`Depends` contracts to specify which of the state abstractions are
+used by a subprogram and how values flow through the different variables.
+The :ada:`Global` and :ada:`Depends` contracts that you write when
+referring to state abstractions are often less precise than contracts
+referring to visible variables since the possibly different dependencies of
+the hidden variables contained within a state abstraction are collapsed
+into a single dependency.
 
-Let's add :ada:`Global` and :ada:`Depends` contracts to the ``Pop`` procedure
-in our stack:
+Let's add :ada:`Global` and :ada:`Depends` contracts to the ``Pop``
+procedure in our stack.
 
 .. code:: ada spark-flow
 
@@ -450,12 +451,13 @@ in our stack:
     end Stack;
 
 In this example, the ``Pop`` procedure only modifies the value of the
-hidden variable ``Top`` and keeps ``Content`` unchanged. If two distinct
-state abstractions are used for the two variables, then this contract is
-preserved.
+hidden variable ``Top``, while ``Content`` is unchanged. By using distinct
+state abstractions for the two variables, we're able to preserve this
+semantic in the contract.
 
-Let's contrast this example with a different expression of :ada:`Global` and
-:ada:`Depends` contracts using a unique abstract state:
+Let's contrast this example with a different representation of
+:ada:`Global` and :ada:`Depends` contracts, this time using a single
+abstract state.
 
 .. code:: ada spark-flow
 
@@ -470,29 +472,30 @@ Let's contrast this example with a different expression of :ada:`Global` and
 
     end Stack;
 
-Here, ``Top_State`` and ``Content_State`` are collapsed into one single
-state abstraction. In this case, we lose the fact that ``Content`` is
-preserved, only keeping the fact that ``The_Stack`` is modified. This loss
-in precision is reasonable here, it is the whole point of abstraction. But
-users must be careful not to aggregate unrelated hidden state lest their
-annotations become meaningless.
+Here, ``Top_State`` and ``Content_State`` are merged into a single state
+abstraction, ``The_Stack``. By doing so, we've hidden the fact that
+``Content`` isn't modified (though we're still showing that ``Top`` may be
+modified).  This loss in precision is reasonable here, since it's the whole
+point of the abstraction. However, you must be careful not to aggregate
+unrelated hidden state because this risks their annotations becoming
+meaningless.
 
-If imprecise contracts dealing with state abstractions as a whole are
-perfectly reasonable for users of a package, :ada:`Global` and
-:ada:`Depends` contracts should remain as precise as possible inside the
-package's body itself. For this reason, SPARK introduces the notion of
-refined contracts. Those are precise contracts, specified on the bodies of
-subprograms, where state refinements are visible. These contracts are
-exactly like normal :ada:`Global` and :ada:`Depends` contracts, except
-they refer directly to the hidden state of the package.
+Even though imprecise contracts that consider state abstractions as a whole
+are perfectly reasonable for users of a package, you should write
+:ada:`Global` and :ada:`Depends` contracts that are as precise as possible
+within the package body. To allow this, SPARK introduces the notion of
+*refined contracts*, which are precise contracts specified on the bodies of
+subprograms where state refinements are visible. These contracts are the
+same as normal :ada:`Global` and :ada:`Depends` contracts except they refer
+directly to the hidden state of the package.
 
-When a subprogram is called inside the package's body, these refined contracts
-are used instead of the general ones, so that the verification can be as
-precise as possible. Note that refined :ada:`Global` and :ada:`Depends` are
-optional: if they are not specified by the user, GNATprove will compute them to
-check the package's implementation.
+When a subprogram is called inside the package body, you should write
+refined contracts instead of the general ones so that the verification can
+be as precise as possible. However, refined :ada:`Global` and
+:ada:`Depends` are optional: if you don't specify them, GNATprove will
+compute them to check the package's implementation.
 
-For our ``Stack`` example, we could add refined contracts like this:
+For our ``Stack`` example, we could add refined contracts as shown below.
 
 .. code:: ada spark-flow
 
@@ -546,16 +549,16 @@ For our ``Stack`` example, we could add refined contracts like this:
 Preconditions and Postconditions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Functional properties of subprograms are usually expressed using preconditions
-and postconditions. As these contracts are standard Boolean expressions, they
-cannot refer directly to state abstractions. To work around this restriction,
-functions can be defined to query the value of hidden variables. These
-functions can then be used in place of the state abstraction in other
-subprograms's contracts.
+We mostly express functional properties of subprograms using preconditions
+and postconditions.  These are standard Boolean expressions, so they can't
+directly refer to state abstractions. To work around this restriction, we
+can define functions to query the value of hidden variables. We then use
+these functions in place of the state abstraction in the contract of other
+subprograms.
 
-For example, we can query the state of the stack with functions ``Is_Empty``
-and ``Is_Full``, and call these in the contracts of procedures ``Pop`` and
-``Push``:
+For example, we can query the state of the stack with functions
+``Is_Empty`` and ``Is_Full`` and call these in the contracts of procedures
+``Pop`` and ``Push``:
 
 .. code:: ada spark-report-all
 
@@ -601,25 +604,27 @@ and ``Is_Full``, and call these in the contracts of procedures ``Pop`` and
 
     end Stack;
 
-Similarly to :ada:`Global` and :ada:`Depends` contracts, it is often useful to
-have a more precise view of functional contracts when the hidden variables are
-visible. This can be achieved using expression functions like we did for
-functions ``Is_Empty`` and ``Is_Full`` above. As expression function bodies act
-as contracts for GNATprove, they automatically give a more precise version of
-the contracts when their implementation is visible.
+Just like we saw for :ada:`Global` and :ada:`Depends` contracts, you may
+often find it useful to have a more precise view of functional contracts in
+the context where the hidden variables are visible. You do this using
+expression functions in the same way we did for the functions ``Is_Empty``
+and ``Is_Full`` above. As expression function, bodies act as contracts for
+GNATprove, so they automatically give a more precise version of the
+contracts when their implementation is visible.
 
-It may be the case that we need a more constraining contract to verify the
-package's implementation than we want to ensure outside the abstraction.  This
-can be achieved using the :ada:`Refined_Post` aspect. This aspect, when placed
-on a subprogram's body, is used to provide stronger guaranties to internal
-callers of a subprogram. If provided, the refined postcondition must imply the
-subprogram's postcondition. This is checked by GNATprove, who will report a
-failing postcondition if the refined postcondition is too weak, even if it is
-actually implied by the subprogram's body. Note that SPARK does not supply a
-similar notation for preconditions.
+You may often need a more constraining contract to verify the package's
+implementation but want to be less strict outside the abstraction.  You do
+this using the :ada:`Refined_Post` aspect. This aspect, when placed on a
+subprogram's body, provides stronger guaranties to internal callers of a
+subprogram. If you provide one, the refined postcondition must imply the
+subprogram's postcondition. This is checked by GNATprove, which reports a
+failing postcondition if the refined postcondition is too weak, even if
+it's actually implied by the subprogram's body. SPARK doesn't peform a
+similar verification for normal preconditions.
 
-For example, we can refine the postconditions stated previously for procedures
-``Pop`` and ``Push``, inside their respective refined postconditions:
+For example, we can refine the postconditions in the bodies of ``Pop`` and
+``Push`` to be more detailed than what we wrote for them in their
+specification.
 
 .. code:: ada spark-report-all
 
@@ -672,21 +677,20 @@ For example, we can refine the postconditions stated previously for procedures
 Initialization of Local Variables
 ---------------------------------------------------------------------
 
-As part of flow analysis, GNATprove checks for proper initialization of
-variables. Therefore, flow analysis needs to know which are the variables
+As part of flow analysis, GNATprove checks for the proper initialization of
+variables. Therefore, flow analysis needs to know which variables are
 initialized during the package's elaboration.
 
-The :ada:`Initializes` aspect can be used to specify the set of visible
-variables and state abstractions of a package that are initialized during
-its elaboration. Note that an :ada:`Initializes` aspect cannot refer to a
-variable that is not defined in the unit as, in SPARK, a package
-shall only initialize variables declared immediately within the package.
+You can use the :ada:`Initializes` aspect to specify the set of visible
+variables and state abstractions that are initialized during the
+elaboration of a package.  An :ada:`Initializes` aspect can't refer to a
+variable that isn't defined in the unit since, in SPARK, a package can only
+initialize variables declared immediately within the package.
 
-:ada:`Initializes` aspects are optional. If they are not supplied by the
-user, they will be computed by GNATprove.
+:ada:`Initializes` aspects are optional. If you don't supply any, they'll
+be derived by GNATprove.
 
-For our ``Stack`` example, we could add an :ada:`Initializes` aspect like
-this:
+For our ``Stack`` example, we could add an :ada:`Initializes` aspect.
 
 .. code:: ada spark-flow
 
@@ -718,14 +722,15 @@ this:
 
     end Stack;
 
-As flow analysis can also check for dependencies between variables, it
-must be aware of information flowing through initialization of states. The
-:ada:`Initializes` aspect also serves this purpose. If the initial value
-of a variable or state abstraction is dependent on the value of a visible
-variable or state abstraction from another package, then this dependency
-must be listed in the :ada:`Initializes` contract. The list of entities on
-which a variable's initial value depends are associated to the variable
-using an arrow.
+Flow analysis also checks for dependencies between variables, so it must be
+aware of how information flows through the code that performs the
+initialization of states.  We discussed one use of the :ada:`Initializes`
+aspect above.  But you also can use it to provide flow information. If the
+initial value of a variable or state abstraction is dependent on the value
+of another visible variable or state abstraction from another package, you
+must list this dependency in the :ada:`Initializes` contract. You specify
+the list of entities on which a variable's initial value depends using an
+arrow following that variable's name.
 
 Let's look at this example:
 
@@ -743,29 +748,31 @@ Let's look at this example:
        V2 : Integer := Q.External_Variable;
     end P;
 
-In our example, we stated in the :ada:`Initializes` aspect of ``P`` that
-``V2``'s initial value depends on the value of ``Q.External_Variable``.
-Note that we omitted the dependency for ``V1``, as its initial value does
-not depend on any external variable. This dependency could also have been
-stated explicitly, writing :ada:`V1 => null`.
+Here we indicated that ``V2``'s initial value depends on the value of
+``Q.External_Variable`` by including that dependency in the
+:ada:`Initializes` aspect of ``P``.  We didn't list any dependency for
+``V1`` because its initial value doesn't depend on any external
+variable. We could also have stated that lack of dependency explicitly by
+writing :ada:`V1 => null`.
 
-Dependencies of initial values can be computed by GNATprove if no
-:ada:`Initializes` aspect is supplied. On the other hand, if an
-:ada:`Initializes` aspect is provided for a package, then it should be
-complete, that is, every initialized state of the package should be
-listed, along with all its external dependencies.
+GNATprove computes dependencies of initial values if you don't supply an
+:ada:`Initializes` aspect.  However, if you do provide an
+:ada:`Initializes` aspect for a package, it must be complete: you must list
+every initialized state of the package, along with all its external
+dependencies.
 
 
 Code Examples / Pitfalls
 ---------------------------------------------------------------------
 
-This section contains some code examples and pitfalls.
+This section contains some code examples to illustrate potential pitfalls.
 
 Example #1
 ~~~~~~~~~~
 
-Package ``Communication`` defines a hidden ``Ring_Buffer`` local package whose
-capacity is initialized at elaboration from an external configuration.
+Package ``Communication`` defines a hidden local package, ``Ring_Buffer``,
+whose capacity is initialized from an external configuration during
+elaboration.
 
 .. code:: ada spark-flow
    :class: ada-expect-compile-error
@@ -805,16 +812,16 @@ capacity is initialized at elaboration from an external configuration.
 
     end Communication;
 
-This example is not correct. Here, ``Capacity`` is declared in the private
-part of ``Communication``. Therefore, it should be linked to ``State`` at
-declaration using the :ada:`Part_Of` aspect.
+This example isn't correct. ``Capacity`` is declared in the private part
+of ``Communication``. Therefore, we should have linked it to ``State`` by
+using the :ada:`Part_Of` aspect in its declaration.
 
 
 Example #2
 ~~~~~~~~~~
 
-Let's add ``Part_Of`` to the state of hidden local package ``Ring_Buffer``, but
-this time we hide variable ``Capacity`` inside the private part of
+Let's add ``Part_Of`` to the state of hidden local package ``Ring_Buffer``,
+but this time we hide variable ``Capacity`` inside the private part of
 ``Ring_Buffer``.
 
 .. code:: ada spark-flow
@@ -862,9 +869,9 @@ This program is correct and GNATprove is able to verify it.
 Example #3
 ~~~~~~~~~~
 
-Package ``Counting`` defines two counters ``Black_Counter`` and
-``Red_Counter``, and provides separate initialization procedures for each, that
-are called from the main procedure.
+Package ``Counting`` defines two counters: ``Black_Counter`` and
+``Red_Counter``. It provides separate initialization procedures for each,
+both called from the main procedure.
 
 .. code:: ada spark-flow
 
@@ -899,14 +906,14 @@ are called from the main procedure.
        Reset_Red_Count;
     end Main;
 
-Although this program does not read uninitialized data, GNATprove fails to
-verify this fact. As we have provided a state abstraction for package
-``Counting``, flow analysis computes subprograms's effects in terms of this
-state abstraction, and thus, will consider ``State`` as an in-out global of
-both ``Reset_Black_Counter`` and ``Reset_Red_Counter``. Hence the message
-issued by GNATprove requiring that ``State`` be initialized after elaboration,
-as well as the warning that no procedure in package ``Counting`` can initialize
-its state.
+This program doesn't read any uninitialized data, but GNATprove fails to
+verify that. This is because we provided a state abstraction for package
+``Counting``, so flow analysis computes the effects of subprograms in terms
+of this state abstraction and thus considers ``State`` to be an in-out
+global consisting of both ``Reset_Black_Counter`` and
+``Reset_Red_Counter``. So it issues the message requiring that ``State`` be
+initialized after elaboration as well as the warning that no procedure in
+package ``Counting`` can initialize its state.
 
 
 Example #4
@@ -943,16 +950,16 @@ Let's remove the abstract state on package ``Counting``.
        Reset_Red_Count;
     end Main;
 
-This example is correct. Here, no state abstraction is provided. GNATprove
-will reason in terms of variables and will prove data initialization
-without any problem.
+This example is correct. Because we didn't provide a state abstraction,
+GNATprove reasons in terms of variables, instead of states, and proves data
+initialization without any problem.
 
 
 Example #5
 ~~~~~~~~~~
 
-Let's restore the abstract state on package ``Counting``, but this time
-providing a procedure ``Reset_All`` calling the initialization procedures
+Let's restore the abstract state to package ``Counting``, but this time
+provide a procedure ``Reset_All`` that calls the initialization procedures
 ``Reset_Black_Counter`` and ``Reset_Red_Counter``.
 
 .. code:: ada spark-flow
@@ -988,10 +995,10 @@ providing a procedure ``Reset_All`` calling the initialization procedures
     end Counting;
 
 This example is correct.  Flow analysis computes refined versions of
-:ada:`Global` contracts for internal calls which are used to verify that
-``Reset_All`` indeed properly initializes ``State``. Note that
-:ada:`Refined_Global` and :ada:`Global` annotations are not mandatory, they can
-also be computed by GNATprove.
+:ada:`Global` contracts for internal calls and uses these to verify that
+``Reset_All`` indeed properly initializes ``State``. The
+:ada:`Refined_Global` and :ada:`Global` annotations are not mandatory and
+can be computed by GNATprove.
 
 Example #6
 ~~~~~~~~~~
@@ -1039,20 +1046,20 @@ Let's consider yet another version of our abstract stack unit.
        function  Is_Empty return Boolean is (Top = 0);
     end Stack;
 
-This example is not correct. There is a compilation error in ``Push``'s
-postcondition. Indeed, ``The_Stack`` is a state abstraction and not a
-variable and cannot be mentioned in an expression.
+This example isn't correct. There's a compilation error in ``Push``'s
+postcondition: ``The_Stack`` is a state abstraction, not a variable, and
+therefore can't be used in an expression.
 
 
 Example #7
 ~~~~~~~~~~
 
-In this version of our abstract stack unit, a model of the stack is returned by
-function ``Get_Stack``, which can be called from the postcondition of ``Push``
-to specify that the stack should not be modified if it is full. Then, we can
-assert in ``Use_Stack`` that after pushing an element on the stack, either the
-stack is unchanged (if the stack was full already) or its top element is equal
-to the element just pushed.
+In this version of our abstract stack unit, a copy of the stack is returned
+by function ``Get_Stack``, which we call in the postcondition of ``Push``
+to specify that the stack shouldn't be modified if it's full.  We also
+assert that after we push an element on the stack, either the stack is
+unchanged (if it was already full) or its top element is equal to the
+element just pushed.
 
 .. code:: ada
 
@@ -1120,9 +1127,9 @@ to the element just pushed.
        pragma Assert (Peek = E or Peek = F);
     end Use_Stack;
 
-This program is correct, but GNATprove cannot prove the
-assertion in ``Use_Stack``. Indeed, even if ``Get_Stack`` is an expression
-function, its body is not visible outside of ``Stack``'s body where it is defined.
+This program is correct, but GNATprove can't prove the assertion in
+``Use_Stack``. Indeed, even if ``Get_Stack`` is an expression function, its
+body isn't visible outside of ``Stack``'s body, where it's defined.
 
 
 Example #8
@@ -1199,16 +1206,16 @@ inside the private part of the spec of ``Stack``.
        pragma Assert (Peek = E or Peek = F);
     end Use_Stack;
 
-This example is correct. GNATprove is able to verify the assertion in
-``Use_Stack`` since it has visibility over ``Get_Stack``'s body.
+This example is correct. GNATprove can verify the assertion in
+``Use_Stack`` because it has visibility to ``Get_Stack``'s body.
 
 
 Example #9
 ~~~~~~~~~~
 
-Package ``Data`` defines three variables ``Data_1``, ``Data_2`` and ``Data_3``
-that are initialized at elaboration (in ``Data``'s package body) from an
-external interface reading the file system.
+Package ``Data`` defines three variables, ``Data_1``, ``Data_2`` and
+``Data_3``, that are initialized at elaboration (in ``Data``'s package
+body) from an external interface that reads the file system.
 
 .. code:: ada spark-flow
 
@@ -1258,7 +1265,7 @@ external interface reading the file system.
        end;
     end Data;
 
-This example is not correct. The dependency between ``Data_1``'s initial
+This example isn't correct. The dependency between ``Data_1``'s initial
 value and ``File_System`` must be listed in ``Data``'s :ada:`Initializes`
 aspect.
 
@@ -1315,5 +1322,5 @@ Let's remove the ``Initializes`` contract on package ``Data``.
     end Data;
 
 This example is correct. Since ``Data`` has no :ada:`Initializes` aspect,
-GNATprove computes the set of variables initialized during its elaboration, as
-well as their dependencies.
+GNATprove computes the set of variables initialized during its elaboration
+as well as their dependencies.
