@@ -13,10 +13,11 @@ properties.
 
 State abstraction allows us to:
 
-- express data (the :ada:`Global` contract) and flow (the :ada:`Depends`
-  contract) dependencies that wouldn't otherwise be expressible because
-  some data that's read or written isn't visible at the point where the
-  subprogram is declared;
+- express dependencies that wouldn't otherwise be expressible because some
+  data that's read or written isn't visible at the point where a subprogram
+  is declared --- examples are dependencies on data, for which we use the
+  :ada:`Global` contract, and on flow, for which we use the :ada:`Depends`
+  contract.
 
 - reduce the number of variables that need to be considered in flow
   analysis and proof, a reduction which may be critical in order to scale
@@ -54,7 +55,7 @@ Take a look at the example code shown below.
        X := X + 1;
     end Increase;
 
-We written a specification of the subprogram ``Increase`` to say that it's
+We've written a specification of the subprogram ``Increase`` to say that it's
 called with a single argument, a variable of type :ada:`Integer` whose
 initial value is less than 100. Our contract says that the only effect of
 the subproram is to increase the value of its argument.
@@ -340,7 +341,7 @@ hidden state is part of ``P``'s hidden state.
 Any visible state of ``Hidden_Nested`` would also have been part of ``P``'s
 hidden state.  However, if ``P`` contains a visible nested package, that
 nested package's state isn't part of ``P``'s hidden state.  Instead, you
-should delare that package's hidden state in a separate state abstraction
+should declare that package's hidden state in a separate state abstraction
 on its own declaration, like we did above for ``Visible_Nested``.
 
 
