@@ -815,8 +815,6 @@ Simple formal package
        end Saturate;
 
        function Sat_Add (V1, V2 : F) return F is
-          pragma Assert (Ovhd_Fixed'Size >= F'Size * 2);
-
           VC1 : Ovhd_Fixed := Ovhd_Fixed (V1);
           VC2 : Ovhd_Fixed := Ovhd_Fixed (V2);
           VC  : Ovhd_Fixed;
