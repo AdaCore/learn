@@ -707,17 +707,6 @@ Operations in formal packages
 
 .. code:: ada
 
-    with Float_Types; use Float_Types;
-
-    generic
-       type F is new My_Float;
-       with function "+" (A : F; B : F) return F is <>;
-    package Gen_Float_Acc is
-       procedure Acc (V : in out F; S : F);
-    end Gen_Float_Acc;
-
-.. code:: ada
-
     package body Gen_Float_Acc is
 
        procedure Acc (V : in out F; S : F) is
@@ -752,6 +741,17 @@ Operations in formal packages
        Put_Line ("F2:  " & My_Float'Image (F2));
 
     end Show_Float_Overriding;
+
+.. code:: ada
+
+    with Float_Types; use Float_Types;
+
+    generic
+       type F is new My_Float;
+       with function "+" (A : F; B : F) return F is <>;
+    package Gen_Float_Acc is
+       procedure Acc (V : in out F; S : F);
+    end Gen_Float_Acc;
 
 
 Generic fixed-point types
@@ -906,16 +906,6 @@ Operations in formal packages
     with Fixed_Types; use Fixed_Types;
 
     generic
-       type F is new Fixed;
-    package Gen_Fixed_Acc is
-       procedure Acc (V : in out F; S : F);
-    end Gen_Fixed_Acc;
-
-.. code:: ada
-
-    with Fixed_Types; use Fixed_Types;
-
-    generic
        type F is delta <>;
        with function "+" (A : F; B : F) return F is <>;
     package Gen_Fixed_Acc is
@@ -954,6 +944,16 @@ Operations in formal packages
 
        Put_Line ("F1:  " & Fixed'Image (F1));
     end Show_Fixed_Overriding;
+
+.. code:: ada
+
+    with Fixed_Types; use Fixed_Types;
+
+    generic
+       type F is new Fixed;
+    package Gen_Fixed_Acc is
+       procedure Acc (V : in out F; S : F);
+    end Gen_Fixed_Acc;
 
 
 Formal access types
