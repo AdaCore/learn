@@ -869,7 +869,7 @@ corresponding operator for :ada:`My_Float` is used in the :ada:`Acc`
 procedure.
 
 Generic fixed-point types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simple formal package
 ^^^^^^^^^^^^^^^^^^^^^
