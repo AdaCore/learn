@@ -660,6 +660,105 @@ Generic numeric types
 
     end Show_Float_Ops;
 
+
+-----------------------------------------------------------------------
+
+**Generic numeric types and operator overriding: floating-point**
+
+**Example of accumulator**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    package Float_Types is
+
+       type My_Float is new Float;
+       function "+" (A, B : My_Float) return My_Float;
+
+    end Float_Types;
+
+.. code:: ada
+
+    package body Float_Types is
+
+       procedure Saturate (V : in out My_Float) is
+       begin
+          if V > 1.0 then
+             V := 1.0;
+          elsif V < -1.0 then
+             V := -1.0;
+          end if;
+       end Saturate;
+
+       overriding function "+" (A, B : My_Float) return My_Float is
+       begin
+          return R : My_Float do
+             R := My_Float (Float (A) + Float (B));
+             Saturate (R);
+          end return;
+       end "+";
+
+    end Float_Types;
+
+.. code:: ada
+
+    generic
+       type F is digits <>;
+       with function "+" (A, B : F) return F is <>;
+    package Gen_Float_Acc is
+       procedure Acc (V : in out F; S : F);
+    end Gen_Float_Acc;
+
+.. code:: ada
+
+    with Float_Types; use Float_Types;
+
+    generic
+       type F is new My_Float;
+       with function "+" (A : F; B : F) return F is <>;
+    package Gen_Float_Acc is
+       procedure Acc (V : in out F; S : F);
+    end Gen_Float_Acc;
+
+.. code:: ada
+
+    package body Gen_Float_Acc is
+
+       procedure Acc (V : in out F; S : F) is
+       begin
+          V := V + S;
+       end Acc;
+
+    end Gen_Float_Acc;
+
+.. code:: ada
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    with Float_Types; use Float_Types;
+    with Gen_Float_Acc;
+
+    procedure Show_Float_Overriding is
+
+       package Float_Ops is new Gen_Float_Acc (F => My_Float);
+       use Float_Ops;
+
+       F1, F2 : My_Float := 0.5;
+
+    begin
+       Put_Line ("F1:  " & My_Float'Image (F1));
+       Put_Line ("F2:  " & My_Float'Image (F2));
+
+       Acc (F1, 3.0);
+       F2 := F2 + 3.0;
+
+       Put_Line ("F1:  " & My_Float'Image (F1));
+       Put_Line ("F2:  " & My_Float'Image (F2));
+
+    end Show_Float_Overriding;
+
+
 -----------------------------------------------------------------------
 
 **Fixed-point**
@@ -774,103 +873,6 @@ Generic numeric types
 
     end Show_Fixed_Ops;
 
-
------------------------------------------------------------------------
-
-**Generic numeric types and operator overriding: floating-point**
-
-**Example of accumulator**
-
------------------------------------------------------------------------
-
-.. code:: ada
-
-    package Float_Types is
-
-       type My_Float is new Float;
-       function "+" (A, B : My_Float) return My_Float;
-
-    end Float_Types;
-
-.. code:: ada
-
-    package body Float_Types is
-
-       procedure Saturate (V : in out My_Float) is
-       begin
-          if V > 1.0 then
-             V := 1.0;
-          elsif V < -1.0 then
-             V := -1.0;
-          end if;
-       end Saturate;
-
-       overriding function "+" (A, B : My_Float) return My_Float is
-       begin
-          return R : My_Float do
-             R := My_Float (Float (A) + Float (B));
-             Saturate (R);
-          end return;
-       end "+";
-
-    end Float_Types;
-
-.. code:: ada
-
-    generic
-       type F is digits <>;
-       with function "+" (A, B : F) return F is <>;
-    package Gen_Float_Acc is
-       procedure Acc (V : in out F; S : F);
-    end Gen_Float_Acc;
-
-.. code:: ada
-
-    with Float_Types; use Float_Types;
-
-    generic
-       type F is new My_Float;
-       with function "+" (A : F; B : F) return F is <>;
-    package Gen_Float_Acc is
-       procedure Acc (V : in out F; S : F);
-    end Gen_Float_Acc;
-
-.. code:: ada
-
-    package body Gen_Float_Acc is
-
-       procedure Acc (V : in out F; S : F) is
-       begin
-          V := V + S;
-       end Acc;
-
-    end Gen_Float_Acc;
-
-.. code:: ada
-
-    with Ada.Text_IO;    use Ada.Text_IO;
-
-    with Float_Types; use Float_Types;
-    with Gen_Float_Acc;
-
-    procedure Show_Float_Overriding is
-
-       package Float_Ops is new Gen_Float_Acc (F => My_Float);
-       use Float_Ops;
-
-       F1, F2 : My_Float := 0.5;
-
-    begin
-       Put_Line ("F1:  " & My_Float'Image (F1));
-       Put_Line ("F2:  " & My_Float'Image (F2));
-
-       Acc (F1, 3.0);
-       F2 := F2 + 3.0;
-
-       Put_Line ("F1:  " & My_Float'Image (F1));
-       Put_Line ("F2:  " & My_Float'Image (F2));
-
-    end Show_Float_Overriding;
 
 -----------------------------------------------------------------------
 
