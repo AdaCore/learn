@@ -803,10 +803,6 @@ Simple formal package
           First : constant Ovhd_Fixed := Ovhd_Fixed (F'First);
           Last  : constant Ovhd_Fixed := Ovhd_Fixed (F'Last);
        begin
-          Put_Line ("First: " & Ovhd_Fixed'Image (First));
-          Put_Line ("Last:  " & Ovhd_Fixed'Image (Last));
-          New_Line;
-
           if V > Last then
              V := Last;
           elsif V < First then
@@ -820,19 +816,7 @@ Simple formal package
           VC  : Ovhd_Fixed;
        begin
           VC := VC1 + VC2;
-
-          Put_Line ("VC'First: " & Ovhd_Fixed'Image (Ovhd_Fixed'First));
-          Put_Line ("VC'Last:  " & Ovhd_Fixed'Image (Ovhd_Fixed'Last));
-          New_Line;
-
-          Put_Line ("VC1:  " & Ovhd_Fixed'Image (VC1));
-          Put_Line ("VC2:  " & Ovhd_Fixed'Image (VC2));
-          New_Line;
-          Put_Line ("VC:   " & Ovhd_Fixed'Image (VC));
-          New_Line;
-
           Saturate (VC);
-
           return F (VC);
        end Sat_Add;
 
