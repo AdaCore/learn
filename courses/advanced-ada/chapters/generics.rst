@@ -903,8 +903,6 @@ Operations in formal packages
 
 .. code:: ada
 
-    with Fixed_Types; use Fixed_Types;
-
     generic
        type F is delta <>;
        with function "+" (A : F; B : F) return F is <>;
