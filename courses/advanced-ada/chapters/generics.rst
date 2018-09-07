@@ -782,6 +782,20 @@ Simple formal package
          -2.0 ** Ovhd_Bits .. 2.0 ** Ovhd_Bits - Ovhd_Delta
          with Size => Ovhd_Depth;
 
+       --  Ensure that 'First and 'Last have at least double amount
+       --  of bits as the original type
+       pragma Assert (Ovhd_Fixed'First <=
+                      Ovhd_Fixed (-2.0 ** (F'Size - 1)));
+       pragma Assert (Ovhd_Fixed'Last  >=
+                      Ovhd_Fixed (2.0 ** (F'Size - 1) - Ovhd_Delta));
+
+       --  Ensure that 'Size is has at least twice as many bits as
+       --  the original type
+       pragma Assert (Ovhd_Fixed'Size  >= F'Size * 2);
+
+       --  Ensure that the precision is at least the same
+       pragma Assert (Ovhd_Fixed'Small <= F'Small);
+
        procedure Saturate (V : in out Ovhd_Fixed)
           with Inline;
 
