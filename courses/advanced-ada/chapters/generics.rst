@@ -949,18 +949,14 @@ Operations in formal packages
        package Fixed_Ops is new Gen_Fixed_Acc (F => Fixed);
        use Fixed_Ops;
 
-       F1, F2 : Fixed := -1.0;
+       F1 : Fixed := -0.5;
 
     begin
        Put_Line ("F1:  " & Fixed'Image (F1));
-       Put_Line ("F2:  " & Fixed'Image (F2));
 
-       Acc (F1, -1.0);
-    --   F2 := F2 - 1.0;
+       Acc (F1, -0.9);
 
        Put_Line ("F1:  " & Fixed'Image (F1));
-       Put_Line ("F2:  " & Fixed'Image (F2));
-
     end Show_Fixed_Overriding;
 
 
