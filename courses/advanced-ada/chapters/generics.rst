@@ -600,11 +600,11 @@ Formal objects
 Generic numeric types
 ---------------------
 
------------------------------------------------------------------------
+Generic floating-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**Floating-point**
-
------------------------------------------------------------------------
+Simple formal package
+^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada
 
@@ -661,13 +661,8 @@ Generic numeric types
     end Show_Float_Ops;
 
 
------------------------------------------------------------------------
-
-**Generic numeric types and operator overriding: floating-point**
-
-**Example of accumulator**
-
------------------------------------------------------------------------
+Operations in formal packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada
 
@@ -759,11 +754,11 @@ Generic numeric types
     end Show_Float_Overriding;
 
 
------------------------------------------------------------------------
+Generic fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**Fixed-point**
-
------------------------------------------------------------------------
+Simple formal package
+^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada
 
@@ -874,13 +869,8 @@ Generic numeric types
     end Show_Fixed_Ops;
 
 
------------------------------------------------------------------------
-
-**Generic numeric types and operator overriding: fixed-point**
-
-**Example of accumulator**
-
------------------------------------------------------------------------
+Operations in formal packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada
 
