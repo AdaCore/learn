@@ -600,11 +600,34 @@ Formal objects
 Generic numeric types
 ---------------------
 
+Ada supports the use of numeric types for generics. This can be used to
+describe a numeric algorithm independently of the actual data type. We'll
+see examples below.
+
+This is the corresponding syntax:
+
+- For floating-point types:  :ada:`type T is digits <>;`
+
+- For binary fixed-point type: :ada:`type T is delta <>;`
+
+- For decimal fixed-point types: :ada:`type T is delta <> digits <>;`
+
+In this section, we discuss generic floating-point and binary fixed-point
+types.
+
 Generic floating-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simple formal package
 ^^^^^^^^^^^^^^^^^^^^^
+
+Let's look at an example of a generic package containing a procedure that
+*saturates* floating-point numbers. In this code, we work with a
+normalized range between -1.0 and 1.0. Due to the fact that some
+calculations might lead to results outside this range, we use the
+:ada:`Saturate`  procedure to put values back into the normalized range.
+
+This is the package specification:
 
 .. code:: ada
 
@@ -613,6 +636,8 @@ Simple formal package
     package Gen_Float_Ops is
        procedure Saturate (V : in out F);
     end Gen_Float_Ops;
+
+This is the package body:
 
 .. code:: ada
 
@@ -628,6 +653,8 @@ Simple formal package
        end Saturate;
 
     end Gen_Float_Ops;
+
+Finally, we create a test application:
 
 .. code:: ada
 
@@ -660,9 +687,24 @@ Simple formal package
 
     end Show_Float_Ops;
 
+In this application, we create two instances of the :ada:`Gen_Float_Ops`
+package: one for the :ada:`Float` type and one for the :ada:`Long_Float`
+type. We then make use of computations whose results are outside the
+normalized range. By calling the :ada:`Saturate` procedure, we ensure that
+the values are inside the range again.
 
 Operations in formal packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this section, we discuss how to declare operations associated with
+floating-point types in formal packages.
+
+Let's first define a package that implements a new type :ada:`My_Float`
+based on the standard :ada:`Float` type. For this type, we override the
+addition operator with an implementation that saturates the value after
+the actual addition.
+
+This is the package specification:
 
 .. code:: ada
 
@@ -672,6 +714,8 @@ Operations in formal packages
        function "+" (A, B : My_Float) return My_Float;
 
     end Float_Types;
+
+This is the corresponding package body:
 
 .. code:: ada
 
@@ -696,6 +740,9 @@ Operations in formal packages
 
     end Float_Types;
 
+Next, we create a package containing a procedure that accumulates
+floating-point values. This is the package specification:
+
 .. code:: ada
 
     generic
@@ -704,6 +751,14 @@ Operations in formal packages
     package Gen_Float_Acc is
        procedure Acc (V : in out F; S : F);
     end Gen_Float_Acc;
+
+In this specification, we declare a formal function for the addition
+operator using :ada:`with function`. This operator is used by the
+:ada:`Acc` procedure in the package body. Also, because we use :ada:`<>`
+in the specification, the corresponding addition operator for type
+:ada:`F` is selected.
+
+This is the package body:
 
 .. code:: ada
 
@@ -715,6 +770,9 @@ Operations in formal packages
        end Acc;
 
     end Gen_Float_Acc;
+
+This is a test application that makes use of the :ada:`Float_Types` and
+:ada:`Gen_Float_Acc` packages.
 
 .. code:: ada
 
@@ -742,6 +800,59 @@ Operations in formal packages
 
     end Show_Float_Overriding;
 
+We create an instance of the :ada:`Gen_Float_Acc` by using the
+:ada:`My_Float` type declared in the :ada:`Float_Types` package. Because
+we used :ada:`<>` in the specification of :ada:`function "+"` (in the
+:ada:`Gen_Float_Acc` package), the compiler will automatically select
+the addition operator that we've overriden in the :ada:`Float_Types`
+package, so that we don't need to specify it in the package instantiation.
+
+The main reason for the formal subprogram in the specification of the
+:ada:`Gen_Float_Acc` package is that it prevents the compiler from
+selecting the standard operator. We could have removed the
+:ada:`function "+"` from the specification, as illustrated in the
+example below, where we modified the :ada:`Gen_Float_Acc` package:
+
+.. code-block:: ada
+
+    generic
+       type F is digits <>;
+       --  no "with function" here!
+    package Gen_Float_Acc is
+       procedure Acc (V : in out F; S : F);
+    end Gen_Float_Acc;
+
+    package body Gen_Float_Acc is
+
+       procedure Acc (V : in out F; S : F) is
+       begin
+          --  Using standard addition for universal floating-point
+          --  type (digits <>) here:
+          V := V + S;
+       end Acc;
+
+    end Gen_Float_Acc;
+
+In this case, however, even though we declared a custom addition operator
+for the :ada:`My_Float` type in the :ada:`Float_Types` package, an
+instantiation of the modified :ada:`Gen_Float_Acc` package would always
+make use of the standard addition:
+
+.. code-block:: ada
+
+    --  This makes use of the type definition of My_Float, but not its
+    --  overriden operators.
+    package Float_Ops is new Gen_Float_Acc (F => My_Float);
+
+Because the type :ada:`F` is declared as :ada:`digits <>`, which
+corresponds to the universal floating-point data type, the compiler
+selects operators associated with the universal floating-point data type
+in the package body. By specifying the formal subprogram, we make sure
+that the operator associated with the actual type is used.
+
+Alternatively, we could make use of the :ada:`Float_Types` package
+directly in the generic package. For example:
+
 .. code:: ada
 
     with Float_Types; use Float_Types;
@@ -753,12 +864,19 @@ Operations in formal packages
        procedure Acc (V : in out F; S : F);
     end Gen_Float_Acc;
 
+In this case, because the formal type is now based on :ada:`My_Float`, the
+corresponding operator for :ada:`My_Float` is used in the :ada:`Acc`
+procedure.
 
 Generic fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simple formal package
 ^^^^^^^^^^^^^^^^^^^^^
+
+In the previous section, we looked into an example of saturation for
+generic floating-point types. Let's adapt this example for fixed-point
+types. This is the package specification:
 
 .. code:: ada
 
@@ -767,6 +885,17 @@ Simple formal package
     package Gen_Fixed_Ops is
        function Sat_Add (V1, V2 : F) return F;
     end Gen_Fixed_Ops;
+
+For the fixed-point version, we specify the normalized range in the
+definition of the data type. Therefore, any computation that leads to
+values out of the normalized range will raise a :ada:`Constraint_Error`
+exception. In order to circumvent this, we can declare a fixed-point data
+type with a wider range and use it in combination with the actual
+operation that we want to perform -- an addition, in this case. This
+approach  can be seen in the implementation of :ada:`Sat_Add`, which
+computes the addition using the local :ada:`Ovhd_Fixed` type with wider
+range, calls the :ada:`Saturate` procedure and converts the data type back
+into the original range.
 
 .. code:: ada
 
@@ -822,6 +951,16 @@ Simple formal package
 
     end Gen_Fixed_Ops;
 
+:ada:`Ovhd_Fixed` is a 64-bit fixed-point data type. By using
+:ada:`Assert`s in the package body that compare this data type to the
+formal :ada:`F` type from the package specification, we ensure that the
+local fixed-point data type has enough overhead to cope with any
+fixed-point operation that we want to implement. Also, we ensure that we
+don't lose precision when converting back-and-forth between the local type
+and the original type.
+
+We then use the :ada:`Gen_Fixed_Ops` package in a test application:
+
 .. code:: ada
 
     with Ada.Text_IO;    use Ada.Text_IO;
@@ -864,9 +1003,25 @@ Simple formal package
 
     end Show_Fixed_Ops;
 
+In this test application, we declare two fixed-point data types:
+the 16-bit type :ada:`Fixed` and the 32-bit type :ada:`Long_Fixed`.
+These types are used to create instances of the :ada:`Gen_Fixed_Ops`. By
+calling :ada:`Sat_Add`, we ensure that the result of adding fixed-point
+values will always be in the allowed range and the computation will never
+raise an exception.
 
 Operations in formal packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this section, we discuss how to declare operations associated with
+fixed-point types in formal packages. We start by adapting the examples
+used for floating-point in the previous section, so that fixed-point types
+are used instead.
+
+First, we define a package that implements a new fixed-point type called
+:ada:`Fixed`. For this type, we override the addition operator with an
+implementation that saturates the value after the actual addition. This is
+the package specification:
 
 .. code:: ada
 
@@ -882,6 +1037,11 @@ Operations in formal packages
        function "+" (A, B : Fixed) return Fixed;
 
     end Fixed_Types;
+
+In the package body, we make use of the :ada:`Gen_Fixed_Ops` package that
+we discussed earlier in the previous section. By instantiating the
+:ada:`Gen_Fixed_Ops` package, we can use the :ada:`Sat_Add` function in
+the implementation of the saturating addition operator.
 
 .. code:: ada
 
@@ -901,6 +1061,9 @@ Operations in formal packages
 
     end Fixed_Types;
 
+Next, we create a package containing a procedure that accumulates
+fixed-point values. This is the package specification:
+
 .. code:: ada
 
     generic
@@ -909,6 +1072,10 @@ Operations in formal packages
     package Gen_Fixed_Acc is
        procedure Acc (V : in out F; S : F);
     end Gen_Fixed_Acc;
+
+In this specification, we declare a formal function for the addition
+operator using :ada:`with function`. This operator is used by the
+:ada:`Acc` procedure in the package body, which we show next.
 
 .. code:: ada
 
@@ -920,6 +1087,9 @@ Operations in formal packages
        end Acc;
 
     end Gen_Fixed_Acc;
+
+This is a test application that makes use of the :ada:`Fixed_Types` and
+:ada:`Gen_Fixed_Acc` packages.
 
 .. code:: ada
 
@@ -942,6 +1112,16 @@ Operations in formal packages
 
        Put_Line ("F1:  " & Fixed'Image (F1));
     end Show_Fixed_Overriding;
+
+We create an instance of the :ada:`Gen_Fixed_Acc` by using the
+:ada:`Fixed` type declared in the :ada:`Fixed_Types` package. We then
+call :ada:`Acc` to accumulate and saturate a fixed-point variable.
+
+As mentioned earlier in the section on generic floating-point types, the
+main reason for the formal subprogram in the specification of the
+:ada:`Gen_Fixed_Acc` package is that it prevents the compiler from
+selecting the standard operator. Alternatively, we could make use of the
+:ada:`Fixed_Types` package directly in the generic package:
 
 .. code:: ada
 
