@@ -765,7 +765,7 @@ Simple formal package
     generic
        type F is delta <>;
     package Gen_Fixed_Ops is
-       function Saturate_Add (V1, V2 : F) return F;
+       function Sat_Add (V1, V2 : F) return F;
     end Gen_Fixed_Ops;
 
 .. code:: ada
@@ -800,7 +800,7 @@ Simple formal package
           end if;
        end Saturate;
 
-       function Saturate_Add (V1, V2 : F) return F is
+       function Sat_Add (V1, V2 : F) return F is
           pragma Assert (Ovhd_Fixed'Size >= F'Size * 2);
 
           VC1 : Ovhd_Fixed := Ovhd_Fixed (V1);
@@ -822,7 +822,7 @@ Simple formal package
           Saturate (VC);
 
           return F (VC);
-       end Saturate_Add;
+       end Sat_Add;
 
     end Gen_Fixed_Ops;
 
@@ -860,8 +860,8 @@ Simple formal package
        Put_Line ("F:  " & Fixed'Image (F));
        Put_Line ("LF: " & Long_Fixed'Image (LF));
 
-       F  := Saturate_Add (F,   0.75);
-       LF := Saturate_Add (LF, -0.75);
+       F  := Sat_Add (F,   0.75);
+       LF := Sat_Add (LF, -0.75);
 
        Put_Line ("F:  " & Fixed'Image (F));
        Put_Line ("LF: " & Long_Fixed'Image (LF));
