@@ -21,7 +21,13 @@ Programming errors are manufactured by programmers, no doubt about it, and we
 should expect a high level of professionalism of those in charge of critical
 applications. At the same time, the flip side of the human brain's inventivity
 and flexibility is its inadequacy to be 100% correct about thousands of little
-details such as those discussed in this book.
+details such as those discussed in this book. Programming language abstractions
+have been invented precisely to discharge the human brain of these details, but
+C lacks these abstractions, or as Kees Cook from the Kernel Self Protection
+Project puts it (during Linux Security Summit North America 2018):
+
+   `"Talking about C as a language, and how it's really just a fancy
+   assembler"`
 
 Even more convincing is the inability of even experts to sometimes grasp the
 full extent of the C programming language rules, as exemplified by Microsoft
