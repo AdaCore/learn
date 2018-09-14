@@ -4,8 +4,8 @@ Strong typing
 Table access
 ------------
 
-Using normal typing
-~~~~~~~~~~~~~~~~~~~
+Typical implementation
+~~~~~~~~~~~~~~~~~~~~~~
 
 
 Using stronger typing
@@ -15,8 +15,8 @@ Using stronger typing
 Multiple indices
 ----------------
 
-Using normal typing
-~~~~~~~~~~~~~~~~~~~
+Typical implementation
+~~~~~~~~~~~~~~~~~~~~~~
 
 
 Using stronger typing
