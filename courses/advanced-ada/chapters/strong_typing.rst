@@ -326,7 +326,7 @@ of the application. This is the updated package specification:
     package Indirect_Ordering is
 
        type Chunk_Index     is new Positive;
-       type Ord_Chunk_Index is new Positive;
+       type Ord_Chunk_Index is new Chunk_Index;
 
        type Chunk is record
           V1  : Float;
