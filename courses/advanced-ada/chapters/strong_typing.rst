@@ -71,7 +71,7 @@ In the example above, we make use of the :ada:`Positive` type, which is
 already a constrained type: we're avoiding accessing the :ada:`Tab` table
 using an index with negative values or zero. But we still may use indices
 that are out-of-range in the positive range, or switch the indices, as in
-the :ada:`Tab (Y, X)` access we mentioned previously. These problems can
+the :ada:`Tab (Y, X)` example we mentioned previously. These problems can
 be avoided by defining range types for each dimension. This is the updated
 implementation:
 
@@ -114,8 +114,8 @@ formally indicating the expected behavior. For example, because we declare
 :ada:`X` to be of :ada:`X_Range` type, and that type is used in the first
 dimension of :ada:`Tab`, we're documenting --- using the syntax of the Ada
 language --- that :ada:`X` is supposed to be used to access the first
-dimension of :ada:`Tab`. Using this approach, developers that need to
-maintain this application can immediately identify the purpose of
+dimension of :ada:`Tab`. Based on this information, developers that need
+to maintain this application can immediately identify the purpose of
 :ada:`X` and use the variable accordingly.
 
 
@@ -126,10 +126,12 @@ In this section, we discuss another example where the use of strong typing
 is relevant. Let's consider an application with the following
 requirements:
 
-- The application receives chunks containing two floating-point
-  coefficients. Also, these chunks are received out of order, so that the
-  chunk itself includes an index indicating its position in an ordered
-  array.
+- The application receives the transmission of chunks of information.
+
+  - Each chunk contains two floating-point coefficients.
+
+  - Also, these chunks are received out of order, so that the chunk itself
+    includes an index indicating its position in an ordered array.
 
 - The application also receives a list of indices for the ordered array
   of chunks. This list --- a so-called *selector* --- is used to select
@@ -145,7 +147,7 @@ requirements:
     the index of unordered chunks must be available.
 
 Let's skip the discussion whether the design used in this application is
-good or not and assume that the requirements listed above are set on stone
+good or not and assume that all requirements listed above are set on stone
 and can't be changed.
 
 Typical implementation
@@ -207,7 +209,15 @@ This is the corresponding package body:
 
     end Indirect_Ordering;
 
-Finally, let's look at a test application that makes use of the package
+Note that the information transmitted to the application might be
+inconsistent due to errors in the transmission channel. For example, the
+information from :ada:`Idx` (:ada:`Chunk` record) might be wrong. In a
+real-world application, we should deal with those transmission errors.
+However, for the discussion in this section, these problems are not
+crucial, so that we can simplify the implementation by skipping error
+handling.
+
+Let's finally look at a test application that makes use of the package
 we've just implemented. In order to simplify the discussion, we'll
 initialize the array containing the unordered chunks and the selector
 directly in the application instead of receiving input data from an
@@ -305,9 +315,11 @@ For example, a mistake that developers can make when using the package
 above is to skip the mapping and access the array of unordered chunks
 directly with the index from the selector --- i.e. :ada:`C (S (I))` in the
 test application above. Detecting this mistake requires extensive testing
-and debugging, since both the index of unordered chunks and the index of
-ordered chunks have the same range. Fortunately, we can use Ada's strong
-typing to detect such issues in an early stage of the development.
+and debugging, since both the array of unordered chunks and the array of
+ordered chunks have the same range, so the corresponding indices can be
+used interchangeably without raising constraint exceptions, even though
+the behavior is not correct. Fortunately, we can use Ada's strong typing
+to detect such issues in an early stage of the development.
 
 
 Using stronger typing
