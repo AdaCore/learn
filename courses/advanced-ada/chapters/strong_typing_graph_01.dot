@@ -1,0 +1,65 @@
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+
+    "Selector:" [fontcolor=brown]
+    "Chunks:"   [fontcolor=brown]
+
+    "Selector:" -> "Mapping:" -> "Selected chunks:" ->
+        "Chunks:" -> "Ordered chunks:" [color=white];
+
+    node [shape=record,
+        height=0.75, width=6.00,
+        fontcolor=black, fontsize=12, fixedsize=true];
+
+    chunks [
+        label="{ <j1> v1=0.70 | v2=0.72 | <i1> idx=3} |\
+               { <j2> v1=0.20 | v2=0.15 | <i2> idx=1} |\
+               { <j3> v1=0.40 | v2=0.74 | <i3> idx=2} |\
+               { <j4> v1=0.80 | v2=0.26 | <i4> idx=4}",
+        color=brown,
+        fillcolor=gray95, style=filled];
+
+    ord_chunks [
+        label="{ <i1> v1=0.20 | v2=0.15 | idx=1} |\
+               { <i2> v1=0.40 | v2=0.74 | idx=2} |\
+               { <i3> v1=0.70 | v2=0.72 | idx=3} |\
+               { <i4> v1=0.80 | v2=0.26 | idx=4}",
+        color=black,
+        fillcolor=lightgrey, style=filled];
+
+    sel_chunks [
+        label="{ <j1> v1=0.40 | v2=0.74 | <i1> idx=2 } |\
+               { <j2> v1=0.70 | v2=0.72 | <i2> idx=3 }",
+        color=black,
+        fillcolor=lightgrey, style=filled];
+
+    mapping [
+        label="<i1> 2 | <i2> 3 | <i3> 1 | <i4> 4",
+        color=black,
+        fillcolor=lightgrey, style=filled];
+
+    selector [
+        label="<i1> 2 | <i2> 3",
+        color=brown,
+        fillcolor=gray95, style=filled];
+
+    { rank=same; "Chunks:";             chunks      }
+    { rank=same; "Ordered chunks:";     ord_chunks  }
+    { rank=same; "Mapping:";            mapping     }
+    { rank=same; "Selector:";           selector    }
+    { rank=same; "Selected chunks:";    sel_chunks  }
+
+    chunks:i1   -> ord_chunks:i3    [color=darkgoldenrod]
+    chunks:i2   -> ord_chunks:i1    [color=darkgoldenrod]
+    chunks:i3   -> ord_chunks:i2    [color=darkgoldenrod]
+    chunks:i4   -> ord_chunks:i4    [color=darkgoldenrod]
+
+    selector:i1 -> mapping:i2       [color=lightgrey]
+    selector:i2 -> mapping:i3       [color=lightgrey]
+
+    mapping:i3  -> chunks:j1        [color=lightblue]
+    mapping:i2  -> chunks:j3        [color=lightblue]
+
+    chunks:j3   -> sel_chunks:i1    [color=dodgerblue4]
+    chunks:j1   -> sel_chunks:i2    [color=dodgerblue4]
+}
