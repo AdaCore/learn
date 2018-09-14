@@ -186,12 +186,8 @@ This is the corresponding package body:
           declare
              Map : Mapping (C'Range);
           begin
-             for I in Map'Range loop
-                for J in C'Range loop
-                   if C (J).Idx = I then
-                      Map (I) := J;
-                   end if;
-                end loop;
+             for J in C'Range loop
+                Map (C (J).Idx) := J;
              end loop;
 
              return Map;
@@ -378,12 +374,8 @@ This is the corresponding update to the package body:
           declare
              Map : Mapping (R.First .. R.Last);
           begin
-             for I in Map'Range loop
-                for J in C'Range loop
-                   if C (J).Idx = I then
-                      Map (I) := J;
-                   end if;
-                end loop;
+             for J in C'Range loop
+                Map (C (J).Idx) := J;
              end loop;
 
              return Map;
