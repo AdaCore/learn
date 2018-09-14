@@ -146,6 +146,15 @@ requirements:
   - A function that returns a mapping from the index of ordered chunks to
     the index of unordered chunks must be available.
 
+For example, consider the following picture containing input chunks and a
+selector:
+
+.. graphviz:: strong_typing_graph_01.dot
+
+By using the mapping, we can select the correct chunks from the input
+(unordered) chunks. Also, we may create an array of ordered chunks for
+testing purposes.
+
 Let's skip the discussion whether the design used in this application is
 good or not and assume that all requirements listed above are set on stone
 and can't be changed.
