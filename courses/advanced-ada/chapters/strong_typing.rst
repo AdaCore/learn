@@ -122,8 +122,36 @@ maintain this application can immediately identify the purpose of
 Multiple indices
 ----------------
 
+In this section, we discuss another example where the use of strong typing
+is relevant. Let's consider an application with the following
+requirements:
+
+- The application receives chunks containing two floating-point
+  coefficients. Also, these chunks are received out of order, so that the
+  chunk itself includes an index indicating its position in an ordered
+  array.
+
+- The application also receives a list of indices for the ordered array
+  of chunks. This list --- a so-called *selector* --- is used to select
+  two chunks from the array of ordered chunks.
+
+- Due to external constraints, the application shall use the unordered
+  array; creating an array of ordered chunks shall be avoided.
+
+  - A function that returns an ordered array of chunks shall be available
+    for testing purposes only.
+
+  - A function that returns a mapping from the index of ordered chunks to
+    the index of unordered chunks must be available.
+
+Let's skip the discussion whether the design used in this application is
+good or not and assume that the requirements listed above are set on stone
+and can't be changed.
+
 Typical implementation
 ~~~~~~~~~~~~~~~~~~~~~~
+
+This is a typical implementation of the package specification:
 
 .. code:: ada
 
@@ -147,6 +175,7 @@ Typical implementation
 
     end Indirect_Ordering;
 
+This is the corresponding package body:
 
 .. code:: ada
 
@@ -182,6 +211,11 @@ Typical implementation
 
     end Indirect_Ordering;
 
+Finally, let's look at a test application that makes use of the package
+we've just implemented. In order to simplify the discussion, we'll
+initialize the array containing the unordered chunks and the selector
+directly in the application instead of receiving input data from an
+external source.
 
 .. code:: ada
 
@@ -190,6 +224,8 @@ Typical implementation
     with Ada.Text_IO; use  Ada.Text_IO;
 
     procedure Show_Indirect_Ordering is
+
+       function Init_Chunks return Chunks;
 
        function Init_Chunks return Chunks is
           C : Chunks (1 .. 4);
@@ -218,8 +254,23 @@ Typical implementation
        end loop;
        New_Line;
 
+       Display_Ordered_Chunk (C, S);
     end Show_Indirect_Ordering;
 
+In this line of the test application, we retrieve the chunk using the
+index from the selector:
+
+.. code-block:: ada
+
+    C1 : Chunk := C (M (S (I)));
+
+Because :ada:`C` contains the unordered chunks and the index from :ada:`S`
+refers to the ordered chunks, we need to map between the *ordered index*
+and the *unordered index*. This is achieved by the mapping stored in
+:ada:`M`.
+
+If we'd use the ordered array of chunks, we could use the index from
+:ada:`S` directly, as illustrated in the following function:
 
 .. code-block:: ada
 
@@ -239,9 +290,36 @@ Typical implementation
        New_Line;
     end Display_Ordered_Chunk;
 
+In this relatively simple application, we're already dealing with 3
+indices:
+
+- The index of the unordered chunks.
+
+- The index of the ordered chunks.
+
+- The index of the selector array.
+
+The use of the wrong index to access an array can be a common source of
+issues. This becomes even more problematic when the application is
+extended and new features are implemented: the amount of arrays might
+increase and developers need to be especially careful not to use the
+wrong index.
+
+For example, a mistake that developers can make when using the package
+above is to skip the mapping and access the array of unordered chunks
+directly with the index from the selector --- i.e. :ada:`C (S (I))` in the
+test application above. Detecting this mistake requires extensive testing
+and debugging, since both the index of unordered chunks and the index of
+ordered chunks have the same range. Fortunately, we can use Ada's strong
+typing to detect such issues in an early stage of the development.
+
 
 Using stronger typing
 ~~~~~~~~~~~~~~~~~~~~~
+
+In the previous implementation, we basically used the :ada:`Positive` type
+for all indices. We can, however, declare individual types for each index
+of the application. This is the updated package specification:
 
 .. code:: ada
 
@@ -257,6 +335,7 @@ Using stronger typing
        end record;
 
        type Selector_Index is range 1 .. 2;
+
        type Selector is array (Selector_Index) of Ord_Chunk_Index;
 
        type Mapping is array (Ord_Chunk_Index range <>) of Chunk_Index;
@@ -271,6 +350,14 @@ Using stronger typing
 
     end Indirect_Ordering;
 
+By declaring these new types, we can avoid that the wrong index is used.
+Moreover, we're documenting --- using the syntax provided by the language
+--- which index is expected in each array or function from the package.
+This allows for better understanding of the package specification and
+makes maintenance easier, as well as it helps when implementing new
+features for the package.
+
+This is the corresponding update to the package body:
 
 .. code:: ada
 
@@ -317,6 +404,13 @@ Using stronger typing
 
     end Indirect_Ordering;
 
+For this updated package body, the major change is that we need to
+convert from the :ada:`Chunk_Index` type to the :ada:`Ord_Chunk_Range`
+type in the :ada:`Get_Mapping` function, since they are now two different
+types. Although this makes the code a little bit more verbose, it helps
+documenting the expected types in that function.
+
+This is the updated test application:
 
 .. code:: ada
 
@@ -357,6 +451,27 @@ Using stronger typing
 
     end Show_Indirect_Ordering;
 
+Apart from minor changes, the test application is basically still the
+same. However, if we now change the following line:
+
+.. code-block:: ada
+
+    C1 : Chunk := C (M (S (I)));
+
+to
+
+.. code-block:: ada
+
+    C1 : Chunk := C (S (I));
+
+The compiler will gives us an error, telling us that it expected the
+:ada:`Chunk_Index` type, but found the :ada:`Ord_Chunk_Index` instead.
+By using Ada's strong typing, we're detecting issues at compile time
+instead of having to rely on extensive testing and debugging to detect
+them. Basically, this eliminates a whole category of potential bugs
+and reduces development time. At the same time, we're improving the
+documentation of the source-code and facilitating further improvements
+to the application.
 
 .. code:: ada
 
