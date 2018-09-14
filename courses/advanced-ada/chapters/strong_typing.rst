@@ -333,6 +333,8 @@ of the application. This is the updated package specification:
 
     package Indirect_Ordering is
 
+       pragma Assertion_Policy (Dynamic_Predicate => Check);
+
        type Chunk_Index     is new Positive;
        type Ord_Chunk_Index is new Chunk_Index;
 
@@ -343,14 +345,15 @@ of the application. This is the updated package specification:
        end record;
 
        type Selector_Index is range 1 .. 2;
-
        type Selector is array (Selector_Index) of Ord_Chunk_Index;
 
        type Mapping is array (Ord_Chunk_Index range <>) of Chunk_Index;
 
        type Chunks is array (Chunk_Index range <>) of Chunk;
 
-       type Ord_Chunks is array (Ord_Chunk_Index range <>) of Chunk;
+       type Ord_Chunks is array (Ord_Chunk_Index range <>) of Chunk
+         with Dynamic_Predicate =>
+           (for all I in Ord_Chunks'Range => Ord_Chunks (I).Idx = I);
 
        function Get_Ordered_Chunks (C : Chunks) return Ord_Chunks;
 
@@ -364,6 +367,14 @@ Moreover, we're documenting --- using the syntax provided by the language
 This allows for better understanding of the package specification and
 makes maintenance easier, as well as it helps when implementing new
 features for the package.
+
+Note that we also declared a separate type for the array of ordered
+chunks: :ada:`Ord_Chunks`. This is needed because the arrays uses a
+different index (:ada:`Ord_Chunk_Index`) and therefore can't be the same
+type as :ada:`Chunks`. As a side note, we're now able to include a
+:ada:`Dynamic_Predicate` to :ada:`Ord_Chunks` that verifies that the index
+stored in the each chunk matches the corresponding index of its position
+in the ordered array.
 
 This is the corresponding update to the package body:
 
