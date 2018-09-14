@@ -1,11 +1,21 @@
 Strong typing
 =============
 
+In this chapter, we discuss the advantages of strong typing and how it can
+be used to avoid common implementation and maintenance issues.
+
 Table access
 ------------
 
+In this section, we discuss an application that accesses a two-dimensional
+table. We first look into a typical implementation, and then discuss how
+to improve it with better use of strong typing.
+
 Typical implementation
 ~~~~~~~~~~~~~~~~~~~~~~
+
+Let's look at an application that declares a two-dimensional lookup table,
+retrieves a value from it an displays this value.
 
 .. code:: ada
 
@@ -31,9 +41,39 @@ Typical implementation
        Put_Line (Float'Image (V));
     end Show_Tab_Access;
 
+In this application, we use :ada:`X` and :ada:`Y` as indices to access the
+:ada:`Tab` table. We store the value in :ada:`V` and display it.
+
+In principle, there is nothing wrong with this implementation. Also, we're
+already making use of strong typing here, since accessing an invalid
+position of the array (say :ada:`Tab (6, 25)`) raises an exception.
+However, in this application, we're assuming that :ada:`X` always refers
+to the first dimension, while :ada:`Y` refers to the second dimension.
+What happens, however, if we write :ada:`Tab (Y, X)`? In the application
+above, this would still work because :ada:`Tab (5, 1)` is in the table's
+range. Even though this works fine here, it's not the expected behavior.
+In the next section, we'll look into strategies to make better use of
+strong typing to avoid this problem.
+
+One could argue that the problem we've just described doesn't happen to
+competent developers, who are expected to be careful. While this might be
+true for the simple application we're discussing here, complex systems
+can be much more complicated to understand: they might include multiple
+tables and multiple indices for example. In this case, even competent
+developers might make use of wrong indices to access tables. Fortunately,
+Ada provides means to avoid this problem.
+
 
 Using stronger typing
 ~~~~~~~~~~~~~~~~~~~~~
+
+In the example above, we make use of the :ada:`Positive` type, which is
+already a constrained type: we're avoiding accessing the :ada:`Tab` table
+using an index with negative values or zero. But we still may use indices
+that are out-of-range in the positive range, or switch the indices, as in
+the :ada:`Tab (Y, X)` access we mentioned previously. These problems can
+be avoided by defining range types for each dimension. This is the updated
+implementation:
 
 .. code:: ada
 
@@ -62,6 +102,21 @@ Using stronger typing
 
        Put_Line (Float'Image (V));
     end Show_Tab_Access;
+
+Now, we not only avoid mistakes like :ada:`Tab (Y, X)`, but we also detect
+them at compile time! This might decrease development time, since we don't
+need to run the application in order to check for those issues.
+
+Also, maintenance becomes easier as well. Because we're explicitly stating
+the allowed ranges for :ada:`X` and :ada:`Y`, developers can know how to
+avoid constraint issues when accessing the :ada:`Tab` table. We're also
+formally indicating the expected behavior. For example, because we declare
+:ada:`X` to be of :ada:`X_Range` type, and that type is used in the first
+dimension of :ada:`Tab`, we're documenting --- using the syntax of the Ada
+language --- that :ada:`X` is supposed to be used to access the first
+dimension of :ada:`Tab`. Using this approach, developers that need to
+maintain this application can immediately identify the purpose of
+:ada:`X` and use the variable accordingly.
 
 
 Multiple indices
