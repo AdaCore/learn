@@ -259,7 +259,9 @@ Using stronger typing
           Idx : Ord_Chunk_Index;
        end record;
 
-       type Selector is array (1 .. 2) of Ord_Chunk_Index;
+       type Selector_Index is range 1 .. 2;
+
+       type Selector is array (Selector_Index) of Ord_Chunk_Index;
 
        type Mapping is array (Ord_Chunk_Index range <>) of Chunk_Index;
 
@@ -351,7 +353,7 @@ Using stronger typing
           declare
              C1 : Chunk := C (M (S (I)));
           begin
-             Put_Line ("Selector #" & Positive'Image (I)
+             Put_Line ("Selector #" & Selector_Index'Image (I)
                        & ": V1 = " & Float'Image (C1.V1));
           end;
        end loop;
@@ -371,7 +373,7 @@ Using stronger typing
           declare
              C1 : Chunk := OC (S (I));
           begin
-             Put_Line ("Selector #" & Positive'Image (I)
+             Put_Line ("Selector #" & Selector_Index'Image (I)
                        & ": V1 = " & Float'Image (C1.V1));
           end;
        end loop;
