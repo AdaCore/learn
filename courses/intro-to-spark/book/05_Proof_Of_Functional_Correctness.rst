@@ -220,7 +220,7 @@ Ghost Code
 
 As the properties you need to specify grow more complex, you may have
 entities that are only needed because they are used in specifications
-(contracts).  You may find it important to ensure these entities can't
+(contracts).  You may find it important to ensure that these entities can't
 affect the behavior of the program or that they're completely removed from
 production code. This concept, having entities that are only used for
 specifications, is usually called having *ghost* code and is supported in
@@ -326,9 +326,9 @@ the initial value of ``X``.
        Do_Something (X);
     end Use_Ghost;
 
-When compiling this example, the the compiler flags the use of ``X_Init``
-as illegal, but more complex cases of interference between ghost and normal
-code may sometimes only be detected when you run GNATprove.
+When compiling this example, the compiler flags the use of ``X_Init``
+as illegal, but more complex cases of interference between ghost and
+normal code may sometimes only be detected when you run GNATprove.
 
 
 Ghost Functions
@@ -502,8 +502,8 @@ steps, using the ghost variable ``V_Interm`` to store the intermediate
 value of ``V`` between those steps. We could also express this using an
 existential quantification on the variable ``V_Interm``, but it would be
 impractical to iterate over all integers at runtime and this can't always
-be written in SPARK because quantification is restricted to :ada:`for
-... loop` patterns.
+be written in SPARK because quantification is restricted to
+:ada:`for ... loop` patterns.
 
 Finally, supplying the value of the variable may help the prover verify the
 contracts.
@@ -560,12 +560,12 @@ cases or inlining the definitions of functions.
 
 Some intermediate assertions may not be proved by GNATprove either because
 it's missing some information or because the amount of information
-available is confusing to it. You can verify these remaining assertions by
-other means such as testing (since they're executable) or by review. You
-can then choose to instruct GNATprove to ignore them, either by turning
-them into assumptions, as in our example, or by using a :ada:`pragma
-Annotate`. In both cases, the compiler generates code to check these
-assumptions at runtime when you enable assertions.
+available is confusing. You can verify these remaining assertions by other
+means such as testing (since they're executable) or by review. You can then
+choose to instruct GNATprove to ignore them, either by turning them into
+assumptions, as in our example, or by using a :ada:`pragma Annotate`. In
+both cases, the compiler generates code to check these assumptions at
+runtime when you enable assertions.
 
 
 Local Ghost Variables
@@ -578,12 +578,12 @@ constants whose only purpose is to be used in assertions.  You'll mostly
 use these ghost variables to store previous values of variables or
 expressions you want to refer to in assertions. They're especially useful
 to refer to initial values of parameters and expressions since the
-:ada`'Old`: attribute is only allowed in postconditions.
+:ada:`'Old` attribute is only allowed in postconditions.
 
 In the example below, we want to help GNATprove verify the postcondition of
 ``P``.  We do this by introducing a local ghost constant, ``X_Init``, to
 represent this value and writing an assertion in both branches of an
-:ada:`if` statement that repeat the postcondition, but using ``X_Init``.
+:ada:`if` statement that repeats the postcondition, but using ``X_Init``.
 
 .. code:: ada spark-report-all
 
@@ -620,11 +620,11 @@ represent this value and writing an assertion in both branches of an
 You can also use local ghost variables for more complex purposes such as
 building a data structure that serves as witness for a complex property of
 a subprogram. In our example, we want to prove that the ``Sort`` procedure
-don't create new elements, that is, that all the elements present in ``A``
-after the sort were in ``A`` before the sort.  This property isn't enough
-to ensure that a call to ``Sort`` produces a value for ``A`` that's a
-permutation of its value before the call (or that the values are indeed
-sorted), but it's already complex for a prover to verify because it
+doesn't create new elements, that is, that all the elements present in
+``A`` after the sort were in ``A`` before the sort.  This property isn't
+enough to ensure that a call to ``Sort`` produces a value for ``A`` that's
+a permutation of its value before the call (or that the values are indeed
+sorted).  However, it's already complex for a prover to verify because it
 involves a nesting of quantifiers. To help GNATprove, you may find it
 useful to store, for each index ``I``, an index ``J`` that has the expected
 property.
@@ -710,7 +710,7 @@ verification techniques used by GNATprove doesn't handle cycles in a
 subprogram's control flow. Instead, loops are flattened by dividing them
 into several acyclic parts.
 
-As an example, let us look at a simple loop with an exit condition.
+As an example, let's look at a simple loop with an exit condition.
 
 .. code:: ada
     :class: ada-nocheck
@@ -1108,7 +1108,7 @@ use in contracts.
     end Ring_Buffer;
 
 This is correct: ``Get_Model`` is used only in contracts.  Calls to
-``Get_Model`` makes copies of the buffer's contents, which isn't efficient,
+``Get_Model`` make copies of the buffer's contents, which isn't efficient,
 but is fine because ``Get_Model`` is only used for verification, not in
 production code. We enforce this by making it a ghost function.  We'll
 produce the final production code with appropriate compiler switches (i.e.,
