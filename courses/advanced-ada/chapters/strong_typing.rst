@@ -150,6 +150,7 @@ Let's skip the discussion whether the design used in this application is
 good or not and assume that all requirements listed above are set on stone
 and can't be changed.
 
+
 Typical implementation
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -245,7 +246,7 @@ external source.
        end Init_Chunks;
 
        C  : Chunks            := Init_Chunks;
-       S  : constant Selector := (3, 1);
+       S  : constant Selector := (2, 3);
        M  : constant Mapping  := Get_Mapping (C);
 
     begin
@@ -449,7 +450,7 @@ This is the updated test application:
        end Init_Chunks;
 
        C  : Chunks            := Init_Chunks;
-       S  : constant Selector := (3, 1);
+       S  : constant Selector := (2, 3);
        M  : constant Mapping  := Get_Mapping (C);
 
     begin
