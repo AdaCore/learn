@@ -477,20 +477,3 @@ and reduces development time. At the same time, we're improving the
 documentation of the source-code and facilitating further improvements
 to the application.
 
-.. code:: ada
-
-    procedure Display_Ordered_Chunk (C : Chunks;
-                                     S : Selector) is
-       OC : Ord_Chunks := Get_Ordered_Chunks (C);
-    begin
-       --  Loop over selector using ordered chunks
-       for I in S'Range loop
-          declare
-             C1 : Chunk := OC (S (I));
-          begin
-             Put_Line ("Selector #" & Selector_Index'Image (I)
-                       & ": V1 = " & Float'Image (C1.V1));
-          end;
-       end loop;
-       New_Line;
-    end Display_Ordered_Chunk;
