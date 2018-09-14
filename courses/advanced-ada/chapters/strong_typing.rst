@@ -191,8 +191,6 @@ Typical implementation
 
     procedure Show_Indirect_Ordering is
 
-       function Init_Chunks return Chunks;
-
        function Init_Chunks return Chunks is
           C : Chunks (1 .. 4);
        begin
@@ -220,11 +218,10 @@ Typical implementation
        end loop;
        New_Line;
 
-       Display_Ordered_Chunk (C, S);
     end Show_Indirect_Ordering;
 
 
-.. code:: ada
+.. code-block:: ada
 
     procedure Display_Ordered_Chunk (C : Chunks;
                                      S : Selector) is
@@ -260,7 +257,6 @@ Using stronger typing
        end record;
 
        type Selector_Index is range 1 .. 2;
-
        type Selector is array (Selector_Index) of Ord_Chunk_Index;
 
        type Mapping is array (Ord_Chunk_Index range <>) of Chunk_Index;
