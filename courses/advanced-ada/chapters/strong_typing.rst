@@ -25,7 +25,7 @@ Typical implementation
 
     begin
        X := 1;
-       Y := 6;
+       Y := 5;
        V := Tab (X, Y);
 
        Put_Line (Float'Image (V));
@@ -57,7 +57,7 @@ Using stronger typing
 
     begin
        X := 1;
-       Y := 6;
+       Y := 5;
        V := Tab (X, Y);
 
        Put_Line (Float'Image (V));
