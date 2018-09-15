@@ -568,8 +568,8 @@ as declarative regions.
     not know its size in advance, then you need to initialize the variable
     during its declaration.
 
-Imperative language - control expressions
------------------------------------------
+Imperative language - conditional expressions
+---------------------------------------------
 
 Ada 2012 introduced an expression analog for conditional statements
 (:ada:`if` and :ada:`case`).
