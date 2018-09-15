@@ -143,6 +143,9 @@ requirements:
   - A function that returns an ordered array of chunks shall be available
     for testing purposes only.
 
+  - A function that returns the selected chunks shall be available for
+    testing purposes only.
+
   - A function that returns a mapping from the index of ordered chunks to
     the index of unordered chunks must be available.
 
@@ -183,6 +186,9 @@ This is a typical implementation of the package specification:
 
        function Get_Ordered_Chunks (C : Chunks) return Chunks;
 
+       function Get_Selected_Chunks (C : Chunks;
+                                     S : Selector) return Chunks;
+
        function Get_Mapping (C : Chunks) return Mapping;
 
     end Indirect_Ordering;
@@ -216,6 +222,18 @@ This is the corresponding package body:
 
           return OC;
        end Get_Ordered_Chunks;
+
+       function Get_Selected_Chunks (C : Chunks;
+                                     S : Selector) return Chunks is
+          Map : constant Mapping := Get_Mapping (C);
+          SC  : Chunks (S'Range);
+       begin
+          for I in S'Range loop
+             SC (I) := C (Map (S (I)));
+          end loop;
+
+          return SC;
+       end Get_Selected_Chunks;
 
     end Indirect_Ordering;
 
@@ -365,7 +383,12 @@ of the application. This is the updated package specification:
          with Dynamic_Predicate =>
            (for all I in Ord_Chunks'Range => Ord_Chunks (I).Idx = I);
 
+       type Sel_Chunks is array (Selector_Index) of Chunk;
+
        function Get_Ordered_Chunks (C : Chunks) return Ord_Chunks;
+
+       function Get_Selected_Chunks (C : Chunks;
+                                     S : Selector) return Sel_Chunks;
 
        function Get_Mapping (C : Chunks) return Mapping;
 
@@ -381,10 +404,12 @@ features for the package.
 Note that we also declared a separate type for the array of ordered
 chunks: :ada:`Ord_Chunks`. This is needed because the arrays uses a
 different index (:ada:`Ord_Chunk_Index`) and therefore can't be the same
-type as :ada:`Chunks`. As a side note, we're now able to include a
-:ada:`Dynamic_Predicate` to :ada:`Ord_Chunks` that verifies that the index
-stored in the each chunk matches the corresponding index of its position
-in the ordered array.
+type as :ada:`Chunks`. For the same reason, we declared a separate type
+for the array of selected chunks: :ada:`Sel_Chunks`.
+
+As a side note, we're now able to include a :ada:`Dynamic_Predicate` to
+:ada:`Ord_Chunks` that verifies that the index stored in the each chunk
+matches the corresponding index of its position in the ordered array.
 
 This is the corresponding update to the package body:
 
@@ -426,6 +451,18 @@ This is the corresponding update to the package body:
 
           return OC;
        end Get_Ordered_Chunks;
+
+       function Get_Selected_Chunks (C : Chunks;
+                                     S : Selector) return Sel_Chunks is
+          Map : constant Mapping := Get_Mapping (C);
+          SC  : Sel_Chunks;
+       begin
+          for I in S'Range loop
+             SC (I) := C (Map (S (I)));
+          end loop;
+
+          return SC;
+       end Get_Selected_Chunks;
 
     end Indirect_Ordering;
 
