@@ -210,38 +210,32 @@ This is the corresponding package body:
 
        function Get_Mapping (C : Chunks) return Mapping is
        begin
-          declare
-             Map : Mapping (C'Range);
-          begin
+          return Map : Mapping (C'Range) do
              for J in C'Range loop
                 Map (C (J).Idx) := J;
              end loop;
-
-             return Map;
-          end;
+          end return;
        end Get_Mapping;
 
        function Get_Ordered_Chunks (C : Chunks) return Chunks is
           Map : constant Mapping := Get_Mapping (C);
-          OC  : Chunks (C'Range);
        begin
-          for I in OC'Range loop
-             OC (I) := C (Map (I));
-          end loop;
-
-          return OC;
+          return OC : Chunks (C'Range) do
+             for I in OC'Range loop
+                OC (I) := C (Map (I));
+             end loop;
+          end return;
        end Get_Ordered_Chunks;
 
        function Get_Selected_Chunks (C : Chunks;
                                      S : Selector) return Chunks is
           Map : constant Mapping := Get_Mapping (C);
-          SC  : Chunks (S'Range);
        begin
-          for I in S'Range loop
-             SC (I) := C (Map (S (I)));
-          end loop;
-
-          return SC;
+          return SC : Chunks (S'Range) do
+             for I in S'Range loop
+                SC (I) := C (Map (S (I)));
+             end loop;
+          end return;
        end Get_Selected_Chunks;
 
     end Indirect_Ordering;
@@ -429,46 +423,39 @@ This is the corresponding update to the package body:
           Last  : Ord_Chunk_Index;
        end record;
 
-       function Get_Ord_Chunk_Range (C : Chunks)
-           return Ord_Chunk_Range is
+       function Get_Ord_Chunk_Range (C : Chunks) return Ord_Chunk_Range is
          ((Ord_Chunk_Index (C'First), Ord_Chunk_Index (C'Last)));
 
        function Get_Mapping (C : Chunks) return Mapping is
           R : constant Ord_Chunk_Range := Get_Ord_Chunk_Range (C);
        begin
-          declare
-             Map : Mapping (R.First .. R.Last);
-          begin
+          return Map : Mapping (R.First .. R.Last) do
              for J in C'Range loop
                 Map (C (J).Idx) := J;
              end loop;
-
-             return Map;
-          end;
+          end return;
        end Get_Mapping;
 
        function Get_Ordered_Chunks (C : Chunks) return Ord_Chunks is
           Map : constant Mapping := Get_Mapping (C);
           R   : constant Ord_Chunk_Range := Get_Ord_Chunk_Range (C);
-          OC  : Ord_Chunks (R.First .. R.Last);
        begin
-          for I in OC'Range loop
-             OC (I) := C (Map (I));
-          end loop;
-
-          return OC;
+          return OC : Ord_Chunks (R.First .. R.Last) do
+             for I in OC'Range loop
+                OC (I) := C (Map (I));
+             end loop;
+          end return;
        end Get_Ordered_Chunks;
 
        function Get_Selected_Chunks (C : Chunks;
                                      S : Selector) return Sel_Chunks is
           Map : constant Mapping := Get_Mapping (C);
-          SC  : Sel_Chunks;
        begin
-          for I in S'Range loop
-             SC (I) := C (Map (S (I)));
-          end loop;
-
-          return SC;
+          return SC : Sel_Chunks do
+             for I in S'Range loop
+                SC (I) := C (Map (S (I)));
+             end loop;
+          end return;
        end Get_Selected_Chunks;
 
     end Indirect_Ordering;
