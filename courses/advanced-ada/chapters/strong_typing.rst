@@ -175,7 +175,7 @@ and can't be changed.
 Typical implementation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-This is a typical implementation of the package specification:
+This is a typical specification of the main package:
 
 .. code:: ada
 
@@ -193,16 +193,24 @@ This is a typical implementation of the package specification:
 
        type Chunks is array (Positive range <>) of Chunk;
 
+       function Get_Mapping (C : Chunks) return Mapping;
+
+    end Indirect_Ordering;
+
+And this is a typical specification of the :ada:`Test` child package:
+
+.. code:: ada
+
+    package Indirect_Ordering.Test is
+
        function Get_Ordered_Chunks (C : Chunks) return Chunks;
 
        function Get_Selected_Chunks (C : Chunks;
                                      S : Selector) return Chunks;
 
-       function Get_Mapping (C : Chunks) return Mapping;
+    end Indirect_Ordering.Test;
 
-    end Indirect_Ordering;
-
-This is the corresponding package body:
+This is the corresponding body of the main package:
 
 .. code:: ada
 
@@ -216,6 +224,14 @@ This is the corresponding package body:
              end loop;
           end return;
        end Get_Mapping;
+
+    end Indirect_Ordering;
+
+This is the corresponding body of the :ada:`Test` child package:
+
+.. code:: ada
+
+    package body Indirect_Ordering.Test is
 
        function Get_Ordered_Chunks (C : Chunks) return Chunks is
           Map : constant Mapping := Get_Mapping (C);
@@ -238,7 +254,7 @@ This is the corresponding package body:
           end return;
        end Get_Selected_Chunks;
 
-    end Indirect_Ordering;
+    end Indirect_Ordering.Test;
 
 Note that the information transmitted to the application might be
 inconsistent due to errors in the transmission channel. For example, the
@@ -289,7 +305,6 @@ external source.
        end loop;
        New_Line;
 
-       Display_Ordered_Chunk (C, S);
     end Show_Indirect_Ordering;
 
 In this line of the test application, we retrieve the chunk using the
@@ -308,6 +323,8 @@ If we'd use the ordered array of chunks, we could use the index from
 :ada:`S` directly, as illustrated in the following function:
 
 .. code-block:: ada
+
+    with Indirect_Ordering.Test; use Indirect_Ordering.Test;
 
     procedure Display_Ordered_Chunk (C : Chunks;
                                      S : Selector) is
@@ -356,13 +373,11 @@ Using stronger typing
 
 In the previous implementation, we basically used the :ada:`Positive` type
 for all indices. We can, however, declare individual types for each index
-of the application. This is the updated package specification:
+of the application. This is the updated specification of the main package:
 
 .. code:: ada
 
     package Indirect_Ordering is
-
-       pragma Assertion_Policy (Dynamic_Predicate => Check);
 
        type Chunk_Index     is new Positive;
        type Ord_Chunk_Index is new Chunk_Index;
@@ -380,17 +395,6 @@ of the application. This is the updated package specification:
 
        type Chunks is array (Chunk_Index range <>) of Chunk;
 
-       type Ord_Chunks is array (Ord_Chunk_Index range <>) of Chunk
-         with Dynamic_Predicate =>
-           (for all I in Ord_Chunks'Range => Ord_Chunks (I).Idx = I);
-
-       type Sel_Chunks is array (Selector_Index) of Chunk;
-
-       function Get_Ordered_Chunks (C : Chunks) return Ord_Chunks;
-
-       function Get_Selected_Chunks (C : Chunks;
-                                     S : Selector) return Sel_Chunks;
-
        function Get_Mapping (C : Chunks) return Mapping;
 
     end Indirect_Ordering;
@@ -402,6 +406,27 @@ This allows for better understanding of the package specification and
 makes maintenance easier, as well as it helps when implementing new
 features for the package.
 
+This is the updated specification of the :ada:`Test` child package:
+
+.. code:: ada
+
+    package Indirect_Ordering.Test is
+
+       pragma Assertion_Policy (Dynamic_Predicate => Check);
+
+       type Ord_Chunks is array (Ord_Chunk_Index range <>) of Chunk
+         with Dynamic_Predicate =>
+           (for all I in Ord_Chunks'Range => Ord_Chunks (I).Idx = I);
+
+       type Sel_Chunks is array (Selector_Index) of Chunk;
+
+       function Get_Ordered_Chunks (C : Chunks) return Ord_Chunks;
+
+       function Get_Selected_Chunks (C : Chunks;
+                                     S : Selector) return Sel_Chunks;
+
+    end Indirect_Ordering.Test;
+
 Note that we also declared a separate type for the array of ordered
 chunks: :ada:`Ord_Chunks`. This is needed because the arrays uses a
 different index (:ada:`Ord_Chunk_Index`) and therefore can't be the same
@@ -412,11 +437,14 @@ As a side note, we're now able to include a :ada:`Dynamic_Predicate` to
 :ada:`Ord_Chunks` that verifies that the index stored in the each chunk
 matches the corresponding index of its position in the ordered array.
 
-This is the corresponding update to the package body:
+We also had to add a new private package that includes a function that
+retrieves the range of an array of :ada:`Chunk` type --- which are of
+:ada:`Chunk_Index` type --- and converts the range using the
+:ada:`Ord_Chunk_Index` type.
 
 .. code:: ada
 
-    package body Indirect_Ordering is
+    private package Indirect_Ordering.Cnvt is
 
        type Ord_Chunk_Range is record
           First : Ord_Chunk_Index;
@@ -425,6 +453,21 @@ This is the corresponding update to the package body:
 
        function Get_Ord_Chunk_Range (C : Chunks) return Ord_Chunk_Range is
          ((Ord_Chunk_Index (C'First), Ord_Chunk_Index (C'Last)));
+
+    end Indirect_Ordering.Cnvt;
+
+This is needed for example in the :ada:`Get_Mapping` function, which has
+to deal with indices of these two types. Although this makes the code a
+little bit more verbose, it helps documenting the expected types in that
+function.
+
+This is the corresponding update to the body of the main package:
+
+.. code:: ada
+
+    with Indirect_Ordering.Cnvt; use Indirect_Ordering.Cnvt;
+
+    package body Indirect_Ordering is
 
        function Get_Mapping (C : Chunks) return Mapping is
           R : constant Ord_Chunk_Range := Get_Ord_Chunk_Range (C);
@@ -435,6 +478,17 @@ This is the corresponding update to the package body:
              end loop;
           end return;
        end Get_Mapping;
+
+    end Indirect_Ordering;
+
+This is the corresponding update to the body of the :ada:`Test` child
+package:
+
+.. code:: ada
+
+    with Indirect_Ordering.Cnvt; use Indirect_Ordering.Cnvt;
+
+    package body Indirect_Ordering.Test is
 
        function Get_Ordered_Chunks (C : Chunks) return Ord_Chunks is
           Map : constant Mapping := Get_Mapping (C);
@@ -458,13 +512,7 @@ This is the corresponding update to the package body:
           end return;
        end Get_Selected_Chunks;
 
-    end Indirect_Ordering;
-
-For this updated package body, the major change is that we need to
-convert from the :ada:`Chunk_Index` type to the :ada:`Ord_Chunk_Range`
-type in the :ada:`Get_Mapping` function, since they are now two different
-types. Although this makes the code a little bit more verbose, it helps
-documenting the expected types in that function.
+    end Indirect_Ordering.Test;
 
 This is the updated test application:
 
