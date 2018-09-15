@@ -268,8 +268,6 @@ external source.
 
     procedure Show_Indirect_Ordering is
 
-       function Init_Chunks return Chunks;
-
        function Init_Chunks return Chunks is
           C : Chunks (1 .. 4);
        begin
@@ -490,8 +488,6 @@ This is the updated test application:
     with Ada.Text_IO; use  Ada.Text_IO;
 
     procedure Show_Indirect_Ordering is
-
-       function Init_Chunks return Chunks;
 
        function Init_Chunks return Chunks is
           C : Chunks (1 .. 4);
