@@ -1,6 +1,15 @@
 Strong typing
 =============
 
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 In this chapter, we discuss the advantages of strong typing and how it can
 be used to avoid common implementation and maintenance issues.
 
