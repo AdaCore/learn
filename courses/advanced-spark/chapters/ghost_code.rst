@@ -1,4 +1,4 @@
-:code-config:'run_button=False;prove_button=True;accumulate_code=False'
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
 
 Ghost Code
 =====================================================================
@@ -49,8 +49,6 @@ Ghost code – A trivial example
 
     end Show_Trivial_Example;
 
-.. code:: ada
-
     package body Show_Trivial_Example is
 
        procedure Alloc is
@@ -62,7 +60,6 @@ Ghost code – A trivial example
        end Alloc;
 
     end Show_Trivial_Example;
-
 
 Ghost variables – aka auxiliary variables
 ---------------------------------------------------------------------
@@ -88,8 +85,6 @@ Ghost variables – aka auxiliary variables
 
     end Show_Ghost_Variable;
 
-.. code:: ada
-
     package body Show_Ghost_Variable is
 
        procedure Alloc is
@@ -101,7 +96,6 @@ Ghost variables – aka auxiliary variables
        end Alloc;
 
     end Show_Ghost_Variable;
-
 
 Ghost variables – non-interference rules
 ---------------------------------------------------------------------
@@ -145,7 +139,6 @@ Ghost variables – non-interference rules
     begin
        Assign (From => Free_Init, To => Free);
     end Show_Non_Interference;
-
 
 Ghost statements
 ---------------------------------------------------------------------
@@ -265,9 +258,7 @@ Ghost functions
        --
        --     function Free_Memory return Natural is (...) with Ghost;
 
-
     end Show_Ghost_Function;
-
 
 Imported ghost functions
 ---------------------------------------------------------------------
@@ -475,11 +466,11 @@ Example #1
 ~~~~~~~~~~
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
     procedure Example_01 is
 
        type Data_Array is array (1 .. 10) of Integer;
-
 
        Data : Data_Array;
        Free : Natural;
@@ -488,7 +479,7 @@ Example #1
           Free_Init : Natural with Ghost;
        begin
           Free_Init := Free;
-          -- some computations here
+          --  some computations here
           if Free <= Free_Init then
              raise Program_Error;
           end if;
@@ -540,6 +531,7 @@ Example #3
 ~~~~~~~~~~
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
     package Example_03 is
 

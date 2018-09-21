@@ -1,4 +1,4 @@
-:code-config:'run_button=False;prove_button=True;accumulate_code=False'
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
 
 Subprogram Contracts
 =====================================================================
@@ -94,6 +94,8 @@ Precondition
 
 .. code:: ada
 
+    with Ada.Numerics; use Ada.Numerics;
+
     package Show_Precondition is
 
        function Sqrt (X : Float) return Float with
@@ -113,7 +115,6 @@ and
        function Sqrt (X : Float) return Float;
 
     end Show_Precondition;
-
 
 .. code:: ada
 
@@ -214,6 +215,7 @@ Attribute ``'Old``
       not limited!)
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
     package Show_Attribute_Old is
 
@@ -224,7 +226,7 @@ Attribute ``'Old``
        type My_Array is array (My_Range) of Value;
 
        procedure Extract (A : in out My_Array;
-                          J : in     My_Range;
+                          J :        My_Range;
                           V :    out Value)
          with
            Post => (if J in A'Range then V = A (J)'Old and A (J) = 0);
@@ -298,7 +300,7 @@ Reasoning by Cases
 
     end Show_Case_Expression;
 
-    - Can sometimes be used at different levels in the expression
+- Can sometimes be used at different levels in the expression
 
 .. code-block:: ada
 
@@ -403,12 +405,12 @@ Example #2
 
     with Interfaces.C; use Interfaces.C;
 
-    procedure Example_02 is
+    package Example_02 is
 
        procedure Memset
          (B  : in out char_array;
-          Ch : in     char;
-          N  : in     size_t)
+          Ch :        char;
+          N  :        size_t)
          with
            Import,
            Pre  => N <= B'Length,
@@ -417,8 +419,7 @@ Example #2
                              B (Idx) = Ch
                            else
                              B (Idx) = B'Old (Idx)));
-    begin
-       null;
+
     end Example_02;
 
 This code is correct. GNAT will create a wrapper for checking the
@@ -459,6 +460,7 @@ Example #4
 ~~~~~~~~~~
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
     procedure Example_04 is
 
@@ -503,7 +505,6 @@ Example #5
     begin
        null;
     end Example_05;
-
 
 This code is not correct. Postcondition is only relevant for normal
 returns.
@@ -557,13 +558,14 @@ Example #8
 ~~~~~~~~~~
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
     package Example_08 is
 
        procedure Memset
          (B  : in out String;
-          Ch : in     Character;
-          N  : in     Natural)
+          Ch :        Character;
+          N  :        Natural)
          with
            Pre  => N <= B'Length,
            Post => (for all Idx in B'Range =>
@@ -581,13 +583,14 @@ Example #9
 ~~~~~~~~~~
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
     package Example_09 is
 
        procedure Memset
          (B  : in out String;
-          Ch : in     Character;
-          N  : in     Natural)
+          Ch :        Character;
+          N  :        Natural)
          with
            Pre  => N <= B'Length - 1,
            Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)
@@ -608,8 +611,8 @@ Example #10
 
        procedure Memset
          (B  : in out String;
-          Ch : in     Character;
-          N  : in     Natural)
+          Ch :        Character;
+          N  :        Natural)
          with
            Pre  => N <= B'Length - 1,
            Post => (for all Idx in 1 .. N => B (B'First + Idx - 1) = Ch)

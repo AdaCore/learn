@@ -1,4 +1,4 @@
-:code-config:'run_button=False;prove_button=True;accumulate_code=False'
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
 
 Concurrency
 =====================================================================
@@ -212,10 +212,6 @@ Communication Between Tasks in Ravenscar
 
     end Show_Protected_Object;
 
-- ... completed by a body
-
-.. code:: ada
-
     package body Show_Protected_Object is
 
        protected body P is
@@ -228,7 +224,6 @@ Communication Between Tasks in Ravenscar
        end P;
 
     end Show_Protected_Object;
-
 
 Protected Objects in Ravenscar
 ---------------------------------------------------------------------
@@ -278,7 +273,6 @@ Protected Objects in Ravenscar
        end PT;
 
     end Show_Protected_Object_Ravenscar;
-
 
 Protected Communication with Procedures & Functions
 ---------------------------------------------------------------------
@@ -345,7 +339,6 @@ Blocking Communication with Entries
 
     end Show_Blocking_Communication;
 
-
 Relaxed Constraints on Entries with Extended Ravenscar
 ---------------------------------------------------------------------
 
@@ -389,7 +382,6 @@ Relaxed Constraints on Entries with Extended Ravenscar
        end Mailbox;
 
     end Show_Relaxed_Constraints_On_Entries;
-
 
 Interrupt Handlers in Ravenscar
 ---------------------------------------------------------------------
@@ -477,7 +469,6 @@ Data and Flow Dependencies of Tasks
                      Y    => X,
                      null => Z);
     end Show_Data_And_Flow_Dependencies;
-
 
 State Abstraction over Synchronized Variables
 ---------------------------------------------------------------------

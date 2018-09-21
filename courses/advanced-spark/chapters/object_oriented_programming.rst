@@ -1,4 +1,4 @@
-:code-config:'run_button=False;prove_button=True;accumulate_code=False'
+:code-config:`run_button=False;prove_button=True;accumulate_code=True`
 
 Object-oriented Programming
 =====================================================================
@@ -120,8 +120,6 @@ Methods in SPARK
 
     end Show_Derived_Methods;
 
-.. code:: ada
-
     package body Show_Derived_Methods is
 
        function Equal (Arg1, Arg2 : Int) return Boolean is
@@ -174,7 +172,6 @@ Methods in SPARK
        Bump (AI); -- call to Approx_Int.Bump
        Bump (Int (AI)); -- call to Int.Bump
     end Use_Derived_Methods;
-
 
 Dynamic dispatching in SPARK
 ---------------------------------------------------------------------
@@ -232,7 +229,6 @@ Dynamic dispatching in SPARK
        Call_Bump (Int'Class (AI)); -- calls Approx_Int.Bump(AI)
     end Use_Classwide_Dispatching;
 
-
 A trivial example
 ~~~~~~~~~~~~~~~~~
 
@@ -261,7 +257,6 @@ A trivial example
     begin
        null;
     end Show_Trivial_Example;
-
 
 The problems with dynamic dispatching
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -314,7 +309,6 @@ LSP – the SPARK solution to dynamic dispatching problems
 
     end Show_LSP;
 
-
 .. code:: ada
 
     package Show_LSP is
@@ -337,7 +331,6 @@ LSP – the SPARK solution to dynamic dispatching problems
 
     end Show_LSP;
 
-
 .. code:: ada
 
     package Show_LSP is
@@ -359,7 +352,6 @@ LSP – the SPARK solution to dynamic dispatching problems
        --  inherited Post'Class from Int.Bump
 
     end Show_LSP;
-
 
 Verification of dynamic dispatching calls
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -429,7 +421,6 @@ Class-wide contracts and data abstraction
          (Arg.Value < Arg.Max - 10);
 
     end Show_Classwide_Contracts;
-
 
 Class-wide contracts, data abstraction and overriding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -502,7 +493,6 @@ Class-wide contracts, data abstraction and overriding
 
     end Show_Contract_Override;
 
-
 Dynamic semantics of class-wide contracts
 ---------------------------------------------------------------------
 
@@ -569,7 +559,6 @@ Redispatching and Extensions_Visible aspect
 
     end Show_Redispatching;
 
-
 Code Examples / Pitfalls
 ---------------------------------------------------------------------
 
@@ -577,8 +566,9 @@ Example #1
 ~~~~~~~~~~
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
-    package Example_01 is
+    package OO_Example_01 is
 
        type Int is record
           Min, Max, Value : Integer;
@@ -588,7 +578,7 @@ Example #1
          Pre'Class  => Arg.Value < Arg.Max - 10,
          Post'Class => Arg.Value > Arg.Value'Old;
 
-    end Example_01;
+    end OO_Example_01;
 
 This code is not correct. Class-wide contracts are only allowed on tagged
 records.
@@ -598,7 +588,7 @@ Example #2
 
 .. code:: ada
 
-    package Example_02 is
+    package OO_Example_02 is
 
        type Int is tagged record
           Min, Max, Value : Integer;
@@ -608,7 +598,7 @@ Example #2
          Pre  => Arg.Value < Arg.Max - 10,
          Post => Arg.Value > Arg.Value'Old;
 
-    end Example_02;
+    end OO_Example_02;
 
 This code is not correct. Plain precondition on dispatching subprogram is
 not allowed in SPARK. Otherwise it would have to be both weaker and
@@ -624,7 +614,7 @@ Example #3
 
 .. code:: ada
 
-    package Example_03 is
+    package OO_Example_03 is
 
        pragma Elaborate_Body;
 
@@ -643,11 +633,9 @@ Example #3
        overriding procedure Bump (Arg : in out Approx_Int) with
          Post'Class => Arg.Value = Arg.Value'Old + 10;
 
-    end Example_03;
+    end OO_Example_03;
 
-.. code:: ada
-
-    package body Example_03 is
+    package body OO_Example_03 is
 
        procedure Bump (Arg : in out Int) is
        begin
@@ -659,7 +647,7 @@ Example #3
           Arg.Value := Arg.Value + 10;
        end Bump;
 
-    end Example_03;
+    end OO_Example_03;
 
 This code is correct. Class-wide precondition of ``Int.Bump`` is inherited
 by ``Approx_Int.Bump``. Class-wide postcondition of ``Approx_Int.Bump`` is
@@ -670,8 +658,9 @@ Example #4
 ~~~~~~~~~~
 
 .. code:: ada
+    :class: ada-expect-compile-error
 
-    package Example_04 is
+    package OO_Example_04 is
 
        type Int is tagged record
           Min, Max, Value : Integer;
@@ -687,7 +676,7 @@ Example #4
 
        --  inherited function “+”
 
-    end Example_04;
+    end OO_Example_04;
 
 This code is not correct. A type must be declared abstract or :ada:`"+"`
 overridden.
@@ -698,7 +687,7 @@ Example #5
 
 .. code:: ada
 
-    package Example_05 is
+    package OO_Example_05 is
 
        type Int is tagged record
           Min, Max, Value : Integer;
@@ -712,7 +701,7 @@ Example #5
 
        --  inherited procedure Reset
 
-    end Example_05;
+    end OO_Example_05;
 
 This code is not correct. A type must be declared abstract or ``Reset``
 overridden ``Reset`` is subject to :ada:`Extensions_Visible`
@@ -724,7 +713,7 @@ Example #6
 
 .. code:: ada
 
-    package Example_06 is
+    package OO_Example_06 is
 
        type Int is tagged record
           Min, Max, Value : Integer;
@@ -738,11 +727,9 @@ Example #6
 
        --  inherited procedure Reset
 
-    end Example_06;
+    end OO_Example_06;
 
-.. code:: ada
-
-    package body Example_06 is
+    package body OO_Example_06 is
 
        procedure Reset (Arg : out Int) is
        begin
@@ -751,7 +738,7 @@ Example #6
                       Value => 0);
        end Reset;
 
-    end Example_06;
+    end OO_Example_06;
 
 This code is not correct. High: extension of ``Arg`` is not initialized in
 ``Reset``.
@@ -762,7 +749,7 @@ Example #7
 
 .. code:: ada
 
-    package Example_07 is
+    package OO_Example_07 is
 
        pragma Elaborate_Body;
 
@@ -782,11 +769,11 @@ Example #7
 
        --  inherited procedure Reset
 
-    end Example_07;
+    end OO_Example_07;
 
 .. code:: ada
 
-    package body Example_07 is
+    package body OO_Example_07 is
 
        function Zero return Int is
           ((0, 0, 0));
@@ -799,7 +786,7 @@ Example #7
        function Zero return Approx_Int is
            ((0, 0, 0, 0));
 
-    end Example_07;
+    end OO_Example_07;
 
 This code is correct. Redispatching ensures that ``Arg`` is fully
 initialized on return.
@@ -868,7 +855,7 @@ Example #8
 
     with File_System; use File_System;
 
-    procedure Example_08 is
+    procedure OO_Example_08 is
 
        procedure Use_File_System (F : out File'Class) is
        begin
@@ -879,7 +866,7 @@ Example #8
 
     begin
        null;
-    end Example_08;
+    end OO_Example_08;
 
 This code is correct. State automaton encoded in class-wide contracts is
 respected.
@@ -945,7 +932,7 @@ Example #9
 
     with File_System.Sync; use File_System.Sync;
 
-    procedure Example_09 is
+    procedure OO_Example_09 is
 
        procedure Use_File_System (F : out File'Class) is
        begin
@@ -956,7 +943,7 @@ Example #9
 
     begin
        null;
-    end Example_09;
+    end OO_Example_09;
 
 This code is not correct. Medium: class-wide precondition might be
 stronger than overridden one
@@ -1024,7 +1011,7 @@ Example #10
 
     with File_System.Sync; use File_System.Sync;
 
-    procedure Example_10 is
+    procedure OO_Example_10 is
 
        procedure Use_File_System (F : out File'Class) is
        begin
@@ -1035,7 +1022,7 @@ Example #10
 
     begin
        null;
-    end Example_10;
+    end OO_Example_10;
 
 This code is correct. Predicate encodes the additional constraint on
 opened files. Type invariants are not yet supported on tagged types in
