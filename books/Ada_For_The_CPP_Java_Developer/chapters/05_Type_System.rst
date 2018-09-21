@@ -16,7 +16,7 @@ One of the main characteristics of Ada is its strong typing (i.e., relative abse
       Result : Float;
    begin
       Result := Float (Alpha) / Float (Beta);
-   end Strong_Typing; 
+   end Strong_Typing;
 
 [C++]
 
@@ -55,7 +55,7 @@ In Ada, a floating point literal must be written with both an integral and decim
 Language-Defined Types
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The principal scalar types predefined by Ada are *Integer*, *Float*, *Boolean*, and *Character*. These correspond to **int**, **float**, **bool**/**boolean**, and **char**, respectively. The names for these types are not reserved words; they are regular identifiers. 
+The principal scalar types predefined by Ada are *Integer*, *Float*, *Boolean*, and *Character*. These correspond to **int**, **float**, **bool**/**boolean**, and **char**, respectively. The names for these types are not reserved words; they are regular identifiers.
 
 Application-Defined Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,7 +69,7 @@ The next example below defines two different metrics: area and distance. Mixing 
    procedure Main is
       type Distance is new Float;
       type Area is new Float;
-      
+
       D1 : Distance := 2.0;
       D2 : Distance := 3.0;
       A  : Area;
@@ -77,7 +77,7 @@ The next example below defines two different metrics: area and distance. Mixing 
       D1 := D1 + D2;        -- OK
       D1 := D1 + A;         -- NOT OK: incompatible types for "+" operator
       A  := D1 * D2;        -- NOT OK: incompatible types for ":=" assignment
-      A  := Area (D1 * D2); -- OK 
+      A  := Area (D1 * D2); -- OK
    end Main;
 
 Even though the **Distance** and **Area** types above are just **Float**\s, the compiler does not allow arbitrary mixing of values of these different types. An explicit conversion (which does not necessarily mean any additional object code) is necessary.
@@ -90,7 +90,7 @@ Ada enumerations work similarly to C++ and Java's *enum*\s.
 
 .. code-block:: ada
 
-   type Day is 
+   type Day is
      (Monday,
       Tuesday,
       Wednesday,
@@ -164,7 +164,7 @@ Contracts can be associated with types and variables, to refine values and defin
 
    procedure Main is
       type Grade is range 0 .. 100;
-    
+
       G1, G2  : Grade;
       N       : Integer;
    begin
@@ -182,7 +182,7 @@ The final assignment illustrates an interesting but subtle point. The subexpress
 
 .. code-block:: ada
 
-      G1 := Grade (Integer (G1) + Integer (G2)) / 2); 
+      G1 := Grade (Integer (G1) + Integer (G2)) / 2);
 
 Range checks are useful for detecting errors as early as possible. However, there may be some impact on performance. Modern compilers do know how to remove redundant checks, and you can deactivate these checks altogether if you have sufficient confidence that your code will function correctly.
 
@@ -210,19 +210,19 @@ Range checks are a special form of type contracts; a more general method is prov
 
 .. code-block:: ada
 
-   subtype Dice_Throw is Integer 
+   subtype Dice_Throw is Integer
       with Dynamic_Predicate => Dice_Throw in 1 .. 6;
 
 The clause beginning with **with** introduces an Ada `aspect', which is additional information provided for declared entities such as types and subtypes. The *Dynamic_Predicate* aspect is the most general form. Within the predicate expression, the name of the (sub)type refers to the current value of the (sub)type. The predicate is checked on assignment, parameter passing, and in several other contexts. There is a "Static_Predicate" form which introduce some optimization and constrains on the form of these predicates, outside of the scope of this document.
 
 Of course, predicates are useful beyond just expressing ranges. They can be used to represent types with arbitrary constraints, in particular types with discontinuities, for example:
 
-.. code-block:: ada 
+.. code-block:: ada
 
-   type Not_Null is new Integer 
+   type Not_Null is new Integer
       with Dynamic_Predicate => Not_Null /= 0;
 
-   type Even is new Integer 
+   type Even is new Integer
       with Dynamic_Predicate => Even mod 2 = 0;
 
 
@@ -415,7 +415,7 @@ Ada also offers high level comparison operations which compare the contents of a
       A1 : Arr_Type (1 .. 2);
       A2 : Arr_Type (1 .. 2);
    begin
-      if A1 = A2 then 
+      if A1 = A2 then
 
 [C++]
 
@@ -534,7 +534,7 @@ We'll continue this section by explaining the difference between objects allocat
          A, B : Integer;
       end record;
 
-      V1, V2 : R; 
+      V1, V2 : R;
    begin
       V1.A := 0;
       V2 := V1;
@@ -553,7 +553,7 @@ We'll continue this section by explaining the difference between objects allocat
    V1.A = 0;
    V2 = V1;
    V2.A = 1;
-    
+
 [Java]
 
 .. code-block:: java
@@ -582,7 +582,7 @@ To obtain similar behavior in Ada, you can use pointers. It can be done through 
       end record;
       type R_Access is access R;
 
-      V1 : R_Access; 
+      V1 : R_Access;
       V2 : R_Access;
    begin
       V1 := new R;
