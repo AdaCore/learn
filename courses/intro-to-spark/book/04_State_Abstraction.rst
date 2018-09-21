@@ -537,7 +537,7 @@ For our ``Stack`` example, we could add refined contracts as shown below.
 
        procedure Push (E : Element) with
          Refined_Global  => (In_Out => (Content, Top)),
-         Refined_Depends => (Content => +(Content, Top, E),
+         Refined_Depends => (Content =>+ (Content, Top, E),
                              Top     => Top) is
        begin
          Top := Top + 1;
