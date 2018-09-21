@@ -20,7 +20,17 @@ test_spark_intro:
 	@$(TEST_DRIVER) ../courses/intro-to-spark/book/*.rst
 	@echo ""
 
-tests: test_ada_intro test_spark_intro
+test_advanced_ada:
+	@echo "===== ADVANCED ADA ====="
+	@$(TEST_DRIVER) ../courses/advanced-ada/chapters/*.rst
+	@echo ""
+
+test_advanced_spark:
+	@echo "===== ADVANCED SPARK ====="
+	@$(TEST_DRIVER) ../courses/advanced-spark/chapters/*.rst
+	@echo ""
+
+tests: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark
 
 publish-staging:
 	@echo "Publishing current branch to learn-staging..."
