@@ -47,14 +47,14 @@ To raise an exception of our newly declared exception kind, do the following:
 
     procedure Main is
     begin
-        raise My_Except;
-        --  Execution of current control flow abandoned; an exception of kind
-        --  "My_Except" will bubble up until it is caught.
+       raise My_Except;
+       --  Execution of current control flow abandoned; an exception of kind
+       --  "My_Except" will bubble up until it is caught.
 
-        raise My_Except with "My exception message";
-        --  Execution of current control flow abandoned; an exception of
-        --  kind "My_Except" with associated string will bubble up until
-	--  it is caught.
+       raise My_Except with "My exception message";
+       --  Execution of current control flow abandoned; an exception of
+       --  kind "My_Except" with associated string will bubble up until
+       --  it is caught.
     end Main;
 
 Handling an exception
@@ -104,6 +104,7 @@ can add it to the statements block of your current subprogram:
     end Open_File;
 
 .. attention::
+
     Exception handlers have an important restriction that
     you need to be careful about: Exceptions raised in the declarative
     section are not caught by the handlers of that block. So for
