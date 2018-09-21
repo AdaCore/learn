@@ -184,8 +184,9 @@ args = parser.parse_args()
 
 args.rst_files = map(os.path.abspath, args.rst_files)
 
-
 def analyze_file(rst_file):
+
+    analysis_error = False
 
     with open(rst_file) as f:
         content = f.read()
@@ -274,6 +275,7 @@ def analyze_file(rst_file):
             out = run("gnatchop", "-r", "-w", "code.ada").splitlines()
         except S.CalledProcessError:
             print_error(loc, "Failed to chop example, skipping\n")
+            analysis_error = True
             continue
 
         idx = -1
@@ -284,6 +286,7 @@ def analyze_file(rst_file):
 
         if idx == -1:
             print_error(loc, "Failed to chop example, skipping\n")
+            analysis_error = True
             continue
 
         source_files = [s.strip() for s in out[idx:]]
@@ -353,7 +356,9 @@ def analyze_file(rst_file):
             print_error(loc, "Expected compile error, got none!")
             has_error = True
 
-        if not has_error and args.verbose:
+        if has_error:
+            analysis_error = True
+        elif args.verbose:
             print C.col("SUCCESS", C.Colors.GREEN)
 
         if args.all_diagnostics:
@@ -363,6 +368,7 @@ def analyze_file(rst_file):
             for source_file in source_files:
                 os.remove(source_file)
 
+    return analysis_error
 
 # Remove the build dir, but only if the user didn't ask for a specific
 # subset of code_blocks
@@ -374,5 +380,15 @@ if not os.path.exists(args.build_dir):
 
 os.chdir(args.build_dir)
 
+test_error = False
+
 for f in args.rst_files:
-    analyze_file(f)
+    analysis_error = analyze_file(f)
+    if analysis_error:
+        test_error = True
+
+if test_error:
+    print C.col("TEST ERROR", C.Colors.RED)
+    exit(1)
+elif args.verbose:
+    print C.col("TEST SUCCESS", C.Colors.GREEN)
