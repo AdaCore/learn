@@ -775,7 +775,6 @@ whose capacity is initialized from an external configuration during
 elaboration.
 
 .. code:: ada spark-flow
-   :class: ada-expect-compile-error
 
     package Configuration is
 
