@@ -35,7 +35,7 @@ A **class** in C++ or Java corresponds to a **tagged type** in Ada. Here's an ex
    class T {
       public:
          int V, W;
- 
+
          int F (void);
 
          void P1 (void);
@@ -49,7 +49,7 @@ A **class** in C++ or Java corresponds to a **tagged type** in Ada. Here's an ex
 
    public class T {
          public int V, W;
- 
+
          public int F (void) {};
 
          public void P1 (void) {};
@@ -57,7 +57,7 @@ A **class** in C++ or Java corresponds to a **tagged type** in Ada. Here's an ex
          public static void P2 (T v) {};
    }
 
-Note that *P2* is not a primitive of *T*---it does not have any parameters of type *T*. Its parameter is of type *T_Access*, which is a different type. 
+Note that *P2* is not a primitive of *T*---it does not have any parameters of type *T*. Its parameter is of type *T_Access*, which is a different type.
 
 Once declared, primitives can be called like any subprogram with every necessary parameter specified, or called using prefix notation.  For example:
 
@@ -112,7 +112,7 @@ Despite the syntactic differences, derivation in Ada is similar to derivation (i
    procedure Method_1 (Self : Child);
 
    procedure Method_2 (Self : Child);
-     
+
 
 [C++]
 
@@ -147,7 +147,7 @@ Despite the syntactic differences, derivation in Ada is similar to derivation (i
       public void method2 ();
    }
 
-Like Java, Ada primitives on tagged types are always subject to dispatching; there is no need to mark them **virtual**. Also like Java, there's an optional keyword **overriding** to ensure that a method is indeed overriding something from the parent type. 
+Like Java, Ada primitives on tagged types are always subject to dispatching; there is no need to mark them **virtual**. Also like Java, there's an optional keyword **overriding** to ensure that a method is indeed overriding something from the parent type.
 
 Unlike many other OOP languages, Ada differentiates between a reference to a specific tagged type, and a reference to an entire tagged type hierarchy. While *Root* is used to mean a specific type, *Root'Class*---a class-wide type---refers to either that type or any of its descendants. A method using a parameter of such a type cannot be overridden, and must be passed a parameter whose type is of any of *Root*'s descendants (including *Root* itself).
 
@@ -310,7 +310,7 @@ While done at the class level for C++ and Java, Ada encapsulation occurs at the 
    };
 
 [Java]
- 
+
 .. code-block:: java
 
    public class T {
@@ -331,7 +331,7 @@ Ada, C++ and Java all offer similar functionality in terms of abstract classes, 
 .. code-block:: ada
 
   package P is
-  
+
       type T is abstract tagged private;
 
       procedure Method (Self : T) is abstract;
@@ -353,7 +353,7 @@ Ada, C++ and Java all offer similar functionality in terms of abstract classes, 
          int f1, f2;
    };
 
- 
+
 [Java]
 
 .. code-block:: java
@@ -381,7 +381,7 @@ Ada doesn't offer multiple inheritance the way C++ does, but it does support a J
 
    type I2 is interface;
    procedure M3 (Self : I2) is abstract;
- 
+
    type Child is new Root and I1 and I2 with record
       F2 : Integer;
    end record;
@@ -416,7 +416,7 @@ Ada doesn't offer multiple inheritance the way C++ does, but it does support a J
          virtual void M2 ();
          virtual void M3 ();
    };
- 
+
 [Java]
 
 .. code-block:: java
@@ -452,23 +452,23 @@ Any private type in Ada may be associated with a *Type_Invariant* contract. An i
 .. code-block:: ada
 
    package Int_List_Pkg is
-   
+
       type Int_List (Max_Length : Natural) is private
         with Type_Invariant => Is_Sorted (Int_List);
-      
+
       function Is_Sorted (List : Int_List) return Boolean;
 
       type Int_Array is array (Positive range <>) of Integer;
-      
+
       function To_Int_List (Ints : Int_Array) return Int_List;
-      
+
       function To_Int_Array (List : Int_List) return Int_Array;
-      
+
       function "&" (Left, Right : Int_List) return Int_List;
-      
+
       ... -- Other subprograms
    private
-   
+
       type Int_List (Max_Length : Natural) is record
          Length : Natural;
          Data   : Int_Array (1..Max_Length);
@@ -478,18 +478,18 @@ Any private type in Ada may be associated with a *Type_Invariant* contract. An i
       function Is_Sorted (List : Int_List) return Boolean is
          (for all I in List.Data'First .. List.Length-1 =>
                List.Data (I) <= List.Data (I+1));
-               
+
    end Int_List_Pkg;
 
    package body Int_List_Pkg is
-   
+
       procedure Sort (Ints : in out Int_Array) is
       begin
          ... Your favorite sorting algorithm
       end Sort;
 
       function To_Int_List (Ints : Int_Array) return Int_List is
-         List : Int_List := 
+         List : Int_List :=
           (Max_Length => Ints'Length,
            Length     => Ints'Length,
            Data       => Ints);
@@ -497,12 +497,12 @@ Any private type in Ada may be associated with a *Type_Invariant* contract. An i
          Sort (List.Data);
          return List;
       end To_Int_List;
-      
+
       function To_Int_Array (List : Int_List) return Int_Array is
       begin
          return List.Data;
       end To_Int_Array;
-      
+
       function "&" (Left, Right : Int_List) return Int_List is
          Ints : Int_Array := Left.Data & Right.Data;
       begin
@@ -512,5 +512,5 @@ Any private type in Ada may be associated with a *Type_Invariant* contract. An i
 
       ... -- Other subprograms
    end Int_List_Pkg;
-      
+
 The *Is_Sorted* function checks that the type stays consistent. It will be called at the exit of every primitive above. It is permissible if the conditions of the invariant aren't met during execution of the primitive. In *To_Int_List* for example, if the source array is not in sorted order, the invariant will not be satisfied at the "begin",  but it will be checked at the end.

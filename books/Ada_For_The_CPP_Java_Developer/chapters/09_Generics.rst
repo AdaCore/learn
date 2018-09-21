@@ -1,7 +1,7 @@
 Generics
 ----------
 
-Ada, C++, and Java all have support for generics or templates, but on different sets of language entities. A C++ template can be applied to a class or a function. So can a Java generic. An Ada generic can be either a package or a subprogram. 
+Ada, C++, and Java all have support for generics or templates, but on different sets of language entities. A C++ template can be applied to a class or a function. So can a Java generic. An Ada generic can be either a package or a subprogram.
 
 Generic Subprograms
 ~~~~~~~~~~~~~~~~~~~~~
@@ -31,7 +31,7 @@ A feature that is similar across all three languages is the subprogram. To swap 
       left  = right;
       right = temp;
    }
- 
+
 [Java]
 
 .. code-block:: java
@@ -72,7 +72,7 @@ And examples of using these:
    R a, b;
    ...
    swap (a, b);
- 
+
 [Java]
 
 .. code-block:: java
@@ -112,7 +112,7 @@ Next, we're going to create a generic unit containing data and subprograms. In J
 
    template <class T>
    class C{
-      public: 
+      public:
         T v;
         static int G;
    };
