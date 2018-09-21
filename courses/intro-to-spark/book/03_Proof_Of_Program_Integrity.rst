@@ -49,7 +49,6 @@ single statement.  Look at the assignment statement setting the ``I`` +
 
     end Show_Runtime_Errors;
 
-
 There are quite a number of errors that may occur when executing this code.
 If we don't know anything about the values of ``I``, ``J``, ``P``, and
 ``Q``, we can't rule out any of those errors.

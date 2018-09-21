@@ -1,4 +1,4 @@
-:code-config:'run_button=False;prove_button=True;accumulate_code=False'
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
 
 Type Contracts
 =====================================================================
@@ -218,7 +218,6 @@ Temporary Violations of the Dynamic Predicate
 
     end Show_Temp_Violation_Dyn_Predicate;
 
-
 Type Invariant
 ---------------------------------------------------------------------
 
@@ -255,7 +254,6 @@ Type Invariant
 
     end Show_Type_Invariant;
 
-
 Dynamic Checking of Type Invariants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -278,6 +276,24 @@ Dynamic Checking of Type Invariants
 
 .. code:: ada
 
+    package Show_Type_Invariant is
+
+       type Day is (Monday,   Tuesday, Wednesday,
+                    Thursday, Friday,  Saturday,
+                    Sunday);
+
+       type Week_Schedule is private;
+    private
+
+       type Week_Schedule is record
+          Day_Off, Day_On_Duty : Day;
+       end record with
+         Type_Invariant => Day_Off /= Day_On_Duty;
+
+       procedure Internal_Adjust (WS : in out Week_Schedule);
+
+    end Show_Type_Invariant;
+
     package body Show_Type_Invariant is
 
        procedure Internal_Adjust (WS : in out Week_Schedule) is
@@ -286,7 +302,6 @@ Dynamic Checking of Type Invariants
        end Internal_Adjust;
 
     end Show_Type_Invariant;
-
 
 Inheritance of Predicates and Type Invariants
 ---------------------------------------------------------------------
@@ -393,7 +408,7 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-.. code:: ada
+.. code-block:: ada
 
     package Example_01 is
 
@@ -564,7 +579,7 @@ This code is correct. This version is valid in both Ada and SPARK.
 Example #7
 ~~~~~~~~~~
 
-.. code:: ada
+.. code-block:: ada
 
     package Example_07 is
 

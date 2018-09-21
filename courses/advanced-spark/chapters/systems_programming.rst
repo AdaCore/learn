@@ -1,4 +1,4 @@
-:code-config:'run_button=False;prove_button=True;accumulate_code=False'
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
 
 Systems Programming
 =====================================================================
@@ -77,8 +77,6 @@ Systems Programming – A trivial example
                      X   => X);
 
     end Show_Trivial_Sys_Prog;
-
-.. code:: ada
 
     package body Show_Trivial_Sys_Prog is
 
@@ -163,8 +161,6 @@ Using ``Async_Readers`` / ``Async_Writers``
        procedure Set;
     end Volatile_Vars;
 
-.. code:: ada
-
     package body Volatile_Vars is
 
        procedure Set is
@@ -226,9 +222,6 @@ Using ``Effective_Reads`` / ``Effective_Writes``
                       Y => Y);
     end Volatile_Vars;
 
-
-.. code:: ada
-
     package body Volatile_Vars is
 
        procedure Set is
@@ -240,7 +233,6 @@ Using ``Effective_Reads`` / ``Effective_Writes``
     begin
        Ext := (others => 0);
     end Volatile_Vars;
-
 
 .. code:: ada
 
@@ -323,8 +315,6 @@ Constraints on Volatile Variables
        procedure Set (V : Integer);
 
     end Volatile_Vars;
-
-.. code:: ada
 
     package body Volatile_Vars is
 
@@ -422,9 +412,6 @@ Constraints on Volatile Functions
 
     end Volatile_Vars;
 
-
-.. code:: ada
-
     package body Volatile_Vars is
 
        function Read_Non_Volatile
@@ -466,7 +453,6 @@ Constraints on Volatile Functions
        Ext := (others => 0);
     end Volatile_Vars;
 
-
 .. code:: ada
 
     with Volatile_Vars;
@@ -478,7 +464,6 @@ Constraints on Volatile Functions
        V := Volatile_Vars.Read_Volatile;
        V := Volatile_Vars.Read_ER;
     end Show_Volatile_Vars;
-
 
 State Abstraction on Volatile Variables
 ---------------------------------------------------------------------
@@ -557,7 +542,6 @@ Constraints on Address Attribute
 
     end Show_Address_Overlay;
 
-
 Can something be known of volatile variables?
 ---------------------------------------------------------------------
 
@@ -583,8 +567,6 @@ Can something be known of volatile variables?
 
     end Show_Provable_Volatile_Var;
 
-.. code:: ada
-
     package body Show_Provable_Volatile_Var is
 
        procedure Read_Value is
@@ -595,7 +577,6 @@ Can something be known of volatile variables?
        end Read_Value;
 
     end Show_Provable_Volatile_Var;
-
 
 Other Concerns in Systems Programming
 ---------------------------------------------------------------------
@@ -642,8 +623,6 @@ Example #1
 
     end Example_01;
 
-.. code:: ada
-
     package body Example_01 is
 
        procedure Get (Val : out Integer) is
@@ -675,8 +654,6 @@ Example #2
 
     end Example_02;
 
-.. code:: ada
-
     package body Example_02 is
 
        procedure Get (Val : out Integer) is
@@ -704,8 +681,6 @@ Example #3
          Depends => (Motor =>+ Speed);
 
     end Example_03;
-
-.. code:: ada
 
     package body Example_03 is
 
@@ -740,8 +715,6 @@ Example #4
          Depends => (Data => Raw_Data);
 
     end Example_04;
-
-.. code:: ada
 
     package body Example_04 is
 
@@ -799,8 +772,6 @@ Example #6
 
     end Example_06;
 
-.. code:: ada
-
     package body Example_06 is
 
        function Reg (R : Regnum) return Integer is
@@ -833,8 +804,6 @@ Example #7
 
     end Example_07;
 
-.. code:: ada
-
     package body Example_07 is
 
        function Reg (R : Regnum) return Integer is
@@ -860,8 +829,6 @@ Example #8
     is
        procedure Dummy;
     end Example_08;
-
-.. code:: ada
 
     package body Example_08 with
       Refined_State => (State => (X, Y, Z))
@@ -904,8 +871,6 @@ Example #9
 
     end Example_09;
 
-.. code:: ada
-
     package body Example_09 is
 
        function Max return Integer is
@@ -940,8 +905,6 @@ Example #10
          Post => Max'Result /= 0;
 
     end Example_10;
-
-.. code:: ada
 
     package body Example_10 is
 
