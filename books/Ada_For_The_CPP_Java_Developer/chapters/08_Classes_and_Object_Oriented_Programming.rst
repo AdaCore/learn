@@ -8,7 +8,7 @@ Primitive subprograms in Ada are basically the subprograms that are eligible for
 
 The way to determine whether *P* is a primitive of a type *T* is if (1) it is declared in the same scope as *T*, and (2) it contains at least one parameter of type *T*, or returns a result of type *T*.
 
-In C++ or Java, the self reference **this** is implicitly declared. It may need to be explicitly stated in certain situations, but usually it's omitted. In Ada the self-reference, called the `controlling parameter', must be explicitly specified in the subprogram parameter list. While it can be any parameter in the profile with any name, we'll focus on the typical case where the first parameter is used as the `self' parameter. Having the controlling parameter listed first also enables the use of OOP prefix notation which is convenient.
+In C++ or Java, the self reference **this** is implicitly declared. It may need to be explicitly stated in certain situations, but usually it's omitted. In Ada the self-reference, called the *controlling parameter*, must be explicitly specified in the subprogram parameter list. While it can be any parameter in the profile with any name, we'll focus on the typical case where the first parameter is used as the *self* parameter. Having the controlling parameter listed first also enables the use of OOP prefix notation which is convenient.
 
 A **class** in C++ or Java corresponds to a **tagged type** in Ada. Here's an example of the declaration of an Ada tagged type with two parameters and some dispatching and non-dispatching primitives, with equivalent examples in C++ and Java:
 
@@ -166,7 +166,7 @@ In C++, by default, calls to virtual methods are always dispatching. One common 
    proc (*v);
 
 
-In the above code, *p.method1 ()* will not dispatch. The call to *proc* makes a copy of the *Root* part of *v*, so inside *proc*,  *p.method1*() refers to the *method1*() of the root object. The intended behavior may be specified by using a reference instead of a copy:
+In the above code, :emphasis:`p.method1()` will not dispatch. The call to *proc* makes a copy of the *Root* part of *v*, so inside *proc*,  :emphasis:`p.method1()` refers to the :emphasis:`method1()` of the root object. The intended behavior may be specified by using a reference instead of a copy:
 
 .. code-block:: cpp
 
