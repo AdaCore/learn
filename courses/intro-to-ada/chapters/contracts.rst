@@ -28,7 +28,7 @@ postconditions, subtype predicates, and type invariants. We study those
 topics in this chapter.
 
 Pre- and postconditions
-----------------------
+-----------------------
 
 Pre- and postconditions provide expectations regarding input and output
 parameters of subprograms and return value of functions. If we say that
