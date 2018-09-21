@@ -320,7 +320,7 @@ into a separate package named ``Generic_Array_Bundle`` and reference the
 ``Generic_Array_Pkg`` there. This would create a chain of generic
 packages:
 
-.. code-block::
+.. code-block:: ada
 
     Generic_Array_Bundle <= Generic_Array_Pkg
 
