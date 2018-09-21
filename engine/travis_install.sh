@@ -6,24 +6,27 @@ pip install -q -r ../requirements.txt
 set -v
 set -e
 
+package_file=5b0d7bffa3f5d709751e3e04
+
 # Get GNAT
-if ! test -f $GNAT_TAR_PATH
+if ! test -f $GNAT_INSTALLER_PATH
 then
     mkdir -p $TOOLS_DIR
-    wget -O $GNAT_TAR_PATH \
-        "http://mirrors.cdn.adacore.com/art/591c6d80c7a447af2deed1d7"
+    wget -O $GNAT_INSTALLER_PATH \
+        "http://mirrors.cdn.adacore.com/art/${package_file}"
+    (cd $TOOLS_DIR && git clone https://github.com/AdaCore/gnat_community_install_script)
 fi
 
 # If needed, extract GNAT
 if ! test -d $GNAT_PATH
 then
-    tar -xf $GNAT_TAR_PATH -C $TOOLS_DIR
+    (cd $TOOLS_DIR && sh gnat_community_install_script/install_package.sh $GNAT_INSTALLER_PATH $GNAT_PATH)
 fi
 
 export PATH=$GNAT_PATH/bin:$PATH
 
 # Log content
-ls $HOME/build_tools
+ls $TOOLS_DIR
 ls $GNAT_PATH
 ls $GNAT_PATH/bin
 
