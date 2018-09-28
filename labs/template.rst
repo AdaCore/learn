@@ -27,6 +27,7 @@ Lab.yaml content
 Possible keys are
 
 .. code-block:: yaml
+
     output-file: {output_file}
     tags: {tags for the test}
 
@@ -41,4 +42,5 @@ them. Tags are alphanumeric works following the ``"\w[\w\d-]+"`` regex pattern.
 For example:
 
 .. code-block:: text
+
     embedded, access-types, privacy, ...
