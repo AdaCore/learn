@@ -1,3 +1,6 @@
+:code-config:`run_button=False;prove_button=False;accumulate_code=True`
+:code-config:`reset_accumulator=True`
+
 Strong typing
 =============
 
@@ -26,7 +29,7 @@ Typical implementation
 Let's look at an application that declares a two-dimensional lookup table,
 retrieves a value from it an displays this value.
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO; use  Ada.Text_IO;
 
@@ -84,7 +87,7 @@ the :ada:`Tab (Y, X)` example we mentioned previously. These problems can
 be avoided by defining range types for each dimension. This is the updated
 implementation:
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO; use  Ada.Text_IO;
 
@@ -270,7 +273,7 @@ initialize the array containing the unordered chunks and the selector
 directly in the application instead of receiving input data from an
 external source.
 
-.. code:: ada
+.. code:: ada run_button
 
     with Indirect_Ordering; use Indirect_Ordering;
 
@@ -322,9 +325,12 @@ and the *unordered index*. This is achieved by the mapping stored in
 If we'd use the ordered array of chunks, we could use the index from
 :ada:`S` directly, as illustrated in the following function:
 
-.. code-block:: ada
+.. code:: ada
 
+    with Indirect_Ordering;      use Indirect_Ordering;
     with Indirect_Ordering.Test; use Indirect_Ordering.Test;
+
+    with Ada.Text_IO; use  Ada.Text_IO;
 
     procedure Display_Ordered_Chunk (C : Chunks;
                                      S : Selector) is
@@ -516,7 +522,7 @@ package:
 
 This is the updated test application:
 
-.. code:: ada
+.. code:: ada run_button
 
     with Indirect_Ordering; use Indirect_Ordering;
 
