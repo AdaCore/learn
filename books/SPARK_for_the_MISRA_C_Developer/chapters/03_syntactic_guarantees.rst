@@ -100,22 +100,22 @@ the second case:
 
 .. code:: ada spark-flow
 
-   package Fun is
-      function F return Integer is (1);
-   end Fun;
+    package Fun is
+       function F return Integer is (1);
+    end Fun;
 
-   with Fun; use Fun;
+    with Fun; use Fun;
 
-   procedure Use_F (Z : out Integer) is
-      X, Y : Integer;
-   begin
-      X := F;
+    procedure Use_F (Z : out Integer) is
+       X, Y : Integer;
+    begin
+       X := F;
 
-      Y := F;
-      X := Y;
+       Y := F;
+       X := Y;
 
-      Z := F;
-   end Use_F;
+       Z := F;
+    end Use_F;
 
 Only the result of the third call is used to influence the value of an output
 of ``Use_F``, here the output parameter ``Z`` of the procedure.
@@ -146,25 +146,26 @@ modified, and their modification is visible at the calling site. For example,
 assigning to parameter of mode `in` (the default parameter mode which can also
 be ommitted) results in compilation errors:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   procedure Swap (X, Y : in Integer) is
-      Tmp : Integer := X;
-   begin
-      X := Y;  --  ERROR
-      Y := Tmp;  --  ERROR
-   end Swap;
+    procedure Swap (X, Y : Integer) is
+       Tmp : Integer := X;
+    begin
+       X := Y;  --  ERROR
+       Y := Tmp;  --  ERROR
+    end Swap;
 
 The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
 
-.. code-block:: ada
+.. code:: ada
 
-   procedure Swap (X, Y : in out Integer) is
-      Tmp : Integer := X;
-   begin
-      X := Y;
-      Y := Tmp;
-   end Swap;
+    procedure Swap (X, Y : in out Integer) is
+       Tmp : Integer := X;
+    begin
+       X := Y;
+       Y := Tmp;
+    end Swap;
 
 Ensuring Control Structures Are Not Abused
 ******************************************
@@ -217,18 +218,17 @@ statement. The null statement is an explicit ``null;`` and all blocks of
 statements have explicit begin and end markers, which defeats mistakes like the
 ones that are possible in C. The above C code is written as follows in SPARK:
 
-.. code-block:: c
+.. code:: ada
 
-   function Main return Integer is
-   begin
-      if True then
-         while True loop
-            return 0;
-         end loop;
-      end if;
-      return 1;
-   end Main;
-
+    function Main return Integer is
+    begin
+       if True then
+          while True loop
+             return 0;
+          end loop;
+       end if;
+       return 1;
+    end Main;
 
 Avoiding Complex Switch
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -253,39 +253,40 @@ with execution automatically exiting the switch after a case is handled, and
 the compiler checking that the cases to handle are disjoint (like in C) and
 complete (unlike in C). So the following code is rejected by the compiler:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Sign_Domain is
+    package Sign_Domain is
 
-      type Sign is (Negative, Zero, Positive);
+       type Sign is (Negative, Zero, Positive);
 
-      function Opposite (A : Sign) return Sign is
+       function Opposite (A : Sign) return Sign is
          (case A is  --  ERROR
-            when Negative => Positive,
-            when Positive => Negative);
+             when Negative => Positive,
+             when Positive => Negative);
 
-      function Multiply (A, B : Sign) return Sign is
+       function Multiply (A, B : Sign) return Sign is
          (case A is
-            when Negative        => Opposite (B),
-            when Zero | Positive => Zero,
-            when Positive        => B);  --  ERROR
+             when Negative        => Opposite (B),
+             when Zero | Positive => Zero,
+             when Positive        => B);  --  ERROR
 
-      procedure Get_Sign (X : in Integer; S : out Sign);
+       procedure Get_Sign (X : Integer; S : out Sign);
 
-   end Sign_Domain;
+    end Sign_Domain;
 
-   package body Sign_Domain is
+    package body Sign_Domain is
 
-      procedure Get_Sign (X : in Integer; S : out Sign) is
-      begin
-         case X is
-            when 0 => S := Zero;
-            when others => S := Negative;  --  ERROR
-            when 1 .. Integer'Last => S := Positive;
-         end case;
-      end Get_Sign;
+       procedure Get_Sign (X : Integer; S : out Sign) is
+       begin
+          case X is
+             when 0 => S := Zero;
+             when others => S := Negative;  --  ERROR
+             when 1 .. Integer'Last => S := Positive;
+          end case;
+       end Get_Sign;
 
-   end Sign_Domain;
+    end Sign_Domain;
 
 The error in function ``Opposite`` is that the cases do not cover all values of
 the expression being switched over. Here, ``A`` is of enumeration type
@@ -303,40 +304,40 @@ Similar rules applied above to both case-expressions as in functions
 ``Opposite`` and ``Multiply`` and in case-statements as in procedure
 ``Get_Sign``. Here is a correct version of the same code:
 
-.. code-block:: ada
+.. code:: ada
 
-   package Sign_Domain is
+    package Sign_Domain is
 
-      type Sign is (Negative, Zero, Positive);
+       type Sign is (Negative, Zero, Positive);
 
-      function Opposite (A : Sign) return Sign is
+       function Opposite (A : Sign) return Sign is
          (case A is
-            when Negative => Positive,
-            when Zero     => Zero,
-            when Positive => Negative);
+             when Negative => Positive,
+             when Zero     => Zero,
+             when Positive => Negative);
 
-      function Multiply (A, B : Sign) return Sign is
+       function Multiply (A, B : Sign) return Sign is
          (case A is
-            when Negative => Opposite (B),
-            when Zero     => Zero,
-            when Positive => B);
+             when Negative => Opposite (B),
+             when Zero     => Zero,
+             when Positive => B);
 
-      procedure Get_Sign (X : in Integer; S : out Sign);
+       procedure Get_Sign (X : Integer; S : out Sign);
 
-   end Sign_Domain;
+    end Sign_Domain;
 
-   package body Sign_Domain is
+    package body Sign_Domain is
 
-      procedure Get_Sign (X : in Integer; S : out Sign) is
-      begin
-         case X is
-            when 0 => S := Zero;
-            when 1 .. Integer'Last => S := Positive;
-            when others => S := Negative;
-         end case;
-      end Get_Sign;
+       procedure Get_Sign (X : Integer; S : out Sign) is
+       begin
+          case X is
+             when 0 => S := Zero;
+             when 1 .. Integer'Last => S := Positive;
+             when others => S := Negative;
+          end case;
+       end Get_Sign;
 
-   end Sign_Domain;
+    end Sign_Domain;
 
 Avoiding Complex Loops
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -373,21 +374,22 @@ this rule:
 The equivalent code in SPARK does not compile due to the attempt at modifying
 the value of the loop counter:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   procedure Well_Formed_Loop (C : Boolean) is
-      Flag : Boolean := False;
-   begin
-      for I in 0 .. 4 loop
-         exit when not Flag;
+    procedure Well_Formed_Loop (C : Boolean) is
+       Flag : Boolean := False;
+    begin
+       for I in 0 .. 4 loop
+          exit when not Flag;
 
-         if C then
-            Flag := True;
-         end if;
+          if C then
+             Flag := True;
+          end if;
 
-         I := I + 3;  --  ERROR
-      end loop;
-   end Well_Formed_Loop;
+          I := I + 3;  --  ERROR
+       end loop;
+    end Well_Formed_Loop;
 
 Removing the problematic line leads to a valid SPARK program. Note that the
 additional condition being tested in the C for-loop has been moved to a
@@ -476,17 +478,17 @@ which has the expected behavior.
 In SPARK, if-statements have an end marker ``end if;`` so the dangling-else
 problem cannot arise. The above C code is written as follows in SPARK:
 
-.. code-block:: ada
+.. code:: ada
 
-   function Absval (X : Integer) return Integer is
-      Result : Integer := X;
-   begin
-      if X >= 0 then
-         if X = 0 then
-            Result := 0;
-         end if;
-      else
-         Result := -X;
-      end if;
-      return Result;
-   end Absval;
+    function Absval (X : Integer) return Integer is
+       Result : Integer := X;
+    begin
+       if X >= 0 then
+          if X = 0 then
+             Result := 0;
+          end if;
+       else
+          Result := -X;
+       end if;
+       return Result;
+    end Absval;
