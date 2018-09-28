@@ -72,18 +72,18 @@ standard type ``System.Address`` defines addresses, and conversions to/from
 integers are provided by standard unit ``System.Storage_Elements``. The
 previous wrong C code can be written as follows in Ada:
 
-.. code-block:: ada
+.. code:: ada
 
-   with System;
-   with System.Storage_Elements;
+    with System;
+    with System.Storage_Elements;
 
-   procedure Pointer is
-      A : constant System.Address := System.Storage_Elements.To_Address(42);
-      M : aliased Integer with Address => A;
-      P : access Integer := M'Access;
-   begin
-      P.all := 0;
-   end Pointer;
+    procedure Pointer is
+       A : constant System.Address := System.Storage_Elements.To_Address (42);
+       M : aliased Integer with Address => A;
+       P : access Integer := M'Access;
+    begin
+       P.all := 0;
+    end Pointer;
 
 The integer value 42 is converted into a memory address ``A`` by calling
 ``System.Storage_Elements.To_Address``, which is then used as the address of
@@ -120,27 +120,27 @@ will be modified by rotation around the ``X`` axis.
 
 .. code:: ada spark-prove
 
-   package Geometry is
+    package Geometry is
 
-      type Point_3D is record
-         X, Y, Z : Float;
-      end record;
+       type Point_3D is record
+          X, Y, Z : Float;
+       end record;
 
-      procedure Rotate_X (P : in out Point_3D) with
-        Post => P = P'Old'Update(Y => P.Z'Old, Z => - P.Y'Old);
+       procedure Rotate_X (P : in out Point_3D) with
+         Post => P = P'Old'Update (Y => P.Z'Old, Z => -P.Y'Old);
 
-   end Geometry;
+    end Geometry;
 
-   package body Geometry is
+    package body Geometry is
 
-      procedure Rotate_X (P : in out Point_3D) is
-         Tmp : constant Float := P.Y;
-      begin
-         P.Y := P.Z;
-         P.Z := - Tmp;
-      end Rotate_X;
+       procedure Rotate_X (P : in out Point_3D) is
+          Tmp : constant Float := P.Y;
+       begin
+          P.Y := P.Z;
+          P.Z := -Tmp;
+       end Rotate_X;
 
-   end Geometry;
+    end Geometry;
 
 SPARK analysis can mathematically prove this fact, and it issues a message that
 the postcondition is proved here.
@@ -219,35 +219,35 @@ of parameter ``len`` passed by the caller of ``count``, which violates
 undecidable MISRA-C Rules 18.1 (pointer arithmetic should stay within bounds)
 and 1.3 (no undefined behavior). Contrast this with the same function in SPARK:
 
-.. code-block:: ada
+.. code:: ada
 
-   package Types is
-      type Int_Array is array (Positive range <>) of Integer;
-   end Types;
+    package Types is
+       type Int_Array is array (Positive range <>) of Integer;
+    end Types;
 
-   with Types; use Types;
+    with Types; use Types;
 
-   function Count (P : Int_Array; V : Integer) return Natural is
-      Count : Natural := 0;
-   begin
-      for I in P'Range loop
-         if P(I) = V then
-            Count := Count + 1;
-         end if;
-      end loop;
-      return Count;
-   end Count;
+    function Count (P : Int_Array; V : Integer) return Natural is
+       Count : Natural := 0;
+    begin
+       for I in P'Range loop
+          if P (I) = V then
+             Count := Count + 1;
+          end if;
+       end loop;
+       return Count;
+    end Count;
 
-   with Ada.Text_IO; use Ada.Text_IO;
-   with Types; use Types;
-   with Count;
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Types; use Types;
+    with Count;
 
-   procedure Test_Count is
-      P : Int_Array := (0, 3, 9, 3, 3);
-      C : Integer := Count (P, 3);
-   begin
-      Put_Line ("value 3 is seen" & C'Img & "times in p");
-   end Test_Count;
+    procedure Test_Count is
+       P : Int_Array := (0, 3, 9, 3, 3);
+       C : Integer := Count (P, 3);
+    begin
+       Put_Line ("value 3 is seen" & C'Img & "times in p");
+    end Test_Count;
 
 Here, array parameter ``P`` contains its own length ``P'Length`` as well as its
 first index ``P'First`` and last index ``P'Last``, so function ``Count`` can
@@ -261,25 +261,25 @@ than the length of parameter ``P`` by stating this property in postcondition of
 
 .. code:: ada spark-prove
 
-   package Types is
-      type Int_Array is array (Positive range <>) of Integer;
-   end Types;
+    package Types is
+       type Int_Array is array (Positive range <>) of Integer;
+    end Types;
 
-   with Types; use Types;
+    with Types; use Types;
 
-   function Count (P : Int_Array; V : Integer) return Natural with
-     Post => Count'Result <= P'Length
-   is
-      Count : Natural := 0;
-   begin
-      for I in P'Range loop
-         pragma Loop_Invariant (Count <= I - P'First);
-         if P(I) = V then
-            Count := Count + 1;
-         end if;
-      end loop;
-      return Count;
-   end Count;
+    function Count (P : Int_Array; V : Integer) return Natural with
+      Post => Count'Result <= P'Length
+    is
+       Count : Natural := 0;
+    begin
+       for I in P'Range loop
+          pragma Loop_Invariant (Count <= I - P'First);
+          if P (I) = V then
+             Count := Count + 1;
+          end if;
+       end loop;
+       return Count;
+    end Count;
 
 The only help that SPARK analysis required from us is to state how ``Count``
 evolves at each iteration in a loop invariant (a special kind of assertion).
@@ -337,42 +337,42 @@ It is possible to use generics in SPARK to obtain the same result in a fully
 typed way, where procedure ``Assign`` applies its parameter procedure
 ``Initialize`` to its parameter ``V``:
 
-.. code-block:: ada
+.. code:: ada
 
-   generic
-      type T is private;
-      with procedure Initialize (V : out T);
-   procedure Assign (V : out T);
+    generic
+       type T is private;
+       with procedure Initialize (V : out T);
+    procedure Assign (V : out T);
 
-   procedure Assign (V : out T) is
-   begin
-      Initialize (V);
-   end Assign;
+    procedure Assign (V : out T) is
+    begin
+       Initialize (V);
+    end Assign;
 
-   with Ada.Text_IO; use Ada.Text_IO;
-   with Assign;
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Assign;
 
-   procedure Apply_Assign is
-      procedure Assign_Int (V : out Integer) is
-      begin
-         V := 42;
-      end Assign_Int;
+    procedure Apply_Assign is
+       procedure Assign_Int (V : out Integer) is
+       begin
+          V := 42;
+       end Assign_Int;
 
-      procedure Assign_Float (V : out Float) is
-      begin
-         V := 42.0;
-      end Assign_Float;
+       procedure Assign_Float (V : out Float) is
+       begin
+          V := 42.0;
+       end Assign_Float;
 
-      procedure Assign_I is new Assign (Integer, Assign_Int);
-      procedure Assign_F is new Assign (Float, Assign_Float);
+       procedure Assign_I is new Assign (Integer, Assign_Int);
+       procedure Assign_F is new Assign (Float, Assign_Float);
 
-      I : Integer;
-      F : Float;
-   begin
-      Assign_I (I);
-      Assign_F (F);
-      Put_Line ("I =" & I'Img & "; F =" & F'Img);
-   end Apply_Assign;
+       I : Integer;
+       F : Float;
+    begin
+       Assign_I (I);
+       Assign_F (F);
+       Put_Line ("I =" & I'Img & "; F =" & F'Img);
+    end Apply_Assign;
 
 The generic procedure ``Assign`` must be instantiated with specific values of
 type ``T`` and parameter procedure ``Initialize``, and the resulting
@@ -467,20 +467,21 @@ integers as well as floating-point types.
 
 Let's try to do the same in SPARK:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Bad_Arith is
+    package Bad_Arith is
 
-      B1 : Boolean := True;
-      B2 : Boolean := False;
-      B3 : Boolean := B1 + B2;
+       B1 : Boolean := True;
+       B2 : Boolean := False;
+       B3 : Boolean := B1 + B2;
 
-      type Fruit is (Apple, Orange);
-      F1 : Fruit := Apple;
-      F2 : Fruit := Orange;
-      F3 : Fruit := F1 + F2;
+       type Fruit is (Apple, Orange);
+       F1 : Fruit := Apple;
+       F2 : Fruit := Orange;
+       F3 : Fruit := F1 + F2;
 
-   end Bad_Arith;
+    end Bad_Arith;
 
 The compiler reports that there is no applicable operator in both cases. It is
 possible however to get the predecessor of a Boolean or enumerated value with
@@ -489,31 +490,31 @@ over all values of the type:
 
 .. code:: ada spark-prove
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Ok_Arith is
+    procedure Ok_Arith is
 
-      B1 : Boolean := False;
-      B2 : Boolean := Boolean'Succ(B1);
-      B3 : Boolean := Boolean'Pred(B2);
+       B1 : Boolean := False;
+       B2 : Boolean := Boolean'Succ (B1);
+       B3 : Boolean := Boolean'Pred (B2);
 
-      type Fruit is (Apple, Orange);
-      F1 : Fruit := Apple;
-      F2 : Fruit := Fruit'Succ(F1);
-      F3 : Fruit := Fruit'Pred(F2);
+       type Fruit is (Apple, Orange);
+       F1 : Fruit := Apple;
+       F2 : Fruit := Fruit'Succ (F1);
+       F3 : Fruit := Fruit'Pred (F2);
 
-   begin
-      pragma Assert (B1 = B3);
-      pragma Assert (F1 = F3);
+    begin
+       pragma Assert (B1 = B3);
+       pragma Assert (F1 = F3);
 
-      for B in Boolean loop
-         Put_Line (B'Img);
-      end loop;
+       for B in Boolean loop
+          Put_Line (B'Img);
+       end loop;
 
-      for F in Fruit loop
-         Put_Line (F'Img);
-      end loop;
-   end Ok_Arith;
+       for F in Fruit loop
+          Put_Line (F'Img);
+       end loop;
+    end Ok_Arith;
 
 Modular Operation on Integers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -552,20 +553,21 @@ operation for signed or unsigned integers.
 
 Let's try to do the same in SPARK, where the modulo operator is called ``mod``:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Bad_Modulo is
+    package Bad_Modulo is
 
-      B1 : Boolean := True;
-      B2 : Boolean := False;
-      B3 : Boolean := B2 mod B1;
+       B1 : Boolean := True;
+       B2 : Boolean := False;
+       B3 : Boolean := B2 mod B1;
 
-      type Fruit is (Apple, Orange, Pineapple);
-      F1 : Fruit := Orange;
-      F2 : Fruit := Pineapple;
-      F3 : Fruit := F2 mod F1;
+       type Fruit is (Apple, Orange, Pineapple);
+       F1 : Fruit := Orange;
+       F2 : Fruit := Pineapple;
+       F3 : Fruit := F2 mod F1;
 
-   end Bad_Modulo;
+    end Bad_Modulo;
 
 The compiler reports that there is no applicable operator in both cases.
 
@@ -607,21 +609,21 @@ operations for all other scalar types.
 This is one case where SPARK adopts the same convention as C of ordering the
 false and true values, so the above code can be also be expressed in SPARK:
 
-.. code-block:: ada
+.. code:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Truth_Table is
-      FF : Boolean := False <= False;
-      FT : Boolean := False <= True;
-      TF : Boolean := True <= False;
-      TT : Boolean := True <= True;
-   begin
-      Put_Line ("false implies false? " & FF'Img);
-      Put_Line ("false implies true? " & FT'Img);
-      Put_Line ("true implies false? " & TF'Img);
-      Put_Line ("true implies true? " & TT'Img);
-   end Truth_Table;
+    procedure Truth_Table is
+       FF : Boolean := False <= False;
+       FT : Boolean := False <= True;
+       TF : Boolean := True <= False;
+       TT : Boolean := True <= True;
+    begin
+       Put_Line ("false implies false? " & FF'Img);
+       Put_Line ("false implies true? " & FT'Img);
+       Put_Line ("true implies false? " & TF'Img);
+       Put_Line ("true implies true? " & TT'Img);
+    end Truth_Table;
 
 .. _Boolean Operations on Boolean:
 
@@ -656,12 +658,13 @@ Let's try to do the same in SPARK, where the Boolean operators are called
 ``and``, ``or``, ``not`` (for the strict operators that always evaluate both
 operands); ``and then``, ``or else`` (for the shortcut operators):
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Bad_Hamlet is
-      type Animal is (Ape, Bee, Cat);
-      Answer : Boolean := Bee or not Bee;
-   end Bad_Hamlet;
+    package Bad_Hamlet is
+       type Animal is (Ape, Bee, Cat);
+       Answer : Boolean := Bee or not Bee;
+    end Bad_Hamlet;
 
 As expected, the compiler reports that there is no applicable operator.
 
@@ -695,14 +698,15 @@ Let's try to do the same in SPARK, where the bitwise operators are called
 ``and``, ``or``, ``xor``, ``not``, ``Shift_Left``, ``Shift_Right``,
 ``Shift_Right_Arithmetic``, ``Rotate_Left`` and ``Rotate_Right``:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Bad_Genetics is
-      type Animal is (Ape, Bee, Cat);
-      function Shift_Left (A : Animal; V : Natural) return Animal
-        with Import, Convention => Intrinsic;
-      Mutant : Animal := Shift_Left (Bee, 1);
-   end Bad_Genetics;
+    package Bad_Genetics is
+       type Animal is (Ape, Bee, Cat);
+       function Shift_Left (A : Animal; V : Natural) return Animal
+         with Import, Convention => Intrinsic;
+       Mutant : Animal := Shift_Left (Bee, 1);
+    end Bad_Genetics;
 
 Operator ``Shift_Left`` must be declared explicitly for it to be available for
 a type. This is to no use here, as the compiler reports that ``Shift_Left``
@@ -797,43 +801,45 @@ applies both between types of a different `essential type category` as MISRA-C
 puts it, as well as between types that are essentially the same but defined as
 different.
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   procedure Bad_Conversions is
-      F : Float := 0.0;
-      I : Integer := 0;
-      type Animal is (Ape, Bee, Cat);
-      E : Animal := Cat;
-      B : Boolean := True;
-      C : Character := 'a';
-   begin
-      F := I;
-      I := E;
-      E := B;
-      B := C;
-      C := F;
-   end Bad_Conversions;
+    procedure Bad_Conversions is
+       F : Float := 0.0;
+       I : Integer := 0;
+       type Animal is (Ape, Bee, Cat);
+       E : Animal := Cat;
+       B : Boolean := True;
+       C : Character := 'a';
+    begin
+       F := I;
+       I := E;
+       E := B;
+       B := C;
+       C := F;
+    end Bad_Conversions;
 
 The compiler reports a mismatch on every line in the above procedure. Adding
 explicit conversions only makes the first line valid, as SPARK only allows
 converting between numeric types:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   procedure Bad_Conversions is
-      F : Float := 0.0;
-      I : Integer := 0;
-      type Animal is (Ape, Bee, Cat);
-      E : Animal := Cat;
-      B : Boolean := True;
-      C : Character := 'a';
-   begin
-      F := Float(I);
-      I := Integer(E);
-      E := Animal(B);
-      B := Boolean(C);
-      C := Character(F);
-   end Bad_Conversions;
+    procedure Bad_Conversions is
+       F : Float := 0.0;
+       I : Integer := 0;
+       type Animal is (Ape, Bee, Cat);
+       E : Animal := Cat;
+       B : Boolean := True;
+       C : Character := 'a';
+    begin
+       F := Float (I);
+       I := Integer (E);
+       E := Animal (B);
+       B := Boolean (C);
+       C := Character (F);
+    end Bad_Conversions;
 
 However, it is possible to get the position of an enumerated value in the
 enumeration with attribute ``Pos`` which starts from value 0. This applies to
@@ -842,19 +848,19 @@ an enumeration with values ``False`` and ``True``) and characters (defined as
 an enumeration with character values). Hence, the following is valid SPARK
 code:
 
-.. code-block:: ada
+.. code:: ada
 
-   procedure Ok_Conversions is
-      F : Float := 0.0;
-      I : Integer := 0;
-      type Animal is (Ape, Bee, Cat);
-      E : Animal := Cat;
-      B : Boolean := True;
-      C : Character := 'a';
-   begin
-      F := Float(I);
-      I := Animal'Pos(E);
-      I := Boolean'Pos(B);
-      I := Character'Pos(C);
-      I := Integer(F);
-   end Ok_Conversions;
+    procedure Ok_Conversions is
+       F : Float := 0.0;
+       I : Integer := 0;
+       type Animal is (Ape, Bee, Cat);
+       E : Animal := Cat;
+       B : Boolean := True;
+       C : Character := 'a';
+    begin
+       F := Float (I);
+       I := Animal'Pos (E);
+       I := Boolean'Pos (B);
+       I := Character'Pos (C);
+       I := Integer (F);
+    end Ok_Conversions;

@@ -71,68 +71,68 @@ parameter ``P``:
 
 .. code:: ada spark-flow
 
-   with Interfaces; use Interfaces;
+    with Interfaces; use Interfaces;
 
-   package Init is
-      procedure F (B : Boolean; P : out Unsigned_16);
-      procedure G;
-   end Init;
+    package Init is
+       procedure F (B : Boolean; P : out Unsigned_16);
+       procedure G;
+    end Init;
 
-   package body Init is
+    package body Init is
 
-      procedure F (B : Boolean; P : out Unsigned_16) is
-      begin
-         if B then
-            P := 3;
-         end if;
-      end F;
+       procedure F (B : Boolean; P : out Unsigned_16) is
+       begin
+          if B then
+             P := 3;
+          end if;
+       end F;
 
-      procedure G is
-         U : Unsigned_16;
-      begin
-         F (False, U);
+       procedure G is
+          U : Unsigned_16;
+       begin
+          F (False, U);
 
-         if U = 3 then
-            null;
-         end if;
-      end G;
+          if U = 3 then
+             null;
+          end if;
+       end G;
 
-   end Init;
+    end Init;
 
 Let's fix the program by initializing ``P`` to value 0 when condition ``B`` is
 not satisfied:
 
 .. code:: ada spark-flow
 
-   with Interfaces; use Interfaces;
+    with Interfaces; use Interfaces;
 
-   package Init is
-      procedure F (B : Boolean; P : out Unsigned_16);
-      procedure G;
-   end Init;
+    package Init is
+       procedure F (B : Boolean; P : out Unsigned_16);
+       procedure G;
+    end Init;
 
-   package body Init is
+    package body Init is
 
-      procedure F (B : Boolean; P : out Unsigned_16) is
-      begin
-         if B then
-            P := 3;
-         else
-            P := 0;
-         end if;
-      end F;
+       procedure F (B : Boolean; P : out Unsigned_16) is
+       begin
+          if B then
+             P := 3;
+          else
+             P := 0;
+          end if;
+       end F;
 
-      procedure G is
-         U : Unsigned_16;
-      begin
-         F (False, U);
+       procedure G is
+          U : Unsigned_16;
+       begin
+          F (False, U);
 
-         if U = 3 then
-            null;
-         end if;
-      end G;
+          if U = 3 then
+             null;
+          end if;
+       end G;
 
-   end Init;
+    end Init;
 
 GNATprove does not report any more check messages for possible reads of
 uninitialized data. On the contrary it confirms that all reads are made to
@@ -148,40 +148,40 @@ the above code where variable ``U`` is now global:
 
 .. code:: ada spark-flow
 
-   with Interfaces; use Interfaces;
+    with Interfaces; use Interfaces;
 
-   package Init is
-      U : Unsigned_16;
-      procedure F (B : Boolean);
-      procedure G;
-   end Init;
+    package Init is
+       U : Unsigned_16;
+       procedure F (B : Boolean);
+       procedure G;
+    end Init;
 
-   package body Init is
+    package body Init is
 
-      procedure F (B : Boolean) is
-      begin
-         if B then
-            U := 3;
-         end if;
-      end F;
+       procedure F (B : Boolean) is
+       begin
+          if B then
+             U := 3;
+          end if;
+       end F;
 
-      procedure G is
-      begin
-         F (False);
+       procedure G is
+       begin
+          F (False);
 
-         if U = 3 then
-            null;
-         end if;
-      end G;
+          if U = 3 then
+             null;
+          end if;
+       end G;
 
-   end Init;
+    end Init;
 
-   with Init;
+    with Init;
 
-   procedure Call_Init is
-   begin
-      Init.G;
-   end Call_Init;
+    procedure Call_Init is
+    begin
+       Init.G;
+    end Call_Init;
 
 GNATprove reports here that variable ``U`` might not be initialized at program
 startup, which is indeed the case here. It reports this issue on the main
@@ -201,40 +201,40 @@ the declaration of procedure ``G``:
 
 .. code:: ada spark-flow
 
-   with Interfaces; use Interfaces;
+    with Interfaces; use Interfaces;
 
-   package Init is
-      U : Unsigned_16;
-      procedure F (B : Boolean);
-      procedure G with Global => (Output => U);
-   end Init;
+    package Init is
+       U : Unsigned_16;
+       procedure F (B : Boolean);
+       procedure G with Global => (Output => U);
+    end Init;
 
-   package body Init is
+    package body Init is
 
-      procedure F (B : Boolean) is
-      begin
-         if B then
-            U := 3;
-         end if;
-      end F;
+       procedure F (B : Boolean) is
+       begin
+          if B then
+             U := 3;
+          end if;
+       end F;
 
-      procedure G is
-      begin
-         F (False);
+       procedure G is
+       begin
+          F (False);
 
-         if U = 3 then
-            null;
-         end if;
-      end G;
+          if U = 3 then
+             null;
+          end if;
+       end G;
 
-   end Init;
+    end Init;
 
-   with Init;
+    with Init;
 
-   procedure Call_Init is
-   begin
-      Init.G;
-   end Call_Init;
+    procedure Call_Init is
+    begin
+       Init.G;
+    end Call_Init;
 
 In that case, GNATprove reports the error on the call to ``F`` in ``G``, as it
 knows at this point that ``F`` needs ``U`` to be initialized but the calling
@@ -292,43 +292,46 @@ In SPARK, the aggregate used to initialize an array or a record should fully
 match the components of the array or record. Violations lead to compilation
 errors, both for records:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Init_Record is
-      type Rec is record
-         X, Y, Z : Integer;
-      end record;
-      R : Rec := (X => 1);
-   end Init_Record;
+    package Init_Record is
+       type Rec is record
+          X, Y, Z : Integer;
+       end record;
+       R : Rec := (X => 1);
+    end Init_Record;
 
 and for arrays:
 
-.. code-block:: ada
+.. code:: ada
 
-   package Init_Array is
-      type Arr is array (1 .. 10) of Integer;
-      A : Arr := (1 => 1);
-   end Init_Array;
+    package Init_Array is
+       type Arr is array (1 .. 10) of Integer;
+       A : Arr := (1 => 1);
+    end Init_Array;
 
 Similarly, redundant initialization leads to compilation errors for records:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Init_Record is
-      type Rec is record
-         X, Y, Z : Integer;
-      end record;
-      R : Rec := (X => 1, Y => 1, Z => 1, X => 2);
-   end Init_Record;
+    package Init_Record is
+       type Rec is record
+          X, Y, Z : Integer;
+       end record;
+       R : Rec := (X => 1, Y => 1, Z => 1, X => 2);
+    end Init_Record;
 
 and for arrays:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Init_Array is
-      type Arr is array (1 .. 10) of Integer;
-      A : Arr := (1 .. 8 => 1, 9 .. 10 => 2, 7 => 3);
-   end Init_Array;
+    package Init_Array is
+       type Arr is array (1 .. 10) of Integer;
+       A : Arr := (1 .. 8 => 1, 9 .. 10 => 2, 7 => 3);
+    end Init_Array;
 
 Finally, while it is legal in Ada to leave uninitialized parts in a record or
 array aggregate by using the box notation (meaning that the default
@@ -336,20 +339,20 @@ initialization of the type is used, which may be no initialization at all),
 SPARK analysis rejects such use when it leads to components not being
 initialized, both for records:
 
-.. code-block:: ada
+.. code:: ada
 
-   package Init_Record is
-      type Rec is record
-         X, Y, Z : Integer;
-      end record;
-      R : Rec := (X => 1, others => <>);
-   end Init_Record;
+    package Init_Record is
+       type Rec is record
+          X, Y, Z : Integer;
+       end record;
+       R : Rec := (X => 1, others => <>);
+    end Init_Record;
 
 and for arrays:
 
-.. code-block:: ada
+.. code:: ada
 
-   package Init_Array is
-      type Arr is array (1 .. 10) of Integer;
-      A : Arr := (1 .. 8 => 1, 9 .. 10 => <>);
-   end Init_Array;
+    package Init_Array is
+       type Arr is array (1 .. 10) of Integer;
+       A : Arr := (1 .. 8 => 1, 9 .. 10 => <>);
+    end Init_Array;

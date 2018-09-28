@@ -48,39 +48,40 @@ enforcing the well-known practice that macro arguments should be parenthesized
 SPARK does not suffer from these problems, as it relies on semantic inclusion
 of context instead of textual inclusion of content, using ``with`` clauses:
 
-.. code-block:: ada
+.. code:: ada
 
-   with Ada.Text_IO;
+    with Ada.Text_IO;
 
-   procedure Hello_World is
-   begin
-      Ada.Text_IO.Put_Line ("hello, world!");
-   end Hello_World;
+    procedure Hello_World is
+    begin
+       Ada.Text_IO.Put_Line ("hello, world!");
+    end Hello_World;
 
 In particular, ``with`` clauses are only allowed at the beginning of files, and
 the compiler issues an error if they are used elsewhere:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-nocheck
 
-   procedure Hello_World is
-      with Ada.Text_IO;
-   begin
-      Ada.Text_IO.Put_Line ("hello, world!");
-   end Hello_World;
+    procedure Hello_World is
+         with Ada.Text_IO;
+    begin
+       Ada.Text_IO.Put_Line ("hello, world!");
+    end Hello_World;
 
 Importing a unit multiple times is harmless, as it is equivalent to importing
 it once, but a compiler warning lets us know about the redundant ``with``
 clause:
 
-.. code-block:: ada
+.. code:: ada
 
-   with Ada.Text_IO;
-   with Ada.Text_IO;
+    with Ada.Text_IO;
+    with Ada.Text_IO;
 
-   procedure Hello_World is
-   begin
-      Ada.Text_IO.Put_Line ("hello, world!");
-   end Hello_World;
+    procedure Hello_World is
+    begin
+       Ada.Text_IO.Put_Line ("hello, world!");
+    end Hello_World;
 
 The order in which units are imported is irrelevant. All orders are valid and
 have the same semantics. There is no possible conflict as a result of importing
@@ -89,63 +90,64 @@ defines. So we can define our own version of ``Put_Line`` in some ``Helper``
 unit and import it together with the standard version defined in
 ``Ada.Text_IO``:
 
-.. code-block:: ada
+.. code:: ada
 
-   package Helper is
-      procedure Put_Line (S : String);
-   end Helper;
+    package Helper is
+       procedure Put_Line (S : String);
+    end Helper;
 
-   with Ada.Text_IO;
+    with Ada.Text_IO;
 
-   package body Helper is
-      procedure Put_Line (S : String) is
-      begin
-         Ada.Text_IO.Put_Line ("Start helper version");
-         Ada.Text_IO.Put_Line (S);
-         Ada.Text_IO.Put_Line ("End helper version");
-      end Put_Line;
-   end Helper;
+    package body Helper is
+       procedure Put_Line (S : String) is
+       begin
+          Ada.Text_IO.Put_Line ("Start helper version");
+          Ada.Text_IO.Put_Line (S);
+          Ada.Text_IO.Put_Line ("End helper version");
+       end Put_Line;
+    end Helper;
 
-   with Ada.Text_IO;
-   with Helper;
+    with Ada.Text_IO;
+    with Helper;
 
-   procedure Hello_World is
-   begin
-      Ada.Text_IO.Put_Line ("hello, world!");
-      Helper.Put_Line ("hello, world!");
-   end Hello_World;
+    procedure Hello_World is
+    begin
+       Ada.Text_IO.Put_Line ("hello, world!");
+       Helper.Put_Line ("hello, world!");
+    end Hello_World;
 
 The only possible conflict arises if we want ``Put_Line`` to be directly
 available without using the qualified name ``Ada.Text_IO.Put_Line`` or
 ``Helper.Put_Line``. We use a ``use clause`` to make public declarations from a
 unit available directly:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Helper is
-      procedure Put_Line (S : String);
-   end Helper;
+    package Helper is
+       procedure Put_Line (S : String);
+    end Helper;
 
-   with Ada.Text_IO;
+    with Ada.Text_IO;
 
-   package body Helper is
-      procedure Put_Line (S : String) is
-      begin
-         Ada.Text_IO.Put_Line ("Start helper version");
-         Ada.Text_IO.Put_Line (S);
-         Ada.Text_IO.Put_Line ("End helper version");
-      end Put_Line;
-   end Helper;
+    package body Helper is
+       procedure Put_Line (S : String) is
+       begin
+          Ada.Text_IO.Put_Line ("Start helper version");
+          Ada.Text_IO.Put_Line (S);
+          Ada.Text_IO.Put_Line ("End helper version");
+       end Put_Line;
+    end Helper;
 
-   with Ada.Text_IO; use Ada.Text_IO;
-   with Helper; use Helper;
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Helper; use Helper;
 
-   procedure Hello_World is
-   begin
-      Ada.Text_IO.Put_Line ("hello, world!");
-      Helper.Put_Line ("hello, world!");
-      Put_Line ("hello, world!");  --  ERROR
-   end Hello_World;
+    procedure Hello_World is
+    begin
+       Ada.Text_IO.Put_Line ("hello, world!");
+       Helper.Put_Line ("hello, world!");
+       Put_Line ("hello, world!");  --  ERROR
+    end Hello_World;
 
 Here, both units ``Ada.Text_IO`` and ``Helper`` define a procedure ``Put_Line``
 taking a string in argument, so the compiler cannot disambiguate the direct
@@ -271,41 +273,42 @@ file). Only declarations from the spec are visible from other units when they
 import that unit. In fact, only declarations from the visible part of the spec
 (before keyword ``private``) are visible from other units.
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Helper is
-      procedure Public_Put_Line (S : String);
-   private
-      procedure Private_Put_Line (S : String);
-   end Helper;
+    package Helper is
+       procedure Public_Put_Line (S : String);
+    private
+       procedure Private_Put_Line (S : String);
+    end Helper;
 
-   with Ada.Text_IO;
+    with Ada.Text_IO;
 
-   package body Helper is
-      procedure Public_Put_Line (S : String) is
-      begin
-         Ada.Text_IO.Put_Line (S);
-      end Public_Put_Line;
+    package body Helper is
+       procedure Public_Put_Line (S : String) is
+       begin
+          Ada.Text_IO.Put_Line (S);
+       end Public_Put_Line;
 
-      procedure Private_Put_Line (S : String) is
-      begin
-         Ada.Text_IO.Put_Line (S);
-      end Private_Put_Line;
+       procedure Private_Put_Line (S : String) is
+       begin
+          Ada.Text_IO.Put_Line (S);
+       end Private_Put_Line;
 
-      procedure Body_Put_Line (S : String) is
-      begin
-         Ada.Text_IO.Put_Line (S);
-      end Body_Put_Line;
-   end Helper;
+       procedure Body_Put_Line (S : String) is
+       begin
+          Ada.Text_IO.Put_Line (S);
+       end Body_Put_Line;
+    end Helper;
 
-   with Helper; use Helper;
+    with Helper; use Helper;
 
-   procedure Hello_World is
-   begin
-      Public_Put_Line ("hello, world!");
-      Private_Put_Line ("hello, world!");  --  ERROR
-      Body_Put_Line ("hello, world!");  --  ERROR
-   end Hello_World;
+    procedure Hello_World is
+    begin
+       Public_Put_Line ("hello, world!");
+       Private_Put_Line ("hello, world!");  --  ERROR
+       Body_Put_Line ("hello, world!");  --  ERROR
+    end Hello_World;
 
 Note the different errors on the calls to the private and body versions of
 ``Put_Line``: in the first case the compiler can locate the candidate procedure
@@ -320,41 +323,42 @@ simply announcing such a declaration in the public part of the spec. This way,
 client code can use the type, typically through a public API, but not any
 specifics on the implementation of the type.
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   package Vault is
-      type Data is private;
-      function Get (X : in Data) return Integer;
-      procedure Set (X : out Data; Value : in Integer);
-   private
-      type Data is record
-         Val : Integer;
-      end record;
-   end Vault;
+    package Vault is
+       type Data is private;
+       function Get (X : Data) return Integer;
+       procedure Set (X : out Data; Value : Integer);
+    private
+       type Data is record
+          Val : Integer;
+       end record;
+    end Vault;
 
-   package body Vault is
-      function Get (X : in Data) return Integer is (X.Val);
-      procedure Set (X : out Data; Value : in Integer) is
-      begin
-         X.Val := Value;
-      end Set;
-   end Vault;
+    package body Vault is
+       function Get (X : Data) return Integer is (X.Val);
+       procedure Set (X : out Data; Value : Integer) is
+       begin
+          X.Val := Value;
+       end Set;
+    end Vault;
 
-   with Vault;
+    with Vault;
 
-   package Information_System is
-      Archive : Vault.Data;
-   end Information_System;
+    package Information_System is
+       Archive : Vault.Data;
+    end Information_System;
 
-   with Information_System;
-   with Vault;
+    with Information_System;
+    with Vault;
 
-   procedure Hacker is
-      V : Integer := Vault.Get (Information_System.Archive);
-   begin
-      Vault.Set (Information_System.Archive, V + 1);
-      Information_System.Archive.Val := 0;  --  ERROR
-   end Hacker;
+    procedure Hacker is
+       V : Integer := Vault.Get (Information_System.Archive);
+    begin
+       Vault.Set (Information_System.Archive, V + 1);
+       Information_System.Archive.Val := 0;  --  ERROR
+    end Hacker;
 
 Note that it is possible to both declare a variable of type ``Vault.Data`` in
 package ``Information_System`` and to get/set it through its API in procedure

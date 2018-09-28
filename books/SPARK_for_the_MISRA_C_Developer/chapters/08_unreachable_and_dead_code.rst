@@ -44,45 +44,45 @@ beyond what other analyses do in general about unreachable and dead code.
 
 .. code:: ada spark-flow
 
-   procedure Do_Stuff (X, Y, Z : Integer; Success : out Boolean) is
+    procedure Do_Stuff (X, Y, Z : Integer; Success : out Boolean) is
 
-      procedure Ok is
-      begin
-         Success := True;
-      end Ok;
+       procedure Ok is
+       begin
+          Success := True;
+       end Ok;
 
-      procedure NOk is
-      begin
-         Success := False;
-      end NOk;
+       procedure NOk is
+       begin
+          Success := False;
+       end NOk;
 
-   begin
-      Success := False;
+    begin
+       Success := False;
 
-      for K in Y .. Z loop
-         if K < X and not Success then
-            Ok;
-         end if;
-      end loop;
+       for K in Y .. Z loop
+          if K < X and not Success then
+             Ok;
+          end if;
+       end loop;
 
-      if X > Y then
-         Ok;
-      else
-         NOk;
-      end if;
+       if X > Y then
+          Ok;
+       else
+          NOk;
+       end if;
 
-      if Z > Y then
-         NOk;
-         return;
-      else
-         Ok;
-         return;
-      end if;
+       if Z > Y then
+          NOk;
+          return;
+       else
+          Ok;
+          return;
+       end if;
 
-      if Success then
-         Success := not Success;
-      end if;
-   end Do_Stuff;
+       if Success then
+          Success := not Success;
+       end if;
+    end Do_Stuff;
 
 GNATprove detects that the code prior to the test that ``Z > Y`` has no effect
 on any output of procedure Do_Stuff (here simply the output parameter

@@ -131,17 +131,17 @@ statement level, so its's not allowed to write:
 
 .. code:: ada spark-flow
 
-   package Volatile_Read is
-      X : Integer with Volatile;
-      procedure P (Y : out Integer);
-   end Volatile_Read;
+    package Volatile_Read is
+       X : Integer with Volatile;
+       procedure P (Y : out Integer);
+    end Volatile_Read;
 
-   package body Volatile_Read is
-      procedure P (Y : out Integer) is
-      begin
-         Y := X - X;
-      end P;
-   end Volatile_Read;
+    package body Volatile_Read is
+       procedure P (Y : out Integer) is
+       begin
+          Y := X - X;
+       end P;
+    end Volatile_Read;
 
 Instead, every read of a volatile variable must occur immediately before being
 assigned to another variable, as follows:
@@ -149,18 +149,18 @@ assigned to another variable, as follows:
 .. code:: ada spark-flow
 
     package Volatile_Read is
-      X : Integer with Volatile;
-      procedure P (Y : out Integer);
-   end Volatile_Read;
+       X : Integer with Volatile;
+       procedure P (Y : out Integer);
+    end Volatile_Read;
 
-   package body Volatile_Read is
-      procedure P (Y : out Integer) is
-         X1 : Integer := X;
-         X2 : Integer := X;
-      begin
-         Y := X1 - X2;
-      end P;
-   end Volatile_Read;
+    package body Volatile_Read is
+       procedure P (Y : out Integer) is
+          X1 : Integer := X;
+          X2 : Integer := X;
+       begin
+          Y := X1 - X2;
+       end P;
+    end Volatile_Read;
 
 Note here that the order of capture of the volatile value of ``X`` might be
 significant. For example, ``X`` might denote a quantity which only increases,
@@ -182,25 +182,25 @@ languages, for example when setting a new value and returning the previous one:
 
 .. code:: ada spark-flow
 
-   package Bad_Functions is
-      function Set (V : Integer) return Integer;
-      function Get return Integer;
-   end Bad_Functions;
+    package Bad_Functions is
+       function Set (V : Integer) return Integer;
+       function Get return Integer;
+    end Bad_Functions;
 
-   package body Bad_Functions is
+    package body Bad_Functions is
 
-      Value : Integer := 0;
+       Value : Integer := 0;
 
-      function Set (V : Integer) return Integer is
-         Previous : constant Integer := Value;
-      begin
-         Value := V;
-         return Previous;
-      end Set;
+       function Set (V : Integer) return Integer is
+          Previous : constant Integer := Value;
+       begin
+          Value := V;
+          return Previous;
+       end Set;
 
-      function Get return Integer is (Value);
+       function Get return Integer is (Value);
 
-   end Bad_Functions;
+    end Bad_Functions;
 
 GNATprove computes that function ``Set`` has a side-effect on global variable
 ``Value`` and issues an error. The correct idiom in SPARK for such a case is to
@@ -208,24 +208,24 @@ use a procedure with an output parameter to return the desired result:
 
 .. code:: ada spark-flow
 
-   package Ok_Functions is
-      procedure Set (V : Integer; Prev : out Integer);
-      function Get return Integer;
-   end Ok_Functions;
+    package Ok_Functions is
+       procedure Set (V : Integer; Prev : out Integer);
+       function Get return Integer;
+    end Ok_Functions;
 
-   package body Ok_Functions is
+    package body Ok_Functions is
 
-      Value : Integer := 0;
+       Value : Integer := 0;
 
-      procedure Set (V : Integer; Prev : out Integer) is
-      begin
-         Prev := Value;
-         Value := V;
-      end Set;
+       procedure Set (V : Integer; Prev : out Integer) is
+       begin
+          Prev := Value;
+          Value := V;
+       end Set;
 
-      function Get return Integer is (Value);
+       function Get return Integer is (Value);
 
-   end Ok_Functions;
+    end Ok_Functions;
 
 With the above restrictions in SPARK, none of the conflicts of side-effects
 that can occur in C can occur in SPARK, as guaranteed by flow analysis.
