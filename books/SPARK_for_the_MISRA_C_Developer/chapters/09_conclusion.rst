@@ -1,5 +1,13 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 Conclusion
 ----------
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
 
 MISRA-C is a very laudable collective effort to significantly reduce the number
 of errors in C programs, by defining guidelines focused on avoiding error-prone
