@@ -30,7 +30,13 @@ test_advanced_spark:
 	@$(TEST_DRIVER) ../courses/advanced-spark/chapters/*.rst
 	@echo ""
 
-tests: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark
+test_spark_for_the_misra_c_developer:
+	@echo "===== SPARK FOR MISRA C DEV ====="
+	@$(TEST_DRIVER) ../books/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
+	@echo ""
+
+tests: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark \
+	test_spark_for_the_misra_c_developer
 
 publish-staging:
 	@echo "Publishing current branch to learn-staging..."
