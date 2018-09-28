@@ -1,3 +1,5 @@
+:orphan:
+
 .. meta::
   :author: AdaCore
 
@@ -12,4 +14,3 @@ Labs
 
    Integer to String <int_to_string/problem_statement>
 
-   

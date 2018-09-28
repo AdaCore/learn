@@ -6,4 +6,4 @@ which gcc
 which gnatchop
 which gprbuild
 
-make tests html
+make SPHINXOPTS="-W" tests html

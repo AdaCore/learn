@@ -17,6 +17,8 @@ This plugin interprets the folloging parameters to the code:: directive:
 these override the code-config setting.
 
 """
+from __future__ import print_function
+
 import codecs
 import glob
 import os
@@ -116,8 +118,8 @@ def real_gnatchop(lines):
             f.write('\n'.join(lines))
         cmd = ['gnatchop', gnatchop_file]
         output = subprocess.check_output(cmd, cwd=wd)
-        files = [os.path.join(wd, f.strip()) for f in output.splitlines()
-                 if not f.startswith("splitting ")]
+        files = [os.path.join(wd, f.decode("utf-8").strip()) for f in output.splitlines()
+                 if not f.startswith(b'splitting ')]
         os.remove(gnatchop_file)
         results = []
         for file in files:
@@ -155,7 +157,7 @@ class WidgetCodeDirective(Directive):
 
         # Make sure code-config exists in the document
         if not codeconfig_found:
-            print self.lineno, dir(self)
+            print (self.lineno, dir(self))
             raise self.error("you need to add a :code-config: role")
 
         if 'class' in self.options and (
@@ -191,7 +193,7 @@ class WidgetCodeDirective(Directive):
             shadow_files_divs = ""
             if config.accumulate_code:
                 editor_files = set([f[0] for f in files])
-                for k, v in accumulated_files.iteritems():
+                for k, v in accumulated_files.items():
                     if k not in editor_files:
                         shadow_files_divs += (
                            u'<div class="shadow_file"'
@@ -204,7 +206,7 @@ class WidgetCodeDirective(Directive):
                 )
         except Exception:
             # If we have an exception here, it's probably a codec error
-            print files
+            print (files)
             raise
 
         for arg in ALLOWED_EXTRA_ARGS:
