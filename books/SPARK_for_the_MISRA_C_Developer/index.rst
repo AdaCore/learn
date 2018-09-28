@@ -1,3 +1,5 @@
+:orphan:
+
 .. meta::
   :author: AdaCore
 
