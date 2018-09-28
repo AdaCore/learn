@@ -1,3 +1,5 @@
+:orphan:
+
 A standard lab needs to be constituted of the following files
 
 .. code-block:: sh
