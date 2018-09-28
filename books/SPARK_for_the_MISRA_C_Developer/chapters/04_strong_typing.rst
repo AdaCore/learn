@@ -127,7 +127,7 @@ will be modified by rotation around the ``X`` axis.
       end record;
 
       procedure Rotate_X (P : in out Point_3D) with
-        Post => P = P'Old'Update(Y => P.Z'Old, Z => - P.Y'Old);
+        Post => P = P'Old'Update (Y => P.Z'Old, Z => -P.Y'Old);
 
    end Geometry;
 
@@ -137,7 +137,7 @@ will be modified by rotation around the ``X`` axis.
          Tmp : constant Float := P.Y;
       begin
          P.Y := P.Z;
-         P.Z := - Tmp;
+         P.Z := -Tmp;
       end Rotate_X;
 
    end Geometry;
@@ -274,7 +274,7 @@ than the length of parameter ``P`` by stating this property in postcondition of
    begin
       for I in P'Range loop
          pragma Loop_Invariant (Count <= I - P'First);
-         if P(I) = V then
+         if P (I) = V then
             Count := Count + 1;
          end if;
       end loop;
@@ -494,13 +494,13 @@ over all values of the type:
    procedure Ok_Arith is
 
       B1 : Boolean := False;
-      B2 : Boolean := Boolean'Succ(B1);
-      B3 : Boolean := Boolean'Pred(B2);
+      B2 : Boolean := Boolean'Succ (B1);
+      B3 : Boolean := Boolean'Pred (B2);
 
       type Fruit is (Apple, Orange);
       F1 : Fruit := Apple;
-      F2 : Fruit := Fruit'Succ(F1);
-      F3 : Fruit := Fruit'Pred(F2);
+      F2 : Fruit := Fruit'Succ (F1);
+      F3 : Fruit := Fruit'Pred (F2);
 
    begin
       pragma Assert (B1 = B3);

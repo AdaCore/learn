@@ -149,18 +149,18 @@ assigned to another variable, as follows:
 .. code:: ada spark-flow
 
     package Volatile_Read is
-      X : Integer with Volatile;
-      procedure P (Y : out Integer);
-   end Volatile_Read;
+       X : Integer with Volatile;
+       procedure P (Y : out Integer);
+    end Volatile_Read;
 
-   package body Volatile_Read is
-      procedure P (Y : out Integer) is
-         X1 : Integer := X;
-         X2 : Integer := X;
-      begin
-         Y := X1 - X2;
-      end P;
-   end Volatile_Read;
+    package body Volatile_Read is
+       procedure P (Y : out Integer) is
+          X1 : Integer := X;
+          X2 : Integer := X;
+       begin
+          Y := X1 - X2;
+       end P;
+    end Volatile_Read;
 
 Note here that the order of capture of the volatile value of ``X`` might be
 significant. For example, ``X`` might denote a quantity which only increases,
