@@ -17,6 +17,10 @@ cache:
   - $HOME/build_tools
   - $HOME/.cache/pip
 
+git:
+  submodules:
+    false
+
 before_install:
  - "sudo apt-get install graphviz"
 
