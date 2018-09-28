@@ -1,6 +1,15 @@
 Generics
 ========
 
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 Abstracting definitions into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -311,7 +320,7 @@ into a separate package named ``Generic_Array_Bundle`` and reference the
 ``Generic_Array_Pkg`` there. This would create a chain of generic
 packages:
 
-.. code-block::
+.. code-block:: ada
 
     Generic_Array_Bundle <= Generic_Array_Pkg
 

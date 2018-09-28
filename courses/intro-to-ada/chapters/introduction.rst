@@ -75,11 +75,11 @@ design are principles that include the following:
    keyword is an abbreviation, etc.
 
 -  Very strong typing. It is very easy to introduce new types in Ada, with the
-  benefit of preventing data usage errors.
+   benefit of preventing data usage errors.
 
-    It is similar to many functional languages in that regard, except that the
-    programmer has to be much more explicit about typing in Ada, because there
-    is almost no type inference.
+   - It is similar to many functional languages in that regard, except that the
+     programmer has to be much more explicit about typing in Ada, because there
+     is almost no type inference.
 
 .. AI for amiard: Develop a little bit. Put in the proper format when we have decided about it (issue #4)
 

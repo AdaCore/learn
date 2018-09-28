@@ -1,6 +1,15 @@
 Interfacing with C and C++
 ==========================
 
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
 Using unconstrained types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
