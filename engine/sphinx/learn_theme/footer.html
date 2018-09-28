@@ -20,8 +20,8 @@
   {%- set prev_state_key = 'prev_state' %}
 
   {%- if meta is defined %}
-      {% set next_but = not next_state_key in meta.viewkeys() %}
-      {% set prev_but = not prev_state_key in meta.viewkeys() %}
+      {% set next_but = not next_state_key in meta.keys() %}
+      {% set prev_but = not prev_state_key in meta.keys() %}
 
       {{ nextprev(prev_but, next_but) }}
   {%- else %}
@@ -32,7 +32,7 @@
   <hr/>
 
   <div class="legal">
-              Copyright &copy; 2018 AdaCore. All rights reserved. 
+              Copyright &copy; 2018 AdaCore. All rights reserved.
               &nbsp;&nbsp;
               <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
               <br>
