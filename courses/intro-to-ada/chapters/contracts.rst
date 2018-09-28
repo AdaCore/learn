@@ -28,7 +28,7 @@ postconditions, subtype predicates, and type invariants. We study those
 topics in this chapter.
 
 Pre- and postconditions
-----------------------
+-----------------------
 
 Pre- and postconditions provide expectations regarding input and output
 parameters of subprograms and return value of functions. If we say that
@@ -295,7 +295,6 @@ non-contiguous elements of an enumeration. A classic example is a list of
 week days:
 
 .. code-block:: ada
-    :class: ada-nocheck
 
     type Week is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
 
@@ -303,7 +302,6 @@ We can easily create a sub-list of work days in the week by specifying a
 :ada:`subtype` with a range based on :ada:`Week`. For example:
 
 .. code-block:: ada
-    :class: ada-nocheck
 
     subtype Work_Week is Week range Mon .. Fri;
 
@@ -313,7 +311,6 @@ just the first, middle and last day of the work week. To do that, we use a
 static predicate:
 
 .. code-block:: ada
-    :class: ada-nocheck
 
    subtype Check_Days is Work_Week
      with Static_Predicate => Check_Days in Mon | Wed | Fri;

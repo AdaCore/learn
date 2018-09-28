@@ -21,5 +21,6 @@ Advanced Ada
     :caption: Contents:
 
 
+    Strong Typing <chapters/strong_typing>
     Generics <chapters/generics>
     Interfacing With C/C++ <chapters/interfacing_with_cpp>

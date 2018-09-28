@@ -27,7 +27,7 @@ Each of the following examples will display the 26 letters of the alphabet twice
 
    procedure Main is -- implicitly called by the environment task
       task My_Task;
-    
+
       task body My_Task is
       begin
          for I in 'A' .. 'Z' loop
@@ -46,7 +46,7 @@ Each of the following examples will display the 26 letters of the alphabet twice
 
    class MyThread : public Thread {
       public:
-      
+
       void run () {
          for (char i = 'A'; i <= 'Z'; ++i) {
             cout << i << endl;
@@ -56,7 +56,7 @@ Each of the following examples will display the 26 letters of the alphabet twice
 
    int main (int argc, char ** argv) {
       MyThread myTask;
-      myTask.start (); 
+      myTask.start ();
 
       for (char i = 'A'; i <= 'Z'; ++i) {
          cout << i << endl;
@@ -90,9 +90,10 @@ Each of the following examples will display the 26 letters of the alphabet twice
          myTask.join ();
       }
    }
+
 Any number of Ada tasks may be declared in any declarative region. A task declaration is very similar to a procedure or package declaration. They all start automatically when control reaches the **begin**. A block will not exit until all sequences of statements defined within that scope, including those in tasks, have been completed.
 
-A task type is a generalization of a task object; each object of a task type has the same behavior. A declared object of a task type is started within the scope where it is declared, and control does not leave that scope until the task has terminated. 
+A task type is a generalization of a task object; each object of a task type has the same behavior. A declared object of a task type is started within the scope where it is declared, and control does not leave that scope until the task has terminated.
 
 An Ada task type is somewhat analogous to a Java *Thread* subclass, but in Java the instances of such a subclass are always dynamically allocated.  In Ada an instance of a task type may either be declared or dynamically allocated.
 
@@ -104,7 +105,7 @@ Task types can be parametrized; the parameter serves the same purpose as an argu
 .. code-block:: ada
 
    task type My_Task (First : Character);
-    
+
    task body My_Task (First : Character) is
    begin
       for I in First .. 'Z' loop
@@ -126,7 +127,7 @@ Task types can be parametrized; the parameter serves the same purpose as an argu
       public:
 
       char first;
-      
+
       void run () {
          for (char i = first; i <= 'Z'; ++i) {
             cout << i << endl;
@@ -240,7 +241,7 @@ Let's consider the following example:
       task After is
          entry Go;
       end After ;
-   
+
       task body After is
       begin
          accept Go;
@@ -254,7 +255,7 @@ Let's consider the following example:
 
 The *Go* **entry** declared in *After* is the external interface to the task. In the task body, the **accept** statement causes the task to wait for a call on the entry. This particular **entry** and **accept** pair doesn't do much more than cause the task to wait until *Main* calls *After.Go*. So, even though the two tasks start simultaneously and execute independently, they can coordinate via *Go*. Then, they both continue execution independently after the rendezvous.
 
-The **entry**\/**accept** pair can take/pass parameters, and the **accept** statement can contain a sequence of statements; while these statements are executed, the caller is blocked. 
+The **entry**\/**accept** pair can take/pass parameters, and the **accept** statement can contain a sequence of statements; while these statements are executed, the caller is blocked.
 
 Let's look at a more ambitious example. The rendezvous below accepts parameters and executes some code:
 
@@ -267,7 +268,7 @@ Let's look at a more ambitious example. The rendezvous below accepts parameters 
       task After is
          entry Go (Text : String);
       end After ;
-   
+
       task body After is
       begin
          accept Go (Text : String) do
@@ -351,7 +352,7 @@ Protected Objects
 
 Although the rendezvous may be used to implement mutually exclusive access to a shared data object, an alternative (and generally preferable) style is through a *protected object*, an efficiently implementable mechanism that makes the effect more explicit. A protected object has a public interface (its *protected operations*) for accessing and manipulating the object's components (its private part). Mutual exclusion is enforced through a conceptual lock on the object, and encapsulation ensures that the only external access to the components are through the protected operations.
 
-Two kinds of operations can be performed on such objects: read-write operations by procedures or entries, and read-only operations by functions. The lock mechanism is implemented so that it's possible to perform concurrent read operations but not concurrent write or read/write operations. 
+Two kinds of operations can be performed on such objects: read-write operations by procedures or entries, and read-only operations by functions. The lock mechanism is implemented so that it's possible to perform concurrent read operations but not concurrent write or read/write operations.
 
 Let's reimplement our earlier tasking example with a protected object called *Counter*:
 
@@ -425,7 +426,7 @@ Here's an example illustrating protected entries: a protected type that models a
     entry Wait;
     procedure Signal;
   private
-    Signaled : Boolean := False;    
+    Signaled : Boolean := False;
   end Binary_Semaphore;
 
   protected body Binary_Semaphore is
@@ -433,7 +434,7 @@ Here's an example illustrating protected entries: a protected type that models a
     begin
       Signaled := False;
     end Wait;
-        
+
     procedure Signal is
     begin
       Signaled := True;
