@@ -1,5 +1,13 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 Recovering Basic Syntactic Guarantees
 -------------------------------------
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
 
 C is well known for its concise syntax. The flip side of this coint is that it
 is also very permissive in terms of syntax, which makes it possible to
@@ -90,7 +98,7 @@ two calls to ``F`` in the following are detected as unused, even if the result
 of the function call is always assigned to a variable, which is itself used in
 the second case:
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
    package Fun is
       function F return Integer is (1);

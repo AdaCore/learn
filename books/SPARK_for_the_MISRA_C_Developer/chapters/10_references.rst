@@ -1,5 +1,13 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 References
 ----------
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
 
 About MISRA-C
 *************

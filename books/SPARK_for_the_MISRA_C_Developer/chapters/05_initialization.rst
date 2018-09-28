@@ -1,5 +1,13 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 Initializing Data Before Use
 ----------------------------
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
 
 As in many other languages, data is not always initialized at declaration in C,
 which makes it possible to unintentionally read uninitialized data. This is a
@@ -61,7 +69,7 @@ Hence, the SPARK analysis tool called GNATprove reports on the following code
 translated from C that function ``F`` might not always initialize output
 parameter ``P``:
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
    with Interfaces; use Interfaces;
 
@@ -94,7 +102,7 @@ parameter ``P``:
 Let's fix the program by initializing ``P`` to value 0 when condition ``B`` is
 not satisfied:
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
    with Interfaces; use Interfaces;
 
@@ -138,7 +146,7 @@ considers global data as always initialized, even if the default value of
 all-zeros might not be valid data for the application! Consider a variant of
 the above code where variable ``U`` is now global:
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
    with Interfaces; use Interfaces;
 
@@ -191,7 +199,7 @@ It is possible in SPARK to specify that ``G`` should initialize variable ``U``
 with a `data dependency` contract introduced with aspect ``Global`` following
 the declaration of procedure ``G``:
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
    with Interfaces; use Interfaces;
 

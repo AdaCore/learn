@@ -1,5 +1,13 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 Detecting Unreachable Code and Dead Code
 ----------------------------------------
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
 
 MISRA-C calls `unreachable code` the code that cannot be executed, which is
 usually called `dead code`. It calls `dead code` the code that can be executed
@@ -34,7 +42,7 @@ separately for every subprogram in order to scale, so it may not be able to
 detect more complex cases of unreachable and dead code, although it goes well
 beyond what other analyses do in general about unreachable and dead code.
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
    procedure Do_Stuff (X, Y, Z : Integer; Success : out Boolean) is
 

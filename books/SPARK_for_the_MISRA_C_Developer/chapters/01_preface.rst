@@ -1,7 +1,15 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 .. _Preface:
 
 Preface
 -------
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
 
 MISRA-C appeared in 1998 as a coding standard for C code focused on avoiding
 error-prone programming features of the C programming language rather than on

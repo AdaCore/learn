@@ -1,5 +1,13 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 Retrofitting Strong Typing Rules
 --------------------------------
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
 
 The Annex C of MISRA-C:2012 document puts it in the clearest terms:
 
@@ -110,7 +118,7 @@ parameter ``P`` of procedure ``Rotate_X`` by copy or by parameter, but in any
 case the postcondition of ``Rotate_X`` will hold: the resulting value of ``P``
 will be modified by rotation around the ``X`` axis.
 
-.. code-block:: ada spark-prove
+.. code:: ada spark-prove
 
    package Geometry is
 
@@ -251,7 +259,7 @@ go further in SPARK and show that the value returned by ``Count`` is no greater
 than the length of parameter ``P`` by stating this property in postcondition of
 ``Count`` and asking SPARK analysis to prove it:
 
-.. code-block:: ada spark-prove
+.. code:: ada spark-prove
 
    package Types is
       type Int_Array is array (Positive range <>) of Integer;
@@ -479,7 +487,7 @@ possible however to get the predecessor of a Boolean or enumerated value with
 ``Value'Pred`` and its successor with ``Value'Succ``, as well as to iterate
 over all values of the type:
 
-.. code-block:: ada spark-prove
+.. code:: ada spark-prove
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -833,6 +841,8 @@ user-defined enumerations like ``Animal`` above, as well as Boolean (defined as
 an enumeration with values ``False`` and ``True``) and characters (defined as
 an enumeration with character values). Hence, the following is valid SPARK
 code:
+
+.. code-block:: ada
 
    procedure Ok_Conversions is
       F : Float := 0.0;

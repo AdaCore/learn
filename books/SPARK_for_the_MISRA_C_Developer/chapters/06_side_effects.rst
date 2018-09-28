@@ -1,5 +1,13 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 Controlling Side-Effects
 ------------------------
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
 
 As most programming languages do, C allows side-effects in expressions. This
 leads to subtle issues about conflicting side-effects, when sub-expressions of
@@ -121,7 +129,7 @@ There are two possible side-effects when evaluating an expression:
 Reads of volatile variables in SPARK are restricted to appear immediately at
 statement level, so its's not allowed to write:
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
    package Volatile_Read is
       X : Integer with Volatile;
@@ -138,16 +146,15 @@ statement level, so its's not allowed to write:
 Instead, every read of a volatile variable must occur immediately before being
 assigned to another variable, as follows:
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
-   package Volatile_Read is
+    package Volatile_Read is
       X : Integer with Volatile;
       procedure P (Y : out Integer);
    end Volatile_Read;
 
    package body Volatile_Read is
       procedure P (Y : out Integer) is
-      begin
          X1 : Integer := X;
          X2 : Integer := X;
       begin
@@ -165,7 +172,7 @@ procedures can. The only effect of SPARK functions is the computation of a
 result from their inputs, passed both as parameters or as global variables. In
 particular, SPARK functions cannot have output parameters:
 
-.. code-block:: ada spark-flow
+.. code-block:: ada
 
    function Bad_Function (X, Y : Integer; Sum, Max : out Integer) return Boolean;
 
@@ -173,7 +180,7 @@ More generally, it is not possible to write functions that have a side-effect
 in addition to returning their result, as is typical of many idioms in other
 languages, for example when setting a new value and returning the previous one:
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
    package Bad_Functions is
       function Set (V : Integer) return Integer;
@@ -199,14 +206,14 @@ GNATprove computes that function ``Set`` has a side-effect on global variable
 ``Value`` and issues an error. The correct idiom in SPARK for such a case is to
 use a procedure with an output parameter to return the desired result:
 
-.. code-block:: ada spark-flow
+.. code:: ada spark-flow
 
    package Ok_Functions is
       procedure Set (V : Integer; Prev : out Integer);
       function Get return Integer;
    end Ok_Functions;
 
-   package Ok_Functions is
+   package body Ok_Functions is
 
       Value : Integer := 0;
 

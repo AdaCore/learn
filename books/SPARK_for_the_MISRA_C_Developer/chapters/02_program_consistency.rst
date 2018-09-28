@@ -1,5 +1,13 @@
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
 Enforcing Basic Program Consistency
 -----------------------------------
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
 
 Many consistency properties that are taken for granted in other languages are
 not enforced in C. The basic property that all uses of a variable or function
