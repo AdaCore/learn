@@ -96,7 +96,7 @@ design are principles that include the following:
       to an absolute minimum.
 
    -  The programmer can generally give a *lot* of information about
-      what his program means to the compiler (and other programmers).
+      what their program means to the compiler (and other programmers).
       This allows the compiler to be extremely helpful (read: strict)
       with the programmer.
 
