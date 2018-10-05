@@ -4,8 +4,6 @@
 Generics
 ========
 
-:code-config:`reset_accumulator=True`
-
 .. role:: ada(code)
    :language: ada
 
@@ -23,8 +21,9 @@ Abstracting definitions into packages
 
 In this section and in the next ones, we will reuse the generic
 reversing algorithm that we discussed in the chapter about generics
-from the introductory course (:doc:`../../intro-to-ada/generics`). In that
-example, we were declaring three formal types for the
+from the introductory course
+(:doc:`../../intro-to-ada/chapters/generics`).
+In that example, we were declaring three formal types for the
 ``Generic_Reverse_Array`` procedure. However, we could abstract the array
 definition into a separate package and reuse it for the generic procedure.
 This could be potentially useful in case we want to create more generic
@@ -97,9 +96,11 @@ algorithm:
 
        type Color is (Black, Red, Green, Blue, White);
 
-       package Color_Pkg is new Simple_Generic_Array_Pkg (T => Color, Index => Integer);
+       package Color_Pkg is new
+         Simple_Generic_Array_Pkg (T => Color, Index => Integer);
 
-       procedure Reverse_Color_Array is new Reverse_Array (T => Color, P => Color_Pkg);
+       procedure Reverse_Color_Array is new
+         Reverse_Array (T => Color, P => Color_Pkg);
 
        My_Colors : Color_Pkg.Array_T (1 .. 5) := (Black, Red, Green, Blue, White);
     begin
@@ -204,7 +205,7 @@ This is a version of the test application that makes use of the generic
           S : String;
           with package Array_Pkg is new Generic_Array_Pkg (<>);
           use Array_Pkg;
-          with function Image (E : in T) return String is <>;
+          with function Image (E : T) return String is <>;
           with procedure Pkg_Test (X : in out Array_T);
        procedure Perform_Test (X : in out Array_T);
 
@@ -301,7 +302,7 @@ references the ``Generic_Array_Pkg`` package and the two formal elements
     generic
        S : String;
        with package Array_Pkg is new Generic_Array_Pkg (<>);
-       with function Image (E : in Array_Pkg.T) return String is <>;
+       with function Image (E : Array_Pkg.T) return String is <>;
     package Generic_Array_Bundle is
     end Generic_Array_Bundle;
 
@@ -372,6 +373,8 @@ package. However, this will be left as an exercise for the reader.
 Formal objects
 --------------
 
+Work in progress: this section only contains source-code snippets.
+
 -----------------------------------------------------------------------
 
 **Simple example**
@@ -403,7 +406,6 @@ Formal objects
        Put_Line ("A: " & Integer'Image (A));
     end Show_Formal_In_Out_Object;
 
-
 -----------------------------------------------------------------------
 
 **Simple example without generics**
@@ -430,7 +432,6 @@ Formal objects
        Increment (A);
        Put_Line ("A: " & Integer'Image (A));
     end Show_Alternative_Formal_Object;
-
 
 -----------------------------------------------------------------------
 
@@ -502,7 +503,6 @@ Formal objects
        Put_Line ("# Decr B: " & Natural'Image (B_Op.Get_Decrement_Count));
     end Show_Formal_In_Out_Object_Pkg;
 
-
 -----------------------------------------------------------------------
 
 **Generic package with formal object: container and operations**
@@ -520,9 +520,6 @@ Formal objects
           Age  : Natural;
        end record;
     end Data_Elements;
-
-
-.. code:: ada
 
     with Ada.Containers;
     with Ada.Containers.Vectors;
@@ -595,7 +592,6 @@ Formal objects
                                           Fast      => False);
 
     end App;
-
 
 Generic numeric types
 ---------------------
@@ -1133,9 +1129,10 @@ selecting the standard operator. Alternatively, we could make use of the
        procedure Acc (V : in out F; S : F);
     end Gen_Fixed_Acc;
 
-
 Formal access types
 -------------------
+
+Work in progress: this section only contains source-code snippets.
 
 -----------------------------------------------------------------------
 
@@ -1322,10 +1319,10 @@ Formal access types
 
     end Show_Procedure_Access;
 
-
-
 Generic tagged types
 --------------------
+
+Work in progress: this section only contains source-code snippets.
 
 -----------------------------------------------------------------------
 
@@ -1343,7 +1340,6 @@ Generic tagged types
        --  Some processing on type T
 
     end Show_Gen_Tagged_Type;
-
 
 -----------------------------------------------------------------------
 
@@ -1646,7 +1642,6 @@ Generic tagged types
 
     end Show_Vector_Processing;
 
-
 Generic interfaces
 ------------------
 
@@ -1746,7 +1741,7 @@ This is just an example on how we could implement these :ada:`Set` and
        function Get (E : My_Type) return Integer is
        begin
           return E.I;
-       end;
+       end Get;
 
        procedure Set (E : in out My_Type; D : Float) is
        begin
@@ -1757,7 +1752,7 @@ This is just an example on how we could implement these :ada:`Set` and
        function Get (E : My_Type) return Float is
        begin
           return E.F;
-       end;
+       end Get;
 
     end My_Type_Pkg;
 
@@ -1867,7 +1862,7 @@ subprograms:
           function Get return Integer is
           begin
              return I;
-          end;
+          end Get;
 
           procedure Set (D : Float) is
           begin
@@ -1878,7 +1873,7 @@ subprograms:
           function Get return Float is
           begin
              return F;
-          end;
+          end Get;
        end My_Type;
 
     end My_Sync_Type_Pkg;
@@ -1895,4 +1890,3 @@ Finally, the main application doesn't require adaptations:
        C.Set (2);
        C.Set (2.1);
     end Show_Gen_Sync_Interface;
-
