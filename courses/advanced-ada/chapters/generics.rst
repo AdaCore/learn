@@ -383,15 +383,51 @@ Work in progress: this section only contains source-code snippets.
 
 .. code:: ada
 
-    package Data_Elements is
-       type Data_Element is private;
+    with Ada.Calendar;          use Ada.Calendar;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
-    private
+    package Data_Elements is
+
        type Data_Element is record
-          Name : String (1 .. 100);
-          Age  : Natural;
+          First_Name : Unbounded_String;
+          Last_Name  : Unbounded_String;
+          Birthday   : Time;
        end record;
+
+       type Data_Fields is (First_Name_F, Last_Name_F, Birthday_F, Age_F);
+
+       function Image (D : Data_Element;
+                       F : Data_Fields) return String;
+
     end Data_Elements;
+
+.. code:: ada
+
+    with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+    with Ada.Calendar.Time_Zones; use Ada.Calendar.Time_Zones;
+
+    package body Data_Elements is
+       TZ   : Time_Offset := UTC_Time_Offset;
+
+       function To_Year (D : Duration) return Natural is
+         (Natural (D) / 86_400 / 365);
+
+       function Image (D : Data_Element;
+                       F : Data_Fields) return String is
+          Now : Time := Clock;
+          Age : Natural := To_Year (Now - D.Birthday);
+       begin
+          case F is
+             when First_Name_F => return To_String (D.First_Name);
+             when Last_Name_F  => return To_String (D.Last_Name);
+             when Birthday_F   => return Image (D.Birthday, True, TZ);
+             when Age_F        => return Natural'Image (Age);
+          end case;
+       end Image;
+
+    end Data_Elements;
+
+.. code:: ada
 
     with Ada.Containers;
     with Ada.Containers.Vectors;
@@ -404,9 +440,14 @@ Work in progress: this section only contains source-code snippets.
 
        procedure Insert (C : in out Data_Container;
                          V : Data_Element);
-       procedure Get (C     : Data_Container;
-                      V     : out Data_Element;
-                      Found : out Boolean);
+
+       type Data_Fields_Array is array (Positive range <>) of Data_Fields;
+
+       generic
+          Container : in out Data_Container;
+          Fields    : Data_Fields_Array;
+          Header    : String := "";
+       procedure Display;
 
     private
 
@@ -422,48 +463,99 @@ Work in progress: this section only contains source-code snippets.
 
 .. code:: ada
 
-    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-    with Data; use Data;
+    package body Data is
 
-    generic
-       Container : in out Data_Container;
-    package File_Ops is
+       procedure Insert (C : in out Data_Container;
+                         V : Data_Element) is
+       begin
+          C.V.Append (V);
+       end Insert;
 
-       procedure Read (S : Stream_Access);
+       procedure Display is
+       begin
+          if Header /= "" then
+             Put_Line (Header);
+             New_Line;
+          end if;
 
-    end File_Ops;
+          for E of Container.V loop
+             for F of Fields loop
+                Put (Image (E, F) & " ");
+             end loop;
+             New_Line;
+          end loop;
+
+          New_Line;
+       end Display;
+
+    end Data;
 
 .. code:: ada
 
-    with Data; use Data;
+    with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
+    with Ada.Calendar.Formatting;
 
-    generic
-       Container : in out Data_Container;
-       Fast      : Boolean := True;
-    package Proc_Ops is
+    with Data;          use Data;
+    with Data_Elements; use Data_Elements;
 
-       procedure Process;
+    procedure Test_Data_Container is
 
-    end Proc_Ops;
-
-.. code:: ada
-
-    with Data;     use Data;
-    with File_Ops;
-    with Proc_Ops;
-
-    package App is
+       --
+       --  Data container for all operations below.
+       --
 
        C : Data_Container;
 
-       package File is new File_Ops (Container => C);
-       package Fast_Proc is new Proc_Ops (Container => C,
-                                          Fast      => True);
-       package Slow_Proc is new Proc_Ops (Container => C,
-                                          Fast      => False);
+       --
+       --  Display procedures are specific for the
+       --  data container.
+       --
 
-    end App;
+       procedure Display_First_Name_Age is new
+         Display (Container => C,
+                  Fields    => (1 => First_Name_F,
+                                2 => Age_F),
+                  Header    => "FIRST_NAME AGE");
+
+       procedure Display_Name_Birthday is new
+         Display (Container => C,
+                  Fields    => (1 => First_Name_F,
+                                2 => Last_Name_F,
+                                3 => Birthday_F),
+                  Header    => "NAME BIRTHDAY");
+
+       --
+       --  Data container initialization
+       --
+
+       procedure Init_Container is
+          function To_US (S : String) return Unbounded_String renames
+            To_Unbounded_String;
+       begin
+          Insert (C, (First_Name => To_US ("John"),
+                      Last_Name  => To_US ("Smith"),
+                      Birthday   => Ada.Calendar.Formatting.Time_Of
+                        (Year        => 1951,
+                         Month       => 5,
+                         Day         => 1)));
+
+          Insert (C, (First_Name => To_US ("Alice"),
+                      Last_Name  => To_US ("Williams"),
+                      Birthday   => Ada.Calendar.Formatting.Time_Of
+                        (Year        => 1968,
+                         Month       => 10,
+                         Day         => 12)));
+       end Init_Container;
+
+    begin
+       Init_Container;
+
+       Display_First_Name_Age;
+       Display_Name_Birthday;
+
+    end Test_Data_Container;
 
 Generic numeric types
 ---------------------
