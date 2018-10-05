@@ -502,29 +502,33 @@ Work in progress: this section only contains source-code snippets.
 
     procedure Test_Data_Container is
 
-       --
-       --  Data container for all operations below.
-       --
+       package App_Data_Container is
 
-       C : Data_Container;
+          --
+          --  Data container for all operations.
+          --
+          C : Data_Container;
 
-       --
-       --  Display procedures are specific for the
-       --  data container.
-       --
+          --
+          --  Display procedures are specific for the
+          --  data container.
+          --
 
-       procedure Display_First_Name_Age is new
-         Display (Container => C,
-                  Fields    => (1 => First_Name_F,
-                                2 => Age_F),
-                  Header    => "FIRST_NAME AGE");
+          procedure Display_First_Name_Age is new
+            Display (Container => C,
+                     Fields    => (1 => First_Name_F,
+                                   2 => Age_F),
+                     Header    => "FIRST_NAME AGE");
 
-       procedure Display_Name_Birthday is new
-         Display (Container => C,
-                  Fields    => (1 => First_Name_F,
-                                2 => Last_Name_F,
-                                3 => Birthday_F),
-                  Header    => "NAME BIRTHDAY");
+          procedure Display_Name_Birthday is new
+            Display (Container => C,
+                     Fields    => (1 => First_Name_F,
+                                   2 => Last_Name_F,
+                                   3 => Birthday_F),
+                     Header    => "NAME BIRTHDAY");
+       end App_Data_Container;
+
+       use App_Data_Container;
 
        --
        --  Data container initialization
