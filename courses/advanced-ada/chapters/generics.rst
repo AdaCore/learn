@@ -1666,6 +1666,133 @@ straightforward:
        C.Set (2.1);
     end Show_Gen_Interface;
 
+-----------------------------------------------------------------------
+
+**Example of calculating average**
+
+-----------------------------------------------------------------------
+
+.. code:: ada
+
+    package Float_Interface_Pkg is
+
+       type Float_Cnvt_Table is interface;
+       function To_Float (E : Float_Cnvt_Table) return Float is abstract;
+
+    end Float_Interface_Pkg;
+
+    generic
+       type T is new Float_Cnvt_Table with private;
+       type T_Class_Access is access all T'Class;
+       type T_Array is array (Positive range <>) of T_Class_Access;
+    package Float_Interface_Pkg.Ops is
+
+       function Average (A : T_Array) return Float;
+
+    end Float_Interface_Pkg.Ops;
+
+.. code:: ada
+
+    package body Float_Interface_Pkg.Ops is
+
+       function Average (A : T_Array) return Float is
+       begin
+          return Acc : Float do
+             Acc := 0.0;
+             for E of A loop
+                Acc := Acc + E.To_Float;
+             end loop;
+             Acc := Acc / Float (A'Last - A'First + 1);
+          end return;
+       end Average;
+
+    end Float_Interface_Pkg.Ops;
+
+.. code:: ada
+
+    with Float_Interface_Pkg; use Float_Interface_Pkg;
+
+    package App_Data is
+
+       type T is new Float_Cnvt_Table with private;
+       type T_Class_Access is access all T'Class;
+       type T_Array is array (Positive range <>) of T_Class_Access;
+
+       procedure Set (E : in out T; F : Float);
+       function To_Float (E : T) return Float;
+
+       type T2 is new T with private;
+
+       procedure Set_2 (E : in out T2; F : Float);
+       overriding function To_Float (E : T2) return Float;
+
+    private
+
+       type T is new Float_Cnvt_Table with record
+          F : Float := 0.0;
+       end record;
+
+       type T2 is new T with record
+          F2 : Float := 0.0;
+       end record;
+
+    end App_Data;
+
+.. code:: ada
+
+    package body App_Data is
+
+       procedure Set (E : in out T; F : Float) is
+       begin
+          E.F := F;
+       end Set;
+
+       function To_Float (E : T) return Float is
+         (E.F);
+
+       procedure Set_2 (E : in out T2; F : Float) is
+       begin
+          E.F2 := F;
+       end Set_2;
+
+       function To_Float (E : T2) return Float is
+         (E.F + E.F2);
+
+    end App_Data;
+
+.. code:: ada
+
+    with App_Data;                use App_Data;
+    with Float_Interface_Pkg.Ops;
+
+    with Ada.Text_IO;             use Ada.Text_IO;
+
+    procedure Show_Average is
+
+       package Ops is new Float_Interface_Pkg.Ops
+         (T              => T,
+          T_Class_Access => T_Class_Access,
+          T_Array        => T_Array);
+
+       A : T_Array (1 .. 3) :=
+             (1 => new T,
+              2 => new T2,
+              3 => new T);
+
+       Avg : Float;
+    begin
+       for I in A'Range loop
+          A (I).Set (1.0);
+       end loop;
+
+       T2 (A (2).all).Set_2 (3.0);
+
+       Avg := Ops.Average (A);
+
+       Put_Line ("Avg: " & Float'Image (Avg));
+
+    end Show_Average;
+
 Discussion: Generic interfaces vs. other approaches
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
