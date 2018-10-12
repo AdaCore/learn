@@ -822,6 +822,9 @@ practice.
 Generic interfaces
 ------------------
 
+Generating subprogram specifications
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Generic interfaces can be used to generate a collection of pre-defined
 subprograms for new types. For example, let's suppose that, for a given
 type T, we need at least a pair of subprograms that set and get elements
@@ -946,6 +949,9 @@ straightforward:
        C.Set (2);
        C.Set (2.1);
     end Show_Gen_Interface;
+
+Generating subprograms
+~~~~~~~~~~~~~~~~~~~~~~
 
 -----------------------------------------------------------------------
 
