@@ -827,11 +827,11 @@ Generating subprogram specifications
 
 Generic interfaces can be used to generate a collection of pre-defined
 subprograms for new types. For example, let's suppose that, for a given
-type T, we need at least a pair of subprograms that set and get elements
-of type T based on another type. We might want to convert back and forth
-between the types T and :ada:`Integer`. In addition, we might want to
-convert from and to other types (e.g., :ada:`Float`). To implement this,
-we can define the following generic interface:
+type :ada:`T`, we need at least a pair of subprograms that set and get
+elements of type :ada:`T` based on another type. We might want to convert
+back and forth between the types :ada:`T` and :ada:`Integer`. In addition,
+we might want to convert from and to other types (e.g., :ada:`Float`). To
+implement this, we can define the following generic interface:
 
 .. code:: ada
 
