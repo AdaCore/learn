@@ -373,6 +373,76 @@ package. However, this will be left as an exercise for the reader.
 Formal objects
 --------------
 
+Formal objects are used to bind objects to a generic specification. They
+are similar to parameters in subprograms and can have :ada:`in`,
+:ada:`out` or :ada:`in out` modes.
+
+One of the simplest applications of formal objects is to use them to
+configure a generic subprogram or package during instantiation. For
+example, we can implement a generic function that processes an array of
+floating-point values and calculates an output value. This calculation is
+implemented in two versions:
+
+- a standard version;
+
+- a faster version that is less accurate than the standard version.
+
+While the generic implementation offers both variants, developers can
+select the version that is more appropriate for their system during
+instantiation.
+
+.. code:: ada
+
+    with Ada.Text_IO;
+    use  Ada.Text_IO;
+
+    procedure Show_Formal_Object is
+
+       type Array_Float is array (Positive range <>) of Float;
+
+       generic
+          Use_Fast_Version : Boolean;
+       function Gen_Calc (A : Array_Float) return Float;
+
+       function Gen_Calc (A : Array_Float) return Float is
+       begin
+          if Use_Fast_Version then
+             Put_Line ("Using fast version");
+          else
+             Put_Line ("Using standard version");
+          end if;
+
+          --  Implementation missing here...
+          return 0.0;
+       end Gen_Calc;
+
+       function Calc is new Gen_Calc (Use_Fast_Version => True);
+
+       Vals : Array_Float (1 .. 2) := (0.5, 0.3);
+       X    : Float;
+
+    begin
+       X := Calc (Vals);
+    end Show_Formal_Object;
+
+In this example, we instantiate the *fast* version of :ada:`Gen_Calc`.
+
+Input-output format objects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Formal objects with :ada:`in out` mode are used to bind objects to an
+instance of a generic specification. For example, we may bind a global
+object from a package to the instantiation of a generic procedure, so that
+all calls to this instance make use of that object internally.
+
+In the application below, we create a database using a container and bind
+it to procedures that display information from the database in a specific
+format.
+
+The :ada:`Data_Elements` package describes the data fields of the data
+container. It also includes an :ada:`Image` function that returns a string
+based on the specified field.
+
 .. code:: ada
 
     with Ada.Calendar;          use Ada.Calendar;
@@ -392,6 +462,8 @@ Formal objects
                        F : Data_Fields) return String;
 
     end Data_Elements;
+
+This is the corresponding package body:
 
 .. code:: ada
 
@@ -418,6 +490,15 @@ Formal objects
        end Image;
 
     end Data_Elements;
+
+Note that the age field in the :ada:`Image` function (represented by
+:ada:`Age_F`) isn't a field from the data container, but a calculated
+value instead.
+
+The :ada:`Data` package below implements the data container using a
+vector. It includes the generic procedure :ada:`Display` that exhibits the
+information from the data container based on the fields specified by the
+developer at the procedure instantiation.
 
 .. code:: ada
 
@@ -453,6 +534,29 @@ Formal objects
 
     end Data;
 
+Note that, in addition to :ada:`Container`, which is a formal input-output
+object, we make use of the :ada:`Fields` and :ada:`Header` objects, which
+are formal input objects. Also, note that we could have declared
+:ada:`Container` as a parameter of :ada:`Display` instead of declaring it
+as a formal object:
+
+.. code-block:: ada
+
+    generic
+       Fields    : Data_Fields_Array;
+       Header    : String := "";
+    procedure Display (Container : in out Data_Container);
+
+In this case, we wouldn't be able to bind a local :ada:`Container` object
+to the instantiation of the :ada:`Display` procedure. Instead, we would
+always have to pass the container as an argument. Potentially, we could
+pass the wrong container to the procedure. By using a formal input-output
+object, we make sure that a specific object is bound to the procedure.
+This design decision ensures that we always have the same object being
+used in all calls to an instance of the :ada:`Display` procedure.
+
+This is the corresponding body of the :ada:`Data` package:
+
 .. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -483,6 +587,9 @@ Formal objects
        end Display;
 
     end Data;
+
+Finally, we implement the :ada:`Test_Data_Container` procedure, which
+makes use of the data container:
 
 .. code:: ada
 
@@ -552,6 +659,15 @@ Formal objects
        Display_Name_Birthday;
 
     end Test_Data_Container;
+
+In this example, we declare the data container :ada:`C` and bind it to
+two instantiations of the :ada:`Display` procedure:
+
+- :ada:`Display_First_Name_Age`, which displays the first name and age of
+  each person from the database;
+
+- :ada:`Display_Name_Birthday`, which displays the full name and birthday
+  of each person.
 
 Formal access types
 -------------------
