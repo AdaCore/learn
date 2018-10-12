@@ -373,14 +373,6 @@ package. However, this will be left as an exercise for the reader.
 Formal objects
 --------------
 
-Work in progress: this section only contains source-code snippets.
-
------------------------------------------------------------------------
-
-**Generic package with formal object: container and operations**
-
------------------------------------------------------------------------
-
 .. code:: ada
 
     with Ada.Calendar;          use Ada.Calendar;
