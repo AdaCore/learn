@@ -672,14 +672,6 @@ two instantiations of the :ada:`Display` procedure:
 Formal access types
 -------------------
 
-Work in progress: this section only contains source-code snippets.
-
------------------------------------------------------------------------
-
-**Access to subprograms**
-
------------------------------------------------------------------------
-
 .. code:: ada
 
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
@@ -730,12 +722,6 @@ Work in progress: this section only contains source-code snippets.
           Sort         => Sort'Access);
 
     end Show_Procedure_Access;
-
------------------------------------------------------------------------
-
-**Implementation of the packages above using formal subprograms**
-
------------------------------------------------------------------------
 
 .. code:: ada
 
