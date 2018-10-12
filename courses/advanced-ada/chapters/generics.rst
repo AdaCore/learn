@@ -950,8 +950,116 @@ straightforward:
        C.Set (2.1);
     end Show_Gen_Interface;
 
-Generating subprograms
-~~~~~~~~~~~~~~~~~~~~~~
+Facilitating arrays of interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Formal interfaces can facilitate the handling of arrays of interface
+types. Let's consider an interface type :ada:`TI` and the derived tagged
+types :ada:`T` and :ada:`T2`. We may declare arrays containing elements
+that access the :ada:`TI` class. These arrays can be initialized with
+elements that access types :ada:`T` or :ada:`T2`. Also, we may process
+these arrays with an operation :ada:`Op` using the API of the :ada:`TI`
+interface.
+
+.. code:: ada
+
+    package TI_Pkg is
+
+       type TI is interface;
+       type TI_Class_Access is access all TI'Class;
+       type TI_Array is array (Positive range <>) of
+         TI_Class_Access;
+
+       procedure Op (E : in out TI) is abstract;
+       procedure Op (A : in out TI_Array);
+
+    end TI_Pkg;
+
+    package body TI_Pkg is
+
+       procedure Op (A : in out TI_Array) is
+       begin
+          for E of A loop
+             E.Op;
+          end loop;
+       end Op;
+
+    end TI_Pkg;
+
+    with TI_Pkg; use TI_Pkg;
+
+    package T_Pkg is
+
+       type T is new TI with null record;
+       type T_Class_Access is access all T'Class;
+       type T_Array is array (Positive range <>) of
+         T_Class_Access;
+
+       --  Missing implementation
+       procedure Op (E : in out T) is null;
+
+       type T2 is new T with null record;
+
+       --  Missing implementation
+       procedure Op (E : in out T2) is null;
+
+    end T_Pkg;
+
+This is a test application that declares an array :ada:`A` of the
+interface type :ada:`TI` and calls :ada:`Op` for :ada:`A`:
+
+.. code:: ada
+
+    with TI_Pkg; use TI_Pkg;
+    with T_Pkg;  use T_Pkg;
+
+    procedure Test_T is
+
+       A : TI_Array (1 .. 3) :=
+             (1 => new T,
+              2 => new T2,
+              3 => new T);
+
+    begin
+
+       Op (TI_Array (A));
+
+    end Test_T;
+
+This example doesn't work if we use an array of the derived type :ada:`T`:
+
+.. code-block:: ada
+
+    with TI_Pkg; use TI_Pkg;
+    with T_Pkg;  use T_Pkg;
+
+    procedure Test_T is
+
+       A : T_Array (1 .. 3) :=
+             (1 => new T,
+              2 => new T2,
+              3 => new T);
+
+    begin
+
+       Op (A);
+
+    end Test_T;
+
+This is incorrect because :ada:`Op` expects an array of type :ada:`TI`,
+not :ada:`T`. Even if the type :ada:`T` is derived from :ada:`TI`, the
+corresponding array type is not. Formal interfaces can be used to create
+a generic version of :ada:`Op` that operates directly on an array of
+type :ada:`T`. Let's look at an example.
+
+The example below calculates the average of interface types that are
+*convertible* to floating-point values. We consider that a type is
+convertible to floating-point if it provides a :ada:`To_Float` function.
+This is implemented with the :ada:`Float_Cnvt_Type` interface. We also
+declare a generic package containing the :ada:`Average` function, which
+calculates the average of an array containing elements of a
+*convertible type* (i.e. any type derived from the :ada:`Float_Cnvt_Type`
+interface).
 
 .. code:: ada
 
@@ -973,6 +1081,9 @@ Generating subprograms
 
     end Float_Interface_Pkg.Ops;
 
+This is the corresponding package body containing the implementation of
+the generic :ada:`Average` function:
+
 .. code:: ada
 
     package body Float_Interface_Pkg.Ops is
@@ -989,6 +1100,10 @@ Generating subprograms
        end Average;
 
     end Float_Interface_Pkg.Ops;
+
+In the :ada:`App_Data` package, we declare two types derived from
+:ada:`Float_Cnvt_Type`: :ada:`T` and :ada:`T2`. We also declare the
+corresponding :ada:`To_Float` functions.
 
 .. code:: ada
 
@@ -1020,6 +1135,8 @@ Generating subprograms
 
     end App_Data;
 
+This is the corresponding package body:
+
 .. code:: ada
 
     package body App_Data is
@@ -1041,6 +1158,10 @@ Generating subprograms
          (E.F + E.F2);
 
     end App_Data;
+
+Finally, this is a test application that declares an array of
+*convertible* types and calls the :ada:`Average` function to calculate
+the average of all elements.
 
 .. code:: ada
 
@@ -1074,6 +1195,11 @@ Generating subprograms
        Put_Line ("Avg: " & Float'Image (Avg));
 
     end Show_Average;
+
+In this example, we declare the array :ada:`A` with elements of both
+:ada:`T` and :ada:`T2` types. After initializing the elements of :ada:`A`,
+we call the :ada:`Average` function from :ada:`Ops`, an instance of the
+generic package :ada:`Float_Interface_Pkg.Ops`.
 
 Discussion: Generic interfaces vs. other approaches
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
