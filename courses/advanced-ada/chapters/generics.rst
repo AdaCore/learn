@@ -374,8 +374,8 @@ Formal objects
 --------------
 
 Formal objects are used to bind objects to a generic specification. They
-are similar to parameters in subprograms and can have :ada:`in`,
-:ada:`out` or :ada:`in out` modes.
+are similar to parameters in subprograms and can have :ada:`in` or
+:ada:`in out` modes.
 
 One of the simplest applications of formal objects is to use them to
 configure a generic subprogram or package during instantiation. For
