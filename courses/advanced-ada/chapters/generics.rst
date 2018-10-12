@@ -561,7 +561,6 @@ Work in progress: this section only contains source-code snippets.
 
     end Test_Data_Container;
 
-
 Formal access types
 -------------------
 
