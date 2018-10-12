@@ -957,18 +957,19 @@ straightforward:
 
     package Float_Interface_Pkg is
 
-       type Float_Cnvt_Table is interface;
-       function To_Float (E : Float_Cnvt_Table) return Float is abstract;
+       type Float_Cnvt_Type is interface;
+       function To_Float (E : Float_Cnvt_Type) return Float is abstract;
 
     end Float_Interface_Pkg;
 
     generic
-       type T is new Float_Cnvt_Table with private;
-       type T_Class_Access is access all T'Class;
-       type T_Array is array (Positive range <>) of T_Class_Access;
+       type Float_Cnvt_T is new Float_Cnvt_Type with private;
+       type Float_Cnvt_Class_Access is access all Float_Cnvt_T'Class;
+       type Float_Cnvt_Array is array (Positive range <>) of
+         Float_Cnvt_Class_Access;
     package Float_Interface_Pkg.Ops is
 
-       function Average (A : T_Array) return Float;
+       function Average (A : Float_Cnvt_Array) return Float;
 
     end Float_Interface_Pkg.Ops;
 
@@ -976,7 +977,7 @@ straightforward:
 
     package body Float_Interface_Pkg.Ops is
 
-       function Average (A : T_Array) return Float is
+       function Average (A : Float_Cnvt_Array) return Float is
        begin
           return Acc : Float do
              Acc := 0.0;
@@ -995,7 +996,7 @@ straightforward:
 
     package App_Data is
 
-       type T is new Float_Cnvt_Table with private;
+       type T is new Float_Cnvt_Type with private;
        type T_Class_Access is access all T'Class;
        type T_Array is array (Positive range <>) of T_Class_Access;
 
@@ -1004,12 +1005,12 @@ straightforward:
 
        type T2 is new T with private;
 
-       procedure Set_2 (E : in out T2; F : Float);
+       procedure Set_Ext (E : in out T2; F : Float);
        overriding function To_Float (E : T2) return Float;
 
     private
 
-       type T is new Float_Cnvt_Table with record
+       type T is new Float_Cnvt_Type with record
           F : Float := 0.0;
        end record;
 
@@ -1031,10 +1032,10 @@ straightforward:
        function To_Float (E : T) return Float is
          (E.F);
 
-       procedure Set_2 (E : in out T2; F : Float) is
+       procedure Set_Ext (E : in out T2; F : Float) is
        begin
           E.F2 := F;
-       end Set_2;
+       end Set_Ext;
 
        function To_Float (E : T2) return Float is
          (E.F + E.F2);
@@ -1051,9 +1052,9 @@ straightforward:
     procedure Show_Average is
 
        package Ops is new Float_Interface_Pkg.Ops
-         (T              => T,
-          T_Class_Access => T_Class_Access,
-          T_Array        => T_Array);
+         (Float_Cnvt_T            => T,
+          Float_Cnvt_Class_Access => T_Class_Access,
+          Float_Cnvt_Array        => T_Array);
 
        A : T_Array (1 .. 3) :=
              (1 => new T,
@@ -1066,7 +1067,7 @@ straightforward:
           A (I).Set (1.0);
        end loop;
 
-       T2 (A (2).all).Set_2 (3.0);
+       T2 (A (2).all).Set_Ext (3.0);
 
        Avg := Ops.Average (A);
 
