@@ -672,6 +672,20 @@ two instantiations of the :ada:`Display` procedure:
 Formal access types
 -------------------
 
+Formal access types allow for binding objects or subprograms to generic
+subprograms or packages by using access types. Formal access types are
+similar to:
+
+- **Formal subprograms**: Instead of passing a formal subprogram during
+  instantiation, we provide access to a subprogram.
+
+- **Formal objects**: Instead of passing a formal object during
+  instantiation, we provide access to an object.
+
+The package :ada:`Read_File_Pkg` below implements a generic procedure that
+reads information from a file and writes it to an array in a sorted
+manner.
+
 .. code:: ada
 
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
@@ -687,6 +701,12 @@ Formal access types
 
     end Read_File_Pkg;
 
+In the specification of the :ada:`Gen_Read_Sorted_File` procedure above,
+we use the formal parameter :ada:`Sort`, which provides access to a
+procedure for sorting the array.
+
+This is the corresponding dummy package body:
+
 .. code:: ada
 
     package body Read_File_Pkg is
@@ -698,6 +718,9 @@ Formal access types
        end Gen_Read_Sorted_File;
 
     end Read_File_Pkg;
+
+This is a test application that instantiates the
+:ada:`Gen_Read_Sorted_File` procedure:
 
 .. code:: ada
 
@@ -723,6 +746,10 @@ Formal access types
 
     end Show_Procedure_Access;
 
+We can rewrite the application above using formal subprograms instead of
+formal access types. This is the update specification of the
+:ada:`Read_File_Pkg` package:
+
 .. code:: ada
 
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
@@ -738,6 +765,8 @@ Formal access types
 
     end Read_File_Pkg;
 
+This is the updated package body:
+
 .. code:: ada
 
     package body Read_File_Pkg is
@@ -749,6 +778,8 @@ Formal access types
        end Gen_Read_Sorted_File;
 
     end Read_File_Pkg;
+
+Finally, this is the update test application:
 
 .. code:: ada
 
@@ -772,6 +803,21 @@ Formal access types
           Array_Type   => A);
 
     end Show_Procedure_Access;
+
+Note that, because we used :ada:`is <>` as we specified the formal
+:ada:`Sort` procedure in the declaration of
+:ada:`Gen_Read_Sorted_File`, the corresponding (actual) :ada:`Sort`
+procedure is automatically detected during instantiation. We could,
+however, declare it explicitly by using :ada:`Sort => Sort`.
+
+As mentioned above, formal access types are similar to formal subprograms
+and formal objects. Whether we should use formal access types or use
+formal subprograms/objects mainly depends on the *surrounding*
+source-code. For example, if we only have the access type of a procedure
+in a certain part of the application we're working on, we cannot make use
+of formal procedures. In general, however, using formal subprograms and
+objects whenever possible is more straightforward and is considered common
+practice.
 
 Generic interfaces
 ------------------
