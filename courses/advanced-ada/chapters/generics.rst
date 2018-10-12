@@ -953,12 +953,6 @@ straightforward:
 Generating subprograms
 ~~~~~~~~~~~~~~~~~~~~~~
 
------------------------------------------------------------------------
-
-**Example of calculating average**
-
------------------------------------------------------------------------
-
 .. code:: ada
 
     package Float_Interface_Pkg is
