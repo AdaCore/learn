@@ -265,6 +265,44 @@ Course: GNAT Libraries
     -  `Gem #160 : Developing unit tests with GNATtest by Vasiliy Fofanov <https://www.adacore.com/gems/gem-160-developing-unit-tests-with-gnattest>`_
 
 
+Book: Ada Development Using GNAT
+--------------------------------
+
+- GNAT
+
+    -  `Gem #95: Dynamic Stack Analysis in GNAT by Quentin Ochem <https://www.adacore.com/gems/gem-93-gnat-dynamic-stack-analysis>`_
+    -  `Gem #156: Listing Control in GNAT by Robert Dewar <https://www.adacore.com/gems/gem-156-listing-control-in-gnat>`_
+
+- gprbuild
+
+    -  `Gem #64: Handling Multiple-Unit Source Files <https://www.adacore.com/gems/gem-64>`_
+    -  `Gem #65: gprbuild <https://www.adacore.com/gems/gem-65>`_
+    -  `Gem #104: Gprbuild and Configuration Files — Part 1 by Johannes Kanig <https://www.adacore.com/gems/gem-104-gprbuild-and-configuration-files-part-1>`_
+    -  `Gem #108: Gprbuild and Configuration Files — Part 2 by Johannes Kanig <https://www.adacore.com/gems/gem-108-gprbuild-and-configuration-files-part-2>`_
+    -  `Gem #126 : Aggregate Library Projects by Pascal Obry <https://www.adacore.com/gems/gem-126-aggregate-library-project>`_
+    -  `Gem #152 : Defining a New Language in a Project File by Vincent Celier <https://www.adacore.com/gems/gem-152-defining-a-new-language-in-a-project-file>`_
+    -  `Gem #155: Enhancing the GPRBuild Database for a New Language by Vincent Celier <https://www.adacore.com/gems/gem-155-enhancing-gprbuild-database-for-new-language>`_
+    -  `Gem #157: Gprbuild and Code Generation <https://www.adacore.com/gems/gem-157-gprbuild-and-code-generation>`_
+    -  `Gem #158: GPRinstall - Part 1 by Pascal Obry <https://www.adacore.com/gems/gem-158-gprinstall>`_
+    -  `Gem #159: GPRinstall - Part 2 by Pascal Obry <https://www.adacore.com/gems/gem-159-gprinstall-part-2>`_
+
+- GPS
+
+    -  `Gem #66: GPS's Key Shortcuts Editor <https://www.adacore.com/gems/gem-66>`_
+    -  `Gem #67: Managing the GPS Workspace <https://www.adacore.com/gems/gem-67>`_
+    -  `Gem #88: GPS - Smart Completion (Part 1 of 2) by Quentin Ochem <https://www.adacore.com/gems/gem-88-gps-smart-completion-12>`_
+    -  `Gem #91: Smart Completion (Part 2 of 2) by Quentin Ochem <https://www.adacore.com/gems/gem-91-smart-completion-part-2-of-2>`_
+    -  `Gem #124 : Scripting GPS for Static Analysis by Yannick Moy, Nicolas Setton <https://www.adacore.com/gems/gem-124-scripting-gps-for-static-analysis>`_
+
+- Debugger
+
+    -  `Gem #119: GDB Scripting— Part 1 by Jean-Charles Delay <https://www.adacore.com/gems/gem-119-gdb-scripting-part-1>`_
+    -  `Gem #120: GDB Scripting — Part 2 by Jean-Charles Delay <https://www.adacore.com/gems/gem-120-gdb-scripting-part-2>`_
+    -  `Gem #121: Breakpoint Commands — Part 1 by Jerome Guitton <https://www.adacore.com/gems/gem-121-breakpoint-command-part-1>`_
+    -  `Gem #122: Breakpoint Commands — Part 2 by Jerome Guitton <https://www.adacore.com/gems/gem-122-breakpoint-commands-part-2>`_
+    -  `Gem #125: Detecting infinite recursion with GDB's Python API by Jerome Guitton <https://www.adacore.com/gems/gem-125-detecting-infinite-recursion-with-gdbs-python-api>`_
+
+
 Book: Safe & Secure Software
 ----------------------------
 
@@ -312,42 +350,6 @@ SKIPPED ITEMS
     -  `Gem #86: Ada Quiz 1 - Basic Types by Quentin Ochem <https://www.adacore.com/gems/gem-86-ada-quiz-01-basic-types>`_
     -  `Gem #137: Ada Quiz 2 - An Heir and a Spare? by Valentine Reboul <https://www.adacore.com/gems/gem-137-inheritance>`_
     -  `Gem #145: Ada Quiz 3 - Statements by Valentine Reboul <https://www.adacore.com/gems/gem-145-ada-quiz-3-statement>`_
-
-- Development environment
-
-    - GNAT
-
-        -  `Gem #95: Dynamic Stack Analysis in GNAT by Quentin Ochem <https://www.adacore.com/gems/gem-93-gnat-dynamic-stack-analysis>`_
-        -  `Gem #156: Listing Control in GNAT by Robert Dewar <https://www.adacore.com/gems/gem-156-listing-control-in-gnat>`_
-
-    - gprbuild
-
-        -  `Gem #64: Handling Multiple-Unit Source Files <https://www.adacore.com/gems/gem-64>`_
-        -  `Gem #65: gprbuild <https://www.adacore.com/gems/gem-65>`_
-        -  `Gem #104: Gprbuild and Configuration Files — Part 1 by Johannes Kanig <https://www.adacore.com/gems/gem-104-gprbuild-and-configuration-files-part-1>`_
-        -  `Gem #108: Gprbuild and Configuration Files — Part 2 by Johannes Kanig <https://www.adacore.com/gems/gem-108-gprbuild-and-configuration-files-part-2>`_
-        -  `Gem #126 : Aggregate Library Projects by Pascal Obry <https://www.adacore.com/gems/gem-126-aggregate-library-project>`_
-        -  `Gem #152 : Defining a New Language in a Project File by Vincent Celier <https://www.adacore.com/gems/gem-152-defining-a-new-language-in-a-project-file>`_
-        -  `Gem #155: Enhancing the GPRBuild Database for a New Language by Vincent Celier <https://www.adacore.com/gems/gem-155-enhancing-gprbuild-database-for-new-language>`_
-        -  `Gem #157: Gprbuild and Code Generation <https://www.adacore.com/gems/gem-157-gprbuild-and-code-generation>`_
-        -  `Gem #158: GPRinstall - Part 1 by Pascal Obry <https://www.adacore.com/gems/gem-158-gprinstall>`_
-        -  `Gem #159: GPRinstall - Part 2 by Pascal Obry <https://www.adacore.com/gems/gem-159-gprinstall-part-2>`_
-
-    - GPS
-
-        -  `Gem #66: GPS's Key Shortcuts Editor <https://www.adacore.com/gems/gem-66>`_
-        -  `Gem #67: Managing the GPS Workspace <https://www.adacore.com/gems/gem-67>`_
-        -  `Gem #88: GPS - Smart Completion (Part 1 of 2) by Quentin Ochem <https://www.adacore.com/gems/gem-88-gps-smart-completion-12>`_
-        -  `Gem #91: Smart Completion (Part 2 of 2) by Quentin Ochem <https://www.adacore.com/gems/gem-91-smart-completion-part-2-of-2>`_
-        -  `Gem #124 : Scripting GPS for Static Analysis by Yannick Moy, Nicolas Setton <https://www.adacore.com/gems/gem-124-scripting-gps-for-static-analysis>`_
-
-    - Debugger
-
-        -  `Gem #119: GDB Scripting— Part 1 by Jean-Charles Delay <https://www.adacore.com/gems/gem-119-gdb-scripting-part-1>`_
-        -  `Gem #120: GDB Scripting — Part 2 by Jean-Charles Delay <https://www.adacore.com/gems/gem-120-gdb-scripting-part-2>`_
-        -  `Gem #121: Breakpoint Commands — Part 1 by Jerome Guitton <https://www.adacore.com/gems/gem-121-breakpoint-command-part-1>`_
-        -  `Gem #122: Breakpoint Commands — Part 2 by Jerome Guitton <https://www.adacore.com/gems/gem-122-breakpoint-commands-part-2>`_
-        -  `Gem #125: Detecting infinite recursion with GDB's Python API by Jerome Guitton <https://www.adacore.com/gems/gem-125-detecting-infinite-recursion-with-gdbs-python-api>`_
 
 - Ada Applications
 
@@ -509,6 +511,31 @@ Course: GNAT Libraries
     -  `The Road to a Thick OpenGL Binding for Ada: Part 2 <http://blog.adacore.com/the-road-to-a-thick-opengl-binding-for-ada-part-2>`_
 
 
+Book: Ada Development Using GNAT
+--------------------------------
+
+- GNAT
+
+    -  `GNAT On macOS Sierra <http://blog.adacore.com/gnat-on-macos-sierra>`_
+
+- GPS
+
+    -  `Bookmarks in the GNAT Programming Studio (GPS) <http://blog.adacore.com/bookmarks-in-the-gnat-programming-studio-gps>`_
+    -  `The Most Obscure Arithmetic Run-Time Error Contest <http://blog.adacore.com/the-most-obscure-arithmetic-run-time-error-contest>`_
+    -  `Debugger improvements in GPS 17 <http://blog.adacore.com/debugger-improvements-in-gps-17>`_
+    -  `Integrate new tools in GPS <http://blog.adacore.com/integrate-new-tools-in-gps>`_
+    -  `Integrate new tools in GPS (2) <http://blog.adacore.com/integrate-new-tools-in-gps-2>`_
+    -  `GPS for bare-metal developers <http://blog.adacore.com/gps-for-bare-metal-development>`_
+
+- Debugger
+
+    -  `Pretty-Printing Ada Containers with GDB Scripts <http://blog.adacore.com/pretty-printing-ada-containers-with-gdb-scripts>`_
+
+- GCC
+
+    -  `C library bindings: GCC plugins to the rescue <http://blog.adacore.com/bindings-gcc-plugins>`_
+
+
 Book: Ada Applications
 ----------------------
 
@@ -594,29 +621,6 @@ SKIPPED ITEMS
         -  `Two Days Dedicated to Sound Static Analysis for Security <http://blog.adacore.com/sound-static-analysis-for-security>`_
         -  `How Ada and SPARK Can Increase the Security of Your Software <http://blog.adacore.com/how-ada-and-spark-can-increase-the-security-of-your-software>`_
         -  `Security Agency Uses SPARK for Secure USB Key  <http://blog.adacore.com/security-agency-uses-spark-for-secure-usb-key>`_
-
-- Development environment
-
-    - GNAT
-
-        -  `GNAT On macOS Sierra <http://blog.adacore.com/gnat-on-macos-sierra>`_
-
-    - GPS
-
-        -  `Bookmarks in the GNAT Programming Studio (GPS) <http://blog.adacore.com/bookmarks-in-the-gnat-programming-studio-gps>`_
-        -  `The Most Obscure Arithmetic Run-Time Error Contest <http://blog.adacore.com/the-most-obscure-arithmetic-run-time-error-contest>`_
-        -  `Debugger improvements in GPS 17 <http://blog.adacore.com/debugger-improvements-in-gps-17>`_
-        -  `Integrate new tools in GPS <http://blog.adacore.com/integrate-new-tools-in-gps>`_
-        -  `Integrate new tools in GPS (2) <http://blog.adacore.com/integrate-new-tools-in-gps-2>`_
-        -  `GPS for bare-metal developers <http://blog.adacore.com/gps-for-bare-metal-development>`_
-
-    - Debugger
-
-        -  `Pretty-Printing Ada Containers with GDB Scripts <http://blog.adacore.com/pretty-printing-ada-containers-with-gdb-scripts>`_
-
-    - GCC
-
-        -  `C library bindings: GCC plugins to the rescue <http://blog.adacore.com/bindings-gcc-plugins>`_
 
 - Ada Applications
 
