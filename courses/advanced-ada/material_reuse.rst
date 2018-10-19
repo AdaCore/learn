@@ -172,7 +172,7 @@ Course: Advanced Ada
 
 
 Course: Embedded Programming
----------------------------
+----------------------------
 
 - Pulse-Width Modulation
 
