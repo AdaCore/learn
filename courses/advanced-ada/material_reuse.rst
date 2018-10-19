@@ -364,3 +364,314 @@ SKIPPED ITEMS
 
         -  `Gem #153: Multicore Maze Solving, Part 1 by Pat Rogers <https://www.adacore.com/gems/gem-153-multicore-maze-solving-part-1>`_
         -  `Gem #154: Multicore Maze Solving, Part 2 by Pat Rogers <https://www.adacore.com/gems/gem-154-multicore-maze-solving-part-2>`_
+
+
+
+AdaCore Blog
+============
+
+Course: Advanced Ada
+--------------------
+
+- Typing
+
+    - Tagged Types / Object-Oriented Programming
+
+        -  `Calling inherited subprograms in Ada <http://blog.adacore.com/calling-inherited-subprograms-in-ada>`_
+
+- Memory Management
+
+    - References
+
+        -  `Using reference types to handle persistent objects <http://blog.adacore.com/use-ref-types-to-persistent-object>`_
+
+- Tasking
+
+    - General
+
+        -  `There's a mini-RTOS in my language <http://blog.adacore.com/theres-a-mini-rtos-in-my-language>`_
+
+- Design Patterns
+
+    -  `Traits-Based Containers <http://blog.adacore.com/traits-based-containers>`_
+
+- Testing
+
+    -  `Leveraging Ada Run-Time Checks with Fuzz Testing in AFL <http://blog.adacore.com/running-american-fuzzy-lop-on-your-ada-code>`_
+
+
+Course: Embedded Programming
+----------------------------
+
+- Applications
+
+    -  `Porting the Ada Runtime to a new ARM board <http://blog.adacore.com/porting-the-ada-runtime-to-a-new-arm-board>`_
+    -  `Getting started with the Ada Drivers Library device drivers <http://blog.adacore.com/getting-started-with-the-ada-drivers-library-device-drivers>`_
+
+
+Course: Advanced SPARK
+----------------------
+
+-  `SPARK Prez at New Conference on Railway Systems <http://blog.adacore.com/spark-prez-at-new-conference-on-railway-systems>`_
+-  `Formal Verification of Legacy Code <http://blog.adacore.com/formal-verification-of-legacy-code>`_
+-  `SPARKSMT - An SMTLIB Processing Tool Written in SPARK - Part I <http://blog.adacore.com/sparksmt-part-1>`_
+-  `Quantifying over Elements of a Container <http://blog.adacore.com/quantifying-over-elements-of-a-container>`_
+-  `Research Corner - SPARK 2014 vs Frama-C vs Why3 <http://blog.adacore.com/research-corner-spark-2014-vs-frama-c-vs-why3>`_
+-  `Automatic Generation of Frame Conditions for Record Components <http://blog.adacore.com/automatic-generation-of-frame-conditions-for-record-components>`_
+-  `Automatic Generation of Frame Conditions for Array Components <http://blog.adacore.com/automatic-generation-of-frame-conditions-for-array-components>`_
+-  `SPARK Cheat Sheets (en & jp) <http://blog.adacore.com/spark-cheat-sheets-en-jp>`_
+-  `Proving Tetris With SPARK in 15 Minutes <http://blog.adacore.com/proving-tetris-with-spark-in-15-minutes>`_
+-  `Research Corner - Auto-active Verification in SPARK <http://blog.adacore.com/research-corner-auto-active-verification-in-spark>`_
+-  `VerifyThis Challenge in SPARK <http://blog.adacore.com/verifythis-challenge-in-spark>`_
+-  `Research Corner - Floating-Point Computations in SPARK <http://blog.adacore.com/research-corner-floating-point-computations-in-spark>`_
+-  `Applied Formal Logic: Searching in Strings <http://blog.adacore.com/applied-formal-logic-searching-in-strings>`_
+-  `Proving Loops Without Loop Invariants <http://blog.adacore.com/proving-loops-without-loop-invariants>`_
+-  `New SPARK Cheat Sheet <http://blog.adacore.com/new-spark-cheat-sheet>`_
+-  `For All Properties, There Exists a Proof <http://blog.adacore.com/for-all-properties-there-exists-a-proof>`_
+-  `Tokeneer Fully Verified with SPARK 2014 <http://blog.adacore.com/tokeneer-fully-verified-with-spark-2014>`_
+-  `Taking on a Challenge in SPARK <http://blog.adacore.com/taking-on-a-challenge-in-spark>`_
+
+
+Book: SPARK 2014 Rationale
+--------------------------
+
+-  `SPARK 2014 Rationale: Specification Functions <http://blog.adacore.com/spark-2014-rationale-specification-functions>`_
+-  `SPARK 2014 Rationale: Pre-call and Pre-loop Values <http://blog.adacore.com/spark-2014-rationale-pre-call-and-pre-loop-values>`_
+-  `SPARK 2014 Rationale: Loop Invariants <http://blog.adacore.com/spark-2014-rationale-loop-invariants>`_
+-  `SPARK 2014 Rationale: Loop Variants <http://blog.adacore.com/spark-2014-rationale-loop-variants>`_
+-  `SPARK 2014 Rationale: Mixing SPARK and Ada Code <http://blog.adacore.com/spark-2014-rationale-mixing-spark-and-ada-code>`_
+-  `SPARK 2014 Rationale: Global State <http://blog.adacore.com/spark-2014-rationale-global-state>`_
+-  `SPARK 2014 Rationale: Formal Containers <http://blog.adacore.com/spark-2014-rationale-formal-containers>`_
+-  `SPARK 2014 Rationale: Expressing Properties over Formal Containers <http://blog.adacore.com/spark-2014-rationale-expressing-properties-over-formal-containers-1>`_
+-  `SPARK 2014 Rationale: Verifying Properties over Formal Containers <http://blog.adacore.com/spark-2014-rationale-verifying-properties-over-formal-containers>`_
+-  `SPARK 2014 Rationale: Data Dependencies <http://blog.adacore.com/spark-2014-rationale-data-dependencies>`_
+-  `SPARK 2014 Rationale: Information Flow <http://blog.adacore.com/spark-2014-rationale-information-flow>`_
+-  `SPARK 2014 Rationale: Ghost Code <http://blog.adacore.com/spark-2014-rationale-ghost-code>`_
+-  `SPARK 2014 Rationale: Object Oriented Programming <http://blog.adacore.com/spark-2014-rationale-object-oriented-programming>`_
+-  `SPARK 2014 Rationale: Functional Update <http://blog.adacore.com/spark-2014-rationale-functional-update>`_
+-  `SPARK 2014 Rationale: Type Predicates <http://blog.adacore.com/spark-2014-rationale-type-predicates>`_
+-  `SPARK 2014 Rationale: Variables That Are Constant <http://blog.adacore.com/constant-after-elaboration-variables>`_
+-  `SPARK 2014 Rationale: Support for Ravenscar <http://blog.adacore.com/spark-2014-rationale-support-for-ravenscar>`_
+-  `SPARK 2014 Rationale: Support for Type Invariants <http://blog.adacore.com/spark-2014-rationale-support-for-type-invariants>`_
+
+
+Book: GNATprove Tips and Tricks
+-------------------------------
+
+-  `GNATprove Tips and Tricks: Referring to Input in Contracts <http://blog.adacore.com/gnatprove-tricks-and-tips-referring-to-input-in-contracts>`_
+-  `GNATprove Tips and Tricks: How to Write Loop Invariants <http://blog.adacore.com/gnatprove-tips-and-tricks-how-to-write-loop-invariants>`_
+-  `GNATprove Tips and Tricks: Keeping Justifications Up-To-Date <http://blog.adacore.com/gnatprove-tips-and-tricks-keeping-justifications-up-to-date>`_
+-  `GNATprove Tips and Tricks: Catching Mistakes in Contracts <http://blog.adacore.com/gnatprove-tips-and-tricks-catching-mistakes-in-contracts>`_
+-  `GNATprove Tips and Tricks: Bitwise Operations <http://blog.adacore.com/gnatprove-tips-and-tricks-bitwise-operations>`_
+-  `GNATprove Tips and Tricks: Minimizing Rework <http://blog.adacore.com/gnatprove-tricks-and-tips-minimizing-rework>`_
+-  `GNATprove Tips and Tricks: User Profiles <http://blog.adacore.com/gnatprove-tips-and-tricks-user-profiles>`_
+-  `GNATprove Tips and Tricks: What’s Provable for Real? <http://blog.adacore.com/gnatprove-tips-and-tricks-whats-provable-for-real>`_
+-  `GNATprove Tips and Tricks: Using the Lemma Library <http://blog.adacore.com/gnatprove-tips-and-tricks-using-the-lemma-library>`_
+-  `GNATprove Tips and Tricks: What’s Provable for Real Now? <http://blog.adacore.com/gnatprove-tips-and-tricks-whats-provable-for-real-now>`_
+-  `GNATprove Tips and Tricks: a Lemma for Sorted Arrays <http://blog.adacore.com/gnatprove-tips-and-tricks-a-lemma-for-sorted-arrays>`_
+-  `GNATprove Tips and Tricks: Proving the Ghost Common Divisor (GCD) <http://blog.adacore.com/gnatprove-tips-and-tricks-proving-the-ghost-common-denominator-gcd>`_
+-  `Hash it and Cache it <http://blog.adacore.com/hash-it-and-cache-it>`_
+
+
+Course: GNAT Libraries
+----------------------
+
+- GNAT
+
+    - Dimensionality Checking System
+
+        -  `Physical Units Pass the Generic Test <http://blog.adacore.com/physical-units-pass-the-generic-test>`_
+
+- GNAT Component Collection
+
+    - Memory Management
+
+        -  `Larger than it looks (storage pools) <http://blog.adacore.com/header-storage-pools>`_
+        -  `Count them all (reference counting) <http://blog.adacore.com/count-them-all-reference-counting>`_
+
+    - Strings
+
+        -  `New strings package in GNATCOLL <http://blog.adacore.com/new-strings-package-in-gnatcoll>`_
+        -  `User-friendly strings API <http://blog.adacore.com/user-friendly-strings-api>`_
+
+- Libadalang
+
+    -  `Introducing Libadalang <http://blog.adacore.com/introducing-libadalang>`_
+    -  `Going After the Low Hanging Bug <http://blog.adacore.com/going-after-the-low-hanging-bug>`_
+    -  `A Usable Copy-Paste Detector in A Few Lines of Python <http://blog.adacore.com/a-usable-copy-paste-detector-in-few-lines-of-python>`_
+    -  `(Many) More Low Hanging Bugs <http://blog.adacore.com/many-more-low-hanging-bugs>`_
+    -  `Highlighting Ada with Libadalang <http://blog.adacore.com/highlighting-ada-with-libadalang>`_
+    -  `Cross-referencing Ada with Libadalang <http://blog.adacore.com/cross-referencing-ada-with-libadalang>`_
+
+- OpenGL Bindings
+
+    -  `The Road to a Thick OpenGL Binding for Ada: Part 1 <http://blog.adacore.com/the-road-to-a-thick-opengl-binding-for-ada>`_
+    -  `The Road to a Thick OpenGL Binding for Ada: Part 2 <http://blog.adacore.com/the-road-to-a-thick-opengl-binding-for-ada-part-2>`_
+
+
+Book: Ada Applications
+----------------------
+
+-  `Tetris in SPARK on ARM Cortex M4 <http://blog.adacore.com/tetris-in-spark-on-arm-cortex-m4>`_
+-  `How to prevent drone crashes using SPARK <http://blog.adacore.com/how-to-prevent-drone-crashes-using-spark>`_
+-  `Make with Ada: "The Eagle has landed" <http://blog.adacore.com/make-with-ada-the-eagle-has-landed>`_
+-  `2015: A Space Ada‑ssey <http://blog.adacore.com/2015-a-space-ada-ssey>`_
+-  `Make with Ada : From bits to music <http://blog.adacore.com/make-with-ada-from-bits-to-music>`_
+-  `Make with Ada: Formal proof on my wrist <http://blog.adacore.com/make-with-ada-formal-proof-on-my-wrist>`_
+-  `Make with Ada: Candy dispenser, with a twist... <http://blog.adacore.com/make-with-ada-candy-dispenser-with-twist>`_
+-  `Make with Ada: ARM Cortex-M CNC controller <http://blog.adacore.com/make-with-ada-arm-cortex-m-cnc-controller>`_
+-  `Unity & Ada <http://blog.adacore.com/unity-ada>`_
+-  `Driving a 3D Lunar Lander Model with ARM and Ada <http://blog.adacore.com/3d-lunar-lander-model>`_
+-  `Make with Ada: DIY instant camera <http://blog.adacore.com/make-with-ada-diy-instant-camera>`_
+-  `SPARK Tetris on the Arduboy <http://blog.adacore.com/spark-tetris-on-the-arduboy>`_
+-  `Writing on Air <http://blog.adacore.com/writing-on-air>`_
+-  `DIY Coffee Alarm Clock <http://blog.adacore.com/diy-coffee-alarm-clock>`_
+-  `Ada on the first RISC-V microcontroller <http://blog.adacore.com/ada-on-the-first-risc-v-microcontroller>`_
+-  `The Adaroombot Project <http://blog.adacore.com/the-adaroombot-project>`_
+-  `Make with Ada 2017: Brushless DC Motor Controller <http://blog.adacore.com/make-with-ada-2017-brushless-dc-motor-controller>`_
+-  `Make with Ada 2017- A "Swiss Army Knife" Watch <http://blog.adacore.com/make-with-ada-2017-a-swiss-army-knife-watch>`_
+-  `Make with Ada 2017- Ada Based IoT Framework <http://blog.adacore.com/make-with-ada-2017-ada-based-iot-framework>`_
+-  `Bitcoin blockchain in Ada: Lady Ada meets Satoshi Nakamoto <http://blog.adacore.com/bitcoin-in-ada>`_
+-  `Ada on the micro:bit <http://blog.adacore.com/ada-on-the-microbit>`_
+-  `SPARKZumo Part 1: Ada and SPARK on Any Platform <http://blog.adacore.com/sparkzumo-part-1-ada-and-spark-on-any-platform>`_
+-  `SPARKZumo Part 2: Integrating the Arduino Build Environment Into GPS <http://blog.adacore.com/sparkzumo-part-2-integrating-the-arduino-build-environment-into-gps>`_
+-  `Ada on FPGAs with PicoRV32 <http://blog.adacore.com/ada-on-fpgas-with-picorv32>`_
+-  `Train control using Ada on a Raspberry Pi <http://blog.adacore.com/train-control-using-ada-on-a-raspberry-pi>`_
+
+
+SKIPPED ITEMS
+-------------
+
+- SPARK
+
+    - General
+
+        -  `SPARK 2014 Flow Analysis <http://blog.adacore.com/spark-2014-flow-analysis>`_
+        -  `MISRA-C 2012 vs SPARK 2014, the Subset Matching Game <http://blog.adacore.com/misra-c-2012-vs-spark-2014-the-subset-matching-game>`_
+        -  `Rail, Space, Security: Three Case Studies for SPARK 2014 <http://blog.adacore.com/rail-space-security-three-case-studies-for-spark-2014>`_
+        -  `Muen Separation Kernel Written in SPARK <http://blog.adacore.com/muen-separation-kernel-written-in-spark>`_
+        -  `Case Study for System to Software Integrity Includes SPARK 2014 <http://blog.adacore.com/case-study-for-system-to-software-integrity-includes-spark-2014>`_
+        -  `Information Flo(w): Array Initialization in Loops <http://blog.adacore.com/array-initialization-in-loops>`_
+        -  `A Little Exercise With Strings <http://blog.adacore.com/a-little-exercise-with-strings>`_
+        -  `Studies of Contracts in Practice <http://blog.adacore.com/studies-of-contracts-in-practice>`_
+        -  `Prove in Parallel with SPARK 2014 <http://blog.adacore.com/prove-in-parallel-with-spark-2014>`_
+        -  `Contextual Analysis of Subprograms Without Contracts <http://blog.adacore.com/contextual-analysis-of-subprograms-without-contracts>`_
+        -  `Contracts of Functions in SPARK 2014 <http://blog.adacore.com/contracts-of-functions-in-spark-2014>`_
+        -  `Use of SPARK in a Certification Context <http://blog.adacore.com/use-of-spark-in-a-certification-context>`_
+        -  `Short Video Demo of SPARK 2014 <http://blog.adacore.com/http-www-spark-2014-org-entries-detail-short-video-demo-of-spark-2014>`_
+        -  `Manual Proof with Ghost Code in SPARK 2014 <http://blog.adacore.com/manual-proof-in-spark-2014>`_
+        -  `External Axiomatizations: a Trip Into SPARK’s Internals <http://blog.adacore.com/external-axiomatizations-a-trip-into-sparks-internals>`_
+        -  `Explicit Assumptions in SPARK 2014 <http://blog.adacore.com/explicit-assumptions-in-spark-2014>`_
+        -  `Using SPARK to Prove AoRTE in Robot Navigation Software <http://blog.adacore.com/using-spark-to-prove-aorte-in-robot-navigation-software>`_
+        -  `SPARK 15: Errors, Warnings and Checks <http://blog.adacore.com/spark-15-errors-warnings-and-checks>`_
+        -  `Using Coq to Verify SPARK 2014 Code <http://blog.adacore.com/using-coq-to-verify-spark-2014-code>`_
+        -  `ProofInUse is coming!  <http://blog.adacore.com/proofinuse-is-coming>`_
+        -  `AdaCore Tech Days Prez on SPARK <http://blog.adacore.com/adacore-tech-days-prez-on-spark>`_
+        -  `Testing, Static Analysis, and Formal Verification <http://blog.adacore.com/testing-static-formal>`_
+        -  `A Building Code for Building Code <http://blog.adacore.com/a-building-code-for-building-code>`_
+        -  `A quick glimpse at the translation of Ada integer types in GNATprove <http://blog.adacore.com/a-quick-glimpse-at-the-translation-of-ada-integer-types-in-gnatprove>`_
+        -  `Verification on Ada code with Static and Dynamic Code Analysis - Webinar <http://blog.adacore.com/verification-on-ada-code-with-static-and-dynamic-code-analysis-webinar>`_
+        -  `How Our Compiler Learnt From Our Analyzers <http://blog.adacore.com/how-our-compiler-learnt-from-our-analyzers>`_
+        -  `SPARKSkein: From tour-de-force to run-of-the-mill Formal Verification <http://blog.adacore.com/sparkskein-from-tour-de-force-to-run-of-the-mill-formal-verification>`_
+        -  `New Book About SPARK 2014 <http://blog.adacore.com/new-book-about-spark-2014>`_
+        -  `The Eight Reasons For Using SPARK <http://blog.adacore.com/the-eight-reasons-for-using-spark>`_
+        -  `SPARK 16: Generating Counterexamples for Failed Proofs <http://blog.adacore.com/spark-16-generating-counterexamples-for-failed-proofs>`_
+        -  `SPARK 2016 Supports Ravenscar! <http://blog.adacore.com/spark-2016-supports-ravenscar>`_
+        -  `Formal Verification Made Easy! <http://blog.adacore.com/formal-verification-made-easy>`_
+        -  `Did SPARK 2014 Rethink Formal Methods? <http://blog.adacore.com/did-spark-2014-rethink-formal-methods>`_
+        -  `Verified, Trustworthy Code with SPARK and Frama-C <http://blog.adacore.com/verified-trustworthy-code-with-spark-and-frama-c>`_
+        -  `Verifying Tasking in Extended, Relaxed Style <http://blog.adacore.com/verifying-tasking-in-extended-relaxed-style>`_
+        -  `Research Corner - SPARK on Lunar IceCube Micro Satellite <http://blog.adacore.com/research-corner-spark-on-lunar-icecube-micro-satellite>`_
+        -  `SPARK and CodePeer, a Good Match! <http://blog.adacore.com/spark-and-codepeer-a-good-match>`_
+        -  `New Year's Resolution for 2017: Use SPARK, Say Goodbye to Bugs <http://blog.adacore.com/new-years-resolution-for-2017-no-bugs-with-spark>`_
+        -  `New Guidance for Adoption of SPARK <http://blog.adacore.com/new-guidance-for-adoption-of-spark>`_
+        -  `Frama-C & SPARK Day Slides and Highlights <http://blog.adacore.com/frama-c-spark-day-slides-and-highlights>`_
+        -  `Research Corner - FLOSS Glider Software in SPARK <http://blog.adacore.com/research-corner-floss-glider-software-in-spark>`_
+        -  `Research Corner - Focused Certification of SPARK in Coq <http://blog.adacore.com/research-corner-focused-certification-of-spark-in-coq>`_
+        -  `SPARK Tutorial at FDL Conference <http://blog.adacore.com/spark-tutorial-at-fdl-conference>`_
+        -  `Prove in the Cloud <http://blog.adacore.com/prove-in-the-cloud>`_
+        -  `Secure Software Architectures Based on Genode + SPARK <http://blog.adacore.com/secure-software-architectures-based-on-genode-spark>`_
+        -  `Two Days Dedicated to Sound Static Analysis for Security <http://blog.adacore.com/sound-static-analysis-for-security>`_
+        -  `How Ada and SPARK Can Increase the Security of Your Software <http://blog.adacore.com/how-ada-and-spark-can-increase-the-security-of-your-software>`_
+        -  `Security Agency Uses SPARK for Secure USB Key  <http://blog.adacore.com/security-agency-uses-spark-for-secure-usb-key>`_
+
+- Development environment
+
+    - GNAT
+
+        -  `GNAT On macOS Sierra <http://blog.adacore.com/gnat-on-macos-sierra>`_
+
+    - GPS
+
+        -  `Bookmarks in the GNAT Programming Studio (GPS) <http://blog.adacore.com/bookmarks-in-the-gnat-programming-studio-gps>`_
+        -  `The Most Obscure Arithmetic Run-Time Error Contest <http://blog.adacore.com/the-most-obscure-arithmetic-run-time-error-contest>`_
+        -  `Debugger improvements in GPS 17 <http://blog.adacore.com/debugger-improvements-in-gps-17>`_
+        -  `Integrate new tools in GPS <http://blog.adacore.com/integrate-new-tools-in-gps>`_
+        -  `Integrate new tools in GPS (2) <http://blog.adacore.com/integrate-new-tools-in-gps-2>`_
+        -  `GPS for bare-metal developers <http://blog.adacore.com/gps-for-bare-metal-development>`_
+
+    - Debugger
+
+        -  `Pretty-Printing Ada Containers with GDB Scripts <http://blog.adacore.com/pretty-printing-ada-containers-with-gdb-scripts>`_
+
+    - GCC
+
+        -  `C library bindings: GCC plugins to the rescue <http://blog.adacore.com/bindings-gcc-plugins>`_
+
+- Ada Applications
+
+    - General
+
+        -  `CubeSat continues to orbit the Earth thanks to Ada & SPARK! <http://blog.adacore.com/carl-brandon-vid>`_
+
+- Etc
+
+        -  `Getting Rid of Rust with Ada <http://blog.adacore.com/getting-rid-of-rust-with-ada>`_
+        -  `A Modern Syntax for Ada <http://blog.adacore.com/a-modern-syntax-for-ada>`_
+
+- Announcements
+
+    -  `Welcome To AdaCore's Blog <http://blog.adacore.com/welcome-to-adacores-blog>`_
+    -  `A Busy Schedule Ahead!  <http://blog.adacore.com/discover-adacores-upcoming-events>`_
+    -  `AdaCore at FOSDEM'15 <http://blog.adacore.com/adacore-at-fosdem15>`_
+    -  `AdaCore Releases GNAT Pro 7.3, QGen 1.0 and GNATdashboard 1.0 <http://blog.adacore.com/adacore-releases-gnat-pro-7-3-and-qgen-1-0>`_
+    -  `20 years on... <http://blog.adacore.com/20-years-on>`_
+    -  `QGen on Embedded News TV <http://blog.adacore.com/embedded-news-tv-qgen>`_
+    -  `The latest Mixed Programming with Ada lectures at the AdaCore University <http://blog.adacore.com/the-latest-mixed-programming-with-ada-lectures-at-the-adacore-university>`_
+    -  `French Intelligence Bill: A Minority Report  <http://blog.adacore.com/new-french-intelligence-bill-a-minority-report>`_
+    -  `The Year for #AdaLove <http://blog.adacore.com/adalove>`_
+    -  `Project P Open Workshop <http://blog.adacore.com/project-p-open-workshop>`_
+    -  `What's in the Box? <http://blog.adacore.com/whats-in-the-box>`_
+    -  `Make with Ada: All that is useless is essential <http://blog.adacore.com/make-with-ada-all-that-is-useless-is-essential>`_
+    -  `Farewell Robert... <http://blog.adacore.com/farewell-robert>`_
+    -  `AdaCore Tech Days 2015 <http://blog.adacore.com/adacore-tech-days-2015>`_
+    -  `HIS Conference 2015, Bristol <http://blog.adacore.com/his-conference-2015>`_
+    -  `ARM TechCon and NBAA Conference 2015 <http://blog.adacore.com/arm-techcon-and-nbaa-2015>`_
+    -  `Modernizing Adacore's Open-Source Involvement  <http://blog.adacore.com/modernizing-adacores-open-source>`_
+    -  `Dissimilar tools: Use cases and impact on tool qualification level  <http://blog.adacore.com/dissimilar-tools>`_
+    -  `Ada Lovelace Bicentennial <http://blog.adacore.com/ada-lovelace-bicentiennial>`_
+    -  `ERTS and Embedded World conferences 2016 <http://blog.adacore.com/erts-embedded-world-2016>`_
+    -  `QGen 2.1 Release! <http://blog.adacore.com/qgen-2-1-release>`_
+    -  `Embedded Product Line Updates  <http://blog.adacore.com/embedded-product-line-update>`_
+    -  `Provably safe programming at Embedded World <http://blog.adacore.com/embedded-world-videos>`_
+    -  `VectorCAST/Ada: Ada 2012 Language Support <http://blog.adacore.com/experience-vectorcast-ada-a-look-at-the-latest-release>`_
+    -  `Efficient use of Simics for testing <http://blog.adacore.com/efficient-use-of-simics-for-testing>`_
+    -  `Certification and Qualification <https://blog.adacore.com/certification-and-qualification>`_
+    -  `Introducing the Make With Ada competition! <http://blog.adacore.com/introducing-make-with-ada>`_
+    -  `GNAT Programming Studio (GPS) on GitHub <http://blog.adacore.com/gnat-programming-studio-gps-on-github>`_
+    -  `Simplifying our product versioning <http://blog.adacore.com/simplifying-our-product-versioning>`_
+    -  `Make With Ada Winners Announced! <http://blog.adacore.com/make-with-ada-winners-announced>`_
+    -  `Building High-Assurance Software without Breaking the Bank <http://blog.adacore.com/formal-methods-webinar-building-high-assurance-software-without-breaking-the-bank>`_
+    -  `AdaCore attends FOSDEM <http://blog.adacore.com/adacore-attends-fosdem>`_
+    -  `GNATcoverage moves to GitHub <http://blog.adacore.com/gnatcoverage-moves-to-github>`_
+    -  `Two Projects to Compute Stats on Analysis Results <http://blog.adacore.com/two-projects-to-compute-stats-on-analysis-results>`_
+    -  `Simics helps run 60 000 GNAT Pro tests in 24 hours <http://blog.adacore.com/simics-helps-run-60-000-gnat-pro-tests-in-24-hours>`_
+    -  `GNAT GPL 2017 is out! <http://blog.adacore.com/gnat-gpl-2017-is-out>`_
+    -  `Welcoming New Members to the GNAT Pro Family <http://blog.adacore.com/adacore-launches-new-gnat-pro-product-lines>`_
+    -  `AdaCore at FOSDEM 2018 <http://blog.adacore.com/adacore-at-fodsem-2018>`_
+    -  `PolyORB now lives on Github <http://blog.adacore.com/polyorb-now-lives-on-github>`_
+    -  `GNAT Community 2018 is here! <http://blog.adacore.com/gnat-community-2018>`_
+    -  `Learn.adacore.com is here <http://blog.adacore.com/learn-adacore-com-is-here>`_
+    -  `AdaCore major sponsor at HIS 2018  <http://blog.adacore.com/adacore-major-sponsor-at-his-2018>`_
+    -  `Public Ada Training Paris, France Dec 3 - 7, 2018 <http://blog.adacore.com/public-ada-training-paris-france-dec-3-7-2018>`_
+    -  `It's time to Make with Ada! <http://blog.adacore.com/its-time-to-make-with-ada>`_
