@@ -303,26 +303,24 @@ Book: Ada Development Using GNAT
     -  `Gem #125: Detecting infinite recursion with GDB's Python API by Jerome Guitton <https://www.adacore.com/gems/gem-125-detecting-infinite-recursion-with-gdbs-python-api>`_
 
 
-Book: Safe & Secure Software
-----------------------------
-
--  `Gem #30: Safe and Secure Software : Introduction by John Barnes <https://www.adacore.com/gems/gem-30>`_
--  `Gem #32: Safe and Secure Software : Chapter 1, Safe Syntax by John Barnes <https://www.adacore.com/gems/gem-32>`_
--  `Gem #34: Safe and Secure Software : Chapter 2, Safe Typing by John Barnes <https://www.adacore.com/gems/gem-34>`_
--  `Gem #36: Safe and Secure Software : Chapter 3, Safe Pointers by John Barnes <https://www.adacore.com/gems/gem-36>`_
--  `Gem #38: Safe and Secure Software : Chapter 4, Safe Architecture by John Barnes <https://www.adacore.com/gems/gem-38>`_
--  `Gem #40: Safe and Secure Software : Chapter 5, Safe Object Oriented Programming by John Barnes <https://www.adacore.com/gems/gem-40>`_
--  `Gem #42: Safe and Secure Software : Chapter 6, Safe Object Construction by John Barnes <https://www.adacore.com/gems/gem-42>`_
--  `Gem #43: Safe and Secure Software : Chapter 7, Safe Memory Management by John Barnes <https://www.adacore.com/gems/gem-43-safe-and-secure-software-chapter-7-safe-memory-management>`_
--  `Gem #45: Safe and Secure Software : Chapter 8, Safe Startup by John Barnes <https://www.adacore.com/gems/gem-45>`_
--  `Gem #47: Safe and Secure Software : Chapter 9, Safe Communication by John Barnes <https://www.adacore.com/gems/gem-47>`_
--  `Gem #49: Safe and Secure Software: Chapter 10, Safe Concurrency by John Barnes <https://www.adacore.com/gems/gem-49>`_
--  `Gem #51: Safe and Secure Software: Chapter 11, Certified Safe with SPARK by John Barnes <https://www.adacore.com/gems/gem-51>`_
--  `Gem #53: Safe and Secure Software: Chapter 12: Conclusion by John Barnes <https://www.adacore.com/gems/gem-53-safe-and-secure-software-chapter-12-conclusion>`_
-
-
 SKIPPED ITEMS
 -------------
+
+    - Book: Safe & Secure Software
+
+        -  `Gem #30: Safe and Secure Software : Introduction by John Barnes <https://www.adacore.com/gems/gem-30>`_
+        -  `Gem #32: Safe and Secure Software : Chapter 1, Safe Syntax by John Barnes <https://www.adacore.com/gems/gem-32>`_
+        -  `Gem #34: Safe and Secure Software : Chapter 2, Safe Typing by John Barnes <https://www.adacore.com/gems/gem-34>`_
+        -  `Gem #36: Safe and Secure Software : Chapter 3, Safe Pointers by John Barnes <https://www.adacore.com/gems/gem-36>`_
+        -  `Gem #38: Safe and Secure Software : Chapter 4, Safe Architecture by John Barnes <https://www.adacore.com/gems/gem-38>`_
+        -  `Gem #40: Safe and Secure Software : Chapter 5, Safe Object Oriented Programming by John Barnes <https://www.adacore.com/gems/gem-40>`_
+        -  `Gem #42: Safe and Secure Software : Chapter 6, Safe Object Construction by John Barnes <https://www.adacore.com/gems/gem-42>`_
+        -  `Gem #43: Safe and Secure Software : Chapter 7, Safe Memory Management by John Barnes <https://www.adacore.com/gems/gem-43-safe-and-secure-software-chapter-7-safe-memory-management>`_
+        -  `Gem #45: Safe and Secure Software : Chapter 8, Safe Startup by John Barnes <https://www.adacore.com/gems/gem-45>`_
+        -  `Gem #47: Safe and Secure Software : Chapter 9, Safe Communication by John Barnes <https://www.adacore.com/gems/gem-47>`_
+        -  `Gem #49: Safe and Secure Software: Chapter 10, Safe Concurrency by John Barnes <https://www.adacore.com/gems/gem-49>`_
+        -  `Gem #51: Safe and Secure Software: Chapter 11, Certified Safe with SPARK by John Barnes <https://www.adacore.com/gems/gem-51>`_
+        -  `Gem #53: Safe and Secure Software: Chapter 12: Conclusion by John Barnes <https://www.adacore.com/gems/gem-53-safe-and-secure-software-chapter-12-conclusion>`_
 
 - Tasking
 
