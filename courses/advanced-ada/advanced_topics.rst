@@ -202,6 +202,8 @@ Structure
 
     - [ ] Ada-specific design patterns
 
+        - Signature package
+
 - [ ] Low-level programming
 
     - [ ] Data Representation (*material reuse*)
