@@ -122,6 +122,86 @@ Structure
 
     - [ ] Modular types
 
+- [ ] Design Patterns
+
+    - [ ] Factory Functions (*material reuse*)
+    - [ ] Scope Locks Idiom (*material reuse*)
+    - [ ] Visitor Pattern (*material reuse*)
+    - [ ] Overridable Class Attributes (*material reuse*)
+
+    - Based on
+      `list of design patterns <https://en.wikipedia.org/wiki/Software_design_pattern>`_
+      and `list for C++ <https://en.wikibooks.org/wiki/C%2B%2B_Programming/Code/Design_Patterns>`_
+
+        - **Note**: the goal is to identify equivalent patterns for Ada
+
+        - Creational Patterns
+
+            - [ ] Builder
+            - [ ] Factory / Abstract Factory
+            - [ ] Lazy initialization
+            - [ ] Multiton
+            - [ ] Object pool
+            - [ ] Dependency Injection
+            - [ ] Prototype
+            - [ ] Resource acquisition is initialization (RAII)
+            - [ ] Singleton
+
+        - Structural Patterns
+
+            - [ ] Adapter or Wrapper
+            - [ ] Bridge
+            - [ ] Composite
+            - [ ] Decorator
+            - [ ] Extension object
+            - [ ] Façade
+            - [ ] Flyweight
+            - [ ] Front controller
+            - [ ] Marker
+            - [ ] Module (probably not worth mentioning)
+            - [ ] Proxy
+            - [ ] Twin
+            - [ ] Mixin
+            - [ ] Interface-based Programming (IBP)
+
+        - Behavioral Patterns
+
+            - [ ] Blackboard
+            - [ ] Chain of Responsibility
+            - [ ] Command
+            - [ ] Interpreter
+            - [ ] Iterator
+            - [ ] Mediator
+            - [ ] Memento
+            - [ ] Null object
+            - [ ] Observer or Publish/subscribe
+            - [ ] Servant
+            - [ ] Specification
+            - [ ] State
+            - [ ] Strategy
+            - [ ] Template Method
+            - [ ] Visitor
+            - [ ] Model-View-Controller (MVC)
+
+        - Concurrency patterns
+
+            - [ ] Active Object
+            - [ ] Balking
+            - [ ] Binding properties
+            - [ ] Compute kernel
+            - [ ] Double-checked locking
+            - [ ] Event-based asynchronous
+            - [ ] Guarded suspension
+            - [ ] Messaging design pattern (MDP)
+            - [ ] Monitor object
+            - [ ] Reactor
+            - [ ] Read-write lock
+            - [ ] Scheduler
+            - [ ] Thread pool
+            - [ ] Thread-specific storage
+
+    - [ ] Ada-specific design patterns
+
 - [ ] Low-level programming
 
     - [ ] Data Representation (*material reuse*)
