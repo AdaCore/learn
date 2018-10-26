@@ -434,47 +434,6 @@ Course: Advanced SPARK
 -  `Taking on a Challenge in SPARK <http://blog.adacore.com/taking-on-a-challenge-in-spark>`_
 
 
-Book: SPARK 2014 Rationale
---------------------------
-
--  `SPARK 2014 Rationale: Specification Functions <http://blog.adacore.com/spark-2014-rationale-specification-functions>`_
--  `SPARK 2014 Rationale: Pre-call and Pre-loop Values <http://blog.adacore.com/spark-2014-rationale-pre-call-and-pre-loop-values>`_
--  `SPARK 2014 Rationale: Loop Invariants <http://blog.adacore.com/spark-2014-rationale-loop-invariants>`_
--  `SPARK 2014 Rationale: Loop Variants <http://blog.adacore.com/spark-2014-rationale-loop-variants>`_
--  `SPARK 2014 Rationale: Mixing SPARK and Ada Code <http://blog.adacore.com/spark-2014-rationale-mixing-spark-and-ada-code>`_
--  `SPARK 2014 Rationale: Global State <http://blog.adacore.com/spark-2014-rationale-global-state>`_
--  `SPARK 2014 Rationale: Formal Containers <http://blog.adacore.com/spark-2014-rationale-formal-containers>`_
--  `SPARK 2014 Rationale: Expressing Properties over Formal Containers <http://blog.adacore.com/spark-2014-rationale-expressing-properties-over-formal-containers-1>`_
--  `SPARK 2014 Rationale: Verifying Properties over Formal Containers <http://blog.adacore.com/spark-2014-rationale-verifying-properties-over-formal-containers>`_
--  `SPARK 2014 Rationale: Data Dependencies <http://blog.adacore.com/spark-2014-rationale-data-dependencies>`_
--  `SPARK 2014 Rationale: Information Flow <http://blog.adacore.com/spark-2014-rationale-information-flow>`_
--  `SPARK 2014 Rationale: Ghost Code <http://blog.adacore.com/spark-2014-rationale-ghost-code>`_
--  `SPARK 2014 Rationale: Object Oriented Programming <http://blog.adacore.com/spark-2014-rationale-object-oriented-programming>`_
--  `SPARK 2014 Rationale: Functional Update <http://blog.adacore.com/spark-2014-rationale-functional-update>`_
--  `SPARK 2014 Rationale: Type Predicates <http://blog.adacore.com/spark-2014-rationale-type-predicates>`_
--  `SPARK 2014 Rationale: Variables That Are Constant <http://blog.adacore.com/constant-after-elaboration-variables>`_
--  `SPARK 2014 Rationale: Support for Ravenscar <http://blog.adacore.com/spark-2014-rationale-support-for-ravenscar>`_
--  `SPARK 2014 Rationale: Support for Type Invariants <http://blog.adacore.com/spark-2014-rationale-support-for-type-invariants>`_
-
-
-Book: GNATprove Tips and Tricks
--------------------------------
-
--  `GNATprove Tips and Tricks: Referring to Input in Contracts <http://blog.adacore.com/gnatprove-tricks-and-tips-referring-to-input-in-contracts>`_
--  `GNATprove Tips and Tricks: How to Write Loop Invariants <http://blog.adacore.com/gnatprove-tips-and-tricks-how-to-write-loop-invariants>`_
--  `GNATprove Tips and Tricks: Keeping Justifications Up-To-Date <http://blog.adacore.com/gnatprove-tips-and-tricks-keeping-justifications-up-to-date>`_
--  `GNATprove Tips and Tricks: Catching Mistakes in Contracts <http://blog.adacore.com/gnatprove-tips-and-tricks-catching-mistakes-in-contracts>`_
--  `GNATprove Tips and Tricks: Bitwise Operations <http://blog.adacore.com/gnatprove-tips-and-tricks-bitwise-operations>`_
--  `GNATprove Tips and Tricks: Minimizing Rework <http://blog.adacore.com/gnatprove-tricks-and-tips-minimizing-rework>`_
--  `GNATprove Tips and Tricks: User Profiles <http://blog.adacore.com/gnatprove-tips-and-tricks-user-profiles>`_
--  `GNATprove Tips and Tricks: What’s Provable for Real? <http://blog.adacore.com/gnatprove-tips-and-tricks-whats-provable-for-real>`_
--  `GNATprove Tips and Tricks: Using the Lemma Library <http://blog.adacore.com/gnatprove-tips-and-tricks-using-the-lemma-library>`_
--  `GNATprove Tips and Tricks: What’s Provable for Real Now? <http://blog.adacore.com/gnatprove-tips-and-tricks-whats-provable-for-real-now>`_
--  `GNATprove Tips and Tricks: a Lemma for Sorted Arrays <http://blog.adacore.com/gnatprove-tips-and-tricks-a-lemma-for-sorted-arrays>`_
--  `GNATprove Tips and Tricks: Proving the Ghost Common Divisor (GCD) <http://blog.adacore.com/gnatprove-tips-and-tricks-proving-the-ghost-common-denominator-gcd>`_
--  `Hash it and Cache it <http://blog.adacore.com/hash-it-and-cache-it>`_
-
-
 Course: GNAT Libraries
 ----------------------
 
@@ -621,6 +580,46 @@ SKIPPED ITEMS
         -  `Two Days Dedicated to Sound Static Analysis for Security <http://blog.adacore.com/sound-static-analysis-for-security>`_
         -  `How Ada and SPARK Can Increase the Security of Your Software <http://blog.adacore.com/how-ada-and-spark-can-increase-the-security-of-your-software>`_
         -  `Security Agency Uses SPARK for Secure USB Key  <http://blog.adacore.com/security-agency-uses-spark-for-secure-usb-key>`_
+
+
+    - Book: SPARK 2014 Rationale
+
+        -  `SPARK 2014 Rationale: Specification Functions <http://blog.adacore.com/spark-2014-rationale-specification-functions>`_
+        -  `SPARK 2014 Rationale: Pre-call and Pre-loop Values <http://blog.adacore.com/spark-2014-rationale-pre-call-and-pre-loop-values>`_
+        -  `SPARK 2014 Rationale: Loop Invariants <http://blog.adacore.com/spark-2014-rationale-loop-invariants>`_
+        -  `SPARK 2014 Rationale: Loop Variants <http://blog.adacore.com/spark-2014-rationale-loop-variants>`_
+        -  `SPARK 2014 Rationale: Mixing SPARK and Ada Code <http://blog.adacore.com/spark-2014-rationale-mixing-spark-and-ada-code>`_
+        -  `SPARK 2014 Rationale: Global State <http://blog.adacore.com/spark-2014-rationale-global-state>`_
+        -  `SPARK 2014 Rationale: Formal Containers <http://blog.adacore.com/spark-2014-rationale-formal-containers>`_
+        -  `SPARK 2014 Rationale: Expressing Properties over Formal Containers <http://blog.adacore.com/spark-2014-rationale-expressing-properties-over-formal-containers-1>`_
+        -  `SPARK 2014 Rationale: Verifying Properties over Formal Containers <http://blog.adacore.com/spark-2014-rationale-verifying-properties-over-formal-containers>`_
+        -  `SPARK 2014 Rationale: Data Dependencies <http://blog.adacore.com/spark-2014-rationale-data-dependencies>`_
+        -  `SPARK 2014 Rationale: Information Flow <http://blog.adacore.com/spark-2014-rationale-information-flow>`_
+        -  `SPARK 2014 Rationale: Ghost Code <http://blog.adacore.com/spark-2014-rationale-ghost-code>`_
+        -  `SPARK 2014 Rationale: Object Oriented Programming <http://blog.adacore.com/spark-2014-rationale-object-oriented-programming>`_
+        -  `SPARK 2014 Rationale: Functional Update <http://blog.adacore.com/spark-2014-rationale-functional-update>`_
+        -  `SPARK 2014 Rationale: Type Predicates <http://blog.adacore.com/spark-2014-rationale-type-predicates>`_
+        -  `SPARK 2014 Rationale: Variables That Are Constant <http://blog.adacore.com/constant-after-elaboration-variables>`_
+        -  `SPARK 2014 Rationale: Support for Ravenscar <http://blog.adacore.com/spark-2014-rationale-support-for-ravenscar>`_
+        -  `SPARK 2014 Rationale: Support for Type Invariants <http://blog.adacore.com/spark-2014-rationale-support-for-type-invariants>`_
+
+
+    - Book: GNATprove Tips and Tricks
+
+        -  `GNATprove Tips and Tricks: Referring to Input in Contracts <http://blog.adacore.com/gnatprove-tricks-and-tips-referring-to-input-in-contracts>`_
+        -  `GNATprove Tips and Tricks: How to Write Loop Invariants <http://blog.adacore.com/gnatprove-tips-and-tricks-how-to-write-loop-invariants>`_
+        -  `GNATprove Tips and Tricks: Keeping Justifications Up-To-Date <http://blog.adacore.com/gnatprove-tips-and-tricks-keeping-justifications-up-to-date>`_
+        -  `GNATprove Tips and Tricks: Catching Mistakes in Contracts <http://blog.adacore.com/gnatprove-tips-and-tricks-catching-mistakes-in-contracts>`_
+        -  `GNATprove Tips and Tricks: Bitwise Operations <http://blog.adacore.com/gnatprove-tips-and-tricks-bitwise-operations>`_
+        -  `GNATprove Tips and Tricks: Minimizing Rework <http://blog.adacore.com/gnatprove-tricks-and-tips-minimizing-rework>`_
+        -  `GNATprove Tips and Tricks: User Profiles <http://blog.adacore.com/gnatprove-tips-and-tricks-user-profiles>`_
+        -  `GNATprove Tips and Tricks: What’s Provable for Real? <http://blog.adacore.com/gnatprove-tips-and-tricks-whats-provable-for-real>`_
+        -  `GNATprove Tips and Tricks: Using the Lemma Library <http://blog.adacore.com/gnatprove-tips-and-tricks-using-the-lemma-library>`_
+        -  `GNATprove Tips and Tricks: What’s Provable for Real Now? <http://blog.adacore.com/gnatprove-tips-and-tricks-whats-provable-for-real-now>`_
+        -  `GNATprove Tips and Tricks: a Lemma for Sorted Arrays <http://blog.adacore.com/gnatprove-tips-and-tricks-a-lemma-for-sorted-arrays>`_
+        -  `GNATprove Tips and Tricks: Proving the Ghost Common Divisor (GCD) <http://blog.adacore.com/gnatprove-tips-and-tricks-proving-the-ghost-common-denominator-gcd>`_
+        -  `Hash it and Cache it <http://blog.adacore.com/hash-it-and-cache-it>`_
+
 
 - Ada Applications
 
