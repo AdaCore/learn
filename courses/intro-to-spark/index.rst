@@ -13,6 +13,7 @@ Intro To SPARK
 
 .. toctree::
    :maxdepth: 4
+   :caption: Contents:
 
    Overview <book/01_Overview>
    Flow Analysis <book/02_Flow_Analysis>
