@@ -904,11 +904,11 @@ user-defined character types are also permitted:
 
        M := 'a';
 
-       C := 64;
-       --   ^ Invalid: 64 is not a Character value
+       C := 65;
+       --   ^ Invalid: 65 is not a Character value
 
-       C := Character'Val (64);
-       --  Assign the character at position 64 in the enumeration (which is 'A')
+       C := Character'Val (65);
+       --  Assign the character at position 65 in the enumeration (which is 'A')
 
        M := C;
        --   ^ Invalid: C is of type Character, and M is a My_Char
