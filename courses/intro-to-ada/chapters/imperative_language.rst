@@ -115,7 +115,7 @@ Here is a minor variant of the "Hello, World" example:
     end Greet;
 
 This version utilizes an Ada feature known as a :ada:`use` clause, which has
-the the form ``use`` *package-name*. As illustrated by the call on
+the form ``use`` *package-name*. As illustrated by the call on
 :ada:`Put_Line`, the effect is that entities from the named package can be
 referenced directly, without the *package-name.* prefix.
 
