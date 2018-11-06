@@ -744,9 +744,9 @@ Rule 10.5 also advises to avoid nonsensical casts:
 - from any scalar type to an enumeration
 
 The rules are not symmetric, so although it is advised not to cast a float into
-an enum, it is allowed to cast an enum into a float. Similarly, it is advised
-not to cast a character into an enum, it is allowed to cast an enum into a
-character.
+an enum, it is allowed to cast an enum into a float. Similarly, although it is
+advised not to cast a character into an enum, it is allowed to cast an enum
+into a character.
 
 The rules in SPARK are simpler. There are no conversions between numeric types
 (integers, fixed-point and floating-point) and non-numeric types (Boolean,
