@@ -847,6 +847,7 @@ Let's see an example:
        use Integer_Sets;
 
        S : Set;
+       --  Same as:  S : Integer_Sets.Set;
        C : Cursor;
        Ins : Boolean;
     begin
@@ -1158,6 +1159,7 @@ Let's see an example:
        use Integer_Hashed_Maps;
 
        M : Map;
+       --  Same as:  M : Integer_Hashed_Maps.Map;
     begin
        M.Include ("Alice", 24);
        M.Include ("John",  40);
