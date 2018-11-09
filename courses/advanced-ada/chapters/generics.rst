@@ -129,6 +129,8 @@ definition from the ``Color_Pkg`` package.
 Abstracting procedures into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+:code-config:`reset_accumulator=True`
+
 In the previous example, we moved the array type definition into a
 separate package, but left the generic procedure (``Reverse_Array``) in
 the test application. We can also move the generic procedure into the
@@ -394,6 +396,8 @@ package. However, this will be left as an exercise for the reader.
 Formal objects
 --------------
 
+:code-config:`reset_accumulator=True`
+
 Formal objects are used to bind objects to a generic specification. They
 are similar to parameters in subprograms and can have :ada:`in` or
 :ada:`in out` modes.
@@ -450,6 +454,8 @@ In this example, we instantiate the *fast* version of :ada:`Gen_Calc`.
 
 Input-output format objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:code-config:`reset_accumulator=True`
 
 Formal objects with :ada:`in out` mode are used to bind objects to an
 instance of a generic specification. For example, we may bind a global
@@ -693,6 +699,8 @@ two instantiations of the :ada:`Display` procedure:
 Formal access types
 -------------------
 
+:code-config:`reset_accumulator=True`
+
 Formal access types allow for binding objects or subprograms to generic
 subprograms or packages by using access types. Formal access types are
 similar to:
@@ -846,6 +854,8 @@ Generic interfaces
 Generating subprogram specifications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+:code-config:`reset_accumulator=True`
+
 Generic interfaces can be used to generate a collection of pre-defined
 subprograms for new types. For example, let's suppose that, for a given
 type :ada:`T`, we need at least a pair of subprograms that set and get
@@ -974,6 +984,8 @@ straightforward:
 Facilitating arrays of interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+:code-config:`reset_accumulator=True`
+
 Formal interfaces can facilitate the handling of arrays of interface
 types. Let's consider an interface type :ada:`TI` and the derived tagged
 types :ada:`T` and :ada:`T2`. We may declare arrays containing elements
@@ -1072,6 +1084,8 @@ not :ada:`T`. Even if the type :ada:`T` is derived from :ada:`TI`, the
 corresponding array type is not. Formal interfaces can be used to create
 a generic version of :ada:`Op` that operates directly on an array of
 type :ada:`T`. Let's look at an example.
+
+:code-config:`reset_accumulator=True`
 
 The example below calculates the average of interface types that are
 *convertible* to floating-point values. We consider that a type is
@@ -1230,6 +1244,8 @@ Discussion: Generic interfaces vs. other approaches
 Generic synchronized interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+:code-config:`reset_accumulator=True`
+
 Generic synchronized interfaces are a specialized case of generic
 interfaces that can be used for task types and protected types. Since
 generic synchronized interfaces are similar to generic interfaces,
@@ -1367,6 +1383,8 @@ Generic floating-point types
 Simple formal package
 ^^^^^^^^^^^^^^^^^^^^^
 
+:code-config:`reset_accumulator=True`
+
 Let's look at an example of a generic package containing a procedure that
 *saturates* floating-point numbers. In this code, we work with a
 normalized range between -1.0 and 1.0. Due to the fact that some
@@ -1441,6 +1459,8 @@ the values are inside the range again.
 
 Operations in formal packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:code-config:`reset_accumulator=True`
 
 In this section, we discuss how to declare operations associated with
 floating-point types in formal packages.
@@ -1620,6 +1640,8 @@ Generic fixed-point types
 Simple formal package
 ^^^^^^^^^^^^^^^^^^^^^
 
+:code-config:`reset_accumulator=True`
+
 In the previous section, we looked into an example of saturation for
 generic floating-point types. Let's adapt this example for fixed-point
 types. This is the package specification:
@@ -1758,6 +1780,8 @@ raise an exception.
 
 Operations in formal packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:code-config:`reset_accumulator=True`
 
 In this section, we discuss how to declare operations associated with
 fixed-point types in formal packages. We start by adapting the examples
