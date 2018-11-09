@@ -53,7 +53,7 @@ vector ``V``:
        null;
     end Show_Vector_Inst;
 
-Containers are based on generic packagess, so we can't simply declare
+Containers are based on generic packages, so we can't simply declare
 a vector as we would declare an array of a specific type:
 
 .. code-block:: ada
@@ -192,7 +192,7 @@ We access the first and last elements of a vector using the
        Put_Line ("Last element is " & Img (V.Last_Element));
     end Show_Vector_First_Last_Element;
 
-You can swap elements by calling the procedure ``Swap`` and retrieve a
+You can swap elements by calling the procedure ``Swap`` and retrieving a
 reference (a *cursor*) to the first and last elements of the vector by
 calling ``First`` and ``Last``. A cursor allows us to iterate over a
 container and process individual elements from it.

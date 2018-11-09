@@ -214,7 +214,7 @@ using a similar syntax, as we will see later.
 In the task definition, you define which part of the task will accept the
 entries by using the keyword :ada:`accept`. A task proceeds until it
 reaches an :ada:`accept` statement and then waits for the master task to
-synchronize with the it. Specifically,
+synchronize with it. Specifically,
 
 - The subtask waits at that point (in the :ada:`accept` statement),
   ready to accept a call to the corresponding entry from the master task.
@@ -470,7 +470,7 @@ and have a regular interval of exactly one second:
              Aux.Computational_Intensive_App;
 
              --  Calculate next execution time using a
-             --  cycle of one seconds
+             --  cycle of one second
              Next := Next + Cycle;
 
              Put_Line ("Cycle # " & Integer'Image (Cnt));

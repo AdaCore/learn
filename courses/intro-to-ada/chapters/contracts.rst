@@ -14,13 +14,13 @@ Design by contracts
 
 
 Contracts are used in programming to codify expectations. Parameter modes
-of a subprogram can be viewed as a simple of form of contracts. When the
+of a subprogram can be viewed as a simple form of contracts. When the
 specification of subprogram ``Op`` declares a parameter using :ada:`in`
 mode, the caller of ``Op`` knows that the :ada:`in` argument won't be
 changed by ``Op``. In other words, the caller expects that ``Op`` doesn't
 modify the argument it's providing, but just reads the information stored
 in the argument. Constraints and subtypes are other examples of
-contracts. In general, these specification improve the consistency of the
+contracts. In general, these specifications improve the consistency of the
 application.
 
 *Design-by-contract* programming refers to techniques that include pre- and
@@ -121,19 +121,19 @@ We illustrate postconditions using the following example:
 
        type Int_8_Array is array (Integer range <>) of Int_8;
 
-       function Double (A : Int_8) return Int_8 is
+       function Square (A : Int_8) return Int_8 is
          (A * A)
-         with Post => Double'Result > A;
+         with Post => Square'Result > A;
 
-       procedure Double (A : in out Int_8_Array)
+       procedure Square (A : in out Int_8_Array)
          with Post => (for all I in A'Range =>
                          A (I) = A'Old (I) * A'Old (I))
        is
        begin
           for V of A loop
-             V := Double (V);
+             V := Square (V);
           end loop;
-       end Double;
+       end Square;
 
        V : Int_8_Array := (9, 10, 11);
     begin
@@ -142,20 +142,20 @@ We illustrate postconditions using the following example:
        end loop;
        New_Line;
 
-       Double (V);
+       Square (V);
        for E of V loop
-          Put_Line ("Double:   " & Int_8'Image (E));
+          Put_Line ("Square:   " & Int_8'Image (E));
        end loop;
     end Show_Simple_Postcondition;
 
 We declare a signed 8-bit type :ada:`Int_8` and an array of that type
 (:ada:`Int_8_Array`). We want to ensure each element of the array is
-doubled after calling the procedure :ada:`Double` for an object of the
+doubled after calling the procedure :ada:`Square` for an object of the
 :ada:`Int_8_Array` type. We do this with a postcondition using a :ada:`for
 all` expression. This postcondition also uses the :ada:`'Old` attribute to
 refer to the original value of the parameter (before the call).
 
-We also want to ensure that the result of calls to the :ada:`Double`
+We also want to ensure that the result of calls to the :ada:`Square`
 function for the :ada:`Int_8` type are greater than the input to that call.
 To do that, we write a postcondition using the :ada:`'Result` attribute of
 the function and comparing it to the input value.
@@ -175,24 +175,24 @@ subprogram. For example:
 
        type Int_8 is range -2 ** 7 .. 2 ** 7 - 1;
 
-       function Double (A : Int_8) return Int_8 is
+       function Square (A : Int_8) return Int_8 is
          (A * A)
          with
               Pre  => (Integer'Size >= Int_8'Size * 2 and
                        Integer (A) * Integer (A) < Integer (Int_8'Last)),
-              Post => Double'Result > A;
+              Post => Square'Result > A;
 
        V : Int_8;
     begin
-       V := Double (11);
-       Put_Line ("Double of 11 is " & Int_8'Image (V));
+       V := Square (11);
+       Put_Line ("Square of 11 is " & Int_8'Image (V));
 
-       V := Double (12);   --  Precondition will fail...
-       Put_Line ("Double of 12 is " & Int_8'Image (V));
+       V := Square (12);   --  Precondition will fail...
+       Put_Line ("Square of 12 is " & Int_8'Image (V));
     end Show_Simple_Contract;
 
 In this example, we want to ensure that the input value of calls to the
-:ada:`Double` function for the :ada:`Int_8` type won't cause overflow in
+:ada:`Square` function for the :ada:`Int_8` type won't cause overflow in
 that function. We do this by converting the input value to the
 :ada:`Integer` type, which is used for the temporary calculation, and check
 if the result is in the appropriate range for the :ada:`Int_8` type. We
