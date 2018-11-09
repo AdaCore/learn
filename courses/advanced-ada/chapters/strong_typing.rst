@@ -16,6 +16,344 @@ Strong typing
 In this chapter, we discuss the advantages of strong typing and how it can
 be used to avoid common implementation and maintenance issues.
 
+Type-based security
+-------------------
+
+The notions of tainted data and trusted data usually refer to data coming
+from the user vs. data coming from the application. Tainting is viral, in
+that any result of a computation where one of the operands is tainted
+becomes tainted too.
+
+Various C/C++ static analyzers provide checkers for tainted data that help
+find bugs where data from the user serves to compute the size of an
+allocation, so that an attacker could use this to trigger a buffer
+overflow leading to an Elevation of Privilege (EoP) attack.
+
+In Ada, the compiler can provide the guarantee that no such bugs have been
+introduced by accident (although you can still bypass the rule if you
+really want to, for example by using :ada:`Unchecked_Conversion` or
+address clause overlays), provided different types are used for tainted
+and trusted data, with no run-time penalty. This can be done with many
+types of data, including basic types like integers.
+
+Let's say tainted data is of an integer type. The basic idea is to derive
+the trusted type from the tainted one, and to provide a function Value to
+get to the raw data inside a trusted value, like the following:
+
+.. code:: ada
+
+    package Taint is
+
+       type Trusted_Value is new Integer;
+
+       function Value (V : Trusted_Value) return Integer;
+       pragma Inline (Value);
+
+    end Taint;
+
+Notice that the implementation of :ada:`Value` is just a type conversion:
+
+.. code:: ada
+
+    package body Taint is
+
+       function Value (V : Trusted_Value) return Integer is
+       begin
+          return Integer (V);
+       end Value;
+
+    end Taint;
+
+Then, make sure the sensitive program uses trusted data:
+
+.. code:: ada
+
+    with Taint; use Taint;
+
+    procedure Sensitive (X : Trusted_Value) is
+    begin
+       null; --  Do something sensitive with value X
+    end Sensitive;
+
+Let's try to pass in data from the user to the sensitive program:
+
+.. code:: ada run_button
+    :class: ada-expect-compile-error
+
+    with Taint;
+    with Sensitive;
+
+    procedure Main is
+
+       procedure Bad (Some_Value : Integer) is
+       begin
+          Sensitive (Some_Value);
+       end Bad;
+
+       A : Integer := 0;
+    begin
+       Bad (A);
+    end Main;
+
+The compiler returns with a type error.
+
+Now, this does not prevent us from doing useful computations on trusted
+data as easily as on tainted data, including initialization with literals,
+case statements, array indexing, etc.
+
+.. code:: ada run_button
+
+    with Taint; use Taint;
+    with Sensitive;
+
+    procedure Good is
+       Max_Value : constant := 100;
+       X : Trusted_Value := Max_Value;
+    begin
+       X := X + 1; --  Perform any computations on X
+       Sensitive (X);
+    end Good;
+
+Because :ada:`Trusted_Value` is a type derived from the tainted type
+(:ada:`Integer`), all operations allowed on tainted data are also allowed
+on trusted data, but operations mixing them are not allowed.
+
+Be aware that nothing prevents the program itself from converting between
+tainted data and trusted data freely, but this requires inserting an
+explicit conversion, which can be spotted during code reviews.
+
+To completely prevent such unintended conversions (say, to facilitate
+maintenance), the type used for trusted data must be made private, so that
+only the package which defines it can convert to and from it. With
+:ada:`Trusted_Value` being private, we should also provide a corresponding
+function for each literal which we used previously, as well as the
+operations that we'd like to allow on trusted values (note that for
+efficiency all operations could be inlined):
+
+.. code:: ada
+
+    package Taint is
+
+       type Trusted_Value is private;
+
+       function Value (V : Trusted_Value) return Integer;
+
+       function Trusted_1 return Trusted_Value;
+       function Trusted_100 return Trusted_Value;
+
+       function "+" (V, W : Trusted_Value) return Trusted_Value;
+
+    private
+
+       type Trusted_Value is new Integer;
+
+    end Taint;
+
+The new implementation is as expected:
+
+.. code:: ada
+
+    package body Taint is
+
+       function Value (V : Trusted_Value) return Integer is
+       begin
+          return Integer (V);
+       end Value;
+
+       function Trusted_1 return Trusted_Value is
+       begin
+          return 1;
+       end Trusted_1;
+
+       function Trusted_100 return Trusted_Value is
+       begin
+          return 100;
+       end Trusted_100;
+
+       function "+" (V, W : Trusted_Value) return Trusted_Value is
+       begin
+          return Trusted_Value (Integer (V) + Integer (W));
+       end "+";
+
+    end Taint;
+
+Of course, the client now needs to be adapted to this new interface:
+
+.. code:: ada run_button
+
+    with Taint; use Taint;
+    with Sensitive;
+
+    procedure Good is
+       X : Trusted_Value := Trusted_100;
+    begin
+       X := X + Trusted_1; --  Perform any computations on X
+       Sensitive (X);
+    end Good;
+
+That's it! No errors can result in tainted data being accidentally passed
+by the user where trusted data is expected, and future maintainers of the
+code won't be tempted to insert conversions when the compiler complains.
+
+Input validation consists of checking a set of properties on the input
+which guarantee it is well-formed. This usually involves excluding a set
+of ill-formed inputs (black-list) or matching the input against an
+exhaustive set of well-formed patterns (white-list).
+
+Here, we consider the task of validating an input for inclusion in an SQL
+command. This is a well-known defense against SQL injection attacks, where
+an attacker passes in a specially crafted string that is interpreted as a
+command rather than a plain string when executing the initial SQL command.
+
+The basic idea is to define a new type :ada:`SQL_Input` derived from type
+:ada:`String`. Function :ada:`Validate` checks that the input is properly
+validated and fails if not. Function :ada:`Valid_String` returns the raw
+data inside a validated string, as follows:
+
+.. code:: ada
+
+    package Inputs is
+
+       type SQL_Input is new String;
+
+       function Validate (Input : String) return SQL_Input;
+
+       function Valid_String (Input : SQL_Input) return String;
+
+    end Inputs;
+
+The implementation of :ada:`Validate` simply checks that the input string
+does not contain a dangerous character before returning it as an
+:ada:`SQL_Input`, while :ada:`Valid_String` is a simple type conversion:
+
+.. code:: ada
+
+    with Ada.Strings.Fixed; use Ada.Strings.Fixed;
+    with Ada.Strings.Maps;  use Ada.Strings.Maps;
+
+    package body Inputs is
+
+       Dangerous_Characters : constant Character_Set := To_Set ("""*^';&><</");
+
+       function Validate (Input : String) return SQL_Input is
+       begin
+          if Index (Input, Dangerous_Characters) /= 0 then
+             raise Constraint_Error
+               with "Invalid input " & Input & " for an SQL query ";
+          else
+             return SQL_Input (Input);
+          end if;
+       end Validate;
+
+       function Valid_String (Input : SQL_Input) return String is
+       begin
+          return String (Input);
+       end Valid_String;
+
+    end Inputs;
+
+Now, this does not prevent future uses of such type conversions in the
+program, whether malicious or unintended. To guard against such
+possibilities, we must make type :ada:`SQL_Input` private. To make sure we
+do not ourselves inadvertently convert an input string into a valid one in
+the implementation of package :ada:`Inputs`, we use this opportunity to
+make :ada:`SQL_Input` a discriminated record parameterized by the
+validation status.
+
+.. code:: ada
+
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    package Inputs is
+
+       type SQL_Input (<>) is private;
+
+       function Validate (Input : String) return SQL_Input;
+
+       function Valid_String (Input : SQL_Input) return String;
+
+       function Is_Valid (Input : SQL_Input) return Boolean;
+
+    private
+
+       type SQL_Input (Validated : Boolean) is
+          record
+             case Validated is
+                when True =>
+                   Valid_Input : Unbounded_String;
+                when False =>
+                   Raw_Input   : Unbounded_String;
+             end case;
+          end record;
+
+    end Inputs;
+
+Each time we access field :ada:`Valid_Input`, a discriminant check will be
+performed to ensure that the operand of type :ada:`SQL_Input` has been
+validated. Observe the use of :ada:`Unbounded_String` for the type of the
+input component, which is more convenient and flexible than using a
+constrained string.
+
+Note in the implementation of :ada:`Validate`, that instead of raising an
+exception when the string cannot be validated, as in the first
+implementation, here we create corresponding validated or invalid input
+values based on the result of the check against dangerous characters.
+Also, an :ada:`Is_Valid` function has been added to allow clients to query
+validity of an :ada:`SQL_Input` value.
+
+.. code:: ada
+
+    with Ada.Strings.Fixed; use Ada.Strings.Fixed;
+    with Ada.Strings.Maps;  use Ada.Strings.Maps;
+
+    package body Inputs is
+
+       Dangerous_Characters : constant Character_Set := To_Set ("""*^';&><</");
+
+       function Validate (Input : String) return SQL_Input is
+          Local_Input : constant Unbounded_String := To_Unbounded_String (Input);
+       begin
+          if Index (Input, Dangerous_Characters) /= 0 then
+             return (Validated   => False,
+                     Raw_Input   => Local_Input);
+          else
+             return (Validated   => True,
+                     Valid_Input => Local_Input);
+          end if;
+       end Validate;
+
+       function Valid_String (Input : SQL_Input) return String is
+       begin
+          return To_String (Input.Valid_Input);
+       end Valid_String;
+
+       function Is_Valid (Input : SQL_Input) return Boolean is
+       begin
+          return Input.Validated;
+       end Is_Valid;
+
+    end Inputs;
+
+That's it! As long as this interface is used, no errors can result in
+improper input being interpreted as a command, while ensuring that future
+maintainers of the code won't inadvertently be able to insert
+inappropriate conversions.
+
+Of course, this minimal interface does not really provide anything other
+than the validation of the input. Simply having an :ada:`Is_Valid`
+function to tell whether a string is valid input data would seem to give
+you much the same functionality. However, you can now safely extend this
+package with additional capabilities, such as transformations on valid SQL
+inputs (for example, to optimize queries before sending them to the
+database), or to resolve queries faster using a local cache, and so forth.
+By using the private encapsulation, you are guaranteed that no client
+package will tamper with the validity of the SQL inputs you are
+manipulating.
+
+Incidentally, the similar but distinct problem of input sanitization,
+where possibly invalid data is transformed into something that is known
+valid prior to use, can be handled in the same way.
+
 Table access
 ------------
 
