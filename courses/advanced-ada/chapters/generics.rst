@@ -165,6 +165,27 @@ array type (``Array_T``) and the procedure (``Reverse_Array``):
 
        Color_Pkg.Reverse_Array (My_Colors);
 
+This is the generic package body:
+
+.. code:: ada
+
+    package body Generic_Array_Pkg is
+       procedure Reverse_Array (X : in out Array_T) is
+       begin
+          for I in X'First .. (X'Last + X'First) / 2 loop
+             declare
+                Tmp     : T;
+                X_Left  : T renames X (I);
+                X_Right : T renames X (X'Last + X'First - I);
+             begin
+                Tmp     := X_Left;
+                X_Left  := X_Right;
+                X_Right := Tmp;
+             end;
+          end loop;
+       end Reverse_Array;
+    end Generic_Array_Pkg;
+
 Abstracting the test application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
