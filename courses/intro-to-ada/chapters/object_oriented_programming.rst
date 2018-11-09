@@ -167,7 +167,7 @@ Tagged types
 The 1995 revision of the Ada language introduced tagged types to
 fullfil the need for an unified solution that allows programming in an
 object-oriented style similar to the one described at the beginning of
-this chaper.
+this chapter.
 
 Tagged types are very similar to normal records except that some
 functionality is added:
