@@ -1,4 +1,4 @@
-:code-config:`run_button=True;prove_button=False;accumulate_code=True`
+:code-config:`run_button=False;prove_button=False;accumulate_code=True`
 :code-config:`reset_accumulator=True`
 
 Generics
@@ -64,7 +64,7 @@ This will allow us to reuse definitions from the generic package.
 This is the updated version of the our test application for the reversing
 algorithm:
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -192,7 +192,7 @@ Also, note that ``S`` is an example of a formal object.
 This is a version of the test application that makes use of the generic
 ``Perform_Test`` procedure:
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -308,7 +308,7 @@ references the ``Generic_Array_Pkg`` package and the two formal elements
 
 Then, we update the definition of ``Perform_Test``:
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -391,7 +391,7 @@ While the generic implementation offers both variants, developers can
 select the version that is more appropriate for their system during
 instantiation.
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -591,7 +591,7 @@ This is the corresponding body of the :ada:`Data` package:
 Finally, we implement the :ada:`Test_Data_Container` procedure, which
 makes use of the data container:
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
     with Ada.Calendar.Formatting;
@@ -939,7 +939,7 @@ This is just an example on how we could implement these :ada:`Set` and
 As expected, declaring and using variable of :ada:`My_Type` is
 straightforward:
 
-.. code:: ada
+.. code:: ada run_button
 
     with My_Type_Pkg; use My_Type_Pkg;
 
@@ -1008,7 +1008,7 @@ interface.
 This is a test application that declares an array :ada:`A` of the
 interface type :ada:`TI` and calls :ada:`Op` for :ada:`A`:
 
-.. code:: ada
+.. code:: ada run_button
 
     with TI_Pkg; use TI_Pkg;
     with T_Pkg;  use T_Pkg;
@@ -1163,7 +1163,7 @@ Finally, this is a test application that declares an array of
 *convertible* types and calls the :ada:`Average` function to calculate
 the average of all elements.
 
-.. code:: ada
+.. code:: ada run_button
 
     with App_Data;                use App_Data;
     with Float_Interface_Pkg.Ops;
@@ -1311,7 +1311,7 @@ subprograms:
 
 Finally, the main application doesn't require adaptations:
 
-.. code:: ada
+.. code:: ada run_button
 
     with My_Sync_Type_Pkg; use My_Sync_Type_Pkg;
 
@@ -1381,7 +1381,7 @@ This is the package body:
 
 Finally, we create a test application:
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Gen_Float_Ops;
@@ -1499,7 +1499,7 @@ This is the package body:
 This is a test application that makes use of the :ada:`Float_Types` and
 :ada:`Gen_Float_Acc` packages.
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO;    use Ada.Text_IO;
 
@@ -1686,7 +1686,7 @@ and the original type.
 
 We then use the :ada:`Gen_Fixed_Ops` package in a test application:
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Gen_Fixed_Ops;
@@ -1816,7 +1816,7 @@ operator using :ada:`with function`. This operator is used by the
 This is a test application that makes use of the :ada:`Fixed_Types` and
 :ada:`Gen_Fixed_Acc` packages.
 
-.. code:: ada
+.. code:: ada run_button
 
     with Ada.Text_IO;    use Ada.Text_IO;
 
@@ -1848,7 +1848,7 @@ main reason for the formal subprogram in the specification of the
 selecting the standard operator. Alternatively, we could make use of the
 :ada:`Fixed_Types` package directly in the generic package:
 
-.. code:: ada
+.. code-block:: ada
 
     with Fixed_Types; use Fixed_Types;
 
