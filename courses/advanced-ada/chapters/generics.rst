@@ -719,8 +719,8 @@ This is the corresponding dummy package body:
 
     end Read_File_Pkg;
 
-This is a test application that instantiates the
-:ada:`Gen_Read_Sorted_File` procedure:
+This is a test package that instantiates the :ada:`Gen_Read_Sorted_File`
+procedure:
 
 .. code:: ada
 
@@ -746,7 +746,7 @@ This is a test application that instantiates the
 
     end Show_Procedure_Access;
 
-We can rewrite the application above using formal subprograms instead of
+We can rewrite the package above using formal subprograms instead of
 formal access types. This is the update specification of the
 :ada:`Read_File_Pkg` package:
 
@@ -779,7 +779,7 @@ This is the updated package body:
 
     end Read_File_Pkg;
 
-Finally, this is the update test application:
+Finally, this is the update test package:
 
 .. code:: ada
 
