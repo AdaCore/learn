@@ -1781,8 +1781,6 @@ raise an exception.
 Operations in formal packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:code-config:`reset_accumulator=True`
-
 In this section, we discuss how to declare operations associated with
 fixed-point types in formal packages. We start by adapting the examples
 used for floating-point in the previous section, so that fixed-point types
