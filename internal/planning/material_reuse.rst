@@ -20,7 +20,7 @@ Course: Advanced Ada
 
     - Overloading
 
-        - [ ] `Gem #50: Overload Resolution by Bob Duff <https://www.adacore.com/gems/gem-50>`_
+        - [x] `Gem #50: Overload Resolution by Bob Duff <https://www.adacore.com/gems/gem-50>`_
 
     - Type-Based Security
 

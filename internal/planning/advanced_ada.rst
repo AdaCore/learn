@@ -16,7 +16,7 @@ Structure
 
 - [ ] Typing
 
-    - [ ] Overloading (*material reuse*)
+    - [x] Overloading (*material reuse*)
 
 - [ ] Access types
 
