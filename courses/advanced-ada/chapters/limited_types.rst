@@ -639,7 +639,6 @@ similar to this:
        end Some_Protected_Type;
 
        type T is limited private;
-       --  type T (<>) is limited private;
        function Make_T (Name : String) return T; -- constructor function
     private
        type T is limited
