@@ -24,8 +24,8 @@ Course: Advanced Ada
 
     - Type-Based Security
 
-        - [ ] `Gem #82: Type-Based Security 1: Handling Tainted Data by Yannick Moy <https://www.adacore.com/gems/gem-82>`_
-        - [ ] `Gem #83: Type-Based Security 2: Validating the Input by Yannick Moy <https://www.adacore.com/gems/gem-83>`_
+        - [x] `Gem #82: Type-Based Security 1: Handling Tainted Data by Yannick Moy <https://www.adacore.com/gems/gem-82>`_
+        - [x] `Gem #83: Type-Based Security 2: Validating the Input by Yannick Moy <https://www.adacore.com/gems/gem-83>`_
 
     - Erroneous Execution
 
