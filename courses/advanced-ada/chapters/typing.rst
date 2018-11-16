@@ -1,0 +1,191 @@
+:orphan:
+
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+:code-config:`reset_accumulator=True`
+
+Typing
+======
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
+.. role:: cpp(code)
+   :language: c++
+
+Overloading
+-----------
+
+Ada allows overloading of subprograms, which means that two or more
+subprogram declarations with the same name can be visible at the same
+place. Here, "name" can refer to operator symbols, like :ada:`"+"`. Ada
+also allows overloading of various other notations, such as literals and
+aggregates.
+
+In most languages that support overloading, overload resolution is done
+"bottom up" --- that is, information flows from inner constructs to outer
+constructs. (As usual, computer folks draw their trees upside-down, with
+the root at the top.) For example, if we have two procedures :ada:`Print`:
+
+.. code-block:: ada
+
+    procedure Print (S : Sequence);
+    procedure Print (S : Set);
+    X : Sequence;
+    ...
+    Print (X);
+
+the type of :ada:`X` determines which :ada:`Print` is meant in the call.
+
+Ada is unusual in that it supports top-down overload resolution as well:
+
+.. code-block:: ada
+
+    function Empty return Sequence;
+    procedure Print_Sequence (S : Sequence);
+    function Empty return Set;
+    procedure Print_Set (S : Set);
+    ...
+    Print_Sequence (Empty);
+
+The type of the formal parameter :ada:`S` of :ada:`Print_Sequence`
+determines which :ada:`Empty` is meant in the call. In C++, for example,
+the equivalent of the :ada:`Print (X)` example would resolve, but the
+:ada:`Print_Sequence (Empty)` would be illegal, because C++ does not use
+top-down information.
+
+If we overload things too heavily, we can cause ambiguities:
+
+.. code-block:: ada
+
+    function Empty return Sequence;
+    procedure Print (S : Sequence);
+    function Empty return Set;
+    procedure Print (S : Set);
+    ...
+    Print (Empty); -- Illegal!
+
+The call is ambiguous, and therefore illegal, because there are two
+possible meanings. One way to resolve the ambiguity is to use a qualified
+expression to say which type we mean:
+
+.. code-block:: ada
+
+    Print (Sequence'(Empty));
+
+Note that we're now using both bottom-up and top-down overload resolution:
+:ada:`Sequence'` determines which :ada:`Empty` is meant (top down) and
+which :ada:`Print` is meant (bottom up). You can qualify an expression,
+even if it is not ambiguous according to Ada rules --- you might want to
+clarify the type because it might be ambiguous for human readers.
+
+Of course, you could instead resolve the :ada:`Print (Empty)` example by
+modifying the source code so the names are unique, as in the earlier
+examples. That might well be the best solution, assuming you can modify
+the relevant sources. Too much overloading can be confusing. How much is
+"too much" is in part a matter of taste.
+
+Ada really needs to have top-down overload resolution, in order to resolve
+literals. In some languages, you can tell the type of a literal by looking
+at it, for example appending :ada:`L` (letter el) means "the type of this
+literal is long int". That sort of kludge won't work in Ada, because we
+have an open-ended set of integer types:
+
+.. code-block:: ada
+
+    type Apple_Count is range 0..100;
+    procedure Peel (Count : Apple_Count);
+    ...
+    Peel (20);
+
+You can't tell by looking at the literal :ada:`20` what its type is. The
+type of formal parameter :ada:`Count` tells us that :ada:`20` is an
+:ada:`Apple_Count`, as opposed to some other type, such as
+:ada:`Standard.Long_Integer`.
+
+Technically, the type of :ada:`20` is :ada:`universal_integer`, which is
+implicitly converted to :ada:`Apple_Count` --- it's really the result type
+of that implicit conversion that is at issue. But that's an obscure point
+--- you won't go *too* far wrong if you think of the integer literal
+notation as being overloaded on all integer types.
+
+Programmers sometimes wonder why the compiler can't resolve something that
+seems obvious. For example:
+
+.. code-block:: ada
+
+    type Apple_Count is range 0..100;
+    procedure Slice (Count : Apple_Count);
+    type Orange_Count is range 0..10_000;
+    procedure Slice (Count : Orange_Count);
+    ...
+    Slice (Count => 10_000); -- Illegal!
+
+This call is ambiguous, and therefore illegal. But why? Clearly the
+programmer must have meant the :ada:`Orange_Count` one, because
+:ada:`10_000` is out of range for :ada:`Apple_Count`. And all the relevant
+expressions happen to be static.
+
+Well, a good rule of thumb in language design (for languages with
+overloading) is that the overload resolution rules should not be
+"too smart". We want this example to be illegal to avoid confusion on the
+part of programmers reading the code. As usual, a qualified expression
+fixes it:
+
+.. code-block:: ada
+
+    Slice (Count => Orange_Count'(10_000));
+
+Another example, similar to the literal, is the aggregate. Ada uses a
+simple rule: the type of an aggregate is determined top down (i.e., from
+the context in which the aggregate appears). Bottom-up information is not
+used; that is, the compiler does not look inside the aggregate in order to
+determine its type.
+
+.. code-block:: ada
+
+    type Complex is
+        record
+            Re, Im : Float;
+        end record;
+    procedure Grind (X : Complex);
+    procedure Grind (X : String);
+    ...
+    Grind (X => (Re => 1.0, Im => 1.0)); -- Illegal!
+
+There are two :ada:`Grind` procedures visible, so the type of the
+aggregate could be :ada:`Complex` or :ada:`String`, so it is ambiguous and
+therefore illegal. The compiler is not required to notice that there is
+only one type with components :ada:`Re` and :ada:`Im`, of some real type
+--- in fact, the compiler is not *allowed* to notice that, for overloading
+purposes.
+
+We can qualify as usual:
+
+.. code-block:: ada
+
+    Grind (X => Complex'(Re => 1.0, Im => 1.0));
+
+Only after resolving that the type of the aggregate is :ada:`Complex` can
+the compiler look inside and make sure :ada:`Re` and :ada:`Im` make sense.
+
+This not-too-smart rule for aggregates helps prevent confusion on the part
+of programmers reading the code. It also simplifies the compiler, and
+makes the overload resolution algorithm reasonably efficient.
+
+How smart is "too smart" is in part a matter of taste. In fact, I would
+make the Ada rules a little bit less smart, if I were redesigning it from
+scratch. If we replaced the :ada:`Grind` on :ada:`String` procedure with:
+
+.. code-block:: ada
+
+    procedure Grind (X : Integer);
+
+then the above call would resolve, because the compiler *does* use the
+fact that the aggregate must be some sort of aggregate-ish type, like a
+record or array. I would prefer the call to still be ambiguous in that
+case, but by and large, Ada gets the rules just about right, so something
+that is confusingly ambiguous to humans is usually ambiguous by the Ada
+rules.
