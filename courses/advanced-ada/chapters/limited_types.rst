@@ -368,39 +368,37 @@ construction was via discriminants. Consider the following package:
     with Ada.Containers.Ordered_Sets;
 
     package Aux is
-
        generic
           with package OS is new Ada.Containers.Ordered_Sets (<>);
        function Gen_Singleton_Set (Element : OS.Element_Type) return OS.Set;
-
-       package Integer_Sets is new Ada.Containers.Ordered_Sets
-         (Element_Type => Integer);
-
-       function Singleton_Set is new Gen_Singleton_Set (OS => Integer_Sets);
-
     end Aux;
 
 .. code:: ada
 
     package body Aux is
-
        function Gen_Singleton_Set  (Element : OS.Element_Type) return OS.Set is
        begin
           return S : OS.Set := OS.Empty_Set do
              S.Insert (Element);
           end return;
        end Gen_Singleton_Set;
-
     end Aux;
 
 Since Ada 2005, we can say:
 
 .. code:: ada run_button
 
-    with Aux; use Aux;
-    use Aux.Integer_Sets;
+    with Ada.Containers.Ordered_Sets;
+    with Aux;
 
     procedure Show_Set_Constructor is
+
+       package Integer_Sets is new Ada.Containers.Ordered_Sets
+         (Element_Type => Integer);
+       use Integer_Sets;
+
+       function Singleton_Set is new Aux.Gen_Singleton_Set (OS => Integer_Sets);
+
        This_Set : Set := Empty_Set;
        That_Set : Set := Singleton_Set (Element => 42);
     begin
@@ -412,10 +410,14 @@ seems clearer than:
 
 .. code:: ada run_button
 
-    with Aux; use Aux;
-    use Aux.Integer_Sets;
+    with Ada.Containers.Ordered_Sets;
 
     procedure Show_Set_Decl is
+
+       package Integer_Sets is new Ada.Containers.Ordered_Sets
+         (Element_Type => Integer);
+       use Integer_Sets;
+
        This_Set : Set;
     begin
        null;
@@ -665,26 +667,26 @@ similar to this:
 
     end P;
 
-.. code:: ada
+    package P.Aux is
+       function Make_Rumplestiltskin return T;
+    end P.Aux;
 
-    with P; use P;
-    function Make_Rumplestiltskin return T;
+    package body P.Aux is
 
-.. code:: ada
+       function Make_Rumplestiltskin return T is
+       begin
+          return Make_T (Name => "Rumplestiltskin");
+       end Make_Rumplestiltskin;
 
-    with P; use P;
-    function Make_Rumplestiltskin return T is
-    begin
-        return Make_T (Name => "Rumplestiltskin");
-    end Make_Rumplestiltskin;
+    end P.Aux;
 
 It is useful to consider the various contexts in which these functions may
 be called. We've already seen things like:
 
 .. code:: ada run_button
 
-    with P; use P;
-    with Make_Rumplestiltskin;
+    with P;     use P;
+    with P.Aux; use P.Aux;
 
     procedure Show_Rumplestiltskin_Constructor is
        Rumplestiltskin_Is_My_Name : constant T := Make_Rumplestiltskin;
@@ -699,8 +701,8 @@ We can also do:
 
 .. code:: ada run_button
 
-    with P; use P;
-    with Make_Rumplestiltskin;
+    with P;     use P;
+    with P.Aux; use P.Aux;
 
     procedure Show_Parameter_Constructor is
        procedure Do_Something (X : T) is null;
@@ -716,8 +718,8 @@ We can allocate initialized objects on the heap:
 
 .. code:: ada run_button
 
-    with P; use P;
-    with Make_Rumplestiltskin;
+    with P;     use P;
+    with P.Aux; use P.Aux;
 
     procedure Show_Heap_Constructor is
 
@@ -748,8 +750,8 @@ use an aggregate:
 
 .. code:: ada run_button
 
-    with P; use P;
-    with Make_Rumplestiltskin;
+    with P;     use P;
+    with P.Aux; use P.Aux;
 
     procedure Show_Outer_Type is
 
@@ -774,8 +776,8 @@ assignment statement:
 .. code:: ada run_button
     :class: ada-expect-compile-error
 
-    with P; use P;
-    with Make_Rumplestiltskin;
+    with P;     use P;
+    with P.Aux; use P.Aux;
 
     procedure Show_Illegal_Constructor is
        Rumplestiltskin_Is_My_Name : T;
@@ -789,8 +791,8 @@ we can't copy a limited object into some other object:
 .. code:: ada run_button
     :class: ada-expect-compile-error
 
-    with P; use P;
-    with Make_Rumplestiltskin;
+    with P;     use P;
+    with P.Aux; use P.Aux;
 
     procedure Show_Illegal_Constructor is
        Rumplestiltskin_Is_My_Name : constant T := Make_T (Name => "");
