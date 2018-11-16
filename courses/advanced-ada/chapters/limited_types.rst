@@ -18,9 +18,12 @@ Limited Types
 Limited types and aggregates
 ----------------------------
 
+Full coverage rules
+~~~~~~~~~~~~~~~~~~~
+
 :code-config:`reset_accumulator=True`
 
-One of my favorite features of Ada is the *full coverage rules* for
+One interesting feature of Ada is the *full coverage rules* for
 aggregates. For example, suppose we have a record type:
 
 .. code:: ada
@@ -94,19 +97,21 @@ for record aggregates):
        null;
     end Show_Aggregate_Init_Others;
 
-According to the Ada RM :ada:`others` here means precisely the same thing
+According to the Ada RM, :ada:`others` here means precisely the same thing
 as :ada:`Age | Shoe_Size`. But that's wrong: what :ada:`others` really
 means is "all the other components, including the ones we might add next
 week or next year". That means you shouldn't use :ada:`others` unless
 you're pretty sure it should apply to all the cases that haven't been
 invented yet.
 
+Full coverage rules for limited types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 :code-config:`reset_accumulator=True`
 
-So far, this is old news --- the full coverage rules have been aiding
-maintenance since Ada 83. So what does this have to do with Ada 2005?
-
-Suppose we have a limited type:
+The full coverage rules have been aiding maintenance since Ada 83. Since
+Ada 2005, however, we can also use them for limited types. Suppose we have
+the following limited type:
 
 .. code:: ada
 
@@ -127,16 +132,16 @@ Suppose we have a limited type:
     end Persons;
 
 This type has a self-reference; it doesn't make sense to copy objects,
-because Self would end up pointing to the wrong place. Therefore, we would
-like to make the type limited, to prevent programmers from accidentally
-making copies. After all, the type is probably private, so the client
-programmer might not be aware of the problem. We could also solve that
-problem with controlled types, but controlled types are expensive, and
-add unnecessary complexity if not needed.
+because :ada:`Self` would end up pointing to the wrong place. Therefore,
+we would like to make the type limited, to prevent developers from
+accidentally making copies. After all, the type is probably private, so
+developers using this package might not be aware of the problem. We could
+also solve that problem with controlled types, but controlled types are
+expensive, and add unnecessary complexity if not needed.
 
-In Ada 95, aggregates were illegal for limited types. Therefore, we would
-be faced with a difficult choice: Make the type limited, and initialize it
-like this:
+Prior to Ada 2005, aggregates were illegal for limited types. Therefore,
+we would be faced with a difficult choice: Make the type limited, and
+initialize it like this:
 
 .. code:: ada run_button
 
@@ -154,7 +159,7 @@ which has the maintenance problem the full coverage rules are supposed to
 prevent. Or, make the type non-limited, and gain the benefits of
 aggregates, but lose the ability to prevent copies.
 
-In Ada 2005, an aggregate is allowed to be limited; we can say:
+Since Ada 2005, an aggregate is allowed to be limited; we can say:
 
 .. code:: ada run_button
 
@@ -173,7 +178,7 @@ In Ada 2005, an aggregate is allowed to be limited; we can say:
        X.Self := X'Unchecked_Access;
     end Show_Aggregate_Init;
 
-We'll see what to do about that :ada:`Self => null` in a future gem.
+We'll see what to do about that :ada:`Self => null` soon.
 
 One very important requirement should be noted: the implementation is
 required to build the value of :ada:`X` *in place*; it cannot construct
@@ -181,35 +186,11 @@ the aggregate in a temporary variable and then copy it into :ada:`X`,
 because that would violate the whole point of limited objects ---
 you can't copy them.
 
-Last week, we noted that Ada 2005 allows aggregates for limited types.
-Such an aggregate must be used to initialize some object (which includes
-parameter passing, where we are initializing the formal parameter).
-Limited aggregates are "built in place" in the object being initialized.
-
-Here's the example:
-
-.. code-block:: ada
-
-   type Limited_Person is limited
-      record
-         Self : Limited_Person_Access := Limited_Person'Unchecked_Access;
-         Name : Unbounded_String;
-         Age : Natural;
-         Shoe_Size : Positive;
-      end record;
-   X : aliased Limited_Person :=
-      (Self => null, -- Wrong!
-
-       Name => To_Unbounded_String ("John Doe"),
-       Age => 25,
-       Shoe_Size => 10);
-   X.Self := X'Access;
-
 It seems uncomfortable to set the value of :ada:`Self` to the wrong value
 (:ada:`null`) and then correct it. It also seems annoying that we have a
-(correct) default value for :ada:`Self`, but in Ada 95, we can't use
-defaults with aggregates. Ada 2005 adds a new syntax in aggregates ---
-:ada:`<>` means "use the default value, if any".
+(correct) default value for :ada:`Self`, but prior to Ada 2005, we
+couldn't use defaults with aggregates. Since Ada 2005, a new syntax in
+aggregates is available: :ada:`<>` means "use the default value, if any".
 
 Here, we can say:
 
@@ -264,9 +245,12 @@ values. Note that this is no more nor less dangerous than this:
 
 As always, one must be careful about uninitialized scalar objects.
 
+Constructor functions for limited types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 :code-config:`reset_accumulator=True`
 
-Given that Ada 2005 allows build-in-place aggregates for limited types,
+Given that we can use build-in-place aggregates for limited types,
 the obvious next step is to allow such aggregates to be wrapped in an
 abstraction --- namely, to return them from functions. After all,
 interesting types are usually private, and we need some way for clients
@@ -311,10 +295,10 @@ to create and initialize objects.
 
     end P;
 
-In Ada 95, constructor functions (that is, functions that create new
-objects and return them) are not allowed for limited types. Ada 2005
-allows fully-general constructor functions. Given the above, clients can
-say:
+Prior to Ada 2005, constructor functions (that is, functions that create
+new objects and return them) were not allowed for limited types. Since
+Ada 2005, fully-general constructor functions are allowed. Given the
+above, clients can say:
 
 .. code:: ada run_button
 
@@ -356,11 +340,11 @@ copied! In this case, :ada:`Make_T` will initialize the :ada:`Name`
 component, and create the :ada:`My_Task` and :ada:`My_Prot` components,
 all directly in :ada:`Rumplestiltskin_Is_My_Name`.
 
-Note that :ada:`Rumplestiltskin_Is_My_Name` is constant. In Ada 95, it is
-impossible to create a constant limited object, because there is no way to
-initialize it.
+Note that :ada:`Rumplestiltskin_Is_My_Name` is constant. Prior to
+Ada 2005, it was impossible to create a constant limited object, because
+there was no way to initialize it.
 
-As in Ada 95, the :ada:`(<>)` on type :ada:`T` means that it has *unknown
+The :ada:`(<>)` on type :ada:`T` means that it has *unknown
 discriminants* from the point of view of the client. This is a trick that
 prevents clients from creating default-initialized objects (that is,
 :ada:`X : T;` is illegal). Thus clients must call :ada:`Make_T` whenever
@@ -370,15 +354,14 @@ control over initialization of objects.
 :code-config:`reset_accumulator=True`
 
 Ideally, limited and non-limited types should be just the same, except for
-the essential difference: you can't copy limited objects. Allowing
-functions and aggregates for limited types in Ada 2005 brings us very
-close to this goal. Some languages have a specific feature called
-*constructor*. In Ada, a *constructor* is just a function that creates a
-new object. Except that in Ada 95, that only works for non-limited types.
-For limited types, the only way to *construct* on declaration is via
-default values, which limits you to one constructor. And the only way to
-pass parameters to that construction is via discriminants. In Ada 2005,
-we can say:
+the essential difference: you can't copy limited objects. By allowing
+functions and aggregates for limited types, we're very close to this goal.
+Some languages have a specific feature called *constructor*. In Ada, a
+*constructor* is just a function that creates a new object. Prior to
+Ada 2005, that only worked for non-limited types. For limited types, the
+only way to *construct* on declaration was via default values, which
+limits you to one constructor. And the only way to pass parameters to that
+construction was via discriminants. Consider the following package:
 
 .. code:: ada
 
@@ -410,6 +393,8 @@ we can say:
 
     end Aux;
 
+Since Ada 2005, we can say:
+
 .. code:: ada run_button
 
     with Aux; use Aux;
@@ -423,7 +408,7 @@ we can say:
     end Show_Set_Constructor;
 
 whether or not :ada:`Set` is limited. :ada:`This_Set : Set := Empty_Set;`
-seems clearer to me than:
+seems clearer than:
 
 .. code:: ada run_button
 
@@ -442,9 +427,12 @@ which might mean "default-initialize to the empty set" or might mean
 Return objects
 --------------
 
+Extended return statements
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 :code-config:`reset_accumulator=True`
 
-A common idiom in Ada 95 is to build up a function result in a local
+A common idiom in Ada is to build up a function result in a local
 object, and then return that object:
 
 .. code:: ada run_button
@@ -466,9 +454,9 @@ object, and then return that object:
        null;
     end Show_Return;
 
-Ada 2005 allows a notation called the :ada:`extended_return_statement`,
+Since Ada 2005, a notation called the :ada:`extended_return_statement`,
 which allows you to declare the result object and return it as part of one
-statement. It looks like this:
+statement, is available. It looks like this:
 
 .. code:: ada run_button
 
@@ -494,8 +482,13 @@ The return statement here creates :ada:`Result`, initializes it to
 When :ada:`end return` is reached, :ada:`Result` is automatically returned
 as the function result.
 
-For most types, this is no big deal --- it's just syntactic sugar. But for
-limited types, this syntax is almost essential:
+Extended return statements for limited types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:code-config:`reset_accumulator=True`
+
+For most types, extended return statements are no big deal --- it's just
+syntactic sugar. But for limited types, this syntax is almost essential:
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -526,7 +519,7 @@ limited types, this syntax is almost essential:
 
 The return statement here is illegal, because :ada:`Result` is local to
 :ada:`Make_Task`, and returning it would involve a copy, which makes no
-sense (which is why task types are limited). In Ada 2005, we can write
+sense (which is why task types are limited). Since Ada 2005, we can write
 constructor functions for task types:
 
 .. code:: ada
@@ -568,7 +561,7 @@ If we call it like this:
        null;
     end Show_Task_Construct;
 
-Result is created *in place* in :ada:`My_Task`. :ada:`Result` is
+:ada:`Result` is created *in place* in :ada:`My_Task`. :ada:`Result` is
 temporarily considered local to :ada:`Make_Task` during the
 :ada:`-- some statements` part, but as soon as :ada:`Make_Task` returns,
 the task becomes more global. :ada:`Result` and :ada:`My_Task` really are
@@ -579,6 +572,11 @@ returns. The :ada:`-- some statements` part had better not try to call one
 of the task's entries, because that would deadlock. That is, the entry
 call would wait until the task reaches an accept statement, which will
 never happen, because the task will never be activated.
+
+Other usages of extended return statements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:code-config:`reset_accumulator=True`
 
 While the :ada:`extended_return_statement` was added to the language
 specifically to support limited constructor functions, it comes in handy
@@ -618,6 +616,11 @@ whenever you want a local name for the function result:
        Put_Line ("No prefix:   " & Make_String (S1, S2, False));
        Put_Line ("With prefix: " & Make_String (S1, S2, True));
     end Show_String_Construct;
+
+Building objects from constructors
+----------------------------------
+
+:code-config:`reset_accumulator=True`
 
 We've earlier seen examples of constructor functions for limited types
 similar to this:
@@ -796,9 +799,12 @@ we can't copy a limited object into some other object:
        null;
     end Show_Illegal_Constructor;
 
+Default initialization
+----------------------
+
 :code-config:`reset_accumulator=True`
 
-Have you ever written Ada 95 code like this?
+Prior to Ada 2005, the following style was common:
 
 .. code:: ada
 
@@ -834,8 +840,8 @@ to write the default values :ada:`Red` and :ada:`False` twice. What if we
 change our mind about :ada:`Red`, and forget to change it in all the
 relevant places?
 
-The :ada:`<>` notation comes to the rescue. If we want to say, "make
-:ada:`Count` equal :ada:`100`, but initialize :ada:`Color` and
+Since Ada 2005, the :ada:`<>` notation comes to the rescue. If we want to
+say, "make :ada:`Count` equal :ada:`100`, but initialize :ada:`Color` and
 :ada:`Is_Gnarly` to their defaults", we can do this:
 
 .. code:: ada
@@ -865,7 +871,7 @@ week, to their defaults", we can do this:
 
 Note that if we add a component :ada:`Glorp : Integer;` to type :ada:`T`,
 then the :ada:`others` case leaves :ada:`Glorp` undefined just as this
-Ada 95 code would do:
+code would do:
 
 .. code:: ada
 
@@ -879,4 +885,5 @@ Ada 95 code would do:
 
     end Type_Defaults;
 
-Think twice before using :ada:`others`.
+Therefore, you should be careful and think twice before using
+:ada:`others`.
