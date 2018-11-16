@@ -26,8 +26,8 @@ aggregates.
 
 In most languages that support overloading, overload resolution is done
 "bottom up" --- that is, information flows from inner constructs to outer
-constructs. (As usual, computer folks draw their trees upside-down, with
-the root at the top.) For example, if we have two procedures :ada:`Print`:
+constructs. As usual, computer folks draw their trees upside-down, with
+the root at the top. For example, if we have two procedures :ada:`Print`:
 
 .. code:: ada run_button
 
@@ -130,7 +130,7 @@ the relevant sources. Too much overloading can be confusing. How much is
 
 Ada really needs to have top-down overload resolution, in order to resolve
 literals. In some languages, you can tell the type of a literal by looking
-at it, for example appending :ada:`L` (letter el) means "the type of this
+at it, for example appending ``L`` (letter el) means "the type of this
 literal is long int". That sort of kludge won't work in Ada, because we
 have an open-ended set of integer types:
 
@@ -156,7 +156,7 @@ of that implicit conversion that is at issue. But that's an obscure point
 --- you won't go *too* far wrong if you think of the integer literal
 notation as being overloaded on all integer types.
 
-Programmers sometimes wonder why the compiler can't resolve something that
+Developers sometimes wonder why the compiler can't resolve something that
 seems obvious. For example:
 
 .. code:: ada run_button
@@ -174,14 +174,14 @@ seems obvious. For example:
     end Show_Literal_Resolution_Error;
 
 This call is ambiguous, and therefore illegal. But why? Clearly the
-programmer must have meant the :ada:`Orange_Count` one, because
+developer must have meant the :ada:`Orange_Count` one, because
 :ada:`10_000` is out of range for :ada:`Apple_Count`. And all the relevant
 expressions happen to be static.
 
 Well, a good rule of thumb in language design (for languages with
 overloading) is that the overload resolution rules should not be
 "too smart". We want this example to be illegal to avoid confusion on the
-part of programmers reading the code. As usual, a qualified expression
+part of developers reading the code. As usual, a qualified expression
 fixes it:
 
 .. code-block:: ada
@@ -226,7 +226,7 @@ Only after resolving that the type of the aggregate is :ada:`Complex` can
 the compiler look inside and make sure :ada:`Re` and :ada:`Im` make sense.
 
 This not-too-smart rule for aggregates helps prevent confusion on the part
-of programmers reading the code. It also simplifies the compiler, and
+of developers reading the code. It also simplifies the compiler, and
 makes the overload resolution algorithm reasonably efficient.
 
 How smart is "too smart" is in part a matter of taste. In fact, I would
