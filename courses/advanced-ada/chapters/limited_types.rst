@@ -18,37 +18,59 @@ Limited Types
 Limited types and aggregates
 ----------------------------
 
+:code-config:`reset_accumulator=True`
+
 One of my favorite features of Ada is the *full coverage rules* for
 aggregates. For example, suppose we have a record type:
 
-.. code-block:: ada
+.. code:: ada
 
-   type Person is
-      record
-         Name : Unbounded_String;
-         Age : Years;
-      end record;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    package Persons is
+       type Years is new Natural;
+
+       type Person is record
+          Name : Ada.Strings.Unbounded.Unbounded_String;
+          Age  : Years;
+       end record;
+    end Persons;
 
 We can create an object of the type using an aggregate:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   X : constant Person :=
-      (Name => To_Unbounded_String ("John Doe"),
-       Age => 25);
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Persons; use Persons;
+
+    procedure Show_Aggregate_Init is
+
+       X : constant Person :=
+             (Name => To_Unbounded_String ("John Doe"),
+              Age  => 25);
+    begin
+       null;
+    end Show_Aggregate_Init;
+
+:code-config:`reset_accumulator=True`
 
 The full coverage rules say that every component of :ada:`Person` must be
 accounted for in the aggregate. If we later modify type :ada:`Person` by
 adding a component:
 
-.. code-block:: ada
+.. code:: ada
 
-   type Person is
-      record
-         Name : Unbounded_String;
-         Age : Natural;
-         Shoe_Size : Positive;
-      end record;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    package Persons is
+       type Years is new Natural;
+
+       type Person is record
+          Name      : Unbounded_String;
+          Age       : Natural;
+          Shoe_Size : Positive;
+       end record;
+    end Persons;
 
 and we forget to modify :ada:`X` accordingly, the compiler will remind us.
 Case statements also have full coverage rules, which serve a similar
@@ -58,11 +80,19 @@ Of course, we can defeat the full coverage rules by using :ada:`others`
 (usually for array aggregates and case statements, but occasionally useful
 for record aggregates):
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   X : constant Person :=
-      (Name => To_Unbounded_String ("John Doe"),
-       others => 25);
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Persons; use Persons;
+
+    procedure Show_Aggregate_Init_Others is
+
+       X : constant Person :=
+             (Name   => To_Unbounded_String ("John Doe"),
+              others => 25);
+    begin
+       null;
+    end Show_Aggregate_Init_Others;
 
 According to the Ada RM :ada:`others` here means precisely the same thing
 as :ada:`Age | Shoe_Size`. But that's wrong: what :ada:`others` really
@@ -71,20 +101,30 @@ week or next year". That means you shouldn't use :ada:`others` unless
 you're pretty sure it should apply to all the cases that haven't been
 invented yet.
 
+:code-config:`reset_accumulator=True`
+
 So far, this is old news --- the full coverage rules have been aiding
 maintenance since Ada 83. So what does this have to do with Ada 2005?
 
 Suppose we have a limited type:
 
-.. code-block:: ada
+.. code:: ada
 
-   type Limited_Person is limited
-      record
-         Self : Limited_Person_Access := Limited_Person'Unchecked_Access;
-         Name : Unbounded_String;
-         Age : Natural;
-         Shoe_Size : Positive;
-      end record;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    package Persons is
+
+       type Limited_Person;
+       type Limited_Person_Access is access all Limited_Person;
+
+       type Limited_Person is limited record
+          Self      : Limited_Person_Access := Limited_Person'Unchecked_Access;
+          Name      : Unbounded_String;
+          Age       : Natural;
+          Shoe_Size : Positive;
+       end record;
+
+    end Persons;
 
 This type has a self-reference; it doesn't make sense to copy objects,
 because Self would end up pointing to the wrong place. Therefore, we would
@@ -98,11 +138,17 @@ In Ada 95, aggregates were illegal for limited types. Therefore, we would
 be faced with a difficult choice: Make the type limited, and initialize it
 like this:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   X : Limited_Person;
-   X.Name := To_Unbounded_String ("John Doe");
-   X.Age := 25;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Persons; use Persons;
+
+    procedure Show_Non_Aggregate_Init is
+       X : Limited_Person;
+    begin
+       X.Name := To_Unbounded_String ("John Doe");
+       X.Age := 25;
+    end Show_Non_Aggregate_Init;
 
 which has the maintenance problem the full coverage rules are supposed to
 prevent. Or, make the type non-limited, and gain the benefits of
@@ -110,15 +156,22 @@ aggregates, but lose the ability to prevent copies.
 
 In Ada 2005, an aggregate is allowed to be limited; we can say:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   X : aliased Limited_Person :=
-      (Self => null, -- Wrong!
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Persons; use Persons;
 
-       Name => To_Unbounded_String ("John Doe"),
-       Age => 25,
-       Shoe_Size => 10);
-   X.Self := X'Access;
+    procedure Show_Aggregate_Init is
+
+       X : aliased Limited_Person :=
+             (Self      => null, -- Wrong!
+
+              Name      => To_Unbounded_String ("John Doe"),
+              Age       => 25,
+              Shoe_Size => 10);
+    begin
+       X.Self := X'Unchecked_Access;
+    end Show_Aggregate_Init;
 
 We'll see what to do about that :ada:`Self => null` in a future gem.
 
@@ -160,13 +213,20 @@ defaults with aggregates. Ada 2005 adds a new syntax in aggregates ---
 
 Here, we can say:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   X : aliased Limited_Person :=
-      (Self => <>,
-       Name => To_Unbounded_String ("John Doe"),
-       Age => 25,
-       Shoe_Size => 10);
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Persons; use Persons;
+
+    procedure Show_Aggregate_Box_Init is
+       X : aliased Limited_Person :=
+             (Self      => <>,
+              Name      => To_Unbounded_String ("John Doe"),
+              Age       => 25,
+              Shoe_Size => 10);
+    begin
+       null;
+    end Show_Aggregate_Box_Init;
 
 The :ada:`Self => <>` means use the default value of
 :ada:`Limited_Person'Unchecked_Access`. Since :ada:`Limited_Person`
@@ -181,20 +241,30 @@ record-component default, then there is no default value.
 
 For example, if we have an aggregate of type :ada:`String`, like this:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    Uninitialized_String_Const : constant String := (1..10 => <>);
+    procedure Show_String_Box_Init is
+        Uninitialized_String_Const : constant String := (1 .. 10 => <>);
+    begin
+       null;
+    end Show_String_Box_Init;
 
 we end up with a 10-character string all of whose characters are invalid
 values. Note that this is no more nor less dangerous than this:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    Uninitialized_String_Var : String (1..10); -- no initialization
+    procedure Show_Dangerous_String is
+        Uninitialized_String_Var : String (1 .. 10);  --  no initialization
 
-    Uninitialized_String_Const : constant String := Uninitialized_String_Var;
+        Uninitialized_String_Const : constant String := Uninitialized_String_Var;
+    begin
+       null;
+    end Show_Dangerous_String;
 
 As always, one must be careful about uninitialized scalar objects.
+
+:code-config:`reset_accumulator=True`
 
 Given that Ada 2005 allows build-in-place aggregates for limited types,
 the obvious next step is to allow such aggregates to be wrapped in an
@@ -202,47 +272,79 @@ abstraction --- namely, to return them from functions. After all,
 interesting types are usually private, and we need some way for clients
 to create and initialize objects.
 
-.. code-block:: ada
+.. code:: ada
 
-   package P is
-      type T (<>) is limited private;
-      function Make_T (Name : String) return T; -- constructor function
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
-   private
-      type T is limited
-         record
-            Name : Unbounded_String;
-            My_Task : Some_Task_Type;
-            My_Prot : Some_Protected_Type;
-         end record;
-   end P;
-   package body P is
-      function Make_T (Name : String) return T is
-      begin
-         return (Name => To_Unbounded_String (Name), others => <>);
-      end Make_T;
-   end P;
+    package P is
+       task type Some_Task_Type;
+
+       protected type Some_Protected_Type is
+          --  dummy type
+       end Some_Protected_Type;
+
+       type T (<>) is limited private;
+       function Make_T (Name : String) return T; -- constructor function
+    private
+       type T is limited
+          record
+             Name    : Unbounded_String;
+             My_Task : Some_Task_Type;
+             My_Prot : Some_Protected_Type;
+          end record;
+    end P;
+
+    package body P is
+
+       task body Some_Task_Type is
+       begin
+          null;
+       end Some_Task_Type;
+
+       protected body Some_Protected_Type is
+       end Some_Protected_Type;
+
+       function Make_T (Name : String) return T is
+       begin
+          return (Name => To_Unbounded_String (Name), others => <>);
+       end Make_T;
+
+    end P;
 
 In Ada 95, constructor functions (that is, functions that create new
 objects and return them) are not allowed for limited types. Ada 2005
 allows fully-general constructor functions. Given the above, clients can
 say:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    My_T : T := Make_T (Name => "Bartholomew Cubbins");
+    with P; use P;
+
+    procedure Show_Constructor_Function is
+       My_T : T := Make_T (Name => "Bartholomew Cubbins");
+    begin
+       null;
+    end Show_Constructor_Function;
 
 As for aggregates, the result of :ada:`Make_T` is built in place (that is,
 in :ada:`My_T`), rather than being created and then copied into
 :ada:`My_T`. Adding another level of function call, we can do:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   function Make_Rumplestiltskin return T is
-   begin
-       return Make_T (Name => "Rumplestiltskin");
-   end Make_Rumplestiltskin;
-   Rumplestiltskin_Is_My_Name : constant T := Make_Rumplestiltskin;
+    with P; use P;
+
+    procedure Show_Rumplestiltskin_Constructor is
+
+       function Make_Rumplestiltskin return T is
+       begin
+           return Make_T (Name => "Rumplestiltskin");
+       end Make_Rumplestiltskin;
+
+       Rumplestiltskin_Is_My_Name : constant T := Make_Rumplestiltskin;
+    begin
+       null;
+    end Show_Rumplestiltskin_Constructor;
 
 It might help to understand the implementation model: In this case,
 :ada:`Rumplestiltskin_Is_My_Name` is allocated in the usual way (on the
@@ -265,6 +367,8 @@ prevents clients from creating default-initialized objects (that is,
 an object of type :ada:`T` is created, giving package :ada:`P` full
 control over initialization of objects.
 
+:code-config:`reset_accumulator=True`
+
 Ideally, limited and non-limited types should be just the same, except for
 the essential difference: you can't copy limited objects. Allowing
 functions and aggregates for limited types in Ada 2005 brings us very
@@ -276,17 +380,61 @@ default values, which limits you to one constructor. And the only way to
 pass parameters to that construction is via discriminants. In Ada 2005,
 we can say:
 
-.. code-block:: ada
+.. code:: ada
 
-   This_Set : Set := Empty_Set;
-   That_Set : Set := Singleton_Set (Element => 42);
+    with Ada.Containers.Ordered_Sets;
+
+    package Aux is
+
+       generic
+          with package OS is new Ada.Containers.Ordered_Sets (<>);
+       function Gen_Singleton_Set (Element : OS.Element_Type) return OS.Set;
+
+       package Integer_Sets is new Ada.Containers.Ordered_Sets
+         (Element_Type => Integer);
+
+       function Singleton_Set is new Gen_Singleton_Set (OS => Integer_Sets);
+
+    end Aux;
+
+.. code:: ada
+
+    package body Aux is
+
+       function Gen_Singleton_Set  (Element : OS.Element_Type) return OS.Set is
+       begin
+          return S : OS.Set := OS.Empty_Set do
+             S.Insert (Element);
+          end return;
+       end Gen_Singleton_Set;
+
+    end Aux;
+
+.. code:: ada run_button
+
+    with Aux; use Aux;
+    use Aux.Integer_Sets;
+
+    procedure Show_Set_Constructor is
+       This_Set : Set := Empty_Set;
+       That_Set : Set := Singleton_Set (Element => 42);
+    begin
+       null;
+    end Show_Set_Constructor;
 
 whether or not :ada:`Set` is limited. :ada:`This_Set : Set := Empty_Set;`
 seems clearer to me than:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   This_Set : Set;
+    with Aux; use Aux;
+    use Aux.Integer_Sets;
+
+    procedure Show_Set_Decl is
+       This_Set : Set;
+    begin
+       null;
+    end Show_Set_Decl;
 
 which might mean "default-initialize to the empty set" or might mean
 "leave it uninitialized, and we'll initialize it in later".
@@ -294,34 +442,52 @@ which might mean "default-initialize to the empty set" or might mean
 Return objects
 --------------
 
+:code-config:`reset_accumulator=True`
+
 A common idiom in Ada 95 is to build up a function result in a local
 object, and then return that object:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   function Sum (A : Array_Of_Natural) return Natural is
-      Result : Natural := 0;
-   begin
-      for Index in A'Range loop
-         Result := Result + A (Index);
-      end loop;
-      return Result;
-   end Sum;
+    procedure Show_Return is
+
+       type Array_Of_Natural is array (Positive range <>) of Natural;
+
+       function Sum (A : Array_Of_Natural) return Natural is
+          Result : Natural := 0;
+       begin
+          for Index in A'Range loop
+             Result := Result + A (Index);
+          end loop;
+          return Result;
+       end Sum;
+
+    begin
+       null;
+    end Show_Return;
 
 Ada 2005 allows a notation called the :ada:`extended_return_statement`,
 which allows you to declare the result object and return it as part of one
 statement. It looks like this:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   function Sum (A : Array_Of_Natural) return Natural is
-   begin
-      return Result : Natural := 0 do
-         for Index in A'Range loop
-            Result := Result + A (Index);
-         end loop;
-      end return;
-   end Sum;
+    procedure Show_Extended_Return is
+
+       type Array_Of_Natural is array (Positive range <>) of Natural;
+
+       function Sum (A : Array_Of_Natural) return Natural is
+       begin
+          return Result : Natural := 0 do
+             for Index in A'Range loop
+                Result := Result + A (Index);
+             end loop;
+          end return;
+       end Sum;
+
+    begin
+       null;
+    end Show_Extended_Return;
 
 The return statement here creates :ada:`Result`, initializes it to
 :ada:`0`, and executes the code between :ada:`do` and :ada:`end return`.
@@ -331,34 +497,76 @@ as the function result.
 For most types, this is no big deal --- it's just syntactic sugar. But for
 limited types, this syntax is almost essential:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
-   function Make_Task (Val : Integer) return Task_Type is
-      Result : Task_Type (Discriminant => Val * 3);
-   begin
-      --  some statements...
-      return Result; -- Illegal!
-   end Make_Task;
+    package Task_Construct_Error is
+
+       task type Task_Type (Discriminant : Integer);
+
+       function Make_Task (Val : Integer) return Task_Type;
+
+    end Task_Construct_Error;
+
+    package body Task_Construct_Error is
+
+       task body Task_Type is
+       begin
+          null;
+       end Task_Type;
+
+       function Make_Task (Val : Integer) return Task_Type is
+          Result : Task_Type (Discriminant => Val * 3);
+       begin
+          --  some statements...
+          return Result; -- Illegal!
+       end Make_Task;
+
+    end Task_Construct_Error;
 
 The return statement here is illegal, because :ada:`Result` is local to
 :ada:`Make_Task`, and returning it would involve a copy, which makes no
 sense (which is why task types are limited). In Ada 2005, we can write
 constructor functions for task types:
 
-.. code-block:: ada
+.. code:: ada
 
-   function Make_Task (Val : Integer) return Task_Type is
-   begin
-      return Result : Task_Type (Discriminant => Val * 3) do
-         --  some statements...
-      end return;
-   end Make_Task;
+    package Task_Construct is
+
+       task type Task_Type (Discriminant : Integer);
+
+       function Make_Task (Val : Integer) return Task_Type;
+
+    end Task_Construct;
+
+    package body Task_Construct is
+
+       task body Task_Type is
+       begin
+          null;
+       end Task_Type;
+
+       function Make_Task (Val : Integer) return Task_Type is
+       begin
+          return Result : Task_Type (Discriminant => Val * 3) do
+             --  some statements...
+             null;
+          end return;
+       end Make_Task;
+
+    end Task_Construct;
 
 If we call it like this:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    My_Task : Task_Type := Make_Task (Val => 42);
+    with Task_Construct; use Task_Construct;
+
+    procedure Show_Task_Construct is
+       My_Task : Task_Type := Make_Task (Val => 42);
+    begin
+       null;
+    end Show_Task_Construct;
 
 Result is created *in place* in :ada:`My_Task`. :ada:`Result` is
 temporarily considered local to :ada:`Make_Task` during the
@@ -376,62 +584,126 @@ While the :ada:`extended_return_statement` was added to the language
 specifically to support limited constructor functions, it comes in handy
 whenever you want a local name for the function result:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   function Make_String (...) return String is
-      Length : Natural := 10;
-   begin
-      if ... then
-         Length := 12;
-      end if;
-      return Result : String (1..Length) do
-         ... -- fill in the characters
-         pragma Assert (Is_Good (Result)); null;
-      end return;
-   end Make_String;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_String_Construct is
+
+       function Make_String (S          : String;
+                             Prefix     : String;
+                             Use_Prefix : Boolean) return String is
+          Length : Natural := S'Length;
+       begin
+          if Use_Prefix then
+             Length := Length + Prefix'Length;
+          end if;
+
+          return Result : String (1 .. Length) do
+
+             --  fill in the characters
+             if Use_Prefix then
+                Result (1 .. Prefix'Length) := Prefix;
+                Result (Prefix'Length + 1 .. Length) := S;
+             else
+                Result := S;
+             end if;
+
+          end return;
+       end Make_String;
+
+       S1 : String := "Ada";
+       S2 : String := "Make_With_";
+    begin
+       Put_Line ("No prefix:   " & Make_String (S1, S2, False));
+       Put_Line ("With prefix: " & Make_String (S1, S2, True));
+    end Show_String_Construct;
 
 We've earlier seen examples of constructor functions for limited types
 similar to this:
 
-.. code-block:: ada
+.. code:: ada
 
-   package P is
-      type T (<>) is limited private;
-      function Make_T (Name : String) return T; -- constructor function
-   private
-      type T is new Limited_Controlled with
-         record
-            ...
-         end record;
-   end P;
-   package body P is
-      function Make_T (Name : String) return T is
-      begin
-         return (Name => To_Unbounded_String (Name), others => <>);
-      end Make_T;
-   end P;
-   function Make_Rumplestiltskin return T is
-   begin
-       return Make_T (Name => "Rumplestiltskin");
-   end Make_Rumplestiltskin;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    package P is
+       task type Some_Task_Type;
+
+       protected type Some_Protected_Type is
+          --  dummy type
+       end Some_Protected_Type;
+
+       type T is limited private;
+       --  type T (<>) is limited private;
+       function Make_T (Name : String) return T; -- constructor function
+    private
+       type T is limited
+          record
+             Name    : Unbounded_String;
+             My_Task : Some_Task_Type;
+             My_Prot : Some_Protected_Type;
+          end record;
+    end P;
+
+    package body P is
+
+       task body Some_Task_Type is
+       begin
+          null;
+       end Some_Task_Type;
+
+       protected body Some_Protected_Type is
+       end Some_Protected_Type;
+
+       function Make_T (Name : String) return T is
+       begin
+          return (Name => To_Unbounded_String (Name), others => <>);
+       end Make_T;
+
+    end P;
+
+.. code:: ada
+
+    with P; use P;
+    function Make_Rumplestiltskin return T;
+
+.. code:: ada
+
+    with P; use P;
+    function Make_Rumplestiltskin return T is
+    begin
+        return Make_T (Name => "Rumplestiltskin");
+    end Make_Rumplestiltskin;
 
 It is useful to consider the various contexts in which these functions may
 be called. We've already seen things like:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   Rumplestiltskin_Is_My_Name : T := Make_Rumplestiltskin;
+    with P; use P;
+    with Make_Rumplestiltskin;
+
+    procedure Show_Rumplestiltskin_Constructor is
+       Rumplestiltskin_Is_My_Name : constant T := Make_Rumplestiltskin;
+    begin
+       null;
+    end Show_Rumplestiltskin_Constructor;
 
 in which case the limited object is built directly in a standalone object.
 This object will be finalized whenever the surrounding scope is left.
 
 We can also do:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   procedure Do_Something (X : T);
+    with P; use P;
+    with Make_Rumplestiltskin;
 
-   Do_Something (X => Make_Rumplestiltskin);
+    procedure Show_Parameter_Constructor is
+       procedure Do_Something (X : T) is null;
+    begin
+       Do_Something (X => Make_Rumplestiltskin);
+    end Show_Parameter_Constructor;
 
 Here, the result of the function is built directly in the formal parameter
 :ada:`X` of :ada:`Do_Something`. :ada:`X` will be finalized as soon as we
@@ -439,18 +711,30 @@ return from :ada:`Do_Something`.
 
 We can allocate initialized objects on the heap:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   type T_Ref is access all T;
-   Global : T_Ref;
-   procedure Heap_Alloc is
-      Local : T_Ref;
-   begin
-      Local := new T'(Make_Rumplestiltskin);
-      if ... then
-         Global := Local;
-      end if;
-   end Heap_Alloc;
+    with P; use P;
+    with Make_Rumplestiltskin;
+
+    procedure Show_Heap_Constructor is
+
+       type T_Ref is access all T;
+
+       Global : T_Ref;
+
+       procedure Heap_Alloc is
+          Local : T_Ref;
+          To_Global : Boolean := True;
+       begin
+          Local := new T'(Make_Rumplestiltskin);
+          if To_Global then
+             Global := Local;
+          end if;
+       end Heap_Alloc;
+
+    begin
+       null;
+    end Show_Heap_Constructor;
 
 The result of the function is built directly in the heap-allocated object,
 which will be finalized when the scope of :ada:`T_Ref` is left (long after
@@ -459,15 +743,24 @@ which will be finalized when the scope of :ada:`T_Ref` is left (long after
 We can create another limited type with a component of type :ada:`T`, and
 use an aggregate:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-   type Outer_Type is limited
-      record
-         This : T;
-         That : T;
-      end record;
-   Outer_Obj : Outer_Type := (This => Make_Rumplestiltskin,
-                              That => Make_T (Name => ""));
+    with P; use P;
+    with Make_Rumplestiltskin;
+
+    procedure Show_Outer_Type is
+
+       type Outer_Type is limited record
+          This : T;
+          That : T;
+       end record;
+
+       Outer_Obj : Outer_Type := (This => Make_Rumplestiltskin,
+                                  That => Make_T (Name => ""));
+
+    begin
+       null;
+    end Show_Outer_Type;
 
 As usual, the function results are built in place, directly in
 :ada:`Outer_Obj.This` and :ada:`Outer_Obj.That`, with no copying involved.
@@ -475,37 +768,65 @@ As usual, the function results are built in place, directly in
 The one case where we *cannot* call such constructor functions is in an
 assignment statement:
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-expect-compile-error
 
-   Rumplestiltskin_Is_My_Name := Make_T(Name => ""); -- Illegal!
+    with P; use P;
+    with Make_Rumplestiltskin;
+
+    procedure Show_Illegal_Constructor is
+       Rumplestiltskin_Is_My_Name : T;
+    begin
+       Rumplestiltskin_Is_My_Name := Make_T (Name => "");  --  Illegal!
+    end Show_Illegal_Constructor;
 
 which is illegal because assignment statements involve copying. Likewise,
 we can't copy a limited object into some other object:
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-expect-compile-error
 
-   Other : T := Rumplestiltskin_Is_My_Name; -- Illegal!
+    with P; use P;
+    with Make_Rumplestiltskin;
+
+    procedure Show_Illegal_Constructor is
+       Rumplestiltskin_Is_My_Name : constant T := Make_T (Name => "");
+       Other : T := Rumplestiltskin_Is_My_Name; -- Illegal!
+    begin
+       null;
+    end Show_Illegal_Constructor;
+
+:code-config:`reset_accumulator=True`
 
 Have you ever written Ada 95 code like this?
 
-.. code-block:: ada
+.. code:: ada
 
-   package P is
-      type T is private;
-      ...
-   private
-      type T is
-         record
-            Color : Color_Enum := Red;
-            Is_Gnarly : Boolean := False;
-            Count : Natural;
-         end record;
-   end P;
-   package body P is
-      Object_100 : constant T :=
-         (Color => Red, Is_Gnarly => False, Count => 100);
-      ...
-   end P;
+    package Type_Defaults is
+       type Color_Enum is (Red, Blue, Green);
+
+       type T is private;
+    private
+       type T is
+          record
+             Color     : Color_Enum := Red;
+             Is_Gnarly : Boolean := False;
+             Count     : Natural;
+          end record;
+
+       procedure Do_Something;
+    end Type_Defaults;
+
+.. code:: ada
+
+    package body Type_Defaults is
+
+       Object_100 : constant T :=
+                      (Color => Red, Is_Gnarly => False, Count => 100);
+
+       procedure Do_Something is null;
+
+    end Type_Defaults;
 
 We want :ada:`Object_100` to be a default-initialized :ada:`T`, with
 :ada:`Count` equal to :ada:`100`. It's a little bit annoying that we had
@@ -517,26 +838,45 @@ The :ada:`<>` notation comes to the rescue. If we want to say, "make
 :ada:`Count` equal :ada:`100`, but initialize :ada:`Color` and
 :ada:`Is_Gnarly` to their defaults", we can do this:
 
-.. code-block:: ada
+.. code:: ada
 
-   Object_100 : constant T :=
-      (Color => <>, Is_Gnarly => <>, Count => 100);
+    package body Type_Defaults is
+
+       Object_100 : constant T :=
+                      (Color => <>, Is_Gnarly => <>, Count => 100);
+
+       procedure Do_Something is null;
+
+    end Type_Defaults;
 
 On the other hand, if we want to say, "make :ada:`Count` equal :ada:`100`,
 but initialize all other components, including the ones we might add next
 week, to their defaults", we can do this:
 
-.. code-block:: ada
+.. code:: ada
 
-   Object_100 : constant T := (Count => 100, others => <>);
+    package body Type_Defaults is
+
+       Object_100 : constant T := (Count => 100, others => <>);
+
+       procedure Do_Something is null;
+
+    end Type_Defaults;
 
 Note that if we add a component :ada:`Glorp : Integer;` to type :ada:`T`,
 then the :ada:`others` case leaves :ada:`Glorp` undefined just as this
 Ada 95 code would do:
 
-.. code-block:: ada
+.. code:: ada
 
-   Object_100 : T;
-   Object_100.Count := 100;
+    package body Type_Defaults is
+
+       procedure Do_Something is
+          Object_100 : T;
+       begin
+          Object_100.Count := 100;
+       end Do_Something;
+
+    end Type_Defaults;
 
 Think twice before using :ada:`others`.
