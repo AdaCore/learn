@@ -29,26 +29,53 @@ In most languages that support overloading, overload resolution is done
 constructs. (As usual, computer folks draw their trees upside-down, with
 the root at the top.) For example, if we have two procedures :ada:`Print`:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    procedure Print (S : Sequence);
-    procedure Print (S : Set);
-    X : Sequence;
-    ...
-    Print (X);
+    procedure Show_Overloading is
+
+       package Types is
+          type Sequence is null record;
+          type Set is null record;
+
+          procedure Print (S : Sequence) is null;
+          procedure Print (S : Set) is null;
+       end Types;
+
+       use Types;
+
+       X : Sequence;
+    begin
+
+       --  Compiler selects Print (S : Sequence)
+       Print (X);
+    end Show_Overloading;
 
 the type of :ada:`X` determines which :ada:`Print` is meant in the call.
 
 Ada is unusual in that it supports top-down overload resolution as well:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    function Empty return Sequence;
-    procedure Print_Sequence (S : Sequence);
-    function Empty return Set;
-    procedure Print_Set (S : Set);
-    ...
-    Print_Sequence (Empty);
+    procedure Show_Top_Down_Overloading is
+
+       package Types is
+          type Sequence is null record;
+          type Set is null record;
+
+          function Empty return Sequence is ((others => <>));
+          function Empty return Set  is ((others => <>));
+
+          procedure Print_Sequence (S : Sequence) is null;
+          procedure Print_Set (S : Set) is null;
+       end Types;
+
+       use Types;
+
+       X : Sequence;
+    begin
+       --  Compiler selects function Empty return Sequence
+       Print_Sequence (Empty);
+    end Show_Top_Down_Overloading;
 
 The type of the formal parameter :ada:`S` of :ada:`Print_Sequence`
 determines which :ada:`Empty` is meant in the call. In C++, for example,
@@ -58,14 +85,28 @@ top-down information.
 
 If we overload things too heavily, we can cause ambiguities:
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-expect-compile-error
 
-    function Empty return Sequence;
-    procedure Print (S : Sequence);
-    function Empty return Set;
-    procedure Print (S : Set);
-    ...
-    Print (Empty); -- Illegal!
+    procedure Show_Overloading_Error is
+
+       package Types is
+          type Sequence is null record;
+          type Set is null record;
+
+          function Empty return Sequence is ((others => <>));
+          function Empty return Set  is ((others => <>));
+
+          procedure Print (S : Sequence) is null;
+          procedure Print (S : Set) is null;
+       end Types;
+
+       use Types;
+
+       X : Sequence;
+    begin
+       Print (Empty);  -- Illegal!
+    end Show_Overloading_Error;
 
 The call is ambiguous, and therefore illegal, because there are two
 possible meanings. One way to resolve the ambiguity is to use a qualified
@@ -93,12 +134,16 @@ at it, for example appending :ada:`L` (letter el) means "the type of this
 literal is long int". That sort of kludge won't work in Ada, because we
 have an open-ended set of integer types:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    type Apple_Count is range 0..100;
-    procedure Peel (Count : Apple_Count);
-    ...
-    Peel (20);
+    procedure Show_Literal_Resolution is
+
+       type Apple_Count is range 0 .. 100;
+
+       procedure Peel (Count : Apple_Count) is null;
+    begin
+       Peel (20);
+    end Show_Literal_Resolution;
 
 You can't tell by looking at the literal :ada:`20` what its type is. The
 type of formal parameter :ada:`Count` tells us that :ada:`20` is an
@@ -114,14 +159,19 @@ notation as being overloaded on all integer types.
 Programmers sometimes wonder why the compiler can't resolve something that
 seems obvious. For example:
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-expect-compile-error
 
-    type Apple_Count is range 0..100;
-    procedure Slice (Count : Apple_Count);
-    type Orange_Count is range 0..10_000;
-    procedure Slice (Count : Orange_Count);
-    ...
-    Slice (Count => 10_000); -- Illegal!
+    procedure Show_Literal_Resolution_Error is
+
+       type Apple_Count is range 0 .. 100;
+       procedure Slice (Count : Apple_Count) is null;
+
+       type Orange_Count is range 0 .. 10_000;
+       procedure Slice (Count : Orange_Count) is null;
+    begin
+       Slice (Count => (10_000));  --  Illegal!
+    end Show_Literal_Resolution_Error;
 
 This call is ambiguous, and therefore illegal. But why? Clearly the
 programmer must have meant the :ada:`Orange_Count` one, because
@@ -144,16 +194,20 @@ the context in which the aggregate appears). Bottom-up information is not
 used; that is, the compiler does not look inside the aggregate in order to
 determine its type.
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-expect-compile-error
 
-    type Complex is
-        record
-            Re, Im : Float;
-        end record;
-    procedure Grind (X : Complex);
-    procedure Grind (X : String);
-    ...
-    Grind (X => (Re => 1.0, Im => 1.0)); -- Illegal!
+    procedure Show_Record_Resolution_Error is
+
+       type Complex is record
+          Re, Im : Float;
+       end record;
+
+       procedure Grind (X : Complex) is null;
+       procedure Grind (X : String) is null;
+    begin
+       Grind (X => (Re => 1.0, Im => 1.0));  --  Illegal!
+    end Show_Record_Resolution_Error;
 
 There are two :ada:`Grind` procedures visible, so the type of the
 aggregate could be :ada:`Complex` or :ada:`String`, so it is ambiguous and
