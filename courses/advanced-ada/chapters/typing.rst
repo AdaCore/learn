@@ -228,18 +228,3 @@ the compiler look inside and make sure :ada:`Re` and :ada:`Im` make sense.
 This not-too-smart rule for aggregates helps prevent confusion on the part
 of developers reading the code. It also simplifies the compiler, and
 makes the overload resolution algorithm reasonably efficient.
-
-How smart is "too smart" is in part a matter of taste. In fact, I would
-make the Ada rules a little bit less smart, if I were redesigning it from
-scratch. If we replaced the :ada:`Grind` on :ada:`String` procedure with:
-
-.. code-block:: ada
-
-    procedure Grind (X : Integer);
-
-then the above call would resolve, because the compiler *does* use the
-fact that the aggregate must be some sort of aggregate-ish type, like a
-record or array. I would prefer the call to still be ambiguous in that
-case, but by and large, Ada gets the rules just about right, so something
-that is confusingly ambiguous to humans is usually ambiguous by the Ada
-rules.
