@@ -2,7 +2,11 @@
 {%- set url_root = pathto('', 1) %}
 {%- if url_root == '#' %}{% set url_root = '' %}{% endif %}
 {%- if not embedded and docstitle %}
-  {%- set titlesuffix = " &mdash; "|safe + docstitle|e %}
+  {%- if parents %}
+    {%- set titlesuffix = " &mdash; "|safe + parents[-1].title|striptags|e + " &mdash; "|safe + docstitle|e %}
+  {%- else %}
+    {%- set titlesuffix = " &mdash; "|safe + docstitle|e %}
+  {%- endif %}
 {%- else %}
   {%- set titlesuffix = "" %}
 {%- endif %}
@@ -21,7 +25,7 @@
   {{ metatags }}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   {% block htmltitle %}
-  <title>{{ project }}</title>
+  <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
   {% endblock %}
 
   {# FAVICON #}
