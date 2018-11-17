@@ -16,7 +16,7 @@ Structure
 
 - [ ] Typing
 
-    - [ ] Overloading (*material reuse*)
+    - [x] Overloading (*material reuse*)
 
 - [ ] Access types
 
@@ -57,7 +57,7 @@ Structure
 
 - [ ] Strong Typing
 
-    - [ ] Type-Based Security (*material reuse*)
+    - [x] Type-Based Security (*material reuse*)
     - [x] Table access
     - [x] Multiple indices
     - [ ] Discriminants
