@@ -28,24 +28,31 @@ singly-linked list can be null-terminated. A :ada:`Lookup` function can
 return :ada:`null` to mean "not found", presuming the result is of an
 access type:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-syntax-only
 
-   type Ref_Element is access all Element;
+    package Show_Null_Return is
 
-   Not_Found : constant Ref_Element := null;
+       type Ref_Element is access all Element;
 
-   function Lookup (T : Table) return Ref_Element;
-   --  Returns Not_Found if not found.
+       Not_Found : constant Ref_Element := null;
+
+       function Lookup (T : Table) return Ref_Element;
+       --  Returns Not_Found if not found.
+    end Show_Null_Return;
 
 An alternative design for :ada:`Lookup` would be to raise an exception:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-syntax-only
 
-   Not_Found : exception;
+    package Show_Not_Found_Exception is
+       Not_Found : exception;
 
-   function Lookup (T : Table) return Ref_Element;
-   --  Raises Not_Found if not found.
-   --  Never returns null.                  <--  Ada 95 comment.
+       function Lookup (T : Table) return Ref_Element;
+       --  Raises Not_Found if not found.
+       --  Never returns null.
+    end Show_Not_Found_Exception;
 
 Neither design is better in all situations; it depends in part on whether
 we consider the "not found" situation to be exceptional.
@@ -56,11 +63,19 @@ idea to document whether things can be null or not, especially for formal
 parameters and function results. Prior to Ada 2005, we would do that with
 comments. Since Ada 2005, we can use the :ada:`not null` syntax:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-syntax-only
 
-   function Lookup (T : Table) return not null Ref_Element;  --  Ada 2005
+    package Show_Not_Null_Return is
+       type Ref_Element is access all Element;
 
-This is the complete package:
+       Not_Found : constant Ref_Element := null;
+
+       function Lookup (T : Table) return not null Ref_Element;
+       --  Possible since Ada 2005.
+    end Show_Not_Null_Return;
+
+This is a complete package for the code snippets above:
 
 .. code:: ada
 
@@ -152,28 +167,53 @@ parameters and function results, for this reason.
 
 Here's another example, first with :ada:`null`:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-syntax-only
 
-   procedure Iterate
-     (T : Table;
-      Action : access procedure (X : not null Ref_Element)
-                                      := null);
-   --  If Action is null, do nothing.
+    package Show_Null_Procedure is
+       type Element is limited null record;
+       --  Not implemented yet
+
+       type Ref_Element is access all Element;
+
+       type Table is limited null record;
+       --  Not implemented yet
+
+       procedure Iterate
+         (T      : Table;
+          Action : access procedure (X : not null Ref_Element)
+          := null);
+       --  If Action is null, do nothing.
+
+    end Show_Null_Procedure;
 
 and without :ada:`null`:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-syntax-only
 
-   procedure Do_Nothing (X : not null Ref_Element) is null;
+    package Show_Null_Procedure is
+       type Element is limited null record;
+       --  Not implemented yet
 
-   procedure Iterate
-     (T : Table;
-      Action : not null access procedure (X : not null Ref_Element)
-                                      := Do_Nothing'Access);
+       type Ref_Element is access all Element;
+
+       type Table is limited null record;
+       --  Not implemented yet
+
+       procedure Do_Nothing (X : not null Ref_Element) is null;
+
+       procedure Iterate
+         (T      : Table;
+          Action : not null access procedure (X : not null Ref_Element)
+          := Do_Nothing'Access);
+
+    end Show_Null_Procedure;
 
 I much prefer the style of the second :ada:`Iterate`.
 
-This is the complete package:
+This is a complete package that includes an implementation of
+:ada:`Iterate`:
 
 .. code:: ada
 
@@ -183,18 +223,6 @@ This is the complete package:
        type Ref_Element is access all Element;
 
        type Table is limited private;
-
-       Not_Found : constant Ref_Element := null;
-       function Lookup (T : Table) return Ref_Element;
-       --  Returns Not_Found if not found.
-
-       Not_Found_2 : exception;
-       function Lookup_2 (T : Table) return not null Ref_Element;
-       --  Raises Not_Found_2 if not found.
-
-       procedure P (X : not null Ref_Element);
-
-       procedure Q (X : not null Ref_Element);
 
        procedure Iterate
          (T : Table;
@@ -208,11 +236,6 @@ This is the complete package:
           Action : not null access procedure (X : not null Ref_Element)
                                           := Do_Nothing'Access);
 
-       type My_Index is range 1 .. 10;
-       type My_Array is array (My_Index) of Integer;
-
-       procedure Process_Array (X : in out My_Array; Index : My_Index);
-
     private
        type Element is limited
           record
@@ -224,38 +247,6 @@ This is the complete package:
     package body Example is
 
        An_Element : aliased Element;
-
-       function Lookup (T : Table) return Ref_Element is
-       begin
-          --  ...
-          return Not_Found;
-       end Lookup;
-
-       function Lookup_2 (T : Table) return not null Ref_Element is
-       begin
-          --  ...
-          raise Not_Found_2;
-
-          return An_Element'Access;
-          --  suppress error: 'missing "return" statement in function body'
-       end Lookup_2;
-
-       procedure P (X : not null Ref_Element) is
-       begin
-          X.all.Component := X.all.Component + 1;
-       end P;
-
-       procedure Q (X : not null Ref_Element) is
-       begin
-          for I in 1 .. 1000 loop
-             P (X);
-          end loop;
-       end Q;
-
-       procedure R is
-       begin
-          Q (An_Element'Access);
-       end R;
 
        procedure Iterate
          (T : Table;
@@ -277,11 +268,6 @@ This is the complete package:
           --  In a real program, this would do something more sensible.
        end Iterate_2;
 
-       procedure Process_Array (X : in out My_Array; Index : My_Index) is
-       begin
-          X (Index) := X (Index) + 1;
-       end Process_Array;
-
     end Example;
 
 The :ada:`not null access procedure` is quite a mouthful, but it's
@@ -289,27 +275,34 @@ worthwhile, and anyway, the compatibility requirement for Ada 2005
 requires that the :ada:`not null` be explicit, rather than the other way
 around.
 
-Another advantage of :ada:`not null` over comments is for efficiency. For
-example:
+Another advantage of :ada:`not null` over comments is for efficiency.
+Consider procedures :ada:`P` and :ada:`Q` in this example:
 
-.. code-block:: ada
+.. code:: ada
 
-   procedure P (X : not null Ref_Element) is
-   begin
-      X.all.Component := X.all.Component + 1;
-   end P;
+    package Example.Processing is
 
-   procedure Q (X : not null Ref_Element) is
-   begin
-      while ... loop
-         P (X);
-      end loop;
-   end Q;
+       procedure P (X : not null Ref_Element);
 
-   procedure R is
-   begin
-      Q (An_Element'Access);
-   end R;
+       procedure Q (X : not null Ref_Element);
+
+    end Example.Processing;
+
+    package body Example.Processing is
+
+       procedure P (X : not null Ref_Element) is
+       begin
+          X.all.Component := X.all.Component + 1;
+       end P;
+
+       procedure Q (X : not null Ref_Element) is
+       begin
+          for I in 1 .. 1000 loop
+             P (X);
+          end loop;
+       end Q;
+
+    end Example.Processing;
 
 Without :ada:`not null`, the generated code for :ada:`P` will do a check
 that :ada:`X /= null`, which may be costly on some systems. :ada:`P` is
@@ -326,12 +319,25 @@ the call site is usually beneficial because
 This is analogous to the situation with other run-time checks, such as
 array bounds checks, in versions of Ada prior to Ada 2005:
 
-.. code-block:: ada
+.. code:: ada
 
-   type My_Index is range 1..10;
-   type My_Array is array (My_Index) of Integer;
+    package Show_Process_Array is
 
-   procedure Process_Array (X : in out My_Array; Index : My_Index);
+       type My_Index is range 1 .. 10;
+       type My_Array is array (My_Index) of Integer;
+
+       procedure Process_Array (X : in out My_Array; Index : My_Index);
+
+    end Show_Process_Array;
+
+    package body Show_Process_Array is
+
+       procedure Process_Array (X : in out My_Array; Index : My_Index) is
+       begin
+          X (Index) := X (Index) + 1;
+       end Process_Array;
+
+    end Show_Process_Array;
 
 If :ada:`X (Index)` occurs inside :ada:`Process_Array`, there is no need
 to check that :ada:`Index` is in range, because the check is pushed to the
