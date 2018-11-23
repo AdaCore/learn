@@ -714,8 +714,7 @@ into several acyclic parts.
 
 As an example, let's look at a simple loop with an exit condition.
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     Stmt1;
     loop

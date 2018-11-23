@@ -60,8 +60,7 @@ of context instead of textual inclusion of content, using ``with`` clauses:
 In particular, ``with`` clauses are only allowed at the beginning of files, and
 the compiler issues an error if they are used elsewhere:
 
-.. code:: ada
-    :class: ada-nocheck
+.. code-block:: ada
 
     procedure Hello_World is
          with Ada.Text_IO;
