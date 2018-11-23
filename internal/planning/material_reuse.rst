@@ -49,9 +49,9 @@ Course: Advanced Ada
 
         - [x] `Gem #23: Null Considered Harmful by Bob Duff <https://www.adacore.com/gems/ada-gem-23>`_
         - [x] `Gem #24: Null Considered Harmful (Part 2—Efficiency) by Bob Duff <https://www.adacore.com/gems/ada-gem-24>`_
-        - [ ] `Gem #33: Accessibility Checks (Part I: Ada95) by Ramón Fernández <https://www.adacore.com/gems/gem-33>`_
-        - [ ] `Gem #41: Accessibility Checks (Part II: Ada2005) by Ramón Fernández <https://www.adacore.com/gems/gem-41>`_
-        - [ ] `Gem #44: Accessibility Checks (Part III) by Bob Duff <https://www.adacore.com/gems/gem-44>`_
+        - [x] `Gem #33: Accessibility Checks (Part I: Ada95) by Ramón Fernández <https://www.adacore.com/gems/gem-33>`_
+        - [x] `Gem #41: Accessibility Checks (Part II: Ada2005) by Ramón Fernández <https://www.adacore.com/gems/gem-41>`_
+        - [x] `Gem #44: Accessibility Checks (Part III) by Bob Duff <https://www.adacore.com/gems/gem-44>`_
 
     - Memory Pools
 
