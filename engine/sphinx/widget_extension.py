@@ -147,7 +147,10 @@ class WidgetCodeDirective(Directive):
         if self.arguments:
             argument_list = self.arguments[0].split(' ')
 
-        if 'no_button' in argument_list:
+        if 'no_button' in argument_list or (
+            'class' in self.options and (
+                'ada-nocheck' in self.options['class'] or
+                'ada-syntax-only' in self.options['class'])):
             has_run_button = False
             has_prove_button = False
         else:
@@ -160,18 +163,10 @@ class WidgetCodeDirective(Directive):
             print (self.lineno, dir(self))
             raise self.error("you need to add a :code-config: role")
 
-        if 'class' in self.options and (
-                'ada-nocheck' in self.options['class'] or
-                'ada-syntax-only' in self.options['class']):
-            # TODO: display it in an editor with no buttons
-            return [nodes.raw('',
-                              '<pre>{}</pre>'.format('\n'.join(self.content)),
-                              format='html')]
-        else:
-            try:
-                files = real_gnatchop(self.content)
-            except subprocess.CalledProcessError:
-                raise self.error("could not gnatchop example")
+        try:
+            files = real_gnatchop(self.content)
+        except subprocess.CalledProcessError:
+            raise self.error("could not gnatchop example")
 
         if config.accumulate_code:
             # We are accumulating code: store the new code in the
