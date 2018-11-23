@@ -368,22 +368,23 @@ dangling pointers can occur.
 
 Consider the following example:
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-expect-compile-error
 
-     procedure Static_Check is
-        type Global is access all Integer;
-        X : Global;
+    procedure Static_Check is
+       type Global is access all Integer;
+       X : Global;
 
-        procedure Init is
-           Y : aliased Integer := 0;
-        begin
-           X := Y'Access; -- Illegal!
-        end Init;
+       procedure Init is
+          Y : aliased Integer := 0;
+       begin
+          X := Y'Access; -- Illegal!
+       end Init;
 
-     begin
-        Init;
-        ...
-     end Static_Check;
+    begin
+       Init;
+       --  ...
+    end Static_Check;
 
 The assignment is illegal because when the procedure :ada:`Init` finishes,
 the object :ada:`Y` no longer exists, thus making :ada:`X` a danging
@@ -398,32 +399,36 @@ the accessibility level that an entity will have during program execution.
 In these cases, the compiler will insert a run-time check to raise an
 exception if a dangling pointer can be created:
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-run-expect-failure
 
-     procedure Access_Params is
-        type Integer_Access is access all Integer;
-        Data : Integer_Access;
+    procedure Access_Params is
 
-        procedure Init_Data (Value : access Integer) is
-        begin
-           Data := Integer_Access (Value);
-           -- this conversion performs a dynamic accessibility check
-        end;
+       type Integer_Access is access all Integer;
+       Data : Integer_Access;
 
-        X : aliased Integer := 1;
+       procedure Init_Data (Value : access Integer) is
+       begin
+          Data := Integer_Access (Value);
+          --  this conversion performs a dynamic accessibility check
+       end Init_Data;
 
-     begin
-        Init_Data (X'Access); -- This is OK
+       procedure Process (D : Integer_Access) is null;
 
-        declare
-           Y : aliased Integer := 2;
-        begin
-           Init_Data (Y'Access); --  Trouble!
-        end;
-        --  Y no longer exists!
+       X : aliased Integer := 1;
 
-        Process (Data);
-     end;
+    begin
+       Init_Data (X'Access); -- This is OK
+
+       declare
+          Y : aliased Integer := 2;
+       begin
+          Init_Data (Y'Access); --  Trouble!
+       end;
+       --  Y no longer exists!
+
+       Process (Data);
+    end Access_Params;
 
 In the example above, we cannot know at compile time the accessibility
 level of the object that will be passed to :ada:`Init_Data`, so the
@@ -455,13 +460,16 @@ Another rule that allows for static accessibility checks relates to
 derived types: a type derivation does not create new accessibility level
 for the derived type, but just takes that of the parent type:
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-expect-compile-error
 
      procedure Example_1 is
+
         type Node is record
            N : access Integer;
         end record;
-        List : Node
+
+        List : Node;
 
         procedure P is
            type Other_Node is new Node;
@@ -490,39 +498,41 @@ access types. In this case, the accessibility level of the object is
 statically determined by the scope of the function declaration. Consider
 the following example:
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-expect-compile-error
 
-     procedure Example_2 is
-        type Rec is record
-           V : access Integer;
-           ...
-        end record;
+    procedure Example_2 is
 
-        Global : aliased Integer := 1;
+       type Rec is record
+          V : access Integer;
+          --  ... other elements
+       end record;
 
-        function F1 (X : Boolean) return Rec is
-           Local : aliased Integer := 2;
+       Global : aliased Integer := 1;
 
-           --  Nested function returns anonymous access values
-           --  with different nesting depths
+       function F1 (X : Boolean) return Rec is
+          Local : aliased Integer := 2;
 
-           function F2 (Y : Boolean) return Access Integer is
-           begin
-              if Y then
-                 return Global'Access;
-              else
-                 return Local'Access;
-              end if;
-           end F2;
+          --  Nested function returns anonymous access values
+          --  with different nesting depths
 
-        begin
-           return (V => F2 (X), ...); -- Illegal
-        end F1;
+          function F2 (Y : Boolean) return access Integer is
+          begin
+             if Y then
+                return Global'Access;
+             else
+                return Local'Access;
+             end if;
+          end F2;
 
-        Data : Rec;
-     begin
-        Data := F1 (True);
-     end Example_2;
+       begin
+          return (V => F2 (X)); -- Illegal
+       end F1;
+
+       Data : Rec;
+    begin
+       Data := F1 (True);
+    end Example_2;
 
 In this example, applying the aforementioned rule, the compiler statically
 determines that this accessibility level is the scope where :ada:`F2` is
@@ -539,11 +549,21 @@ Ada 2005, access discriminants are permitted for non-limited types.
 Consequently, it's necessary to disallow defaults for access discriminants
 of non-limited types. Thus, the following declaration is illegal:
 
-.. code-block:: ada
+.. code:: ada run_button
+    :class: ada-expect-compile-error
 
-     Default : aliased Integer := ...
-     type Rec (D : access Integer := Default'Access) is record
-        ...
+    procedure Example_Default_Access is
+
+       Default : aliased Integer;
+
+       type Rec (D : access Integer := Default'Access) is record
+          V : Integer := D.all;
+       end record;
+
+       --  This can be fixed with: "type Rec (...) is limited record"
+    begin
+       null;
+    end Example_Default_Access;
 
 This restriction is needed to prevent the discriminant from creating a
 dangling reference due to an assignment of the record object; it ensures
@@ -555,21 +575,24 @@ with allocators and return statements. The accessibility rules require the
 compiler to perform static checks when new objects containing access
 discriminants are created or returned. Consider the following example:
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
     procedure Example_3 is
+
        type Node (D : access Integer) is record
           V : Integer;
        end record;
+
        type Ptr is access all Node;
 
        Global_Value : aliased Integer := 1;
-       Other_Data   : Integer := 2;
+       Other_Data   : Integer         := 2;
 
        procedure P is
           Local : aliased Integer := 3;
-          R1 : Ptr;
-          R2 : Ptr;
+          R1    : Ptr;
+          R2    : Ptr;
        begin
           R1 := new Node'(D => Global_Value'Access, V => Other_Data);
           --  This is legal
