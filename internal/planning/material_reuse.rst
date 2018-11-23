@@ -38,12 +38,12 @@ Course: Advanced Ada
 
     - Limited Types
 
-        - [ ] `Gem #1: Limited Types in Ada 2005 — Limited Aggregates by Bob Duff <https://www.adacore.com/gems/gem-1>`_
-        - [ ] `Gem #2: Limited Types in Ada 2005 — \<\> Notation in Aggregates by Bob Duff <https://www.adacore.com/gems/gem-2>`_
-        - [ ] `Gem #3: Limited Types in Ada 2005 — Constructor Functions by Bob Duff <https://www.adacore.com/gems/gem-3>`_
-        - [ ] `Gem #10: Limited Types in Ada 2005 — Extended Return Statements by Bob Duff <https://www.adacore.com/gems/ada-gem-10>`_
-        - [ ] `Gem #11: Limited Types in Ada 2005 — Constructor Functions Part 2 by Bob Duff <https://www.adacore.com/gems/ada-gem-11>`_
-        - [ ] `Gem #12: Limited Types in Ada 2005 — \<\> Notation Part 2 by Bob Duff <https://www.adacore.com/gems/ada-gem-12>`_
+        - [x] `Gem #1: Limited Types in Ada 2005 — Limited Aggregates by Bob Duff <https://www.adacore.com/gems/gem-1>`_
+        - [x] `Gem #2: Limited Types in Ada 2005 — \<\> Notation in Aggregates by Bob Duff <https://www.adacore.com/gems/gem-2>`_
+        - [x] `Gem #3: Limited Types in Ada 2005 — Constructor Functions by Bob Duff <https://www.adacore.com/gems/gem-3>`_
+        - [x] `Gem #10: Limited Types in Ada 2005 — Extended Return Statements by Bob Duff <https://www.adacore.com/gems/ada-gem-10>`_
+        - [x] `Gem #11: Limited Types in Ada 2005 — Constructor Functions Part 2 by Bob Duff <https://www.adacore.com/gems/ada-gem-11>`_
+        - [x] `Gem #12: Limited Types in Ada 2005 — \<\> Notation Part 2 by Bob Duff <https://www.adacore.com/gems/ada-gem-12>`_
 
     - Access Types
 
