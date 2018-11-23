@@ -165,6 +165,8 @@ had better initialize it explicitly, or you will get
 :ada:`Constraint_Error`. :ada:`not null` is more often useful on
 parameters and function results, for this reason.
 
+:code-config:`reset_accumulator=True`
+
 Here's another example, first with :ada:`null`:
 
 .. code:: ada
@@ -210,10 +212,12 @@ and without :ada:`null`:
 
     end Show_Null_Procedure;
 
-I much prefer the style of the second :ada:`Iterate`.
+:code-config:`reset_accumulator=True`
 
-This is a complete package that includes an implementation of
-:ada:`Iterate`:
+The style of the second :ada:`Iterate` is clearly better because it makes
+use of the syntax to indicate that a procedure is expected. This is a
+complete package that includes both versions of the :ada:`Iterate`
+procedure:
 
 .. code:: ada
 
@@ -271,9 +275,9 @@ This is a complete package that includes an implementation of
     end Example;
 
 The :ada:`not null access procedure` is quite a mouthful, but it's
-worthwhile, and anyway, the compatibility requirement for Ada 2005
-requires that the :ada:`not null` be explicit, rather than the other way
-around.
+worthwhile, and anyway, as mentioned earlier, the compatibility
+requirement requires that the :ada:`not null` be explicit, rather than the
+other way around.
 
 Another advantage of :ada:`not null` over comments is for efficiency.
 Consider procedures :ada:`P` and :ada:`Q` in this example:
@@ -317,7 +321,7 @@ the call site is usually beneficial because
        be :ada:`null`.
 
 This is analogous to the situation with other run-time checks, such as
-array bounds checks, in versions of Ada prior to Ada 2005:
+array bounds checks:
 
 .. code:: ada
 
@@ -342,3 +346,5 @@ array bounds checks, in versions of Ada prior to Ada 2005:
 If :ada:`X (Index)` occurs inside :ada:`Process_Array`, there is no need
 to check that :ada:`Index` is in range, because the check is pushed to the
 caller.
+
+:code-config:`reset_accumulator=True`
