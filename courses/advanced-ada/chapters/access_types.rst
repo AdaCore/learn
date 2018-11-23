@@ -574,7 +574,7 @@ with allocators and return statements. The accessibility rules require the
 compiler to perform static checks when new objects containing access
 discriminants are created or returned. Consider the following example:
 
-.. code:: ada
+.. code:: ada run_button
     :class: ada-expect-compile-error
 
     procedure Example_3 is
@@ -589,9 +589,9 @@ discriminants are created or returned. Consider the following example:
        Other_Data   : Integer         := 2;
 
        procedure P is
-          Local : aliased Integer := 3;
-          R1    : Ptr;
-          R2    : Ptr;
+          Local_Value : aliased Integer := 3;
+          R1          : Ptr;
+          R2          : Ptr;
        begin
           R1 := new Node'(D => Global_Value'Access, V => Other_Data);
           --  This is legal
@@ -743,6 +743,7 @@ implemented as a linked list via :ada:`Stack_Top` and chained through the
 
     begin
        Nested;
+
        Text_IO.Put_Line ("After Nested returns:");
        Print_All_Objects;
     end Main;
