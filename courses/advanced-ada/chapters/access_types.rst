@@ -142,6 +142,17 @@ This is a complete package for the code snippets above:
 
     end Example;
 
+.. code:: ada run_button
+
+    with Example; use Example;
+
+    procedure Show_Example is
+       T : Table;
+       E : Ref_Element;
+    begin
+       E := Lookup (T);
+    end;
+
 In general, it's better to use the language proper for documentation, when
 possible, rather than comments, because compile-time and/or run-time
 checks can help ensure that the "documentation" is actually true. With
@@ -272,6 +283,16 @@ procedure:
 
     end Example;
 
+.. code:: ada run_button
+
+    with Example; use Example;
+
+    procedure Show_Example is
+       T : Table;
+    begin
+       Iterate_2 (T);
+    end;
+
 The :ada:`not null access procedure` is quite a mouthful, but it's
 worthwhile, and anyway, as mentioned earlier, the compatibility
 requirement requires that the :ada:`not null` be explicit, rather than the
@@ -317,6 +338,8 @@ the call site is usually beneficial because
     2. the check might be eliminated altogether, as in the example
        above, where the compiler knows that :ada:`An_Element'Access` cannot
        be :ada:`null`.
+
+:code-config:`reset_accumulator=True`
 
 This is analogous to the situation with other run-time checks, such as
 array bounds checks:
