@@ -353,18 +353,17 @@ Accessibility checks
 Introduction
 ~~~~~~~~~~~~
 
-Ada is a block-structured language, which means the programmer can nest
+Ada is a block-structured language, which means that developers can nest
 blocks of code inside other blocks. At the end of a block, all objects
-declared inside of it go out of scope, meaning they no longer exist, so
+declared inside of it go out of scope, so they no longer exist. Therefore,
 the language disallows pointers to objects in blocks with a deeper nesting
 level.
 
 In order to prevent dangling references, every entity is associated with a
-number, called its *accessibility level*, according to a Ada's
+number, called its *accessibility level*, according to Ada's
 accessibility rules. When certain references are made to an entity of an
-access type (Ada's parlance for pointer), the accessibility level of the
-entity is checked against the level allowed by the context so that no
-dangling pointers can occur.
+access type, the accessibility level of the entity is checked against the
+level allowed by the context so that no dangling pointers can occur.
 
 Consider the following example:
 
@@ -541,7 +540,7 @@ even though the call :ada:`F1 (True)` would provide a valid value for
 :ada:`V`, the code is illegal. The accessibility restriction is
 conservative, to keep the rules simple, and so that the compiler is not
 required to perform data flow analysis to determine legality (not to
-mention that in general the legality would be undecidable).
+mention that, in general, the legality would be undecidable).
 
 The new rules also take into account discriminants of an anonymous access
 type (which are technically referred to as access discriminants). Since
@@ -606,7 +605,7 @@ discriminants are created or returned. Consider the following example:
 
 The allocator for :ada:`R1` is legal, since the accessibility level of
 :ada:`Global'Access` is the same as the accessibility level of :ada:`D`.
-However the allocator for :ada:`R2` is illegal, because the accessibility
+However, the allocator for :ada:`R2` is illegal, because the accessibility
 level of :ada:`Local'Access` is deeper than the accessibility level of
 :ada:`D`, and assigning :ada:`R2` to an object outside :ada:`P` could lead
 to a dangling reference.
@@ -624,8 +623,8 @@ Unchecked Access
 
 In the previous sections, we showed how the accessibility rules help
 prevent dangling pointers, by ensuring that pointers cannot point from
-longer-lived scopes to shorter-lived ones. But what if you want to do
-that?
+longer-lived scopes to shorter-lived ones. But what if we actually want to
+do that?
 
 In some cases, it is necessary to store a reference to a local object in
 a global data structure. You can do that by using :ada:`'Unchecked_Access`
@@ -645,12 +644,7 @@ Here is an example. Let's assume there are no tasks, and no heap-allocated
 objects --- otherwise, we would need a more complicated data structure,
 such as a doubly-linked list, with locking. We keep a stack of objects,
 implemented as a linked list via :ada:`Stack_Top` and chained through the
-:ada:`Prev` component. All occurrences of :ada:`'Unchecked_Access` are
-encapsulated in the :ada:`Objects` package, and clients of :ada:`Objects`
-(such as :ada:`Main`, below at end) can freely declare :ada:`Objects`,
-without worrying about dangling pointers. :ada:`Stack_Top` can never
-dangle, because :ada:`Finalize` cleans up, even in the case of exceptions
-and aborts.
+:ada:`Prev` component.
 
 .. code:: ada
 
@@ -752,6 +746,13 @@ and aborts.
        Text_IO.Put_Line ("After Nested returns:");
        Print_All_Objects;
     end Main;
+
+All occurrences of :ada:`'Unchecked_Access` are encapsulated in the
+:ada:`Objects` package, and clients of :ada:`Objects` (such as
+:ada:`Main`, below at the end) can freely declare :ada:`Objects` without
+worrying about dangling pointers. :ada:`Stack_Top` can never dangle,
+because :ada:`Finalize` cleans up, even in the case of exceptions and
+aborts.
 
 Note that :ada:`'Unchecked_Access` is applied to a formal parameter of
 type :ada:`Object`, which is legal because formals of tagged types are
