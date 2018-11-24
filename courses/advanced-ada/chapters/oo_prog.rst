@@ -18,8 +18,8 @@ Object-Oriented Programming
 Extending Interfaces
 --------------------
 
-The classic way
-~~~~~~~~~~~~~~~
+Using new interfaces
+~~~~~~~~~~~~~~~~~~~~
 
 Let's assume we have the following interface:
 
@@ -183,15 +183,15 @@ class, before calling the new version of :ada:`Eat`:
 
 :code-config:`reset_accumulator=True`
 
-The Ada 2005 Way
-~~~~~~~~~~~~~~~~
+Using null procedures
+~~~~~~~~~~~~~~~~~~~~~
 
-Ada 2005 introduces the notion of null procedures. A null procedure is a
-procedure that is declared using :ada:`is null` and logically has an empty
-body. Fortunately, null procedures are allowed in interface definitions
---- they define the default behavior of such a subprogram as doing
-nothing. Back to the :ada:`Animal` example, the programmer can declare the
-interface's :ada:`Eat` primitive as follows:
+Since Ada 2005, we have the notion of null procedures. A null procedure is
+a procedure that is declared using :ada:`is null` and logically has an
+empty body. Fortunately, null procedures are allowed in interface
+definitions --- they define the default behavior of such a subprogram as
+doing nothing. Back to the :ada:`Animal` example, the programmer can
+declare the interface's :ada:`Eat` primitive as follows:
 
 .. code-block:: ada
 
