@@ -387,17 +387,18 @@ needs to be changed (and not just in the spec), as in:
        S.Initialize;
     end Show_Geometric_Forms;
 
-The last change is easy to forget when one modifies the inheritance tree,
-and its omission would result in not initializing the :ada:`Rectangle`
-specific data.
+The last change --- in the implementation of the :ada:`Initialize`
+procedure of the :ada:`Square` type --- is easy to forget when one
+modifies the inheritance tree, and its omission would result in not
+initializing the :ada:`Rectangle` specific data.
 
 :code-config:`reset_accumulator=True`
 
 Let's look into how the code should best be organized to limit the risks
-here. One of the idioms that has been proposed is interesting enough that
-we felt it was worth putting in this short post. The trick is to always
-define a :ada:`Parent` subtype every time one extends a type, and use that
-subtype when calling the inherited procedure. Here is a full example:
+here. An interesting idiom is the one that makes use of parent subtypes.
+The trick is to always define a :ada:`Parent` subtype every time one
+extends a type, and use that subtype when calling the inherited procedure.
+Here is a full example:
 
 .. code:: ada
 
@@ -505,6 +506,6 @@ Now, if we want to add an extra :ada:`Parallelogram` class between
 of the :ada:`Parent` subtype in the :ada:`Rectangles` package, and no
 change is needed for the body.
 
-This is not a new syntax nor a new idiom, but is worth thinking about when
+This is not a new syntax nor a new idiom, but is worth considering it when
 one is developing a complex hierarchy of types, or at least a hierarchy
 that is likely to change regularly in the future.
