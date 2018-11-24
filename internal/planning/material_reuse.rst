@@ -15,7 +15,7 @@ Course: Advanced Ada
 
     - Tagged Types / Object-Oriented Programming
 
-        - [ ] `Gem #48: Extending Interfaces in Ada 2005 by Quentin Ochem <https://www.adacore.com/gems/gem-48>`_
+        - [x] `Gem #48: Extending Interfaces in Ada 2005 by Quentin Ochem <https://www.adacore.com/gems/gem-48>`_
 
     - Overloading
 
@@ -377,7 +377,7 @@ Course: Advanced Ada
 
     - Tagged Types / Object-Oriented Programming
 
-        - [ ] `Calling inherited subprograms in Ada <http://blog.adacore.com/calling-inherited-subprograms-in-ada>`_
+        - [x] `Calling inherited subprograms in Ada <http://blog.adacore.com/calling-inherited-subprograms-in-ada>`_
 
 - Memory Management
 
