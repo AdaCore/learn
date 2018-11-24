@@ -23,20 +23,48 @@ The classic way
 
 Let's assume we have the following interface:
 
-.. code-block:: ada
+.. code:: ada
 
-    type Animal is interface;
+    package Animals is
 
-    procedure Eat (Beast : in out Animal) is abstract;
+       type Animal is interface;
+
+       procedure Eat (Beast : in out Animal) is abstract;
+
+    end Animals;
 
 All types implementing the :ada:`Animal` interface have to override the
 :ada:`Eat` operation:
 
-.. code-block:: ada
+.. code:: ada
 
-    type Cat is new Animal with record ...
+    package Animals.Cats is
 
-    procedure Eat (Beast : in out Cat);
+       type Cat is new Animal with null record;
+
+       procedure Eat (Beast : in out Cat);
+
+    end Animals.Cats;
+
+    package body Animals.Cats is
+
+       procedure Eat (Beast : in out Cat) is
+       begin
+          --  no implementation yet
+          null;
+       end Eat;
+
+    end Animals.Cats;
+
+.. code:: ada run_button
+
+    with Animals.Cats; use Animals.Cats;
+
+    procedure Show_Cat is
+       C : Cat;
+    begin
+       C.Eat;
+    end Show_Cat;
 
 Now, after a while, the developer of :ada:`Animal` might feel the need to
 let animals eat something specific, and would like to add the following
@@ -54,19 +82,66 @@ they're just happy eating some random amount of anonymous food. Extending
 this interface is just not the way to go --- so the extension has to be
 done separately, in a new interface, such as:
 
-.. code-block:: ada
+.. code:: ada
 
-    type Animal_Extension_1 is interface;
+    package Animals.Extensions is
 
-    procedure Eat (Beast : in out Animal_Extension_1;
-                   Thing : in out A_Thing) is abstract;
+       type Animal_Extension_1 is interface;
+
+       type A_Thing is null record;
+       --  no implementation yet
+
+       procedure Eat (Beast : in out Animal_Extension_1;
+                      Thing : in out A_Thing) is abstract;
+
+    end Animals.Extensions;
 
 So now, :ada:`Animals` that need to rely on this new way of eating will
 need to be declared, such as:
 
-.. code-block:: ada
+.. code:: ada
 
-    type Cat is new Animal and Animal_Extension_1 with record ...
+    with Animals.Extensions; use Animals.Extensions;
+
+    package Animals.Cats is
+
+       type Cat is new Animal and Animal_Extension_1 with null record;
+
+       procedure Eat (Beast : in out Cat);
+
+       procedure Eat (Beast : in out Cat;
+                      Thing : in out A_Thing);
+
+    end Animals.Cats;
+
+    package body Animals.Cats is
+
+       procedure Eat (Beast : in out Cat) is
+       begin
+          --  no implementation yet
+          null;
+       end Eat;
+
+       procedure Eat (Beast : in out Cat;
+                      Thing : in out A_Thing) is
+       begin
+          --  no implementation yet
+          null;
+       end Eat;
+
+    end Animals.Cats;
+
+.. code:: ada run_button
+
+    with Animals.Cats;       use Animals.Cats;
+    with Animals.Extensions; use Animals.Extensions;
+
+    procedure Show_Cat is
+       C : Cat;
+       T : A_Thing;
+    begin
+       C.Eat (T);
+    end Show_Cat;
 
 Note that it's even possible to enforce the fact that an extension of
 :ada:`Animal` has to be an :ada:`Animal` in the first place, by writing:
@@ -80,7 +155,7 @@ no longer a need to extend from two interfaces:
 
 .. code-block:: ada
 
-    type Cat is new Animal_Extension_1 with record ...
+    type Cat is new Animal_Extension_1 with null record;
 
 The rest of the code will remain completely untouched thanks to this
 change. Calls to the new subprogram will require some additional amount of
@@ -89,13 +164,24 @@ work though, as we'll first have to check that the type of an
 :ada:`Animal_Extension_1`, and perform a conversion to that interface's
 class, before calling the new version of :ada:`Eat`:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    The_Animal : Animal'Class := ...
+    with Animals;            use Animals;
+    with Animals.Cats;       use Animals.Cats;
+    with Animals.Extensions; use Animals.Extensions;
 
-    if The_Animal in Animal_Extension_1'Class then
-       Animal_Extension_1'Class (The_Animal).Eat (Something);
-    end if;
+    procedure Show_Animal_Eat is
+       C : Cat;
+       T : A_Thing;
+
+       A : Animal'Class := C;
+    begin
+       if A in Animal_Extension_1'Class then
+          Animal_Extension_1'Class (A).Eat (T);
+       end if;
+    end Show_Animal_Eat;
+
+:code-config:`reset_accumulator=True`
 
 The Ada 2005 Way
 ~~~~~~~~~~~~~~~~
@@ -112,6 +198,52 @@ interface's :ada:`Eat` primitive as follows:
     procedure Eat (Beast : in out Animal;
                    Thing : in out A_Thing) is null;
 
+This is adapted code:
+
+.. code:: ada
+
+    package Animals is
+
+       type Animal is interface;
+
+       type A_Thing is null record;
+       --  no implementation yet
+
+       procedure Eat (Beast : in out Animal) is abstract;
+
+       procedure Eat (Beast : in out Animal;
+                      Thing : in out A_Thing) is abstract;
+
+    end Animals;
+
+    package Animals.Cats is
+
+       type Cat is new Animal with null record;
+
+       procedure Eat (Beast : in out Cat);
+
+       procedure Eat (Beast : in out Cat;
+                      Thing : in out A_Thing);
+
+    end Animals.Cats;
+
+    package body Animals.Cats is
+
+       procedure Eat (Beast : in out Cat) is
+       begin
+          --  no implementation yet
+          null;
+       end Eat;
+
+       procedure Eat (Beast : in out Cat;
+                      Thing : in out A_Thing) is
+       begin
+          --  no implementation yet
+          null;
+       end Eat;
+
+    end Animals.Cats;
+
 All of our hundreds of kinds of animals will automatically inherit from
 this procedure, but won't have to implement it. The addition of this
 declaration does not break source compatibility with the contract of the
@@ -119,11 +251,19 @@ declaration does not break source compatibility with the contract of the
 lot easier to make calls to this subprogram --- no more need to check
 membership or write a type conversion, and we can just write:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    The_Animal : Animal'Class := ...
+    with Animals;            use Animals;
+    with Animals.Cats;       use Animals.Cats;
 
-    The_Animal.Eat (Something);
+    procedure Show_Animal_Eat is
+       C : Cat;
+       T : A_Thing;
+
+       A : Animal'Class := C;
+    begin
+       A.Eat (T);
+    end Show_Animal_Eat;
 
 which will execute as a no-op except for animals that have explicitly
 overridden the primitive.
