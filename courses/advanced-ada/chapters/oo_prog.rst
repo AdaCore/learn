@@ -267,3 +267,106 @@ membership or write a type conversion, and we can just write:
 
 which will execute as a no-op except for animals that have explicitly
 overridden the primitive.
+
+Calling inherited subprograms
+-----------------------------
+
+In object-oriented code, it is often the case that we need to call
+inherited subprograms. Some programing languages make it very easy by
+introducing a new keyword `super` (although this approach has its limits
+for languages that allow multiple inheritance of implementation).
+
+In Ada, things are slightly more complicated. Let's take an example, using
+the traditional geometric classes that are often found in text books:
+
+.. code-block:: ada
+
+    type Polygon is tagged private;
+    procedure Initialize (Self : in out Polygon);
+
+    type Square is new Polygon with private;
+    overriding procedure Initialize (Self : in out Square);
+
+Let's assume now that :ada:`Square`'s :ada:`Initialize` needs to call
+:ada:`Polygon`'s :ada:`Initialize`, in addition to doing a number of
+square specific setups. To do this, we need to use type conversions to
+change the view of :ada:`Self`, so that the compiler statically knows
+which :ada:`Initialize` to call. The code thus looks like:
+
+.. code-block:: ada
+
+    procedure Initialize (Self : in out Square) is
+    begin
+        Initialize (Polygon (Self));  --  calling inherited procedure
+        ... square-specific setups
+    end Initialize;
+
+The main issue with this code (apart from its relative lack of
+readability) is the need to hard-code the name of the ancestor class. If
+we suddenly realize that a :ada:`Square` is after all a special case of a
+:ada:`Rectangle`, and thus decide to add the new rectangle class, the code
+needs to be changed (and not just in the spec), as in:
+
+.. code-block:: ada
+
+    type Polygon is tagged private;
+    procedure Initialize (Self : in out Polygon);
+
+    type Rectangle is new Polygon with private;   --  NEW
+    overriding procedure Initialize (Self : in out Rectangle);  --  NEW
+
+    type Square is new Rectangle with private;   --  MODIFIED
+    overriding procedure Initialize (Self : in out Square);
+
+    procedure Initialize (Self : in out Square) is
+    begin
+        Initialize (Rectangle (Self));  --   MODIFIED
+        ... square-specific setups
+    end Initialize;
+
+The last change is easy to forget when one modifies the inheritance tree,
+and its omission would result in not initializing the :ada:`Rectangle`
+specific data.
+
+Let's look into how the code should best be organized to limit the risks
+here. One of the idioms that has been proposed is interesting enough that
+we felt it was worth putting in this short post. The trick is to always
+define a :ada:`Parent` subtype every time one extends a type, and use that
+subtype when calling the inherited procedure. Here is a full example:
+
+.. code-block:: ada
+
+    package Polygons is
+        type Polygon is tagged private;
+        procedure Initialize (Self : in out Polygon);
+    end Polygons;
+
+    with Polygons;
+    package Rectangles is
+       subtype Parent is Polygons.Polygon;
+       type Rectangle is new Parent with private;
+       overriding procedure Initialize (Self : in out Rectangle);
+    end Rectangles;
+
+    with Rectangles;
+    package Squares is
+       subtype Parent is Rectangles.Rectangle;
+       type Square is new Parent with private;
+       overriding procedure Initialize (Self : in out Square);
+    end Squares;
+
+    package body Squares is
+       overriding procedure Initialize (Self : in out Square) is
+       begin
+          Initialize (Parent (Self));
+       end Initialize;
+    end Squares;
+
+Now, if we want to add an extra :ada:`Parallelogram` class between
+:ada:`Polygon` and :ada:`Rectangle`, we just need to change the definition
+of the :ada:`Parent` subtype in the :ada:`Rectangles` package, and no
+change is needed for the body.
+
+This is not a new syntax nor a new idiom, but is worth thinking about when
+one is developing a complex hierarchy of types, or at least a hierarchy
+that is likely to change regularly in the future.
