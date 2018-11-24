@@ -279,13 +279,22 @@ for languages that allow multiple inheritance of implementation).
 In Ada, things are slightly more complicated. Let's take an example, using
 the traditional geometric classes that are often found in text books:
 
-.. code-block:: ada
+.. code:: ada
 
-    type Polygon is tagged private;
-    procedure Initialize (Self : in out Polygon);
+    package Geometric_Forms is
 
-    type Square is new Polygon with private;
-    overriding procedure Initialize (Self : in out Square);
+       type Polygon is tagged private;
+       procedure Initialize (Self : in out Polygon);
+
+       type Square is new Polygon with private;
+       overriding procedure Initialize (Self : in out Square);
+
+    private
+
+       type Polygon is tagged null record;
+       type Square is new Polygon with null record;
+
+    end Geometric_Forms;
 
 Let's assume now that :ada:`Square`'s :ada:`Initialize` needs to call
 :ada:`Polygon`'s :ada:`Initialize`, in addition to doing a number of
@@ -293,13 +302,32 @@ square specific setups. To do this, we need to use type conversions to
 change the view of :ada:`Self`, so that the compiler statically knows
 which :ada:`Initialize` to call. The code thus looks like:
 
-.. code-block:: ada
+.. code:: ada
 
-    procedure Initialize (Self : in out Square) is
+    package body Geometric_Forms is
+
+       procedure Initialize (Self : in out Polygon) is
+       begin
+          null;
+       end Initialize;
+
+       overriding procedure Initialize (Self : in out Square) is
+       begin
+          Initialize (Polygon (Self));  --  calling inherited procedure
+          --  ... square-specific setups
+       end Initialize;
+
+    end Geometric_Forms;
+
+.. code:: ada run_button
+
+    with Geometric_Forms; use Geometric_Forms;
+
+    procedure Show_Geometric_Forms is
+       S : Square;
     begin
-        Initialize (Polygon (Self));  --  calling inherited procedure
-        ... square-specific setups
-    end Initialize;
+       S.Initialize;
+    end Show_Geometric_Forms;
 
 The main issue with this code (apart from its relative lack of
 readability) is the need to hard-code the name of the ancestor class. If
@@ -307,26 +335,63 @@ we suddenly realize that a :ada:`Square` is after all a special case of a
 :ada:`Rectangle`, and thus decide to add the new rectangle class, the code
 needs to be changed (and not just in the spec), as in:
 
-.. code-block:: ada
+.. code:: ada
 
-    type Polygon is tagged private;
-    procedure Initialize (Self : in out Polygon);
+    package Geometric_Forms is
 
-    type Rectangle is new Polygon with private;   --  NEW
-    overriding procedure Initialize (Self : in out Rectangle);  --  NEW
+       type Polygon is tagged private;
+       procedure Initialize (Self : in out Polygon);
 
-    type Square is new Rectangle with private;   --  MODIFIED
-    overriding procedure Initialize (Self : in out Square);
+       type Rectangle is new Polygon with private;                 --  NEW
+       overriding procedure Initialize (Self : in out Rectangle);  --  NEW
 
-    procedure Initialize (Self : in out Square) is
+       type Square is new Rectangle with private;                  --  MODIFIED
+       overriding procedure Initialize (Self : in out Square);
+
+    private
+
+       type Polygon is tagged null record;
+       type Rectangle is new Polygon with null record;
+       type Square is new Rectangle with null record;
+
+    end Geometric_Forms;
+
+    package body Geometric_Forms is
+
+       procedure Initialize (Self : in out Polygon) is
+       begin
+          null;
+       end Initialize;
+
+       overriding procedure Initialize (Self : in out Rectangle) is
+       begin
+          Initialize (Polygon (Self));  --  calling inherited procedure
+          --  ... rectangle-specific setups
+       end Initialize;
+
+       procedure Initialize (Self : in out Square) is
+       begin
+          Initialize (Rectangle (Self));  --   MODIFIED
+          --  ... square-specific setups
+       end Initialize;
+
+    end Geometric_Forms;
+
+.. code:: ada run_button
+
+    with Geometric_Forms; use Geometric_Forms;
+
+    procedure Show_Geometric_Forms is
+       S : Square;
     begin
-        Initialize (Rectangle (Self));  --   MODIFIED
-        ... square-specific setups
-    end Initialize;
+       S.Initialize;
+    end Show_Geometric_Forms;
 
 The last change is easy to forget when one modifies the inheritance tree,
 and its omission would result in not initializing the :ada:`Rectangle`
 specific data.
+
+:code-config:`reset_accumulator=True`
 
 Let's look into how the code should best be organized to limit the risks
 here. One of the idioms that has been proposed is interesting enough that
@@ -334,33 +399,106 @@ we felt it was worth putting in this short post. The trick is to always
 define a :ada:`Parent` subtype every time one extends a type, and use that
 subtype when calling the inherited procedure. Here is a full example:
 
-.. code-block:: ada
+.. code:: ada
 
-    package Polygons is
-        type Polygon is tagged private;
-        procedure Initialize (Self : in out Polygon);
-    end Polygons;
+    package Geo_Forms with Pure is
 
-    with Polygons;
-    package Rectangles is
-       subtype Parent is Polygons.Polygon;
+    end Geo_Forms;
+
+    package Geo_Forms.Polygons is
+
+       type Polygon is tagged private;
+       procedure Initialize (Self : in out Polygon);
+
+    private
+
+       type Polygon is tagged null record;
+
+    end Geo_Forms.Polygons;
+
+    with Geo_Forms.Polygons;
+
+    package Geo_Forms.Rectangles is
+
+       subtype Parent is Geo_Forms.Polygons.Polygon;
        type Rectangle is new Parent with private;
+
        overriding procedure Initialize (Self : in out Rectangle);
-    end Rectangles;
 
-    with Rectangles;
-    package Squares is
-       subtype Parent is Rectangles.Rectangle;
+    private
+
+       type Rectangle is new Parent with null record;
+
+    end Geo_Forms.Rectangles;
+
+    with Geo_Forms.Rectangles;
+
+    package Geo_Forms.Squares is
+
+       subtype Parent is Geo_Forms.Rectangles.Rectangle;
        type Square is new Parent with private;
-       overriding procedure Initialize (Self : in out Square);
-    end Squares;
 
-    package body Squares is
-       overriding procedure Initialize (Self : in out Square) is
+       overriding procedure Initialize (Self : in out Square);
+
+    private
+
+       type Square is new Parent with null record;
+
+    end Geo_Forms.Squares;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Geo_Forms.Polygons is
+
+       procedure Initialize (Self : in out Polygon) is
+       begin
+          Put_Line ("Initializing Polygon type...");
+       end Initialize;
+
+    end Geo_Forms.Polygons;
+
+    with Ada.Text_IO;        use Ada.Text_IO;
+    with Geo_Forms.Polygons; use Geo_Forms.Polygons;
+
+    package body Geo_Forms.Rectangles is
+
+       overriding procedure Initialize (Self : in out Rectangle) is
        begin
           Initialize (Parent (Self));
+
+          --  ... rectangle-specific setups
+          Put_Line ("Initializing Rectangle type...");
        end Initialize;
-    end Squares;
+
+    end Geo_Forms.Rectangles;
+
+    with Ada.Text_IO;          use Ada.Text_IO;
+    with Geo_Forms.Rectangles; use Geo_Forms.Rectangles;
+
+    package body Geo_Forms.Squares is
+
+       procedure Initialize (Self : in out Square) is
+       begin
+          Initialize (Parent (Self));
+
+          --  ... square-specific setups
+          Put_Line ("Initializing Square type...");
+       end Initialize;
+
+    end Geo_Forms.Squares;
+
+.. code:: ada run_button
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Geo_Forms.Squares; use Geo_Forms.Squares;
+
+    procedure Show_Geo_Forms is
+       S : Square;
+    begin
+       Put_Line ("Initialize Square object:");
+
+       S.Initialize;
+    end Show_Geo_Forms;
 
 Now, if we want to add an extra :ada:`Parallelogram` class between
 :ada:`Polygon` and :ada:`Rectangle`, we just need to change the definition
