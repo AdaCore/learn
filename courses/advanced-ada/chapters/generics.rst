@@ -1625,7 +1625,6 @@ directly in the generic package. For example:
 
     generic
        type F is new My_Float;
-       with function "+" (A : F; B : F) return F is <>;
     package Gen_Float_Acc is
        procedure Acc (V : in out F; S : F);
     end Gen_Float_Acc;
