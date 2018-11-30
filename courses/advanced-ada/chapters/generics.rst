@@ -1526,16 +1526,9 @@ into the original range.
          -2.0 ** Ovhd_Bits .. 2.0 ** Ovhd_Bits - Ovhd_Delta
          with Size => Ovhd_Depth;
 
-       --  Ensure that 'First and 'Last have at least double amount
-       --  of bits as the original type
-       pragma Assert (Ovhd_Fixed'First <=
-                      Ovhd_Fixed (-2.0 ** (F'Size - 1)));
-       pragma Assert (Ovhd_Fixed'Last  >=
-                      Ovhd_Fixed (2.0 ** (F'Size - 1) - Ovhd_Delta));
-
-       --  Ensure that 'Size has at least twice as many bits as
-       --  the original type
-       pragma Assert (Ovhd_Fixed'Size  >= F'Size * 2);
+       --  Ensure that Ovhd_Fixed has enough headroom
+       pragma Assert (Ovhd_Fixed'First <= 2.0 * Ovhd_Fixed (F'First));
+       pragma Assert (Ovhd_Fixed'Last  >= 2.0 * Ovhd_Fixed (F'Last));
 
        --  Ensure that the precision is at least the same
        pragma Assert (Ovhd_Fixed'Small <= F'Small);
