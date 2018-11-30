@@ -452,12 +452,12 @@ instantiation.
 
 In this example, we instantiate the *fast* version of :ada:`Gen_Calc`.
 
-Input-output format objects
+Input-output formal objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :code-config:`reset_accumulator=True`
 
-Formal objects with :ada:`in out` mode are used to bind objects to an
+Formal objects with :ada:`in out` mode are used to bind objects in an
 instance of a generic specification. For example, we may bind a global
 object from a package to the instantiation of a generic procedure, so that
 all calls to this instance make use of that object internally.
@@ -1686,7 +1686,7 @@ into the original range.
        pragma Assert (Ovhd_Fixed'Last  >=
                       Ovhd_Fixed (2.0 ** (F'Size - 1) - Ovhd_Delta));
 
-       --  Ensure that 'Size is has at least twice as many bits as
+       --  Ensure that 'Size has at least twice as many bits as
        --  the original type
        pragma Assert (Ovhd_Fixed'Size  >= F'Size * 2);
 
