@@ -1221,9 +1221,11 @@ the average of all elements.
     begin
        for I in A'Range loop
           A (I).Set (1.0);
-       end loop;
 
-       T2 (A (2).all).Set_Ext (3.0);
+          if A (I).all in T2'Class then
+             T2 (A (I).all).Set_Ext (3.0);
+          end if;
+       end loop;
 
        Avg := Ops.Average (A);
 
