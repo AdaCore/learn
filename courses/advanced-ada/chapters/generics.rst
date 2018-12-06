@@ -452,12 +452,12 @@ instantiation.
 
 In this example, we instantiate the *fast* version of :ada:`Gen_Calc`.
 
-Input-output format objects
+Input-output formal objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :code-config:`reset_accumulator=True`
 
-Formal objects with :ada:`in out` mode are used to bind objects to an
+Formal objects with :ada:`in out` mode are used to bind objects in an
 instance of a generic specification. For example, we may bind a global
 object from a package to the instantiation of a generic procedure, so that
 all calls to this instance make use of that object internally.
@@ -695,158 +695,6 @@ two instantiations of the :ada:`Display` procedure:
 
 - :ada:`Display_Name_Birthday`, which displays the full name and birthday
   of each person.
-
-Formal access types
--------------------
-
-:code-config:`reset_accumulator=True`
-
-Formal access types allow for binding objects or subprograms to generic
-subprograms or packages by using access types. Formal access types are
-similar to:
-
-- **Formal subprograms**: Instead of passing a formal subprogram during
-  instantiation, we provide access to a subprogram.
-
-- **Formal objects**: Instead of passing a formal object during
-  instantiation, we provide access to an object.
-
-The package :ada:`Read_File_Pkg` below implements a generic procedure that
-reads information from a file and writes it to an array in a sorted
-manner.
-
-.. code:: ada
-
-    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
-
-    package Read_File_Pkg is
-
-       generic
-          type Index_Type is (<>);
-          type Element_Type is private;
-          type Array_Type is array (Index_Type) of Element_Type;
-          Sort : access procedure (A : in out Array_Type);
-       procedure Gen_Read_Sorted_File (A : Array_Type; S : Stream_Access);
-
-    end Read_File_Pkg;
-
-In the specification of the :ada:`Gen_Read_Sorted_File` procedure above,
-we use the formal parameter :ada:`Sort`, which provides access to a
-procedure for sorting the array.
-
-This is the corresponding dummy package body:
-
-.. code:: ada
-
-    package body Read_File_Pkg is
-
-       procedure Gen_Read_Sorted_File (A : Array_Type; S : Stream_Access) is
-       begin
-          --  Missing implementation
-          null;
-       end Gen_Read_Sorted_File;
-
-    end Read_File_Pkg;
-
-This is a test package that instantiates the :ada:`Gen_Read_Sorted_File`
-procedure:
-
-.. code:: ada
-
-    with Ada.Containers.Generic_Constrained_Array_Sort;
-
-    with Read_File_Pkg;
-
-    package Show_Procedure_Access is
-
-       type A_Range is range 0 .. 10;
-       type A is array (A_Range) of Integer;
-
-       procedure Sort is new Ada.Containers.Generic_Constrained_Array_Sort
-         (Index_Type   => A_Range,
-          Element_Type => Integer,
-          Array_Type   => A);
-
-       procedure Read_Sorted_File is new Read_File_Pkg.Gen_Read_Sorted_File
-         (Index_Type   => A_Range,
-          Element_Type => Integer,
-          Array_Type   => A,
-          Sort         => Sort'Access);
-
-    end Show_Procedure_Access;
-
-We can rewrite the package above using formal subprograms instead of
-formal access types. This is the update specification of the
-:ada:`Read_File_Pkg` package:
-
-.. code:: ada
-
-    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
-
-    package Read_File_Pkg is
-
-       generic
-          type Index_Type is (<>);
-          type Element_Type is private;
-          type Array_Type is array (Index_Type) of Element_Type;
-          with procedure Sort (A : in out Array_Type) is <>;
-       procedure Gen_Read_Sorted_File (A : Array_Type; S : Stream_Access);
-
-    end Read_File_Pkg;
-
-This is the updated package body:
-
-.. code:: ada
-
-    package body Read_File_Pkg is
-
-       procedure Gen_Read_Sorted_File (A : Array_Type; S : Stream_Access) is
-       begin
-          --  Missing implementation
-          null;
-       end Gen_Read_Sorted_File;
-
-    end Read_File_Pkg;
-
-Finally, this is the update test package:
-
-.. code:: ada
-
-    with Ada.Containers.Generic_Constrained_Array_Sort;
-
-    with Read_File_Pkg;
-
-    package Show_Procedure_Access is
-
-       type A_Range is range 0 .. 10;
-       type A is array (A_Range) of Integer;
-
-       procedure Sort is new Ada.Containers.Generic_Constrained_Array_Sort
-         (Index_Type   => A_Range,
-          Element_Type => Integer,
-          Array_Type   => A);
-
-       procedure Read_Sorted_File is new Read_File_Pkg.Gen_Read_Sorted_File
-         (Index_Type   => A_Range,
-          Element_Type => Integer,
-          Array_Type   => A);
-
-    end Show_Procedure_Access;
-
-Note that, because we used :ada:`is <>` as we specified the formal
-:ada:`Sort` procedure in the declaration of
-:ada:`Gen_Read_Sorted_File`, the corresponding (actual) :ada:`Sort`
-procedure is automatically detected during instantiation. We could,
-however, declare it explicitly by using :ada:`Sort => Sort`.
-
-As mentioned above, formal access types are similar to formal subprograms
-and formal objects. Whether we should use formal access types or use
-formal subprograms/objects mainly depends on the *surrounding*
-source-code. For example, if we only have the access type of a procedure
-in a certain part of the application we're working on, we cannot make use
-of formal procedures. In general, however, using formal subprograms and
-objects whenever possible is more straightforward and is considered common
-practice.
 
 Generic interfaces
 ------------------
@@ -1625,7 +1473,6 @@ directly in the generic package. For example:
 
     generic
        type F is new My_Float;
-       with function "+" (A : F; B : F) return F is <>;
     package Gen_Float_Acc is
        procedure Acc (V : in out F; S : F);
     end Gen_Float_Acc;
@@ -1679,16 +1526,9 @@ into the original range.
          -2.0 ** Ovhd_Bits .. 2.0 ** Ovhd_Bits - Ovhd_Delta
          with Size => Ovhd_Depth;
 
-       --  Ensure that 'First and 'Last have at least double amount
-       --  of bits as the original type
-       pragma Assert (Ovhd_Fixed'First <=
-                      Ovhd_Fixed (-2.0 ** (F'Size - 1)));
-       pragma Assert (Ovhd_Fixed'Last  >=
-                      Ovhd_Fixed (2.0 ** (F'Size - 1) - Ovhd_Delta));
-
-       --  Ensure that 'Size is has at least twice as many bits as
-       --  the original type
-       pragma Assert (Ovhd_Fixed'Size  >= F'Size * 2);
+       --  Ensure that Ovhd_Fixed has enough headroom
+       pragma Assert (Ovhd_Fixed'First <= 2.0 * Ovhd_Fixed (F'First));
+       pragma Assert (Ovhd_Fixed'Last  >= 2.0 * Ovhd_Fixed (F'Last));
 
        --  Ensure that the precision is at least the same
        pragma Assert (Ovhd_Fixed'Small <= F'Small);

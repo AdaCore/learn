@@ -81,7 +81,6 @@ Structure
 
     - [x] Formal packages
     - [x] Formal objects
-    - [x] Formal access types
     - [ ] Generic interfaces
     - [x] Generic numeric types
     - [ ] Partial parameterization
