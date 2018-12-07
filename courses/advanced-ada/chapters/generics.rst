@@ -1225,8 +1225,6 @@ generic package :ada:`Float_Interface_Pkg.Ops`.
 Discussion: Generic interfaces vs. other approaches
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. TODO: Add discussion about interfaces vs. types & formal subprograms
-
 Generic synchronized interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
