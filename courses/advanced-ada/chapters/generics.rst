@@ -1002,6 +1002,7 @@ corresponding :ada:`To_Float` functions.
        function To_Float (E : T) return Float;
 
        type T2 is new T with private;
+       type T2_Class_Access is access all T2'Class;
 
        procedure Set_Ext (E : in out T2; F : Float);
        overriding function To_Float (E : T2) return Float;
@@ -1069,9 +1070,15 @@ the average of all elements.
     begin
        for I in A'Range loop
           A (I).Set (1.0);
-       end loop;
 
-       T2 (A (2).all).Set_Ext (3.0);
+          if A (I).all in T2'Class then
+             declare
+                A_I : T2_Class_Access := T2_Class_Access (A (I));
+             begin
+                A_I.Set_Ext (3.0);
+             end;
+          end if;
+       end loop;
 
        Avg := Ops.Average (A);
 
