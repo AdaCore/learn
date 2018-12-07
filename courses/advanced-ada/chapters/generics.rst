@@ -1331,11 +1331,6 @@ to deduce that the intention of declaring :ada:`T` and :ada:`Hash` is to
 define an interface. However, this approach has the advantage of not
 requiring the use of tagged types in the package instantiation.
 
-Another advantage of this approach is that multiple implementations of
-the :ada:`Hash` function can be used, as we'll see later. When using
-generic interfaces, only a single implementation --- the one defined for
-the formal interface type --- can be used in the instantiation.
-
 This is an example of a package instantiating the generic hash table:
 
 .. code:: ada
@@ -1380,14 +1375,13 @@ generic :ada:`Hash_Tables` package. This is possible for two reasons:
 If the above-mentioned conditions are not met, we have to provide an
 argument for the formal function parameter in the package instantiation.
 
-As we've mentioned earlier, when using the formal subprogram approach to
-implement interfaces, we may instantiate the formal package using
-alternative versions of the function associated with the formal package.
-This is exactly what we're doing in the declaration of the
-:ada:`My_Type_Alt_Hash_Tables` package. In this case, we're using
-:ada:`Alt_Hash` instead of :ada:`Hash` for the formal function parameter.
-Note that, because the name of the actual function doesn't match the name
-of the formal function, we need to indicate it explicitly.
+We may also instantiate the formal package using alternative versions of
+the function associated with the formal package. This is what we're doing
+in the declaration of the :ada:`My_Type_Alt_Hash_Tables` package. In this
+case, we're using :ada:`Alt_Hash` instead of :ada:`Hash` for the formal
+function parameter. Note that, because the name of the actual function
+doesn't match the name of the formal function, we need to indicate it
+explicitly.
 
 Interfaces using signature packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1466,20 +1460,13 @@ generic hash table:
 
     end Instantiation_Using_Signature_Package;
 
-Note that this approach shares many of advantages listed for the previous
-approach:
-
-- We may use any type, not only tagged types for instantiating the generic
-  package.
-
-- We're not restricted to use a single implementation of the formal
-  subprogram, as it's the case with generic interfaces.
-
-Note that, using this approach, the generic package instantiation also
-becomes more verbose: we have to instantiate two packages instead of one
-to achieve the same result. For the example above, we first declare
-the :ada:`My_Type_Hashable` package and use it in the declaration of the
-:ada:`My_Type_Hash_Tables` package.
+This approach shares the same advantage listed for the previous approach:
+we may use any type, not only tagged types for instantiating the generic
+package. However, when using signature packages, the generic package
+instantiation also becomes more verbose: we have to instantiate two
+packages instead of one to achieve the same result. For the example above,
+we first declare the :ada:`My_Type_Hashable` package and use it in the
+declaration of the :ada:`My_Type_Hash_Tables` package.
 
 The advantage of this approach is that the instantiation of the actual
 package (the hash table in our example) is simplified: instead of passing
