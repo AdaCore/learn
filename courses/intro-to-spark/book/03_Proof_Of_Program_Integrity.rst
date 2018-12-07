@@ -374,7 +374,7 @@ Ada semantics (the value 1).
 Additional Assertions and Contracts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As we've seen, a key feature of SPARK is that is allows us to state
+As we've seen, a key feature of SPARK is that it allows us to state
 properties to check using assertions and contracts. SPARK supports
 preconditions and postconditions as well as assertions introduced by the
 :ada:`Assert` pragma.
