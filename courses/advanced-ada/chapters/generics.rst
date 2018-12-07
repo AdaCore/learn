@@ -1489,6 +1489,74 @@ interface. When implementing complex interfaces, this approach might lead
 to a cleaner design than the previous approach using formal subprograms
 directly.
 
+Interfaces using tagged types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Finally, let's discuss the design of generic packages using formal
+interfaces and tagged types. In contrast to the two approaches mentioned
+above, formal interfaces explicitly indicate what's the interface in the
+implementation through the :ada:`interface` keyword. No interpretation of
+design patterns is needed in this case.
+
+For the approaches we've discussed earlier (using formal subprograms and
+signature packages), we were free to use any type in the instantiation of
+the generic package. However, for generic packages using formal
+interfaces, we can only use tagged types in the instantiation. This may
+be a serious restriction, especially if we have to use existing code
+containing types that are tagged. Fortunately, in this case, we can use
+the previous approaches to implement interfaces.
+
+Let's look at the implementation of a generic hash table using a formal
+interface:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+
+    package Interface_Using_Tagged_Types is
+
+       type Hashable is interface;
+       function Hash (Self : Hashable) return Hash_Type is abstract;
+
+       generic
+          type T is new Hashable with private;
+       package Hash_Tables is
+          --  Missing implementation
+       end Hash_Tables;
+
+    end Interface_Using_Tagged_Types;
+
+This is an example of a package instantiating the generic hash table
+using a tagged type:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Strings.Hash;
+
+    with Interface_Using_Tagged_Types; use Interface_Using_Tagged_Types;
+
+    package Instantiation_Using_Tagged_Types is
+
+       type My_Type is new Hashable with record
+          Key   : String (1 .. 100);
+          Key_2 : String (1 .. 100);
+       end record;
+
+       function Hash (Self : My_Type) return Hash_Type is
+         (Ada.Strings.Hash (Self.Key));
+
+       package My_Type_Hash_Tables is new Hash_Tables (My_Type);
+
+    end Instantiation_Using_Tagged_Types;
+
+The instantiation of generic packages is much simpler in this case: we
+don't have to pass operations as parameters in the package instantiation.
+In this example, the declaration of :ada:`My_Type_Hash_Tables` is very
+straightforward: we just have to specify the tagged type (:ada:`My_Type`).
+All operations are *implicitly defined* in the tagged type, so we don't
+have to specify them.
+
 Generic synchronized interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
