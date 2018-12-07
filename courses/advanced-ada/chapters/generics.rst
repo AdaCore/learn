@@ -829,15 +829,15 @@ two instantiations of the :ada:`Display` procedure:
 - :ada:`Display_Name_Birthday`, which displays the full name and birthday
   of each person.
 
-Generic interfaces
-------------------
+Formal interfaces
+-----------------
 
 Generating subprogram specifications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :code-config:`reset_accumulator=True`
 
-Generic interfaces can be used to generate a collection of pre-defined
+Formal interfaces can be used to generate a collection of pre-defined
 subprograms for new types. For example, let's suppose that, for a given
 type :ada:`T`, we need at least a pair of subprograms that set and get
 elements of type :ada:`T` based on another type. We might want to convert
@@ -1224,13 +1224,13 @@ In this example, we declare the array :ada:`A` with elements of both
 we call the :ada:`Average` function from :ada:`Ops`, an instance of the
 generic package :ada:`Float_Interface_Pkg.Ops`.
 
-Discussion: Generic interfaces vs. other approaches
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Discussion: formal interfaces vs. other approaches
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :code-config:`reset_accumulator=True`
 
 In Ada, we basically have three approaches to describe interfaces. In
-addition to the approach using generic interfaces that we've just seen
+addition to the approach using formal interfaces that we've just seen
 above, we also have these approaches:
 
 - Formal subprograms, which we've presented in the introductory course
@@ -1319,7 +1319,7 @@ table:
 
     end Interface_Using_Formal_Function;
 
-In contrast to generic interfaces, the interface described with formal
+In contrast to formal interfaces, the interface described with formal
 subprograms is implicit: we don't have an explicit :ada:`interface` type
 defined here. However, the combination of type :ada:`T` and the function
 :ada:`Hash` represent an interface.
@@ -1545,14 +1545,14 @@ straightforward: we just have to specify the tagged type (:ada:`My_Type`).
 All operations are *implicitly defined* in the tagged type, so we don't
 have to specify them.
 
-Generic synchronized interfaces
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Formal synchronized interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :code-config:`reset_accumulator=True`
 
-Generic synchronized interfaces are a specialized case of generic
+Formal synchronized interfaces are a specialized case of formal
 interfaces that can be used for task types and protected types. Since
-generic synchronized interfaces are similar to generic interfaces,
+formal synchronized interfaces are similar to formal interfaces,
 we can reuse the previous source-code example with minimal adaptations.
 
 When adapting the :ada:`Gen_Interface` package, we just need to make use
