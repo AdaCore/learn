@@ -1295,6 +1295,99 @@ Let's briefly recapitulate these approaches:
     end Interface_Approaches;
 
 The following subsections discuss the pros and cons of each approach.
+For the source-code examples, we'll implement a generic hash table.
+
+Interfaces using formal subprograms
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Formal subprograms, combined with a formal type, can be used to define
+an implicit interface. Let's look at the implementation of a generic hash
+table:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+
+    package Interface_Using_Formal_Function is
+
+       generic
+          type T is private;
+          with function Hash (Self : T) return Hash_Type is <>;
+       package Hash_Tables is
+          --  Missing implementation
+       end Hash_Tables;
+
+    end Interface_Using_Formal_Function;
+
+In contrast to generic interfaces, the interface described with formal
+subprograms is implicit: we don't have an explicit :ada:`interface` type
+defined here. However, the combination of type :ada:`T` and the function
+:ada:`Hash` represent an interface.
+
+The fact that we don't declare an explicit interface has the disadvantage
+of not being as obvious as when the :ada:`interface` keyword is used in
+the code. Developers are forced to recognize the design pattern: they have
+to deduce that the intention of declaring :ada:`T` and :ada:`Hash` is to
+define an interface. However, this approach has the advantage of not
+requiring the use of tagged types in the package instantiation.
+
+Another advantage of this approach is that multiple implementations of
+the :ada:`Hash` function can be used, as we'll see later. When using
+generic interfaces, only a single implementation --- the one defined for
+the formal interface type --- can be used in the instantiation.
+
+This is an example of a package instantiating the generic hash table:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Strings.Hash;
+
+    with Interface_Using_Formal_Function; use Interface_Using_Formal_Function;
+
+    package Instantiation_Using_Formal_Function is
+
+       type My_Type is record
+          Key   : String (1 .. 100);
+          Key_2 : String (1 .. 100);
+       end record;
+
+       function Hash (Self : My_Type) return Hash_Type is
+         (Ada.Strings.Hash (Self.Key));
+
+       function Alt_Hash (Self : My_Type) return Hash_Type is
+         (Ada.Strings.Hash (Self.Key_2));
+
+       package My_Type_Hash_Tables is new Hash_Tables (My_Type);
+
+       package My_Type_Alt_Hash_Tables is new Hash_Tables
+         (T    => My_Type,
+          Hash => Alt_Hash);
+
+    end Instantiation_Using_Formal_Function;
+
+Note that, in the declaration of the :ada:`My_Type_Hash_Tables`, we're
+not specifying the :ada:`Hash` function for the instantiation of the
+generic :ada:`Hash_Tables` package. This is possible for two reasons:
+
+- In the declaration of the formal function parameter, we're using
+  :ada:`is <>`, which automatically selects a function with the same name
+  in the package instantiation if available.
+
+- For :ada:`My_Type`, we've declared a function that has the same name as
+  the formal function.
+
+If the above-mentioned conditions are not met, we have to provide an
+argument for the formal function parameter in the package instantiation.
+
+As we've mentioned earlier, when using the formal subprogram approach to
+implement interfaces, we may instantiate the formal package using
+alternative versions of the function associated with the formal package.
+This is exactly what we're doing in the declaration of the
+:ada:`My_Type_Alt_Hash_Tables` package. In this case, we're using
+:ada:`Alt_Hash` instead of :ada:`Hash` for the formal function parameter.
+Note that, because the name of the actual function doesn't match the name
+of the formal function, we need to indicate it explicitly.
 
 Generic synchronized interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
