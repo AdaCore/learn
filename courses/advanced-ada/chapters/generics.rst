@@ -13,6 +13,8 @@ Generics
 .. role:: cpp(code)
    :language: c++
 
+.. _FormalPackages:
+
 Formal packages
 ---------------
 
@@ -1224,6 +1226,75 @@ generic package :ada:`Float_Interface_Pkg.Ops`.
 
 Discussion: Generic interfaces vs. other approaches
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:code-config:`reset_accumulator=True`
+
+In Ada, we basically have three approaches to describe interfaces. In
+addition to the approach using generic interfaces that we've just seen
+above, we also have these approaches:
+
+- Formal subprograms, which we've presented in the introductory course
+  (:doc:`../../intro-to-ada/chapters/generics`).
+
+- Formal packages, which we've discussed in the section on
+  :ref:`formal packages <FormalPackages>`).
+
+Let's briefly recapitulate these approaches:
+
+.. code:: ada
+
+    package Interface_Approaches is
+
+       -------------------------------
+       --  Using Formal Subprograms --
+       -------------------------------
+       package Using_Formal_Subprograms is
+
+          generic
+             type T is private;
+             with procedure P (E : T) is <>;
+          package Pkg is
+          end Pkg;
+
+       end Using_Formal_Subprograms;
+
+       -------------------------------
+       --  Using Signature Packages --
+       -------------------------------
+       package Using_Signature_Packages is
+
+          generic
+             type T2;
+             with procedure P (E : T2) is <>;
+          package Sig_Pkg is
+          end Sig_Pkg;
+
+          generic
+             type T is private;
+             with package SP is new Sig_Pkg (T, <>);
+          package Pkg is
+          end Pkg;
+
+       end Using_Signature_Packages;
+
+       -------------------------
+       --  Using Tagged Types --
+       -------------------------
+       package Using_Tagged_Types is
+
+          type I is interface;
+          procedure P (E : I) is abstract;
+
+          generic
+             type T is new I with private;
+          package Pkg is
+          end Pkg;
+
+       end Using_Tagged_Types;
+
+    end Interface_Approaches;
+
+The following subsections discuss the pros and cons of each approach.
 
 Generic synchronized interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
