@@ -1490,9 +1490,9 @@ For the approaches we've discussed earlier (using formal subprograms and
 signature packages), we were free to use any type in the instantiation of
 the generic package. However, for generic packages using formal
 interfaces, we can only use tagged types in the instantiation. This may
-be a serious restriction, especially if we have to use existing code
-containing types that are tagged. Fortunately, in this case, we can use
-the previous approaches to implement interfaces.
+be a serious restriction, especially if we have to deal with existing code
+containing types that are *not* tagged. Fortunately, in this case, we can
+use the previous approaches to implement interfaces.
 
 Let's look at the implementation of a generic hash table using a formal
 interface:
