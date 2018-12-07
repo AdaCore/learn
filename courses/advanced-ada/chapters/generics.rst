@@ -1338,7 +1338,8 @@ This is an example of a package instantiating the generic hash table:
     with Ada.Containers; use Ada.Containers;
     with Ada.Strings.Hash;
 
-    with Interface_Using_Formal_Function; use Interface_Using_Formal_Function;
+    with Interface_Using_Formal_Function;
+    use  Interface_Using_Formal_Function;
 
     package Instantiation_Using_Formal_Function is
 
