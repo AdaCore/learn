@@ -178,6 +178,75 @@ instantiation of the generic ``Reverse_Array`` procedure. Also, in the
 declaration of the ``My_Colors`` array, we make use of the array type
 definition from the ``Color_Pkg`` package.
 
+Formal package parametrization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that we're using partial parametrization for the formal package
+parameter :ada:`P` in the previous example. Partial parametrization makes
+use of :ada:`others => <>` to indicate that the generic declaration takes
+the definitions from the package argument provided in the generic
+instantiation:
+
+.. code:: ada
+
+    with Simple_Generic_Array_Pkg;
+
+    package Show_Partial_Parametrization is
+
+       generic
+          type T is private;
+          with package P is new Simple_Generic_Array_Pkg (T => T, others => <>);
+       procedure Reverse_Array (X : in out P.Array_T);
+
+    end Show_Partial_Parametrization;
+
+For the previous example, the definitions come from the declarations of
+the :ada:`Color_Pkg` package:
+
+A complete parametrization, in constrast, contains the definition of all
+types in the generic declaration. For example:
+
+.. code:: ada
+
+    with Simple_Generic_Array_Pkg;
+
+    package Show_Complete_Parametrization is
+
+       generic
+          type T is private;
+          type Index is range <>;
+          with package P is new Simple_Generic_Array_Pkg (T     => T,
+                                                          Index => Index);
+       procedure Reverse_Array (X : in out P.Array_T);
+
+    end Show_Complete_Parametrization;
+
+Another approach is to take the all definitions from the formal package
+parameter:
+
+.. code:: ada
+
+    with Simple_Generic_Array_Pkg;
+
+    package Show_Box_Parameter is
+
+       generic
+          with package P is new Simple_Generic_Array_Pkg (<>);
+       procedure Reverse_Array (X : in out P.Array_T);
+
+    end Show_Box_Parameter;
+
+In this case, package :ada:`P` contains all type and subprogram
+definitions that are used by the generic :ada:`Reverse_Array` procedure.
+This kind of formal package parameter containing definitions is called a
+*signature package*. Usually, a signature package is a generic package
+and therefore doesn't have a package body and it's not useful as a
+standalone package. Instead, it's used to group types and subprogram
+declarations that will be used as a formal package parameter. This
+approach is useful for creating separate specifications for types and
+subprograms that don't belong together. Also, multiple signature packages
+can be cascaded to create more complex generic implementations.
+
 Abstracting procedures into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
