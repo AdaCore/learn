@@ -81,7 +81,7 @@ design are principles that include the following:
      programmer has to be much more explicit about typing in Ada, because there
      is almost no type inference.
 
--  Explicit is better than implicit: Although this is a
+-  Explicit is better than implicit. Although this is a
    `Python <https://www.python.org>`_ commandment, Ada takes it way further
    than any language we know of:
 
