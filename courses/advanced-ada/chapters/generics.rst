@@ -178,6 +178,8 @@ package in the instantiation of the generic :ada:`Reverse_Array`
 procedure. Also, in the declaration of the :ada:`My_Colors` array, we make
 use of the array type definition from the :ada:`Color_Pkg` package.
 
+.. _FormalPackageParametrization:
+
 Formal package parametrization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -411,8 +413,10 @@ For example:
 
     package Color_Pkg is new Generic_Array_Pkg (T => Color, Index => Integer);
 
-In this case, however, we're using simply :ada:`(<>)`. This means that the
-generic procedure (:ada:`Perform_Test`) will accept the default definition
+In this case, however, we're simply using :ada:`(<>)`, as discussed in the
+section on
+:ref:`formal package parametrization <FormalPackageParametrization>`.
+This means that :ada:`Perform_Test` makes use of the default definition
 used for the instance of :ada:`Generic_Array_Pkg`.
 
 Cascading signature packages
