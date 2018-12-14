@@ -322,8 +322,8 @@ will therefore declare the following formal parameters:
 
     - the string :ada:`S` containing the array name;
 
-    - the formal :ada:`Generic_Array_Pkg` package parameter (which was
-      implemented in the previous section);
+    - the formal :ada:`Generic_Array_Pkg` package parameter, which is a
+      signature package implemented in the previous section;
 
     - the formal :ada:`Image` function that converts an element of type
       :ada:`T` to a string;
