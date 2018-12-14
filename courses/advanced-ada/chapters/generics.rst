@@ -255,7 +255,7 @@ Abstracting procedures into packages
 
 In the previous example, we moved the array type definition into a
 separate package, but left the generic procedure (:ada:`Reverse_Array`) in
-the test application. We can also move the generic procedure into the
+the test application. We could also move the generic procedure into the
 generic package:
 
 .. code:: ada
