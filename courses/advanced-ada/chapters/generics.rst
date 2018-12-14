@@ -241,7 +241,7 @@ definitions that are used by the generic :ada:`Reverse_Array` procedure.
 
 This kind of formal package parameter containing definitions is called a
 *signature package*. Usually, a signature package is a generic package
-and therefore doesn't have a package body and it's not useful as a
+and doesn't have a package body. Also, it isn't useful as a
 standalone package. Instead, it's used to group types and subprogram
 declarations that will be used as a formal package parameter. This
 approach is useful for creating separate specifications for types and
