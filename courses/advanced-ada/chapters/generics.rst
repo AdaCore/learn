@@ -428,7 +428,7 @@ related to the array that we're using for the test:
 
 We could abstract our implementation even further by moving these elements
 into a separate package named :ada:`Generic_Array_Bundle` and reference
-the :ada:`Generic_Array_Pkg` there. This would create a chain of generic
+the :ada:`Generic_Array_Pkg` there. This would create a chain of signature
 packages:
 
 .. code-block:: ada
