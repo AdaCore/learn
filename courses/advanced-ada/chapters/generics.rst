@@ -240,6 +240,8 @@ parameter:
 
 In this case, package :ada:`P` contains all type and subprogram
 definitions that are used by the generic :ada:`Reverse_Array` procedure.
+By using the box syntax :ada:`(<>)`, we indicate that we make use of all
+definitions from the formal package parameter.
 
 This kind of formal package parameter containing definitions is called a
 *signature package*. Usually, a signature package is a generic package
