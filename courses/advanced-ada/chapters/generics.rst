@@ -1366,8 +1366,8 @@ types.
 Generic floating-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Simple formal package
-^^^^^^^^^^^^^^^^^^^^^
+Simple generic package
+^^^^^^^^^^^^^^^^^^^^^^
 
 :code-config:`reset_accumulator=True`
 
@@ -1443,13 +1443,13 @@ type. We then make use of computations whose results are outside the
 normalized range. By calling the :ada:`Saturate` procedure, we ensure that
 the values are inside the range again.
 
-Operations in formal packages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Operations in generic packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :code-config:`reset_accumulator=True`
 
 In this section, we discuss how to declare operations associated with
-floating-point types in formal packages.
+floating-point types in generic packages.
 
 Let's first define a package that implements a new type :ada:`My_Float`
 based on the standard :ada:`Float` type. For this type, we override the
@@ -1622,8 +1622,8 @@ procedure.
 Generic fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Simple formal package
-^^^^^^^^^^^^^^^^^^^^^
+Simple generic package
+^^^^^^^^^^^^^^^^^^^^^^
 
 :code-config:`reset_accumulator=True`
 
@@ -1756,11 +1756,11 @@ calling :ada:`Sat_Add`, we ensure that the result of adding fixed-point
 values will always be in the allowed range and the computation will never
 raise an exception.
 
-Operations in formal packages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Operations in generic packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we discuss how to declare operations associated with
-fixed-point types in formal packages. We start by adapting the examples
+fixed-point types in generic packages. We start by adapting the examples
 used for floating-point in the previous section, so that fixed-point types
 are used instead.
 
