@@ -105,7 +105,7 @@ package.
 
 In order to reuse the ``Simple_Generic_Array_Pkg`` package in the
 ``Generic_Reverse_Array`` procedure, we need to use a formal package
-declaration in the form:
+parameter in the form:
 
 .. code-block:: ada
 
