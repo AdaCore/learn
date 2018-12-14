@@ -212,7 +212,7 @@ to explicitly store it in a local variable.
        return Res;
     end Quadruple;
 
-.. admonition:: In GNAT
+.. admonition:: In the GNAT toolchain
 
     In GNAT, with all warnings activated, it becomes even harder to ignore the
     result of a function, because unused variables will be flagged. For
@@ -391,7 +391,7 @@ error, imposing that as a rule would cause either inefficient run-time checks
 or complex compile-time rules. So from the user's perspective an out parameter
 acts like an uninitialized variable when the subprogram is invoked.
 
-.. admonition:: In GNAT
+.. admonition:: In the GNAT toolchain
 
     GNAT will detect simple cases of incorrect use of out parameters.
     For example, the compiler will emit a warning for the following program:
