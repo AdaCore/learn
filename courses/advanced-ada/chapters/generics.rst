@@ -320,19 +320,21 @@ test other procedures that change elements of an array.
 In order to achieve this, we have to abstract quite a few elements. We
 will therefore declare the following formal parameters:
 
-    - :ada:`S`: the string containing the array name
+    - the string :ada:`S` containing the array name;
 
-    - an instance of the :ada:`Generic_Array_Pkg` package (which was
-      implemented in the previous section)
+    - the formal :ada:`Generic_Array_Pkg` package parameter (which was
+      implemented in the previous section);
 
-    - a function :ada:`Image` that converts an element of type :ada:`T` to
-      a string
+    - the formal :ada:`Image` function that converts an element of type
+      :ada:`T` to a string;
 
-    - a procedure :ada:`Pkg_Test` that performs some operation on the
-      array
+    - the formal :ada:`Pkg_Test` procedure that performs some operation on
+      the array.
 
 Note that :ada:`Image` and :ada:`Pkg_Test` are examples of formal
-subprograms. Also, note that :ada:`S` is an example of a formal object.
+subprograms, which have been discussed in the introductory course. Also,
+note that :ada:`S` is an example of a formal object, which we discuss in
+later section.
 
 This is a version of the test application that makes use of the generic
 :ada:`Perform_Test` procedure:
