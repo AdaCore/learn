@@ -414,8 +414,8 @@ In this case, however, we're using simply :ada:`(<>)`. This means that the
 generic procedure (:ada:`Perform_Test`) will accept the default definition
 used for the instance of :ada:`Generic_Array_Pkg`.
 
-Abstracting test application by cascading generic packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cascading signature packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the code example from the previous section, we declared four formal
 parameters for the :ada:`Perform_Test` procedure. Two of them are directly
