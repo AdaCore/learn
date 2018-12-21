@@ -145,7 +145,6 @@ bounded stack type. Its spec would look like this:
 
     private
 
-       Top : constant := 100;
        type Element_Array is array (Positive range <>) of Element_Type;
 
        type Stack (Capacity : Natural) is
