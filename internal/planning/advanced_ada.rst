@@ -25,7 +25,7 @@ Structure
     - [ ] Implicit Dereferencing
     - [ ] Accessibility levels
     - [ ] Unchecked access
-    - [ ] Nullability  (*material reuse*)
+    - [x] Nullability  (*material reuse*)
     - [ ] Anonymous access types
 
 - [ ] Object-Oriented Programming / Tagged Types
