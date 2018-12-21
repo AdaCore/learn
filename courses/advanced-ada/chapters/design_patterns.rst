@@ -21,7 +21,7 @@ Factory Functions
 Suppose we have a generic package that declares a stack class. The root of
 the hierarchy would be as follows:
 
-.. code-block:: ada
+.. code:: ada
 
     generic
        type Element_Type is private;
@@ -30,8 +30,7 @@ the hierarchy would be as follows:
 
        procedure Push
          (Container : in out Stack;
-          Item      : in     Element_Type) is abstract;
-       --  ...
+          Item      :        Element_Type) is abstract;
     end Stacks;
 
 Assume there are various concrete types in the class, say an unbounded
@@ -41,13 +40,24 @@ stack (that automatically grows as necessary) and a bounded stack
 Now suppose we want to assign one stack to another, irrespective of the
 specific stack type, something like this:
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    procedure Op (T : in out Stack'Class; S : Stack'Class) is
-    begin
-       T := S;  -- raises exception if tags don't match
-         --  ...
-    end;
+    generic
+    package Stacks.Ops is
+
+       procedure Op (T : in out Stack'Class; S : Stack'Class);
+
+    end Stacks.Ops;
+
+    package body Stacks.Ops is
+
+       procedure Op (T : in out Stack'Class; S : Stack'Class) is
+       begin
+          T := S;  -- raises exception if tags don't match
+          --  ...
+       end Op;
+
+    end Stacks.Ops;
 
 This compiles, but isn't very robust, since if the tag of the target stack
 doesn't match the tag of the source stack, then an exception will occur.
@@ -68,45 +78,87 @@ single controlled operand.)
 
 The assign operation would be declared like this:
 
-.. code-block:: ada
+.. code:: ada
 
-    procedure Assign
-      (Target : in out Stack;
-       Source : Stack'Class) is abstract;
+    generic
+       type Element_Type is private;
+    package Stacks is
+       type Stack is abstract tagged null record;
+
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type) is abstract;
+
+       procedure Assign
+         (Target : in out Stack;
+          Source : Stack'Class) is abstract;
+       --  NEW: Assign procedure for Stack'Class
+
+       function Length
+         (Container : Stack) return Natural is abstract;
+
+    end Stacks;
 
 which would allow us to rewrite the above assignment statement as:
 
-.. code-block:: ada
+.. code:: ada
 
-    procedure Op (T : in out Stack'Class; S : Stack'Class) is
-    begin
-       T.Assign (S);  -- dispatches according T's tag
-       -- ...
-    end;
+    generic
+    package Stacks.Ops_2 is
+
+       procedure Op (T : in out Stack'Class; S : Stack'Class);
+
+    end Stacks.Ops_2;
+
+    package body Stacks.Ops_2 is
+
+       procedure Op (T : in out Stack'Class; S : Stack'Class) is
+       begin
+          T.Assign (S);  -- dispatches according T's tag
+          --  ...
+       end Op;
+
+    end Stacks.Ops_2;
 
 Each type in the class will have to override :ada:`Assign`. As an example,
 let's follow the steps the necessary to implement the operation for the
 bounded stack type. Its spec would look like this:
 
-.. code-block:: ada
+.. code:: ada
 
     generic
     package Stacks.Bounded_G is
+
        type Stack (Capacity : Natural) is
          new Stacks.Stack with private;
+
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type);
 
        procedure Assign
          (Target : in out Stack;
           Source : Stacks.Stack'Class);
 
-       -- ...
+       function Length
+         (Container : Stack) return Natural;
+
     private
+
+       Top : constant := 100;
+       type Element_Array is array (Positive range <>) of Element_Type;
+
        type Stack (Capacity : Natural) is
          new Stacks.Stack with
           record
              Elements  : Element_Array (1 .. Capacity);
              Top_Index : Natural := 0;
           end record;
+
+       function Length
+         (Container : Stack) return Natural
+       is (Container.Top_Index);
+
     end Stacks.Bounded_G;
 
 This is just a canonical implementation of a bounded container form, that
@@ -115,21 +167,30 @@ allocated. The interesting part is implementing the :ada:`Assign`
 operation, since we need some way to iterate over items in the source
 stack. Here's a skeleton of the implementation:
 
-.. code-block:: ada
+.. code:: ada
 
-    procedure Assign
-      (Target : in out Stack;  -- bounded form
-       Source : Stacks.Stack'Class)
-    is
-       --  ...
-    begin
-       --  ...
-       for I in reverse 1 .. Source.Length loop
-          --  Target.Elements (I) := < get curr elem of source >
-          --  < move to next elem of source >
-       end loop;
-       --   ...
-    end Assign;
+    package body Stacks.Bounded_G is
+
+       procedure Assign
+         (Target : in out Stack;  -- bounded form
+          Source : Stacks.Stack'Class)
+       is
+          --  ...
+       begin
+          --  ...
+          for I in reverse 1 .. Source.Length loop
+             --  Target.Elements (I) := < get curr elem of source >
+             --  < move to next elem of source >
+             null;
+          end loop;
+          --   ...
+       end Assign;
+
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type) is null;
+
+    end Stacks.Bounded_G;
 
 Note carefully that, assuming we visit items of the source stack in
 top-to-bottom order, it's not a simple matter of pushing items onto the
@@ -159,39 +220,124 @@ must be class-wide. We now introduce type :ada:`Cursor`, the root of the
 stack iterator hierarchy, and amend the stack class with a factory
 function for cursors:
 
-.. code-block:: ada
+:code-config:`reset_accumulator=True`
 
-    type Cursor is abstract tagged null record;  -- the iterator
+.. code:: ada
 
-    function Top_Cursor  -- the factory function
-      (Container : not null access constant Stack)
-          return Cursor'Class is abstract;
+    generic
+       type Element_Type is private;
+    package Stacks is
+       type Stack is abstract tagged null record;
 
-    -- primitive ops for the Cursor class
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type) is abstract;
+
+       procedure Assign
+         (Target : in out Stack;
+          Source : Stack'Class) is abstract;
+       --  NEW: Assign procedure for Stack'Class
+
+       function Length
+         (Container : Stack) return Natural is abstract;
+
+       procedure Clear
+         (Container : in out Stack);
+
+       type Cursor is abstract tagged null record;  -- the iterator
+
+       function Top_Cursor  -- the factory function
+         (Container : not null access constant Stack)
+           return Cursor'Class is abstract;
+
+       --  primitive ops for the Cursor class
+       function Element
+         (Position : Cursor) return Element_Type;
+
+       procedure Next (Position : in out Cursor);
+       --  procedure Previous (Position : in out Cursor);
+
+    end Stacks;
 
 Each type in the stack class will override :ada:`Top_Cursor`, to return a
 cursor that can be used to visit the items in that stack object. We can
 now complete our implementation of the :ada:`Assign` operation for bounded
 stacks as follows:
 
-.. code-block:: ada
+.. code:: ada
 
-    procedure Assign
-      (Target : in out Stack;
-       Source : Stacks.Stack'Class)
-    is
-       C : Stacks.Cursor'Class := Source.Top_Cursor;  -- dispatches
+    generic
+    package Stacks.Bounded_G is
 
-    begin
-       Target.Clear;
+       type Stack (Capacity : Natural) is
+         new Stacks.Stack with private;
 
-       for I in reverse 1 .. Source.Length loop
-          Target.Elements (I) := C.Element;  -- dispatches
-          C.Next;  -- dispatches
-       end loop;
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type);
 
-       Target.Top_Index := Source.Length;
-    end Assign;
+       procedure Assign
+         (Target : in out Stack;
+          Source : Stacks.Stack'Class);
+
+       function Length
+         (Container : Stack) return Natural;
+
+       function Top_Cursor
+         (Container : not null access constant Stack)
+         return Stacks.Cursor'Class;
+
+    private
+
+       type Element_Array is array (Positive range <>) of Element_Type;
+
+       type Stack (Capacity : Natural) is
+         new Stacks.Stack with
+          record
+             Elements  : Element_Array (1 .. Capacity);
+             Top_Index : Natural := 0;
+          end record;
+
+       function Length
+         (Container : Stack) return Natural
+       is (Container.Top_Index);
+
+    end Stacks.Bounded_G;
+
+.. code:: ada
+
+    package body Stacks.Bounded_G is
+
+       procedure Assign
+         (Target : in out Stack;
+          Source : Stacks.Stack'Class)
+       is
+          C : Stacks.Cursor'Class := Source.Top_Cursor;  -- dispatches
+
+       begin
+          Target.Clear;
+
+          for I in reverse 1 .. Source.Length loop
+             Target.Elements (I) := C.Element;  -- dispatches
+             C.Next;  -- dispatches
+          end loop;
+
+          Target.Top_Index := Source.Length;
+       end Assign;
+
+       function Top_Cursor
+         (Container : not null access constant Stack)
+         return Stacks.Cursor'Class
+       is
+       begin
+          if Container.Top_Index = 0 then
+             return Cursor'(null, 0);
+          else
+             return Cursor'(Container, Container.Top_Index);
+          end if;
+       end Top_Cursor;
+
+    end Stacks.Bounded_G;
 
 The :ada:`Source` parameter has a class-wide type, which means the call to
 :ada:`Top_Cursor` dispatches (since :ada:`Top_Cursor` is primitive for the
@@ -204,9 +350,11 @@ dispatch. The function call :ada:`C.Element` returns the element of
 advances the cursor to the next position (towards the bottom of the
 stack).
 
+:code-config:`reset_accumulator=True`
+
 This is the complete source-code:
 
-.. code-block:: ada
+.. code:: ada
 
     generic
        type Element_Type is private;
@@ -218,7 +366,7 @@ This is the complete source-code:
 
        procedure Push
          (Container : in out Stack;
-          Item      : in     Element_Type) is abstract;
+          Item      :        Element_Type) is abstract;
 
        function Top
          (Container : Stack) return Element_Type is abstract;
@@ -254,6 +402,8 @@ This is the complete source-code:
 
     end Stacks;
 
+.. code:: ada
+
     generic
     package Stacks.Bounded_G is
        pragma Pure;
@@ -262,7 +412,7 @@ This is the complete source-code:
 
        procedure Push
          (Container : in out Stack;
-          Item      : in     Element_Type);
+          Item      :        Element_Type);
 
        function Top
          (Container : Stack) return Element_Type;
@@ -313,6 +463,8 @@ This is the complete source-code:
 
     end Stacks.Bounded_G;
 
+.. code:: ada
+
     private with Ada.Finalization;
 
     generic
@@ -323,7 +475,7 @@ This is the complete source-code:
 
        procedure Push
          (Container : in out Stack;
-          Item      : in     Element_Type);
+          Item      :        Element_Type);
 
        function Top
          (Container : Stack) return Element_Type;
@@ -386,13 +538,15 @@ This is the complete source-code:
 
     end Stacks.Unbounded_G;
 
+.. code:: ada
+
     with System;  use type System.Address;
 
     package body Stacks.Bounded_G is
 
        procedure Push
          (Container : in out Stack;
-          Item      : in     Element_Type)
+          Item      :        Element_Type)
        is
           E : Element_Array renames Container.Elements;
           I : Natural renames Container.Top_Index;
@@ -402,14 +556,9 @@ This is the complete source-code:
           I := I + 1;
        end Push;
 
-
        function Top
          (Container : Stack) return Element_Type
-       is
-       begin
-          return Container.Elements (Container.Top_Index);
-       end;
-
+       is (Container.Elements (Container.Top_Index));
 
        procedure Pop
          (Container : in out Stack)
@@ -418,22 +567,16 @@ This is the complete source-code:
 
        begin
           I := I - 1;
-       end;
-
+       end Pop;
 
        function Length
          (Container : Stack) return Natural
-       is
-       begin
-          return Container.Top_Index;
-       end;
-
+       is (Container.Top_Index);
 
        procedure Clear (Container : in out Stack) is
        begin
           Container.Top_Index := 0;
-       end;
-
+       end Clear;
 
        procedure Assign
          (Target : in out Stack;
@@ -460,7 +603,6 @@ This is the complete source-code:
           Target.Top_Index := Source.Length;
        end Assign;
 
-
        function Top_Cursor
          (Container : not null access constant Stack)
          return Stacks.Cursor'Class
@@ -472,7 +614,6 @@ This is the complete source-code:
              return Cursor'(Container, Container.Top_Index);
           end if;
        end Top_Cursor;
-
 
        function Bottom_Cursor
          (Container : not null access constant Stack)
@@ -486,12 +627,8 @@ This is the complete source-code:
           end if;
        end Bottom_Cursor;
 
-
        function Has_Element (Position : Cursor) return Boolean is
-       begin
-          return Position.Index > 0;
-       end;
-
+         (Position.Index > 0);
 
        function Element
          (Position : Cursor) return Element_Type
@@ -501,8 +638,7 @@ This is the complete source-code:
 
        begin
           return S.Elements (I);
-       end;
-
+       end Element;
 
        procedure Next (Position : in out Cursor) is
           I : Natural renames Position.Index;
@@ -527,7 +663,6 @@ This is the complete source-code:
           end if;
        end Next;
 
-
        procedure Previous (Position : in out Cursor) is
           I : Natural renames Position.Index;
 
@@ -549,8 +684,10 @@ This is the complete source-code:
           end;
        end Previous;
 
-
     end Stacks.Bounded_G;
+
+.. code:: ada
+
     with Ada.Unchecked_Deallocation;
     with System;  use type System.Address;
 
@@ -561,10 +698,9 @@ This is the complete source-code:
          (Element_Array,
           Element_Array_Access);
 
-
        procedure Push
          (Container : in out Stack;
-          Item      : in     Element_Type)
+          Item      :        Element_Type)
        is
           R : Rep_Type renames Container.Rep;
           I : Natural renames R.Top_Index;
@@ -600,7 +736,6 @@ This is the complete source-code:
           I := I + 1;
        end Push;
 
-
        function Top
          (Container : Stack) return Element_Type
        is
@@ -608,8 +743,7 @@ This is the complete source-code:
 
        begin
           return R.Elements (R.Top_Index);
-       end;
-
+       end Top;
 
        procedure Pop
          (Container : in out Stack)
@@ -619,22 +753,16 @@ This is the complete source-code:
 
        begin
           I := I - 1;
-       end;
-
+       end Pop;
 
        function Length
          (Container : Stack) return Natural
-       is
-       begin
-          return Container.Rep.Top_Index;
-       end;
-
+       is (Container.Rep.Top_Index);
 
        procedure Clear (Container : in out Stack) is
        begin
           Container.Rep.Top_Index := 0;
-       end;
-
+       end Clear;
 
        procedure Assign
          (Target : in out Stack;
@@ -677,7 +805,6 @@ This is the complete source-code:
           T.Top_Index := L;
        end Assign;
 
-
        procedure Adjust (Rep : in out Rep_Type) is
           X : constant Element_Array_Access := Rep.Elements;
           I : constant Natural := Rep.Top_Index;
@@ -692,7 +819,6 @@ This is the complete source-code:
           end if;
        end Adjust;
 
-
        procedure Finalize (Rep : in out Rep_Type) is
           X : Element_Array_Access := Rep.Elements;
 
@@ -701,8 +827,7 @@ This is the complete source-code:
           Rep.Top_Index := 0;
 
           Free (X);
-       end;
-
+       end Finalize;
 
        function Top_Cursor
          (Container : not null access constant Stack)
@@ -716,8 +841,7 @@ This is the complete source-code:
           else
              return Cursor'(Container, R.Top_Index);
           end if;
-       end;
-
+       end Top_Cursor;
 
        function Bottom_Cursor
          (Container : not null access constant Stack)
@@ -731,14 +855,10 @@ This is the complete source-code:
           else
              return Cursor'(Container, 1);
           end if;
-       end;
-
+       end Bottom_Cursor;
 
        function Has_Element (Position : Cursor) return Boolean is
-       begin
-          return Position.Index > 0;
-       end;
-
+         (Position.Index > 0);
 
        function Element
          (Position : Cursor) return Element_Type
@@ -748,8 +868,7 @@ This is the complete source-code:
 
        begin
           return R.Elements (I);
-       end;
-
+       end Element;
 
        procedure Next (Position : in out Cursor) is
           I : Natural renames Position.Index;
@@ -773,7 +892,6 @@ This is the complete source-code:
              Position.Container := null;
           end if;
        end Next;
-
 
        procedure Previous (Position : in out Cursor) is
           I : Natural renames Position.Index;
