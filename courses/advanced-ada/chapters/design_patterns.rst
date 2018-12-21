@@ -40,7 +40,7 @@ stack (that automatically grows as necessary) and a bounded stack
 Now suppose we want to assign one stack to another, irrespective of the
 specific stack type, something like this:
 
-.. code:: ada run_button
+.. code:: ada
 
     generic
     package Stacks.Ops is
