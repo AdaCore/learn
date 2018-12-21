@@ -582,7 +582,8 @@ This is the complete source-code:
          (Target : in out Stack;
           Source : Stacks.Stack'Class)
        is
-          C : Stacks.Cursor'Class := Source.Top_Cursor;
+          --  C : Stacks.Cursor'Class := Source.Top_Cursor;
+          C : Stacks.Cursor'Class := Top_Cursor (Source'Unchecked_Access);
 
        begin
           if Target'Address = Source'Address then
@@ -768,7 +769,8 @@ This is the complete source-code:
          (Target : in out Stack;
           Source : Stacks.Stack'Class)
        is
-          C : Stacks.Cursor'Class := Source.Top_Cursor;
+          --  C : Stacks.Cursor'Class := Source.Top_Cursor;
+          C : Stacks.Cursor'Class := Top_Cursor (Source'Unchecked_Access);
           T : Rep_Type renames Target.Rep;
           L : constant Natural := Source.Length;
 
@@ -915,3 +917,42 @@ This is the complete source-code:
        end Previous;
 
     end Stacks.Unbounded_G;
+
+.. code:: ada run_button
+
+    with Stacks;
+    with Stacks.Bounded_G;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Test is
+
+       package Int_Stacks           is new Stacks (Element_Type => Integer);
+       package Bounded_G_Int_Stacks is new Int_Stacks.Bounded_G;
+       use Bounded_G_Int_Stacks;
+
+       S1, S2 : Stack (10);
+
+    begin
+
+       S1.Push (1);
+       S1.Push (4);
+       S1.Push (5);
+
+       S2.Push (2);
+       S2.Push (3);
+       S2.Push (7);
+
+       while S1.Length > 0 loop
+          Put_Line (Integer'Image (S1.Top));
+          S1.Pop;
+       end loop;
+
+       S1.Assign (S2);
+
+       while S1.Length > 0 loop
+          Put_Line (Integer'Image (S1.Top));
+          S1.Pop;
+       end loop;
+
+    end Simple_Test;
