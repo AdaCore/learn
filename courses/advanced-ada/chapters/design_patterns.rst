@@ -1345,121 +1345,60 @@ generic algorithm, a container is merely a sequence of items.
 
 This is the complete source-code:
 
-.. code-block:: ada
+- Stacks specification:
+
+.. code:: ada
 
     generic
-       type Container_Type (<>) is limited private;
-       type Cursor_Type (<>) is private;
-       type Element_Type (<>) is private;
+       type Element_Type is private;
+       with function "=" (L, R : Element_Type) return Boolean is <>;
+    package Stacks is
+       pragma Pure;
 
-       with function First
-         (Container : Container_Type)
-          return Cursor_Type is <>;
-       with procedure Clear
-         (Container : in out Container_Type) is <>;
-       with procedure Insert
-         (Container : in out Container_Type;
-          Item      : Element_Type) is <>;
-       with function Has_Element
-         (Cursor : Cursor_Type) return Boolean is <>;
-       with function Element
-         (Cursor : Cursor_Type) return Element_Type is <>;
-       with procedure Advance
-         (Cursor : in out Cursor_Type) is <>;
+       type Stack is abstract tagged null record;
 
-    procedure Generic_Copy6
-      (Source : Container_Type;
-       Target : in out Container_Type);
-    generic
-       type Container_Type (<>) is limited private;
-       type Cursor_Type (<>) is private;
-       type Element_Type (<>) is private;
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type) is abstract;
 
-       with procedure Insert
-         (Container : in out Container_Type;
-          Item      : Element_Type) is <>;
-       with function Has_Element
-         (Cursor : Cursor_Type) return Boolean is <>;
-       with function Element
-         (Cursor : Cursor_Type) return Element_Type is <>;
-       with procedure Advance
-         (Cursor : in out Cursor_Type) is <>;
-       with procedure Clear
-         (Container : in out Container_Type) is null;
+       function Top
+         (Container : Stack) return Element_Type is abstract;
 
-    procedure Generic_Copy7
-      (Source : Cursor_Type;
-       Target : in out Container_Type);
-    generic
-       type Container_Type (<>) is limited private;
-       type Cursor_Type (<>) is private;
+       procedure Pop (Container : in out Stack) is abstract;
 
-       with procedure Insert
-         (Target : in out Container_Type;
-          Source : Cursor_Type) is <>;
-       with function Has_Element
-         (Cursor : Cursor_Type) return Boolean is <>;
-       with procedure Advance
-         (Cursor : in out Cursor_Type) is <>;
-       with procedure Clear
-         (Container : in out Container_Type) is null;
+       function Length
+         (Container : Stack) return Natural is abstract;
 
-    procedure Generic_Copy8
-      (Source : Cursor_Type;
-       Target : in out Container_Type);
-    with Stacks;
+       procedure Clear (Container : in out Stack) is abstract;
 
-    generic
-       with package Stack_Types is new Stacks (<>);
-       use Stack_Types;
-    procedure Generic_Stack_Copy4
-      (Source : Stack'Class;
-       Target : in out Stack'Class);
-    generic
-       type Stack_Type (<>) is limited private;
-       type Cursor_Type (<>) is private;
-       type Element_Type (<>) is private;
+       procedure Copy
+         (Source : Stack;
+          Target : in out Stack'Class) is abstract;
 
-       with function Bottom_Cursor
-         (Stack : Stack_Type)
-          return Cursor_Type is <>;
-       with procedure Clear
-         (Stack : in out Stack_Type) is <>;
-       with procedure Push
-         (Stack : in out Stack_Type;
-          Item  : Element_Type) is <>;
-       with function Has_Element
-         (Cursor : Cursor_Type) return Boolean is <>;
-       with function Element
-         (Cursor : Cursor_Type) return Element_Type is <>;
-       with procedure Previous
-         (Cursor : in out Cursor_Type) is <>;
+       procedure Copy2
+         (Source : Stack'Class;
+          Target : in out Stack'Class);
 
-    procedure Generic_Stack_Copy5
-      (Source : Stack_Type;
-       Target : in out Stack_Type);
-    with Stacks.Bounded_G;
+       type Cursor is abstract tagged null record;
 
-    package Integer_Stacks.Bounded is new Integer_Stacks.Bounded_G;
-    pragma Pure (Integer_Stacks.Bounded);
-    with Stacks;
-    pragma Elaborate_All (Stacks);
+       function Top_Cursor
+         (Container : not null access constant Stack)
+          return Cursor'Class is abstract;
 
-    package Integer_Stacks is new Stacks (Integer);
-    pragma Pure (Integer_Stacks);
-    with Stacks_Bounded;
-    pragma Elaborate_All (Stacks_Bounded);
+       function Bottom_Cursor
+         (Container : not null access constant Stack)
+          return Cursor'Class is abstract;
 
-    package Integer_Stacks_Bounded is new Stacks_Bounded (Integer);
-    pragma Pure (Integer_Stacks_Bounded);
-    with Integer_Stacks_Bounded;  use Integer_Stacks_Bounded;
-    with Generic_Stack_Copy5;
+       function Has_Element (Position : Cursor) return Boolean is abstract;
 
-    procedure Integer_Stacks_Bounded_Copy5 is
-      new Generic_Stack_Copy5
-        (Stack,
-         Cursor,
-         Integer);
+       function Element
+         (Position : Cursor) return Element_Type is abstract;
+
+       procedure Next (Position : in out Cursor) is abstract;
+       procedure Previous (Position : in out Cursor) is abstract;
+
+    end Stacks;
+
     generic
     package Stacks.Bounded_G is
        pragma Pure;
@@ -1468,7 +1407,7 @@ This is the complete source-code:
 
        procedure Push
          (Container : in out Stack;
-          Item      : in     Element_Type);
+          Item      :        Element_Type);
 
        function Top
          (Container : Stack) return Element_Type;
@@ -1520,10 +1459,7 @@ This is the complete source-code:
        procedure Previous (Position : in out Cursor);
 
     end Stacks.Bounded_G;
-    generic
-    procedure Stacks.Generic_Copy3
-      (Source : Stack'Class;
-       Target : in out Stack'Class);
+
     private with Ada.Finalization;
 
     generic
@@ -1534,7 +1470,7 @@ This is the complete source-code:
 
        procedure Push
          (Container : in out Stack;
-          Item      : in     Element_Type);
+          Item      :        Element_Type);
 
        function Top
          (Container : Stack) return Element_Type;
@@ -1596,55 +1532,512 @@ This is the complete source-code:
        procedure Previous (Position : in out Cursor);
 
     end Stacks.Unbounded_G;
-    generic
-       type Element_Type is private;
-       with function "=" (L, R : Element_Type) return Boolean is <>;
-    package Stacks is
-       pragma Pure;
 
-       type Stack is abstract tagged null record;
+.. code:: ada
 
-       procedure Push
-         (Container : in out Stack;
-          Item      : in     Element_Type) is abstract;
+    with System;  use type System.Address;
 
-       function Top
-         (Container : Stack) return Element_Type is abstract;
-
-       procedure Pop (Container : in out Stack) is abstract;
-
-       function Length
-         (Container : Stack) return Natural is abstract;
-
-       procedure Clear (Container : in out Stack) is abstract;
-
-       procedure Copy
-         (Source : Stack;
-          Target : in out Stack'Class) is abstract;
+    package body Stacks is
 
        procedure Copy2
          (Source : Stack'Class;
-          Target : in out Stack'Class);
+          Target : in out Stack'Class)
+       is
+          C : Cursor'Class := Bottom_Cursor (Source'Access);
 
-       type Cursor is abstract tagged null record;
+       begin
+          if Source'Address = Target'Address then
+             return;
+          end if;
+
+          Target.Clear;
+
+          while C.Has_Element loop
+             Target.Push (C.Element);
+             C.Previous;
+          end loop;
+       end Copy2;
+
+    end Stacks;
+
+- Stacks.Bounded_G package body:
+
+.. code:: ada
+
+    with System;  use type System.Address;
+
+    package body Stacks.Bounded_G is
+
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type)
+       is
+          E : Element_Array renames Container.Elements;
+          I : Natural renames Container.Top_Index;
+
+       begin
+          E (I + 1) := Item;
+          I := I + 1;
+       end Push;
+
+       function Top
+         (Container : Stack) return Element_Type
+       is
+       begin
+          return Container.Elements (Container.Top_Index);
+       end Top;
+
+       procedure Pop
+         (Container : in out Stack)
+       is
+          I : Natural renames Container.Top_Index;
+
+       begin
+          I := I - 1;
+       end Pop;
+
+       function Length
+         (Container : Stack) return Natural
+       is
+       begin
+          return Container.Top_Index;
+       end Length;
+
+       procedure Clear (Container : in out Stack) is
+       begin
+          Container.Top_Index := 0;
+       end Clear;
+
+       procedure Copy
+         (Source : Stack;
+          Target : in out Stacks.Stack'Class)
+       is
+       begin
+          if Target'Address = Source'Address then
+             return;
+          end if;
+
+          Target.Clear;
+
+          for I in 1 .. Source.Top_Index loop
+             Target.Push (Source.Elements (I));
+          end loop;
+       end Copy;
 
        function Top_Cursor
          (Container : not null access constant Stack)
-          return Cursor'Class is abstract;
+          return Stacks.Cursor'Class
+       is
+       begin
+          if Container.Top_Index = 0 then
+             return Cursor'(null, 0);
+          else
+             return Cursor'(Container, Container.Top_Index);
+          end if;
+       end Top_Cursor;
 
        function Bottom_Cursor
          (Container : not null access constant Stack)
-          return Cursor'Class is abstract;
+          return Stacks.Cursor'Class
+       is
+       begin
+          if Container.Top_Index = 0 then
+             return Cursor'(null, 0);
+          else
+             return Cursor'(Container, 1);
+          end if;
+       end Bottom_Cursor;
 
-       function Has_Element (Position : Cursor) return Boolean is abstract;
+       function Has_Element (Position : Cursor) return Boolean is
+       begin
+          return Position.Index > 0;
+       end Has_Element;
 
        function Element
-         (Position : Cursor) return Element_Type is abstract;
+         (Position : Cursor) return Element_Type
+       is
+          S : Stack renames Position.Container.all;
+          I : constant Positive range 1 .. S.Top_Index := Position.Index;
 
-       procedure Next (Position : in out Cursor) is abstract;
-       procedure Previous (Position : in out Cursor) is abstract;
+       begin
+          return S.Elements (I);
+       end Element;
 
-    end Stacks;
+       procedure Next (Position : in out Cursor) is
+          I : Natural renames Position.Index;
+
+       begin
+          if I = 0 then
+             return;
+          end if;
+
+          declare
+             S : Stack renames Position.Container.all;
+          begin
+             if I > S.Top_Index then
+                I := S.Top_Index;
+             else
+                I := I - 1;
+             end if;
+          end;
+
+          if I = 0 then
+             Position.Container := null;
+          end if;
+       end Next;
+
+       procedure Previous (Position : in out Cursor) is
+          I : Natural renames Position.Index;
+
+       begin
+          if I = 0 then
+             return;
+          end if;
+
+          declare
+             S : Stack renames Position.Container.all;
+          begin
+             if I >= S.Top_Index then
+                I := 0;
+                Position.Container := null;
+
+             else
+                I := I + 1;
+             end if;
+          end;
+       end Previous;
+
+    end Stacks.Bounded_G;
+
+- Stacks.Unbounded_G package body:
+
+.. code:: ada
+
+    with Ada.Unchecked_Deallocation;
+    with System;  use type System.Address;
+
+    package body Stacks.Unbounded_G is
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Element_Array,
+            Element_Array_Access);
+
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type)
+       is
+          R : Rep_Type renames Container.Rep;
+          I : Natural renames R.Top_Index;
+
+       begin
+          if R.Elements = null then
+             R.Elements := new Element_Array'(1 .. 1 => Item);
+             I := 1;
+             return;
+          end if;
+
+          if I = R.Elements'Last then
+             declare
+                X : Element_Array_Access := R.Elements;
+                J : constant Positive := 2 * I;
+                E : Element_Array_Access := new Element_Array (1 .. J);
+
+             begin
+                Copy : begin
+                   E (1 .. I) := X.all;
+                exception
+                   when others =>
+                      Free (E);
+                      raise;
+                end Copy;
+
+                R.Elements := E;
+                Free (X);
+             end;
+          end if;
+
+          R.Elements (I + 1) := Item;
+          I := I + 1;
+       end Push;
+
+       function Top
+         (Container : Stack) return Element_Type
+       is
+          R : Rep_Type renames Container.Rep;
+
+       begin
+          return R.Elements (R.Top_Index);
+       end Top;
+
+       procedure Pop
+         (Container : in out Stack)
+       is
+          R : Rep_Type renames Container.Rep;
+          I : Natural renames R.Top_Index;
+
+       begin
+          I := I - 1;
+       end Pop;
+
+       function Length
+         (Container : Stack) return Natural
+       is
+       begin
+          return Container.Rep.Top_Index;
+       end Length;
+
+       procedure Clear (Container : in out Stack) is
+       begin
+          Container.Rep.Top_Index := 0;
+       end Clear;
+
+       procedure Copy
+         (Source : Stack;
+          Target : in out Stacks.Stack'Class)
+       is
+          S : Rep_Type renames Source.Rep;
+
+       begin
+          if Target'Address = Source'Address then
+             return;
+          end if;
+
+          Target.Clear;
+
+          for I in 1 .. S.Top_Index loop
+             Target.Push (S.Elements (I));
+          end loop;
+       end Copy;
+
+       procedure Adjust (Rep : in out Rep_Type) is
+          X : constant Element_Array_Access := Rep.Elements;
+          I : constant Natural := Rep.Top_Index;
+
+       begin
+          Rep.Elements := null;
+          Rep.Top_Index := 0;
+
+          if I > 0 then
+             Rep.Elements := new Element_Array'(X (1 .. I));
+             Rep.Top_Index := I;
+          end if;
+       end Adjust;
+
+       procedure Finalize (Rep : in out Rep_Type) is
+          X : Element_Array_Access := Rep.Elements;
+
+       begin
+          Rep.Elements := null;
+          Rep.Top_Index := 0;
+
+          Free (X);
+       end Finalize;
+
+       function Top_Cursor
+         (Container : not null access constant Stack)
+          return Stacks.Cursor'Class
+       is
+          R : Rep_Type renames Container.Rep;
+
+       begin
+          if R.Top_Index = 0 then
+             return Cursor'(null, 0);
+          else
+             return Cursor'(Container, R.Top_Index);
+          end if;
+       end Top_Cursor;
+
+       function Bottom_Cursor
+         (Container : not null access constant Stack)
+          return Stacks.Cursor'Class
+       is
+          R : Rep_Type renames Container.Rep;
+
+       begin
+          if R.Top_Index = 0 then
+             return Cursor'(null, 0);
+          else
+             return Cursor'(Container, 1);
+          end if;
+       end Bottom_Cursor;
+
+       function Has_Element (Position : Cursor) return Boolean is
+       begin
+          return Position.Index > 0;
+       end Has_Element;
+
+       function Element
+         (Position : Cursor) return Element_Type
+       is
+          R : Rep_Type renames Position.Container.Rep;
+          I : constant Positive range 1 .. R.Top_Index := Position.Index;
+
+       begin
+          return R.Elements (I);
+       end Element;
+
+       procedure Next (Position : in out Cursor) is
+          I : Natural renames Position.Index;
+
+       begin
+          if I = 0 then
+             return;
+          end if;
+
+          declare
+             R : Rep_Type renames Position.Container.Rep;
+          begin
+             if I > R.Top_Index then
+                I := R.Top_Index;
+             else
+                I := I - 1;
+             end if;
+          end;
+
+          if I = 0 then
+             Position.Container := null;
+          end if;
+       end Next;
+
+       procedure Previous (Position : in out Cursor) is
+          I : Natural renames Position.Index;
+
+       begin
+          if I = 0 then
+             return;
+          end if;
+
+          declare
+             R : Rep_Type renames Position.Container.Rep;
+          begin
+             if I >= R.Top_Index then
+                I := 0;
+                Position.Container := null;
+
+             else
+                I := I + 1;
+             end if;
+          end;
+       end Previous;
+
+    end Stacks.Unbounded_G;
+
+- Generic_Copy3:
+
+.. code:: ada
+
+    generic
+    procedure Stacks.Generic_Copy3
+      (Source : Stack'Class;
+       Target : in out Stack'Class);
+
+    with System;  use type System.Address;
+
+    procedure Stacks.Generic_Copy3
+      (Source : Stack'Class;
+       Target : in out Stack'Class)
+    is
+       C : Cursor'Class := Bottom_Cursor (Source'Access);
+
+    begin
+       if Source'Address = Target'Address then
+          return;
+       end if;
+
+       Target.Clear;
+
+       while C.Has_Element loop
+          Target.Push (C.Element);
+          C.Previous;
+       end loop;
+    end Stacks.Generic_Copy3;
+
+- Generic_Stack_Copy4:
+
+.. code:: ada
+
+    with Stacks;
+
+    generic
+       with package Stack_Types is new Stacks (<>);
+       use Stack_Types;
+    procedure Generic_Stack_Copy4
+      (Source : Stack'Class;
+       Target : in out Stack'Class);
+
+    with System;  use type System.Address;
+
+    procedure Generic_Stack_Copy4
+      (Source : Stack'Class;
+       Target : in out Stack'Class)
+    is
+       C : Cursor'Class := Bottom_Cursor (Source'Access);
+
+    begin
+       if Source'Address = Target'Address then
+          return;
+       end if;
+
+       Target.Clear;
+       while C.Has_Element loop
+          Target.Push (C.Element);
+          C.Previous;
+       end loop;
+    end Generic_Stack_Copy4;
+
+- Generic_Stack_Copy5:
+
+.. code:: ada
+
+    generic
+       type Stack_Type (<>) is limited private;
+       type Cursor_Type (<>) is private;
+       type Element_Type (<>) is private;
+
+       with function Bottom_Cursor
+         (Stack : Stack_Type)
+          return Cursor_Type is <>;
+       with procedure Clear
+         (Stack : in out Stack_Type) is <>;
+       with procedure Push
+         (Stack : in out Stack_Type;
+          Item  : Element_Type) is <>;
+       with function Has_Element
+         (Cursor : Cursor_Type) return Boolean is <>;
+       with function Element
+         (Cursor : Cursor_Type) return Element_Type is <>;
+       with procedure Previous
+         (Cursor : in out Cursor_Type) is <>;
+
+    procedure Generic_Stack_Copy5
+      (Source : Stack_Type;
+       Target : in out Stack_Type);
+
+    with System;  use type System.Address;
+
+    procedure Generic_Stack_Copy5
+      (Source : Stack_Type;
+       Target : in out Stack_Type)
+    is
+       C : Cursor_Type := Bottom_Cursor (Source);
+
+    begin
+       if Source'Address = Target'Address then
+          return;
+       end if;
+
+       Clear (Target);
+       while Has_Element (C) loop
+          Push (Target, Element (C));
+          Previous (C);
+       end loop;
+    end Generic_Stack_Copy5;
+
+- Stacks_Bounded package spec:
+
+.. code:: ada
+
     generic
        type Element_Type is private;
 
@@ -1655,7 +2048,7 @@ This is the complete source-code:
 
        procedure Push
          (Container : in out Stack;
-          Item      : in     Element_Type);
+          Item      :        Element_Type);
 
        function Top
          (Container : Stack) return Element_Type;
@@ -1700,6 +2093,204 @@ This is the complete source-code:
        end record;
 
     end Stacks_Bounded;
+
+- Stacks_Bounded package body:
+
+.. code:: ada
+
+    with System;  use type System.Address;
+
+    package body Stacks_Bounded is
+
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type)
+       is
+          E : Element_Array renames Container.Elements;
+          I : Natural renames Container.Top_Index;
+
+       begin
+          E (I + 1) := Item;
+          I := I + 1;
+       end Push;
+
+       function Top
+         (Container : Stack) return Element_Type
+       is
+       begin
+          return Container.Elements (Container.Top_Index);
+       end Top;
+
+       procedure Pop
+         (Container : in out Stack)
+       is
+          I : Natural renames Container.Top_Index;
+
+       begin
+          I := I - 1;
+       end Pop;
+
+       function Length
+         (Container : Stack) return Natural
+       is
+       begin
+          return Container.Top_Index;
+       end Length;
+
+       procedure Clear (Container : in out Stack) is
+       begin
+          Container.Top_Index := 0;
+       end Clear;
+
+       function Top_Cursor (Container : Stack) return Cursor is
+       begin
+          if Container.Top_Index = 0 then
+             return (null, 0);
+          else
+             return (Container'Unchecked_Access, Container.Top_Index);
+          end if;
+       end Top_Cursor;
+
+       function Bottom_Cursor (Container : Stack) return Cursor is
+       begin
+          if Container.Top_Index = 0 then
+             return (null, 0);
+          else
+             return (Container'Unchecked_Access, 1);
+          end if;
+       end Bottom_Cursor;
+
+       function Has_Element (Position : Cursor) return Boolean is
+       begin
+          return Position.Index > 0;
+       end Has_Element;
+
+       function Element
+         (Position : Cursor) return Element_Type
+       is
+          S : Stack renames Position.Container.all;
+          I : constant Positive range 1 .. S.Top_Index := Position.Index;
+
+       begin
+          return S.Elements (I);
+       end Element;
+
+       procedure Next (Position : in out Cursor) is
+          I : Natural renames Position.Index;
+
+       begin
+          if I = 0 then
+             return;
+          end if;
+
+          declare
+             S : Stack renames Position.Container.all;
+          begin
+             if I > S.Top_Index then
+                I := S.Top_Index;
+             else
+                I := I - 1;
+             end if;
+          end;
+
+          if I = 0 then
+             Position.Container := null;
+          end if;
+       end Next;
+
+       procedure Previous (Position : in out Cursor) is
+          I : Natural renames Position.Index;
+
+       begin
+          if I = 0 then
+             return;
+          end if;
+
+          declare
+             S : Stack renames Position.Container.all;
+          begin
+             if I >= S.Top_Index then
+                I := 0;
+                Position.Container := null;
+
+             else
+                I := I + 1;
+             end if;
+          end;
+       end Previous;
+
+    end Stacks_Bounded;
+
+- Stacks instantiations:
+
+.. code:: ada
+
+    with Stacks;
+    pragma Elaborate_All (Stacks);
+
+    package Integer_Stacks is new Stacks (Integer);
+    pragma Pure (Integer_Stacks);
+
+    with Stacks.Bounded_G;
+
+    package Integer_Stacks.Bounded is new Integer_Stacks.Bounded_G;
+    pragma Pure (Integer_Stacks.Bounded);
+
+    with Stacks_Bounded;
+    pragma Elaborate_All (Stacks_Bounded);
+
+    package Integer_Stacks_Bounded is new Stacks_Bounded (Integer);
+    pragma Pure (Integer_Stacks_Bounded);
+
+- Test_Copy5:
+
+.. code:: ada
+
+    with Integer_Stacks_Bounded; use Integer_Stacks_Bounded;
+    with Generic_Stack_Copy5;
+
+    procedure Test_Copy5 (S : Stack) is
+       procedure Copy5 is
+         new Generic_Stack_Copy5
+           (Stack,
+            Cursor,
+            Integer);
+
+       T : Stack (S.Length);
+
+    begin
+       Copy5 (Source => S, Target => T);
+    end Test_Copy5;
+
+- Generic_Copy6:
+
+.. code:: ada
+
+    generic
+       type Container_Type (<>) is limited private;
+       type Cursor_Type (<>) is private;
+       type Element_Type (<>) is private;
+
+       with function First
+         (Container : Container_Type)
+          return Cursor_Type is <>;
+       with procedure Clear
+         (Container : in out Container_Type) is <>;
+       with procedure Insert
+         (Container : in out Container_Type;
+          Item      : Element_Type) is <>;
+       with function Has_Element
+         (Cursor : Cursor_Type) return Boolean is <>;
+       with function Element
+         (Cursor : Cursor_Type) return Element_Type is <>;
+       with procedure Advance
+         (Cursor : in out Cursor_Type) is <>;
+
+    procedure Generic_Copy6
+      (Source : Container_Type;
+       Target : in out Container_Type);
+
+    private with Ada.Finalization;
     with System;  use type System.Address;
 
     procedure Generic_Copy6
@@ -1719,645 +2310,10 @@ This is the complete source-code:
           Advance (C);
        end loop;
     end Generic_Copy6;
-    with System;  use type System.Address;
 
-    procedure Generic_Copy7
-      (Source : Cursor_Type;
-       Target : in out Container_Type)
-    is
-       C : Cursor_Type := Source;
+- Test_Copy6:
 
-    begin
-       Clear (Target);
-       while Has_Element (C) loop
-          Insert (Target, Element (C));
-          Advance (C);
-       end loop;
-    end Generic_Copy7;
-    with System;  use type System.Address;
-
-    procedure Generic_Copy8
-      (Source : Cursor_Type;
-       Target : in out Container_Type)
-    is
-       C : Cursor_Type := Source;
-
-    begin
-       Clear (Target);
-       while Has_Element (C) loop
-          Insert (Target, C);
-          Advance (C);
-       end loop;
-    end Generic_Copy8;
-    with System;  use type System.Address;
-
-    procedure Generic_Stack_Copy4
-      (Source : Stack'Class;
-       Target : in out Stack'Class)
-    is
-       C : Cursor'Class := Bottom_Cursor (Source'Access);
-
-    begin
-       if Source'Address = Target'Address then
-          return;
-       end if;
-
-       Target.Clear;
-       while C.Has_Element loop
-          Target.Push (C.Element);
-          C.Previous;
-       end loop;
-    end Generic_Stack_Copy4;
-    with System;  use type System.Address;
-
-    procedure Generic_Stack_Copy5
-      (Source : Stack_Type;
-       Target : in out Stack_Type)
-    is
-       C : Cursor_Type := Bottom_Cursor (Source);
-
-    begin
-       if Source'Address = Target'Address then
-          return;
-       end if;
-
-       Clear (Target);
-       while Has_Element (C) loop
-          Push (Target, Element (C));
-          Previous (C);
-       end loop;
-    end Generic_Stack_Copy5;
-    with System;  use type System.Address;
-
-    package body Stacks.Bounded_G is
-
-       procedure Push
-         (Container : in out Stack;
-          Item      : in     Element_Type)
-       is
-          E : Element_Array renames Container.Elements;
-          I : Natural renames Container.Top_Index;
-
-       begin
-          E (I + 1) := Item;
-          I := I + 1;
-       end Push;
-
-
-       function Top
-         (Container : Stack) return Element_Type
-       is
-       begin
-          return Container.Elements (Container.Top_Index);
-       end;
-
-
-       procedure Pop
-         (Container : in out Stack)
-       is
-          I : Natural renames Container.Top_Index;
-
-       begin
-          I := I - 1;
-       end;
-
-
-       function Length
-         (Container : Stack) return Natural
-       is
-       begin
-          return Container.Top_Index;
-       end;
-
-
-       procedure Clear (Container : in out Stack) is
-       begin
-          Container.Top_Index := 0;
-       end;
-
-
-       procedure Copy
-         (Source : Stack;
-          Target : in out Stacks.Stack'Class)
-       is
-       begin
-          if Target'Address = Source'Address then
-             return;
-          end if;
-
-          Target.Clear;
-
-          for I in 1 .. Source.Top_Index loop
-             Target.Push (Source.Elements (I));
-          end loop;
-       end Copy;
-
-       function Top_Cursor
-         (Container : not null access constant Stack)
-          return Stacks.Cursor'Class
-       is
-       begin
-          if Container.Top_Index = 0 then
-             return Cursor'(null, 0);
-          else
-             return Cursor'(Container, Container.Top_Index);
-          end if;
-       end Top_Cursor;
-
-
-       function Bottom_Cursor
-         (Container : not null access constant Stack)
-          return Stacks.Cursor'Class
-       is
-       begin
-          if Container.Top_Index = 0 then
-             return Cursor'(null, 0);
-          else
-             return Cursor'(Container, 1);
-          end if;
-       end Bottom_Cursor;
-
-
-       function Has_Element (Position : Cursor) return Boolean is
-       begin
-          return Position.Index > 0;
-       end;
-
-
-       function Element
-         (Position : Cursor) return Element_Type
-       is
-          S : Stack renames Position.Container.all;
-          I : constant Positive range 1 .. S.Top_Index := Position.Index;
-
-       begin
-          return S.Elements (I);
-       end;
-
-
-       procedure Next (Position : in out Cursor) is
-          I : Natural renames Position.Index;
-
-       begin
-          if I = 0 then
-             return;
-          end if;
-
-          declare
-             S : Stack renames Position.Container.all;
-          begin
-             if I > S.Top_Index then
-                I := S.Top_Index;
-             else
-                I := I - 1;
-             end if;
-          end;
-
-          if I = 0 then
-             Position.Container := null;
-          end if;
-       end Next;
-
-
-       procedure Previous (Position : in out Cursor) is
-          I : Natural renames Position.Index;
-
-       begin
-          if I = 0 then
-             return;
-          end if;
-
-          declare
-             S : Stack renames Position.Container.all;
-          begin
-             if I >= S.Top_Index then
-                I := 0;
-                Position.Container := null;
-
-             else
-                I := I + 1;
-             end if;
-          end;
-       end Previous;
-
-
-    end Stacks.Bounded_G;
-    with System;  use type System.Address;
-
-    procedure Stacks.Generic_Copy3
-      (Source : Stack'Class;
-       Target : in out Stack'Class)
-    is
-       C : Cursor'Class := Bottom_Cursor (Source'Access);
-
-    begin
-       if Source'Address = Target'Address then
-          return;
-       end if;
-
-       Target.Clear;
-
-       while C.Has_Element loop
-          Target.Push (C.Element);
-          C.Previous;
-       end loop;
-    end Stacks.Generic_Copy3;
-
-    with Ada.Unchecked_Deallocation;
-    with System;  use type System.Address;
-
-    package body Stacks.Unbounded_G is
-
-       procedure Free is
-         new Ada.Unchecked_Deallocation
-           (Element_Array,
-            Element_Array_Access);
-
-
-       procedure Push
-         (Container : in out Stack;
-          Item      : in     Element_Type)
-       is
-          R : Rep_Type renames Container.Rep;
-          I : Natural renames R.Top_Index;
-
-       begin
-          if R.Elements = null then
-             R.Elements := new Element_Array'(1 .. 1 => Item);
-             I := 1;
-             return;
-          end if;
-
-          if I = R.Elements'Last then
-             declare
-                X : Element_Array_Access := R.Elements;
-                J : constant Positive := 2 * I;
-                E : Element_Array_Access := new Element_Array (1 .. J);
-
-             begin
-                Copy : begin
-                   E (1 .. I) := X.all;
-                exception
-                   when others =>
-                      Free (E);
-                      raise;
-                end Copy;
-
-                R.Elements := E;
-                Free (X);
-             end;
-          end if;
-
-          R.Elements (I + 1) := Item;
-          I := I + 1;
-       end Push;
-
-
-       function Top
-         (Container : Stack) return Element_Type
-       is
-          R : Rep_Type renames Container.Rep;
-
-       begin
-          return R.Elements (R.Top_Index);
-       end;
-
-
-       procedure Pop
-         (Container : in out Stack)
-       is
-          R : Rep_Type renames Container.Rep;
-          I : Natural renames R.Top_Index;
-
-       begin
-          I := I - 1;
-       end;
-
-
-       function Length
-         (Container : Stack) return Natural
-       is
-       begin
-          return Container.Rep.Top_Index;
-       end;
-
-
-       procedure Clear (Container : in out Stack) is
-       begin
-          Container.Rep.Top_Index := 0;
-       end;
-
-
-       procedure Copy
-         (Source : Stack;
-          Target : in out Stacks.Stack'Class)
-       is
-          S : Rep_Type renames Source.Rep;
-
-       begin
-          if Target'Address = Source'Address then
-             return;
-          end if;
-
-          Target.Clear;
-
-          for I in 1 .. S.Top_Index loop
-             Target.Push (S.Elements (I));
-          end loop;
-       end Copy;
-
-
-       procedure Adjust (Rep : in out Rep_Type) is
-          X : constant Element_Array_Access := Rep.Elements;
-          I : constant Natural := Rep.Top_Index;
-
-       begin
-          Rep.Elements := null;
-          Rep.Top_Index := 0;
-
-          if I > 0 then
-             Rep.Elements := new Element_Array'(X (1 .. I));
-             Rep.Top_Index := I;
-          end if;
-       end Adjust;
-
-
-       procedure Finalize (Rep : in out Rep_Type) is
-          X : Element_Array_Access := Rep.Elements;
-
-       begin
-          Rep.Elements := null;
-          Rep.Top_Index := 0;
-
-          Free (X);
-       end;
-
-
-       function Top_Cursor
-         (Container : not null access constant Stack)
-          return Stacks.Cursor'Class
-       is
-          R : Rep_Type renames Container.Rep;
-
-       begin
-          if R.Top_Index = 0 then
-             return Cursor'(null, 0);
-          else
-             return Cursor'(Container, R.Top_Index);
-          end if;
-       end;
-
-
-       function Bottom_Cursor
-         (Container : not null access constant Stack)
-          return Stacks.Cursor'Class
-       is
-          R : Rep_Type renames Container.Rep;
-
-       begin
-          if R.Top_Index = 0 then
-             return Cursor'(null, 0);
-          else
-             return Cursor'(Container, 1);
-          end if;
-       end;
-
-
-       function Has_Element (Position : Cursor) return Boolean is
-       begin
-          return Position.Index > 0;
-       end;
-
-
-       function Element
-         (Position : Cursor) return Element_Type
-       is
-          R : Rep_Type renames Position.Container.Rep;
-          I : constant Positive range 1 .. R.Top_Index := Position.Index;
-
-       begin
-          return R.Elements (I);
-       end;
-
-
-       procedure Next (Position : in out Cursor) is
-          I : Natural renames Position.Index;
-
-       begin
-          if I = 0 then
-             return;
-          end if;
-
-          declare
-             R : Rep_Type renames Position.Container.Rep;
-          begin
-             if I > R.Top_Index then
-                I := R.Top_Index;
-             else
-                I := I - 1;
-             end if;
-          end;
-
-          if I = 0 then
-             Position.Container := null;
-          end if;
-       end Next;
-
-
-       procedure Previous (Position : in out Cursor) is
-          I : Natural renames Position.Index;
-
-       begin
-          if I = 0 then
-             return;
-          end if;
-
-          declare
-             R : Rep_Type renames Position.Container.Rep;
-          begin
-             if I >= R.Top_Index then
-                I := 0;
-                Position.Container := null;
-
-             else
-                I := I + 1;
-             end if;
-          end;
-       end Previous;
-
-    end Stacks.Unbounded_G;
-    with System;  use type System.Address;
-
-    package body Stacks is
-
-       procedure Copy2
-         (Source : Stack'Class;
-          Target : in out Stack'Class)
-       is
-          C : Cursor'Class := Bottom_Cursor (Source'Access);
-
-       begin
-          if Source'Address = Target'Address then
-             return;
-          end if;
-
-          Target.Clear;
-
-          while C.Has_Element loop
-             Target.Push (C.Element);
-             C.Previous;
-          end loop;
-       end Copy2;
-
-    end Stacks;
-    with System;  use type System.Address;
-
-    package body Stacks_Bounded is
-
-       procedure Push
-         (Container : in out Stack;
-          Item      : in     Element_Type)
-       is
-          E : Element_Array renames Container.Elements;
-          I : Natural renames Container.Top_Index;
-
-       begin
-          E (I + 1) := Item;
-          I := I + 1;
-       end Push;
-
-
-       function Top
-         (Container : Stack) return Element_Type
-       is
-       begin
-          return Container.Elements (Container.Top_Index);
-       end;
-
-
-       procedure Pop
-         (Container : in out Stack)
-       is
-          I : Natural renames Container.Top_Index;
-
-       begin
-          I := I - 1;
-       end;
-
-
-       function Length
-         (Container : Stack) return Natural
-       is
-       begin
-          return Container.Top_Index;
-       end;
-
-
-       procedure Clear (Container : in out Stack) is
-       begin
-          Container.Top_Index := 0;
-       end;
-
-
-       function Top_Cursor (Container : Stack) return Cursor is
-       begin
-          if Container.Top_Index = 0 then
-             return (null, 0);
-          else
-             return (Container'Unchecked_Access, Container.Top_Index);
-          end if;
-       end Top_Cursor;
-
-
-       function Bottom_Cursor (Container : Stack) return Cursor is
-       begin
-          if Container.Top_Index = 0 then
-             return (null, 0);
-          else
-             return (Container'Unchecked_Access, 1);
-          end if;
-       end Bottom_Cursor;
-
-
-       function Has_Element (Position : Cursor) return Boolean is
-       begin
-          return Position.Index > 0;
-       end;
-
-
-       function Element
-         (Position : Cursor) return Element_Type
-       is
-          S : Stack renames Position.Container.all;
-          I : constant Positive range 1 .. S.Top_Index := Position.Index;
-
-       begin
-          return S.Elements (I);
-       end;
-
-
-       procedure Next (Position : in out Cursor) is
-          I : Natural renames Position.Index;
-
-       begin
-          if I = 0 then
-             return;
-          end if;
-
-          declare
-             S : Stack renames Position.Container.all;
-          begin
-             if I > S.Top_Index then
-                I := S.Top_Index;
-             else
-                I := I - 1;
-             end if;
-          end;
-
-          if I = 0 then
-             Position.Container := null;
-          end if;
-       end Next;
-
-
-       procedure Previous (Position : in out Cursor) is
-          I : Natural renames Position.Index;
-
-       begin
-          if I = 0 then
-             return;
-          end if;
-
-          declare
-             S : Stack renames Position.Container.all;
-          begin
-             if I >= S.Top_Index then
-                I := 0;
-                Position.Container := null;
-
-             else
-                I := I + 1;
-             end if;
-          end;
-       end Previous;
-
-
-    end Stacks_Bounded;
-    with Integer_Stacks_Bounded;  use Integer_Stacks_Bounded;
-    with Generic_Stack_Copy5;
-
-    procedure Test_Copy5 (S : Stack) is
-       procedure Copy5 is
-         new Generic_Stack_Copy5
-           (Stack,
-            Cursor,
-            Integer);
-
-       T : Stack (S.Length);
-
-    begin
-       Copy5 (Source => S, Target => T);
-    end;
+.. code:: ada
 
     with Integer_Stacks_Bounded;  use Integer_Stacks_Bounded;
     with Generic_Copy6;
@@ -2376,7 +2332,52 @@ This is the complete source-code:
 
     begin
        Copy6 (Source => S, Target => T);
-    end;
+    end Test_Copy6;
+
+- Generic_Copy7:
+
+.. code:: ada
+
+    generic
+       type Container_Type (<>) is limited private;
+       type Cursor_Type (<>) is private;
+       type Element_Type (<>) is private;
+
+       with procedure Insert
+         (Container : in out Container_Type;
+          Item      : Element_Type) is <>;
+       with function Has_Element
+         (Cursor : Cursor_Type) return Boolean is <>;
+       with function Element
+         (Cursor : Cursor_Type) return Element_Type is <>;
+       with procedure Advance
+         (Cursor : in out Cursor_Type) is <>;
+       with procedure Clear
+         (Container : in out Container_Type) is null;
+
+    procedure Generic_Copy7
+      (Source : Cursor_Type;
+       Target : in out Container_Type);
+
+    with System;  use type System.Address;
+
+    procedure Generic_Copy7
+      (Source : Cursor_Type;
+       Target : in out Container_Type)
+    is
+       C : Cursor_Type := Source;
+
+    begin
+       Clear (Target);
+       while Has_Element (C) loop
+          Insert (Target, Element (C));
+          Advance (C);
+       end loop;
+    end Generic_Copy7;
+
+- Test_Copy7:
+
+.. code:: ada
 
     with Integer_Stacks_Bounded;  use Integer_Stacks_Bounded;
     with Generic_Copy7;
@@ -2398,7 +2399,7 @@ This is the complete source-code:
           begin
              Container (I) := Item;
              I := I + 1;
-          end;
+          end Insert;
 
           procedure Copy7 is
             new Generic_Copy7
@@ -2415,17 +2416,17 @@ This is the complete source-code:
           function Has_Element (I : Natural) return Boolean is
           begin
              return I > 0;
-          end;
+          end Has_Element;
 
           function Element (I : Natural) return Integer is
           begin
              return A (I);
-          end;
+          end Element;
 
           procedure Advance (I : in out Natural) is
           begin
              I := I - 1;
-          end;
+          end Advance;
 
           procedure Copy7 is
             new Generic_Copy7
@@ -2441,6 +2442,47 @@ This is the complete source-code:
 
     end Test_Copy7;
 
+- Generic_Copy8:
+
+.. code:: ada
+
+    generic
+       type Container_Type (<>) is limited private;
+       type Cursor_Type (<>) is private;
+
+       with procedure Insert
+         (Target : in out Container_Type;
+          Source : Cursor_Type) is <>;
+       with function Has_Element
+         (Cursor : Cursor_Type) return Boolean is <>;
+       with procedure Advance
+         (Cursor : in out Cursor_Type) is <>;
+       with procedure Clear
+         (Container : in out Container_Type) is null;
+
+    procedure Generic_Copy8
+      (Source : Cursor_Type;
+       Target : in out Container_Type);
+
+    with System;  use type System.Address;
+
+    procedure Generic_Copy8
+      (Source : Cursor_Type;
+       Target : in out Container_Type)
+    is
+       C : Cursor_Type := Source;
+
+    begin
+       Clear (Target);
+       while Has_Element (C) loop
+          Insert (Target, C);
+          Advance (C);
+       end loop;
+    end Generic_Copy8;
+
+- Test_Copy8:
+
+.. code:: ada
 
     with Integer_Stacks_Bounded;  use Integer_Stacks_Bounded;
     with Generic_Copy8;
@@ -2462,7 +2504,7 @@ This is the complete source-code:
           begin
              Target (I) := Element (Source);
              I := I + 1;
-          end;
+          end Insert;
 
           procedure Copy8 is
             new Generic_Copy8
@@ -2481,17 +2523,17 @@ This is the complete source-code:
           is
           begin
              Target.Push (Item => A (Source));
-          end;
+          end Insert;
 
           function Has_Element (I : Natural) return Boolean is
           begin
              return I > 0;
-          end;
+          end Has_Element;
 
           procedure Advance (I : in out Natural) is
           begin
              I := I - 1;
-          end;
+          end Advance;
 
           procedure Copy8 is
             new Generic_Copy8
