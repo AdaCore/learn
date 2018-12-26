@@ -956,6 +956,8 @@ This is the complete source-code:
 
     end Simple_Test;
 
+:code-config:`reset_accumulator=True`
+
 Classwide Operations, Iterators, and Generic Algorithms
 -------------------------------------------------------
 
@@ -1053,299 +1055,6 @@ operation, so that it only needs to be implemented once:
           C.Previous;
        end loop;
     end Copy2;
-
-Note that we declared the classwide stack operation in the root package
-(see the specification of the :ada:`Stacks` package), but it could have
-just as easily been declared as a generic child procedure:
-
-.. code-block:: ada
-
-    generic
-    procedure Stacks.Generic_Copy3
-      (Source : Stack'Class;
-       Target : in out Stack'Class);
-
-Actually, we could move the operation out of the package hierarchy
-entirely:
-
-.. code-block:: ada
-
-    with Stacks;
-    generic
-       with package Stack_Types is new Stacks (<>);
-       use Stack_Types;
-    procedure Generic_Stack_Copy4
-      (Source : Stack'Class;
-       Target : in out Stack'Class);
-
-We can generalize this even more, such that the copy algorithm works for
-any kind of stack:
-
-.. code-block:: ada
-
-    generic
-       type Stack_Type (<>) is limited private;
-       type Cursor_Type (<>) is private;
-       type Element_Type (<>) is private;
-
-       with function Bottom_Cursor
-         (Stack : Stack_Type)
-            return Cursor_Type is <>;
-       with procedure Push
-         (Stack : in out Stack_Type;
-          Item  : Element_Type) is <>;
-       with procedure Previous
-         (Cursor : in out Cursor_Type) is <>;
-
-    procedure Generic_Stack_Copy5
-      (Source : Stack_Type;
-       Target : in out Stack_Type);
-
-This illustrates the difference between the dynamic polymorphism of tagged
-types and the static polymorphism of generics. There is no need for a
-stack class anymore (having a dedicated copy operation that works only for
-types in that class), since the generic algorithm works for any stack.
-(This is exactly how the standard container library is designed. Container
-types are tagged, but they are not members of a common class.)
-
-Instantiating this operation on our stack type is easy, since the names of
-the generic actual operations match the names of the generic formal
-operations, so we don't need to specify them explicitly (since the generic
-formals are marked as accepting a :ada:`<>` default):
-
-.. code-block:: ada
-
-    procedure Test_Copy5 (S : Stack) is
-       procedure Copy5 is
-         new Generic_Stack_Copy5
-           (Stack,
-            Cursor,
-            Integer); -- default everything else
-
-       T : Stack (S.Length);
-
-    begin
-       Copy5 (Source => S, Target => T);
-    end;
-
-But why stop there? We can write a generic copy algorithm for any kind of
-container. We just need to generalize iteration a little, to mean "visit
-these items in the way that makes sense for this source container," and
-generalizing insertion, to mean "add this element in the way that makes
-sense for this target container." The declaration would be:
-
-.. code-block:: ada
-
-    generic
-       type Container_Type (<>) is limited private;
-       type Cursor_Type (<>) is private;
-       type Element_Type (<>) is private;
-
-       with function First
-         (Container : Container_Type)
-            return Cursor_Type is <>;
-       with procedure Insert
-         (Container : in out Container_Type;
-          Item      : Element_Type) is <>;
-       with procedure Advance
-         (Cursor : in out Cursor_Type) is <>;
-
-    procedure Generic_Copy6
-      (Source : Container_Type;
-       Target : in out Container_Type);
-
-We can instantiate this using our stack type, but note that the generic
-actuals no longer match the generic formals, so we need to specify them
-explicitly:
-
-.. code-block:: ada
-
-    procedure Test_Copy6 (S : Stack) is
-       procedure Copy6 is
-         new Generic_Copy6
-           (Stack,
-            Cursor,
-            Integer,
-            First   => Bottom_Cursor,
-            Insert  => Push,
-            Advance => Previous);
-
-       T : Stack (S.Length);
-
-    begin
-       Copy6 (Source => S, Target => T);
-    end;
-
-One assumption we've made here is that the source and target containers
-have the same type. Suppose we would like to copy the items in a stack to,
-say, an array. One approach would be to introduce another generic formal
-container type (a *source container* type that is distinct from the
-*target container* type), but there's another way. Consider the
-implementation of the copy algorithm:
-
-.. code-block:: ada
-
-    procedure Generic_Copy6
-      (Source : Container_Type;
-       Target : in out Container_Type)
-    is
-       C : Cursor_Type := First (Source);
-
-    begin
-       Clear (Target);
-       while Has_Element (C) loop
-          Insert (Target, Element (C));
-          Advance (C);
-       end loop;
-    end Generic_Copy6;
-
-Notice that the only thing we do with the source container is to use it to
-construct a cursor. If we pass in the cursor directly, that eliminates any
-mention of the source stack, which in turn allows the source and target
-containers to be different types. Our algorithm now becomes:
-
-.. code-block:: ada
-
-    generic
-       type Container_Type (<>) is limited private;
-       type Cursor_Type (<>) is private;
-       type Element_Type (<>) is private;
-
-    procedure Generic_Copy7
-      (Source : Cursor_Type;
-       Target : in out Container_Type);
-
-We can now copy from an integer stack to an array like this:
-
-.. code-block:: ada
-
-    procedure Copy_From_Stack_To_Array (S : in out Stack) is
-       T : Integer_Array (1 .. S.Length);
-       I : Positive := T'First;
-
-       procedure Insert
-         (Container : in out Integer_Array;
-          Item      : Integer)
-       is
-       begin
-          Container (I) := Item;
-          I := I + 1;
-       end;
-
-       procedure Copy7 is
-         new Generic_Copy7
-           (Integer_Array,
-            Cursor,
-            Integer,
-            Advance => Next);
-
-    begin
-       Copy7 (Source => S.Top_Cursor, Target => T);
-    end Copy_From_Stack_To_Array;
-
-The *target container* is just an array. The only special thing we need to
-do is synthesize an insertion operation, to pass as the generic actual. We
-can also use the same algorithm to go the other way, from an array to a
-stack:
-
-.. code-block:: ada
-
-    procedure Copy_From_Array_To_Stack (S : Integer_Array) is
-       T : Stack (S'Length);
-
-       function Has_Element (I : Natural) return Boolean is
-       begin
-          return I > 0;
-       end;
-
-       function Element (I : Natural) return Integer is
-       begin
-          return S (I);
-       end;
-
-       procedure Advance (I : in out Natural) is
-       begin
-          I := I - 1;
-       end;
-
-       procedure Copy7 is
-         new Generic_Copy7
-           (Stack,
-            Natural,
-            Integer,
-            Insert => Push);
-
-    begin
-       Copy7 (Source => S'Last, Target => T);
-    end Copy_From_Array_To_Stack;
-
-Now the source container is an array, and the *cursor* is just the array
-index (an integer subtype). We have the familiar problem of ensuring that
-the target stack is populated in the correct order. As before, we simply
-iterate over the array in reverse, by passing the index :ada:`S'Last` as
-the initial cursor value, and then *advancing* the cursor by
-decrementing the index value.
-
-The algorithm can be generalized further still. In this final version, we
-eliminate the generic formal element type. That means we'll need to modify
-the generic formal :ada:`Insert` operation, by passing the source cursor
-as a parameter instead of the source element. The declaration of the
-generic algorithm now becomes:
-
-.. code-block:: ada
-
-    generic
-       type Container_Type (<>) is limited private;
-       type Cursor_Type (<>) is private;
-
-       with procedure Insert
-         (Target : in out Container_Type;
-          Source : Cursor_Type) is <>;
-
-    procedure Generic_Copy8
-      (Source : Cursor_Type;
-       Target : in out Container_Type);
-
-The algorithm is now agnostic about the mapping from cursor to element
-(since it doesn't even know about elements), which is more flexible, since
-it allows the client to choose whatever mechanism is the most efficient.
-To use the new algorithm, all we need to do is make a slight change to the
-generic actual :ada:`Insert` procedure, as follows:
-
-.. code-block:: ada
-
-    procedure Copy_From_Stack_To_Array (S : in out Stack) is
-       T : Integer_Array (1 .. S.Length);
-       I : Positive := T'First;
-
-       procedure Insert
-         (Target : in out Integer_Array;
-          Source : Cursor)  -- now a cursor instead of an element
-       is
-       begin
-          Target (I) := Element (Source);
-          I := I + 1;
-       end;
-
-       procedure Copy8 is
-         new Generic_Copy8
-           (Integer_Array,
-            Cursor,
-            Advance => Next);
-
-    begin
-       Copy8 (Source => S.Top_Cursor, Target => T);
-    end Copy_From_Stack_To_Array;
-
-The basic idea is that a generic algorithm can be used over a wide range
-of containers (including array types). A cursor provides access to the
-elements in a container, but as we've seen, once you have a cursor then
-the container itself sort of disappears. From the point of view of a
-generic algorithm, a container is merely a sequence of items.
-
-This is the complete source-code:
-
-- Stacks specification:
 
 .. code:: ada
 
@@ -1560,8 +1269,6 @@ This is the complete source-code:
 
     end Stacks;
 
-- Stacks.Bounded_G package body:
-
 .. code:: ada
 
     with System;  use type System.Address;
@@ -1708,8 +1415,6 @@ This is the complete source-code:
        end Previous;
 
     end Stacks.Bounded_G;
-
-- Stacks.Unbounded_G package body:
 
 .. code:: ada
 
@@ -1923,7 +1628,9 @@ This is the complete source-code:
 
     end Stacks.Unbounded_G;
 
-- Generic_Copy3:
+Note that we declared the classwide stack operation in the root package
+(see the specification of the :ada:`Stacks` package), but it could have
+just as easily been declared as a generic child procedure:
 
 .. code:: ada
 
@@ -1931,6 +1638,8 @@ This is the complete source-code:
     procedure Stacks.Generic_Copy3
       (Source : Stack'Class;
        Target : in out Stack'Class);
+
+.. code:: ada
 
     with System;  use type System.Address;
 
@@ -1953,7 +1662,8 @@ This is the complete source-code:
        end loop;
     end Stacks.Generic_Copy3;
 
-- Generic_Stack_Copy4:
+Actually, we could move the operation out of the package hierarchy
+entirely:
 
 .. code:: ada
 
@@ -1965,6 +1675,8 @@ This is the complete source-code:
     procedure Generic_Stack_Copy4
       (Source : Stack'Class;
        Target : in out Stack'Class);
+
+.. code:: ada
 
     with System;  use type System.Address;
 
@@ -1986,7 +1698,8 @@ This is the complete source-code:
        end loop;
     end Generic_Stack_Copy4;
 
-- Generic_Stack_Copy5:
+We can generalize this even more, such that the copy algorithm works for
+any kind of stack:
 
 .. code:: ada
 
@@ -2014,6 +1727,8 @@ This is the complete source-code:
       (Source : Stack_Type;
        Target : in out Stack_Type);
 
+.. code:: ada
+
     with System;  use type System.Address;
 
     procedure Generic_Stack_Copy5
@@ -2034,7 +1749,56 @@ This is the complete source-code:
        end loop;
     end Generic_Stack_Copy5;
 
-- Stacks_Bounded package spec:
+This illustrates the difference between the dynamic polymorphism of tagged
+types and the static polymorphism of generics. There is no need for a
+stack class anymore (having a dedicated copy operation that works only for
+types in that class), since the generic algorithm works for any stack.
+(This is exactly how the standard container library is designed. Container
+types are tagged, but they are not members of a common class.)
+
+Instantiating this operation on our stack type is easy, since the names of
+the generic actual operations match the names of the generic formal
+operations, so we don't need to specify them explicitly (since the generic
+formals are marked as accepting a :ada:`<>` default).
+
+First, we instantiate a stack of integer:
+
+.. code:: ada
+
+    with Stacks;
+    pragma Elaborate_All (Stacks);
+
+    package Integer_Stacks is new Stacks (Integer);
+    pragma Pure (Integer_Stacks);
+
+    with Stacks.Bounded_G;
+
+    package Integer_Stacks.Bounded is new Integer_Stacks.Bounded_G;
+    pragma Pure (Integer_Stacks.Bounded);
+
+Unfortunately, using our original :ada:`Stacks` package doesn't work in
+this case, as indicated in the compilation error:
+
+.. code:: ada
+    :class: ada-expect-compile-error
+
+    with Integer_Stacks.Bounded; use Integer_Stacks.Bounded;
+    with Generic_Stack_Copy5;
+
+    procedure Test_Copy5 (S : Stack) is
+       procedure Copy5 is
+         new Generic_Stack_Copy5
+           (Stack,
+            Cursor,
+            Integer);
+
+       T : Stack (S.Length);
+
+    begin
+       Copy5 (Source => S, Target => T);
+    end Test_Copy5;
+
+We need to first rewrite our stack package:
 
 .. code:: ada
 
@@ -2094,7 +1858,7 @@ This is the complete source-code:
 
     end Stacks_Bounded;
 
-- Stacks_Bounded package body:
+This is the package body of :ada:`Stacks_Bounded`:
 
 .. code:: ada
 
@@ -2221,20 +1985,9 @@ This is the complete source-code:
 
     end Stacks_Bounded;
 
-- Stacks instantiations:
+Now, we instantiate a stack of integer based on :ada:`Stacks_Bounded`:
 
 .. code:: ada
-
-    with Stacks;
-    pragma Elaborate_All (Stacks);
-
-    package Integer_Stacks is new Stacks (Integer);
-    pragma Pure (Integer_Stacks);
-
-    with Stacks.Bounded_G;
-
-    package Integer_Stacks.Bounded is new Integer_Stacks.Bounded_G;
-    pragma Pure (Integer_Stacks.Bounded);
 
     with Stacks_Bounded;
     pragma Elaborate_All (Stacks_Bounded);
@@ -2242,7 +1995,7 @@ This is the complete source-code:
     package Integer_Stacks_Bounded is new Stacks_Bounded (Integer);
     pragma Pure (Integer_Stacks_Bounded);
 
-- Test_Copy5:
+We can use this stack in our test application:
 
 .. code:: ada
 
@@ -2262,7 +2015,11 @@ This is the complete source-code:
        Copy5 (Source => S, Target => T);
     end Test_Copy5;
 
-- Generic_Copy6:
+But why stop there? We can write a generic copy algorithm for any kind of
+container. We just need to generalize iteration a little, to mean "visit
+these items in the way that makes sense for this source container," and
+generalizing insertion, to mean "add this element in the way that makes
+sense for this target container." The declaration would be:
 
 .. code:: ada
 
@@ -2290,6 +2047,8 @@ This is the complete source-code:
       (Source : Container_Type;
        Target : in out Container_Type);
 
+.. code:: ada
+
     private with Ada.Finalization;
     with System;  use type System.Address;
 
@@ -2311,7 +2070,9 @@ This is the complete source-code:
        end loop;
     end Generic_Copy6;
 
-- Test_Copy6:
+We can instantiate this using our stack type, but note that the generic
+actuals no longer match the generic formals, so we need to specify them
+explicitly:
 
 .. code:: ada
 
@@ -2334,7 +2095,16 @@ This is the complete source-code:
        Copy6 (Source => S, Target => T);
     end Test_Copy6;
 
-- Generic_Copy7:
+One assumption we've made here is that the source and target containers
+have the same type. Suppose we would like to copy the items in a stack to,
+say, an array. One approach would be to introduce another generic formal
+container type (a *source container* type that is distinct from the
+*target container* type), but there's another way. Consider the
+implementation of the copy algorithm :ada:`Generic_Copy6` above.
+Notice that the only thing we do with the source container is to use it to
+construct a cursor. If we pass in the cursor directly, that eliminates any
+mention of the source stack, which in turn allows the source and target
+containers to be different types. Our algorithm now becomes:
 
 .. code:: ada
 
@@ -2359,6 +2129,8 @@ This is the complete source-code:
       (Source : Cursor_Type;
        Target : in out Container_Type);
 
+.. code:: ada
+
     with System;  use type System.Address;
 
     procedure Generic_Copy7
@@ -2375,7 +2147,7 @@ This is the complete source-code:
        end loop;
     end Generic_Copy7;
 
-- Test_Copy7:
+We can now copy from an integer stack to an array like this:
 
 .. code:: ada
 
@@ -2442,7 +2214,23 @@ This is the complete source-code:
 
     end Test_Copy7;
 
-- Generic_Copy8:
+The *target container* is just an array. The only special thing we need to
+do is synthesize an insertion operation, to pass as the generic actual. We
+can also use the same algorithm to go the other way, from an array to a
+stack, as implemented in :ada:`Copy_From_Array_To_Stack` above.
+
+Now the source container is an array, and the *cursor* is just the array
+index (an integer subtype). We have the familiar problem of ensuring that
+the target stack is populated in the correct order. As before, we simply
+iterate over the array in reverse, by passing the index :ada:`S'Last` as
+the initial cursor value, and then *advancing* the cursor by
+decrementing the index value.
+
+The algorithm can be generalized further still. In this final version, we
+eliminate the generic formal element type. That means we'll need to modify
+the generic formal :ada:`Insert` operation, by passing the source cursor
+as a parameter instead of the source element. The declaration of the
+generic algorithm now becomes:
 
 .. code:: ada
 
@@ -2464,6 +2252,8 @@ This is the complete source-code:
       (Source : Cursor_Type;
        Target : in out Container_Type);
 
+.. code:: ada
+
     with System;  use type System.Address;
 
     procedure Generic_Copy8
@@ -2480,7 +2270,11 @@ This is the complete source-code:
        end loop;
     end Generic_Copy8;
 
-- Test_Copy8:
+The algorithm is now agnostic about the mapping from cursor to element
+(since it doesn't even know about elements), which is more flexible, since
+it allows the client to choose whatever mechanism is the most efficient.
+To use the new algorithm, all we need to do is make a slight change to the
+generic actual :ada:`Insert` procedure, as follows:
 
 .. code:: ada
 
@@ -2546,3 +2340,9 @@ This is the complete source-code:
        end Copy_From_Array_To_Stack;
 
     end Test_Copy8;
+
+The basic idea is that a generic algorithm can be used over a wide range
+of containers (including array types). A cursor provides access to the
+elements in a container, but as we've seen, once you have a cursor then
+the container itself sort of disappears. From the point of view of a
+generic algorithm, a container is merely a sequence of items.
