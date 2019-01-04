@@ -30,8 +30,9 @@ from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 from xml.sax.saxutils import escape
 
-WIDGETS_SERVER_URL = "https://cloudchecker-staging.r53.adacore.com"
-# TODO: make this a configuration parameter
+WIDGETS_SERVER_URL = os.environ.get(
+    "CODE_SERVER_URL",
+    "https://cloudchecker-staging.r53.adacore.com")
 
 template = u"""
 <div class="widget_editor"

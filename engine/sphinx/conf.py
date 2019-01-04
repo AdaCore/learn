@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = u'learn.adacore.com'
-copyright = u'2018, AdaCore'
+copyright = u'2019, AdaCore'
 author = u'AdaCore'
 
 # The short X.Y version

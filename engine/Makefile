@@ -57,6 +57,13 @@ publish-staging:
 	cd ../; \
 	rm -rf learn-staging-html-pages
 
+# Development target, rebuilds the site, with it pointing to the local
+# code server.
+local:
+	rm -rf "$(BUILDDIR)"
+	CODE_SERVER_URL="Http://localhost:8000" $(SPHINXBUILD) -M html "../" \
+	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
