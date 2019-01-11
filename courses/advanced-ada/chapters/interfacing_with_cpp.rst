@@ -4,6 +4,8 @@
 Interfacing with C and C++
 ==========================
 
+.. include:: <isopub.txt>
+
 .. role:: ada(code)
    :language: ada
 
@@ -160,7 +162,7 @@ source-code implementation. Also, because symbol mangling is not
 standardized, different compilers might use different methods. The most
 prominent example is the difference between the gcc and MSVC compilers.
 However, since GNAT is based on gcc, we can build applications using Ada
-and C++ code without issues --- as long as we use the same compiler.
+and C++ code without issues |mdash| as long as we use the same compiler.
 
 In order to retrieved the mangled symbol names, we can simply generate
 bindings automatically by using ``g++`` with the ``-fdump-ada-spec``

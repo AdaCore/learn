@@ -4,6 +4,8 @@
 Access Types
 ============
 
+.. include:: <isopub.txt>
+
 .. role:: ada(code)
    :language: ada
 
@@ -162,8 +164,8 @@ a good idea to put in :ada:`not null` when possible. In fact, a good
 argument can be made that :ada:`not null` should be the default, with
 extra syntax required when :ada:`null` is wanted. This is the way
 `Standard ML <https://en.wikipedia.org/wiki/Standard_ML>`_ works, for
-example --- you don't get any special null-like value unless you ask for
-it. Of course, because Ada 2005 needs to be compatible with previous
+example |mdash| you don't get any special null-like value unless you ask
+for it. Of course, because Ada 2005 needs to be compatible with previous
 versions of the language, :ada:`not null` cannot be the default for Ada.
 
 One word of caution: access objects are default-initialized to
@@ -453,7 +455,7 @@ exception if a dangling pointer can be created:
 In the example above, we cannot know at compile time the accessibility
 level of the object that will be passed to :ada:`Init_Data`, so the
 compiler inserts a run-time check to make sure that the assignment
-:ada:`Data := ...` does not cause a dangling reference --- and to raise
+:ada:`Data := ...` does not cause a dangling reference |mdash| and to raise
 an exception if it would.
 
 In summary, when it comes to dangling references, Ada makes it very hard
@@ -662,7 +664,7 @@ structure, and :ada:`Finalize` removes the pointer just before it becomes
 a dangling pointer.
 
 Here is an example. Let's assume there are no tasks, and no heap-allocated
-objects --- otherwise, we would need a more complicated data structure,
+objects |mdash| otherwise, we would need a more complicated data structure,
 such as a doubly-linked list, with locking. We keep a stack of objects,
 implemented as a linked list via :ada:`Stack_Top` and chained through the
 :ada:`Prev` component.

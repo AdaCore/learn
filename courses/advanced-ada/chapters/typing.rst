@@ -4,6 +4,8 @@
 Typing
 ======
 
+.. include:: <isopub.txt>
+
 .. role:: ada(code)
    :language: ada
 
@@ -23,7 +25,7 @@ also allows overloading of various other notations, such as literals and
 aggregates.
 
 In most languages that support overloading, overload resolution is done
-"bottom up" --- that is, information flows from inner constructs to outer
+"bottom up" |mdash| that is, information flows from inner constructs to outer
 constructs. As usual, computer folks draw their trees upside-down, with
 the root at the top. For example, if we have two procedures :ada:`Print`:
 
@@ -117,8 +119,8 @@ expression to say which type we mean:
 Note that we're now using both bottom-up and top-down overload resolution:
 :ada:`Sequence'` determines which :ada:`Empty` is meant (top down) and
 which :ada:`Print` is meant (bottom up). You can qualify an expression,
-even if it is not ambiguous according to Ada rules --- you might want to
-clarify the type because it might be ambiguous for human readers.
+even if it is not ambiguous according to Ada rules |mdash| you might want
+to clarify the type because it might be ambiguous for human readers.
 
 Of course, you could instead resolve the :ada:`Print (Empty)` example by
 modifying the source code so the names are unique, as in the earlier
@@ -149,10 +151,10 @@ type of formal parameter :ada:`Count` tells us that :ada:`20` is an
 :ada:`Standard.Long_Integer`.
 
 Technically, the type of :ada:`20` is :ada:`universal_integer`, which is
-implicitly converted to :ada:`Apple_Count` --- it's really the result type
-of that implicit conversion that is at issue. But that's an obscure point
---- you won't go *too* far wrong if you think of the integer literal
-notation as being overloaded on all integer types.
+implicitly converted to :ada:`Apple_Count` |mdash| it's really the result
+type of that implicit conversion that is at issue. But that's an obscure
+point |mdash| you won't go *too* far wrong if you think of the integer
+literal notation as being overloaded on all integer types.
 
 Developers sometimes wonder why the compiler can't resolve something that
 seems obvious. For example:
@@ -211,8 +213,8 @@ There are two :ada:`Grind` procedures visible, so the type of the
 aggregate could be :ada:`Complex` or :ada:`String`, so it is ambiguous and
 therefore illegal. The compiler is not required to notice that there is
 only one type with components :ada:`Re` and :ada:`Im`, of some real type
---- in fact, the compiler is not *allowed* to notice that, for overloading
-purposes.
+|mdash| in fact, the compiler is not *allowed* to notice that, for
+overloading purposes.
 
 We can qualify as usual:
 

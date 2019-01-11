@@ -4,6 +4,8 @@
 Limited Types
 =============
 
+.. include:: <isopub.txt>
+
 .. role:: ada(code)
    :language: ada
 
@@ -181,7 +183,7 @@ We'll see what to do about that :ada:`Self => null` soon.
 One very important requirement should be noted: the implementation is
 required to build the value of :ada:`X` *in place*; it cannot construct
 the aggregate in a temporary variable and then copy it into :ada:`X`,
-because that would violate the whole point of limited objects ---
+because that would violate the whole point of limited objects |mdash|
 you can't copy them.
 
 It seems uncomfortable to set the value of :ada:`Self` to the wrong value
@@ -250,7 +252,7 @@ Constructor functions for limited types
 
 Given that we can use build-in-place aggregates for limited types,
 the obvious next step is to allow such aggregates to be wrapped in an
-abstraction --- namely, to return them from functions. After all,
+abstraction |mdash| namely, to return them from functions. After all,
 interesting types are usually private, and we need some way for clients
 to create and initialize objects.
 
@@ -487,7 +489,7 @@ Extended return statements for limited types
 
 :code-config:`reset_accumulator=True`
 
-For most types, extended return statements are no big deal --- it's just
+For most types, extended return statements are no big deal |mdash| it's just
 syntactic sugar. But for limited types, this syntax is almost essential:
 
 .. code:: ada
