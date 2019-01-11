@@ -205,7 +205,7 @@ in the package body.
 Here we can see that the body of the :ada:`Get_Workload` function has to be
 declared in the body. Coincidentally, introducing a body allows us to put the
 :ada:`Workload_Type` array type and the constant :ada:`Workload` in the body,
-and make them inaccessible to the user of the :ada:`Week` package, providing a
+and make them inaccessible to the user of the :ada:`Week_2` package, providing a
 first form of encapsulation.
 
 This works because entities declared in the body are *only* visible in the
