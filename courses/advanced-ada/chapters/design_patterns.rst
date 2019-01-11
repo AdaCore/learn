@@ -978,7 +978,37 @@ However, applying a protected type and protected operations may not always
 be feasible. For example, consider an existing sequential program that
 makes calls to procedures and functions provided by a package. Inside the
 package are variables that are manipulated by the procedures and
-functions.
+functions. For example:
+
+.. code:: ada
+
+    package P is
+
+       procedure Operation_1;
+
+       procedure Operation_2;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body P is
+
+       State : Integer := 0;
+
+       procedure Operation_1 is
+       begin
+          State := State + 1;  -- for example...
+          Put_Line ("State is now" & State'Img);
+       end Operation_1;
+
+       procedure Operation_2 is
+       begin
+          State := State - 1;  -- for example...
+          Put_Line ("State is now" & State'Img);
+       end Operation_2;
+
+    end P;
 
 If more than one task is now going to be calling these subprograms, the
 package-level variables will be subject to race conditions because they
@@ -993,12 +1023,63 @@ In such a case, the programmer must fall back to manually acquiring and
 releasing an explicit lock. The result is essentially that of using
 semaphores, a low-level and clearly much less robust approach. For
 example, to ensure serial execution of the exported operations, one could
-declare a lock at the package level, as shown below, and have each
-operation acquire and release it:
+declare a lock at the package level, and have each operation acquire and
+release it. The lock can be implemented using a binary semaphore:
 
-.. code-block:: ada
+.. code:: ada
+
+    package Semaphores is
+
+       --  Simplified implementation
+       --  See GNAT.Semaphores for complete package
+
+       protected type Binary_Semaphore
+         (Initially_Available : Boolean)
+       is
+          entry Seize;
+
+          procedure Release;
+
+       private
+          Available : Boolean := Initially_Available;
+       end Binary_Semaphore;
+
+    end Semaphores;
+
+    package body Semaphores is
+
+       protected body Binary_Semaphore is
+
+          entry Seize when Available is
+          begin
+             Available := False;
+          end Seize;
+
+          procedure Release is
+          begin
+             Available := True;
+          end Release;
+
+       end Binary_Semaphore;
+
+    end Semaphores;
+
+This semaphore is a simplified implementation based on the binary
+semaphore that you can find in the package :ada:`GNAT.Semaphores`. You can
+assume it is a protected type with classic semaphore semantics.
+
+This is the updated package :ada:`P` that makes use of semaphores:
+
+.. code:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Semaphores;  use Semaphores;
 
     package body P is
+
+       subtype Mutual_Exclusion is Binary_Semaphore
+         (Initially_Available => True);
 
        Mutex : Mutual_Exclusion;
 
@@ -1031,19 +1112,9 @@ operation acquire and release it:
     end P;
 
 The type :ada:`Mutual_Exclusion` is actually a subtype of a binary
-semaphore abstraction available to users via the :ada:`GNAT.Semaphores`
-package:
-
-.. code-block:: ada
-
-  subtype Mutual_Exclusion is Binary_Semaphore
-    (Initially_Available => True,
-     Ceiling             => Default_Ceiling);
-
-See package :ada:`GNAT.Semaphores` for the details. You can assume it is
-a protected type with classic semaphore semantics. We define a subtype to
-ensure that all such objects are initially available, as required when
-providing mutual exclusion.
+semaphore abstraction from the :ada:`Semaphores` package. We define a
+subtype to ensure that all such objects are initially available, as
+required when providing mutual exclusion.
 
 Although we cannot eliminate the need for this lock, we can make the code
 more robust by automatically acquiring and releasing it using an object of
@@ -1061,13 +1132,72 @@ lock using a discriminant. Objects of the type are then declared within
 procedures and functions with a discriminant value designating the shared
 lock declared within the package. Such a type is called a *scope lock*
 because the elaboration of the enclosing declarative region |mdash| the
-scope |mdash| is sufficient to acquire the referenced lock. The
-subprogram's sequence of statements will not execute until the lock is
+scope |mdash| is sufficient to acquire the referenced lock.
+
+To define the :ada:`Scope_Lock` type, we declare it with a discriminant
+designating a :ada:`Mutual_Exclusion` object:
+
+.. code:: ada
+
+    with Semaphores;  use Semaphores;
+
+    with Ada.Finalization;
+
+    package Locks is
+
+       subtype Mutual_Exclusion is Binary_Semaphore
+         (Initially_Available => True);
+
+       type Scope_Lock (Lock : access Mutual_Exclusion) is
+         tagged limited private;
+
+    private
+
+       type Scope_Lock (Lock : access Mutual_Exclusion) is
+         new Ada.Finalization.Limited_Controlled with null record;
+
+       overriding procedure Initialize (This : in out Scope_Lock);
+       overriding procedure Finalize   (This : in out Scope_Lock);
+
+    end Locks;
+
+In the private part the type is fully declared as a controlled type
+derived from :ada:`Ada.Finalization.Limited_Controlled`, as shown below.
+We hide the fact that the type will be controlled because
+:ada:`Initialize` and :ada:`Finalize` are never intended to be called
+manually.
+
+Each overridden procedure simply references the semaphore object
+designated by the formal parameter's discriminant:
+
+.. code:: ada
+
+    with Ada.Finalization;
+
+    package body Locks is
+
+       procedure Initialize (This : in out Scope_Lock) is
+       begin
+          This.Lock.Seize;
+       end Initialize;
+
+       procedure Finalize (This : in out Scope_Lock) is
+       begin
+          This.Lock.Release;
+       end Finalize;
+
+    end Locks;
+
+The subprogram's sequence of statements will not execute until the lock is
 acquired, no matter how long that takes. When the procedure or function is
 done, for any reason, finalization will release the lock. The resulting
 user code is thus almost unchanged from the original sequential code:
 
-.. code-block:: ada
+.. code:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Locks; use Locks;
 
     package body P is
 
@@ -1091,45 +1221,10 @@ user code is thus almost unchanged from the original sequential code:
 
     end P;
 
-To define the :ada:`Scope_Lock` type, we declare it with a discriminant
-designating a :ada:`Mutual_Exclusion` object:
-
-.. code-block:: ada
-
-      type Scope_Lock (Lock : access Mutual_Exclusion) is
-         tagged limited private;
-
-In the private part the type is fully declared as a controlled type
-derived from :ada:`Ada.Finalization.Limited_Controlled`, as shown below.
-We hide the fact that the type will be controlled because
-:ada:`Initialize` and :ada:`Finalize` are never intended to be called
-manually.
-
-.. code-block:: ada
-
-       type Scope_Lock (Lock : access Mutual_Exclusion) is
-          new Ada.Finalization.Limited_Controlled with null record;
-
-       overriding procedure Initialize (This : in out Scope_Lock);
-       overriding procedure Finalize   (This : in out Scope_Lock);
-
-Each overridden procedure simply references the semaphore object
-designated by the formal parameter's discriminant:
-
-.. code-block:: ada
-
-      procedure Initialize (This : in out Scope_Lock) is
-      begin
-        This.Lock.Seize;
-      end Initialize;
-
-      procedure Finalize (This : in out Scope_Lock) is
-      begin
-        This.Lock.Release;
-      end Finalize;
-
 So as you can see, by combining controlled types with protected types one
 can make simple work of providing mutually exclusive access when a
 protected object is not an option. By taking advantage of the automatic
 calls to :ada:`Initialize` and :ada:`Finalize`, the resulting user code is
 much more robust and requires very little change.
+
+:code-config:`reset_accumulator=True`
