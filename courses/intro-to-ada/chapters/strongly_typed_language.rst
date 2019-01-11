@@ -74,9 +74,11 @@ the ranges that we use in for loops, that defines the low and high bound of the
 type. Every integer in the inclusive range of the bounds is a valid value for
 the type.
 
-    In Ada, an integer type is not specified in terms of its
-    machine representation, but rather by its range. The
-    compiler will then choose the most appropriate representation.
+.. admonition:: Ada integer types
+
+   In Ada, an integer type is not specified in terms of its
+   machine representation, but rather by its range. The
+   compiler will then choose the most appropriate representation.
 
 Another point to note in the above example is the :ada:`My_Int'Image (I)`
 expression. The :ada:`Name'Attribute (optional params)` notation is used for
