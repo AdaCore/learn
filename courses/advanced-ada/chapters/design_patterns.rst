@@ -6,6 +6,8 @@
 Design Patterns
 ===============
 
+.. include:: <isopub.txt>
+
 .. role:: ada(code)
    :language: ada
 
@@ -960,3 +962,174 @@ This is the complete source-code:
 
 :code-config:`reset_accumulator=True`
 
+Scope Locks
+-----------
+
+Like the classical *monitor* concept on which they are based, protected
+types provide mutually exclusive access to internal variables. Clients can
+only access these variables indirectly, by means of a procedural
+interface. This interface is very robust because mutually exclusive access
+is provided automatically: users cannot forget to acquire the underlying
+(logical) lock and cannot forget to release it, including when exceptions
+occur. As a result, encapsulating actions within protected operations is
+highly recommended.
+
+However, applying a protected type and protected operations may not always
+be feasible. For example, consider an existing sequential program that
+makes calls to procedures and functions provided by a package. Inside the
+package are variables that are manipulated by the procedures and
+functions.
+
+If more than one task is now going to be calling these subprograms, the
+package-level variables will be subject to race conditions because they
+are (indirectly) shared among the calling tasks. Moving the procedures and
+functions into a protected object would provide the required mutual
+exclusion, but it would require changes to both the package and the
+callers. Additionally, the existing procedures and functions may perform
+potentially blocking operations, such as I/O, that are prohibited from
+within protected operations.
+
+In such a case, the programmer must fall back to manually acquiring and
+releasing an explicit lock. The result is essentially that of using
+semaphores, a low-level and clearly much less robust approach. For
+example, to ensure serial execution of the exported operations, one could
+declare a lock at the package level, as shown below, and have each
+operation acquire and release it:
+
+.. code-block:: ada
+
+    package body P is
+
+       Mutex : Mutual_Exclusion;
+
+       State : Integer := 0;
+
+       procedure Operation_1 is
+       begin
+          Mutex.Seize;
+          State := State + 1;  -- for example...
+          Put_Line ("State is now" & State'Img);
+          Mutex.Release;
+       exception
+          when others =>
+             Mutex.Release;
+             raise;
+       end Operation_1;
+
+       procedure Operation_2 is
+       begin
+          Mutex.Seize;
+          State := State - 1;  -- for example...
+          Put_Line ("State is now" & State'Img);
+          Mutex.Release;
+       exception
+          when others =>
+             Mutex.Release;
+             raise;
+       end Operation_2;
+
+    end P;
+
+The type :ada:`Mutual_Exclusion` is actually a subtype of a binary
+semaphore abstraction available to users via the :ada:`GNAT.Semaphores`
+package:
+
+.. code-block:: ada
+
+  subtype Mutual_Exclusion is Binary_Semaphore
+    (Initially_Available => True,
+     Ceiling             => Default_Ceiling);
+
+See package :ada:`GNAT.Semaphores` for the details. You can assume it is
+a protected type with classic semaphore semantics. We define a subtype to
+ensure that all such objects are initially available, as required when
+providing mutual exclusion.
+
+Although we cannot eliminate the need for this lock, we can make the code
+more robust by automatically acquiring and releasing it using an object of
+a controlled type. Initialization will automatically acquire the lock and
+finalization will automatically release it, including both when an
+exception is raised and when the task is aborted.
+
+.. admonition:: In other languages
+
+    C++ programmers may be familiar with this technique under the name
+    "Resource Acquisition Is Initialization" (RAII).
+
+The idea is to define a limited controlled type that references a shared
+lock using a discriminant. Objects of the type are then declared within
+procedures and functions with a discriminant value designating the shared
+lock declared within the package. Such a type is called a *scope lock*
+because the elaboration of the enclosing declarative region |mdash| the
+scope |mdash| is sufficient to acquire the referenced lock. The
+subprogram's sequence of statements will not execute until the lock is
+acquired, no matter how long that takes. When the procedure or function is
+done, for any reason, finalization will release the lock. The resulting
+user code is thus almost unchanged from the original sequential code:
+
+.. code-block:: ada
+
+    package body P is
+
+       Mutex : aliased Mutual_Exclusion;
+
+       State : Integer := 0;
+
+       procedure Operation_1 is
+          S : Scope_Lock (Mutex'Access);
+       begin
+          State := State + 1;  -- for example...
+          Put_Line ("State is now" & State'Img);
+       end Operation_1;
+
+       procedure Operation_2 is
+          S : Scope_Lock (Mutex'Access);
+       begin
+          State := State - 1;  -- for example...
+          Put_Line ("State is now" & State'Img);
+       end Operation_2;
+
+    end P;
+
+To define the :ada:`Scope_Lock` type, we declare it with a discriminant
+designating a :ada:`Mutual_Exclusion` object:
+
+.. code-block:: ada
+
+      type Scope_Lock (Lock : access Mutual_Exclusion) is
+         tagged limited private;
+
+In the private part the type is fully declared as a controlled type
+derived from :ada:`Ada.Finalization.Limited_Controlled`, as shown below.
+We hide the fact that the type will be controlled because
+:ada:`Initialize` and :ada:`Finalize` are never intended to be called
+manually.
+
+.. code-block:: ada
+
+       type Scope_Lock (Lock : access Mutual_Exclusion) is
+          new Ada.Finalization.Limited_Controlled with null record;
+
+       overriding procedure Initialize (This : in out Scope_Lock);
+       overriding procedure Finalize   (This : in out Scope_Lock);
+
+Each overridden procedure simply references the semaphore object
+designated by the formal parameter's discriminant:
+
+.. code-block:: ada
+
+      procedure Initialize (This : in out Scope_Lock) is
+      begin
+        This.Lock.Seize;
+      end Initialize;
+
+      procedure Finalize (This : in out Scope_Lock) is
+      begin
+        This.Lock.Release;
+      end Finalize;
+
+So as you can see, by combining controlled types with protected types one
+can make simple work of providing mutually exclusive access when a
+protected object is not an option. By taking advantage of the automatic
+calls to :ada:`Initialize` and :ada:`Finalize`, the resulting user code is
+much more robust and requires very little change.
