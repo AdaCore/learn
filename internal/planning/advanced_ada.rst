@@ -80,10 +80,10 @@ Structure
 - [ ] Generics
 
     - [x] Formal packages
+    - [x] Partial parameterization
     - [x] Formal objects
     - [ ] Generic interfaces
     - [x] Generic numeric types
-    - [ ] Partial parameterization
 
 - [ ] Freezing
 

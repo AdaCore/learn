@@ -22,9 +22,61 @@ Abstracting definitions into packages
 In this section and in the next ones, we will reuse the generic
 reversing algorithm that we discussed in the chapter about generics
 from the introductory course
-(:doc:`../../intro-to-ada/chapters/generics`).
+(:doc:`../../intro-to-ada/chapters/generics`):
+
+.. code:: ada run_button
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Test_Reverse_Colors is
+       generic
+          type T is private;
+          type Index is range <>;
+          type Array_T is array (Index range <>) of T;
+       procedure Generic_Reverse_Array (X : in out Array_T);
+
+       procedure Generic_Reverse_Array (X : in out Array_T) is
+       begin
+          for I in X'First .. (X'Last + X'First) / 2 loop
+             declare
+                Tmp     : T;
+                X_Left  : T renames X (I);
+                X_Right : T renames X (X'Last + X'First - I);
+             begin
+                Tmp     := X_Left;
+                X_Left  := X_Right;
+                X_Right := Tmp;
+             end;
+          end loop;
+       end Generic_Reverse_Array;
+
+       type Color is (Black, Red, Green, Blue, White);
+       type Color_Array is array (Integer range <>) of Color;
+
+       procedure Reverse_Color_Array is new Generic_Reverse_Array
+         (T => Color, Index => Integer, Array_T => Color_Array);
+
+       My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
+
+    begin
+       for C of My_Colors loop
+          Put_Line ("My_Color: " & Color'Image (C));
+       end loop;
+
+       New_Line;
+       Put_Line ("Reversing My_Color...");
+       New_Line;
+       Reverse_Color_Array (My_Colors);
+
+       for C of My_Colors loop
+          Put_Line ("My_Color: " & Color'Image (C));
+       end loop;
+
+    end Test_Reverse_Colors;
+
 In that example, we were declaring three formal types for the
-``Generic_Reverse_Array`` procedure. However, we could abstract the array
+:ada:`Generic_Reverse_Array` procedure: a type :ada:`T`, a range :ada:`Index`
+and the array type :ada:`Array_T`. However, we could abstract the array
 definition into a separate package and reuse it for the generic procedure.
 This could be potentially useful in case we want to create more generic
 procedures for the same array.
@@ -43,17 +95,17 @@ that contains the generic array type definition:
 
 As you can see, this definition is the same that we've seen in the
 previous section: we just moved it into a separate package. Now, we have a
-definition of ``Array_T`` that can be reused in multiple places.
+definition of :ada:`Array_T` that can be reused in multiple places.
 
-The next step is to reuse the ``Simple_Generic_Array_Pkg`` package in the
-``Generic_Reverse_Array`` procedure. By doing this, we can eliminate the
-declaration of the ``Index`` and ``Array_T`` types that we had before,
-since the definition will come from the ``Simple_Generic_Array_Pkg``
-package.
+The next step is to reuse the :ada:`Simple_Generic_Array_Pkg` package in
+the :ada:`Generic_Reverse_Array` procedure. By doing this, we can
+eliminate the declaration of the :ada:`Index` and :ada:`Array_T` types
+that we had before, since the definition will come from the
+:ada:`Simple_Generic_Array_Pkg` package.
 
-In order to reuse the ``Simple_Generic_Array_Pkg`` package in the
-``Generic_Reverse_Array`` procedure, we need to use a formal package
-declaration in the form:
+In order to reuse the :ada:`Simple_Generic_Array_Pkg` package in the
+:ada:`Generic_Reverse_Array` procedure, we need to use a formal package
+parameter in the form:
 
 .. code-block:: ada
 
@@ -120,11 +172,85 @@ algorithm:
     end Test_Reverse_Colors_Simple_Pkg;
 
 In this example, we're first instantiating the
-``Simple_Generic_Array_Pkg`` package, thereby creating the ``Color_Pkg``
-package. We then proceed to use this ``Color_Pkg`` package in the
-instantiation of the generic ``Reverse_Array`` procedure. Also, in the
-declaration of the ``My_Colors`` array, we make use of the array type
-definition from the ``Color_Pkg`` package.
+:ada:`Simple_Generic_Array_Pkg` package, thereby creating the
+:ada:`Color_Pkg` package. We then proceed to use this :ada:`Color_Pkg`
+package in the instantiation of the generic :ada:`Reverse_Array`
+procedure. Also, in the declaration of the :ada:`My_Colors` array, we make
+use of the array type definition from the :ada:`Color_Pkg` package.
+
+.. _FormalPackageParametrization:
+
+Formal package parametrization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that we're using partial parametrization for the formal package
+parameter :ada:`P` in the previous example. Partial parametrization makes
+use of :ada:`others => <>` to indicate that the generic declaration takes
+the definitions from the package argument provided in the generic
+instantiation:
+
+.. code:: ada
+
+    with Simple_Generic_Array_Pkg;
+
+    package Show_Partial_Parametrization is
+
+       generic
+          type T is private;
+          with package P is new Simple_Generic_Array_Pkg (T => T, others => <>);
+       procedure Reverse_Array (X : in out P.Array_T);
+
+    end Show_Partial_Parametrization;
+
+For the previous example, the definitions come from the declarations of
+the :ada:`Color_Pkg` package:
+
+A complete parametrization, in constrast, contains the definition of all
+types in the generic declaration. For example:
+
+.. code:: ada
+
+    with Simple_Generic_Array_Pkg;
+
+    package Show_Complete_Parametrization is
+
+       generic
+          type T is private;
+          type Index is range <>;
+          with package P is new Simple_Generic_Array_Pkg (T     => T,
+                                                          Index => Index);
+       procedure Reverse_Array (X : in out P.Array_T);
+
+    end Show_Complete_Parametrization;
+
+Another approach is to take the all definitions from the formal package
+parameter:
+
+.. code:: ada
+
+    with Simple_Generic_Array_Pkg;
+
+    package Show_Box_Parameter is
+
+       generic
+          with package P is new Simple_Generic_Array_Pkg (<>);
+       procedure Reverse_Array (X : in out P.Array_T);
+
+    end Show_Box_Parameter;
+
+In this case, package :ada:`P` contains all type and subprogram
+definitions that are used by the generic :ada:`Reverse_Array` procedure.
+By using the box syntax :ada:`(<>)`, we indicate that we make use of all
+definitions from the formal package parameter.
+
+This kind of formal package parameter containing definitions is called a
+*signature package*. Usually, a signature package is a generic package
+and doesn't have a package body. Also, it isn't useful as a
+standalone package. Instead, it's used to group types and subprogram
+declarations that will be used as a formal package parameter. This
+approach is useful for creating separate specifications for types and
+subprograms that don't belong together. Also, multiple signature packages
+can be cascaded to create more complex generic implementations.
 
 Abstracting procedures into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -132,8 +258,8 @@ Abstracting procedures into packages
 :code-config:`reset_accumulator=True`
 
 In the previous example, we moved the array type definition into a
-separate package, but left the generic procedure (``Reverse_Array``) in
-the test application. We can also move the generic procedure into the
+separate package, but left the generic procedure (:ada:`Reverse_Array`) in
+the test application. We could also move the generic procedure into the
 generic package:
 
 .. code:: ada
@@ -148,8 +274,8 @@ generic package:
     end Generic_Array_Pkg;
 
 The advantage of this approach is that we don't need to repeat the formal
-declaration for the ``Reverse_Array`` procedure. Also, this simplifies the
-instantiation in the test application.
+declaration for the :ada:`Reverse_Array` procedure. Also, this simplifies
+the instantiation in the test application.
 
 However, the disadvantage of this approach is that it also increases code
 size: every instantiation of the generic package generates code for each
@@ -160,8 +286,8 @@ this approach.
 Because we have a procedure declaration in the generic package, we need a
 corresponding package body. Here, we can simply reuse the existing code
 and move the procedure into the package body. In the test application, we
-just instantiate the ``Generic_Array_Pkg`` package and make use of the
-array type (``Array_T``) and the procedure (``Reverse_Array``):
+just instantiate the :ada:`Generic_Array_Pkg` package and make use of the
+array type (:ada:`Array_T`) and the procedure (:ada:`Reverse_Array`):
 
 .. code-block:: ada
 
@@ -199,21 +325,24 @@ test other procedures that change elements of an array.
 In order to achieve this, we have to abstract quite a few elements. We
 will therefore declare the following formal parameters:
 
-    - ``S``: the string containing the array name
+    - the string :ada:`S` containing the array name;
 
-    - an instance of the ``Generic_Array_Pkg`` package (which was
-      implemented in the previous section)
+    - the formal :ada:`Generic_Array_Pkg` package parameter, which is a
+      signature package implemented in the previous section;
 
-    - a function ``Image`` that converts an element of type ``T`` to a
-      string
+    - the formal :ada:`Image` function that converts an element of type
+      :ada:`T` to a string;
 
-    - a procedure ``Pkg_Test`` that performs some operation on the array
+    - the formal :ada:`Pkg_Test` procedure that performs some operation on
+      the array.
 
-Note that ``Image`` and ``Pkg_Test`` are examples of formal subprograms.
-Also, note that ``S`` is an example of a formal object.
+Note that :ada:`Image` and :ada:`Pkg_Test` are examples of formal
+subprograms, which have been discussed in the introductory course. Also,
+note that :ada:`S` is an example of a formal object, which we discuss in
+later section.
 
 This is a version of the test application that makes use of the generic
-``Perform_Test`` procedure:
+:ada:`Perform_Test` procedure:
 
 .. code:: ada run_button
 
@@ -264,14 +393,14 @@ This is a version of the test application that makes use of the generic
     end Test_Reverse_Colors_Pkg;
 
 In this example, we create the procedure
-``Perform_Test_Reverse_Color_Array`` as an instance of the generic
-procedure (``Perform_Test``). Note that:
+:ada:`Perform_Test_Reverse_Color_Array` as an instance of the generic
+procedure (:ada:`Perform_Test`). Note that:
 
-    - For the formal ``Image`` function, we make use of the ``'Image``
-      attribute of the ``Color`` type
+    - For the formal :ada:`Image` function, we make use of the
+      :ada:`'Image` attribute of the :ada:`Color` type
 
-    - For the formal ``Pkg_Test`` procedure, we reference the
-      ``Reverse_Array`` procedure from the package.
+    - For the formal :ada:`Pkg_Test` procedure, we reference the
+      :ada:`Reverse_Array` procedure from the package.
 
 Note that this example includes a formal package declaration:
 
@@ -286,25 +415,27 @@ For example:
 
     package Color_Pkg is new Generic_Array_Pkg (T => Color, Index => Integer);
 
-In this case, however, we're using simply ``(<>)``. This means that the
-generic procedure (``Perform_Test``) will accept the default definition
-used for the instance of ``Generic_Array_Pkg``.
+In this case, however, we're simply using :ada:`(<>)`, as discussed in the
+section on
+:ref:`formal package parametrization <FormalPackageParametrization>`.
+This means that :ada:`Perform_Test` makes use of the default definition
+used for the instance of :ada:`Generic_Array_Pkg`.
 
-Abstracting test application by cascading generic packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cascading signature packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the code example from the previous section, we declared four formal
-parameters for the ``Perform_Test`` procedure. Two of them are directly
+parameters for the :ada:`Perform_Test` procedure. Two of them are directly
 related to the array that we're using for the test:
 
-    - ``S``: the string containing the array name
+    - :ada:`S`: the string containing the array name
 
-    - the function ``Image`` that converts an elements of the array to a
+    - the function :ada:`Image` that converts an elements of the array to a
       string
 
 We could abstract our implementation even further by moving these elements
-into a separate package named ``Generic_Array_Bundle`` and reference the
-``Generic_Array_Pkg`` there. This would create a chain of generic
+into a separate package named :ada:`Generic_Array_Bundle` and reference
+the :ada:`Generic_Array_Pkg` there. This would create a chain of signature
 packages:
 
 .. code-block:: ada
@@ -314,9 +445,9 @@ packages:
 This strategy demonstrates that, in Ada, it is really straightforward to
 make use of generics in order to abstracts algorithms.
 
-First, let us define the new ``Generic_Array_Bundle`` package, which
-references the ``Generic_Array_Pkg`` package and the two formal elements
-(``S`` and ``Image``) mentioned previously:
+First, let us define the new :ada:`Generic_Array_Bundle` package, which
+references the :ada:`Generic_Array_Pkg` package and the two formal elements
+(:ada:`S` and :ada:`Image`) mentioned previously:
 
 .. code:: ada
 
@@ -329,7 +460,7 @@ references the ``Generic_Array_Pkg`` package and the two formal elements
     package Generic_Array_Bundle is
     end Generic_Array_Bundle;
 
-Then, we update the definition of ``Perform_Test``:
+Then, we update the definition of :ada:`Perform_Test`:
 
 .. code:: ada run_button
 
@@ -385,12 +516,12 @@ Then, we update the definition of ``Perform_Test``:
 Note that, in this case, we reduce the number of formal parameters to only
 two:
 
-    - ``Array_Bundle``: an instance of the new ``Generic_Array_Bundle``
-      package
+    - :ada:`Array_Bundle`: an instance of the new
+      :ada:`Generic_Array_Bundle` package
 
-   - the procedure ``Pkg_Test`` that we already had before
+   - the procedure :ada:`Pkg_Test` that we already had before
 
-We could go even further and move ``Perform_Test`` into a separate
+We could go even further and move :ada:`Perform_Test` into a separate
 package. However, this will be left as an exercise for the reader.
 
 Formal objects
@@ -1235,8 +1366,8 @@ types.
 Generic floating-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Simple formal package
-^^^^^^^^^^^^^^^^^^^^^
+Simple generic package
+^^^^^^^^^^^^^^^^^^^^^^
 
 :code-config:`reset_accumulator=True`
 
@@ -1312,13 +1443,13 @@ type. We then make use of computations whose results are outside the
 normalized range. By calling the :ada:`Saturate` procedure, we ensure that
 the values are inside the range again.
 
-Operations in formal packages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Operations in generic packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :code-config:`reset_accumulator=True`
 
 In this section, we discuss how to declare operations associated with
-floating-point types in formal packages.
+floating-point types in generic packages.
 
 Let's first define a package that implements a new type :ada:`My_Float`
 based on the standard :ada:`Float` type. For this type, we override the
@@ -1491,8 +1622,8 @@ procedure.
 Generic fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Simple formal package
-^^^^^^^^^^^^^^^^^^^^^
+Simple generic package
+^^^^^^^^^^^^^^^^^^^^^^
 
 :code-config:`reset_accumulator=True`
 
@@ -1625,11 +1756,11 @@ calling :ada:`Sat_Add`, we ensure that the result of adding fixed-point
 values will always be in the allowed range and the computation will never
 raise an exception.
 
-Operations in formal packages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Operations in generic packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we discuss how to declare operations associated with
-fixed-point types in formal packages. We start by adapting the examples
+fixed-point types in generic packages. We start by adapting the examples
 used for floating-point in the previous section, so that fixed-point types
 are used instead.
 
