@@ -324,7 +324,7 @@ this type will have the same bounds and therefore the same number of elements
 and the same size.
 
 However, Ada also allows you to declare array types whose bounds are not fixed:
-In that case, the bounds will need to be provided when creating instances of
+in that case, the bounds will need to be provided when creating instances of
 the type.
 
 .. code:: ada
