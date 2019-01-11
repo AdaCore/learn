@@ -13,6 +13,9 @@ Interfacing with C and C++
 .. role:: cpp(code)
    :language: c++
 
+Interfacing with C
+------------------
+
 Using unconstrained types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -68,7 +71,7 @@ and use the ``Interfaces.C`` package whenever possible for interfacing
 with C.
 
 Interfacing with C++
-====================
+--------------------
 
 All the previous examples focused on interfacing with C code. For C++, the
 same methods apply. However, there are a few differences that we need to
