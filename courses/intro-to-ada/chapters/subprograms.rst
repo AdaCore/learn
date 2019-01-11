@@ -42,7 +42,7 @@ in a package, and have that subprogram available to be invoked from client
 ("with"ing) units, you need to do two things:
 
 * Put its specification (name, parameters, result type if a function) in the
-  package specifciation, along with any comments / documentation you wish to
+  package specification, along with any comments / documentation you wish to
   provide
 
 * Put the full declaration of the subprogram (its body, or implementation) in
