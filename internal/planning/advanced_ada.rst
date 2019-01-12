@@ -125,7 +125,7 @@ Structure
 
     - [x] Factory Functions (*material reuse*)
     - [x] Scope Locks Idiom (*material reuse*)
-    - [ ] Visitor Pattern (*material reuse*)
+    - [x] Visitor Pattern (*material reuse*)
     - [ ] Overridable Class Attributes (*material reuse*)
 
     - Based on
