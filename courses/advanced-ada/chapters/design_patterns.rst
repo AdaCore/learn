@@ -1508,10 +1508,6 @@ name was stored in the instance. Another reason (though not really
 applicable here) is to save memory, which would be important in cases
 where there are thousands of instances of the class.
 
-Of course, the approach proposed in this section is not the only way to
-solve the basic problem, but it serves as a nice example of one of the
-new Ada 2012 features.
-
 .. admonition:: In other languages
 
     C++, like Ada, does not provide a way to override a static class
