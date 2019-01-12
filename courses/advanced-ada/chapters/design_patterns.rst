@@ -1376,7 +1376,7 @@ could and should be generated automatically as much as possible. The
 in the usual case. On the other hand, the :ada:`Visit_...` primitives of
 the visitor itself should be overridden when it makes sense. The default
 implementation is provided just so the user has the choice at which level
-do to the overriding.
+to do the overriding.
 
 Now let's see what a code generator would look like. We'll assume that we
 are only interested, initially, in doing code generation for classes.
