@@ -1428,10 +1428,9 @@ The code would be something like the following:
        Tmp3 : aliased PPackage;
 
        All_Model_Elements : array (Positive range <>) of
-         access NamedElement'Class :=
-           (Tmp1'Access,
-            Tmp2'Access,
-            Tmp3'Access);
+         access NamedElement'Class := (Tmp1'Access,
+                                       Tmp2'Access,
+                                       Tmp3'Access);
 
        Gen  : aliased Code_Generator;
 
@@ -1442,6 +1441,7 @@ The code would be something like the following:
        end loop;
 
     end Main;
+
 
 If we wanted to do model checking, we would create a type
 :ada:`Model_Checker`, derived from :ada:`Visitor`, that overrides some of
