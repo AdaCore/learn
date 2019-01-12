@@ -1248,6 +1248,11 @@ actual UML metamodel, but will be sufficient for our purposes. In practice,
 these types would be automatically generated from the description of the
 UML metamodel.
 
+This is the package specification of the UML metamodel example. The code
+below also includes the specification of a visitor class, which will be
+overridden by the user code, for instance, to provide a code generator, a
+model checker, and so on:
+
 .. code:: ada
 
     limited with Visitors;
@@ -1285,12 +1290,6 @@ UML metamodel.
            The_Visitor : access Visitors.Visitor'Class);
     end UML;
 
-In addition, a visitor class is declared, which will be overridden by the
-user code, for instance, to provide a code generator, a model checker, and
-so on:
-
-.. code:: ada
-
     with UML;  use UML;
 
     package Visitors is
@@ -1311,6 +1310,8 @@ so on:
           Obj  : in out PPackage'Class);
 
     end Visitors;
+
+.. code:: ada
 
     package body Visitors is
 
