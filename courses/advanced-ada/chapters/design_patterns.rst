@@ -1454,6 +1454,6 @@ appears as a parameter in their operations). But a visitor also needs to
 see the UML types for the same reason. One possibility is to put all the
 types in the same package. Another is to use :ada:`limited with` to give
 visibility on access types, and then pass an access to :ada:`Visitor'Class`
-as a parameter to :ada:`Visit`.
+as a parameter to :ada:`Visit`, as we've implemented above.
 
 :code-config:`reset_accumulator=True`
