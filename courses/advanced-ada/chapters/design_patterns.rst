@@ -1228,3 +1228,255 @@ calls to :ada:`Initialize` and :ada:`Finalize`, the resulting user code is
 much more robust and requires very little change.
 
 :code-config:`reset_accumulator=True`
+
+Visitor
+-------
+
+Imagine that you have a UML model and you want to generate code from it.
+A convenient approach is to have a *code generator* object, which has a
+set of subprograms to handle each kind of UML element (one that generates
+code for a class, one that generates code for an operation, etc.).
+
+One way to implement this is by using a big series of *if* statements of
+the form :ada:`if Obj in CClass'Class then`, which is rather inelegant and
+inefficient.
+
+Another approach is to use discriminated types. A *case* statement on the
+discriminant is then efficient, and Ada will check that all discriminant
+values are covered. The problem is that then you would need to use case
+statements for all clients of the types in your application. Here, we
+prefer to use tagged types, to take advantage of Ada's object-oriented
+programming capabilities, so the *case* statement cannot be used.
+
+Let's consider a specific example. Again, taking the UML example, assume
+we have the following types. These are only very roughly similar to the
+actual UML metamodel, but will be sufficient for our purposes. In practice,
+these types would be automatically generated from the description of the
+UML metamodel.
+
+.. code-block:: ada
+
+       type NamedElement is tagged private;
+       type CClass is new NamedElement with private;
+       type PPackage is new NamedElement with private;
+
+In addition, a visitor class is declared, which will be overridden by the
+user code, for instance, to provide a code generator, a model checker, and
+so on:
+
+.. code-block:: ada
+
+       type Visitor is abstract tagged null record;
+
+       procedure Visit_NamedElement
+          (Self : in out Visitor; Obj : NamedElement'Class) is null;
+       --  No parent type, do nothing
+
+       procedure Visit_CClass (Self : in out Visitor; Obj : CClass'Class) is
+       begin
+          --  In UML, a "Class" inherits from a "NamedElement".
+          --  Concrete implementations of the visitor might want to work at the
+          --  "NamedElement" level (so that their code applies to both a Class
+          --  and a Package, for instance), rather than duplicate the work for each
+          --  child of NamedElement. The default implementation here is to call the
+          --  parent type's operation.
+
+          Self.Visit_NamedElement (Obj);
+       end Visit_Class;
+
+       procedure Visit_PPackage (Self : in out Visitor; Obj : PPackage'Class) is
+       begin
+          Self.Visit_NamedElement (Obj);
+       end Visit_PPackage;
+
+We then need to add one primitive :ada:`Visit` operation to each of the
+types created from the UML metamodel:
+
+.. code-block:: ada
+
+       procedure Visit (Self : NamedElement; V : in out Visitor'Class) is
+       begin
+          --  First dispatching was on "Self" (done by the compiler).
+          --  Second dispatching is simulated here by calling the right
+          --  primitive operation of V.
+
+          V.Visit_NamedElement (Self);
+       end Visit;
+
+       overriding procedure Visit (Self : CClass; V : in out Visitor'Class) is
+       begin
+          V.Visit_CClass (Self);
+       end Visit;
+
+       overriding procedure Visit (Self : PPackage; V : in out Visitor'Class) is
+       begin
+          V.Visit_PPackage (Self);
+       end Visit;
+
+All of the code described above is completely systematic, and as such
+could and should be generated automatically as much as possible. The
+:ada:`Visit` primitive operations should never be overridden in user code
+in the usual case. On the other hand, the :ada:`Visit_...` primitives of
+the visitor itself should be overridden when it makes sense. The default
+implementation is provided just so the user has the choice at which level
+do to the overriding.
+
+Now let's see what a code generator would look like. We'll assume that we
+are only interested, initially, in doing code generation for classes.
+Other types of elements (such as operations) will call the default
+implementation for their visitor (:ada:`Visit_Operation`, for instance),
+which then calls the visitor for its parent (:ada:`Visit_NamedElement`)
+and so on, until we end up calling a :ada:`Visit` operation with a null
+body. So nothing happens for those, and we don't need to deal with them
+explicitly.
+
+The code would be something like the following:
+
+.. code-block:: ada
+
+       type CodeGen is new Visitor with private;
+
+       overriding procedure Visit_CClass
+          (Self : in out Codegen; Obj : CClass'Class) is
+       begin
+           ...;  --  Do some code generation
+       end Visit_CClass;
+
+       procedure Main is
+          Gen : CodeGen;
+       begin
+          for Element in All_Model_Elements loop  --  Pseudo code
+              Element.Visit (Gen);   --  Double dispatching
+          end loop;
+       end Main;
+
+If we wanted to do model checking, we would create a type
+:ada:`Model_Checker`, derived from :ada:`Visitor`, that overrides some of
+the :ada:`Visit_...` operations. The body of :ada:`Main` would not change,
+except for the type of :ada:`Gen`.
+
+When using this in practice, there are a few issues to resolve. For
+instance, the UML types need access to the :ada:`Visitor` type (because it
+appears as a parameter in their operations). But a visitor also needs to
+see the UML types for the same reason. One possibility is to put all the
+types in the same package. Another is to use :ada:`limited with` to give
+visibility on access types, and then pass an access to :ada:`Visitor'Class`
+as a parameter to :ada:`Visit`.
+
+Here is a full example. This example must be compiled with the ``-gnat05``
+switch since it uses Ada 2005 features such as the :ada:`limited with`
+clause and prefixed call notation.
+
+.. code-block:: ada
+
+    with UML;         use UML;
+    with Visitors;    use Visitors;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       type Code_Generator is new Visitor with null record;
+
+       overriding procedure Visit_CClass
+          (Self : in out Code_Generator; Obj : in out CClass'Class) is
+       begin
+          Put_Line ("Visiting CClass");
+       end Visit_CClass;
+
+       Tmp1 : NamedElement;
+       Tmp2 : CClass;
+       Tmp3 : PPackage;
+
+       Gen  : aliased Code_Generator;
+
+    begin
+       Tmp1.Visit (Gen'Access);  --  No output
+       Tmp2.Visit (Gen'Access);  --  Outputs "Visiting CClass"
+       Tmp3.Visit (Gen'Access);  --  No output
+    end Main;
+
+
+    limited with Visitors;
+    package UML is
+       type NamedElement is tagged null record;
+       procedure Visit
+          (Self        : in out NamedElement;
+           The_Visitor : access Visitors.Visitor'Class);
+
+       type CClass is new NamedElement with null record;
+       overriding procedure Visit
+          (Self        : in out CClass;
+           The_Visitor : access Visitors.Visitor'Class);
+
+       type PPackage is new NamedElement with null record;
+       overriding procedure Visit
+          (Self        : in out PPackage;
+           The_Visitor : access Visitors.Visitor'Class);
+    end UML;
+
+
+    with Visitors;  use Visitors;
+    package body UML is
+
+       procedure Visit
+          (Self        : in out NamedElement;
+           The_Visitor : access Visitors.Visitor'Class) is
+       begin
+          The_Visitor.Visit_NamedElement (Self);
+       end Visit;
+
+       overriding procedure Visit
+          (Self        : in out CClass;
+           The_Visitor : access Visitors.Visitor'Class) is
+       begin
+          The_Visitor.Visit_CClass (Self);
+       end Visit;
+
+       overriding procedure Visit
+          (Self        : in out PPackage;
+           The_Visitor : access Visitors.Visitor'Class) is
+       begin
+          The_Visitor.Visit_PPackage (Self);
+       end Visit;
+
+    end UML;
+
+
+    with UML;  use UML;
+
+    package Visitors is
+       type Visitor is abstract tagged null record;
+
+       procedure Visit_NamedElement
+          (Self : in out Visitor; Obj : in out NamedElement'Class);
+       procedure Visit_CClass
+          (Self : in out Visitor; Obj : in out CClass'Class);
+       procedure Visit_PPackage
+          (Self : in out Visitor; Obj : in out PPackage'Class);
+
+    end Visitors;
+
+
+    package body Visitors is
+
+       procedure Visit_NamedElement
+          (Self : in out Visitor; Obj : in out NamedElement'Class) is
+       begin
+          null;
+       end Visit_NamedElement;
+
+       procedure Visit_CClass
+          (Self : in out Visitor; Obj : in out CClass'Class) is
+       begin
+          Self.Visit_NamedElement (Obj);
+       end Visit_CClass;
+
+       procedure Visit_PPackage
+          (Self : in out Visitor; Obj : in out PPackage'Class) is
+       begin
+          Self.Visit_NamedElement (Obj);
+       end Visit_PPackage;
+
+    end Visitors;
+
+:code-config:`reset_accumulator=True`
+
