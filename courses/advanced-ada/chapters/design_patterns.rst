@@ -1546,8 +1546,6 @@ nondispatching call), but in general there will be no benefit because
 :ada:`Template` will be a dispatching call, which requires an indirect
 call and thus wouldn't benefit from inlining.
 
-And that's it. We have the Ada equivalent of a Python class member.
-
 But so far there is nothing new here, and this approach is rather heavy to
 write. For instance, the body of :ada:`Render` could contain code like:
 
@@ -1588,11 +1586,16 @@ using the same notation:
        overriding function Template (Self : Text_Block) return String
           is ("otherfile.html");
 
-Compared to Python, this is in fact more powerful, because some of the
-children could provide a more complex body for :ada:`Template`, so we are
-not limited to using the value of a simple variable as in Python. In fact,
-we can do this in the spec itself, by using a conditional expression
-(another new feature of Ada 2012):
+.. admonition:: In other languages
+
+    This design pattern is the Ada equivalent of a Python class member.
+    Compared to Python, however, this approach is in fact more powerful,
+    because some of the children could provide a more complex body for
+    :ada:`Template`, so we are not limited to using the value of a simple
+    variable as in Python.
+
+In fact, we can do this in the spec itself, by using a conditional
+expression (another new feature of Ada 2012):
 
 .. code-block:: ada
 
