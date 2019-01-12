@@ -1497,14 +1497,14 @@ template needs to change, not the computation of the parameters.
     .. code-block:: python
 
         class Text_Block(object):
-            template = "somefile.txt"
+            template = "filename.txt"
             def render (self):
                 # ... compute some parameters
                 # Then do template expansion
                 print "processing %s" % self.__class__.template
 
         class Html_Block(Text_Block):
-            template = "otherfile.html"
+            template = "filename.html"
 
 In this example, we chose to use a class attribute rather than the usual
 instance attribute. This example comes from the implementation of
