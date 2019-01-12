@@ -1523,94 +1523,34 @@ important point here is that we want to be able to override the template
 name in child classes, so we cannot use a simple constant in the package
 spec or body.
 
-.. code-block:: ada
+.. code:: ada
+
+    package Text_Blocks is
 
        type Text_Block is tagged null record;
-       function Template (Self : Text_Block) return String;
-       function Render (Self : Text_Block) return String;
 
        function Template (Self : Text_Block) return String is
-          pragma Unreferenced (Self);
-       begin
-          return "file_name.txt";
-       end Template;
+         ("filename.txt");
 
-The parameter :ada:`Self` is only used for dispatching (so that children
-of :ada:`Text_Block` can override this function). Since we prefer to
-compile with ``-gnatwu`` to get a warning on unused entities, we indicate
-to the compiler that it is expected that :ada:`Self` is unreferenced.
-
-We could make the function :ada:`Template` inlinable, which might be
-useful in a few cases (for instance if called from :ada:`Render` in a
-nondispatching call), but in general there will be no benefit because
-:ada:`Template` will be a dispatching call, which requires an indirect
-call and thus wouldn't benefit from inlining.
-
-But so far there is nothing new here, and this approach is rather heavy to
-write. For instance, the body of :ada:`Render` could contain code like:
-
-.. code-block:: ada
-
-       pragma Ada95;
-
-       function Render (Self : Text_Block) return String is
-          T : constant String := Template (Text_Block'Class (Self));
-       begin
-          --  ..  prepare the parameters for template expansion
-          --  ..  substitute in the template and return it
-          return T;
-       end Render;
-
-Fortunately, Ada 2012 provides an easier way to write this, using the new
-feature of expression functions. Since :ada:`Template` is a function that
-returns a constant, we can declare that directly in the spec, and remove
-the body altogether. The spec will thus look like:
-
-.. code-block:: ada
-
-       pragma Ada_2012;
-
-       type Text_Block is tagged null record;
-       function Template (Self : Text_Block) return String
-          is ("filename.txt");
        function Render (Self : Text_Block) return String;
 
-This is a much lighter syntax, and much closer to how one would do it in
-Python (except we use a function instead of a variable to represent a
-class member). A child of :ada:`Text_Block` would override :ada:`Template`
-using the same notation:
+    end Text_Blocks;
 
-.. code-block:: ada
+Note that :ada:`Template` is a function that returns a constant, so we can
+declare that directly in the spec as an expression function, and remove
+the body altogether. This is a light syntax, and close to how one would do
+it in Python, for example |mdash| except we use a function instead of a
+variable to represent a class member.
 
-       type Html_Block is new Text_Block with null record;
-       overriding function Template (Self : Text_Block) return String
-          is ("otherfile.html");
+Also note that the parameter :ada:`Self` of :ada:`Template` is only used
+for dispatching, so that children of :ada:`Text_Block` can override this
+function.
 
-.. admonition:: In other languages
+This is the package body with the implementation of :ada:`Render`:
 
-    This design pattern is the Ada equivalent of a Python class member.
-    Compared to Python, however, this approach is in fact more powerful,
-    because some of the children could provide a more complex body for
-    :ada:`Template`, so we are not limited to using the value of a simple
-    variable as in Python.
+.. code:: ada
 
-In fact, we can do this in the spec itself, by using a conditional
-expression (another new feature of Ada 2012):
-
-.. code-block:: ada
-
-       pragma Ada_2012;
-
-       type Text_Block is tagged null record;
-       function Template (Self : Text_Block) return String
-           is (if Self.Blah then "filename.html" else "file2.json");
-       function Render (Self : Text_Block) return String;
-
-Finally, we can also make the body of :ada:`Render` slightly more familiar
-(in terms of object-oriented notation) using the dotted notation
-introduced in Ada 2005:
-
-.. code-block:: ada
+    package body Text_Blocks is
 
        function Render (Self : Text_Block) return String is
           T : constant String := Text_Block'Class (Self).Template;
@@ -1620,31 +1560,60 @@ introduced in Ada 2005:
           return T;
        end Render;
 
-Now the call to :ada:`Template` looks closer to how it would appear in
-those languages that provide overridable class members. Some will argue
-that this doesn't look like a function call and thus is less readable,
-since we don't know that we are calling a function. This is a matter of
-taste, but at least we have the choice.
+    end Text_Blocks;
 
-There is one thing we have lost, temporarily, in the declaration of
-:ada:`Template`. If we compile with ``-gnatwu``, the compiler will
-complain that Self is unreferenced. There is currently no way to add a
-:ada:`pragma Unreferenced` within an expression function. This has
-generated a discussion and the issue is not resolved yet. The current two
-proposals are either to always omit the unused parameter warning when a
-function has a single parameter and it controls dispatching (precisely to
-facilitate this class member pattern), or else to use an Ada 2012 aspect
-for this, as in the following:
+A child of :ada:`Text_Block` would override :ada:`Template` using the same
+notation:
 
-.. code-block:: ada
+.. code:: ada
 
-       function Template (Self : Text_Block) return String
-          is ("filename.html")
-       with Unreferenced => Self;
+    package Text_Blocks.Html is
 
-Note also that the use of expression functions in this section requires a
-very recent version of GNAT: the expression function feature wasn't
-available in older versions, and the initial implementation had some
-limitations.
+       type Html_Block is new Text_Block with null record;
+
+       overriding function Template (Self : Html_Block) return String is
+         ("filename.html");
+
+    end Text_Blocks.Html;
+
+This design pattern is the Ada equivalent of a Python class member.
+Compared to Python, however, this approach is in fact more powerful,
+because some of the children could provide a more complex body for
+:ada:`Template`, so we are not limited to using the value of a simple
+variable (as in Python). In fact, we can do this in the spec itself by
+using a conditional expression:
+
+.. code:: ada
+
+    package Text_Blocks.Selectable is
+
+       type Selectable_Block is new Text_Block with record
+          Use_Html : Boolean := True;
+       end record;
+
+       overriding function Template (Self : Selectable_Block) return String is
+         (if Self.Use_Html then "filename.html" else "file2.json");
+
+    end Text_Blocks.Selectable;
+
+This is a test application that makes use of the packages above:
+
+.. code:: ada run_button
+
+    with Ada.Text_IO;            use Ada.Text_IO;
+    with Text_Blocks;            use Text_Blocks;
+    with Text_Blocks.Selectable; use Text_Blocks.Selectable;
+
+    procedure Test_Blocks is
+
+       B1 : Text_Block;
+       B2 : Selectable_Block;
+
+    begin
+
+       Put_Line ("B1 template: " & B1.Template);
+       Put_Line ("B2 template: " & B2.Template);
+
+    end Test_Blocks;
 
 :code-config:`reset_accumulator=True`
