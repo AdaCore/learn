@@ -126,7 +126,7 @@ Structure
     - [x] Factory Functions (*material reuse*)
     - [x] Scope Locks Idiom (*material reuse*)
     - [x] Visitor Pattern (*material reuse*)
-    - [ ] Overridable Class Attributes (*material reuse*)
+    - [x] Overridable Class Attributes (*material reuse*)
 
     - Based on
       `list of design patterns <https://en.wikipedia.org/wiki/Software_design_pattern>`_
