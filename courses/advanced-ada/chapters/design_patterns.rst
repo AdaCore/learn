@@ -1554,7 +1554,7 @@ This is the package body with the implementation of :ada:`Render`:
        begin
           --  ..  prepare the parameters for template expansion
           --  ..  substitute in the template and return it
-          return T;
+          return "processing " & T;
        end Render;
 
     end Text_Blocks;
@@ -1608,8 +1608,8 @@ This is a test application that makes use of the packages above:
 
     begin
 
-       Put_Line ("B1 template: " & B1.Template);
-       Put_Line ("B2 template: " & B2.Template);
+       Put_Line ("B1 : " & B1.Render);
+       Put_Line ("B2 : " & B2.Render);
 
     end Test_Blocks;
 
