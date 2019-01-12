@@ -1389,8 +1389,8 @@ to do the overriding.
 
 Now let's see what a code generator would look like. We'll assume that we
 are only interested, initially, in doing code generation for classes.
-Other types of elements (such as operations) will call the default
-implementation for their visitor (:ada:`Visit_Operation`, for instance),
+Other types of elements (such as packages) will call the default
+implementation for their visitor (:ada:`Visit_PPackage`, for instance),
 which then calls the visitor for its parent (:ada:`Visit_NamedElement`)
 and so on, until we end up calling a :ada:`Visit` operation with a null
 body. So nothing happens for those, and we don't need to deal with them
