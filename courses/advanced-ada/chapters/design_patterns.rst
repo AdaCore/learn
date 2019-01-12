@@ -1245,25 +1245,75 @@ actual UML metamodel, but will be sufficient for our purposes. In practice,
 these types would be automatically generated from the description of the
 UML metamodel.
 
-.. code-block:: ada
+.. code:: ada
 
-       type NamedElement is tagged private;
-       type CClass is new NamedElement with private;
-       type PPackage is new NamedElement with private;
+    limited with Visitors;
+
+    package UML is
+
+       -------------------
+       --  NamedElement --
+       -------------------
+
+       type NamedElement is tagged null record;
+
+       procedure Visit
+          (Self        : in out NamedElement;
+           The_Visitor : access Visitors.Visitor'Class);
+
+       -------------
+       --  CClass --
+       -------------
+
+       type CClass is new NamedElement with null record;
+
+       overriding procedure Visit
+          (Self        : in out CClass;
+           The_Visitor : access Visitors.Visitor'Class);
+
+       ---------------
+       --  PPackage --
+       ---------------
+
+       type PPackage is new NamedElement with null record;
+
+       overriding procedure Visit
+          (Self        : in out PPackage;
+           The_Visitor : access Visitors.Visitor'Class);
+    end UML;
 
 In addition, a visitor class is declared, which will be overridden by the
 user code, for instance, to provide a code generator, a model checker, and
 so on:
 
-.. code-block:: ada
+.. code:: ada
+
+    with UML;  use UML;
+
+    package Visitors is
 
        type Visitor is abstract tagged null record;
 
        procedure Visit_NamedElement
-          (Self : in out Visitor; Obj : NamedElement'Class) is null;
+         (Self : in out Visitor;
+          Obj  : in out NamedElement'Class) is null;
        --  No parent type, do nothing
 
-       procedure Visit_CClass (Self : in out Visitor; Obj : CClass'Class) is
+       procedure Visit_CClass
+         (Self : in out Visitor;
+          Obj  : in out CClass'Class);
+
+       procedure Visit_PPackage
+         (Self : in out Visitor;
+          Obj  : in out PPackage'Class);
+
+    end Visitors;
+
+    package body Visitors is
+
+       procedure Visit_CClass
+         (Self : in out Visitor;
+          Obj  : in out CClass'Class) is
        begin
           --  In UML, a "Class" inherits from a "NamedElement".
           --  Concrete implementations of the visitor might want to work at the
@@ -1273,36 +1323,52 @@ so on:
           --  parent type's operation.
 
           Self.Visit_NamedElement (Obj);
-       end Visit_Class;
+       end Visit_CClass;
 
-       procedure Visit_PPackage (Self : in out Visitor; Obj : PPackage'Class) is
+       procedure Visit_PPackage
+         (Self : in out Visitor;
+          Obj  : in out PPackage'Class) is
        begin
           Self.Visit_NamedElement (Obj);
        end Visit_PPackage;
 
+    end Visitors;
+
 We then need to add one primitive :ada:`Visit` operation to each of the
 types created from the UML metamodel:
 
-.. code-block:: ada
+.. code:: ada
 
-       procedure Visit (Self : NamedElement; V : in out Visitor'Class) is
+    with Visitors; use Visitors;
+
+    package body UML is
+
+       procedure Visit
+          (Self        : in out NamedElement;
+           The_Visitor : access Visitor'Class) is
        begin
           --  First dispatching was on "Self" (done by the compiler).
           --  Second dispatching is simulated here by calling the right
           --  primitive operation of V.
 
-          V.Visit_NamedElement (Self);
+          The_Visitor.Visit_NamedElement (Self);
        end Visit;
 
-       overriding procedure Visit (Self : CClass; V : in out Visitor'Class) is
+       overriding procedure Visit
+          (Self        : in out CClass;
+           The_Visitor : access Visitor'Class) is
        begin
-          V.Visit_CClass (Self);
+          The_Visitor.Visit_CClass (Self);
        end Visit;
 
-       overriding procedure Visit (Self : PPackage; V : in out Visitor'Class) is
+       overriding procedure Visit
+          (Self        : in out PPackage;
+           The_Visitor : access Visitor'Class) is
        begin
-          V.Visit_PPackage (Self);
+          The_Visitor.Visit_PPackage (Self);
        end Visit;
+
+    end UML;
 
 All of the code described above is completely systematic, and as such
 could and should be generated automatically as much as possible. The
@@ -1323,23 +1389,59 @@ explicitly.
 
 The code would be something like the following:
 
-.. code-block:: ada
+.. code:: ada
 
-       type CodeGen is new Visitor with private;
+    with UML;      use UML;
+    with Visitors; use Visitors;
+
+    package Code_Generator_Pkg is
+
+       type Code_Generator is new Visitor with null record;
 
        overriding procedure Visit_CClass
-          (Self : in out Codegen; Obj : CClass'Class) is
+          (Self : in out Code_Generator; Obj : in out CClass'Class);
+
+    end Code_Generator_Pkg;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Code_Generator_Pkg is
+
+       overriding procedure Visit_CClass
+          (Self : in out Code_Generator; Obj : in out CClass'Class) is
        begin
-           ...;  --  Do some code generation
+          Put_Line ("Visiting CClass");
        end Visit_CClass;
 
-       procedure Main is
-          Gen : CodeGen;
-       begin
-          for Element in All_Model_Elements loop  --  Pseudo code
-              Element.Visit (Gen);   --  Double dispatching
-          end loop;
-       end Main;
+    end Code_Generator_Pkg;
+
+.. code:: ada run_button
+
+    with UML;                use UML;
+    with Visitors;           use Visitors;
+    with Code_Generator_Pkg; use Code_Generator_Pkg;
+
+    procedure Main is
+
+       Tmp1 : aliased NamedElement;
+       Tmp2 : aliased CClass;
+       Tmp3 : aliased PPackage;
+
+       All_Model_Elements : array (Positive range <>) of
+         access NamedElement'Class :=
+           (Tmp1'Access,
+            Tmp2'Access,
+            Tmp3'Access);
+
+       Gen  : aliased Code_Generator;
+
+    begin
+
+       for Element of All_Model_Elements loop  --  Pseudo code
+          Element.Visit (Gen'Access);          --  Double dispatching
+       end loop;
+
+    end Main;
 
 If we wanted to do model checking, we would create a type
 :ada:`Model_Checker`, derived from :ada:`Visitor`, that overrides some of
@@ -1354,120 +1456,4 @@ types in the same package. Another is to use :ada:`limited with` to give
 visibility on access types, and then pass an access to :ada:`Visitor'Class`
 as a parameter to :ada:`Visit`.
 
-Here is a full example. This example must be compiled with the ``-gnat05``
-switch since it uses Ada 2005 features such as the :ada:`limited with`
-clause and prefixed call notation.
-
-.. code-block:: ada
-
-    with UML;         use UML;
-    with Visitors;    use Visitors;
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Main is
-       type Code_Generator is new Visitor with null record;
-
-       overriding procedure Visit_CClass
-          (Self : in out Code_Generator; Obj : in out CClass'Class) is
-       begin
-          Put_Line ("Visiting CClass");
-       end Visit_CClass;
-
-       Tmp1 : NamedElement;
-       Tmp2 : CClass;
-       Tmp3 : PPackage;
-
-       Gen  : aliased Code_Generator;
-
-    begin
-       Tmp1.Visit (Gen'Access);  --  No output
-       Tmp2.Visit (Gen'Access);  --  Outputs "Visiting CClass"
-       Tmp3.Visit (Gen'Access);  --  No output
-    end Main;
-
-
-    limited with Visitors;
-    package UML is
-       type NamedElement is tagged null record;
-       procedure Visit
-          (Self        : in out NamedElement;
-           The_Visitor : access Visitors.Visitor'Class);
-
-       type CClass is new NamedElement with null record;
-       overriding procedure Visit
-          (Self        : in out CClass;
-           The_Visitor : access Visitors.Visitor'Class);
-
-       type PPackage is new NamedElement with null record;
-       overriding procedure Visit
-          (Self        : in out PPackage;
-           The_Visitor : access Visitors.Visitor'Class);
-    end UML;
-
-
-    with Visitors;  use Visitors;
-    package body UML is
-
-       procedure Visit
-          (Self        : in out NamedElement;
-           The_Visitor : access Visitors.Visitor'Class) is
-       begin
-          The_Visitor.Visit_NamedElement (Self);
-       end Visit;
-
-       overriding procedure Visit
-          (Self        : in out CClass;
-           The_Visitor : access Visitors.Visitor'Class) is
-       begin
-          The_Visitor.Visit_CClass (Self);
-       end Visit;
-
-       overriding procedure Visit
-          (Self        : in out PPackage;
-           The_Visitor : access Visitors.Visitor'Class) is
-       begin
-          The_Visitor.Visit_PPackage (Self);
-       end Visit;
-
-    end UML;
-
-
-    with UML;  use UML;
-
-    package Visitors is
-       type Visitor is abstract tagged null record;
-
-       procedure Visit_NamedElement
-          (Self : in out Visitor; Obj : in out NamedElement'Class);
-       procedure Visit_CClass
-          (Self : in out Visitor; Obj : in out CClass'Class);
-       procedure Visit_PPackage
-          (Self : in out Visitor; Obj : in out PPackage'Class);
-
-    end Visitors;
-
-
-    package body Visitors is
-
-       procedure Visit_NamedElement
-          (Self : in out Visitor; Obj : in out NamedElement'Class) is
-       begin
-          null;
-       end Visit_NamedElement;
-
-       procedure Visit_CClass
-          (Self : in out Visitor; Obj : in out CClass'Class) is
-       begin
-          Self.Visit_NamedElement (Obj);
-       end Visit_CClass;
-
-       procedure Visit_PPackage
-          (Self : in out Visitor; Obj : in out PPackage'Class) is
-       begin
-          Self.Visit_NamedElement (Obj);
-       end Visit_PPackage;
-
-    end Visitors;
-
 :code-config:`reset_accumulator=True`
-
