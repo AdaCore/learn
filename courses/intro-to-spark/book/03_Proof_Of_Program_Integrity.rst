@@ -983,7 +983,8 @@ of ``Memory``.
 
     package Memories is
 
-       type Chunk is array (Integer range <>) of Integer;
+       type Chunk is array (Integer range <>) of Integer
+         with Predicate => Chunk'Length >= 10;
 
        function Is_Too_Coarse (V : Integer) return Boolean;
 
@@ -994,12 +995,13 @@ of ``Memory``.
     with Memories; use Memories;
 
     procedure Read_Record (Memory : Chunk; From : Integer)
-      with SPARK_Mode => On
+      with SPARK_Mode => On,
+           Pre => From in Memory'First .. Memory'Last - 2
     is
        function Read_One (First : Integer; Offset : Integer) return Integer
-         with Pre => Memory (First) + Offset in Memory'Range
+         with Pre => First + Offset in Memory'Range
        is
-          Value : Integer := Memory (Memory (First) + Offset);
+          Value : Integer := Memory (First + Offset);
        begin
           if Is_Too_Coarse (Value) then
              Treat_Value (Value);
@@ -1007,19 +1009,11 @@ of ``Memory``.
           return Value;
        end Read_One;
 
-       Size, Data1, Data2, Addr : Integer;
+       Data1, Data2 : Integer;
 
     begin
-       Size := Read_One (From, 0);
-       pragma Assume (Size in 1 .. 10
-                      and then Memory (From) < Integer'Last - 2 * Size);
-
        Data1 := Read_One (From, 1);
-
-       Addr  := Read_One (From, Size + 1);
-       pragma Assume (Memory (Addr) > Memory (From) + Size);
-
-       Data2 := Read_One (Addr, -Size);
+       Data2 := Read_One (From, 2);
     end Read_Record;
 
 This example is correct, but it can't be verified by GNATprove, which
@@ -1036,7 +1030,8 @@ Let's rewrite the precondition of ``Read_One`` to avoid any possible overflow.
 
     package Memories is
 
-       type Chunk is array (Integer range <>) of Integer;
+       type Chunk is array (Integer range <>) of Integer
+         with Predicate => Chunk'Length >= 10;
 
        function Is_Too_Coarse (V : Integer) return Boolean;
 
@@ -1047,12 +1042,14 @@ Let's rewrite the precondition of ``Read_One`` to avoid any possible overflow.
     with Memories; use Memories;
 
     procedure Read_Record (Memory : Chunk; From : Integer)
-      with SPARK_Mode => On
+      with SPARK_Mode => On,
+           Pre => From in Memory'First .. Memory'Last - 2
     is
        function Read_One (First : Integer; Offset : Integer) return Integer
-         with Pre => Memory (First) <= Memory'Last - Offset
+         with Pre => First >= Memory'First
+                and then Offset in 0 .. Memory'Last - First
        is
-          Value : Integer := Memory (Memory (First) + Offset);
+          Value : Integer := Memory (First + Offset);
        begin
           if Is_Too_Coarse (Value) then
              Treat_Value (Value);
@@ -1060,25 +1057,18 @@ Let's rewrite the precondition of ``Read_One`` to avoid any possible overflow.
           return Value;
        end Read_One;
 
-       Size, Data1, Data2, Addr : Integer;
+       Data1, Data2 : Integer;
 
     begin
-       Size := Read_One (From, 0);
-       pragma Assume (Size in 1 .. 10
-                      and then Memory (From) < Integer'Last - 2 * Size);
-
        Data1 := Read_One (From, 1);
-
-       Addr  := Read_One (From, Size + 1);
-       pragma Assume (Memory (Addr) > Memory (From) + Size);
-
-       Data2 := Read_One (Addr, -Size);
+       Data2 := Read_One (From, 2);
     end Read_Record;
 
 This example is also not correct: unfortunately, our attempt to correct
 ``Read_One``'s precondition failed. For example, an overflow will occur at
-runtime if ``Memory (First)`` is :ada:`Integer'Last` and ``Offset`` is
-negative.
+runtime if ``First`` is :ada:`Integer'Last` and ``Memory'Last`` is
+negative. This is possible here because type ``Chunk`` uses ``Integer`` as
+base index type instead of ``Natural`` or ``Positive``.
 
 
 Example #8
@@ -1090,7 +1080,8 @@ Let's completely remove the precondition of ``Read_One``.
 
     package Memories is
 
-       type Chunk is array (Integer range <>) of Integer;
+       type Chunk is array (Integer range <>) of Integer
+         with Predicate => Chunk'Length >= 10;
 
        function Is_Too_Coarse (V : Integer) return Boolean;
 
@@ -1101,10 +1092,11 @@ Let's completely remove the precondition of ``Read_One``.
     with Memories; use Memories;
 
     procedure Read_Record (Memory : Chunk; From : Integer)
-      with SPARK_Mode => On
+      with SPARK_Mode => On,
+           Pre => From in Memory'First .. Memory'Last - 2
     is
        function Read_One (First : Integer; Offset : Integer) return Integer is
-          Value : Integer := Memory (Memory (First) + Offset);
+          Value : Integer := Memory (First + Offset);
        begin
           if Is_Too_Coarse (Value) then
              Treat_Value (Value);
@@ -1112,24 +1104,16 @@ Let's completely remove the precondition of ``Read_One``.
           return Value;
        end Read_One;
 
-       Size, Data1, Data2, Addr : Integer;
+       Data1, Data2 : Integer;
 
     begin
-       Size := Read_One (From, 0);
-       pragma Assume (Size in 1 .. 10
-                      and then Memory (From) < Integer'Last - 2 * Size);
-
        Data1 := Read_One (From, 1);
-
-       Addr  := Read_One (From, Size + 1);
-       pragma Assume (Memory (Addr) > Memory (From) + Size);
-
-       Data2 := Read_One (Addr, -Size);
+       Data2 := Read_One (From, 2);
     end Read_Record;
 
 This example is correct and fully proved. We could have fixed the contract
 of ``Read_One`` to correctly handle both positive and negative values of
-``Offset``, but we found it simpler to let the function be inlined for
+``Memory'Last``, but we found it simpler to let the function be inlined for
 proof by removing its precondition.
 
 
