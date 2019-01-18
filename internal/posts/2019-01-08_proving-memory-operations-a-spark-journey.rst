@@ -1658,10 +1658,10 @@ one. Add another 150 lines of assertions maybe. Still reasonable.
 
 Platinum is about completely proving the functionality of my subprogram.
 And that proved (pun intended) to be a much much more difficult
-experience. See this
-`link <https://blog.adacore.com/verifythis-challenge-in-spark>`_
-and this
-`link <https://blog.adacore.com/applied-formal-logic-searching-in-strings>`_
+experience. See this page on a
+`challenge in SPARK <https://blog.adacore.com/verifythis-challenge-in-spark>`_
+and this page on
+`formal proof of string searching <https://blog.adacore.com/applied-formal-logic-searching-in-strings>`_
 for other similar experiences.
 
 This is the complete source-code:
