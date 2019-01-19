@@ -157,7 +157,8 @@ class WidgetCodeDirective(Directive):
         else:
             has_run_button = config.run_button or \
                 'run_button' in argument_list
-            has_prove_button = config.prove_button
+            has_prove_button = config.prove_button or \
+                'prove_button' in argument_list
 
         # Make sure code-config exists in the document
         if not codeconfig_found:
