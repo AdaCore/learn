@@ -33,8 +33,9 @@ each increase variable ``a`` by one:
    ++a;
    ++a; */
 
-Now consider what happens if the first line gets commented out using a block comment
-and the third line gets commented out using a line comment:
+Now consider what happens if the first line gets commented out using a block
+comment and the third line gets commented out using a line comment (also known
+as C++ style comment, allowed in C since C99):
 
 .. code-block:: c
 
