@@ -106,7 +106,7 @@ is a question of what are the errors which may occur when executing this
 code. In fact, there are quite an important number of them.
 
 First, the computation of ``I`` + ``J`` may overflow, for example if ``I``
-is :ada:`Integer'Last` and ``J`` is positive.
+is ``Integer'Last`` and ``J`` is positive.
 
 .. code-block:: ada
 
@@ -119,7 +119,7 @@ Then, its result may not be in the range of the array ``A``.
     A (A'Last + 1) := P / Q;
 
 On the other side of the assignment, the division may also overflow, but
-only in the very special case where ``P`` is :ada:`Integer'First` and
+only in the very special case where ``P`` is ``Integer'First`` and
 ``Q`` is -1 because of the asymmetric range of signed integer types.
 
 .. code-block:: ada
