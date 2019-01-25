@@ -223,7 +223,7 @@ types in the generic declaration. For example:
 
     end Show_Complete_Parametrization;
 
-Another approach is to take the all definitions from the formal package
+Another approach is to take all definitions from the formal package
 parameter:
 
 .. code:: ada
