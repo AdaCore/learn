@@ -4,6 +4,8 @@
 Strong typing
 =============
 
+.. include:: <isopub.txt>
+
 .. role:: ada(code)
    :language: ada
 
@@ -462,10 +464,10 @@ the allowed ranges for :ada:`X` and :ada:`Y`, developers can know how to
 avoid constraint issues when accessing the :ada:`Tab` table. We're also
 formally indicating the expected behavior. For example, because we declare
 :ada:`X` to be of :ada:`X_Range` type, and that type is used in the first
-dimension of :ada:`Tab`, we're documenting --- using the syntax of the Ada
-language --- that :ada:`X` is supposed to be used to access the first
-dimension of :ada:`Tab`. Based on this information, developers that need
-to maintain this application can immediately identify the purpose of
+dimension of :ada:`Tab`, we're documenting |mdash| using the syntax of the
+Ada language |mdash| that :ada:`X` is supposed to be used to access the
+first dimension of :ada:`Tab`. Based on this information, developers that
+need to maintain this application can immediately identify the purpose of
 :ada:`X` and use the variable accordingly.
 
 
@@ -484,8 +486,8 @@ requirements:
     includes an index indicating its position in an ordered array.
 
 - The application also receives a list of indices for the ordered array
-  of chunks. This list --- a so-called *selector* --- is used to select
-  two chunks from the array of ordered chunks.
+  of chunks. This list |mdash| a so-called *selector* |mdash| is used to
+  select two chunks from the array of ordered chunks.
 
 - Due to external constraints, the application shall use the unordered
   array; creating an array of ordered chunks shall be avoided.
@@ -703,8 +705,8 @@ wrong index.
 
 For example, a mistake that developers can make when using the package
 above is to skip the mapping and access the array of unordered chunks
-directly with the index from the selector --- i.e. :ada:`C (S (I))` in the
-test application above. Detecting this mistake requires extensive testing
+directly with the index from the selector |mdash| i.e. :ada:`C (S (I))` in
+the test application above. Detecting this mistake requires extensive testing
 and debugging, since both the array of unordered chunks and the array of
 ordered chunks have the same range, so the corresponding indices can be
 used interchangeably without raising constraint exceptions, even though
@@ -744,8 +746,9 @@ of the application. This is the updated specification of the main package:
     end Indirect_Ordering;
 
 By declaring these new types, we can avoid that the wrong index is used.
-Moreover, we're documenting --- using the syntax provided by the language
---- which index is expected in each array or function from the package.
+Moreover, we're documenting |mdash| using the syntax provided by the
+language |mdash| which index is expected in each array or function from
+the package.
 This allows for better understanding of the package specification and
 makes maintenance easier, as well as it helps when implementing new
 features for the package.
@@ -782,8 +785,8 @@ As a side note, we're now able to include a :ada:`Dynamic_Predicate` to
 matches the corresponding index of its position in the ordered array.
 
 We also had to add a new private package that includes a function that
-retrieves the range of an array of :ada:`Chunk` type --- which are of
-:ada:`Chunk_Index` type --- and converts the range using the
+retrieves the range of an array of :ada:`Chunk` type |mdash| which are of
+:ada:`Chunk_Index` type |mdash| and converts the range using the
 :ada:`Ord_Chunk_Index` type.
 
 .. code:: ada
