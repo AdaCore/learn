@@ -1,7 +1,7 @@
 Subprograms
 ===========
 
-:code-config:`reset_accumulator=True`
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 .. _Subprograms:
 
@@ -59,6 +59,8 @@ section at all, for example:
    function Func return Integer;
 
 Here's another variation on the Week example:
+
+:code-config:`reset_accumulator=True;accumulate_code=True`
 
 .. code:: ada no_button
 
@@ -150,6 +152,8 @@ We can then call our subprogram this way:
        Put_Line (Week_4.Get_Day_Name (Day => Week_4.Friday));
        --                           ^ Named parameter passing
     end Show_Days;
+
+:code-config:`reset_accumulator=True;accumulate_code=False`
 
 Ada allows you to name the parameters when you pass them, whether they have a
 default or not. There are some rules:

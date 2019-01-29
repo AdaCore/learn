@@ -1,7 +1,7 @@
 More about types
 ================
 
-:code-config:`reset_accumulator=True`
+:code-config:`reset_accumulator=True;accumulate_code=False`
 
 .. _Aggregates:
 
@@ -496,6 +496,8 @@ different sizes.
 You can get analogous functionality for records, too, using a special kind of
 field that is called a discriminant:
 
+:code-config:`reset_accumulator=True;accumulate_code=True`
+
 .. code:: ada no_button
 
     package Var_Size_Record_2 is
@@ -565,6 +567,8 @@ values via the dot notation.
        Print_Stack (S);
     end Main;
 
+:code-config:`reset_accumulator=True;accumulate_code=False`
+
 .. note:
     In the examples above, we used a discriminant to determine the size of an
     array, but it is not limited to that, and could be used, for example, to
@@ -580,6 +584,8 @@ discriminant.
 However, discriminants can also be used to obtain the functionality of what are
 sometimes called "variant records": records that can contain different sets of
 fields.
+
+:code-config:`reset_accumulator=True;accumulate_code=True`
 
 .. code:: ada no_button
 
@@ -645,6 +651,8 @@ Here is how you could write an evaluator for expressions:
     begin
        Put_Line (Integer'Image (Eval_Expr (E)));
     end Main;
+
+:code-config:`reset_accumulator=True;accumulate_code=False`
 
 .. admonition:: In other languages
 

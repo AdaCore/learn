@@ -1,7 +1,7 @@
 Arrays
 ======
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=True`
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 :code-config:`reset_accumulator=True`
 
 .. role:: ada(code)

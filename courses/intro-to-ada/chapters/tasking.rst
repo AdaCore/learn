@@ -1,7 +1,7 @@
 Tasking
 =======
 
-:code-config:`reset_accumulator=True`
+:code-config:`reset_accumulator=True;accumulate_code=False`
 
 .. role:: ada(code)
    :language: ada
@@ -133,6 +133,8 @@ Synchronization also occurs if we move the task to a separate package. In
 the example below, we declare a task ``T`` in the package
 ``Simple_Sync_Pkg``.
 
+:code-config:`reset_accumulator=True;accumulate_code=True`
+
 .. code:: ada no_button
 
     package Simple_Sync_Pkg is
@@ -170,6 +172,8 @@ defined in the package is part of the main task. For example:
 Again, as soon as the main task reaches its end, it synchronizes with task
 ``T`` from ``Simple_Sync_Pkg`` before terminating.
 
+:code-config:`reset_accumulator=True;accumulate_code=False`
+
 Delay
 ~~~~~
 
@@ -187,7 +191,7 @@ statement. For example:
 
        task body T is
        begin
-          for I in 1 .. 10 loop
+          for I in 1 .. 5 loop
              Put_Line ("hello from task T");
              delay 1.0;
              --    ^ Wait 1.0 seconds
@@ -359,6 +363,8 @@ the elapsed time (``Show_Elapsed_Time``) and a dummy
 ``Computational_Intensive_App`` procedure which is simulated by using a
 simple delay. This is the package specification:
 
+:code-config:`reset_accumulator=True;accumulate_code=True`
+
 .. code:: ada no_button
 
     with Ada.Real_Time; use Ada.Real_Time;
@@ -486,6 +492,8 @@ and have a regular interval of exactly one second:
 Now, as we can see by running the application, the :ada:`delay until`
 statement ensures that the ``Computational_Intensive_App`` doesn't disturb
 the regular interval of one second between iterations.
+
+:code-config:`reset_accumulator=True;accumulate_code=False`
 
 Protected objects
 -----------------
