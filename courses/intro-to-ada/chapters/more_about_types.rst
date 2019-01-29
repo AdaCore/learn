@@ -220,6 +220,8 @@ pointers:
 
 Here is how you declare a simple pointer type, or access type, in Ada:
 
+:code-config:`reset_accumulator=True;accumulate_code=True`
+
 .. code:: ada no_button
 
     package Dates is
@@ -372,6 +374,8 @@ dereferenced for you:
        --                 ^ Implicit dereference for record and array components
        --                 Equivalent to D.all.day
     end Access_Types;
+
+:code-config:`reset_accumulator=True;accumulate_code=False`
 
 Other features
 ~~~~~~~~~~~~~~
