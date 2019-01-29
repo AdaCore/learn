@@ -1,3 +1,12 @@
+// List of known modes, and the corresponding button labels
+
+MODES = {
+   "prove": "Prove",
+   "run": "Run",
+   "prove_flow": "Prove (flow)",
+   "prove_report_all": "Prove (report=all)",
+}
+
 // Log an error message in the output area
 function output_error(output_area, message) {
     var div = $('<div class="output_error">')
@@ -165,7 +174,6 @@ function query_operation_result(container, example_name, editors, output_area, o
     data = {
         "example_name": example_name,
         "files": files,
-        "main": container.attr("main"),
         "extra_args": container.attr("extra_args"),
     }
 
@@ -304,7 +312,7 @@ function create_editor(resource, container, content, editors, counter) {
 var unique_id = 0
 
 function fill_editor_from_contents(container, example_name, example_server,
-                                   resources, main) {
+                                   resources) {
 
    is_inline = container.attr("inline")
 
@@ -364,62 +372,53 @@ function fill_editor_from_contents(container, example_name, example_server,
    editors.buttons = []
 
    if (container.attr("prove_button") || container.attr("run_button")){
-      var reset_button = $('<button type="button" class="btn btn-secondary">').text("Reset").appendTo(buttons_div)
-      reset_button.editors = editors;
-      editors.buttons.push(reset_button)
-      reset_button.on('click', function (x) {
-          if (reset_button.disabled) {return;}
-          editors.buttons.forEach(function(b){b.disabled = false;})
-          container.already_read = 0;
-          output_area.empty();
-          output_area.error_count = 0;
+   }
 
-          reset_button.editors.forEach(function (x) {
-              x.setValue(x.initial_contents);
-              x.gotoLine(1);
+   var reset_created = false;
+
+   for (var mode in MODES) {
+      if (container.attr(mode + "_button")){
+
+         // Create the reset button, but do this only once and if there are other buttons
+         if (!reset_created) {
+            reset_created = true;
+            var reset_button = $('<button type="button" class="btn btn-secondary">').text("Reset").appendTo(buttons_div)
+            reset_button.editors = editors;
+            editors.buttons.push(reset_button)
+            reset_button.on('click', function (x) {
+                if (reset_button.disabled) {return;}
+                editors.buttons.forEach(function(b){b.disabled = false;})
+                container.already_read = 0;
+                output_area.empty();
+                output_area.error_count = 0;
+
+                reset_button.editors.forEach(function (x) {
+                    x.setValue(x.initial_contents);
+                    x.gotoLine(1);
+                })
+            })
+
+         }
+
+         // Now create the button for each mode that has been specified in the attributes
+         var the_text = MODES[mode];
+
+         var check_button = $('<button type="button" class="btn btn-primary">').text(the_text).appendTo(buttons_div);
+         check_button.operation_label = the_text;
+         editors.buttons.push(check_button);
+         check_button.editors = editors;
+         check_button.click(check_button, function (x) {
+             if (x.data.disabled) {return;}
+             editors.buttons.forEach(function(b){b.disabled = true;})
+             output_area.empty();
+             output_area.error_count = 0;
+
+             var div = $('<div class="output_info">');
+             div.text(x.data.operation_label + "...");
+             div.appendTo(output_area);
+             query_operation_result(container, example_name, x.data.editors, output_area, "/run_program/");
           })
-      })
-   }
-
-   if (container.attr("prove_button")){
-      var the_text = "Prove";
-
-      // Special case to call the button "Examine" in flow mode
-      if (container.attr("extra_args") == "spark-flow"){
-          var the_text = "Examine";
       }
-
-      var check_button = $('<button type="button" class="btn btn-primary">').text(the_text).appendTo(buttons_div)
-      editors.buttons.push(check_button);
-      check_button.editors = editors;
-      check_button.on('click', function (x) {
-          if (check_button.disabled) {return;}
-          editors.buttons.forEach(function(b){b.disabled = true;})
-          output_area.empty();
-          output_area.error_count = 0;
-
-          var div = $('<div class="output_info">');
-          div.text("Proving...");
-          div.appendTo(output_area);
-          query_operation_result(container, example_name, check_button.editors, output_area, "/check_program/");
-       })
-   }
-
-   if (container.attr("run_button")){
-       var run_button = $('<button type="button" class="btn btn-primary">').text("Run").appendTo(buttons_div);
-       editors.buttons.push(run_button);
-       run_button.editors = editors;
-       run_button.on('click', function (x) {
-          if (run_button.disabled) {return;}
-          editors.buttons.forEach(function(b){b.disabled = true;})
-          output_area.empty();
-          output_area.error_count = 0;
-
-          var div = $('<div class="output_info">');
-          div.text("Running...");
-          div.appendTo(output_area);
-          query_operation_result(container, example_name, run_button.editors, output_area, "/run_program/");
-       })
    }
 }
 
@@ -458,7 +457,7 @@ function fill_editor(container, example_name, example_server) {
        })
 
        fill_editor_from_contents(container, example_name, example_server,
-                                 resources, container.attr("main"));
+                                 resources);
     } else {
 
        // request the examples
@@ -476,7 +475,7 @@ function fill_editor(container, example_name, example_server) {
                // On success, create editors for each of the resources
 
                fill_editor_from_contents(container, example_name, example_server,
-                                         json.resources, json.main);
+                                         json.resources);
 
                })
            .fail(function (xhr, status, errorThrown) {
