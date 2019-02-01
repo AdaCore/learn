@@ -36,7 +36,6 @@ WIDGETS_SERVER_URL = os.environ.get(
 
 template = u"""
 <div class="widget_editor"
-     example_editor="Inline Code"
      example_server="{server_url}"
      {extra_attribs}
      inline="true">
