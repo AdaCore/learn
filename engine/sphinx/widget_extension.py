@@ -177,15 +177,6 @@ class WidgetCodeDirective(Directive):
             for f in files:
                 accumulated_files[f[0]] = f[1]
 
-        if has_run_button:
-            # We have a run button: try to find the main!
-            # Current heuristics: find the .adb that doesn't have a .ads.
-            names = [f[0] for f in files]
-            bases = set([b[:-4] for b in names])
-            main = [b + '.adb' for b in bases if b + '.ads' not in names]
-            if main:
-                extra_attribs += ' main="{}"'.format(main[0])
-
         try:
             shadow_files_divs = ""
             if config.accumulate_code:

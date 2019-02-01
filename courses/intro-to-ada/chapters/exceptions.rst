@@ -1,7 +1,7 @@
 Exceptions
 ==========
 
-:code-config:`reset_accumulator=True`
+:code-config:`reset_accumulator=True;accumulate_code=False`
 
 .. role:: ada(code)
    :language: ada
@@ -23,6 +23,8 @@ Exception declaration
 Ada exceptions are not types, but instead objects, which may be
 peculiar to you if you're used to the way Java or Python support
 exceptions. Here's how you declare an exception:
+
+:code-config:`reset_accumulator=True;accumulate_code=True`
 
 .. code:: ada no_button
 
@@ -56,6 +58,8 @@ To raise an exception of our newly declared exception kind, do the following:
        --  kind "My_Except" with associated string will bubble up until
        --  it is caught.
     end Main;
+
+:code-config:`reset_accumulator=True;accumulate_code=False`
 
 Handling an exception
 ---------------------
