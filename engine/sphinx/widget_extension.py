@@ -51,8 +51,8 @@ codeconfig_found = False
 # These are configured via the "code-config" role, see doc in the
 # function codeconfig below.
 class Config(object):
-    run_button = False
-    prove_button = False
+    buttons = set()
+    # The list of active buttons. Strings of the form 'xxx_button'.
     accumulate_code = False
     reset_accumulator = False
 
@@ -61,9 +61,6 @@ config = Config()
 
 accumulated_files = {}
 # The accumulated files. Key: basename, value: lastest content seen
-
-ALLOWED_EXTRA_ARGS = ('spark-flow', 'spark-report-all')
-# Known "extra args" parameters
 
 
 def cheapo_gnatchop(lines):
@@ -144,6 +141,8 @@ class WidgetCodeDirective(Directive):
 
         extra_attribs = ""
         argument_list = []
+        force_no_buttons = False
+
         if self.arguments:
             argument_list = self.arguments[0].split(' ')
 
@@ -151,13 +150,7 @@ class WidgetCodeDirective(Directive):
             'class' in self.options and (
                 'ada-nocheck' in self.options['class'] or
                 'ada-syntax-only' in self.options['class'])):
-            has_run_button = False
-            has_prove_button = False
-        else:
-            has_run_button = config.run_button or \
-                'run_button' in argument_list
-            has_prove_button = config.prove_button or \
-                'prove_button' in argument_list
+            force_no_buttons = True
 
         # Make sure code-config exists in the document
         if not codeconfig_found:
@@ -196,14 +189,9 @@ class WidgetCodeDirective(Directive):
             print (files)
             raise
 
-        for arg in ALLOWED_EXTRA_ARGS:
-            if arg in argument_list:
-                extra_attribs += ' extra_args="{}"'.format(arg)
-
-        if has_run_button:
-            extra_attribs += ' run_button="True"'
-        if has_prove_button:
-            extra_attribs += ' prove_button="True"'
+        for x in config.buttons | set(filter(lambda y: y.endswith('_button'),
+                                             argument_list)):
+            extra_attribs += ' {}="True"'.format(x)
 
         return [
             nodes.raw('',
@@ -229,9 +217,17 @@ def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
     directives = text.split(';')
     for d in directives:
         key, value = d.strip().split('=')
-        if not hasattr(config, key):
-            raise inliner.error("wrong key for code-config: {}".format(key))
-        setattr(config, key, value.lower() == "true")
+        if key.endswith('_button'):
+            if value.lower() == "true":
+                config.buttons.add(key)
+            else:
+                if key in config.buttons:
+                    config.buttons.remove(key)
+        else:
+            if not hasattr(config, key):
+                raise inliner.error(
+                    "wrong key for code-config: {}".format(key))
+            setattr(config, key, value.lower() == "true")
 
     if config.reset_accumulator:
         accumulated_files = {}

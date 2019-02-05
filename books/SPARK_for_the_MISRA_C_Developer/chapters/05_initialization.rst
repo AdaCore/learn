@@ -69,7 +69,7 @@ Hence, the SPARK analysis tool called GNATprove reports on the following code
 translated from C that function ``F`` might not always initialize output
 parameter ``P``:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     with Interfaces; use Interfaces;
 
@@ -102,7 +102,7 @@ parameter ``P``:
 Let's fix the program by initializing ``P`` to value 0 when condition ``B`` is
 not satisfied:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     with Interfaces; use Interfaces;
 
@@ -146,7 +146,7 @@ considers global data as always initialized, even if the default value of
 all-zeros might not be valid data for the application! Consider a variant of
 the above code where variable ``U`` is now global:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     with Interfaces; use Interfaces;
 
@@ -199,7 +199,7 @@ It is possible in SPARK to specify that ``G`` should initialize variable ``U``
 with a `data dependency` contract introduced with aspect ``Global`` following
 the declaration of procedure ``G``:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     with Interfaces; use Interfaces;
 

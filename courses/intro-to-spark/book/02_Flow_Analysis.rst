@@ -52,7 +52,7 @@ we've neglected to initialize the value of ``Max`` prior to entering the
 loop. As a consequence, the value read by the condition of the if statement
 may be uninitialized. Flow analysis detects and reports this error.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Uninitialized is
 
@@ -97,7 +97,7 @@ statement to be ineffective.  That ineffective statement is not an error in
 itself, but flow analysis produces a warning since it can be indicative of
 an error, as it is here.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Ineffective_Statements is
 
@@ -241,7 +241,7 @@ see this in the case of the declaration of ``Get_Value_Of_X``. Finally, if
 a subprogram, such as ``Incr_Parameter_X``, doesn't reference any global
 variables, you set the value of the global contract to :ada:`null`.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Global_Contracts is
 
@@ -309,7 +309,7 @@ For example, here we indicate that the final value of each parameter of
 subprogram is a function, we list its result as an output, using the
 :ada:`Result` attribute, as we do for ``Get_Value_Of_X`` below.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Depends_Contracts is
 
@@ -388,7 +388,7 @@ This can produce error messages on perfectly correct subprograms .  An
 example is ``Set_X_To_Y_Plus_Z`` below, which only sets its :ada:`out`
 parameter ``X`` when ``Overflow`` is :ada:`False`.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     procedure Set_X_To_Y_Plus_Z
       (Y, Z     :     Natural;
@@ -432,7 +432,7 @@ isn't initialized. To resolve this issue, you can either use an aggregate
 assignment, or, if that's not possible, verify initialization of the object
 manually.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Composite_Types_Shortcoming is
 
@@ -468,7 +468,7 @@ components, flow analysis knows that the entire object is initialized.
 However, record objects are still treated as single objects when analyzed
 as an input or output of a subprogram.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Record_Flow_Analysis is
 
@@ -496,7 +496,7 @@ Flow analysis complains when a procedure call initializes only some
 components of a record object.  It'll notify you of uninitialized
 components, as we see in subprogram ``Init_F2`` below.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Record_Flow_Analysis is
 
@@ -542,7 +542,7 @@ computes that ``R`` is uninitialized on a path that enters neither of the
 two conditional statements. Because it doesn't consider values of
 expressions, it can't know that such a path is impossible.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     procedure Absolute_Value
       (X :     Integer;
@@ -561,7 +561,7 @@ expressions, it can't know that such a path is impossible.
 To avoid this problem, you should make the control flow explicit, as in
 this second version of ``Absolute_Value``:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     procedure Absolute_Value
       (X :     Integer;
@@ -611,7 +611,7 @@ The procedure ``Search_Array`` searches for an occurrence of element ``E``
 in an array ``A``. If it finds one, it stores the index of the element in
 ``Result``.  Otherwise, it sets ``Found`` to :ada:`False`.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Search_Array is
 
@@ -776,7 +776,7 @@ it updates the largest value seen so far in this sequence.  If not, it
 means it's found the end of a sequence, so it computes the size of that
 sequence and stores it in ``Size_Of_Seq``.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -849,7 +849,7 @@ identity, where the ``I``'th elements is at the ``I``'th
 position. ``Cyclic_Permutation`` calls ``Init`` and then swaps elements to
 construct a cyclic permutation.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Permutation is
 
@@ -907,7 +907,7 @@ This program is the same as the previous one except that we've changed the
 mode of ``A`` in the specification of ``Init`` to :ada:`in out` to avoid
 the message from flow analysis on array assignment.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Permutation is
 
@@ -967,7 +967,7 @@ through ``A`` to increment every element by the value of ``Increment``,
 saturating at a specified threshold value. We specified a ``Global``
 contract for ``Incr_Until_Threshold``.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Increments is
 
@@ -1025,7 +1025,7 @@ We now go back to the procedure ``Test_Index`` from :ref:`Example #4` and
 correct the missing initializations.  We want to know if the :ada:`Global`
 contract of ``Test_Index`` is correct.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
     :class: ada-expect-compile-error
 
     package Show_Biggest_Increasing_Sequence is
@@ -1092,7 +1092,7 @@ Next, we change the :ada:`Global` contract of ``Test_Index`` into a
 the set of global variables accessed can be deduced from the :ada:`Depends`
 contract.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -1160,7 +1160,7 @@ The subprogram ``Identity`` swaps the value of its parameter two times. Its
 :ada:`Depends` contract says that the final value of ``X`` only depends on
 its initial value and likewise for ``Y``.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Show_Swap is
 

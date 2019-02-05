@@ -42,7 +42,7 @@ separately for every subprogram in order to scale, so it may not be able to
 detect more complex cases of unreachable and dead code, although it goes well
 beyond what other analyses do in general about unreachable and dead code.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     procedure Do_Stuff (X, Y, Z : Integer; Success : out Boolean) is
 
