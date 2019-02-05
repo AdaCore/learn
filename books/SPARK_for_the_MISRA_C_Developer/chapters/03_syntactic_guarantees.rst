@@ -99,7 +99,7 @@ two calls to ``F`` in the following are detected as unused, even if the result
 of the function call is always assigned to a variable, which is itself used in
 the second case:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Fun is
        function F return Integer is (1);

@@ -31,7 +31,7 @@ raised when using the result of the function ``Find`` below, it may be
 enough to know that the result is either 0 or in the range of ``A``. We can
 express this as a postcondition of ``Find``.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Find is
 
@@ -187,7 +187,7 @@ as subprogram contracts. Type predicates, which must hold for every object
 of a given type, are usually a better match for this purpose. Here's an
 example.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Sort is
 
@@ -239,7 +239,7 @@ Consider the procedure ``Do_Something`` below, which calls a complex
 function on its input, ``X``, and wants to check that the initial and
 modified values of ``X`` are related in that complex way.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Ghost is
 
@@ -587,7 +587,7 @@ In the example below, we want to help GNATprove verify the postcondition of
 represent this value and writing an assertion in both branches of an
 :ada:`if` statement that repeats the postcondition, but using ``X_Init``.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Local_Ghost is
 
@@ -658,7 +658,7 @@ allowed are assignments to ghost variables and calls to ghost procedures.
 As an example, the :ada:`for` loop contained in ``Increase_A`` couldn't
 appear by itself in normal code.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Ghost_Proc is
 
@@ -753,7 +753,7 @@ loop.
 For example, consider the function ``Find`` which iterates over the array
 ``A`` and searches for an element where ``E`` is stored in ``A``.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Find is
 
@@ -811,7 +811,7 @@ iteration assuming it held in the previous iteration.  This is called
 As an example, let's add a loop invariant to the ``Find`` function stating
 that the first element of ``A`` is not ``E``.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Find is
 
@@ -858,7 +858,7 @@ Let's look at a version of ``Find`` where we use a loop invariant instead
 of an assertion to state that none of the array elements seen so far are
 equal to ``E``.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Find is
 
@@ -939,7 +939,7 @@ determine at which point it can no longer be proved.
 As an example, let's look at a loop that iterates through an array ``A``
 and applies a function ``F`` to each of its elements.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Map is
 
@@ -1000,7 +1000,7 @@ you'll have to provide one as a loop invariant. For example, consider a
 version of ``Map`` where the result of applying ``F`` to an element at
 index ``K`` is stored at index ``K-1``:
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Map is
 
@@ -1052,7 +1052,7 @@ of a ring buffer of length ``Length`` are obtained by starting at index
 ghost function ``Get_Model`` to return the contents of the ring buffer for
 use in contracts.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Ring_Buffer is
 
@@ -1183,7 +1183,7 @@ Example #3
 Let's mark ``Valid_Model`` as :ada:`Ghost` and update ``Model`` inside
 ``Push_Last``.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Ring_Buffer is
 
@@ -1309,7 +1309,7 @@ Let's move the code updating ``Model`` inside a local ghost procedure,
 ``Update_Model``, but still using a local variable, ``New_Length``, to
 compute the length.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Ring_Buffer is
 
@@ -1534,7 +1534,7 @@ first argument instead of returning a new array. We want to prove that
 ``Max_Array`` sets the maximum values of both its arguments into each index
 in its first argument.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Array_Util is
 
@@ -1578,7 +1578,7 @@ Example #10
 
 Let's remove the frame condition from the previous example.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Array_Util is
 

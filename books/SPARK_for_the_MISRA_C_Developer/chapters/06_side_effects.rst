@@ -129,7 +129,7 @@ There are two possible side-effects when evaluating an expression:
 Reads of volatile variables in SPARK are restricted to appear immediately at
 statement level, so its's not allowed to write:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Volatile_Read is
        X : Integer with Volatile;
@@ -146,7 +146,7 @@ statement level, so its's not allowed to write:
 Instead, every read of a volatile variable must occur immediately before being
 assigned to another variable, as follows:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Volatile_Read is
        X : Integer with Volatile;
@@ -180,7 +180,7 @@ More generally, it is not possible to write functions that have a side-effect
 in addition to returning their result, as is typical of many idioms in other
 languages, for example when setting a new value and returning the previous one:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Bad_Functions is
        function Set (V : Integer) return Integer;
@@ -206,7 +206,7 @@ GNATprove computes that function ``Set`` has a side-effect on global variable
 ``Value`` and issues an error. The correct idiom in SPARK for such a case is to
 use a procedure with an output parameter to return the desired result:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Ok_Functions is
        procedure Set (V : Integer; Prev : out Integer);

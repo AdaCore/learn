@@ -195,7 +195,7 @@ abstraction. For example, we must add a :ada:`Refined_State` aspect on our
 the entire hidden state of the package, which consists of both ``Content``
 and ``Top``.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Stack with
       Abstract_State => The_Stack
@@ -246,7 +246,7 @@ variable's declaration.
 state annotation, you must link all the hidden variables defined in its
 private part to a state abstraction. For example:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Stack with
       Abstract_State => The_Stack
@@ -295,7 +295,7 @@ must be listed in ``P``'s state refinement.
 We see this in the example below, where the package ``Hidden_Nested``'s
 hidden state is part of ``P``'s hidden state.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package P with
        Abstract_State => State
@@ -363,7 +363,7 @@ refinement.
 
 Let's look at this example.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Stack with
       Abstract_State => The_Stack
@@ -435,7 +435,7 @@ into a single dependency.
 Let's add :ada:`Global` and :ada:`Depends` contracts to the ``Pop``
 procedure in our stack.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Stack with
        Abstract_State => (Top_State, Content_State)
@@ -459,7 +459,7 @@ Let's contrast this example with a different representation of
 :ada:`Global` and :ada:`Depends` contracts, this time using a single
 abstract state.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Stack with
       Abstract_State => The_Stack
@@ -497,7 +497,7 @@ compute them to check the package's implementation.
 
 For our ``Stack`` example, we could add refined contracts as shown below.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Stack with
       Abstract_State => The_Stack
@@ -560,7 +560,7 @@ For example, we can query the state of the stack with functions
 ``Is_Empty`` and ``Is_Full`` and call these in the contracts of procedures
 ``Pop`` and ``Push``:
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Stack is
        type Element is new Integer;
@@ -626,7 +626,7 @@ For example, we can refine the postconditions in the bodies of ``Pop`` and
 ``Push`` to be more detailed than what we wrote for them in their
 specification.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Stack is
        type Element is new Integer;
@@ -692,7 +692,7 @@ be derived by GNATprove.
 
 For our ``Stack`` example, we could add an :ada:`Initializes` aspect.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Stack with
       Abstract_State => The_Stack,
@@ -734,7 +734,7 @@ arrow following that variable's name.
 
 Let's look at this example:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Q is
        External_Variable : Integer := 2;
@@ -774,7 +774,7 @@ Package ``Communication`` defines a hidden local package, ``Ring_Buffer``,
 whose capacity is initialized from an external configuration during
 elaboration.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
     :class: ada-expect-compile-error
 
     package Configuration is
@@ -824,7 +824,7 @@ Let's add ``Part_Of`` to the state of hidden local package ``Ring_Buffer``,
 but this time we hide variable ``Capacity`` inside the private part of
 ``Ring_Buffer``.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Configuration is
 
@@ -873,7 +873,7 @@ Package ``Counting`` defines two counters: ``Black_Counter`` and
 ``Red_Counter``. It provides separate initialization procedures for each,
 both called from the main procedure.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Counting with
       Abstract_State => State
@@ -921,7 +921,7 @@ Example #4
 
 Let's remove the abstract state on package ``Counting``.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Counting is
        procedure Reset_Black_Count;
@@ -962,7 +962,7 @@ Let's restore the abstract state to package ``Counting``, but this time
 provide a procedure ``Reset_All`` that calls the initialization procedures
 ``Reset_Black_Counter`` and ``Reset_Red_Counter``.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Counting with
       Abstract_State => State
@@ -1005,7 +1005,7 @@ Example #6
 
 Let's consider yet another version of our abstract stack unit.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
     :class: ada-expect-compile-error
 
     package Stack with
@@ -1138,7 +1138,7 @@ Example #8
 Let's move the definition of ``Get_Stack`` and other expression functions
 inside the private part of the spec of ``Stack``.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Stack with
       Abstract_State => The_Stack
@@ -1217,7 +1217,7 @@ Package ``Data`` defines three variables, ``Data_1``, ``Data_2`` and
 ``Data_3``, that are initialized at elaboration (in ``Data``'s package
 body) from an external interface that reads the file system.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package External_Interface with
       Abstract_State => File_System,
@@ -1275,7 +1275,7 @@ Example #10
 
 Let's remove the ``Initializes`` contract on package ``Data``.
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package External_Interface with
       Abstract_State => File_System,
