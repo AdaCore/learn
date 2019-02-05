@@ -173,7 +173,6 @@ function query_operation_result(container, editors, output_area, mode) {
 
     data = {
         "files": files,
-        "extra_args": container.attr("extra_args"),
         "mode": mode,
     }
 
