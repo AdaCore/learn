@@ -63,6 +63,27 @@ accumulated_files = {}
 # The accumulated files. Key: basename, value: lastest content seen
 
 
+def c_chop(lines):
+    """Chops the text, counting on filenames being given in the form
+          !<filename>
+    as the first line of each file.
+    Returns a list of tuples of the form (basename, contents)
+    """
+    results = []
+    current_filename = None
+    current_contents = []
+    for j in lines:
+        if j.startswith('!'):
+            if current_filename:
+                results.append((current_filename, '\n'.join(current_contents)))
+            current_filename = j[1:]
+        else:
+            current_contents.append(j)
+    if current_filename:
+        results.append((current_filename, '\n'.join(current_contents)))
+    return results
+
+
 def cheapo_gnatchop(lines):
     """Performs a cheapo gnatchop on the given text.
 
@@ -158,7 +179,10 @@ class WidgetCodeDirective(Directive):
             raise self.error("you need to add a :code-config: role")
 
         try:
-            files = real_gnatchop(self.content)
+            if 'c' in argument_list:
+                files = c_chop(self.content)
+            else:
+                files = real_gnatchop(self.content)
         except subprocess.CalledProcessError:
             raise self.error("could not gnatchop example")
 
@@ -189,9 +213,11 @@ class WidgetCodeDirective(Directive):
             print (files)
             raise
 
-        for x in config.buttons | set(filter(lambda y: y.endswith('_button'),
-                                             argument_list)):
-            extra_attribs += ' {}="True"'.format(x)
+        if not force_no_buttons:
+            for x in (config.buttons |
+                      set(filter(lambda y: y.endswith('_button'),
+                                 argument_list))):
+                extra_attribs += ' {}="True"'.format(x)
 
         return [
             nodes.raw('',

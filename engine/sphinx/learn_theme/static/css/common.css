@@ -14,6 +14,16 @@ div.editor_container.inline{
    margin: .5em 0;
 }
 
+div.editor_label {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier, monospace;
+    border: 1px solid #ddd;
+    border-bottom: 0px;
+    display: inline-block;
+    padding: 3px 5px;
+    font-size: 0.75em;
+    color: #777;
+}
+
 div.output_line{
    color: #666;
    padding-left:15px;
@@ -39,7 +49,6 @@ div.output_msg_info{
 div.output_msg_info:hover{
    background-color:#ddf;
 }
-
 
 div.output_info{
    color: #222;

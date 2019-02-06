@@ -2,9 +2,9 @@
 
 MODES = {
    "prove": "Prove",
-   "run": "Run",
-   "prove_flow": "Prove (flow)",
+   "prove_flow": "Examine",
    "prove_report_all": "Prove (report=all)",
+   "run": "Run",
 }
 
 // Log an error message in the output area
@@ -211,14 +211,27 @@ function create_editor(resource, container, content, editors, counter) {
    var div = $('<div role="tabpanel" class="tab-pane' +
        (counter == 1 ? ' active' : '') +
        '" id="' + the_id + '">');
+
    var editordiv = $('<div class="editor_container"'
                      + ' id="' + resource.basename + the_id + '_editor">');
+
+   // Display the file name for files that are not Ada or main.c
+   if (!resource.basename.match(/.ad[sb]$|^main.c$/)) {
+      var labeldiv = $('<div class="editor_label">' + resource.basename + '</div>');
+      labeldiv.appendTo(div);
+   }
    editordiv.appendTo(div);
    div.appendTo(content);
 
    // ACE editors...
    editor = ace.edit(resource.basename + the_id + '_editor');
-   editor.session.setMode("ace/mode/ada");
+
+   // Set the mode
+   if (resource.basename.match(/.ad[sb]$/)) {
+      editor.session.setMode("ace/mode/ada");
+   } else {
+      editor.session.setMode("ace/mode/c_cpp");
+   }
 
    // ... and their contents
    editor.setValue(resource.contents);
