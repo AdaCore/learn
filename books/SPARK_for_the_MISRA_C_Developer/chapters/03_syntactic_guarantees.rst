@@ -1,4 +1,4 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
 Recovering Basic Syntactic Guarantees
 -------------------------------------
@@ -419,8 +419,9 @@ closing symbol for an if-statement. This makes it possible to write the
 following code which appears to try to return the absolute value of its
 argument, while it actually returns its opposite:
 
-.. code-block:: c
+.. code:: c run_button
 
+   !main.c
    #include <stdio.h>
 
    int absval (int x) {
@@ -452,8 +453,9 @@ statement"`. Yes, that's the same rule as the one we saw before for
 :ref:`Preventing the Semicolon Mistake`. So the code for ``absval`` must be
 written:
 
-.. code-block:: c
+.. code:: c run_button
 
+   !main.c
    #include <stdio.h>
 
    int absval (int x) {

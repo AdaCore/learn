@@ -1,4 +1,4 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
 Controlling Side-Effects
 ------------------------
@@ -71,8 +71,9 @@ deceiving, if the programmer wrongly thinks that the side-effects are
 guaranteed to happen. Consider the function ``decrease_until_one_is_null``
 below, which decreases both arguments until one is null:
 
-.. code-block:: c
+.. code:: c run_button
 
+   !main.c
    #include <stdio.h>
 
    void decrease_until_one_is_null (int *x, int *y) {

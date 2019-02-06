@@ -207,12 +207,11 @@ for ``var`` and ``fun``:
       return 0;
    }
 
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
-
 or to repeat these declarations directy:
 
-.. code-block:: c
+.. code:: c run_button
 
+   !main.c
    extern int var;
    extern int fun();
    extern void print();
@@ -222,6 +221,8 @@ or to repeat these declarations directy:
       print();
       return 0;
    }
+
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
 
 Then, if an inconsistency is introduced in the type of ``var`` of ``fun``
 between these alternative declarations and their actual type, the compiler
