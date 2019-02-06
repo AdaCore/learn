@@ -1,4 +1,4 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
 Detecting Undefined Behavior
 ----------------------------
@@ -82,7 +82,7 @@ the successor of the last element in an enumeration ``Enum'Last'Succ``.
 Let's look at a simple assignment statement setting the value of the ``I`` +
 ``J`` th cell of an array of naturals ``A`` to ``P`` / ``Q``.
 
-.. code:: ada spark-prove
+.. code:: ada prove_button
 
     package Show_Runtime_Errors is
 
@@ -208,7 +208,7 @@ a combination of:
 For example, here is a possible way to rewrite the previous program so that we
 can guarantee through proof that no possible runtime error can be raised:
 
-.. code:: ada spark-prove
+.. code:: ada prove_button
 
     package No_Runtime_Errors is
 

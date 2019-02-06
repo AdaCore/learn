@@ -1,4 +1,4 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
 Recovering Basic Syntactic Guarantees
 -------------------------------------
@@ -99,7 +99,7 @@ two calls to ``F`` in the following are detected as unused, even if the result
 of the function call is always assigned to a variable, which is itself used in
 the second case:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     package Fun is
        function F return Integer is (1);
@@ -147,7 +147,7 @@ modified, and their modification is visible at the calling site. For example,
 assigning to parameter of mode `in` (the default parameter mode which can also
 be ommitted) results in compilation errors:
 
-.. code:: ada
+.. code:: ada prove_button
     :class: ada-expect-compile-error
 
     procedure Swap (X, Y : Integer) is
@@ -159,7 +159,7 @@ be ommitted) results in compilation errors:
 
 The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
 
-.. code:: ada
+.. code:: ada prove_button
 
     procedure Swap (X, Y : in out Integer) is
        Tmp : Integer := X;
@@ -219,7 +219,7 @@ statement. The null statement is an explicit ``null;`` and all blocks of
 statements have explicit begin and end markers, which defeats mistakes like the
 ones that are possible in C. The above C code is written as follows in SPARK:
 
-.. code:: ada
+.. code:: ada prove_button
 
     function Main return Integer is
     begin
@@ -254,7 +254,7 @@ with execution automatically exiting the switch after a case is handled, and
 the compiler checking that the cases to handle are disjoint (like in C) and
 complete (unlike in C). So the following code is rejected by the compiler:
 
-.. code:: ada
+.. code:: ada prove_button
     :class: ada-expect-compile-error
 
     package Sign_Domain is
@@ -305,7 +305,7 @@ Similar rules applied above to both case-expressions as in functions
 ``Opposite`` and ``Multiply`` and in case-statements as in procedure
 ``Get_Sign``. Here is a correct version of the same code:
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Sign_Domain is
 
@@ -375,7 +375,7 @@ this rule:
 The equivalent code in SPARK does not compile due to the attempt at modifying
 the value of the loop counter:
 
-.. code:: ada
+.. code:: ada prove_button
     :class: ada-expect-compile-error
 
     procedure Well_Formed_Loop (C : Boolean) is
@@ -419,8 +419,9 @@ closing symbol for an if-statement. This makes it possible to write the
 following code which appears to try to return the absolute value of its
 argument, while it actually returns its opposite:
 
-.. code-block:: c
+.. code:: c run_button
 
+   !main.c
    #include <stdio.h>
 
    int absval (int x) {
@@ -452,8 +453,9 @@ statement"`. Yes, that's the same rule as the one we saw before for
 :ref:`Preventing the Semicolon Mistake`. So the code for ``absval`` must be
 written:
 
-.. code-block:: c
+.. code:: c run_button
 
+   !main.c
    #include <stdio.h>
 
    int absval (int x) {
@@ -479,7 +481,7 @@ which has the expected behavior.
 In SPARK, if-statements have an end marker ``end if;`` so the dangling-else
 problem cannot arise. The above C code is written as follows in SPARK:
 
-.. code:: ada
+.. code:: ada prove_button
 
     function Absval (X : Integer) return Integer is
        Result : Integer := X;

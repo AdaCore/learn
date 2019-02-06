@@ -1,4 +1,4 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
 Initializing Data Before Use
 ----------------------------
@@ -69,7 +69,7 @@ Hence, the SPARK analysis tool called GNATprove reports on the following code
 translated from C that function ``F`` might not always initialize output
 parameter ``P``:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     with Interfaces; use Interfaces;
 
@@ -102,7 +102,7 @@ parameter ``P``:
 Let's fix the program by initializing ``P`` to value 0 when condition ``B`` is
 not satisfied:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button
 
     with Interfaces; use Interfaces;
 
@@ -146,7 +146,7 @@ considers global data as always initialized, even if the default value of
 all-zeros might not be valid data for the application! Consider a variant of
 the above code where variable ``U`` is now global:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button run_button
 
     with Interfaces; use Interfaces;
 
@@ -199,7 +199,7 @@ It is possible in SPARK to specify that ``G`` should initialize variable ``U``
 with a `data dependency` contract introduced with aspect ``Global`` following
 the declaration of procedure ``G``:
 
-.. code:: ada spark-flow
+.. code:: ada prove_flow_button run_button
 
     with Interfaces; use Interfaces;
 
@@ -251,8 +251,9 @@ structure or array at declaration. These rules attempt to patch holes created
 by the lax syntax and rules in C standard. For example, here are five valid
 initializations of an array of 10 elements in C:
 
-.. code-block:: c
+.. code:: c run_button
 
+   !main.c
    int main() {
       int a[10] = {0};
       int b[10] = {0, 0};
@@ -272,8 +273,9 @@ initialized twice).
 The same holds for initialization of structures. Here is an equivalent set of
 declarations with the same potential issues:
 
-.. code-block:: c
+.. code:: c run_button
 
+   !main.c
    int main() {
      typedef struct { int x; int y; int z; } rec;
       rec a = {0};
@@ -292,7 +294,7 @@ In SPARK, the aggregate used to initialize an array or a record should fully
 match the components of the array or record. Violations lead to compilation
 errors, both for records:
 
-.. code:: ada
+.. code:: ada prove_button
     :class: ada-expect-compile-error
 
     package Init_Record is
@@ -304,7 +306,7 @@ errors, both for records:
 
 and for arrays:
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
@@ -313,7 +315,7 @@ and for arrays:
 
 Similarly, redundant initialization leads to compilation errors for records:
 
-.. code:: ada
+.. code:: ada prove_button
     :class: ada-expect-compile-error
 
     package Init_Record is
@@ -325,7 +327,7 @@ Similarly, redundant initialization leads to compilation errors for records:
 
 and for arrays:
 
-.. code:: ada
+.. code:: ada prove_button
     :class: ada-expect-compile-error
 
     package Init_Array is
@@ -339,7 +341,7 @@ initialization of the type is used, which may be no initialization at all),
 SPARK analysis rejects such use when it leads to components not being
 initialized, both for records:
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Init_Record is
        type Rec is record
@@ -350,7 +352,7 @@ initialized, both for records:
 
 and for arrays:
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;

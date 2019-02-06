@@ -2,9 +2,9 @@
 
 MODES = {
    "prove": "Prove",
-   "run": "Run",
-   "prove_flow": "Prove (flow)",
+   "prove_flow": "Examine",
    "prove_report_all": "Prove (report=all)",
+   "run": "Run",
 }
 
 // Log an error message in the output area
@@ -149,7 +149,7 @@ function get_output_from_identifier(container, editors, output_area, identifier)
 
 
 // Launch a run on the given example editor
-function query_operation_result(container, example_name, editors, output_area, operation_url) {
+function query_operation_result(container, editors, output_area, mode) {
 
     files = []
 
@@ -172,9 +172,8 @@ function query_operation_result(container, example_name, editors, output_area, o
     }
 
     data = {
-        "example_name": example_name,
         "files": files,
-        "extra_args": container.attr("extra_args"),
+        "mode": mode,
     }
 
     // reset the number of lines already read
@@ -182,7 +181,7 @@ function query_operation_result(container, example_name, editors, output_area, o
 
     // request the examples
     $.ajax({
-            url: container.example_server + operation_url,
+            url: container.example_server + "/run_program/",
             data: JSON.stringify(data),
             type: "POST",
             dataType: "json",
@@ -212,14 +211,27 @@ function create_editor(resource, container, content, editors, counter) {
    var div = $('<div role="tabpanel" class="tab-pane' +
        (counter == 1 ? ' active' : '') +
        '" id="' + the_id + '">');
-   var editordiv = $('<div class="editor_container' + (is_inline?' inline':'') + '"'
+
+   var editordiv = $('<div class="editor_container"'
                      + ' id="' + resource.basename + the_id + '_editor">');
+
+   // Display the file name for files that are not Ada or main.c
+   if (!resource.basename.match(/.ad[sb]$|^main.c$/)) {
+      var labeldiv = $('<div class="editor_label">' + resource.basename + '</div>');
+      labeldiv.appendTo(div);
+   }
    editordiv.appendTo(div);
    div.appendTo(content);
 
    // ACE editors...
    editor = ace.edit(resource.basename + the_id + '_editor');
-   editor.session.setMode("ace/mode/ada");
+
+   // Set the mode
+   if (resource.basename.match(/.ad[sb]$/)) {
+      editor.session.setMode("ace/mode/ada");
+   } else {
+      editor.session.setMode("ace/mode/c_cpp");
+   }
 
    // ... and their contents
    editor.setValue(resource.contents);
@@ -237,33 +249,30 @@ function create_editor(resource, container, content, editors, counter) {
        theme: "ace/theme/tomorrow"
    });
 
-   // check if we are overriding db content with inline content
-   if (container.attr("inline")) {
-       $(container).children(".resource").each(function () {
-           if ($(this).attr("region")) {
-               region = $(this).attr("region");
+   $(container).children(".resource").each(function () {
+       if ($(this).attr("region")) {
+           region = $(this).attr("region");
 
-               // search editor content for region "region"
-               beginregion = editor.find("--  #region " + region);
-               endregion = editor.find("--  #endregion " + region);
+           // search editor content for region "region"
+           beginregion = editor.find("--  #region " + region);
+           endregion = editor.find("--  #endregion " + region);
 
-               newRange = beginregion.clone();
-               newRange.end.row = endregion.end.row;
-               newRange.end.column = endregion.end.column;
+           newRange = beginregion.clone();
+           newRange.end.row = endregion.end.row;
+           newRange.end.column = endregion.end.column;
 
-               textReplace = $(this).text().replace(/^\s|\s+$/g, '');
+           textReplace = $(this).text().replace(/^\s|\s+$/g, '');
 
-               editor.getSession().getDocument().replace(newRange, textReplace);
-               $(this).text('');
-           }
-          else {
-             // No region: replace the whole editor
-             editor.initial_contents = $(this).text();
-             editor.setValue($(this).text());
-             $(this).text('');
-          }
-       })
-   }
+           editor.getSession().getDocument().replace(newRange, textReplace);
+           $(this).text('');
+       }
+      else {
+         // No region: replace the whole editor
+         editor.initial_contents = $(this).text();
+         editor.setValue($(this).text());
+         $(this).text('');
+      }
+   })
 
    // search for remaining region marks and remove
    editor.replaceAll("", {
@@ -286,58 +295,30 @@ function create_editor(resource, container, content, editors, counter) {
        editor.setOption("readOnly", true);
    }
 
-   // Inline? set the editor to use exactly the vertical space it needs
-   if (is_inline){
-       editor.setOptions({
-            minLines: editor.session.doc.getLength(),
-            maxLines: editor.session.doc.getLength()
-       })
-   }
-    editor.resize()
+   // set the editor to use exactly the vertical space it needs
+   editor.setOptions({
+        minLines: editor.session.doc.getLength(),
+        maxLines: editor.session.doc.getLength()
+   })
+
+   editor.resize()
    // place the cursor at 1,1
    editor.selection.moveTo(0, 0);
 
    // clear undo stack to avoid undoing everything we just did
    editor.getSession().getUndoManager().reset();
 
-    editor.renderer.setScrollMargin(5, 5, 0, 0);
+   editor.renderer.setScrollMargin(5, 5, 0, 0);
 
    return editor;
 }
 
 // Fills a <div> with an editable representation of an example.
 //    container: the <div> in question
-//    example_name: the name of the example to load
 
 var unique_id = 0
 
-function fill_editor_from_contents(container, example_name, example_server,
-                                   resources) {
-
-   is_inline = container.attr("inline")
-
-   // First create the tabs
-
-   if (!is_inline){
-      var ul = $('<ul class="nav nav-tabs" role="tablist">')
-      ul.appendTo(container);
-
-      var counter = 0;
-
-      resources.forEach(function (resource) {
-          counter++;
-          var the_id = "tab_" + container.attr("the_id") + "-" + counter
-
-          var li = $('<li role="presentation" class="' +
-              (counter == 1 ? 'active' : '') +
-              '">').appendTo(ul);
-          $('<a href="#' + the_id + '" aria-controls="' +
-              the_id + '" ' +
-              'id="' + the_id + '-tab"' +
-              'role="tab" data-toggle="tab">' +
-              resource.basename + '</a>').appendTo(li)
-      })
-   }
+function fill_editor_from_contents(container, example_server, resources) {
 
    // Then fill the contents of the tabs
 
@@ -405,6 +386,7 @@ function fill_editor_from_contents(container, example_name, example_server,
 
          var check_button = $('<button type="button" class="btn btn-primary">').text(the_text).appendTo(buttons_div);
          check_button.operation_label = the_text;
+         check_button.mode = mode;
          editors.buttons.push(check_button);
          check_button.editors = editors;
          check_button.click(check_button, function (x) {
@@ -416,75 +398,41 @@ function fill_editor_from_contents(container, example_name, example_server,
              var div = $('<div class="output_info">');
              div.text(x.data.operation_label + "...");
              div.appendTo(output_area);
-             query_operation_result(container, example_name, x.data.editors, output_area, "/run_program/");
+             query_operation_result(container, x.data.editors, output_area, x.data.mode);
           })
       }
    }
 }
 
-function fill_editor(container, example_name, example_server) {
+function fill_editor(container, example_server) {
     unique_id++;
     container.attr("the_id", unique_id);
     container.already_read = 0;  // The number of lines already read
     container.example_server = example_server;
 
-    is_inline = container.attr("inline");
+    // List the "file" divs, add these as resources
+    var resources = []
+    $(container).children(".file").each(function () {
+       // Create a fake resource for each 'file' div
+       a = Object();
+       a.basename = $(this).attr("basename");
+       a.contents = $(this).text();
+       $(this).text('');
+       resources.push(a);
+    })
 
-    if (is_inline){
-       // In inline mode, just assume all the sources are here, do not
-       // request them in AJAX
+    // List the contents of the ".shadow_file" divs
+    container.shadow_files = []
+    $(container).children(".shadow_file").each(function () {
+       // Create a fake resource for each 'file' div
+       a = Object();
+       a.basename = $(this).attr("basename");
+       a.contents = $(this).text();
+       $(this).text('');
+       container.shadow_files.push(a);
+    })
 
-       // List the "file" divs, add these as resources
-       var resources = []
-       $(container).children(".file").each(function () {
-          // Create a fake resource for each 'file' div
-          a = Object();
-          a.basename = $(this).attr("basename");
-          a.contents = $(this).text();
-          $(this).text('');
-          resources.push(a);
-       })
-
-       // List the contents of the ".shadow_file" divs
-       container.shadow_files = []
-       $(container).children(".shadow_file").each(function () {
-          // Create a fake resource for each 'file' div
-          a = Object();
-          a.basename = $(this).attr("basename");
-          a.contents = $(this).text();
-          $(this).text('');
-          container.shadow_files.push(a);
-       })
-
-       fill_editor_from_contents(container, example_name, example_server,
-                                 resources);
-    } else {
-
-       // request the examples
-       $.ajax({
-               url: container.example_server + "/example/" + example_name,
-               data: {},
-               type: "GET",
-               // dataType : "json",
-               contentType: 'text/plain',
-               crossDomain: true,
-               //      headers: { "Origin": "http://www.adacore.com" }
-
-           })
-           .done(function (json) {
-               // On success, create editors for each of the resources
-
-               fill_editor_from_contents(container, example_name, example_server,
-                                         json.resources);
-
-               })
-           .fail(function (xhr, status, errorThrown) {
-               alert("could not download the example");
-               console.log("Error: " + errorThrown);
-               console.log("Status: " + status);
-               console.dir(xhr);
-           });
-        }
+    fill_editor_from_contents(container, example_server, resources);
 }
 
 
@@ -494,13 +442,10 @@ $(document).ready(function () {
     // Iterate on all divs, finding those that have the "example_editor"
     // attribute
     $("div").each(function (index, element) {
-        example_name = $(this).attr("example_editor");
         example_server = $(this).attr("example_server");
         if (!example_server) {
             example_server = '';
         }
-        if (example_name) {
-            fill_editor($(this), example_name, example_server);
-        }
+        fill_editor($(this), example_server);
     })
 });

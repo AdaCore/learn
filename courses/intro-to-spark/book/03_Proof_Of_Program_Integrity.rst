@@ -202,7 +202,7 @@ contracts can be inlined if they're simple enough and are neither recursive
 nor have multiple return points. If we remove the contract from
 ``Increment``, it fits the criteria for inlining.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     procedure Show_Modularity is
 
@@ -231,7 +231,7 @@ as the postcondition on the result of the function.
 In our example, replacing ``Increment`` with an expression function allows
 GNATprove to successfully verify the overflow check in the addition.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     procedure Show_Modularity is
 
@@ -386,7 +386,7 @@ value is a Boolean expression which GNATprove assumes to be true without
 any attempt to verify that it's true. You'll find this feature useful, but
 you must use it with great care.  Here's an example of using it.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     procedure Incr (X : in out Integer) is
     begin
@@ -404,7 +404,7 @@ one guard is permitted to evaluate to :ada:`True`. The consequence of that
 case is a contract that's required to be satisfied when the subprogram
 returns.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     procedure Absolute (X : in out Integer) with
       Pre            =>  X > Integer'First,
@@ -651,7 +651,7 @@ help. We can also specify an alternative automatic prover --- if we have
 one --- using the option ``--prover`` of GNATprove (or the dialog box). For
 our postcondition, we tried Alt-Ergo, CVC4, and Z3 without any luck.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Show_Failed_Proof_Attempt is
 
@@ -767,7 +767,7 @@ Example #2
 
 We now redefine ``Goes_To`` as an expression function.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Lists with SPARK_Mode is
 
@@ -922,7 +922,7 @@ Example #5
 Let's add a precondition to ``Push`` stating that the stack shouldn't be
 full.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Stacks with SPARK_Mode is
 
@@ -1076,7 +1076,7 @@ Example #8
 
 Let's completely remove the precondition of ``Read_One``.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     package Memories is
 
