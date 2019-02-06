@@ -168,8 +168,11 @@ An issue which is related to text-based inclusion of files is that there is no
 single source for declaring the type of a variable or function. If a file
 ``origin.c`` defines a variable ``var`` and functions ``fun`` and ``print``:
 
-.. code-block:: c
+:code-config:`run_button=True;prove_button=False;accumulate_code=True`
 
+.. code:: c no_button
+
+   !origin.c
    #include <stdio.h>
 
    int var = 0;
@@ -183,8 +186,9 @@ single source for declaring the type of a variable or function. If a file
 and the corresponding header file declares ``var``, ``fun`` and ``print`` as
 having external linkage:
 
-.. code-block:: c
+.. code:: c no_button
 
+   !origin.h
    extern int var;
    extern int fun();
    extern void print();
@@ -192,8 +196,9 @@ having external linkage:
 then it is equivalent for client code to include ``origin.h`` with declarations
 for ``var`` and ``fun``:
 
-.. code-block:: c
+.. code:: c
 
+   !main.c
    #include "origin.h"
 
    int main() {
@@ -201,6 +206,8 @@ for ``var`` and ``fun``:
       print();
       return 0;
    }
+
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
 
 or to repeat these declarations directy:
 

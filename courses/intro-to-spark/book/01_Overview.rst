@@ -1,6 +1,6 @@
 :prev_state: False
 
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:`run_button=False;accumulate_code=False`
 
 .. _SPARK Overview:
 

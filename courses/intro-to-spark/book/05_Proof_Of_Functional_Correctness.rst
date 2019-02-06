@@ -64,7 +64,7 @@ ensure it returns an index of ``A`` where ``E`` is stored and returns 0
 only if ``E`` is nowhere in ``A``. Again, we can express this as a
 postcondition of ``Find``.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Show_Find is
 
@@ -115,7 +115,7 @@ example, during testing, the postcondition of the subprogram ``Find`` shown
 below is checked dynamically for the set of inputs for which ``Find`` is
 called in that test, but just for that set.
 
-.. code:: ada run_button
+.. code:: ada prove_button run_button
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -282,7 +282,7 @@ performed by the call to ``Do_Some_Complex_Stuff`` modified the value of
 However, ``X_Init`` can't be used in normal code, for example to restore
 the initial value of ``X``.
 
-.. code:: ada run_button
+.. code:: ada prove_button run_button
     :class: ada-expect-compile-error
 
     package Show_Ghost is
@@ -353,7 +353,7 @@ information without making it available to normal client code.
 
 Let's look at the following example.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Stacks is
 
@@ -393,7 +393,7 @@ stack.  However, we don't want code that uses the ``Stack`` package to use
 Here's an example of trying to break that abstraction in the subprogram
 ``Peek`` below.
 
-.. code:: ada
+.. code:: ada prove_button
     :class: ada-expect-compile-error
 
     package Stacks is
@@ -450,7 +450,7 @@ accesses a state ``B``. We use the ghost variable ``Last_Accessed_Is_A`` to
 specify that ``B`` can't be accessed twice in a row without accessing ``A``
 in between.
 
-.. code:: ada run_button
+.. code:: ada prove_button run_button
    :class: ada-run-expect-failure
 
     package Call_Sequence is
@@ -510,7 +510,7 @@ be written in SPARK because quantification is restricted to
 Finally, supplying the value of the variable may help the prover verify the
 contracts.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Action_Sequence is
 
@@ -1122,7 +1122,7 @@ Example #2
 Instead of using a ghost function, ``Get_Model``, to retrieve the contents
 of the ring buffer, we're now using a global ghost variable, ``Model``.
 
-.. code:: ada
+.. code:: ada prove_button
     :class: ada-expect-compile-error
 
     package Ring_Buffer is
@@ -1243,7 +1243,7 @@ Example #4
 We're now modifying ``Push_Last`` to share the computation of the new
 length between the operational and ghost code.
 
-.. code:: ada
+.. code:: ada prove_button
     :class: ada-expect-compile-error
 
     package Ring_Buffer is
@@ -1379,7 +1379,7 @@ The function ``Max_Array`` takes two arrays of the same length (but not
 necessarily with the same bounds) as arguments and returns an array with
 each entry being the maximum values of both arguments at that index.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Array_Util is
 
@@ -1425,7 +1425,7 @@ Let's add a loop invariant that states that ``J`` stays in the index range
 of ``B`` and let's protect the increment to ``J`` by checking that it's not
 already the maximal integer value.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Array_Util is
 
@@ -1475,7 +1475,7 @@ We now consider a version of ``Max_Array`` which takes arguments that have
 the same bounds. We want to prove that ``Max_Array`` returns an array of
 the maximum values of both its arguments at each index.
 
-.. code:: ada run_button
+.. code:: ada prove_button run_button
    :class: ada-run-expect-failure
 
     package Array_Util is

@@ -43,7 +43,7 @@ implementation.
 
 Take a look at the example code shown below.
 
-.. code:: ada
+.. code:: ada prove_button
 
     procedure Increase (X : in out Integer) with
       Global => null,
@@ -74,7 +74,7 @@ For example, callers of the subprogram ``Increase`` can assume that it
 always strictly increases the value of its argument. In the code snippet
 shown below, this means the loop must terminate.
 
-.. code:: ada
+.. code:: ada prove_button
 
     procedure Increase (X : in out Integer) with
       Global => null,
@@ -1061,7 +1061,7 @@ assert that after we push an element on the stack, either the stack is
 unchanged (if it was already full) or its top element is equal to the
 element just pushed.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Stack with
       Abstract_State => The_Stack

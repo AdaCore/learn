@@ -149,7 +149,7 @@ isn't used.  All of these may be signs of an error.
 We see an example below. The subprogram ``Swap`` is incorrect and GNATprove
 warns about an input which isn't read:
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Show_Incorrect_Param_Mode is
 
@@ -663,7 +663,7 @@ Example #2
 To avoid the message previously issued by GNATprove, we modify
 ``Search_Array`` to raise an exception when ``E`` isn't found in ``A``:
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Show_Search_Array is
 
@@ -713,7 +713,7 @@ such a structure, the place to store the index at which ``E`` was found
 exists only when ``E`` was indeed found.  So if it wasn't found, there's
 nothing to be initialized.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Show_Search_Array is
 
