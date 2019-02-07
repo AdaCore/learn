@@ -133,7 +133,8 @@ Limited types
 Ada's "limited type" facility allows you to declare a type for which
 assignment and comparison operations are not automatically provided.
 
-.. code:: ada no_button
+.. code:: ada
+    :class: ada-expect-compile-error
 
     package Stacks is
        type Stack is limited private;
@@ -150,9 +151,6 @@ assignment and comparison operations are not automatically provided.
           Content : Content_Type;
        end record;
     end Stacks;
-
-.. code:: ada
-    :class: ada-expect-compile-error
 
     with Stacks; use Stacks;
 

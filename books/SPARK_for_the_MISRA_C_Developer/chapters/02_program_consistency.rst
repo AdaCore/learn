@@ -1,4 +1,4 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Enforcing Basic Program Consistency
 -----------------------------------
@@ -60,8 +60,9 @@ of context instead of textual inclusion of content, using ``with`` clauses:
 In particular, ``with`` clauses are only allowed at the beginning of files, and
 the compiler issues an error if they are used elsewhere:
 
-.. code-block:: ada
+.. code:: ada manual_chop
 
+    !hello_world.adb
     procedure Hello_World is
          with Ada.Text_IO;
     begin
@@ -168,7 +169,7 @@ An issue which is related to text-based inclusion of files is that there is no
 single source for declaring the type of a variable or function. If a file
 ``origin.c`` defines a variable ``var`` and functions ``fun`` and ``print``:
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=True`
+:code-config:`accumulate_code=True`
 
 .. code:: c no_button
 
@@ -222,7 +223,7 @@ or to repeat these declarations directy:
       return 0;
    }
 
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:`accumulate_code=False`
 
 Then, if an inconsistency is introduced in the type of ``var`` of ``fun``
 between these alternative declarations and their actual type, the compiler

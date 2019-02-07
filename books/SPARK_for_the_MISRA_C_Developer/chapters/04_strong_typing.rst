@@ -638,10 +638,10 @@ false and true values, so the above code can be also be expressed in SPARK:
        TF : Boolean := True <= False;
        TT : Boolean := True <= True;
     begin
-       Put_Line ("false implies false? " & FF'Img);
-       Put_Line ("false implies true? " & FT'Img);
-       Put_Line ("true implies false? " & TF'Img);
-       Put_Line ("true implies true? " & TT'Img);
+       Put ("false implies false? "); Put_Line (FF'Img);
+       Put ("false implies true? "); Put_Line (FT'Img);
+       Put ("true implies false? "); Put_Line (TF'Img);
+       Put ("true implies true? "); Put_Line (TT'Img);
     end Truth_Table;
 
 .. _Boolean Operations on Boolean:
