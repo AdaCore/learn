@@ -37,6 +37,11 @@ LEARN.ADACORE.COM
        Courses <courses/courses>
        Books <books/books>
 
+    .. toctree::
+       :hidden:
+
+       Tests <engine/tests/index>
+
 
 -------------
 

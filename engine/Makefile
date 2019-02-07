@@ -4,11 +4,19 @@ SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = learnadacorecom
 SPHINXCONF    = sphinx
 BUILDDIR      = _build
-TEST_DRIVER = python tests/compile_blocks.py
+TEST_DRIVER   = python tests/compile_blocks.py
+
 
 help:
 	@echo "make tests  - run the testsuite"
+	@echo "make test_engine  - generate the engine test html"
 	@echo "make html   - generates the html"
+
+test_engine:
+	@echo "===== ENGINE TEST ====="
+	@$(SPHINXBUILD) -M html "tests/" \
+	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@echo ""
 
 test_ada_intro:
 	@echo "===== INTRO TO ADA ====="
