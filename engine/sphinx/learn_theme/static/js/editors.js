@@ -363,11 +363,13 @@ function test_callback(container) {
    var results_div = $( "<div>" );
 
    results_div.append("Test: " + test_name + "<br>");
-   if(response.html() == test_expects.html()) {
+   if(response.text() == test_expects.text()) {
        results_div.append("<span class='passed_test'>Test passed!</span>");
    }
    else {
-       results_div.append("<span class='failed_test'>Test failed!</span><br>Response: " + response.html() + "<br>Expects: " + test_expects.html());
+       results_div.append("<span class='failed_test'>Test failed!</span>");
+       results_div.append("<p>Response: " + response.html() + "</p>");
+       results_div.append("<p>Expects: " + test_expects.html() + "</p>");
    }
    results_div.append("<br><br></p>");
    results_area.append( results_div );

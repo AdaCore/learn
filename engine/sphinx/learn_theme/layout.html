@@ -107,7 +107,7 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search">
           {% block sidebartitle %}
-          
+
           {% if theme_beta %}
               <div class="beta-ribbon">BETA</div>
           {% endif %}
@@ -159,7 +159,10 @@
               {{ global_toc }}
             {% else %}
               <!-- Local TOC -->
-              <div class="local-toc">{{ toc }}</div>
+              <div class="local-toc">{{ toctree(maxdepth=navigation_depth|int,
+                                          collapse=collapse_navigation|tobool,
+                                          includehidden=includehidden|tobool,
+                                          titles_only=titles_only|tobool) }}</div>
             {% endif %}
           {% endblock %}
         </div>
@@ -220,9 +223,9 @@
     </section>
 
   </div>
-  
+
   <button onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="fas fa-caret-square-up"></i></button>
-  
+
   {% include "versions.html" %}
 
   {% if not embedded %}
