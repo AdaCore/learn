@@ -179,7 +179,9 @@ class WidgetCodeDirective(Directive):
             raise self.error("you need to add a :code-config: role")
 
         try:
-            if 'c' in argument_list:
+            if 'manual_chop' in argument_list:
+                files = c_chop(self.content)
+            elif 'c' in argument_list:
                 files = c_chop(self.content)
             else:
                 files = real_gnatchop(self.content)
