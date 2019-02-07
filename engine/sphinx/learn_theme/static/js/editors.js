@@ -27,7 +27,7 @@ function reset(container, editors){
 //  status: the exit status
 //  message: any message coming back from the application
 //   TODO: make use of message
-function process_check_output(container, editors, output_area, output, status, completed, message, test_cb) {
+function process_check_output(container, editors, output_area, output, status, completed, message) {
     // Process the lines
 
     var read_lines = 0
