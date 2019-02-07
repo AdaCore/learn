@@ -6,7 +6,7 @@
 
 Engine Test Front-end
 =====================
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
 .. role:: ada(code)
    :language: ada
@@ -23,15 +23,15 @@ This page is used to test the engine (front-end to backend interaction)
 
     The test.js script reads the JSON descriptor listed before each test editor and simulates "pressing" the listed button. It then compares the response from the backend with the known 'test_expects' field. Insert new tests before the Test Results section at the end of the document.
 
-Simple Run Button Test
-----------------------
+Simple Ada Run Button Test
+--------------------------
 
 .. container:: test_descriptor
 
    .. raw:: html
 
-      <div class="test_name">Simple Run Button Test</div>
-      <div class="test_expects">Hello, World!</div>
+      <div class="test_name">Simple Ada Run Button Test</div>
+      <div class="test_expects"><div class="output_area"><div class="output_info">Run...</div><div class="output_line"></div><div class="output_line"></div><div class="output_line">Hello, World!</div><div class="output_line"></div><div class="output_success">Success!</div></div></div>
       <div class="test_exercises">Run</div>
 
    .. code:: ada run_button
@@ -44,6 +44,28 @@ Simple Run Button Test
           Ada.Text_IO.Put_Line ("Hello, World!");
        end Greet;
 
+Simple C Run Button Test
+------------------------
+
+.. container:: test_descriptor
+
+   .. raw:: html
+
+      <div class="test_name">Simple C Run Button Test</div>
+      <div class="test_expects"><div class="output_area"><div class="output_info">Run...</div><div class="output_line"></div><div class="output_line"></div><div class="output_line">Hello, World!</div><div class="output_success">Success!</div></div></div>
+      <div class="test_exercises">Run</div>
+
+   .. code:: c run_button
+
+      !main.c
+      #include <stdio.h>
+
+      int main()
+      {
+         printf("Hello, World!");
+      }
+
+
 Accumulated Code Test
 ---------------------
 
@@ -52,11 +74,7 @@ Accumulated Code Test
    .. raw:: html
 
       <div class="test_name">Accumulated Code Test</div>
-      <div class="test_expects">
-         Running...<br>
-         &lt;Stack, items: [ 1 2 3 4]&gt;<br>
-         Success!
-      </div>
+      <div class="test_expects"><div class="output_area"><div class="output_info">Run...</div><div class="output_line"></div><div class="output_line"></div><div class="output_line">&lt;Stack, items: [  1  2  3  4]&gt;</div><div class="output_line"></div><div class="output_success">Success!</div></div></div>
       <div class="test_exercises">Run</div>
 
    :code-config:`reset_accumulator=True;accumulate_code=True`
@@ -106,16 +124,7 @@ Examine SPARK Test
    .. raw:: html
 
       <div class="test_name">Examine SPARK Test</div>
-      <div class="test_expects">
-         Proving...<br>
-         Phase 1 of 2: generation of Global contracts ...<br>
-         Phase 2 of 2: analysis of data and information flow ...<br>
-         show_uninitialized.adb:7:21: warning: "Max" may be referenced before it has a value<br>
-         show_uninitialized.adb:7:21: medium: "Max" might not be initialized<br>
-         show_uninitialized.adb:11:14: medium: "Max" might not be initialized<br>
-         gnatprove: unproved check messages considered as errors<br>
-         exit status: 1
-      </div>
+      <div class="test_expects"><div class="output_area"><div class="output_info">Examine...</div><div class="output_line"></div><div class="output_line"></div><div class="output_line">Phase 1 of 2: generation of Global contracts ...</div><div class="output_line"></div><div class="output_line">Phase 2 of 2: analysis of data and information flow ...</div><div class="output_line"></div><div class="output_msg">show_uninitialized.adb:7:21: warning: "Max" may be referenced before it has a value</div><div class="output_line"></div><div class="output_msg">show_uninitialized.adb:7:21: medium: "Max" might not be initialized</div><div class="output_line"></div><div class="output_msg">show_uninitialized.adb:11:14: medium: "Max" might not be initialized</div><div class="output_line"></div><div class="output_line">gnatprove: unproved check messages considered as errors</div><div class="output_line"></div><div class="output_line"></div><div class="output_info">3 errors.</div></div></div>
       <div class="test_exercises">Examine</div>
 
    .. code:: ada prove_flow_button
@@ -151,17 +160,7 @@ Prove SPARK Test
    .. raw:: html
 
       <div class="test_name">Prove SPARK Test</div>
-      <div class="test_expects">
-         Proving...<br>
-         Phase 1 of 2: generation of Global contracts ...<br>
-         Phase 2 of 2: flow analysis and proof ...<br>
-         show_runtime_errors.adb:5:12: medium: overflow check might fail (e.g. when I = -2147483648 and J = -1)<br>
-         show_runtime_errors.adb:5:12: medium: array index check might fail (e.g. when A'First = 1)<br>
-         show_runtime_errors.adb:5:22: medium: range check might fail<br>
-         show_runtime_errors.adb:5:22: medium: overflow check might fail (e.g. when P = -1 and Q = 0)<br>
-         show_runtime_errors.adb:5:22: medium: divide by zero might fail (e.g. when Q = 0)\ngnatprove: unproved check messages considered as errors<br>
-         exit status: 1
-      </div>
+      <div class="test_expects"><div class="output_area"><div class="output_info">Prove...</div><div class="output_line"></div><div class="output_line"></div><div class="output_line">Phase 1 of 2: generation of Global contracts ...</div><div class="output_line"></div><div class="output_line">Phase 2 of 2: flow analysis and proof ...</div><div class="output_line"></div><div class="output_msg">show_runtime_errors.adb:5:12: medium: overflow check might fail (e.g. when I = -2147483648 and J = -1)</div><div class="output_line"></div><div class="output_msg">show_runtime_errors.adb:5:12: medium: array index check might fail (e.g. when A'First = 1)</div><div class="output_line"></div><div class="output_msg">show_runtime_errors.adb:5:22: medium: range check might fail</div><div class="output_line"></div><div class="output_msg">show_runtime_errors.adb:5:22: medium: overflow check might fail (e.g. when P = -1 and Q = 0)</div><div class="output_line"></div><div class="output_msg">show_runtime_errors.adb:5:22: medium: divide by zero might fail (e.g. when Q = 0)</div><div class="output_line"></div><div class="output_line">gnatprove: unproved check messages considered as errors</div><div class="output_line"></div><div class="output_line"></div><div class="output_info">5 errors.</div></div></div>
       <div class="test_exercises">Prove</div>
 
    .. code:: ada prove_button

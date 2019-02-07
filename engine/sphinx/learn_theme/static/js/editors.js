@@ -108,7 +108,7 @@ function process_check_output(container, editors, output_area, output, status, c
     return read_lines
 }
 
-function get_output_from_identifier(container, editors, output_area, identifier, test_cb) {
+function get_output_from_identifier(container, editors, output_area, identifier) {
     data = {
         "identifier": identifier,
         "already_read": container.already_read
@@ -135,7 +135,11 @@ function get_output_from_identifier(container, editors, output_area, identifier,
                 }, 250)
             }
             else {
-               test_cb();
+
+               if (container.parent().hasClass( "test-descriptor" )) {
+                  // we are in test mode. call test function callback
+                  test_callback(container);
+               }
             }
         })
         .fail(function (xhr, status, errorThrown) {
@@ -152,7 +156,7 @@ function get_output_from_identifier(container, editors, output_area, identifier,
 
 
 // Launch a run on the given example editor
-function query_operation_result(container, editors, output_area, mode, test_cb) {
+function query_operation_result(container, editors, output_area, mode) {
 
     files = []
 
@@ -196,7 +200,7 @@ function query_operation_result(container, editors, output_area, mode, test_cb) 
                 reset(container, editors);
                 output_error(output_area, json.message);
             } else {
-                get_output_from_identifier(container, editors, output_area, json.identifier, test_cb)
+                get_output_from_identifier(container, editors, output_area, json.identifier)
             }
         })
         .fail(function (xhr, status, errorThrown) {
@@ -205,7 +209,7 @@ function query_operation_result(container, editors, output_area, mode, test_cb) 
             console.log("Error: " + errorThrown);
             console.log("Status: " + status);
             console.dir(xhr);
-        })
+        });
 }
 
 
@@ -334,7 +338,7 @@ function reset_worker(button, editors, container, output_area) {
    });
 }
 
-function check_worker(button, editors, container, output_area, test_cb = function(){}) {
+function check_worker(button, editors, container, output_area) {
    if (button.disabled) {return;}
    editors.buttons.forEach(function(b){b.disabled = true;});
    output_area.empty();
@@ -343,7 +347,30 @@ function check_worker(button, editors, container, output_area, test_cb = functio
    var div = $('<div class="output_info">');
    div.text(button.operation_label + "...");
    div.appendTo(output_area);
-   query_operation_result(container, editors, output_area, button.mode, test_cb);
+   query_operation_result(container, editors, output_area, button.mode);
+}
+
+function test_callback(container) {
+   var parent = container.parent();
+   var test_name = parent.find( "div.test_name" ).text();
+   var test_input = parent.find( "div.test_input" ).text();
+   var test_expects = parent.find( "div.test_expects" ).find( "div.output_area" );
+   var test_exercises = parent.find( "div.test_exercises" ).text();
+
+   var response = container.find( "div.output_area" );
+   var results_area = $( "div.test-results" );
+
+   var results_div = $( "<div>" );
+
+   results_div.append("Test: " + test_name + "<br>");
+   if(response.html() == test_expects.html()) {
+       results_div.append("<span class='passed_test'>Test passed!</span>");
+   }
+   else {
+       results_div.append("<span class='failed_test'>Test failed!</span><br>Response: " + response.html() + "<br>Expects: " + test_expects.html());
+   }
+   results_div.append("<br><br></p>");
+   results_area.append( results_div );
 }
 
 function fill_editor_from_contents(container, example_server, resources) {
@@ -391,7 +418,7 @@ function fill_editor_from_contents(container, example_server, resources) {
 
    var reset_created = false;
 
-   var results_div = $( "div.test-results" )
+   var results_div = $( "div.test-results" );
 
    results_div.text("");
 
@@ -424,38 +451,10 @@ function fill_editor_from_contents(container, example_server, resources) {
 
          if(test_mode) {
             var parent = container.parent();
-            var test_name = parent.find( "div.test_name" ).text();
-            var test_input = parent.find( "div.test_input" ).text();
-            var test_expects = parent.find( "div.test_expects" ).text();
             var test_exercises = parent.find( "div.test_exercises" ).text();
 
-
             if (the_text == test_exercises) {
-               check_worker(check_button, editors, container, output_area, function() {
-                  var response = "";
-                  var output_info = container.find( "div.output_area div.output_info" );
-                  var output_error = container.find( "div.output_area div.output_error" );
-                  var output_success = container.find( "div.output_area div.output_success" );
-
-                  if( output_success.length > 0 ) {
-                      response = output_success.text();
-                  }
-                  else if( output_error.length > 0 ) {
-                      response = output_error.text();
-                  }
-                  else {
-                      response = "No response from server...";
-                  }
-
-                  results_div.append("Test ");
-                  if(response == test_expects) {
-                      results_div.append("<span class='passed_test'>Test passed!</span>");
-                  }
-                  else {
-                      results_div.append("<span class='failed_test'>Test failed!</span><br>Response: " + response + "<br>Expects: " + test_expects);
-                  }
-                  results_div.append("<br><br></p>");
-               });
+               check_worker(check_button, editors, container, output_area);
             }
          }
 
@@ -501,10 +500,13 @@ $(document).ready(function () {
     // Iterate on all divs, finding those that have the "example_editor"
     // attribute
     $("div").each(function (index, element) {
-        example_server = $(this).attr("example_server");
-        if (!example_server) {
+        var example_server = $(this).attr("example_server");
+        if (example_server) {
+            fill_editor($(this), example_server);
+        }
+        else {
             example_server = '';
         }
-        fill_editor($(this), example_server);
+
     })
 });
