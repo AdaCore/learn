@@ -27,7 +27,7 @@ function reset(container, editors){
 //  status: the exit status
 //  message: any message coming back from the application
 //   TODO: make use of message
-function process_check_output(container, editors, output_area, output, status, completed, message) {
+function process_check_output(container, editors, output_area, output, status, completed, message, test_cb) {
     // Process the lines
 
     var read_lines = 0
@@ -108,7 +108,7 @@ function process_check_output(container, editors, output_area, output, status, c
     return read_lines
 }
 
-function get_output_from_identifier(container, editors, output_area, identifier) {
+function get_output_from_identifier(container, editors, output_area, identifier, test_cb) {
     data = {
         "identifier": identifier,
         "already_read": container.already_read
@@ -134,6 +134,9 @@ function get_output_from_identifier(container, editors, output_area, identifier)
                     get_output_from_identifier(container, editors, output_area, identifier)
                 }, 250)
             }
+            else {
+               test_cb();
+            }
         })
         .fail(function (xhr, status, errorThrown) {
             output_error(output_area, "the machine running the examples is not responding, please try again later")
@@ -149,7 +152,7 @@ function get_output_from_identifier(container, editors, output_area, identifier)
 
 
 // Launch a run on the given example editor
-function query_operation_result(container, editors, output_area, mode) {
+function query_operation_result(container, editors, output_area, mode, test_cb) {
 
     files = []
 
@@ -193,7 +196,7 @@ function query_operation_result(container, editors, output_area, mode) {
                 reset(container, editors);
                 output_error(output_area, json.message);
             } else {
-                get_output_from_identifier(container, editors, output_area, json.identifier)
+                get_output_from_identifier(container, editors, output_area, json.identifier, test_cb)
             }
         })
         .fail(function (xhr, status, errorThrown) {
@@ -318,7 +321,38 @@ function create_editor(resource, container, content, editors, counter) {
 
 var unique_id = 0
 
+function reset_worker(button, editors, container, output_area) {
+   if (button.disabled) {return;}
+   editors.buttons.forEach(function(b){b.disabled = false;});
+   container.already_read = 0;
+   output_area.empty();
+   output_area.error_count = 0;
+
+   button.editors.forEach(function (x) {
+      x.setValue(x.initial_contents);
+      x.gotoLine(1);
+   });
+}
+
+function check_worker(button, editors, container, output_area, test_cb = function(){}) {
+   if (button.disabled) {return;}
+   editors.buttons.forEach(function(b){b.disabled = true;});
+   output_area.empty();
+   output_area.error_count = 0;
+
+   var div = $('<div class="output_info">');
+   div.text(button.operation_label + "...");
+   div.appendTo(output_area);
+   query_operation_result(container, editors, output_area, button.mode, test_cb);
+}
+
 function fill_editor_from_contents(container, example_server, resources) {
+
+   var test_mode = false;
+   // if container parent is test-descriptor then we are in test mode
+   if (container.parent().hasClass( "test-descriptor" )) {
+      test_mode = true;
+   }
 
    // Then fill the contents of the tabs
 
@@ -357,6 +391,10 @@ function fill_editor_from_contents(container, example_server, resources) {
 
    var reset_created = false;
 
+   var results_div = $( "div.test-results" )
+
+   results_div.text("");
+
    for (var mode in MODES) {
       if (container.attr(mode + "_button")){
 
@@ -365,19 +403,10 @@ function fill_editor_from_contents(container, example_server, resources) {
             reset_created = true;
             var reset_button = $('<button type="button" class="btn btn-secondary">').text("Reset").appendTo(buttons_div)
             reset_button.editors = editors;
-            editors.buttons.push(reset_button)
+            editors.buttons.push(reset_button);
             reset_button.on('click', function (x) {
-                if (reset_button.disabled) {return;}
-                editors.buttons.forEach(function(b){b.disabled = false;})
-                container.already_read = 0;
-                output_area.empty();
-                output_area.error_count = 0;
-
-                reset_button.editors.forEach(function (x) {
-                    x.setValue(x.initial_contents);
-                    x.gotoLine(1);
-                })
-            })
+                reset_worker(reset_button, editors, container, output_area)
+            });
 
          }
 
@@ -390,16 +419,46 @@ function fill_editor_from_contents(container, example_server, resources) {
          editors.buttons.push(check_button);
          check_button.editors = editors;
          check_button.click(check_button, function (x) {
-             if (x.data.disabled) {return;}
-             editors.buttons.forEach(function(b){b.disabled = true;})
-             output_area.empty();
-             output_area.error_count = 0;
+            check_worker(x.data, editors, container, output_area);
+         });
 
-             var div = $('<div class="output_info">');
-             div.text(x.data.operation_label + "...");
-             div.appendTo(output_area);
-             query_operation_result(container, x.data.editors, output_area, x.data.mode);
-          })
+         if(test_mode) {
+            var parent = container.parent();
+            var test_name = parent.find( "div.test_name" ).text();
+            var test_input = parent.find( "div.test_input" ).text();
+            var test_expects = parent.find( "div.test_expects" ).text();
+            var test_exercises = parent.find( "div.test_exercises" ).text();
+
+
+            if (the_text == test_exercises) {
+               check_worker(check_button, editors, container, output_area, function() {
+                  var response = "";
+                  var output_info = container.find( "div.output_area div.output_info" );
+                  var output_error = container.find( "div.output_area div.output_error" );
+                  var output_success = container.find( "div.output_area div.output_success" );
+
+                  if( output_success.length > 0 ) {
+                      response = output_success.text();
+                  }
+                  else if( output_error.length > 0 ) {
+                      response = output_error.text();
+                  }
+                  else {
+                      response = "No response from server...";
+                  }
+
+                  results_div.append("Test ");
+                  if(response == test_expects) {
+                      results_div.append("<span class='passed_test'>Test passed!</span>");
+                  }
+                  else {
+                      results_div.append("<span class='failed_test'>Test failed!</span><br>Response: " + response + "<br>Expects: " + test_expects);
+                  }
+                  results_div.append("<br><br></p>");
+               });
+            }
+         }
+
       }
    }
 }
