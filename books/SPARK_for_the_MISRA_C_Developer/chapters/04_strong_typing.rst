@@ -1,4 +1,4 @@
-:code-config:`accumulate_code=False;run_button=True`
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Retrofitting Strong Typing Rules
 --------------------------------
@@ -73,7 +73,7 @@ standard type ``System.Address`` defines addresses, and conversions to/from
 integers are provided by standard unit ``System.Storage_Elements``. The
 previous wrong C code can be written as follows in Ada:
 
-.. code:: ada prove_button
+.. code:: ada
 
     with System;
     with System.Storage_Elements;
@@ -119,9 +119,7 @@ parameter ``P`` of procedure ``Rotate_X`` by copy or by parameter, but in any
 case the postcondition of ``Rotate_X`` will hold: the resulting value of ``P``
 will be modified by rotation around the ``X`` axis.
 
-:code-config:`accumulate_code=False;run_button=False`
-
-.. code:: ada prove_button
+.. code:: ada
 
     package Geometry is
 
@@ -144,8 +142,6 @@ will be modified by rotation around the ``X`` axis.
        end Rotate_X;
 
     end Geometry;
-
-:code-config:`accumulate_code=False;run_button=True`
 
 SPARK analysis can mathematically prove this fact, and it issues a message that
 the postcondition is proved here.
@@ -226,7 +222,7 @@ of parameter ``len`` passed by the caller of ``count``, which violates
 undecidable MISRA-C Rules 18.1 (pointer arithmetic should stay within bounds)
 and 1.3 (no undefined behavior). Contrast this with the same function in SPARK:
 
-.. code:: ada prove_button
+.. code:: ada
 
     package Types is
        type Int_Array is array (Positive range <>) of Integer;
@@ -266,8 +262,6 @@ go further in SPARK and show that the value returned by ``Count`` is no greater
 than the length of parameter ``P`` by stating this property in postcondition of
 ``Count`` and asking SPARK analysis to prove it:
 
-:code-config:`accumulate_code=False;run_button=False`
-
 .. code:: ada prove_button
 
     package Types is
@@ -289,8 +283,6 @@ than the length of parameter ``P`` by stating this property in postcondition of
        end loop;
        return Count;
     end Count;
-
-:code-config:`accumulate_code=False;run_button=True`
 
 The only help that SPARK analysis required from us is to state how ``Count``
 evolves at each iteration in a loop invariant (a special kind of assertion).
@@ -349,7 +341,7 @@ It is possible to use generics in SPARK to obtain the same result in a fully
 typed way, where procedure ``Assign`` applies its parameter procedure
 ``Initialize`` to its parameter ``V``:
 
-.. code:: ada prove_button
+.. code:: ada
 
     generic
        type T is private;
@@ -480,9 +472,7 @@ integers as well as floating-point types.
 
 Let's try to do the same in SPARK:
 
-:code-config:`accumulate_code=False;run_button=False`
-
-.. code:: ada prove_button
+.. code:: ada
     :class: ada-expect-compile-error
 
     package Bad_Arith is
@@ -498,14 +488,12 @@ Let's try to do the same in SPARK:
 
     end Bad_Arith;
 
-:code-config:`accumulate_code=False;run_button=True`
-
 The compiler reports that there is no applicable operator in both cases. It is
 possible however to get the predecessor of a Boolean or enumerated value with
 ``Value'Pred`` and its successor with ``Value'Succ``, as well as to iterate
 over all values of the type:
 
-.. code:: ada prove_button
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -571,7 +559,7 @@ operation for signed or unsigned integers.
 
 Let's try to do the same in SPARK, where the modulo operator is called ``mod``:
 
-.. code:: ada prove_button
+.. code:: ada
     :class: ada-expect-compile-error
 
     package Bad_Modulo is
@@ -628,7 +616,7 @@ operations for all other scalar types.
 This is one case where SPARK adopts the same convention as C of ordering the
 false and true values, so the above code can be also be expressed in SPARK:
 
-.. code:: ada prove_button
+.. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -678,7 +666,7 @@ Let's try to do the same in SPARK, where the Boolean operators are called
 ``and``, ``or``, ``not`` (for the strict operators that always evaluate both
 operands); ``and then``, ``or else`` (for the shortcut operators):
 
-.. code:: ada prove_button
+.. code:: ada
     :class: ada-expect-compile-error
 
     package Bad_Hamlet is
@@ -694,7 +682,7 @@ Bitwise Operations on Unsigned Integers
 Fancy genetic engineering? Look at how one can transform a Bee into a Cat by
 manipulating individual genes (really, bits) of their matrix:
 
-.. code:: c run_button
+.. code:: c
 
    !main.c
    #include <stdbool.h>
@@ -719,7 +707,7 @@ Let's try to do the same in SPARK, where the bitwise operators are called
 ``and``, ``or``, ``xor``, ``not``, ``Shift_Left``, ``Shift_Right``,
 ``Shift_Right_Arithmetic``, ``Rotate_Left`` and ``Rotate_Right``:
 
-.. code:: ada prove_button
+.. code:: ada
     :class: ada-expect-compile-error
 
     package Bad_Genetics is
@@ -787,7 +775,7 @@ conversions. Take for example the Shakespearian code we saw in section
 :ref:`Boolean Operations on Boolean`. It can be reexpressed in a way that
 satisfies both Rules 10.1 and 10.5:
 
-.. code:: c run_button
+.. code:: c
 
    !main.c
    #include <stdbool.h>
@@ -823,7 +811,7 @@ applies both between types of a different `essential type category` as MISRA-C
 puts it, as well as between types that are essentially the same but defined as
 different.
 
-.. code:: ada prove_button
+.. code:: ada
     :class: ada-expect-compile-error
 
     procedure Bad_Conversions is
@@ -845,7 +833,7 @@ The compiler reports a mismatch on every line in the above procedure. Adding
 explicit conversions only makes the first line valid, as SPARK only allows
 converting between numeric types:
 
-.. code:: ada prove_button
+.. code:: ada
     :class: ada-expect-compile-error
 
     procedure Bad_Conversions is
@@ -870,7 +858,7 @@ an enumeration with values ``False`` and ``True``) and characters (defined as
 an enumeration with character values). Hence, the following is valid SPARK
 code:
 
-.. code:: ada prove_button
+.. code:: ada
 
     procedure Ok_Conversions is
        F : Float := 0.0;

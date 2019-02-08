@@ -146,7 +146,7 @@ considers global data as always initialized, even if the default value of
 all-zeros might not be valid data for the application! Consider a variant of
 the above code where variable ``U`` is now global:
 
-.. code:: ada prove_flow_button run_button
+.. code:: ada prove_flow_button
 
     with Interfaces; use Interfaces;
 
@@ -199,7 +199,7 @@ It is possible in SPARK to specify that ``G`` should initialize variable ``U``
 with a `data dependency` contract introduced with aspect ``Global`` following
 the declaration of procedure ``G``:
 
-.. code:: ada prove_flow_button run_button
+.. code:: ada prove_flow_button
 
     with Interfaces; use Interfaces;
 
@@ -291,10 +291,10 @@ forbids the declarations of ``b`` and ``c``. In addition, MISRA-C Rule 9.4
 forbids the declaration of ``e``.
 
 In SPARK, the aggregate used to initialize an array or a record should fully
-match the components of the array or record. Violations lead to compilation
-errors, both for records:
+match the components of the array or record. Violations lead to errors or
+warnings at compilation, both for records:
 
-.. code:: ada prove_button
+.. code:: ada run_button
     :class: ada-expect-compile-error
 
     package Init_Record is
@@ -306,7 +306,7 @@ errors, both for records:
 
 and for arrays:
 
-.. code:: ada prove_button
+.. code:: ada run_button
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
@@ -315,7 +315,7 @@ and for arrays:
 
 Similarly, redundant initialization leads to compilation errors for records:
 
-.. code:: ada prove_button
+.. code:: ada run_button
     :class: ada-expect-compile-error
 
     package Init_Record is
@@ -327,7 +327,7 @@ Similarly, redundant initialization leads to compilation errors for records:
 
 and for arrays:
 
-.. code:: ada prove_button
+.. code:: ada run_button
     :class: ada-expect-compile-error
 
     package Init_Array is
@@ -341,7 +341,7 @@ initialization of the type is used, which may be no initialization at all),
 SPARK analysis rejects such use when it leads to components not being
 initialized, both for records:
 
-.. code:: ada prove_button
+.. code:: ada prove_flow_button
 
     package Init_Record is
        type Rec is record
@@ -352,7 +352,7 @@ initialized, both for records:
 
 and for arrays:
 
-.. code:: ada prove_button
+.. code:: ada prove_flow_button
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;

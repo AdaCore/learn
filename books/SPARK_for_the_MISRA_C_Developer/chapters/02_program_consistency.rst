@@ -65,7 +65,7 @@ the compiler issues an error if they are used elsewhere:
 
     !hello_world.adb
     procedure Hello_World is
-         with Ada.Text_IO;
+       with Ada.Text_IO;
     begin
        Ada.Text_IO.Put_Line ("hello, world!");
     end Hello_World;
@@ -211,7 +211,7 @@ for ``var`` and ``fun``:
 
 or to repeat these declarations directy:
 
-.. code:: c run_button
+.. code:: c
 
    !main.c
    extern int var;
@@ -238,8 +238,7 @@ is changed to ``float`` in the declarations above. With the declaration of
 errors, producing the erroneous output ``var = 1065353216`` instead of ``var =
 1``. With the return type of ``fun`` changed to ``float`` instead, the program
 still compiles and runs without errors, producing this time the erroneous
-output ``var = 0``. With both ``var`` and ``fun`` changed from ``int`` to
-``float``, the erroneous output is yet different: ``var = 16777215``.
+output ``var = 0``.
 
 The inconsistency just discussed is prevented by MISRA-C Rule 8.3 `"All
 declarations of an object or function shall use the same names and type

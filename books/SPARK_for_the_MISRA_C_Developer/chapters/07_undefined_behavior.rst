@@ -1,5 +1,7 @@
 :code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
+.. _Detecting Undefined Behavior:
+
 Detecting Undefined Behavior
 ----------------------------
 
