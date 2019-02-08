@@ -173,7 +173,7 @@ procedures can. The only effect of SPARK functions is the computation of a
 result from their inputs, passed both as parameters or as global variables. In
 particular, SPARK functions cannot have output parameters:
 
-.. code-block:: ada
+.. code:: ada prove_flow_button
 
    function Bad_Function (X, Y : Integer; Sum, Max : out Integer) return Boolean;
 

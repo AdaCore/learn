@@ -1,4 +1,4 @@
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Recovering Basic Syntactic Guarantees
 -------------------------------------
@@ -147,7 +147,7 @@ modified, and their modification is visible at the calling site. For example,
 assigning to parameter of mode `in` (the default parameter mode which can also
 be ommitted) results in compilation errors:
 
-.. code:: ada prove_button
+.. code:: ada
     :class: ada-expect-compile-error
 
     procedure Swap (X, Y : Integer) is
@@ -159,7 +159,7 @@ be ommitted) results in compilation errors:
 
 The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
 
-.. code:: ada prove_button
+.. code:: ada
 
     procedure Swap (X, Y : in out Integer) is
        Tmp : Integer := X;
@@ -219,7 +219,7 @@ statement. The null statement is an explicit ``null;`` and all blocks of
 statements have explicit begin and end markers, which defeats mistakes like the
 ones that are possible in C. The above C code is written as follows in SPARK:
 
-.. code:: ada prove_button
+.. code:: ada
 
     function Main return Integer is
     begin
@@ -254,7 +254,7 @@ with execution automatically exiting the switch after a case is handled, and
 the compiler checking that the cases to handle are disjoint (like in C) and
 complete (unlike in C). So the following code is rejected by the compiler:
 
-.. code:: ada prove_button
+.. code:: ada
     :class: ada-expect-compile-error
 
     package Sign_Domain is
@@ -305,7 +305,7 @@ Similar rules applied above to both case-expressions as in functions
 ``Opposite`` and ``Multiply`` and in case-statements as in procedure
 ``Get_Sign``. Here is a correct version of the same code:
 
-.. code:: ada prove_button
+.. code:: ada
 
     package Sign_Domain is
 
@@ -375,7 +375,7 @@ this rule:
 The equivalent code in SPARK does not compile due to the attempt at modifying
 the value of the loop counter:
 
-.. code:: ada prove_button
+.. code:: ada
     :class: ada-expect-compile-error
 
     procedure Well_Formed_Loop (C : Boolean) is
@@ -453,7 +453,7 @@ statement"`. Yes, that's the same rule as the one we saw before for
 :ref:`Preventing the Semicolon Mistake`. So the code for ``absval`` must be
 written:
 
-.. code:: c run_button
+.. code:: c
 
    !main.c
    #include <stdio.h>
@@ -495,3 +495,7 @@ problem cannot arise. The above C code is written as follows in SPARK:
        end if;
        return Result;
     end Absval;
+
+Interestingly, SPARK analysis detects here that the negation operation on line
+9 might overflow. That's an example of runtime error detection which will be
+covered in the chapter on :ref:`Detecting Undefined Behavior`.
