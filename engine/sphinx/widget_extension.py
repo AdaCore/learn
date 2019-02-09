@@ -11,10 +11,33 @@ Code accumulation: cancel it with an empty :code-config: directive
 
 This plugin interprets the folloging parameters to the code:: directive:
 
-    * run_button  - forces the existence of a run button
     * no_button   - removes all buttons
+    * <X>_button  - forces the existence of a button for mode X.
+                    Modes are defined in the MODES variable in editors.js.
 
 these override the code-config setting.
+
+The code inside code:: directives is extracted into a list of files.
+The files are extracted the following way:
+
+   - for valid Ada code, 'gnatchop' is run on the entirety of the
+     snippet
+
+   - for C code, the files should be named explicitely, with a marker of
+     the form
+             !<basename>
+     placed at the beginning of each file in the snippet. This mechanism
+     is also activated if the argument manual_chop is passed to the
+     code:: directive. For instance:
+
+              .. code:: prove_button manual_chop
+
+                 !main.c
+                 int main(void);
+
+                 !t.ads
+                 package T is
+                 end T;
 
 """
 from __future__ import print_function
