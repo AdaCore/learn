@@ -84,7 +84,7 @@ previous C code can be written as follows in Ada:
     procedure Pointer is
        A : constant System.Address := System.Storage_Elements.To_Address (42);
        M : aliased Integer with Address => A;
-       P : access Integer := M'Access;
+       P : constant access Integer := M'Access;
     begin
        P.all := 0;
     end Pointer;
@@ -130,6 +130,8 @@ parameter ``P`` of procedure ``Rotate_X`` either by copy or by reference, but
 regardless of the choice the postcondition of ``Rotate_X`` will hold:
 the final value of ``P`` will be modified by rotation around the ``X`` axis.
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
 .. code:: ada prove_button
 
     package Geometry is
@@ -153,6 +155,8 @@ the final value of ``P`` will be modified by rotation around the ``X`` axis.
        end Rotate_X;
 
     end Geometry;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 SPARK's analysis tool can mathematically prove that the postcondition is true.
 
@@ -260,8 +264,8 @@ and 1.3 (no undefined behavior). Contrast this with the same function in SPARK
     with Count;
 
     procedure Test_Count is
-       P : Int_Array := (0, 3, 9, 3, 3);
-       C : Integer := Count (P, 3);
+       P : constant Int_Array := (0, 3, 9, 3, 3);
+       C : constant Integer := Count (P, 3);
     begin
        Put_Line ("value 3 is seen" & C'Img & " times in p");
     end Test_Count;
@@ -277,6 +281,8 @@ not depend on the values of parameters passed by its callers. In fact, we can
 go further in SPARK and show that the value returned by ``Count`` is no greater
 than the length of parameter ``P`` by stating this property in the postcondition of
 ``Count`` and asking the SPARK analysis tool to prove it:
+
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
 .. code:: ada prove_button
 
@@ -299,6 +305,8 @@ than the length of parameter ``P`` by stating this property in the postcondition
        end loop;
        return Count;
     end Count;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 The only help that SPARK analysis required from the programmer, in order to prove the
 postcondition, is a loop invariant (a special kind of assertion) that reflects
