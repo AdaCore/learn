@@ -9,22 +9,22 @@ Initializing Data Before Use
 .. role:: c(code)
    :language: c
 
-As in many other languages, data is not always initialized at declaration in C,
-which makes it possible to unintentionally read uninitialized data. This is a
-case of undefined behavior, which can sometimes be used to attack the program
-in various ways.
+As with most programming languages, C does not require that variables be initialized at
+their declaration, which makes it possible to unintentionally read
+uninitialized data. This is a case of undefined behavior, which can sometimes
+be used to attack the program.
 
 .. _Detecting Read of Uninitialized Data:
 
-Detecting Read of Uninitialized Data
-************************************
+Detecting Reads of Uninitialized Data
+*************************************
 
-MISRA-C attempts to prevent reads of uninitialized data in a specific section
-on "Initialization" containing 5 rules. The most important is Rule 9.1 stating
-that "`The value of an object with automatic storage duration shall not be read
+MISRA C attempts to prevent reads of uninitialized data in a specific section
+on "Initialization", containing five rules. The most important is Rule 9.1:
+"`The value of an object with automatic storage duration shall not be read
 before it has been set`". The first example in the rule is interesting, as it
 shows a non-trivial (and common) case of conditional initialization, where a
-function ``f`` initializes an output parameter ``p`` only in come cases, and
+function ``f`` initializes an output parameter ``p`` only in some cases, and
 the caller ``g`` of ``f`` ends up reading the value of the variable ``u``
 passed in argument to ``f`` in cases where it has not been initialized:
 
@@ -51,23 +51,23 @@ passed in argument to ``f`` in cases where it has not been initialized:
    }
 
 Detecting the violation of Rule 9.1 can be arbitrarily complex, as the program
-points corresponding to initialization and read can be separated by many calls
-and conditions. This rule is one of the undecidable ones, for which most
-MISRA-C checkers won't detect all violations.
+points corresponding to a variable's initialization and read can be separated
+by many calls and conditions. This is one of the undecidable rules, for which most
+MISRA C checkers won't detect all violations.
 
-In SPARK, the guarantee that all reads are to initialized data is provided by a
-part of the tool called `flow analysis`. Every subprogram is analyzed
+In SPARK, the guarantee that all reads are to initialized data is enforced by
+the SPARK analysis tool, GNATprove, through what is referred to as
+`flow analysis`. Every subprogram is analyzed
 separately to check that it cannot read uninitialized data. To make this
-modular analysis possible, SPARK programs should respect the following
+modular analysis possible, SPARK programs need to respect the following
 constraints:
 
 - all inputs of a subprogram should be initialized on subprogram entry
 
-- all outputs of a subprogram should be initialized on subprogram exit
+- all outputs of a subprogram should be initialized on subprogram return
 
-Hence, the SPARK analysis tool called GNATprove reports on the following code
-translated from C that function ``F`` might not always initialize output
-parameter ``P``:
+Hence, given the following code translated from C, GNATprove reports that
+function ``F`` might not always initialize output parameter ``P``:
 
 .. code:: ada prove_flow_button
 
@@ -99,7 +99,7 @@ parameter ``P``:
 
     end Init;
 
-Let's fix the program by initializing ``P`` to value 0 when condition ``B`` is
+We can correct the program by initializing ``P`` to value 0 when condition ``B`` is
 not satisfied:
 
 .. code:: ada prove_flow_button
@@ -134,16 +134,15 @@ not satisfied:
 
     end Init;
 
-GNATprove does not report any more check messages for possible reads of
-uninitialized data. On the contrary it confirms that all reads are made to
-initialized data.
+GNATprove now does not report any possible reads of uninitialized data.
+On the contrary, it confirms that all reads are made from initialized data.
 
-Contrary to C, SPARK does not guarantee that global data (called
-`library-level` data in SPARK) is zero-initialized at program startup. Instead,
+In contrast with C, SPARK does not guarantee that global data (called
+`library-level` data in SPARK and Ada) is zero-initialized at program startup. Instead,
 GNATprove checks that all global data is explicitly initialized (at declaration
-or elsewhere) before it is read. Hence it goes beyond MISRA-C Rule 9.1 which
-considers global data as always initialized, even if the default value of
-all-zeros might not be valid data for the application! Consider a variant of
+or elsewhere) before it is read. Hence it goes beyond the MISRA C Rule 9.1, which
+considers global data as always initialized even if the default value of
+all-zeros might not be valid data for the application. Here's a variation of
 the above code where variable ``U`` is now global:
 
 .. code:: ada prove_flow_button
@@ -191,13 +190,13 @@ paths, ``U`` keeps its value on the other path, which needs to be an
 initialized value), which means that ``G`` which calls ``F`` also needs to take
 ``U`` as an initialized input, which in turn means that ``Call_Init`` which
 calls ``G`` also needs to take ``U`` as an initialized input. At this point,
-we've reached the main program, so the initialization phase called
-`elaboration` in SPARK should have taken care of initializing ``U``, which is
-not the case here, hence the message from GNATprove.
+we've reached the main program, so the initialization phase (referred to as
+`elaboration` in SPARK and Ada) should have taken care of initializing ``U``.
+This is not the case here, hence the message from GNATprove.
 
-It is possible in SPARK to specify that ``G`` should initialize variable ``U``
-with a `data dependency` contract introduced with aspect ``Global`` following
-the declaration of procedure ``G``:
+It is possible in SPARK to specify that ``G`` should initialize variable ``U``;
+this is done with a `data dependency` contract introduced with aspect ``Global``
+following the declaration of procedure ``G``:
 
 .. code:: ada prove_flow_button
 
@@ -236,7 +235,7 @@ the declaration of procedure ``G``:
        Init.G;
     end Call_Init;
 
-In that case, GNATprove reports the error on the call to ``F`` in ``G``, as it
+GNATprove reports the error on the call to ``F`` in ``G``, as it
 knows at this point that ``F`` needs ``U`` to be initialized but the calling
 context in ``G`` cannot provide that guarantee. If we provide the same data
 dependency contract for ``F``, then GNATprove reports the error on ``F``
@@ -245,7 +244,7 @@ itself, similarly to what we saw for an output parameter ``U``.
 Detecting Partial or Redundant Initialization of Arrays and Structures
 **********************************************************************
 
-The other rules in the section on "Initialization" deal with common errors with
+The other rules in the section on "Initialization" deal with common errors in
 initializing aggregates and `designated initializers` in C99 to initialize a
 structure or array at declaration. These rules attempt to patch holes created
 by the lax syntax and rules in C standard. For example, here are five valid
@@ -263,9 +262,9 @@ initializations of an array of 10 elements in C:
       return 0;
    }
 
-Only ``a`` is fully initialized to all-zeros in the above code snippet. MISRA-C
+Only ``a`` is fully initialized to all-zeros in the above code snippet. MISRA C
 Rule 9.3 thus forbids all other declarations by stating that `"Arrays shall not
-be partially initialized"`. In addition, MISRA-C Rule 9.4 forbids the
+be partially initialized"`. In addition, MISRA C Rule 9.4 forbids the
 declaration of ``e`` by stating that `"An element of an object shall not be
 initialised more than once"` (in ``e``'s declaration, the element at index 8 is
 initialized twice).
@@ -277,7 +276,7 @@ declarations with the same potential issues:
 
    !main.c
    int main() {
-     typedef struct { int x; int y; int z; } rec;
+      typedef struct { int x; int y; int z; } rec;
       rec a = {0};
       rec b = {0, 0};
       rec c = {0, .y = 0};
@@ -286,13 +285,13 @@ declarations with the same potential issues:
       return 0;
    }
 
-Here only ``a``, ``d`` and ``e`` are fully initialized. MISRA-C Rule 9.3 thus
-forbids the declarations of ``b`` and ``c``. In addition, MISRA-C Rule 9.4
+Here only ``a``, ``d`` and ``e`` are fully initialized. MISRA C Rule 9.3 thus
+forbids the declarations of ``b`` and ``c``. In addition, MISRA C Rule 9.4
 forbids the declaration of ``e``.
 
-In SPARK, the aggregate used to initialize an array or a record should fully
-match the components of the array or record. Violations lead to errors or
-warnings at compilation, both for records:
+In SPARK and Ada, the aggregate used to initialize an array or a record must fully
+cover the components of the array or record. Violations lead to compilation
+errors, both for records:
 
 .. code:: ada run_button
     :class: ada-expect-compile-error
@@ -301,7 +300,7 @@ warnings at compilation, both for records:
        type Rec is record
           X, Y, Z : Integer;
        end record;
-       R : Rec := (X => 1);
+       R : Rec := (X => 1); -- Error, Y and Z not specified
     end Init_Record;
 
 and for arrays:
@@ -310,7 +309,7 @@ and for arrays:
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
-       A : Arr := (1 => 1);
+       A : Arr := (1 => 1); -- Error, elements 2..10 not specified
     end Init_Array;
 
 Similarly, redundant initialization leads to compilation errors for records:
@@ -322,7 +321,7 @@ Similarly, redundant initialization leads to compilation errors for records:
        type Rec is record
           X, Y, Z : Integer;
        end record;
-       R : Rec := (X => 1, Y => 1, Z => 1, X => 2);
+       R : Rec := (X => 1, Y => 1, Z => 1, X => 2); -- Error, X duplicated
     end Init_Record;
 
 and for arrays:
@@ -332,7 +331,7 @@ and for arrays:
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
-       A : Arr := (1 .. 8 => 1, 9 .. 10 => 2, 7 => 3);
+       A : Arr := (1 .. 8 => 1, 9 .. 10 => 2, 7 => 3); -- error, A(7) duplicated
     end Init_Array;
 
 Finally, while it is legal in Ada to leave uninitialized parts in a record or
@@ -347,7 +346,7 @@ initialized, both for records:
        type Rec is record
           X, Y, Z : Integer;
        end record;
-       R : Rec := (X => 1, others => <>);
+       R : Rec := (X => 1, others => <>); -- Error, Y and Z not specified
     end Init_Record;
 
 and for arrays:
@@ -356,5 +355,5 @@ and for arrays:
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
-       A : Arr := (1 .. 8 => 1, 9 .. 10 => <>);
+       A : Arr := (1 .. 8 => 1, 9 .. 10 => <>); -- Error, A(9..10) not specified
     end Init_Array;

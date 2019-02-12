@@ -11,84 +11,90 @@ Detecting Undefined Behavior
 .. role:: c(code)
    :language: c
 
-Undefined behavior (and critical unspecified behavior, that we'll include in
-undefined behavior for this discussion) are the plague of C programs. Many
-rules in MISRA-C actually contribute to avoid undefined behavior, as visible in
-the 20 occurrences of "undefined" in the MISRA-C:2012 document.
+Undefined behavior (and critical unspecified behavior, which we'll treat as
+undefined behavior) are the plague of C programs. Many
+rules in MISRA C are designed to avoid undefined behavior, as evidenced by
+the twenty occurrences of "undefined" in the MISRA C:2012 document.
 
-MISRA-C Rule 1.3 is the rule that rules them all, stating very simply:
+MISRA C Rule 1.3 is the overarching rule, stating very simply:
 
    `"There shall be no occurrence of undefined or critical unspecified
    behaviour."`
 
-The deceiving simplicity of this rule rests on the definition of `undefined or
-critical unspecified behaviour`. Appendix H of MISRA:C 2012 lists over 10 pages
-the hundreds of cases of undefined and critical unspecified behavior in the C
+The deceptive simplicity of this rule rests on the definition of `undefined or
+critical unspecified behaviour`. Appendix H of MISRA:C 2012 lists
+hundreds of cases of undefined and critical unspecified behavior in the C
 programming language standard, a majority of which are not individually
 decidable.
 
-It is therefore not surprising that a majority of MISRA-C checkers stay away
-from any serious attempt at verifying MISRA-C Rule 1.3.
+It is therefore not surprising that a majority of MISRA C checkers do
+not make a serious attempt to verify compliance with MISRA C Rule 1.3.
 
-Undefined Behavior in SPARK
-***************************
+Preventing Undefined Behavior in SPARK
+**************************************
 
-As SPARK is a subset of the Ada programming language, SPARK programs may
-exhibit two types of undefined behaviors:
+Since SPARK is a subset of the Ada programming language, SPARK programs may
+exhibit two types of undefined behaviors that can occur in Ada:
 
-- `bounded errors` occur when the program enters a state not defined in the
-  programming language semantics, but the consequences are bounded in various
+- `bounded error`: when the program enters a state not defined by the
+  language semantics, but the consequences are bounded in various
   ways. For example, reading uninitialized data can lead to a bounded error,
   when the value read does not correspond to a valid value for the type of the
   object. In this specific case, the Ada Reference Manual states that either a
   predefined exception is raised or execution continues using the invalid
   representation.
 
-- `erroneous executions` occur when when the program enters a state not defined
-  in the programming language semantics, but the consequences are not bounded
+- `erroneous execution`: when when the program enters a state not defined
+  by the language semantics, but the consequences are not bounded
   by the Ada Reference Manual. This is the closest to an undefined behavior
-  in C. For exemple, concurrently writing through different tasks to the same
-  unprotected variable is a case of erroneous behavior.
+  in C. For example, concurrently writing through different tasks to the same
+  unprotected variable is a case of erroneous execution.
 
-Many cases of undefined behavior in C are in fact raising exceptions in
+Many cases of undefined behavior in C would in fact raise exceptions in
 SPARK. For example, accessing an array beyond its bounds raises the exception
 ``Constraint_Error`` while reaching the end of a function without returning a
 value raises the exception ``Program_Error``.
 
-SPARK Reference Manual defines the SPARK subset through a combination of
-legality rules (checked by the compiler, or the compile-like phase preceding
-analysis) and verification rules (checked by the formal analysis tool
+The SPARK Reference Manual defines the SPARK subset through a combination of
+*legality rules* (checked by the compiler, or the compiler-like phase preceding
+analysis) and *verification rules* (checked by the formal analysis tool
 GNATprove). Bounded errors and erroneous execution are prevented by a
-combination of legality rules and the part of GNATprove called `flow analysis`
-which in particular detects potential reads of uninitialized data, as seen in
-:ref:`Detecting Read of Uninitialized Data`. In the following, we concentrate
-on the verification that no exceptions can be raised.
+combination of legality rules and the `flow analysis` part of GNATprove,
+which in particular detects potential reads of uninitialized data, as described in
+:ref:`Detecting Read of Uninitialized Data`. The following discussion focuses
+on how SPARK can verify that no exceptions can be raised.
 
-Proof of Absence of Runtime Errors in SPARK
-*******************************************
+Proof of Absence of Run-Time Errors in SPARK
+********************************************
 
-The most common runtime errors are related to misuse of arithmetic (division by
+The most common run-time errors are related to misuse of arithmetic (division by
 zero, overflows, exceeding the range of allowed values), arrays (accessing
-beyond an array bounds, assigning between arrays of different lengths),
-structures (accessing components that are not defined in a given dynamic
-variant).
+beyond an array bounds, assigning between arrays of different lengths), and
+structures (accessing components that are not defined for a given variant).
 
-The arithmetic runtime errors can occur with any numeric type: signed integers,
-unsigned integers, floating-point, fixed-point. These can occur when applying
-arithmetic operations or when converting between numeric types.
+Arithmetic run-time errors can occur with signed integers,
+unsigned integers, fixed-point and floating-point (although with
+IEEE 754 floating-point arithmetic, errors are manifest as special
+run-time values such as NaN and infinities rather than as exceptions
+that are raised). These errors can occur when applying
+arithmetic operations or when converting between numeric types (if the
+value of the expression being converted is outside the range of the
+type to which it is being converted).
 
-Operations on enumerations too can lead to runtime errors when trying to obtain
-the predecessor of the first element in an enumeration ``Enum'First'Pred`` or
-the successor of the last element in an enumeration ``Enum'Last'Succ``.
+Operations on enumeration values can also lead to run-time errors; e.g.,
+``T'Pred(T'First)`` or ``T'Succ(T'Last)`` for an enumeration type ``T``,
+or ``T'Val(N)`` where ``N`` is an integer value that
+is outside the range ``0 .. T'Pos(T'Last)``.
 
-Let's look at a simple assignment statement setting the value of the ``I`` +
-``J`` th cell of an array of naturals ``A`` to ``P`` / ``Q``.
+The ``Update`` procedure below contains what appears to be a simple assignment
+statement, which sets the value of array element ``A(I+J)``  to ``P/Q``.
 
 .. code:: ada prove_button
 
     package Show_Runtime_Errors is
 
        type Nat_Array is array (Integer range <>) of Natural;
+       --  The values in subtype Natural are 0 , 1, ... Integer'Last
 
        procedure Update (A : in out Nat_Array; I, J, P, Q : Integer);
 
@@ -103,129 +109,134 @@ Let's look at a simple assignment statement setting the value of the ``I`` +
 
     end Show_Runtime_Errors;
 
-If we don't know the values of ``I``, ``J``, ``P``, and ``Q``, then there
-is a question of what are the errors which may occur when executing this
-code. In fact, there are quite an important number of them.
+However, for an arbitrary invocation of this procedure, say
+``Update(A, I, J, P, Q)``, an exception can be raised in a variety of
+circumstances:
 
-First, the computation of ``I`` + ``J`` may overflow, for example if ``I``
-is ``Integer'Last`` and ``J`` is positive.
+* The computation ``I+J`` may overflow, for example if ``I``
+  is ``Integer'Last`` and ``J`` is positive.
 
-.. code-block:: ada
+  .. code-block:: ada
 
-    A (Integer'Last + 1) := P / Q;
+     A (Integer'Last + 1) := P / Q;
 
-Then, its result may not be in the range of the array ``A``.
+* The value of ``I+J`` may be outside the range of the array ``A``.
 
-.. code-block:: ada
+  .. code-block:: ada
 
-    A (A'Last + 1) := P / Q;
+     A (A'Last + 1) := P / Q;
 
-On the other side of the assignment, the division may also overflow, but
-only in the very special case where ``P`` is ``Integer'First`` and
-``Q`` is -1 because of the asymmetric range of signed integer types.
+* The division ``P / Q`` may overflow in the special case where ``P``
+  is ``Integer'First`` and ``Q`` is ``-1``, because of the asymmetric
+  range of signed integer types.
 
-.. code-block:: ada
+  .. code-block:: ada
 
-    A (I + J) := Integer'First / -1;
+     A (I + J) := Integer'First / -1;
 
-As the array contains natural numbers, it is also an error to store a
-negative value in it.
+* Since the array can only contain non-negative numbers (the element subtype
+  is ``Natural``), it is also an error to store a negative value in it.
 
-.. code-block:: ada
+  .. code-block:: ada
 
     A (I + J) := 1 / -1;
 
-Finally, the division is not allowed if ``Q`` is 0.
+* Finally, if ``Q`` is 0 then a divide by zero error will occur.
 
-.. code-block:: ada
+  .. code-block:: ada
 
     A (I + J) := P / 0;
 
-For all those runtime errors, the compiler will generate checks in the
-executable code to make sure that no inconsistent state can be reached,
-raising an exception if those checks fail. You can see the type of
-exceptions raised due to failed checks for each of the different
-assignment statements below:
+For each of these potential run-time errors, the compiler will generate checks in the
+executable code, raising an exception if any of the checks fail:
 
 .. code-block:: ada
 
     A (Integer'Last + 1) := P / Q;
-    -- raised CONSTRAINT_ERROR : overflow check failed
+    --  raised CONSTRAINT_ERROR : overflow check failed
 
     A (A'Last + 1) := P / Q;
-    -- raised CONSTRAINT_ERROR : index check failed
+    --  raised CONSTRAINT_ERROR : index check failed
 
     A (I + J) := Integer'First / (-1);
-    -- raised CONSTRAINT_ERROR : overflow check failed
+    --  raised CONSTRAINT_ERROR : overflow check failed
 
     A (I + J) := 1 / (-1);
-    -- raised CONSTRAINT_ERROR : range check failed
+    --  raised CONSTRAINT_ERROR : range check failed
 
     A (I + J) := P / 0;
-    -- raised CONSTRAINT_ERROR : divide by zero
+    --  raised CONSTRAINT_ERROR : divide by zero
 
-Note that these runtime checks are costly, both in terms of program size
-and execution time. They do not come at zero cost and therefore, depending
-on the context, it may be appropriate to remove them if we can statically
-ensure that they can never be needed at runtime.
+These run-time checks incur an overhead in program size
+and execution time. Therefore it may be appropriate to remove them
+if we are confident that they are not needed.
 
-This is where analysis using GNATprove can be used to demonstrate
-statically that none of these errors will ever occur at runtime. More
-precisely, GNATprove logically interprets the meaning of every instruction
-in the program. Using this interpretation, GNATprove generates a logical
-formula called verification condition for each possible check required
-for the validity of the code.
+The traditional way to obtain the needed confidence is through testing,
+but it is well known that this can never be complete, at least for
+non-trivial programs. Much better is to guarantee the absence of
+run-time errors through sound static analysis, and that's where
+SPARK and GNATprove can help.
+
+More precisely, GNATprove logically interprets the meaning of every instruction
+in the program, taking into account both control flow and data/information
+dependencies. It uses this analysis to generate a logical
+formula called a *verification condition* for each possible check.
 
 .. code-block:: ada
 
     A (Integer'Last + 1) := P / Q;
-    -- medium: overflow check might fail
+    --  medium: overflow check might fail
 
     A (A'Last + 1) := P / Q;
-    -- medium: array index check might fail
+    --  medium: array index check might fail
 
     A (I + J) := Integer'First / (-1);
-    -- medium: overflow check might fail
+    --  medium: overflow check might fail
 
     A (I + J) := 1 / (-1);
-    -- medium: range check might fail
+    --  medium: range check might fail
 
     A (I + J) := P / 0;
-    -- medium: divide by zero might fail
+    --  medium: divide by zero might fail
 
 The verification conditions are then given to an automatic prover. If
-every verification condition generated for a program can be validated by a
-prover, it means that no error will ever be raised at runtime when
-executing this program.
+every verification condition can be proved, then no run-time errors will
+occur.
 
-The way to program in SPARK in order to prove the absence of runtime errors is
-a combination of:
+GNATprove's analysis is sound -- it will detect all possible instances of run-time
+exceptions being raised -- while also having high precision (i.e., not producing
+a cascade of "false alarms").
 
-- more precise types for variables, that give precise ranges to numeric values
+The way to program in SPARK so that GNATprove can guarantee the absence of run-time
+errors entails:
 
-- using preconditions and postconditions on subprograms to specify respectively
+- declaring variables with precise constraints, and in particular to specify
+  precise ranges for scalars; and
+
+- defining preconditions and postconditions on subprograms, to specify respectively
   the constraints that callers should respect and the guarantees that the
-  subprogram should provide on exit
+  subprogram should provide on exit.
 
-For example, here is a possible way to rewrite the previous program so that we
-can guarantee through proof that no possible runtime error can be raised:
+For example, here is a revised version of the previous example, which
+can guarantee through proof that no possible run-time error can be raised:
 
 .. code:: ada prove_button
 
     package No_Runtime_Errors is
 
-       subtype Index is Integer range 0 .. 100;
+       subtype Index_Range is Integer range 0 .. 100;
 
-       type Nat_Array is array (Index range <>) of Natural;
+       type Nat_Array is array (Index_Range range <>) of Natural;
 
-       procedure Update (A : in out Nat_Array; I, J : Index; P, Q : Positive) with
+       procedure Update (A : in out Nat_Array; I, J : Index_Range; P, Q : Positive)
+       with
          Pre => I + J in A'Range;
 
     end No_Runtime_Errors;
 
     package body No_Runtime_Errors is
 
-       procedure Update (A : in out Nat_Array; I, J : Index; P, Q : Positive) is
+       procedure Update (A : in out Nat_Array; I, J : Index_Range; P, Q : Positive) is
        begin
           A (I + J) := P / Q;
        end Update;
