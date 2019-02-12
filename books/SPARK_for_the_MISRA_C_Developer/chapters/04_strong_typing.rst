@@ -1,4 +1,4 @@
-:code-config:`run_button=True;prove_button=True;accumulate_code=False`
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Enforcing Strong Typing
 -----------------------
@@ -130,7 +130,7 @@ parameter ``P`` of procedure ``Rotate_X`` either by copy or by reference, but
 regardless of the choice the postcondition of ``Rotate_X`` will hold:
 the final value of ``P`` will be modified by rotation around the ``X`` axis.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Geometry is
 
@@ -505,14 +505,14 @@ Here's an attempt to simulate the above C code in SPARK (and Ada):
 
     package Bad_Arith is
 
-       B1 : Boolean := True;
-       B2 : Boolean := False;
-       B3 : Boolean := B1 + B2;
+       B1 : constant Boolean := True;
+       B2 : constant Boolean := False;
+       B3 : constant Boolean := B1 + B2;
 
        type Fruit is (Apple, Orange);
-       F1 : Fruit := Apple;
-       F2 : Fruit := Orange;
-       F3 : Fruit := F1 + F2;
+       F1 : constant Fruit := Apple;
+       F2 : constant Fruit := Orange;
+       F3 : constant Fruit := F1 + F2;
 
     end Bad_Arith;
 
@@ -522,18 +522,18 @@ Here is the output from AdaCore's GNAT compiler:
 
      1.     package Bad_Arith is
      2.
-     3.        B1 : Boolean := True;
-     4.        B2 : Boolean := False;
-     5.        B3 : Boolean := B1 + B2;
-                                  |
+     3.        B1 : constant Boolean := True;
+     4.        B2 : constant Boolean := False;
+     5.        B3 : constant Boolean := B1 + B2;
+                                           |
         >>> there is no applicable operator "+" for type "Standard.Boolean"
 
      6.
      7.        type Fruit is (Apple, Orange);
-     8.        F1 : Fruit := Apple;
-     9.        F2 : Fruit := Orange;
-    10.        F3 : Fruit := F1 + F2;
-                                |
+     8.        F1 : constant Fruit := Apple;
+     9.        F2 : constant Fruit := Orange;
+    10.        F3 : constant Fruit := F1 + F2;
+                                         |
         >>> there is no applicable operator "+" for type "Fruit" defined at line 7
 
     11.
@@ -549,14 +549,14 @@ to iterate over all values of the type:
 
     procedure Ok_Arith is
 
-       B1 : Boolean := False;
-       B2 : Boolean := Boolean'Succ (B1);
-       B3 : Boolean := Boolean'Pred (B2);
+       B1 : constant Boolean := False;
+       B2 : constant Boolean := Boolean'Succ (B1);
+       B3 : constant Boolean := Boolean'Pred (B2);
 
        type Fruit is (Apple, Orange);
-       F1 : Fruit := Apple;
-       F2 : Fruit := Fruit'Succ (F1);
-       F3 : Fruit := Fruit'Pred (F2);
+       F1 : constant Fruit := Apple;
+       F2 : constant Fruit := Fruit'Succ (F1);
+       F3 : constant Fruit := Fruit'Pred (F2);
 
     begin
        pragma Assert (B1 = B3);
@@ -773,6 +773,7 @@ different types.
     :class: ada-expect-compile-error
 
     procedure Bad_Conversions is
+       pragma Warnings (Off);
        F : Float := 0.0;
        I : Integer := 0;
        type Animal is (Ape, Bee, Cat);
@@ -801,6 +802,7 @@ type and its parent typ, but all other conversions are illegal:
     :class: ada-expect-compile-error
 
     procedure Bad_Conversions is
+       pragma Warnings (Off);
        F : Float := 0.0;
        I : Integer := 0;
        type Animal is (Ape, Bee, Cat);
@@ -835,6 +837,7 @@ an enumeration type:
 .. code:: ada
 
     procedure Ok_Conversions is
+       pragma Warnings (Off);
        F : Float := 0.0;
        I : Integer := 0;
        type Animal is (Ape, Bee, Cat);
