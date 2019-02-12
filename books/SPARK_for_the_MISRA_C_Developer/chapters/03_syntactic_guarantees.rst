@@ -99,6 +99,8 @@ two calls to ``F`` in the following are detected as unused, even though the resu
 of the function call is assigned to a variable, which is itself used in
 the second case:
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
 .. code:: ada prove_flow_button
 
     package Fun is
@@ -117,6 +119,8 @@ the second case:
 
        Z := F;
     end Use_F;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Only the result of the third call is used to influence the value of an output
 of ``Use_F``, here the output parameter ``Z`` of the procedure.
@@ -180,7 +184,7 @@ The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
 .. code:: ada
 
     procedure Swap (X, Y : in out Integer) is
-       Tmp : Integer := X;
+       Tmp : constant Integer := X;
     begin
        X := Y;
        Y := Tmp;
@@ -210,6 +214,7 @@ a single semicolon can completely change the behavior of the code:
          return 1;
       while (1)
          return 0;
+      return 0;
    }
 
 As written, the code above returns with status 0. If a semicolon is added after
@@ -228,6 +233,7 @@ statement"` so that the code above must be written:
       while (1) {
          return 0;
       }
+      return 0;
    }
 
 Then, no addition of a single semicolon can change the behavior of the code.
@@ -247,6 +253,7 @@ that are possible in C. The SPARK (also Ada) version of the above C code is as f
        while True loop
           return 0;
        end loop;
+       return 0;
     end Func;
 
 Avoiding Complex Switch Statements
