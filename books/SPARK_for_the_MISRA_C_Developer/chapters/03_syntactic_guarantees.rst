@@ -1,7 +1,7 @@
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
 
-Recovering Basic Syntactic Guarantees
--------------------------------------
+Enforcing Basic Syntactic Guarantees
+------------------------------------
 
 .. role:: ada(code)
    :language: ada
@@ -9,13 +9,12 @@ Recovering Basic Syntactic Guarantees
 .. role:: c(code)
    :language: c
 
-C is well known for its concise syntax. The flip side of this coint is that it
-is also very permissive in terms of syntax, which makes it possible to
-unintentionnally abuse the syntax to say something that was not
-intended. MISRA-C contains guidelines to:
+C's syntax is concise but also very permissive, which makes it easy
+to write programs whose effect is not what was intended.
+MISRA C contains guidelines to:
 
-* distinguish clearly code from comments
-* handle specially function parameters and result
+* clearly distinguish code from comments
+* specially handle function parameters and result
 * ensure that control structures are not abused
 
 Distinguishing Code and Comments
@@ -33,9 +32,9 @@ each increase variable ``a`` by one:
    ++a;
    ++a; */
 
-Now consider what happens if the first line gets commented out using a block
-comment and the third line gets commented out using a line comment (also known
-as C++ style comment, allowed in C since C99):
+Now consider what happens if the first line is commented out using a block
+comment and the third line is commented out using a line comment (also known
+as a C++ style comment, allowed in C since C99):
 
 .. code-block:: c
 
@@ -46,13 +45,13 @@ as C++ style comment, allowed in C since C99):
 
 The result of commenting out code that was already commented out is that the
 second line of code becomes live! Of course, the above example is simplified,
-but similar situations do arise in practice, which is the reason for MISRA-C
+but similar situations do arise in practice, which is the reason for MISRA C
 Directive 4.1 `"Sections of code should not be 'commented out'"`.  This is
 reinforced with Rules 3.1 and 3.2 from the section on "Comments" that forbid in
 particular the use of ``/*`` inside a comment like we did above.
 
-These situations cannot arise in SPARK, as only line comments are possible,
-using ``--``:
+These situations cannot arise in SPARK (or in Ada), as only line comments are
+permitted, using ``--``:
 
 .. code-block:: ada
 
@@ -60,7 +59,7 @@ using ``--``:
    --  A := A + 1;
    --  A := A + 1;
 
-So commenting again the first and third lines does not change the code:
+So commenting again the first and third lines does not change the effect:
 
 .. code-block:: ada
 
@@ -69,34 +68,35 @@ So commenting again the first and third lines does not change the code:
    --  --  A := A + 1;
 
 
-Handling Specially Function Parameters and Result
+Specially Handling Function Parameters and Result
 *************************************************
 
 Handling the Result of Function Calls
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is possible in C to ignore the result of a function call, either implicitly
-or explicitly by converting the result to ``void``:
+or else explicitly by converting the result to ``void``:
 
 .. code-block:: c
 
    f();
    (void)f();
 
-This is particularly inadapted when the function returns an error status, as
-the caller is then ignoring the possibility of errors in the callee. This is
-why MISRA-C Directive 4.7 forbids that case: `"If a function returns error
+This is particularly dangerous when the function returns an error status, as
+the caller is then ignoring the possibility of errors in the callee. Thus the
+MISRA C Directive 4.7: `"If a function returns error
 information, then that error information shall be tested"`. In the general case
-of a function returning a result which is not an error status, MISRA-C Rule
+of a function returning a result which is not an error status, MISRA C Rule
 17.7 states that `"The value returned by a function having non-void return type
 shall be used"`, where an explicit conversion to ``void`` counts as a use.
 
-In SPARK, the result of a function call must be assigned to a variable,
-contrary to procedures which are the equivalent to void-returning functions
-in C. SPARK analysis also checks that the result of the function is `really`
+In SPARK, as in Ada, the result of a function call must be used, for example by assigning
+it to a variable or by passing it as a parameter, in
+contrast with procedures (which are equivalent to void-returning functions
+in C). SPARK analysis also checks that the result of the function is actually
 used to influence an output of the calling subprogram. For example, the first
-two calls to ``F`` in the following are detected as unused, even if the result
-of the function call is always assigned to a variable, which is itself used in
+two calls to ``F`` in the following are detected as unused, even though the result
+of the function call is assigned to a variable, which is itself used in
 the second case:
 
 .. code:: ada prove_flow_button
@@ -126,8 +126,8 @@ Handling Function Parameters
 
 In C, function parameters are treated as local variables of the function. They
 can be modified, but these modifications won't be visible outside the
-function. This is an opportunity for mistakes. For example, the following code
-which appears to swap the values of its parameters has in reality no effect:
+function. This is an opportunity for mistakes. For example, the following code,
+which appears to swap the values of its parameters, has in reality no effect:
 
 .. code-block:: c
 
@@ -137,15 +137,16 @@ which appears to swap the values of its parameters has in reality no effect:
       y = tmp;
    }
 
-MISRA-C Rule 17.8 prevents such mistakes by stating that `"A function parameter
+MISRA C Rule 17.8 prevents such mistakes by stating that `"A function parameter
 should not be modified"`.
 
-No such rule is needed in SPARK, as function parameters are only inputs so
+No such rule is needed in SPARK, since function parameters are only inputs so
 cannot be modified, and procedure parameters have a `mode` defining whether
 they can be modified or not. Only parameters of mode `out` or `in out` can be
-modified, and their modification is visible at the calling site. For example,
-assigning to parameter of mode `in` (the default parameter mode which can also
-be ommitted) results in compilation errors:
+modified -- and these are prohibited from functions in SPARK -- and their
+modification is visible at the calling site. For example,
+assigning to a parameter of mode `in` (the default parameter mode if
+omitted) results in compilation errors:
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -156,6 +157,23 @@ be ommitted) results in compilation errors:
        X := Y;  --  ERROR
        Y := Tmp;  --  ERROR
     end Swap;
+
+Here is the output of AdaCore's GNAT compiler:
+
+::
+
+        1.     procedure Swap (X, Y : Integer) is
+        2.        Tmp : Integer := X;
+        3.     begin
+        4.        X := Y;  --  ERROR
+                  |
+           >>> assignment to "in" mode parameter not allowed
+
+        5.        Y := Tmp;  --  ERROR
+               |
+           >>> assignment to "in" mode parameter not allowed
+
+        6.     end Swap;
 
 The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
 
@@ -171,9 +189,9 @@ The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
 Ensuring Control Structures Are Not Abused
 ******************************************
 
-The previous issue with the resulf of function calls being ignored is an
+The previous issue (ignoring the result of a function call) is an
 example of a control structure being abused, due to the permissive syntax
-of C. There are many such examples, and MISRA-C contains a number of guidelines
+of C. There are many such examples, and MISRA C contains a number of guidelines
 to prevent such abuse.
 
 .. _Preventing the Semicolon Mistake:
@@ -181,77 +199,78 @@ to prevent such abuse.
 Preventing the Semicolon Mistake
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Because a semicolon can act as a statement, and because if-statement and loops
-accept a simple statement (among them the semicolon) as body, then insertion of
-a single semicolon can completely change the behavior of the code below:
+Because a semicolon can act as a statement, and because an if-statement and a loop
+accept a simple statement (possibly only a semicolon) as body, inserting
+a single semicolon can completely change the behavior of the code:
 
 .. code-block:: c
 
-   int main() {
-      if (1)
-         while (1)
-            return 0;
-      return 1;
+   int func() {
+      if (0)
+         return 1;
+      while (1)
+         return 0;
    }
 
 As written, the code above returns with status 0. If a semicolon is added after
-the first line (``if (1);``), then the code returns with status 1. If a
-semicolon is added instead after the second line (``while (1);``), then the
-code does not return. To prevent this, MISRA-C Rule 15.6 states that `"The body
-of an iteration-statement or a selection-statement shall be a compound
+the first line (``if (0);``), then the code returns with status 1. If a
+semicolon is added instead after the third line (``while (1);``), then the
+code does not return. To prevent such surprises, MISRA C Rule 15.6 states that
+`"The body of an iteration-statement or a selection-statement shall be a compound
 statement"` so that the code above must be written:
 
 .. code-block:: c
 
-   int main() {
-      if (1) {
-         while (1) {
-            return 0;
-         }
+   int func() {
+      if (0) {
+         return 1;
       }
-      return 1;
+      while (1) {
+         return 0;
+      }
    }
 
 Then, no addition of a single semicolon can change the behavior of the code.
 
-In SPARK, the semicolon is not a statement by itself, only a marker of end of
-statement. The null statement is an explicit ``null;`` and all blocks of
-statements have explicit begin and end markers, which defeats mistakes like the
-ones that are possible in C. The above C code is written as follows in SPARK:
+In SPARK, the semicolon is not a statement by itself, but rather a marker that
+terminates a statement. The null statement is an explicit ``null;``, and all blocks of
+statements have explicit begin and end markers, which prevents mistakes
+that are possible in C. The SPARK (also Ada) version of the above C code is as follows:
 
 .. code:: ada
 
-    function Main return Integer is
+    function Func return Integer is
     begin
-       if True then
-          while True loop
-             return 0;
-          end loop;
+       if False then
+          return 1;
        end if;
-       return 1;
-    end Main;
+       while True loop
+          return 0;
+       end loop;
+    end Func;
 
-Avoiding Complex Switch
-^^^^^^^^^^^^^^^^^^^^^^^
+Avoiding Complex Switch Statements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Switch statements are well-known for being easily misused. Control can jump
-anywhere there is a case in the body of the switch, which in C can be before
-any statement contained in the body of the switch. At the end of the treatment
-associated to a case, execution continues with the code that follows unless a
-break is uncountered. This is a recipe for mistakes, and MISRA-C enforces a
-simpler `well-formed` syntax for switch statements defined in Rule 16.1: `"All
-switch statements shall be well-formed"`.
+to any case section in the body of the switch, which in C can be before
+any statement contained in the body of the switch. At the end of the sequence
+of statements associated with a case, execution continues with the code that
+follows unless a break is encountered. This is a recipe for mistakes, and
+MISRA C enforces a simpler `well-formed` syntax for switch statements defined
+in Rule 16.1: `"All switch statements shall be well-formed"`.
 
-The other rules of the section on "Switch statements" go on detailing
+The other rules in the section on "Switch statements" go on detailing
 individual consequences of Rule 16.1. For example Rule 16.3 forbids the
 fall-through from one case to the next: `"An unconditional break statement
-shall terminate every switch-clause"`. As another example Rule 16.4 mandates
+shall terminate every switch-clause"`. As another example, Rule 16.4 mandates
 the presence of a default case to handle cases not taken into account
 explicitly: `"Every switch statement shall have a default label"`.
 
-Switch statements in SPARK have already a simpler and more robust structure,
-with execution automatically exiting the switch after a case is handled, and
-the compiler checking that the cases to handle are disjoint (like in C) and
+The analog of the C switch statements in SPARK (and in Ada) is the case statement. This statement
+has a simpler and more robust structure than the C switch,
+with control automatically exiting after one of the case alternatives is executed, and
+the compiler checking that the alternatives are disjoint (like in C) and
 complete (unlike in C). So the following code is rejected by the compiler:
 
 .. code:: ada
@@ -289,21 +308,18 @@ complete (unlike in C). So the following code is rejected by the compiler:
 
     end Sign_Domain;
 
-The error in function ``Opposite`` is that the cases do not cover all values of
-the expression being switched over. Here, ``A`` is of enumeration type
+The error in function ``Opposite`` is that the ``when`` choices do not cover
+all values of the target expression. Here, ``A`` is of the enumeration type
 ``Sign``, so all three values of the enumeration must be covered.
 
-The error in function ``Multiply`` is that the case for ``Positive`` is covered
-twice, in the second and the third cases. This is not allowed.
+The error in function ``Multiply`` is that ``Positive`` is covered
+twice, in the second and the third alternatives. This is not allowed.
 
-The error in procedure ``Get_Sign`` is that the ``others`` case (the equivalent
-of C ``default`` case) should come last. Note that an ``others`` case would be
-useless in ``Opposite`` and ``Multiply``, as the compiler already checks that
-all cases are covered.
+The error in procedure ``Get_Sign`` is that the ``others`` choice (the equivalent
+of C ``default`` case) must come last. Note that an ``others`` choice would be
+useless in ``Opposite`` and ``Multiply``, as all ``Sign`` values are covered.
 
-Similar rules applied above to both case-expressions as in functions
-``Opposite`` and ``Multiply`` and in case-statements as in procedure
-``Get_Sign``. Here is a correct version of the same code:
+Here is a correct version of the same code:
 
 .. code:: ada
 
@@ -343,19 +359,19 @@ Similar rules applied above to both case-expressions as in functions
 Avoiding Complex Loops
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Similarly to C switches, for-loops in C can become unreadable. MISRA-C thus
-enforces similarly a simpler `well-formed` syntax for for-loops defined in Rule
+Similarly to C switches, for-loops in C can become unreadable. MISRA C thus
+enforces a simpler `well-formed` syntax for for-loops, defined in Rule
 14.2: `"A for loop shall be well-formed"`. The main effect of this
-simplification is that for-loops in C look like for-loops in SPARK, with a
-scalar `loop counter` being incremented or decremented. Section 8.14 defined
+simplification is that for-loops in C look like for-loops in SPARK (and in Ada), with a
+`loop counter` that is incremented or decremented at each iteration. Section 8.14 defines
 precisely what a loop counter is:
 
 #. It has a scalar type;
-#. Its value varies monotonically on each iteration of a given instance of a loop; and
-#. It is involved in a decision to exit the loop.
+#. Its value varies monotonically on each loop iteration; and
+#. It is used in a decision to exit the loop.
 
 In particular, Rule 14.2 forbids any modification of the loop counter inside
-the loop body. Let's look at the example used in MISRA-C:2012 to illustrate
+the loop body. Here's the example used in MISRA C:2012 to illustrate
 this rule:
 
 .. code-block:: c
@@ -372,8 +388,8 @@ this rule:
      i = i + 3;     /* Non-compliant - altering the loop counter */
    }
 
-The equivalent code in SPARK does not compile due to the attempt at modifying
-the value of the loop counter:
+The equivalent SPARK (and Ada) code does not compile, because of the attempt
+to modify the value of the loop counter:
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -392,32 +408,36 @@ the value of the loop counter:
        end loop;
     end Well_Formed_Loop;
 
-Removing the problematic line leads to a valid SPARK program. Note that the
+Removing the problematic line leads to a valid program. Note that the
 additional condition being tested in the C for-loop has been moved to a
-separate exit statement at the start of the loop body in SPARK.
+separate exit statement at the start of the loop body.
 
-SPARK loops can be increasing as above, or decreasing:
+SPARK (and Ada) loops can increase (or, with explicit syntax, decrease) the
+loop counter by 1 at each iteration.
 
 .. code-block:: ada
 
       for I in reverse 0 .. 4 loop
+         ... -- Successive values of I are 4, 3, 2, 1, 0
+      end loop;
 
-SPARK loops can iterate over integers as above, or over other scalar types like
-enumerations:
+SPARK loops can iterate over any discrete type; i.e., integers as above or enumerations:
 
 .. code-block:: ada
 
       type Sign is (Negative, Zero, Positive);
 
       for S in Sign loop
+        ...
+      end loop;
 
 Avoiding the Dangling Else Issue
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In its effort to minimize the number of keystrokes, C does not provide a
+C does not provide a
 closing symbol for an if-statement. This makes it possible to write the
-following code which appears to try to return the absolute value of its
-argument, while it actually returns its opposite:
+following code, which appears to try to return the absolute value of its
+argument, while it actually does the opposite:
 
 .. code:: c run_button
 
@@ -442,14 +462,12 @@ argument, while it actually returns its opposite:
 
 The warning issued by GCC or LLVM with option ``-Wdangling-else`` (implied by
 ``-Wall``) gives a clue about the problem: although the ``else`` branch is
-written above as completing the outter if-statement, it completes in fact the
-inner if-statement. This is a common parsing conflict, which is resolved in C
-by binding the ``else`` with the innermost if-statement (in parsing theory,
-preferring shift to reduce to solve the shift-reduce conflict).
+written as though it completes the outer if-statement, in fact it completes the
+inner if-statement.
 
-MISRA-C avoids that problem by requiring in Rule 15.6 that `"The body of an
+MISRA C Rule 15.6 avoids the problem: "The body of an
 iteration-statement or a selection-statement shall be a compound
-statement"`. Yes, that's the same rule as the one we saw before for
+statement"`. That's the same rule as the one shown earlier for
 :ref:`Preventing the Semicolon Mistake`. So the code for ``absval`` must be
 written:
 
@@ -478,8 +496,8 @@ written:
 
 which has the expected behavior.
 
-In SPARK, if-statements have an end marker ``end if;`` so the dangling-else
-problem cannot arise. The above C code is written as follows in SPARK:
+In SPARK (as in Ada), each if-statement has a matching end marker ``end if;``
+so the dangling-else problem cannot arise. The above C code is written as follows:
 
 .. code:: ada prove_button
 
