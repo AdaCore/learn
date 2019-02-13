@@ -173,7 +173,7 @@ assigned to another variable, as follows:
 
 Note here that the order of capture of the volatile value of ``X`` might be
 significant. For example, ``X`` might denote a quantity which only increases,
-like clock time, so that the above expression ``X1 - X2`` would always be
+like clock time, so that the above expression ``X1-X2`` would always be
 negative or zero.
 
 Even more significantly, functions in SPARK cannot have side effects; only
