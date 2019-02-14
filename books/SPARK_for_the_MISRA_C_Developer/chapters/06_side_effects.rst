@@ -120,7 +120,7 @@ particular, there are no increment/decrement operators, and no assignment
 operator. There is instead an assignment statement, whose syntax using ``:=``
 clearly distinguishes it from equality (using ``=``). And in any event an
 expression is not allowed as a statement and this a construct such as
-``X = Y;" would be illegal. Here is how a variable ``X`` can be assigned,
+``X = Y;`` would be illegal. Here is how a variable ``X`` can be assigned,
 incremented and decremented:
 
 .. code-block:: ada
