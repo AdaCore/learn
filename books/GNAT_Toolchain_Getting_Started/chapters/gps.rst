@@ -7,6 +7,9 @@ GNAT Programming Studio
 
 .. include:: <isoamsa.txt>
 
+.. role:: ada(code)
+   :language: ada
+
 This chapter presents an introduction to the GNAT Programming Studio (GPS),
 which provides an IDE to develop applications in Ada. For a detailed
 overview, please refer to the
