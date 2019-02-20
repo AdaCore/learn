@@ -646,7 +646,7 @@ a Cat, by manipulating the atomic structure (the bits in its representation):
    }
 
 This algorithm works by accessing the underlying bitwise representation
-of ``Bee`` and ``Dog`` (0x00 and 0x03, respectively) and, by applying the
+of ``Bee`` and ``Dog`` (0x01 and 0x03, respectively) and, by applying the
 exclusive-or operator ``^``, transforming it into the underlying bitwise
 representation of a ``Cat`` (0x02). While powerful, manipulating the bits
 in the representation of values is best reserved for unsigned integers as
