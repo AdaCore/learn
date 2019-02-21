@@ -174,7 +174,7 @@ Here is the output of AdaCore's GNAT compiler:
            >>> assignment to "in" mode parameter not allowed
 
         5.        Y := Tmp;  --  ERROR
-               |
+                  |
            >>> assignment to "in" mode parameter not allowed
 
         6.     end Swap;
@@ -236,7 +236,9 @@ statement"` so that the code above must be written:
       return 0;
    }
 
-Then, no addition of a single semicolon can change the behavior of the code.
+Note that adding a semicolon after the test of the ``if`` or ``while``
+statement has the same effect as before! But doing so would violate MISRA C
+Rule 15.6.
 
 In SPARK, the semicolon is not a statement by itself, but rather a marker that
 terminates a statement. The null statement is an explicit ``null;``, and all blocks of
@@ -472,7 +474,7 @@ The warning issued by GCC or LLVM with option ``-Wdangling-else`` (implied by
 written as though it completes the outer if-statement, in fact it completes the
 inner if-statement.
 
-MISRA C Rule 15.6 avoids the problem: "The body of an
+MISRA C Rule 15.6 avoids the problem: `"The body of an
 iteration-statement or a selection-statement shall be a compound
 statement"`. That's the same rule as the one shown earlier for
 :ref:`Preventing the Semicolon Mistake`. So the code for ``absval`` must be
