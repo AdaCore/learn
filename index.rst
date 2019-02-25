@@ -40,6 +40,7 @@ LEARN.ADACORE.COM
     .. toctree::
        :hidden:
 
+       Labs <labs/labs>
        Tests <engine/tests/index>
 
 

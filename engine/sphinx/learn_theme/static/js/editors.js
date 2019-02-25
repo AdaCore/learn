@@ -4,6 +4,7 @@ MODES = {
     "prove_flow": "Examine",
     "prove_report_all": "Prove (report=all)",
     "run": "Run",
+    "submit": "Submit",
 };
 
 // Log an error message in the output area
@@ -175,6 +176,18 @@ function query_operation_result(container, editors, output_area, mode) {
                 'contents': e.contents
             });
         });
+    }
+
+    var input_search = container.find( 'textarea[name="custom_input"]' );
+    var check_search = container.find( '.custom_check' );
+
+    if(check_search.length == 1 && input_search.length == 1) {
+        if(check_search[0].is(':checked')) {
+            files.push({
+                'basename': "custom_input.txt",
+                'contents': input_search[0].text()
+            });
+        }
     }
 
     data = {
@@ -423,6 +436,27 @@ function fill_editor_from_contents(container, example_server, resources) {
     var results_div = $("div.test-results");
 
     results_div.text("");
+
+    if(container.attr("lab")) {
+        container.attr("prove_button", true);
+        container.attr("run_button", true);
+        container.attr("submit_button", true);
+
+        $( '<textarea class="custom_input" name="custom_input" rows="4" cols="6"></textarea>' ).appendTo(buttons_div);
+        var custom_check = $( '<input type="checkbox" class="custom_check" name="custom_check"><label for="custom_check">Test against custom input</label>' ).appendTo(buttons_div).change( function() {
+            var input_search = container.find( 'textarea[name="custom_input"]' );
+            if ($(this).is(':checked')) {
+                if(input_search.length == 1) {
+                    input_search.show();
+                }
+            }
+            else {
+                if(input_search.length == 1) {
+                    input_search.hide();
+                }
+            }
+        }).change();
+    }
 
     for (var mode in MODES) {
         if (container.attr(mode + "_button")) {

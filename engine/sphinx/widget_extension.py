@@ -173,6 +173,9 @@ class WidgetCodeDirective(Directive):
                 'ada-syntax-only' in self.options['class'])):
             force_no_buttons = True
 
+        if 'lab' in argument_list:
+            extra_attribs += ' lab="True"';
+
         # Make sure code-config exists in the document
         if not codeconfig_found:
             print (self.lineno, dir(self))
