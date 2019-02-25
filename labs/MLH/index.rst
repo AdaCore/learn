@@ -4,6 +4,8 @@
 :prev_state: False
 :next_state: False
 
+:code-config:`accumulate_code=False;reset_accumulator=True`
+
 Let's Build a Stack
 =====================
 
@@ -127,7 +129,7 @@ Here is the sample output.
       Tab  : array (1 .. Max_Size) of Character;
       --  The stack. We push and pop pointers to Values.
 
-      function Full return Boolean is (Last >= Max_Size);
+      function Full return Boolean is (Last = Max_Size);
 
       function Empty return Boolean is (Last < 1);
 
@@ -177,31 +179,12 @@ Here is the sample output.
 
    end Stack;
 
+   with Ada.Command_Line; use Ada.Command_Line;
    with Ada.Text_IO; use Ada.Text_IO;
    with Stack;       use Stack;
 
-   procedure Example is
-      Done : Boolean := False;
-
-      --------------------
-      -- Get_User_Input --
-      --------------------
-
-      function Get_User_Input return Character is
-      begin
-         loop
-            declare
-               User_Input : String := Get_Line;
-            begin
-               if User_Input'Length = 1 then
-                  return User_Input (User_Input'First);
-               end if;
-
-               Put_Line ("Invalid Input, please try again!");
-               Put ("input > ");
-            end;
-         end loop;
-      end Get_User_Input;
+   procedure Main with SPARK_Mode => Off
+   is
 
       -----------
       -- Debug --
@@ -211,15 +194,15 @@ Here is the sample output.
       begin
          Put_Line ("**************************************");
 
-         Put_Line ("Size: " & Integer'Image(Stack.Size));
-         Put_Line ("Max Size: " & Integer'Image(Stack.Max_Size));
+         Put_Line ("Size: " & Integer'Image (Stack.Size));
+         Put_Line ("Max Size: " & Integer'Image (Stack.Max_Size));
 
          if not Stack.Empty then
             Put_Line ("Top: " & Stack.Top);
 
             Put ("Stack: [");
             for I in Stack.Tab'First .. Stack.Size loop
-               Put (Stack.Tab(I) & ", ");
+               Put (Stack.Tab (I) & ", ");
             end loop;
             Put_Line ("]");
          else
@@ -230,21 +213,20 @@ Here is the sample output.
          Put_Line ("**************************************");
       end Debug;
 
+      S : Character;
    begin
 
       ----------
       -- Main --
       ----------
 
-      while not Done = True loop
-         Put ("input > ");
+      for Arg in 1 .. Argument_Count loop
+         if Argument (Arg)'Length /= 1 then
+            Put_Line (Argument (Arg) & " is an invalid input to the stack.");
+         else
+            S := Argument (Arg)(Argument (Arg)'First);
 
-         declare
-            S : Character := Get_User_Input;
-         begin
-            if S = 'q' then
-               Done := True;
-            elsif S = 'd' then
+            if S = 'd' then
                Debug;
             elsif S = 'p' then
                if not Stack.Empty then
@@ -261,8 +243,8 @@ Here is the sample output.
                   Put_Line ("Could not push '" & S & "', Stack is full!");
                end if;
             end if;
-         end;
+         end if;
+
       end loop;
 
-      Put_Line ("Example ended.");
-   end Example;
+   end Main;

@@ -182,10 +182,10 @@ function query_operation_result(container, editors, output_area, mode) {
     var check_search = container.find( '.custom_check' );
 
     if(check_search.length == 1 && input_search.length == 1) {
-        if(check_search[0].is(':checked')) {
+        if(check_search.is(':checked')) {
             files.push({
-                'basename': "custom_input.txt",
-                'contents': input_search[0].text()
+                'basename': "input.txt",
+                'contents': input_search.text()
             });
         }
     }
