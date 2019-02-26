@@ -7,6 +7,8 @@ MODES = {
     "submit": "Submit",
 };
 
+CLI_FILE = "cli.txt"
+
 // Log an error message in the output area
 function output_error(output_area, message) {
     var div = $('<div class="output_error">');
@@ -184,8 +186,8 @@ function query_operation_result(container, editors, output_area, mode) {
     if(check_search.length == 1 && input_search.length == 1) {
         if(check_search.is(':checked')) {
             files.push({
-                'basename': "input.txt",
-                'contents': input_search.text()
+                'basename': CLI_FILE,
+                'contents': input_search.val(),
             });
         }
     }
