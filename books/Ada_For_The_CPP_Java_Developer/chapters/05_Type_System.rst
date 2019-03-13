@@ -351,12 +351,12 @@ Ada offers high-level operations for copying, slicing, and assigning values to a
 .. code-block:: ada
 
    declare
-      type Arr_Type is array (Integer range <>) of Integer
+      type Arr_Type is array (Integer range <>) of Integer;
       A1 : Arr_Type (1 .. 2);
       A2 : Arr_Type (1 .. 2);
    begin
-      A1 (1) = 0;
-      A1 (2) = 1;
+      A1 (1) := 0;
+      A1 (2) := 1;
 
       A2 := A1;
    end;
@@ -442,7 +442,7 @@ Ada also offers high level comparison operations which compare the contents of a
    int [] A1 = new int [2];
    int [] A2 = new int [2];
 
-   if (A1.equals (A2)) {
+   if (Arrays.equals (A1, A2)) {
 
 You can assign to all the elements of an array in each language in different ways. In Ada, the number of elements to assign can be determined by looking at the right-hand side, the left-hand side, or both sides of the assignment. When bounds are known on the left-hand side, it's possible to use the **others** expression to define a default value for all the unspecified array elements. Therefore, you can write:
 
@@ -513,15 +513,15 @@ Ada allows specification of default values for fields just like C++ and Java. Th
       C    : Float := 0.0;
    end record;
 
-   V1 : R => (1, 2, 1.0);
-   V2 : R => (A => 1, B => 2, C => 1.0);
-   V3 : R => (C => 1.0, A => 1, B => 2);
-   V3 : R => (C => 1.0, others => <>);
+   V1 : R := (1, 2, 1.0);
+   V2 : R := (A => 1, B => 2, C => 1.0);
+   V3 : R := (C => 1.0, A => 1, B => 2);
+   V4 : R := (C => 1.0, others => <>);
 
 Pointers
 ~~~~~~~~~~
 
-Pointers, references, and access types differ in significant ways across the languages that we are examining. In C++, pointers are integral to a basic understanding of the language, from array manipulation to proper declaration and use of function parameters. Java goes a step further: everything is a reference, except for primitive types like scalars. Ada's design goes in the other direction: it makes more features available without requiring the explicit use of pointers.
+Pointers, references, and access types differ in significant ways across the languages that we are examining. In C++, pointers are integral to a basic understanding of the language, from array manipulation to proper declaration and use of function parameters. In Java, direct pointer manipulation is abstracted by the Java runtime. And in Ada, direct pointer manipulation is possible, but unlike C++, they are not required for basic usage with arrays and parameter passing.
 
 We'll continue this section by explaining the difference between objects allocated on the stack and objects allocated on the heap using the following example:
 

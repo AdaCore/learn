@@ -12,10 +12,10 @@ Without further ado, we present the famous "Hello World" in three languages:
 [Ada]
 
 .. code-block:: ada
-   
+
    with Ada.Text_IO;
    use  Ada.Text_IO;
-   
+
    procedure Main is
    begin
       Put_Line ("Hello World");
@@ -42,7 +42,7 @@ Without further ado, we present the famous "Hello World" in three languages:
       }
    }
 
-The first line of Ada we see is the **with** clause, declaring that the unit (in this case, the Main subprogram) will require the services of the package *Ada.Text_IO*. This is different from how **#include** works in C++ in that it does not, in a logical sense, copy/paste the code of *Ada.Text_IO* into *Main*. The **with** clause directs the compiler to make the public interface of the *Ada.Text_IO* package visible to code in the unit (here *Main*) containing the **with** clause. Note that this construct does not have a direct analog in Java, where the entire CLASSPATH is always accessible. Also, the name ''Main'' for the main subprogram was chosen for consistency with C++ and Java style but in Ada the name can be whatever the programmer chooses.
+The first line of Ada we see is the **with** clause, declaring that the unit (in this case, the Main subprogram) will require the services of the package *Ada.Text_IO*. This is different from how **#include** works in C++ in that it does not, in a logical sense, copy/paste the code of *Ada.Text_IO* into *Main*. The **with** clause directs the compiler to make the public interface of the *Ada.Text_IO* package visible to code in the unit (here *Main*) containing the **with** clause. Note that this construct does not have a direct analog in Java, where the entire CLASSPATH is always accessible. Also, the name "Main" for the main subprogram was chosen for consistency with C++ and Java style but in Ada the name can be whatever the programmer chooses.
 
 The **use** clause is the equivalent of **using namespace** in C++, or **import** in Java (though it wasn't necessary to use **import** in the Java example above). It allows you to omit the full package name when referring to **with**\ed units. Without the **use** clause, any reference to *Ada.Text_IO* items would have had to be fully qualified with the package name. The *Put_Line* line would then have read:
 
@@ -67,7 +67,7 @@ The word "package" has different meanings in Ada and Java. In Java, a package is
 The implementation in a package body (written in a *.adb* file) has the structure:
 
 .. code-block:: ada
-   
+
    package body Package_Name is
 
       -- implementation

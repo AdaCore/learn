@@ -36,9 +36,9 @@ A **class** in C++ or Java corresponds to a **tagged type** in Ada. Here's an ex
       public:
          int V, W;
 
-         int F (void);
+         int F ();
 
-         void P1 (void);
+         void P1 ();
    };
 
    void P2 (T * v);
@@ -50,9 +50,9 @@ A **class** in C++ or Java corresponds to a **tagged type** in Ada. Here's an ex
    public class T {
          public int V, W;
 
-         public int F (void) {};
+         public int F () {};
 
-         public void P1 (void) {};
+         public void P1 () {};
 
          public static void P2 (T v) {};
    }
@@ -106,7 +106,7 @@ Despite the syntactic differences, derivation in Ada is similar to derivation (i
 
    type Child is new Root with record
       F2 : Integer;
-   end Child;
+   end record;
 
    overriding
    procedure Method_1 (Self : Child);
@@ -270,7 +270,7 @@ For additional expressive power, Ada provides a type called *Ada.Finalization.Co
    end Initialize;
 
    V1 : T;
-   V2 : T := (V => 0);
+   V2 : T := (F => 0);
 
 Again, this default initialization subprogram is only called for *V1*; *V2* is initialized manually. Furthermore, unlike a C++ or Java constructor, *Initialize* is a normal subprogram and does not perform any additional initialization such as calling the parent's initialization routines.
 

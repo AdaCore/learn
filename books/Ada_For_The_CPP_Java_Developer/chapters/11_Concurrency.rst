@@ -106,7 +106,7 @@ Task types can be parametrized; the parameter serves the same purpose as an argu
 
    task type My_Task (First : Character);
 
-   task body My_Task (First : Character) is
+   task body My_Task is
    begin
       for I in First .. 'Z' loop
          Put_Line (I);
@@ -278,7 +278,7 @@ Let's look at a more ambitious example. The rendezvous below accepts parameters 
 
    begin
       Put_Line ("Before");
-      After.Go ("Main");;
+      After.Go ("Main");
    end;
 
 In the above example, the *Put_Line* is placed in the **accept** statement. Here's a possible execution trace, assuming a uniprocessor:
@@ -291,7 +291,7 @@ In the above example, the *Put_Line* is placed in the **accept** statement. Here
 
 4. The main procedure calls the *Go* entry.  Since *After* is suspended on its **accept** statement for this entry, the call succeeds.
 
-5. Tha main procedure is suspended, and the task *After* is awakened to execute the body of the **accept** statement. The actual parameter "Main" is passed to the **accept** statement, and the *Put_Line* invocation is executed. As a result, the string "After: Main" is displayed.
+5. The main procedure is suspended, and the task *After* is awakened to execute the body of the **accept** statement. The actual parameter "Main" is passed to the **accept** statement, and the *Put_Line* invocation is executed. As a result, the string "After: Main" is displayed.
 
 6. When the **accept** statement is completed, both the *After* task and the main procedure are ready to run.  Suppose that the *Main* procedure is given the processor. It reaches its **end**, but the local task *After* has not yet terminated.  The main procedure is suspended.
 
@@ -330,7 +330,7 @@ The accept statement by itself can only wait for a single event (call) at a time
                Result := Value;
             end Get;
          or
-            delay 1.0 * Minute;
+            delay 60.0;  --  delay 1 minute
             exit;
          end select;
       end loop;

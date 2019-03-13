@@ -6,7 +6,7 @@ Ada, C++, and Java all have support for generics or templates, but on different 
 Generic Subprograms
 ~~~~~~~~~~~~~~~~~~~~~
 
-A feature that is similar across all three languages is the subprogram. To swap two objects:
+In this example, we will swap two generic objects. This is possible in Ada and C++ using a temporary variable. In Java, parameters are a copy of a reference value that is passed into the function, so modifying those references in the function scope has no effect from the caller's context. A generic swap method, like the below Ada or C++ examples is not possible in Java, so we will skip the Java version of this example.
 
 [Ada]
 
@@ -27,16 +27,6 @@ A feature that is similar across all three languages is the subprogram. To swap 
 
    template <class AType>
    AType swap (AType & left, AType & right) {
-      AType temp = left;
-      left  = right;
-      right = temp;
-   }
-
-[Java]
-
-.. code-block:: java
-
-   public <AType> void swap (AType left, AType right) {
       AType temp = left;
       left  = right;
       right = temp;
@@ -73,19 +63,8 @@ And examples of using these:
    ...
    swap (a, b);
 
-[Java]
 
-.. code-block:: java
-
-   public class R {
-      public int f1, f2;
-   }
-
-   R a = new R(), b = new R();
-   ...
-   swap (a, b);
-
-The C++ template and Java generic both become usable once defined. The Ada generic needs to be explicitly instantiated using a local name and the generic's parameters.
+The C++ template becomes usable once defined. The Ada generic needs to be explicitly instantiated using a local name and the generic's parameters.
 
 Generic Packages
 ~~~~~~~~~~~~~~~~~
