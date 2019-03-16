@@ -55,11 +55,3 @@ LEARN.ADACORE.COM
 **Try Ada and SPARK now with GNAT Community edition.**
 
 GNAT Community includes the Ada compiler and toolchain, the SPARK verifier and provers, and the GNAT Programming Studio IDE.
-
---------------
-
-.. container:: mwac-banner
-
-    .. image:: https://www.adacore.com/uploads/page_content/MWAC-banner.png
-        :target: https://www.makewithada.org
-        :width: 100pc
