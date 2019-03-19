@@ -24,7 +24,7 @@ Ada makes heavy use of exceptions especially for data consistency check failures
 
 In the above code, we're trying to assign a negative value to a variable that's declared to be positive. The range check takes place during the assignment operation, and the failure raises the *Constraint_Error* exception at that point. (Note that the compiler may give a warning that the value is out of range, but the error is manifest as a run-time exception.) Since there is no local handler, the exception is propagated to the caller; if *P* is the main procedure, then the program will be terminated.
 
-Java and C++ **throw** and **catch** exceptions when **try**\ing code. All Ada code is already implicitly within **try** blocks, and exceptions are **raise**\d and handled.
+Java and C++ can **throw** and **catch** exceptions when **try**\ing code. All Ada code is already implicitly within **try** blocks, and exceptions are **raise**\d and handled.
 
 [Ada]
 
@@ -69,7 +69,7 @@ Java and C++ **throw** and **catch** exceptions when **try**\ing code. All Ada c
       System.out.println ("Unknown error");
    }
 
-Raising and throwing exceptions while within an exception handler is permissible in all three languages.
+Raising and throwing exceptions is permissible in all three languages.
 
 Custom Exceptions
 ~~~~~~~~~~~~~~~~~~~
