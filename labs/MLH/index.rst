@@ -102,7 +102,16 @@ Here is the sample output.
 --------------
 
 
-.. code:: ada lab
+.. code:: ada lab=MLH_Stack
+
+   --  START LAB IO BLOCK
+   in 0: M L H d p d p d p d
+   out 0: this is a test
+   in 1: a b c d e d p
+   out 1: another test
+   in 2: p a p d
+   out 2: another another test
+   --  END LAB IO BLOCK
 
    package Stack with SPARK_Mode => On is
 
@@ -247,4 +256,4 @@ Here is the sample output.
 
       end loop;
 
-   end Main;
+   end Main; 

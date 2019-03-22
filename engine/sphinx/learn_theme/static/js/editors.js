@@ -197,6 +197,11 @@ function query_operation_result(container, editors, output_area, mode) {
         "mode": mode,
     };
 
+    var lab_name = container.attr("lab_name");
+    if(lab_name) {
+        data["lab"] = lab_name;
+    }
+
     // reset the number of lines already read
     container.already_read = 0;
 
