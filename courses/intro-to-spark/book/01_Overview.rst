@@ -768,7 +768,7 @@ Our final example is a package with two functions to search for the value 0
 inside an array ``A``. The first raises an exception if 0 isn't found in
 ``A`` while the other simply returns 0 in that case.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package P
       with SPARK_Mode => On
