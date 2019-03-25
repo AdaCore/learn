@@ -106,11 +106,11 @@ Here is the sample output.
 
    --  START LAB IO BLOCK
    in 0: M L H d p d p d p d
-   out 0: this is a test
+   out 0: [M, L, H] [M, L] [M] []
    in 1: a b c d e d p
-   out 1: another test
+   out 1: [a, b, c] [a, b, c, e]
    in 2: p a p d
-   out 2: another another test
+   out 2: Nothing to Pop, Stack is empty! []
    --  END LAB IO BLOCK
 
    package Stack with SPARK_Mode => On is
@@ -201,25 +201,18 @@ Here is the sample output.
 
       procedure Debug is
       begin
-         Put_Line ("**************************************");
-
-         Put_Line ("Size: " & Integer'Image (Stack.Size));
-         Put_Line ("Max Size: " & Integer'Image (Stack.Max_Size));
 
          if not Stack.Empty then
-            Put_Line ("Top: " & Stack.Top);
 
-            Put ("Stack: [");
-            for I in Stack.Tab'First .. Stack.Size loop
+            Put ("[");
+            for I in Stack.Tab'First .. Stack.Size - 1 loop
                Put (Stack.Tab (I) & ", ");
             end loop;
-            Put_Line ("]");
+            Put_Line (Stack.Tab (Stack.Size) & "]");
          else
-            Put_Line ("Top: Null");
-            Put_Line ("Stack: []");
+            Put_Line ("[]");
          end if;
 
-         Put_Line ("**************************************");
       end Debug;
 
       S : Character;
@@ -240,14 +233,12 @@ Here is the sample output.
             elsif S = 'p' then
                if not Stack.Empty then
                   Stack.Pop (S);
-                  Put_Line ("Popped: " & S);
                else
                   Put_Line ("Nothing to Pop, Stack is empty!");
                end if;
             else
                if not Stack.Full then
                   Stack.Push (S);
-                  Put_Line ("Pushed: " & S);
                else
                   Put_Line ("Could not push '" & S & "', Stack is full!");
                end if;
