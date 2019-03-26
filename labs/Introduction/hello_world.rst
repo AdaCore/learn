@@ -1,5 +1,5 @@
 .. meta::
-:author: AdaCore
+   :author: AdaCore
 
 :prev_state: False
 :next_state: False
