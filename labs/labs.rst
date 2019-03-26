@@ -7,10 +7,11 @@
 :next_state: False
 
 Labs
-=============================
+======
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   Major League Hacking  - Bug Free Coding with SPARK Ada <MLH/index>
+   Introduction to Ada <Introduction/index>
+   Major League Hacking - Bug Free Coding with SPARK Ada <MLH/index>
 
