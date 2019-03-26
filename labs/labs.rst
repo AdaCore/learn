@@ -13,5 +13,5 @@ Labs
    :maxdepth: 2
 
    Introduction to Ada <Introduction/index>
-   Major League Hacking - Bug Free Coding with SPARK Ada <MLH/index>
+   Major League Hacking <MLH/index>
 
