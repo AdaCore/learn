@@ -1,0 +1,429 @@
+The C Developer's Perspective on Ada
+======================================
+
+What we mean by Embedded Software
+------------------------------------
+The Ada programming language is a general programming language, which means it can be used for many different types of applications. One type of application where it particularly shines is reliable and safety-critical embedded software; meaning, a platform with a microprocessor such as ARM, PowerPC, x86, or RISC-V. The application may be running on top of an embedded operating system, such as an embedded Linux, or directly on bare metal. And the application domain can range from small entities such as firmware or device controllers to flight management system, communication based train control systems, or advanced driver assistance systems. 
+
+The GNAT toolchain
+-------------------
+
+The toolchain used throughout this book is called GNAT, which is a suite of tools with a compiler based on the GCC environment. It can be obtained from AdaCore, either as part of a commercial contract with `GNAT Pro <https://www.adacore.com/gnatpro)>`_ or at no charge with the `GNAT Community edition <https://www.adacore.com/community>`_. The information on this book will be relevant no matter which edition you’re using. Most examples will be runnable on the native Linux or Windows version for convenience. Some will only be relevant in the context of a cross toolchain, in which case we’ll be using the embedded ARM bare metal toolchain.
+
+As for any Ada compiler, GNAT takes advantage of implementation permissions and offers a project management system. Because we’re talking about embedded platforms, there are a lot of topics that we’ll go over which will be specific to GNAT, and sometimes to specific platforms supported by GNAT. We’ll try to make the distinction between what is GNAT-specific and Ada generic as much as possible through this book.
+
+The GNAT Toolchain for Embedded Targets
+-----------------------------------------
+
+.. todo::
+   AI - Rob: complete this section (explain run-time differences, how to compile, the concept of BSP, etc)
+
+Hello World in Ada
+--------------------
+
+The first piece of code to translate from C to Ada is the usual Hello World program:
+
+.. code:: c
+
+   #include <stdio.h>
+
+   int main() 
+   {
+     printf("Hello World\n");
+     return 0;
+   }
+
+.. code:: ada
+
+   with Ada.Text_IO;
+
+   procedure Hello_World 
+   is
+   begin
+      Ada.Text_IO.Put_Line ("Hello World");
+   end Hello_World;
+
+The resulting program will print :ada:`Hello World` on the screen. Let’s now dissect the Ada version to describe what is going on:
+
+The first line of the Ada code is giving us access to the :ada:`Ada.Text_IO` library which contains the :ada:`Put_Line` function we will use to print the text to the console. This is similar to C’s :c:`#include <stdio.h>`. We then create a procedure which executes :ada:`Put_Line` which prints to the console. This is similar to C’s :c:`printf` statement. For now, we can assume these Ada and C features have similar functionality. In reality, they are very different. We will explore that more as we delve further into the Ada language. 
+
+You may have noticed that the Ada syntax is more verbose than C. Instead of using braces :c:`{}` to declare scope, Ada uses keywords. :ada:`is` opens a declarative scope - which is empty here as there’s no variable to declare. :ada:`begin` opens a sequence of statements. Within this sequence, we’re calling the function :ada:`Put_Line`, prefixing explicitly by the name of the library unit where it’s declared, :ada:`Ada.Text_IO`. The absence of the end of line :c:`\n` can also be noted, as :ada:`Put_Line` always terminates by an end of line.
+
+The Ada Syntax
+
+Ada syntax might seem peculiar at first glance. Unlike many other languages, it’s not derived from the popular C style of notation with its ample use of brackets; rather, it uses a more expository syntax coming from Pascal. In many ways, Ada is a more explicit language - its syntax was designed to increase readability and maintainability, rather than making it faster to write in a condensed manner. For example, full words like :ada:`begin` and :ada:`end` are used in place of curly braces. Conditions are written using :ada:`if`, :ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada’s assignment operator does not double as an expression, eliminating potential mistakes that could be caused by :c:`=` being used where :c:`==` should be. 
+
+All languages provide one or more ways to express comments. In Ada, two consecutive hyphens :ada:`--` mark the start of a comment that continues to the end of the line. This is exactly the same as using :c:`//` for comments in C. Multi line comments like C’s :c:`/* */` do not exist in Ada. 
+
+Ada compilers are stricter with type and range checking than most C programmers are used to. Most beginning Ada programmers encounter a variety of warnings and error messages when coding, but this helps detect problems and vulnerabilities at compile time - early on in the development cycle. In addition, checks (such as array bounds checks) provide verification that could not be done at compile time but can be performed either at run-time, or through formal proof (with the SPARK tooling). 
+
+Ada identifiers and reserved words are case insensitive. The identifiers :ada:`VAR`, :ada:`var` and :ada:`VaR` are treated as the same identifier; likewise :ada:`begin`, :ada:`BEGIN`, :ada:`Begin`, etc. Identifiers may include letters, digits, and underscores, but must always start with a letter. There are 73 reserved keywords in Ada that may not be used as identifiers, and these are: 
+
+  ======== ========= ========== ============
+  abort    else      null       select
+  abs      elsif     of         separate
+  abstract end       or         some
+  accept   entry     others     subtype
+  access   exception out        synchronized
+  aliased  exit      overriding tagged
+  all      for       package    task
+  and      function  pragma     terminate
+  array    generic   private    then
+  at       goto      procedure  type
+  begin    if        protected  until
+  body     in        raise      use
+  case     interface range      when
+  constant is        record     while
+  declare  limited   rem        with
+  delay    loop      renames    xor
+  delta    mod       requeue
+  digits   new       return
+  do       not       reverse
+  ======== ========= ========== ============
+
+Compilation Unit Structure
+----------------------------
+
+Both C and Ada were designed with the idea that the code specification and code implementation could be separated into two files. In C, the specification typically lives in the .h, or header file, and the implementation lives in the .c file. Ada is superficially similar to C. With the GNAT toolchain, compilation units are stored in files with an .ads extension for specifications and with an .adb extension for implementations.
+
+One main difference between the C and Ada compilation structure is that Ada compilation units are structured into something called packages. A specification defines a package and the implementation implements the package. We saw this in an earlier example when we included the :ada:`Ada.Text_IO` package into our application. The package specification has the structure:
+
+.. code:: ada no_button
+
+   --  my_package.ads
+   package My_Package is
+
+      --  public declarations
+
+   private
+
+      --  private declarations
+
+   end My_Package;
+
+The package implementation, or body, has the structure:
+
+.. code:: ada no_button
+
+   --  my_package.adb
+   package body My_Package is
+
+      --  implementation
+
+   end My_Package;
+
+Something that might stick out in this example is the use of the reserve word :ada:`private` in the package specification. This acts as a partition in the package - anything declared before this keyword is publicly visible to other units that may :ada:`with` this package. Anything declared after the private keyword is only visible to the package implementation. A package specification, or spec, does not require a private section. One typical use-case for the private section in a package is when you want to declare a heterogeneous data type, called a record in Ada or a struct in C, but you want to stop the user of the package from accessing the record components directly. 
+
+.. code:: ada no_button
+
+   package Containers is
+
+      type Stack is private;
+
+      procedure Push (St   : in out Stack;
+                      Elem : Integer);
+      function Pop (St : in out Stack) return Integer;
+
+      --  more accessors go here
+
+   private
+      type Integer_Array is array (Natural range <>) of Integer;
+
+      type Stack is record
+         Data : Integer_Array (1 .. 100);
+         Top : Natural := 0;
+      end record;
+
+   end Containers;
+
+In this example we have a specification for a Stack data type. We don't really want the user to be manipulating the underlying array or index of the top of the array directly. To accomplish this "hiding" we can, in the public section of the package, declare a Stack data type as a private type and some accessors which take a parameter of type stack. In the private section we actually declare the Stack as a record with its components. The user of this package **cannot** access :ada:`Data` or :ada:`Top` directly in this example.
+
+However, from the package body, we **can** access :ada:`Data` and :ada:`Top`.
+
+.. code:: ada no_button
+
+   package body Containers is
+
+      procedure Push (St   : in out Stack;
+                      Elem : Integer)
+      is
+      begin
+         --  some defensive code should go here
+         St.Top := St.Top + 1;
+         St.Data (St.Top) := Elem;
+      end Push;
+
+      function Pop (St : in out Stack) return Integer
+      is
+         Ret : Integer;
+      begin
+         --  some defensive code should go here
+         Ret := St.Data (St.Top);
+         St.Top := St.Top - 1;
+
+         return Ret;
+      end Pop;
+
+   end Containers;
+
+Statements and Declarations
+----------------------------
+
+The following code samples are all equivalent, and illustrate the use of comments and working with integer variables:
+
+.. code:: c
+
+   #include <stdio.h>
+
+   int main()
+   {
+      // variable declarations
+      int a = 0, b = 0, c = 100, d;
+
+      // c shorthand for increment
+      a++;
+
+      // regular addition
+      d = a + b + c;
+
+      // printing the result
+      printf("d = %d\n", d);
+
+      return 0;
+   }
+
+.. code:: ada
+
+   with Ada.Text_IO;
+
+   procedure Main 
+   is
+      --  variable declaration
+      A, B : Integer := 0;
+      C    : Integer := 100;
+      D    : Integer;
+   begin
+      --  Ada does not have a shortcut format for increment like in C
+      A := A + 1;
+
+      --  regular addition
+      D := A + B + C;
+
+      --  printing the result
+      Ada.Text_IO.Put_Line ("D =" & D'Img);
+   end Main;
+
+You'll notice that, in both languages, statements are terminated with a semicolon. This means that you can have multi-line statements.
+
+In the Ada example above, there are two distinct sections to the :ada:`procedure Main`. This first section is delimited by the :ada:`is` keyword and the :ada:'begin' keyword. This section is called the declarative block of the subprogram. The declarative block is where you will define all the local variables which will be used in the subprogram. C89 had something similar, where developers were required to declare their variables at the top of the scope block. Most C developers may have run into this before when trying to write a for loop:
+
+.. code-block:: c
+
+   /* The C89 v
+   int average(int* list, int length)
+   {
+      int i;
+      int sum = 0;
+
+      for(i = 0; i < length; ++i) {
+         sum += list[i];
+      }
+      return (sum / length);
+   }
+
+.. code-block:: c
+
+   // The modern C way
+   int average(int* list, int length)
+   {
+      int sum = 0;
+
+      for(int i = 0; i < length; ++i) {
+         sum += list[i];
+      }
+
+      return (sum / length);
+   }
+
+For the fun of it, let's also see the Ada way to do this:
+
+.. code-block:: ada
+   
+   type Int_Array is array (Natural range <>) of Integer;
+
+   function Average (List : Int_Array) return Integer
+   is
+      Sum : Integer;
+   begin
+
+      for I in List'Range loop
+         Sum := Sum + List (I);
+      end loop;
+
+      return (Sum / List'Length);
+   end Average;
+
+We will explore more about the syntax of loops in Ada in a future section of this book; but for now, notice that the :ada:`I` variable used as the loop index is not declared in the declarative section! 
+
+.. admonition:: Declaration Flippy Floppy
+
+   Something peculiar that you may have noticed about declarations in Ada is that they are backwards from the way C does declarations. The C language expects the type followed by the variable name. Ada expects the variable name followed by a semicolon and then the type.
+
+The next block in the Ada example is between the :ada:`begin` and :ada:`end` keywords. This is where your statements will live. You can create new scopes by using the :ada:`declare` keyword:
+
+.. code:: ada
+
+   with Ada.Text_IO;
+
+   procedure Main 
+   is
+      --  variable declaration
+      A, B : Integer := 0;
+      C    : Integer := 100;
+      D    : Integer;
+   begin
+      --  Ada does not have a shortcut format for increment like in C
+      A := A + 1;
+
+      --  regular addition
+      D := A + B + C;
+
+      --  printing the result
+      Ada.Text_IO.Put_Line ("D =" & D'Img);
+
+      declare
+         E : Integer := D * 100;
+      begin
+         --  printing the result
+         Ada.Text_IO.Put_Line ("E =" & E'Img);
+      end;
+
+   end Main;
+
+Notice that we declared a new variable :ada:`E` whose scope only exists in our newly defined block. The equivalent C code is:
+
+.. code:: c
+
+   #include <stdio.h>
+
+   int main()
+   {
+      // variable declarations
+      int a = 0, b = 0, c = 100, d;
+
+      // c shorthand for increment
+      a++;
+
+      // regular addition
+      d = a + b + c;
+
+      // printing the result
+      printf("d = %d\n", d);
+
+      {
+         int e = d * 100;
+         printf("e = %d\n", e);
+      }
+
+      return 0;
+   }
+
+.. admonition:: The shortcuts of incrementing and decrementing
+
+   You may have noticed that Ada does not have something similar to the :c:`a++` or :c:`a--` operators. Instead you must use the full assignment :ada:`A := A + 1` or :ada:`A := A - 1`.
+
+**Fun Fact** about the C language assignment operator :c:`=`: Did you know that an assignment in C can be used in an expression? Let's look at an example:
+
+.. code:: c
+
+   #include <stdio.h>
+
+   int main()
+   {
+      int a = 0;
+
+      if(a = 10)
+         printf("True\n");
+      else
+         printf("False\n");
+
+      return 0;
+   }
+
+Run the above code example. What does it output? Is that what you were expecting?
+
+The author of the above code example probably meant to test if :c:`a == 10` in the if statement but accidentally typed :c:`=` instead of :c:`==`. Because C treats assignment as an expression, it was able to evaluate :c:`a = 10`.
+
+Let's look at the equivalent Ada code:
+
+.. code:: ada
+   :class: ada-expect-compile-error
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Main
+   is
+      A : Integer := 0;
+   begin
+
+      if A := 10 then
+         Put_Line ("True");
+      else
+         Put_Line ("False");
+      end if;
+   end Main;
+
+Try running the above code. You will notice that you will get a compilation error. This is because Ada does no allow assignment as an expression.
+
+.. admonition:: The "use" clause
+
+   You'll notice in the above code example, after :ada:`with Ada.Text_IO;` there is a new statement we haven't seen before - :ada:`use Ada.Text_IO;`. You may also notice that we are not using the :ada:`Ada.Text_IO` prefix before the :ada:`Put_Line` statements. When we add the use clause it tells the compiler that we won't be using the prefix in the call to subprograms of that package. The use clause is something to use with caution. For example: if we use the :ada:`Ada.Text_IO` package and we also have a :ada:`Put_Line` subprogram in our current compilation unit with the same signature, we have a conflict!
+
+Conditions
+------------
+
+The syntax of an if statement:
+
+.. code:: c
+
+   #include <stdio.h>
+
+   int main()
+   {
+      // try changing the initial value to change the
+      //    output of the program
+      int v = 0;
+
+      if(v > 0) {
+         printf("Positive\n");
+      }
+      else if(v < 0) {
+         printf("Negative\n");
+      }
+      else {
+         printf("Zero\n");   
+      }
+
+      return 0;
+   }
+   
+
+.. code-block:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Main
+   is
+      --  try changing the initial value to change the
+      --    output of the program
+      V : Integer := 0;
+   begin
+      if v > 0 then
+         Put_Line ("Positive");
+      elsif v < 0 then
+         Put_Line ("Negative");
+      else
+         Put_Line ("Zero");
+      end if;
+   end Main;
+
