@@ -24,4 +24,4 @@ Ada for the C Embedded Developer
    C to Ada Translation Patterns <chapters/06_Translation>
    Handling Variability and Re-usability <chapters/07_Reusability>
    Argumentation and Business Perspectives <chapters/08_Business>
-   Conclusion <chapters/09_Cnclusion>
+   Conclusion <chapters/09_Conclusion>

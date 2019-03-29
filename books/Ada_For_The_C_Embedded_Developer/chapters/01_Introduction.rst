@@ -22,6 +22,7 @@ Let’s look at an example of this problem in action by comparing the same progr
 
 .. code:: c
 
+   !main.c
    #include <stdio.h>
    #include <stdlib.h>
 

@@ -5,7 +5,7 @@ What we mean by Embedded Software
 ------------------------------------
 The Ada programming language is a general programming language, which means it can be used for many different types of applications. One type of application where it particularly shines is reliable and safety-critical embedded software; meaning, a platform with a microprocessor such as ARM, PowerPC, x86, or RISC-V. The application may be running on top of an embedded operating system, such as an embedded Linux, or directly on bare metal. And the application domain can range from small entities such as firmware or device controllers to flight management system, communication based train control systems, or advanced driver assistance systems. 
 
-The GNAT toolchain
+The GNAT Toolchain
 -------------------
 
 The toolchain used throughout this book is called GNAT, which is a suite of tools with a compiler based on the GCC environment. It can be obtained from AdaCore, either as part of a commercial contract with `GNAT Pro <https://www.adacore.com/gnatpro)>`_ or at no charge with the `GNAT Community edition <https://www.adacore.com/community>`_. The information on this book will be relevant no matter which edition you’re using. Most examples will be runnable on the native Linux or Windows version for convenience. Some will only be relevant in the context of a cross toolchain, in which case we’ll be using the embedded ARM bare metal toolchain.
@@ -25,6 +25,7 @@ The first piece of code to translate from C to Ada is the usual Hello World prog
 
 .. code:: c
 
+   !main.c
    #include <stdio.h>
 
    int main() 
@@ -50,6 +51,7 @@ The first line of the Ada code is giving us access to the :ada:`Ada.Text_IO` lib
 You may have noticed that the Ada syntax is more verbose than C. Instead of using braces :c:`{}` to declare scope, Ada uses keywords. :ada:`is` opens a declarative scope - which is empty here as there’s no variable to declare. :ada:`begin` opens a sequence of statements. Within this sequence, we’re calling the function :ada:`Put_Line`, prefixing explicitly by the name of the library unit where it’s declared, :ada:`Ada.Text_IO`. The absence of the end of line :c:`\n` can also be noted, as :ada:`Put_Line` always terminates by an end of line.
 
 The Ada Syntax
+----------------
 
 Ada syntax might seem peculiar at first glance. Unlike many other languages, it’s not derived from the popular C style of notation with its ample use of brackets; rather, it uses a more expository syntax coming from Pascal. In many ways, Ada is a more explicit language - its syntax was designed to increase readability and maintainability, rather than making it faster to write in a condensed manner. For example, full words like :ada:`begin` and :ada:`end` are used in place of curly braces. Conditions are written using :ada:`if`, :ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada’s assignment operator does not double as an expression, eliminating potential mistakes that could be caused by :c:`=` being used where :c:`==` should be. 
 
@@ -88,7 +90,7 @@ Both C and Ada were designed with the idea that the code specification and code 
 
 One main difference between the C and Ada compilation structure is that Ada compilation units are structured into something called packages. A specification defines a package and the implementation implements the package. We saw this in an earlier example when we included the :ada:`Ada.Text_IO` package into our application. The package specification has the structure:
 
-.. code:: ada no_button
+.. code-block:: ada
 
    --  my_package.ads
    package My_Package is
@@ -103,7 +105,7 @@ One main difference between the C and Ada compilation structure is that Ada comp
 
 The package implementation, or body, has the structure:
 
-.. code:: ada no_button
+.. code-block:: ada
 
    --  my_package.adb
    package body My_Package is
@@ -114,7 +116,7 @@ The package implementation, or body, has the structure:
 
 Something that might stick out in this example is the use of the reserve word :ada:`private` in the package specification. This acts as a partition in the package - anything declared before this keyword is publicly visible to other units that may :ada:`with` this package. Anything declared after the private keyword is only visible to the package implementation. A package specification, or spec, does not require a private section. One typical use-case for the private section in a package is when you want to declare a heterogeneous data type, called a record in Ada or a struct in C, but you want to stop the user of the package from accessing the record components directly. 
 
-.. code:: ada no_button
+.. code-block:: ada 
 
    package Containers is
 
@@ -140,7 +142,7 @@ In this example we have a specification for a Stack data type. We don't really w
 
 However, from the package body, we **can** access :ada:`Data` and :ada:`Top`.
 
-.. code:: ada no_button
+.. code-block:: ada
 
    package body Containers is
 
@@ -173,6 +175,7 @@ The following code samples are all equivalent, and illustrate the use of comment
 
 .. code:: c
 
+   !main.c
    #include <stdio.h>
 
    int main()
@@ -219,7 +222,7 @@ In the Ada example above, there are two distinct sections to the :ada:`procedure
 
 .. code-block:: c
 
-   /* The C89 v
+   /* The C89 version */
    int average(int* list, int length)
    {
       int i;
@@ -304,6 +307,7 @@ Notice that we declared a new variable :ada:`E` whose scope only exists in our n
 
 .. code:: c
 
+   !main.c
    #include <stdio.h>
 
    int main()
@@ -336,6 +340,7 @@ Notice that we declared a new variable :ada:`E` whose scope only exists in our n
 
 .. code:: c
 
+   !main.c
    #include <stdio.h>
 
    int main()
@@ -386,6 +391,7 @@ The syntax of an if statement:
 
 .. code:: c
 
+   !main.c
    #include <stdio.h>
 
    int main()
@@ -408,7 +414,7 @@ The syntax of an if statement:
    }
    
 
-.. code-block:: ada
+.. code:: ada
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -426,4 +432,74 @@ The syntax of an if statement:
          Put_Line ("Zero");
       end if;
    end Main;
+
+In Ada, everything that appears between the :ada:`if` and :ada:`then` keywords is the conditional expression, no parentheses required. Comparison operators are the same except for:
+
+========== ======= ==========
+Operator   C       Ada
+========== ======= ==========
+Equality   :c:`==` :ada:`=`
+Inequality :c:`!=` :ada:`/=`
+Not        :c:`!`  :ada:`not`
+And        :c:`&&` :ada:`and`
+Or         :c:`||` :ada:`or`
+========== ======= ========== 
+
+The syntax of a switch/case statement:
+
+.. code:: c
+
+   !main.c
+   #include <stdio.h>
+
+   int main()
+   {
+      // try changing the initial value to change the
+      //    output of the program
+      int v = 0;
+
+      switch(v) {
+         case 0:
+            printf("Zero\n");
+            break;
+         case 1: case 2: case 3: case 4: case 5:
+         case 6: case 7: case 8: case 9:
+            printf("Positive\n");
+            break;
+         case 10: case 12: case 14: case 16: case 18:
+            printf("Even number between 10 and 18\n");
+            break;
+         default:
+            printf("Something else\n");
+            break;
+      }
+
+      return 0;
+   }
+
+.. code:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Main
+   is
+      --  try changing the initial value to change the
+      --    output of the program
+      V : Integer := 0;
+   begin
+      case V is
+         when 0 =>
+            Put_Line ("Zero");
+         when 1 .. 9 => 
+            Put_Line ("Positive");
+         when 10 | 12 | 14| 16 | 18 =>
+            Put_Line ("Even number between 10 and 18");
+         when others =>
+            Put_Line ("Something else");
+      end case;
+   end Main;
+
+.. admonition:: Switch or Case?
+
+   A switch statement in C is the same as a case statement in Ada. This may be a little strange because C uses both keywords in the statement syntax. 
 
