@@ -448,7 +448,11 @@ function fill_editor_from_contents(container, example_server, resources) {
         container.attr("prove_button", true);
         container.attr("run_button", true);
         container.attr("submit_button", true);
+        container.attr("cli_input", true);
 
+    }
+
+    if(container.attr("cli_input")) {
         $( '<textarea class="custom_input" name="custom_input" rows="4" cols="6"></textarea>' ).appendTo(buttons_div);
         var custom_check = $( '<input type="checkbox" class="custom_check" name="custom_check"><label for="custom_check">Test against custom input</label>' ).appendTo(buttons_div).change( function() {
             var input_search = container.find( 'textarea[name="custom_input"]' );
