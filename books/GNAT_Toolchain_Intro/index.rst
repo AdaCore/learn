@@ -17,3 +17,4 @@ Introduction to GNAT Toolchain
    Introduction <chapters/intro>
    GNAT Community <chapters/gnat_community>
    GNAT Tools <chapters/gnat_tools>
+   GPRbuild <chapters/gprbuild>
