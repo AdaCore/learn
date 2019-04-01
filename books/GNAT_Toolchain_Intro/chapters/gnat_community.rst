@@ -188,3 +188,91 @@ of useful warnings. Some of them are displayed by default, while some need
 to be explicitly activated. In this section, we discuss some of these
 warnings, their purpose and how to activate them.
 
+``-gnatwa`` switch and warning suppression
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's start by recapitulating the difference between a *warning* and an
+*error*. First, errors are generally violations of the Ada language rules
+as specified in the Ada Reference Manual; warnings are GNAT specific.
+Thus, other Ada compilers might not warn about the same things that GNAT
+does. Second, warnings are typically conservative; that is, some warnings
+will be false alarms, and the programmer needs to study the code to see if
+the warning is a real problem.
+
+Some warnings are given by default, whereas some are given only if a
+switch enables them. Use the ``-gnatwa`` switch to turn on (almost) all
+warnings.
+
+Warnings are useless if you don't do something about them. If you give
+your team-member some code that causes warnings, how are they supposed to
+know if they represent real problems? Pretty soon people will ignore
+warnings, and they will scatter themselves all about the code. Use the
+``-gnatwae`` switch to turn on (almost) all warnings, and to treat
+warnings as errors. This will force you to get a clean (no warnings or
+errors) compilation.
+
+But some warnings are false alarms. Use :ada:`pragma Warnings (Off)` to
+suppress false alarms. It's best to be as specific as possible: narrow
+down to a single line of code, and a single warning message. And use a
+comment to explain why the warning is a false alarm, if it's not obvious.
+
+Let's look at the following example:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Warnings_Example is
+
+       procedure Mumble (X : Integer) is
+       begin
+          Put_Line ("Mumble processing...");
+       end Mumble;
+
+    end Warnings_Example;
+
+We compile the code above with ``-gnatwae``:
+
+.. code-block:: none
+
+    gnat compile -gnatwae ./src/warnings_example.adb
+
+This will cause GNAT to complain:
+
+.. code-block:: none
+
+    warnings_example.adb:5:22: warning: formal parameter "X" is not referenced
+
+But the following will compile cleanly:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Warnings_Example is
+
+       pragma Warnings (Off, "formal parameter ""X"" is not referenced");
+       procedure Mumble (X : Integer) is
+       pragma Warnings (On, "formal parameter ""X"" is not referenced");
+       --  X is ignored here, because blah blah blah...
+       begin
+          Put_Line ("Mumble processing...");
+       end Mumble;
+
+    end Warnings_Example;
+
+Here we've suppressed the specific warning message on a specific line.
+
+If you get many warnings of a specific type, and it's not feasible to fix
+them all, then suppress that type of message, so the good warnings won't
+get buried beneath a pile of bogus ones. The ``-gnatwaeF`` switch will
+silence the warning on the first version of :ada:`Mumble` above: the ``F``
+means suppress warnings on unreferenced formal parameters, and would be a
+good idea if you have lots of those.
+
+In summary, we suggest turning on as many warnings as makes sense for your
+project. Then, whenever you see a warning message, look at the code and
+decide if it's real. If so, fix the code. If it's a false alarm, suppress
+the warning. Either way, make the warning disappear before checking your
+code into your configuration management system.
+
