@@ -270,6 +270,78 @@ silence the warning on the first version of :ada:`Mumble` above: the ``F``
 means suppress warnings on unreferenced formal parameters, and would be a
 good idea if you have lots of those.
 
+As indicated above, ``-gnatwa`` activates almost all warnings, but not
+all of them. You may refer to the
+`GNAT User's Guide <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#warning-message-control>`_
+to get a list of the remaining warnings that you could also use in your
+project. One example is ``-gnatw.o``, which displays warnings in case the
+compiler detects modified but unreferenced out parameters. Consider the
+following example:
+
+.. code-block:: ada
+
+    package Warnings_Example is
+
+       procedure Process (X : in out Integer;
+                          B :    out Boolean);
+
+    end Warnings_Example;
+
+.. code-block:: ada
+
+    package body Warnings_Example is
+
+       procedure Process (X : in out Integer;
+                          B :    out Boolean) is
+       begin
+          if X = Integer'First or else X = Integer'Last then
+             B := False;
+          else
+             X := X + 1;
+             B := True;
+          end if;
+       end Process;
+
+    end Warnings_Example;
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Warnings_Example; use Warnings_Example;
+
+    procedure Main  is
+       X : Integer := 0;
+       Success : Boolean;
+    begin
+       Process (X, Success);
+       Put_Line (Integer'Image (X));
+    end Main;
+
+If we build the main application using the  ``-gnatw.o`` switch, the
+compiler warns us that we missed using the :ada:`Success` variable, which
+was modified in the call to :ada:`Process`:
+
+.. code-block:: none
+
+    main.adb:8:16: warning: "Success" modified by call, but value might not be referenced
+
+This is actually a bug, since :ada:`X` only contains a valid value if
+:ada:`Success` is :ada:`True`. The corrected code for :ada:`Main` is:
+
+.. code-block:: ada
+
+    -- ...
+    begin
+       Process (X, Success);
+
+       if Success then
+          Put_Line (Integer'Image (X));
+       else
+          Put_Line ("Couldn't process variable X.");
+       end if;
+    end Main;
+
 In summary, we suggest turning on as many warnings as makes sense for your
 project. Then, whenever you see a warning message, look at the code and
 decide if it's real. If so, fix the code. If it's a false alarm, suppress
