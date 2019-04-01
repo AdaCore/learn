@@ -37,13 +37,13 @@ Intro to GNAT toolchain
   documentation with some common practical examples. However, for those
   tools, we always refer to their documentation for further details.
 
-- [ ] GNAT Community
+- [x] GNAT Community
 
     - **Goal**: show common compiler options / examples
 
     - [x] Expanded source-code (``-gnatG`` switch)
     - [x] Target dependent information
-    - [ ] GNAT warnings
+    - [x] GNAT warnings
 
 - [x] GNAT tools
 
