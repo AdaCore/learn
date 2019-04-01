@@ -715,10 +715,77 @@ In the C code there are two problems:
 
 #. The loop predicate should be modified to :c:`i >= 0;`
 
-This is a typical off-by-one problem that plagues C programs. You'll notice that we didn't have this problem with the Ada code. 
+#. The C code also has another off-by-one problem in the math to compute the value stored in :c:`list[i]`. The expression should be changed to be :c:`list[i] = LIST_LENGTH - i - 1;`.
 
+These are typical off-by-one problems that plagues C programs. You'll notice that we didn't have this problem with the Ada code because we aren't defining the loop with arbitrary numeric literals. Instead we are accessing attributes of the array we want to manipulate and are using a keyword to determine the indexing direction.
 
+We can actually simplify the Ada for loop a little further using iterators:
 
+.. code:: ada
 
+   with Ada.Text_IO; use Ada.Text_IO;
 
+   procedure Main
+   is
+      type Int_Array is array (Natural range 1 .. 100) of Integer;
 
+      List : Int_Array;
+   begin
+
+      for I in reverse List'Range loop
+         List (I) := List'Last - I;
+      end loop;
+
+      for I of List loop
+         Put (I'Img & " ");
+      end loop;
+
+      New_Line;
+   end Main;
+
+In the second for loop, we changed the syntax to :ada:`for I of List`. Instead of I being the index counter, it is now an iterator that references the underlying element. This example of Ada code is identical to the last bit of Ada code. We just used a different method to index over the second for loop. There is no C equivalent to this Ada feature, but it is similar to C++'s range based for loop.
+
+Type System
+--------------
+
+Ada is considered a "strongly typed" language. This means that the language does not define any implicit type conversions. C does define implicit type conversions, sometimes referred to as 
+*integer promotion*. The rules for promotion are fairly straightforward in simple expressions but can get confusing very quickly. Let's look at a typical place of confusion with implicit type conversion:
+
+.. code:: c
+
+   !main.c
+   #include <stdio.h>
+
+   int main()
+   {
+      unsigned char a = 0xFF;
+      char b = 0xFF;
+
+      printf("Does a == b?\n");
+      if(a == b)
+         printf("No.\n");
+      else
+         printf("Yes.\n");
+
+      printf("a: 0x%08X, b: 0x%08X\n", a, b);
+
+      return 0;
+   }
+
+Run the above code. You will notice that :c:`a != b`! If we look at the output of the last :c:`printf` statement we will see the problem. :c:`a` is an unsigned number where :c:`b` is a signed number. We stored a value of :c:`0xFF` in both variables, but :c:`a` treated this as the decimal number :c:`255` while b treated this as the decimal number :c:`-1`. When we compare the two variables, of course they aren't equal; but thats not very intuitive. Lets look at the equivalent Ada example:
+
+.. code:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Main
+   is
+      type Char is range 0 .. 255;
+      type Unsigned_Char is mod 256;
+
+      A : Char := 16#FF#;
+      B : Unsigned_Char := 16#FF#;
+   begin
+
+      Put_Line ("Does A = B?");
+      
