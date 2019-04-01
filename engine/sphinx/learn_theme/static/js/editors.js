@@ -224,7 +224,7 @@ function query_operation_result(container, editors, output_area, mode) {
         })
         .fail(function(xhr, status, errorThrown) {
             reset(container, editors);
-            output_error(output_area, "the machine running the examples is not available, please try again later");
+            output_error(output_area, "The machine running the examples may not be available or is busy, please try again now or come back later.");
             console.log("Error: " + errorThrown);
             console.log("Status: " + status);
             console.dir(xhr);
