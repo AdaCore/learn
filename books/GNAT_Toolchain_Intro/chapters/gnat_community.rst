@@ -294,6 +294,6 @@ subprograms are explicitly marked as such. Using this switch can avoid
 surprises when you didn't intentionally want to override an operation for
 some data type. Therefore, we recommend studying the list of coding style
 switches and selecting the ones that seem relevant for your project. When
-in doubt, you may start by using all of them |mdash| using ``-gnatyy``,
-for example |mdash| and deactivating the ones that cause too much *noise*
-during compilation.
+in doubt, you may start by using all of them |mdash| using ``-gnatyy`` and
+``-gnatyBdIL4oOSux``, for example |mdash| and deactivating the ones that
+cause too much *noise* during compilation.
