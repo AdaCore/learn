@@ -503,11 +503,6 @@ Please refer to the
 from the GNAT User’s Guide for the many options available for
 :program:`gnatmetric`, including the generation of reports in XML format.
 
-gnatdll (Windows)
------------------
-
-
-
 gnatdoc
 -------
 
