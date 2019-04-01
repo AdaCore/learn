@@ -178,3 +178,13 @@ achieved via the ``-gnateT=path`` option. For example:
     gnat compile ./src/main.adb -gnateT=machine.tdi
 
 In this case, the information from ``machine.tdi`` is used as the target.
+
+
+Compiler warnings
+-----------------
+
+One of the strengths of the GNAT compiler is the ability to generate lots
+of useful warnings. Some of them are displayed by default, while some need
+to be explicitly activated. In this section, we discuss some of these
+warnings, their purpose and how to activate them.
+
