@@ -136,3 +136,126 @@ dynamic library) from the project file for the :ada:`Test_Pkg` package.
 With these small changes, we were able to compile the :ada:`Test_Pkg`
 package to a dynamic library and link it to our main application.
 
+Configuration pragmas files
+---------------------------
+
+Configuration pragmas files contain a list of pragmas that drive
+compilation of source-code files according to external requirements. For
+example, depending on your environment, you may use pragmas for relaxed
+requirements or more strict requirements.
+
+In :program:`GPRbuild`, we can use ``Local_Configuration_Pragmas``
+(from the ``Compiler`` package) to indicate the configuration pragmas file
+to be used for the source-code files in our project.
+
+The file ``gnat.adc`` listed below is an example of a configuration
+pragmas file:
+
+.. code-block:: none
+
+    pragma Suppress (Overflow_Check);
+
+We can use this file in our project by declaring a ``Compiler`` package.
+This is the complete project file:
+
+.. code-block:: none
+
+    project Default is
+
+       for Source_Dirs use ("src");
+       for Object_Dir use "obj";
+       for Main use ("main.adb");
+
+       package Compiler is
+          for Local_Configuration_Pragmas use "gnat.adc";
+       end Compiler;
+
+    end Default;
+
+When compiling the code with this project, each pragma of ``gnat.adc`` is
+taken into account.
+
+Configuration packages
+----------------------
+
+It's possible to drive the compilation of the source-code by creating
+packages for each use-case and selecting the appropriate package in the
+compilation package. This is useful for example for conditional
+compilation using Boolean constants, as in the code below:
+
+.. code-block:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Config;
+
+    procedure Main is
+    begin
+
+       if Config.Debug then
+          Put_Line ("Debug version");
+       else
+          Put_Line ("Release version");
+       end if;
+    end Main;
+
+In this example, the Boolean constant is declared in the :ada:`Config`
+package. By having multiple versions of the :ada:`Config` package, we may
+create different specifications for each use-case. For this simple
+example, there are only two possible use-cases: either :ada:`Debug` is
+:ada:`True` or :ada:`False`. However, you can apply this strategy to
+create more complex use-cases.
+
+For this example, we store the packages in the subdirectories ``debug``
+and ``release`` of the source-code directory. This is the content of
+the ``src/debug/config.ads`` file:
+
+.. code-block:: ada
+
+    package Config is
+
+       Debug : constant Boolean := True;
+
+    end Config;
+
+This is the content of the ``src/release/config.ads`` file:
+
+.. code-block:: ada
+
+    package Config is
+
+       Debug : constant Boolean := False;
+
+    end Config;
+
+In this case, :program:`GPRbuild` selects the appropriate directory
+containing the ``config.ads`` file according to information that we
+provide for the compilation process. For example:
+
+.. code-block:: sh
+
+    gprbuild -P default.gpr -Xmode=release
+
+We can do this by using a scenario type called ``Mode_Type`` in our
+project file:
+
+.. code-block:: none
+
+    project Default is
+
+       type Mode_Type is ("debug", "release");
+
+       Mode : Mode_Type := external ("mode", "debug");
+
+       for Source_Dirs use ("src", "src/" & Mode);
+       for Object_Dir use "obj";
+       for Main use ("main.adb");
+
+    end Default;
+
+We declare the scenario variable ``Mode`` and use it to add the path to
+the subdirectory containing the ``config.ads`` file in the ``Source_Dirs``
+specification. The expression ``"src/" & Mode`` takes the user-selected
+mode to select the appropriate subdirectory. For more complex use-cases,
+we could use a tree of subdirectories or multiple scenario variables for
+each aspect that needs to be configurable.

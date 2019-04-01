@@ -60,10 +60,10 @@ Intro to GNAT toolchain
     - [x] ``gnatstub``
     - [x] ``gnattest``
 
-- [ ] GPRbuild
+- [x] GPRbuild
 
-    - [ ] Configuration pragmas / files
-    - [ ] Project dependencies
+    - [x] Configuration pragmas / files
+    - [x] Project dependencies
 
 
 Moved to Embedded course
