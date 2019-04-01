@@ -272,11 +272,11 @@ good idea if you have lots of those.
 
 As indicated above, ``-gnatwa`` activates almost all warnings, but not
 all of them. You may refer to the
-`GNAT User's Guide <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#warning-message-control>`_
-to get a list of the remaining warnings that you could also use in your
-project. One example is ``-gnatw.o``, which displays warnings in case the
-compiler detects modified but unreferenced out parameters. Consider the
-following example:
+`section on warnings <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#warning-message-control>`_
+of the GNAT User's Guide, to get a list of the remaining warnings that you
+could also use in your project. One example is ``-gnatw.o``, which
+displays warnings in case the compiler detects modified but unreferenced
+out parameters. Consider the following example:
 
 .. code-block:: ada
 
@@ -354,11 +354,11 @@ Style checking
 GNAT provides many options to configure code style checking. The main
 compiler switch for this is ``-gnatyy``, which sets almost all standard
 style check options. As indicated by the
-`GNAT User's Guide <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking>`_,
-using this switch "is equivalent to ``-gnaty3aAbcefhiklmnprst``, that is
-all checking options enabled with the exception of ``-gnatyB``,
-``-gnatyd``, ``-gnatyI``, ``-gnatyLnnn``, ``-gnatyo``, ``-gnatyO``,
-``-gnatyS``, ``-gnatyu``, and ``-gnatyx``."
+`section on style checking <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking>`_
+of the GNAT User's Guide, using this switch "is equivalent to
+``-gnaty3aAbcefhiklmnprst``, that is all checking options enabled with the
+exception of ``-gnatyB``, ``-gnatyd``, ``-gnatyI``, ``-gnatyLnnn``,
+``-gnatyo``, ``-gnatyO``, ``-gnatyS``, ``-gnatyu``, and ``-gnatyx``."
 
 Selecting the appropriate coding style may be useful to detect issues at
 early stages. For example, the ``-gnatyO`` switch checks that overriding
