@@ -3,6 +3,11 @@ GPRbuild
 
 .. include:: <isopub.txt>
 
+.. include:: <isoamsa.txt>
+
+.. role:: ada(code)
+   :language: ada
+
 This chapter presents some useful features of GPRbuild, the project
 manager of the GNAT toolchain. For a detailed presentation of the tool,
 please refer to the
