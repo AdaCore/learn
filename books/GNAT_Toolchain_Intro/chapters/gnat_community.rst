@@ -276,3 +276,24 @@ decide if it's real. If so, fix the code. If it's a false alarm, suppress
 the warning. Either way, make the warning disappear before checking your
 code into your configuration management system.
 
+Style checking
+~~~~~~~~~~~~~~
+
+GNAT provides many options to configure code style checking. The main
+compiler switch for this is ``-gnatyy``, which sets almost all standard
+style check options. As indicated by the
+`GNAT User's Guide <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking>`_,
+using this switch "is equivalent to ``-gnaty3aAbcefhiklmnprst``, that is
+all checking options enabled with the exception of ``-gnatyB``,
+``-gnatyd``, ``-gnatyI``, ``-gnatyLnnn``, ``-gnatyo``, ``-gnatyO``,
+``-gnatyS``, ``-gnatyu``, and ``-gnatyx``."
+
+Selecting the appropriate coding style may be useful to detect issues at
+early stages. For example, the ``-gnatyO`` switch checks that overriding
+subprograms are explicitly marked as such. Using this switch can avoid
+surprises when you didn't intentionally want to override an operation for
+some data type. Therefore, we recommend studying the list of coding style
+switches and selecting the ones that seem relevant for your project. When
+in doubt, you may start by using all of them |mdash| using ``-gnatyy``,
+for example |mdash| and deactivating the ones that cause too much *noise*
+during compilation.
