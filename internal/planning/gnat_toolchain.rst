@@ -45,7 +45,7 @@ Intro to GNAT toolchain
     - [x] Target dependent information
     - [ ] GNAT warnings
 
-- [ ] GNAT tools
+- [x] GNAT tools
 
     - [x] ``gnatchop``
     - [x] ``gnatprep``
@@ -53,7 +53,6 @@ Intro to GNAT toolchain
     - [x] ``gnatxref``
     - [x] ``gnatmem``
     - [x] ``gnatmetric``
-    - [ ] ``gnatdll`` (Windows only)
     - [x] ``gnatdoc``
     - [x] ``gnat2xml``
     - [x] ``gnatpp``
