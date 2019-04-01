@@ -361,8 +361,7 @@ The author of the above code example probably meant to test if :c:`a == 10` in t
 
 Let's look at the equivalent Ada code:
 
-.. code:: ada
-   :class: ada-expect-compile-error
+.. code-block:: ada
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -378,7 +377,7 @@ Let's look at the equivalent Ada code:
       end if;
    end Main;
 
-Try running the above code. You will notice that you will get a compilation error. This is because Ada does no allow assignment as an expression.
+THe above code will not compile. This is because Ada does no allow assignment as an expression.
 
 .. admonition:: The "use" clause
 
@@ -501,5 +500,225 @@ The syntax of a switch/case statement:
 
 .. admonition:: Switch or Case?
 
-   A switch statement in C is the same as a case statement in Ada. This may be a little strange because C uses both keywords in the statement syntax. 
+   A switch statement in C is the same as a case statement in Ada. This may be a little strange because C uses both keywords in the statement syntax. Lets make an analogy between C and Ada: C's :c:`switch` is to Ada's :ada:`case` as C's :c:`case` is to Ada's :ada:`when`.
+
+Notice that in Ada, the case statement does not use the :c:`break` keyword. In C, we use :c:`break` to stop the execution of a case branch from falling through to the next branch. Here is an example:
+
+.. code:: c cli_input
+
+   !main.c
+   #include <stdio.h>
+
+   int main()
+   {
+      int v = 0;
+
+      switch(v) {
+         case 0:
+            printf("Zero\n");
+         case 1:
+            printf("One\n");
+         default:
+            printf("Other\n");
+      }
+
+      return 0;
+   }
+
+Run the above code with :c:`v = 0`. What prints? What prints when we change the assignment to :c:`v = 1`? 
+
+When :c:`v = 0` the program outputs the strings :c:`Zero` then :c:`One` then :c:`Other`. This is called fall through. If you add the :c:`break` statements back into the :c:`switch` you can stop this fall through behavior from happening. The reason why fall through is allowed in C is to allow the behavior from the previous example where we want a specific branch to execute for multiple inputs. Ada solves this a different way because it is possible, or even probable, that the developer might forget a :c:`break` statement accidentally. So Ada does not allow fall through. Instead, you can use Ada's semantic to identify when a specific branch can be executed by more than one input. If you want a range of values for a specific branch you can use the :ada:`First .. Last` notation. If you want a few non-consecutive values you can use the :ada:`Value1 | Value2 | Value3` notation.
+
+Instead of using the word :c:`default` to denote the catch-all case, Ada uses the :ada:`others` keyword. 
+
+Loops
+------
+
+Let's start with some syntax:
+
+.. code-block:: c
+
+   // this is a while loop
+   while(v < 10000) {
+      v *= 2;
+   }
+
+   // this is a do while loop
+   do {
+      v *= 2;
+   } while(v < 10000);
+
+   // this is a for loop
+   for(int i = 0; i < 10000; ++i) {
+      v *= (i * i);
+   }
+
+   // this is a forever loop with a conditional exit
+   while(1) {
+      // do stuff here
+      if(condition)
+         break;
+   }
+
+   // this is a loop over an array
+   {
+      #define ARR_SIZE (10)
+      int arr[ARR_SIZE];
+      int sum = 0;
+
+      for(int i = 0; i < ARR_SIZE; ++i) {
+         sum += arr[i];
+      }
+   }
+   
+
+.. code-block:: ada
+
+   --  this is a while loop
+   while V < 10_000 loop
+      V := V * 2;
+   end loop;
+
+   --  Ada doesn't have an explicit do while loop
+   --    instead you can use the loop and exit keywords
+   loop
+      V := V * 2;
+      exit when V >= 10_000;
+   end loop;
+
+   --  this is a for loop
+   for I in 1 .. 10_000 loop
+      V := V * (I * I);
+   end loop;
+
+   --  this is a forever loop with a conditional exit
+   loop
+      --  do stuff here
+      exit when condition;
+   end loop;
+
+   --  this is a loop over an array
+   declare
+      type Int_Array is array (Natural range 1 .. 10) of Integer;
+
+      Arr : Int_Array;
+      Sum : Integer := 0;
+   begin
+      for I in Arr'Range loop
+         Sum := Sum + Arr (I);
+      end loop;
+   end;
+
+The loop syntax in Ada is pretty straightforward. The :ada:`loop` and :ada:`end loop` keywords are used to open and close the loop scope. Instead of using the :c:`break` keyword to exit the loop, Ada has the :ada:`exit` statement. The :ada:`exit` statement can be combined with a logic expression using the :ada:`exit when` syntax. 
+
+The major deviation in loop syntax is regarding for loops. You'll notice, in C, that you sometimes declare, and at least initialize a loop counter variable, specify a loop predicate, or an expression that indicates when the loop should continue executing or complete, and last you specify an expression to update the loop counter. 
+
+.. code-block:: c
+
+   for(initialization expression; loop predicate; update expression) {
+      // some statements
+   } 
+
+In Ada, you don't declare or initialize a loop counter or specify an update expression. You only name the loop counter and give it a range to loop over. The loop counter is **read-only**! You cannot modify the loop counter inside the loop like you can in C. And the loop counter will increment consecutively along the specified range. But what if you want to loop over the range in reverse order?
+
+.. code:: c
+
+   !main.c
+   #include <stdio.h>
+
+   #define MY_RANGE (10)
+
+   int main()
+   {
+
+      for(int i = MY_RANGE; i >= 0; --i) {
+         printf("%d\n", i);
+      }
+
+      return 0;
+   }
+
+.. code:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Main
+   is
+      My_Range : constant := 10;
+   begin
+      for I in reverse 0 .. My_Range loop
+         Put_Line (I'Img);
+      end loop;
+   end Main;
+
+.. admonition:: Tick Image
+
+   Strangely enough, Ada people call the single apostrophe symbol, :ada:`'`, "tick". This "tick" says the we are accessing an attribute of the variable. When we do :ada:`'Img` on a variable of a numerical type, we are going to return the string version of that numerical type. So in the for loop above, :ada:`I'Img`, or "I tick image" will return the string representation of the numerical value stored in I. We have to do this because Put_Line is expecting a string as an input parameter.
+
+In the above example, we are traversing over the range in reverse order. In Ada, we use the :ada:`reverse` keyword to accomplish this.
+
+In many cases, when we are writing a for loop, it has something to do with traversing an array. In C, this is a classic location for off-by-one errors. Lets see an example in action:
+
+.. code:: c
+
+   !main.c
+   #include <stdio.h>
+
+   #define LIST_LENGTH (100)
+
+   int main()
+   {
+      int list[LIST_LENGTH];
+
+      for(int i = LIST_LENGTH; i > 0; --i) {
+         list[i] = LIST_LENGTH - i;
+      }
+
+      for (int i = 0; i < LIST_LENGTH; ++i)
+      {
+         printf("%d ", list[i]);
+      }
+      printf("\n");
+
+      return 0;
+   }
+
+.. code:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Main
+   is
+      type Int_Array is array (Natural range 1 .. 100) of Integer;
+
+      List : Int_Array;
+   begin
+
+      for I in reverse List'Range loop
+         List (I) := List'Last - I;
+      end loop;
+
+      for I in List'Range loop
+         Put (List (I)'Img & " ");
+      end loop;
+
+      New_Line;
+   end Main;
+
+The above Ada and C code should initialize an array using a for loop. The initial values in the array should be contiguously decreasing from 99 to 0 as we index from the first index to the last index. In other words, the first index has a value of 99, the next has 98, the next 97 ... the last has a value of 0. 
+
+If you run both the C and Ada code above you'll notice that the outputs of the two programs are different. Can you spot why?
+
+In the C code there are two problems:
+
+#. There's a buffer overflow in the first iteration of the loop. We would need to modify the loop initialization to :c:`int i = LIST_LENGTH - 1;`.
+
+#. The loop predicate should be modified to :c:`i >= 0;`
+
+This is a typical off-by-one problem that plagues C programs. You'll notice that we didn't have this problem with the Ada code. 
+
+
+
+
+
 

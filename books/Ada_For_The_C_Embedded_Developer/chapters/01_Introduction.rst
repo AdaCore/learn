@@ -20,7 +20,7 @@ To answer this question let’s introduce Ada as it compares to C for an embedde
 
 Let’s look at an example of this problem in action by comparing the same program in Ada and C:
 
-.. code:: c
+.. code:: c cli_input
 
    !main.c
    #include <stdio.h>
@@ -54,7 +54,7 @@ Let’s look at an example of this problem in action by comparing the same progr
      return 0;
    }
 
-.. code:: ada
+.. code:: ada cli_input
 
    with Ada.Command_Line; use Ada.Command_Line;
    with Ada.Text_IO; use Ada.Text_IO;
