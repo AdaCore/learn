@@ -101,9 +101,9 @@ M L H d p d p d p d
 Sample Output
 -------------
 
-[M, L, H] 
-[M, L] 
-[M] 
+[M, L, H]
+[M, L]
+[M]
 []
 
 --------------
@@ -254,4 +254,4 @@ Sample Output
 
       end loop;
 
-   end Main; 
+   end Main;
