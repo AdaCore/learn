@@ -3,7 +3,7 @@ The C Developer's Perspective on Ada
 
 What we mean by Embedded Software
 ------------------------------------
-The Ada programming language is a general programming language, which means it can be used for many different types of applications. One type of application where it particularly shines is reliable and safety-critical embedded software; meaning, a platform with a microprocessor such as ARM, PowerPC, x86, or RISC-V. The application may be running on top of an embedded operating system, such as an embedded Linux, or directly on bare metal. And the application domain can range from small entities such as firmware or device controllers to flight management system, communication based train control systems, or advanced driver assistance systems. 
+The Ada programming language is a general programming language, which means it can be used for many different types of applications. One type of application where it particularly shines is reliable and safety-critical embedded software; meaning, a platform with a microprocessor such as ARM, PowerPC, x86, or RISC-V. The application may be running on top of an embedded operating system, such as an embedded Linux, or directly on bare metal. And the application domain can range from small entities such as firmware or device controllers to flight management system, communication based train control systems, or advanced driver assistance systems.
 
 The GNAT Toolchain
 -------------------
@@ -28,7 +28,7 @@ The first piece of code to translate from C to Ada is the usual Hello World prog
    !main.c
    #include <stdio.h>
 
-   int main() 
+   int main()
    {
      printf("Hello World\n");
      return 0;
@@ -38,7 +38,7 @@ The first piece of code to translate from C to Ada is the usual Hello World prog
 
    with Ada.Text_IO;
 
-   procedure Hello_World 
+   procedure Hello_World
    is
    begin
       Ada.Text_IO.Put_Line ("Hello World");
@@ -46,20 +46,20 @@ The first piece of code to translate from C to Ada is the usual Hello World prog
 
 The resulting program will print :ada:`Hello World` on the screen. Let’s now dissect the Ada version to describe what is going on:
 
-The first line of the Ada code is giving us access to the :ada:`Ada.Text_IO` library which contains the :ada:`Put_Line` function we will use to print the text to the console. This is similar to C’s :c:`#include <stdio.h>`. We then create a procedure which executes :ada:`Put_Line` which prints to the console. This is similar to C’s :c:`printf` statement. For now, we can assume these Ada and C features have similar functionality. In reality, they are very different. We will explore that more as we delve further into the Ada language. 
+The first line of the Ada code is giving us access to the :ada:`Ada.Text_IO` library which contains the :ada:`Put_Line` function we will use to print the text to the console. This is similar to C’s :c:`#include <stdio.h>`. We then create a procedure which executes :ada:`Put_Line` which prints to the console. This is similar to C’s :c:`printf` statement. For now, we can assume these Ada and C features have similar functionality. In reality, they are very different. We will explore that more as we delve further into the Ada language.
 
 You may have noticed that the Ada syntax is more verbose than C. Instead of using braces :c:`{}` to declare scope, Ada uses keywords. :ada:`is` opens a declarative scope - which is empty here as there’s no variable to declare. :ada:`begin` opens a sequence of statements. Within this sequence, we’re calling the function :ada:`Put_Line`, prefixing explicitly by the name of the library unit where it’s declared, :ada:`Ada.Text_IO`. The absence of the end of line :c:`\n` can also be noted, as :ada:`Put_Line` always terminates by an end of line.
 
 The Ada Syntax
 ----------------
 
-Ada syntax might seem peculiar at first glance. Unlike many other languages, it’s not derived from the popular C style of notation with its ample use of brackets; rather, it uses a more expository syntax coming from Pascal. In many ways, Ada is a more explicit language - its syntax was designed to increase readability and maintainability, rather than making it faster to write in a condensed manner. For example, full words like :ada:`begin` and :ada:`end` are used in place of curly braces. Conditions are written using :ada:`if`, :ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada’s assignment operator does not double as an expression, eliminating potential mistakes that could be caused by :c:`=` being used where :c:`==` should be. 
+Ada syntax might seem peculiar at first glance. Unlike many other languages, it’s not derived from the popular C style of notation with its ample use of brackets; rather, it uses a more expository syntax coming from Pascal. In many ways, Ada is a more explicit language - its syntax was designed to increase readability and maintainability, rather than making it faster to write in a condensed manner. For example, full words like :ada:`begin` and :ada:`end` are used in place of curly braces. Conditions are written using :ada:`if`, :ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada’s assignment operator does not double as an expression, eliminating potential mistakes that could be caused by :c:`=` being used where :c:`==` should be.
 
-All languages provide one or more ways to express comments. In Ada, two consecutive hyphens :ada:`--` mark the start of a comment that continues to the end of the line. This is exactly the same as using :c:`//` for comments in C. Multi line comments like C’s :c:`/* */` do not exist in Ada. 
+All languages provide one or more ways to express comments. In Ada, two consecutive hyphens :ada:`--` mark the start of a comment that continues to the end of the line. This is exactly the same as using :c:`//` for comments in C. Multi line comments like C’s :c:`/* */` do not exist in Ada.
 
-Ada compilers are stricter with type and range checking than most C programmers are used to. Most beginning Ada programmers encounter a variety of warnings and error messages when coding, but this helps detect problems and vulnerabilities at compile time - early on in the development cycle. In addition, checks (such as array bounds checks) provide verification that could not be done at compile time but can be performed either at run-time, or through formal proof (with the SPARK tooling). 
+Ada compilers are stricter with type and range checking than most C programmers are used to. Most beginning Ada programmers encounter a variety of warnings and error messages when coding, but this helps detect problems and vulnerabilities at compile time - early on in the development cycle. In addition, checks (such as array bounds checks) provide verification that could not be done at compile time but can be performed either at run-time, or through formal proof (with the SPARK tooling).
 
-Ada identifiers and reserved words are case insensitive. The identifiers :ada:`VAR`, :ada:`var` and :ada:`VaR` are treated as the same identifier; likewise :ada:`begin`, :ada:`BEGIN`, :ada:`Begin`, etc. Identifiers may include letters, digits, and underscores, but must always start with a letter. There are 73 reserved keywords in Ada that may not be used as identifiers, and these are: 
+Ada identifiers and reserved words are case insensitive. The identifiers :ada:`VAR`, :ada:`var` and :ada:`VaR` are treated as the same identifier; likewise :ada:`begin`, :ada:`BEGIN`, :ada:`Begin`, etc. Identifiers may include letters, digits, and underscores, but must always start with a letter. There are 73 reserved keywords in Ada that may not be used as identifiers, and these are:
 
   ======== ========= ========== ============
   abort    else      null       select
@@ -114,9 +114,9 @@ The package implementation, or body, has the structure:
 
    end My_Package;
 
-Something that might stick out in this example is the use of the reserve word :ada:`private` in the package specification. This acts as a partition in the package - anything declared before this keyword is publicly visible to other units that may :ada:`with` this package. Anything declared after the private keyword is only visible to the package implementation. A package specification, or spec, does not require a private section. One typical use-case for the private section in a package is when you want to declare a heterogeneous data type, called a record in Ada or a struct in C, but you want to stop the user of the package from accessing the record components directly. 
+Something that might stick out in this example is the use of the reserve word :ada:`private` in the package specification. This acts as a partition in the package - anything declared before this keyword is publicly visible to other units that may :ada:`with` this package. Anything declared after the private keyword is only visible to the package implementation. A package specification, or spec, does not require a private section. One typical use-case for the private section in a package is when you want to declare a heterogeneous data type, called a record in Ada or a struct in C, but you want to stop the user of the package from accessing the record components directly.
 
-.. code-block:: ada 
+.. code-block:: ada
 
    package Containers is
 
@@ -199,7 +199,7 @@ The following code samples are all equivalent, and illustrate the use of comment
 
    with Ada.Text_IO;
 
-   procedure Main 
+   procedure Main
    is
       --  variable declaration
       A, B : Integer := 0;
@@ -251,7 +251,7 @@ In the Ada example above, there are two distinct sections to the :ada:`procedure
 For the fun of it, let's also see the Ada way to do this:
 
 .. code-block:: ada
-   
+
    type Int_Array is array (Natural range <>) of Integer;
 
    function Average (List : Int_Array) return Integer
@@ -266,7 +266,7 @@ For the fun of it, let's also see the Ada way to do this:
       return (Sum / List'Length);
    end Average;
 
-We will explore more about the syntax of loops in Ada in a future section of this book; but for now, notice that the :ada:`I` variable used as the loop index is not declared in the declarative section! 
+We will explore more about the syntax of loops in Ada in a future section of this book; but for now, notice that the :ada:`I` variable used as the loop index is not declared in the declarative section!
 
 .. admonition:: Declaration Flippy Floppy
 
@@ -278,7 +278,7 @@ The next block in the Ada example is between the :ada:`begin` and :ada:`end` key
 
    with Ada.Text_IO;
 
-   procedure Main 
+   procedure Main
    is
       --  variable declaration
       A, B : Integer := 0;
@@ -406,12 +406,12 @@ The syntax of an if statement:
          printf("Negative\n");
       }
       else {
-         printf("Zero\n");   
+         printf("Zero\n");
       }
 
       return 0;
    }
-   
+
 
 .. code:: ada
 
@@ -442,7 +442,7 @@ Inequality :c:`!=` :ada:`/=`
 Not        :c:`!`  :ada:`not`
 And        :c:`&&` :ada:`and`
 Or         :c:`||` :ada:`or`
-========== ======= ========== 
+========== ======= ==========
 
 The syntax of a switch/case statement:
 
@@ -489,7 +489,7 @@ The syntax of a switch/case statement:
       case V is
          when 0 =>
             Put_Line ("Zero");
-         when 1 .. 9 => 
+         when 1 .. 9 =>
             Put_Line ("Positive");
          when 10 | 12 | 14| 16 | 18 =>
             Put_Line ("Even number between 10 and 18");
@@ -525,11 +525,11 @@ Notice that in Ada, the case statement does not use the :c:`break` keyword. In C
       return 0;
    }
 
-Run the above code with :c:`v = 0`. What prints? What prints when we change the assignment to :c:`v = 1`? 
+Run the above code with :c:`v = 0`. What prints? What prints when we change the assignment to :c:`v = 1`?
 
 When :c:`v = 0` the program outputs the strings :c:`Zero` then :c:`One` then :c:`Other`. This is called fall through. If you add the :c:`break` statements back into the :c:`switch` you can stop this fall through behavior from happening. The reason why fall through is allowed in C is to allow the behavior from the previous example where we want a specific branch to execute for multiple inputs. Ada solves this a different way because it is possible, or even probable, that the developer might forget a :c:`break` statement accidentally. So Ada does not allow fall through. Instead, you can use Ada's semantic to identify when a specific branch can be executed by more than one input. If you want a range of values for a specific branch you can use the :ada:`First .. Last` notation. If you want a few non-consecutive values you can use the :ada:`Value1 | Value2 | Value3` notation.
 
-Instead of using the word :c:`default` to denote the catch-all case, Ada uses the :ada:`others` keyword. 
+Instead of using the word :c:`default` to denote the catch-all case, Ada uses the :ada:`others` keyword.
 
 Loops
 ------
@@ -570,7 +570,7 @@ Let's start with some syntax:
          sum += arr[i];
       }
    }
-   
+
 
 .. code-block:: ada
 
@@ -609,15 +609,15 @@ Let's start with some syntax:
       end loop;
    end;
 
-The loop syntax in Ada is pretty straightforward. The :ada:`loop` and :ada:`end loop` keywords are used to open and close the loop scope. Instead of using the :c:`break` keyword to exit the loop, Ada has the :ada:`exit` statement. The :ada:`exit` statement can be combined with a logic expression using the :ada:`exit when` syntax. 
+The loop syntax in Ada is pretty straightforward. The :ada:`loop` and :ada:`end loop` keywords are used to open and close the loop scope. Instead of using the :c:`break` keyword to exit the loop, Ada has the :ada:`exit` statement. The :ada:`exit` statement can be combined with a logic expression using the :ada:`exit when` syntax.
 
-The major deviation in loop syntax is regarding for loops. You'll notice, in C, that you sometimes declare, and at least initialize a loop counter variable, specify a loop predicate, or an expression that indicates when the loop should continue executing or complete, and last you specify an expression to update the loop counter. 
+The major deviation in loop syntax is regarding for loops. You'll notice, in C, that you sometimes declare, and at least initialize a loop counter variable, specify a loop predicate, or an expression that indicates when the loop should continue executing or complete, and last you specify an expression to update the loop counter.
 
 .. code-block:: c
 
    for(initialization expression; loop predicate; update expression) {
       // some statements
-   } 
+   }
 
 In Ada, you don't declare or initialize a loop counter or specify an update expression. You only name the loop counter and give it a range to loop over. The loop counter is **read-only**! You cannot modify the loop counter inside the loop like you can in C. And the loop counter will increment consecutively along the specified range. But what if you want to loop over the range in reverse order?
 
@@ -705,7 +705,7 @@ In many cases, when we are writing a for loop, it has something to do with trave
       New_Line;
    end Main;
 
-The above Ada and C code should initialize an array using a for loop. The initial values in the array should be contiguously decreasing from 99 to 0 as we index from the first index to the last index. In other words, the first index has a value of 99, the next has 98, the next 97 ... the last has a value of 0. 
+The above Ada and C code should initialize an array using a for loop. The initial values in the array should be contiguously decreasing from 99 to 0 as we index from the first index to the last index. In other words, the first index has a value of 99, the next has 98, the next 97 ... the last has a value of 0.
 
 If you run both the C and Ada code above you'll notice that the outputs of the two programs are different. Can you spot why?
 
@@ -748,7 +748,7 @@ In the second for loop, we changed the syntax to :ada:`for I of List`. Instead o
 Type System
 --------------
 
-Ada is considered a "strongly typed" language. This means that the language does not define any implicit type conversions. C does define implicit type conversions, sometimes referred to as 
+Ada is considered a "strongly typed" language. This means that the language does not define any implicit type conversions. C does define implicit type conversions, sometimes referred to as
 *integer promotion*. The rules for promotion are fairly straightforward in simple expressions but can get confusing very quickly. Let's look at a typical place of confusion with implicit type conversion:
 
 .. code:: c
@@ -763,9 +763,9 @@ Ada is considered a "strongly typed" language. This means that the language does
 
       printf("Does a == b?\n");
       if(a == b)
-         printf("No.\n");
-      else
          printf("Yes.\n");
+      else
+         printf("No.\n");
 
       printf("a: 0x%08X, b: 0x%08X\n", a, b);
 
@@ -775,6 +775,7 @@ Ada is considered a "strongly typed" language. This means that the language does
 Run the above code. You will notice that :c:`a != b`! If we look at the output of the last :c:`printf` statement we will see the problem. :c:`a` is an unsigned number where :c:`b` is a signed number. We stored a value of :c:`0xFF` in both variables, but :c:`a` treated this as the decimal number :c:`255` while b treated this as the decimal number :c:`-1`. When we compare the two variables, of course they aren't equal; but thats not very intuitive. Lets look at the equivalent Ada example:
 
 .. code:: ada
+   :class: ada-expect-compile-error
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -788,4 +789,14 @@ Run the above code. You will notice that :c:`a != b`! If we look at the output o
    begin
 
       Put_Line ("Does A = B?");
-      
+
+      if A = B then
+         Put_Line ("Yes");
+      else
+         Put_Line ("No");
+      end if;
+
+   end Main;
+
+If you try to run this Ada example you will get a compilation error. This is because the compiler is telling you that you cannot compare variables of two different types. We would need to explicitly cast one side to make the comparison against two variables of the same type. By enforcing the explicit cast we can't accidentally end up in a situation where we assume something will happen implicitly when, in fact, our assumption is incorrect.
+
