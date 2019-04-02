@@ -39,19 +39,62 @@ function process_check_output(container, editors, output_area, output, status, c
     output.forEach(function(l) {
         read_lines++;
 
-        // Look for lines that contain an error message
         var error_found = false;
-        var match_found = l.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
         var klass = "";
-        if (match_found) {
-            if (match_found[4].indexOf(" info:") == 0) {
-                klass = "output_msg_info";
-            } else {
-                klass = "output_msg";
-                error_found = true;
+
+        // look for classification of message
+        var std_match = l.match(/^std(in|out|err):(.*)$/);
+        if (std_match) {
+            var type = std_match[1];
+            var msg = std_match[2];
+
+            switch(type) {
+                case "in":
+                    // TODO: need to figure out what to do with this
+                    return;
+                    break;
+                case "out":
+                    // Look for lines that contain an error message
+                    var match_found = msg.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
+                    if (match_found) {
+                        if (match_found[4].indexOf(" info:") == 0) {
+                            klass = "output_msg_info";
+                        } else {
+                            klass = "output_msg";
+                            error_found = true;
+                        }
+                    }
+                    else {
+                        klass = "output_line";
+                    }
+
+                    l = l.replace("stdout:", "");
+                    break;
+                case "err":
+                    error_found = true;
+                    klass = "output_msg";
+                    l = l.replace("stderr:", "");
+                    break;
             }
-        } else {
-            klass = "output_line";
+        }
+        else {
+            var lab_match = l.match(/^lab_output:(.*)$/);
+            if (lab_match) {
+                var lab_output = JSON.parse(lab_match[1]);
+                // TODO: do something with the JSON
+                if (lab_output["success"]) {
+                    l = "Lab completed successfully."
+                    klass = "output_line";
+                }
+                else {
+                    l = "Lab failed."
+                    klass = "output_line";
+                }
+            }
+            else {
+                // TODO: this branch should probably throw an error
+                klass = "output_line";
+            }
         }
 
         // Print the line in the output area
