@@ -1,8 +1,8 @@
-.. meta::
-  :author: AdaCore
-
 :prev_state: False
 :next_state: False
+
+.. meta::
+    :author: AdaCore
 
 :code-config:`accumulate_code=False;reset_accumulator=True`
 
@@ -19,8 +19,8 @@ Background
 A stack is like a pile of dishes...
 
 .. image:: pile_of_dishes.png
-   :align: center
-   :scale: 55 %
+    :align: center
+    :scale: 55 %
 
 #. The pile starts out empty.
 #. You add ( :ada:`push` ) a new plate ( :ada:`data` ) to the stack by placing it on the top of the pile.
@@ -34,20 +34,20 @@ Here's what should happen if we pushed the string :ada:`MLH` onto the stack.
 
 .. container:: img_row
 
-   .. image:: push_1.png
-      :scale: 50 %
+    .. image:: push_1.png
+        :scale: 50 %
 
-   .. image:: push_2.png
-      :scale: 50 %
+    .. image:: push_2.png
+        :scale: 50 %
 
-   .. image:: push_3.png
-      :scale: 50 %
+    .. image:: push_3.png
+        :scale: 50 %
 
-   .. image:: push_4.png
-      :scale: 50 %
+    .. image:: push_4.png
+        :scale: 50 %
 
-   .. image:: push_5.png
-      :scale: 50 %
+    .. image:: push_5.png
+        :scale: 50 %
 
 The list starts out empty. Each time we push a character onto the stack, :ada:`Last` increments by :ada:`1`.
 
@@ -57,17 +57,17 @@ Here's what should happen if we popped :ada:`2` characters off our stack & then 
 
 .. container:: img_row
 
-   .. image:: pop_1.png
-      :scale: 50 %
+    .. image:: pop_1.png
+        :scale: 50 %
 
-   .. image:: pop_2.png
-      :scale: 50 %
+    .. image:: pop_2.png
+        :scale: 50 %
 
-   .. image:: pop_3.png
-      :scale: 50 %
+    .. image:: pop_3.png
+        :scale: 50 %
 
-   .. image:: pop_4.png
-      :scale: 50 %
+    .. image:: pop_4.png
+        :scale: 50 %
 
 Note that :ada:`pop` and :ada:`clear` don't unset the :ada:`Storage` array's elements, they just change the value of :ada:`Last`.
 
@@ -111,147 +111,152 @@ Sample Output
 
 .. code:: ada lab=MLH_Stack
 
-   --  START LAB IO BLOCK
-   in 0: M L H d p d p d p d
-   out 0: [M, L, H] [M, L] [M] []
-   in 1: a b c d e d p
-   out 1: [a, b, c] [a, b, c, e]
-   in 2: p a p d
-   out 2: Nothing to Pop, Stack is empty! []
-   --  END LAB IO BLOCK
+    --  START LAB IO BLOCK
+    in 0: M L H d p d p d p d
+    out 0: [M, L, H] [M, L] [M] []
+    in 1: a b c d e d p
+    out 1: [a, b, c] [a, b, c, e]
+    in 2: p a p d
+    out 2: Nothing to Pop, Stack is empty! []
+    --  END LAB IO BLOCK
 
-   package Stack with SPARK_Mode => On is
+    package Stack with SPARK_Mode => On is
 
-      procedure Push (V : Character)
-        with Pre => not Full,
-        Post => Size = Size'Old + 1;
+       procedure Push (V : Character)
+         with Pre  => not Full,
+              Post => Size = Size'Old + 1;
 
-      procedure Pop (V : out Character)
-        with Pre => not Empty,
-        Post => Size = Size'Old - 1;
+       procedure Pop (V : out Character)
+         with Pre  => not Empty,
+              Post => Size = Size'Old - 1;
 
-      procedure Clear
-        with Post => Size = 0;
+       procedure Clear
+         with Post => Size = 0;
 
-      function Top return Character
-        with Post => Top'Result = Tab(Last);
+       function Top return Character
+         with Post => Top'Result = Tab(Last);
 
-      Max_Size : constant := 9;
-      --  The stack size.
+       Max_Size : constant := 9;
+       --  The stack size.
 
-      Last : Integer range 0 .. Max_Size := 0;
-      --  Indicates the top of the stack. When 0 the stack is empty.
+       Last : Integer range 0 .. Max_Size := 0;
+       --  Indicates the top of the stack. When 0 the stack is empty.
 
-      Tab  : array (1 .. Max_Size) of Character;
-      --  The stack. We push and pop pointers to Values.
+       Tab  : array (1 .. Max_Size) of Character;
+       --  The stack. We push and pop pointers to Values.
 
-      function Full return Boolean is (Last = Max_Size);
+       function Full return Boolean is (Last = Max_Size);
 
-      function Empty return Boolean is (Last < 1);
+       function Empty return Boolean is (Last < 1);
 
-      function Size return Integer is (Last);
+       function Size return Integer is (Last);
 
-   end Stack;
+    end Stack;
 
-   package body Stack
-   with SPARK_Mode => On
-   is
-      -----------
-      -- Clear --
-      -----------
+    package body Stack with SPARK_Mode => On is
 
-      procedure Clear is
-      begin
-         Last := Tab'First;
-      end Clear;
+       -----------
+       -- Clear --
+       -----------
 
-      ----------
-      -- Push --
-      ----------
+       procedure Clear 
+       is
+       begin
+          Last := Tab'First;
+       end Clear;
 
-      procedure Push (V : Character) is
-      begin
-         Tab (Last) := V;
-      end Push;
+       ----------
+       -- Push --
+       ----------
 
-      ---------
-      -- Pop --
-      ---------
+       procedure Push (V : Character) 
+       is
+       begin
+          Tab (Last) := V;
+       end Push;
 
-      procedure Pop (V : out Character) is
-      begin
-         Last := Last - 1;
-         V := Tab (Last);
-      end Pop;
+       ---------
+       -- Pop --
+       ---------
 
-      ---------
-      -- Top --
-      ---------
+       procedure Pop (V : out Character) 
+       is
+       begin
+          Last := Last - 1;
+          V := Tab (Last);
+       end Pop;
 
-      function Top return Character is
-      begin
-         return Tab (1);
-      end Top;
+       ---------
+       -- Top --
+       ---------
 
-   end Stack;
+       function Top return Character 
+       is
+       begin
+          return Tab (1);
+       end Top;
 
-   with Ada.Command_Line; use Ada.Command_Line;
-   with Ada.Text_IO; use Ada.Text_IO;
-   with Stack;       use Stack;
+    end Stack;
 
-   procedure Main with SPARK_Mode => Off
-   is
+    with Ada.Command_Line; use Ada.Command_Line;
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Stack;            use Stack;
 
-      -----------
-      -- Debug --
-      -----------
+    procedure Main with SPARK_Mode => Off
+    is
 
-      procedure Debug is
-      begin
+       -----------
+       -- Debug --
+       -----------
 
-         if not Stack.Empty then
+       procedure Debug 
+       is
+       begin
 
-            Put ("[");
-            for I in Stack.Tab'First .. Stack.Size - 1 loop
-               Put (Stack.Tab (I) & ", ");
-            end loop;
-            Put_Line (Stack.Tab (Stack.Size) & "]");
-         else
-            Put_Line ("[]");
-         end if;
+          if not Stack.Empty then
 
-      end Debug;
+             Put ("[");
+             for I in Stack.Tab'First .. Stack.Size - 1 loop
+                Put (Stack.Tab (I) & ", ");
+             end loop;
+             Put_Line (Stack.Tab (Stack.Size) & "]");
+          else
+             Put_Line ("[]");
+          end if;
 
-      S : Character;
-   begin
+       end Debug;
 
-      ----------
-      -- Main --
-      ----------
+       S : Character;
 
-      for Arg in 1 .. Argument_Count loop
-         if Argument (Arg)'Length /= 1 then
-            Put_Line (Argument (Arg) & " is an invalid input to the stack.");
-         else
-            S := Argument (Arg)(Argument (Arg)'First);
+    begin
 
-            if S = 'd' then
-               Debug;
-            elsif S = 'p' then
-               if not Stack.Empty then
-                  Stack.Pop (S);
-               else
-                  Put_Line ("Nothing to Pop, Stack is empty!");
-               end if;
-            else
-               if not Stack.Full then
-                  Stack.Push (S);
-               else
-                  Put_Line ("Could not push '" & S & "', Stack is full!");
-               end if;
-            end if;
-         end if;
+       ----------
+       -- Main --
+       ----------
 
-      end loop;
+       for Arg in 1 .. Argument_Count loop
+          if Argument (Arg)'Length /= 1 then
+             Put_Line (Argument (Arg) & " is an invalid input to the stack.");
+          else
+             S := Argument (Arg)(Argument (Arg)'First);
 
-   end Main; 
+             if S = 'd' then
+                Debug;
+             elsif S = 'p' then
+                if not Stack.Empty then
+                   Stack.Pop (S);
+                else
+                   Put_Line ("Nothing to Pop, Stack is empty!");
+                end if;
+             else
+                if not Stack.Full then
+                   Stack.Push (S);
+                else
+                   Put_Line ("Could not push '" & S & "', Stack is full!");
+                end if;
+             end if;
+          end if;
+
+       end loop;
+
+    end Main; 

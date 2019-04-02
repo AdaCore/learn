@@ -1,5 +1,5 @@
 .. meta::
-   :author: AdaCore
+    :author: AdaCore
 
 :prev_state: False
 :next_state: False
@@ -42,26 +42,26 @@ Sample Output
 
 .. code:: ada lab=Introduction_HelloWorld
 
-   --  START LAB IO BLOCK
-   in 0: Welcome to the Ada programming language.
-   out 0: Hello World! Welcome to the Ada programming language.
-   in 1: ABC123
-   out 1: Hello World! ABC123
-   in 2: 
-   out 2: Hello World!
-   --  END LAB IO BLOCK
+    --  START LAB IO BLOCK
+    in 0: Welcome to the Ada programming language.
+    out 0: Hello World! Welcome to the Ada programming language.
+    in 1: ABC123
+    out 1: Hello World! ABC123
+    in 2: 
+    out 2: Hello World!
+    --  END LAB IO BLOCK
 
-   with Ada.Command_Line; use Ada.Command_Line;
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Command_Line; use Ada.Command_Line;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Main
-   is
-   begin
-      Put_Line ("Hello World!");
-      if Argument_Count > 0 then
-         for Arg in 1 .. Argument_Count - 1 loop
-            -- fill in this loop to complete the lab
-            null;
-         end loop;
-      end if;
-   end Main; 
+    procedure Main
+    is
+    begin
+       Put_Line ("Hello World!");
+       if Argument_Count > 0 then
+          for Arg in 1 .. Argument_Count - 1 loop
+             -- fill in this loop to complete the lab
+             null;
+          end loop;
+       end if;
+    end Main; 
