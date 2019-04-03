@@ -67,6 +67,12 @@ template = u"""
 </div>
 """
 
+LAB_REGEX = re.compile('lab=(\S+)')
+LAB_IO_START_REGEX = re.compile("--  START LAB IO BLOCK")
+LAB_IO_END_REGEX = re.compile("--  END LAB IO BLOCK")
+
+LABIO_FILENAME = "lab_io.txt"
+
 codeconfig_found = False
 # A safeguard against documents not defining code-config. Is it needed?
 
@@ -182,10 +188,16 @@ class WidgetCodeDirective(Directive):
     }
 
     def run(self):
-
+        shadow_files_divs = ""
         extra_attribs = ""
         argument_list = []
         force_no_buttons = False
+        is_lab = False
+
+        def get_shadow_div(basename, content):
+            return (u'<div class="shadow_file"'
+                     'style="display:none" basename="{}">'
+                     '{}</div>').format(basename, escape(content))
 
         if self.arguments:
             argument_list = self.arguments[0].split(' ')
@@ -196,18 +208,53 @@ class WidgetCodeDirective(Directive):
                 'ada-syntax-only' in self.options['class'])):
             force_no_buttons = True
 
+        # look for lab=my_lab_name
+        lab_matches = [LAB_REGEX.match(line) for line in argument_list if LAB_REGEX.match(line)]
+        if len(lab_matches) == 1:
+            extra_attribs += ' lab="True"'
+            extra_attribs += ' lab_name={}'.format(lab_matches[0].group(1))
+            is_lab = True
+        elif len(lab_matches) > 1:
+            raise self.error("malformed lab directive")
+
         # Make sure code-config exists in the document
         if not codeconfig_found:
             print (self.lineno, dir(self))
             raise self.error("you need to add a :code-config: role")
+        
+        if is_lab:
+            # look for lab io start block
+            io_start_matches = [i for i, line in enumerate(self.content) if LAB_IO_START_REGEX.match(line)]
 
-        try:
-            if 'manual_chop' in argument_list:
-                files = c_chop(self.content)
-            elif 'c' in argument_list:
-                files = c_chop(self.content)
+            # look for lab io end block
+            io_end_matches = [i for i, line in enumerate(self.content) if LAB_IO_END_REGEX.match(line)]
+
+            # check for correct formation of lab io block
+            if len(io_start_matches) == 1 and len(io_end_matches) == 1 and io_start_matches[0] < io_end_matches[0]:
+                io_content = self.content[io_start_matches[0] + 1 : io_end_matches[0]]
+
+                # create shadow file from io blocks
+                new_file = "\n".join(io_content)
+                shadow_files_divs += get_shadow_div(LABIO_FILENAME, new_file)
+
+                # remove io block lines from self.content
+                # The following does not work for some odd reason so we will have to copy the list
+                # del self.content[io_start_matches[0] : (io_end_matches[0] + 1)]
+                chop_contents = self.content[:io_start_matches[0]] + self.content[io_end_matches[0] + 1:]
             else:
-                files = real_gnatchop(self.content)
+                raise self.error("malformed lab io block: io_start={} io_end={}".format(io_start_matches, io_end_matches))
+        else:
+            chop_contents = self.content
+
+        # chop contents into files
+        try:
+            # chop source files
+            if 'manual_chop' in argument_list:
+                files = c_chop(chop_contents)
+            elif 'c' in argument_list:
+                files = c_chop(chop_contents)
+            else:
+                files = real_gnatchop(chop_contents)
         except subprocess.CalledProcessError:
             raise self.error("could not gnatchop example")
 
@@ -219,15 +266,11 @@ class WidgetCodeDirective(Directive):
                 accumulated_files[f[0]] = f[1]
 
         try:
-            shadow_files_divs = ""
             if config.accumulate_code:
                 editor_files = set([f[0] for f in files])
                 for k, v in accumulated_files.items():
                     if k not in editor_files:
-                        shadow_files_divs += (
-                           u'<div class="shadow_file"'
-                           'style="display:none" basename="{}">'
-                           '{}</div>').format(k, escape(v))
+                        shadow_files_divs += get_shadow_div(k, v)
 
             divs = "\n".join(
                 [u'<div class="file" basename="{}">{}</div>'.format(

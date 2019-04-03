@@ -184,6 +184,39 @@ Prove SPARK Test
 
 -----------------
 
+Simple Lab Submit Test
+--------------------------
+
+.. container:: test_descriptor
+
+   .. raw:: html
+
+      <div class="test_name">Simple Lab Submit Test</div>
+      <div class="test_expects"><div class="output_area"><div class="output_info">Submit...</div><div class="output_line"></div><div class="output_line"></div><div class="output_line">All test cases passed. Lab completed.</div><div class="output_success">Success!</div></div></div>
+      <div class="test_exercises">Submit</div>
+
+   .. code:: ada ada lab=Submit_Test
+
+      --  START LAB IO BLOCK
+      in 0: Hello World
+      out 0: Hello World
+      in 1: Goodbye World
+      out 1: Goodbye World
+      --  END LAB IO BLOCK
+
+       with Ada.Command_Line; use Ada.Command_Line;
+       with Ada.Text_IO; use Ada.Text_IO;
+
+       procedure Main is
+       begin
+          for Arg in 1 .. Argument_Count loop
+             Put (Argument (Arg) & " ");
+          end loop;
+          New_Line;
+       end Main;
+
+----------------------
+
 Test Results
 ------------
 

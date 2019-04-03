@@ -4,7 +4,10 @@ MODES = {
     "prove_flow": "Examine",
     "prove_report_all": "Prove (report=all)",
     "run": "Run",
+    "submit": "Submit",
 };
+
+CLI_FILE = "cli.txt"
 
 // Log an error message in the output area
 function output_error(output_area, message) {
@@ -28,7 +31,7 @@ function reset(container, editors) {
 //  status: the exit status
 //  message: any message coming back from the application
 //   TODO: make use of message
-function process_check_output(container, editors, output_area, output, status, completed, message) {
+function process_check_output(container, editors, output_area, lab_area, output, status, completed, message) {
     // Process the lines
 
     var read_lines = 0;
@@ -36,19 +39,80 @@ function process_check_output(container, editors, output_area, output, status, c
     output.forEach(function(l) {
         read_lines++;
 
-        // Look for lines that contain an error message
         var error_found = false;
-        var match_found = l.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
         var klass = "";
-        if (match_found) {
-            if (match_found[4].indexOf(" info:") == 0) {
-                klass = "output_msg_info";
-            } else {
-                klass = "output_msg";
-                error_found = true;
+
+        // look for classification of message
+        var std_match = l.match(/^(stdout|stderr|console):(.*)$/);
+        if (std_match) {
+            var type = std_match[1];
+            var msg = std_match[2];
+
+            switch(type) {
+                case "console":
+                    klass = "output_console";
+                    l = l.replace("console:", "$ ");
+                    break;
+                case "stdout":
+                    // Look for lines that contain an error message
+                    var match_found = msg.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
+                    if (match_found) {
+                        if (match_found[4].indexOf(" info:") == 0) {
+                            klass = "output_msg_info";
+                        } else {
+                            klass = "output_msg";
+                            error_found = true;
+                        }
+                    }
+                    else {
+                        klass = "output_line";
+                    }
+
+                    l = l.replace("stdout:", "");
+                    break;
+                case "stderr":
+                    error_found = true;
+                    klass = "output_msg";
+                    l = l.replace("stderr:", "");
+                    break;
             }
-        } else {
-            klass = "output_line";
+        }
+        else {
+            var lab_match = l.match(/^lab_output:(.*)$/);
+            if (lab_match) {
+                var lab_output = JSON.parse(lab_match[1]);
+
+                var test_cases = lab_output["test_cases"];
+                for (var test in test_cases) {
+                    var case_div = $('<div class="lab_test_case">');
+                    case_div.appendTo(lab_area);
+
+                    if (test_cases[test]["status"] == "Success") {
+                        case_div.addClass("lab_test_success");
+                    }
+                    else {
+                        case_div.addClass("lab_test_failed");
+                    }
+
+                    $('<div class="lab_test_msg lab_test_title">Test Case #' + test + '</div>').appendTo(case_div);
+                    $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">Input:</span>' + test_cases[test]["in"] + '</div>').appendTo(case_div);
+                    $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">Expected Output:</span>' + test_cases[test]["out"] + '</div>').appendTo(case_div);
+                    $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">Actual Output:</span>' + test_cases[test]["actual"] + '</div>').appendTo(case_div);
+                    $('<div class="lab_test_msg lab_test_status"><span class="lab_test_msg_title">Status:</span>' + test_cases[test]["status"] + '</div>').appendTo(case_div);
+                }
+
+                klass = "lab_status";
+                if (lab_output["success"]) {
+                    l = "Lab completed successfully."
+                }
+                else {
+                    l = "Lab failed."
+                }
+            }
+            else {
+                // TODO: this branch should probably throw an error
+                klass = "output_line";
+            }
         }
 
         // Print the line in the output area
@@ -108,7 +172,7 @@ function process_check_output(container, editors, output_area, output, status, c
     return read_lines;
 }
 
-function get_output_from_identifier(container, editors, output_area, identifier) {
+function get_output_from_identifier(container, editors, output_area, lab_area, identifier) {
     data = {
         "identifier": identifier,
         "already_read": container.already_read
@@ -124,14 +188,14 @@ function get_output_from_identifier(container, editors, output_area, identifier)
         .done(function(json) {
             read_lines = process_check_output(
                 container,
-                editors, output_area,
+                editors, output_area, lab_area,
                 json.output_lines, json.status, json.completed, json.message
             );
             container.already_read = container.already_read + read_lines;
             if (!json.completed) {
                 // We have not finished processing the output: call this again
                 setTimeout(function() {
-                    get_output_from_identifier(container, editors, output_area, identifier);
+                    get_output_from_identifier(container, editors, output_area, lab_area, identifier);
                 }, 250);
             } else {
 
@@ -155,7 +219,7 @@ function get_output_from_identifier(container, editors, output_area, identifier)
 
 
 // Launch a run on the given example editor
-function query_operation_result(container, editors, output_area, mode) {
+function query_operation_result(container, editors, output_area, lab_area, mode) {
 
     files = [];
 
@@ -177,10 +241,27 @@ function query_operation_result(container, editors, output_area, mode) {
         });
     }
 
+    var input_search = container.find( 'textarea[name="custom_input"]' );
+    var check_search = container.find( '.custom_check' );
+
+    if(check_search.length == 1 && input_search.length == 1) {
+        if(check_search.is(':checked')) {
+            files.push({
+                'basename': CLI_FILE,
+                'contents': input_search.val(),
+            });
+        }
+    }
+
     data = {
         "files": files,
         "mode": mode,
     };
+
+    var lab_name = container.attr("lab_name");
+    if(lab_name) {
+        data["lab"] = lab_name;
+    }
 
     // reset the number of lines already read
     container.already_read = 0;
@@ -199,12 +280,12 @@ function query_operation_result(container, editors, output_area, mode) {
                 reset(container, editors);
                 output_error(output_area, json.message);
             } else {
-                get_output_from_identifier(container, editors, output_area, json.identifier);
+                get_output_from_identifier(container, editors, output_area, lab_area, json.identifier);
             }
         })
         .fail(function(xhr, status, errorThrown) {
             reset(container, editors);
-            output_error(output_area, "the machine running the examples is not available, please try again later");
+            output_error(output_area, "The machine running the examples may not be available or is busy, please try again now or come back later.");
             console.log("Error: " + errorThrown);
             console.log("Status: " + status);
             console.dir(xhr);
@@ -323,7 +404,7 @@ function create_editor(resource, container, content, editors, counter) {
 
 var unique_id = 0;
 
-function reset_worker(button, editors, container, output_area) {
+function reset_worker(button, editors, container, output_area, lab_area) {
     if (button.disabled) {
         return;
     }
@@ -334,13 +415,16 @@ function reset_worker(button, editors, container, output_area) {
     output_area.empty();
     output_area.error_count = 0;
 
+    if (lab_area != null)
+        lab_area.empty();
+
     button.editors.forEach(function(x) {
         x.setValue(x.initial_contents);
         x.gotoLine(1);
     });
 }
 
-function check_worker(button, editors, container, output_area) {
+function check_worker(button, editors, container, output_area, lab_area) {
     if (button.disabled) {
         return;
     }
@@ -350,10 +434,13 @@ function check_worker(button, editors, container, output_area) {
     output_area.empty();
     output_area.error_count = 0;
 
+    if (lab_area != null)
+        lab_area.empty();
+
     var div = $('<div class="output_info">');
-    div.text(button.operation_label + "...");
+    div.html(button.operation_label + "...<br>Console Output:");
     div.appendTo(output_area);
-    query_operation_result(container, editors, output_area, button.mode);
+    query_operation_result(container, editors, output_area, lab_area, button.mode);
 }
 
 function test_callback(container) {
@@ -424,6 +511,36 @@ function fill_editor_from_contents(container, example_server, resources) {
 
     results_div.text("");
 
+    var lab_area = $('<div class="lab_area">');
+    if(container.attr("lab")) {
+        container.attr("prove_button", true);
+        container.attr("run_button", true);
+        container.attr("submit_button", true);
+        container.attr("cli_input", true);
+
+        lab_area.appendTo(output_div);
+    }
+    else {
+        lab_area = null;
+    }
+
+    if(container.attr("cli_input")) {
+        $( '<textarea class="custom_input" name="custom_input" rows="4" cols="6"></textarea>' ).appendTo(buttons_div);
+        var custom_check = $( '<input type="checkbox" class="custom_check" name="custom_check"><label for="custom_check">Test against custom input</label>' ).appendTo(buttons_div).change( function() {
+            var input_search = container.find( 'textarea[name="custom_input"]' );
+            if ($(this).is(':checked')) {
+                if(input_search.length == 1) {
+                    input_search.show();
+                }
+            }
+            else {
+                if(input_search.length == 1) {
+                    input_search.hide();
+                }
+            }
+        }).change();
+    }
+
     for (var mode in MODES) {
         if (container.attr(mode + "_button")) {
 
@@ -434,7 +551,7 @@ function fill_editor_from_contents(container, example_server, resources) {
                 reset_button.editors = editors;
                 editors.buttons.push(reset_button);
                 reset_button.on('click', function(x) {
-                    reset_worker(reset_button, editors, container, output_area);
+                    reset_worker(reset_button, editors, container, output_area, lab_area);
                 });
 
             }
@@ -448,7 +565,7 @@ function fill_editor_from_contents(container, example_server, resources) {
             editors.buttons.push(check_button);
             check_button.editors = editors;
             check_button.click(check_button, function(x) {
-                check_worker(x.data, editors, container, output_area);
+                check_worker(x.data, editors, container, output_area, lab_area);
             });
 
             if (test_mode) {
@@ -456,7 +573,7 @@ function fill_editor_from_contents(container, example_server, resources) {
                 var test_exercises = parent.find("div.test_exercises").text();
 
                 if (the_text == test_exercises) {
-                    check_worker(check_button, editors, container, output_area);
+                    check_worker(check_button, editors, container, output_area, lab_area);
                 }
             }
 

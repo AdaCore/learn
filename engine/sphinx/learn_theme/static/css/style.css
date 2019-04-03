@@ -1,8 +1,8 @@
 @import url("theme.css"); /* make sure to sync this with the base theme's css filename */
 
-img.logo { 
-    width: 150px !important; 
-    height: auto; 
+img.logo {
+    width: 150px !important;
+    height: auto;
     /*    margin: 10px 20px !important;  */
     text-align: right !important;
 }
@@ -15,29 +15,29 @@ div#learn-adacore-com > h1 {
     padding-bottom: 10px;
 }
 
-.wy-side-nav-search { 
+.wy-side-nav-search {
     background-color: #F56F23;
 }
 
-.wy-nav-top { 
+.wy-nav-top {
     background-color: #F56F23;
 }
 
 .wy-nav-top img {
     border-radius: 0 !important;
     background-color: transparent !important;
-} 
+}
 
-.wy-side-nav-search a { 
+.wy-side-nav-search a {
  text-align: right !important;
  float: right;
 }
 
-.legal { 
-    padding: 20px; 
-    color: #878B9A; 
-    font-size: 12px; 
-    text-align: center; 
+.legal {
+    padding: 20px;
+    color: #878B9A;
+    font-size: 12px;
+    text-align: center;
 }
 
 .beta-ribbon {
@@ -59,8 +59,8 @@ div#learn-adacore-com > h1 {
     transform:rotate(-45deg);
 }
 
-.legal a { 
-    color: #878B9A; 
+.legal a {
+    color: #878B9A;
 }
 
 #scrollToTopBtn {
@@ -83,10 +83,10 @@ div#learn-adacore-com > h1 {
     background-color: #F56F23; /* Add a dark-grey background on hover */
 }
 
-div.download-button.docutils.container { 
-    float: right; 
-    width: 300px; 
-    margin: 20px; 
+div.download-button.docutils.container {
+    float: right;
+    width: 300px;
+    margin: 20px;
 }
 
 .slider {
@@ -132,4 +132,57 @@ div.content-description.docutils.container {
 
 .responsiveCarousel {
     padding-top: 20px;
+}
+
+.img-row {
+    display: flex;
+}
+
+.img-row img {
+    flex: 33.33%;
+    padding: 5px;
+    vertical-align: top;
+}
+
+div.lab_area {
+    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+   background: #f3f3f3;
+}
+
+div.lab_test_case {
+    border-radius: 15px;
+    padding-left:3px;
+    padding-right:3px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.lab_test_msg {
+    color: #666;
+    padding-left:20px;
+    padding-right:3px;
+}
+
+div.lab_test_msg.lab_test_title {
+    font-weight:bold;
+    padding-left: 15px;
+}
+
+div.lab_test_success {
+    background: #83ef5f;
+}
+
+div.lab_test_failed {
+    background: #ef6e5f;
+}
+
+span.lab_test_msg_title {
+    font-weight:bold;
+    padding-right: 5px;
+}
+
+div.lab_status {
+    font-weight:bold;
+    padding-left: 15px;
+    padding-right: 3px;
 }
