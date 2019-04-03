@@ -143,3 +143,46 @@ div.content-description.docutils.container {
     padding: 5px;
     vertical-align: top;
 }
+
+div.lab_area {
+    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+   background: #f3f3f3;
+}
+
+div.lab_test_case {
+    border-radius: 15px;
+    padding-left:3px;
+    padding-right:3px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.lab_test_msg {
+    color: #666;
+    padding-left:20px;
+    padding-right:3px;
+}
+
+div.lab_test_msg.lab_test_title {
+    font-weight:bold;
+    padding-left: 15px;
+}
+
+div.lab_test_success {
+    background: #83ef5f;
+}
+
+div.lab_test_failed {
+    background: #ef6e5f;
+}
+
+span.lab_test_msg_title {
+    font-weight:bold;
+    padding-right: 5px;
+}
+
+div.lab_status {
+    font-weight:bold;
+    padding-left: 15px;
+    padding-right: 3px;
+}
