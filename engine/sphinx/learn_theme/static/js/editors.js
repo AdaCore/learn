@@ -39,112 +39,98 @@ function process_check_output(container, editors, output_area, lab_area, output,
     output.forEach(function(l) {
         read_lines++;
 
-        var error_found = false;
-        var klass = "";
+        var msg_obj = JSON.parse(l);
 
         // look for classification of message
-        var std_match = l.match(/^(stdout|stderr|console):(.*)$/);
-        if (std_match) {
-            var type = std_match[1];
-            var msg = std_match[2];
+        for (var msg_type in msg_obj) {
+            var msg = msg_obj[msg_type];
 
-            switch(type) {
+            var div = $('<div>');
+            div.appendTo(output_area);
+
+            switch(msg_type) {
                 case "console":
-                    klass = "output_console";
-                    l = l.replace("console:", "$ ");
+                    div.addClass("output_console");
+                    div.text("$ " + msg);
                     break;
                 case "stdout":
                     // Look for lines that contain an error message
                     var match_found = msg.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
                     if (match_found) {
                         if (match_found[4].indexOf(" info:") == 0) {
-                            klass = "output_msg_info";
+                            div.addClass("output_msg_info");
                         } else {
-                            klass = "output_msg";
-                            error_found = true;
+                            div.addClass("output_msg");
+                            output_area.error_count++;
                         }
+
+                        // Lines that contain a sloc are clickable:
+                        div.on('click', function(x) {
+                            // find the corresponding editor
+                            var basename = match_found[1];
+                            editors.forEach(function(e) {
+                                if (e.basename == basename) {
+                                    // Switch to the tab that contains the editor
+
+                                    // TODO: this is in the case of bootstrap only
+                                    // $("#" + e.unique_id + "-tab").tab('show')
+
+                                    // Jump to the corresponding line
+                                    e.gotoLine(parseInt(match_found[2]),
+                                        // looks like column numbers are indexed from 0
+                                        parseInt(match_found[3] - 1),
+                                        true);
+                                    e.focus();
+                                }
+                            });
+                        });
                     }
                     else {
-                        klass = "output_line";
+                        div.addClass("output_line");
                     }
 
-                    l = l.replace("stdout:", "");
+                    div.text(msg);
+
                     break;
                 case "stderr":
                     error_found = true;
-                    klass = "output_msg";
-                    l = l.replace("stderr:", "");
+                    div.addClass("output_msg");
+                    div.text(msg);
                     break;
-            }
-        }
-        else {
-            var lab_match = l.match(/^lab_output:(.*)$/);
-            if (lab_match) {
-                var lab_output = JSON.parse(lab_match[1]);
+                case "lab_output":
+                    var test_cases = msg["test_cases"];
+                    for (var test in test_cases) {
+                        var case_div = $('<div class="lab_test_case">');
+                        case_div.appendTo(lab_area);
 
-                var test_cases = lab_output["test_cases"];
-                for (var test in test_cases) {
-                    var case_div = $('<div class="lab_test_case">');
-                    case_div.appendTo(lab_area);
+                        if (test_cases[test]["status"] == "Success") {
+                            case_div.addClass("lab_test_success");
+                        }
+                        else {
+                            case_div.addClass("lab_test_failed");
+                        }
 
-                    if (test_cases[test]["status"] == "Success") {
-                        case_div.addClass("lab_test_success");
+                        $('<div class="lab_test_msg lab_test_title">Test Case #' + test + '</div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">Input:</span>' + test_cases[test]["in"] + '</div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">Expected Output:</span>' + test_cases[test]["out"] + '</div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">Actual Output:</span>' + test_cases[test]["actual"] + '</div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_status"><span class="lab_test_msg_title">Status:</span>' + test_cases[test]["status"] + '</div>').appendTo(case_div);
+                    }
+
+                    div.addClass("lab_status");
+                    if (msg["success"]) {
+                        div.text("Lab completed successfully.");
                     }
                     else {
-                        case_div.addClass("lab_test_failed");
+                        div.text("Lab failed.");
                     }
-
-                    $('<div class="lab_test_msg lab_test_title">Test Case #' + test + '</div>').appendTo(case_div);
-                    $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">Input:</span>' + test_cases[test]["in"] + '</div>').appendTo(case_div);
-                    $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">Expected Output:</span>' + test_cases[test]["out"] + '</div>').appendTo(case_div);
-                    $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">Actual Output:</span>' + test_cases[test]["actual"] + '</div>').appendTo(case_div);
-                    $('<div class="lab_test_msg lab_test_status"><span class="lab_test_msg_title">Status:</span>' + test_cases[test]["status"] + '</div>').appendTo(case_div);
-                }
-
-                klass = "lab_status";
-                if (lab_output["success"]) {
-                    l = "Lab completed successfully."
-                }
-                else {
-                    l = "Lab failed."
-                }
+                    break;
+                default:
+                    // TODO: this branch should probably throw an error
+                    div.addClass("output_line");
+                    div.text(msg);
+                    break;
             }
-            else {
-                // TODO: this branch should probably throw an error
-                klass = "output_line";
-            }
-        }
-
-        // Print the line in the output area
-        var div = $('<div class="' + klass + '">');
-        div.text(l);
-        div.appendTo(output_area);
-
-        if (match_found != null) {
-            if (error_found) {
-                output_area.error_count++;
-            }
-
-            // Lines that contain a sloc are clickable:
-            div.on('click', function(x) {
-                // find the corresponding editor
-                var basename = match_found[1];
-                editors.forEach(function(e) {
-                    if (e.basename == basename) {
-                        // Switch to the tab that contains the editor
-
-                        // TODO: this is in the case of bootstrap only
-                        // $("#" + e.unique_id + "-tab").tab('show')
-
-                        // Jump to the corresponding line
-                        e.gotoLine(parseInt(match_found[2]),
-                            // looks like column numbers are indexed from 0
-                            parseInt(match_found[3] - 1),
-                            true);
-                        e.focus();
-                    }
-                });
-            });
         }
     });
 
