@@ -43,7 +43,12 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
         // look for classification of message
         for (var msg_type in msg_obj) {
-            var msg = msg_obj[msg_type];
+            var msg = msg_obj[msg_type]["msg"];
+            var lab_ref = null;
+
+            if ("lab_ref" in msg_obj[msg_type])
+                lab_ref = msg_obj[msg_type]["lab_ref"];
+            // TODO: use this lab ref to categorize msgs into lab containers
 
             var div = $('<div>');
             div.appendTo(output_area);
