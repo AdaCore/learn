@@ -6,6 +6,8 @@
 SPARK Ada for the MISRA C Developer
 ===================================
 
+`Download pdf <https://www.adacore.com/uploads/books/pdf/SPARK-Ada-for-MISRA-C-Developer.pdf>`_
+
 .. container:: content-description
 
    This book presents the SPARK technology -- the SPARK subset of Ada and its
