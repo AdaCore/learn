@@ -123,7 +123,7 @@ Structure
 
 - [ ] Design Patterns
 
-    - [ ] Factory Functions (*material reuse*)
+    - [x] Factory Functions (*material reuse*)
     - [ ] Scope Locks Idiom (*material reuse*)
     - [ ] Visitor Pattern (*material reuse*)
     - [ ] Overridable Class Attributes (*material reuse*)
