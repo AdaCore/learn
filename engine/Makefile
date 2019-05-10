@@ -1,14 +1,22 @@
 # You can set these variables from the command line.
-SPHINXOPTS    =
+SPHINXOPTS    = 
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = learnadacorecom
 SPHINXCONF    = sphinx
 BUILDDIR      = _build
-TEST_DRIVER = python tests/compile_blocks.py
+TEST_DRIVER   = python tests/compile_blocks.py
+
 
 help:
 	@echo "make tests  - run the testsuite"
+	@echo "make test_engine  - generate the engine test html"
 	@echo "make html   - generates the html"
+
+test_engine:
+	@echo "===== ENGINE TEST ====="
+	@$(SPHINXBUILD) -M html "tests/" \
+	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@echo ""
 
 test_ada_intro:
 	@echo "===== INTRO TO ADA ====="
@@ -56,6 +64,16 @@ publish-staging:
 	git add -A && git commit -m "Regenerate" && git push origin gh-pages; \
 	cd ../; \
 	rm -rf learn-staging-html-pages
+
+# Development target, rebuilds the site, with it pointing to the local
+# code server.
+local:
+	rm -rf "$(BUILDDIR)"
+	CODE_SERVER_URL="Http://localhost:8000" $(SPHINXBUILD) -M html "../" \
+	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	# link the real editors.js to the generated location, to ease work
+	rm _build/html/_static/js/editors.js
+	ln -s ../../../../sphinx/learn_theme/static/js/editors.js _build/html/_static/js/
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

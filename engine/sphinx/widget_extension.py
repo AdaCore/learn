@@ -11,10 +11,33 @@ Code accumulation: cancel it with an empty :code-config: directive
 
 This plugin interprets the folloging parameters to the code:: directive:
 
-    * run_button  - forces the existence of a run button
     * no_button   - removes all buttons
+    * <X>_button  - forces the existence of a button for mode X.
+                    Modes are defined in the MODES variable in editors.js.
 
 these override the code-config setting.
+
+The code inside code:: directives is extracted into a list of files.
+The files are extracted the following way:
+
+   - for valid Ada code, 'gnatchop' is run on the entirety of the
+     snippet
+
+   - for C code, the files should be named explicitely, with a marker of
+     the form
+             !<basename>
+     placed at the beginning of each file in the snippet. This mechanism
+     is also activated if the argument manual_chop is passed to the
+     code:: directive. For instance:
+
+              .. code:: prove_button manual_chop
+
+                 !main.c
+                 int main(void);
+
+                 !t.ads
+                 package T is
+                 end T;
 
 """
 from __future__ import print_function
@@ -30,12 +53,12 @@ from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 from xml.sax.saxutils import escape
 
-WIDGETS_SERVER_URL = "https://cloudchecker-staging.r53.adacore.com"
-# TODO: make this a configuration parameter
+WIDGETS_SERVER_URL = os.environ.get(
+    "CODE_SERVER_URL",
+    "https://cloudchecker-staging.r53.adacore.com")
 
 template = u"""
 <div class="widget_editor"
-     example_editor="Inline Code"
      example_server="{server_url}"
      {extra_attribs}
      inline="true">
@@ -44,6 +67,12 @@ template = u"""
 </div>
 """
 
+LAB_REGEX = re.compile('lab=(\S+)')
+LAB_IO_START_REGEX = re.compile("--  START LAB IO BLOCK")
+LAB_IO_END_REGEX = re.compile("--  END LAB IO BLOCK")
+
+LABIO_FILENAME = "lab_io.txt"
+
 codeconfig_found = False
 # A safeguard against documents not defining code-config. Is it needed?
 
@@ -51,8 +80,8 @@ codeconfig_found = False
 # These are configured via the "code-config" role, see doc in the
 # function codeconfig below.
 class Config(object):
-    run_button = False
-    prove_button = False
+    buttons = set()
+    # The list of active buttons. Strings of the form 'xxx_button'.
     accumulate_code = False
     reset_accumulator = False
 
@@ -62,8 +91,26 @@ config = Config()
 accumulated_files = {}
 # The accumulated files. Key: basename, value: lastest content seen
 
-ALLOWED_EXTRA_ARGS = ('spark-flow', 'spark-report-all')
-# Known "extra args" parameters
+
+def c_chop(lines):
+    """Chops the text, counting on filenames being given in the form
+          !<filename>
+    as the first line of each file.
+    Returns a list of tuples of the form (basename, contents)
+    """
+    results = []
+    current_filename = None
+    current_contents = []
+    for j in lines:
+        if j.startswith('!'):
+            if current_filename:
+                results.append((current_filename, '\n'.join(current_contents)))
+            current_filename = j[1:]
+        else:
+            current_contents.append(j)
+    if current_filename:
+        results.append((current_filename, '\n'.join(current_contents)))
+    return results
 
 
 def cheapo_gnatchop(lines):
@@ -141,9 +188,17 @@ class WidgetCodeDirective(Directive):
     }
 
     def run(self):
-
+        shadow_files_divs = ""
         extra_attribs = ""
         argument_list = []
+        force_no_buttons = False
+        is_lab = False
+
+        def get_shadow_div(basename, content):
+            return (u'<div class="shadow_file"'
+                     'style="display:none" basename="{}">'
+                     '{}</div>').format(basename, escape(content))
+
         if self.arguments:
             argument_list = self.arguments[0].split(' ')
 
@@ -151,20 +206,55 @@ class WidgetCodeDirective(Directive):
             'class' in self.options and (
                 'ada-nocheck' in self.options['class'] or
                 'ada-syntax-only' in self.options['class'])):
-            has_run_button = False
-            has_prove_button = False
-        else:
-            has_run_button = config.run_button or \
-                'run_button' in argument_list
-            has_prove_button = config.prove_button
+            force_no_buttons = True
+
+        # look for lab=my_lab_name
+        lab_matches = [LAB_REGEX.match(line) for line in argument_list if LAB_REGEX.match(line)]
+        if len(lab_matches) == 1:
+            extra_attribs += ' lab="True"'
+            extra_attribs += ' lab_name={}'.format(lab_matches[0].group(1))
+            is_lab = True
+        elif len(lab_matches) > 1:
+            raise self.error("malformed lab directive")
 
         # Make sure code-config exists in the document
         if not codeconfig_found:
             print (self.lineno, dir(self))
             raise self.error("you need to add a :code-config: role")
+        
+        if is_lab:
+            # look for lab io start block
+            io_start_matches = [i for i, line in enumerate(self.content) if LAB_IO_START_REGEX.match(line)]
 
+            # look for lab io end block
+            io_end_matches = [i for i, line in enumerate(self.content) if LAB_IO_END_REGEX.match(line)]
+
+            # check for correct formation of lab io block
+            if len(io_start_matches) == 1 and len(io_end_matches) == 1 and io_start_matches[0] < io_end_matches[0]:
+                io_content = self.content[io_start_matches[0] + 1 : io_end_matches[0]]
+
+                # create shadow file from io blocks
+                new_file = "\n".join(io_content)
+                shadow_files_divs += get_shadow_div(LABIO_FILENAME, new_file)
+
+                # remove io block lines from self.content
+                # The following does not work for some odd reason so we will have to copy the list
+                # del self.content[io_start_matches[0] : (io_end_matches[0] + 1)]
+                chop_contents = self.content[:io_start_matches[0]] + self.content[io_end_matches[0] + 1:]
+            else:
+                raise self.error("malformed lab io block: io_start={} io_end={}".format(io_start_matches, io_end_matches))
+        else:
+            chop_contents = self.content
+
+        # chop contents into files
         try:
-            files = real_gnatchop(self.content)
+            # chop source files
+            if 'manual_chop' in argument_list:
+                files = c_chop(chop_contents)
+            elif 'c' in argument_list:
+                files = c_chop(chop_contents)
+            else:
+                files = real_gnatchop(chop_contents)
         except subprocess.CalledProcessError:
             raise self.error("could not gnatchop example")
 
@@ -175,25 +265,12 @@ class WidgetCodeDirective(Directive):
             for f in files:
                 accumulated_files[f[0]] = f[1]
 
-        if has_run_button:
-            # We have a run button: try to find the main!
-            # Current heuristics: find the .adb that doesn't have a .ads.
-            names = [f[0] for f in files]
-            bases = set([b[:-4] for b in names])
-            main = [b + '.adb' for b in bases if b + '.ads' not in names]
-            if main:
-                extra_attribs += ' main="{}"'.format(main[0])
-
         try:
-            shadow_files_divs = ""
             if config.accumulate_code:
                 editor_files = set([f[0] for f in files])
                 for k, v in accumulated_files.items():
                     if k not in editor_files:
-                        shadow_files_divs += (
-                           u'<div class="shadow_file"'
-                           'style="display:none" basename="{}">'
-                           '{}</div>').format(k, escape(v))
+                        shadow_files_divs += get_shadow_div(k, v)
 
             divs = "\n".join(
                 [u'<div class="file" basename="{}">{}</div>'.format(
@@ -204,14 +281,11 @@ class WidgetCodeDirective(Directive):
             print (files)
             raise
 
-        for arg in ALLOWED_EXTRA_ARGS:
-            if arg in argument_list:
-                extra_attribs += ' extra_args="{}"'.format(arg)
-
-        if has_run_button:
-            extra_attribs += ' run_button="True"'
-        if has_prove_button:
-            extra_attribs += ' prove_button="True"'
+        if not force_no_buttons:
+            for x in (config.buttons |
+                      set(filter(lambda y: y.endswith('_button'),
+                                 argument_list))):
+                extra_attribs += ' {}="True"'.format(x)
 
         return [
             nodes.raw('',
@@ -237,9 +311,17 @@ def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
     directives = text.split(';')
     for d in directives:
         key, value = d.strip().split('=')
-        if not hasattr(config, key):
-            raise inliner.error("wrong key for code-config: {}".format(key))
-        setattr(config, key, value.lower() == "true")
+        if key.endswith('_button'):
+            if value.lower() == "true":
+                config.buttons.add(key)
+            else:
+                if key in config.buttons:
+                    config.buttons.remove(key)
+        else:
+            if not hasattr(config, key):
+                raise inliner.error(
+                    "wrong key for code-config: {}".format(key))
+            setattr(config, key, value.lower() == "true")
 
     if config.reset_accumulator:
         accumulated_files = {}

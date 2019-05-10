@@ -81,9 +81,7 @@ design are principles that include the following:
      programmer has to be much more explicit about typing in Ada, because there
      is almost no type inference.
 
-.. AI for amiard: Develop a little bit. Put in the proper format when we have decided about it (issue #4)
-
--  Explicit is better than implicit: Although this is a
+-  Explicit is better than implicit. Although this is a
    `Python <https://www.python.org>`_ commandment, Ada takes it way further
    than any language we know of:
 
@@ -99,6 +97,9 @@ design are principles that include the following:
       what their program means to the compiler (and other programmers).
       This allows the compiler to be extremely helpful (read: strict)
       with the programmer.
+
+.. AI for amiard: Create admonition with more details about comparison to
+   functional languages (referred in paragraph about strong typing).
 
 During this course, we will explain the individual language features that
 are building blocks for that philosophy.

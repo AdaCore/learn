@@ -7,10 +7,11 @@
 :next_state: False
 
 Labs
-=============================
+======
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   Integer to String <int_to_string/problem_statement>
+   Introduction to Ada <Introduction/index>
+   Major League Hacking <MLH/index>
 

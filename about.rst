@@ -19,9 +19,3 @@ The SPARK programming language is a formally verifiable subset of the Ada langua
 .. rubric:: About AdaCore
 
 Founded in 1994, AdaCore is the leading provider of commercial and open-source software solutions for Ada, a state-of-the-art programming language designed for large, long-lived applications where safety, security, and reliability are critical. AdaCore is committed to being an active member of the software development community providing the GNAT Ada compiler and SPARK formal methods technologies as open-source projects to the world to advocate their use in the future of safe and reliable computing. Visit the AdaCore `website <https://www.adacore.com>`_ for more information.
-
-.. container:: mwac-banner
-
-    .. image:: https://www.adacore.com/uploads/page_content/MWAC-banner.png
-        :target: https://www.makewithada.org
-        :width: 100pc

@@ -1,15 +1,28 @@
+// List of known modes, and the corresponding button labels
+MODES = {
+    "prove": "Prove",
+    "prove_flow": "Examine",
+    "prove_report_all": "Prove (report=all)",
+    "run": "Run",
+    "submit": "Submit",
+};
+
+CLI_FILE = "cli.txt"
+
 // Log an error message in the output area
 function output_error(output_area, message) {
-    var div = $('<div class="output_error">')
-    div.text(message)
-    div.appendTo(output_area)
+    var div = $('<div class="output_error">');
+    div.text(message);
+    div.appendTo(output_area);
 }
 
 // Reset the buttons on the editors to the "enabled" state
 // Reset the count of lines already read to 0
-function reset(container, editors){
-   editors.buttons.forEach(function(b){b.disabled = false;})
-   container.already_read = 0;
+function reset(container, editors) {
+    editors.buttons.forEach(function(b) {
+        b.disabled = false;
+    });
+    container.already_read = 0;
 }
 
 // Process the result of a check
@@ -18,92 +31,138 @@ function reset(container, editors){
 //  status: the exit status
 //  message: any message coming back from the application
 //   TODO: make use of message
-function process_check_output(container, editors, output_area, output, status, completed, message) {
+function process_check_output(container, editors, output_area, lab_area, output, status, completed, message) {
     // Process the lines
 
-    var read_lines = 0
+    var read_lines = 0;
 
-    output.forEach(function (l) {
-        read_lines++
+    output.forEach(function(l) {
+        read_lines++;
 
-        // Look for lines that contain an error message
-        var error_found = false;
-        var match_found = l.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/)
-        if (match_found) {
-           if (match_found[4].indexOf(" info:") == 0) {
-              var klass = "output_msg_info";
-           }
-           else {
-              var klass = "output_msg"
-              error_found = true;
-           }
-        }
-        else {
-           var klass = "output_line";
-        }
+        var msg_obj = JSON.parse(l);
 
-        // Print the line in the output area
-        var div = $('<div class="' + klass + '">')
-        div.text(l)
-        div.appendTo(output_area)
+        // look for classification of message
+        for (var msg_type in msg_obj) {
+            var msg = msg_obj[msg_type];
 
-        if (match_found != null) {
-            if (error_found) {
-               output_area.error_count++
+            var div = $('<div>');
+            div.appendTo(output_area);
+
+            switch(msg_type) {
+                case "console":
+                    div.addClass("output_console");
+                    div.text("$ " + msg);
+                    break;
+                case "stdout":
+                    // Look for lines that contain an error message
+                    var match_found = msg.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
+                    if (match_found) {
+                        if (match_found[4].indexOf(" info:") == 0) {
+                            div.addClass("output_msg_info");
+                        } else {
+                            div.addClass("output_msg");
+                            output_area.error_count++;
+                        }
+
+                        // Lines that contain a sloc are clickable:
+                        div.on('click', function(x) {
+                            // find the corresponding editor
+                            var basename = match_found[1];
+                            editors.forEach(function(e) {
+                                if (e.basename == basename) {
+                                    // Switch to the tab that contains the editor
+
+                                    // TODO: this is in the case of bootstrap only
+                                    // $("#" + e.unique_id + "-tab").tab('show')
+
+                                    // Jump to the corresponding line
+                                    e.gotoLine(parseInt(match_found[2]),
+                                        // looks like column numbers are indexed from 0
+                                        parseInt(match_found[3] - 1),
+                                        true);
+                                    e.focus();
+                                }
+                            });
+                        });
+                    }
+                    else {
+                        div.addClass("output_line");
+                    }
+
+                    div.text(msg);
+
+                    break;
+                case "stderr":
+                    error_found = true;
+                    div.addClass("output_msg");
+                    div.text(msg);
+                    break;
+                case "lab_output":
+                    var test_cases = msg["test_cases"];
+                    for (var test in test_cases) {
+                        var case_div = $('<div class="lab_test_case">');
+                        case_div.appendTo(lab_area);
+
+                        if (test_cases[test]["status"] == "Success") {
+                            case_div.addClass("lab_test_success");
+                        }
+                        else {
+                            case_div.addClass("lab_test_failed");
+                        }
+
+                        $('<div class="lab_test_msg lab_test_title">Test Case #' + test + '</div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">Input:</span>' + test_cases[test]["in"] + '</div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">Expected Output:</span>' + test_cases[test]["out"] + '</div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">Actual Output:</span>' + test_cases[test]["actual"] + '</div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_status"><span class="lab_test_msg_title">Status:</span>' + test_cases[test]["status"] + '</div>').appendTo(case_div);
+                    }
+
+                    div.addClass("lab_status");
+                    if (msg["success"]) {
+                        div.text("Lab completed successfully.");
+                    }
+                    else {
+                        div.text("Lab failed.");
+                    }
+                    break;
+                default:
+                    // TODO: this branch should probably throw an error
+                    div.addClass("output_line");
+                    div.text(msg);
+                    break;
             }
-
-            // Lines that contain a sloc are clickable:
-            div.on('click', function (x) {
-               // find the corresponding editor
-               var basename = match_found[1]
-               editors.forEach(function (e) {
-                  if (e.basename == basename) {
-                     // Switch to the tab that contains the editor
-
-                     // TODO: this is in the case of bootstrap only
-                     // $("#" + e.unique_id + "-tab").tab('show')
-
-                     // Jump to the corresponding line
-                     e.gotoLine(parseInt(match_found[2]),
-                         // looks like column numbers are indexed from 0
-                         parseInt(match_found[3] - 1),
-                         true)
-                     e.focus()
-                   }
-                })
-            })
         }
-    })
+    });
 
     // Congratulations!
     if (completed) {
         reset(container, editors);
 
         if (status != 0) {
-            output_error(output_area, "exit status: " + status)
+            output_error(output_area, "exit status: " + status);
         } else if (output_area.error_count == 0) {
-            var div = $('<div class="output_success">')
-            div.text("Success!")
-            div.appendTo(output_area)
+            var div = $('<div class="output_success">');
+            div.text("Success!");
+            div.appendTo(output_area);
         } else if (output_area.error_count == 1) {
-            var div = $('<div class="output_info">')
-            div.text("One error.")
-            div.appendTo(output_area)
+            var div = $('<div class="output_info">');
+            div.text("One error.");
+            div.appendTo(output_area);
         } else {
-            var div = $('<div class="output_info">')
-            div.text(output_area.error_count + " errors.")
-            div.appendTo(output_area)
+            var div = $('<div class="output_info">');
+            div.text(output_area.error_count + " errors.");
+            div.appendTo(output_area);
         }
     }
 
-    return read_lines
+    return read_lines;
 }
 
-function get_output_from_identifier(container, editors, output_area, identifier) {
+function get_output_from_identifier(container, editors, output_area, lab_area, identifier) {
     data = {
         "identifier": identifier,
         "already_read": container.already_read
-    }
+    };
     $.ajax({
             url: container.example_server + "/check_output/",
             data: JSON.stringify(data),
@@ -112,61 +171,82 @@ function get_output_from_identifier(container, editors, output_area, identifier)
             contentType: 'application/json; charset=UTF-8',
             timeout: 4000
         })
-        .done(function (json) {
+        .done(function(json) {
             read_lines = process_check_output(
                 container,
-                editors, output_area,
+                editors, output_area, lab_area,
                 json.output_lines, json.status, json.completed, json.message
-            )
-            container.already_read = container.already_read + read_lines
+            );
+            container.already_read = container.already_read + read_lines;
             if (!json.completed) {
                 // We have not finished processing the output: call this again
-                setTimeout(function () {
-                    get_output_from_identifier(container, editors, output_area, identifier)
-                }, 250)
+                setTimeout(function() {
+                    get_output_from_identifier(container, editors, output_area, lab_area, identifier);
+                }, 250);
+            } else {
+
+                if (container.parent().hasClass("test-descriptor")) {
+                    // we are in test mode. call test function callback
+                    test_callback(container);
+                }
             }
         })
-        .fail(function (xhr, status, errorThrown) {
-            output_error(output_area, "the machine running the examples is not responding, please try again later")
+        .fail(function(xhr, status, errorThrown) {
+            output_error(output_area, "the machine running the examples is not responding, please try again later");
             console.log("Error: " + errorThrown);
             console.log("Status: " + status);
             console.dir(xhr);
         })
-        .fail(function (json) {
-            reset(container,editors);
-            output_error(output_area, json.message)
-        })
+        .fail(function(json) {
+            reset(container, editors);
+            output_error(output_area, json.message);
+        });
 }
 
 
 // Launch a run on the given example editor
-function query_operation_result(container, example_name, editors, output_area, operation_url) {
+function query_operation_result(container, editors, output_area, lab_area, mode) {
 
-    files = []
+    files = [];
 
     // Grab the contents from actual editors
-    editors.forEach(function (e) {
+    editors.forEach(function(e) {
         files.push({
             'basename': e.basename,
             'contents': e.getValue()
-        })
-    })
+        });
+    });
 
     // Grab the contents from shadow files
-    if (container.shadow_files){
-      container.shadow_files.forEach(function (e){
-        files.push({
-            'basename': e.basename,
-            'contents': e.contents
+    if (container.shadow_files) {
+        container.shadow_files.forEach(function(e) {
+            files.push({
+                'basename': e.basename,
+                'contents': e.contents
             });
-      });
+        });
+    }
+
+    var input_search = container.find( 'textarea[name="custom_input"]' );
+    var check_search = container.find( '.custom_check' );
+
+    if(check_search.length == 1 && input_search.length == 1) {
+        if(check_search.is(':checked')) {
+            files.push({
+                'basename': CLI_FILE,
+                'contents': input_search.val(),
+            });
+        }
     }
 
     data = {
-        "example_name": example_name,
         "files": files,
-        "main": container.attr("main"),
-        "extra_args": container.attr("extra_args"),
+        "mode": mode,
+    };
+
+    var lab_name = container.attr("lab_name");
+    if(lab_name) {
+        data["lab"] = lab_name;
     }
 
     // reset the number of lines already read
@@ -174,334 +254,363 @@ function query_operation_result(container, example_name, editors, output_area, o
 
     // request the examples
     $.ajax({
-            url: container.example_server + operation_url,
+            url: container.example_server + "/run_program/",
             data: JSON.stringify(data),
             type: "POST",
             dataType: "json",
             contentType: 'application/json; charset=UTF-8',
             timeout: 4000,
         })
-        .done(function (json) {
+        .done(function(json) {
             if (json.identifier == "") {
                 reset(container, editors);
                 output_error(output_area, json.message);
             } else {
-                get_output_from_identifier(container, editors, output_area, json.identifier)
+                get_output_from_identifier(container, editors, output_area, lab_area, json.identifier);
             }
         })
-        .fail(function (xhr, status, errorThrown) {
+        .fail(function(xhr, status, errorThrown) {
             reset(container, editors);
-            output_error(output_area, "the machine running the examples is not available, please try again later")
+            output_error(output_area, "The machine running the examples may not be available or is busy, please try again now or come back later.");
             console.log("Error: " + errorThrown);
             console.log("Status: " + status);
             console.dir(xhr);
-        })
+        });
 }
 
 
 function create_editor(resource, container, content, editors, counter) {
-   var the_id = "tab_" + container.attr("the_id") + "-" + counter
-   var div = $('<div role="tabpanel" class="tab-pane' +
-       (counter == 1 ? ' active' : '') +
-       '" id="' + the_id + '">');
-   var editordiv = $('<div class="editor_container' + (is_inline?' inline':'') + '"'
-                     + ' id="' + resource.basename + the_id + '_editor">');
-   editordiv.appendTo(div);
-   div.appendTo(content);
+    var the_id = "tab_" + container.attr("the_id") + "-" + counter;
+    var div = $('<div role="tabpanel" class="tab-pane' +
+        (counter == 1 ? ' active' : '') +
+        '" id="' + the_id + '">');
 
-   // ACE editors...
-   editor = ace.edit(resource.basename + the_id + '_editor');
-   editor.session.setMode("ace/mode/ada");
+    var editordiv = $('<div class="editor_container"' +
+        ' id="' + resource.basename + the_id + '_editor">');
 
-   // ... and their contents
-   editor.setValue(resource.contents);
-   editor.setShowPrintMargin(false);
-   editor.gotoLine(1);
-   editor.initial_contents = resource.contents;
-   editor.basename = resource.basename;
-   editor.unique_id = the_id;
+    // Display the file name for files that are not Ada or main.c
+    if (!resource.basename.match(/.ad[sb]$|^main.c$/)) {
+        var labeldiv = $('<div class="editor_label">' + resource.basename + '</div>');
+        labeldiv.appendTo(div);
+    }
+    editordiv.appendTo(div);
+    div.appendTo(content);
 
-   editor.setOptions({
-       highlightActiveLine: false,
-       fontSize: 13,
-       tabSize: 3,
-       useSoftTabs: true,
-       theme: "ace/theme/tomorrow"
-   });
+    // ACE editors...
+    editor = ace.edit(resource.basename + the_id + '_editor');
 
-   // check if we are overriding db content with inline content
-   if (container.attr("inline")) {
-       $(container).children(".resource").each(function () {
-           if ($(this).attr("region")) {
-               region = $(this).attr("region");
+    // Set the mode
+    if (resource.basename.match(/.ad[sb]$/)) {
+        editor.session.setMode("ace/mode/ada");
+    } else {
+        editor.session.setMode("ace/mode/c_cpp");
+    }
 
-               // search editor content for region "region"
-               beginregion = editor.find("--  #region " + region);
-               endregion = editor.find("--  #endregion " + region);
+    // ... and their contents
+    editor.setValue(resource.contents);
+    editor.setShowPrintMargin(false);
+    editor.gotoLine(1);
+    editor.initial_contents = resource.contents;
+    editor.basename = resource.basename;
+    editor.unique_id = the_id;
 
-               newRange = beginregion.clone();
-               newRange.end.row = endregion.end.row;
-               newRange.end.column = endregion.end.column;
+    editor.setOptions({
+        highlightActiveLine: false,
+        fontSize: 13,
+        tabSize: 3,
+        useSoftTabs: true,
+        theme: "ace/theme/tomorrow"
+    });
 
-               textReplace = $(this).text().replace(/^\s|\s+$/g, '');
+    $(container).children(".resource").each(function() {
+        if ($(this).attr("region")) {
+            region = $(this).attr("region");
 
-               editor.getSession().getDocument().replace(newRange, textReplace);
-               $(this).text('');
-           }
-          else {
-             // No region: replace the whole editor
-             editor.initial_contents = $(this).text();
-             editor.setValue($(this).text());
-             $(this).text('');
-          }
-       })
-   }
+            // search editor content for region "region"
+            beginregion = editor.find("--  #region " + region);
+            endregion = editor.find("--  #endregion " + region);
 
-   // search for remaining region marks and remove
-   editor.replaceAll("", {
-       needle: "--  #region (.*)\n",
-       regExp: true
-   });
-   editor.replaceAll("", {
-       needle: "--  #endregion (.*)\n",
-       regExp: true
-   });
+            newRange = beginregion.clone();
+            newRange.end.row = endregion.end.row;
+            newRange.end.column = endregion.end.column;
 
-   // check if container is readonly
-   if (container.attr("readonly")) {
-       // remove all read only tags in the editor
-       editor.replaceAll("", {
-           needle: "--  (begin|end) readonly",
-           regExp: true
-       });
+            textReplace = $(this).text().replace(/^\s|\s+$/g, '');
 
-       editor.setOption("readOnly", true);
-   }
+            editor.getSession().getDocument().replace(newRange, textReplace);
+            $(this).text('');
+        } else {
+            // No region: replace the whole editor
+            editor.initial_contents = $(this).text();
+            editor.setValue($(this).text());
+            $(this).text('');
+        }
+    });
 
-   // Inline? set the editor to use exactly the vertical space it needs
-   if (is_inline){
-       editor.setOptions({
-            minLines: editor.session.doc.getLength(),
-            maxLines: editor.session.doc.getLength()
-       })
-   }
-    editor.resize()
-   // place the cursor at 1,1
-   editor.selection.moveTo(0, 0);
+    // search for remaining region marks and remove
+    editor.replaceAll("", {
+        needle: "--  #region (.*)\n",
+        regExp: true
+    });
+    editor.replaceAll("", {
+        needle: "--  #endregion (.*)\n",
+        regExp: true
+    });
 
-   // clear undo stack to avoid undoing everything we just did
-   editor.getSession().getUndoManager().reset();
+    // check if container is readonly
+    if (container.attr("readonly")) {
+        // remove all read only tags in the editor
+        editor.replaceAll("", {
+            needle: "--  (begin|end) readonly",
+            regExp: true
+        });
+
+        editor.setOption("readOnly", true);
+    }
+
+    // set the editor to use exactly the vertical space it needs
+    editor.setOptions({
+        minLines: editor.session.doc.getLength(),
+        maxLines: editor.session.doc.getLength()
+    });
+
+    editor.resize();
+    // place the cursor at 1,1
+    editor.selection.moveTo(0, 0);
+
+    // clear undo stack to avoid undoing everything we just did
+    editor.getSession().getUndoManager().reset();
 
     editor.renderer.setScrollMargin(5, 5, 0, 0);
 
-   return editor;
+    return editor;
 }
 
 // Fills a <div> with an editable representation of an example.
 //    container: the <div> in question
-//    example_name: the name of the example to load
 
-var unique_id = 0
+var unique_id = 0;
 
-function fill_editor_from_contents(container, example_name, example_server,
-                                   resources, main) {
+function reset_worker(button, editors, container, output_area, lab_area) {
+    if (button.disabled) {
+        return;
+    }
+    editors.buttons.forEach(function(b) {
+        b.disabled = false;
+    });
+    container.already_read = 0;
+    output_area.empty();
+    output_area.error_count = 0;
 
-   is_inline = container.attr("inline")
+    if (lab_area != null)
+        lab_area.empty();
 
-   // First create the tabs
-
-   if (!is_inline){
-      var ul = $('<ul class="nav nav-tabs" role="tablist">')
-      ul.appendTo(container);
-
-      var counter = 0;
-
-      resources.forEach(function (resource) {
-          counter++;
-          var the_id = "tab_" + container.attr("the_id") + "-" + counter
-
-          var li = $('<li role="presentation" class="' +
-              (counter == 1 ? 'active' : '') +
-              '">').appendTo(ul);
-          $('<a href="#' + the_id + '" aria-controls="' +
-              the_id + '" ' +
-              'id="' + the_id + '-tab"' +
-              'role="tab" data-toggle="tab">' +
-              resource.basename + '</a>').appendTo(li)
-      })
-   }
-
-   // Then fill the contents of the tabs
-
-   var content = $('<div class="tab-content">')
-   content.appendTo(container);
-
-   counter = 0;
-
-   var editors = []
-
-   resources.forEach(function (resource) {
-       counter++;
-       var editor = create_editor(resource, container, content, editors, counter)
-       // Append the editor to the list of editors
-       editors.push(editor)
-   })
-
-   var row = $('<div class="row output_row">')
-   row.appendTo(container)
-
-   // create the buttons
-
-   var buttons_div = $('<div class="col-md-3">')
-   buttons_div.appendTo(row)
-
-   var output_div = $('<div class="col-md-9">')
-   output_div.appendTo(row)
-
-   var output_area = $('<div class="output_area">')
-   output_area.appendTo(output_div)
-
-   editors.buttons = []
-
-   if (container.attr("prove_button") || container.attr("run_button")){
-      var reset_button = $('<button type="button" class="btn btn-secondary">').text("Reset").appendTo(buttons_div)
-      reset_button.editors = editors;
-      editors.buttons.push(reset_button)
-      reset_button.on('click', function (x) {
-          if (reset_button.disabled) {return;}
-          editors.buttons.forEach(function(b){b.disabled = false;})
-          container.already_read = 0;
-          output_area.empty();
-          output_area.error_count = 0;
-
-          reset_button.editors.forEach(function (x) {
-              x.setValue(x.initial_contents);
-              x.gotoLine(1);
-          })
-      })
-   }
-
-   if (container.attr("prove_button")){
-      var the_text = "Prove";
-
-      // Special case to call the button "Examine" in flow mode
-      if (container.attr("extra_args") == "spark-flow"){
-          var the_text = "Examine";
-      }
-
-      var check_button = $('<button type="button" class="btn btn-primary">').text(the_text).appendTo(buttons_div)
-      editors.buttons.push(check_button);
-      check_button.editors = editors;
-      check_button.on('click', function (x) {
-          if (check_button.disabled) {return;}
-          editors.buttons.forEach(function(b){b.disabled = true;})
-          output_area.empty();
-          output_area.error_count = 0;
-
-          var div = $('<div class="output_info">');
-          div.text("Proving...");
-          div.appendTo(output_area);
-          query_operation_result(container, example_name, check_button.editors, output_area, "/check_program/");
-       })
-   }
-
-   if (container.attr("run_button")){
-       var run_button = $('<button type="button" class="btn btn-primary">').text("Run").appendTo(buttons_div);
-       editors.buttons.push(run_button);
-       run_button.editors = editors;
-       run_button.on('click', function (x) {
-          if (run_button.disabled) {return;}
-          editors.buttons.forEach(function(b){b.disabled = true;})
-          output_area.empty();
-          output_area.error_count = 0;
-
-          var div = $('<div class="output_info">');
-          div.text("Running...");
-          div.appendTo(output_area);
-          query_operation_result(container, example_name, run_button.editors, output_area, "/run_program/");
-       })
-   }
+    button.editors.forEach(function(x) {
+        x.setValue(x.initial_contents);
+        x.gotoLine(1);
+    });
 }
 
-function fill_editor(container, example_name, example_server) {
+function check_worker(button, editors, container, output_area, lab_area) {
+    if (button.disabled) {
+        return;
+    }
+    editors.buttons.forEach(function(b) {
+        b.disabled = true;
+    });
+    output_area.empty();
+    output_area.error_count = 0;
+
+    if (lab_area != null)
+        lab_area.empty();
+
+    var div = $('<div class="output_info">');
+    div.html(button.operation_label + "...<br>Console Output:");
+    div.appendTo(output_area);
+    query_operation_result(container, editors, output_area, lab_area, button.mode);
+}
+
+function test_callback(container) {
+    var parent = container.parent();
+    var test_name = parent.find("div.test_name").text();
+    var test_input = parent.find("div.test_input").text();
+    var test_expects = parent.find("div.test_expects").find("div.output_area");
+
+    var response = container.find("div.output_area");
+    var results_area = $("div.test-results");
+
+    var results_div = $("<div>");
+
+    results_div.append("Test: " + test_name + "<br>");
+    if (response.text() == test_expects.text()) {
+        results_div.append("<span class='passed_test'>Test passed!</span>");
+    } else {
+        results_div.append("<span class='failed_test'>Test failed!</span>");
+        results_div.append("<p>Response: " + response.html() + "</p>");
+        results_div.append("<p>Expects: " + test_expects.html() + "</p>");
+    }
+    results_div.append("<br><br></p>");
+    results_area.append(results_div);
+}
+
+function fill_editor_from_contents(container, example_server, resources) {
+
+    // if container parent is test-descriptor then we are in test mode
+    var test_mode = container.parent().hasClass("test-descriptor");
+
+    // Then fill the contents of the tabs
+
+    var content = $('<div class="tab-content">');
+    content.appendTo(container);
+
+    counter = 0;
+
+    var editors = [];
+
+    resources.forEach(function(resource) {
+        counter++;
+        var editor = create_editor(resource, container, content, editors, counter);
+        // Append the editor to the list of editors
+        editors.push(editor);
+    });
+
+    var row = $('<div class="row output_row">');
+    row.appendTo(container);
+
+    // create the buttons
+
+    var buttons_div = $('<div class="col-md-3">');
+    buttons_div.appendTo(row);
+
+    var output_div = $('<div class="col-md-9">');
+    output_div.appendTo(row);
+
+    var output_area = $('<div class="output_area">');
+    output_area.appendTo(output_div);
+
+    editors.buttons = [];
+
+    if (container.attr("prove_button") || container.attr("run_button")) {}
+
+    var reset_created = false;
+
+    var results_div = $("div.test-results");
+
+    results_div.text("");
+
+    var lab_area = $('<div class="lab_area">');
+    if(container.attr("lab")) {
+        container.attr("prove_button", true);
+        container.attr("run_button", true);
+        container.attr("submit_button", true);
+        container.attr("cli_input", true);
+
+        lab_area.appendTo(output_div);
+    }
+    else {
+        lab_area = null;
+    }
+
+    if(container.attr("cli_input")) {
+        $( '<textarea class="custom_input" name="custom_input" rows="4" cols="6"></textarea>' ).appendTo(buttons_div);
+        var custom_check = $( '<input type="checkbox" class="custom_check" name="custom_check"><label for="custom_check">Test against custom input</label>' ).appendTo(buttons_div).change( function() {
+            var input_search = container.find( 'textarea[name="custom_input"]' );
+            if ($(this).is(':checked')) {
+                if(input_search.length == 1) {
+                    input_search.show();
+                }
+            }
+            else {
+                if(input_search.length == 1) {
+                    input_search.hide();
+                }
+            }
+        }).change();
+    }
+
+    for (var mode in MODES) {
+        if (container.attr(mode + "_button")) {
+
+            // Create the reset button, but do this only once and if there are other buttons
+            if (!reset_created) {
+                reset_created = true;
+                var reset_button = $('<button type="button" class="btn btn-secondary">').text("Reset").appendTo(buttons_div);
+                reset_button.editors = editors;
+                editors.buttons.push(reset_button);
+                reset_button.on('click', function(x) {
+                    reset_worker(reset_button, editors, container, output_area, lab_area);
+                });
+
+            }
+
+            // Now create the button for each mode that has been specified in the attributes
+            var the_text = MODES[mode];
+
+            var check_button = $('<button type="button" class="btn btn-primary">').text(the_text).appendTo(buttons_div);
+            check_button.operation_label = the_text;
+            check_button.mode = mode;
+            editors.buttons.push(check_button);
+            check_button.editors = editors;
+            check_button.click(check_button, function(x) {
+                check_worker(x.data, editors, container, output_area, lab_area);
+            });
+
+            if (test_mode) {
+                var parent = container.parent();
+                var test_exercises = parent.find("div.test_exercises").text();
+
+                if (the_text == test_exercises) {
+                    check_worker(check_button, editors, container, output_area, lab_area);
+                }
+            }
+
+        }
+    }
+}
+
+function fill_editor(container, example_server) {
     unique_id++;
     container.attr("the_id", unique_id);
-    container.already_read = 0;  // The number of lines already read
+    container.already_read = 0; // The number of lines already read
     container.example_server = example_server;
 
-    is_inline = container.attr("inline");
+    // List the "file" divs, add these as resources
+    var resources = [];
+    $(container).children(".file").each(function() {
+        // Create a fake resource for each 'file' div
+        a = {};
+        a.basename = $(this).attr("basename");
+        a.contents = $(this).text();
+        $(this).text('');
+        resources.push(a);
+    });
 
-    if (is_inline){
-       // In inline mode, just assume all the sources are here, do not
-       // request them in AJAX
+    // List the contents of the ".shadow_file" divs
+    container.shadow_files = [];
+    $(container).children(".shadow_file").each(function() {
+        // Create a fake resource for each 'file' div
+        a = {};
+        a.basename = $(this).attr("basename");
+        a.contents = $(this).text();
+        $(this).text('');
+        container.shadow_files.push(a);
+    });
 
-       // List the "file" divs, add these as resources
-       var resources = []
-       $(container).children(".file").each(function () {
-          // Create a fake resource for each 'file' div
-          a = Object();
-          a.basename = $(this).attr("basename");
-          a.contents = $(this).text();
-          $(this).text('');
-          resources.push(a);
-       })
-
-       // List the contents of the ".shadow_file" divs
-       container.shadow_files = []
-       $(container).children(".shadow_file").each(function () {
-          // Create a fake resource for each 'file' div
-          a = Object();
-          a.basename = $(this).attr("basename");
-          a.contents = $(this).text();
-          $(this).text('');
-          container.shadow_files.push(a);
-       })
-
-       fill_editor_from_contents(container, example_name, example_server,
-                                 resources, container.attr("main"));
-    } else {
-
-       // request the examples
-       $.ajax({
-               url: container.example_server + "/example/" + example_name,
-               data: {},
-               type: "GET",
-               // dataType : "json",
-               contentType: 'text/plain',
-               crossDomain: true,
-               //      headers: { "Origin": "http://www.adacore.com" }
-
-           })
-           .done(function (json) {
-               // On success, create editors for each of the resources
-
-               fill_editor_from_contents(container, example_name, example_server,
-                                         json.resources, json.main);
-
-               })
-           .fail(function (xhr, status, errorThrown) {
-               alert("could not download the example");
-               console.log("Error: " + errorThrown);
-               console.log("Status: " + status);
-               console.dir(xhr);
-           });
-        }
+    fill_editor_from_contents(container, example_server, resources);
 }
 
 
 // Called when the document is ready
-$(document).ready(function () {
+$(document).ready(function() {
 
     // Iterate on all divs, finding those that have the "example_editor"
     // attribute
-    $("div").each(function (index, element) {
-        example_name = $(this).attr("example_editor");
-        example_server = $(this).attr("example_server");
-        if (!example_server) {
+    $("div").each(function(index, element) {
+        var example_server = $(this).attr("example_server");
+        if (example_server) {
+            fill_editor($(this), example_server);
+        } else {
             example_server = '';
         }
-        if (example_name) {
-            fill_editor($(this), example_name, example_server);
-        }
-    })
+
+    });
 });

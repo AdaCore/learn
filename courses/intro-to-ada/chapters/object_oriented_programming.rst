@@ -1,7 +1,7 @@
 Object-oriented programming
 ===========================
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=True`
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 :code-config:`reset_accumulator=True`
 
 .. role:: ada(code)
@@ -187,6 +187,8 @@ functionality is added:
   base type to be statically compatible with the base type.
 
 Let's see our first tagged type declarations:
+
+:code-config:`reset_accumulator=True;accumulate_code=True`
 
 .. code:: ada no_button
 
@@ -429,3 +431,5 @@ the dot notation. Any remaining parameter are passed normally:
        Obj.Bar (2);
        Obj.Foo;
     end Main;
+
+:code-config:`reset_accumulator=True;accumulate_code=False`

@@ -1,7 +1,7 @@
 Subprograms
 ===========
 
-:code-config:`reset_accumulator=True`
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 .. _Subprograms:
 
@@ -42,7 +42,7 @@ in a package, and have that subprogram available to be invoked from client
 ("with"ing) units, you need to do two things:
 
 * Put its specification (name, parameters, result type if a function) in the
-  package specifciation, along with any comments / documentation you wish to
+  package specification, along with any comments / documentation you wish to
   provide
 
 * Put the full declaration of the subprogram (its body, or implementation) in
@@ -59,6 +59,8 @@ section at all, for example:
    function Func return Integer;
 
 Here's another variation on the Week example:
+
+:code-config:`reset_accumulator=True;accumulate_code=True`
 
 .. code:: ada no_button
 
@@ -151,6 +153,8 @@ We can then call our subprogram this way:
        --                           ^ Named parameter passing
     end Show_Days;
 
+:code-config:`reset_accumulator=True;accumulate_code=False`
+
 Ada allows you to name the parameters when you pass them, whether they have a
 default or not. There are some rules:
 
@@ -212,7 +216,7 @@ to explicitly store it in a local variable.
        return Res;
     end Quadruple;
 
-.. admonition:: In GNAT
+.. admonition:: In the GNAT toolchain
 
     In GNAT, with all warnings activated, it becomes even harder to ignore the
     result of a function, because unused variables will be flagged. For
@@ -391,7 +395,7 @@ error, imposing that as a rule would cause either inefficient run-time checks
 or complex compile-time rules. So from the user's perspective an out parameter
 acts like an uninitialized variable when the subprogram is invoked.
 
-.. admonition:: In GNAT
+.. admonition:: In the GNAT toolchain
 
     GNAT will detect simple cases of incorrect use of out parameters.
     For example, the compiler will emit a warning for the following program:

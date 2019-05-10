@@ -21,6 +21,9 @@ Advanced Ada
     :caption: Contents:
 
 
+    Typing <chapters/typing>
     Strong Typing <chapters/strong_typing>
+    Access Types <chapters/access_types>
+    Limited Types <chapters/limited_types>
     Generics <chapters/generics>
     Interfacing With C/C++ <chapters/interfacing_with_cpp>

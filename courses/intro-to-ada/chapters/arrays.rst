@@ -1,7 +1,7 @@
 Arrays
 ======
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=True`
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 :code-config:`reset_accumulator=True`
 
 .. role:: ada(code)
@@ -324,7 +324,7 @@ this type will have the same bounds and therefore the same number of elements
 and the same size.
 
 However, Ada also allows you to declare array types whose bounds are not fixed:
-In that case, the bounds will need to be provided when creating instances of
+in that case, the bounds will need to be provided when creating instances of
 the type.
 
 .. code:: ada
