@@ -37,7 +37,7 @@ For the moment, don't worry about the details of the :ada:`Main` procedure.
 You should just focus on implementing the application in the body of the
 :ada:`Display_Numbers` procedure.
 
-.. code:: ada lab=MLH_Stack
+.. code:: ada lab=Imperative_Language_Numbers
 
     --  START LAB IO BLOCK
     in 0: 1 5
