@@ -58,6 +58,8 @@ function process_check_output(container, editors, output_area, lab_area, output,
                     div.addClass("output_console");
                     div.text("$ " + msg);
                     break;
+                case "stderr":
+                    error_found = true;
                 case "stdout":
                     // Look for lines that contain an error message
                     var match_found = msg.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
@@ -96,11 +98,6 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
                     div.text(msg);
 
-                    break;
-                case "stderr":
-                    error_found = true;
-                    div.addClass("output_msg");
-                    div.text(msg);
                     break;
                 case "lab_output":
                     var test_cases = msg["test_cases"];
