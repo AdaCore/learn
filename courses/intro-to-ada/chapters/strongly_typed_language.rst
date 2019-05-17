@@ -12,6 +12,7 @@ Strongly typed language
 .. role:: cpp(code)
    :language: c++
 
+.. sectionauthor:: Raphaël Amiard
 
 Ada is a strongly typed language. It is interestingly modern in that
 respect: strong static typing has been increasing in popularity in programming
@@ -238,6 +239,8 @@ generally available to the user.
 
 Floating-point types
 --------------------
+
+.. sectionauthor:: Gustavo A. Hoffmann
 
 Basic properties
 ~~~~~~~~~~~~~~~~

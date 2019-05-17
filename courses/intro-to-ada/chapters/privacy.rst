@@ -12,6 +12,7 @@ Privacy
 .. role:: cpp(code)
    :language: c++
 
+.. sectionauthor:: Raphaël Amiard
 
 One of the main principles of modular programming, as well as object oriented
 programming, is `encapsulation <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`_.

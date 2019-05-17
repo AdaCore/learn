@@ -81,6 +81,8 @@ language = None
 # This pattern also affects html_static_path and html_extra_path .
 exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content']
 
+show_authors = True
+
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 

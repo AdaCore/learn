@@ -12,6 +12,7 @@ Modular programming
 .. role:: cpp(code)
    :language: c++
 
+.. sectionauthor:: Raphaël Amiard
 
 So far, our examples have been simple standalone procedures.  Ada is helpful in
 that regard, since it allows arbitrary declarations in a declarative part. We

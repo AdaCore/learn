@@ -18,6 +18,8 @@ Object-Oriented Programming
 Extending Interfaces
 --------------------
 
+.. sectionauthor:: Quentin Ochem
+
 Using new interfaces
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -270,6 +272,8 @@ overridden the primitive.
 
 Calling inherited subprograms
 -----------------------------
+
+.. sectionauthor:: Emmanuel Briot
 
 In object-oriented code, it is often the case that we need to call
 inherited subprograms. Some programing languages make it very easy by

@@ -18,6 +18,8 @@ Design Patterns
 Factory Functions
 -----------------
 
+.. sectionauthor:: Matthew Heaney
+
 Suppose we have a generic package that declares a stack class. The root of
 the hierarchy would be as follows:
 

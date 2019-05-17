@@ -13,6 +13,7 @@ Interfacing with C
 .. role:: cpp(code)
    :language: c++
 
+.. sectionauthor:: Gustavo A. Hoffmann
 
 Ada allows us to interface with code in many languages, including C
 and C++. This section discusses how to interface with C.

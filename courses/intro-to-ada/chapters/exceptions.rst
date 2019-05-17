@@ -12,6 +12,7 @@ Exceptions
 .. role:: cpp(code)
    :language: c++
 
+.. sectionauthor:: Raphaël Amiard
 
 Ada uses exceptions for error handling.  Unlike many other languages,
 Ada speaks about *raising*, not *throwing*, an exception and

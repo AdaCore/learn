@@ -18,6 +18,8 @@ Typing
 Overloading
 -----------
 
+.. sectionauthor:: Bob Duff
+
 Ada allows overloading of subprograms, which means that two or more
 subprogram declarations with the same name can be visible at the same
 place. Here, "name" can refer to operator symbols, like :ada:`"+"`. Ada
