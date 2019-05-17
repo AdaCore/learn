@@ -415,7 +415,7 @@ This means that :ada:`Perform_Test` makes use of the default definition
 used for the instance of :ada:`Generic_Array_Pkg`.
 
 Cascading generic packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the code example from the previous section, we declared four formal
 parameters for the :ada:`Perform_Test` procedure. Two of them are directly
