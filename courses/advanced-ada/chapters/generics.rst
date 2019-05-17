@@ -245,15 +245,6 @@ definitions that are used by the generic :ada:`Reverse_Array` procedure.
 By using the box syntax :ada:`(<>)`, we indicate that we make use of all
 definitions from the formal package parameter.
 
-This kind of formal package parameter containing definitions is called a
-*signature package*. Usually, a signature package is a generic package
-and doesn't have a package body. Also, it isn't useful as a
-standalone package. Instead, it's used to group types and subprogram
-declarations that will be used as a formal package parameter. This
-approach is useful for creating separate specifications for types and
-subprograms that don't belong together. Also, multiple signature packages
-can be cascaded to create more complex generic implementations.
-
 Abstracting procedures into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -330,7 +321,7 @@ will therefore declare the following formal parameters:
     - the string :ada:`S` containing the array name;
 
     - the formal :ada:`Generic_Array_Pkg` package parameter, which is a
-      signature package implemented in the previous section;
+      generic package implemented in the previous section;
 
     - the formal :ada:`Image` function that converts an element of type
       :ada:`T` to a string;
@@ -423,7 +414,7 @@ section on
 This means that :ada:`Perform_Test` makes use of the default definition
 used for the instance of :ada:`Generic_Array_Pkg`.
 
-Cascading signature packages
+Cascading generic packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the code example from the previous section, we declared four formal
@@ -437,7 +428,7 @@ related to the array that we're using for the test:
 
 We could abstract our implementation even further by moving these elements
 into a separate package named :ada:`Generic_Array_Bundle` and reference
-the :ada:`Generic_Array_Pkg` there. This would create a chain of signature
+the :ada:`Generic_Array_Pkg` there. This would create a chain of generic
 packages:
 
 .. code-block:: ada
@@ -593,6 +584,13 @@ In general, signature packages aren't used in isolation, but in
 combination with other generic packages. Also, they don't define anything
 themselves. In this sense, signature packages don't have an associated
 package body.
+
+Using signature packages is an useful approach to clean-up the declaration
+of generic packages or subprograms that contain many formal parameters.
+You may move these formal parameters into multiple signature packages,
+each one containing a group of formal parameters that belong together.
+Also, multiple signature packages can be cascaded to create more complex
+generic implementations.
 
 Formal objects
 --------------
