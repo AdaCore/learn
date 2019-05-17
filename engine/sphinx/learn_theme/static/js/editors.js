@@ -36,6 +36,22 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
     var read_lines = 0;
 
+    function find_ref_in_lab_ref_list(ref) {
+
+        var child = lab_area.find( '#' + ref );
+
+        if(child.length > 0) {
+            return child;
+        }
+
+        var div = $('<div id=' + ref + ' class="lab_test_case">');
+        $('<div class="lab_test_msg lab_test_title">Test Case #' + ref + '</div>').appendTo(div);
+
+        div.appendTo(lab_area);
+
+        return div;
+    }
+
     output.forEach(function(l) {
         read_lines++;
 
@@ -43,17 +59,30 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
         // look for classification of message
         for (var msg_type in msg_obj) {
-            var msg = msg_obj[msg_type];
+            var home_div = output_area;
+
+            if ("lab_ref" in msg_obj[msg_type]) {
+                lab_ref = msg_obj[msg_type]["lab_ref"];
+                var found = false;
+                var found_obj = null;
+
+                home_div = find_ref_in_lab_ref_list(lab_ref);
+            }
 
             var div = $('<div>');
-            div.appendTo(output_area);
+            div.appendTo(home_div);
 
             switch(msg_type) {
                 case "console":
+                    var msg = msg_obj[msg_type]["msg"];
                     div.addClass("output_console");
                     div.text("$ " + msg);
                     break;
+                case "stderr":
+                    error_found = true;
+                    //  this fall through is intentional
                 case "stdout":
+                    var msg = msg_obj[msg_type]["msg"];
                     // Look for lines that contain an error message
                     var match_found = msg.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
                     if (match_found) {
@@ -92,25 +121,20 @@ function process_check_output(container, editors, output_area, lab_area, output,
                     div.text(msg);
 
                     break;
-                case "stderr":
-                    error_found = true;
-                    div.addClass("output_msg");
-                    div.text(msg);
-                    break;
                 case "lab_output":
-                    var test_cases = msg["test_cases"];
+                    var test_cases = msg_obj[msg_type]["test_cases"];
                     for (var test in test_cases) {
-                        var case_div = $('<div class="lab_test_case">');
-                        case_div.appendTo(lab_area);
+                        home_div = find_ref_in_lab_ref_list(test);
+                        var case_div = $('<div class="lab_results">');
+                        case_div.appendTo(home_div);
 
                         if (test_cases[test]["status"] == "Success") {
-                            case_div.addClass("lab_test_success");
+                            home_div.addClass("lab_test_success");
                         }
                         else {
-                            case_div.addClass("lab_test_failed");
+                            home_div.addClass("lab_test_failed");
                         }
 
-                        $('<div class="lab_test_msg lab_test_title">Test Case #' + test + '</div>').appendTo(case_div);
                         $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">Input:</span>' + test_cases[test]["in"] + '</div>').appendTo(case_div);
                         $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">Expected Output:</span>' + test_cases[test]["out"] + '</div>').appendTo(case_div);
                         $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">Actual Output:</span>' + test_cases[test]["actual"] + '</div>').appendTo(case_div);
@@ -118,7 +142,7 @@ function process_check_output(container, editors, output_area, lab_area, output,
                     }
 
                     div.addClass("lab_status");
-                    if (msg["success"]) {
+                    if (msg_obj[msg_type]["success"]) {
                         div.text("Lab completed successfully.");
                     }
                     else {
