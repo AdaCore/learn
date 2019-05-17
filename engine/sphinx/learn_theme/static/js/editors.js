@@ -61,7 +61,7 @@ function process_check_output(container, editors, output_area, lab_area, output,
         for (var msg_type in msg_obj) {
             var home_div = output_area;
 
-            if ("lab_ref" in msg_obj[msg_type]) {
+            if (msg_obj[msg_type].hasOwnProperty('lab_ref')) {
                 lab_ref = msg_obj[msg_type]["lab_ref"];
                 var found = false;
                 var found_obj = null;
