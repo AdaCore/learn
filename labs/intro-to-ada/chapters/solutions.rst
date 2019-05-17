@@ -24,9 +24,9 @@ Exercise #1
 
     --  START LAB IO BLOCK
     in 0: 1 5
-    out 0: 1 2 3 4 5
+    out 0:  1 2 3 4 5
     in 1: 5 1
-    out 1: 1 2 3 4 5
+    out 1:  1 2 3 4 5
     in 2: -5 -1
     out 2: -1 -2 -3 -4 -5
     in 3: 5 -1
