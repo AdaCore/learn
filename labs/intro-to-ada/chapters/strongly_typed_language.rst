@@ -52,8 +52,8 @@ In this exercise, you'll work with enumerations. These are your goals:
    :ada:`HTML_Color` type to the integer values listed on table above.
 
    - Hints: You may use a :ada:`case` for this. Also, in order to express
-            the hexadecimal values above in Ada, use the following syntax:
-            ```16#<hex_value>#``` (e.g.: :ada:`16#FFFFFF#`).
+     the hexadecimal values above in Ada, use the following syntax:
+     ```16#<hex_value>#``` (e.g.: :ada:`16#FFFFFF#`).
 
 #. Declare another color type (:ada:`Basic_HTML_Color`) with the following
    colors: Red, Green, Blue. Also, implement the function
@@ -179,16 +179,16 @@ In this exercise, you'll create integer types. These are your goals:
    output of the function is 50.
 
    - Hint: you may use the type attributes :ada:`D_50'First` and
-           :ada:`D_50'Last`, which indicate, respectively, the minimum and
-           maximum value of the :ada:`D_50` type. The same attributes are
-           available for the :ada:`S_50` type.
+     :ada:`D_50'Last`, which indicate, respectively, the minimum and
+     maximum value of the :ada:`D_50` type. The same attributes are
+     available for the :ada:`S_50` type.
 
 #. Implement the function :ada:`To_I_100` that convert from :ada:`D_100`
    back to the base type :ada:`I_100`.
 
    - Remark: we could write a function :ada:`To_I_100` to convert from
-             :ada:`S_100` as well. However, we skip this here because
-             explicit conversions are not needed for subtypes.
+     :ada:`S_100` as well. However, we skip this here because explicit
+     conversions are not needed for subtypes.
 
 Don't worry about the details of the :ada:`Main` procedure. You should
 just focus on declaring the types (in the :ada:`Int_Types` package) and
@@ -418,7 +418,7 @@ are your goals:
    values in the implementation of the :ada:`To_Celsius` function.
 
    - Hint: use variables of floating-point type (:ada:`Float`) for
-           intermediate values in the implementation of :ada:`To_Celsius`.
+     intermediate values in the implementation of :ada:`To_Celsius`.
 
 #. Declare a floating-point type named :ada:`Kelvin` for temperatures in
    Kelvin using a range between 0.0 and 5778.0.
@@ -426,8 +426,8 @@ are your goals:
 #. Implement the functions :ada:`To_Celsius` and :ada:`To_Kelvin` to
    convert between temperatures in Kelvin and Celsius.
 
-   - Hint: use variable of floating-point type (:ada:`Float`) for
-           intermediate values.
+   - Hint: use a variable of floating-point type (:ada:`Float`) for
+     intermediate values.
 
 For the floating-point types above, use a precision of six digits.
 
