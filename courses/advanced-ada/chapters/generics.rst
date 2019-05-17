@@ -525,11 +525,11 @@ Signature Packages
 Signature packages are used to group a set of types and subprograms that
 serve as a formal package parameter in another generic package. In the
 source-code examples of the previous section, we've seen the
-package ``Generic_Array_Bundle``, which was used as a formal package for
-the generic procedure ``Perform_Test``. ``Generic_Array_Bundle`` is an
-example of a signature package.
+package :ada:`Generic_Array_Bundle`, which was used as a formal package
+for the generic procedure :ada:`Perform_Test`. :ada:`Generic_Array_Bundle`
+is an example of a signature package.
 
-In this simple example, we define the signature package ``Sig_Pkg``:
+In this simple example, we define the signature package :ada:`Sig_Pkg`:
 
 .. code:: ada
 
@@ -539,10 +539,10 @@ In this simple example, we define the signature package ``Sig_Pkg``:
     package Sig_Pkg is
     end Sig_Pkg;
 
-As a standalone package, ``Sig_Pkg`` is not really useful. However, it
+As a standalone package, :ada:`Sig_Pkg` is not really useful. However, it
 becomes useful when used as a formal package in other generic declarations.
 For example, let's use this signature package for the generic procedure
-``Show`` of a package ``P``:
+:ada:`Show` of a package :ada:`P`:
 
 .. code:: ada
 
@@ -1621,10 +1621,10 @@ In this example, the declaration of :ada:`My_Type_Hash_Tables` is very
 straightforward: we just have to specify the tagged type (:ada:`My_Type`).
 All operations are *implicitly defined* in the tagged type, so we don't
 have to specify them. Conversely, we're bound to use the implementation
-associated with the type. We cannot easily replace ``Hash`` by
-``Alt_Hash`` as in the previous approaches. In order to do that, we have
-to declare a derived type and override the ``Hash`` function. This is how
-we may create the ``My_Type_Alt_Hash_Tables`` package using the
+associated with the type. We cannot easily replace :ada:`Hash` by
+:ada:`Alt_Hash` as in the previous approaches. In order to do that, we
+have to declare a derived type and override the :ada:`Hash` function. This
+is how we may create the :ada:`My_Type_Alt_Hash_Tables` package using the
 alternative hashing function, as we did in the previous approaches:
 
 .. code:: ada
@@ -1646,8 +1646,8 @@ alternative hashing function, as we did in the previous approaches:
 
     end Instantiation_Using_Alt_Tagged_Types;
 
-In this example, the ``Hash`` function of the ``My_Alt_Type`` type
-corresponds to the ``Alt_Hash`` function that we implemented in the
+In this example, the :ada:`Hash` function of the :ada:`My_Alt_Type` type
+corresponds to the :ada:`Alt_Hash` function that we implemented in the
 previous approaches.
 
 Formal synchronized interfaces
