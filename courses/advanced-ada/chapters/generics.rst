@@ -583,8 +583,9 @@ Finally, we can use this package in an application:
        package   Int_P    is new Sig_Pkg (Integer, Integer'Image);
        procedure Show_Int is new P.Show (Int_P);
 
-       V : Integer := 2;
+       V : Integer;
     begin
+       V := 42;
        Show_Int (V);
     end Main;
 
