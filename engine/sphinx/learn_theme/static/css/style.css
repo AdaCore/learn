@@ -153,6 +153,7 @@ div.lab_test_case {
     border-radius: 15px;
     padding-left:3px;
     padding-right:3px;
+    padding-bottom: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -185,4 +186,10 @@ div.lab_status {
     font-weight:bold;
     padding-left: 15px;
     padding-right: 3px;
+}
+
+div.lab_results {
+
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
