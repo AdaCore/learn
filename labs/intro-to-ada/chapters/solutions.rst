@@ -20,7 +20,7 @@ Imperative Language
 Hello World
 ~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Imperative_Language_HelloWorld
+.. code:: ada lab=Solutions_ImperativeLanguage_HelloWorld
 
     --  START LAB IO BLOCK
     in 0:
@@ -37,7 +37,7 @@ Hello World
 Greetings
 ~~~~~~~~~
 
-.. code:: ada lab=Solutions_Imperative_Language_Greetings
+.. code:: ada lab=Solutions_ImperativeLanguage_Greetings
 
     --  START LAB IO BLOCK
     in 0: John
@@ -70,7 +70,7 @@ Greetings
 Positive Or Negative
 ~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Imperative_Language_PositiveOrNegative
+.. code:: ada lab=Solutions_ImperativeLanguage_PositiveOrNegative
 
     --  START LAB IO BLOCK
     in 0: 0
@@ -123,7 +123,7 @@ Positive Or Negative
 Numbers
 ~~~~~~~
 
-.. code:: ada lab=Solutions_Imperative_Language_Numbers
+.. code:: ada lab=Solutions_ImperativeLanguage_Numbers
 
     --  START LAB IO BLOCK
     in 0: 1 5
