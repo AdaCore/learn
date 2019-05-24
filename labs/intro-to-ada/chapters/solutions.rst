@@ -17,6 +17,56 @@ Solutions
 Imperative Language
 -------------------
 
+Hello World
+~~~~~~~~~~~
+
+.. code:: ada lab=Solutions_Imperative_Language_HelloWorld
+
+    --  START LAB IO BLOCK
+    in 0:
+    out 0: Hello World!
+    --  END LAB IO BLOCK
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+    begin
+       Put_Line ("Hello World!");
+    end Main;
+
+Greetings
+~~~~~~~~~
+
+.. code:: ada lab=Solutions_Imperative_Language_Greetings
+
+    --  START LAB IO BLOCK
+    in 0: John
+    out 0: Hello John!
+    in 1: Joanna
+    out 1: Hello Joanna!
+    --  END LAB IO BLOCK
+
+    with Ada.Command_Line; use Ada.Command_Line;
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    procedure Main is
+
+       procedure Greet (Name : String) is
+       begin
+          Put_Line ("Hello " & Name & "!");
+       end Greet;
+
+    begin
+       if Argument_Count < 1 then
+          Put_Line ("ERROR: missing arguments! Exiting...");
+          return;
+       elsif Argument_Count > 1 then
+          Put_Line ("Ignoring additional arguments...");
+       end if;
+
+       Greet (Argument (1));
+    end Main;
+
 Numbers
 ~~~~~~~
 
