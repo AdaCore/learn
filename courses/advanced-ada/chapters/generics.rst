@@ -16,6 +16,7 @@ Generics
 .. sectionauthor:: Gustavo A. Hoffmann
 
 .. _FormalPackages:
+
 Formal packages
 ---------------
 
