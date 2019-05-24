@@ -67,6 +67,59 @@ Greetings
        Greet (Argument (1));
     end Main;
 
+Positive Or Negative
+~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ada lab=Solutions_Imperative_Language_PositiveOrNegative
+
+    --  START LAB IO BLOCK
+    in 0: 0
+    out 0:  Zero
+    in 1: 1
+    out 1:  Positive
+    in 2: -1
+    out 2: Negative
+    in 3: 99999
+    out 3: Positive
+    in 4: -99999
+    out 4: Negative
+    --  END LAB IO BLOCK
+
+    procedure Classify_Number (X : Integer);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Classify_Number (X : Integer) is
+    begin
+       if X > 0 then
+          Put_Line ("Positive");
+       elsif X < 0 then
+          Put_Line ("Negative");
+       else
+          Put_Line ("Zero");
+       end if;
+    end Classify_Number;
+
+    with Ada.Command_Line; use Ada.Command_Line;
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    with Classify_Number;
+
+    procedure Main is
+       A : Integer;
+    begin
+       if Argument_Count < 1 then
+          Put_Line ("ERROR: missing arguments! Exiting...");
+          return;
+       elsif Argument_Count > 1 then
+          Put_Line ("Ignoring additional arguments...");
+       end if;
+
+       A := Integer'Value (Argument (1));
+
+       Classify_Number (A);
+    end Main;
+
 Numbers
 ~~~~~~~
 
