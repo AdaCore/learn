@@ -29,8 +29,8 @@ number closest to zero. In other words:
    one closest to zero. If both numbers are equally close to zero (for
    example, -1 and 1), start with the negative number.
 
-   - Hint: you can use the :ada:`abs` function to help with the
-     comparison. By calling :ada:`abs (A)`, you get the absolute value of
+   - Hint: you can use the :ada:`abs` operator to help with the
+     comparison. By calling :ada:`abs A`, you get the absolute value of
      variable :ada:`A`.
 
 For the moment, don't worry about the details of the :ada:`Main` procedure.

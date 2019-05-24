@@ -63,7 +63,7 @@ Numbers
              Put_Line (Integer'Image (I));
           end loop;
        else
-          if abs (X) <= abs (Y) then
+          if abs X <= abs Y then
              for I in X .. Y loop
                 Put_Line (Integer'Image (I));
              end loop;
