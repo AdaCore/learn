@@ -17,8 +17,8 @@ Solutions
 Imperative Language
 -------------------
 
-Exercise #1
-~~~~~~~~~~~
+Numbers
+~~~~~~~
 
 .. code:: ada lab=Solutions_Imperative_Language_Numbers
 

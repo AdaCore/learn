@@ -14,8 +14,8 @@ Imperative language
 .. role:: cpp(code)
    :language: c++
 
-Exercise #1
------------
+Numbers
+-------
 
 Your goal with this exercise is to create an application that, given two
 integer numbers, displays all numbers in the range starting with the
