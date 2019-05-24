@@ -15,6 +15,7 @@ Generics
 
 .. sectionauthor:: Gustavo A. Hoffmann
 
+.. _FormalPackages:
 Formal packages
 ---------------
 
@@ -245,15 +246,6 @@ definitions that are used by the generic :ada:`Reverse_Array` procedure.
 By using the box syntax :ada:`(<>)`, we indicate that we make use of all
 definitions from the formal package parameter.
 
-This kind of formal package parameter containing definitions is called a
-*signature package*. Usually, a signature package is a generic package
-and doesn't have a package body. Also, it isn't useful as a
-standalone package. Instead, it's used to group types and subprogram
-declarations that will be used as a formal package parameter. This
-approach is useful for creating separate specifications for types and
-subprograms that don't belong together. Also, multiple signature packages
-can be cascaded to create more complex generic implementations.
-
 Abstracting procedures into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -330,7 +322,7 @@ will therefore declare the following formal parameters:
     - the string :ada:`S` containing the array name;
 
     - the formal :ada:`Generic_Array_Pkg` package parameter, which is a
-      signature package implemented in the previous section;
+      generic package implemented in the previous section;
 
     - the formal :ada:`Image` function that converts an element of type
       :ada:`T` to a string;
@@ -423,8 +415,8 @@ section on
 This means that :ada:`Perform_Test` makes use of the default definition
 used for the instance of :ada:`Generic_Array_Pkg`.
 
-Cascading signature packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cascading generic packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the code example from the previous section, we declared four formal
 parameters for the :ada:`Perform_Test` procedure. Two of them are directly
@@ -437,7 +429,7 @@ related to the array that we're using for the test:
 
 We could abstract our implementation even further by moving these elements
 into a separate package named :ada:`Generic_Array_Bundle` and reference
-the :ada:`Generic_Array_Pkg` there. This would create a chain of signature
+the :ada:`Generic_Array_Pkg` there. This would create a chain of generic
 packages:
 
 .. code-block:: ada
@@ -525,6 +517,81 @@ two:
 
 We could go even further and move :ada:`Perform_Test` into a separate
 package. However, this will be left as an exercise for the reader.
+
+.. _SignaturePackages:
+
+Signature Packages
+~~~~~~~~~~~~~~~~~~
+
+Signature packages are used to group a set of types and subprograms that
+serve as a formal package parameter in another generic package. In the
+source-code examples of the previous section, we've seen the
+package :ada:`Generic_Array_Bundle`, which was used as a formal package
+for the generic procedure :ada:`Perform_Test`. :ada:`Generic_Array_Bundle`
+is an example of a signature package.
+
+In this simple example, we define the signature package :ada:`Sig_Pkg`:
+
+.. code:: ada
+
+    generic
+       type T is private;
+       with function Image (E : T) return String is <>;
+    package Sig_Pkg is
+    end Sig_Pkg;
+
+As a standalone package, :ada:`Sig_Pkg` is not really useful. However, it
+becomes useful when used as a formal package in other generic declarations.
+For example, let's use this signature package for the generic procedure
+:ada:`Show` of a package :ada:`P`:
+
+.. code:: ada
+
+    with Sig_Pkg;
+
+    package P is
+       generic
+          with package SP is new Sig_Pkg (<>);
+       procedure Show (V : SP.T);
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body P is
+       procedure Show (V : SP.T) is
+       begin
+          Put_Line ("Value: " & SP.Image (V));
+       end Show;
+    end P;
+
+Finally, we can use this package in an application:
+
+.. code:: ada run_button
+
+    with Sig_Pkg;
+    with P;
+
+    procedure Main is
+       package   Int_P    is new Sig_Pkg (Integer, Integer'Image);
+       procedure Show_Int is new P.Show (Int_P);
+
+       V : Integer;
+    begin
+       V := 42;
+       Show_Int (V);
+    end Main;
+
+In general, signature packages aren't used in isolation, but in
+combination with other generic packages. Also, they don't define anything
+themselves. In this sense, signature packages don't have an associated
+package body.
+
+Using signature packages is an useful approach to clean-up the declaration
+of generic packages or subprograms that contain many formal parameters.
+You may move these formal parameters into multiple signature packages,
+each one containing a group of formal parameters that belong together.
+Also, multiple signature packages can be cascaded to create more complex
+generic implementations.
 
 Formal objects
 --------------
@@ -829,15 +896,15 @@ two instantiations of the :ada:`Display` procedure:
 - :ada:`Display_Name_Birthday`, which displays the full name and birthday
   of each person.
 
-Generic interfaces
-------------------
+Formal interfaces
+-----------------
 
 Generating subprogram specifications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :code-config:`reset_accumulator=True`
 
-Generic interfaces can be used to generate a collection of pre-defined
+Formal interfaces can be used to generate a collection of pre-defined
 subprograms for new types. For example, let's suppose that, for a given
 type :ada:`T`, we need at least a pair of subprograms that set and get
 elements of type :ada:`T` based on another type. We might want to convert
@@ -1224,19 +1291,374 @@ In this example, we declare the array :ada:`A` with elements of both
 we call the :ada:`Average` function from :ada:`Ops`, an instance of the
 generic package :ada:`Float_Interface_Pkg.Ops`.
 
-Discussion: Generic interfaces vs. other approaches
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. TODO: Add discussion about interfaces vs. types & formal subprograms
-
-Generic synchronized interfaces
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Discussion: formal interfaces vs. other approaches
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :code-config:`reset_accumulator=True`
 
-Generic synchronized interfaces are a specialized case of generic
+In Ada, we basically have three approaches to describe interfaces for
+generic types. In addition to the approach using formal interfaces that
+we've just seen above, we also have these approaches:
+
+- Formal subprograms, which we've presented in the introductory course
+  (:doc:`../../intro-to-ada/chapters/generics`).
+
+- Signature packages, which we've discussed in a
+  :ref:`previous section <SignaturePackages>`.
+
+Let's briefly recapitulate these approaches:
+
+.. code:: ada
+
+    package Interface_Approaches is
+
+       -------------------------------
+       --  Using Formal Subprograms --
+       -------------------------------
+       package Using_Formal_Subprograms is
+
+          generic
+             type T is private;
+             with procedure P (E : T) is <>;
+          package Pkg is
+          end Pkg;
+
+       end Using_Formal_Subprograms;
+
+       -------------------------------
+       --  Using Signature Packages --
+       -------------------------------
+       package Using_Signature_Packages is
+
+          generic
+             type T2;
+             with procedure P (E : T2) is <>;
+          package Sig_Pkg is
+          end Sig_Pkg;
+
+          generic
+             type T is private;
+             with package SP is new Sig_Pkg (T, <>);
+          package Pkg is
+          end Pkg;
+
+       end Using_Signature_Packages;
+
+       -------------------------
+       --  Using Tagged Types --
+       -------------------------
+       package Using_Tagged_Types is
+
+          type I is interface;
+          procedure P (E : I) is abstract;
+
+          generic
+             type T is new I with private;
+          package Pkg is
+          end Pkg;
+
+       end Using_Tagged_Types;
+
+    end Interface_Approaches;
+
+The following subsections discuss the pros and cons of each approach.
+For the source-code examples, we'll implement a generic hash table.
+
+Interfaces using formal subprograms
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Formal subprograms, combined with a formal type, can be used to define
+an implicit interface. Let's look at the implementation of a generic hash
+table:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+
+    package Interface_Using_Formal_Function is
+
+       generic
+          type T is private;
+          with function Hash (Self : T) return Hash_Type is <>;
+       package Hash_Tables is
+          --  Missing implementation
+       end Hash_Tables;
+
+    end Interface_Using_Formal_Function;
+
+In contrast to formal interfaces, the interface described with formal
+subprograms is implicit: we don't have an explicit :ada:`interface` type
+defined here. However, the combination of type :ada:`T` and the function
+:ada:`Hash` represent an interface.
+
+The fact that we don't declare an explicit interface has the disadvantage
+of not being as obvious as when the :ada:`interface` keyword is used in
+the code. Developers are forced to recognize the design pattern: they have
+to deduce that the intention of declaring :ada:`T` and :ada:`Hash` is to
+define an interface. However, this approach has the advantage of not
+requiring the use of tagged types in the package instantiation.
+
+This is an example of a package instantiating the generic hash table:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Strings.Hash;
+
+    with Interface_Using_Formal_Function;
+    use  Interface_Using_Formal_Function;
+
+    package Instantiation_Using_Formal_Function is
+
+       type My_Type is record
+          Key   : String (1 .. 100);
+          Key_2 : String (1 .. 100);
+       end record;
+
+       function Hash (Self : My_Type) return Hash_Type is
+         (Ada.Strings.Hash (Self.Key));
+
+       function Alt_Hash (Self : My_Type) return Hash_Type is
+         (Ada.Strings.Hash (Self.Key_2));
+
+       package My_Type_Hash_Tables is new Hash_Tables (My_Type);
+
+       package My_Type_Alt_Hash_Tables is new Hash_Tables
+         (T    => My_Type,
+          Hash => Alt_Hash);
+
+    end Instantiation_Using_Formal_Function;
+
+Note that, in the declaration of the :ada:`My_Type_Hash_Tables`, we're
+not specifying the :ada:`Hash` function for the instantiation of the
+generic :ada:`Hash_Tables` package. This is possible for two reasons:
+
+- In the declaration of the formal function parameter, we're using
+  :ada:`is <>`, which automatically selects a function with the same name
+  and a compatible signature in the package instantiation if available.
+
+- For :ada:`My_Type`, we've declared a function that has the same name as
+  the formal function and the expected signature.
+
+If the above-mentioned conditions are not met, we have to provide an
+argument for the formal function parameter in the package instantiation.
+
+We may also instantiate the formal package using alternative versions of
+the function associated with the formal package. This is what we're doing
+in the declaration of the :ada:`My_Type_Alt_Hash_Tables` package. In this
+case, we're using :ada:`Alt_Hash` instead of :ada:`Hash` for the formal
+function parameter. Note that, because the name of the actual function
+doesn't match the name of the formal function, we need to indicate it
+explicitly.
+
+Interfaces using signature packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The basic form of signature packages is similar to the approach we've just
+seen using formal subprograms: a signature package defines an interface
+using a formal type and formal subprograms.
+
+Signature packages make it more explicit that the types and subprograms
+defined in the package represent an interface. This is an advantage over
+the approach using formal subprograms directly. However, using signature
+package isn't as explicit as using the :ada:`interface` keyword.
+
+As mentioned before, signature packages aren't used in isolation, but in
+combination with other generic packages. Also, they don't define anything
+themselves. These features might provide a hint that a package is used to
+represent an interface.
+
+Let's look at the implementation of a generic hash table using a signature
+package:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+
+    package Interface_Using_Signature_Package is
+
+       generic
+          type Element;
+          with function Hash (Self : Element) return Hash_Type is <>;
+       package Hashable_Signature is
+       end Hashable_Signature;
+
+       generic
+          type T is private;
+          with package T_Hashable is new Hashable_Signature (T, <>);
+       package Hash_Tables is
+          --  Missing implementation
+       end Hash_Tables;
+
+    end Interface_Using_Signature_Package;
+
+Note that this approach is more verbose than the previous one using formal
+subprograms directly. In this case, we have to declare two generic
+packages instead of one.
+
+This is an example of a package instantiating a signature package and the
+generic hash table:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Strings.Hash;
+
+    with Interface_Using_Signature_Package;
+    use  Interface_Using_Signature_Package;
+
+    package Instantiation_Using_Signature_Package is
+
+       type My_Type is record
+          Key   : String (1 .. 100);
+          Key_2 : String (1 .. 100);
+       end record;
+
+       function Hash (Self : My_Type) return Hash_Type is
+         (Ada.Strings.Hash (Self.Key));
+
+       function Alt_Hash (Self : My_Type) return Hash_Type is
+         (Ada.Strings.Hash (Self.Key_2));
+
+       package My_Type_Hashable is new Hashable_Signature
+         (My_Type, Hash);
+
+       package My_Type_Hash_Tables is new Hash_Tables
+         (My_Type, My_Type_Hashable);
+
+       package My_Type_Alt_Hashable is new Hashable_Signature
+         (My_Type, Alt_Hash);
+
+       package My_Type_Alt_Hash_Tables is new Hash_Tables
+         (My_Type, My_Type_Alt_Hashable);
+
+    end Instantiation_Using_Signature_Package;
+
+This approach shares the same advantage listed for the previous approach:
+we may use any type, not only tagged types for instantiating the generic
+package. However, when using signature packages, the generic package
+instantiation also becomes more verbose: we have to instantiate two
+packages instead of one to achieve the same result. For the example above,
+we first declare the :ada:`My_Type_Hashable` package and use it in the
+declaration of the :ada:`My_Type_Hash_Tables` package.
+
+The advantage of this approach is that the instantiation of the actual
+package (the hash table in our example) is simplified: instead of passing
+all formal subprograms as parameters to :ada:`My_Type_Hash_Tables`, we
+only need to specify the signature package which contains the complete
+interface. When implementing complex interfaces, this approach might lead
+to a cleaner design than the previous approach using formal subprograms
+directly.
+
+Similar to the previous approach, we may also instantiate the formal
+package using alternative versions of the function associated with the
+formal package. This is what we're doing in the declaration of the
+:ada:`My_Type_Alt_Hash_Tables` package.
+
+Interfaces using tagged types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Finally, let's discuss the design of generic packages using formal
+interfaces and tagged types. In contrast to the two approaches mentioned
+above, formal interfaces explicitly indicate what's the interface in the
+implementation through the :ada:`interface` keyword. No interpretation of
+design patterns is needed in this case.
+
+For the approaches we've discussed earlier (using formal subprograms and
+signature packages), we were free to use any type in the instantiation of
+the generic package. However, for generic packages using formal
+interfaces, we can only use tagged types in the instantiation. This may
+be a serious restriction, especially if we have to deal with existing code
+containing types that are *not* tagged. Fortunately, in this case, we can
+use the previous approaches to implement interfaces.
+
+Let's look at the implementation of a generic hash table using a formal
+interface:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+
+    package Interface_Using_Tagged_Types is
+
+       type Hashable is interface;
+       function Hash (Self : Hashable) return Hash_Type is abstract;
+
+       generic
+          type T is new Hashable with private;
+       package Hash_Tables is
+          --  Missing implementation
+       end Hash_Tables;
+
+    end Interface_Using_Tagged_Types;
+
+This is an example of a package instantiating the generic hash table
+using a tagged type:
+
+.. code:: ada
+
+    with Ada.Containers; use Ada.Containers;
+    with Ada.Strings.Hash;
+
+    with Interface_Using_Tagged_Types; use Interface_Using_Tagged_Types;
+
+    package Instantiation_Using_Tagged_Types is
+
+       type My_Type is new Hashable with record
+          Key   : String (1 .. 100);
+          Key_2 : String (1 .. 100);
+       end record;
+
+       function Hash (Self : My_Type) return Hash_Type is
+         (Ada.Strings.Hash (Self.Key));
+
+       package My_Type_Hash_Tables is new Hash_Tables (My_Type);
+
+    end Instantiation_Using_Tagged_Types;
+
+The instantiation of generic packages is much simpler in this case: we
+don't have to pass operations as parameters in the package instantiation.
+In this example, the declaration of :ada:`My_Type_Hash_Tables` is very
+straightforward: we just have to specify the tagged type (:ada:`My_Type`).
+All operations are *implicitly defined* in the tagged type, so we don't
+have to specify them. Conversely, we're bound to use the implementation
+associated with the type. We cannot easily replace :ada:`Hash` by
+:ada:`Alt_Hash` as in the previous approaches. In order to do that, we
+have to declare a derived type and override the :ada:`Hash` function. This
+is how we may create the :ada:`My_Type_Alt_Hash_Tables` package using the
+alternative hashing function, as we did in the previous approaches:
+
+.. code:: ada
+
+    with Ada.Containers;                   use Ada.Containers;
+    with Ada.Strings.Hash;
+
+    with Interface_Using_Tagged_Types;     use Interface_Using_Tagged_Types;
+    with Instantiation_Using_Tagged_Types; use Instantiation_Using_Tagged_Types;
+
+    package Instantiation_Using_Alt_Tagged_Types is
+
+       type My_Alt_Type is new My_Type with null record;
+
+       overriding function Hash (Self : My_Alt_Type) return Hash_Type is
+         (Ada.Strings.Hash (Self.Key_2));
+
+       package My_Type_Alt_Hash_Tables is new Hash_Tables (My_Alt_Type);
+
+    end Instantiation_Using_Alt_Tagged_Types;
+
+In this example, the :ada:`Hash` function of the :ada:`My_Alt_Type` type
+corresponds to the :ada:`Alt_Hash` function that we implemented in the
+previous approaches.
+
+Formal synchronized interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:code-config:`reset_accumulator=True`
+
+Formal synchronized interfaces are a specialized case of formal
 interfaces that can be used for task types and protected types. Since
-generic synchronized interfaces are similar to generic interfaces,
+formal synchronized interfaces are similar to formal interfaces,
 we can reuse the previous source-code example with minimal adaptations.
 
 When adapting the :ada:`Gen_Interface` package, we just need to make use
