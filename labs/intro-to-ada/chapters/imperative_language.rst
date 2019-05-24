@@ -14,6 +14,72 @@ Imperative language
 .. role:: cpp(code)
    :language: c++
 
+Hello World
+-----------
+
+Your goal with this exercise is to create an application that displays
+the message "Hello World!".
+
+.. code:: ada lab=Imperative_Language_HelloWorld
+
+    --  START LAB IO BLOCK
+    in 0:
+    out 0: Hello World!
+    --  END LAB IO BLOCK
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+    begin
+       --  Implement the application here!
+       null;
+    end Main;
+
+Greetings
+---------
+
+Your goal with this exercise is to create an application that, given a
+name (e.g. "John"), displays the message "Hello John!". In order to do
+this, you'll complete the :ada:`Greet` procedure.
+
+    - Hint: you can use the concatenation operator (:ada:`&`).
+
+For the moment, don't worry about the details of the :ada:`Main` procedure.
+You should just focus on implementing the application in the body of the
+:ada:`Greet` procedure.
+
+
+.. code:: ada lab=Imperative_Language_Greetings
+
+    --  START LAB IO BLOCK
+    in 0: John
+    out 0: Hello John!
+    in 1: Joanna
+    out 1: Hello Joanna!
+    --  END LAB IO BLOCK
+
+    with Ada.Command_Line; use Ada.Command_Line;
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    procedure Main is
+
+       procedure Greet (Name : String) is
+       begin
+          --  Implement the application here!
+          null;
+       end Greet;
+
+    begin
+       if Argument_Count < 1 then
+          Put_Line ("ERROR: missing arguments! Exiting...");
+          return;
+       elsif Argument_Count > 1 then
+          Put_Line ("Ignoring additional arguments...");
+       end if;
+
+       Greet (Argument (1));
+    end Main;
+
 Numbers
 -------
 
