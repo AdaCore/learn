@@ -18,6 +18,8 @@ Access Types
 Null & Not Null Access
 ----------------------
 
+.. sectionauthor:: Bob Duff
+
 Ada, like many languages, defines a special :ada:`null` value for access
 types. All values of an access type designate some object of the
 designated type, except for :ada:`null`, which does not designate any
@@ -372,6 +374,10 @@ caller.
 
 Accessibility checks
 --------------------
+
+.. sectionauthor:: Ramón Fernández
+
+.. sectionauthor:: Bob Duff
 
 Introduction
 ~~~~~~~~~~~~

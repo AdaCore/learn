@@ -12,6 +12,7 @@ Standard library
 .. role:: cpp(code)
    :language: c++
 
+.. sectionauthor:: Gustavo A. Hoffmann
 
 Standard package
 ----------------

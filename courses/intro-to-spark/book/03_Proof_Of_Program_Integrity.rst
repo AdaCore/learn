@@ -4,6 +4,8 @@ Proof of Program Integrity
 .. role:: ada(code)
    :language: ada
 
+.. sectionauthor:: Yannick Moy
+
 This section presents the proof capability of GNATprove, a major tool for
 the SPARK language. We focus here on the simpler proofs that you'll need to
 write to verify your program's integrity.  The primary objective of

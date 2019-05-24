@@ -14,6 +14,7 @@ Subprograms
 .. role:: cpp(code)
    :language: c++
 
+.. sectionauthor:: Raphaël Amiard
 
 Subprograms
 -----------

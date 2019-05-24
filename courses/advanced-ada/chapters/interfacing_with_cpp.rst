@@ -15,6 +15,8 @@ Interfacing with C and C++
 .. role:: cpp(code)
    :language: c++
 
+.. sectionauthor:: Gustavo A. Hoffmann
+
 Interfacing with C
 ------------------
 

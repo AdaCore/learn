@@ -13,8 +13,9 @@ Generics
 .. role:: cpp(code)
    :language: c++
 
-.. _FormalPackages:
+.. sectionauthor:: Gustavo A. Hoffmann
 
+.. _FormalPackages:
 Formal packages
 ---------------
 

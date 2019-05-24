@@ -10,6 +10,8 @@ SPARK Overview
 .. role:: ada(code)
    :language: ada
 
+.. sectionauthor:: Yannick Moy
+
 This tutorial is an interactive introduction to the SPARK programming
 language and its formal verification tools. You need not know any specific
 programming language (although going over the

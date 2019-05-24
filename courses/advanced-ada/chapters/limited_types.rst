@@ -18,6 +18,8 @@ Limited Types
 Limited types and aggregates
 ----------------------------
 
+.. sectionauthor:: Bob Duff
+
 Full coverage rules
 ~~~~~~~~~~~~~~~~~~~
 
@@ -429,6 +431,8 @@ which might mean "default-initialize to the empty set" or might mean
 Return objects
 --------------
 
+.. sectionauthor:: Bob Duff
+
 Extended return statements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -622,6 +626,8 @@ whenever you want a local name for the function result:
 Building objects from constructors
 ----------------------------------
 
+.. sectionauthor:: Bob Duff
+
 :code-config:`reset_accumulator=True`
 
 We've earlier seen examples of constructor functions for limited types
@@ -802,6 +808,8 @@ we can't copy a limited object into some other object:
 
 Default initialization
 ----------------------
+
+.. sectionauthor:: Bob Duff
 
 :code-config:`reset_accumulator=True`
 

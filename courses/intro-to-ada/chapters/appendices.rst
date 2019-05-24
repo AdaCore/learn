@@ -14,6 +14,7 @@ Appendices
 .. role:: cpp(code)
    :language: c++
 
+.. sectionauthor:: Gustavo A. Hoffmann
 
 Appendix A: Generic Formal Types
 --------------------------------
