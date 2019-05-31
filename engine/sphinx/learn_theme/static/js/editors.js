@@ -391,10 +391,12 @@ function create_editor(resource, container, content, editors, counter) {
         editor.setOption("readOnly", true);
     }
 
-    // set the editor to use exactly the vertical space it needs
+    // set the editor to use exactly the minimum vertical space it needs
+    //  but set maxLines large enough so that it auto sizes when lines are added
     editor.setOptions({
         minLines: editor.session.doc.getLength(),
-        maxLines: editor.session.doc.getLength()
+    //    maxLines: editor.session.doc.getLength()
+        maxLines: 50
     });
 
     editor.resize();
