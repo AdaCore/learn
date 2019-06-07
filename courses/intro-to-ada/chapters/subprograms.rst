@@ -19,35 +19,29 @@ Subprograms
 Subprograms
 -----------
 
-So far, we have used procedures extensively, mostly to have a main body of code
-to execute, and we have also seen a function or two. Those entities are
-collectively known as *subprograms*.
+So far, we have used procedures, mostly to have a main body of code
+to execute. Procedures are one kind of *subprogram*.
 
 There are two kinds of subprograms in Ada, *functions* and *procedures*. The
 distinction between the two is that a function returns a value, and a procedure
 does not.
 
+This example shows the declaration and definition of a function:
+
 .. code:: ada no_button
 
-    package Week_3 is
-       type Days is (Monday, Tuesday, Wednesday,
-                     Thursday, Friday, Saturday, Sunday);
+    function Increment (I : Integer) return Integer;
+    --  We declare (but don't define) a function with one
+    --  parameter, returning an integer value
 
-       function Get_Workload (Day : Days) return Natural;
-       --  We declare (but don't define) a function with one
-       --  parameter, returning a Natural value (a non-negative Integer)
-    end Week_3;
+.. code:: ada no_button
 
-As we saw earlier in the packages section, if you want to declare a subprogram
-in a package, and have that subprogram available to be invoked from client
-("with"ing) units, you need to do two things:
+    --  We define the Increment function
 
-* Put its specification (name, parameters, result type if a function) in the
-  package specification, along with any comments / documentation you wish to
-  provide
-
-* Put the full declaration of the subprogram (its body, or implementation) in
-  the package body
+    function Increment (I : Integer) return Integer is
+    begin
+        return I + 1;
+    end Increment;
 
 Subprograms in Ada can, of course, have parameters. One syntactically important
 note is that a subprogram which has no parameters does not have a parameter
@@ -59,76 +53,31 @@ section at all, for example:
 
    function Func return Integer;
 
-Here's another variation on the Week example:
+Here's another variation on the previous example:
 
 :code-config:`reset_accumulator=True;accumulate_code=True`
 
 .. code:: ada no_button
 
-    package Week_4 is
-       type Days is (Monday, Tuesday, Wednesday,
-                     Thursday, Friday, Saturday, Sunday);
+    function Increment_By
+      (I    : Integer := 0;
+       Incr : Integer := 1) return Integer;
+    --                ^ Default value for parameters
 
-       function Get_Day_Name
-          (Day : Days := Monday) return String;
-       --                               ^ We can return any type,
-       --                                 even indefinite ones
-       --             ^ Default value for parameter
-    end Week_4;
+In this example, we see that parameters can have default values. When calling the
+subprogram, you can then omit parameters if they have a default value. Unlike
+C/C++, a call to a subprogram without parameters does not include parentheses.
 
-This example illustrates several points:
-
-- Parameters can have default values. When calling the subprogram, you can
-  then omit parameters if they have a default value. Unlike C/C++, a call to
-  a subprogram without parameters does not include parentheses.
-
-- The return type of a function can be any type; a function can return a value
-  whose size is unknown at compile time. Likewise the parameters can be of
-  any type.
-
-.. admonition:: In other languages
-
-    Returning variable size objects in languages lacking a garbage collector is
-    a bit complicated implementation-wise, which is why C and C++ don't allow
-    it, prefering to depend on explicit dynamic allocation / free from the user.
-
-    The problem is that explicit storage management is unsafe as soon as you
-    want to collect unused memory. Ada's ability to return variable size
-    objects will remove one use case for dynamic allocation, and hence, remove
-    one potential source of bugs from your programs.
-
-    Rust follows the C/C++ model, but with safe pointer semantics.
-    However, dynamic allocation is still used. Ada can benefit from
-    an eventual performance edge because it can use any model.
-
-    .. amiard: TODO: say less or say more
-
-As we showed briefly above, if a subprogram declaration appears in a package
-declaration then a subprogram body needs to be supplied in the package body.
-For the ``Week`` package above, we could have the following body:
+This is the implementation of the function above:
 
 .. code:: ada no_button
 
-    package body Week_4 is
-       --  Implementation of the Get_Day_Name function
-       function Get_Day_Name (Day : Days := Monday) return String is
-       begin
-          return
-            (case Day is
-             when Monday => "Monday",
-             when Tuesday => "Tuesday",
-             when Wednesday => "Wednesday",
-             when Thursday => "Thursday",
-             when Friday => "Friday",
-             when Saturday => "Saturday",
-             when Sunday => "Sunday");
-       end Get_Day_Name;
-    end Week_4;
-
-(This example is for illustrative purposes only.  There is a built-in mechanism,
-the 'Image attribute for scalar types, that returns the name (as a String) of
-any element of an enumeration type.  For example Days'Image(Monday) is "MONDAY".)
-
+    function Increment_By
+      (I    : Integer := 0;
+       Incr : Integer := 1) return Integer is
+    begin
+       return I + Incr;
+    end Increment_By;
 
 Subprogram calls
 ~~~~~~~~~~~~~~~~
@@ -139,27 +88,43 @@ We can then call our subprogram this way:
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
-    with Week_4;
+    with Increment_By;
 
-    procedure Show_Days is
+    procedure Show_Increment is
+       A, B, C : Integer;
     begin
-       Put_Line (Week_4.Get_Day_Name);
-       --             ^ Parameterless call, value of Day parameter is Monday
-       for Day in Week_4.Days loop
-          Put_Line (Week_4.Get_Day_Name (Day));
-          --                           ^ Regular parameter passing
-       end loop;
+       C := Increment_By;
+       --              ^ Parameterless call, value of I is 0
+       --                and Incr is 1
 
-       Put_Line (Week_4.Get_Day_Name (Day => Week_4.Friday));
-       --                           ^ Named parameter passing
-    end Show_Days;
+       Put_Line ("Using defaults for Increment_By is "
+                 & Integer'Image (C));
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
+       A := 10;
+       B := 3;
+       C := Increment_By (A, B);
+       --                 ^ Regular parameter passing
+
+       Put_Line ("Increment of " & Integer'Image (A)
+                 & " with "      & Integer'Image (B)
+                 & " is "        & Integer'Image (C));
+
+       A := 20;
+       B := 5;
+       C := Increment_By (I    => A,
+                          Incr => B);
+        --                ^ Named parameter passing
+
+       Put_Line ("Increment of " & Integer'Image (A)
+                 & " with "      & Integer'Image (B)
+                 & " is "        & Integer'Image (C));
+    end Show_Increment;
 
 Ada allows you to name the parameters when you pass them, whether they have a
 default or not. There are some rules:
 
 - Positional parameters come first.
+
 - A positional parameter cannot follow a named parameter.
 
 .. ?? I don't understand the following sentence.  If the param has a
@@ -170,25 +135,50 @@ As a convention, people usually name parameters at the call site if the
 function's corresponding parameters has a default value. However, it is also
 perfectly acceptable to name every parameter if it makes the code clearer.
 
-.. code:: ada no_button
+Nested subprograms
+~~~~~~~~~~~~~~~~~~
 
-    package Week_5 is
-       type Days is (Monday, Tuesday, Wednesday,
-                     Thursday, Friday, Saturday, Sunday);
+As briefly mentioned earlier, Ada allows you to declare one subprogram inside
+of another.
 
-       type Language is (English, Italian);
+This is useful for two reasons:
 
-       function Get_Day_Name
-         (Day : Days; Lang : Language := English) return String;
-    end Week_5;
+- It lets you organize your programs in a cleaner fashion. If you need a
+  subprogram only as a "helper" for another subprogram, then the principle of
+  localization indicates that the helper subprogram should be declared nested.
 
-    with Week_5; use Week_5;
+- It allows you to share state easily in a controlled fashion, because the
+  nested subprograms have access to the parameters, as well as any local
+  variables, declared in the outer scope.
+
+For the previous example, we can move the duplicated code (call to
+:ada:`Put_Line`) to a separate procedure. This is a shortened version with
+the nested :ada:`Display_Result` procedure.
+
+.. code:: ada
+    :class: ada-run
+
     with Ada.Text_IO; use Ada.Text_IO;
+    with Increment_By;
 
-    procedure Main is
+    procedure Show_Increment is
+       A, B, C : Integer;
+
+       procedure Display_Result is
+       begin
+          Put_Line ("Increment of " & Integer'Image (A)
+                    & " with "      & Integer'Image (B)
+                    & " is "        & Integer'Image (C));
+       end Display_Result;
+
     begin
-       Put_Line (Get_Day_Name (Monday, Lang => Italian));
-    end Main;
+       A := 10;
+       B := 3;
+       C := Increment_By (A, B);
+       Display_Result;
+    end Show_Increment;
+
+:code-config:`reset_accumulator=True;accumulate_code=False`
 
 Function calls
 ~~~~~~~~~~~~~~
@@ -413,64 +403,12 @@ acts like an uninitialized variable when the subprogram is invoked.
            null;
         end Outp;
 
-Nested subprograms
-~~~~~~~~~~~~~~~~~~
-
-As briefly mentioned earlier, Ada allows you to declare one subprogram inside
-of another.
-
-This is useful for two reasons:
-
-- It lets you organize your programs in a cleaner fashion. If you need a
-  subprogram only as a "helper" for another subprogram, then the principle of
-  localization indicates that the helper subprogram should be declared nested.
-
-- It allows you to share state easily in a controlled fashion, because the
-  nested subprograms have access to the parameters, as well as any local
-  variables, declared in the outer scope.
-
-.. code:: ada
-    :class: ada-run
-
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Lists is
-
-       type String_Array is array (Positive range <>) of Unbounded_String;
-
-       procedure Show_List (Strings : String_Array) is
-          Item_Number : Positive := 1;
-
-          procedure Show_Item (Item : Unbounded_String) is
-          begin
-             Put_Line (Positive'Image (Item_Number)
-                       & ". " & To_String (Item));
-             Item_Number := Item_Number + 1;
-          end Show_Item;
-
-       begin
-          for Item of Strings loop
-             Show_Item (Item);
-          end loop;
-       end Show_List;
-
-       List : String_Array :=
-         (To_Unbounded_String ("This"),
-          To_Unbounded_String ("is"),
-          To_Unbounded_String ("a"),
-          To_Unbounded_String ("list"));
-    begin
-       Show_List (List);
-    end Lists;
-
 Forward declaration of subprograms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As we saw earlier, a subprogram can be declared without being fully defined,
-for example in a package specification. This is possible in general, and can be
-useful if you need subprograms to be mutually recursive, as in the example
-below:
+This is possible in general, and can be useful if you need subprograms to be
+mutually recursive, as in the example below:
 
 .. ?? This example is rather contrived but I suspect that any realistic
 .. ?? example would be in the context of recursive data structures and
