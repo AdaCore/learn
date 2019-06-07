@@ -23,11 +23,11 @@ Introduction to Ada
 
     Introduction <chapters/introduction>
     Imperative Language <chapters/imperative_language>
+    Subprograms <chapters/subprograms>
     Strongly Typed Language <chapters/strongly_typed_language>
     Records <chapters/records>
     Arrays <chapters/arrays>
     Modular Programming <chapters/modular_programming>
-    Subprograms <chapters/subprograms>
     More About Types <chapters/more_about_types>
     Privacy <chapters/privacy>
     Generics <chapters/generics>

@@ -553,6 +553,62 @@ generally result in a run-time error.
            null;
         end Indefinite_Subtypes;
 
+Returning unconstrained arrays
+------------------------------
+
+The return type of a function can be any type; a function can return a value
+whose size is unknown at compile time. Likewise, the parameters can be of
+any type.
+
+For example, this is a function that returns an unconstrained :ada:`String`:
+
+.. code:: ada
+
+   with Ada.Text_IO; use Ada.Text_IO;
+
+   procedure Main is
+
+       type Days is (Monday, Tuesday, Wednesday,
+                     Thursday, Friday, Saturday, Sunday);
+
+       function Get_Day_Name (Day : Days := Monday) return String is
+       begin
+          return
+            (case Day is
+             when Monday => "Monday",
+             when Tuesday => "Tuesday",
+             when Wednesday => "Wednesday",
+             when Thursday => "Thursday",
+             when Friday => "Friday",
+             when Saturday => "Saturday",
+             when Sunday => "Sunday");
+       end Get_Day_Name;
+
+    begin
+       Put_Line ("First day is " & Get_Day_Name (Days'First));
+    end Main;
+
+(This example is for illustrative purposes only.  There is a built-in mechanism,
+the 'Image attribute for scalar types, that returns the name (as a String) of
+any element of an enumeration type.  For example Days'Image(Monday) is "MONDAY".)
+
+.. admonition:: In other languages
+
+    Returning variable size objects in languages lacking a garbage collector is
+    a bit complicated implementation-wise, which is why C and C++ don't allow
+    it, preferring to depend on explicit dynamic allocation / free from the user.
+
+    The problem is that explicit storage management is unsafe as soon as you
+    want to collect unused memory. Ada's ability to return variable size
+    objects will remove one use case for dynamic allocation, and hence, remove
+    one potential source of bugs from your programs.
+
+    Rust follows the C/C++ model, but with safe pointer semantics.
+    However, dynamic allocation is still used. Ada can benefit from
+    an eventual performance edge because it can use any model.
+
+    .. amiard: TODO: say less or say more
+
 Declaring arrays (2)
 --------------------
 
