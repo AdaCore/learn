@@ -14,7 +14,7 @@ Modular programming
 
 .. sectionauthor:: Raphaël Amiard
 
-So far, our examples have been simple standalone procedures.  Ada is helpful in
+So far, our examples have been simple standalone subprograms.  Ada is helpful in
 that regard, since it allows arbitrary declarations in a declarative part. We
 were thus able to declare our types and variables in the bodies of main
 procedures.
@@ -36,18 +36,13 @@ Here is an example of a package declaration in Ada:
 
     package Week is
 
-       --  This is a declarative part. You can put only
-       --  declarations here, no statements
-
-       type Days is (Monday, Tuesday, Wednesday,
-                     Thursday, Friday, Saturday, Sunday);
-
-       type Workload_Type is array (Days range <>) of Natural;
-
-       Workload : constant Workload_Type :=
-          (Monday .. Thursday => 8,
-           Friday             => 7,
-           Saturday | Sunday  => 0);
+       Mon : constant String := "Monday";
+       Tue : constant String := "Tuesday";
+       Wed : constant String := "Wednesday";
+       Thu : constant String := "Thursday";
+       Fri : constant String := "Friday";
+       Sat : constant String := "Saturday";
+       Sun : constant String := "Sunday";
 
     end Week;
 
@@ -63,12 +58,7 @@ And here is how you use it:
 
     procedure Main is
     begin
-       for D in Week.Days loop
-       --       ^ Reference to Week.Days enumeration type
-          Put_Line
-            ("Workload for day " & Week.Days'Image (D)
-             & " is " & Natural'Image (Week.Workload (D)));
-       end loop;
+       Put_Line ("First day of the week is " & Week.Mon);
     end Main;
 
 Packages let you make your code modular, separating your programs into
@@ -152,12 +142,7 @@ this tutorial.
        use Week;
        --  Make every entity of the Week package directly visible.
     begin
-       for D in Days loop
-       --       ^ Reference to Week.Days enum type
-          Put_Line  -- Put_Line comes from Ada.Text_IO.
-            ("Workload for day " & Days'Image (D)
-             & " is " & Natural'Image (Workload (D)));
-       end loop;
+       Put_Line ("First day of the week is " & Mon);
     end Main;
 
 As you can see in the example above:
@@ -173,41 +158,90 @@ As you can see in the example above:
 Package body
 ------------
 
-In the somewhat artificial example above, the :ada:`Week` package only has
+In the simple example above, the :ada:`Week` package only has
 declarations and no body. That's not a mistake: in a package specification,
 which is what is illustrated above, you cannot declare bodies. Those have to be
 in the package body.
 
 .. code:: ada no_button
 
-    package Week_2 is
+    package Operations is
 
-       type Days is (Monday, Tuesday, Wednesday,
-          Thursday, Friday, Saturday, Sunday);
+       -- Declaration
+       function Increment_By
+         (I    : Integer;
+          Incr : Integer := 0) return Integer;
 
-       function Get_Workload (Day : Days) return Natural;
+       function Get_Increment_Value return Integer;
 
-    end Week_2;
+    end Operations;
 
-    package body Week_2 is
+.. code:: ada no_button
 
-       --  The body contains additional declarations, not visible from the
-       --  spec, or anywhere outside of the body
-       type WorkLoad_Type is array (Days range <>) of Natural;
-       Workload : constant Workload_Type :=
-          (Monday .. Thursday => 8, Friday => 7, Saturday | Sunday => 0);
+    package body Operations is
 
-       function Get_Workload (Day : Days) return Natural is
+       Last_Increment : Integer := 1;
+
+       function Increment_By
+         (I    : Integer;
+          Incr : Integer := 0) return Integer is
        begin
-          return Workload (Day);
-       end Get_Workload;
-    end Week_2;
+          if Incr /= 0 then
+             Last_Increment := Incr;
+          end if;
 
-Here we can see that the body of the :ada:`Get_Workload` function has to be
+          return I + Last_Increment;
+       end Increment_By;
+
+       function Get_Increment_Value return Integer is
+       begin
+          return Last_Increment;
+       end Get_Increment_Value;
+
+    end Operations;
+
+Here we can see that the body of the :ada:`Increment_By` function has to be
 declared in the body. Coincidentally, introducing a body allows us to put the
-:ada:`Workload_Type` array type and the constant :ada:`Workload` in the body,
-and make them inaccessible to the user of the :ada:`Week_2` package, providing a
-first form of encapsulation.
+:ada:`Last_Increment` variable in the body, and make them inaccessible to the
+user of the :ada:`Operations` package, providing a first form of encapsulation.
 
 This works because entities declared in the body are *only* visible in the
 body.
+
+This example shows how :ada:`Last_Increment` is used indirectly:
+
+.. code:: ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Operations;
+
+    procedure Main is
+       use Operations;
+
+       I : Integer := 0;
+       R : Integer;
+
+       procedure Display_Update_Values is
+          Incr : constant Integer := Get_Increment_Value;
+       begin
+          Put_Line (Integer'Image (I)
+                    & " incremented by " & Integer'Image (Incr)
+                    & " is "             & Integer'Image (R));
+          I := R;
+       end Display_Update_Values;
+    begin
+       R := Increment_By (I);
+       Display_Update_Values;
+       R := Increment_By (I);
+       Display_Update_Values;
+
+       R := Increment_By (I, 5);
+       Display_Update_Values;
+       R := Increment_By (I);
+       Display_Update_Values;
+
+       R := Increment_By (I, 10);
+       Display_Update_Values;
+       R := Increment_By (I);
+       Display_Update_Values;
+    end Main;
