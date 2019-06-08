@@ -564,9 +564,9 @@ For example, this is a function that returns an unconstrained :ada:`String`:
 
 .. code:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Main is
+    procedure Main is
 
        type Days is (Monday, Tuesday, Wednesday,
                      Thursday, Friday, Saturday, Sunday);
