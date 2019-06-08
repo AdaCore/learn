@@ -167,7 +167,7 @@ in the package body.
 
     package Operations is
 
-       -- Declaration
+       --  Declaration
        function Increment_By
          (I    : Integer;
           Incr : Integer := 0) return Integer;
