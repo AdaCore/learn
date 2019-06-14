@@ -191,6 +191,8 @@ warnings, their purpose and how to activate them.
 ``-gnatwa`` switch and warning suppression
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. sectionauthor:: Bob Duff
+
 Let's start by recapitulating the difference between a *warning* and an
 *error*. First, errors are generally violations of the Ada language rules
 as specified in the Ada Reference Manual; warnings are GNAT specific.
