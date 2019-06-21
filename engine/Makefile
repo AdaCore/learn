@@ -25,7 +25,7 @@ test_ada_intro:
 
 test_spark_intro:
 	@echo "===== INTRO TO SPARK ====="
-	@$(TEST_DRIVER) ../courses/intro-to-spark/book/*.rst
+	@$(TEST_DRIVER) ../courses/intro-to-spark/chapters/*.rst
 	@echo ""
 
 test_advanced_ada:
