@@ -35,7 +35,6 @@ LEARN.ADACORE.COM
 
        About <about>
        Courses <courses/courses>
-       Books <books/books>
 
     .. toctree::
        :hidden:
