@@ -284,7 +284,7 @@ than the length of parameter ``P`` by stating this property in the postcondition
 
 :code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
-.. code:: ada prove_button
+.. code:: ada prove_report_all_button
 
     package Types is
        type Int_Array is array (Positive range <>) of Integer;
@@ -664,7 +664,7 @@ and ``Rotate_Right``:
 
    package Bad_Genetics is
       type Animal is (Ape, Bee, Cat, Dog);
-      Mutant : Animal := Bee xor Dog; -- Error
+      Mutant : Animal := Bee xor Dog;  --  ERROR
       pragma Assert (Mutant = Cat);
    end Bad_Genetics;
 
@@ -676,6 +676,7 @@ in legal SPARK (or Ada), then the following approach will work (the type ``Unsig
 is an 8-bit modular type declared in the predefined package ``Interfaces``).
 
 .. code:: ada
+   :class: ada-syntax-only
 
     with Interfaces; use Interfaces;
     package Unethical_Genetics is
@@ -791,12 +792,12 @@ different types.
        B : Boolean := True;
        C : Character := 'a';
     begin
-       F := I; -- Illegal
-       I := A; -- Illegal
-       A := B; -- Illegal
-       M := A; -- Illegal
-       B := C; -- Illegal
-       C := F; -- Illegal
+       F := I;  --  ERROR
+       I := A;  --  ERROR
+       A := B;  --  ERROR
+       M := A;  --  ERROR
+       B := C;  --  ERROR
+       C := F;  --  ERROR
     end Bad_Conversions;
 
 The compiler reports a mismatch on every statement in the above procedure
@@ -820,12 +821,12 @@ type and its parent typ, but all other conversions are illegal:
        B : Boolean := True;
        C : Character := 'a';
     begin
-       F := Float (I);      -- Legal
-       I := Integer (A);    -- Illegal
-       A := Animal (B);     -- Illegal
-       M := My_Animal (A);  -- Legal
-       B := Boolean (C);    -- Illegal
-       C := Character (F);  -- Illegal
+       F := Float (I);       --  OK
+       I := Integer (A);     --  ERROR
+       A := Animal (B);      --  ERROR
+       M := My_Animal (A);   --  OK
+       B := Boolean (C);     --  ERROR
+       C := Character (F);   --  ERROR
     end Bad_Conversions;
 
 Although an enumeration value cannot be converted to an integer (or *vice

@@ -220,7 +220,7 @@ errors entails:
 For example, here is a revised version of the previous example, which
 can guarantee through proof that no possible run-time error can be raised:
 
-.. code:: ada prove_button
+.. code:: ada prove_report_all_button
 
     package No_Runtime_Errors is
 
