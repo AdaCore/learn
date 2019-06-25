@@ -143,13 +143,12 @@ and Ada languages. The aim when designing the SPARK subset of Ada was to
 create the largest possible subset of Ada that was still amenable to simple
 specification and sound verification.
 
-The most notable exclusions from Ada include exceptions and access types
-(including related features such as allocators), both of which are known to
-considerably increase the amount of user-written annotations required. Goto
-statements and controlled types are also not supported since they introduce
-non-trivial control flow. The two remaining restrictions relate to
-side-effects in expressions and aliasing of names, which we now cover in
-more detail.
+The most notable restrictions from Ada are related to exceptions and access
+types, both of which are known to considerably increase the amount of
+user-written annotations required for full support. Goto statements and
+controlled types are also not supported since they introduce non-trivial
+control flow. The two remaining restrictions relate to side-effects in
+expressions and aliasing of names, which we now cover in more detail.
 
 
 Limitations
@@ -273,9 +272,7 @@ why aliasing is forbidden in SPARK:
   subprogram call may depend on compiler-specific attributes, such as
   parameter passing mechanisms, when its parameters are aliased.
 
-Since access types (`pointers
-<https://en.m.wikipedia.org/wiki/Pointer_(computer_programming)>`_ in Ada)
-are not allowed in SPARK, aliasing can only occur as part of the parameter
+Aliasing can occur as part of the parameter
 passing that occurs in a subprogram call. Functions have no side-effects in
 SPARK, so aliasing of parameters in function calls isn't problematic; we
 need only consider procedure calls. When a procedure is called, SPARK
@@ -328,6 +325,36 @@ that the postcondition of ``Move_To_Total`` is not violated on this
 second call since integer parameters are passed by copy and the
 postcondition is checked before the copy-back from the formal
 parameters to the actual arguments.
+
+Aliasing can also occur as a result of using access types (`pointers
+<https://en.m.wikipedia.org/wiki/Pointer_(computer_programming)>`_ in Ada).
+These are restricted in SPARK so that only benign aliasing is allowed, when
+both names are only used to read the data. In particular, assignment between
+access objects operates a transfer of ownership, where the source object loses
+its permission to read or write the underlying allocated memory.
+
+Procedure ``Ownership_Transfer`` is an example of code that is legal in Ada but
+rejected in SPARK due to aliasing:
+
+.. code:: ada run_button prove_flow_button
+
+    procedure Ownership_Transfer is
+       type Int_Ptr is access Integer;
+       X   : Int_Ptr;
+       Y   : Int_Ptr;
+       Tmp : Integer;
+    begin
+       X := new Integer'(1);
+       X.all := X.all + 1;
+       Y := X;
+       Y.all := Y.all + 1;
+       X.all := X.all + 1;  --  illegal
+       X.all := 1;          --  illegal
+       Tmp   := X.all;      --  illegal
+    end Ownership_Transfer;
+
+After the assignment of ``X`` to ``Y``, variable ``X`` cannot be used anymore
+to read or write the underlying allocated memory.
 
 Designating SPARK Code
 ---------------------------------------------------------------------
@@ -614,7 +641,7 @@ word at the correct index in a dictionary.
       with SPARK_Mode => On
     is
        subtype Letter is Character range 'a' .. 'z';
-       type String_Access is access String;
+       type String_Access is access all String;
        type Dictionary is array (Letter) of String_Access;
 
        procedure Store (D : in out Dictionary; W : String);
@@ -630,18 +657,20 @@ word at the correct index in a dictionary.
        end Store;
     end P;
 
-This code is not correct: access types are not part of the SPARK subset. In
-this case, they are very useful because without them we can't store
-arbitrarily long strings in an array. One solution here is to use
-:ada:`SPARK_Mode` to separate parts of the access type from the rest of the
-code in a fine grained manner.
+This code is not correct: general access types are not part of the SPARK
+subset. Not that we could use here a pool-specific access type for
+``String_Access`` by removing the keyword ``all`` in its definition. In the
+case where it's necessary to keep a general access type (for example to be able
+to store pointers to variables on the stack), another solution here is to use
+:ada:`SPARK_Mode` to separate the definition of ``String_Access`` from the rest
+of the code in a fine grained manner.
 
 
 Example #7
 ~~~~~~~~~~
 
-Here's a new version of the previous example, which we've modified to hide
-the access type inside the private part of package ``P``, using ``pragma
+Here's a new version of the previous example, which we've modified to hide the
+general access type inside the private part of package ``P``, using ``pragma
 SPARK_Mode (Off)`` at the start of the private part.
 
 .. code:: ada prove_flow_button
@@ -660,13 +689,13 @@ SPARK_Mode (Off)`` at the start of the private part.
     private
        pragma SPARK_Mode (Off);
 
-       type String_Access is access String;
+       type String_Access is access all String;
 
        function New_String_Access (W : String) return String_Access is
          (new String'(W));
     end P;
 
-Since the access type is defined and used inside of a part of the code
+Since the general access type is defined and used inside of a part of the code
 ignored by GNATprove, this code is correct.
 
 
@@ -693,7 +722,7 @@ previously.
     private
        pragma SPARK_Mode (Off);
 
-       type String_Access is access String;
+       type String_Access is access all String;
 
        function New_String_Access (W : String) return String_Access is
          (new String'(W));
@@ -735,7 +764,7 @@ another package named ``Q``.
     private
        pragma SPARK_Mode (Off);
 
-       type String_Access is access String;
+       type String_Access is access all String;
 
        function New_String_Access (W : String) return String_Access is
          (new String'(W));
