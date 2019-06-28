@@ -148,7 +148,7 @@ statement level, so the following is not allowed:
     package body Volatile_Read is
        procedure P (Y : out Integer) is
        begin
-          Y := X - X; -- Not legal SPARK
+          Y := X - X;  --  ERROR
        end P;
     end Volatile_Read;
 
@@ -185,7 +185,7 @@ parameters:
 .. code:: ada prove_flow_button
 
    function Bad_Function (X, Y : Integer; Sum, Max : out Integer) return Boolean;
-   --  Not legal SPARK, since "out" parameters are not allowed
+   --  ERROR, since "out" parameters are not allowed
 
 More generally, SPARK does not allow functions that have a side effect
 in addition to returning their result, as is typical of many idioms in other
@@ -205,7 +205,7 @@ languages, for example when setting a new value and returning the previous one:
        function Set (V : Integer) return Integer is
           Previous : constant Integer := Value;
        begin
-          Value := V;  -- Not legal SPARK
+          Value := V;  --  ERROR
           return Previous;
        end Set;
 

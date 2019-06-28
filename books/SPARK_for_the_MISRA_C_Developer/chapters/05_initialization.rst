@@ -300,7 +300,7 @@ errors, both for records:
        type Rec is record
           X, Y, Z : Integer;
        end record;
-       R : Rec := (X => 1); -- Error, Y and Z not specified
+       R : Rec := (X => 1);  --  ERROR, Y and Z not specified
     end Init_Record;
 
 and for arrays:
@@ -309,7 +309,7 @@ and for arrays:
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
-       A : Arr := (1 => 1); -- Error, elements 2..10 not specified
+       A : Arr := (1 => 1);  --  ERROR, elements 2..10 not specified
     end Init_Array;
 
 Similarly, redundant initialization leads to compilation errors for records:
@@ -321,7 +321,7 @@ Similarly, redundant initialization leads to compilation errors for records:
        type Rec is record
           X, Y, Z : Integer;
        end record;
-       R : Rec := (X => 1, Y => 1, Z => 1, X => 2); -- Error, X duplicated
+       R : Rec := (X => 1, Y => 1, Z => 1, X => 2);  --  ERROR, X duplicated
     end Init_Record;
 
 and for arrays:
@@ -331,7 +331,7 @@ and for arrays:
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
-       A : Arr := (1 .. 8 => 1, 9 .. 10 => 2, 7 => 3); -- error, A(7) duplicated
+       A : Arr := (1 .. 8 => 1, 9 .. 10 => 2, 7 => 3);  --  ERROR, A(7) duplicated
     end Init_Array;
 
 Finally, while it is legal in Ada to leave uninitialized parts in a record or
@@ -346,7 +346,7 @@ initialized, both for records:
        type Rec is record
           X, Y, Z : Integer;
        end record;
-       R : Rec := (X => 1, others => <>); -- Error, Y and Z not specified
+       R : Rec := (X => 1, others => <>);  --  ERROR, Y and Z not specified
     end Init_Record;
 
 and for arrays:
@@ -355,5 +355,5 @@ and for arrays:
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
-       A : Arr := (1 .. 8 => 1, 9 .. 10 => <>); -- Error, A(9..10) not specified
+       A : Arr := (1 .. 8 => 1, 9 .. 10 => <>);  --  ERROR, A(9..10) not specified
     end Init_Array;
