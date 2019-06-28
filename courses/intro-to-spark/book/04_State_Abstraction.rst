@@ -45,7 +45,7 @@ implementation.
 
 Take a look at the example code shown below.
 
-.. code:: ada prove_button
+.. code:: ada prove_report_all_button
 
     procedure Increase (X : in out Integer) with
       Global => null,
@@ -60,7 +60,7 @@ Take a look at the example code shown below.
 We've written a specification of the subprogram ``Increase`` to say that it's
 called with a single argument, a variable of type :ada:`Integer` whose
 initial value is less than 100. Our contract says that the only effect of
-the subproram is to increase the value of its argument.
+the subprogram is to increase the value of its argument.
 
 
 Why is Abstraction Useful?
