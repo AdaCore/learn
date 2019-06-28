@@ -615,7 +615,7 @@ the left operand and only evaluate the right operand when its value may affect
 the result.
 
 .. code:: ada
-   :class: ada-expect-compile-error
+    :class: ada-expect-compile-error
 
     package Bad_Hamlet is
        type Animal is (Ape, Bee, Cat);
@@ -676,7 +676,7 @@ in legal SPARK (or Ada), then the following approach will work (the type ``Unsig
 is an 8-bit modular type declared in the predefined package ``Interfaces``).
 
 .. code:: ada
-   :class: ada-syntax-only
+    :class: ada-syntax-only
 
     with Interfaces; use Interfaces;
     package Unethical_Genetics is

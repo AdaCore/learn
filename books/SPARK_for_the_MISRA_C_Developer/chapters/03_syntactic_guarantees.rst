@@ -182,7 +182,7 @@ Here is the output of AdaCore's GNAT compiler:
 The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
 
 .. code:: ada
-   :class: ada-syntax-only
+    :class: ada-syntax-only
 
     procedure Swap (X, Y : in out Integer) is
        Tmp : constant Integer := X;
@@ -247,7 +247,7 @@ statements have explicit begin and end markers, which prevents mistakes
 that are possible in C. The SPARK (also Ada) version of the above C code is as follows:
 
 .. code:: ada
-   :class: ada-syntax-only
+    :class: ada-syntax-only
 
     function Func return Integer is
     begin
@@ -333,7 +333,7 @@ useless in ``Opposite`` and ``Multiply``, as all ``Sign`` values are covered.
 Here is a correct version of the same code:
 
 .. code:: ada
-   :class: ada-syntax-only
+    :class: ada-syntax-only
 
     package Sign_Domain is
 
@@ -512,7 +512,7 @@ In SPARK (as in Ada), each if-statement has a matching end marker ``end if;``
 so the dangling-else problem cannot arise. The above C code is written as follows:
 
 .. code:: ada prove_button
-   :class: ada-syntax-only
+    :class: ada-syntax-only
 
     function Absval (X : Integer) return Integer is
        Result : Integer := X;
