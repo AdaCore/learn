@@ -658,7 +658,7 @@ word at the correct index in a dictionary.
     end P;
 
 This code is not correct: general access types are not part of the SPARK
-subset. Not that we could use here a pool-specific access type for
+subset. Note that we could use here a pool-specific access type for
 ``String_Access`` by removing the keyword ``all`` in its definition. In the
 case where it's necessary to keep a general access type (for example to be able
 to store pointers to variables on the stack), another solution here is to use
