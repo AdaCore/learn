@@ -453,7 +453,7 @@ specify that ``B`` can't be accessed twice in a row without accessing ``A``
 in between.
 
 .. code:: ada prove_button run_button
-   :class: ada-run-expect-failure
+    :class: ada-run-expect-failure
 
     package Call_Sequence is
 
@@ -1478,7 +1478,7 @@ the same bounds. We want to prove that ``Max_Array`` returns an array of
 the maximum values of both its arguments at each index.
 
 .. code:: ada prove_button run_button
-   :class: ada-run-expect-failure
+    :class: ada-run-expect-failure
 
     package Array_Util is
 
