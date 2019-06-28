@@ -6,7 +6,7 @@ Flow Analysis
 .. role:: ada(code)
    :language: ada
 
-.. sectionauthor:: Yannick Moy
+.. sectionauthor:: Claire Dross, Yannick Moy
 
 In this section we present the flow analysis capability provided by the
 GNATprove tool, a critical tool for using SPARK.
