@@ -425,13 +425,13 @@ about which global variables are accessed less precise and hence the
 dependencies of those variables are also less precise. This also affects
 the ability to accurately detect reads of uninitialized data.
 
-It's often impossible for flow analysis to determine if an entire array
-object has been initialized, even in very simple cases. For example, after
-we write a loop to initialize every element of an unconstrained array ``A``,
-we may still receive a message from flow analysis claiming that the array
-isn't initialized. To resolve this issue, you can either use an aggregate
-assignment, or, if that's not possible, verify initialization of the object
-manually.
+It's sometimes impossible for flow analysis to determine if an entire array
+object has been initialized. For example, after we write code to initialize
+every element of an unconstrained array ``A`` in chunks, we may still receive a
+message from flow analysis claiming that the array isn't initialized. To
+resolve this issue, you can either use a simpler loop over the full range of
+the array, or (even better) an aggregate assignment, or, if that's not possible,
+verify initialization of the object manually.
 
 .. code:: ada prove_flow_button
 
@@ -439,6 +439,7 @@ manually.
 
        type T is array (Natural range <>) of Integer;
 
+       procedure Init_Chunks (A : out T);
        procedure Init_Loop (A : out T);
        procedure Init_Aggregate (A : out T);
 
@@ -446,12 +447,21 @@ manually.
 
     package body Show_Composite_Types_Shortcoming is
 
+       procedure Init_Chunks (A : out T) is
+       begin
+          A (A'First) := 0;
+          for I in A'First + 1 .. A'Last loop
+             A (I) := 0;
+          end loop;
+          --  flow analysis doesn't know that A is initialized
+       end Init_Chunks;
+
        procedure Init_Loop (A : out T) is
        begin
           for I in A'Range loop
              A (I) := 0;
           end loop;
-          --  flow analysis doesn't know that A is initialized
+          --  flow analysis knows that A is initialized
        end Init_Loop;
 
        procedure Init_Aggregate (A : out T) is
@@ -714,7 +724,7 @@ such a structure, the place to store the index at which ``E`` was found
 exists only when ``E`` was indeed found.  So if it wasn't found, there's
 nothing to be initialized.
 
-.. code:: ada prove_button
+.. code:: ada prove_report_all_button
 
     package Show_Search_Array is
 
@@ -878,7 +888,8 @@ construct a cyclic permutation.
 
        procedure Init (A : out Permutation) is
        begin
-          for I in A'Range loop
+          A (A'First) := A'First;
+          for I in A'First + 1 .. A'Last loop
              A (I) := I;
           end loop;
        end Init;
@@ -936,7 +947,8 @@ the message from flow analysis on array assignment.
 
        procedure Init (A : in out Permutation) is
        begin
-          for I in A'Range loop
+          A (A'First) := A'First;
+          for I in A'First + 1 .. A'Last loop
              A (I) := I;
           end loop;
        end Init;

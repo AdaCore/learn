@@ -162,7 +162,7 @@ The SPARK language doesn't allow side-effects in expressions.  In other
 words, evaluating a SPARK expression must not update any object. This
 limitation is necessary to avoid unpredictable behavior that depends on
 order of evaluation, parameter passing mechanisms, or compiler
-optimizations. The expression for ``G`` below is non-deterministic due to
+optimizations. The expression for ``Dummy`` below is non-deterministic due to
 the order in which the two calls to F are evaluated.  It's therefore not
 legal SPARK.
 
@@ -178,10 +178,10 @@ legal SPARK.
           return Tmp;
        end F;
 
-       G : Integer := 0;
+       Dummy : Integer := 0;
 
     begin
-       G := F (G) - F (G); -- ??
+       Dummy := F (Dummy) - F (Dummy); -- ??
     end Show_Illegal_Ada_Code;
 
 In fact, the code above is not even legal Ada, so the same error is
@@ -193,17 +193,17 @@ Ada compiler:
 
     procedure Show_Illegal_SPARK_Code is
 
-       G : Integer := 0;
+       Dummy : Integer := 0;
 
        function F return Integer is
-          Tmp : constant Integer := G;
+          Tmp : constant Integer := Dummy;
        begin
-          G := G + 1;
+          Dummy := Dummy + 1;
           return Tmp;
        end F;
 
     begin
-       G := F - F; -- ??
+       Dummy := F - F; -- ??
     end Show_Illegal_SPARK_Code;
 
 The SPARK languages enforces the lack of side-effects in expressions by

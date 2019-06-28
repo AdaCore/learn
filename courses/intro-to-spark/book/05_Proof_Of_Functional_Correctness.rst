@@ -119,8 +119,6 @@ called in that test, but just for that set.
 
 .. code:: ada prove_button run_button
 
-    with Ada.Text_IO; use Ada.Text_IO;
-
     package Show_Find is
 
        type Nat_Array is array (Positive range <>) of Natural;

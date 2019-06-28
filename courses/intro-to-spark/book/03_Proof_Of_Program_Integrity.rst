@@ -32,7 +32,7 @@ below illustrates many examples of possible runtime errors, all within a
 single statement.  Look at the assignment statement setting the ``I`` +
 ``J``'th cell of an array ``A`` to the value ``P`` / ``Q``.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Show_Runtime_Errors is
 
@@ -174,7 +174,7 @@ that the value of ``X`` after the call is always less than
 :ada:`Integer'Last`. Therefore, it can't prove that the addition following
 the call to ``Increment`` can't overflow.
 
-.. code:: ada spark-report-all
+.. code:: ada prove_report_all_button
 
     procedure Show_Modularity is
 
@@ -268,7 +268,7 @@ with assertions enabled and testing it with inputs that trigger the
 violation. Another way, one that doesn't require guessing the needed
 inputs, is to run GNATprove.
 
-.. code:: ada run_button
+.. code:: ada run_button prove_button
    :class: ada-run-expect-failure
 
     procedure Show_Precondition_Violation is
@@ -293,7 +293,7 @@ inputs that trigger the violation. Another way, one which again doesn't
 require finding the inputs needed to demonstrate the error, is to run
 GNATprove.
 
-.. code:: ada run_button
+.. code:: ada run_button prove_button
    :class: ada-run-expect-failure
 
     procedure Show_Postcondition_Violation is
@@ -342,7 +342,7 @@ those semantics too heavy, in particular with respect to overflow checks,
 because they can make it harder to specify an appropriate precondition.  We
 see this in the function ``Add`` below.
 
-.. code:: ada run_button
+.. code:: ada run_button prove_button
    :class: ada-run-expect-failure
 
     procedure Show_Executable_Semantics
@@ -454,7 +454,7 @@ the specification may be incorrect. As an example, there's an error in our
 procedure ``Incr_Until`` below which makes its :ada:`Contract_Cases`
 unprovable.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Show_Failed_Proof_Attempt is
 
@@ -487,7 +487,7 @@ sets of inputs. This allows you to find bugs in both the code and its
 contracts. In this case, testing ``Incr_Until`` with an input greater than
 1000 raises an exception at runtime.
 
-.. code:: ada run_button
+.. code:: ada run_button prove_button
    :class: ada-run-expect-failure
 
     package Show_Failed_Proof_Attempt is
@@ -555,7 +555,7 @@ Let's look at the case where the code and the specification are correct but
 there's some information missing. As an example, GNATprove finds the
 postcondition of ``Increase`` to be unprovable.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Show_Failed_Proof_Attempt is
 
@@ -619,7 +619,7 @@ For example, the postcondition of our ``GCD`` function below --- which
 calculates the value of the ``GCD`` of two positive numbers using Euclide's
 algorithm --- can't be verified with GNATprove's default settings.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Show_Failed_Proof_Attempt is
 
@@ -715,7 +715,7 @@ The package ``Lists`` defines a linked-list data structure.  We call
 index ``J``. The postcondition of ``Link`` uses ``Goes_To`` to state that
 there must be a link between its arguments once ``Link`` completes.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Lists with SPARK_Mode is
 
@@ -821,7 +821,7 @@ procedure that adds an element at the top of the stack and a function
 ``Peek`` that returns the content of the element at the top of the stack
 (without removing it).
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Stacks with SPARK_Mode is
 
@@ -871,7 +871,7 @@ Example #4
 We now change the behavior of ``Push`` so it raises an exception when the
 stack is full instead of returning.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Stacks with SPARK_Mode is
 
@@ -981,7 +981,7 @@ to one data element.  The procedure ``Read_Record`` reads two pieces of
 data starting at index ``From`` out of the chunk represented by the value
 of ``Memory``.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Memories is
 
@@ -1028,7 +1028,7 @@ Example #7
 
 Let's rewrite the precondition of ``Read_One`` to avoid any possible overflow.
 
-.. code:: ada
+.. code:: ada prove_button
 
     package Memories is
 
@@ -1126,7 +1126,7 @@ The procedure ``Compute`` performs various computations on its argument.
 The computation performed depends on its input range and is reflected in
 its contract, which we express using a ``Contract_Cases`` aspect.
 
-.. code:: ada
+.. code:: ada prove_button
 
     procedure Compute (X : in out Integer) with
       Contract_Cases => ((X in -100 .. 100) => X = X'Old * 2,
@@ -1161,7 +1161,7 @@ Example #10
 
 Let's rewrite the contract of ``Compute`` to avoid overlapping cases.
 
-.. code:: ada
+.. code:: ada prove_button
 
     procedure Compute (X : in out Integer) with
       Contract_Cases => ((X in    1 ..  199) => X >= X'Old,
