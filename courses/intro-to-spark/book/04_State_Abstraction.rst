@@ -4,7 +4,7 @@ State Abstraction
 .. role:: ada(code)
    :language: ada
 
-.. sectionauthor:: Yannick Moy
+.. sectionauthor:: Claire Dross, Yannick Moy
 
 Abstraction is a key concept in programming that can drastically simplify
 both the implementation and maintenance of code. It's particularly well

@@ -6,7 +6,7 @@ Proof of Functional Correctness
 .. role:: ada(code)
    :language: ada
 
-.. sectionauthor:: Yannick Moy
+.. sectionauthor:: Claire Dross, Yannick Moy
 
 This section is dedicated to the functional correctness of programs. It
 presents advanced proof features that you may need to use for the
