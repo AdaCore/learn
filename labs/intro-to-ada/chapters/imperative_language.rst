@@ -99,9 +99,9 @@ You should focus on the :ada:`Classify_Number` procedure.
 
     --  START LAB IO BLOCK
     in 0: 0
-    out 0:  Zero
+    out 0: Zero
     in 1: 1
-    out 1:  Positive
+    out 1: Positive
     in 2: -1
     out 2: Negative
     in 3: 99999
