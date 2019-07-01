@@ -78,6 +78,9 @@ function process_check_output(container, editors, output_area, lab_area, output,
                     div.addClass("output_console");
                     div.text("$ " + msg);
                     break;
+                case "internal_error":
+                    msg_obj[msg_type]["msg"] += " Please report this issue on https://github.com/AdaCore/learn/issues";
+                    //  this fall through is intentional
                 case "stderr":
                     error_found = true;
                     //  this fall through is intentional

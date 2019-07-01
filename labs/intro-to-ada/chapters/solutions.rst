@@ -24,7 +24,7 @@ Hello World
 
     --  START LAB IO BLOCK
     in 0:
-    out 0: Hello World!
+    out 0:Hello World!
     --  END LAB IO BLOCK
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -40,10 +40,10 @@ Greetings
 .. code:: ada lab=Solutions_ImperativeLanguage_Greetings
 
     --  START LAB IO BLOCK
-    in 0: John
-    out 0: Hello John!
-    in 1: Joanna
-    out 1: Hello Joanna!
+    in 0:John
+    out 0:Hello John!
+    in 1:Joanna
+    out 1:Hello Joanna!
     --  END LAB IO BLOCK
 
     with Ada.Command_Line; use Ada.Command_Line;
@@ -73,16 +73,16 @@ Positive Or Negative
 .. code:: ada lab=Solutions_ImperativeLanguage_PositiveOrNegative
 
     --  START LAB IO BLOCK
-    in 0: 0
-    out 0:  Zero
-    in 1: 1
-    out 1:  Positive
-    in 2: -1
-    out 2: Negative
-    in 3: 99999
-    out 3: Positive
-    in 4: -99999
-    out 4: Negative
+    in 0:0
+    out 0:Zero
+    in 1:1
+    out 1:Positive
+    in 2:-1
+    out 2:Negative
+    in 3:99999
+    out 3:Positive
+    in 4:-99999
+    out 4:Negative
     --  END LAB IO BLOCK
 
     procedure Classify_Number (X : Integer);
@@ -126,20 +126,20 @@ Numbers
 .. code:: ada lab=Solutions_ImperativeLanguage_Numbers
 
     --  START LAB IO BLOCK
-    in 0: 1 5
-    out 0:  1 2 3 4 5
-    in 1: 5 1
-    out 1:  1 2 3 4 5
-    in 2: -5 -1
-    out 2: -1 -2 -3 -4 -5
-    in 3: 5 -1
-    out 3: -1 0 1 2 3 4 5
-    in 4: -5 1
-    out 4: 1 0 -1 -2 -3 -4 -5
-    in 5: 1 -1
-    out 5: -1 0 1
-    in 6: -1 -5
-    out 6: -1 -2 -3 -4 -5
+    in 0:1 5
+    out 0: 1  2  3  4  5
+    in 1:5 1
+    out 1: 1  2  3  4  5
+    in 2:-5 -1
+    out 2:-1 -2 -3 -4 -5
+    in 3:5 -1
+    out 3:-1  0  1  2  3  4  5
+    in 4:-5 1
+    out 4: 1  0 -1 -2 -3 -4 -5
+    in 5:1 -1
+    out 5:-1  0  1
+    in 6:-1 -5
+    out 6:-1 -2 -3 -4 -5
     --  END LAB IO BLOCK
 
     procedure Display_Numbers (A, B : Integer);
@@ -208,12 +208,12 @@ Exercise #1
 .. code:: ada lab=Solutions_Strongly_Typed_Enumerations
 
     --  START LAB IO BLOCK
-    in 0: HTML_Color_Range
-    out 0: SALMON FIREBRICK RED DARKRED LIME FORESTGREEN GREEN DARKGREEN BLUE MEDIUMBLUE DARKBLUE
-    in 1: HTML_Color_To_Integer
-    out 1: 16#FA8072# 16#B22222# 16#FF0000# 16#8B0000# 16#FF00# 16#228B22# 16#8000# 16#6400# 16#FF# 16#CD# 16#8B#
-    in 2: Basic_HTML_Color_To_HTML_Color
-    out 2: RED GREEN BLUE
+    in 0:HTML_Color_Range
+    out 0:SALMON FIREBRICK RED DARKRED LIME FORESTGREEN GREEN DARKGREEN BLUE MEDIUMBLUE DARKBLUE
+    in 1:HTML_Color_To_Integer
+    out 1:16#FA8072# 16#B22222# 16#FF0000# 16#8B0000# 16#FF00# 16#228B22# 16#8000# 16#6400# 16#FF# 16#CD# 16#8B#
+    in 2:Basic_HTML_Color_To_HTML_Color
+    out 2:RED GREEN BLUE
     --  END LAB IO BLOCK
 
     package Color_Types is
@@ -323,28 +323,28 @@ Exercise #2
 .. code:: ada lab=Solutions_Strongly_Typed_Integers
 
     --  START LAB IO BLOCK
-    in 0: I_100_Range
-    out 0:  0 100
-    in 1: U_100_Range
-    out 1: 0 100
-    in 2: U_100_Wraparound
-    out 2: 100 0
-    in 3: U_100_To_I_100
-    out 3: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
-    in 4: I_100_To_U_100
-    out 4: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
-    in 5: D_50_Range
-    out 5: 10 50
-    in 6: S_50_Range
-    out 6: 10 50
-    in 7: I_100_To_D_50
-    out 7: 10 10 10 10 10 10 10 10 10 10 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
-    in 8: I_100_To_S_50
-    out 8: 10 10 10 10 10 10 10 10 10 10 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
-    in 9: D_50_To_I_100
-    out 9: 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
-    in 10: S_50_To_I_100
-    out 10: 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
+    in 0:I_100_Range
+    out 0:0 100
+    in 1:U_100_Range
+    out 1:0 100
+    in 2:U_100_Wraparound
+    out 2:100 0
+    in 3:U_100_To_I_100
+    out 3:0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
+    in 4:I_100_To_U_100
+    out 4:0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
+    in 5:D_50_Range
+    out 5:10 50
+    in 6:S_50_Range
+    out 6:10 50
+    in 7:I_100_To_D_50
+    out 7:10 10 10 10 10 10 10 10 10 10 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
+    in 8:I_100_To_S_50
+    out 8:10 10 10 10 10 10 10 10 10 10 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
+    in 9:D_50_To_I_100
+    out 9:10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
+    in 10:S_50_To_I_100
+    out 10:10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
     --  END LAB IO BLOCK
 
     package Int_Types is
@@ -521,16 +521,16 @@ Exercise #3
 .. code:: ada lab=Solutions_Strongly_Typed_Floating_Point
 
     --  START LAB IO BLOCK
-    in 0: Celsius_Range
-    out 0: -2.73150E+02 5.50485E+03
-    in 1: Celsius_To_Int_Celsius
-    out 1: -273 0 5505
-    in 2: Int_Celsius_To_Celsius
-    out 2: -2.73000E+02 0.00000E+00 5.50485E+03
-    in 3: Kelvin_To_Celsius
-    out 3: -2.73150E+02 0.00000E+00 5.50485E+03
-    in 4: Celsius_To_Kelvin
-    out 4: 0.00000E+00 5.77800E+03
+    in 0:Celsius_Range
+    out 0:-2.73150E+02 5.50485E+03
+    in 1:Celsius_To_Int_Celsius
+    out 1:-273 0 5505
+    in 2:Int_Celsius_To_Celsius
+    out 2:-2.73000E+02 0.00000E+00 5.50485E+03
+    in 3:Kelvin_To_Celsius
+    out 3:-2.73150E+02 0.00000E+00 5.50485E+03
+    in 4:Celsius_To_Kelvin
+    out 4:0.00000E+00 5.77800E+03
     --  END LAB IO BLOCK
 
     package Temperature_Types is

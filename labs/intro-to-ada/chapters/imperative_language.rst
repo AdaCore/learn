@@ -23,8 +23,8 @@ the message "Hello World!".
 .. code:: ada lab=ImperativeLanguage_HelloWorld
 
     --  START LAB IO BLOCK
-    in 0:
-    out 0: Hello World!
+    in 0
+    out 0:Hello World!
     --  END LAB IO BLOCK
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -52,10 +52,10 @@ You should just focus on implementing the application in the body of the
 .. code:: ada lab=ImperativeLanguage_Greetings
 
     --  START LAB IO BLOCK
-    in 0: John
-    out 0: Hello John!
-    in 1: Joanna
-    out 1: Hello Joanna!
+    in 0:John
+    out 0:Hello John!
+    in 1:Joanna
+    out 1:Hello Joanna!
     --  END LAB IO BLOCK
 
     with Ada.Command_Line; use Ada.Command_Line;
@@ -98,16 +98,16 @@ You should focus on the :ada:`Classify_Number` procedure.
 .. code:: ada lab=ImperativeLanguage_PositiveOrNegative
 
     --  START LAB IO BLOCK
-    in 0: 0
-    out 0:  Zero
-    in 1: 1
-    out 1:  Positive
-    in 2: -1
-    out 2: Negative
-    in 3: 99999
-    out 3: Positive
-    in 4: -99999
-    out 4: Negative
+    in 0:0
+    out 0:Zero
+    in 1:1
+    out 1:Positive
+    in 2:-1
+    out 2:Negative
+    in 3:99999
+    out 3:Positive
+    in 4:-99999
+    out 4:Negative
     --  END LAB IO BLOCK
 
     procedure Classify_Number (X : Integer);
@@ -166,18 +166,20 @@ You should just focus on implementing the application in the body of the
 .. code:: ada lab=ImperativeLanguage_Numbers
 
     --  START LAB IO BLOCK
-    in 0: 1 5
-    out 0: 1 2 3 4 5
-    in 1: 5 1
-    out 1: 1 2 3 4 5
-    in 2: -5 -1
-    out 2: -1 -2 -3 -4 -5
-    in 3: 5 -1
-    out 3: -1 0 1 2 3 4 5
-    in 4: -5 1
-    out 4: 1 0 -1 -2 -3 -4 -5
-    in 5: 1 -1
-    out 5: -1 0 1
+    in 0:1 5
+    out 0: 1  2  3  4  5
+    in 1:5 1
+    out 1: 1  2  3  4  5
+    in 2:-5 -1
+    out 2:-1 -2 -3 -4 -5
+    in 3:5 -1
+    out 3:-1  0  1  2  3  4  5
+    in 4:-5 1
+    out 4: 1  0 -1 -2 -3 -4 -5
+    in 5:1 -1
+    out 5:-1  0  1
+    in 6:-1 -5
+    out 6:-1 -2 -3 -4 -5
     --  END LAB IO BLOCK
 
     procedure Display_Numbers (A, B : Integer);
