@@ -36,55 +36,25 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
     var read_lines = 0;
 
-    // this variable tells the lab output parser when the first lab output arrives
-    //  the parser will make that tab active and set lab_tab_active to false
-    var lab_tab_active = true;
-
     function find_ref_in_lab_ref_list(ref) {
 
-        var child = lab_area.find( '[data-labref=' + ref + ']');
+        var child = lab_area.find( 'div[data-labref=' + ref + ']');
 
         if(child.length > 0) {
             return child;
         }
 
-        var lab_children = lab_area.children('div.lab_tabs');
+        var acc_button = $("<button class='accordion' data-labref=" + ref + ">Test Case #" + ref + '</button>')
+        acc_button.appendTo(lab_area);
 
-        if(lab_children.length < 1) {
-            var lab_tabs = $("<div class='lab_tabs'>");
-            lab_tabs.appendTo(lab_area);
-        }
-        else if(lab_children.length == 1) {
-            var lab_tabs = lab_area.children('div.lab_tabs')[0];
-        }
-        else {
-            // TODO: something is wrong here
-        }
-
-        var tab_button = $("<button class=lab-links data-labref=" + ref + ">Test Case #" + ref + '</button>').appendTo(lab_tabs);
         var tab_id = generateUniqueId();
 
-        if(lab_tab_active) {
-            lab_tab_active = false;
-            tab_button.addClass("active");
-        }
-        tab_button.click(function() {
-            // Get all elements with class="tab-content" in current editor and hide them
-            lab_area.find("div.lab_test_case").hide();
-
-            // Get all elements with class="tab-links" and remove the class "active"
-            lab_area.find("button.lab-links").removeClass("active");
-
-            // Show the current tab, and add an "active" class to the button that opened the tab
-            $("#" + tab_id).addClass("active");
-            $("#" + tab_id).show();
-
-            $(this).addClass("active");
+        acc_button.click(function() {
+            $(this).toggleClass("active");
+            $("#" + tab_id).toggle();
         });
 
-
         var div = $('<div id=' + tab_id + ' class="lab_test_case" data-labref=' + ref + '>');
-        $('<div class="lab_test_msg lab_test_title">Test Case #' + ref + '</div>').appendTo(div);
 
         div.appendTo(lab_area);
 
@@ -174,12 +144,18 @@ function process_check_output(container, editors, output_area, lab_area, output,
                         var case_div = $('<div class="lab_results">');
                         case_div.appendTo(home_div);
 
+                        var test_class = ""
+
                         if (test_cases[test]["status"] == "Success") {
-                            home_div.addClass("lab_test_success");
+                            test_class = "lab_test_success";
                         }
                         else {
-                            home_div.addClass("lab_test_failed");
+                            test_class = "lab_test_failed";
                         }
+
+                        home_div.addClass(test_class);
+                        var labref = home_div.data('labref');
+                        lab_area.find("button[data-labref='" + labref + "']").addClass(test_class);
 
                         $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">Input:</span>' + test_cases[test]["in"] + '</div>').appendTo(case_div);
                         $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">Expected Output:</span>' + test_cases[test]["out"] + '</div>').appendTo(case_div);
@@ -260,15 +236,16 @@ function get_output_from_identifier(container, editors, output_area, lab_area, i
                     test_callback(container);
                 }
 
-                // if there is a lab area, make lab results active and sort tab buttons in lab_tabs
-                var lab_tabs = lab_area.find("div.lab_tabs");
-                var buttons = lab_area.find("button.lab-links");
-                var sorted_buttons = buttons.sort(function(a, b) {
-                    return $(a).data('labref') > $(b).data('labref');
-                });
-                sorted_buttons.appendTo(lab_tabs);
+                // if there is a lab area, sort accordions
 
-                lab_area.find("button.lab-links.active").click();
+
+//                var lab_tabs = lab_area.find("div.lab_tabs");
+ //               var buttons = lab_area.find("button.lab-links");
+  //              var sorted_buttons = buttons.sort(function(a, b) {
+   //                 return $(a).data('labref') > $(b).data('labref');
+    //            });
+     //           sorted_buttons.appendTo(lab_tabs);
+
 
             }
         })

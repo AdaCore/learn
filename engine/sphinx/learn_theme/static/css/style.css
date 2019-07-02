@@ -163,10 +163,6 @@ div.lab_test_msg {
     padding-right:3px;
 }
 
-div.lab_test_msg.lab_test_title {
-    font-weight:bold;
-    padding-left: 15px;
-}
 
 div.lab_test_success {
     background: #83ef5f;
@@ -225,14 +221,14 @@ div.lab_results {
   padding: 0px;
 }
 
-/* Style the lab tab */
+/*
 .lab_tabs {
   overflow-x: auto;
   display: flex;
   flex-wrap: nowrap;
 }
 
-/* Style the buttons that are used to open the lab tab content */
+
 .lab_tabs button {
   background-color: inherit;
   float: left;
@@ -245,11 +241,12 @@ div.lab_results {
   flex: 0 0 auto;
 }
 
-/* Style the lab tab content */
+
 .lab_test_case {
   display: none;
   padding: 0px;
 }
+*/
 
 button.lab_test_success {
     background: #cce8c3;
@@ -273,4 +270,47 @@ button.lab_test_success:hover {
 
 button.lab_test_failed:hover {
   background-color: #ef6e5f;
+}
+
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  font-weight:bold;
+}
+
+.accordion:after {
+  content: '\02795'; /* Unicode character for "plus" sign (+) */
+  font-size: 9px;
+  color: #777;
+  float: right;
+  margin-left: 5px;
+}
+
+.accordion.active:after {
+  content: "\2796"; /* Unicode character for "minus" sign (-) */
+  font-size: 9px;
+  color: #777;
+  float: right;
+  margin-left: 5px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.lab_test_case {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
 }
