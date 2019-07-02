@@ -197,15 +197,13 @@ div.lab_results {
 /* Style the tab */
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
 }
 
 /* Style the buttons that are used to open the tab content */
 .tab button {
   background-color: inherit;
   float: left;
-  border: none;
+  border: 1px solid #ccc;
   outline: none;
   cursor: pointer;
   padding: 14px 16px;
@@ -225,7 +223,5 @@ div.lab_results {
 /* Style the tab content */
 .tab-content {
   display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
+  padding: 0px;
 }

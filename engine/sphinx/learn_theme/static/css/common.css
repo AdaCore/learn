@@ -5,7 +5,10 @@ div.file{
 div.editor_container{
    height: 30em;
    border: 1px solid #ddd;
-   margin: 5px 0px;
+   margin-top: 0px;
+   margin-bottom: 5px;
+   margin-left: 0px;
+   margin-right: 0px;
 }
 
 div.editor_container.inline{

@@ -105,7 +105,7 @@ function process_check_output(container, editors, output_area, lab_area, output,
                                     // Switch to the tab that contains the editor
 
                                     // TODO: this is in the case of bootstrap only
-                                    // $("#" + e.unique_id + "-tab").tab('show')
+                                    $("#" + e.unique_id + "_button").click();
 
                                     // Jump to the corresponding line
                                     e.gotoLine(parseInt(match_found[2]),
@@ -126,7 +126,12 @@ function process_check_output(container, editors, output_area, lab_area, output,
                     break;
                 case "lab_output":
                     var test_cases = msg_obj[msg_type]["test_cases"];
+
+                    var lab_tab = $("<div class='lab_tab'>");
+
                     for (var test in test_cases) {
+                        var the_id = generateUniqueId();
+
                         home_div = find_ref_in_lab_ref_list(test);
                         var case_div = $('<div class="lab_results">');
                         case_div.appendTo(home_div);
@@ -305,12 +310,22 @@ function query_operation_result(container, editors, output_area, lab_area, mode)
         });
 }
 
+function generateUniqueId() {
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+
 
 function create_editor(resource, container, tabs, editors, counter) {
     var tab_id = "tab_" + container.attr("the_id")
     var the_id = tab_id + "-" + counter;
 
-    var tab_button = $('<button class="tab-links ' + tab_id + (counter == 1 ? ' active' : '') +'">' + resource.basename + '</button>');
+    var tab_button = $('<button id="' + the_id + '_button" class="tab-links ' + tab_id + (counter == 1 ? ' active' : '') +'">' + resource.basename + '</button>');
     tab_button.click(function() {
         // Get all elements with class="tab-content" in current editor and hide them
         $("div.tab-content." + tab_id).hide();
