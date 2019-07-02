@@ -278,13 +278,19 @@ button.lab_test_failed:hover {
   background-color: #eee;
   color: #444;
   cursor: pointer;
-  padding: 18px;
+  padding: 10px;
   width: 100%;
   text-align: left;
   border: none;
   outline: none;
   transition: 0.4s;
   font-weight:bold;
+  border-radius: 7px;
+}
+
+.accordion.active {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
 
 .accordion:after {
@@ -303,14 +309,11 @@ button.lab_test_failed:hover {
   margin-left: 5px;
 }
 
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .accordion:hover {
-  background-color: #ccc;
-}
-
 /* Style the accordion panel. Note: hidden by default */
 .lab_test_case {
   padding: 0 18px;
   display: none;
   overflow: hidden;
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
 }

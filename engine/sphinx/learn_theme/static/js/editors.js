@@ -38,14 +38,17 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
     function find_ref_in_lab_ref_list(ref) {
 
-        var child = lab_area.find( 'div[data-labref=' + ref + ']');
+        var child = lab_area.find( 'div.lab_test_case[data-labref=' + ref + ']');
 
         if(child.length > 0) {
             return child;
         }
 
+        var acc_wrapper = $("<div class='acc_wrapper' data-labref=" + ref + ">");
+        acc_wrapper.appendTo(lab_area);
+
         var acc_button = $("<button class='accordion' data-labref=" + ref + ">Test Case #" + ref + '</button>')
-        acc_button.appendTo(lab_area);
+        acc_button.appendTo(acc_wrapper);
 
         var tab_id = generateUniqueId();
 
@@ -56,7 +59,7 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
         var div = $('<div id=' + tab_id + ' class="lab_test_case" data-labref=' + ref + '>');
 
-        div.appendTo(lab_area);
+        div.appendTo(acc_wrapper);
 
         return div;
     }
@@ -237,7 +240,11 @@ function get_output_from_identifier(container, editors, output_area, lab_area, i
                 }
 
                 // if there is a lab area, sort accordions
-
+                var lab_accs = lab_area.find("div.acc_wrapper");
+                var sorted_accs = lab_accs.sort(function(a, b) {
+                    return $(a).data('labref') > $(b).data('labref');
+                });
+                sorted_accs.appendTo(lab_area);
 
 //                var lab_tabs = lab_area.find("div.lab_tabs");
  //               var buttons = lab_area.find("button.lab-links");
