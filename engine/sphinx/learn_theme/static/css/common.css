@@ -84,7 +84,7 @@ div.output_row{
 div.output_row button{
    margin-right:4px;
    margin-top:2px;
-   margin-bottom: 4px;
+   margin-bottom: 0px;
 }
 
 .read-only {
