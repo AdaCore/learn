@@ -306,9 +306,27 @@ function query_operation_result(container, editors, output_area, lab_area, mode)
 }
 
 
-function create_editor(resource, container, content, editors, counter) {
-    var the_id = "tab_" + container.attr("the_id") + "-" + counter;
-    var div = $('<div role="tabpanel" class="tab-pane' +
+function create_editor(resource, container, tabs, editors, counter) {
+    var tab_id = "tab_" + container.attr("the_id")
+    var the_id = tab_id + "-" + counter;
+
+    var tab_button = $('<button class="tab-links ' + tab_id + (counter == 1 ? ' active' : '') +'">' + resource.basename + '</button>');
+    tab_button.click(function() {
+        // Get all elements with class="tab-content" in current editor and hide them
+        $("div.tab-content." + tab_id).hide();
+
+        // Get all elements with class="tab-links" and remove the class "active"
+        $("button.tab-links." + tab_id).removeClass("active");
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        $("#" + the_id).addClass("active");
+        $("#" + the_id).show();
+
+        $(this).addClass("active");
+    });
+    tab_button.appendTo(tabs);
+
+    var div = $('<div class="tab-content ' + tab_id +
         (counter == 1 ? ' active' : '') +
         '" id="' + the_id + '">');
 
@@ -321,7 +339,7 @@ function create_editor(resource, container, content, editors, counter) {
         labeldiv.appendTo(div);
     }
     editordiv.appendTo(div);
-    div.appendTo(content);
+    div.appendTo(container);
 
     // ACE editors...
     editor = ace.edit(resource.basename + the_id + '_editor');
@@ -488,8 +506,11 @@ function fill_editor_from_contents(container, example_server, resources) {
 
     // Then fill the contents of the tabs
 
-    var content = $('<div class="tab-content">');
-    content.appendTo(container);
+    var tabs = $('<div class="tab">');
+//    var content = $('<div class="tab-content">');
+
+    tabs.appendTo(container);
+//    content.appendTo(container);
 
     counter = 0;
 
@@ -497,10 +518,13 @@ function fill_editor_from_contents(container, example_server, resources) {
 
     resources.forEach(function(resource) {
         counter++;
-        var editor = create_editor(resource, container, content, editors, counter);
+        var editor = create_editor(resource, container, tabs, editors, counter);
         // Append the editor to the list of editors
         editors.push(editor);
     });
+
+    // "click" all active tabs to show them
+    $("button.tab-links.active").click();
 
     var row = $('<div class="row output_row">');
     row.appendTo(container);
