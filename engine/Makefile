@@ -1,5 +1,5 @@
 # You can set these variables from the command line.
-SPHINXOPTS    = 
+SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = learnadacorecom
 SPHINXCONF    = sphinx
@@ -25,7 +25,7 @@ test_ada_intro:
 
 test_spark_intro:
 	@echo "===== INTRO TO SPARK ====="
-	@$(TEST_DRIVER) ../courses/intro-to-spark/book/*.rst
+	@$(TEST_DRIVER) ../courses/intro-to-spark/chapters/*.rst
 	@echo ""
 
 test_advanced_ada:
@@ -40,7 +40,7 @@ test_advanced_spark:
 
 test_spark_for_the_misra_c_developer:
 	@echo "===== SPARK FOR MISRA C DEV ====="
-	@$(TEST_DRIVER) ../books/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
+	@$(TEST_DRIVER) ../courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
 	@echo ""
 
 tests: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark \
