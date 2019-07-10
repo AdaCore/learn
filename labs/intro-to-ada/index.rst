@@ -9,8 +9,7 @@ Labs: Introduction to Ada
 
 .. container:: content-description
 
-    These labs contain exercises for the **Introduction to Ada** course
-    (:doc:`../../courses/intro-to-ada/index`).
+    These labs contain exercises for the Introduction to Ada course.
 
 .. toctree::
     :maxdepth: 4
