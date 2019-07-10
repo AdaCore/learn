@@ -38,16 +38,28 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
     function find_ref_in_lab_ref_list(ref) {
 
-        var child = lab_area.find( '#' + ref );
+        var child = lab_area.find( 'div.lab_test_case[data-labref=' + ref + ']');
 
         if(child.length > 0) {
             return child;
         }
 
-        var div = $('<div id=' + ref + ' class="lab_test_case">');
-        $('<div class="lab_test_msg lab_test_title">Test Case #' + ref + '</div>').appendTo(div);
+        var acc_wrapper = $("<div class='acc_wrapper' data-labref=" + ref + ">");
+        acc_wrapper.appendTo(lab_area);
 
-        div.appendTo(lab_area);
+        var acc_button = $("<button class='accordion' data-labref=" + ref + "><span>Test Case #" + ref + '</span></button>')
+        acc_button.appendTo(acc_wrapper);
+
+        var tab_id = generateUniqueId();
+
+        acc_button.click(function() {
+            $(this).toggleClass("active");
+            $("#" + tab_id).toggle();
+        });
+
+        var div = $('<div id=' + tab_id + ' class="lab_test_case" data-labref=' + ref + '>');
+
+        div.appendTo(acc_wrapper);
 
         return div;
     }
@@ -105,7 +117,7 @@ function process_check_output(container, editors, output_area, lab_area, output,
                                     // Switch to the tab that contains the editor
 
                                     // TODO: this is in the case of bootstrap only
-                                    // $("#" + e.unique_id + "-tab").tab('show')
+                                    $("#" + e.unique_id + "_button").click();
 
                                     // Jump to the corresponding line
                                     e.gotoLine(parseInt(match_found[2]),
@@ -126,17 +138,27 @@ function process_check_output(container, editors, output_area, lab_area, output,
                     break;
                 case "lab_output":
                     var test_cases = msg_obj[msg_type]["test_cases"];
+
+                    var lab_tab = $("<div class='lab_tab'>");
+
                     for (var test in test_cases) {
+
                         home_div = find_ref_in_lab_ref_list(test);
                         var case_div = $('<div class="lab_results">');
                         case_div.appendTo(home_div);
 
+                        var test_class = ""
+
                         if (test_cases[test]["status"] == "Success") {
-                            home_div.addClass("lab_test_success");
+                            test_class = "lab_test_success";
                         }
                         else {
-                            home_div.addClass("lab_test_failed");
+                            test_class = "lab_test_failed";
                         }
+
+                        home_div.addClass(test_class);
+                        var labref = home_div.data('labref');
+                        lab_area.find("button[data-labref='" + labref + "']").addClass(test_class);
 
                         $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">Input:</span>' + test_cases[test]["in"] + '</div>').appendTo(case_div);
                         $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">Expected Output:</span>' + test_cases[test]["out"] + '</div>').appendTo(case_div);
@@ -216,6 +238,14 @@ function get_output_from_identifier(container, editors, output_area, lab_area, i
                     // we are in test mode. call test function callback
                     test_callback(container);
                 }
+
+                // if there is a lab area, sort accordions
+                var lab_accs = lab_area.find("div.acc_wrapper");
+                var sorted_accs = lab_accs.sort(function(a, b) {
+                    return $(a).data('labref') > $(b).data('labref');
+                });
+                sorted_accs.appendTo(lab_area);
+
             }
         })
         .fail(function(xhr, status, errorThrown) {
@@ -305,10 +335,38 @@ function query_operation_result(container, editors, output_area, lab_area, mode)
         });
 }
 
+function generateUniqueId() {
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
 
-function create_editor(resource, container, content, editors, counter) {
-    var the_id = "tab_" + container.attr("the_id") + "-" + counter;
-    var div = $('<div role="tabpanel" class="tab-pane' +
+
+function create_editor(resource, container, tabs, editors, counter) {
+    var tab_id = "tab_" + container.attr("the_id")
+    var the_id = tab_id + "-" + counter;
+
+    var tab_button = $('<button id="' + the_id + '_button" class="tab-links ' + tab_id + (counter == 1 ? ' active' : '') +'">' + resource.basename + '</button>');
+    tab_button.click(function() {
+        // Get all elements with class="tab-content" in current editor and hide them
+        $("div.tab-content." + tab_id).hide();
+
+        // Get all elements with class="tab-links" and remove the class "active"
+        $("button.tab-links." + tab_id).removeClass("active");
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        $("#" + the_id).addClass("active");
+        $("#" + the_id).show();
+
+        $(this).addClass("active");
+    });
+    tab_button.appendTo(tabs);
+
+    var div = $('<div class="tab-content ' + tab_id +
         (counter == 1 ? ' active' : '') +
         '" id="' + the_id + '">');
 
@@ -321,7 +379,7 @@ function create_editor(resource, container, content, editors, counter) {
         labeldiv.appendTo(div);
     }
     editordiv.appendTo(div);
-    div.appendTo(content);
+    div.appendTo(container);
 
     // ACE editors...
     editor = ace.edit(resource.basename + the_id + '_editor');
@@ -487,9 +545,9 @@ function fill_editor_from_contents(container, example_server, resources) {
     var test_mode = container.parent().hasClass("test-descriptor");
 
     // Then fill the contents of the tabs
+    var tabs = $('<div class="tab">');
 
-    var content = $('<div class="tab-content">');
-    content.appendTo(container);
+    tabs.appendTo(container);
 
     counter = 0;
 
@@ -497,10 +555,13 @@ function fill_editor_from_contents(container, example_server, resources) {
 
     resources.forEach(function(resource) {
         counter++;
-        var editor = create_editor(resource, container, content, editors, counter);
+        var editor = create_editor(resource, container, tabs, editors, counter);
         // Append the editor to the list of editors
         editors.push(editor);
     });
+
+    // "click" all active tabs to show them
+    $("button.tab-links.active").click();
 
     var row = $('<div class="row output_row">');
     row.appendTo(container);

@@ -150,11 +150,10 @@ div.lab_area {
 }
 
 div.lab_test_case {
-    border-radius: 15px;
     padding-left:3px;
     padding-right:3px;
     padding-bottom: 5px;
-    margin-top: 5px;
+    margin-top: 0px;
     margin-bottom: 5px;
 }
 
@@ -164,17 +163,13 @@ div.lab_test_msg {
     padding-right:3px;
 }
 
-div.lab_test_msg.lab_test_title {
-    font-weight:bold;
-    padding-left: 15px;
-}
 
 div.lab_test_success {
-    background: #83ef5f;
+    background: #bef5cb;
 }
 
 div.lab_test_failed {
-    background: #ef6e5f;
+    background: #fdaeb7;
 }
 
 span.lab_test_msg_title {
@@ -192,4 +187,134 @@ div.lab_results {
 
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: 1px solid #ccc;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tab-content {
+  display: none;
+  padding: 0px;
+}
+
+button.lab_test_success {
+  background: #e6ffed;
+}
+
+button.lab_test_success span:after {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: normal;
+  content: "\f00c";
+  font-size: 9px;
+  color: #777;
+/*  float: left;  */
+  margin-left: 5px;
+}
+
+button.lab_test_failed {
+  background: #ffeef0;
+}
+
+button.lab_test_failed span:after {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: normal;
+  content: "\f00d";
+  font-size: 9px;
+  color: #777;
+/*  float: left;  */
+  margin-left: 5px;
+}
+
+button.active.lab_test_success  {
+  background: #bef5cb;
+}
+
+button.active.lab_test_failed {
+  background: #fdaeb7;
+}
+
+button.lab_test_success:hover {
+  background-color: #bef5cb;
+}
+
+button.lab_test_failed:hover {
+  background-color: #fdaeb7;
+}
+
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  font-weight:bold;
+  border-radius: 7px;
+}
+
+.accordion.active {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.accordion:after {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: normal;
+  content: '\f067';
+  font-size: 9px;
+  color: #777;
+  float: right;
+  margin-left: 5px;
+}
+
+.accordion.active:after {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: normal;
+  content: "\f068";
+  font-size: 9px;
+  color: #777;
+  float: right;
+  margin-left: 5px;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.lab_test_case {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
 }
