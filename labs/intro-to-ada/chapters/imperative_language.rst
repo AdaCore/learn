@@ -23,7 +23,7 @@ the message "Hello World!".
 .. code:: ada lab=ImperativeLanguage_HelloWorld
 
     --  START LAB IO BLOCK
-    in 0
+    in 0:
     out 0:Hello World!
     --  END LAB IO BLOCK
 
