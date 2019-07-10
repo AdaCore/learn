@@ -35,11 +35,11 @@ LEARN.ADACORE.COM
 
        About <about>
        Courses <courses/courses>
+       Labs <labs/labs>
 
     .. toctree::
        :hidden:
 
-       Labs <labs/labs>
        Tests <engine/tests/index>
 
 
