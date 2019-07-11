@@ -321,3 +321,11 @@ button.lab_test_failed:hover {
   border-bottom-right-radius: 7px;
   border-bottom-left-radius: 7px;
 }
+
+.custom_check_container {
+  display: block;
+}
+
+label.custom_check {
+  display: inline-block;
+}
