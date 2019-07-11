@@ -75,6 +75,7 @@ div.output_success{
 div.output_area{
    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
    background: #f3f3f3;
+   margin-top: 8px;
 }
 
 div.output_row{
