@@ -189,18 +189,6 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
         if (status != 0) {
             output_error(output_area, "exit status: " + status);
-        } else if (output_area.error_count == 0) {
-            var div = $('<div class="output_success">');
-            div.text("Success!");
-            div.appendTo(output_area);
-        } else if (output_area.error_count == 1) {
-            var div = $('<div class="output_info">');
-            div.text("One error.");
-            div.appendTo(output_area);
-        } else {
-            var div = $('<div class="output_info">');
-            div.text(output_area.error_count + " errors.");
-            div.appendTo(output_area);
         }
     }
 
@@ -511,7 +499,7 @@ function check_worker(button, editors, container, output_area, lab_area) {
         lab_area.empty();
 
     var div = $('<div class="output_info">');
-    div.html(button.operation_label + "...<br>Console Output:");
+    div.html("Console Output:");
     div.appendTo(output_area);
     query_operation_result(container, editors, output_area, lab_area, button.mode);
 }
