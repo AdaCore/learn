@@ -229,6 +229,11 @@ function process_check_output(container, editors, output_area, lab_area, output,
         if (status != 0) {
             output_error(output_area, EXIT_STATUS_LABEL + ": " + status);
         }
+        else {
+            var div = $('<div class="output_success">');
+            div.text("Done");
+            div.appendTo(output_area);
+        }
     }
 
     return read_lines;
