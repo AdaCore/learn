@@ -191,7 +191,9 @@ div.lab_results {
 
 /* Style the tab */
 .tab {
-  overflow: hidden;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 /* Style the buttons that are used to open the tab content */
@@ -203,6 +205,7 @@ div.lab_results {
   cursor: pointer;
   padding: 14px 16px;
   transition: 0.3s;
+  flex: 0 0 auto;
 }
 
 /* Change background color of buttons on hover */
@@ -220,6 +223,18 @@ div.lab_results {
   display: none;
   padding: 0px;
 }
+
+@media screen and (max-width: 800px) {
+  label {
+    font-size: 0;
+  }
+  label:before {
+    margin: 0;
+    font-size: 18px;
+  }
+}
+
+
 
 button.lab_test_success {
   background: #e6ffed;
