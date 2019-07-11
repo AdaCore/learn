@@ -225,15 +225,17 @@ button.lab_test_success {
   background: #e6ffed;
 }
 
-button.lab_test_success span:after {
-  font-family: "Font Awesome 5 Free";
-  font-style: normal;
-  font-weight: normal;
-  content: "\f00c";
-  font-size: 9px;
+button.accordion span:after {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 10px;
+  font-style: italic;
+  font-weight: 600;
   color: #777;
-/*  float: left;  */
-  margin-left: 5px;
+  margin-left: 8px;
+}
+
+button.lab_test_success span:after {
+  content: "Pass";
 }
 
 button.lab_test_failed {
@@ -241,14 +243,7 @@ button.lab_test_failed {
 }
 
 button.lab_test_failed span:after {
-  font-family: "Font Awesome 5 Free";
-  font-style: normal;
-  font-weight: normal;
-  content: "\f00d";
-  font-size: 9px;
-  color: #777;
-/*  float: left;  */
-  margin-left: 5px;
+  content: "Fail";
 }
 
 button.active.lab_test_success  {
@@ -292,7 +287,7 @@ button.lab_test_failed:hover {
   font-family: "Font Awesome 5 Free";
   font-style: normal;
   font-weight: normal;
-  content: '\f067';
+  content: '\f067'; /* + */
   font-size: 9px;
   color: #777;
   float: right;
@@ -303,7 +298,7 @@ button.lab_test_failed:hover {
   font-family: "Font Awesome 5 Free";
   font-style: normal;
   font-weight: normal;
-  content: "\f068";
+  content: "\f068"; /* - */
   font-size: 9px;
   color: #777;
   float: right;
