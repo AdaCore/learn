@@ -229,11 +229,8 @@ function process_check_output(container, editors, output_area, lab_area, output,
         if (status != 0) {
             output_error(output_area, EXIT_STATUS_LABEL + ": " + status);
         }
-        else {
-            var div = $('<div class="output_success">');
-            div.text("Done");
-            div.appendTo(output_area);
-        }
+
+        output_area.find( '.spinner' ).remove();
     }
 
     return read_lines;
@@ -542,9 +539,11 @@ function check_worker(button, editors, container, output_area, lab_area) {
     if (lab_area != null)
         lab_area.empty();
 
-    var div = $('<div class="output_info">');
+    var div = $('<div class="output_info console_output">');
     div.html(CONSOLE_OUTPUT_LABEL + ":");
     div.appendTo(output_area);
+
+    $('<div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>').appendTo(output_area);
     query_operation_result(container, editors, output_area, lab_area, button.mode);
 }
 
@@ -595,19 +594,14 @@ function fill_editor_from_contents(container, example_server, resources) {
     // "click" all active tabs to show them
     $("button.tab-links.active").click();
 
-    var row = $('<div class="row output_row">');
-    row.appendTo(container);
+    var row = $('<div class="row output_row">').appendTo(container);
 
     // create the buttons
 
-    var buttons_div = $('<div class="col-md-3">');
-    buttons_div.appendTo(row);
+    var buttons_div = $('<div class="col-md-3">').appendTo(row);
+    var output_div = $('<div class="col-md-9">').appendTo(row);
 
-    var output_div = $('<div class="col-md-9">');
-    output_div.appendTo(row);
-
-    var output_area = $('<div class="output_area">');
-    output_area.appendTo(output_div);
+    var output_area = $('<div class="output_area">').appendTo(output_div);
 
     editors.buttons = [];
 
