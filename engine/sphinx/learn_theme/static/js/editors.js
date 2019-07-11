@@ -33,7 +33,7 @@ INTERNAL_ERROR_MESSAGE = "Please report this issue on https://github.com/AdaCore
 
 LAB_TEST_INPUT_LABEL = "Input";
 LAB_TEST_OUTPUT_LABEL = "Expected Output";
-LAB_TEST_ACTUAL_LABEL = "Actual Output";
+LAB_TEST_ACTUAL_LABEL = "Received Output";
 LAB_TEST_STATUS_LABEL = "Status";
 
 LAB_COMPLETE_LABEL = "Lab completed successfully.";
