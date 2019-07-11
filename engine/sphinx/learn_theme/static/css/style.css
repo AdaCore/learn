@@ -194,6 +194,7 @@ div.lab_results {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Style the buttons that are used to open the tab content */
@@ -206,18 +207,18 @@ div.lab_results {
   transition: 0.3s;
   flex: 0 0 auto;
   border: 1px solid transparent;
-  color: #abc;
+  color: #808080;
 }
 
 /* Change background color of buttons on hover */
 .tab button:hover {
-  color: #789;
+  color: #4C4C4C;
   cursor: pointer;
 }
 
 /* Create an active/current tablink class */
 .tab button.active {
-  color: #000000;
+  color: #262626;
   border: 1px solid #abc;
   border-top: 2px solid #f88745;
   border-bottom: 1px solid #fff;

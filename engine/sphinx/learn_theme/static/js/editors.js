@@ -273,7 +273,7 @@ function query_operation_result(container, editors, output_area, lab_area, mode)
     }
 
     var input_search = container.find( 'textarea[name="custom_input"]' );
-    var check_search = container.find( '.custom_check' );
+    var check_search = container.find( 'input.custom_check' );
 
     if(check_search.length == 1 && input_search.length == 1) {
         if(check_search.is(':checked')) {
@@ -592,7 +592,7 @@ function fill_editor_from_contents(container, example_server, resources) {
         $( '<textarea class="custom_input" name="custom_input" rows="4" cols="6"></textarea>' ).appendTo(buttons_div);
         var unique_id = generateUniqueId();
         var div = $('<div class="custom_check_container">').appendTo(buttons_div);
-        var custom_check = $( '<input type="checkbox" id="' + unique_id + ' class="custom_check"><label class="custom_check" for="' + unique_id + '">Test against custom input</label>' ).appendTo(div).change( function() {
+        $('<input type="checkbox" id="' + unique_id + '" class="custom_check">').appendTo(div).change( function() {
             var input_search = container.find( 'textarea[name="custom_input"]' );
             if ($(this).is(':checked')) {
                 if(input_search.length == 1) {
@@ -605,6 +605,7 @@ function fill_editor_from_contents(container, example_server, resources) {
                 }
             }
         }).change();
+        $('<label class="custom_check" for="' + unique_id + '">Test against custom input</label>').appendTo(div);
     }
 
     for (var mode in MODES) {
