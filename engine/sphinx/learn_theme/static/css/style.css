@@ -163,6 +163,9 @@ div.lab_test_msg {
     padding-right:3px;
 }
 
+div.lab_test_msg code {
+  white-space: pre-wrap;
+}
 
 div.lab_test_success {
     background: #bef5cb;

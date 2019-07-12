@@ -199,9 +199,9 @@ function process_check_output(container, editors, output_area, lab_area, output,
                         var labref = home_div.data('labref');
                         lab_area.find("button[data-labref='" + labref + "']").addClass(test_class);
 
-                        $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">' + LAB_TEST_INPUT_LABEL + ':</span>' + test_cases[test]["in"] + '</div>').appendTo(case_div);
-                        $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">' + LAB_TEST_OUTPUT_LABEL + ':</span>' + test_cases[test]["out"] + '</div>').appendTo(case_div);
-                        $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">' + LAB_TEST_ACTUAL_LABEL + ':</span>' + test_cases[test]["actual"] + '</div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">' + LAB_TEST_INPUT_LABEL + ':</span><code>' + test_cases[test]["in"] + '</code></div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">' + LAB_TEST_OUTPUT_LABEL + ':</span><code>' + test_cases[test]["out"] + '</code></div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">' + LAB_TEST_ACTUAL_LABEL + ':</span><code>' + test_cases[test]["actual"] + '</code></div>').appendTo(case_div);
                         $('<div class="lab_test_msg lab_test_status"><span class="lab_test_msg_title">' + LAB_TEST_STATUS_LABEL + ':</span>' + test_cases[test]["status"] + '</div>').appendTo(case_div);
                     }
 
