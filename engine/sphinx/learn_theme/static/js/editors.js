@@ -402,11 +402,6 @@ function create_editor(resource, container, tabs, editors, counter) {
     var editordiv = $('<div class="editor_container"' +
         ' id="' + resource.basename + the_id + '_editor">');
 
-    // Display the file name for files that are not Ada or main.c
-    if (!resource.basename.match(/.ad[sb]$|^main.c$/)) {
-        var labeldiv = $('<div class="editor_label">' + resource.basename + '</div>');
-        labeldiv.appendTo(div);
-    }
     editordiv.appendTo(div);
     div.appendTo(container);
 
