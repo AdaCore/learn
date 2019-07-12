@@ -413,8 +413,8 @@ Months
 .. code:: ada lab=Solutions_ModularProgramming_Months
 
     --  START LAB IO BLOCK
-    in 0: Months_Chk
-    out 0: Months: - January - February - March - April - May - June - July - August - September - October - November - December
+    in 0:Months_Chk
+    out 0:Months: - January - February - March - April - May - June - July - August - September - October - November - December
     --  END LAB IO BLOCK
 
     package Months is
@@ -494,10 +494,10 @@ Operations
 .. code:: ada lab=Solutions_ModularProgramming_Operations
 
     --  START LAB IO BLOCK
-    in 0: Operations_Chk
-    out 0: Add (100, 2) =  102 Subtract (100, 2) =  98 Multiply (100, 2) =  200 Divide (100, 2) =  50
-    in 1: Operations_Display_Chk
-    out 1: Operations: 10 + 5 = 15, 10 - 5 = 5, 10 * 5 = 50, 10 / 5 = 2, Operations: 1 + 2 = 3, 1 - 2 = -1, 1 * 2 = 2, 1 / 2 = 0,
+    in 0:Operations_Chk
+    out 0:Add (100, 2) =  102 Subtract (100, 2) =  98 Multiply (100, 2) =  200 Divide (100, 2) =  50
+    in 1:Operations_Display_Chk
+    out 1:Operations: 10 + 5 = 15, 10 - 5 = 5, 10 * 5 = 50, 10 / 5 = 2, Operations: 1 + 2 = 3, 1 - 2 = -1, 1 * 2 = 2, 1 / 2 = 0,
     --  END LAB IO BLOCK
 
     package Operations is
