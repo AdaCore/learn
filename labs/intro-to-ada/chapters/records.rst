@@ -36,8 +36,8 @@ which includes the actual geometric angle and the corresponding direction
 .. code:: ada lab=Records_Directions
 
     --  START LAB IO BLOCK
-    in 0: Direction_Chk
-    out 0: Angle: 0 => EAST. Angle: 30 => NORTHWEST. Angle: 45 => NORTHWEST. Angle: 90 => NORTH. Angle: 91 => NORTHWEST. Angle: 120 => NORTHWEST. Angle: 180 => WEST. Angle: 250 => SOUTHWEST. Angle: 270 => SOUTH.
+    in 0:Direction_Chk
+    out 0:Angle: 0 => EAST. Angle: 30 => NORTHWEST. Angle: 45 => NORTHWEST. Angle: 90 => NORTH. Angle: 91 => NORTHWEST. Angle: 120 => NORTHWEST. Angle: 180 => WEST. Angle: 250 => SOUTHWEST. Angle: 270 => SOUTH.
     --  END LAB IO BLOCK
 
     package Directions is
@@ -200,8 +200,8 @@ the individual color elements. In addition, you will:
 .. code:: ada lab=Records_Colors
 
     --  START LAB IO BLOCK
-    in 0: HTML_Color_To_RGB
-    out 0: SALMON => (Red => 16#FA#, Green => 16#80#, Blue => 16#72#). FIREBRICK => (Red => 16#B2#, Green => 16#22#, Blue => 16#22#). RED => (Red => 16#FF#, Green => 16#0#, Blue => 16#0#). DARKRED => (Red => 16#8B#, Green => 16#0#, Blue => 16#0#). LIME => (Red => 16#0#, Green => 16#FF#, Blue => 16#0#). FORESTGREEN => (Red => 16#22#, Green => 16#8B#, Blue => 16#22#). GREEN => (Red => 16#0#, Green => 16#80#, Blue => 16#0#). DARKGREEN => (Red => 16#0#, Green => 16#64#, Blue => 16#0#). BLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#FF#). MEDIUMBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#CD#). DARKBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#8B#).
+    in 0:HTML_Color_To_RGB
+    out 0:SALMON => (Red => 16#FA#, Green => 16#80#, Blue => 16#72#). FIREBRICK => (Red => 16#B2#, Green => 16#22#, Blue => 16#22#). RED => (Red => 16#FF#, Green => 16#0#, Blue => 16#0#). DARKRED => (Red => 16#8B#, Green => 16#0#, Blue => 16#0#). LIME => (Red => 16#0#, Green => 16#FF#, Blue => 16#0#). FORESTGREEN => (Red => 16#22#, Green => 16#8B#, Blue => 16#22#). GREEN => (Red => 16#0#, Green => 16#80#, Blue => 16#0#). DARKGREEN => (Red => 16#0#, Green => 16#64#, Blue => 16#0#). BLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#FF#). MEDIUMBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#CD#). DARKBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#8B#).
     --  END LAB IO BLOCK
 
     package Color_Types is
@@ -338,8 +338,8 @@ assets. These are your goals:
 .. code:: ada lab=Records_Inventory
 
     --  START LAB IO BLOCK
-    in 0: Inventory_Chk
-    out 0: Adding item: Ballpoint Pen. Assets: $27.75. Adding item: Oil-based Pen Marker. Assets: $927.75. Adding item: Feather Quill Pen. Assets: $1007.75.
+    in 0:Inventory_Chk
+    out 0:Adding item: Ballpoint Pen. Assets: $27.75. Adding item: Oil-based Pen Marker. Assets: $927.75. Adding item: Feather Quill Pen. Assets: $1007.75.
     --  END LAB IO BLOCK
 
     package Inventory_Pkg is
