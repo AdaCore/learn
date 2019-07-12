@@ -51,15 +51,15 @@ your goals:
 
     --  START LAB IO BLOCK
     in 0:Range_Chk
-    out 0: 1 2 3 4 5 6 7 8 9 10
+    out 0: 1  2  3  4  5  6  7  8  9  10
     in 1:Array_Range_Chk
-    out 1: 1 2 3 4 5 6 7 8 9 10
+    out 1: 1  2  3  4  5  6  7  8  9  10
     in 2:A_Obj_Chk
-    out 2: 1 2 42 42 42 42 42 42 42 42
+    out 2: 1  2  42  42  42  42  42  42  42  42
     in 3:Init_Chk
-    out 3: 1 2 3 4 5 6 7 8 9 10
+    out 3: 1  2  3  4  5  6  7  8  9  10
     in 4:Double_Chk
-    out 4: 200 180 160 20 40 60 80 120 100 140
+    out 4: 200  180  160  20  40  60  80  120  100  140
     in 5:First_Elem_Chk
     out 5: 100
     in 6:Last_Elem_Chk
@@ -220,9 +220,9 @@ constant values. In order to do that, you will:
 
     --  START LAB IO BLOCK
     in 0:Color_Table_Chk
-    out 0:Size of HTML_Color_RGB: 11 Firebrick: (Red => 16#B2#, Green => 16#22#, Blue => 16#22#)
+    out 0:Size of HTML_Color_RGB:  11 Firebrick: (Red =>     16#B2#, Green =>     16#22#, Blue =>     16#22#)
     in 1:HTML_Color_To_Integer_Chk
-    out 1:SALMON => (Red => 16#FA#, Green => 16#80#, Blue => 16#72#). FIREBRICK => (Red => 16#B2#, Green => 16#22#, Blue => 16#22#). RED => (Red => 16#FF#, Green => 16#0#, Blue => 16#0#). DARKRED => (Red => 16#8B#, Green => 16#0#, Blue => 16#0#). LIME => (Red => 16#0#, Green => 16#FF#, Blue => 16#0#). FORESTGREEN => (Red => 16#22#, Green => 16#8B#, Blue => 16#22#). GREEN => (Red => 16#0#, Green => 16#80#, Blue => 16#0#). DARKGREEN => (Red => 16#0#, Green => 16#64#, Blue => 16#0#). BLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#FF#). MEDIUMBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#CD#). DARKBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#8B#).
+    out 1:SALMON => (Red =>     16#FA#, Green =>     16#80#, Blue =>     16#72#). FIREBRICK => (Red =>     16#B2#, Green =>     16#22#, Blue =>     16#22#). RED => (Red =>     16#FF#, Green =>      16#0#, Blue =>      16#0#). DARKRED => (Red =>     16#8B#, Green =>      16#0#, Blue =>      16#0#). LIME => (Red =>      16#0#, Green =>     16#FF#, Blue =>      16#0#). FORESTGREEN => (Red =>     16#22#, Green =>     16#8B#, Blue =>     16#22#). GREEN => (Red =>      16#0#, Green =>     16#80#, Blue =>      16#0#). DARKGREEN => (Red =>      16#0#, Green =>     16#64#, Blue =>      16#0#). BLUE => (Red =>      16#0#, Green =>      16#0#, Blue =>     16#FF#). MEDIUMBLUE => (Red =>      16#0#, Green =>      16#0#, Blue =>     16#CD#). DARKBLUE => (Red =>      16#0#, Green =>      16#0#, Blue =>     16#8B#).
     --  END LAB IO BLOCK
 
     package Color_Types is
@@ -390,13 +390,13 @@ attributes.
 
     --  START LAB IO BLOCK
     in 0:Init_Chk
-    out 0: 5 4 3 2 1
+    out 0: 5  4  3  2  1
     in 1:Init_Proc_Chk
-    out 1: 5 4 3 2 1
+    out 1: 5  4  3  2  1
     in 2:Double_Chk
-    out 2: 2 4 10 20 -20
+    out 2: 2  4  10  20 -20
     in 3:Diff_Prev_Chk
-    out 3: 0 1 3 5 -20
+    out 3: 0  1  3  5 -20
     in 4:Diff_Prev_Single_Chk
     out 4: 0
     --  END LAB IO BLOCK
@@ -800,9 +800,9 @@ These are other hints that could be useful:
 
     --  START LAB IO BLOCK
     in 0:Names_Ages_Chk
-    out 0:LIST OF NAMES: NAME: John AGE: 0 NAME: Patricia AGE: 0 NAME: Josh AGE: 0 LIST OF NAMES: NAME: John AGE: 18 NAME: Patricia AGE: 35 NAME: Josh AGE: 53
+    out 0:LIST OF NAMES: NAME: John AGE:  0 NAME: Patricia AGE:  0 NAME: Josh AGE:  0 LIST OF NAMES: NAME: John AGE:  18 NAME: Patricia AGE:  35 NAME: Josh AGE:  53
     in 1:Get_Age_Chk
-    out 1:Peter is 45 years old.
+    out 1:Peter is  45 years old.
     --  END LAB IO BLOCK
 
     package Names_Ages is
