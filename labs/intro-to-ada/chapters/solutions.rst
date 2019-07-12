@@ -1212,21 +1212,21 @@ Constrained Array
 .. code:: ada lab=Solutions_Arrays_ConstrainedArray
 
     --  START LAB IO BLOCK
-    in 0: Range_Chk
+    in 0:Range_Chk
     out 0: 1 2 3 4 5 6 7 8 9 10
-    in 1: Array_Range_Chk
-    out 1:  1 2 3 4 5 6 7 8 9 10
-    in 2: A_Obj_Chk
+    in 1:Array_Range_Chk
+    out 1: 1 2 3 4 5 6 7 8 9 10
+    in 2:A_Obj_Chk
     out 2: 1 2 42 42 42 42 42 42 42 42
-    in 3: Init_Chk
+    in 3:Init_Chk
     out 3: 1 2 3 4 5 6 7 8 9 10
-    in 4: Double_Chk
+    in 4:Double_Chk
     out 4: 200 180 160 20 40 60 80 120 100 140
-    in 5: First_Elem_Chk
+    in 5:First_Elem_Chk
     out 5: 100
-    in 6: Last_Elem_Chk
+    in 6:Last_Elem_Chk
     out 6: 70
-    in 7: Length_Chk
+    in 7:Length_Chk
     out 7: 10
     --  END LAB IO BLOCK
 
@@ -1363,10 +1363,10 @@ Colors: Lookup-Table
 .. code:: ada lab=Solutions_Arrays_ColorsLookupTable
 
     --  START LAB IO BLOCK
-    in 0: Color_Table_Chk
-    out 0: Size of HTML_Color_RGB: 11 Firebrick: (Red => 16#B2#, Green => 16#22#, Blue => 16#22#)
-    in 1: HTML_Color_To_Integer_Chk
-    out 1: SALMON => (Red => 16#FA#, Green => 16#80#, Blue => 16#72#). FIREBRICK => (Red => 16#B2#, Green => 16#22#, Blue => 16#22#). RED => (Red => 16#FF#, Green => 16#0#, Blue => 16#0#). DARKRED => (Red => 16#8B#, Green => 16#0#, Blue => 16#0#). LIME => (Red => 16#0#, Green => 16#FF#, Blue => 16#0#). FORESTGREEN => (Red => 16#22#, Green => 16#8B#, Blue => 16#22#). GREEN => (Red => 16#0#, Green => 16#80#, Blue => 16#0#). DARKGREEN => (Red => 16#0#, Green => 16#64#, Blue => 16#0#). BLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#FF#). MEDIUMBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#CD#). DARKBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#8B#).
+    in 0:Color_Table_Chk
+    out 0:Size of HTML_Color_RGB: 11 Firebrick: (Red => 16#B2#, Green => 16#22#, Blue => 16#22#)
+    in 1:HTML_Color_To_Integer_Chk
+    out 1:SALMON => (Red => 16#FA#, Green => 16#80#, Blue => 16#72#). FIREBRICK => (Red => 16#B2#, Green => 16#22#, Blue => 16#22#). RED => (Red => 16#FF#, Green => 16#0#, Blue => 16#0#). DARKRED => (Red => 16#8B#, Green => 16#0#, Blue => 16#0#). LIME => (Red => 16#0#, Green => 16#FF#, Blue => 16#0#). FORESTGREEN => (Red => 16#22#, Green => 16#8B#, Blue => 16#22#). GREEN => (Red => 16#0#, Green => 16#80#, Blue => 16#0#). DARKGREEN => (Red => 16#0#, Green => 16#64#, Blue => 16#0#). BLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#FF#). MEDIUMBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#CD#). DARKBLUE => (Red => 16#0#, Green => 16#0#, Blue => 16#8B#).
     --  END LAB IO BLOCK
 
     package Color_Types is
@@ -1487,15 +1487,15 @@ Unconstrained Array
 .. code:: ada lab=Solutions_Arrays_UnconstrainedArray
 
     --  START LAB IO BLOCK
-    in 0: Init_Chk
+    in 0:Init_Chk
     out 0: 5 4 3 2 1
-    in 1: Init_Proc_Chk
+    in 1:Init_Proc_Chk
     out 1: 5 4 3 2 1
-    in 2: Double_Chk
+    in 2:Double_Chk
     out 2: 2 4 10 20 -20
-    in 3: Diff_Prev_Chk
+    in 3:Diff_Prev_Chk
     out 3: 0 1 3 5 -20
-    in 4: Diff_Prev_Single_Chk
+    in 4:Diff_Prev_Single_Chk
     out 4: 0
     --  END LAB IO BLOCK
 
@@ -1622,12 +1622,12 @@ Quantities And Amounts
 .. code:: ada lab=Solutions_Arrays_QuantitiesAndAmounts
 
     --  START LAB IO BLOCK
-    in 0: Total_Func_Chk
-    out 0: 0.50 20.00 200.00 100.00 200.00
-    in 1: Total_Proc_Chk
-    out 1: 0.50 20.00 200.00 100.00 200.00
-    in 2: Total_Amount_Chk
-    out 2: 520.50
+    in 0:Total_Func_Chk
+    out 0:0.50 20.00 200.00 100.00 200.00
+    in 1:Total_Proc_Chk
+    out 1:0.50 20.00 200.00 100.00 200.00
+    in 2:Total_Amount_Chk
+    out 2:520.50
     --  END LAB IO BLOCK
 
     package Quantities_Amounts is
@@ -1759,8 +1759,8 @@ String_10
 .. code:: ada lab=Solutions_Arrays_String10
 
     --  START LAB IO BLOCK
-    in 0: String_10_Chk
-    out 0: And this i
+    in 0:String_10_Chk
+    out 0:And this i
     --  END LAB IO BLOCK
 
     package Strings_10 is
@@ -1827,10 +1827,10 @@ List of Names
 .. code:: ada lab=Solutions_Arrays_ListOfNames
 
     --  START LAB IO BLOCK
-    in 0: Names_Ages_Chk
-    out 0: LIST OF NAMES: NAME: John AGE: 0 NAME: Patricia AGE: 0 NAME: Josh AGE: 0 LIST OF NAMES: NAME: John AGE: 18 NAME: Patricia AGE: 35 NAME: Josh AGE: 53
-    in 1: Get_Age_Chk
-    out 1: Peter is 45 years old.
+    in 0:Names_Ages_Chk
+    out 0:LIST OF NAMES: NAME: John AGE: 0 NAME: Patricia AGE: 0 NAME: Josh AGE: 0 LIST OF NAMES: NAME: John AGE: 18 NAME: Patricia AGE: 35 NAME: Josh AGE: 53
+    in 1:Get_Age_Chk
+    out 1:Peter is 45 years old.
     --  END LAB IO BLOCK
 
     package Names_Ages is
