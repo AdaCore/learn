@@ -203,11 +203,12 @@ div.lab_results {
   float: left;
   outline: none;
   cursor: pointer;
-  padding: 14px 16px;
+  padding: 6px 16px;
   transition: 0.3s;
   flex: 0 0 auto;
   border: 1px solid transparent;
   color: #808080;
+  font-family: monospace
 }
 
 /* Change background color of buttons on hover */
@@ -218,10 +219,10 @@ div.lab_results {
 
 /* Create an active/current tablink class */
 .tab button.active {
-  color: #262626;
-  border: 1px solid #abc;
+  color: #333;
   border-top: 2px solid #f88745;
-  border-bottom: 1px solid #fff;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
 }
 
 /* Style the tab content */
