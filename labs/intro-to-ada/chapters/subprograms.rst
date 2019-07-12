@@ -25,13 +25,13 @@ the name indicates, this procedure performs the operation :ada:`A - B`.
 
     --  START LAB IO BLOCK
     in 0:Sub_10_1_Chk
-    out 0:Result: 9
+    out 0:Result:  9
     in 1:Sub_10_100_Chk
     out 1:Result: -90
     in 2:Sub_0_5_Chk
     out 2:Result: -5
     in 3:Sub_0_Minus_5_Chk
-    out 3:Result: 5
+    out 3:Result:  5
     --  END LAB IO BLOCK
 
     --  Write the correct parameters for the procedure below.
@@ -96,13 +96,13 @@ operation :ada:`A - B` and returns the result.
 
     --  START LAB IO BLOCK
     in 0:Sub_10_1_Chk
-    out 0:Result: 9
+    out 0:Result:  9
     in 1:Sub_10_100_Chk
     out 1:Result: -90
     in 2:Sub_0_5_Chk
     out 2:Result: -5
     in 3:Sub_0_Minus_5_Chk
-    out 3:Result: 5
+    out 3:Result:  5
     --  END LAB IO BLOCK
 
     --  Write the correct signature for the function below.
@@ -168,9 +168,9 @@ equal (flag is :ada:`True`) or not (flag is :ada:`False`).
 
     --  START LAB IO BLOCK
     in 0:Equal_Chk
-    out 0: 0 is equal to 0. 1 is equal to 1. 2 is equal to 2. 3 is equal to 3. 4 is equal to 4. 5 is equal to 5. 6 is equal to 6. 7 is equal to 7. 8 is equal to 8. 9 is equal to 9. 10 is equal to 10.
+    out 0: 0 is equal to  0.  1 is equal to  1.  2 is equal to  2.  3 is equal to  3.  4 is equal to  4.  5 is equal to  5.  6 is equal to  6.  7 is equal to  7.  8 is equal to  8.  9 is equal to  9.  10 is equal to  10.
     in 1:Inequal_Chk
-    out 1: 0 isn't equal to -1. 1 isn't equal to 0. 2 isn't equal to 1. 3 isn't equal to 2. 4 isn't equal to 3. 5 isn't equal to 4. 6 isn't equal to 5. 7 isn't equal to 6. 8 isn't equal to 7. 9 isn't equal to 8. 10 isn't equal to 9.
+    out 1: 0 isn't equal to -1.  1 isn't equal to  0.  2 isn't equal to  1.  3 isn't equal to  2.  4 isn't equal to  3.  5 isn't equal to  4.  6 isn't equal to  5.  7 isn't equal to  6.  8 isn't equal to  7.  9 isn't equal to  8.  10 isn't equal to  9.
     --  END LAB IO BLOCK
 
     --  Write the correct signature for the function below.
