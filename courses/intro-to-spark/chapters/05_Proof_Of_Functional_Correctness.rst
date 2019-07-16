@@ -1393,7 +1393,7 @@ each entry being the maximum values of both arguments at that index.
     package body Array_Util is
 
        function Max_Array (A, B : Nat_Array) return Nat_Array is
-          R : Nat_Array (A'Range) := (others => 0);
+          R : Nat_Array (A'Range);
           J : Integer := B'First;
        begin
           for I in A'Range loop
@@ -1439,7 +1439,7 @@ already the maximal integer value.
     package body Array_Util is
 
        function Max_Array (A, B : Nat_Array) return Nat_Array is
-          R : Nat_Array (A'Range) := (others => 0);
+          R : Nat_Array (A'Range);
           J : Integer := B'First;
        begin
           for I in A'Range loop

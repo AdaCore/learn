@@ -488,7 +488,7 @@ contracts. In this case, testing ``Incr_Until`` with an input greater than
 1000 raises an exception at runtime.
 
 .. code:: ada run_button prove_button
-   :class: ada-run-expect-failure
+    :class: ada-run-expect-failure
 
     package Show_Failed_Proof_Attempt is
 
@@ -518,13 +518,13 @@ contracts. In this case, testing ``Incr_Until`` with an input greater than
     with Show_Failed_Proof_Attempt; use Show_Failed_Proof_Attempt;
 
     procedure Main is
-       X : Integer;
+       Dummy : Integer;
     begin
-       X := 0;
-       Incr_Until (X);
+       Dummy := 0;
+       Incr_Until (Dummy);
 
-       X := 1000;
-       Incr_Until (X);
+       Dummy := 1000;
+       Incr_Until (Dummy);
     end Main;
 
 The error message shows that the first contract case is failing, which
