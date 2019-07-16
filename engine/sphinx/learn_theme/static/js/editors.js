@@ -25,6 +25,9 @@ MODES = {
 TEST_CASE_LABEL = "Test Case";
 
 RESET_TOOLTIP = "Reset editor to default state";
+SETTINGS_TOOLTIP = "Modify settings for this editor";
+
+SETTINGS_TABBED_EDITOR_LABEL = "Enable tabbed editor view for this editor";
 
 CUSTOM_INPUT_LABEL = "Test against custom input";
 CUSTOM_INPUT_TOOLTIP = "Use the Run button to test your code against a custom input sequence";
@@ -382,10 +385,11 @@ function create_editor(resource, container, tabs, editors, counter) {
     var tab_button = $('<button id="' + the_id + '_button" class="tab-links ' + tab_id + (counter == 1 ? ' active' : '') +'">' + resource.basename + '</button>');
     tab_button.click(function() {
         // Get all elements with class="tab-content" in current editor and hide them
-        $("div.tab-content." + tab_id).hide();
+        container.find('.tab-content').hide();
 
         // Get all elements with class="tab-links" and remove the class "active"
-        $("button.tab-links." + tab_id).removeClass("active");
+        container.find('.tab-links').removeClass('active');
+        container.find('.tab-content').removeClass('active');
 
         // Show the current tab, and add an "active" class to the button that opened the tab
         $("#" + the_id).addClass("active");
@@ -602,8 +606,6 @@ function fill_editor_from_contents(container, example_server, resources) {
 
     if (container.attr("prove_button") || container.attr("run_button")) {}
 
-    var reset_created = false;
-
     var results_div = $("div.test-results");
 
     results_div.text("");
@@ -638,23 +640,40 @@ function fill_editor_from_contents(container, example_server, resources) {
                 }
             }
         }).change();
-        $('<label class="custom_check" for="' + unique_id + '">' + CUSTOM_INPUT_LABEL + '</label>').appendTo(div);
+        $('<label class="custom_check" for="' + unique_id + '">').text(CUSTOM_INPUT_LABEL).appendTo(div);
     }
+
+    // create settings button
+    var settings_div = $('<div class="settings-container">').appendTo(buttons_div);
+    var settings_button = $('<button class="settings-btn">').html('<i class="fas fa-cog"></i>').appendTo(settings_div);
+    editors.buttons.push(settings_button);
+
+    var settings_content = $('<div class="settings-content">').appendTo(settings_div);
+    var tab_chkbox_id = generateUniqueId();
+    $('<input type="checkbox" id="' + tab_chkbox_id + '" class="settings-check" checked>').appendTo(settings_content).change(function() {
+        if ($(this).is(':checked')) {
+            container.find('.tab').show();
+            container.find('.tab-content').hide();
+
+            container.find('.tab-content.active').show();
+        }
+        else {
+            container.find('.tab').hide();
+            container.find('.tab-content').show();
+        }
+    });
+    $('<label class="settings-check" for="' + tab_chkbox_id + '">').text(SETTINGS_TABBED_EDITOR_LABEL).appendTo(settings_content);
+
+
+    // create reset button
+    var reset_button = $('<button type="button" class="btn btn-secondary" title="' + RESET_TOOLTIP + '">').text("Reset").appendTo(buttons_div).click(function(x) {
+        reset_worker(reset_button, editors, container, output_area, lab_area);
+    });
+    reset_button.editors = editors;
+    editors.buttons.push(reset_button);
 
     for (var mode in MODES) {
         if (container.attr(mode + "_button")) {
-
-            // Create the reset button, but do this only once and if there are other buttons
-            if (!reset_created) {
-                reset_created = true;
-                var reset_button = $('<button type="button" class="btn btn-secondary" title="' + RESET_TOOLTIP + '">').text("Reset").appendTo(buttons_div);
-                reset_button.editors = editors;
-                editors.buttons.push(reset_button);
-                reset_button.on('click', function(x) {
-                    reset_worker(reset_button, editors, container, output_area, lab_area);
-                });
-
-            }
 
             // Now create the button for each mode that has been specified in the attributes
             var the_text = MODES[mode]["button_text"];
@@ -680,6 +699,8 @@ function fill_editor_from_contents(container, example_server, resources) {
 
         }
     }
+
+
 }
 
 function fill_editor(container, example_server) {
