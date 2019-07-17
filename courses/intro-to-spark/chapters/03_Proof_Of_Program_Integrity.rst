@@ -1164,10 +1164,10 @@ Let's rewrite the contract of ``Compute`` to avoid overlapping cases.
 .. code:: ada prove_button
 
     procedure Compute (X : in out Integer) with
-      Contract_Cases => ((X in    1 ..  199) => X >= X'Old,
+      Contract_Cases => ((X in    0 ..  199) => X >= X'Old,
                          (X in -199 ..   -1) => X <= X'Old,
                           X >=  200           => X =  200,
-                          X <= -200           => X = -200)
+                          X <  -200           => X = -200)
     is
     begin
        if X in -100 .. 100 then
@@ -1186,5 +1186,5 @@ Let's rewrite the contract of ``Compute`` to avoid overlapping cases.
 This example is still not correct.  GNATprove can successfully prove the
 different cases are disjoint and also successfully verify each case
 individually. This isn't enough, though: a :ada:`Contract_Cases` must cover
-all cases. Here, we forgot the value 0, which is what GNATprove reports in
+all cases. Here, we forgot the value -200, which is what GNATprove reports in
 its counterexample.
