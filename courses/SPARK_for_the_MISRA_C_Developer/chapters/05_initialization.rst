@@ -102,7 +102,7 @@ function ``F`` might not always initialize output parameter ``P``:
 We can correct the program by initializing ``P`` to value 0 when condition ``B`` is
 not satisfied:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     with Interfaces; use Interfaces;
 

@@ -132,7 +132,7 @@ the final value of ``P`` will be modified by rotation around the ``X`` axis.
 
 :code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
-.. code:: ada prove_button
+.. code:: ada prove_report_all_button
 
     package Geometry is
 
@@ -675,8 +675,9 @@ listed above.  If we really wanted to achieve the effect of the above code
 in legal SPARK (or Ada), then the following approach will work (the type ``Unsigned_8``
 is an 8-bit modular type declared in the predefined package ``Interfaces``).
 
-.. code:: ada
-    :class: ada-syntax-only
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+.. code:: ada prove_flow_report_all_button
 
     with Interfaces; use Interfaces;
     package Unethical_Genetics is
@@ -687,6 +688,8 @@ is an 8-bit modular type declared in the predefined package ``Interfaces``).
        Mutant : Animal := Animal'Val (A (Bee) xor A (Dog));
        pragma Assert (Mutant = Cat);
     end Unethical_Genetics;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Note that ``and``, ``or``, ``not`` and ``xor`` are used both as logical operators
 and as bitwise operators, but there is no possible confusion between these two uses.

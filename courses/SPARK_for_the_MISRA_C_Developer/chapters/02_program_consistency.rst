@@ -172,7 +172,7 @@ GNAT Ada compiler:
                |
         >>> ambiguous expression (cannot resolve "Put_Line")
         >>> possible interpretation at helper.ads:2
-        >>> possible interpretation at a-textio.ads:263
+        >>> possible interpretation at a-textio.ads:508
 
      9.     end Hello_World;
 

@@ -155,7 +155,7 @@ statement level, so the following is not allowed:
 Instead, every read of a volatile variable must occur immediately before being
 assigned to another variable, as follows:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     package Volatile_Read is
        X : Integer with Volatile;
@@ -217,7 +217,7 @@ GNATprove detects that function ``Set`` has a side effect on global variable
 ``Value`` and issues an error. The correct idiom in SPARK for such a case is to
 use a procedure with an ``out`` parameter to return the desired result:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     package Ok_Subprograms is
        procedure Set (V : Integer; Prev : out Integer);
