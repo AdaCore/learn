@@ -14,4 +14,8 @@
     "es6": true,
     "jquery": true
   },
+
+  "globals": {
+    "ace": "readonly",
+  },
 }

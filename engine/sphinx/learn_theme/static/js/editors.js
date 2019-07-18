@@ -624,9 +624,6 @@ function createEditor(resource, container, tabs, editors, counter) {
   return editor;
 }
 
-// Fills a <div> with an editable representation of an example.
-//    container: the <div> in question
-
 /**
  * Fills a <div> with an editable representation of an example.
  *
