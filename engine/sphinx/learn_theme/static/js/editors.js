@@ -1,752 +1,989 @@
 // List of known modes, and the corresponding button labels
-MODES = {
-    "prove": {
-        "button_text": "Prove",
-        "tooltip": "Run gnatprove to prove SPARK code"
-    },
-    "prove_flow": {
-        "button_text": "Examine",
-        "tooltip": "Run gnatprove to examine SPARK data and control flow"
-    },
-    "prove_report_all": {
-        "button_text": "Prove (report=all)",
-        "tooltip": "Run gnatprove to prove SPARK code and report all findings"
-    },
-    "run": {
-        "button_text": "Run",
-        "tooltip": "Run code in editor"
-    },
-    "submit": {
-        "button_text": "Submit",
-        "tooltip": "Submit code for lab"
-    }
+const MODES = {
+  'prove': {
+    'button_text': 'Prove',
+    'tooltip': 'Run gnatprove to prove SPARK code',
+  },
+  'prove_flow': {
+    'button_text': 'Examine',
+    'tooltip': 'Run gnatprove to examine SPARK data and control flow',
+  },
+  'prove_report_all': {
+    'button_text': 'Prove (report=all)',
+    'tooltip': 'Run gnatprove to prove SPARK code and report all findings',
+  },
+  'run': {
+    'button_text': 'Run',
+    'tooltip': 'Run code in editor',
+  },
+  'submit': {
+    'button_text': 'Submit',
+    'tooltip': 'Submit code for lab',
+  },
 };
 
-TEST_CASE_LABEL = "Test Case";
+const TEST_CASE_LABEL = 'Test Case';
 
-RESET_TOOLTIP = "Reset editor to default state";
-SETTINGS_TOOLTIP = "Modify settings for this editor";
+const RESET_TOOLTIP = 'Reset editor to default state';
+// const SETTINGS_TOOLTIP = 'Modify settings for this editor';
 
-SETTINGS_TABBED_EDITOR_LABEL = "Enable tabbed editor view for this editor";
+const SETTINGS_TABBED_EDITOR_LABEL =
+'Enable tabbed editor view for this editor';
 
-CUSTOM_INPUT_LABEL = "Test against custom input";
-CUSTOM_INPUT_TOOLTIP = "Use the Run button to test your code against a custom input sequence";
+const CUSTOM_INPUT_LABEL = 'Test against custom input';
+const CUSTOM_INPUT_TOOLTIP =
+'Use the Run button to test your code against a custom input sequence';
 
-INTERNAL_ERROR_MESSAGE = "Please report this issue on https://github.com/AdaCore/learn/issues";
+const INTERNAL_ERROR_MESSAGE =
+'Please report this issue on https://github.com/AdaCore/learn/issues';
 
-LAB_TEST_INPUT_LABEL = "Input";
-LAB_TEST_OUTPUT_LABEL = "Expected Output";
-LAB_TEST_ACTUAL_LABEL = "Received Output";
-LAB_TEST_STATUS_LABEL = "Status";
+const LAB_TEST_INPUT_LABEL = 'Input';
+const LAB_TEST_OUTPUT_LABEL = 'Expected Output';
+const LAB_TEST_ACTUAL_LABEL = 'Received Output';
+const LAB_TEST_STATUS_LABEL = 'Status';
 
-LAB_COMPLETE_LABEL = "Lab completed successfully.";
-LAB_FAILED_LABEL = "Lab failed.";
+const LAB_COMPLETE_LABEL = 'Lab completed successfully.';
+const LAB_FAILED_LABEL = 'Lab failed.';
 
-EXIT_STATUS_LABEL = "exit status";
+const EXIT_STATUS_LABEL = 'exit status';
 
-MACHINE_NOT_RESPONDING_LABEL = "The machine running the examples is not responding, please try again later.";
-MACHINE_BUSY_LABEL = "The machine running the examples may not be available or is busy, please try again now or come back later.";
+const MACHINE_NOT_RESPONDING_LABEL =
+'The machine running the examples is not responding, please try again later.';
+const MACHINE_BUSY_LABEL =
+'The machine running the examples may not be available or is busy, please try' +
+' again now or come back later.';
 
-CONSOLE_OUTPUT_LABEL = "Console Output";
+const CONSOLE_OUTPUT_LABEL = 'Console Output';
 
-CLI_FILE = "cli.txt"
+const CLI_FILE = 'cli.txt';
 
-// Log an error message in the output area
-function output_error(output_area, message) {
-    var div = $('<div class="output_error">');
-    div.text(message);
-    div.appendTo(output_area);
+/**
+ * Log an error message in the output area
+ *
+ * @param {jQuery} outputArea - The output area div where messages will be put
+ * @param {string} message - The message to put in outputArea
+ *
+ */
+function outputError(outputArea, message) {
+  $('<div>')
+      .addClass('output_error')
+      .text(message)
+      .appendTo(outputArea);
 }
 
-// Reset the buttons on the editors to the "enabled" state
-// Reset the count of lines already read to 0
+/**
+ * Reset the buttons on the editors to the "enabled" state
+ * Reset the count of lines already read to 0
+ *
+ * @param {jQuery} container - The container to reset
+ * @param {Object} editors - The list of ace editors
+ *
+ */
 function reset(container, editors) {
-    editors.buttons.forEach(function(b) {
-        b.disabled = false;
-    });
-    container.already_read = 0;
+  editors.buttons.forEach(function(b) {
+    b.disabled = false;
+  });
+  container.alreadyRead = 0;
 }
 
-// Process the result of a check
-//  editors: the editors to decorate
-//  output_area: the div where the messages should go
-//  status: the exit status
-//  message: any message coming back from the application
-//   TODO: make use of message
-function process_check_output(container, editors, output_area, lab_area, output, status, completed, message) {
-    // Process the lines
+/**
+ * Process the result of a check
+ *
+ * @param {jQuery} container - The container with the editors
+ * @param {Object} editors - The list of ace editors in the container
+ * @param {jQuery} outputArea - The output area to put messages
+ * @param {jQuery} labArea - The area in the output area where lab messages go
+ * @param {string[]} output - The list of string outputs from the server
+ * @param {Number} status - The exit status
+ * @param {boolean} completed - Is the program finished running
+ * @param {string} message - Any message coming back from the application
+ * @return {Number} - The number of lines processed
+ *
+ * @todo Make use of message
+ *
+ */
+function processCheckOutput(container, editors, outputArea, labArea, output,
+    status, completed, message) {
+  let readLines = 0;
 
-    var read_lines = 0;
+  /**
+   * Find and return the lab output div corresponding to the lab ref
+   * Create a new div if one doesn't already exist
+   *
+   * @param {string} ref - The lab ref to search for
+   * @return {jQuery} - The div to put the lab ref messages
+   *
+   */
+  function findRefInLabRefList(ref) {
+    const child = labArea.find( 'div.lab_test_case[data-labref=' + ref + ']');
 
-    function find_ref_in_lab_ref_list(ref) {
+    if (child.length > 0) {
+      return child;
+    }
 
-        var child = lab_area.find( 'div.lab_test_case[data-labref=' + ref + ']');
+    const tabId = generateUniqueId();
 
-        if(child.length > 0) {
-            return child;
-        }
 
-        var acc_wrapper = $("<div class='acc_wrapper' data-labref=" + ref + ">");
-        acc_wrapper.appendTo(lab_area);
+    const accWrapper = $('<div>')
+        .addClass('acc_wrapper')
+        .attr('data-labref', ref)
+        .appendTo(labArea);
 
-        var acc_button = $("<button class='accordion' data-labref=" + ref + "><span>" + TEST_CASE_LABEL + " #" + ref + '</span></button>')
-        acc_button.appendTo(acc_wrapper);
-
-        var tab_id = generateUniqueId();
-
-        acc_button.click(function() {
-            $(this).toggleClass("active");
-            $("#" + tab_id).toggle();
+    $('<button>')
+        .addClass('accordion')
+        .attr('data-labref', ref)
+        .append(
+            $('<span>').text(TEST_CASE_LABEL + ' #' + ref)
+        )
+        .appendTo(accWrapper)
+        .click(function() {
+          $(this).toggleClass('active');
+          $('#' + tabId).toggle();
         });
 
-        var div = $('<div id=' + tab_id + ' class="lab_test_case" data-labref=' + ref + '>');
+    return $('<div>')
+        .attr('id', tabId)
+        .addClass('lab_test_case')
+        .attr('data-labref', ref)
+        .appendTo(accWrapper);
+  }
 
-        div.appendTo(acc_wrapper);
+  output.forEach(function(l) {
+    readLines++;
 
-        return div;
-    }
+    const msgObj = JSON.parse(l);
 
-    output.forEach(function(l) {
-        read_lines++;
-
-        var msg_obj = JSON.parse(l);
-
-        // look for classification of message
-        for (var msg_type in msg_obj) {
-            var home_div = output_area;
-
-            if (msg_obj[msg_type].hasOwnProperty('lab_ref')) {
-                lab_ref = msg_obj[msg_type]["lab_ref"];
-                var found = false;
-                var found_obj = null;
-
-                home_div = find_ref_in_lab_ref_list(lab_ref);
-            }
-
-            var div = $('<div>');
-            div.appendTo(home_div);
-
-            switch(msg_type) {
-                case "console":
-                    var msg = msg_obj[msg_type]["msg"];
-                    div.addClass("output_console");
-                    div.text("$ " + msg);
-                    break;
-                case "internal_error":
-                    msg_obj[msg_type]["msg"] += " " + INTERNAL_ERROR_MESSAGE;
-                    //  this fall through is intentional
-                case "stderr":
-                    error_found = true;
-                    //  this fall through is intentional
-                case "stdout":
-                    var msg = msg_obj[msg_type]["msg"];
-                    // Look for lines that contain an error message
-                    var match_found = msg.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
-                    if (match_found) {
-                        if (match_found[4].indexOf(" info:") == 0) {
-                            div.addClass("output_msg_info");
-                        } else {
-                            div.addClass("output_msg");
-                            output_area.error_count++;
-                        }
-
-                        // Lines that contain a sloc are clickable:
-                        div.on('click', function(x) {
-                            // find the corresponding editor
-                            var basename = match_found[1];
-                            editors.forEach(function(e) {
-                                if (e.basename == basename) {
-                                    // Switch to the tab that contains the editor
-
-                                    // TODO: this is in the case of bootstrap only
-                                    $("#" + e.unique_id + "_button").click();
-
-                                    // Jump to the corresponding line
-                                    e.gotoLine(parseInt(match_found[2]),
-                                        // looks like column numbers are indexed from 0
-                                        parseInt(match_found[3] - 1),
-                                        true);
-                                    e.focus();
-                                }
-                            });
-                        });
-                    }
-                    else {
-                        div.addClass("output_line");
-                    }
-
-                    div.text(msg);
-
-                    break;
-                case "lab_output":
-                    var test_cases = msg_obj[msg_type]["test_cases"];
-
-                    var lab_tab = $("<div class='lab_tab'>");
-
-                    for (var test in test_cases) {
-
-                        home_div = find_ref_in_lab_ref_list(test);
-                        var case_div = $('<div class="lab_results">');
-                        case_div.appendTo(home_div);
-
-                        var test_class = ""
-
-                        if (test_cases[test]["status"] == "Success") {
-                            test_class = "lab_test_success";
-                        }
-                        else {
-                            test_class = "lab_test_failed";
-                        }
-
-                        home_div.addClass(test_class);
-                        var labref = home_div.data('labref');
-                        lab_area.find("button[data-labref='" + labref + "']").addClass(test_class);
-
-                        $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">' + LAB_TEST_INPUT_LABEL + ':</span><code>' + test_cases[test]["in"] + '</code></div>').appendTo(case_div);
-                        $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">' + LAB_TEST_OUTPUT_LABEL + ':</span><code>' + test_cases[test]["out"] + '</code></div>').appendTo(case_div);
-                        $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">' + LAB_TEST_ACTUAL_LABEL + ':</span><code>' + test_cases[test]["actual"] + '</code></div>').appendTo(case_div);
-                        $('<div class="lab_test_msg lab_test_status"><span class="lab_test_msg_title">' + LAB_TEST_STATUS_LABEL + ':</span>' + test_cases[test]["status"] + '</div>').appendTo(case_div);
-                    }
-
-                    div.addClass("lab_status");
-                    if (msg_obj[msg_type]["success"]) {
-                        div.text(LAB_COMPLETE_LABEL);
-                    }
-                    else {
-                        div.text(LAB_FAILED_LABEL);
-                    }
-                    break;
-                default:
-                    // TODO: this branch should probably throw an error
-                    div.addClass("output_line");
-                    div.text(msg);
-                    break;
-            }
-        }
-    });
-
-    // Congratulations!
-    if (completed) {
-        reset(container, editors);
-
-        if (status != 0) {
-            output_error(output_area, EXIT_STATUS_LABEL + ": " + status);
+    // look for classification of message
+    let homeDiv = outputArea;
+    for (const msgType in msgObj) {
+      // Require Guarding for-in (guard-for-in)
+      if ({}.hasOwnProperty.call(msgObj, msgType)) {
+        if (Object.prototype.hasOwnProperty.call(msgObj[msgType], 'lab_ref')) {
+          const labRef = msgObj[msgType]['lab_ref'];
+          homeDiv = findRefInLabRefList(labRef);
         }
 
-        output_area.find( '.spinner' ).remove();
-    }
+        const div = $('<div>').appendTo(homeDiv);
 
-    return read_lines;
-}
+        switch (msgType) {
+          case 'console':
+            div.addClass('output_console');
+            div.text('$ ' + msgObj[msgType]['msg']);
+            break;
+          case 'internal_error':
+            msgObj[msgType]['msg'] += ' ' + INTERNAL_ERROR_MESSAGE;
+          //  this fall through is intentional
+          case 'stderr':
+          case 'stdout': {
+            const msg = msgObj[msgType]['msg'];
+            // Look for lines that contain an error message
+            const matchFound =
+              msg.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
 
-function get_output_from_identifier(container, editors, output_area, lab_area, identifier) {
-    data = {
-        "identifier": identifier,
-        "already_read": container.already_read
-    };
-    $.ajax({
-            url: container.example_server + "/check_output/",
-            data: JSON.stringify(data),
-            type: "POST",
-            dataType: "json",
-            contentType: 'application/json; charset=UTF-8',
-            timeout: 4000
-        })
-        .done(function(json) {
-            read_lines = process_check_output(
-                container,
-                editors, output_area, lab_area,
-                json.output_lines, json.status, json.completed, json.message
-            );
-            container.already_read = container.already_read + read_lines;
-            if (!json.completed) {
-                // We have not finished processing the output: call this again
-                setTimeout(function() {
-                    get_output_from_identifier(container, editors, output_area, lab_area, identifier);
-                }, 250);
+            if (matchFound) {
+              if (matchFound[4].indexOf(' info:') == 0) {
+                div.addClass('output_msg_info');
+              } else {
+                div.addClass('output_msg');
+                outputArea.error_count++;
+              }
+
+              // Lines that contain a sloc are clickable:
+              div.click(function(x) {
+                // find the corresponding editor
+                const basename = matchFound[1];
+                editors.forEach(function(e) {
+                  if (e.basename == basename) {
+                    // Switch to the tab that contains the editor
+                    $('#' + e.uniqueId + '_button').click();
+
+                    // Jump to the corresponding line
+                    e.gotoLine(parseInt(matchFound[2]),
+                        // looks like column numbers are indexed from 0
+                        parseInt(matchFound[3] - 1),
+                        true);
+                    e.focus();
+                  }
+                });
+              });
             } else {
+              div.addClass('output_line');
+            }
 
-                if (container.parent().hasClass("test-descriptor")) {
-                    // we are in test mode. call test function callback
-                    test_callback(container);
+            div.text(msg);
+
+            break;
+          }
+          case 'lab_output': {
+            const testCases = msgObj[msgType]['test_cases'];
+
+            for (const test in testCases) {
+              if ({}.hasOwnProperty.call(testCases, test)) {
+                homeDiv = findRefInLabRefList(test);
+                const caseDiv = $('<div>')
+                    .addClass('lab_results')
+                    .appendTo(homeDiv);
+
+                let testClass = '';
+
+                if (testCases[test]['status'] == 'Success') {
+                  testClass = 'lab_test_success';
+                } else {
+                  testClass = 'lab_test_failed';
                 }
 
-                // if there is a lab area, sort accordions
-                var lab_accs = lab_area.find("div.acc_wrapper");
-                var sorted_accs = lab_accs.sort(function(a, b) {
-                    return $(a).data('labref') > $(b).data('labref');
-                });
-                sorted_accs.appendTo(lab_area);
+                homeDiv.addClass(testClass);
 
+                const labref = homeDiv.data('labref');
+                labArea.find('button[data-labref="' + labref + '"]')
+                    .addClass(testClass);
+
+                $('<div>')
+                    .addClass('lab_test_msg')
+                    .addClass('lab_test_input')
+                    .append(
+                        $('<span>')
+                            .addClass('lab_test_msg_title')
+                            .text(LAB_TEST_INPUT_LABEL + ':')
+                    )
+                    .append(
+                        $('<code>').text(testCases[test]['in'])
+                    )
+                    .appendTo(caseDiv);
+
+                $('<div>')
+                    .addClass('lab_test_msg')
+                    .addClass('lab_test_output')
+                    .append(
+                        $('<span>')
+                            .addClass('lab_test_msg_title')
+                            .text(LAB_TEST_OUTPUT_LABEL + ':')
+                    )
+                    .append(
+                        $('<code>').text(testCases[test]['out'])
+                    )
+                    .appendTo(caseDiv);
+
+                $('<div>')
+                    .addClass('lab_test_msg')
+                    .addClass('lab_test_actual')
+                    .append(
+                        $('<span>')
+                            .addClass('lab_test_msg_title')
+                            .text(LAB_TEST_ACTUAL_LABEL + ':')
+                    )
+                    .append(
+                        $('<code>').text(testCases[test]['actual'])
+                    )
+                    .appendTo(caseDiv);
+
+                $('<div>')
+                    .addClass('lab_test_msg')
+                    .addClass('lab_test_status')
+                    .append(
+                        $('<span>')
+                            .addClass('lab_test_msg_title')
+                            .text(LAB_TEST_STATUS_LABEL + ':')
+                    )
+                    .append(
+                        $('<code>').text(testCases[test]['status'])
+                    )
+                    .appendTo(caseDiv);
+              }
             }
-        })
-        .fail(function(xhr, status, errorThrown) {
-            output_error(output_area, MACHINE_NOT_RESPONDING_LABEL);
-            console.log("Error: " + errorThrown);
-            console.log("Status: " + status);
-            console.dir(xhr);
-        })
-        .fail(function(json) {
-            reset(container, editors);
-            output_error(output_area, json.message);
-        });
-}
 
-
-// Launch a run on the given example editor
-function query_operation_result(container, editors, output_area, lab_area, mode) {
-
-    files = [];
-
-    // Grab the contents from actual editors
-    editors.forEach(function(e) {
-        files.push({
-            'basename': e.basename,
-            'contents': e.getValue()
-        });
-    });
-
-    // Grab the contents from shadow files
-    if (container.shadow_files) {
-        container.shadow_files.forEach(function(e) {
-            files.push({
-                'basename': e.basename,
-                'contents': e.contents
-            });
-        });
-    }
-
-    var input_search = container.find( 'textarea[name="custom_input"]' );
-    var check_search = container.find( 'input.custom_check' );
-
-    if(check_search.length == 1 && input_search.length == 1) {
-        if(check_search.is(':checked')) {
-            files.push({
-                'basename': CLI_FILE,
-                'contents': input_search.val(),
-            });
-        }
-    }
-
-    data = {
-        "files": files,
-        "mode": mode,
-    };
-
-    var lab_name = container.attr("lab_name");
-    if(lab_name) {
-        data["lab"] = lab_name;
-    }
-
-    // reset the number of lines already read
-    container.already_read = 0;
-
-    // request the examples
-    $.ajax({
-            url: container.example_server + "/run_program/",
-            data: JSON.stringify(data),
-            type: "POST",
-            dataType: "json",
-            contentType: 'application/json; charset=UTF-8',
-            timeout: 4000,
-        })
-        .done(function(json) {
-            if (json.identifier == "") {
-                reset(container, editors);
-                output_error(output_area, json.message);
+            div.addClass('lab_status');
+            if (msgObj[msgType]['success']) {
+              div.text(LAB_COMPLETE_LABEL);
             } else {
-                get_output_from_identifier(container, editors, output_area, lab_area, json.identifier);
+              div.text(LAB_FAILED_LABEL);
             }
-        })
-        .fail(function(xhr, status, errorThrown) {
-            reset(container, editors);
-            output_error(output_area, MACHINE_BUSY_LABEL);
-            console.log("Error: " + errorThrown);
-            console.log("Status: " + status);
-            console.dir(xhr);
-        });
+            break;
+          }
+          default: {
+            // TODO: this branch should probably throw an error
+            const msg = msgObj[msgType]['msg'];
+            div.addClass('output_line');
+            div.text(msg);
+            break;
+          }
+        }
+      }
+    }
+  });
+
+  // Congratulations!
+  if (completed) {
+    reset(container, editors);
+
+    if (status != 0) {
+      outputError(outputArea, EXIT_STATUS_LABEL + ': ' + status);
+    }
+
+    outputArea.find( '.spinner' ).remove();
+  }
+
+  return readLines;
 }
 
+/**
+ * Process the result of a check
+ *
+ * @param {jQuery} container - The container with the editors
+ * @param {Object} editors - The list of ace editors in the container
+ * @param {jQuery} outputArea - The output area to put messages
+ * @param {jQuery} labArea - The area in the output area where lab messages go
+ * @param {string} identifier - The location of the example directory
+ *
+ */
+function getOutputFromIdentifier(container, editors, outputArea, labArea,
+    identifier) {
+  const data = {
+    'identifier': identifier,
+    'already_read': container.alreadyRead,
+  };
+
+  $.ajax({
+    url: container.exampleServer + '/check_output/',
+    data: JSON.stringify(data),
+    type: 'POST',
+    dataType: 'json',
+    contentType: 'application/json; charset=UTF-8',
+    timeout: 4000,
+  }).done(function(json) {
+    const readLines = processCheckOutput(
+        container,
+        editors, outputArea, labArea,
+        json.output_lines, json.status, json.completed, json.message
+    );
+    container.alreadyRead = container.alreadyRead + readLines;
+    if (!json.completed) {
+      // We have not finished processing the output: call this again
+      setTimeout(function() {
+        getOutputFromIdentifier(container, editors, outputArea,
+            labArea, identifier);
+      }, 250);
+    } else {
+      if (container.parent().hasClass('test-descriptor')) {
+        // we are in test mode. call test function callback
+        testCallback(container);
+      }
+
+      // if there is a lab area, sort accordions
+      const labAccs = labArea.find('div.acc_wrapper');
+      const sortedAccs = labAccs.sort(function(a, b) {
+        return $(a).data('labref') > $(b).data('labref');
+      });
+      sortedAccs.appendTo(labArea);
+    }
+  }).fail(function(xhr, status, errorThrown) {
+    outputError(outputArea, MACHINE_NOT_RESPONDING_LABEL);
+    console.log('Error: ' + errorThrown);
+    console.log('Status: ' + status);
+    console.dir(xhr);
+  }).fail(function(json) {
+    reset(container, editors);
+    outputError(outputArea, json.message);
+  });
+}
+
+/**
+ * Launch a run on the given example editor
+ *
+ * @param {jQuery} container - The container with the editors
+ * @param {Object} editors - The list of ace editors in the container
+ * @param {jQuery} outputArea - The output area to put messages
+ * @param {jQuery} labArea - The area in the output area where lab messages go
+ * @param {string} mode - the button mode
+ *
+ */
+function queryOperationResult(container, editors, outputArea, labArea, mode) {
+  const files = [];
+
+  // Grab the contents from actual editors
+  editors.forEach(function(e) {
+    files.push({
+      'basename': e.basename,
+      'contents': e.getValue(),
+    });
+  });
+
+  // Grab the contents from shadow files
+  if (container.shadow_files) {
+    container.shadow_files.forEach(function(e) {
+      files.push({
+        'basename': e.basename,
+        'contents': e.contents,
+      });
+    });
+  }
+
+  const inputSearch = container.find( 'textarea[name="custom_input"]' );
+  const checkSearch = container.find( 'input.custom_check' );
+
+  if (checkSearch.length == 1 && inputSearch.length == 1) {
+    if (checkSearch.is(':checked')) {
+      files.push({
+        'basename': CLI_FILE,
+        'contents': inputSearch.val(),
+      });
+    }
+  }
+
+  const data = {
+    'files': files,
+    'mode': mode,
+  };
+
+  const labName = container.attr('lab_name');
+  if (labName) {
+    data['lab'] = labName;
+  }
+
+  // reset the number of lines already read
+  container.alreadyRead = 0;
+
+  // request the examples
+  $.ajax({
+    url: container.exampleServer + '/run_program/',
+    data: JSON.stringify(data),
+    type: 'POST',
+    dataType: 'json',
+    contentType: 'application/json; charset=UTF-8',
+    timeout: 4000,
+  }).done(function(json) {
+    if (json.identifier == '') {
+      reset(container, editors);
+      outputError(outputArea, json.message);
+    } else {
+      getOutputFromIdentifier(container, editors, outputArea, labArea,
+          json.identifier);
+    }
+  }).fail(function(xhr, status, errorThrown) {
+    reset(container, editors);
+    outputError(outputArea, MACHINE_BUSY_LABEL);
+    console.log('Error: ' + errorThrown);
+    console.log('Status: ' + status);
+    console.dir(xhr);
+  });
+}
+
+/**
+ * Generate a unique ID using a UUID generator
+ *
+ * @return {string} A unique ID based on a UUID
+ *
+ */
 function generateUniqueId() {
-    var dt = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (dt + Math.random()*16)%16 | 0;
+  let dt = new Date().getTime();
+  const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+      .replace(/[xy]/g, function(c) {
+        const r = (dt + Math.random()*16)%16 | 0;
         dt = Math.floor(dt/16);
         return (c=='x' ? r :(r&0x3|0x8)).toString(16);
-    });
-    return uuid;
+      });
+  return uuid;
 }
 
+/**
+ * Create an editor and add it to the list of tabs in the container
+ *
+ * @param {string} resource - The file to put in the editor
+ * @param {jQuery} container - the container we are working in
+ * @param {jQuery} tabs - The div where the tabs live
+ * @param {Object} editors - The list of editors
+ * @param {Number} counter - The count'nth editor in the widget
+ * @return {Object} The created editor
+ *
+ */
+function createEditor(resource, container, tabs, editors, counter) {
+  const tabId = 'tab_' + container.attr('the_id');
+  const theId = tabId + '-' + counter;
 
-function create_editor(resource, container, tabs, editors, counter) {
-    var tab_id = "tab_" + container.attr("the_id")
-    var the_id = tab_id + "-" + counter;
-
-    var tab_button = $('<button id="' + the_id + '_button" class="tab-links ' + tab_id + (counter == 1 ? ' active' : '') +'">' + resource.basename + '</button>');
-    tab_button.click(function() {
-        // Get all elements with class="tab-content" in current editor and hide them
+  $('<button>')
+      .attr('id', theId + '_button')
+      .addClass('tab-links')
+      .addClass(tabId + (counter == 1 ? ' active' : ''))
+      .text(resource.basename)
+      .click(function() {
+        // Get all elements with .tab-content in current editor and hide them
         container.find('.tab-content').hide();
 
         // Get all elements with class="tab-links" and remove the class "active"
         container.find('.tab-links').removeClass('active');
         container.find('.tab-content').removeClass('active');
 
-        // Show the current tab, and add an "active" class to the button that opened the tab
-        $("#" + the_id).addClass("active");
-        $("#" + the_id).show();
+        // Show the current tab, add "active" to button that opened the tab
+        $('#' + theId).addClass('active');
+        $('#' + theId).show();
 
-        $(this).addClass("active");
-    });
-    tab_button.appendTo(tabs);
+        $(this).addClass('active');
+      })
+      .appendTo(tabs);
 
-    var div = $('<div class="tab-content ' + tab_id +
-        (counter == 1 ? ' active' : '') +
-        '" id="' + the_id + '">');
+  const div = $('<div>')
+      .addClass('tab-content')
+      .addClass(tabId)
+      .addClass(counter == 1 ? 'active' : '')
+      .attr('id', theId)
+      .appendTo(container);
 
-    var editordiv = $('<div class="editor_container"' +
-        ' id="' + resource.basename + the_id + '_editor">');
+  $('<div>')
+      .addClass('editor_container')
+      .attr('id', resource.basename + theId + '_editor')
+      .appendTo(div);
 
-    editordiv.appendTo(div);
-    div.appendTo(container);
+  // ACE editors...
+  const editor = ace.edit(resource.basename + theId + '_editor');
 
-    // ACE editors...
-    editor = ace.edit(resource.basename + the_id + '_editor');
+  // Set the mode
+  if (resource.basename.match(/.ad[sb]$/)) {
+    editor.session.setMode('ace/mode/ada');
+  } else {
+    editor.session.setMode('ace/mode/c_cpp');
+  }
 
-    // Set the mode
-    if (resource.basename.match(/.ad[sb]$/)) {
-        editor.session.setMode("ace/mode/ada");
+  // ... and their contents
+  editor.setValue(resource.contents);
+  editor.setShowPrintMargin(false);
+  editor.gotoLine(1);
+  editor.initial_contents = resource.contents;
+  editor.basename = resource.basename;
+  editor.uniqueId = theId;
+
+  editor.setOptions({
+    highlightActiveLine: false,
+    fontSize: 13,
+    tabSize: 3,
+    useSoftTabs: true,
+    theme: 'ace/theme/tomorrow',
+  });
+
+  $(container).children('.resource').each(function() {
+    if ($(this).attr('region')) {
+      const region = $(this).attr('region');
+
+      // search editor content for region "region"
+      const beginregion = editor.find('--  #region ' + region);
+      const endregion = editor.find('--  #endregion ' + region);
+
+      const newRange = beginregion.clone();
+      newRange.end.row = endregion.end.row;
+      newRange.end.column = endregion.end.column;
+
+      const textReplace = $(this).text().replace(/^\s|\s+$/g, '');
+
+      editor.getSession().getDocument().replace(newRange, textReplace);
+      $(this).text('');
     } else {
-        editor.session.setMode("ace/mode/c_cpp");
+      // No region: replace the whole editor
+      editor.initial_contents = $(this).text();
+      editor.setValue($(this).text());
+      $(this).text('');
     }
+  });
 
-    // ... and their contents
-    editor.setValue(resource.contents);
-    editor.setShowPrintMargin(false);
-    editor.gotoLine(1);
-    editor.initial_contents = resource.contents;
-    editor.basename = resource.basename;
-    editor.unique_id = the_id;
+  // search for remaining region marks and remove
+  editor.replaceAll('', {
+    needle: '--  #region (.*)\n',
+    regExp: true,
+  });
+  editor.replaceAll('', {
+    needle: '--  #endregion (.*)\n',
+    regExp: true,
+  });
 
-    editor.setOptions({
-        highlightActiveLine: false,
-        fontSize: 13,
-        tabSize: 3,
-        useSoftTabs: true,
-        theme: "ace/theme/tomorrow"
+  // check if container is readonly
+  if (container.attr('readonly')) {
+    // remove all read only tags in the editor
+    editor.replaceAll('', {
+      needle: '--  (begin|end) readonly',
+      regExp: true,
     });
 
-    $(container).children(".resource").each(function() {
-        if ($(this).attr("region")) {
-            region = $(this).attr("region");
+    editor.setOption('readOnly', true);
+  }
 
-            // search editor content for region "region"
-            beginregion = editor.find("--  #region " + region);
-            endregion = editor.find("--  #endregion " + region);
+  // set the editor to use exactly the minimum vertical space it needs
+  //  but set maxLines large enough so that it auto sizes when lines are added
+  editor.setOptions({
+    minLines: editor.session.doc.getLength(),
+    // maxLines: editor.session.doc.getLength()
+    maxLines: 50,
+  });
 
-            newRange = beginregion.clone();
-            newRange.end.row = endregion.end.row;
-            newRange.end.column = endregion.end.column;
+  editor.resize();
+  // place the cursor at 1,1
+  editor.selection.moveTo(0, 0);
 
-            textReplace = $(this).text().replace(/^\s|\s+$/g, '');
+  // clear undo stack to avoid undoing everything we just did
+  editor.getSession().getUndoManager().reset();
 
-            editor.getSession().getDocument().replace(newRange, textReplace);
-            $(this).text('');
-        } else {
-            // No region: replace the whole editor
-            editor.initial_contents = $(this).text();
-            editor.setValue($(this).text());
-            $(this).text('');
-        }
-    });
+  editor.renderer.setScrollMargin(5, 5, 0, 0);
 
-    // search for remaining region marks and remove
-    editor.replaceAll("", {
-        needle: "--  #region (.*)\n",
-        regExp: true
-    });
-    editor.replaceAll("", {
-        needle: "--  #endregion (.*)\n",
-        regExp: true
-    });
-
-    // check if container is readonly
-    if (container.attr("readonly")) {
-        // remove all read only tags in the editor
-        editor.replaceAll("", {
-            needle: "--  (begin|end) readonly",
-            regExp: true
-        });
-
-        editor.setOption("readOnly", true);
-    }
-
-    // set the editor to use exactly the minimum vertical space it needs
-    //  but set maxLines large enough so that it auto sizes when lines are added
-    editor.setOptions({
-        minLines: editor.session.doc.getLength(),
-    //    maxLines: editor.session.doc.getLength()
-        maxLines: 50
-    });
-
-    editor.resize();
-    // place the cursor at 1,1
-    editor.selection.moveTo(0, 0);
-
-    // clear undo stack to avoid undoing everything we just did
-    editor.getSession().getUndoManager().reset();
-
-    editor.renderer.setScrollMargin(5, 5, 0, 0);
-
-    return editor;
+  return editor;
 }
 
 // Fills a <div> with an editable representation of an example.
 //    container: the <div> in question
 
-var unique_id = 0;
+/**
+ * Fills a <div> with an editable representation of an example.
+ *
+ * @param {jQuery} button - The button that was pressed
+ * @param {Object} editors - The list of ace editors in the container
+ * @param {jQuery} container - The container that holds the editors
+ * @param {jQuery} outputArea - The output area to put messages
+ * @param {jQuery} labArea -The area in the output area where lab messages go
+ *
+ */
+function resetWorker(button, editors, container, outputArea, labArea) {
+  if (button.disabled) {
+    return;
+  }
+  editors.buttons.forEach(function(b) {
+    b.disabled = false;
+  });
+  container.alreadyRead = 0;
+  outputArea.empty();
+  outputArea.error_count = 0;
 
-function reset_worker(button, editors, container, output_area, lab_area) {
-    if (button.disabled) {
-        return;
-    }
-    editors.buttons.forEach(function(b) {
-        b.disabled = false;
-    });
-    container.already_read = 0;
-    output_area.empty();
-    output_area.error_count = 0;
+  if (labArea != null) {
+    labArea.empty();
+  }
 
-    if (lab_area != null)
-        lab_area.empty();
-
-    button.editors.forEach(function(x) {
-        x.setValue(x.initial_contents);
-        x.gotoLine(1);
-    });
+  button.editors.forEach(function(x) {
+    x.setValue(x.initial_contents);
+    x.gotoLine(1);
+  });
 }
 
-function check_worker(button, editors, container, output_area, lab_area) {
-    if (button.disabled) {
-        return;
-    }
-    editors.buttons.forEach(function(b) {
-        b.disabled = true;
-    });
-    output_area.empty();
-    output_area.error_count = 0;
+/**
+ * The callback for widget button presses
+ *
+ * @param {jQuery} button - The button that was pressed
+ * @param {Object} editors - The list of ace editors in the container
+ * @param {jQuery} container - The container that holds the editors
+ * @param {jQuery} outputArea - The output area to put messages
+ * @param {jQuery} labArea -The area in the output area where lab messages go
+ *
+ */
+function checkWorker(button, editors, container, outputArea, labArea) {
+  if (button.disabled) {
+    return;
+  }
+  editors.buttons.forEach(function(b) {
+    b.disabled = true;
+  });
+  outputArea.empty();
+  outputArea.error_count = 0;
 
-    if (lab_area != null)
-        lab_area.empty();
+  if (labArea != null) {
+    labArea.empty();
+  }
 
-    var div = $('<div class="output_info console_output">');
-    div.html(CONSOLE_OUTPUT_LABEL + ":");
-    div.appendTo(output_area);
+  $('<div>')
+      .addClass('output_info')
+      .addClass('console_output')
+      .text(CONSOLE_OUTPUT_LABEL + ':')
+      .appendTo(outputArea);
 
-    $('<div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>').appendTo(output_area);
-    query_operation_result(container, editors, output_area, lab_area, button.mode);
+  $('<div>')
+      .addClass('spinner')
+      .append(
+          $('<div>').addClass('bounce1')
+      )
+      .append(
+          $('<div>').addClass('bounce2')
+      )
+      .append(
+          $('<div>').addClass('bounce3')
+      )
+      .appendTo(outputArea);
+  queryOperationResult(container, editors, outputArea, labArea, button.mode);
 }
 
-function test_callback(container) {
-    var parent = container.parent();
-    var test_name = parent.find("div.test_name").text();
-    var test_input = parent.find("div.test_input").text();
-    var test_expects = parent.find("div.test_expects").find("div.output_area");
+/**
+ * This is the callback used for the testing page
+ *
+ * @param {jQUery} container - The container being tested
+ *
+ */
+function testCallback(container) {
+  const parent = container.parent();
+  const testName = parent.find('div.test_name').text();
+  // const testInput = parent.find('div.test_input').text();
+  const testExpects = parent.find('div.test_expects').find('div.output_area');
 
-    var response = container.find("div.output_area");
-    var results_area = $("div.test-results");
+  const response = container.find('div.output_area');
+  const resultsArea = $('div.test-results');
 
-    var results_div = $("<div>");
+  const resultsDiv = $('<div>')
+      .append('Test: ' + testName + '<br>');
+  if (response.text() == testExpects.text()) {
+    resultsDiv.append(
+        $('<span>')
+            .addClass('passed_test')
+            .text('Test passed!')
+    );
+  } else {
+    resultsDiv.append(
+        $('<span>')
+            .addClass('failed_test')
+            .text('Test failed!')
+    )
+        .append('<p>Response: ' + response.html() + '</p>')
+        .append('<p>Expects: ' + testExpects.html() + '</p>');
+  }
 
-    results_div.append("Test: " + test_name + "<br>");
-    if (response.text() == test_expects.text()) {
-        results_div.append("<span class='passed_test'>Test passed!</span>");
-    } else {
-        results_div.append("<span class='failed_test'>Test failed!</span>");
-        results_div.append("<p>Response: " + response.html() + "</p>");
-        results_div.append("<p>Expects: " + test_expects.html() + "</p>");
-    }
-    results_div.append("<br><br></p>");
-    results_area.append(results_div);
+  resultsDiv.append('<br><br></p>');
+  resultsArea.append(resultsDiv);
 }
 
-function fill_editor_from_contents(container, example_server, resources) {
+/**
+ * fill an editor with content from a file in the container
+ *
+ * @param {jQuery} container - The div to fill with editors
+ * @param {string} exampleServer - the value of attr example_server of container
+ * @param {Object[]} resources - The list of files
+ *
+ */
+function fillEditorFromContents(container, exampleServer, resources) {
+  // if container parent is test-descriptor then we are in test mode
+  const testMode = container.parent().hasClass('test-descriptor');
 
-    // if container parent is test-descriptor then we are in test mode
-    var test_mode = container.parent().hasClass("test-descriptor");
+  // Then fill the contents of the tabs
+  const tabs = $('<div>')
+      .addClass('tab')
+      .appendTo(container);
 
-    // Then fill the contents of the tabs
-    var tabs = $('<div class="tab">');
+  let counter = 0;
 
-    tabs.appendTo(container);
+  const editors = [];
 
-    counter = 0;
+  resources.forEach(function(resource) {
+    counter++;
+    const editor = createEditor(resource, container, tabs, editors, counter);
+    // Append the editor to the list of editors
+    editors.push(editor);
+  });
 
-    var editors = [];
+  // "click" all active tabs to show them
+  $('button.tab-links.active').click();
 
-    resources.forEach(function(resource) {
-        counter++;
-        var editor = create_editor(resource, container, tabs, editors, counter);
-        // Append the editor to the list of editors
-        editors.push(editor);
-    });
+  const row = $('<div>')
+      .addClass('row')
+      .addClass('output_row')
+      .appendTo(container);
 
-    // "click" all active tabs to show them
-    $("button.tab-links.active").click();
+  // create the buttons
 
-    var row = $('<div class="row output_row">').appendTo(container);
+  const buttonsDiv = $('<div>')
+      .addClass('col-md-3')
+      .appendTo(row);
 
-    // create the buttons
+  const outputDiv = $('<div>')
+      .addClass('col-md-9')
+      .appendTo(row);
 
-    var buttons_div = $('<div class="col-md-3">').appendTo(row);
-    var output_div = $('<div class="col-md-9">').appendTo(row);
+  const outputArea = $('<div>')
+      .addClass('output_area')
+      .appendTo(outputDiv);
 
-    var output_area = $('<div class="output_area">').appendTo(output_div);
+  editors.buttons = [];
 
-    editors.buttons = [];
+  // if (container.attr("prove_button") || container.attr("run_button")) {}
 
-    if (container.attr("prove_button") || container.attr("run_button")) {}
+  $('div.test-results').text('');
 
-    var results_div = $("div.test-results");
+  let labArea = $('<div>').addClass('lab_area');
+  if (container.attr('lab')) {
+    container.attr('prove_button', true);
+    container.attr('run_button', true);
+    container.attr('submit_button', true);
+    container.attr('cli_input', true);
 
-    results_div.text("");
+    labArea.appendTo(outputDiv);
+  } else {
+    labArea = null;
+  }
 
-    var lab_area = $('<div class="lab_area">');
-    if(container.attr("lab")) {
-        container.attr("prove_button", true);
-        container.attr("run_button", true);
-        container.attr("submit_button", true);
-        container.attr("cli_input", true);
+  if (container.attr('cli_input')) {
+    $('<textarea>')
+        .addClass('custom_input')
+        .attr('name', 'custom_input')
+        .attr('rows', '4')
+        .attr('cols', '6')
+        .appendTo(buttonsDiv);
 
-        lab_area.appendTo(output_div);
-    }
-    else {
-        lab_area = null;
-    }
-
-    if(container.attr("cli_input")) {
-        $( '<textarea class="custom_input" name="custom_input" rows="4" cols="6"></textarea>' ).appendTo(buttons_div);
-        var unique_id = generateUniqueId();
-        var div = $('<div class="custom_check_container">').appendTo(buttons_div);
-        $('<input type="checkbox" id="' + unique_id + '" class="custom_check" title="' + CUSTOM_INPUT_TOOLTIP + '">').appendTo(div).change( function() {
-            var input_search = container.find( 'textarea[name="custom_input"]' );
-            if ($(this).is(':checked')) {
-                if(input_search.length == 1) {
-                    input_search.show();
-                }
+    const uniqueId = generateUniqueId();
+    const div = $('<div>')
+        .addClass('custom_check_container')
+        .appendTo(buttonsDiv);
+    $('<input>')
+        .attr('type', 'checkbox')
+        .attr('id', uniqueId)
+        .addClass('custom_check')
+        .attr('title', CUSTOM_INPUT_TOOLTIP)
+        .appendTo(div)
+        .change( function() {
+          const inputSearch = container.find('textarea[name="custom_input"]');
+          if ($(this).is(':checked')) {
+            if (inputSearch.length == 1) {
+              inputSearch.show();
             }
-            else {
-                if(input_search.length == 1) {
-                    input_search.hide();
-                }
+          } else {
+            if (inputSearch.length == 1) {
+              inputSearch.hide();
             }
+          }
         }).change();
-        $('<label class="custom_check" for="' + unique_id + '">').text(CUSTOM_INPUT_LABEL).appendTo(div);
-    }
 
-    // create settings button
-    var settings_div = $('<div class="settings-container">').appendTo(buttons_div);
-    var settings_button = $('<button class="settings-btn">').html('<i class="fas fa-cog"></i>').appendTo(settings_div);
-    editors.buttons.push(settings_button);
+    $('<label>')
+        .addClass('custom_check')
+        .attr('for', uniqueId)
+        .text(CUSTOM_INPUT_LABEL)
+        .appendTo(div);
+  }
 
-    var settings_content = $('<div class="settings-content">').appendTo(settings_div);
-    var tab_chkbox_id = generateUniqueId();
-    $('<input type="checkbox" id="' + tab_chkbox_id + '" class="settings-check" checked>').appendTo(settings_content).change(function() {
+  // create settings button
+  const settingsDiv = $('<div>')
+      .addClass('settings-container')
+      .appendTo(buttonsDiv);
+
+  const settingsButton = $('<button>')
+      .addClass('settings-btn')
+      .append(
+          $('<i>').addClass('fas').addClass('fa-cog')
+      )
+      .appendTo(settingsDiv);
+
+  editors.buttons.push(settingsButton);
+
+  const settingsContent = $('<div>')
+      .addClass('settings-content')
+      .appendTo(settingsDiv);
+  const tabChkboxId = generateUniqueId();
+
+  $('<input>')
+      .attr('type', 'checkbox')
+      .attr('id', tabChkboxId)
+      .addClass('settings-check')
+      .prop('checked', true)
+      .appendTo(settingsContent)
+      .change(function() {
         if ($(this).is(':checked')) {
-            container.find('.tab').show();
-            container.find('.tab-content').hide();
+          container.find('.tab').show();
+          container.find('.tab-content').hide();
 
-            container.find('.tab-content.active').show();
+          container.find('.tab-content.active').show();
+        } else {
+          container.find('.tab').hide();
+          container.find('.tab-content').show();
         }
-        else {
-            container.find('.tab').hide();
-            container.find('.tab-content').show();
+      });
+  $('<label>')
+      .addClass('settings-check')
+      .attr('for', tabChkboxId)
+      .text(SETTINGS_TABBED_EDITOR_LABEL)
+      .appendTo(settingsContent);
+
+  // create reset button
+  const resetButton = $('<button>')
+      .attr('type', 'button')
+      .addClass('btn')
+      .addClass('btn-secondary')
+      .attr('title', RESET_TOOLTIP)
+      .text('Reset')
+      .appendTo(buttonsDiv)
+      .click(function(x) {
+        resetWorker(resetButton, editors, container, outputArea, labArea);
+      });
+  resetButton.editors = editors;
+  editors.buttons.push(resetButton);
+
+  for (const mode in MODES) {
+    if (container.attr(mode + '_button')) {
+      // Create button for each mode that has been specified in the attributes
+      const theText = MODES[mode]['button_text'];
+      const tooltipText = MODES[mode]['tooltip'];
+
+      const checkButton = $('<button>')
+          .attr('type', 'button')
+          .addClass('btn')
+          .addClass('btn-primary')
+          .attr('title', tooltipText)
+          .text(theText)
+          .appendTo(buttonsDiv);
+
+      checkButton.operation_label = theText;
+      checkButton.mode = mode;
+      editors.buttons.push(checkButton);
+      checkButton.editors = editors;
+      checkButton.click(checkButton, function(x) {
+        checkWorker(x.data, editors, container, outputArea, labArea);
+      });
+
+      if (testMode) {
+        const parent = container.parent();
+        const testExercises = parent.find('div.test_exercises').text();
+
+        if (theText == testExercises) {
+          checkWorker(checkButton, editors, container, outputArea, labArea);
         }
-    });
-    $('<label class="settings-check" for="' + tab_chkbox_id + '">').text(SETTINGS_TABBED_EDITOR_LABEL).appendTo(settings_content);
-
-
-    // create reset button
-    var reset_button = $('<button type="button" class="btn btn-secondary" title="' + RESET_TOOLTIP + '">').text("Reset").appendTo(buttons_div).click(function(x) {
-        reset_worker(reset_button, editors, container, output_area, lab_area);
-    });
-    reset_button.editors = editors;
-    editors.buttons.push(reset_button);
-
-    for (var mode in MODES) {
-        if (container.attr(mode + "_button")) {
-
-            // Now create the button for each mode that has been specified in the attributes
-            var the_text = MODES[mode]["button_text"];
-            var tooltip_text = MODES[mode]["tooltip"];
-
-            var check_button = $('<button type="button" class="btn btn-primary" title="' + tooltip_text + '">').text(the_text).appendTo(buttons_div);
-            check_button.operation_label = the_text;
-            check_button.mode = mode;
-            editors.buttons.push(check_button);
-            check_button.editors = editors;
-            check_button.click(check_button, function(x) {
-                check_worker(x.data, editors, container, output_area, lab_area);
-            });
-
-            if (test_mode) {
-                var parent = container.parent();
-                var test_exercises = parent.find("div.test_exercises").text();
-
-                if (the_text == test_exercises) {
-                    check_worker(check_button, editors, container, output_area, lab_area);
-                }
-            }
-
-        }
+      }
     }
-
-
+  }
 }
 
-function fill_editor(container, example_server) {
-    unique_id++;
-    container.attr("the_id", unique_id);
-    container.already_read = 0; // The number of lines already read
-    container.example_server = example_server;
+/**
+ * create editors with files and shadow files and stick them in container
+ *
+ * @param {jQuery} container - The div to fill with editors
+ * @param {string} exampleServer - the value of attr example_server of container
+ *
+ */
+function fillEditor(container, exampleServer) {
+  container.attr('the_id', generateUniqueId());
+  container.alreadyRead = 0; // The number of lines already read
+  container.exampleServer = exampleServer;
 
-    // List the "file" divs, add these as resources
-    var resources = [];
-    $(container).children(".file").each(function() {
-        // Create a fake resource for each 'file' div
-        a = {};
-        a.basename = $(this).attr("basename");
-        a.contents = $(this).text();
-        $(this).text('');
-        resources.push(a);
-    });
+  // List the "file" divs, add these as resources
+  const resources = [];
+  $(container).children('.file').each(function() {
+    // Create a fake resource for each 'file' div
+    const a = {};
+    a.basename = $(this).attr('basename');
+    a.contents = $(this).text();
+    $(this).text('');
+    resources.push(a);
+  });
 
-    // List the contents of the ".shadow_file" divs
-    container.shadow_files = [];
-    $(container).children(".shadow_file").each(function() {
-        // Create a fake resource for each 'file' div
-        a = {};
-        a.basename = $(this).attr("basename");
-        a.contents = $(this).text();
-        $(this).text('');
-        container.shadow_files.push(a);
-    });
+  // List the contents of the ".shadow_file" divs
+  container.shadow_files = [];
+  $(container).children('.shadow_file').each(function() {
+    // Create a fake resource for each 'file' div
+    const a = {};
+    a.basename = $(this).attr('basename');
+    a.contents = $(this).text();
+    $(this).text('');
+    container.shadow_files.push(a);
+  });
 
-    fill_editor_from_contents(container, example_server, resources);
+  fillEditorFromContents(container, exampleServer, resources);
 }
 
 
 // Called when the document is ready
 $(document).ready(function() {
-
-    // Iterate on all divs, finding those that have the "example_editor"
-    // attribute
-    $("div").each(function(index, element) {
-        var example_server = $(this).attr("example_server");
-        if (example_server) {
-            fill_editor($(this), example_server);
-        } else {
-            example_server = '';
-        }
-
-    });
+  // Iterate on all divs, finding those that have the "example_editor"
+  // attribute
+  $('div').each(function(index, element) {
+    let exampleServer = $(this).attr('example_server');
+    if (exampleServer) {
+      fillEditor($(this), exampleServer);
+    } else {
+      exampleServer = '';
+    }
+  });
 });
