@@ -145,19 +145,7 @@ Numbers
 
 Your goal with this exercise is to create an application that, given two
 integer numbers, displays all numbers in the range starting with the
-number closest to zero. In other words:
-
-#. If both numbers are positive, start with the smallest number.
-
-#. If both numbers are negative, start with the greatest number.
-
-#. If one number is positive and the other one is negative, start with the
-   one closest to zero. If both numbers are equally close to zero (for
-   example, -1 and 1), start with the negative number.
-
-   - Hint: you can use the :ada:`abs` operator to help with the
-     comparison. By calling :ada:`abs A`, you get the absolute value of
-     variable :ada:`A`.
+smallest number.
 
 For the moment, don't worry about the details of the :ada:`Main` procedure.
 You should just focus on implementing the application in the body of the
@@ -171,15 +159,15 @@ You should just focus on implementing the application in the body of the
     in 1:5 1
     out 1: 1  2  3  4  5
     in 2:-5 -1
-    out 2:-1 -2 -3 -4 -5
+    out 2:-5 -4 -3 -2 -1
     in 3:5 -1
     out 3:-1  0  1  2  3  4  5
     in 4:-5 1
-    out 4: 1  0 -1 -2 -3 -4 -5
+    out 4:-5 -4 -3 -2 -1  0  1
     in 5:1 -1
     out 5:-1  0  1
     in 6:-1 -5
-    out 6:-1 -2 -3 -4 -5
+    out 6:-5 -4 -3 -2 -1
     --  END LAB IO BLOCK
 
     procedure Display_Numbers (A, B : Integer);
