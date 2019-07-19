@@ -176,7 +176,7 @@ Colors: Lookup-Table
     Add link to "records" labs as soon as they are available!
 
 This exercise is based on the HTML colors exercise from a previous lab
-(*missing link*). In that exercise, one of the goals was to write the
+(:doc:`./records`). In that exercise, one of the goals was to write the
 function :ada:`To_RGB` to convert from the :ada:`HTML_Color` type to the
 :ada:`RGB` type. These were the values for the colors:
 
