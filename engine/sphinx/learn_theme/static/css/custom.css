@@ -9,14 +9,14 @@
   bottom: 0px;
 }
 
-.responsiveCarousel { }
-.responsiveCarousel div { margin-bottom: 10px; }
-.responsiveCarousel div a {
+.responsive-carousel { }
+.responsive-carousel div { margin-bottom: 10px; }
+.responsive-carousel div a {
     display: block; background-color: #4A90E2; color: #FFF; border-radius: 3px; position: relative;
     height: 230px;
 }
-.responsiveCarousel div a:hover { background-color: #2d74c4; }
-.responsiveCarousel div a .inner {
+.responsive-carousel div a:hover { background-color: #2d74c4; }
+.responsive-carousel div a .inner {
     position: absolute; top: 50%; padding: 20px;
     -moz-transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
@@ -24,22 +24,22 @@
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
-.responsiveCarousel div a .inner strong { font-size: 1.3em; margin-bottom: 5px; display: block; }
-.responsiveCarousel div a .inner p { color: rgba(255, 255, 255, 0.7); font-size: .8em; line-height: 1.5em; margin-bottom: 0px; }
-.responsiveCarousel div a .inner em { color: rgba(255, 255, 255, 0.6); font-style: normal; font-size: .8em; font-weight: 600; text-transform: uppercase; }
+.responsive-carousel div a .inner strong { font-size: 1.3em; margin-bottom: 5px; display: block; }
+.responsive-carousel div a .inner p { color: rgba(255, 255, 255, 0.7); font-size: .8em; line-height: 1.5em; margin-bottom: 0px; }
+.responsive-carousel div a .inner em { color: rgba(255, 255, 255, 0.6); font-style: normal; font-size: .8em; font-weight: 600; text-transform: uppercase; }
 
-.responsiveCarousel .slick-active { opacity: 1; }
-.responsiveCarousel .slick-next:before, .slick-prev:before { color: #000; }
+.responsive-carousel .slick-active { opacity: 1; }
+.responsive-carousel .slick-next:before, .slick-prev:before { color: #000; }
 
-.responsiveCarousel .slick-prev { left: -10px; margin-top: -15px; } .responsiveCarousel .slick-next { right: -10px; margin-top: -15px; }
+.responsive-carousel .slick-prev { left: -10px; margin-top: -15px; } .responsive-carousel .slick-next { right: -10px; margin-top: -15px; }
 
 
 
-.responsiveCarousel div.labs a { background-color: #D91E5B; }
-.responsiveCarousel div.labs a:hover { background-color: #bb144c; }
+.responsive-carousel div.labs a { background-color: #D91E5B; }
+.responsive-carousel div.labs a:hover { background-color: #bb144c; }
 
-.responsiveCarousel div.books a { background-color: #F56F23; }
-.responsiveCarousel div.books a:hover { background-color: #e06118; }
+.responsive-carousel div.books a { background-color: #F56F23; }
+.responsive-carousel div.books a:hover { background-color: #e06118; }
 
 div.test_name::before {
   content: "Test Name: ";

@@ -1,3 +1,8 @@
+import $   from 'jquery';
+import * as ace from 'brace';
+import 'brace/mode/ada';
+import 'brace/theme/tomorrow';
+
 // List of known modes, and the corresponding button labels
 const MODES = {
   'prove': {
@@ -370,11 +375,13 @@ function getOutputFromIdentifier(container, editors, outputArea, labArea,
       }
 
       // if there is a lab area, sort accordions
-      const labAccs = labArea.find('div.acc_wrapper');
-      const sortedAccs = labAccs.sort(function(a, b) {
-        return $(a).data('labref') > $(b).data('labref');
-      });
-      sortedAccs.appendTo(labArea);
+      if (labArea != null) {
+        const labAccs = labArea.find('div.acc_wrapper');
+        const sortedAccs = labAccs.sort(function(a, b) {
+          return $(a).data('labref') > $(b).data('labref');
+        });
+        sortedAccs.appendTo(labArea);
+      }
     }
   }).fail(function(xhr, status, errorThrown) {
     outputError(outputArea, MACHINE_NOT_RESPONDING_LABEL);

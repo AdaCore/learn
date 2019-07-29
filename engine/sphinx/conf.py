@@ -79,7 +79,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content']
+exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content', 'sass', '**/node_modules']
 
 show_authors = True
 
@@ -201,16 +201,17 @@ todo_include_todos = False
 
 
 def setup(app):
-    for css in ["https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css",
-                "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css",
+
+    for css in ['node_modules/slick-carousel/slick/slick.css',
+                'node_modules/slick-carousel/slick/slick-theme.css',
+                'node_modules/@fortawesome/fontawesome-free/css/solid.css',
+                'node_modules/@fortawesome/fontawesome-free/css/brands.css',
+                'node_modules/@fortawesome/fontawesome-free/css/fontawesome.css',
+                'css/style.css',
                 'css/custom.css',
                 'css/common.css']:
         app.add_stylesheet(css)
 
-    for j in ['js/customizer.js',
-              'js/carousel.js',
-              'js/editors.js',
-              'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js',
-              'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js',
-              'ace-builds/src/ace.js']:
+    for j in ['dist/main.bundle.js',
+              'dist/vendors~main.bundle.js']:
         app.add_javascript(j)

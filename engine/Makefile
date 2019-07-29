@@ -65,6 +65,11 @@ publish-staging:
 	cd ../; \
 	rm -rf learn-staging-html-pages
 
+webpack:
+	@echo "Building webpack..."
+	cd sphinx/learn_theme/static; \
+	npm run build
+
 # Development target, rebuilds the site, with it pointing to the local
 # code server.
 local:
@@ -72,8 +77,8 @@ local:
 	CODE_SERVER_URL="Http://localhost:8000" $(SPHINXBUILD) -M html "../" \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	# link the real editors.js to the generated location, to ease work
-	rm _build/html/_static/js/editors.js
-	ln -s ../../../../sphinx/learn_theme/static/js/editors.js _build/html/_static/js/
+	# rm _build/html/_static/js/editors.js
+	# ln -s ../../../../sphinx/learn_theme/static/js/editors.js _build/html/_static/js/
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

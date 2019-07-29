@@ -1,3 +1,0 @@
-[submodule "engine/sphinx/learn_theme/static/ace-builds"]
-	path = engine/sphinx/learn_theme/static/ace-builds
-	url = https://github.com/ajaxorg/ace-builds.git

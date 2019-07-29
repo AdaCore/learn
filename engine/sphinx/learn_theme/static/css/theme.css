@@ -909,7 +909,8 @@ a .rst-content dl dt .headerlink, .rst-content dl dt a .headerlink, a .rst-conte
 .rst-content .wy-alert-warning.hint .wy-alert-title, .rst-content .wy-alert-warning.important .wy-alert-title,
 .rst-content .wy-alert-warning.tip .wy-alert-title, .rst-content .warning .wy-alert-title,
 .rst-content .wy-alert-warning.seealso .wy-alert-title, .rst-content .admonition-todo .wy-alert-title,
-.rst-content .wy-alert-warning.admonition .wy-alert-title, .wy-alert.wy-alert-warning .rst-content .admonition-title,
+.rst-content .wy-alert-warning.admonition .wy-alert-title, .wy-alert.wy-alert-warn
+}ing .rst-content .admonition-title,
 .rst-content .wy-alert.wy-alert-warning .admonition-title, .rst-content .wy-alert-warning.note .admonition-title,
 .rst-content .attention .admonition-title, .rst-content .caution .admonition-title,
 .rst-content .wy-alert-warning.danger .admonition-title, .rst-content .wy-alert-warning.error .admonition-title,
@@ -2633,7 +2634,7 @@ color: #9e9e9e;
 
 
 .wy-menu-vertical li.toctree-l3 {
-	
+
     font-size: .9em
 }
 
@@ -2994,7 +2995,7 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
     .wy-nav-side {
         left: -300px
     }
-    
+
     .beta-ribbon {
         left: -300px;
     }
@@ -3777,5 +3778,3 @@ span[id * ='MathJax-Span'] {
     src: url("../fonts/RobotoSlab/roboto-slab-v7-bold.eot");
     src: url("../fonts/RobotoSlab/roboto-slab-v7-bold.eot?#iefix") format("embedded-opentype"), url("../fonts/RobotoSlab/roboto-slab-v7-bold.woff2") format("woff2"), url("../fonts/RobotoSlab/roboto-slab-v7-bold.woff") format("woff"), url("../fonts/RobotoSlab/roboto-slab-v7-bold.ttf") format("truetype")
 }
-
-
