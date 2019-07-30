@@ -16,10 +16,13 @@
 <!--[if IE 8]><html class="no-js lt-ie9" lang="{{ lang_attr }}" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="{{ lang_attr }}" > <!--<![endif]-->
 <head>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117428-14"></script>
-  <script src="{{ pathto('_static/js/adacore_analytics.js', 1) }}"></script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KD5HNRR');</script>
+  <!-- End Google Tag Manager -->
 
   <meta charset="utf-8">
   {{ metatags }}
@@ -90,12 +93,13 @@
   {%- endblock %}
   {%- block extrahead %} {% endblock %}
 
-  {# Keep modernizr in head - http://modernizr.com/docs/#installing #}
-  <script src="{{ pathto('_static/js/modernizr.min.js', 1) }}"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KD5HNRR"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   {% block extrabody %} {% endblock %}
   <div class="wy-grid-for-nav">
