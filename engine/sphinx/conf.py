@@ -79,7 +79,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content', 'sass', '**/node_modules']
+exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content', 'sass', '**/node_modules', 'internal', '**/package.json', '**/webpack.config.js']
 
 show_authors = True
 
@@ -117,7 +117,7 @@ html_show_sourcelink = False
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+# html_static_path = [os.path.join('learn_theme', 'static', 'dist')]
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -128,6 +128,8 @@ html_show_sourcelink = False
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
+
+html_copy_source = False
 
 
 # -- Options for HTMLHelp output ---------------------------------------------
@@ -204,12 +206,8 @@ def setup(app):
 
     for css in ['node_modules/slick-carousel/slick/slick.css',
                 'node_modules/slick-carousel/slick/slick-theme.css',
-                'node_modules/@fortawesome/fontawesome-free/css/solid.css',
-                'node_modules/@fortawesome/fontawesome-free/css/brands.css',
-                'node_modules/@fortawesome/fontawesome-free/css/fontawesome.css',
-                'css/style.css',
-                'css/custom.css',
-                'css/common.css']:
+                'dist/style.css',
+                'dist/vendors~main.style.css']:
         app.add_stylesheet(css)
 
     for j in ['dist/main.bundle.js',

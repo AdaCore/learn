@@ -1,3 +1,4 @@
+//@import '~@fortawesome/fontawesome-free/css/all.css';
 
 .rst-content .highlight {
 background: #ebf4f9;
@@ -17,8 +18,6 @@ nav, section {
 
 audio, canvas, video {
     display: inline-block;
-    * display: inline;
-    * zoom: 1
 }
 
 audio:not([controls]) {
@@ -162,7 +161,6 @@ label {
 
 legend {
     border: 0;
-    * margin-left: -7px;
     padding: 0;
     white-space: normal
 }
@@ -171,7 +169,6 @@ button, input, select, textarea {
     font-size: 100%;
     margin: 0;
     vertical-align: baseline;
-    * vertical-align: middle
 }
 
 button, input {
@@ -181,7 +178,6 @@ button, input {
 button, input[type="button"], input[type="reset"], input[type="submit"] {
     cursor: pointer;
     -webkit-appearance: button;
-    * overflow: visible
 }
 
 button[disabled], input[disabled] {
@@ -191,8 +187,6 @@ button[disabled], input[disabled] {
 input[type="checkbox"], input[type="radio"] {
     box-sizing: border-box;
     padding: 0;
-    * width: 13px;
-    * height: 13px
 }
 
 input[type="search"] {
@@ -242,7 +236,6 @@ td {
     background-repeat: no-repeat;
     text-align: left;
     direction: ltr;
-    * line-height: 0
 }
 
 .ir br {
@@ -361,10 +354,6 @@ input[type="tel"], input[type="color"], select, textarea, .wy-menu-vertical li.o
     -webkit-font-smoothing: antialiased
 }
 
-.clearfix {
-    * zoom: 1
-}
-
 .clearfix:before, .clearfix:after {
     display: table;
     content: ""
@@ -382,7 +371,10 @@ input[type="tel"], input[type="color"], select, textarea, .wy-menu-vertical li.o
 .rst-content table > caption .headerlink, .rst-content tt.download span:first-child,
 .rst-content code.download span:first-child, .icon {
     display: inline-block;
-    font: normal normal normal 14px / 1 "Font Awesome 5 Free";
+    font-family: $icon-font;
+    font-weight: $icon-weight;
+    font-size: 14px;
+    line-height: 1;
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
@@ -688,10 +680,10 @@ input[type="tel"], input[type="color"], select, textarea, .wy-menu-vertical li.o
 .wy-inline-validate.wy-inline-validate-danger .wy-input-context:before,
 .wy-inline-validate.wy-inline-validate-warning .wy-input-context:before,
 .wy-inline-validate.wy-inline-validate-info .wy-input-context:before {
-    font-family: "Font Awesome 5 Free";
+    font-family: $icon-font;
     display: inline-block;
     font-style: normal;
-    font-weight: normal;
+    font-weight: $icon-weight;
     line-height: 1;
     text-decoration: inherit
 }
@@ -865,7 +857,7 @@ a .rst-content dl dt .headerlink, .rst-content dl dt a .headerlink, a .rst-conte
     background: #6ab0de;
     margin: -12px;
     padding: 6px 12px;
-    margin-bottom: 12px
+    margin-bottom: 12px;
 }
 
 .wy-alert.wy-alert-danger, .rst-content .wy-alert-danger.note,
@@ -874,7 +866,7 @@ a .rst-content dl dt .headerlink, .rst-content dl dt a .headerlink, a .rst-conte
 .rst-content .wy-alert-danger.important, .rst-content .wy-alert-danger.tip,
 .rst-content .wy-alert-danger.warning, .rst-content .wy-alert-danger.seealso,
 .rst-content .wy-alert-danger.admonition-todo, .rst-content .wy-alert-danger.admonition {
-    background: #fdf3f2
+    background: #fdf3f2;
 }
 
 .wy-alert.wy-alert-danger .wy-alert-title, .rst-content .wy-alert-danger.note .wy-alert-title,
@@ -891,7 +883,7 @@ a .rst-content dl dt .headerlink, .rst-content dl dt a .headerlink, a .rst-conte
 .rst-content .wy-alert-danger.tip .admonition-title, .rst-content .wy-alert-danger.warning .admonition-title,
 .rst-content .wy-alert-danger.seealso .admonition-title, .rst-content .wy-alert-danger.admonition-todo .admonition-title,
 .rst-content .wy-alert-danger.admonition .admonition-title {
-    background: #f29f97
+    background: #f29f97;
 }
 
 .wy-alert.wy-alert-warning, .rst-content .wy-alert-warning.note,
@@ -900,7 +892,7 @@ a .rst-content dl dt .headerlink, .rst-content dl dt a .headerlink, a .rst-conte
 .rst-content .wy-alert-warning.important, .rst-content .wy-alert-warning.tip,
 .rst-content .warning, .rst-content .wy-alert-warning.seealso, .rst-content .admonition-todo,
 .rst-content .wy-alert-warning.admonition {
-    background: #ffedcc
+    background: #ffedcc;
 }
 
 .wy-alert.wy-alert-warning .wy-alert-title, .rst-content .wy-alert-warning.note .wy-alert-title,
@@ -909,8 +901,7 @@ a .rst-content dl dt .headerlink, .rst-content dl dt a .headerlink, a .rst-conte
 .rst-content .wy-alert-warning.hint .wy-alert-title, .rst-content .wy-alert-warning.important .wy-alert-title,
 .rst-content .wy-alert-warning.tip .wy-alert-title, .rst-content .warning .wy-alert-title,
 .rst-content .wy-alert-warning.seealso .wy-alert-title, .rst-content .admonition-todo .wy-alert-title,
-.rst-content .wy-alert-warning.admonition .wy-alert-title, .wy-alert.wy-alert-warn
-}ing .rst-content .admonition-title,
+.rst-content .wy-alert-warning.admonition .wy-alert-title, .wy-alert.wy-alert-warning .rst-content .admonition-title,
 .rst-content .wy-alert.wy-alert-warning .admonition-title, .rst-content .wy-alert-warning.note .admonition-title,
 .rst-content .attention .admonition-title, .rst-content .caution .admonition-title,
 .rst-content .wy-alert-warning.danger .admonition-title, .rst-content .wy-alert-warning.error .admonition-title,
@@ -918,7 +909,7 @@ a .rst-content dl dt .headerlink, .rst-content dl dt a .headerlink, a .rst-conte
 .rst-content .wy-alert-warning.tip .admonition-title, .rst-content .warning .admonition-title,
 .rst-content .wy-alert-warning.seealso .admonition-title, .rst-content .admonition-todo .admonition-title,
 .rst-content .wy-alert-warning.admonition .admonition-title {
-    background: #f0b37e
+    background: #f0b37e;
 }
 
 .wy-alert.wy-alert-info, .rst-content .note, .rst-content .wy-alert-info.attention,
@@ -927,7 +918,7 @@ a .rst-content dl dt .headerlink, .rst-content dl dt a .headerlink, a .rst-conte
 .rst-content .wy-alert-info.important, .rst-content .wy-alert-info.tip,
 .rst-content .wy-alert-info.warning, .rst-content .seealso, .rst-content .wy-alert-info.admonition-todo,
 .rst-content .wy-alert-info.admonition {
-    background: #e7f2fa
+    background: #e7f2fa;
 }
 
 .wy-alert.wy-alert-info .wy-alert-title, .rst-content .note .wy-alert-title,
@@ -1082,11 +1073,9 @@ button {
     font-size: 100%;
     margin: 0;
     vertical-align: baseline;
-    * vertical-align: middle;
     cursor: pointer;
     line-height: normal;
     -webkit-appearance: button;
-    * overflow: visible
 }
 
 button::-moz-focus-inner, input::-moz-focus-inner {
@@ -1116,7 +1105,6 @@ button[disabled] {
     box-shadow: 0px 1px 2px -1px rgba(255, 255, 255, 0.5) inset, 0px -2px 0px 0px rgba(0, 0, 0, 0.1) inset;
     outline-none: false;
     vertical-align: middle;
-    * display: inline;
     zoom: 1;
     -webkit-user-drag: none;
     -webkit-user-select: none;
@@ -1154,7 +1142,7 @@ button[disabled] {
 
 .btn:disabled {
     background-image: none;
-    filter: progid: DXImageTransform.Microsoft.gradient(enabled = false);
+//    filter: progid: DXImageTransform.Microsoft.gradient(enabled = false);
     filter: alpha(opacity=40);
     opacity: .4;
     cursor: not-allowed;
@@ -1163,7 +1151,7 @@ button[disabled] {
 
 .btn-disabled {
     background-image: none;
-    filter: progid: DXImageTransform.Microsoft.gradient(enabled = false);
+//    filter: progid: DXImageTransform.Microsoft.gradient(enabled = false);
     filter: alpha(opacity=40);
     opacity: .4;
     cursor: not-allowed;
@@ -1172,7 +1160,7 @@ button[disabled] {
 
 .btn-disabled:hover, .btn-disabled:focus, .btn-disabled:active {
     background-image: none;
-    filter: progid: DXImageTransform.Microsoft.gradient(enabled = false);
+//    filter: progid: DXImageTransform.Microsoft.gradient(enabled = false);
     filter: alpha(opacity=40);
     opacity: .4;
     cursor: not-allowed;
@@ -1271,7 +1259,6 @@ button[disabled] {
 
 .wy-btn-group {
     margin-bottom: 24px;
-    * zoom: 1
 }
 
 .wy-btn-group:before, .wy-btn-group:after {
@@ -1399,8 +1386,6 @@ button[disabled] {
 .wy-form-aligned input, .wy-form-aligned textarea, .wy-form-aligned select,
 .wy-form-aligned .wy-help-inline, .wy-form-aligned label {
     display: inline-block;
-    * display: inline;
-    * zoom: 1;
     vertical-align: middle
 }
 
@@ -1438,7 +1423,6 @@ legend {
     white-space: normal;
     margin-bottom: 24px;
     font-size: 150%;
-    * margin-left: -7px
 }
 
 label {
@@ -1452,16 +1436,13 @@ input, select, textarea {
     font-size: 100%;
     margin: 0;
     vertical-align: baseline;
-    * vertical-align: middle
 }
 
 .wy-control-group {
     margin-bottom: 24px;
-    * zoom: 1;
     max-width: 68em;
     margin-left: auto;
     margin-right: auto;
-    * zoom: 1
 }
 
 .wy-control-group:before, .wy-control-group:after {
@@ -1627,7 +1608,6 @@ input[type="button"], input[type="reset"], input[type="submit"] {
     -webkit-appearance: button;
     cursor: pointer;
     font-family: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
-    * overflow: visible
 }
 
 input[type="text"], input[type="password"], input[type="email"],
@@ -1661,8 +1641,6 @@ input[type="checkbox"], input[type="radio"] {
     box-sizing: border-box;
     padding: 0;
     margin-right: .3125em;
-    * height: 13px;
-    * width: 13px
 }
 
 input[type="search"] {
@@ -1776,8 +1754,6 @@ input[type="radio"][disabled], input[type="checkbox"][disabled] {
 
 .wy-form-message-inline {
     display: inline-block;
-    * display: inline;
-    * zoom: 1;
     vertical-align: middle
 }
 
@@ -2396,10 +2372,6 @@ article ol li ul li {
     list-style: disc
 }
 
-.wy-breadcrumbs {
-    * zoom: 1
-}
-
 .wy-breadcrumbs:before, .wy-breadcrumbs:after {
     display: table;
     content: ""
@@ -2469,10 +2441,6 @@ article ol li ul li {
     text-decoration: none
 }
 
-.wy-menu-horiz {
-    * zoom: 1
-}
-
 .wy-menu-horiz:before, .wy-menu-horiz:after {
     display: table;
     content: ""
@@ -2540,7 +2508,6 @@ article ol li ul li {
 
 .wy-menu-vertical li.current a {
     color: #F56F23;
-/*     border-right: solid 1px #c9c9c9; */
     padding: .4045em 2.427em
 }
 
@@ -2613,7 +2580,7 @@ color: #9e9e9e;
 }
 
 .wy-menu-vertical li.toctree-l2.current > a {
-	background: #4A90E2;
+    background: #4A90E2;
     padding: .4045em 2.427em;
     color:#fff; font-weight: 900;
 }
@@ -2854,7 +2821,6 @@ color: #9e9e9e;
     line-height: 50px;
     text-align: center;
     font-size: 100%;
-    * zoom: 1
 }
 
 .wy-nav-top:before, .wy-nav-top:after {
@@ -2930,10 +2896,6 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
     color: gray
 }
 
-.rst-footer-buttons {
-    * zoom: 1
-}
-
 .rst-footer-buttons:before, .rst-footer-buttons:after {
     width: 100%
 }
@@ -2949,7 +2911,6 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
 
 .rst-breadcrumbs-buttons {
     margin-top: 12px;
-    * zoom: 1
 }
 
 .rst-breadcrumbs-buttons:before, .rst-breadcrumbs-buttons:after {
@@ -3084,7 +3045,6 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
     font-size: 90%;
     cursor: pointer;
     color: #27AE60;
-    * zoom: 1
 }
 
 .rst-versions .rst-current-version:before, .rst-versions .rst-current-version:after {
@@ -3415,7 +3375,8 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
 .rst-content h4 .headerlink:after, .rst-content h5 .headerlink:after,
 .rst-content h6 .headerlink:after, .rst-content dl dt .headerlink:after,
 .rst-content p.caption .headerlink:after, .rst-content table > caption .headerlink:after {
-    font-family: "Font Awesome 5 Free";
+    font-family: $icon-font;
+    font-weight: $icon-weight;
     content: "\f0c1";
 }
 
@@ -3723,7 +3684,7 @@ a .rst-content tt, a .rst-content code {
     }
 }
 
-span[id * ='MathJax-Span'] {
+span[id='MathJax-Span'] {
     color: #404040
 }
 
@@ -3732,49 +3693,43 @@ span[id * ='MathJax-Span'] {
 }
 
 @font-face {
-    font-family: "Lato";
-    src: url("../fonts/Lato/lato-regular.eot");
-    src: url("../fonts/Lato/lato-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/Lato/lato-regular.woff2") format("woff2"), url("../fonts/Lato/lato-regular.woff") format("woff"), url("../fonts/Lato/lato-regular.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal
-}
-
-@font-face {
-    font-family: "Lato";
-    src: url("../fonts/Lato/lato-bold.eot");
-    src: url("../fonts/Lato/lato-bold.eot?#iefix") format("embedded-opentype"), url("../fonts/Lato/lato-bold.woff2") format("woff2"), url("../fonts/Lato/lato-bold.woff") format("woff"), url("../fonts/Lato/lato-bold.ttf") format("truetype");
-    font-weight: 700;
-    font-style: normal
-}
-
-@font-face {
-    font-family: "Lato";
-    src: url("../fonts/Lato/lato-bolditalic.eot");
-    src: url("../fonts/Lato/lato-bolditalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Lato/lato-bolditalic.woff2") format("woff2"), url("../fonts/Lato/lato-bolditalic.woff") format("woff"), url("../fonts/Lato/lato-bolditalic.ttf") format("truetype");
-    font-weight: 700;
-    font-style: italic
-}
-
-@font-face {
-    font-family: "Lato";
-    src: url("../fonts/Lato/lato-italic.eot");
-    src: url("../fonts/Lato/lato-italic.eot?#iefix") format("embedded-opentype"), url("../fonts/Lato/lato-italic.woff2") format("woff2"), url("../fonts/Lato/lato-italic.woff") format("woff"), url("../fonts/Lato/lato-italic.ttf") format("truetype");
-    font-weight: 400;
-    font-style: italic
-}
-
-@font-face {
-    font-family: "Roboto Slab";
+    font-family: 'Lato';
+    src: url('#{$lato-font-path}/lato-normal/lato-normal.woff2') format('woff2'), url('#{$lato-font-path}/lato-normal/lato-normal.woff') format('woff');
+    font-weight: $fontweight-normal;
     font-style: normal;
-    font-weight: 400;
-    src: url("../fonts/RobotoSlab/roboto-slab.eot");
-    src: url("../fonts/RobotoSlab/roboto-slab-v7-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/RobotoSlab/roboto-slab-v7-regular.woff2") format("woff2"), url("../fonts/RobotoSlab/roboto-slab-v7-regular.woff") format("woff"), url("../fonts/RobotoSlab/roboto-slab-v7-regular.ttf") format("truetype")
 }
 
 @font-face {
-    font-family: "Roboto Slab";
+    font-family: 'Lato';
+    src: url('#{$lato-font-path}/lato-bold/lato-bold.woff2') format('woff2'), url('#{$lato-font-path}/lato-bold/lato-bold.woff') format('woff');
+    font-weight: $fontweight-bold;
     font-style: normal;
-    font-weight: 700;
-    src: url("../fonts/RobotoSlab/roboto-slab-v7-bold.eot");
-    src: url("../fonts/RobotoSlab/roboto-slab-v7-bold.eot?#iefix") format("embedded-opentype"), url("../fonts/RobotoSlab/roboto-slab-v7-bold.woff2") format("woff2"), url("../fonts/RobotoSlab/roboto-slab-v7-bold.woff") format("woff"), url("../fonts/RobotoSlab/roboto-slab-v7-bold.ttf") format("truetype")
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('#{$lato-font-path}/lato-bold-italic/lato-bold-italic.woff2') format('woff2'), url('#{$lato-font-path}/lato-bold-italic/lato-bold-italic.woff') format('woff');
+    font-weight: $fontweight-bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('#{$lato-font-path}/lato-normal-italic/lato-normal-italic.woff2') format('woff2'), url('#{$lato-font-path}/lato-normal-italic/lato-normal-italic.woff') format('woff');
+    font-weight: $fontweight-normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: $fontweight-normal;
+    src: url('#{$roboto-font-path}/Roboto-Slab-Regular.woff2') format('woff2'), url('#{$roboto-font-path}/Roboto-Slab-Regular.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: $fontweight-bold;
+    src: url('#{$roboto-font-path}/Roboto-Slab-Bold.woff2') format('woff2'), url('#{$roboto-font-path}/Roboto-Slab-Bold.woff') format('woff');
 }

@@ -1,0 +1,607 @@
+@import 'variables';
+
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+@import 'theme';
+
+// theme overrides
+
+.wy-side-nav-search {
+  background-color: $color-theme-bg-dark;
+
+  a {
+    text-align: right !important;
+    float: right;
+  }
+}
+
+.wy-nav-top {
+  background-color: $color-theme-bg-dark;
+  img {
+    border-radius: 0 !important;
+    background-color: transparent !important;
+  }
+}
+
+.admonition-in-other-languages {
+  background: $color-theme-alt-bg;
+  padding: 12px;
+  margin-bottom: 24px;
+}
+
+// theme overrides
+
+// widget
+
+.widget_editor {
+  padding-bottom: 10px;
+}
+
+.tab {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  button {
+    background-color: inherit;
+    float: left;
+    outline: none;
+    cursor: pointer;
+    padding: 6px 16px;
+    transition: 0.3s;
+    flex: 0 0 auto;
+    border: 1px solid transparent;
+    color: $color-tab-font;
+    font-family: $mono-font;
+    font-size: 13px;
+    &:hover {
+      color: $color-tab-hover-font;
+      cursor: pointer;
+    }
+    &.active {
+      color: $color-tab-active-font;
+      border-top: 2px solid $color-theme-bg-dark;
+      border-left: 1px solid $color-widget-border;
+      border-right: 1px solid $color-widget-border;
+    }
+  }
+}
+
+.tab-content {
+  display: none;
+  padding: 0px;
+}
+
+.settings-btn {
+  color: $color-theme-fg-light;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.settings-container {
+  position: relative;
+  display: inline-block;
+
+  &:hover {
+    .settings-content {
+        display: block;
+      }
+      .settings-btn {
+        color: #bbb;
+      }
+  }
+}
+
+.settings-content {
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+div {
+  &.file {
+    display: none;
+  }
+  &.editor_container {
+    height: 30em;
+    border: 1px solid $color-widget-border;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+    &.inline {
+      height: 20em;
+      border: 1px solid $color-widget-border;
+      margin: .5em 0;
+    }
+  }
+  &.editor_label {
+    font-family: $mono-font;
+    border: 1px solid $color-widget-border;
+    border-bottom: 0px;
+    display: inline-block;
+    padding: 3px 5px;
+    font-size: 0.75em;
+    color: $color-font-grey;
+  }
+  &.output_line {
+    color: $color-font-grey;
+    padding-left: 15px;
+    padding-right: 3px;
+  }
+  &.output_msg {
+    color: $color-widget-msg;
+    padding-left: 15px;
+    padding-right: 3px;
+    &:hover {
+      background-color: #fdd;
+    }
+  }
+  &.output_msg_info {
+    color: $color-widget-info;
+    padding-left: 15px;
+    padding-right: 3px;
+    &:hover {
+      background-color: $color-widget-msg-info-bg-hover;
+    }
+  }
+  &.output_info {
+    color: $color-widget-info;
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  &.output_error {
+    color: $color-widget-error;
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  &.output_success {
+    color: $color-widget-success;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-weight: $fontweight-bold;
+  }
+  &.output_area {
+    font-family: $mono-font;
+    font-size: 12px;
+    font-style: normal;
+    background: $color-widget-output-area;
+    margin-top: 8px;
+  }
+  &.output_row {
+    margin-right: 0px;
+    button {
+      margin-right: 4px;
+      margin-top: 2px;
+      margin-bottom: 0px;
+    }
+  }
+}
+
+.read-only {
+  background-color: $color-widget-readonly;
+  opacity: 0.2;
+  position: absolute;
+}
+
+// widget
+
+// layout customizations
+img.logo {
+  width: 150px !important;
+  height: auto;
+  /*    margin: 10px 20px !important;  */
+  text-align: right !important;
+}
+
+div#learn-adacore-com > h1 {
+  display: none;
+}
+
+.legal {
+  padding: 20px;
+  color: $color-font-grey;
+  font-size: 12px;
+  text-align: center;
+
+  a {
+    color: $color-font-grey;
+  }
+}
+
+.beta-ribbon {
+  position: absolute;
+  width: 80px;
+  height: 25px;
+  background: $color-beta-bg;
+  top: 7px;
+  left: -20px;
+  text-align: center;
+  font-size: 13px;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-weight: $fontweight-bold;
+  color: $color-beta-fg;
+  line-height: 27px;
+  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+#scrollToTopBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: $color-scroll-button-bg;
+  color: $color-scroll-button-fg;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+
+  &:hover {
+    background-color: $color-scroll-button-hover;
+  }
+}
+
+.img-row {
+  display: flex;
+  img {
+    flex: 33.33%;
+    padding: 5px;
+    vertical-align: top;
+  }
+}
+
+#sidebarfooter {
+  position: absolute;
+  bottom: 0px;
+}
+
+// layout customizations
+
+// download button
+
+div.download-button.docutils.container {
+  float: right;
+  width: 300px;
+  margin: 20px;
+}
+
+// download button
+
+
+// slick carousel customization
+
+.slick-slide {
+  margin: 0px 20px;
+  transition: all ease-in-out .3s;
+  opacity: .2;
+  img {
+    width: 100%;
+  }
+}
+
+.slick-current {
+  opacity: 1;
+}
+
+div.content-description.docutils.container {
+  padding: 20px;
+}
+
+.responsive-carousel {
+  padding-top: 20px;
+
+  .slick-prev {
+    left: -10px;
+    margin-top: -15px;
+
+    &:before {
+        color: #000;
+    }
+  }
+  .slick-next {
+    right: -10px;
+    margin-top: -15px;
+
+    &:before {
+        color: #000;
+    }
+  }
+  .slick-active {
+    opacity: 1;
+  }
+
+  div {
+    margin-bottom: 10px;
+    a {
+      display: block;
+      background-color: $color-slider-link-bg;
+      color: $color-slider-link-fg;
+      border-radius: 3px;
+      position: relative;
+      height: 230px;
+      &:hover {
+        background-color: $color-slider-link-bg-hover;
+      }
+      .inner {
+        position: absolute;
+        top: 50%;
+        padding: 20px;
+        -moz-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        strong {
+          font-size: 1.3em;
+          margin-bottom: 5px;
+          display: block;
+        }
+        p {
+          color: rgba(255, 255, 255, 0.7);
+          font-size: .8em;
+          line-height: 1.5em;
+          margin-bottom: 0px;
+        }
+        em {
+          color: rgba(255, 255, 255, 0.6);
+          font-style: normal;
+          font-size: .8em;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+      }
+    }
+    &.courses a {
+        background-color: $color-slider-course;
+        &:hover {
+            background-color: $color-slider-course-hover;
+        }
+    }
+    &.labs a {
+      background-color: $color-slider-lab;
+      &:hover {
+        background-color: $color-slider-lab-hover;
+      }
+    }
+    &.books a {
+      background-color: $color-slider-book;
+      &:hover {
+        background-color: $color-slider-book-hover;
+      }
+    }
+  }
+}
+
+// slick carousel customization
+
+// lab stuff
+
+div {
+  &.lab_area {
+    font-family: $mono-font;
+    font-size: 12px;
+    font-weight: $fontweight-normal;
+    background: $color-labarea-bg;
+  }
+  &.lab_test_case {
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+  }
+  &.lab_test_msg {
+    color: $color-labarea-fg;
+    padding-left: 20px;
+    padding-right: 3px;
+    code {
+      white-space: pre-wrap;
+    }
+  }
+  &.lab_test_success {
+    background: $color-success-green-bg;
+  }
+  &.lab_test_failed {
+    background: $color-fail-red-bg;
+  }
+}
+
+span.lab_test_msg_title {
+  font-weight: $fontweight-bold;
+  padding-right: 5px;
+}
+
+div {
+  &.lab_status {
+    font-weight: $fontweight-bold;
+    padding-left: 15px;
+    padding-right: 3px;
+  }
+  &.lab_results {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+button {
+  &.lab_test_success {
+    background: $color-success-green-light-bg;
+
+    span:after {
+        content: "Pass";
+    }
+
+    &:hover {
+        background-color: $color-success-green-bg;
+    }
+  }
+  &.accordion span:after {
+    font-family: $mono-font;
+    font-size: 10px;
+    font-style: italic;
+    font-weight: $fontweight-semibold;
+    color: $color-font-grey;
+    margin-left: 8px;
+  }
+
+  &.lab_test_failed {
+    background: $color-fail-red-light-bg;
+
+    span:after {
+        content: "Fail";
+    }
+
+    &:hover {
+        background-color: $color-fail-red-bg;
+    }
+  }
+  &.active {
+    &.lab_test_success {
+      background: $color-success-green-bg;
+    }
+    &.lab_test_failed {
+      background: $color-fail-red-bg;
+    }
+  }
+}
+
+.accordion {
+  background-color: $color-theme-bg-light;
+  color: $color-theme-fg-dark;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  font-weight: $fontweight-bold;
+  border-radius: 7px;
+  &.active {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+  &:after {
+    font-family: $icon-font;
+    font-style: normal;
+    font-weight: $icon-weight;
+    content: $plus-icon;
+    font-size: 9px;
+    color: $color-font-grey;
+    float: right;
+    margin-left: 5px;
+  }
+  &.active:after {
+    font-family: $icon-font;
+    font-style: normal;
+    font-weight: $icon-weight;
+    content: $minus-icon;
+    font-size: 9px;
+    color: $color-font-grey;
+    float: right;
+    margin-left: 5px;
+  }
+}
+
+.lab_test_case {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+
+.custom_check_container {
+  display: block;
+}
+
+label.custom_check, .console_output {
+  display: inline-block;
+}
+
+.spinner {
+  width: 70px;
+  text-align: center;
+  display: inline-block;
+  > div {
+    width: 7px;
+    height: 7px;
+    background-color: $color-spinner-fg;
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    margin-right: 5px;
+  }
+  .bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  .bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+  }
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+  }
+
+  40% {
+    -webkit-transform: scale(1);
+  }
+}
+
+
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+// lab stuff
+
+// test stuff
+
+div {
+  &.test_name::before {
+    content: "Test Name: ";
+  }
+  &.test_input::before {
+    content: "Test Input: ";
+  }
+  &.test_expects::before {
+    content: "Test Expects: ";
+  }
+  &.test_exercises::before {
+    content: "Test Exercies: ";
+  }
+}
+
+.passed_test {
+  color: green;
+}
+
+.failed_test {
+  color: red;
+}
+
+// test stuff

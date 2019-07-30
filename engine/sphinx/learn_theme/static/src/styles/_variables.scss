@@ -1,0 +1,81 @@
+// colors
+$color-theme-bg-dark:           #F56F23;
+$color-theme-bg-light:          rgb(252, 252, 252);
+
+$color-theme-fg-dark:           rgb(64, 64, 64);
+$color-theme-fg-light:          rgb(217, 217, 217);
+
+$color-theme-alt-bg:            rgb(218, 230, 239);
+
+$color-font-grey:               rgb(135, 135, 135);
+
+$color-slider-course:           #4A90E2;
+$color-slider-course-hover:     darken($color-slider-course, 10%);
+
+$color-slider-lab:              #D91E5B;
+$color-slider-lab-hover:        darken($color-slider-lab, 10%);
+
+$color-slider-book:             $color-theme-bg-dark;
+$color-slider-book-hover:       darken($color-slider-book, 10%);
+
+$color-slider-link-bg:          rgb(74, 144, 226);
+$color-slider-link-bg-hover:    darken($color-slider-link-bg, 12%);
+$color-slider-link-fg:          white;
+
+$color-tab-active-font:         rgb(51, 51, 51);
+$color-tab-hover-font:          lighten($color-tab-active-font, 10%);
+$color-tab-font:                lighten($color-tab-active-font, 30%);
+
+$color-widget-border:           rgb(221, 221, 221);
+
+$color-beta-bg:                 black;
+$color-beta-fg:                 white;
+
+$color-scroll-button-bg:        $color-font-grey;
+$color-scroll-button-fg:        white;
+$color-scroll-button-hover:     $color-theme-bg-dark;
+
+$color-labarea-bg:              $color-theme-bg-light;
+$color-labarea-fg:              $color-font-grey;
+
+$color-success-green-bg:        rgb(190, 245, 203);
+$color-success-green-light-bg:  lighten($color-success-green-bg, 10%);
+$color-fail-red-bg:             rgb(253, 174, 183);
+$color-fail-red-light-bg:       lighten($color-fail-red-bg, 10%);
+
+$color-spinner-fg:                  rgb(166, 166, 166);
+
+$color-widget-output-area:      rgb(243, 243, 243);
+
+$color-widget-msg:                  rgb(153, 68, 68);
+$color-widget-msg-info:             rgb(68, 68, 153);
+$color-widget-msg-info-bg-hover:    rgb(221, 221, 255);
+
+$color-widget-info:             rgb(34, 34, 34);
+
+$color-widget-error:            rgb(136, 34, 34);
+$color-widget-success:          rgb(0, 119, 0);
+
+$color-widget-readonly:         rgb(192, 192, 192);
+
+// fonts
+$lato_font-path:                '~lato-font/fonts';
+$roboto-font-path:              '~roboto-fontface/fonts/roboto-slab';
+
+$mono-font:                     'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+$roboto-sans-serif-font:        'Roboto Slab', 'ff-tisa-web-pro', 'Georgia', Arial, sans-serif;
+$lato-sans-serif-font:          'Lato', 'proxima-nova', 'Helvetica Neue', Arial, sans-serif;
+
+$icon-font:                     'Font Awesome 5 Free';
+$icon-weight:                   900;
+
+$fontweight-light:              300;
+$fontweight-normal:             400;
+$fontweight-semibold:           500;
+$fontweight-bold:               700;
+
+
+// icons
+
+$plus-icon:                     '\f067';
+$minus-icon:                    '\f068';

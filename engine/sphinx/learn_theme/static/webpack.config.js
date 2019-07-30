@@ -5,10 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: [
-    './src/js/carousel.js',
-    './src/js/editors.js',
-    './src/js/scroll_to_top.js',
-    './src/js/theme.js'
+    './src/index.js'
   ],
   output: {
     filename: 'main.bundle.js',
@@ -27,9 +24,16 @@ module.exports = {
   module: {
     noParse: [/ace-builds.*/],
     rules: [
+
       {
         test: /\.(scss|sass)$/,
-        loader: 'style-loader!sass-loader'
+        use: [{
+          loader: MiniCssExtractPlugin.loader
+        }, {
+          loader: "css-loader"
+        }, {
+          loader: "sass-loader",
+        }]
       },
       {
         test: /\.css$/,
@@ -41,8 +45,9 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
+              name: '[name].[ext]?[hash]',
+              outputPath: 'fonts/',
+              publicPath: path.resolve(__dirname, 'dist', 'fonts')
             }
           }
         ]
@@ -54,7 +59,8 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'img/'
+              outputPath: 'img/',
+              publicPath: path.resolve(__dirname, 'dist', 'img')
             }
           }
         ]
