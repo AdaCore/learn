@@ -1,4 +1,4 @@
-import $   from 'jquery';
+import $ from 'jquery';
 import * as ace from 'brace';
 import 'brace/mode/ada';
 import 'brace/theme/tomorrow';
@@ -761,6 +761,46 @@ function fillEditorFromContents(container, exampleServer, resources) {
       .addClass('tab')
       .appendTo(container);
 
+  // create settings button
+  const settingsDiv = $('<div>')
+      .addClass('settings-container')
+      .appendTo(container);
+
+  $('<button>')
+      .addClass('settings-btn')
+      .append(
+          $('<i>').addClass('fas').addClass('fa-cog')
+      )
+      .appendTo(settingsDiv);
+
+  const settingsContent = $('<div>')
+      .addClass('settings-content')
+      .appendTo(settingsDiv);
+
+  $('<label>')
+      .addClass('settings-check-label')
+      .text(SETTINGS_TABBED_EDITOR_LABEL)
+      .appendTo(settingsContent)
+      .append(
+          $('<input>')
+              .attr('type', 'checkbox')
+              .addClass('settings-check')
+              .prop('checked', true)
+              .appendTo(settingsContent)
+              .change(function() {
+                if ($(this).is(':checked')) {
+                  container.find('.tab').show();
+                  container.find('.tab-content').hide();
+
+                  container.find('.tab-content.active').show();
+                } else {
+                  container.find('.tab').hide();
+                  container.find('.tab-content').show();
+                }
+              }))
+      .append($('<span>').addClass('settings-check-span'));
+
+
   let counter = 0;
 
   const editors = [];
@@ -849,48 +889,6 @@ function fillEditorFromContents(container, exampleServer, resources) {
         .text(CUSTOM_INPUT_LABEL)
         .appendTo(div);
   }
-
-  // create settings button
-  const settingsDiv = $('<div>')
-      .addClass('settings-container')
-      .appendTo(buttonsDiv);
-
-  const settingsButton = $('<button>')
-      .addClass('settings-btn')
-      .append(
-          $('<i>').addClass('fas').addClass('fa-cog')
-      )
-      .appendTo(settingsDiv);
-
-  editors.buttons.push(settingsButton);
-
-  const settingsContent = $('<div>')
-      .addClass('settings-content')
-      .appendTo(settingsDiv);
-  const tabChkboxId = generateUniqueId();
-
-  $('<input>')
-      .attr('type', 'checkbox')
-      .attr('id', tabChkboxId)
-      .addClass('settings-check')
-      .prop('checked', true)
-      .appendTo(settingsContent)
-      .change(function() {
-        if ($(this).is(':checked')) {
-          container.find('.tab').show();
-          container.find('.tab-content').hide();
-
-          container.find('.tab-content.active').show();
-        } else {
-          container.find('.tab').hide();
-          container.find('.tab-content').show();
-        }
-      });
-  $('<label>')
-      .addClass('settings-check')
-      .attr('for', tabChkboxId)
-      .text(SETTINGS_TABBED_EDITOR_LABEL)
-      .appendTo(settingsContent);
 
   // create reset button
   const resetButton = $('<button>')

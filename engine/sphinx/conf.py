@@ -204,9 +204,7 @@ todo_include_todos = False
 
 def setup(app):
 
-    for css in ['node_modules/slick-carousel/slick/slick.css',
-                'node_modules/slick-carousel/slick/slick-theme.css',
-                'dist/style.css',
+    for css in ['dist/style.css',
                 'dist/vendors~main.style.css']:
         app.add_stylesheet(css)
 

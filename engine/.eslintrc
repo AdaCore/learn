@@ -1,11 +1,12 @@
 {
   "extends": ["eslint:recommended", "google"],
   "rules": {
-    // Additional, per-project rules...
+    "no-invalid-this": "off"
   },
 
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
 
   "env": {

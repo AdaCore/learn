@@ -2,15 +2,17 @@ const path = require('path');
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const SassLintPlugin = require('sass-lint-webpack');
+
 
 module.exports = {
   entry: [
-    './src/index.js'
+    './sphinx/learn_theme/static/src/index.js'
   ],
   output: {
     filename: 'main.bundle.js',
     chunkFilename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'sphinx', 'learn_theme', 'static', 'dist')
   },
   resolve: {
     modules: ['node_modules']
@@ -24,7 +26,20 @@ module.exports = {
   module: {
     noParse: [/ace-builds.*/],
     rules: [
-
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        exclude: /(node_modules)|theme.js/,
+        loader: "eslint-loader",
+        options: {
+            cache: false,
+            fix: false,
+            emitWarning: true,
+            emitError: true,
+            failOnWarning: true,
+            failOnError: true
+        }
+      },
       {
         test: /\.(scss|sass)$/,
         use: [{
@@ -47,7 +62,7 @@ module.exports = {
             options: {
               name: '[name].[ext]?[hash]',
               outputPath: 'fonts/',
-              publicPath: path.resolve(__dirname, 'dist', 'fonts')
+              publicPath: '/_static/dist/fonts/'
             }
           }
         ]
@@ -60,14 +75,13 @@ module.exports = {
             options: {
               name: '[name].[ext]',
               outputPath: 'img/',
-              publicPath: path.resolve(__dirname, 'dist', 'img')
+              publicPath: '/_static/dist/img/'
             }
           }
         ]
       },
     ]
   },
-  devtool: 'source-map',
   target: 'web',
 
   plugins: [
@@ -78,7 +92,8 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery"
-    })
+    }),
+//    new SassLintPlugin(),
   ]
 
 };
