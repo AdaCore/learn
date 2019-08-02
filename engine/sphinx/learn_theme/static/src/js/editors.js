@@ -2,6 +2,7 @@ import $ from 'jquery';
 import * as ace from 'brace';
 import 'brace/mode/ada';
 import 'brace/theme/tomorrow';
+import 'brace/theme/tomorrow_night';
 
 // List of known modes, and the corresponding button labels
 const MODES = {
@@ -34,6 +35,9 @@ const RESET_TOOLTIP = 'Reset editor to default state';
 
 const SETTINGS_TABBED_EDITOR_LABEL =
 'Enable tabbed editor view for this editor';
+
+const SETTINGS_THEME_EDITOR_LABEL =
+'Use the dark theme';
 
 const CUSTOM_INPUT_LABEL = 'Test against custom input';
 const CUSTOM_INPUT_TOOLTIP =
@@ -761,46 +765,6 @@ function fillEditorFromContents(container, exampleServer, resources) {
       .addClass('tab')
       .appendTo(container);
 
-  // create settings button
-  const settingsDiv = $('<div>')
-      .addClass('settings-container')
-      .appendTo(container);
-
-  $('<button>')
-      .addClass('settings-btn')
-      .append(
-          $('<i>').addClass('fas').addClass('fa-cog')
-      )
-      .appendTo(settingsDiv);
-
-  const settingsContent = $('<div>')
-      .addClass('settings-content')
-      .appendTo(settingsDiv);
-
-  $('<label>')
-      .addClass('settings-check-label')
-      .text(SETTINGS_TABBED_EDITOR_LABEL)
-      .appendTo(settingsContent)
-      .append(
-          $('<input>')
-              .attr('type', 'checkbox')
-              .addClass('settings-check')
-              .prop('checked', true)
-              .appendTo(settingsContent)
-              .change(function() {
-                if ($(this).is(':checked')) {
-                  container.find('.tab').show();
-                  container.find('.tab-content').hide();
-
-                  container.find('.tab-content.active').show();
-                } else {
-                  container.find('.tab').hide();
-                  container.find('.tab-content').show();
-                }
-              }))
-      .append($('<span>').addClass('settings-check-span'));
-
-
   let counter = 0;
 
   const editors = [];
@@ -811,6 +775,88 @@ function fillEditorFromContents(container, exampleServer, resources) {
     // Append the editor to the list of editors
     editors.push(editor);
   });
+
+  const settingsBar = $('<div>')
+      .addClass('settings-bar')
+      .appendTo(container);
+
+  const dropdownContainer = $('<div>')
+      .addClass('dropdown-container')
+      .addClass('settingsbar-item')
+      .appendTo(settingsBar);
+
+  $('<button>')
+      .addClass('dropdown-btn')
+      .append(
+          $('<i>').addClass('fas').addClass('fa-cog')
+      )
+      .appendTo(dropdownContainer);
+
+  const dropdownContent = $('<div>')
+      .addClass('dropdown-content')
+      .appendTo(dropdownContainer);
+
+  const tabsCheckboxId = generateUniqueId();
+  $('<input>')
+      .addClass('checkbox')
+      .attr('id', tabsCheckboxId)
+      .attr('type', 'checkbox')
+      .prop('checked', true)
+      .appendTo(dropdownContent)
+      .change(function() {
+        if ($(this).is(':checked')) {
+          container.find('.tab').show();
+          container.find('.tab-content').hide();
+
+          container.find('.tab-content.active').show();
+        } else {
+          container.find('.tab').hide();
+          container.find('.tab-content').show();
+        }
+      });
+
+  $('<label>')
+      .attr('for', tabsCheckboxId)
+      .text(SETTINGS_TABBED_EDITOR_LABEL)
+      .appendTo(dropdownContent);
+
+  const themeCheckboxId = generateUniqueId();
+  $('<input>')
+      .addClass('checkbox')
+      .attr('id', themeCheckboxId)
+      .attr('type', 'checkbox')
+      .appendTo(dropdownContent)
+      .change(function() {
+        let theme = 'ace/theme/tomorrow';
+        if ($(this).is(':checked')) {
+          theme = 'ace/theme/tomorrow_night';
+        }
+        editors.forEach(function(ed) {
+          ed.setTheme(theme);
+        });
+      });
+
+  $('<label>')
+      .attr('for', themeCheckboxId)
+      .text(SETTINGS_THEME_EDITOR_LABEL)
+      .appendTo(dropdownContent);
+
+  editors.buttons = [];
+  // create reset button
+  const resetButton = $('<button>')
+      .attr('type', 'button')
+      .addClass('settingsbar-item')
+      .addClass('reset-btn')
+      .attr('title', RESET_TOOLTIP)
+      .append(
+          $('<i>').addClass('fas').addClass('fa-undo')
+      )
+      .appendTo(settingsBar)
+      .click(function(x) {
+        resetWorker(resetButton, editors, container, outputArea, labArea);
+      });
+  resetButton.editors = editors;
+  editors.buttons.push(resetButton);
 
   // "click" all active tabs to show them
   $('button.tab-links.active').click();
@@ -833,8 +879,6 @@ function fillEditorFromContents(container, exampleServer, resources) {
   const outputArea = $('<div>')
       .addClass('output_area')
       .appendTo(outputDiv);
-
-  editors.buttons = [];
 
   // if (container.attr("prove_button") || container.attr("run_button")) {}
 
@@ -889,20 +933,6 @@ function fillEditorFromContents(container, exampleServer, resources) {
         .text(CUSTOM_INPUT_LABEL)
         .appendTo(div);
   }
-
-  // create reset button
-  const resetButton = $('<button>')
-      .attr('type', 'button')
-      .addClass('btn')
-      .addClass('btn-secondary')
-      .attr('title', RESET_TOOLTIP)
-      .text('Reset')
-      .appendTo(buttonsDiv)
-      .click(function(x) {
-        resetWorker(resetButton, editors, container, outputArea, labArea);
-      });
-  resetButton.editors = editors;
-  editors.buttons.push(resetButton);
 
   for (const mode in MODES) {
     if (container.attr(mode + '_button')) {

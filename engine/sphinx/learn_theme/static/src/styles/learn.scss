@@ -1,8 +1,11 @@
 @import 'variables';
+//@import '~bootstrap/scss/bootstrap';
 @import '~@fortawesome/fontawesome-free/css/all.css';
 @import '~slick-carousel/slick/slick.css';
 @import '~slick-carousel/slick/slick-theme.css';
 @import 'theme';
+
+
 // theme overrides
 .wy-side-nav-search {
     background-color: $color-theme-bg-dark;
@@ -68,106 +71,128 @@
     padding: 0px;
 }
 
-.settings-btn {
-    color: $color-font-grey;
-    background-color: $color-theme-bg-light;
-    padding: 10px;
-    font-size: 16px;
-    border-top: 1px solid $color-widget-border;
-    border-right: 1px solid $color-widget-border;
-    border-left: none;
-    border-bottom: none;
-    cursor: pointer;
-}
+.settings-bar {
+    background-color: $color-settingsbar-bg;
+    padding-left: 13px;
+    display: block;
+    margin-top: 0px;
+    margin-bottom: 10px;
 
-.settings-container {
-    position: absolute;
-    display: inline-block;
-    opacity: 0.2;
-    top: 32px;
-    right: 0px;
-    z-index: 10;
-    &:hover {
-        opacity: 1.0;
-        .settings-content {
-            display: block;
-        }
-        .settings-btn {
-            color: $color-theme-fg-dark;
+    button {
+        background-color: transparent;
+        color: $color-font-grey;
+        opacity: 0.5;
+        padding: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
+        font-size: 13px;
+        border: none;
+
+        &:hover {
+            opacity: 1.0;
         }
     }
-}
 
-.settings-content {
-    display: none;
-    position: absolute;
-    background-color: $color-theme-bg-light;
-    right: 0px;
-    width: 300px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    .settings-check-label {
-        display: block;
+    .dropdown-container {
         position: relative;
-        padding-left: 35px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        cursor: pointer;
-        font-size: 13px;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        input {
+        display: inline-block;
+
+        .dropdown-content {
+            display: none;
             position: absolute;
-            opacity: 0;
-            cursor: pointer;
-            height: 0;
-            width: 0;
-            &:checked {
-                & ~ .settings-check-span {
-                    background-color: $color-theme-bg-dark;
-                    &:after {
-                        display: block;
-                    }
+            background-color: $color-theme-bg-light;
+            min-width: 300px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            padding: 8px;
+
+            a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+
+                &:hover {
+                    background-color: #ddd;
                 }
             }
         }
-        .settings-check-span {
+
+        &:hover {
+            .dropdown-content {
+                display: block;
+            }
+            .dropdown-btn {
+                opacity: 1.0;
+            }
+        }
+
+        .checkbox {
             position: absolute;
-            top: 0;
-            left: 0;
-            height: 20px;
-            width: 20px;
-            background-color: #eee;
-            &:after {
-                content: "";
+            opacity: 0;
+
+            & + label {
+                position: relative;
+                cursor: pointer;
+                padding: 0;
+                white-space: nowrap;
+            }
+
+            // Box.
+            & + label:before {
+                content: '';
+                margin-right: 10px;
+                display: inline-block;
+                vertical-align: middle;
+                width: 20px;
+                height: 20px;
+                background: #ddd;
+            }
+
+            // Box hover
+            &:hover + label:before {
+                background: $color-theme-bg-dark;
+            }
+
+            // Box checked
+            &:checked + label:before {
+                background: $color-theme-bg-dark;
+            }
+
+            // Disabled state label.
+            &:disabled + label {
+                color: #b8b8b8;
+                cursor: auto;
+            }
+
+            // Disabled box.
+            &:disabled + label:before {
+                box-shadow: none;
+                background: #ddd;
+            }
+
+            // Checkmark. Could be replaced with an image
+            &:checked + label:after {
+                content: '';
                 position: absolute;
-                display: none;
-                left: 6px;
-                top: 3px;
-                width: 5px;
-                height: 10px;
-                border: solid white;
-                border-width: 0 3px 3px 0;
-                -webkit-transform: rotate(45deg);
-                -ms-transform: rotate(45deg);
+                left: 5px;
+                top: 9px;
+                background: white;
+                width: 2px;
+                height: 2px;
+                box-shadow:
+                  2px 0 0 white,
+                  4px 0 0 white,
+                  4px -2px 0 white,
+                  4px -4px 0 white,
+                  4px -6px 0 white,
+                  4px -8px 0 white;
                 transform: rotate(45deg);
             }
         }
-        &:hover {
-            input {
-                & ~ .settings-check-span {
-                    background-color: #ccc;
-                }
-            }
-        }
     }
 }
+
 
 div {
     &.file {
@@ -176,10 +201,7 @@ div {
     &.editor_container {
         height: 30em;
         border: 1px solid $color-widget-border;
-        margin-top: 0px;
-        margin-bottom: 5px;
-        margin-left: 0px;
-        margin-right: 0px;
+        margin: 0px;
         &.inline {
             height: 20em;
             border: 1px solid $color-widget-border;
