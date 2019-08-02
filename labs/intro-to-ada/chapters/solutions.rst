@@ -131,15 +131,15 @@ Numbers
     in 1:5 1
     out 1: 1  2  3  4  5
     in 2:-5 -1
-    out 2:-1 -2 -3 -4 -5
+    out 2:-5 -4 -3 -2 -1
     in 3:5 -1
     out 3:-1  0  1  2  3  4  5
     in 4:-5 1
-    out 4: 1  0 -1 -2 -3 -4 -5
+    out 4:-5 -4 -3 -2 -1  0  1
     in 5:1 -1
     out 5:-1  0  1
     in 6:-1 -5
-    out 6:-1 -2 -3 -4 -5
+    out 6:-5 -4 -3 -2 -1
     --  END LAB IO BLOCK
 
     procedure Display_Numbers (A, B : Integer);
@@ -157,25 +157,9 @@ Numbers
           Y := A;
        end if;
 
-       if A > 0 and B > 0 then
-          for I in X .. Y loop
-             Put_Line (Integer'Image (I));
-          end loop;
-       elsif A < 0 and B < 0 then
-          for I in reverse X .. Y loop
-             Put_Line (Integer'Image (I));
-          end loop;
-       else
-          if abs X <= abs Y then
-             for I in X .. Y loop
-                Put_Line (Integer'Image (I));
-             end loop;
-          else
-             for I in reverse X .. Y loop
-                Put_Line (Integer'Image (I));
-             end loop;
-          end if;
-       end if;
+       for I in X .. Y loop
+          Put_Line (Integer'Image (I));
+       end loop;
     end Display_Numbers;
 
     with Ada.Command_Line; use Ada.Command_Line;
