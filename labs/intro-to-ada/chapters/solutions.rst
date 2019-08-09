@@ -597,10 +597,10 @@ Operations
 Strongly typed language
 -----------------------
 
-Exercise #1
-~~~~~~~~~~~
+Colors
+~~~~~~
 
-.. code:: ada lab=Solutions.Strongly_Typed.Enumerations
+.. code:: ada lab=Solutions.Strongly_Typed.Colors
 
     --  START LAB IO BLOCK
     in 0:HTML_Color_Range
@@ -712,10 +712,10 @@ Exercise #1
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Exercise #2
-~~~~~~~~~~~
+Integer Types
+~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Strongly_Typed.Integers
+.. code:: ada lab=Solutions.Strongly_Typed.Integer_Types
 
     --  START LAB IO BLOCK
     in 0:I_100_Range
@@ -910,10 +910,10 @@ Exercise #2
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Exercise #3
-~~~~~~~~~~~
+Temperatures
+~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Strongly_Typed.Floating_Point
+.. code:: ada lab=Solutions.Strongly_Typed.Temperatures
 
     --  START LAB IO BLOCK
     in 0:Celsius_Range
