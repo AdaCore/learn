@@ -165,7 +165,7 @@ assignment and comparison operations are not automatically provided.
 This is useful because, for example, for some data types the built-in assignment
 operation might be incorrect (for example when a deep copy is required).
 
-Ada does allow you to overload the comparison operators "=" and "/" for limited
+Ada does allow you to overload the comparison operators ``=`` and ``/=`` for limited
 types (and to override the built-in declarations for non-limited types).
 
 Ada also allows you to implement special semantics for assignment via
