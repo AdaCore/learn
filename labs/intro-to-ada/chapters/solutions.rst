@@ -20,7 +20,7 @@ Imperative Language
 Hello World
 ~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Imperative_Language.HelloWorld
+.. code:: ada lab=Solutions.Imperative_Language.Hello_World
 
     --  START LAB IO BLOCK
     in 0:
@@ -70,7 +70,7 @@ Greetings
 Positive Or Negative
 ~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Imperative_Language.PositiveOrNegative
+.. code:: ada lab=Solutions.Imperative_Language.Positive_Or_Negative
 
     --  START LAB IO BLOCK
     in 0:0
@@ -189,7 +189,7 @@ Subprograms
 Subtract Procedure
 ~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Subprograms.SubtractProc
+.. code:: ada lab=Solutions.Subprograms.Subtract_Proc
 
     --  START LAB IO BLOCK
     in 0:Sub_10_1_Chk
@@ -256,7 +256,7 @@ Subtract Procedure
 Subtract Function
 ~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Subprograms.SubtractFunc
+.. code:: ada lab=Solutions.Subprograms.Subtract_Func
 
     --  START LAB IO BLOCK
     in 0:Sub_10_1_Chk
@@ -321,7 +321,7 @@ Subtract Function
 Equality function
 ~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Subprograms.EqualityFunc
+.. code:: ada lab=Solutions.Subprograms.Equality_Func
 
     --  START LAB IO BLOCK
     in 0:Equal_Chk
@@ -1399,7 +1399,7 @@ Arrays
 Constrained Array
 ~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Arrays.ConstrainedArray
+.. code:: ada lab=Solutions.Arrays.Constrained_Array
 
     --  START LAB IO BLOCK
     in 0:Range_Chk
@@ -1550,7 +1550,7 @@ Constrained Array
 Colors: Lookup-Table
 ~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Arrays.ColorsLookupTable
+.. code:: ada lab=Solutions.Arrays.Colors_Lookup_Table
 
     --  START LAB IO BLOCK
     in 0:Color_Table_Chk
@@ -1674,7 +1674,7 @@ Colors: Lookup-Table
 Unconstrained Array
 ~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Arrays.UnconstrainedArray
+.. code:: ada lab=Solutions.Arrays.Unconstrained_Array
 
     --  START LAB IO BLOCK
     in 0:Init_Chk
@@ -1809,7 +1809,7 @@ Unconstrained Array
 Quantities And Amounts
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Arrays.QuantitiesAndAmounts
+.. code:: ada lab=Solutions.Arrays.Quantities_And_Amounts
 
     --  START LAB IO BLOCK
     in 0:Total_Func_Chk
@@ -1946,7 +1946,7 @@ Quantities And Amounts
 String_10
 ~~~~~~~~~
 
-.. code:: ada lab=Solutions.Arrays.String10
+.. code:: ada lab=Solutions.Arrays.String_10
 
     --  START LAB IO BLOCK
     in 0:String_10_Chk
@@ -2014,7 +2014,7 @@ String_10
 List of Names
 ~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Arrays.ListOfNames
+.. code:: ada lab=Solutions.Arrays.List_Of_Names
 
     --  START LAB IO BLOCK
     in 0:Names_Ages_Chk

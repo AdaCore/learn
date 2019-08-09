@@ -20,7 +20,7 @@ Hello World
 Your goal with this exercise is to create an application that displays
 the message "Hello World!".
 
-.. code:: ada lab=Imperative_Language.HelloWorld
+.. code:: ada lab=Imperative_Language.Hello_World
 
     --  START LAB IO BLOCK
     in 0:
@@ -95,7 +95,7 @@ zero and displays the result. In other words:
 
 You should focus on the :ada:`Classify_Number` procedure.
 
-.. code:: ada lab=Imperative_Language.PositiveOrNegative
+.. code:: ada lab=Imperative_Language.Positive_Or_Negative
 
     --  START LAB IO BLOCK
     in 0:0
