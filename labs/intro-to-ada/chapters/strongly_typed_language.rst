@@ -1,5 +1,3 @@
-:orphan:
-
 Strongly typed language
 =======================
 
