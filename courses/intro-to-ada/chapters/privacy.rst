@@ -169,7 +169,7 @@ Ada does allow you to overload the comparison operators ``=`` and ``/=`` for lim
 types (and to override the built-in declarations for non-limited types).
 
 Ada also allows you to implement special semantics for assignment via
-`controlled types <todo_link_to_controlled_types>`_. However, in some cases
+`controlled types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-7-6.html>`_. However, in some cases
 assignment is simply inappropriate; one example is the ``File_Type`` from the
 ``Ada.Text_IO`` package, which is declared as a limited type and thus
 attempts to assign one file to another would be detected as illegal.
