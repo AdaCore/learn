@@ -64,7 +64,7 @@ Don't worry about the details of the :ada:`Main` procedure. You should
 just focus on declaring the types (in the :ada:`Color_Types` package) and
 implementing the functions as indicated below.
 
-.. code:: ada lab=Strongly_Typed_Enumerations
+.. code:: ada lab=Strongly_Typed.Enumerations
 
     --  START LAB IO BLOCK
     in 0:HTML_Color_Range
@@ -194,7 +194,7 @@ Don't worry about the details of the :ada:`Main` procedure. You should
 just focus on declaring the types (in the :ada:`Int_Types` package) and
 implementing the functions as indicated below.
 
-.. code:: ada lab=Strongly_Typed_Integers
+.. code:: ada lab=Strongly_Typed.Integers
 
     --  START LAB IO BLOCK
     in 0:I_100_Range
@@ -431,7 +431,7 @@ are your goals:
 
 For the floating-point types above, use a precision of six digits.
 
-.. code:: ada lab=Strongly_Typed_Floating_Point
+.. code:: ada lab=Strongly_Typed.Floating_Point
 
     --  START LAB IO BLOCK
     in 0:Celsius_Range

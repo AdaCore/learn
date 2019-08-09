@@ -33,7 +33,7 @@ which includes the actual geometric angle and the corresponding direction
 #. Implement the function :ada:`To_Ext_Angle` to convert a simple angle
    value to an extended angle.
 
-.. code:: ada lab=Records_Directions
+.. code:: ada lab=Records.Directions
 
     --  START LAB IO BLOCK
     in 0:Direction_Chk
@@ -197,7 +197,7 @@ the individual color elements. In addition, you will:
    of the :ada:`RGB` type in this format:
    :ada:`"(Red => 16#..#, Green => 16#...#, Blue => 16#...# )"`
 
-.. code:: ada lab=Records_Colors
+.. code:: ada lab=Records.Colors
 
     --  START LAB IO BLOCK
     in 0:HTML_Color_To_RGB
@@ -335,7 +335,7 @@ assets. These are your goals:
 #. Implement a procedure :ada:`Display` to display information about the
    inventory.
 
-.. code:: ada lab=Records_Inventory
+.. code:: ada lab=Records.Inventory
 
     --  START LAB IO BLOCK
     in 0:Inventory_Chk
