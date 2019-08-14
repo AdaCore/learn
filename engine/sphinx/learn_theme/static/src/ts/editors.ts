@@ -209,7 +209,7 @@ function processCheckOutput(container, editors, outputArea, labArea, output,
                     // Jump to the corresponding line
                     e.gotoLine(parseInt(matchFound[2]),
                         // looks like column numbers are indexed from 0
-                        parseInt(matchFound[3] - 1),
+                        parseInt((matchFound[3] - 1).toString()),
                         true);
                     e.focus();
                   }
@@ -392,7 +392,7 @@ function getOutputFromIdentifier(container, editors, outputArea, labArea,
     console.log('Error: ' + errorThrown);
     console.log('Status: ' + status);
     console.dir(xhr);
-  }).fail(function(json) {
+  }).fail(function(json : any) {
     reset(container, editors);
     outputError(outputArea, json.message);
   });
@@ -545,7 +545,7 @@ function createEditor(resource, container, tabs, editors, counter) {
       .appendTo(div);
 
   // ACE editors...
-  const editor = ace.edit(resource.basename + theId + '_editor');
+  const editor : any = ace.edit(resource.basename + theId + '_editor');
 
   // Set the mode
   if (resource.basename.match(/.ad[sb]$/)) {

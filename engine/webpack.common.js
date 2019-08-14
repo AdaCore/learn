@@ -7,7 +7,7 @@ const SassLintPlugin = require('sass-lint-webpack');
 
 module.exports = {
   entry: [
-    './sphinx/learn_theme/static/src/index.js'
+    './sphinx/learn_theme/static/src/index.ts'
   ],
   output: {
     filename: 'main.bundle.js',
@@ -15,7 +15,8 @@ module.exports = {
     path: path.resolve(__dirname, 'sphinx', 'learn_theme', 'static', 'dist')
   },
   resolve: {
-    modules: ['node_modules']
+    modules: ['node_modules'],
+    extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
   },
   optimization: {
     splitChunks: {
@@ -27,36 +28,32 @@ module.exports = {
     noParse: [/ace-builds.*/],
     rules: [
       {
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader',
+        exclude: /node_modules/,
+      },
+      {
         enforce: "pre",
         test: /\.js$/,
-        exclude: /(node_modules)|theme.js/,
-        loader: "eslint-loader",
-        options: {
-            cache: false,
-            fix: false,
-            emitWarning: true,
-            emitError: true,
-            failOnWarning: true,
-            failOnError: true
-        }
+        loader: "source-map-loader"
       },
       {
         test: /\.(scss|sass)$/,
         use: [{
           loader: MiniCssExtractPlugin.loader
         }, {
-          loader: "css-loader"
+          loader: 'css-loader'
         }, {
           loader: 'postcss-loader',
           options: {
-            plugins: function () { 
+            plugins: function () {
               return [
                 require('autoprefixer')
               ];
             }
           }
         }, {
-          loader: "sass-loader",
+          loader: 'sass-loader',
         }]
       },
       {

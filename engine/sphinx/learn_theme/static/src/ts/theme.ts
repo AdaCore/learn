@@ -1,4 +1,4 @@
-var jQuery = (typeof(window) != 'undefined') ? window.jQuery : require('jquery');
+import $ from 'jquery';
 
 // Sphinx theme nav state
 function ThemeNav () {
@@ -32,7 +32,7 @@ function ThemeNav () {
         }
 
         self.isRunning = true;
-        jQuery(function ($) {
+        $(function ($) {
             self.init($);
 
             self.reset();
@@ -112,7 +112,7 @@ function ThemeNav () {
         // Add expand links to all parents of nested ul
         $('.wy-menu-vertical ul').not('.simple').siblings('a').each(function () {
             var link = $(this);
-                expand = $('<span class="toctree-expand"></span>');
+            const expand = $('<span class="toctree-expand"></span>');
             expand.on('click', function (ev) {
                 self.toggleCurrent(link);
                 ev.stopPropagation();
@@ -225,7 +225,7 @@ if (typeof(window) != 'undefined') {
     }
 
     if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
+        window.requestAnimationFrame = function(callback : FrameRequestCallback) {
             var currTime = new Date().getTime();
             var timeToCall = Math.max(0, 16 - (currTime - lastTime));
             var id = window.setTimeout(function() { callback(currTime + timeToCall); },

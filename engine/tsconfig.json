@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "outDir": "./sphinx/learn_theme/static/built",
+        "sourceMap": true,
+        "allowJs": true,
+        "target": "es5",
+        "esModuleInterop": true,
+        "downlevelIteration": true
+    },
+    "include": [
+        "./sphinx/learn_theme/static/src/**/*"
+    ]
+}
