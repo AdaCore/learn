@@ -8,7 +8,7 @@ $(window).scroll(function() {
   }
 });
 
-$('#scrollToTopBtn').click(function() {
+$('#scrollToTopBtn').click(() => {
   $('html, body').animate({
     scrollTop: 0,
   }, 300);

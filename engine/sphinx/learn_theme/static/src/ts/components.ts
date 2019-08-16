@@ -1,15 +1,16 @@
 export class Tabs {
-  private headers : JQuery[];
-  private contents : JQuery[];
+  private headers : Array<JQuery> = [];
+  private contents : Array<JQuery> = [];
 
   public addTab(name : string, content : JQuery)  : JQuery {
-    this.contents.push($('<div>')
+    const tabContent = $('<div>')
         .addClass('tab-content')
-        .append(content));
+        .append(content);
 
     const header = $('<button>')
         .addClass('tab-links')
-        .click((event: JQuery.Event) => {
+        .text(name)
+        .click(() => {
           for(const c of this.contents) {
             c.hide();
             c.removeClass('active');
@@ -18,11 +19,12 @@ export class Tabs {
             h.removeClass('active');
           }
 
-          contentContainer.addClass('active');
-          contentContainer.show();
-          event.target.addClass('active');
+          tabContent.addClass('active');
+          tabContent.show();
+          header.addClass('active');
         });
     this.headers.push(header);
+    this.contents.push(tabContent);
     return header;
   }
 
@@ -62,15 +64,81 @@ export class Tabs {
   }
 }
 
-function Button(classList : string[], title : string, text : string) : JQuery {
-  const button = $('<button>')
-          .attr('type', 'button')
-          .addClass('btn')
-          .addClass('btn-primary')
-          .attr('title', title)
-          .text(text);
-  for(let c of classList) {
-    button.addClass(c);
+export class Button {
+  private obj : JQuery;
+  public disabled = false;
+
+  constructor(classList : string[], title : string, text : string){
+    this.obj = $('<button>')
+        .attr('type', 'button')
+        .addClass('btn')
+        .addClass('btn-primary')
+        .attr('title', title)
+        .text(text);
+    for(let c of classList) {
+      this.obj.addClass(c);
+    }
   }
-  return button;
+
+  public render() {
+    return this.obj;
+  }
+}
+
+export class CheckBox {
+  private container : JQuery;
+  private input : JQuery;
+  private label : JQuery;
+  private state : boolean;
+
+  constructor(label : string, parent? : JQuery, classes? : string[], title? : string) {
+    if(parent == undefined) {
+      this.container = $('<div>');
+    } else {
+      this.container = parent;
+    }
+
+    if(classes != undefined) {
+      for(const c in classes) {
+        this.container.addClass(c);
+      }
+    }
+
+    const qId = this.generateUniqueId();
+    this.input = $('<input>')
+        .attr('type', 'checkbox')
+        .attr('id', qId)
+        .appendTo(this.container);
+    if(title != undefined) {
+      this.input.attr('title', title);
+    }
+
+    this.label = $('<label>')
+        .attr('for', qId)
+        .text(label)
+        .appendTo(this.container);
+  }
+
+  public checked() : boolean {
+    return this.input.is(':checked');
+  }
+
+  public getCheckBox() : JQuery {
+    return this.input;
+  }
+
+  public render() : JQuery {
+    return this.container;
+  }
+
+  private generateUniqueId() {
+    let dt = new Date().getTime();
+    const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+        .replace(/[xy]/g, function(c) {
+          const r = (dt + Math.random()*16)%16 | 0;
+          dt = Math.floor(dt/16);
+          return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+        });
+    return uuid;
+  }
 }

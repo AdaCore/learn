@@ -4,28 +4,19 @@ import 'brace/mode/ada';
 import 'brace/theme/tomorrow';
 import 'brace/theme/tomorrow_night';
 
-import 'components';
-import 'strings';
-import 'types';
-
-function generateUniqueId() : string {
-  let dt = new Date().getTime();
-  const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-      .replace(/[xy]/g, function(c) {
-        const r = (dt + Math.random()*16)%16 | 0;
-        dt = Math.floor(dt/16);
-        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
-      });
-  return uuid;
-}
+import {CheckBox, Button, Tabs} from './components';
+import {Strings} from './strings';
+import './types';
 
 class Editor {
+  private container : JQuery;
   private editor : ace.Editor;
   private initialContents : string;
   private basename : string;
-  private tab : Tabs;
+  private tab : JQuery;
 
   constructor(resource : Resource) {
+    this.container = $('<div>').addClass('editor-container');
     this.editor = ace.edit(null);
 
     // Set the mode
@@ -55,12 +46,13 @@ class Editor {
 
     this.editor.resize();
     // place the cursor at 1,1
-    this.editor.selection.moveTo(0, 0);
+    this.editor.selection.moveCursorTo(0, 0);
 
     // clear undo stack to avoid undoing everything we just did
     this.editor.getSession().getUndoManager().reset();
 
     this.editor.renderer.setScrollMargin(5, 5, 0, 0);
+    this.container.append(this.editor.container);
   }
 
   public setTheme(theme) {
@@ -73,7 +65,7 @@ class Editor {
   }
 
   public render() : JQuery {
-    return $('<div>').addClass('editor-container').append(this.editor.container);
+    return this.container;
   }
 
   public getBasename() : string {
@@ -96,18 +88,45 @@ class Editor {
 
 abstract class Area {
   protected container : JQuery;
+  public errorCount : number = 0;
 
   constructor() { };
-  abstract render();
-  abstract addConsole(text : string);
-  abstract addInfo(text : string);
-  abstract addErr(text : string);
+  abstract render() : JQuery;
+
+  public add(classes : Array<string>, text : string) : JQuery {
+    const div = $('<div>');
+    for(const c in classes) {
+      div.addClass(c);
+    }
+    div.text(text);
+    div.appendTo(this.container);
+    return div;
+  }
+
+  public reset() {
+    this.container.empty();
+    this.errorCount = 0;
+  }
+
+  public addConsole(text : string) : JQuery {
+    return this.add(['output_console'], '$ ' + text);
+  }
+
+  public addInfo(text : string) : JQuery {
+    return this.add(['output_msg_info'], text);
+  }
+
+  public addMsg(text : string) : JQuery {
+    return this.add(['output_msg'], text);
+  }
+
+  public addLine(text : string) : JQuery {
+    return this.add(['output_line'], text);
+  }
 }
 
 class OutputArea extends Area {
   private spinner : JQuery;
-
-  public errorCount : number = 0;
 
   constructor() {
     super();
@@ -124,34 +143,11 @@ class OutputArea extends Area {
         )
         .append(
             $('<div>').addClass('bounce3')
-        )
-        .appendTo(this.container);
+        );
   }
 
-  public reset() {
-    this.container.empty();
-  }
-
-  public add(classes : string[], text : string) : JQuery {
-    const div = $('<div>');
-    for(const c in classes) {
-      div.addClass(c);
-    }
-    div.text(text);
-    div.appendTo(this.container);
-    return div;
-  }
-
-  public addConsole(text : string) {
-    this.add(['output_console'], '$ ' + text);
-  }
-
-  public addInfo(text : string) {
-
-  }
-
-  public addErr(text : string) {
-
+  public render() : JQuery {
+    return this.container;
   }
 
   public addError(message : string) {
@@ -160,10 +156,14 @@ class OutputArea extends Area {
 
   public showSpinner(show : boolean) {
     if (show) {
-      this.spinner.show();
+      this.spinner.appendTo(this.container);
     } else {
-      this.spinner.hide();
+      this.container.hide();
     }
+  }
+
+  public getErrCount() : number {
+    return this.errorCount;
   }
 
   public getContainer() : JQuery {
@@ -172,157 +172,212 @@ class OutputArea extends Area {
 }
 
 class LabArea extends Area {
+  private ref : number;
+  private wrapper : JQuery;
+  private button : JQuery;
+
+  constructor(ref : number) {
+    super();
+    this.wrapper = $('<div>').addClass('acc_wrapper');
+    this.ref = ref;
+
+    this.button = $('<button>')
+        .addClass('accordion')
+        .appendTo(this.wrapper)
+        .append(
+          $('<span>').text(Strings.TEST_CASE_LABEL + ' #' + this.ref)
+        ).click((event : JQuery.ClickEvent) => {
+          event.target.toggleClass('active');
+          this.container.toggle();
+        });
+    this.container = $('<div>')
+        .addClass('lab_test_case')
+        .appendTo(this.wrapper);
+  }
+
+  public render() : JQuery {
+    return this.wrapper;
+  }
+
+  public addResults(success : string, result : CheckOutput.TestResult) {
+    if(success == 'Success') {
+      this.button.addClass('lab_test_success');
+      this.container.addClass('lab_test_success');
+    } else {
+      this.button.addClass('lab_test_failed');
+      this.container.addClass('lab_test_failed');
+    }
+
+    const caseDiv : JQuery = $('<div>')
+        .addClass('lab_results')
+        .appendTo(this.container);
+
+    $('<div>')
+        .addClass('lab_test_msg')
+        .addClass('lab_test_input')
+        .append(
+            $('<span>')
+                .addClass('lab_test_msg_title')
+                .text(Strings.LAB_TEST_INPUT_LABEL + ':')
+        )
+        .append(
+            $('<code>').text(result.in)
+        )
+        .appendTo(caseDiv);
+
+    $('<div>')
+        .addClass('lab_test_msg')
+        .addClass('lab_test_output')
+        .append(
+            $('<span>')
+                .addClass('lab_test_msg_title')
+                .text(Strings.LAB_TEST_OUTPUT_LABEL + ':')
+        )
+        .append(
+            $('<code>').text(result.out)
+        )
+        .appendTo(caseDiv);
+
+    $('<div>')
+        .addClass('lab_test_msg')
+        .addClass('lab_test_actual')
+        .append(
+            $('<span>')
+                .addClass('lab_test_msg_title')
+                .text(Strings.LAB_TEST_ACTUAL_LABEL + ':')
+        )
+        .append(
+            $('<code>').text(result.actual)
+        )
+        .appendTo(caseDiv);
+
+    $('<div>')
+        .addClass('lab_test_msg')
+        .addClass('lab_test_status')
+        .append(
+            $('<span>')
+                .addClass('lab_test_msg_title')
+                .text(Strings.LAB_TEST_STATUS_LABEL + ':')
+        )
+        .append(
+            $('<code>').text(result.status)
+        )
+        .appendTo(caseDiv);
+
+  }
+
+  public getRef() : number {
+    return this.ref;
+  }
+}
+
+class LabContainer {
+  private labList : Array<LabArea> = [];
   private container : JQuery;
 
   constructor() {
     this.container = $('<div>').addClass('lab_area');
   }
 
-  public reset() {
-    this.container.empty();
+  public getLabArea(ref : number) : LabArea {
+    for(const l of this.labList) {
+      if(l.getRef() == ref) {
+        return l;
+      }
+    }
+    const newLab : LabArea = new LabArea(ref);
+    return newLab;
   }
 
-  public render() {
-
-  }
-
-  private refLab(ref : Number) : JQuery {
-
+  public render() : JQuery {
+    for(const l of this.labList) {
+      l.render().appendTo(this.container);
+    }
+    return this.container;
   }
 
   public processResults(data : Object) {
-    const labOutput : any = JSON.parse(msg)['lab_output'];
+    const labOutput : any = data['lab_output'];
     const success : string = labOutput['success'];
     const testCases : any = labOutput['test_cases'];
 
-    for (const testIndex : string in testCases) {
+    for (const index in testCases) {
       const test : CheckOutput.TestResult = testCases[index];
-      homeDiv = this.refLab(parseInt(test));
-      const caseDiv = $('<div>')
-          .addClass('lab_results')
-          .appendTo(homeDiv);
 
-      let testClass = '';
-
-      if (test.status == 'Success') {
-        testClass = 'lab_test_success';
-      } else {
-        testClass = 'lab_test_failed';
-      }
-
-      homeDiv.addClass(testClass);
-
-      const labref = homeDiv.data('labref');
-      labArea.find('button[data-labref="' + labref + '"]')
-          .addClass(testClass);
-
-        $('<div>')
-            .addClass('lab_test_msg')
-            .addClass('lab_test_input')
-            .append(
-                $('<span>')
-                    .addClass('lab_test_msg_title')
-                    .text(LAB_TEST_INPUT_LABEL + ':')
-            )
-            .append(
-                $('<code>').text(testCases[test]['in'])
-            )
-            .appendTo(caseDiv);
-
-        $('<div>')
-            .addClass('lab_test_msg')
-            .addClass('lab_test_output')
-            .append(
-                $('<span>')
-                    .addClass('lab_test_msg_title')
-                    .text(LAB_TEST_OUTPUT_LABEL + ':')
-            )
-            .append(
-                $('<code>').text(testCases[test]['out'])
-            )
-            .appendTo(caseDiv);
-
-        $('<div>')
-            .addClass('lab_test_msg')
-            .addClass('lab_test_actual')
-            .append(
-                $('<span>')
-                    .addClass('lab_test_msg_title')
-                    .text(LAB_TEST_ACTUAL_LABEL + ':')
-            )
-            .append(
-                $('<code>').text(testCases[test]['actual'])
-            )
-            .appendTo(caseDiv);
-
-        $('<div>')
-            .addClass('lab_test_msg')
-            .addClass('lab_test_status')
-            .append(
-                $('<span>')
-                    .addClass('lab_test_msg_title')
-                    .text(LAB_TEST_STATUS_LABEL + ':')
-            )
-            .append(
-                $('<code>').text(testCases[test]['status'])
-            )
-            .appendTo(caseDiv);
+      for(const l of this.labList) {
+        if(l.getRef() == parseInt(index)) {
+          l.addResults(success, test);
+          return;
+        }
       }
     }
+  }
 
-    div.addClass('lab_status');
-    if (msgObj[msgType]['success']) {
-      div.text(LAB_COMPLETE_LABEL);
-    } else {
-      div.text(LAB_FAILED_LABEL);
+  public reset() {
+    for(const l of this.labList) {
+      l.reset();
     }
   }
 }
 
-interface runProgramRequest {
-  files : Resource[];
-  mode : string;
-  lab : string;
-}
+class CLIArea {
+  private textArea : JQuery;
+  private checkBox : CheckBox;
 
-interface checkOutputRequest {
-  identifier : string;
-  already_read : number;
+  constructor() {
+    this.textArea = $('<textarea>')
+        .addClass('custom_input')
+        .attr('name', 'custom_input')
+        .attr('rows', '4')
+        .attr('cols', '6');
+    this.checkBox = new CheckBox(Strings.CUSTOM_INPUT_LABEL, undefined, ['custom_check_container'], Strings.CUSTOM_INPUT_TOOLTIP);
+    this.checkBox.getCheckBox().change(() => {
+      if(this.checkBox.checked()) {
+        this.textArea.show();
+      } else {
+        this.textArea.hide();
+      }
+    });
+  }
+
+  public render(parent : JQuery) {
+    this.textArea.appendTo(parent);
+    this.checkBox.render().appendTo(parent);
+  }
 }
 
 export class Widget {
-  private editors : Editor[];
+  private editors : Array<Editor> = [];
   private container : JQuery;
-  private tabs : Tabs;
+  private tabs : Tabs = new Tabs();
   private outputContainer : JQuery;
-  private outputArea : OutputArea;
-  private labArea : LabArea;
-  private cliArea : JQuery;
+  private outputArea : OutputArea = new OutputArea();
+  private labContainer : LabContainer = new LabContainer();
+  private cliArea : CLIArea = new CLIArea();
 
-  private buttons : JQuery[];
+  private buttons : Array<Button> = [];
 
   private linesRead : number = 0;
   private server : string;
 
-  private resources : Resource[];
-  private shadowFiles : Resource[];
+  private resources : Array<Resource> = [];
+  private shadowFiles : Array<Resource> = [];
 
   constructor(container : JQuery, server : string) {
-    container.attr('the_id', generateUniqueId());
     this.server = server;
     this.container = container;
 
     for (const file of this.container.children('.file')) {
-      const a : Resource = {basename: file.attr('basename'),
-                            contents: file.text()};
-      file.text('');
+      const a : Resource = {basename: $(file).attr('basename'),
+                            contents: $(file).text()};
+      $(file).text('');
       this.resources.push(a);
     }
 
     for (const file of this.container.children('.shadow_file')) {
-      const a : Resource = {basename: file.attr('basename'),
-                            contents: file.text()};
-      file.text('');
+      const a : Resource = {basename: $(file).attr('basename'),
+                            contents: $(file).text()};
+      $(file).text('');
       this.shadowFiles.push(a);
     }
 
@@ -337,26 +392,26 @@ export class Widget {
     }
 
     if (container.attr('lab')) {
-      this.container.attr('prove_button', true);
-      this.container.attr('run_button', true);
-      this.container.attr('submit_button', true);
-      this.container.attr('cli_input', true);
+      this.container.attr('prove_button', 'true');
+      this.container.attr('run_button', 'true');
+      this.container.attr('submit_button', 'true');
+      this.container.attr('cli_input', 'true');
 
-      this.labArea = new LabArea();
+      this.labContainer = new LabContainer();
     } else {
-      this.labArea = null;
+      this.labContainer = null;
     }
 
     if (container.attr('cli_input')) {
-      this.cliArea = this.renderCLIInput();
+      this.cliArea = new CLIArea();
     } else {
       this.cliArea = null;
     }
 
-    for(const mode in modeDictionary) {
+    for(const mode in Strings.modeDictionary) {
       if (this.container.attr(mode + '_button')) {
-        const btn = Button([], modeDictionary[mode].tooltip,  modeDictionary[mode].buttonText);
-        btn.click((event : JQuery.Event) => {
+        const btn : Button = new Button([], Strings.modeDictionary[mode].tooltip,  Strings.modeDictionary[mode].buttonText);
+        btn.render().click((event : JQuery.ClickEvent) => {
           this.buttonCB(event, mode);
         });
         this.buttons.push(btn);
@@ -364,7 +419,7 @@ export class Widget {
     }
   }
 
-  private buttonCB(event : JQuery.Event, mode : string) {
+  private buttonCB(event : JQuery.ClickEvent, mode : string) {
     if (event.target.disabled)
       return;
 
@@ -373,17 +428,17 @@ export class Widget {
     }
 
     this.outputArea.reset();
-    if (this.labArea != null) {
-      this.labArea.reset();
+    if (this.labContainer != null) {
+      this.labContainer.reset();
     }
 
-    this.outputArea.add(['output_info', 'console_output'], CONSOLE_OUTPUT_LABEL + ':');
-    this.outputArea.spinner(true);
+    this.outputArea.add(['output_info', 'console_output'], Strings.CONSOLE_OUTPUT_LABEL + ':');
+    this.outputArea.showSpinner(true);
 
     // TODO: grab cli input and put in shadow file CLI_FILE
 
-    const labName = container.attr('lab_name');
-    const serverData : runProgramRequest = {
+    const labName = this.container.attr('lab_name');
+    const serverData : RunProgram.TS = {
       files: this.resources.concat(this.shadowFiles),
       mode: mode,
       lab: labName
@@ -398,26 +453,25 @@ export class Widget {
       dataType: 'json',
       contentType: 'application/json; charset=UTF-8',
       timeout: 4000,
-    }).done((json) => {
+    }).done((json : RunProgram.FS) => {
       if (json.identifier == '') {
-        resetServerReq();
+        this.resetServerReq();
         this.outputArea.addError(json.message);
       } else {
-        processServerOutput(json.identifier);
+        this.getOutputFromIdentifier(json);
       }
     }).fail((xhr, status, errorThrown) => {
-      resetServerReq();
-      this.outputArea.addError(MACHINE_BUSY_LABEL);
+      this.resetServerReq();
+      this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
       console.log('Error: ' + errorThrown);
       console.log('Status: ' + status);
       console.dir(xhr);
     });
   }
 
-
-  private processServerOutput(identifier : Object) {
-    const data : checkOutputRequest = {
-      identifier: identifier,
+  private getOutputFromIdentifier(json : RunProgram.FS) {
+    const data : CheckOutput.TS = {
+      identifier: json.identifier,
       already_read: this.linesRead
     };
 
@@ -429,121 +483,111 @@ export class Widget {
       contentType: 'application/json; charset=UTF-8',
       timeout: 4000,
     }).done((data : CheckOutput.FS) => {
-      const readLines = processCheckOutput(data);
-
-      this.linesRead += readLines;
+      this.linesRead += this.processCheckOutput(data);
 
       if (!data.completed) {
         // We have not finished processing the output: call this again
         setTimeout(() => {
-          this.processServerOutput(identifier);
+          this.getOutputFromIdentifier(json);
         }, 250);
       }
     }).fail((xhr, status, errorThrown) => {
-      this.outputArea.addError(MACHINE_NOT_RESPONDING_LABEL);
+      this.outputArea.addError(Strings.MACHINE_NOT_RESPONDING_LABEL);
       console.log('Error: ' + errorThrown);
       console.log('Status: ' + status);
       console.dir(xhr);
-    }).fail((json) => {
+    }).fail((json : any) => {
+      const message = (<CheckOutput.FS>json).message;
       this.resetServerReq();
-      this.outputArea.addError(json.message);
+      this.outputArea.addError(message);
     });
   }
 
-  private processCheckOutput(data : CheckOutput.FS) {
+  private processCheckOutput(data : CheckOutput.FS) : number {
+    let readLines : number = 0;
 
-    for(const i in data.output_lines) {
-      const lab = (data.output_lines[i].lab_ref != null);
+    for(const str_ol in data.output_lines) {
+      const ol : CheckOutput.OutputLine = data.output_lines[str_ol];
+      let homeArea : Area;
+      readLines++;
 
-
-       switch(data.output_lines[i].msg.type) {
-         case 'console': {
-            if(lab) {
-              this.labArea.
-            } else {
-
-            }
-         }
-
-
-
-
-
-      let homeDiv : JQuery = this.outputArea.getContainer();
-
-      if(data.output_lines[i].lab_ref != null) {
-        homeDiv = this.labArea.refLab(data.output_lines[i].lab_ref);
+      if(ol.lab_ref != null) {
+        homeArea = this.labContainer.getLabArea(ol.lab_ref);
+      } else {
+        homeArea = this.outputArea;
       }
 
-      const div = $('<div>').appendTo(homeDiv);
-      let msg = data.output_lines[i].msg.data;
-
-      switch(data.output_lines[i].msg.type) {
+      switch(ol.msg.type) {
         case 'console': {
-          div.addClass('output_console');
-          div.text('$ ' + msg);
+          homeArea.addConsole(ol.msg.data);
           break;
         }
         case 'internal_error':
-            msg += ' ' + INTERNAL_ERROR_MESSAGE;
-          //  this fall through is intentional
+          ol.msg.data += ' ' + Strings.INTERNAL_ERROR_MESSAGE;
+          // Intentional: fall through
         case 'stderr':
         case 'stdout': {
-          // Look for lines that contain an error message
-          const matchFound =
-            msg.match(/^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/);
+          const msg = ol.msg.data;
+          const regex : RegExp = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/;
 
-          if (matchFound) {
+          const matchFound : Array<string> = msg.match(regex);
+          let div : JQuery;
+
+          if(matchFound) {
             if (matchFound[4].indexOf(' info:') == 0) {
-              div.addClass('output_msg_info');
+              div = homeArea.addInfo(msg);
             } else {
-              div.addClass('output_msg');
-              this.outputArea.errorCount++;
+              div = homeArea.addMsg(msg);
+              homeArea.errorCount++;
             }
 
             // Lines that contain a sloc are clickable:
             div.click((event : JQuery.Event) => {
-              // find the corresponding editor
-              const basename : string = matchFound[1];
+              const basename = matchFound[1];
               for(const e of this.editors) {
-                if(e.getBasename() == basename) {
+                if(basename == e.getBasename()) {
                   // Switch to the tab that contains the editor
                   e.getTab().click();
 
                   // Jump to the corresponding line
                   e.gotoLine(parseInt(matchFound[2]),
                       // looks like column numbers are indexed from 0
-                      parseInt(matchFound[3]));
+                      parseInt(matchFound[3]) - 1);
                 }
               }
             });
           } else {
-            div.addClass('output_line');
+            homeArea.addLine(msg);
           }
-
-          div.text(msg);
-
           break;
         }
         case 'lab_output': {
-          this.labArea.processResults(JSON.parse(msg));
+          this.labContainer.processResults(JSON.parse(ol.msg.data));
           break;
         }
         default: {
           // TODO: this branch should probably throw an error
-          const msg = msgObj[msgType]['msg'];
-          div.addClass('output_line');
-          div.text(msg);
+          homeArea.addLine(ol.msg.data);
           break;
         }
       }
-
-
     }
+
+    if(data.completed) {
+      this.resetEditors();
+
+      if(data.status != 0) {
+        this.outputArea.addError(Strings.EXIT_STATUS_LABEL + ': ' + data.status);
+      }
+
+      this.outputArea.showSpinner(false);
+    }
+
+    return readLines;
   }
 
   private resetServerReq() {
-    for(const b in this.buttons) {
+    for(const b of this.buttons) {
       b.disabled = false;
     }
     this.linesRead = 0;
@@ -552,15 +596,12 @@ export class Widget {
   private resetEditors() {
     this.linesRead = 0;
     this.outputArea.reset();
-    this.labArea.reset();
+    if(this.labContainer != null) {
+      this.labContainer.reset();
+    }
     for (const editor of this.editors) {
       editor.reset();
     }
-  }
-
-  private renderCLIInput() : JQuery {
-    // TODO
-    return null;
   }
 
   private renderSettingsBar() : JQuery {
@@ -583,57 +624,36 @@ export class Widget {
         .addClass('dropdown-content')
         .appendTo(dropdownContainer);
 
-    const tabsCheckboxId = generateUniqueId();
-    $('<input>')
-        .addClass('checkbox')
-        .attr('id', tabsCheckboxId)
-        .attr('type', 'checkbox')
-        .prop('checked', true)
-        .appendTo(dropdownContent)
-        .change((event: JQuery.Event) => {
-          if (event.target.is(':checked')) {
-            this.tabs.show(true);
-          } else {
-            this.tabs.show(false);
-          }
-        });
+    const tabSetting : CheckBox = new CheckBox(Strings.SETTINGS_TABBED_EDITOR_LABEL, dropdownContent);
+    tabSetting.getCheckBox().prop('checked', true).change(() => {
+      if(tabSetting.checked()) {
+        this.tabs.show(true);
+      } else {
+        this.tabs.show(false);
+      }
+    });
 
-    $('<label>')
-        .attr('for', tabsCheckboxId)
-        .text(SETTINGS_TABBED_EDITOR_LABEL)
-        .appendTo(dropdownContent);
-
-    const themeCheckboxId = generateUniqueId();
-    $('<input>')
-        .addClass('checkbox')
-        .attr('id', themeCheckboxId)
-        .attr('type', 'checkbox')
-        .appendTo(dropdownContent)
-        .change((event: JQuery.Event) => {
-          let theme = 'ace/theme/tomorrow';
-          if (event.target.is(':checked')) {
-            theme = 'ace/theme/tomorrow_night';
-          }
-          for (let editor of this.editors) {
-            editor.setTheme(theme);
-          }
-        });
-
-    $('<label>')
-        .attr('for', themeCheckboxId)
-        .text(SETTINGS_THEME_EDITOR_LABEL)
-        .appendTo(dropdownContent);
+    const themeSetting : CheckBox = new CheckBox(Strings.SETTINGS_THEME_EDITOR_LABEL, dropdownContent);
+    themeSetting.getCheckBox().change(() => {
+      let theme = 'ace/theme/tomorrow';
+      if (themeSetting.checked()) {
+        theme = 'ace/theme/tomorrow_night';
+      }
+      for (let editor of this.editors) {
+        editor.setTheme(theme);
+      }
+    });
 
     $('<button>')
       .attr('type', 'button')
       .addClass('settingsbar-item')
       .addClass('reset-btn')
-      .attr('title', RESET_TOOLTIP)
+      .attr('title', Strings.RESET_TOOLTIP)
       .append(
           $('<i>').addClass('fas').addClass('fa-undo')
       )
       .appendTo(settingsBar)
-      .click((event: JQuery.Event) => {
+      .click((event: JQuery.ClickEvent) => {
         if(event.target.disabled)
           return;
         this.resetEditors();
@@ -643,15 +663,31 @@ export class Widget {
   }
 
   public render() {
-    this.tabs.render().appendTo(this.container);
+    this.tabs.render(this.container);
+    this.renderSettingsBar().appendTo(this.container);
     const row = $('<div>')
         .addClass('row output_row')
         .appendTo(this.container);
 
+    const butCol = $('<div>')
+        .addClass('col-md-3')
+        .appendTo(row);
 
+    if(this.labContainer != null) {
+      this.cliArea.render(butCol);
+    }
 
+    for(const b of this.buttons) {
+      b.render().appendTo(butCol);
+    }
 
+    const outCol = $('<div>')
+        .addClass('col-md-9')
+        .appendTo(row)
+        .append(this.outputArea.render());
 
-
+    if(this.labContainer != null) {
+      this.labContainer.render().appendTo(outCol);
+    }
   }
 }

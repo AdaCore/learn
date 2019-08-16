@@ -3,7 +3,7 @@ import $ from 'jquery';
 // Sphinx theme nav state
 function ThemeNav () {
 
-    var nav = {
+    const nav : any = {
         navBar: null,
         win: null,
         winScroll: false,
@@ -201,7 +201,7 @@ function ThemeNav () {
 module.exports.ThemeNav = ThemeNav();
 
 if (typeof(window) != 'undefined') {
-    window.SphinxRtdTheme = {
+    (<any>window).SphinxRtdTheme = {
         Navigation: module.exports.ThemeNav,
         // TODO remove this once static assets are split up between the theme
         // and Read the Docs. For now, this patches 0.3.0 to be backwards
