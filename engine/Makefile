@@ -65,6 +65,25 @@ publish-staging:
 	cd ../; \
 	rm -rf learn-staging-html-pages
 
+publish:
+	@echo "Publishing current branch to learn..."
+	@if [ ! -d learn-html-pages ] ;\
+        then \
+                git clone -b gh-pages git@github.com:AdaCore/learn-html-pages.git; \
+                cd learn-html-pages; \
+        else \
+                cd learn-html-pages; \
+                git checkout gh-pages && git pull; \
+        fi; \
+        rm -rf *; \
+        git checkout CNAME; \
+        cd ../; \
+        cp -R $(BUILDDIR)/html/. learn-html-pages/; \
+        cd learn-html-pages; \
+        git add -A && git commit -m "Regenerate" && git push origin gh-pages; \
+        cd ../; \
+        rm -rf learn-html-pages
+
 # Development target, rebuilds the site, with it pointing to the local
 # code server.
 local:
@@ -74,6 +93,11 @@ local:
 	# link the real editors.js to the generated location, to ease work
 	rm _build/html/_static/js/editors.js
 	ln -s ../../../../sphinx/learn_theme/static/js/editors.js _build/html/_static/js/
+
+# Build the site pointing to 'cloudchecker.r53.adacore.com'
+site:
+	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" $(SPHINXBUILD) -M html "../" \
+        "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
