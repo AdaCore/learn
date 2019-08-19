@@ -7,6 +7,7 @@ import 'brace/theme/tomorrow_night';
 import {CheckBox, Button, Tabs} from './components';
 import {Strings} from './strings';
 import './types';
+import * as util from './utilities';
 
 class Editor {
   private container : JQuery;
@@ -17,7 +18,7 @@ class Editor {
 
   constructor(resource : Resource) {
     this.container = $('<div>').addClass('editor-container');
-    this.editor = ace.edit(null);
+    this.editor = ace.edit(this.container[0]);
 
     // Set the mode
     if (resource.basename.match(/.ad[sb]$/)) {
@@ -52,7 +53,6 @@ class Editor {
     this.editor.getSession().getUndoManager().reset();
 
     this.editor.renderer.setScrollMargin(5, 5, 0, 0);
-    this.container.append(this.editor.container);
   }
 
   public setTheme(theme) {
@@ -70,6 +70,10 @@ class Editor {
 
   public getBasename() : string {
     return this.basename;
+  }
+
+  public getResource() : Resource {
+    return {basename: this.basename, contents: this.editor.getValue()};
   }
 
   public setTab(tab : JQuery) {
@@ -154,11 +158,19 @@ class OutputArea extends Area {
     this.add(['output_error'], message);
   }
 
+  public addLabStatus(status : boolean) {
+    if(status) {
+      this.add(['lab_status'], Strings.LAB_COMPLETE_LABEL);
+    } else {
+      this.add(['lab_status'], Strings.LAB_FAILED_LABEL);
+    }
+  }
+
   public showSpinner(show : boolean) {
     if (show) {
       this.spinner.appendTo(this.container);
     } else {
-      this.container.hide();
+      this.spinner.remove();
     }
   }
 
@@ -187,7 +199,7 @@ class LabArea extends Area {
         .append(
           $('<span>').text(Strings.TEST_CASE_LABEL + ' #' + this.ref)
         ).click((event : JQuery.ClickEvent) => {
-          event.target.toggleClass('active');
+          $(event.target).toggleClass('active');
           this.container.toggle();
         });
     this.container = $('<div>')
@@ -199,8 +211,8 @@ class LabArea extends Area {
     return this.wrapper;
   }
 
-  public addResults(success : string, result : CheckOutput.TestResult) {
-    if(success == 'Success') {
+  public addResults(result : CheckOutput.TestResult) {
+    if(result.status == "Success") {
       this.button.addClass('lab_test_success');
       this.container.addClass('lab_test_success');
     } else {
@@ -286,37 +298,40 @@ class LabContainer {
       }
     }
     const newLab : LabArea = new LabArea(ref);
+    this.labList.push(newLab);
     return newLab;
   }
 
   public render() : JQuery {
-    for(const l of this.labList) {
-      l.render().appendTo(this.container);
-    }
     return this.container;
   }
 
-  public processResults(data : Object) {
-    const labOutput : any = data['lab_output'];
-    const success : string = labOutput['success'];
-    const testCases : any = labOutput['test_cases'];
+  public processResults(data : Object)  : boolean {
+    const success : boolean = data['success'];
+    const testCases : any = data['test_cases'];
 
     for (const index in testCases) {
       const test : CheckOutput.TestResult = testCases[index];
-
-      for(const l of this.labList) {
-        if(l.getRef() == parseInt(index)) {
-          l.addResults(success, test);
-          return;
-        }
-      }
+      const la = this.getLabArea(parseInt(index));
+      la.addResults(test);
     }
+
+    return success;
   }
 
   public reset() {
-    for(const l of this.labList) {
-      l.reset();
-    }
+    this.container.empty();
+    this.labList = [];
+  }
+
+  public sort() {
+    this.labList.sort((lhs, rhs) : number => {
+      if(lhs.getRef() < rhs.getRef()) return -1;
+      if(lhs.getRef() > rhs.getRef()) return 1;
+      return 0;
+    }).map((l) => {
+      return l.render().appendTo(this.container);
+    });
   }
 }
 
@@ -329,7 +344,8 @@ class CLIArea {
         .addClass('custom_input')
         .attr('name', 'custom_input')
         .attr('rows', '4')
-        .attr('cols', '6');
+        .attr('cols', '6')
+        .hide();
     this.checkBox = new CheckBox(Strings.CUSTOM_INPUT_LABEL, undefined, ['custom_check_container'], Strings.CUSTOM_INPUT_TOOLTIP);
     this.checkBox.getCheckBox().change(() => {
       if(this.checkBox.checked()) {
@@ -344,6 +360,22 @@ class CLIArea {
     this.textArea.appendTo(parent);
     this.checkBox.render().appendTo(parent);
   }
+
+  public enabled() : boolean {
+    return this.checkBox.checked();
+  }
+
+  public getContent() : string {
+    const ret : string | number | string[] = this.textArea.val();
+
+    if(util.isString(ret)) {
+      return <string>ret;
+    } else if(util.isNumber(ret)) {
+      return ret.toString();
+    } else {
+      return (<string[]>ret).join();
+    }
+  }
 }
 
 export class Widget {
@@ -352,18 +384,18 @@ export class Widget {
   private tabs : Tabs = new Tabs();
   private outputContainer : JQuery;
   private outputArea : OutputArea = new OutputArea();
-  private labContainer : LabContainer = new LabContainer();
-  private cliArea : CLIArea = new CLIArea();
+  private labContainer : LabContainer;
+  private cliArea : CLIArea;
 
   private buttons : Array<Button> = [];
 
   private linesRead : number = 0;
   private server : string;
 
-  private resources : Array<Resource> = [];
   private shadowFiles : Array<Resource> = [];
 
   constructor(container : JQuery, server : string) {
+    const resources : Array<Resource> = [];
     this.server = server;
     this.container = container;
 
@@ -371,7 +403,7 @@ export class Widget {
       const a : Resource = {basename: $(file).attr('basename'),
                             contents: $(file).text()};
       $(file).text('');
-      this.resources.push(a);
+      resources.push(a);
     }
 
     for (const file of this.container.children('.shadow_file')) {
@@ -383,7 +415,7 @@ export class Widget {
 
     // Then fill the contents of the tabs
 
-    for (const file of this.resources) {
+    for (const file of resources) {
       const ed = new Editor(file);
       this.editors.push(ed);
 
@@ -435,11 +467,21 @@ export class Widget {
     this.outputArea.add(['output_info', 'console_output'], Strings.CONSOLE_OUTPUT_LABEL + ':');
     this.outputArea.showSpinner(true);
 
-    // TODO: grab cli input and put in shadow file CLI_FILE
+    const files : Array<Resource> = [];
+    for(const e of this.editors) {
+      files.push(e.getResource());
+    }
+
+    // grab cli input and put in file CLI_FILE
+    if(this.cliArea != null) {
+      if(this.cliArea.enabled()) {
+        files.push({basename: Strings.CLI_FILE, contents: this.cliArea.getContent()});
+      }
+    }
 
     const labName = this.container.attr('lab_name');
     const serverData : RunProgram.TS = {
-      files: this.resources.concat(this.shadowFiles),
+      files: files.concat(this.shadowFiles),
       mode: mode,
       lab: labName
     }
@@ -490,6 +532,10 @@ export class Widget {
         setTimeout(() => {
           this.getOutputFromIdentifier(json);
         }, 250);
+      } else {
+        if(this.labContainer != null) {
+          this.labContainer.sort();
+        }
       }
     }).fail((xhr, status, errorThrown) => {
       this.outputArea.addError(Strings.MACHINE_NOT_RESPONDING_LABEL);
@@ -506,8 +552,7 @@ export class Widget {
   private processCheckOutput(data : CheckOutput.FS) : number {
     let readLines : number = 0;
 
-    for(const str_ol in data.output_lines) {
-      const ol : CheckOutput.OutputLine = data.output_lines[str_ol];
+    for(const ol of data.output_lines) {
       let homeArea : Area;
       readLines++;
 
@@ -562,7 +607,8 @@ export class Widget {
           break;
         }
         case 'lab_output': {
-          this.labContainer.processResults(JSON.parse(ol.msg.data));
+          const result = this.labContainer.processResults(ol.msg.data);
+          this.outputArea.addLabStatus(result);
           break;
         }
         default: {
@@ -574,7 +620,10 @@ export class Widget {
     }
 
     if(data.completed) {
-      this.resetEditors();
+      this.linesRead = 0;
+      for(const b of this.buttons) {
+        b.disabled = false;
+      }
 
       if(data.status != 0) {
         this.outputArea.addError(Strings.EXIT_STATUS_LABEL + ': ' + data.status);
