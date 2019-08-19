@@ -99,7 +99,7 @@ abstract class Area {
 
   public add(classes : Array<string>, text : string) : JQuery {
     const div = $('<div>');
-    for(const c in classes) {
+    for(const c of classes) {
       div.addClass(c);
     }
     div.text(text);
@@ -199,7 +199,7 @@ class LabArea extends Area {
         .append(
           $('<span>').text(Strings.TEST_CASE_LABEL + ' #' + this.ref)
         ).click((event : JQuery.ClickEvent) => {
-          $(event.target).toggleClass('active');
+          this.button.toggleClass('active');
           this.container.toggle();
         });
     this.container = $('<div>')
@@ -595,9 +595,7 @@ export class Widget {
                   e.getTab().click();
 
                   // Jump to the corresponding line
-                  e.gotoLine(parseInt(matchFound[2]),
-                      // looks like column numbers are indexed from 0
-                      parseInt(matchFound[3]) - 1);
+                  e.gotoLine(parseInt(matchFound[2]), parseInt(matchFound[3]));
                 }
               }
             });
