@@ -2,17 +2,15 @@ const path = require('path');
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const SassLintPlugin = require('sass-lint-webpack');
-
+const Chunks2JsonPlugin = require('chunks-2-json-webpack-plugin');
 
 module.exports = {
   entry: [
-    './sphinx/learn_theme/static/src/index.ts'
+    './sphinx/src/index.ts'
   ],
   output: {
-    filename: 'main.bundle.js',
-    chunkFilename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'sphinx', 'learn_theme', 'static', 'dist')
+    filename: 'main.[hash].js',
+    path: path.resolve(__dirname, 'sphinx', 'learn_theme', 'static')
   },
   resolve: {
     modules: ['node_modules'],
@@ -25,17 +23,16 @@ module.exports = {
   },
 
   module: {
-    noParse: [/ace-builds.*/],
     rules: [
       {
         test: /\.tsx?$/,
-        loader: 'awesome-typescript-loader',
+        use: ['awesome-typescript-loader', 'eslint-loader'],
         exclude: /node_modules/,
       },
       {
-        enforce: "pre",
+        enforce: 'pre',
         test: /\.js$/,
-        loader: "source-map-loader"
+        loader: ['source-map-loader', 'babel-loader']
       },
       {
         test: /\.(scss|sass)$/,
@@ -53,12 +50,13 @@ module.exports = {
             }
           }
         }, {
-          loader: 'sass-loader',
+          loader: 'sass-loader'
         }]
       },
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
+
       },
       {
         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
@@ -68,7 +66,7 @@ module.exports = {
             options: {
               name: '[name].[ext]?[hash]',
               outputPath: 'fonts/',
-              publicPath: '/_static/dist/fonts/'
+              publicPath: '/_static/fonts/'
             }
           }
         ]
@@ -81,7 +79,7 @@ module.exports = {
             options: {
               name: '[name].[ext]',
               outputPath: 'img/',
-              publicPath: '/_static/dist/img/'
+              publicPath: '/_static/img/'
             }
           }
         ]
@@ -93,13 +91,13 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'style.css',
+      filename: 'style.[hash].css',
     }),
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery"
     }),
-//    new SassLintPlugin(),
+    new Chunks2JsonPlugin(),
   ]
 
 };

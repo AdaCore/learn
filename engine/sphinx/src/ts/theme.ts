@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import $ from 'jquery';
 
 // Sphinx theme nav state

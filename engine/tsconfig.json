@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./sphinx/learn_theme/static/built",
+        "outDir": "./sphinx/built",
         "sourceMap": true,
         "allowJs": true,
         "target": "es5",
@@ -8,6 +8,6 @@
         "downlevelIteration": true
     },
     "include": [
-        "./sphinx/learn_theme/static/src/**/*"
+        "./sphinx/src/**/*"
     ]
 }

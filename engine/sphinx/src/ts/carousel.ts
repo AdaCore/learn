@@ -1,30 +1,39 @@
 import $ from 'jquery';
 import 'slick-carousel';
 
+/** Class for carousel */
 export class Carousel {
-  private container : JQuery;
+  private container: JQuery;
 
+  /**
+   * Constructs a carousel
+   */
   constructor() {
     this.container = $('<div>')
         .addClass('responsive-carousel');
+  }
 
+  /**
+   * Renders the carousel
+   */
+  public render(): void {
     // Get each top level node which will be a carousel if it has inside nodes
     $('div.content-blocks li.toctree-l1').each((i, elem) => {
       if ($(elem).has('ul').length > 0 ) {
-        const name : string = $(elem).children('a').text();
-        const type : string = $(elem).children('a').text().toLowerCase();
+        const name: string = $(elem).children('a').text();
+        const type: string = $(elem).children('a').text().toLowerCase();
 
         $(elem).find('li.toctree-l2').each((j, subelem) => {
-          const title : string = $(subelem).children('a').text();
-          const link : string = $(subelem).children('a').attr('href');
+          const title: string = $(subelem).children('a').text();
+          const link: string = $(subelem).children('a').attr('href');
 
           this.container.append(
               $('<div>').addClass(type).append(
                   $('<a>').attr('href', link).append(
                       $('<div>').addClass('inner').append([
-                          $('<em>').text(name),
-                          $('<strong>').text(title),
-                          $('<p>'),
+                        $('<em>').text(name),
+                        $('<strong>').text(title),
+                        $('<p>'),
                       ])
                   )
               )
@@ -39,8 +48,8 @@ export class Carousel {
     // get content descriptions from other pages and
     // populate description section of carousel divs
     $('div.responsive-carousel > div').each((i, elem) => {
-      const link : string = $(elem).children('a').attr('href');
-      const desc : JQuery = $(elem).find('p');
+      const link: string = $(elem).children('a').attr('href');
+      const desc: JQuery = $(elem).find('p');
       desc.load(link + ' div.content-description.docutils.container', () => {
         desc.find('div')
             .removeClass('content-description docutils container')
@@ -49,7 +58,7 @@ export class Carousel {
     });
 
     // make carousel divs clickable
-    $('.slider-element').click((event : JQuery.ClickEvent) => {
+    $('.slider-element').click((event: JQuery.ClickEvent) => {
       window.open(event.target.find('a:first').attr('href'));
       return false;
     });
@@ -89,8 +98,5 @@ export class Carousel {
         },
       ],
     });
-
   }
-
-
 }

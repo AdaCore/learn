@@ -4,8 +4,8 @@
 :prev_state: False
 :next_state: False
 
-Labs: Introduction to Ada
-=========================
+Labs: Introduction to Ada - BETA
+=================================
 
 .. container:: content-description
 

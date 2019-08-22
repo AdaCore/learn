@@ -42,6 +42,7 @@ release = u'1'
 # Find the widgets extension
 import os
 import sys
+import json
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 import widget_extension
@@ -79,7 +80,18 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content', 'sass', '**/node_modules', 'internal', '**/package.json', '**/webpack.config.js']
+exclude_patterns = [u'_build',
+                     'Thumbs.db',
+                     '.DS_Store',
+                     'old-content',
+                     'sass',
+                     '**/node_modules',
+                     'internal',
+                     '**/package.json',
+                     '**/webpack.config.js'
+                     'built',
+                     'dist',
+                     'src']
 
 show_authors = True
 
@@ -106,18 +118,18 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 # documentation.
 #
 html_theme_options = {
-    "beta": True,
+    "beta": False,
     'sticky_navigation': False,
 }
 
-html_logo = "learn_theme/static/img/logo.svg"
+html_logo = "img/logo.svg"
 
 html_show_sourcelink = False
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = [os.path.join('learn_theme', 'static', 'dist')]
+# html_static_path = ["dist"]
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -203,11 +215,16 @@ todo_include_todos = False
 
 
 def setup(app):
+    manifest = os.path.join(os.getcwd(), "build-manifest.json")
+    with open(manifest, 'r') as infile:
+        data = json.load(infile)
 
-    for css in ['dist/style.css',
-                'dist/vendors~main.style.css']:
-        app.add_stylesheet(css)
-
-    for j in ['dist/main.bundle.js',
-              'dist/vendors~main.bundle.js']:
-        app.add_javascript(j)
+    for chunk, files in data.iteritems():
+        if "css" in files.keys():
+            for css in files["css"]:
+                print("Adding {} to css...".format(css))
+                app.add_stylesheet(css)
+        if "js" in files.keys():
+            for js in files["js"]:
+                print("Adding {} to js...".format(js))
+                app.add_javascript(js)
