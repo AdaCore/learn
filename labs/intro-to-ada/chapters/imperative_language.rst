@@ -1,5 +1,3 @@
-:orphan:
-
 Imperative language
 ===================
 
@@ -20,7 +18,7 @@ Hello World
 Your goal with this exercise is to create an application that displays
 the message "Hello World!".
 
-.. code:: ada lab=ImperativeLanguage_HelloWorld
+.. code:: ada lab=Imperative_Language.Hello_World
 
     --  START LAB IO BLOCK
     in 0:
@@ -49,7 +47,7 @@ You should just focus on implementing the application in the body of the
 :ada:`Greet` procedure.
 
 
-.. code:: ada lab=ImperativeLanguage_Greetings
+.. code:: ada lab=Imperative_Language.Greetings
 
     --  START LAB IO BLOCK
     in 0:John
@@ -95,7 +93,7 @@ zero and displays the result. In other words:
 
 You should focus on the :ada:`Classify_Number` procedure.
 
-.. code:: ada lab=ImperativeLanguage_PositiveOrNegative
+.. code:: ada lab=Imperative_Language.Positive_Or_Negative
 
     --  START LAB IO BLOCK
     in 0:0
@@ -151,7 +149,7 @@ For the moment, don't worry about the details of the :ada:`Main` procedure.
 You should just focus on implementing the application in the body of the
 :ada:`Display_Numbers` procedure.
 
-.. code:: ada lab=ImperativeLanguage_Numbers
+.. code:: ada lab=Imperative_Language.Numbers
 
     --  START LAB IO BLOCK
     in 0:1 5

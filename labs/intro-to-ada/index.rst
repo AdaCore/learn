@@ -16,5 +16,9 @@ Labs: Introduction to Ada
     :caption: Contents:
 
     Imperative Language <chapters/imperative_language>
+    Subprograms <chapters/subprograms>
+    Modular Programming <chapters/modular_programming>
     Strongly Typed Language <chapters/strongly_typed_language>
+    Records <chapters/records>
+    Arrays <chapters/arrays>
     Solutions <chapters/solutions>

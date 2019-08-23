@@ -1,5 +1,3 @@
-:orphan:
-
 Modular Programming
 ===================
 
@@ -25,7 +23,7 @@ constants based on the month's name. For example, the string
 then used by the :ada:`Display_Months` procedure, which is also part of
 the :ada:`Months` package.
 
-.. code:: ada lab=ModularProgramming_Months
+.. code:: ada lab=Modular_Programming.Months
 
     --  START LAB IO BLOCK
     in 0:Months_Chk
@@ -116,7 +114,7 @@ The goal of this exercise is to create two packages:
   :ada:`Display_Operations` procedure. This procedure makes use of the
   functions from the :ada:`Operations` package.
 
-.. code:: ada lab=ModularProgramming_Operations
+.. code:: ada lab=Modular_Programming.Operations
 
     --  START LAB IO BLOCK
     in 0:Operations_Chk

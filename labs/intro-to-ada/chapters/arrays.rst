@@ -1,5 +1,3 @@
-:orphan:
-
 Arrays
 ======
 
@@ -47,7 +45,7 @@ your goals:
   initialized it with the values 1 and 2 for the first two elements, and
   42 for all other elements.
 
-.. code:: ada lab=Arrays_ConstrainedArray
+.. code:: ada lab=Arrays.Constrained_Array
 
     --  START LAB IO BLOCK
     in 0:Range_Chk
@@ -216,7 +214,7 @@ constant values. In order to do that, you will:
 - Declare the actual table as an object of :ada:`HTML_Color_RGB` type and
   initialize it.
 
-.. code:: ada lab=Arrays_ColorsLookupTable
+.. code:: ada lab=Arrays.Colors_Lookup_Table
 
     --  START LAB IO BLOCK
     in 0:Color_Table_Chk
@@ -386,7 +384,7 @@ in the declaration of another array (e.g.: :ada:`B : My_Array (A'Range)`).
 Alternatively, you can use the :ada:`A'First` and :ada:`A'Last`
 attributes.
 
-.. code:: ada lab=Arrays_UnconstrainedArray
+.. code:: ada lab=Arrays.Unconstrained_Array
 
     --  START LAB IO BLOCK
     in 0:Init_Chk
@@ -532,7 +530,7 @@ subtype is based on the :ada:`Integer` type and the :ada:`Amount` subtype
 is based on the :ada:`Float` type, so a conversion is necessary in
 calculations using those types.
 
-.. code:: ada lab=Arrays_QuantitiesAndAmounts
+.. code:: ada lab=Arrays.Quantities_And_Amounts
 
     --  START LAB IO BLOCK
     in 0:Total_Func_Chk
@@ -670,7 +668,7 @@ constrained string type called :ada:`String_10`. Your goals are:
   strings of :ada:`String_10` type based on an input parameter of
   :ada:`String` type.
 
-.. code:: ada lab=Arrays_String10
+.. code:: ada lab=Arrays.String_10
 
     --  START LAB IO BLOCK
     in 0:String_10_Chk
@@ -796,7 +794,7 @@ These are other hints that could be useful:
   to convert from :ada:`String` to :ada:`Name_Type` might be useful. Take
   a moment to reflect on which other subprograms could be useful as well.
 
-.. code:: ada lab=Arrays_ListOfNames
+.. code:: ada lab=Arrays.List_Of_Names
 
     --  START LAB IO BLOCK
     in 0:Names_Ages_Chk

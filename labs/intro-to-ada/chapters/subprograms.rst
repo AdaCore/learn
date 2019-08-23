@@ -1,5 +1,3 @@
-:orphan:
-
 Subprograms
 ===========
 
@@ -21,7 +19,7 @@ Subtract procedure
 In this exercise, you'll write a procedure called :ada:`Subtract`. As
 the name indicates, this procedure performs the operation :ada:`A - B`.
 
-.. code:: ada lab=Subprograms_SubtractProc
+.. code:: ada lab=Subprograms.Subtract_Proc
 
     --  START LAB IO BLOCK
     in 0:Sub_10_1_Chk
@@ -92,7 +90,7 @@ In this exercise, you'll rewrite the :ada:`Subtract` procedure as a
 function. As in the previous exercise, this function performs the
 operation :ada:`A - B` and returns the result.
 
-.. code:: ada lab=Subprograms_SubtractFunc
+.. code:: ada lab=Subprograms.Subtract_Func
 
     --  START LAB IO BLOCK
     in 0:Sub_10_1_Chk
@@ -164,7 +162,7 @@ In this exercise, you'll write a function that compares two values and
 returns a flag (:ada:`Boolean` value) indicating whether the values are
 equal (flag is :ada:`True`) or not (flag is :ada:`False`).
 
-.. code:: ada lab=Subprograms_EqualityFunc
+.. code:: ada lab=Subprograms.Equality_Func
 
     --  START LAB IO BLOCK
     in 0:Equal_Chk

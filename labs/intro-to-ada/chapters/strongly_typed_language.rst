@@ -1,5 +1,3 @@
-:orphan:
-
 Strongly typed language
 =======================
 
@@ -14,8 +12,8 @@ Strongly typed language
 .. role:: cpp(code)
    :language: c++
 
-Exercise #1
------------
+Colors
+------
 
 In this exercise, you'll work with enumerations. These are your goals:
 
@@ -64,7 +62,7 @@ Don't worry about the details of the :ada:`Main` procedure. You should
 just focus on declaring the types (in the :ada:`Color_Types` package) and
 implementing the functions as indicated below.
 
-.. code:: ada lab=Strongly_Typed_Enumerations
+.. code:: ada lab=Strongly_Typed.Colors
 
     --  START LAB IO BLOCK
     in 0:HTML_Color_Range
@@ -158,8 +156,8 @@ implementing the functions as indicated below.
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Exercise #2
------------
+Integer Types
+-------------
 
 In this exercise, you'll create integer types. These are your goals:
 
@@ -194,7 +192,7 @@ Don't worry about the details of the :ada:`Main` procedure. You should
 just focus on declaring the types (in the :ada:`Int_Types` package) and
 implementing the functions as indicated below.
 
-.. code:: ada lab=Strongly_Typed_Integers
+.. code:: ada lab=Strongly_Typed.Integer_Types
 
     --  START LAB IO BLOCK
     in 0:I_100_Range
@@ -400,8 +398,8 @@ implementing the functions as indicated below.
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Exercise #3
------------
+Temperatures
+------------
 
 In this exercise, you'll work with custom floating-point and integer types
 to implement a small system with temperatures in Celsius and Kelvin. These
@@ -431,7 +429,7 @@ are your goals:
 
 For the floating-point types above, use a precision of six digits.
 
-.. code:: ada lab=Strongly_Typed_Floating_Point
+.. code:: ada lab=Strongly_Typed.Temperatures
 
     --  START LAB IO BLOCK
     in 0:Celsius_Range

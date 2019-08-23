@@ -1,5 +1,3 @@
-:orphan:
-
 Solutions
 =========
 
@@ -20,7 +18,7 @@ Imperative Language
 Hello World
 ~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_ImperativeLanguage_HelloWorld
+.. code:: ada lab=Solutions.Imperative_Language.Hello_World
 
     --  START LAB IO BLOCK
     in 0:
@@ -37,7 +35,7 @@ Hello World
 Greetings
 ~~~~~~~~~
 
-.. code:: ada lab=Solutions_ImperativeLanguage_Greetings
+.. code:: ada lab=Solutions.Imperative_Language.Greetings
 
     --  START LAB IO BLOCK
     in 0:John
@@ -70,7 +68,7 @@ Greetings
 Positive Or Negative
 ~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_ImperativeLanguage_PositiveOrNegative
+.. code:: ada lab=Solutions.Imperative_Language.Positive_Or_Negative
 
     --  START LAB IO BLOCK
     in 0:0
@@ -123,7 +121,7 @@ Positive Or Negative
 Numbers
 ~~~~~~~
 
-.. code:: ada lab=Solutions_ImperativeLanguage_Numbers
+.. code:: ada lab=Solutions.Imperative_Language.Numbers
 
     --  START LAB IO BLOCK
     in 0:1 5
@@ -189,7 +187,7 @@ Subprograms
 Subtract Procedure
 ~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Subprograms_SubtractProc
+.. code:: ada lab=Solutions.Subprograms.Subtract_Proc
 
     --  START LAB IO BLOCK
     in 0:Sub_10_1_Chk
@@ -256,7 +254,7 @@ Subtract Procedure
 Subtract Function
 ~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Subprograms_SubtractFunc
+.. code:: ada lab=Solutions.Subprograms.Subtract_Func
 
     --  START LAB IO BLOCK
     in 0:Sub_10_1_Chk
@@ -321,7 +319,7 @@ Subtract Function
 Equality function
 ~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Subprograms_EqualityFunc
+.. code:: ada lab=Solutions.Subprograms.Equality_Func
 
     --  START LAB IO BLOCK
     in 0:Equal_Chk
@@ -394,7 +392,7 @@ Modular Programming
 Months
 ~~~~~~
 
-.. code:: ada lab=Solutions_ModularProgramming_Months
+.. code:: ada lab=Solutions.Modular_Programming.Months
 
     --  START LAB IO BLOCK
     in 0:Months_Chk
@@ -475,7 +473,7 @@ Months
 Operations
 ~~~~~~~~~~
 
-.. code:: ada lab=Solutions_ModularProgramming_Operations
+.. code:: ada lab=Solutions.Modular_Programming.Operations
 
     --  START LAB IO BLOCK
     in 0:Operations_Chk
@@ -597,10 +595,10 @@ Operations
 Strongly typed language
 -----------------------
 
-Exercise #1
-~~~~~~~~~~~
+Colors
+~~~~~~
 
-.. code:: ada lab=Solutions_Strongly_Typed_Enumerations
+.. code:: ada lab=Solutions.Strongly_Typed.Colors
 
     --  START LAB IO BLOCK
     in 0:HTML_Color_Range
@@ -712,10 +710,10 @@ Exercise #1
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Exercise #2
-~~~~~~~~~~~
+Integer Types
+~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Strongly_Typed_Integers
+.. code:: ada lab=Solutions.Strongly_Typed.Integer_Types
 
     --  START LAB IO BLOCK
     in 0:I_100_Range
@@ -910,10 +908,10 @@ Exercise #2
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Exercise #3
-~~~~~~~~~~~
+Temperatures
+~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Strongly_Typed_Floating_Point
+.. code:: ada lab=Solutions.Strongly_Typed.Temperatures
 
     --  START LAB IO BLOCK
     in 0:Celsius_Range
@@ -1061,7 +1059,7 @@ Records
 Directions
 ~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Records_Directions
+.. code:: ada lab=Solutions.Records.Directions
 
     --  START LAB IO BLOCK
     in 0:Direction_Chk
@@ -1168,7 +1166,7 @@ Directions
 Colors
 ~~~~~~
 
-.. code:: ada lab=Solutions_Records_Colors
+.. code:: ada lab=Solutions.Records.Colors
 
     --  START LAB IO BLOCK
     in 0:HTML_Color_To_RGB
@@ -1283,7 +1281,7 @@ Colors
 Inventory
 ~~~~~~~~~
 
-.. code:: ada lab=Solutions_Records_Inventory
+.. code:: ada lab=Solutions.Records.Inventory
 
     --  START LAB IO BLOCK
     in 0:Inventory_Chk
@@ -1399,7 +1397,7 @@ Arrays
 Constrained Array
 ~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Arrays_ConstrainedArray
+.. code:: ada lab=Solutions.Arrays.Constrained_Array
 
     --  START LAB IO BLOCK
     in 0:Range_Chk
@@ -1550,7 +1548,7 @@ Constrained Array
 Colors: Lookup-Table
 ~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Arrays_ColorsLookupTable
+.. code:: ada lab=Solutions.Arrays.Colors_Lookup_Table
 
     --  START LAB IO BLOCK
     in 0:Color_Table_Chk
@@ -1674,7 +1672,7 @@ Colors: Lookup-Table
 Unconstrained Array
 ~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Arrays_UnconstrainedArray
+.. code:: ada lab=Solutions.Arrays.Unconstrained_Array
 
     --  START LAB IO BLOCK
     in 0:Init_Chk
@@ -1809,7 +1807,7 @@ Unconstrained Array
 Quantities And Amounts
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Arrays_QuantitiesAndAmounts
+.. code:: ada lab=Solutions.Arrays.Quantities_And_Amounts
 
     --  START LAB IO BLOCK
     in 0:Total_Func_Chk
@@ -1946,7 +1944,7 @@ Quantities And Amounts
 String_10
 ~~~~~~~~~
 
-.. code:: ada lab=Solutions_Arrays_String10
+.. code:: ada lab=Solutions.Arrays.String_10
 
     --  START LAB IO BLOCK
     in 0:String_10_Chk
@@ -2014,7 +2012,7 @@ String_10
 List of Names
 ~~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions_Arrays_ListOfNames
+.. code:: ada lab=Solutions.Arrays.List_Of_Names
 
     --  START LAB IO BLOCK
     in 0:Names_Ages_Chk
