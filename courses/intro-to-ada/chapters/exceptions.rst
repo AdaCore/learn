@@ -90,6 +90,10 @@ exception handler to any statement block as follows:
        end;
     end Open_File;
 
+In the example above, we're using the `Exception_Message` function from
+the `Ada.Exceptions` package. This function returns the message
+associated with the exception as a string.
+
 You don't need to introduce a block just to handle an exception: you
 can add it to the statements block of your current subprogram:
 
