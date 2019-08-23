@@ -147,6 +147,7 @@ Predefined exceptions
 Ada has a very small number of predefined exceptions:
 
 - `Constraint_Error` is the main one you might see. It's raised:
+
     - When bounds don't match or, in general, any violation of constraints.
     - In case of overflow
     - In case of null dereferences
@@ -157,6 +158,7 @@ Ada has a very small number of predefined exceptions:
   and some cases of detectable erroneous execution.
 
 - `Storage_Error` will happen because of memory issues, such as:
+
      - Not enough memory (allocator)
      - Not enough stack
 
