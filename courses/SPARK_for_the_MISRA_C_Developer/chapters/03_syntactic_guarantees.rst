@@ -181,8 +181,9 @@ Here is the output of AdaCore's GNAT compiler:
 
 The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
 
-.. code:: ada
-    :class: ada-syntax-only
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+.. code:: ada prove_flow_report_all_button
 
     procedure Swap (X, Y : in out Integer) is
        Tmp : constant Integer := X;
@@ -190,6 +191,8 @@ The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
        X := Y;
        Y := Tmp;
     end Swap;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Ensuring Control Structures Are Not Abused
 ******************************************
@@ -246,8 +249,9 @@ terminates a statement. The null statement is an explicit ``null;``, and all blo
 statements have explicit begin and end markers, which prevents mistakes
 that are possible in C. The SPARK (also Ada) version of the above C code is as follows:
 
-.. code:: ada
-    :class: ada-syntax-only
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+.. code:: ada prove_flow_report_all_button
 
     function Func return Integer is
     begin
@@ -259,6 +263,8 @@ that are possible in C. The SPARK (also Ada) version of the above C code is as f
        end loop;
        return 0;
     end Func;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Avoiding Complex Switch Statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -332,8 +338,9 @@ useless in ``Opposite`` and ``Multiply``, as all ``Sign`` values are covered.
 
 Here is a correct version of the same code:
 
-.. code:: ada
-    :class: ada-syntax-only
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+.. code:: ada prove_flow_report_all_button
 
     package Sign_Domain is
 
@@ -367,6 +374,8 @@ Here is a correct version of the same code:
        end Get_Sign;
 
     end Sign_Domain;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Avoiding Complex Loops
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -511,8 +520,9 @@ which has the expected behavior.
 In SPARK (as in Ada), each if-statement has a matching end marker ``end if;``
 so the dangling-else problem cannot arise. The above C code is written as follows:
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
 .. code:: ada prove_button
-    :class: ada-syntax-only
 
     function Absval (X : Integer) return Integer is
        Result : Integer := X;
@@ -526,6 +536,8 @@ so the dangling-else problem cannot arise. The above C code is written as follow
        end if;
        return Result;
     end Absval;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Interestingly, SPARK analysis detects here that the negation operation on line
 9 might overflow. That's an example of runtime error detection which will be
