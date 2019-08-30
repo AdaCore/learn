@@ -147,6 +147,8 @@ As you can see in the example above:
   prelude, or in any declarative region. In the latter case the :ada:`use`
   clause will have an effect in its containing lexical scope.
 
+:code-config:`reset_accumulator=True`
+
 Package body
 ------------
 
@@ -236,4 +238,435 @@ This example shows how :ada:`Last_Increment` is used indirectly:
        Display_Update_Values;
        R := Increment_By (I);
        Display_Update_Values;
+    end Main;
+
+Child and nested packages
+-------------------------
+
+Packages can be used to create hierarchies. We achieve this by using child
+or nested packages, which are both subunits of a parent package. One example
+of a child package that we've been using so far is the :ada:`Ada.Text_IO`
+package. Here, the parent package is called :ada:`Ada`, while the child
+package is called :ada:`Text_IO`. In the previous examples, we've been using
+the :ada:`Put_Line` procedure from the :ada:`Text_IO` child package.
+
+Child packages
+~~~~~~~~~~~~~~
+
+Let's begin our discussion on child packages by taking our previous
+:ada:`Week` package:
+
+.. code:: ada no_button
+
+    package Week is
+
+       Mon : constant String := "Monday";
+       Tue : constant String := "Tuesday";
+       Wed : constant String := "Wednesday";
+       Thu : constant String := "Thursday";
+       Fri : constant String := "Friday";
+       Sat : constant String := "Saturday";
+       Sun : constant String := "Sunday";
+
+    end Week;
+
+If we want to create a child package for :ada:`Week`, we may write:
+
+.. code:: ada no_button
+
+    package Week.Child is
+
+       function Get_First_Of_Week return String;
+
+    end Week.Child;
+
+Here, :ada:`Week` is the parent package and :ada:`Child` is the child
+package. This is the corresponding package body of :ada:`Week.Child`:
+
+.. code:: ada no_button
+
+    package body Week.Child is
+
+       function Get_First_Of_Week return String is
+       begin
+          return Mon;
+       end Get_First_Of_Week;
+
+    end Week.Child;
+
+In the implementation of the :ada:`Get_First_Of_Week` function, we can use
+the :ada:`Mon` string directly, even though it was declared in the parent
+package :ada:`Week`. We don't write :ada:`with Week` here because all
+elements from the specification of the :ada:`Week` package |mdash| such as
+:ada:`Mon`, :ada:`Tue` and so on |mdash|  are visible in the child package
+:ada:`Week.Child`.
+
+Now that we've completed the implementation of the :ada:`Week.Child` package,
+we can use elements from this child package in a subprogram by simply writing
+:ada:`with Week.Child`. Similarly, if we want to use these elements directly,
+we write :ada:`use Week.Child` in addition. For example:
+
+.. code:: ada
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Week.Child;  use Week.Child;
+
+    procedure Main is
+    begin
+       Put_Line ("First day of the week is " & Get_First_Of_Week);
+    end Main;
+
+Child of a child package
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+So far, we've seen a two-level package hierarchy. But the hierarchy that we
+can potentially create isn't limited to that. For instance, we could extend
+the hierarchy of the previous source-code example by declaring a
+:ada:`Week.Child.Grandchild` package. In this case, :ada:`Week.Child` would
+be the parent of the :ada:`Grandchild` package. Let's consider this
+implementation:
+
+.. code:: ada no_button
+
+    package Week.Child.Grandchild is
+
+       function Get_Second_Of_Week return String;
+
+    end Week.Child.Grandchild;
+
+    package body Week.Child.Grandchild is
+
+       function Get_Second_Of_Week return String is
+       begin
+          return Tue;
+       end Get_Second_Of_Week;
+
+    end Week.Child.Grandchild;
+
+We can use this new :ada:`Grandchild` package in our test application in the
+same way as before: we can reuse the previous test applicaation and adapt the
+:ada:`with` and :ada:`use`, and the function call. This is the updated code:
+
+.. code:: ada
+    :class: ada-run
+
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with Week.Child.Grandchild; use Week.Child.Grandchild;
+
+    procedure Main is
+    begin
+       Put_Line ("Second day of the week is " & Get_Second_Of_Week);
+    end Main;
+
+Again, this isn't the limit for the package hierarchy. We could continue to
+extend the hierarchy of the previous example by implementing a
+:ada:`Week.Child.Grandchild.Grand_grandchild` package.
+
+Multiple children
+~~~~~~~~~~~~~~~~~
+
+So far, we've seen a single child package of a parent package. However, a
+parent package can also have multiple children. We could extend the example
+above and implement a :ada:`Week.Child_2` package. For example:
+
+.. code:: ada no_button
+
+    package Week.Child_2 is
+
+       function Get_Last_Of_Week return String;
+
+    end Week.Child_2;
+
+Here, :ada:`Week` is still the parent package of the :ada:`Child` package,
+but it's also the parent of the :ada:`Child_2` package. In the same way,
+:ada:`Child_2` is obviously one of the child packages of :ada:`Week`.
+
+This is the corresponding package body of :ada:`Week.Child_2`:
+
+.. code:: ada no_button
+
+    package body Week.Child_2 is
+
+       function Get_Last_Of_Week return String is
+       begin
+          return Sun;
+       end Get_Last_Of_Week;
+
+    end Week.Child_2;
+
+We can now reference both children in our test application:
+
+.. code:: ada
+    :class: ada-run
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Week.Child;   use Week.Child;
+    with Week.Child_2; use Week.Child_2;
+
+    procedure Main is
+    begin
+       Put_Line ("First day of the week is " & Get_First_Of_Week);
+       Put_Line ("Last day of the week is "  & Get_Last_Of_Week);
+    end Main;
+
+:code-config:`reset_accumulator=True`
+
+Nested packages
+~~~~~~~~~~~~~~~
+
+Nested packages, as the name suggests, are declared within a parent
+package. This contrasts with child packages, which are declared separately.
+For example, this would be a nested package for the :ada:`Week` package:
+
+.. code:: ada no_button
+
+    package Week is
+
+       Mon : constant String := "Monday";
+       Tue : constant String := "Tuesday";
+       Wed : constant String := "Wednesday";
+       Thu : constant String := "Thursday";
+       Fri : constant String := "Friday";
+       Sat : constant String := "Saturday";
+       Sun : constant String := "Sunday";
+
+       package Nested is
+
+          function Get_First_Of_Week return String;
+
+       end Nested;
+
+    end Week;
+
+In contrast to child packages, we don't write
+:ada:`package body Week.Nested is ...` to implement the package body of
+:ada:`Nested`. Instead, the package body of :ada:`Nested` is *nested* in
+the package body of the parent package :ada:`Week`:
+
+.. code:: ada no_button
+
+    package body Week is
+
+       package body Nested is
+
+          function Get_First_Of_Week return String is
+          begin
+             return Mon;
+          end Get_First_Of_Week;
+
+       end Nested;
+
+    end Week;
+
+We can now use elements from :ada:`Week.Nested` in a test application:
+
+.. code:: ada
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Week;
+
+    procedure Main is
+       use Week.Nested;
+    begin
+       Put_Line ("First day of the week is " & Get_First_Of_Week);
+    end Main;
+
+Note that we cannot access the :ada:`Week.Nested` package directly using
+:ada:`with Week.Nested` because :ada:`Nested` is actually part of :ada:`Week`,
+not  a separate subunit. We can, however, still write :ada:`use Week.Nested`
+|mdash| as we did in the example above.
+
+Visibility
+~~~~~~~~~~
+
+In the previous section, we've seen that elements declared in a parent package
+specification are visible in the child package. This is, however, not the case
+for elements declared in the package body of a parent package.
+
+Let's consider the package :ada:`Book` and its child
+:ada:`Additional_Operations`:
+
+.. code:: ada no_button
+
+    package Book is
+
+       Title : constant String := "Visible for my children";
+
+       function Get_Title return String;
+
+       function Get_Author return String;
+
+    end Book;
+
+    package Book.Additional_Operations is
+
+       function Get_Extended_Title return String;
+
+       function Get_Extended_Author return String;
+
+    end Book.Additional_Operations;
+
+This is the body of both packages:
+
+.. code:: ada no_button
+
+    package body Book is
+
+       Author : constant String := "Author not visible for my children";
+
+       function Get_Title return String is
+       begin
+          return Title;
+       end Get_Title;
+
+       function Get_Author return String is
+       begin
+          return Author;
+       end Get_Author;
+
+    end Book;
+
+    package body Book.Additional_Operations is
+
+       function Get_Extended_Title return String is
+       begin
+          return "Book Title: " & Title;
+       end Get_Extended_Title;
+
+       function Get_Extended_Author return String is
+       begin
+          --  "Author" string declared in the body of Book package is not
+          --  visible here. Therefore, we cannot write:
+          --
+          --  return "Book Author: " & Author;
+
+          return "Book Author: Unknown";
+       end Get_Extended_Author;
+
+    end Book.Additional_Operations;
+
+In the implementation of the :ada:`Get_Extended_Title`, we're using the
+:ada:`Title` constant from the parent package :ada:`Book`. However, as
+indicated in the comments of the :ada:`Get_Extended_Author` function, the
+:ada:`Author` string |mdash| which we declared in the body of the :ada:`Book`
+package |mdash| isn't visible in the :ada:`Book.Additional_Operations`
+package. Therefore, we cannot use it to implement the
+:ada:`Get_Extended_Author` function.
+
+We can, however, use the :ada:`Get_Author` function from :ada:`Book` in the
+implementation of the :ada:`Get_Extended_Author` function to retrieve this
+string. Likewise, we can use this strategy to implement the
+:ada:`Get_Extended_Title` function. This is the adapted code:
+
+.. code:: ada no_button
+
+    package body Book.Additional_Operations is
+
+       function Get_Extended_Title return String is
+       begin
+          return "Book Title: " & Get_Title;
+       end Get_Extended_Title;
+
+       function Get_Extended_Author return String is
+       begin
+          return "Book Author: " & Get_Author;
+       end Get_Extended_Author;
+
+    end Book.Additional_Operations;
+
+This is a simple test application for the packages above:
+
+.. code:: ada
+    :class: ada-run
+
+    with Ada.Text_IO;                use Ada.Text_IO;
+    with Book.Additional_Operations; use Book.Additional_Operations;
+
+    procedure Main is
+    begin
+       Put_Line (Get_Extended_Title);
+       Put_Line (Get_Extended_Author);
+    end Main;
+
+By declaring elements in the body of a package, we can implement encapsulation
+in Ada. Those elements will only be visible in the package body, but nowhere
+else. This isn't, however, the only way to achieve encapsulation in Ada: we'll
+discuss other approaches in the :doc:`./privacy` chapter.
+
+Let's now discuss the same situation for nested packages. Because the body of
+nested packages is part of the body of their parent, nested packages have the
+same visibility as their parent package. Let's rewrite the previous example using
+nested packages to illustrate this:
+
+.. code:: ada no_button
+
+    package Book is
+
+       Title : constant String := "Visible for my children";
+
+       function Get_Title return String;
+
+       function Get_Author return String;
+
+       package Additional_Operations is
+
+          function Get_Extended_Title return String;
+
+          function Get_Extended_Author return String;
+
+       end Additional_Operations;
+
+    end Book;
+
+Now, because :ada:`Author` is declared before the body of the nested package
+:ada:`Additional_Operations`, we can use it in the implementation of the
+:ada:`Get_Extended_Author` function:
+
+.. code:: ada no_button
+
+    package body Book is
+
+       Author : constant String := "Author not visible for my children";
+
+       function Get_Title return String is
+       begin
+          return Title;
+       end Get_Title;
+
+       function Get_Author return String is
+       begin
+          return Author;
+       end Get_Author;
+
+       package body Additional_Operations is
+
+          function Get_Extended_Title return String is
+          begin
+             return "Book Title: " & Title;
+          end Get_Extended_Title;
+
+          function Get_Extended_Author return String is
+          begin
+             return "Book Author: " & Author;
+          end Get_Extended_Author;
+
+       end Additional_Operations;
+
+    end Book;
+
+This is the test application in this case:
+
+.. code:: ada
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Book;
+
+    procedure Main is
+       use Book.Additional_Operations;
+    begin
+       Put_Line (Get_Extended_Title);
+       Put_Line (Get_Extended_Author);
     end Main;
