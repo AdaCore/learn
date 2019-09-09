@@ -285,7 +285,8 @@ example:
     procedure Show_Rendezvous_Loop is
 
        task T is
-          entry Start;
+          entry Reset;
+          entry Increment;
        end T;
 
        task body T is
@@ -293,9 +294,14 @@ example:
        begin
           loop
              select
-                accept Start do
+                accept Reset do
+                   Cnt := 0;
+                end Reset;
+                Put_Line ("Reset");
+             or
+                accept Increment do
                    Cnt := Cnt + 1;
-                end Start;
+                end Increment;
                 Put_Line ("In T's loop (" & Integer'Image (Cnt) & ")");
              or
                 terminate;
@@ -307,29 +313,37 @@ example:
        Put_Line ("In Main");
 
        for I in 1 .. 4 loop
-          T.Start; --  Calling T's entry multiple times
+          T.Increment; --  Calling T's entry multiple times
+       end loop;
+
+       T.Reset;
+       for I in 1 .. 4 loop
+          T.Increment; --  Calling T's entry multiple times
        end loop;
 
     end Show_Rendezvous_Loop;
 
 In this example, the task body implements an infinite loop that accepts
-calls to the ``Start`` entry. We make the following observations:
+calls to the ``Reset`` and ``Increment`` entry. We make the following
+observations:
 
 - The :ada:`accept E do ... end` block is used to increment a counter.
 
     - As long as task ``T`` is performing the :ada:`do ... end` block, the
       main task waits for the block to complete.
 
-- The main task is calling the ``Start`` entry multiple times in the loop
-  from ``1 .. 4``.
+- The main task is calling the ``Increment`` entry multiple times in the
+  loop from ``1 .. 4``. It is also calling the ``Reset`` entry before and
+  the loop.
 
     - Because task ``T`` contains an infinite loop, it always accepts calls
-      to the ``Start`` entry.
+      to the ``Reset`` and ``Increment`` entries.
 
     - When the main task finishes, it checks the status of the ``T``
-      task. Even though task ``T`` could accept new calls to the ``Start``
-      entry, the master task is allowed to terminate task ``T`` due to the
-      :ada:`or terminate` part of the :ada:`select` statement.
+      task. Even though task ``T`` could accept new calls to the
+      ``Reset`` or ``Increment`` entries, the master task is allowed to
+      terminate task ``T`` due to the :ada:`or terminate` part of the
+      :ada:`select` statement.
 
 Cycling tasks
 ~~~~~~~~~~~~~
