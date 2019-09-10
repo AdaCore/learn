@@ -117,6 +117,6 @@ with MISRA C.
 
 An on-line and interactive version of this document is available at
 `AdaCore's learn.adacore.com site
-<https://learn.adacore.com/books/SPARK_for_the_MISRA_C_Developer>`_.
+<https://learn.adacore.com/courses/SPARK_for_the_MISRA_C_Developer>`_.
 
 This document was prepared by Yannick Moy, with contributions and review from Ben Brosgol.
