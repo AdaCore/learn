@@ -6,8 +6,8 @@ export interface Resource {
 }
 
 export interface ButtonMode {
-    buttonText: string;
-    tooltip: string;
+  buttonText: string;
+  tooltip: string;
 }
 
 // FS - From Server

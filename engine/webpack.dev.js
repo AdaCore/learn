@@ -25,7 +25,7 @@ module.exports = merge(common, {
       onBuildEnd: ['make local -j4'],
       // dev=false here to force every build to trigger make, the default is
       // first build only.
-      dev: true,
+      dev: false,
     }),
   ]
 });

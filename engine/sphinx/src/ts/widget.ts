@@ -608,6 +608,27 @@ export class Widget {
     }
   }
 
+  /* eslint-disable @typescript-eslint/ban-types,
+  @typescript-eslint/no-explicit-any */
+  /**
+   * The communication interface with the server
+   * @param {Object} payload - the payload to send
+   * @param {string} url - the url to query
+   * @return {JQuery.Promise} return the ajax promise for cb binding
+   */
+  private communicate(payload: Object, url: string): JQuery.Promise<any> {
+    return $.ajax({
+      url: this.server + '/' + url + '/',
+      data: JSON.stringify(payload),
+      type: 'POST',
+      dataType: 'json',
+      contentType: 'application/json; charset=UTF-8',
+      timeout: 4000,
+    }) as JQuery.Promise<any>;
+  }
+  /* eslint-enable @typescript-eslint/ban-types,
+  @typescript-eslint/no-explicit-any */
+
   /**
    * The main callback for the widget buttons
    * @param {JQuery.ClickEvent} event - the event that triggered the CB
@@ -654,28 +675,23 @@ export class Widget {
     };
 
     this.linesRead = 0;
-
-    $.ajax({
-      url: this.server + '/run_program/',
-      data: JSON.stringify(serverData),
-      type: 'POST',
-      dataType: 'json',
-      contentType: 'application/json; charset=UTF-8',
-      timeout: 4000,
-    }).done((json: Types.RunProgram.FS) => {
-      if (json.identifier == '') {
-        this.resetServerReq();
-        this.outputArea.addError(json.message);
-      } else {
-        this.getOutputFromIdentifier(json);
-      }
-    }).fail((xhr, status, errorThrown) => {
-      this.resetServerReq();
-      this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-      console.log('Error: ' + errorThrown);
-      console.log('Status: ' + status);
-      console.dir(xhr);
-    });
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    this.communicate(serverData as Object, 'run_program')
+        .done((json: Types.RunProgram.FS) => {
+          if (json.identifier == '') {
+            this.resetServerReq();
+            this.outputArea.addError(json.message);
+          } else {
+            this.getOutputFromIdentifier(json);
+          }
+        })
+        .fail((xhr, status, errorThrown) => {
+          this.resetServerReq();
+          this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+          console.log('Error: ' + errorThrown);
+          console.log('Status: ' + status);
+          console.dir(xhr);
+        });
   }
 
   /**
@@ -688,36 +704,33 @@ export class Widget {
       read: this.linesRead,
     };
 
-    $.ajax({
-      url: this.server + '/check_output/',
-      data: JSON.stringify(data),
-      type: 'POST',
-      dataType: 'json',
-      contentType: 'application/json; charset=UTF-8',
-      timeout: 4000,
-    }).done((data: Types.CheckOutput.FS) => {
-      this.linesRead += this.processCheckOutput(data);
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    this.communicate(data as Object, 'check_output')
+        .done((data: Types.CheckOutput.FS) => {
+          this.linesRead += this.processCheckOutput(data);
 
-      if (!data.completed) {
-        // We have not finished processing the output: call this again
-        setTimeout(() => {
-          this.getOutputFromIdentifier(json);
-        }, 250);
-      } else {
-        if (this.labContainer != null) {
-          this.labContainer.sort();
-        }
-      }
-    }).fail((xhr, status, errorThrown) => {
-      this.outputArea.addError(Strings.MACHINE_NOT_RESPONDING_LABEL);
-      console.log('Error: ' + errorThrown);
-      console.log('Status: ' + status);
-      console.dir(xhr);
-    }).fail((json) => {
-      const message = ((json as unknown) as Types.CheckOutput.FS).message;
-      this.resetServerReq();
-      this.outputArea.addError(message);
-    });
+          if (!data.completed) {
+            // We have not finished processing the output: call this again
+            setTimeout(() => {
+              this.getOutputFromIdentifier(json);
+            }, 250);
+          } else {
+            if (this.labContainer != null) {
+              this.labContainer.sort();
+            }
+          }
+        })
+        .fail((xhr, status, errorThrown) => {
+          this.outputArea.addError(Strings.MACHINE_NOT_RESPONDING_LABEL);
+          console.log('Error: ' + errorThrown);
+          console.log('Status: ' + status);
+          console.dir(xhr);
+        })
+        .fail((json) => {
+          const message = ((json as unknown) as Types.CheckOutput.FS).message;
+          this.resetServerReq();
+          this.outputArea.addError(message);
+        });
   }
 
   /**
@@ -897,6 +910,34 @@ export class Widget {
             return;
           }
           this.resetEditors();
+        });
+
+    $('<button>')
+        .attr('type', 'button')
+        .addClass('settingsbar-item')
+        .addClass('download-btn')
+        .attr('title', Strings.DOWNLOAD_TOOLTIP)
+        .append(
+            $('<i>').addClass('fas').addClass('fa-file-download')
+        )
+        .appendTo(settingsBar)
+        .click(() => {
+          this.editors.map((e): void => {
+            const resource: Types.Resource = e.getResource();
+            const blob: Blob =
+              new Blob([resource.contents], {type: 'text/plain'});
+            const objURL: string = URL.createObjectURL(blob);
+
+            const a = $('<a>')
+                .attr('href', objURL)
+                .attr('download', resource.basename)
+                // .hide()
+                .appendTo('body');
+            a[0].click();
+            a.remove();
+
+            URL.revokeObjectURL(objURL);
+          });
         });
 
     return settingsBar;
