@@ -3,6 +3,8 @@ Design by contracts
 
 :code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
+.. include:: <isopub.txt>
+
 .. role:: ada(code)
    :language: ada
 
@@ -51,9 +53,6 @@ The following code shows an example of preconditions:
 .. code:: ada
     :class: ada-run-expect-failure
 
-    with Ada.Text_IO; use Ada.Text_IO;
-    with Ada.Numerics.Elementary_Functions;
-
     procedure Show_Simple_Precondition is
        pragma Assertion_Policy (Pre  => Check);
 
@@ -81,7 +80,7 @@ The :ada:`pragma Assertion_Policy` statement is used to force the compiler
 to generate code to check the precondition. The same :ada:`pragma` is used
 similarly for the other kinds of contracts shown in the rest of this
 chapter. When using GNAT, you can get that behavior globally via a
-configuration pragma or a command-line switch --- please consult the GNAT
+configuration pragma or a command-line switch |mdash| please consult the GNAT
 documentation on `configuration pragmas
 <http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#configuration-pragmas>`_
 for details.
@@ -114,7 +113,6 @@ We illustrate postconditions using the following example:
 .. code:: ada
 
     with Ada.Text_IO; use Ada.Text_IO;
-    with Ada.Numerics.Elementary_Functions;
 
     procedure Show_Simple_Postcondition is
        pragma Assertion_Policy (Post => Check);
@@ -169,7 +167,6 @@ subprogram. For example:
     :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
-    with Ada.Numerics.Elementary_Functions;
 
     procedure Show_Simple_Contract is
        pragma Assertion_Policy (Pre  => Check,
@@ -226,7 +223,6 @@ Let's use the following example to illustrate dynamic predicates:
 .. code:: ada
     :class: ada-run-expect-failure
 
-    with Ada.Text_IO;           use Ada.Text_IO;
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Ada.Calendar;          use Ada.Calendar;
     with Ada.Containers.Vectors;
