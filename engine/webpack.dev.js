@@ -12,6 +12,7 @@ module.exports = merge(common, {
     contentBase: path.join(__dirname, '_build', 'html'),
     watchContentBase: true,
     compress: false,
+    host: '0.0.0.0',
     port: 8080,
     hot: false,
     liveReload: true,
