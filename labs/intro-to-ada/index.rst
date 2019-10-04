@@ -21,4 +21,10 @@ Labs: Introduction to Ada
     Strongly Typed Language <chapters/strongly_typed_language>
     Records <chapters/records>
     Arrays <chapters/arrays>
+    More About Types <chapters/more_about_types>
+    Privacy <chapters/privacy>
+    Generics <chapters/generics>
+    Exceptions <chapters/exceptions>
+    Tasking <chapters/tasking>
+    Design by contracts <chapters/contracts>
     Solutions <chapters/solutions>
