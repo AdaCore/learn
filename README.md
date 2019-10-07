@@ -15,7 +15,7 @@ $ vagrant ssh
 
 # From the vagrant VM run:
 
-$ cd /vagrant
+$ cd /vagrant/engine
 $ yarn run dev
 ```
 
