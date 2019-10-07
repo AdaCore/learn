@@ -73,10 +73,10 @@ In Ada the programmer specifies how the parameter will be used and in general th
          Var2 = Func (Var1);
          Var3 = Var3 + 1;
       }
-   }
 
-   int Func (int Var) {
-      return Var + 1;
+      public static int Func (int Var) {
+         return Var + 1;
+      }
    }
 
 The first two declarations for *Proc* and *Func* are specifications of the subprograms which are being provided later. Although optional here, it's still considered good practice to separately define specifications and implementations in order to make it easier to read the program. In Ada and C++, a function that has not yet been seen cannot be used. Here, *Proc* can call *Func* because its specification has been declared. In Java, it's fine to have the declaration of the subprogram later .
