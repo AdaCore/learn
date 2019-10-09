@@ -7,7 +7,6 @@ apt-get install -y \
     python-pip \
     nodejs \
     npm \
-    yarn \
     make \
     gnat
 
