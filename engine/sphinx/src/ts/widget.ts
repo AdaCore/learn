@@ -910,7 +910,9 @@ export class Widget {
           if (event.target.disabled) {
             return;
           }
-          this.resetEditors();
+          if (window.confirm("Are you sure?")) {
+            this.resetEditors();
+          }
         });
 
     $('<button>')

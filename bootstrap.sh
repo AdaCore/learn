@@ -7,6 +7,7 @@ apt-get install -y \
     python-pip \
     nodejs \
     npm \
+    graphviz \
     make \
     gnat
 
