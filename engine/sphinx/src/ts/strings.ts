@@ -28,6 +28,10 @@ export const modeDictionary: {[mode: string]: ButtonMode } = {
 export const TEST_CASE_LABEL = 'Test Case';
 
 export const RESET_TOOLTIP = 'Reset editor to default state';
+export const RESET_CONFIRM_MSG =
+'Your changes will be lost after reset. ' +
+'Are you sure you want to reset the editor?';
+
 export const DOWNLOAD_TOOLTIP = 'Download source files';
 // const SETTINGS_TOOLTIP = 'Modify settings for this editor';
 
