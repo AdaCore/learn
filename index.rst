@@ -14,7 +14,7 @@ LEARN.ADACORE.COM
 
 **Learn.adacore.com is an interactive learning platform designed to teach the Ada and SPARK programming languages.**
 
-.. code:: ada run_button
+.. code:: ada run_button project=Introduction
 
     with Ada.Text_IO; use Ada.Text_IO;
 

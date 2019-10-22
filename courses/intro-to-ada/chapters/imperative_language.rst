@@ -130,7 +130,7 @@ and subprogram parameter modes.
 
 Ada's :ada:`if` statement is pretty unsurprising in form and function:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Intro_To_Ada.Imperative_Language.If_Then_Else
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;

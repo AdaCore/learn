@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import 'whatwg-fetch';
 
 import {CheckBox, Button, Tabs} from './components';
 import {Editor} from './editor';
@@ -419,13 +420,17 @@ class CLIArea {
 export class Widget {
   private editors: Array<Editor> = [];
   private container: JQuery;
+  private name: string;
   private tabs: Tabs = new Tabs();
   private outputContainer: JQuery;
   private outputArea: OutputArea = new OutputArea();
   private labContainer: LabContainer;
+  private lab = false;
   private cliArea: CLIArea;
 
   private buttons: Array<Button> = [];
+
+  private dlType: Types.DownloadType = Types.DownloadType.Client;
 
   private linesRead = 0;
   private server: string;
@@ -441,6 +446,8 @@ export class Widget {
     const resources: Array<Types.Resource> = [];
     this.server = server;
     this.container = container;
+
+    this.name = container.attr('name');
 
     for (const file of this.container.children('.file')) {
       const a: Types.Resource = {basename: $(file).attr('basename'),
@@ -466,6 +473,7 @@ export class Widget {
     });
 
     if (container.attr('lab')) {
+      this.lab = true;
       this.container.attr('prove_button', 'true');
       this.container.attr('run_button', 'true');
       this.container.attr('submit_button', 'true');
@@ -484,6 +492,7 @@ export class Widget {
 
     for (const mode in Strings.modeDictionary) {
       if (this.container.attr(mode + '_button')) {
+        this.dlType = Types.DownloadType.Server;
         const btn: Button = new Button([],
             Strings.modeDictionary[mode].tooltip,
             Strings.modeDictionary[mode].buttonText);
@@ -493,28 +502,78 @@ export class Widget {
         this.buttons.push(btn);
       }
     }
+
+    if (util.isUndefined(this.name)) {
+      this.dlType = Types.DownloadType.None;
+    }
   }
 
-  /* eslint-disable @typescript-eslint/ban-types,
-  @typescript-eslint/no-explicit-any */
   /**
-   * The communication interface with the server
-   * @param {Object} payload - the payload to send
-   * @param {string} url - the url to query
-   * @return {JQuery.Promise} return the ajax promise for cb binding
+   * Collect the resources loaded in the widget and return as list
+   * @return {Array<Types.Resource>} return the widget resources
    */
-  private communicate(payload: Object, url: string): JQuery.Promise<any> {
-    return $.ajax({
-      url: this.server + '/' + url + '/',
-      data: JSON.stringify(payload),
-      type: 'POST',
-      dataType: 'json',
-      contentType: 'application/json; charset=UTF-8',
-      timeout: 4000,
-    }) as JQuery.Promise<any>;
+  private collectResources(): Array<Types.Resource> {
+    const files: Array<Types.Resource> = [];
+    this.editors.map((e) => {
+      files.push(e.getResource());
+    });
+    return files.concat(this.shadowFiles);
   }
-  /* eslint-enable @typescript-eslint/ban-types,
-  @typescript-eslint/no-explicit-any */
+
+  /**
+   * Perform a POST via the fetch method to retrieve json data
+   * @param {string} data - the json to send
+   * @param {string} url - the url suffix to send the fetch to
+   * @typeparam R - This is the json object type to send
+   * @typeparam T - This is the json object type to return
+   * @return {T} returns a promise to a json object of type T
+   */
+  private async fetchJSON<R, T>(data: R, url: string): Promise<T> {
+    const response = await fetch(this.server + '/' + url + '/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Status: ' + response.status + ' Msg: ' +
+        response.statusText);
+    }
+    const json: T = await response.json();
+    return json;
+  }
+
+  /**
+   * Perform a POST via the fetch method to retrieve a file
+   * @param {string} data - the json to send
+   * @param {string} url - the url suffix to send the fetch to
+   * @return {Promise<Types.Download.FS>} returns a promise to a dl file
+   */
+  private async fetchBlob(data: Types.Download.TS,
+      url: string): Promise<Types.Download.FS> {
+    const response = await fetch(this.server + '/' + url + '/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Status: ' + response.status + ' Msg: ' +
+        response.statusText);
+    }
+    const blob: Blob = await response.blob();
+    const disposition = response.headers.get('content-disposition');
+    const filename = disposition.match(
+        /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+
+    const ret: Types.Download.FS = {
+      blob: blob,
+      filename: filename,
+    };
+    return ret;
+  }
 
   /**
    * The main callback for the widget buttons
@@ -539,10 +598,7 @@ export class Widget {
         Strings.CONSOLE_OUTPUT_LABEL + ':');
     this.outputArea.showSpinner(true);
 
-    const files: Array<Types.Resource> = [];
-    this.editors.map((e) => {
-      files.push(e.getResource());
-    });
+    const files: Array<Types.Resource> = this.collectResources();
 
     // grab cli input and put in file CLI_FILE
     if (this.cliArea != null) {
@@ -554,17 +610,18 @@ export class Widget {
       }
     }
 
-    const labName = this.container.attr('lab_name');
     const serverData: Types.RunProgram.TS = {
-      files: files.concat(this.shadowFiles),
+      files: files,
       mode: mode,
-      lab: labName,
+      name: this.name,
+      lab: this.lab,
     };
 
     this.linesRead = 0;
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    this.communicate(serverData as Object, 'run_program')
-        .done((json: Types.RunProgram.FS) => {
+
+    this.fetchJSON<Types.RunProgram.TS, Types.RunProgram.FS>(serverData,
+        'run_program')
+        .then((json) => {
           if (json.identifier == '') {
             this.resetServerReq();
             this.outputArea.addError(json.message);
@@ -572,13 +629,66 @@ export class Widget {
             this.getOutputFromIdentifier(json);
           }
         })
-        .fail((xhr, status, errorThrown) => {
+        .catch((error) => {
           this.resetServerReq();
           this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-          console.log('Error: ' + errorThrown);
-          console.log('Status: ' + status);
-          console.dir(xhr);
+          console.error('Error:', error);
         });
+  }
+
+  /**
+   * The download example callback
+   */
+  private downloadExample(): void {
+    const files: Array<Types.Resource> = this.collectResources();
+
+    switch (this.dlType) {
+      case Types.DownloadType.None:
+        return;
+      case Types.DownloadType.Server:
+        const serverData: Types.Download.TS = {
+          files: files,
+          name: this.name,
+        };
+
+        this.fetchBlob(serverData, 'download')
+            .then((ret) => {
+              const objURL: string = URL.createObjectURL(ret.blob);
+              const a = $('<a>')
+                  .attr('href', objURL)
+                  .attr('download', ret.filename)
+                  // .hide()
+                  .appendTo('body');
+              a[0].click();
+              a.remove();
+
+              URL.revokeObjectURL(objURL);
+            })
+            .catch((error) => {
+              this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+              console.error('Error:', error);
+            });
+
+        break;
+      case Types.DownloadType.Client:
+        this.editors.map((e): void => {
+          const resource: Types.Resource = e.getResource();
+          const blob: Blob =
+            new Blob([resource.contents], {type: 'text/plain'});
+          const objURL: string = URL.createObjectURL(blob);
+
+          const a = $('<a>')
+              .attr('href', objURL)
+              .attr('download', resource.basename)
+              // .hide()
+              .appendTo('body');
+          a[0].click();
+          a.remove();
+
+          URL.revokeObjectURL(objURL);
+        });
+        break;
+    }
   }
 
   /**
@@ -592,12 +702,12 @@ export class Widget {
       read: this.linesRead,
     };
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    this.communicate(data as Object, 'check_output')
-        .done((data: Types.CheckOutput.FS) => {
-          this.linesRead += this.processCheckOutput(data);
+    this.fetchJSON<Types.CheckOutput.TS, Types.CheckOutput.FS>(data,
+        'check_output')
+        .then((rdata) => {
+          this.linesRead += this.processCheckOutput(rdata);
 
-          if (!data.completed) {
+          if (!rdata.completed) {
             // We have not finished processing the output: call this again
             setTimeout(() => {
               this.getOutputFromIdentifier(json);
@@ -608,16 +718,9 @@ export class Widget {
             }
           }
         })
-        .fail((xhr, status, errorThrown) => {
-          this.outputArea.addError(Strings.MACHINE_NOT_RESPONDING_LABEL);
-          console.log('Error: ' + errorThrown);
-          console.log('Status: ' + status);
-          console.dir(xhr);
-        })
-        .fail((json) => {
-          const message = ((json as unknown) as Types.CheckOutput.FS).message;
-          this.resetServerReq();
-          this.outputArea.addError(message);
+        .catch((error) => {
+          this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+          console.error('Error:', error);
         });
   }
 
@@ -801,34 +904,20 @@ export class Widget {
             this.resetEditors();
           }
         });
-
-    $('<button>')
-        .attr('type', 'button')
-        .addClass('settingsbar-item')
-        .addClass('download-btn')
-        .attr('title', Strings.DOWNLOAD_TOOLTIP)
-        .append(
-            $('<i>').addClass('fas').addClass('fa-file-download')
-        )
-        .appendTo(settingsBar)
-        .click(() => {
-          this.editors.map((e): void => {
-            const resource: Types.Resource = e.getResource();
-            const blob: Blob =
-              new Blob([resource.contents], {type: 'text/plain'});
-            const objURL: string = URL.createObjectURL(blob);
-
-            const a = $('<a>')
-                .attr('href', objURL)
-                .attr('download', resource.basename)
-                // .hide()
-                .appendTo('body');
-            a[0].click();
-            a.remove();
-
-            URL.revokeObjectURL(objURL);
+    if (this.dlType != Types.DownloadType.None) {
+      $('<button>')
+          .attr('type', 'button')
+          .addClass('settingsbar-item')
+          .addClass('download-btn')
+          .attr('title', Strings.DOWNLOAD_TOOLTIP)
+          .append(
+              $('<i>').addClass('fas').addClass('fa-file-download')
+          )
+          .appendTo(settingsBar)
+          .click(() => {
+            this.downloadExample();
           });
-        });
+    }
 
     return settingsBar;
   }

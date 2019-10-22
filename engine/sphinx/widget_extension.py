@@ -67,7 +67,7 @@ template = u"""
 </div>
 """
 
-LAB_REGEX = re.compile('lab=(\S+)')
+NAME_REGEX = re.compile('(lab|project)=(\S+)')
 LAB_IO_START_REGEX = re.compile("--  START LAB IO BLOCK")
 LAB_IO_END_REGEX = re.compile("--  END LAB IO BLOCK")
 
@@ -208,20 +208,21 @@ class WidgetCodeDirective(Directive):
                 'ada-syntax-only' in self.options['class'])):
             force_no_buttons = True
 
-        # look for lab=my_lab_name
-        lab_matches = [LAB_REGEX.match(line) for line in argument_list if LAB_REGEX.match(line)]
-        if len(lab_matches) == 1:
-            extra_attribs += ' lab="True"'
-            extra_attribs += ' lab_name={}'.format(lab_matches[0].group(1))
-            is_lab = True
-        elif len(lab_matches) > 1:
-            raise self.error("malformed lab directive")
+        # look for (lab|project)=my_name
+        name_matches = [NAME_REGEX.match(line) for line in argument_list if NAME_REGEX.match(line)]
+        if len(name_matches) == 1:
+            if name_matches[0].group(1) == "lab":
+                extra_attribs += ' lab="True"'
+                is_lab = True
+            extra_attribs += ' name={}'.format(name_matches[0].group(2))
+        elif len(name_matches) > 1:
+            raise self.error("malformed widget directive")
 
         # Make sure code-config exists in the document
         if not codeconfig_found:
             print (self.lineno, dir(self))
             raise self.error("you need to add a :code-config: role")
-        
+
         if is_lab:
             # look for lab io start block
             io_start_matches = [i for i, line in enumerate(self.content) if LAB_IO_START_REGEX.match(line)]

@@ -23,6 +23,10 @@ export const modeDictionary: {[mode: string]: ButtonMode } = {
     buttonText: 'Submit',
     tooltip: 'Submit code for lab',
   },
+  compile: {
+    buttonText: 'Compile',
+    tooltip: 'Compile code to check syntax',
+  },
 };
 
 export const TEST_CASE_LABEL = 'Test Case';

@@ -10,8 +10,26 @@ export interface ButtonMode {
   tooltip: string;
 }
 
+export enum DownloadType {
+  None,
+  Client,
+  Server,
+}
+
 // FS - From Server
 // TS - To Server
+
+export namespace Download {
+  export interface TS {
+    files: Array<Resource>;
+    name: string;
+  }
+
+  export interface FS {
+    blob: Blob;
+    filename: string;
+  }
+}
 
 export namespace RunProgram {
   export interface FS {
@@ -23,7 +41,8 @@ export namespace RunProgram {
   export interface TS {
     files: Array<Resource>;
     mode: string;
-    lab: string;
+    name: string;
+    lab: boolean;
   }
 }
 
