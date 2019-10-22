@@ -3,8 +3,9 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = learnadacorecom
 SPHINXCONF    = sphinx
-BUILDDIR      = _build
+BUILDDIR      = dist
 TEST_DRIVER   = python tests/compile_blocks.py
+CONTENT_DIR   = ../content
 
 
 help:
@@ -20,27 +21,27 @@ test_engine:
 
 test_ada_intro:
 	@echo "===== INTRO TO ADA ====="
-	@$(TEST_DRIVER) ../courses/intro-to-ada/chapters/*.rst
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/intro-to-ada/chapters/*.rst
 	@echo ""
 
 test_spark_intro:
 	@echo "===== INTRO TO SPARK ====="
-	@$(TEST_DRIVER) ../courses/intro-to-spark/chapters/*.rst
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/intro-to-spark/chapters/*.rst
 	@echo ""
 
 test_advanced_ada:
 	@echo "===== ADVANCED ADA ====="
-	@$(TEST_DRIVER) ../courses/advanced-ada/chapters/*.rst
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/advanced-ada/chapters/*.rst
 	@echo ""
 
 test_advanced_spark:
 	@echo "===== ADVANCED SPARK ====="
-	@$(TEST_DRIVER) ../courses/advanced-spark/chapters/*.rst
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/advanced-spark/chapters/*.rst
 	@echo ""
 
 test_spark_for_the_misra_c_developer:
 	@echo "===== SPARK FOR MISRA C DEV ====="
-	@$(TEST_DRIVER) ../courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
 	@echo ""
 
 tests: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark \
@@ -65,22 +66,16 @@ publish-staging:
 	cd ../; \
 	rm -rf learn-staging-html-pages
 
-webpack:
-	@echo "Building webpack..."
-	cd sphinx/learn_theme/static; \
-	npm run dev
-
 # Development target, rebuilds the site, with it pointing to the local
 # code server.
 local:
-	rm -rf "$(BUILDDIR)"
-	CODE_SERVER_URL="http://localhost:8000" $(SPHINXBUILD) -M html "../" \
+	CODE_SERVER_URL="http://localhost:8000" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
-	@$(SPHINXBUILD) -M $@ "../" \
+	@$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 .PHONY: Makefile help tests

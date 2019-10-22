@@ -6,11 +6,11 @@ const Chunks2JsonPlugin = require('chunks-2-json-webpack-plugin');
 
 module.exports = {
   entry: [
-    './sphinx/src/index.ts'
+    './src/index.ts'
   ],
   output: {
     filename: 'main.[hash].js',
-    path: path.resolve(__dirname, 'sphinx', 'learn_theme', 'static')
+    path: path.resolve(__dirname, 'dist', 'html', '_static')
   },
   resolve: {
     modules: ['node_modules'],

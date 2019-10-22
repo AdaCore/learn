@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./sphinx/built",
+        "outDir": "./_src_dist",
         "sourceMap": true,
         "allowJs": true,
         "target": "es5",
@@ -8,6 +8,6 @@
         "downlevelIteration": true
     },
     "include": [
-        "./sphinx/src/**/*"
+        "./src/**/*"
     ]
 }

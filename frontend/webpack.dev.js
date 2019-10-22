@@ -9,7 +9,7 @@ module.exports = merge(common, {
   mode: 'development',
   watch: true,
   devServer: {
-    contentBase: path.join(__dirname, '_build', 'html'),
+    contentBase: path.join(__dirname, 'dist', 'html'),
     watchContentBase: true,
     compress: false,
     host: '0.0.0.0',

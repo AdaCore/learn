@@ -1,5 +1,5 @@
-_build/
 node_modules
 npm-debug.log
 *.map
 build-manifest.json
+dist

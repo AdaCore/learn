@@ -37,11 +37,6 @@ LEARN.ADACORE.COM
        Courses <courses/courses>
        Labs <labs/labs>
 
-    .. toctree::
-       :hidden:
-
-       Tests <engine/tests/index>
-
 
 -------------
 
