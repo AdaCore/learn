@@ -84,7 +84,7 @@ Component selection
 To access components of a record instance, you use an operation that is
 called component selection:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Records.Record_Selection
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;

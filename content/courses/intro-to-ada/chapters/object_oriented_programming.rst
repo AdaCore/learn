@@ -81,7 +81,7 @@ brushed on, but not really covered, up to now:
 You can create one or more new types from every type in Ada. Type
 derivation is built into the language.
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Newtypes
 
     package Newtypes is
        type Point is record
@@ -109,7 +109,7 @@ defined in the same scope as the type.
     1. The subprogram is declared in the same scope as the type and
     2. The type and the subprogram are declared in a package
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Primitives
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -191,7 +191,7 @@ Let's see our first tagged type declarations:
 
 :code-config:`reset_accumulator=True;accumulate_code=True`
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     package P is
        type My_Class is tagged null record;
@@ -239,7 +239,7 @@ descendent derives tagged type".
 In Ada, we call this the *classwide type*. It's used in OOP as soon as
 you need polymorphism. For example, you can't do the following:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
     :class: ada-expect-compile-error
 
     with P; use P;
@@ -265,7 +265,7 @@ programmer is "I want O3 to be able to hold an object of type
 ``My_Class`` or any type descending from ``My_Class``". Here's how you
 do that:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -311,7 +311,7 @@ In other words, to make a dispatching call, you must first have an
 object that can be either of a type or any type derived from this
 type, namely an object of a classwide type.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -347,7 +347,7 @@ type, namely an object of a classwide type.
     modify the state of an object: changes to converted object will
     affect the original one.
 
-    .. code:: ada
+    .. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
         :class: ada-run
 
         with P; use P;
@@ -376,7 +376,7 @@ You can also call primitives of tagged types with a notation that's
 more familiar to object oriented programmers. Given the Foo primitive
 above, you can also write the above program this way:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -406,7 +406,7 @@ which is the case in our examples, you can call the primitive using
 the dot notation. Any remaining parameter are passed normally:
 
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
     :class: ada-run
 
     with P; use P;

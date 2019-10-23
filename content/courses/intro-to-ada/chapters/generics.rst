@@ -25,7 +25,7 @@ by using the keyword :ada:`generic`. For example:
 
 .. raph-amiard: We are lacking a definition/link of metaprogramming.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Simple_Generic
 
     procedure Show_Simple_Generic is
 
@@ -50,7 +50,7 @@ want to create an algorithm that works on any integer type, or even on
 any type at all, whether a numeric type or not. The following example
 declares a formal type ``T`` for the ``Set`` procedure.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Formal_Type_Declaration
 
     procedure Show_Formal_Type_Declaration is
 
@@ -87,7 +87,7 @@ Formal object declaration
 Formal objects are similar to subprogram parameters. They can reference
 formal types declared in the formal specification. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Formal_Object_Declaration
 
     procedure Show_Formal_Object_Declaration is
 
@@ -113,7 +113,7 @@ We don't repeat the :ada:`generic` keyword for the body declaration of a
 generic subprogram or package.  Instead, we start with the actual
 declaration and use the generic types and objects we declared. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Generic_Body_Definition
 
     procedure Show_Generic_Body_Definition is
 
@@ -138,7 +138,7 @@ Generic subprograms or packages can't be used directly. Instead, they
 need to be instantiated, which we do using the :ada:`new` keyword, as
 shown in the following example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Generic_Instantiation
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -190,7 +190,7 @@ continue with formal declarations. The only difference is that
 
 Here's an example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Generic_Package
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -281,7 +281,7 @@ We use the :ada:`with` keyword to declare a formal subprogram. In the
 example below, we declare a formal function (``Comparison``) to be
 used by the generic procedure ``Check``.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Formal_Subprogram
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -335,7 +335,7 @@ section <Containers>`).
 
 A typical example of an ADT is a stack:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Stack
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -423,7 +423,7 @@ Abstracting a swap algorithm
 Let's look at a simple procedure that swaps variables of type
 ``Color``:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Swap_Colors
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -471,7 +471,7 @@ In the example below, we create a generic version of ``Swap_Colors``
 and name it ``Generic_Swap``. This generic version can operate on any
 type due to the declaration of formal type ``T``.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Swap_Colors
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -526,7 +526,7 @@ reversing elements of an array. First, let's start with a non-generic
 version of the algorithm, one that works specifically for the ``Color``
 type:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Reverse_Colors
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -587,7 +587,7 @@ the algorithm:
 
 This is a generic version of the algorithm:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Reverse_Colors
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -670,7 +670,7 @@ Note that ``Image`` and ``Test`` are examples of formal subprograms and
 Here is a version of the test application making use of the generic
 ``Perform_Test`` procedure:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Reverse_Colors_2
 
     with Ada.Text_IO; use Ada.Text_IO;
 

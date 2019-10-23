@@ -44,7 +44,7 @@ Raising an exception
 
 To raise an exception of our newly declared exception kind, do the following:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Exceptions.Show_Exception
 
     with Exceptions; use Exceptions;
 
@@ -69,7 +69,7 @@ Next, we address how to handle exceptions that were raised by us or
 libraries that we call. The neat thing in Ada is that you can add an
 exception handler to any statement block as follows:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Exceptions.Show_Exception_Handling
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Exceptions;  use Ada.Exceptions;
@@ -93,7 +93,7 @@ exception handler to any statement block as follows:
 You don't need to introduce a block just to handle an exception: you
 can add it to the statements block of your current subprogram:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Exceptions.Show_Exception_Message
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Exceptions;  use Ada.Exceptions;
@@ -115,7 +115,7 @@ can add it to the statements block of your current subprogram:
     section are not caught by the handlers of that block. So for
     example, in the following code, the exception will not be caught.
 
-    .. code:: ada
+    .. code:: ada project=Courses.Intro_To_Ada.Exceptions.Be_Careful
 
         with Ada.Text_IO; use Ada.Text_IO;
         with Ada.Exceptions;  use Ada.Exceptions;
