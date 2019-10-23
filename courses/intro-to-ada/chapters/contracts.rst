@@ -50,7 +50,7 @@ postcondition.
 
 The following code shows an example of preconditions:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Contracts.Show_Simple_Precondition
     :class: ada-run-expect-failure
 
     procedure Show_Simple_Precondition is
@@ -110,7 +110,7 @@ elements.
 
 We illustrate postconditions using the following example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Contracts.Show_Simple_Postcondition
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -163,7 +163,7 @@ the function and comparing it to the input value.
 We can use both pre- and postconditions in the declaration of a single
 subprogram. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Contracts.Show_Simple_Contract
     :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -220,7 +220,7 @@ respectively:
 
 Let's use the following example to illustrate dynamic predicates:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Contracts.Show_Dynamic_Predicate_Courses
     :class: ada-run-expect-failure
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -315,7 +315,7 @@ static predicate:
 
 Let's look at a complete example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Contracts.Show_Predicates
     :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -424,7 +424,7 @@ of checks. The following table summarizes the differences:
 We could rewrite our previous example and replace dynamic predicates by
 type invariants. It would look like this:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Contracts.Show_Type_Invariant
     :class: ada-run-expect-failure
 
     with Ada.Text_IO;           use Ada.Text_IO;
