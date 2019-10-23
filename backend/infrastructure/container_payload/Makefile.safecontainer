@@ -1,0 +1,52 @@
+all: deploy_base_packages create_preloader install_gnat_community protect create_workspace
+
+
+deploy_base_packages:
+	apt-get update -y
+	apt install -y gcc
+	apt install -y libfontconfig
+	apt install -y libx11-xcb-dev
+	apt install -y python
+	# do this only once
+	touch deploy_base_packages
+
+create_preloader:
+	# do this only once
+	gcc -shared -o /preloader.so -fPIC preloader.c
+	touch create_preloader
+
+install_gnat_community:
+	git clone https://github.com/AdaCore/gnat_community_install_script.git
+	rm -f /root/package
+	wget http://mirrors.cdn.adacore.com/art/5cdffc5409dcd015aaf82626 -O /root/package
+	sh gnat_community_install_script/install_package.sh /root/package /gnat
+	# do this only once
+	touch install_gnat_community
+
+protect:
+	# create runner
+	useradd -M runner || true
+	mkdir -p /home/runner
+	chown runner /home/runner
+
+	# create unprivileged
+	useradd -M unprivileged || true
+	mkdir -p /home/unprivileged
+	chown unprivileged /home/unprivileged
+
+	# Allow runner to run unprivileged
+	echo "runner ALL=(unprivileged) NOPASSWD:ALL" > /etc/sudoers.d/runner
+
+	# Prevent unprivileged from writing to /tmp
+	chmod 775 /tmp
+	chmod 775 /var/tmp
+	chgrp runner /tmp
+	chgrp runner /var/tmp
+
+	# deactivate network
+	ifconfig eth0 down || true
+
+create_workspace:
+	mkdir -p /workspace/sessions
+	chown runner /workspace/sessions
+	cp /root/container_payload/run.py /workspace

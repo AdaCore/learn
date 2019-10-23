@@ -12,9 +12,8 @@ apt-get install -y \
     gnat
 
 # Install learn deps
-cd /vagrant
+cd /vagrant/frontend
 pip install -r requirements.txt
-cd engine
 
 # Install yarn
 apt remove cmdtest
