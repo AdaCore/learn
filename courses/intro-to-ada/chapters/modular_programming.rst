@@ -32,7 +32,7 @@ Packages
 
 Here is an example of a package declaration in Ada:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Week
 
     package Week is
 
@@ -48,7 +48,7 @@ Here is an example of a package declaration in Ada:
 
 And here is how you use it:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Modular_Programming.Week
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -130,7 +130,7 @@ every entity of a package visible directly in the current scope, using the
 In fact, we have been using the :ada:`use` clause since almost the beginning of
 this tutorial.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Modular_Programming.Week
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -163,7 +163,7 @@ declarations and no body. That's not a mistake: in a package specification,
 which is what is illustrated above, you cannot declare bodies. Those have to be
 in the package body.
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Operations
 
     package Operations is
 
@@ -176,7 +176,7 @@ in the package body.
 
     end Operations;
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Operations
 
     package body Operations is
 
@@ -210,7 +210,7 @@ body.
 
 This example shows how :ada:`Last_Increment` is used indirectly:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Modular_Programming.Operations
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Operations;

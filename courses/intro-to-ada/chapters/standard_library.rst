@@ -39,7 +39,7 @@ Instantiation
 Here's an example showing the instantiation and declaration of a
 vector ``V``:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Inst
 
     with Ada.Containers.Vectors;
 
@@ -80,7 +80,7 @@ Initialization
 One way to initialize a vector is from a concatenation of elements.
 We use the :ada:`&` operator, as shown in the following example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Init
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -115,7 +115,7 @@ You add elements to a vector using the ``Prepend`` and ``Append``
 operations. As the names suggest, these operations add elements to the
 beginning or end of a vector, respectively. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Append
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -164,7 +164,7 @@ Accessing first and last elements
 We access the first and last elements of a vector using the
 ``First_Element`` and ``Last_Element`` functions. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_First_Last_Element
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -201,7 +201,7 @@ container and process individual elements from it.
 With these operations, we're able to write code to swap the first and last
 elements of a vector:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_First_Last_Element
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -236,7 +236,7 @@ The easiest way to iterate over a container is to use a :ada:`for E of
 Our_Container` loop. This gives us a reference (``E``) to the element
 at the current position. We can then use ``E`` directly.  For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Iteration
 
     with Ada.Containers.Vectors;
 
@@ -283,7 +283,7 @@ similar to a loop over array elements: we use a :ada:`for I in
 ``V.Last_Index``. We can access the current element by using it as an
 array index: ``V (I)``.  For example:
 
-.. code:: ada
+.. code:: ada  project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Index_Iteration
 
     with Ada.Containers.Vectors;
 
@@ -332,7 +332,7 @@ format :ada:`for C in V.Iterate loop`. Like the previous example using
 indices, you can again access the current element by using the cursor as an
 array index: ``V (C)``. For example:
 
-.. code:: ada
+.. code:: ada  project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Cursor_Iteration
 
     with Ada.Containers.Vectors;
 
@@ -417,7 +417,7 @@ procedure*, which takes an individual element and does some processing on
 it.  You can call ``Update_Element`` and pass both a cursor and an access
 to the process procedure. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Update
 
     with Ada.Containers.Vectors;
 
@@ -455,7 +455,7 @@ You can locate a specific element in a vector by retrieving its index.
 you're looking for. Alternatively, you can use ``Find`` to retrieve a
 cursor referencing that element. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Vector_Element
 
     with Ada.Containers.Vectors;
 
@@ -523,7 +523,7 @@ You may want to insert an element at a specific position, e.g.  before a
 certain element in the vector.  You do this by calling ``Insert``. For
 example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Insert
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -583,7 +583,7 @@ cursor to the ``Delete`` procedure. If we combine this with the functions
 ``Find_Index`` and ``Find`` from the previous section, we can write a
 program that searches for a specific element and deletes it, if found:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Remove_Vector_Element
 
     with Ada.Containers.Vectors;
 
@@ -624,7 +624,7 @@ We can extend this approach to delete all elements matching a certain
 value. We just need to keep searching for the element in a loop until we
 get an invalid index or cursor. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Remove_Vector_Elements
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -726,7 +726,7 @@ sort the vector and ``Merge`` to merge one vector into another.
 The following example presents code that manipulates three vectors (``V1``,
 ``V2``, ``V3``) using the concatenation, sorting and merging operations:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Ops
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -833,7 +833,7 @@ vectors. This gives you a reference to each element in the set.
 
 Let's see an example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Set_Init
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Ordered_Sets;
@@ -907,7 +907,7 @@ exist.  You can use either function to search for elements in a set.
 
 Let's look at an example that makes use of these operations:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Set_Element_Ops
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Ordered_Sets;
@@ -1000,7 +1000,7 @@ operations and its associated operator:
 
 The following example makes use of these operators:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Set_Ops
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Ordered_Sets;
@@ -1141,7 +1141,7 @@ above in the section on sets).
 
 Let's see an example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Hashed_Map
 
     with Ada.Containers.Indefinite_Hashed_Maps;
     with Ada.Strings.Hash;
@@ -1198,7 +1198,7 @@ Ordered maps share many features with hashed maps. The main differences are:
 
 Let's see an example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Ordered_Map
 
     with Ada.Containers.Indefinite_Ordered_Maps;
 
@@ -1277,7 +1277,7 @@ The standard library supports representing and handling dates and
 times. This is part of the :ada:`Ada.Calendar` package. Let's look at a
 simple example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Time
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
@@ -1295,7 +1295,7 @@ call to the ``Clock`` function. We call the function ``Image`` from the
 date and time. We could instead retrieve each component using the ``Split``
 function. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Year
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Text_IO;             use Ada.Text_IO;
@@ -1328,7 +1328,7 @@ You can delay an application so that it restarts at a specific date and
 time. We saw something similar in the chapter on tasking.  You do this
 using a :ada:`delay until` statement. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Specific_Time
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
@@ -1378,7 +1378,7 @@ We could achieve a similar result by initializing ``Next`` with a
 ``String``. We can do this with a call to ``Value`` from the
 :ada:`Ada.Calendar.Formatting` package. This is the modified code:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Specific_Time
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
@@ -1408,7 +1408,7 @@ Just like we saw in the tasking chapter, we could instead specify the
 delay relative to the current time. For example, we could delay by 5
 seconds, using the current time:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Text_IO;             use Ada.Text_IO;
@@ -1445,7 +1445,7 @@ In the previous section, we used the ``Time`` type from the
 application by 5 seconds. We could have used the :ada:`Ada.Real_Time`
 package instead. Let's modify that example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Real_Time
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -1473,7 +1473,7 @@ One interesting application using the :ada:`Ada.Real_Time` package is
 benchmarking. We've used that package before in a previous section when
 discussing tasking. Let's look at an example of benchmarking:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -1511,7 +1511,7 @@ A similar application is benchmarking of CPU time.  We can implement this
 using the :ada:`Execution_Time` package. Let's modify the previous example
 to measure CPU time:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_CPU_Time
 
     with Ada.Text_IO;        use Ada.Text_IO;
     with Ada.Real_Time;      use Ada.Real_Time;
@@ -1550,7 +1550,7 @@ different if we change the implementation of
 ``Computational_Intensive_App`` to use a mathematical functions in a long
 loop. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_Math
 
     with Ada.Text_IO;        use Ada.Text_IO;
     with Ada.Real_Time;      use Ada.Real_Time;
@@ -1638,7 +1638,7 @@ One of the simplest operations provided is counting the number of
 substrings available in a string (``Count``) and finding their
 corresponding indices (``Index``). Let's look at an example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Substring
 
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
     with Ada.Text_IO;       use Ada.Text_IO;
@@ -1680,7 +1680,7 @@ That example looked for instances of a specific substring.  In the next
 example, we retrieve all the words in the string. We do this using
 ``Find_Token`` and specifying whitespaces as separators. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Words
 
     with Ada.Strings;       use Ada.Strings;
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
@@ -1759,7 +1759,7 @@ This keeps the length of ``S`` fixed. Let's see an example that makes use
 of both function and procedure versions of ``Insert``, ``Overwrite``, and
 ``Delete``:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Adapted_Strings
 
     with Ada.Strings;       use Ada.Strings;
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
@@ -1833,7 +1833,7 @@ fixed-length strings because fixed-length strings are arrays of
 characters. The following example shows how cumbersome the initialization
 of fixed-length strings can be when it's not performed in the declaration:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Char_Array
 
     with Ada.Text_IO;         use Ada.Text_IO;
 
@@ -1880,7 +1880,7 @@ Both bounded and fixed-length strings have a maximum length that they
 can hold. However, bounded strings are not arrays, so initializing
 them at run-time is much easier. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Bounded_String
 
     with Ada.Strings;         use Ada.Strings;
     with Ada.Strings.Bounded;
@@ -1933,7 +1933,7 @@ After initializing a bounded string, we can manipulate it. For example, we
 can append a string to a bounded string using ``Append`` or concatenate
 bounded strings using the :ada:`&` operator.  Like so:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Bounded_String_Op
 
     with Ada.Strings;         use Ada.Strings;
     with Ada.Strings.Bounded;
@@ -1983,7 +1983,7 @@ truncation is necessary.
 Initialization of unbounded strings is very similar to bounded strings.
 Let's look at an example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String
 
     with Ada.Strings;           use Ada.Strings;
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -2017,7 +2017,7 @@ unbounded strings. However, in this case, truncation is not needed.
 And, just like for bounded strings, you can use the ``Append`` function and
 the :ada:`&` operator for unbounded strings. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String_Op
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Ada.Text_IO;           use Ada.Text_IO;
@@ -2049,7 +2049,7 @@ information on the console. However, this procedure also accepts a
 ``File_Type`` parameter. For example, you can select between standard
 output and standard error by setting this parameter explicitly:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Std_Text_Out
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2074,7 +2074,7 @@ information from the file.
 Let's see an example that writes information into a new text file and then
 reads it back from the same file:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Simple_Text_File_IO
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2099,7 +2099,7 @@ In addition to the ``Create`` and ``Close`` procedures, the standard
 library also includes a ``Reset`` procedure, which, as the name implies,
 resets (erases) all the information from the file. For example:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Text_File_Reset
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2133,7 +2133,7 @@ specified file isn't found.  Therefore, you should handle exceptions in
 that context. The following example deletes a file and then tries to open
 the same file for reading:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Text_File_Input_Except
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2176,7 +2176,7 @@ procedures, you'd call the ``Read`` and ``Write`` procedures.
 In the following example, we instantiate the :ada:`Ada.Sequential_IO`
 package for floating-point types:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Seq_Float_IO
 
     with Ada.Text_IO;
     with Ada.Sequential_IO;
@@ -2210,7 +2210,7 @@ We use the same approach to read and write complex information. The
 following example uses a record that includes a Boolean and a
 floating-point value:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Seq_Rec_IO
 
     with Ada.Text_IO;
     with Ada.Sequential_IO;
@@ -2271,7 +2271,7 @@ the :ada:`Ada.Direct_IO` package, we just need to replace the instances of
 the :ada:`Ada.Sequential_IO` package by the :ada:`Ada.Direct_IO`
 package. This is the new source code:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Dir_Float_IO
 
     with Ada.Text_IO;
     with Ada.Direct_IO;
@@ -2310,7 +2310,7 @@ To access any position in the file, call the ``Set_Index`` procedure to set
 the new position / index.  You can use the ``Index`` function to retrieve
 the current index. Let's see an example:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Dir_Float_In_Out_File
 
     with Ada.Text_IO;
     with Ada.Direct_IO;
@@ -2376,7 +2376,7 @@ or writing.
 Let's look at a version of the ``Show_Dir_Float_IO`` procedure from the
 previous section that makes use of stream I/O instead of direct I/O:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Float_Stream
 
     with Ada.Text_IO;
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
@@ -2427,7 +2427,7 @@ addition to the object's actual data.
 The following example shows file I/O that mixes both strings of
 different lengths and floating-point values:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_String_Stream
 
     with Ada.Text_IO;
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
@@ -2499,7 +2499,7 @@ The :ada:`Ada.Numerics.Elementary_Functions` package provides common
 operations for floating-point types, such as square root, logarithm,
 and the trigonometric functions (e.g., sin, cos). For example:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Elem_Math
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -2560,7 +2560,7 @@ The :ada:`Ada.Numerics.Float_Random` package provides a simple random
 number generator for the range between 0.0 and 1.0. To use it, declare a
 generator ``G``, which you pass to ``Random``. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Float_Random_Num
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
@@ -2587,7 +2587,7 @@ discrete type. This allows you to specify a range for the generator. In the
 following example, we create an application that displays random integers
 between 1 and 10:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Discrete_Random_Num
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics.Discrete_Random;
@@ -2631,7 +2631,7 @@ you can use the :ada:`Ada.Text_IO.Complex_IO` package to perform I/O
 operations on complex numbers. In the following example, we declare
 variables of the ``Complex`` type and initialize them using an aggregate:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Elem_Math
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -2746,7 +2746,7 @@ respectively.
 The following example uses some of the operations from the
 :ada:`Ada.Numerics.Real_Arrays` package:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Matrix
 
     with Ada.Text_IO;  use Ada.Text_IO;
 
