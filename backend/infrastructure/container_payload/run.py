@@ -208,20 +208,18 @@ def safe_run(workdir, mode, lab):
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
             while True:
                 stdout_line = p.stdout.readline().replace(workdir, '.')
-                stderr_line = p.stderr.readline().replace(workdir, '.')
-
-                if stderr_line:
-                    print_stderr(stderr_line.rstrip(), lab_ref)
-                    sys.stderr.flush()
 
                 if stdout_line:
                     print_stdout(stdout_line.rstrip(), lab_ref)
                     stdout_list.append(stdout_line)
                     sys.stdout.flush()
 
-                if not (stderr_line or stdout_line):
+                if not (stdout_line):
                     p.poll()
                     break
+
+            for line in iter(p.stderr.readline, b''):
+                print_stderr(line.replace(workdir, '.').rstrip(), lab_ref)
 
             sys.stdout.flush()
             sys.stderr.flush()
