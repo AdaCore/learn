@@ -12,7 +12,7 @@ This chapter presents a brief overview of some of the tools included in the
 GNAT Community toolchain.
 
 For further details, please refer to the
-`GNAT User’s Guide <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn.html>`_.
+`GNAT User's Guide <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn.html>`_.
 
 gnatchop
 --------
@@ -81,7 +81,7 @@ generated ones.
 For documentation on other switches available for :program:`gnatchop`,
 please refer to the `gnatchop chapter
 <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#renaming-files-with-gnatchop>`_
-of the GNAT User’s Guide.
+of the GNAT User's Guide.
 
 gnatprep
 --------
@@ -293,7 +293,7 @@ We can also associate :program:`gnatelim` with project files for
 
 Please refer to the
 `gnatelim chapter  <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_and_program_execution.html#reducing-size-of-ada-executables-with-gnatelim>`_
-of the GNAT User' Guide for further switches for :program:`gnatprep`.
+of the GNAT User's Guide for further switches for :program:`gnatprep`.
 
 gnatxref and gnatfind
 ---------------------
@@ -595,7 +595,7 @@ indicates that the package body is parsed for additional documentation.
 Also, when the ``-p`` option is used,  :program:`GNATdoc` parses the
 private part of package specifications. For a complete list of options,
 please refer to the
-`GNATdoc User Guide <http://docs.adacore.com/gnatdoc-docs/users_guide/_build/html/index.html>`_.
+`GNATdoc User's Guide <http://docs.adacore.com/gnatdoc-docs/users_guide/_build/html/index.html>`_.
 
 gnat2xml
 --------
@@ -809,7 +809,7 @@ a detailed and precise description of these elements.
 
 Please refer to the
 `section on gnat2xml <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-ada-to-xml-converter-gnat2xml>`_
-from the GNAT User’s Guide for a detailed discussion on
+from the GNAT User's Guide for a detailed discussion on
 :program:`gnat2xml`.
 
 gnatpp
@@ -874,7 +874,7 @@ example:
 specifying the formatting of many aspects of the source-code and dealing
 with many coding styles. These options are extensively discussed in the
 `section on gnatpp <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-gnat-pretty-printer-gnatpp>`_
-from the GNAT User’s Guide.
+from the GNAT User's Guide.
 
 gnatstub
 --------
@@ -943,7 +943,7 @@ package specification in the generate package body, but we also have:
 In summary, :program:`gnatstub` creates a good starting point for our
 implementation. Please refer to the
 `section on gnatstub <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-body-stub-generator-gnatstub>`_
-from the GNAT User’s Guide for a detailed discussion on :program:`gnatstub`
+from the GNAT User's Guide for a detailed discussion on :program:`gnatstub`
 and its options.
 
 gnattest
@@ -1026,4 +1026,4 @@ Also, :program:`gnattest` offers many options to configure the test
 generation and integrate it to project files. You can find more information
 in the
 `section on gnattest <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-unit-test-generator-gnattest>`_
-from the GNAT User’s Guide.
+from the GNAT User's Guide.
