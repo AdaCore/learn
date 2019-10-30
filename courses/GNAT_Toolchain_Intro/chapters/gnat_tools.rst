@@ -458,7 +458,7 @@ was deallocated.
 
 Please refer to the
 `chapter on gnatmem <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_and_program_execution.html#the-gnatmem-tool>`_
-of the GNAT User's Guide for a more detailed discussion of :file:`gnatmem`a.
+of the GNAT User's Guide for a more detailed discussion of :program:`gnatmem`.
 
 gnatmetric
 ----------
