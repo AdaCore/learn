@@ -6,6 +6,7 @@ SPHINXCONF    = sphinx
 BUILDDIR      = dist
 TEST_DRIVER   = python tests/compile_blocks.py
 CONTENT_DIR   = ../content
+HOST_ADDRESS ?= localhost
 
 
 help:
@@ -69,7 +70,7 @@ publish-staging:
 # Development target, rebuilds the site, with it pointing to the local
 # code server.
 local:
-	CODE_SERVER_URL="http://localhost:8000" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	CODE_SERVER_URL="http://$(HOST_ADDRESS):8000" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Catch-all target: route all unknown targets to Sphinx using the new
