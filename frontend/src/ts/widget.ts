@@ -698,7 +698,6 @@ export class Widget {
   private getOutputFromIdentifier(json: Types.RunProgram.FS): void {
     const data: Types.CheckOutput.TS = {
       identifier: json.identifier,
-      tempd: json.tempd,
       read: this.linesRead,
     };
 

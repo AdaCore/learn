@@ -34,7 +34,6 @@ export namespace Download {
 export namespace RunProgram {
   export interface FS {
     identifier: string;
-    tempd: string;
     message: string;
   }
 
@@ -82,7 +81,6 @@ export namespace CheckOutput {
 
   export interface TS {
     identifier: string;
-    tempd: string;
     read: number;
   }
 }

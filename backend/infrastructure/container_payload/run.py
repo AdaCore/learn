@@ -7,16 +7,14 @@
     exists and is running.
 """
 
-import io
-import re
-import os
-import codecs
+
+
 import json
-import glob
 import logging
 import os
-import time
+import re
 import sys
+import time
 import subprocess
 import traceback
 
@@ -29,27 +27,6 @@ CLI_FILE = "cli.txt"
 LAB_IO_FILE = "lab_io.txt"
 
 LAB_IO_REGEX = re.compile("(in|out) ?(\d+):(.*)")
-
-
-COMMON_ADC = """
-pragma Restrictions (No_Specification_of_Aspect => Import);
-pragma Restrictions (No_Use_Of_Pragma => Import);
-pragma Restrictions (No_Use_Of_Pragma => Interface);
-pragma Restrictions (No_Dependence => System.Machine_Code);
-pragma Restrictions (No_Dependence => Machine_Code);
-"""
-
-SPARK_ADC = """
-pragma Profile(GNAT_Extended_Ravenscar);
-pragma Partition_Elaboration_Policy(Sequential);
-pragma SPARK_Mode (On);
-pragma Warnings (Off, "no Global contract available");
-pragma Warnings (Off, "subprogram * has no effect");
-pragma Warnings (Off, "file name does not match");
-"""
-
-
-procedure_re = re.compile("^procedure +[A-Za-z][_a-zA-Z0-9]*[ |\n]+(is|with)", re.MULTILINE)
 
 
 ########################
@@ -95,96 +72,13 @@ def print_internal_error(msg, lab_ref=None):
     print_generic(msg, "internal_error", lab_ref)
 
 
-def run(command):
-    logger.debug(">{}".format(" ".join(command)))
-    output = subprocess.check_output(["lxc", "exec", CONT, "--"] + command)
-    if output:
-        output = output.rstrip()
-    logger.debug("<{}".format(output))
-    return output
-
-
-def extract_ada_main(workdir):
-    """Return the main if it is found in workdir, empty string otherwise"""
-    # Current heuristics for finding the main:
-    # find the .adb that doesn't have a .ads.
-
-    names = [os.path.basename(f)
-             for f in glob.glob(os.path.join(workdir, "*.ad[sb]"))]
-    bases = set([b[:-4] for b in names])
-    mains = [b for b in bases if b + '.ads' not in names]
-    if mains:
-        main = mains[-1]
-
-        # Verify that the main does indeed contain a main
-        with open(os.path.join(workdir, main + '.adb'), 'rb') as fd:
-            main_text = fd.read()
-
-        if not procedure_re.findall(main_text):
-            # This is not a main
-            main = ''
-
-        if len(mains) > 1:
-            logger.debug("multiple mains found")
-        return main
-    else:
-        logger.debug("No main found")
-        return ''
-
-
-def doctor_main_gpr(tempd, spark_mode=False):
-    """Doctor the main.gpr to replace the placeholder with the name of the
-       main, and the .adc configuration file for SPARK.
-
-       See template "inline_code".
-
-       Return the name of the main that was found.
-    """
-    # In the temporary directory, doctor the project file to know about the
-    # main.
-
-    to_insert = ''
-    languages = []
-    main = ""
-
-    # Figure out which language(s) to use
-    if glob.glob(os.path.join(tempd, '*.adb')):
-        languages.append('Ada')
-        # Figure out which main to use
-        main = extract_ada_main(tempd)
-
-    if glob.glob(os.path.join(tempd, '*.c')):
-        languages.append('C')
-        # If there is C
-        main = 'main.c'
-
-    if languages:
-        to_insert += ("\nfor Languages use ({});".format(
-            ", ".join(['"{}"'.format(x) for x in languages])))
-
-    if main:
-        to_insert += '\nfor Main use ("{}");'.format(main)
-
-    # Read the project file
-
-    project_file = os.path.join(tempd, "main.gpr")
-    with codecs.open(project_file, "rb", encoding="utf-8") as f:
-        project_str = f.read()
-
-    project_str = project_str.replace("--MAIN_PLACEHOLDER--", to_insert)
-
-    with codecs.open(project_file, "wb", encoding="utf-8") as f:
-        f.write(project_str)
-
-    # Create the main.adc file
-    adc_file = os.path.join(tempd, "main.adc")
-    contents = COMMON_ADC
-    if spark_mode:
-        contents += '\n' + SPARK_ADC
-    with open(adc_file, "wb") as f:
-        f.write(contents)
-
-    return main
+# def run(command):
+#     logger.debug(">{}".format(" ".join(command)))
+#     output = subprocess.check_output(["lxc", "exec", CONT, "--"] + command)
+#     if output:
+#         output = output.rstrip()
+#     logger.debug("<{}".format(output))
+#     return output
 
 
 def safe_run(workdir, mode, lab):

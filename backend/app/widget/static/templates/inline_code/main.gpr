@@ -2,6 +2,8 @@ project Main is
 
    --MAIN_PLACEHOLDER--
 
+   --LANGUAGE_PLACEHOLDER--
+
    package Compiler is
       for Switches ("ada") use ("-g");
    end Compiler;
