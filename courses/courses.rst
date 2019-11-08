@@ -21,3 +21,4 @@ Courses
 
    Advanced Ada <advanced-ada/index>
    Advanced SPARK <advanced-spark/index>
+   Ada For The C Embedded Developer <Ada_For_The_C_Embedded_Developer/index>
