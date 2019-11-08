@@ -277,6 +277,18 @@ class WidgetCodeDirective(Directive):
                 [u'<div class="file" basename="{}">{}</div>'.format(
                     f[0], escape(f[1])) for f in files]
                 )
+
+            file_latex = r"""
+\sphinxVerbatimTitle{{\detokenize{{{title}}}}}
+\begin{{sphinxVerbatim}}
+{file_code}
+\end{{sphinxVerbatim}}
+"""
+
+            files_latex = "\n".join(
+                [file_latex.format(title=f[0],
+                                   file_code=f[1]) for f in files]
+                )
         except Exception:
             # If we have an exception here, it's probably a codec error
             print (files)
@@ -294,7 +306,10 @@ class WidgetCodeDirective(Directive):
                                       files_divs=divs,
                                       shadow_files_divs=shadow_files_divs,
                                       extra_attribs=extra_attribs),
-                      format='html')
+                      format='html'),
+            nodes.raw('',
+                      files_latex,
+                      format='latex')
         ]
 
 
