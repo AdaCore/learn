@@ -278,17 +278,27 @@ class WidgetCodeDirective(Directive):
                     f[0], escape(f[1])) for f in files]
                 )
 
-            file_latex = r"""
-\sphinxVerbatimTitle{{\detokenize{{{title}}}}}
-\begin{{sphinxVerbatim}}
-{file_code}
-\end{{sphinxVerbatim}}
-"""
-
-            files_latex = "\n".join(
-                [file_latex.format(title=f[0],
-                                   file_code=f[1]) for f in files]
+            nodes_latex = []
+            for f in files:
+                nodes_latex.append(
+                    nodes.raw('',
+                        "\sphinxVerbatimTitle{{\detokenize{{{title}}}}}".format(
+                        title=f[0]),
+                        format='latex')
                 )
+
+                # Based on sphinx/directives/code.py
+
+                literal = nodes.literal_block('',
+                                              f[1],
+                                              format='latex')
+                literal['language'] = self.arguments[0].split(' ')[0]
+                literal['linenos'] = 'linenos' in self.options or \
+                    'lineno-start' in self.options
+                literal['source'] = f[0]
+
+                nodes_latex.append(literal)
+
         except Exception:
             # If we have an exception here, it's probably a codec error
             print (files)
@@ -306,12 +316,8 @@ class WidgetCodeDirective(Directive):
                                       files_divs=divs,
                                       shadow_files_divs=shadow_files_divs,
                                       extra_attribs=extra_attribs),
-                      format='html'),
-            nodes.raw('',
-                      files_latex,
-                      format='latex')
-        ]
-
+                      format='html')
+        ] + nodes_latex
 
 def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
     """Support the code-config role.
