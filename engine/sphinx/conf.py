@@ -22,6 +22,7 @@
 project = u'learn.adacore.com'
 copyright = u'2019, AdaCore'
 author = u'AdaCore'
+title = u'Learn Ada (Complete)'
 
 # The short X.Y version
 version = u''
@@ -138,30 +139,32 @@ htmlhelp_basename = 'learnadacorecomdoc'
 
 # -- Options for LaTeX output ------------------------------------------------
 
+latex_engine = 'xelatex'
+
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
-    # 'papersize': 'letterpaper',
+    'papersize': 'a4paper',
 
     # The font size ('10pt', '11pt' or '12pt').
     #
-    # 'pointsize': '10pt',
+    'pointsize': '10pt',
 
     # Additional stuff for the LaTeX preamble.
     #
-    # 'preamble': '',
+    'preamble': r'\usepackage{pmboxdraw} \usepackage{unicode-math}',
 
     # Latex figure (float) alignment
     #
-    # 'figure_align': 'htbp',
+    'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'learnadacorecom.tex', u'learn.adacore.com Documentation',
-     u'AdaCore', 'manual'),
+    (master_doc, 'learnadacorecom.tex', title,
+     author, 'manual'),
 ]
 
 
@@ -170,7 +173,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'learnadacorecom', u'learn.adacore.com Documentation',
+    (master_doc, 'learnadacorecom', title,
      [author], 1)
 ]
 
@@ -181,7 +184,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'learnadacorecom', u'learn.adacore.com Documentation',
+    (master_doc, 'learnadacorecom', title,
      author, 'learnadacorecom', 'One line description of project.',
      'Miscellaneous'),
 ]
