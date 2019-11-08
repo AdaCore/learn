@@ -11,6 +11,7 @@ help:
 	@echo "make tests  - run the testsuite"
 	@echo "make test_engine  - generate the engine test html"
 	@echo "make html   - generates the html"
+	@echo "make latexpdf - generates the PDF document"
 
 test_engine:
 	@echo "===== ENGINE TEST ====="
