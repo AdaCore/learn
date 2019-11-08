@@ -280,14 +280,10 @@ class WidgetCodeDirective(Directive):
 
             nodes_latex = []
             for f in files:
-                nodes_latex.append(
-                    nodes.raw('',
-                        "\sphinxVerbatimTitle{{\detokenize{{{title}}}}}".format(
-                        title=f[0]),
-                        format='latex')
-                )
-
                 # Based on sphinx/directives/code.py
+
+                container_node = nodes.container(
+                    '', literal_block=True, classes=['literal-block-wrapper'])
 
                 literal = nodes.literal_block('',
                                               f[1],
@@ -297,7 +293,14 @@ class WidgetCodeDirective(Directive):
                     'lineno-start' in self.options
                 literal['source'] = f[0]
 
-                nodes_latex.append(literal)
+                caption = nodes.caption('', f[0])
+                caption.source = literal.source
+                caption.line = literal.line
+
+                container_node += caption
+                container_node += literal
+
+                nodes_latex.append(container_node)
 
         except Exception:
             # If we have an exception here, it's probably a codec error
