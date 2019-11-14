@@ -61,6 +61,36 @@ def download_example():
     return response
 
 
+@widget_bp.route('/check_download/', methods=['POST'])
+def check_download():
+    error_code = 200
+    data = request.get_json()
+    app.logger.debug(data)
+    identifier = data['identifier']
+    task = tasks.run_program.AsyncResult(identifier)
+
+    app.logger.debug('Checking Celery task with id={}'.format(identifier))
+
+    response = {'zipfile': None,
+                'completed': False,
+                'message': task.state}
+
+    app.logger.debug("Task state {}".format(task.state))
+    if task.failed():
+        result = task.get()
+        app.logger.error('Task id={} failed. Response={}'.format(task.id, task.info))
+        error_code = 500
+
+    if task.ready():
+        app.logger.debug("Task info {}".format(task.info))
+        result = task.get()
+        response['completed'] = True
+        response['zipfile'] = result["zipfile"]
+
+    app.logger.debug('Responding with response={} and code={}'.format(response, error_code))
+    return compose_response(response, error_code)
+
+
 @widget_bp.route('/run_program/', methods=['POST'])
 def run_program():
     data = request.get_json()
@@ -74,7 +104,7 @@ def run_program():
 
 
 @widget_bp.route('/check_output/', methods=['POST'])
-def check_output():
+def check_run():
     error_code = 200
     data = request.get_json()
     app.logger.debug(data)

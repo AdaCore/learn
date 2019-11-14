@@ -20,13 +20,14 @@ class Container:
         self.client = pylxd.Client()
         # Get the container from lxd
         self.container = self.client.containers.get(self.name)
-        logger.debug("Attached to lxd {}".format(self.name))
+        logger.debug("Attached to lxd {} with status {}".format(self.name, self.container.status))
+        # TODO: check to see if the container is actually running
 
     def push_files(self, files, dst):
         for f in files:
-            dst_path = os.path.join(dst, f.get_name())
-            logger.debug("Copying {} to {}".format(f.get_name(), dst_path))
-            self.container.put(dst_path, f.get_content())
+            dst_path = os.path.normpath(os.path.join(dst, f.get_name()))
+            logger.debug("Copying file {} with contents {} to {}".format(f.get_name(), f.get_content(), dst_path))
+            self.container.files.put(dst_path, f.get_content())
 
         # Change ownership and access permissions for files in container
         self.execute_rw(["chown", "-R", rw_user, dst])

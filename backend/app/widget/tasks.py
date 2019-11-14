@@ -62,6 +62,7 @@ def run_program(self, data):
             raise Exception("Mode not implemented")
 
     except Exception as ex:
+        logger.error(ex)
         self.update_state(state=states.FAILURE,
                           meta={
                             'exc_type': type(ex).__name__,
