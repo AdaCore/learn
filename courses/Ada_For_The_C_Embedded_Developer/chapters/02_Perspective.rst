@@ -226,7 +226,7 @@ The following code samples are all equivalent, and illustrate the use of comment
 
 You'll notice that, in both languages, statements are terminated with a semicolon. This means that you can have multi-line statements.
 
-In the Ada example above, there are two distinct sections to the :ada:`procedure Main`. This first section is delimited by the :ada:`is` keyword and the :ada:'begin' keyword. This section is called the declarative block of the subprogram. The declarative block is where you will define all the local variables which will be used in the subprogram. C89 had something similar, where developers were required to declare their variables at the top of the scope block. Most C developers may have run into this before when trying to write a for loop:
+In the Ada example above, there are two distinct sections to the :ada:`procedure Main`. This first section is delimited by the :ada:`is` keyword and the :ada:`begin` keyword. This section is called the declarative block of the subprogram. The declarative block is where you will define all the local variables which will be used in the subprogram. C89 had something similar, where developers were required to declare their variables at the top of the scope block. Most C developers may have run into this before when trying to write a for loop:
 
 .. code-block:: c
 
