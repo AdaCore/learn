@@ -18,7 +18,7 @@ Introduction
 So, what is this Ada thing anyway?
 -----------------------------------
 
-To answer this question let’s introduce Ada as it compares to C for an embedded
+To answer this question let's introduce Ada as it compares to C for an embedded
 application. C developers are used to a certain coding semantic and style of
 programming. Especially in the embedded domain, developers are used to working
 at a very low level near the hardware to directly manipulate memory and
@@ -29,7 +29,7 @@ language for faster, more efficient programming. Because of this minimal
 abstraction, the programmer has to model the data that represents the problem
 they are trying to solve using the language of the physical hardware.
 
-Let’s look at an example of this problem in action by comparing the same
+Let's look at an example of this problem in action by comparing the same
 program in Ada and C:
 
 .. code:: c cli_input
@@ -117,11 +117,11 @@ different?
 
 The problem with the C code is that we forgot to call :c:`MOD_DEGREES` in the
 for loop of add_angles. This means that it is possible for add_angles to return
-values greater than :c:`DEGREES_MAX`. Let’s look at the equivalent Ada code now
+values greater than :c:`DEGREES_MAX`. Let's look at the equivalent Ada code now
 to see how Ada handles the situation. The first thing we do in the Ada code is
 to create the type :ada:`Degrees` which is a modular type. This means that the
 compiler is going to handle performing the modulus operation for us. If we use
-the same for loop in the :ada:`Add_Angles` function, we can see that we aren’t
+the same for loop in the :ada:`Add_Angles` function, we can see that we aren't
 doing anything special to make sure that our resulting value is within the 360°
 range we need it to be in.
 
@@ -139,7 +139,7 @@ manipulate the hardware we are working on while also allowing us the ability to
 more accurately model data in a safe way. So, we have a dilemma; what can give
 us the power of operations like the C language, but also provide us with
 features that can minimize the potential for developer error? Since this book
-is about Ada, it's a good bet we’re about to introduce the Ada language as the
+is about Ada, it's a good bet we're about to introduce the Ada language as the
 answer to this question…
 
 Unlike C, the Ada language was designed as a higher level language from its
@@ -173,7 +173,7 @@ similar to the equivalent C code.
 
 It is possible to do a line-by-line translation of C code to Ada. This feels
 like a natural step for a developer used to C paradigms. However, there may be
-very little benefit to doing so. For the purpose of this book, we’re going to
+very little benefit to doing so. For the purpose of this book, we're going to
 assume that the choice of Ada over C is guided by considerations linked to
 reliability, safety or security. In order to improve upon the reliability,
 safety and security of our application, Ada paradigms should be applied in

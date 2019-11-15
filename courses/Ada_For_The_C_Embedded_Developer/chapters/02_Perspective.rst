@@ -30,15 +30,15 @@ tools with a compiler based on the GCC environment. It can be obtained from
 AdaCore, either as part of a commercial contract with
 `GNAT Pro <https://www.adacore.com/gnatpro)>`_ or at no charge with the
 `GNAT Community edition <https://www.adacore.com/community>`_. The information
-on this book  will be relevant no matter which edition you’re using. Most
+on this book  will be relevant no matter which edition you're using. Most
 examples will be runnable on the native Linux or Windows version for
 convenience. Some will only be relevant in the context of a cross toolchain, in
-which case we’ll be using the embedded ARM bare metal toolchain.
+which case we'll be using the embedded ARM bare metal toolchain.
 
 As for any Ada compiler, GNAT takes advantage of implementation permissions and
-offers a project management system. Because we’re talking about embedded
-platforms, there are a lot of topics that we’ll go over which will be specific
-to GNAT, and sometimes to specific platforms supported by GNAT. We’ll try to
+offers a project management system. Because we're talking about embedded
+platforms, there are a lot of topics that we'll go over which will be specific
+to GNAT, and sometimes to specific platforms supported by GNAT. We'll try to
 make the distinction between what is GNAT-specific and Ada generic as much as
 possible through this book.
 
@@ -77,23 +77,23 @@ program:
       Ada.Text_IO.Put_Line ("Hello World");
    end Hello_World;
 
-The resulting program will print :ada:`Hello World` on the screen. Let’s now
+The resulting program will print :ada:`Hello World` on the screen. Let's now
 dissect the Ada version to describe what is going on:
 
 The first line of the Ada code is giving us access to the :ada:`Ada.Text_IO`
 library which contains the :ada:`Put_Line` function we will use to print the
-text to the console. This is similar to C’s :c:`#include <stdio.h>`. We then
+text to the console. This is similar to C's :c:`#include <stdio.h>`. We then
 create a procedure which executes :ada:`Put_Line` which prints to the console.
-This is similar to C’s :c:`printf` statement. For now, we can assume these Ada
+This is similar to C's :c:`printf` statement. For now, we can assume these Ada
 and C features have similar functionality. In reality, they are very different.
 We will explore that more as we delve further into the Ada language.
 
 You may have noticed that the Ada syntax is more verbose than C. Instead of
 using braces :c:`{}` to declare scope, Ada uses keywords. :ada:`is` opens a
-declarative scope |mdash| which is empty here as there’s no variable to
+declarative scope |mdash| which is empty here as there's no variable to
 declare. :ada:`begin` opens a sequence of statements. Within this sequence,
-we’re calling the function :ada:`Put_Line`, prefixing explicitly by the name of
-the library unit where it’s declared, :ada:`Ada.Text_IO`. The absence of the
+we're calling the function :ada:`Put_Line`, prefixing explicitly by the name of
+the library unit where it's declared, :ada:`Ada.Text_IO`. The absence of the
 end of line :c:`\n` can also be noted, as :ada:`Put_Line` always terminates by
 an end of line.
 
@@ -101,20 +101,20 @@ The Ada Syntax
 ----------------
 
 Ada syntax might seem peculiar at first glance. Unlike many other languages,
-it’s not derived from the popular C style of notation with its ample use of
+it's not derived from the popular C style of notation with its ample use of
 brackets; rather, it uses a more expository syntax coming from Pascal. In many
 ways, Ada is a more explicit language |mdash| its syntax was designed to
 increase readability and maintainability, rather than making it faster to write
 in a condensed manner. For example, full words like :ada:`begin` and :ada:`end`
 are used in place of curly braces. Conditions are written using :ada:`if`,
-:ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada’s assignment
+:ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada's assignment
 operator does not double as an expression, eliminating potential mistakes that
 could be caused by :c:`=` being used where :c:`==` should be.
 
 All languages provide one or more ways to express comments. In Ada, two
 consecutive hyphens :ada:`--` mark the start of a comment that continues to the
 end of the line. This is exactly the same as using :c:`//` for comments in C.
-Multi line comments like C’s :c:`/* */` do not exist in Ada.
+Multi line comments like C's :c:`/* */` do not exist in Ada.
 
 Ada compilers are stricter with type and range checking than most C programmers
 are used to. Most beginning Ada programmers encounter a variety of warnings and
