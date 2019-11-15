@@ -385,7 +385,7 @@ Let's look at the equivalent Ada code:
       end if;
    end Main;
 
-THe above code will not compile. This is because Ada does no allow assignment as an expression.
+The above code will not compile. This is because Ada does no allow assignment as an expression.
 
 .. admonition:: The "use" clause
 
@@ -780,7 +780,7 @@ Ada is considered a "strongly typed" language. This means that the language does
       return 0;
    }
 
-Run the above code. You will notice that :c:`a != b`! If we look at the output of the last :c:`printf` statement we will see the problem. :c:`a` is an unsigned number where :c:`b` is a signed number. We stored a value of :c:`0xFF` in both variables, but :c:`a` treated this as the decimal number :c:`255` while b treated this as the decimal number :c:`-1`. When we compare the two variables, of course they aren't equal; but thats not very intuitive. Lets look at the equivalent Ada example:
+Run the above code. You will notice that :c:`a != b`! If we look at the output of the last :c:`printf` statement we will see the problem. :c:`a` is an unsigned number where :c:`b` is a signed number. We stored a value of :c:`0xFF` in both variables, but :c:`a` treated this as the decimal number :c:`255` while b treated this as the decimal number :c:`-1`. When we compare the two variables, of course they aren't equal; but that's not very intuitive. Let's look at the equivalent Ada example:
 
 .. code:: ada
    :class: ada-expect-compile-error
