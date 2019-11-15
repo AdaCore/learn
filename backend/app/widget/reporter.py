@@ -9,13 +9,11 @@ logger = logging.getLogger(__name__)
 
 class MQReporter():
 
-    def __init__(self, task_id, lab_ref=None, quiet=False):
+    def __init__(self, task_id, lab_ref=None):
         self.lab_ref = lab_ref
-        self.quiet = quiet
-        self.container_name = container_name
 
         self.connection = establish_connection()
-        self.publisher = Publisher(connection=connection,
+        self.publisher = Publisher(connection=self.connection,
                                    exchange="learn",
                                    routing_key=task_id,
                                    exchange_type="direct")
@@ -45,8 +43,7 @@ class MQReporter():
         self.__send(msg, "stderr")
 
     def console(self, cmds):
-        if not self.quiet:
-            self.__send(" ".join(cmds), "console")
+        self.__send(" ".join(cmds), "console")
 
     def lab(self, success, cases):
         self.__send({"success": success, "cases": cases}, "lab")

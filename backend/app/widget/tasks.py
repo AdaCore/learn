@@ -5,7 +5,7 @@ import logging
 import traceback
 
 from .container import Container
-from .project import Project, RemoteProject
+from .project import Project, RemoteProject, BuildError
 
 
 celery = Celery(__name__, autofinalize=False)
@@ -20,6 +20,7 @@ def download_program(self, data):
         project = Project(data['files'])
         zipfile = project.zip()
     except Exception as ex:
+        logger.error("An error occured in download program", exc_info=True)
         self.update_state(state=states.FAILURE,
                           meta={
                             'exc_type': type(ex).__name__,
@@ -51,7 +52,7 @@ def run_program(self, data):
             code = project.build()
         elif mode == "prove":
             project = RemoteProject(container, task_id, data['files'], True)
-            code = project.prove()
+            code = project.prove([])
         elif mode == "prove_flow":
             project = RemoteProject(container, task_id, data['files'], True)
             code = project.prove(["--mode=flow"])
@@ -61,8 +62,10 @@ def run_program(self, data):
         else:
             raise Exception("Mode not implemented")
 
+    except BuildError as ex:
+        return {'status': 0}
     except Exception as ex:
-        logger.error(ex)
+        logger.error("An error occured in run program", exc_info=True)
         self.update_state(state=states.FAILURE,
                           meta={
                             'exc_type': type(ex).__name__,

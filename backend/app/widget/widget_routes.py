@@ -121,7 +121,7 @@ def check_run():
     output = []
     for msg in consumer.iterqueue():
         app.logger.debug("Reading {} from mq".format(msg.body))
-        output += msg.body
+        output.append(msg.body)
         msg.ack()
 
     app.logger.debug("output {}".format(output))

@@ -1,13 +1,15 @@
+import logging
 import re
 
+logger = logging.getLogger(__name__)
 lab_re = re.compile("(in|out) ?(\d+):(.*)")
 
 class LabIO:
 
     def __init__(self, key):
         self.key = key
-        self.input = []
-        self.expected = []
+        self.input = None
+        self.expected = None
 
     def get_key(self):
         return self.key
@@ -24,20 +26,20 @@ class LabIO:
             raise Exception("Unknown string in lab io format")
 
     def set_input(self, val):
-        self.input += val
+        self.input = val.split()
 
     def set_expected(self, val):
-        self.expected += val
+        self.expected = val
 
     def check_actual(self, actual, code):
-        self.actual = " ".join(stdout).replace('\n', '').replace('\r', '')
+        self.actual = actual.replace('\n', ' ').replace('\r', ' ').rstrip()
         self.code = code
 
-        if this.expected == self.actual:
+        if self.expected == self.actual:
             self.status = "Success"
             return True
         else:
-            self.status == "Failed"
+            self.status = "Failed"
             return False
 
 
@@ -54,18 +56,21 @@ class LabList:
 
     def __init__(self, file):
         self.test_cases = []
+
+        logger.debug("LAB IO {}".format(file))
         for line in file.splitlines():
             match = lab_re.match(line)
 
             if match:
+                logger.debug("LAB IO re match {}".format(match.groups()))
                 io = match.group(1)
                 key = match.group(2)
                 seq = match.group(3)
 
-                io = next((x for x in self.test_cases if x.get_key() == key), None)
+                case = next((x for x in self.test_cases if x.get_key() == key), None)
 
-                if io:
-                    io.set(io, seq)
+                if case:
+                    case.set(io, seq)
                 else:
                     lab = LabIO(key)
                     lab.set(io, seq)

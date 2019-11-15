@@ -1,5 +1,8 @@
+import logging
 import os
 import re
+
+logger = logging.getLogger(__name__)
 
 RECEIVED_FILE_CHAR_LIMIT = 50 * 1000
 # The limit in number of characters of files to accept
@@ -21,6 +24,25 @@ def new_file(basename, content):
         return File(basename, content)
 
 
+def find_mains(filelist):
+    mains = []
+    for f in filelist:
+        logger.debug("Checking {} for main".format(f.get_name()))
+        if f.language() == "Ada":
+            filename = f.get_name()
+            base, ext = os.path.splitext(filename)
+            if ext == ".adb":
+                logger.debug("Looking for spec for {}".format(f.get_name()))
+                if not next((x for x in filelist if x.get_name() == (base + ".ads")), None):
+                    logger.debug("Found main in {}".format(f.get_name()))
+                    mains.append(filename)
+        else:
+            if f.is_main():
+                mains.append(f.get_name())
+                logger.debug("Found main in {}".format(f.get_name()))
+    return mains
+
+
 class File:
 
     def __init__(self, basename, content):
@@ -37,15 +59,11 @@ class File:
         return None
 
     def is_main(self):
-        return None
+        return False
 
 
 class AdaFile(File):
     procedure_re = re.compile("^procedure +[A-Za-z][_a-zA-Z0-9]*[ |\n]+(is|with)", re.MULTILINE)
-
-    def is_main(self):
-        pass
-        # TODO: figure this out
 
     def language(self):
         return "Ada"
