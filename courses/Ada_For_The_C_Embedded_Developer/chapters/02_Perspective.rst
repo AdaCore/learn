@@ -1,3 +1,11 @@
+.. include:: <isopub.txt>
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
 The C Developer's Perspective on Ada
 ======================================
 
@@ -48,16 +56,16 @@ The resulting program will print :ada:`Hello World` on the screen. Let’s now d
 
 The first line of the Ada code is giving us access to the :ada:`Ada.Text_IO` library which contains the :ada:`Put_Line` function we will use to print the text to the console. This is similar to C’s :c:`#include <stdio.h>`. We then create a procedure which executes :ada:`Put_Line` which prints to the console. This is similar to C’s :c:`printf` statement. For now, we can assume these Ada and C features have similar functionality. In reality, they are very different. We will explore that more as we delve further into the Ada language.
 
-You may have noticed that the Ada syntax is more verbose than C. Instead of using braces :c:`{}` to declare scope, Ada uses keywords. :ada:`is` opens a declarative scope - which is empty here as there’s no variable to declare. :ada:`begin` opens a sequence of statements. Within this sequence, we’re calling the function :ada:`Put_Line`, prefixing explicitly by the name of the library unit where it’s declared, :ada:`Ada.Text_IO`. The absence of the end of line :c:`\n` can also be noted, as :ada:`Put_Line` always terminates by an end of line.
+You may have noticed that the Ada syntax is more verbose than C. Instead of using braces :c:`{}` to declare scope, Ada uses keywords. :ada:`is` opens a declarative scope |mdash| which is empty here as there’s no variable to declare. :ada:`begin` opens a sequence of statements. Within this sequence, we’re calling the function :ada:`Put_Line`, prefixing explicitly by the name of the library unit where it’s declared, :ada:`Ada.Text_IO`. The absence of the end of line :c:`\n` can also be noted, as :ada:`Put_Line` always terminates by an end of line.
 
 The Ada Syntax
 ----------------
 
-Ada syntax might seem peculiar at first glance. Unlike many other languages, it’s not derived from the popular C style of notation with its ample use of brackets; rather, it uses a more expository syntax coming from Pascal. In many ways, Ada is a more explicit language - its syntax was designed to increase readability and maintainability, rather than making it faster to write in a condensed manner. For example, full words like :ada:`begin` and :ada:`end` are used in place of curly braces. Conditions are written using :ada:`if`, :ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada’s assignment operator does not double as an expression, eliminating potential mistakes that could be caused by :c:`=` being used where :c:`==` should be.
+Ada syntax might seem peculiar at first glance. Unlike many other languages, it’s not derived from the popular C style of notation with its ample use of brackets; rather, it uses a more expository syntax coming from Pascal. In many ways, Ada is a more explicit language |mdash| its syntax was designed to increase readability and maintainability, rather than making it faster to write in a condensed manner. For example, full words like :ada:`begin` and :ada:`end` are used in place of curly braces. Conditions are written using :ada:`if`, :ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada’s assignment operator does not double as an expression, eliminating potential mistakes that could be caused by :c:`=` being used where :c:`==` should be.
 
 All languages provide one or more ways to express comments. In Ada, two consecutive hyphens :ada:`--` mark the start of a comment that continues to the end of the line. This is exactly the same as using :c:`//` for comments in C. Multi line comments like C’s :c:`/* */` do not exist in Ada.
 
-Ada compilers are stricter with type and range checking than most C programmers are used to. Most beginning Ada programmers encounter a variety of warnings and error messages when coding, but this helps detect problems and vulnerabilities at compile time - early on in the development cycle. In addition, checks (such as array bounds checks) provide verification that could not be done at compile time but can be performed either at run-time, or through formal proof (with the SPARK tooling).
+Ada compilers are stricter with type and range checking than most C programmers are used to. Most beginning Ada programmers encounter a variety of warnings and error messages when coding, but this helps detect problems and vulnerabilities at compile time |mdash| early on in the development cycle. In addition, checks (such as array bounds checks) provide verification that could not be done at compile time but can be performed either at run-time, or through formal proof (with the SPARK tooling).
 
 Ada identifiers and reserved words are case insensitive. The identifiers :ada:`VAR`, :ada:`var` and :ada:`VaR` are treated as the same identifier; likewise :ada:`begin`, :ada:`BEGIN`, :ada:`Begin`, etc. Identifiers may include letters, digits, and underscores, but must always start with a letter. There are 73 reserved keywords in Ada that may not be used as identifiers, and these are:
 
@@ -114,7 +122,7 @@ The package implementation, or body, has the structure:
 
    end My_Package;
 
-Something that might stick out in this example is the use of the reserve word :ada:`private` in the package specification. This acts as a partition in the package - anything declared before this keyword is publicly visible to other units that may :ada:`with` this package. Anything declared after the private keyword is only visible to the package implementation. A package specification, or spec, does not require a private section. One typical use-case for the private section in a package is when you want to declare a heterogeneous data type, called a record in Ada or a struct in C, but you want to stop the user of the package from accessing the record components directly.
+Something that might stick out in this example is the use of the reserve word :ada:`private` in the package specification. This acts as a partition in the package |mdash| anything declared before this keyword is publicly visible to other units that may :ada:`with` this package. Anything declared after the private keyword is only visible to the package implementation. A package specification, or spec, does not require a private section. One typical use-case for the private section in a package is when you want to declare a heterogeneous data type, called a record in Ada or a struct in C, but you want to stop the user of the package from accessing the record components directly.
 
 .. code-block:: ada
 
@@ -381,7 +389,7 @@ THe above code will not compile. This is because Ada does no allow assignment as
 
 .. admonition:: The "use" clause
 
-   You'll notice in the above code example, after :ada:`with Ada.Text_IO;` there is a new statement we haven't seen before - :ada:`use Ada.Text_IO;`. You may also notice that we are not using the :ada:`Ada.Text_IO` prefix before the :ada:`Put_Line` statements. When we add the use clause it tells the compiler that we won't be using the prefix in the call to subprograms of that package. The use clause is something to use with caution. For example: if we use the :ada:`Ada.Text_IO` package and we also have a :ada:`Put_Line` subprogram in our current compilation unit with the same signature, we have a conflict!
+   You'll notice in the above code example, after :ada:`with Ada.Text_IO;` there is a new statement we haven't seen before |mdash| :ada:`use Ada.Text_IO;`. You may also notice that we are not using the :ada:`Ada.Text_IO` prefix before the :ada:`Put_Line` statements. When we add the use clause it tells the compiler that we won't be using the prefix in the call to subprograms of that package. The use clause is something to use with caution. For example: if we use the :ada:`Ada.Text_IO` package and we also have a :ada:`Put_Line` subprogram in our current compilation unit with the same signature, we have a conflict!
 
 Conditions
 ------------
