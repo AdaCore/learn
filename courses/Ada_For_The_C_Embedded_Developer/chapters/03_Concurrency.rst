@@ -1,19 +1,48 @@
 Concurrency and Real-Time
 ============================
 
+.. include:: <isopub.txt>
+
+.. role:: ada(code)
+   :language: ada
+
+.. role:: c(code)
+   :language: c
+
 Understanding the various options
 ---------------------------------
 
-When it comes to implementing concurrency and real time, Ada offers several options. The most common one is on systems known as "full run-time", which offers entire Ada semantics. In the GNAT case, this is typically the case when running on top of an OS (e.g. Linux). In this case, Ada provides high level constructions such as tasks and protected objects to handle concurrency and synchronization. On more constrained systems, such are bare metal or some RTOS, a subset of the Ada tasking capabilities known as Ravenscar is available. Though restricted, this subset also has nice properties, in particular absence of deadlock, absence of priority inversion, schedulability and very small footprint. On bare metal systems, this also essentially means that Ada comes with its own real-time kernel.
+When it comes to implementing concurrency and real time, Ada offers several
+options. The most common one is on systems known as "full run-time", which
+offers entire Ada semantics. In the GNAT case, this is typically the case when
+running on top of an OS (e.g. Linux). In this case, Ada provides high level
+constructions such as tasks and protected objects to handle concurrency and
+synchronization. On more constrained systems, such are bare metal or some RTOS,
+a subset of the Ada tasking capabilities known as Ravenscar is available.
+Though restricted, this subset also has nice properties, in particular absence
+of deadlock, absence of priority inversion, schedulability and very small
+footprint. On bare metal systems, this also essentially means that Ada comes
+with its own real-time kernel.
 
-The advantage of using the full Ada tasking model or the restricted Ravenscar one is to enhance portability. For example, migrating from Windows to Linux doesn’t require any change as far as the creation of threads or handling of mutexes goes. However, in some situations, it’s critical to be able to rely directly on the services provided by the platform. In this case, it’s always possible to make direct system calls bound to Ada. Several targets of the GNAT compiler provide these API by default, for example win32ada for Windows and Florist for POSIX systems.
+The advantage of using the full Ada tasking model or the restricted Ravenscar
+one is to enhance portability. For example, migrating from Windows to Linux
+doesn’t require any change as far as the creation of threads or handling of
+mutexes goes. However, in some situations, it’s critical to be able to rely
+directly on the services provided by the platform. In this case, it’s always
+possible to make direct system calls bound to Ada. Several targets of the GNAT
+compiler provide these API by default, for example win32ada for Windows and
+Florist for POSIX systems.
 
 Tasks
 -----
 
-Ada offers a high level capability called a "task" which is essentially an independent thread of execution. In GNAT, these tasks are either mapped on the underlying OS threads, or using an dedicated kernel when not available.
+Ada offers a high level capability called a *task* which is essentially an
+independent thread of execution. In GNAT, these tasks are either mapped on the
+underlying OS threads, or using an dedicated kernel when not available.
 
-The following example will display the 26 letters of the alphabet twice, using two concurrent tasks. Since there is no synchronization between the two threads of control in any of the examples, the output may be interspersed.
+The following example will display the 26 letters of the alphabet twice, using
+two concurrent tasks. Since there is no synchronization between the two threads
+of control in any of the examples, the output may be interspersed.
 
 .. code-block:: ada
 
@@ -32,11 +61,23 @@ The following example will display the 26 letters of the alphabet twice, using t
        end loop;
     end Main;
 
-Any number of Ada tasks may be declared in any declarative region. A task declaration is very similar to a procedure or package declaration. They all start automatically when control reaches the begin. A block will not exit until all sequences of statements defined within that scope, including those in tasks, have been completed.
+Any number of Ada tasks may be declared in any declarative region. A task
+declaration is very similar to a procedure or package declaration. They all
+start automatically when control reaches the begin. A block will not exit until
+all sequences of statements defined within that scope, including those in
+tasks, have been completed.
 
-A task type is a generalization of a task object; each object of a task type has the same behavior. A declared object of a task type is started within the scope where it is declared, and control does not leave that scope until the task has terminated.
+A task type is a generalization of a task object; each object of a task type
+has the same behavior. A declared object of a task type is started within the
+scope where it is declared, and control does not leave that scope until the
+task has terminated.
 
-Task types can be parametrized; the parameter serves the same purpose as an argument to a constructor in Java. The following example creates 10 tasks, each of which displays a subset of the alphabet contained between the parameter and the 'Z' Character.  As with the earlier example, since there is no synchronization among the tasks, the output may be interspersed depending on the implementation task scheduling algorithm.
+Task types can be parametrized; the parameter serves the same purpose as an
+argument to a constructor in Java. The following example creates 10 tasks, each
+of which displays a subset of the alphabet contained between the parameter and
+the :ada:`'Z'` Character.  As with the earlier example, since there is no
+synchronization among the tasks, the output may be interspersed depending on
+the implementation task scheduling algorithm.
 
 .. code-block:: ada
 
@@ -55,7 +96,9 @@ Task types can be parametrized; the parameter serves the same purpose as an argu
        null;
     end Main;
 
-In Ada a task may be allocated on the heap as opposed to the stack. The task will then start as soon as it has been allocated, and terminates when its work is completed.
+In Ada, a task may be allocated on the heap as opposed to the stack. The task
+will then start as soon as it has been allocated, and terminates when its work
+is completed.
 
 .. code-block:: ada
 
@@ -70,7 +113,8 @@ In Ada a task may be allocated on the heap as opposed to the stack. The task wil
 Rendezvous
 ----------
 
-A rendezvous is a synchronization between two tasks, allowing them to exchange data and coordinate execution. Let's consider the following example:
+A rendezvous is a synchronization between two tasks, allowing them to exchange
+data and coordinate execution. Let's consider the following example:
 
 .. code-block:: ada
 
@@ -93,11 +137,20 @@ A rendezvous is a synchronization between two tasks, allowing them to exchange d
        After.Go;
     end;
 
-The Go entry declared in After is the external interface to the task. In the task body, the accept statement causes the task to wait for a call on the entry. This particular entry and accept pair doesn't do much more than cause the task to wait until Main calls After.Go. So, even though the two tasks start simultaneously and execute independently, they can coordinate via Go. Then, they both continue execution independently after the rendezvous.
+The :ada:`Go` entry declared in :ada:`After` is the external interface to the
+task. In the task body, the accept statement causes the task to wait for a call
+on the entry. This particular entry and accept pair doesn't do much more than
+cause the task to wait until :ada:`Main` calls :ada:`After.Go`. So, even though
+the two tasks start simultaneously and execute independently, they can
+coordinate via :ada:`Go`. Then, they both continue execution independently
+after the rendezvous.
 
-The entry/accept pair can take/pass parameters, and the accept statement can contain a sequence of statements; while these statements are executed, the caller is blocked.
+The :ada:`entry`/:ada:`accept` pair can take/pass parameters, and the
+:ada:`accept` statement can contain a sequence of statements; while these
+statements are executed, the caller is blocked.
 
-Let's look at a more ambitious example. The rendezvous below accepts parameters and executes some code:
+Let's look at a more ambitious example. The rendezvous below accepts parameters
+and executes some code:
 
 .. code-block:: ada
 
@@ -121,28 +174,48 @@ Let's look at a more ambitious example. The rendezvous below accepts parameters 
        After.Go ("Main");
     end;
 
-In the above example, the Put_Line is placed in the accept statement. Here's a possible execution trace, assuming a uniprocessor:
+In the above example, the :ada:`Put_Line` is placed in the accept statement.
+Here's a possible execution trace, assuming a uniprocessor:
 
-1. At the begin of Main, task After is started and the main procedure is suspended.
+#. At the begin of :ada:`Main`, task :ada:`After` is started and the main
+   procedure is suspended.
 
-2. After reaches the accept statement and is suspended, since there is no pending call on the Go entry.
+#. :ada:`After` reaches the :ada:`accept` statement and is suspended, since
+   there is no pending call on the :ada:`Go` entry.
 
-3. The main procedure is awakened and executes the Put_Line invocation, displaying the string "Before".
+#. The main procedure is awakened and executes the :ada:`Put_Line` invocation,
+   displaying the string :ada:`"Before"`.
 
-4. The main procedure calls the Go entry.  Since After is suspended on its accept statement for this entry, the call succeeds.
+#. The main procedure calls the :ada:`Go` entry.  Since :ada:`After` is
+   suspended on its :ada:`accept` statement for this entry, the call succeeds.
 
-5. Tha main procedure is suspended, and the task After is awakened to execute the body of the accept statement. The actual parameter "Main" is passed to the accept statement, and the Put_Line invocation is executed. As a result, the string After: Main is displayed.
+#. The main procedure is suspended, and the task :ada:`After` is awakened to
+   execute the body of the :ada:`accept` statement. The actual parameter
+   :ada:`"Main"` is passed to the :ada:`accept` statement, and the
+   :ada:`Put_Line` invocation is executed. As a result, the string
+   :ada:`"After: Main"` is displayed.
 
-6. When the accept statement is completed, both the After task and the main procedure are ready to run.  Suppose that the Main procedure is given the processor. It reaches its end, but the local task After has not yet terminated.  The main procedure is suspended.
+#. When the :ada:`accept` statement is completed, both the :ada:`After` task
+   and the main procedure are ready to run.  Suppose that the :ada:`Main`
+   procedure is given the processor. It reaches its end, but the local task
+   :ada:`After` has not yet terminated.  The main procedure is suspended.
 
-7. The After task continues, and terminates since it is at its end.  The main procedure is resumed, and it too can terminate since its dependent task has terminated.
+#. The :ada:`After` task continues, and terminates since it is at its end.  The
+   main procedure is resumed, and it too can terminate since its dependent task
+   has terminated.
 
-The above description is a conceptual model; in practice the implementation can perform various optimizations to avoid unnecessary context switches.
+The above description is a conceptual model; in practice the implementation can
+perform various optimizations to avoid unnecessary context switches.
 
 Selective Rendez-vous
 ---------------------
 
-The accept statement by itself can only wait for a single event (call) at a time. The select statement allows a task to listen for multiple events simultaneously, and then to deal with the first event to occur. This feature is illustrated by the task below, which maintains an integer value that is modified by other tasks that call Increment, Decrement, and Get:
+The :ada:`accept` statement by itself can only wait for a single event (call)
+at a time. The :ada:`select` statement allows a task to listen for multiple
+events simultaneously, and then to deal with the first event to occur. This
+feature is illustrated by the task below, which maintains an integer value that
+is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
+:ada:`Get`:
 
 .. code-block:: ada
 
@@ -175,24 +248,63 @@ The accept statement by itself can only wait for a single event (call) at a time
        end loop;
     end Counter;
 
-When the task's statement flow reaches the select, it will wait for all four events---three entries and a delay---in parallel. If the delay of one minute is exceeded, the task will execute the statements following the delay statement (and in this case will exit the loop, in effect terminating the task). The accept bodies for the Increment, Decrement, or Get entries will be otherwise executed as they're called. These four sections of the select statement are mutually exclusive: at each iteration of the loop, only one will be invoked. This is a critical point; if the task had been written as a package, with procedures for the various operations, then a "race condition" could occur where multiple tasks simultaneously calling, say, *Increment*, cause the value to only get incremented once. In the tasking version, if multiple tasks simultaneously call *Increment* then only one at a time will be accepted, and the value will be incremented by each of the tasks when it is accepted.
+When the task's statement flow reaches the select, it will wait for all four
+events |mdash| three entries and a delay |mdash| in parallel. If the delay of
+one minute is exceeded, the task will execute the statements following the
+:ada:`delay` statement (and in this case will exit the loop, in effect
+terminating the task). The :ada:`accept` bodies for the :ada:`Increment`,
+:ada:`Decrement`, or :ada:`Get` entries will be otherwise executed as they're
+called. These four sections of the select statement are mutually exclusive: at
+each iteration of the loop, only one will be invoked. This is a critical point;
+if the task had been written as a package, with procedures for the various
+operations, then a *race condition* could occur where multiple tasks
+simultaneously calling, say, :ada:`Increment`, cause the value to only get
+incremented once. In the tasking version, if multiple tasks simultaneously call
+:ada:`Increment` then only one at a time will be accepted, and the value will
+be incremented by each of the tasks when it is accepted.
 
-More specifically, each entry has an associated queue of pending callers.  If a task calls one of the entries and Counter is not ready to accept the call (i.e., if Counter is not suspended at the select statement) then the calling task is suspended, and placed in the queue of the entry that it is calling.  From the perspective of the Counter task, at any iteration of the loop there are several possibilities:
+More specifically, each entry has an associated queue of pending callers.  If a
+task calls one of the entries and Counter is not ready to accept the call
+(i.e., if :ada:`Counter` is not suspended at the :ada:`select` statement) then
+the calling task is suspended, and placed in the queue of the entry that it is
+calling.  From the perspective of the :ada:`Counter` task, at any iteration of
+the loop there are several possibilities:
 
-* There is no call pending on any of the entries.  In this case Counter is suspended.  It will be awakened by the first of two events: a call on one of its entries (which will then be immediately accepted), or the expiration of the one minute delay (whose effect was noted above).
+* There is no call pending on any of the entries.  In this case :ada:`Counter`
+  is suspended.  It will be awakened by the first of two events: a call on one
+  of its entries (which will then be immediately accepted), or the expiration
+  of the one minute delay (whose effect was noted above).
 
-* There is a call pending on exactly one of the entries.  In this case control passes to the select branch with an accept statement for that entry.  The choice of which caller to accept, if more than one, depends on the queuing policy, which can be specified via a pragma defined in the Real-Time Systems Annex of the Ada standard; the default is First-In First-Out.
+* There is a call pending on exactly one of the entries.  In this case control
+  passes to the :ada:`select` branch with an :ada:`accept` statement for that
+  entry.  The choice of which caller to accept, if more than one, depends on
+  the queuing policy, which can be specified via a :ada:`pragma` defined in the
+  Real-Time Systems Annex of the Ada standard; the default is
+  *First-In First-Out*.
 
-* There are calls pending on more than one entry.  In this case one of the entries with pending callers is chosen, and then one of the callers is chosen to be de-queued (the choices depend on the queueing policy).
+* There are calls pending on more than one entry.  In this case one of the
+  entries with pending callers is chosen, and then one of the callers is chosen
+  to be de-queued (the choices depend on the queueing policy).
 
 Protected Objects
 -----------------
 
-Although the rendezvous may be used to implement mutually exclusive access to a shared data object, an alternative (and generally preferable) style is through a protected object, an efficiently implementable mechanism that makes the effect more explicit. A protected object has a public interface (its protected operations) for accessing and manipulating the object's components (its private part). Mutual exclusion is enforced through a conceptual lock on the object, and encapsulation ensures that the only external access to the components are through the protected operations.
+Although the rendezvous may be used to implement mutually exclusive access to a
+shared data object, an alternative (and generally preferable) style is through
+a protected object, an efficiently implementable mechanism that makes the
+effect more explicit. A protected object has a public interface (its protected
+operations) for accessing and manipulating the object's components (its private
+part). Mutual exclusion is enforced through a conceptual lock on the object,
+and encapsulation ensures that the only external access to the components are
+through the protected operations.
 
-Two kinds of operations can be performed on such objects: read-write operations by procedures or entries, and read-only operations by functions. The lock mechanism is implemented so that it's possible to perform concurrent read operations but not concurrent write or read/write operations.
+Two kinds of operations can be performed on such objects: read-write operations
+by procedures or entries, and read-only operations by functions. The lock
+mechanism is implemented so that it's possible to perform concurrent read
+operations but not concurrent write or read/write operations.
 
-Let's reimplement our earlier tasking example with a protected object called Counter:
+Let's reimplement our earlier tasking example with a protected object called
+:ada:`Counter`:
 
 .. code-block:: ada
 
@@ -221,7 +333,10 @@ Let's reimplement our earlier tasking example with a protected object called Cou
        end Decrement;
     end Counter;
 
-Having two completely different ways to implement the same paradigm might seem complicated. However, in practice the actual problem to solve usually drives the choice between an active structure (a task) or a passive structure (a protected object).
+Having two completely different ways to implement the same paradigm might seem
+complicated. However, in practice the actual problem to solve usually drives
+the choice between an active structure (a task) or a passive structure (a
+protected object).
 
 A protected object can be accessed through prefix notation:
 
@@ -231,9 +346,16 @@ A protected object can be accessed through prefix notation:
     Counter.Decrement;
     Put_Line (Integer'Image (Counter.Get));
 
-A protected object may look like a package syntactically, since it contains declarations that can be accessed externally using prefix notation. However, the declaration of a protected object is extremely restricted; for example, no public data is allowed, no types can be declared inside, etc. And besides the syntactic differences, there is a critical semantic distinction: a protected object has a conceptual lock that guarantees mutual exclusion; there is no such lock for a package.
+A protected object may look like a package syntactically, since it contains
+declarations that can be accessed externally using prefix notation. However,
+the declaration of a protected object is extremely restricted; for example, no
+public data is allowed, no types can be declared inside, etc. And besides the
+syntactic differences, there is a critical semantic distinction: a protected
+object has a conceptual lock that guarantees mutual exclusion; there is no such
+lock for a package.
 
-Like tasks, it's possible to declare protected types that can be instantiated several times:
+Like tasks, it's possible to declare protected types that can be instantiated
+several times:
 
 .. code-block:: ada
 
@@ -254,9 +376,18 @@ Like tasks, it's possible to declare protected types that can be instantiated se
        .. .
     end;
 
-Protected objects and types can declare a procedure-like operation known as an "entry". An entry is somewhat similar to a procedure but includes a so-called barrier condition that must be true in order for the entry invocation to succeed. Calling a protected entry is thus a two step process: first, acquire the lock on the object, and then evaluate the barrier condition.  If the condition is true then the caller will execute the entry body.  If the condition is false, then the caller is placed in the queue for the entry, and relinquishes the lock.  Barrier conditions (for entries with non-empty queues) are reevaluated upon completion of protected procedures and protected entries.
+Protected objects and types can declare a procedure-like operation known as an
+*entry*. An entry is somewhat similar to a procedure but includes a so-called
+barrier condition that must be true in order for the entry invocation to
+succeed. Calling a protected entry is thus a two step process: first, acquire
+the lock on the object, and then evaluate the barrier condition.  If the
+condition is true then the caller will execute the entry body.  If the
+condition is false, then the caller is placed in the queue for the entry, and
+relinquishes the lock.  Barrier conditions (for entries with non-empty queues)
+are reevaluated upon completion of protected procedures and protected entries.
 
-Here's an example illustrating protected entries: a protected type that models a binary semaphore / persistent signal.
+Here's an example illustrating protected entries: a protected type that models
+a binary semaphore / persistent signal.
 
 .. code-block:: ada
 
@@ -279,7 +410,9 @@ Here's an example illustrating protected entries: a protected type that models a
        end Signal;
     end Binary_Semaphore;
 
-Ada concurrency features provide much further generality than what's been presented here. For additional information please consult one of the works cited in the *References* section.
+Ada concurrency features provide much further generality than what's been
+presented here. For additional information please consult one of the works
+cited in the *References* section.
 
 Ravenscar
 ---------
