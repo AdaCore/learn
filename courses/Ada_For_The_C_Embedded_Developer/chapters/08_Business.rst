@@ -1,2 +1,0 @@
-Argumentation and Business Perspectives
-==========================================

@@ -15,7 +15,7 @@ Ada for the C Embedded Developer
 
 .. toctree::
    :maxdepth: 4
- 
+
    Introduction <chapters/01_Introduction>
    The C Developer's Perspective <chapters/02_Perspective>
    Concurrency and Real-Time <chapters/03_Concurrency>
@@ -23,5 +23,6 @@ Ada for the C Embedded Developer
    Enhancing Verification with SPARK and Ada <chapters/05_SPARK>
    C to Ada Translation Patterns <chapters/06_Translation>
    Handling Variability and Re-usability <chapters/07_Reusability>
-   Argumentation and Business Perspectives <chapters/08_Business>
-   Conclusion <chapters/09_Conclusion>
+   Performance Considerations <chapters/08_Performance>
+   Argumentation and Business Perspectives <chapters/09_Business>
+   Conclusion <chapters/10_Conclusion>
