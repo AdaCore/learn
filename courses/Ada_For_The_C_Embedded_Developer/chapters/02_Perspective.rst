@@ -884,13 +884,12 @@ two programs are different. Can you spot why?
 In the C code there are two problems:
 
 #. There's a buffer overflow in the first iteration of the loop. We would need
-to modify the loop initialization to :c:`int i = LIST_LENGTH - 1;`.
-
-#. The loop predicate should be modified to :c:`i >= 0;`
+   to modify the loop initialization to :c:`int i = LIST_LENGTH - 1;`. The loop
+   predicate should be modified to :c:`i >= 0;`
 
 #. The C code also has another off-by-one problem in the math to compute the
-value stored in :c:`list[i]`. The expression should be changed to be
-:c:`list[i] = LIST_LENGTH - i - 1;`.
+   value stored in :c:`list[i]`. The expression should be changed to be
+   :c:`list[i] = LIST_LENGTH - i - 1;`.
 
 These are typical off-by-one problems that plagues C programs. You'll notice
 that we didn't have this problem with the Ada code because we aren't defining
