@@ -824,7 +824,7 @@ Ada, we use the :ada:`reverse` keyword to accomplish this.
 
 In many cases, when we are writing a for loop, it has something to do with
 traversing an array. In C, this is a classic location for off-by-one errors.
-Lets see an example in action:
+Let's see an example in action:
 
 .. code:: c
 
