@@ -154,7 +154,7 @@ class RemoteProject(Project):
         code, out, err = self.container.execute(line, rep)
         if code != 0:
             rep.stderr("Build failed with error code: {}".format(code))
-            raise BuildError("Build failed with error code: {}".format(code))
+            raise BuildError(code)
         return code
 
     def run(self, lab_ref=None, cli=None):

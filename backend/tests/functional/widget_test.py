@@ -6,42 +6,104 @@ of the widget blueprint.
 """
 
 import json
+import os
+import re
 
+curd = os.path.dirname(__file__)
 
-def test_run_singlefile_ada(test_client):
-    """
-    GIVEN a Flask application
-    WHEN the '/run_program' page is posted to (POST)
-    THEN check the response is valid
-    """
-    run_data = {
-                "files": [
-                        {"basename" : "learn.adb",
-                         "contents" : "with Ada.Text_IO; use Ada.Text_IO;\n\nprocedure Learn is\n\n   subtype Alphabet is Character range 'A' .. 'Z';\n\nbegin\n\n   Put_Line (\"Learning Ada from \" & Alphabet'First & \" to \" & Alphabet'Last);\n\nend Learn;"
-                        }
-                     ],
-                     "mode" : "run",
-                     "name" : "Introduction",
-                     "lab" : False
-            }
+results_fn = "results.json"
 
-    response = test_client.post('/run_program/', data=json.dumps(run_data))
+def run_transaction(client, run_data):
+    response = client.post('/run_program/', json=run_data)
     assert response.status_code == 200
 
-    print(response.json)
+    json_data = response.get_json()
+    identifier = json_data['identifier']
 
     read = 0
+    output = []
     while True:
         check_data = {
-                      "identifier": response.json["identifier"],
+                      "identifier": identifier,
                       "read": read
                      }
-        print(check_data)
-        response = test_client.post('/check_output/', data=json.dumps(check_data))
+
+        response = client.post('/check_output/', json=check_data)
         assert response.status_code == 200
 
-        read += len(response.json["output"])
-        if response.json["completed"]:
-            assert response.json["status"] == 0
-            break;
+        json_data = response.get_json()
 
+        read += len(json_data["output"])
+        output.extend(json_data["output"])
+        if json_data["completed"]:
+            return json_data, output
+
+
+def prep_run_data(files):
+    ret_files = []
+    for file in files:
+        with open(file, 'r') as f:
+            ret_files.append({"basename": os.path.basename(file), "contents": f.read()})
+    return ret_files
+
+
+def get_results(dirname):
+    test_dir = os.path.join(curd, "run_program", dirname)
+
+    results_file = os.path.join(test_dir, results_fn)
+    assert os.path.exists(results_file)
+    with open(results_file, 'r') as f:
+        results = json.loads(f.read())
+
+    return results
+
+
+def run_program(client, dirname):
+    test_dir = os.path.join(curd, "run_program", dirname)
+
+    src_files = []
+    for x in os.listdir(test_dir):
+        filepath = os.path.join(test_dir, x)
+        if re.match(r'.*\.[adb|ads|c|h|cpp|hh]', filepath):
+            src_files.append(filepath)
+
+    run_data = {
+            "files": prep_run_data(src_files),
+            "mode" : "run",
+            "name" : dirname,
+            "lab" : False
+    }
+
+    return run_transaction(client, run_data)
+
+
+def fix_results(received):
+    combined = {}
+
+    for msg in received:
+        data = msg['msg']['data']
+        mtype = msg['msg']['type']
+        if mtype in combined.keys():
+            combined[mtype].append(data)
+        else:
+            combined[mtype] = [data]
+
+    return combined
+
+
+def test_ada_single_pass(test_client):
+    dirname = "test_run_singlefile_ada"
+    expected = get_results(dirname)
+    data, output = run_program(test_client, dirname)
+    assert data["status"] == 0
+    fixed_results = fix_results(output)
+    assert expected == fixed_results
+
+
+def test_ada_single_fail(test_client):
+    dirname = "test_run_singlefile_error_ada"
+    expected = get_results(dirname)
+    data, output = run_program(test_client, dirname)
+    assert data["status"] == 4
+    fixed_results = fix_results(output)
+    assert expected == fixed_results

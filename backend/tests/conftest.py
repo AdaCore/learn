@@ -6,7 +6,7 @@ from app import create_app
 
 @pytest.fixture
 def test_client():
-    app = create_app(debug=True)
+    app = create_app(debug=False)
 
     # Flask provides a way to test your application by exposing the Werkzeug test Client
     # and handling the context locals for you.

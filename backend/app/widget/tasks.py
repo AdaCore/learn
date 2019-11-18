@@ -47,6 +47,7 @@ def run_program(self, data):
             project = RemoteProject(container, task_id, data['files'])
             project.build()
             project.submit()
+            code = 0
         elif mode == "compile":
             project = RemoteProject(container, task_id, data['files'])
             code = project.build()
@@ -63,7 +64,8 @@ def run_program(self, data):
             raise Exception("Mode not implemented")
 
     except BuildError as ex:
-        return {'status': 0}
+        logger.error("Build error code {}".format(ex), exc_info=True)
+        return {'status': int("{}".format(ex))}
     except Exception as ex:
         logger.error("An error occured in run program", exc_info=True)
         self.update_state(state=states.FAILURE,
