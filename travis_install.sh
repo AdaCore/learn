@@ -1,7 +1,7 @@
 #! /usr/bin/env sh
 
 # Install requirements
-pip install -q -r ../requirements.txt
+pip install -q -r frontend/requirements.txt
 
 set -v
 set -e
