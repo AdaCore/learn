@@ -22,7 +22,7 @@ git:
     false
 
 before_install:
- - "sudo apt-get install graphviz"
+ - "sudo apt-get install -y graphviz"
 
 install: ./travis_install.sh
 

@@ -56,7 +56,9 @@ class SubmitError(ProjectError):
 class Project:
 
     def __init__(self, files, spark_mode=False):
+        source_files = []
         self.file_list = []
+        self.cli = None
         self.spark = spark_mode
 
         # Grab project file
@@ -66,8 +68,17 @@ class Project:
 
         self.gpr = new_file(gpr_name, gpr_content)
 
+         # strip cli and labio files from files
+        for file in files:
+            if file['basename'] == CLI_FILE:
+                self.cli = file['contents'].split()
+            elif file['basename'] == LAB_IO_FILE:
+                self.lab_list = LabList(file['contents'])
+            else:
+                source_files.append(file)
+
         # Add user submitted files to file list
-        self.file_list = [new_file(f['basename'], f['contents']) for f in files]
+        self.file_list = [new_file(f['basename'], f['contents']) for f in source_files]
 
         # Figure out what language(s) to use for the project
         languages = []
@@ -95,6 +106,13 @@ class Project:
 
         self.file_list.append(self.gpr)
 
+        # Add ADC file to file list
+        adc_content = COMMON_ADC
+        if spark_mode:
+            adc_content += '\n' + SPARK_ADC
+
+        self.file_list.append(new_file("main.adc", adc_content))
+
     def zip(self):
         memory_file = io.BytesIO()
         with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
@@ -109,28 +127,10 @@ class Project:
 class RemoteProject(Project):
 
     def __init__(self, container, task_id, files, spark_mode=False):
-        source_files = []
         self.task_id = task_id
         self.container = container
-        self.cli = None
 
-        # strip cli and labio files from files
-        for file in files:
-            if file['basename'] == CLI_FILE:
-                self.cli = file['contents'].split()
-            elif file['basename'] == LAB_IO_FILE:
-                self.lab_list = LabList(file['contents'])
-            else:
-                source_files.append(file)
-
-        super().__init__(source_files, spark_mode)
-
-        # Add ADC file to file list
-        adc_content = COMMON_ADC
-        if spark_mode:
-            adc_content += '\n' + SPARK_ADC
-
-        self.file_list.append(new_file("main.adc", adc_content))
+        super().__init__(files, spark_mode)
 
         self.local_tempd = tempfile.mkdtemp()
         tmp_name = os.path.basename(os.path.normpath(self.local_tempd))

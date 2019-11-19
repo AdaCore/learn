@@ -17,6 +17,7 @@ import tempfile
 import zipfile
 
 from . import tasks
+from .project import Project
 
 widget_bp = Blueprint('widget_bp', __name__)
 CORS(widget_bp)
@@ -29,66 +30,21 @@ def compose_response(obj, code):
 
 @widget_bp.route('/download/', methods=['POST'])
 def download_example():
-
     data = request.get_json()
-    e = get_example()
-    if not e:
-        return compose_response({'identifier': '', 'message': "example not found"}, 500)
+    app.logger.debug(data)
 
-    tempd, message = prep_example_directory(e, data)
-    if message:
-        return compose_response({'identifier': '', 'message': message}, 500)
-
-    app.logger.debug("Zipping tmp dir {}".format(tempd))
-
-    memory_file = io.BytesIO()
-    cwd = os.getcwd()
-    os.chdir(tempd)
-    with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
-        for root, dirs, files in os.walk('.'):
-            for file in files:
-                app.logger.debug("Adding {} to zip".format(os.path.join(root, file)))
-                zf.write(os.path.join(root, file))
-    os.chdir(cwd)
-    memory_file.seek(0)
+    project = Project(data['files'])
+    zipfile = project.zip()
 
     archive = data['name'] + '.zip'
 
-    app.logger.debug("Sending zipped file {} size={}".format(archive, sys.getsizeof(memory_file)))
-    response = make_response(send_file(memory_file, attachment_filename=archive, as_attachment=True))
+    app.logger.debug("Sending zipped file {} size={}".format(archive, sys.getsizeof(zipfile)))
+    response = make_response(zipfile)
     response.headers['Access-Control-Expose-Headers'] = 'Content-Disposition'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Disposition'
+    response.headers.set('Content-Type', 'application/zip')
+    response.headers.set('Content-Disposition', 'attachment', filename=archive)
     return response
-
-
-@widget_bp.route('/check_download/', methods=['POST'])
-def check_download():
-    error_code = 200
-    data = request.get_json()
-    app.logger.debug(data)
-    identifier = data['identifier']
-    task = tasks.run_program.AsyncResult(identifier)
-
-    app.logger.debug('Checking Celery task with id={}'.format(identifier))
-
-    response = {'zipfile': None,
-                'completed': False,
-                'message': task.state}
-
-    app.logger.debug("Task state {}".format(task.state))
-    if task.failed():
-        result = task.get()
-        app.logger.error('Task id={} failed. Response={}'.format(task.id, task.info))
-        error_code = 500
-
-    if task.ready():
-        app.logger.debug("Task info {}".format(task.info))
-        result = task.get()
-        response['completed'] = True
-        response['zipfile'] = result["zipfile"]
-
-    app.logger.debug('Responding with response={} and code={}'.format(response, error_code))
-    return compose_response(response, error_code)
 
 
 @widget_bp.route('/run_program/', methods=['POST'])

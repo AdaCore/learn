@@ -8,5 +8,6 @@ which gprbuild
 
 cd frontend
 make SPHINXOPTS="-W" tests
-yarn run build
-make html
+# TODO: need to build the frontend to test build
+
+# TODO: need to also test backend
