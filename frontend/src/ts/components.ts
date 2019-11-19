@@ -137,10 +137,8 @@ export class CheckBox {
     }
 
     if (classes != undefined) {
-      for (const c in classes) {
-        if ({}.hasOwnProperty.call(classes, c)) {
-          this.container.addClass(c);
-        }
+      for (const c of classes) {
+        this.container.addClass(c);
       }
     }
 

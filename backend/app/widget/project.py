@@ -117,7 +117,7 @@ class RemoteProject(Project):
         # strip cli and labio files from files
         for file in files:
             if file['basename'] == CLI_FILE:
-                self.cli = file[contents].split()
+                self.cli = file['contents'].split()
             elif file['basename'] == LAB_IO_FILE:
                 self.lab_list = LabList(file['contents'])
             else:

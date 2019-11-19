@@ -593,6 +593,10 @@ button {
 
 .custom_check_container {
     display: block;
+
+    label {
+        display: inline-block;
+    }
 }
 
 label.custom_check,
