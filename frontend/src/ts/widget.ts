@@ -752,7 +752,7 @@ export class Widget {
         case 'stderr':
         case 'stdout': {
           const msg = ol.msg.data;
-          const regex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/;
+          const regex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
 
           const matchFound: Array<string> = msg.match(regex);
           let div: JQuery;
