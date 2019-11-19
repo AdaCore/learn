@@ -7,4 +7,6 @@ which gnatchop
 which gprbuild
 
 cd frontend
-make SPHINXOPTS="-W" tests html
+make SPHINXOPTS="-W" tests
+yarn run build
+make html
