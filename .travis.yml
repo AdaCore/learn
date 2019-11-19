@@ -24,6 +24,6 @@ git:
 before_install:
  - "sudo apt-get install graphviz"
 
-install: cd engine && ./travis_install.sh
+install: ./travis_install.sh
 
 script: ./travis_script.sh

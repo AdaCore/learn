@@ -6,4 +6,5 @@ which gcc
 which gnatchop
 which gprbuild
 
+cd frontend
 make SPHINXOPTS="-W" tests html
