@@ -752,29 +752,47 @@ export class Widget {
         case 'stderr':
         case 'stdout': {
           const msg = ol.msg.data;
-          const regex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
+          const ctRegex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
+          const rtRegex = /^raised .+ : ([a-zA-Z._0-9-]+):(\d+) (.+)$/m;
 
-          const matchFound: Array<string> = msg.match(regex);
+          const ctMatchFound: Array<string> = msg.match(ctRegex);
+          const rtMatchFound: Array<string> = msg.match(rtRegex);
           let div: JQuery;
 
-          if (matchFound) {
-            if (matchFound[4].indexOf(' info:') == 0) {
-              div = homeArea.addInfo(msg);
+          if (ctMatchFound || rtMatchFound) {
+            let basename: string;
+            let row: number;
+            let col: number;
+
+            if (ctMatchFound) {
+              basename = ctMatchFound[1];
+              row = parseInt(ctMatchFound[2]);
+              col = parseInt(ctMatchFound[3]);
+
+              if (ctMatchFound[4].indexOf(' info:') == 0) {
+                div = homeArea.addInfo(msg);
+              } else {
+                div = homeArea.addMsg(msg);
+                homeArea.errorCount++;
+              }
             } else {
+              basename = rtMatchFound[1];
+              row = parseInt(rtMatchFound[2]);
+              col = 1;
+
               div = homeArea.addMsg(msg);
               homeArea.errorCount++;
             }
 
             // Lines that contain a sloc are clickable:
             div.click(() => {
-              const basename = matchFound[1];
               this.editors.map((e) => {
                 if (basename == e.getResource().basename) {
                   // Switch to the tab that contains the editor
                   e.getTab().click();
 
                   // Jump to the corresponding line
-                  e.gotoLine(parseInt(matchFound[2]), parseInt(matchFound[3]));
+                  e.gotoLine(row, col);
                 }
               });
             });
