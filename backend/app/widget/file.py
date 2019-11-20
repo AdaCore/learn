@@ -2,12 +2,26 @@ import logging
 import os
 import re
 
+
 logger = logging.getLogger(__name__)
+
 
 RECEIVED_FILE_CHAR_LIMIT = 50 * 1000
 # The limit in number of characters of files to accept
 
+
 def new_file(basename, content):
+    """
+    The method creates a new File object or derived object from File based on the basename file extension. This should
+    be used to create Files instead of using the File object constructors. This also ensures that the file is not longer
+    than the file char limit.
+    :param basename:
+        The file name
+    :param content:
+        The file content
+    :return:
+        Returns a File or derived File object
+    """
     if len(content) > RECEIVED_FILE_CHAR_LIMIT:
         raise Exception("File {} exceeds size limits".format(basename))
 
@@ -25,6 +39,14 @@ def new_file(basename, content):
 
 
 def find_mains(filelist):
+    """
+    This checks a list of files to find files that can be considered mains. For Ada files, the criteria is that the
+    adb file does not have a corresponding ads file. For C files, we use the CFile.is_main() method.
+    :param filelist:
+        The list of files to check for mains
+    :return:
+        The list of files that have mains
+    """
     mains = []
     for f in filelist:
         logger.debug("Checking {} for main".format(f.get_name()))
@@ -44,53 +66,220 @@ def find_mains(filelist):
 
 
 class File:
+    """
+    This is the base File class used to represent generic Files.
 
+    Attributes
+    ----------
+    basename : str
+        The file name
+    content : str
+        the name of the animal
+
+    Methods
+    -------
+    get_name()
+        Returns the name of the file
+    get_content()
+        Returns the content of the file
+    language()
+        Returns the coding language for the file is any
+    is_main()
+        Checks if the file is a main
+    """
     def __init__(self, basename, content):
+        """
+        Constructor for File. THIS SHOULD NOT BE CALLED DIRECTLY!! Use new_file method instead.
+        :param basename:
+            File name
+        :param content:
+            File content
+        """
         self.basename = basename
         self.content = content
 
     def get_name(self):
+        """
+        Returns the name of the file
+        :return:
+            The file name
+        """
         return self.basename
 
     def get_content(self):
+        """
+        Returns the content of the file
+        :return:
+            The file content
+        """
         return self.content
 
     def language(self):
+        """
+        Returns the language for the file
+        :return:
+            Returns the file language or None
+        """
         return None
 
     def is_main(self):
+        """
+        Returns if the file is/has a main. Valid for C or CPP only now.
+        :return:
+            Returns True if the file has/is a main
+        """
         return False
 
 
 class AdaFile(File):
-    procedure_re = re.compile("^procedure +[A-Za-z][_a-zA-Z0-9]*[ |\n]+(is|with)", re.MULTILINE)
+    """
+    Class for an Ada file. Inherits from File.
+
+    Attributes
+    ----------
+    basename : str
+        The file name
+    content : str
+        the name of the animal
+
+    Methods
+    -------
+    get_name()
+        Returns the name of the file
+    get_content()
+        Returns the content of the file
+    language()
+        Returns the coding language for the file is any
+    is_main()
+        Checks if the file is a main
+    """
+    def is_main(self):
+        """
+        This should check if the Ada file is a main. This is unimplemented and shouldn't be used
+        """
+        # TODO: figure out how to do this
+        raise NotImplementedError
 
     def language(self):
+        """
+        Returns "Ada"
+        :return:
+            The language string
+        """
         return "Ada"
 
 
 class CFile(File):
-    main_re = re.compile("^(?:void|int) +main\(.*\)(?: |\n)*{", re.MULTILINE)
+    """
+    Class for a C file. Inherits from File.
 
+    Attributes
+    ----------
+    basename : str
+        The file name
+    content : str
+        the name of the animal
+
+    Methods
+    -------
+    get_name()
+        Returns the name of the file
+    get_content()
+        Returns the content of the file
+    language()
+        Returns the coding language for the file is any
+    is_main()
+        Checks if the file is a main
+    """
     def is_main(self):
+        """
+        Uses a regex to compute if the C file has the right function layout/name for a main
+        :return:
+            True if the regex matches
+        """
+        main_re = re.compile("^(?:void|int) +main\(.*\)(?: |\n)*{", re.MULTILINE)
         return main_re.findall(self.contents)
 
     def language(self):
+        """
+        Returns "c"
+        :return:
+            The language string
+        """
         return "c"
 
 
 class CPPFile(CFile):
+    """
+    Class for a CPP file. Inherits from CFile.
 
+    Attributes
+    ----------
+    basename : str
+        The file name
+    content : str
+        the name of the animal
+
+    Methods
+    -------
+    get_name()
+        Returns the name of the file
+    get_content()
+        Returns the content of the file
+    language()
+        Returns the coding language for the file is any
+    is_main()
+        Checks if the file is a main
+    """
     def language(self):
+        """
+        Returns "c++"
+        :return:
+            The language string
+        """
         return "c++"
 
 
 class ProjectFile(File):
+    """
+    Class for a Project file. Inherits from File.
 
+    Attributes
+    ----------
+    basename : str
+        The file name
+    content : str
+        the name of the animal
+
+    Methods
+    -------
+    get_name()
+        Returns the name of the file
+    get_content()
+        Returns the content of the file
+    language()
+        Returns the coding language for the file is any
+    is_main()
+        Checks if the file is a main
+    insert_language(languages)
+        Inserts the languages for the project into the project file
+    define_mains(mains)
+        Inserts the mains for the project into the project file
+    """
     def insert_languages(self, languages):
+        """
+        Inserts languages into the correct place in the project file
+        :param languages:
+            The list of languages to add to the project
+        """
         to_insert = "for Languages use ({});".format(", ".join(['"{}"'.format(x) for x in languages]))
         self.content = self.content.replace("--LANGUAGE_PLACEHOLDER--", to_insert)
 
     def define_mains(self, mains):
+        """
+        Inserts the mains into the correct place in the project file
+        :param mains:
+            The list of mains to add to the project
+        """
         to_insert = "for Main use ({});".format(", ".join(['"{}"'.format(x) for x in mains]))
         self.content = self.content.replace("--MAIN_PLACEHOLDER--", to_insert)

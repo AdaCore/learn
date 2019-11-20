@@ -38,30 +38,65 @@ TEMPLATE_PROJECT = os.path.join(os.getcwd(), "app", "widget", "static", "templat
 
 SAFE_RUNNER = os.path.join(os.path.sep, "workspace", "run.py")
 
+
 class ProjectError(Exception):
     pass
+
 
 class BuildError(ProjectError):
     pass
 
+
 class RunError(ProjectError):
     pass
+
 
 class ProveError(ProjectError):
     pass
 
+
 class SubmitError(ProjectError):
     pass
 
-class Project:
 
+class Project:
+    """
+    This class represents a project and is used as an interface to interact with code and artifacts of the build.
+
+    Attributes
+    ----------
+    file_list
+        The list of files associated with the project
+    cli
+        The command line arguments to pass to a run command on the project if any
+    spark
+        Whether or not the project is a spark project
+    gpr
+        The gpr file for the project
+    lab_list
+        The LabList object representing the lab test cases if any
+    main
+        The name of the main file for the project. Currently we only support a single main
+
+    Methods
+    -------
+    zip()
+        Zips up the files of the project and returns the byte stream
+    """
     def __init__(self, files, spark_mode=False):
+        """
+        Construct the Project. The list of files passed in are processed and stored based on their types and contents.
+        :param files:
+            The files to construct the project with
+        :param spark_mode:
+            Whether this is a spark project
+        """
         source_files = []
         self.file_list = []
         self.cli = None
         self.spark = spark_mode
 
-        # Grab project file
+        # Grab the default project file
         gpr_name = os.path.basename(TEMPLATE_PROJECT)
         with open(TEMPLATE_PROJECT, 'r') as f:
             gpr_content = f.read()
@@ -114,37 +149,108 @@ class Project:
         self.file_list.append(new_file("main.adc", adc_content))
 
     def zip(self):
+        """
+        Zips up the project files and returns the byte stream
+        :return:
+            Returns the byte stream for the zipfile
+        """
+        # Make the zipfile in memory to avoid file io
         memory_file = io.BytesIO()
         with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
             for f in self.file_list:
                 logger.debug("Adding {} to zip".format(f.get_name()))
                 zf.writestr(f.get_name(), f.get_content())
-
+        # Seek back to the beginning of the byte stream before sending
         memory_file.seek(0)
         return memory_file.getvalue()
 
 
 class RemoteProject(Project):
+    """
+        This class represents a remote project and is used as an interface to interact with code that will be executed
+        inside a container. This class derives from Project.
 
+        Attributes
+        ----------
+        file_list
+            The list of files associated with the project
+        cli
+            The command line arguments to pass to a run command on the project if any
+        spark
+            Whether or not the project is a spark project
+        gpr
+            The gpr file for the project
+        lab_list
+            The LabList object representing the lab test cases if any
+        main
+            The name of the main file for the project. Currently we only support a single main
+        task_id
+            The task id for the task that this class will live in. This is used to associate outputs back to the
+            task runner.
+        container
+            The container that will be used to execute actions inside
+        local_tempd
+            The local tempd file created to house files from the project. This is currently not used.
+        remote_tempd
+            The remote tempd file with the same name as the local tempd that will house the project files
+
+        Methods
+        -------
+        zip()
+            Zips up the files of the project and returns the byte stream
+        build()
+            Builds the project in the container
+        run(lab_ref=None, cli=None)
+            Runs the project inside the container. The run can be associated with a lab via lab_ref and can take in
+            input via cli.
+        prove(extra_args)
+            Proves the project inside the container. Extra args can be added to gnatprove via extra_args
+        submit()
+            Submits the project against the lab_list data. This will run the project against each test case and
+            aggregate the results
+        """
     def __init__(self, container, task_id, files, spark_mode=False):
+        """
+        Constructs the RemoteProject. Calls the super constructor and creates local_tempd and remote_tempd directories
+        and pushes files to the container.
+        :param container:
+            The container to use
+        :param task_id:
+            The task id for the task that created this class
+        :param files:
+            The files for the project
+        :param spark_mode:
+            Whether or not this is a spark project
+        """
         self.task_id = task_id
         self.container = container
 
+        # Call the Project constructor
         super().__init__(files, spark_mode)
 
+        # Create a tempd and remote_tempd with the same names
+        # We are using the mkdtemp interface to create unique folder names
+        # local_tempd is actually not used
         self.local_tempd = tempfile.mkdtemp()
         tmp_name = os.path.basename(os.path.normpath(self.local_tempd))
         self.remote_tempd = os.path.join(TEMP_WORKSPACE_BASEDIR, tmp_name)
 
         self.container.mkdir(self.remote_tempd)
-
         self.container.push_files(self.file_list, self.remote_tempd)
 
     def __del__(self):
+        """
+        Cleans up the local and remote tempds and deconstructs the object
+        """
         shutil.rmtree(self.local_tempd)
         self.container.rmdir(self.remote_tempd)
 
     def build(self):
+        """
+        Builds the project inside the container
+        :return:
+            Returns the status code returned from the build
+        """
         rep = MQReporter(self.task_id)
         rep.console(["gprbuild", "-q", "-P", self.gpr.get_name(), "-gnatwa"])
 
@@ -154,10 +260,21 @@ class RemoteProject(Project):
         code, out, err = self.container.execute(line, rep)
         if code != 0:
             rep.stderr("Build failed with error code: {}".format(code))
+            # We need to raise an exception here to disrupt a build/run/prove build chain from the main task
             raise BuildError(code)
         return code
 
     def run(self, lab_ref=None, cli=None):
+        """
+        Runs the project build artifact inside the container
+        :param lab_ref:
+            The lab_ref is any to associate with the run
+        :param cli:
+            The cli is any to pass to the run. If cli was passed into the constructor, then this cli overrides the
+            member attribute cli.
+        :return:
+            Returns a tuple of exit status and stdout
+        """
         if not self.main:
             raise RunError("Cannot run program without main")
 
@@ -176,6 +293,13 @@ class RemoteProject(Project):
         return code, out
 
     def prove(self, extra_args):
+        """
+        Proves the project inside the container
+        :param extra_args:
+            The extra args to pass to the prover
+        :return:
+            Returns the exit code of gnatprove
+        """
         if not self.spark:
             raise ProveError("Project not configured for spark mode")
 
@@ -190,6 +314,10 @@ class RemoteProject(Project):
         return code
 
     def submit(self):
+        """
+        Submits the project against the lab test cases. The lab test cases should have been passed into the constructor
+        before this is called.
+        """
         successes = []
         if not self.main:
             raise SubmitError("Cannot run program without main")
@@ -197,10 +325,14 @@ class RemoteProject(Project):
         if not self.lab_list:
             raise SubmitError("No lab io sent with project")
 
+        # Loop over the labs in the lab_list and run each one against the test case input
+        # Store the runs output in a list to check later
         for lab in self.lab_list.loop():
             code, out = self.run(lab_ref=lab.get_key(), cli=lab.get_input())
             successes.append(lab.check_actual(out, code))
 
+        # Get the results from the test cases
         results = self.lab_list.get_results()
         rep = MQReporter(self.task_id)
+        # Check to make sure all the test cases passed and send results to reporter
         rep.lab(all(successes), results)

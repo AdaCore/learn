@@ -1,5 +1,5 @@
 .DS_Store
 *.pyc
 env
-
+.idea
 .vagrant
