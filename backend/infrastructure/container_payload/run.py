@@ -1,17 +1,26 @@
 #!/usr/bin/env python
+"""Safe Runner
 
-import sys
+This script is used to run applications inside the lxd container using the correct user and the preloader. This protects
+the container from abusive file io and other security related attacks.
+
+The script should be run with the following syntax:
+
+./run.py <executable> [cli args]
+"""
+
 import subprocess
+import sys
 
 
-def safe_run(main, arg_list):
+def safe_run(exe, arg_list):
 
     line = ['sudo', '-u', 'unprivileged', 'timeout', '10s',
                 'bash', '-c',
                 'LD_PRELOAD=/preloader.so {} {}'.format(
-                   main, "`echo {}`".format(" ".join(arg_list)))]
+                   exe, "`echo {}`".format(" ".join(arg_list)))]
 
-    subprocess.call(line)
+    subprocess.run(line)
 
 
 if __name__ == '__main__':
@@ -29,6 +38,5 @@ if __name__ == '__main__':
     else:
         sys.stderr.write("run.py called incorrectly")
         sys.exit(1)
-
 
     safe_run(main, cli)

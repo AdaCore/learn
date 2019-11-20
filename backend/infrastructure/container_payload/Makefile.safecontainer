@@ -6,7 +6,7 @@ deploy_base_packages:
 	apt install -y gcc
 	apt install -y libfontconfig
 	apt install -y libx11-xcb-dev
-	apt install -y python
+	apt install -y python3
 	# do this only once
 	touch deploy_base_packages
 

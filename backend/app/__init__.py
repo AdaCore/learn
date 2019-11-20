@@ -1,5 +1,3 @@
-import logging
-
 from flask import Flask
 
 from .config import Config
@@ -50,9 +48,9 @@ def create(debug=False, mode='app'):
     # register blueprints
     app.register_blueprint(widget_routes.widget_bp)
 
-    if mode=='app':
+    if mode == 'app':
         return app
-    elif mode=='celery':
+    elif mode == 'celery':
         return celery
 
 
@@ -70,16 +68,14 @@ def configure_celery(app, celery):
     celery.conf.result_backend = app.config['CELERY_RESULT_BACKEND']
 
     # subclass task base for app context
-    # http://flask.pocoo.org/docs/0.12/patterns/celery/
-    taskBase = celery.Task
+    # https://flask.palletsprojects.com/en/1.1.x/patterns/celery/
 
-    class AppContextTask(taskBase):
-        abstract = True
-
+    class ContextTask(celery.Task):
         def __call__(self, *args, **kwargs):
             with app.app_context():
-                return taskBase.__call__(self, *args, **kwargs)
-    celery.Task = AppContextTask
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
 
     # run finalize to process decorated tasks
     celery.finalize()

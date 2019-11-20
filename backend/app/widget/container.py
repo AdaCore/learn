@@ -52,6 +52,7 @@ class Container:
 
         # Create the pylxd client
         self.client = pylxd.Client()
+
         # Get the container from lxd
         self.container = self.client.containers.get(self.name)
         logger.debug("Attached to lxd {} with status {}".format(self.name, self.container.status))

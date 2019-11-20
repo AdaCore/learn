@@ -13,6 +13,7 @@ curd = os.path.dirname(__file__)
 
 results_fn = "results.json"
 
+
 def run_transaction(client, run_data):
     response = client.post('/run_program/', json=run_data)
     assert response.status_code == 200
