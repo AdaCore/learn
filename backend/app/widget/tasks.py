@@ -25,7 +25,6 @@ def run_program(self, data):
     :return:
         Returns a dict containing the status code from the execution
     """
-    code = None
     container = Container(CONTAINER_NAME)
     task_id = self.request.id
     mode = data['mode']
