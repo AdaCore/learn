@@ -16,7 +16,7 @@ GNAT_PATH = os.path.join(os.path.sep, "gnat", "bin")
 
 class Container:
     """
-    This class represents the container and is the interface for interactions with the container
+    This class represents the LXC container and is the interface for interactions with the container
 
     Attributes
     ----------
@@ -125,19 +125,19 @@ class Container:
         Make a directory in the container
         :param tdir:
             The directory path to create
-        :return:
-            Returns a tuple of exit code, stdout, stderr
         """
         logger.debug("Making dir {}".format(tdir))
-        return self.__execute(["mkdir", tdir], {}, None)
+        code, stdout, stderr = self.__execute(["mkdir", tdir], {}, None)
+        if code != 0:
+            raise Exception(stderr)
 
     def rmdir(self, tdir):
         """
         Remove a directory in the container
         :param tdir:
             The directory path to remove
-        :return:
-            Returns a tuple of exit code, stdout, stderr
         """
         logger.debug("Deleting dir {}".format(tdir))
-        return self.__execute(["rm", "-rf", tdir], {}, None)
+        code, stdout, stderr = self.__execute(["rm", "-rf", tdir], {}, None)
+        if code != 0:
+            raise Exception(stderr)

@@ -5,11 +5,11 @@ import shutil
 import tempfile
 import zipfile
 
-logger = logging.getLogger(__name__)
-
 from .file import new_file, find_mains
 from .lab import LabList
 from .reporter import MQReporter
+
+logger = logging.getLogger(__name__)
 
 CLI_FILE = "cli.txt"
 
@@ -35,8 +35,6 @@ pragma Warnings (Off, "file name does not match");
 TEMP_WORKSPACE_BASEDIR = os.path.join(os.path.sep, "workspace", "sessions")
 
 TEMPLATE_PROJECT = os.path.join(os.getcwd(), "app", "widget", "static", "templates", "inline_code", "main.gpr")
-
-SAFE_RUNNER = os.path.join(os.path.sep, "workspace", "run.py")
 
 
 class ProjectError(Exception):
@@ -103,7 +101,7 @@ class Project:
 
         self.gpr = new_file(gpr_name, gpr_content)
 
-         # strip cli and labio files from files
+        # strip cli and labio files from files
         for file in files:
             if file['basename'] == CLI_FILE:
                 self.cli = file['contents'].split()
@@ -287,8 +285,12 @@ class RemoteProject(Project):
         rep = MQReporter(self.task_id, lab_ref=lab_ref)
         rep.console(["./{}".format(self.main), " ".join(cli)])
 
-        line = [SAFE_RUNNER, os.path.join(self.remote_tempd, self.main)]
-        line.extend(cli)
+        exe = os.path.join(self.remote_tempd, self.main)
+        line = ['sudo', '-u', 'unprivileged', 'timeout', '10s',
+                'bash', '-c',
+                'LD_PRELOAD=/preloader.so {} {}'.format(
+                    exe, "`echo {}`".format(" ".join(cli)))]
+
         code, out, err = self.container.execute_noenv(line, rep)
         return code, out
 
