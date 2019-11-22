@@ -12,6 +12,7 @@ help:
 	@echo "make test_engine  - generate the engine test html"
 	@echo "make html   - generates the html"
 	@echo "make latexpdf - generates the PDF document"
+	@echo "make pdf_books - generates the PDF document for each course and labs"
 
 test_engine:
 	@echo "===== ENGINE TEST ====="
@@ -112,10 +113,23 @@ site:
 	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" $(SPHINXBUILD) -M html "../" \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
+BOOKS = $(wildcard ../courses/*/.) $(wildcard ../labs/*/.)
+
+pdf_books: $(BOOKS)
+$(BOOKS):
+	$(eval SPHINX_DIR := $(shell dirname $@ | awk -F/ '{ print $$2 }' ))
+	$(eval SPHINX_PDF := $(shell basename $(shell dirname $@)).pdf)
+	$(eval SPHINX_TITLE := $(shell cat $@/conf.txt | grep title | sed -e 's#title=##'))
+	@mkdir -p _build/pdf_books/$(SPHINX_DIR)
+	@ export SPHINX_TITLE="$(SPHINX_TITLE)"; \
+	$(SPHINXBUILD) -M latexpdf $@ \
+	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@ mv _build/latex/learnadacorecom.pdf _build/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "../" \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-.PHONY: Makefile help tests
+.PHONY: Makefile help tests pdf_books $(BOOKS)

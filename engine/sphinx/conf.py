@@ -12,7 +12,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -22,7 +22,8 @@
 project = u'learn.adacore.com'
 copyright = u'2019, AdaCore'
 author = u'AdaCore'
-title = u'Learn Ada (Complete)'
+title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
+    os.environ['SPHINX_TITLE']
 
 # The short X.Y version
 version = u''
