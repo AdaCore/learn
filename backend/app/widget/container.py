@@ -55,7 +55,7 @@ class Container:
 
         # Get the container from lxd
         self.container = self.client.containers.get(self.name)
-        logger.debug("Attached to lxd {} with status {}".format(self.name, self.container.status))
+        logger.debug(f"Attached to lxd {self.name} with status {self.container.status}")
         # TODO: check to see if the container is actually running
 
     def push_files(self, files, dst):
@@ -68,7 +68,7 @@ class Container:
         """
         for f in files:
             dst_path = os.path.normpath(os.path.join(dst, f.get_name()))
-            logger.debug("Copying file {} with contents {} to {}".format(f.get_name(), f.get_content(), dst_path))
+            logger.debug(f"Copying file {f.get_name()} with contents {f.get_content()} to {dst_path}")
             self.container.files.put(dst_path, f.get_content())
 
         # Change ownership and access permissions for files in container
@@ -87,7 +87,7 @@ class Container:
         :return:
             Returns a tuple of exit status, stdout, and stderr
         """
-        logger.debug("Running {} {} in {}".format(env, cmds, self.name))
+        logger.debug(f"Running {env} {cmds} in {self.name}")
         if reporter:
             exit_code, stdout, stderr = self.container.execute(cmds, env, stdout_handler=reporter.stdout, stderr_handler=reporter.stderr)
             if exit_code == INTERRUPT_RETURNCODE:
@@ -126,7 +126,7 @@ class Container:
         :param tdir:
             The directory path to create
         """
-        logger.debug("Making dir {}".format(tdir))
+        logger.debug(f"Making dir {tdir}")
         code, stdout, stderr = self.__execute(["mkdir", tdir], {}, None)
         if code != 0:
             raise Exception(stderr)
@@ -137,7 +137,7 @@ class Container:
         :param tdir:
             The directory path to remove
         """
-        logger.debug("Deleting dir {}".format(tdir))
+        logger.debug(f"Deleting dir {tdir}")
         code, stdout, stderr = self.__execute(["rm", "-rf", tdir], {}, None)
         if code != 0:
             raise Exception(stderr)

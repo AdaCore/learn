@@ -156,7 +156,7 @@ class Project:
         memory_file = io.BytesIO()
         with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
             for f in self.file_list:
-                logger.debug("Adding {} to zip".format(f.get_name()))
+                logger.debug(f"Adding {f.get_name()} to zip")
                 zf.writestr(f.get_name(), f.get_content())
         # Seek back to the beginning of the byte stream before sending
         memory_file.seek(0)
@@ -257,7 +257,7 @@ class RemoteProject(Project):
 
         code, out, err = self.container.execute(line, rep)
         if code != 0:
-            rep.stderr("Build failed with error code: {}".format(code))
+            rep.stderr(f"Build failed with error code: {code}")
             # We need to raise an exception here to disrupt a build/run/prove build chain from the main task
             raise BuildError(code)
         return code
@@ -283,13 +283,13 @@ class RemoteProject(Project):
                 cli = self.cli
 
         rep = MQReporter(self.task_id, lab_ref=lab_ref)
-        rep.console(["./{}".format(self.main), " ".join(cli)])
+        rep.console([f"./{self.main}", " ".join(cli)])
 
         exe = os.path.join(self.remote_tempd, self.main)
+        echo_line = f"`echo {' '.join(cli)}`"
         line = ['sudo', '-u', 'unprivileged', 'timeout', '10s',
                 'bash', '-c',
-                'LD_PRELOAD=/preloader.so {} {}'.format(
-                    exe, "`echo {}`".format(" ".join(cli)))]
+                f'LD_PRELOAD=/preloader.so {exe} {echo_line}']
 
         code, out, err = self.container.execute_noenv(line, rep)
         return code, out

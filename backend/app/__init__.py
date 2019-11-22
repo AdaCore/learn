@@ -1,48 +1,46 @@
 from flask import Flask
+import logging
 
-from .config import Config
+import config
 from .widget import widget_routes, tasks, celery
 
+logger = logging.getLogger(__name__)
 
-def create_celery(debug=False):
+
+def create_celery():
     """
     Entry point for a celery works
-    :param debug:
-        Sets the logging and app state
     :return:
         Returns an initialized celery object
     """
-    return create(debug=debug, mode='celery')
+    return create(mode='celery')
 
 
-def create_app(debug=False):
+def create_app():
     """
     Entry point for the flask app
-    :param debug:
-        Sets the logging and app state
     :return:
         Returns an initialized flask object
     """
-    return create(debug=debug, mode='app')
+    return create(mode='app')
 
 
-def create(debug=False, mode='app'):
+def create(mode='app'):
     """
     The initialization method for the celery and flask apps. Sets config states and registers blueprints
-    :param debug:
-        The logging and app state
     :param mode:
         The mode (celery, app)
     :return:
         Returns the flask app or celery object depending on the mode
     """
-    assert isinstance(mode, str), 'bad mode type "{}"'.format(type(mode))
-    assert mode in ('app','celery'), 'bad mode "{}"'.format(mode)
+    assert isinstance(mode, str), f'bad mode type "{type(mode)}"'
+    assert mode in ('app', 'celery'), f'bad mode "{mode}"'
+
+    logger.info(f'Starting {mode} in {config.APP_ENV} environment')
 
     app = Flask(__name__, instance_relative_config=False)
-    app.debug = debug
 
-    app.config.from_object(Config)
+    app.config.from_object('config')
     configure_celery(app, tasks.celery)
 
     # register blueprints
@@ -64,8 +62,7 @@ def configure_celery(app, celery):
     """
     app.logger.debug('Configuring Celery')
     # set broker url and result backend from app config
-    celery.conf.broker_url = app.config['CELERY_BROKER_URL']
-    celery.conf.result_backend = app.config['CELERY_RESULT_BACKEND']
+    celery.conf.update(config.as_dict())
 
     # subclass task base for app context
     # https://flask.palletsprojects.com/en/1.1.x/patterns/celery/

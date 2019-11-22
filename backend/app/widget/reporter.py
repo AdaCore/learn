@@ -94,11 +94,11 @@ class MQReporter:
                 else:
                     msg_list = msg.splitlines()
                     fixed_msg = self.cache[tag] + "\n".join(msg_list[:-1])
-                    logger.debug("Caching {} to send later".format(msg_list[-1]))
+                    logger.debug(f"Caching {msg_list[-1]} to send later")
                     self.cache[tag] = msg_list[-1]
                 self.__send(fixed_msg, tag)
             else:
-                logger.debug("Caching {} to send later".format(msg))
+                logger.debug(f"Caching {msg} to send later")
                 self.cache[tag] += msg
 
     def __send(self, msg, tag):
@@ -119,7 +119,7 @@ class MQReporter:
 
         obj_str = json.dumps(obj)
 
-        logger.debug("Updating status with msg:{}".format(obj_str))
+        logger.debug(f"Updating status with msg:{obj_str}")
         self.publisher.send(obj_str)
 
     def stdout(self, msg):

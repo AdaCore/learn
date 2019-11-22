@@ -23,7 +23,7 @@ def new_file(basename, content):
         Returns a File or derived File object
     """
     if len(content) > RECEIVED_FILE_CHAR_LIMIT:
-        raise Exception("File {} exceeds size limits".format(basename))
+        raise Exception(f"File {basename} exceeds size limits")
 
     fn, ext = os.path.splitext(basename)
     if ext == ".adb" or ext == ".ads":
@@ -49,19 +49,19 @@ def find_mains(filelist):
     """
     mains = []
     for f in filelist:
-        logger.debug("Checking {} for main".format(f.get_name()))
+        logger.debug(f"Checking {f.get_name()} for main")
         if f.language() == "Ada":
             filename = f.get_name()
             base, ext = os.path.splitext(filename)
             if ext == ".adb":
-                logger.debug("Looking for spec for {}".format(f.get_name()))
+                logger.debug(f"Looking for spec for {f.get_name()}")
                 if not next((x for x in filelist if x.get_name() == (base + ".ads")), None):
-                    logger.debug("Found main in {}".format(f.get_name()))
+                    logger.debug(f"Found main in {f.get_name()}")
                     mains.append(filename)
         else:
             if f.is_main():
                 mains.append(f.get_name())
-                logger.debug("Found main in {}".format(f.get_name()))
+                logger.debug(f"Found main in {f.get_name()}")
     return mains
 
 
@@ -272,7 +272,8 @@ class ProjectFile(File):
         :param languages:
             The list of languages to add to the project
         """
-        to_insert = "for Languages use ({});".format(", ".join(['"{}"'.format(x) for x in languages]))
+        lang_list = [f'"{x}"' for x in languages]
+        to_insert = f"for Languages use ({', '.join(lang_list)});"
         self.content = self.content.replace("--LANGUAGE_PLACEHOLDER--", to_insert)
 
     def define_mains(self, mains):
@@ -281,5 +282,6 @@ class ProjectFile(File):
         :param mains:
             The list of mains to add to the project
         """
-        to_insert = "for Main use ({});".format(", ".join(['"{}"'.format(x) for x in mains]))
+        main_list = [f'"{x}"' for x in mains]
+        to_insert = f"for Main use ({', '.join(main_list)});"
         self.content = self.content.replace("--MAIN_PLACEHOLDER--", to_insert)

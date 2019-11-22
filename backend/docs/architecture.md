@@ -13,7 +13,8 @@ Flask is a lightweight WSGI web application framework.
 
 ### Entrypoint
 
-wsgi.py creates the app and calls run.
+Production: wsgi.py creates the app.
+Development: dev.py creates the app and calls run.
 
 
 ### App

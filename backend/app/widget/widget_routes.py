@@ -44,7 +44,7 @@ def download_example():
 
     archive = data['name'] + '.zip'
 
-    app.logger.debug("Sending zipped file {} size={}".format(archive, sys.getsizeof(zipfile)))
+    app.logger.debug(f"Sending zipped file {archive} size={sys.getsizeof(zipfile)}")
     response = make_response(zipfile)
 
     # We need to mess with the header here because we are sending file attachments in CORS
@@ -67,7 +67,7 @@ def run_program():
 
     # Push the code to the container in Celery task
     task = tasks.run_program.apply_async(kwargs={'data': data})
-    app.logger.debug('Starting Celery task with id={}'.format(task.id))
+    app.logger.debug(f'Starting Celery task with id={task.id}')
 
     return compose_response({'identifier': task.id, 'message': "Pending"}, 200)
 
@@ -98,30 +98,30 @@ def check_run():
     # Read messages from the message queue
     output = []
     for msg in consumer.iterqueue():
-        app.logger.debug("Reading {} from mq".format(msg.body))
+        app.logger.debug(f"Reading {msg.body} from mq")
         output.append(msg.body)
         msg.ack()
 
-    app.logger.debug("output {}".format(output))
+    app.logger.debug(f"output {output}")
 
     response = {'output': [json.loads(l) for l in output],
                 'status': 0,
                 'completed': False,
                 'message': task.state}
 
-    app.logger.debug('Checking Celery task with id={}'.format(identifier))
+    app.logger.debug(f'Checking Celery task with id={identifier}')
 
-    app.logger.debug("Task state {}".format(task.state))
+    app.logger.debug(f"Task state {task.state}")
     if task.failed():
         result = task.get()
-        app.logger.error('Task id={} failed. Response={}'.format(task.id, task.info))
+        app.logger.error(f'Task id={task.id} failed. Response={task.info}')
         error_code = 500
 
     if task.ready():
-        app.logger.debug("Task info {}".format(task.info))
+        app.logger.debug(f"Task info {task.info}")
         result = task.get()
         response['completed'] = True
         response['status'] = result["status"]
 
-    app.logger.debug('Responding with response={} and code={}'.format(response, error_code))
+    app.logger.debug(f'Responding with response={response} and code={error_code}')
     return compose_response(response, error_code)

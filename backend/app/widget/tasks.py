@@ -11,8 +11,6 @@ from .project import RemoteProject, BuildError
 celery = Celery(__name__, autofinalize=False)
 logger = logging.getLogger(__name__)
 
-CONTAINER_NAME = "safecontainer"
-
 
 @celery.task(bind=True)
 def run_program(self, data):
@@ -25,7 +23,7 @@ def run_program(self, data):
     :return:
         Returns a dict containing the status code from the execution
     """
-    container = Container(CONTAINER_NAME)
+    container = Container(celery.conf['CONTAINER_NAME'])
     task_id = self.request.id
     mode = data['mode']
 
@@ -55,8 +53,8 @@ def run_program(self, data):
             raise Exception("Mode not implemented")
 
     except BuildError as ex:
-        logger.error("Build error code {}".format(ex), exc_info=True)
-        return {'status': int("{}".format(ex))}
+        logger.error(f"Build error code {ex}", exc_info=True)
+        return {'status': int(f"{ex}")}
     except Exception as ex:
         logger.error("An error occured in run program", exc_info=True)
         self.update_state(state=states.FAILURE,

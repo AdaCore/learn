@@ -60,4 +60,3 @@ packages:
   - gcc
   - libfontconfig
   - libx11-xcb-dev
-  - python3

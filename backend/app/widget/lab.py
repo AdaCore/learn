@@ -163,12 +163,12 @@ class LabList:
         self.test_cases = []
         lab_re = re.compile("(in|out) ?(\d+):(.*)")
 
-        logger.debug("LAB IO {}".format(file))
+        logger.debug(f"LAB IO {file}")
         for line in file.splitlines():
             match = lab_re.match(line)
 
             if match:
-                logger.debug("LAB IO re match {}".format(match.groups()))
+                logger.debug(f"LAB IO re match {match.groups()}")
                 io = match.group(1)
                 key = match.group(2)
                 seq = match.group(3)
