@@ -98,7 +98,7 @@ function ThemeNav () {
             })
             .on('click', "[data-toggle='rst-current-version']", function() {
                 $("[data-toggle='rst-versions']").toggleClass("shift-up");
-            })
+            });
 
         // Make tables responsive
         $("table.docutils:not(.field-list,.footnote,.citation)")
@@ -195,11 +195,10 @@ function ThemeNav () {
         parent_li.siblings().find('li.current').removeClass('current');
         parent_li.find('> ul li.current').removeClass('current');
         parent_li.toggleClass('current');
-    }
+    };
 
     return nav;
-};
-
+}
 module.exports.ThemeNav = ThemeNav();
 
 if (typeof(window) != 'undefined') {

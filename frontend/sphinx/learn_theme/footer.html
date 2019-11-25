@@ -19,7 +19,7 @@
   {%- set prev_state = '' %}
   {%- set prev_state_key = 'prev_state' %}
 
-  {%- if meta is defined %}
+  {%- if meta is defined and meta is not none %}
       {% set next_but = not next_state_key in meta.keys() %}
       {% set prev_but = not prev_state_key in meta.keys() %}
 

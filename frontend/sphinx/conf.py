@@ -206,7 +206,7 @@ texinfo_documents = [
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-#intersphinx_mapping = {'https://docs.python.org/': None}
+# intersphinx_mapping = {'https://docs.python.org/': None}
 
 # -- Options for todo extension ----------------------------------------------
 
@@ -219,7 +219,7 @@ def setup(app):
     with open(manifest, 'r') as infile:
         data = json.load(infile)
 
-    for chunk, files in data.iteritems():
+    for chunk, files in data.items():
         if "css" in files.keys():
             for css in files["css"]:
                 print("Adding {} to css...".format(css))

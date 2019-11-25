@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import 'whatwg-fetch';
 
-import {CheckBox, Button, Tabs} from './components';
+import {Button, CheckBox, Tabs} from './components';
 import {Editor} from './editor';
 import * as Strings from './strings';
 import * as Types from './types';
@@ -164,8 +164,8 @@ class OutputArea extends Area {
  * @extends Area
  */
 class LabArea extends Area {
-  private ref: number;
-  private wrapper: JQuery;
+  private readonly ref: number;
+  private readonly wrapper: JQuery;
   private button: JQuery;
 
   /**
@@ -182,7 +182,7 @@ class LabArea extends Area {
         .appendTo(this.wrapper)
         .append(
             $('<span>').text(Strings.TEST_CASE_LABEL + ' #' + this.ref)
-        ).click(() => {
+        ).on('click', () => {
           this.button.toggleClass('active');
           this.container.toggle();
         });
@@ -281,7 +281,7 @@ class LabArea extends Area {
 /** Class representing the LabContainer */
 class LabContainer {
   private labList: Array<LabArea> = [];
-  private container: JQuery;
+  private readonly container: JQuery;
 
   /**
    * Constructs a LabContainer
@@ -373,7 +373,7 @@ class CLIArea {
         undefined, ['custom_check_container'],
         Strings.CUSTOM_INPUT_TOOLTIP);
 
-    this.checkBox.getCheckBox().change(() => {
+    this.checkBox.getCheckBox().on('change', () => {
       if (this.checkBox.checked()) {
         this.textArea.show();
       } else {
@@ -419,21 +419,21 @@ class CLIArea {
 /** The Widget class */
 export class Widget {
   private editors: Array<Editor> = [];
-  private container: JQuery;
-  private name: string;
+  private readonly container: JQuery;
+  private readonly name: string;
   private tabs: Tabs = new Tabs();
   private outputContainer: JQuery;
   private outputArea: OutputArea = new OutputArea();
-  private labContainer: LabContainer;
-  private lab = false;
-  private cliArea: CLIArea;
+  private readonly labContainer: LabContainer;
+  private readonly lab: boolean = false;
+  private readonly cliArea: CLIArea;
 
   private buttons: Array<Button> = [];
 
-  private dlType: Types.DownloadType = Types.DownloadType.Client;
+  private readonly dlType: Types.DownloadType = Types.DownloadType.Client;
 
   private linesRead = 0;
-  private server: string;
+  private readonly server: string;
 
   private shadowFiles: Array<Types.Resource> = [];
 
@@ -496,8 +496,10 @@ export class Widget {
         const btn: Button = new Button([],
             Strings.modeDictionary[mode].tooltip,
             Strings.modeDictionary[mode].buttonText);
-        btn.render().click((event: JQuery.ClickEvent) => {
-          this.buttonCB(event, mode);
+        btn.registerEvent('click', (event: JQuery.ClickEvent) => {
+          if (!btn.disabled) {
+            this.buttonCB(event, mode);
+          }
         });
         this.buttons.push(btn);
       }
@@ -540,8 +542,7 @@ export class Widget {
       throw new Error('Status: ' + response.status + ' Msg: ' +
         response.statusText);
     }
-    const json: T = await response.json();
-    return json;
+    return await response.json();
   }
 
   /**
@@ -568,11 +569,10 @@ export class Widget {
     const filename = disposition.match(
         /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
 
-    const ret: Types.Download.FS = {
+    return {
       blob: blob,
       filename: filename,
     };
-    return ret;
   }
 
   /**
@@ -623,17 +623,16 @@ export class Widget {
         'run_program')
         .then((json) => {
           if (json.identifier == '') {
-            this.resetServerReq();
             this.outputArea.addError(json.message);
           } else {
             this.getOutputFromIdentifier(json);
           }
         })
         .catch((error) => {
-          this.resetServerReq();
           this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
           console.error('Error:', error);
         });
+    this.resetServerReq();
   }
 
   /**
@@ -785,11 +784,11 @@ export class Widget {
             }
 
             // Lines that contain a sloc are clickable:
-            div.click(() => {
+            div.on('click', () => {
               this.editors.map((e) => {
                 if (basename == e.getResource().basename) {
                   // Switch to the tab that contains the editor
-                  e.getTab().click();
+                  e.getTab().trigger('click');
 
                   // Jump to the corresponding line
                   e.gotoLine(row, col);
@@ -884,7 +883,7 @@ export class Widget {
 
     const tabSetting: CheckBox =
         new CheckBox(Strings.SETTINGS_TABBED_EDITOR_LABEL, dropdownContent);
-    tabSetting.getCheckBox().prop('checked', true).change(() => {
+    tabSetting.getCheckBox().prop('checked', true).on('change', () => {
       if (tabSetting.checked()) {
         this.tabs.show(true);
       } else {
@@ -894,7 +893,7 @@ export class Widget {
 
     const themeSetting: CheckBox =
         new CheckBox(Strings.SETTINGS_THEME_EDITOR_LABEL, dropdownContent);
-    themeSetting.getCheckBox().change(() => {
+    themeSetting.getCheckBox().on('change', () => {
       let theme = 'ace/theme/tomorrow';
       if (themeSetting.checked()) {
         theme = 'ace/theme/tomorrow_night';
@@ -913,7 +912,7 @@ export class Widget {
             $('<i>').addClass('fas').addClass('fa-undo')
         )
         .appendTo(settingsBar)
-        .click((event: JQuery.ClickEvent) => {
+        .on('click', (event: JQuery.ClickEvent) => {
           if (event.target.disabled) {
             return;
           }
@@ -931,7 +930,7 @@ export class Widget {
               $('<i>').addClass('fas').addClass('fa-file-download')
           )
           .appendTo(settingsBar)
-          .click(() => {
+          .on('click', () => {
             this.downloadExample();
           });
     }

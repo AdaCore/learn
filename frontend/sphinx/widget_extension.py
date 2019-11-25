@@ -40,10 +40,7 @@ The files are extracted the following way:
                  end T;
 
 """
-from __future__ import print_function
-
 import codecs
-import glob
 import os
 import re
 import shutil

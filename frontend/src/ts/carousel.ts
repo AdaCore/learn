@@ -58,7 +58,7 @@ export class Carousel {
     });
 
     // make carousel divs clickable
-    $('.slider-element').click((event: JQuery.ClickEvent) => {
+    $('.slider-element').on('click', (event: JQuery.ClickEvent) => {
       window.open(event.target.find('a:first').attr('href'));
       return false;
     });

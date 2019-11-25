@@ -5,7 +5,7 @@ import {Widget} from './ts/widget';
 
 
 (function(): void {
-  $(window).scroll(function() {
+  $(window).on('scroll', () => {
     if ($(window).scrollTop() > 300) {
       $('#scrollToTopBtn').fadeIn('slow');
     } else {
@@ -13,7 +13,7 @@ import {Widget} from './ts/widget';
     }
   });
 
-  $('#scrollToTopBtn').click(() => {
+  $('#scrollToTopBtn').on('click', () => {
     $('html, body').animate({
       scrollTop: 0,
     }, 300);
@@ -21,6 +21,8 @@ import {Widget} from './ts/widget';
   });
 
   // widget entry point
+  // The on version doesn't work for some, probably, ridiculous reason...
+  // $(document).on('ready', () => {
   $(document).ready(() => {
     $('div.widget_editor').each((index: number, element: HTMLElement) => {
       let exampleServer = $(element).attr('example_server');

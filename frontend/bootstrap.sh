@@ -3,8 +3,8 @@
 # Install system deps
 apt-get update
 apt-get install -y \
-    python2.7 \
-    python-pip \
+    python3 \
+    python3-pip \
     nodejs \
     npm \
     graphviz \
@@ -13,7 +13,7 @@ apt-get install -y \
 
 # Install learn deps
 cd /vagrant/frontend
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 
 # Install yarn
 apt remove cmdtest

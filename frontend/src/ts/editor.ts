@@ -8,10 +8,10 @@ import * as Types from './types';
 
 /** Class representing an Editor **/
 export class Editor {
-  private container: JQuery;
+  private readonly container: JQuery;
   private editor: ace.Editor;
-  private initialContents: string;
-  private basename: string;
+  private readonly initialContents: string;
+  private readonly basename: string;
   private tab: JQuery;
 
   /**

@@ -18,7 +18,7 @@ export class Tabs {
     const header = $('<button>')
         .addClass('tab-links')
         .text(name)
-        .click(() => {
+        .on('click', () => {
           for (const c of this.contents) {
             c.hide();
             c.removeClass('active');
@@ -49,7 +49,7 @@ export class Tabs {
       c.appendTo(parent);
     }
     if (this.headers.length > 0) {
-      this.headers[0].click();
+      this.headers[0].trigger('click');
     }
   }
 
@@ -82,7 +82,7 @@ export class Tabs {
 
 /** Class represents a Button */
 export class Button {
-  private obj: JQuery;
+  private readonly obj: JQuery;
   public disabled = false;
 
   /**
@@ -104,6 +104,23 @@ export class Button {
   }
 
   /**
+   * The event callback signature for buttons
+   *
+   * @callback eventCallback
+   * @param {JQuery.ClickEvent} event - The event that triggered the call
+   */
+
+  /**
+   * Registers an event on the button
+   * @param {string} type - The event type to register ["click", "focus", etc]
+   * @param {eventCallback} fn - The callback to trigger
+   */
+  public registerEvent(type: string,
+      fn: (event: JQuery.ClickEvent) => void): void {
+    this.obj.on(type, fn);
+  }
+
+  /**
    * Render the button
    * @return {JQuery} The button
    */
@@ -114,8 +131,8 @@ export class Button {
 
 /** Class represents a checkbox */
 export class CheckBox {
-  private container: JQuery;
-  private input: JQuery;
+  private readonly container: JQuery;
+  private readonly input: JQuery;
   private label: JQuery;
   private state: boolean;
 
@@ -188,12 +205,11 @@ export class CheckBox {
    */
   private generateUniqueId(): string {
     let dt = new Date().getTime();
-    const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
         .replace(/[xy]/g, function(c) {
           const r = (dt + Math.random()*16)%16 | 0;
           dt = Math.floor(dt/16);
           return (c=='x' ? r :(r&0x3|0x8)).toString(16);
         });
-    return uuid;
   }
 }

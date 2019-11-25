@@ -133,7 +133,7 @@ def header(strn):
 
 
 def error(loc, strn):
-    print "{} {}: {}".format(C.col("ERROR", C.Colors.RED), loc, strn)
+    print(f"{C.col('ERROR', C.Colors.RED)} {loc}: {strn}")
 
 
 def get_line(block):
@@ -200,7 +200,7 @@ def analyze_file(rst_file):
 
     def run(*run_args):
         if args.verbose:
-            print "Running \"{}\"".format(" ".join(run_args))
+            print(f"Running \"{' '.join(run_args)}\"")
         try:
             output = S.check_output(run_args, stderr=S.STDOUT)
             all_output.extend(output.splitlines())
@@ -254,7 +254,7 @@ def analyze_file(rst_file):
             for diag in diags:
                 diag.line = diag.line + block.line_start
                 diag.file = rst_file
-                print diag
+                print(diag)
 
         def print_error(*error_args):
             error(*error_args)
@@ -262,11 +262,11 @@ def analyze_file(rst_file):
 
         if 'ada-nocheck' in block.classes:
             if args.verbose:
-                print "Skipping code block {}".format(loc)
+                print(f"Skipping code block {loc}")
             continue
 
         if args.verbose:
-            print header("Checking code block {}".format(loc))
+            print(header(f"Checking code block {loc}"))
 
         with open(u"code.ada", u"w") as code_file:
             code_file.write(block.text)
@@ -320,7 +320,7 @@ def analyze_file(rst_file):
                 out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f", main_file)
             except S.CalledProcessError as e:
                 print_error(loc, "Failed to compile example")
-                print e.output
+                print(e.output)
                 has_error = True
 
             if not has_error:
@@ -336,7 +336,7 @@ def analyze_file(rst_file):
                 except S.CalledProcessError:
                     if 'ada-run-expect-failure' in block.classes:
                         if args.verbose:
-                            print "Running of example expectedly failed"
+                            print("Running of example expectedly failed")
                     else:
                         print_error(loc, "Running of example failed")
                         has_error = True
@@ -359,7 +359,7 @@ def analyze_file(rst_file):
         if has_error:
             analysis_error = True
         elif args.verbose:
-            print C.col("SUCCESS", C.Colors.GREEN)
+            print(C.col("SUCCESS", C.Colors.GREEN))
 
         if args.all_diagnostics:
             print_diags()
@@ -388,7 +388,7 @@ for f in args.rst_files:
         test_error = True
 
 if test_error:
-    print C.col("TEST ERROR", C.Colors.RED)
+    print(C.col("TEST ERROR", C.Colors.RED))
     exit(1)
 elif args.verbose:
-    print C.col("TEST SUCCESS", C.Colors.GREEN)
+    print(C.col("TEST SUCCESS", C.Colors.GREEN))

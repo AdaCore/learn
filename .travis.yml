@@ -1,7 +1,4 @@
-language: python
 
-python:
-  - "2.7"
 
 env:
   global:
@@ -13,17 +10,33 @@ os:
   - linux
 
 cache:
+  yarn: true
   directories:
   - $HOME/build_tools
   - $HOME/.cache/pip
 
-git:
-  submodules:
-    false
-
 before_install:
- - "sudo apt-get install -y graphviz"
+ - sudo apt-get install -y graphviz
+ - apt remove cmdtest
+ - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+ - echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+ - apt-get update && apt-get install yarn
+ - yarn
 
 install: ./travis_install.sh
 
-script: ./travis_script.sh
+jobs:
+  include:
+    - stage: "Sphinx tests"
+      language: python
+      python: 3.6
+      script:
+        - PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" tests
+    - stage: "Frontend build"
+      language: python
+      node_js: 3.6
+      script:
+        - yarn run build
+        - PATH=$GNAT_PATH/bin:$PATH make html
+
+# TODO: insert test stages for backend
