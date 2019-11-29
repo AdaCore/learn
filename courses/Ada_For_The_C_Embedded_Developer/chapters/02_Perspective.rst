@@ -931,6 +931,9 @@ based for loop.
 Type System
 --------------
 
+Strong Typing
+~~~~~~~~~~~~~
+
 Ada is considered a "strongly typed" language. This means that the language
 does not define any implicit type conversions. C does define implicit type
 conversions, sometimes referred to as *integer promotion*. The rules for
@@ -998,3 +1001,1013 @@ comparison against two variables of the same type. By enforcing the explicit
 cast we can't accidentally end up in a situation where we assume something will
 happen implicitly when, in fact, our assumption is incorrect.
 
+Another example: you can't divide an integer by a float. You need to perform
+the division operation using values of the same type, so one value must be
+explicitly converted to match the type of the other (in this case the more
+likely conversion is from integer to float). Ada is designed to guarantee that
+what's done by the program is what's meant by the programmer, leaving as little
+room for compiler interpretation as possible. Let's have a look at the
+following example:
+
+[Ada]
+
+.. code-block:: ada
+
+    procedure Strong_Typing is
+       Alpha  : Integer := 1;
+       Beta   : Integer := 10;
+       Result : Float;
+    begin
+       Result := Float (Alpha) / Float (Beta);
+    end Strong_Typing;
+
+[C]
+
+.. code-block:: c
+
+    void weakTyping (void) {
+       int   alpha = 1;
+       int   beta = 10;
+       float result;
+
+       result = alpha / beta;
+    }
+
+Are the three programs above equivalent? It may seem like Ada is just adding
+extra complexity by forcing you to make the conversion from :ada:`Integer` to
+:ada:`Float` explicit. In fact, it significantly changes the behavior of the
+computation. While the Ada code performs a floating point operation :math:`1.0
+/ 10.0` and stores :math:`0.1` in :ada:`Result`, the C version instead store
+:math:`0.0` in :c:`result`. This is because the C version perform an integer
+operation between two integer variables: :math:`1 / 10` is :math:`0`. The
+result of the integer division is then converted to a :c:`float` and stored.
+Errors of this sort can be very hard to locate in complex pieces of code, and
+systematic specification of how the operation should be interpreted helps to
+avoid this class of errors. If an integer division was actually intended in the
+Ada case, it is still necessary to explicitly convert the final result to
+:ada:`Float`:
+
+[Ada]
+
+.. code-block:: ada
+
+    -- Perform an Integer division then convert to Float
+    Result := Float (Alpha / Beta);
+
+In Ada, a floating point literal must be written with both an integral and
+decimal part. :ada:`10` is not a valid literal for a floating point value,
+while :ada:`10.0` is.
+
+Language-Defined Types
+~~~~~~~~~~~~~~~~~~~~~~
+
+The principal scalar types predefined by Ada are :ada:`Integer`, :ada:`Float`,
+:ada:`Boolean`, and :ada:`Character`. These correspond to :c:`int`, :c:`float`,
+:c:`int` (when used for Booleans), and :c:`char`, respectively. The names for
+these types are not reserved words; they are regular identifiers.
+
+Application-Defined Types
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ada's type system encourages programmers to think about data at a high level of
+abstraction. The compiler will at times output a simple efficient machine
+instruction for a full line of source code (and some instructions can be
+eliminated entirely). The careful programmer's concern that the operation
+really makes sense in the real world would be satisfied, and so would the
+programmer's concern about performance.
+
+The next example below defines two different metrics: area and distance. Mixing
+these two metrics must be done with great care, as certain operations do not
+make sense, like adding an area to a distance. Others require knowledge of the
+expected semantics; for example, multiplying two distances. To help avoid
+errors, Ada requires that each of the binary operators ``+``, ``-``, ``*``, and
+``/`` for integer and floating-point types take operands of the same type and
+return a value of that type.
+
+[Ada]
+
+.. code-block:: ada
+
+    procedure Main is
+       type Distance is new Float;
+       type Area is new Float;
+
+       D1 : Distance := 2.0;
+       D2 : Distance := 3.0;
+       A  : Area;
+    begin
+       D1 := D1 + D2; -- OK
+       D1 := D1 + A;  -- NOT OK: incompatible types for "+"
+       A  := D1 * D2; -- NOT OK: incompatible types for ":="
+       A  := Area (D1 * D2); -- OK
+    end Main;
+
+Even though the :ada:`Distance` and :ada:`Area` types above are just
+:ada:`Float`, the compiler does not allow arbitrary mixing of values of these
+different types. An explicit conversion (which does not necessarily mean any
+additional object code) is necessary.
+
+The predefined Ada rules are not perfect; they admit some problematic cases
+(for example multiplying two :ada:`Distance` yields a :ada:`Distance`) and
+prohibit some useful cases (for example multiplying two :ada:`Distances` should
+deliver an :ada:`Area`). These situations can be handled through other
+mechanisms. A predefined operation can be identified as abstract to make it
+unavailable; overloading can be used to give new interpretations to existing
+operator symbols, for example allowing an operator to return a value from a
+type different from its operands; and more generally, GNAT has introduced a
+facility that helps perform dimensionality checking.
+
+Ada enumerations work similarly to C :c:`enum`:
+
+[Ada]
+
+.. code-block:: ada
+
+    type Day is
+      (Monday,
+       Tuesday,
+       Wednesday,
+       Thursday,
+       Friday,
+       Saturday,
+       Sunday);
+
+[C]
+
+.. code-block:: c
+
+    enum Day {
+       Monday,
+       Tuesday,
+       Wednesday,
+       Thursday,
+       Friday,
+       Saturday,
+       Sunday
+    };
+
+But even though such enumerations may be implemented using a machine word, at
+the language level Ada will not confuse the fact that :ada:`Monday` is a
+:ada:`Day` and is not an :ada:`Integer`. You can compare a :ada:`Day` with
+another :ada:`Day`, though. To specify implementation details like the numeric
+values that correspond with enumeration values in C you include them in the
+original :c:`enum` declaration:
+
+[C]
+
+.. code-block:: c
+
+    enum Day {
+       Monday    = 10,
+       Tuesday   = 11,
+       Wednesday = 12,
+       Thursday  = 13,
+       Friday    = 14,
+       Saturday  = 15,
+       Sunday    = 16
+    };
+
+But in Ada you must use both a type definition for :ada:`Day` as well as a
+separate representation clause for it like:
+
+[Ada]
+
+.. code-block:: ada
+
+    for Day use
+      (Monday    => 10,
+       Tuesday   => 11,
+       Wednesday => 12,
+       Thursday  => 13,
+       Friday    => 14,
+       Saturday  => 15,
+       Sunday    => 16);
+
+Note that however, unlike C, values for enumerations in Ada have to be unique.
+
+Type Ranges
+~~~~~~~~~~~
+
+Contracts can be associated with types and variables, to refine values and
+define what are considered valid values. The most common kind of contract is a
+*range constraint* introduced with the :ada:`range` reserved word, for example:
+
+[Ada]
+
+.. code-block:: ada
+
+    procedure Main is
+       type Grade is range 0 .. 100;
+
+       G1, G2  : Grade;
+       N       : Integer;
+    begin
+       ...                -- Initialization of N
+       G1 := 80;          -- OK
+       G1 := N;           -- Illegal (type mismatch)
+       G1 := Grade (N);   -- Legal, run-time range check
+       G2 := G1 + 10;     -- Legal, run-time range check
+       G1 := (G1 + G2)/2; -- Legal, run-time range check
+    end Main;
+
+In the above example, :ada:`Grade` is a new integer type associated with a
+range check. Range checks are dynamic and are meant to enforce the property
+that no object of the given type can have a value outside the specified range.
+In this example, the first assignment to :ada:`G1` is correct and will not
+raise a run-time exception. Assigning :ada:`N` to :ada:`G1` is illegal since
+:ada:`Grade` is a different type than :ada:`Integer`. Converting :ada:`N` to
+:ada:`Grade` makes the assignment legal, and a range check on the conversion
+confirms that the value is within :ada:`0 .. 100`.  Assigning :ada:`G1 + 10` to
+:ada:`G2` is legal since :ada:`+` for :ada:`Grade` returns a :ada:`Grade` (note
+that the literal :ada:`10` is interpreted as a :ada:`Grade` value in this
+context), and again there is a range check.
+
+The final assignment illustrates an interesting but subtle point. The
+subexpression :ada:`G1 + G2` may be outside the range of :ada:`Grade`, but the
+final result will be in range. Nevertheless, depending on the representation
+chosen for :ada:`Grade`, the addition may overflow. If the compiler represents
+:ada:`Grade` values as signed 8-bit integers (i.e., machine numbers in the
+range :ada:`-128 .. 127`) then the sum :ada:`G1 + G2` may exceed 127, resulting
+in an integer overflow. To prevent this, you can use explicit conversions and
+perform the computation in a sufficiently large integer type, for example:
+
+[Ada]
+
+.. code-block:: ada
+
+    G1 := Grade (Integer (G1) + Integer (G2)) / 2);
+
+Range checks are useful for detecting errors as early as possible. However,
+there may be some impact on performance. Modern compilers do know how to remove
+redundant checks, and you can deactivate these checks altogether if you have
+sufficient confidence that your code will function correctly.
+
+Types can be derived from the representation of any other type. The new derived
+type can be associated with new constraints and operations. Going back to the
+:ada:`Day` example, one can write:
+
+[Ada]
+
+.. code-block:: ada
+
+    type Business_Day is new Day range Monday .. Friday;
+    type Weekend_Day is new Day range Saturday .. Sunday;
+
+Since these are new types, implicit conversions are not allowed. In this case,
+it's more natural to create a new set of constraints for the same type, instead
+of making completely new ones. This is the idea behind *subtypes* in Ada. A
+subtype is a type with optional additional constraints. For example:
+
+[Ada]
+
+.. code-block:: ada
+
+    subtype Business_Day is Day range Monday .. Friday;
+    subtype Weekend_Day is Day range Saturday .. Sunday;
+    subtype Dice_Throw is Integer range 1 .. 6;
+
+These declarations don't create new types, just new names for constrained
+ranges of their base types.
+
+Attributes
+~~~~~~~~~~
+
+Attributes start with a single apostrophe ("tick"), and they allow you to query
+properties of, and perform certain actions on, declared entities such as types,
+objects, and subprograms. For example, you can determine the first and last
+bounds of scalar types, get the sizes of objects and types, and convert values
+to and from strings. This section provides an overview of how attributes work.
+For more information on the many attributes defined by the language, you can
+refer directly to the Ada Language Reference Manual.
+
+The :ada:`'Image` and :ada:`'Value` attributes allow you to transform a scalar
+value into a :ada:`String` and vice-versa. For example:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       A : Integer := 99;
+    begin
+       Put_Line (Integer'Image (A));
+       A := Integer'Value ("99");
+    end;
+
+Certain attributes are provided only for certain kinds of types. For example,
+the :ada:`'Val` and :ada:`'Pos` attributes for an enumeration type associates a
+discrete value with its position among its peers. One circuitous way of moving
+to the next character of the ASCII table is:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       C : Character := 'a';
+    begin
+       C := Character'Val (Character'Pos (C) + 1);
+    end;
+
+A more concise way to get the next value in Ada is to use the :ada:`'Succ`
+attribute:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       C : Character := 'a';
+    begin
+       C := Character'Succ (C);
+    end;
+
+You can get the previous value using the :ada:`'Pred` attribute. Here is the
+equivalent in C:
+
+[C]
+
+.. code-block:: c
+
+    char c = 'a';
+    c++;
+
+Other interesting examples are the :ada:`'First` and :ada:`'Last` attributes
+which, respectively, return the first and last values of a scalar type. Using
+32-bit integers, for instance, :ada:`Integer'First` returns :math:`-2^{31}` and
+:ada:`Integer'Last` returns :math:`2^{31} - 1`.
+
+Arrays and Strings
+~~~~~~~~~~~~~~~~~~
+
+C arrays are pointers with offsets, but the same is not the case for Ada.
+Arrays in Ada are not interchangeable with operations on pointers, and array
+types are considered first-class citizens. They have dedicated semantics such
+as the availability of the array's boundaries at run-time. Therefore, unhandled
+array overflows are impossible unless checks are suppressed. Any discrete type
+can serve as an array index, and you can specify both the starting and ending
+bounds |mdash| the lower bound doesn't necessarily have to be 0. Most of the
+time, array types need to be explicitly declared prior to the declaration of an
+object of that array type.
+
+Here's an example of declaring an array of 26 characters, initializing the
+values from :ada:`'a'` to :ada:`'z'`:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       type Arr_Type is array (Integer range <>) of Character;
+       Arr : Arr_Type (1 .. 26);
+       C : Character := 'a';
+    begin
+       for I in Arr'Range loop
+          Arr (I) := C;
+          C := Character'Succ (C);
+       end loop;
+    end;
+
+[C]
+
+.. code-block:: c
+
+    char Arr [26];
+    char C = 'a';
+
+    for (int I = 0; I < 26; ++I) {
+       Arr [I] = C;
+       C = C + 1;
+       C += 1;
+    }
+
+In C, only the size of the array is given during declaration. In Ada, array
+index ranges are specified using two values of a discrete type. In this
+example, the array type declaration specifies the use of :ada:`Integer` as the
+index type, but does not provide any constraints (use :ada:`<>`, pronounced
+*box*, to specify "no constraints"). The constraints are defined in the object
+declaration to be 1 to 26, inclusive. Arrays have an attribute called
+:ada:`'Range`. In our example, :ada:`Arr'Range` can also be expressed as
+:ada:`Arr'First .. Arr'Last`; both expressions will resolve to :ada:`1 .. 26`.
+So the :ada:`'Range` attribute supplies the bounds for our :ada:`for` loop.
+There is no risk of stating either of the bounds incorrectly, as one might do
+in C where :c:`I <= 26` may be specified as the end-of-loop condition.
+
+As in C, Ada :ada:`String` is an array of :ada:`Character`. Ada strings,
+importantly, are not delimited with the special character :c:`'\0'` like they
+are in C. It is not necessary because Ada uses the array's bounds to determine
+where the string starts and stops.
+
+Ada's predefined :ada:`String` type is very straightforward to use:
+
+[Ada]
+
+.. code-block:: ada
+
+    My_String : String (1 .. 26);
+
+Unlike C, Ada does not offer escape sequences such as :c:`'\n'`. Instead,
+explicit values from the ASCII package must be concatenated (via the
+concatenation operator, :ada:`&`). Here for example, is how to initialize a
+line of text ending with a new line:
+
+.. code-block:: ada
+
+    My_String : String := "This is a line" & ASCII.LF;
+
+You see here that no constraints are necessary for this variable definition.
+The initial value given allows the automatic determination of
+:ada:`My_String`'s bounds.
+
+Ada offers high-level operations for copying, slicing, and assigning values to
+arrays. We'll start with assignment. In C, the assignment operator doesn't make
+a copy of the value of an array, but only copies the address or reference to
+the target variable. In Ada, the actual array contents are duplicated. To get
+the above behavior, actual pointer types would have to be defined and used.
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       type Arr_Type is array (Integer range <>) of Integer
+       A1 : Arr_Type (1 .. 2);
+       A2 : Arr_Type (1 .. 2);
+    begin
+       A1 (1) = 0;
+       A1 (2) = 1;
+
+       A2 := A1;
+    end;
+
+[C]
+
+.. code-block:: c
+
+    int A1 [2];
+    int A2 [2];
+
+    A1 [0] = 0;
+    A1 [1] = 1;
+
+    memcpy (A1, A2, sizeof (int) * 2);
+
+In all of the examples above, the source and destination arrays must have
+precisely the same number of elements. Ada allows you to easily specify a
+portion, or slice, of an array. So you can write the following:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       type Arr_Type is array (Integer range <>) of Integer
+       A1 : Arr_Type (1 .. 10);
+       A2 : Arr_Type (1 .. 5);
+    begin
+       A2 (1 .. 3) := A1 (4 .. 6);
+    end;
+
+This assigns the 4th, 5th, and 6th elements of :ada:`A1` into the 1st, 2nd, and
+3rd elements of :ada:`A2`. Note that only the length matters here: the values
+of the indexes don't have to be equal; they slide automatically.
+
+Ada also offers high level comparison operations which compare the contents of
+arrays as opposed to their addresses:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       type Arr_Type is array (Integer range <>) of Integer;
+       A1 : Arr_Type (1 .. 2);
+       A2 : Arr_Type (1 .. 2);
+    begin
+       if A1 = A2 then
+
+[C]
+
+.. code-block:: c
+
+    int A1 [2];
+    int A2 [2];
+
+    bool eq = true;
+
+    for (int i = 0; i < 2; ++i) {
+       if (A1 [i] != A2 [i]) {
+          eq = false;
+          break;
+       }
+    }
+
+    if (eq) {
+
+You can assign to all the elements of an array in each language in different
+ways. In Ada, the number of elements to assign can be determined by looking at
+the right-hand side, the left-hand side, or both sides of the assignment. When
+bounds are known on the left-hand side, it's possible to use the others
+expression to define a default value for all the unspecified array elements.
+Therefore, you can write:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       type Arr_Type is array (Integer range <>) of Integer;
+       A1 : Arr_Type := (1, 2, 3, 4, 5, 6, 7, 8, 9);
+       A2 : Arr_Type (-2 .. 42) := (others => 0);
+    begin
+       A1 := (1, 2, 3, others => 10);
+
+       -- use a slice to assign A2 elements 11 .. 19 to 1
+       A2 (11 .. 19) := (others => 1);
+    end;
+
+Heterogeneous Data Structures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The structure corresponding to a C :c:`struct` is an Ada :ada:`record`. Here
+are some simple records:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       type R is record
+          A, B : Integer;
+          C    : Float;
+       end record;
+
+       V : R;
+    begin
+       V.A := 0;
+    end;
+
+[C]
+
+.. code-block:: c
+
+    typedef struct R {
+       int A, B;
+       float C;
+    };
+
+    struct R V;
+    V.A = 0;
+
+Ada allows specification of default values for fields just like C. The values
+specified can take the form of an ordered list of values, a named list of
+values, or an incomplete list followed by others :ada:`=> <>` to specify that
+fields not listed will take their default values. For example:
+
+[Ada]
+
+.. code-block:: ada
+
+    type R is record
+       A, B : Integer := 0;
+       C    : Float := 0.0;
+    end record;
+
+    V1 : R => (1, 2, 1.0);
+    V2 : R => (A => 1, B => 2, C => 1.0);
+    V3 : R => (C => 1.0, A => 1, B => 2);
+    V3 : R => (C => 1.0, others => <>);
+
+Pointers
+~~~~~~~~
+
+As a foreword to the topic of pointers, it's important to keep in mind the fact
+that most situation that would require a pointer in C do not in Ada. In the
+vast majority of cases, indirect memory management can be hidden from the
+developer and thus saves from many potential errors. However, there are
+situation that do require the use of pointers, or said differently that require
+to make memory indirection explicit. This section will present Ada access
+types, the equivalent of C pointers. A further section will provide more
+details as to how situations that require pointers in C can be done without
+access types in Ada.
+
+We'll continue this section by explaining the difference between objects
+allocated on the stack and objects allocated on the heap using the following
+example:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       type R is record
+          A, B : Integer;
+       end record;
+
+       V1, V2 : R;
+    begin
+       V1.A := 0;
+       V2 := V1;
+       V2.A := 1;
+    end;
+
+[C]
+
+.. code-block:: c
+
+    typedef struct R {
+       int A, B;
+    };
+
+    struct R V1, V2;
+    V1.A = 0;
+    V2 = V1;
+    V2.A = 1;
+
+There are many commonalities between the Ada and C semantics above. In Ada and
+C, objects are allocated on the stack and are directly accessed. :ada:`V1` and
+:ada:`V2` are two different objects and the assignment statement copies the
+value of :ada:`V1` into :ada:`V2`. :ada:`V1` and :ada:`V2` are two distinct
+objects.
+
+Here's now a similar example, but using heap allocation instead:
+
+[Ada]
+
+.. code-block:: ada
+
+    declare
+       type R is record
+          A, B : Integer;
+       end record;
+       type R_Access is access R;
+
+       V1 : R_Access;
+       V2 : R_Access;
+    begin
+       V1 := new R;
+       V1.A := 0;
+       V2 := V1;
+       V2.A := 1;
+    end;
+
+[C]
+
+.. code-block:: c
+
+    typedef struct R {
+       int A, B;
+    };
+
+    struct R * V1, * V2;
+    V1 = malloc(sizeof(struct R));
+    V1->A = 0;
+    V2 = V1;
+    V2->A = 0;
+
+In this example, an object of type :ada:`R` is allocated on the heap. The same
+object is then referred to through :ada:`V1` and :ada:`V2`. As for C, there's
+no garbage collector in Ada, so objects allocated by the new operator need to
+be expressly freed (which is not the case here).
+
+Dereferencing is performed automatically in certain situations, for instance
+when it is clear that the type required is the dereferenced object rather than
+the pointer itself, or when accessing record members via a pointer. To
+explicitly dereference an access variable, append :ada:`.all`. The equivalent
+of :c:`V1->A` in C can be written either as :ada:`V1.A` or :ada:`V1.all.A`.
+
+Pointers to scalar objects in Ada and C look like:
+
+[Ada]
+
+.. code-block:: ada
+
+    procedure Main is
+       type A_Int is access Integer;
+       Var : A_Int := new Integer;
+    begin
+       Var.all := 0;
+    end Main;
+
+[C]
+
+.. code-block:: c
+
+    int main (int argc, char *argv[])
+    {
+      int * Var = malloc (sizeof(int));
+      *Var = 0;
+      return 0;
+    }
+
+In Ada, an initializer can be specified with the allocation by appending
+:ada:`'(value)`:
+
+[Ada]
+
+.. code-block:: ada
+
+    Var : A_Int := new Integer'(0);
+
+When using Ada pointers to reference objects on the stack, the referenced
+objects must be declared as being aliased. This directs the compiler to
+implement the object using a memory region, rather than using registers or
+eliminating it entirely via optimization. The access type needs to be declared
+as either :ada:`access all` (if the referenced object needs to be assigned to)
+or :ada:`access constant` (if the referenced object is a constant). The
+:ada:`'Access` attribute works like the C :c:`&` operator to get a pointer to
+the object, but with a *scope accessibility* check to prevent references to
+objects that have gone out of scope. For example:
+
+[Ada]
+
+.. code-block:: ada
+
+    type A_Int is access all Integer;
+    Var : aliased Integer;
+    Ptr : A_Int := Var'Access;
+
+[C]
+
+.. code-block:: c
+
+    int Var;
+    int * Ptr = &Var;
+
+To deallocate objects from the heap in Ada, it is necessary to use a
+deallocation subprogram that accepts a specific access type. A generic
+procedure is provided that can be customized to fit your needs, it's called
+:ada:`Ada.Unchecked_Deallocation`. To create your customized deallocator (that
+is, to instantiate this generic), you must provide the object type as well as
+the access type as follows:
+
+[Ada]
+
+.. code-block:: ada
+
+    with Ada.Unchecked_Deallocation;
+    procedure Main is
+       type Integer_Access is access all Integer;
+       procedure Free is new Ada.Unchecked_Deallocation (Integer, Integer_Access);
+       My_Pointer : Integer_Access := new Integer;
+    begin
+       Free (My_Pointer);
+    end Main;
+
+[C]
+
+.. code-block:: c
+
+    int main (int argc, char *argv[])
+    {
+      int * my_pointer = malloc (sizeof(int));
+      free (my_pointer);
+    }
+
+Functions and Procedures
+------------------------
+
+General Form
+~~~~~~~~~~~~
+
+Subroutines in C are always expressed as function which may or may not return a
+value. Ada explicitly differentiates between functions and procedures.
+Functions must return a value and procedures must not. Ada uses the more
+general term *subprogram* to refer to both functions and procedures.
+
+Parameters can be passed in three distinct modes:
+
+- :ada:`in`, which is the default, is for input parameters, whose value is
+  provided by the caller and cannot be changed by the subprogram.
+
+- :ada:`out` is for output parameters, with no initial value, to be assigned by
+  the subprogram and returned to the caller.
+
+- :ada:`in out` is a parameter with an initial value provided by the caller,
+  which can be modified by the subprogram and returned to the caller (more or
+  less the equivalent of a non-constant reference in C).
+
+Ada also provides :ada:`access` and :ada:`aliased` parameters, in effect an
+explicit pass-by-reference indicator.
+
+In Ada, the programmer specifies how the parameter will be used and in general
+the compiler decides how it will be passed (i.e., by copy or by reference). C
+has the programmer specify how to pass the parameter.
+
+.. admonition:: Important
+
+    There are some exceptions to the "general" rule in Ada. For example,
+    parameters of scalar types are always passed by copy, for all three modes.
+
+Here's a first example:
+
+[Ada]
+
+.. code-block:: ada
+
+    procedure Proc
+     (Var1 : Integer;
+      Var2 : out Integer;
+      Var3 : in out Integer);
+
+    function Func (Var : Integer) return Integer;
+
+    procedure Proc
+     (Var1 : Integer;
+      Var2 : out Integer;
+      Var3 : in out Integer)
+    is
+    begin
+       Var2 := Func (Var1);
+       Var3 := Var3 + 1;
+    end Proc;
+
+    function Func (Var : Integer) return Integer
+    is
+    begin
+       return Var + 1;
+    end Func;
+
+[C]
+
+.. code-block:: c
+
+    void Proc
+      (int Var1,
+       int * Var2,
+       int * Var3);
+
+    int Func (int Var);
+
+    void Proc
+      (int Var1,
+       int * Var2,
+       int * Var3)
+    {
+
+       *Var2 = Func (Var1);
+       *Var3 += *Var3 + 1;
+    }
+
+    int Func (int Var)
+    {
+       return Var + 1;
+    }
+
+The first two declarations for :ada:`Proc` and :ada:`Func` are specifications
+of the subprograms which are being provided later. Although optional here, it's
+still considered good practice to separately define specifications and
+implementations in order to make it easier to read the program. In Ada and C, a
+function that has not yet been seen cannot be used. Here, :ada:`Proc` can call
+:ada:`Func` because its specification has been declared. In Java, it's fine to
+have the declaration of the subprogram later.
+
+Parameters in Ada subprogram declarations are separated with semicolons,
+because commas are reserved for listing multiple parameters of the same type.
+Parameter declaration syntax is the same as variable declaration syntax,
+including default values for parameters. If there are no parameters, the
+parentheses must be omitted entirely from both the declaration and invocation
+of the subprogram.
+
+Overloading
+~~~~~~~~~~~
+
+In C, function names must be unique. Ada allow overloading, that is two
+subprograms that share the same name but can be resolved though differences in
+profile. As long as the subprogram signatures (subprogram name, parameter
+types, and return types) are different, the compiler will be able to resolve
+the calls to the proper destinations. For example:
+
+[Ada]
+
+.. code-block:: ada
+
+    function Value (Str : String) return Integer;
+    function Value (Str : String) return Float;
+
+    V : Integer := Value ("8");
+
+The Ada compiler knows that an assignment to :ada:`V` requires an
+:ada:`Integer`. So, it chooses the :ada:`Value` function that returns an
+:ada:`Integer` to satisfy this requirement.
+
+Operators in Ada can be treated as functions too. This allows you to define
+local operators that override operators defined at an outer scope, and provide
+overloaded operators that operate on and compare different types. To express an
+operator as a function, enclose it in quotes:
+
+[Ada]
+
+.. code-block:: ada
+
+    function "=" (Left : Day; Right : Integer) return Boolean;
+
+Packages
+--------
+
+Declaration Protection
+~~~~~~~~~~~~~~~~~~~~~~
+
+The package is the basic modularization unit of the Ada language, as is the
+class for Java and the header and implementation pair for C. An Ada package
+contains three parts that, for GNAT, are separated into two files: :file:`.ads`
+files contain public and private Ada specifications, and :file:`.adb` files
+contain the implementation, or Ada bodies.
+
+[Ada]
+
+.. code-block:: ada
+
+    package Package_Name is
+       -- public specifications
+    private
+       -- private specifications
+    end Package_Name;
+
+    package body Package_Name is
+       -- implementation
+    end Package_Name;
+
+Private types are useful for preventing the users of a package's types from
+depending on the types' implementation details. The private reserved word
+splits the package spec into *public* and *private* parts. For example:
+
+[Ada]
+
+.. code-block:: ada
+
+    package Types is
+       type Type_1 is private;
+       type Type_2 is private;
+       type Type_3 is private;
+       procedure P (X : Type_1);
+       ...
+    private
+       procedure Q (Y : Type_1);
+       type Type_1 is new Integer range 1 .. 1000;
+       type Type_2 is array (Integer range 1 .. 1000) of Integer;
+       type Type_3 is record
+          A, B : Integer;
+       end record;
+    end Types;
+
+Subprograms declared above the :ada:`private` separator (such as :ada:`P`) will
+be visible to the package user, and the ones below (such as :ada:`Q`) will not.
+The body of the package, the implementation, has access to both parts.
+
+Hierarchical Packages
+~~~~~~~~~~~~~~~~~~~~~
+
+Ada packages can be organized into hierarchies. A child unit can be declared in
+the following way:
+
+[Ada]
+
+.. code-block:: ada
+
+    -- root-child.ads
+
+    package Root.Child is
+       --  package spec goes here
+    end Root.Child;
+
+    -- root-child.adb
+
+    package body Root.Child is
+       --  package body goes here
+    end Root.Child;
+
+Here, :ada:`Root.Child` is a child package of :ada:`Root`. The public part of
+:ada:`Root.Child` has access to the public part of :ada:`Root`. The private
+part of :ada:`Child` has access to the private part of :ada:`Root`, which is
+one of the main advantages of child packages. However, there is no visibility
+relationship between the two bodies. One common way to use this capability is
+to define subsystems around a hierarchical naming scheme.
+
+Using Entities from Packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Entities declared in the visible part of a package specification can be made
+accessible using a :ada:`with` clause that references the package, which is
+similar to the C :c:`#include` directive. After a :ada:`with` clause, entities
+needs to be prefixed by the name of their package. This prefix can be omitted
+if a :ada:`use` clause is employed.
+
+[Ada]
+
+.. code-block:: ada
+
+    -- pck.ads
+
+    package Pck is
+       My_Glob : Integer;
+    end Pck;
+
+    -- main.adb
+
+    with Pck;
+
+    procedure Main is
+    begin
+       Pck.My_Glob := 0;
+    end Main;
