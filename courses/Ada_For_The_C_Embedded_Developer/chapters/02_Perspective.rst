@@ -1086,7 +1086,8 @@ return a value of that type.
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
+   :class: ada-expect-compile-error
 
     procedure Main is
        type Distance is new Float;
@@ -1194,7 +1195,8 @@ define what are considered valid values. The most common kind of contract is a
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
+    :class: ada-expect-compile-error
 
     procedure Main is
        type Grade is range 0 .. 100;
@@ -1202,7 +1204,7 @@ define what are considered valid values. The most common kind of contract is a
        G1, G2  : Grade;
        N       : Integer;
     begin
-       ...                -- Initialization of N
+       --  ...            -- Initialization of N
        G1 := 80;          -- OK
        G1 := N;           -- Illegal (type mismatch)
        G1 := Grade (N);   -- Legal, run-time range check
@@ -1285,13 +1287,16 @@ value into a :ada:`String` and vice-versa. For example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    declare
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
        A : Integer := 99;
     begin
        Put_Line (Integer'Image (A));
        A := Integer'Value ("99");
+       Put_Line (Integer'Image (A));
     end;
 
 Certain attributes are provided only for certain kinds of types. For example,
@@ -1355,9 +1360,11 @@ values from :ada:`'a'` to :ada:`'z'`:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    declare
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
        type Arr_Type is array (Integer range <>) of Character;
        Arr : Arr_Type (1 .. 26);
        C : Character := 'a';
@@ -1365,20 +1372,27 @@ values from :ada:`'a'` to :ada:`'z'`:
        for I in Arr'Range loop
           Arr (I) := C;
           C := Character'Succ (C);
+
+          Put (Arr (I) & " ");
        end loop;
     end;
 
 [C]
 
-.. code-block:: c
+.. code:: c
 
-    char Arr [26];
-    char C = 'a';
+    !main.c
+    #include <stdio.h>
 
-    for (int I = 0; I < 26; ++I) {
-       Arr [I] = C;
-       C = C + 1;
-       C += 1;
+    void main(void)
+    {
+      char Arr [26];
+      char C = 'a';
+
+      for (int I = 0; I < 26; ++I) {
+        Arr [I] = C++;
+        printf ("%c ", Arr [I]);
+      }
     }
 
 In C, only the size of the array is given during declaration. In Ada, array
@@ -1427,30 +1441,36 @@ the above behavior, actual pointer types would have to be defined and used.
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    declare
-       type Arr_Type is array (Integer range <>) of Integer
+    procedure Main is
+       type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type (1 .. 2);
        A2 : Arr_Type (1 .. 2);
     begin
-       A1 (1) = 0;
-       A1 (2) = 1;
+       A1 (1) := 0;
+       A1 (2) := 1;
 
        A2 := A1;
     end;
 
 [C]
 
-.. code-block:: c
+.. code:: c
 
-    int A1 [2];
-    int A2 [2];
+    !main.c
+    #include <string.h>
 
-    A1 [0] = 0;
-    A1 [1] = 1;
+    int main(int argc, const char * argv[])
+    {
+      int A1 [2];
+      int A2 [2];
 
-    memcpy (A1, A2, sizeof (int) * 2);
+      A1 [0] = 0;
+      A1 [1] = 1;
+
+      memcpy (A1, A2, sizeof (int) * 2);
+    }
 
 In all of the examples above, the source and destination arrays must have
 precisely the same number of elements. Ada allows you to easily specify a
@@ -1458,10 +1478,10 @@ portion, or slice, of an array. So you can write the following:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    declare
-       type Arr_Type is array (Integer range <>) of Integer
+    procedure Main is
+       type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type (1 .. 10);
        A2 : Arr_Type (1 .. 5);
     begin
@@ -1477,32 +1497,43 @@ arrays as opposed to their addresses:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    declare
+    procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type (1 .. 2);
        A2 : Arr_Type (1 .. 2);
     begin
        if A1 = A2 then
+         --  ...
+
+         null;
+       end if;
+    end;
 
 [C]
 
-.. code-block:: c
+.. code:: c
 
-    int A1 [2];
-    int A2 [2];
+    !main.c
+    int main(int argc, const char * argv[])
+    {
+      int A1 [2];
+      int A2 [2];
 
-    bool eq = true;
+      int eq = 1;
 
-    for (int i = 0; i < 2; ++i) {
-       if (A1 [i] != A2 [i]) {
-          eq = false;
+      for (int i = 0; i < 2; ++i) {
+        if (A1 [i] != A2 [i]) {
+          eq = 0;
           break;
-       }
-    }
+        }
+      }
 
-    if (eq) {
+      if (eq) {
+        /* ... */
+      }
+    }
 
 You can assign to all the elements of an array in each language in different
 ways. In Ada, the number of elements to assign can be determined by looking at
@@ -1513,9 +1544,9 @@ Therefore, you can write:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    declare
+    procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type := (1, 2, 3, 4, 5, 6, 7, 8, 9);
        A2 : Arr_Type (-2 .. 42) := (others => 0);
@@ -1534,9 +1565,9 @@ are some simple records:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    declare
+    procedure Main is
        type R is record
           A, B : Integer;
           C    : Float;
@@ -1549,15 +1580,19 @@ are some simple records:
 
 [C]
 
-.. code-block:: c
+.. code:: c
 
-    typedef struct R {
+    !main.c
+    struct R {
        int A, B;
        float C;
     };
 
-    struct R V;
-    V.A = 0;
+    int main(int argc, const char * argv[])
+    {
+      struct R V;
+      V.A = 0;
+    }
 
 Ada allows specification of default values for fields just like C. The values
 specified can take the form of an ordered list of values, a named list of
@@ -1566,17 +1601,23 @@ fields not listed will take their default values. For example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    type R is record
-       A, B : Integer := 0;
-       C    : Float := 0.0;
-    end record;
+    procedure Main is
 
-    V1 : R => (1, 2, 1.0);
-    V2 : R => (A => 1, B => 2, C => 1.0);
-    V3 : R => (C => 1.0, A => 1, B => 2);
-    V3 : R => (C => 1.0, others => <>);
+       type R is record
+          A, B : Integer := 0;
+          C    : Float   := 0.0;
+       end record;
+
+       V1 : R := (1, 2, 1.0);
+       V2 : R := (A => 1, B => 2, C => 1.0);
+       V3 : R := (C => 1.0, A => 1, B => 2);
+       V4 : R := (C => 1.0, others => <>);
+
+    begin
+       null;
+    end;
 
 Pointers
 ~~~~~~~~
@@ -1597,9 +1638,9 @@ example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    declare
+    procedure Main is
        type R is record
           A, B : Integer;
        end record;
@@ -1613,16 +1654,20 @@ example:
 
 [C]
 
-.. code-block:: c
+.. code:: c
 
-    typedef struct R {
+    !main.c
+    struct R {
        int A, B;
     };
 
-    struct R V1, V2;
-    V1.A = 0;
-    V2 = V1;
-    V2.A = 1;
+    int main(int argc, const char * argv[])
+    {
+      struct R V1, V2;
+      V1.A = 0;
+      V2 = V1;
+      V2.A = 1;
+    }
 
 There are many commonalities between the Ada and C semantics above. In Ada and
 C, objects are allocated on the stack and are directly accessed. :ada:`V1` and
@@ -1634,9 +1679,9 @@ Here's now a similar example, but using heap allocation instead:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
-    declare
+    procedure Main is
        type R is record
           A, B : Integer;
        end record;
@@ -1653,17 +1698,23 @@ Here's now a similar example, but using heap allocation instead:
 
 [C]
 
-.. code-block:: c
+.. code:: c
 
-    typedef struct R {
+    !main.c
+    #include <stdlib.h>
+
+    struct R {
        int A, B;
     };
 
-    struct R * V1, * V2;
-    V1 = malloc(sizeof(struct R));
-    V1->A = 0;
-    V2 = V1;
-    V2->A = 0;
+    int main(int argc, const char * argv[])
+    {
+      struct R * V1, * V2;
+      V1 = malloc(sizeof(struct R));
+      V1->A = 0;
+      V2 = V1;
+      V2->A = 0;
+    }
 
 In this example, an object of type :ada:`R` is allocated on the heap. The same
 object is then referred to through :ada:`V1` and :ada:`V2`. As for C, there's
@@ -1680,7 +1731,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Main is
        type A_Int is access Integer;
@@ -1691,7 +1742,10 @@ Pointers to scalar objects in Ada and C look like:
 
 [C]
 
-.. code-block:: c
+.. code:: c
+
+    !main.c
+    #include <stdlib.h>
 
     int main (int argc, char *argv[])
     {
@@ -1743,7 +1797,7 @@ the access type as follows:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
     with Ada.Unchecked_Deallocation;
     procedure Main is
@@ -1756,7 +1810,10 @@ the access type as follows:
 
 [C]
 
-.. code-block:: c
+.. code:: c
+
+    !main.c
+    #include <stdlib.h>
 
     int main (int argc, char *argv[])
     {
@@ -1803,7 +1860,7 @@ Here's a first example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
     procedure Proc
      (Var1 : Integer;
@@ -1811,6 +1868,8 @@ Here's a first example:
       Var3 : in out Integer);
 
     function Func (Var : Integer) return Integer;
+
+    with Func;
 
     procedure Proc
      (Var1 : Integer;
@@ -1828,16 +1887,34 @@ Here's a first example:
        return Var + 1;
     end Func;
 
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Proc;
+
+    procedure Main is
+       V1, V2 : Integer;
+    begin
+       V2 := 2;
+       Proc (5, V1, V2);
+
+       Put_Line ("V1: " & Integer'Image (V1));
+       Put_Line ("V2: " & Integer'Image (V2));
+    end Main;
+
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop
 
+    !proc.h
     void Proc
       (int Var1,
        int * Var2,
        int * Var3);
 
+    !func.h
     int Func (int Var);
+
+    !proc.c
+    #include "func.h"
 
     void Proc
       (int Var1,
@@ -1846,12 +1923,28 @@ Here's a first example:
     {
 
        *Var2 = Func (Var1);
-       *Var3 += *Var3 + 1;
+       *Var3 += 1;
     }
 
+    !func.c
     int Func (int Var)
     {
        return Var + 1;
+    }
+
+    !main.c
+    #include <stdio.h>
+    #include "proc.h"
+
+    void main (void)
+    {
+       int v1, v2;
+
+       v2 = 2;
+       Proc (5, &v1, &v2);
+
+       printf("v1: %d\n", v1);
+       printf("v2: %d\n", v2);
     }
 
 The first two declarations for :ada:`Proc` and :ada:`Func` are specifications
@@ -1934,14 +2027,14 @@ splits the package spec into *public* and *private* parts. For example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada no_button
 
     package Types is
        type Type_1 is private;
        type Type_2 is private;
        type Type_3 is private;
        procedure P (X : Type_1);
-       ...
+       --  ...
     private
        procedure Q (Y : Type_1);
        type Type_1 is new Integer range 1 .. 1000;
@@ -1963,7 +2056,7 @@ the following way:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada no_button
 
     -- root-child.ads
 
@@ -1995,7 +2088,7 @@ if a :ada:`use` clause is employed.
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada
 
     -- pck.ads
 
