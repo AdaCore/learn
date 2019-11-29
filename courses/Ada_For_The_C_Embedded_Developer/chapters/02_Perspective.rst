@@ -1186,6 +1186,10 @@ separate representation clause for it like:
 
 Note that however, unlike C, values for enumerations in Ada have to be unique.
 
+.. todo::
+
+    Add subsection on modular vs. unsigned types
+
 Type Ranges
 ~~~~~~~~~~~
 
