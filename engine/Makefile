@@ -43,8 +43,20 @@ test_spark_for_the_misra_c_developer:
 	@$(TEST_DRIVER) ../courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
 	@echo ""
 
+test_ada_for_the_cpp_java_developer:
+	@echo "===== ADA FOR THE CPP JAVA DEV ====="
+	@$(TEST_DRIVER) ../courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
+	@echo ""
+
+test_gnat_toolchain_getting_started:
+	@echo "===== GNAT TOOLCHAIN: GETTING STARTED ====="
+	@$(TEST_DRIVER) ../courses/GNAT_Toolchain_Getting_Started/chapters/*.rst
+	@echo ""
+
 tests: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark \
-	test_spark_for_the_misra_c_developer
+	test_spark_for_the_misra_c_developer \
+	test_ada_for_the_cpp_java_developer \
+	test_gnat_toolchain_getting_started
 
 publish-staging:
 	@echo "Publishing current branch to learn-staging..."
