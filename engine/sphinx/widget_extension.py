@@ -105,6 +105,7 @@ def c_chop(lines):
         if j.startswith('!'):
             if current_filename:
                 results.append((current_filename, '\n'.join(current_contents)))
+                current_contents = []
             current_filename = j[1:]
         else:
             current_contents.append(j)
@@ -221,7 +222,7 @@ class WidgetCodeDirective(Directive):
         if not codeconfig_found:
             print (self.lineno, dir(self))
             raise self.error("you need to add a :code-config: role")
-        
+
         if is_lab:
             # look for lab io start block
             io_start_matches = [i for i, line in enumerate(self.content) if LAB_IO_START_REGEX.match(line)]
