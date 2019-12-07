@@ -816,11 +816,11 @@ from the GNAT User's Guide for a detailed discussion on
 gnatpp
 ------
 
-Pretty-printing refers to the process of formatting the source-code
-according to a pre-defined convention. :program:`gnatpp` is used for
-pretty-printing of Ada source-code files.
+The term 'pretty-printing' refers to the process of formatting the
+source-code according to a pre-defined convention. :program:`gnatpp`
+is used for the pretty-printing of Ada source-code files.
 
-Let's look at this example with messy formatting:
+Let's look at this example, which contains very messy formatting:
 
 .. code-block:: ada
 
@@ -842,15 +842,15 @@ Let's look at this example with messy formatting:
                 I              :=        Init_2;
                      ENd;
 
-We now let :program:`gnatpp` correct the formatting of this file by using
-this command-line:
+We can request :program:`gnatpp` to clean up the formatting of this
+file by using this command-line:
 
 .. code-block:: sh
 
     gnatpp main.adb
 
-:program:`gnatpp` corrects the formatting of the file in place, which now
-looks like this:
+:program:`gnatpp` modifies the formatting of the file in place.  After
+this command, it looks like this:
 
 .. code-block:: ada
 
@@ -864,8 +864,8 @@ looks like this:
        I := Init_2;
     end Main;
 
-We may also process all source-code files from a project at once. For
-example:
+We can also process all source-code files from a project at once by
+specifying a project file. For example:
 
 .. code-block:: sh
 
@@ -880,11 +880,11 @@ from the GNAT User's Guide.
 gnatstub
 --------
 
-Let's suppose you've created a complex specification of an Ada package.
-You may create the corresponding package body by copying and adapting
-the content of the package specification. But you may also let
-:program:`gnatstub` do the job for you. For example, let's consider the
-following package specification:
+Suppose you've created a complex specification of an Ada package.  You
+can create the corresponding package body by copying and adapting the
+content of the package specification. But you can also have
+:program:`gnatstub` do the job for you. For example, let's consider
+the following package specification:
 
 .. code-block:: ada
 
@@ -902,7 +902,7 @@ We can call :program:`gnatstub` and indicate the package specification:
 
     gnatstub aux.ads
 
-This generates the file ``aux.adb`` with the following content:
+This generates the file :file:`aux.adb` with the following contents:
 
 .. code-block:: ada
 
@@ -933,33 +933,34 @@ This generates the file ``aux.adb`` with the following content:
 
     end Aux;
 
-As we can see in this example, not only we have all the elements from the
-package specification in the generate package body, but we also have:
+As we can see in this example, not only has :program:`gnatstub` put
+all the elements from the package specification into the package body
+that it generate package body, but it also created:
 
     - Headers for each subprogram (as comments);
 
-    - Pragmas and exceptions that prevent us from using unimplemented
+    - Pragmas and exceptions that prevent us from using the unimplemented
       subprograms in our application.
 
-In summary, :program:`gnatstub` creates a good starting point for our
-implementation. Please refer to the
-`section on gnatstub <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-body-stub-generator-gnatstub>`_
-from the GNAT User's Guide for a detailed discussion on :program:`gnatstub`
-and its options.
+This is a good starting point for the implementation of the
+body. Please refer to the `section on gnatstub
+<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-body-stub-generator-gnatstub>`_
+from the GNAT User's Guide for a detailed discussion of
+:program:`gnatstub` and its options.
 
 gnattest
 --------
 
-:program:`gnattest` facilitates the creation of unit tests based on
-`AUnit <http://docs.adacore.com/live/wave/aunit/html/aunit_cb/aunit_cb.html>`_,
-the Ada Unit Testing Framework. In principle, we could create unit tests
-based on AUnit by just coding everything *by hand*. However,
-:program:`gnattest` saves us time, as it generates all the mechanical code
-required to connect the package specification from our project to the
-AUnit framework.
+:program:`gnattest` creates unit tests based on `AUnit
+<http://docs.adacore.com/live/wave/aunit/html/aunit_cb/aunit_cb.html>`_,
+the Ada Unit Testing Framework. In principle, we could create unit
+tests based on AUnit by coding everything by hand. However,
+:program:`gnattest` saves us time by generating all the mechanical
+code required to connect the our project's package specification to
+the AUnit framework.
 
-In this section, we'll reuse the package specification from the previous
-section. Just to recap, this was the specification of the :ada:`Aux`
+In this section, we'll reuse the package specification from the
+previous section.  This was the specification of the :ada:`Aux`
 package:
 
 .. code-block:: ada
@@ -979,12 +980,13 @@ We start by calling :program:`gnattest` for our project:
     gnattest -P default.gpr -r
 
 
-By using the ``-r`` option, :program:`gnattest` recursively creates unit
-tests for all package specifications from our project.
+We specify the ``-r`` option to request that :program:`gnattest`
+recursively create unit tests for all package specifications in our
+project.
 
-The complete generated code can be found in ``obj/gnattest``. We can build
-it by calling :program:`GPRbuild` for the ``test_driver`` project that
-:program:`gnattest` has generated:
+We find the complete generated code in :file:`obj/gnattest`. We can
+build it by calling :program:`GPRbuild` for the ``test_driver``
+project that :program:`gnattest` generated:
 
 .. code-block:: sh
 
@@ -996,9 +998,9 @@ We can now run the generated application:
 
     ./obj/gnattest/harness/test_runner
 
-If we had implemented the actual unit tests, we'd now see the test
-results. However, we haven't implemented them yet. The stub code generated
-by :program:`gnattest` reminds us of this fact when running the
+If we had implemented the actual unit tests, see the test results at
+this point. However, we haven't implemented them yet. The stub code
+generated by :program:`gnattest` reminds us of this when running the
 ``test_runner`` application:
 
 .. code-block:: none
@@ -1007,11 +1009,11 @@ by :program:`gnattest` reminds us of this fact when running the
     aux.ads:5:4: error: corresponding test FAILED: Test not implemented. (aux-test_data-tests.adb:65)
     2 tests run: 0 passed; 2 failed; 0 crashed.
 
-The next step would be to implement the actual unit tests in the
-``obj/gnattest/tests/aux-test_data-tests.adb`` file. Just to show how
+Our next step is to implement the actual unit tests into the
+:file:`obj/gnattest/tests/aux-test_data-tests.adb` file. To show what
 the behavior looks like when the test is implemented, we can simply
-replace the calls to :ada:`Assert` in that file by :ada:`null`. If we do
-this quick change and rebuild the application, we get this message:
+replace the calls to :ada:`Assert` in that file by :ada:`null`. If we
+do this change and rebuild the application, we get:
 
 .. code-block:: none
 
@@ -1019,12 +1021,13 @@ this quick change and rebuild the application, we get this message:
     aux.ads:5:4: info: corresponding test PASSED
     2 tests run: 2 passed; 0 failed; 0 crashed.
 
-Of course, this latest change was just a quick test. We should now
-implement an actual tests where those calls to :ada:`Assert` originally
-were. You can find more details on how to do that in the
-`AUnit Cookbook <http://docs.adacore.com/live/wave/aunit/html/aunit_cb/aunit_cb.html>`_.
-Also, :program:`gnattest` offers many options to configure the test
-generation and integrate it to project files. You can find more information
-in the
-`section on gnattest <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-unit-test-generator-gnattest>`_
-from the GNAT User's Guide.
+Of course, this latest change created fake tests. We would now
+implement the actual tests where those calls to :ada:`Assert` were
+originally located. You can find more details on how to do that in the
+`AUnit Cookbook
+<http://docs.adacore.com/live/wave/aunit/html/aunit_cb/aunit_cb.html>`_.
+:program:`gnattest` offers many options to configure the test
+generation and integrate it to project files. You can find more
+information in the `section on gnattest
+<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-unit-test-generator-gnattest>`_
+in the GNAT User's Guide.
