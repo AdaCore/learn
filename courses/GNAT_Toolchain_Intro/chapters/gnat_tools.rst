@@ -506,26 +506,26 @@ format.
 gnatdoc
 -------
 
-:program:`GNATdoc` is used to generate the HTML documentation of a
-project. It scans the source-code files in the project and extracts the
-most important information, such as package, subprogram and type
-declarations.
+:program:`GNATdoc` to generates HTML documentation for a project. It scans
+the source files in the project and extracts the most important
+information, such as package, subprogram and type declarations.
 
-The simplest usage is by providing the name of the project or calling
-:program:`GNATdoc` from a directory where a project file is available:
+The simplest way for you to use this tool is by providing the name of the
+project or calling :program:`GNATdoc` from a directory where a project file
+is available:
 
 .. code-block:: sh
 
-    gnatdoc -P default.gpr
+    gnatdoc -P some_directory/default.gpr
 
-    # Alternatively, when the project file is in the same directory:
+    # Alternatively, when the :file:`default.gpr` file is in the same directory
 
     gnatdoc
 
-Using this command is sufficient to generate a simple list of the
-packages and the corresponding API. However, in order to create a
-meaningful documentation, we should add a description of each parameter or
-field in the application. For example:
+This command is sufficient to generate a simple list of the packages and
+the corresponding API for each. However, in order to create a meaningful
+documentation, you can annotate the source code to add a description of
+each parameter or field. For example:
 
 .. code-block:: ada
 
@@ -563,18 +563,18 @@ field in the application. For example:
        I := Add_One (0);
     end Main;
 
-In this example, the documentation is extracted from the specification of
-package :ada:`P`. Note that the description of each element is added as a
-comment in the line below the actual declaration. :program:`GNATdoc` is
-able to extract the package description, which we wrote as a comment in
-the line right after :ada:`package P is`. Also, the tool extracts the
-documentation of function :ada:`Add_One` (both the description of the
-:ada:`V` parameter and of the return value).
+In this example, :program:`GNATdoc` extracted the documentation from the
+specification of package :ada:`P` and added the description of each element
+as a comment in the line below the actual declaration. It was also able to
+extract the package description, which we wrote as a comment in the line
+right after :ada:`package P is`. Finally, it extracted the documentation of
+function :ada:`Add_One` (both the description of the :ada:`V` parameter and
+of the return value).
 
 In addition to the approach we've just seen, :program:`GNATdoc` also
 supports the tagged format |mdash| commonly found in tools such as Javadoc
-|mdash| using the ``@`` syntax. The documentation for package :ada:`P`
-could be rewritten as follows:
+|mdash| using the ``@`` syntax. We could rewrite the documentation for
+package :ada:`P` as follows:
 
 .. code-block:: ada
 
@@ -589,13 +589,13 @@ could be rewritten as follows:
 
     end P;
 
-It's possible to control what parts of the source-code :program:`GNATdoc`
-parses to extract the documentation. For example, the ``-b`` option
-indicates that the package body is parsed for additional documentation.
-Also, when the ``-p`` option is used,  :program:`GNATdoc` parses the
+You can control what parts of the source-code :program:`GNATdoc` parses to
+extract the documentation. For example, you can specify the ``-b`` option
+to request that the package body be parsed for additional documentation.
+Or you can use the ``-p`` to request :program:`GNATdoc` to parse the
 private part of package specifications. For a complete list of options,
-please refer to the
-`GNATdoc User's Guide <http://docs.adacore.com/gnatdoc-docs/users_guide/_build/html/index.html>`_.
+please refer to the `GNATdoc User's Guide
+<http://docs.adacore.com/gnatdoc-docs/users_guide/_build/html/index.html>`_.
 
 gnat2xml
 --------
