@@ -600,30 +600,31 @@ please refer to the `GNATdoc User's Guide
 gnat2xml
 --------
 
-:program:`gnat2xml` is a tool for generating an XML representation of the
-source-code from a project. This XML representation can be used for
-source-code analysis, for example. In order to use the tool, you have
-to indicate the project file:
+:program:`gnat2xml` is a tool for generating an XML representation of
+the source-code from a project. For example, you can use this XML
+representation for source-code analysis.  Use the tool by naming
+the project file:
 
 .. code-block:: sh
 
     gnat2xml -P default.gpr > output.xml
 
-Since the XML representation is written to the standard output by default,
-we need to redirect it to a file for storage (as in the example above).
-In this case, the ``output.xml`` file contains an XML representation of
-the complete source-code of our project.
+By default, :program:`gnat2xml` writes the XML representation to the
+standard output by default, so we usually need to redirect it to a
+file (as in the example above).  In the above example, the
+:file:`output.xml` file will receive an XML representation of the
+complete source-code of our project.
 
 Alternatively, we can generate a corresponding XML file for each
-source-code from our project. In order to do that, we use the
-``--output-dir`` option:
+source-code from our project. To do that, use the ``--output-dir``
+option:
 
 .. code-block:: sh
 
     gnat2xml -P default.gpr --output-dir=out_xml
 
-This command generates XML files and stores them in the ``out_xml``
-directory.
+This command generates multiple XML files and stores them in the
+:file:`out_xml` directory.
 
 Let's consider this simple example:
 
@@ -640,7 +641,7 @@ Let's consider this simple example:
     end Main;
 
 For this example, :program:`gnat2xml` generates the following XML
-representation:
+representation of the program:
 
 .. code-block:: xml
 
@@ -802,10 +803,10 @@ representation:
        </pragmas_after_ql>
     </compilation_unit>
 
-Although our source-code example was very simple, the corresponding XML
-representation is quite verbose. This shows that :program:`gnat2xml`
-classifies each syntactical element from the source-code and generates
-a detailed and precise description of these elements.
+Although our source-code example was very simple, the corresponding
+XML representation is quite verbose because :program:`gnat2xml`
+classifies each syntactical element in the source-code and generates a
+detailed and precise description of each element.
 
 Please refer to the
 `section on gnat2xml <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-ada-to-xml-converter-gnat2xml>`_
