@@ -8,16 +8,16 @@ GNAT Community
 .. role:: ada(code)
    :language: ada
 
-This chapter presents useful compiler options from the GNAT compiler
-including examples on how to use them.
+This chapter presents useful compiler options for the GNAT compiler
+including examples of how to use them.
 
 
 Expanded source-code
 --------------------
 
-GNAT provides a command-line option for generating an expanded form of a
-source-code file. This can be useful to analyze operations used in the
-source-code.
+GNAT provides a command-line option to generate an expanded form of a
+source-code file. You can use this to analyze what operations are used by
+the source-code.
 
 Let's start with a simple example:
 
@@ -29,15 +29,15 @@ Let's start with a simple example:
        F := F + 1.0;
     end Main;
 
-For generating the expanded form, we run the compiler with the ``-gnatG``
+To generate the expanded form, we run the compiler with the ``-gnatG``
 option for the source-code file containing the :ada:`Main` procedure:
 
 .. code-block:: sh
 
     gnat compile -gnatG main.adb > main.expanded
 
-In this example, we redirect the output to the ``main.expanded`` file,
-which contains the following expanded source-code:
+In this example, we redirected the output to the :file:`main.expanded`
+file, which will contain the following expanded source-code:
 
 .. code-block:: none
 
@@ -52,9 +52,10 @@ which contains the following expanded source-code:
        return;
     end main;
 
-Notice that the original floating-point value (:ada:`1.0`) is converted
-to a representation close to the machine representation, which uses a
-23-bit mantissa and an 8-bit exponent: ``[8388608.0*2**(-23)]``
+The only substantive change from our input is that the original
+floating-point value (:ada:`1.0`) is converted to a representation close to
+the machine representation, which uses a 23-bit mantissa and an 8-bit
+exponent: ``[8388608.0*2**(-23)]``
 
 Let's look at an example using operator overriding:
 
@@ -80,8 +81,7 @@ Let's look at an example using operator overriding:
        B := B + 2;
     end Main;
 
-When running the same command-line as before, we get the following
-expanded code:
+Using the same procedure as before, we get the following expanded code:
 
 .. code-block:: none
 
@@ -110,13 +110,16 @@ expanded code:
        return;
     end main;
 
-When we analyze the expanded code, we notice that the compiler selects the
+This shows more significant differences than the last example.  When we
+analyze the expanded code, we notice that the compiler selects the
 overridden addition for the operation on the :ada:`A` variable of
-:ada:`Int` type. In this code, the overridden addition is represented by
-the  :ada:`main__Oadd` function. For operation on the :ada:`B` variable,
-the standard operator (represented by ``{+}``) is used. This kind of
-analysis is helpful to verify, for example, if the operation selected by
-the compiler is the one we expected.
+:ada:`Int` type. In this code, the :ada:`main__Oadd` function represents
+the overridden addition. For operation on the :ada:`B` variable, the
+standard operator is used.  The brackets (``{+}``) indicate that overflow
+checking is required for the operation.
+
+Analyzing the generated code in this way is helpful to verify, for example,
+that the operation selected by the compiler is the one we expected.
 
 
 Target dependent information
@@ -127,7 +130,7 @@ architecture that is used as the target of the compilation process. This
 includes information such as size and alignment of base data types, and
 endianness.
 
-You may generate a file containing target dependent information with them
+You generate a file containing target dependent information with the
 ``-gnatet=path`` option. For example:
 
 .. code-block:: sh
@@ -168,55 +171,59 @@ information:
     long double   18  I  80 128
     TF            33  I 128 128
 
-In case we have a specific, predefined architecture as a target that
-defers from the target we're currently working on, it's possible to drive
-the compilation process to use this specific architecture. This is
-achieved via the ``-gnateT=path`` option. For example:
+If we have a specific predefined architecture as a target that differs from
+the target we're currently working on, it's possible to have the
+compilation process use this specific architecture. You do this by using
+the ``-gnateT=path`` option. For example:
 
 .. code-block:: sh
 
     gnat compile ./src/main.adb -gnateT=machine.tdi
 
-In this case, the information from ``machine.tdi`` is used as the target.
-
+In this case, the compiler uses the information from ``machine.tdi`` as the
+parameters to use for the target machine.   Note, however, that it will
+still be generating code for the target architecture, so changing these
+parameters too drastically can cause unexpected results, including the
+compiler being unable to compile your code.
 
 Compiler warnings
 -----------------
 
-One of the strengths of the GNAT compiler is the ability to generate lots
-of useful warnings. Some of them are displayed by default, while some need
-to be explicitly activated. In this section, we discuss some of these
-warnings, their purpose and how to activate them.
+One of the strengths of the GNAT compiler is the ability to generate many
+useful warnings. Some of them are displayed by default but other need to be
+explicitly activated. In this section, we discuss some of these warnings,
+their purpose, and how you activate them.
 
 ``-gnatwa`` switch and warning suppression
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. sectionauthor:: Bob Duff
 
-Let's start by recapitulating the difference between a *warning* and an
-*error*. First, errors are generally violations of the Ada language rules
-as specified in the Ada Reference Manual; warnings are GNAT specific.
-Thus, other Ada compilers might not warn about the same things that GNAT
-does. Second, warnings are typically conservative; that is, some warnings
-will be false alarms, and the programmer needs to study the code to see if
-the warning is a real problem.
+We first need to understand the difference between a *warning* and an
+*error*. Errors are generally violations of the Ada language rules as
+specified in the Ada Reference Manual; warnings don't indicate violations
+of those rules, but rather flag things in a program that seem suspicious to
+the compiler.  Warnings GNAT-specific, so other Ada compilers might not
+warn about the same things GNAT does. Warnings are typically conservative;
+that is, some warnings will be false alarms. The programmer needs to study
+the code to see if the warning is describing a real problem.
 
-Some warnings are given by default, whereas some are given only if a
+Some warnings are produced by default while others are produced only if a
 switch enables them. Use the ``-gnatwa`` switch to turn on (almost) all
 warnings.
 
-Warnings are useless if you don't do something about them. If you give
-your team-member some code that causes warnings, how are they supposed to
-know if they represent real problems? Pretty soon people will ignore
-warnings, and they will scatter themselves all about the code. Use the
-``-gnatwae`` switch to turn on (almost) all warnings, and to treat
-warnings as errors. This will force you to get a clean (no warnings or
-errors) compilation.
+Warnings are useless if you don't do something about them. If you give your
+team-member some code that causes warnings, how are they supposed to know
+if they represent real problems?  If you don't do something about them,
+people will pretty soon starting ignoring warnings and there'll be many
+warnings will scattered all over your code. Use the ``-gnatwae`` switch to
+both turn on (almost) all warnings and to treat warnings as errors. This
+forces you to get a clean (no warnings or errors) compilation.
 
-But some warnings are false alarms. Use :ada:`pragma Warnings (Off)` to
-suppress false alarms. It's best to be as specific as possible: narrow
-down to a single line of code, and a single warning message. And use a
-comment to explain why the warning is a false alarm, if it's not obvious.
+Howver, some warnings are false alarms. Use :ada:`pragma Warnings (Off)` to
+suppress false alarms. It's best to be as specific as possible and narrow
+down to a single line of code and a single warning. Also, use a comment to
+explain why the warning is a false alarm, if it's not obvious.
 
 Let's look at the following example:
 
@@ -233,19 +240,19 @@ Let's look at the following example:
 
     end Warnings_Example;
 
-We compile the code above with ``-gnatwae``:
+We compile the above code with ``-gnatwae``:
 
 .. code-block:: none
 
     gnat compile -gnatwae ./src/warnings_example.adb
 
-This will cause GNAT to complain:
+This causes GNAT to complain:
 
 .. code-block:: none
 
     warnings_example.adb:5:22: warning: formal parameter "X" is not referenced
 
-But the following will compile cleanly:
+But the following compiles cleanly:
 
 .. code-block:: ada
 
@@ -265,20 +272,20 @@ But the following will compile cleanly:
 
 Here we've suppressed the specific warning message on a specific line.
 
-If you get many warnings of a specific type, and it's not feasible to fix
-them all, then suppress that type of message, so the good warnings won't
-get buried beneath a pile of bogus ones. The ``-gnatwaeF`` switch will
-silence the warning on the first version of :ada:`Mumble` above: the ``F``
-means suppress warnings on unreferenced formal parameters, and would be a
-good idea if you have lots of those.
+If you get many warnings of a specific type and it's not feasible to fix
+all of them, you can suppress that type of message so the good warnings
+won't get buried beneath a pile of bogus ones. You can use the
+``-gnatwaeF`` switch to silence the warning on the first version of
+:ada:`Mumble` above: the ``F`` suppresses warnings on unreferenced formal
+parameters.  Using it would be a good idea if you have many of those.
 
-As indicated above, ``-gnatwa`` activates almost all warnings, but not
-all of them. You may refer to the
-`section on warnings <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#warning-message-control>`_
-of the GNAT User's Guide, to get a list of the remaining warnings that you
-could also use in your project. One example is ``-gnatw.o``, which
-displays warnings in case the compiler detects modified but unreferenced
-out parameters. Consider the following example:
+As discussed above, ``-gnatwa`` activates almost all warnings, but not
+all. Refer to the `section on warnings
+<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#warning-message-control>`_
+of the GNAT User's Guide to get a list of the remaining warnings you could
+also use in your project. One example is ``-gnatw.o``, which displays
+warnings when the compiler detects modified but unreferenced *Out*
+parameters. Consider the following example:
 
 .. code-block:: ada
 
@@ -320,16 +327,17 @@ out parameters. Consider the following example:
        Put_Line (Integer'Image (X));
     end Main;
 
-If we build the main application using the  ``-gnatw.o`` switch, the
-compiler warns us that we missed using the :ada:`Success` variable, which
-was modified in the call to :ada:`Process`:
+If we build the main application using the ``-gnatw.o`` switch, the
+compiler warns us that we didn't reference the :ada:`Success` variable,
+which was modified in the call to :ada:`Process`:
 
 .. code-block:: none
 
     main.adb:8:16: warning: "Success" modified by call, but value might not be referenced
 
-This is actually a bug, since :ada:`X` only contains a valid value if
-:ada:`Success` is :ada:`True`. The corrected code for :ada:`Main` is:
+In this case, this is actually a bug in our program, since :ada:`X` only
+contains a valid value if :ada:`Success` is :ada:`True`. The corrected code
+for :ada:`Main` is:
 
 .. code-block:: ada
 
@@ -344,19 +352,21 @@ This is actually a bug, since :ada:`X` only contains a valid value if
        end if;
     end Main;
 
-In summary, we suggest turning on as many warnings as makes sense for your
-project. Then, whenever you see a warning message, look at the code and
-decide if it's real. If so, fix the code. If it's a false alarm, suppress
-the warning. Either way, make the warning disappear before checking your
-code into your configuration management system.
+To summarize, we suggest turning on as many warnings as makes sense for
+your project. Then, when you see a warning message, look at the code and
+decide if it's real. If it is, fix the code. If it's a false alarm,
+suppress the warning. In either case, we strongly recommend that you make
+the warning disappear before you check your code into your configuration
+management system.
 
 Style checking
 ~~~~~~~~~~~~~~
 
-GNAT provides many options to configure code style checking. The main
-compiler switch for this is ``-gnatyy``, which sets almost all standard
-style check options. As indicated by the
-`section on style checking <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking>`_
+GNAT provides many options to configure style checking of your codea. The
+main compiler switch for this is ``-gnatyy``, which sets almost all
+standard style check options. As indicated by the `section on style
+checking
+<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking>`_
 of the GNAT User's Guide, using this switch "is equivalent to
 ``-gnaty3aAbcefhiklmnprst``, that is all checking options enabled with the
 exception of ``-gnatyB``, ``-gnatyd``, ``-gnatyI``, ``-gnatyLnnn``,
@@ -368,6 +378,6 @@ subprograms are explicitly marked as such. Using this switch can avoid
 surprises when you didn't intentionally want to override an operation for
 some data type. Therefore, we recommend studying the list of coding style
 switches and selecting the ones that seem relevant for your project. When
-in doubt, you may start by using all of them |mdash| using ``-gnatyy`` and
+in doubt, you can start by using all of them |mdash| using ``-gnatyy`` and
 ``-gnatyBdIL4oOSux``, for example |mdash| and deactivating the ones that
 cause too much *noise* during compilation.
