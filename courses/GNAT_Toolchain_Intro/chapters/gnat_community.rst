@@ -1,3 +1,5 @@
+:prev_state: False
+
 GNAT Community
 ==============
 

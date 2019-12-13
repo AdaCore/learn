@@ -1,5 +1,3 @@
-:next_state: False
-
 GNAT Programming Studio
 =======================
 
