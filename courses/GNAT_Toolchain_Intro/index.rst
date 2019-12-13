@@ -16,6 +16,6 @@ Introduction to GNAT Toolchain
 
    Introduction <chapters/intro>
    GNAT Community <chapters/gnat_community>
-   GNAT Tools <chapters/gnat_tools>
    GPRbuild <chapters/gprbuild>
    GNAT Programming Studio (GPS) <chapters/gps>
+   GNAT Tools <chapters/gnat_tools>
