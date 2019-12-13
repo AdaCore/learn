@@ -401,7 +401,7 @@ gnatmem
 -------
 
 Memory allocation errors involving mismatches between allocations and
-deallocations are a comomn source of memory leaks. To test an application
+deallocations are a common source of memory leaks. To test an application
 for memory allocation issues, we can use :program:`gnatmem`. This tool
 monitors all memory allocations in our application. We use this tool by
 linking our application to a special version of the memory allocation

@@ -123,7 +123,7 @@ operation.
 Analyzing the expanded code in this way is helpful to verify that the
 operation selected by the compiler is the one we expected.  You may
 also want to look at the expanded code to see how high-level
-constructs such as tasking are implemented.a
+constructs such as tasking are implemented.
 
 
 Target-dependent information
@@ -227,7 +227,7 @@ the ``-gnatwae`` switch to both turn on (almost) all warnings and to treat
 warnings as errors. This forces you to get a clean (no warnings or errors)
 compilation.
 
-Howver, some warnings are false alarms. Use :ada:`pragma Warnings (Off)` to
+However, some warnings are false alarms. Use :ada:`pragma Warnings (Off)` to
 suppress false alarms. It's best to be as specific as possible and narrow
 down to a single line of code and a single warning. Also, use a comment to
 explain why the warning is a false alarm if it's not obvious.

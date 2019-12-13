@@ -120,7 +120,7 @@ We can structure project files to make use of dynamic (shared)
 libraries using a very similar approach. It's straightforward to
 convert the project above so that :ada:`Test_Pkg` is now compiled into
 a dynamic library and linked to our main application.  All we need to
-do are make a few additions to the project file for the
+do is to make a few additions to the project file for the
 :ada:`Test_Pkg` package:
 
 .. code-block:: none
