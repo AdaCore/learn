@@ -1,2 +1,0 @@
-title=GNAT Toolchain: Getting Started
-

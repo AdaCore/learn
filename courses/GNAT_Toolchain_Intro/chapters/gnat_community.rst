@@ -1,3 +1,5 @@
+:prev_state: False
+
 GNAT Community
 ==============
 
@@ -8,188 +10,89 @@ GNAT Community
 .. role:: ada(code)
    :language: ada
 
-This chapter presents useful options for the GNAT compiler including
-examples of how to use them.
+This chapter presents the steps needed to install the GNAT Community
+toolchain and how to use basic commands from the toolchain.
 
+Installation
+------------
 
-Expanded source code
---------------------
+These are the basics steps to install GNAT Community on all platforms:
 
-GNAT provides a command-line option to generate an expanded form of a
-source file. You can use this to analyze what operations are used by
-the source code.
+    - Go to the
+      `AdaCore Community page <https://www.adacore.com/community>`_.
 
-Let's start with a simple example:
+    - Download the GNAT installer.
 
-.. code-block:: ada
+    - Run the GNAT installer.
 
-    procedure Main is
-       F : Float := 0.0;
-    begin
-       F := F + 1.0;
-    end Main;
+        - Leave all options checked on the "Select Components" page.
 
-To generate the expanded form, we run the compiler with the ``-gnatG``
-switch and specify the source-code file containing the :ada:`Main`
-procedure:
+On Windows platforms, continue with the following steps:
 
-.. code-block:: sh
+    - Add ``C:\GNAT\2019\bin`` to your ``Path`` environment variable.
 
-    gnat compile -gnatG main.adb > main.expanded
+        - The environment variables can be found in the
+          ``System Properties`` window of the ``Control Panel``.
 
-In this example, we redirected the output to the :file:`main.expanded`
-file, which will contain the following expanded source-code:
+    - You might need to restart your computer for the settings to take
+      effect.
 
-.. code-block:: none
+On Linux platforms, perform the following steps:
 
-    Source recreated from tree for Main (body)
-    ------------------------------------------
+    - Make sure the GNAT installer has execution permissions before
+      running it.
 
+    - Select the directory where you want to install the toolchain.
 
-    procedure main is
-       f : float := 0.0;
-    begin
-       f := f + [8388608.0*2**(-23)];
-       return;
-    end main;
+        - For example: ``/home/me/GNAT/2019``
 
-The only substantive change from our input is that the original
-floating-point value (:ada:`1.0`) is converted to a representation close to
-the machine representation, which uses a 23-bit mantissa and an 8-bit
-exponent: ``[8388608.0*2**(-23)]``
+    - Add the path to the ``bin`` directory (within the toolchain
+      directory) as the first directory in your ``PATH`` environment
+      variable.
 
-Let's look at an example using operator overriding:
+        - For example: ``/home/me/GNAT/2019/bin``.
 
-.. code-block:: ada
+Basic commands
+--------------
 
-    procedure Main is
-
-       type Int is new Integer;
-
-       overriding function "+" (A, B : Int) return Int;
-
-       function "+" (A, B : Int) return Int is
-          AI : Integer := Integer (A);
-          BI : Integer := Integer (B);
-       begin
-          return Int (AI + BI);
-       end;
-
-       A : Int     := 1;
-       B : Integer := 1;
-    begin
-       A := A + 2;
-       B := B + 2;
-    end Main;
-
-Starting with the same procedure as before, we get the following
-expanded code:
-
-.. code-block:: none
-
-    Source recreated from tree for Main (body)
-    ------------------------------------------
-
-    procedure main is
-       [type main__TintB is new integer]
-       freeze main__TintB []
-       type main__int is new integer;
-       function main__Oadd (a : main__int; b : main__int) return main__int;
-
-       function main__Oadd (a : main__int; b : main__int) return main__int is
-          ai : integer := integer(a);
-          bi : integer := integer(b);
-       begin
-          return main__int(ai {+} bi);
-       end main__Oadd;
-
-       a : main__int := 1;
-       b : integer := 1;
-    begin
-       a := main__Oadd (1, 2);
-       b := b {+} 2;
-       return;
-    end main;
-
-This shows more significant differences than the last example.  When
-we analyze the expanded code, we notice that the compiler selects the
-overridden addition for the operation on the :ada:`A` variable of
-:ada:`Int` type. In this expansion, the :ada:`main__Oadd` function
-represents the overridden addition. For the operation on the :ada:`B`
-variable, the standard operator is used.  The brackets (``{+}``)
-indicate that overflow checking is required when performing the
-operation.
-
-Analyzing the expanded code in this way is helpful to verify that the
-operation selected by the compiler is the one we expected.  You may
-also want to look at the expanded code to see how high-level
-constructs such as tasking are implemented.
-
-
-Target-dependent information
-----------------------------
-
-Target-dependent information refers to information about the computer
-architecture to be used as the target of the compilation process. This
-includes information such as size and alignment of base data types and
-endianness.
-
-You can generate a file containing target dependent information by
-using the ``-gnatet=path`` switch. For example:
+Now that the toolchain is installed, you can start using it. From the
+command line, you can compile a project using :program:`gprbuild`. For
+example:
 
 .. code-block:: sh
 
-    gnat compile ./src/main.adb -gnatet=machine.tdi
+    gprbuild -P project.gpr
 
-On a typical 64-bit PC, the output file :file:`machine.tdi` will
-contain the following information:
-
-.. code-block:: none
-
-    Bits_BE                       0
-    Bits_Per_Unit                 8
-    Bits_Per_Word                64
-    Bytes_BE                      0
-    Char_Size                     8
-    Double_Float_Alignment        0
-    Double_Scalar_Alignment       0
-    Double_Size                  64
-    Float_Size                   32
-    Float_Words_BE                0
-    Int_Size                     32
-    Long_Double_Size            128
-    Long_Long_Size               64
-    Long_Size                    64
-    Maximum_Alignment            16
-    Max_Unaligned_Field          64
-    Pointer_Size                 64
-    Short_Enums                   0
-    Short_Size                   16
-    Strict_Alignment              0
-    System_Allocator_Alignment   16
-    Wchar_T_Size                 32
-    Words_BE                      0
-
-    float          6  I  32  32
-    double        15  I  64  64
-    long double   18  I  80 128
-    TF            33  I 128 128
-
-If you have a specific predefined architecture as a target that differs from
-the target we're currently working on, it's possible to have the
-compilation process use this specific architecture. You do this by using
-the ``-gnateT=path`` option. For example:
+You can find the binary built with the command above in the *obj*
+directory. You can the run it in the same way as you would do with any
+other executable on your platform. For example:
 
 .. code-block:: sh
 
-    gnat compile ./src/main.adb -gnateT=machine.tdi
+    obj/main
 
-In this case, the compiler will use the information from
-:file:`machine.tdi` as parameters for the target machine.  Note,
-however, that it will still be generating code for the target
-architecture, so changing these parameters too drastically can cause
-unexpected results, including the compiler being unable to compile
-your code at all.
+A handy command-line option for :program:`gprbuild` you might want to use
+is ``-p``, which automatically creates directories such as ``obj`` if they
+aren't in the directory tree:
+
+.. code-block:: sh
+
+    gprbuild -p -P project.gpr
+
+Ada source-code are stored in *.ads* and *.adb* files. To view the
+content of these files, you can use the GNAT Programming Studio
+(:program:`GPS`). To open :program:`GPS`, double-click on the *.gpr*
+project file or invoke :program:`GPS` on the command line:
+
+.. code-block:: sh
+
+    gps -P project.gpr
+
+To compile your project using :program:`GPS`, use the top-level menu to
+invoke ``Build`` |srarr| ``Project`` |srarr| ``main.adb`` (or press the
+keyboard shortcut ``F4``). To run the main program, click on
+``Build`` |srarr| ``Run`` |srarr| ``main`` (or press the keyboard shortcut
+``Shift + F2``).
 
 Compiler warnings
 -----------------

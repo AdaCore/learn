@@ -50,15 +50,15 @@ test_ada_for_the_cpp_java_developer:
 	@$(TEST_DRIVER) ../courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
 	@echo ""
 
-test_gnat_toolchain_getting_started:
-	@echo "===== GNAT TOOLCHAIN: GETTING STARTED ====="
-	@$(TEST_DRIVER) ../courses/GNAT_Toolchain_Getting_Started/chapters/*.rst
+test_gnat_toolchain_intro:
+	@echo "===== GNAT TOOLCHAIN INTRO ====="
+	@$(TEST_DRIVER) ../courses/GNAT_Toolchain_Intro/chapters/*.rst
 	@echo ""
 
 tests: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark \
 	test_spark_for_the_misra_c_developer \
 	test_ada_for_the_cpp_java_developer \
-	test_gnat_toolchain_getting_started
+	test_gnat_toolchain_intro
 
 publish-staging:
 	@echo "Publishing current branch to learn-staging..."
