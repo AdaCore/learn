@@ -4,4 +4,4 @@ Introduction
 ============
 
 This book presents an introduction to the GNAT toolchain included in the GNAT
-Community 18 edition.
+Community 19 edition.
