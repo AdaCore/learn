@@ -5,6 +5,9 @@ GNAT Community
 
 .. include:: <isoamsa.txt>
 
+.. role:: ada(code)
+   :language: ada
+
 This chapter presents the steps needed to install the GNAT Community
 toolchain and how to use basic commands from the toolchain.
 
