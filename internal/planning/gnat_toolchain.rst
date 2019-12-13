@@ -37,36 +37,43 @@ Intro to GNAT toolchain
   documentation with some common practical examples. However, for those
   tools, we always refer to their documentation for further details.
 
-- [ ] GNAT Community
+- [x] GNAT Community
 
     - **Goal**: show common compiler options / examples
 
-    - [ ] Expanded source-code (``-gnatG`` switch)
-    - [ ] Target dependent information
-    - [ ] Stack usage / overflow analysis
+    - [x] Expanded source-code (``-gnatG`` switch)
+    - [x] Target dependent information
+    - [x] GNAT warnings
 
-- [ ] GNAT tools
+- [x] GNAT tools
 
-    - [ ] ``gnatchop``
-    - [ ] ``gnatprep``
-    - [ ] ``gnatelim``
-    - [ ] ``gnatcheck``
-    - [ ] ``gnatxref``
-    - [ ] ``gnatmem``
-    - [ ] ``gnatmetric``
-    - [ ] ``gnatdll``
-    - [ ] ``gnatdoc``
-    - [ ] ``gnat2xml``
-    - [ ] ``gnatpp``
-    - [ ] ``gnatstub``
-    - [ ] ``gnattest``
-    - [ ] ``gnatsymbolize``
+    - [x] ``gnatchop``
+    - [x] ``gnatprep``
+    - [x] ``gnatelim``
+    - [x] ``gnatxref``
+    - [x] ``gnatmem``
+    - [x] ``gnatmetric``
+    - [x] ``gnatdoc``
+    - [x] ``gnat2xml``
+    - [x] ``gnatpp``
+    - [x] ``gnatstub``
+    - [x] ``gnattest``
 
-- [ ] GPRbuild
+- [x] GPRbuild
 
-    - [ ] Configuration pragmas / files
-    - [ ] Project dependencies
+    - [x] Configuration pragmas / files
+    - [x] Project dependencies
+
+
+Moved to Embedded course
+------------------------
+
+- [ ] Stack usage / overflow analysis
 
 - [ ] GPS
 
     - [ ] Working with boards (setup, debugging)
+
+- [ ] Tools
+
+    - [ ] gnatsymbolize
