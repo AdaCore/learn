@@ -108,32 +108,34 @@ warnings, their purpose, and how you activate them.
 .. sectionauthor:: Bob Duff
 
 We first need to understand the difference between a *warning* and an
-*error*. Errors are generally violations of the Ada language rules as
-specified in the Ada Reference Manual; warnings don't indicate
-violations of those rules, but rather flag things in a program that
-seem suspicious to the compiler.  Warnings are GNAT-specific, so other
-Ada compilers might not warn about the same things GNAT does or warn
-in a different way. Warnings are typically conservative; that is, some
-warnings are false alarms. The programmer needs to study the code to
-determine if the warning is describing a real problem.
+*error*. Errors are violations of the Ada language rules as specified
+in the Ada Reference Manual; warnings don't indicate violations of
+those rules, but instead flag constructs in a program that seem
+suspicious to the compiler.  Warnings are GNAT-specific, so other Ada
+compilers might not warn about the same things GNAT does or might warn
+about them in a different way. Warnings are typically conservative;
+meaning that some warnings are false alarms.  The programmer needs to study
+the code to determine if each warning is describing a real problem.
 
 Some warnings are produced by default while others are produced only if a
 switch enables them. Use the ``-gnatwa`` switch to turn on (almost) all
 warnings.
 
-Warnings are useless if you don't do something about them. If you give your
-team member some code that causes warnings, how are they supposed to know
-whether they represent real problems?  If you don't do something about
-them, people will soon starting ignoring warnings and there'll be many
-warnings scattered all over your code.  To avoid this, you may want to use
-the ``-gnatwae`` switch to both turn on (almost) all warnings and to treat
-warnings as errors. This forces you to get a clean (no warnings or errors)
+Warnings are useless if you don't do anything about them. If you give
+your team member some code that causes warnings, how are they supposed
+to know whether they represent real problems?  If you don't address
+each warning, people will soon starting ignoring warnings and there'll
+be lots of things that generates warnings scattered all over your
+code.  To avoid this, you may want to use the ``-gnatwae`` switch to
+both turn on (almost) all warnings and to treat warnings as
+errors. This forces you to get a clean (no warnings or errors)
 compilation.
 
-However, some warnings are false alarms. Use :ada:`pragma Warnings (Off)` to
-suppress false alarms. It's best to be as specific as possible and narrow
-down to a single line of code and a single warning. Also, use a comment to
-explain why the warning is a false alarm if it's not obvious.
+However, as we said, some warnings are false alarms. Use :ada:`pragma
+Warnings (Off)` to suppress those warnings. It's best to be as
+specific as possible and narrow down to a single line of code and a
+single warning. Then use a comment to explain why the warning is a
+false alarm if it's not obvious.
 
 Let's look at the following example:
 
@@ -188,13 +190,13 @@ all of them, you can suppress that type of message so the good warnings
 won't get buried beneath a pile of bogus ones. For example, you can use the
 ``-gnatwaeF`` switch to silence the warning on the first version of
 :ada:`Mumble` above: the ``F`` suppresses warnings on unreferenced formal
-parameters.  Using it would be a good idea if you have many of those.
+parameters.  It would be a good idea to use it if you have many of those.
 
 As discussed above, ``-gnatwa`` activates almost all warnings, but not
 all. Refer to the `section on warnings
 <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#warning-message-control>`_
-in the GNAT User's Guide to get a list of the remaining warnings you could
-also enable in your project. One example is ``-gnatw.o``, which displays
+of the GNAT User's Guide to get a list of the remaining warnings you
+could enable in your project. One is ``-gnatw.o``, which displays
 warnings when the compiler detects modified but unreferenced *Out*
 parameters. Consider the following example:
 
@@ -246,9 +248,9 @@ which was modified in the call to :ada:`Process`:
 
     main.adb:8:16: warning: "Success" modified by call, but value might not be referenced
 
-In this case, this is actually a bug in our program, since :ada:`X` only
-contains a valid value if :ada:`Success` is :ada:`True`. The corrected code
-for :ada:`Main` is:
+In this case, this actually points us to a bug in our program, since
+:ada:`X` only contains a valid value if :ada:`Success` is
+:ada:`True`. The corrected code for :ada:`Main` is:
 
 .. code-block:: ada
 
@@ -263,12 +265,12 @@ for :ada:`Main` is:
        end if;
     end Main;
 
-To summarize, we suggest turning on as many warnings as makes sense for
-your project. Then, when you see a warning message, look at the code and
-decide if it's real. If it is, fix the code. If it's a false alarm,
-suppress the warning. In either case, we strongly recommend you make the
-warning disappear before you check your code into your configuration
-management system.
+We suggest turning on as many warnings as makes sense for your
+project. Then, when you see a warning message, look at the code and decide
+if it's real. If it is, fix the code. If it's a false alarm, suppress the
+warning. In either case, we strongly recommend you make the warning
+disappear before you check your code into your configuration management
+system.
 
 Style checking
 ~~~~~~~~~~~~~~
@@ -278,7 +280,7 @@ main compiler switch for this is ``-gnatyy``, which sets almost all
 standard style check options. As indicated by the `section on style
 checking
 <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking>`_
-in the GNAT User's Guide, using this switch "is equivalent to
+of the GNAT User's Guide, using this switch "is equivalent to
 ``-gnaty3aAbcefhiklmnprst``, that is all checking options enabled with the
 exception of ``-gnatyB``, ``-gnatyd``, ``-gnatyI``, ``-gnatyLnnn``,
 ``-gnatyo``, ``-gnatyO``, ``-gnatyS``, ``-gnatyu``, and ``-gnatyx``."
@@ -287,8 +289,9 @@ You may find that selecting the appropriate coding style is useful to
 detect issues at early stages. For example, the ``-gnatyO`` switch checks
 that overriding subprograms are explicitly marked as such. Using this
 switch can avoid surprises when you didn't intentionally want to override
-an operation for some data type. Therefore, we recommend studying the list
-of coding style switches and selecting the ones that seem relevant for your
+an operation for some data type.  We recommend studying the list of coding
+style switches and selecting the ones that seem relevant for your
 project. When in doubt, you can start by using all of them |mdash| using
 ``-gnatyy`` and ``-gnatyBdIL4oOSux``, for example |mdash| and deactivating
 the ones that cause too much *noise* during compilation.
+
