@@ -14,8 +14,7 @@ In chapter we present a brief overview of some of the tools included
 in the GNAT Community toolchain.
 
 For further details on how to use these tools, please refer to the
-`GNAT User's Guide
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn.html>`_.
+`GNAT User's Guide <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn.html>`_.
 
 gnatchop
 --------
@@ -86,8 +85,8 @@ compiler warning would now refer to the line in the original file, not
 in one of the generated ones.
 
 For documentation of other switches available for :program:`gnatchop`,
-please refer to the `gnatchop chapter
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#renaming-files-with-gnatchop>`_
+please refer to the
+`gnatchop chapter <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#renaming-files-with-gnatchop>`_
 of the GNAT User's Guide.
 
 gnatprep
@@ -101,8 +100,7 @@ way to do this uses a source-code preprocessor. However, in many cases
 where conditional compilation is needed, we can instead use the syntax
 of the Ada language or the functionality provided by
 :program:`GPRbuild` to avoid using a preprocessor in those cases. The
-`conditional compilation section
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#conditional-compilation>`_
+`conditional compilation section <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#conditional-compilation>`_
 of the GNAT User's Guide discusses how to do this in detail.
 
 Nevertheless, using a preprocessor is ofen the most straightforward
@@ -211,7 +209,8 @@ When we use one of these options, :program:`gnatprep` ensures that the
 output file :file:`do_something.adb` has the same line numbering as the
 original file (:file:`do_something.org.adb`).
 
-The `gnatprep chapter <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#preprocessing-with-gnatprep>`_.
+The
+`gnatprep chapter <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#preprocessing-with-gnatprep>`_.
 of the GNAT User's Guide contains further details about this tool, such as
 how to integrate :program:`gnatprep` with project files for
 :program:`GPRbuild` and how to replace symbols without using preprocessing
@@ -401,8 +400,8 @@ This generates the following output:
     main_app.adb:5:6:            Test_1
     p.adb:7:8:                   Test_1
 
-The `chapter on gnatxref and gnatfind
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-cross-referencing-tools-gnatxref-and-gnatfind>`_
+The
+`chapter on gnatxref and gnatfind <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-cross-referencing-tools-gnatxref-and-gnatfind>`_
 of the GNAT User's Guide contains further examples and describes the
 usage of more command-line switches for these tools.
 
@@ -469,8 +468,8 @@ For this example, :program:`gnatmem` produces the following output:
 This shows all the memory we allocated and tells us that we didn't
 deallocate any of it.
 
-Please refer to the `chapter on gnatmem
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_and_program_execution.html#the-gnatmem-tool>`_
+Please refer to the
+`chapter on gnatmem <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_and_program_execution.html#the-gnatmem-tool>`_
 of the GNAT User's Guide for a more detailed discussion of
 :program:`gnatmem`.
 
@@ -607,8 +606,8 @@ extract the documentation. For example, you can specify the ``-b`` switch
 to request that the package body be parsed for additional documentation
 and you can use the ``-p`` switch to request :program:`GNATdoc` to parse the
 private part of package specifications. For a complete list of switches,
-please refer to the `GNATdoc User's Guide
-<http://docs.adacore.com/gnatdoc-docs/users_guide/_build/html/index.html>`_.
+please refer to the
+`GNATdoc User's Guide <http://docs.adacore.com/gnatdoc-docs/users_guide/_build/html/index.html>`_.
 
 gnat2xml
 --------
@@ -819,8 +818,8 @@ XML representation is quite verbose because :program:`gnat2xml` classifies
 each syntactical element in the source and produces a detailed description
 of each.
 
-Please refer to the `section on gnat2xml
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-ada-to-xml-converter-gnat2xml>`_
+Please refer to the
+`section on gnat2xml <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-ada-to-xml-converter-gnat2xml>`_
 of the GNAT User's Guide for a detailed discussion on :program:`gnat2xml`.
 
 gnatpp
@@ -883,9 +882,8 @@ specifying a project file. For example:
 
 :program:`gnatpp` has an extensive list of options, which allow for
 specifying the formatting of many aspects of the source and implementing
-many coding styles. These are extensively discussed in the `section on
-gnatpp
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-gnat-pretty-printer-gnatpp>`_
+many coding styles. These are extensively discussed in the
+`section on gnatpp <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-gnat-pretty-printer-gnatpp>`_
 of the GNAT User's Guide.
 
 gnatstub
@@ -955,16 +953,16 @@ also created:
       subprograms in our application.
 
 This is a good starting point for the implementation of the body. Please
-refer to the `section on gnatstub
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-body-stub-generator-gnatstub>`_
+refer to the
+`section on gnatstub <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-body-stub-generator-gnatstub>`_
 of the GNAT User's Guide for a detailed discussion of :program:`gnatstub`
 and its options.
 
 gnattest
 --------
 
-:program:`gnattest` creates unit tests based on `AUnit
-<http://docs.adacore.com/live/wave/aunit/html/aunit_cb/aunit_cb.html>`_,
+:program:`gnattest` creates unit tests based on
+`AUnit <http://docs.adacore.com/live/wave/aunit/html/aunit_cb/aunit_cb.html>`_,
 the Ada Unit Testing Framework. In principle, we could create unit tests
 based on AUnit by coding everything by hand. However, :program:`gnattest`
 saves us time by generating all the boilerplate code required to connect
@@ -1033,10 +1031,9 @@ that and rebuild the application, we get:
 Of course, this latest change created fake tests. We would now
 implement the actual tests where those calls to :ada:`Assert` were
 originally located. You can find more details on how to do that in the
-`AUnit Cookbook
-<http://docs.adacore.com/live/wave/aunit/html/aunit_cb/aunit_cb.html>`_.
+`AUnit Cookbook <http://docs.adacore.com/live/wave/aunit/html/aunit_cb/aunit_cb.html>`_.
 :program:`gnattest` offers many options to configure the test
 generation and integrate it to project files. You can find more
-information in the `section on gnattest
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-unit-test-generator-gnattest>`_
+information in the
+`section on gnattest <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-unit-test-generator-gnattest>`_
 in the GNAT User's Guide.

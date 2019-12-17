@@ -131,11 +131,11 @@ both turn on (almost) all warnings and to treat warnings as
 errors. This forces you to get a clean (no warnings or errors)
 compilation.
 
-However, as we said, some warnings are false alarms. Use :ada:`pragma
-Warnings (Off)` to suppress those warnings. It's best to be as
-specific as possible and narrow down to a single line of code and a
-single warning. Then use a comment to explain why the warning is a
-false alarm if it's not obvious.
+However, as we said, some warnings are false alarms. Use
+:ada:`pragma Warnings (Off)` to suppress those warnings. It's best to be as
+specific as possible and narrow down to a single line of code and a single
+warning. Then use a comment to explain why the warning is a false alarm if it's
+not obvious.
 
 Let's look at the following example:
 
@@ -193,11 +193,11 @@ won't get buried beneath a pile of bogus ones. For example, you can use the
 parameters.  It would be a good idea to use it if you have many of those.
 
 As discussed above, ``-gnatwa`` activates almost all warnings, but not
-all. Refer to the `section on warnings
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#warning-message-control>`_
+all. Refer to the
+`section on warnings <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#warning-message-control>`_
 of the GNAT User's Guide to get a list of the remaining warnings you
 could enable in your project. One is ``-gnatw.o``, which displays
-warnings when the compiler detects modified but unreferenced *Out*
+warnings when the compiler detects modified but unreferenced :ada:`out`
 parameters. Consider the following example:
 
 .. code-block:: ada
@@ -277,9 +277,8 @@ Style checking
 
 GNAT provides many options to configure style checking of your code. The
 main compiler switch for this is ``-gnatyy``, which sets almost all
-standard style check options. As indicated by the `section on style
-checking
-<https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking>`_
+standard style check options. As indicated by the
+`section on style checking <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking>`_
 of the GNAT User's Guide, using this switch "is equivalent to
 ``-gnaty3aAbcefhiklmnprst``, that is all checking options enabled with the
 exception of ``-gnatyB``, ``-gnatyd``, ``-gnatyI``, ``-gnatyLnnn``,
