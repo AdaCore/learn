@@ -231,7 +231,7 @@ This is the code for the :ada:`Test_Pkg` package:
     end Test_Pkg;
 
 For this example, we use a directory :file:`test_pkg` containing the
-project file and the subdirectory :file:`test_pkg/src` containing the
+project file and a subdirectory :file:`test_pkg/src` containing the
 source files.  The directory structure looks like this:
 
 .. code-block:: none
@@ -243,7 +243,7 @@ source files.  The directory structure looks like this:
     |    |    | test_pkg.ads
 
 Suppose we want to use the :ada:`Test_Pkg` package in a new
-application. Instead of directly including the source files of the
+application. Instead of directly including the source files of
 :ada:`Test_Pkg` in the project file of our application (either
 directly or indirectly), we can instead reference the existing project
 file for the package by using ``with "test_pkg.gpr"``. This is the
@@ -259,7 +259,7 @@ resulting project file:
         for Main use ("main.adb");
     end Default;
 
-This is the code for the main application:
+And this is the code for the main application:
 
 .. code-block:: ada
 
@@ -304,7 +304,7 @@ This is what we had to do:
     - We added the specification for ``Library_Name``, ``Library_Dir``
       and ``Library_Kind``.
 
-We don't need to change the project file for the main application:
+We don't need to change the project file for the main application because
 :program:`GPRbuild` automatically detects the dependency information
 (e.g., the path to the dynamic library) from the project file for the
 :ada:`Test_Pkg` package.  With these small changes, we're able to
@@ -321,7 +321,7 @@ requirements depending on your environment.
 
 In :program:`GPRbuild`, we can use ``Local_Configuration_Pragmas`` (in
 the ``Compiler`` package) to indicate the configuration pragmas file
-to be used with the source files in our project.
+we want :program:`GPRbuild` to use with the source files in our project.
 
 The file :file:`gnat.adc` shown here is an example of a configuration
 pragma file:
@@ -347,15 +347,16 @@ the complete project file:
 
     end Default;
 
-Each pragma contained in :file:`gnat.adc` is applied to the
-compilation of each file.
+Each pragma contained in :file:`gnat.adc` is used in the compilation
+of each file, as if that pragma was placed at the beginning of each
+file.
 
 Configuration packages
 ----------------------
 
-You can control the compilation of the source code by creating variant
-for each various cases and selecting the appropriate variant in the
-compilation package in the project file. One example where this is
+You can control the compilation of your source code by creating
+variants for various cases and selecting the appropriate variant in
+the compilation package in the project file. One example where this is
 useful is conditional compilation using Boolean constants, shown in
 the code below:
 
@@ -377,9 +378,9 @@ the code below:
 
 In this example, we declared the Boolean constant in the :ada:`Config`
 package. By having multiple versions of that package, we can create
-different specifications for each usage. For this simple example,
-there are only two possible cases: either :ada:`Debug` is :ada:`True`
-or :ada:`False`. However, we can apply this strategy to create more
+different behavior for each usage. For this simple example, there are
+only two possible cases: either :ada:`Debug` is :ada:`True` or
+:ada:`False`. However, we can apply this strategy to create more
 complex cases.
 
 In our next example, we store the packages in the subdirectories :file:`debug`
