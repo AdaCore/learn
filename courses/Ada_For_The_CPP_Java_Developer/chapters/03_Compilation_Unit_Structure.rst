@@ -1,7 +1,9 @@
 Compilation Unit Structure
 ----------------------------
 
-C++ programming style usually promotes the use of two distinct files: header files used to define specifications (*.h*, *.hxx*, *.hpp*), and implementation files which contain the executable code (*.c*, *.cxx*, *.cpp*). However, the distinction between specification and implementation is not enforced by the compiler and may need to be worked around in order to implement, for example, inlining or templates.
+.. include:: ../../global.txt
+
+C++ programming style usually promotes the use of two distinct files: header files used to define specifications (.h*, *.hxx*, *.hpp*), and implementation files which contain the executable code (*.c*, *.cxx*, *.cpp*). However, the distinction between specification and implementation is not enforced by the compiler and may need to be worked around in order to implement, for example, inlining or templates.
 
 Java compilers expect both the implementation and specification to be in the same *.java* file. (Yes, design patterns allow using interfaces to separate specification from implementation to a certain extent, but this is outside of the scope of this description.)
 
@@ -42,9 +44,9 @@ Without further ado, we present the famous "Hello World" in three languages:
       }
    }
 
-The first line of Ada we see is the **with** clause, declaring that the unit (in this case, the Main subprogram) will require the services of the package *Ada.Text_IO*. This is different from how **#include** works in C++ in that it does not, in a logical sense, copy/paste the code of *Ada.Text_IO* into *Main*. The **with** clause directs the compiler to make the public interface of the *Ada.Text_IO* package visible to code in the unit (here *Main*) containing the **with** clause. Note that this construct does not have a direct analog in Java, where the entire CLASSPATH is always accessible. Also, the name "Main" for the main subprogram was chosen for consistency with C++ and Java style but in Ada the name can be whatever the programmer chooses.
+The first line of Ada we see is the :ada:`with` clause, declaring that the unit (in this case, the Main subprogram) will require the services of the package :ada:`Ada.Text_IO`. This is different from how :cpp:`#include` works in C++ in that it does not, in a logical sense, copy/paste the code of :ada:`Ada.Text_IO` into :ada:`Main`. The :ada:`with` clause directs the compiler to make the public interface of the :ada:`Ada.Text_IO` package visible to code in the unit (here :ada:`Main`) containing the :ada:`with` clause. Note that this construct does not have a direct analog in Java, where the entire CLASSPATH is always accessible. Also, the name ``Main`` for the main subprogram was chosen for consistency with C++ and Java style but in Ada the name can be whatever the programmer chooses.
 
-The **use** clause is the equivalent of **using namespace** in C++, or **import** in Java (though it wasn't necessary to use **import** in the Java example above). It allows you to omit the full package name when referring to **with**\ed units. Without the **use** clause, any reference to *Ada.Text_IO* items would have had to be fully qualified with the package name. The *Put_Line* line would then have read:
+The :ada:`use` clause is the equivalent of :cpp:`using namespace` in C++, or :java:`import` in Java (though it wasn't necessary to use :java:`import` in the Java example above). It allows you to omit the full package name when referring to :ada:`with`'ed units. Without the :ada:`use` clause, any reference to :ada:`Ada.Text_IO` items would have had to be fully qualified with the package name. The :ada:`Put_Line` line would then have read:
 
 .. code-block:: ada
 
@@ -74,7 +76,7 @@ The implementation in a package body (written in a *.adb* file) has the structur
 
    end Package_Name;
 
-The **private** reserved word is used to mark the start of the private portion of a package spec. By splitting the package spec into private and public parts, it is possible to make an entity available for use while hiding its implementation. For instance, a common use is declaring a **record** (Ada's **struct**) whose fields are only visible to its package and not to the caller. This allows the caller to refer to objects of that type, but not to change any of its contents directly.
+The :ada:`private` reserved word is used to mark the start of the private portion of a package spec. By splitting the package spec into private and public parts, it is possible to make an entity available for use while hiding its implementation. For instance, a common use is declaring a :ada:`record` (Ada's :cpp:`struct`) whose fields are only visible to its package and not to the caller. This allows the caller to refer to objects of that type, but not to change any of its contents directly.
 
 The package body contains implementation code, and is only accessible to outside code through declarations in the package spec.
 

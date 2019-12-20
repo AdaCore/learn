@@ -1,6 +1,8 @@
 Generics
 ----------
 
+.. include:: ../../global.txt
+
 Ada, C++, and Java all have support for generics or templates, but on different sets of language entities. A C++ template can be applied to a class or a function. So can a Java generic. An Ada generic can be either a package or a subprogram.
 
 Generic Subprograms
@@ -106,7 +108,7 @@ Next, we're going to create a generic unit containing data and subprograms. In J
         public static int G;
    }
 
-In all three cases, there's an instance variable (*v*) and a static variable (*G*). Let's now look at the behavior (and syntax) of these three instantiations:
+In all three cases, there's an instance variable (:ada:`v`) and a static variable (:ada:`G`). Let's now look at the behavior (and syntax) of these three instantiations:
 
 
 [Ada]
@@ -141,12 +143,12 @@ In all three cases, there's an instance variable (*v*) and a static variable (*G
    C.G = 1;
    C.G = 2;
 
-In the Java case, we access the generic entity directly without using a parametric type. This is because there's really only one instance of *C*, with each instance sharing the same global variable *G*. In C++, the instances are implicit, so it's not possible to create two different instances with the same parameters. The first two assignments are manipulating the same global while the third one is manipulating a different instance. In the Ada case, the three instances are explicitly created, named, and referenced individually.
+In the Java case, we access the generic entity directly without using a parametric type. This is because there's really only one instance of :java:`C`, with each instance sharing the same global variable :java:`G`. In C++, the instances are implicit, so it's not possible to create two different instances with the same parameters. The first two assignments are manipulating the same global while the third one is manipulating a different instance. In the Ada case, the three instances are explicitly created, named, and referenced individually.
 
 Generic Parameters
 ~~~~~~~~~~~~~~~~~~~~
 
-Ada offers a wide variety of generic parameters which is difficult to translate into other languages. The parameters used during instantiation---and as a consequence those on which the generic unit may rely on---may be variables, types, or subprograms with certain properties. For example, the following provides a sort algorithm for any kind of array:
+Ada offers a wide variety of generic parameters which is difficult to translate into other languages. The parameters used during instantiation |mdash| and as a consequence those on which the generic unit may rely on |mdash| may be variables, types, or subprograms with certain properties. For example, the following provides a sort algorithm for any kind of array:
 
 .. code-block:: ada
 
@@ -157,7 +159,7 @@ Ada offers a wide variety of generic parameters which is difficult to translate 
       type Array_Type is array (Index range <>) of Component;
    procedure Sort (A : in out Array_Type);
 
-The above declaration states that we need a type (*Component*), a discrete type (*Index*), a comparison subprogram (*"<"*), and an array definition (*Array_Type*). Given these, it's possible to write an algorithm that can sort any *Array_Type*. Note the usage of the **with** reserved word in front of the function name, to differentiate between the generic parameter and the beginning of the generic subprogram.
+The above declaration states that we need a type (:ada:`Component`), a discrete type (:ada:`Index`), a comparison subprogram (:ada:`"<"`), and an array definition (:ada:`Array_Type`). Given these, it's possible to write an algorithm that can sort any :ada:`Array_Type`. Note the usage of the :ada:`with` reserved word in front of the function name, to differentiate between the generic parameter and the beginning of the generic subprogram.
 
 Here is a non-exhaustive overview of the kind of constraints that can be put on types:
 
