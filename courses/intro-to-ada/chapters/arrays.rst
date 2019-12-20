@@ -4,14 +4,7 @@ Arrays
 :code-config:`run_button=True;prove_button=False;accumulate_code=False`
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 .. sectionauthor:: Raphaël Amiard
 

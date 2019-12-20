@@ -5,14 +5,7 @@ Subprograms
 
 .. _Subprograms:
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 .. sectionauthor:: Raphaël Amiard
 
@@ -235,8 +228,8 @@ to explicitly store it in a local variable.
         B : Boolean := Read_Int (Stream, My_Int);
         pragma Unreferenced (B);
 
-    - Or give the variable a name that contains any of the strings ``discard``
-      ``dummy`` ``ignore`` ``junk`` ``unused`` (case insensitive)
+    - Or give the variable a name that contains any of the strings :ada:`discard`
+      :ada:`dummy` :ada:`ignore` :ada:`junk` :ada:`unused` (case insensitive)
 
 .. ?? This example might be confusing since out parameters have not been covered.
 .. ?? It would be better to show an example where the function's side effect is on

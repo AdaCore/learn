@@ -4,14 +4,7 @@ Interfacing with C
 :code-config:`run_button=False;prove_button=False;accumulate_code=True`
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 .. sectionauthor:: Gustavo A. Hoffmann
 
@@ -23,9 +16,10 @@ and C++. This section discusses how to interface with C.
 Multi-language project
 ----------------------
 
-By default, when using ``gprbuild`` we only compile Ada source files.  To
-compile C files as well, we need to modify the project file used by
-``gprbuild``. We use the ``Languages`` entry, as in the following example:
+By default, when using :program:`gprbuild` we only compile Ada source files.
+To compile C files as well, we need to modify the project file used by
+:program:`gprbuild`. We use the ``Languages`` entry, as in the following
+example:
 
 .. code-block:: ada
 
@@ -45,7 +39,7 @@ Type convention
 To interface with data types declared in a C application, you specify
 the :ada:`Convention` aspect on the corresponding Ada type
 declaration. In the following example, we interface with the
-``C_Enum`` enumeration declared in a C source file:
+:ada:`C_Enum` enumeration declared in a C source file:
 
 .. code-block:: ada
 
@@ -78,7 +72,7 @@ package, which contains most of the type definitions we need. For example:
        null;
     end Show_C_Struct;
 
-Here, we're interfacing with a C struct (``C_Struct``) and using the
+Here, we're interfacing with a C struct (:ada:`C_Struct`) and using the
 corresponding data types in C (:c:`int`, :c:`long`, :c:`unsigned` and
 :c:`double`). This is the declaration in C:
 
@@ -136,7 +130,7 @@ Here's the corresponding C definition:
     }
 
 If you want, you can use a different subprogram name in the Ada code. For
-example, we could call the C function ``Get_Value``:
+example, we could call the C function :ada:`Get_Value`:
 
 .. code-block:: ada
 
@@ -222,8 +216,8 @@ subprograms: we specify the :ada:`Import` and :ada:`Convention`
 aspects for each variable we want to import.
 
 Let's reuse an example from the previous section. We'll add a global
-variable (``func_cnt``) to count the number of times the function
-(``my_func``) is called:
+variable (:c:`func_cnt`) to count the number of times the function
+(:c:`my_func`) is called:
 
 .. code-block:: c
 
@@ -233,7 +227,7 @@ variable (``func_cnt``) to count the number of times the function
 
     int my_func (int a);
 
-The variable is declared in the C file and incremented in ``my_func``:
+The variable is declared in the C file and incremented in :c:`my_func`:
 
 .. code-block:: c
 
@@ -280,7 +274,7 @@ In the Ada application, we just reference the foreign variable:
     end Show_C_Func;
 
 As we see by running the application, the value of the counter is the
-number of times ``my_func`` was called.
+number of times :c:`my_func` was called.
 
 We can use the :ada:`External_Name` aspect to give a different name
 for the variable in the Ada application in the same we do for
@@ -315,7 +309,7 @@ example, but this time have the counter incremented in Ada code:
 
     end C_API;
 
-The variable is then increment in ``My_Func``:
+The variable is then increment in :ada:`My_Func`:
 
 .. code-block:: ada
 
@@ -356,7 +350,7 @@ In the C application, we just need to declare the variable and use it:
     }
 
 Again, by running the application, we see that the value from the counter
-is the number of times that ``my_func`` was called.
+is the number of times that :c:`my_func` was called.
 
 Generating bindings
 -------------------
@@ -381,7 +375,7 @@ To create Ada bindings, we'll call the compiler like this:
 
     gcc -c -fdump-ada-spec -C ./test.h
 
-The result is an Ada spec file called ``test_h.ads``:
+The result is an Ada spec file called :file:`test_h.ads`:
 
 .. code-block:: ada
 
@@ -400,7 +394,7 @@ The result is an Ada spec file called ``test_h.ads``:
 
     end test_h;
 
-Now we simply refer to this ``test_h`` package in our Ada application:
+Now we simply refer to this :file:`test_h` package in our Ada application:
 
 .. code-block:: ada
 
@@ -426,7 +420,7 @@ creating as the operand to ``fdump-ada-spec``:
 
     gcc -c -fdump-ada-spec -fada-spec-parent=Ext_C_Code -C ./test.h
 
-This creates the file ``ext_c_code-test_h.ads``:
+This creates the file :file:`ext_c_code-test_h.ads`:
 
 .. code:: ada
     :class: ada-syntax-only
@@ -536,7 +530,7 @@ Next, we'll create our bindings:
 
     gcc -c -fdump-ada-spec -C ./test.h
 
-This creates the following specification in ``test_h.ads``:
+This creates the following specification in :file:`test_h.ads`:
 
 .. code-block:: ada
 
@@ -572,7 +566,7 @@ This creates the following specification in ``test_h.ads``:
     end test_h;
 
 As we can see, the binding generator completely ignores the
-declaration :c:`struct test` and all references to the ``test`` struct
+declaration :c:`struct test` and all references to the :c:`test` struct
 are replaced by addresses (:ada:`System.Address`). Nevertheless, these
 bindings are good enough to allow us to create a test application in
 Ada:
@@ -609,10 +603,10 @@ file. This requires manual analysis of the header file. The good news is
 that we can use the automatic generated bindings as a starting point and
 adapt them to our needs. For example, we can:
 
-    #. Define a ``Test`` type based on :ada:`System.Address` and use it in
+    #. Define a :ada:`Test` type based on :ada:`System.Address` and use it in
        all relevant functions.
 
-    #. Remove the ``test_`` prefix in all operations on the ``Test``
+    #. Remove the ``test_`` prefix in all operations on the :ada:`Test`
        type.
 
 This is the resulting specification:
@@ -676,5 +670,5 @@ And this is the corresponding Ada body:
        Destroy (T);
     end Show_Adapted_C_Struct_Bindings;
 
-Now we can use the ``Test`` type and its operations in a clean, readable
+Now we can use the :ada:`Test` type and its operations in a clean, readable
 way.

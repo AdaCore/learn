@@ -3,14 +3,7 @@ Privacy
 
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 .. sectionauthor:: Raphaël Amiard
 
@@ -112,7 +105,7 @@ for you.
        ...
     end Stacks;
 
-Here is how the ``Stacks`` package would be used:
+Here is how the :ada:`Stacks` package would be used:
 
 .. code-block:: ada
 
@@ -165,11 +158,11 @@ assignment and comparison operations are not automatically provided.
 This is useful because, for example, for some data types the built-in assignment
 operation might be incorrect (for example when a deep copy is required).
 
-Ada does allow you to overload the comparison operators ``=`` and ``/=`` for limited
+Ada does allow you to overload the comparison operators :ada:`=` and :ada:`/=` for limited
 types (and to override the built-in declarations for non-limited types).
 
 Ada also allows you to implement special semantics for assignment via
 `controlled types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-7-6.html>`_. However, in some cases
-assignment is simply inappropriate; one example is the ``File_Type`` from the
-``Ada.Text_IO`` package, which is declared as a limited type and thus
+assignment is simply inappropriate; one example is the :ada:`File_Type` from the
+:ada:`Ada.Text_IO` package, which is declared as a limited type and thus
 attempts to assign one file to another would be detected as illegal.

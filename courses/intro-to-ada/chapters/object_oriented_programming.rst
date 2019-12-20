@@ -259,10 +259,10 @@ you need polymorphism. For example, you can't do the following:
        null;
     end Main;
 
-This is because an object of a type ``T`` is exactly of the type
-``T``, whether ``T`` is tagged or not. What you want to say as a
+This is because an object of a type :ada:`T` is exactly of the type
+:ada:`T`, whether :ada:`T` is tagged or not. What you want to say as a
 programmer is "I want O3 to be able to hold an object of type
-``My_Class`` or any type descending from ``My_Class``". Here's how you
+:ada:`My_Class` or any type descending from :ada:`My_Class`". Here's how you
 do that:
 
 .. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
@@ -302,10 +302,10 @@ tagged type. The eventual goal of OOP is to make a dispatching call: a
 call to a primitive (method) that depends on the exact type of the
 object.
 
-But, if you think carefully about it, a variable of type ``My_Class``
+But, if you think carefully about it, a variable of type :ada:`My_Class`
 always contains an object of exactly that type. If you want to have a
-variable that can contain a ``My_Class`` or any derived type, it has
-to be of type ``My_Class'Class``.
+variable that can contain a :ada:`My_Class` or any derived type, it has
+to be of type :ada:`My_Class'Class`.
 
 In other words, to make a dispatching call, you must first have an
 object that can be either of a type or any type derived from this
@@ -336,12 +336,12 @@ type, namely an object of a classwide type.
        --  Dispatching: Calls My_Class.Foo
     end Main;
 
-.. attention:: You can convert an object of type ``Derived`` to an
-    object of type ``My_Class``. This is called a *view conversion* in
+.. attention:: You can convert an object of type :ada:`Derived` to an
+    object of type :ada:`My_Class`. This is called a *view conversion* in
     Ada parlance and is useful, for example, if you want to call a
     parent method.
 
-    In that case, the object really is converted to a ``My_Class``
+    In that case, the object really is converted to a :ada:`My_Class`
     object, which means its tag is changed. Since tagged objects are
     always passed by reference, you can use this kind of conversion to
     modify the state of an object: changes to converted object will

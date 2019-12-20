@@ -3,14 +3,7 @@ Imperative language
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 .. sectionauthor:: Raphaël Amiard
 
@@ -78,13 +71,13 @@ There are several noteworthy things in the above program:
    standard library module, the :ada:`Ada.Text_IO` package,
    which contains a procedure to print text on the screen: :ada:`Put_Line`.
 
--  ``Greet`` is a procedure, and the main entry point for our first
+-  :ada:`Greet` is a procedure, and the main entry point for our first
    program. Unlike in C or C++, it can be named anything you prefer. The
    builder will determine the entry point. In our simple example,
-   ``gprbuild``, GNAT's builder, will use the file you passed as
+   :program:`gprbuild`, GNAT's builder, will use the file you passed as
    parameter.
 
--  :ada:`Put_Line` is a procedure, just like ``Greet``, except it is
+-  :ada:`Put_Line` is a procedure, just like :ada:`Greet`, except it is
    declared in the :ada:`Ada.Text_IO` module. It is the Ada equivalent
    of C's :c:`printf`.
 
@@ -117,7 +110,7 @@ Here is a minor variant of the "Hello, World" example:
     end Greet;
 
 This version utilizes an Ada feature known as a :ada:`use` clause, which has
-the form ``use`` *package-name*. As illustrated by the call on
+the form :ada:`use` *package-name*. As illustrated by the call on
 :ada:`Put_Line`, the effect is that entities from the named package can be
 referenced directly, without the *package-name.* prefix.
 
@@ -233,7 +226,7 @@ alternative and more efficient style to accomplish the same effect,
 through a :ada:`case` statement.
 
 Ada's :ada:`elsif` keyword differs from C or
-C++, where nested ``else .. if`` blocks would be used instead.
+C++, where nested :ada:`else .. if` blocks would be used instead.
 And another difference is the presence of the :ada:`end if` in Ada,
 which avoids the problem known as the "dangling else".
 
@@ -248,7 +241,7 @@ in line with Ada's philosophy.
 For loops
 ~~~~~~~~~
 
-The first kind of loop is the ``for`` loop, which allows iteration through a
+The first kind of loop is the :ada:`for` loop, which allows iteration through a
 discrete range.
 
 .. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Greet_5a
@@ -276,12 +269,12 @@ Executing this procedure yields the following output:
 
 A few things to note:
 
--  ``1 .. 5`` is a discrete range, from ``1`` to ``5`` inclusive.
+-  :ada:`1 .. 5` is a discrete range, from :ada:`1` to :ada:`5` inclusive.
 
--  The loop parameter ``I`` (the name is arbitrary) in the body of the
+-  The loop parameter :ada:`I` (the name is arbitrary) in the body of the
    loop has a value within this range.
 
--  ``I`` is local to the loop, so you cannot refer to ``I``
+-  :ada:`I` is local to the loop, so you cannot refer to :ada:`I`
    outside the loop.
 
 -  Although the value of `I`` is incremented at each iteration, from the
@@ -292,7 +285,7 @@ A few things to note:
    String.  It is an example of a language construct known as an *attribute*,
    indicated by the "'" syntax, which will be covered in more detail later.
 
--  The ``&`` symbol is the concatenation operator for String values
+-  The :ada:`&` symbol is the concatenation operator for String values
 
 -  The :ada:`end loop` marks the end of the loop
 
@@ -365,11 +358,11 @@ the other kinds of Ada loops.
        end loop;
     end Greet_5b;
 
-This example has the same effect as ``Greet_5a`` shown earlier.
+This example has the same effect as :ada:`Greet_5a` shown earlier.
 
 It illustrates several concepts:
 
--  We have declared a variable named ``I`` between the :ada:`is` and the
+-  We have declared a variable named :ada:`I` between the :ada:`is` and the
    :ada:`begin`. This constitutes a *declarative region*.  Ada clearly
    separates the declarative region from the statement part of a
    subprogram. A declaration can appear in a declarative region but is
