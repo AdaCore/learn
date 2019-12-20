@@ -3,8 +3,7 @@
 Flow Analysis
 =====================================================================
 
-.. role:: ada(code)
-   :language: ada
+.. include:: ../../global.txt
 
 .. sectionauthor:: Claire Dross, Yannick Moy
 
@@ -48,8 +47,8 @@ For these reasons, SPARK requires every variable to be initialized before
 being read.
 
 Flow analysis is responsible for ensuring that SPARK code always fulfills
-this requirement. For example, in the function ``Max_Array`` shown below,
-we've neglected to initialize the value of ``Max`` prior to entering the
+this requirement. For example, in the function :ada:`Max_Array` shown below,
+we've neglected to initialize the value of :ada:`Max` prior to entering the
 loop. As a consequence, the value read by the condition of the if statement
 may be uninitialized. Flow analysis detects and reports this error.
 
@@ -92,8 +91,8 @@ statement may have been written for some purpose, but isn't accomplishing
 that purpose.  These kinds of errors can be difficult to detect in other
 ways.
 
-For example, the subprograms ``Swap1`` and ``Swap2`` shown below don't
-properly swap their two parameters ``X`` and ``Y``.  This error caused a
+For example, the subprograms :ada:`Swap1` and :ada:`Swap2` shown below don't
+properly swap their two parameters :ada:`X` and :ada:`Y`.  This error caused a
 statement to be ineffective.  That ineffective statement is not an error in
 itself, but flow analysis produces a warning since it can be indicative of
 an error, as it is here.
@@ -147,7 +146,7 @@ subprogram (since it may not be defined on subprogram entry), and warn
 whens an :ada:`in out` parameter isn't modified or when its initial value
 isn't used.  All of these may be signs of an error.
 
-We see an example below. The subprogram ``Swap`` is incorrect and GNATprove
+We see an example below. The subprogram :ada:`Swap` is incorrect and GNATprove
 warns about an input which isn't read:
 
 .. code:: ada prove_button
@@ -181,15 +180,15 @@ modes as a function of whether reads and writes are done to the parameter.
 | Initial value | Written on | Written on | Parameter mode |
 | read          | some path  | every path |                |
 +===============+============+============+================+
-| X             |            |            | in             |
+| X             |            |            | :ada:`in`      |
 +---------------+------------+------------+----------------+
-| X             | X          |            | in out         |
+| X             | X          |            | :ada:`in out`  |
 +---------------+------------+------------+----------------+
-| X             |            | X          | in out         |
+| X             |            | X          | :ada:`in out`  |
 +---------------+------------+------------+----------------+
-|               | X          |            | in out         |
+|               | X          |            | :ada:`in out`  |
 +---------------+------------+------------+----------------+
-|               |            | X          | out            |
+|               |            | X          | :ada:`out`     |
 +---------------+------------+------------+----------------+
 
 
@@ -210,7 +209,7 @@ checks that it's both correct and complete, meaning that no variables other
 than those stated in the contract are accessed or modified, either directly
 or through a subprogram call, and that all those listed are accessed or
 modified. For example, we may want to specify that the function
-``Get_Value_Of_X`` reads the value of the global variable ``X`` and doesn't
+:ada:`Get_Value_Of_X` reads the value of the global variable :ada:`X` and doesn't
 access any other global variable. If we do this through a comment, as is
 usually done in other languages, GNATprove can't verify that the code
 complies with this specification:
@@ -232,14 +231,14 @@ information to users of a subprogram. The value you specify for the
 :ada:`Global` aspect is an aggregate-like list of global variable names,
 grouped together according to their mode.
 
-In the example below, the procedure ``Set_X_To_Y_Plus_Z`` reads both ``Y``
-and ``Z``.  We indicate this by specifying them as the value for
-:ada:`Input`.  It also writes ``X``, which we specify using
-:ada:`Output`. Since ``Set_X_To_X_Plus_Y`` both writes ``X`` and reads its
-initial value, ``X``'s mode is :ada:`In_Out`. Like parameters, if no mode
+In the example below, the procedure :ada:`Set_X_To_Y_Plus_Z` reads both :ada:`Y`
+and :ada:`Z`.  We indicate this by specifying them as the value for
+:ada:`Input`.  It also writes :ada:`X`, which we specify using
+:ada:`Output`. Since :ada:`Set_X_To_X_Plus_Y` both writes :ada:`X` and reads its
+initial value, :ada:`X`'s mode is :ada:`In_Out`. Like parameters, if no mode
 is specified in a :ada:`Global` aspect, the default is :ada:`Input`.  We
-see this in the case of the declaration of ``Get_Value_Of_X``. Finally, if
-a subprogram, such as ``Incr_Parameter_X``, doesn't reference any global
+see this in the case of the declaration of :ada:`Get_Value_Of_X`. Finally, if
+a subprogram, such as :ada:`Incr_Parameter_X`, doesn't reference any global
 variables, you set the value of the global contract to :ada:`null`.
 
 .. code:: ada prove_flow_button
@@ -276,8 +275,8 @@ that it's correct and complete, that is, for each dependency you list, the
 variable depends on those listed and on no others.
 
 For example, you may want to say that the new value of each parameter of
-``Swap``, shown below, depends only on the initial value of the other
-parameter and that the value of ``X`` after the return of ``Set_X_To_Zero``
+:ada:`Swap`, shown below, depends only on the initial value of the other
+parameter and that the value of :ada:`X` after the return of :ada:`Set_X_To_Zero`
 doesn't depend on any global variables. If you indicate this through a
 comment, as you often do in other languages, GNATprove can't verify that
 this is actually the case.
@@ -306,9 +305,9 @@ arrow. On the left of each arrow are variables whose final value
 depends on the initial value of the variables you list on the right.
 
 For example, here we indicate that the final value of each parameter of
-``Swap`` depends only on the initial value of the other parameter. If the
+:ada:`Swap` depends only on the initial value of the other parameter. If the
 subprogram is a function, we list its result as an output, using the
-:ada:`Result` attribute, as we do for ``Get_Value_Of_X`` below.
+:ada:`Result` attribute, as we do for :ada:`Get_Value_Of_X` below.
 
 .. code:: ada prove_flow_button
 
@@ -348,7 +347,7 @@ subprogram is a function, we list its result as an output, using the
 
 Often, the final value of a variable depends on its own initial value.  You
 can specify this in a concise way using the :ada:`+` character, as we did
-in the specification of ``Set_X_To_X_Plus_Y`` above. If there's more than
+in the specification of :ada:`Set_X_To_X_Plus_Y` above. If there's more than
 one variable on the left of the arrow, a :ada:`+` means each variables
 depends on itself, not that they all depend on each other.  You can write
 the corresponding dependency with (:ada:`=> +`) or without (:ada:`=>+`)
@@ -356,13 +355,13 @@ whitespace.
 
 If you have a program where an input isn't used to compute the final value
 of any output, you express that by writting :ada:`null` on the left of the
-dependency relation, as we did for the ``Do_Nothing`` subprogram above.
+dependency relation, as we did for the :ada:`Do_Nothing` subprogram above.
 You can only write one such dependency relation, which lists all unused
 inputs of the subprogram, and it must be written last.  Such an annotation
 also silences flow analysis' warning about unused parameters. You can also
 write :ada:`null` on the right of a dependency relation to indicate that an
 output doesn't depend on any input. We do that above for the procedure
-``Set_X_To_Zero``.
+:ada:`Set_X_To_Zero`.
 
 Shortcomings
 ---------------------------------------------------------------------
@@ -386,8 +385,8 @@ subprogram returns, it checks that global and parameter outputs were
 modified.
 
 This can produce error messages on perfectly correct subprograms .  An
-example is ``Set_X_To_Y_Plus_Z`` below, which only sets its :ada:`out`
-parameter ``X`` when ``Overflow`` is :ada:`False`.
+example is :ada:`Set_X_To_Y_Plus_Z` below, which only sets its :ada:`out`
+parameter :ada:`X` when :ada:`Overflow` is :ada:`False`.
 
 .. code:: ada prove_flow_button
 
@@ -407,9 +406,9 @@ parameter ``X`` when ``Overflow`` is :ada:`False`.
 
 The message means that flow analysis wasn't able to verify that the program
 didn't read an uninitialized variable. To solve this problem, you can
-either set ``X`` to a dummy value when there's an overflow or manually
-verify that ``X`` is never used after a call to ``Set_X_To_Y_Plus_Z`` that
-returned :ada:`True` as the value of ``Overflow``.
+either set :ada:`X` to a dummy value when there's an overflow or manually
+verify that :ada:`X` is never used after a call to :ada:`Set_X_To_Y_Plus_Z` that
+returned :ada:`True` as the value of :ada:`Overflow`.
 
 
 Composite Types
@@ -427,7 +426,7 @@ the ability to accurately detect reads of uninitialized data.
 
 It's sometimes impossible for flow analysis to determine if an entire array
 object has been initialized. For example, after we write code to initialize
-every element of an unconstrained array ``A`` in chunks, we may still receive a
+every element of an unconstrained array :ada:`A` in chunks, we may still receive a
 message from flow analysis claiming that the array isn't initialized. To
 resolve this issue, you can either use a simpler loop over the full range of
 the array, or (even better) an aggregate assignment, or, if that's not possible,
@@ -505,7 +504,7 @@ as an input or output of a subprogram.
 
 Flow analysis complains when a procedure call initializes only some
 components of a record object.  It'll notify you of uninitialized
-components, as we see in subprogram ``Init_F2`` below.
+components, as we see in subprogram :ada:`Init_F2` below.
 
 .. code:: ada prove_flow_button
 
@@ -548,8 +547,8 @@ expressions, flow analysis still considers that path feasible and may emit
 messages based on it believing that execution along such a path is
 possible.
 
-For example, in the version of ``Absolute_Value`` below, flow analysis
-computes that ``R`` is uninitialized on a path that enters neither of the
+For example, in the version of :ada:`Absolute_Value` below, flow analysis
+computes that :ada:`R` is uninitialized on a path that enters neither of the
 two conditional statements. Because it doesn't consider values of
 expressions, it can't know that such a path is impossible.
 
@@ -570,7 +569,7 @@ expressions, it can't know that such a path is impossible.
     end Absolute_Value;
 
 To avoid this problem, you should make the control flow explicit, as in
-this second version of ``Absolute_Value``:
+this second version of :ada:`Absolute_Value`:
 
 .. code:: ada prove_flow_button
 
@@ -618,9 +617,9 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-The procedure ``Search_Array`` searches for an occurrence of element ``E``
-in an array ``A``. If it finds one, it stores the index of the element in
-``Result``.  Otherwise, it sets ``Found`` to :ada:`False`.
+The procedure :ada:`Search_Array` searches for an occurrence of element :ada:`E`
+in an array :ada:`A`. If it finds one, it stores the index of the element in
+:ada:`Result`.  Otherwise, it sets :ada:`Found` to :ada:`False`.
 
 .. code:: ada prove_flow_button
 
@@ -656,15 +655,15 @@ in an array ``A``. If it finds one, it stores the index of the element in
 
     end Show_Search_Array;
 
-GNATprove produces a message saying that ``Result`` is possibly
+GNATprove produces a message saying that :ada:`Result` is possibly
 uninitialized on return.  There are perfectly legal uses of the function
-``Search_Array``, but flow analysis detects that ``Result`` is not
+:ada:`Search_Array`, but flow analysis detects that :ada:`Result` is not
 initialized on the path that falls through from the loop. Even though this
 program is correct, you shouldn't ignore the message: it means flow
-analysis cannot guarantee that ``Result`` is always initialized at the call
-site and so assumes any read of ``Result`` at the call site will read
-initialized data.  Therefore, you should either initialize ``Result`` when
-``Found`` is false, which silences flow analysis, or verify this assumption
+analysis cannot guarantee that :ada:`Result` is always initialized at the call
+site and so assumes any read of :ada:`Result` at the call site will read
+initialized data.  Therefore, you should either initialize :ada:`Result` when
+:ada:`Found` is false, which silences flow analysis, or verify this assumption
 at each call site by other means.
 
 
@@ -672,7 +671,7 @@ Example #2
 ~~~~~~~~~~
 
 To avoid the message previously issued by GNATprove, we modify
-``Search_Array`` to raise an exception when ``E`` isn't found in ``A``:
+:ada:`Search_Array` to raise an exception when :ada:`E` isn't found in :ada:`A`:
 
 .. code:: ada prove_button
 
@@ -707,21 +706,21 @@ To avoid the message previously issued by GNATprove, we modify
     end Show_Search_Array;
 
 Flow analysis doesn't emit any messages in this case, meaning it can verify
-that ``Result`` can't be read in SPARK code while uninitialized. But why is
-that, since ``Result`` is still not initialized when ``E`` is not in ``A``?
-This is because the exception, ``Not_Found``, can never be caught within
+that :ada:`Result` can't be read in SPARK code while uninitialized. But why is
+that, since :ada:`Result` is still not initialized when :ada:`E` is not in :ada:`A`?
+This is because the exception, :ada:`Not_Found`, can never be caught within
 SPARK code (SPAK doesn't allow exception handlers).  However, the GNATprove
 tool also tries to ensure the absence of runtime errors in SPARK code, so
-tries to prove that ``Not_Found`` is never raised.  When it can't do that
+tries to prove that :ada:`Not_Found` is never raised.  When it can't do that
 here, it produces a different message.
 
 Example #3
 ~~~~~~~~~~
 
 In this example, we're using a discriminated record for the result of
-``Search_Array`` instead of conditionally raising an exception.  By using
-such a structure, the place to store the index at which ``E`` was found
-exists only when ``E`` was indeed found.  So if it wasn't found, there's
+:ada:`Search_Array` instead of conditionally raising an exception.  By using
+such a structure, the place to store the index at which :ada:`E` was found
+exists only when :ada:`E` was indeed found.  So if it wasn't found, there's
 nothing to be initialized.
 
 .. code:: ada prove_report_all_button
@@ -766,26 +765,26 @@ nothing to be initialized.
     end Show_Search_Array;
 
 This example is correct and flow analysis doesn't issue any message: it can
-verify both that no uninitialized variables are read in ``Search_Array``'s
+verify both that no uninitialized variables are read in :ada:`Search_Array`'s
 body, and that all its outputs are set on return.  We've used the attribute
-``Constrained`` in the precondition of ``Search_Array`` to indicate that
-the value of the ``Result`` in argument can be set to any variant of the
-record type ``Search_Result``, specifically to either the variant where
-``E`` was found and where it wasn't.
+:ada:`Constrained` in the precondition of :ada:`Search_Array` to indicate that
+the value of the :ada:`Result` in argument can be set to any variant of the
+record type :ada:`Search_Result`, specifically to either the variant where
+:ada:`E` was found and where it wasn't.
 
 .. _Example #4:
 
 Example #4
 ~~~~~~~~~~
 
-The function ``Size_Of_Biggest_Increasing_Sequence`` is supposed to find
-all sequences within its parameter ``A`` that contain elements with
+The function :ada:`Size_Of_Biggest_Increasing_Sequence` is supposed to find
+all sequences within its parameter :ada:`A` that contain elements with
 increasing values and returns the length of the longest one. To do this, it
-calls a nested procedure ``Test_Index`` iteratively on all the elements of
-``A``.  ``Test_Index`` checks if the sequence is still increasing. If so,
+calls a nested procedure :ada:`Test_Index` iteratively on all the elements of
+:ada:`A`.  :ada:`Test_Index` checks if the sequence is still increasing. If so,
 it updates the largest value seen so far in this sequence.  If not, it
 means it's found the end of a sequence, so it computes the size of that
-sequence and stores it in ``Size_Of_Seq``.
+sequence and stores it in :ada:`Size_Of_Seq`.
 
 .. code:: ada prove_flow_button
 
@@ -836,28 +835,28 @@ sequence and stores it in ``Size_Of_Seq``.
     end Show_Biggest_Increasing_Sequence;
 
 However, this example is not correct. Flow analysis emits messages for
-``Test_Index`` stating that ``Max``, ``Beginning``, and ``Size_Of_Seq``
+:ada:`Test_Index` stating that :ada:`Max`, :ada:`Beginning`, and :ada:`Size_Of_Seq`
 should be initialized before being read. Indeed, when you look carefully,
-you see that both ``Max`` and ``Beginning`` are missing initializations
-because they are read in ``Test_Index`` before being written. As for
-``Size_Of_Seq``, we only read its value when ``End_Of_Seq`` is true, so it
+you see that both :ada:`Max` and :ada:`Beginning` are missing initializations
+because they are read in :ada:`Test_Index` before being written. As for
+:ada:`Size_Of_Seq`, we only read its value when :ada:`End_Of_Seq` is true, so it
 actually can't be read before being written, but flow analysis isn't able
 to verify its initialization by using just flow information.
 
-The call to ``Test_Index`` is automatically inlined by GNATprove, which
+The call to :ada:`Test_Index` is automatically inlined by GNATprove, which
 leads to another messages above. If GNATprove couldn't inline the call to
-``Test_Index``, for example if it was defined in another unit, the same
-messages would be issued on the call to ``Test_Index``.
+:ada:`Test_Index`, for example if it was defined in another unit, the same
+messages would be issued on the call to :ada:`Test_Index`.
 
 
 Example #5
 ~~~~~~~~~~
 
 In the following example, we model permutations as arrays where the element
-at index ``I`` is the position of the ``I``'th element in the
-permutation. The procedure ``Init`` initializes a permutation to the
-identity, where the ``I``'th elements is at the ``I``'th
-position. ``Cyclic_Permutation`` calls ``Init`` and then swaps elements to
+at index :ada:`I` is the position of the :ada:`I`'th element in the
+permutation. The procedure :ada:`Init` initializes a permutation to the
+identity, where the :ada:`I`'th elements is at the :ada:`I`'th
+position. :ada:`Cyclic_Permutation` calls :ada:`Init` and then swaps elements to
 construct a cyclic permutation.
 
 .. code:: ada prove_flow_button
@@ -907,8 +906,8 @@ construct a cyclic permutation.
     end Show_Permutation;
 
 This program is correct. However, flow analysis will nevertheless still
-emit messages because it can't verify that every element of ``A`` is
-initialized by the loop in ``Init``. This message is a false alarm.  You
+emit messages because it can't verify that every element of :ada:`A` is
+initialized by the loop in :ada:`Init`. This message is a false alarm.  You
 can either ignore it or justify it safely.
 
 
@@ -916,7 +915,7 @@ Example #6
 ~~~~~~~~~~
 
 This program is the same as the previous one except that we've changed the
-mode of ``A`` in the specification of ``Init`` to :ada:`in out` to avoid
+mode of :ada:`A` in the specification of :ada:`Init` to :ada:`in out` to avoid
 the message from flow analysis on array assignment.
 
 .. code:: ada prove_flow_button
@@ -967,18 +966,18 @@ the message from flow analysis on array assignment.
 
 This program is not correct. Changing the mode of a parameter that should
 really be :ada:`out` to :ada:`in out` to silence a false alarm is not a
-good idea. Not only does this obfuscate the specification of ``Init``, but
-flow analysis emits a message on the procedure where ``A`` is not
-initialized, as shown by the message in ``Cyclic_Permutation``.
+good idea. Not only does this obfuscate the specification of :ada:`Init`, but
+flow analysis emits a message on the procedure where :ada:`A` is not
+initialized, as shown by the message in :ada:`Cyclic_Permutation`.
 
 
 Example #7
 ~~~~~~~~~~
 
-``Incr_Step_Function`` takes an array ``A`` as an argument and iterates
-through ``A`` to increment every element by the value of ``Increment``,
-saturating at a specified threshold value. We specified a ``Global``
-contract for ``Incr_Until_Threshold``.
+:ada:`Incr_Step_Function` takes an array :ada:`A` as an argument and iterates
+through :ada:`A` to increment every element by the value of :ada:`Increment`,
+saturating at a specified threshold value. We specified a :ada:`Global`
+contract for :ada:`Incr_Until_Threshold`.
 
 .. code:: ada prove_flow_button
 
@@ -1022,21 +1021,21 @@ contract for ``Incr_Until_Threshold``.
 
     end Show_Increments;
 
-Everything is fine here.  Specifically, the ``Global`` contract is
-correct. It mentions both ``Threshold``, which is read but not written in
-the procedure, and ``A``, which is both read and written.  The fact that
-``A`` is a parameter of an enclosing unit doesn't prevent us from using it
+Everything is fine here.  Specifically, the :ada:`Global` contract is
+correct. It mentions both :ada:`Threshold`, which is read but not written in
+the procedure, and :ada:`A`, which is both read and written.  The fact that
+:ada:`A` is a parameter of an enclosing unit doesn't prevent us from using it
 inside the :ada:`Global` contract; it really is global to
-``Incr_Until_Threshold``. We didn't mention ``Increment`` since it's a
+:ada:`Incr_Until_Threshold`. We didn't mention :ada:`Increment` since it's a
 static constant.
 
 
 Example #8
 ~~~~~~~~~~
 
-We now go back to the procedure ``Test_Index`` from :ref:`Example #4` and
+We now go back to the procedure :ada:`Test_Index` from :ref:`Example #4` and
 correct the missing initializations.  We want to know if the :ada:`Global`
-contract of ``Test_Index`` is correct.
+contract of :ada:`Test_Index` is correct.
 
 .. code:: ada prove_flow_button
     :class: ada-expect-compile-error
@@ -1091,16 +1090,16 @@ contract of ``Test_Index`` is correct.
 
     end Show_Biggest_Increasing_Sequence;
 
-The contract in this example is not correct: ``Current_Index`` is a
-parameter of ``Test_Index``, so we shouldn't reference it as a global
-variable. Also, we should have listed variable ``A`` from the outer scope
+The contract in this example is not correct: :ada:`Current_Index` is a
+parameter of :ada:`Test_Index`, so we shouldn't reference it as a global
+variable. Also, we should have listed variable :ada:`A` from the outer scope
 as an :ada:`Input` in the :ada:`Global` contract.
 
 
 Example #9
 ~~~~~~~~~~
 
-Next, we change the :ada:`Global` contract of ``Test_Index`` into a
+Next, we change the :ada:`Global` contract of :ada:`Test_Index` into a
 :ada:`Depends` contract. In general, we don't need both contracts because
 the set of global variables accessed can be deduced from the :ada:`Depends`
 contract.
@@ -1157,21 +1156,21 @@ contract.
 
     end Show_Biggest_Increasing_Sequence;
 
-This example is correct. Some of the dependencies, such as ``Size_Of_Seq``
-depending on ``Beginning``, come directly from the assignments in the
+This example is correct. Some of the dependencies, such as :ada:`Size_Of_Seq`
+depending on :ada:`Beginning`, come directly from the assignments in the
 subprogram. Since the control flow influences the final value of all of the
-outputs, the variables that are being read, ``A``, ``Current_Index``, and
-``Max``, are present in every dependency relation.  Finally, the
-dependencies of ``Size_Of_Eq`` and ``Beginning`` on themselves are because
+outputs, the variables that are being read, :ada:`A`, :ada:`Current_Index`, and
+:ada:`Max`, are present in every dependency relation.  Finally, the
+dependencies of :ada:`Size_Of_Eq` and :ada:`Beginning` on themselves are because
 they may not be modified by the subprogram execution.
 
 
 Example #10
 ~~~~~~~~~~~
 
-The subprogram ``Identity`` swaps the value of its parameter two times. Its
-:ada:`Depends` contract says that the final value of ``X`` only depends on
-its initial value and likewise for ``Y``.
+The subprogram :ada:`Identity` swaps the value of its parameter two times. Its
+:ada:`Depends` contract says that the final value of :ada:`X` only depends on
+its initial value and likewise for :ada:`Y`.
 
 .. code:: ada prove_flow_button
 
@@ -1203,8 +1202,8 @@ its initial value and likewise for ``Y``.
     end Show_Swap;
 
 This code is correct, but flow analysis can't verify the :ada:`Depends`
-contract of ``Identity`` because we didn't supply a :ada:`Depends` contract
-for ``Swap``. Therefore, flow analysis assumes that all outputs of
-``Swap``, ``X`` and ``Y``, depend on all its inputs, both ``X`` and ``Y``'s
-initial values. To prevent this, we should manually specify a
-:ada:`Depends` contract for ``Swap``.
+contract of :ada:`Identity` because we didn't supply a :ada:`Depends` contract
+for :ada:`Swap`. Therefore, flow analysis assumes that all outputs of
+:ada:`Swap`, :ada:`X` and :ada:`Y`, depend on all its inputs, both :ada:`X` and
+:ada:`Y`'s initial values. To prevent this, we should manually specify a
+:ada:`Depends` contract for :ada:`Swap`.

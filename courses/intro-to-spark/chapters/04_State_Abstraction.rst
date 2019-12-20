@@ -1,8 +1,7 @@
 State Abstraction
 =====================================================================
 
-.. role:: ada(code)
-   :language: ada
+.. include:: ../../global.txt
 
 .. sectionauthor:: Claire Dross, Yannick Moy
 
@@ -17,7 +16,7 @@ State abstraction allows us to:
 
 - express dependencies that wouldn't otherwise be expressible because some
   data that's read or written isn't visible at the point where a subprogram
-  is declared --- examples are dependencies on data, for which we use the
+  is declared |mdash| examples are dependencies on data, for which we use the
   :ada:`Global` contract, and on flow, for which we use the :ada:`Depends`
   contract.
 
@@ -31,8 +30,8 @@ What's an Abstraction?
 
 Abstraction is an important part of programming language design. It
 provides two views of the same object: an abstract one and a refined
-one. The abstract one --- usually called *specification* --- describes what
-the object does in a coarse way. A subprogram's specification usually
+one. The abstract one |mdash| usually called *specification* |mdash| describes
+what the object does in a coarse way. A subprogram's specification usually
 describes how it should be called (e.g., parameter information such as how
 many and of what types) as well as what it does (e.g., returns a result or
 modifies one or more of its parameters).
@@ -57,7 +56,7 @@ Take a look at the example code shown below.
        X := X + 1;
     end Increase;
 
-We've written a specification of the subprogram ``Increase`` to say that it's
+We've written a specification of the subprogram :ada:`Increase` to say that it's
 called with a single argument, a variable of type :ada:`Integer` whose
 initial value is less than 100. Our contract says that the only effect of
 the subprogram is to increase the value of its argument.
@@ -72,7 +71,7 @@ on. In other words, a caller of that subprogram shouldn't rely on any
 behavior of its implementation if that behavior isn't documented in its
 specification.
 
-For example, callers of the subprogram ``Increase`` can assume that it
+For example, callers of the subprogram :ada:`Increase` can assume that it
 always strictly increases the value of its argument. In the code snippet
 shown below, this means the loop must terminate.
 
@@ -93,10 +92,10 @@ shown below, this means the loop must terminate.
        pragma Assert (X = 101); --  Will this hold?
     end Client;
 
-Callers can also assume that the implementation of ``Increase`` won't cause
+Callers can also assume that the implementation of :ada:`Increase` won't cause
 any runtime errors when called in the loop. On the other hand, nothing in
 the specification guarantees that the assertion show above is correct: it
-may fail if ``Increase``'s implementation is changed.
+may fail if :ada:`Increase`'s implementation is changed.
 
 If you follow this basic principle, abstraction can bring you significant
 benefits. It simplifies both your program's implementation and
@@ -108,19 +107,19 @@ since understanding the specification is usually much simpler than
 understanding the implementation.
 
 GNATprove relies on the abstraction defined by subprogram contracts and
-therefore doesn't prove the assertion after the loop in ``Client`` above.
+therefore doesn't prove the assertion after the loop in :ada:`Client` above.
 
 Abstraction of a Package's State
 ---------------------------------------------------------------------
 
 Subprograms aren't the only objects that benefit from abstraction.  The
-state of a package --- the set of persistent variables defined in it ---
+state of a package |mdash| the set of persistent variables defined in it |mdash|
 can also be hidden from external users. You achieve this form of
-abstraction --- called *state abstraction* --- by defining variables in the
-body or private part of a package so they can only be accessed through
-subprogram calls. For example, our ``Stack`` package shown below provides
-an abstraction for a ``Stack`` object which can only be modified using the
-``Pop`` and ``Push`` procedures.
+abstraction |mdash| called *state abstraction* |mdash| by defining variables in
+the body or private part of a package so they can only be accessed through
+subprogram calls. For example, our :ada:`Stack` package shown below provides
+an abstraction for a :ada:`Stack` object which can only be modified using the
+:ada:`Pop` and :ada:`Push` procedures.
 
 .. code-block:: ada
 
@@ -153,7 +152,7 @@ of variables.  A state abstraction isn't a variable: it doesn't have a type
 and can't be used inside expressions, either those in bodies or contracts.
 
 As an example of the use of this aspect, we can optionally define a state
-abstraction for the entire hidden state of the ``Stack`` package like this:
+abstraction for the entire hidden state of the :ada:`Stack` package like this:
 
 .. code-block:: ada
 
@@ -193,9 +192,9 @@ state abstraction in its refined state.
 If you specify an abstract state for a package, it must be complete,
 meaning you must have listed every hidden variable as part of some state
 abstraction. For example, we must add a :ada:`Refined_State` aspect on our
-``Stack`` package's body linking the state abstraction (``The_Stack``) to
-the entire hidden state of the package, which consists of both ``Content``
-and ``Top``.
+:ada:`Stack` package's body linking the state abstraction (:ada:`The_Stack`) to
+the entire hidden state of the package, which consists of both :ada:`Content`
+and :ada:`Top`.
 
 .. code:: ada prove_flow_button
 
@@ -269,11 +268,11 @@ private part to a state abstraction. For example:
 
     end Stack;
 
-Since we chose to define ``Content`` and ``Top`` in ``Stack``'s private
+Since we chose to define :ada:`Content` and :ada:`Top` in :ada:`Stack`'s private
 part instead of its body, we had to add a :ada:`Part_Of` aspect to both of
 their declarations, associating them with the state abstraction
-``The_Stack``, even though it's the only state abstraction. However, we
-still need to list them in the :ada:`Refined_State` aspect in ``Stack``'s
+:ada:`The_Stack`, even though it's the only state abstraction. However, we
+still need to list them in the :ada:`Refined_State` aspect in :ada:`Stack`'s
 body.
 
 .. code-block:: ada
@@ -289,13 +288,13 @@ Nested Packages
 ~~~~~~~~~~~~~~~
 
 So far, we've only discussed hidden variables. But variables aren't the
-only component of a package's state. If a package ``P`` contains a nested
-package, the nested package's state is also part of ``P``'s state.  If the
-nested package is hidden, its state is part of ``P``'s hidden state and
-must be listed in ``P``'s state refinement.
+only component of a package's state. If a package :ada:`P` contains a nested
+package, the nested package's state is also part of :ada:`P`'s state.  If the
+nested package is hidden, its state is part of :ada:`P`'s hidden state and
+must be listed in :ada:`P`'s state refinement.
 
-We see this in the example below, where the package ``Hidden_Nested``'s
-hidden state is part of ``P``'s hidden state.
+We see this in the example below, where the package :ada:`Hidden_Nested`'s
+hidden state is part of :ada:`P`'s hidden state.
 
 .. code:: ada prove_flow_button
 
@@ -340,11 +339,11 @@ hidden state is part of ``P``'s hidden state.
        end Visible_Nested;
     end P;
 
-Any visible state of ``Hidden_Nested`` would also have been part of ``P``'s
-hidden state.  However, if ``P`` contains a visible nested package, that
-nested package's state isn't part of ``P``'s hidden state.  Instead, you
+Any visible state of :ada:`Hidden_Nested` would also have been part of :ada:`P`'s
+hidden state.  However, if :ada:`P` contains a visible nested package, that
+nested package's state isn't part of :ada:`P`'s hidden state.  Instead, you
 should declare that package's hidden state in a separate state abstraction
-on its own declaration, like we did above for ``Visible_Nested``.
+on its own declaration, like we did above for :ada:`Visible_Nested`.
 
 
 Constants that Depend on Variables
@@ -411,10 +410,10 @@ Let's look at this example.
 
     end Stack;
 
-Here, ``Max`` --- the maximum number of elements that can be stored in the
-stack --- is initialized from a variable in an external package. Because of
-this, we must include ``Max`` as part of the state abstraction
-``The_Stack``.
+Here, :ada:`Max` |mdash| the maximum number of elements that can be stored in
+the stack |mdash| is initialized from a variable in an external package.
+Because of this, we must include :ada:`Max` as part of the state abstraction
+:ada:`The_Stack`.
 
 
 Subprogram Contracts
@@ -434,7 +433,7 @@ referring to visible variables since the possibly different dependencies of
 the hidden variables contained within a state abstraction are collapsed
 into a single dependency.
 
-Let's add :ada:`Global` and :ada:`Depends` contracts to the ``Pop``
+Let's add :ada:`Global` and :ada:`Depends` contracts to the :ada:`Pop`
 procedure in our stack.
 
 .. code:: ada prove_flow_button
@@ -452,8 +451,8 @@ procedure in our stack.
 
     end Stack;
 
-In this example, the ``Pop`` procedure only modifies the value of the
-hidden variable ``Top``, while ``Content`` is unchanged. By using distinct
+In this example, the :ada:`Pop` procedure only modifies the value of the
+hidden variable :ada:`Top`, while :ada:`Content` is unchanged. By using distinct
 state abstractions for the two variables, we're able to preserve this
 semantic in the contract.
 
@@ -474,9 +473,9 @@ abstract state.
 
     end Stack;
 
-Here, ``Top_State`` and ``Content_State`` are merged into a single state
-abstraction, ``The_Stack``. By doing so, we've hidden the fact that
-``Content`` isn't modified (though we're still showing that ``Top`` may be
+Here, :ada:`Top_State` and :ada:`Content_State` are merged into a single state
+abstraction, :ada:`The_Stack`. By doing so, we've hidden the fact that
+:ada:`Content` isn't modified (though we're still showing that :ada:`Top` may be
 modified).  This loss in precision is reasonable here, since it's the whole
 point of the abstraction. However, you must be careful not to aggregate
 unrelated hidden state because this risks their annotations becoming
@@ -497,7 +496,7 @@ be as precise as possible. However, refined :ada:`Global` and
 :ada:`Depends` are optional: if you don't specify them, GNATprove will
 compute them to check the package's implementation.
 
-For our ``Stack`` example, we could add refined contracts as shown below.
+For our :ada:`Stack` example, we could add refined contracts as shown below.
 
 .. code:: ada prove_flow_button
 
@@ -559,8 +558,8 @@ these functions in place of the state abstraction in the contract of other
 subprograms.
 
 For example, we can query the state of the stack with functions
-``Is_Empty`` and ``Is_Full`` and call these in the contracts of procedures
-``Pop`` and ``Push``:
+:ada:`Is_Empty` and :ada:`Is_Full` and call these in the contracts of procedures
+:ada:`Pop` and :ada:`Push`:
 
 .. code:: ada prove_report_all_button
 
@@ -609,8 +608,8 @@ For example, we can query the state of the stack with functions
 Just like we saw for :ada:`Global` and :ada:`Depends` contracts, you may
 often find it useful to have a more precise view of functional contracts in
 the context where the hidden variables are visible. You do this using
-expression functions in the same way we did for the functions ``Is_Empty``
-and ``Is_Full`` above. As expression function, bodies act as contracts for
+expression functions in the same way we did for the functions :ada:`Is_Empty`
+and :ada:`Is_Full` above. As expression function, bodies act as contracts for
 GNATprove, so they automatically give a more precise version of the
 contracts when their implementation is visible.
 
@@ -624,8 +623,8 @@ failing postcondition if the refined postcondition is too weak, even if
 it's actually implied by the subprogram's body. SPARK doesn't peform a
 similar verification for normal preconditions.
 
-For example, we can refine the postconditions in the bodies of ``Pop`` and
-``Push`` to be more detailed than what we wrote for them in their
+For example, we can refine the postconditions in the bodies of :ada:`Pop` and
+:ada:`Push` to be more detailed than what we wrote for them in their
 specification.
 
 .. code:: ada prove_report_all_button
@@ -692,7 +691,7 @@ initialize variables declared immediately within the package.
 :ada:`Initializes` aspects are optional. If you don't supply any, they'll
 be derived by GNATprove.
 
-For our ``Stack`` example, we could add an :ada:`Initializes` aspect.
+For our :ada:`Stack` example, we could add an :ada:`Initializes` aspect.
 
 .. code:: ada prove_flow_button
 
@@ -750,10 +749,10 @@ Let's look at this example:
        V2 : Integer := Q.External_Variable;
     end P;
 
-Here we indicated that ``V2``'s initial value depends on the value of
-``Q.External_Variable`` by including that dependency in the
-:ada:`Initializes` aspect of ``P``.  We didn't list any dependency for
-``V1`` because its initial value doesn't depend on any external
+Here we indicated that :ada:`V2`'s initial value depends on the value of
+:ada:`Q.External_Variable` by including that dependency in the
+:ada:`Initializes` aspect of :ada:`P`.  We didn't list any dependency for
+:ada:`V1` because its initial value doesn't depend on any external
 variable. We could also have stated that lack of dependency explicitly by
 writing :ada:`V1 => null`.
 
@@ -772,7 +771,7 @@ This section contains some code examples to illustrate potential pitfalls.
 Example #1
 ~~~~~~~~~~
 
-Package ``Communication`` defines a hidden local package, ``Ring_Buffer``,
+Package :ada:`Communication` defines a hidden local package, :ada:`Ring_Buffer`,
 whose capacity is initialized from an external configuration during
 elaboration.
 
@@ -814,17 +813,17 @@ elaboration.
 
     end Communication;
 
-This example isn't correct. ``Capacity`` is declared in the private part
-of ``Communication``. Therefore, we should have linked it to ``State`` by
+This example isn't correct. :ada:`Capacity` is declared in the private part
+of :ada:`Communication`. Therefore, we should have linked it to :ada:`State` by
 using the :ada:`Part_Of` aspect in its declaration.
 
 
 Example #2
 ~~~~~~~~~~
 
-Let's add ``Part_Of`` to the state of hidden local package ``Ring_Buffer``,
-but this time we hide variable ``Capacity`` inside the private part of
-``Ring_Buffer``.
+Let's add :ada:`Part_Of` to the state of hidden local package :ada:`Ring_Buffer`,
+but this time we hide variable :ada:`Capacity` inside the private part of
+:ada:`Ring_Buffer`.
 
 .. code:: ada prove_flow_button
 
@@ -871,8 +870,8 @@ This program is correct and GNATprove is able to verify it.
 Example #3
 ~~~~~~~~~~
 
-Package ``Counting`` defines two counters: ``Black_Counter`` and
-``Red_Counter``. It provides separate initialization procedures for each,
+Package :ada:`Counting` defines two counters: :ada:`Black_Counter` and
+:ada:`Red_Counter`. It provides separate initialization procedures for each,
 both called from the main procedure.
 
 .. code:: ada prove_flow_button
@@ -910,18 +909,18 @@ both called from the main procedure.
 
 This program doesn't read any uninitialized data, but GNATprove fails to
 verify that. This is because we provided a state abstraction for package
-``Counting``, so flow analysis computes the effects of subprograms in terms
-of this state abstraction and thus considers ``State`` to be an in-out
-global consisting of both ``Reset_Black_Counter`` and
-``Reset_Red_Counter``. So it issues the message requiring that ``State`` be
+:ada:`Counting`, so flow analysis computes the effects of subprograms in terms
+of this state abstraction and thus considers :ada:`State` to be an in-out
+global consisting of both :ada:`Reset_Black_Counter` and
+:ada:`Reset_Red_Counter`. So it issues the message requiring that :ada:`State` be
 initialized after elaboration as well as the warning that no procedure in
-package ``Counting`` can initialize its state.
+package :ada:`Counting` can initialize its state.
 
 
 Example #4
 ~~~~~~~~~~
 
-Let's remove the abstract state on package ``Counting``.
+Let's remove the abstract state on package :ada:`Counting`.
 
 .. code:: ada prove_flow_button
 
@@ -960,9 +959,9 @@ initialization without any problem.
 Example #5
 ~~~~~~~~~~
 
-Let's restore the abstract state to package ``Counting``, but this time
-provide a procedure ``Reset_All`` that calls the initialization procedures
-``Reset_Black_Counter`` and ``Reset_Red_Counter``.
+Let's restore the abstract state to package :ada:`Counting`, but this time
+provide a procedure :ada:`Reset_All` that calls the initialization procedures
+:ada:`Reset_Black_Counter` and :ada:`Reset_Red_Counter`.
 
 .. code:: ada prove_flow_button
 
@@ -998,7 +997,7 @@ provide a procedure ``Reset_All`` that calls the initialization procedures
 
 This example is correct.  Flow analysis computes refined versions of
 :ada:`Global` contracts for internal calls and uses these to verify that
-``Reset_All`` indeed properly initializes ``State``. The
+:ada:`Reset_All` indeed properly initializes :ada:`State`. The
 :ada:`Refined_Global` and :ada:`Global` annotations are not mandatory and
 can be computed by GNATprove.
 
@@ -1048,8 +1047,8 @@ Let's consider yet another version of our abstract stack unit.
        function  Is_Empty return Boolean is (Top = 0);
     end Stack;
 
-This example isn't correct. There's a compilation error in ``Push``'s
-postcondition: ``The_Stack`` is a state abstraction, not a variable, and
+This example isn't correct. There's a compilation error in :ada:`Push`'s
+postcondition: :ada:`The_Stack` is a state abstraction, not a variable, and
 therefore can't be used in an expression.
 
 
@@ -1057,7 +1056,7 @@ Example #7
 ~~~~~~~~~~
 
 In this version of our abstract stack unit, a copy of the stack is returned
-by function ``Get_Stack``, which we call in the postcondition of ``Push``
+by function :ada:`Get_Stack`, which we call in the postcondition of :ada:`Push`
 to specify that the stack shouldn't be modified if it's full.  We also
 assert that after we push an element on the stack, either the stack is
 unchanged (if it was already full) or its top element is equal to the
@@ -1130,15 +1129,15 @@ element just pushed.
     end Use_Stack;
 
 This program is correct, but GNATprove can't prove the assertion in
-``Use_Stack``. Indeed, even if ``Get_Stack`` is an expression function, its
-body isn't visible outside of ``Stack``'s body, where it's defined.
+:ada:`Use_Stack`. Indeed, even if :ada:`Get_Stack` is an expression function, its
+body isn't visible outside of :ada:`Stack`'s body, where it's defined.
 
 
 Example #8
 ~~~~~~~~~~
 
-Let's move the definition of ``Get_Stack`` and other expression functions
-inside the private part of the spec of ``Stack``.
+Let's move the definition of :ada:`Get_Stack` and other expression functions
+inside the private part of the spec of :ada:`Stack`.
 
 .. code:: ada prove_report_all_button
 
@@ -1209,14 +1208,14 @@ inside the private part of the spec of ``Stack``.
     end Use_Stack;
 
 This example is correct. GNATprove can verify the assertion in
-``Use_Stack`` because it has visibility to ``Get_Stack``'s body.
+:ada:`Use_Stack` because it has visibility to :ada:`Get_Stack`'s body.
 
 
 Example #9
 ~~~~~~~~~~
 
-Package ``Data`` defines three variables, ``Data_1``, ``Data_2`` and
-``Data_3``, that are initialized at elaboration (in ``Data``'s package
+Package :ada:`Data` defines three variables, :ada:`Data_1`, :ada:`Data_2` and
+:ada:`Data_3`, that are initialized at elaboration (in :ada:`Data`'s package
 body) from an external interface that reads the file system.
 
 .. code:: ada prove_flow_button
@@ -1267,15 +1266,15 @@ body) from an external interface that reads the file system.
        end;
     end Data;
 
-This example isn't correct. The dependency between ``Data_1``'s initial
-value and ``File_System`` must be listed in ``Data``'s :ada:`Initializes`
+This example isn't correct. The dependency between :ada:`Data_1`'s initial
+value and :ada:`File_System` must be listed in :ada:`Data`'s :ada:`Initializes`
 aspect.
 
 
 Example #10
 ~~~~~~~~~~~
 
-Let's remove the ``Initializes`` contract on package ``Data``.
+Let's remove the :ada:`Initializes` contract on package :ada:`Data`.
 
 .. code:: ada prove_flow_button
 
@@ -1323,6 +1322,6 @@ Let's remove the ``Initializes`` contract on package ``Data``.
        end;
     end Data;
 
-This example is correct. Since ``Data`` has no :ada:`Initializes` aspect,
+This example is correct. Since :ada:`Data` has no :ada:`Initializes` aspect,
 GNATprove computes the set of variables initialized during its elaboration
 as well as their dependencies.
