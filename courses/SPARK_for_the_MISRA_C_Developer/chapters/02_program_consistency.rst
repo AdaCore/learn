@@ -3,11 +3,7 @@
 Enforcing Basic Program Consistency
 -----------------------------------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 Many consistency properties that are taken for granted in other languages are
 not enforced in C. The basic property that all uses of a variable or function
@@ -40,7 +36,7 @@ than once"`.
 
 The subsequent section on "Preprocessing Directives" contains 14
 rules restricting the use of text-based inclusion through preprocessing.
-Among other things these rules forbid the use of the ``#undef`` directive
+Among other things these rules forbid the use of the :c:`#undef` directive
 (which works around conflicts in macro definitions introduced by text-based
 inclusion) and enforces the well-known practice of enclosing macro arguments
 in parentheses (to avoid syntactic reinterpretations in the context of the
@@ -48,7 +44,7 @@ macro use).
 
 SPARK (and more generally Ada) does not suffer from these problems, as it
 relies on semantic inclusion of context instead of textual inclusion of content,
-using ``with`` clauses:
+using :ada:`with` clauses:
 
 .. code:: ada
 
@@ -59,7 +55,7 @@ using ``with`` clauses:
        Ada.Text_IO.Put_Line ("hello, world!");
     end Hello_World;
 
-Note that ``with`` clauses are only allowed at the beginning of files;
+Note that :ada:`with` clauses are only allowed at the beginning of files;
 the compiler issues an error if they are used elsewhere:
 
 .. code:: ada manual_chop
@@ -72,7 +68,7 @@ the compiler issues an error if they are used elsewhere:
        Ada.Text_IO.Put_Line ("hello, world!");
     end Hello_World;
 
-Importing a unit (i.e., specifying it in a ``with`` clause) multiple times is
+Importing a unit (i.e., specifying it in a :ada:`with` clause) multiple times is
 harmless, as it is equivalent to importing it once, but a compiler warning lets
 us know about the redundancy:
 
@@ -91,9 +87,9 @@ have the same semantics.
 
 No conflict arises from importing multiple units, even if the same name is
 defined in several, since each unit serves as namespace for the entities which it
-defines. So we can define our own version of ``Put_Line`` in some ``Helper``
+defines. So we can define our own version of :ada:`Put_Line` in some :ada:`Helper`
 unit and import it together with the standard version defined in
-``Ada.Text_IO``:
+:ada:`Ada.Text_IO`:
 
 .. code:: ada
 
@@ -121,9 +117,9 @@ unit and import it together with the standard version defined in
        Helper.Put_Line ("hello, world!");
     end Hello_World;
 
-The only way a conflict can arise is if we want to be able to reference ``Put_Line``
-directly, without using the qualified name ``Ada.Text_IO.Put_Line`` or
-``Helper.Put_Line``. The ``use clause`` makes public declarations from a
+The only way a conflict can arise is if we want to be able to reference :ada:`Put_Line`
+directly, without using the qualified name :ada:`Ada.Text_IO.Put_Line` or
+:ada:`Helper.Put_Line`. The :ada:`use` clause makes public declarations from a
 unit available directly:
 
 .. code:: ada
@@ -154,10 +150,10 @@ unit available directly:
        Put_Line ("hello, world!");  --  ERROR
     end Hello_World;
 
-Here, both units ``Ada.Text_IO`` and ``Helper`` define a procedure ``Put_Line``
-taking a String as argument, so the compiler cannot disambiguate the direct
-call to ``Put_Line`` and issues an error. Here is output from AdaCore's
-GNAT Ada compiler:
+Here, both units :ada:`Ada.Text_IO` and :ada:`Helper` define a procedure
+:ada:`Put_Line` taking a :ada:`String` as argument, so the compiler cannot
+disambiguate the direct call to :ada:`Put_Line` and issues an error. Here is
+output from AdaCore's GNAT Ada compiler:
 
 ::
 
@@ -192,7 +188,8 @@ Hardening Link-Time Checking
 
 An issue related to text-based inclusion of files is that there is no
 single source for declaring the type of a variable or function. If a file
-``origin.c`` defines a variable ``var`` and functions ``fun`` and ``print``:
+:file:`origin.c` defines a variable :c:`var` and functions :c:`fun` and
+:c:`print`:
 
 :code-config:`accumulate_code=True`
 
@@ -209,8 +206,8 @@ single source for declaring the type of a variable or function. If a file
       printf("var = %d\n", var);
    }
 
-and the corresponding header file ``origin.h`` declares ``var``, ``fun`` and
-``print`` as having external linkage:
+and the corresponding header file :file:`origin.h` declares :c:`var`, :c:`fun`
+and :c:`print` as having external linkage:
 
 .. code:: c no_button
 
@@ -219,8 +216,8 @@ and the corresponding header file ``origin.h`` declares ``var``, ``fun`` and
    extern int fun();
    extern void print();
 
-then client code can include ``origin.h`` with declarations
-for ``var`` and ``fun``:
+then client code can include :file:`origin.h` with declarations
+for :c:`var` and :c:`fun`:
 
 .. code:: c
 
@@ -250,19 +247,19 @@ or, equivalently, repeat these declarations directly:
 
 :code-config:`accumulate_code=False`
 
-Then, if an inconsistency is introduced in the type of ``var`` of ``fun``
+Then, if an inconsistency is introduced in the type of :c:`var` of :c:`fun`
 between these alternative declarations and their actual type, the compiler
 cannot detect it. Only the linker, which has access to the set of object files
 for a program, can detect such inconsistencies. However, a linker's main
 task is to link, not to detect inconsistencies, and so inconsistencies in the
 type of variables and functions in most cases cannot be detected. For example,
-most linkers cannot detect if the type of ``var`` or the return type of ``fun``
-is changed to ``float`` in the declarations above. With the declaration of
-``var`` changed to ``float``, the above program compiles and runs without
-errors, producing the erroneous output ``var = 1065353216`` instead of ``var =
-1``. With the return type of ``fun`` changed to ``float`` instead, the program
-still compiles and runs without errors, producing this time the erroneous
-output ``var = 0``.
+most linkers cannot detect if the type of :c:`var` or the return type of :c:`fun`
+is changed to :c:`float` in the declarations above. With the declaration of
+:c:`var` changed to :c:`float`, the above program compiles and runs without
+errors, producing the erroneous output :c:`var = 1065353216` instead of
+:c:`var =1`. With the return type of :c:`fun` changed to :c:`float` instead, the
+program still compiles and runs without errors, producing this time the
+erroneous output :c:`var = 0`.
 
 The inconsistency just discussed is prevented by MISRA C Rule 8.3 `"All
 declarations of an object or function shall use the same names and type
@@ -275,7 +272,7 @@ specific section on "Identifiers" containing 9 rules requiring uniqueness of
 various categories of identifiers.
 
 SPARK (and more generally Ada) does not suffer from these problems, as it
-relies on semantic inclusion of context using ``with`` clauses to provide a
+relies on semantic inclusion of context using :ada:`with` clauses to provide a
 unique declaration for each entity.
 
 Going Towards Encapsulation
@@ -296,7 +293,7 @@ declarations:
   `"Functions and objects should not be defined with external linkage if they
   are referenced in only one translation unit."`
 
-* Rule 8.8 forces the explicit use of keyword ``static`` when appropriate:
+* Rule 8.8 forces the explicit use of keyword :c:`static` when appropriate:
   `"The static storage class specifier shall be used in all declarations of
   objects and functions that have internal linkage."`
 
@@ -304,9 +301,9 @@ The basic unit of modularization in SPARK, as in Ada, is the *package*.
 A package always has a spec (in an ``.ads`` file), which defines the interface
 to other units. It generally also has a body (in an ``.adb`` file), which
 completes the spec with an implementation. Only declarations from the package spec are
-visible from other units when they import (``with``) the package. In fact, only
+visible from other units when they import (:ada:`with`) the package. In fact, only
 declarations from what is called the "visible part" of the spec
-(before the keyword ``private``) are visible from units that ``with`` the package.
+(before the keyword :ada:`private`) are visible from units that :ada:`with` the package.
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -367,14 +364,14 @@ Here's the output from AdaCore's GNAT compiler:
 
 
 Note the different errors on the calls to the private and body versions of
-``Put_Line``. In the first case the compiler can locate the candidate procedure
-but it is illegal to call it from ``Hello_World``, in the second case the
-compiler does not even know about any ``Body_Put_Line`` when compiling
-``Hello_World`` since it only looks at the spec and not the body.
+:ada:`Put_Line`. In the first case the compiler can locate the candidate procedure
+but it is illegal to call it from :ada:`Hello_World`, in the second case the
+compiler does not even know about any :ada:`Body_Put_Line` when compiling
+:ada:`Hello_World` since it only looks at the spec and not the body.
 
 SPARK (and Ada) also allow defining a type in the private part of a package spec while
 simply declaring the type name in the public ("visible") part of the spec. This way,
-client code -- i.e., code that ``with``\ s the package -- can use the type,
+client code |mdash| i.e., code that :ada:`with`'s the package |mdash| can use the type,
 typically through a public API, but have no access to how the type is implemented:
 
 .. code:: ada
@@ -414,6 +411,6 @@ typically through a public API, but have no access to how the type is implemente
        Information_System.Archive.Val := 0;  --  ERROR
     end Hacker;
 
-Note that it is possible to declare a variable of type ``Vault.Data`` in
-package ``Information_System`` and to get/set it through its API in procedure
-``Hacker``, but not to directly access its ``Val`` field.
+Note that it is possible to declare a variable of type :ada:`Vault.Data` in
+package :ada:`Information_System` and to get/set it through its API in procedure
+:ada:`Hacker`, but not to directly access its :ada:`Val` field.
