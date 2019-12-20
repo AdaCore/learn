@@ -4,16 +4,7 @@
 Interfacing with C and C++
 ==========================
 
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 .. sectionauthor:: Gustavo A. Hoffmann
 
@@ -24,7 +15,7 @@ Using unconstrained types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the previous examples, we're being careful about the data types: all of
-them are coming from the ``Interfaces.C`` package. Using Ada built-in
+them are coming from the :ada:`Interfaces.C` package. Using Ada built-in
 types when interfacing with C can be problematic, especially in case of
 unconstrained types. For example:
 
@@ -46,7 +37,7 @@ This is the function implementation:
       return "hello";
     }
 
-In the Ada application, we try to import this as a ``String`` type:
+In the Ada application, we try to import this as a :ada:`String` type:
 
 .. code-block:: ada
 
@@ -69,9 +60,9 @@ In the Ada application, we try to import this as a ``String`` type:
        Put_Line (S);
     end Show_C_Func;
 
-When running this application, we'll get a ``STORAGE_ERROR`` exception.
+When running this application, we'll get a :ada:`Storage_Error` exception.
 Therefore, the recommendation is to be very careful about the data types
-and use the ``Interfaces.C`` package whenever possible for interfacing
+and use the :ada:`Interfaces.C` package whenever possible for interfacing
 with C.
 
 Interfacing with C++
@@ -84,7 +75,7 @@ take into account:
 - When importing or exporting variables and subprograms, we replace 'C'
   by 'Cpp' in the :ada:`Convention` aspect of their declaration.
 
-- In the project file for ``gprbuild``, we replace 'C' by 'C++' in the
+- In the project file for :program:`gprbuild`, we replace 'C' by 'C++' in the
   ``Languages`` entry.
 
 There are other aspects specific to C++ that we also have to take into
@@ -150,12 +141,12 @@ In the Ada application, as mentioned before, we need to replace 'C' by
 
     end Show_Cpp_Func;
 
-Also, in the declaration of ``my_func``, we need to include a reference to
+Also, in the declaration of :cpp:`my_func`, we need to include a reference to
 the original name using :ada:`External_Name`. If we leave this out, the
-linker won't be able to find the original implementation of ``my_func``,
+linker won't be able to find the original implementation of :cpp:`my_func`,
 so it won't build the application. Note that the function name is not
-``my_func`` anymore (as it was the case for the C version). Instead, it is
-now called ``_Z7my_funci``.  This situation is caused by symbol mangling.
+:cpp:`my_func` anymore (as it was the case for the C version). Instead, it is
+now called :cpp:`_Z7my_funci`.  This situation is caused by symbol mangling.
 
 In C, the symbol names in object files match the symbol name in the
 source-code. In C++, due to symbol mangling, the symbol names of
@@ -167,7 +158,7 @@ However, since GNAT is based on gcc, we can build applications using Ada
 and C++ code without issues |mdash| as long as we use the same compiler.
 
 In order to retrieved the mangled symbol names, we can simply generate
-bindings automatically by using ``g++`` with the ``-fdump-ada-spec``
+bindings automatically by using :program:`g++` with the ``-fdump-ada-spec``
 option:
 
 .. code-block:: sh
@@ -175,8 +166,8 @@ option:
     g++ -c -fdump-ada-spec -C ./test.hh
 
 Alternatively, we could use binary examination tools to retrieve the
-symbol names from a library. Examples of such tools are ``nm`` for Mac and
-Linux, and ``dumpbin.exe`` for Windows.
+symbol names from a library. Examples of such tools are :program:`nm` for Mac and
+Linux, and :program:`dumpbin.exe` for Windows.
 
 C++ classes
 ~~~~~~~~~~~
@@ -222,8 +213,8 @@ And this is the corresponding implementation:
     }
 
 Because of the more complex structure, the recommendation is to generate
-bindings using ``g++`` and, if needed, adapt the file. Let's first run
-``g++``:
+bindings using :program:`g++` and, if needed, adapt the file. Let's first run
+:program:`g++`:
 
 .. code-block:: sh
 
@@ -258,8 +249,8 @@ The generated bindings look like this:
        use Class_Test;
     end test_hh;
 
-As we can see, the original C++ class (``Test``) is represented as a
-nested package (``test_hh.Class_Test``) in the Ada bindings.
+As we can see, the original C++ class (:cpp:`Test`) is represented as a
+nested package (:ada:`test_hh.Class_Test`) in the Ada bindings.
 
 The Ada application can then use the bindings:
 
@@ -291,16 +282,16 @@ Note that, in the Ada application, we cannot use the prefixed notation.
 This notation would be more similar to the corresponding syntax in C++.
 This restriction is caused by the fact that the automatic generated
 bindings don't use tagged types. However, if we adapt the declaration of
-``Test`` and replace it by :ada:`type Test is tagged limited record ...`,
-we'll be able to write ``TA.my_func(1)`` and ``TA.get_cnt`` in our
+:cpp:`Test` and replace it by :ada:`type Test is tagged limited record ...`,
+we'll be able to write :ada:`TA.my_func(1)` and :ada:`TA.get_cnt` in our
 application.
 
 Another correction we might want to make is in the visibility of the
-``Test`` record. In the original C++ class, the ``func_cnt`` element was
-declared in the private part of the ``Test`` class. However, in the
+:ada:`Test` record. In the original C++ class, the :cpp:`func_cnt` element was
+declared in the private part of the :cpp:`Test` class. However, in the
 generated bindings, this element has been exposed, so it could be accessed
 directly in our application. In order to correct that, we can simply move
-the type declaration to the private part of the ``Class_Test`` package and
+the type declaration to the private part of the :ada:`Class_Test` package and
 indicate that in the public part of the package (by using
 :ada:`type Test is limited private;`).
 
