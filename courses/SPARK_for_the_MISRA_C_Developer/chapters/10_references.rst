@@ -5,11 +5,7 @@
 References
 ----------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 About MISRA C
 *************

@@ -5,11 +5,7 @@
 Detecting Undefined Behavior
 ----------------------------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 Undefined behavior (and critical unspecified behavior, which we'll treat as
 undefined behavior) are the plague of C programs. Many
@@ -52,8 +48,8 @@ exhibit two types of undefined behaviors that can occur in Ada:
 
 Many cases of undefined behavior in C would in fact raise exceptions in
 SPARK. For example, accessing an array beyond its bounds raises the exception
-``Constraint_Error`` while reaching the end of a function without returning a
-value raises the exception ``Program_Error``.
+:ada:`Constraint_Error` while reaching the end of a function without returning a
+value raises the exception :ada:`Program_Error`.
 
 The SPARK Reference Manual defines the SPARK subset through a combination of
 *legality rules* (checked by the compiler, or the compiler-like phase preceding
@@ -82,12 +78,12 @@ value of the expression being converted is outside the range of the
 type to which it is being converted).
 
 Operations on enumeration values can also lead to run-time errors; e.g.,
-``T'Pred(T'First)`` or ``T'Succ(T'Last)`` for an enumeration type ``T``,
-or ``T'Val(N)`` where ``N`` is an integer value that
-is outside the range ``0 .. T'Pos(T'Last)``.
+:ada:`T'Pred(T'First)` or :ada:`T'Succ(T'Last)` for an enumeration type :ada:`T`,
+or :ada:`T'Val(N)` where :ada:`N` is an integer value that
+is outside the range :ada:`0 .. T'Pos(T'Last)`.
 
-The ``Update`` procedure below contains what appears to be a simple assignment
-statement, which sets the value of array element ``A(I+J)``  to ``P/Q``.
+The :ada:`Update` procedure below contains what appears to be a simple assignment
+statement, which sets the value of array element :ada:`A(I+J)`  to :ada:`P/Q`.
 
 .. code:: ada prove_button
 
@@ -110,24 +106,24 @@ statement, which sets the value of array element ``A(I+J)``  to ``P/Q``.
     end Show_Runtime_Errors;
 
 However, for an arbitrary invocation of this procedure, say
-``Update(A, I, J, P, Q)``, an exception can be raised in a variety of
+:ada:`Update(A, I, J, P, Q)`, an exception can be raised in a variety of
 circumstances:
 
-* The computation ``I+J`` may overflow, for example if ``I``
-  is ``Integer'Last`` and ``J`` is positive.
+* The computation :ada:`I+J` may overflow, for example if :ada:`I`
+  is :ada:`Integer'Last` and :ada:`J` is positive.
 
   .. code-block:: ada
 
      A (Integer'Last + 1) := P / Q;
 
-* The value of ``I+J`` may be outside the range of the array ``A``.
+* The value of :ada:`I+J` may be outside the range of the array :ada:`A`.
 
   .. code-block:: ada
 
      A (A'Last + 1) := P / Q;
 
-* The division ``P / Q`` may overflow in the special case where ``P``
-  is ``Integer'First`` and ``Q`` is ``-1``, because of the asymmetric
+* The division :ada:`P / Q` may overflow in the special case where :ada:`P`
+  is :ada:`Integer'First` and :ada:`Q` is :ada:`-1`, because of the asymmetric
   range of signed integer types.
 
   .. code-block:: ada
@@ -135,13 +131,13 @@ circumstances:
      A (I + J) := Integer'First / -1;
 
 * Since the array can only contain non-negative numbers (the element subtype
-  is ``Natural``), it is also an error to store a negative value in it.
+  is :ada:`Natural`), it is also an error to store a negative value in it.
 
   .. code-block:: ada
 
     A (I + J) := 1 / -1;
 
-* Finally, if ``Q`` is 0 then a divide by zero error will occur.
+* Finally, if :ada:`Q` is 0 then a divide by zero error will occur.
 
   .. code-block:: ada
 
@@ -203,9 +199,9 @@ The verification conditions are then given to an automatic prover. If
 every verification condition can be proved, then no run-time errors will
 occur.
 
-GNATprove's analysis is sound -- it will detect all possible instances of run-time
-exceptions being raised -- while also having high precision (i.e., not producing
-a cascade of "false alarms").
+GNATprove's analysis is sound |mdash| it will detect all possible instances of
+run-time exceptions being raised |mdash| while also having high precision
+(i.e., not producing a cascade of "false alarms").
 
 The way to program in SPARK so that GNATprove can guarantee the absence of run-time
 errors entails:
