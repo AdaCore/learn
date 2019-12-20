@@ -155,6 +155,14 @@ latex_elements = {
     #
     'preamble': r'\usepackage{pmboxdraw} \usepackage{unicode-math}',
 
+    # Font package inclusion
+    #
+    'fontpkg': r'''
+\setmainfont{Open Sans}
+\setsansfont{Open Sans}
+\setmonofont{DejaVu Sans Mono}
+''',
+
     # Latex figure (float) alignment
     #
     'figure_align': 'htbp',
