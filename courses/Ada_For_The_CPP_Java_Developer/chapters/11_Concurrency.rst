@@ -1,6 +1,8 @@
 Concurrency
 -------------
 
+.. include:: ../../global.txt
+
 .. todo::
 
   *Update with comparison to new C++11 concurrency features*
@@ -8,7 +10,7 @@ Concurrency
 Tasks
 ~~~~~~
 
-Java and Ada both provide support for concurrency in the language. The C++ language has added a concurrency facility in its most recent revision, C++11, but we are assuming that most C++ programmers are not (yet) familiar with these new features. We thus provide the following mock API for C++ which is similar to the Java *Thread* class:
+Java and Ada both provide support for concurrency in the language. The C++ language has added a concurrency facility in its most recent revision, C++11, but we are assuming that most C++ programmers are not (yet) familiar with these new features. We thus provide the following mock API for C++ which is similar to the Java :java:`Thread` class:
 
 .. code-block:: cpp
 
@@ -91,13 +93,13 @@ Each of the following examples will display the 26 letters of the alphabet twice
       }
    }
 
-Any number of Ada tasks may be declared in any declarative region. A task declaration is very similar to a procedure or package declaration. They all start automatically when control reaches the **begin**. A block will not exit until all sequences of statements defined within that scope, including those in tasks, have been completed.
+Any number of Ada tasks may be declared in any declarative region. A task declaration is very similar to a procedure or package declaration. They all start automatically when control reaches the :ada:`begin`. A block will not exit until all sequences of statements defined within that scope, including those in tasks, have been completed.
 
 A task type is a generalization of a task object; each object of a task type has the same behavior. A declared object of a task type is started within the scope where it is declared, and control does not leave that scope until the task has terminated.
 
-An Ada task type is somewhat analogous to a Java *Thread* subclass, but in Java the instances of such a subclass are always dynamically allocated.  In Ada an instance of a task type may either be declared or dynamically allocated.
+An Ada task type is somewhat analogous to a Java :java:`Thread` subclass, but in Java the instances of such a subclass are always dynamically allocated.  In Ada an instance of a task type may either be declared or dynamically allocated.
 
-Task types can be parametrized; the parameter serves the same purpose as an argument to a constructor in Java. The following example creates 10 tasks, each of which displays a subset of the alphabet contained between the parameter and the 'Z' Character.  As with the earlier example, since there is no synchronization among the tasks, the output may be interspersed depending on the implementation's task scheduling algorithm.
+Task types can be parametrized; the parameter serves the same purpose as an argument to a constructor in Java. The following example creates 10 tasks, each of which displays a subset of the alphabet contained between the parameter and the :ada:`'Z'` Character.  As with the earlier example, since there is no synchronization among the tasks, the output may be interspersed depending on the implementation's task scheduling algorithm.
 
 
 [Ada]
@@ -253,9 +255,9 @@ Let's consider the following example:
       After.Go;
    end;
 
-The *Go* **entry** declared in *After* is the external interface to the task. In the task body, the **accept** statement causes the task to wait for a call on the entry. This particular **entry** and **accept** pair doesn't do much more than cause the task to wait until *Main* calls *After.Go*. So, even though the two tasks start simultaneously and execute independently, they can coordinate via *Go*. Then, they both continue execution independently after the rendezvous.
+The :ada:`Go` :ada:`entry` declared in :ada:`After` is the external interface to the task. In the task body, the :ada:`accept` statement causes the task to wait for a call on the entry. This particular :ada:`entry` and :ada:`accept` pair doesn't do much more than cause the task to wait until :ada:`Main` calls :ada:`After.Go`. So, even though the two tasks start simultaneously and execute independently, they can coordinate via :ada:`Go`. Then, they both continue execution independently after the rendezvous.
 
-The **entry**\/**accept** pair can take/pass parameters, and the **accept** statement can contain a sequence of statements; while these statements are executed, the caller is blocked.
+The :ada:`entry`\/:ada:`accept` pair can take/pass parameters, and the :ada:`accept` statement can contain a sequence of statements; while these statements are executed, the caller is blocked.
 
 Let's look at a more ambitious example. The rendezvous below accepts parameters and executes some code:
 
@@ -281,21 +283,21 @@ Let's look at a more ambitious example. The rendezvous below accepts parameters 
       After.Go ("Main");
    end;
 
-In the above example, the *Put_Line* is placed in the **accept** statement. Here's a possible execution trace, assuming a uniprocessor:
+In the above example, the :ada:`Put_Line` is placed in the :ada:`accept` statement. Here's a possible execution trace, assuming a uniprocessor:
 
-1. At the **begin** of *Main*, task *After* is started and the main procedure is suspended.
+1. At the :ada:`begin` of :ada:`Main`, task :ada:`After` is started and the main procedure is suspended.
 
-2. *After* reaches the **accept** statement and is suspended, since there is no pending call on the *Go* entry.
+2. :ada:`After` reaches the :ada:`accept` statement and is suspended, since there is no pending call on the :ada:`Go` entry.
 
-3. The main procedure is awakened and executes the *Put_Line* invocation, displaying the string "Before".
+3. The main procedure is awakened and executes the :ada:`Put_Line` invocation, displaying the string "Before".
 
-4. The main procedure calls the *Go* entry.  Since *After* is suspended on its **accept** statement for this entry, the call succeeds.
+4. The main procedure calls the :ada:`Go` entry.  Since :ada:`After` is suspended on its :ada:`accept` statement for this entry, the call succeeds.
 
-5. The main procedure is suspended, and the task *After* is awakened to execute the body of the **accept** statement. The actual parameter "Main" is passed to the **accept** statement, and the *Put_Line* invocation is executed. As a result, the string "After: Main" is displayed.
+5. The main procedure is suspended, and the task :ada:`After` is awakened to execute the body of the :ada:`accept` statement. The actual parameter :ada:`"Main"` is passed to the :ada:`accept` statement, and the :ada:`Put_Line` invocation is executed. As a result, the string :ada:`"After: Main"` is displayed.
 
-6. When the **accept** statement is completed, both the *After* task and the main procedure are ready to run.  Suppose that the *Main* procedure is given the processor. It reaches its **end**, but the local task *After* has not yet terminated.  The main procedure is suspended.
+6. When the :ada:`accept` statement is completed, both the :ada:`After` task and the main procedure are ready to run.  Suppose that the :ada:`Main` procedure is given the processor. It reaches its :ada:`end`, but the local task :ada:`After` has not yet terminated.  The main procedure is suspended.
 
-7. The *After* task continues, and terminates since it is at its **end**.  The main procedure is resumed, and it too can terminate since its dependent task has terminated.
+7. The :ada:`After` task continues, and terminates since it is at its :ada:`end`.  The main procedure is resumed, and it too can terminate since its dependent task has terminated.
 
 The above description is a conceptual model; in practice the implementation can perform various optimizations to avoid unnecessary context switches.
 
@@ -303,7 +305,7 @@ The above description is a conceptual model; in practice the implementation can 
 Selective Rendezvous
 ~~~~~~~~~~~~~~~~~~~~~
 
-The accept statement by itself can only wait for a single event (call) at a time. The **select** statement allows a task to listen for multiple events simultaneously, and then to deal with the first event to occur. This feature is illustrated by the task below, which maintains an integer value that is modified by other tasks that call *Increment*, *Decrement*, and *Get*:
+The accept statement by itself can only wait for a single event (call) at a time. The :ada:`select` statement allows a task to listen for multiple events simultaneously, and then to deal with the first event to occur. This feature is illustrated by the task below, which maintains an integer value that is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and :ada:`Get`:
 
 .. code-block:: ada
 
@@ -336,13 +338,13 @@ The accept statement by itself can only wait for a single event (call) at a time
       end loop;
    end Counter;
 
-When the task's statement flow reaches the **select**, it will wait for all four events---three entries and a delay---in parallel. If the delay of one minute is exceeded, the task will execute the statements following the **delay** statement (and in this case will exit the loop, in effect terminating the task). The accept bodies for the *Increment*, *Decrement*, or *Get* entries will be otherwise executed as they're called. These four sections of the **select** statement are mutually exclusive: at each iteration of the loop, only one will be invoked. This is a critical point; if the task had been written as a package, with procedures for the various operations, then a "race condition" could occur where multiple tasks simultaneously calling, say, *Increment*, cause the value to only get incremented once. In the tasking version, if multiple tasks simultaneously call *Increment* then only one at a time will be accepted, and the value will be incremented by each of the tasks when it is accepted.
+When the task's statement flow reaches the :ada:`select`, it will wait for all four events |mdash| three entries and a delay |mdash| in parallel. If the delay of one minute is exceeded, the task will execute the statements following the :ada:`delay` statement (and in this case will exit the loop, in effect terminating the task). The accept bodies for the :ada:`Increment`, :ada:`Decrement`, or :ada:`Get` entries will be otherwise executed as they're called. These four sections of the :ada:`select` statement are mutually exclusive: at each iteration of the loop, only one will be invoked. This is a critical point; if the task had been written as a package, with procedures for the various operations, then a "race condition" could occur where multiple tasks simultaneously calling, say, :ada:`Increment`, cause the value to only get incremented once. In the tasking version, if multiple tasks simultaneously call :ada:`Increment` then only one at a time will be accepted, and the value will be incremented by each of the tasks when it is accepted.
 
-More specifically, each entry has an associated queue of pending callers.  If a task calls one of the entries and *Counter* is not ready to accept the call (i.e., if *Counter* is not suspended at the **select** statement) then the calling task is suspended, and placed in the queue of the entry that it is calling.  From the perspective of the *Counter* task, at any iteration of the loop there are several possibilities:
+More specifically, each entry has an associated queue of pending callers.  If a task calls one of the entries and :ada:`Counter` is not ready to accept the call (i.e., if :ada:`Counter` is not suspended at the :ada:`select` statement) then the calling task is suspended, and placed in the queue of the entry that it is calling.  From the perspective of the :ada:`Counter` task, at any iteration of the loop there are several possibilities:
 
-* There is no call pending on any of the entries.  In this case *Counter* is suspended.  It will be awakened by the first of two events: a call on one of its entries (which will then be immediately accepted), or the expiration of the one minute delay (whose effect was noted above).
+* There is no call pending on any of the entries.  In this case :ada:`Counter` is suspended.  It will be awakened by the first of two events: a call on one of its entries (which will then be immediately accepted), or the expiration of the one minute delay (whose effect was noted above).
 
-* There is a call pending on exactly one of the entries.  In this case control passes to the **select** branch with an **accept** statement for that entry.  The choice of which caller to accept, if more than one, depends on the queuing policy, which can be specified via a pragma defined in the Real-Time Systems Annex of the Ada standard; the default is First-In First-Out.
+* There is a call pending on exactly one of the entries.  In this case control passes to the :ada:`select` branch with an :ada:`accept` statement for that entry.  The choice of which caller to accept, if more than one, depends on the queuing policy, which can be specified via a pragma defined in the Real-Time Systems Annex of the Ada standard; the default is First-In First-Out.
 
 * There are calls pending on more than one entry.  In this case one of the entries with pending callers is chosen, and then one of the callers is chosen to be de-queued (the choices depend on the queueing policy).
 
@@ -354,7 +356,7 @@ Although the rendezvous may be used to implement mutually exclusive access to a 
 
 Two kinds of operations can be performed on such objects: read-write operations by procedures or entries, and read-only operations by functions. The lock mechanism is implemented so that it's possible to perform concurrent read operations but not concurrent write or read/write operations.
 
-Let's reimplement our earlier tasking example with a protected object called *Counter*:
+Let's reimplement our earlier tasking example with a protected object called :ada:`Counter`:
 
 .. code-block:: ada
 
