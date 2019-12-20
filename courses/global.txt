@@ -1,0 +1,21 @@
+.. role:: ada(code)
+   :language: ada
+   :class: highlight
+
+.. role:: c(code)
+   :language: c
+   :class: highlight
+
+.. role:: cpp(code)
+   :language: c++
+   :class: highlight
+
+.. role:: java(code)
+   :language: java
+   :class: highlight
+
+.. role:: assembly(code)
+
+.. include:: <isopub.txt>
+
+.. include:: <isoamsa.txt>

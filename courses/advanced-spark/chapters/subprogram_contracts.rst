@@ -3,9 +3,7 @@
 Subprogram Contracts
 =====================================================================
 
-.. role:: ada(code)
-   :language: ada
-
+.. include:: ../../global.txt
 
 Subprogram Contracts in Ada 2012 and SPARK 2014
 ---------------------------------------------------------------------
