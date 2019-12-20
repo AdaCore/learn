@@ -5,14 +5,7 @@ More about types
 
 .. _Aggregates:
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 .. sectionauthor:: Raphaël Amiard
 
@@ -388,7 +381,7 @@ features that are considered fundamental to the use of pointers, such as:
 - Pointer arithmetic (being able to increment or decrement a pointer in order
   to point to the next or previous object)
 
-- Manual deallocation - what is called ``free`` or ``delete`` in C. This is
+- Manual deallocation - what is called :c:`free` or :c:`delete` in C. This is
   a potentially unsafe operation. To keep within the realm of safe
   Ada, you need to never deallocate manually.
 
@@ -494,7 +487,7 @@ Records with discriminant
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the example above, the size of the Items field is determined once, at
-run-time, but every ``Growable_Stack`` instance will be exactly the same size.
+run-time, but every :ada:`Growable_Stack` instance will be exactly the same size.
 But maybe that's not what you want to do. We saw that arrays in general offer
 this flexibility: for an unconstrained array type, different objects can have
 different sizes.
@@ -713,7 +706,7 @@ Several attributes are useful for dealing with decimal types:
 | Delta                  | The delta value of the type                  |
 +------------------------+----------------------------------------------+
 
-In the example below, we declare two data types: ``T3_D3`` and ``T6_D3``.
+In the example below, we declare two data types: :ada:`T3_D3` and :ada:`T6_D3`.
 For both types, the delta value is the same: 0.001.
 
 .. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Decimal_Fixed_Point_Types
@@ -734,8 +727,8 @@ For both types, the delta value is the same: 0.001.
     end Decimal_Fixed_Point_Types;
 
 When running the application, we see that the delta value of both
-types is indeed the same: 0.001. However, because ``T3_D3`` is restricted
-to 3 digits, its range is -0.999 to 0.999. For the ``T6_D3``, we have
+types is indeed the same: 0.001. However, because :ada:`T3_D3` is restricted
+to 3 digits, its range is -0.999 to 0.999. For the :ada:`T6_D3`, we have
 defined a precision of 6 digits, so the range is -999.999 to 999.999.
 
 Similar to the type definition using the :ada:`range` syntax, because we
@@ -765,9 +758,9 @@ zero. For example:
     end Decimal_Fixed_Point_Smaller;
 
 In this example, the result of the operation :math:`0.001 * 0.5` is
-0.0005. Since this value is not representable for the ``T3_D3`` type
+0.0005. Since this value is not representable for the :ada:`T3_D3` type
 because the delta value is 0.001, the actual value stored in variable
-``A`` is zero. However, accuracy is preserved during the arithmetic
+:ada:`A` is zero. However, accuracy is preserved during the arithmetic
 operations if the target has sufficient precision, and the value
 displayed for C is 0.000500.
 
@@ -779,10 +772,10 @@ Fixed-point types
 Ordinary fixed-point types are similar to decimal fixed-point types in that the
 values are, in effect, scaled integers.  The difference between them is in the
 scale factor: for a decimal fixed-point type, the scaling, given explicitly by
-the type's ``delta``, is always a power of ten.
+the type's :ada:`delta`, is always a power of ten.
 
 In contrast, for an ordinary fixed-point type, the scaling is defined by the
-type's ``small``, which is derived from the specified ``delta`` and, by
+type's :ada:`small`, which is derived from the specified :ada:`delta` and, by
 default, is a power of two. Therefore, ordinary fixed-point types are sometimes
 called binary fixed-point types.
 
@@ -799,7 +792,7 @@ The syntax for an ordinary fixed-point type is
 
     type <type-name> is delta <delta-value> range <lower-bound> .. <upper-bound>;
 
-By default the compiler will choose a scale factor, or ``small``, that is a
+By default the compiler will choose a scale factor, or :ada:`small`, that is a
 power of 2 no greater than <delta-value>.
 
 For example, we may define a normalized range between -1.0 and 1.0 as
@@ -822,7 +815,7 @@ following:
 In this example, we are defining a 32-bit fixed-point data type for our
 normalized range. When running the application, we notice that the upper
 bound is close to one, but not exact one. This is a typical effect of
-fixed-point data types --- you can find more details in this discussion
+fixed-point data types |mdash| you can find more details in this discussion
 about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 We may also rewrite this code with an exact type definition:
 
@@ -854,7 +847,7 @@ We may also use any other range. For example:
                  & T_Inv_Trig'Image (T_Inv_Trig'Last));
     end Custom_Fixed_Point_Range;
 
-In this example, we are defining a 16-bit type called ``T_Inv_Trig``,
+In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
 which has a range from :math:`-\pi/2` to :math:`\pi/2`.
 
 All standard operations are available for fixed-point types. For example:
@@ -874,7 +867,7 @@ All standard operations are available for fixed-point types. For example:
        Put_Line ("R is " & TQ31'Image (R));
     end Fixed_Point_Op;
 
-As expected, ``R`` contains 0.75 after the addition of ``A`` and ``B``.
+As expected, :ada:`R` contains 0.75 after the addition of :ada:`A` and :ada:`B`.
 
 In fact the language is more general that these examples imply, since in
 practice it is typical to need to multiply or divide values from different
@@ -883,7 +876,7 @@ The details are outside the scope of this introductory course.
 
 It is also worth noting, although again the details are outside the scope of
 this course, that you can explicitly specify a value for an ordinary
-fixed-point type's ``small``.  This allows non-binary scaling, for example:
+fixed-point type's :ada:`small`.  This allows non-binary scaling, for example:
 
 .. code-block:: ada
 

@@ -3,14 +3,7 @@ Modular programming
 
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 .. sectionauthor:: Raphaël Amiard
 
@@ -68,14 +61,14 @@ time.
 
 While the :ada:`with` clause indicates a dependency, you can see in the example
 above that you still need to prefix the referencing of entities from the Week
-package by the name of the package. (If we had included a "use Week" clause,
+package by the name of the package. (If we had included a :ada:`use Week` clause,
 then such a prefix would not have been necessary.)
 
 Accessing entities from a package uses the dot notation, :ada:`A.B`, which is
 the same notation as the one used to access record fields.
 
 A :ada:`with` clause can *only* appear in the prelude of a compilation unit
-(i.e., before the reserved word, such as ``procedure``, that marks the
+(i.e., before the reserved word, such as :ada:`procedure`, that marks the
 beginning of the unit). It is not allowed anywhere else.  This rule is only
 needed for methodological reasons: the person reading your code should be able
 to see immediately which units the code depends on.
@@ -86,26 +79,27 @@ to see immediately which units the code depends on.
     files in C/C++.
 
     - The first and most important distinction is that packages are a language-level
-      mechanism. This is in contrast to a #include'd header file, which is a
+      mechanism. This is in contrast to a :c:`#include`'d header file, which is a
       functionality of the C preprocessor.
 
-    - An immediate consequence is that the "with" construct is a semantic
+    - An immediate consequence is that the :ada:`with` construct is a semantic
       inclusion mechanism, not a text inclusion mechanism. Hence, when you
-      "with" a package, you are saying to the compiler "I'm depending on this
-      semantic unit", and not "include this bunch of text in place here".
+      :ada:`with` a package, you are saying to the compiler "I'm depending on
+      this semantic unit", and not "include this bunch of text in place here".
 
     - The effect of a package thus does not vary depending on where it has been
-      "with"ed from. Contrast this with C/C++, where the meaning of the
-      included text depends on the context in which the #include appears.
+      :ada:`with`ed from. Contrast this with C/C++, where the meaning of the
+      included text depends on the context in which the :c:`#include` appears.
 
       This allows compilation/recompilation to be more efficient. It also
       allows tools like IDEs to have correct information about the semantics
       of a program. In turn, this allows better tooling in general, and code
       that is more analyzable, even by humans.
 
-    An important benefit of Ada "with" clauses when compared to #include is
-    that it is stateless. The order of "with" and "use" clauses does not matter,
-    and can be changed without side effects.
+    An important benefit of Ada :ada:`with` clauses when compared to
+    :c:`#include` is that it is stateless. The order of :ada:`with` and
+    :ada:`use` clauses does not matter, and can be changed without side
+    effects.
 
 .. admonition:: In the GNAT toolchain
 
@@ -114,17 +108,17 @@ to see immediately which units the code depends on.
     your code in one file, or use your own file naming conventions. In
     practice, however, an implementation will have specific rules. With GNAT,
     each top-level compilation unit needs to go into a separate file. In the
-    example above, the ``Week`` package will be in an ``.ads`` file (for Ada
-    specification), and the ``Main`` procedure will be in an ``.adb`` file
+    example above, the :ada:`Week` package will be in an ``.ads`` file (for Ada
+    specification), and the :ada:`Main` procedure will be in an ``.adb`` file
     (for Ada body).
 
 Using a package
 ---------------
 
 As we have seen above, the :ada:`with` clause indicates a dependency on another
-package. However, every reference to an entity coming from the ``Week`` package
-had to be prefixed by the full name of the package. It is possible to make
-every entity of a package visible directly in the current scope, using the
+package. However, every reference to an entity coming from the :ada:`Week`
+package had to be prefixed by the full name of the package. It is possible to
+make every entity of a package visible directly in the current scope, using the
 :ada:`use` clause.
 
 In fact, we have been using the :ada:`use` clause since almost the beginning of
