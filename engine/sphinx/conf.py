@@ -157,11 +157,11 @@ latex_elements = {
 
     # Font package inclusion
     #
-    'fontpkg': r'''
-\setmainfont{Open Sans}
-\setsansfont{Open Sans}
-\setmonofont{DejaVu Sans Mono}
-''',
+#    'fontpkg': r'''
+# \setmainfont{Open Sans}
+# \setsansfont{Open Sans}
+# \setmonofont{DejaVu Sans Mono}
+# ''',
 
     # Latex figure (float) alignment
     #

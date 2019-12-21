@@ -22,7 +22,9 @@ git:
     false
 
 before_install:
- - "sudo apt-get install graphviz texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra latexmk texlive-xetex fonts-lmodern fonts-open-sans fonts-dejavu"
+ - "sudo apt-get install graphviz texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra latexmk texlive-xetex fonts-lmodern"
+
+# fonts-open-sans fonts-dejavu
 
 install: cd engine && ./travis_install.sh
 
