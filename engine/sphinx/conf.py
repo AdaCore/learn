@@ -49,7 +49,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 import widget_extension
 
 extensions = [
-#    'sphinx.ext.intersphinx',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
@@ -203,8 +203,9 @@ texinfo_documents = [
 
 # -- Options for intersphinx extension ---------------------------------------
 
-# Example configuration for intersphinx: refer to the Python standard library.
-#intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
+
+
 
 # -- Options for todo extension ----------------------------------------------
 
