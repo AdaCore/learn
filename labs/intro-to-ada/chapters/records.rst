@@ -17,8 +17,8 @@ Directions
 
 In this exercise, we make use of the algorithm implemented in the
 :ada:`Check_Direction` procedure (see chapter on
-:doc:`../../../courses/intro-to-ada/chapters/imperative_language`). For
-the sake of this exercise, we use the concept of an *extended angle*,
+:doc:`chapter on imperative language <courses/intro-to-ada/chapters/imperative_language>`).
+For the sake of this exercise, we use the concept of an *extended angle*,
 which includes the actual geometric angle and the corresponding direction
 (North, South, Northwest, and so on). These are your goals:
 
