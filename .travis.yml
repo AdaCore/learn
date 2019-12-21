@@ -12,6 +12,8 @@ env:
 os:
   - linux
 
+dist: bionic
+
 cache:
   directories:
   - $HOME/build_tools
