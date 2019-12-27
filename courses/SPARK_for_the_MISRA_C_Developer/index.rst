@@ -20,15 +20,16 @@ SPARK Ada for the MISRA C Developer
         :width: 64pt
 
 .. toctree::
-   :maxdepth: 3
+    :maxdepth: 4
+    :caption: Contents:
 
-   Preface <chapters/01_preface>
-   Enforcing Basic Program Consistency <chapters/02_program_consistency>
-   Enforcing Basic Syntactic Guarantees <chapters/03_syntactic_guarantees>
-   Enforcing Strong Typing <chapters/04_strong_typing>
-   Initializing Data Before Use <chapters/05_initialization>
-   Controlling Side Effects <chapters/06_side_effects>
-   Detecting Undefined Behavior <chapters/07_undefined_behavior>
-   Detecting Unreachable Code and Dead Code <chapters/08_unreachable_and_dead_code>
-   Conclusion <chapters/09_conclusion>
-   References <chapters/10_references>
+    Preface <chapters/01_preface>
+    Enforcing Basic Program Consistency <chapters/02_program_consistency>
+    Enforcing Basic Syntactic Guarantees <chapters/03_syntactic_guarantees>
+    Enforcing Strong Typing <chapters/04_strong_typing>
+    Initializing Data Before Use <chapters/05_initialization>
+    Controlling Side Effects <chapters/06_side_effects>
+    Detecting Undefined Behavior <chapters/07_undefined_behavior>
+    Detecting Unreachable Code and Dead Code <chapters/08_unreachable_and_dead_code>
+    Conclusion <chapters/09_conclusion>
+    References <chapters/10_references>

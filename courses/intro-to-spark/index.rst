@@ -19,11 +19,11 @@ Intro To SPARK
         :width: 64pt
 
 .. toctree::
-   :maxdepth: 4
-   :caption: Contents:
+    :maxdepth: 4
+    :caption: Contents:
 
-   Overview <chapters/01_Overview>
-   Flow Analysis <chapters/02_Flow_Analysis>
-   Proof of Program Integrity <chapters/03_Proof_Of_Program_Integrity>
-   State Abstraction <chapters/04_State_Abstraction>
-   Proof of Functional Correctness <chapters/05_Proof_Of_Functional_Correctness>
+    Overview <chapters/01_Overview>
+    Flow Analysis <chapters/02_Flow_Analysis>
+    Proof of Program Integrity <chapters/03_Proof_Of_Program_Integrity>
+    State Abstraction <chapters/04_State_Abstraction>
+    Proof of Functional Correctness <chapters/05_Proof_Of_Functional_Correctness>

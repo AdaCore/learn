@@ -23,9 +23,10 @@ Introduction to GNAT Toolchain
         :width: 64pt
 
 .. toctree::
-   :maxdepth: 4
+    :maxdepth: 4
+    :caption: Contents:
 
-   GNAT Community <chapters/gnat_community>
-   GPRbuild <chapters/gprbuild>
-   GNAT Programming Studio (GPS) <chapters/gps>
-   GNAT Tools <chapters/gnat_tools>
+    GNAT Community <chapters/gnat_community>
+    GPRbuild <chapters/gprbuild>
+    GNAT Programming Studio (GPS) <chapters/gps>
+    GNAT Tools <chapters/gnat_tools>

@@ -21,19 +21,20 @@ Ada for the C++ or Java Developer
         :width: 64pt
 
 .. toctree::
-   :maxdepth: 4
+    :maxdepth: 4
+    :caption: Contents:
 
-   Preface <chapters/01_Preface>
-   Basics <chapters/02_Basics>
-   Compilation Unit Structure <chapters/03_Compilation_Unit_Structure>
-   Statements, Declarations, and Control Structures <chapters/04_Statements_Declarations_and_Control_Structures>
-   Type System <chapters/05_Type_System>
-   Functions and Procedures <chapters/06_Functions_and_Procedures>
-   Packages <chapters/07_Packages>
-   Classes and Object Oriented Programming <chapters/08_Classes_and_Object_Oriented_Programming>
-   Generics <chapters/09_Generics>
-   Exceptions <chapters/10_Exceptions>
-   Concurrency <chapters/11_Concurrency>
-   Low Level Programming <chapters/12_Low_Level_Programming>
-   Conclusion <chapters/13_Conclusion>
-   References <chapters/14_References>
+    Preface <chapters/01_Preface>
+    Basics <chapters/02_Basics>
+    Compilation Unit Structure <chapters/03_Compilation_Unit_Structure>
+    Statements, Declarations, and Control Structures <chapters/04_Statements_Declarations_and_Control_Structures>
+    Type System <chapters/05_Type_System>
+    Functions and Procedures <chapters/06_Functions_and_Procedures>
+    Packages <chapters/07_Packages>
+    Classes and Object Oriented Programming <chapters/08_Classes_and_Object_Oriented_Programming>
+    Generics <chapters/09_Generics>
+    Exceptions <chapters/10_Exceptions>
+    Concurrency <chapters/11_Concurrency>
+    Low Level Programming <chapters/12_Low_Level_Programming>
+    Conclusion <chapters/13_Conclusion>
+    References <chapters/14_References>

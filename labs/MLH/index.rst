@@ -19,7 +19,7 @@ Bug Free Coding with SPARK Ada
         :width: 64pt
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Contents:
+    :maxdepth: 4
+    :caption: Contents:
 
    Let's Build a Stack <stack>
