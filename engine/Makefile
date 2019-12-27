@@ -116,8 +116,10 @@ $(BOOKS):
 	$(eval SPHINX_DIR := $(shell dirname $@ | awk -F/ '{ print $$2 }' ))
 	$(eval SPHINX_PDF := $(shell basename $(shell dirname $@)).pdf)
 	$(eval SPHINX_TITLE := $(shell cat $@/conf.txt | grep title | sed -e 's#title=##'))
+	$(eval SPHINX_AUTHOR := $(shell cat $@/conf.txt | grep author | sed -e 's#author=##'))
 	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
 	@ export SPHINX_TITLE="$(SPHINX_TITLE)"; \
+	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
 	$(SPHINXBUILD) -M latexpdf $@ \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@ mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)

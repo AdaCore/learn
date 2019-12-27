@@ -21,7 +21,8 @@ import os
 
 project = u'learn.adacore.com'
 copyright = u'2019, AdaCore'
-author = u'AdaCore'
+author = u'AdaCore' if 'SPHINX_AUTHOR' not in os.environ else \
+    os.environ['SPHINX_AUTHOR']
 title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
     os.environ['SPHINX_TITLE']
 
