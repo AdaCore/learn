@@ -16,8 +16,6 @@
 Introduction
 ============
 
-.. sectionauthor:: Raphaël Amiard
-
 History
 -------
 

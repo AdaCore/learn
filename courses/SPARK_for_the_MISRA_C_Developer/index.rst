@@ -1,6 +1,3 @@
-.. meta::
-  :author: AdaCore
-
 :nextprev_state: False
 
 SPARK Ada for the MISRA C Developer

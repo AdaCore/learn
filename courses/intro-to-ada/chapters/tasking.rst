@@ -12,9 +12,6 @@ Tasking
 .. role:: cpp(code)
    :language: c++
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
-
 Tasks and protected objects allow the implementation of concurrency in
 Ada. The following sections explain these concepts in more details.
 

@@ -4,8 +4,6 @@ State Abstraction
 .. role:: ada(code)
    :language: ada
 
-.. sectionauthor:: Claire Dross, Yannick Moy
-
 Abstraction is a key concept in programming that can drastically simplify
 both the implementation and maintenance of code. It's particularly well
 suited to SPARK and its modular analysis. This section explains what state

@@ -13,8 +13,6 @@ Arrays
 .. role:: cpp(code)
    :language: c++
 
-.. sectionauthor:: Raphaël Amiard
-
 Arrays provide another fundamental family of composite types in Ada.
 
 Array type declaration

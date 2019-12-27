@@ -14,9 +14,6 @@ Design by contracts
 .. role:: cpp(code)
    :language: c++
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
-
 Contracts are used in programming to codify expectations. Parameter modes
 of a subprogram can be viewed as a simple form of contracts. When the
 specification of subprogram ``Op`` declares a parameter using :ada:`in`
