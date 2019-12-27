@@ -4,7 +4,7 @@ SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = learnadacorecom
 SPHINXCONF    = sphinx
 BUILDDIR      = _build
-TEST_DRIVER   = python tests/compile_blocks.py
+TEST_DRIVER   = python3 tests/compile_blocks.py
 
 
 help:
