@@ -100,8 +100,7 @@ publish:
 
 # Development target, rebuilds the site, with it pointing to the local
 # code server.
-local:
-	rm -rf "$(BUILDDIR)"
+local: cleanall
 	CODE_SERVER_URL="Http://localhost:8000" $(SPHINXBUILD) -M html "../" \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	# link the real editors.js to the generated location, to ease work
@@ -109,7 +108,7 @@ local:
 	ln -s ../../../../sphinx/learn_theme/static/js/editors.js _build/html/_static/js/
 
 # Build the site pointing to 'cloudchecker.r53.adacore.com'
-site:
+site: cleanall
 	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" $(SPHINXBUILD) -M html "../" \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
@@ -127,7 +126,7 @@ $(BOOKS):
 	@ mv _build/latex/learnadacorecom.pdf _build/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
 
 cleanall:
-	@ rm -rf _build
+	@ rm -rf "$(BUILDDIR)"
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
