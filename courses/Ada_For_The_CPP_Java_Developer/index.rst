@@ -13,12 +13,14 @@ Ada for the C++ or Java Developer
 
    This document will present the Ada language using terminology and examples that are familiar to developers that understand the C++ or Java languages.
 
-.. container:: download-button
+.. only:: builder_html
 
-    .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
-        :target: ../../pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf
-        :alt: PDF Download
-        :width: 64pt
+    .. container:: download-button
+
+        .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
+            :target: ../../pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf
+            :alt: PDF Download
+            :width: 64pt
 
 .. toctree::
     :maxdepth: 4

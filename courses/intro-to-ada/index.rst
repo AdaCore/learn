@@ -16,12 +16,14 @@ Introduction to Ada
 
     This course will teach you the basics of the Ada programming language and is intended for those who already have a basic understanding of programming techniques. You will learn how to apply those techniques to programming in Ada.
 
-.. container:: download-button
+.. only:: builder_html
 
-    .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
-        :target: ../../pdf_books/courses/intro-to-ada.pdf
-        :alt: PDF Download
-        :width: 64pt
+    .. container:: download-button
+
+        .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
+            :target: ../../pdf_books/courses/intro-to-ada.pdf
+            :alt: PDF Download
+            :width: 64pt
 
 .. toctree::
     :maxdepth: 4

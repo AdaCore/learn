@@ -11,12 +11,14 @@ Labs: Introduction to Ada
 
     These labs contain exercises for the Introduction to Ada course.
 
-.. container:: download-button
+.. only:: builder_html
 
-    .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
-        :target: ../../pdf_books/labs/intro-to-ada.pdf
-        :alt: PDF Download
-        :width: 64pt
+    .. container:: download-button
+
+        .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
+            :target: ../../pdf_books/labs/intro-to-ada.pdf
+            :alt: PDF Download
+            :width: 64pt
 
 .. toctree::
     :maxdepth: 4

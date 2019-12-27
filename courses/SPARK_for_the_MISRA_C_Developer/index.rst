@@ -12,12 +12,14 @@ SPARK Ada for the MISRA C Developer
    supporting static analysis tools -- through an example-driven comparison
    with the rules in the widely known MISRA C subset of the C language.
 
-.. container:: download-button
+.. only:: builder_html
 
-    .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
-        :target: ../../pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf
-        :alt: PDF Download
-        :width: 64pt
+    .. container:: download-button
+
+        .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
+            :target: ../../pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf
+            :alt: PDF Download
+            :width: 64pt
 
 .. toctree::
     :maxdepth: 4
