@@ -23,27 +23,27 @@ In this exercise, you'll work with enumerations. These are your goals:
    +-------------+---------------+
    | Color       | Value         |
    +=============+===============+
-   | Salmon      | ```#FA8072``` |
+   | Salmon      | ``#FA8072``   |
    +-------------+---------------+
-   | Firebrick   | ```#B22222``` |
+   | Firebrick   | ``#B22222``   |
    +-------------+---------------+
-   | Red         | ```#FF0000``` |
+   | Red         | ``#FF0000``   |
    +-------------+---------------+
-   | Darkred     | ```#8B0000``` |
+   | Darkred     | ``#8B0000``   |
    +-------------+---------------+
-   | Lime        | ```#00FF00``` |
+   | Lime        | ``#00FF00``   |
    +-------------+---------------+
-   | Forestgreen | ```#228B22``` |
+   | Forestgreen | ``#228B22``   |
    +-------------+---------------+
-   | Green       | ```#008000``` |
+   | Green       | ``#008000``   |
    +-------------+---------------+
-   | Darkgreen   | ```#006400``` |
+   | Darkgreen   | ``#006400``   |
    +-------------+---------------+
-   | Blue        | ```#0000FF``` |
+   | Blue        | ``#0000FF``   |
    +-------------+---------------+
-   | Mediumblue  | ```#0000CD``` |
+   | Mediumblue  | ``#0000CD``   |
    +-------------+---------------+
-   | Darkblue    | ```#00008B``` |
+   | Darkblue    | ``#00008B``   |
    +-------------+---------------+
 
 #. Implement a function :ada:`To_Integer` to convert from the
@@ -51,7 +51,7 @@ In this exercise, you'll work with enumerations. These are your goals:
 
    - Hints: You may use a :ada:`case` for this. Also, in order to express
      the hexadecimal values above in Ada, use the following syntax:
-     ```16#<hex_value>#``` (e.g.: :ada:`16#FFFFFF#`).
+     ``16#<hex_value>#`` (e.g.: :ada:`16#FFFFFF#`).
 
 #. Declare another color type (:ada:`Basic_HTML_Color`) with the following
    colors: Red, Green, Blue. Also, implement the function
