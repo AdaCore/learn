@@ -104,6 +104,10 @@ site: cleanall
 	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" $(SPHINXBUILD) -M html "../" \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
+site-staging: cleanall
+	$(SPHINXBUILD) -M html "../" \
+        "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+
 BOOKS = $(wildcard ../courses/*/.) $(wildcard ../labs/*/.)
 
 pdf_books: $(BOOKS)
