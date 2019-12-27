@@ -23,10 +23,12 @@ or have experience in formal verification.
     are available through the buttons labelled:
 
     - `Run`: compile the code with assertions enabled and run the executable
-    produced.
+      produced.
+
     - `Examine`: perform the `flow analysis` stage of formal verification
+
     - `Prove`: perform the `proof` stage of formal verification (which includes
-    `flow analysis`)
+      `flow analysis`)
 
     You can edit the sample code, so you can modify it and rerun the tools
     to see the effect of your changes on the compilation or analysis. Use
