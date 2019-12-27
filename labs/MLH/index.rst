@@ -22,4 +22,4 @@ Bug Free Coding with SPARK Ada
     :maxdepth: 4
     :caption: Contents:
 
-   Let's Build a Stack <stack>
+    Let's Build a Stack <stack>
