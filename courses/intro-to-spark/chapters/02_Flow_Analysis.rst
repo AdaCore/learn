@@ -383,7 +383,7 @@ checks that global and parameter inputs are initialized and each time a
 subprogram returns, it checks that global and parameter outputs were
 modified.
 
-This can produce error messages on perfectly correct subprograms .  An
+This can produce error messages on perfectly correct subprograms.  An
 example is ``Set_X_To_Y_Plus_Z`` below, which only sets its :ada:`out`
 parameter ``X`` when ``Overflow`` is :ada:`False`.
 
