@@ -104,8 +104,8 @@ local: cleanall
 	CODE_SERVER_URL="Http://localhost:8000" $(SPHINXBUILD) -M html "../" \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	# link the real editors.js to the generated location, to ease work
-	rm _build/html/_static/js/editors.js
-	ln -s ../../../../sphinx/learn_theme/static/js/editors.js _build/html/_static/js/
+	rm $(BUILDDIR)/html/_static/js/editors.js
+	ln -s ../../../../sphinx/learn_theme/static/js/editors.js $(BUILDDIR)/html/_static/js/
 
 # Build the site pointing to 'cloudchecker.r53.adacore.com'
 site: cleanall
@@ -119,11 +119,11 @@ $(BOOKS):
 	$(eval SPHINX_DIR := $(shell dirname $@ | awk -F/ '{ print $$2 }' ))
 	$(eval SPHINX_PDF := $(shell basename $(shell dirname $@)).pdf)
 	$(eval SPHINX_TITLE := $(shell cat $@/conf.txt | grep title | sed -e 's#title=##'))
-	@mkdir -p _build/pdf_books/$(SPHINX_DIR)
+	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
 	@ export SPHINX_TITLE="$(SPHINX_TITLE)"; \
 	$(SPHINXBUILD) -M latexpdf $@ \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@ mv _build/latex/learnadacorecom.pdf _build/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
+	@ mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
 
 cleanall:
 	@ rm -rf "$(BUILDDIR)"
