@@ -65,18 +65,14 @@ publish-staging:
 	@if [ ! -d learn-staging-html-pages ] ;\
 	then \
 		git clone -b gh-pages git@github.com:AdaCore/learn-staging-html-pages.git; \
-		cd learn-staging-html-pages; \
-	else \
-		cd learn-staging-html-pages; \
-		git checkout gh-pages && git pull; \
-	fi; \
-	rm -rf *; \
-	git checkout CNAME; \
-	cd ../; \
-	cp -R $(BUILDDIR)/html/. learn-staging-html-pages/; \
-	cd learn-staging-html-pages; \
-	git add -A && git commit -m "Regenerate" && git push origin gh-pages; \
-	cd ../; \
+	fi && \
+	( cd learn-staging-html-pages && \
+	  git checkout gh-pages && git pull && \
+	  rm -rf * && \
+	  git checkout CNAME ) && \
+	cp -R $(BUILDDIR)/html/. learn-staging-html-pages/ && \
+	( cd learn-staging-html-pages && \
+	  git add -A && git commit -m "Regenerate" && git push origin gh-pages ) && \
 	rm -rf learn-staging-html-pages
 
 publish:
@@ -84,18 +80,14 @@ publish:
 	@if [ ! -d learn-html-pages ] ;\
         then \
                 git clone -b gh-pages git@github.com:AdaCore/learn-html-pages.git; \
-                cd learn-html-pages; \
-        else \
-                cd learn-html-pages; \
-                git checkout gh-pages && git pull; \
-        fi; \
-        rm -rf *; \
-        git checkout CNAME; \
-        cd ../; \
-        cp -R $(BUILDDIR)/html/. learn-html-pages/; \
-        cd learn-html-pages; \
-        git add -A && git commit -m "Regenerate" && git push origin gh-pages; \
-        cd ../; \
+        fi && \
+	( cd learn-html-pages && \
+	  git checkout gh-pages && git pull && \
+	  rm -rf * && \
+	  git checkout CNAME ) && \
+        cp -R $(BUILDDIR)/html/. learn-html-pages/ && \
+        ( cd learn-html-pages && \
+          git add -A && git commit -m "Regenerate" && git push origin gh-pages ) && \
         rm -rf learn-html-pages
 
 # Development target, rebuilds the site, with it pointing to the local
