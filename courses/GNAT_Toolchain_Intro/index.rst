@@ -13,7 +13,7 @@ Introduction to GNAT Toolchain
     (GNAT Programming Studio).
 
     This document was written by Gustavo A. Hoffmann, with contributions and
-    review from Richard Kenner.
+    review from Richard Kenner and Bob Duff.
 
 .. only:: builder_html
 
