@@ -8,9 +8,12 @@ SPARK Ada for the MISRA C Developer
 
 .. container:: content-description
 
-   This book presents the SPARK technology -- the SPARK subset of Ada and its
-   supporting static analysis tools -- through an example-driven comparison
-   with the rules in the widely known MISRA C subset of the C language.
+    This book presents the SPARK technology -- the SPARK subset of Ada and its
+    supporting static analysis tools -- through an example-driven comparison
+    with the rules in the widely known MISRA C subset of the C language.
+
+    This document was prepared by Yannick Moy, with contributions and review
+    from Ben Brosgol.
 
 .. only:: builder_html
 

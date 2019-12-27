@@ -9,9 +9,10 @@ Ada for the C++ or Java Developer
 
 .. container:: content-description
 
-   Author: Quentin Ochem
+    This document will present the Ada language using terminology and examples that are familiar to developers that understand the C++ or Java languages.
 
-   This document will present the Ada language using terminology and examples that are familiar to developers that understand the C++ or Java languages.
+    This document was prepared by Quentin Ochem, with contributions and review
+    from Richard Kenner, Albert Lee, and Ben Brosgol.
 
 .. only:: builder_html
 

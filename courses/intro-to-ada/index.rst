@@ -16,6 +16,9 @@ Introduction to Ada
 
     This course will teach you the basics of the Ada programming language and is intended for those who already have a basic understanding of programming techniques. You will learn how to apply those techniques to programming in Ada.
 
+    This document was written by Raphaël Amiard and Gustavo A. Hoffmann, with
+    review from Richard Kenner.
+
 .. only:: builder_html
 
     .. container:: download-button

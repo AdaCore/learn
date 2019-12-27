@@ -11,6 +11,8 @@ Intro To SPARK
 
     This tutorial is an interactive introduction to the SPARK programming language and its formal verification tools. You will learn the difference between Ada and SPARK and how to use the various analysis tools that come with SPARK.
 
+    This document was prepared by Claire Dross and Yannick Moy.
+
 .. only:: builder_html
 
     .. container:: download-button
