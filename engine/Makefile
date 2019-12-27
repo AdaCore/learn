@@ -71,6 +71,7 @@ publish-staging:
 	  rm -rf * && \
 	  git checkout CNAME ) && \
 	cp -R $(BUILDDIR)/html/. learn-staging-html-pages/ && \
+	cp -R $(BUILDDIR)/pdf_books learn-staging-html-pages/ && \
 	( cd learn-staging-html-pages && \
 	  git add -A && git commit -m "Regenerate" && git push origin gh-pages ) && \
 	rm -rf learn-staging-html-pages
@@ -92,7 +93,7 @@ publish:
 
 # Development target, rebuilds the site, with it pointing to the local
 # code server.
-local: cleanall
+local: cleanall pdf_books
 	CODE_SERVER_URL="Http://localhost:8000" $(SPHINXBUILD) -M html "../" \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	# link the real editors.js to the generated location, to ease work
@@ -100,11 +101,11 @@ local: cleanall
 	ln -s ../../../../sphinx/learn_theme/static/js/editors.js $(BUILDDIR)/html/_static/js/
 
 # Build the site pointing to 'cloudchecker.r53.adacore.com'
-site: cleanall
+site: cleanall pdf_books
 	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" $(SPHINXBUILD) -M html "../" \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-site-staging: cleanall
+site-staging: cleanall pdf_books
 	$(SPHINXBUILD) -M html "../" \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
