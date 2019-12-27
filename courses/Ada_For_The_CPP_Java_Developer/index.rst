@@ -7,18 +7,22 @@
 Ada for the C++ or Java Developer
 ===================================
 
-`Download pdf <https://www.adacore.com/uploads/books/pdf/Ada_for_the_C_or_Java_Developer-cc.pdf>`_
-
 .. container:: content-description
 
    Author: Quentin Ochem
-   
+
    This document will present the Ada language using terminology and examples that are familiar to developers that understand the C++ or Java languages.
 
+.. container:: download-button
+
+    .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
+        :target: ../../pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf
+        :alt: PDF Download
+        :width: 64pt
 
 .. toctree::
    :maxdepth: 4
- 
+
    Preface <chapters/01_Preface>
    Basics <chapters/02_Basics>
    Compilation Unit Structure <chapters/03_Compilation_Unit_Structure>
