@@ -279,28 +279,32 @@ class WidgetCodeDirective(Directive):
                 )
 
             nodes_latex = []
-            for f in files:
-                # Based on sphinx/directives/code.py
 
-                container_node = nodes.container(
-                    '', literal_block=True, classes=['literal-block-wrapper'])
+            # Attemping to detect HTML or Latex output by checking for 'html' in tags
+            if 'html' not in self.state.state_machine.document.settings.env.app.tags.tags:
+                for f in files:
+                    # Based on sphinx/directives/code.py
 
-                literal = nodes.literal_block('',
-                                              f[1],
-                                              format='latex')
-                literal['language'] = self.arguments[0].split(' ')[0]
-                literal['linenos'] = 'linenos' in self.options or \
-                    'lineno-start' in self.options
-                literal['source'] = f[0]
+                    container_node = nodes.container(
+                        '', literal_block=True,
+                        classes=['literal-block-wrapper'])
 
-                caption = nodes.caption('', f[0])
-                caption.source = literal.source
-                caption.line = literal.line
+                    literal = nodes.literal_block('',
+                                                  f[1],
+                                                  format='latex')
+                    literal['language'] = self.arguments[0].split(' ')[0]
+                    literal['linenos'] = 'linenos' in self.options or \
+                        'lineno-start' in self.options
+                    literal['source'] = f[0]
 
-                container_node += caption
-                container_node += literal
+                    caption = nodes.caption('', f[0])
+                    caption.source = literal.source
+                    caption.line = literal.line
 
-                nodes_latex.append(container_node)
+                    container_node += caption
+                    container_node += literal
+
+                    nodes_latex.append(container_node)
 
         except Exception:
             # If we have an exception here, it's probably a codec error
