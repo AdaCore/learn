@@ -169,6 +169,8 @@ latex_elements = {
     'figure_align': 'htbp',
 }
 
+latex_logo = 'learn_theme/static/img/logo.png'
+
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
