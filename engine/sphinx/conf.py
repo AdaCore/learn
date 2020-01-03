@@ -167,6 +167,12 @@ latex_elements = {
     # Latex figure (float) alignment
     #
     'figure_align': 'htbp',
+
+    # Sphinx Setup (LaTeX-type customization)
+    #
+    'sphinxsetup': 'VerbatimBorderColor={rgb}{0.95,0.95,0.95}',
+    # 'verbatimwithframe=false'
+
 }
 
 latex_logo = 'learn_theme/static/img/logo.png'
