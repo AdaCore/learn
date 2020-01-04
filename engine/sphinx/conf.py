@@ -171,6 +171,9 @@ latex_elements = {
     #
     'figure_align': 'htbp',
 
+    # Avoid blank page for chapters on odd pages
+    # 'extraclassoptions': 'openany',
+
     # Sphinx Setup (LaTeX-type customization)
     #
     'sphinxsetup': 'VerbatimBorderColor={rgb}{0.95,0.95,0.95}',
