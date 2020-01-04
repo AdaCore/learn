@@ -8,10 +8,10 @@ Advanced SPARK
 
     .. container:: download-button
 
-        .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
+        .. image:: ../../images/pdf-download.png
             :target: ../../pdf_books/courses/advanced-spark.pdf
             :alt: PDF Download
-            :width: 64pt
+            :width: 80pt
 
 .. toctree::
     :maxdepth: 4

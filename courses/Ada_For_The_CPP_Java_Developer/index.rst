@@ -15,10 +15,10 @@ Ada for the C++ or Java Developer
 
     .. container:: download-button
 
-        .. image:: https://icons-for-free.com/download-icon-download+file+files+pdf+icon-1320184619509952330_128.png
+        .. image:: ../../images/pdf-download.png
             :target: ../../pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf
             :alt: PDF Download
-            :width: 64pt
+            :width: 80pt
 
 .. toctree::
     :maxdepth: 4
