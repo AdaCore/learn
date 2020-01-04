@@ -176,7 +176,7 @@ latex_elements = {
 
     # Sphinx Setup (LaTeX-type customization)
     #
-    'sphinxsetup': 'VerbatimBorderColor={rgb}{0.95,0.95,0.95}',
+    'sphinxsetup': 'VerbatimBorderColor={rgb}{0.90,0.90,0.90}',
     # 'verbatimwithframe=false'
 
 }
