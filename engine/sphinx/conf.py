@@ -154,7 +154,10 @@ latex_elements = {
 
     # Additional stuff for the LaTeX preamble.
     #
-    'preamble': r'\usepackage{pmboxdraw} \usepackage{unicode-math}',
+    'preamble': r'''
+\usepackage{pmboxdraw} \usepackage{unicode-math}
+\fvset{fontsize=\small}
+''',
 
     # Font package inclusion
     #
