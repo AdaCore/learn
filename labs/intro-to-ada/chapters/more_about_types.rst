@@ -1,5 +1,3 @@
-:orphan:
-
 More About Types
 ================
 
