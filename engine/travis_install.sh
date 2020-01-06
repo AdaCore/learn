@@ -6,7 +6,8 @@ pip install -q -r ../requirements.txt
 set -v
 set -e
 
-package_file=5cdffc5409dcd015aaf82626
+installer_hash=0cd3e2a668332613b522d9612ffa27ef3eb0815b
+installer_name=gnat-community-2019-20190517-x86_64-linux-bin
 
 # Create tools directory
 if ! test -d $TOOLS_DIR
@@ -26,7 +27,7 @@ fi
 if ! test -f $GNAT_INSTALLER_PATH
 then
     wget -O $GNAT_INSTALLER_PATH \
-        "http://mirrors.cdn.adacore.com/art/${package_file}"
+        "https://community.download.adacore.com/v1/${installer_hash}?filename=${installer_name}"
 fi
 
 # If needed, extract GNAT
