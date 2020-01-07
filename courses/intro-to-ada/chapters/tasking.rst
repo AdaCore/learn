@@ -3,14 +3,7 @@ Tasking
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 Tasks and protected objects allow the implementation of concurrency in
 Ada. The following sections explain these concepts in more details.
@@ -49,8 +42,8 @@ is specified in a :ada:`task body` block. For example:
        Put_Line ("In main");
     end Show_Simple_Task;
 
-Here, we're declaring and implementing the task ``T``. As soon as the main
-application starts, task ``T`` starts automatically --- it's not necessary
+Here, we're declaring and implementing the task :ada:`T`. As soon as the main
+application starts, task :ada:`T` starts automatically |mdash| it's not necessary
 to manually start this task. By running the application above, we can see
 that both calls to :ada:`Put_Line` are performed.
 
@@ -58,20 +51,20 @@ Note that:
 
 - The main application is itself a task (the main task).
 
-  - In this example, the subprogram ``Show_Simple_Task`` is the main task of
+  - In this example, the subprogram :ada:`Show_Simple_Task` is the main task of
     the application.
 
-- Task ``T`` is a subtask.
+- Task :ada:`T` is a subtask.
 
   - Each subtask has a master task.
 
-  - Therefore the main task is also the master task of task ``T``.
+  - Therefore the main task is also the master task of task :ada:`T`.
 
 - The number of tasks is not limited to one: we could include a
-  task ``T2`` in the example above.
+  task :ada:`T2` in the example above.
 
   - This task also starts automatically and runs *concurrently* with
-    both task ``T`` and the main task. For example:
+    both task :ada:`T` and the main task. For example:
 
     .. code:: ada
 
@@ -129,8 +122,8 @@ mechanism is not limited to the main application and also applies to any
 subprogram called by the main application or its subprograms.
 
 Synchronization also occurs if we move the task to a separate package. In
-the example below, we declare a task ``T`` in the package
-``Simple_Sync_Pkg``.
+the example below, we declare a task :ada:`T` in the package
+:ada:`Simple_Sync_Pkg`.
 
 :code-config:`reset_accumulator=True;accumulate_code=True`
 
@@ -155,7 +148,7 @@ This is the corresponding package body:
        end T;
     end Simple_Sync_Pkg;
 
-Because the package is :ada:`with`'ed by the main procedure, the task ``T``
+Because the package is :ada:`with`'ed by the main procedure, the task :ada:`T`
 defined in the package is part of the main task. For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
@@ -169,7 +162,7 @@ defined in the package is part of the main task. For example:
     end Test_Simple_Sync_Pkg;
 
 Again, as soon as the main task reaches its end, it synchronizes with task
-``T`` from ``Simple_Sync_Pkg`` before terminating.
+:ada:`T` from :ada:`Simple_Sync_Pkg` before terminating.
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
@@ -201,7 +194,7 @@ statement. For example:
        Put_Line ("hello from main");
     end Show_Delay;
 
-In this example, we're making the task ``T`` wait one second after each
+In this example, we're making the task :ada:`T` wait one second after each
 time it displays the "hello" message. In addition, the main task is waiting
 1.5 seconds before displaying its own "hello" message
 
@@ -249,11 +242,11 @@ example:
        T.Start; --  Calling T's entry
     end Show_Rendezvous;
 
-In this example, we declare an entry ``Start`` for task ``T``.  In the task
-body, we implement this entry using :ada:`accept Start`. When task ``T``
+In this example, we declare an entry :ada:`Start` for task :ada:`T`.  In the task
+body, we implement this entry using :ada:`accept Start`. When task :ada:`T`
 reaches this point, it waits for the master task. This synchronization
-occurs in the ``T.Start`` statement. After the synchronization completes,
-the main task and task ``T`` again run concurrently until they synchronize
+occurs in the :ada:`T.Start` statement. After the synchronization completes,
+the main task and task :ada:`T` again run concurrently until they synchronize
 one final time when the main task finishes.
 
 An entry may be used to perform more than a simple task synchronization: it
@@ -321,25 +314,25 @@ example:
     end Show_Rendezvous_Loop;
 
 In this example, the task body implements an infinite loop that accepts
-calls to the ``Reset`` and ``Increment`` entry. We make the following
+calls to the :ada:`Reset` and :ada:`Increment` entry. We make the following
 observations:
 
 - The :ada:`accept E do ... end` block is used to increment a counter.
 
-    - As long as task ``T`` is performing the :ada:`do ... end` block, the
+    - As long as task :ada:`T` is performing the :ada:`do ... end` block, the
       main task waits for the block to complete.
 
-- The main task is calling the ``Increment`` entry multiple times in the
-  loop from ``1 .. 4``. It is also calling the ``Reset`` entry before and
+- The main task is calling the :ada:`Increment` entry multiple times in the
+  loop from :ada:`1 .. 4`. It is also calling the :ada:`Reset` entry before and
   the loop.
 
-    - Because task ``T`` contains an infinite loop, it always accepts calls
-      to the ``Reset`` and ``Increment`` entries.
+    - Because task :ada:`T` contains an infinite loop, it always accepts calls
+      to the :ada:`Reset` and :ada:`Increment` entries.
 
-    - When the main task finishes, it checks the status of the ``T``
-      task. Even though task ``T`` could accept new calls to the
-      ``Reset`` or ``Increment`` entries, the master task is allowed to
-      terminate task ``T`` due to the :ada:`or terminate` part of the
+    - When the main task finishes, it checks the status of the :ada:`T`
+      task. Even though task :ada:`T` could accept new calls to the
+      :ada:`Reset` or :ada:`Increment` entries, the master task is allowed to
+      terminate task :ada:`T` due to the :ada:`or terminate` part of the
       :ada:`select` statement.
 
 Cycling tasks
@@ -361,7 +354,7 @@ between executions of successive delay statements:
 
 In this case, we can't guarantee that exactly 10 seconds have elapsed after
 10 calls to the delay statement because a time drift may be introduced by
-the ``Computational_Intensive_App`` procedure. In many cases, this time
+the :ada:`Computational_Intensive_App` procedure. In many cases, this time
 drift is not relevant, so using the :ada:`delay` keyword is good enough.
 
 However, there are situations where a time drift isn't acceptable. In those
@@ -372,8 +365,8 @@ interval. This is useful, for example, in real-time applications.
 We will soon see an example of how this time drift may be introduced and
 how the :ada:`delay until` statement circumvents the problem. But before we
 do that, we look at a package containing a procedure allowing us to measure
-the elapsed time (``Show_Elapsed_Time``) and a dummy
-``Computational_Intensive_App`` procedure which is simulated by using a
+the elapsed time (:ada:`Show_Elapsed_Time`) and a dummy
+:ada:`Computational_Intensive_App` procedure which is simulated by using a
 simple delay. This is the package specification:
 
 :code-config:`reset_accumulator=True;accumulate_code=True`
@@ -460,7 +453,7 @@ application:
 
 We can see by running the application that we already have a time
 difference of about four seconds after three iterations of the loop due to
-the drift introduced by ``Computational_Intensive_App``. Using the
+the drift introduced by :ada:`Computational_Intensive_App`. Using the
 :ada:`delay until` statement, however, we're able to avoid this time drift
 and have a regular interval of exactly one second:
 
@@ -503,7 +496,7 @@ and have a regular interval of exactly one second:
     end Show_Cycling_Task;
 
 Now, as we can see by running the application, the :ada:`delay until`
-statement ensures that the ``Computational_Intensive_App`` doesn't disturb
+statement ensures that the :ada:`Computational_Intensive_App` doesn't disturb
 the regular interval of one second between iterations.
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
@@ -574,13 +567,13 @@ part. The corresponding implementation of the operations is included in the
        Put_Line ("Number is: " & Integer'Image (Obj.Get));
     end Show_Protected_Objects;
 
-In this example, we define two operations for ``Obj``: ``Set`` and
-``Get``. The implementation of these operations is in the ``Obj`` body. The
+In this example, we define two operations for :ada:`Obj`: :ada:`Set` and
+:ada:`Get`. The implementation of these operations is in the :ada:`Obj` body. The
 syntax used for writing these operations is the same as that for normal
 procedures and functions. The implementation of protected objects is
-straightforward --- we simply access and update ``Local`` in these
+straightforward |mdash| we simply access and update :ada:`Local` in these
 subprograms.  To call these operations in the main application, we use
-prefixed notation, e.g., ``Obj.Get``.
+prefixed notation, e.g., :ada:`Obj.Get`.
 
 Entries
 ~~~~~~~
@@ -589,20 +582,20 @@ In addition to protected procedures and functions, you can also define
 protected entry points. Do this using the :ada:`entry` keyword. Protected
 entry points allow you to define barriers using the :ada:`when`
 keyword. Barriers are conditions that must be fulfilled before the entry
-can start performing its actual processing --- we speak of *releasing* the
+can start performing its actual processing |mdash| we speak of *releasing* the
 barrier when the condition is fulfilled.
 
 The previous example used procedures and functions to define operations on
 the protected objects. However, doing so permits reading protected
-information (via ``Obj.Get``) before it's set (via ``Obj.Set``). To allow
+information (via :ada:`Obj.Get`) before it's set (via :ada:`Obj.Set`). To allow
 that to be a defined operation, we specified a default value (0). Instead,
-by rewriting ``Obj.Get`` using an *entry* instead of a function, we
+by rewriting :ada:`Obj.Get` using an *entry* instead of a function, we
 implement a barrier, ensuring no task can read the information before it's
 been set.
 
-The following example implements the barrier for the ``Obj.Get``
+The following example implements the barrier for the :ada:`Obj.Get`
 operation. It also contains two concurrent subprograms (main task and task
-``T``) that try to access the protected object.
+:ada:`T`) that try to access the protected object.
 
 .. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Protected_Objects_Entries
 
@@ -658,11 +651,11 @@ operation. It also contains two concurrent subprograms (main task and task
     end Show_Protected_Objects_Entries;
 
 As we see by running it, the main application waits until the protected
-object is set (by the call to ``Obj.Set`` in task ``T``) before it reads
-the information (via ``Obj.Get``). Because a 4-second delay has been added
-in task ``T``, the main application is also delayed by 4 seconds. Only
-after this delay does task ``T`` set the object and release the barrier in
-``Obj.Get`` so that the main application can then resume processing (after
+object is set (by the call to :ada:`Obj.Set` in task :ada:`T`) before it reads
+the information (via :ada:`Obj.Get`). Because a 4-second delay has been added
+in task :ada:`T`, the main application is also delayed by 4 seconds. Only
+after this delay does task :ada:`T` set the object and release the barrier in
+:ada:`Obj.Get` so that the main application can then resume processing (after
 the information is retrieved from the protected object).
 
 Task and protected types
@@ -702,8 +695,8 @@ To illustrate this, we repeat our first example:
        Put_Line ("In main");
     end Show_Simple_Task;
 
-We now rewrite it by replacing ``task T`` with ``task type TT``.  We
-declare a task (``A_Task``) based on the task type ``TT`` after its
+We now rewrite it by replacing :ada:`task T` with :ada:`task type TT`.  We
+declare a task (:ada:`A_Task`) based on the task type :ada:`TT` after its
 definition:
 
 .. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task_Type
@@ -726,7 +719,7 @@ definition:
 We can extend this example and create an array of tasks. Since we're using
 the same syntax as for variable declarations, we use a similar syntax for
 task types: :ada:`array (<>) of Task_Type`. Also, we can pass information
-to the individual tasks by defining a ``Start`` entry. Here's the updated
+to the individual tasks by defining a :ada:`Start` entry. Here's the updated
 example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Task_Type_Array
@@ -756,10 +749,10 @@ example:
        end loop;
     end Show_Task_Type_Array;
 
-In this example, we're declaring five tasks in the array ``My_Tasks``. We
+In this example, we're declaring five tasks in the array :ada:`My_Tasks`. We
 pass the array index to the individual tasks in the entry point
-(``Start``). After the synchronization between the individual subtasks and
-the main task, each subtask calls ``Put_Line`` concurrently.
+(:ada:`Start`). After the synchronization between the individual subtasks and
+the main task, each subtask calls :ada:`Put_Line` concurrently.
 
 Protected types
 ~~~~~~~~~~~~~~~
@@ -805,8 +798,8 @@ We can reuse a previous example and rewrite it to use a protected type:
     end Show_Protected_Object_Type;
 
 In this example, instead of directly defining the protected object
-``Obj``, we first define a protected type ``Obj_Type`` and then
-declare ``Obj`` as an object of that protected type. Note that the
-main application hasn't changed: we still use ``Obj.Set`` and
-``Obj.Get`` to access the protected object, just like in the original
+:ada:`Obj`, we first define a protected type :ada:`Obj_Type` and then
+declare :ada:`Obj` as an object of that protected type. Note that the
+main application hasn't changed: we still use :ada:`Obj.Set` and
+:ada:`Obj.Get` to access the protected object, just like in the original
 example.

@@ -3,12 +3,7 @@
 GNAT Tools
 ==========
 
-.. include:: <isopub.txt>
-
-.. include:: <isoamsa.txt>
-
-.. role:: ada(code)
-   :language: ada
+.. include:: ../../global.txt
 
 In chapter we present a brief overview of some of the tools included
 in the GNAT Community toolchain.

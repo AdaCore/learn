@@ -1,6 +1,8 @@
 Packages
 ----------
 
+.. include:: ../../global.txt
+
 Declaration Protection
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -22,7 +24,7 @@ Ada and C++ do offer separation between specifications and implementations out o
       -- implementation
    end Package_Name;
 
-Private types are useful for preventing the users of a package's types from depending on the types' implementation details. The **private** keyword splits the package spec into "public" and "private" parts. That is somewhat analogous to C++'s partitioning of the class construct into different sections with different visibility properties. In Java, the encapsulation has to be done field by field, but in Ada the entire definition of a type can be hidden. For example:
+Private types are useful for preventing the users of a package's types from depending on the types' implementation details. The :ada:`private` keyword splits the package spec into "public" and "private" parts. That is somewhat analogous to C++'s partitioning of the class construct into different sections with different visibility properties. In Java, the encapsulation has to be done field by field, but in Ada the entire definition of a type can be hidden. For example:
 
 .. code-block:: ada
 
@@ -41,7 +43,7 @@ Private types are useful for preventing the users of a package's types from depe
       end record;
    end Types;
 
-Subprograms declared above the **private** separator (such as *P*) will be visible to the package user, and the ones below (such as *Q*) will not. The body of the package, the implementation, has access to both parts.
+Subprograms declared above the :ada:`private` separator (such as :ada:`P`) will be visible to the package user, and the ones below (such as :ada:`Q`) will not. The body of the package, the implementation, has access to both parts.
 
 Hierarchical Packages
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,17 +64,17 @@ Ada packages can be organized into hierarchies. A child unit can be declared in 
       --  package body goes here
    end Root.Child;
 
-Here, *Root.Child* is a child package of *Root*. The public part of *Root.Child* has access to the public part of *Root*. The private part of *Child* has access to the private part of *Root*, which is one of the main advantages of child packages. However, there is no visibility relationship between the two bodies. One common way to use this capability is to define subsystems around a hierarchical naming scheme.
+Here, :ada:`Root.Child` is a child package of :ada:`Root`. The public part of :ada:`Root.Child` has access to the public part of :ada:`Root`. The private part of :ada:`Child` has access to the private part of :ada:`Root`, which is one of the main advantages of child packages. However, there is no visibility relationship between the two bodies. One common way to use this capability is to define subsystems around a hierarchical naming scheme.
 
 Using Entities from Packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Entities declared in the visible part of a package specification can be made accessible using a **with** clause that references the package, which is similar to the C++ **#include** directive. Visibility is implicit in Java: you can always access all classes located in your *CLASSPATH*. After a **with** clause, entities needs to be prefixed by the name of their package, like a C++ namespace or a Java package. This prefix can be omitted if a **use** clause is employed, similar to a C++ **using namespace** or a Java **import**.
+Entities declared in the visible part of a package specification can be made accessible using a :ada:`with` clause that references the package, which is similar to the C++ :cpp:`#include` directive. Visibility is implicit in Java: you can always access all classes located in your *CLASSPATH*. After a :ada:`with` clause, entities needs to be prefixed by the name of their package, like a C++ namespace or a Java package. This prefix can be omitted if a :ada:`use` clause is employed, similar to a C++ :cpp:`using namespace` or a Java :java:`import`.
 
 [Ada]
 
 .. code-block:: ada
-  
+
    -- pck.ads
 
    package Pck is

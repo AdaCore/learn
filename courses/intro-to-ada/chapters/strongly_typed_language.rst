@@ -3,14 +3,7 @@ Strongly typed language
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 Ada is a strongly typed language. It is interestingly modern in that
 respect: strong static typing has been increasing in popularity in programming
@@ -349,7 +342,7 @@ Range of floating-point types
 
 In addition to the precision, a range can also be specified for a
 floating-point type. The syntax is similar to the one used for integer data
-types --- using the :ada:`range` keyword.  This simple example creates a new
+types |mdash| using the :ada:`range` keyword.  This simple example creates a new
 floating-point type based on the type :ada:`Float`, for a normalized range
 between :ada:`-1.0` and :ada:`1.0`:
 
@@ -494,7 +487,7 @@ will in turn prevent some subtle errors.
         int a = 3, b = 2;
         float f = a / b;
 
-    This code will compile fine, but the result of ``f`` will be 1.0 instead
+    This code will compile fine, but the result of :c:`f` will be 1.0 instead
     of 1.5, because the compiler will generate an integer division (three
     divided by two) that results in one. The software developer must be
     aware of data conversion issues and use an appropriate casting:
@@ -511,8 +504,8 @@ will in turn prevent some subtle errors.
     This example is very simple, and experienced C developers will probably
     notice and correct it before it creates bigger
     problems. However, in more complex applications where the type
-    declaration is not always visible --- e.g. when referring to elements of
-    a :c:`struct` --- this situation might not always be evident and quickly
+    declaration is not always visible |mdash| e.g. when referring to elements of
+    a :c:`struct` |mdash| this situation might not always be evident and quickly
     lead to software defects that can be harder to find.
 
     The Ada compiler, in contrast, will always reject code that

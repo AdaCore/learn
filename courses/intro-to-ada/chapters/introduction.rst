@@ -4,14 +4,7 @@
 
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 Introduction
 ============
@@ -48,7 +41,7 @@ will really shine in low-level applications:
 Specific domains seeing Ada usage include Aerospace & Defense, civil aviation,
 rail, and many others. These applications require a high degree of safety: a
 software defect is not just an annoyance, but may have severe consequences. Ada
-provides safety features that detect defects at an early stage --- usually at
+provides safety features that detect defects at an early stage |mdash| usually at
 compilation time or using static analysis tools. Ada can also be used to create
 applications in a variety of other areas, such as:
 

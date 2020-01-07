@@ -3,11 +3,7 @@
 Enforcing Strong Typing
 -----------------------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 Annex C of MISRA C:2012 summarizes the problem succinctly:
 
@@ -72,8 +68,8 @@ classified as only Advisory, MISRA C completes it with two Required rules:
   a non-integer arithmetic type"`
 
 In Ada, pointers are not addresses, and addresses are not integers. An opaque
-standard type ``System.Address`` is used for addresses, and conversions to/from
-integers are provided in a standard package ``System.Storage_Elements``. The
+standard type :ada:`System.Address` is used for addresses, and conversions to/from
+integers are provided in a standard package :ada:`System.Storage_Elements`. The
 previous C code can be written as follows in Ada:
 
 .. code:: ada
@@ -89,17 +85,17 @@ previous C code can be written as follows in Ada:
        P.all := 0;
     end Pointer;
 
-The integer value 42 is converted to a memory address ``A`` by calling
-``System.Storage_Elements.To_Address``, which is then used as the address of
-integer variable ``M``. The pointer variable ``P`` is set to point to ``M``
-(which is allowed because ``M`` is declared as ``aliased``).
+The integer value 42 is converted to a memory address :ada:`A` by calling
+:ada:`System.Storage_Elements.To_Address`, which is then used as the address of
+integer variable :ada:`M`. The pointer variable :ada:`P` is set to point to :ada:`M`
+(which is allowed because :ada:`M` is declared as :ada:`aliased`).
 
 Ada requires more verbiage than C:
 
-* The integer value ``42`` must be explicitly converted to type ``Address``
+* The integer value :ada:`42` must be explicitly converted to type :ada:`Address`
 
-* To get a pointer to a declared variable such as ``M``, the declaration
-  must be marked as ``aliased``
+* To get a pointer to a declared variable such as :ada:`M`, the declaration
+  must be marked as :ada:`aliased`
 
 The added syntax helps first in making clear what is happening and, second,
 in ensuring that a potentially dangerous feature (assigning to a value at a
@@ -126,9 +122,9 @@ parameter can be stored, which completely solves this issue. In fact, the
 decision to pass a parameter by copy or by reference rests in many cases with
 the compiler, but such compiler dependency has no effect on the functional
 behavior of a SPARK program. In the example below, the compiler may decide to pass
-parameter ``P`` of procedure ``Rotate_X`` either by copy or by reference, but
-regardless of the choice the postcondition of ``Rotate_X`` will hold:
-the final value of ``P`` will be modified by rotation around the ``X`` axis.
+parameter :ada:`P` of procedure :ada:`Rotate_X` either by copy or by reference, but
+regardless of the choice the postcondition of :ada:`Rotate_X` will hold:
+the final value of :ada:`P` will be modified by rotation around the :ada:`X` axis.
 
 :code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
@@ -198,19 +194,19 @@ array. In C, this could be written:
       return 0;
    }
 
-Function ``count`` has no control over the range of addresses accessed from
-pointer ``p``. The critical property that the ``len`` parameter is a valid length
-for an array of integers pointed to by parameter ``p`` rests completely with
-the caller of ``count``, and ``count`` has no way to check that this is
+Function :c:`count` has no control over the range of addresses accessed from
+pointer :c:`p`. The critical property that the :c:`len` parameter is a valid length
+for an array of integers pointed to by parameter :c:`p` rests completely with
+the caller of :c:`count`, and :c:`count` has no way to check that this is
 true.
 
 To mitigate the risks associated with pointers being used for arrays, MISRA C
 contains eight rules in a section on "Pointers and arrays". These rules
 forbid pointer arithmetic (Rule 18.4) or, if this Advisory rule is not
 followed, require pointer arithmetic to stay within bounds (Rule 18.1). But,
-even if we rewrite the loop in ``count`` to respect all decidable MISRA C
-rules, the program's correctness still depends on the caller of ``count``
-passing a correct value of ``len``:
+even if we rewrite the loop in :c:`count` to respect all decidable MISRA C
+rules, the program's correctness still depends on the caller of :c:`count`
+passing a correct value of :c:`len`:
 
 .. code:: c
 
@@ -235,7 +231,7 @@ passing a correct value of ``len``:
    }
 
 The resulting code is more readable, but still vulnerable to incorrect values
-of parameter ``len`` passed by the caller of ``count``, which violates
+of parameter :c:`len` passed by the caller of :c:`count`, which violates
 undecidable MISRA C Rules 18.1 (pointer arithmetic should stay within bounds)
 and 1.3 (no undefined behavior). Contrast this with the same function in SPARK
 (and Ada):
@@ -270,17 +266,17 @@ and 1.3 (no undefined behavior). Contrast this with the same function in SPARK
        Put_Line ("value 3 is seen" & C'Img & " times in p");
     end Test_Count;
 
-The array parameter ``P`` is not simply a homogeneous sequence of Integer
-values. The compiler must represent ``P`` so that its lower and upper bounds
-(P'First and P'Last) and thus also its length (P'Length) can be retrieved.
-Function ``Count`` can
-simply loop over the range of valid array indexes ``P'First .. P'Last`` (or
-``P'Range`` for short). As a result, function ``Count`` can be verified in
+The array parameter :ada:`P` is not simply a homogeneous sequence of Integer
+values. The compiler must represent :ada:`P` so that its lower and upper bounds
+(:ada:`P'First` and :ada:`P'Last`) and thus also its length (:ada:`P'Length`)
+can be retrieved. Function :ada:`Count` can
+simply loop over the range of valid array indexes :ada:`P'First .. P'Last` (or
+:ada:`P'Range` for short). As a result, function :ada:`Count` can be verified in
 isolation to be free of vulnerabilities such as buffer overflow, as it does
 not depend on the values of parameters passed by its callers. In fact, we can
-go further in SPARK and show that the value returned by ``Count`` is no greater
-than the length of parameter ``P`` by stating this property in the postcondition of
-``Count`` and asking the SPARK analysis tool to prove it:
+go further in SPARK and show that the value returned by :ada:`Count` is no greater
+than the length of parameter :ada:`P` by stating this property in the postcondition of
+:ada:`Count` and asking the SPARK analysis tool to prove it:
 
 :code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
@@ -310,16 +306,16 @@ than the length of parameter ``P`` by stating this property in the postcondition
 
 The only help that SPARK analysis required from the programmer, in order to prove the
 postcondition, is a loop invariant (a special kind of assertion) that reflects
-the value of ``Count`` at each iteration.
+the value of :ada:`Count` at each iteration.
 
 Pointers Should Be Typed
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The C language defines a special pointer type ``void*`` that corresponds to an
-untyped pointer. It is legal to convert any pointer type to and from ``void*``,
+The C language defines a special pointer type :c:`void*` that corresponds to an
+untyped pointer. It is legal to convert any pointer type to and from :c:`void*`,
 which makes it a convenient way to simulate C++ style templates. Consider the following
-code which indirectly applies ``assign_int`` to integer ``i`` and
-``assign_float`` to floating-point ``f`` by calling ``assign`` on both:
+code which indirectly applies :c:`assign_int` to integer :c:`i` and
+:c:`assign_float` to floating-point :c:`f` by calling :c:`assign` on both:
 
 .. code:: c
 
@@ -348,12 +344,12 @@ code which indirectly applies ``assign_int`` to integer ``i`` and
       printf("i = %d; f = %f\n", i, f);
    }
 
-The references to the variables ``i`` and ``f`` are implicitly converted to
-the ``void*`` type as a way
-to apply ``assign`` to any second parameter ``p`` whose type matches the
-argument type of its first argument ``fun``. The use of an untyped argument
+The references to the variables :c:`i` and :c:`f` are implicitly converted to
+the :c:`void*` type as a way
+to apply :c:`assign` to any second parameter :c:`p` whose type matches the
+argument type of its first argument :c:`fun`. The use of an untyped argument
 means that the responsibility for the correct typing rests completely
-with the programmer. Swap ``i`` and ``f`` in the calls to ``assign``
+with the programmer. Swap :c:`i` and :c:`f` in the calls to :c:`assign`
 and you still get a compilable program without warnings, that runs and produces
 completely bogus output::
 
@@ -364,8 +360,8 @@ instead of the expected::
   i = 42; f = 42.000000
 
 Generics in SPARK (and Ada) can implement the desired functionality in a fully
-typed way, with any errors caught at compile time, where procedure ``Assign``
-applies its parameter procedure ``Initialize`` to its parameter ``V``:
+typed way, with any errors caught at compile time, where procedure :ada:`Assign`
+applies its parameter procedure :ada:`Initialize` to its parameter :ada:`V`:
 
 .. code:: ada
 
@@ -404,11 +400,11 @@ applies its parameter procedure ``Initialize`` to its parameter ``V``:
        Put_Line ("I =" & I'Img & "; F =" & F'Img);
     end Apply_Assign;
 
-The generic procedure ``Assign`` must be instantiated with a specific
-type for ``T`` and a specific procedure (taking a single ``out`` parameter
-of this type) for ``Initialize``. The procedure resulting from the
-instantiation applies to a variable of this type. So switching ``I`` and
-``F`` above would result in an error detected by the compiler.
+The generic procedure :ada:`Assign` must be instantiated with a specific
+type for :ada:`T` and a specific procedure (taking a single :ada:`out` parameter
+of this type) for :ada:`Initialize`. The procedure resulting from the
+instantiation applies to a variable of this type. So switching :ada:`I` and
+:ada:`F` above would result in an error detected by the compiler.
 Likewise, an instantiation such as the following would also be
 a compile-time error:
 
@@ -436,11 +432,11 @@ buggy version of the code to produce the minimum signed integer:
 
    return (T)(1 << (BitCount()-1));
 
-The issue here is that the literal ``1`` on the left-hand side of the shift is an
-``int``, so on a 64-bit machine with 32-bit ``int`` and 64-bit type ``T``, the
-above is shifting 32-bit value ``1`` by 63 bits. This is a case of undefined behavior,
+The issue here is that the literal :c:`1` on the left-hand side of the shift is an
+:c:`int`, so on a 64-bit machine with 32-bit :c:`int` and 64-bit type :c:`T`, the
+above is shifting 32-bit value :c:`1` by 63 bits. This is a case of undefined behavior,
 producing an unexpected output with the Microsoft compiler. The correction is to convert
-the first literal ``1`` to ``T`` before the shift:
+the first literal :c:`1` to :c:`T` before the shift:
 
 .. code-block:: c
 
@@ -498,12 +494,12 @@ bad idea, but it is easily done in C:
    }
 
 No error from the compiler here. In fact, there is no undefined behavior in the
-above code. Variables ``b3`` and ``f3`` both end up with value 1. Of course it
+above code. Variables :c:`b3` and :c:`f3` both end up with value 1. Of course it
 makes no sense to add Boolean or enumerated values, and thus MISRA C
 Rule 18.1 forbids the use of all arithmetic operations on Boolean and
 enumerated values, while also forbidding most arithmetic operations on
 characters. That leaves the use of arithmetic operations for signed or unsigned
-integers as well as floating-point types and the use of modulo operation ``%``
+integers as well as floating-point types and the use of modulo operation :c:`%`
 for signed or unsigned integers.
 
 Here's an attempt to simulate the above C code in SPARK (and Ada):
@@ -548,7 +544,7 @@ Here is the output from AdaCore's GNAT compiler:
     12.     end Bad_Arith;
 
 It is possible, however, to get the predecessor of a Boolean or enumerated
-value with ``Value'Pred`` and its successor with ``Value'Succ``, as well as
+value with :ada:`Value'Pred` and its successor with :ada:`Value'Succ`, as well as
 to iterate over all values of the type:
 
 .. code:: ada
@@ -600,16 +596,16 @@ Boolean Operations on Boolean
    }
 
 The answer to the question posed by Shakespeare's Hamlet is 1, since it
-reduces to ``A or not A`` and this is true in classical logic.
+reduces to :ada:`A or not A` and this is true in classical logic.
 
 As previously noted, MISRA C forbids the use of the multiplication operator
 with an operand of an enumerated type. Rule 18.1 also forbids
-the use of Boolean operations "and", "or", and "not" (``&&``, ``||``, ``!``,
+the use of Boolean operations "and", "or", and "not" (:c:`&&`, :c:`||`, :c:`!`,
 respectively, in C) on anything other than Boolean operands. It would
 thus prohibit the Shakespearian code above.
 
 Below is an attempt to express the same code in SPARK (and Ada), where the Boolean operators are
-``and``, ``or``, and ``not``. The ``and`` and ``or`` operators evaluate both
+:ada:`and`, :ada:`or`, and :ada:`not`. The :ada:`and` and :ada:`or` operators evaluate both
 operands, and the language also supplies short-circuit forms that evaluate
 the left operand and only evaluate the right operand when its value may affect
 the result.
@@ -622,8 +618,8 @@ the result.
        Answer : Boolean := 2 * Bee or not 2 * Bee; -- Illegal
     end Bad_Hamlet;
 
-As expected, the compiler rejects this code. There is no available ``*`` operation
-that works on an enumeration type, and likewise no available ``or`` or ``not``
+As expected, the compiler rejects this code. There is no available :ada:`*` operation
+that works on an enumeration type, and likewise no available :ada:`or` or :ada:`not`
 operation.
 
 Bitwise Operations on Unsigned Integers
@@ -646,18 +642,18 @@ a Cat, by manipulating the atomic structure (the bits in its representation):
    }
 
 This algorithm works by accessing the underlying bitwise representation
-of ``Bee`` and ``Dog`` (0x01 and 0x03, respectively) and, by applying the
-exclusive-or operator ``^``, transforming it into the underlying bitwise
-representation of a ``Cat`` (0x02). While powerful, manipulating the bits
+of :c:`Bee` and :c:`Dog` (0x01 and 0x03, respectively) and, by applying the
+exclusive-or operator :c:`^`, transforming it into the underlying bitwise
+representation of a :c:`Cat` (0x02). While powerful, manipulating the bits
 in the representation of values is best reserved for unsigned integers as
 illustrated in the book `Hacker's Delight <http://www.hackersdelight.org/>`_.
 MISRA C Rule 18.1 thus forbids the use of all bitwise operations on anything
 but unsigned integers.
 
 Below is an attempt to do the same in SPARK (and Ada). The bitwise operators are
-``and``, ``or``, ``xor``, and ``not``, and the related bitwise functions are
-``Shift_Left``, ``Shift_Right``, ``Shift_Right_Arithmetic``, ``Rotate_Left``
-and ``Rotate_Right``:
+:ada:`and`, :ada:`or`, :ada:`xor`, and :ada:`not`, and the related bitwise functions are
+:ada:`Shift_Left`, :ada:`Shift_Right`, :ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left`
+and :ada:`Rotate_Right`:
 
 .. code:: ada
    :class: ada-expect-compile-error
@@ -668,12 +664,12 @@ and ``Rotate_Right``:
       pragma Assert (Mutant = Cat);
    end Bad_Genetics;
 
-The declaration of ``Mutant`` is illegal, since the ``xor`` operator is only
+The declaration of :ada:`Mutant` is illegal, since the :ada:`xor` operator is only
 available for Boolean and unsigned integer (modular) values; it is not available
-for ``Animal``.  The same restriction applies to the other bitwise operators
+for :ada:`Animal`.  The same restriction applies to the other bitwise operators
 listed above.  If we really wanted to achieve the effect of the above code
-in legal SPARK (or Ada), then the following approach will work (the type ``Unsigned_8``
-is an 8-bit modular type declared in the predefined package ``Interfaces``).
+in legal SPARK (or Ada), then the following approach will work (the type :ada:`Unsigned_8`
+is an 8-bit modular type declared in the predefined package :ada:`Interfaces`).
 
 :code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
@@ -691,7 +687,7 @@ is an 8-bit modular type declared in the predefined package ``Interfaces``).
 
 :code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
-Note that ``and``, ``or``, ``not`` and ``xor`` are used both as logical operators
+Note that :ada:`and`, :ada:`or`, :ada:`not` and :ada:`xor` are used both as logical operators
 and as bitwise operators, but there is no possible confusion between these two uses.
 Indeed the use of such operators on values from modular types is a natural
 generalization of their uses on Boolean, since values from modular types are often
@@ -707,9 +703,9 @@ casts that are allowed in C are either downright errors or poor replacements
 for clearer syntax.
 
 One example is to cast from a scalar type to Boolean. A better way to
-express ``(bool)x`` is to compare ``x`` to the zero value of its type: ``x != 0``
-for integers, ``x != 0.0`` for floats, ``x != `\0``` for characters, ``x !=Enum``
-where ``Enum`` is the first enumerated value of the type. Thus, MISRA C
+express :c:`(bool)x` is to compare :c:`x` to the zero value of its type: :c:`x != 0`
+for integers, :c:`x != 0.0` for floats, :c:`x != '\0'` for characters, :c:`x != Enum`
+where :c:`Enum` is the first enumerated value of the type. Thus, MISRA C
 Rule 10.5 advises avoiding casting non-Boolean values to Boolean.
 
 Rule 10.5 also advises avoiding other casts that are, at best, obscure:
@@ -759,8 +755,8 @@ satisfy both Rules 10.1 and 10.5:
       return 0;
    }
 
-Here, we're implicitly converting the enumerated value ``Bee`` to an int,
-and then implicitly converting the integer value ``2 * b`` to a Boolean.
+Here, we're implicitly converting the enumerated value :c:`Bee` to an int,
+and then implicitly converting the integer value :c:`2 * b` to a Boolean.
 This does not violate 10.1 or 10.5, but it is prohibited by
 MISRA C Rule 10.3:  `"The value of an
 expression shall not be assigned to an object with a narrower essential type or
@@ -806,9 +802,9 @@ different types.
 The compiler reports a mismatch on every statement in the above procedure
 (the declarations are all legal).
 
-Adding explicit conversions makes the assignments to F and M valid,
+Adding explicit conversions makes the assignments to :ada:`F` and :ada:`M` valid,
 since SPARK (and Ada) allow conversions between numeric types and between a derived
-type and its parent typ, but all other conversions are illegal:
+type and its parent type, but all other conversions are illegal:
 
 .. code:: ada
     :class: ada-expect-compile-error
@@ -834,16 +830,16 @@ type and its parent typ, but all other conversions are illegal:
 
 Although an enumeration value cannot be converted to an integer (or *vice
 versa*) either implicitly or explicitly, SPARK (and Ada) provide functions
-to obtain the effect of a type conversion. For any enumeration type ``T``,
-the function ``T'Pos(e)`` takes an enumeration value from type ``T``
-and returns its relative position as an integer, starting at ``0``.
-For example, ``Animal'Pos(Bee)`` is ``1``, and ``Boolean'Pos(False)``
-is ``0``. In the other direction, ``T'Val(n)``, where ``n`` is an integer,
-returns the enumeration value in type ``T`` at relative position ``n``.
-If ``n`` is negative or greater then ``T'Pos(T'Last)`` then a run-time
+to obtain the effect of a type conversion. For any enumeration type :ada:`T`,
+the function :ada:`T'Pos(e)` takes an enumeration value from type :ada:`T`
+and returns its relative position as an integer, starting at :ada:`0`.
+For example, :ada:`Animal'Pos(Bee)` is :ada:`1`, and :ada:`Boolean'Pos(False)`
+is :ada:`0`. In the other direction, :ada:`T'Val(n)`, where :ada:`n` is an integer,
+returns the enumeration value in type :ada:`T` at relative position ``n``.
+If ``n`` is negative or greater then :ada:`T'Pos(T'Last)` then a run-time
 exception is raised.
 
-Hence, the following is valid SPARK (and Ada) code; ``Character`` is defined as
+Hence, the following is valid SPARK (and Ada) code; :ada:`Character` is defined as
 an enumeration type:
 
 .. code:: ada

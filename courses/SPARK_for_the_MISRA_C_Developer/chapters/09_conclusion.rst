@@ -3,11 +3,7 @@
 Conclusion
 ----------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 The C programming language is "close to the metal" and has
 emerged as a *lingua franca* for the majority of embedded platforms of all

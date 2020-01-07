@@ -3,11 +3,7 @@
 Initializing Data Before Use
 ----------------------------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 As with most programming languages, C does not require that variables be initialized at
 their declaration, which makes it possible to unintentionally read
@@ -24,9 +20,9 @@ on "Initialization", containing five rules. The most important is Rule 9.1:
 "`The value of an object with automatic storage duration shall not be read
 before it has been set`". The first example in the rule is interesting, as it
 shows a non-trivial (and common) case of conditional initialization, where a
-function ``f`` initializes an output parameter ``p`` only in some cases, and
-the caller ``g`` of ``f`` ends up reading the value of the variable ``u``
-passed in argument to ``f`` in cases where it has not been initialized:
+function :c:`f` initializes an output parameter :c:`p` only in some cases, and
+the caller :c:`g` of :c:`f` ends up reading the value of the variable :c:`u`
+passed in argument to :c:`f` in cases where it has not been initialized:
 
 .. code-block:: c
 
@@ -67,7 +63,7 @@ constraints:
 - all outputs of a subprogram should be initialized on subprogram return
 
 Hence, given the following code translated from C, GNATprove reports that
-function ``F`` might not always initialize output parameter ``P``:
+function :ada:`F` might not always initialize output parameter :ada:`P`:
 
 .. code:: ada prove_flow_button
 
@@ -99,7 +95,7 @@ function ``F`` might not always initialize output parameter ``P``:
 
     end Init;
 
-We can correct the program by initializing ``P`` to value 0 when condition ``B`` is
+We can correct the program by initializing :ada:`P` to value 0 when condition :ada:`B` is
 not satisfied:
 
 .. code:: ada prove_flow_report_all_button
@@ -143,7 +139,7 @@ GNATprove checks that all global data is explicitly initialized (at declaration
 or elsewhere) before it is read. Hence it goes beyond the MISRA C Rule 9.1, which
 considers global data as always initialized even if the default value of
 all-zeros might not be valid data for the application. Here's a variation of
-the above code where variable ``U`` is now global:
+the above code where variable :ada:`U` is now global:
 
 .. code:: ada prove_flow_button
 
@@ -182,21 +178,21 @@ the above code where variable ``U`` is now global:
        Init.G;
     end Call_Init;
 
-GNATprove reports here that variable ``U`` might not be initialized at program
+GNATprove reports here that variable :ada:`U` might not be initialized at program
 startup, which is indeed the case here. It reports this issue on the main
-program ``Call_Init`` because its analysis showed that ``F`` needs to take
-``U`` as an initialized input (since ``F`` is not initializing ``U`` on all
-paths, ``U`` keeps its value on the other path, which needs to be an
-initialized value), which means that ``G`` which calls ``F`` also needs to take
-``U`` as an initialized input, which in turn means that ``Call_Init`` which
-calls ``G`` also needs to take ``U`` as an initialized input. At this point,
+program :ada:`Call_Init` because its analysis showed that :ada:`F` needs to take
+:ada:`U` as an initialized input (since :ada:`F` is not initializing :ada:`U` on all
+paths, :ada:`U` keeps its value on the other path, which needs to be an
+initialized value), which means that :ada:`G` which calls :ada:`F` also needs to take
+:ada:`U` as an initialized input, which in turn means that :ada:`Call_Init` which
+calls :ada:`G` also needs to take :ada:`U` as an initialized input. At this point,
 we've reached the main program, so the initialization phase (referred to as
-`elaboration` in SPARK and Ada) should have taken care of initializing ``U``.
+`elaboration` in SPARK and Ada) should have taken care of initializing :ada:`U`.
 This is not the case here, hence the message from GNATprove.
 
-It is possible in SPARK to specify that ``G`` should initialize variable ``U``;
-this is done with a `data dependency` contract introduced with aspect ``Global``
-following the declaration of procedure ``G``:
+It is possible in SPARK to specify that :ada:`G` should initialize variable :ada:`U`;
+this is done with a `data dependency` contract introduced with aspect :ada:`Global`
+following the declaration of procedure :ada:`G`:
 
 .. code:: ada prove_flow_button
 
@@ -235,11 +231,11 @@ following the declaration of procedure ``G``:
        Init.G;
     end Call_Init;
 
-GNATprove reports the error on the call to ``F`` in ``G``, as it
-knows at this point that ``F`` needs ``U`` to be initialized but the calling
-context in ``G`` cannot provide that guarantee. If we provide the same data
-dependency contract for ``F``, then GNATprove reports the error on ``F``
-itself, similarly to what we saw for an output parameter ``U``.
+GNATprove reports the error on the call to :ada:`F` in :ada:`G`, as it
+knows at this point that :ada:`F` needs :ada:`U` to be initialized but the calling
+context in :ada:`G` cannot provide that guarantee. If we provide the same data
+dependency contract for :ada:`F`, then GNATprove reports the error on :ada:`F`
+itself, similarly to what we saw for an output parameter :ada:`U`.
 
 Detecting Partial or Redundant Initialization of Arrays and Structures
 **********************************************************************
@@ -262,11 +258,11 @@ initializations of an array of 10 elements in C:
       return 0;
    }
 
-Only ``a`` is fully initialized to all-zeros in the above code snippet. MISRA C
+Only :c:`a` is fully initialized to all-zeros in the above code snippet. MISRA C
 Rule 9.3 thus forbids all other declarations by stating that `"Arrays shall not
 be partially initialized"`. In addition, MISRA C Rule 9.4 forbids the
-declaration of ``e`` by stating that `"An element of an object shall not be
-initialised more than once"` (in ``e``'s declaration, the element at index 8 is
+declaration of :c:`e` by stating that `"An element of an object shall not be
+initialised more than once"` (in :c:`e`'s declaration, the element at index 8 is
 initialized twice).
 
 The same holds for initialization of structures. Here is an equivalent set of
@@ -285,9 +281,9 @@ declarations with the same potential issues:
       return 0;
    }
 
-Here only ``a``, ``d`` and ``e`` are fully initialized. MISRA C Rule 9.3 thus
-forbids the declarations of ``b`` and ``c``. In addition, MISRA C Rule 9.4
-forbids the declaration of ``e``.
+Here only :c:`a`, :c:`d` and :c:`e` are fully initialized. MISRA C Rule 9.3 thus
+forbids the declarations of :c:`b` and :c:`c`. In addition, MISRA C Rule 9.4
+forbids the declaration of :c:`e`.
 
 In SPARK and Ada, the aggregate used to initialize an array or a record must fully
 cover the components of the array or record. Violations lead to compilation

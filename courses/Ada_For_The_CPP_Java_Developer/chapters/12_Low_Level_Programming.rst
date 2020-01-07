@@ -1,6 +1,8 @@
 Low Level Programming
 -----------------------
 
+.. include:: ../../global.txt
+
 Representation Clauses
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -16,7 +18,7 @@ One very interesting feature of the language is that, unlike C, for example, the
       V  : Integer range 0 .. 255;
       B1 : Boolean;
       B2 : Boolean;
-   end record 
+   end record
    with Pack;
 
 [C++]
@@ -41,7 +43,7 @@ One very interesting feature of the language is that, unlike C, for example, the
 
 The Ada and the C++ code above both represent efforts to create an object that's as small as possible. Controlling data size is not possible in Java, but the language does specify the size of values for the primitive types.
 
-Although the C++ and Ada code are equivalent in this particular example, there's an interesting semantic difference. In C++, the number of bits required by each field needs to be specified. Here, we're stating that *v* is only 8 bits, effectively representing values from 0 to 255. In Ada, it's the other way around: the developer specifies the range of values required and the compiler decides how to represent things, optimizing for speed or size. The **Pack** aspect declared at the end of the record specifies that the compiler should optimize for size even at the expense of decreased speed in accessing record components.
+Although the C++ and Ada code are equivalent in this particular example, there's an interesting semantic difference. In C++, the number of bits required by each field needs to be specified. Here, we're stating that :cpp:`v` is only 8 bits, effectively representing values from 0 to 255. In Ada, it's the other way around: the developer specifies the range of values required and the compiler decides how to represent things, optimizing for speed or size. The :ada:`Pack` aspect declared at the end of the record specifies that the compiler should optimize for size even at the expense of decreased speed in accessing record components.
 
 Other representation clauses can be specified as well, along with compile-time consistency checks between requirements in terms of available values and specified sizes. This is particularly useful when a specific layout is necessary; for example when interfacing with hardware, a driver, or a communication protocol. Here's how to specify a specific data layout based on the previous example:
 
@@ -65,7 +67,7 @@ Other representation clauses can be specified as well, along with compile-time c
       B2 at 1 range 1 .. 1;
    end record;
 
-We omit the **with** *Pack* directive and instead use a record representation clause following the record declaration. The compiler is directed to spread objects of type *R* across two bytes. The layout we're specifying here is fairly inefficient to work with on any machine, but you can have the compiler construct the most efficient methods for access, rather than coding your own machine-dependent bit-level methods manually.
+We omit the :ada:`with Pack` directive and instead use a record representation clause following the record declaration. The compiler is directed to spread objects of type :ada:`R` across two bytes. The layout we're specifying here is fairly inefficient to work with on any machine, but you can have the compiler construct the most efficient methods for access, rather than coding your own machine-dependent bit-level methods manually.
 
 Embedded Assembly Code
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,9 +76,9 @@ When performing low-level development, such as at the kernel or hardware driver 
 
 Every Ada compiler has its own conventions for embedding assembly code, based on the hardware platform and the supported assembler(s). Our examples here will work with GNAT and GCC on the x86 architecture.
 
-All x86 processors since the Intel Pentium offer the *rdtsc* instruction, which tells us the number of cycles since the last processor reset. It takes no inputs and places an unsigned 64 bit value split between the *edx* and *eax* registers.
+All x86 processors since the Intel Pentium offer the :assembly:`rdtsc` instruction, which tells us the number of cycles since the last processor reset. It takes no inputs and places an unsigned 64 bit value split between the :assembly:`edx` and :assembly:`eax` registers.
 
-GNAT provides a subprogram called *System.Machine_Code.Asm* that can be used for assembly code insertion. You can specify a string to pass to the assembler as well as source-level variables to be used for input and output:
+GNAT provides a subprogram called :ada:`System.Machine_Code.Asm` that can be used for assembly code insertion. You can specify a string to pass to the assembler as well as source-level variables to be used for input and output:
 
 .. code-block:: ada
 
@@ -100,18 +102,18 @@ GNAT provides a subprogram called *System.Machine_Code.Asm* that can be used for
       return Counter;
    end Get_Processor_Cycles;
 
-The *Unsigned_32'Asm_Output* clauses above provide associations between machine registers and source-level variables to be updated. "=a" and "=d" refer to the *eax* and *edx* machine registers, respectively. The use of the *Unsigned_32* and *Unsigned_64* types from package *Interfaces* ensures correct representation of the data. We assemble the two 32-bit values to form a single 64 bit value.
+The :ada:`Unsigned_32'Asm_Output` clauses above provide associations between machine registers and source-level variables to be updated. :ada:`"=a"` and :ada:`"=d"` refer to the :assembly:`eax` and :assembly:`edx` machine registers, respectively. The use of the :ada:`Unsigned_32` and :ada:`Unsigned_64` types from package :ada:`Interfaces` ensures correct representation of the data. We assemble the two 32-bit values to form a single 64 bit value.
 
-We set the *Volatile* parameter to *True* to tell the compiler that invoking this instruction multiple times with the same inputs can result in different outputs. This eliminates the possibility that the compiler will optimize multiple invocations into a single call.
+We set the :ada:`Volatile` parameter to :ada:`True` to tell the compiler that invoking this instruction multiple times with the same inputs can result in different outputs. This eliminates the possibility that the compiler will optimize multiple invocations into a single call.
 
-With optimization turned on, the GNAT compiler is smart enough to use the *eax* and *edx* registers to implement the *High* and *Low* variables, resulting in zero overhead for the assembly interface.
+With optimization turned on, the GNAT compiler is smart enough to use the :assembly:`eax` and :assembly:`edx` registers to implement the :ada:`High` and :ada:`Low` variables, resulting in zero overhead for the assembly interface.
 
 The machine code insertion interface provides many features beyond what was shown here. More information can be found in the GNAT User's Guide, and the GNAT Reference manual.
 
 Interfacing with C
 ~~~~~~~~~~~~~~~~~~~~~
 
-Much effort was spent making Ada easy to interface with other languages. The *Interfaces* package hierarchy and the pragmas *Convention*, *Import*, and *Export* allow you to make inter-language calls while observing proper data representation for each language.
+Much effort was spent making Ada easy to interface with other languages. The :ada:`Interfaces` package hierarchy and the pragmas :ada:`Convention`, :ada:`Import`, and :ada:`Export` allow you to make inter-language calls while observing proper data representation for each language.
 
 Let's start with the following C code:
 
@@ -125,7 +127,7 @@ Let's start with the following C code:
       printf ("%d", p->A);
    }
 
-To call that function from Ada, the Ada compiler requires a description of the data structure to pass as well as a description of the function itself. To capture how the C **struct** *my_struct* is represented, we can use the following record along with a **pragma** *Convention*. The pragma directs the compiler to lay out the data in memory the way a C compiler would.
+To call that function from Ada, the Ada compiler requires a description of the data structure to pass as well as a description of the function itself. To capture how the C :c:`struct my_struct` is represented, we can use the following record along with a :ada:`pragma Convention`. The pragma directs the compiler to lay out the data in memory the way a C compiler would.
 
 .. code-block:: ada
 
@@ -135,16 +137,16 @@ To call that function from Ada, the Ada compiler requires a description of the d
    end record;
    pragma Convention (C, my_struct);
 
-Describing a foreign subprogram call to Ada code is called "binding" and it is performed in two stages. First, an Ada subprogram specification equivalent to the C function is coded. A C function returning a value maps to an Ada function, and a **void** function maps to an Ada procedure. Then, rather than implementing the subprogram using Ada code, we use a **pragma** *Import*:
+Describing a foreign subprogram call to Ada code is called "binding" and it is performed in two stages. First, an Ada subprogram specification equivalent to the C function is coded. A C function returning a value maps to an Ada function, and a :c:`void` function maps to an Ada procedure. Then, rather than implementing the subprogram using Ada code, we use a :ada:`pragma Import`:
 
 .. code-block:: ada
 
    procedure Call (V : my_struct);
    pragma Import (C, Call, "call"); -- Third argument optional
 
-The *Import* pragma specifies that whenever *Call* is invokeed by Ada code, it should invoke the *call* function with the C calling convention.
+The :ada:`Import` pragma specifies that whenever :ada:`Call` is invoked by Ada code, it should invoke the :c:`call` function with the C calling convention.
 
-And that's all that's necessary. Here's an example of a call to *Call*:
+And that's all that's necessary. Here's an example of a call to :ada:`Call`:
 
 .. code-block:: ada
 

@@ -3,14 +3,7 @@ Generics
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 Introduction
 ------------
@@ -46,7 +39,7 @@ Formal type declaration
 Formal types are abstractions of a specific type. For example, we may
 want to create an algorithm that works on any integer type, or even on
 any type at all, whether a numeric type or not. The following example
-declares a formal type ``T`` for the ``Set`` procedure.
+declares a formal type :ada:`T` for the :ada:`Set` procedure.
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Formal_Type_Declaration
 
@@ -64,7 +57,7 @@ declares a formal type ``T`` for the ``Set`` procedure.
        null;
     end Show_Formal_Type_Declaration;
 
-The declaration of ``T`` as :ada:`private` indicates that you can map
+The declaration of :ada:`T` as :ada:`private` indicates that you can map
 any type to it. But you can also restrict the declaration to allow
 only some types to be mapped to that formal type.  Here are some
 examples:
@@ -172,9 +165,9 @@ shown in the following example:
        Put_Line ("Value of Main is " & Integer'Image (Main));
     end Show_Generic_Instantiation;
 
-In the example above, we instantiate the procedure ``Set`` by mapping the
-formal parameters ``T`` and ``X`` to actual existing elements, in this case
-the :ada:`Integer` type and the ``Main`` variable.
+In the example above, we instantiate the procedure :ada:`Set` by mapping the
+formal parameters :ada:`T` and :ada:`X` to actual existing elements, in this case
+the :ada:`Integer` type and the :ada:`Main` variable.
 
 
 Generic packages
@@ -260,13 +253,13 @@ Here's an example:
 
     end Show_Generic_Package;
 
-In the example above, we created a simple container named ``Element``,
+In the example above, we created a simple container named :ada:`Element`,
 with just one single element. This container tracks whether the
 element has been initialized or not.
 
-After writing package definition, we create the instance ``I`` of the
-``Element``. We use the instance by calling the package subprograms
-(``Set``, ``Reset``, and ``Get``).
+After writing package definition, we create the instance :ada:`I` of the
+:ada:`Element`. We use the instance by calling the package subprograms
+(:ada:`Set`, :ada:`Reset`, and :ada:`Get`).
 
 Formal subprograms
 ~~~~~~~~~~~~~~~~~~
@@ -276,8 +269,8 @@ subprograms or packages. This course only describes formal subprograms;
 formal packages are discussed in the advanced course.
 
 We use the :ada:`with` keyword to declare a formal subprogram. In the
-example below, we declare a formal function (``Comparison``) to be
-used by the generic procedure ``Check``.
+example below, we declare a formal function (:ada:`Comparison`) to be
+used by the generic procedure :ada:`Check`.
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Formal_Subprogram
 
@@ -412,14 +405,14 @@ A typical example of an ADT is a stack:
        Put_Line ("Last value was " & Integer'Image (Pop (Values)));
     end Show_Stack;
 
-In this example, we first create a generic stack package (``Stacks``)
+In this example, we first create a generic stack package (:ada:`Stacks`)
 and then instantiate it to create a stack of 10 integer values.
 
 Abstracting a swap algorithm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's look at a simple procedure that swaps variables of type
-``Color``:
+:ada:`Color`:
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Swap_Colors
 
@@ -457,7 +450,7 @@ Let's look at a simple procedure that swaps variables of type
        Put_Line ("Value of C is " & Color'Image (C));
     end Test_Non_Generic_Swap_Colors;
 
-In this example, ``Swap_Colors`` can only be used for the ``Color``
+In this example, :ada:`Swap_Colors` can only be used for the :ada:`Color`
 type.  However, this algorithm can theoretically be used for any type,
 whether an enumeration type or a complex record type with many
 elements. The algorithm itself is the same: it's only the type that
@@ -465,9 +458,9 @@ differs. If, for example, we want to swap variables of :ada:`Integer`
 type, we don't want to duplicate the implementation. Therefore, such
 an algorithm is a perfect candidate for abstraction using generics.
 
-In the example below, we create a generic version of ``Swap_Colors``
-and name it ``Generic_Swap``. This generic version can operate on any
-type due to the declaration of formal type ``T``.
+In the example below, we create a generic version of :ada:`Swap_Colors`
+and name it :ada:`Generic_Swap`. This generic version can operate on any
+type due to the declaration of formal type :ada:`T`.
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Swap_Colors
 
@@ -509,11 +502,11 @@ type due to the declaration of formal type ``T``.
        Put_Line ("Value of C is " & Color'Image (C));
     end Test_Swap_Colors;
 
-As we can see in the example, we can create the same ``Swap_Colors``
+As we can see in the example, we can create the same :ada:`Swap_Colors`
 procedure as we had in the non-generic version of the algorithm by
-declaring it as an instance of the generic ``Generic_Swap`` procedure. We
-specify that the generic ``T`` type will be mapped to the ``Color`` type by
-passing it as an argument to the ``Generic_Swap`` instantiation,
+declaring it as an instance of the generic :ada:`Generic_Swap` procedure. We
+specify that the generic :ada:`T` type will be mapped to the :ada:`Color` type
+by passing it as an argument to the :ada:`Generic_Swap` instantiation,
 
 Abstracting a reversing algorithm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -521,7 +514,7 @@ Abstracting a reversing algorithm
 The previous example, with an algorithm to swap two values, is one of the
 simplest examples of using generics. Next we study an algorithm for
 reversing elements of an array. First, let's start with a non-generic
-version of the algorithm, one that works specifically for the ``Color``
+version of the algorithm, one that works specifically for the :ada:`Color`
 type:
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Reverse_Colors
@@ -568,7 +561,7 @@ type:
 
     end Test_Non_Generic_Reverse_Colors;
 
-The procedure ``Reverse_Color_Array`` takes an array of colors, starts by
+The procedure :ada:`Reverse_Color_Array` takes an array of colors, starts by
 swapping the first and last elements of the array, and continues doing that
 with successive elements until it reaches the middle of array. At that
 point, the entire array has been reversed, as we see from the output of the
@@ -577,11 +570,11 @@ test program.
 To abstract this procedure, we declare formal types for three components of
 the algorithm:
 
-    - the elements of the array (``Color`` type in the example)
+    - the elements of the array (:ada:`Color` type in the example)
 
-    - the range used for the array (``Integer`` range in the example)
+    - the range used for the array (:ada:`Integer` range in the example)
 
-    - the actual array type (``Color_Array`` type in the example)
+    - the actual array type (:ada:`Color_Array` type in the example)
 
 This is a generic version of the algorithm:
 
@@ -637,12 +630,12 @@ This is a generic version of the algorithm:
 
 As mentioned above, we're abstracting three components of the algorithm:
 
-    - the ``T`` type abstracts the elements of the array
+    - the :ada:`T` type abstracts the elements of the array
 
-    - the ``Index`` type abstracts the range used for the array
+    - the :ada:`Index` type abstracts the range used for the array
 
-    - the ``Array_T`` type abstracts the array type and uses the
-      formal declarations of the ``T`` and ``Index`` types.
+    - the :ada:`Array_T` type abstracts the array type and uses the
+      formal declarations of the :ada:`T` and :ada:`Index` types.
 
 Abstracting the test application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -655,18 +648,18 @@ other procedures that change elements of an array.
 In order to do this, we again have to choose the elements to abstract. We
 therefore declare the following formal parameters:
 
-    - ``S``: the string containing the array name
+    - :ada:`S`: the string containing the array name
 
-    - a function ``Image`` that converts an element of type ``T`` to a
+    - a function :ada:`Image` that converts an element of type :ada:`T` to a
       string
 
-    - a procedure ``Test`` that performs some operation on the array
+    - a procedure :ada:`Test` that performs some operation on the array
 
-Note that ``Image`` and ``Test`` are examples of formal subprograms and
-``S`` is an example of a formal object.
+Note that :ada:`Image` and :ada:`Test` are examples of formal subprograms and
+:ada:`S` is an example of a formal object.
 
 Here is a version of the test application making use of the generic
-``Perform_Test`` procedure:
+:ada:`Perform_Test` procedure:
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Reverse_Colors_2
 
@@ -743,11 +736,11 @@ Here is a version of the test application making use of the generic
     end Test_Reverse_Colors;
 
 In this example, we create the procedure
-``Perform_Test_Reverse_Color_Array`` as an instance of the generic
-procedure (``Perform_Test``). Note that:
+:ada:`Perform_Test_Reverse_Color_Array` as an instance of the generic
+procedure (:ada:`Perform_Test`). Note that:
 
-    - For the formal ``Image`` function, we use the ``'Image`` attribute of
-      the ``Color`` type
+    - For the formal :ada:`Image` function, we use the :ada:`'Image` attribute
+      of the :ada:`Color` type
 
-    - For the formal ``Test`` procedure, we reference the
-      ``Reverse_Array`` procedure from the package.
+    - For the formal :ada:`Test` procedure, we reference the
+      :ada:`Reverse_Array` procedure from the package.

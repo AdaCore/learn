@@ -3,14 +3,7 @@ Records
 
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 So far, all the types we have encountered have values that are not
 decomposable: each instance represents a single piece of data. Now we are going

@@ -7,8 +7,7 @@
 SPARK Overview
 =====================================================================
 
-.. role:: ada(code)
-   :language: ada
+.. include:: ../../global.txt
 
 This tutorial is an introduction to the SPARK programming
 language and its formal verification tools. You need not know any specific
@@ -93,7 +92,7 @@ A trivial example
 
 We start with a simple example of a subprogram in Ada that uses SPARK
 aspects to specify verifiable subprogram contracts. The subprogram, called
-``Increment``, adds 1 to the value of its parameter ``X``:
+:ada:`Increment`, adds 1 to the value of its parameter :ada:`X`:
 
 .. code:: ada prove_report_all_button
 
@@ -115,25 +114,25 @@ aspects to specify verifiable subprogram contracts. The subprogram, called
 The contracts are written using the Ada `aspect` feature and those shown
 specify several properties of this subprogram:
 
-- The SPARK Global aspect says that ``Increment`` does not read or write
+- The SPARK Global aspect says that :ada:`Increment` does not read or write
   any global variables.
 
 - The SPARK Depend aspect is especially interesting for security: it says
-  that the value of the parameter ``X`` after the call depends only on the
-  (previous) value of ``X``.
+  that the value of the parameter :ada:`X` after the call depends only on the
+  (previous) value of :ada:`X`.
 
 - The :ada:`Pre` and :ada:`Post` aspects of Ada specify functional
-  properties of ``Increment``:
+  properties of :ada:`Increment`:
 
-   - ``Increment`` is only allowed to be called if the value of ``X`` prior
+   - :ada:`Increment` is only allowed to be called if the value of :ada:`X` prior
      to the call is less than :ada:`Integer'Last`. This ensures that the
      addition operation performed in the subprogram body doesn't overflow.
 
-   - ``Increment`` does indeed perform an increment of ``X``: the value of
-     ``X`` after a call is one greater than its value before the call.
+   - :ada:`Increment` does indeed perform an increment of :ada:`X`: the value of
+     :ada:`X` after a call is one greater than its value before the call.
 
 GNATprove can verify all of these contracts.  In addition, it verifies
-that no error can be raised at runtime when executing ``Increment``'s
+that no error can be raised at runtime when executing :ada:`Increment`'s
 body.
 
 
@@ -163,7 +162,7 @@ The SPARK language doesn't allow side-effects in expressions.  In other
 words, evaluating a SPARK expression must not update any object. This
 limitation is necessary to avoid unpredictable behavior that depends on
 order of evaluation, parameter passing mechanisms, or compiler
-optimizations. The expression for ``Dummy`` below is non-deterministic due to
+optimizations. The expression for :ada:`Dummy` below is non-deterministic due to
 the order in which the two calls to F are evaluated.  It's therefore not
 legal SPARK.
 
@@ -211,9 +210,9 @@ The SPARK languages enforces the lack of side-effects in expressions by
 forbidding side-effects in functions, which include modifications to either
 parameters or global variables. As a consequence, SPARK forbids functions
 with :ada:`out` or :ada:`in out` parameters in addition to functions
-modifying a global variable. Function ``F`` below is illegal in
-SPARK, while Function ``Incr`` might be legal if it doesn't modify any
-global variables and function ``Incr_And_Log`` might be illegal if it
+modifying a global variable. Function :ada:`F` below is illegal in
+SPARK, while Function :ada:`Incr` might be legal if it doesn't modify any
+global variables and function :ada:`Incr_And_Log` might be illegal if it
 modifies global variables to perform logging.
 
 .. code-block:: ada
@@ -229,9 +228,9 @@ In most cases, you can easily replace these functions by procedures with an
 
 When it has access to function bodies, GNATprove verifies that those
 functions are indeed free from side-effects. Here for example, the two
-functions ``Incr`` and ``Incr_And_Log`` have the same signature, but only
-``Incr`` is legal in SPARK. ``Incr_And_Log`` isn't: it attempts to update
-the global variable ``Call_Count``.
+functions :ada:`Incr` and :ada:`Incr_And_Log` have the same signature, but only
+:ada:`Incr` is legal in SPARK. :ada:`Incr_And_Log` isn't: it attempts to update
+the global variable :ada:`Call_Count`.
 
 .. code:: ada prove_flow_button
 
@@ -282,7 +281,7 @@ verifies that no :ada:`out` or :ada:`in out` parameter is aliased with
 either another parameter of the procedure or a global variable modified in
 the procedure's body.
 
-Procedure ``Move_To_Total`` is an example where the possibility of aliasing
+Procedure :ada:`Move_To_Total` is an example where the possibility of aliasing
 wasn't taken into account by the programmer:
 
 .. code:: ada run_button prove_flow_button
@@ -309,21 +308,21 @@ wasn't taken into account by the programmer:
        pragma Assert (Total = 6); -- runtime error
     end No_Aliasing;
 
-``Move_To_Total`` adds the value of its input parameter ``Source`` to
-the global variable ``Total`` and then resets ``Source`` to 0.  The
+:ada:`Move_To_Total` adds the value of its input parameter :ada:`Source` to
+the global variable :ada:`Total` and then resets :ada:`Source` to 0.  The
 programmer has clearly not taken into account the possibility of an
-aliasing between ``Total`` and ``Source``.  (This sort of error is
+aliasing between :ada:`Total` and :ada:`Source`.  (This sort of error is
 quite common.)
 
 This procedure itself is valid SPARK. When doing verification,
 GNATprove assumes, like the programmer did, that there's no aliasing
-between ``Total`` and ``Source``. To ensure this assumption is valid,
+between :ada:`Total` and :ada:`Source`. To ensure this assumption is valid,
 GNATprove checks for possible aliasing on every call to
-``Move_To_Total``.  Its final call in procedure ``No_Aliasing``
+:ada:`Move_To_Total`.  Its final call in procedure :ada:`No_Aliasing`
 violates this assumption, which produces both a message from GNATprove
 and a runtime error (an assertion violation corresponding to the
-expected change in ``Total`` from calling ``Move_To_Total``). Note
-that the postcondition of ``Move_To_Total`` is not violated on this
+expected change in :ada:`Total` from calling :ada:`Move_To_Total`). Note
+that the postcondition of :ada:`Move_To_Total` is not violated on this
 second call since integer parameters are passed by copy and the
 postcondition is checked before the copy-back from the formal
 parameters to the actual arguments.
@@ -335,7 +334,7 @@ both names are only used to read the data. In particular, assignment between
 access objects operates a transfer of ownership, where the source object loses
 its permission to read or write the underlying allocated memory.
 
-Procedure ``Ownership_Transfer`` is an example of code that is legal in Ada but
+Procedure :ada:`Ownership_Transfer` is an example of code that is legal in Ada but
 rejected in SPARK due to aliasing:
 
 .. code:: ada run_button prove_flow_button
@@ -355,7 +354,7 @@ rejected in SPARK due to aliasing:
        Dummy := X.all;      --  illegal
     end Ownership_Transfer;
 
-After the assignment of ``X`` to ``Y``, variable ``X`` cannot be used anymore
+After the assignment of :ada:`X` to :ada:`Y`, variable :ada:`X` cannot be used anymore
 to read or write the underlying allocated memory.
 
 Designating SPARK Code
@@ -394,7 +393,7 @@ Here's a common case of using the :ada:`SPARK_Mode` aspect:
        -- body is NOT IN SPARK, so is ignored by GNATprove
     end P;
 
-The package ``P`` only defines entities whose specifications are in the
+The package :ada:`P` only defines entities whose specifications are in the
 SPARK subset. However, it wants to use all Ada features in its body.
 Therefore the body should not be analyzed and has its :ada:`SPARK_Mode`
 aspect set to `Off`.
@@ -421,7 +420,7 @@ Example #1
 ~~~~~~~~~~
 
 Here's a package defining an abstract stack type (defined as a private type
-in SPARK) of ``Element`` objects along with some subprograms providing the
+in SPARK) of :ada:`Element` objects along with some subprograms providing the
 usual functionalities of stacks. It's marked as being in the SPARK subset.
 
 .. code:: ada prove_flow_button
@@ -444,8 +443,8 @@ usual functionalities of stacks. It's marked as being in the SPARK subset.
 
     end Stack_Package;
 
-Side-effects in expressions are not allowed in SPARK. Therefore, ``Pop``
-is not allowed to modify its parameter ``S``.
+Side-effects in expressions are not allowed in SPARK. Therefore, :ada:`Pop`
+is not allowed to modify its parameter :ada:`S`.
 
 
 Example #2
@@ -453,8 +452,8 @@ Example #2
 
 Let's turn to an abstract state machine version of a stack, where the unit
 provides a single instance of a stack. The content of the stack (global
-variables ``Content`` and ``Top``) is not directly visible to clients. In
-this stripped-down version, only the function ``Pop`` is available to
+variables :ada:`Content` and :ada:`Top`) is not directly visible to clients. In
+this stripped-down version, only the function :ada:`Pop` is available to
 clients. The package spec and body are marked as being in the SPARK subset.
 
 .. code:: ada prove_flow_button
@@ -486,16 +485,16 @@ clients. The package spec and body are marked as being in the SPARK subset.
 
     end Global_Stack;
 
-As above, functions should be free from side-effects. Here, ``Pop`` updates
-the global variable ``Top``, which is not allowed in SPARK.
+As above, functions should be free from side-effects. Here, :ada:`Pop` updates
+the global variable :ada:`Top`, which is not allowed in SPARK.
 
 
 Example #3
 ~~~~~~~~~~
 
-We now consider two procedures: ``Permute`` and ``Swap``. ``Permute``
+We now consider two procedures: :ada:`Permute` and :ada:`Swap`. :ada:`Permute`
 applies a circular permutation to the value of its three parameters.
-``Swap`` then uses ``Permute`` to swap the value of ``X`` and ``Y``.
+:ada:`Swap` then uses :ada:`Permute` to swap the value of :ada:`X` and :ada:`Y`.
 
 .. code:: ada run_button prove_flow_button
     :class: ada-expect-compile-error
@@ -535,22 +534,22 @@ applies a circular permutation to the value of its three parameters.
        Swap (A, B);
     end Test_Swap;
 
-Here, the values for parameters ``Y`` and ``Z`` are aliased in the call to
-``Permute``, which is not allowed in SPARK. In fact, in this particular
+Here, the values for parameters :ada:`Y` and :ada:`Z` are aliased in the call to
+:ada:`Permute`, which is not allowed in SPARK. In fact, in this particular
 case, this is even a violation of Ada rules so the same error is issued by
 the Ada compiler.
 
 In this example, we see the reason why aliasing is not allowed in SPARK:
-since ``Y`` and ``Z`` are :ada:`Positive`, they are passed by copy and the
-result of the call to ``Permute`` depends on the order in which they're
+since :ada:`Y` and :ada:`Z` are :ada:`Positive`, they are passed by copy and the
+result of the call to :ada:`Permute` depends on the order in which they're
 copied back after the call.
 
 
 Example #4
 ~~~~~~~~~~
 
-Here, the ``Swap`` procedure is used to swap the value of the two record
-components of ``R``.
+Here, the :ada:`Swap` procedure is used to swap the value of the two record
+components of :ada:`R`.
 
 .. code:: ada prove_flow_button
 
@@ -583,7 +582,7 @@ components of ``R``.
 
     end P;
 
-This code is correct. The call to ``Swap`` is safe: two different
+This code is correct. The call to :ada:`Swap` is safe: two different
 components of the same record can't refer to the same object.
 
 
@@ -591,8 +590,8 @@ Example #5
 ~~~~~~~~~~
 
 Here's a slight modification of the previous example using an array instead
-of a record: ``Swap_Indexes`` calls ``Swap`` on values stored in the array
-``A``.
+of a record: :ada:`Swap_Indexes` calls :ada:`Swap` on values stored in the array
+:ada:`A`.
 
 .. code:: ada prove_flow_button
 
@@ -623,8 +622,8 @@ of a record: ``Swap_Indexes`` calls ``Swap`` on values stored in the array
     end P;
 
 GNATprove detects a possible case of aliasing. Unlike the previous example,
-it has no way of knowing that the two elements ``A (I)`` and ``A (J)`` are
-actually distinct when we call ``Swap``.  GNATprove issues a check message
+it has no way of knowing that the two elements :ada:`A (I)` and :ada:`A (J)` are
+actually distinct when we call :ada:`Swap`.  GNATprove issues a check message
 here instead of an error, giving you the possibility of justifying the
 message after review (meaning that you've verified manually that this
 can't, in fact, occur).
@@ -633,8 +632,8 @@ can't, in fact, occur).
 Example #6
 ~~~~~~~~~~
 
-We now consider a package declaring a type ``Dictionary``, an array
-containing a word per letter. The procedure ``Store`` allows us to insert a
+We now consider a package declaring a type :ada:`Dictionary`, an array
+containing a word per letter. The procedure :ada:`Store` allows us to insert a
 word at the correct index in a dictionary.
 
 .. code:: ada prove_flow_button
@@ -661,10 +660,10 @@ word at the correct index in a dictionary.
 
 This code is not correct: general access types are not part of the SPARK
 subset. Note that we could use here a pool-specific access type for
-``String_Access`` by removing the keyword ``all`` in its definition. In the
+:ada:`String_Access` by removing the keyword :ada:`all` in its definition. In the
 case where it's necessary to keep a general access type (for example to be able
 to store pointers to variables on the stack), another solution here is to use
-:ada:`SPARK_Mode` to separate the definition of ``String_Access`` from the rest
+:ada:`SPARK_Mode` to separate the definition of :ada:`String_Access` from the rest
 of the code in a fine grained manner.
 
 
@@ -672,7 +671,7 @@ Example #7
 ~~~~~~~~~~
 
 Here's a new version of the previous example, which we've modified to hide the
-general access type inside the private part of package ``P``, using ``pragma
+general access type inside the private part of package :ada:`P`, using ``pragma
 SPARK_Mode (Off)`` at the start of the private part.
 
 .. code:: ada prove_flow_button
@@ -704,7 +703,7 @@ ignored by GNATprove, this code is correct.
 Example #8
 ~~~~~~~~~~
 
-Let's put together the new spec for package ``P`` with the body of ``P`` seen
+Let's put together the new spec for package :ada:`P` with the body of :ada:`P` seen
 previously.
 
 .. code:: ada prove_flow_button
@@ -740,17 +739,17 @@ previously.
        end Store;
     end P;
 
-The body of ``Store`` doesn't actually use any construct that's not in the
-SPARK subset, but we nevertheless can't set :ada:`SPARK_Mode` to ``On`` for
-``P``'s body because it has visibility to ``P``'s private part, which is
+The body of :ada:`Store` doesn't actually use any construct that's not in the
+SPARK subset, but we nevertheless can't set :ada:`SPARK_Mode` to :ada:`On` for
+:ada:`P`'s body because it has visibility to :ada:`P`'s private part, which is
 not in SPARK, even if we don't use it.
 
 
 Example #9
 ~~~~~~~~~~
 
-Next, we moved the declaration and the body of the procedure ``Store`` to
-another package named ``Q``.
+Next, we moved the declaration and the body of the procedure :ada:`Store` to
+another package named :ada:`Q`.
 
 .. code:: ada prove_flow_button
 
@@ -798,8 +797,8 @@ Example #10
 ~~~~~~~~~~~
 
 Our final example is a package with two functions to search for the value 0
-inside an array ``A``. The first raises an exception if 0 isn't found in
-``A`` while the other simply returns 0 in that case.
+inside an array :ada:`A`. The first raises an exception if 0 isn't found in
+:ada:`A` while the other simply returns 0 in that case.
 
 .. code:: ada prove_button
 
@@ -838,10 +837,10 @@ inside an array ``A``. The first raises an exception if 0 isn't found in
 
 This code is perfectly correct, despite the use of exception handling,
 because we've carefully isolated this non-SPARK feature in a function body
-marked with a ``SPARK_Mode`` of ``Off`` so it's ignored by GNATprove.
-However, GNATprove tries to show that ``Not_Found`` is never raised in
-``Search_Zero_P``, producing a message about a possible exception being
-raised.  Looking at ``Search_Zero_N``, it's indeed likely that an exception
+marked with a :ada:`SPARK_Mode` of :ada:`Off` so it's ignored by GNATprove.
+However, GNATprove tries to show that :ada:`Not_Found` is never raised in
+:ada:`Search_Zero_P`, producing a message about a possible exception being
+raised.  Looking at :ada:`Search_Zero_N`, it's indeed likely that an exception
 is meant to be raised in some cases, which means you need to verify that
-``Not_Found`` is only raised when appropriate using other methods such as
+:ada:`Not_Found` is only raised when appropriate using other methods such as
 peer review or testing.

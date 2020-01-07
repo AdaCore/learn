@@ -3,8 +3,7 @@
 Proof of Functional Correctness
 =====================================================================
 
-.. role:: ada(code)
-   :language: ada
+.. include:: ../../global.txt
 
 This section is dedicated to the functional correctness of programs. It
 presents advanced proof features that you may need to use for the
@@ -27,9 +26,9 @@ they can also come from more informal sources, such as the program's
 documentation, comments in its code, or test oracles.
 
 For example, if one of our goals is to ensure that no runtime error is
-raised when using the result of the function ``Find`` below, it may be
-enough to know that the result is either 0 or in the range of ``A``. We can
-express this as a postcondition of ``Find``.
+raised when using the result of the function :ada:`Find` below, it may be
+enough to know that the result is either 0 or in the range of :ada:`A`. We can
+express this as a postcondition of :ada:`Find`.
 
 .. code:: ada prove_report_all_button
 
@@ -58,11 +57,11 @@ express this as a postcondition of ``Find``.
 
 In this case, it's automatically proved by GNATprove.
 
-However, to be sure that ``Find`` performs the task we expect, we may want
+However, to be sure that :ada:`Find` performs the task we expect, we may want
 to verify more complex properties of that function. For example, we want to
-ensure it returns an index of ``A`` where ``E`` is stored and returns 0
-only if ``E`` is nowhere in ``A``. Again, we can express this as a
-postcondition of ``Find``.
+ensure it returns an index of :ada:`A` where :ada:`E` is stored and returns 0
+only if :ada:`E` is nowhere in :ada:`A`. Again, we can express this as a
+postcondition of :ada:`Find`.
 
 .. code:: ada prove_button
 
@@ -95,7 +94,7 @@ postcondition of ``Find``.
 This time, GNATprove can't prove this postcondition automatically, but
 we'll see later that we can help GNATprove by providing a loop invariant,
 which is checked by GNATprove and allows it to automatically prove the
-postcondition for ``Find``.
+postcondition for :ada:`Find`.
 
 Writing at least part of your program's specification in the form of
 contracts has many advantages.  You can execute those contracts during
@@ -111,8 +110,8 @@ GNATprove to formally prove these contracts.
 
 The advantage of a formal proof is that it verifies all possible execution
 paths, something which isn't always possible by running test cases. For
-example, during testing, the postcondition of the subprogram ``Find`` shown
-below is checked dynamically for the set of inputs for which ``Find`` is
+example, during testing, the postcondition of the subprogram :ada:`Find` shown
+below is checked dynamically for the set of inputs for which :ada:`Find` is
 called in that test, but just for that set.
 
 .. code:: ada prove_button run_button
@@ -156,12 +155,12 @@ called in that test, but just for that set.
        Put_Line ("Found 3 in index #" & Natural'Image (Res) & " of array");
     end Use_Find;
 
-However, if ``Find`` is formally verified, that verification checks its
+However, if :ada:`Find` is formally verified, that verification checks its
 postcondition for all possible inputs.  During development, you can attempt
 such verification earlier than testing since it's performed modularly on a
 per-subprogram basis. For example, in the code shown above, you can
-formally verify ``Use_Find`` even before you write the body for subprogram
-``Find``.
+formally verify :ada:`Use_Find` even before you write the body for subprogram
+:ada:`Find`.
 
 
 Advanced Contracts
@@ -203,16 +202,16 @@ example.
        Good_Array : Sorted_Nat_Array := (1, 2, 4, 8, 42);
     end Show_Sort;
 
-We can use the subtype ``Sorted_Nat_Array`` as the type of a variable that
+We can use the subtype :ada:`Sorted_Nat_Array` as the type of a variable that
 must remain sorted throughout the program's execution. Specifying that an
 array is sorted requires a rather complex expression involving quantifiers,
 so we abstract away this property as an expression function to improve
-readability.  ``Is_Sorted``'s body remains in the package's specification
+readability.  :ada:`Is_Sorted`'s body remains in the package's specification
 and allows users of the package to retain a precise knowledge of its
-meaning when necessary.  (You must use ``Nat_Array`` as the type of the
-operand of ``Is_Sorted``.  If you use ``Sorted_Nat_Array``, you'll get
+meaning when necessary.  (You must use :ada:`Nat_Array` as the type of the
+operand of :ada:`Is_Sorted`.  If you use :ada:`Sorted_Nat_Array`, you'll get
 infinite recursion at runtime when assertion checks are enabled since that
-function is called to check all operands of type ``Sorted_Nat_Array``.)
+function is called to check all operands of type :ada:`Sorted_Nat_Array`.)
 
 
 Ghost Code
@@ -233,9 +232,9 @@ behavior. When the program is compiled with assertions enabled, ghost code
 is executed like normal code so it can execute the contracts using it. You
 can also instruct the compiler to not generate code for ghost entities.
 
-Consider the procedure ``Do_Something`` below, which calls a complex
-function on its input, ``X``, and wants to check that the initial and
-modified values of ``X`` are related in that complex way.
+Consider the procedure :ada:`Do_Something` below, which calls a complex
+function on its input, :ada:`X`, and wants to check that the initial and
+modified values of :ada:`X` are related in that complex way.
 
 .. code:: ada prove_report_all_button
 
@@ -272,13 +271,13 @@ modified values of ``X`` are related in that complex way.
 
     end Show_Ghost;
 
-``Do_Something`` stores the initial value of ``X`` in a ghost constant,
-``X_Init``. We reference it in an assertion to check that the computation
-performed by the call to ``Do_Some_Complex_Stuff`` modified the value of
-``X`` in the expected manner.
+:ada:`Do_Something` stores the initial value of :ada:`X` in a ghost constant,
+:ada:`X_Init`. We reference it in an assertion to check that the computation
+performed by the call to :ada:`Do_Some_Complex_Stuff` modified the value of
+:ada:`X` in the expected manner.
 
-However, ``X_Init`` can't be used in normal code, for example to restore
-the initial value of ``X``.
+However, :ada:`X_Init` can't be used in normal code, for example to restore
+the initial value of :ada:`X`.
 
 .. code:: ada prove_button run_button
     :class: ada-expect-compile-error
@@ -326,7 +325,7 @@ the initial value of ``X``.
        Do_Something (X);
     end Use_Ghost;
 
-When compiling this example, the compiler flags the use of ``X_Init``
+When compiling this example, the compiler flags the use of :ada:`X_Init`
 as illegal, but more complex cases of interference between ghost and
 normal code may sometimes only be detected when you run GNATprove.
 
@@ -381,15 +380,15 @@ Let's look at the following example.
 
     end Stacks;
 
-Here, the type ``Stack`` is private.  To specify the expected behavior of
-the ``Push`` procedure, we need to go inside this abstraction and access
-the values of the elements stored in ``S``. For this, we introduce a
-function ``Get_Model`` that returns an array as a representation of the
-stack.  However, we don't want code that uses the ``Stack`` package to use
-``Get_Model`` in normal code since this breaks our stack's abstraction.
+Here, the type :ada:`Stack` is private.  To specify the expected behavior of
+the :ada:`Push` procedure, we need to go inside this abstraction and access
+the values of the elements stored in :ada:`S`. For this, we introduce a
+function :ada:`Get_Model` that returns an array as a representation of the
+stack.  However, we don't want code that uses the :ada:`Stack` package to use
+:ada:`Get_Model` in normal code since this breaks our stack's abstraction.
 
 Here's an example of trying to break that abstraction in the subprogram
-``Peek`` below.
+:ada:`Peek` below.
 
 .. code:: ada prove_button
     :class: ada-expect-compile-error
@@ -426,7 +425,7 @@ Here's an example of trying to break that abstraction in the subprogram
     end Stacks;
 
 We see that marking the function as :ada:`Ghost` achieves this goal: it
-ensures that the subprogram ``Get_Model`` is never used in production code.
+ensures that the subprogram :ada:`Get_Model` is never used in production code.
 
 Global Ghost Variables
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -443,9 +442,9 @@ the ghost code as the program modifies the data structure itself.
 
 You can also use ghost variables to store information about previous runs
 of subprograms to specify temporal properties. In the following example, we
-have two procedures, one that accesses a state ``A`` and the other that
-accesses a state ``B``. We use the ghost variable ``Last_Accessed_Is_A`` to
-specify that ``B`` can't be accessed twice in a row without accessing ``A``
+have two procedures, one that accesses a state :ada:`A` and the other that
+accesses a state :ada:`B`. We use the ghost variable :ada:`Last_Accessed_Is_A` to
+specify that :ada:`B` can't be accessed twice in a row without accessing :ada:`A`
 in between.
 
 .. code:: ada prove_button run_button
@@ -497,10 +496,10 @@ behavior is sometimes best expressed as a sequence of actions it must
 perform.  You can use global ghost variables that store intermediate values
 of normal variables to write this sort of specification more easily.
 
-For example, we specify the subprogram ``Do_Two_Things`` below in two
-steps, using the ghost variable ``V_Interm`` to store the intermediate
-value of ``V`` between those steps. We could also express this using an
-existential quantification on the variable ``V_Interm``, but it would be
+For example, we specify the subprogram :ada:`Do_Two_Things` below in two
+steps, using the ghost variable :ada:`V_Interm` to store the intermediate
+value of :ada:`V` between those steps. We could also express this using an
+existential quantification on the variable :ada:`V_Interm`, but it would be
 impractical to iterate over all integers at runtime and this can't always
 be written in SPARK because quantification is restricted to
 :ada:`for ... loop` patterns.
@@ -581,9 +580,9 @@ to refer to initial values of parameters and expressions since the
 :ada:`'Old` attribute is only allowed in postconditions.
 
 In the example below, we want to help GNATprove verify the postcondition of
-``P``.  We do this by introducing a local ghost constant, ``X_Init``, to
+:ada:`P`.  We do this by introducing a local ghost constant, :ada:`X_Init`, to
 represent this value and writing an assertion in both branches of an
-:ada:`if` statement that repeats the postcondition, but using ``X_Init``.
+:ada:`if` statement that repeats the postcondition, but using :ada:`X_Init`.
 
 .. code:: ada prove_report_all_button
 
@@ -619,14 +618,14 @@ represent this value and writing an assertion in both branches of an
 
 You can also use local ghost variables for more complex purposes such as
 building a data structure that serves as witness for a complex property of
-a subprogram. In our example, we want to prove that the ``Sort`` procedure
+a subprogram. In our example, we want to prove that the :ada:`Sort` procedure
 doesn't create new elements, that is, that all the elements present in
-``A`` after the sort were in ``A`` before the sort.  This property isn't
-enough to ensure that a call to ``Sort`` produces a value for ``A`` that's
+:ada:`A` after the sort were in :ada:`A` before the sort.  This property isn't
+enough to ensure that a call to :ada:`Sort` produces a value for :ada:`A` that's
 a permutation of its value before the call (or that the values are indeed
 sorted).  However, it's already complex for a prover to verify because it
 involves a nesting of quantifiers. To help GNATprove, you may find it
-useful to store, for each index ``I``, an index ``J`` that has the expected
+useful to store, for each index :ada:`I`, an index :ada:`J` that has the expected
 property.
 
 .. code-block:: ada
@@ -653,7 +652,7 @@ variables in any way you choose in code inside ghost procedures.  This
 isn't the case outside ghost procedures, where the only ghost statements
 allowed are assignments to ghost variables and calls to ghost procedures.
 
-As an example, the :ada:`for` loop contained in ``Increase_A`` couldn't
+As an example, the :ada:`for` loop contained in :ada:`Increase_A` couldn't
 appear by itself in normal code.
 
 .. code:: ada prove_report_all_button
@@ -686,12 +685,12 @@ isn't part of the functional behavior of the subprogram. Finally, it can
 help GNATprove by abstracting away assertions that would otherwise make its
 job more complex.
 
-In the example below, calling ``Prove_P`` with ``X`` as an operand only
-adds ``P (X)`` to the proof context instead of the larger set of assertions
-required to verify it. In addition, the proof of ``P`` need only be done
+In the example below, calling :ada:`Prove_P` with :ada:`X` as an operand only
+adds :ada:`P (X)` to the proof context instead of the larger set of assertions
+required to verify it. In addition, the proof of :ada:`P` need only be done
 once and may be made easier not having any unnecessary information present
 in its context while verifying it.  Also, if GNATprove can't fully verify
-``Prove_P``, you can review the remaining assumptions more easily since
+:ada:`Prove_P`, you can review the remaining assumptions more easily since
 they're in a smaller context.
 
 .. code-block:: ada
@@ -748,8 +747,8 @@ information it had on the value of constants or unmodified variables, but
 it nevertheless won't be able to deduce new information about them from the
 loop.
 
-For example, consider the function ``Find`` which iterates over the array
-``A`` and searches for an element where ``E`` is stored in ``A``.
+For example, consider the function :ada:`Find` which iterates over the array
+:ada:`A` and searches for an element where :ada:`E` is stored in :ada:`A`.
 
 .. code:: ada prove_report_all_button
 
@@ -780,10 +779,10 @@ For example, consider the function ``Find`` which iterates over the array
     end Show_Find;
 
 At the end of each loop iteration, GNATprove knows that the value stored at
-index ``I``in ``A``must not be ``E``. (If it were, the loop wouldn't have
+index :ada:`I`in :ada:`A`must not be :ada:`E`. (If it were, the loop wouldn't have
 reached the end of the interation.) This proves the second assertion.  But
 it's unable to aggregate this information over multiple loop iterations to
-deduce that it's true for all the indexes smaller than ``I``, so it can't
+deduce that it's true for all the indexes smaller than :ada:`I`, so it can't
 prove the first assertion.
 
 
@@ -806,8 +805,8 @@ iteration assuming it held in the previous iteration.  This is called
 `proof by induction
 <https://en.wikipedia.org/wiki/Mathematical_induction>`_.
 
-As an example, let's add a loop invariant to the ``Find`` function stating
-that the first element of ``A`` is not ``E``.
+As an example, let's add a loop invariant to the :ada:`Find` function stating
+that the first element of :ada:`A` is not :ada:`E`.
 
 .. code:: ada prove_report_all_button
 
@@ -839,9 +838,9 @@ that the first element of ``A`` is not ``E``.
 To verify this invariant, GNATprove generates two checks. The first checks
 that the assertion holds in the first iteration of the loop.  This isn't
 verified by GNATprove. And indeed there's no reason to expect the first
-element of ``A`` to always be different from ``E`` in this iteration.
+element of :ada:`A` to always be different from :ada:`E` in this iteration.
 However, the second check is proved: it's easy to deduce that if the first
-element of ``A`` was not ``E`` in a given iteration it's still not ``E`` in
+element of :ada:`A` was not :ada:`E` in a given iteration it's still not :ada:`E` in
 the next. However, if we move the invariant to the end of the loop, then it
 is successfully verified by GNATprove.
 
@@ -852,9 +851,9 @@ following the loop. More precisely, when verifying a runtime check or other
 assertion there, GNATprove assumes that the last occurrence of the loop
 invariant preceding the check or assertion is true.
 
-Let's look at a version of ``Find`` where we use a loop invariant instead
+Let's look at a version of :ada:`Find` where we use a loop invariant instead
 of an assertion to state that none of the array elements seen so far are
-equal to ``E``.
+equal to :ada:`E`.
 
 .. code:: ada prove_report_all_button
 
@@ -886,8 +885,8 @@ equal to ``E``.
 This version is fully verified by GNATprove! This time, it proves that the
 loop invariant holds in every iteration of the loop (separately proving
 this property for the first iteration and then for the following
-iterations). It also proves that none of the elements of ``A`` are equal to
-``E`` after the loop exits by assuming that the loop invariant holds in the
+iterations). It also proves that none of the elements of :ada:`A` are equal to
+:ada:`E` after the loop exits by assuming that the loop invariant holds in the
 last iteration of the loop.
 
 Finding a good loop invariant can turn out to be quite a challenge.  To
@@ -934,8 +933,8 @@ to verify the preservation of a loop invariant you provided, you may find
 it useful to repeat it as local assertions throughout the loop's body to
 determine at which point it can no longer be proved.
 
-As an example, let's look at a loop that iterates through an array ``A``
-and applies a function ``F`` to each of its elements.
+As an example, let's look at a loop that iterates through an array :ada:`A`
+and applies a function :ada:`F` to each of its elements.
 
 .. code:: ada prove_report_all_button
 
@@ -965,13 +964,13 @@ and applies a function ``F`` to each of its elements.
 
     end Show_Map;
 
-After the loop, each element of ``A`` should be the result of applying
-``F`` to its previous value. We want to prove this.  To specify this
-property, we copy the value of ``A`` before the loop into a ghost variable,
-``A_I``. Our loop invariant states that the element at each index less than
-``K`` has been modified in the expected way. We use the :ada:`Loop_Entry`
-attribute to refer to the value of ``A`` on entry of the loop instead of
-using ``A_I``.
+After the loop, each element of :ada:`A` should be the result of applying
+:ada:`F` to its previous value. We want to prove this.  To specify this
+property, we copy the value of :ada:`A` before the loop into a ghost variable,
+:ada:`A_I`. Our loop invariant states that the element at each index less than
+:ada:`K` has been modified in the expected way. We use the :ada:`Loop_Entry`
+attribute to refer to the value of :ada:`A` on entry of the loop instead of
+using :ada:`A_I`.
 
 Does our loop invariant have the four properties of a good loop-invariant?
 When launching GNATprove, we see that ``INIT`` is fulfilled: the
@@ -995,8 +994,8 @@ GNATprove then uses both our and the internally-generated loop invariants
 to prove ``PRESERVE``. However, in more complex cases, the heuristics used
 by GNATprove to generate the frame condition may not be sufficient and
 you'll have to provide one as a loop invariant. For example, consider a
-version of ``Map`` where the result of applying ``F`` to an element at
-index ``K`` is stored at index ``K-1``:
+version of :ada:`Map` where the result of applying :ada:`F` to an element at
+index :ada:`K` is stored at index :ada:`K-1`:
 
 .. code:: ada prove_report_all_button
 
@@ -1044,10 +1043,10 @@ This section contains some code examples and pitfalls.
 Example #1
 ~~~~~~~~~~
 
-We implement a ring buffer inside an array ``Content``, where the contents
-of a ring buffer of length ``Length`` are obtained by starting at index
-``First`` and possibly wrapping around the end of the buffer. We use a
-ghost function ``Get_Model`` to return the contents of the ring buffer for
+We implement a ring buffer inside an array :ada:`Content`, where the contents
+of a ring buffer of length :ada:`Length` are obtained by starting at index
+:ada:`First` and possibly wrapping around the end of the buffer. We use a
+ghost function :ada:`Get_Model` to return the contents of the ring buffer for
 use in contracts.
 
 .. code:: ada prove_report_all_button
@@ -1106,9 +1105,9 @@ use in contracts.
 
     end Ring_Buffer;
 
-This is correct: ``Get_Model`` is used only in contracts.  Calls to
-``Get_Model`` make copies of the buffer's contents, which isn't efficient,
-but is fine because ``Get_Model`` is only used for verification, not in
+This is correct: :ada:`Get_Model` is used only in contracts.  Calls to
+:ada:`Get_Model` make copies of the buffer's contents, which isn't efficient,
+but is fine because :ada:`Get_Model` is only used for verification, not in
 production code. We enforce this by making it a ghost function.  We'll
 produce the final production code with appropriate compiler switches (i.e.,
 not using ``-gnata``) that ensure assertions are ignored.
@@ -1117,8 +1116,8 @@ not using ``-gnata``) that ensure assertions are ignored.
 Example #2
 ~~~~~~~~~~
 
-Instead of using a ghost function, ``Get_Model``, to retrieve the contents
-of the ring buffer, we're now using a global ghost variable, ``Model``.
+Instead of using a ghost function, :ada:`Get_Model`, to retrieve the contents
+of the ring buffer, we're now using a global ghost variable, :ada:`Model`.
 
 .. code:: ada prove_button
     :class: ada-expect-compile-error
@@ -1168,18 +1167,18 @@ of the ring buffer, we're now using a global ghost variable, ``Model``.
 
     end Ring_Buffer;
 
-This example isn't correct. ``Model``, which is a ghost variable, must not
-influence the return value of the normal function ``Valid_Model``. Since
-``Valid_Model`` is only used in specifications, we should have marked it as
-:ada:`Ghost`. Another problem is that ``Model`` needs to be updated inside
-``Push_Last`` to reflect the changes to the ring buffer.
+This example isn't correct. :ada:`Model`, which is a ghost variable, must not
+influence the return value of the normal function :ada:`Valid_Model`. Since
+:ada:`Valid_Model` is only used in specifications, we should have marked it as
+:ada:`Ghost`. Another problem is that :ada:`Model` needs to be updated inside
+:ada:`Push_Last` to reflect the changes to the ring buffer.
 
 
 Example #3
 ~~~~~~~~~~
 
-Let's mark ``Valid_Model`` as :ada:`Ghost` and update ``Model`` inside
-``Push_Last``.
+Let's mark :ada:`Valid_Model` as :ada:`Ghost` and update :ada:`Model` inside
+:ada:`Push_Last`.
 
 .. code:: ada prove_report_all_button
 
@@ -1230,15 +1229,15 @@ Let's mark ``Valid_Model`` as :ada:`Ghost` and update ``Model`` inside
 
     end Ring_Buffer;
 
-This example is correct. The ghost variable ``Model`` can be referenced
-both from the body of the ghost function ``Valid_Model`` and the non-ghost
-procedure ``Push_Last`` as long as it's only used in ghost statements.
+This example is correct. The ghost variable :ada:`Model` can be referenced
+both from the body of the ghost function :ada:`Valid_Model` and the non-ghost
+procedure :ada:`Push_Last` as long as it's only used in ghost statements.
 
 
 Example #4
 ~~~~~~~~~~
 
-We're now modifying ``Push_Last`` to share the computation of the new
+We're now modifying :ada:`Push_Last` to share the computation of the new
 length between the operational and ghost code.
 
 .. code:: ada prove_button
@@ -1292,19 +1291,19 @@ length between the operational and ghost code.
 
     end Ring_Buffer;
 
-This example isn't correct. We didn't mark local constant ``New_Length`` as
+This example isn't correct. We didn't mark local constant :ada:`New_Length` as
 :ada:`Ghost`, so it can't be computed from the value of ghost variable
-``Model``. If we made ``New_Length`` a ghost constant, the compiler would
-report the problem on the assignment from ``New_Length`` to ``Length``. The
-correct solution here is to compute ``New_Length`` from the value of the
-non-ghost variable ``Length``.
+:ada:`Model`. If we made :ada:`New_Length` a ghost constant, the compiler would
+report the problem on the assignment from :ada:`New_Length` to :ada:`Length`. The
+correct solution here is to compute :ada:`New_Length` from the value of the
+non-ghost variable :ada:`Length`.
 
 
 Example #5
 ~~~~~~~~~~
 
-Let's move the code updating ``Model`` inside a local ghost procedure,
-``Update_Model``, but still using a local variable, ``New_Length``, to
+Let's move the code updating :ada:`Model` inside a local ghost procedure,
+:ada:`Update_Model`, but still using a local variable, :ada:`New_Length`, to
 compute the length.
 
 .. code:: ada prove_report_all_button
@@ -1363,17 +1362,17 @@ compute the length.
 
     end Ring_Buffer;
 
-Everything's fine here. ``Model`` is only accessed inside ``Update_Model``,
+Everything's fine here. :ada:`Model` is only accessed inside :ada:`Update_Model`,
 itself a ghost procedure, so it's fine to declare local variable
-``New_Length`` without the :ada:`Ghost` aspect: everything inside a ghost
+:ada:`New_Length` without the :ada:`Ghost` aspect: everything inside a ghost
 procedure body is ghost. Moreover, we don't need to add any contract to
-``Update_Model``: it's inlined by GNATprove because it's a local procedure
+:ada:`Update_Model`: it's inlined by GNATprove because it's a local procedure
 without a contract.
 
 Example #6
 ~~~~~~~~~~
 
-The function ``Max_Array`` takes two arrays of the same length (but not
+The function :ada:`Max_Array` takes two arrays of the same length (but not
 necessarily with the same bounds) as arguments and returns an array with
 each entry being the maximum values of both arguments at that index.
 
@@ -1407,11 +1406,11 @@ each entry being the maximum values of both arguments at that index.
 
     end Array_Util;
 
-This program is correct, but GNATprove can't prove that ``J`` is always in
-the index range of ``B`` (the unproved index check) or even that it's
+This program is correct, but GNATprove can't prove that :ada:`J` is always in
+the index range of :ada:`B` (the unproved index check) or even that it's
 always within the bounds of its type (the unproved overflow check). Indeed,
 when checking the body of the loop, GNATprove forgets everything about the
-current value of ``J`` because it's been modified by previous loop
+current value of :ada:`J` because it's been modified by previous loop
 iterations. To get more precise results, we need to provide a loop
 invariant.
 
@@ -1419,8 +1418,8 @@ invariant.
 Example #7
 ~~~~~~~~~~
 
-Let's add a loop invariant that states that ``J`` stays in the index range
-of ``B`` and let's protect the increment to ``J`` by checking that it's not
+Let's add a loop invariant that states that :ada:`J` stays in the index range
+of :ada:`B` and let's protect the increment to :ada:`J` by checking that it's not
 already the maximal integer value.
 
 .. code:: ada prove_button
@@ -1460,17 +1459,17 @@ The loop invariant now allows verifying that no runtime error can occur in
 the loop's body (property INSIDE seen in section :ref:`Loop
 Invariants`). Unfortunately, GNATprove fails to verify that the invariant
 stays valid after the first iteration of the loop (property
-PRESERVE). Indeed, knowing that ``J`` is in ``B'Range`` in a given
+PRESERVE). Indeed, knowing that :ada:`J` is in :ada:`B'Range` in a given
 iteration isn't enough to prove it'll remain so in the next iteration. We
-need a more precise invariant, linking ``J`` to the value of the loop index
-``I``, like :ada:`J = I - A'First + B'First`.
+need a more precise invariant, linking :ada:`J` to the value of the loop index
+:ada:`I`, like :ada:`J = I - A'First + B'First`.
 
 
 Example #8
 ~~~~~~~~~~
 
-We now consider a version of ``Max_Array`` which takes arguments that have
-the same bounds. We want to prove that ``Max_Array`` returns an array of
+We now consider a version of :ada:`Max_Array` which takes arguments that have
+the same bounds. We want to prove that :ada:`Max_Array` returns an array of
 the maximum values of both its arguments at each index.
 
 .. code:: ada prove_button run_button
@@ -1519,17 +1518,17 @@ the maximum values of both its arguments at each index.
 Here, GNATprove doesn't manage to prove the loop invariant even for the
 first loop iteration (property INIT seen in section :ref:`Loop
 Invariants`). In fact, the loop invariant is incorrect, as you can see by
-executing the function ``Max_Array`` with assertions enabled: at each loop
-iteration, ``R`` contains the maximum of ``A`` and ``B`` only until ``I -
-1`` because the ``I``'th index wasn't yet handled.
+executing the function :ada:`Max_Array` with assertions enabled: at each loop
+iteration, :ada:`R` contains the maximum of :ada:`A` and :ada:`B` only until
+:ada:`I - 1` because the :ada:`I`'th index wasn't yet handled.
 
 
 Example #9
 ~~~~~~~~~~
 
-We now consider a procedural version of ``Max_Array`` which updates its
+We now consider a procedural version of :ada:`Max_Array` which updates its
 first argument instead of returning a new array. We want to prove that
-``Max_Array`` sets the maximum values of both its arguments into each index
+:ada:`Max_Array` sets the maximum values of both its arguments into each index
 in its first argument.
 
 .. code:: ada prove_report_all_button
@@ -1564,10 +1563,10 @@ in its first argument.
     end Array_Util;
 
 Everything is proved. The first loop invariant states that the values of
-``A`` before the loop index contains the maximum values of the arguments of
-``Max_Array`` (referring to the input value of ``A`` with
-``A'Loop_Entry``). The second loop invariant states that the values of
-``A`` beyond and including the loop index are the same as they were on
+:ada:`A` before the loop index contains the maximum values of the arguments of
+:ada:`Max_Array` (referring to the input value of :ada:`A` with
+:ada:`A'Loop_Entry`). The second loop invariant states that the values of
+:ada:`A` beyond and including the loop index are the same as they were on
 entry.  This is the frame condition of the loop.
 
 
@@ -1606,6 +1605,6 @@ Let's remove the frame condition from the previous example.
     end Array_Util;
 
 Everything is still proved.  GNATprove internally generates the frame
-condition for the loop, so it's sufficient here to state that ``A`` before
+condition for the loop, so it's sufficient here to state that :ada:`A` before
 the loop index contains the maximum values of the arguments of
-``Max_Array``.
+:ada:`Max_Array`.

@@ -3,14 +3,7 @@ Standard library
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 Standard package
 ----------------
@@ -35,7 +28,7 @@ Instantiation
 ^^^^^^^^^^^^^
 
 Here's an example showing the instantiation and declaration of a
-vector ``V``:
+vector :ada:`V`:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Inst
 
@@ -66,9 +59,9 @@ the desired type.  Only then can we declare the vector using the type from
 the instantiated package. This instantiation needs to be done for any
 container type from the standard library.
 
-In the instantiation of ``Integer_Vectors``, we indicate that the vector
-contains elements of ``Integer`` type by specifying it as the
-``Element_Type``.  By setting ``Index_Type`` to ``Natural``, we specify
+In the instantiation of :ada:`Integer_Vectors`, we indicate that the vector
+contains elements of :ada:`Integer` type by specifying it as the
+:ada:`Element_Type`.  By setting :ada:`Index_Type` to :ada:`Natural`, we specify
 that the allowed range includes all natural numbers. We could have used a
 more restrictive range if desired.
 
@@ -101,15 +94,15 @@ We use the :ada:`&` operator, as shown in the following example:
 
 We specify :ada:`use Integer_Vectors`, so we have direct access to the
 types and operations from the instantiated package. Also, the example
-introduces another operation on the vector: ``Length``, which
+introduces another operation on the vector: :ada:`Length`, which
 retrieves the number of elements in the vector. We can use the dot
-notation because ``Vector`` is a tagged type, allowing us to write
-either ``V.Length`` or ``Length (V)``.
+notation because :ada:`Vector` is a tagged type, allowing us to write
+either :ada:`V.Length` or :ada:`Length (V)`.
 
 Appending and prepending elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You add elements to a vector using the ``Prepend`` and ``Append``
+You add elements to a vector using the :ada:`Prepend` and :ada:`Append`
 operations. As the names suggest, these operations add elements to the
 beginning or end of a vector, respectively. For example:
 
@@ -152,15 +145,15 @@ This example puts elements into the vector in the following sequence: (100,
 
 The Reference Manual specifies that the worst-case complexity must be:
 
-- O(:math:`log N`) for the ``Append`` operation, and
+- O(:math:`log N`) for the :ada:`Append` operation, and
 
-- O(:math:`N log N`) for the ``Prepend`` operation.
+- O(:math:`N log N`) for the :ada:`Prepend` operation.
 
 Accessing first and last elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We access the first and last elements of a vector using the
-``First_Element`` and ``Last_Element`` functions. For example:
+:ada:`First_Element` and :ada:`Last_Element` functions. For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_First_Last_Element
 
@@ -191,9 +184,9 @@ We access the first and last elements of a vector using the
        Put_Line ("Last element is " & Img (V.Last_Element));
     end Show_Vector_First_Last_Element;
 
-You can swap elements by calling the procedure ``Swap`` and retrieving a
+You can swap elements by calling the procedure :ada:`Swap` and retrieving a
 reference (a *cursor*) to the first and last elements of the vector by
-calling ``First`` and ``Last``. A cursor allows us to iterate over a
+calling :ada:`First` and :ada:`Last`. A cursor allows us to iterate over a
 container and process individual elements from it.
 
 With these operations, we're able to write code to swap the first and last
@@ -230,9 +223,10 @@ elements of a vector:
 Iterating
 ^^^^^^^^^
 
-The easiest way to iterate over a container is to use a :ada:`for E of
-Our_Container` loop. This gives us a reference (``E``) to the element
-at the current position. We can then use ``E`` directly.  For example:
+The easiest way to iterate over a container is to use a
+:ada:`for E of Our_Container` loop. This gives us a reference (:ada:`E`) to the
+element at the current position. We can then use :ada:`E` directly.
+For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Iteration
 
@@ -263,11 +257,11 @@ at the current position. We can then use ``E`` directly.  For example:
 
     end Show_Vector_Iteration;
 
-This code displays each element from the vector ``V``.
+This code displays each element from the vector :ada:`V`.
 
 Because we're given a reference, we can display not only the value of an
 element but also modify it. For example, we could easily write a loop to
-add one to each element of vector ``V``:
+add one to each element of vector :ada:`V`:
 
 .. code-block:: ada
 
@@ -276,10 +270,10 @@ add one to each element of vector ``V``:
        end loop;
 
 We can also use indices to access vector elements. The format is
-similar to a loop over array elements: we use a :ada:`for I in
-<range>` loop. The range is provided by ``V.First_Index`` and
-``V.Last_Index``. We can access the current element by using it as an
-array index: ``V (I)``.  For example:
+similar to a loop over array elements: we use a
+:ada:`for I in <range>` loop. The range is provided by :ada:`V.First_Index` and
+:ada:`V.Last_Index`. We can access the current element by using it as an
+array index: :ada:`V (I)`.  For example:
 
 .. code:: ada  project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Index_Iteration
 
@@ -319,16 +313,16 @@ array index: ``V (I)``.  For example:
     end Show_Vector_Index_Iteration;
 
 Here, in addition to displaying the vector elements, we're also
-displaying each index, ``I``, just like what we can do for array
+displaying each index, :ada:`I`, just like what we can do for array
 indices. Also, we can access the element by using either the short
-form ``V (I)`` or the longer form ``V.Element (I)`` but not ``V.I``.
+form :ada:`V (I)` or the longer form :ada:`V.Element (I)` but not :ada:`V.I`.
 
 As mentioned in the previous section, you can use cursors to iterate over
-containers. For this, use the function ``Iterate``, which retrieves a
+containers. For this, use the function :ada:`Iterate`, which retrieves a
 cursor for each position in the vector. The corresponding loop has the
 format :ada:`for C in V.Iterate loop`. Like the previous example using
 indices, you can again access the current element by using the cursor as an
-array index: ``V (C)``. For example:
+array index: :ada:`V (C)`. For example:
 
 .. code:: ada  project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Cursor_Iteration
 
@@ -380,16 +374,16 @@ array index: ``V (C)``. For example:
 
     end Show_Vector_Cursor_Iteration;
 
-Instead of accessing an element in the loop using ``V (C)``, we could
-also have used the longer form ``Element (C)``. In this example, we're
-using the function ``To_Index`` to retrieve the index corresponding to
+Instead of accessing an element in the loop using :ada:`V (C)`, we could
+also have used the longer form :ada:`Element (C)`. In this example, we're
+using the function :ada:`To_Index` to retrieve the index corresponding to
 the current cursor.
 
 As shown in the comments after the loop, we could also use a
 :ada:`while ... loop` to iterate over the vector. In this case, we
 would start with a cursor for the first element (retrieved by calling
-``V.First``) and then call ``Next (C)`` to retrieve a cursor for
-subsequent elements. ``Next (C)`` returns ``No_Element`` when the
+:ada:`V.First`) and then call :ada:`Next (C)` to retrieve a cursor for
+subsequent elements. :ada:`Next (C)` returns :ada:`No_Element` when the
 cursor reaches the end of the vector.
 
 You can directly modify the elements using a reference.  This is what it
@@ -412,7 +406,7 @@ accessing an element be O(:math:`log N`).
 
 Another way of modifing elements of a vector is using a *process
 procedure*, which takes an individual element and does some processing on
-it.  You can call ``Update_Element`` and pass both a cursor and an access
+it.  You can call :ada:`Update_Element` and pass both a cursor and an access
 to the process procedure. For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Update
@@ -449,8 +443,8 @@ Finding and changing elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can locate a specific element in a vector by retrieving its index.
-``Find_Index`` retrieves the index of the first element matching the value
-you're looking for. Alternatively, you can use ``Find`` to retrieve a
+:ada:`Find_Index` retrieves the index of the first element matching the value
+you're looking for. Alternatively, you can use :ada:`Find` to retrieve a
 cursor referencing that element. For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Vector_Element
@@ -487,9 +481,9 @@ As we saw in the previous section, we can directly access vector elements
 by using either an index or cursor. However, an exception is raised if we
 try to access an element with an invalid index or cursor, so we must check
 whether the index or cursor is valid before using it to access an element.
-In our example, ``Find_Index`` or ``Find`` might not have found the element
+In our example, :ada:`Find_Index` or :ada:`Find` might not have found the element
 in the vector.  We check for this possibility by comparing the index to
-``No_Index`` or the cursor to ``No_Element``. For example:
+:ada:`No_Index` or the cursor to :ada:`No_Element`. For example:
 
 .. code-block:: ada
 
@@ -503,7 +497,7 @@ in the vector.  We check for this possibility by comparing the index to
           V (C) := 14;
        end if;
 
-Instead of writing ``V (C) := 14``, we could use the longer form
+Instead of writing :ada:`V (C) := 14`, we could use the longer form
 :ada:`V.Replace_Element (C, 14)`.
 
 Inserting elements
@@ -515,10 +509,10 @@ vector:
 - using the concatenation operator (:ada:`&`) at the vector declaration,
   or
 
-- calling the ``Prepend`` and ``Append`` procedures.
+- calling the :ada:`Prepend` and :ada:`Append` procedures.
 
 You may want to insert an element at a specific position, e.g.  before a
-certain element in the vector.  You do this by calling ``Insert``. For
+certain element in the vector.  You do this by calling :ada:`Insert`. For
 example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Insert
@@ -577,8 +571,8 @@ Removing elements
 ^^^^^^^^^^^^^^^^^
 
 You can remove elements from a vector by passing either a valid index or
-cursor to the ``Delete`` procedure. If we combine this with the functions
-``Find_Index`` and ``Find`` from the previous section, we can write a
+cursor to the :ada:`Delete` procedure. If we combine this with the functions
+:ada:`Find_Index` and :ada:`Find` from the previous section, we can write a
 program that searches for a specific element and deletes it, if found:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Remove_Vector_Element
@@ -706,23 +700,23 @@ elements and operate on the vector considering the element's relations to
 each other.
 
 We do vector concatenation using the :ada:`&` operator on vectors.  Let's
-consider two vectors ``V1`` and ``V2``. We can concatenate them by doing
-:ada:`V := V1 & V2`. ``V`` contains the resulting vector.
+consider two vectors :ada:`V1` and :ada:`V2`. We can concatenate them by doing
+:ada:`V := V1 & V2`. :ada:`V` contains the resulting vector.
 
-The generic package ``Generic_Sorting`` is a child package of
-``Ada.Containers.Vectors``. It contains sorting and merging operations.
+The generic package :ada:`Generic_Sorting` is a child package of
+:ada:`Ada.Containers.Vectors`. It contains sorting and merging operations.
 Because it's a generic package, you can't use it directly, but have to
 instantiate it.  In order to use these operations on a vector of integer
-values (``Integer_Vectors``, in our example), you need to instantiate it
-directly as a child of ``Integer_Vectors``. The next example makes it clear
+values (:ada:`Integer_Vectors`, in our example), you need to instantiate it
+directly as a child of :ada:`Integer_Vectors`. The next example makes it clear
 how to do this.
 
-After instantiating ``Generic_Sorting``, we make all the operations
-available to us with the :ada:`use` statement. We can then call ``Sort`` to
-sort the vector and ``Merge`` to merge one vector into another.
+After instantiating :ada:`Generic_Sorting`, we make all the operations
+available to us with the :ada:`use` statement. We can then call :ada:`Sort` to
+sort the vector and :ada:`Merge` to merge one vector into another.
 
-The following example presents code that manipulates three vectors (``V1``,
-``V2``, ``V3``) using the concatenation, sorting and merging operations:
+The following example presents code that manipulates three vectors (:ada:`V1`,
+:ada:`V2`, :ada:`V3`) using the concatenation, sorting and merging operations:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Ops
 
@@ -797,7 +791,7 @@ The following example presents code that manipulates three vectors (``V1``,
     end Show_Vector_Ops;
 
 The Reference Manual requires that the worst-case complexity of a call to
-``Sort`` be O(:math:`N^2`) and the average complexity be better than
+:ada:`Sort` be O(:math:`N^2`) and the average complexity be better than
 O(:math:`N^2`).
 
 Sets
@@ -814,16 +808,16 @@ to the section on vectors for a more detailed discussion.
 Initialization and iteration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To initialize a set, you can call the ``Insert`` procedure.  However, if
+To initialize a set, you can call the :ada:`Insert` procedure.  However, if
 you do, you need to ensure no duplicate elements are being inserted: if you
 try to insert a duplicate, you'll get an exception. If you have less
 control over the elements to be inserted so that there may be duplicates,
 you can use another option instead:
 
-- a version of ``Insert`` that returns a Boolean value
+- a version of :ada:`Insert` that returns a Boolean value
   indicating whether the insertion was successful;
 
-- the ``Include`` procedure, which silently ignores any attempt to
+- the :ada:`Include` procedure, which silently ignores any attempt to
   insert a duplicated element.
 
 To iterate over a set, you can use a :ada:`for E of S` loop, as you saw for
@@ -887,20 +881,20 @@ Operations on elements
 
 In this section, we briefly explore the following operations on sets:
 
-- ``Delete`` and ``Exclude`` to remove elements;
+- :ada:`Delete` and :ada:`Exclude` to remove elements;
 
-- ``Contains`` and ``Find`` to verify the existence of elements.
+- :ada:`Contains` and :ada:`Find` to verify the existence of elements.
 
-To delete elements, you call the procedure ``Delete``.  However,
-analogously to the ``Insert`` procedure above, ``Delete`` raises an
+To delete elements, you call the procedure :ada:`Delete`.  However,
+analogously to the :ada:`Insert` procedure above, :ada:`Delete` raises an
 exception if the element to be deleted isn't present in the set. If you
 want to permit the case where an element might not exist, you can call
-``Exclude``, which silently ignores any attempt to delete a non-existent
+:ada:`Exclude`, which silently ignores any attempt to delete a non-existent
 element.
 
-``Contains`` returns a Boolean value indicating whether a value is
-contained in the set. ``Find`` also looks for an element in a set, but
-returns a cursor to the element or ``No_Element`` if the element doesn't
+:ada:`Contains` returns a Boolean value indicating whether a value is
+contained in the set. :ada:`Find` also looks for an element in a set, but
+returns a cursor to the element or :ada:`No_Element` if the element doesn't
 exist.  You can use either function to search for elements in a set.
 
 Let's look at an example that makes use of these operations:
@@ -960,19 +954,19 @@ In addition to ordered sets used in the examples above, the standard
 library also offers hashed sets. The Reference Manual requires the
 following average complexity of each operation:
 
-+-----------------------+----------------------+------------------+
-| Operations            | ``Ordered_Sets``     | ``Hashed_Sets``  |
-+=======================+======================+==================+
-| - Insert              | O(:math:`(log N)^2)` | :math:`O(log N)` |
-| - Include             | or better            |                  |
-| - Replace             |                      |                  |
-| - Delete              |                      |                  |
-| - Exclude             |                      |                  |
-| - Find                |                      |                  |
-+-----------------------+----------------------+------------------+
-| Subprogram using      | O(:math:`1`)         | O(:math:`1`)     |
-| cursor                |                      |                  |
-+-----------------------+----------------------+------------------+
++-----------------------+-------------------------+---------------------+
+| Operations            | :ada:`Ordered_Sets`     | :ada:`Hashed_Sets`  |
++=======================+=========================+=====================+
+| - Insert              | O(:math:`(log N)^2)`    | :math:`O(log N)`    |
+| - Include             | or better               |                     |
+| - Replace             |                         |                     |
+| - Delete              |                         |                     |
+| - Exclude             |                         |                     |
+| - Find                |                         |                     |
++-----------------------+-------------------------+---------------------+
+| Subprogram using      | O(:math:`1`)            | O(:math:`1`)        |
+| cursor                |                         |                     |
++-----------------------+-------------------------+---------------------+
 
 Other Operations
 ^^^^^^^^^^^^^^^^
@@ -980,7 +974,7 @@ Other Operations
 The previous sections mostly dealt with operations on individual elements
 of a set. But Ada also provides typical set operations: union,
 intersection, difference and symmetric difference. In contrast to some
-vector operations we've seen before (e.g. ``Merge``), here you can use
+vector operations we've seen before (e.g. :ada:`Merge`), here you can use
 built-in operators, such as :ada:`-`. The following table lists the
 operations and its associated operator:
 
@@ -1111,30 +1105,30 @@ calculated by a function you provide.
     different map for each and use only one type in each map.
 
 When instantiating a hashed map from
-``Ada.Containers.Indefinite_Hashed_Maps``, we specify following elements:
+:ada:`Ada.Containers.Indefinite_Hashed_Maps`, we specify following elements:
 
-- ``Key_Type``: type of the key
+- :ada:`Key_Type`: type of the key
 
-- ``Element_Type``: type of the element
+- :ada:`Element_Type`: type of the element
 
-- ``Hash``: hash function for the ``Key_Type``
+- :ada:`Hash`: hash function for the :ada:`Key_Type`
 
-- ``Equivalent_Keys``: an equality operator (e.g. ``=``) that indicates
+- :ada:`Equivalent_Keys`: an equality operator (e.g. :ada:`=`) that indicates
   whether two keys are to be considered equal.
 
-  - If the type specified in ``Key_Type`` has a standard operator, you can
+  - If the type specified in :ada:`Key_Type` has a standard operator, you can
     use it, which you do by specifing using that operator as the value of
-    ``Equivalent_Keys``.
+    :ada:`Equivalent_Keys`.
 
 In the next example, we'll use a string as a key type. We'll use the
-``Hash`` function provided by the standard library for strings (in the
-``Ada.Strings`` package) and the standard equality operator.
+:ada:`Hash` function provided by the standard library for strings (in the
+:ada:`Ada.Strings` package) and the standard equality operator.
 
-You add elements to a hashed map by calling ``Insert``. If an element is
-already contained in a map ``M``, you can access it directly by using its
+You add elements to a hashed map by calling :ada:`Insert`. If an element is
+already contained in a map :ada:`M`, you can access it directly by using its
 key. For example, you can change the value of an element by calling :ada:`M
 ("My_Key") := 10`. If the key is not found, an exception is raised.  To
-verify if a key is available, use the function ``Contains`` (as we've seen
+verify if a key is available, use the function :ada:`Contains` (as we've seen
 above in the section on sets).
 
 Let's see an example:
@@ -1187,12 +1181,12 @@ Ordered maps
 Ordered maps share many features with hashed maps. The main differences are:
 
 - A hash function isn't needed. Instead, you must provide an ordering
-  function (``<`` operator), which the ordered map will use to order
+  function (:ada:`<` operator), which the ordered map will use to order
   elements and allow fast access, :math:`O(log n)`, using a binary search.
 
-  - If the type specified in ``Key_Type`` has a standard ``<`` operator, you
-    can use it in a similar way as we did for ``Equivalent_Keys`` above for
-    hashed maps.
+  - If the type specified in :ada:`Key_Type` has a standard :ada:`<` operator,
+    you can use it in a similar way as we did for :ada:`Equivalent_Keys` above
+    for hashed maps.
 
 Let's see an example:
 
@@ -1251,19 +1245,19 @@ So if you don't need ordering, use hashed maps.
 The Reference Manual requires the following average complexity of
 operations:
 
-+-----------------------+----------------------+------------------+
-| Operations            | ``Ordered_Maps``     | ``Hashed_Maps``  |
-+=======================+======================+==================+
-| - Insert              | O(:math:`(log N)^2)` | :math:`O(log N)` |
-| - Include             | or better            |                  |
-| - Replace             |                      |                  |
-| - Delete              |                      |                  |
-| - Exclude             |                      |                  |
-| - Find                |                      |                  |
-+-----------------------+----------------------+------------------+
-| Subprogram using      | O(:math:`1`)         | O(:math:`1`)     |
-| cursor                |                      |                  |
-+-----------------------+----------------------+------------------+
++-----------------------+-------------------------+---------------------+
+| Operations            | :ada:`Ordered_Maps`     | :ada:`Hashed_Maps`  |
++=======================+=========================+=====================+
+| - Insert              | O(:math:`(log N)^2)`    | :math:`O(log N)`    |
+| - Include             | or better               |                     |
+| - Replace             |                         |                     |
+| - Delete              |                         |                     |
+| - Exclude             |                         |                     |
+| - Find                |                         |                     |
++-----------------------+-------------------------+---------------------+
+| Subprogram using      | O(:math:`1`)            | O(:math:`1`)        |
+| cursor                |                         |                     |
++-----------------------+-------------------------+---------------------+
 
 Dates & Times
 -------------
@@ -1288,9 +1282,9 @@ simple example:
     end Display_Current_Time;
 
 This example displays the current date and time, which is retrieved by a
-call to the ``Clock`` function. We call the function ``Image`` from the
-:ada:`Ada.Calendar.Formatting` package to get a ``String`` for the current
-date and time. We could instead retrieve each component using the ``Split``
+call to the :ada:`Clock` function. We call the function :ada:`Image` from the
+:ada:`Ada.Calendar.Formatting` package to get a :ada:`String` for the current
+date and time. We could instead retrieve each component using the :ada:`Split`
 function. For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Year
@@ -1356,9 +1350,9 @@ using a :ada:`delay until` statement. For example:
        Put_Line ("Enough waiting!");
     end Display_Delay_Next_Specific_Time;
 
-In this example, we specify the date and time by initializing ``Next``
-using a call to ``Time_Of``, a function taking the various components
-of a date (year, month, etc) and returning an element of the ``Time``
+In this example, we specify the date and time by initializing :ada:`Next`
+using a call to :ada:`Time_Of`, a function taking the various components
+of a date (year, month, etc) and returning an element of the :ada:`Time`
 type. Because the date specified is in the past, the :ada:`delay
 until` statement won't produce any noticeable effect. However, if we
 passed a date in the future, the program would wait until that
@@ -1367,13 +1361,13 @@ specific date and time arrived.
 Here we're converting the time to the local timezone. If we don't specify a
 timezone, *Coordinated Universal Time* (abbreviated to UTC) is used by
 default. By retrieving the time offset to UTC with a call to
-``UTC_Time_Offset`` from the :ada:`Ada.Calendar.Time_Zones` package, we can
-initialize ``TZ`` and use it in the call to ``Time_Of``.  This is all we
-need do to make the information provided to ``Time_Of`` relative to the
+:ada:`UTC_Time_Offset` from the :ada:`Ada.Calendar.Time_Zones` package, we can
+initialize :ada:`TZ` and use it in the call to :ada:`Time_Of`.  This is all we
+need do to make the information provided to :ada:`Time_Of` relative to the
 local time zone.
 
-We could achieve a similar result by initializing ``Next`` with a
-``String``. We can do this with a call to ``Value`` from the
+We could achieve a similar result by initializing :ada:`Next` with a
+:ada:`String`. We can do this with a call to :ada:`Value` from the
 :ada:`Ada.Calendar.Formatting` package. This is the modified code:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Specific_Time
@@ -1398,7 +1392,7 @@ We could achieve a similar result by initializing ``Next`` with a
        Put_Line ("Enough waiting!");
     end Display_Delay_Next_Specific_Time;
 
-In this example, we're again using ``TZ`` in the call to ``Value`` to
+In this example, we're again using :ada:`TZ` in the call to :ada:`Value` to
 adjust the input time to the current time zone.
 
 In the examples above, we were delaying to a specific date and time.
@@ -1423,8 +1417,8 @@ seconds, using the current time:
        Put_Line ("Enough waiting!");
     end Display_Delay_Next;
 
-Here, we're specifying a duration of 5 seconds in ``D``, adding it to the
-current time from ``Now``, and storing the sum in ``Next``. We then use it
+Here, we're specifying a duration of 5 seconds in :ada:`D`, adding it to the
+current time from :ada:`Now`, and storing the sum in :ada:`Next`. We then use it
 in the :ada:`delay until` statement.
 
 Real-time
@@ -1432,13 +1426,13 @@ Real-time
 
 In addition to :ada:`Ada.Calendar`, the standard library also supports time
 operations for real-time applications. These are included in the
-:ada:`Ada.Real_Time` package. This package also include a ``Time`` type.
-However, in the :ada:`Ada.Real_Time` package, the ``Time`` type is used to
+:ada:`Ada.Real_Time` package. This package also include a :ada:`Time` type.
+However, in the :ada:`Ada.Real_Time` package, the :ada:`Time` type is used to
 represent an absolute clock and handle a time span. This contrasts with the
-:ada:`Ada.Calendar`, which uses the ``Time`` type to represent dates and
+:ada:`Ada.Calendar`, which uses the :ada:`Time` type to represent dates and
 times.
 
-In the previous section, we used the ``Time`` type from the
+In the previous section, we used the :ada:`Time` type from the
 :ada:`Ada.Calendar` and the :ada:`delay until` statement to delay an
 application by 5 seconds. We could have used the :ada:`Ada.Real_Time`
 package instead. Let's modify that example:
@@ -1458,11 +1452,11 @@ package instead. Let's modify that example:
        Put_Line ("Enough waiting!");
     end Display_Delay_Next_Real_Time;
 
-The main difference is that ``D`` is now a variable of type ``Time_Span``,
+The main difference is that :ada:`D` is now a variable of type :ada:`Time_Span`,
 defined in the :ada:`Ada.Real_Time` package. We call the function
-``Seconds`` to initialize ``D``, but could have gotten a finer granularity
-by calling ``Nanoseconds`` instead. Also, we need to first convert ``D`` to
-the ``Duration`` type using ``To_Duration`` before we can display it.
+:ada:`Seconds` to initialize :ada:`D`, but could have gotten a finer granularity
+by calling :ada:`Nanoseconds` instead. Also, we need to first convert :ada:`D` to
+the :ada:`Duration` type using :ada:`To_Duration` before we can display it.
 
 Benchmarking
 ^^^^^^^^^^^^
@@ -1499,9 +1493,9 @@ discussing tasking. Let's look at an example of benchmarking:
                  & " seconds");
     end Display_Benchmarking;
 
-This example defines a dummy ``Computational_Intensive_App`` implemented
-using a simple :ada:`delay` statement. We initialize ``Start_Time`` and
-``Stop_Time`` from the then-current clock and calculate the elapsed
+This example defines a dummy :ada:`Computational_Intensive_App` implemented
+using a simple :ada:`delay` statement. We initialize :ada:`Start_Time` and
+:ada:`Stop_Time` from the then-current clock and calculate the elapsed
 time. By running this program, we see that the time is roughly 5 seconds,
 which is expected due to the :ada:`delay` statement.
 
@@ -1538,14 +1532,14 @@ to measure CPU time:
                  & " seconds");
     end Display_Benchmarking_CPU_Time;
 
-In this example, ``Start_Time`` and ``Stop_Time`` are of type ``CPU_Time``
-instead of ``Time``. However, we still call the ``Clock`` function to
+In this example, :ada:`Start_Time` and :ada:`Stop_Time` are of type :ada:`CPU_Time`
+instead of :ada:`Time`. However, we still call the :ada:`Clock` function to
 initialize both variables and calculate the elapsed time in the same way as
 before. By running this program, we see that the CPU time is significantly
 lower than the 5 seconds we've seen before. This is because the
 :ada:`delay` statement doesn't require much CPU time.  The results will be
 different if we change the implementation of
-``Computational_Intensive_App`` to use a mathematical functions in a long
+:ada:`Computational_Intensive_App` to use a mathematical functions in a long
 loop. For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_Math
@@ -1614,7 +1608,7 @@ loop. For example:
        Benchm_CPU_Time;
     end Display_Benchmarking_Math;
 
-Now that our dummy ``Computational_Intensive_App`` involves mathematical
+Now that our dummy :ada:`Computational_Intensive_App` involves mathematical
 operations requiring significant CPU time, the measured elapsed and CPU
 time are much closer to each other than before.
 
@@ -1630,11 +1624,11 @@ String operations
 Operations on standard strings are available in the
 :ada:`Ada.Strings.Fixed` package. As mentioned previously, standard strings
 are arrays of elements of :ada:`Character` type with *a
-fixed-length*. That's why this child package is called ``Fixed``.
+fixed-length*. That's why this child package is called :ada:`Fixed`.
 
 One of the simplest operations provided is counting the number of
-substrings available in a string (``Count``) and finding their
-corresponding indices (``Index``). Let's look at an example:
+substrings available in a string (:ada:`Count`) and finding their
+corresponding indices (:ada:`Index`). Let's look at an example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Substring
 
@@ -1668,15 +1662,15 @@ corresponding indices (``Index``). Let's look at an example:
 
     end Show_Find_Substring;
 
-We initialize the string ``S`` using a multiplication. Writing
+We initialize the string :ada:`S` using a multiplication. Writing
 :ada:`"Hello" & 3 * " World"` creates the string ``Hello World World
-World``. We then call the function ``Count`` to get the number of instances
-of the word ``World`` in ``S``.  Next we call the function ``Index`` in a
-loop to find the index of each instance of ``World`` in ``S``.
+World:ada:`. We then call the function `Count`` to get the number of instances
+of the word :ada:`World` in :ada:`S`.  Next we call the function :ada:`Index` in a
+loop to find the index of each instance of :ada:`World` in :ada:`S`.
 
 That example looked for instances of a specific substring.  In the next
 example, we retrieve all the words in the string. We do this using
-``Find_Token`` and specifying whitespaces as separators. For example:
+:ada:`Find_Token` and specifying whitespaces as separators. For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Words
 
@@ -1719,14 +1713,14 @@ example, we retrieve all the words in the string. We do this using
     end Show_Find_Words;
 
 We pass a set of characters to be used as delimitators to the procedure
-``Find_Token``. This set is a member of the ``Character_Set`` type from the
-:ada:`Ada.Strings.Maps` package. We call the ``To_Set`` function (from the
-same package) to initialize the set to ``Whitespace`` and then call
-``Find_Token`` to loop over each valid index and find the starting index of
-each word. We pass ``Outside`` to the ``Test`` parameter of the
-``Find_Token`` procedure to indicate that we're looking for indices that
-are outside the ``Whitespace`` set, i.e. actual words. The ``First`` and
-``Last`` parameters of ``Find_Token`` are output parameters that indicate
+:ada:`Find_Token`. This set is a member of the :ada:`Character_Set` type from the
+:ada:`Ada.Strings.Maps` package. We call the :ada:`To_Set` function (from the
+same package) to initialize the set to :ada:`Whitespace` and then call
+:ada:`Find_Token` to loop over each valid index and find the starting index of
+each word. We pass :ada:`Outside` to the :ada:`Test` parameter of the
+:ada:`Find_Token` procedure to indicate that we're looking for indices that
+are outside the :ada:`Whitespace` set, i.e. actual words. The :ada:`First` and
+:ada:`Last` parameters of :ada:`Find_Token` are output parameters that indicate
 the valid range of the substring. We use this information to display the
 string (:ada:`S (F .. L)`).
 
@@ -1748,14 +1742,14 @@ them. We next discuss operations that change the content of strings:
 All these operations are available both as functions or procedures.
 Functions create a new string but procedures perform the operations in
 place. The procedure will raise an exception if the constraints of the
-string are not satisfied. For example, if we have a string ``S`` containing
-10 characters, inserting a string with two characters (e.g. ``"!!"``) into
+string are not satisfied. For example, if we have a string :ada:`S` containing
+10 characters, inserting a string with two characters (e.g. :ada:`"!!"`) into
 it produces a string containing 12 characters. Since it has a fixed length,
 we can't increase its size. One possible solution in this case is to
 specify that truncation should be applied while inserting the substring.
-This keeps the length of ``S`` fixed. Let's see an example that makes use
-of both function and procedure versions of ``Insert``, ``Overwrite``, and
-``Delete``:
+This keeps the length of :ada:`S` fixed. Let's see an example that makes use
+of both function and procedure versions of :ada:`Insert`, :ada:`Overwrite`, and
+:ada:`Delete`:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Adapted_Strings
 
@@ -1812,13 +1806,13 @@ of both function and procedure versions of ``Insert``, ``Overwrite``, and
        end if;
     end Show_Adapted_Strings;
 
-In this example, we look for the index of the substring ``World`` and
+In this example, we look for the index of the substring :ada:`World` and
 perform operations on this substring within the outer string. The procedure
-``Display_Adapted_String`` uses both versions of the operations.  For the
-procedural version of ``Insert`` and ``Overwrite``, we apply truncation to
-the right side of the string (``Right``). For the ``Delete`` procedure, we
+:ada:`Display_Adapted_String` uses both versions of the operations.  For the
+procedural version of :ada:`Insert` and :ada:`Overwrite`, we apply truncation to
+the right side of the string (:ada:`Right`). For the :ada:`Delete` procedure, we
 specify the range of the substring, which is replaced by whitespaces. For
-the function version of ``Delete``, we also call ``Trim`` which trims the
+the function version of :ada:`Delete`, we also call :ada:`Trim` which trims the
 trailing whitespace.
 
 Bounded and unbounded strings
@@ -1854,9 +1848,9 @@ of fixed-length strings can be when it's not performed in the declaration:
     end Show_Char_Array;
 
 In this case, we can't simply write :ada:`S := "Hello"` because the
-resulting array of characters for the ``Hello`` constant has a different
-length than the ``S`` string. Therefore, we need to include trailing
-whitespaces to match the length of ``S``. As shown in the example, we could
+resulting array of characters for the :ada:`Hello` constant has a different
+length than the :ada:`S` string. Therefore, we need to include trailing
+whitespaces to match the length of :ada:`S`. As shown in the example, we could
 use an exact range for the initialization ( :ada:`S (1 .. 5)`) or use an
 explicit array of individual characters.
 
@@ -1872,7 +1866,7 @@ Bounded strings are defined in the
 :ada:`Ada.Strings.Bounded.Generic_Bounded_Length` package. Because
 this is a generic package, you need to instantiate it and set the
 maximum length of the bounded string. You can then declare bounded
-strings of the ``Bounded_String`` type.
+strings of the :ada:`Bounded_String` type.
 
 Both bounded and fixed-length strings have a maximum length that they
 can hold. However, bounded strings are not arrays, so initializing
@@ -1913,22 +1907,22 @@ them at run-time is much easier. For example:
        Display_String_Info (S1);
     end Show_Bounded_String;
 
-By using bounded strings, we can easily assign to ``S1`` and ``S2``
-multiple times during execution. We use the ``To_Bounded_String`` and
-``To_String`` functions to convert, in the respective direction, between
-fixed-length and bounded strings. A call to ``To_Bounded_String`` raises an
+By using bounded strings, we can easily assign to :ada:`S1` and :ada:`S2`
+multiple times during execution. We use the :ada:`To_Bounded_String` and
+:ada:`To_String` functions to convert, in the respective direction, between
+fixed-length and bounded strings. A call to :ada:`To_Bounded_String` raises an
 exception if the length of the input string is greater than the maximum
 capacity of the bounded string. To avoid this, we can use the truncation
-parameter (``Right`` in our example).
+parameter (:ada:`Right` in our example).
 
 Bounded strings are not arrays, so we can't use the :ada:`'Length`
 attribute as we did for fixed-length strings. Instead, we call the
-``Length`` function, which returns the length of the bounded string. The
-``Max_Length`` constant represents the maximum length of the bounded string
+:ada:`Length` function, which returns the length of the bounded string. The
+:ada:`Max_Length` constant represents the maximum length of the bounded string
 that we set when we instantiated the package.
 
 After initializing a bounded string, we can manipulate it. For example, we
-can append a string to a bounded string using ``Append`` or concatenate
+can append a string to a bounded string using :ada:`Append` or concatenate
 bounded strings using the :ada:`&` operator.  Like so:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Bounded_String_Op
@@ -1956,8 +1950,8 @@ bounded strings using the :ada:`&` operator.  Like so:
     end Show_Bounded_String_Op;
 
 We can initialize a bounded string with an empty string using the
-``Null_Bounded_String`` constant. Also, we can use the ``Append`` procedure
-and specify the truncation mode like we do with the ``To_Bounded_String``
+:ada:`Null_Bounded_String` constant. Also, we can use the :ada:`Append` procedure
+and specify the truncation mode like we do with the :ada:`To_Bounded_String`
 function.
 
 .. _UnboundedStrings:
@@ -1967,7 +1961,7 @@ Unbounded strings
 
 Unbounded strings are defined in the :ada:`Ada.Strings.Unbounded` package.
 This is *not* a generic package, so we don't need to instantiate it before
-using the ``Unbounded_String`` type. As you may recall from the previous
+using the :ada:`Unbounded_String` type. As you may recall from the previous
 section, bounded strings require a package instantiation.
 
 Unbounded strings are similar to bounded strings. The main difference is
@@ -2007,12 +2001,12 @@ Let's look at an example:
        Display_String_Info (S1);
     end Show_Unbounded_String;
 
-Like bounded strings, we can assign to ``S1`` and ``S2`` multiple times
-during execution and use the ``To_Unbounded_String`` and ``To_String``
+Like bounded strings, we can assign to :ada:`S1` and :ada:`S2` multiple times
+during execution and use the :ada:`To_Unbounded_String` and :ada:`To_String`
 functions to convert back-and-forth between fixed-length strings and
 unbounded strings. However, in this case, truncation is not needed.
 
-And, just like for bounded strings, you can use the ``Append`` function and
+And, just like for bounded strings, you can use the :ada:`Append` function and
 the :ada:`&` operator for unbounded strings. For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String_Op
@@ -2042,9 +2036,9 @@ input/output (I/O).
 Text I/O
 ~~~~~~~~
 
-In most parts of this course, we used the ``Put_Line`` procedure to display
+In most parts of this course, we used the :ada:`Put_Line` procedure to display
 information on the console. However, this procedure also accepts a
-``File_Type`` parameter. For example, you can select between standard
+:ada:`File_Type` parameter. For example, you can select between standard
 output and standard error by setting this parameter explicitly:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Std_Text_Out
@@ -2058,15 +2052,15 @@ output and standard error by setting this parameter explicitly:
     end Show_Std_Text_Out;
 
 You can also use this parameter to write information to any text file.  To
-create a new file for writing, use the ``Create`` procedure, which
-initializes a ``File_Type`` element that you can later pass to ``Put_Line``
-(instead of, e.g., ``Standard_Output``). After you finish writing
-information, you can close the file by calling the ``Close`` procedure.
+create a new file for writing, use the :ada:`Create` procedure, which
+initializes a :ada:`File_Type` element that you can later pass to :ada:`Put_Line`
+(instead of, e.g., :ada:`Standard_Output`). After you finish writing
+information, you can close the file by calling the :ada:`Close` procedure.
 
 You use a similar method to read information from a text file.  However,
 when opening the file, you must specify that it's an input file
-(``In_File``) instead of an output file. Also, instead of calling the
-``Put_Line`` procedure, you call the ``Get_Line`` function to read
+(:ada:`In_File`) instead of an output file. Also, instead of calling the
+:ada:`Put_Line` procedure, you call the :ada:`Get_Line` function to read
 information from the file.
 
 Let's see an example that writes information into a new text file and then
@@ -2093,8 +2087,8 @@ reads it back from the same file:
        Close (F);
     end Show_Simple_Text_File_IO;
 
-In addition to the ``Create`` and ``Close`` procedures, the standard
-library also includes a ``Reset`` procedure, which, as the name implies,
+In addition to the :ada:`Create` and :ada:`Close` procedures, the standard
+library also includes a :ada:`Reset` procedure, which, as the name implies,
 resets (erases) all the information from the file. For example:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Text_File_Reset
@@ -2119,14 +2113,14 @@ resets (erases) all the information from the file. For example:
     end Show_Text_File_Reset;
 
 By running this program, we notice that, although we've written the first
-string (``Hello World #1``) to the file, it has been erased because of the
-call to ``Reset``.
+string (:ada:`Hello World #1`) to the file, it has been erased because of the
+call to :ada:`Reset`.
 
 In addition to opening a file for reading or writing, you can also open an
-existing file and append to it.  Do this by calling the ``Open`` procedure
-with the ``Append_File`` option.
+existing file and append to it.  Do this by calling the :ada:`Open` procedure
+with the :ada:`Append_File` option.
 
-When calling the ``Open`` procedure, an exception is raised if the
+When calling the :ada:`Open` procedure, an exception is raised if the
 specified file isn't found.  Therefore, you should handle exceptions in
 that context. The following example deletes a file and then tries to open
 the same file for reading:
@@ -2153,10 +2147,10 @@ the same file for reading:
           Put_Line ("Error while processing input file");
     end Show_Text_File_Input_Except;
 
-In this example, we create the file by calling ``Create`` and then
-delete it by calling ``Delete``. After the call to ``Delete``, we can
-no longer use the ``File_Type`` element`. After deleting the file, we
-try to open the non-existent file, which raises a ``Name_Error``
+In this example, we create the file by calling :ada:`Create` and then
+delete it by calling :ada:`Delete`. After the call to :ada:`Delete`, we can
+no longer use the :ada:`File_Type` element`. After deleting the file, we
+try to open the non-existent file, which raises a :ada:`Name_Error`
 exception.
 
 Sequential I/O
@@ -2167,9 +2161,9 @@ discuss doing file I/O in binary format. The first package we'll explore is
 the :ada:`Ada.Sequential_IO` package. Because this package is a generic
 package, you need to instantiate it for the data type you want to use for
 file I/O. Once you've done that, you can use the same procedures we've seen
-in the previous section: ``Create``, ``Open``, ``Close``, ``Reset`` and
-``Delete``. However, instead of calling the ``Get_Line`` and ``Put_Line``
-procedures, you'd call the ``Read`` and ``Write`` procedures.
+in the previous section: :ada:`Create`, :ada:`Open`, :ada:`Close`, :ada:`Reset` and
+:ada:`Delete`. However, instead of calling the :ada:`Get_Line` and :ada:`Put_Line`
+procedures, you'd call the :ada:`Read` and :ada:`Write` procedures.
 
 In the following example, we instantiate the :ada:`Ada.Sequential_IO`
 package for floating-point types:
@@ -2264,7 +2258,7 @@ Direct I/O is available in the :ada:`Ada.Direct_IO` package. This mechanism
 is similar to the sequential I/O approach just presented, but allows us to
 access any position in the file. The package instantiation and most
 operations are very similar to sequential I/O.  To rewrite the
-``Show_Seq_Float_IO`` application presented in the previous section to use
+:ada:`Show_Seq_Float_IO` application presented in the previous section to use
 the :ada:`Ada.Direct_IO` package, we just need to replace the instances of
 the :ada:`Ada.Sequential_IO` package by the :ada:`Ada.Direct_IO`
 package. This is the new source code:
@@ -2301,11 +2295,11 @@ package. This is the new source code:
 
 Unlike sequential I/O, direct I/O allows you to access any position in
 the file. However, it doesn't offer an option to append information to
-a file. Instead, it provides an ``Inout_File`` mode allowing reading
-and writing to a file via the same ``File_Type`` element.
+a file. Instead, it provides an :ada:`Inout_File` mode allowing reading
+and writing to a file via the same :ada:`File_Type` element.
 
-To access any position in the file, call the ``Set_Index`` procedure to set
-the new position / index.  You can use the ``Index`` function to retrieve
+To access any position in the file, call the :ada:`Set_Index` procedure to set
+the new position / index.  You can use the :ada:`Index` function to retrieve
 the current index. Let's see an example:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Dir_Float_In_Out_File
@@ -2348,7 +2342,7 @@ By running this example, we see that the file contains ``7.7``, rather than
 the previous ``6.7`` that we wrote.  We overwrote the value by changing the
 index to the previous position before doing another write.
 
-In this example we used the ``Inout_File`` mode. Using that mode, we just
+In this example we used the :ada:`Inout_File` mode. Using that mode, we just
 changed the index back to the initial position before reading from the file
 (:ada:`Set_Index (F, 1)`) instead of closing the file and reopening it for
 reading.
@@ -2365,13 +2359,13 @@ any objects of an unbounded type, these approaches are not
 sufficient. Instead, you should use stream I/O.
 
 Stream I/O shares some similarities with the previous approaches.  We still
-use the ``Create``, ``Open`` and ``Close`` procedures. However, instead of
-accessing the file directly via a ``File_Type`` element, you use a
-``Stream_Access`` element. To read and write information, you use the
+use the :ada:`Create`, :ada:`Open` and :ada:`Close` procedures. However, instead of
+accessing the file directly via a :ada:`File_Type` element, you use a
+:ada:`Stream_Access` element. To read and write information, you use the
 :ada:`'Read` or :ada:`'Write` attributes of the data types you're reading
 or writing.
 
-Let's look at a version of the ``Show_Dir_Float_IO`` procedure from the
+Let's look at a version of the :ada:`Show_Dir_Float_IO` procedure from the
 previous section that makes use of stream I/O instead of direct I/O:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Float_Stream
@@ -2407,12 +2401,12 @@ previous section that makes use of stream I/O instead of direct I/O:
        end;
     end Show_Float_Stream;
 
-After the call to ``Create``, we retrieve the corresponding
-``Stream_Access`` element by calling the ``Stream`` function. We then
+After the call to :ada:`Create`, we retrieve the corresponding
+:ada:`Stream_Access` element by calling the :ada:`Stream` function. We then
 use this stream to write information to the file via the :ada:`'Write`
 attribute of the :ada:`Float` type. After closing the file and
 reopening it for reading, we again retrieve the corresponding
-``Stream_Access`` element and processed to read information from the
+:ada:`Stream_Access` element and processed to read information from the
 file via the :ada:`'Read` attribute of the :ada:`Float` type.
 
 You can use streams to create and process files containing different data
@@ -2533,7 +2527,7 @@ and the trigonometric functions (e.g., sin, cos). For example:
                  & " is " & Float'Image (Arccos (X)));
     end Show_Elem_Math;
 
-Here we use the standard ``e`` and ``Pi`` constants from the
+Here we use the standard :ada:`e` and :ada:`Pi` constants from the
 :ada:`Ada.Numerics` package.
 
 The :ada:`Ada.Numerics.Elementary_Functions` package provides operations
@@ -2556,7 +2550,7 @@ Random Number Generation
 
 The :ada:`Ada.Numerics.Float_Random` package provides a simple random
 number generator for the range between 0.0 and 1.0. To use it, declare a
-generator ``G``, which you pass to ``Random``. For example:
+generator :ada:`G`, which you pass to :ada:`Random`. For example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Float_Random_Num
 
@@ -2611,11 +2605,11 @@ between 1 and 10:
        end loop;
     end Show_Discrete_Random_Num;
 
-Here, package ``R`` is instantiated with the ``Random_Range`` type,
+Here, package :ada:`R` is instantiated with the :ada:`Random_Range` type,
 which has a constrained range between 1 and 10. This allows us to
 control the range used for the random numbers. We could easily modify
 the application to display random integers between 0 and 20 by
-changing the specification of the ``Random_Range`` type.  We can also
+changing the specification of the :ada:`Random_Range` type.  We can also
 use floating-point or fixed-point types.
 
 Complex Types
@@ -2627,7 +2621,7 @@ package provides support for common operations on complex number types,
 similar to the :ada:`Ada.Numerics.Elementary_Functions` package. Finally,
 you can use the :ada:`Ada.Text_IO.Complex_IO` package to perform I/O
 operations on complex numbers. In the following example, we declare
-variables of the ``Complex`` type and initialize them using an aggregate:
+variables of the :ada:`Complex` type and initialize them using an aggregate:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Elem_Math
 
@@ -2695,10 +2689,10 @@ variables of the ``Complex`` type and initialize them using an aggregate:
 
 As we can see from this example, all the common operators, such as :ada:`*`
 and :ada:`+`, are available for complex types. You also have typical
-operations on complex numbers, such as ``Argument`` and ``Exp``.  In
+operations on complex numbers, such as :ada:`Argument` and :ada:`Exp`.  In
 addition to initializing complex numbers in the cartesian form using
 aggregates, you can do so from the polar form by calling the
-``Compose_From_Polar`` function.
+:ada:`Compose_From_Polar` function.
 
 The :ada:`Ada.Numerics.Complex_Types` and
 :ada:`Ada.Numerics.Complex_Elementary_Functions` packages provide
@@ -2738,7 +2732,7 @@ The :ada:`Ada.Numerics.Real_Arrays` package provides support for
 vectors and matrices. It includes common matrix operations such as
 inverse, determinant, eigenvalues in addition to simpler operators
 such as matrix addition and multiplication. You can declare vectors
-and matrices using the ``Real_Vector`` and ``Real_Matrix`` types,
+and matrices using the :ada:`Real_Vector` and :ada:`Real_Matrix` types,
 respectively.
 
 The following example uses some of the operations from the
