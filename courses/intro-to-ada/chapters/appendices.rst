@@ -7,8 +7,6 @@ Appendices
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
 Appendix A: Generic Formal Types
 --------------------------------
 

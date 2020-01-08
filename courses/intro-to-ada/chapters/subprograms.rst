@@ -7,8 +7,6 @@ Subprograms
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Raphaël Amiard
-
 Subprograms
 -----------
 

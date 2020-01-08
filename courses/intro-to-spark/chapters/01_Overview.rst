@@ -9,27 +9,29 @@ SPARK Overview
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Claire Dross, Yannick Moy
-
-This tutorial is an interactive introduction to the SPARK programming
+This tutorial is an introduction to the SPARK programming
 language and its formal verification tools. You need not know any specific
 programming language (although going over the
-:doc:`../../intro-to-ada/index` first may help) or have experience in
-formal verification.
+:doc:`Introduction to Ada course <courses/intro-to-ada/index>` first may help)
+or have experience in formal verification.
 
-For some of the sample code presented, you'll be able to compile and run
-the program and/or run the formal verification tool on the program. These
-are available through the buttons labelled:
+.. only:: builder_html
 
-- `Run`: compile the code with assertions enabled and run the executable
-  produced.
-- `Examine`: perform the `flow analysis` stage of formal verification
-- `Prove`: perform the `proof` stage of formal verification (which includes
-  `flow analysis`)
+    For some of the sample code presented, you'll be able to compile and run
+    the program and/or run the formal verification tool on the program. These
+    are available through the buttons labelled:
 
-You can edit the sample code, so you can modify it and rerun the tools
-to see the effect of your changes on the compilation or analysis. Use
-the `Reset` button to restore the example to its initial version.
+    - `Run`: compile the code with assertions enabled and run the executable
+      produced.
+
+    - `Examine`: perform the `flow analysis` stage of formal verification
+
+    - `Prove`: perform the `proof` stage of formal verification (which includes
+      `flow analysis`)
+
+    You can edit the sample code, so you can modify it and rerun the tools
+    to see the effect of your changes on the compilation or analysis. Use
+    the `Reset` button to restore the example to its initial version.
 
 
 What is it?

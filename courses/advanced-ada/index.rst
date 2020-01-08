@@ -2,9 +2,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. meta::
-  :author: AdaCore
-
 :prev_state: False
 :next_state: False
 
@@ -15,6 +12,14 @@ Advanced Ada
 
     This course will teach you advanced topics of the Ada programming language.
 
+.. only:: builder_html
+
+    .. container:: download-button
+
+        .. image:: ../../images/pdf-download.png
+            :target: ../../pdf_books/courses/advanced-ada.pdf
+            :alt: PDF Download
+            :width: 80pt
 
 .. toctree::
     :maxdepth: 4

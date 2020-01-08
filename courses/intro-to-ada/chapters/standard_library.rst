@@ -5,8 +5,6 @@ Standard library
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
 Standard package
 ----------------
 

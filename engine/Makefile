@@ -65,18 +65,15 @@ publish-staging:
 	@if [ ! -d learn-staging-html-pages ] ;\
 	then \
 		git clone -b gh-pages git@github.com:AdaCore/learn-staging-html-pages.git; \
-		cd learn-staging-html-pages; \
-	else \
-		cd learn-staging-html-pages; \
-		git checkout gh-pages && git pull; \
-	fi; \
-	rm -rf *; \
-	git checkout CNAME; \
-	cd ../; \
-	cp -R $(BUILDDIR)/html/. learn-staging-html-pages/; \
-	cd learn-staging-html-pages; \
-	git add -A && git commit -m "Regenerate" && git push origin gh-pages; \
-	cd ../; \
+	fi && \
+	( cd learn-staging-html-pages && \
+	  git checkout gh-pages && git pull && \
+	  rm -rf * && \
+	  git checkout CNAME ) && \
+	cp -R $(BUILDDIR)/html/. learn-staging-html-pages/ && \
+	cp -R $(BUILDDIR)/pdf_books learn-staging-html-pages/ && \
+	( cd learn-staging-html-pages && \
+	  git add -A && git commit -m "Regenerate" && git push origin gh-pages ) && \
 	rm -rf learn-staging-html-pages
 
 publish:
@@ -84,33 +81,32 @@ publish:
 	@if [ ! -d learn-html-pages ] ;\
         then \
                 git clone -b gh-pages git@github.com:AdaCore/learn-html-pages.git; \
-                cd learn-html-pages; \
-        else \
-                cd learn-html-pages; \
-                git checkout gh-pages && git pull; \
-        fi; \
-        rm -rf *; \
-        git checkout CNAME; \
-        cd ../; \
-        cp -R $(BUILDDIR)/html/. learn-html-pages/; \
-        cd learn-html-pages; \
-        git add -A && git commit -m "Regenerate" && git push origin gh-pages; \
-        cd ../; \
+        fi && \
+	( cd learn-html-pages && \
+	  git checkout gh-pages && git pull && \
+	  rm -rf * && \
+	  git checkout CNAME ) && \
+        cp -R $(BUILDDIR)/html/. learn-html-pages/ && \
+        ( cd learn-html-pages && \
+          git add -A && git commit -m "Regenerate" && git push origin gh-pages ) && \
         rm -rf learn-html-pages
 
 # Development target, rebuilds the site, with it pointing to the local
 # code server.
-local:
-	rm -rf "$(BUILDDIR)"
+local: cleanall pdf_books
 	CODE_SERVER_URL="Http://localhost:8000" $(SPHINXBUILD) -M html "../" \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	# link the real editors.js to the generated location, to ease work
-	rm _build/html/_static/js/editors.js
-	ln -s ../../../../sphinx/learn_theme/static/js/editors.js _build/html/_static/js/
+	rm $(BUILDDIR)/html/_static/js/editors.js
+	ln -s ../../../../sphinx/learn_theme/static/js/editors.js $(BUILDDIR)/html/_static/js/
 
 # Build the site pointing to 'cloudchecker.r53.adacore.com'
-site:
+site: cleanall pdf_books
 	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" $(SPHINXBUILD) -M html "../" \
+        "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+
+site-staging: cleanall pdf_books
+	$(SPHINXBUILD) -M html "../" \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 BOOKS = $(wildcard ../courses/*/.) $(wildcard ../labs/*/.)
@@ -120,14 +116,16 @@ $(BOOKS):
 	$(eval SPHINX_DIR := $(shell dirname $@ | awk -F/ '{ print $$2 }' ))
 	$(eval SPHINX_PDF := $(shell basename $(shell dirname $@)).pdf)
 	$(eval SPHINX_TITLE := $(shell cat $@/conf.txt | grep title | sed -e 's#title=##'))
-	@mkdir -p _build/pdf_books/$(SPHINX_DIR)
+	$(eval SPHINX_AUTHOR := $(shell cat $@/conf.txt | grep author | sed -e 's#author=##'))
+	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
 	@ export SPHINX_TITLE="$(SPHINX_TITLE)"; \
+	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
 	$(SPHINXBUILD) -M latexpdf $@ \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@ mv _build/latex/learnadacorecom.pdf _build/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
+	@ mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
 
 cleanall:
-	@ rm -rf _build
+	@ rm -rf "$(BUILDDIR)"
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

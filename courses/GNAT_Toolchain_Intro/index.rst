@@ -1,6 +1,3 @@
-.. meta::
-  :author: AdaCore
-
 :prev_state: False
 :next_state: False
 
@@ -15,10 +12,23 @@ Introduction to GNAT Toolchain
     (GPRbuild) and the integrated development environment
     (GNAT Programming Studio).
 
-.. toctree::
-   :maxdepth: 4
+    This document was written by Gustavo A. Hoffmann, with contributions and
+    review from Richard Kenner and Bob Duff.
 
-   GNAT Community <chapters/gnat_community>
-   GPRbuild <chapters/gprbuild>
-   GNAT Programming Studio (GPS) <chapters/gps>
-   GNAT Tools <chapters/gnat_tools>
+.. only:: builder_html
+
+    .. container:: download-button
+
+        .. image:: ../../images/pdf-download.png
+            :target: ../../pdf_books/courses/GNAT_Toolchain_Intro.pdf
+            :alt: PDF Download
+            :width: 80pt
+
+.. toctree::
+    :maxdepth: 4
+    :caption: Contents:
+
+    GNAT Community <chapters/gnat_community>
+    GPRbuild <chapters/gprbuild>
+    GNAT Programming Studio (GPS) <chapters/gps>
+    GNAT Tools <chapters/gnat_tools>

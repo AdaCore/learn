@@ -5,8 +5,6 @@ Records
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Raphaël Amiard
-
 So far, all the types we have encountered have values that are not
 decomposable: each instance represents a single piece of data. Now we are going
 to see our first class of composite types: records.

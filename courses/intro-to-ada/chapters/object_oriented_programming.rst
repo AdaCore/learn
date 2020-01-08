@@ -13,8 +13,6 @@ Object-oriented programming
 .. role:: cpp(code)
    :language: c++
 
-.. sectionauthor:: Raphaël Amiard
-
 Object-oriented programming (OOP) is a large and ill-defined concept
 in programming languages and one that tends to encompass many
 different meanings because different languages often implement their

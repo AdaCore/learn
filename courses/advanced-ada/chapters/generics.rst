@@ -17,9 +17,9 @@ Abstracting definitions into packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this section and in the next ones, we will reuse the generic
-reversing algorithm that we discussed in the chapter about generics
-from the introductory course
-(:doc:`../../intro-to-ada/chapters/generics`):
+reversing algorithm that we discussed in the
+:doc:`chapter about generics <courses/intro-to-ada/chapters/generics>`
+from the introductory course.
 
 .. code:: ada run_button
 
@@ -1295,7 +1295,8 @@ generic types. In addition to the approach using formal interfaces that
 we've just seen above, we also have these approaches:
 
 - Formal subprograms, which we've presented in the introductory course
-  (:doc:`../../intro-to-ada/chapters/generics`).
+  (in the
+  :doc:`chapter about generics <courses/intro-to-ada/chapters/generics>`).
 
 - Signature packages, which we've discussed in a
   :ref:`previous section <SignaturePackages>`.

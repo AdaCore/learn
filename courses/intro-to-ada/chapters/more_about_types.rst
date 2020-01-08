@@ -7,8 +7,6 @@ More about types
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Raphaël Amiard
-
 Aggregates: A primer
 --------------------
 
@@ -669,8 +667,6 @@ Here is how you could write an evaluator for expressions:
 
 Fixed-point types
 -----------------
-
-.. sectionauthor:: Gustavo A. Hoffmann
 
 Decimal fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~

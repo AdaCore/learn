@@ -5,8 +5,6 @@ Generics
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
 Introduction
 ------------
 

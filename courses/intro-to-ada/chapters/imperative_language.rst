@@ -5,9 +5,6 @@ Imperative language
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Raphaël Amiard
-
-
 Ada is a multi-paradigm language with support for object orientation
 and some elements of functional programming, but its core is a simple, coherent
 procedural/imperative language akin to C or Pascal.

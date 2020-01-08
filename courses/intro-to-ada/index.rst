@@ -3,9 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. meta::
-  :author: AdaCore
-
 :prev_state: False
 :next_state: False
 
@@ -16,6 +13,17 @@ Introduction to Ada
 
     This course will teach you the basics of the Ada programming language and is intended for those who already have a basic understanding of programming techniques. You will learn how to apply those techniques to programming in Ada.
 
+    This document was written by Raphaël Amiard and Gustavo A. Hoffmann, with
+    review from Richard Kenner.
+
+.. only:: builder_html
+
+    .. container:: download-button
+
+        .. image:: ../../images/pdf-download.png
+            :target: ../../pdf_books/courses/intro-to-ada.pdf
+            :alt: PDF Download
+            :width: 80pt
 
 .. toctree::
     :maxdepth: 4

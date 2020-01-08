@@ -17,8 +17,8 @@ Directions
 
 In this exercise, we make use of the algorithm implemented in the
 :ada:`Check_Direction` procedure (see chapter on
-:doc:`../../../courses/intro-to-ada/chapters/imperative_language`). For
-the sake of this exercise, we use the concept of an *extended angle*,
+:doc:`chapter on imperative language <courses/intro-to-ada/chapters/imperative_language>`).
+For the sake of this exercise, we use the concept of an *extended angle*,
 which includes the actual geometric angle and the corresponding direction
 (North, South, Northwest, and so on). These are your goals:
 
@@ -154,27 +154,27 @@ Just to recapitulate, these are the HTML colors that we use:
    +-------------+---------------+
    | Color       | Value         |
    +=============+===============+
-   | Salmon      | ```#FA8072``` |
+   | Salmon      | ``#FA8072``   |
    +-------------+---------------+
-   | Firebrick   | ```#B22222``` |
+   | Firebrick   | ``#B22222``   |
    +-------------+---------------+
-   | Red         | ```#FF0000``` |
+   | Red         | ``#FF0000``   |
    +-------------+---------------+
-   | Darkred     | ```#8B0000``` |
+   | Darkred     | ``#8B0000``   |
    +-------------+---------------+
-   | Lime        | ```#00FF00``` |
+   | Lime        | ``#00FF00``   |
    +-------------+---------------+
-   | Forestgreen | ```#228B22``` |
+   | Forestgreen | ``#228B22``   |
    +-------------+---------------+
-   | Green       | ```#008000``` |
+   | Green       | ``#008000``   |
    +-------------+---------------+
-   | Darkgreen   | ```#006400``` |
+   | Darkgreen   | ``#006400``   |
    +-------------+---------------+
-   | Blue        | ```#0000FF``` |
+   | Blue        | ``#0000FF``   |
    +-------------+---------------+
-   | Mediumblue  | ```#0000CD``` |
+   | Mediumblue  | ``#0000CD``   |
    +-------------+---------------+
-   | Darkblue    | ```#00008B``` |
+   | Darkblue    | ``#00008B``   |
    +-------------+---------------+
 
 The hexadecimal information of each color on this table can be mapped

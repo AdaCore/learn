@@ -5,8 +5,6 @@ Flow Analysis
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Claire Dross, Yannick Moy
-
 In this section we present the flow analysis capability provided by the
 GNATprove tool, a critical tool for using SPARK.
 
@@ -384,7 +382,7 @@ checks that global and parameter inputs are initialized and each time a
 subprogram returns, it checks that global and parameter outputs were
 modified.
 
-This can produce error messages on perfectly correct subprograms .  An
+This can produce error messages on perfectly correct subprograms.  An
 example is :ada:`Set_X_To_Y_Plus_Z` below, which only sets its :ada:`out`
 parameter :ada:`X` when :ada:`Overflow` is :ada:`False`.
 

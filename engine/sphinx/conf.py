@@ -21,7 +21,8 @@ import os
 
 project = u'learn.adacore.com'
 copyright = u'2019, AdaCore'
-author = u'AdaCore'
+author = u'AdaCore' if 'SPHINX_AUTHOR' not in os.environ else \
+    os.environ['SPHINX_AUTHOR']
 title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
     os.environ['SPHINX_TITLE']
 
@@ -49,7 +50,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 import widget_extension
 
 extensions = [
-#    'sphinx.ext.intersphinx',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
@@ -153,12 +154,34 @@ latex_elements = {
 
     # Additional stuff for the LaTeX preamble.
     #
-    'preamble': r'\usepackage{pmboxdraw} \usepackage{unicode-math}',
+    'preamble': r'''
+\usepackage{pmboxdraw} \usepackage{unicode-math}
+\fvset{fontsize=\small}
+''',
+
+    # Font package inclusion
+    #
+    'fontpkg': r'''
+\setmainfont{Open Sans}
+\setsansfont{Open Sans}
+\setmonofont{DejaVu Sans Mono}
+''',
 
     # Latex figure (float) alignment
     #
     'figure_align': 'htbp',
+
+    # Avoid blank page for chapters on odd pages
+    # 'extraclassoptions': 'openany',
+
+    # Sphinx Setup (LaTeX-type customization)
+    #
+    'sphinxsetup': 'VerbatimBorderColor={rgb}{0.90,0.90,0.90}',
+    # 'verbatimwithframe=false'
+
 }
+
+latex_logo = 'learn_theme/static/img/logo.png'
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
@@ -195,8 +218,9 @@ texinfo_documents = [
 
 # -- Options for intersphinx extension ---------------------------------------
 
-# Example configuration for intersphinx: refer to the Python standard library.
-#intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
+
+
 
 # -- Options for todo extension ----------------------------------------------
 

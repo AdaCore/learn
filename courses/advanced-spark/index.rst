@@ -1,11 +1,17 @@
-.. meta::
-  :author: AdaCore
-
 :prev_state: False
 :next_state: False
 
 Advanced SPARK
 ==============
+
+.. only:: builder_html
+
+    .. container:: download-button
+
+        .. image:: ../../images/pdf-download.png
+            :target: ../../pdf_books/courses/advanced-spark.pdf
+            :alt: PDF Download
+            :width: 80pt
 
 .. toctree::
     :maxdepth: 4
