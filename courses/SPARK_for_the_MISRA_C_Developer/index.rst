@@ -16,10 +16,12 @@ SPARK Ada for the MISRA C Developer
 
     .. container:: download-button
 
-        .. image:: ../../images/pdf-download.png
-            :target: ../../pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf
-            :alt: PDF Download
-            :width: 80pt
+        .. raw:: html
+
+            <a class="button" href="../../pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+                <img src="../../_static/img/download-button.svg" />
+                Download PDF
+            </a>
 
 .. toctree::
     :maxdepth: 4

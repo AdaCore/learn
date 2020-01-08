@@ -49,6 +49,21 @@ a:hover, a:active {
     outline: 0
 }
 
+a.button {
+    background-color: #F56F23;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #FFF;
+    font-weight: 600;
+    float: left;
+    font-family: sans-serif;
+}
+a.button svg {
+    position: relative;
+    top: 2px;
+}
+
 abbr[title] {
     border-bottom: 1px dotted
 }
@@ -2633,7 +2648,7 @@ color: #9e9e9e;
 
 
 .wy-menu-vertical li.toctree-l3 {
-	
+
     font-size: .9em
 }
 
@@ -2994,7 +3009,7 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
     .wy-nav-side {
         left: -300px
     }
-    
+
     .beta-ribbon {
         left: -300px;
     }
