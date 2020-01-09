@@ -11,6 +11,19 @@ Labs: Introduction to Ada
     This document was written by Gustavo A. Hoffmann, with contributions and
     review pending.
 
+    .. only:: builder_latex
+
+        This book is published under a CC BY-SA license, which means that you
+        can copy, redistribute, remix, transform, and build upon the content
+        for any purpose, even commercially, as long as you give appropriate
+        credit, provide a link to the license, and indicate if changes were
+        made. If you remix, transform, or build upon the material, you must
+        distribute your contributions under the same license as the original.
+        License details:
+        `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
+
+        .. image:: ../../images/ccheart_black.png
+
 .. only:: builder_html
 
     .. container:: download-button
