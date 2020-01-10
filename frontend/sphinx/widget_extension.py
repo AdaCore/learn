@@ -330,7 +330,7 @@ def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
 
 def on_builder_inited(app):
     # Connect to the "code" directive
-    app.add_directive('code', WidgetCodeDirective)
+    app.add_directive('code', WidgetCodeDirective, override=True)
 
 
 def setup(app):
