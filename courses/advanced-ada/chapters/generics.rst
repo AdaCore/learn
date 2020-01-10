@@ -2117,7 +2117,7 @@ into the original range.
     end Gen_Fixed_Ops;
 
 :ada:`Ovhd_Fixed` is a 64-bit fixed-point data type. By using
-:ada:`Assert`s in the package body that compare this data type to the
+:ada:`Assert`\s in the package body that compare this data type to the
 formal :ada:`F` type from the package specification, we ensure that the
 local fixed-point data type has enough overhead to cope with any
 fixed-point operation that we want to implement. Also, we ensure that we

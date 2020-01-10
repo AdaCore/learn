@@ -1663,8 +1663,8 @@ corresponding indices (:ada:`Index`). Let's look at an example:
     end Show_Find_Substring;
 
 We initialize the string :ada:`S` using a multiplication. Writing
-:ada:`"Hello" & 3 * " World"` creates the string ``Hello World World
-World:ada:`. We then call the function `Count`` to get the number of instances
+:ada:`"Hello" & 3 * " World"` creates the string ``Hello World World World``.
+We then call the function `Count`` to get the number of instances
 of the word :ada:`World` in :ada:`S`.  Next we call the function :ada:`Index` in a
 loop to find the index of each instance of :ada:`World` in :ada:`S`.
 

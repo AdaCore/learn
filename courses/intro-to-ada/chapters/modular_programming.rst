@@ -77,7 +77,7 @@ to see immediately which units the code depends on.
     files in C/C++.
 
     - The first and most important distinction is that packages are a language-level
-      mechanism. This is in contrast to a :c:`#include`'d header file, which is a
+      mechanism. This is in contrast to a :c:`#include`\'d header file, which is a
       functionality of the C preprocessor.
 
     - An immediate consequence is that the :ada:`with` construct is a semantic
@@ -86,7 +86,7 @@ to see immediately which units the code depends on.
       this semantic unit", and not "include this bunch of text in place here".
 
     - The effect of a package thus does not vary depending on where it has been
-      :ada:`with`ed from. Contrast this with C/C++, where the meaning of the
+      :ada:`with`\ed from. Contrast this with C/C++, where the meaning of the
       included text depends on the context in which the :c:`#include` appears.
 
       This allows compilation/recompilation to be more efficient. It also
@@ -140,8 +140,8 @@ this tutorial.
 As you can see in the example above:
 
 - :ada:`Put_Line` is a subprogram that comes from the :ada:`Ada.Text_IO`
-  package. We can reference it directly because we have "use"d the package at
-  the top of the :ada:`Main` unit.
+  package. We can reference it directly because we have :ada:`use`\d the
+  package at the top of the :ada:`Main` unit.
 
 - Unlike :ada:`with` clauses, a :ada:`use` clause can be placed either in the
   prelude, or in any declarative region. In the latter case the :ada:`use`
