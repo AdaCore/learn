@@ -7,8 +7,6 @@
 Ada for the C Embedded Developer
 ===================================
 
-`Download pdf <https://www.adacore.com/uploads/books/pdf/Ada_for_the_C_Embedded_Developer.pdf>`_
-
 .. container:: content-description
 
     This books introduces you to the Ada language by comparing it to C. It
@@ -23,6 +21,15 @@ Ada for the C Embedded Developer
     behavior, so that the code is fit for sound static analysis techniques.
 
    This book was written by Quentin Ochem and Robert Tice.
+
+.. only:: builder_html
+
+    .. container:: download-button
+
+        .. image:: ../../images/pdf-download.png
+            :target: ../../pdf_books/courses/Ada_For_The_C_Embedded_Developer.pdf
+            :alt: PDF Download
+            :width: 80pt
 
 .. toctree::
    :maxdepth: 4
