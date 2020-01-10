@@ -86,4 +86,4 @@ local:
 	@$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-.PHONY: Makefile help tests
+.PHONY: Makefile help test_content test_engine
