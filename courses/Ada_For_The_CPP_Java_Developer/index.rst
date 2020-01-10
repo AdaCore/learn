@@ -4,14 +4,13 @@
 Ada for the C++ or Java Developer
 ===================================
 
-.. container:: content-description
+.. include:: ../global.txt
 
-    This document will present the Ada language using terminology and examples that are familiar to developers that understand the C++ or Java languages.
+.. only:: builder_latex
 
-    This document was prepared by Quentin Ochem, with contributions and review
-    from Richard Kenner, Albert Lee, and Ben Brosgol.
+    .. container:: content-copyright
 
-    .. only:: builder_latex
+        Copyright © 2013 |ndash| 2020, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -23,6 +22,14 @@ Ada for the C++ or Java Developer
         `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+
+.. container:: content-description
+
+    This document will present the Ada language using terminology and examples
+    that are familiar to developers that understand the C++ or Java languages.
+
+    This document was prepared by Quentin Ochem, with contributions and review
+    from Richard Kenner, Albert Lee, and Ben Brosgol.
 
 .. only:: builder_html
 

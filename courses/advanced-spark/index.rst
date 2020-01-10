@@ -4,7 +4,13 @@
 Advanced SPARK
 ==============
 
-    .. only:: builder_latex
+.. include:: ../global.txt
+
+.. only:: builder_latex
+
+    .. container:: content-copyright
+
+        Copyright © 2020, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -16,6 +22,10 @@ Advanced SPARK
         `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+
+.. container:: content-description
+
+    This course will teach you advanced topics of SPARK.
 
 .. only:: builder_html
 

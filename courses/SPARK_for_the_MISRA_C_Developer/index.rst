@@ -3,16 +3,13 @@
 SPARK Ada for the MISRA C Developer
 ===================================
 
-.. container:: content-description
+.. include:: ../global.txt
 
-    This book presents the SPARK technology -- the SPARK subset of Ada and its
-    supporting static analysis tools -- through an example-driven comparison
-    with the rules in the widely known MISRA C subset of the C language.
+.. only:: builder_latex
 
-    This document was prepared by Yannick Moy, with contributions and review
-    from Ben Brosgol.
+    .. container:: content-copyright
 
-    .. only:: builder_latex
+        Copyright © 2018 |ndash| 2020, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -24,6 +21,15 @@ SPARK Ada for the MISRA C Developer
         `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+
+.. container:: content-description
+
+    This book presents the SPARK technology -- the SPARK subset of Ada and its
+    supporting static analysis tools -- through an example-driven comparison
+    with the rules in the widely known MISRA C subset of the C language.
+
+    This document was prepared by Yannick Moy, with contributions and review
+    from Ben Brosgol.
 
 .. only:: builder_html
 

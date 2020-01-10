@@ -4,14 +4,13 @@
 Labs: Introduction to Ada
 =========================
 
-.. container:: content-description
+.. include:: ../../courses/global.txt
 
-    These labs contain exercises for the Introduction to Ada course.
+.. only:: builder_latex
 
-    This document was written by Gustavo A. Hoffmann, with contributions and
-    review pending.
+    .. container:: content-copyright
 
-    .. only:: builder_latex
+        Copyright © 2019 |ndash| 2020, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -23,6 +22,13 @@ Labs: Introduction to Ada
         `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+
+.. container:: content-description
+
+    These labs contain exercises for the Introduction to Ada course.
+
+    This document was written by Gustavo A. Hoffmann, with contributions and
+    review pending.
 
 .. only:: builder_html
 

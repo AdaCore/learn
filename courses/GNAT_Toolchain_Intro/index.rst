@@ -4,18 +4,13 @@
 Introduction to GNAT Toolchain
 ==============================
 
-.. container:: content-description
+.. include:: ../global.txt
 
-    This course presents an introduction to the GNAT toolchain, which is
-    included in the GNAT Community 19 edition. The course includes first steps
-    to get started with the toolchain and some details on the project manager
-    (GPRbuild) and the integrated development environment
-    (GNAT Programming Studio).
+.. only:: builder_latex
 
-    This document was written by Gustavo A. Hoffmann, with contributions and
-    review from Richard Kenner and Bob Duff.
+    .. container:: content-copyright
 
-    .. only:: builder_latex
+        Copyright © 2019 |ndash| 2020, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -27,6 +22,17 @@ Introduction to GNAT Toolchain
         `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+
+.. container:: content-description
+
+    This course presents an introduction to the GNAT toolchain, which is
+    included in the GNAT Community 19 edition. The course includes first steps
+    to get started with the toolchain and some details on the project manager
+    (GPRbuild) and the integrated development environment
+    (GNAT Programming Studio).
+
+    This document was written by Gustavo A. Hoffmann, with contributions and
+    review from Richard Kenner and Bob Duff.
 
 .. only:: builder_html
 

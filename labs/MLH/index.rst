@@ -4,11 +4,13 @@
 Bug Free Coding with SPARK Ada
 ===============================
 
-.. container:: content-description
+.. include:: ../../courses/global.txt
 
-    Workshop project for Major League Hacking course: Learn to write maintainable bug-free code with SPARK Ada.
+.. only:: builder_latex
 
-    .. only:: builder_latex
+    .. container:: content-copyright
+
+        Copyright © 2018 |ndash| 2020, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -20,6 +22,11 @@ Bug Free Coding with SPARK Ada
         `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+
+.. container:: content-description
+
+    Workshop project for Major League Hacking course: Learn to write
+    maintainable bug-free code with SPARK Ada.
 
 .. only:: builder_html
 

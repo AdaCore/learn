@@ -9,14 +9,13 @@
 Introduction to Ada
 ===================
 
-.. container:: content-description
+.. include:: ../global.txt
 
-    This course will teach you the basics of the Ada programming language and is intended for those who already have a basic understanding of programming techniques. You will learn how to apply those techniques to programming in Ada.
+.. only:: builder_latex
 
-    This document was written by Raphaël Amiard and Gustavo A. Hoffmann, with
-    review from Richard Kenner.
+    .. container:: content-copyright
 
-    .. only:: builder_latex
+        Copyright © 2018 |ndash| 2020, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -28,6 +27,16 @@ Introduction to Ada
         `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+
+.. container:: content-description
+
+    This course will teach you the basics of the Ada programming language and
+    is intended for those who already have a basic understanding of programming
+    techniques. You will learn how to apply those techniques to programming in
+    Ada.
+
+    This document was written by Raphaël Amiard and Gustavo A. Hoffmann, with
+    review from Richard Kenner.
 
 .. only:: builder_html
 

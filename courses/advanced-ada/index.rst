@@ -8,11 +8,13 @@
 Advanced Ada
 ============
 
-.. container:: content-description
+.. include:: ../global.txt
 
-    This course will teach you advanced topics of the Ada programming language.
+.. only:: builder_latex
 
-    .. only:: builder_latex
+    .. container:: content-copyright
+
+        Copyright © 2020, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -24,6 +26,10 @@ Advanced Ada
         `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+
+.. container:: content-description
+
+    This course will teach you advanced topics of the Ada programming language.
 
 .. only:: builder_html
 
