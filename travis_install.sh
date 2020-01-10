@@ -1,20 +1,33 @@
 #! /usr/bin/env sh
 
 # Install requirements
-pip install -q -r frontend/requirements.txt
+pip install -q -r ../requirements.txt
 
 set -v
 set -e
 
-package_file=5b0d7bffa3f5d709751e3e04
+installer_hash=0cd3e2a668332613b522d9612ffa27ef3eb0815b
+installer_name=gnat-community-2019-20190517-x86_64-linux-bin
+
+# Create tools directory
+if ! test -d $TOOLS_DIR
+then
+    mkdir -p $TOOLS_DIR
+fi
+
+# Get / update gnat_community_install_script repo
+if ! test -d $TOOLS_DIR/gnat_community_install_script
+then
+    (cd $TOOLS_DIR && git clone https://github.com/AdaCore/gnat_community_install_script)
+else
+    (cd $TOOLS_DIR/gnat_community_install_script && git pull)
+fi
 
 # Get GNAT
 if ! test -f $GNAT_INSTALLER_PATH
 then
-    mkdir -p $TOOLS_DIR
     wget -O $GNAT_INSTALLER_PATH \
-        "http://mirrors.cdn.adacore.com/art/${package_file}"
-    (cd $TOOLS_DIR && git clone https://github.com/AdaCore/gnat_community_install_script)
+        "https://community.download.adacore.com/v1/${installer_hash}?filename=${installer_name}"
 fi
 
 # If needed, extract GNAT
