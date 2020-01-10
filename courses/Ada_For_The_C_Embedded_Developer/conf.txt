@@ -1,0 +1,2 @@
+title=Ada for the C Embedded Developer
+author=Quentin Ochem and Robert Tice
