@@ -31,7 +31,7 @@ jobs:
       language: python
       python: 3.6
       script:
-        - PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" tests
+        - cd frontend && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" tests
     - stage: "Frontend build"
       language: python
       node_js: 3.6
