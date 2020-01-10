@@ -35,7 +35,7 @@ jobs:
         - cd frontend && PATH=$GNAT_PATH/bin:$PATH make test_content
     - stage: "Frontend build"
       language: python
-      node_js: 3.6
+      node_js: 12
       script:
         - cd frontend && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" test_engine
 
