@@ -185,6 +185,8 @@ TitleColor={named}{MidnightBlue}
 ''',
     # 'verbatimwithframe=false'
 
+    # Inline code cannot be highlighted, see
+    # https://github.com/sphinx-doc/sphinx/issues/5157
 }
 
 latex_logo = 'learn_theme/static/img/logo.png'
