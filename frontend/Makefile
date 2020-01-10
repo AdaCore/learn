@@ -23,7 +23,7 @@ help:
 test_engine:
 	@echo "===== ENGINE TEST ====="
 	@$(YARN_BUILD)
-	@$(SPHINXBUILD) -M html "tests/" \
+	@$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@echo ""
 
