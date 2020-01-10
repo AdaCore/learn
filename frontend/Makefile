@@ -4,9 +4,15 @@ SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = learnadacorecom
 SPHINXCONF    = sphinx
 BUILDDIR      = dist
-TEST_DRIVER   = python tests/compile_blocks.py
-CONTENT_DIR   = ../content
+TEST_DRIVER   = python3 tests/compile_blocks.py
+
+mkfile_path  := $(abspath $(lastword $(MAKEFILE_LIST)))
+mkfile_dir   := $(dir $(mkfile_path))
+
+CONTENT_DIR   = $(mkfile_dir)/../content
 HOST_ADDRESS ?= localhost
+
+YARN_BUILD    := yarn run build
 
 
 help:
@@ -16,6 +22,7 @@ help:
 
 test_engine:
 	@echo "===== ENGINE TEST ====="
+	@$(YARN_BUILD)
 	@$(SPHINXBUILD) -M html "tests/" \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@echo ""
@@ -45,7 +52,7 @@ test_spark_for_the_misra_c_developer:
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
 	@echo ""
 
-tests: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark \
+test_content: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark \
 	test_spark_for_the_misra_c_developer
 
 publish-staging:

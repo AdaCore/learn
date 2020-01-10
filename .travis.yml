@@ -31,12 +31,11 @@ jobs:
       language: python
       python: 3.6
       script:
-        - cd frontend && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" tests
+        - cd frontend && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" test_content
     - stage: "Frontend build"
       language: python
       node_js: 3.6
       script:
-        - yarn run build
-        - PATH=$GNAT_PATH/bin:$PATH make html
+        - cd frontend && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" test_engine
 
 # TODO: insert test stages for backend
