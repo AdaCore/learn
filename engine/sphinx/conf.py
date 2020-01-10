@@ -176,7 +176,13 @@ latex_elements = {
 
     # Sphinx Setup (LaTeX-type customization)
     #
-    'sphinxsetup': 'VerbatimBorderColor={rgb}{0.90,0.90,0.90}',
+    'passoptionstopackages': r'\PassOptionsToPackage{svgnames}{xcolor}',
+
+    'sphinxsetup': '''
+VerbatimBorderColor={rgb}{0.90,0.90,0.90},
+VerbatimColor={rgb}{0.99,0.99,0.99},
+TitleColor={named}{MidnightBlue}
+''',
     # 'verbatimwithframe=false'
 
 }
