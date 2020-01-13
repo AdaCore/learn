@@ -1,0 +1,3 @@
+--webpack-config webpack.test.js
+--require jsdom-global/register
+"tests/ts/**/*.spec.ts"

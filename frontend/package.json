@@ -21,16 +21,19 @@
     "@types/ace": "0.0.42",
     "@types/chai": "^4.2.7",
     "@types/jquery": "^3.3.31",
+    "@types/jsdom-global": "^3.0.1",
     "@types/mocha": "^5.2.7",
     "@types/slick-carousel": "^1.6.33",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
+    "amd-loader": "^0.0.8",
     "autoprefixer": "^9.6.1",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
     "chai": "^4.2.0",
     "chunks-2-json-webpack-plugin": "^1.0.2",
     "clean-webpack-plugin": "^3.0.0",
+    "cross-env": "^6.0.3",
     "css-loader": "^3.1.0",
     "eslint": "^6.0.1",
     "eslint-config-google": "^0.13.0",
@@ -38,9 +41,15 @@
     "file-loader": "^4.1.0",
     "html-webpack-plugin": "^3.2.0",
     "imports-loader": "^0.8.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "jsdom": "^15.2.1",
+    "jsdom-global": "^3.0.2",
+    "jsdom-global-jquery": "^1.0.5",
     "mini-css-extract-plugin": "^0.8.0",
     "mocha": "^7.0.0",
+    "mocha-webpack": "^2.0.0-beta.0",
     "node-sass": "^4.12.0",
+    "nyc": "^15.0.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "postcss-loader": "^3.0.0",
     "sass": "^1.22.6",
@@ -49,12 +58,14 @@
     "sass-loader": "^7.1.0",
     "source-map-loader": "^0.2.4",
     "terser-webpack-plugin": "^1.4.1",
+    "ts-loader": "^6.2.1",
     "ts-node": "^8.6.0",
     "typescript": "^3.5.3",
     "webpack": "^4.36.1",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.7.2",
     "webpack-merge": "^4.2.1",
+    "webpack-node-externals": "^1.7.2",
     "webpack-shell-plugin": "^0.5.0",
     "webpack-watch-files-plugin": "^1.0.3"
   },
@@ -62,8 +73,17 @@
     "dev": "webpack-dev-server --open --config webpack.dev.js",
     "tsc": "tsc",
     "eslint": "eslint --ext .ts sphinx/src/",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "test": "mocha-webpack",
+    "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text yarn run test"
   },
   "author": "AdaCore",
-  "license": "ISC"
+  "license": "ISC",
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "instrument": false,
+    "sourceMap": false
+  }
 }

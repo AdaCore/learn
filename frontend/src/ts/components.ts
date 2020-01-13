@@ -1,4 +1,3 @@
-
 /** Class represents Tab component */
 export class Tabs {
   private headers: Array<JQuery> = [];

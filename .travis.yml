@@ -30,9 +30,16 @@ jobs:
       python: 3.6
       script:
         - cd frontend && PATH=$GNAT_PATH/bin:$PATH make test_content
+    - stage: "Frontend unit tests"
+      language: node_js
+      node_js:
+        - 12
+      script:
+        - cd frontend && yarn && yarn run cover
     - stage: "Frontend build"
-      language: python
-      node_js: 12
+      language: node_js
+      node_js:
+        - 12
       script:
         - cd frontend && yarn && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" test_engine
 
