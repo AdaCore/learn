@@ -49,21 +49,6 @@ a:hover, a:active {
     outline: 0
 }
 
-a.button {
-    background-color: #F56F23;
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #FFF;
-    font-weight: 600;
-    float: left;
-    font-family: sans-serif;
-}
-a.button svg {
-    position: relative;
-    top: 2px;
-}
-
 abbr[title] {
     border-bottom: 1px dotted
 }
