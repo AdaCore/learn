@@ -18,8 +18,8 @@ Ada for the C++ or Java Developer
         credit, provide a link to the license, and indicate if changes were
         made. If you remix, transform, or build upon the material, you must
         distribute your contributions under the same license as the original.
-        License details:
-        `creativecommons.org/licenses/by-sa/4.0 <http://creativecommons.org/licenses/by-sa/4.0>`_
+        You can find license details
+        `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
 
