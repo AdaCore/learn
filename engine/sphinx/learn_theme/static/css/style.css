@@ -374,7 +374,7 @@ a.pdf_download_button {
     text-decoration: none;
     color: #FFF;
     font-weight: 600;
-    float: left;
+    float: right;
     font-family: sans-serif;
 }
 a.pdf_download_button svg {
