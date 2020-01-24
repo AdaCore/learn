@@ -367,7 +367,7 @@ label.custom_check {
   animation-delay: -0.16s;
 }
 
-a.button {
+a.pdf_download_button {
     background-color: #F56F23;
     display: block;
     padding: 10px 15px;
@@ -377,7 +377,7 @@ a.button {
     float: left;
     font-family: sans-serif;
 }
-a.button svg {
+a.pdf_download_button svg {
     position: relative;
     top: 2px;
 }

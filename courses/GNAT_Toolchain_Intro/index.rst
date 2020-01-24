@@ -36,11 +36,11 @@ Introduction to GNAT Toolchain
 
 .. only:: builder_html
 
-    .. container:: download-button
+    .. container:: pdf-download
 
         .. raw:: html
 
-            <a class="button" href="../../pdf_books/courses/GNAT_Toolchain_Intro.pdf">
+            <a class="pdf_download_button" href="../../pdf_books/courses/GNAT_Toolchain_Intro.pdf">
                 <img src="../../_static/img/download-button.svg" />
                 Download PDF
             </a>

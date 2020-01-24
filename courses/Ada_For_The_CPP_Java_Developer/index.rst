@@ -33,11 +33,11 @@ Ada for the C++ or Java Developer
 
 .. only:: builder_html
 
-    .. container:: download-button
+    .. container:: pdf-download
 
         .. raw:: html
 
-            <a class="button" href="../../pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
+            <a class="pdf_download_button" href="../../pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
                 <img src="../../_static/img/download-button.svg" />
                 Download PDF
             </a>

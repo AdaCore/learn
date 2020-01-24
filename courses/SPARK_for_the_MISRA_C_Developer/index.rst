@@ -33,11 +33,11 @@ SPARK Ada for the MISRA C Developer
 
 .. only:: builder_html
 
-    .. container:: download-button
+    .. container:: pdf-download
 
         .. raw:: html
 
-            <a class="button" href="../../pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+            <a class="pdf_download_button" href="../../pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
                 <img src="../../_static/img/download-button.svg" />
                 Download PDF
             </a>
