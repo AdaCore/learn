@@ -2633,7 +2633,7 @@ color: #9e9e9e;
 
 
 .wy-menu-vertical li.toctree-l3 {
-	
+
     font-size: .9em
 }
 
@@ -2994,7 +2994,7 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
     .wy-nav-side {
         left: -300px
     }
-    
+
     .beta-ribbon {
         left: -300px;
     }

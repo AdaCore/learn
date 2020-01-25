@@ -367,6 +367,21 @@ label.custom_check {
   animation-delay: -0.16s;
 }
 
+a.pdf_download_button {
+    background-color: #F56F23;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #FFF;
+    font-weight: 600;
+    float: right;
+    font-family: sans-serif;
+}
+a.pdf_download_button svg {
+    position: relative;
+    top: 2px;
+}
+
 @-webkit-keyframes sk-bouncedelay {
   0%, 80%, 100% { -webkit-transform: scale(0) }
   40% { -webkit-transform: scale(1.0) }

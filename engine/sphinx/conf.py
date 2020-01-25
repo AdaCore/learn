@@ -29,7 +29,7 @@ title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
 # The short X.Y version
 version = u''
 # The full version, including alpha/beta/rc tags
-release = u'2019'
+release = u'2020-01'
 
 
 # -- General configuration ---------------------------------------------------
@@ -176,12 +176,24 @@ latex_elements = {
 
     # Sphinx Setup (LaTeX-type customization)
     #
-    'sphinxsetup': 'VerbatimBorderColor={rgb}{0.90,0.90,0.90}',
+    'passoptionstopackages': r'\PassOptionsToPackage{svgnames}{xcolor}',
+
+    'sphinxsetup': '''
+VerbatimBorderColor={rgb}{0.90,0.90,0.90},
+VerbatimColor={rgb}{0.99,0.99,0.99},
+TitleColor={named}{MidnightBlue}
+''',
     # 'verbatimwithframe=false'
 
+    # Inline code cannot be highlighted, see
+    # https://github.com/sphinx-doc/sphinx/issues/5157
 }
 
 latex_logo = 'learn_theme/static/img/logo.png'
+
+latex_show_urls = 'footnote'
+
+latex_show_pagerefs = True
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,

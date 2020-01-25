@@ -4,21 +4,43 @@
 Ada for the C++ or Java Developer
 ===================================
 
+.. include:: ../global.txt
+
+.. only:: builder_latex
+
+    .. container:: content-copyright
+
+        Copyright © 2013 |ndash| 2020, AdaCore
+
+        This book is published under a CC BY-SA license, which means that you
+        can copy, redistribute, remix, transform, and build upon the content
+        for any purpose, even commercially, as long as you give appropriate
+        credit, provide a link to the license, and indicate if changes were
+        made. If you remix, transform, or build upon the material, you must
+        distribute your contributions under the same license as the original.
+        You can find license details
+        `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
+
+        .. image:: ../../images/ccheart_black.png
+
 .. container:: content-description
 
-    This document will present the Ada language using terminology and examples that are familiar to developers that understand the C++ or Java languages.
+    This document will present the Ada language using terminology and examples
+    that are familiar to developers that understand the C++ or Java languages.
 
     This document was prepared by Quentin Ochem, with contributions and review
     from Richard Kenner, Albert Lee, and Ben Brosgol.
 
 .. only:: builder_html
 
-    .. container:: download-button
+    .. container:: pdf-download
 
-        .. image:: ../../images/pdf-download.png
-            :target: ../../pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf
-            :alt: PDF Download
-            :width: 80pt
+        .. raw:: html
+
+            <a class="pdf_download_button" href="../../pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
+                <img src="../../_static/img/download-button.svg" />
+                Download PDF
+            </a>
 
 .. toctree::
     :maxdepth: 4

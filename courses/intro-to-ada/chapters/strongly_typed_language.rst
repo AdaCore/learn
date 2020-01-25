@@ -467,10 +467,6 @@ introduce conversion functions along with the types.
        Put_Line (Miles'Image (Dist_Imperial));
     end Conv;
 
-This is the first example of a function declaration. We will see
-:ref:`functions and procedures <Subprograms>`
-in more detail soon.
-
 If you write a lot of numeric code, having to explicitly provide such
 conversions might seem painful at first. However, this approach brings some
 advantages. Notably, you can rely on the absence of implicit conversions, which

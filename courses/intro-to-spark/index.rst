@@ -4,20 +4,44 @@
 Intro To SPARK
 ===============
 
+.. include:: ../global.txt
+
+.. only:: builder_latex
+
+    .. container:: content-copyright
+
+        Copyright © 2018 |ndash| 2020, AdaCore
+
+        This book is published under a CC BY-SA license, which means that you
+        can copy, redistribute, remix, transform, and build upon the content
+        for any purpose, even commercially, as long as you give appropriate
+        credit, provide a link to the license, and indicate if changes were
+        made. If you remix, transform, or build upon the material, you must
+        distribute your contributions under the same license as the original.
+        You can find license details
+        `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
+
+        .. image:: ../../images/ccheart_black.png
+
 .. container:: content-description
 
-    This tutorial is an interactive introduction to the SPARK programming language and its formal verification tools. You will learn the difference between Ada and SPARK and how to use the various analysis tools that come with SPARK.
+    This tutorial is an interactive introduction to the SPARK programming
+    language and its formal verification tools. You will learn the difference
+    between Ada and SPARK and how to use the various analysis tools that come
+    with SPARK.
 
     This document was prepared by Claire Dross and Yannick Moy.
 
 .. only:: builder_html
 
-    .. container:: download-button
+    .. container:: pdf-download
 
-        .. image:: ../../images/pdf-download.png
-            :target: ../../pdf_books/courses/intro-to-spark.pdf
-            :alt: PDF Download
-            :width: 80pt
+        .. raw:: html
+
+            <a class="pdf_download_button" href="../../pdf_books/courses/intro-to-spark.pdf">
+                <img src="../../_static/img/download-button.svg" />
+                Download PDF
+            </a>
 
 .. toctree::
     :maxdepth: 4

@@ -3,23 +3,45 @@
 SPARK Ada for the MISRA C Developer
 ===================================
 
+.. include:: ../global.txt
+
+.. only:: builder_latex
+
+    .. container:: content-copyright
+
+        Copyright © 2018 |ndash| 2020, AdaCore
+
+        This book is published under a CC BY-SA license, which means that you
+        can copy, redistribute, remix, transform, and build upon the content
+        for any purpose, even commercially, as long as you give appropriate
+        credit, provide a link to the license, and indicate if changes were
+        made. If you remix, transform, or build upon the material, you must
+        distribute your contributions under the same license as the original.
+        You can find license details
+        `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
+
+        .. image:: ../../images/ccheart_black.png
+
 .. container:: content-description
 
-    This book presents the SPARK technology -- the SPARK subset of Ada and its
-    supporting static analysis tools -- through an example-driven comparison
-    with the rules in the widely known MISRA C subset of the C language.
+    This book presents the SPARK technology |mdash| the SPARK subset of Ada and
+    its supporting static analysis tools |mdash| through an example-driven
+    comparison with the rules in the widely known MISRA C subset of the C
+    language.
 
     This document was prepared by Yannick Moy, with contributions and review
     from Ben Brosgol.
 
 .. only:: builder_html
 
-    .. container:: download-button
+    .. container:: pdf-download
 
-        .. image:: ../../images/pdf-download.png
-            :target: ../../pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf
-            :alt: PDF Download
-            :width: 80pt
+        .. raw:: html
+
+            <a class="pdf_download_button" href="../../pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+                <img src="../../_static/img/download-button.svg" />
+                Download PDF
+            </a>
 
 .. toctree::
     :maxdepth: 4
