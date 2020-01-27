@@ -6,6 +6,16 @@ import 'brace/theme/tomorrow_night';
 
 import * as Types from './types';
 
+export enum EditorTheme {
+  Light = 'ace/theme/tomorrow',
+  Dark = 'ace/theme/tomorrow_night'
+}
+
+enum EditorLanguage {
+  Ada = 'ace/mode/ada',
+  C_CPP = 'ace/mode/c_cpp'
+}
+
 /** Class representing an Editor **/
 export class Editor {
   private readonly container: JQuery;
@@ -24,9 +34,9 @@ export class Editor {
 
     // Set the mode
     if (resource.basename.match(/.ad[sb]$/)) {
-      this.editor.session.setMode('ace/mode/ada');
+      this.editor.session.setMode(EditorLanguage.Ada);
     } else {
-      this.editor.session.setMode('ace/mode/c_cpp');
+      this.editor.session.setMode(EditorLanguage.C_CPP);
     }
     this.editor.$blockScrolling = Infinity;
 
@@ -43,7 +53,7 @@ export class Editor {
       fontSize: 13,
       tabSize: 3,
       useSoftTabs: true,
-      theme: 'ace/theme/tomorrow',
+      theme: EditorTheme.Light,
       minLines: this.editor.session.doc.getLength(),
       maxLines: 50,
     });
@@ -60,10 +70,18 @@ export class Editor {
 
   /**
    * Set the theme of the editor
-   * @param {string} theme - The ace theme to load
+   * @param {EditorTheme} theme - The ace theme to load
    */
-  public setTheme(theme: string): void {
+  public setTheme(theme: EditorTheme): void {
     this.editor.setTheme(theme);
+  }
+
+  /**
+   * Get the theme of the editor
+   * @return {EditorTheme} theme - The ace theme currently set
+   */
+  public getTheme(): EditorTheme {
+    return EditorTheme[this.editor.getTheme()];
   }
 
   /**

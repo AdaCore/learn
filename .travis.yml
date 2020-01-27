@@ -11,6 +11,7 @@ os:
 
 cache:
   yarn: true
+  pip: true
   directories:
   - $HOME/build_tools
   - $HOME/.cache/pip
@@ -35,12 +36,11 @@ jobs:
       node_js:
         - 12
       script:
-        - cd frontend && yarn && yarn run cover
+        - cd frontend && yarn && yarn run test
     - stage: "Frontend build"
-      language: node_js
-      node_js:
-        - 12
+      language: python
+      python: 3.6
       script:
-        - cd frontend && yarn && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" test_engine
+        - cd frontend && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" test_engine
 
 # TODO: insert test stages for backend

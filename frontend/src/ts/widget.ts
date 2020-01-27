@@ -2,7 +2,7 @@ import $ from 'jquery';
 import 'whatwg-fetch';
 
 import {Button, CheckBox, Tabs} from './components';
-import {Editor} from './editor';
+import {Editor, EditorTheme} from './editor';
 import * as Strings from './strings';
 import * as Types from './types';
 import * as util from './utilities';
@@ -894,9 +894,9 @@ export class Widget {
     const themeSetting: CheckBox =
         new CheckBox(Strings.SETTINGS_THEME_EDITOR_LABEL, dropdownContent);
     themeSetting.getCheckBox().on('change', () => {
-      let theme = 'ace/theme/tomorrow';
+      let theme = EditorTheme.Light;
       if (themeSetting.checked()) {
-        theme = 'ace/theme/tomorrow_night';
+        theme = EditorTheme.Dark;
       }
       this.editors.map((e) => {
         e.setTheme(theme);
