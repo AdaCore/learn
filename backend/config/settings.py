@@ -1,3 +1,5 @@
+import os
+
 class BaseConfig():
     TESTING = False
     DEBUG = False
@@ -18,8 +20,8 @@ class DevConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     FLASK_ENV = 'production'
 
-    CELERY_BROKER = 'pyamqp://rabbit_user:rabbit_password@broker-rabbitmq//'
-    CELERY_RESULT_BACKEND = 'rpc://rabbit_user:rabbit_password@broker-rabbitmq//'
+    CELERY_BROKER = os.environ.get('RABBITMQ_BROKER')
+    CELERY_RESULT_BACKEND = os.environ.get('RABBITMQ_RESULTS_BACKEND')
 
 
 class TestConfig(BaseConfig):
