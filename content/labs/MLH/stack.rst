@@ -109,7 +109,7 @@ Sample Output
 --------------
 
 
-.. code:: ada lab=MLH_Stack
+.. code:: ada lab=MLH_Stack prove_button
 
     --  START LAB IO BLOCK
     in 0:M L H d p d p d p d

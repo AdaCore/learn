@@ -474,7 +474,6 @@ export class Widget {
 
     if (container.attr('lab')) {
       this.lab = true;
-      this.container.attr('prove_button', 'true');
       this.container.attr('run_button', 'true');
       this.container.attr('submit_button', 'true');
       this.container.attr('cli_input', 'true');
