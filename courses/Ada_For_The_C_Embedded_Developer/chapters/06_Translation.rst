@@ -1,13 +1,7 @@
 C to Ada Translation Patterns
 =================================
 
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 Naming conventions and casing considerations
 --------------------------------------------

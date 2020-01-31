@@ -1,13 +1,7 @@
 Concurrency and Real-Time
 ============================
 
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 Understanding the various options
 ---------------------------------

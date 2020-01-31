@@ -1,13 +1,7 @@
 Writing Ada on Embedded Systems
 =================================
 
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 Understanding the Ada Run-Time
 ------------------------------

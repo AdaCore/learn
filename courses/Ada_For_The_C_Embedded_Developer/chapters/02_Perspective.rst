@@ -1,13 +1,7 @@
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
 The C Developer's Perspective on Ada
 ======================================
+
+.. include:: ../../global.txt
 
 What we mean by Embedded Software
 ------------------------------------

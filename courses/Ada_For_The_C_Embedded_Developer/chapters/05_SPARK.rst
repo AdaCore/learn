@@ -1,13 +1,7 @@
 Enhancing Verification with SPARK and Ada
 ============================================
 
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 Dealing or not Dealing with Exceptions
 --------------------------------------

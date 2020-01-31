@@ -1,13 +1,7 @@
 Argumentation and Business Perspectives
 ==========================================
 
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 The technical benefits of a migration from C to Ada are usually relatively
 straightforward to demonstrate. Hopefully, this booklet provides good basis for
