@@ -386,6 +386,198 @@ Equality function
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
+States
+~~~~~~
+
+.. code:: ada lab=Solutions.Subprograms.States_1
+
+    --  START LAB IO BLOCK
+    in 0:0
+    out 0:Off
+    in 1:1
+    out 1:On: Simple Processing
+    in 2:2
+    out 2:On: Advanced Processing
+    --  END LAB IO BLOCK
+
+    procedure Display_State (State : Integer);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Display_State (State : Integer) is
+    begin
+       case State is
+          when 0 =>
+             Put_Line ("Off");
+          when 1 =>
+             Put_Line ("On: Simple Processing");
+          when 2 =>
+             Put_Line ("On: Advanced Processing");
+          when others =>
+             null;
+       end case;
+    end Display_State;
+
+    with Ada.Command_Line; use Ada.Command_Line;
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    with Display_State;
+
+    procedure Main is
+       State : Integer;
+    begin
+       if Argument_Count < 1 then
+          Put_Line ("ERROR: missing arguments! Exiting...");
+          return;
+       elsif Argument_Count > 1 then
+          Put_Line ("Ignoring additional arguments...");
+       end if;
+
+       State := Integer'Value (Argument (1));
+
+       Display_State (State);
+    end Main;
+
+States #2
+~~~~~~~~~
+
+.. code:: ada lab=Solutions.Subprograms.States_2
+
+    --  START LAB IO BLOCK
+    in 0:0
+    out 0:Off
+    in 1:1
+    out 1:On: Simple Processing
+    in 2:2
+    out 2:On: Advanced Processing
+    --  END LAB IO BLOCK
+
+    function Get_State (State : Integer) return String;
+
+    function Get_State (State : Integer) return String is
+    begin
+       return (case State is
+               when 0 => "Off",
+               when 1 => "On: Simple Processing",
+               when 2 => "On: Advanced Processing",
+               when others => "");
+    end Get_State;
+
+    with Ada.Command_Line; use Ada.Command_Line;
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    with Get_State;
+
+    procedure Main is
+       State : Integer;
+    begin
+       if Argument_Count < 1 then
+          Put_Line ("ERROR: missing arguments! Exiting...");
+          return;
+       elsif Argument_Count > 1 then
+          Put_Line ("Ignoring additional arguments...");
+       end if;
+
+       State := Integer'Value (Argument (1));
+
+       Put_Line (Get_State (State));
+    end Main;
+
+States #3
+~~~~~~~~~
+
+.. code:: ada lab=Solutions.Subprograms.States_3
+
+    --  START LAB IO BLOCK
+    in 0:0
+    out 0:Off FALSE
+    in 1:1
+    out 1:On TRUE
+    in 2:2
+    out 2:On TRUE
+    --  END LAB IO BLOCK
+
+    function Is_On (State : Integer) return Boolean;
+
+    function Is_On (State : Integer) return Boolean is
+    begin
+       return (if State = 0 then False else True);
+    end Is_On;
+
+    procedure Display_On_Off (State : Integer);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Is_On;
+
+    procedure Display_On_Off (State : Integer) is
+    begin
+       Put_Line (if Is_On (State) then "On" else "Off");
+    end Display_On_Off;
+
+    with Ada.Command_Line; use Ada.Command_Line;
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    with Display_On_Off;
+    with Is_On;
+
+    procedure Main is
+       State : Integer;
+    begin
+       if Argument_Count < 1 then
+          Put_Line ("ERROR: missing arguments! Exiting...");
+          return;
+       elsif Argument_Count > 1 then
+          Put_Line ("Ignoring additional arguments...");
+       end if;
+
+       State := Integer'Value (Argument (1));
+
+       Display_On_Off (State);
+       Put_Line (Boolean'Image (Is_On (State)));
+    end Main;
+
+States #4
+~~~~~~~~~
+
+.. code:: ada lab=Solutions.Subprograms.States_4
+
+    --  START LAB IO BLOCK
+    in 0:0
+    out 0: 1
+    in 1:1
+    out 1: 2
+    in 2:2
+    out 2: 0
+    --  END LAB IO BLOCK
+
+    procedure Set_Next (State : in out Integer);
+
+    procedure Set_Next (State : in out Integer) is
+    begin
+       State := (if State < 2 then State + 1 else 0);
+    end Set_Next;
+
+    with Ada.Command_Line; use Ada.Command_Line;
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    with Set_Next;
+
+    procedure Main is
+       State : Integer;
+    begin
+       if Argument_Count < 1 then
+          Put_Line ("ERROR: missing arguments! Exiting...");
+          return;
+       elsif Argument_Count > 1 then
+          Put_Line ("Ignoring additional arguments...");
+       end if;
+
+       State := Integer'Value (Argument (1));
+
+       Set_Next (State);
+       Put_Line (Integer'Image (State));
+    end Main;
+
 Modular Programming
 -------------------
 
