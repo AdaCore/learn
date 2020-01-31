@@ -45,7 +45,7 @@ frames. For example:
     end Main;
 
 On the above code, :ada:`Some_Process` calls :ada:`Read` with values leading to
-an out-of-bound access (:math:`1 + 10 * 10 = 101`, beyond :ada:`A` last index).
+an out-of-bound access (:ada:`1 + 10 * 10 = 101`, beyond :ada:`A` last index).
 This will trigger an exception in :ada:`Read` which will happen prior to
 reading the value in memory. :ada:`Read` doesn't have any code handling
 exceptions, so the exception is propagated to the caller :ada:`Some_Process`.
@@ -157,7 +157,7 @@ a later section. These can be enabled at run-time with ``-gnata``. Here's an
 example of a simple program and the result of the compilation on under various
 set of switches:
 
-::
+.. code-block:: ada
 
     with GNAT.IO; use GNAT.IO;
 
@@ -177,7 +177,7 @@ set of switches:
     raised CONSTRAINT_ERROR : main.adb:8 range check failed
 
 The above call is the default behavior. The assertion isn't checked, but the
-type constraints are. :math:`X * 5 = 50`, :ada:`X - 99  = -49`, which is
+type constraints are. :ada:`X * 5 = 50`, :ada:`X - 99  = -49`, which is
 outside of positive boundaries. As a result, the check on the last assignment
 fails.
 
@@ -278,16 +278,16 @@ program. As for regular assertions, those can be activated or deactivated at
 run-time, as well as formally proven. We'll concentrate here on three kind of
 contracts:
 
-- Preconditions, which are Boolean expressions that have to be true prior to a
+- *Preconditions*, which are Boolean expressions that have to be true prior to a
   call
 
-- Postconditions, which are Boolean expressions that have to be true after a
+- *Postconditions*, which are Boolean expressions that have to be true after a
   call
 
-- Predicates, which are Boolean expressions that have to be true for values of
+- *Predicates*, which are Boolean expressions that have to be true for values of
   a given type
 
-These contracts and be build after the values of function, parameters, global
+These contracts can be built after the values of function, parameters, global
 data or references to the current instance. For example:
 
 .. code-block:: ada
@@ -299,7 +299,7 @@ data or references to the current instance. For example:
 This function has a precondition, establishing a relationship between :ada:`X`
 and :ada:`Y`. Their sum has to be different than 0, maybe because we're
 dividing by :ada:`X + Y` in :ada:`Compute`. It also provides some guarantees on
-the result, the fact that that it has to be different than 0. If we look at a
+the result, the fact that it has to be different than 0. If we look at a
 piece of code using these:
 
 .. code-block:: ada
@@ -309,7 +309,7 @@ piece of code using these:
     C := Compute (A, B);
 
 From a dynamic analysis perspective, the second statement will fail with an
-assertion failure, as :math:`-1 + 1 = 0`. This will happen prior to calling any
+assertion failure, as :ada:`-1 + 1 = 0`. This will happen prior to calling any
 of the code within :ada:`Compute`. If we fix the code, for example:
 
 .. code-block:: ada
@@ -318,10 +318,10 @@ of the code within :ada:`Compute`. If we fix the code, for example:
     B := Compute (1, -2);
     C := Compute (A, B);
 
-:program:`gnatprove` will know from compute postcondition that :ada:`A` has to
-be above 1, and so does :ada:`B`. It therefore can deduce that the call :ada:`C
-:= Compute (A, B);` is compliant with regards to its precondition, as the
-addition of two numbers above 1 will be different than 0.
+:program:`gnatprove` will know from :ada:`Compute` postcondition that :ada:`A`
+has to be above 1, and so does :ada:`B`. It therefore can deduce that the call
+:ada:`C := Compute (A, B);` is compliant with regards to its precondition, as
+the addition of two numbers above 1 will be different than 0.
 
 Postconditions can also compare the state prior to a call with the state after
 a call, using the :ada:`'Old` attribute. For example:
@@ -349,7 +349,7 @@ verifications on its values. For example:
 This will verify that if the value of :ada:`Initialize` is true, then :ada:`A`
 and :ada:`B` have to be different. Note that verifications are inserted at
 certain points in the program, such as parameter passing,  assignments,
-conversion or qualification. But not on expression computation. Also, the
+conversion or qualification, but not on expression computation. Also, the
 predicate of a type will not be checked when modifying its subcomponents (which
 allows to do an update in steps). This can lead to some delayed detection that
 can be surprising at first glance. For example:
@@ -364,12 +364,12 @@ can be surprising at first glance. For example:
        V.B := 0; -- The predicate is not correct but not verified.
        Some_Call (V) -- The predicate will be checked and raise an error
 
-Absence of Run-Time Errors v.s.Functional Correctness
+Absence of Run-Time Errors vs. Functional Correctness
 -----------------------------------------------------
 
 A proof is a way to verify an implementation against a specification. Often,
 the main challenge resides not in doing the proof itself, but in the ability to
-formally express a requirements. This may require skills and experience beyond
+formally express requirements. This may require skills and experience beyond
 what's provided through typical software engineering curriculum. In this
 regards, although possible replacing entirely functional verification (e.g.
 functional test) by proof is a hard problem that shouldn't be considered prior
@@ -401,7 +401,7 @@ being usually more difficult to write.
 
 Even when targeting functional correctness, it's a perfectly reasonable
 approach to only define and prove a subset of the requirements in SPARK, and
-demonstrate other through other means, in particular testing. This is a
+demonstrate others through other means, in particular testing. This is a
 pragmatic approach that provides good results in terms of return on investment
 and can be more easily adopted by traditional software development team.
 
@@ -448,12 +448,12 @@ expecting an index of this array as input:
 
 This procedure is responsible for reading an element on an array and then
 incrementing the read index. What should it do in case of an invalid index? In
-this case, there is some defensive code which return an arbitrary value (which
+this case, there is some defensive code which returns an arbitrary value (which
 could also be a valid value in the array). We could also *complexify* the code
 and return a status in this case, or raise an exception.
 
 A more efficient way of working would be instead to make sure that this
-subprogram cannot be called if Index is out of the boundaries of data:
+subprogram cannot be called if :ada:`Index` is out of the boundaries of data:
 
 .. code-block:: ada
 
@@ -472,13 +472,13 @@ enabled) or SPARK can prove that such check will never fail.
 Ghost Code
 ----------
 
-Adding contracts and assertions in a piece of code can be viewed as embedded
+Adding contracts and assertions in a piece of code can be viewed as embedding
 the implementation and verification on the same program. It may be useful to
 designate some entities are being solely written for the purpose of the
 verification, and to be stripped from the program if said verification has to
 be removed, for example for final deployment.
 
-Most Ada entities can be declared with ghost mode, for example types,
+Most Ada entities can be declared with *ghost* mode, for example types,
 subprograms and variables. A ghost entity cannot be used to produce non-ghost
 results for the program. However, ghost code can be interlaced with non ghost
 code as long as the ghost computation doesn't influence the non ghost one.
@@ -544,7 +544,7 @@ by :ada:`Lock_Depth`.
 Understanding proof locality
 ----------------------------
 
-One of the difficulty of using prover lies in the fact that in order to prove
+One of the difficulty of using provers lies in the fact that in order to prove
 code, one need to have some understanding on how the prover underneath
 operates. In particular, in the case of SPARK, the key property to understand
 about the proof is that this proof is local. Proving a subprogram means proving
@@ -587,7 +587,7 @@ not prove. To be able to reach proof, you may complete the specification of
 .. code-block:: ada
 
     function My_Abs (I : Integer)
-      with My_Abs'Result > 0;
+      with Post => My_Abs'Result > 0;
 
 The proof locality has two very interesting properties: first of all, it makes
 the proof scalable. You can concentrate on proving a subprogram without knowing
@@ -633,9 +633,9 @@ few examples based on an array, checking whether all values are positive
        (for some E of V => E > 0);
 
 Note the qualifier all to verify that a property is true for all element, some
-to check that it's true for at least one, and the difference between in when
-iterating over indices of the container and of to iterate over the actual
-values.
+to check that it's true for at least one, and the difference between iterating
+over indices of the container and iterating over the actual values from the
+container.
 
 Using the above, we could write more complex properties. Here's for example a
 function that places the minimal value in the front of an array:
@@ -649,8 +649,8 @@ function that places the minimal value in the front of an array:
           (for all I in V'First .. V'Last => V (V'First) <= V (I));
 
 The post condition could read "either the array size is 1 or less, or the
-element at position :ada:`V'First` is lower or equal to the next. For sake of
-simplicity, we're not proving that all of the elements in the initial array are
+element at position :ada:`V'First` is lower or equal to the next." For sake of
+simplicity, we're not proving that all the elements in the initial array are
 still in the final array.
 
 The code that implements such procedure is quite trivial:
@@ -670,7 +670,7 @@ The code that implements such procedure is quite trivial:
        end loop;
     end Put_Min_In_Front;
 
-As you might imagine, the purpose of this chapter is because this can't be
+As you might imagine, the purpose of this example is to show that this can't be
 proven as-is. This is because it's extremely hard for provers to understand
 what happening inside loops. To be able to process things, they need to cut the
 loop as only to consider pieces of sequential code. There are three sequences
@@ -695,7 +695,7 @@ From start to first iteration:
 
     pragma Loop_Invariant (<some invariant>);
 
-From one loop to the next
+From one loop to the next:
 
 .. code-block:: ada
 
@@ -725,7 +725,8 @@ And at the last loop:
 The trick is now to define the invariant that will allow to prove all three
 pieces and be verified from one iteration to the next. Here, we want to say
 that at each iteration, all the elements until the current iterated index
-:ada:`I` are greater to the first element. The overall code then looks like:
+:ada:`I` are greater than the first element. The overall code then looks like
+this:
 
 .. code-block:: ada
 
@@ -752,7 +753,7 @@ Specifying what changes and what doesn't
 ----------------------------------------
 
 When a subprogram is manipulating data structures, it's often as important to
-specify what changes than what doesn't change. Let's take the example of a
+specify what changes as what doesn't change. Let's take the example of a
 simple procedure manipulating a record representing registers:
 
 .. code-block:: ada
@@ -776,7 +777,7 @@ simple procedure manipulating a record representing registers:
       S.Top := S.Top + 1;
     end Push_Sum;
 
-Now for the purpose of this example, we're trying to ensure that the numbers of
+Now, for the purpose of this example, we're trying to ensure that the numbers in
 this stack are always positive. We're doing some process on the stack |mdash|
 some sums |mdash| and want to make sure that these numbers are still positive:
 
@@ -792,8 +793,8 @@ some sums |mdash| and want to make sure that these numbers are still positive:
        Push_Sum (S);
     end Process;
 
-The expectation is that the postcondition should be proven (not taking into
-account overflows). We have a list of positive numbers and push another
+The expectation is that the postcondition should be proven (not taking overflows
+into account). We have a list of positive numbers and push another
 positive number on top of it. However, it doesn't |mdash| the reason being that
 the postcondition of :ada:`Top` doesn't say anything about the other values in
 the array. They may have been modified, they may be the same.
@@ -831,7 +832,7 @@ Still using exceptions in SPARK
 
 At the time of writing, exception handlers are not supported in SPARK. They
 introduce difficulties in terms of control flow that make it difficult to prove
-a piece of code in the case of an jump between an arbitrary location in the
+a piece of code in the case of a jump between an arbitrary location in the
 code and a handler. However, there's a way to work around this issue by
 wrapping a non-proven subprograms with the handler within a proven function.
 This can be quite handy in particular if SPARK is calling an Ada function which
@@ -880,7 +881,7 @@ In the non-SPARK body, it's very important to make sure that the postcondition
 still holds. This is something that needs to be verified manually. In many
 cases, it's not possible, in which case the best solution is to re-raise an
 exception at the end of the handler in order to avoid getting the control flow
-back to regular SPARK code (which would otherwise render the prove void).
+back to regular SPARK code (which would otherwise render the proof void).
 
 Understanding proof consistency
 -------------------------------
@@ -891,9 +892,9 @@ correctly represents the intent of the developer. As a result, while allowing
 to remove a lot of effort traditionally allocated to code review,
 contract-based programming and SPARK emphasis contract review.
 
-One element that is critical to understand is that it the premise of a proof is
+One element that is critical to understand is that if the premise of a proof is
 false, then the conclusion is always true |mdash| or doesn't matter. For
-example in the following code seems to be proving that :math:`0 = 1`:
+example in the following code seems to be proving that :ada:`0 = 1`:
 
 .. code-block:: ada
 
@@ -908,7 +909,7 @@ the code with assertion enabled. There's no way to make this postcondition
 fail.
 
 Beyond this simple example, the consequence of these situation may be that the
-developer may think he manage to prove a piece of code while there's a
+developer may think they managed to prove a piece of code while there's a
 fundamental contradiction in what had to be proven in the first place. The
 above is one of a short list of inconsistencies that can fortunately be
 detected automatically. Because the detection takes computing time, it's not
@@ -957,15 +958,12 @@ this last technique through an example. Consider the following piece of code:
     procedure Move
        (X, Y : in out Integer; Max, Min : Integer; D : Direction)
      with Pre => Max > Min and X in Min .. Max and Y in Min .. Max,
-     Post => (if D in North | South then X = X'Old else Y = Y'Old);
+          Post => (if D in North | South then X = X'Old else Y = Y'Old);
 
     procedure Move
        (X, Y : in out Integer; Max, Min : Integer; D : Direction)
     is
     begin
-       XInit := X;
-       YInit := Y;
-
        if D = North and then Y < Max then
           Y := Y + 1;
        elsif D = South and then Y > Min  then
