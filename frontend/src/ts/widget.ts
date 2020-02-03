@@ -532,6 +532,9 @@ export class Widget {
   private async fetchJSON<R, T>(data: R, url: string): Promise<T> {
     const response = await fetch(this.server + '/' + url + '/', {
       method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      redirect: 'follow',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
@@ -554,6 +557,9 @@ export class Widget {
       url: string): Promise<Types.Download.FS> {
     const response = await fetch(this.server + '/' + url + '/', {
       method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      redirect: 'follow',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',

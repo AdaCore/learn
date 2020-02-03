@@ -36,9 +36,9 @@ def create(mode='app'):
     assert isinstance(mode, str), f'bad mode type "{type(mode)}"'
     assert mode in ('app', 'celery'), f'bad mode "{mode}"'
 
-    logger.info(f'Starting {mode} in {config.APP_ENV} environment')
-
     app = Flask(__name__, instance_relative_config=False)
+
+    app.logger.info(f'Starting {mode} in {config.APP_ENV} environment')
 
     app.config.from_object('config')
     configure_celery(app, tasks.celery)
