@@ -8,20 +8,17 @@ class BaseConfig():
     # Container settings
     CONTAINER_NAME = "safecontainer"
 
+    CELERY_BROKER = os.environ.get('RABBITMQ_BROKER', 'pyamqp://guest@localhost//')
+    CELERY_RESULT_BACKEND = os.environ.get('RABBITMQ_RESULTS_BACKEND', 'rpc://')
+
 
 class DevConfig(BaseConfig):
     FLASK_ENV = 'development'
     DEBUG = True
 
-    CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
-    CELERY_RESULT_BACKEND = 'rpc://'
-
 
 class ProductionConfig(BaseConfig):
     FLASK_ENV = 'production'
-
-    CELERY_BROKER = os.environ.get('RABBITMQ_BROKER')
-    CELERY_RESULT_BACKEND = os.environ.get('RABBITMQ_RESULTS_BACKEND')
 
 
 class TestConfig(BaseConfig):

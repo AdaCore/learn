@@ -38,9 +38,9 @@ def create(mode='app'):
 
     app = Flask(__name__, instance_relative_config=False)
 
-    app.logger.info(f'Starting {mode} in {config.APP_ENV} environment')
-
     app.config.from_object('config')
+
+    app.logger.debug(f'Starting {mode} in {config.APP_ENV} environment')
     configure_celery(app, tasks.celery)
 
     # register blueprints
