@@ -6,35 +6,35 @@ Handling Variability and Re-usability
 Understanding static and dynamic variability
 --------------------------------------------
 
-It is common to see embedded software be used in a variety of configurations
+It is common to see embedded software being used in a variety of configurations
 that require small changes to the code for each instance. For example, the same
-software may need to be portable between two different architectures (ARM and
-x86), or two different platforms with different set of device available. Maybe
-the same software is used for two different generation of the product, and need
-to account for absence or presence of new features, or it's used for different
-projects which may select different components or configurations. All these
-cases, and many others, need to the need to introduce variability in the
-software, in order to ensure its reusability.
+application may need to be portable between two different architectures (ARM and
+x86), or two different platforms with different set of devices available. Maybe
+the same application is used for two different generations of the product, so it
+needs to account for absence or presence of new features, or it's used for
+different projects which may select different components or configurations. All
+these cases, and many others, require variability in the software in order to
+ensure its reusability.
 
-In C, variability is usually achieved through the means of macros and function
-pointers, the former being tied to static variability (variability in different
+In C, variability is usually achieved through macros and function pointers, the
+former being tied to static variability (variability in different
 builds) the latter to dynamic variability (variability within the same build
 decided at run-time).
 
 Ada offers many alternatives for both techniques, which aim at structuring
 possible variations of the software. When Ada isn't enough, the GNAT
 compilation system also provides a layer of capabilities, in particular
-alternate bodies selection.
+selection of alternate bodies.
 
-If you're familiar with object oriented programming (OOP) languages such as C++
-and Java, you might also be interested to know that OOP is supported by Ada and
-can be used to implement variability. This should, however, be used with care,
-as OOP brings its own set of problems, such as loss of efficiency (dispatching
-call can't be inlined and require one level of indirection) or loss of
-analyzability (the target of a dispatching call isn't known at run time). As a
-rule of thumb, OOP should be considered only for cases of dynamic variability,
-where several versions of the same object need to exist concurrently in the
-same application.
+If you're familiar with object-oriented programming (OOP) |mdash| supported in
+languages such as C++ and Java |mdash|, you might also be interested in knowing
+that OOP is supported by Ada and can be used to implement variability. This
+should, however, be used with care, as OOP brings its own set of problems, such
+as loss of efficiency |mdash| dispatching calls can't be inlined and require one
+level  of indirection |mdash| or loss of analyzability |mdash| the target of a
+dispatching call isn't known at run time. As a rule of thumb, OOP should be
+considered only for cases of dynamic variability, where several versions of the
+same object need to exist concurrently in the same application.
 
 Handling variability & reusability statically
 ---------------------------------------------
@@ -42,8 +42,8 @@ Handling variability & reusability statically
 Genericity
 ~~~~~~~~~~
 
-One usage of C macros involve the creation of functions that work regardless of
-the type they're called upon. For example, a swap macro may look like:
+One usage of C macros involves the creation of functions that works regardless
+of the type they're being called upon. For example, a swap macro may look like:
 
 [C]
 
@@ -59,7 +59,7 @@ the type they're called upon. For example, a swap macro may look like:
     int b = 1;
     SWAP (int, a, b)
 
-Ada offers a way to declare this kind of function as a generic, that is a
+Ada offers a way to declare this kind of functions as a generic, that is, a
 function that is written after static arguments, such as a parameter:
 
 [Ada]
@@ -89,7 +89,7 @@ without any kind of checks. In Ada, the generic will first be checked for
 internal consistency. It then needs to be explicitly instantiated for a
 concrete type. From there, it's exactly as if there was an actual version of
 this :ada:`Swap` function, which is going to be called as any other function.
-In particular, all the rules for parameter modes and control will apply.
+All rules for parameter modes and control will apply to this instance.
 
 In many respects, an Ada generic is a way to provide a safe specification and
 implementation of such macros, through both the validation of the generic
@@ -129,8 +129,8 @@ The above can be instantiated and used the following way:
 
 Here, :ada:`I1.G`, :ada:`I2.G` and :ada:`I3.G` are three distinct variables.
 
-So far, we've only looked at generic with one kind of parameter |mdash| a
-so-called private type. There's actually much more that can be specified here,
+So far, we've only looked at generics with one kind of parameter: a so-called
+private type. There's actually much more that can be described in this section,
 such as variables, subprograms or package instantiations with certain
 properties. For example, the following provides a sort algorithm for any kind
 of array:
@@ -144,12 +144,12 @@ of array:
        type Array_Type is array (Index range <>) of Component;
     procedure Sort (A : in out Array_Type);
 
-The above declaration states that we need a type (:ada:`Component`), a discrete
+The declaration above states that we need a type (:ada:`Component`), a discrete
 type (:ada:`Index`), a comparison subprogram (:ada:`"<"`), and an array
 definition (:ada:`Array_Type`). Given these, it's possible to write an
 algorithm that can sort any :ada:`Array_Type`. Note the usage of the with
-reserved word in front of the function name, to differentiate between the
-generic parameter and the beginning of the generic subprogram.
+reserved word in front of the function name: it exists to differentiate between
+the generic parameter and the beginning of the generic subprogram.
 
 Here is a non-exhaustive overview of the kind of constraints that can be put on
 types:
@@ -176,8 +176,8 @@ are available. However, we want an easy way to implement a new device based on
 a previous one, saying "this new device is the same as this previous device,
 with these new services and these changes in existing services".
 
-We can implement such pattern using Ada simple derivation (as opposed to tagged
-derivation, which is OOP-related and discussed in a further section).
+We can implement such patterns using Ada's simple derivation |mdash| as opposed
+to tagged derivation, which is OOP-related and discussed in a later section.
 
 Let's start from the following example:
 
@@ -198,8 +198,8 @@ some fields if required, or be a different type such as a scalar. Then the four
 procedures :ada:`Startup`, :ada:`Send`, :ada:`Send_Fast` and :ada:`Receive` are
 primitives of this type. A primitive is essentially a subprogram that has a
 parameter or return type directly referencing this type and declared in the
-same scope. At this stage, there's nothing spec to this type, we're using it as
-we would use any other type, for example:
+same scope. At this stage, there's nothing special with this type: we're using
+it as we would use any other type. For example:
 
 .. code-block:: ada
 
@@ -214,8 +214,8 @@ we would use any other type, for example:
     end Main;
 
 Let's now assume that we need to implement a new generation of device,
-:ada:`Device_2`. This new device works exactly like the second one but for the
-startup code that has to be done differently. We can create a new type that
+:ada:`Device_2`. This new device works exactly like the first one, except for
+the startup code that has to be done differently. We can create a new type that
 operates exactly like the previous one, but modifies only the behavior of
 :ada:`Startup`:
 
@@ -234,8 +234,8 @@ Here, :ada:`Device_2` is derived from :ada:`Device_1`. It contains all the
 exact same properties and primitives, in particular, :ada:`Startup`,
 :ada:`Send`, :ada:`Send_Fast` and :ada:`Receive`. However, here, we decided to
 change the :ada:`Startup` function and to provide a different implementation.
-We override this function. The main subprogram doesn't change much, but for the
-fact that it now relies on a different type:
+We override this function. The main subprogram doesn't change much, except for
+the fact that it now relies on a different type:
 
 .. code-block:: ada
 
@@ -249,8 +249,8 @@ fact that it now relies on a different type:
        Put_Line (Integer'Image (I));
     end Main;
 
-We can further go through the generation of devices and now introduce a new
-one. This new device doesn't implement the :ada:`Send_Fast` service so we want
+We can continue with approach and introduce a new generation of devices. This
+new device doesn't implement the :ada:`Send_Fast` service so we want
 to remove it from the list of available services. Furthermore, for the purpose
 of our example, let's assume that the hardware team went back to the
 :ada:`Device_1` way of implementing :ada:`Startup`. We can write this new
@@ -285,9 +285,9 @@ implementation:
           Device_1.Startup (Device_1 (Device));
        end Startup;
 
-Our :ada:`Main` will looks like:
+Our :ada:`Main` now looks like:
 
- .. code-block:: ada
+.. code-block:: ada
 
     procedure Main is
        Device : Device_3;
@@ -299,14 +299,14 @@ Our :ada:`Main` will looks like:
        Put_Line (Integer'Image (I));
     end Main;
 
-And the call to :ada:`Send_Fast` will get flagged by the compiler.
+Here, the call to :ada:`Send_Fast` will get flagged by the compiler.
 
 Note that the fact that the code of :ada:`Main` has to be changed for every
 implementation isn't necessary satisfactory. We may want to go one step
-further, and isolate in one unique file the selection of the device kind to use
-for the whole application. One way to do this is to use the same name for all
-types, and use a renaming to select which package to use. Here's a simplified
-example of the above:
+further, and isolate the selection of the device kind to be used for the whole
+application in one unique file. One way to do this is to use the same name for
+all types, and use a renaming to select which package to use. Here's a
+simplified example to illustrate that:
 
 .. code-block:: ada
 
@@ -328,7 +328,7 @@ example of the above:
 
     package Drivers_2 is
 
-       type Device_Type is new Device_1.Device_Tye;
+       type Device_Type is new Device_1.Device_Type;
        procedure Send (Device : Device_Type; Data : Integer);
        procedure Receive (Device : Device_Type; Data : out Integer);
 
@@ -355,7 +355,7 @@ example of the above:
     end Main;
 
 In the above example, the whole code can rely on :file:`drivers.ads`, instead
-of relying on the specific driver. :ada:`Driver` is here an alias to
+of relying on the specific driver. Here, :ada:`Driver`  is an alias to
 :ada:`Driver_1`. In order to switch to :ada:`Driver_2`, the project only has to
 replace that one :file:`drivers.ads` file.
 

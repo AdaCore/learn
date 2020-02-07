@@ -8,21 +8,21 @@ Naming conventions and casing considerations
 
 One question that may arise relatively soon when converting from C to Ada is
 the style of identifiers. The Ada language doesn't impose any particular style
-and for many reasons, it may seem attractive to keep a C-like style, for
-example camel casing, to the Ada program.
+and for many reasons, it may seem attractive to keep a C-like style |mdash| for
+example, camel casing |mdash| to the Ada program.
 
 However, the Ada run-time library |mdash| in particular the one provided by
-GNAT |mdash| is following a specific style and using a different style for the
-rest of the program leads to inconsistencies, decreasing readability and
-confusing automatic style checkers. For those reasons, it's usually advisable
-to adopt the Ada style |mdash| which each word is an upper case letter followed
-by lower cases (several upper case letter at start are OK), with an underscore
-separating two words.
+GNAT |mdash| is following a specific style, so that using a different style for
+the rest of the program leads to inconsistencies, thereby decreasing readability
+and confusing automatic style checkers. For those reasons, it's usually
+advisable to adopt the Ada style |mdash| which each word is an upper case letter
+followed by lower cases (several upper case letter at start are OK), with an
+underscore separating two words.
 
 Following this scheme doesn't prevent to have an extra layer of compatible
-rules. For example, Ada being strongly typed language, it's not rare to create
+rules. For example, Ada being a strongly typed language, it's not rare to create
 a type for only one instance and not to have a different word to identify the
-variable and is type |mdash| so some styles add systematically a leading ``T_``
+variable and its type. Therefore, some styles add systematically a leading ``T_``
 or trailing ``_T`` to all type names.
 
 Interfacing C and Ada
@@ -33,9 +33,9 @@ Manual Interfacing
 
 Before even considering translating code from C to Ada, it's worthwhile
 evaluating the possibility of keeping portion of the C code intact, and only
-translating selected modules in Ada. This is a necessary evil when introducing
-Ada to a large existing C codebase, were re-writing the entire code upfront is
-not practical or not cost effective.
+translating selected modules to Ada. This is a necessary evil when introducing
+Ada to an existing large C codebase, where re-writing the entire code upfront is
+not practical or not cost-effective.
 
 Fortunately, Ada has a dedicated set of features for interfacing with other
 languages. The :ada:`Interfaces` package hierarchy and the pragmas
@@ -104,7 +104,7 @@ Building and Debugging mixed language code
 Automatic interfacing
 ~~~~~~~~~~~~~~~~~~~~~
 
-It may be useful to start interfacing Ada to C by using automatic binding
+It may be useful to start interfacing Ada and C by using automatic binding
 generators. These can be done either by invoking :program:`gcc`
 ``-fdump-ada-spec`` option (to generate an Ada binding to a C header file) or
 ``-gnatceg`` option (to generate a C binding to an Ada specification file). For
@@ -119,8 +119,8 @@ The level of interfacing is very low level and typically requires either
 massaging (changing the generated files) or wrapping (calling the generated
 files from a higher level interface). For example, numbers bound from C to Ada
 are only standard numbers where user-defined types may be desirable. C uses a
-lot of by-pointer parameters which may be better to be replaced by other
-parameter modes, etc.
+lot of by-pointer parameters which may be better replaced by other parameter
+modes, etc.
 
 However, the automatic binding generator helps having a starting point which
 ensures compatibility of the Ada and the C code.
@@ -158,8 +158,8 @@ carry boundaries, they need to be recreated in some way.
 
 The first option is to actually create an Ada array without boundaries. This is
 the most flexible, but also the least safe option. It involves creating an
-array with indices over the full range of Integer without ever creating it from
-Ada, but instead retrieving it as an access from C. For example:
+array with indices over the full range of :ada:`Integer` without ever creating
+it from Ada, but instead retrieving it as an access from C. For example:
 
 [C]
 
@@ -183,7 +183,7 @@ iterate over the whole range of integer, beyond the memory actually allocated
 for the array.
 
 A somewhat safer way is to overlay an Ada array over the C one. This requires
-to have access to the length of the array. Let's consider this time two cases,
+having access to the length of the array. This time, let's consider two cases,
 one with an array and its size accessible through functions, another one on
 global variables. This time, as we're using an overlay, the function will be
 directly mapped to an Ada function returning an address:
@@ -225,8 +225,8 @@ By-value v.s. by-reference types
 When interfacing Ada and C, the rules of parameter passing are a bit different
 with regards to what's a reference and what's a copy. Scalar types and pointers
 are passed by value, record and arrays are always passed by reference (recall
-that in pure Ada, this may vary from the size of the object). However, there
-may be cases where the C interface also pass values and not pointers to
+that, in pure Ada, this may vary from the size of the object). However, there
+may be cases where the C interface also passes values and not pointers to
 objects. Here's a slightly modified version of a previous example to illustrate
 this point:
 
@@ -242,7 +242,7 @@ this point:
        printf ("%d", p.A);
     }
 
-In Ada, a type can be modified so that parameter of this type can always be
+In Ada, a type can be modified so that parameters of this type can always be
 passed by copy.
 
 .. code-block:: ada
@@ -258,13 +258,13 @@ passed by copy.
     pragma Import (C, Call, "call");
 
 Note that this cannot be done at the subprogram declaration level, so if there
-is a mix of a by-copy and by-reference calls, two different types need to be
+is a mix of by-copy and by-reference calls, two different types need to be
 used on the Ada side.
 
 Naming and prefixes
 ~~~~~~~~~~~~~~~~~~~
 
-Because of the absence of namespaces, any global name in C tend to be very
+Because of the absence of namespaces, any global name in C tends to be very
 long. And because of the absence of overloading, they can even encode type
 names in their type.
 
@@ -288,7 +288,7 @@ could be translated:
 .. code-block:: ada
 
     package Register_Interface is
-       Procedure Initialize(Size : Integer)
+       procedure Initialize(Size : Integer)
     end Register_Interface;
 
     Register_Interface.Initialize (15);
@@ -303,7 +303,7 @@ The first thing to ask when translating pointers from C to Ada is: are they
 needed in the first place? In Ada, pointers (or access types) should only be
 used with complex structures that cannot be allocated at run-time |mdash| think
 of a linked list or a graph for example. There are many other situations that
-would need a pointer in C but doesn't in Ada, in particular:
+would need a pointer in C, but do not in Ada, in particular:
 
 - Arrays, even when dynamically allocated
 
@@ -315,17 +315,17 @@ would need a pointer in C but doesn't in Ada, in particular:
 
 - ... others
 
-This is not to say that no pointers is used in these cases, but more often than
-not the pointer is hidden from the user and automatically handled by the code
-generated by the compiler, avoiding possible mistakes to be made. Generally
-speaking, it's good practise when looking at C code to start by analyzing how
+This is not to say that no pointers is used in these cases, but, more often than
+not, the pointer is hidden from the user and automatically handled by the code
+generated by the compiler, thus avoiding possible mistakes to be made. Generally
+speaking, when looking at C code, it's good practice to start by analyzing how
 many pointers are used and to translate as many as possible into *pointerless*
 Ada structures.
 
 Here are a few examples of such patterns |mdash| additional examples can be
-found through this document.
+found throughout this document.
 
-Dynamically allocated array can be directly allocated on the stack:
+Dynamically allocated arrays can be directly allocated on the stack:
 
 [C]
 
@@ -371,9 +371,9 @@ discriminant:
 With regards to parameter passing, usage mode (input / output) should be
 preferred to implementation mode (by copy or by reference). The Ada compiler
 will automatically pass a reference when needed. This works also for smaller
-objects that the compiler will copy in an out when needed. One of the advantage
-is that it clarifies the nature of the object, in particular differentiates
-arrays from scalars. For example:
+objects, so that the compiler will copy in an out when needed. One of the
+advantages of this approach is that it clarifies the nature of the object: in
+particular, it differentiates between arrays and scalars. For example:
 
 [C]
 
@@ -389,8 +389,8 @@ arrays from scalars. For example:
 
     procedure P (A : in out Integer; B : in out Arr);
 
-Most of the time, access to registers end up into some specific structures
-being mapped on to a specific location in memory. In Ada, this can be achieved
+Most of the time, access to registers end up in some specific structures
+being mapped onto a specific location in memory. In Ada, this can be achieved
 through an :ada:`Address` clause associated to a variable, for example:
 
 [C]
@@ -420,14 +420,14 @@ Bitwise Operations
 ~~~~~~~~~~~~~~~~~~
 
 Bitwise operations such as masks and shifts in Ada should be relatively rarely
-needed, and it's good practise when translating C code to consider alternative.
-In a lot of cases, these operations are used to insert several pieces of data
-into a larger structure. In Ada, this can be done by describing the structure
-layout at the type level through representation clauses, and then accessing
-this structure as any other.
+needed, and, when translating C code, it's good practice to consider
+alternatives. In a lot of cases, these operations are used to insert several
+pieces of data into a larger structure. In Ada, this can be done by describing
+the structure layout at the type level through representation clauses, and then
+accessing this structure as any other.
 
-The simpler example of the above is the case of an array of bytes representing
-various flags. In C, this would be done through masks, e.g.:
+This is the case of an array of bytes representing various flags. In C, this
+would be done through masks, e.g.:
 
 [C]
 
@@ -458,10 +458,10 @@ values:
         Flag_4 => True,
         others => False)
 
-Note the :ada:`Pack` directive for the array which guarantees that the array
+Note the :ada:`Pack` directive for the array, which guarantees that the array
 takes as little space as possible.
 
-It is also possible to map record on memory when additional control over the
+It is also possible to map records on memory when additional control over the
 representation is needed or more complex data are used:
 
 [C]
@@ -492,12 +492,12 @@ The benefit of using Ada structure instead of bitwise operations is threefold:
 
 - The code is simpler to read / write and less error-prone
 
-- Data are named
+- Individual fields are named
 
 - The compiler can run consistency checks (for example, check that the value
   indeed fit in the expected size).
 
-Note that in case where bitwise operators are needed, Ada provides modular
+Note that, in case where bitwise operators are needed, Ada provides modular
 types with :ada:`and`, :ada:`or` and :ada:`xor` operators. Further shifts
 operators can also be provided upon request through a :ada:`pragma`. So the
 above could also be literally translated to:

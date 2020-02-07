@@ -6,8 +6,8 @@ Performance considerations
 Overall expectations
 --------------------
 
-All in all, there should not be significant performances differences between
-code written in Ada and code written in C, provided that there are semantically
+All in all, there should not be significant performance differences between
+code written in Ada and code written in C, provided that they are semantically
 equivalent. Taking the current GNAT implementation and its GCC C counterpart
 for example, most of the code generation and optimization phases are shared
 between C and Ada |mdash| so there's not one compiler more efficient than the
@@ -101,8 +101,8 @@ respectively constrained by the discriminant :ada:`D1` and :ada:`D2`. The
 consequence is, however, that to access :ada:`F2`, the run-time needs to know
 how large :ada:`F1` is, which is dynamically constrained when creating an
 instance. Therefore, accessing to :ada:`F2` requires a computation involving
-:ada:`D1` which is slower than |mdash| say |mdash| two pointers in an C array
-that would point to two different arrays.
+:ada:`D1` which is slower than, let's say, two pointers in an C array that would
+point to two different arrays.
 
 Generally speaking, when values are used in data structures, it's useful to
 always consider where they're coming from, and if their value is static
