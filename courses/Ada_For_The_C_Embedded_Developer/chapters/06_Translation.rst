@@ -207,7 +207,7 @@ directly mapped to an Ada function returning an address:
     function F_Arr return System.Address;
     function F_Size return Integer;
 
-    F : Arr (0 .. F_Size - 1) with Address => F_Size;
+    F : Arr (0 .. F_Size - 1) with Address => F_Arr;
 
     G_Size : Integer;
     pragma Import (C, G_Size, "g_size");
