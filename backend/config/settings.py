@@ -1,6 +1,7 @@
 import os
 
 class BaseConfig():
+    FLASK_ENV = 'production'
     TESTING = False
     DEBUG = False
     TASK_TIME_LIMIT = 30
@@ -10,6 +11,8 @@ class BaseConfig():
 
     CELERY_BROKER = os.environ.get('RABBITMQ_BROKER', 'pyamqp://guest@localhost//')
     CELERY_RESULT_BACKEND = os.environ.get('RABBITMQ_RESULTS_BACKEND', 'rpc://')
+
+    SECRET_KEY = os.environ.get('FLASK_SECRET_KEY', None)
 
 
 class DevConfig(BaseConfig):

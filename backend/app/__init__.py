@@ -7,6 +7,19 @@ from .widget import widget_routes, tasks, celery
 logger = logging.getLogger(__name__)
 
 
+####### Remove these ###############
+import getpass
+import os
+import pprint
+####################################
+
+config_dict = {
+    "development": "config.DevConfig",
+    "production": "config.ProductionConfig",
+    "testing": "config.TestConfig"
+}
+
+
 def create_celery():
     """
     Entry point for a celery works
@@ -38,9 +51,18 @@ def create(mode='app'):
 
     app = Flask(__name__, instance_relative_config=False)
 
-    app.config.from_object('config')
+    ####### Remove these ###############
+    env_var = os.environ
+    print("User's Environment variable:")
+    username = getpass.getuser()
+    print(f"Username: {username}")
+    pprint.pprint(dict(env_var), width = 1)
+    ####################################
 
-    app.logger.debug(f'Starting {mode} in {config.APP_ENV} environment')
+    config_name = os.getenv('FLASK_CONFIGURATION', 'development')
+    app.config.from_object(config_dict[config_name])
+
+    app.logger.info(f'Starting {mode} in {config.APP_ENV} environment')
     configure_celery(app, tasks.celery)
 
     # register blueprints
@@ -60,7 +82,7 @@ def configure_celery(app, celery):
     :param celery:
         The celery object to configure
     """
-    app.logger.debug('Configuring Celery')
+    app.logger.info('Configuring Celery')
     # set broker url and result backend from app config
     celery.conf.update(config.as_dict())
 
