@@ -102,7 +102,7 @@ local: cleanall pdf_books
 
 # Build the site pointing to 'cloudchecker.r53.adacore.com'
 site: cleanall pdf_books
-	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" $(SPHINXBUILD) -M html "../" \
+	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html "../" \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 site-staging: cleanall pdf_books

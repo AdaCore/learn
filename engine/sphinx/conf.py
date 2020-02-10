@@ -84,6 +84,12 @@ language = None
 # This pattern also affects html_static_path and html_extra_path .
 exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content']
 
+# Exclude internal and unfinished material from final site build
+if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
+    exclude_patterns += ['**internal/**',
+                         '**courses/advanced-ada/**',
+                         '**courses/advanced-spark/**']
+
 show_authors = True
 
 # The name of the Pygments (syntax highlighting) style to use.
