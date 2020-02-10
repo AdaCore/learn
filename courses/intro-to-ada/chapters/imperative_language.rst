@@ -500,11 +500,31 @@ in the program, and statements, which perform the processing.
 The areas in the program where declarations may appear are known
 as declarative regions.
 
--  In any subprogram, the section between the
-   :ada:`is` and the :ada:`begin` is a declarative region.
+In any subprogram, the section between the :ada:`is` and the :ada:`begin` is a
+declarative region. You can have variables, constants, types, inner subprograms,
+and other entities there.
 
--  You can have variables, constants, types, inner subprograms, and other
-   entities there. For example:
+We've briefly mentioned variable declarations in previous subsection. Let's look
+at a simple example, where we declare an integer variable :ada:`X` in the
+declarative region and perform an initialization and an addition on it:
+
+.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Variable_Declaration
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       X : Integer;
+    begin
+       X := 0;
+       Put_Line ("The initial value of X is " & Integer'Image (X));
+
+       Put_Line ("Performing operation on X...");
+       X := X + 1;
+
+       Put_Line ("The value of X now is " & Integer'Image (X));
+    end Main;
+
+Let's look at an example of a nested procedure:
 
 .. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Nested_Procedure
 
@@ -520,10 +540,9 @@ as declarative regions.
        --  Call to Nested
     end Main;
 
--  A declaration cannot appear as a statement if you
-   need to declare a local variable amidst the statements,
-   you can introduce a new declarative region with a block
-   statement:
+A declaration cannot appear as a statement if you need to declare a local
+variable amidst the statements, you can introduce a new declarative region with
+a block statement:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_6
 
