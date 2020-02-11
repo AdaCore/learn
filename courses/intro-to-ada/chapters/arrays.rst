@@ -675,3 +675,122 @@ subtype, constrained by the bounds of the slice.
 .. ?? Somewhere it should be noted that Ada allows multidimensional arrays
 .. ?? The 'attention' note is the 1st implication that Ada supports more
 .. ?? than one-dimensional arrays
+
+Renaming
+--------
+
+Objects can be renamed by using the :ada:`renames` keyword. This allows for
+creating alternative names for these objects. Let's look at a simple example:
+
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Variable_Renaming
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       Some_Variable_With_Long_Name : Float;
+
+       X : Float renames Some_Variable_With_Long_Name;
+    begin
+        X := 5.0;
+
+        Put_Line (Float'Image (X));
+        Put_Line (Float'Image (Some_Variable_With_Long_Name));
+
+        X := X + 2.5;
+
+        Put_Line (Float'Image (X));
+        Put_Line (Float'Image (Some_Variable_With_Long_Name));
+    end Main;
+
+In the example above, we declare a variable :ada:`X` by renaming
+:ada:`Some_Variable_With_Long_Name`. As you can see by running this example,
+both :ada:`Some_Variable_With_Long_Name` and its alternative name :ada:`X` have
+the same values:
+
+- first, they show the value 5.0
+- after the addition, they show the value 7.5.
+
+This is because they are essentialy referring to the same object, but with two
+different names.
+
+Renaming can be useful for improving the readability of more complicated array
+indexing. Instead of explicitly using indices every time we're accessing certain
+positions of the array, we can create shorter names for these positions by
+renaming them. Let's look at the following example:
+
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Reverse_Colors
+
+    package Colors is
+
+       type Color is (Black, Red, Green, Blue, White);
+
+       type Color_Array is array (Positive range <>) of Color;
+
+       procedure Reverse_It (X : in out Color_Array);
+
+    end Colors;
+
+    package body Colors is
+
+       procedure Reverse_It (X : in out Color_Array) is
+       begin
+          for I in X'First .. (X'Last + X'First) / 2 loop
+             declare
+                Tmp     : Color;
+                X_Left  : Color renames X (I);
+                X_Right : Color renames X (X'Last + X'First - I);
+             begin
+                Tmp     := X_Left;
+                X_Left  := X_Right;
+                X_Right := Tmp;
+             end;
+          end loop;
+       end Reverse_It;
+
+    end Colors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Colors; use Colors;
+
+    procedure Test_Reverse_Colors is
+
+       My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
+
+    begin
+       for C of My_Colors loop
+          Put_Line ("My_Color: " & Color'Image (C));
+       end loop;
+
+       New_Line;
+       Put_Line ("Reversing My_Color...");
+       New_Line;
+       Reverse_It (My_Colors);
+
+       for C of My_Colors loop
+          Put_Line ("My_Color: " & Color'Image (C));
+       end loop;
+
+    end Test_Reverse_Colors;
+
+In the example above, package :ada:`Colors` implements the procedure
+:ada:`Reverse_It` by declaring new names for two positions of the array. The
+actual implementation becomes easy to read:
+
+.. code-block:: ada
+
+    begin
+       Tmp     := X_Left;
+       X_Left  := X_Right;
+       X_Right := Tmp;
+    end;
+
+Compare this to the alternative version without renaming:
+
+.. code-block:: ada
+
+    begin
+       Tmp                      := X (I);
+       X (I)                    := X (X'Last + X'First - I);
+       X (X'Last + X'First - I) := Tmp;
+    end;
