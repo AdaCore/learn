@@ -1,7 +1,7 @@
 Strongly typed language
 =======================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
+:code-config:`run_button=True;reset_accumulator=True;accumulate_code=False`
 
 .. include:: ../../global.txt
 
