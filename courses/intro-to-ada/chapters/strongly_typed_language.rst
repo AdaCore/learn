@@ -658,3 +658,54 @@ an exception will be raised.
        --         ^ Wrong value for the subtype
        --           Compiles, but exception at runtime
     end Greet;
+
+Type aliases
+------------
+
+Previously, we've seen that we can create new types by declaring
+:ada:`type Miles is new Float`. We could also create type aliases, which
+generate alternative names |mdash| *aliases* |mdash| for known types. We achieve
+this by using subtypes. In this case, however, we don't get the benefits of
+Ada's strong type checking. Let's rewrite an example using type aliases:
+
+.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Undetected_Imperial_Metric_Error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Undetected_Imperial_Metric_Error is
+       --  Declare two type aliases
+       subtype Meters is Float;
+       subtype Miles is Float;
+
+       Dist_Imperial : Miles;
+
+       --  Declare a constant
+       Dist_Metric : constant Meters := 100.0;
+    begin
+       --  Not correct, but undetected:
+       Dist_Imperial := (Dist_Metric * 1609.0) / 1000.0;
+       Put_Line (Miles'Image (Dist_Imperial));
+    end Undetected_Imperial_Metric_Error;
+
+In the example above, the fact that both :ada:`Meters` and :ada:`Miles` are
+subtypes of :ada:`Float` allows us to mix variables of both types without
+type conversion. This, however, can lead to all sorts of programming mistakes
+that we'd like to avoid. Therefore, the recommendation is to use strong typing
+|mdash| via :ada:`type X is new Y` |mdash| for cases such as the one above.
+
+There are, however, many situations where type aliases are useful. For example,
+in an application that uses floating-point types in multiple contexts, we could
+use type aliases to indicate additional meaning to the types or to avoid long
+variable names. For example, instead of writing:
+
+.. code-block:: ada
+
+    Paid_Amount, Due_Amount : Float;
+
+We could write:
+
+.. code-block:: ada
+
+    subtype Amount is Float;
+
+    Paid, Due : Amount;
