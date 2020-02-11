@@ -450,12 +450,12 @@ system. Let's look at an example:
 .. code:: ada project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
 
     procedure A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed
-      (A_Message: String);
+      (A_Message : String);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed
-      (A_Message: String) is
+      (A_Message : String) is
     begin
        Put_Line (A_Message);
     end A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
