@@ -17,22 +17,19 @@ by using the keyword :ada:`generic`. For example:
 
 .. raph-amiard: We are lacking a definition/link of metaprogramming.
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Simple_Generic
+.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Simple_Generic
 
-    procedure Show_Simple_Generic is
+    generic
+       type T is private;
+       --  Declaration of formal types and objects
+    --  Below, we could use one of the following:
+    --  <procedure | function | package>
+    procedure Operator (Dummy : in out T);
 
-       generic
-          type T is private;
-          --  Declaration of formal types and objects
-       procedure Operator (X : in out T);
-       --  This could be one of the following:
-       --  <procedure | function | package>
-
-       procedure Operator (X : in out T) is null;
-
+    procedure Operator (Dummy : in out T) is
     begin
        null;
-    end Show_Simple_Generic;
+    end Operator;
 
 Formal type declaration
 -----------------------
@@ -42,21 +39,18 @@ want to create an algorithm that works on any integer type, or even on
 any type at all, whether a numeric type or not. The following example
 declares a formal type :ada:`T` for the :ada:`Set` procedure.
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Formal_Type_Declaration
+.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Type_Declaration
 
-    procedure Show_Formal_Type_Declaration is
+    generic
+       type T is private;
+       --  T is a formal type that indicates that any type can be used,
+       --  possibly a numeric type or possibly even a record type.
+    procedure Set (Dummy : T);
 
-       generic
-          type T is private;
-          --  T is a formal type that indicates that any type can be used,
-          --  possibly a numeric type or possibly even a record type.
-       procedure Set (E : T);
-
-       procedure Set (E : T) is null;
-
+    procedure Set (Dummy : T) is
     begin
        null;
-    end Show_Formal_Type_Declaration;
+    end;
 
 The declaration of :ada:`T` as :ada:`private` indicates that you can map
 any type to it. But you can also restrict the declaration to allow
@@ -79,21 +73,19 @@ Formal object declaration
 Formal objects are similar to subprogram parameters. They can reference
 formal types declared in the formal specification. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Formal_Object_Declaration
+.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Object_Declaration
 
-    procedure Show_Formal_Object_Declaration is
+    generic
+       type T is private;
+       X : in out T;
+       --  X can be used in the Set procedure
+    procedure Set (E : T);
 
-       generic
-          type T is private;
-          X : in out T;
-          --  X can be used in the Set procedure
-       procedure Set (E : T);
-
-       procedure Set (E : T) is null;
-
+    procedure Set (E : T) is
+       pragma Unreferenced (E, X);
     begin
        null;
-    end Show_Formal_Object_Declaration;
+    end Set;
 
 Formal objects can be either input parameters or specified using the
 :ada:`in out` mode.
@@ -105,23 +97,18 @@ We don't repeat the :ada:`generic` keyword for the body declaration of a
 generic subprogram or package.  Instead, we start with the actual
 declaration and use the generic types and objects we declared. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Generic_Body_Definition
+.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Generic_Body_Definition
 
-    procedure Show_Generic_Body_Definition is
+    generic
+       type T is private;
+       X : in out T;
+    procedure Set (E : T);
 
-       generic
-          type T is private;
-          X : in out T;
-       procedure Set (E : T);
-
-       procedure Set (E : T) is
-       --  Body definition: "generic" keyword is not used
-       begin
-          X := E;
-       end Set;
+    procedure Set (E : T) is
+    --  Body definition: "generic" keyword is not used
     begin
-       null;
-    end Show_Generic_Body_Definition;
+       X := E;
+    end Set;
 
 Generic instantiation
 ---------------------
@@ -132,20 +119,21 @@ shown in the following example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Generic_Instantiation
 
+    generic
+       type T is private;
+       X : in out T;
+       --  X can be used in the Set procedure
+    procedure Set (E : T);
+
+    procedure Set (E : T) is
+    begin
+       X := E;
+    end Set;
+
     with Ada.Text_IO; use Ada.Text_IO;
+    with Set;
 
     procedure Show_Generic_Instantiation is
-
-       generic
-          type T is private;
-          X : in out T;
-          --  X can be used in the Set procedure
-       procedure Set (E : T);
-
-       procedure Set (E : T) is
-       begin
-          X := E;
-       end Set;
 
        Main    : Integer := 0;
        Current : Integer;
@@ -184,50 +172,50 @@ Here's an example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Generic_Package
 
+    generic
+       type T is private;
+    package Element is
+
+       procedure Set (E : T);
+       procedure Reset;
+       function Get return T;
+       function Is_Valid return Boolean;
+
+       Invalid_Element : exception;
+
+    private
+       Value : T;
+       Valid : Boolean := False;
+    end Element;
+
+    package body Element is
+
+       procedure Set (E : T) is
+       begin
+          Value := E;
+          Valid := True;
+       end Set;
+
+       procedure Reset is
+       begin
+          Valid := False;
+       end Reset;
+
+       function Get return T is
+       begin
+          if not Valid then
+             raise Invalid_Element;
+          end if;
+          return Value;
+       end Get;
+
+       function Is_Valid return Boolean is (Valid);
+    end Element;
+
     with Ada.Text_IO; use Ada.Text_IO;
+    with Element;
 
     procedure Show_Generic_Package is
-
-       generic
-          type T is private;
-       package Element is
-
-          procedure Set (E : T);
-          procedure Reset;
-          function Get return T;
-          function Is_Valid return Boolean;
-
-          Invalid_Element : exception;
-
-       private
-          Value : T;
-          Valid : Boolean := False;
-       end Element;
-
-       package body Element is
-
-          procedure Set (E : T) is
-          begin
-             Value := E;
-             Valid := True;
-          end Set;
-
-          procedure Reset is
-          begin
-             Valid := False;
-          end Reset;
-
-          function Get return T is
-          begin
-             if not Valid then
-                raise Invalid_Element;
-             end if;
-             return Value;
-          end Get;
-
-          function Is_Valid return Boolean is (Valid);
-
-       end Element;
 
        package I is new Element (T => Integer);
 
@@ -275,28 +263,30 @@ used by the generic procedure :ada:`Check`.
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Formal_Subprogram
 
+    generic
+       Description : String;
+       type T is private;
+       with function Comparison (X, Y : T) return Boolean;
+    procedure Check (X, Y : T);
+
     with Ada.Text_IO; use Ada.Text_IO;
 
+    procedure Check (X, Y : T) is
+       Result : Boolean;
+    begin
+       Result := Comparison (X, Y);
+       if Result then
+          Put_Line ("Comparison (" & Description &
+                    ") between arguments is OK!");
+       else
+          Put_Line ("Comparison (" & Description &
+                    ") between arguments is not OK!");
+       end if;
+    end Check;
+
+    with Check;
+
     procedure Show_Formal_Subprogram is
-
-       generic
-          Description : String;
-          type T is private;
-          with function Comparison (X, Y : T) return Boolean;
-       procedure Check (X, Y : T);
-
-       procedure Check (X, Y : T) is
-          Result : Boolean;
-       begin
-          Result := Comparison (X, Y);
-          if Result then
-             Put_Line ("Comparison (" & Description &
-                       ") between arguments is OK!");
-          else
-             Put_Line ("Comparison (" & Description &
-                       ") between arguments is not OK!");
-          end if;
-       end Check;
 
        A, B : Integer;
 
@@ -323,69 +313,70 @@ A typical example of an ADT is a stack:
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Stack
 
+    generic
+       Max : Positive;
+       type T is private;
+    package Stacks is
+
+       type Stack is limited private;
+
+       Stack_Underflow, Stack_Overflow : exception;
+
+       function Is_Empty (S : Stack) return Boolean;
+
+       function Pop (S : in out Stack) return T;
+
+       procedure Push (S : in out Stack; V : T);
+
+    private
+
+       type Stack_Array is array (Natural range <>) of T;
+
+       Min : constant := 1;
+
+       type Stack is record
+          Container : Stack_Array (Min .. Max);
+          Top       : Natural := Min - 1;
+       end record;
+
+    end Stacks;
+
+    package body Stacks is
+
+       function Is_Empty (S : Stack) return Boolean is
+         (S.Top < S.Container'First);
+
+       function Is_Full (S : Stack) return Boolean is
+         (S.Top >= S.Container'Last);
+
+       function Pop (S : in out Stack) return T is
+       begin
+          if Is_Empty (S) then
+             raise Stack_Underflow;
+          else
+             return X : T do
+                X     := S.Container (S.Top);
+                S.Top := S.Top - 1;
+             end return;
+          end if;
+       end Pop;
+
+       procedure Push (S : in out Stack; V : T) is
+       begin
+          if Is_Full (S) then
+             raise Stack_Overflow;
+          else
+             S.Top               := S.Top + 1;
+             S.Container (S.Top) := V;
+          end if;
+       end Push;
+
+    end Stacks;
+
     with Ada.Text_IO; use Ada.Text_IO;
+    with Stacks;
 
     procedure Show_Stack is
-
-       generic
-          Max : Positive;
-          type T is private;
-       package Stacks is
-
-          type Stack is limited private;
-
-          Stack_Underflow, Stack_Overflow : exception;
-
-          function Is_Empty (S : Stack) return Boolean;
-
-          function Pop (S : in out Stack) return T;
-
-          procedure Push (S : in out Stack; V : T);
-
-       private
-
-          type Stack_Array is array (Natural range <>) of T;
-
-          Min : constant := 1;
-
-          type Stack is record
-             Container : Stack_Array (Min .. Max);
-             Top       : Natural := Min - 1;
-          end record;
-
-       end Stacks;
-
-       package body Stacks is
-
-          function Is_Empty (S : Stack) return Boolean is
-            (S.Top < S.Container'First);
-
-          function Is_Full (S : Stack) return Boolean is
-            (S.Top >= S.Container'Last);
-
-          function Pop (S : in out Stack) return T is
-          begin
-             if Is_Empty (S) then
-                raise Stack_Underflow;
-             else
-                return X : T do
-                   X     := S.Container (S.Top);
-                   S.Top := S.Top - 1;
-                end return;
-             end if;
-          end Pop;
-
-          procedure Push (S : in out Stack; V : T) is
-          begin
-             if Is_Full (S) then
-                raise Stack_Overflow;
-             else
-                S.Top               := S.Top + 1;
-                S.Container (S.Top) := V;
-             end if;
-          end Push;
-
-       end Stacks;
 
        package Integer_Stacks is new Stacks (Max => 10,
                                              T   => Integer);
@@ -411,12 +402,13 @@ Let's look at a simple procedure that swaps variables of type
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Swap_Colors
 
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Test_Non_Generic_Swap_Colors is
+    package Colors is
        type Color is (Black, Red, Green, Blue, White);
 
        procedure Swap_Colors (X, Y : in out Color);
+    end Colors;
+
+    package body Colors is
 
        procedure Swap_Colors (X, Y : in out Color) is
           Tmp : constant Color := X;
@@ -425,6 +417,12 @@ Let's look at a simple procedure that swaps variables of type
           Y := Tmp;
        end Swap_Colors;
 
+    end Colors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Colors;      use Colors;
+
+    procedure Test_Non_Generic_Swap_Colors is
        A, B, C : Color;
     begin
        A := Blue;
@@ -459,24 +457,31 @@ type due to the declaration of formal type :ada:`T`.
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Swap_Colors
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    generic
+       type T is private;
+    procedure Generic_Swap (X, Y : in out T);
 
-    procedure Test_Swap_Colors is
-       generic
-          type T is private;
-       procedure Generic_Swap (X, Y : in out T);
+    procedure Generic_Swap (X, Y : in out T) is
+       Tmp : constant T := X;
+    begin
+       X := Y;
+       Y := Tmp;
+    end Generic_Swap;
 
-       procedure Generic_Swap (X, Y : in out T) is
-          Tmp : constant T := X;
-       begin
-          X := Y;
-          Y := Tmp;
-       end Generic_Swap;
+    with Generic_Swap;
+
+    package Colors is
 
        type Color is (Black, Red, Green, Blue, White);
 
        procedure Swap_Colors is new Generic_Swap (T => Color);
 
+    end Colors;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Colors;       use Colors;
+
+    procedure Test_Swap_Colors is
        A, B, C : Color;
     begin
        A := Blue;
@@ -514,14 +519,17 @@ type:
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Reverse_Colors
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    package Colors is
 
-    procedure Test_Non_Generic_Reverse_Colors is
        type Color is (Black, Red, Green, Blue, White);
 
        type Color_Array is array (Integer range <>) of Color;
 
        procedure Reverse_Color_Array (X : in out Color_Array);
+
+    end Colors;
+
+    package body Colors is
 
        procedure Reverse_Color_Array (X : in out Color_Array) is
        begin
@@ -537,6 +545,13 @@ type:
              end;
           end loop;
        end Reverse_Color_Array;
+
+    end Colors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Colors;      use Colors;
+
+    procedure Test_Non_Generic_Reverse_Colors is
 
        My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
 
@@ -575,35 +590,44 @@ This is a generic version of the algorithm:
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Reverse_Colors
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    generic
+       type T is private;
+       type Index is range <>;
+       type Array_T is array (Index range <>) of T;
+    procedure Generic_Reverse_Array (X : in out Array_T);
 
-    procedure Test_Reverse_Colors is
-       generic
-          type T is private;
-          type Index is range <>;
-          type Array_T is array (Index range <>) of T;
-       procedure Generic_Reverse_Array (X : in out Array_T);
+    procedure Generic_Reverse_Array (X : in out Array_T) is
+    begin
+       for I in X'First .. (X'Last + X'First) / 2 loop
+          declare
+             Tmp     : T;
+             X_Left  : T renames X (I);
+             X_Right : T renames X (X'Last + X'First - I);
+          begin
+             Tmp     := X_Left;
+             X_Left  := X_Right;
+             X_Right := Tmp;
+          end;
+       end loop;
+    end Generic_Reverse_Array;
 
-       procedure Generic_Reverse_Array (X : in out Array_T) is
-       begin
-          for I in X'First .. (X'Last + X'First) / 2 loop
-             declare
-                Tmp     : T;
-                X_Left  : T renames X (I);
-                X_Right : T renames X (X'Last + X'First - I);
-             begin
-                Tmp     := X_Left;
-                X_Left  := X_Right;
-                X_Right := Tmp;
-             end;
-          end loop;
-       end Generic_Reverse_Array;
+    with Generic_Reverse_Array;
+
+    package Colors is
 
        type Color is (Black, Red, Green, Blue, White);
+
        type Color_Array is array (Integer range <>) of Color;
 
        procedure Reverse_Color_Array is new Generic_Reverse_Array
          (T => Color, Index => Integer, Array_T => Color_Array);
+
+    end Colors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Colors;      use Colors;
+
+    procedure Test_Reverse_Colors is
 
        My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
 
@@ -658,63 +682,71 @@ Here is a version of the test application making use of the generic
 
 .. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Reverse_Colors_2
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    generic
+       type T is private;
+       type Index is range <>;
+       type Array_T is array (Index range <>) of T;
+    procedure Generic_Reverse_Array (X : in out Array_T);
 
-    procedure Test_Reverse_Colors is
+    procedure Generic_Reverse_Array (X : in out Array_T) is
+    begin
+       for I in X'First .. (X'Last + X'First) / 2 loop
+          declare
+             Tmp     : T;
+             X_Left  : T renames X (I);
+             X_Right : T renames X (X'Last + X'First - I);
+          begin
+             Tmp     := X_Left;
+             X_Left  := X_Right;
+             X_Right := Tmp;
+          end;
+       end loop;
+    end Generic_Reverse_Array;
 
-       generic
-          type T is private;
-          type Index is range <>;
-          type Array_T is array (Index range <>) of T;
-       procedure Generic_Reverse_Array (X : in out Array_T);
+    generic
+       type T is private;
+       type Index is range <>;
+       type Array_T is array (Index range <>) of T;
+       S : String;
+       with function Image (E : T) return String is <>;
+       with procedure Test (X : in out Array_T);
+    procedure Perform_Test (X : in out Array_T);
 
-       generic
-          type T is private;
-          type Index is range <>;
-          type Array_T is array (Index range <>) of T;
-          S : String;
-          with function Image (E : T) return String is <>;
-          with procedure Test (X : in out Array_T);
-       procedure Perform_Test (X : in out Array_T);
+    with Ada.Text_IO;  use Ada.Text_IO;
 
-       procedure Generic_Reverse_Array (X : in out Array_T) is
-       begin
-          for I in X'First .. (X'Last + X'First) / 2 loop
-             declare
-                Tmp     : T;
-                X_Left  : T renames X (I);
-                X_Right : T renames X (X'Last + X'First - I);
-             begin
-                Tmp     := X_Left;
-                X_Left  := X_Right;
-                X_Right := Tmp;
-             end;
-          end loop;
-       end Generic_Reverse_Array;
+    procedure Perform_Test (X : in out Array_T) is
+    begin
+       for C of X loop
+          Put_Line (S & ": " & Image (C));
+       end loop;
 
-       procedure Perform_Test (X : in out Array_T) is
-       begin
-          for C of X loop
-             Put_Line (S & ": " & Image (C));
-          end loop;
+       New_Line;
+       Put_Line ("Testing " & S & "...");
+       New_Line;
+       Test (X);
 
-          New_Line;
-          Put_Line ("Testing " & S & "...");
-          New_Line;
-          Test (X);
+       for C of X loop
+          Put_Line (S & ": " & Image (C));
+       end loop;
+    end Perform_Test;
 
-          for C of X loop
-             Put_Line (S & ": " & Image (C));
-          end loop;
-       end Perform_Test;
+    with Generic_Reverse_Array;
+
+    package Colors is
 
        type Color is (Black, Red, Green, Blue, White);
+
        type Color_Array is array (Integer range <>) of Color;
 
-       procedure Reverse_Color_Array is new
-         Generic_Reverse_Array (T       => Color,
-                                Index   => Integer,
-                                Array_T => Color_Array);
+       procedure Reverse_Color_Array is new Generic_Reverse_Array
+         (T => Color, Index => Integer, Array_T => Color_Array);
+
+    end Colors;
+
+    with Colors;       use Colors;
+    with Perform_Test;
+
+    procedure Test_Reverse_Colors is
 
        procedure Perform_Test_Reverse_Color_Array is new
          Perform_Test (T       => Color,
