@@ -301,6 +301,116 @@ used by the generic procedure :ada:`Check`.
        Check_Is_Equal (A, B);
     end Show_Formal_Subprogram;
 
+Example: I/O instances
+----------------------
+
+Ada offers generic I/O packages that can be instatianted for standard and
+derived types. One example is the generic :ada:`Float_IO` package, which
+provides procedures such as :ada:`Put` and :ada:`Get`. In fact,
+:ada:`Float_Text_IO` |mdash| available from the standard library |mdash| is an
+instance of the :ada:`Float_IO` package, and it's defined as:
+
+.. code-block:: ada
+
+    with Ada.Text_IO;
+
+    package Ada.Float_Text_IO is new Ada.Text_IO.Float_IO (Float);
+
+You can use it directly with any object of floating-point type. For example:
+
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Float_Text_IO
+
+    with Ada.Float_Text_IO;
+
+    procedure Show_Float_Text_IO is
+       X : constant Float := 2.5;
+
+       use Ada.Float_Text_IO;
+    begin
+       Put (X);
+    end Show_Float_Text_IO;
+
+Instantiating generic I/O packages can be useful for derived types. For example,
+let's create a new type :ada:`Price` that must be displayed with two decimal
+digits after the point, and no exponent.
+
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Float_IO_Inst
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Float_IO_Inst is
+
+       type Price is digits 3;
+
+       package Price_IO is new Ada.Text_IO.Float_IO (Price);
+
+       P : Price;
+    begin
+       --  Set to zero => don't display exponent
+       Price_IO.Default_Exp  := 0;
+
+       P := 2.5;
+       Price_IO.Put (P);
+       New_Line;
+
+       P := 5.75;
+       Price_IO.Put (P);
+       New_Line;
+    end Show_Float_IO_Inst;
+
+By adjusting :ada:`Default_Exp` from the :ada:`Price_IO` instance to *remove*
+the exponent, we can control how variables of :ada:`Price` type are displayed.
+Just as a side note, we could also have written:
+
+.. code-block:: ada
+
+    -- [...]
+
+       type Price is new Float;
+
+       package Price_IO is new Ada.Text_IO.Float_IO (Price);
+
+    begin
+       Price_IO.Default_Aft  := 2;
+       Price_IO.Default_Exp  := 0;
+
+In this case, we're ajusting :ada:`Default_Aft`, too, to get two decimal digits
+after the point when calling :ada:`Put`.
+
+In addition to the generic :ada:`Float_IO` package, the following generic
+packages are available from :ada:`Ada.Text_IO`:
+
+- :ada:`Enumeration_IO` for enumeration types;
+- :ada:`Integer_IO` for integer types;
+- :ada:`Modular_IO` for modular types;
+- :ada:`Fixed_IO` for fixed-point types;
+- :ada:`Decimal_IO` for decimal types.
+
+In fact, we could rewrite the example above using decimal types:
+
+.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Decimal_IO_Inst
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_IO_Inst is
+
+       type Price is delta 10.0 ** (-2) digits 12;
+
+       package Price_IO is new Ada.Text_IO.Decimal_IO (Price);
+
+       P : Price;
+    begin
+       Price_IO.Default_Exp  := 0;
+
+       P := 2.5;
+       Price_IO.Put (P);
+       New_Line;
+
+       P := 5.75;
+       Price_IO.Put (P);
+       New_Line;
+    end Show_Decimal_IO_Inst;
+
 Example: ADTs
 -------------
 
