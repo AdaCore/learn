@@ -5,6 +5,8 @@ Standard library: Dates & Times
 
 .. include:: ../../global.txt
 
+.. _DatesTimes:
+
 Date and time handling
 ----------------------
 
