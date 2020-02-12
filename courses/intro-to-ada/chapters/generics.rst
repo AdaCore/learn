@@ -50,7 +50,7 @@ declares a formal type :ada:`T` for the :ada:`Set` procedure.
     procedure Set (Dummy : T) is
     begin
        null;
-    end;
+    end Set;
 
 The declaration of :ada:`T` as :ada:`private` indicates that you can map
 any type to it. But you can also restrict the declaration to allow
