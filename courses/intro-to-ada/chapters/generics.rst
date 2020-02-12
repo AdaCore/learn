@@ -34,7 +34,7 @@ by using the keyword :ada:`generic`. For example:
     end Show_Simple_Generic;
 
 Formal type declaration
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 Formal types are abstractions of a specific type. For example, we may
 want to create an algorithm that works on any integer type, or even on
@@ -73,7 +73,7 @@ examples:
 +-------------------------+---------------------------------------------+
 
 Formal object declaration
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 Formal objects are similar to subprogram parameters. They can reference
 formal types declared in the formal specification. For example:
@@ -98,7 +98,7 @@ Formal objects can be either input parameters or specified using the
 :ada:`in out` mode.
 
 Generic body definition
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 We don't repeat the :ada:`generic` keyword for the body declaration of a
 generic subprogram or package.  Instead, we start with the actual
@@ -123,7 +123,7 @@ declaration and use the generic types and objects we declared. For example:
     end Show_Generic_Body_Definition;
 
 Generic instantiation
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 Generic subprograms or packages can't be used directly. Instead, they
 need to be instantiated, which we do using the :ada:`new` keyword, as
@@ -171,7 +171,7 @@ the :ada:`Integer` type and the :ada:`Main` variable.
 
 
 Generic packages
-~~~~~~~~~~~~~~~~
+----------------
 
 The previous examples focused on generic subprograms. In this section,
 we look at generic packages. The syntax is similar to that used for
@@ -262,7 +262,7 @@ After writing package definition, we create the instance :ada:`I` of the
 (:ada:`Set`, :ada:`Reset`, and :ada:`Get`).
 
 Formal subprograms
-~~~~~~~~~~~~~~~~~~
+------------------
 
 In addition to formal types and objects, we can also declare formal
 subprograms or packages. This course only describes formal subprograms;
@@ -310,14 +310,8 @@ used by the generic procedure :ada:`Check`.
        Check_Is_Equal (A, B);
     end Show_Formal_Subprogram;
 
-Examples of using generics
---------------------------
-
-In this section, we look at examples and strategies for abstracting
-algorithms using generics.
-
-Application: ADTs
-~~~~~~~~~~~~~~~~~
+Example: ADTs
+-------------
 
 An important application of generics is to model abstract data types
 (ADTs). In fact, Ada includes a library with numerous ADTs using
@@ -408,8 +402,8 @@ A typical example of an ADT is a stack:
 In this example, we first create a generic stack package (:ada:`Stacks`)
 and then instantiate it to create a stack of 10 integer values.
 
-Abstracting a swap algorithm
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example: Swap
+-------------
 
 Let's look at a simple procedure that swaps variables of type
 :ada:`Color`:
@@ -508,8 +502,8 @@ declaring it as an instance of the generic :ada:`Generic_Swap` procedure. We
 specify that the generic :ada:`T` type will be mapped to the :ada:`Color` type
 by passing it as an argument to the :ada:`Generic_Swap` instantiation,
 
-Abstracting a reversing algorithm
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example: Reversing
+------------------
 
 The previous example, with an algorithm to swap two values, is one of the
 simplest examples of using generics. Next we study an algorithm for
@@ -637,8 +631,8 @@ As mentioned above, we're abstracting three components of the algorithm:
     - the :ada:`Array_T` type abstracts the array type and uses the
       formal declarations of the :ada:`T` and :ada:`Index` types.
 
-Abstracting the test application
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example: Test application
+-------------------------
 
 In the previous example we've focused only on abstracting the reversing
 algorithm itself. However, we could have decided to also abstract our small
