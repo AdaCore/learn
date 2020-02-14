@@ -6,13 +6,6 @@ from .widget import widget_routes, tasks, celery
 
 logger = logging.getLogger(__name__)
 
-
-####### Remove these ###############
-import getpass
-import os
-import pprint
-####################################
-
 config_dict = {
     "development": "config.settings.DevConfig",
     "production": "config.settings.ProductionConfig",
@@ -50,14 +43,6 @@ def create(mode='app'):
     assert mode in ('app', 'celery'), f'bad mode "{mode}"'
 
     app = Flask(__name__, instance_relative_config=False)
-
-    ####### Remove these ###############
-    env_var = os.environ
-    print("User's Environment variable:")
-    username = getpass.getuser()
-    print(f"Username: {username}")
-    pprint.pprint(dict(env_var), width = 1)
-    ####################################
 
     config_name = os.getenv('FLASK_CONFIGURATION', 'development')
     app.config.from_object(config_dict[config_name])
