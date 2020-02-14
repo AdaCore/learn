@@ -1,10 +1,6 @@
 import json
 import logging
 
-from celery.messaging import establish_connection
-from kombu.compat import Publisher
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -37,7 +33,7 @@ class MQReporter:
         Reports lab data to flask uncached
     """
 
-    def __init__(self, task_id, lab_ref=None):
+    def __init__(self, app, task_id, lab_ref=None):
         """
         Constructor for MQReporter class
         :param task_id:
@@ -53,11 +49,8 @@ class MQReporter:
             "console": ""
         }
 
-        self.connection = establish_connection()
-        self.publisher = Publisher(connection=self.connection,
-                                   exchange="learn",
-                                   routing_key=task_id,
-                                   exchange_type="direct")
+        self.app = app
+        self.task_id = task_id
 
     def __del__(self):
         """
@@ -66,8 +59,6 @@ class MQReporter:
         for key, value in self.cache.items():
             if value != "":
                 self.__send(value, key)
-        self.publisher.close()
-        self.connection.close()
 
     def __cache_send(self, msg, tag):
         """
@@ -120,7 +111,10 @@ class MQReporter:
         obj_str = json.dumps(obj)
 
         logger.debug(f"Updating status with msg:{obj_str}")
-        self.publisher.send(obj_str)
+        with self.app.connection_or_acquire() as conn:
+            queue = conn.SimpleQueue(self.task_id)
+            queue.put(obj_str)
+            queue.close()
 
     def stdout(self, msg):
         """

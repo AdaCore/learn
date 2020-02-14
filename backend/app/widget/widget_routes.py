@@ -2,13 +2,13 @@ from flask import Blueprint, make_response, request, send_file
 from flask import current_app as app
 from flask_cors import CORS
 
-from celery.messaging import establish_connection
-from kombu.compat import Consumer
+from queue import Empty
+from kombu import Queue
 
 import json
 import sys
 
-from . import tasks
+from . import tasks, celery
 from .project import Project
 
 widget_bp = Blueprint('widget_bp', __name__)
@@ -88,19 +88,18 @@ def check_run():
 
     # Create a connection to the message queue associated with the task id
     # This is how we receive intermediate results from the task during run
-    connection = establish_connection()
-    consumer = Consumer(connection=connection,
-                        queue=data['identifier'],
-                        exchange="learn",
-                        routing_key=data['identifier'],
-                        exchange_type="direct")
-
-    # Read messages from the message queue
     output = []
-    for msg in consumer.iterqueue():
-        app.logger.debug(f"Reading {msg.body} from mq")
-        output.append(msg.body)
-        msg.ack()
+    with celery.connection_or_acquire() as conn:
+        queue = conn.SimpleQueue(data['identifier'])
+        while True:
+            try:
+                msg = queue.get(block=False)
+                app.logger.debug(f"Reading {msg.body} from mq")
+                output.append(msg.body)
+                msg.ack()
+            except Empty:
+                break
+        queue.close()
 
     app.logger.debug(f"output {output}")
 

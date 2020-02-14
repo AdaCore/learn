@@ -207,7 +207,7 @@ class RemoteProject(Project):
             Submits the project against the lab_list data. This will run the project against each test case and
             aggregate the results
         """
-    def __init__(self, container, task_id, files, spark_mode=False):
+    def __init__(self, app, container, task_id, files, spark_mode=False):
         """
         Constructs the RemoteProject. Calls the super constructor and creates local_tempd and remote_tempd directories
         and pushes files to the container.
@@ -222,6 +222,7 @@ class RemoteProject(Project):
         """
         self.task_id = task_id
         self.container = container
+        self.app = app
 
         # Call the Project constructor
         super().__init__(files, spark_mode)
@@ -249,7 +250,7 @@ class RemoteProject(Project):
         :return:
             Returns the status code returned from the build
         """
-        rep = MQReporter(self.task_id)
+        rep = MQReporter(self.app, self.task_id)
         rep.console(["gprbuild", "-q", "-P", self.gpr.get_name(), "-gnatwa"])
 
         main_path = os.path.join(self.remote_tempd, self.gpr.get_name())
@@ -282,7 +283,7 @@ class RemoteProject(Project):
             else:
                 cli = self.cli
 
-        rep = MQReporter(self.task_id, lab_ref=lab_ref)
+        rep = MQReporter(self.app, self.task_id, lab_ref=lab_ref)
         rep.console([f"./{self.main}", " ".join(cli)])
 
         exe = os.path.join(self.remote_tempd, self.main)
@@ -305,7 +306,7 @@ class RemoteProject(Project):
         if not self.spark:
             raise ProveError("Project not configured for spark mode")
 
-        rep = MQReporter(self.task_id)
+        rep = MQReporter(self.app, self.task_id)
         rep.console(["gnatprove", "-P", self.gpr.get_name(), "--checks-as-errors", "--level=0", "--no-axiom-guard"] + extra_args)
 
         prove_path = os.path.join(self.remote_tempd, self.gpr.get_name())
@@ -335,6 +336,6 @@ class RemoteProject(Project):
 
         # Get the results from the test cases
         results = self.lab_list.get_results()
-        rep = MQReporter(self.task_id)
+        rep = MQReporter(self.app, self.task_id)
         # Check to make sure all the test cases passed and send results to reporter
         rep.lab(all(successes), results)

@@ -26,28 +26,29 @@ def run_program(self, data):
     container = Container(celery.conf['CONTAINER_NAME'])
     task_id = self.request.id
     mode = data['mode']
+    app = self._app
 
     try:
         if mode == "run":
-            project = RemoteProject(container, task_id, data['files'])
+            project = RemoteProject(app, container, task_id, data['files'])
             project.build()
             code, out = project.run()
         elif mode == "submit":
-            project = RemoteProject(container, task_id, data['files'])
+            project = RemoteProject(app, container, task_id, data['files'])
             project.build()
             project.submit()
             code = 0
         elif mode == "compile":
-            project = RemoteProject(container, task_id, data['files'])
+            project = RemoteProject(app, container, task_id, data['files'])
             code = project.build()
         elif mode == "prove":
-            project = RemoteProject(container, task_id, data['files'], True)
+            project = RemoteProject(app, container, task_id, data['files'], True)
             code = project.prove([])
         elif mode == "prove_flow":
-            project = RemoteProject(container, task_id, data['files'], True)
+            project = RemoteProject(app, container, task_id, data['files'], True)
             code = project.prove(["--mode=flow"])
         elif mode == "prove_report_all":
-            project = RemoteProject(container, task_id, data['files'], True)
+            project = RemoteProject(app, container, task_id, data['files'], True)
             code = project.prove(["--report=all"])
         else:
             raise Exception("Mode not implemented")
