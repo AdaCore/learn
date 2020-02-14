@@ -72,6 +72,10 @@ def configure_celery(app, celery):
 
     # set broker url and result backend from app config
     celery.conf.update(app.config)
+    celery.conf.update(
+        broker_url = os.environ.get('RABBITMQ_BROKER', 'pyamqp://guest@localhost//'),
+        result_backend = os.environ.get('RABBITMQ_RESULTS_BACKEND', 'rpc://')
+    )
 
     # subclass task base for app context
     # https://flask.palletsprojects.com/en/1.1.x/patterns/celery/

@@ -9,9 +9,6 @@ class BaseConfig():
     # Container settings
     CONTAINER_NAME = "safecontainer"
 
-    CELERY_BROKER_URL = os.environ.get('RABBITMQ_BROKER', 'pyamqp://guest@localhost//')
-    CELERY_RESULT_BACKEND = os.environ.get('RABBITMQ_RESULTS_BACKEND', 'rpc://')
-
     SECRET_KEY = os.environ.get('FLASK_SECRET_KEY', None)
 
 
