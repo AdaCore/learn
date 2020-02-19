@@ -56,7 +56,10 @@ class Container:
         # Get the container from lxd
         self.container = self.client.containers.get(self.name)
         logger.debug(f"Attached to lxd {self.name} with status {self.container.status}")
-        # TODO: check to see if the container is actually running
+
+        self.container.start(timeout=30, force=True, wait=True)
+        if self.container.status == "Stopped":
+            raise Exception(f"Cannot start lxd {self.name}")
 
     def push_files(self, files, dst):
         """
