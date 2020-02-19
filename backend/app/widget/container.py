@@ -58,9 +58,8 @@ class Container:
         logger.debug(f"Attached to lxd {self.name} with status {self.container.status}")
 
         try:
-            self.container.start(timeout=30, force=True, wait=True)
             if self.container.status == "Stopped":
-                raise Exception(f"Cannot start lxd {self.name}")
+                self.container.start(timeout=30, force=True, wait=True)
         except pylxd.exceptions.LXDAPIException as ex:
             raise Exception(f"PYLXD error: {ex}")
 
