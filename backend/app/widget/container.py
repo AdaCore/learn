@@ -57,9 +57,12 @@ class Container:
         self.container = self.client.containers.get(self.name)
         logger.debug(f"Attached to lxd {self.name} with status {self.container.status}")
 
-        self.container.start(timeout=30, force=True, wait=True)
-        if self.container.status == "Stopped":
-            raise Exception(f"Cannot start lxd {self.name}")
+        try:
+            self.container.start(timeout=30, force=True, wait=True)
+            if self.container.status == "Stopped":
+                raise Exception(f"Cannot start lxd {self.name}")
+        except pylxd.exceptions.LXDAPIException as ex:
+            raise Exception(f"PYLXD error: {ex}")
 
     def push_files(self, files, dst):
         """
