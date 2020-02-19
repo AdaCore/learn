@@ -94,7 +94,7 @@ class Container:
         """
         logger.debug(f"Running {env} {cmds} in {self.name}")
         if reporter:
-            exit_code, stdout, stderr = self.container.execute(cmds, env, stdout_handler=reporter.stdout, stderr_handler=reporter.stderr)
+            exit_code, stdout, stderr = self.container.execute(cmds, environment=env, stdout_handler=reporter.stdout, stderr_handler=reporter.stderr)
             if exit_code == INTERRUPT_RETURNCODE:
                 reporter.sterr(INTERRUPT_STRING)
             return exit_code, stdout, stderr
