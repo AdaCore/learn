@@ -531,3 +531,25 @@ By declaring elements in the body of a package, we can implement encapsulation
 in Ada. Those elements will only be visible in the package body, but nowhere
 else. This isn't, however, the only way to achieve encapsulation in Ada: we'll
 discuss other approaches in the :doc:`./privacy` chapter.
+
+Renaming
+--------
+
+Packages can be renamed by using the :ada:`renames` keyword. The following
+example renames the :ada:`Ada.Text_IO` package as :ada:`T_IO`:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Rename_Text_IO
+
+    with Ada.Text_IO;
+
+    procedure Main is
+       package T renames Ada.Text_IO;
+    begin
+       T.Put_Line ("Hello");
+    end Main;
+
+We can use renaming to improve the readability of our code by using shorter
+package names. In the example above, we write :ada:`T.Put_Line` instead of the
+longer version (:ada:`Ada.Text_IO.Put_Line`). This approach is especially
+useful when we don't :ada:`use` packages and want to avoid that the code
+becomes too verbose.
