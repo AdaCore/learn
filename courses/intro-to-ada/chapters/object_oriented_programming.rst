@@ -432,3 +432,84 @@ the dot notation. Any remaining parameter are passed normally:
     end Main;
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
+
+Private & Limited
+-----------------
+
+We've seen previously (in the :doc:`./privacy` chapter) that types can be
+declared limited or private. These encapsulation techniques can also be
+applied to tagged types, as we'll see in this section.
+
+This is an example of a tagged private type:
+
+.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Private_Types
+    :class: ada-syntax-only
+
+    package P is
+       type T is tagged private;
+    private
+       type T is tagged record
+           E : Integer;
+       end record;
+    end P;
+
+This is an example of a tagged limited type:
+
+.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Types
+    :class: ada-syntax-only
+
+    package P is
+       type T is tagged limited record
+           E : Integer;
+       end record;
+    end P;
+
+Naturally, you can combine both *limited* and *private* types and declare a
+tagged limited private type:
+
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Private_Types
+
+    package P is
+       type T is tagged limited private;
+
+       procedure Init (A : in out T);
+    private
+       type T is tagged limited record
+           E : Integer;
+       end record;
+    end P;
+
+    package body P is
+
+       procedure Init (A : in out T) is
+       begin
+          A.E := 0;
+       end Init;
+
+    end P;
+
+    with P; use P;
+
+    procedure Main is
+      T1, T2 : T;
+    begin
+      T1.Init;
+      T2.Init;
+
+      --  The following line doesn't work because type T is private:
+      --  T1.E := 0;
+
+      --  The following line doesn't work because type T is limited:
+      --  T2 := T1;
+    end Main;
+
+Note that the code in the :ada:`Main` procedure above presents two assignments
+that trigger compilation errors because type :ada:`T` is limited private.
+In fact, you cannot:
+
+- assign to :ada:`T1.E` directly because type :ada:`T` is private;
+
+- assign :ada:`T1` to :ada:`T2` because type :ada:`T` is limited.
+
+In this case, there's no distinction between tagged and non-tagged types: these
+compilation errors would also occur for non-tagged types.
