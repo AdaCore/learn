@@ -244,12 +244,11 @@ Child packages
 --------------
 
 Packages can be used to create hierarchies. We achieve this by using child
-packages, which are logically contained within their parent package. One
-example of a child package that we've been using so far is the
-:ada:`Ada.Text_IO` package. Here, the parent package is called :ada:`Ada`,
-while the child package is called :ada:`Text_IO`. In the previous examples,
-we've been using the :ada:`Put_Line` procedure from the :ada:`Text_IO` child
-package.
+packages, which extend the functionality of their parent package. One example
+of a child package that we've been using so far is the :ada:`Ada.Text_IO`
+package. Here, the parent package is called :ada:`Ada`, while the child package
+is called :ada:`Text_IO`. In the previous examples, we've been using the
+:ada:`Put_Line` procedure from the :ada:`Text_IO` child package.
 
 .. admonition:: Important
 
