@@ -12,7 +12,7 @@ Nested packages
 ---------------
 
 Nested packages, as the name suggests, are declared within a parent
-package. This contrasts with child packages, which are declared separately.
+package. This contrasts with child packages, which are declared independently.
 For example, this would be a nested package for the :ada:`Week` package:
 
 .. code:: ada no_button
@@ -71,15 +71,15 @@ We can now use elements from :ada:`Week.Nested` in a test application:
 
 Note that we cannot access the :ada:`Week.Nested` package directly using
 :ada:`with Week.Nested` because :ada:`Nested` is actually part of :ada:`Week`,
-not  a separate subunit. We can, however, still write :ada:`use Week.Nested`
+not a child package. We can, however, still write :ada:`use Week.Nested`
 |mdash| as we did in the example above.
 
 Visibility
 ~~~~~~~~~~
 
-Let's now discuss the same situation for nested packages. Because the body of
-nested packages is part of the body of their parent, nested packages have the
-same visibility as their parent package. Let's rewrite the previous example using
+Let's now discuss visibility of nested packages. Because the body of nested
+packages is part of the body of their parent, nested packages have the same
+visibility as their parent package. Let's rewrite the previous example using
 nested packages to illustrate this:
 
 .. code:: ada no_button
