@@ -348,7 +348,7 @@ implementation:
     end Week.Child.Grandchild;
 
 We can use this new :ada:`Grandchild` package in our test application in the
-same way as before: we can reuse the previous test applicaation and adapt the
+same way as before: we can reuse the previous test application and adapt the
 :ada:`with` and :ada:`use`, and the function call. This is the updated code:
 
 .. code:: ada
