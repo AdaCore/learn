@@ -3040,7 +3040,7 @@ Inventory
 
     --  START LAB IO BLOCK
     in 0:Inventory_Chk
-    out 0:==== ITEM #  1: Ballpoint Pen == BOUGHT Quantity:  10 Amount:    1.50 == SOLD Quantity:  4 Amount:    0.60 == IN STOCK Quantity:  6 Amount:    0.90  ==== ITEM #  2: Oil-based Pen Marker == BOUGHT Quantity:  20 Amount:    180.00 == SOLD Quantity:  0 Amount:    0.00 == IN STOCK Quantity:  20 Amount:    180.00  ==== ITEM #  3: Feather Quill Pen == BOUGHT Quantity:  50 Amount:    750.00 == SOLD Quantity:  20 Amount:    300.00 == IN STOCK Quantity:  30 Amount:    450.00  ==== OVERALL Amount bought:    931.50 Amount sold:      300.60 Amount in stock:  450.00
+    out 0:==== ITEM #  1: Ballpoint Pen == BOUGHT Quantity:  10 Amount:    1.50 == SOLD Quantity:  4 Amount:    0.60 == IN STOCK Quantity:  6 Amount:    0.90  ==== ITEM #  2: Oil-based Pen Marker == BOUGHT Quantity:  20 Amount:    180.00 == SOLD Quantity:  0 Amount:    0.00 == IN STOCK Quantity:  20 Amount:    180.00  ==== ITEM #  3: Feather Quill Pen == BOUGHT Quantity:  50 Amount:    750.00 == SOLD Quantity:  20 Amount:    300.00 == IN STOCK Quantity:  30 Amount:    450.00  ==== OVERALL Amount bought:    931.50 Amount sold:      300.60 Amount in stock:  630.90
     in 1:Inventory_Range_Chk
     out 1:Info: Call to 'Add' failed as expected. Info: Call to 'Set' failed as expected.
     --  END LAB IO BLOCK
@@ -3281,7 +3281,7 @@ Inventory
           Total : Amount := 0.0;
        begin
           for I in Inv.List_Item'First .. Last_Id (Inv) loop
-             Total :=  + Get (Inv, I);
+             Total := Total + Get (Inv, I);
           end loop;
 
           return Total;
