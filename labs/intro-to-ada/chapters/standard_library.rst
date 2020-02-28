@@ -118,7 +118,7 @@ the code you've implemented as a starting point.
 
     --  START LAB IO BLOCK
     in 0:Inventory_Chk
-    out 0:==== ITEM : Ballpoint Pen == BOUGHT Quantity:  10 Amount:    1.50 == SOLD Quantity:  4 Amount:    0.60 == IN STOCK Quantity:  6 Amount:    0.90  ==== ITEM : Oil-based Pen Marker == BOUGHT Quantity:  20 Amount:    180.00 == SOLD Quantity:  0 Amount:    0.00 == IN STOCK Quantity:  20 Amount:    180.00  ==== ITEM : Feather Quill Pen == BOUGHT Quantity:  50 Amount:    750.00 == SOLD Quantity:  20 Amount:    300.00 == IN STOCK Quantity:  30 Amount:    450.00  ==== OVERALL Amount bought:    931.50 Amount sold:      300.60 Amount in stock:  630.90
+    out 0:==== ITEM : Ballpoint Pen == BOUGHT Quantity:  10 Value:     1.50 == SOLD Quantity:  4 Value:     0.60 == IN STOCK Quantity:  6 Value:     0.90  ==== ITEM : Oil-based Pen Marker == BOUGHT Quantity:  20 Value:     180.00 == SOLD Quantity:  0 Value:     0.00 == IN STOCK Quantity:  20 Value:     180.00  ==== ITEM : Feather Quill Pen == BOUGHT Quantity:  50 Value:     750.00 == SOLD Quantity:  20 Value:     300.00 == IN STOCK Quantity:  30 Value:     450.00  ==== OVERALL Value bought:     931.50 Value sold:       300.60 Value in stock:   630.90
     --  END LAB IO BLOCK
 
     with Ada.Strings.Unbounded;  use Ada.Strings.Unbounded;
@@ -128,7 +128,7 @@ the code you've implemented as a starting point.
 
        subtype Item_Quantity is Natural;
 
-       type Amount is delta 10.0 ** (-2) digits 12;
+       type Currency is delta 10.0 ** (-2) digits 12;
 
        type Transaction_Type is (Bought, Sold);
 
@@ -139,7 +139,7 @@ the code you've implemented as a starting point.
        type Inventory is private;
 
        function Init (Name  : String;
-                      Price : Amount) return Item;
+                      Price : Currency) return Item;
 
        procedure Init (Inv : in out Inventory);
 
@@ -169,10 +169,10 @@ the code you've implemented as a starting point.
        --  Number_Units_In_Stock_For_Item : Item_Quantity := Get (Inv, ID);
 
        function Get (Inv   : Inventory;
-                     ID    : Item_ID) return Amount;
+                     ID    : Item_ID) return Currency;
        --  Retrieve total amount in stock for specified item
        --
-       --  Potential_Income_For_Units_In_Stock_For_Item : Amount := Get (Inv, ID);
+       --  Potential_Income_For_Units_In_Stock_For_Item : Currency := Get (Inv, ID);
 
        function Get (Inv   : Inventory;
                      Trans : Transaction_Type;
@@ -183,21 +183,21 @@ the code you've implemented as a starting point.
 
        function Get (Inv   : Inventory;
                      Trans : Transaction_Type;
-                     ID    : Item_ID) return Amount;
+                     ID    : Item_ID) return Currency;
        --  Retrieve amount for specified item and transaction type
        --
-       --  Income_For_Sold_Units_Of_Item : Amount := Get (Inv, Sold, ID);
+       --  Income_For_Sold_Units_Of_Item : Currency := Get (Inv, Sold, ID);
 
        function Get (Inv   : Inventory;
-                     Trans : Transaction_Type) return Amount;
+                     Trans : Transaction_Type) return Currency;
        --  Retrieve amount for transaction type
        --
-       --  Income_For_All_Sold_Units : Amount := Get (Inv, Sold);
+       --  Income_For_All_Sold_Units : Currency := Get (Inv, Sold);
 
-       function Get (Inv   : Inventory) return Amount;
+       function Get (Inv   : Inventory) return Currency;
        --  Retrieve amount for inventory
        --
-       --  Income_For_All_Units_In_Stock : Amount := Get (Inv);
+       --  Income_For_All_Units_In_Stock : Currency := Get (Inv);
 
        procedure Display (Inv : Inventory);
 
@@ -220,7 +220,7 @@ the code you've implemented as a starting point.
     package body Inventory_Pkg is
 
        function Init (Name  : String;
-                      Price : Amount) return Item is
+                      Price : Currency) return Item is
        begin
           return (null record);
        end Init;
@@ -264,7 +264,7 @@ the code you've implemented as a starting point.
          (0);
 
        function Get (Inv   : Inventory;
-                     ID    : Item_ID) return Amount is
+                     ID    : Item_ID) return Currency is
          (0.0);
 
        function Get (Inv   : Inventory;
@@ -274,27 +274,27 @@ the code you've implemented as a starting point.
 
        function Get (Inv   : Inventory;
                      Trans : Transaction_Type;
-                     ID    : Item_ID) return Amount is
+                     ID    : Item_ID) return Currency is
          (0.0);
 
        function Get (Inv   : Inventory;
-                     Trans : Transaction_Type) return Amount
+                     Trans : Transaction_Type) return Currency
        is
-          Total : Amount := 0.0;
+          Total : Currency := 0.0;
        begin
           return Total;
        end Get;
 
-       function Get (Inv   : Inventory) return Amount
+       function Get (Inv   : Inventory) return Currency
        is
-          Total : Amount := 0.0;
+          Total : Currency := 0.0;
        begin
           return Total;
        end Get;
 
        procedure Display (Inv : Inventory)
        is
-          package F_IO is new Ada.Text_IO.Decimal_IO (Amount);
+          package F_IO is new Ada.Text_IO.Decimal_IO (Currency);
 
           use F_IO;
        begin
@@ -311,27 +311,27 @@ the code you've implemented as a starting point.
        --            Put_Line ("== " & Transaction_Type'Image (Trans));
        --            Put_Line ("Quantity: "
        --                      & Item_Quantity'Image (Get (Inv, Trans, I)));
-       --            Put ("Amount:    ");
-       --            Put (Amount'(Get (Inv, Trans, I)), 1, 2, 0);
+       --            Put ("Value:     ");
+       --            Put (Currency'(Get (Inv, Trans, I)), 1, 2, 0);
        --            New_Line;
        --         end loop;
        --         Put_Line ("== IN STOCK");
        --         Put_Line ("Quantity: " & Item_Quantity'Image (Get (Inv, I)));
-       --         Put ("Amount:    ");
-       --         Put (Amount'(Get (Inv, I)), 1, 2, 0);
+       --         Put ("Value:     ");
+       --         Put (Currency'(Get (Inv, I)), 1, 2, 0);
        --         New_Line;
        --         New_Line;
        --      end;
        --   end loop;
           Put_Line ("==== OVERALL");
-          Put ("Amount bought:    ");
-          Put (Amount'(Get (Inv, Bought)), 1, 2, 0);
+          Put ("Value bought:     ");
+          Put (Currency'(Get (Inv, Bought)), 1, 2, 0);
           New_Line;
-          Put ("Amount sold:      ");
-          Put (Amount'(Get (Inv, Sold)), 1, 2, 0);
+          Put ("Value sold:       ");
+          Put (Currency'(Get (Inv, Sold)), 1, 2, 0);
           New_Line;
-          Put ("Amount in stock:  ");
-          Put (Amount'(Get (Inv)), 1, 2, 0);
+          Put ("Value in stock:   ");
+          Put (Currency'(Get (Inv)), 1, 2, 0);
           New_Line;
        end Display;
 

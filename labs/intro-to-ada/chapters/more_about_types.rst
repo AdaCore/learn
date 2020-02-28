@@ -768,7 +768,7 @@ Your goals with this exercise are:
     - Hint: you can take the same approach as for the previous lab on
       *Price list* for the :ada:`Inventory` type.
 
-#. Declare a decimal fixed-point data type :ada:`Amount` with a delta
+#. Declare a decimal fixed-point data type :ada:`Currency` with a delta
    of two digits (e.g. ``0.01``) and twelve digits in total.
 
     - Hint: you can reuse the type declaration of the :ada:`Price_Type`
@@ -847,7 +847,7 @@ Your goals with this exercise are:
         --  Retrieve number of units in stock for specified item
 
         function Get (Inv   : Inventory;
-                      ID    : Item_ID) return Amount;
+                      ID    : Item_ID) return Currency;
         --  Retrieve total amount in stock for specified item
 
         function Get (Inv   : Inventory;
@@ -857,14 +857,14 @@ Your goals with this exercise are:
 
         function Get (Inv   : Inventory;
                       Trans : Transaction_Type;
-                      ID    : Item_ID) return Amount;
+                      ID    : Item_ID) return Currency;
         --  Retrieve amount for specified item and transaction type
 
         function Get (Inv   : Inventory;
-                      Trans : Transaction_Type) return Amount;
+                      Trans : Transaction_Type) return Currency;
         --  Retrieve amount for transaction type
 
-        function Get (Inv   : Inventory) return Amount;
+        function Get (Inv   : Inventory) return Currency;
         --  Retrieve amount for whole inventory
 
     - Note that overloading is used for most of these functions. Therefore,
@@ -906,19 +906,19 @@ Your goals with this exercise are:
               Number_Units_In_Stock_For_Item               : Item_Quantity
                 := Get (Inv, ID);
 
-              Potential_Income_For_Units_In_Stock_For_Item : Amount
+              Potential_Income_For_Units_In_Stock_For_Item : Currency
                 := Get (Inv, ID);
 
               Number_Units_Sold_For_Item                   : Item_Quantity
                 := Get (Inv, Sold, ID);
 
-              Income_For_Sold_Units_Of_Item                : Amount
+              Income_For_Sold_Units_Of_Item                : Currency
                 := Get (Inv, Sold, ID);
 
-              Income_For_All_Sold_Units                    : Amount
+              Income_For_All_Sold_Units                    : Currency
                 := Get (Inv, Sold);
 
-              Potential_Income_For_All_Units_In_Stock      : Amount
+              Potential_Income_For_All_Units_In_Stock      : Currency
                 := Get (Inv);
            begin
               --  Some processing here...
@@ -945,7 +945,7 @@ the implementation work of this exercise.
 
     --  START LAB IO BLOCK
     in 0:Inventory_Chk
-    out 0:==== ITEM #  1: Ballpoint Pen == BOUGHT Quantity:  10 Amount:    1.50 == SOLD Quantity:  4 Amount:    0.60 == IN STOCK Quantity:  6 Amount:    0.90  ==== ITEM #  2: Oil-based Pen Marker == BOUGHT Quantity:  20 Amount:    180.00 == SOLD Quantity:  0 Amount:    0.00 == IN STOCK Quantity:  20 Amount:    180.00  ==== ITEM #  3: Feather Quill Pen == BOUGHT Quantity:  50 Amount:    750.00 == SOLD Quantity:  20 Amount:    300.00 == IN STOCK Quantity:  30 Amount:    450.00  ==== OVERALL Amount bought:    931.50 Amount sold:      300.60 Amount in stock:  630.90
+    out 0:==== ITEM #  1: Ballpoint Pen == BOUGHT Quantity:  10 Value:     1.50 == SOLD Quantity:  4 Value:     0.60 == IN STOCK Quantity:  6 Value:     0.90  ==== ITEM #  2: Oil-based Pen Marker == BOUGHT Quantity:  20 Value:     180.00 == SOLD Quantity:  0 Value:     0.00 == IN STOCK Quantity:  20 Value:     180.00  ==== ITEM #  3: Feather Quill Pen == BOUGHT Quantity:  50 Value:     750.00 == SOLD Quantity:  20 Value:     300.00 == IN STOCK Quantity:  30 Value:     450.00  ==== OVERALL Value bought:     931.50 Value sold:       300.60 Value in stock:   630.90
     in 1:Inventory_Range_Chk
     out 1:Info: Call to 'Add' failed as expected. Info: Call to 'Set' failed as expected.
     --  END LAB IO BLOCK
@@ -955,7 +955,7 @@ the implementation work of this exercise.
        subtype Item_Quantity is Natural;
 
        --  Replace by actual fixed-point decimal type declaration
-       type Amount is new Float;
+       type Currency is new Float;
 
        --  Replace by actual access type declaration
        type Name_Type is null record;
@@ -969,7 +969,7 @@ the implementation work of this exercise.
 
        type Item is null record;
           --  Name            : Name_Type;
-          --  Price           : Amount;
+          --  Price           : Currency;
           --
           --  --  Add components for quantities and amounts
           --
@@ -983,7 +983,7 @@ the implementation work of this exercise.
        --  end record;
 
        function Init (Name  : String;
-                      Price : Amount) return Item;
+                      Price : Currency) return Item;
 
        procedure Init (Inv : in out Inventory);
 
@@ -1015,10 +1015,10 @@ the implementation work of this exercise.
        --  Number_Units_In_Stock_For_Item : Item_Quantity := Get (Inv, ID);
 
        function Get (Inv   : Inventory;
-                     ID    : Item_ID) return Amount;
+                     ID    : Item_ID) return Currency;
        --  Retrieve total amount in stock for specified item
        --
-       --  Potential_Income_For_Units_In_Stock_For_Item : Amount := Get (Inv, ID);
+       --  Potential_Income_For_Units_In_Stock_For_Item : Currency := Get (Inv, ID);
 
        function Get (Inv   : Inventory;
                      Trans : Transaction_Type;
@@ -1029,21 +1029,21 @@ the implementation work of this exercise.
 
        function Get (Inv   : Inventory;
                      Trans : Transaction_Type;
-                     ID    : Item_ID) return Amount;
+                     ID    : Item_ID) return Currency;
        --  Retrieve amount for specified item and transaction type
        --
-       --  Income_For_Sold_Units_Of_Item : Amount := Get (Inv, Sold, ID);
+       --  Income_For_Sold_Units_Of_Item : Currency := Get (Inv, Sold, ID);
 
        function Get (Inv   : Inventory;
-                     Trans : Transaction_Type) return Amount;
+                     Trans : Transaction_Type) return Currency;
        --  Retrieve amount for transaction type
        --
-       --  Income_For_All_Sold_Units : Amount := Get (Inv, Sold);
+       --  Income_For_All_Sold_Units : Currency := Get (Inv, Sold);
 
-       function Get (Inv   : Inventory) return Amount;
+       function Get (Inv   : Inventory) return Currency;
        --  Retrieve amount for whole inventory
        --
-       --  Income_For_All_Units_In_Stock : Amount := Get (Inv);
+       --  Income_For_All_Units_In_Stock : Currency := Get (Inv);
 
        procedure Display (Inv : Inventory);
 
@@ -1054,7 +1054,7 @@ the implementation work of this exercise.
     package body Inventory_Pkg is
 
        function Init (Name  : String;
-                      Price : Amount) return Item is
+                      Price : Currency) return Item is
        begin
           return (null record);
        end Init;
@@ -1099,7 +1099,7 @@ the implementation work of this exercise.
          (0);
 
        function Get (Inv   : Inventory;
-                     ID    : Item_ID) return Amount is
+                     ID    : Item_ID) return Currency is
          (0.0);
 
        function Get (Inv   : Inventory;
@@ -1109,27 +1109,27 @@ the implementation work of this exercise.
 
        function Get (Inv   : Inventory;
                      Trans : Transaction_Type;
-                     ID    : Item_ID) return Amount is
+                     ID    : Item_ID) return Currency is
          (0.0);
 
        function Get (Inv   : Inventory;
-                     Trans : Transaction_Type) return Amount
+                     Trans : Transaction_Type) return Currency
        is
-          Total : Amount := 0.0;
+          Total : Currency := 0.0;
        begin
           return Total;
        end Get;
 
-       function Get (Inv   : Inventory) return Amount
+       function Get (Inv   : Inventory) return Currency
        is
-          Total : Amount := 0.0;
+          Total : Currency := 0.0;
        begin
           return Total;
        end Get;
 
        procedure Display (Inv : Inventory)
        is
-          package F_IO is new Ada.Text_IO.Decimal_IO (Amount);
+          package F_IO is new Ada.Text_IO.Decimal_IO (Currency);
 
           use F_IO;
        begin
@@ -1140,26 +1140,26 @@ the implementation work of this exercise.
                 Put_Line ("== " & Transaction_Type'Image (Trans));
                 Put_Line ("Quantity: "
                           & Item_Quantity'Image (Get (Inv, Trans, I)));
-                Put ("Amount:    ");
-                Put (Amount'(Get (Inv, Trans, I)), 1, 2, 0);
+                Put ("Value:     ");
+                Put (Currency'(Get (Inv, Trans, I)), 1, 2, 0);
                 New_Line;
              end loop;
              Put_Line ("== IN STOCK");
              Put_Line ("Quantity: " & Item_Quantity'Image (Get (Inv, I)));
-             Put ("Amount:    ");
-             Put (Amount'(Get (Inv, I)), 1, 2, 0);
+             Put ("Value:     ");
+             Put (Currency'(Get (Inv, I)), 1, 2, 0);
              New_Line;
              New_Line;
           end loop;
           Put_Line ("==== OVERALL");
-          Put ("Amount bought:    ");
-          Put (Amount'(Get (Inv, Bought)), 1, 2, 0);
+          Put ("Value bought:     ");
+          Put (Currency'(Get (Inv, Bought)), 1, 2, 0);
           New_Line;
-          Put ("Amount sold:      ");
-          Put (Amount'(Get (Inv, Sold)), 1, 2, 0);
+          Put ("Value sold:       ");
+          Put (Currency'(Get (Inv, Sold)), 1, 2, 0);
           New_Line;
-          Put ("Amount in stock:  ");
-          Put (Amount'(Get (Inv)), 1, 2, 0);
+          Put ("Value in stock:   ");
+          Put (Currency'(Get (Inv)), 1, 2, 0);
           New_Line;
        end Display;
 
