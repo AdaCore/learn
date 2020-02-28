@@ -57,4 +57,6 @@ Labs: Introduction to Ada
     Exceptions <chapters/exceptions>
     Tasking <chapters/tasking>
     Design by contracts <chapters/contracts>
+    Object Oriented Programming <chapters/object_oriented_programming>
+    Standard Library <chapters/standard_library>
     Solutions <chapters/solutions>
