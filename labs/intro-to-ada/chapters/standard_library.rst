@@ -20,7 +20,7 @@ Simple todo list
 ----------------
 
 This exercise is based on the *Simple todo list* exercise from the
-:doc:`more_about_types`. Your goal is to rewrite that exercise using
+:doc:`./more_about_types`. Your goal is to rewrite that exercise using
 vectors instead of arrays. Please refer to the original exercise for
 details. You may reuse the code you've implemented as a starting point.
 
@@ -105,7 +105,7 @@ Inventory
 ---------
 
 This exercise is based on the *Inventory* exercise from the
-:doc:`more_about_types`. Your goal is to rewrite that exercise using
+:doc:`./more_about_types`. Your goal is to rewrite that exercise using
 vectors |mdash| instead of arrays |mdash| and unbounded strings.
 
 - Hint: for the declaration of the :ada:`Item_ID` type, you can use the
