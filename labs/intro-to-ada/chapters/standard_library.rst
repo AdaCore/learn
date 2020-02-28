@@ -881,10 +881,13 @@ consist of following points / positions:
     Point #4: ( 0.0, -1.0)
     Point #5: ( 1.0,  0.0)
 
-Or graphically:
+.. only:: builder_html
 
-.. figure:: rotation.svg
-   :width: 50%
+    Or graphically:
+
+    .. figure:: rotation.svg
+       :width: 50%
+
 
 As expected, point #5 is equal to the starting point (point #1), since the
 object rotates around (0.0, 0.0) and returns to the starting point.
