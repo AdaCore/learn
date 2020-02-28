@@ -118,7 +118,7 @@ the code you've implemented as a starting point.
 
     --  START LAB IO BLOCK
     in 0:Inventory_Chk
-    out 0:==== ITEM : Ballpoint Pen  Price:     0.90 == BOUGHT Quantity:  10 Amount:    1.50 == SOLD Quantity:  4 Amount:    0.60 == IN STOCK Quantity:  6 Amount:    0.90  ==== ITEM : Oil-based Pen Marker  Price:     180.00 == BOUGHT Quantity:  20 Amount:    180.00 == SOLD Quantity:  0 Amount:    0.00 == IN STOCK Quantity:  20 Amount:    180.00  ==== ITEM : Feather Quill Pen  Price:     450.00 == BOUGHT Quantity:  50 Amount:    750.00 == SOLD Quantity:  20 Amount:    300.00 == IN STOCK Quantity:  30 Amount:    450.00  ==== OVERALL Amount bought:    931.50 Amount sold:      300.60 Amount in stock:  450.00
+    out 0:==== ITEM : Ballpoint Pen == BOUGHT Quantity:  10 Amount:    1.50 == SOLD Quantity:  4 Amount:    0.60 == IN STOCK Quantity:  6 Amount:    0.90  ==== ITEM : Oil-based Pen Marker == BOUGHT Quantity:  20 Amount:    180.00 == SOLD Quantity:  0 Amount:    0.00 == IN STOCK Quantity:  20 Amount:    180.00  ==== ITEM : Feather Quill Pen == BOUGHT Quantity:  50 Amount:    750.00 == SOLD Quantity:  20 Amount:    300.00 == IN STOCK Quantity:  30 Amount:    450.00  ==== OVERALL Amount bought:    931.50 Amount sold:      300.60 Amount in stock:  450.00
     --  END LAB IO BLOCK
 
     with Ada.Strings.Unbounded;  use Ada.Strings.Unbounded;
@@ -307,10 +307,6 @@ the code you've implemented as a starting point.
        --      begin
        --         Put_Line ("==== ITEM "
        --                   & ": " & Get (Inv, I));
-       --         New_Line;
-       --         Put ("Price:     ");
-       --         Put (Amount'(Get (Inv, I)), 1, 2, 0);
-       --         New_Line;
        --         for Trans in Transaction_Type loop
        --            Put_Line ("== " & Transaction_Type'Image (Trans));
        --            Put_Line ("Quantity: "
