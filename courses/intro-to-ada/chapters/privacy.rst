@@ -164,3 +164,174 @@ Ada also allows you to implement special semantics for assignment via
 assignment is simply inappropriate; one example is the :ada:`File_Type` from the
 :ada:`Ada.Text_IO` package, which is declared as a limited type and thus
 attempts to assign one file to another would be detected as illegal.
+
+Child packages & privacy
+------------------------
+
+We've seen previously (in the :ref:`child packages section <ChildPackages>`)
+that packages can have child packages. Privacy plays an important role in child
+packages. This section discusses some of the privacy rules that apply to child
+packages.
+
+Child packages have access to the private part of their parent's specification:
+they can refer to information from the private part of a parent package as
+if it were declared in the non-private part of the specification.
+
+We've seen in a previous source-code example that the :ada:`Hello2` procedure
+declared in the private part of the :ada:`Encapsulate` package cannot be used
+in the :ada:`Main` procedure, since it's not visible there. This is not the
+case, however, for child packages of the :ada:`Encapsulate` package. In fact,
+its child package :ada:`Encapsulate.Child` has access to the :ada:`Hello2`
+procedure and can call it in its body, as you can see in the implementation of
+the :ada:`Hello3` procedure of the :ada:`Child` package:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Privacy.Encapsulate_Child
+
+    package Encapsulate is
+       procedure Hello;
+
+    private
+
+       procedure Hello2;
+       --  Not visible from external units
+       --  But visible in child packages
+    end Encapsulate;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Encapsulate is
+
+       procedure Hello is
+       begin
+          Put_Line ("Hello");
+       end Hello;
+
+       procedure Hello2 is
+       begin
+          Put_Line ("Hello #2");
+       end Hello2;
+
+    end Encapsulate;
+
+    package Encapsulate.Child is
+
+       procedure Hello3;
+
+    end Encapsulate.Child;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Encapsulate.Child is
+
+       procedure Hello3 is
+       begin
+          --  Using private procedure Hello2 from the parent package
+          Hello2;
+          Put_Line ("Hello #3");
+       end Hello3;
+
+    end Encapsulate.Child;
+
+    with Encapsulate.Child;
+
+    procedure Main is
+    begin
+       Encapsulate.Child.Hello3;
+    end Main;
+
+The same mechanism applies to types declared in the private part of a parent
+package. For instance, a child package can access components of a record
+declared in the private part of its parent package. Let's look at an example:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Privacy.Private_Type_Child
+
+    package My_Types is
+
+       type T is private;
+
+    private
+
+       type T is record
+         Number : Integer := 42;
+       end record;
+
+    end My_Types;
+
+    package My_Types.Ops is
+
+       procedure Display (E : T);
+
+    end My_Types.Ops;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body My_Types.Ops is
+
+       procedure Display (E : T) is
+       begin
+          Put_Line ("T.Number: " & Integer'Image (E.Number));
+       end Display;
+
+    end My_Types.Ops;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with My_Types;     use My_Types;
+    with My_Types.Ops; use My_Types.Ops;
+
+    procedure Main is
+       E : T;
+    begin
+       Put_Line ("Presenting information:");
+
+       --  The following line would trigger a compilation error here:
+       --  Put_Line ("T.Number: " & Integer'Image (E.Number));
+
+       Display (E);
+    end Main;
+
+In this example, we don't have access to the :ada:`Number` component of the
+record type :ada:`T` in the :ada:`Main` procedure. You can see this in the call
+to :ada:`Put_Line` that has been commented-out in the implementation of
+:ada:`Main`. Trying to access the :ada:`Number` component there would trigger a
+compilation error. But we do have access to this component in the
+:ada:`My_Types.Ops` package, since it's a child package of the
+:ada:`My_Types` package and therefore it has access to the declaration of the
+:ada:`T` type (in the private part of the :ada:`My_Types` package). For this
+reason, the same call to :ada:`Put_Line` that would trigger a compilation error
+in the :ada:`Main` procedure works fine in the :ada:`Display` procedure of the
+:ada:`My_Types.Ops` package.
+
+This kind of privacy rules for child packages allows for extending the
+functionality of a parent package and, at the same time, retain its
+encapsulation.
+
+Note, however, that the privacy rule described above only applies to the
+private part and the body of a child package. For example, we could declare
+an object of type :ada:`T` in the private part of a child of :ada:`My_Types`
+and initialize the :ada:`Number` component directly:
+
+.. code-block:: ada
+
+    package My_Types.Child is
+    private
+
+       E : T := (Number => 99);
+
+    end My_Types.Ops;
+
+But we cannot initialize this component if the declaration is in the visible
+part of the same child package:
+
+.. code-block:: ada
+
+    package My_Types.Child is
+
+       E : T := (Number => 99);
+
+    end My_Types.Ops;
+
+The declaration above triggers a compilation error. The reason is that type
+:ada:`T` is private. Since the visible part of :ada:`My_Types.Child` is also
+visible outside the child package, Ada cannot allow accessing private
+information in this part of the specification.
