@@ -150,11 +150,10 @@ div.lab_area {
 }
 
 div.lab_test_case {
-    border-radius: 15px;
     padding-left:3px;
     padding-right:3px;
     padding-bottom: 5px;
-    margin-top: 5px;
+    margin-top: 0px;
     margin-bottom: 5px;
 }
 
@@ -164,17 +163,16 @@ div.lab_test_msg {
     padding-right:3px;
 }
 
-div.lab_test_msg.lab_test_title {
-    font-weight:bold;
-    padding-left: 15px;
+div.lab_test_msg code {
+  white-space: pre-wrap;
 }
 
 div.lab_test_success {
-    background: #83ef5f;
+    background: #bef5cb;
 }
 
 div.lab_test_failed {
-    background: #ef6e5f;
+    background: #fdaeb7;
 }
 
 span.lab_test_msg_title {
@@ -192,4 +190,209 @@ div.lab_results {
 
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+/* Style the tab */
+.tab {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  outline: none;
+  cursor: pointer;
+  padding: 6px 16px;
+  transition: 0.3s;
+  flex: 0 0 auto;
+  border: 1px solid transparent;
+  color: #808080;
+  font-family: monospace
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  color: #4C4C4C;
+  cursor: pointer;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  color: #333;
+  border-top: 2px solid #f88745;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+/* Style the tab content */
+.tab-content {
+  display: none;
+  padding: 0px;
+}
+
+button.lab_test_success {
+  background: #e6ffed;
+}
+
+button.accordion span:after {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 10px;
+  font-style: italic;
+  font-weight: 600;
+  color: #777;
+  margin-left: 8px;
+}
+
+button.lab_test_success span:after {
+  content: "Pass";
+}
+
+button.lab_test_failed {
+  background: #ffeef0;
+}
+
+button.lab_test_failed span:after {
+  content: "Fail";
+}
+
+button.active.lab_test_success  {
+  background: #bef5cb;
+}
+
+button.active.lab_test_failed {
+  background: #fdaeb7;
+}
+
+button.lab_test_success:hover {
+  background-color: #bef5cb;
+}
+
+button.lab_test_failed:hover {
+  background-color: #fdaeb7;
+}
+
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  font-weight:bold;
+  border-radius: 7px;
+}
+
+.accordion.active {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.accordion:after {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: normal;
+  content: '\f067'; /* + */
+  font-size: 9px;
+  color: #777;
+  float: right;
+  margin-left: 5px;
+}
+
+.accordion.active:after {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: normal;
+  content: "\f068"; /* - */
+  font-size: 9px;
+  color: #777;
+  float: right;
+  margin-left: 5px;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.lab_test_case {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+
+.custom_check_container {
+  display: block;
+}
+
+label.custom_check {
+  display: inline-block;
+}
+
+.console_output {
+  display: inline-block;
+}
+
+.spinner {
+  width: 70px;
+  text-align: center;
+  display: inline-block;
+}
+
+.spinner > div {
+  width: 7px;
+  height: 7px;
+  background-color: #a6a6a6;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  margin-right: 5px;
+}
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+a.pdf_download_button {
+    background-color: #F56F23;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #FFF;
+    font-weight: 600;
+    float: right;
+    font-family: sans-serif;
+}
+a.pdf_download_button svg {
+    position: relative;
+    top: 2px;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
 }

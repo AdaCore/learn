@@ -4,9 +4,7 @@
 Object-oriented Programming
 =====================================================================
 
-.. role:: ada(code)
-   :language: ada
-
+.. include:: ../../global.txt
 
 What is Object Oriented Programming?
 ---------------------------------------------------------------------

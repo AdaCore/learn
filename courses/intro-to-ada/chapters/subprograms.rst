@@ -5,16 +5,7 @@ Subprograms
 
 .. _Subprograms:
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
-.. sectionauthor:: Raphaël Amiard
+.. include:: ../../global.txt
 
 Subprograms
 -----------
@@ -28,13 +19,13 @@ does not.
 
 This example shows the declaration and definition of a function:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment
 
     function Increment (I : Integer) return Integer;
     --  We declare (but don't define) a function with one
     --  parameter, returning an integer value
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment
 
     --  We define the Increment function
 
@@ -57,7 +48,7 @@ Here's another variation on the previous example:
 
 :code-config:`reset_accumulator=True;accumulate_code=True`
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
 
     function Increment_By
       (I    : Integer := 0;
@@ -70,7 +61,7 @@ C/C++, a call to a subprogram without parameters does not include parentheses.
 
 This is the implementation of the function above:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
 
     function Increment_By
       (I    : Integer := 0;
@@ -84,7 +75,7 @@ Subprogram calls
 
 We can then call our subprogram this way:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Increment_By
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -155,7 +146,7 @@ For the previous example, we can move the duplicated code (call to
 :ada:`Put_Line`) to a separate procedure. This is a shortened version with
 the nested :ada:`Display_Result` procedure.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Increment_By
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -189,7 +180,7 @@ call cannot be ignored; that is, a function call cannot be used as a statement.
 If you want to call a function and do not need its result, you will still need
 to explicitly store it in a local variable.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Quadruple
     :class: ada-expect-compile-error
 
     function Quadruple (I : Integer) return Integer is
@@ -235,8 +226,8 @@ to explicitly store it in a local variable.
         B : Boolean := Read_Int (Stream, My_Int);
         pragma Unreferenced (B);
 
-    - Or give the variable a name that contains any of the strings ``discard``
-      ``dummy`` ``ignore`` ``junk`` ``unused`` (case insensitive)
+    - Or give the variable a name that contains any of the strings :ada:`discard`
+      :ada:`dummy` :ada:`ignore` :ada:`junk` :ada:`unused` (case insensitive)
 
 .. ?? This example might be confusing since out parameters have not been covered.
 .. ?? It would be better to show an example where the function's side effect is on
@@ -290,7 +281,7 @@ The first mode for parameters is the one we have been implicitly using so far.
 Parameters passed using this mode cannot be modified, so that the following
 program will cause an error:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Swap
     :class: ada-expect-compile-error
 
     procedure Swap (A, B : Integer) is
@@ -313,7 +304,7 @@ In out parameters
 
 To correct our code above, we can use an "in out" parameter.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Subprograms.In_Out_Params
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -414,7 +405,7 @@ mutually recursive, as in the example below:
 .. ?? example would be in the context of recursive data structures and
 .. ?? mutually dependent types, which have not been covered yet.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Mutually_Recursive_Subprograms
     :class: ada-run
 
     procedure Mutually_Recursive_Subprograms is

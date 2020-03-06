@@ -13,8 +13,6 @@ Object-oriented programming
 .. role:: cpp(code)
    :language: c++
 
-.. sectionauthor:: Raphaël Amiard
-
 Object-oriented programming (OOP) is a large and ill-defined concept
 in programming languages and one that tends to encompass many
 different meanings because different languages often implement their
@@ -81,7 +79,7 @@ brushed on, but not really covered, up to now:
 You can create one or more new types from every type in Ada. Type
 derivation is built into the language.
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Newtypes
 
     package Newtypes is
        type Point is record
@@ -109,7 +107,7 @@ defined in the same scope as the type.
     1. The subprogram is declared in the same scope as the type and
     2. The type and the subprogram are declared in a package
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Primitives
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -191,7 +189,7 @@ Let's see our first tagged type declarations:
 
 :code-config:`reset_accumulator=True;accumulate_code=True`
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     package P is
        type My_Class is tagged null record;
@@ -239,7 +237,7 @@ descendent derives tagged type".
 In Ada, we call this the *classwide type*. It's used in OOP as soon as
 you need polymorphism. For example, you can't do the following:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
     :class: ada-expect-compile-error
 
     with P; use P;
@@ -259,13 +257,13 @@ you need polymorphism. For example, you can't do the following:
        null;
     end Main;
 
-This is because an object of a type ``T`` is exactly of the type
-``T``, whether ``T`` is tagged or not. What you want to say as a
+This is because an object of a type :ada:`T` is exactly of the type
+:ada:`T`, whether :ada:`T` is tagged or not. What you want to say as a
 programmer is "I want O3 to be able to hold an object of type
-``My_Class`` or any type descending from ``My_Class``". Here's how you
+:ada:`My_Class` or any type descending from :ada:`My_Class`". Here's how you
 do that:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -302,16 +300,16 @@ tagged type. The eventual goal of OOP is to make a dispatching call: a
 call to a primitive (method) that depends on the exact type of the
 object.
 
-But, if you think carefully about it, a variable of type ``My_Class``
+But, if you think carefully about it, a variable of type :ada:`My_Class`
 always contains an object of exactly that type. If you want to have a
-variable that can contain a ``My_Class`` or any derived type, it has
-to be of type ``My_Class'Class``.
+variable that can contain a :ada:`My_Class` or any derived type, it has
+to be of type :ada:`My_Class'Class`.
 
 In other words, to make a dispatching call, you must first have an
 object that can be either of a type or any type derived from this
 type, namely an object of a classwide type.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -336,18 +334,18 @@ type, namely an object of a classwide type.
        --  Dispatching: Calls My_Class.Foo
     end Main;
 
-.. attention:: You can convert an object of type ``Derived`` to an
-    object of type ``My_Class``. This is called a *view conversion* in
+.. attention:: You can convert an object of type :ada:`Derived` to an
+    object of type :ada:`My_Class`. This is called a *view conversion* in
     Ada parlance and is useful, for example, if you want to call a
     parent method.
 
-    In that case, the object really is converted to a ``My_Class``
+    In that case, the object really is converted to a :ada:`My_Class`
     object, which means its tag is changed. Since tagged objects are
     always passed by reference, you can use this kind of conversion to
     modify the state of an object: changes to converted object will
     affect the original one.
 
-    .. code:: ada
+    .. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
         :class: ada-run
 
         with P; use P;
@@ -376,7 +374,7 @@ You can also call primitives of tagged types with a notation that's
 more familiar to object oriented programmers. Given the Foo primitive
 above, you can also write the above program this way:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -406,7 +404,7 @@ which is the case in our examples, you can call the primitive using
 the dot notation. Any remaining parameter are passed normally:
 
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
     :class: ada-run
 
     with P; use P;

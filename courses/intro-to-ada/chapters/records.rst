@@ -3,16 +3,7 @@ Records
 
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
-.. sectionauthor:: Raphaël Amiard
+.. include:: ../../global.txt
 
 So far, all the types we have encountered have values that are not
 decomposable: each instance represents a single piece of data. Now we are going
@@ -84,7 +75,7 @@ Component selection
 To access components of a record instance, you use an operation that is
 called component selection:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Records.Record_Selection
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;

@@ -35,12 +35,11 @@ LEARN.ADACORE.COM
 
        About <about>
        Courses <courses/courses>
-       Books <books/books>
+       Labs <labs/labs>
 
     .. toctree::
        :hidden:
 
-       Labs <labs/labs>
        Tests <engine/tests/index>
 
 

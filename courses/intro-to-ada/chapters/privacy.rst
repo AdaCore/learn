@@ -3,16 +3,7 @@ Privacy
 
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
-.. sectionauthor:: Raphaël Amiard
+.. include:: ../../global.txt
 
 One of the main principles of modular programming, as well as object oriented
 programming, is `encapsulation <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`_.
@@ -31,7 +22,7 @@ package level.
 Basic encapsulation
 -------------------
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Privacy.Encapsulate
     :class: ada-expect-compile-error
 
     package Encapsulate is
@@ -58,7 +49,7 @@ Abstract data types
 With this high-level granularity, it might not seem obvious how to hide the
 implementation details of a type. Here is how it can be done in Ada:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Privacy.Stacks
 
     package Stacks is
        type Stack is private;
@@ -80,11 +71,11 @@ implementation details of a type. Here is how it can be done in Ada:
     end Stacks;
 
 In the above example, we define a stack type in the public part (known as the
-"visible part" of the package spec in Ada), but the exact representation
+*visible part* of the package spec in Ada), but the exact representation
 of that type is private.
 
 Then, in the private part, we define the representation of that type. We can
-also declare other types that will be used as "helpers" for our main public
+also declare other types that will be used as *helpers* for our main public
 type. This is useful since declaring helper types is common in Ada.
 
 A few words about terminology:
@@ -95,7 +86,7 @@ A few words about terminology:
 - The Stack type as viewed from the private part or the body of the package is
   called the full view of the type. This is what implementers have access to.
 
-From the point of view of the client (the "with"ing unit), only the public
+From the point of view of the client (the *with*'ing unit), only the public
 (visible) part is important, and the private part could as well not exist. It
 makes it very easy to read linearly the part of the package that is important
 for you.
@@ -112,7 +103,7 @@ for you.
        ...
     end Stacks;
 
-Here is how the ``Stacks`` package would be used:
+Here is how the :ada:`Stacks` package would be used:
 
 .. code-block:: ada
 
@@ -131,10 +122,10 @@ Here is how the ``Stacks`` package would be used:
 Limited types
 -------------
 
-Ada's "limited type" facility allows you to declare a type for which
+Ada's *limited type* facility allows you to declare a type for which
 assignment and comparison operations are not automatically provided.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Privacy.Limited_Stacks
     :class: ada-expect-compile-error
 
     package Stacks is
@@ -165,11 +156,11 @@ assignment and comparison operations are not automatically provided.
 This is useful because, for example, for some data types the built-in assignment
 operation might be incorrect (for example when a deep copy is required).
 
-Ada does allow you to overload the comparison operators "=" and "/" for limited
+Ada does allow you to overload the comparison operators :ada:`=` and :ada:`/=` for limited
 types (and to override the built-in declarations for non-limited types).
 
 Ada also allows you to implement special semantics for assignment via
-`controlled types <todo_link_to_controlled_types>`_. However, in some cases
-assignment is simply inappropriate; one example is the ``File_Type`` from the
-``Ada.Text_IO`` package, which is declared as a limited type and thus
+`controlled types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-7-6.html>`_. However, in some cases
+assignment is simply inappropriate; one example is the :ada:`File_Type` from the
+:ada:`Ada.Text_IO` package, which is declared as a limited type and thus
 attempts to assign one file to another would be detected as illegal.

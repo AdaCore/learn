@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 This program will extract every Ada code block in an Ada source file, and try
@@ -85,7 +85,7 @@ class Block(object):
                 m = classes_re.match(line)
 
                 if m:
-                    classes = map(str.strip, m.groups()[0].split(","))
+                    classes = [str.strip(l) for l in m.groups()[0].split(",")]
                     cb_start = i + 1
             else:
                 if line[indent:].startswith(".. code::"):
@@ -133,7 +133,7 @@ def header(strn):
 
 
 def error(loc, strn):
-    print "{} {}: {}".format(C.col("ERROR", C.Colors.RED), loc, strn)
+    print("{} {}: {}".format(C.col("ERROR", C.Colors.RED), loc, strn))
 
 
 def get_line(block):
@@ -182,7 +182,7 @@ parser.add_argument('--code-block-at', type=int, default=0)
 
 args = parser.parse_args()
 
-args.rst_files = map(os.path.abspath, args.rst_files)
+args.rst_files = [os.path.abspath(f) for f in args.rst_files]
 
 def analyze_file(rst_file):
 
@@ -200,12 +200,12 @@ def analyze_file(rst_file):
 
     def run(*run_args):
         if args.verbose:
-            print "Running \"{}\"".format(" ".join(run_args))
+            print("Running \"{}\"".format(" ".join(run_args)))
         try:
-            output = S.check_output(run_args, stderr=S.STDOUT)
+            output = S.check_output(run_args, stderr=S.STDOUT).decode("utf-8")
             all_output.extend(output.splitlines())
         except S.CalledProcessError as e:
-            all_output.extend(e.output.splitlines())
+            all_output.extend(e.output.decode("utf-8").splitlines())
             raise e
 
         return output
@@ -254,7 +254,7 @@ def analyze_file(rst_file):
             for diag in diags:
                 diag.line = diag.line + block.line_start
                 diag.file = rst_file
-                print diag
+                print(diag)
 
         def print_error(*error_args):
             error(*error_args)
@@ -262,11 +262,11 @@ def analyze_file(rst_file):
 
         if 'ada-nocheck' in block.classes:
             if args.verbose:
-                print "Skipping code block {}".format(loc)
+                print("Skipping code block {}".format(loc))
             continue
 
         if args.verbose:
-            print header("Checking code block {}".format(loc))
+            print(header("Checking code block {}".format(loc)))
 
         with open(u"code.ada", u"w") as code_file:
             code_file.write(block.text)
@@ -320,7 +320,7 @@ def analyze_file(rst_file):
                 out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f", main_file)
             except S.CalledProcessError as e:
                 print_error(loc, "Failed to compile example")
-                print e.output
+                print(e.output)
                 has_error = True
 
             if not has_error:
@@ -336,7 +336,7 @@ def analyze_file(rst_file):
                 except S.CalledProcessError:
                     if 'ada-run-expect-failure' in block.classes:
                         if args.verbose:
-                            print "Running of example expectedly failed"
+                            print("Running of example expectedly failed")
                     else:
                         print_error(loc, "Running of example failed")
                         has_error = True
@@ -359,7 +359,7 @@ def analyze_file(rst_file):
         if has_error:
             analysis_error = True
         elif args.verbose:
-            print C.col("SUCCESS", C.Colors.GREEN)
+            print(C.col("SUCCESS", C.Colors.GREEN))
 
         if args.all_diagnostics:
             print_diags()
@@ -388,7 +388,7 @@ for f in args.rst_files:
         test_error = True
 
 if test_error:
-    print C.col("TEST ERROR", C.Colors.RED)
+    print(C.col("TEST ERROR", C.Colors.RED))
     exit(1)
 elif args.verbose:
-    print C.col("TEST SUCCESS", C.Colors.GREEN)
+    print(C.col("TEST SUCCESS", C.Colors.GREEN))

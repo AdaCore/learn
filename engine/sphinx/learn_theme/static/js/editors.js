@@ -1,11 +1,50 @@
 // List of known modes, and the corresponding button labels
 MODES = {
-    "prove": "Prove",
-    "prove_flow": "Examine",
-    "prove_report_all": "Prove (report=all)",
-    "run": "Run",
-    "submit": "Submit",
+    "prove": {
+        "button_text": "Prove",
+        "tooltip": "Run gnatprove to prove SPARK code"
+    },
+    "prove_flow": {
+        "button_text": "Examine",
+        "tooltip": "Run gnatprove to examine SPARK data and control flow"
+    },
+    "prove_report_all": {
+        "button_text": "Prove (report=all)",
+        "tooltip": "Run gnatprove to prove SPARK code and report all findings"
+    },
+    "run": {
+        "button_text": "Run",
+        "tooltip": "Run code in editor"
+    },
+    "submit": {
+        "button_text": "Submit",
+        "tooltip": "Submit code for lab"
+    }
 };
+
+TEST_CASE_LABEL = "Test Case";
+
+RESET_TOOLTIP = "Reset editor to default state";
+
+CUSTOM_INPUT_LABEL = "Test against custom input";
+CUSTOM_INPUT_TOOLTIP = "Use the Run button to test your code against a custom input sequence";
+
+INTERNAL_ERROR_MESSAGE = "Please report this issue on https://github.com/AdaCore/learn/issues";
+
+LAB_TEST_INPUT_LABEL = "Input";
+LAB_TEST_OUTPUT_LABEL = "Expected Output";
+LAB_TEST_ACTUAL_LABEL = "Received Output";
+LAB_TEST_STATUS_LABEL = "Status";
+
+LAB_COMPLETE_LABEL = "Lab completed successfully.";
+LAB_FAILED_LABEL = "Lab failed.";
+
+EXIT_STATUS_LABEL = "exit status";
+
+MACHINE_NOT_RESPONDING_LABEL = "The machine running the examples is not responding, please try again later.";
+MACHINE_BUSY_LABEL = "The machine running the examples may not be available or is busy, please try again now or come back later.";
+
+CONSOLE_OUTPUT_LABEL = "Console Output";
 
 CLI_FILE = "cli.txt"
 
@@ -38,16 +77,28 @@ function process_check_output(container, editors, output_area, lab_area, output,
 
     function find_ref_in_lab_ref_list(ref) {
 
-        var child = lab_area.find( '#' + ref );
+        var child = lab_area.find( 'div.lab_test_case[data-labref=' + ref + ']');
 
         if(child.length > 0) {
             return child;
         }
 
-        var div = $('<div id=' + ref + ' class="lab_test_case">');
-        $('<div class="lab_test_msg lab_test_title">Test Case #' + ref + '</div>').appendTo(div);
+        var acc_wrapper = $("<div class='acc_wrapper' data-labref=" + ref + ">");
+        acc_wrapper.appendTo(lab_area);
 
-        div.appendTo(lab_area);
+        var acc_button = $("<button class='accordion' data-labref=" + ref + "><span>" + TEST_CASE_LABEL + " #" + ref + '</span></button>')
+        acc_button.appendTo(acc_wrapper);
+
+        var tab_id = generateUniqueId();
+
+        acc_button.click(function() {
+            $(this).toggleClass("active");
+            $("#" + tab_id).toggle();
+        });
+
+        var div = $('<div id=' + tab_id + ' class="lab_test_case" data-labref=' + ref + '>');
+
+        div.appendTo(acc_wrapper);
 
         return div;
     }
@@ -78,6 +129,9 @@ function process_check_output(container, editors, output_area, lab_area, output,
                     div.addClass("output_console");
                     div.text("$ " + msg);
                     break;
+                case "internal_error":
+                    msg_obj[msg_type]["msg"] += " " + INTERNAL_ERROR_MESSAGE;
+                    //  this fall through is intentional
                 case "stderr":
                     error_found = true;
                     //  this fall through is intentional
@@ -102,7 +156,7 @@ function process_check_output(container, editors, output_area, lab_area, output,
                                     // Switch to the tab that contains the editor
 
                                     // TODO: this is in the case of bootstrap only
-                                    // $("#" + e.unique_id + "-tab").tab('show')
+                                    $("#" + e.unique_id + "_button").click();
 
                                     // Jump to the corresponding line
                                     e.gotoLine(parseInt(match_found[2]),
@@ -123,30 +177,40 @@ function process_check_output(container, editors, output_area, lab_area, output,
                     break;
                 case "lab_output":
                     var test_cases = msg_obj[msg_type]["test_cases"];
+
+                    var lab_tab = $("<div class='lab_tab'>");
+
                     for (var test in test_cases) {
+
                         home_div = find_ref_in_lab_ref_list(test);
                         var case_div = $('<div class="lab_results">');
                         case_div.appendTo(home_div);
 
+                        var test_class = ""
+
                         if (test_cases[test]["status"] == "Success") {
-                            home_div.addClass("lab_test_success");
+                            test_class = "lab_test_success";
                         }
                         else {
-                            home_div.addClass("lab_test_failed");
+                            test_class = "lab_test_failed";
                         }
 
-                        $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">Input:</span>' + test_cases[test]["in"] + '</div>').appendTo(case_div);
-                        $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">Expected Output:</span>' + test_cases[test]["out"] + '</div>').appendTo(case_div);
-                        $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">Actual Output:</span>' + test_cases[test]["actual"] + '</div>').appendTo(case_div);
-                        $('<div class="lab_test_msg lab_test_status"><span class="lab_test_msg_title">Status:</span>' + test_cases[test]["status"] + '</div>').appendTo(case_div);
+                        home_div.addClass(test_class);
+                        var labref = home_div.data('labref');
+                        lab_area.find("button[data-labref='" + labref + "']").addClass(test_class);
+
+                        $('<div class="lab_test_msg lab_test_input"><span class="lab_test_msg_title">' + LAB_TEST_INPUT_LABEL + ':</span><code>' + test_cases[test]["in"] + '</code></div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_output"><span class="lab_test_msg_title">' + LAB_TEST_OUTPUT_LABEL + ':</span><code>' + test_cases[test]["out"] + '</code></div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_actual"><span class="lab_test_msg_title">' + LAB_TEST_ACTUAL_LABEL + ':</span><code>' + test_cases[test]["actual"] + '</code></div>').appendTo(case_div);
+                        $('<div class="lab_test_msg lab_test_status"><span class="lab_test_msg_title">' + LAB_TEST_STATUS_LABEL + ':</span>' + test_cases[test]["status"] + '</div>').appendTo(case_div);
                     }
 
                     div.addClass("lab_status");
                     if (msg_obj[msg_type]["success"]) {
-                        div.text("Lab completed successfully.");
+                        div.text(LAB_COMPLETE_LABEL);
                     }
                     else {
-                        div.text("Lab failed.");
+                        div.text(LAB_FAILED_LABEL);
                     }
                     break;
                 default:
@@ -163,20 +227,10 @@ function process_check_output(container, editors, output_area, lab_area, output,
         reset(container, editors);
 
         if (status != 0) {
-            output_error(output_area, "exit status: " + status);
-        } else if (output_area.error_count == 0) {
-            var div = $('<div class="output_success">');
-            div.text("Success!");
-            div.appendTo(output_area);
-        } else if (output_area.error_count == 1) {
-            var div = $('<div class="output_info">');
-            div.text("One error.");
-            div.appendTo(output_area);
-        } else {
-            var div = $('<div class="output_info">');
-            div.text(output_area.error_count + " errors.");
-            div.appendTo(output_area);
+            output_error(output_area, EXIT_STATUS_LABEL + ": " + status);
         }
+
+        output_area.find( '.spinner' ).remove();
     }
 
     return read_lines;
@@ -213,10 +267,18 @@ function get_output_from_identifier(container, editors, output_area, lab_area, i
                     // we are in test mode. call test function callback
                     test_callback(container);
                 }
+
+                // if there is a lab area, sort accordions
+                var lab_accs = lab_area.find("div.acc_wrapper");
+                var sorted_accs = lab_accs.sort(function(a, b) {
+                    return $(a).data('labref') > $(b).data('labref');
+                });
+                sorted_accs.appendTo(lab_area);
+
             }
         })
         .fail(function(xhr, status, errorThrown) {
-            output_error(output_area, "the machine running the examples is not responding, please try again later");
+            output_error(output_area, MACHINE_NOT_RESPONDING_LABEL);
             console.log("Error: " + errorThrown);
             console.log("Status: " + status);
             console.dir(xhr);
@@ -252,7 +314,7 @@ function query_operation_result(container, editors, output_area, lab_area, mode)
     }
 
     var input_search = container.find( 'textarea[name="custom_input"]' );
-    var check_search = container.find( '.custom_check' );
+    var check_search = container.find( 'input.custom_check' );
 
     if(check_search.length == 1 && input_search.length == 1) {
         if(check_search.is(':checked')) {
@@ -295,30 +357,53 @@ function query_operation_result(container, editors, output_area, lab_area, mode)
         })
         .fail(function(xhr, status, errorThrown) {
             reset(container, editors);
-            output_error(output_area, "The machine running the examples may not be available or is busy, please try again now or come back later.");
+            output_error(output_area, MACHINE_BUSY_LABEL);
             console.log("Error: " + errorThrown);
             console.log("Status: " + status);
             console.dir(xhr);
         });
 }
 
+function generateUniqueId() {
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
 
-function create_editor(resource, container, content, editors, counter) {
-    var the_id = "tab_" + container.attr("the_id") + "-" + counter;
-    var div = $('<div role="tabpanel" class="tab-pane' +
+
+function create_editor(resource, container, tabs, editors, counter) {
+    var tab_id = "tab_" + container.attr("the_id")
+    var the_id = tab_id + "-" + counter;
+
+    var tab_button = $('<button id="' + the_id + '_button" class="tab-links ' + tab_id + (counter == 1 ? ' active' : '') +'">' + resource.basename + '</button>');
+    tab_button.click(function() {
+        // Get all elements with class="tab-content" in current editor and hide them
+        $("div.tab-content." + tab_id).hide();
+
+        // Get all elements with class="tab-links" and remove the class "active"
+        $("button.tab-links." + tab_id).removeClass("active");
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        $("#" + the_id).addClass("active");
+        $("#" + the_id).show();
+
+        $(this).addClass("active");
+    });
+    tab_button.appendTo(tabs);
+
+    var div = $('<div class="tab-content ' + tab_id +
         (counter == 1 ? ' active' : '') +
         '" id="' + the_id + '">');
 
     var editordiv = $('<div class="editor_container"' +
         ' id="' + resource.basename + the_id + '_editor">');
 
-    // Display the file name for files that are not Ada or main.c
-    if (!resource.basename.match(/.ad[sb]$|^main.c$/)) {
-        var labeldiv = $('<div class="editor_label">' + resource.basename + '</div>');
-        labeldiv.appendTo(div);
-    }
     editordiv.appendTo(div);
-    div.appendTo(content);
+    div.appendTo(container);
 
     // ACE editors...
     editor = ace.edit(resource.basename + the_id + '_editor');
@@ -449,9 +534,11 @@ function check_worker(button, editors, container, output_area, lab_area) {
     if (lab_area != null)
         lab_area.empty();
 
-    var div = $('<div class="output_info">');
-    div.html(button.operation_label + "...<br>Console Output:");
+    var div = $('<div class="output_info console_output">');
+    div.html(CONSOLE_OUTPUT_LABEL + ":");
     div.appendTo(output_area);
+
+    $('<div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>').appendTo(output_area);
     query_operation_result(container, editors, output_area, lab_area, button.mode);
 }
 
@@ -484,9 +571,9 @@ function fill_editor_from_contents(container, example_server, resources) {
     var test_mode = container.parent().hasClass("test-descriptor");
 
     // Then fill the contents of the tabs
+    var tabs = $('<div class="tab">');
 
-    var content = $('<div class="tab-content">');
-    content.appendTo(container);
+    tabs.appendTo(container);
 
     counter = 0;
 
@@ -494,24 +581,22 @@ function fill_editor_from_contents(container, example_server, resources) {
 
     resources.forEach(function(resource) {
         counter++;
-        var editor = create_editor(resource, container, content, editors, counter);
+        var editor = create_editor(resource, container, tabs, editors, counter);
         // Append the editor to the list of editors
         editors.push(editor);
     });
 
-    var row = $('<div class="row output_row">');
-    row.appendTo(container);
+    // "click" all active tabs to show them
+    $("button.tab-links.active").click();
+
+    var row = $('<div class="row output_row">').appendTo(container);
 
     // create the buttons
 
-    var buttons_div = $('<div class="col-md-3">');
-    buttons_div.appendTo(row);
+    var buttons_div = $('<div class="col-md-3">').appendTo(row);
+    var output_div = $('<div class="col-md-9">').appendTo(row);
 
-    var output_div = $('<div class="col-md-9">');
-    output_div.appendTo(row);
-
-    var output_area = $('<div class="output_area">');
-    output_area.appendTo(output_div);
+    var output_area = $('<div class="output_area">').appendTo(output_div);
 
     editors.buttons = [];
 
@@ -538,7 +623,9 @@ function fill_editor_from_contents(container, example_server, resources) {
 
     if(container.attr("cli_input")) {
         $( '<textarea class="custom_input" name="custom_input" rows="4" cols="6"></textarea>' ).appendTo(buttons_div);
-        var custom_check = $( '<input type="checkbox" class="custom_check" name="custom_check"><label for="custom_check">Test against custom input</label>' ).appendTo(buttons_div).change( function() {
+        var unique_id = generateUniqueId();
+        var div = $('<div class="custom_check_container">').appendTo(buttons_div);
+        $('<input type="checkbox" id="' + unique_id + '" class="custom_check" title="' + CUSTOM_INPUT_TOOLTIP + '">').appendTo(div).change( function() {
             var input_search = container.find( 'textarea[name="custom_input"]' );
             if ($(this).is(':checked')) {
                 if(input_search.length == 1) {
@@ -551,6 +638,7 @@ function fill_editor_from_contents(container, example_server, resources) {
                 }
             }
         }).change();
+        $('<label class="custom_check" for="' + unique_id + '">' + CUSTOM_INPUT_LABEL + '</label>').appendTo(div);
     }
 
     for (var mode in MODES) {
@@ -559,7 +647,7 @@ function fill_editor_from_contents(container, example_server, resources) {
             // Create the reset button, but do this only once and if there are other buttons
             if (!reset_created) {
                 reset_created = true;
-                var reset_button = $('<button type="button" class="btn btn-secondary">').text("Reset").appendTo(buttons_div);
+                var reset_button = $('<button type="button" class="btn btn-secondary" title="' + RESET_TOOLTIP + '">').text("Reset").appendTo(buttons_div);
                 reset_button.editors = editors;
                 editors.buttons.push(reset_button);
                 reset_button.on('click', function(x) {
@@ -569,9 +657,10 @@ function fill_editor_from_contents(container, example_server, resources) {
             }
 
             // Now create the button for each mode that has been specified in the attributes
-            var the_text = MODES[mode];
+            var the_text = MODES[mode]["button_text"];
+            var tooltip_text = MODES[mode]["tooltip"];
 
-            var check_button = $('<button type="button" class="btn btn-primary">').text(the_text).appendTo(buttons_div);
+            var check_button = $('<button type="button" class="btn btn-primary" title="' + tooltip_text + '">').text(the_text).appendTo(buttons_div);
             check_button.operation_label = the_text;
             check_button.mode = mode;
             editors.buttons.push(check_button);

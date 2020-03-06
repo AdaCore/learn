@@ -4,19 +4,10 @@
 
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 Introduction
 ============
-
-.. sectionauthor:: Raphaël Amiard
 
 History
 -------
@@ -50,7 +41,7 @@ will really shine in low-level applications:
 Specific domains seeing Ada usage include Aerospace & Defense, civil aviation,
 rail, and many others. These applications require a high degree of safety: a
 software defect is not just an annoyance, but may have severe consequences. Ada
-provides safety features that detect defects at an early stage --- usually at
+provides safety features that detect defects at an early stage |mdash| usually at
 compilation time or using static analysis tools. Ada can also be used to create
 applications in a variety of other areas, such as:
 
@@ -118,8 +109,8 @@ amenable to automatic proof. This provides a level of assurance with regard to
 the correctness of your code that is much higher than with a regular
 programming language.
 
-There is a dedicated class for the SPARK language
-(:doc:`../../intro-to-spark/index`),
+There is a dedicated
+:doc:`course for the SPARK language <courses/intro-to-spark/index>`
 but keep in mind that every time we speak about the specification power of Ada
 during this course, it is power that you can leverage in SPARK to help proving
 the correctness of program properties ranging from absence of run-time errors

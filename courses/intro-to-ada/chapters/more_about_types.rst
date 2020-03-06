@@ -5,16 +5,7 @@ More about types
 
 .. _Aggregates:
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
-.. sectionauthor:: Raphaël Amiard
+.. include:: ../../global.txt
 
 Aggregates: A primer
 --------------------
@@ -31,7 +22,7 @@ record has to be specified, even components that have a default value.
 
 This means that the following code is incorrect:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Incorrect_Aggregate
     :class: ada-expect-compile-error
 
     package Incorrect is
@@ -59,7 +50,7 @@ convenient:
 However, note that as soon as you used a named association, all subsequent
 components likewise need to be specified with names associations.
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Points
 
     package Points is
        type Point is record
@@ -98,7 +89,7 @@ overloading.
 One of the novel aspects of Ada's overloading facility is the ability to
 resolve overloading based on the return type of a function.
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
 
     package Pkg is
        type SSID is new Integer;
@@ -127,7 +118,7 @@ However, sometimes an ambiguity makes it impossible to resolve which
 declaration of an overloaded name a given occurrence of the name refers to.
 This is where a qualified expression becomes useful.
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading_Error
     :class: ada-expect-compile-error
 
     package Pkg is
@@ -161,7 +152,7 @@ This is where a qualified expression becomes useful.
 Syntactically the target of a qualified expression can be either any expression
 in parentheses, or an aggregate:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Qual_Expr
 
     package Qual_Expr is
        type Point is record
@@ -224,7 +215,7 @@ Here is how you declare a simple pointer type, or access type, in Ada:
 
 :code-config:`reset_accumulator=True;accumulate_code=True`
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     package Dates is
        type Month_Type is (January, February, March, April, May, June, July,
@@ -308,7 +299,7 @@ Once we have declared an access type, we need a way to give variables of the
 types a meaningful value! You can allocate a value of an access type
 with the :ada:`new` keyword in Ada.
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     with Dates; use Dates;
 
@@ -322,7 +313,7 @@ with the :ada:`new` keyword in Ada.
 If the type you want to allocate needs constraints, you can put them in the
 subtype indication, just as you would do in a variable declaration:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     with Dates; use Dates;
 
@@ -340,7 +331,7 @@ In some cases, though, allocating just by specifiying the type is not ideal, so
 Ada also allows you to initialize along with the allocation. This is done via
 the qualified expression syntax:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     with Dates; use Dates;
 
@@ -361,7 +352,7 @@ pointer. Dereferencing a pointer uses the :ada:`.all` syntax in Ada, but is
 often not needed - in many cases, the access value will be implicitly
 dereferenced for you:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     with Dates; use Dates;
 
@@ -388,7 +379,7 @@ features that are considered fundamental to the use of pointers, such as:
 - Pointer arithmetic (being able to increment or decrement a pointer in order
   to point to the next or previous object)
 
-- Manual deallocation - what is called ``free`` or ``delete`` in C. This is
+- Manual deallocation - what is called :c:`free` or :c:`delete` in C. This is
   a potentially unsafe operation. To keep within the realm of safe
   Ada, you need to never deallocate manually.
 
@@ -432,7 +423,7 @@ naturally defined through two types, a record type and an access type, that are
 mutually dependent.  To declare mutually dependent types, you can use an
 incomplete type declaration:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Simple_List
 
     package Simple_List is
        type Node;
@@ -463,7 +454,7 @@ known at compile time. This is illustrated in the example below:
 .. ?? an elaboration pragma is used.
 .. ?? Consider simplfying or restructuring the example to avoid this issue
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record
 
     package Runtime_Length is
        function Compute_Max_Len return Natural;
@@ -494,7 +485,7 @@ Records with discriminant
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the example above, the size of the Items field is determined once, at
-run-time, but every ``Growable_Stack`` instance will be exactly the same size.
+run-time, but every :ada:`Growable_Stack` instance will be exactly the same size.
 But maybe that's not what you want to do. We saw that arrays in general offer
 this flexibility: for an unconstrained array type, different objects can have
 different sizes.
@@ -504,7 +495,7 @@ field that is called a discriminant:
 
 :code-config:`reset_accumulator=True;accumulate_code=True`
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record_2
 
     package Var_Size_Record_2 is
         type Items_Array is array (Positive range <>) of Integer;
@@ -525,7 +516,7 @@ Also, they make a type indefinite: Whether or not the discriminant is used to
 specify the size of an object, a type with a discriminant will be indefinite if
 the discriminant is not declared with an initialization:
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Test_Discriminants
     :class: ada-expect-compile-error
 
     package Test_Discriminants is
@@ -550,7 +541,7 @@ In most other respects discriminants behave like regular fields: You have to
 specify their values in aggregates, as seen above, and you can access their
 values via the dot notation.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record_2
     :class: ada-run
 
     with Var_Size_Record_2; use Var_Size_Record_2;
@@ -593,7 +584,7 @@ fields.
 
 :code-config:`reset_accumulator=True;accumulate_code=True`
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
 
     package Variant_Record is
        type Expr;                       --  Forward declaration of Expr
@@ -623,7 +614,7 @@ will only be able to access the fields :ada:`Left` and :ada:`Right` when the
 If you try to access a field that is not valid for your record, a
 :ada:`Constraint_Error` will be raised.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
     :class: ada-run-expect-failure
 
     with Variant_Record; use Variant_Record;
@@ -637,7 +628,7 @@ If you try to access a field that is not valid for your record, a
 
 Here is how you could write an evaluator for expressions:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
     :class: ada-run
 
     with Variant_Record; use Variant_Record;
@@ -677,8 +668,6 @@ Here is how you could write an evaluator for expressions:
 Fixed-point types
 -----------------
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
 Decimal fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -713,10 +702,10 @@ Several attributes are useful for dealing with decimal types:
 | Delta                  | The delta value of the type                  |
 +------------------------+----------------------------------------------+
 
-In the example below, we declare two data types: ``T3_D3`` and ``T6_D3``.
+In the example below, we declare two data types: :ada:`T3_D3` and :ada:`T6_D3`.
 For both types, the delta value is the same: 0.001.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Decimal_Fixed_Point_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -734,8 +723,8 @@ For both types, the delta value is the same: 0.001.
     end Decimal_Fixed_Point_Types;
 
 When running the application, we see that the delta value of both
-types is indeed the same: 0.001. However, because ``T3_D3`` is restricted
-to 3 digits, its range is -0.999 to 0.999. For the ``T6_D3``, we have
+types is indeed the same: 0.001. However, because :ada:`T3_D3` is restricted
+to 3 digits, its range is -0.999 to 0.999. For the :ada:`T6_D3`, we have
 defined a precision of 6 digits, so the range is -999.999 to 999.999.
 
 Similar to the type definition using the :ada:`range` syntax, because we
@@ -745,7 +734,7 @@ multiplication or division on decimal fixed-point types is smaller than
 the delta value required for the context, the actual result will be
 zero. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Decimal_Fixed_Point_Smaller
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -765,9 +754,9 @@ zero. For example:
     end Decimal_Fixed_Point_Smaller;
 
 In this example, the result of the operation :math:`0.001 * 0.5` is
-0.0005. Since this value is not representable for the ``T3_D3`` type
+0.0005. Since this value is not representable for the :ada:`T3_D3` type
 because the delta value is 0.001, the actual value stored in variable
-``A`` is zero. However, accuracy is preserved during the arithmetic
+:ada:`A` is zero. However, accuracy is preserved during the arithmetic
 operations if the target has sufficient precision, and the value
 displayed for C is 0.000500.
 
@@ -779,10 +768,10 @@ Fixed-point types
 Ordinary fixed-point types are similar to decimal fixed-point types in that the
 values are, in effect, scaled integers.  The difference between them is in the
 scale factor: for a decimal fixed-point type, the scaling, given explicitly by
-the type's ``delta``, is always a power of ten.
+the type's :ada:`delta`, is always a power of ten.
 
 In contrast, for an ordinary fixed-point type, the scaling is defined by the
-type's ``small``, which is derived from the specified ``delta`` and, by
+type's :ada:`small`, which is derived from the specified :ada:`delta` and, by
 default, is a power of two. Therefore, ordinary fixed-point types are sometimes
 called binary fixed-point types.
 
@@ -799,13 +788,13 @@ The syntax for an ordinary fixed-point type is
 
     type <type-name> is delta <delta-value> range <lower-bound> .. <upper-bound>;
 
-By default the compiler will choose a scale factor, or ``small``, that is a
+By default the compiler will choose a scale factor, or :ada:`small`, that is a
 power of 2 no greater than <delta-value>.
 
 For example, we may define a normalized range between -1.0 and 1.0 as
 following:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Normalized_Fixed_Point_Type
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -822,11 +811,11 @@ following:
 In this example, we are defining a 32-bit fixed-point data type for our
 normalized range. When running the application, we notice that the upper
 bound is close to one, but not exact one. This is a typical effect of
-fixed-point data types --- you can find more details in this discussion
+fixed-point data types |mdash| you can find more details in this discussion
 about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 We may also rewrite this code with an exact type definition:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Normalized_Adapted_Fixed_Point_Type
 
     procedure Normalized_Adapted_Fixed_Point_Type is
        type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
@@ -836,7 +825,7 @@ We may also rewrite this code with an exact type definition:
 
 We may also use any other range. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Custom_Fixed_Point_Range
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -854,12 +843,12 @@ We may also use any other range. For example:
                  & T_Inv_Trig'Image (T_Inv_Trig'Last));
     end Custom_Fixed_Point_Range;
 
-In this example, we are defining a 16-bit type called ``T_Inv_Trig``,
+In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
 which has a range from :math:`-\pi/2` to :math:`\pi/2`.
 
 All standard operations are available for fixed-point types. For example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Fixed_Point_Op
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -874,7 +863,7 @@ All standard operations are available for fixed-point types. For example:
        Put_Line ("R is " & TQ31'Image (R));
     end Fixed_Point_Op;
 
-As expected, ``R`` contains 0.75 after the addition of ``A`` and ``B``.
+As expected, :ada:`R` contains 0.75 after the addition of :ada:`A` and :ada:`B`.
 
 In fact the language is more general that these examples imply, since in
 practice it is typical to need to multiply or divide values from different
@@ -883,7 +872,7 @@ The details are outside the scope of this introductory course.
 
 It is also worth noting, although again the details are outside the scope of
 this course, that you can explicitly specify a value for an ordinary
-fixed-point type's ``small``.  This allows non-binary scaling, for example:
+fixed-point type's :ada:`small`.  This allows non-binary scaling, for example:
 
 .. code-block:: ada
 
@@ -901,7 +890,7 @@ enumeration literals. This means that in addition to the language's
 strongly typed character types,
 user-defined character types are also permitted:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Character_Example
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;

@@ -4,16 +4,7 @@ Arrays
 :code-config:`run_button=True;prove_button=False;accumulate_code=False`
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
-.. sectionauthor:: Raphaël Amiard
+.. include:: ../../global.txt
 
 Arrays provide another fundamental family of composite types in Ada.
 
@@ -23,7 +14,7 @@ Array type declaration
 Arrays in Ada are used to define contiguous collections of elements that can be
 selected by indexing. Here's a simple example:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Greet
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -83,7 +74,7 @@ to index into the array.
     not simply a handle or pointer.  Unlike C and C++, there is no implicit
     equivalence between an array and a pointer to its initial element.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Array_Bounds_Example
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -124,7 +115,7 @@ even though it works correctly:
 Since you can use any discrete type to index an array, enumeration types
 are permitted.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Month_Example
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -178,7 +169,7 @@ First, as is true in general in Ada, the indexing operation is strongly typed.
 If you use a value of the wrong type to index the array, you will get a
 compile-time error.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Greet_2
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -203,7 +194,7 @@ Second, arrays in Ada are bounds checked. This means that if you try to access
 an element outside of the bounds of the array, you will get a run-time error
 instead of accessing random memory as in unsafe languages.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Greet_3
     :class: ada-run, ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -230,7 +221,7 @@ the array. While this can be useful for typing and readability purposes,
 sometimes you simply want to express a range of values.  Ada allows you to do
 that, too.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Simple_Array_Bounds
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -266,7 +257,7 @@ range in a for loop.  That raises the question of how to write an iteration
 when the array has an anonymous range for its bounds, since there is no name to
 refer to the range.  Ada solves that via several attributes of array objects:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Range_Example
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -285,7 +276,7 @@ refer to the range.  Ada solves that via several attributes of array objects:
 If you want more fine grained control, you can use the separate attributes
 :ada:`'First` and :ada:`'Last`.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Array_Attributes_Example
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -328,7 +319,7 @@ However, Ada also allows you to declare array types whose bounds are not fixed:
 in that case, the bounds will need to be provided when creating instances of
 the type.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Unconstrained_Array_Example
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -425,7 +416,7 @@ literals, as we can see in the example below.
                                      'W', 'o', 'r', 'l', 'd');
         end String_Literals;
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Greet_4
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -450,7 +441,7 @@ You can omit the bounds when creating an instance of an unconstrained array
 type if you supply an initialization, since the bounds can be deduced from the
 initialization expression.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Greet_5
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -466,7 +457,7 @@ initialization expression.
        New_Line;
     end Greet;
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Constant_Integer_Array
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -562,7 +553,7 @@ any type.
 
 For example, this is a function that returns an unconstrained :ada:`String`:
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Day_Name_1
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -618,7 +609,7 @@ the array's component type needs to be of a definite and constrained type.
 Thus, if you need to declare, for example, an array of Strings, the String
 subtype used as component will need to have a fixed size.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Day_Name_2
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -651,7 +642,7 @@ One last feature of Ada arrays that we're going to cover is array slices. It is
 possible to take and use a slice of an array (a contiguous sequence of
 elements) as a name or a value.
 
-.. code:: ada
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Slices
 
     with Ada.Text_IO; use Ada.Text_IO;
 

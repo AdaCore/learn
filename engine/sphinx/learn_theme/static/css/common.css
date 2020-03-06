@@ -5,7 +5,10 @@ div.file{
 div.editor_container{
    height: 30em;
    border: 1px solid #ddd;
-   margin: 5px 0px;
+   margin-top: 0px;
+   margin-bottom: 5px;
+   margin-left: 0px;
+   margin-right: 0px;
 }
 
 div.editor_container.inline{
@@ -72,6 +75,7 @@ div.output_success{
 div.output_area{
    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
    background: #f3f3f3;
+   margin-top: 8px;
 }
 
 div.output_row{
@@ -81,7 +85,7 @@ div.output_row{
 div.output_row button{
    margin-right:4px;
    margin-top:2px;
-   margin-bottom: 4px;
+   margin-bottom: 0px;
 }
 
 .read-only {

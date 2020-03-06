@@ -3,9 +3,7 @@
 Test and Proof
 =====================================================================
 
-.. role:: ada(code)
-   :language: ada
-
+.. include:: ../../global.txt
 
 Various Combinations of Tests and Proofs
 ---------------------------------------------------------------------

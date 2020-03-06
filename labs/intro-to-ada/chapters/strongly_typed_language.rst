@@ -1,5 +1,3 @@
-:orphan:
-
 Strongly typed language
 =======================
 
@@ -14,8 +12,8 @@ Strongly typed language
 .. role:: cpp(code)
    :language: c++
 
-Exercise #1
------------
+Colors
+------
 
 In this exercise, you'll work with enumerations. These are your goals:
 
@@ -25,27 +23,27 @@ In this exercise, you'll work with enumerations. These are your goals:
    +-------------+---------------+
    | Color       | Value         |
    +=============+===============+
-   | Salmon      | ```#FA8072``` |
+   | Salmon      | ``#FA8072``   |
    +-------------+---------------+
-   | Firebrick   | ```#B22222``` |
+   | Firebrick   | ``#B22222``   |
    +-------------+---------------+
-   | Red         | ```#FF0000``` |
+   | Red         | ``#FF0000``   |
    +-------------+---------------+
-   | Darkred     | ```#8B0000``` |
+   | Darkred     | ``#8B0000``   |
    +-------------+---------------+
-   | Lime        | ```#00FF00``` |
+   | Lime        | ``#00FF00``   |
    +-------------+---------------+
-   | Forestgreen | ```#228B22``` |
+   | Forestgreen | ``#228B22``   |
    +-------------+---------------+
-   | Green       | ```#008000``` |
+   | Green       | ``#008000``   |
    +-------------+---------------+
-   | Darkgreen   | ```#006400``` |
+   | Darkgreen   | ``#006400``   |
    +-------------+---------------+
-   | Blue        | ```#0000FF``` |
+   | Blue        | ``#0000FF``   |
    +-------------+---------------+
-   | Mediumblue  | ```#0000CD``` |
+   | Mediumblue  | ``#0000CD``   |
    +-------------+---------------+
-   | Darkblue    | ```#00008B``` |
+   | Darkblue    | ``#00008B``   |
    +-------------+---------------+
 
 #. Implement a function :ada:`To_Integer` to convert from the
@@ -53,7 +51,7 @@ In this exercise, you'll work with enumerations. These are your goals:
 
    - Hints: You may use a :ada:`case` for this. Also, in order to express
      the hexadecimal values above in Ada, use the following syntax:
-     ```16#<hex_value>#``` (e.g.: :ada:`16#FFFFFF#`).
+     ``16#<hex_value>#`` (e.g.: :ada:`16#FFFFFF#`).
 
 #. Declare another color type (:ada:`Basic_HTML_Color`) with the following
    colors: Red, Green, Blue. Also, implement the function
@@ -64,15 +62,15 @@ Don't worry about the details of the :ada:`Main` procedure. You should
 just focus on declaring the types (in the :ada:`Color_Types` package) and
 implementing the functions as indicated below.
 
-.. code:: ada lab=Strongly_Typed_Enumerations
+.. code:: ada lab=Strongly_Typed.Colors
 
     --  START LAB IO BLOCK
-    in 0: HTML_Color_Range
-    out 0: SALMON FIREBRICK RED DARKRED LIME FORESTGREEN GREEN DARKGREEN BLUE MEDIUMBLUE DARKBLUE
-    in 1: HTML_Color_To_Integer
-    out 1: 16#FA8072# 16#B22222# 16#FF0000# 16#8B0000# 16#FF00# 16#228B22# 16#8000# 16#6400# 16#FF# 16#CD# 16#8B#
-    in 2: Basic_HTML_Color_To_HTML_Color
-    out 2: RED GREEN BLUE
+    in 0:HTML_Color_Range
+    out 0:SALMON FIREBRICK RED DARKRED LIME FORESTGREEN GREEN DARKGREEN BLUE MEDIUMBLUE DARKBLUE
+    in 1:HTML_Color_To_Integer
+    out 1:16#FA8072# 16#B22222# 16#FF0000# 16#8B0000# 16#FF00# 16#228B22# 16#8000# 16#6400# 16#FF# 16#CD# 16#8B#
+    in 2:Basic_HTML_Color_To_HTML_Color
+    out 2:RED GREEN BLUE
     --  END LAB IO BLOCK
 
     package Color_Types is
@@ -158,8 +156,8 @@ implementing the functions as indicated below.
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Exercise #2
------------
+Integer Types
+-------------
 
 In this exercise, you'll create integer types. These are your goals:
 
@@ -194,31 +192,31 @@ Don't worry about the details of the :ada:`Main` procedure. You should
 just focus on declaring the types (in the :ada:`Int_Types` package) and
 implementing the functions as indicated below.
 
-.. code:: ada lab=Strongly_Typed_Integers
+.. code:: ada lab=Strongly_Typed.Integer_Types
 
     --  START LAB IO BLOCK
-    in 0: I_100_Range
-    out 0:  0 100
-    in 1: U_100_Range
-    out 1: 0 100
-    in 2: U_100_Wraparound
-    out 2: 100 0
-    in 3: U_100_To_I_100
-    out 3: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
-    in 4: I_100_To_U_100
-    out 4: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
-    in 5: D_50_Range
-    out 5: 10 50
-    in 6: S_50_Range
-    out 6: 10 50
-    in 7: I_100_To_D_50
-    out 7: 10 10 10 10 10 10 10 10 10 10 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
-    in 8: I_100_To_S_50
-    out 8: 10 10 10 10 10 10 10 10 10 10 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
-    in 9: D_50_To_I_100
-    out 9: 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
-    in 10: S_50_To_I_100
-    out 10: 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
+    in 0:I_100_Range
+    out 0:0 100
+    in 1:U_100_Range
+    out 1:0 100
+    in 2:U_100_Wraparound
+    out 2:100 0
+    in 3:U_100_To_I_100
+    out 3:0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
+    in 4:I_100_To_U_100
+    out 4:0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
+    in 5:D_50_Range
+    out 5:10 50
+    in 6:S_50_Range
+    out 6:10 50
+    in 7:I_100_To_D_50
+    out 7:10 10 10 10 10 10 10 10 10 10 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
+    in 8:I_100_To_S_50
+    out 8:10 10 10 10 10 10 10 10 10 10 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
+    in 9:D_50_To_I_100
+    out 9:10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
+    in 10:S_50_To_I_100
+    out 10:10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
     --  END LAB IO BLOCK
 
     package Int_Types is
@@ -400,8 +398,8 @@ implementing the functions as indicated below.
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Exercise #3
------------
+Temperatures
+------------
 
 In this exercise, you'll work with custom floating-point and integer types
 to implement a small system with temperatures in Celsius and Kelvin. These
@@ -431,19 +429,19 @@ are your goals:
 
 For the floating-point types above, use a precision of six digits.
 
-.. code:: ada lab=Strongly_Typed_Floating_Point
+.. code:: ada lab=Strongly_Typed.Temperatures
 
     --  START LAB IO BLOCK
-    in 0: Celsius_Range
-    out 0: -2.73150E+02 5.50485E+03
-    in 1: Celsius_To_Int_Celsius
-    out 1: -273 0 5505
-    in 2: Int_Celsius_To_Celsius
-    out 2: -2.73000E+02 0.00000E+00 5.50485E+03
-    in 3: Kelvin_To_Celsius
-    out 3: -2.73150E+02 0.00000E+00 5.50485E+03
-    in 4: Celsius_To_Kelvin
-    out 4: 0.00000E+00 5.77800E+03
+    in 0:Celsius_Range
+    out 0:-2.73150E+02 5.50485E+03
+    in 1:Celsius_To_Int_Celsius
+    out 1:-273 0 5505
+    in 2:Int_Celsius_To_Celsius
+    out 2:-2.73000E+02 0.00000E+00 5.50485E+03
+    in 3:Kelvin_To_Celsius
+    out 3:-2.73150E+02 0.00000E+00 5.50485E+03
+    in 4:Celsius_To_Kelvin
+    out 4:0.00000E+00 5.77800E+03
     --  END LAB IO BLOCK
 
     package Temperature_Types is

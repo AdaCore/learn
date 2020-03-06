@@ -105,6 +105,7 @@ def c_chop(lines):
         if j.startswith('!'):
             if current_filename:
                 results.append((current_filename, '\n'.join(current_contents)))
+                current_contents = []
             current_filename = j[1:]
         else:
             current_contents.append(j)
@@ -221,7 +222,7 @@ class WidgetCodeDirective(Directive):
         if not codeconfig_found:
             print (self.lineno, dir(self))
             raise self.error("you need to add a :code-config: role")
-        
+
         if is_lab:
             # look for lab io start block
             io_start_matches = [i for i, line in enumerate(self.content) if LAB_IO_START_REGEX.match(line)]
@@ -276,6 +277,35 @@ class WidgetCodeDirective(Directive):
                 [u'<div class="file" basename="{}">{}</div>'.format(
                     f[0], escape(f[1])) for f in files]
                 )
+
+            nodes_latex = []
+
+            # Attemping to detect HTML or Latex output by checking for 'html' in tags
+            if 'html' not in self.state.state_machine.document.settings.env.app.tags.tags:
+                for f in files:
+                    # Based on sphinx/directives/code.py
+
+                    container_node = nodes.container(
+                        '', literal_block=True,
+                        classes=['literal-block-wrapper'])
+
+                    literal = nodes.literal_block('',
+                                                  f[1],
+                                                  format='latex')
+                    literal['language'] = self.arguments[0].split(' ')[0]
+                    literal['linenos'] = 'linenos' in self.options or \
+                        'lineno-start' in self.options
+                    literal['source'] = f[0]
+
+                    caption = nodes.caption('', f[0])
+                    caption.source = literal.source
+                    caption.line = literal.line
+
+#                    container_node += caption
+                    container_node += literal
+
+                    nodes_latex.append(container_node)
+
         except Exception:
             # If we have an exception here, it's probably a codec error
             print (files)
@@ -294,8 +324,7 @@ class WidgetCodeDirective(Directive):
                                       shadow_files_divs=shadow_files_divs,
                                       extra_attribs=extra_attribs),
                       format='html')
-        ]
-
+        ] + nodes_latex
 
 def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
     """Support the code-config role.

@@ -6,16 +6,7 @@
 Design Patterns
 ===============
 
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 .. role:: python(code)
    :language: python

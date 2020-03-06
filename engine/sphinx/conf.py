@@ -12,7 +12,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -21,12 +21,15 @@
 
 project = u'learn.adacore.com'
 copyright = u'2019, AdaCore'
-author = u'AdaCore'
+author = u'AdaCore' if 'SPHINX_AUTHOR' not in os.environ else \
+    os.environ['SPHINX_AUTHOR']
+title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
+    os.environ['SPHINX_TITLE']
 
 # The short X.Y version
 version = u''
 # The full version, including alpha/beta/rc tags
-release = u'1'
+release = u'2020-01'
 
 
 # -- General configuration ---------------------------------------------------
@@ -47,7 +50,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 import widget_extension
 
 extensions = [
-#    'sphinx.ext.intersphinx',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
@@ -80,6 +83,12 @@ language = None
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
 exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content']
+
+# Exclude internal and unfinished material from final site build
+if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
+    exclude_patterns += ['**internal/**',
+                         '**courses/advanced-ada/**',
+                         '**courses/advanced-spark/**']
 
 show_authors = True
 
@@ -138,30 +147,66 @@ htmlhelp_basename = 'learnadacorecomdoc'
 
 # -- Options for LaTeX output ------------------------------------------------
 
+latex_engine = 'xelatex'
+
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
-    # 'papersize': 'letterpaper',
+    'papersize': 'a4paper',
 
     # The font size ('10pt', '11pt' or '12pt').
     #
-    # 'pointsize': '10pt',
+    'pointsize': '10pt',
 
     # Additional stuff for the LaTeX preamble.
     #
-    # 'preamble': '',
+    'preamble': r'''
+\usepackage{pmboxdraw} \usepackage{unicode-math}
+\fvset{fontsize=\small}
+''',
+
+    # Font package inclusion
+    #
+    'fontpkg': r'''
+\setmainfont{Open Sans}
+\setsansfont{Open Sans}
+\setmonofont{DejaVu Sans Mono}
+''',
 
     # Latex figure (float) alignment
     #
-    # 'figure_align': 'htbp',
+    'figure_align': 'htbp',
+
+    # Avoid blank page for chapters on odd pages
+    # 'extraclassoptions': 'openany',
+
+    # Sphinx Setup (LaTeX-type customization)
+    #
+    'passoptionstopackages': r'\PassOptionsToPackage{svgnames}{xcolor}',
+
+    'sphinxsetup': '''
+VerbatimBorderColor={rgb}{0.90,0.90,0.90},
+VerbatimColor={rgb}{0.99,0.99,0.99},
+TitleColor={named}{MidnightBlue}
+''',
+    # 'verbatimwithframe=false'
+
+    # Inline code cannot be highlighted, see
+    # https://github.com/sphinx-doc/sphinx/issues/5157
 }
+
+latex_logo = 'learn_theme/static/img/logo.png'
+
+latex_show_urls = 'footnote'
+
+latex_show_pagerefs = True
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'learnadacorecom.tex', u'learn.adacore.com Documentation',
-     u'AdaCore', 'manual'),
+    (master_doc, 'learnadacorecom.tex', title,
+     author, 'manual'),
 ]
 
 
@@ -170,7 +215,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'learnadacorecom', u'learn.adacore.com Documentation',
+    (master_doc, 'learnadacorecom', title,
      [author], 1)
 ]
 
@@ -181,7 +226,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'learnadacorecom', u'learn.adacore.com Documentation',
+    (master_doc, 'learnadacorecom', title,
      author, 'learnadacorecom', 'One line description of project.',
      'Miscellaneous'),
 ]
@@ -191,8 +236,9 @@ texinfo_documents = [
 
 # -- Options for intersphinx extension ---------------------------------------
 
-# Example configuration for intersphinx: refer to the Python standard library.
-#intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
+
+
 
 # -- Options for todo extension ----------------------------------------------
 

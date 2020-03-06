@@ -9,6 +9,9 @@
 Let's Build a Stack
 =====================
 
+.. role:: ada(code)
+   :language: ada
+
 In this lab we will build a stack data structure and use the SPARK provers to find the errors in the below implementation.
 
 Background
@@ -112,12 +115,12 @@ Sample Output
 .. code:: ada lab=MLH_Stack
 
     --  START LAB IO BLOCK
-    in 0: M L H d p d p d p d
-    out 0: [M, L, H] [M, L] [M] []
-    in 1: a b c d e d p
-    out 1: [a, b, c] [a, b, c, e]
-    in 2: p a p d
-    out 2: Nothing to Pop, Stack is empty! []
+    in 0:M L H d p d p d p d
+    out 0:[M, L, H] [M, L] [M] []
+    in 1:a b c d e d p
+    out 1:[a, b, c] [a, b, c, e]
+    in 2:p a p d
+    out 2:Nothing to Pop, Stack is empty! []
     --  END LAB IO BLOCK
 
     package Stack with SPARK_Mode => On is
@@ -159,7 +162,7 @@ Sample Output
        -- Clear --
        -----------
 
-       procedure Clear 
+       procedure Clear
        is
        begin
           Last := Tab'First;
@@ -169,7 +172,7 @@ Sample Output
        -- Push --
        ----------
 
-       procedure Push (V : Character) 
+       procedure Push (V : Character)
        is
        begin
           Tab (Last) := V;
@@ -179,7 +182,7 @@ Sample Output
        -- Pop --
        ---------
 
-       procedure Pop (V : out Character) 
+       procedure Pop (V : out Character)
        is
        begin
           Last := Last - 1;
@@ -190,7 +193,7 @@ Sample Output
        -- Top --
        ---------
 
-       function Top return Character 
+       function Top return Character
        is
        begin
           return Tab (1);
@@ -209,7 +212,7 @@ Sample Output
        -- Debug --
        -----------
 
-       procedure Debug 
+       procedure Debug
        is
        begin
 
@@ -259,4 +262,4 @@ Sample Output
 
        end loop;
 
-    end Main; 
+    end Main;
