@@ -665,8 +665,8 @@ Type aliases
 Previously, we've seen that we can create new types by declaring
 :ada:`type Miles is new Float`. We could also create type aliases, which
 generate alternative names |mdash| *aliases* |mdash| for known types. We achieve
-this by using subtypes. In this case, however, we don't get the benefits of
-Ada's strong type checking. Let's rewrite an example using type aliases:
+this by using subtypes. In this case, however, we don't get all of the benefits
+of Ada's strong type checking. Let's rewrite an example using type aliases:
 
 .. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Undetected_Imperial_Metric_Error
 
