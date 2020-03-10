@@ -58,5 +58,7 @@ Labs: Introduction to Ada
     Tasking <chapters/tasking>
     Design by contracts <chapters/contracts>
     Object Oriented Programming <chapters/object_oriented_programming>
-    Standard Library <chapters/standard_library>
+    Standard Library: Containers <chapters/standard_library_containers>
+    Standard Library: Dates & Times <chapters/standard_library_dates_times>
+    Standard Library: Numerics <chapters/standard_library_numerics>
     Solutions <chapters/solutions>
