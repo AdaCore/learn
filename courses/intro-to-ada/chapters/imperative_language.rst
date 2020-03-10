@@ -540,7 +540,7 @@ Let's look at an example of a nested procedure:
        --  Call to Nested
     end Main;
 
-A declaration cannot appear as a statement if you need to declare a local
+A declaration cannot appear as a statement. If you need to declare a local
 variable amidst the statements, you can introduce a new declarative region with
 a block statement:
 
