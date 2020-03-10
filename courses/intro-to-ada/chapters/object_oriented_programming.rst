@@ -432,3 +432,254 @@ the dot notation. Any remaining parameter are passed normally:
     end Main;
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
+
+Private & Limited
+-----------------
+
+We've seen previously (in the :doc:`./privacy` chapter) that types can be
+declared limited or private. These encapsulation techniques can also be
+applied to tagged types, as we'll see in this section.
+
+This is an example of a tagged private type:
+
+.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Private_Types
+    :class: ada-syntax-only
+
+    package P is
+       type T is tagged private;
+    private
+       type T is tagged record
+           E : Integer;
+       end record;
+    end P;
+
+This is an example of a tagged limited type:
+
+.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Types
+    :class: ada-syntax-only
+
+    package P is
+       type T is tagged limited record
+           E : Integer;
+       end record;
+    end P;
+
+Naturally, you can combine both *limited* and *private* types and declare a
+tagged limited private type:
+
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Private_Types
+
+    package P is
+       type T is tagged limited private;
+
+       procedure Init (A : in out T);
+    private
+       type T is tagged limited record
+           E : Integer;
+       end record;
+    end P;
+
+    package body P is
+
+       procedure Init (A : in out T) is
+       begin
+          A.E := 0;
+       end Init;
+
+    end P;
+
+    with P; use P;
+
+    procedure Main is
+      T1, T2 : T;
+    begin
+      T1.Init;
+      T2.Init;
+
+      --  The following line doesn't work because type T is private:
+      --  T1.E := 0;
+
+      --  The following line doesn't work because type T is limited:
+      --  T2 := T1;
+    end Main;
+
+Note that the code in the :ada:`Main` procedure above presents two assignments
+that trigger compilation errors because type :ada:`T` is limited private.
+In fact, you cannot:
+
+- assign to :ada:`T1.E` directly because type :ada:`T` is private;
+
+- assign :ada:`T1` to :ada:`T2` because type :ada:`T` is limited.
+
+In this case, there's no distinction between tagged and non-tagged types: these
+compilation errors would also occur for non-tagged types.
+
+Classwide access types
+----------------------
+
+:code-config:`reset_accumulator=True;accumulate_code=True`
+
+In this section, we'll discuss an useful pattern for object-oriented programming
+in Ada: classwide access type. Let's start with an example where we declare a
+tagged type :ada:`T` and a derived type :ada:`T_New`:
+
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Error
+    :class: ada-syntax-only
+
+    package P is
+       type T is tagged null record;
+
+       procedure Show (Dummy : T);
+
+       type T_New is new T with null record;
+
+       procedure Show (Dummy : T_New);
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body P is
+
+       procedure Show (Dummy : T) is
+       begin
+          Put_Line ("Using type " & T'External_Tag);
+       end Show;
+
+       procedure Show (Dummy : T_New) is
+       begin
+          Put_Line ("Using type " & T_New'External_Tag);
+       end Show;
+
+    end P;
+
+Note that we're using null records for both types :ada:`T` and :ada:`T_New`.
+Although these types don't actually have any component, we can still use them
+to demonstrate dispatching. Also note that the example above makes use of the
+:ada:`'External_Tag` attribute in the implementation of the :ada:`Show`
+procedure to get a string for the corresponding tagged type.
+
+As we've seen before, we must use a classwide type to create objects that
+can make dispatching calls. In other words, objects of type :ada:`T'Class` will
+dispatch. For example:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Error
+
+    with P; use P;
+
+    procedure Dispatching_Example is
+      T2         :          T_New;
+      T_Dispatch : constant T'Class := T2;
+    begin
+      T_Dispatch.Show;
+    end Dispatching_Example;
+
+A more useful application is to declare an array of objects that can dispatch.
+For example, we'd like to declare an array :ada:`T_Arr`, loop over this array
+and dispatch according to the actual type of each individual element:
+
+.. code-block:: ada
+
+    for I in T_Arr'Range loop
+       T_Arr (I).Show;
+       --  Call Show procedure according to actual type of T_Arr (I)
+    end loop;
+
+However, it's not possible to declare an array of type :ada:`T'Class` directly:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Error
+    :class: ada-expect-compile-error
+
+    with P; use P;
+
+    procedure Classwide_Compilation_Error is
+      T_Arr  : array (1 .. 2) of T'Class;
+      --                         ^ Compilation Error!
+    begin
+      for I in T_Arr'Range loop
+         T_Arr (I).Show;
+      end loop;
+    end Classwide_Compilation_Error;
+
+In fact, it's impossible for the compiler to know which type would actually be
+used for each element of the array. However, if we use dynamic allocation via
+access types, we can allocate objects of different types for the individual
+elements of an array :ada:`T_Arr`. We do this by using classwide access types,
+which have the following format:
+
+.. code-block:: ada
+
+    type T_Class is access T'Class;
+
+:code-config:`reset_accumulator=True;accumulate_code=False`
+
+We can rewrite the previous example using the :ada:`T_Class` type. In this
+case, dynamically allocated objects of this type will dispatch according to
+the actual type used during the allocation. Also, let's introduce an
+:ada:`Init` procedure that won't be overridden for the derived :ada:`T_New`
+type. This is the adapted code:
+
+.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Access
+
+    package P is
+       type T is tagged record
+           E : Integer;
+       end record;
+
+       type T_Class is access T'Class;
+
+       procedure Init (A : in out T);
+
+       procedure Show (Dummy : T);
+
+       type T_New is new T with null record;
+
+       procedure Show (Dummy : T_New);
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body P is
+
+       procedure Init (A : in out T) is
+       begin
+          Put_Line ("Initializing type T...");
+          A.E := 0;
+       end Init;
+
+       procedure Show (Dummy : T) is
+       begin
+          Put_Line ("Using type " & T'External_Tag);
+       end Show;
+
+       procedure Show (Dummy : T_New) is
+       begin
+          Put_Line ("Using type " & T_New'External_Tag);
+       end Show;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with P;           use P;
+
+    procedure Main is
+      T_Arr  : array (1 .. 2) of T_Class;
+    begin
+      T_Arr (1) := new T;
+      T_Arr (2) := new T_New;
+
+      for I in T_Arr'Range loop
+         Put_Line ("Element # " & Integer'Image (I));
+
+         T_Arr (I).Init;
+         T_Arr (I).Show;
+
+         Put_Line ("-----------");
+      end loop;
+    end Main;
+
+In this example, the first element (:ada:`T_Arr (1)`) is of type :ada:`T`,
+while the second element is of type :ada:`T_New`. When running the example,
+the :ada:`Init` procedure of type :ada:`T` is called for both elements of the
+:ada:`T_Arr` array, while the call to the :ada:`Show` procedure selects the
+corresponding procedure according to the type of each element of :ada:`T_Arr`.
