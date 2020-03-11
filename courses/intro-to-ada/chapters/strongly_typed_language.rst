@@ -740,11 +740,28 @@ We could write:
         - Haskell: ``type Meters = Float``
 
 Note, however, that subtypes in Ada correspond to type aliases if, and only
-if, they don't have constraints. Thus, if we add a constraint to a subtype
-declaration, we don't have a type alias anymore. For example, the following
-declaration *can't* be consider a type alias of :ada:`Float`:
+if, they don't have new constraints. Thus, if we add a new constraint to a
+subtype declaration, we don't have a type alias anymore. For example, the
+following declaration *can't* be consider a type alias of :ada:`Float`:
 
 .. code-block:: ada
 
     subtype Meters is Float range 0.0 .. 1_000_000.0;
 
+Let's look at another example:
+
+.. code-block:: ada
+
+    subtype Degree_Celsius is Float;
+    subtype Liquid_Water_Temperature is Degree_Celsius range 0.0 .. 100.0;
+    subtype Running_Water_Temperature is Liquid_Water_Temperature;
+
+In this example, :ada:`Liquid_Water_Temperature` isn't an alias of
+:ada:`Degree_Celsius`, since it adds a new constraint that wasn't part of the
+declaration of the :ada:`Degree_Celsius`. However, we do have two type aliases
+here:
+
+- :ada:`Degree_Celsius` is an alias of :ada:`Float`;
+- :ada:`Running_Water_Temperature` is an alias of
+  :ada:`Liquid_Water_Temperature`, even if :ada:`Liquid_Water_Temperature`
+  itself has a constrained range.
