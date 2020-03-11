@@ -664,8 +664,8 @@ Subtypes as type aliases
 
 Previously, we've seen that we can create new types by declaring
 :ada:`type Miles is new Float`. We could also create type aliases, which
-generate alternative names |mdash| *aliases* |mdash| for known types. Type
-alias are sometimes also called type synonyms.
+generate alternative names |mdash| *aliases* |mdash| for known types. Note that
+type aliases are sometimes called *type synonyms*.
 
 We achieve this in Ada by using subtypes without constraints. In this case,
 however, we don't get all of the benefits of Ada's strong type checking. Let's
