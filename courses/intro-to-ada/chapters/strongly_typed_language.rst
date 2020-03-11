@@ -730,3 +730,12 @@ We could write:
         - Swift: ``typealias Meters = Double``
         - Kotlin: ``typealias Meters = Double``
         - Haskell: ``type Meters = Float``
+
+Note, however, that subtypes in Ada correspond to type aliases if, and only
+if, they don't have constraints. Thus, if we add a constraint to a subtype
+declaration, we don't have a type alias anymore. For example, the following
+declaration *can't* be consider a type alias:
+
+.. code-block:: ada
+
+    subtype Meters is Float range 0.0 .. 1_000_000;
