@@ -746,4 +746,5 @@ declaration *can't* be consider a type alias of :ada:`Float`:
 
 .. code-block:: ada
 
-    subtype Meters is Float range 0.0 .. 1_000_000;
+    subtype Meters is Float range 0.0 .. 1_000_000.0;
+
