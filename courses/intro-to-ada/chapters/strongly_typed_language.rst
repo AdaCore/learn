@@ -667,9 +667,9 @@ Previously, we've seen that we can create new types by declaring
 generate alternative names |mdash| *aliases* |mdash| for known types. Type
 alias are sometimes also called type synonyms.
 
-We achieve this by using subtypes. In this case, however, we don't get all of
-the benefits of Ada's strong type checking. Let's rewrite an example using type
-aliases:
+We achieve this in Ada by using subtypes without constraints. In this case,
+however, we don't get all of the benefits of Ada's strong type checking. Let's
+rewrite an example using type aliases:
 
 .. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Undetected_Imperial_Metric_Error
 
