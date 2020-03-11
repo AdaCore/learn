@@ -712,3 +712,21 @@ We could write:
     subtype Amount is Float;
 
     Paid, Due : Amount;
+
+.. admonition:: In other languages
+
+    In C, for example, we can use a :c:`typedef` declaration to create a type
+    alias. For example:
+
+    .. code-block:: c
+
+        typedef float meters;
+
+    This corresponds to the declaration that we've seen above using subtypes.
+    Other programming languages include this concept in similar ways. For
+    example:
+
+        - C++: ``using meters = float;``
+        - Swift: ``typealias Meters = Double``
+        - Kotlin: ``typealias Meters = Double``
+        - Haskell: ``type Meters = Float``
