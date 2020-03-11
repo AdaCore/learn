@@ -700,9 +700,9 @@ type conversion. This, however, can lead to all sorts of programming mistakes
 that we'd like to avoid, as we can see in the undetected error highlighted in
 the code above. In that example, the error in the assignment of a value in
 meters to a variable meant to store values in miles remains undetected because
-both subtypes (:ada:`Meters` and :ada:`Miles`) are type aliases of
-:ada:`Float`. Therefore, the recommendation is to use strong typing
-|mdash| via :ada:`type X is new Y` |mdash| for cases such as the one above.
+both :ada:`Meters` and :ada:`Miles` are subtypes of :ada:`Float`. Therefore,
+the recommendation is to use strong typing |mdash| via :ada:`type X is new Y`
+|mdash| for cases such as the one above.
 
 There are, however, many situations where type aliases are useful. For example,
 in an application that uses floating-point types in multiple contexts, we could
