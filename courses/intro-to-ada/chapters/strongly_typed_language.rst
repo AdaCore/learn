@@ -667,7 +667,7 @@ Previously, we've seen that we can create new types by declaring
 generate alternative names |mdash| *aliases* |mdash| for known types. Note that
 type aliases are sometimes called *type synonyms*.
 
-We achieve this in Ada by using subtypes without constraints. In this case,
+We achieve this in Ada by using subtypes without new constraints. In this case,
 however, we don't get all of the benefits of Ada's strong type checking. Let's
 rewrite an example using type aliases:
 
@@ -742,7 +742,7 @@ We could write:
 Note, however, that subtypes in Ada correspond to type aliases if, and only
 if, they don't have constraints. Thus, if we add a constraint to a subtype
 declaration, we don't have a type alias anymore. For example, the following
-declaration *can't* be consider a type alias:
+declaration *can't* be consider a type alias of :ada:`Float`:
 
 .. code-block:: ada
 
