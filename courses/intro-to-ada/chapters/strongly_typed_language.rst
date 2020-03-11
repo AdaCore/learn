@@ -659,8 +659,8 @@ an exception will be raised.
        --           Compiles, but exception at runtime
     end Greet;
 
-Type aliases
-------------
+Subtypes as type aliases
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Previously, we've seen that we can create new types by declaring
 :ada:`type Miles is new Float`. We could also create type aliases, which
