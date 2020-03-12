@@ -275,6 +275,16 @@ performs the check for each object. The predicate uses the type name where
 a variable of that type would normally be used: this is a reference to the
 instance of the object being tested.
 
+Note that the example above makes use of unbounded strings and dates. Both types
+are available in Ada's standard library. Please refer to the following sections
+for more information about:
+
+- the unbounded string type (:ada:`Unbounded_String`):
+  :ref:`Unbounded Strings <UnboundedStrings>` section;
+
+- dates and times:
+  :ref:`Dates & Times <DatesTimes>` section.
+
 Static predicates, as mentioned above, are mostly used for scalar types and
 checked during compilation. They're particularly useful for representing
 non-contiguous elements of an enumeration. A classic example is a list of
