@@ -5909,8 +5909,8 @@ Online Store
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Standard library
-----------------
+Standard library: Containers
+----------------------------
 
 Simple todo list
 ~~~~~~~~~~~~~~~~
@@ -6494,6 +6494,9 @@ List of unique integers
        end if;
     end Main;
 
+Standard library: Dates & Times
+-------------------------------
+
 List of events
 ~~~~~~~~~~~~~~
 
@@ -6622,6 +6625,9 @@ List of events
 
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
+
+Standard library: Numerics
+--------------------------
 
 Decibel Factor
 ~~~~~~~~~~~~~~
