@@ -502,7 +502,7 @@ A typical example of an ADT is a stack:
     end Show_Stack;
 
 In this example, we first create a generic stack package (:ada:`Stacks`)
-and then instantiate it to create a stack of 10 integer values.
+and then instantiate it to create a stack of up to 10 integer values.
 
 Example: Swap
 -------------
