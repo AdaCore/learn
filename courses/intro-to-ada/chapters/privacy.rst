@@ -179,9 +179,9 @@ this private part of :ada:`P`. In those cases, information from the private
 part of :ada:`P` can then be used as if it were declared in the public part of
 its specification. To be more specific, the body of :ada:`P.C` and the private
 part of the specification of :ada:`P.C` have access to the private part of
-:ada:`P`. However, the public part of the specification of :ada:`P.C` doesn't
-have access to the private part of :ada:`P`'s specification. The following
-table summarizes this:
+:ada:`P`. However, the public part of the specification of :ada:`P.C` only has
+access to the public part of :ada:`P`'s specification. The following table
+summarizes this:
 
 +-------------------------------+-------------------------------+
 | Part of a child package       | Access to the private part of |
@@ -194,11 +194,12 @@ table summarizes this:
 | Body                          | X                             |
 +-------------------------------+-------------------------------+
 
-The rest of this section shows examples of how this access actually works.
+The rest of this section shows examples of how this access to private
+information actually works for child packages
 
 Let's first look at an example where the body of a child package :ada:`P.C`
 has access to the private part of the specification of its parent :ada:`P`.
-We've seen in a previous source-code example that the :ada:`Hello2` procedure
+We've seen, in a previous source-code example, that the :ada:`Hello2` procedure
 declared in the private part of the :ada:`Encapsulate` package cannot be used
 in the :ada:`Main` procedure, since it's not visible there. This limitation
 doesn't apply, however, for parts of the child packages of the
@@ -262,8 +263,9 @@ of the :ada:`Child` package:
     end Main;
 
 The same mechanism applies to types declared in the private part of a parent
-package. For instance, a child package can access components of a record
-declared in the private part of its parent package. Let's look at an example:
+package. For instance, the body of a child package can access components of a
+record declared in the private part of its parent package. Let's look at an
+example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Privacy.Private_Type_Child
 
@@ -339,14 +341,15 @@ private part of the child package :ada:`My_Types.Child` *and* initialize the
 .. code-block:: ada
 
     package My_Types.Child is
+
     private
 
        E : Priv_Rec := (Number => 99);
 
     end My_Types.Ops;
 
-As expected, we wouldn't be able to initialize this component if the
-declaration was in the visible part of the same child package:
+As expected, we wouldn't be able to initialize this component if we moved this
+declaration to the public (visible) part of the same child package:
 
 .. code-block:: ada
 
@@ -357,6 +360,6 @@ declaration was in the visible part of the same child package:
     end My_Types.Ops;
 
 The declaration above triggers a compilation error, since type :ada:`Priv_Rec`
-is private. Because the visible part of :ada:`My_Types.Child` is also visible
+is private. Because the public part of :ada:`My_Types.Child` is also visible
 outside the child package, Ada cannot allow accessing private information in
 this part of the specification.
