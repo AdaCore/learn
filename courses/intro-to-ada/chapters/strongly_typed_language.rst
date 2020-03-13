@@ -659,6 +659,8 @@ an exception will be raised.
        --           Compiles, but exception at runtime
     end Greet;
 
+.. _SubtypeAliases:
+
 Subtypes as type aliases
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

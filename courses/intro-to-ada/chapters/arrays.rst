@@ -682,38 +682,51 @@ Renaming
 --------
 
 Objects can be renamed by using the :ada:`renames` keyword. This allows for
-creating alternative names for these objects. Let's look at a simple example:
+creating alternative names for these objects. Let's look at an example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Arrays.Variable_Renaming
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    package Measurements is
+
+       subtype Degree_Celsius is Float;
+
+       Current_Temperature : Degree_Celsius;
+
+    end Measurements;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Measurements;
 
     procedure Main is
-       Some_Variable_With_Long_Name : Float;
+       subtype Degrees is Measurements.Degree_Celsius;
 
-       X : Float renames Some_Variable_With_Long_Name;
+       T : Degrees renames Measurements.Current_Temperature;
     begin
-        X := 5.0;
+        T := 5.0;
 
-        Put_Line (Float'Image (X));
-        Put_Line (Float'Image (Some_Variable_With_Long_Name));
+        Put_Line (Degrees'Image (T));
+        Put_Line (Degrees'Image (Measurements.Current_Temperature));
 
-        X := X + 2.5;
+        T := T + 2.5;
 
-        Put_Line (Float'Image (X));
-        Put_Line (Float'Image (Some_Variable_With_Long_Name));
+        Put_Line (Degrees'Image (T));
+        Put_Line (Degrees'Image (Measurements.Current_Temperature));
     end Main;
 
-In the example above, we declare a variable :ada:`X` by renaming
-:ada:`Some_Variable_With_Long_Name`. As you can see by running this example,
-both :ada:`Some_Variable_With_Long_Name` and its alternative name :ada:`X` have
-the same values:
+In the example above, we declare a variable :ada:`T` by renaming the
+:ada:`Current_Temperature` object from the :ada:`Measurements` package. As you
+can see by running this example, both :ada:`Current_Temperature` and its
+alternative name :ada:`T` have the same values:
 
 - first, they show the value 5.0
 - after the addition, they show the value 7.5.
 
 This is because they are essentialy referring to the same object, but with two
 different names.
+
+Note that, in the example above, we're using :ada:`Degrees` as an alias of
+:ada:`Degree_Celsius`. We discussed this method
+:ref:`earlier in the course <SubtypeAliases>`.
 
 Renaming can be useful for improving the readability of more complicated array
 indexing. Instead of explicitly using indices every time we're accessing certain
