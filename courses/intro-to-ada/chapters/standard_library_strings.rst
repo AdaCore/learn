@@ -5,8 +5,24 @@ Standard library: Strings
 
 .. include:: ../../global.txt
 
-We've used strings in many previous examples. In this chapter, we'll cover
-them in more detail.
+In previous chapters, we've seen source-code examples using the :ada:`String`
+type, which is a fixed-length string type |mdash| essentialy, it's an array
+of characters. In many cases, this data type is good enough to deal with
+textual information. However, there are situations that require more advanced
+text processing. Ada offers alternative approaches for these cases:
+
+- *Bounded strings*: similar to fixed-length strings, bounded strings have a
+  maximum length, which is set at its instantiation. However, bounded strings
+  are not arrays of characters. At any time, they can contain a string of
+  varied length |mdash| provided this length is below or equal to the maximum
+  length.
+
+- *Unbounded strings*: similar to bounded strings, unbounded strings can
+  contain strings of varied length. However, in addition to that, they don't
+  have a maximum length. In this sense, they are very flexible.
+
+The following sections present an overview of the different string types and
+common operations for string types.
 
 String operations
 -----------------
