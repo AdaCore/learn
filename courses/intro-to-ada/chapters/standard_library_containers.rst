@@ -7,9 +7,15 @@ Standard library: Containers
 
 .. include:: ../../global.txt
 
-Ada's standard library includes support for containers (such as
-vectors and sets). We present an introduction to them here. For a list
-of all containers available in Ada, see Appendix B.
+In previous chapters, we've used arrays as the standard way to group multiple
+objects of a specific data type. In many cases, arrays are good enough for
+manipulating those objects. However, there are situations that require more
+flexibility and more advanced operations. For those cases, Ada provides support
+for containers |mdash| such as vectors and sets |mdash| in its standard
+library.
+
+We present an introduction to containers here. For a list of all containers
+available in Ada, see :ref:`Appendix B <ContainersTable>`.
 
 Vectors
 -------

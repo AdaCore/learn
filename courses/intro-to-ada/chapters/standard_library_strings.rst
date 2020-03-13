@@ -5,13 +5,29 @@ Standard library: Strings
 
 .. include:: ../../global.txt
 
-We've used strings in many previous examples. In this chapter, we'll cover
-them in more detail.
+In previous chapters, we've seen source-code examples using the :ada:`String`
+type, which is a fixed-length string type |mdash| essentialy, it's an array
+of characters. In many cases, this data type is good enough to deal with
+textual information. However, there are situations that require more advanced
+text processing. Ada offers alternative approaches for these cases:
+
+- *Bounded strings*: similar to fixed-length strings, bounded strings have a
+  maximum length, which is set at its instantiation. However, bounded strings
+  are not arrays of characters. At any time, they can contain a string of
+  varied length |mdash| provided this length is below or equal to the maximum
+  length.
+
+- *Unbounded strings*: similar to bounded strings, unbounded strings can
+  contain strings of varied length. However, in addition to that, they don't
+  have a maximum length. In this sense, they are very flexible.
+
+The following sections present an overview of the different string types and
+common operations for string types.
 
 String operations
 -----------------
 
-Operations on standard strings are available in the
+Operations on standard (fixed-length) strings are available in the
 :ada:`Ada.Strings.Fixed` package. As mentioned previously, standard strings
 are arrays of elements of :ada:`Character` type with *a
 fixed-length*. That's why this child package is called :ada:`Fixed`.
@@ -205,8 +221,8 @@ specify the range of the substring, which is replaced by whitespaces. For
 the function version of :ada:`Delete`, we also call :ada:`Trim` which trims the
 trailing whitespace.
 
-Bounded and unbounded strings
------------------------------
+Limitation of fixed-length strings
+----------------------------------
 
 Using fixed-length strings is usually good enough for strings that are
 initialized when they are declared. However, as seen in the previous
@@ -250,7 +266,7 @@ types is that they aren't arrays, so the difficulties presented above don't
 apply. Let's start with bounded strings.
 
 Bounded strings
-~~~~~~~~~~~~~~~
+---------------
 
 Bounded strings are defined in the
 :ada:`Ada.Strings.Bounded.Generic_Bounded_Length` package. Because
@@ -347,7 +363,7 @@ function.
 .. _UnboundedStrings:
 
 Unbounded strings
-~~~~~~~~~~~~~~~~~
+-----------------
 
 Unbounded strings are defined in the :ada:`Ada.Strings.Unbounded` package.
 This is *not* a generic package, so we don't need to instantiate it before

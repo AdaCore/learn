@@ -5,14 +5,26 @@ Standard library: Dates & Times
 
 .. include:: ../../global.txt
 
+The standard library supports processing of dates and times using two
+approaches:
+
+- *Calendar* approach, which is suitable for handling dates and times in
+  general;
+
+- *Real-time* approach, which is better suited for real-time applications
+  that require enhanced precision |mdash| for example, by having access to an
+  absolute clock and handling time spans. Note that this approach only supports
+  times, not dates.
+
+The following sections present these two approaches.
+
 .. _DatesTimes:
 
 Date and time handling
 ----------------------
 
-The standard library supports representing and handling dates and
-times. This is part of the :ada:`Ada.Calendar` package. Let's look at a
-simple example:
+The :ada:`Ada.Calendar` package supports handling of dates and times. Let's
+look at a simple example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Time
 
