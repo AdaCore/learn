@@ -553,3 +553,19 @@ package names. In the example above, we write :ada:`T.Put_Line` instead of the
 longer version (:ada:`Ada.Text_IO.Put_Line`). This approach is especially
 useful when we don't :ada:`use` packages and want to avoid that the code
 becomes too verbose.
+
+Note we can also rename subprograms and objects inside packages. For instance,
+we could have just renamed the :ada:`Put_Line` procedure in the source-code
+example above:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Rename_Put_Line
+
+    with Ada.Text_IO;
+
+    procedure Main is
+       procedure Say (Something : String) renames Ada.Text_IO.Put_Line;
+    begin
+       Say ("Hello");
+    end Main;
+
+We'll discuss object renaming :ref:`later in this course <ObjectRenaming>`.

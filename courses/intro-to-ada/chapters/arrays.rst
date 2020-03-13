@@ -676,6 +676,8 @@ subtype, constrained by the bounds of the slice.
 .. ?? The 'attention' note is the 1st implication that Ada supports more
 .. ?? than one-dimensional arrays
 
+.. _ObjectRenaming:
+
 Renaming
 --------
 
