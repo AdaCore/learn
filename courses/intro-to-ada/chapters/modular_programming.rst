@@ -543,9 +543,9 @@ example renames the :ada:`Ada.Text_IO` package as :ada:`T_IO`:
     with Ada.Text_IO;
 
     procedure Main is
-       package T renames Ada.Text_IO;
+       package TIO renames Ada.Text_IO;
     begin
-       T.Put_Line ("Hello");
+       TIO.Put_Line ("Hello");
     end Main;
 
 We can use renaming to improve the readability of our code by using shorter
