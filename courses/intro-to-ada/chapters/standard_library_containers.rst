@@ -9,7 +9,7 @@ Standard library: Containers
 
 Ada's standard library includes support for containers (such as
 vectors and sets). We present an introduction to them here. For a list
-of all containers available in Ada, see Appendix B.
+of all containers available in Ada, see :ref:`Appendix B <ContainersTable>`.
 
 Vectors
 -------
