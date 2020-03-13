@@ -317,12 +317,13 @@ record type :ada:`Priv_Rec` in the :ada:`Main` procedure. You can see this in
 the call to :ada:`Put_Line` that has been commented-out in the implementation
 of :ada:`Main`. Trying to access the :ada:`Number` component there would
 trigger a compilation error. But we do have access to this component in the
-:ada:`My_Types.Ops` package, since it's a child package of the :ada:`My_Types`
-package and therefore it has access to the declaration of the :ada:`Priv_Rec`
-type (in the private part of the :ada:`My_Types` package). For this reason, the
-same call to :ada:`Put_Line` that would trigger a compilation error in the
-:ada:`Main` procedure works fine in the :ada:`Display` procedure of the
-:ada:`My_Types.Ops` package.
+body of the :ada:`My_Types.Ops` package, since it's a child package of the
+:ada:`My_Types` package. Therefore, :ada:`Ops`'s body has access to the
+declaration of the :ada:`Priv_Rec` type |mdash| which is in the private part of
+its parent, the :ada:`My_Types` package. For this reason, the same call to
+:ada:`Put_Line` that would trigger a compilation error in the :ada:`Main`
+procedure works fine in the :ada:`Display` procedure of the :ada:`My_Types.Ops`
+package.
 
 This kind of privacy rules for child packages allows for extending the
 functionality of a parent package and, at the same time, retain its
