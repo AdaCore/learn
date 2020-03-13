@@ -269,11 +269,11 @@ declared in the private part of its parent package. Let's look at an example:
 
     package My_Types is
 
-       type T is private;
+       type Priv_Rec is private;
 
     private
 
-       type T is record
+       type Priv_Rec is record
          Number : Integer := 42;
        end record;
 
@@ -281,7 +281,7 @@ declared in the private part of its parent package. Let's look at an example:
 
     package My_Types.Ops is
 
-       procedure Display (E : T);
+       procedure Display (E : Priv_Rec);
 
     end My_Types.Ops;
 
@@ -289,9 +289,9 @@ declared in the private part of its parent package. Let's look at an example:
 
     package body My_Types.Ops is
 
-       procedure Display (E : T) is
+       procedure Display (E : Priv_Rec) is
        begin
-          Put_Line ("T.Number: " & Integer'Image (E.Number));
+          Put_Line ("Priv_Rec.Number: " & Integer'Image (E.Number));
        end Display;
 
     end My_Types.Ops;
@@ -302,26 +302,26 @@ declared in the private part of its parent package. Let's look at an example:
     with My_Types.Ops; use My_Types.Ops;
 
     procedure Main is
-       E : T;
+       E : Priv_Rec;
     begin
        Put_Line ("Presenting information:");
 
        --  The following line would trigger a compilation error here:
-       --  Put_Line ("T.Number: " & Integer'Image (E.Number));
+       --  Put_Line ("Priv_Rec.Number: " & Integer'Image (E.Number));
 
        Display (E);
     end Main;
 
 In this example, we don't have access to the :ada:`Number` component of the
-record type :ada:`T` in the :ada:`Main` procedure. You can see this in the call
-to :ada:`Put_Line` that has been commented-out in the implementation of
-:ada:`Main`. Trying to access the :ada:`Number` component there would trigger a
-compilation error. But we do have access to this component in the
-:ada:`My_Types.Ops` package, since it's a child package of the
-:ada:`My_Types` package and therefore it has access to the declaration of the
-:ada:`T` type (in the private part of the :ada:`My_Types` package). For this
-reason, the same call to :ada:`Put_Line` that would trigger a compilation error
-in the :ada:`Main` procedure works fine in the :ada:`Display` procedure of the
+record type :ada:`Priv_Rec` in the :ada:`Main` procedure. You can see this in
+the call to :ada:`Put_Line` that has been commented-out in the implementation
+of :ada:`Main`. Trying to access the :ada:`Number` component there would
+trigger a compilation error. But we do have access to this component in the
+:ada:`My_Types.Ops` package, since it's a child package of the :ada:`My_Types`
+package and therefore it has access to the declaration of the :ada:`Priv_Rec`
+type (in the private part of the :ada:`My_Types` package). For this reason, the
+same call to :ada:`Put_Line` that would trigger a compilation error in the
+:ada:`Main` procedure works fine in the :ada:`Display` procedure of the
 :ada:`My_Types.Ops` package.
 
 This kind of privacy rules for child packages allows for extending the
@@ -331,16 +331,16 @@ encapsulation.
 As we mentioned previously, in addition to the package body, the private part
 of the specification of a child package :ada:`P.C` also has access to the
 private part of the specification of its parent :ada:`P`. Let's look at an
-example where we declare an object of private type :ada:`T` in the private
-part of the child package :ada:`My_Types.Child` *and* initialize the
-:ada:`Number` component of :ada:`T` directly:
+example where we declare an object of private type :ada:`Priv_Rec` in the
+private part of the child package :ada:`My_Types.Child` *and* initialize the
+:ada:`Number` component of the :ada:`Priv_Rec` record directly:
 
 .. code-block:: ada
 
     package My_Types.Child is
     private
 
-       E : T := (Number => 99);
+       E : Priv_Rec := (Number => 99);
 
     end My_Types.Ops;
 
@@ -351,11 +351,11 @@ declaration was in the visible part of the same child package:
 
     package My_Types.Child is
 
-       E : T := (Number => 99);
+       E : Priv_Rec := (Number => 99);
 
     end My_Types.Ops;
 
-The declaration above triggers a compilation error, since type :ada:`T` is
-private. Because the visible part of :ada:`My_Types.Child` is also visible
+The declaration above triggers a compilation error, since type :ada:`Priv_Rec`
+is private. Because the visible part of :ada:`My_Types.Child` is also visible
 outside the child package, Ada cannot allow accessing private information in
 this part of the specification.
