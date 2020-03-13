@@ -5,8 +5,36 @@ Standard library: Files and streams
 
 .. include:: ../../global.txt
 
-This chapter presents the different options available in Ada for file
-input/output (I/O).
+Ada provides different approaches for file input/output (I/O):
+
+- *Text I/O*, which supports file I/O in text format, including the display of
+  information on the console.
+
+- *Sequential I/O*, which supports file I/O in binary format written in a
+  sequential fashion for a specific data type.
+
+- *Direct I/O*, which supports file I/O in binary format for a specific data
+  type, but also supporting access to any position of a file.
+
+- *Stream I/O*, which supports I/O of information for multiple data types,
+  including objects of unbounded types, using files in binary format.
+
+This table presents a summary of the features we've just seen:
+
++----------------+------------+------------+----------------+
+| File I/O       | Format     | Random     | Data types     |
+| option         |            | access     |                |
++================+============+============+================+
+| Text I/O       | text       |            | string type    |
++----------------+------------+------------+----------------+
+| Sequential I/O | binary     |            | single type    |
++----------------+------------+------------+----------------+
+| Direct I/O     | binary     | X          | single type    |
++----------------+------------+------------+----------------+
+| Stream I/O     | binary     | X          | multiple types |
++----------------+------------+------------+----------------+
+
+In the following sections, we discuss details about these I/O approaches.
 
 Text I/O
 --------
