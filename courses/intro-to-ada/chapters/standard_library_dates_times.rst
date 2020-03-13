@@ -11,7 +11,7 @@ approaches:
 - *Calendar* approach, which is suitable for handling dates and times in
   general;
 
-- *Real-time* approach, which is better suitable for real-time applications
+- *Real-time* approach, which is better suited for real-time applications
   that require enhanced precision |mdash| for example, by having access to an
   absolute clock and handling time spans. Note that this approach only supports
   times, not dates.
