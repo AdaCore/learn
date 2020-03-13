@@ -27,7 +27,7 @@ common operations for string types.
 String operations
 -----------------
 
-Operations on standard strings are available in the
+Operations on standard (fixed-length) strings are available in the
 :ada:`Ada.Strings.Fixed` package. As mentioned previously, standard strings
 are arrays of elements of :ada:`Character` type with *a
 fixed-length*. That's why this child package is called :ada:`Fixed`.
