@@ -178,7 +178,7 @@ information, certain parts of a child package :ada:`P.C` can have access to
 this private part of :ada:`P`. In those cases, information from the private
 part of :ada:`P` can then be used as if it were declared in the public part of
 its specification. To be more specific, the body of :ada:`P.C` and the private
-part of specification of :ada:`P.C` have access to the private part of
+part of the specification of :ada:`P.C` have access to the private part of
 :ada:`P`. However, the public part of the specification of :ada:`P.C` doesn't
 have access to the private part of :ada:`P`'s specification. The following
 table summarizes this:
