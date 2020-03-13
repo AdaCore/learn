@@ -852,7 +852,7 @@ Object renaming can also be applied to record components. For example:
           else
              M := Next (M);
           end if;
-        end Increase_Month;
+       end Increase_Month;
 
        procedure Display_Month (Some_Day : Date) is
           --  Renaming components from the Date record
@@ -865,7 +865,7 @@ Object renaming can also be applied to record components. For example:
 
     end Dates;
 
-    with Dates;       use Dates;
+    with Dates; use Dates;
 
     procedure Main is
        D : Date := (1, January, 2000);
