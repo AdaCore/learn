@@ -221,8 +221,8 @@ specify the range of the substring, which is replaced by whitespaces. For
 the function version of :ada:`Delete`, we also call :ada:`Trim` which trims the
 trailing whitespace.
 
-Bounded and unbounded strings
------------------------------
+Limitation of fixed-length strings
+----------------------------------
 
 Using fixed-length strings is usually good enough for strings that are
 initialized when they are declared. However, as seen in the previous
@@ -266,7 +266,7 @@ types is that they aren't arrays, so the difficulties presented above don't
 apply. Let's start with bounded strings.
 
 Bounded strings
-~~~~~~~~~~~~~~~
+---------------
 
 Bounded strings are defined in the
 :ada:`Ada.Strings.Bounded.Generic_Bounded_Length` package. Because
@@ -363,7 +363,7 @@ function.
 .. _UnboundedStrings:
 
 Unbounded strings
-~~~~~~~~~~~~~~~~~
+-----------------
 
 Unbounded strings are defined in the :ada:`Ada.Strings.Unbounded` package.
 This is *not* a generic package, so we don't need to instantiate it before
