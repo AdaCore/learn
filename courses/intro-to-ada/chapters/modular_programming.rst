@@ -240,6 +240,8 @@ This example shows how :ada:`Last_Increment` is used indirectly:
        Display_Update_Values;
     end Main;
 
+.. _ChildPackages:
+
 Child packages
 --------------
 
