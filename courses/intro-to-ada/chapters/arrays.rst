@@ -675,3 +675,210 @@ subtype, constrained by the bounds of the slice.
 .. ?? Somewhere it should be noted that Ada allows multidimensional arrays
 .. ?? The 'attention' note is the 1st implication that Ada supports more
 .. ?? than one-dimensional arrays
+
+.. _ObjectRenaming:
+
+Renaming
+--------
+
+Objects can be renamed by using the :ada:`renames` keyword. This allows for
+creating alternative names for these objects. Let's look at an example:
+
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Variable_Renaming
+
+    package Measurements is
+
+       subtype Degree_Celsius is Float;
+
+       Current_Temperature : Degree_Celsius;
+
+    end Measurements;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Measurements;
+
+    procedure Main is
+       subtype Degrees is Measurements.Degree_Celsius;
+
+       T : Degrees renames Measurements.Current_Temperature;
+    begin
+        T := 5.0;
+
+        Put_Line (Degrees'Image (T));
+        Put_Line (Degrees'Image (Measurements.Current_Temperature));
+
+        T := T + 2.5;
+
+        Put_Line (Degrees'Image (T));
+        Put_Line (Degrees'Image (Measurements.Current_Temperature));
+    end Main;
+
+In the example above, we declare a variable :ada:`T` by renaming the
+:ada:`Current_Temperature` object from the :ada:`Measurements` package. As you
+can see by running this example, both :ada:`Current_Temperature` and its
+alternative name :ada:`T` have the same values:
+
+- first, they show the value 5.0
+- after the addition, they show the value 7.5.
+
+This is because they are essentialy referring to the same object, but with two
+different names.
+
+Note that, in the example above, we're using :ada:`Degrees` as an alias of
+:ada:`Degree_Celsius`. We discussed this method
+:ref:`earlier in the course <SubtypeAliases>`.
+
+Renaming can be useful for improving the readability of more complicated array
+indexing. Instead of explicitly using indices every time we're accessing certain
+positions of the array, we can create shorter names for these positions by
+renaming them. Let's look at the following example:
+
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Reverse_Colors
+
+    package Colors is
+
+       type Color is (Black, Red, Green, Blue, White);
+
+       type Color_Array is array (Positive range <>) of Color;
+
+       procedure Reverse_It (X : in out Color_Array);
+
+    end Colors;
+
+    package body Colors is
+
+       procedure Reverse_It (X : in out Color_Array) is
+       begin
+          for I in X'First .. (X'Last + X'First) / 2 loop
+             declare
+                Tmp     : Color;
+                X_Left  : Color renames X (I);
+                X_Right : Color renames X (X'Last + X'First - I);
+             begin
+                Tmp     := X_Left;
+                X_Left  := X_Right;
+                X_Right := Tmp;
+             end;
+          end loop;
+       end Reverse_It;
+
+    end Colors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Colors; use Colors;
+
+    procedure Test_Reverse_Colors is
+
+       My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
+
+    begin
+       for C of My_Colors loop
+          Put_Line ("My_Color: " & Color'Image (C));
+       end loop;
+
+       New_Line;
+       Put_Line ("Reversing My_Color...");
+       New_Line;
+       Reverse_It (My_Colors);
+
+       for C of My_Colors loop
+          Put_Line ("My_Color: " & Color'Image (C));
+       end loop;
+
+    end Test_Reverse_Colors;
+
+In the example above, package :ada:`Colors` implements the procedure
+:ada:`Reverse_It` by declaring new names for two positions of the array. The
+actual implementation becomes easy to read:
+
+.. code-block:: ada
+
+    begin
+       Tmp     := X_Left;
+       X_Left  := X_Right;
+       X_Right := Tmp;
+    end;
+
+Compare this to the alternative version without renaming:
+
+.. code-block:: ada
+
+    begin
+       Tmp                      := X (I);
+       X (I)                    := X (X'Last + X'First - I);
+       X (X'Last + X'First - I) := Tmp;
+    end;
+
+Object renaming can also be applied to record components. For example:
+
+.. code:: ada project=Courses.Intro_To_Ada.Arrays.Record_Component_Renaming
+    :class: ada-run
+
+    package Dates is
+
+       type Month_Type is
+         (January, February, March, April, May, June, July,
+          August, September, October, November, December);
+
+       type Date is record
+          Day   : Integer range 1 .. 31;
+          Month : Month_Type;
+          Year  : Integer range 1 .. 3000 := 2032;
+       end record;
+
+       procedure Increase_Month (Some_Day : in out Date);
+
+       procedure Display_Month (Some_Day : Date);
+
+    end Dates;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Dates is
+
+       procedure Increase_Month (Some_Day : in out Date) is
+          --  Renaming components from the Date record
+          M : Month_Type renames Some_Day.Month;
+          Y : Integer    renames Some_Day.Year;
+
+          --  Renaming function (for Month_Type enumeration)
+          function Next (M : Month_Type) return Month_Type
+            renames Month_Type'Succ;
+       begin
+          if M = December then
+             M := January;
+             Y := Y + 1;
+          else
+             M := Next (M);
+          end if;
+       end Increase_Month;
+
+       procedure Display_Month (Some_Day : Date) is
+          --  Renaming components from the Date record
+          M : Month_Type renames Some_Day.Month;
+          Y : Integer    renames Some_Day.Year;
+       begin
+          Put_Line ("Month: " & Month_Type'Image (M)
+                    & ", Year:" & Integer'Image (Y));
+       end Display_Month;
+
+    end Dates;
+
+    with Dates; use Dates;
+
+    procedure Main is
+       D : Date := (1, January, 2000);
+    begin
+       Display_Month (D);
+       Increase_Month (D);
+       Display_Month (D);
+    end Main;
+
+We apply renaming to two components of the :ada:`Date` record in the
+implementation of the :ada:`Increase_Month` procedure. Then, instead of
+directly using :ada:`Some_Day.Month` and :ada:`Some_Day.Year` in the
+next operations, we simply use the renamed versions :ada:`M` and :ada:`Y`.
+
+Note that, in the example above, we also rename :ada:`Month_Type'Succ` |mdash|
+which is the function that gives us the next month |mdash| to :ada:`Next`.
