@@ -1,7 +1,7 @@
 Strongly typed language
 =======================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
+:code-config:`run_button=True;reset_accumulator=True;accumulate_code=False`
 
 .. include:: ../../global.txt
 
@@ -658,3 +658,112 @@ an exception will be raised.
        --         ^ Wrong value for the subtype
        --           Compiles, but exception at runtime
     end Greet;
+
+.. _SubtypeAliases:
+
+Subtypes as type aliases
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Previously, we've seen that we can create new types by declaring
+:ada:`type Miles is new Float`. We could also create type aliases, which
+generate alternative names |mdash| *aliases* |mdash| for known types. Note that
+type aliases are sometimes called *type synonyms*.
+
+We achieve this in Ada by using subtypes without new constraints. In this case,
+however, we don't get all of the benefits of Ada's strong type checking. Let's
+rewrite an example using type aliases:
+
+.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Undetected_Imperial_Metric_Error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Undetected_Imperial_Metric_Error is
+       --  Declare two type aliases
+       subtype Meters is Float;
+       subtype Miles is Float;
+
+       Dist_Imperial : Miles;
+
+       --  Declare a constant
+       Dist_Metric : constant Meters := 100.0;
+    begin
+       --  No conversion to Miles type required:
+       Dist_Imperial := (Dist_Metric * 1609.0) / 1000.0;
+
+       --  Not correct, but undetected:
+       Dist_Imperial := Dist_Metric;
+
+       Put_Line (Miles'Image (Dist_Imperial));
+    end Undetected_Imperial_Metric_Error;
+
+In the example above, the fact that both :ada:`Meters` and :ada:`Miles` are
+subtypes of :ada:`Float` allows us to mix variables of both types without
+type conversion. This, however, can lead to all sorts of programming mistakes
+that we'd like to avoid, as we can see in the undetected error highlighted in
+the code above. In that example, the error in the assignment of a value in
+meters to a variable meant to store values in miles remains undetected because
+both :ada:`Meters` and :ada:`Miles` are subtypes of :ada:`Float`. Therefore,
+the recommendation is to use strong typing |mdash| via :ada:`type X is new Y`
+|mdash| for cases such as the one above.
+
+There are, however, many situations where type aliases are useful. For example,
+in an application that uses floating-point types in multiple contexts, we could
+use type aliases to indicate additional meaning to the types or to avoid long
+variable names. For example, instead of writing:
+
+.. code-block:: ada
+
+    Paid_Amount, Due_Amount : Float;
+
+We could write:
+
+.. code-block:: ada
+
+    subtype Amount is Float;
+
+    Paid, Due : Amount;
+
+.. admonition:: In other languages
+
+    In C, for example, we can use a :c:`typedef` declaration to create a type
+    alias. For example:
+
+    .. code-block:: c
+
+        typedef float meters;
+
+    This corresponds to the declaration that we've seen above using subtypes.
+    Other programming languages include this concept in similar ways. For
+    example:
+
+        - C++: ``using meters = float;``
+        - Swift: ``typealias Meters = Double``
+        - Kotlin: ``typealias Meters = Double``
+        - Haskell: ``type Meters = Float``
+
+Note, however, that subtypes in Ada correspond to type aliases if, and only
+if, they don't have new constraints. Thus, if we add a new constraint to a
+subtype declaration, we don't have a type alias anymore. For example, the
+following declaration *can't* be consider a type alias of :ada:`Float`:
+
+.. code-block:: ada
+
+    subtype Meters is Float range 0.0 .. 1_000_000.0;
+
+Let's look at another example:
+
+.. code-block:: ada
+
+    subtype Degree_Celsius is Float;
+    subtype Liquid_Water_Temperature is Degree_Celsius range 0.0 .. 100.0;
+    subtype Running_Water_Temperature is Liquid_Water_Temperature;
+
+In this example, :ada:`Liquid_Water_Temperature` isn't an alias of
+:ada:`Degree_Celsius`, since it adds a new constraint that wasn't part of the
+declaration of the :ada:`Degree_Celsius`. However, we do have two type aliases
+here:
+
+- :ada:`Degree_Celsius` is an alias of :ada:`Float`;
+- :ada:`Running_Water_Temperature` is an alias of
+  :ada:`Liquid_Water_Temperature`, even if :ada:`Liquid_Water_Temperature`
+  itself has a constrained range.

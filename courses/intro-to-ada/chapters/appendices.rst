@@ -207,6 +207,8 @@ Many of the examples above can be used for formal indefinite types:
 The same examples could also contain discriminants. In this case, :ada:`(<>)`
 is replaced by a list of discriminants, e.g.: :ada:`(D: DT)`.
 
+.. _ContainersTable:
+
 Appendix B: Containers
 ----------------------
 
