@@ -87,6 +87,7 @@ exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'old-content']
 # Exclude internal and unfinished material from final site build
 if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
     exclude_patterns += ['**internal/**',
+                         '**courses/Ada_For_The_C_Embedded_Developer/**',
                          '**courses/advanced-ada/**',
                          '**courses/advanced-spark/**']
 
