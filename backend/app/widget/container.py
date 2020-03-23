@@ -96,7 +96,7 @@ class Container:
         if reporter:
             exit_code, stdout, stderr = self.container.execute(cmds, environment=env, stdout_handler=reporter.stdout, stderr_handler=reporter.stderr)
             if exit_code == INTERRUPT_RETURNCODE:
-                reporter.sterr(INTERRUPT_STRING)
+                reporter.stderr(INTERRUPT_STRING)
             return exit_code, stdout, stderr
         else:
             return self.container.execute(cmds, env)
