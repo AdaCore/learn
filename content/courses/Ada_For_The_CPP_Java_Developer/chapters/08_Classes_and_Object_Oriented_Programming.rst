@@ -1,16 +1,21 @@
 Classes and Object Oriented Programming
 -----------------------------------------
 
+.. include:: ../../global.txt
+
 Primitive Subprograms
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Primitive subprograms in Ada are basically the subprograms that are eligible for inheritance / derivation. They are the equivalent of C++ member functions and Java instance methods. While in C++ and Java these subprograms are located within the nested scope of the type, in Ada they are simply declared in the same scope as the type. There's no syntactic indication that a subprogram is a primitive of a type.
 
-The way to determine whether *P* is a primitive of a type *T* is if (1) it is declared in the same scope as *T*, and (2) it contains at least one parameter of type *T*, or returns a result of type *T*.
+The way to determine whether :ada:`P` is a primitive of a type :ada:`T` is if
 
-In C++ or Java, the self reference **this** is implicitly declared. It may need to be explicitly stated in certain situations, but usually it's omitted. In Ada the self-reference, called the *controlling parameter*, must be explicitly specified in the subprogram parameter list. While it can be any parameter in the profile with any name, we'll focus on the typical case where the first parameter is used as the *self* parameter. Having the controlling parameter listed first also enables the use of OOP prefix notation which is convenient.
+    #. it is declared in the same scope as :ada:`T`, and
+    #. it contains at least one parameter of type :ada:`T`, or returns a result of type :ada:`T`.
 
-A **class** in C++ or Java corresponds to a **tagged type** in Ada. Here's an example of the declaration of an Ada tagged type with two parameters and some dispatching and non-dispatching primitives, with equivalent examples in C++ and Java:
+In C++ or Java, the self reference :cpp:`this` is implicitly declared. It may need to be explicitly stated in certain situations, but usually it's omitted. In Ada the self-reference, called the *controlling parameter*, must be explicitly specified in the subprogram parameter list. While it can be any parameter in the profile with any name, we'll focus on the typical case where the first parameter is used as the :cpp:`self` parameter. Having the controlling parameter listed first also enables the use of OOP prefix notation which is convenient.
+
+A :cpp:`class` in C++ or Java corresponds to a :ada:`tagged type` in Ada. Here's an example of the declaration of an Ada tagged type with two parameters and some dispatching and non-dispatching primitives, with equivalent examples in C++ and Java:
 
 [Ada]
 
@@ -57,7 +62,7 @@ A **class** in C++ or Java corresponds to a **tagged type** in Ada. Here's an ex
          public static void P2 (T v) {};
    }
 
-Note that *P2* is not a primitive of *T*---it does not have any parameters of type *T*. Its parameter is of type *T_Access*, which is a different type.
+Note that :ada:`P2` is not a primitive of :ada:`T` |mdash| it does not have any parameters of type :ada:`T`. Its parameter is of type :ada:`T_Access`, which is a different type.
 
 Once declared, primitives can be called like any subprogram with every necessary parameter specified, or called using prefix notation.  For example:
 
@@ -147,11 +152,11 @@ Despite the syntactic differences, derivation in Ada is similar to derivation (i
       public void method2 ();
    }
 
-Like Java, Ada primitives on tagged types are always subject to dispatching; there is no need to mark them **virtual**. Also like Java, there's an optional keyword **overriding** to ensure that a method is indeed overriding something from the parent type.
+Like Java, Ada primitives on tagged types are always subject to dispatching; there is no need to mark them :cpp:`virtual`. Also like Java, there's an optional keyword :ada:`overriding` to ensure that a method is indeed overriding something from the parent type.
 
-Unlike many other OOP languages, Ada differentiates between a reference to a specific tagged type, and a reference to an entire tagged type hierarchy. While *Root* is used to mean a specific type, *Root'Class*---a class-wide type---refers to either that type or any of its descendants. A method using a parameter of such a type cannot be overridden, and must be passed a parameter whose type is of any of *Root*'s descendants (including *Root* itself).
+Unlike many other OOP languages, Ada differentiates between a reference to a specific tagged type, and a reference to an entire tagged type hierarchy. While :ada:`Root` is used to mean a specific type, :ada:`Root'Class` |mdash| a class-wide type |mdash| refers to either that type or any of its descendants. A method using a parameter of such a type cannot be overridden, and must be passed a parameter whose type is of any of :ada:`Root`'s descendants (including :ada:`Root` itself).
 
-Next, we'll take a look at how each language finds the appropriate method to call within an OO class hierarchy; that is, their dispatching rules. In Java, calls to non-private instance methods are always dispatching. The only case where static selection of an instance method is possible is when calling from a method to the **super** version.
+Next, we'll take a look at how each language finds the appropriate method to call within an OO class hierarchy; that is, their dispatching rules. In Java, calls to non-private instance methods are always dispatching. The only case where static selection of an instance method is possible is when calling from a method to the :java:`super` version.
 
 In C++, by default, calls to virtual methods are always dispatching. One common mistake is to use a by-copy parameter hoping that dispatching will reach the real object. For example:
 
@@ -166,7 +171,7 @@ In C++, by default, calls to virtual methods are always dispatching. One common 
    proc (*v);
 
 
-In the above code, :emphasis:`p.method1()` will not dispatch. The call to *proc* makes a copy of the *Root* part of *v*, so inside *proc*,  :emphasis:`p.method1()` refers to the :emphasis:`method1()` of the root object. The intended behavior may be specified by using a reference instead of a copy:
+In the above code, :cpp:`p.method1()` will not dispatch. The call to :cpp:`proc` makes a copy of the :cpp:`Root` part of :cpp:`v`, so inside :cpp:`proc`, :cpp:`p.method1()` refers to the :cpp:`method1()` of the root object. The intended behavior may be specified by using a reference instead of a copy:
 
 .. code-block:: cpp
 
@@ -194,7 +199,7 @@ In Ada, tagged types are always passed by reference but dispatching only occurs 
       Proc (V.all);
    end;
 
-Dispatching from within primitives can get tricky. Let's consider a call to *Method_1* in the implementation of *Method_2*. The first implementation that might come to mind is:
+Dispatching from within primitives can get tricky. Let's consider a call to :ada:`Method_1` in the implementation of :ada:`Method_2`. The first implementation that might come to mind is:
 
 .. code-block:: ada
 
@@ -203,7 +208,7 @@ Dispatching from within primitives can get tricky. Let's consider a call to *Met
       P.Method_1;
    end;
 
-However, *Method_2* is called with a parameter that is of the definite type *Root*. More precisely, it is a definite view of a child. So, this call is not dispatching; it will always call *Method_1* of *Root* even if the object passed is a child of *Root*. To fix this, a view conversion is necessary:
+However, :ada:`Method_2` is called with a parameter that is of the definite type :ada:`Root`. More precisely, it is a definite view of a child. So, this call is not dispatching; it will always call :ada:`Method_1` of :ada:`Root` even if the object passed is a child of :ada:`Root`. To fix this, a view conversion is necessary:
 
 .. code-block:: ada
 
@@ -253,9 +258,9 @@ Default initialization may be specified for a record component and will occur if
    V1 : T;
    V2 : T := (F => 0);
 
-In the declaration of *V1*, *T.F* receives a value computed by the subprogram *Compute_Default_F*. This is part of the default initialization. *V2* is initialized manually and thus will not use the default initialization.
+In the declaration of :ada:`V1`, :ada:`T.F` receives a value computed by the subprogram :ada:`Compute_Default_F`. This is part of the default initialization. :ada:`V2` is initialized manually and thus will not use the default initialization.
 
-For additional expressive power, Ada provides a type called *Ada.Finalization.Controlled* from which you can derive your own type. Then, by overriding the *Initialize* procedure you can create a constructor for the type:
+For additional expressive power, Ada provides a type called :ada:`Ada.Finalization.Controlled` from which you can derive your own type. Then, by overriding the :ada:`Initialize` procedure you can create a constructor for the type:
 
 .. code-block:: ada
 
@@ -272,9 +277,9 @@ For additional expressive power, Ada provides a type called *Ada.Finalization.Co
    V1 : T;
    V2 : T := (F => 0);
 
-Again, this default initialization subprogram is only called for *V1*; *V2* is initialized manually. Furthermore, unlike a C++ or Java constructor, *Initialize* is a normal subprogram and does not perform any additional initialization such as calling the parent's initialization routines.
+Again, this default initialization subprogram is only called for :ada:`V1`; :ada:`V2` is initialized manually. Furthermore, unlike a C++ or Java constructor, :ada:`Initialize` is a normal subprogram and does not perform any additional initialization such as calling the parent's initialization routines.
 
-When deriving from *Controlled*, it's also possible to override the subprogram *Finalize*, which is like a destructor and is called for object finalization. Like *Initialize*, this is a regular subprogram. Do not expect any other finalizers to be automatically invoked for you.
+When deriving from :ada:`Controlled`, it's also possible to override the subprogram :ada:`Finalize`, which is like a destructor and is called for object finalization. Like :ada:`Initialize`, this is a regular subprogram. Do not expect any other finalizers to be automatically invoked for you.
 
 Controlled types also provide functionality that essentially allows overriding the meaning of the assignment operation, and are useful for defining types that manage their own storage reclamation (for example, implementing a reference count reclamation strategy).
 
@@ -319,12 +324,12 @@ While done at the class level for C++ and Java, Ada encapsulation occurs at the 
       protected void method2 ();
    }
 
-The C++ and Java code's use of **protected** and the Ada code's use of **private** here demonstrates how to map these concepts between languages. Indeed, the private part of an Ada child package would have visibility of the private part of its parents, mimicking the notion of **protected**. Only entities declared in the package body are completely isolated from access.
+The C++ and Java code's use of :cpp:`protected` and the Ada code's use of :ada:`private` here demonstrates how to map these concepts between languages. Indeed, the private part of an Ada child package would have visibility of the private part of its parents, mimicking the notion of :cpp:`protected`. Only entities declared in the package body are completely isolated from access.
 
 Abstract Types and Interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ada, C++ and Java all offer similar functionality in terms of abstract classes, or pure virtual classes. It is necessary in Ada and Java to explicitly specify whether a tagged type or class is **abstract**, whereas in C++ the presence of a pure virtual function implicitly makes the class an abstract base class. For example:
+Ada, C++ and Java all offer similar functionality in terms of abstract classes, or pure virtual classes. It is necessary in Ada and Java to explicitly specify whether a tagged type or class is :ada:`abstract`, whereas in C++ the presence of a pure virtual function implicitly makes the class an abstract base class. For example:
 
 [Ada]
 
@@ -447,7 +452,7 @@ Invariants
   *This section is not part of the OOP material and should be moved to a different chapter*
 
 
-Any private type in Ada may be associated with a *Type_Invariant* contract. An invariant is a property of a type that must always be true after the return from of any of its primitive subprograms. (The invariant might not be maintained during the execution of the primitive subprograms, but will be true after the return.) Let's take the following example:
+Any private type in Ada may be associated with a :ada:`Type_Invariant` contract. An invariant is a property of a type that must always be true after the return from of any of its primitive subprograms. (The invariant might not be maintained during the execution of the primitive subprograms, but will be true after the return.) Let's take the following example:
 
 .. code-block:: ada
 
@@ -513,4 +518,4 @@ Any private type in Ada may be associated with a *Type_Invariant* contract. An i
       ... -- Other subprograms
    end Int_List_Pkg;
 
-The *Is_Sorted* function checks that the type stays consistent. It will be called at the exit of every primitive above. It is permissible if the conditions of the invariant aren't met during execution of the primitive. In *To_Int_List* for example, if the source array is not in sorted order, the invariant will not be satisfied at the "begin",  but it will be checked at the end.
+The :ada:`Is_Sorted` function checks that the type stays consistent. It will be called at the exit of every primitive above. It is permissible if the conditions of the invariant aren't met during execution of the primitive. In :ada:`To_Int_List` for example, if the source array is not in sorted order, the invariant will not be satisfied at the "begin",  but it will be checked at the end.

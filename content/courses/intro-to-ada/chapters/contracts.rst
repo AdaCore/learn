@@ -3,23 +3,13 @@ Design by contracts
 
 :code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
-.. sectionauthor:: Gustavo A. Hoffmann
-
+.. include:: ../../global.txt
 
 Contracts are used in programming to codify expectations. Parameter modes
 of a subprogram can be viewed as a simple form of contracts. When the
-specification of subprogram ``Op`` declares a parameter using :ada:`in`
-mode, the caller of ``Op`` knows that the :ada:`in` argument won't be
-changed by ``Op``. In other words, the caller expects that ``Op`` doesn't
+specification of subprogram :ada:`Op` declares a parameter using :ada:`in`
+mode, the caller of :ada:`Op` knows that the :ada:`in` argument won't be
+changed by :ada:`Op`. In other words, the caller expects that :ada:`Op` doesn't
 modify the argument it's providing, but just reads the information stored
 in the argument. Constraints and subtypes are other examples of
 contracts. In general, these specifications improve the consistency of the
@@ -34,9 +24,9 @@ Pre- and postconditions
 
 Pre- and postconditions provide expectations regarding input and output
 parameters of subprograms and return value of functions. If we say that
-certain requirements must be met before calling a subprogram ``Op``, those
+certain requirements must be met before calling a subprogram :ada:`Op`, those
 are preconditions. Similarly, if certain requirements must be met after a
-call to the subprogram ``Op``, those are postconditions. We can think of
+call to the subprogram :ada:`Op`, those are postconditions. We can think of
 preconditions and postconditions as promises between the subprogram caller
 and the callee: a precondition is a promise from the caller to the callee,
 and a postcondition is a promise in the other direction.
@@ -50,9 +40,6 @@ The following code shows an example of preconditions:
 
 .. code:: ada project=Courses.Intro_To_Ada.Contracts.Show_Simple_Precondition
     :class: ada-run-expect-failure
-
-    with Ada.Text_IO; use Ada.Text_IO;
-    with Ada.Numerics.Elementary_Functions;
 
     procedure Show_Simple_Precondition is
        pragma Assertion_Policy (Pre  => Check);
@@ -81,7 +68,7 @@ The :ada:`pragma Assertion_Policy` statement is used to force the compiler
 to generate code to check the precondition. The same :ada:`pragma` is used
 similarly for the other kinds of contracts shown in the rest of this
 chapter. When using GNAT, you can get that behavior globally via a
-configuration pragma or a command-line switch --- please consult the GNAT
+configuration pragma or a command-line switch |mdash| please consult the GNAT
 documentation on `configuration pragmas
 <http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#configuration-pragmas>`_
 for details.
@@ -114,7 +101,6 @@ We illustrate postconditions using the following example:
 .. code:: ada project=Courses.Intro_To_Ada.Contracts.Show_Simple_Postcondition
 
     with Ada.Text_IO; use Ada.Text_IO;
-    with Ada.Numerics.Elementary_Functions;
 
     procedure Show_Simple_Postcondition is
        pragma Assertion_Policy (Post => Check);
@@ -169,7 +155,6 @@ subprogram. For example:
     :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
-    with Ada.Numerics.Elementary_Functions;
 
     procedure Show_Simple_Contract is
        pragma Assertion_Policy (Pre  => Check,
@@ -206,7 +191,7 @@ Predicates
 Predicates specify expectations regarding types. They're similar to pre-
 and postconditions, but apply to types instead of subprograms. Their
 conditions are checked for each object of a given type, which allows
-verifying that an object of type ``T`` is conformant to the requirements of
+verifying that an object of type :ada:`T` is conformant to the requirements of
 its type.
 
 There are two kinds of predicates: static and dynamic. In simple terms,
@@ -226,7 +211,6 @@ Let's use the following example to illustrate dynamic predicates:
 .. code:: ada project=Courses.Intro_To_Ada.Contracts.Show_Dynamic_Predicate_Courses
     :class: ada-run-expect-failure
 
-    with Ada.Text_IO;           use Ada.Text_IO;
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Ada.Calendar;          use Ada.Calendar;
     with Ada.Containers.Vectors;
@@ -290,6 +274,16 @@ this rule, we declare a dynamic predicate for the :ada:`Course` type that
 performs the check for each object. The predicate uses the type name where
 a variable of that type would normally be used: this is a reference to the
 instance of the object being tested.
+
+Note that the example above makes use of unbounded strings and dates. Both types
+are available in Ada's standard library. Please refer to the following sections
+for more information about:
+
+- the unbounded string type (:ada:`Unbounded_String`):
+  :ref:`Unbounded Strings <UnboundedStrings>` section;
+
+- dates and times:
+  :ref:`Dates & Times <DatesTimes>` section.
 
 Static predicates, as mentioned above, are mostly used for scalar types and
 checked during compilation. They're particularly useful for representing
@@ -402,13 +396,14 @@ Type invariants
 
 Type invariants are another way of specifying expectations regarding types.
 While predicates are used for *non-private* types, type invariants are used
-exclusively to define expectations about private types. If a type ``T``
-from a package ``P`` has a type invariant, the results of operations on
-objects of type ``T`` are always consistent with that invariant.
+exclusively to define expectations about private types. If a type :ada:`T`
+from a package :ada:`P` has a type invariant, the results of operations on
+objects of type :ada:`T` are always consistent with that invariant.
 
-Type invariants are specified with a :ada:`with Type_Invariant =>
-<property>` clause. Like predicates, the *property* defines a condition
-that allows us to check if an object of type ``T`` is conformant to its
+Type invariants are specified with a
+:ada:`with Type_Invariant => <property>`
+clause. Like predicates, the *property* defines a condition
+that allows us to check if an object of type :ada:`T` is conformant to its
 requirements. In this sense, type invariants can be viewed as a sort of
 predicate for private types.  However, there are some differences in terms
 of checks. The following table summarizes the differences:

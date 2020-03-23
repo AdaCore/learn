@@ -352,14 +352,33 @@ div#learn-adacore-com>h1 {
 }
 
 // layout customizations
-// download button
+// download buttons
 div.download-button.docutils.container {
     float: right;
     width: 300px;
     margin: 20px;
 }
 
-// download button
+a.pdf_download_button {
+    background-color: #F56F23;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #FFF;
+    font-weight: 600;
+    float: right;
+    font-family: sans-serif;
+
+    &:before {
+        font-family: $icon-font;
+        font-style: normal;
+        font-weight: $icon-weight;
+        content: $download-icon;
+        margin-right: 3px;
+    }
+}
+
+// download buttons
 // slick carousel customization
 .slick-slide {
     margin: 0px 20px;

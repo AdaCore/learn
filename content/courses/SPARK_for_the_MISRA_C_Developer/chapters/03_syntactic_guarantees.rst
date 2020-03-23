@@ -3,11 +3,7 @@
 Enforcing Basic Syntactic Guarantees
 ------------------------------------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 C's syntax is concise but also very permissive, which makes it easy
 to write programs whose effect is not what was intended.
@@ -23,7 +19,7 @@ Distinguishing Code and Comments
 The problem arises from block comments in C, starting with ``/*`` and ending
 with ``*/``. These comments do not nest with other block comments or with line
 comments. For example, consider a block comment surrounding three lines that
-each increase variable ``a`` by one:
+each increase variable :c:`a` by one:
 
 .. code-block:: c
 
@@ -51,7 +47,7 @@ reinforced with Rules 3.1 and 3.2 from the section on "Comments" that forbid in
 particular the use of ``/*`` inside a comment like we did above.
 
 These situations cannot arise in SPARK (or in Ada), as only line comments are
-permitted, using ``--``:
+permitted, using :ada:`--`:
 
 .. code-block:: ada
 
@@ -75,7 +71,7 @@ Handling the Result of Function Calls
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is possible in C to ignore the result of a function call, either implicitly
-or else explicitly by converting the result to ``void``:
+or else explicitly by converting the result to :c:`void`:
 
 .. code-block:: c
 
@@ -88,14 +84,14 @@ MISRA C Directive 4.7: `"If a function returns error
 information, then that error information shall be tested"`. In the general case
 of a function returning a result which is not an error status, MISRA C Rule
 17.7 states that `"The value returned by a function having non-void return type
-shall be used"`, where an explicit conversion to ``void`` counts as a use.
+shall be used"`, where an explicit conversion to :c:`void` counts as a use.
 
 In SPARK, as in Ada, the result of a function call must be used, for example by assigning
 it to a variable or by passing it as a parameter, in
 contrast with procedures (which are equivalent to void-returning functions
 in C). SPARK analysis also checks that the result of the function is actually
 used to influence an output of the calling subprogram. For example, the first
-two calls to ``F`` in the following are detected as unused, even though the result
+two calls to :ada:`F` in the following are detected as unused, even though the result
 of the function call is assigned to a variable, which is itself used in
 the second case:
 
@@ -123,7 +119,7 @@ the second case:
 :code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Only the result of the third call is used to influence the value of an output
-of ``Use_F``, here the output parameter ``Z`` of the procedure.
+of :ada:`Use_F`, here the output parameter :ada:`Z` of the procedure.
 
 Handling Function Parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -145,11 +141,11 @@ MISRA C Rule 17.8 prevents such mistakes by stating that `"A function parameter
 should not be modified"`.
 
 No such rule is needed in SPARK, since function parameters are only inputs so
-cannot be modified, and procedure parameters have a `mode` defining whether
-they can be modified or not. Only parameters of mode `out` or `in out` can be
-modified -- and these are prohibited from functions in SPARK -- and their
-modification is visible at the calling site. For example,
-assigning to a parameter of mode `in` (the default parameter mode if
+cannot be modified, and procedure parameters have a *mode* defining whether
+they can be modified or not. Only parameters of mode :ada:`out` or ada:`in out`
+can be modified |mdash| and these are prohibited from functions in SPARK
+|mdash| and their modification is visible at the calling site. For example,
+assigning to a parameter of mode :ada:`in` (the default parameter mode if
 omitted) results in compilation errors:
 
 .. code:: ada
@@ -179,10 +175,12 @@ Here is the output of AdaCore's GNAT compiler:
 
         6.     end Swap;
 
-The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
+The correct version of :ada:`Swap` in SPARK takes parameters of mode
+:ada:`in out`:
 
-.. code:: ada
-    :class: ada-syntax-only
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+.. code:: ada prove_flow_report_all_button
 
     procedure Swap (X, Y : in out Integer) is
        Tmp : constant Integer := X;
@@ -190,6 +188,8 @@ The correct version of ``Swap`` in SPARK takes parameters of mode `in out`:
        X := Y;
        Y := Tmp;
     end Swap;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Ensuring Control Structures Are Not Abused
 ******************************************
@@ -219,8 +219,8 @@ a single semicolon can completely change the behavior of the code:
    }
 
 As written, the code above returns with status 0. If a semicolon is added after
-the first line (``if (0);``), then the code returns with status 1. If a
-semicolon is added instead after the third line (``while (1);``), then the
+the first line (:c:`if (0);`), then the code returns with status 1. If a
+semicolon is added instead after the third line (:c:`while (1);`), then the
 code does not return. To prevent such surprises, MISRA C Rule 15.6 states that
 `"The body of an iteration-statement or a selection-statement shall be a compound
 statement"` so that the code above must be written:
@@ -237,17 +237,19 @@ statement"` so that the code above must be written:
       return 0;
    }
 
-Note that adding a semicolon after the test of the ``if`` or ``while``
+Note that adding a semicolon after the test of the :c:`if` or :c:`while`
 statement has the same effect as before! But doing so would violate MISRA C
 Rule 15.6.
 
 In SPARK, the semicolon is not a statement by itself, but rather a marker that
-terminates a statement. The null statement is an explicit ``null;``, and all blocks of
-statements have explicit begin and end markers, which prevents mistakes
-that are possible in C. The SPARK (also Ada) version of the above C code is as follows:
+terminates a statement. The null statement is an explicit :ada:`null;`, and all
+blocks of statements have explicit :ada:`begin` and :ada:`end` markers, which
+prevents mistakes that are possible in C. The SPARK (also Ada) version of the
+above C code is as follows:
 
-.. code:: ada
-    :class: ada-syntax-only
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+.. code:: ada prove_flow_report_all_button
 
     function Func return Integer is
     begin
@@ -259,6 +261,8 @@ that are possible in C. The SPARK (also Ada) version of the above C code is as f
        end loop;
        return 0;
     end Func;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Avoiding Complex Switch Statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -319,21 +323,22 @@ complete (unlike in C). So the following code is rejected by the compiler:
 
     end Sign_Domain;
 
-The error in function ``Opposite`` is that the ``when`` choices do not cover
-all values of the target expression. Here, ``A`` is of the enumeration type
-``Sign``, so all three values of the enumeration must be covered.
+The error in function :ada:`Opposite` is that the :ada:`when` choices do not cover
+all values of the target expression. Here, :ada:`A` is of the enumeration type
+:ada:`Sign`, so all three values of the enumeration must be covered.
 
-The error in function ``Multiply`` is that ``Positive`` is covered
+The error in function :ada:`Multiply` is that :ada:`Positive` is covered
 twice, in the second and the third alternatives. This is not allowed.
 
-The error in procedure ``Get_Sign`` is that the ``others`` choice (the equivalent
-of C ``default`` case) must come last. Note that an ``others`` choice would be
-useless in ``Opposite`` and ``Multiply``, as all ``Sign`` values are covered.
+The error in procedure :ada:`Get_Sign` is that the :ada:`others` choice (the equivalent
+of C :c:`default` case) must come last. Note that an :ada:`others` choice would be
+useless in :ada:`Opposite` and :ada:`Multiply`, as all :ada:`Sign` values are covered.
 
 Here is a correct version of the same code:
 
-.. code:: ada
-    :class: ada-syntax-only
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+.. code:: ada prove_flow_report_all_button
 
     package Sign_Domain is
 
@@ -367,6 +372,8 @@ Here is a correct version of the same code:
        end Get_Sign;
 
     end Sign_Domain;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Avoiding Complex Loops
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -473,14 +480,14 @@ argument, while it actually does the opposite:
    }
 
 The warning issued by GCC or LLVM with option ``-Wdangling-else`` (implied by
-``-Wall``) gives a clue about the problem: although the ``else`` branch is
+``-Wall``) gives a clue about the problem: although the :c:`else` branch is
 written as though it completes the outer if-statement, in fact it completes the
 inner if-statement.
 
 MISRA C Rule 15.6 avoids the problem: `"The body of an
 iteration-statement or a selection-statement shall be a compound
 statement"`. That's the same rule as the one shown earlier for
-:ref:`Preventing the Semicolon Mistake`. So the code for ``absval`` must be
+:ref:`Preventing the Semicolon Mistake`. So the code for :c:`absval` must be
 written:
 
 .. code:: c
@@ -508,11 +515,12 @@ written:
 
 which has the expected behavior.
 
-In SPARK (as in Ada), each if-statement has a matching end marker ``end if;``
+In SPARK (as in Ada), each if-statement has a matching end marker :c:`end if;`
 so the dangling-else problem cannot arise. The above C code is written as follows:
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
 .. code:: ada prove_button
-    :class: ada-syntax-only
 
     function Absval (X : Integer) return Integer is
        Result : Integer := X;
@@ -526,6 +534,8 @@ so the dangling-else problem cannot arise. The above C code is written as follow
        end if;
        return Result;
     end Absval;
+
+:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Interestingly, SPARK analysis detects here that the negation operation on line
 9 might overflow. That's an example of runtime error detection which will be

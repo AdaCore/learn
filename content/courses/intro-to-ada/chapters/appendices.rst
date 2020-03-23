@@ -5,16 +5,7 @@ Appendices
 
 :code-config:`reset_accumulator=True`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
-.. sectionauthor:: Gustavo A. Hoffmann
+.. include:: ../../global.txt
 
 Appendix A: Generic Formal Types
 --------------------------------
@@ -215,6 +206,8 @@ Many of the examples above can be used for formal indefinite types:
 
 The same examples could also contain discriminants. In this case, :ada:`(<>)`
 is replaced by a list of discriminants, e.g.: :ada:`(D: DT)`.
+
+.. _ContainersTable:
 
 Appendix B: Containers
 ----------------------

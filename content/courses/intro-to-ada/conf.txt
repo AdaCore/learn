@@ -1,0 +1,3 @@
+title=Introduction to Ada
+author=Raphaël Amiard and Gustavo A. Hoffmann
+

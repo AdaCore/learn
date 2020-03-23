@@ -3,11 +3,7 @@
 Detecting Unreachable Code and Dead Code
 ----------------------------------------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 MISRA C defines `unreachable code` as code that cannot be executed, and
 it defines `dead code` as code that can be executed
@@ -31,7 +27,7 @@ various kinds (type declarations, tag declarations, macro declarations, label
 declarations, function parameters).
 
 While some simple cases of unreachable code can be detected by static analysis
-(typically if a condition in an ``if`` statement can be determined to be always
+(typically if a condition in an :c:`if` statement can be determined to be always
 true or false), most cases of unreachable code can only be detected by performing
 coverage analysis in testing, with the caveat that code reported as not being
 executed is not necessarily unreachable (it could simply reflect gaps in the test
@@ -92,11 +88,11 @@ detect complex cases, but it goes well beyond what other analyses do in general.
        end if;
     end Much_Ado_About_Little;
 
-The only code in the body of ``Much_Ado_About_Little`` that affects the result
-of the procedure's execution is the ``if Z > Y...`` statement, since this
-statement sets ``Success`` to either True or False regardless of what the
-previous statements did.  I.e., the statements preceding this ``if`` are
-dead code in the MISRA C sense. Since both branches of the ``if Z > Y...``
-statement return from the procedure, the subsequent ``if Success...`` statement
+The only code in the body of :ada:`Much_Ado_About_Little` that affects the result
+of the procedure's execution is the :ada:`if Z > Y...` statement, since this
+statement sets :ada:`Success` to either True or False regardless of what the
+previous statements did.  I.e., the statements preceding this :ada:`if` are
+dead code in the MISRA C sense. Since both branches of the :ada:`if Z > Y...`
+statement return from the procedure, the subsequent :ada:`if Success...` statement
 is unreachable.  GNATprove detects and issues warnings about both
 the dead code and the unreachable code.

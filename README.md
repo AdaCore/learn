@@ -25,6 +25,7 @@ $ vagrant ssh web
 
 # The following commands will be run inside the vm
 
+$ source /vagrant/venv/bin/activate
 $ cd /vagrant/frontend
 $ yarn run dev
 ```
@@ -40,8 +41,7 @@ $ vagrant ssh server
 
 # The following commands will be run inside the vm
 
-$ cd /vagrant
-$ source venv/bin/activate
+$ source /vagrant/venv/bin/activate
 $ flask run --host=0.0.0.0
 
 # Open another terminal window and run
@@ -50,7 +50,7 @@ $ vagrant ssh server
 
 # The following commands will be run inside the vm
 
+$ source /vagrant/venv/bin/activate
 $ cd /vagrant
-$ source venv/bin/activate
 $ celery worker -A celery_worker.celery -E --loglevel=DEBUG
 ```

@@ -109,9 +109,9 @@ Course: Advanced Ada
     - [ ] `Gem #6: The Ada95 Multiple Views Idiom vs. Ada05 Interfaces by Matthew Heaney <https://www.adacore.com/gems/gem-6>`_
     - [x] `Gem #8: Factory Functions by Matthew Heaney <https://www.adacore.com/gems/ada-gem-8>`_
     - [ ] `Gem #9: Classwide Operations, Iterators, and Generic Algorithms by Matthew Heaney <https://www.adacore.com/gems/ada-gem-9>`_
-    - [ ] `Gem #70: The Scope Locks Idiom by Pat Rogers <https://www.adacore.com/gems/gem-70>`_
-    - [ ] `Gem #113: Visitor Pattern in Ada <https://www.adacore.com/gems/gem-113-visitor-pattern-in-ada>`_
-    - [ ] `Gem #117: Design Pattern: Overridable Class Attributes in Ada <https://www.adacore.com/gems/gem-117-design-pattern-overridable-class-attributes-in-ada-2012>`_
+    - [x] `Gem #70: The Scope Locks Idiom by Pat Rogers <https://www.adacore.com/gems/gem-70>`_
+    - [x] `Gem #113: Visitor Pattern in Ada <https://www.adacore.com/gems/gem-113-visitor-pattern-in-ada>`_
+    - [x] `Gem #117: Design Pattern: Overridable Class Attributes in Ada <https://www.adacore.com/gems/gem-117-design-pattern-overridable-class-attributes-in-ada-2012>`_
 
 - Exceptions
 

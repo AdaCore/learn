@@ -5,11 +5,7 @@
 Preface
 -------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 MISRA C appeared in 1998 as a coding standard for C; it focused on avoiding
 error-prone programming features of the C programming language rather than on
@@ -78,15 +74,15 @@ Here, the multiplication of two unsigned 16-bit values and assignment of the
 result to an unsigned 32-bit variable constitutes a violation of the
 aforementioned rule, which gets justified for efficiency reasons. What the
 authors seem to have missed is that the multiplication is then performed with
-the signed integer type ``int`` instead of the target unsigned type
-``uint32_t``. Thus the multiplication of two unsigned 16-bit values may lead to
+the signed integer type :c:`int` instead of the target unsigned type
+:c:`uint32_t`. Thus the multiplication of two unsigned 16-bit values may lead to
 an overflow of the 32-bit intermediate signed result, which is an occurrence of
 an undefined behavior. In such a case, a compiler is free to assume that the
-value of ``prod`` cannot exceed 2^31-1 (the maximal value of a signed 32-bit
-integer) as otherwise an undefined behavior would have been triggered. For
-example, the undefined behavior with values 65535 for ``qty`` and ``time_step``
-is reported when running the code compiled by either the GCC or LLVM compiler with
-option ``-fsanitize=undefined``.
+value of :c:`prod` cannot exceed :math:`2^{31} - 1` (the maximal value of a
+signed 32-bit integer) as otherwise an undefined behavior would have been
+triggered. For example, the undefined behavior with values 65535 for :c:`qty`
+and :c:`time_step` is reported when running the code compiled by either the GCC
+or LLVM compiler with option ``-fsanitize=undefined``.
 
 The MISRA C checkers that detect violations of
 undecidable rules are either unsound tools that can detect only some of
@@ -117,6 +113,4 @@ with MISRA C.
 
 An on-line and interactive version of this document is available at
 `AdaCore's learn.adacore.com site
-<https://learn.adacore.com/books/SPARK_for_the_MISRA_C_Developer>`_.
-
-This document was prepared by Yannick Moy, with contributions and review from Ben Brosgol.
+<https://learn.adacore.com/courses/SPARK_for_the_MISRA_C_Developer>`_.

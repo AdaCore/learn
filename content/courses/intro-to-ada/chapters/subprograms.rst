@@ -5,16 +5,7 @@ Subprograms
 
 .. _Subprograms:
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
-.. sectionauthor:: Raphaël Amiard
+.. include:: ../../global.txt
 
 Subprograms
 -----------
@@ -235,8 +226,8 @@ to explicitly store it in a local variable.
         B : Boolean := Read_Int (Stream, My_Int);
         pragma Unreferenced (B);
 
-    - Or give the variable a name that contains any of the strings ``discard``
-      ``dummy`` ``ignore`` ``junk`` ``unused`` (case insensitive)
+    - Or give the variable a name that contains any of the strings :ada:`discard`
+      :ada:`dummy` :ada:`ignore` :ada:`junk` :ada:`unused` (case insensitive)
 
 .. ?? This example might be confusing since out parameters have not been covered.
 .. ?? It would be better to show an example where the function's side effect is on
@@ -439,3 +430,88 @@ mutually recursive, as in the example below:
     begin
        Compute_A (15);
     end Mutually_Recursive_Subprograms;
+
+Renaming
+--------
+
+:code-config:`run_button=False;prove_button=False;accumulate_code=True`
+
+Subprograms can be renamed by using the :ada:`renames` keyword and declaring a
+new name for a subprogram:
+
+.. code-block:: ada
+
+    procedure New_Proc renames Original_Proc;
+
+This can be useful, for example, to improve the readability of your application
+when you're using code from external sources that cannot be changed in your
+system. Let's look at an example:
+
+.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
+
+    procedure A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed
+      (A_Message : String);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed
+      (A_Message : String) is
+    begin
+       Put_Line (A_Message);
+    end A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
+
+As the wording in the name of procedure above implies, we cannot change its
+name. We can, however, rename it to something like :ada:`Show` in our test
+application and use this shorter name. Note that we also have to declare all
+parameters of the original subprogram |mdash| we may rename them, too, in the
+declaration. For example:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
+
+    with A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
+
+    procedure Show_Renaming is
+
+       procedure Show (S : String) renames
+         A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
+
+    begin
+       Show ("Hello World!");
+    end Show_Renaming;
+
+Note that the original name
+(:ada:`A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed`) is still visible
+after the declaration of the :ada:`Show` procedure.
+
+We may also rename subprograms from the standard library. For example, we may
+rename :ada:`Integer'Image` to :ada:`Img`:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Integer_Image_Renaming
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Image_Renaming is
+
+       function Img (I : Integer) return String renames Integer'Image;
+
+    begin
+       Put_Line (Img (2));
+       Put_Line (Img (3));
+    end Show_Image_Renaming;
+
+Renaming also allows us to introduce default expressions that were not available
+in the original declaration. For example, we may specify :ada:`"Hello World!"`
+as the default for the :ada:`String` parameter of the :ada:`Show` procedure:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
+
+    with A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
+
+    procedure Show_Renaming_Defaults is
+
+       procedure Show (S : String := "Hello World!") renames
+         A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
+
+    begin
+       Show;
+    end Show_Renaming_Defaults;

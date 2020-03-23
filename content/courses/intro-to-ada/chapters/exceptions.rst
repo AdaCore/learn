@@ -3,16 +3,7 @@ Exceptions
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
-.. sectionauthor:: Raphaël Amiard
+.. include:: ../../global.txt
 
 Ada uses exceptions for error handling.  Unlike many other languages,
 Ada speaks about *raising*, not *throwing*, an exception and
@@ -90,6 +81,10 @@ exception handler to any statement block as follows:
        end;
     end Open_File;
 
+In the example above, we're using the :ada:`Exception_Message` function from
+the :ada:`Ada.Exceptions` package. This function returns the message
+associated with the exception as a string.
+
 You don't need to introduce a block just to handle an exception: you
 can add it to the statements block of your current subprogram:
 
@@ -146,21 +141,23 @@ Predefined exceptions
 
 Ada has a very small number of predefined exceptions:
 
-- `Constraint_Error` is the main one you might see. It's raised:
+- :ada:`Constraint_Error` is the main one you might see. It's raised:
+
     - When bounds don't match or, in general, any violation of constraints.
     - In case of overflow
     - In case of null dereferences
     - In case of division by 0
 
-- `Program_Error` might appear, but probably less often. It's raised
+- :ada:`Program_Error` might appear, but probably less often. It's raised
   in more arcane situations, such as for order of elaboration issues
   and some cases of detectable erroneous execution.
 
-- `Storage_Error` will happen because of memory issues, such as:
+- :ada:`Storage_Error` will happen because of memory issues, such as:
+
      - Not enough memory (allocator)
      - Not enough stack
 
-- `Tasking_Error` will happen with task related errors, such as any error
+- :ada:`Tasking_Error` will happen with task related errors, such as any error
   happening during task activation.
 
 You should not reuse predefined exceptions. If you do then, it won't

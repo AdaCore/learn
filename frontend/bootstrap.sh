@@ -12,14 +12,28 @@ apt-get update
 apt-get install -y \
     python3 \
     python3-pip \
+    python3-venv \
     nodejs \
     graphviz \
     make \
     gnat \
-    yarn
+    yarn \
+    texlive-latex-base \
+    texlive-latex-recommended \
+    texlive-latex-extra \
+    texlive-fonts-recommended \
+    texlive-fonts-extra \
+    latexmk \
+    texlive-xetex \
+    fonts-lmodern \
+    fonts-open-sans \
+    fonts-dejavu
+
 
 # Install learn deps
-cd /vagrant/frontend
-pip3 install -r requirements.txt
+python3 -m venv /vagrant/venv
+source /vagrant/venv/bin/activate
+pip3 install -r /vagrant/frontend/requirements.txt
 
+cd /vagrant/frontend
 yarn

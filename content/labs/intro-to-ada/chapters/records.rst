@@ -1,5 +1,3 @@
-:orphan:
-
 Records
 =======
 
@@ -19,8 +17,8 @@ Directions
 
 In this exercise, we make use of the algorithm implemented in the
 :ada:`Check_Direction` procedure (see chapter on
-:doc:`../../../courses/intro-to-ada/chapters/imperative_language`). For
-the sake of this exercise, we use the concept of an *extended angle*,
+:doc:`chapter on imperative language <courses/intro-to-ada/chapters/imperative_language>`).
+For the sake of this exercise, we use the concept of an *extended angle*,
 which includes the actual geometric angle and the corresponding direction
 (North, South, Northwest, and so on). These are your goals:
 
@@ -33,7 +31,7 @@ which includes the actual geometric angle and the corresponding direction
 #. Implement the function :ada:`To_Ext_Angle` to convert a simple angle
    value to an extended angle.
 
-.. code:: ada lab=Records_Directions
+.. code:: ada lab=Records.Directions
 
     --  START LAB IO BLOCK
     in 0:Direction_Chk
@@ -156,27 +154,27 @@ Just to recapitulate, these are the HTML colors that we use:
    +-------------+---------------+
    | Color       | Value         |
    +=============+===============+
-   | Salmon      | ```#FA8072``` |
+   | Salmon      | ``#FA8072``   |
    +-------------+---------------+
-   | Firebrick   | ```#B22222``` |
+   | Firebrick   | ``#B22222``   |
    +-------------+---------------+
-   | Red         | ```#FF0000``` |
+   | Red         | ``#FF0000``   |
    +-------------+---------------+
-   | Darkred     | ```#8B0000``` |
+   | Darkred     | ``#8B0000``   |
    +-------------+---------------+
-   | Lime        | ```#00FF00``` |
+   | Lime        | ``#00FF00``   |
    +-------------+---------------+
-   | Forestgreen | ```#228B22``` |
+   | Forestgreen | ``#228B22``   |
    +-------------+---------------+
-   | Green       | ```#008000``` |
+   | Green       | ``#008000``   |
    +-------------+---------------+
-   | Darkgreen   | ```#006400``` |
+   | Darkgreen   | ``#006400``   |
    +-------------+---------------+
-   | Blue        | ```#0000FF``` |
+   | Blue        | ``#0000FF``   |
    +-------------+---------------+
-   | Mediumblue  | ```#0000CD``` |
+   | Mediumblue  | ``#0000CD``   |
    +-------------+---------------+
-   | Darkblue    | ```#00008B``` |
+   | Darkblue    | ``#00008B``   |
    +-------------+---------------+
 
 The hexadecimal information of each color on this table can be mapped
@@ -197,7 +195,7 @@ the individual color elements. In addition, you will:
    of the :ada:`RGB` type in this format:
    :ada:`"(Red => 16#..#, Green => 16#...#, Blue => 16#...# )"`
 
-.. code:: ada lab=Records_Colors
+.. code:: ada lab=Records.Colors
 
     --  START LAB IO BLOCK
     in 0:HTML_Color_To_RGB
@@ -335,7 +333,7 @@ assets. These are your goals:
 #. Implement a procedure :ada:`Display` to display information about the
    inventory.
 
-.. code:: ada lab=Records_Inventory
+.. code:: ada lab=Records.Inventory
 
     --  START LAB IO BLOCK
     in 0:Inventory_Chk

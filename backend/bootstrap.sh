@@ -16,13 +16,9 @@ apt-get install -y \
 lxd init --auto
 
 # Install code_examples_server deps
-cd /vagrant
-python3 -m venv venv
-source venv/bin/activate
-pip3 install -r REQUIREMENTS.txt
-cd infrastructure
+python3 -m venv /vagrant/venv
+source /vagrant/venv/bin/activate
+pip3 install -r /vagrant/REQUIREMENTS.txt
+
+cd /vagrant/infrastructure
 make
-
-# Setup server
-cd /vagrant
-

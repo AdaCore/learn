@@ -1,6 +1,8 @@
 Exceptions
 ------------
 
+.. include:: ../../global.txt
+
 Exceptions are a mechanism for dealing with run-time occurrences that are rare, that usually correspond to errors (such as improperly formed input data), and whose occurrence causes an unconditional transfer of control.
 
 .. todo::
@@ -10,9 +12,9 @@ Exceptions are a mechanism for dealing with run-time occurrences that are rare, 
 Standard Exceptions
 ~~~~~~~~~~~~~~~~~~~~~
 
-Compared with Java and C++, the notion of an Ada exception is very simple. An exception in Ada is an object whose "type" is **exception**, as opposed to classes in Java or any type in C++. The only piece of user data that can be associated with an Ada exception is a String.  Basically, an exception in Ada can be raised, and it can be handled; information associated with an occurrence of an exception can be interrogated by a handler.
+Compared with Java and C++, the notion of an Ada exception is very simple. An exception in Ada is an object whose "type" is :ada:`exception`, as opposed to classes in Java or any type in C++. The only piece of user data that can be associated with an Ada exception is a String.  Basically, an exception in Ada can be raised, and it can be handled; information associated with an occurrence of an exception can be interrogated by a handler.
 
-Ada makes heavy use of exceptions especially for data consistency check failures at run time. These include, but are not limited to, checking against type ranges and array boundaries, null pointers, various kind of concurrency properties, and functions not returning a value.  For example, the following piece of code will raise the exception *Constraint_Error*:
+Ada makes heavy use of exceptions especially for data consistency check failures at run time. These include, but are not limited to, checking against type ranges and array boundaries, null pointers, various kind of concurrency properties, and functions not returning a value.  For example, the following piece of code will raise the exception :ada:`Constraint_Error`:
 
 .. code-block:: ada
 
@@ -22,9 +24,9 @@ Ada makes heavy use of exceptions especially for data consistency check failures
       V := -1;
    end P;
 
-In the above code, we're trying to assign a negative value to a variable that's declared to be positive. The range check takes place during the assignment operation, and the failure raises the *Constraint_Error* exception at that point. (Note that the compiler may give a warning that the value is out of range, but the error is manifest as a run-time exception.) Since there is no local handler, the exception is propagated to the caller; if *P* is the main procedure, then the program will be terminated.
+In the above code, we're trying to assign a negative value to a variable that's declared to be positive. The range check takes place during the assignment operation, and the failure raises the :ada:`Constraint_Error` exception at that point. (Note that the compiler may give a warning that the value is out of range, but the error is manifest as a run-time exception.) Since there is no local handler, the exception is propagated to the caller; if :ada:`P` is the main procedure, then the program will be terminated.
 
-Java and C++ can **throw** and **catch** exceptions when **try**\ing code. All Ada code is already implicitly within **try** blocks, and exceptions are **raise**\d and handled.
+Java and C++ can :cpp:`throw` and :cpp:`catch` exceptions when :cpp:`try`\ing code. All Ada code is already implicitly within :cpp:`try` blocks, and exceptions are :cpp:`raise`\d and handled.
 
 [Ada]
 
@@ -74,13 +76,13 @@ Raising and throwing exceptions is permissible in all three languages.
 Custom Exceptions
 ~~~~~~~~~~~~~~~~~~~
 
-Custom exception declarations resemble object declarations, and they can be created in Ada using the **exception** keyword:
+Custom exception declarations resemble object declarations, and they can be created in Ada using the :ada:`exception` keyword:
 
 .. code-block:: ada
 
    My_Exception : exception;
 
-Your exceptions can then be raised using a **raise** statement, optionally accompanied by a message following the **with** reserved word:
+Your exceptions can then be raised using a :ada:`raise` statement, optionally accompanied by a message following the :ada:`with` reserved word:
 
 [Ada]
 

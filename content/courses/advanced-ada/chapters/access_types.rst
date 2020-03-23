@@ -4,16 +4,7 @@
 Access Types
 ============
 
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../global.txt
 
 Null & Not Null Access
 ----------------------

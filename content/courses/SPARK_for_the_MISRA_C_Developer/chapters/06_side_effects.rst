@@ -3,11 +3,7 @@
 Controlling Side Effects
 ------------------------
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
+.. include:: ../../global.txt
 
 As with most programming languages, C allows side effects in expressions. This
 leads to subtle issues about conflicting side effects, when subexpressions of
@@ -61,14 +57,14 @@ Even in cases with no undefined or unspecified behavior, expressions with
 multiple side effects can be confusing to programmers reading or maintaining
 the code. This problem arises in particular with C's increment and decrement
 operators that can be applied prior to or after the expression evaluation,
-and with the assignment operator ``=`` in C since it can easily be mistaken
+and with the assignment operator :c:`=` in C since it can easily be mistaken
 for equality. Thus MISRA C forbids the use of the
 increment / decrement (Rule 13.3) and assignment (Rule 13.4) operators in
 expressions that have other potential side effects.
 
 In other cases, the presence of expressions with side effects might be
 confusing, if the programmer wrongly thinks that the side effects are
-guaranteed to occur. Consider the function ``decrease_until_one_is_null``
+guaranteed to occur. Consider the function :c:`decrease_until_one_is_null`
 below, which decreases both arguments until one is null:
 
 .. code:: c run_button
@@ -99,16 +95,16 @@ The program produces the following output:
       x = 0, y = 1
 
 
-I.e., starting from the same value 42 for both ``x`` and ``y``, only
-``x`` has reached the value zero after ``decrease_until_one_is_null``
-returns. The reason is that the side effect on ``y`` is performed only
+I.e., starting from the same value 42 for both :c:`x` and :c:`y`, only
+:c:`x` has reached the value zero after :c:`decrease_until_one_is_null`
+returns. The reason is that the side effect on :c:`y` is performed only
 conditionally. To avoid such surprises, MISRA C Rule 13.5 states:
 `"The right hand operand of a logical && or || operator shall not contain
 persistent side effects"`; this rule forbids the code above.
 
 MISRA C Rule 13.6 similarly states: `"The operand of the sizeof operator
 shall not contain any expression which has potential side effects"`. Indeed,
-the operand of ``sizeof`` is evaluated only in rare situations, and only
+the operand of :c:`sizeof` is evaluated only in rare situations, and only
 according to C99 rules, which makes any side effect in such an operand a
 likely mistake.
 
@@ -117,10 +113,10 @@ Side Effects and SPARK
 
 In SPARK, expressions cannot have side effects; only statements can. In
 particular, there are no increment/decrement operators, and no assignment
-operator. There is instead an assignment statement, whose syntax using ``:=``
-clearly distinguishes it from equality (using ``=``). And in any event an
+operator. There is instead an assignment statement, whose syntax using :ada:`:=`
+clearly distinguishes it from equality (using :ada:`=`). And in any event an
 expression is not allowed as a statement and this a construct such as
-``X = Y;`` would be illegal. Here is how a variable ``X`` can be assigned,
+:ada:`X = Y;` would be illegal. Here is how a variable :ada:`X` can be assigned,
 incremented and decremented:
 
 .. code-block:: ada
@@ -155,7 +151,7 @@ statement level, so the following is not allowed:
 Instead, every read of a volatile variable must occur immediately before being
 assigned to another variable, as follows:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     package Volatile_Read is
        X : Integer with Volatile;
@@ -171,15 +167,15 @@ assigned to another variable, as follows:
        end P;
     end Volatile_Read;
 
-Note here that the order of capture of the volatile value of ``X`` might be
-significant. For example, ``X`` might denote a quantity which only increases,
-like clock time, so that the above expression ``X1-X2`` would always be
+Note here that the order of capture of the volatile value of :ada:`X` might be
+significant. For example, :ada:`X` might denote a quantity which only increases,
+like clock time, so that the above expression :ada:`X1 - X2` would always be
 negative or zero.
 
 Even more significantly, functions in SPARK cannot have side effects; only
 procedures can. The only effect of a SPARK function is the computation of a
 result from its inputs, which may be passed as parameters or as global
-variables. In particular, SPARK functions cannot have ``out`` or ``in out``
+variables. In particular, SPARK functions cannot have :ada:`out` or :ada:`in out`
 parameters:
 
 .. code:: ada prove_flow_button
@@ -213,11 +209,11 @@ languages, for example when setting a new value and returning the previous one:
 
     end Bad_Functions;
 
-GNATprove detects that function ``Set`` has a side effect on global variable
-``Value`` and issues an error. The correct idiom in SPARK for such a case is to
-use a procedure with an ``out`` parameter to return the desired result:
+GNATprove detects that function :ada:`Set` has a side effect on global variable
+:ada:`Value` and issues an error. The correct idiom in SPARK for such a case is to
+use a procedure with an :ada:`out` parameter to return the desired result:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     package Ok_Subprograms is
        procedure Set (V : Integer; Prev : out Integer);
