@@ -5,7 +5,7 @@ import pylxd
 logger = logging.getLogger(__name__)
 
 
-INTERRUPT_STRING = '<interrupted>'
+INTERRUPT_STRING = '<interrupted> : Maximum 10s process limit reached.'
 INTERRUPT_RETURNCODE = 124
 
 rw_user = "runner"
