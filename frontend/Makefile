@@ -108,14 +108,15 @@ local: pdf_books
 	CODE_SERVER_URL="http://$(HOST_ADDRESS):8000" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
+webpack:
+	$(YARN_BUILD)
+
 # Build the site pointing to 'cloudchecker.r53.adacore.com'
-site: cleanall pdf_books
-	@$(YARN_BUILD)
+site: cleanall webpack pdf_books
 	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-site-staging: cleanall pdf_books
-	@$(YARN_BUILD)
+site-staging: cleanall webpack pdf_books
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
