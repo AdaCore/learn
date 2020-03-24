@@ -22,8 +22,8 @@ module.exports = merge(common, {
   devtool: 'source-map',
   plugins: [
     new ShellPlugin({
-      onBuildStart: ['make cleanall'],
-      onBuildEnd: ['make local'],
+      onBuildStart: ['make cleanall -j4'],
+      onBuildEnd: ['make local -j4'],
       // dev=false here to force every build to trigger make, the default is
       // first build only.
       dev: false,

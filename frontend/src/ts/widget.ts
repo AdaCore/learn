@@ -429,6 +429,7 @@ export class Widget {
   private readonly cliArea: CLIArea;
 
   private buttons: Array<Button> = [];
+  private buttonsDisabled = false;
 
   private readonly dlType: Types.DownloadType = Types.DownloadType.Client;
 
@@ -496,9 +497,25 @@ export class Widget {
             Strings.modeDictionary[mode].tooltip,
             Strings.modeDictionary[mode].buttonText);
         btn.registerEvent('click', (event: JQuery.ClickEvent) => {
-          if (!btn.disabled) {
-            this.buttonCB(event, mode);
+          if (this.buttonsDisabled) {
+            return;
           }
+
+          this.buttonsDisabled = true;
+          this.buttonCB(event, mode)
+              .then(() => {
+                if (this.labContainer != null) {
+                  this.labContainer.sort();
+                }
+              })
+              .catch((error) => {
+                this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+                console.error('Error:', error);
+              })
+              .finally(() => {
+                this.linesRead = 0;
+                this.buttonsDisabled = false;
+              });
         });
         this.buttons.push(btn);
       }
@@ -585,15 +602,8 @@ export class Widget {
    * @param {JQuery.ClickEvent} event - the event that triggered the CB
    * @param {string} mode - the mode of the button that triggered the event
    */
-  private buttonCB(event: JQuery.ClickEvent, mode: string): void {
-    if (event.target.disabled) {
-      return;
-    }
-
-    this.buttons.map((b) => {
-      b.disabled = true;
-    });
-
+  private async buttonCB(event: JQuery.ClickEvent,
+      mode: string): Promise<void> {
     this.outputArea.reset();
     if (this.labContainer != null) {
       this.labContainer.reset();
@@ -624,20 +634,18 @@ export class Widget {
 
     this.linesRead = 0;
 
-    this.fetchJSON<Types.RunProgram.TS, Types.RunProgram.FS>(serverData,
+    await this.fetchJSON<Types.RunProgram.TS, Types.RunProgram.FS>(serverData,
         'run_program')
         .then((json) => {
           if (json.identifier == '') {
-            this.outputArea.addError(json.message);
+            throw new Error(json.message);
           } else {
-            this.getOutputFromIdentifier(json);
+            return this.getOutputFromIdentifier(json);
           }
         })
-        .catch((error) => {
-          this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-          console.error('Error:', error);
+        .catch((error: Error) => {
+          throw error;
         });
-    this.resetServerReq();
   }
 
   /**
@@ -699,13 +707,14 @@ export class Widget {
    * Get the run output using the return identifier from the button CB
    * @param {Types.RunProgram.FS} json - the json data returned from button CB
    */
-  private getOutputFromIdentifier(json: Types.RunProgram.FS): void {
+  private async getOutputFromIdentifier(json: Types.RunProgram.FS):
+      Promise<void> {
     const data: Types.CheckOutput.TS = {
       identifier: json.identifier,
       read: this.linesRead,
     };
 
-    this.fetchJSON<Types.CheckOutput.TS, Types.CheckOutput.FS>(data,
+    await this.fetchJSON<Types.CheckOutput.TS, Types.CheckOutput.FS>(data,
         'check_output')
         .then((rdata) => {
           this.linesRead += this.processCheckOutput(rdata);
@@ -713,17 +722,12 @@ export class Widget {
           if (!rdata.completed) {
             // We have not finished processing the output: call this again
             setTimeout(() => {
-              this.getOutputFromIdentifier(json);
+              return this.getOutputFromIdentifier(json);
             }, 250);
-          } else {
-            if (this.labContainer != null) {
-              this.labContainer.sort();
-            }
           }
         })
-        .catch((error) => {
-          this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-          console.error('Error:', error);
+        .catch((error: Error) => {
+          throw error;
         });
   }
 
@@ -835,17 +839,6 @@ export class Widget {
     }
 
     return readLines;
-  }
-
-  /**
-   * Reset the widget after a run_program request
-   */
-  private resetServerReq(): void {
-    this.buttons.map((b) => {
-      b.disabled = false;
-    });
-
-    this.linesRead = 0;
   }
 
   /**

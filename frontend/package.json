@@ -72,7 +72,7 @@
   "scripts": {
     "dev": "webpack-dev-server --open --config webpack.dev.js",
     "tsc": "tsc",
-    "eslint": "eslint --ext .ts sphinx/src/",
+    "eslint": "eslint --ext .ts src/",
     "build": "webpack --config webpack.prod.js",
     "test": "mocha-webpack",
     "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text yarn run test"
