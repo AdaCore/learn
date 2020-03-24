@@ -41,6 +41,6 @@ jobs:
 #      language: python
 #      python: 3.6
 #      script:
-#        - cd frontend && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" site-staging
+#        - cd frontend && PATH=$GNAT_PATH/bin:$PATH make SPHINXOPTS="-W" test_engine
 
 # TODO: insert test stages for backend

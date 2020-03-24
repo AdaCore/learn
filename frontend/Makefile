@@ -4,27 +4,27 @@ SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = learnadacorecom
 SPHINXCONF    = sphinx
 BUILDDIR      = dist
-TEST_DRIVER   = python3 tests/compile_blocks.py
+TEST_DRIVER   = python3 tests/compile_blocks.py -B $(BUILDDIR)/test_output
 
 mkfile_path  := $(abspath $(lastword $(MAKEFILE_LIST)))
 mkfile_dir   := $(dir $(mkfile_path))
 
 CONTENT_DIR   = $(mkfile_dir)/../content
 HOST_ADDRESS ?= localhost
+HOST_PORT    ?= 8000
 
 YARN_BUILD    := yarn run build
 
 
 help:
-	@echo "make tests  - run the testsuite"
+	@echo "make test_content  - run the testsuite"
 	@echo "make test_engine  - generate the engine test html"
 	@echo "make html   - generates the html"
 	@echo "make latexpdf - generates the PDF document"
 	@echo "make pdf_books - generates the PDF document for each course and labs"
 
-test_engine:
+test_engine: webpack
 	@echo "===== ENGINE TEST ====="
-	@$(YARN_BUILD)
 	@$(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@echo ""
@@ -56,12 +56,12 @@ test_spark_for_the_misra_c_developer:
 
 test_ada_for_the_cpp_java_developer:
 	@echo "===== ADA FOR THE CPP JAVA DEV ====="
-	@$(TEST_DRIVER) ../courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
 	@echo ""
 
 test_gnat_toolchain_intro:
 	@echo "===== GNAT TOOLCHAIN INTRO ====="
-	@$(TEST_DRIVER) ../courses/GNAT_Toolchain_Intro/chapters/*.rst
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
 	@echo ""
 
 test_content: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark \
@@ -105,7 +105,7 @@ publish:
 # code server.
 # This should only be called from `yarn run dev`
 local: pdf_books
-	CODE_SERVER_URL="http://$(HOST_ADDRESS):8000" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	CODE_SERVER_URL="http://$(HOST_ADDRESS):$(HOST_PORT)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack:
