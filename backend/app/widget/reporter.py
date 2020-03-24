@@ -112,7 +112,7 @@ class MQReporter:
 
         logger.debug(f"Updating status with msg:{obj_str}")
         with self.app.connection_or_acquire() as conn:
-            queue = conn.SimpleQueue(self.task_id)
+            queue = conn.SimpleBuffer(self.task_id)
             queue.put(obj_str)
             queue.close()
 
