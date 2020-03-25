@@ -419,24 +419,25 @@ class CLIArea {
 /** The Widget class */
 export class Widget {
   private editors: Array<Editor> = [];
-  private readonly container: JQuery;
+  protected readonly container: JQuery;
   private readonly name: string;
   private tabs: Tabs = new Tabs();
   private outputContainer: JQuery;
-  private outputArea: OutputArea = new OutputArea();
-  private readonly labContainer: LabContainer;
-  private readonly lab: boolean = false;
-  private readonly cliArea: CLIArea;
+  protected outputArea: OutputArea = new OutputArea();
 
   private buttons: Array<Button> = [];
   private buttonsDisabled = false;
 
-  private readonly dlType: Types.DownloadType = Types.DownloadType.Client;
+  protected lab = false;
 
-  private linesRead = 0;
+  private dlType: Types.DownloadType = Types.DownloadType.Client;
+
   private readonly server: string;
 
   private shadowFiles: Array<Types.Resource> = [];
+
+  protected buttonGroup: JQuery;
+  protected outputGroup: JQuery;
 
   /**
    * Constructs the Widget
@@ -448,6 +449,7 @@ export class Widget {
     this.server = server;
     this.container = container;
 
+    // Read attributes from container object to initialize members
     this.name = container.attr('name');
 
     for (const file of this.container.children('.file')) {
@@ -464,7 +466,7 @@ export class Widget {
       this.shadowFiles.push(a);
     }
 
-    // Then fill the contents of the tabs
+    // fill the contents of the tabs
     resources.map((file) => {
       const ed = new Editor(file);
       this.editors.push(ed);
@@ -473,64 +475,53 @@ export class Widget {
       ed.setTab(tab);
     });
 
-    if (container.attr('lab')) {
-      this.lab = true;
-      this.container.attr('run_button', 'true');
-      this.container.attr('submit_button', 'true');
-      this.container.attr('cli_input', 'true');
-
-      this.labContainer = new LabContainer();
-    } else {
-      this.labContainer = null;
-    }
-
-    if (container.attr('cli_input')) {
-      this.cliArea = new CLIArea();
-    } else {
-      this.cliArea = null;
-    }
-
+    // Check which buttons are enabled on container and populate
     for (const mode in Strings.modeDictionary) {
       if (this.container.attr(mode + '_button')) {
-        this.dlType = Types.DownloadType.Server;
-        const btn: Button = new Button([],
-            Strings.modeDictionary[mode].tooltip,
-            Strings.modeDictionary[mode].buttonText);
-        btn.registerEvent('click', (event: JQuery.ClickEvent) => {
-          if (this.buttonsDisabled) {
-            return;
-          }
-
-          this.buttonsDisabled = true;
-          this.buttonCB(event, mode)
-              .then(() => {
-                if (this.labContainer != null) {
-                  this.labContainer.sort();
-                }
-              })
-              .catch((error) => {
-                this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-                console.error('Error:', error);
-              })
-              .finally(() => {
-                this.linesRead = 0;
-                this.buttonsDisabled = false;
-              });
-        });
-        this.buttons.push(btn);
+        this.addButton(mode);
       }
     }
 
+    // if this widget doesn't have a name defined, don't allow for download
     if (util.isUndefined(this.name)) {
       this.dlType = Types.DownloadType.None;
     }
   }
 
   /**
+   * Add a button to the button list
+   * @param {string} mode - the mode of button to add
+   */
+  protected addButton(mode: string): void {
+    // if there are any buttons, the dltype needs to be server
+    this.dlType = Types.DownloadType.Server;
+
+    const btn: Button = new Button([],
+        Strings.modeDictionary[mode].tooltip,
+        Strings.modeDictionary[mode].buttonText);
+    btn.registerEvent('click', async (event: JQuery.ClickEvent) => {
+      if (this.buttonsDisabled) {
+        return;
+      }
+      this.buttonsDisabled = true;
+      try {
+        await this.buttonCB(event, mode);
+      } catch (error) {
+        this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+        console.error('Error:', error);
+      } finally {
+        this.buttonsDisabled = false;
+      }
+    });
+
+    this.buttons.push(btn);
+  }
+
+  /**
    * Collect the resources loaded in the widget and return as list
    * @return {Array<Types.Resource>} return the widget resources
    */
-  private collectResources(): Array<Types.Resource> {
+  protected collectResources(): Array<Types.Resource> {
     const files: Array<Types.Resource> = [];
     this.editors.map((e) => {
       files.push(e.getResource());
@@ -602,28 +593,15 @@ export class Widget {
    * @param {JQuery.ClickEvent} event - the event that triggered the CB
    * @param {string} mode - the mode of the button that triggered the event
    */
-  private async buttonCB(event: JQuery.ClickEvent,
+  protected async buttonCB(event: JQuery.ClickEvent,
       mode: string): Promise<void> {
     this.outputArea.reset();
-    if (this.labContainer != null) {
-      this.labContainer.reset();
-    }
 
     this.outputArea.add(['output_info', 'console_output'],
         Strings.CONSOLE_OUTPUT_LABEL + ':');
     this.outputArea.showSpinner(true);
 
     const files: Array<Types.Resource> = this.collectResources();
-
-    // grab cli input and put in file CLI_FILE
-    if (this.cliArea != null) {
-      if (this.cliArea.enabled()) {
-        files.push({
-          basename: Strings.CLI_FILE,
-          contents: this.cliArea.getContent(),
-        });
-      }
-    }
 
     const serverData: Types.RunProgram.TS = {
       files: files,
@@ -632,27 +610,27 @@ export class Widget {
       lab: this.lab,
     };
 
-    this.linesRead = 0;
-
+    const json =
     await this.fetchJSON<Types.RunProgram.TS, Types.RunProgram.FS>(serverData,
-        'run_program')
-        .then((json) => {
-          if (json.identifier == '') {
-            throw new Error(json.message);
-          } else {
-            return this.getOutputFromIdentifier(json);
-          }
-        })
-        .catch((error: Error) => {
-          throw error;
-        });
+        'run_program');
+
+    if (json.identifier == '') {
+      throw new Error(json.message);
+    }
+
+    return new Promise(async (resolve) => {
+      await this.getOutputFromIdentifier(json);
+      resolve();
+    });
   }
 
   /**
    * The download example callback
    */
-  private downloadExample(): void {
+  private async downloadExample(): Promise<void> {
     const files: Array<Types.Resource> = this.collectResources();
+    let blobs: Blob[];
+    let filenames: string[];
 
     switch (this.dlType) {
       case Types.DownloadType.None:
@@ -663,72 +641,148 @@ export class Widget {
           name: this.name,
         };
 
-        this.fetchBlob(serverData, 'download')
-            .then((ret) => {
-              const objURL: string = URL.createObjectURL(ret.blob);
-              const a = $('<a>')
-                  .attr('href', objURL)
-                  .attr('download', ret.filename)
-                  // .hide()
-                  .appendTo('body');
-              a[0].click();
-              a.remove();
-
-              URL.revokeObjectURL(objURL);
-            })
-            .catch((error) => {
-              this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-              console.error('Error:', error);
-            });
+        const ret = await this.fetchBlob(serverData, 'download');
+        blobs.push(ret.blob);
+        filenames.push(ret.filename);
 
         break;
       case Types.DownloadType.Client:
         this.editors.map((e): void => {
           const resource: Types.Resource = e.getResource();
-          const blob: Blob =
-            new Blob([resource.contents], {type: 'text/plain'});
-          const objURL: string = URL.createObjectURL(blob);
-
-          const a = $('<a>')
-              .attr('href', objURL)
-              .attr('download', resource.basename)
-              // .hide()
-              .appendTo('body');
-          a[0].click();
-          a.remove();
-
-          URL.revokeObjectURL(objURL);
+          blobs.push(new Blob([resource.contents], {type: 'text/plain'}));
+          filenames.push(resource.basename);
         });
         break;
+    }
+
+    for (const [blob, name] of util.zip(blobs, filenames)) {
+      const objURL: string = URL.createObjectURL(blob);
+
+      const a = $('<a>')
+          .attr('href', objURL)
+          .attr('download', name)
+          // .hide()
+          .appendTo('body');
+      a[0].click();
+      a.remove();
+
+      URL.revokeObjectURL(objURL);
     }
   }
 
   /**
    * Get the run output using the return identifier from the button CB
    * @param {Types.RunProgram.FS} json - the json data returned from button CB
+   * @param {number} lRead - the number of lines already read from the stream
    */
-  private async getOutputFromIdentifier(json: Types.RunProgram.FS):
+  private async getOutputFromIdentifier(json: Types.RunProgram.FS, lRead = 0):
       Promise<void> {
     const data: Types.CheckOutput.TS = {
       identifier: json.identifier,
-      read: this.linesRead,
+      read: lRead,
     };
 
-    await this.fetchJSON<Types.CheckOutput.TS, Types.CheckOutput.FS>(data,
-        'check_output')
-        .then((rdata) => {
-          this.linesRead += this.processCheckOutput(rdata);
+    const rdata =
+      await this.fetchJSON<Types.CheckOutput.TS, Types.CheckOutput.FS>(data,
+          'check_output');
 
-          if (!rdata.completed) {
-            // We have not finished processing the output: call this again
-            setTimeout(() => {
-              return this.getOutputFromIdentifier(json);
-            }, 250);
+    lRead += this.processCheckOutput(rdata);
+
+    if (!rdata.completed) {
+      // We have not finished processing the output: call this again
+      return new Promise((resolve) => {
+        setTimeout(async () => {
+          await this.getOutputFromIdentifier(json, lRead);
+          resolve();
+        }, 250);
+      });
+    }
+  }
+
+  /**
+   * Returns the correct Area to place data in
+   * @param {number} ref - should be null for Widget
+   * @return {Area} the area to place returned data
+   */
+  protected getHomeArea(ref: number): Area {
+    if (ref != null) {
+      throw new Error('Malformed data packet has ref in non-lab.');
+    }
+    return this.outputArea;
+  }
+
+  /**
+   * Handle the msg data coming back from server
+   * @param {Types.CheckOutput.RunMsg} msg - the returned msg
+   * @param {Area} homeArea - the area to place the rendered msg
+   */
+  protected handleMsgType(msg: Types.CheckOutput.RunMsg, homeArea: Area): void {
+    switch (msg.type) {
+      case 'console': {
+        homeArea.addConsole(msg.data);
+        break;
+      }
+      case 'internal_error':
+        msg.data += ' ' + Strings.INTERNAL_ERROR_MESSAGE;
+        // Intentional: fall through
+      case 'stderr':
+      case 'stdout': {
+        const outMsg = msg.data;
+        const ctRegex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
+        const rtRegex = /^raised .+ : ([a-zA-Z._0-9-]+):(\d+) (.+)$/m;
+
+        const ctMatchFound: Array<string> = outMsg.match(ctRegex);
+        const rtMatchFound: Array<string> = outMsg.match(rtRegex);
+        let div: JQuery;
+
+        if (ctMatchFound || rtMatchFound) {
+          let basename: string;
+          let row: number;
+          let col: number;
+
+          if (ctMatchFound) {
+            basename = ctMatchFound[1];
+            row = parseInt(ctMatchFound[2]);
+            col = parseInt(ctMatchFound[3]);
+
+            if (ctMatchFound[4].indexOf(' info:') == 0) {
+              div = homeArea.addInfo(outMsg);
+            } else {
+              div = homeArea.addMsg(outMsg);
+              homeArea.errorCount++;
+            }
+          } else {
+            basename = rtMatchFound[1];
+            row = parseInt(rtMatchFound[2]);
+            col = 1;
+
+            div = homeArea.addMsg(outMsg);
+            homeArea.errorCount++;
           }
-        })
-        .catch((error: Error) => {
-          throw error;
-        });
+
+          // Lines that contain a sloc are clickable:
+          div.on('click', () => {
+            this.editors.map((e) => {
+              if (basename == e.getResource().basename) {
+                // Switch to the tab that contains the editor
+                e.getTab().trigger('click');
+
+                // Jump to the corresponding line
+                e.gotoLine(row, col);
+              }
+            });
+          });
+        } else {
+          homeArea.addLine(outMsg);
+        }
+        break;
+      }
+      default: {
+        homeArea.addLine(msg.data);
+        throw new Error('Unhandled msg type.');
+        break;
+      }
+    }
   }
 
   /**
@@ -740,92 +794,13 @@ export class Widget {
     let readLines = 0;
 
     data.output.map((ol) => {
-      let homeArea: Area;
+      const homeArea = this.getHomeArea(ol.ref);
       readLines++;
 
-      if (ol.ref != null) {
-        homeArea = this.labContainer.getLabArea(ol.ref);
-      } else {
-        homeArea = this.outputArea;
-      }
-
-      switch (ol.msg.type) {
-        case 'console': {
-          homeArea.addConsole(ol.msg.data);
-          break;
-        }
-        case 'internal_error':
-          ol.msg.data += ' ' + Strings.INTERNAL_ERROR_MESSAGE;
-          // Intentional: fall through
-        case 'stderr':
-        case 'stdout': {
-          const msg = ol.msg.data;
-          const ctRegex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
-          const rtRegex = /^raised .+ : ([a-zA-Z._0-9-]+):(\d+) (.+)$/m;
-
-          const ctMatchFound: Array<string> = msg.match(ctRegex);
-          const rtMatchFound: Array<string> = msg.match(rtRegex);
-          let div: JQuery;
-
-          if (ctMatchFound || rtMatchFound) {
-            let basename: string;
-            let row: number;
-            let col: number;
-
-            if (ctMatchFound) {
-              basename = ctMatchFound[1];
-              row = parseInt(ctMatchFound[2]);
-              col = parseInt(ctMatchFound[3]);
-
-              if (ctMatchFound[4].indexOf(' info:') == 0) {
-                div = homeArea.addInfo(msg);
-              } else {
-                div = homeArea.addMsg(msg);
-                homeArea.errorCount++;
-              }
-            } else {
-              basename = rtMatchFound[1];
-              row = parseInt(rtMatchFound[2]);
-              col = 1;
-
-              div = homeArea.addMsg(msg);
-              homeArea.errorCount++;
-            }
-
-            // Lines that contain a sloc are clickable:
-            div.on('click', () => {
-              this.editors.map((e) => {
-                if (basename == e.getResource().basename) {
-                  // Switch to the tab that contains the editor
-                  e.getTab().trigger('click');
-
-                  // Jump to the corresponding line
-                  e.gotoLine(row, col);
-                }
-              });
-            });
-          } else {
-            homeArea.addLine(msg);
-          }
-          break;
-        }
-        case 'lab': {
-          const result =
-            this.labContainer.processResults(
-                (ol.msg.data as unknown) as Types.CheckOutput.LabOutput);
-          this.outputArea.addLabStatus(result);
-          break;
-        }
-        default: {
-          // TODO: this branch should probably throw an error
-          homeArea.addLine(ol.msg.data);
-          break;
-        }
-      }
+      this.handleMsgType(ol.msg, homeArea);
     });
 
     if (data.completed) {
-      this.linesRead = 0;
       this.buttons.map((b) => {
         b.disabled = false;
       });
@@ -842,14 +817,11 @@ export class Widget {
   }
 
   /**
-   * Reset the editors, outputArea, and labContainer
+   * Reset the editors, outputArea
    */
-  private resetEditors(): void {
-    this.linesRead = 0;
+  protected resetEditors(): void {
     this.outputArea.reset();
-    if (this.labContainer != null) {
-      this.labContainer.reset();
-    }
+
     this.editors.map((e) => {
       e.reset();
     });
@@ -929,7 +901,11 @@ export class Widget {
           )
           .appendTo(settingsBar)
           .on('click', () => {
-            this.downloadExample();
+            this.downloadExample()
+                .catch((error: Error) => {
+                  this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+                  console.error('Error:', error);
+                });
           });
     }
 
@@ -946,25 +922,118 @@ export class Widget {
         .addClass('row output_row')
         .appendTo(this.container);
 
-    const butCol = $('<div>')
+    this.buttonGroup = $('<div>')
         .addClass('col-md-3')
         .appendTo(row);
 
-    if (this.labContainer != null) {
-      this.cliArea.render(butCol);
-    }
-
     this.buttons.map((b) => {
-      b.render().appendTo(butCol);
+      b.render().appendTo(this.buttonGroup);
     });
 
-    const outCol = $('<div>')
+    this.outputGroup = $('<div>')
         .addClass('col-md-9')
         .appendTo(row)
         .append(this.outputArea.render());
+  }
+}
 
-    if (this.labContainer != null) {
-      this.labContainer.render().appendTo(outCol);
+/** The LabWidget class */
+export class LabWidget extends Widget {
+  private readonly labContainer: LabContainer = new LabContainer;
+  private readonly cliArea: CLIArea = new CLIArea();
+
+  /**
+   * Constructs the LabWidget
+   * @param {JQuery} container - the container for the widget
+   * @param {string} server - the server address:port
+   */
+  constructor(container: JQuery, server: string) {
+    super(container, server);
+
+    this.addButton('run');
+    this.addButton('submit');
+
+    this.lab = true;
+  }
+
+  /**
+   * Collect the resources loaded in the widget and return as list
+   *  then add cli data to file list
+   * @return {Array<Types.Resource>} return the widget resources
+   */
+  protected collectResources(): Array<Types.Resource> {
+    const files = super.collectResources();
+
+    if (this.cliArea.enabled()) {
+      files.push({
+        basename: Strings.CLI_FILE,
+        contents: this.cliArea.getContent(),
+      });
     }
+
+    return files;
+  }
+
+  /**
+   * The main callback for the widget buttons
+   * @param {JQuery.ClickEvent} event - the event that triggered the CB
+   * @param {string} mode - the mode of the button that triggered the event
+   */
+  protected async buttonCB(event: JQuery.ClickEvent,
+      mode: string): Promise<void> {
+    this.labContainer.reset();
+
+    await super.buttonCB(event, mode);
+
+    this.labContainer.sort();
+  }
+
+  /**
+   * Returns the correct Area to place data in
+   * @param {number} ref - if not null, the lab ref
+   * @return {Area} the area to place returned data
+   */
+  protected getHomeArea(ref: number): Area {
+    if (ref != null) {
+      return this.labContainer.getLabArea(ref);
+    }
+    return this.outputArea;
+  }
+
+  /**
+   * Handle the msg data coming back from server
+   * @param {Types.CheckOutput.RunMsg} msg - the returned msg
+   * @param {Area} homeArea - the area to place the rendered msg
+   */
+  protected handleMsgType(msg: Types.CheckOutput.RunMsg, homeArea: Area): void {
+    switch (msg.type) {
+      case 'lab': {
+        const result =
+          this.labContainer.processResults(
+              (msg.data as unknown) as Types.CheckOutput.LabOutput);
+        this.outputArea.addLabStatus(result);
+        break;
+      }
+      default: {
+        super.handleMsgType(msg, homeArea);
+      }
+    }
+  }
+
+  /**
+   * Reset the editors, outputArea, and labContainer
+   */
+  protected resetEditors(): void {
+    super.resetEditors();
+    this.labContainer.reset();
+  }
+
+  /**
+   * Render the widget by putting it into this.container
+   */
+  public render(): void {
+    super.render();
+    this.cliArea.render(this.buttonGroup);
+    this.labContainer.render().appendTo(this.outputGroup);
   }
 }

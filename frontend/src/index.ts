@@ -1,7 +1,7 @@
 import './styles/learn.scss';
 import './ts/theme';
 import {Carousel} from './ts/carousel';
-import {Widget} from './ts/widget';
+import {Widget, LabWidget} from './ts/widget';
 
 
 (function(): void {
@@ -25,12 +25,18 @@ import {Widget} from './ts/widget';
   // $(document).on('ready', () => {
   $(document).ready(() => {
     $('div.widget_editor').each((index: number, element: HTMLElement) => {
-      let exampleServer = $(element).attr('example_server');
+      const exampleServer = $(element).attr('example_server');
+
       if (exampleServer) {
-        const widget = new Widget($(element), exampleServer);
-        widget.render();
-      } else {
-        exampleServer = '';
+        const isLab = $(element).attr('lab');
+
+        if (isLab) {
+          const labWidget = new LabWidget($(element), exampleServer);
+          labWidget.render();
+        } else {
+          const widget = new Widget($(element), exampleServer);
+          widget.render();
+        }
       }
     });
 
