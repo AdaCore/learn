@@ -1,419 +1,18 @@
 import $ from 'jquery';
 import 'whatwg-fetch';
 
+import {Area, OutputArea, LabContainer, CLIArea} from './areas';
 import {Button, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
+import {Resource, Download, RunProgram, CheckOutput} from './types';
 import * as Strings from './strings';
-import * as Types from './types';
 import * as util from './utilities';
 
 
-/** Abstract class representing an Area **/
-abstract class Area {
-  protected container: JQuery;
-  public errorCount = 0;
-
-  /**
-   * Render the Area
-   * @abstract
-   * @return {JQuery} The object holding the Area
-   */
-  abstract render(): JQuery;
-
-  /**
-   * Add a line to the Area
-   * @param {Array<string>} classes - The list of classes to add to the line
-   * @param {string} text - The text to display on the line
-   * @return {JQuery} The JQuery object of the newly created line
-   */
-  public add(classes: Array<string>, text: string): JQuery {
-    const div = $('<div>');
-    classes.map((c: string) => {
-      div.addClass(c);
-    });
-
-    div.text(text);
-    div.appendTo(this.container);
-    return div;
-  }
-
-  /**
-   * Empty the Area and reset to default state
-   */
-  public reset(): void {
-    this.container.empty();
-    this.errorCount = 0;
-  }
-
-  /**
-   * Add a Console message to the Area
-   * @param {string} text - The console message to add
-   * @return {JQuery} The newly created line
-   */
-  public addConsole(text: string): JQuery {
-    return this.add(['output_console'], '$ ' + text);
-  }
-
-  /**
-   * Add an Info message to the Area
-   * @param {string} text - The info message to add
-   * @return {JQuery} The newly created line
-   */
-  public addInfo(text: string): JQuery {
-    return this.add(['output_msg_info'], text);
-  }
-
-  /**
-   * Add a Msg message to the Area
-   * @param {string} text - The Msg message to add
-   * @return {JQuery} The newly created line
-   */
-  public addMsg(text: string): JQuery {
-    return this.add(['output_msg'], text);
-  }
-
-  /**
-   * Add a Line message to the Area
-   * @param {string} text - The Line message to add
-   * @return {JQuery} The newly created line
-   */
-  public addLine(text: string): JQuery {
-    return this.add(['output_line'], text);
-  }
-}
-
-/**
- * Class representing an OutputArea
- * @extends Area
- */
-class OutputArea extends Area {
-  private spinner: JQuery;
-
-  /**
-   * Construct an OutputArea
-   */
-  constructor() {
-    super();
-    this.container = $('<div>')
-        .addClass('output_area');
-
-    this.spinner = $('<div>')
-        .addClass('spinner')
-        .append(
-            $('<div>').addClass('bounce1')
-        )
-        .append(
-            $('<div>').addClass('bounce2')
-        )
-        .append(
-            $('<div>').addClass('bounce3')
-        );
-  }
-
-  /**
-   * Render the OutputArea
-   * @return {JQuery} The container of the OutputArea
-   */
-  public render(): JQuery {
-    return this.container;
-  }
-
-  /**
-   * Add an Error message to the OutputArea
-   * @param {string} message - The error message to add
-   */
-  public addError(message: string): void {
-    this.add(['output_error'], message);
-  }
-
-  /**
-   * Add a LabStatus message to the Area
-   * @param {boolean} status - The Pass/Fail status to add
-   */
-  public addLabStatus(status: boolean): void {
-    if (status) {
-      this.add(['lab_status'], Strings.LAB_COMPLETE_LABEL);
-    } else {
-      this.add(['lab_status'], Strings.LAB_FAILED_LABEL);
-    }
-  }
-
-  /**
-   * Show or hide the loading spinner
-   * @param {boolean} show - Show or hide
-   */
-  public showSpinner(show: boolean): void {
-    if (show) {
-      this.spinner.appendTo(this.container);
-    } else {
-      this.spinner.remove();
-    }
-  }
-
-  /**
-   * Get the number of errors recorded in the OutputArea
-   * @return {number} The number of errors counted
-   */
-  public getErrCount(): number {
-    return this.errorCount;
-  }
-}
-
-/**
- * Class representing a LabArea
- * @extends Area
- */
-class LabArea extends Area {
-  private readonly ref: number;
-  private readonly wrapper: JQuery;
-  private button: JQuery;
-
-  /**
-   * Constructs a LabArea
-   * @param {number} ref - The ref number of the lab result
-   */
-  constructor(ref: number) {
-    super();
-    this.wrapper = $('<div>').addClass('acc_wrapper');
-    this.ref = ref;
-
-    this.button = $('<button>')
-        .addClass('accordion')
-        .appendTo(this.wrapper)
-        .append(
-            $('<span>').text(Strings.TEST_CASE_LABEL + ' #' + this.ref)
-        ).on('click', () => {
-          this.button.toggleClass('active');
-          this.container.toggle();
-        });
-    this.container = $('<div>')
-        .addClass('lab_test_case')
-        .appendTo(this.wrapper);
-  }
-
-  /**
-   * Render the LabArea
-   * @return {JQuery} Returns the JQuery object holding the LabArea
-   */
-  public render(): JQuery {
-    return this.wrapper;
-  }
-
-  /**
-   * Adds a result to the LabArea
-   * @param {Types.CheckOutput.TestResult} result - the result to add
-   */
-  public addResults(result: Types.CheckOutput.TestResult): void {
-    if (result.status == 'Success') {
-      this.button.addClass('lab_test_success');
-      this.container.addClass('lab_test_success');
-    } else {
-      this.button.addClass('lab_test_failed');
-      this.container.addClass('lab_test_failed');
-    }
-
-    const caseDiv: JQuery = $('<div>')
-        .addClass('lab_results')
-        .appendTo(this.container);
-
-    $('<div>')
-        .addClass('lab_test_msg')
-        .addClass('lab_test_input')
-        .append(
-            $('<span>')
-                .addClass('lab_test_msg_title')
-                .text(Strings.LAB_TEST_INPUT_LABEL + ':')
-        )
-        .append(
-            $('<code>').text(result.in)
-        )
-        .appendTo(caseDiv);
-
-    $('<div>')
-        .addClass('lab_test_msg')
-        .addClass('lab_test_output')
-        .append(
-            $('<span>')
-                .addClass('lab_test_msg_title')
-                .text(Strings.LAB_TEST_OUTPUT_LABEL + ':')
-        )
-        .append(
-            $('<code>').text(result.out)
-        )
-        .appendTo(caseDiv);
-
-    $('<div>')
-        .addClass('lab_test_msg')
-        .addClass('lab_test_actual')
-        .append(
-            $('<span>')
-                .addClass('lab_test_msg_title')
-                .text(Strings.LAB_TEST_ACTUAL_LABEL + ':')
-        )
-        .append(
-            $('<code>').text(result.actual)
-        )
-        .appendTo(caseDiv);
-
-    $('<div>')
-        .addClass('lab_test_msg')
-        .addClass('lab_test_status')
-        .append(
-            $('<span>')
-                .addClass('lab_test_msg_title')
-                .text(Strings.LAB_TEST_STATUS_LABEL + ':')
-        )
-        .append(
-            $('<code>').text(result.status)
-        )
-        .appendTo(caseDiv);
-  }
-
-  /**
-   * Returns the ref number for the LabArea
-   * @return {number} The ref number
-   */
-  public getRef(): number {
-    return this.ref;
-  }
-}
-
-/** Class representing the LabContainer */
-class LabContainer {
-  private labList: Array<LabArea> = [];
-  private readonly container: JQuery;
-
-  /**
-   * Constructs a LabContainer
-   */
-  constructor() {
-    this.container = $('<div>').addClass('lab_area');
-  }
-
-  /**
-   * Returns the LabArea corresponding to the ref number
-   * @param {number} ref - The ref number to lookup
-   * @return {LabArea} the LabArea with the ref number
-   */
-  public getLabArea(ref: number): LabArea {
-    for (const l of this.labList) {
-      if (l.getRef() == ref) {
-        return l;
-      }
-    }
-    const newLab: LabArea = new LabArea(ref);
-    this.labList.push(newLab);
-    return newLab;
-  }
-
-  /**
-   * Renders the LabContainer
-   * @return {JQuery} the JQuery object containing the LabContainer
-   */
-  public render(): JQuery {
-    return this.container;
-  }
-
-  /**
-   * Process the results from a lab submission
-   * @param {Types.CheckOutput.LabOutput} data - The lab submission data
-   * @return {boolean} the success/fail of the lab
-   */
-  public processResults(data: Types.CheckOutput.LabOutput): boolean {
-    for (const index in data.cases) {
-      if ({}.hasOwnProperty.call(data.cases, index)) {
-        const test: Types.CheckOutput.TestResult =
-          (data.cases[index] as unknown) as Types.CheckOutput.TestResult;
-        const la = this.getLabArea(parseInt(index));
-        la.addResults(test);
-      }
-    }
-
-    return data.success;
-  }
-
-  /**
-   * Empty and reset the LabContainer
-   */
-  public reset(): void {
-    this.container.empty();
-    this.labList = [];
-  }
-
-  /**
-   * Sort the LabAreas in the LabContainer
-   */
-  public sort(): void {
-    const sorted = this.labList.sort((lhs, rhs): number => {
-      return lhs.getRef() - rhs.getRef();
-    });
-    sorted.map((l) => {
-      return l.render().appendTo(this.container);
-    });
-  }
-}
-
-/** Class representing the CLIArea */
-class CLIArea {
-  private textArea: JQuery;
-  private checkBox: CheckBox;
-
-  /**
-   * Construct CLIArea
-   */
-  constructor() {
-    this.textArea = $('<textarea>')
-        .addClass('custom_input')
-        .attr('name', 'custom_input')
-        .attr('rows', '4')
-        .attr('cols', '6')
-        .hide();
-    this.checkBox =
-    new CheckBox(Strings.CUSTOM_INPUT_LABEL,
-        undefined, ['custom_check_container'],
-        Strings.CUSTOM_INPUT_TOOLTIP);
-
-    this.checkBox.getCheckBox().on('change', () => {
-      if (this.checkBox.checked()) {
-        this.textArea.show();
-      } else {
-        this.textArea.hide();
-      }
-    });
-  }
-
-  /**
-   * Renders the CLIArea
-   * @param {JQuery} parent - the JQuery object to insert the CLIArea into
-   */
-  public render(parent: JQuery): void {
-    this.textArea.appendTo(parent);
-    this.checkBox.render().appendTo(parent);
-  }
-
-  /**
-   * Checks if the CLI checkbox is checked
-   * @return {boolean} true if the checkbox is checked
-   */
-  public enabled(): boolean {
-    return this.checkBox.checked();
-  }
-
-  /**
-   * Get the content of the textarea
-   * @return {string} the textarea string
-   */
-  public getContent(): string {
-    const ret: string | number | string[] = this.textArea.val();
-
-    if (util.isString(ret)) {
-      return ret as string;
-    } else if (util.isNumber(ret)) {
-      return ret.toString();
-    } else {
-      return (ret as string[]).join();
-    }
-  }
+enum DownloadType {
+  None,
+  Client,
+  Server,
 }
 
 /** The Widget class */
@@ -430,11 +29,11 @@ export class Widget {
 
   protected lab = false;
 
-  private dlType: Types.DownloadType = Types.DownloadType.Client;
+  private dlType: DownloadType = DownloadType.Client;
 
   private readonly server: string;
 
-  private shadowFiles: Array<Types.Resource> = [];
+  private shadowFiles: Array<Resource> = [];
 
   protected buttonGroup: JQuery;
   protected outputGroup: JQuery;
@@ -445,7 +44,7 @@ export class Widget {
    * @param {string} server - the server address:port
    */
   constructor(container: JQuery, server: string) {
-    const resources: Array<Types.Resource> = [];
+    const resources: Array<Resource> = [];
     this.server = server;
     this.container = container;
 
@@ -453,14 +52,14 @@ export class Widget {
     this.name = container.attr('name');
 
     for (const file of this.container.children('.file')) {
-      const a: Types.Resource = {basename: $(file).attr('basename'),
+      const a: Resource = {basename: $(file).attr('basename'),
         contents: $(file).text()};
       $(file).text('');
       resources.push(a);
     }
 
     for (const file of this.container.children('.shadow_file')) {
-      const a: Types.Resource = {basename: $(file).attr('basename'),
+      const a: Resource = {basename: $(file).attr('basename'),
         contents: $(file).text()};
       $(file).text('');
       this.shadowFiles.push(a);
@@ -484,7 +83,7 @@ export class Widget {
 
     // if this widget doesn't have a name defined, don't allow for download
     if (util.isUndefined(this.name)) {
-      this.dlType = Types.DownloadType.None;
+      this.dlType = DownloadType.None;
     }
   }
 
@@ -494,7 +93,7 @@ export class Widget {
    */
   protected addButton(mode: string): void {
     // if there are any buttons, the dltype needs to be server
-    this.dlType = Types.DownloadType.Server;
+    this.dlType = DownloadType.Server;
 
     const btn: Button = new Button([],
         Strings.modeDictionary[mode].tooltip,
@@ -519,10 +118,10 @@ export class Widget {
 
   /**
    * Collect the resources loaded in the widget and return as list
-   * @return {Array<Types.Resource>} return the widget resources
+   * @return {Array<Resource>} return the widget resources
    */
-  protected collectResources(): Array<Types.Resource> {
-    const files: Array<Types.Resource> = [];
+  protected collectResources(): Array<Resource> {
+    const files: Array<Resource> = [];
     this.editors.map((e) => {
       files.push(e.getResource());
     });
@@ -559,10 +158,10 @@ export class Widget {
    * Perform a POST via the fetch method to retrieve a file
    * @param {string} data - the json to send
    * @param {string} url - the url suffix to send the fetch to
-   * @return {Promise<Types.Download.FS>} returns a promise to a dl file
+   * @return {Promise<Download.FS>} returns a promise to a dl file
    */
-  private async fetchBlob(data: Types.Download.TS,
-      url: string): Promise<Types.Download.FS> {
+  private async fetchBlob(data: Download.TS,
+      url: string): Promise<Download.FS> {
     const response = await fetch(this.server + '/' + url + '/', {
       method: 'POST',
       mode: 'cors',
@@ -601,25 +200,30 @@ export class Widget {
         Strings.CONSOLE_OUTPUT_LABEL + ':');
     this.outputArea.showSpinner(true);
 
-    const files: Array<Types.Resource> = this.collectResources();
+    const files: Array<Resource> = this.collectResources();
 
-    const serverData: Types.RunProgram.TS = {
+    const serverData: RunProgram.TS = {
       files: files,
       mode: mode,
       name: this.name,
       lab: this.lab,
     };
 
-    const json =
-    await this.fetchJSON<Types.RunProgram.TS, Types.RunProgram.FS>(serverData,
-        'run_program');
+    return new Promise(async (resolve, reject) => {
+      try {
+        const json =
+          await
+          this.fetchJSON<RunProgram.TS, RunProgram.FS>(serverData,
+              'run_program');
+        if (json.identifier == '') {
+          throw new Error(json.message);
+        }
 
-    if (json.identifier == '') {
-      throw new Error(json.message);
-    }
+        await this.getOutputFromIdentifier(json);
+      } catch (e) {
+        reject(e);
+      }
 
-    return new Promise(async (resolve) => {
-      await this.getOutputFromIdentifier(json);
       resolve();
     });
   }
@@ -627,63 +231,61 @@ export class Widget {
   /**
    * The download example callback
    */
-  private async downloadExample(): Promise<void> {
-    const files: Array<Types.Resource> = this.collectResources();
-    let blobs: Blob[];
-    let filenames: string[];
+  private async downloadExample(): Promise<Array<Download.FS>> {
+    const files: Array<Resource> = this.collectResources();
+    const blobList: Array<Download.FS> = [];
 
-    switch (this.dlType) {
-      case Types.DownloadType.None:
-        return;
-      case Types.DownloadType.Server:
-        const serverData: Types.Download.TS = {
-          files: files,
-          name: this.name,
-        };
+    return new Promise(async (resolve, reject) => {
+      switch (this.dlType) {
+        case DownloadType.None: {
+          reject(Error('No download available for this exercise.'));
+        }
+        case DownloadType.Server: {
+          const serverData: Download.TS = {
+            files: files,
+            name: this.name,
+          };
 
-        const ret = await this.fetchBlob(serverData, 'download');
-        blobs.push(ret.blob);
-        filenames.push(ret.filename);
+          try {
+            const ret = await this.fetchBlob(serverData, 'download');
+            blobList.push(ret);
+          } catch (e) {
+            reject(e);
+          }
 
-        break;
-      case Types.DownloadType.Client:
-        this.editors.map((e): void => {
-          const resource: Types.Resource = e.getResource();
-          blobs.push(new Blob([resource.contents], {type: 'text/plain'}));
-          filenames.push(resource.basename);
-        });
-        break;
-    }
+          break;
+        }
+        case DownloadType.Client: {
+          this.editors.map((e): void => {
+            const resource: Resource = e.getResource();
 
-    for (const [blob, name] of util.zip(blobs, filenames)) {
-      const objURL: string = URL.createObjectURL(blob);
+            blobList.push({
+              blob: new Blob([resource.contents], {type: 'text/plain'}),
+              filename: resource.basename,
+            });
+          });
+          break;
+        }
+      }
 
-      const a = $('<a>')
-          .attr('href', objURL)
-          .attr('download', name)
-          // .hide()
-          .appendTo('body');
-      a[0].click();
-      a.remove();
-
-      URL.revokeObjectURL(objURL);
-    }
+      resolve(blobList);
+    });
   }
 
   /**
    * Get the run output using the return identifier from the button CB
-   * @param {Types.RunProgram.FS} json - the json data returned from button CB
+   * @param {RunProgram.FS} json - the json data returned from button CB
    * @param {number} lRead - the number of lines already read from the stream
    */
-  private async getOutputFromIdentifier(json: Types.RunProgram.FS, lRead = 0):
+  private async getOutputFromIdentifier(json: RunProgram.FS, lRead = 0):
       Promise<void> {
-    const data: Types.CheckOutput.TS = {
+    const data: CheckOutput.TS = {
       identifier: json.identifier,
       read: lRead,
     };
 
     const rdata =
-      await this.fetchJSON<Types.CheckOutput.TS, Types.CheckOutput.FS>(data,
+      await this.fetchJSON<CheckOutput.TS, CheckOutput.FS>(data,
           'check_output');
 
     lRead += this.processCheckOutput(rdata);
@@ -713,10 +315,10 @@ export class Widget {
 
   /**
    * Handle the msg data coming back from server
-   * @param {Types.CheckOutput.RunMsg} msg - the returned msg
+   * @param {CheckOutput.RunMsg} msg - the returned msg
    * @param {Area} homeArea - the area to place the rendered msg
    */
-  protected handleMsgType(msg: Types.CheckOutput.RunMsg, homeArea: Area): void {
+  protected handleMsgType(msg: CheckOutput.RunMsg, homeArea: Area): void {
     switch (msg.type) {
       case 'console': {
         homeArea.addConsole(msg.data);
@@ -787,10 +389,10 @@ export class Widget {
 
   /**
    * Process the output from "check_output" ajax request
-   * @param {Types.CheckOutput.FS} data - The data from check_output
+   * @param {CheckOutput.FS} data - The data from check_output
    * @return {number} the number of lines read by this function
    */
-  private processCheckOutput(data: Types.CheckOutput.FS): number {
+  private processCheckOutput(data: CheckOutput.FS): number {
     let readLines = 0;
 
     data.output.map((ol) => {
@@ -890,7 +492,7 @@ export class Widget {
             this.resetEditors();
           }
         });
-    if (this.dlType != Types.DownloadType.None) {
+    if (this.dlType != DownloadType.None) {
       $('<button>')
           .attr('type', 'button')
           .addClass('settingsbar-item')
@@ -900,12 +502,28 @@ export class Widget {
               $('<i>').addClass('fas').addClass('fa-file-download')
           )
           .appendTo(settingsBar)
-          .on('click', () => {
-            this.downloadExample()
-                .catch((error: Error) => {
-                  this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-                  console.error('Error:', error);
-                });
+          .on('click', async () => {
+            try {
+              const blobs = await this.downloadExample();
+
+              for (const blob of blobs) {
+                const objURL: string = URL.createObjectURL(blob.blob);
+
+                const a = $('<a>')
+                    .attr('href', objURL)
+                    .attr('download', blob.filename)
+                    // .hide()
+                    .appendTo('body');
+                a[0].click();
+                a.remove();
+
+                URL.revokeObjectURL(objURL);
+              }
+            } catch (error) {
+              this.outputArea.reset();
+              this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+              console.error('Error:', error);
+            }
           });
     }
 
@@ -937,7 +555,10 @@ export class Widget {
   }
 }
 
-/** The LabWidget class */
+/**
+ * The LabWidget class
+ * @extends Widget
+ */
 export class LabWidget extends Widget {
   private readonly labContainer: LabContainer = new LabContainer;
   private readonly cliArea: CLIArea = new CLIArea();
@@ -959,9 +580,9 @@ export class LabWidget extends Widget {
   /**
    * Collect the resources loaded in the widget and return as list
    *  then add cli data to file list
-   * @return {Array<Types.Resource>} return the widget resources
+   * @return {Array<Resource>} return the widget resources
    */
-  protected collectResources(): Array<Types.Resource> {
+  protected collectResources(): Array<Resource> {
     const files = super.collectResources();
 
     if (this.cliArea.enabled()) {
@@ -1002,15 +623,15 @@ export class LabWidget extends Widget {
 
   /**
    * Handle the msg data coming back from server
-   * @param {Types.CheckOutput.RunMsg} msg - the returned msg
+   * @param {CheckOutput.RunMsg} msg - the returned msg
    * @param {Area} homeArea - the area to place the rendered msg
    */
-  protected handleMsgType(msg: Types.CheckOutput.RunMsg, homeArea: Area): void {
+  protected handleMsgType(msg: CheckOutput.RunMsg, homeArea: Area): void {
     switch (msg.type) {
       case 'lab': {
         const result =
           this.labContainer.processResults(
-              (msg.data as unknown) as Types.CheckOutput.LabOutput);
+              (msg.data as unknown) as CheckOutput.LabOutput);
         this.outputArea.addLabStatus(result);
         break;
       }

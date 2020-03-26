@@ -29,14 +29,11 @@ import {Widget, LabWidget} from './ts/widget';
 
       if (exampleServer) {
         const isLab = $(element).attr('lab');
+        const widget =
+          isLab ? new LabWidget($(element), exampleServer) :
+            new Widget($(element), exampleServer);
 
-        if (isLab) {
-          const labWidget = new LabWidget($(element), exampleServer);
-          labWidget.render();
-        } else {
-          const widget = new Widget($(element), exampleServer);
-          widget.render();
-        }
+        widget.render();
       }
     });
 

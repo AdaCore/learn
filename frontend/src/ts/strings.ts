@@ -1,4 +1,7 @@
-import {ButtonMode} from './types';
+interface ButtonMode {
+  buttonText: string;
+  tooltip: string;
+}
 
 export const modeDictionary: {[mode: string]: ButtonMode } = {
   prove: {

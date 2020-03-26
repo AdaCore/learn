@@ -1,23 +1,12 @@
 /* eslint-disable */
 
+// FS - From Server
+// TS - To Server
+
 export interface Resource {
   basename: string;
   contents: string;
 }
-
-export interface ButtonMode {
-  buttonText: string;
-  tooltip: string;
-}
-
-export enum DownloadType {
-  None,
-  Client,
-  Server,
-}
-
-// FS - From Server
-// TS - To Server
 
 export namespace Download {
   export interface TS {

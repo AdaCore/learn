@@ -1,5 +1,3 @@
-import {strict as assert} from 'assert';
-
 /**
  * Check if value is string
  * @param {any} value - The item to check
@@ -107,16 +105,3 @@ export function isDate(value): boolean {
 export function isSymbol(value): boolean {
   return typeof value === 'symbol';
 }
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/**
- * Zips two arrays to allow iterating through both via iterator
- * @param {any[]} a - First array
- * @param {any[]} b - Second array
- * @return {any[]} iterable list with both arrays
- */
-export function zip(a, b): any[] {
-  assert(a.length === b.length);
-
-  return a.map((x, i) => [x, b[i]]);
-}
-/* eslint-enable @typescript-eslint/no-explicit-any */
