@@ -16,8 +16,15 @@ Subprograms
 Subtract procedure
 -------------------
 
-In this exercise, you'll write a procedure called :ada:`Subtract`. As
-the name indicates, this procedure performs the operation :ada:`A - B`.
+**Goal**: write a procedure to subtract two numbers.
+
+**Steps**:
+
+    #. Complete the procedure :ada:`Subtract`.
+
+**Requirements**:
+
+    #. :ada:`Subtract` performs the operation :ada:`A - B`.
 
 .. code:: ada lab=Subprograms.Subtract_Proc
 
@@ -86,9 +93,17 @@ the name indicates, this procedure performs the operation :ada:`A - B`.
 Subtract function
 ------------------
 
-In this exercise, you'll rewrite the :ada:`Subtract` procedure as a
-function. As in the previous exercise, this function performs the
-operation :ada:`A - B` and returns the result.
+**Goal**: write a function that subtracts two numbers.
+
+**Steps**:
+
+    #. Rewrite the :ada:`Subtract` procedure from the previous exercise as a
+       function.
+
+**Requirements**:
+
+    #. :ada:`Subtract` performs the operation :ada:`A - B` and returns the
+       result.
 
 .. code:: ada lab=Subprograms.Subtract_Func
 
@@ -158,9 +173,18 @@ operation :ada:`A - B` and returns the result.
 Equality function
 -----------------
 
-In this exercise, you'll write a function that compares two values and
-returns a flag (:ada:`Boolean` value) indicating whether the values are
-equal (flag is :ada:`True`) or not (flag is :ada:`False`).
+**Goal**: write a function that compares two values and returns a flag.
+
+**Steps**:
+
+    #. Complete the :ada:`Is_Equal` subprogram.
+
+**Requirements**:
+
+    #. :ada:`Is_Equal` returns a flag as a :ada:`Boolean` value.
+
+    #. The flag must indicate whether the values are equal (flag is
+       :ada:`True`) or not (flag is :ada:`False`).
 
 .. code:: ada lab=Subprograms.Equality_Func
 
@@ -235,24 +259,33 @@ equal (flag is :ada:`True`) or not (flag is :ada:`False`).
 States
 ------
 
-In this exercise, you'll work on a procedure :ada:`Display_State` that displays
-the state of a machine. The states can be set according to the following
-numbers:
+**Goal**: write a procedure that displays the state of a machine.
 
-    +--------+-------------------------+
-    | Number | State                   |
-    +========+=========================+
-    | 0      | Off                     |
-    +--------+-------------------------+
-    | 1      | On: Simple Processing   |
-    +--------+-------------------------+
-    | 2      | On: Advanced Processing |
-    +--------+-------------------------+
+**Steps**:
 
-The procedure :ada:`Display_State` receives the number corresponding to a state
-and displays the state (indicated by the table above) as a user message.
+    #. Complete the procedure :ada:`Display_State`.
 
-    - Hint: you can use a case statement to implement this procedure.
+**Requirements**:
+
+    #. The states can be set according to the following numbers:
+
+        +--------+-------------------------+
+        | Number | State                   |
+        +========+=========================+
+        | 0      | Off                     |
+        +--------+-------------------------+
+        | 1      | On: Simple Processing   |
+        +--------+-------------------------+
+        | 2      | On: Advanced Processing |
+        +--------+-------------------------+
+
+    #. The procedure :ada:`Display_State` receives the number corresponding to
+       a state and displays the state (indicated by the table above) as a user
+       message.
+
+**Remarks**:
+
+    #. You can use a case statement to implement this procedure.
 
 .. code:: ada lab=Subprograms.States_1
 
@@ -297,34 +330,44 @@ and displays the state (indicated by the table above) as a user message.
 States #2
 ---------
 
-In this exercise, we'll reuse the machine from the previous exercise. In this
-case, however, your job is to implement the function :ada:`Get_State`, which
-returns the state as a string.
+**Goal**: write a function that returns the state of a machine.
 
-You can implement a function returning a string by simply using quotes in a
-return statement. For example:
+**Steps**:
 
-.. code:: ada run_button
+    #. Implement the function :ada:`Get_State`.
 
-    function Get_Hello return String;
+**Requirements**:
 
-    function Get_Hello return String is
-    begin
-       return "Hello";
-    end Get_Hello;
+    #. Implement same state machine as in the previous exercise.
 
-    with Ada.Text_IO;      use Ada.Text_IO;
-    with Get_Hello;
+    #. Function :ada:`Get_State` must return the state as a string.
 
-    procedure Main is
+**Remarks**:
+
+    #. You can implement a function returning a string by simply using quotes in
+       a return statement. For example:
+
+    .. code:: ada run_button
+
+        function Get_Hello return String;
+
+        function Get_Hello return String is
+        begin
+           return "Hello";
+        end Get_Hello;
+
+        with Ada.Text_IO;      use Ada.Text_IO;
+        with Get_Hello;
+
+        procedure Main is
        S : constant String := Get_Hello;
-    begin
-       Put_Line (S);
-    end Main;
+        begin
+           Put_Line (S);
+        end Main;
 
-You can reuse your previous implementation and replace it by a case expression.
-For values that do not correspond to a state, you can simply return an empty
-string (:ada:`""`).
+    #. You can reuse your previous implementation and replace it by a case
+       expression. For values that do not correspond to a state, you can simply
+       return an empty string (:ada:`""`).
 
 .. code:: ada lab=Subprograms.States_2
 
@@ -367,17 +410,34 @@ string (:ada:`""`).
 States #3
 ---------
 
-We'll continue using the machine from the previous exercises. In this exercise,
-you'll implement:
+**Goal**: implement an on/off indicator for a state machine.
 
-- the function :ada:`Is_On`, which returns :ada:`True` if the machine is on;
-  otherwise, it returns :ada:`False`.
+**Steps**:
 
-- the procedure :ada:`Display_On_Off`, which displays the message "On" if the
-  machine is on, or "Off" otherwise.
+    #. Implement the function :ada:`Is_On`.
 
-You can implement both subprograms using if expressions. Also, you should call
-:ada:`Is_On` in the implementation of :ada:`Display_On_Off`.
+    #. Implement the procedure :ada:`Display_On_Off`.
+
+**Requirements**:
+
+    #. Implement same state machine as in the previous exercise.
+
+    #. Function :ada:`Is_On` returns:
+
+        - :ada:`True` if the machine is on;
+        - otherwise, it returns :ada:`False`.
+
+    #. Procedure :ada:`Display_On_Off` displays the message
+
+        - "On" if the machine is on, or
+        - "Off" otherwise.
+
+    #. :ada:`Is_On` must be called in the implementation of
+       :ada:`Display_On_Off`.
+
+**Remarks**:
+
+    #. You can implement both subprograms using if expressions.
 
 .. code:: ada lab=Subprograms.States_3
 
@@ -432,17 +492,28 @@ You can implement both subprograms using if expressions. Also, you should call
 States #4
 ---------
 
-We'll continue using the machine from the previous exercises. In this exercise,
-you'll implement the procedure :ada:`Set_Next`, which updates the machine's
-state with the next one in a *circular* manner:
+**Goal**: implement a procedure to update the state of a machine.
 
-- In most cases, the next state of :ada:`N` is simply the next number
-  (:ada:`N + 1`).
+**Steps**:
 
-- However, if the state is the last one (which is 2 for our machine), the next
-  state must be the first one (in our case: 0).
+    #. Implement the procedure :ada:`Set_Next`.
 
-You can use an if expression to implement :ada:`Set_Next`.
+**Requirements**:
+
+    #. Implement same state machine as in the previous exercise.
+
+    #. Procedure :ada:`Set_Next` updates the machine's state with the next one
+       in a *circular* manner:
+
+        - In most cases, the next state of :ada:`N` is simply the next number
+          (:ada:`N + 1`).
+
+        - However, if the state is the last one (which is 2 for our machine),
+          the next state must be the first one (in our case: 0).
+
+**Remarks**:
+
+    #. You can use an if expression to implement :ada:`Set_Next`.
 
 .. code:: ada lab=Subprograms.States_4
 
