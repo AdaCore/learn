@@ -1,19 +1,21 @@
 # You can set these variables from the command line.
-SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = learnadacorecom
-SPHINXCONF    = sphinx
-BUILDDIR      = dist
-TEST_DRIVER   = python3 tests/compile_blocks.py -B $(BUILDDIR)/test_output
+SPHINXOPTS    	=
+SPHINXBUILD   	= sphinx-build
+SPHINXPROJ    	= learnadacorecom
+SPHINXCONF    	= sphinx
+BUILDDIR      	= dist
+TEST_DRIVER   	= python3 tests/compile_blocks.py -B $(BUILDDIR)/test_output
 
-mkfile_path  := $(abspath $(lastword $(MAKEFILE_LIST)))
-mkfile_dir   := $(dir $(mkfile_path))
+MKFILE_PATH  	:= $(abspath $(lastword $(MAKEFILE_LIST)))
+MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
 
-CONTENT_DIR   = $(mkfile_dir)/../content
-HOST_ADDRESS ?= localhost
-HOST_PORT    ?= 8000
+BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 
-YARN_BUILD    := yarn run build
+CONTENT_DIR   	= $(MKFILE_DIR)/../content
+HOST_ADDRESS 	?= localhost
+HOST_PORT    	?= 8000
+
+YARN_BUILD    	:= yarn run build
 
 
 help:
@@ -105,7 +107,7 @@ publish:
 # code server.
 # This should only be called from `yarn run dev`
 local:
-	CODE_SERVER_URL="http://$(HOST_ADDRESS):$(HOST_PORT)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	@CODE_SERVER_URL="http://$(HOST_ADDRESS):$(HOST_PORT)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack:
@@ -129,19 +131,22 @@ $(BOOKS):
 	$(eval SPHINX_TITLE := $(shell cat $@/conf.txt | grep title | sed -e 's#title=##'))
 	$(eval SPHINX_AUTHOR := $(shell cat $@/conf.txt | grep author | sed -e 's#author=##'))
 	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
-	@ export SPHINX_TITLE="$(SPHINX_TITLE)"; \
+	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
 	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
 	$(SPHINXBUILD) -M latexpdf $@ \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@ mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
+	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
 
 cleanall:
-	@ rm -rf "$(BUILDDIR)"
+	@rm -rf "$(BUILDDIR)"
+	@rm $(BUILD_MANIFEST)
+
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
-	@$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
+	@export SPHINX_LOCAL_BUILD=true; \
+	$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 .PHONY: Makefile help test_content test_engine pdf_books $(BOOKS)
