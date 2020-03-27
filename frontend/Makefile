@@ -105,7 +105,7 @@ publish:
 # code server.
 # This should only be called from `yarn run dev`
 local:
-	CODE_SERVER_URL="http://$(HOST_ADDRESS):8000" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	CODE_SERVER_URL="http://$(HOST_ADDRESS):$(HOST_PORT)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack:
