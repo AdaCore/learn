@@ -1,9 +1,9 @@
 import $ from 'jquery';
-import 'whatwg-fetch';
 
 import {Area, OutputArea, LabContainer, CLIArea} from './areas';
 import {Button, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
+import {fetchJSON, fetchBlob} from './comms';
 import {Resource, Download, RunProgram, CheckOutput} from './types';
 import * as Strings from './strings';
 import * as util from './utilities';
@@ -128,63 +128,8 @@ export class Widget {
     return files.concat(this.shadowFiles);
   }
 
-  /**
-   * Perform a POST via the fetch method to retrieve json data
-   * @param {string} data - the json to send
-   * @param {string} url - the url suffix to send the fetch to
-   * @typeparam R - This is the json object type to send
-   * @typeparam T - This is the json object type to return
-   * @return {T} returns a promise to a json object of type T
-   */
-  private async fetchJSON<R, T>(data: R, url: string): Promise<T> {
-    const response = await fetch(this.server + '/' + url + '/', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      redirect: 'follow',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error('Status: ' + response.status + ' Msg: ' +
-        response.statusText);
-    }
-    return await response.json();
-  }
-
-  /**
-   * Perform a POST via the fetch method to retrieve a file
-   * @param {string} data - the json to send
-   * @param {string} url - the url suffix to send the fetch to
-   * @return {Promise<Download.FS>} returns a promise to a dl file
-   */
-  private async fetchBlob(data: Download.TS,
-      url: string): Promise<Download.FS> {
-    const response = await fetch(this.server + '/' + url + '/', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      redirect: 'follow',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error('Status: ' + response.status + ' Msg: ' +
-        response.statusText);
-    }
-    const blob: Blob = await response.blob();
-    const disposition = response.headers.get('content-disposition');
-    const filename = disposition.match(
-        /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
-
-    return {
-      blob: blob,
-      filename: filename,
-    };
+  private serverAddress(url: string): string {
+    return this.server + '/' + url + '/';
   }
 
   /**
@@ -213,7 +158,7 @@ export class Widget {
       try {
         const json =
           await
-          this.fetchJSON<RunProgram.TS, RunProgram.FS>(serverData,
+          fetchJSON<RunProgram.TS, RunProgram.FS>(serverData,
               'run_program');
         if (json.identifier == '') {
           throw new Error(json.message);
@@ -247,7 +192,7 @@ export class Widget {
           };
 
           try {
-            const ret = await this.fetchBlob(serverData, 'download');
+            const ret = await fetchBlob(serverData, 'download');
             blobList.push(ret);
           } catch (e) {
             reject(e);
@@ -285,7 +230,7 @@ export class Widget {
     };
 
     const rdata =
-      await this.fetchJSON<CheckOutput.TS, CheckOutput.FS>(data,
+      await fetchJSON<CheckOutput.TS, CheckOutput.FS>(data,
           'check_output');
 
     lRead += this.processCheckOutput(rdata);

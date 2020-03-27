@@ -212,3 +212,87 @@ export class CheckBox {
         });
   }
 }
+
+type ValidationFunction = (data: string) => boolean;
+
+export interface FormData {
+  key: string;
+  value: string;
+}
+
+type SubmitForm = (Array<FormData>) => void;
+
+interface ValidationObjects {
+  object: JQuery;
+  validateFn: ValidationFunction;
+}
+
+/** Class represents a form */
+export class Form {
+  private container: JQuery;
+  private validateList: Array<ValidationObjects> = [];
+  private submit: Button;
+
+  /**
+   * Construct a form
+   * @param {string} title - The displayed title
+   */
+  constructor(title: string, buttonText: string, submitAction: SubmitForm) {
+    this.submit = new Button([], buttonText, buttonText);
+    this.submit.registerEvent("click", async (event: JQuery.ClickEvent) => {
+      let submission: Array<FormData> = [];
+      let allGood = true;
+
+      for(const field of this.validateList) {
+        submission.push({key: field.object.attr('name'), value: field.object.val()});
+        field.object.removeClass('form-error');
+        if (!field.validateFn(field.object.val())) {
+          allGood = false;
+          field.object.addClass('form-error');
+        }
+      }
+      if (allGood) {
+        await submitAction(submission);
+      }
+    });
+
+    ('<h2>')
+        .addClass('title')
+        .text(title)
+        .appendTo(this.container);
+  }
+
+  public addInput(label: string, name: string, placeholder: string,
+      validator: ValidationFunction): void {
+    ('<label>')
+        .attr('for', name)
+        .text(label)
+        .appendTo(this.container);
+    const i = ('<input>')
+        .attr('name', name)
+        .attr('type', 'text')
+        .attr('placeholder', placeholder)
+        .appendTo(this.container);
+
+    this.validateList.push({object: i, validateFn: validator});
+  }
+
+  public addTextArea(label: string, name: string, placeholder: string,
+      rows: number, validator: ValidationFunction): void {
+    ('<label>')
+        .attr('for', name)
+        .text(label)
+        .appendTo(this.container);
+    const i = ('<textarea>')
+        .attr('name', name)
+        .attr('rows', rows)
+        .attr('placeholder', placeholder)
+        .appendTo(this.container);
+
+    this.validateList.push({object: i, validateFn: validator});
+  }
+
+  public render(): JQuery {
+    return this.container.append(this.submit.render());
+  }
+}

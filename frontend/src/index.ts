@@ -1,6 +1,7 @@
 import './styles/learn.scss';
 import './ts/theme';
 import {Carousel} from './ts/carousel';
+import {ContactForm} from './contact';
 import {Widget, LabWidget} from './ts/widget';
 
 
@@ -34,11 +35,25 @@ import {Widget, LabWidget} from './ts/widget';
             new Widget($(element), exampleServer);
 
         widget.render();
+      } else {
+        throw Error("Malformed widget! No server address specified.");
       }
     });
 
     // carousel entry point
     const carousel: Carousel = new Carousel();
     carousel.render();
+
+    // contact form entry point
+    $('div.contact-form').each((index: number, element: HTMLElement) => {
+      const exampleServer = $(element).attr('example_server');
+
+      if (exampleServer) {
+        const form = new ContactForm($(element), exampleServer);
+        form.render();
+      } else {
+        throw Error("Malformed contact form. No server address specified.");
+      }
+    });
   });
 }());
