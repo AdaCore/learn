@@ -90,13 +90,13 @@ def check_run():
     # This is how we receive intermediate results from the task during run
     output = []
     with celery.connection_or_acquire() as conn:
-        queue = conn.SimpleQueue(data['identifier'])
+        queue = conn.SimpleBuffer(data['identifier'])
         while True:
             try:
                 msg = queue.get(block=False)
                 app.logger.debug(f"Reading {msg.body} from mq")
                 output.append(msg.body)
-                msg.ack()
+            #    msg.ack()
             except Empty:
                 break
         queue.close()
