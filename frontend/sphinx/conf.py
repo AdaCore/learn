@@ -12,7 +12,11 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import datetime
+import json
 import os
+import sys
+
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -43,9 +47,6 @@ release = u'2020-01'
 # ones.
 
 # Find the widgets extension
-import os
-import sys
-import json
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 import widget_extension
@@ -152,6 +153,10 @@ html_static_path = ['img',]
 # html_sidebars = {}
 
 html_copy_source = False
+
+html_context = {
+    'year': datetime.date.today().strftime('%Y'),
+}
 
 
 # -- Options for HTMLHelp output ---------------------------------------------
@@ -261,16 +266,22 @@ todo_include_todos = False
 
 
 def setup(app):
-    manifest = os.path.join(os.getcwd(), "build-manifest.json")
-    with open(manifest, 'r') as infile:
-        data = json.load(infile)
+    try:
+        manifest = os.path.join(os.getcwd(), "build-manifest.json")
+        with open(manifest, 'r') as infile:
+            data = json.load(infile)
 
-    for chunk, files in data.items():
-        if "css" in files.keys():
-            for css in files["css"]:
-                print("Adding {} to css...".format(css))
-                app.add_stylesheet(css)
-        if "js" in files.keys():
-            for js in files["js"]:
-                print("Adding {} to js...".format(js))
-                app.add_javascript(js)
+        for chunk, files in data.items():
+            if "css" in files.keys():
+                for css in files["css"]:
+                    print("Adding {} to css...".format(css))
+                    app.add_stylesheet(css)
+            if "js" in files.keys():
+                for js in files["js"]:
+                    print("Adding {} to js...".format(js))
+                    app.add_javascript(js)
+    except FileNotFoundError as e:
+        print("Warning: build-manifest.json not available")
+
+        if not os.getenv('SPHINX_LOCAL_BUILD'):
+            raise e

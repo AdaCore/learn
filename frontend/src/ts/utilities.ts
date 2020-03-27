@@ -1,4 +1,3 @@
-
 /**
  * Check if value is string
  * @param {any} value - The item to check
