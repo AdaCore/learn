@@ -10,7 +10,7 @@ import {Download} from './types';
 * @typeparam T - This is the json object type to return
 * @return {T} returns a promise to a json object of type T
 */
-async function fetchJSON<R, T>(data: R, url: string): Promise<T> {
+export async function fetchJSON<R, T>(data: R, url: string): Promise<T> {
   const response = await fetch(url, {
     method: 'POST',
     mode: 'cors',
@@ -34,7 +34,8 @@ async function fetchJSON<R, T>(data: R, url: string): Promise<T> {
 * @param {string} url - the url suffix to send the fetch to
 * @return {Promise<Download.FS>} returns a promise to a dl file
 */
-async function fetchBlob<R, T>(data: Download.TS, url: string): Promise<Download.FS> {
+export async function fetchBlob<R, T>(data: Download.TS, url: string):
+    Promise<Download.FS> {
   const response = await fetch(url, {
     method: 'POST',
     mode: 'cors',

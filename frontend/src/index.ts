@@ -1,7 +1,7 @@
 import './styles/learn.scss';
 import './ts/theme';
 import {Carousel} from './ts/carousel';
-import {ContactForm} from './contact';
+import {ContactForm} from './ts/contact';
 import {Widget, LabWidget} from './ts/widget';
 
 
@@ -36,7 +36,7 @@ import {Widget, LabWidget} from './ts/widget';
 
         widget.render();
       } else {
-        throw Error("Malformed widget! No server address specified.");
+        throw Error('Malformed widget! No server address specified.');
       }
     });
 
@@ -49,10 +49,9 @@ import {Widget, LabWidget} from './ts/widget';
       const exampleServer = $(element).attr('example_server');
 
       if (exampleServer) {
-        const form = new ContactForm($(element), exampleServer);
-        form.render();
+        new ContactForm($(element), exampleServer);
       } else {
-        throw Error("Malformed contact form. No server address specified.");
+        throw Error('Malformed contact form. No server address specified.');
       }
     });
   });

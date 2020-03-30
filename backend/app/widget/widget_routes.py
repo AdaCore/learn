@@ -6,6 +6,7 @@ from queue import Empty
 from kombu import Queue
 
 import json
+import time
 import sys
 
 from . import tasks, celery
@@ -53,6 +54,23 @@ def download_example():
     response.headers.set('Content-Type', 'application/zip')
     response.headers.set('Content-Disposition', 'attachment', filename=archive)
     return response
+
+
+@widget_bp.route('/contact_form/', methods=['POST'])
+def contact_form():
+    """
+    The route for a contact-form submission.The data is sent via email.
+    :return:
+        The success or fail of the email send
+    """
+    data = request.get_json()
+    app.logger.debug(data)
+
+    # simulate email send with delay
+    time.sleep(5)
+
+    # TODO: send data via email
+    return compose_response({'success': True}, 200)
 
 
 @widget_bp.route('/run_program/', methods=['POST'])

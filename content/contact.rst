@@ -14,6 +14,11 @@ If you have any question or issues with learn.adacore.com, we would love to hear
     <a href="https://github.com/AdaCore/learn"><i class="fab fa-github"></i>learn.adacore.com GitHub</a><br><br>
 
 
-.. raw:: html
+.. contact:: Contact Us
 
-    <div class="contact-form"></div>
+    input: Name: type="text"
+    input: Email: type="email"
+    textarea: Message: rows="5" type="text"
+    input: Submit: type="submit"
+
+`AdaCore's Privacy Policy <https://www.adacore.com/company/privacy/>`_
