@@ -4968,8 +4968,8 @@ Generic Protected Queue
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Contracts
----------
+Design by contracts
+-------------------
 
 Price Range
 ~~~~~~~~~~~

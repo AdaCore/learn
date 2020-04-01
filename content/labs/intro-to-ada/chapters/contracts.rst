@@ -1,5 +1,5 @@
-Contracts
-=========
+Design by contracts
+===================
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
