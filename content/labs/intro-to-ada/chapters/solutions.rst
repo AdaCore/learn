@@ -4983,9 +4983,6 @@ Price Range
 
     package Prices is
 
-       pragma Assertion_Policy (Static_Predicate  => Check,
-                                Dynamic_Predicate => Check);
-
        type Amount is delta 10.0 ** (-2) digits 12;
 
        --  subtype Price is Amount range 0.0 .. Amount'Last;
@@ -5003,21 +5000,18 @@ Price Range
 
     procedure Main is
 
+       pragma Assertion_Policy (Static_Predicate  => Check,
+                                Dynamic_Predicate => Check);
+
        type Test_Case_Index is
          (Price_Range_Chk);
 
        procedure Check (TC : Test_Case_Index) is
 
           procedure Check_Range (A : Amount) is
-             P : Price;
+             P : constant Price := A;
           begin
-             P := A;
              Put_Line ("Price: " & Price'Image (P));
-          exception
-             when Constraint_Error =>
-                Put_Line ("Constraint_Error detected (NOT as expected).");
-             when Assert_Failure =>
-                Put_Line ("Assert_Failure detected (as expected).");
           end Check_Range;
 
        begin
@@ -5025,6 +5019,11 @@ Price Range
           when Price_Range_Chk =>
              Check_Range (-2.0);
           end case;
+       exception
+          when Constraint_Error =>
+             Put_Line ("Constraint_Error detected (NOT as expected).");
+          when Assert_Failure =>
+             Put_Line ("Assert_Failure detected (as expected).");
        end Check;
 
     begin
