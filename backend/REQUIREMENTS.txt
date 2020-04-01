@@ -3,3 +3,4 @@ Flask==1.1.1
 Flask-Cors
 pylxd
 python-dotenv
+Flask-Mail

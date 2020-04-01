@@ -3,8 +3,8 @@ import $ from 'jquery';
 import {Area, OutputArea, LabContainer, CLIArea} from './areas';
 import {Button, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
-import {fetchJSON, fetchBlob} from './comms';
-import {Resource, Download, RunProgram, CheckOutput} from './types';
+import {fetchJSON, fetchBlob, DownloadRequest, DownloadResponse} from './comms';
+import {Resource, RunProgram, CheckOutput} from './types';
 import * as Strings from './strings';
 import * as util from './utilities';
 
@@ -164,7 +164,7 @@ export class Widget {
         const json =
           await
           fetchJSON<RunProgram.TS, RunProgram.FS>(serverData,
-              'run_program');
+              this.serverAddress('run_program'));
         if (json.identifier == '') {
           throw new Error(json.message);
         }
@@ -181,9 +181,9 @@ export class Widget {
   /**
    * The download example callback
    */
-  private async downloadExample(): Promise<Array<Download.FS>> {
+  private async downloadExample(): Promise<Array<DownloadResponse>> {
     const files: Array<Resource> = this.collectResources();
-    const blobList: Array<Download.FS> = [];
+    const blobList: Array<DownloadResponse> = [];
 
     return new Promise(async (resolve, reject) => {
       switch (this.dlType) {
@@ -191,13 +191,14 @@ export class Widget {
           reject(Error('No download available for this exercise.'));
         }
         case DownloadType.Server: {
-          const serverData: Download.TS = {
+          const serverData: DownloadRequest = {
             files: files,
             name: this.name,
           };
 
           try {
-            const ret = await fetchBlob(serverData, 'download');
+            const ret = await fetchBlob(serverData,
+                this.serverAddress('download'));
             blobList.push(ret);
           } catch (e) {
             reject(e);
@@ -236,7 +237,7 @@ export class Widget {
 
     const rdata =
       await fetchJSON<CheckOutput.TS, CheckOutput.FS>(data,
-          'check_output');
+          this.serverAddress('check_output'));
 
     lRead += this.processCheckOutput(rdata);
 

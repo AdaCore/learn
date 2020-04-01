@@ -74,3 +74,9 @@ export const MACHINE_BUSY_LABEL =
 export const CONSOLE_OUTPUT_LABEL = 'Console Output';
 
 export const CLI_FILE = 'cli.txt';
+
+export const FORM_SUCCESS =
+'Your message has been successfully sent to the learn.adacore.com team.';
+export const FORM_FAIL =
+'An error occurred while trying to send your message. ' +
+'Please try again, or submit an issue on our GitHub.';

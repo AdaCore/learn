@@ -1,4 +1,5 @@
 import {fetchJSON} from './comms';
+import * as Strings from './strings';
 
 type ValidationFunction = (data: string) => boolean;
 
@@ -7,8 +8,32 @@ interface ValidationObjects {
   validateFn: ValidationFunction;
 }
 
-interface SubmissionReturn {
+interface SubmitRequest {
+  Name: string;
+  Email: string;
+  Message: string;
+}
+
+interface SubmitResponse {
   success: boolean;
+}
+
+/**
+ * Convert a JQuery NameValuePair to SubmitForm Interface
+ * @param {JQuery.NameValuePair} json - the data to convert
+ * @return {SubmitRequest} the converted SubmitForm interface
+ */
+function convertNVP(json: Array<JQuery.NameValuePair>): SubmitRequest {
+  const ret: SubmitRequest = {
+    Name: '',
+    Email: '',
+    Message: '',
+  };
+
+  for (const field of json) {
+    ret[field['name']] = field['value'];
+  }
+  return ret;
 }
 
 /** The Contact Form class */
@@ -17,6 +42,13 @@ export class ContactForm {
   private form: JQuery;
   private readonly loader: JQuery;
   private readonly server: string;
+
+  private failDOM: JQuery= $('<span>')
+      .addClass('form-fail')
+      .text(Strings.FORM_FAIL);
+  private successDOM: JQuery = $('<span>')
+      .addClass('form-success')
+      .text(Strings.FORM_SUCCESS);
 
   private validateList: Array<ValidationObjects> = [];
 
@@ -71,9 +103,8 @@ export class ContactForm {
 
     this.form.on('submit', async (event: JQuery.SubmitEvent) => {
       event.preventDefault();
-      this.loader.appendTo(this.container);
-      this.form.fadeOut(200);
-
+      this.successDOM.remove();
+      this.failDOM.remove();
       let allGood = true;
 
       for (const field of this.validateList) {
@@ -85,21 +116,29 @@ export class ContactForm {
         }
       }
       if (allGood) {
+        this.form.fadeOut(200, () => {
+          this.loader.appendTo(this.container);
+        });
+
         const formData = this.form.serializeArray();
+        const msgData = convertNVP(formData);
+
         try {
           const ret =
-            await fetchJSON<Array<JQuery.NameValuePair>,
-              SubmissionReturn>(formData, this.server + '/contact_form/');
+            await fetchJSON<SubmitRequest,
+              SubmitResponse>(msgData, this.server + '/contact_form/');
           if (ret.success) {
-            // TODO: figure this out
-            console.log('Form submission success');
+            this.loader.fadeOut(200, () => {
+              this.successDOM.appendTo(this.container);
+            });
           } else {
             throw new Error('Failed to submit form.');
           }
         } catch (error) {
-          // TODO: figure out error handling
-          console.log(error);
-          this.form.show();
+          this.form.fadeIn(200, () => {
+            this.loader.fadeOut(200);
+            this.failDOM.appendTo(this.container);
+          });
         } finally {
           this.loader.remove();
         }

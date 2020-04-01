@@ -9,7 +9,10 @@ module.exports = merge(common, {
   mode: 'development',
   watch: true,
   devServer: {
-    contentBase: [path.join(__dirname, 'dist', 'html'), path.join(__dirname, 'dist')],
+    contentBase: [
+      path.join(__dirname, 'dist', 'html'),
+      path.join(__dirname, 'dist')
+    ],
     watchContentBase: true,
     compress: false,
     host: '0.0.0.0',
@@ -17,7 +20,12 @@ module.exports = merge(common, {
     hot: true,
     liveReload: false,
     index: 'index.html',
-    publicPath:  '/_static/'
+    publicPath:  '/_static/',
+    watchOptions: {
+      poll: true,
+      ignored: /node_modules/
+    },
+    overlay: true
   },
   devtool: 'source-map',
   plugins: [
@@ -26,7 +34,7 @@ module.exports = merge(common, {
       onBuildEnd: ['make local -j4'],
       // dev=false here to force every build to trigger make, the default is
       // first build only.
-      dev: false,
+      dev: true,
     }),
   ]
 });

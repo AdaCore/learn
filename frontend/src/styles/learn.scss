@@ -326,6 +326,14 @@ div {
                 color:red;
             }
         }
+        span {
+            &.form-success {
+
+            }
+            &.form-fail {
+                color: red;
+            }
+        }
     }
 }
 
@@ -742,7 +750,7 @@ label.custom_check,
     position: absolute;
     width: 64px;
     height: 64px;
-    margin: 8px;
+    margin: 0 auto;
     border: 8px solid #000;
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;

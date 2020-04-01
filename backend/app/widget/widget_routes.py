@@ -1,6 +1,7 @@
 from flask import Blueprint, make_response, request, send_file
 from flask import current_app as app
 from flask_cors import CORS
+from flask_mail import Mail, Message
 
 from queue import Empty
 from kombu import Queue
@@ -66,11 +67,14 @@ def contact_form():
     data = request.get_json()
     app.logger.debug(data)
 
-    # simulate email send with delay
-    time.sleep(5)
-
-    # TODO: send data via email
-    return compose_response({'success': True}, 200)
+    mail = Mail(app)
+    msg = Message(subject=f"LEARN: Message from {data['Name']}",
+                  body=f"Name: {data['Name']}\nEmail: {data['Email']}\nMessage: {data['Message']}\n",
+                  sender=data["Email"],
+                  reply_to=data["Email"],
+                  recipients=["tice@adacore.com"])
+    mail.send(msg)
+    return compose_response({'success': False}, 200)
 
 
 @widget_bp.route('/run_program/', methods=['POST'])

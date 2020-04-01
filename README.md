@@ -42,6 +42,7 @@ $ vagrant ssh server
 # The following commands will be run inside the vm
 
 $ source /vagrant/venv/bin/activate
+$ cd /vagrant
 $ flask run --host=0.0.0.0
 
 # Open another terminal window and run

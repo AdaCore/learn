@@ -1,16 +1,15 @@
 import 'whatwg-fetch';
 
-import {Download} from './types';
+import {Resource} from './types';
 
 /**
-* Perform a POST via the fetch method to retrieve json data
-* @param {string} data - the json to send
-* @param {string} url - the url suffix to send the fetch to
+* Perform a POST via the fetch method to retrieve data
+* @param {string} data - the data to send
+* @param {string} url - the url to send the fetch to
 * @typeparam R - This is the json object type to send
-* @typeparam T - This is the json object type to return
-* @return {T} returns a promise to a json object of type T
+* @return {Promise<Response>} returns a promise to a response object
 */
-export async function fetchJSON<R, T>(data: R, url: string): Promise<T> {
+async function fetchGeneric<R>(data: R, url: string): Promise<Response> {
   const response = await fetch(url, {
     method: 'POST',
     mode: 'cors',
@@ -25,31 +24,41 @@ export async function fetchJSON<R, T>(data: R, url: string): Promise<T> {
     throw new Error('Status: ' + response.status + ' Msg: ' +
       response.statusText);
   }
+  return response;
+}
+
+/**
+* Perform a POST via the fetch method to retrieve json data
+* @param {string} data - the data to send
+* @param {string} url - the url to send the fetch to
+* @typeparam R - This is the json object type to send
+* @typeparam T - This is the json object type to return
+* @return {Promise<T>} returns a promise to an object of type T
+*/
+export async function fetchJSON<R, T>(data: R, url: string): Promise<T> {
+  const response = await fetchGeneric<R>(data, url);
   return await response.json();
+}
+
+export interface DownloadRequest {
+  files: Array<Resource>;
+  name: string;
+}
+
+export interface DownloadResponse {
+  blob: Blob;
+  filename: string;
 }
 
 /**
 * Perform a POST via the fetch method to retrieve a file
-* @param {string} data - the json to send
-* @param {string} url - the url suffix to send the fetch to
-* @return {Promise<Download.FS>} returns a promise to a dl file
+* @param {DownloadRequest} data - the json to send
+* @param {string} url - the url to send the fetch to
+* @return {Promise<DownloadResponse>} returns a promise to a dl file
 */
-export async function fetchBlob<R, T>(data: Download.TS, url: string):
-    Promise<Download.FS> {
-  const response = await fetch(url, {
-    method: 'POST',
-    mode: 'cors',
-    cache: 'no-cache',
-    redirect: 'follow',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  if (!response.ok) {
-    throw new Error('Status: ' + response.status + ' Msg: ' +
-      response.statusText);
-  }
+export async function fetchBlob(data: DownloadRequest, url: string):
+    Promise<DownloadResponse> {
+  const response = await fetchGeneric<DownloadRequest>(data, url);
   const blob: Blob = await response.blob();
   const disposition = response.headers.get('content-disposition');
   const filename = disposition.match(

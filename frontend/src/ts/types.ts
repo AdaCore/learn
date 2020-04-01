@@ -8,18 +8,6 @@ export interface Resource {
   contents: string;
 }
 
-export namespace Download {
-  export interface TS {
-    files: Array<Resource>;
-    name: string;
-  }
-
-  export interface FS {
-    blob: Blob;
-    filename: string;
-  }
-}
-
 export namespace RunProgram {
   export interface FS {
     identifier: string;

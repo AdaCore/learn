@@ -4,8 +4,8 @@
 :prev_state: False
 :next_state: False
 
-Contact Us - LEARN.ADACORE.COM
-===============================
+Contact - LEARN.ADACORE.COM
+============================
 
 If you have any question or issues with learn.adacore.com, we would love to hear from you. Please use the contact form below to ask us questions that you may have about courses or labs. If you are experiencing an issue with the website or if you would like to contribute changes or fixes, please visit this website's GitHub page at:
 
