@@ -501,7 +501,7 @@ States #3
 
     function Is_On (State : Integer) return Boolean is
     begin
-       return (if State = 0 then False else True);
+       return not (State = 0);
     end Is_On;
 
     procedure Display_On_Off (State : Integer);
