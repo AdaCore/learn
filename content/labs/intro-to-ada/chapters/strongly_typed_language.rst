@@ -531,6 +531,13 @@ Temperatures
     #. The functions :ada:`To_Celsius` and :ada:`To_Kelvin` are used to convert
        between temperatures in :ada:`Kelvin` and :ada:`Celsius`.
 
+        #. In order to convert temperatures in Celsius to Kelvin, you must use
+           the formula :math:`K = C + 273.15`, where:
+
+            - *K* is the temperature in Kelvin, and
+
+            - *C* is the temperature in Celsius.
+
 **Remarks**:
 
 #. When implementing the :ada:`To_Celsius` function for the :ada:`Int_Celsius`:
