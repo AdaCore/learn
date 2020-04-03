@@ -188,8 +188,8 @@ corresponding names.
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Integer Types
--------------
+Integers
+--------
 
 **Goal**: implement a package with various integer types.
 
@@ -272,7 +272,7 @@ Integer Types
    :ada:`S_100` to :ada:`I_100`. However, we skip this here because explicit
    conversions are not needed for subtypes.
 
-.. code:: ada lab=Strongly_Typed.Integer_Types
+.. code:: ada lab=Strongly_Typed.Integers
 
     --  START LAB IO BLOCK
     in 0:I_100_Range
