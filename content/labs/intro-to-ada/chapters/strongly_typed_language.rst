@@ -108,7 +108,8 @@ corresponding names.
        --  type HTML_Color is [...]
        --
 
-       function To_Integer (C : HTML_Color) return Integer;
+       --  Include function declaration for:
+       --  function To_Integer (C : HTML_Color) return Integer;
 
        --  Include type declaration for Basic_HTML_Color!
        --
@@ -124,15 +125,13 @@ corresponding names.
 
     package body Color_Types is
 
-       function To_Integer (C : HTML_Color) return Integer is
-       begin
-          --  Implement the conversion from HTML_Color to Integer here!
-          --
-          --  Hint: use 'case' for the HTML colors;
-          --        use 16#...# for the hexadecimal values.
-          --
-          null;
-       end To_Integer;
+       --  Implement the conversion from HTML_Color to Integer here!
+       --
+       --  function To_Integer (C : HTML_Color) return Integer is
+       --  begin
+       --  --  Hint: use 'case' for the HTML colors;
+       --  --        use 16#...# for the hexadecimal values.
+       --  end To_Integer;
 
        --  Implement the conversion from Basic_HTML_Color to HTML_Color here!
        --
