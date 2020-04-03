@@ -19,11 +19,15 @@ application in the subprogram specified by the exercise.
 Hello World
 -----------
 
-**Goal**: create an application that displays the message "Hello World!".
+**Goal**: create a "Hello World!" application.
 
 **Steps**:
 
     #. Complete the :ada:`Main` procedure.
+
+**Requirements**:
+
+    #. The application must display the message "Hello World!".
 
 .. code:: ada lab=Imperative_Language.Hello_World
 
@@ -43,12 +47,19 @@ Hello World
 Greetings
 ---------
 
-**Goal**: create an application that, given a name (e.g. "John"), displays the
-message "Hello John!".
+**Goal**: create an application that greets a person.
 
 **Steps**:
 
     #. Complete the :ada:`Greet` procedure.
+
+**Requirements**:
+
+    #. Given an input string ``<name>``, procedure :ada:`Greet` must display
+       the message "Hello <name>!".
+
+        #. For example, if the name is "John", it displays the message
+           "Hello John!".
 
 **Remarks**:
 
@@ -88,8 +99,7 @@ message "Hello John!".
 Positive Or Negative
 --------------------
 
-**Goal**: create an application that, given an integer number ``X``, classifies
-the number as positive, negative or zero and displays the result.
+**Goal**: create an application that classifies integer numbers.
 
 **Steps**:
 
@@ -97,11 +107,14 @@ the number as positive, negative or zero and displays the result.
 
 **Requirements**:
 
-    #. If ``X > 0``, display ``Positive``.
+    #. Given an integer number ``X``, procedure :ada:`Classify_Number` must
+       classify ``X`` as positive, negative or zero and display the result:
 
-    #. If ``X < 0``, display ``Negative``.
+        #. If ``X > 0``, it displays ``Positive``.
 
-    #. If ``X = 0``, display ``Zero``.
+        #. If ``X < 0``, it displays ``Negative``.
+
+        #. If ``X = 0``, it displays ``Zero``.
 
 .. code:: ada lab=Imperative_Language.Positive_Or_Negative
 
