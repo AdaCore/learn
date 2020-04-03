@@ -415,8 +415,3 @@ that you can make:
     #. Exercise: *Price List*:
 
         - Change :ada:`Price_List` type to :ada:`limited private`.
-
-    #. Exercise: *Inventory*:
-
-        - Change :ada:`Item` and :ada:`Inventory` types to
-          :ada:`limited private`.
