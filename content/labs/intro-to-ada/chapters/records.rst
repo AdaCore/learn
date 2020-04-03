@@ -15,21 +15,40 @@ Records
 Directions
 ----------
 
-In this exercise, we make use of the algorithm implemented in the
-:ada:`Check_Direction` procedure (see chapter on
-:doc:`chapter on imperative language <courses/intro-to-ada/chapters/imperative_language>`).
-For the sake of this exercise, we use the concept of an *extended angle*,
-which includes the actual geometric angle and the corresponding direction
-(North, South, Northwest, and so on). These are your goals:
+**Goal**: create a package that handles directions and geometric angles.
 
-#. Create a record :ada:`Ext_Angle` to store information about the
-   extended angle.
+**Steps**:
 
-#. Implement a procedure :ada:`Display` to display information about the
-   extended angle.
+    #. Implement the :ada:`Directions` package.
 
-#. Implement the function :ada:`To_Ext_Angle` to convert a simple angle
-   value to an extended angle.
+        #. Declare the :ada:`Ext_Angle` record.
+
+        #. Implement the :ada:`Display` procedure.
+
+        #. Implement the :ada:`To_Ext_Angle` function.
+
+**Requirements**:
+
+    #. Record :ada:`Ext_Angle` stores information about the extended angle
+       (see remark about *extended angles* below).
+
+    #. Procedure :ada:`Display` displays information about the extended angle.
+
+        #. You should use the implementation that has been commented out (see
+           code below) as a starting point.
+
+    #. Function :ada:`To_Ext_Angle` converts a simple angle value to an
+       extended angle (:ada:`Ext_Angle` type)
+
+**Remarks**:
+
+    #. We make use of the algorithm implemented in the :ada:`Check_Direction`
+       procedure (see chapter on
+       :doc:`chapter on imperative language <courses/intro-to-ada/chapters/imperative_language>`).
+
+    #. For the sake of this exercise, we use the concept of *extended angles*.
+       This includes the actual geometric angle and the corresponding direction
+       (North, South, Northwest, and so on).
 
 .. code:: ada lab=Records.Directions
 
@@ -146,54 +165,78 @@ which includes the actual geometric angle and the corresponding direction
 Colors
 ------
 
-In this exercise, we use the exercise on HTML colors from the previous lab
-on :doc:`./strongly_typed_language` as a starting point.
+**Goal**: create a package to represent HTML colors in RGB format using the
+hexadecimal form.
 
-Just to recapitulate, these are the HTML colors that we use:
+**Steps**:
 
-   +-------------+---------------+
-   | Color       | Value         |
-   +=============+===============+
-   | Salmon      | ``#FA8072``   |
-   +-------------+---------------+
-   | Firebrick   | ``#B22222``   |
-   +-------------+---------------+
-   | Red         | ``#FF0000``   |
-   +-------------+---------------+
-   | Darkred     | ``#8B0000``   |
-   +-------------+---------------+
-   | Lime        | ``#00FF00``   |
-   +-------------+---------------+
-   | Forestgreen | ``#228B22``   |
-   +-------------+---------------+
-   | Green       | ``#008000``   |
-   +-------------+---------------+
-   | Darkgreen   | ``#006400``   |
-   +-------------+---------------+
-   | Blue        | ``#0000FF``   |
-   +-------------+---------------+
-   | Mediumblue  | ``#0000CD``   |
-   +-------------+---------------+
-   | Darkblue    | ``#00008B``   |
-   +-------------+---------------+
+    #. Implement the :ada:`Color_Types` package.
 
-The hexadecimal information of each color on this table can be mapped
-to three color elements: red, green and blue. Each color element has a
-value between 0 and 255, or ``00`` and ``FF`` in hexadecimal. For the
-color *salmon*, the value of the color elements are: red = ``FA``, green =
-``80`` and blue = ``72`` (in hexadecimal).
+        #. Declare the :ada:`RGB` record.
 
-Your goal with this exercise is to create a record :ada:`RGB` that stores
-information about HTML colors in RGB format, so that we can retrieve
-the individual color elements. In addition, you will:
+        #. Implement the :ada:`To_RGB` function.
 
-#. Implement a function :ada:`To_RGB` to convert from the
-   :ada:`HTML_Color` type to the :ada:`RGB` type based on the information
-   from the table above.
+        #. Implement the :ada:`Image` function for the :ada:`RGB` type.
 
-#. Implement a function :ada:`Image` that returns a string representation
-   of the :ada:`RGB` type in this format:
-   :ada:`"(Red => 16#..#, Green => 16#...#, Blue => 16#...# )"`
+**Requirements**:
+
+    #. The following table contains the HTML colors and the corresponding value
+       in hexadecimal form:
+
+        +-------------+---------------+
+        | Color       | Value         |
+        +=============+===============+
+        | Salmon      | ``#FA8072``   |
+        +-------------+---------------+
+        | Firebrick   | ``#B22222``   |
+        +-------------+---------------+
+        | Red         | ``#FF0000``   |
+        +-------------+---------------+
+        | Darkred     | ``#8B0000``   |
+        +-------------+---------------+
+        | Lime        | ``#00FF00``   |
+        +-------------+---------------+
+        | Forestgreen | ``#228B22``   |
+        +-------------+---------------+
+        | Green       | ``#008000``   |
+        +-------------+---------------+
+        | Darkgreen   | ``#006400``   |
+        +-------------+---------------+
+        | Blue        | ``#0000FF``   |
+        +-------------+---------------+
+        | Mediumblue  | ``#0000CD``   |
+        +-------------+---------------+
+        | Darkblue    | ``#00008B``   |
+        +-------------+---------------+
+
+    #. The hexadecimal information of each HTML color can be mapped to three
+       color elements: red, green and blue.
+
+        #. Each color element has a value between 0 and 255, or ``00`` and
+           ``FF`` in hexadecimal.
+
+        #. For example, for the color *salmon*, the hexadecimal value of the
+           color elements are:
+
+            - red = ``FA``,
+            - green = ``80``, and
+            - blue = ``72``.
+
+    #. Record :ada:`RGB` stores information about HTML colors in RGB format, so
+       that we can retrieve the individual color elements.
+
+    #. Function :ada:`To_RGB` converts from the :ada:`HTML_Color` enumeration
+       to the :ada:`RGB` type based on the information from the table above.
+
+    #. Function :ada:`Image` returns a string representation of the :ada:`RGB`
+       type in this format:
+
+        - :ada:`"(Red => 16#..#, Green => 16#...#, Blue => 16#...# )"`
+
+**Remarks**:
+
+    #. We use the exercise on HTML colors from the previous lab on
+       :doc:`./strongly_typed_language` as a starting point.
 
 .. code:: ada lab=Records.Colors
 
@@ -305,33 +348,57 @@ the individual color elements. In addition, you will:
 Inventory
 ---------
 
-In this exercise, you'll create a simplified inventory system for your
-store. The system will be used to enter items and keep track of your
-assets. These are your goals:
+**Goal**: create a simplified inventory system for a store to enter items and
+keep track of assets.
 
-#. Create a record :ada:`Item` to collect information about products from
-   your store. To keep it simple, this record only contains the quantity
-   and price of each item. The record elements must be named :ada:`Quantity` and
-   :ada:`Price`.
+**Steps**:
 
-#. Create a record :ada:`Inventory` to collect information about your
-   inventory. In this case, we're only interested in the assets.
+    #. Implement the :ada:`Inventory_Pkg` package.
 
-#. Implement an :ada:`Init` function for the :ada:`Item` type to return an
-   initialized item. This function should also display the item name.
+        #. Declare the :ada:`Item` record.
 
-#. Implement a procedure :ada:`Add` to add an item to your inventory.
-   Since you're keeping track of the assets, you should accumulate the
-   total amount of each item in this element.
+        #. Declare the :ada:`Inventory` record.
 
-   - Hint: the code below doesn't have an :ada:`Init` subprogram for the
-     :ada:`Inventory` type. In order for your system to have correct
-     information about your assets, you should declare a default value.
-     Alternatively, you can implement an :ada:`Init` subprogram and make
-     sure it is called in the :ada:`Check` procedure below.
+        #. Implement the :ada:`Init` function.
 
-#. Implement a procedure :ada:`Display` to display information about the
-   inventory.
+        #. Implement the :ada:`Add` procedure.
+
+        #. Implement the :ada:`Display` procedure.
+
+**Requirements**:
+
+    #. Record :ada:`Item` collects information about products from the store.
+
+        #. To keep it simple, this record only contains the quantity and price
+           of each item.
+
+        #. The record elements must be named :ada:`Quantity` and :ada:`Price`.
+
+    #. Record :ada:`Inventory` collects information about the inventory.
+
+        #. We're only interested in the assets here.
+
+    #. Function :ada:`Init` returns an initialized item (of :ada:`Item` type).
+
+        #. This function must also display the item name.
+
+    #. Procedure :ada:`Add` adds an item to the inventory.
+
+        #. Since we want to keep track of the assets, the implementation must
+           accumulate the total amount of each item in this element.
+
+    #. Procedure :ada:`Display` displays information about the inventory.
+
+**Remarks**:
+
+    #. The code below doesn't have an :ada:`Init` subprogram for the
+       :ada:`Inventory` type.
+
+        #. In order for the system to have correct information about the
+           assets, you should declare a default value.
+
+        #. Alternatively, you could implement an :ada:`Init` subprogram and
+           make sure it's called in the :ada:`Check` procedure below.
 
 .. code:: ada lab=Records.Inventory
 

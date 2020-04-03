@@ -15,52 +15,80 @@ Strongly typed language
 Colors
 ------
 
-In this exercise, you'll work with enumerations. These are your goals:
+**Goal**: create a package to represent HTML colors in hexadecimal form and its
+corresponding names.
 
-#. Declare an enumeration named :ada:`HTML_Color` for the following
-   colors:
+**Steps**:
 
-   +-------------+---------------+
-   | Color       | Value         |
-   +=============+===============+
-   | Salmon      | ``#FA8072``   |
-   +-------------+---------------+
-   | Firebrick   | ``#B22222``   |
-   +-------------+---------------+
-   | Red         | ``#FF0000``   |
-   +-------------+---------------+
-   | Darkred     | ``#8B0000``   |
-   +-------------+---------------+
-   | Lime        | ``#00FF00``   |
-   +-------------+---------------+
-   | Forestgreen | ``#228B22``   |
-   +-------------+---------------+
-   | Green       | ``#008000``   |
-   +-------------+---------------+
-   | Darkgreen   | ``#006400``   |
-   +-------------+---------------+
-   | Blue        | ``#0000FF``   |
-   +-------------+---------------+
-   | Mediumblue  | ``#0000CD``   |
-   +-------------+---------------+
-   | Darkblue    | ``#00008B``   |
-   +-------------+---------------+
+    #. Implement the :ada:`Color_Types` package.
 
-#. Implement a function :ada:`To_Integer` to convert from the
-   :ada:`HTML_Color` type to the integer values listed on table above.
+        #. Declare the :ada:`HTML_Color` enumeration
 
-   - Hints: You may use a :ada:`case` for this. Also, in order to express
-     the hexadecimal values above in Ada, use the following syntax:
-     ``16#<hex_value>#`` (e.g.: :ada:`16#FFFFFF#`).
+        #. Declare the :ada:`Basic_HTML_Color` enumeration.
 
-#. Declare another color type (:ada:`Basic_HTML_Color`) with the following
-   colors: Red, Green, Blue. Also, implement the function
-   :ada:`To_HTML_Color` that converts from the :ada:`Basic_HTML_Color` to
-   :ada:`HTML_Color`.
+        #. Implement the :ada:`To_Integer` function.
 
-Don't worry about the details of the :ada:`Main` procedure. You should
-just focus on declaring the types (in the :ada:`Color_Types` package) and
-implementing the functions as indicated below.
+        #. Implement the :ada:`To_HTML_Color` function.
+
+**Requirements**:
+
+    #. Enumeration :ada:`HTML_Color` has the following colors:
+
+        - Salmon
+        - Firebrick
+        - Red
+        - Darkred
+        - Lime
+        - Forestgreen
+        - Green
+        - Darkgreen
+        - Blue
+        - Mediumblue
+        - Darkblue
+
+    #. Enumeration :ada:`Basic_HTML_Color` has the following colors: Red,
+       Green, Blue.
+
+    #. Function :ada:`To_Integer` converts from the :ada:`HTML_Color` type to
+       the integer values in hexadecimal according to the table below.
+
+    #. Function :ada:`To_HTML_Color` converts from :ada:`Basic_HTML_Color` to
+       :ada:`HTML_Color`.
+
+    #. This is the table to convert from an HTML color to a hexadecimal value:
+
+    +-------------+---------------+
+    | Color       | Value         |
+    +=============+===============+
+    | Salmon      | ``#FA8072``   |
+    +-------------+---------------+
+    | Firebrick   | ``#B22222``   |
+    +-------------+---------------+
+    | Red         | ``#FF0000``   |
+    +-------------+---------------+
+    | Darkred     | ``#8B0000``   |
+    +-------------+---------------+
+    | Lime        | ``#00FF00``   |
+    +-------------+---------------+
+    | Forestgreen | ``#228B22``   |
+    +-------------+---------------+
+    | Green       | ``#008000``   |
+    +-------------+---------------+
+    | Darkgreen   | ``#006400``   |
+    +-------------+---------------+
+    | Blue        | ``#0000FF``   |
+    +-------------+---------------+
+    | Mediumblue  | ``#0000CD``   |
+    +-------------+---------------+
+    | Darkblue    | ``#00008B``   |
+    +-------------+---------------+
+
+**Remarks**:
+
+#. In order to express the hexadecimal values above in Ada, use the following
+   syntax: ``16#<hex_value>#`` (e.g.: :ada:`16#FFFFFF#`).
+
+#. For function :ada:`To_Integer`, you may use a :ada:`case` for this.
 
 .. code:: ada lab=Strongly_Typed.Colors
 
@@ -159,38 +187,86 @@ implementing the functions as indicated below.
 Integer Types
 -------------
 
-In this exercise, you'll create integer types. These are your goals:
+**Goal**: implement a package with various integer types.
 
-#. Declare two custom integer types with values between 0 and 100: one
-   integer type (:ada:`I_100`) and a modular type (:ada:`U_100`).
+**Steps**:
 
-#. Implement the functions :ada:`To_I_100` and :ada:`To_U_100` to convert
-   between the :ada:`I_100` and :ada:`U_100` types.
+    #. Implement the :ada:`Int_Types` package.
 
-#. Declare integer types with values between 10 and 50 using :ada:`I_100`
-   as a base type. You must create one derived type (:ada:`D_50`) and a
-   subtype (:ada:`S_50`).
+        #. Declare the integer type :ada:`I_100`.
 
-#. Implement the function :ada:`To_D_50` and :ada:`To_S_50` that convert
-   from :ada:`I_100` to these types and saturate the value if they are out
-   of range. For example, if the input for :ada:`To_D_50` is 100, the
-   output of the function is 50.
+        #. Declare the modular type :ada:`U_100`.
 
-   - Hint: you may use the type attributes :ada:`D_50'First` and
-     :ada:`D_50'Last`, which indicate, respectively, the minimum and
-     maximum value of the :ada:`D_50` type. The same attributes are
-     available for the :ada:`S_50` type.
+        #. Implement the :ada:`To_I_100` function to convert from the
+           :ada:`U_100` type.
 
-#. Implement the function :ada:`To_I_100` that convert from :ada:`D_100`
-   back to the base type :ada:`I_100`.
+        #. Implement the :ada:`To_U_100` function to convert from the
+           :ada:`I_100` type.
 
-   - Remark: we could write a function :ada:`To_I_100` to convert from
-     :ada:`S_100` as well. However, we skip this here because explicit
-     conversions are not needed for subtypes.
+        #. Declare the derived type :ada:`D_50`.
 
-Don't worry about the details of the :ada:`Main` procedure. You should
-just focus on declaring the types (in the :ada:`Int_Types` package) and
-implementing the functions as indicated below.
+        #. Declare the subtype :ada:`S_50`.
+
+        #. Implement the :ada:`To_D_50` function to convert from the
+           :ada:`I_100` type.
+
+        #. Implement the :ada:`To_S_50` function to convert from the
+           :ada:`I_100` type.
+
+        #. Implement the :ada:`To_I_100` function to convert from the
+           :ada:`D_50` type.
+
+**Requirements**:
+
+    #. Types :ada:`I_100` and :ada:`U_100` have values between 0 and 100.
+
+        #. Type :ada:`I_100` is an integer type.
+
+        #. Type :ada:`U_100` is a modular type.
+
+    #. Function :ada:`To_I_100` converts from the :ada:`U_100` type to the
+       :ada:`I_100` type.
+
+    #. Function :ada:`To_U_100` converts from the :ada:`I_100` type to the
+       :ada:`U_100` type.
+
+    #. Types :ada:`D_50` and :ada:`S_50` have values between 10 and 50 and
+       use :ada:`I_100` as a base type.
+
+        #. :ada:`D_50` is a derived type.
+
+        #. :ada:`S_50` is a subtype.
+
+    #. Function :ada:`To_D_50` converts from the :ada:`I_100` type to the
+       :ada:`D_50` type.
+
+    #. Function :ada:`To_S_50` converts from the :ada:`I_100` type to the
+       :ada:`S_50` type.
+
+    #. Functions :ada:`To_D_50` and :ada:`To_S_50` saturate the input values if
+       they are out of range.
+
+       - For example, if the input for :ada:`To_D_50` is 100, the output of the
+         function is 50.
+
+    #. Function :ada:`To_I_100` converts from the :ada:`D_50` type to the
+       :ada:`I_100` type.
+
+**Remarks**:
+
+#. For the implementation of functions :ada:`To_D_50` and :ada:`To_S_50`, you
+   may use the type attributes :ada:`D_50'First` and :ada:`D_50'Last`:
+
+   #. :ada:`D_50'First` indicates the minimum value of the :ada:`D_50` type.
+
+   #. :ada:`D_50'Last` indicates the maximum value of the :ada:`D_50` type.
+
+   #. The same attributes are available for the :ada:`S_50` type (
+      :ada:`S_50'First` and :ada:`S_50'Last`).
+
+#. We could have implement a function :ada:`To_I_100` as well to convert from
+   :ada:`S_100` to :ada:`I_100`. However, we skip this here because explicit
+   conversions are not needed for subtypes.
 
 .. code:: ada lab=Strongly_Typed.Integer_Types
 
@@ -401,33 +477,70 @@ implementing the functions as indicated below.
 Temperatures
 ------------
 
-In this exercise, you'll work with custom floating-point and integer types
-to implement a small system with temperatures in Celsius and Kelvin. These
-are your goals:
+**Goal**: create a package to handle temperatures in Celsius and Kelvin.
 
-#. Declare a floating-point and an integer type for temperatures in
-   Celsius: :ada:`Celsius` and :ada:`Int_Celsius`, respectively. You must
-   use a range between -273.15 and 5504.85 for the floating-point type and
-   the rounded interval between -273 and 5505 for the integer type.
+**Steps**:
 
-#. Implement the functions :ada:`To_Celsius` and :ada:`To_Int_Celsius` to
-   convert between these types. Because of the slightly different ranges,
-   you'll need to check for the minimum and maximum values of the input
-   values in the implementation of the :ada:`To_Celsius` function.
+    #. Implement the :ada:`Temperature_Types` package.
 
-   - Hint: use variables of floating-point type (:ada:`Float`) for
-     intermediate values in the implementation of :ada:`To_Celsius`.
+        #. Declare the :ada:`Celsius` type.
 
-#. Declare a floating-point type named :ada:`Kelvin` for temperatures in
-   Kelvin using a range between 0.0 and 5778.0.
+        #. Declare the :ada:`Int_Celsius` type.
 
-#. Implement the functions :ada:`To_Celsius` and :ada:`To_Kelvin` to
-   convert between temperatures in Kelvin and Celsius.
+        #. Implement the :ada:`To_Celsius` function.
 
-   - Hint: use a variable of floating-point type (:ada:`Float`) for
-     intermediate values.
+        #. Implement the :ada:`To_Int_Celsius` function.
 
-For the floating-point types above, use a precision of six digits.
+        #. Declare the :ada:`Kelvin` type
+
+        #. Implement the :ada:`To_Celsius` function to convert from the
+           :ada:`Kelvin` type.
+
+        #. Implement the :ada:`To_Kelvin` function.
+
+**Requirements**:
+
+    #. The custom floating-point types declared in :ada:`Temperature_Types`
+       must use a precision of six digits.
+
+    #. Types :ada:`Celsius` and :ada:`Int_Celsius` are used for temperatures in
+       Celsius:
+
+       #. :ada:`Celsius` is a floating-point type with a range between -273.15
+          and 5504.85
+
+       #. :ada:`Int_Celsius` is an integer type with a range between -273 and
+          5505.
+
+    #. Functions :ada:`To_Celsius` and :ada:`To_Int_Celsius` are used for type
+       conversion:
+
+        #. :ada:`To_Celsius` converts from :ada:`Int_Celsius` to :ada:`Celsius`
+           type.
+
+        #. :ada:`To_Int_Celsius` converts from :ada:`Celsius` and
+           :ada:`Int_Celsius` types:
+
+    #. :ada:`Kelvin` is a floating-point type for temperatures in Kelvin using
+       a range between 0.0 and 5778.0.
+
+    #. The functions :ada:`To_Celsius` and :ada:`To_Kelvin` are used to convert
+       between temperatures in :ada:`Kelvin` and :ada:`Celsius`.
+
+**Remarks**:
+
+#. When implementing the :ada:`To_Celsius` function for the :ada:`Int_Celsius`:
+
+    #. You'll need to check for the minimum and maximum values of the input
+       values because of the slightly different ranges.
+
+    #. You may use variables of floating-point type (:ada:`Float`) for
+       intermediate values.
+
+#. For the implementation of the functions :ada:`To_Celsius` and
+   :ada:`To_Kelvin` (used for converting between :ada:`Kelvin` and
+   :ada:`Celsius`), you may use a variable of floating-point type
+   (:ada:`Float`) for intermediate values.
 
 .. code:: ada lab=Strongly_Typed.Temperatures
 

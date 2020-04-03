@@ -17,50 +17,72 @@ Generics
 Display Array
 -------------
 
-Your goal for this exercise is to create a generic procedure called
-:ada:`Display_Array` that displays the elements of an array. This
-procedure must first display a header and then the elements of the array.
-When displaying the elements, it must use one line per element and include
-the corresponding index of the array. This is the expected format:
+**Goal**: create a generic procedure that displays the elements of an array.
 
-.. code-block:: none
+**Steps**:
 
-    <HEADER>
-    <index #1>: <element #1>
-    <index #2>: <element #2>
-    ...
+    #. Implement the generic procedure :ada:`Display_Array`.
 
-For example, for the following code:
+**Requirements**:
 
-.. code-block:: ada
+    #. Generic procedure :ada:`Display_Array` displays the elements of an
+       array.
 
-    procedure Test is
-       A : Int_Array (1 .. 2) := (1, 5);
-    begin
-       Display_Int_Array ("Elements of A", A);;
-    end Test;
+        #. It uses the following scheme:
 
-The output is:
+            - First, it displays a header.
 
-.. code-block:: none
+            - Then, it displays the elements of the array.
 
-    Elements of A
-     1:  1
-     2:  5
+        #. When displaying the elements, it must:
 
-These are the formal parameter of the procedure:
+            - use one line per element, and
 
-- a range type :ada:`T_Range` for the the array;
+            - include the corresponding index of the array.
 
-- a formal type :ada:`T_Element` for the elements of the array;
+        #. This is the expected format:
 
-    - This type must be declared in such a way, so that it can be mapped
-      to any type in the instantiation |mdash| including record types.
+            .. code-block:: none
 
-- an array type :ada:`T_Array` using :ada:`T_Range` and :ada:`T_Element`;
+                <HEADER>
+                <index #1>: <element #1>
+                <index #2>: <element #2>
+                ...
 
-- a function :ada:`Image` that converts a variable of type :ada:`T_Element`
-  to a :ada:`String`.
+        #. For example:
+
+            - For the following code:
+
+                .. code-block:: ada
+
+                    procedure Test is
+                       A : Int_Array (1 .. 2) := (1, 5);
+                    begin
+                       Display_Int_Array ("Elements of A", A);;
+                    end Test;
+
+            - The output is:
+
+                .. code-block:: none
+
+                    Elements of A
+                     1:  1
+                     2:  5
+
+    #. These are the formal parameters of the procedure:
+
+        #. a range type :ada:`T_Range` for the the array;
+
+        #. a formal type :ada:`T_Element` for the elements of the array;
+
+            - This type must be declared in such a way that it can be mapped to
+              any type in the instantiation |mdash| including record types.
+
+        #. an array type :ada:`T_Array` using the :ada:`T_Range` and
+           :ada:`T_Element` types;
+
+        #. a function :ada:`Image` that converts a variable of :ada:`T_Element`
+           type to a :ada:`String`.
 
 .. code:: ada lab=Generics.Display_Array
 
@@ -157,17 +179,28 @@ These are the formal parameter of the procedure:
 Average of Array of Float
 -------------------------
 
-In this exercise, you'll create a generic function :ada:`Average` that
-calculates the average of an array containing floating-point values of
-arbitrary precision. This function must contain the following formal
-parameters:
+**Goal**: create a generic function that calculates the average of an array
+of floating-point elements.
 
-- a range type :ada:`T_Range` for the array;
+**Steps**:
 
-- a formal type :ada:`T_Element` that can be mapped to floating-point
-  types of arbitrary precision;
+    #. Declare and implement the generic function :ada:`Average`.
 
-- an array type :ada:`T_Array` using :ada:`T_Range` and :ada:`T_Element`;
+**Requirements**:
+
+    #. Generic function :ada:`Average` calculates the average of an array
+       containing floating-point values of arbitrary precision.
+
+    #. Generic function :ada:`Average` must contain the following formal
+       parameters:
+
+        #. a range type :ada:`T_Range` for the array;
+
+        #. a formal type :ada:`T_Element` that can be mapped to floating-point
+           types of arbitrary precision;
+
+        #. an array type :ada:`T_Array` using :ada:`T_Range` and
+           :ada:`T_Element`;
 
 .. code:: ada lab=Generics.Average_Array_Of_Float
 
@@ -250,10 +283,31 @@ parameters:
 Average of Array of Decimal Fixed-Point
 ---------------------------------------
 
-This exercise is based on the implementation that you created for the
-previous exercise. Here, your task is to adapt the generic function
-:ada:`Average` to calculate the average of decimal fixed-point values. You
-may want to reuse the previous implementation as a starting point.
+**Goal**: create a generic function that calculates the average of an array
+of decimal fixed-point elements.
+
+**Steps**:
+
+    #. Declare and implement the generic function :ada:`Average`.
+
+**Requirements**:
+
+    #. Generic function :ada:`Average` calculates the average of an array
+       containing decimal fixed-point values.
+
+    #. Generic function :ada:`Average` has the same formal parameters as in the
+       previous exercise, except for:
+
+        #. :ada:`T_Element`, which is now a formal type that can be mapped to
+           any fixed-point decimal type.
+
+**Remarks**:
+
+    #. This exercise is based on the implementation that you created for the
+       previous exercise.
+
+        - You may want to reuse the previous implementation as a starting
+          point.
 
 .. code:: ada lab=Generics.Average_Array_Of_Decimal
 
@@ -339,77 +393,135 @@ may want to reuse the previous implementation as a starting point.
 Average of Array of Any Type
 ----------------------------
 
-In this exercise, you'll abstract the :ada:`Average` function from the
-previous exercises a step further. In this case, the function shall be
-able to calculate the average of any arbitrary type |mdash| including
-arrays containing elements of record types. Since record types can be
-composed by many components of different types, we need to provide a way to
-indicate which component (or components) of the record should be used when
-calculating the average of the array. This problem is solved by specifying
-a :ada:`To_Float` function as a formal parameter, which converts the
-arbitrary element of :ada:`T_Element` type to the :ada:`Float` type. In
-the implementation of the :ada:`Average` function, you'll use the
-:ada:`To_Float` function and calculate the average using a floating-point
-variable.
+**Goal**: create a generic function that calculates the average of an array
+of elements of any arbitrary type.
 
-In addition, you'll also work on the implementation of the test procedures
-:ada:`Test_Decimal_Array` and :ada:`Test_Item_Array`:
+**Steps**:
 
-    - For the :ada:`Test_Decimal_Array` procedure, you'll work with the
-      decimal fixed-point type :ada:`Decimal`.
+    #. Declare and implement the generic function :ada:`Average`.
 
-    - In the case of :ada:`Test_Item_Array`, you'll work with the record
-      type :ada:`Item`, which contains the :ada:`Quantity` and :ada:`Price`
-      components.
+    #. Implement the test procedure :ada:`Test_Decimal_Array`.
 
-This is what you have to do for both procedures:
+        #. Declare the :ada:`F_IO` package.
 
-- Create the :ada:`To_Float` function.
+        #. Implement the :ada:`To_Float` function for the :ada:`Decimal` type.
 
-    - For the :ada:`Decimal` type, the function is pretty straightforward.
+        #. Declare the :ada:`Average_Decimal` function.
 
-    - For the :ada:`Item` type, you'll actually create two functions to
-      convert to floating-point type:
+    #. Implement the test procedure :ada:`Test_Item_Array`.
 
-        - :ada:`Get_Total`, which returns the multiplication of the
-          quantity and the price components of the :ada:`Item` type;
+        #. Declare the :ada:`F_IO` package.
 
-        - :ada:`Get_Price`, which returns just the price.
+        #. Implement the :ada:`Get_Total` function for the :ada:`Item` type.
 
-- Instantiate the :ada:`Average` function.
+        #. Implement the :ada:`Get_Price` function for the :ada:`Item` type.
 
-    - For the :ada:`Decimal` type, you'll declare the
-      :ada:`Average_Decimal` function.
+        #. Declare the :ada:`Average_Total` function.
 
-    - For the :ada:`Item` type, you'll declare the :ada:`Average_Total`
-      and :ada:`Average_Price` functions using, respectively, the
-      :ada:`Get_Total` and  :ada:`Get_Price` functions mentioned above.
+        #. Declare the :ada:`Average_Price` function.
 
-- Instantiate the generic standard package :ada:`Ada.Text_IO.Float_IO` as
-  :ada:`F_IO`.
+**Requirements**:
 
-- Use the :ada:`Put` procedure from :ada:`Ada.Text_IO.Float_IO`.
+    #. Generic function :ada:`Average` calculates the average of an array
+       containing elements of any arbitrary type.
 
-    - This is the specification of the :ada:`Put` procedure, as described
-      in the appendix A.10.9 of the Ada Reference Manual:
+    #. Generic function :ada:`Average` has the same formal parameters as in the
+       previous exercise, except for:
 
-        .. code-block:: ada
+        #. :ada:`T_Element`, which is now a formal type that can be mapped to
+           any arbitrary type.
 
-            procedure Put(Item : in Num;
-                          Fore : in Field := Default_Fore;
-                          Aft  : in Field := Default_Aft;
-                          Exp  : in Field := Default_Exp);
+        #. :ada:`To_Float`, which is an *additional* formal parameter.
 
-    - For the test procedures you're working on, this is the expected
-      format when calling :ada:`Put` from :ada:`Float_IO`:
+            - :ada:`To_Float` is a function that converts the arbitrary element
+              of :ada:`T_Element` type to the :ada:`Float` type.
 
-       +-----------------------------+-------+------+------+
-       | Function                    | Fore  | Aft  | Exp  |
-       +=============================+=======+======+======+
-       | :ada:`Test_Decimal_Array`   |     1 |    2 |    0 |
-       +-----------------------------+-------+------+------+
-       | :ada:`Test_Item_Array`      |     3 |    2 |    0 |
-       +-----------------------------+-------+------+------+
+    #. Procedure :ada:`Test_Decimal_Array` is used to test the generic
+       :ada:`Average` procedure for decimal fixed-point types.
+
+    #. Procedure :ada:`Test_Item_Array` is used to test the generic
+       :ada:`Average` procedure for a record type (:ada:`Item`).
+
+        #. Record type :ada:`Item` contains the :ada:`Quantity` and
+           :ada:`Price` components.
+
+    #. The following functions have to implemented to be used for the formal
+       :ada:`To_Float` function parameter:
+
+        #. For the :ada:`Decimal` type, the function is pretty straightforward:
+           it simply returns the floating-point value converted from the
+           decimal type.
+
+        #. For the :ada:`Item` type, two functions must be created to convert
+           to floating-point type:
+
+            #. :ada:`Get_Total`, which returns the multiplication of the
+               quantity and the price components of the :ada:`Item` type;
+
+            #. :ada:`Get_Price`, which returns just the price.
+
+    #. The generic function :ada:`Average` must be instantiated as follows:
+
+        #. For the :ada:`Decimal` type, you must declare the
+           :ada:`Average_Decimal` function.
+
+        #. For the :ada:`Item` type, you must:
+
+            #. declare the :ada:`Average_Total` function (as an instance of
+               :ada:`Average`) using the :ada:`Get_Total` for the
+               :ada:`To_Float` parameter;
+
+            #. declare the :ada:`Average_Price` function (as an instance of
+               :ada:`Average`) using the :ada:`Get_Price` for the
+               :ada:`To_Float` parameter.
+
+    #. You must use the :ada:`Put` procedure from :ada:`Ada.Text_IO.Float_IO`.
+
+        #. The generic standard package :ada:`Ada.Text_IO.Float_IO` must be
+           instantiated as :ada:`F_IO` in the test procedures.
+
+        #. This is the specification of the :ada:`Put` procedure, as described
+           in the appendix A.10.9 of the Ada Reference Manual:
+
+            .. code-block:: ada
+
+                procedure Put(Item : in Num;
+                              Fore : in Field := Default_Fore;
+                              Aft  : in Field := Default_Aft;
+                              Exp  : in Field := Default_Exp);
+
+        #. Depending on the test procedures you're working on, this is the
+           expected format when calling :ada:`Put` from :ada:`Float_IO`:
+
+           +-----------------------------+-------+------+------+
+           | Function                    | Fore  | Aft  | Exp  |
+           +=============================+=======+======+======+
+           | :ada:`Test_Decimal_Array`   |     1 |    2 |    0 |
+           +-----------------------------+-------+------+------+
+           | :ada:`Test_Item_Array`      |     3 |    2 |    0 |
+           +-----------------------------+-------+------+------+
+
+**Remarks**:
+
+    #. In this exercise, you'll abstract the :ada:`Average` function from the
+       previous exercises a step further.
+
+        #. In this case, the function shall be able to calculate the average of
+           any arbitrary type |mdash| including arrays containing elements of
+           record types.
+
+        #. Since record types can be composed by many components of different
+           types, we need to provide a way to indicate which component (or
+           components) of the record will be used when calculating the average
+           of the array.
+
+        #. This problem is solved by specifying a :ada:`To_Float` function as a
+           formal parameter, which converts the arbitrary element of
+           :ada:`T_Element` type to the :ada:`Float` type.
+
+        #. In the implementation of the :ada:`Average` function, we use the
+           :ada:`To_Float` function and calculate the average using a
+           floating-point variable.
 
 .. code:: ada lab=Generics.Average_Any
 
@@ -514,79 +626,101 @@ This is what you have to do for both procedures:
 Generic list
 ------------
 
-In previous labs, you've been implementing lists for a variety of types.
-The *List of Names* exercise from the :doc:`./arrays` labs is an example.
-In this exercise, you'll abstract those list implementations in order to
-\create the generic :ada:`Gen_List` package. This package must have the
-following subprograms:
+**Goal**: create a system based on a generic list to add and displays elements.
 
-    - a procedure :ada:`Init` to initialize the list;
+**Steps**:
 
-    - a procedure :ada:`Add` to add an item to the list;
+    #. Declare and implement the generic package :ada:`Gen_List`.
 
-        - This procedure must contain a :ada:`Status` output parameter
-          that is set to :ada:`False` when the list was full |mdash| i.e.
-          when the procedure couldn't add the item;
+        #. Implement the :ada:`Init` procedure.
 
-    - a procedure :ada:`Display` to display the complete list.
+        #. Implement the :ada:`Add` procedure.
 
-        - This includes the *name* of the list and its elements |mdash|
-          using one line per element. This is the expected format:
+        #. Implement the :ada:`Display` procedure.
 
-        .. code-block:: none
+**Requirements**:
 
-            <NAME>
-            <element #1>
-            <element #2>
-            ...
+    #. Generic package :ada:`Gen_List` must have the following subprograms:
 
-These are the formal parameters of the :ada:`Gen_List` package:
+        #. Procedure :ada:`Init` initializes the list.
 
-    - an arbitrary formal type :ada:`Item`;
+        #. Procedure :ada:`Add` adds an item to the list.
 
-    - an unconstrained array type :ada:`Items` of :ada:`Item` element with
-      positive range;
+            #. This procedure must contain a :ada:`Status` output parameter
+               that is set to :ada:`False` when the list was full |mdash| i.e.
+               if the procedure failed while trying to add the item;
 
-    - the :ada:`Name` parameter containing the name of the list;
+        #. Procedure :ada:`Display` displays the complete list.
 
-        - This must be a formal input object of :ada:`String` type.
+            #. This includes the *name* of the list and its elements |mdash|
+               using one line per element.
 
-        - It's used in the :ada:`Display` procedure.
+            #. This is the expected format:
 
-    - an actual array :ada:`List_Array` to store the list;
+                .. code-block:: none
 
-        - This must be a formal :ada:`in out` object of :ada:`Items` type.
+                    <NAME>
+                    <element #1>
+                    <element #2>
+                    ...
 
-    - the variable :ada:`Last` to store the index of the last element;
+    #. Generic package :ada:`Gen_List` has these formal parameters:
 
-        - This must be a formal :ada:`in out` object of :ada:`Natural` type.
+        #. an arbitrary formal type :ada:`Item`;
 
-    - a procedure :ada:`Put` for the :ada:`Item` type.
+        #. an unconstrained array type :ada:`Items` of :ada:`Item` element with
+           positive range;
 
-        - This procedure is used in the :ada:`Display` procedure to display
-          individual elements of the list.
+        #. the :ada:`Name` parameter containing the name of the list;
 
-Also, you'll work on two test procedures:
+            - This must be a formal input object of :ada:`String` type.
 
-    - the :ada:`Test_Int_List` procedure to test a list of elements of
-      :ada:`Integer` type;
+            - It must be used in the :ada:`Display` procedure.
 
-    - the :ada:`Test_String_List` procedure to test a list of elements of
-      access to :ada:`String` type.
+        #. an actual array :ada:`List_Array` to store the list;
 
-For both test procedures, you'll have to:
+            - This must be a formal :ada:`in out` object of :ada:`Items` type.
 
-    - add missing type declarations;
+        #. the variable :ada:`Last` to store the index of the last element;
 
-    - declare and implement a :ada:`Put` procedure for individual elements
-      of the list;
+            - This must be a formal :ada:`in out` object of :ada:`Natural`
+              type.
 
-    - declare instances of the :ada:`Gen_List` package.
+        #. a procedure :ada:`Put` for the :ada:`Item` type.
 
-        - the :ada:`Int_List` package for the :ada:`Test_Int_List` procedure;
+            - This procedure is used in the :ada:`Display` procedure to display
+              individual elements of the list.
 
-        - the :ada:`String_List` package for the :ada:`Test_String_List`
-          procedure.
+    #. The test procedure :ada:`Test_Int_List` is used to test a list of
+       elements of :ada:`Integer` type.
+
+    #. The test procedure :ada:`Test_String_List` is used to test a list of
+       elements of access to :ada:`String` type.
+
+    #. For both test procedures, you must:
+
+        #. add missing type declarations;
+
+        #. declare and implement a :ada:`Put` procedure for individual elements
+           of the list;
+
+        #. declare instances of the :ada:`Gen_List` package.
+
+            - For the :ada:`Test_Int_List` procedure, declare the
+              :ada:`Int_List` package.
+
+            - For the :ada:`Test_String_List` procedure, declare the
+              :ada:`String_List` package.
+
+**Remarks**:
+
+    #. In previous labs, you've been implementing lists for a variety of types.
+
+        - The *List of Names* exercise from the :doc:`./arrays` labs is an
+          example.
+
+        - In this exercise, you have to abstract those implementations to
+          create the generic :ada:`Gen_List` package.
 
 .. code:: ada lab=Generics.Gen_List
 

@@ -17,10 +17,47 @@ Standard library: Containers
 Simple todo list
 ----------------
 
-This exercise is based on the *Simple todo list* exercise from the
-:doc:`./more_about_types`. Your goal is to rewrite that exercise using
-vectors instead of arrays. Please refer to the original exercise for
-details. You may reuse the code you've implemented as a starting point.
+**Goal**: implement a simple to-do list system using vectors.
+
+**Steps**:
+
+    #. Implement the :ada:`Todo_Lists` package.
+
+        #. Declare the :ada:`Todo_Item` type.
+
+        #. Declare the :ada:`Todo_List` type.
+
+        #. Implement the :ada:`Add` procedure.
+
+        #. Implement the :ada:`Display` procedure.
+
+    #. :ada:`Todo_Item` type is used to store to-do items.
+
+        #. It should be implemented as an access type to strings.
+
+    #. :ada:`Todo_List` type is the container for all to-do items.
+
+        #. It should be implemented as a **vector**.
+
+    #. Procedure :ada:`Add` adds items (of :ada:`Todo_Item` type) to the list
+       (of :ada:`Todo_List` type).
+
+        #. This requires allocating a string for the access type.
+
+    #. Procedure :ada:`Display` is used to display all to-do items.
+
+        #. It must display one item per line.
+
+**Remarks**:
+
+    #. This exercise is based on the *Simple todo list* exercise from the
+       :doc:`./more_about_types`.
+
+        #. Your goal is to rewrite that exercise using vectors instead of
+           arrays.
+
+        #. You may reuse the code you've already implemented as a starting
+           point.
 
 .. code:: ada lab=Standard_Library.Simple_Todo_List
 
@@ -102,17 +139,53 @@ details. You may reuse the code you've implemented as a starting point.
 List of unique integers
 -----------------------
 
-In this exercise, you'll remove duplicates from an array of integer values and
-order the elements. For example, if the input array contains :ada:`(7, 7, 1)`,
-the function should return :ada:`(1, 7)`. This can easily be done by using
-sets from the :ada:`Ordered_Sets` package.
+**Goal**: create function that removes duplicates from and order elements.
 
-Your goal is to implement the :ada:`Get_Unique` functions of the :ada:`Ops`
-package in two versions:
+**Steps**:
 
-    - one that returns a set; and
+    #. Implement package :ada:`Ops`.
 
-    - one that returns an array of integer values.
+        #. Declare the :ada:`Int_Array` type.
+
+        #. Declare the :ada:`Integer_Sets` type.
+
+        #. Implement the :ada:`Get_Unique` function that returns a set.
+
+        #. Implement the :ada:`Get_Unique` function that returns an array of
+           integer values.
+
+**Requirements**:
+
+    #. The :ada:`Int_Array` type is an unconstrained array of positive range.
+
+    #. The :ada:`Integer_Sets` package is an instantiation of the
+       :ada:`Ordered_Sets` package for the :ada:`Integer` type.
+
+    #. The :ada:`Get_Unique` function must remove duplicates from an input
+       array of integer values and order the elements.
+
+        #. For example:
+
+            - if the input array contains :ada:`(7, 7, 1)`
+
+            - the function must return :ada:`(1, 7)`.
+
+        #. You must implement this function by using sets from the
+           :ada:`Ordered_Sets` package.
+
+        #. :ada:`Get_Unique` must be implemented in two versions:
+
+            - one version that returns a set |mdash| :ada:`Set` type from the
+              :ada:`Ordered_Sets` package.
+
+            - one version that returns an array of integer values |mdash|
+              :ada:`Int_Array` type.
+
+**Remarks**:
+
+    #. Sets |mdash| as the one found in the generic :ada:`Ordered_Sets` package
+       |mdash| are useful for quickly and easily creating an algorithm that
+       removes duplicates from a list of elements.
 
 .. code:: ada lab=Standard_Library.List_of_Unique_Integers
 

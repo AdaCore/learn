@@ -18,32 +18,54 @@ Arrays
 Constrained Array
 -----------------
 
-In this exercise, you'll work with constrained arrays. In this case, your
-array type will be limited to 10 elements of :ada:`Integer` type. These are
-your goals:
+**Goal**: declare a constrained array and implement operations on it.
 
-- Declare the range type :ada:`My_Index` for the 10 elements of the array.
+**Steps**:
 
-- Declare the array type :ada:`My_Array` using the :ada:`My_Index` type.
+    #. Implement the :ada:`Constrained_Arrays` package.
 
-- Declare and implement an :ada:`Init` function that returns an array
-  where each element is initialize with the corresponding index.
+        #. Declare the range type :ada:`My_Index`.
 
-- Declare and implement a :ada:`Double` procedure that doubles the value of
-  each element of an array.
+        #. Declare the array type :ada:`My_Array`.
 
-- Declare and implement a function called :ada:`First_Elem` that returns
-  the first element of the array.
+        #. Declare and implement the :ada:`Init` function.
 
-- Declare and implement a function called :ada:`Last_Elem` that returns
-  the last element of the array.
+        #. Declare and implement the :ada:`Double` procedure.
 
-- Declare and implement a :ada:`Length` function, which returns the length
-  of the array.
+        #. Declare and implement the :ada:`First_Elem` function.
 
-- Finally, declare an object :ada:`A` of :ada:`My_Array`  type and
-  initialized it with the values 1 and 2 for the first two elements, and
-  42 for all other elements.
+        #. Declare and implement the :ada:`Last_Elem` function.
+
+        #. Declare and implement the :ada:`Length` function.
+
+        #. Declare the object :ada:`A` of :ada:`My_Array` type.
+
+**Requirements**:
+
+    #. Range type :ada:`My_Index` has a range from 1 to 10.
+
+    #. :ada:`My_Array` is a constrainted array of :ada:`Integer` type.
+
+        #. It must make use of the :ada:`My_Index` type.
+
+        #. It is therefore limited to 10 elements.
+
+    #. Function :ada:`Init` returns an array where each element is initialize
+       with the corresponding index.
+
+    #. Procedure :ada:`Double` doubles the value of each element of an array.
+
+    #. Function :ada:`First_Elem` returns the first element of the array.
+
+    #. Function :ada:`Last_Elem` returns the last element of the array.
+
+    #. Function :ada:`Length` returns the length of the array.
+
+    #. Object :ada:`A` of :ada:`My_Array`  type is initialized with:
+
+        #. the values 1 and 2 for the first two elements, and
+
+        #. 42 for all other elements.
 
 .. code:: ada lab=Arrays.Constrained_Array
 
@@ -169,50 +191,68 @@ your goals:
 Colors: Lookup-Table
 --------------------
 
-.. todo::
+**Goal**: rewrite a package to represent HTML colors in RGB format using a
+lookup table.
 
-    Add link to "records" labs as soon as they are available!
+**Steps**:
 
-This exercise is based on the HTML colors exercise from a previous lab
-(:doc:`./records`). In that exercise, one of the goals was to write the
-function :ada:`To_RGB` to convert from the :ada:`HTML_Color` type to the
-:ada:`RGB` type. These were the values for the colors:
+    #. Implement the :ada:`Color_Types` package.
 
-   +-------------+---------------+
-   | Color       | Value         |
-   +=============+===============+
-   | Salmon      | ``#FA8072``   |
-   +-------------+---------------+
-   | Firebrick   | ``#B22222``   |
-   +-------------+---------------+
-   | Red         | ``#FF0000``   |
-   +-------------+---------------+
-   | Darkred     | ``#8B0000``   |
-   +-------------+---------------+
-   | Lime        | ``#00FF00``   |
-   +-------------+---------------+
-   | Forestgreen | ``#228B22``   |
-   +-------------+---------------+
-   | Green       | ``#008000``   |
-   +-------------+---------------+
-   | Darkgreen   | ``#006400``   |
-   +-------------+---------------+
-   | Blue        | ``#0000FF``   |
-   +-------------+---------------+
-   | Mediumblue  | ``#0000CD``   |
-   +-------------+---------------+
-   | Darkblue    | ``#00008B``   |
-   +-------------+---------------+
+        #. Declare the array type :ada:`HTML_Color_RGB`.
 
-You probably used a :ada:`case` statement to implement the :ada:`To_RGB`
-function in that exercise. Now, in  this exercise, you'll rewrite the
-function using a look-up table, which is implemented as an array of
-constant values. In order to do that, you will:
+        #. Declare the :ada:`To_RGB_Loopup_Table` object and initialize it.
 
-- Declare the array type :ada:`HTML_Color_RGB` for the table.
+        #. Adapt the implementation of :ada:`To_RGB` function.
 
-- Declare the actual table as an object of :ada:`HTML_Color_RGB` type and
-  initialize it.
+**Requirements**:
+
+    #. Array type :ada:`HTML_Color_RGB` is used for the table.
+
+    #. The :ada:`To_RGB_Loopup_Table` object of :ada:`HTML_Color_RGB` type
+       contains the lookup table.
+
+        - This table must be implemented as an array of constant values.
+
+    #. The implementation of the :ada:`To_RGB` function must use the
+       :ada:`To_RGB_Loopup_Table` object.
+
+**Remarks**:
+
+    #. This exercise is based on the HTML colors exercise from a previous lab
+       (:doc:`./records`).
+
+    #. In the previous implementation, you probably used a :ada:`case`
+       statement to implement the :ada:`To_RGB` function. Here, you must
+       rewrite the function using a look-up table.
+
+    #. The following table contains the HTML colors and the corresponding value
+       in hexadecimal form:
+
+        +-------------+---------------+
+        | Color       | Value         |
+        +=============+===============+
+        | Salmon      | ``#FA8072``   |
+        +-------------+---------------+
+        | Firebrick   | ``#B22222``   |
+        +-------------+---------------+
+        | Red         | ``#FF0000``   |
+        +-------------+---------------+
+        | Darkred     | ``#8B0000``   |
+        +-------------+---------------+
+        | Lime        | ``#00FF00``   |
+        +-------------+---------------+
+        | Forestgreen | ``#228B22``   |
+        +-------------+---------------+
+        | Green       | ``#008000``   |
+        +-------------+---------------+
+        | Darkgreen   | ``#006400``   |
+        +-------------+---------------+
+        | Blue        | ``#0000FF``   |
+        +-------------+---------------+
+        | Mediumblue  | ``#0000CD``   |
+        +-------------+---------------+
+        | Darkblue    | ``#00008B``   |
+        +-------------+---------------+
 
 .. code:: ada lab=Arrays.Colors_Lookup_Table
 
@@ -332,57 +372,87 @@ constant values. In order to do that, you will:
 Unconstrained Array
 -------------------
 
-In this exercise, you'll work with unconstrained arrays of :ada:`Integer`
-type. Your goals are:
+**Goal**: declare an unconstrained array and implement operations on it.
 
-- Declare an unconstrained array type of Integer called :ada:`My_Array`
-  using a :ada:`Positive` range.
+**Steps**:
 
-- Declare and implement a procedure :ada:`Init` where each element is
-  initialized with the index starting with the last one. For example,
-  for an array  of 3 elements, the values of these elements after a call
-  to :ada:`Init` are :ada:`(3, 2, 1)`.
+    #. Implement the :ada:`Unconstrained_Arrays` package.
 
-  - Hint: For an array :ada:`A`, you can retrieve the index of the last
-    element with the attribute :ada:`'Last`. For example:
-    :ada:`Y : Positive := A'Last;`
+        #. Declare the :ada:`My_Array` type.
 
-- Declare and implement an :ada:`Init` function that returns an array
-  based on the length :ada:`L` provided to the :ada:`Init` function. This
-  is the declaration: :ada:`function Init (L : Positive) return My_Array;`.
-  Also, you must initialize the elements of the array in the same manner
-  as for the :ada:`Init` procedure described above.
+        #. Declare and implement the :ada:`Init` procedure.
 
-  - Hint: The easiest way to implement this function is by simply calling
-    the :ada:`Init` procedure to initialize the elements. By doing this,
-    you avoid code duplication.
+        #. Declare and implement the :ada:`Init` function.
 
-- Declare and implement a :ada:`Double` procedure that doubles each element
-  of an array.
+        #. Declare and implement the :ada:`Double` procedure.
 
-- Declare and implement the :ada:`Diff_Prev_Elem` function, which returns
-  |mdash| for each element of an input array :ada:`A` |mdash| an array
-  with the difference between an element of array :ada:`A` and the
-  previous element. In this case, the difference is zero for the first
-  element.
+        #. Declare and implement the :ada:`Diff_Prev_Elem` function.
 
-  - For example:
+**Requirements**:
 
-    - **INPUT**: :ada:`(2, 5, 15)`
+    #. :ada:`My_Array` is an unconstrained array (with a :ada:`Positive` range)
+       of :ada:`Integer` elements.
 
-    - **RETURN** of :ada:`Diff_Prev_Elem`: :ada:`(0, 3, 10)`, where
+    #. Procedure :ada:`Init` initializes each element with the index starting
+       with the last one.
 
-      - :ada:`0`: constant difference for first element;
-      - :ada:`3 = 5 - 2`: difference between the second and the first
-        elements of the input array;
-      - :ada:`10 = 15 - 5`: difference between the third and the second
-        elements of the input array.
+       - For example, for an array  of 3 elements, the values of these
+         elements after a call to :ada:`Init` must be :ada:`(3, 2, 1)`.
 
-Just as a hint: you can use the range attribute (:ada:`A'Range`) to
-retrieve the range of an array :ada:`A`. You can also use this attribute
-in the declaration of another array (e.g.: :ada:`B : My_Array (A'Range)`).
-Alternatively, you can use the :ada:`A'First` and :ada:`A'Last`
-attributes.
+    #. Function :ada:`Init` returns an array based on the length :ada:`L`
+       provided to the :ada:`Init` function.
+
+        #. This is its declaration:
+           :ada:`function Init (L : Positive) return My_Array;`.
+
+        #. You must initialize the elements of the array in the same manner
+           as for the :ada:`Init` procedure described above.
+
+    #. Procedure :ada:`Double` doubles each element of an array.
+
+    #. Function :ada:`Diff_Prev_Elem` returns |mdash| for each element of an
+       input array :ada:`A` |mdash| an array with the difference between an
+       element of array :ada:`A` and the previous element.
+
+        #. For the first element, the difference must be zero.
+
+        #. For example:
+
+            - **INPUT**: :ada:`(2, 5, 15)`
+
+            - **RETURN** of :ada:`Diff_Prev_Elem`: :ada:`(0, 3, 10)`, where
+
+                - :ada:`0` is the constant difference for the first element;
+
+                - :ada:`5 - 2 = 3` is the difference between the second and the
+                  first elements of the input array;
+
+                - :ada:`15 - 5 = 10` is the difference between the third and
+                  the second elements of the input array.
+
+**Remarks**:
+
+#. For an array :ada:`A`, you can retrieve the index of the last element with
+   the attribute :ada:`'Last`.
+
+    #. For example: :ada:`Y : Positive := A'Last;`
+
+    #. This can be useful during the implementation of procedure :ada:`Init`.
+
+#. For the implementation of the :ada:`Init` function, you can call the
+   :ada:`Init` procedure to initialize the elements. By doing this, you avoid
+   code duplication.
+
+#. Some hints about attributes:
+
+    #. You can use the range attribute (:ada:`A'Range`) to retrieve the
+       range of an array :ada:`A`.
+
+    #. You can also use the range attribute in the declaration of another array
+       (e.g.: :ada:`B : My_Array (A'Range)`).
+
+    #. Alternatively, you can use the :ada:`A'First` and :ada:`A'Last`
+       attributes in an array declaration.
 
 .. code:: ada lab=Arrays.Unconstrained_Array
 
@@ -498,37 +568,76 @@ attributes.
 Quantities And Amounts
 ----------------------
 
-In this exercise, you'll create a system to keep track of quantities and
-prices of products. In this system, the quantity of an individual product
-is represented by the :ada:`Quantity` subtype and the price (or amount)
-by the :ada:`Amount` subtype. You'll declare the array types
-:ada:`Quantities` and :ada:`Amounts` to deal with information for various
-products. In addition, you'll implement the following subprograms:
+**Goal**: create a system to keep track of quantities and prices of products.
 
-- :ada:`procedure Total`: given an input array of quantities and an input
-  array of amounts for each product, it outputs an array with the total
-  amount for each product using the :ada:`Amounts` type. The total amount
-  for an individual product is calculated by multiplying the quantity for
-  this product by its price.
+**Steps**:
 
-- :ada:`function Total`: it has the same purpose as the procedure we've
-  just mentioned. The difference is that the function returns an array of
-  :ada:`Amounts` type instead of providing this array as an output
-  parameter.
+    #. Implement the :ada:`Quantities_Amounts` package.
 
-- :ada:`function Total`: given an array of quantities and an array of
-  amounts for each product, it returns a single value of :ada:`Amount` type
-  corresponding to the total amount for all products in the system. In
-  other words, this function returns the sum of all total amounts for the
-  individual products.
+        #. Declare the array type :ada:`Quantities`.
 
-Hint: you can use :ada:`Amount (Q)` to convert from an element :ada:`Q` of
-:ada:`Quantity` type to the :ada:`Amount` type. As you might remember, Ada
-requires an explicit conversion in calculations where variables of both
-integer and floating-point types are used. In our case, the :ada:`Quantity`
-subtype is based on the :ada:`Integer` type and the :ada:`Amount` subtype
-is based on the :ada:`Float` type, so a conversion is necessary in
-calculations using those types.
+        #. Declare the array type :ada:`Amounts`.
+
+        #. Implement the :ada:`Total` procedure.
+
+        #. Implement the :ada:`Total` function returning an array of
+           :ada:`Amounts` type.
+
+        #. Implement the :ada:`Total` function returning a single value of
+           :ada:`Amount` type.
+
+**Requirements**:
+
+    #. Quantities of an individual product are represented by the
+       :ada:`Quantity` subtype.
+
+    #. Prices of an individual product are represented by the :ada:`Amount`
+       subtype.
+
+    #. Array types :ada:`Quantities` and :ada:`Amounts` deal with information
+       for various products.
+
+    #. Procedure :ada:`Total` receives an input array of quantities and an
+       input array of amounts for each product.
+
+        #. It outputs an array with the total amount for each product using the
+           :ada:`Amounts` type.
+
+        #. The total amount for an individual product is calculated by
+           multiplying the quantity for this product by its price.
+
+    #. Function :ada:`Total` returns an array of :ada:`Amounts` type.
+
+        #. This function has the same purpose as the procedure :ada:`Total`.
+
+        #. The difference is that the function returns an array instead of
+           providing this array as an output parameter.
+
+    #. The second function :ada:`Total` returns a single value of
+       :ada:`Amount` type.
+
+        #. This function receives an array of quantities and an array of
+           amounts for each product
+
+        #. It returns a single value corresponding to the total amount for all
+           products in the system.
+
+        #. In other words, this function returns the sum of all total amounts
+           for the individual products.
+
+**Remarks**:
+
+    #. You can use :ada:`Amount (Q)` to convert from an element :ada:`Q` of
+       :ada:`Quantity` type to the :ada:`Amount` type.
+
+        #. As you might remember, Ada requires an explicit conversion in
+           calculations where variables of both integer and floating-point
+           types are used.
+
+        #. In our case, the :ada:`Quantity` subtype is based on the
+           :ada:`Integer` type and the :ada:`Amount` subtype is based on the
+           :ada:`Float` type, so a conversion is necessary in calculations
+           using those types.
 
 .. code:: ada lab=Arrays.Quantities_And_Amounts
 
@@ -653,20 +762,31 @@ calculations using those types.
 String_10
 ---------
 
-As you know, the :ada:`String` type is an unconstrained array. In this
-exercise, you'll deal with the :ada:`String` type and a custom
-constrained string type called :ada:`String_10`. Your goals are:
+**Goal**: work with constrained string types.
 
-- Declare the constrained string type :ada:`String_10` as an array of
-  ten characters.
+**Steps**:
 
-  - Hint: declaring :ada:`String_10` as a subtype of :ada:`String` is the
-    easiest way. You may declare it as a new type as well. However, this
-    requires some adaptations for the :ada:`Main` test procedure.
+    #. Implement the :ada:`Strings_10` package.
 
-- Implement the :ada:`To_String_10` function to create constrained
-  strings of :ada:`String_10` type based on an input parameter of
-  :ada:`String` type.
+        #. Declare the :ada:`String_10` type.
+
+        #. Implement the :ada:`To_String_10` function.
+
+**Requirements**:
+
+    #. The constrained string type :ada:`String_10` is an array of ten
+       characters.
+
+    #. Function :ada:`To_String_10` returns constrained strings of
+       :ada:`String_10` type based on an input parameter of :ada:`String` type.
+
+**Remarks**:
+
+    #. Declaring :ada:`String_10` as a subtype of :ada:`String` is the easiest
+       way.
+
+        - You may declare it as a new type as well. However, this requires some
+          adaptations in the :ada:`Main` test procedure.
 
 .. code:: ada lab=Arrays.String_10
 
@@ -734,65 +854,94 @@ constrained string type called :ada:`String_10`. Your goals are:
 List of Names
 -------------
 
-In this exercise, you'll create a system that consists of a list of names
-and ages. In this system, each person is represented by the :ada:`Person`
-type, which is a record containing the name and the age of that person.
-Your goals are:
+**Goal**: create a system for a list of names and ages.
 
-- Declare the :ada:`People_Array` array type as an unconstrained array of
-  positive range.
+**Steps**:
 
-- Complete the declaration of the :ada:`People` record type with the
-  :ada:`People_A` element of :ada:`People_Array` type. This array must be
-  constrained to 10 elements using the :ada:`Max_People` constant.
+    #. Implement the :ada:`Names_Ages` package.
 
-- Implement the procedure :ada:`Add` to add a person to the list. By
-  default, the age of this person is set to zero in this procedure.
+        #. Declare the :ada:`People_Array` array type.
 
-  - Hint: You may use an index to indicate the last valid position in the
-    array. See :ada:`Last_Valid` in the code below.
+        #. Complete the declaration of the :ada:`People` record type with the
+           :ada:`People_A` element of :ada:`People_Array` type.
 
-- Implement the procedure :ada:`Reset` to reset the list.
+        #. Implement the :ada:`Add` procedure.
 
-- Implement the function :ada:`Get` to retrieve the age of a person from
-  the list.
+        #. Implement the :ada:`Reset` procedure.
 
-- Implement the procedure :ada:`Update` to update the age of a person from
-  the list.
+        #. Implement the :ada:`Get` function.
 
-- Implement the procedure :ada:`Display` to show the complete list by
-  using the following format:
+        #. Implement the :ada:`Update` procedure.
 
-  - The first line must be ``LIST OF NAMES:`` followed by the name and
-    age of each person in the next lines.
+        #. Implement the :ada:`Display` procedure.
 
-  - For each person on the list, the procedure must diplay the information
-    in the following format:
+**Requirements**:
 
-    .. code-block:: none
+    #. Each person is represented by the :ada:`Person` type, which is a record
+       containing the name and the age of that person.
 
-      NAME: XXXX
-      AGE: YY
+    #. :ada:`People_Array` is an unconstrained array of :ada:`Person` type
+       with a positive range.
 
-  - Hint: You should use the :ada:`Trim` function from the
-    :ada:`Ada.Strings.Fixed` package to format the person's name. For
-    example: :ada:`Trim (P.Name, Right)`.
+    #. The :ada:`Max_People` constant is set to 10.
 
-These are other hints that could be useful:
+    #. Record type :ada:`People` contains:
 
-- You may need the :ada:`Integer'Min (A, B)` and the
-  :ada:`Integer'Max (A, B)` functions to get the minimum and maximum values
-  in a comparison between two integer values :ada:`A` and :ada:`B`.
+        #. The :ada:`People_A` element of :ada:`People_Array` type.
 
-- Fixed-length strings can be initialized with whitespaces using
-  the :ada:`others` syntax. For example:
-  :ada:`S : String_10 := (others => ' ');`
+        #. This array must be constrained by the :ada:`Max_People` constant.
 
-- You may implement additional subprograms to deal with other types declared
-  in the :ada:`Names_Ages` package below, such as the :ada:`Name_Type` and
-  the :ada:`Person` type. For example, a function :ada:`To_Name_Type`
-  to convert from :ada:`String` to :ada:`Name_Type` might be useful. Take
-  a moment to reflect on which other subprograms could be useful as well.
+    #. Procedure :ada:`Add` adds a person to the list.
+
+        #. By default, the age of this person is set to zero in this procedure.
+
+    #. Procedure :ada:`Reset` resets the list.
+
+    #. Function :ada:`Get` retrieves the age of a person from the list.
+
+    #. Procedure :ada:`Update` updates the age of a person ob the list.
+
+    #. Procedure :ada:`Display` shows the complete list using the following
+       format:
+
+        #. The first line must be ``LIST OF NAMES:``. It is followed by the
+           name and age of each person in the next lines.
+
+        #. For each person on the list, the procedure must diplay the
+           information in the following format:
+
+            .. code-block:: none
+
+              NAME: XXXX
+              AGE: YY
+
+**Remarks**:
+
+    #. In the implementation of procedure :ada:`Add`, you may use an index to
+       indicate the last valid position in the array |mdash| see
+       :ada:`Last_Valid` in the code below.
+
+    #. In the implementation of procedure :ada:`Display`, you should use the
+       :ada:`Trim` function from the :ada:`Ada.Strings.Fixed` package to format
+       the person's name |mdash| for example: :ada:`Trim (P.Name, Right)`.
+
+    #. You may need the :ada:`Integer'Min (A, B)` and the
+       :ada:`Integer'Max (A, B)` functions to get the minimum and maximum
+       values in a comparison between two integer values :ada:`A` and :ada:`B`.
+
+    #. Fixed-length strings can be initialized with whitespaces using
+       the :ada:`others` syntax. For example:
+       :ada:`S : String_10 := (others => ' ');`
+
+    #. You may implement additional subprograms to deal with other types
+       declared in the :ada:`Names_Ages` package below, such as the
+       :ada:`Name_Type` and the :ada:`Person` type.
+
+        #. For example, a function :ada:`To_Name_Type` to convert from
+           :ada:`String` to :ada:`Name_Type` might be useful.
+
+        #. Take a moment to reflect on which additional subprograms could be
+           useful as well.
 
 .. code:: ada lab=Arrays.List_Of_Names
 

@@ -15,13 +15,35 @@ Modular Programming
 Months
 ------
 
-In this exercise, you'll create the specification and body of the
-:ada:`Months` package. This package must contain the declaration of
-strings for each month of the year, which are stored in three-character
-constants based on the month's name. For example, the string
-:ada:`"January"` is stored in the constant :ada:`Jan`. These strings are
-then used by the :ada:`Display_Months` procedure, which is also part of
-the :ada:`Months` package.
+**Goal**: create a package to display the months of the year.
+
+**Steps**:
+
+    #. Convert the :ada:`Months` procedure below to a package.
+
+    #. Create the specification and body of the :ada:`Months` package.
+
+**Requirements**:
+
+    #. :ada:`Months` must contain the declaration of strings for each month of
+       the year, which are stored in three-character constants based on the
+       month's name.
+
+       - For example, the string :ada:`"January"` is stored in the constant
+         :ada:`Jan`. These strings are then used by the :ada:`Display_Months`
+         procedure, which is also part of the :ada:`Months` package.
+
+**Remarks**:
+
+    #. The goal of this exercise is to create the :ada:`Months` package.
+
+        #. In the code below, :ada:`Months` is declared as a procedure.
+
+            - Therefore, we need to *convert* it into a real package.
+
+        #. You have to modify the procedure declaration and implementation in
+           the code below, so that it becomes a package specification and a
+           package body.
 
 .. code:: ada lab=Modular_Programming.Months
 
@@ -93,26 +115,47 @@ the :ada:`Months` package.
 Operations
 ----------
 
-The goal of this exercise is to create two packages:
 
-- Package :ada:`Operations`, which contains functions for each of the four
-  basic mathematical operations for parameters of :ada:`Integer` type:
+**Goal**: create a package to perform basic mathematical operations.
 
-  - function :ada:`Add`: performs the addition of :ada:`A` and :ada:`B`
-    and returns the result;
+**Steps**:
 
-  - function :ada:`Subtract`: performs the subtraction of :ada:`A` and
-    :ada:`B` and returns the result;
+    #. Implement the `Operations` package.
 
-  - function :ada:`Multiply`: performs the multiplication of :ada:`A` and
-    :ada:`B` and returns the result;
+        #. Implement the :ada:`Add` function.
 
-  - function :ada:`Divide`: performs the division of :ada:`A` and
-    :ada:`B` and returns the result.
+        #. Implement the :ada:`Subtract` function.
 
-- Package :ada:`Operations_Test`, which contains the
-  :ada:`Display_Operations` procedure. This procedure makes use of the
-  functions from the :ada:`Operations` package.
+        #. Implement the :ada:`Multiply`: function.
+
+        #. Implement the :ada:`Divide` function.
+
+    #. Implement the :ada:`Operations_Test` package
+
+        #. Implement the :ada:`Display_Operations` procedure.
+
+**Requirements**:
+
+    #. Package :ada:`Operations` contains functions for each of the four
+       basic mathematical operations for parameters of :ada:`Integer` type:
+
+        #. Function :ada:`Add` performs the addition of :ada:`A` and :ada:`B`
+           and returns the result;
+
+        #. Function :ada:`Subtract` performs the subtraction of :ada:`A` and
+           :ada:`B` and returns the result;
+
+        #. Function :ada:`Multiply` performs the multiplication of :ada:`A` and
+           :ada:`B` and returns the result;
+
+        #. Function :ada:`Divide`: performs the division of :ada:`A` and
+           :ada:`B` and returns the result.
+
+    #. Package :ada:`Operations_Test` contains the test environment:
+
+        #. Procedure :ada:`Display_Operations` must use of the functions from
+           the :ada:`Operations` package as indicated by the template in the
+           code below.
 
 .. code:: ada lab=Modular_Programming.Operations
 

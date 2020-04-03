@@ -17,11 +17,31 @@ Tasking
 Display Service
 ---------------
 
-Your goal with this exercise is to create a simple service using tasking
-that displays messages to the user. You should implement a task type
-:ada:`Display_Service` that displays messages received by the
-:ada:`Display` entry. These messages can be passed to the :ada:`Display`
-entry either as a string parameter or an :ada:`Integer` parameter.
+**Goal**: create a simple service that displays messages to the user.
+
+**Steps**:
+
+    #. Implement the :ada:`Display_Services` package.
+
+        #. Declare the task type :ada:`Display_Service`.
+
+        #. Implement the :ada:`Display` entry for strings.
+
+        #. Implement the :ada:`Display` entry for integers.
+
+**Requirements**:
+
+    #. Task type :ada:`Display_Service` uses the :ada:`Display` entry to
+       display messages to the user.
+
+    #. There are two versions of the :ada:`Display` entry:
+
+        #. One that receives messages as a string parameter.
+
+        #. One that receives messages as an :ada:`Integer` parameter.
+
+    #. When a message is received via a :ada:`Display` entry, it must be
+       displayed immediately to the user.
 
 .. code:: ada lab=Tasking.Display_Service
 
@@ -74,30 +94,50 @@ entry either as a string parameter or an :ada:`Integer` parameter.
 Event Manager
 -------------
 
-In this exercise, you'll implement a simple event manager using the task
-type :ada:`Event_Manager` from the :ada:`Event_Managers` package below.
-The event manager must have two entries:
+**Goal**: implement a simple event manager.
 
-    - :ada:`Start`, which starts the event manager with an event ID;
+**Steps**:
 
-        - You can use the :ada:`Natural` type for this ID.
+    #. Implement the :ada:`Event_Managers` package.
 
-    - :ada:`Event`, which delays the task for a certain amount of time and
-      then displays the event ID as a user message.
+        #. Declare the task type :ada:`Event_Manager`.
 
-        - You should use the :ada:`Time` type from the :ada:`Ada.Real_Time`
-          package for the time parameter.
+        #. Implement the :ada:`Start` entry.
 
-The format for the user message displayed the event manager is
-``Event #<event_id>``. You should use ``Natural'Image`` to display the ID,
-as indicated in the body of the :ada:`Event_Managers` package.
+        #. Implement the :ada:`Event` entry.
 
-The event manager has a similar behavior as an alarm: its purpose is to
-just display the event ID at the correct time. After this is done, the
-task must finish.
+**Requirements**:
 
-Note that the test application below creates an array of event managers
-with different delays.
+    #. The event manager has a similar behavior as an alarm
+
+        #. The sole purpose of this event manager is to display the event ID at
+           the correct time.
+
+        #. After the event ID is displayed, the task must finish.
+
+    #. The event manager (:ada:`Event_Manager` type) must have two entries:
+
+        #. :ada:`Start`, which starts the event manager with an event ID;
+
+        #. :ada:`Event`, which delays the task for a certain amount of time and
+           then displays the event ID as a user message.
+
+    #. The format of the user message displayed by the event manager is
+       ``Event #<event_id>``.
+
+        #. You should use ``Natural'Image`` to display the ID (as indicated
+           in the body of the :ada:`Event_Managers` package below).
+
+**Remarks**:
+
+    #. In the :ada:`Start` entry, you can use the :ada:`Natural` type for the
+       ID.
+
+    #. In the :ada:`Event` entry, you should use the :ada:`Time` type from the
+       :ada:`Ada.Real_Time` package for the time parameter.
+
+    #. Note that the test application below creates an array of event managers
+       with different delays.
 
 .. code:: ada lab=Tasking.Event_Manager
 
@@ -157,40 +197,63 @@ with different delays.
 Generic Protected Queue
 -----------------------
 
-The goal of this exercise is to create a queue container by declaring and
-implementing a protected type :ada:`Queue` as part of the generic package
-:ada:`Gen_Queues`.
+**Goal**: create a queue container using a protected type.
 
-These are the formal parameters for the generic package:
+**Steps**:
 
-    #. a formal modular type;
+    #. Implement the generic package :ada:`Gen_Queues`.
 
-        - This modular type should be used by the :ada:`Queue` to declare
-          an array that stores the elements of the queue.
+        #. Declare the protected type :ada:`Queue` as part of the
 
-        - The modulus of the modular type must correspond to the maximum
-          number of elements of the queue.
+        #. Implement the :ada:`Empty` function.
 
-    #. the data type of the elements of the queue.
+        #. Implement the :ada:`Full` function.
 
-        - Select a formal parameter that allows you to store elements of
-          any data type in the queue.
+        #. Implement the :ada:`Push` entry.
 
-These are the operations of the :ada:`Queue` type:
+        #. Implement the :ada:`Pop` entry.
 
-    - a function :ada:`Empty` that indicates whether the queue is empty;
+**Requirements**:
 
-    - a function :ada:`Full` that indicates whether the queue is full;
+    #. These are the formal parameters for the generic package
+       :ada:`Gen_Queues`:
 
-    - an entry :ada:`Push` to store an element in the queue;
+        #. a formal modular type;
 
-    - an entry :ada:`Pop` to remove an element from the queue.
+            - This modular type should be used by the :ada:`Queue` to declare
+              an array that stores the elements of the queue.
 
-As a bonus exercise, you can analyze the body of the :ada:`Queue_Tests`
-package and understand how the :ada:`Queue` type is used there. In
-particular, the procedure :ada:`Concurrent_Test` implements two tasks
-(:ada:`T_Producer` and :ada:`T_Consumer`) that make use of the queue
-concurrently.
+            - The modulus of the modular type must correspond to the maximum
+              number of elements of the queue.
+
+        #. the data type of the elements of the queue.
+
+            - Select a formal parameter that allows you to store elements of
+              any data type in the queue.
+
+    #. These are the operations of the :ada:`Queue` type:
+
+        #. Function :ada:`Empty` indicates whether the queue is empty.
+
+        #. Function :ada:`Full` indicates whether the queue is full.
+
+        #. Entry :ada:`Push` stores an element in the queue.
+
+        #. Entry :ada:`Pop` removes an element from the queue.
+
+
+**Remarks**:
+
+    #. In this exercise, we create a queue container by declaring and
+       implementing a protected type (:ada:`Queue`) as part of a generic
+       package (:ada:`Gen_Queues`).
+
+    #. As a bonus exercise, you can analyze the body of the :ada:`Queue_Tests`
+       package and understand how the :ada:`Queue` type is used there.
+
+        #. In particular, the procedure :ada:`Concurrent_Test` implements two
+           tasks: :ada:`T_Producer` and :ada:`T_Consumer`. They make use of the
+           queue concurrently.
 
 .. code:: ada lab=Tasking.Generic_Protected_Queue
 
