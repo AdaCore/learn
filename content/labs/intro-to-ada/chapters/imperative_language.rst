@@ -12,11 +12,22 @@ Imperative language
 .. role:: cpp(code)
    :language: c++
 
+For the exercises below (except for the first one), don't worry about the
+details of the :ada:`Main` procedure. You should just focus on implementing the
+application in the subprogram specified by the exercise.
+
 Hello World
 -----------
 
-Your goal with this exercise is to create an application that displays
-the message "Hello World!".
+**Goal**: create a "Hello World!" application.
+
+**Steps**:
+
+    #. Complete the :ada:`Main` procedure.
+
+**Requirements**:
+
+    #. The application must display the message "Hello World!".
 
 .. code:: ada lab=Imperative_Language.Hello_World
 
@@ -36,16 +47,23 @@ the message "Hello World!".
 Greetings
 ---------
 
-Your goal with this exercise is to create an application that, given a
-name (e.g. "John"), displays the message "Hello John!". In order to do
-this, you'll complete the :ada:`Greet` procedure.
+**Goal**: create an application that greets a person.
 
-    - Hint: you can use the concatenation operator (:ada:`&`).
+**Steps**:
 
-For the moment, don't worry about the details of the :ada:`Main` procedure.
-You should just focus on implementing the application in the body of the
-:ada:`Greet` procedure.
+    #. Complete the :ada:`Greet` procedure.
 
+**Requirements**:
+
+    #. Given an input string ``<name>``, procedure :ada:`Greet` must display
+       the message "Hello <name>!".
+
+        #. For example, if the name is "John", it displays the message
+           "Hello John!".
+
+**Remarks**:
+
+    #. You can use the concatenation operator (:ada:`&`).
 
 .. code:: ada lab=Imperative_Language.Greetings
 
@@ -81,17 +99,22 @@ You should just focus on implementing the application in the body of the
 Positive Or Negative
 --------------------
 
-Your goal with this exercise is to create an application that, given an
-integer number ``X``, classifies the number as positive, negative or
-zero and displays the result. In other words:
+**Goal**: create an application that classifies integer numbers.
 
-#. If ``X > 0``, display ``Positive``.
+**Steps**:
 
-#. If ``X < 0``, display ``Negative``.
+    #. Complete the :ada:`Classify_Number` procedure.
 
-#. If ``X = 0``, display ``Zero``.
+**Requirements**:
 
-You should focus on the :ada:`Classify_Number` procedure.
+    #. Given an integer number ``X``, procedure :ada:`Classify_Number` must
+       classify ``X`` as positive, negative or zero and display the result:
+
+        #. If ``X > 0``, it displays ``Positive``.
+
+        #. If ``X < 0``, it displays ``Negative``.
+
+        #. If ``X = 0``, it displays ``Zero``.
 
 .. code:: ada lab=Imperative_Language.Positive_Or_Negative
 
@@ -141,13 +164,16 @@ You should focus on the :ada:`Classify_Number` procedure.
 Numbers
 -------
 
-Your goal with this exercise is to create an application that, given two
-integer numbers, displays all numbers in the range starting with the
-smallest number.
+**Goal**: create an application that displays numbers in a specific order.
 
-For the moment, don't worry about the details of the :ada:`Main` procedure.
-You should just focus on implementing the application in the body of the
-:ada:`Display_Numbers` procedure.
+**Steps**:
+
+    #. Complete the :ada:`Display_Numbers` procedure.
+
+**Requirements**:
+
+    #. Given two integer numbers, :ada:`Display_Numbers` displays all numbers
+       in the range starting with the smallest number.
 
 .. code:: ada lab=Imperative_Language.Numbers
 

@@ -17,22 +17,44 @@ Privacy
 Directions
 ----------
 
-This exercise is based on the *Directions* exercise from the :doc:`records`
-labs. In this version, however, :ada:`Ext_Angle` is a private type.
+**Goal**: create a package that handles directions and geometric angles using
+a previous implementation.
 
-In the implementation of the :ada:`Test_Directions` procedure below, the
-Ada developer tried to initialize :ada:`All_Directions` |mdash| an array
-of :ada:`Ext_Angle` type |mdash| with aggregates. Since we now have a
-private type, the compiler complains about this initialization. Your job
-for this exercise is to fix the compilation error by using the appropriate
-API function from the :ada:`Directions` package.
+**Steps**:
 
-**Note**: the initialization of :ada:`All_Directions` in the code below
-contains a consistency error where the angle doesn't match the assessed
-direction. See if you can spot this error! This kind of errors can happen
-when record components that have correlated information are initialized
-individually without consistency checks |mdash| using private types helps
-avoiding the problem.
+    #. Fix the implementation of the :ada:`Test_Directions` procedure.
+
+**Requirements**:
+
+    #. The implementation of the :ada:`Test_Directions` procedure must compile
+       correctly.
+
+**Remarks**:
+
+    #. This exercise is based on the *Directions* exercise from the
+       :doc:`records` labs.
+
+        #. In this version, however, :ada:`Ext_Angle` is a private type.
+
+    #. In the implementation of the :ada:`Test_Directions` procedure below, the
+       Ada developer tried to initialize :ada:`All_Directions` |mdash| an array
+       of :ada:`Ext_Angle` type |mdash| with aggregates.
+
+        #. Since we now have a private type, the compiler complains about this
+           initialization.
+
+    #. To fix the implementation of the :ada:`Test_Directions` procedure, you
+       should use the appropriate function from the :ada:`Directions` package.
+
+    #. The initialization of :ada:`All_Directions` in the code below contains a
+       consistency error where the angle doesn't match the assessed direction.
+
+        #. See if you can spot this error!
+
+        #. This kind of errors can happen when record components that have
+           correlated information are initialized individually without
+           consistency checks |mdash| using private types helps avoiding the
+           problem.
 
 .. code:: ada lab=Privacy.Directions
 
@@ -157,76 +179,101 @@ avoiding the problem.
 Limited Strings
 ---------------
 
-In this exercise, we'll use :ada:`limited private` types. The code below
-shows the :ada:`Lim_String` type (in the :ada:`Limited_Strings` package
-specification), which acts as a container for strings. In the *background*
-(i.e. in the private part), it's actually declared as an access type to a
-:ada:`String`. The :ada:`Lim_String` type is initialized with :ada:`Init`
-functions |mdash| either by taking another string, or by indicating the
-number of characters for a string *container* |mdash| and displayed with
-the :ada:`Put_Line` procedure.
+**Goal**: work with  :ada:`limited private` types.
 
-As we've discussed in the course, variables of limited types cannot be
-assigned to. Also, they don't have an equality operator (:ada:`=`). We
-can, however, define our own, custom subprograms to circumvent this
-limitation:
+**Steps**:
 
-    - In order to copy instances of a limited type, we can define a
-      custom :ada:`Copy` procedure.
+    #. Implement the :ada:`Limited_Strings` package.
 
-    - In order to compare instances of a limited type, we can define an
-      :ada:`=` operator.
+        #. Implement the :ada:`Copy` function.
 
-Your job for this exercise is to complete the implementation of :ada:`Copy`
-and :ada:`=` in the package body of :ada:`Limited_Strings`.
+        #. Implement the :ada:`=` operator.
 
-These are further requirements for the implementation:
+**Requirements**:
 
-    #. For both subprograms, the two parameters may refer to strings with
-       different lengths. We'll limit the implementation to just take the
-       minimum length:
+    #. For both :ada:`Copy` and :ada:`=`, the two parameters may refer to
+       strings with different lengths. We'll limit the implementation to just
+       take the minimum length:
 
-        - In case of copying the string "Hello World" to a string with 5
-          characters, the copied string is "Hello":
+        #. In case of copying the string "Hello World" to a string with 5
+           characters, the copied string is "Hello":
 
-        .. code-block:: ada
+            .. code-block:: ada
 
-               S1 : constant Lim_String := Init ("Hello World");
-               S2 :          Lim_String := Init (5);
-            begin
-               Copy (From => S1, To => S2);
-               Put_Line (S2);     --  This displays "Hello".
+                   S1 : constant Lim_String := Init ("Hello World");
+                   S2 :          Lim_String := Init (5);
+                begin
+                   Copy (From => S1, To => S2);
+                   Put_Line (S2);     --  This displays "Hello".
 
-        - When comparing "Hello World" to "Hello", the :ada:`=` operator
-          indicates that these strings are equivalent:
+        #. When comparing "Hello World" to "Hello", the :ada:`=` operator
+           indicates that these strings are equivalent:
 
-        .. code-block:: ada
+            .. code-block:: ada
 
-               S1 : constant Lim_String := Init ("Hello World");
-               S2 : constant Lim_String := Init ("Hello");
-            begin
-               if S1 = S2 then
-                  --  True => This branch gets selected.
-
-        - You can use the :ada:`Min_Last` constant |mdash| which is already
-          declared in the implementation of these subprograms |mdash| in
-          the code you write.
+                   S1 : constant Lim_String := Init ("Hello World");
+                   S2 : constant Lim_String := Init ("Hello");
+                begin
+                   if S1 = S2 then
+                      --  True => This branch gets selected.
 
     #. When copying from a short string to a longer string, the remaining
        characters of the longer string must be initialized with underscores
        (``_``). For example:
 
-    .. code-block:: ada
+        .. code-block:: ada
 
-           S1 : constant Lim_String := Init ("Hello");
-           S2 :          Lim_String := Init (10);
-        begin
-           Copy (From => S1, To => S2);
-           Put_Line (S2);     --  This displays "Hello_____".
+               S1 : constant Lim_String := Init ("Hello");
+               S2 :          Lim_String := Init (10);
+            begin
+               Copy (From => S1, To => S2);
+               Put_Line (S2);     --  This displays "Hello_____".
 
-**Note**: the design and implementation of the :ada:`Limited_Strings`
-package is very simplistic. A good design would have better handling of
-access types, for example.
+**Remarks**:
+
+    #. As we've discussed in the course:
+
+        #. Variables of limited types have the following limitations:
+
+            - they cannot be assigned to;
+
+            - they don't have an equality operator (:ada:`=`).
+
+        #. We can, however, define our own, custom subprograms to circumvent
+           these limitations:
+
+            - In order to copy instances of a limited type, we can define a
+              custom :ada:`Copy` procedure.
+
+            - In order to compare instances of a limited type, we can define an
+              :ada:`=` operator.
+
+    #. You can use the :ada:`Min_Last` constant |mdash| which is already
+       declared in the implementation of these subprograms |mdash| in
+       the code you write.
+
+    #. Some details about the :ada:`Limited_Strings` package:
+
+        #. The :ada:`Lim_String` type acts as a container for strings.
+
+            #. In the the private part, :ada:`Lim_String` is declared as an
+               access  type to a :ada:`String`.
+
+        #. There are two versions of the :ada:`Init` function that initializes
+           an object of :ada:`Lim_String` type:
+
+            #. The first one takes another string.
+
+            #. The second one receives the number of characters for a string
+               *container*.
+
+        #. Procedure :ada:`Put_Line` displays object of :ada:`Lim_String` type.
+
+        #. The design and implementation of the :ada:`Limited_Strings` package
+           is very simplistic.
+
+            #. A good design would have better handling of access types, for
+               example.
 
 .. code:: ada lab=Privacy.Limited_Strings
 
@@ -384,7 +431,7 @@ weren't making use of record components directly (but handling record
 types via the API instead), they continue to work fine after these
 modifications.
 
-This exercise doesn't contain any source-code. In fact, the goal here is
+This exercise doesn't contain any source-code. In fact, the **goal** here is
 to modify previous labs, so that the record declarations are made private.
 You can look into those labs, modify the type declarations, and recompile
 the code. The corresponding test-cases must still pass.
@@ -392,31 +439,47 @@ the code. The corresponding test-cases must still pass.
 In case you don't have a working version of the source-code of previous
 labs, you can look into the corresponding solutions.
 
-This is a list of selected labs that you can work on, including changes
-that you can make:
+Below, you find the selected labs that you can work on, including changes
+that you should make.
 
-#. :doc:`records`:
+Colors
+~~~~~~
 
-    #. Exercise: *Colors*:
+**Chapter**: :doc:`records`
 
-        - Change :ada:`RGB` type to :ada:`private`.
+**Steps**:
 
-#. *Arrays* labs:
+    #. Change declaration of :ada:`RGB` type to :ada:`private`.
 
-    #. Exercise: *List of Names*:
+**Requirements**:
 
-        - Change :ada:`Person` and :ada:`People` types to
-          :ada:`limited private`.
+    #. Implementation must compile correctly and test cases must pass.
 
-        - Move :ada:`People_Array` type declaration to private part.
+List of Names
+~~~~~~~~~~~~~
 
-#. *More About Types* labs:
+**Chapter**: :doc:`arrays`
 
-    #. Exercise: *Price List*:
+**Steps**:
 
-        - Change :ada:`Price_List` type to :ada:`limited private`.
+    #. Change declaration of :ada:`Person` and :ada:`People` types to
+       :ada:`limited private`.
 
-    #. Exercise: *Inventory*:
+    #. Move type declaration of :ada:`People_Array` to private part.
 
-        - Change :ada:`Item` and :ada:`Inventory` types to
-          :ada:`limited private`.
+**Requirements**:
+
+    #. Implementation must compile correctly and test cases must pass.
+
+Price List
+~~~~~~~~~~
+
+**Chapter**: :doc:`more_about_types`
+
+**Steps**:
+
+    #. Change declaration of :ada:`Price_List` type to :ada:`limited private`.
+
+**Requirements**:
+
+    #. Implementation must compile correctly and test cases must pass.

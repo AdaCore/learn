@@ -19,43 +19,83 @@ Object-oriented programming
 Simple type extension
 ---------------------
 
-In this exercise, you'll work with record types containing numeric
-components. The first step is to create a record type :ada:`T_Float` with
-a floating-point component in the :ada:`Type_Extensions` package below.
-Next, you create a record type :ada:`T_Mixed` that extends the
-:ada:`T_Float` type and adds an integer component. In case of the
-:ada:`T_Mixed` type, the goal is to have both components *synchronized*:
-if the floating-point component contains the value 2.0, the corresponding
-integer value should be 2. In order to simplify the implementation, you can
-simply use :ada:`Integer (F)` to convert a floating-point variable :ada:`F`
-to integer.
+**Goal**: work with type extensions using record types containing numeric
+components.
 
-For both types, you should implement the following functions:
+**Steps**:
 
-- :ada:`Init`, which returns an element of :ada:`T_Float` or
-  :ada:`T_Mixed` types.
+    #. Implement the :ada:`Type_Extensions` package.
 
-  - For each type, two versions of :ada:`Init` must be declared: one with
-    a floating-point parameter, another with an integer parameter.
+        #. Declare the record type :ada:`T_Float`.
 
-  - The parameter to :ada:`Init` is used to initialize the record
-    components.
+        #. Declare the record type :ada:`T_Mixed`
 
-- :ada:`Image`, which returns a string for the components of the record
-  type.
+        #. Implement the :ada:`Init` function for the :ada:`T_Float` type with
+           a floating-point input parameter.
 
-    - In case of the :ada:`Image` function for the :ada:`T_Float` type,
-      the string must have the format :ada:`"{ F =>  <float value> }"`.
+        #. Implement the :ada:`Init` function for the :ada:`T_Float` type with
+           an integer input parameter.
 
-        - For example, the call :ada:`Image (T_Float'(Init (8.0))))` should
-          return the string :ada:`"{ F =>  8.00000E+00 }"`.
+        #. Implement the :ada:`Image` function for the :ada:`T_Float` type.
 
-    - In case of the :ada:`Image` function for the :ada:`T_Mixed` type,
-      the string must have the format
-      :ada:`"{ F =>  <float value>, I => <integer value> }"`.
+        #. Implement the :ada:`Init` function for the :ada:`T_Mixed` type with
+           a floating-point input parameter.
 
-        - For example, the call :ada:`Image (T_Mixed'(Init (8.0))))` should
-          return the string :ada:`"{ F =>  8.00000E+00, I =>  8 }"`.
+        #. Implement the :ada:`Init` function for the :ada:`T_Mixed` type with
+           an integer input parameter.
+
+        #. Implement the :ada:`Image` function for the :ada:`T_Mixed` type.
+
+**Requirements**:
+
+    #. Record type :ada:`T_Float` contains the following component:
+
+        #. :ada:`F`, a floating-point type.
+
+    #. Record type :ada:`T_Mixed` is derived from the :ada:`T_Float` type.
+
+        #. :ada:`T_Mixed` extends :ada:`T_Float` with the following component:
+
+            #. :ada:`I`, an integer component.
+
+        #. Both components must be numerically *synchronized*:
+
+            - For example, if the floating-point component contains the value
+              2.0, the value of the integer component must be 2.
+
+            - In order to simplify the implementation, you can simply use
+              :ada:`Integer (F)` to convert a floating-point variable :ada:`F`
+              to integer.
+
+    #. Function :ada:`Init` returns an object of the corresponding type
+       (:ada:`T_Float` or :ada:`T_Mixed`).
+
+        #. For each type, two versions of :ada:`Init` must be declared:
+
+            #. one with a floating-point input parameter,
+
+            #. another with an integer input parameter.
+
+        #. The parameter to :ada:`Init` is used to initialize the record
+           components.
+
+    #. Function :ada:`Image` returns a string for the components of the
+       record type.
+
+        #. In case of the :ada:`Image` function for the :ada:`T_Float`
+           type, the string must have the format
+           :ada:`"{ F =>  <float value> }"`.
+
+            - For example, the call :ada:`Image (T_Float'(Init (8.0))))`
+              should return the string :ada:`"{ F =>  8.00000E+00 }"`.
+
+        #. In case of the :ada:`Image` function for the :ada:`T_Mixed`
+           type, the string must have the format
+           :ada:`"{ F =>  <float value>, I => <integer value> }"`.
+
+            - For example, the call :ada:`Image (T_Mixed'(Init (8.0))))`
+              should return the string
+              :ada:`"{ F =>  8.00000E+00, I =>  8 }"`.
 
 .. code:: ada lab=Object_Oriented_Programming.Simple_Type_Extension
 
@@ -128,123 +168,190 @@ For both types, you should implement the following functions:
 Online Store
 ------------
 
-In this exercise, you'll work on an online store application for the members
-of your association. In this association, members can have one of the
-following status: associate member or full member. The goal of this exercise
-is to implement a function :ada:`Get_Price` that returns the correct price of
-an item. Here, associate members must pay the full price when they buy items
-from the online store, while full members get a discount. The discount rate
-can be different for each full member |mdash| depending on factors that are
-out of scope for this exercise.
+**Goal**: create an online store for the members of an association.
 
-In previous labs, we could have implemented a simplified version of such a
-system by using an enumeration type to specify the membership status. For
-example:
+**Steps**:
 
-.. code-block:: ada
+    #. Implement the :ada:`Online_Store` package.
 
-    type Member_Status is (Associate_Member, Full_Member);
+        #. Declare the :ada:`Member` type.
 
-The :ada:`Get_Price` function would then evaluate the membership status
-and adapt the item price |mdash| in this case, assuming a fixed discount
-rate for all full members. This could be the corresponding function
-declaration:
+        #. Declare the :ada:`Full_Member` type.
 
-.. code-block:: ada
+        #. Implement the :ada:`Get_Status` function for the :ada:`Member` type.
 
-    type Amount is delta 10.0**(-2) digits 10;
+        #. Implement the :ada:`Get_Price` function for the :ada:`Member` type.
 
-    function Get_Price (M : Member_Status;
-                        P : Amount) return Amount;
+        #. Implement the :ada:`Get_Status` function for the :ada:`Full_Member`
+           type.
 
-In this exercise, however, we'll use type extension to represent the
-membership status in our application. Therefore, you have to declare the
-following types in the :ada:`Online_Store` package:
+        #. Implement the :ada:`Get_Price` function for the :ada:`Full_Member`
+           type.
 
-- :ada:`Member` type for associate members.
+    #. Implement the :ada:`Online_Store.Tests` child package.
 
-    - The :ada:`Member` type must contain the :ada:`Start` component,
-      which indicates the starting year of the membership. This information
-      is common for both associate and full members. You can use the
-      :ada:`Year_Number` type from the standard :ada:`Ada.Calendar` package
-      for this component.
+        #. Implement the :ada:`Simple_Test` procedure.
 
-- :ada:`Full_Member` type for full members.
+**Requirements**:
 
-    - This type must extend the :ada:`Member` type above.
+    #. Package :ada:`Online_Store` implements an online store application for
+       the members of an association.
 
-    - It must contain the :ada:`Discount` component, which indicates the
-      discount rate |mdash| a percentage ranging from 0.0 to 1.0 |mdash|
-      that the full member gets in the online store. You should use the
-      :ada:`Percentage` type from the :ada:`Online_Store` package for this
-      component.
+        #. In this association, members can have one of the following status:
 
-For these types, you must implement the following functions:
+            - associate member, or
 
-- :ada:`Get_Status`, which returns a string with the membership status.
+            - full member.
 
-    - The string must be :ada:`"Associate Member"` or :ada:`"Full Member"`,
-      respectively.
+    #. Function :ada:`Get_Price` returns the correct price of an item.
 
-- :ada:`Get_Price`, which returns the *adapted price* of an item |mdash|
-  indicating the actual due amount.
+        #. Associate members must pay the full price when they buy items
+           from the online store.
 
-    - For example, for a full member with a 10% discount rate, the actual
-      due amount of an item with a price of 100.00 is 90.00.
+        #. Full members can get a discount.
 
-In addition, you'll work on a simple unit test for the :ada:`Online_Store`
-package. The unit test will be implemented in the :ada:`Simple_Test`
-procedure of the :ada:`Online_Store.Tests` (child) package. For a list of
-members that bought on the online store and the corresponding full price
-of the item,the unit test will display detailed information about each
-member and the actual due amount after discounts.
+            #. The discount rate can be different for each full member |mdash|
+               depending on factors that are irrelevant for this exercise.
 
-For example, let's consider a list with the following two members:
+    #. Package :ada:`Online_Store` has following types:
 
-    +---+-------------------+--------------+----------+------------+
-    | # | Membership status | Start (year) | Discount | Full Price |
-    +===+===================+==============+==========+============+
-    | 1 | Associate         | 2002         | *N/A*    |     100.00 |
-    +---+-------------------+--------------+----------+------------+
-    | 2 | Full              | 2005         | 10.0 %   |     100.00 |
-    +---+-------------------+--------------+----------+------------+
+        #. :ada:`Percentage` type, which represents a percentage ranging from
+           0.0 to 1.0.
 
-For this list, the unit test must display the following information (and
-in the following format):
+        #. :ada:`Member` type for associate members containing following
+           components:
 
-.. code-block:: none
+            - :ada:`Start`, which indicates the starting year of the
+              membership.
 
-    Member # 1
-    Status: Associate Member
-    Since:  2002
-    Due Amount:  100.00
-    --------
-    Member # 2
-    Status: Full Member
-    Since:  2005
-    Due Amount:  90.00
-    --------
+                - This information is common for both associate and full
+                  members.
 
-In this example, although both members had the same full price, member #2
-gets a reduced due amount of 90.00 because of the full membership status.
+                - You can use the :ada:`Year_Number` type from the standard
+                  :ada:`Ada.Calendar` package for this component.
 
-For the unit test that you'll implement in :ada:`Simple_Test`, the
-following list must be used:
+        #. :ada:`Full_Member` type for full members.
 
-    +---+-------------------+--------------+----------+------------+
-    | # | Membership status | Start (year) | Discount | Full Price |
-    +===+===================+==============+==========+============+
-    | 1 | Associate         | 2010         | *N/A*    |     250.00 |
-    +---+-------------------+--------------+----------+------------+
-    | 2 | Full              | 1998         | 10.0 %   |     160.00 |
-    +---+-------------------+--------------+----------+------------+
-    | 3 | Full              | 1987         | 20.0 %   |     400.00 |
-    +---+-------------------+--------------+----------+------------+
-    | 4 | Associate         | 2013         | *N/A*    |     110.00 |
-    +---+-------------------+--------------+----------+------------+
+            #. This type must extend the :ada:`Member` type above.
 
-In order to pass the tests, please make sure that the information displayed
-by :ada:`Simple_Test` adheres to the format illustrated above.
+            #. It contains the following additional component:
+
+                - :ada:`Discount`, which indicates the discount rate that the
+                  full member gets in the online store.
+
+                    - This component must be of :ada:`Percentage` type.
+
+    #. For the :ada:`Member` and :ada:`Full_Member` types, you must implement
+       the following functions:
+
+        #. :ada:`Get_Status`, which returns a string with the membership
+           status.
+
+            - The string must be :ada:`"Associate Member"` or
+              :ada:`"Full Member"`, respectively.
+
+        #. :ada:`Get_Price`, which returns the *adapted price* of an item
+           |mdash| indicating the actual due amount.
+
+            - For example, for a full member with a 10% discount rate, the
+              actual due amount of an item with a price of 100.00 is 90.00.
+
+            - Associated members don't get a discount, so they always pay the
+              full price.
+
+    #. Procedure :ada:`Simple_Test` (from  the :ada:`Online_Store.Tests`
+       package) is used for testing.
+
+        #. Based on a list of members that bought on the online store and the
+           corresponding full price of the item, :ada:`Simple_Test` must
+           display information about each member and the actual due amount
+           after discounts.
+
+        #. Information about the members must be displayed in the following
+           format:
+
+            .. code-block:: none
+
+                Member # <number>
+                Status: <status>
+                Since:  <year>
+                Due Amount:  <value>
+                --------
+
+        #. For this exercise, :ada:`Simple_Test` must use the following list:
+
+            +---+-------------------+--------------+----------+------------+
+            | # | Membership status | Start (year) | Discount | Full Price |
+            +===+===================+==============+==========+============+
+            | 1 | Associate         | 2010         | *N/A*    |     250.00 |
+            +---+-------------------+--------------+----------+------------+
+            | 2 | Full              | 1998         | 10.0 %   |     160.00 |
+            +---+-------------------+--------------+----------+------------+
+            | 3 | Full              | 1987         | 20.0 %   |     400.00 |
+            +---+-------------------+--------------+----------+------------+
+            | 4 | Associate         | 2013         | *N/A*    |     110.00 |
+            +---+-------------------+--------------+----------+------------+
+
+        #. In order to pass the tests, the information displayed by a call to
+           :ada:`Simple_Test` must conform to the format described above.
+
+            - You can find another example in the remarks below.
+
+**Remarks**:
+
+    #. In previous labs, we could have implemented a simplified version of the
+       system described above by simply using an enumeration type to specify
+       the membership status. For example:
+
+        .. code-block:: ada
+
+            type Member_Status is (Associate_Member, Full_Member);
+
+        #. In this case, the :ada:`Get_Price` function would then evaluate the
+           membership status and adapt the item price |mdash| assuming a fixed
+           discount rate for all full members. This could be the corresponding
+           function declaration:
+
+            .. code-block:: ada
+
+                type Amount is delta 10.0**(-2) digits 10;
+
+                function Get_Price (M : Member_Status;
+                                    P : Amount) return Amount;
+
+        #. In this exercise, however, we'll use type extension to represent the
+           membership status in our application.
+
+    #. For the procedure :ada:`Simple_Test`, let's consider the following list
+       of members as an example:
+
+        +---+-------------------+--------------+----------+------------+
+        | # | Membership status | Start (year) | Discount | Full Price |
+        +===+===================+==============+==========+============+
+        | 1 | Associate         | 2002         | *N/A*    |     100.00 |
+        +---+-------------------+--------------+----------+------------+
+        | 2 | Full              | 2005         | 10.0 %   |     100.00 |
+        +---+-------------------+--------------+----------+------------+
+
+        - For this list, the test procedure displays the following information
+          (in this exact format):
+
+            .. code-block:: none
+
+                Member # 1
+                Status: Associate Member
+                Since:  2002
+                Due Amount:  100.00
+                --------
+                Member # 2
+                Status: Full Member
+                Since:  2005
+                Due Amount:  90.00
+                --------
+
+        - Here, although both members had the same full price (as indicated by
+          the last column), member #2 gets a reduced due amount of 90.00
+          because of the full membership status.
 
 .. code:: ada lab=Object_Oriented_Programming.Online_Store
 
@@ -263,7 +370,7 @@ by :ada:`Simple_Test` adheres to the format illustrated above.
 
        subtype Percentage is Amount range 0.0 .. 1.0;
 
-       --  Create declaration of Member type type!
+       --  Create declaration of Member type!
        --
        --  You can use Year_Number from Ada.Calendar for the membership
        --  starting year.
@@ -275,7 +382,7 @@ by :ada:`Simple_Test` adheres to the format illustrated above.
        function Get_Price (M : Member;
                            P : Amount) return Amount;
 
-       --  Create declaration of Member type type!
+       --  Create declaration of Full_Member type!
        --
        --  Use the Percentage type for storing the membership discount.
        --

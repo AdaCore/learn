@@ -17,62 +17,107 @@ Standard library: Dates & Times
 List of events
 --------------
 
-Your goal with this exercise is to create a list of events using the
-following format:
+**Goal**: create a system to manage a list of events.
 
-.. code-block:: none
+**Steps**:
 
-    <event_date #1>
-        <description of item #1a>
-        <description of item #1b>
-    <event_date #2>
-        <description of item #2a>
-        <description of item #2b>
+    #. Implement the :ada:`Events` package.
 
-First, you need to declare the :ada:`Event_Item` type in the :ada:`Events`
-package. This type contains the *description of the event* mentioned
-in the format above. This description can be stored as an unbounded string.
-Since we can have multiple events for a specific date, we need a container
-to store those items. To implement this, we declare the :ada:`Event_Items`
-type in the same package. You can use a vector for this type.
+        #. Declare the :ada:`Event_Item` type.
 
-We map event items (as elements of :ada:`Event_Item` type) to specific dates
-by using the :ada:`Event_List` of the :ada:`Events.Lists` package. For
-the dates, you should use the :ada:`Time` type from the :ada:`Ada.Calendar`
-package. Since we expect the events to be ordered by the date, you should
-use ordered maps for the :ada:`Event_List` type.
+        #. Declare the :ada:`Event_Items` type.
 
-The :ada:`Events.Lists` package contains the API that is used in our test
-application. Consider the following example:
+    #. Implement the :ada:`Events.Lists` package.
 
-.. code-block:: ada
+        #. Declare the :ada:`Event_List` type.
 
-    procedure Test is
-       EL : Event_List;
-    begin
-       EL.Add (Time_Of (2019, 4, 16),
-               "Item #2");
-       EL.Add (Time_Of (2019, 4, 15),
-               "Item #1");
-       EL.Add (Time_Of (2019, 4, 16),
-               "Item #3");
-       EL.Display;
-    end Test;
+        #. Implement the :ada:`Add` procedure.
 
-The expected output of the :ada:`Test` procedure is:
+        #. Implement the :ada:`Display` procedure.
 
-.. code-block:: none
+**Requirements**:
 
-    EVENTS LIST
-    - 2019-04-15
-        - Item #1
-    - 2019-04-16
-        - Item #2
-        - Item #3
+    #. The :ada:`Event_Item` type (from the :ada:`Events` package) contains the
+       *description of an event*.
 
-In the implementation of the :ada:`Display` procedure, make sure to use the
-format as shown above. Also, you should use the auxiliary :ada:`Date_Image`
-function to display the date in the ``YYYY-MM-DD`` format.
+       #. This description can be stored as an unbounded string.
+
+    #. The :ada:`Event_Items` type stores a list of events.
+
+        #. This will be used later to represent multiple events for a specific
+           date.
+
+        #. You can use a vector for this type.
+
+    #. The :ada:`Events.Lists` package contains the subprograms that are used
+       in the test application.
+
+    #. The :ada:`Event_List` type (from the :ada:`Events.Lists` package) maps
+       a list of events to a specific date.
+
+        #. You must use the :ada:`Event_Items` type for the list of events.
+
+        #. You should use the :ada:`Time` type from the :ada:`Ada.Calendar`
+           package for the dates.
+
+        #. Since we expect the events to be ordered by the date, you should
+           use ordered maps for the :ada:`Event_List` type.
+
+    #. Procedure :ada:`Add` adds an event into the list of events for a
+       specific date.
+
+    #. Procedure :ada:`Display` must display all events for each date (ordered
+       by date) using the following format:
+
+        .. code-block:: none
+
+            <event_date #1>
+                <description of item #1a>
+                <description of item #1b>
+            <event_date #2>
+                <description of item #2a>
+                <description of item #2b>
+
+        #. You should use the auxiliary :ada:`Date_Image` function |mdash|
+           available in the body of the :ada:`Events.Lists` package |mdash| to
+           display  the date in the ``YYYY-MM-DD`` format.
+
+
+**Remarks**:
+
+    #. Let's briefly illustrate the expected output of this system.
+
+        #. Consider the following example:
+
+            .. code-block:: ada
+
+                with Ada.Calendar;
+                with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+
+                with Events.Lists;            use Events.Lists;
+
+                procedure Test is
+                   EL : Event_List;
+                begin
+                   EL.Add (Time_Of (2019, 4, 16),
+                           "Item #2");
+                   EL.Add (Time_Of (2019, 4, 15),
+                           "Item #1");
+                   EL.Add (Time_Of (2019, 4, 16),
+                           "Item #3");
+                   EL.Display;
+                end Test;
+
+        #. The expected output of the :ada:`Test` procedure must be:
+
+            .. code-block:: none
+
+                EVENTS LIST
+                - 2019-04-15
+                    - Item #1
+                - 2019-04-16
+                    - Item #2
+                    - Item #3
 
 .. code:: ada lab=Solutions.Standard_Library.List_of_Events
 

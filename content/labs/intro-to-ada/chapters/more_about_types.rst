@@ -17,30 +17,54 @@ More About Types
 Aggregate Initialization
 ------------------------
 
-In this exercise, we'll look into aggregates to initialize records and
-arrays. Your goal is to:
+**Goal**: initialize records and arrays using aggregates.
 
-- Create a record type :ada:`Rec` with four components of :ada:`Integer`
-  type and specify default values for them, as indicated by this list:
+**Steps**:
 
-    - :ada:`W` = 10
-    - :ada:`X` = 11
-    - :ada:`Y` = 12
-    - :ada:`Z` = 13
+    #. Implement the :ada:`Aggregates` package.
 
-- Create an array type :ada:`Int_Arr` of :ada:`Integer` with 20 elements
-  (ranging from 1 to 20).
+        #. Create the record type :ada:`Rec`.
 
-- Implement the procedure :ada:`Init` that outputs a record :ada:`Rec`,
-  where :ada:`X` is initialized with 100, :ada:`Y` is initialized with 200,
-  and the remaining elements use their default values.
+        #. Create the array type :ada:`Int_Arr`.
 
-- Implement the procedure :ada:`Init_Some` that outputs an array
-  :ada:`Int_Arr` where the first five elements are initialized with the
-  value 99, and the remaining elements are initialized with the value 100.
+        #. Implement the :ada:`Init` procedure that outputs a record of
+           :ada:`Rec` type.
 
-- Implement the procedure :ada:`Init` that outputs an array
-  :ada:`Int_Arr` where all elements are initialized with the value 5.
+        #. Implement the :ada:`Init_Some` procedure.
+
+        #. Implement the :ada:`Init` procedure that outputs an array of
+           :ada:`Int_Arr` type.
+
+**Requirements**:
+
+    #. Record type :ada:`Rec` has four components of :ada:`Integer` type. These
+       are the components with the corresponding default values:
+
+        - :ada:`W` = 10
+        - :ada:`X` = 11
+        - :ada:`Y` = 12
+        - :ada:`Z` = 13
+
+    #. Array type :ada:`Int_Arr` of :ada:`Integer` has 20 elements ranging from
+       1 to 20.
+
+    #. The first :ada:`Init` procedure outputs a record of :ada:`Rec` type
+       where:
+
+        #. :ada:`X` is initialized with 100,
+        #. :ada:`Y` is initialized with 200, and
+        #. the remaining elements use their default values.
+
+    #. Procedure :ada:`Init_Some` outputs an array of :ada:`Int_Arr` type
+       where:
+
+        #. the first five elements are initialized with the value 99, and
+        #. the remaining elements are initialized with the value 100.
+
+    #. The second :ada:`Init` procedure outputs an array of :ada:`Int_Arr` type
+       where:
+
+        #. all elements are initialized with the value 5.
 
 .. code:: ada lab=More_About_Types.Aggregate_Initialization
 
@@ -142,24 +166,53 @@ arrays. Your goal is to:
 Versioning
 ----------
 
-In this exercise, you'll implement a simple package for source-code
-versioning. This requires the use of function overloading. Your goal is to:
+**Goal**: implement a simple package for source-code versioning.
 
-- Declare a record type :ada:`Version` with the components :ada:`Major`,
-  :ada:`Minor` and :ada:`Maintenance` of :ada:`Natural` type.
+**Steps**:
 
-- Implement a function :ada:`Convert` that returns a string containing
-  the version number.
+    #. Implement the :ada:`Versioning` package.
 
-  - Hint: you can make use of the :ada:`Image_Trim` function, as indicated
-    in the source-code below (see package body of :ada:`Versioning`)
+        #. Declare the record type :ada:`Version`.
 
-- Implement a function :ada:`Convert` that returns a floating-point number,
-  where the number before the decimal point corresponds to the major number
-  and the number after the decimal point corresponds to the minor number.
+        #. Implement the :ada:`Convert` function that returns a string.
 
-  - For example, version "1.3.5" is converted to the floating-point number
-    ``1.3``.
+        #. Implement the :ada:`Convert` function that returns a floating-point
+           number.
+
+**Requirements**:
+
+    #. Record type :ada:`Version` has the following components of
+       :ada:`Natural` type:
+
+        #. :ada:`Major`,
+        #. :ada:`Minor`, and
+        #. :ada:`Maintenance`.
+
+    #. The first :ada:`Convert` function returns a string containing the
+       version number.
+
+    #. The second :ada:`Convert` function returns a floating-point value.
+
+        #. For this floating-point value:
+
+            #. the number before the decimal point must correspond to the major
+               number, and
+
+            #. the number after the decimal point must correspond to the minor
+               number.
+
+            #. the maintenance number is ignored.
+
+        #. For example, version "1.3.5" is converted to the floating-point
+           value ``1.3``.
+
+**Remarks**:
+
+    #. We use overloading for the :ada:`Convert` functions.
+
+    #. For the function :ada:`Convert` that returns a string, you can make use
+       of the :ada:`Image_Trim` function, as indicated in the source-code below
+       |mdash| see package body of :ada:`Versioning`.
 
 .. code:: ada lab=Solutions.More_About_Types.Versioning
 
@@ -239,26 +292,47 @@ versioning. This requires the use of function overloading. Your goal is to:
 Simple todo list
 ----------------
 
-In this exercise, you'll implement a simple to-do list system. In order
-to do that, you'll use access types and unconstrained arrays. This is the
-system specification:
+**Goal**: implement a simple to-do list system.
 
-- :ada:`Todo_Item` type: this is used to store to-do items. It should be
-  implemented as an access type to strings.
+**Steps**:
 
-- :ada:`Todo_List` type: it's the container for all to-do items. It should
-  be implemented as an unconstrained array with positive range.
+    #. Implement the :ada:`Todo_Lists` package.
 
-    - Hint: don't forget to keep track of the last element added to the
-      list!
+        #. Declare the :ada:`Todo_Item` type.
 
-- :ada:`Add` procedure: it's used to add items (of :ada:`Todo_Item` type)
-  to the list (of :ada:`Todo_List` type).
+        #. Declare the :ada:`Todo_List` type.
 
-    - Hint: this requires allocating a string for the access type.
+        #. Implement the :ada:`Add` procedure.
 
-- :ada:`Display` procedure: it's used to display all to-do items. It must
-  display one item per line.
+        #. Implement the :ada:`Display` procedure.
+
+**Requirements**:
+
+    #. :ada:`Todo_Item` type is used to store to-do items.
+
+        #. It should be implemented as an access type to strings.
+
+    #. :ada:`Todo_List` type is the container for all to-do items.
+
+        #. It should be implemented as an unconstrained array with positive
+           range.
+
+        #. Don't forget to keep track of the last element added to the
+           list!
+
+    #. Procedure :ada:`Add` adds items (of :ada:`Todo_Item` type) to the list
+       (of :ada:`Todo_List` type).
+
+        #. This requires allocating a string for the access type.
+
+    #. Procedure :ada:`Display` is used to display all to-do items.
+
+        #. It must display one item per line.
+
+**Remarks**:
+
+    #. We use access types and unconstrained arrays in the implementation of
+       the :ada:`Todo_Lists` package.
 
 .. code:: ada lab=Solutions.More_About_Types.Simple_Todo_List
 
@@ -340,70 +414,107 @@ system specification:
 Price list
 ----------
 
-In this exercise, you'll implement a list containing prices. In order to
-accomplish this, you'll use the following features of the Ada language:
+**Goal**: implement a list containing prices
 
-- decimal fixed-point types;
-- records with discriminants;
-- dynamically-sized record types;
-- variant records.
+**Steps**:
 
-Your goals are:
+    #. Implement the :ada:`Price_Lists` package.
 
-#. Declare a decimal fixed-point data type :ada:`Price_Type` with a delta
-   of two digits (e.g. ``0.01``) and twelve digits in total.
+        #. Declare the :ada:`Price_Type` type.
 
-#. Declare the record type :ada:`Price_List` that contains the price list.
-   This record type must have a discriminant for the maximum number of
-   elements of the list.
+        #. Declare the :ada:`Price_List` record.
 
-    - Hint: you may use an unconstrained array as a component of the
-      record and use the discriminant in the component declaration.
+        #. Implement the :ada:`Reset` procedure.
 
-#. Implement the procedure :ada:`Reset` to reset the list.
+        #. Implement the :ada:`Add` procedure.
 
-#. Implement the procedure :ada:`Add` to add a price to the list.
+        #. Implement the :ada:`Get` function.
 
-    - Hint: you should keep track of the last element added to the list.
+        #. Implement the :ada:`Display` procedure.
 
-#. Implement the :ada:`Get` function to retrieve a price from the list
-   using an index. This function returns a record instance of type
-   :ada:`Price_Result`:
+**Requirements**:
 
-    - :ada:`Price_Result` is a variant record containing the Boolean
-      component :ada:`Ok` and the component :ada:`Price` (of
-      :ada:`Price_Type`).
+    #. :ada:`Price_Type` is a decimal fixed-point data type with a delta
+       of two digits (e.g. ``0.01``) and twelve digits in total.
 
-    - If the index specified in a call to :ada:`Get` contains a valid
-      (initialized) price, :ada:`Ok` is set to :ada:`True` and
-      :ada:`Price` contains the price for that index. Otherwise, :ada:`Ok`
-      is set to :ada:`False` and the :ada:`Price` component is not
-      available.
+    #. :ada:`Price_List` is a record type that contains the price list.
 
-#. Implement the procedure :ada:`Display` to show all prices from the list.
-   The header (first line) must be :ada:`PRICE LIST`, while the remaining
-   lines contain one price per line.
+        #. This record type must have a discriminant for the maximum number of
+           elements of the list.
 
-For example, for the following code:
+    #. Procedure :ada:`Reset` resets the list.
 
-.. code-block:: ada
+    #. Procedure :ada:`Add` adds a price to the list.
 
-    procedure Test is
-       L : Price_List (10);
-    begin
-       Reset (L);
-       Add (L, 1.45);
-       Add (L, 2.37);
-       Display (L);
-    end Test;
+        #. You should keep track of the last element added to the list.
 
-The output is:
+    #. Function :ada:`Get` retrieves a price from the list using an index.
 
-.. code-block:: none
+        #. This function returns a record instance of :ada:`Price_Result` type.
 
-    PRICE LIST
-     1.45
-     2.37
+        #. :ada:`Price_Result` is a variant record containing:
+
+            #. the Boolean component :ada:`Ok`, and
+            #. the component :ada:`Price` (of :ada:`Price_Type`).
+
+        #. The returned value of :ada:`Price_Result` type is one of the
+           following:
+
+            #. If the index specified in a call to :ada:`Get` contains a valid
+               (initialized) price, then
+
+                - :ada:`Ok` is set to :ada:`True`, and
+
+                - the :ada:`Price` component contains the price for that index.
+
+            #. Otherwise:
+
+                - :ada:`Ok` is set to :ada:`False`, and
+
+                - the :ada:`Price` component is not available.
+
+    #. Procedure :ada:`Display` shows all prices from the list.
+
+        #. The header (first line) must be :ada:`PRICE LIST`.
+
+        #. The remaining lines contain one price per line.
+
+        #. For example:
+
+            - For the following code:
+
+                .. code-block:: ada
+
+                    procedure Test is
+                       L : Price_List (10);
+                    begin
+                       Reset (L);
+                       Add (L, 1.45);
+                       Add (L, 2.37);
+                       Display (L);
+                    end Test;
+
+            - The output is:
+
+                .. code-block:: none
+
+                    PRICE LIST
+                     1.45
+                     2.37
+
+**Remarks**:
+
+#. To implement the package, you'll use the following features of the Ada
+   language:
+
+    #. decimal fixed-point types;
+    #. records with discriminants;
+    #. dynamically-sized record types;
+    #. variant records.
+
+#. For record type :ada:`Price_List`, you may use an unconstrained array as a
+   component of the record and use the discriminant in the component
+   declaration.
 
 .. code:: ada lab=More_About_Types.Price_List
 
@@ -543,745 +654,3 @@ The output is:
 
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
-
-Binary fixed-point types
-------------------------
-
-In this exercise, you'll work on a square-root calculation algorithm
-implemented with fixed-point data types. The original algorithm was
-implemented in C language by Christophe Meessen and was taken from
-`this repository on Github <https://github.com/chmike/fpsqrt/blob/master/fpsqrt.c>`_.
-This is the original source-code of the function that we want to port to
-Ada and use in our test application:
-
-.. code-block:: c
-
-    typedef int32_t fixed;
-
-    /*
-     * fixed sqrtF2F( fixed v );
-     *
-     * Compute fixed to fixed square root
-     * RETURNS the fixed point square root of v (fixed)
-     * REQUIRES v is positive
-     */
-    fixed sqrtF2F ( fixed x )
-    {
-        uint32_t t, q, b, r;
-        r = x;
-        b = 0x40000000;
-        q = 0;
-        while( b > 0x40 )
-        {
-            t = q + b;
-            if( r >= t )
-            {
-                r -= t;
-                q = t + b; // equivalent to q += 2*b
-            }
-            r <<= 1;
-            b >>= 1;
-        }
-        q >>= 8;
-        return q;
-    }
-
-In order to complete this exercise, you don't need to worry about the
-implementation details of the :ada:`Sqrt` function. If you look at the
-body of the :ada:`Fixed_Point_Ops` package in the source-code below,
-you'll see that it already contains the ported algorithm! Your only task
-in this exercise is to declare the correct fixed-point data type
-:ada:`Fixed` |mdash| in the specification of the :ada:`Fixed_Point_Ops`
-package |mdash| for the :ada:`Sqrt` function.
-
-As a bonus, however, if you're looking for a more challenging exercise,
-you may adapt the ported algorithm for multiple, arbitrary formats of
-fixed-point data types. The implementation of :ada:`Sqrt` shown below only
-works fine for Q15.16 |mdash| as in the original C code. However, you may
-adapt the algorithm to make it work for Q31.32, Q23.24, Q11.12, Q7.6, or
-unsigned version such as Q32.32, Q24.24, and Q12.12, or even formats such
-as Q7.24. This may require some generalization of the :ada:`Fixed`
-declaration as well as the :ada:`Sqrt` function implementation. For
-example, you may use a type declaration such as
-:ada:`type Fixed is delta F_Delta range 0.0 .. F_Last - F_Delta;` and
-declare :ada:`F_Delta` and :ada:`F_Last` with constant values depending on
-which Qx.y format you want to use.
-
-.. code:: ada lab=More_About_Types.Fixed_Point_Sqrt
-
-    --  START LAB IO BLOCK
-    in 0:TESTCASE Sqrt_Chk_Last_Div_8
-    out 0:Float-Sqrt of 4096.00000 = 64.00000 Fixed-Sqrt of  4095.99998 =  63.99998
-    in 1:VALUE 8.0
-    out 1:Float-Sqrt of 8.00000 = 2.82843 Fixed-Sqrt of  8.00000 =  2.82841
-    in 2:VALUE 4.0
-    out 2:Float-Sqrt of 4.00000 = 2.00000 Fixed-Sqrt of  4.00000 =  2.00000
-    in 3:VALUE 2.0
-    out 3:Float-Sqrt of 2.00000 = 1.41421 Fixed-Sqrt of  2.00000 =  1.41420
-    in 4:VALUE 1.0
-    out 4:Float-Sqrt of 1.00000 = 1.00000 Fixed-Sqrt of  1.00000 =  1.00000
-    in 5:VALUE 0.5
-    out 5:Float-Sqrt of 0.50000 = 0.70711 Fixed-Sqrt of  0.50000 =  0.70709
-    in 6:VALUE 0.125
-    out 6:Float-Sqrt of 0.12500 = 0.35355 Fixed-Sqrt of  0.12500 =  0.35355
-    in 7:VALUE 0.001
-    out 7:Float-Sqrt of 0.00101 = 0.03173 Fixed-Sqrt of  0.00101 =  0.03172
-    --  END LAB IO BLOCK
-
-    package Fixed_Point_Ops is
-
-       --  Complete fixed-point type declaration:
-       --  type TQ15_16 is ...
-       subtype Fixed is TQ15_16;
-
-       function Sqrt (V : Fixed) return Fixed;
-
-    end Fixed_Point_Ops;
-
-    package body Fixed_Point_Ops is
-
-       --
-       --  Algorithm and code Author: Christophe Meessen 1993.
-       --  Initially published in :
-       --    usenet comp.lang.c, Thu, 28 Jan 1993 08:35:23 GMT.
-       --
-       --  https://github.com/chmike/fpsqrt/blob/master/fpsqrt.c
-       --
-
-       function Sqrt (V : Fixed) return Fixed
-       is
-          T, Q, B, R : Fixed;
-
-          B_Init     : constant := 16#4000.0000#;
-          --  Equivalent to:
-          --      2#100_0000_0000_0000.0000_0000_0000_0000#;
-
-          B_Thres    : constant := 16#0000.0040#;
-          --  Equivalent to:
-          --      2#000_0000_0000_0000.0000_0000_0000_0100#;
-       begin
-          R := V;
-          B := B_Init;
-
-          Q := 0.0;
-          while B > B_Thres loop
-             T := Q + B;
-             if R >= T then
-                R := R - T;
-                Q := T + B;
-             end if;
-             R := R * 2;
-             B := B / 2;
-          end loop;
-          Q := Q / 2 ** 8;
-
-          return Q;
-       end Sqrt;
-
-    end Fixed_Point_Ops;
-
-    with Ada.Command_Line;  use Ada.Command_Line;
-    with Ada.Text_IO;       use Ada.Text_IO;
-
-    with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
-
-    with Fixed_Point_Ops;   use Fixed_Point_Ops;
-
-    procedure Main is
-       type Test_Case_Index is
-         (Sqrt_Chk_Last_Div_2,
-          Sqrt_Chk_Last_Div_2_Minus,
-          Sqrt_Chk_Last_Div_4,
-          Sqrt_Chk_Last_Div_8);
-
-       procedure Display_Sqrt (V : Fixed) is
-          package Float_IO is new Ada.Text_IO.Float_IO (Float);
-
-          F : constant Float := Float (V);
-       begin
-          Put ("Float-Sqrt of ");
-          Float_IO.Put (F,
-                        Fore => 1, Aft => 5, Exp => 0);
-          Put (" = ");
-          Float_IO.Put (Sqrt (F),
-                        Fore => 1, Aft => 5, Exp => 0);
-          New_Line;
-          Put_Line ("Fixed-Sqrt of "
-                    & Fixed'Image (V)
-                    & " = "
-                    & Fixed'Image (Sqrt (V)));
-       end Display_Sqrt;
-
-       procedure Check (TC : Test_Case_Index) is
-
-       begin
-          case TC is
-          when Sqrt_Chk_Last_Div_2_Minus =>
-             Display_Sqrt (Fixed'Last / 2 - Fixed'Delta * Fixed'Size);
-          when Sqrt_Chk_Last_Div_2 =>
-             Display_Sqrt (Fixed'Last / 2);
-          when Sqrt_Chk_Last_Div_4 =>
-             Display_Sqrt (Fixed'Last / 4);
-          when Sqrt_Chk_Last_Div_8 =>
-             Display_Sqrt (Fixed'Last / 8);
-          end case;
-       exception
-          when others =>
-             Put_Line ("Exception!");
-       end Check;
-
-    begin
-       if Argument_Count < 2 then
-          Put_Line ("ERROR: missing arguments! Exiting...");
-          return;
-       elsif Argument_Count > 2 then
-          Put_Line ("Ignoring additional arguments...");
-       end if;
-
-       if Argument (1) = "TESTCASE" then
-          Check (Test_Case_Index'Value (Argument (2)));
-       elsif Argument (1) = "VALUE" then
-          Display_Sqrt (Fixed'Value (Argument (2)));
-       end if;
-
-    end Main;
-
-Inventory
----------
-
-In this exercise, you'll improve the simplified inventory system for your
-store, which you designed in a previous lab (see
-:doc:`./records`) The system will be used to enter items and keep track of
-your assets. These are the improvements that you'll implement:
-
-- Support for storing items on a database, so that you're able to retrieve
-  and display them later.
-
-- Support for storing information about how many units have been bought
-  and sold for each item.
-
-Your goals with this exercise are:
-
-#. Create a database using arrays and records to store the information.
-   You need to declare the record types :ada:`Item` and :ada:`Inventory`.
-
-    - Hint: you can take the same approach as for the previous lab on
-      *Price list* for the :ada:`Inventory` type.
-
-#. Declare a decimal fixed-point data type :ada:`Currency` with a delta
-   of two digits (e.g. ``0.01``) and twelve digits in total.
-
-    - Hint: you can reuse the type declaration of the :ada:`Price_Type`
-      type from the previous lab on *Price list*.
-
-#. Declare :ada:`Name_Type` as an access type to strings.
-
-    - Hint: you can reuse the type declaration of the :ada:`Todo_Item`
-      type from the previous lab on *Simple To-Do List*.
-
-#. Declare the variant record type :ada:`Add_Status` with a Boolean type
-   as a discriminant. This type is used for an output parameter of the
-   :ada:`Add` procedure, which we'll discuss later.
-
-    - Hint: as a starting point, you can reuse the declaration of the
-      :ada:`Price_Result` type from the previous lab on *Price list*.
-
-#. Implement two :ada:`Init` functions: one for the :ada:`Item` type and
-   one for the :ada:`Inventory` type. Make sure to initialize all relevant
-   components!
-
-#. Implement the :ada:`Add` procedure for adding items to your inventory.
-   As mentioned above, this procedure has an output parameter
-   of :ada:`Add_Status` type:
-
-    - If the call to :ada:`Add` is successful, :ada:`Success` is set to
-      :ada:`True` and :ada:`ID` contains the index of the item that has
-      just been added. Otherwise, :ada:`Success` is set to :ada:`False`
-      and the :ada:`ID` component is not available.
-
-#. Implement the :ada:`Last_Id` function, which returns the index of the
-   last item of the list.
-
-#. Implement the :ada:`Set` procedure for adding transaction information
-   (*bought* or *sold* units) for a specific item from the inventory.
-
-    - This procedure has the output parameter :ada:`Success` of
-      Boolean type, which indicates whether the call was successful or
-      not. This happens, for example, when 20 units are available for an
-      item, and the call to the :ada:`Set` procedure attemps to *sell* 30
-      units, which could lead to a negative number of items. In this case,
-      the call to :ada:`Set` indicates a failure. For example:
-
-    .. code-block:: ada
-
-         Add (Inv,
-              Init ("Chair", 200.00),
-              Status);
-
-         if Status.Success then
-            Set (Inv      => Inv,
-                 Trans    => Bought,
-                 ID       => Status.ID,
-                 Quantity => 20,
-                 Success  => Success);
-
-            --  Success = False in the call below, because we only have
-            --  20 units in stock, so we cannot sell 30 units.
-            Set (Inv      => Inv,
-                 Trans    => Sold,
-                 ID       => Status.ID,
-                 Quantity => 30,
-                 Success  => Success);
-         end if;
-
-#. Implement the following :ada:`Get` functions:
-
-    .. code-block:: ada
-
-        function Get (Inv   : Inventory;
-                      ID    : Item_ID) return String;
-        --  Retrieve item name
-
-        function Get (Inv   : Inventory;
-                      ID    : Item_ID) return Item_Quantity;
-        --  Retrieve number of units in stock for specified item
-
-        function Get (Inv   : Inventory;
-                      ID    : Item_ID) return Currency;
-        --  Retrieve total amount in stock for specified item
-
-        function Get (Inv   : Inventory;
-                      Trans : Transaction_Type;
-                      ID    : Item_ID) return Item_Quantity;
-        --  Retrieve number of units for specified item and transaction type
-
-        function Get (Inv   : Inventory;
-                      Trans : Transaction_Type;
-                      ID    : Item_ID) return Currency;
-        --  Retrieve amount for specified item and transaction type
-
-        function Get (Inv   : Inventory;
-                      Trans : Transaction_Type) return Currency;
-        --  Retrieve amount for transaction type
-
-        function Get (Inv   : Inventory) return Currency;
-        --  Retrieve amount for whole inventory
-
-    - Note that overloading is used for most of these functions. Therefore,
-      the actual function called for a specific variable depends on its
-      type (as indicated in the comments of the code block above). For
-      example:
-
-    .. code-block:: ada
-
-        procedure Test is
-           Inv     : Inventory (3);
-        begin
-           --
-           --  Add two items to the database
-           --
-           declare
-              Success : Boolean;
-              Status  : Add_Status;
-           begin
-              Add (Inv, Init ("Chair", 200.0), Status);
-              Set (Inv, Bought, Status.ID, 10, Success);
-              Set (Inv, Sold,   Status.ID,  5, Success);
-
-              Add (Inv, Init ("Table", 300.0), Status);
-              Set (Inv, Bought, Status.ID, 20, Success);
-              Set (Inv, Sold,   Status.ID, 10, Success);
-           end;
-
-           --
-           --  Retrieve information from the database
-           --
-           declare
-              ID                                           : Item_ID
-                := Get (Inv, "Chair");
-
-              Item_Name                                    : String
-                := Get (Inv, ID);
-
-              Number_Units_In_Stock_For_Item               : Item_Quantity
-                := Get (Inv, ID);
-
-              Potential_Income_For_Units_In_Stock_For_Item : Currency
-                := Get (Inv, ID);
-
-              Number_Units_Sold_For_Item                   : Item_Quantity
-                := Get (Inv, Sold, ID);
-
-              Income_For_Sold_Units_Of_Item                : Currency
-                := Get (Inv, Sold, ID);
-
-              Income_For_All_Sold_Units                    : Currency
-                := Get (Inv, Sold);
-
-              Potential_Income_For_All_Units_In_Stock      : Currency
-                := Get (Inv);
-           begin
-              --  Some processing here...
-              null;
-           end;
-        end Test;
-
-    - **Remark**: we didn't mention error handling for the :ada:`ID`
-      parameter of the :ada:`Get` functions above |mdash| as we had in a
-      previous exercise (see *Price list*). If the :ada:`ID` indicates an
-      item that hasn't been initialized yet, the information returned by
-      the :ada:`Get` function is essentially garbage. Although this is an
-      important check to make, we're leaving it out of this specification
-      to simplify the exercise a little bit. You may, however, as a bonus
-      for this exercise, extend the system to cover this check.
-
-As you've probably noticed, this exercise consists of many steps, so it
-takes more time to complete it than it took for previous labs. However, as
-indicated in the description above, you may reuse many elements that you
-already implemented in previous labs. This may make it quicker to finish
-the implementation work of this exercise.
-
-.. code:: ada lab=More_About_Types.Inventory
-
-    --  START LAB IO BLOCK
-    in 0:Inventory_Chk
-    out 0:==== ITEM #  1: Ballpoint Pen == BOUGHT Quantity:  10 Value:     1.50 == SOLD Quantity:  4 Value:     0.60 == IN STOCK Quantity:  6 Value:     0.90  ==== ITEM #  2: Oil-based Pen Marker == BOUGHT Quantity:  20 Value:     180.00 == SOLD Quantity:  0 Value:     0.00 == IN STOCK Quantity:  20 Value:     180.00  ==== ITEM #  3: Feather Quill Pen == BOUGHT Quantity:  50 Value:     750.00 == SOLD Quantity:  20 Value:     300.00 == IN STOCK Quantity:  30 Value:     450.00  ==== OVERALL Value bought:     931.50 Value sold:       300.60 Value in stock:   630.90
-    in 1:Inventory_Range_Chk
-    out 1:Info: Call to 'Add' failed as expected. Info: Call to 'Set' failed as expected.
-    --  END LAB IO BLOCK
-
-    package Inventory_Pkg is
-
-       subtype Item_Quantity is Natural;
-
-       --  Replace by actual fixed-point decimal type declaration
-       type Currency is new Float;
-
-       --  Replace by actual access type declaration
-       type Name_Type is null record;
-
-       subtype Item_ID is Positive;
-
-       type Transaction_Type is (Bought, Sold);
-
-       --  Replace by actual variant record declaration
-       type Add_Status is null record;
-
-       type Item is null record;
-          --  Name            : Name_Type;
-          --  Price           : Currency;
-          --
-          --  --  Add components for quantities and amounts
-          --
-       --  end record;
-
-       --  Replace by actual variant record declaration
-       type Inventory is null record;
-          --
-          --  --  Add components (e.g. array of elements of type Item)
-          --
-       --  end record;
-
-       function Init (Name  : String;
-                      Price : Currency) return Item;
-
-       procedure Init (Inv : in out Inventory);
-
-       procedure Add (Inv     : in out Inventory;
-                      I       :        Item;
-                      Status  : out    Add_Status);
-
-       function Get (Inv       : Inventory;
-                     Item_Name : String) return Item_ID;
-
-       function Last_Id (Inv : Inventory) return Natural;
-
-       procedure Set (Inv      : in out Inventory;
-                      Trans    :        Transaction_Type;
-                      ID       :        Item_ID;
-                      Quantity :        Positive;
-                      Success  :    out Boolean);
-
-       function Get (Inv   : Inventory;
-                     ID    : Item_ID) return String;
-       --  Retrieve item name
-       --
-       --  Item_Name : String := Get (Inv, ID);
-
-       function Get (Inv   : Inventory;
-                     ID    : Item_ID) return Item_Quantity;
-       --  Retrieve number of units in stock for specified item
-       --
-       --  Number_Units_In_Stock_For_Item : Item_Quantity := Get (Inv, ID);
-
-       function Get (Inv   : Inventory;
-                     ID    : Item_ID) return Currency;
-       --  Retrieve total amount in stock for specified item
-       --
-       --  Potential_Income_For_Units_In_Stock_For_Item : Currency := Get (Inv, ID);
-
-       function Get (Inv   : Inventory;
-                     Trans : Transaction_Type;
-                     ID    : Item_ID) return Item_Quantity;
-       --  Retrieve number of units for specified item and transaction type
-       --
-       --  Number_Units_Sold_For_Item : Item_Quantity := Get (Inv, Sold, ID);
-
-       function Get (Inv   : Inventory;
-                     Trans : Transaction_Type;
-                     ID    : Item_ID) return Currency;
-       --  Retrieve amount for specified item and transaction type
-       --
-       --  Income_For_Sold_Units_Of_Item : Currency := Get (Inv, Sold, ID);
-
-       function Get (Inv   : Inventory;
-                     Trans : Transaction_Type) return Currency;
-       --  Retrieve amount for transaction type
-       --
-       --  Income_For_All_Sold_Units : Currency := Get (Inv, Sold);
-
-       function Get (Inv   : Inventory) return Currency;
-       --  Retrieve amount for whole inventory
-       --
-       --  Income_For_All_Units_In_Stock : Currency := Get (Inv);
-
-       procedure Display (Inv : Inventory);
-
-    end Inventory_Pkg;
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    package body Inventory_Pkg is
-
-       function Init (Name  : String;
-                      Price : Currency) return Item is
-       begin
-          return (null record);
-       end Init;
-
-       procedure Init (Inv : in out Inventory) is
-       begin
-          null;
-       end Init;
-
-       procedure Add (Inv     : in out Inventory;
-                      I       :        Item;
-                      Status  : out    Add_Status)
-       is
-       begin
-          null;
-       end Add;
-
-       function Get (Inv       : Inventory;
-                     Item_Name : String) return Item_ID is
-       begin
-          return 1;
-       end Get;
-
-       function Last_Id (Inv : Inventory) return Natural is (0);
-
-       procedure Set (Inv      : in out Inventory;
-                      Trans    :        Transaction_Type;
-                      ID       :        Item_ID;
-                      Quantity :        Positive;
-                      Success  :    out Boolean)
-       is
-       begin
-          Success := False;
-       end Set;
-
-       function Get (Inv   : Inventory;
-                     ID    : Item_ID) return String is
-          ("");
-
-       function Get (Inv   : Inventory;
-                     ID    : Item_ID) return Item_Quantity is
-         (0);
-
-       function Get (Inv   : Inventory;
-                     ID    : Item_ID) return Currency is
-         (0.0);
-
-       function Get (Inv   : Inventory;
-                     Trans : Transaction_Type;
-                     ID    : Item_ID) return Item_Quantity is
-         (0);
-
-       function Get (Inv   : Inventory;
-                     Trans : Transaction_Type;
-                     ID    : Item_ID) return Currency is
-         (0.0);
-
-       function Get (Inv   : Inventory;
-                     Trans : Transaction_Type) return Currency
-       is
-          Total : Currency := 0.0;
-       begin
-          return Total;
-       end Get;
-
-       function Get (Inv   : Inventory) return Currency
-       is
-          Total : Currency := 0.0;
-       begin
-          return Total;
-       end Get;
-
-       procedure Display (Inv : Inventory)
-       is
-          package F_IO is new Ada.Text_IO.Decimal_IO (Currency);
-
-          use F_IO;
-       begin
-          for I in Inv.List_Item'First .. Last_Id (Inv) loop
-             Put_Line ("==== ITEM # " & Positive'Image (I)
-                       & ": " & Get (Inv, I));
-             for Trans in Transaction_Type loop
-                Put_Line ("== " & Transaction_Type'Image (Trans));
-                Put_Line ("Quantity: "
-                          & Item_Quantity'Image (Get (Inv, Trans, I)));
-                Put ("Value:     ");
-                Put (Currency'(Get (Inv, Trans, I)), 1, 2, 0);
-                New_Line;
-             end loop;
-             Put_Line ("== IN STOCK");
-             Put_Line ("Quantity: " & Item_Quantity'Image (Get (Inv, I)));
-             Put ("Value:     ");
-             Put (Currency'(Get (Inv, I)), 1, 2, 0);
-             New_Line;
-             New_Line;
-          end loop;
-          Put_Line ("==== OVERALL");
-          Put ("Value bought:     ");
-          Put (Currency'(Get (Inv, Bought)), 1, 2, 0);
-          New_Line;
-          Put ("Value sold:       ");
-          Put (Currency'(Get (Inv, Sold)), 1, 2, 0);
-          New_Line;
-          Put ("Value in stock:   ");
-          Put (Currency'(Get (Inv)), 1, 2, 0);
-          New_Line;
-       end Display;
-
-    end Inventory_Pkg;
-
-    with Ada.Command_Line;  use Ada.Command_Line;
-    with Ada.Text_IO;       use Ada.Text_IO;
-
-    with Inventory_Pkg;     use Inventory_Pkg;
-
-    procedure Main is
-       --  Remark: the following line is not relevant.
-       F   : array (1 .. 200) of Float := (others => 42.42);
-
-       type Test_Case_Index is
-         (Inventory_Chk,
-          Inventory_Range_Chk);
-
-       procedure Check (TC : Test_Case_Index) is
-          Inv     : Inventory (3);
-          Success : Boolean;
-          Status  : Add_Status;
-
-          --  Please ignore the following three lines!
-          pragma Warnings (Off, "default initialization");
-          for Inv'Address use F'Address;
-          pragma Warnings (On, "default initialization");
-
-          procedure Init_Check_Data is
-          begin
-             Add (Inv,
-                  Init ("Ballpoint Pen", 0.15),
-                  Status);
-
-             if Status.Success then
-                Set (Inv      => Inv,
-                     Trans    => Bought,
-                     ID       => Status.ID,
-                     Quantity => 10,
-                     Success  => Success);
-
-                Set (Inv      => Inv,
-                     Trans    => Sold,
-                     ID       => Status.ID,
-                     Quantity => 2,
-                     Success  => Success);
-
-                Set (Inv      => Inv,
-                     Trans    => Sold,
-                     ID       => Status.ID,
-                     Quantity => 2,
-                     Success  => Success);
-             end if;
-
-             Add (Inv,
-                  Init ("Oil-based Pen Marker", 9.0),
-                  Status);
-
-             Add (Inv,
-                  Init ("Feather Quill Pen", 15.0),
-                  Status);
-
-             Set (Inv      => Inv,
-                  Trans    => Bought,
-                  ID       => Get (Inv, "Oil-based Pen Marker"),
-                  Quantity => 20,
-                  Success  => Success);
-
-             Set (Inv      => Inv,
-                  Trans    => Bought,
-                  ID       => Get (Inv, "Feather Quill Pen"),
-                  Quantity => 50,
-                  Success  => Success);
-
-             Set (Inv      => Inv,
-                  Trans    => Sold,
-                  ID       => Get (Inv, "Feather Quill Pen"),
-                  Quantity => 20,
-                  Success  => Success);
-          end Init_Check_Data;
-
-          procedure Check_Expected_Failure (Success   : Boolean;
-                                            Proc_Name : String) is
-          begin
-             if Success then
-                Put_Line ("ERROR: Call to '" & Proc_Name & "' should have failed.");
-             else
-                Put_Line ("Info: Call to '" & Proc_Name & "' failed as expected.");
-             end if;
-          end Check_Expected_Failure;
-
-       begin
-          Init_Check_Data;
-
-          case TC is
-          when Inventory_Chk =>
-             Display (Inv);
-          when Inventory_Range_Chk =>
-             --  Inventory is full; try to add another item
-             Add (Inv,
-                  Init ("Ballpoint Pen", 0.15),
-                  Status);
-             Check_Expected_Failure (Status.Success, "Add");
-
-             --  Try to sell more than available in stock
-             Set (Inv      => Inv,
-                  Trans    => Sold,
-                  ID       => Get (Inv, "Oil-based Pen Marker"),
-                  Quantity => 30,
-                  Success  => Success);
-             Check_Expected_Failure (Success, "Set");
-          end case;
-       end Check;
-
-    begin
-       if Argument_Count < 1 then
-          Put_Line ("ERROR: missing arguments! Exiting...");
-          return;
-       elsif Argument_Count > 1 then
-          Put_Line ("Ignoring additional arguments...");
-       end if;
-
-       Check (Test_Case_Index'Value (Argument (1)));
-    end Main;
-

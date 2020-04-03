@@ -17,23 +17,45 @@ Standard library: Numerics
 Decibel Factor
 --------------
 
-The `Decibel <https://en.wikipedia.org/wiki/Decibel>`_ is used to express
-the ratio of two values on a logarithmic scale. For example, an increase
-of 6 dB corresponds roughly to a multiplication by two (or an increase by
-100 % of the original value).
+**Goal**: implement functions to convert from Decibel values to factors and
+vice-versa.
 
-Your goal in this exercise is to implement the functions :ada:`To_Decibel`
-and :ada:`To_Factor` of the :ada:`Decibels` package to convert from a
-multiplication factor (or ratio) to decibels and vice-versa:
+**Steps**:
 
-    - For :ada:`To_Decibel`, use :math:`20 * log_{10}(F)`, where *F* is the
-      factor/ratio.
+    #. Implement the :ada:`Decibels` package.
 
-    - For :ada:`To_Factor`, use :math:`10^{D/20}`, where *D* is the value
-      in Decibel.
+        #. Implement the :ada:`To_Decibel` function.
 
-You can find the functions that you'll need for the calculation in the
-:ada:`Ada.Numerics.Elementary_Functions` package.
+        #. Implement the :ada:`To_Factor` function.
+
+**Requirements**:
+
+    #. The subtypes :ada:`Decibel` and :ada:`Factor` are based on a
+       floating-point type.
+
+    #. Function :ada:`To_Decibel` converts a multiplication factor (or ratio)
+       to decibels.
+
+        - For the implementation, use :math:`20 * log_{10}(F)`, where *F* is
+          the factor/ratio.
+
+    #. Function :ada:`To_Decibel` converts a value in decibels to a
+       multiplication factor (or ratio).
+
+        - For the implementation, use :math:`10^{D/20}`, where *D* is the value
+          in Decibel.
+
+**Remarks**:
+
+    #. The `Decibel <https://en.wikipedia.org/wiki/Decibel>`_ is used to
+       express the ratio of two values on a logarithmic scale.
+
+        #. For example, an increase of 6 dB corresponds roughly to a
+           multiplication by two (or an increase by 100 % of the original
+           value).
+
+    #. You can find the functions that you'll need for the calculation in the
+       :ada:`Ada.Numerics.Elementary_Functions` package.
 
 .. code:: ada lab=Standard_Library.Decibel_Factor
 
@@ -133,25 +155,46 @@ You can find the functions that you'll need for the calculation in the
 Root-Mean-Square
 ----------------
 
-The `root-mean-square <https://en.wikipedia.org/wiki/Root_mean_square>`_
-(RMS) value is an important information associated with sequences of values.
-It's used, for example, as a measurement for signal processing.
+**Goal**: implement a function to calculate the root-mean-square of a sequence
+of values.
 
-Your goal with this exercise is to implement the function :ada:`Rms` of the
-:ada:`Signals` package, which calculates the RMS of a sequence of values
-stored in an array of type :ada:`Signal`.
+**Steps**:
 
-As the name implies, you calculate the RMS value by:
+    #. Implement the :ada:`Signals` package.
 
-1. Creating a sequence :math:`S` with the square of each value of an input
-   sequence :math:`S_{in}`.
+        #. Implement the :ada:`Rms` function.
 
-2. Calculating the mean value :math:`M` of the sequence :math:`S`.
+**Requirements**:
 
-3. Calculating the square-root :math:`R` of :math:`M`.
+    #. Subtype :ada:`Sig_Value` is based on a floating-point type.
 
-You can optimize the algorithm above by combining steps #1 and #2 into a
-single step.
+    #. Type :ada:`Signal` is an unconstrained array of :ada:`Sig_Value`
+       elements.
+
+    #. Function :ada:`Rms` calculates the RMS of a sequence of values stored in
+       an array of type :ada:`Signal`.
+
+        #. See the remarks below for a description of the RMS calculation.
+
+**Remarks**:
+
+    #. The `root-mean-square <https://en.wikipedia.org/wiki/Root_mean_square>`_
+       (RMS) value is an important information associated with sequences of
+       values.
+
+        #. It's used, for example, as a measurement for signal processing.
+
+        #. It is calculated by:
+
+            #. Creating a sequence :math:`S` with the square of each value of
+               an input sequence :math:`S_{in}`.
+
+            #. Calculating the mean value :math:`M` of the sequence :math:`S`.
+
+            #. Calculating the square-root :math:`R` of :math:`M`.
+
+        #. You can optimize the algorithm above by combining steps #1 and #2
+           into a single step.
 
 .. code:: ada lab=Standard_Library.Root_Mean_Square
 
@@ -284,53 +327,88 @@ single step.
 Rotation
 --------
 
-Complex numbers are particularly useful in computer graphics to simplify
-the calculation. For example, let's assume you've drawn an object on your
-screen on position (1.0, 0.0). Now, you want to move this object in a
-circular path |mdash| i.e. make it rotate around position (0.0, 0.0) on your
-screen. You could use *sine* and *cosine* functions to calculate each
-position of the path. However, you could also calculate the positions using
-complex numbers.
+**Goal**: use complex numbers to calculate the positions of an object in a
+circle after rotation.
 
-On this exercise, you'll use complex numbers to calculate the positions
-of an object that starts on zero degrees |mdash| on position (1.0, 0.0)
-|mdash| and rotates around (0.0, 0.0) for *N* slices of a circle. For
-example, if we divide the circle in four slices, the object's path will
-consist of following points / positions:
+**Steps**:
 
-.. code-block:: none
+    #. Implement the :ada:`Rotation` package.
 
-    Point #1: ( 1.0,  0.0)
-    Point #2: ( 0.0,  1.0)
-    Point #3: (-1.0,  0.0)
-    Point #4: ( 0.0, -1.0)
-    Point #5: ( 1.0,  0.0)
+        #. Implement the :ada:`Rotation` function.
 
-.. only:: builder_html
+**Requirements**:
 
-    Or graphically:
+    #. Type :ada:`Complex_Points` is an unconstrained array of complex values.
 
-    .. figure:: rotation.svg
-       :width: 50%
+    #. Function :ada:`Rotation` returns a list of positions (represented by
+       the :ada:`Complex_Points` type) when dividing a circle in :ada:`N`
+       equal slices.
 
+        #. See the remarks below for a more detailed explanation.
 
-As expected, point #5 is equal to the starting point (point #1), since the
-object rotates around (0.0, 0.0) and returns to the starting point.
+        #. You must use functions from :ada:`Ada.Numerics.Complex_Types` to
+           implement :ada:`Rotation`.
 
-We can  also describe this path in terms of angles. The following list
-presents the angles for the path on a four-sliced circle:
+    #. Subtype :ada:`Angle` is based on a floating-point type.
 
-.. code-block:: none
+    #. Type :ada:`Angles` is an unconstrained array of angles.
 
-    Point #1:    0.00 degrees
-    Point #2:   90.00 degrees
-    Point #3:  180.00 degrees
-    Point #4:  -90.00 degrees (= 270 degrees)
-    Point #5:    0.00 degrees
+    #. Function :ada:`To_Angles` returns a list of angles based on an input
+       list of positions.
 
-Your goal in this exercise is to implement the function :ada:`Rotation` of
-the :ada:`Rotation` package. You can use functions from
-:ada:`Ada.Numerics.Complex_Types` to complete this task.
+**Remarks**:
+
+    #. Complex numbers are particularly useful in computer graphics to simplify
+       the calculation.
+
+        #. For example, let's assume you've drawn an object on your screen on
+           position (1.0, 0.0).
+
+        #. Now, you want to move this object in a circular path |mdash| i.e.
+           make it rotate around position (0.0, 0.0) on your screen.
+
+            - You could use *sine* and *cosine* functions to calculate each
+              position of the path.
+
+            - However, you could also calculate the positions using complex
+              numbers.
+
+    #. In this exercise, you'll use complex numbers to calculate the positions
+       of an object that starts on zero degrees |mdash| on position (1.0, 0.0)
+       |mdash| and rotates around (0.0, 0.0) for *N* slices of a circle.
+
+        #. For example, if we divide the circle in four slices, the object's
+           path will consist of following points / positions:
+
+            .. code-block:: none
+
+                Point #1: ( 1.0,  0.0)
+                Point #2: ( 0.0,  1.0)
+                Point #3: (-1.0,  0.0)
+                Point #4: ( 0.0, -1.0)
+                Point #5: ( 1.0,  0.0)
+
+            .. only:: builder_html
+
+                Or graphically:
+
+                .. figure:: rotation.svg
+                   :width: 50%
+
+            #. As expected, point #5 is equal to the starting point (point #1),
+               since the object rotates around (0.0, 0.0) and returns to the
+               starting point.
+
+        #. We can  also describe this path in terms of angles. The following
+           list presents the angles for the path on a four-sliced circle:
+
+            .. code-block:: none
+
+                Point #1:    0.00 degrees
+                Point #2:   90.00 degrees
+                Point #3:  180.00 degrees
+                Point #4:  -90.00 degrees (= 270 degrees)
+                Point #5:    0.00 degrees
 
 .. code:: ada lab=Standard_Library.Rotation
 

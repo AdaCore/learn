@@ -17,17 +17,31 @@ Design by contracts
 Price Range
 -----------
 
-As discussed in the course, ranges are a form of contract. For example,
-the subtype :ada:`Price` below indicates that a value of this subtype must
-always be positive:
+**Goal**: use predicates to indicate the correct range of prices.
 
-.. code-block:: ada
+**Steps**:
 
-    subtype Price is Amount range 0.0 .. Amount'Last;
+    #. Complete the :ada:`Prices` package.
 
-Interestingly, you can also use predicates to specify ranges. In this
-exercise, your job is to rewrite the type declaration of :ada:`Price` (in
-the :ada:`Prices` package) using a predicate.
+        #. Rewrite the type declaration of :ada:`Price`.
+
+**Requirements**:
+
+    #. Type :ada:`Price` must use a predicate instead of a range.
+
+**Remarks**:
+
+    #. As discussed in the course, ranges are a form of contract.
+
+        #. For example, the subtype :ada:`Price` below indicates that a value
+           of this subtype must always be positive:
+
+            .. code-block:: ada
+
+                subtype Price is Amount range 0.0 .. Amount'Last;
+
+        #. Interestingly, you can replace ranges by predicates, which is the
+           goal of this exercise.
 
 .. code:: ada lab=Contracts.Price_Range
 
@@ -92,13 +106,25 @@ the :ada:`Prices` package) using a predicate.
 Pythagorean Theorem: Predicate
 ------------------------------
 
-As you probably remember, the
-`Pythagoras' theorem <https://en.wikipedia.org/wiki/Pythagorean_theorem>`_
-states that the square of the hypotenuse of a right triangle is equal to
-the sum of the squares of the other two sides.
+**Goal**: use the Pythagorean theorem as a predicate.
 
-In this exercise, you'll write a predicate that ensures that the
-Pythagorean theorem holds for the :ada:`Right_Triangle` type.
+**Steps**:
+
+    #. Complete the :ada:`Triangles` package.
+
+        #. Add a predicate to the :ada:`Right_Triangle` type.
+
+**Requirements**:
+
+    #. The :ada:`Right_Triangle` type must use the Pythagorean theorem as a
+       predicate to ensure that its components are consistent.
+
+**Remarks**:
+
+    #. As you probably remember, the
+       `Pythagoras' theorem <https://en.wikipedia.org/wiki/Pythagorean_theorem>`_
+       states that the square of the hypotenuse of a right triangle is equal to
+       the sum of the squares of the other two sides.
 
 .. code:: ada lab=Solutions.Contracts.Pythagoras_Predicate
 
@@ -208,9 +234,28 @@ Pythagorean theorem holds for the :ada:`Right_Triangle` type.
 Pythagorean Theorem: Precondition
 ---------------------------------
 
-In this exercise, you'll work again with the :ada:`Right_Triangle` type.
-This time, your job is to write a precondition for the :ada:`Init` function
-that ensures that the Pythagorean theorem holds.
+**Goal**: use the Pythagorean theorem as a precondition.
+
+**Steps**:
+
+    #. Complete the :ada:`Triangles` package.
+
+        #. Add a precondition to the :ada:`Init` function.
+
+**Requirements**:
+
+    #. The :ada:`Init` function must use the Pythagorean theorem as a
+       precondition to ensure that the input values are consistent.
+
+**Remarks**:
+
+    #. In this exercise, you'll work again with the :ada:`Right_Triangle` type.
+
+        #. This time, your job is to use a precondition instead of a
+           predicate.
+
+        #. The precondition is applied to the :ada:`Init` function, not to the
+           :ada:`Right_Triangle` type.
 
 .. code:: ada lab=Solutions.Contracts.Pythagoras_Precondition
 
@@ -319,10 +364,25 @@ that ensures that the Pythagorean theorem holds.
 Pythagorean Theorem: Postcondition
 ----------------------------------
 
-In the previous exercise, you've written a precondition for the
-:ada:`Init` function that ensures that the Pythagorean theorem holds. In
-this exercise, your job is to replace that precondition with a
-postcondition.
+**Goal**: use the Pythagorean theorem as a postcondition.
+
+**Steps**:
+
+    #. Complete the :ada:`Triangles` package.
+
+        #. Add a postcondition to the :ada:`Init` function.
+
+**Requirements**:
+
+    #. The :ada:`Init` function must use the Pythagorean theorem as a
+       postcondition to ensure that the returned object is consistent.
+
+**Remarks**:
+
+    #. In this exercise, you'll work again with the :ada:`Triangles` package.
+
+        #. This time, your job is to apply a postcondition instead of a
+           precondition to the :ada:`Init` function.
 
 .. code:: ada lab=Contracts.Pythagoras_Postcondition
 
@@ -431,16 +491,38 @@ postcondition.
 Pythagorean Theorem: Type Invariant
 -----------------------------------
 
-In this exercise, you'll use a private type for the :ada:`Right_Triangle`
-declaration. Now, your job is to write a type invariant for
-:ada:`Right_Triangle` to check the Pythagorean theorem.
+**Goal**: use the Pythagorean theorem as a type invariant.
 
-As a bonus, after completing the exercise, you may analyse the effect that
-default values have on type invariants. For example, the declaration of
-:ada:`Right_Triangle` uses zero as the default values of the three
-triangle lengths. If you replace those default values with
-:ada:`Length'Last`, you'll get different results. Make sure you understand
-why this is happening.
+**Steps**:
+
+    #. Complete the :ada:`Triangles` package.
+
+        #. Add a type invariant to the :ada:`Right_Triangle` type.
+
+**Requirements**:
+
+    #. :ada:`Right_Triangle` is a private type.
+
+        #. It must use the Pythagorean theorem as a type invariant to ensure
+           that its encapsulated components are consistent.
+
+**Remarks**:
+
+    #. In this exercise, :ada:`Right_Triangle` is declared as a private type.
+
+        #. In this case, we use a type invariant for :ada:`Right_Triangle` to
+           check the Pythagorean theorem.
+
+    #. As a bonus, after completing the exercise, you may analyze the effect
+       that default values have on type invariants.
+
+        #. For example, the declaration of :ada:`Right_Triangle` uses zero as
+           the default values of the three triangle lengths.
+
+        #. If you replace those default values with :ada:`Length'Last`, you'll
+           get different results.
+
+        #. Make sure you understand why this is happening.
 
 .. code:: ada lab=Contracts.Pythagoras_Type_Invariant
 
@@ -555,57 +637,100 @@ why this is happening.
 Primary Color
 -------------
 
-In this exercise, you'll reuse the code of the ``Colors: Lookup-Table``
-exercise from the :doc:`./arrays` labs. Just to recapitulate, these were
-the hexadecimal values of the colors that we used in the original
-exercise:
+**Goal**: extend a package for HTML colors so that it can handle primary
+colors.
 
-   +-------------+-------------+
-   | Color       | Value       |
-   +=============+=============+
-   | Salmon      | ``#FA8072`` |
-   +-------------+-------------+
-   | Firebrick   | ``#B22222`` |
-   +-------------+-------------+
-   | Red         | ``#FF0000`` |
-   +-------------+-------------+
-   | Darkred     | ``#8B0000`` |
-   +-------------+-------------+
-   | Lime        | ``#00FF00`` |
-   +-------------+-------------+
-   | Forestgreen | ``#228B22`` |
-   +-------------+-------------+
-   | Green       | ``#008000`` |
-   +-------------+-------------+
-   | Darkgreen   | ``#006400`` |
-   +-------------+-------------+
-   | Blue        | ``#0000FF`` |
-   +-------------+-------------+
-   | Mediumblue  | ``#0000CD`` |
-   +-------------+-------------+
-   | Darkblue    | ``#00008B`` |
-   +-------------+-------------+
+**Steps**:
 
-In the code below, the :ada:`HTML_Color` type from the :ada:`Color_Types`
-package declares these colors, while the :ada:`To_RGB_Loopup_Table` array
-implements a lookup-table to convert the colors into a hexadecimal value
-for the RGB color components (i.e. :ada:`Red`, :ada:`Green` and
-:ada:`Blue`)
+    #. Complete the :ada:`Color_Types` package.
 
-In this exercise, your goal is to implement the new :ada:`To_Int_Color`
-function, which retrieves the hexadecimal value of a RGB color component.
-For example, the hexadecimal value of :ada:`Salmon` is ``#FA8072``, where
-the first part of this hexadecimal value (``#FA``) corresponds to the red
-component, the second part (``#80``) corresponds to the green component,
-and the last part (``#72``) corresponds to the blue component of this color.
-Therefore, if we call :ada:`To_Int_Color (Salmon, Red)`, the function
-returns ``#FA``, which is the hexadecimal value of the red component of the
-:ada:`Salmon` color. This means that the second parameter of
-:ada:`To_Int_Color` indicates which RGB component is selected.
+        #. Declare the :ada:`HTML_RGB_Color` subtype.
 
-Your goal is also to correctly declare the :ada:`HTML_RGB_Color` subtype
-using a predicate, so that only RGB colors can be used for selecting the
-RGB component in calls to :ada:`To_Int_Color`.
+        #. Implement the :ada:`To_Int_Color` function.
+
+**Requirements**:
+
+    #. The :ada:`HTML_Color` type is an enumeration that contains a list of
+       HTML colors.
+
+    #. The :ada:`To_RGB_Loopup_Table` array implements a lookup-table to
+       convert the colors into a hexadecimal value using RGB color components
+       (i.e. :ada:`Red`, :ada:`Green` and :ada:`Blue`)
+
+    #. Function :ada:`To_Int_Color` extracts one of the RGB components of an
+       HTML color and returns its hexadecimal value.
+
+        #. The function has two parameters:
+
+            - First parameter is the HTML color (:ada:`HTML_Color` type).
+
+            - Second parameter indicates which RGB component is to be extracted
+              from the HTML color (:ada:`HTML_RGB_Color` subtype).
+
+        #. For example, if we call :ada:`To_Int_Color (Salmon, Red)`, the
+           function returns ``#FA``,
+
+            - This is the hexadecimal value of the red component of the
+              :ada:`Salmon` color.
+
+            - You can find further remarks below about this color as an
+              example.
+
+    #. The :ada:`HTML_RGB_Color` subtype is limited to the primary RGB colors
+       components (i.e. :ada:`Red`, :ada:`Green` and :ada:`Blue`).
+
+        #. This subtype is used to select the RGB component in calls to
+           :ada:`To_Int_Color`.
+
+        #. You must use a predicate in the type declaration.
+
+**Remarks**:
+
+    #. In this exercise, we reuse the code of the ``Colors: Lookup-Table``
+       exercise from the :doc:`./arrays` labs.
+
+    #. These are the hexadecimal values of the colors that we used in the
+       original exercise:
+
+        +-------------+-------------+
+        | Color       | Value       |
+        +=============+=============+
+        | Salmon      | ``#FA8072`` |
+        +-------------+-------------+
+        | Firebrick   | ``#B22222`` |
+        +-------------+-------------+
+        | Red         | ``#FF0000`` |
+        +-------------+-------------+
+        | Darkred     | ``#8B0000`` |
+        +-------------+-------------+
+        | Lime        | ``#00FF00`` |
+        +-------------+-------------+
+        | Forestgreen | ``#228B22`` |
+        +-------------+-------------+
+        | Green       | ``#008000`` |
+        +-------------+-------------+
+        | Darkgreen   | ``#006400`` |
+        +-------------+-------------+
+        | Blue        | ``#0000FF`` |
+        +-------------+-------------+
+        | Mediumblue  | ``#0000CD`` |
+        +-------------+-------------+
+        | Darkblue    | ``#00008B`` |
+        +-------------+-------------+
+
+    #. You can extract the hexadecimal value of each primary color by splitting
+       the values from the table above into three hexadecimal values with two
+       digits each.
+
+        - For example, the hexadecimal value of :ada:`Salmon` is ``#FA8072``,
+          where:
+
+            - the first part of this hexadecimal value (``#FA``) corresponds
+              to the red component,
+
+            - the second part (``#80``) corresponds to the green component, and
+
+            - the last part (``#72``) corresponds to the blue component.
 
 .. code:: ada lab=Contracts.Primary_Colors
 
