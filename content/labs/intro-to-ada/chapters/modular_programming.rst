@@ -115,24 +115,23 @@ Months
 Operations
 ----------
 
-
 **Goal**: create a package to perform basic mathematical operations.
 
 **Steps**:
 
     #. Implement the `Operations` package.
 
-        #. Implement the :ada:`Add` function.
+        #. Declare and implement the :ada:`Add` function.
 
-        #. Implement the :ada:`Subtract` function.
+        #. Declare and implement the :ada:`Subtract` function.
 
-        #. Implement the :ada:`Multiply`: function.
+        #. Declare and implement the :ada:`Multiply`: function.
 
-        #. Implement the :ada:`Divide` function.
+        #. Declare and implement the :ada:`Divide` function.
 
     #. Implement the :ada:`Operations_Test` package
 
-        #. Implement the :ada:`Display_Operations` procedure.
+        #. Declare and implement the :ada:`Display_Operations` procedure.
 
 **Requirements**:
 
@@ -156,6 +155,20 @@ Operations
         #. Procedure :ada:`Display_Operations` must use of the functions from
            the :ada:`Operations` package as indicated by the template in the
            code below.
+
+**Remarks**:
+
+    #. The goal of this exercise is to create the :ada:`Operations` and
+       :ada:`Operations_Test` packages.
+
+        #. As for the previous exercise, :ada:`Operations` and
+           :ada:`Operations_Test` are declared as procedures in the code below.
+
+            - Therefore, we need to *convert* them into a real packages.
+
+        #. You have to modify the procedure declarations and implementations in
+           the code below, so that they become package specifications and
+           package bodies.
 
 .. code:: ada lab=Modular_Programming.Operations
 
