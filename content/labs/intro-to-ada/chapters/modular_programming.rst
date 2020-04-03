@@ -119,7 +119,7 @@ Operations
 
 **Steps**:
 
-    #. Implement the `Operations` package.
+    #. Implement the :ada:`Operations` package.
 
         #. Declare and implement the :ada:`Add` function.
 
@@ -129,9 +129,9 @@ Operations
 
         #. Declare and implement the :ada:`Divide` function.
 
-    #. Implement the :ada:`Operations_Test` package
+    #. Implement the :ada:`Operations.Test` package
 
-        #. Declare and implement the :ada:`Display_Operations` procedure.
+        #. Declare and implement the :ada:`Display` procedure.
 
 **Requirements**:
 
@@ -150,25 +150,11 @@ Operations
         #. Function :ada:`Divide`: performs the division of :ada:`A` and
            :ada:`B` and returns the result.
 
-    #. Package :ada:`Operations_Test` contains the test environment:
+    #. Package :ada:`Operations.Test` contains the test environment:
 
-        #. Procedure :ada:`Display_Operations` must use of the functions from
-           the :ada:`Operations` package as indicated by the template in the
-           code below.
-
-**Remarks**:
-
-    #. The goal of this exercise is to create the :ada:`Operations` and
-       :ada:`Operations_Test` packages.
-
-        #. As for the previous exercise, :ada:`Operations` and
-           :ada:`Operations_Test` are declared as procedures in the code below.
-
-            - Therefore, we need to *convert* them into a real packages.
-
-        #. You have to modify the procedure declarations and implementations in
-           the code below, so that they become package specifications and
-           package bodies.
+        #. Procedure :ada:`Display` must use of the functions from
+           the parent (:ada:`Operations`) package as indicated by the template
+           in the code below.
 
 .. code:: ada lab=Modular_Programming.Operations
 
@@ -179,30 +165,37 @@ Operations
     out 1:Operations:  10 +  5 =  15,  10 -  5 =  5,  10 *  5 =  50,  10 /  5 =  2, Operations:  1 +  2 =  3,  1 -  2 = -1,  1 *  2 =  2,  1 /  2 =  0,
     --  END LAB IO BLOCK
 
-    --  Create specification for Operations package, including the
-    --  declaration of the functions mentioned above.
-    --
-    procedure Operations;
+    package Operations is
 
-    --  Create body of Operations package.
-    --
-    procedure Operations is
-    begin
-       null;
+       --  Create specification for Operations package, including the
+       --  declaration of the functions mentioned above.
+       --
+
     end Operations;
 
-    --  Create specification for Operations package, including the
-    --  declaration of the Display_Operations procedure:
-    --
-    --   procedure Display_Operations (A, B : Integer);
-    --
-    procedure Operations_Test;
+    package body Operations is
 
-    --  Create body of Operations_Test package.
-    --
-    procedure Operations_Test is
+       --  Create body of Operations package.
+       --
 
-       procedure Display_Operations (A, B : Integer) is
+    end Operations;
+
+    package Operations.Test is
+
+       --  Create specification for Operations package, including the
+       --  declaration of the Display procedure:
+       --
+       --   procedure Display (A, B : Integer);
+       --
+
+    end Operations.Test;
+
+    package body Operations.Test is
+
+       --  Implement body of Operations.Test package.
+       --
+
+       procedure Display (A, B : Integer) is
           A_Str : constant String := Integer'Image (A);
           B_Str : constant String := Integer'Image (B);
        begin
@@ -212,16 +205,15 @@ Operations
                     & ",");
           --  Use the line above as a template and add the rest of the
           --  implementation for Subtract, Multiply and Divide.
-       end Display_Operations;
-    begin
-       null;
-    end Operations_Test;
+       end Display;
+
+    end Operations.Test;
 
     with Ada.Command_Line; use Ada.Command_Line;
     with Ada.Text_IO;      use Ada.Text_IO;
 
     with Operations;
-    with Operations_Test;  use Operations_Test;
+    with Operations.Test;  use Operations.Test;
 
     procedure Main is
 
@@ -242,8 +234,8 @@ Operations
                 Put_Line ("Divide (100, 2) = "
                           & Integer'Image (Operations.Divide (100, 2)));
              when Operations_Display_Chk =>
-                Display_Operations (10, 5);
-                Display_Operations ( 1, 2);
+                Display (10, 5);
+                Display ( 1, 2);
           end case;
        end Check;
 
