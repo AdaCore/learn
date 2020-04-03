@@ -12,11 +12,10 @@ Subprograms
 .. role:: cpp(code)
    :language: c++
 
-
 Subtract procedure
 -------------------
 
-**Goal**: write a procedure to subtract two numbers.
+**Goal**: write a procedure that subtracts two numbers.
 
 **Steps**:
 
@@ -347,27 +346,29 @@ States #2
     #. You can implement a function returning a string by simply using quotes in
        a return statement. For example:
 
-    .. code:: ada run_button
+        .. code:: ada run_button
 
-        function Get_Hello return String;
+            function Get_Hello return String;
 
-        function Get_Hello return String is
-        begin
-           return "Hello";
-        end Get_Hello;
+            function Get_Hello return String is
+            begin
+               return "Hello";
+            end Get_Hello;
 
-        with Ada.Text_IO;      use Ada.Text_IO;
-        with Get_Hello;
+            with Ada.Text_IO;      use Ada.Text_IO;
+            with Get_Hello;
 
-        procedure Main is
-       S : constant String := Get_Hello;
-        begin
-           Put_Line (S);
-        end Main;
+            procedure Main is
+               S : constant String := Get_Hello;
+            begin
+               Put_Line (S);
+            end Main;
 
     #. You can reuse your previous implementation and replace it by a case
-       expression. For values that do not correspond to a state, you can simply
-       return an empty string (:ada:`""`).
+       expression.
+
+        #. For values that do not correspond to a state, you can simply
+           return an empty string (:ada:`""`).
 
 .. code:: ada lab=Subprograms.States_2
 
