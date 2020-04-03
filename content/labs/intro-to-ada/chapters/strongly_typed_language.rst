@@ -52,38 +52,41 @@ corresponding names.
        Green, Blue.
 
     #. Function :ada:`To_Integer` converts from the :ada:`HTML_Color` type to
-       the integer values in hexadecimal according to the table below.
+       the HTML color code |mdash| as integer values in hexadecimal notation.
+
+        - You can find the HTML color codes in the table below.
 
     #. Function :ada:`To_HTML_Color` converts from :ada:`Basic_HTML_Color` to
        :ada:`HTML_Color`.
 
-    #. This is the table to convert from an HTML color to a hexadecimal value:
+    #. This is the table to convert from an HTML color to a HTML color code in
+       hexadecimal notation:
 
-    +-------------+---------------+
-    | Color       | Value         |
-    +=============+===============+
-    | Salmon      | ``#FA8072``   |
-    +-------------+---------------+
-    | Firebrick   | ``#B22222``   |
-    +-------------+---------------+
-    | Red         | ``#FF0000``   |
-    +-------------+---------------+
-    | Darkred     | ``#8B0000``   |
-    +-------------+---------------+
-    | Lime        | ``#00FF00``   |
-    +-------------+---------------+
-    | Forestgreen | ``#228B22``   |
-    +-------------+---------------+
-    | Green       | ``#008000``   |
-    +-------------+---------------+
-    | Darkgreen   | ``#006400``   |
-    +-------------+---------------+
-    | Blue        | ``#0000FF``   |
-    +-------------+---------------+
-    | Mediumblue  | ``#0000CD``   |
-    +-------------+---------------+
-    | Darkblue    | ``#00008B``   |
-    +-------------+---------------+
+    +-------------+------------------------+
+    | Color       | HTML color code (hexa) |
+    +=============+========================+
+    | Salmon      | ``#FA8072``            |
+    +-------------+------------------------+
+    | Firebrick   | ``#B22222``            |
+    +-------------+------------------------+
+    | Red         | ``#FF0000``            |
+    +-------------+------------------------+
+    | Darkred     | ``#8B0000``            |
+    +-------------+------------------------+
+    | Lime        | ``#00FF00``            |
+    +-------------+------------------------+
+    | Forestgreen | ``#228B22``            |
+    +-------------+------------------------+
+    | Green       | ``#008000``            |
+    +-------------+------------------------+
+    | Darkgreen   | ``#006400``            |
+    +-------------+------------------------+
+    | Blue        | ``#0000FF``            |
+    +-------------+------------------------+
+    | Mediumblue  | ``#0000CD``            |
+    +-------------+------------------------+
+    | Darkblue    | ``#00008B``            |
+    +-------------+------------------------+
 
 **Remarks**:
 
