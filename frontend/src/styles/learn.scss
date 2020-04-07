@@ -225,6 +225,7 @@ div {
         color: $color-widget-msg;
         padding-left: 15px;
         padding-right: 3px;
+        white-space: pre;
         &:hover {
             background-color: #fdd;
         }
