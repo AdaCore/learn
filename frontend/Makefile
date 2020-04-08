@@ -139,7 +139,7 @@ $(BOOKS):
 
 cleanall:
 	@rm -rf "$(BUILDDIR)"
-	@rm $(BUILD_MANIFEST)
+	@rm -f $(BUILD_MANIFEST)
 
 
 # Catch-all target: route all unknown targets to Sphinx using the new

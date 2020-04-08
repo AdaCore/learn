@@ -1,7 +1,8 @@
 import json
-import logging
 
-logger = logging.getLogger(__name__)
+from celery.utils.log import get_task_logger
+
+logger = get_task_logger(__name__)
 
 
 class MQReporter:

@@ -10,6 +10,7 @@ class BaseConfig():
     CONTAINER_NAME = "safecontainer"
 
     SECRET_KEY = os.environ.get('FLASK_SECRET_KEY', None)
+    LOGLEVEL = "DEBUG"
 
 
 class DevConfig(BaseConfig):
@@ -19,6 +20,7 @@ class DevConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     FLASK_ENV = 'production'
+    LOGLEVEL = "INFO"
 
 
 class TestConfig(BaseConfig):

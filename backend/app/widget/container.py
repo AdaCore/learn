@@ -1,8 +1,9 @@
-import logging
 import os
 import pylxd
 
-logger = logging.getLogger(__name__)
+from celery.utils.log import get_task_logger
+
+logger = get_task_logger(__name__)
 
 
 INTERRUPT_STRING = '<interrupted> : Maximum 10s process limit reached.'
