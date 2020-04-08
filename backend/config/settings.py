@@ -20,7 +20,7 @@ class DevConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     FLASK_ENV = 'production'
-    LOGLEVEL = "INFO"
+    LOGLEVEL = "WARNING"
 
 
 class TestConfig(BaseConfig):
