@@ -10,10 +10,19 @@ apt-get install -y \
     lxd \
     lxd-client \
     make \
-    rabbitmq-server
+    rabbitmq-server \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
 
 # Initialize lxc for code_examples_server
 lxd init --auto
+
+# Install docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
 
 # Install code_examples_server deps
 python3 -m venv /vagrant/venv

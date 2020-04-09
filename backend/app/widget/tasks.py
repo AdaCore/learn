@@ -4,7 +4,7 @@ from celery.utils.log import get_task_logger
 
 import traceback
 
-from .container import Container
+from .container import get_container
 from .project import RemoteProject, BuildError
 
 
@@ -23,7 +23,7 @@ def run_program(self, data):
     :return:
         Returns a dict containing the status code from the execution
     """
-    container = Container(celery.conf['CONTAINER_NAME'])
+    container = get_container(celery.conf['CONTAINER_IMPL'], celery.conf['CONTAINER_NAME'])
     task_id = self.request.id
     mode = data['mode']
     app = self._app
