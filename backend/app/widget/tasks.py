@@ -1,7 +1,7 @@
 from celery import Celery, states
 from celery.exceptions import Ignore
+from celery.utils.log import get_task_logger
 
-import logging
 import traceback
 
 from .container import Container
@@ -9,7 +9,7 @@ from .project import RemoteProject, BuildError
 
 
 celery = Celery(__name__, autofinalize=False)
-logger = logging.getLogger(__name__)
+logger = get_task_logger(__name__)
 
 
 @celery.task(bind=True)

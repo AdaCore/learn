@@ -1,11 +1,8 @@
 from flask import Flask
-import logging
 import os
 
 import config
 from .widget import widget_routes, tasks, celery
-
-logger = logging.getLogger(__name__)
 
 config_dict = {
     "development": "config.settings.DevConfig",
@@ -47,6 +44,8 @@ def create(mode='app'):
 
     config_name = os.getenv('FLASK_CONFIGURATION', 'development')
     app.config.from_object(config_dict[config_name])
+
+    app.logger.setLevel(app.config['LOGLEVEL'])
 
     app.logger.info(f'Starting {mode} in {config_name} environment')
     configure_celery(app, tasks.celery)
