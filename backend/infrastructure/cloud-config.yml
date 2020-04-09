@@ -37,9 +37,6 @@ write_files:
         _exit(1);
       }
 
-network:
-  config: disabled
-
 # Run command on first boot only
 runcmd:
   # Install community
