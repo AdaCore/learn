@@ -5,6 +5,7 @@ package_upgrade: false
 users:
   - default
   - name: unprivileged
+    system: true
   - name: runner
     sudo:  ALL=(unprivileged) NOPASSWD:ALL
 

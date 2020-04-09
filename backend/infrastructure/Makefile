@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-all: create_container
+all: destroy_container create_container
 
 destroy_container:
 	lxc list | grep safecontainer && lxc delete --force safecontainer || true
