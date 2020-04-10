@@ -21,8 +21,17 @@ apt-get install -y \
 lxd init --auto
 
 # Install docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sh get-docker.sh
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+apt-get update
+apt-get install -y docker-ce docker-ce-cli containerd.io
+
+# Add vagrant user to docker to allow interactive container
+# groupadd docker
+usermod -aG docker vagrant
 
 # Install code_examples_server deps
 python3 -m venv /vagrant/venv
@@ -30,4 +39,4 @@ source /vagrant/venv/bin/activate
 pip3 install -r /vagrant/REQUIREMENTS.txt
 
 cd /vagrant/infrastructure
-make
+make docker

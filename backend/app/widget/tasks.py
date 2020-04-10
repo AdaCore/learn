@@ -23,19 +23,18 @@ def run_program(self, data):
     :return:
         Returns a dict containing the status code from the execution
     """
-    container = get_container(celery.conf['CONTAINER_IMPL'], celery.conf['CONTAINER_NAME'])
-    task_id = self.request.id
-    mode = data['mode']
-    app = self._app
-
     try:
+        container = get_container(celery.conf['CONTAINER_IMPL'], celery.conf['CONTAINER_NAME'])
+        task_id = self.request.id
+        mode = data['mode']
+        app = self._app
+
+
         if mode == "run":
             project = RemoteProject(app, container, task_id, data['files'])
-            project.build()
             code, out = project.run()
         elif mode == "submit":
             project = RemoteProject(app, container, task_id, data['files'])
-            project.build()
             project.submit()
             code = 0
         elif mode == "compile":
@@ -64,5 +63,8 @@ def run_program(self, data):
                             'exc_message': traceback.format_exc().split('\n')
                         })
         raise Ignore()
+    finally:
+        if container:
+            del container
 
     return {'status': code}

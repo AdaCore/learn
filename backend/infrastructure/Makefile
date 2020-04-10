@@ -1,4 +1,4 @@
-LXC_IMAGE      = images:alpine/3.11
+LXC_IMAGE      = ubuntu:18.04
 CONTAINER_NAME = safecontainer
 
 CLOUD_CONFIG   = cloud-config.yml
@@ -13,12 +13,14 @@ all: lxc docker
 docker:
 	# destroy previous container if it exists
 	docker container ls | grep $(CONTAINER_NAME) && docker rm --force $(CONTAINER_NAME) || true
+	# remove all images on system
+	docker system prune -a -f
 	# Build docker image
 	docker build -f $(DOCKERFILE) -t "$(CONTAINER_NAME):Dockerfile" $(DOCKER_URL)
 	# Run image as a container
-	docker run --detach --name $(CONTAINER_NAME) "$(CONTAINER_NAME):Dockerfile"
+#	docker run --detach --name $(CONTAINER_NAME) "$(CONTAINER_NAME):Dockerfile"
 	# set process limit
-	docker container run --pids-limit $(PROCESS_LIMIT) $(CONTAINER_NAME)
+#	docker container run --pids-limit $(PROCESS_LIMIT) $(CONTAINER_NAME)
 
 lxc:
 	# destroy previous container if it exists

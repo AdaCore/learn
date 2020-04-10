@@ -7,8 +7,7 @@ import pylxd
 
 ###### Docker #######
 import docker
-import io
-import StringIO
+from io import BytesIO
 import tarfile
 #####################
 
@@ -30,7 +29,7 @@ GNAT_PATH = os.path.join(os.path.sep, "gnat", "bin")
 def get_container(impl, name):
     if impl == "lxc":
         return LXCContainer(name)
-    elif imp == "docker":
+    elif impl == "docker":
         return DockerContainer(name)
     else:
         raise Exception("Unknown container type")
@@ -80,7 +79,7 @@ class Container(ABC):
         pass
 
     @abstractmethod
-    def __execute(self, cmds, env, reporter):
+    def _execute(self, cmds, env, reporter, user=ro_user):
         """
         Execute commands inside the container and report back results through reporter if any or via return
         :param cmds:
@@ -104,7 +103,7 @@ class Container(ABC):
         :return:
             Returns a tuple of exit status, stdout, stderr
         """
-        return self.__execute(cmds, {}, reporter)
+        return self._execute(cmds, {}, reporter)
 
     def execute(self, cmds, reporter=None):
         """
@@ -116,7 +115,7 @@ class Container(ABC):
         :return:
             Returns a tuple of exit code, stdout, stderr
         """
-        return self.__execute(cmds, {"PATH": GNAT_PATH}, reporter)
+        return self._execute(cmds, {"PATH": GNAT_PATH}, reporter)
 
     def mkdir(self, tdir):
         """
@@ -125,7 +124,7 @@ class Container(ABC):
             The directory path to create
         """
         logger.debug(f"Making dir {tdir}")
-        code, stdout, stderr = self.__execute(["mkdir", tdir], {}, None)
+        code, stdout, stderr = self._execute(["mkdir", tdir], {}, None)
         if code != 0:
             raise Exception(stderr)
 
@@ -136,7 +135,7 @@ class Container(ABC):
             The directory path to remove
         """
         logger.debug(f"Deleting dir {tdir}")
-        code, stdout, stderr = self.__execute(["rm", "-rf", tdir], {}, None)
+        code, stdout, stderr = self._execute(["rm", "-rf", tdir], {}, None)
         if code != 0:
             raise Exception(stderr)
 
@@ -198,10 +197,10 @@ class LXCContainer(Container):
             self.container.files.put(dst_path, f.get_content())
 
         # Change ownership and access permissions for files in container
-        self.__execute(["chown", "-R", rw_user, dst], {}, None)
-        self.__execute(["chmod", "-R", "a+rx", dst], {}, None)
+        self._execute(["chown", "-R", rw_user, dst], {}, None)
+        self._execute(["chmod", "-R", "a+rx", dst], {}, None)
 
-    def __execute(self, cmds, env, reporter):
+    def _execute(self, cmds, env, reporter, user=ro_user):
         """
         Execute commands inside the container and report back results through reporter if any or via return
         :param cmds:
@@ -250,18 +249,18 @@ class DockerContainer(Container):
     rmdir(tdir)
         Remove directory tdir in the container
     """
-    def __init__(self):
-        super()
+    def __init__(self, name):
+        super().__init__(name)
         # Create the pylxd client
         self.client = docker.from_env()
 
         # Get the container from lxd
-        self.container = self.client.containers.get(self.name)
+        self.container = self.client.containers.create(f"{self.name}:Dockerfile", command= "/bin/sh", detach=True, pids_limit=300)
+        self.container.start()
         logger.debug(f"Attached to docker {self.name} with status {self.container.status}")
 
-        try:
-            if self.container.status == "exited":
-                self.container.start()
+    def __del__(self):
+        self.container.remove()
 
     def push_files(self, files, dst):
         """
@@ -287,10 +286,10 @@ class DockerContainer(Container):
             raise Exception("Could not push files to docker container")
 
         # Change ownership and access permissions for files in container
-        self.__execute(["chown", "-R", rw_user, dst], {}, None, user=rw_user)
-        self.__execute(["chmod", "-R", "a+rx", dst], {}, None, user=rw_user)
+        self._execute(["chown", "-R", rw_user, dst], {}, None, user=rw_user)
+        self._execute(["chmod", "-R", "a+rx", dst], {}, None, user=rw_user)
 
-    def __stream_exec(self, cmds, env, reporter, user):
+    def _stream_exec(self, cmds, env, reporter, user):
         """
         Helper function to use docker low level API. Necessary to get return code
         :param cmds:
@@ -314,7 +313,7 @@ class DockerContainer(Container):
                 reporter.stderr(stderr)
         return self.client.api.exec_inspect(self.id)['ExitCode']
 
-    def __execute(self, cmds, env, reporter, user=ro_user):
+    def _execute(self, cmds, env, reporter, user=ro_user):
         """
         Execute commands inside the container and report back results through reporter if any or via return
         :param cmds:
@@ -330,7 +329,7 @@ class DockerContainer(Container):
         """
         logger.debug(f"Running {env} {cmds} in {self.name}")
         if reporter:
-            exit_code = self.__stream_exec(cmds, env, reporter, user)
+            exit_code = self._stream_exec(cmds, env, reporter, user)
 
             if exit_code == INTERRUPT_RETURNCODE:
                 reporter.stderr(INTERRUPT_STRING)
@@ -346,9 +345,9 @@ class DockerContainer(Container):
             The directory path to create
         """
         logger.debug(f"Making dir {tdir}")
-        code, stdout, stderr = self.__execute(["mkdir", tdir], {}, None, rw_user)
+        code, stdout, stderr = self._execute(["mkdir", tdir], {}, None, rw_user)
         if code != 0:
-            raise Exception(stderr)
+            raise Exception(f"mkdir failed with code: {code} - {stderr}")
 
     def rmdir(self, tdir):
         """
@@ -357,6 +356,6 @@ class DockerContainer(Container):
             The directory path to remove
         """
         logger.debug(f"Deleting dir {tdir}")
-        code, stdout, stderr = self.__execute(["rm", "-rf", tdir], {}, None, rw_user)
+        code, stdout, stderr = self._execute(["rm", "-rf", tdir], {}, None, rw_user)
         if code != 0:
-            raise Exception(stderr)
+            raise Exception(f"rmdir failed with code: {code} - {stderr}")
