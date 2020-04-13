@@ -2,6 +2,7 @@ from celery import Celery, states
 from celery.exceptions import Ignore
 from celery.utils.log import get_task_logger
 
+import time
 import traceback
 
 from .container import get_container
@@ -24,6 +25,7 @@ def run_program(self, data):
         Returns a dict containing the status code from the execution
     """
     try:
+        start = time.time()
         container = get_container(celery.conf['CONTAINER_IMPL'], celery.conf['CONTAINER_NAME'])
         task_id = self.request.id
         mode = data['mode']
@@ -32,9 +34,11 @@ def run_program(self, data):
 
         if mode == "run":
             project = RemoteProject(app, container, task_id, data['files'])
+            project.build()
             code, out = project.run()
         elif mode == "submit":
             project = RemoteProject(app, container, task_id, data['files'])
+            project.build()
             project.submit()
             code = 0
         elif mode == "compile":
@@ -54,7 +58,8 @@ def run_program(self, data):
 
     except BuildError as ex:
         logger.error(f"Build error code {ex}", exc_info=True)
-        return {'status': int(f"{ex}")}
+        elapsed = time.time() - start
+        return {'status': int(f"{ex}"), 'elapsed': elapsed}
     except Exception as ex:
         logger.error("An error occured in run program", exc_info=True)
         self.update_state(state=states.FAILURE,
@@ -65,6 +70,7 @@ def run_program(self, data):
         raise Ignore()
     finally:
         if container:
-            del container
+            container.remove()
+        elapsed = time.time() - start
 
-    return {'status': code}
+    return {'status': code, 'elapsed': elapsed}

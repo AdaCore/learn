@@ -4,6 +4,7 @@ import shutil
 import tempfile
 import zipfile
 
+from .container import rw_user, ro_user
 from .file import new_file, find_mains
 from .lab import LabList
 from .reporter import MQReporter
@@ -189,10 +190,6 @@ class RemoteProject(Project):
             task runner.
         container
             The container that will be used to execute actions inside
-        local_tempd
-            The local tempd file created to house files from the project. This is currently not used.
-        remote_tempd
-            The remote tempd file with the same name as the local tempd that will house the project files
 
         Methods
         -------
@@ -229,24 +226,7 @@ class RemoteProject(Project):
         # Call the Project constructor
         super().__init__(files, spark_mode)
 
-        # Create a tempd and remote_tempd with the same names
-        # We are using the mkdtemp interface to create unique folder names
-        # local_tempd is actually not used
-#        self.local_tempd = tempfile.mkdtemp()
-#        tmp_name = os.path.basename(os.path.normpath(self.local_tempd))
-#        self.remote_tempd = os.path.join(TEMP_WORKSPACE_BASEDIR, tmp_name)
-
-#        self.container.mkdir(self.remote_tempd)
-#        self.container.push_files(self.file_list, self.remote_tempd)
         self.container.push_files(self.file_list, TEMP_WORKSPACE_BASEDIR)
-
-    def __del__(self):
-        """
-        Cleans up the local and remote tempds and deconstructs the object
-        """
-#        shutil.rmtree(self.local_tempd)
-#        self.container.rmdir(self.remote_tempd)
-        pass
 
     def build(self):
         """
@@ -257,11 +237,10 @@ class RemoteProject(Project):
         rep = MQReporter(self.app, self.task_id)
         rep.console(["gprbuild", "-q", "-P", self.gpr.get_name(), "-gnatwa"])
 
-#        main_path = os.path.join(self.remote_tempd, self.gpr.get_name())
         main_path = os.path.join(TEMP_WORKSPACE_BASEDIR, self.gpr.get_name())
         line = ["gprbuild", "-q", "-P", main_path, "-gnatwa"]
 
-        code, out, err = self.container.execute(line, rep)
+        code, out, err = self.container.execute(line, {"TMPDIR": TEMP_WORKSPACE_BASEDIR}, rep, rw_user)
         if code != 0:
             rep.stderr(f"Build failed with error code: {code}")
             # We need to raise an exception here to disrupt a build/run/prove build chain from the main task
@@ -279,7 +258,6 @@ class RemoteProject(Project):
         :return:
             Returns a tuple of exit status and stdout
         """
-        self.build()
         if not self.main:
             raise RunError("Cannot run program without main")
 
@@ -292,14 +270,13 @@ class RemoteProject(Project):
         rep = MQReporter(self.app, self.task_id, lab_ref=lab_ref)
         rep.console([f"./{self.main}", " ".join(cli)])
 
-#        exe = os.path.join(self.remote_tempd, self.main)
         exe = os.path.join(TEMP_WORKSPACE_BASEDIR, self.main)
         echo_line = f"`echo {' '.join(cli)}`"
-        line = ['sudo', '-u', 'unprivileged', 'timeout', '10s',
+        line = ['timeout', '10s',
                 'bash', '-c',
                 f'LD_PRELOAD=/preloader.so {exe} {echo_line}']
 
-        code, out, err = self.container.execute_noenv(line, rep)
+        code, out, err = self.container.execute(line, reporter=rep)
         return code, out
 
     def prove(self, extra_args):
@@ -316,12 +293,11 @@ class RemoteProject(Project):
         rep = MQReporter(self.app, self.task_id)
         rep.console(["gnatprove", "-P", self.gpr.get_name(), "--checks-as-errors", "--level=0", "--no-axiom-guard"] + extra_args)
 
-#        prove_path = os.path.join(self.remote_tempd, self.gpr.get_name())
         prove_path = os.path.join(TEMP_WORKSPACE_BASEDIR, self.gpr.get_name())
         line = ["gnatprove", "-P", prove_path, "--checks-as-errors", "--level=0", "--no-axiom-guard"]
         line.extend(extra_args)
 
-        code, out, err = self.container.execute(line, rep)
+        code, out, err = self.container.execute(line, {"TMPDIR": TEMP_WORKSPACE_BASEDIR}, rep, rw_user)
         return code
 
     def submit(self):
