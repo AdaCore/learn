@@ -1,5 +1,4 @@
 import io
-import logging
 import os
 import shutil
 import tempfile
@@ -9,7 +8,9 @@ from .file import new_file, find_mains
 from .lab import LabList
 from .reporter import MQReporter
 
-logger = logging.getLogger(__name__)
+from celery.utils.log import get_task_logger
+
+logger = get_task_logger(__name__)
 
 CLI_FILE = "cli.txt"
 

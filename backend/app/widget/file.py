@@ -1,9 +1,9 @@
-import logging
 import os
 import re
 
+from celery.utils.log import get_task_logger
 
-logger = logging.getLogger(__name__)
+logger = get_task_logger(__name__)
 
 
 RECEIVED_FILE_CHAR_LIMIT = 50 * 1000
