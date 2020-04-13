@@ -3,6 +3,8 @@ Strongly typed language
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
+.. include:: <isopub.txt>
+
 .. role:: ada(code)
    :language: ada
 
@@ -50,38 +52,41 @@ corresponding names.
        Green, Blue.
 
     #. Function :ada:`To_Integer` converts from the :ada:`HTML_Color` type to
-       the integer values in hexadecimal according to the table below.
+       the HTML color code |mdash| as integer values in hexadecimal notation.
+
+        - You can find the HTML color codes in the table below.
 
     #. Function :ada:`To_HTML_Color` converts from :ada:`Basic_HTML_Color` to
        :ada:`HTML_Color`.
 
-    #. This is the table to convert from an HTML color to a hexadecimal value:
+    #. This is the table to convert from an HTML color to a HTML color code in
+       hexadecimal notation:
 
-    +-------------+---------------+
-    | Color       | Value         |
-    +=============+===============+
-    | Salmon      | ``#FA8072``   |
-    +-------------+---------------+
-    | Firebrick   | ``#B22222``   |
-    +-------------+---------------+
-    | Red         | ``#FF0000``   |
-    +-------------+---------------+
-    | Darkred     | ``#8B0000``   |
-    +-------------+---------------+
-    | Lime        | ``#00FF00``   |
-    +-------------+---------------+
-    | Forestgreen | ``#228B22``   |
-    +-------------+---------------+
-    | Green       | ``#008000``   |
-    +-------------+---------------+
-    | Darkgreen   | ``#006400``   |
-    +-------------+---------------+
-    | Blue        | ``#0000FF``   |
-    +-------------+---------------+
-    | Mediumblue  | ``#0000CD``   |
-    +-------------+---------------+
-    | Darkblue    | ``#00008B``   |
-    +-------------+---------------+
+    +-------------+------------------------+
+    | Color       | HTML color code (hexa) |
+    +=============+========================+
+    | Salmon      | ``#FA8072``            |
+    +-------------+------------------------+
+    | Firebrick   | ``#B22222``            |
+    +-------------+------------------------+
+    | Red         | ``#FF0000``            |
+    +-------------+------------------------+
+    | Darkred     | ``#8B0000``            |
+    +-------------+------------------------+
+    | Lime        | ``#00FF00``            |
+    +-------------+------------------------+
+    | Forestgreen | ``#228B22``            |
+    +-------------+------------------------+
+    | Green       | ``#008000``            |
+    +-------------+------------------------+
+    | Darkgreen   | ``#006400``            |
+    +-------------+------------------------+
+    | Blue        | ``#0000FF``            |
+    +-------------+------------------------+
+    | Mediumblue  | ``#0000CD``            |
+    +-------------+------------------------+
+    | Darkblue    | ``#00008B``            |
+    +-------------+------------------------+
 
 **Remarks**:
 
@@ -108,7 +113,8 @@ corresponding names.
        --  type HTML_Color is [...]
        --
 
-       function To_Integer (C : HTML_Color) return Integer;
+       --  Include function declaration for:
+       --  function To_Integer (C : HTML_Color) return Integer;
 
        --  Include type declaration for Basic_HTML_Color!
        --
@@ -124,15 +130,13 @@ corresponding names.
 
     package body Color_Types is
 
-       function To_Integer (C : HTML_Color) return Integer is
-       begin
-          --  Implement the conversion from HTML_Color to Integer here!
-          --
-          --  Hint: use 'case' for the HTML colors;
-          --        use 16#...# for the hexadecimal values.
-          --
-          null;
-       end To_Integer;
+       --  Implement the conversion from HTML_Color to Integer here!
+       --
+       --  function To_Integer (C : HTML_Color) return Integer is
+       --  begin
+       --  --  Hint: use 'case' for the HTML colors;
+       --  --        use 16#...# for the hexadecimal values.
+       --  end To_Integer;
 
        --  Implement the conversion from Basic_HTML_Color to HTML_Color here!
        --
@@ -184,8 +188,8 @@ corresponding names.
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Integer Types
--------------
+Integers
+--------
 
 **Goal**: implement a package with various integer types.
 
@@ -268,7 +272,7 @@ Integer Types
    :ada:`S_100` to :ada:`I_100`. However, we skip this here because explicit
    conversions are not needed for subtypes.
 
-.. code:: ada lab=Strongly_Typed.Integer_Types
+.. code:: ada lab=Strongly_Typed.Integers
 
     --  START LAB IO BLOCK
     in 0:I_100_Range
@@ -526,6 +530,13 @@ Temperatures
 
     #. The functions :ada:`To_Celsius` and :ada:`To_Kelvin` are used to convert
        between temperatures in :ada:`Kelvin` and :ada:`Celsius`.
+
+        #. In order to convert temperatures in Celsius to Kelvin, you must use
+           the formula :math:`K = C + 273.15`, where:
+
+            - *K* is the temperature in Kelvin, and
+
+            - *C* is the temperature in Celsius.
 
 **Remarks**:
 

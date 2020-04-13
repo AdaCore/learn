@@ -900,10 +900,10 @@ Colors
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Integer Types
-~~~~~~~~~~~~~
+Integers
+~~~~~~~~
 
-.. code:: ada lab=Solutions.Strongly_Typed.Integer_Types
+.. code:: ada lab=Solutions.Strongly_Typed.Integers
 
     --  START LAB IO BLOCK
     in 0:I_100_Range
