@@ -710,19 +710,17 @@ Operations
 
     end Operations;
 
-    package Operations_Test is
+    package Operations.Test is
 
-       procedure Display_Operations (A, B : Integer);
+       procedure Display (A, B : Integer);
 
-    end Operations_Test;
+    end Operations.Test;
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    with Operations;  use Operations;
+    package body Operations.Test is
 
-    package body Operations_Test is
-
-       procedure Display_Operations (A, B : Integer) is
+       procedure Display (A, B : Integer) is
           A_Str : constant String := Integer'Image (A);
           B_Str : constant String := Integer'Image (B);
        begin
@@ -739,15 +737,15 @@ Operations
           Put_Line (A_Str & " / " & B_Str & " = "
                     & Integer'Image (Divide (A, B))
                     & ",");
-       end Display_Operations;
+       end Display;
 
-    end Operations_Test;
+    end Operations.Test;
 
     with Ada.Command_Line; use Ada.Command_Line;
     with Ada.Text_IO;      use Ada.Text_IO;
 
     with Operations;
-    with Operations_Test;  use Operations_Test;
+    with Operations.Test;  use Operations.Test;
 
     procedure Main is
 
@@ -768,8 +766,8 @@ Operations
                 Put_Line ("Divide (100, 2) = "
                           & Integer'Image (Operations.Divide (100, 2)));
              when Operations_Display_Chk =>
-                Display_Operations (10, 5);
-                Display_Operations ( 1, 2);
+                Display (10, 5);
+                Display ( 1, 2);
           end case;
        end Check;
 
