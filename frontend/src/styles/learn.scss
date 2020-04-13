@@ -220,11 +220,13 @@ div {
         color: $color-font-grey;
         padding-left: 15px;
         padding-right: 3px;
+        white-space: pre;
     }
     &.output_msg {
         color: $color-widget-msg;
         padding-left: 15px;
         padding-right: 3px;
+        white-space: pre;
         &:hover {
             background-color: #fdd;
         }
@@ -233,6 +235,7 @@ div {
         color: $color-widget-info;
         padding-left: 15px;
         padding-right: 3px;
+        white-space: pre;
         &:hover {
             background-color: $color-widget-msg-info-bg-hover;
         }
@@ -241,11 +244,13 @@ div {
         color: $color-widget-info;
         padding-left: 3px;
         padding-right: 3px;
+        white-space: pre;
     }
     &.output_error {
         color: $color-widget-error;
         padding-left: 3px;
         padding-right: 3px;
+        white-space: pre;
     }
     &.output_success {
         color: $color-widget-success;
