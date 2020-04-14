@@ -1,11 +1,7 @@
-import os
-
-###### Docker #######
 import docker
 from io import BytesIO
 import tarfile
 import time
-#####################
 
 from celery.utils.log import get_task_logger
 
@@ -17,14 +13,23 @@ INTERRUPT_RETURNCODE = 124
 rw_user = "runner"
 ro_user = "unprivileged"
 
-PROCESS_LIMIT = 300
+TMPFS = "/workspace/sessions"
 
-
-def get_container(impl, name):
-    if impl == "docker":
-        return DockerContainer(name)
-    else:
-        raise Exception("Unknown container type")
+CONTAINER_CONFIG = {
+    'command': "/bin/sh",
+    'environment': {
+        'TMPDIR': TMPFS
+    },
+    'mem_limit': '32M',
+    'network_disabled': True,
+    'pids_limit': 100,
+    'security_opt': [
+        'no-new-privileges'
+    ],
+    'stdin_open': True,
+    'tty': True,
+    'working_dir': TMPFS
+}
 
 
 class DockerContainer:
@@ -48,15 +53,10 @@ class DockerContainer:
         Executes cmds in the container modifying the container env by setting PATH with GNAT installation bin path
         and reports results back through reporter if any
     """
-    def __init__(self, name):
+    def __init__(self, image):
         self.client = docker.from_env()
 
-        self.container = self.client.containers.create(f"{name}:Dockerfile",
-                                                        command= "/bin/sh",
-                                                        tty=True,
-                                                        stdin_open=True,
-                                                        pids_limit=PROCESS_LIMIT,
-                                                        network_disabled=True)
+        self.container = self.client.containers.create(f"{image}:Dockerfile", **CONTAINER_CONFIG)
         self.name = self.container.name
         self.container.start()
         logger.debug(f"Attached to docker {self.name} with status {self.container.status}")
@@ -66,13 +66,11 @@ class DockerContainer:
         self.container.remove(force=True)
         logger.debug(f"Container status: {self.container.status}")
 
-    def push_files(self, files, dst):
+    def push_files(self, files):
         """
         Push files into the container
         :param files:
             The files to push
-        :param dst:
-            The destination to put the files
         """
         memfile = BytesIO()
         with tarfile.open('payload.tar', mode='w', fileobj=memfile) as tar:
@@ -87,18 +85,17 @@ class DockerContainer:
                 tar.addfile(tarinfo=info, fileobj=file)
         memfile.seek(0)
 
-        success = self.container.put_archive(dst, memfile)
+        logger.debug(f"Pushing files to {TMPFS} in {self.name}")
+        success = self.container.put_archive(TMPFS, memfile)
 
         if not success:
             raise Exception("Could not push files to docker container")
 
-    def _stream_exec(self, cmds, env, reporter, user):
+    def _stream_exec(self, cmds, reporter, user):
         """
         Helper function to use docker low level API. Necessary to get return code
         :param cmds:
             The cmds to run in the container
-        :param env:
-            The env to modify for the execution
         :param reporter:
             The reporter to send intermediate results to if any
         :param user:
@@ -108,8 +105,13 @@ class DockerContainer:
         """
         ret_stdout = ""
         ret_stderr = ""
-        exec_id = self.container.client.api.exec_create(self.container.id, cmds, user=user, environment=env)['Id']
-        output = self.container.client.api.exec_start(exec_id, stream=True, demux=True)
+        exec_id = self.container.client.api.exec_create(self.container.id,
+                                                        cmds,
+                                                        user=user,
+                                                        workdir=TMPFS)['Id']
+        output = self.container.client.api.exec_start(exec_id,
+                                                      stream=True,
+                                                      demux=True)
         for item in output:
             stdout, stderr = item
             if stdout:
@@ -123,13 +125,11 @@ class DockerContainer:
                 reporter.stderr(temp)
         return self.container.client.api.exec_inspect(exec_id)['ExitCode'], ret_stdout, ret_stderr
 
-    def execute(self, cmds, env={}, reporter=None, user=ro_user):
+    def execute(self, cmds, reporter=None, user=ro_user):
         """
         Execute commands inside the container and report back results through reporter if any or via return
         :param cmds:
             The cmds to run in the container
-        :param env:
-            The env to modify for the execution
         :param reporter:
             The reporter to send intermediate results to if any
         :param user:
@@ -141,15 +141,22 @@ class DockerContainer:
         stdout = None
         stderr = None
 
-        logger.debug(f"Running {env} {cmds} in {self.name}")
+        logger.debug(f"Running {cmds} in {self.name}")
 
         if reporter:
-            exit_code, stdout, stderr = self._stream_exec(cmds, env, reporter, user)
+            exit_code, stdout, stderr = self._stream_exec(cmds,
+                                                          reporter,
+                                                          user)
 
             if exit_code == INTERRUPT_RETURNCODE:
                 reporter.stderr(INTERRUPT_STRING)
         else:
-            exit_code, output = self.container.exec_run(cmds, stdout=True, stderr=True, user=user, environment=env, demux=True)
+            exit_code, output = self.container.exec_run(cmds,
+                                                        stdout=True,
+                                                        stderr=True,
+                                                        user=user,
+                                                        workdir=TMPFS,
+                                                        demux=True)
             if output[0]:
                 stdout = output[0].decode("utf-8")
             if output[1]:

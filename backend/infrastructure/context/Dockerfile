@@ -6,7 +6,7 @@ COPY preloader.c .
 RUN gcc -shared -o preloader.so -fPIC preloader.c
 
 # STAGE: Install gnat community
-FROM ubuntu:bionic as gnat_stage
+FROM ubuntu:latest as gnat_stage
 
 # Install dependencies
 RUN DEBIAN_FRONTEND=noninteractive \
@@ -27,12 +27,14 @@ RUN git clone https://github.com/AdaCore/gnat_community_install_script.git /gnat
     && sh /gnat_installer/script/install_package.sh /gnat_installer/actual /gnat com.adacore.spark2014_discovery,com.adacore.gnat \
     && rm -rf /gnat_installer
 
-# base image
-FROM ubuntu:bionic
+# STAGE: final
+FROM ubuntu:latest
 
+# Copy artifacts from previous stages
 COPY --from=preloader_stage preloader.so /
 COPY --from=gnat_stage /gnat /gnat
 
+# Install deps
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get update \
     && apt-get install --no-install-recommends -y \
@@ -50,3 +52,6 @@ RUN useradd -r runner \
 
 # Update PATH
 ENV PATH="/gnat/bin:${PATH}"
+
+# Make unprivileged the default run user
+USER unprivileged

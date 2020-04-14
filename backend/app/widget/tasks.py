@@ -5,7 +5,7 @@ from celery.utils.log import get_task_logger
 import time
 import traceback
 
-from .container import get_container
+from .container import DockerContainer
 from .project import RemoteProject, BuildError
 
 
@@ -26,7 +26,7 @@ def run_program(self, data):
     """
     try:
         start = time.time()
-        container = get_container(celery.conf['CONTAINER_IMPL'], celery.conf['CONTAINER_NAME'])
+        container = DockerContainer(celery.conf['CONTAINER_NAME'])
         task_id = self.request.id
         mode = data['mode']
         app = self._app

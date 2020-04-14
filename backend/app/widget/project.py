@@ -35,10 +35,24 @@ pragma Warnings (Off, "subprogram * has no effect");
 pragma Warnings (Off, "file name does not match");
 """
 
-TEMP_WORKSPACE_BASEDIR = os.path.join(os.path.sep, "workspace", "sessions")
+MAIN_GPR = """
+project Main is
 
-TEMPLATE_PROJECT = os.path.join(os.getcwd(), "app", "widget", "static", "templates", "inline_code", "main.gpr")
+   --MAIN_PLACEHOLDER--
 
+   --LANGUAGE_PLACEHOLDER--
+
+   package Compiler is
+      for Switches ("ada") use ("-g");
+   end Compiler;
+
+   package Builder is
+      for Switches ("ada") use ("-g", "-O0", "-gnata");
+      for Global_Configuration_Pragmas use "main.adc";
+   end Builder;
+
+end Main;
+"""
 
 class ProjectError(Exception):
     pass
@@ -98,11 +112,7 @@ class Project:
         self.spark = spark_mode
 
         # Grab the default project file
-        gpr_name = os.path.basename(TEMPLATE_PROJECT)
-        with open(TEMPLATE_PROJECT, 'r') as f:
-            gpr_content = f.read()
-
-        self.gpr = new_file(gpr_name, gpr_content)
+        self.gpr = new_file("main.gpr", MAIN_GPR)
 
         # strip cli and labio files from files
         for file in files:
@@ -226,7 +236,7 @@ class RemoteProject(Project):
         # Call the Project constructor
         super().__init__(files, spark_mode)
 
-        self.container.push_files(self.file_list, TEMP_WORKSPACE_BASEDIR)
+        self.container.push_files(self.file_list)
 
     def build(self):
         """
@@ -235,12 +245,11 @@ class RemoteProject(Project):
             Returns the status code returned from the build
         """
         rep = MQReporter(self.app, self.task_id)
-        rep.console(["gprbuild", "-q", "-P", self.gpr.get_name(), "-gnatwa"])
 
-        main_path = os.path.join(TEMP_WORKSPACE_BASEDIR, self.gpr.get_name())
-        line = ["gprbuild", "-q", "-P", main_path, "-gnatwa"]
+        line = ["gprbuild", "-q", "-P", self.gpr.get_name(), "-gnatwa"]
+        rep.console(line)
 
-        code, out, err = self.container.execute(line, {"TMPDIR": TEMP_WORKSPACE_BASEDIR}, rep, rw_user)
+        code, out, err = self.container.execute(line, rep, rw_user)
         if code != 0:
             rep.stderr(f"Build failed with error code: {code}")
             # We need to raise an exception here to disrupt a build/run/prove build chain from the main task
@@ -270,11 +279,10 @@ class RemoteProject(Project):
         rep = MQReporter(self.app, self.task_id, lab_ref=lab_ref)
         rep.console([f"./{self.main}", " ".join(cli)])
 
-        exe = os.path.join(TEMP_WORKSPACE_BASEDIR, self.main)
         echo_line = f"`echo {' '.join(cli)}`"
         line = ['timeout', '10s',
                 'bash', '-c',
-                f'LD_PRELOAD=/preloader.so {exe} {echo_line}']
+                f'LD_PRELOAD=/preloader.so ./{self.main} {echo_line}']
 
         code, out, err = self.container.execute(line, reporter=rep)
         return code, out
@@ -291,13 +299,12 @@ class RemoteProject(Project):
             raise ProveError("Project not configured for spark mode")
 
         rep = MQReporter(self.app, self.task_id)
-        rep.console(["gnatprove", "-P", self.gpr.get_name(), "--checks-as-errors", "--level=0", "--no-axiom-guard"] + extra_args)
-
-        prove_path = os.path.join(TEMP_WORKSPACE_BASEDIR, self.gpr.get_name())
-        line = ["gnatprove", "-P", prove_path, "--checks-as-errors", "--level=0", "--no-axiom-guard"]
+        line = ["gnatprove", "-P", self.gpr.get_name(), "--checks-as-errors", "--level=0", "--no-axiom-guard"]
         line.extend(extra_args)
 
-        code, out, err = self.container.execute(line, {"TMPDIR": TEMP_WORKSPACE_BASEDIR}, rep, rw_user)
+        rep.console(line)
+
+        code, out, err = self.container.execute(line, rep, rw_user)
         return code
 
     def submit(self):

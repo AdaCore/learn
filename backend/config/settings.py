@@ -8,7 +8,6 @@ class BaseConfig():
 
     # Container settings
     CONTAINER_NAME = "safecontainer"
-    CONTAINER_IMPL = "docker"
 
     SECRET_KEY = os.environ.get('FLASK_SECRET_KEY', None)
     LOGLEVEL = "DEBUG"

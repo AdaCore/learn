@@ -6,9 +6,6 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     python3 \
     python3-pip \
     python3-venv \
-    lxc \
-    lxd \
-    lxd-client \
     make \
     rabbitmq-server \
     apt-transport-https \
