@@ -81,7 +81,7 @@
     "tsc": "tsc",
     "eslint": "eslint --ext .ts src/",
     "staging": "webpack --env.staging --config webpack.staging.js",
-    "build": "webpack --env.staging=false --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js",
     "test": "mocha-webpack",
     "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text yarn run test"
   },
