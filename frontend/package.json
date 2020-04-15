@@ -42,6 +42,7 @@
     "eslint-loader": "^2.2.1",
     "file-loader": "^4.1.0",
     "html-webpack-plugin": "^3.2.0",
+    "ifdef-loader": "^2.1.5",
     "imports-loader": "^0.8.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jsdom": "^15.2.1",
@@ -79,7 +80,8 @@
     "dev": "webpack-dev-server --open --config webpack.dev.js",
     "tsc": "tsc",
     "eslint": "eslint --ext .ts src/",
-    "build": "webpack --config webpack.prod.js",
+    "staging": "webpack --env.staging --config webpack.staging.js",
+    "build": "webpack --env.staging=false --config webpack.prod.js",
     "test": "mocha-webpack",
     "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text yarn run test"
   },

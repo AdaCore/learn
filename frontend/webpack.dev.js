@@ -5,7 +5,7 @@ const WatchPlugin = require('webpack-watch-files-plugin').default;
 const ShellPlugin = require('webpack-shell-plugin');
 const common = require('./webpack.common.js');
 
-module.exports = merge(common, {
+module.exports = env => merge(common(env), {
   mode: 'development',
   watch: true,
   devServer: {
