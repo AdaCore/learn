@@ -56,7 +56,7 @@ class DockerContainer:
     def __init__(self, image):
         self.client = docker.from_env()
 
-        self.container = self.client.containers.create(f"{image}:Dockerfile", **CONTAINER_CONFIG)
+        self.container = self.client.containers.create(image, **CONTAINER_CONFIG)
         self.name = self.container.name
         self.container.start()
         logger.debug(f"Attached to docker {self.name} with status {self.container.status}")

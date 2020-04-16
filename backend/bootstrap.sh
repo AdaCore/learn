@@ -14,9 +14,6 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     gnupg-agent \
     software-properties-common
 
-# Initialize lxc for code_examples_server
-lxd init --auto
-
 # Install docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 add-apt-repository \
@@ -36,4 +33,9 @@ source /vagrant/venv/bin/activate
 pip3 install -r /vagrant/REQUIREMENTS.txt
 
 cd /vagrant/infrastructure
-make docker
+# destroy previous container if it exists
+docker container ls | grep safecontainer && docker rm --force safecontainer || true
+# remove all images on system
+docker system prune -a -f
+# Build docker image
+docker build -t "safecontainer" .
