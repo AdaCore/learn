@@ -34,7 +34,7 @@ pip3 install -r /vagrant/REQUIREMENTS.txt
 
 cd /vagrant/infrastructure
 # destroy previous container if it exists
-docker container ls | grep safecontainer && docker rm --force safecontainer || true
+docker container ls | grep safecontainer && docker rm --force safecontainer
 # remove all images on system
 docker system prune -a -f
 # Build docker image

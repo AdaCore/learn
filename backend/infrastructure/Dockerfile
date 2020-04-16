@@ -18,6 +18,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     libdbus-1-3 \
     libfontconfig \
     libx11-xcb-dev \
+    make \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
