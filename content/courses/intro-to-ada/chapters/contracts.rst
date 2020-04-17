@@ -64,14 +64,12 @@ zero. If the :ada:`DB_Entry` procedure is called with an empty string for
 the :ada:`Name` parameter, the call will fail because the precondition is
 not met.
 
-The :ada:`pragma Assertion_Policy` statement is used to force the compiler
-to generate code to check the precondition. The same :ada:`pragma` is used
-similarly for the other kinds of contracts shown in the rest of this
-chapter. When using GNAT, you can get that behavior globally via a
-configuration pragma or a command-line switch |mdash| please consult the GNAT
-documentation on `configuration pragmas
-<http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#configuration-pragmas>`_
-for details.
+.. admonition:: In the GNAT toolchain
+
+    GNAT handles pre- and postconditions by generating runtime assertions for
+    them. By default, however, assertions aren't enabled. Therefore, in order
+    to check pre- and postconditions at runtime, you need to enable assertions
+    by using the `-gnata` switch.
 
 Before we get to our next example, let's briefly discuss quantified
 expressions, which are quite useful in concisely writing pre- and
