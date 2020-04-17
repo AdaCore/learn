@@ -364,15 +364,17 @@ export class Widget {
 
           // Lines that contain a sloc are clickable:
           div.on('click', () => {
-            this.editors.map((e) => {
-              if (basename == e.getResource().basename) {
-                // Switch to the tab that contains the editor
-                e.getTab().trigger('click');
+            if (window.getSelection().toString() == '') {
+              this.editors.map((e) => {
+                if (basename == e.getResource().basename) {
+                  // Switch to the tab that contains the editor
+                  e.getTab().trigger('click');
 
-                // Jump to the corresponding line
-                e.gotoLine(row, col);
-              }
-            });
+                  // Jump to the corresponding line
+                  e.gotoLine(row, col);
+                }
+              });
+            }
           });
         } else {
           homeArea.addLine(outMsg);
