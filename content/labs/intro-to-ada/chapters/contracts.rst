@@ -66,9 +66,6 @@ Price Range
 
     procedure Main is
 
-       pragma Assertion_Policy (Static_Predicate  => Check,
-                                Dynamic_Predicate => Check);
-
        type Test_Case_Index is
          (Price_Range_Chk);
 
@@ -144,9 +141,6 @@ Pythagorean Theorem: Predicate
     --  END LAB IO BLOCK
 
     package Triangles is
-
-       pragma Assertion_Policy (Static_Predicate  => Check,
-                                Dynamic_Predicate => Check);
 
        subtype Length is Integer;
 
@@ -276,8 +270,6 @@ Pythagorean Theorem: Precondition
 
     package Triangles is
 
-       pragma Assertion_Policy (Pre => Check);
-
        subtype Length is Integer;
 
        type Right_Triangle is record
@@ -402,8 +394,6 @@ Pythagorean Theorem: Postcondition
     --  END LAB IO BLOCK
 
     package Triangles is
-
-       pragma Assertion_Policy (Post => Check);
 
        subtype Length is Integer;
 
@@ -542,8 +532,6 @@ Pythagorean Theorem: Type Invariant
     --  END LAB IO BLOCK
 
     package Triangles is
-
-       pragma Assertion_Policy (Type_Invariant => Check);
 
        subtype Length is Integer;
 

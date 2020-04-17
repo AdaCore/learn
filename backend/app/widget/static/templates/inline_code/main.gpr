@@ -5,11 +5,11 @@ project Main is
    --LANGUAGE_PLACEHOLDER--
 
    package Compiler is
-      for Switches ("ada") use ("-g");
+      for Default_Switches ("ada") use ("-g", "-O0", "-gnata");
    end Compiler;
 
    package Builder is
-      for Switches ("ada") use ("-g", "-O0", "-gnata");
+      for Switches ("ada") use ("-g");
       for Global_Configuration_Pragmas use "main.adc";
    end Builder;
 
