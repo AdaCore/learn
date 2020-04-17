@@ -1516,23 +1516,23 @@ Inventory
 
     package Inventory_Pkg is
 
+       type Item_Name is
+         (Ballpoint_Pen, Oil_Based_Pen_Marker, Feather_Quill_Pen);
+
+       function To_String (I : Item_Name) return String;
+
        type Item is record
+          Name     : Item_Name;
           Quantity : Natural;
           Price    : Float;
        end record;
 
-       type Inventory is record
-          Assets   : Float := 0.0;
-       end record;
-
-       function Init (Name     : String;
+       function Init (Name     : Item_Name;
                       Quantity : Natural;
                       Price    : Float) return Item;
 
-       procedure Add (Inv : in out Inventory;
-                      I   : Item);
-
-       procedure Display (Inv : Inventory);
+       procedure Add (Assets : in out Float;
+                      I      : Item);
 
     end Inventory_Pkg;
 
@@ -1540,32 +1540,31 @@ Inventory
 
     package body Inventory_Pkg is
 
-       function Init (Name     : String;
+       function To_String (I : Item_Name) return String is
+       begin
+          case I is
+             when Ballpoint_Pen        => return "Ballpoint Pen";
+             when Oil_Based_Pen_Marker => return "Oil-based Pen Marker";
+             when Feather_Quill_Pen    => return "Feather Quill Pen";
+          end case;
+       end To_String;
+
+       function Init (Name     : Item_Name;
                       Quantity : Natural;
                       Price    : Float) return Item is
        begin
-          Put_Line ("Adding item: " & Name & ".");
+          Put_Line ("Adding item: " & To_String (Name) & ".");
 
-          return (Quantity => Quantity,
+          return (Name     => Name,
+                  Quantity => Quantity,
                   Price    => Price);
        end Init;
 
-       procedure Add (Inv : in out Inventory;
-                      I   : Item) is
+       procedure Add (Assets : in out Float;
+                      I      : Item) is
        begin
-          Inv.Assets := Inv.Assets + Float (I.Quantity) * I.Price;
+          Assets := Assets + Float (I.Quantity) * I.Price;
        end Add;
-
-       procedure Display (Inv : Inventory) is
-          package F_IO is new Ada.Text_IO.Float_IO (Float);
-
-          use F_IO;
-       begin
-          Put ("Assets: $");
-          Put (Inv.Assets, 1, 2, 0);
-          Put (".");
-          New_Line;
-       end Display;
 
     end Inventory_Pkg;
 
@@ -1581,28 +1580,39 @@ Inventory
        type Test_Case_Index is
          (Inventory_Chk);
 
+       procedure Display (Assets : Float) is
+          package F_IO is new Ada.Text_IO.Float_IO (Float);
+
+          use F_IO;
+       begin
+          Put ("Assets: $");
+          Put (Assets, 1, 2, 0);
+          Put (".");
+          New_Line;
+       end Display;
+
        procedure Check (TC : Test_Case_Index) is
-          I   : Item;
-          Inv : Inventory;
+          I      : Item;
+          Assets : Float := 0.0;
 
           --  Please ignore the following three lines!
           pragma Warnings (Off, "default initialization");
-          for Inv'Address use F'Address;
+          for Assets'Address use F'Address;
           pragma Warnings (On, "default initialization");
        begin
           case TC is
           when Inventory_Chk =>
-             I := Init ("Ballpoint Pen",        185,  0.15);
-             Add (Inv, I);
-             Display (Inv);
+             I := Init (Ballpoint_Pen,        185,  0.15);
+             Add (Assets, I);
+             Display (Assets);
 
-             I := Init ("Oil-based Pen Marker", 100,  9.0);
-             Add (Inv, I);
-             Display (Inv);
+             I := Init (Oil_Based_Pen_Marker, 100,  9.0);
+             Add (Assets, I);
+             Display (Assets);
 
-             I := Init ("Feather Quill Pen",      2, 40.0);
-             Add (Inv, I);
-             Display (Inv);
+             I := Init (Feather_Quill_Pen,      2, 40.0);
+             Add (Assets, I);
+             Display (Assets);
           end case;
        end Check;
 

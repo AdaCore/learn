@@ -393,48 +393,36 @@ keep track of assets.
 
         #. Declare the :ada:`Item` record.
 
-        #. Declare the :ada:`Inventory` record.
-
         #. Implement the :ada:`Init` function.
 
         #. Implement the :ada:`Add` procedure.
-
-        #. Implement the :ada:`Display` procedure.
 
 **Requirements**:
 
     #. Record :ada:`Item` collects information about products from the store.
 
-        #. To keep it simple, this record only contains the quantity and price
-           of each item.
+        #. To keep it simple, this record only contains the name, quantity and
+           price of each item.
 
-        #. The record elements must be named :ada:`Quantity` and :ada:`Price`.
+        #. The record components are:
 
-    #. Record :ada:`Inventory` collects information about the inventory.
+            - :ada:`Name` of :ada:`Item_Name` type;
 
-        #. We're only interested in the assets here.
+            - :ada:`Quantity` of :ada:`Natural` type;
+
+            - :ada:`Price` of :ada:`Float` type.
 
     #. Function :ada:`Init` returns an initialized item (of :ada:`Item` type).
 
-        #. This function must also display the item name.
+        #. Function :ada:`Init` must also display the item name by calling the
+           :ada:`To_String` function for the :ada:`Item_Name` type.
 
-    #. Procedure :ada:`Add` adds an item to the inventory.
+            - This is already implemented in the code below.
+
+    #. Procedure :ada:`Add` adds an item to the assets.
 
         #. Since we want to keep track of the assets, the implementation must
-           accumulate the total amount of each item in this element.
-
-    #. Procedure :ada:`Display` displays information about the inventory.
-
-**Remarks**:
-
-    #. The code below doesn't have an :ada:`Init` subprogram for the
-       :ada:`Inventory` type.
-
-        #. In order for the system to have correct information about the
-           assets, you should declare a default value.
-
-        #. Alternatively, you could implement an :ada:`Init` subprogram and
-           make sure it's called in the :ada:`Check` procedure below.
+           accumulate the total amount of each item.
 
 .. code:: ada lab=Records.Inventory
 
@@ -445,22 +433,21 @@ keep track of assets.
 
     package Inventory_Pkg is
 
+       type Item_Name is
+         (Ballpoint_Pen, Oil_Based_Pen_Marker, Feather_Quill_Pen);
+
+       function To_String (I : Item_Name) return String;
+
        --  Replace type declaration for Item record:
        --
        type Item is null record;
 
-       --  Replace type declaration for Inventory record:
-       --
-       type Inventory is null record;
-
-       function Init (Name     : String;
+       function Init (Name     : Item_Name;
                       Quantity : Natural;
                       Price    : Float) return Item;
 
-       procedure Add (Inv : in out Inventory;
-                      I   : Item);
-
-       procedure Display (Inv : Inventory);
+       procedure Add (Assets : in out Float;
+                      I      : Item);
 
     end Inventory_Pkg;
 
@@ -468,38 +455,33 @@ keep track of assets.
 
     package body Inventory_Pkg is
 
-       function Init (Name     : String;
+       function To_String (I : Item_Name) return String is
+       begin
+          case I is
+             when Ballpoint_Pen        => return "Ballpoint Pen";
+             when Oil_Based_Pen_Marker => return "Oil-based Pen Marker";
+             when Feather_Quill_Pen    => return "Feather Quill Pen";
+          end case;
+       end To_String;
+
+       function Init (Name     : Item_Name;
                       Quantity : Natural;
                       Price    : Float) return Item is
        begin
-          Put_Line ("Adding item: " & Name & ".");
+          Put_Line ("Adding item: " & To_String (Name) & ".");
 
           --  Replace return statement with the actual record initialization!
           --
           return (null record);
        end Init;
 
-       procedure Add (Inv : in out Inventory;
-                      I   : Item) is
+       procedure Add (Assets : in out Float;
+                      I      : Item) is
        begin
           --  Implement the function that adds an item to the inventory here!
           --
           null;
        end Add;
-
-       procedure Display (Inv : Inventory) is
-          package F_IO is new Ada.Text_IO.Float_IO (Float);
-
-          use F_IO;
-       begin
-          --  Uncomment the code below and fill the missing elements
-          --
-          --  Put ("Assets: $");
-          --  Put (____, 1, 2, 0);
-          --  Put (".");
-          --  New_Line;
-          null;
-       end Display;
 
     end Inventory_Pkg;
 
@@ -515,28 +497,39 @@ keep track of assets.
        type Test_Case_Index is
          (Inventory_Chk);
 
+       procedure Display (Assets : Float) is
+          package F_IO is new Ada.Text_IO.Float_IO (Float);
+
+          use F_IO;
+       begin
+          Put ("Assets: $");
+          Put (Assets, 1, 2, 0);
+          Put (".");
+          New_Line;
+       end Display;
+
        procedure Check (TC : Test_Case_Index) is
-          I   : Item;
-          Inv : Inventory;
+          I      : Item;
+          Assets : Float := 0.0;
 
           --  Please ignore the following three lines!
           pragma Warnings (Off, "default initialization");
-          for Inv'Address use F'Address;
+          for Assets'Address use F'Address;
           pragma Warnings (On, "default initialization");
        begin
           case TC is
           when Inventory_Chk =>
-             I := Init ("Ballpoint Pen",        185,  0.15);
-             Add (Inv, I);
-             Display (Inv);
+             I := Init (Ballpoint_Pen,        185,  0.15);
+             Add (Assets, I);
+             Display (Assets);
 
-             I := Init ("Oil-based Pen Marker", 100,  9.0);
-             Add (Inv, I);
-             Display (Inv);
+             I := Init (Oil_Based_Pen_Marker, 100,  9.0);
+             Add (Assets, I);
+             Display (Assets);
 
-             I := Init ("Feather Quill Pen",      2, 40.0);
-             Add (Inv, I);
-             Display (Inv);
+             I := Init (Feather_Quill_Pen,      2, 40.0);
+             Add (Assets, I);
+             Display (Assets);
           end case;
        end Check;
 
