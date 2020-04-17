@@ -5,7 +5,7 @@ project Main is
    --LANGUAGE_PLACEHOLDER--
 
    package Compiler is
-      for Switches ("ada") use ("-g", "-O0", "-gnata");
+      for Default_Switches ("ada") use ("-g", "-O0", "-gnata");
    end Compiler;
 
    package Builder is
