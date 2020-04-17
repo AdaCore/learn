@@ -109,7 +109,7 @@ local:
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack-production:
-	yarn run build
+	yarn run production
 
 webpack-staging:
 	yarn run staging

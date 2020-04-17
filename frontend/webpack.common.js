@@ -20,7 +20,7 @@ const ts_rule = function(env) {
   return {
     test: /\.tsx?$/,
     use: [
-      { loader: 'awesome-typescript-loader' },
+      { loader: 'ts-loader' },
       { loader: 'ifdef-loader', options: ifdef_opts },
       { loader: 'eslint-loader' },
     ],

@@ -30,7 +30,6 @@
     "@typescript-eslint/parser": "^2.0.0",
     "amd-loader": "^0.0.8",
     "autoprefixer": "^9.6.1",
-    "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
     "chai": "^4.2.0",
     "chunks-2-json-webpack-plugin": "^1.0.2",
@@ -80,8 +79,8 @@
     "dev": "webpack-dev-server --open --config webpack.dev.js",
     "tsc": "tsc",
     "eslint": "eslint --ext .ts src/",
-    "staging": "webpack --env.staging --config webpack.staging.js",
-    "build": "webpack --config webpack.prod.js",
+    "staging": "webpack --env.staging --config webpack.prod.js",
+    "production": "webpack --config webpack.prod.js",
     "test": "mocha-webpack",
     "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text yarn run test"
   },
