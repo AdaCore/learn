@@ -31,7 +31,7 @@ preconditions and postconditions as promises between the subprogram caller
 and the callee: a precondition is a promise from the caller to the callee,
 and a postcondition is a promise in the other direction.
 
-Pre- and postconditions are specified using a :ada:`with` clause in the
+Pre- and postconditions are specified using an aspect clause in the
 subprogram declaration. A :ada:`with Pre => <condition>` clause specifies a
 precondition and a :ada:`with Post => <condition>` clause specifies a
 postcondition.
@@ -138,7 +138,7 @@ We illustrate postconditions using the following example:
 
 We declare a signed 8-bit type :ada:`Int_8` and an array of that type
 (:ada:`Int_8_Array`). We want to ensure each element of the array is
-doubled after calling the procedure :ada:`Square` for an object of the
+squared after calling the procedure :ada:`Square` for an object of the
 :ada:`Int_8_Array` type. We do this with a postcondition using a :ada:`for
 all` expression. This postcondition also uses the :ada:`'Old` attribute to
 refer to the original value of the parameter (before the call).
