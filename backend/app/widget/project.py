@@ -252,10 +252,10 @@ class RemoteProject(Project):
             Returns the status code returned from the build
         """
         rep = MQReporter(self.app, self.task_id)
-        rep.console(["gprbuild", "-q", "-P", self.gpr.get_name(), "-gnatwa"])
+        rep.console(["gprbuild", "-q", "-P", self.gpr.get_name(), "-gnatwa", "-gnata"])
 
         main_path = os.path.join(self.remote_tempd, self.gpr.get_name())
-        line = ["gprbuild", "-q", "-P", main_path, "-gnatwa"]
+        line = ["gprbuild", "-q", "-P", main_path, "-gnatwa", "-gnata"]
 
         code, out, err = self.container.execute(line, rep)
         if code != 0:
