@@ -43,11 +43,11 @@ project Main is
    --LANGUAGE_PLACEHOLDER--
 
    package Compiler is
-      for Switches ("ada") use ("-g");
+      for Switches ("ada") use ("-g", "-O0", "-gnata", "-gnatwa");
    end Compiler;
 
    package Builder is
-      for Switches ("ada") use ("-g", "-O0", "-gnata");
+      for Switches ("ada") use ("-g");
       for Global_Configuration_Pragmas use "main.adc";
    end Builder;
 
@@ -246,7 +246,7 @@ class RemoteProject(Project):
         """
         rep = MQReporter(self.app, self.task_id)
 
-        line = ["gprbuild", "-q", "-P", self.gpr.get_name(), "-gnatwa"]
+        line = ["gprbuild", "-q", "-P", self.gpr.get_name()]
         rep.console(line)
 
         code, out, err = self.container.execute(line, rep, rw_user)
