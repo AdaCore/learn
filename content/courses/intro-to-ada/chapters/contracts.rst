@@ -42,7 +42,6 @@ The following code shows an example of preconditions:
     :class: ada-run-expect-failure
 
     procedure Show_Simple_Precondition is
-       pragma Assertion_Policy (Pre  => Check);
 
        procedure DB_Entry (Name : String; Age  : Natural)
          with Pre => Name'Length > 0
@@ -101,7 +100,6 @@ We illustrate postconditions using the following example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Simple_Postcondition is
-       pragma Assertion_Policy (Post => Check);
 
        type Int_8 is range -2 ** 7 .. 2 ** 7 - 1;
 
@@ -155,8 +153,6 @@ subprogram. For example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Simple_Contract is
-       pragma Assertion_Policy (Pre  => Check,
-                                Post => Check);
 
        type Int_8 is range -2 ** 7 .. 2 ** 7 - 1;
 
@@ -214,8 +210,6 @@ Let's use the following example to illustrate dynamic predicates:
     with Ada.Containers.Vectors;
 
     procedure Show_Dynamic_Predicate_Courses is
-
-       pragma Assertion_Policy (Dynamic_Predicate => Check);
 
        package Courses is
           type Course_Container is private;
@@ -317,9 +311,6 @@ Let's look at a complete example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Predicates is
-
-       pragma Assertion_Policy (Static_Predicate  => Check,
-                                Dynamic_Predicate => Check);
 
        type Week is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
 
@@ -430,7 +421,6 @@ type invariants. It would look like this:
     with Ada.Containers.Vectors;
 
     procedure Show_Type_Invariant is
-       pragma Assertion_Policy (Type_Invariant => Check);
 
        package Courses is
           type Course is private
