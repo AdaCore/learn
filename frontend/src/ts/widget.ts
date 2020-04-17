@@ -222,6 +222,8 @@ export class Widget {
         await this.getOutputFromIdentifier(json);
       } catch (e) {
         reject(e);
+      } finally {
+        this.outputArea.showSpinner(false);
       }
 
       resolve();
@@ -411,8 +413,6 @@ export class Widget {
         this.outputArea.addError(Strings.EXIT_STATUS_LABEL +
             ': ' + data.status);
       }
-
-      this.outputArea.showSpinner(false);
     }
 
     return readLines;
