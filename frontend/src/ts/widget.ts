@@ -344,7 +344,7 @@ export class Widget {
           let col: number;
 
           // Lines that contain a sloc are clickable:
-          const cb = () => {
+          const cb = (): void => {
             if (window.getSelection().toString() == '') {
               this.editors.map((e) => {
                 if (basename == e.getResource().basename) {
@@ -356,7 +356,7 @@ export class Widget {
                 }
               });
             }
-          }
+          };
 
           if (ctMatchFound) {
             basename = ctMatchFound[1];
