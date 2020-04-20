@@ -1,9 +1,7 @@
 import $ from 'jquery';
 
-import {CheckBox} from './components';
 import * as Strings from './strings';
 import {CheckOutput} from './types';
-import * as util from './utilities';
 
 /** Abstract class representing an Area **/
 export abstract class Area {
@@ -347,68 +345,5 @@ export class LabContainer {
     sorted.map((l) => {
       return l.render().appendTo(this.container);
     });
-  }
-}
-
-/** Class representing the CLIArea */
-export class CLIArea {
-  private textArea: JQuery;
-  private checkBox: CheckBox;
-
-  /**
-   * Construct CLIArea
-   */
-  constructor() {
-    this.textArea = $('<textarea>')
-        .addClass('custom_input')
-        .attr('name', 'custom_input')
-        .attr('rows', '4')
-        .attr('cols', '6')
-        .hide();
-    this.checkBox =
-    new CheckBox(Strings.CUSTOM_INPUT_LABEL,
-        undefined, ['custom_check_container'],
-        Strings.CUSTOM_INPUT_TOOLTIP);
-
-    this.checkBox.getCheckBox().on('change', () => {
-      if (this.checkBox.checked()) {
-        this.textArea.show();
-      } else {
-        this.textArea.hide();
-      }
-    });
-  }
-
-  /**
-   * Renders the CLIArea
-   * @param {JQuery} parent - the JQuery object to insert the CLIArea into
-   */
-  public render(parent: JQuery): void {
-    this.textArea.appendTo(parent);
-    this.checkBox.render().appendTo(parent);
-  }
-
-  /**
-   * Checks if the CLI checkbox is checked
-   * @return {boolean} true if the checkbox is checked
-   */
-  public enabled(): boolean {
-    return this.checkBox.checked();
-  }
-
-  /**
-   * Get the content of the textarea
-   * @return {string} the textarea string
-   */
-  public getContent(): string {
-    const ret: string | number | string[] = this.textArea.val();
-
-    if (util.isString(ret)) {
-      return ret as string;
-    } else if (util.isNumber(ret)) {
-      return ret.toString();
-    } else {
-      return (ret as string[]).join();
-    }
   }
 }

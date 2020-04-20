@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import 'whatwg-fetch';
 
-import {Area, OutputArea, LabContainer, CLIArea} from './areas';
+import {Area, OutputArea, LabContainer} from './areas';
 import {Button, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
 import {Resource, Download, RunProgram, CheckOutput} from './types';
@@ -563,7 +563,6 @@ export class Widget {
  */
 export class LabWidget extends Widget {
   private readonly labContainer: LabContainer = new LabContainer;
-  private readonly cliArea: CLIArea = new CLIArea();
 
   /**
    * Constructs the LabWidget
@@ -573,28 +572,9 @@ export class LabWidget extends Widget {
   constructor(container: JQuery, server: string) {
     super(container, server);
 
-    this.addButton('run');
     this.addButton('submit');
 
     this.lab = true;
-  }
-
-  /**
-   * Collect the resources loaded in the widget and return as list
-   *  then add cli data to file list
-   * @return {Array<Resource>} return the widget resources
-   */
-  protected collectResources(): Array<Resource> {
-    const files = super.collectResources();
-
-    if (this.cliArea.enabled()) {
-      files.push({
-        basename: Strings.CLI_FILE,
-        contents: this.cliArea.getContent(),
-      });
-    }
-
-    return files;
   }
 
   /**
@@ -656,7 +636,6 @@ export class LabWidget extends Widget {
    */
   public render(): void {
     super.render();
-    this.cliArea.render(this.buttonGroup);
     this.labContainer.render().appendTo(this.outputGroup);
   }
 }
