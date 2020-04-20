@@ -18,10 +18,6 @@ export const modeDictionary: {[mode: string]: ButtonMode } = {
     buttonText: 'Prove (report=all)',
     tooltip: 'Run gnatprove to prove SPARK code and report all findings',
   },
-  compile: {
-    buttonText: 'Compile',
-    tooltip: 'Compile the code in the editor',
-  },
   run: {
     buttonText: 'Run',
     tooltip: 'Run code in editor',

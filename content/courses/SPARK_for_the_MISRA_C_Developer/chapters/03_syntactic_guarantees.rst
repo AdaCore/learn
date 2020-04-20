@@ -249,7 +249,7 @@ above C code is as follows:
 
 :code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button compile_button
 
     function Func return Integer is
     begin
