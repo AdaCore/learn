@@ -271,6 +271,8 @@ class RemoteProject(Project):
             rep.stderr(f"Build failed with error code: {code}")
             # We need to raise an exception here to disrupt a build/run/prove build chain from the main task
             raise BuildError(code)
+        else:
+            rep.stdout(f"Build completed successfully.")
         return code
 
     def run(self, lab_ref=None, cli=None):
