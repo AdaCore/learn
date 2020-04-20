@@ -69,6 +69,26 @@ export class Editor {
   }
 
   /**
+   * Set the length of the visible lines in the editor
+   * @param {number} length - The number of visible lines in the editor
+   */
+  public setLength(length: number): void {
+    this.editor.setOption('minLines', length);
+    this.editor.resize();
+  }
+
+  /**
+   * Get the length of the visible lines in the editor
+   * @return {number} - The number of visible lines in the editor
+   */
+  public getLength(): number {
+    const maxLength = this.editor.getOption('maxLines');
+    const length = this.editor.session.doc.getLength();
+
+    return (length > maxLength) ? maxLength : length;
+  }
+
+  /**
    * Set the theme of the editor
    * @param {EditorTheme} theme - The ace theme to load
    */

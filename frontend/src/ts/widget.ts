@@ -70,7 +70,12 @@ export class Widget {
       const ed = new Editor(file);
       this.editors.push(ed);
 
-      const tab = this.tabs.addTab(file.basename, ed.render());
+      const tab = this.tabs.addTab(file.basename, ed.render(), () => {
+        const lengths = this.editors.map((e) => e.getLength());
+        // This is a new one: ... is a spread operator
+        const max = Math.max(...lengths);
+        ed.setLength(max);
+      });
       ed.setTab(tab);
     });
 

@@ -4,12 +4,19 @@ export class Tabs {
   private contents: Array<JQuery> = [];
 
   /**
+   * The event callback signature for tabs
+   *
+   * @callback tabChange
+   */
+
+  /**
    * Add a Tab
    * @param {string} name - The name to put at the tab button
    * @param {JQuery} content - The content to put inside the tab
+   * @param {tabChange} fn - The function to call when the tab changes
    * @return {JQuery} The button or header for the new tab
    */
-  public addTab(name: string, content: JQuery): JQuery {
+  public addTab(name: string, content: JQuery, fn: () => void): JQuery {
     const tabContent = $('<div>')
         .addClass('tab-content')
         .append(content);
@@ -25,6 +32,8 @@ export class Tabs {
           for (const h of this.headers) {
             h.removeClass('active');
           }
+
+          fn();
 
           tabContent.addClass('active');
           tabContent.show();
