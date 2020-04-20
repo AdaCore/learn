@@ -337,35 +337,14 @@ export class Widget {
 
         const ctMatchFound: Array<string> = outMsg.match(ctRegex);
         const rtMatchFound: Array<string> = outMsg.match(rtRegex);
-        let div: JQuery;
 
         if (ctMatchFound || rtMatchFound) {
           let basename: string;
           let row: number;
           let col: number;
 
-          if (ctMatchFound) {
-            basename = ctMatchFound[1];
-            row = parseInt(ctMatchFound[2]);
-            col = parseInt(ctMatchFound[3]);
-
-            if (ctMatchFound[4].indexOf(' info:') == 0) {
-              div = homeArea.addInfo(outMsg);
-            } else {
-              div = homeArea.addMsg(outMsg);
-              homeArea.errorCount++;
-            }
-          } else {
-            basename = rtMatchFound[1];
-            row = parseInt(rtMatchFound[2]);
-            col = 1;
-
-            div = homeArea.addMsg(outMsg);
-            homeArea.errorCount++;
-          }
-
           // Lines that contain a sloc are clickable:
-          div.on('click', () => {
+          const cb = () => {
             if (window.getSelection().toString() == '') {
               this.editors.map((e) => {
                 if (basename == e.getResource().basename) {
@@ -377,7 +356,27 @@ export class Widget {
                 }
               });
             }
-          });
+          }
+
+          if (ctMatchFound) {
+            basename = ctMatchFound[1];
+            row = parseInt(ctMatchFound[2]);
+            col = parseInt(ctMatchFound[3]);
+
+            if (ctMatchFound[4].indexOf(' info:') == 0) {
+              homeArea.addInfo(outMsg, cb);
+            } else {
+              homeArea.addMsg(outMsg, cb);
+              homeArea.errorCount++;
+            }
+          } else {
+            basename = rtMatchFound[1];
+            row = parseInt(rtMatchFound[2]);
+            col = 1;
+
+            homeArea.addMsg(outMsg, cb);
+            homeArea.errorCount++;
+          }
         } else {
           homeArea.addLine(outMsg);
         }
