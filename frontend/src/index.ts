@@ -2,7 +2,6 @@
 import Cookies from 'js-cookie';
 // #endif
 import './styles/learn.scss';
-import './ts/theme';
 import {Carousel} from './ts/carousel';
 import {Widget, LabWidget} from './ts/widget';
 

@@ -21,7 +21,6 @@ export class Widget {
   protected readonly container: JQuery;
   private readonly name: string;
   private tabs: Tabs = new Tabs();
-  private outputContainer: JQuery;
   protected outputArea: OutputArea = new OutputArea();
 
   private buttons: Array<Button> = [];
