@@ -221,15 +221,14 @@ lookup table.
     #. This exercise is based on the HTML colors exercise from a previous lab
        (:doc:`./records`).
 
-    #. In the previous implementation, you probably used a :ada:`case`
-       statement to implement the :ada:`To_RGB` function. Here, you must
-       rewrite the function using a look-up table.
+    #. In the previous implementation, you could use a :ada:`case` statement to
+       implement the :ada:`To_RGB` function. Here, you must rewrite the
+       function using a look-up table.
 
-       #. You can use the previous implementation of the :ada:`To_RGB`
-          function |mdash| which is based on a case statement |mdash| as a
-          starting point. The code has been commented out in the function
-          implementation, so you just need to copy it and convert it to an
-          array declaration.
+       #. The implementation of the :ada:`To_RGB` function below includes the
+          case statement as commented-out code. You can use this as your
+          starting point: you just need to copy it and convert the case
+          statement to an array declaration.
 
         #. Don't use a case statement to implement the :ada:`To_RGB` function.
            Instead, write code that accesses :ada:`To_RGB_Loopup_Table` to get
