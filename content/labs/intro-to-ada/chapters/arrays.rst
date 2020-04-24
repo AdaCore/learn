@@ -605,48 +605,53 @@ Unconstrained Array
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Quantities And Amounts
-----------------------
+Product info
+------------
 
 **Goal**: create a system to keep track of quantities and prices of products.
 
 **Steps**:
 
-    #. Implement the :ada:`Quantities_Amounts` package.
+    #. Implement the :ada:`Product_Info_Pkg` package.
 
-        #. Declare the array type :ada:`Quantities`.
+        #. Declare the array type :ada:`Product_Infos`.
 
-        #. Declare the array type :ada:`Amounts`.
+        #. Declare the array type :ada:`Currency_Array`.
 
         #. Implement the :ada:`Total` procedure.
 
         #. Implement the :ada:`Total` function returning an array of
-           :ada:`Amounts` type.
+           :ada:`Currency_Array` type.
 
         #. Implement the :ada:`Total` function returning a single value of
-           :ada:`Amount` type.
+           :ada:`Currency` type.
 
 **Requirements**:
 
-    #. Quantities of an individual product are represented by the
-       :ada:`Quantity` subtype.
-
-    #. Prices of an individual product are represented by the :ada:`Amount`
+    #. Quantity of an individual product is represented by the :ada:`Quantity`
        subtype.
 
-    #. Array types :ada:`Quantities` and :ada:`Amounts` deal with information
-       for various products.
+    #. Price of an individual product are represented by the :ada:`Currency`
+       subtype.
+
+    #. Record type :ada:`Product_Info` deals with information for various
+       products.
+
+    #. Array type :ada:`Product_Infos` is used to represent a list of products.
+
+    #. Array type :ada:`Currency_Array` is used to represent a list of total
+       values of individual products (see more details below).
 
     #. Procedure :ada:`Total` receives an input array of quantities and an
        input array of amounts for each product.
 
-        #. It outputs an array with the total amount for each product using the
-           :ada:`Amounts` type.
+        #. It outputs an array with the total value of each product using the
+           :ada:`Currency_Array` type.
 
-        #. The total amount for an individual product is calculated by
+        #. The total value of an individual product is calculated by
            multiplying the quantity for this product by its price.
 
-    #. Function :ada:`Total` returns an array of :ada:`Amounts` type.
+    #. Function :ada:`Total` returns an array of :ada:`Currency_Array` type.
 
         #. This function has the same purpose as the procedure :ada:`Total`.
 
@@ -654,136 +659,133 @@ Quantities And Amounts
            providing this array as an output parameter.
 
     #. The second function :ada:`Total` returns a single value of
-       :ada:`Amount` type.
+       :ada:`Currency` type.
 
-        #. This function receives an array of quantities and an array of
-           amounts for each product
+        #. This function receives an array of products.
 
-        #. It returns a single value corresponding to the total amount for all
+        #. It returns a single value corresponding to the total value for all
            products in the system.
-
-        #. In other words, this function returns the sum of all total amounts
-           for the individual products.
 
 **Remarks**:
 
-    #. You can use :ada:`Amount (Q)` to convert from an element :ada:`Q` of
-       :ada:`Quantity` type to the :ada:`Amount` type.
+    #. You can use :ada:`Currency (Q)` to convert from an element :ada:`Q` of
+       :ada:`Quantity` type to the :ada:`Currency` type.
 
         #. As you might remember, Ada requires an explicit conversion in
            calculations where variables of both integer and floating-point
            types are used.
 
         #. In our case, the :ada:`Quantity` subtype is based on the
-           :ada:`Integer` type and the :ada:`Amount` subtype is based on the
+           :ada:`Integer` type and the :ada:`Currency` subtype is based on the
            :ada:`Float` type, so a conversion is necessary in calculations
            using those types.
 
-.. code:: ada lab=Arrays.Quantities_And_Amounts
+.. code:: ada lab=Arrays.Product_Info
 
     --  START LAB IO BLOCK
     in 0:Total_Func_Chk
     out 0:0.50 20.00 200.00 100.00 200.00
     in 1:Total_Proc_Chk
     out 1:0.50 20.00 200.00 100.00 200.00
-    in 2:Total_Amount_Chk
+    in 2:Total_Value_Chk
     out 2:520.50
     --  END LAB IO BLOCK
 
-    package Quantities_Amounts is
+    package Product_Info_Pkg is
 
        subtype Quantity is Natural;
 
-       subtype Amount is Float;
+       subtype Currency is Float;
+
+       type Product_Info is record
+          Units : Quantity;
+          Price : Currency;
+       end record;
 
        --  Complete the type declarations:
        --
-       --  type Quantities is ...
+       --  type Product_Infos is ...
        --
-       --  type Amounts is ...
+       --  type Currency_Array is ...
 
-       procedure Total (Q     : Quantities;
-                        A     : Amounts;
-                        A_Out : out Amounts);
+       procedure Total (P   : Product_Infos;
+                        Tot : out Currency_Array);
 
-       function Total (Q : Quantities;
-                       A : Amounts) return Amounts;
+       function Total (P : Product_Infos) return Currency_Array;
 
-       function Total (Q : Quantities;
-                       A : Amounts) return Amount;
+       function Total (P : Product_Infos) return Currency;
 
-    end Quantities_Amounts;
+    end Product_Info_Pkg;
 
-    package body Quantities_Amounts is
+    package body Product_Info_Pkg is
 
        --  Complete the subprogram implementations:
        --
 
-       --  procedure Total (Q     : Quantities;
-       --                   A     : Amounts;
-       --                   A_Out : out Amounts) is...
+       --  procedure Total (P   : Product_Infos;
+       --                   Tot : out Currency_Array) is ...
 
-       --  function Total (Q : Quantities;
-       --                  A : Amounts) return Amounts is...
+       --  function Total (P : Product_Infos) return Currency_Array is ...
 
-       --  function Total (Q : Quantities;
-       --                  A : Amounts) return Amount is ...
+       --  function Total (P : Product_Infos) return Currency is ...
 
-    end Quantities_Amounts;
+    end Product_Info_Pkg;
 
     with Ada.Command_Line;   use Ada.Command_Line;
     with Ada.Text_IO;        use Ada.Text_IO;
 
-    with Quantities_Amounts; use Quantities_Amounts;
+    with Product_Info_Pkg;   use Product_Info_Pkg;
 
     procedure Main is
-       package Amount_IO is new Ada.Text_IO.Float_IO (Amount);
+       package Currency_IO is new Ada.Text_IO.Float_IO (Currency);
 
        type Test_Case_Index is
          (Total_Func_Chk,
           Total_Proc_Chk,
-          Total_Amount_Chk);
+          Total_Value_Chk);
 
        procedure Check (TC : Test_Case_Index) is
           subtype Test_Range is Positive range 1 .. 5;
 
-          A  : Amounts (Test_Range);
-          Q  : Quantities (Test_Range);
-          A1 : Amount;
+          P    : Product_Infos (Test_Range);
+          Tots : Currency_Array (Test_Range);
+          Tot  : Currency;
 
-          procedure Display (A : Amounts) is
+          procedure Display (Tots : Currency_Array) is
           begin
-             for I in A'Range loop
-                Amount_IO.Put (A (I));
+             for I in Tots'Range loop
+                Currency_IO.Put (Tots (I));
                 New_Line;
              end loop;
           end Display;
 
-          procedure Local_Init (Q : in out Quantities;
-                                A : in out Amounts) is
+          procedure Local_Init (P : in out Product_Infos) is
           begin
-             Q := (1,    2,    5,   10,   10);
-             A := (0.5, 10.0, 40.0, 10.0, 20.0);
+             P := ((1,   0.5),
+                   (2,  10.0),
+                   (5,  40.0),
+                   (10, 10.0),
+                   (10, 20.0));
           end Local_Init;
 
        begin
-          Amount_IO.Default_Fore := 1;
-          Amount_IO.Default_Aft  := 2;
-          Amount_IO.Default_Exp  := 0;
+          Currency_IO.Default_Fore := 1;
+          Currency_IO.Default_Aft  := 2;
+          Currency_IO.Default_Exp  := 0;
 
           case TC is
           when Total_Func_Chk =>
-             Local_Init (Q, A);
-             A := Total (Q, A);
-             Display (A);
+             Local_Init (P);
+             Tots := Total (P);
+             Display (Tots);
           when Total_Proc_Chk =>
-             Local_Init (Q, A);
-             Total (Q, A, A);
-             Display (A);
-          when Total_Amount_Chk =>
-             Local_Init (Q, A);
-             A1 := Total (Q, A);
-             Amount_IO.Put (A1);
+             Local_Init (P);
+             Total (P, Tots);
+             Display (Tots);
+          when Total_Value_Chk =>
+             Local_Init (P);
+             Tot := Total (P);
+             Currency_IO.Put (Tot);
              New_Line;
           end case;
        end Check;
