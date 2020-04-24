@@ -318,17 +318,26 @@ Simple todo list
 
 **Requirements**:
 
-    #. :ada:`Todo_Item` type is used to store to-do items.
+    #. :ada:`Todo_Item` type is used to store a to-do item.
 
         #. It should be implemented as an access type to strings.
 
-    #. :ada:`Todo_List` type is the container for all to-do items.
+    #. :ada:`Todo_Items` type is an array of to-do items.
 
         #. It should be implemented as an unconstrained array with positive
            range.
 
+    #. :ada:`Todo_List` type is the container for all to-do items.
+
+        #. It should be declared as a records with discriminant.
+
+        #. In order to store the to-do items, it must contain a component named
+           :ada:`Items` of :ada:`Todo_Items` type.
+
         #. Don't forget to keep track of the last element added to the
            list!
+
+            - You should declare a :ada:`Last` component in the record.
 
     #. Procedure :ada:`Add` adds items (of :ada:`Todo_Item` type) to the list
        (of :ada:`Todo_List` type).
@@ -355,6 +364,9 @@ Simple todo list
 
        --  Replace by actual type declaration
        type Todo_Item is null record;
+
+       --  Replace by actual type declaration
+       type Todo_Items is null record;
 
        --  Replace by actual type declaration
        type Todo_List is null record;

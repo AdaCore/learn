@@ -2651,9 +2651,12 @@ Simple todo list
 
        type Todo_Item is access String;
 
-       type Todo_List is array (Positive range <>) of Todo_Item;
+       type Todo_Items is array (Positive range <>) of Todo_Item;
 
-       Last : Natural := 0;
+       type Todo_List (Max_Len : Natural) is record
+          Items : Todo_Items (1 .. Max_Len);
+          Last  : Natural := 0;
+       end record;
 
        procedure Add (Todos : in out Todo_List;
                       Item  : String);
@@ -2669,9 +2672,9 @@ Simple todo list
        procedure Add (Todos : in out Todo_List;
                       Item  : String) is
        begin
-          if Last < Todos'Last then
-             Last := Last + 1;
-             Todos (Last) := new String'(Item);
+          if Todos.Last < Todos.Items'Last then
+             Todos.Last := Todos.Last + 1;
+             Todos.Items (Todos.Last) := new String'(Item);
           else
              Put_Line ("ERROR: list is full!");
           end if;
@@ -2680,8 +2683,8 @@ Simple todo list
        procedure Display (Todos : Todo_List) is
        begin
           Put_Line ("TO-DO LIST");
-          for I in Todos'First .. Last loop
-             Put_Line (Todos (I).all);
+          for I in Todos.Items'First .. Todos.Last loop
+             Put_Line (Todos.Items (I).all);
           end loop;
        end Display;
 
@@ -2697,7 +2700,7 @@ Simple todo list
          (Todo_List_Chk);
 
        procedure Check (TC : Test_Case_Index) is
-          T : Todo_List (1 .. 10);
+          T : Todo_List (10);
        begin
           case TC is
              when Todo_List_Chk =>
