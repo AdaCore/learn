@@ -33,9 +33,9 @@ source /vagrant/venv/bin/activate
 pip3 install -r /vagrant/REQUIREMENTS.txt
 
 cd /vagrant/infrastructure
-# destroy previous container if it exists
-docker container ls | grep safecontainer && docker rm --force safecontainer
-# remove all images on system
+# stop previous containers
+docker stop $(docker ps -a -q)
+# remove all images/containers on system
 docker system prune -a -f
 # Build docker image
 docker build -t "safecontainer" .
