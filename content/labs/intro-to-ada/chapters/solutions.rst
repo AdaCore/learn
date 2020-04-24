@@ -2193,17 +2193,17 @@ String_10
 .. code:: ada lab=Solutions.Arrays.String_10
 
     --  START LAB IO BLOCK
-    in 0:String_10_Chk
+    in 0:String_10_Long_Chk
     out 0:And this i
+    in 1:String_10_Short_Chk
+    out 1:Hey!
     --  END LAB IO BLOCK
 
     package Strings_10 is
 
        subtype String_10 is String (1 .. 10);
 
-       --  Using "type String_10 is..." is possible, too. However, it
-       --  requires a custom Put_Line procedure that is called in Main:
-       --  procedure Put_Line (S : String_10);
+       --  Using "type String_10 is..." is possible, too.
 
        function To_String_10 (S : String) return String_10;
 
@@ -2214,8 +2214,12 @@ String_10
        function To_String_10 (S : String) return String_10 is
           S_Out : String_10;
        begin
-          for I in String_10'Range loop
+          for I in String_10'First .. Integer'Min (String_10'Last, S'Last) loop
              S_Out (I) := S (I);
+          end loop;
+
+          for I in Integer'Min (String_10'Last + 1, S'Last + 1) .. String_10'Last loop
+             S_Out (I) := ' ';
           end loop;
 
           return S_Out;
@@ -2230,17 +2234,23 @@ String_10
 
     procedure Main is
        type Test_Case_Index is
-         (String_10_Chk);
+         (String_10_Long_Chk,
+          String_10_Short_Chk);
 
        procedure Check (TC : Test_Case_Index) is
-          S    : constant String := "And this is a long string just for testing...";
+          SL   : constant String := "And this is a long string just for testing...";
+          SS   : constant String := "Hey!";
           S_10 : String_10;
 
        begin
           case TC is
-          when String_10_Chk =>
-             S_10 := To_String_10 (S);
-             Put_Line (S_10);
+          when String_10_Long_Chk =>
+             S_10 := To_String_10 (SL);
+             Put_Line (String (S_10));
+          when String_10_Short_Chk =>
+             S_10 := (others => ' ');
+             S_10 := To_String_10 (SS);
+             Put_Line (String (S_10));
           end case;
        end Check;
 
