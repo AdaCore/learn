@@ -206,6 +206,16 @@ Versioning
         #. For example, version "1.3.5" is converted to the floating-point
            value ``1.3``.
 
+        #. An obvious limitation of this function is that it can only handle
+           one-digit numbers for the minor component.
+
+            - For example, we cannot convert version "1.10.0" to a reasonable
+              value with the approach described above. The result of the call
+              :ada:`Convert ((1, 10, 0))` is therefore unspecified.
+
+            - For the scope of this exercise, only version numbers with
+              one-digit components are checked.
+
 **Remarks**:
 
     #. We use overloading for the :ada:`Convert` functions.
