@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import * as ace from 'brace';
 import 'brace/mode/ada';
+import 'brace/mode/c_cpp';
 import 'brace/theme/tomorrow';
 import 'brace/theme/tomorrow_night';
 
@@ -66,6 +67,26 @@ export class Editor {
     this.editor.getSession().setUndoManager(new ace.UndoManager());
 
     this.editor.renderer.setScrollMargin(5, 5, 0, 0);
+  }
+
+  /**
+   * Set the length of the visible lines in the editor
+   * @param {number} length - The number of visible lines in the editor
+   */
+  public setLength(length: number): void {
+    this.editor.setOption('minLines', length);
+    this.editor.resize();
+  }
+
+  /**
+   * Get the length of the visible lines in the editor
+   * @return {number} - The number of visible lines in the editor
+   */
+  public getLength(): number {
+    const maxLength = this.editor.getOption('maxLines');
+    const length = this.editor.session.doc.getLength();
+
+    return (length > maxLength) ? maxLength : length;
   }
 
   /**

@@ -143,12 +143,21 @@ class Project:
         mains = find_mains(self.file_list)
 
         if len(mains) > 1:
-            raise ProjectError("More than one main found in project")
+            main_match = [i for i in mains if "main.adb" in i]
+            if len(main_match) > 1:
+                raise ProjectError("More than one main.adb found in project")
+            elif len(main_match) < 1:
+                self.main = None
+            else:
+                self.main = main_match[0]
         elif len(mains) == 1:
-            self.main = mains[0].split('.')[0]
-            self.gpr.define_mains([self.main])
+            self.main = mains[0]
         else:
             self.main = None
+
+        if self.main:
+            self.main = self.main.split('.')[0]
+            self.gpr.define_mains([self.main])
 
         self.file_list.append(self.gpr)
 
@@ -254,6 +263,8 @@ class RemoteProject(Project):
             rep.stderr(f"Build failed with error code: {code}")
             # We need to raise an exception here to disrupt a build/run/prove build chain from the main task
             raise BuildError(code)
+        else:
+            rep.stdout(f"Build completed successfully.")
         return code
 
     def run(self, lab_ref=None, cli=None):

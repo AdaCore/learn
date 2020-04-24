@@ -501,7 +501,7 @@ States #3
 
     function Is_On (State : Integer) return Boolean is
     begin
-       return (if State = 0 then False else True);
+       return not (State = 0);
     end Is_On;
 
     procedure Display_On_Off (State : Integer);
@@ -710,19 +710,17 @@ Operations
 
     end Operations;
 
-    package Operations_Test is
+    package Operations.Test is
 
-       procedure Display_Operations (A, B : Integer);
+       procedure Display (A, B : Integer);
 
-    end Operations_Test;
+    end Operations.Test;
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    with Operations;  use Operations;
+    package body Operations.Test is
 
-    package body Operations_Test is
-
-       procedure Display_Operations (A, B : Integer) is
+       procedure Display (A, B : Integer) is
           A_Str : constant String := Integer'Image (A);
           B_Str : constant String := Integer'Image (B);
        begin
@@ -739,15 +737,15 @@ Operations
           Put_Line (A_Str & " / " & B_Str & " = "
                     & Integer'Image (Divide (A, B))
                     & ",");
-       end Display_Operations;
+       end Display;
 
-    end Operations_Test;
+    end Operations.Test;
 
     with Ada.Command_Line; use Ada.Command_Line;
     with Ada.Text_IO;      use Ada.Text_IO;
 
     with Operations;
-    with Operations_Test;  use Operations_Test;
+    with Operations.Test;  use Operations.Test;
 
     procedure Main is
 
@@ -768,8 +766,8 @@ Operations
                 Put_Line ("Divide (100, 2) = "
                           & Integer'Image (Operations.Divide (100, 2)));
              when Operations_Display_Chk =>
-                Display_Operations (10, 5);
-                Display_Operations ( 1, 2);
+                Display (10, 5);
+                Display ( 1, 2);
           end case;
        end Check;
 
@@ -902,10 +900,10 @@ Colors
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Integer Types
-~~~~~~~~~~~~~
+Integers
+~~~~~~~~
 
-.. code:: ada lab=Solutions.Strongly_Typed.Integer_Types
+.. code:: ada lab=Solutions.Strongly_Typed.Integers
 
     --  START LAB IO BLOCK
     in 0:I_100_Range
@@ -1380,6 +1378,15 @@ Colors
           Mediumblue,
           Darkblue);
 
+       function To_Integer (C : HTML_Color) return Integer;
+
+       type Basic_HTML_Color is
+         (Red,
+          Green,
+          Blue);
+
+       function To_HTML_Color (C : Basic_HTML_Color) return HTML_Color;
+
        subtype Int_Color is Integer range 0 .. 255;
 
        type RGB is record
@@ -1397,6 +1404,33 @@ Colors
     with Ada.Integer_Text_IO;
 
     package body Color_Types is
+
+       function To_Integer (C : HTML_Color) return Integer is
+       begin
+          case C is
+             when Salmon      => return 16#FA8072#;
+             when Firebrick   => return 16#B22222#;
+             when Red         => return 16#FF0000#;
+             when Darkred     => return 16#8B0000#;
+             when Lime        => return 16#00FF00#;
+             when Forestgreen => return 16#228B22#;
+             when Green       => return 16#008000#;
+             when Darkgreen   => return 16#006400#;
+             when Blue        => return 16#0000FF#;
+             when Mediumblue  => return 16#0000CD#;
+             when Darkblue    => return 16#00008B#;
+          end case;
+
+       end To_Integer;
+
+       function To_HTML_Color (C : Basic_HTML_Color) return HTML_Color is
+       begin
+          case C is
+             when Red   => return Red;
+             when Green => return Green;
+             when Blue  => return Blue;
+          end case;
+       end To_HTML_Color;
 
        function To_RGB (C : HTML_Color) return RGB is
        begin
@@ -1482,23 +1516,23 @@ Inventory
 
     package Inventory_Pkg is
 
+       type Item_Name is
+         (Ballpoint_Pen, Oil_Based_Pen_Marker, Feather_Quill_Pen);
+
+       function To_String (I : Item_Name) return String;
+
        type Item is record
+          Name     : Item_Name;
           Quantity : Natural;
           Price    : Float;
        end record;
 
-       type Inventory is record
-          Assets   : Float := 0.0;
-       end record;
-
-       function Init (Name     : String;
+       function Init (Name     : Item_Name;
                       Quantity : Natural;
                       Price    : Float) return Item;
 
-       procedure Add (Inv : in out Inventory;
-                      I   : Item);
-
-       procedure Display (Inv : Inventory);
+       procedure Add (Assets : in out Float;
+                      I      : Item);
 
     end Inventory_Pkg;
 
@@ -1506,32 +1540,31 @@ Inventory
 
     package body Inventory_Pkg is
 
-       function Init (Name     : String;
+       function To_String (I : Item_Name) return String is
+       begin
+          case I is
+             when Ballpoint_Pen        => return "Ballpoint Pen";
+             when Oil_Based_Pen_Marker => return "Oil-based Pen Marker";
+             when Feather_Quill_Pen    => return "Feather Quill Pen";
+          end case;
+       end To_String;
+
+       function Init (Name     : Item_Name;
                       Quantity : Natural;
                       Price    : Float) return Item is
        begin
-          Put_Line ("Adding item: " & Name & ".");
+          Put_Line ("Adding item: " & To_String (Name) & ".");
 
-          return (Quantity => Quantity,
+          return (Name     => Name,
+                  Quantity => Quantity,
                   Price    => Price);
        end Init;
 
-       procedure Add (Inv : in out Inventory;
-                      I   : Item) is
+       procedure Add (Assets : in out Float;
+                      I      : Item) is
        begin
-          Inv.Assets := Inv.Assets + Float (I.Quantity) * I.Price;
+          Assets := Assets + Float (I.Quantity) * I.Price;
        end Add;
-
-       procedure Display (Inv : Inventory) is
-          package F_IO is new Ada.Text_IO.Float_IO (Float);
-
-          use F_IO;
-       begin
-          Put ("Assets: $");
-          Put (Inv.Assets, 1, 2, 0);
-          Put (".");
-          New_Line;
-       end Display;
 
     end Inventory_Pkg;
 
@@ -1547,28 +1580,39 @@ Inventory
        type Test_Case_Index is
          (Inventory_Chk);
 
+       procedure Display (Assets : Float) is
+          package F_IO is new Ada.Text_IO.Float_IO (Float);
+
+          use F_IO;
+       begin
+          Put ("Assets: $");
+          Put (Assets, 1, 2, 0);
+          Put (".");
+          New_Line;
+       end Display;
+
        procedure Check (TC : Test_Case_Index) is
-          I   : Item;
-          Inv : Inventory;
+          I      : Item;
+          Assets : Float := 0.0;
 
           --  Please ignore the following three lines!
           pragma Warnings (Off, "default initialization");
-          for Inv'Address use F'Address;
+          for Assets'Address use F'Address;
           pragma Warnings (On, "default initialization");
        begin
           case TC is
           when Inventory_Chk =>
-             I := Init ("Ballpoint Pen",        185,  0.15);
-             Add (Inv, I);
-             Display (Inv);
+             I := Init (Ballpoint_Pen,        185,  0.15);
+             Add (Assets, I);
+             Display (Assets);
 
-             I := Init ("Oil-based Pen Marker", 100,  9.0);
-             Add (Inv, I);
-             Display (Inv);
+             I := Init (Oil_Based_Pen_Marker, 100,  9.0);
+             Add (Assets, I);
+             Display (Assets);
 
-             I := Init ("Feather Quill Pen",      2, 40.0);
-             Add (Inv, I);
-             Display (Inv);
+             I := Init (Feather_Quill_Pen,      2, 40.0);
+             Add (Assets, I);
+             Display (Assets);
           end case;
        end Check;
 
@@ -1778,7 +1822,7 @@ Colors: Lookup-Table
 
        type HTML_Color_RGB is array (HTML_Color) of RGB;
 
-       To_RGB_Loopup_Table : constant HTML_Color_RGB
+       To_RGB_Lookup_Table : constant HTML_Color_RGB
          := (Salmon      => (16#FA#, 16#80#, 16#72#),
              Firebrick   => (16#B2#, 16#22#, 16#22#),
              Red         => (16#FF#, 16#00#, 16#00#),
@@ -1798,7 +1842,7 @@ Colors: Lookup-Table
 
        function To_RGB (C : HTML_Color) return RGB is
        begin
-          return To_RGB_Loopup_Table (C);
+          return To_RGB_Lookup_Table (C);
        end To_RGB;
 
        function Image (C : RGB) return String is
@@ -1841,7 +1885,7 @@ Colors: Lookup-Table
                 Put_Line ("Size of HTML_Color_RGB: "
                           & Integer'Image (HTML_Color_RGB'Length));
                 Put_Line ("Firebrick: "
-                          & Image (To_RGB_Loopup_Table (Firebrick)));
+                          & Image (To_RGB_Lookup_Table (Firebrick)));
              when HTML_Color_To_Integer_Chk =>
                 for I in HTML_Color'Range loop
                    Put_Line (HTML_Color'Image (I) & " => "
@@ -4405,9 +4449,6 @@ Price Range
 
     procedure Main is
 
-       pragma Assertion_Policy (Static_Predicate  => Check,
-                                Dynamic_Predicate => Check);
-
        type Test_Case_Index is
          (Price_Range_Chk);
 
@@ -4464,9 +4505,6 @@ Pythagorean Theorem: Predicate
     --  END LAB IO BLOCK
 
     package Triangles is
-
-       pragma Assertion_Policy (Static_Predicate  => Check,
-                                Dynamic_Predicate => Check);
 
        subtype Length is Integer;
 
@@ -4574,8 +4612,6 @@ Pythagorean Theorem: Precondition
 
     package Triangles is
 
-       pragma Assertion_Policy (Pre => Check);
-
        subtype Length is Integer;
 
        type Right_Triangle is record
@@ -4681,8 +4717,6 @@ Pythagorean Theorem: Postcondition
     --  END LAB IO BLOCK
 
     package Triangles is
-
-       pragma Assertion_Policy (Post => Check);
 
        subtype Length is Integer;
 
@@ -4791,8 +4825,6 @@ Pythagorean Theorem: Type Invariant
     --  END LAB IO BLOCK
 
     package Triangles is
-
-       pragma Assertion_Policy (Type_Invariant => Check);
 
        subtype Length is Integer;
 
@@ -4934,7 +4966,7 @@ Primary Colors
 
        type HTML_Color_RGB_Array is array (HTML_Color) of RGB;
 
-       To_RGB_Loopup_Table : constant HTML_Color_RGB_Array
+       To_RGB_Lookup_Table : constant HTML_Color_RGB_Array
          := (Salmon      => (16#FA#, 16#80#, 16#72#),
              Firebrick   => (16#B2#, 16#22#, 16#22#),
              Red         => (16#FF#, 16#00#, 16#00#),
@@ -4962,7 +4994,7 @@ Primary Colors
 
        function To_RGB (C : HTML_Color) return RGB is
        begin
-          return To_RGB_Loopup_Table (C);
+          return To_RGB_Lookup_Table (C);
        end To_RGB;
 
        function To_Int_Color (C : HTML_Color;

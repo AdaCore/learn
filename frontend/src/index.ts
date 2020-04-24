@@ -1,5 +1,7 @@
+// #if STAGING
+import Cookies from 'js-cookie';
+// #endif
 import './styles/learn.scss';
-import './ts/theme';
 import {Carousel} from './ts/carousel';
 import {Widget, LabWidget} from './ts/widget';
 
@@ -34,11 +36,23 @@ import {Widget, LabWidget} from './ts/widget';
             new Widget($(element), exampleServer);
 
         widget.render();
+      } else {
+        throw Error('Malformed widget! No server address specified.');
       }
     });
 
     // carousel entry point
     const carousel: Carousel = new Carousel();
     carousel.render();
+
+    // #if STAGING
+    if (!Cookies.get('AdaCore_staff')) {
+      const msg = 'You have reached learn-staging, the learn testing site. ' +
+      'This is reserved for testers only. You will be directed to the main ' +
+      'learn.adacore.com site after pressing OK.';
+      alert(msg);
+      window.location.href = 'http://learn.adacore.com';
+    }
+    // #endif
   });
 }());

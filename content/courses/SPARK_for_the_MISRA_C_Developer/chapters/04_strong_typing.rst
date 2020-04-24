@@ -673,7 +673,7 @@ is an 8-bit modular type declared in the predefined package :ada:`Interfaces`).
 
 :code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button compile_button
 
     with Interfaces; use Interfaces;
     package Unethical_Genetics is

@@ -15,8 +15,6 @@ CONTENT_DIR   	= $(MKFILE_DIR)/../content
 HOST_ADDRESS 	?= localhost
 HOST_PORT    	?= 8000
 
-YARN_BUILD    	:= yarn run build
-
 
 help:
 	@echo "make test_content  - run the testsuite"
@@ -25,7 +23,7 @@ help:
 	@echo "make latexpdf - generates the PDF document"
 	@echo "make pdf_books - generates the PDF document for each course and labs"
 
-test_engine: webpack
+test_engine: webpack-production
 	@echo "===== ENGINE TEST ====="
 	@$(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
@@ -110,15 +108,18 @@ local:
 	@CODE_SERVER_URL="http://$(HOST_ADDRESS):$(HOST_PORT)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-webpack:
-	$(YARN_BUILD)
+webpack-production:
+	yarn run production
+
+webpack-staging:
+	yarn run staging
 
 # Build the site pointing to 'cloudchecker.r53.adacore.com'
-site: cleanall webpack pdf_books
+site: cleanall webpack-production pdf_books
 	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-site-staging: cleanall webpack pdf_books
+site-staging: cleanall webpack-staging pdf_books
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 

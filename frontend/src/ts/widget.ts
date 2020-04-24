@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import 'whatwg-fetch';
 
-import {Area, OutputArea, LabContainer, CLIArea} from './areas';
+import {Area, OutputArea, LabContainer} from './areas';
 import {Button, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
 import {Resource, Download, RunProgram, CheckOutput} from './types';
@@ -21,7 +21,6 @@ export class Widget {
   protected readonly container: JQuery;
   private readonly name: string;
   private tabs: Tabs = new Tabs();
-  private outputContainer: JQuery;
   protected outputArea: OutputArea = new OutputArea();
 
   private buttons: Array<Button> = [];
@@ -70,7 +69,12 @@ export class Widget {
       const ed = new Editor(file);
       this.editors.push(ed);
 
-      const tab = this.tabs.addTab(file.basename, ed.render());
+      const tab = this.tabs.addTab(file.basename, ed.render(), () => {
+        const lengths = this.editors.map((e) => e.getLength());
+        // This is a new one: ... is a spread operator
+        const max = Math.max(...lengths);
+        ed.setLength(max);
+      });
       ed.setTab(tab);
     });
 
@@ -222,6 +226,8 @@ export class Widget {
         await this.getOutputFromIdentifier(json);
       } catch (e) {
         reject(e);
+      } finally {
+        this.outputArea.showSpinner(false);
       }
 
       resolve();
@@ -335,12 +341,26 @@ export class Widget {
 
         const ctMatchFound: Array<string> = outMsg.match(ctRegex);
         const rtMatchFound: Array<string> = outMsg.match(rtRegex);
-        let div: JQuery;
 
         if (ctMatchFound || rtMatchFound) {
           let basename: string;
           let row: number;
           let col: number;
+
+          // Lines that contain a sloc are clickable:
+          const cb = (): void => {
+            if (window.getSelection().toString() == '') {
+              this.editors.map((e) => {
+                if (basename == e.getResource().basename) {
+                  // Switch to the tab that contains the editor
+                  e.getTab().trigger('click');
+
+                  // Jump to the corresponding line
+                  e.gotoLine(row, col);
+                }
+              });
+            }
+          };
 
           if (ctMatchFound) {
             basename = ctMatchFound[1];
@@ -348,9 +368,9 @@ export class Widget {
             col = parseInt(ctMatchFound[3]);
 
             if (ctMatchFound[4].indexOf(' info:') == 0) {
-              div = homeArea.addInfo(outMsg);
+              homeArea.addInfo(outMsg, cb);
             } else {
-              div = homeArea.addMsg(outMsg);
+              homeArea.addMsg(outMsg, cb);
               homeArea.errorCount++;
             }
           } else {
@@ -358,22 +378,9 @@ export class Widget {
             row = parseInt(rtMatchFound[2]);
             col = 1;
 
-            div = homeArea.addMsg(outMsg);
+            homeArea.addMsg(outMsg, cb);
             homeArea.errorCount++;
           }
-
-          // Lines that contain a sloc are clickable:
-          div.on('click', () => {
-            this.editors.map((e) => {
-              if (basename == e.getResource().basename) {
-                // Switch to the tab that contains the editor
-                e.getTab().trigger('click');
-
-                // Jump to the corresponding line
-                e.gotoLine(row, col);
-              }
-            });
-          });
         } else {
           homeArea.addLine(outMsg);
         }
@@ -411,8 +418,6 @@ export class Widget {
         this.outputArea.addError(Strings.EXIT_STATUS_LABEL +
             ': ' + data.status);
       }
-
-      this.outputArea.showSpinner(false);
     }
 
     return readLines;
@@ -561,7 +566,6 @@ export class Widget {
  */
 export class LabWidget extends Widget {
   private readonly labContainer: LabContainer = new LabContainer;
-  private readonly cliArea: CLIArea = new CLIArea();
 
   /**
    * Constructs the LabWidget
@@ -571,28 +575,9 @@ export class LabWidget extends Widget {
   constructor(container: JQuery, server: string) {
     super(container, server);
 
-    this.addButton('run');
     this.addButton('submit');
 
     this.lab = true;
-  }
-
-  /**
-   * Collect the resources loaded in the widget and return as list
-   *  then add cli data to file list
-   * @return {Array<Resource>} return the widget resources
-   */
-  protected collectResources(): Array<Resource> {
-    const files = super.collectResources();
-
-    if (this.cliArea.enabled()) {
-      files.push({
-        basename: Strings.CLI_FILE,
-        contents: this.cliArea.getContent(),
-      });
-    }
-
-    return files;
   }
 
   /**
@@ -654,7 +639,6 @@ export class LabWidget extends Widget {
    */
   public render(): void {
     super.render();
-    this.cliArea.render(this.buttonGroup);
     this.labContainer.render().appendTo(this.outputGroup);
   }
 }

@@ -66,9 +66,6 @@ Price Range
 
     procedure Main is
 
-       pragma Assertion_Policy (Static_Predicate  => Check,
-                                Dynamic_Predicate => Check);
-
        type Test_Case_Index is
          (Price_Range_Chk);
 
@@ -144,9 +141,6 @@ Pythagorean Theorem: Predicate
     --  END LAB IO BLOCK
 
     package Triangles is
-
-       pragma Assertion_Policy (Static_Predicate  => Check,
-                                Dynamic_Predicate => Check);
 
        subtype Length is Integer;
 
@@ -276,8 +270,6 @@ Pythagorean Theorem: Precondition
 
     package Triangles is
 
-       pragma Assertion_Policy (Pre => Check);
-
        subtype Length is Integer;
 
        type Right_Triangle is record
@@ -402,8 +394,6 @@ Pythagorean Theorem: Postcondition
     --  END LAB IO BLOCK
 
     package Triangles is
-
-       pragma Assertion_Policy (Post => Check);
 
        subtype Length is Integer;
 
@@ -543,8 +533,6 @@ Pythagorean Theorem: Type Invariant
 
     package Triangles is
 
-       pragma Assertion_Policy (Type_Invariant => Check);
-
        subtype Length is Integer;
 
        type Right_Triangle is private;
@@ -653,7 +641,7 @@ colors.
     #. The :ada:`HTML_Color` type is an enumeration that contains a list of
        HTML colors.
 
-    #. The :ada:`To_RGB_Loopup_Table` array implements a lookup-table to
+    #. The :ada:`To_RGB_Lookup_Table` array implements a lookup-table to
        convert the colors into a hexadecimal value using RGB color components
        (i.e. :ada:`Red`, :ada:`Green` and :ada:`Blue`)
 
@@ -774,7 +762,7 @@ colors.
 
        type HTML_Color_RGB_Array is array (HTML_Color) of RGB;
 
-       To_RGB_Loopup_Table : constant HTML_Color_RGB_Array
+       To_RGB_Lookup_Table : constant HTML_Color_RGB_Array
          := (Salmon      => (16#FA#, 16#80#, 16#72#),
              Firebrick   => (16#B2#, 16#22#, 16#22#),
              Red         => (16#FF#, 16#00#, 16#00#),
@@ -801,7 +789,7 @@ colors.
 
        function To_RGB (C : HTML_Color) return RGB is
        begin
-          return To_RGB_Loopup_Table (C);
+          return To_RGB_Lookup_Table (C);
        end To_RGB;
 
        function To_Int_Color (C : HTML_Color;
