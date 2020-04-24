@@ -225,6 +225,16 @@ lookup table.
        statement to implement the :ada:`To_RGB` function. Here, you must
        rewrite the function using a look-up table.
 
+       #. You can use the previous implementation of the :ada:`To_RGB`
+          function |mdash| which is based on a case statement |mdash| as a
+          starting point. The code has been commented out in the function
+          implementation, so you just need to copy it and convert it to an
+          array declaration.
+
+        #. Don't use a case statement to implement the :ada:`To_RGB` function.
+           Instead, write code that accesses :ada:`To_RGB_Loopup_Table` to get
+           the correct value.
+
     #. The following table contains the HTML colors and the corresponding value
        in hexadecimal form:
 
@@ -307,6 +317,24 @@ lookup table.
        begin
           --  Implement To_RGB using To_RGB_Loopup_Table
           return (0, 0, 0);
+
+          --  Use the code below from the previous version of the To_RGB
+          --  function to declare the To_RGB_Loopup_Table:
+          --
+          --  case C is
+          --     when Salmon      => return (16#FA#, 16#80#, 16#72#);
+          --     when Firebrick   => return (16#B2#, 16#22#, 16#22#);
+          --     when Red         => return (16#FF#, 16#00#, 16#00#);
+          --     when Darkred     => return (16#8B#, 16#00#, 16#00#);
+          --     when Lime        => return (16#00#, 16#FF#, 16#00#);
+          --     when Forestgreen => return (16#22#, 16#8B#, 16#22#);
+          --     when Green       => return (16#00#, 16#80#, 16#00#);
+          --     when Darkgreen   => return (16#00#, 16#64#, 16#00#);
+          --     when Blue        => return (16#00#, 16#00#, 16#FF#);
+          --     when Mediumblue  => return (16#00#, 16#00#, 16#CD#);
+          --     when Darkblue    => return (16#00#, 16#00#, 16#8B#);
+          --  end case;
+
        end To_RGB;
 
        function Image (C : RGB) return String is
