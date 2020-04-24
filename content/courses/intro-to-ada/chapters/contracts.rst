@@ -31,7 +31,7 @@ preconditions and postconditions as promises between the subprogram caller
 and the callee: a precondition is a promise from the caller to the callee,
 and a postcondition is a promise in the other direction.
 
-Pre- and postconditions are specified using a :ada:`with` clause in the
+Pre- and postconditions are specified using an aspect clause in the
 subprogram declaration. A :ada:`with Pre => <condition>` clause specifies a
 precondition and a :ada:`with Post => <condition>` clause specifies a
 postcondition.
@@ -107,7 +107,8 @@ We illustrate postconditions using the following example:
 
        function Square (A : Int_8) return Int_8 is
          (A * A)
-         with Post => Square'Result > A;
+         with Post => (if abs A in 0 | 1 then Square'Result = abs A
+                       else Square'Result > A);
 
        procedure Square (A : in out Int_8_Array)
          with Post => (for all I in A'Range =>
@@ -119,7 +120,7 @@ We illustrate postconditions using the following example:
           end loop;
        end Square;
 
-       V : Int_8_Array := (9, 10, 11);
+       V : Int_8_Array := (-2, -1, 0, 1, 10, 11);
     begin
        for E of V loop
           Put_Line ("Original: " & Int_8'Image (E));
@@ -134,7 +135,7 @@ We illustrate postconditions using the following example:
 
 We declare a signed 8-bit type :ada:`Int_8` and an array of that type
 (:ada:`Int_8_Array`). We want to ensure each element of the array is
-doubled after calling the procedure :ada:`Square` for an object of the
+squared after calling the procedure :ada:`Square` for an object of the
 :ada:`Int_8_Array` type. We do this with a postcondition using a :ada:`for
 all` expression. This postcondition also uses the :ada:`'Old` attribute to
 refer to the original value of the parameter (before the call).
@@ -161,7 +162,8 @@ subprogram. For example:
          with
               Pre  => (Integer'Size >= Int_8'Size * 2 and
                        Integer (A) * Integer (A) < Integer (Int_8'Last)),
-              Post => Square'Result > A;
+              Post => (if abs A in 0 | 1 then Square'Result = abs A
+                       else Square'Result > A);
 
        V : Int_8;
     begin
