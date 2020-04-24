@@ -98,7 +98,7 @@ function :ada:`F` might not always initialize output parameter :ada:`P`:
 We can correct the program by initializing :ada:`P` to value 0 when condition :ada:`B` is
 not satisfied:
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button compile_button
 
     with Interfaces; use Interfaces;
 

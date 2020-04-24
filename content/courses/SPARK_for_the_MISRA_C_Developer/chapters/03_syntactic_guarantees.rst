@@ -338,7 +338,7 @@ Here is a correct version of the same code:
 
 :code-config:`run_button=False;prove_button=False;accumulate_code=False`
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button compile_button
 
     package Sign_Domain is
 
