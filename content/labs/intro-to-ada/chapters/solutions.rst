@@ -2746,7 +2746,7 @@ Price list
 
     package Price_Lists is
 
-       type Price_Type is delta 10.0 ** (-2) digits 12;
+       type Price_Type is delta 0.01 digits 12;
 
        type Price_List_Array is array (Positive range <>) of Price_Type;
 
