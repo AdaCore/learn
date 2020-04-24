@@ -45,8 +45,8 @@ Aggregate Initialization
         - :ada:`Y` = 12
         - :ada:`Z` = 13
 
-    #. Array type :ada:`Int_Arr` of :ada:`Integer` has 20 elements ranging from
-       1 to 20.
+    #. Array type :ada:`Int_Arr` has 20 elements of :ada:`Integer` type (with
+       indices ranging from 1 to 20).
 
     #. The first :ada:`Init` procedure outputs a record of :ada:`Rec` type
        where:
