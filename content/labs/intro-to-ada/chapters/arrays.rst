@@ -50,7 +50,7 @@ Constrained Array
 
         #. It is therefore limited to 10 elements.
 
-    #. Function :ada:`Init` returns an array where each element is initialize
+    #. Function :ada:`Init` returns an array where each element is initialized
        with the corresponding index.
 
     #. Procedure :ada:`Double` doubles the value of each element of an array.
@@ -899,7 +899,7 @@ List of Names
 
     #. Function :ada:`Get` retrieves the age of a person from the list.
 
-    #. Procedure :ada:`Update` updates the age of a person ob the list.
+    #. Procedure :ada:`Update` updates the age of a person in the list.
 
     #. Procedure :ada:`Display` shows the complete list using the following
        format:
@@ -907,7 +907,7 @@ List of Names
         #. The first line must be ``LIST OF NAMES:``. It is followed by the
            name and age of each person in the next lines.
 
-        #. For each person on the list, the procedure must diplay the
+        #. For each person on the list, the procedure must display the
            information in the following format:
 
             .. code-block:: none
