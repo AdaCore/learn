@@ -2,9 +2,10 @@ from celery import Celery, states
 from celery.exceptions import Ignore
 from celery.utils.log import get_task_logger
 
+import time
 import traceback
 
-from .container import Container
+from .container import DockerContainer
 from .project import RemoteProject, BuildError
 
 
@@ -23,12 +24,14 @@ def run_program(self, data):
     :return:
         Returns a dict containing the status code from the execution
     """
-    container = Container(celery.conf['CONTAINER_NAME'])
-    task_id = self.request.id
-    mode = data['mode']
-    app = self._app
-
     try:
+        start = time.time()
+        container = DockerContainer(celery.conf['CONTAINER_NAME'])
+        task_id = self.request.id
+        mode = data['mode']
+        app = self._app
+
+
         if mode == "run":
             project = RemoteProject(app, container, task_id, data['files'])
             project.build()
@@ -55,7 +58,8 @@ def run_program(self, data):
 
     except BuildError as ex:
         logger.error(f"Build error code {ex}", exc_info=True)
-        return {'status': int(f"{ex}")}
+        elapsed = time.time() - start
+        return {'status': int(f"{ex}"), 'elapsed': elapsed}
     except Exception as ex:
         logger.error("An error occured in run program", exc_info=True)
         self.update_state(state=states.FAILURE,
@@ -64,5 +68,9 @@ def run_program(self, data):
                             'exc_message': traceback.format_exc().split('\n')
                         })
         raise Ignore()
+    finally:
+        if container:
+            container.remove()
+        elapsed = time.time() - start
 
-    return {'status': code}
+    return {'status': code, 'elapsed': elapsed}

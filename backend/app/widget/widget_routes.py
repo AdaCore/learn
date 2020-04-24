@@ -119,6 +119,8 @@ def check_run():
     if task.ready():
         app.logger.debug(f"Task info {task.info}")
         result = task.get()
+        elapsed = result["elapsed"]
+        app.logger.debug(f"Task took {elapsed}s.")
         response['completed'] = True
         response['status'] = result["status"]
 
