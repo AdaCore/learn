@@ -198,7 +198,7 @@ class CFile(File):
             True if the regex matches
         """
         main_re = re.compile("^(?:void|int) +main\(.*\)(?: |\n)*{", re.MULTILINE)
-        return main_re.findall(self.contents)
+        return main_re.findall(self.content)
 
     def language(self):
         """
