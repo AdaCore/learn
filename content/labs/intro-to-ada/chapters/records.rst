@@ -428,7 +428,7 @@ keep track of assets.
 
     --  START LAB IO BLOCK
     in 0:Inventory_Chk
-    out 0:Adding item: Ballpoint Pen. Assets: $27.75. Adding item: Oil-based Pen Marker. Assets: $927.75. Adding item: Feather Quill Pen. Assets: $1007.75.
+    out 0:Item: Ballpoint Pen. Assets: $27.75. Item: Oil-based Pen Marker. Assets: $927.75. Item: Feather Quill Pen. Assets: $1007.75.
     --  END LAB IO BLOCK
 
     package Inventory_Pkg is
@@ -468,7 +468,7 @@ keep track of assets.
                       Quantity : Natural;
                       Price    : Float) return Item is
        begin
-          Put_Line ("Adding item: " & To_String (Name) & ".");
+          Put_Line ("Item: " & To_String (Name) & ".");
 
           --  Replace return statement with the actual record initialization!
           --
