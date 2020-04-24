@@ -16,12 +16,18 @@ export abstract class Area {
   abstract render(): JQuery;
 
   /**
+   * The event callback signature for clickable divs
+   *
+   * @callback eventCallback
+   */
+
+  /**
    * Add a line to the Area
    * @param {Array<string>} classes - The list of classes to add to the line
    * @param {string} text - The text to display on the line
-   * @return {JQuery} The JQuery object of the newly created line
+   * @param {eventCallback} cb (optional) - The on click function to register
    */
-  public add(classes: Array<string>, text: string): JQuery {
+  public add(classes: Array<string>, text: string, cb?: () => void): void {
     const div = $('<div>');
     classes.map((c: string) => {
       div.addClass(c);
@@ -29,7 +35,10 @@ export abstract class Area {
 
     div.text(text);
     div.appendTo(this.container);
-    return div;
+
+    if (cb) {
+      div.on('click', cb);
+    }
   }
 
   /**
@@ -43,37 +52,37 @@ export abstract class Area {
   /**
    * Add a Console message to the Area
    * @param {string} text - The console message to add
-   * @return {JQuery} The newly created line
+   * @param {eventCallback} cb (optional) - The on click function to register
    */
-  public addConsole(text: string): JQuery {
-    return this.add(['output_console'], '$ ' + text);
+  public addConsole(text: string, cb?: () => void): void {
+    this.add(['output_console'], '$ ' + text, cb);
   }
 
   /**
    * Add an Info message to the Area
    * @param {string} text - The info message to add
-   * @return {JQuery} The newly created line
+   * @param {eventCallback} cb (optional) - The on click function to register
    */
-  public addInfo(text: string): JQuery {
-    return this.add(['output_msg_info'], text);
+  public addInfo(text: string, cb?: () => void): void {
+    this.add(['output_msg_info'], text, cb);
   }
 
   /**
    * Add a Msg message to the Area
    * @param {string} text - The Msg message to add
-   * @return {JQuery} The newly created line
+   * @param {eventCallback} cb (optional) - The on click function to register
    */
-  public addMsg(text: string): JQuery {
-    return this.add(['output_msg'], text);
+  public addMsg(text: string, cb?: () => void): void {
+    this.add(['output_msg'], text, cb);
   }
 
   /**
    * Add a Line message to the Area
    * @param {string} text - The Line message to add
-   * @return {JQuery} The newly created line
+   * @param {eventCallback} cb (optional) - The on click function to register
    */
-  public addLine(text: string): JQuery {
-    return this.add(['output_line'], text);
+  public addLine(text: string, cb?: () => void): void {
+    this.add(['output_line'], text, cb);
   }
 }
 
@@ -116,9 +125,10 @@ export class OutputArea extends Area {
   /**
    * Add an Error message to the OutputArea
    * @param {string} message - The error message to add
+   * @param {eventCallback} cb (optional) - The on click function to register
    */
-  public addError(message: string): void {
-    this.add(['output_error'], message);
+  public addError(message: string, cb?: () => void): void {
+    this.add(['output_error'], message, cb);
   }
 
   /**
