@@ -560,7 +560,7 @@ Price list
     in 1:Price_List_Chk
     out 1:PRICE LIST  1.45  2.37  3.21  4.14  5.22  6.69  7.77  8.14  9.99  10.01
     in 2:Price_List_Get_Chk
-    out 2:Attemp Get #  5 Element #  5 =>  5.22 Attemp Get #  40 Element not available (as expected)
+    out 2:Attempt Get #  5 Element #  5 =>  5.22 Attempt Get #  40 Element not available (as expected)
     --  END LAB IO BLOCK
 
     package Price_Lists is
@@ -644,7 +644,7 @@ Price list
           procedure Get_Display (Idx : Positive) is
              R : constant Price_Result := Get (L, Idx);
           begin
-             Put_Line ("Attemp Get # " & Positive'Image (Idx));
+             Put_Line ("Attempt Get # " & Positive'Image (Idx));
              if R.Ok then
                 Put_Line ("Element # " & Positive'Image (Idx)
                           & " => "     & Price_Type'Image (R.Price));
