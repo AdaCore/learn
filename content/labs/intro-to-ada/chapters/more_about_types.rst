@@ -344,6 +344,18 @@ Simple todo list
 
         #. This requires allocating a string for the access type.
 
+        #. An item can only be added to the list if the list isn't full yet
+           |mdash| see next point for details on error handling.
+
+    #. Since the number of items that can be stored on the list is limited,
+       the list might eventually become full in a call to :ada:`Add`.
+
+        #. You must write code in the implementation of the :ada:`Add`
+           procedure that verifies this condition.
+
+        #. If the procedure detects that the list is full, it must display the
+           following message: "ERROR: list is full!".
+
     #. Procedure :ada:`Display` is used to display all to-do items.
 
         #. It must display one item per line.
@@ -378,12 +390,14 @@ Simple todo list
 
     end Todo_Lists;
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     package body Todo_Lists is
 
        procedure Add (Todos : in out Todo_List;
                       Item  : String) is
        begin
-          null;
+          Put_Line ("ERROR: list is full!");
        end Add;
 
        procedure Display (Todos : Todo_List) is
