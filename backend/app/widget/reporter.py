@@ -53,7 +53,7 @@ class MQReporter:
         }
 
         self.string_replace = {
-            TMPFS, ""
+            TMPFS: ""
         }
 
         self.app = app
