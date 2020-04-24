@@ -1776,7 +1776,7 @@ Colors: Lookup-Table
 
        type HTML_Color_RGB is array (HTML_Color) of RGB;
 
-       To_RGB_Loopup_Table : constant HTML_Color_RGB
+       To_RGB_Lookup_Table : constant HTML_Color_RGB
          := (Salmon      => (16#FA#, 16#80#, 16#72#),
              Firebrick   => (16#B2#, 16#22#, 16#22#),
              Red         => (16#FF#, 16#00#, 16#00#),
@@ -1796,7 +1796,7 @@ Colors: Lookup-Table
 
        function To_RGB (C : HTML_Color) return RGB is
        begin
-          return To_RGB_Loopup_Table (C);
+          return To_RGB_Lookup_Table (C);
        end To_RGB;
 
        function Image (C : RGB) return String is
@@ -1839,7 +1839,7 @@ Colors: Lookup-Table
                 Put_Line ("Size of HTML_Color_RGB: "
                           & Integer'Image (HTML_Color_RGB'Length));
                 Put_Line ("Firebrick: "
-                          & Image (To_RGB_Loopup_Table (Firebrick)));
+                          & Image (To_RGB_Lookup_Table (Firebrick)));
              when HTML_Color_To_Integer_Chk =>
                 for I in HTML_Color'Range loop
                    Put_Line (HTML_Color'Image (I) & " => "
@@ -4920,7 +4920,7 @@ Primary Colors
 
        type HTML_Color_RGB_Array is array (HTML_Color) of RGB;
 
-       To_RGB_Loopup_Table : constant HTML_Color_RGB_Array
+       To_RGB_Lookup_Table : constant HTML_Color_RGB_Array
          := (Salmon      => (16#FA#, 16#80#, 16#72#),
              Firebrick   => (16#B2#, 16#22#, 16#22#),
              Red         => (16#FF#, 16#00#, 16#00#),
@@ -4948,7 +4948,7 @@ Primary Colors
 
        function To_RGB (C : HTML_Color) return RGB is
        begin
-          return To_RGB_Loopup_Table (C);
+          return To_RGB_Lookup_Table (C);
        end To_RGB;
 
        function To_Int_Color (C : HTML_Color;

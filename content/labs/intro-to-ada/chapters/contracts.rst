@@ -641,7 +641,7 @@ colors.
     #. The :ada:`HTML_Color` type is an enumeration that contains a list of
        HTML colors.
 
-    #. The :ada:`To_RGB_Loopup_Table` array implements a lookup-table to
+    #. The :ada:`To_RGB_Lookup_Table` array implements a lookup-table to
        convert the colors into a hexadecimal value using RGB color components
        (i.e. :ada:`Red`, :ada:`Green` and :ada:`Blue`)
 
@@ -762,7 +762,7 @@ colors.
 
        type HTML_Color_RGB_Array is array (HTML_Color) of RGB;
 
-       To_RGB_Loopup_Table : constant HTML_Color_RGB_Array
+       To_RGB_Lookup_Table : constant HTML_Color_RGB_Array
          := (Salmon      => (16#FA#, 16#80#, 16#72#),
              Firebrick   => (16#B2#, 16#22#, 16#22#),
              Red         => (16#FF#, 16#00#, 16#00#),
@@ -789,7 +789,7 @@ colors.
 
        function To_RGB (C : HTML_Color) return RGB is
        begin
-          return To_RGB_Loopup_Table (C);
+          return To_RGB_Lookup_Table (C);
        end To_RGB;
 
        function To_Int_Color (C : HTML_Color;
