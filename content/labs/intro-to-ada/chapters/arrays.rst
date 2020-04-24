@@ -424,14 +424,21 @@ Unconstrained Array
     #. Procedure :ada:`Init` initializes each element with the index starting
        with the last one.
 
-       - For example, for an array  of 3 elements, the values of these
-         elements after a call to :ada:`Init` must be :ada:`(3, 2, 1)`.
+       - For example, for an array of 3 elements where the index of the first
+         element is 1 (:ada:`My_Array (1 .. 3)`), the values of these elements
+         after a call to :ada:`Init` must be :ada:`(3, 2, 1)`.
 
-    #. Function :ada:`Init` returns an array based on the length :ada:`L`
-       provided to the :ada:`Init` function.
+    #. Function :ada:`Init` returns an array based on the length :ada:`L` and
+       start index :ada:`I` provided to the :ada:`Init` function.
+
+        #. :ada:`I` indicates the index of the first element of the array.
+
+        #. :ada:`L` indicates the length of the array.
+
+        #. Both :ada:`I` and :ada:`L` must be positive.
 
         #. This is its declaration:
-           :ada:`function Init (L : Positive) return My_Array;`.
+           :ada:`function Init (I, L : Positive) return My_Array;`.
 
         #. You must initialize the elements of the array in the same manner
            as for the :ada:`Init` procedure described above.
@@ -486,9 +493,9 @@ Unconstrained Array
 
     --  START LAB IO BLOCK
     in 0:Init_Chk
-    out 0: 5  4  3  2  1
+    out 0: 5  4  3  2  1  9  8  7  6  5
     in 1:Init_Proc_Chk
-    out 1: 5  4  3  2  1
+    out 1: 5  4  3  2  1  9  8  7  6  5
     in 2:Double_Chk
     out 2: 2  4  10  20 -20
     in 3:Diff_Prev_Chk
@@ -505,7 +512,7 @@ Unconstrained Array
        --
        --  procedure Init ...;
 
-       function Init (L : Positive) return My_Array;
+       function Init (I, L : Positive) return My_Array;
 
        --  procedure Double ...;
        --
@@ -543,6 +550,7 @@ Unconstrained Array
 
        procedure Check (TC : Test_Case_Index) is
           AA : My_Array (1 .. 5);
+          AB : My_Array (5 .. 9);
 
           procedure Display (A : My_Array) is
           begin
@@ -559,19 +567,23 @@ Unconstrained Array
        begin
           case TC is
           when Init_Chk =>
-             AA := Init (AA'Last);
+             AA := Init (AA'First, AA'Length);
+             AB := Init (AB'First, AB'Length);
              Display (AA);
+             Display (AB);
           when Init_Proc_Chk =>
              Init (AA);
+             Init (AB);
              Display (AA);
+             Display (AB);
           when Double_Chk =>
-             Local_Init (AA);
-             Double (AA);
-             Display (AA);
+             Local_Init (AB);
+             Double (AB);
+             Display (AB);
           when Diff_Prev_Chk =>
-             Local_Init (AA);
-             AA := Diff_Prev_Elem (AA);
-             Display (AA);
+             Local_Init (AB);
+             AB := Diff_Prev_Elem (AB);
+             Display (AB);
           when Diff_Prev_Single_Chk =>
              declare
                 A1 : My_Array (1 .. 1) := (1 => 42);
