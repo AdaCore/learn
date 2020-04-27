@@ -215,16 +215,16 @@ export class Widget {
     }
 
     return blobList;
-
   }
 
   /**
    * Get the run output using the return identifier from the button CB
    * @param {RunProgram.FS} json - the json data returned from button CB
    * @param {number} lRead - the number of lines already read from the stream
+   * @param {number} nReq - the number of requests sent
    */
-  private async getOutputFromIdentifier(json: RunProgram.FS, lRead = 0):
-      Promise<void> {
+  private async getOutputFromIdentifier(json: RunProgram.FS,
+      lRead = 0, nReq = 0): Promise<void> {
     const data: CheckOutput.TS = {
       identifier: json.identifier,
       read: lRead,
@@ -234,12 +234,18 @@ export class Widget {
       await fetchJSON<CheckOutput.TS, CheckOutput.FS>(data,
           this.serverAddress('check_output'));
 
+    if (nReq > 200) {
+      throw new Error('Request timed out. ' + Strings.INTERNAL_ERROR_MESSAGE);
+    } else {
+      nReq++;
+    }
+
     lRead += this.processCheckOutput(rdata);
 
     if (!rdata.completed) {
       // We have not finished processing the output: call this again
       await new Promise((resolve) => setTimeout(resolve, 250));
-      await this.getOutputFromIdentifier(json, lRead);
+      await this.getOutputFromIdentifier(json, lRead, nReq);
     }
   }
 
