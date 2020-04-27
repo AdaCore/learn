@@ -239,7 +239,7 @@ see this in the case of the declaration of :ada:`Get_Value_Of_X`. Finally, if
 a subprogram, such as :ada:`Incr_Parameter_X`, doesn't reference any global
 variables, you set the value of the global contract to :ada:`null`.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     package Show_Global_Contracts is
 

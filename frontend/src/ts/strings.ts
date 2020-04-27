@@ -6,17 +6,22 @@ interface ButtonMode {
 export const modeDictionary: {[mode: string]: ButtonMode } = {
   prove: {
     buttonText: 'Prove',
-    tooltip: 'Run gnatprove to prove SPARK code',
+    tooltip: 'Prove SPARK code',
   },
   // eslint-disable-next-line @typescript-eslint/camelcase
   prove_flow: {
     buttonText: 'Examine',
-    tooltip: 'Run gnatprove to examine SPARK data and control flow',
+    tooltip: 'Examine SPARK data and control flow',
+  },
+  // eslint-disable-next-line @typescript-eslint/camelcase
+  prove_flow_report_all: {
+    buttonText: 'Examine (report=all)',
+    tooltip: 'Examine SPARK data and control flow and report all findings',
   },
   // eslint-disable-next-line @typescript-eslint/camelcase
   prove_report_all: {
     buttonText: 'Prove (report=all)',
-    tooltip: 'Run gnatprove to prove SPARK code and report all findings',
+    tooltip: 'Prove SPARK code and report all findings',
   },
   run: {
     buttonText: 'Run',

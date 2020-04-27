@@ -50,6 +50,9 @@ def run_program(self, data):
         elif mode == "prove_flow":
             project = RemoteProject(app, container, task_id, data['files'], True)
             code = project.prove(["--mode=flow"])
+        elif mode == "prove_flow_report_all":
+            project = RemoteProject(app, container, task_id, data['files'], True)
+            code = project.prove(["--mode=flow", "--report=all"])
         elif mode == "prove_report_all":
             project = RemoteProject(app, container, task_id, data['files'], True)
             code = project.prove(["--report=all"])
