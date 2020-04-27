@@ -239,7 +239,7 @@ see this in the case of the declaration of :ada:`Get_Value_Of_X`. Finally, if
 a subprogram, such as :ada:`Incr_Parameter_X`, doesn't reference any global
 variables, you set the value of the global contract to :ada:`null`.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_button
 
     package Show_Global_Contracts is
 
@@ -476,7 +476,7 @@ components, flow analysis knows that the entire object is initialized.
 However, record objects are still treated as single objects when analyzed
 as an input or output of a subprogram.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     package Show_Record_Flow_Analysis is
 
@@ -550,7 +550,7 @@ computes that :ada:`R` is uninitialized on a path that enters neither of the
 two conditional statements. Because it doesn't consider values of
 expressions, it can't know that such a path is impossible.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     procedure Absolute_Value
       (X :     Integer;
@@ -977,7 +977,7 @@ through :ada:`A` to increment every element by the value of :ada:`Increment`,
 saturating at a specified threshold value. We specified a :ada:`Global`
 contract for :ada:`Incr_Until_Threshold`.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     package Show_Increments is
 
@@ -1102,7 +1102,7 @@ Next, we change the :ada:`Global` contract of :ada:`Test_Index` into a
 the set of global variables accessed can be deduced from the :ada:`Depends`
 contract.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_report_all_button
 
     package Show_Biggest_Increasing_Sequence is
 
