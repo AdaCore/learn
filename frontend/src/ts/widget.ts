@@ -1,10 +1,10 @@
 import $ from 'jquery';
-import 'whatwg-fetch';
 
 import {Area, OutputArea, LabContainer} from './areas';
 import {Button, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
-import {Resource, Download, RunProgram, CheckOutput} from './types';
+import {fetchJSON, fetchBlob, DownloadRequest, DownloadResponse} from './comms';
+import {Resource, RunProgram, CheckOutput} from './types';
 import * as Strings from './strings';
 import * as util from './utilities';
 
@@ -133,62 +133,12 @@ export class Widget {
   }
 
   /**
-   * Perform a POST via the fetch method to retrieve json data
-   * @param {string} data - the json to send
-   * @param {string} url - the url suffix to send the fetch to
-   * @typeparam R - This is the json object type to send
-   * @typeparam T - This is the json object type to return
-   * @return {T} returns a promise to a json object of type T
+   * Construct the server address string
+   * @param {string} url - the url suffix
+   * @return {string} - the full constructed url
    */
-  private async fetchJSON<R, T>(data: R, url: string): Promise<T> {
-    const response = await fetch(this.server + '/' + url + '/', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      redirect: 'follow',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error('Status: ' + response.status + ' Msg: ' +
-        response.statusText);
-    }
-    return await response.json();
-  }
-
-  /**
-   * Perform a POST via the fetch method to retrieve a file
-   * @param {string} data - the json to send
-   * @param {string} url - the url suffix to send the fetch to
-   * @return {Promise<Download.FS>} returns a promise to a dl file
-   */
-  private async fetchBlob(data: Download.TS,
-      url: string): Promise<Download.FS> {
-    const response = await fetch(this.server + '/' + url + '/', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      redirect: 'follow',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error('Status: ' + response.status + ' Msg: ' +
-        response.statusText);
-    }
-    const blob: Blob = await response.blob();
-    const disposition = response.headers.get('content-disposition');
-    const filename = disposition.match(
-        /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
-
-    return {
-      blob: blob,
-      filename: filename,
-    };
+  private serverAddress(url: string): string {
+    return this.server + '/' + url + '/';
   }
 
   /**
@@ -213,69 +163,59 @@ export class Widget {
       lab: this.lab,
     };
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        const json =
-          await
-          this.fetchJSON<RunProgram.TS, RunProgram.FS>(serverData,
-              'run_program');
-        if (json.identifier == '') {
-          throw new Error(json.message);
-        }
-
-        await this.getOutputFromIdentifier(json);
-      } catch (e) {
-        reject(e);
-      } finally {
-        this.outputArea.showSpinner(false);
+    try {
+      const json =
+        await
+        fetchJSON<RunProgram.TS, RunProgram.FS>(serverData,
+            this.serverAddress('run_program'));
+      if (json.identifier == '') {
+        throw new Error(json.message);
       }
 
-      resolve();
-    });
+      await this.getOutputFromIdentifier(json);
+    } finally {
+      this.outputArea.showSpinner(false);
+    }
   }
 
   /**
    * The download example callback
    */
-  private async downloadExample(): Promise<Array<Download.FS>> {
+  private async downloadExample(): Promise<Array<DownloadResponse>> {
     const files: Array<Resource> = this.collectResources();
-    const blobList: Array<Download.FS> = [];
+    const blobList: Array<DownloadResponse> = [];
 
-    return new Promise(async (resolve, reject) => {
-      switch (this.dlType) {
-        case DownloadType.None: {
-          reject(Error('No download available for this exercise.'));
-        }
-        case DownloadType.Server: {
-          const serverData: Download.TS = {
-            files: files,
-            name: this.name,
-          };
-
-          try {
-            const ret = await this.fetchBlob(serverData, 'download');
-            blobList.push(ret);
-          } catch (e) {
-            reject(e);
-          }
-
-          break;
-        }
-        case DownloadType.Client: {
-          this.editors.map((e): void => {
-            const resource: Resource = e.getResource();
-
-            blobList.push({
-              blob: new Blob([resource.contents], {type: 'text/plain'}),
-              filename: resource.basename,
-            });
-          });
-          break;
-        }
+    switch (this.dlType) {
+      case DownloadType.None: {
+        throw new Error('No download available for this exercise.');
       }
+      case DownloadType.Server: {
+        const serverData: DownloadRequest = {
+          files: files,
+          name: this.name,
+        };
 
-      resolve(blobList);
-    });
+        const ret = await fetchBlob(serverData,
+            this.serverAddress('download'));
+        blobList.push(ret);
+
+        break;
+      }
+      case DownloadType.Client: {
+        this.editors.map((e): void => {
+          const resource: Resource = e.getResource();
+
+          blobList.push({
+            blob: new Blob([resource.contents], {type: 'text/plain'}),
+            filename: resource.basename,
+          });
+        });
+        break;
+      }
+    }
+
+    return blobList;
+
   }
 
   /**
@@ -291,19 +231,15 @@ export class Widget {
     };
 
     const rdata =
-      await this.fetchJSON<CheckOutput.TS, CheckOutput.FS>(data,
-          'check_output');
+      await fetchJSON<CheckOutput.TS, CheckOutput.FS>(data,
+          this.serverAddress('check_output'));
 
     lRead += this.processCheckOutput(rdata);
 
     if (!rdata.completed) {
       // We have not finished processing the output: call this again
-      return new Promise((resolve) => {
-        setTimeout(async () => {
-          await this.getOutputFromIdentifier(json, lRead);
-          resolve();
-        }, 250);
-      });
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      await this.getOutputFromIdentifier(json, lRead);
     }
   }
 
