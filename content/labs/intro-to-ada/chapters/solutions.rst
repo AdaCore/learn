@@ -3465,10 +3465,8 @@ Average of Array of Any Type
 .. code:: ada lab=Solutions.Generics.Average_Any
 
     --  START LAB IO BLOCK
-    in 0:Decimal_Array_Chk
-    out 0:Average: 5.40
-    in 1:Item_Array_Chk
-    out 1:Average per item & quantity: 175.00 Average price:                 7.50
+    in 0:Item_Array_Chk
+    out 0:Average per item & quantity: 175.00 Average price:                 7.50
     --  END LAB IO BLOCK
 
     generic
@@ -3488,42 +3486,13 @@ Average of Array of Any Type
        return Acc / Float (A'Length);
     end Average;
 
-    procedure Test_Decimal_Array;
+    procedure Test_Item;
 
     with Ada.Text_IO;      use Ada.Text_IO;
 
     with Average;
 
-    procedure Test_Decimal_Array is
-       package F_IO is new Ada.Text_IO.Float_IO (Float);
-
-       type Decimal is delta 10.0 ** (-2) digits 12;
-
-       type Decimal_Array is
-         array (Integer range <>) of Decimal;
-
-       function To_Float (V : Decimal) return Float is
-         (Float (V));
-
-       function Average_Decimal is new
-         Average (T_Range   => Integer,
-                  T_Element => Decimal,
-                  T_Array   => Decimal_Array);
-
-       A : constant Decimal_Array (-2 .. 2) := (-1.0, 3.0, 5.0, 7.5, 12.5);
-    begin
-       Put ("Average: ");
-       F_IO.Put (Average_Decimal (A), 1, 2, 0);
-       New_Line;
-    end Test_Decimal_Array;
-
-    procedure Test_Item_Array;
-
-    with Ada.Text_IO;      use Ada.Text_IO;
-
-    with Average;
-
-    procedure Test_Item_Array is
+    procedure Test_Item is
        package F_IO is new Ada.Text_IO.Float_IO (Float);
 
        type Amount is delta 0.01 digits 12;
@@ -3568,25 +3537,21 @@ Average of Array of Any Type
        Put ("Average price:               ");
        F_IO.Put (Average_Price (A), 3, 2, 0);
        New_Line;
-    end Test_Item_Array;
+    end Test_Item;
 
     with Ada.Command_Line; use Ada.Command_Line;
     with Ada.Text_IO;      use Ada.Text_IO;
 
-    with Test_Decimal_Array;
-    with Test_Item_Array;
+    with Test_Item;
 
     procedure Main is
-       type Test_Case_Index is (Decimal_Array_Chk,
-                                Item_Array_Chk);
+       type Test_Case_Index is (Item_Array_Chk);
 
        procedure Check (TC : Test_Case_Index) is
        begin
           case TC is
-             when Decimal_Array_Chk =>
-                Test_Decimal_Array;
              when Item_Array_Chk =>
-                Test_Item_Array;
+                Test_Item;
           end case;
        end Check;
 
