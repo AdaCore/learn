@@ -3194,7 +3194,7 @@ Display Array
        type T_Range is range <>;
        type T_Element is private;
        type T_Array is array (T_Range range <>) of T_Element;
-       with function Image (E : T_Element) return String is <>;
+       with function Image (E : T_Element) return String;
     procedure Display_Array (Header : String;
                              A      : T_Array);
 
