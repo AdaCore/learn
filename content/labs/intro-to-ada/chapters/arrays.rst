@@ -630,7 +630,7 @@ Product info
     #. Quantity of an individual product is represented by the :ada:`Quantity`
        subtype.
 
-    #. Price of an individual product are represented by the :ada:`Currency`
+    #. Price of an individual product is represented by the :ada:`Currency`
        subtype.
 
     #. Record type :ada:`Product_Info` deals with information for various
