@@ -443,7 +443,9 @@ In case you don't have a working version of the source-code of previous
 labs, you can look into the corresponding solutions.
 
 Below, you find the selected labs that you can work on, including changes
-that you should make.
+that you should make. In case you don't have a working version of the
+source-code of previous labs, you can look into the corresponding solutions.
+
 
 Colors
 ~~~~~~
