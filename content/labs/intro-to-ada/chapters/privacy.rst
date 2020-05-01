@@ -53,8 +53,10 @@ a previous implementation.
 
         #. This kind of errors can happen when record components that have
            correlated information are initialized individually without
-           consistency checks |mdash| using private types helps avoiding the
-           problem.
+           consistency checks |mdash| using private types helps to avoid the
+           problem by requiring initialization routines that can enforce
+           consistency.
+
 
 .. code:: ada lab=Privacy.Directions
 
