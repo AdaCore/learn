@@ -657,9 +657,6 @@ Generic list
     #. The test procedure :ada:`Test_Int_List` is used to test a list of
        elements of :ada:`Integer` type.
 
-    #. The test procedure :ada:`Test_String_List` is used to test a list of
-       elements of access to :ada:`String` type.
-
     #. For both test procedures, you must:
 
         #. add missing type declarations;
@@ -671,9 +668,6 @@ Generic list
 
             - For the :ada:`Test_Int_List` procedure, declare the
               :ada:`Int_List` package.
-
-            - For the :ada:`Test_String_List` procedure, declare the
-              :ada:`String_List` package.
 
 **Remarks**:
 
@@ -690,8 +684,6 @@ Generic list
     --  START LAB IO BLOCK
     in 0:Int_List_Chk
     out 0:Added item successfully! Added item successfully! Added item successfully! Couldn't add item! List of integers  2  5  7
-    in 1:String_List_Chk
-    out 1:Added item successfully! Added item successfully! Added item successfully! Couldn't add item! List of strings Hello World Bye
     --  END LAB IO BLOCK
 
     generic
@@ -771,66 +763,19 @@ Generic list
        Int_List.Display;
     end Test_Int_List;
 
-    procedure Test_String_List;
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    with Gen_List;
-
-    procedure Test_String_List is
-
-       type String_Array is array (Positive range <>) of String_Access;
-
-       A : String_Array (1 .. 3);
-       L : Natural;
-
-       Success : Boolean;
-
-       procedure Display_Add_Success (Success : Boolean) is
-       begin
-          if Success then
-             Put_Line ("Added item successfully!");
-          else
-             Put_Line ("Couldn't add item!");
-          end if;
-
-       end Display_Add_Success;
-
-    begin
-       String_List.Init;
-
-       String_List.Add (new String'("Hello"), Success);
-       Display_Add_Success (Success);
-
-       String_List.Add (new String'("World"), Success);
-       Display_Add_Success (Success);
-
-       String_List.Add (new String'("Bye"), Success);
-       Display_Add_Success (Success);
-
-       String_List.Add (new String'("Wait"), Success);
-       Display_Add_Success (Success);
-
-       String_List.Display;
-    end Test_String_List;
-
     with Ada.Command_Line; use Ada.Command_Line;
     with Ada.Text_IO;      use Ada.Text_IO;
 
     with Test_Int_List;
-    with Test_String_List;
 
     procedure Main is
-       type Test_Case_Index is (Int_List_Chk,
-                                String_List_Chk);
+       type Test_Case_Index is (Int_List_Chk);
 
        procedure Check (TC : Test_Case_Index) is
        begin
           case TC is
              when Int_List_Chk =>
                 Test_Int_List;
-             when String_List_Chk =>
-                Test_String_List;
           end case;
        end Check;
 
