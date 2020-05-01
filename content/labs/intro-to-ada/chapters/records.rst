@@ -181,33 +181,33 @@ hexadecimal form.
 **Requirements**:
 
     #. The following table contains the HTML colors and the corresponding value
-       in hexadecimal form:
+       in hexadecimal form for each color element:
 
-        +-------------+---------------+
-        | Color       | Value         |
-        +=============+===============+
-        | Salmon      | ``#FA8072``   |
-        +-------------+---------------+
-        | Firebrick   | ``#B22222``   |
-        +-------------+---------------+
-        | Red         | ``#FF0000``   |
-        +-------------+---------------+
-        | Darkred     | ``#8B0000``   |
-        +-------------+---------------+
-        | Lime        | ``#00FF00``   |
-        +-------------+---------------+
-        | Forestgreen | ``#228B22``   |
-        +-------------+---------------+
-        | Green       | ``#008000``   |
-        +-------------+---------------+
-        | Darkgreen   | ``#006400``   |
-        +-------------+---------------+
-        | Blue        | ``#0000FF``   |
-        +-------------+---------------+
-        | Mediumblue  | ``#0000CD``   |
-        +-------------+---------------+
-        | Darkblue    | ``#00008B``   |
-        +-------------+---------------+
+        +-------------+---------+---------+---------+
+        | Color       | Red     | Green   | Blue    |
+        +=============+=========+=========+=========+
+        | Salmon      | ``#FA`` | ``#80`` | ``#72`` |
+        +-------------+---------+---------+---------+
+        | Firebrick   | ``#B2`` | ``#22`` | ``#22`` |
+        +-------------+---------+---------+---------+
+        | Red         | ``#FF`` | ``#00`` | ``#00`` |
+        +-------------+---------+---------+---------+
+        | Darkred     | ``#8B`` | ``#00`` | ``#00`` |
+        +-------------+---------+---------+---------+
+        | Lime        | ``#00`` | ``#FF`` | ``#00`` |
+        +-------------+---------+---------+---------+
+        | Forestgreen | ``#22`` | ``#8B`` | ``#22`` |
+        +-------------+---------+---------+---------+
+        | Green       | ``#00`` | ``#80`` | ``#00`` |
+        +-------------+---------+---------+---------+
+        | Darkgreen   | ``#00`` | ``#64`` | ``#00`` |
+        +-------------+---------+---------+---------+
+        | Blue        | ``#00`` | ``#00`` | ``#FF`` |
+        +-------------+---------+---------+---------+
+        | Mediumblue  | ``#00`` | ``#00`` | ``#CD`` |
+        +-------------+---------+---------+---------+
+        | Darkblue    | ``#00`` | ``#00`` | ``#8B`` |
+        +-------------+---------+---------+---------+
 
     #. The hexadecimal information of each HTML color can be mapped to three
        color elements: red, green and blue.
@@ -428,7 +428,7 @@ keep track of assets.
 
     --  START LAB IO BLOCK
     in 0:Inventory_Chk
-    out 0:Adding item: Ballpoint Pen. Assets: $27.75. Adding item: Oil-based Pen Marker. Assets: $927.75. Adding item: Feather Quill Pen. Assets: $1007.75.
+    out 0:Item: Ballpoint Pen. Assets: $27.75. Item: Oil-based Pen Marker. Assets: $927.75. Item: Feather Quill Pen. Assets: $1007.75.
     --  END LAB IO BLOCK
 
     package Inventory_Pkg is
@@ -468,7 +468,7 @@ keep track of assets.
                       Quantity : Natural;
                       Price    : Float) return Item is
        begin
-          Put_Line ("Adding item: " & To_String (Name) & ".");
+          Put_Line ("Item: " & To_String (Name) & ".");
 
           --  Replace return statement with the actual record initialization!
           --
