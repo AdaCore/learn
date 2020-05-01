@@ -135,6 +135,8 @@ html_theme_options = {
 
 html_logo = "img/logo.svg"
 
+html_favicon = "img/favicon.ico"
+
 html_show_sourcelink = False
 
 # Add any paths that contain custom static files (such as style sheets) here,
