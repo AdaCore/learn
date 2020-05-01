@@ -202,6 +202,10 @@ of floating-point elements.
         #. an array type :ada:`T_Array` using :ada:`T_Range` and
            :ada:`T_Element`;
 
+**Remarks**:
+
+    #. You should use the :ada:`Float` type for the accumulator.
+
 .. code:: ada lab=Generics.Average_Array_Of_Float
 
     --  START LAB IO BLOCK

@@ -3298,13 +3298,13 @@ Average of Array of Float
     function Average (A : T_Array) return T_Element;
 
     function Average (A : T_Array) return T_Element is
-       Acc : T_Element := 0.0;
+       Acc : Float := 0.0;
     begin
        for I in A'Range loop
-          Acc := Acc + A (I);
+          Acc := Acc + Float (A (I));
        end loop;
 
-       return Acc / T_Element (A'Length);
+       return T_Element (Acc / Float (A'Length));
     end Average;
 
     with Ada.Command_Line; use Ada.Command_Line;
