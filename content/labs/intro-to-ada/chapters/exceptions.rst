@@ -189,8 +189,6 @@ Numerical Exception
 
     with Tests; use Tests;
 
-    procedure Check_Exception (ID : Test_ID);
-
     procedure Check_Exception (ID : Test_ID) is
     begin
        Num_Exception_Test (ID);

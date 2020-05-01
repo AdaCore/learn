@@ -3928,9 +3928,7 @@ Numerical Exception
 
     end Tests;
 
-    with Tests; use Tests;
-
-    procedure Check_Exception (ID : Test_ID);
+    with Tests;          use Tests;
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Ada.Exceptions; use Ada.Exceptions;
