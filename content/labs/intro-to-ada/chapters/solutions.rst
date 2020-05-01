@@ -3083,12 +3083,8 @@ Limited Strings
                        To   : in out Lim_String) is
           Min_Last : constant Positive := Get_Min_Last (From, To);
        begin
-          for I in To'First .. Min_Last loop
-             To (I) := From (I);
-          end loop;
-          for I in Min_Last + 1 .. To'Last loop
-             To (I) := '_';
-          end loop;
+          To (To'First .. Min_Last)    := From (To'First .. Min_Last);
+          To (Min_Last + 1 .. To'Last) := (others => '_');
        end;
 
        function "=" (Ref, Dut : Lim_String) return Boolean is
