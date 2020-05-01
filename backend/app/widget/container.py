@@ -13,7 +13,7 @@ INTERRUPT_RETURNCODE = 124
 rw_user = "runner"
 ro_user = "unprivileged"
 
-TMPFS = "/workspace/sessions"
+TMPFS = "/workspace/sessions/"
 
 CONTAINER_CONFIG = {
     'command': "/bin/sh",

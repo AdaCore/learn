@@ -2,6 +2,8 @@ import json
 
 from celery.utils.log import get_task_logger
 
+from .container import TMPFS
+
 logger = get_task_logger(__name__)
 
 
@@ -48,6 +50,10 @@ class MQReporter:
             "stdout": "",
             "stderr": "",
             "console": ""
+        }
+
+        self.string_replace = {
+            TMPFS: ""
         }
 
         self.app = app
@@ -101,9 +107,10 @@ class MQReporter:
         :param tag:
             The type of msg we are sending
         """
+        re_msg = self.__replace_strings(msg)
         obj = {"msg": {
                         "type": tag,
-                        "data": msg,
+                        "data": re_msg,
                       }
               }
         if self.lab_ref:
@@ -116,6 +123,12 @@ class MQReporter:
             queue = conn.SimpleBuffer(self.task_id)
             queue.put(obj_str)
             queue.close()
+
+    def __replace_strings(self, msg):
+        fixed_string = msg
+        for key, value in self.string_replace.items():
+            fixed_string = fixed_string.replace(key, value)
+        return fixed_string
 
     def stdout(self, msg):
         """
