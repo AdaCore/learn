@@ -543,7 +543,7 @@ Generic list
             - This procedure is used in the :ada:`Display` procedure to display
               individual elements of the list.
 
-    #. The test procedure :ada:`Test_Int_List` is used to test a list of
+    #. The test procedure :ada:`Test_Int` is used to test a list of
        elements of :ada:`Integer` type.
 
     #. For both test procedures, you must:
@@ -555,7 +555,7 @@ Generic list
 
         #. declare instances of the :ada:`Gen_List` package.
 
-            - For the :ada:`Test_Int_List` procedure, declare the
+            - For the :ada:`Test_Int` procedure, declare the
               :ada:`Int_List` package.
 
 **Remarks**:
@@ -571,7 +571,7 @@ Generic list
 .. code:: ada lab=Generics.Gen_List
 
     --  START LAB IO BLOCK
-    in 0:Int_List_Chk
+    in 0:Int_Chk
     out 0:Added item successfully! Added item successfully! Added item successfully! Couldn't add item! List of integers  2  5  7
     --  END LAB IO BLOCK
 
@@ -609,13 +609,13 @@ Generic list
 
     end Gen_List;
 
-    procedure Test_Int_List;
+    procedure Test_Int;
 
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Gen_List;
 
-    procedure Test_Int_List is
+    procedure Test_Int is
 
        type Integer_Array is array (Positive range <>) of Integer;
 
@@ -650,21 +650,21 @@ Generic list
        Display_Add_Success (Success);
 
        Int_List.Display;
-    end Test_Int_List;
+    end Test_Int;
 
     with Ada.Command_Line; use Ada.Command_Line;
     with Ada.Text_IO;      use Ada.Text_IO;
 
-    with Test_Int_List;
+    with Test_Int;
 
     procedure Main is
-       type Test_Case_Index is (Int_List_Chk);
+       type Test_Case_Index is (Int_Chk);
 
        procedure Check (TC : Test_Case_Index) is
        begin
           case TC is
-             when Int_List_Chk =>
-                Test_Int_List;
+             when Int_Chk =>
+                Test_Int;
           end case;
        end Check;
 
