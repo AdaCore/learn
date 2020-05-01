@@ -203,7 +203,7 @@ Generic Protected Queue
 
     #. Implement the generic package :ada:`Gen_Queues`.
 
-        #. Declare the protected type :ada:`Queue` as part of the
+        #. Declare the protected type :ada:`Queue`.
 
         #. Implement the :ada:`Empty` function.
 
