@@ -119,8 +119,8 @@ Event Manager
 
         #. :ada:`Start`, which starts the event manager with an event ID;
 
-        #. :ada:`Event`, which delays the task for a certain amount of time and
-           then displays the event ID as a user message.
+        #. :ada:`Event`, which delays the task until a certain time and then
+           displays the event ID as a user message.
 
     #. The format of the user message displayed by the event manager is
        ``Event #<event_id>``.
