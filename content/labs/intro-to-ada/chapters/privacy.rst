@@ -355,10 +355,11 @@ Limited Strings
     with Limited_Strings; use Limited_Strings;
 
     procedure Check_Lim_String is
+       S  : constant String := "----------";
        S1 : constant Lim_String := Init ("Hello World");
        S2 : constant Lim_String := Init (30);
        S3 : Lim_String := Init (5);
-       S4 : Lim_String := Init (30);
+       S4 : Lim_String := Init (S & S & S);
     begin
        Put ("S1 => ");
        Put_Line (S1);
