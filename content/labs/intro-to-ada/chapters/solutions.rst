@@ -3287,8 +3287,8 @@ Average of Array of Float
     --  START LAB IO BLOCK
     in 0:Float_Array_Chk
     out 0:Average:  8.00000E-01
-    in 1:Digits_12_Float_Array_Chk
-    out 1:Average:  5.40000000000E+00
+    in 1:Digits_7_Float_Array_Chk
+    out 1:Average:  5.200000E-01
     --  END LAB IO BLOCK
 
     generic
@@ -3314,7 +3314,7 @@ Average of Array of Float
 
     procedure Main is
        type Test_Case_Index is (Float_Array_Chk,
-                                Digits_12_Float_Array_Chk);
+                                Digits_7_Float_Array_Chk);
 
        procedure Test_Float_Array is
           type Float_Array is array (Positive range <>) of Float;
@@ -3329,8 +3329,8 @@ Average of Array of Float
           Put_Line ("Average: " & Float'Image (Average_Float (A)));
        end Test_Float_Array;
 
-       procedure Test_Digits_12_Float_Array is
-          type Custom_Float is digits 12;
+       procedure Test_Digits_7_Float_Array is
+          type Custom_Float is digits 7 range 0.0 .. 1.0;
 
           type Float_Array is
             array (Integer range <>) of Custom_Float;
@@ -3340,19 +3340,19 @@ Average of Array of Float
                      T_Element => Custom_Float,
                      T_Array   => Float_Array);
 
-          A : constant Float_Array (-1 .. 3) := (-1.0, 3.0, 5.0, 7.5, 12.5);
+          A : constant Float_Array (-1 .. 3) := (0.5, 0.0, 1.0, 0.6, 0.5);
        begin
           Put_Line ("Average: "
                     & Custom_Float'Image (Average_Float (A)));
-       end Test_Digits_12_Float_Array;
+       end Test_Digits_7_Float_Array;
 
        procedure Check (TC : Test_Case_Index) is
        begin
           case TC is
              when Float_Array_Chk =>
                 Test_Float_Array;
-             when Digits_12_Float_Array_Chk =>
-                Test_Digits_12_Float_Array;
+             when Digits_7_Float_Array_Chk =>
+                Test_Digits_7_Float_Array;
           end case;
        end Check;
 
