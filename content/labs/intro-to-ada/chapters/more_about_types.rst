@@ -329,7 +329,7 @@ Simple todo list
 
     #. :ada:`Todo_List` type is the container for all to-do items.
 
-        #. It should be declared as a records with discriminant.
+        #. It should be declared as a record with discriminant.
 
         #. In order to store the to-do items, it must contain a component named
            :ada:`Items` of :ada:`Todo_Items` type.
