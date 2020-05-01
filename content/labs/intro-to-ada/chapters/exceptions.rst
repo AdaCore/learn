@@ -247,9 +247,14 @@ Re-raising Exceptions
 
 **Steps**:
 
+    #. Declare new exception: :ada:`Another_Exception`.
+
     #. Add exception re-raise to the :ada:`Check_Exception` procedure.
 
 **Requirements**:
+
+    #. Exception :ada:`Another_Exception` must be declared in the :ada:`Tests`
+       package.
 
     #. Procedure :ada:`Check_Exception` must be extended to *re-raise* any
        exception. When an exception is detected, the procedure must:
@@ -257,7 +262,13 @@ Re-raising Exceptions
         #. display an user message (as implemented in the previous exercise),
            and then
 
-        #. *re-raise* the exception.
+        #. Raise or *re-raise* exception depending on the exception that is
+           being handled:
+
+            #. In case of :ada:`Constraint_Error` exception, *re-raise* the
+               exception.
+
+            #. In all other cases, raise :ada:`Another_Exception`.
 
 **Remarks**:
 
@@ -273,7 +284,7 @@ Re-raising Exceptions
     in 0:Exception_1_Chk
     out 0:Constraint_Error detected! Constraint_Error (raised by Check_Exception) detected!
     in 1:Exception_2_Chk
-    out 1:Custom_Exception raised! TESTS.CUSTOM_EXCEPTION (raised by Check_Exception) detected!
+    out 1:Custom_Exception raised! TESTS.ANOTHER_EXCEPTION (raised by Check_Exception) detected!
     --  END LAB IO BLOCK
 
     package Tests is
