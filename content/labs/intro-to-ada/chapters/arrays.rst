@@ -50,7 +50,7 @@ Constrained Array
 
         #. It is therefore limited to 10 elements.
 
-    #. Function :ada:`Init` returns an array where each element is initialize
+    #. Function :ada:`Init` returns an array where each element is initialized
        with the corresponding index.
 
     #. Procedure :ada:`Double` doubles the value of each element of an array.
@@ -200,7 +200,7 @@ lookup table.
 
         #. Declare the array type :ada:`HTML_Color_RGB`.
 
-        #. Declare the :ada:`To_RGB_Loopup_Table` object and initialize it.
+        #. Declare the :ada:`To_RGB_Lookup_Table` object and initialize it.
 
         #. Adapt the implementation of :ada:`To_RGB` function.
 
@@ -208,22 +208,31 @@ lookup table.
 
     #. Array type :ada:`HTML_Color_RGB` is used for the table.
 
-    #. The :ada:`To_RGB_Loopup_Table` object of :ada:`HTML_Color_RGB` type
+    #. The :ada:`To_RGB_Lookup_Table` object of :ada:`HTML_Color_RGB` type
        contains the lookup table.
 
         - This table must be implemented as an array of constant values.
 
     #. The implementation of the :ada:`To_RGB` function must use the
-       :ada:`To_RGB_Loopup_Table` object.
+       :ada:`To_RGB_Lookup_Table` object.
 
 **Remarks**:
 
     #. This exercise is based on the HTML colors exercise from a previous lab
        (:doc:`./records`).
 
-    #. In the previous implementation, you probably used a :ada:`case`
-       statement to implement the :ada:`To_RGB` function. Here, you must
-       rewrite the function using a look-up table.
+    #. In the previous implementation, you could use a :ada:`case` statement to
+       implement the :ada:`To_RGB` function. Here, you must rewrite the
+       function using a look-up table.
+
+       #. The implementation of the :ada:`To_RGB` function below includes the
+          case statement as commented-out code. You can use this as your
+          starting point: you just need to copy it and convert the case
+          statement to an array declaration.
+
+        #. Don't use a case statement to implement the :ada:`To_RGB` function.
+           Instead, write code that accesses :ada:`To_RGB_Lookup_Table` to get
+           the correct value.
 
     #. The following table contains the HTML colors and the corresponding value
        in hexadecimal form for each color element:
@@ -296,7 +305,7 @@ lookup table.
 
        --  Declare lookup table here:
        --
-       --  To_RGB_Loopup_Table : ...
+       --  To_RGB_Lookup_Table : ...
 
     end Color_Types;
 
@@ -305,8 +314,26 @@ lookup table.
 
        function To_RGB (C : HTML_Color) return RGB is
        begin
-          --  Implement To_RGB using To_RGB_Loopup_Table
+          --  Implement To_RGB using To_RGB_Lookup_Table
           return (0, 0, 0);
+
+          --  Use the code below from the previous version of the To_RGB
+          --  function to declare the To_RGB_Lookup_Table:
+          --
+          --  case C is
+          --     when Salmon      => return (16#FA#, 16#80#, 16#72#);
+          --     when Firebrick   => return (16#B2#, 16#22#, 16#22#);
+          --     when Red         => return (16#FF#, 16#00#, 16#00#);
+          --     when Darkred     => return (16#8B#, 16#00#, 16#00#);
+          --     when Lime        => return (16#00#, 16#FF#, 16#00#);
+          --     when Forestgreen => return (16#22#, 16#8B#, 16#22#);
+          --     when Green       => return (16#00#, 16#80#, 16#00#);
+          --     when Darkgreen   => return (16#00#, 16#64#, 16#00#);
+          --     when Blue        => return (16#00#, 16#00#, 16#FF#);
+          --     when Mediumblue  => return (16#00#, 16#00#, 16#CD#);
+          --     when Darkblue    => return (16#00#, 16#00#, 16#8B#);
+          --  end case;
+
        end To_RGB;
 
        function Image (C : RGB) return String is
@@ -349,7 +376,7 @@ lookup table.
                 Put_Line ("Size of HTML_Color_RGB: "
                           & Integer'Image (HTML_Color_RGB'Length));
                 Put_Line ("Firebrick: "
-                          & Image (To_RGB_Loopup_Table (Firebrick)));
+                          & Image (To_RGB_Lookup_Table (Firebrick)));
              when HTML_Color_To_Integer_Chk =>
                 for I in HTML_Color'Range loop
                    Put_Line (HTML_Color'Image (I) & " => "
@@ -396,14 +423,21 @@ Unconstrained Array
     #. Procedure :ada:`Init` initializes each element with the index starting
        with the last one.
 
-       - For example, for an array  of 3 elements, the values of these
-         elements after a call to :ada:`Init` must be :ada:`(3, 2, 1)`.
+       - For example, for an array of 3 elements where the index of the first
+         element is 1 (:ada:`My_Array (1 .. 3)`), the values of these elements
+         after a call to :ada:`Init` must be :ada:`(3, 2, 1)`.
 
-    #. Function :ada:`Init` returns an array based on the length :ada:`L`
-       provided to the :ada:`Init` function.
+    #. Function :ada:`Init` returns an array based on the length :ada:`L` and
+       start index :ada:`I` provided to the :ada:`Init` function.
+
+        #. :ada:`I` indicates the index of the first element of the array.
+
+        #. :ada:`L` indicates the length of the array.
+
+        #. Both :ada:`I` and :ada:`L` must be positive.
 
         #. This is its declaration:
-           :ada:`function Init (L : Positive) return My_Array;`.
+           :ada:`function Init (I, L : Positive) return My_Array;`.
 
         #. You must initialize the elements of the array in the same manner
            as for the :ada:`Init` procedure described above.
@@ -458,9 +492,9 @@ Unconstrained Array
 
     --  START LAB IO BLOCK
     in 0:Init_Chk
-    out 0: 5  4  3  2  1
+    out 0: 5  4  3  2  1  9  8  7  6  5
     in 1:Init_Proc_Chk
-    out 1: 5  4  3  2  1
+    out 1: 5  4  3  2  1  9  8  7  6  5
     in 2:Double_Chk
     out 2: 2  4  10  20 -20
     in 3:Diff_Prev_Chk
@@ -477,7 +511,7 @@ Unconstrained Array
        --
        --  procedure Init ...;
 
-       function Init (L : Positive) return My_Array;
+       function Init (I, L : Positive) return My_Array;
 
        --  procedure Double ...;
        --
@@ -515,6 +549,7 @@ Unconstrained Array
 
        procedure Check (TC : Test_Case_Index) is
           AA : My_Array (1 .. 5);
+          AB : My_Array (5 .. 9);
 
           procedure Display (A : My_Array) is
           begin
@@ -531,19 +566,23 @@ Unconstrained Array
        begin
           case TC is
           when Init_Chk =>
-             AA := Init (AA'Last);
+             AA := Init (AA'First, AA'Length);
+             AB := Init (AB'First, AB'Length);
              Display (AA);
+             Display (AB);
           when Init_Proc_Chk =>
              Init (AA);
+             Init (AB);
              Display (AA);
+             Display (AB);
           when Double_Chk =>
-             Local_Init (AA);
-             Double (AA);
-             Display (AA);
+             Local_Init (AB);
+             Double (AB);
+             Display (AB);
           when Diff_Prev_Chk =>
-             Local_Init (AA);
-             AA := Diff_Prev_Elem (AA);
-             Display (AA);
+             Local_Init (AB);
+             AB := Diff_Prev_Elem (AB);
+             Display (AB);
           when Diff_Prev_Single_Chk =>
              declare
                 A1 : My_Array (1 .. 1) := (1 => 42);
@@ -565,48 +604,53 @@ Unconstrained Array
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Quantities And Amounts
-----------------------
+Product info
+------------
 
 **Goal**: create a system to keep track of quantities and prices of products.
 
 **Steps**:
 
-    #. Implement the :ada:`Quantities_Amounts` package.
+    #. Implement the :ada:`Product_Info_Pkg` package.
 
-        #. Declare the array type :ada:`Quantities`.
+        #. Declare the array type :ada:`Product_Infos`.
 
-        #. Declare the array type :ada:`Amounts`.
+        #. Declare the array type :ada:`Currency_Array`.
 
         #. Implement the :ada:`Total` procedure.
 
         #. Implement the :ada:`Total` function returning an array of
-           :ada:`Amounts` type.
+           :ada:`Currency_Array` type.
 
         #. Implement the :ada:`Total` function returning a single value of
-           :ada:`Amount` type.
+           :ada:`Currency` type.
 
 **Requirements**:
 
-    #. Quantities of an individual product are represented by the
-       :ada:`Quantity` subtype.
-
-    #. Prices of an individual product are represented by the :ada:`Amount`
+    #. Quantity of an individual product is represented by the :ada:`Quantity`
        subtype.
 
-    #. Array types :ada:`Quantities` and :ada:`Amounts` deal with information
-       for various products.
+    #. Price of an individual product is represented by the :ada:`Currency`
+       subtype.
+
+    #. Record type :ada:`Product_Info` deals with information for various
+       products.
+
+    #. Array type :ada:`Product_Infos` is used to represent a list of products.
+
+    #. Array type :ada:`Currency_Array` is used to represent a list of total
+       values of individual products (see more details below).
 
     #. Procedure :ada:`Total` receives an input array of quantities and an
        input array of amounts for each product.
 
-        #. It outputs an array with the total amount for each product using the
-           :ada:`Amounts` type.
+        #. It outputs an array with the total value of each product using the
+           :ada:`Currency_Array` type.
 
-        #. The total amount for an individual product is calculated by
+        #. The total value of an individual product is calculated by
            multiplying the quantity for this product by its price.
 
-    #. Function :ada:`Total` returns an array of :ada:`Amounts` type.
+    #. Function :ada:`Total` returns an array of :ada:`Currency_Array` type.
 
         #. This function has the same purpose as the procedure :ada:`Total`.
 
@@ -614,136 +658,133 @@ Quantities And Amounts
            providing this array as an output parameter.
 
     #. The second function :ada:`Total` returns a single value of
-       :ada:`Amount` type.
+       :ada:`Currency` type.
 
-        #. This function receives an array of quantities and an array of
-           amounts for each product
+        #. This function receives an array of products.
 
-        #. It returns a single value corresponding to the total amount for all
+        #. It returns a single value corresponding to the total value for all
            products in the system.
-
-        #. In other words, this function returns the sum of all total amounts
-           for the individual products.
 
 **Remarks**:
 
-    #. You can use :ada:`Amount (Q)` to convert from an element :ada:`Q` of
-       :ada:`Quantity` type to the :ada:`Amount` type.
+    #. You can use :ada:`Currency (Q)` to convert from an element :ada:`Q` of
+       :ada:`Quantity` type to the :ada:`Currency` type.
 
         #. As you might remember, Ada requires an explicit conversion in
            calculations where variables of both integer and floating-point
            types are used.
 
         #. In our case, the :ada:`Quantity` subtype is based on the
-           :ada:`Integer` type and the :ada:`Amount` subtype is based on the
+           :ada:`Integer` type and the :ada:`Currency` subtype is based on the
            :ada:`Float` type, so a conversion is necessary in calculations
            using those types.
 
-.. code:: ada lab=Arrays.Quantities_And_Amounts
+.. code:: ada lab=Arrays.Product_Info
 
     --  START LAB IO BLOCK
     in 0:Total_Func_Chk
     out 0:0.50 20.00 200.00 100.00 200.00
     in 1:Total_Proc_Chk
     out 1:0.50 20.00 200.00 100.00 200.00
-    in 2:Total_Amount_Chk
+    in 2:Total_Value_Chk
     out 2:520.50
     --  END LAB IO BLOCK
 
-    package Quantities_Amounts is
+    package Product_Info_Pkg is
 
        subtype Quantity is Natural;
 
-       subtype Amount is Float;
+       subtype Currency is Float;
+
+       type Product_Info is record
+          Units : Quantity;
+          Price : Currency;
+       end record;
 
        --  Complete the type declarations:
        --
-       --  type Quantities is ...
+       --  type Product_Infos is ...
        --
-       --  type Amounts is ...
+       --  type Currency_Array is ...
 
-       procedure Total (Q     : Quantities;
-                        A     : Amounts;
-                        A_Out : out Amounts);
+       procedure Total (P   : Product_Infos;
+                        Tot : out Currency_Array);
 
-       function Total (Q : Quantities;
-                       A : Amounts) return Amounts;
+       function Total (P : Product_Infos) return Currency_Array;
 
-       function Total (Q : Quantities;
-                       A : Amounts) return Amount;
+       function Total (P : Product_Infos) return Currency;
 
-    end Quantities_Amounts;
+    end Product_Info_Pkg;
 
-    package body Quantities_Amounts is
+    package body Product_Info_Pkg is
 
        --  Complete the subprogram implementations:
        --
 
-       --  procedure Total (Q     : Quantities;
-       --                   A     : Amounts;
-       --                   A_Out : out Amounts) is...
+       --  procedure Total (P   : Product_Infos;
+       --                   Tot : out Currency_Array) is ...
 
-       --  function Total (Q : Quantities;
-       --                  A : Amounts) return Amounts is...
+       --  function Total (P : Product_Infos) return Currency_Array is ...
 
-       --  function Total (Q : Quantities;
-       --                  A : Amounts) return Amount is ...
+       --  function Total (P : Product_Infos) return Currency is ...
 
-    end Quantities_Amounts;
+    end Product_Info_Pkg;
 
     with Ada.Command_Line;   use Ada.Command_Line;
     with Ada.Text_IO;        use Ada.Text_IO;
 
-    with Quantities_Amounts; use Quantities_Amounts;
+    with Product_Info_Pkg;   use Product_Info_Pkg;
 
     procedure Main is
-       package Amount_IO is new Ada.Text_IO.Float_IO (Amount);
+       package Currency_IO is new Ada.Text_IO.Float_IO (Currency);
 
        type Test_Case_Index is
          (Total_Func_Chk,
           Total_Proc_Chk,
-          Total_Amount_Chk);
+          Total_Value_Chk);
 
        procedure Check (TC : Test_Case_Index) is
           subtype Test_Range is Positive range 1 .. 5;
 
-          A  : Amounts (Test_Range);
-          Q  : Quantities (Test_Range);
-          A1 : Amount;
+          P    : Product_Infos (Test_Range);
+          Tots : Currency_Array (Test_Range);
+          Tot  : Currency;
 
-          procedure Display (A : Amounts) is
+          procedure Display (Tots : Currency_Array) is
           begin
-             for I in A'Range loop
-                Amount_IO.Put (A (I));
+             for I in Tots'Range loop
+                Currency_IO.Put (Tots (I));
                 New_Line;
              end loop;
           end Display;
 
-          procedure Local_Init (Q : in out Quantities;
-                                A : in out Amounts) is
+          procedure Local_Init (P : in out Product_Infos) is
           begin
-             Q := (1,    2,    5,   10,   10);
-             A := (0.5, 10.0, 40.0, 10.0, 20.0);
+             P := ((1,   0.5),
+                   (2,  10.0),
+                   (5,  40.0),
+                   (10, 10.0),
+                   (10, 20.0));
           end Local_Init;
 
        begin
-          Amount_IO.Default_Fore := 1;
-          Amount_IO.Default_Aft  := 2;
-          Amount_IO.Default_Exp  := 0;
+          Currency_IO.Default_Fore := 1;
+          Currency_IO.Default_Aft  := 2;
+          Currency_IO.Default_Exp  := 0;
 
           case TC is
           when Total_Func_Chk =>
-             Local_Init (Q, A);
-             A := Total (Q, A);
-             Display (A);
+             Local_Init (P);
+             Tots := Total (P);
+             Display (Tots);
           when Total_Proc_Chk =>
-             Local_Init (Q, A);
-             Total (Q, A, A);
-             Display (A);
-          when Total_Amount_Chk =>
-             Local_Init (Q, A);
-             A1 := Total (Q, A);
-             Amount_IO.Put (A1);
+             Local_Init (P);
+             Total (P, Tots);
+             Display (Tots);
+          when Total_Value_Chk =>
+             Local_Init (P);
+             Tot := Total (P);
+             Currency_IO.Put (Tot);
              New_Line;
           end case;
        end Check;
@@ -788,11 +829,16 @@ String_10
         - You may declare it as a new type as well. However, this requires some
           adaptations in the :ada:`Main` test procedure.
 
+    #. You can use :ada:`Integer'Min` to calculate the minimum of two integer
+       values.
+
 .. code:: ada lab=Arrays.String_10
 
     --  START LAB IO BLOCK
-    in 0:String_10_Chk
+    in 0:String_10_Long_Chk
     out 0:And this i
+    in 1:String_10_Short_Chk
+    out 1:Hey!
     --  END LAB IO BLOCK
 
     package Strings_10 is
@@ -825,17 +871,23 @@ String_10
 
     procedure Main is
        type Test_Case_Index is
-         (String_10_Chk);
+         (String_10_Long_Chk,
+          String_10_Short_Chk);
 
        procedure Check (TC : Test_Case_Index) is
-          S    : constant String := "And this is a long string just for testing...";
+          SL   : constant String := "And this is a long string just for testing...";
+          SS   : constant String := "Hey!";
           S_10 : String_10;
 
        begin
           case TC is
-          when String_10_Chk =>
-             S_10 := To_String_10 (S);
-             Put_Line (S_10);
+          when String_10_Long_Chk =>
+             S_10 := To_String_10 (SL);
+             Put_Line (String (S_10));
+          when String_10_Short_Chk =>
+             S_10 := (others => ' ');
+             S_10 := To_String_10 (SS);
+             Put_Line (String (S_10));
           end case;
        end Check;
 
@@ -899,7 +951,7 @@ List of Names
 
     #. Function :ada:`Get` retrieves the age of a person from the list.
 
-    #. Procedure :ada:`Update` updates the age of a person ob the list.
+    #. Procedure :ada:`Update` updates the age of a person in the list.
 
     #. Procedure :ada:`Display` shows the complete list using the following
        format:
@@ -907,7 +959,7 @@ List of Names
         #. The first line must be ``LIST OF NAMES:``. It is followed by the
            name and age of each person in the next lines.
 
-        #. For each person on the list, the procedure must diplay the
+        #. For each person on the list, the procedure must display the
            information in the following format:
 
             .. code-block:: none

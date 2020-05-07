@@ -1912,9 +1912,9 @@ Unconstrained Array
 
     --  START LAB IO BLOCK
     in 0:Init_Chk
-    out 0: 5  4  3  2  1
+    out 0: 5  4  3  2  1  9  8  7  6  5
     in 1:Init_Proc_Chk
-    out 1: 5  4  3  2  1
+    out 1: 5  4  3  2  1  9  8  7  6  5
     in 2:Double_Chk
     out 2: 2  4  10  20 -20
     in 3:Diff_Prev_Chk
@@ -1929,7 +1929,7 @@ Unconstrained Array
 
        procedure Init (A : in out My_Array);
 
-       function Init (L : Positive) return My_Array;
+       function Init (I, L : Positive) return My_Array;
 
        procedure Double (A : in out My_Array);
 
@@ -1948,8 +1948,8 @@ Unconstrained Array
           end loop;
        end Init;
 
-       function Init (L : Positive) return My_Array is
-          A : My_Array (1 .. L);
+       function Init (I, L : Positive) return My_Array is
+          A : My_Array (I .. I + L - 1);
        begin
           Init (A);
           return A;
@@ -1965,8 +1965,8 @@ Unconstrained Array
        function Diff_Prev_Elem (A : My_Array) return My_Array is
           A_Out : My_Array (A'Range);
        begin
-          A_Out (1) := 0;
-          for I in 2 .. A'Last loop
+          A_Out (A'First) := 0;
+          for I in A'First + 1 .. A'Last loop
              A_Out (I) := A (I) - A (I - 1);
           end loop;
 
@@ -1990,6 +1990,7 @@ Unconstrained Array
 
        procedure Check (TC : Test_Case_Index) is
           AA : My_Array (1 .. 5);
+          AB : My_Array (5 .. 9);
 
           procedure Display (A : My_Array) is
           begin
@@ -2006,19 +2007,23 @@ Unconstrained Array
        begin
           case TC is
           when Init_Chk =>
-             AA := Init (AA'Last);
+             AA := Init (AA'First, AA'Length);
+             AB := Init (AB'First, AB'Length);
              Display (AA);
+             Display (AB);
           when Init_Proc_Chk =>
              Init (AA);
+             Init (AB);
              Display (AA);
+             Display (AB);
           when Double_Chk =>
-             Local_Init (AA);
-             Double (AA);
-             Display (AA);
+             Local_Init (AB);
+             Double (AB);
+             Display (AB);
           when Diff_Prev_Chk =>
-             Local_Init (AA);
-             AA := Diff_Prev_Elem (AA);
-             Display (AA);
+             Local_Init (AB);
+             AB := Diff_Prev_Elem (AB);
+             Display (AB);
           when Diff_Prev_Single_Chk =>
              declare
                 A1 : My_Array (1 .. 1) := (1 => 42);
@@ -2040,128 +2045,133 @@ Unconstrained Array
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
 
-Quantities And Amounts
-~~~~~~~~~~~~~~~~~~~~~~
+Product info
+~~~~~~~~~~~~
 
-.. code:: ada lab=Solutions.Arrays.Quantities_And_Amounts
+.. code:: ada lab=Solutions.Arrays.Product_Info
 
     --  START LAB IO BLOCK
     in 0:Total_Func_Chk
     out 0:0.50 20.00 200.00 100.00 200.00
     in 1:Total_Proc_Chk
     out 1:0.50 20.00 200.00 100.00 200.00
-    in 2:Total_Amount_Chk
+    in 2:Total_Value_Chk
     out 2:520.50
     --  END LAB IO BLOCK
 
-    package Quantities_Amounts is
+    package Product_Info_Pkg is
 
        subtype Quantity is Natural;
 
-       subtype Amount is Float;
+       subtype Currency is Float;
 
-       type Quantities is array (Positive range <>) of Quantity;
+       type Product_Info is record
+          Units : Quantity;
+          Price : Currency;
+       end record;
 
-       type Amounts is array (Positive range <>) of Amount;
+       type Product_Infos is array (Positive range <>) of Product_Info;
 
-       procedure Total (Q     : Quantities;
-                        A     : Amounts;
-                        A_Out : out Amounts);
+       type Currency_Array is array (Positive range <>) of Currency;
 
-       function Total (Q : Quantities;
-                       A : Amounts) return Amounts;
+       procedure Total (P   : Product_Infos;
+                        Tot : out Currency_Array);
 
-       function Total (Q : Quantities;
-                       A : Amounts) return Amount;
+       function Total (P : Product_Infos) return Currency_Array;
 
-    end Quantities_Amounts;
+       function Total (P : Product_Infos) return Currency;
 
-    package body Quantities_Amounts is
+    end Product_Info_Pkg;
 
-       procedure Total (Q     : Quantities;
-                        A     : Amounts;
-                        A_Out : out Amounts) is
+    package body Product_Info_Pkg is
+
+       --  Get total for single product
+       function Total (P : Product_Info) return Currency is
+          (Currency (P.Units) * P.Price);
+
+       procedure Total (P   : Product_Infos;
+                        Tot : out Currency_Array) is
        begin
-          for I in A'Range loop
-             A_Out (I) := Amount (Q (I)) * A (I);
+          for I in P'Range loop
+             Tot (I) := Total (P (I));
           end loop;
        end Total;
 
-       function Total (Q : Quantities;
-                       A : Amounts) return Amounts
+       function Total (P : Product_Infos) return Currency_Array
        is
-          A_Out : Amounts (A'Range);
+          Tot : Currency_Array (P'Range);
        begin
-          Total (Q, A, A_Out);
-          return A_Out;
+          Total (P, Tot);
+          return Tot;
        end Total;
 
-       function Total (Q : Quantities;
-                       A : Amounts) return Amount
+       function Total (P : Product_Infos) return Currency
        is
-          A_Out : Amount := 0.0;
+          Tot : Currency := 0.0;
        begin
-         for I in A'Range loop
-             A_Out := A_Out + Amount (Q (I)) * A (I);
+         for I in P'Range loop
+             Tot := Tot + Total (P (I));
           end loop;
-          return A_Out;
+          return Tot;
        end Total;
 
-    end Quantities_Amounts;
+    end Product_Info_Pkg;
 
     with Ada.Command_Line;   use Ada.Command_Line;
     with Ada.Text_IO;        use Ada.Text_IO;
 
-    with Quantities_Amounts; use Quantities_Amounts;
+    with Product_Info_Pkg;   use Product_Info_Pkg;
 
     procedure Main is
-       package Amount_IO is new Ada.Text_IO.Float_IO (Amount);
+       package Currency_IO is new Ada.Text_IO.Float_IO (Currency);
 
        type Test_Case_Index is
          (Total_Func_Chk,
           Total_Proc_Chk,
-          Total_Amount_Chk);
+          Total_Value_Chk);
 
        procedure Check (TC : Test_Case_Index) is
           subtype Test_Range is Positive range 1 .. 5;
 
-          A  : Amounts (Test_Range);
-          Q  : Quantities (Test_Range);
-          A1 : Amount;
+          P    : Product_Infos (Test_Range);
+          Tots : Currency_Array (Test_Range);
+          Tot  : Currency;
 
-          procedure Display (A : Amounts) is
+          procedure Display (Tots : Currency_Array) is
           begin
-             for I in A'Range loop
-                Amount_IO.Put (A (I));
+             for I in Tots'Range loop
+                Currency_IO.Put (Tots (I));
                 New_Line;
              end loop;
           end Display;
 
-          procedure Local_Init (Q : in out Quantities;
-                                A : in out Amounts) is
+          procedure Local_Init (P : in out Product_Infos) is
           begin
-             Q := (1,    2,    5,   10,   10);
-             A := (0.5, 10.0, 40.0, 10.0, 20.0);
+             P := ((1,   0.5),
+                   (2,  10.0),
+                   (5,  40.0),
+                   (10, 10.0),
+                   (10, 20.0));
           end Local_Init;
 
        begin
-          Amount_IO.Default_Fore := 1;
-          Amount_IO.Default_Aft  := 2;
-          Amount_IO.Default_Exp  := 0;
+          Currency_IO.Default_Fore := 1;
+          Currency_IO.Default_Aft  := 2;
+          Currency_IO.Default_Exp  := 0;
 
           case TC is
           when Total_Func_Chk =>
-             Local_Init (Q, A);
-             A := Total (Q, A);
-             Display (A);
+             Local_Init (P);
+             Tots := Total (P);
+             Display (Tots);
           when Total_Proc_Chk =>
-             Local_Init (Q, A);
-             Total (Q, A, A);
-             Display (A);
-          when Total_Amount_Chk =>
-             Local_Init (Q, A);
-             A1 := Total (Q, A);
-             Amount_IO.Put (A1);
+             Local_Init (P);
+             Total (P, Tots);
+             Display (Tots);
+          when Total_Value_Chk =>
+             Local_Init (P);
+             Tot := Total (P);
+             Currency_IO.Put (Tot);
              New_Line;
           end case;
        end Check;
@@ -2183,17 +2193,17 @@ String_10
 .. code:: ada lab=Solutions.Arrays.String_10
 
     --  START LAB IO BLOCK
-    in 0:String_10_Chk
+    in 0:String_10_Long_Chk
     out 0:And this i
+    in 1:String_10_Short_Chk
+    out 1:Hey!
     --  END LAB IO BLOCK
 
     package Strings_10 is
 
        subtype String_10 is String (1 .. 10);
 
-       --  Using "type String_10 is..." is possible, too. However, it
-       --  requires a custom Put_Line procedure that is called in Main:
-       --  procedure Put_Line (S : String_10);
+       --  Using "type String_10 is..." is possible, too.
 
        function To_String_10 (S : String) return String_10;
 
@@ -2204,8 +2214,12 @@ String_10
        function To_String_10 (S : String) return String_10 is
           S_Out : String_10;
        begin
-          for I in String_10'Range loop
+          for I in String_10'First .. Integer'Min (String_10'Last, S'Last) loop
              S_Out (I) := S (I);
+          end loop;
+
+          for I in Integer'Min (String_10'Last + 1, S'Last + 1) .. String_10'Last loop
+             S_Out (I) := ' ';
           end loop;
 
           return S_Out;
@@ -2220,17 +2234,23 @@ String_10
 
     procedure Main is
        type Test_Case_Index is
-         (String_10_Chk);
+         (String_10_Long_Chk,
+          String_10_Short_Chk);
 
        procedure Check (TC : Test_Case_Index) is
-          S    : constant String := "And this is a long string just for testing...";
+          SL   : constant String := "And this is a long string just for testing...";
+          SS   : constant String := "Hey!";
           S_10 : String_10;
 
        begin
           case TC is
-          when String_10_Chk =>
-             S_10 := To_String_10 (S);
-             Put_Line (S_10);
+          when String_10_Long_Chk =>
+             S_10 := To_String_10 (SL);
+             Put_Line (String (S_10));
+          when String_10_Short_Chk =>
+             S_10 := (others => ' ');
+             S_10 := To_String_10 (SS);
+             Put_Line (String (S_10));
           end case;
        end Check;
 
