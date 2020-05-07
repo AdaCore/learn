@@ -202,13 +202,17 @@ of floating-point elements.
         #. an array type :ada:`T_Array` using :ada:`T_Range` and
            :ada:`T_Element`;
 
+**Remarks**:
+
+    #. You should use the :ada:`Float` type for the accumulator.
+
 .. code:: ada lab=Generics.Average_Array_Of_Float
 
     --  START LAB IO BLOCK
     in 0:Float_Array_Chk
     out 0:Average:  8.00000E-01
-    in 1:Digits_12_Float_Array_Chk
-    out 1:Average:  5.40000000000E+00
+    in 1:Digits_7_Float_Array_Chk
+    out 1:Average:  5.200000E-01
     --  END LAB IO BLOCK
 
     generic
@@ -226,7 +230,7 @@ of floating-point elements.
 
     procedure Main is
        type Test_Case_Index is (Float_Array_Chk,
-                                Digits_12_Float_Array_Chk);
+                                Digits_7_Float_Array_Chk);
 
        procedure Test_Float_Array is
           type Float_Array is array (Positive range <>) of Float;
@@ -241,8 +245,8 @@ of floating-point elements.
           Put_Line ("Average: " & Float'Image (Average_Float (A)));
        end Test_Float_Array;
 
-       procedure Test_Digits_12_Float_Array is
-          type Custom_Float is digits 12;
+       procedure Test_Digits_7_Float_Array is
+          type Custom_Float is digits 7 range 0.0 .. 1.0;
 
           type Float_Array is
             array (Integer range <>) of Custom_Float;
@@ -252,130 +256,19 @@ of floating-point elements.
                      T_Element => Custom_Float,
                      T_Array   => Float_Array);
 
-          A : constant Float_Array (-1 .. 3) := (-1.0, 3.0, 5.0, 7.5, 12.5);
+          A : constant Float_Array (-1 .. 3) := (0.5, 0.0, 1.0, 0.6, 0.5);
        begin
           Put_Line ("Average: "
                     & Custom_Float'Image (Average_Float (A)));
-       end Test_Digits_12_Float_Array;
+       end Test_Digits_7_Float_Array;
 
        procedure Check (TC : Test_Case_Index) is
        begin
           case TC is
              when Float_Array_Chk =>
                 Test_Float_Array;
-             when Digits_12_Float_Array_Chk =>
-                Test_Digits_12_Float_Array;
-          end case;
-       end Check;
-
-    begin
-       if Argument_Count < 1 then
-          Put_Line ("ERROR: missing arguments! Exiting...");
-          return;
-       elsif Argument_Count > 1 then
-          Put_Line ("Ignoring additional arguments...");
-       end if;
-
-       Check (Test_Case_Index'Value (Argument (1)));
-    end Main;
-
-
-Average of Array of Decimal Fixed-Point
----------------------------------------
-
-**Goal**: create a generic function that calculates the average of an array
-of decimal fixed-point elements.
-
-**Steps**:
-
-    #. Declare and implement the generic function :ada:`Average`.
-
-**Requirements**:
-
-    #. Generic function :ada:`Average` calculates the average of an array
-       containing decimal fixed-point values.
-
-    #. Generic function :ada:`Average` has the same formal parameters as in the
-       previous exercise, except for:
-
-        #. :ada:`T_Element`, which is now a formal type that can be mapped to
-           any fixed-point decimal type.
-
-**Remarks**:
-
-    #. This exercise is based on the implementation that you created for the
-       previous exercise.
-
-        - You may want to reuse the previous implementation as a starting
-          point.
-
-.. code:: ada lab=Generics.Average_Array_Of_Decimal
-
-    --  START LAB IO BLOCK
-    in 0:Decimal_Array_Chk
-    out 0:Average:  5.40
-    in 1:Delta_EM4_Digits_16_Float_Array_Chk
-    out 1:Average:  1.2000
-    --  END LAB IO BLOCK
-
-    generic
-    function Average (A : T_Array) return T_Element;
-
-    function Average (A : T_Array) return T_Element is
-    begin
-       return 0.0;
-    end Average;
-
-    with Ada.Command_Line; use Ada.Command_Line;
-    with Ada.Text_IO;      use Ada.Text_IO;
-
-    with Average;
-
-    procedure Main is
-       type Test_Case_Index is (Decimal_Array_Chk,
-                                Delta_EM4_Digits_16_Float_Array_Chk);
-
-       procedure Test_Decimal_Array is
-          type Decimal is delta 10.0 ** (-2) digits 12;
-
-          type Decimal_Array is
-            array (Integer range <>) of Decimal;
-
-          function Average_Decimal is new
-            Average (T_Range   => Integer,
-                     T_Element => Decimal,
-                     T_Array   => Decimal_Array);
-
-          A : constant Decimal_Array (-2 .. 2) := (-1.0, 3.0, 5.0, 7.5, 12.5);
-       begin
-          Put_Line ("Average: "
-                    & Decimal'Image (Average_Decimal (A)));
-       end Test_Decimal_Array;
-
-       procedure Test_Delta_EM4_Digits_16_Float_Array is
-          type Decimal is delta 10.0 ** (-4) digits 16;
-
-          type Decimal_Array is
-            array (Positive range <>) of Decimal;
-
-          function Average_Decimal is new
-            Average (T_Range   => Positive,
-                     T_Element => Decimal,
-                     T_Array   => Decimal_Array);
-
-          A : constant Decimal_Array (2 .. 6) := (2.0, 5.0, 2.0, 8.5, -11.5);
-       begin
-          Put_Line ("Average: "
-                    & Decimal'Image (Average_Decimal (A)));
-       end Test_Delta_EM4_Digits_16_Float_Array;
-
-       procedure Check (TC : Test_Case_Index) is
-       begin
-          case TC is
-             when Decimal_Array_Chk =>
-                Test_Decimal_Array;
-             when Delta_EM4_Digits_16_Float_Array_Chk =>
-                Test_Delta_EM4_Digits_16_Float_Array;
+             when Digits_7_Float_Array_Chk =>
+                Test_Digits_7_Float_Array;
           end case;
        end Check;
 
@@ -400,15 +293,7 @@ of elements of any arbitrary type.
 
     #. Declare and implement the generic function :ada:`Average`.
 
-    #. Implement the test procedure :ada:`Test_Decimal_Array`.
-
-        #. Declare the :ada:`F_IO` package.
-
-        #. Implement the :ada:`To_Float` function for the :ada:`Decimal` type.
-
-        #. Declare the :ada:`Average_Decimal` function.
-
-    #. Implement the test procedure :ada:`Test_Item_Array`.
+    #. Implement the test procedure :ada:`Test_Item`.
 
         #. Declare the :ada:`F_IO` package.
 
@@ -436,11 +321,8 @@ of elements of any arbitrary type.
             - :ada:`To_Float` is a function that converts the arbitrary element
               of :ada:`T_Element` type to the :ada:`Float` type.
 
-    #. Procedure :ada:`Test_Decimal_Array` is used to test the generic
-       :ada:`Average` procedure for decimal fixed-point types.
-
-    #. Procedure :ada:`Test_Item_Array` is used to test the generic
-       :ada:`Average` procedure for a record type (:ada:`Item`).
+    #. Procedure :ada:`Test_Item` is used to test the generic :ada:`Average`
+       procedure for a record type (:ada:`Item`).
 
         #. Record type :ada:`Item` contains the :ada:`Quantity` and
            :ada:`Price` components.
@@ -461,9 +343,6 @@ of elements of any arbitrary type.
             #. :ada:`Get_Price`, which returns just the price.
 
     #. The generic function :ada:`Average` must be instantiated as follows:
-
-        #. For the :ada:`Decimal` type, you must declare the
-           :ada:`Average_Decimal` function.
 
         #. For the :ada:`Item` type, you must:
 
@@ -490,15 +369,13 @@ of elements of any arbitrary type.
                               Aft  : in Field := Default_Aft;
                               Exp  : in Field := Default_Exp);
 
-        #. Depending on the test procedures you're working on, this is the
-           expected format when calling :ada:`Put` from :ada:`Float_IO`:
+        #. This is the expected format when calling :ada:`Put` from
+           :ada:`Float_IO`:
 
            +-----------------------------+-------+------+------+
            | Function                    | Fore  | Aft  | Exp  |
            +=============================+=======+======+======+
-           | :ada:`Test_Decimal_Array`   |     1 |    2 |    0 |
-           +-----------------------------+-------+------+------+
-           | :ada:`Test_Item_Array`      |     3 |    2 |    0 |
+           | :ada:`Test_Item`            |     3 |    2 |    0 |
            +-----------------------------+-------+------+------+
 
 **Remarks**:
@@ -526,10 +403,8 @@ of elements of any arbitrary type.
 .. code:: ada lab=Generics.Average_Any
 
     --  START LAB IO BLOCK
-    in 0:Decimal_Array_Chk
-    out 0:Average: 5.40
-    in 1:Item_Array_Chk
-    out 1:Average per item & quantity: 175.00 Average price:                 7.50
+    in 0:Item_Array_Chk
+    out 0:Average per item & quantity: 175.00 Average price:                 7.50
     --  END LAB IO BLOCK
 
     generic
@@ -540,32 +415,13 @@ of elements of any arbitrary type.
        null;
     end Average;
 
-    procedure Test_Decimal_Array;
+    procedure Test_Item;
 
     with Ada.Text_IO;      use Ada.Text_IO;
 
     with Average;
 
-    procedure Test_Decimal_Array is
-       type Decimal is delta 10.0 ** (-2) digits 12;
-
-       type Decimal_Array is
-         array (Integer range <>) of Decimal;
-
-       A : constant Decimal_Array (-2 .. 2) := (-1.0, 3.0, 5.0, 7.5, 12.5);
-    begin
-       Put ("Average: ");
-       F_IO.Put (Average_Decimal (A));
-       New_Line;
-    end Test_Decimal_Array;
-
-    procedure Test_Item_Array;
-
-    with Ada.Text_IO;      use Ada.Text_IO;
-
-    with Average;
-
-    procedure Test_Item_Array is
+    procedure Test_Item is
        type Amount is delta 0.01 digits 12;
 
        type Item is record
@@ -590,25 +446,21 @@ of elements of any arbitrary type.
        Put ("Average price:               ");
        F_IO.Put (Average_Price (A));
        New_Line;
-    end Test_Item_Array;
+    end Test_Item;
 
     with Ada.Command_Line; use Ada.Command_Line;
     with Ada.Text_IO;      use Ada.Text_IO;
 
-    with Test_Decimal_Array;
-    with Test_Item_Array;
+    with Test_Item;
 
     procedure Main is
-       type Test_Case_Index is (Decimal_Array_Chk,
-                                Item_Array_Chk);
+       type Test_Case_Index is (Item_Array_Chk);
 
        procedure Check (TC : Test_Case_Index) is
        begin
           case TC is
-             when Decimal_Array_Chk =>
-                Test_Decimal_Array;
              when Item_Array_Chk =>
-                Test_Item_Array;
+                Test_Item;
           end case;
        end Check;
 
@@ -691,11 +543,8 @@ Generic list
             - This procedure is used in the :ada:`Display` procedure to display
               individual elements of the list.
 
-    #. The test procedure :ada:`Test_Int_List` is used to test a list of
+    #. The test procedure :ada:`Test_Int` is used to test a list of
        elements of :ada:`Integer` type.
-
-    #. The test procedure :ada:`Test_String_List` is used to test a list of
-       elements of access to :ada:`String` type.
 
     #. For both test procedures, you must:
 
@@ -706,11 +555,8 @@ Generic list
 
         #. declare instances of the :ada:`Gen_List` package.
 
-            - For the :ada:`Test_Int_List` procedure, declare the
+            - For the :ada:`Test_Int` procedure, declare the
               :ada:`Int_List` package.
-
-            - For the :ada:`Test_String_List` procedure, declare the
-              :ada:`String_List` package.
 
 **Remarks**:
 
@@ -725,10 +571,8 @@ Generic list
 .. code:: ada lab=Generics.Gen_List
 
     --  START LAB IO BLOCK
-    in 0:Int_List_Chk
+    in 0:Int_Chk
     out 0:Added item successfully! Added item successfully! Added item successfully! Couldn't add item! List of integers  2  5  7
-    in 1:String_List_Chk
-    out 1:Added item successfully! Added item successfully! Added item successfully! Couldn't add item! List of strings Hello World Bye
     --  END LAB IO BLOCK
 
     generic
@@ -765,13 +609,13 @@ Generic list
 
     end Gen_List;
 
-    procedure Test_Int_List;
+    procedure Test_Int;
 
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Gen_List;
 
-    procedure Test_Int_List is
+    procedure Test_Int is
 
        type Integer_Array is array (Positive range <>) of Integer;
 
@@ -806,68 +650,21 @@ Generic list
        Display_Add_Success (Success);
 
        Int_List.Display;
-    end Test_Int_List;
-
-    procedure Test_String_List;
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    with Gen_List;
-
-    procedure Test_String_List is
-
-       type String_Array is array (Positive range <>) of String_Access;
-
-       A : String_Array (1 .. 3);
-       L : Natural;
-
-       Success : Boolean;
-
-       procedure Display_Add_Success (Success : Boolean) is
-       begin
-          if Success then
-             Put_Line ("Added item successfully!");
-          else
-             Put_Line ("Couldn't add item!");
-          end if;
-
-       end Display_Add_Success;
-
-    begin
-       String_List.Init;
-
-       String_List.Add (new String'("Hello"), Success);
-       Display_Add_Success (Success);
-
-       String_List.Add (new String'("World"), Success);
-       Display_Add_Success (Success);
-
-       String_List.Add (new String'("Bye"), Success);
-       Display_Add_Success (Success);
-
-       String_List.Add (new String'("Wait"), Success);
-       Display_Add_Success (Success);
-
-       String_List.Display;
-    end Test_String_List;
+    end Test_Int;
 
     with Ada.Command_Line; use Ada.Command_Line;
     with Ada.Text_IO;      use Ada.Text_IO;
 
-    with Test_Int_List;
-    with Test_String_List;
+    with Test_Int;
 
     procedure Main is
-       type Test_Case_Index is (Int_List_Chk,
-                                String_List_Chk);
+       type Test_Case_Index is (Int_Chk);
 
        procedure Check (TC : Test_Case_Index) is
        begin
           case TC is
-             when Int_List_Chk =>
-                Test_Int_List;
-             when String_List_Chk =>
-                Test_String_List;
+             when Int_Chk =>
+                Test_Int;
           end case;
        end Check;
 
