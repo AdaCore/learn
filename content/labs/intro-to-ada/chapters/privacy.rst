@@ -53,8 +53,10 @@ a previous implementation.
 
         #. This kind of errors can happen when record components that have
            correlated information are initialized individually without
-           consistency checks |mdash| using private types helps avoiding the
-           problem.
+           consistency checks |mdash| using private types helps to avoid the
+           problem by requiring initialization routines that can enforce
+           consistency.
+
 
 .. code:: ada lab=Privacy.Directions
 
@@ -353,10 +355,11 @@ Limited Strings
     with Limited_Strings; use Limited_Strings;
 
     procedure Check_Lim_String is
+       S  : constant String := "----------";
        S1 : constant Lim_String := Init ("Hello World");
        S2 : constant Lim_String := Init (30);
        S3 : Lim_String := Init (5);
-       S4 : Lim_String := Init (30);
+       S4 : Lim_String := Init (S & S & S);
     begin
        Put ("S1 => ");
        Put_Line (S1);
@@ -436,11 +439,22 @@ to modify previous labs, so that the record declarations are made private.
 You can look into those labs, modify the type declarations, and recompile
 the code. The corresponding test-cases must still pass.
 
-In case you don't have a working version of the source-code of previous
-labs, you can look into the corresponding solutions.
+If no other changes are needed apart from changes in the declaration, then that
+indicates we have used good programming techniques in the original code. On the
+other hand, if further changes are needed, then you should investigate why this
+is the case.
+
+Also note that, in some cases, you can move support types into the private
+part of the specification without affecting its compilation. This is the case,
+for example, for the :ada:`People_Array` type of the *List of Names* lab
+mentioned below. You should, in fact, keep only relevant types and subprograms
+in the public part and move all support declarations to the private part of the
+specification whenever possible.
 
 Below, you find the selected labs that you can work on, including changes
-that you should make.
+that you should make. In case you don't have a working version of the
+source-code of previous labs, you can look into the corresponding solutions.
+
 
 Colors
 ~~~~~~
