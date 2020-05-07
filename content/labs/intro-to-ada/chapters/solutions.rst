@@ -3738,9 +3738,7 @@ Numerical Exception
 
     end Tests;
 
-    with Tests; use Tests;
-
-    procedure Check_Exception (ID : Test_ID);
+    with Tests;          use Tests;
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Ada.Exceptions; use Ada.Exceptions;
@@ -3810,14 +3808,14 @@ Re-raising Exceptions
     in 0:Exception_1_Chk
     out 0:Constraint_Error detected! Constraint_Error (raised by Check_Exception) detected!
     in 1:Exception_2_Chk
-    out 1:Custom_Exception raised! TESTS.CUSTOM_EXCEPTION (raised by Check_Exception) detected!
+    out 1:Custom_Exception raised! TESTS.ANOTHER_EXCEPTION (raised by Check_Exception) detected!
     --  END LAB IO BLOCK
 
     package Tests is
 
        type Test_ID is (Test_1, Test_2);
 
-       Custom_Exception : exception;
+       Custom_Exception, Another_Exception : exception;
 
        procedure Num_Exception_Test (ID : Test_ID);
 
@@ -3860,7 +3858,7 @@ Re-raising Exceptions
           raise;
        when E : others =>
           Put_Line (Exception_Message (E));
-          raise;
+          raise Another_Exception;
     end Check_Exception;
 
     with Ada.Command_Line; use Ada.Command_Line;
