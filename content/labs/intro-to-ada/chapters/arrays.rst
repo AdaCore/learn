@@ -200,7 +200,7 @@ lookup table.
 
         #. Declare the array type :ada:`HTML_Color_RGB`.
 
-        #. Declare the :ada:`To_RGB_Loopup_Table` object and initialize it.
+        #. Declare the :ada:`To_RGB_Lookup_Table` object and initialize it.
 
         #. Adapt the implementation of :ada:`To_RGB` function.
 
@@ -208,13 +208,13 @@ lookup table.
 
     #. Array type :ada:`HTML_Color_RGB` is used for the table.
 
-    #. The :ada:`To_RGB_Loopup_Table` object of :ada:`HTML_Color_RGB` type
+    #. The :ada:`To_RGB_Lookup_Table` object of :ada:`HTML_Color_RGB` type
        contains the lookup table.
 
         - This table must be implemented as an array of constant values.
 
     #. The implementation of the :ada:`To_RGB` function must use the
-       :ada:`To_RGB_Loopup_Table` object.
+       :ada:`To_RGB_Lookup_Table` object.
 
 **Remarks**:
 
@@ -231,7 +231,7 @@ lookup table.
           statement to an array declaration.
 
         #. Don't use a case statement to implement the :ada:`To_RGB` function.
-           Instead, write code that accesses :ada:`To_RGB_Loopup_Table` to get
+           Instead, write code that accesses :ada:`To_RGB_Lookup_Table` to get
            the correct value.
 
     #. The following table contains the HTML colors and the corresponding value
@@ -305,7 +305,7 @@ lookup table.
 
        --  Declare lookup table here:
        --
-       --  To_RGB_Loopup_Table : ...
+       --  To_RGB_Lookup_Table : ...
 
     end Color_Types;
 
@@ -314,11 +314,11 @@ lookup table.
 
        function To_RGB (C : HTML_Color) return RGB is
        begin
-          --  Implement To_RGB using To_RGB_Loopup_Table
+          --  Implement To_RGB using To_RGB_Lookup_Table
           return (0, 0, 0);
 
           --  Use the code below from the previous version of the To_RGB
-          --  function to declare the To_RGB_Loopup_Table:
+          --  function to declare the To_RGB_Lookup_Table:
           --
           --  case C is
           --     when Salmon      => return (16#FA#, 16#80#, 16#72#);
@@ -376,7 +376,7 @@ lookup table.
                 Put_Line ("Size of HTML_Color_RGB: "
                           & Integer'Image (HTML_Color_RGB'Length));
                 Put_Line ("Firebrick: "
-                          & Image (To_RGB_Loopup_Table (Firebrick)));
+                          & Image (To_RGB_Lookup_Table (Firebrick)));
              when HTML_Color_To_Integer_Chk =>
                 for I in HTML_Color'Range loop
                    Put_Line (HTML_Color'Image (I) & " => "
