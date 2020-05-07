@@ -45,8 +45,8 @@ Aggregate Initialization
         - :ada:`Y` = 12
         - :ada:`Z` = 13
 
-    #. Array type :ada:`Int_Arr` of :ada:`Integer` has 20 elements ranging from
-       1 to 20.
+    #. Array type :ada:`Int_Arr` has 20 elements of :ada:`Integer` type (with
+       indices ranging from 1 to 20).
 
     #. The first :ada:`Init` procedure outputs a record of :ada:`Rec` type
        where:
@@ -206,6 +206,16 @@ Versioning
         #. For example, version "1.3.5" is converted to the floating-point
            value ``1.3``.
 
+        #. An obvious limitation of this function is that it can only handle
+           one-digit numbers for the minor component.
+
+            - For example, we cannot convert version "1.10.0" to a reasonable
+              value with the approach described above. The result of the call
+              :ada:`Convert ((1, 10, 0))` is therefore unspecified.
+
+            - For the scope of this exercise, only version numbers with
+              one-digit components are checked.
+
 **Remarks**:
 
     #. We use overloading for the :ada:`Convert` functions.
@@ -308,22 +318,43 @@ Simple todo list
 
 **Requirements**:
 
-    #. :ada:`Todo_Item` type is used to store to-do items.
+    #. :ada:`Todo_Item` type is used to store a to-do item.
 
         #. It should be implemented as an access type to strings.
 
-    #. :ada:`Todo_List` type is the container for all to-do items.
+    #. :ada:`Todo_Items` type is an array of to-do items.
 
         #. It should be implemented as an unconstrained array with positive
            range.
 
+    #. :ada:`Todo_List` type is the container for all to-do items.
+
+        #. It should be declared as a record with discriminant.
+
+        #. In order to store the to-do items, it must contain a component named
+           :ada:`Items` of :ada:`Todo_Items` type.
+
         #. Don't forget to keep track of the last element added to the
            list!
+
+            - You should declare a :ada:`Last` component in the record.
 
     #. Procedure :ada:`Add` adds items (of :ada:`Todo_Item` type) to the list
        (of :ada:`Todo_List` type).
 
         #. This requires allocating a string for the access type.
+
+        #. An item can only be added to the list if the list isn't full yet
+           |mdash| see next point for details on error handling.
+
+    #. Since the number of items that can be stored on the list is limited,
+       the list might eventually become full in a call to :ada:`Add`.
+
+        #. You must write code in the implementation of the :ada:`Add`
+           procedure that verifies this condition.
+
+        #. If the procedure detects that the list is full, it must display the
+           following message: "ERROR: list is full!".
 
     #. Procedure :ada:`Display` is used to display all to-do items.
 
@@ -347,6 +378,9 @@ Simple todo list
        type Todo_Item is null record;
 
        --  Replace by actual type declaration
+       type Todo_Items is null record;
+
+       --  Replace by actual type declaration
        type Todo_List is null record;
 
        procedure Add (Todos : in out Todo_List;
@@ -356,12 +390,14 @@ Simple todo list
 
     end Todo_Lists;
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     package body Todo_Lists is
 
        procedure Add (Todos : in out Todo_List;
                       Item  : String) is
        begin
-          null;
+          Put_Line ("ERROR: list is full!");
        end Add;
 
        procedure Display (Todos : Todo_List) is
@@ -524,7 +560,7 @@ Price list
     in 1:Price_List_Chk
     out 1:PRICE LIST  1.45  2.37  3.21  4.14  5.22  6.69  7.77  8.14  9.99  10.01
     in 2:Price_List_Get_Chk
-    out 2:Attemp Get #  5 Element #  5 =>  5.22 Attemp Get #  40 Element not available (as expected)
+    out 2:Attempt Get #  5 Element #  5 =>  5.22 Attempt Get #  40 Element not available (as expected)
     --  END LAB IO BLOCK
 
     package Price_Lists is
@@ -608,7 +644,7 @@ Price list
           procedure Get_Display (Idx : Positive) is
              R : constant Price_Result := Get (L, Idx);
           begin
-             Put_Line ("Attemp Get # " & Positive'Image (Idx));
+             Put_Line ("Attempt Get # " & Positive'Image (Idx));
              if R.Ok then
                 Put_Line ("Element # " & Positive'Image (Idx)
                           & " => "     & Price_Type'Image (R.Price));

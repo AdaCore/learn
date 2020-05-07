@@ -2651,9 +2651,12 @@ Simple todo list
 
        type Todo_Item is access String;
 
-       type Todo_List is array (Positive range <>) of Todo_Item;
+       type Todo_Items is array (Positive range <>) of Todo_Item;
 
-       Last : Natural := 0;
+       type Todo_List (Max_Len : Natural) is record
+          Items : Todo_Items (1 .. Max_Len);
+          Last  : Natural := 0;
+       end record;
 
        procedure Add (Todos : in out Todo_List;
                       Item  : String);
@@ -2669,9 +2672,9 @@ Simple todo list
        procedure Add (Todos : in out Todo_List;
                       Item  : String) is
        begin
-          if Last < Todos'Last then
-             Last := Last + 1;
-             Todos (Last) := new String'(Item);
+          if Todos.Last < Todos.Items'Last then
+             Todos.Last := Todos.Last + 1;
+             Todos.Items (Todos.Last) := new String'(Item);
           else
              Put_Line ("ERROR: list is full!");
           end if;
@@ -2680,8 +2683,8 @@ Simple todo list
        procedure Display (Todos : Todo_List) is
        begin
           Put_Line ("TO-DO LIST");
-          for I in Todos'First .. Last loop
-             Put_Line (Todos (I).all);
+          for I in Todos.Items'First .. Todos.Last loop
+             Put_Line (Todos.Items (I).all);
           end loop;
        end Display;
 
@@ -2697,7 +2700,7 @@ Simple todo list
          (Todo_List_Chk);
 
        procedure Check (TC : Test_Case_Index) is
-          T : Todo_List (1 .. 10);
+          T : Todo_List (10);
        begin
           case TC is
              when Todo_List_Chk =>
@@ -2738,12 +2741,12 @@ Price list
     in 1:Price_List_Chk
     out 1:PRICE LIST  1.45  2.37  3.21  4.14  5.22  6.69  7.77  8.14  9.99  10.01
     in 2:Price_List_Get_Chk
-    out 2:Attemp Get #  5 Element #  5 =>  5.22 Attemp Get #  40 Element not available (as expected)
+    out 2:Attempt Get #  5 Element #  5 =>  5.22 Attempt Get #  40 Element not available (as expected)
     --  END LAB IO BLOCK
 
     package Price_Lists is
 
-       type Price_Type is delta 10.0 ** (-2) digits 12;
+       type Price_Type is delta 0.01 digits 12;
 
        type Price_List_Array is array (Positive range <>) of Price_Type;
 
@@ -2847,7 +2850,7 @@ Price list
           procedure Get_Display (Idx : Positive) is
              R : constant Price_Result := Get (L, Idx);
           begin
-             Put_Line ("Attemp Get # " & Positive'Image (Idx));
+             Put_Line ("Attempt Get # " & Positive'Image (Idx));
              if R.Ok then
                 Put_Line ("Element # " & Positive'Image (Idx)
                           & " => "     & Price_Type'Image (R.Price));
