@@ -60,11 +60,13 @@ def run_program(self, data):
             raise Exception("Mode not implemented")
 
     except BuildError as ex:
-        logger.error(f"Build error code {ex}", exc_info=True)
+        # Build errors can be common - syntax errors and such
+        # Use logger.debug here to minimize unwanted traffic in celery logs
+        logger.debug(f"Build error code {ex}", exc_info=True)
         elapsed = time.time() - start
         return {'status': int(f"{ex}"), 'elapsed': elapsed}
     except Exception as ex:
-        logger.error("An error occured in run program", exc_info=True)
+        logger.error("An error occured executing the command", exc_info=True)
         self.update_state(state=states.FAILURE,
                           meta={
                             'exc_type': type(ex).__name__,

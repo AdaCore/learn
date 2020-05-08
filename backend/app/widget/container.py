@@ -20,7 +20,7 @@ CONTAINER_CONFIG = {
     'environment': {
         'TMPDIR': TMPFS
     },
-    'mem_limit': '32M',
+    'mem_limit': '256M',
     'network_disabled': True,
     'pids_limit': 100,
     'security_opt': [
