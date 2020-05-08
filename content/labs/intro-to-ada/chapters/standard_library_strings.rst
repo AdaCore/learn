@@ -1,5 +1,5 @@
-Standard library: Dates & Times
-===============================
+Standard library: Strings
+=========================
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
@@ -23,101 +23,37 @@ List of events
 
     #. Implement the :ada:`Events` package.
 
-        #. Declare the :ada:`Event_Item` type.
-
-        #. Declare the :ada:`Event_Items` type.
+        #. Declare the :ada:`Event_Item` subtype.
 
     #. Implement the :ada:`Events.Lists` package.
 
-        #. Declare the :ada:`Event_List` type.
+        #. Adapt the :ada:`Add` procedure.
 
-        #. Implement the :ada:`Add` procedure.
-
-        #. Implement the :ada:`Display` procedure.
+        #. Adapt the :ada:`Display` procedure.
 
 **Requirements**:
 
     #. The :ada:`Event_Item` type (from the :ada:`Events` package) contains the
        *description of an event*.
 
-       #. This description should be stored in an access-to-string type.
-
-    #. The :ada:`Event_Items` type stores a list of events.
-
-        #. This will be used later to represent multiple events for a specific
-           date.
-
-        #. You can use a vector for this type.
-
-    #. The :ada:`Events.Lists` package contains the subprograms that are used
-       in the test application.
-
-    #. The :ada:`Event_List` type (from the :ada:`Events.Lists` package) maps
-       a list of events to a specific date.
-
-        #. You must use the :ada:`Event_Items` type for the list of events.
-
-        #. You should use the :ada:`Time` type from the :ada:`Ada.Calendar`
-           package for the dates.
-
-        #. Since we expect the events to be ordered by the date, you should
-           use ordered maps for the :ada:`Event_List` type.
+       #. This description is declared as a subtype of unbounded string.
 
     #. Procedure :ada:`Add` adds an event into the list of events for a
        specific date.
 
+        #. The declaration of :ada:`E` needs to be adapted to use unbounded
+           strings.
+
     #. Procedure :ada:`Display` must display all events for each date (ordered
        by date) using the following format:
 
-        .. code-block:: none
-
-            <event_date #1>
-                <description of item #1a>
-                <description of item #1b>
-            <event_date #2>
-                <description of item #2a>
-                <description of item #2b>
-
-        #. You should use the auxiliary :ada:`Date_Image` function |mdash|
-           available in the body of the :ada:`Events.Lists` package |mdash| to
-           display  the date in the ``YYYY-MM-DD`` format.
-
+        #. The arguments to :ada:`Put_Line` need to be adapted to use unbounded
+           strings.
 
 **Remarks**:
 
-    #. Let's briefly illustrate the expected output of this system.
-
-        #. Consider the following example:
-
-            .. code-block:: ada
-
-                with Ada.Calendar;
-                with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
-
-                with Events.Lists;            use Events.Lists;
-
-                procedure Test is
-                   EL : Event_List;
-                begin
-                   EL.Add (Time_Of (2019, 4, 16),
-                           "Item #2");
-                   EL.Add (Time_Of (2019, 4, 15),
-                           "Item #1");
-                   EL.Add (Time_Of (2019, 4, 16),
-                           "Item #3");
-                   EL.Display;
-                end Test;
-
-        #. The expected output of the :ada:`Test` procedure must be:
-
-            .. code-block:: none
-
-                EVENTS LIST
-                - 2019-04-15
-                    - Item #1
-                - 2019-04-16
-                    - Item #2
-                    - Item #3
+    #. We use the lab on the list of events from the previous chapter
+       (:doc:`./standard_library_dates_times`) as a starting point.
 
 .. code:: ada lab=Solutions.Standard_Library_Dates_Times.List_of_Events
 
@@ -126,15 +62,23 @@ List of events
     out 0:EVENTS LIST - 2018-01-01     - New Year's Day - 2018-02-16     - Final check     - Release - 2018-12-03     - Brother's birthday
     --  END LAB IO BLOCK
 
+    with Ada.Containers.Vectors;
+
     package Events is
 
-       type Event_Item is null record;
+       --  subtype Event_Item is
 
-       type Event_Items is null record;
+       package Event_Item_Containers is new
+         Ada.Containers.Vectors
+           (Index_Type   => Positive,
+            Element_Type => Event_Item);
+
+       subtype Event_Items is Event_Item_Containers.Vector;
 
     end Events;
 
-    with Ada.Calendar; use Ada.Calendar;
+    with Ada.Calendar;                use Ada.Calendar;
+    with Ada.Containers.Ordered_Maps;
 
     package Events.Lists is
 
@@ -148,7 +92,13 @@ List of events
 
     private
 
-       type Event_List is tagged null record;
+       package Event_Time_Item_Containers is new
+         Ada.Containers.Ordered_Maps
+           (Key_Type         => Time,
+            Element_Type     => Event_Items,
+            "="              => Event_Item_Containers."=");
+
+       type Event_List is new Event_Time_Item_Containers.Map with null record;
 
     end Events.Lists;
 
@@ -160,8 +110,13 @@ List of events
        procedure Add (Events     : in out Event_List;
                       Event_Time : Time;
                       Event      : String) is
+          use Event_Item_Containers;
+          E : constant Event_Item := new String'(Event);
        begin
-          null;
+          if not Events.Contains (Event_Time) then
+             Events.Include (Event_Time, Empty_Vector);
+          end if;
+          Events (Event_Time).Append (E);
        end Add;
 
        function Date_Image (T : Time) return String is
@@ -171,10 +126,17 @@ List of events
        end;
 
        procedure Display (Events : Event_List) is
+          use Event_Time_Item_Containers;
           T : Time;
        begin
           Put_Line ("EVENTS LIST");
-          --  You should use Date_Image (T) here!
+          for C in Events.Iterate loop
+             T := Key (C);
+             Put_Line ("- " & Date_Image (T));
+             for I of Events (C) loop
+                Put_Line ("    - " & I.all);
+             end loop;
+          end loop;
        end Display;
 
     end Events.Lists;
