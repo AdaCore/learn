@@ -107,7 +107,11 @@ class MQReporter:
         :param tag:
             The type of msg we are sending
         """
-        re_msg = self.__replace_strings(msg)
+        if tag != 'lab':
+            re_msg = self.__replace_strings(msg)
+        else:
+            re_msg = msg
+
         obj = {"msg": {
                         "type": tag,
                         "data": re_msg,
@@ -125,6 +129,7 @@ class MQReporter:
             queue.close()
 
     def __replace_strings(self, msg):
+        logger.debug(f"Replacing strings in {msg}")
         fixed_string = msg
         for key, value in self.string_replace.items():
             fixed_string = fixed_string.replace(key, value)
