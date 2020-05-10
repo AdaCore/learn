@@ -5517,8 +5517,10 @@ List of events
 .. code:: ada lab=Solutions.Standard_Library_Strings.List_of_Events
 
     --  START LAB IO BLOCK
-    in 0:Event_List_Chk
-    out 0:EVENTS LIST - 2018-01-01     - New Year's Day - 2018-02-16     - Final check     - Release - 2018-12-03     - Brother's birthday
+    in 0:Unbounded_String_Chk
+    out 0:Checked
+    in 1:Event_List_Chk
+    out 1:EVENTS LIST - 2018-01-01     - New Year's Day - 2018-02-16     - Final check     - Release - 2018-12-03     - Brother's birthday
     --  END LAB IO BLOCK
 
     with Ada.Strings.Unbounded;  use Ada.Strings.Unbounded;
@@ -5605,17 +5607,26 @@ List of events
     with Ada.Text_IO;             use Ada.Text_IO;
     with Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+    with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
 
+    with Events;
     with Events.Lists;            use Events.Lists;
 
     procedure Main is
        type Test_Case_Index is
-         (Event_List_Chk);
+         (Unbounded_String_Chk,
+          Event_List_Chk);
 
        procedure Check (TC : Test_Case_Index) is
           EL : Event_List;
        begin
           case TC is
+             when Unbounded_String_Chk =>
+                declare
+                   S : constant Events.Event_Item := To_Unbounded_String ("Checked");
+                begin
+                   Put_Line (To_String (S));
+                end;
              when Event_List_Chk =>
                 EL.Add (Time_Of (2018, 2, 16),
                         "Final check");
