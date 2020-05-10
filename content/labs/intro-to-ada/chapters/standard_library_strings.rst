@@ -14,6 +14,103 @@ Standard library: Strings
 .. role:: cpp(code)
    :language: c++
 
+Concatenation
+-------------
+
+**Goal**: implement functions to concatenate three strings
+
+**Steps**:
+
+    #. Implement the :ada:`Str_Concat` package.
+
+        #. Implement the :ada:`Concat` function for :ada:`Unbounded_String`.
+
+        #. Implement the :ada:`Concat` function for :ada:`String`.
+
+**Requirements**:
+
+    #. Function :ada:`Concat` receives three strings of :ada:`String` type and
+       returns the concatenation of those strings as an unbounded string.
+
+    #. Function :ada:`Concat` receives three unbouded strings and returns the
+       concatenation of those strings as a standard string (:ada:`String`
+       type).
+
+.. code:: ada lab=Solutions.Standard_Library_Strings.Concatenation
+
+    --  START LAB IO BLOCK
+    in 0:Unbounded_String_Chk
+    out 0:Hello World!
+    in 1:String_Chk
+    out 1:This is a test.
+    --  END LAB IO BLOCK
+
+    with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
+
+    package Str_Concat is
+
+       function Concat (S1, S2, S3 : String) return Unbounded_String;
+
+       function Concat (S1, S2, S3 : Unbounded_String) return String;
+
+    end Str_Concat;
+
+    package body Str_Concat is
+
+       function Concat (S1, S2, S3 : String) return Unbounded_String is
+       begin
+          null;
+       end Concat;
+
+       function Concat (S1, S2, S3 : Unbounded_String) return String is
+       begin
+          null;
+       end Concat;
+
+    end Str_Concat;
+
+    with Ada.Command_Line;        use Ada.Command_Line;
+    with Ada.Text_IO;             use Ada.Text_IO;
+    with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
+
+    with Str_Concat;              use Str_Concat;
+
+    procedure Main is
+       type Test_Case_Index is
+         (Unbounded_String_Chk,
+          String_Chk);
+
+       procedure Check (TC : Test_Case_Index) is
+       begin
+          case TC is
+             when Unbounded_String_Chk =>
+                declare
+                   S : constant Unbounded_String := Concat ("Hello", " World", "!");
+                begin
+                   Put_Line (To_String (S));
+                end;
+             when String_Chk =>
+                declare
+                   S : constant String := Concat (To_Unbounded_String ("This"),
+                                                  To_Unbounded_String (" is a "),
+                                                  To_Unbounded_String ("test."));
+                begin
+                   Put_Line (S);
+                end;
+          end case;
+       end Check;
+
+    begin
+       if Argument_Count < 1 then
+          Put_Line ("ERROR: missing arguments! Exiting...");
+          return;
+       elsif Argument_Count > 1 then
+          Put_Line ("Ignoring additional arguments...");
+       end if;
+
+       Check (Test_Case_Index'Value (Argument (1)));
+    end Main;
+
 List of events
 --------------
 
