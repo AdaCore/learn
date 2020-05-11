@@ -14,6 +14,84 @@ Standard library: Dates & Times
 .. role:: cpp(code)
    :language: c++
 
+Holocene calendar
+-----------------
+
+**Goal**: create a function that returns the year in the Holocene calendar.
+
+**Steps**:
+
+    #. Implement the :ada:`To_Holocene_Year` function.
+
+**Requirements**:
+
+    #. The :ada:`To_Holocene_Year` extracts the year from a time object
+       (:ada:`Time` type) and returns the corresponding year for the
+       `Holocene calendar <https://en.wikipedia.org/wiki/Holocene_calendar>`_.
+
+        #. For positive (AD) years, the Holocene year is calculated by adding
+           10,000 to the year number.
+
+**Remarks**:
+
+    #. In this exercise, we don't deal with BC years.
+
+    #. Note that the year component of the :ada:`Time` type from the
+       :ada:`Ada.Calendar` package is limited to years starting with 1901.
+
+
+.. code:: ada lab=Solutions.Standard_Library_Dates_Times.Holocene_Calendar
+
+    --  START LAB IO BLOCK
+    in 0:Holocene_Chk
+    out 0:Year (Gregorian):  2012 Year (Holocene):   12012 Year (Gregorian):  2020 Year (Holocene):   12020
+    --  END LAB IO BLOCK
+
+    with Ada.Calendar; use Ada.Calendar;
+
+    function To_Holocene_Year (T : Time) return Integer is
+    begin
+       return 0;
+    end To_Holocene_Year;
+
+    with Ada.Command_Line;        use Ada.Command_Line;
+    with Ada.Text_IO;             use Ada.Text_IO;
+    with Ada.Calendar;            use Ada.Calendar;
+
+    with To_Holocene_Year;
+
+    procedure Main is
+       type Test_Case_Index is
+         (Holocene_Chk);
+
+       procedure Display_Holocene_Year (Y : Year_Number) is
+          HY : Integer;
+       begin
+          HY := To_Holocene_Year (Time_Of (Y, 1, 1));
+          Put_Line ("Year (Gregorian): " & Year_Number'Image (Y));
+          Put_Line ("Year (Holocene):  " & Integer'Image (HY));
+       end Display_Holocene_Year;
+
+       procedure Check (TC : Test_Case_Index) is
+       begin
+          case TC is
+             when Holocene_Chk =>
+                Display_Holocene_Year (2012);
+                Display_Holocene_Year (2020);
+          end case;
+       end Check;
+
+    begin
+       if Argument_Count < 1 then
+          Put_Line ("ERROR: missing arguments! Exiting...");
+          return;
+       elsif Argument_Count > 1 then
+          Put_Line ("Ignoring additional arguments...");
+       end if;
+
+       Check (Test_Case_Index'Value (Argument (1)));
+    end Main;
+
 List of events
 --------------
 
