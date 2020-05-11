@@ -17,7 +17,7 @@ Standard library: Strings
 Concatenation
 -------------
 
-**Goal**: implement functions to concatenate three strings
+**Goal**: implement functions to concatenate an array of unbounded strings.
 
 **Steps**:
 
@@ -29,42 +29,77 @@ Concatenation
 
 **Requirements**:
 
-    #. Function :ada:`Concat` receives three strings of :ada:`String` type and
-       returns the concatenation of those strings as an unbounded string.
+    #. The first :ada:`Concat` function receives an unconstrained array of
+       unbounded strings and returns the concatenation of those strings as an
+       unbounded string.
 
-    #. Function :ada:`Concat` receives three unbouded strings and returns the
-       concatenation of those strings as a standard string (:ada:`String`
-       type).
+        #. The second :ada:`Concat` function has the same parameters, but
+           returns a standard string (:ada:`String` type).
+
+    #. Both :ada:`Concat` functions have the following parameters:
+
+        #. An unconstrained array of :ada:`Unbounded_String` strings
+           (:ada:`Unbounded_Strings` type).
+
+        #. :ada:`Trim_Str`, a Boolean parameter indicating whether each
+           unbounded string must be trimmed.
+
+        #. :ada:`Add_Whitespace`, a Boolean parameter indicating whether a
+           whitespace shall be added between each unbounded string and the next
+           one.
+
+            #. No whitespace shall be added after the last string of the array.
+
+**Remarks**:
+
+    #. You can use the :ada:`Trim` function from the
+       :ada:`Ada.Strings.Unbounded` package.
 
 .. code:: ada lab=Solutions.Standard_Library_Strings.Concatenation
 
     --  START LAB IO BLOCK
-    in 0:Unbounded_String_Chk
+    in 0:Unbounded_Concat_No_Trim_No_WS_Chk
     out 0:Hello World!
-    in 1:String_Chk
-    out 1:This is a test.
+    in 1:Unbounded_Concat_Trim_No_WS_Chk
+    out 1:This_is_a_check
+    in 2:String_Concat_Trim_WS_Chk
+    out 2:This is a test.
+    in 3:Concat_Single_Element
+    out 3:Hi
     --  END LAB IO BLOCK
 
-    with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
     package Str_Concat is
 
-       function Concat (S1, S2, S3 : String) return Unbounded_String;
+       type Unbounded_Strings is array (Positive range <>) of Unbounded_String;
 
-       function Concat (S1, S2, S3 : Unbounded_String) return String;
+       function Concat (USA            : Unbounded_Strings;
+                        Trim_Str       : Boolean;
+                        Add_Whitespace : Boolean) return Unbounded_String;
+
+       function Concat (USA            : Unbounded_Strings;
+                        Trim_Str       : Boolean;
+                        Add_Whitespace : Boolean) return String;
 
     end Str_Concat;
 
+    with Ada.Strings; use Ada.Strings;
+
     package body Str_Concat is
 
-       function Concat (S1, S2, S3 : String) return Unbounded_String is
+       function Concat (USA            : Unbounded_Strings;
+                        Trim_Str       : Boolean;
+                        Add_Whitespace : Boolean) return Unbounded_String is
        begin
-          null;
+          return "";
        end Concat;
 
-       function Concat (S1, S2, S3 : Unbounded_String) return String is
+       function Concat (USA            : Unbounded_Strings;
+                        Trim_Str       : Boolean;
+                        Add_Whitespace : Boolean) return String is
        begin
-          null;
+          return "";
        end Concat;
 
     end Str_Concat;
@@ -77,25 +112,48 @@ Concatenation
 
     procedure Main is
        type Test_Case_Index is
-         (Unbounded_String_Chk,
-          String_Chk);
+         (Unbounded_Concat_No_Trim_No_WS_Chk,
+          Unbounded_Concat_Trim_No_WS_Chk,
+          String_Concat_Trim_WS_Chk,
+          Concat_Single_Element);
 
        procedure Check (TC : Test_Case_Index) is
        begin
           case TC is
-             when Unbounded_String_Chk =>
+             when Unbounded_Concat_No_Trim_No_WS_Chk =>
                 declare
-                   S : constant Unbounded_String := Concat ("Hello", " World", "!");
+                   S : constant Unbounded_Strings := (
+                      To_Unbounded_String ("Hello"),
+                      To_Unbounded_String (" World"),
+                      To_Unbounded_String ("!"));
                 begin
-                   Put_Line (To_String (S));
+                   Put_Line (To_String (Concat (S, False, False)));
                 end;
-             when String_Chk =>
+             when Unbounded_Concat_Trim_No_WS_Chk =>
                 declare
-                   S : constant String := Concat (To_Unbounded_String ("This"),
-                                                  To_Unbounded_String (" is a "),
-                                                  To_Unbounded_String ("test."));
+                   S : constant Unbounded_Strings := (
+                      To_Unbounded_String (" This "),
+                      To_Unbounded_String (" _is_ "),
+                      To_Unbounded_String ("  a   "),
+                      To_Unbounded_String (" _check "));
                 begin
-                   Put_Line (S);
+                   Put_Line (To_String (Concat (S, True, False)));
+                end;
+             when String_Concat_Trim_WS_Chk =>
+                declare
+                   S : constant Unbounded_Strings := (
+                       To_Unbounded_String ("  This  "),
+                       To_Unbounded_String ("  is a  "),
+                       To_Unbounded_String ("  test.  "));
+                begin
+                   Put_Line (Concat (S, True, True));
+                end;
+             when Concat_Single_Element =>
+                declare
+                   S : constant Unbounded_Strings := (
+                       1 => To_Unbounded_String ("  Hi "));
+                begin
+                   Put_Line (Concat (S, True, True));
                 end;
           end case;
        end Check;
