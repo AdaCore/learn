@@ -118,7 +118,7 @@ List of events
     #. The :ada:`Event_Item` type (from the :ada:`Events` package) contains the
        *description of an event*.
 
-       #. This description can be stored as an unbounded string.
+       #. This description should be stored in an access-to-string type.
 
     #. The :ada:`Event_Items` type stores a list of events.
 
@@ -197,7 +197,7 @@ List of events
                     - Item #2
                     - Item #3
 
-.. code:: ada lab=Solutions.Standard_Library.List_of_Events
+.. code:: ada lab=Solutions.Standard_Library_Dates_Times.List_of_Events
 
     --  START LAB IO BLOCK
     in 0:Event_List_Chk
