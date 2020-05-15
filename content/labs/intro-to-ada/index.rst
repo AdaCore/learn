@@ -27,8 +27,8 @@ Labs: Introduction to Ada
 
     These labs contain exercises for the Introduction to Ada course.
 
-    This document was written by Gustavo A. Hoffmann, with contributions and
-    review pending.
+    This document was written by Gustavo A. Hoffmann and reviewed by Michael
+    Frank.
 
 .. only:: builder_html
 
