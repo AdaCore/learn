@@ -11,7 +11,8 @@ Let's Build a Stack
 
 .. include:: ../../courses/global.txt
 
-In this lab we will build a stack data structure and use the SPARK provers to find the errors in the below implementation.
+In this lab we will build a stack data structure and use the SPARK provers to
+find the errors in the below implementation.
 
 Background
 ----------
@@ -25,8 +26,13 @@ A stack is like a pile of dishes...
     :scale: 55 %
 
 #. The pile starts out empty.
-#. You add ( :ada:`push` ) a new plate ( :ada:`data` ) to the stack by placing it on the top of the pile.
-#. To get plates ( :ada:`data` ) out, you take the one off the top of the pile ( :ada:`pop` ).
+
+#. You add ( :ada:`push` ) a new plate ( :ada:`data` ) to the stack by placing
+   it on the top of the pile.
+
+#. To get plates ( :ada:`data` ) out, you take the one off the top of the pile
+   ( :ada:`pop` ).
+
 #. Out stack has a maximum height ( :ada:`size` ) of 9 dishes
 
 
@@ -51,11 +57,13 @@ Here's what should happen if we pushed the string :ada:`MLH` onto the stack.
     .. image:: push_5.png
         :scale: 50 %
 
-The list starts out empty. Each time we push a character onto the stack, :ada:`Last` increments by :ada:`1`.
+The list starts out empty. Each time we push a character onto the stack,
+:ada:`Last` increments by :ada:`1`.
 
 **Popping items from the stack**
 
-Here's what should happen if we popped :ada:`2` characters off our stack & then clear it.
+Here's what should happen if we popped :ada:`2` characters off our stack & then
+clear it.
 
 .. container:: img_row
 
@@ -71,7 +79,8 @@ Here's what should happen if we popped :ada:`2` characters off our stack & then 
     .. image:: pop_4.png
         :scale: 50 %
 
-Note that :ada:`pop` and :ada:`clear` don't unset the :ada:`Storage` array's elements, they just change the value of :ada:`Last`.
+Note that :ada:`pop` and :ada:`clear` don't unset the :ada:`Storage` array's
+elements, they just change the value of :ada:`Last`.
 
 Input Format
 ------------
@@ -82,7 +91,9 @@ Constraints
 -----------
 
 1 <= N <= 1000
-C is any character. Characters d and p will be special characters corresponding to the below commands:
+
+C is any character. Characters d and p will be special characters corresponding
+to the below commands:
 
 p => Pops a character off the stack
 
@@ -91,7 +102,8 @@ d => Prints the current characters in the stack
 Output Format
 -------------
 
-If the stack currently has the characters "M", "L", and "H" then the program should print the stack like this:
+If the stack currently has the characters "M", "L", and "H" then the program
+should print the stack like this:
 
 [M, L, H]
 
