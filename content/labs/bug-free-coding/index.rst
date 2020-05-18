@@ -25,8 +25,7 @@ Bug Free Coding with SPARK Ada
 
 .. container:: content-description
 
-    Workshop project for Major League Hacking course: Learn to write
-    maintainable bug-free code with SPARK Ada.
+    Workshop project: Learn to write maintainable bug-free code with SPARK Ada.
 
 .. only:: builder_html
 
@@ -34,7 +33,7 @@ Bug Free Coding with SPARK Ada
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/labs/MLH.pdf">
+            <a class="pdf_download_button" href="/pdf_books/labs/bug-free-coding.pdf">
                 Download PDF
             </a>
 
