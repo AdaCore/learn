@@ -3,16 +3,7 @@ Strongly typed language
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
-.. include:: <isopub.txt>
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../../courses/global.txt
 
 Colors
 ------
