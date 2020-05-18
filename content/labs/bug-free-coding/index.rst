@@ -27,6 +27,8 @@ Bug Free Coding with SPARK Ada
 
     Workshop project: Learn to write maintainable bug-free code with SPARK Ada.
 
+    This document was written by Robert Tice.
+
 .. only:: builder_html
 
     .. container:: pdf-download
