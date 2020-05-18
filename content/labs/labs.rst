@@ -11,4 +11,4 @@ Labs
    :maxdepth: 2
 
    Introduction to Ada <intro-to-ada/index>
-   Major League Hacking <MLH/index>
+   Bug Free Coding <bug-free-coding/index>
