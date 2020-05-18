@@ -110,6 +110,10 @@ Sample Output
 
 --------------
 
+.. only:: builder_html
+
+    Note that, in order to prove the code below, you need to click on the
+    *Prove* button.
 
 .. code:: ada lab=MLH_Stack prove_button
 
