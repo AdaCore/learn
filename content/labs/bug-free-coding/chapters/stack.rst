@@ -9,8 +9,7 @@
 Let's Build a Stack
 =====================
 
-.. role:: ada(code)
-   :language: ada
+.. include:: ../../courses/global.txt
 
 In this lab we will build a stack data structure and use the SPARK provers to find the errors in the below implementation.
 
