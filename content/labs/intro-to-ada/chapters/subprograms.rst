@@ -3,14 +3,7 @@ Subprograms
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../../courses/global.txt
 
 Subtract procedure
 -------------------

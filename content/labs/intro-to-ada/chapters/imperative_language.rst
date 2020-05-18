@@ -3,14 +3,7 @@ Imperative language
 
 :code-config:`reset_accumulator=True;accumulate_code=False`
 
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
+.. include:: ../../../courses/global.txt
 
 For the exercises below (except for the first one), don't worry about the
 details of the :ada:`Main` procedure. You should just focus on implementing the
