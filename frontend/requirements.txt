@@ -1,4 +1,4 @@
--e git+http://github.com/gusthoff/pygments/#egg=pygments
+git+http://github.com/pygments/pygments/#egg=pygments
 Sphinx==2.2.1
 ipython==5.7.0
 sphinx_rtd_theme
