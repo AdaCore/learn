@@ -50,5 +50,5 @@ Introduction to GNAT Toolchain
 
     GNAT Community <chapters/gnat_community>
     GPRbuild <chapters/gprbuild>
-    GNAT Programming Studio (GPS) <chapters/gps>
+    GNAT Studio <chapters/gnat_studio>
     GNAT Tools <chapters/gnat_tools>
