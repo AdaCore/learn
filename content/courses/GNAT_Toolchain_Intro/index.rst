@@ -28,8 +28,7 @@ Introduction to GNAT Toolchain
     This course presents an introduction to the GNAT toolchain, which is
     included in the GNAT Community 2020 edition. The course includes first steps
     to get started with the toolchain and some details on the project manager
-    (GPRbuild) and the integrated development environment
-    (GNAT Programming Studio).
+    (GPRbuild) and the integrated development environment (GNAT Studio).
 
     This document was written by Gustavo A. Hoffmann, with contributions and
     review from Richard Kenner and Bob Duff.

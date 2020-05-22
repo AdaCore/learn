@@ -32,7 +32,7 @@ In order to clean the project, you can use :program:`gprclean`:
 Project files
 -------------
 
-You can create project files using :program:`GPS`, which presents many
+You can create project files using :program:`GNAT Studio`, which presents many
 options on its graphical interface. However, you can also edit project
 files manually as a normal text file in an editor, since its syntax is
 human readable. In fact, project files use a syntax similar to the one

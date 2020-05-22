@@ -75,15 +75,15 @@ aren't in the directory tree:
     gprbuild -p -P project.gpr
 
 Ada source-code are stored in *.ads* and *.adb* files. To view the
-content of these files, you can use the GNAT Programming Studio
-(:program:`GPS`). To open :program:`GPS`, double-click on the *.gpr*
-project file or invoke :program:`GPS` on the command line:
+content of these files, you can use :program:`GNAT Studio`. To open
+:program:`GNAT Studio`, double-click on the *.gpr*
+project file or invoke :program:`GNAT Studio` on the command line:
 
 .. code-block:: sh
 
     gps -P project.gpr
 
-To compile your project using :program:`GPS`, use the top-level menu to
+To compile your project using :program:`GNAT Studio`, use the top-level menu to
 invoke ``Build`` |srarr| ``Project`` |srarr| ``main.adb`` (or press the
 keyboard shortcut ``F4``). To run the main program, click on
 ``Build`` |srarr| ``Run`` |srarr| ``main`` (or press the keyboard shortcut
