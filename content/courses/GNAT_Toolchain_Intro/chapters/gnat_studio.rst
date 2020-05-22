@@ -71,14 +71,14 @@ Building
 As soon as you've created a project file, you can use it to build an
 application. These are the required steps:
 
-- Click on ``Project`` |srarr| ``Build`` |srarr| ``Build All``
+- Click on ``Build`` |srarr| ``Project`` |srarr| ``Build All``
 
     - You can also click on this icon:
 
 .. image:: gnat_windows_build_opt.png
 
 - Alternatively, you can click on
-  ``Project`` |srarr| ``Build`` |srarr| ``Build & Run`` |srarr|
+  ``Build`` |srarr| ``Project`` |srarr| ``Build & Run`` |srarr|
   ``<name of your main application>``
 
     - You can also click on this icon:
@@ -138,7 +138,7 @@ Debugging the application
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can now build and debug the application by clicking on
-``Project`` |srarr| ``Build`` |srarr| ``Build & Debug`` |srarr|
+``Build`` |srarr| ``Project`` |srarr| ``Build & Debug`` |srarr|
 ``<name of your main application>``.
 
 You can then click on ``Debug`` |srarr| ``Run...`` to open a window that
