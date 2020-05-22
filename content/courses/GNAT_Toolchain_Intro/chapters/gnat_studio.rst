@@ -47,8 +47,8 @@ the steps:
       projects) isn't already opened, click on ``File`` |srarr|
       ``New Project...`` to open it.
 
-    - You should see a window with this title:
-      ``Create Project from Template``
+    - After clicking on ``Create new project``, you should see a window with
+      this title: ``Create Project from Template``.
 
 - Select one of the options from the list and click on ``Next``.
 
