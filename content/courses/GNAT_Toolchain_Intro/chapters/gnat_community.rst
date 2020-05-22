@@ -24,7 +24,7 @@ These are the basics steps to install GNAT Community on all platforms:
 
 On Windows platforms, continue with the following steps:
 
-    - Add ``C:\GNAT\2019\bin`` to your ``Path`` environment variable.
+    - Add ``C:\GNAT\2020\bin`` to your ``Path`` environment variable.
 
         - The environment variables can be found in the
           ``System Properties`` window of the ``Control Panel``.
@@ -39,13 +39,13 @@ On Linux platforms, perform the following steps:
 
     - Select the directory where you want to install the toolchain.
 
-        - For example: ``/home/me/GNAT/2019``
+        - For example: ``/home/me/GNAT/2020``
 
     - Add the path to the ``bin`` directory (within the toolchain
       directory) as the first directory in your ``PATH`` environment
       variable.
 
-        - For example: ``/home/me/GNAT/2019/bin``.
+        - For example: ``/home/me/GNAT/2020/bin``.
 
 Basic commands
 --------------
