@@ -507,9 +507,7 @@ Renaming also allows us to introduce default expressions that were not available
 in the original declaration. For example, we may specify :ada:`"Hello World!"`
 as the default for the :ada:`String` parameter of the :ada:`Show` procedure:
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
-.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
+.. code-block:: ada
 
     with A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
 
