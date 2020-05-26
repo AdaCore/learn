@@ -434,7 +434,9 @@ mutually recursive, as in the example below:
 Renaming
 --------
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=True`
+:code-config:`run_button=False;prove_button=False`
+
+:code-config:`reset_accumulator=True;accumulate_code=True`
 
 Subprograms can be renamed by using the :ada:`renames` keyword and declaring a
 new name for a subprogram:
@@ -483,6 +485,8 @@ Note that the original name
 (:ada:`A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed`) is still visible
 after the declaration of the :ada:`Show` procedure.
 
+:code-config:`reset_accumulator=True;accumulate_code=False`
+
 We may also rename subprograms from the standard library. For example, we may
 rename :ada:`Integer'Image` to :ada:`Img`:
 
@@ -503,7 +507,7 @@ Renaming also allows us to introduce default expressions that were not available
 in the original declaration. For example, we may specify :ada:`"Hello World!"`
 as the default for the :ada:`String` parameter of the :ada:`Show` procedure:
 
-.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
+.. code-block:: ada
 
     with A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
 
