@@ -981,9 +981,9 @@ operations and its associated operator:
 +-----------------------+--------------------------------+
 | Set Operation         | Operator                       |
 +=======================+================================+
-| Union                 | :ada:`and`                     |
+| Union                 | :ada:`or`                      |
 +-----------------------+--------------------------------+
-| Intersection          | :ada:`or`                      |
+| Intersection          | :ada:`and`                     |
 +-----------------------+--------------------------------+
 | Difference            | :ada:`-`                       |
 +-----------------------+--------------------------------+
@@ -1055,11 +1055,11 @@ The following example makes use of these operators:
        end if;
 
        S3 := S1 and S2;
-       Show_Op (S3, "Union");
+       Show_Op (S3, "Intersection");
        Show_Elements (S3);
 
        S3 := S1 or S2;
-       Show_Op (S3, "Intersection");
+       Show_Op (S3, "Union");
        Show_Elements (S3);
 
        S3 := S1 - S2;
