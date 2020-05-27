@@ -231,7 +231,7 @@ discussing tasking. Let's look at an example of benchmarking:
 
        procedure Computational_Intensive_App is
        begin
-          delay 0.5;
+          delay 5.0;
        end Computational_Intensive_App;
 
        Start_Time, Stop_Time : Time;
@@ -270,7 +270,7 @@ to measure CPU time:
 
        procedure Computational_Intensive_App is
        begin
-          delay 0.5;
+          delay 5.0;
        end Computational_Intensive_App;
 
        Start_Time, Stop_Time : CPU_Time;
