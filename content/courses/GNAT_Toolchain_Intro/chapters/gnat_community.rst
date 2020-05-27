@@ -24,7 +24,7 @@ These are the basics steps to install GNAT Community on all platforms:
 
 On Windows platforms, continue with the following steps:
 
-    - Add ``C:\GNAT\2019\bin`` to your ``Path`` environment variable.
+    - Add ``C:\GNAT\2020\bin`` to your ``Path`` environment variable.
 
         - The environment variables can be found in the
           ``System Properties`` window of the ``Control Panel``.
@@ -39,13 +39,13 @@ On Linux platforms, perform the following steps:
 
     - Select the directory where you want to install the toolchain.
 
-        - For example: ``/home/me/GNAT/2019``
+        - For example: ``/home/me/GNAT/2020``
 
     - Add the path to the ``bin`` directory (within the toolchain
       directory) as the first directory in your ``PATH`` environment
       variable.
 
-        - For example: ``/home/me/GNAT/2019/bin``.
+        - For example: ``/home/me/GNAT/2020/bin``.
 
 Basic commands
 --------------
@@ -75,15 +75,15 @@ aren't in the directory tree:
     gprbuild -p -P project.gpr
 
 Ada source-code are stored in *.ads* and *.adb* files. To view the
-content of these files, you can use the GNAT Programming Studio
-(:program:`GPS`). To open :program:`GPS`, double-click on the *.gpr*
-project file or invoke :program:`GPS` on the command line:
+content of these files, you can use :program:`GNAT Studio`. To open
+:program:`GNAT Studio`, double-click on the *.gpr*
+project file or invoke :program:`GNAT Studio` on the command line:
 
 .. code-block:: sh
 
     gps -P project.gpr
 
-To compile your project using :program:`GPS`, use the top-level menu to
+To compile your project using :program:`GNAT Studio`, use the top-level menu to
 invoke ``Build`` |srarr| ``Project`` |srarr| ``main.adb`` (or press the
 keyboard shortcut ``F4``). To run the main program, click on
 ``Build`` |srarr| ``Run`` |srarr| ``main`` (or press the keyboard shortcut

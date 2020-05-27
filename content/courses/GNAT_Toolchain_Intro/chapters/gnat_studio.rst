@@ -1,45 +1,45 @@
-GNAT Programming Studio
-=======================
+GNAT Studio
+===========
 
 .. include:: ../../global.txt
 
-This chapter presents an introduction to the GNAT Programming Studio (GPS),
-which provides an IDE to develop applications in Ada. For a detailed
-overview, please refer to the
-`GPS tutorial <http://docs.adacore.com/live/wave/gps/html/gps_tutorial>`_.
+This chapter presents an introduction to the GNAT Studio, which provides an IDE
+to develop applications in Ada. For a detailed overview, please refer to the
+`GNAT Studio tutorial <http://docs.adacore.com/live/wave/gps/html/gps_tutorial>`_.
 Also, you can refer to the
-`GPS product page <https://www.adacore.com/gnatpro/toolsuite/gps>`_ for
+`GNAT Studio product page <https://www.adacore.com/gnatpro/toolsuite/gps>`_ for
 some introductory videos.
 
 In this chapter, all indications using "|srarr|" refer to options from the
-GPS menu that you can click in order to execute commands.
+GNAT Studio menu that you can click in order to execute commands.
 
 
 Start-up
 --------
 
-The first step is to start-up the GNAT Programming Studio. The actual step
+The first step is to start-up the GNAT Studio. The actual step
 depends on your platform.
 
 Windows
 ~~~~~~~
 
-- You may find an icon (shortcut to :program:`GPS`) on your desktop.
+- You may find an icon (shortcut to :program:`GNAT Studio`) on your desktop.
 
-- Otherwise, start :program:`GPS` by typing ``gps`` on the command prompt.
+- Otherwise, start :program:`GNAT Studio` by typing ``gnatstudio`` on the
+  command prompt.
 
 
 Linux
 ~~~~~
 
-- Start :program:`GPS` by typing ``gps`` on a shell.
+- Start :program:`GNAT Studio` by typing ``gnatstudio`` on a shell.
 
 
 Creating projects
 -----------------
 
-After starting-up :program:`GPS`, you can create a project. These are the
-steps:
+After starting-up :program:`GNAT Studio`, you can create a project. These are
+the steps:
 
 - Click on ``Create new project`` in the welcome window
 
@@ -47,8 +47,8 @@ steps:
       projects) isn't already opened, click on ``File`` |srarr|
       ``New Project...`` to open it.
 
-    - You should see a window with this title:
-      ``Create Project from Template``
+    - After clicking on ``Create new project``, you should see a window with
+      this title: ``Create Project from Template``.
 
 - Select one of the options from the list and click on ``Next``.
 
@@ -71,14 +71,14 @@ Building
 As soon as you've created a project file, you can use it to build an
 application. These are the required steps:
 
-- Click on ``Project`` |srarr| ``Build`` |srarr| ``Build All``
+- Click on ``Build`` |srarr| ``Project`` |srarr| ``Build All``
 
     - You can also click on this icon:
 
 .. image:: gnat_windows_build_opt.png
 
 - Alternatively, you can click on
-  ``Project`` |srarr| ``Build`` |srarr| ``Build & Run`` |srarr|
+  ``Build`` |srarr| ``Project`` |srarr| ``Build & Run`` |srarr|
   ``<name of your main application>``
 
     - You can also click on this icon:
@@ -107,7 +107,7 @@ manually adding a debug version into your project, as described in the
 previous chapter (see :doc:`gprbuild`).
 
 Alternatively, you can change the project properties directly in
-:program:`GPS`. In order to do that, click on ``Edit`` |srarr|
+:program:`GNAT Studio`. In order to do that, click on ``Edit`` |srarr|
 ``Project Properties...``, which opens the following window:
 
 .. image:: gnat_windows_project_debug_opt.png
@@ -138,7 +138,7 @@ Debugging the application
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can now build and debug the application by clicking on
-``Project`` |srarr| ``Build`` |srarr| ``Build & Debug`` |srarr|
+``Build`` |srarr| ``Project`` |srarr| ``Build & Debug`` |srarr|
 ``<name of your main application>``.
 
 You can then click on ``Debug`` |srarr| ``Run...`` to open a window that
