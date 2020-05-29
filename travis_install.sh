@@ -6,8 +6,8 @@ pip install -q -r frontend/requirements.txt
 set -v
 set -e
 
-installer_hash=0cd3e2a668332613b522d9612ffa27ef3eb0815b
-installer_name=gnat-community-2019-20190517-x86_64-linux-bin
+installer_hash=4d99b7b2f212c8efdab2ba8ede474bb9fa15888d
+installer_name=gnat-2020-20200429-x86_64-linux-bin
 
 # Create tools directory
 if ! test -d $TOOLS_DIR
