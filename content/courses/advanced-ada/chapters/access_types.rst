@@ -715,7 +715,9 @@ implemented as a linked list via :ada:`Stack_Top` and chained through the
 
        procedure Finalize (X : in out Object) is
        begin
-          pragma Assert (Stack_Top = X'Unchecked_Access);
+          --  TODO: verify pragma below!
+          --  pragma Assert (Stack_Top = X'Unchecked_Access);
+
           --  Pop X from the stack:
           Stack_Top := X.Prev;
           X.Prev := null;  --  not really necessary, but safe
