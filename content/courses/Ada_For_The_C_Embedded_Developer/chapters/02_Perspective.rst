@@ -44,10 +44,59 @@ course.
 The GNAT Toolchain for Embedded Targets
 -----------------------------------------
 
-.. todo::
+When we're discussing embedded programming, our target device is often
+different from the host, which is the device we're using to actually write and
+build an application. In this case, we're talking about compilation cross
+platforms.
 
-    AI - Rob: complete this section (explain run-time differences, how to
-    compile, the concept of BSP, etc)
+The GNAT toolchain supports cross platform compilation for various
+target devices. This section provides a short introduction to the topic. For
+more details, please refer to the
+`GNAT User’s Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx.html>`_
+
+GNAT supports two types of cross platforms:
+
+- **cross targets**, where the target device has an embedded operating system.
+
+    - ARM-Linux, which is commonly found in a Raspberry-Pi, is a prominent
+      example.
+
+- **bareboard targets**, where the run-times do not depend on an operating
+  system.
+
+    - In this case, the application communicates directly with the device's
+      processor.
+
+For each platform, a set of run-time libraries is available. Run-time libraries
+implement a subset of the Ada language for different use cases, and they're
+different for each target platform. They may be selected via an attribute in
+the project's GPR project file or as a command-line switch to
+:program:`GPRbuild`.
+
+Run-time libraries consists of:
+
+#. Files that are dependent on the target board.
+
+    - These files are responsible for configuring and interacting with the
+      hardware.
+
+    - They are known as Board Support Package |mdash| commonly refer as *BSP*.
+
+#. Code that is target-independent.
+
+    - This code implements language-defined functionality.
+
+The bareboard run-time libraries are provided as customized run-times that are
+configured to target a very specific micro-controller or processor. Therefore,
+for different micro-controllers and processors, the run-time libraries need to
+be ported to your target.
+
+For more details on the topic, please refer to the following chapters of the
+`GNAT User’s Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx.html>`_:
+
+- `Bareboard Topics <http://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx/bareboard_topics.html>`_
+
+- `Customized Run-Time Libraries <http://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx/customized_run-time_libraries.html>`_
 
 Hello World in Ada
 --------------------
