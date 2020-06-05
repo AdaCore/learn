@@ -1180,9 +1180,65 @@ separate representation clause for it like:
 
 Note that however, unlike C, values for enumerations in Ada have to be unique.
 
-.. todo::
+Unsigned And Modular Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Add subsection on modular vs. unsigned types
+Unsigned integer numbers are quite common in embedded applications. In C, you
+can use them by declaring :c:`unsigned int` variables. In Ada, you can use
+:ada:`Natural` variables, which is a subtype of :ada:`Integer`. For example:
+
+[C]
+
+.. code-block:: c
+
+    unsigned int x = 42;
+
+This corresponding declaration in Ada is:
+
+[Ada]
+
+.. code-block:: ada
+
+    X : Natural := 42;
+
+There is, however, a difference in behavior for the variables we just declared,
+which occurs in case of overflow. Let's consider this C example:
+
+[C]
+
+.. code-block:: c
+
+    unsigned int x = UINT_MAX + 1;
+    /* Now: x == 0 */
+
+The corresponding code in Ada raises an exception:
+
+[Ada]
+
+.. code-block:: ada
+
+    X : Natural := Natural'Last + 1;
+    --  Overflow: exception is raised!
+
+While the C uses modulo arithmetic for unsigned integer, Ada doesn't use it for
+the :ada:`Natural` subtype. Ada does, however, support modular types via type
+defintions using the :ada:`mod` keyword. In this example, we declare a 32-bit
+modular type:
+
+[Ada]
+
+.. code-block:: ada
+
+    type Unsigned_32 is mod 2**32;
+
+    X : Unsigned_32 := Unsigned_32'Last + 1;
+    --  Now: X = 0
+
+In this case, the behavior is the same as in the C declaration above.
+
+Modular types are useful for bitwise operations, which is a typical application
+for unsigned integers in C. In Ada, you can use operators such as :ada:`and`,
+:ada:`or`, :ada:`xor` and :ada:`not`.
 
 Type Ranges
 ~~~~~~~~~~~
