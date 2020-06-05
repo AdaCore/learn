@@ -104,6 +104,11 @@ if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
                          '**courses/advanced-ada/**',
                          '**courses/advanced-spark/**']
 
+else:
+    # When not building final site, `todo` and `todoList` produce output
+    todo_include_todos = True
+
+
 show_authors = True
 
 # The name of the Pygments (syntax highlighting) style to use.
@@ -259,12 +264,6 @@ texinfo_documents = [
 # -- Options for intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
-
-
-# -- Options for todo extension ----------------------------------------------
-
-# If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = False
 
 
 def setup(app):

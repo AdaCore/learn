@@ -27,7 +27,9 @@ is a variable or a constant). The aim is to classify objects by what you can
 accomplish with them (i.e., the operations that are permitted), and this way
 you can reason about the correctness of the objects' values.
 
-.. todo: expand/clarify
+.. todo::
+
+    Expand / clarify (on section: "what is a type?")
 
 Integers
 --------
