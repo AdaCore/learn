@@ -22,7 +22,7 @@ The GNAT Toolchain
 The toolchain used throughout this book is called GNAT, which is a suite of
 tools with a compiler based on the GCC environment. It can be obtained from
 AdaCore, either as part of a commercial contract with
-`GNAT Pro <https://www.adacore.com/gnatpro)>`_ or at no charge with the
+`GNAT Pro <https://www.adacore.com/gnatpro>`_ or at no charge with the
 `GNAT Community edition <https://www.adacore.com/community>`_. The information
 on this book  will be relevant no matter which edition you're using. Most
 examples will be runnable on the native Linux or Windows version for
