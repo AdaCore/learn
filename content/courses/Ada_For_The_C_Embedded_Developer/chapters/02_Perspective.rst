@@ -36,6 +36,11 @@ to GNAT, and sometimes to specific platforms supported by GNAT. We'll try to
 make the distinction between what is GNAT-specific and Ada generic as much as
 possible through this book.
 
+For an introduction to the GNAT Toolchain for the GNAT Community edition, you
+may refer to the
+:doc:`Introduction to GNAT Toolchain <courses/GNAT_Toolchain_Intro/index>`
+course.
+
 The GNAT Toolchain for Embedded Targets
 -----------------------------------------
 
