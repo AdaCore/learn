@@ -1184,8 +1184,27 @@ Unsigned And Modular Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Unsigned integer numbers are quite common in embedded applications. In C, you
-can use them by declaring :c:`unsigned int` variables. In Ada, you can use
-:ada:`Natural` variables, which is a subtype of :ada:`Integer`. For example:
+can use them by declaring :c:`unsigned int` variables. In Ada, you have two
+options:
+
+- declare custom *unsigned* range types;
+
+    - In addition, you can declare custom range *subtypes* or use existing
+      subtypes such as :ada:`Natural`.
+
+- declare custom modular types.
+
+The following table presents the main features of each type. We discuss these
+types right after.
+
++-------------------+-----------------------+----------------------+---------------+
+| Feature           | [C] :c:`unsigned int` | [Ada] Unsigned range | [Ada] Modular |
++===================+=======================+======================+===============+
+| Excludes negative | |check|               | |check|              | |check|       |
+| value             |                       |                      |               |
++-------------------+-----------------------+----------------------+---------------+
+| Wraparound        | |check|               |                      | |check|       |
++-------------------+-----------------------+----------------------+---------------+
 
 [C]
 
