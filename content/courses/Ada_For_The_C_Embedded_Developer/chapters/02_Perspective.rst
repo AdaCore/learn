@@ -1206,6 +1206,21 @@ types right after.
 | Wraparound        | |check|               |                      | |check|       |
 +-------------------+-----------------------+----------------------+---------------+
 
+When declaring custom range types in Ada, you may use the full range in the
+same way as in C. For example, this is the declaration of a 32-bit unsigned
+integer type and the :ada:`X` variable in Ada:
+
+[Ada]
+
+.. code-block:: ada
+
+    type Unsigned_Int_32 is range 0 .. 2 ** 32 - 1;
+
+    X : Unsigned_Int_32 := 42;
+
+In C, when :c:`unsigned int` has a size of 32 bits, this corresponds to the
+following declaration:
+
 [C]
 
 .. code-block:: c
