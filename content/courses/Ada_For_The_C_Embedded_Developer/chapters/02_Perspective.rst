@@ -1227,16 +1227,42 @@ following declaration:
 
     unsigned int x = 42;
 
-This corresponding declaration in Ada is:
+Another strategy is to declare subtypes for existing signed types and specify
+just the range that excludes negative numbers. For example, let's declare a
+custom 32-bit signed type and its unsigned subtype:
 
 [Ada]
 
 .. code-block:: ada
 
-    X : Natural := 42;
+    type Signed_Int_32 is range -2 ** 31 .. 2 ** 31 - 1;
 
-There is, however, a difference in behavior for the variables we just declared,
-which occurs in case of overflow. Let's consider this C example:
+    subtype Unsigned_Int_31 is Signed_Int_32 range 0 .. Signed_Int_32'Last;
+    --  Equivalent to:
+    --  subtype Unsigned_Int_31 is Signed_Int_32 range 0 .. 2 ** 31 - 1;
+
+    X : Unsigned_Int_31 := 42;
+
+In this case, we're just skipping the sign bit of the :ada:`Signed_Int_32`
+type. In other words, while :ada:`Signed_Int_32` has a size of 32 bits,
+:ada:`Unsigned_Int_31` has a range of 31 bits, even if the base type has
+32 bits.
+
+Note that the declaration above is actually similar to the existing
+:ada:`Natural` subtype. Ada provides the following standard subtypes:
+
+.. code-block:: ada
+
+    subtype Natural  is Integer range 0..Integer'Last;
+    subtype Positive is Integer range 1..Integer'Last;
+
+Since they're standard subtypes, you can declare variables of those subtypes
+directly in your implementation, in the same as you can declare :ada:`Integer`
+variables.
+
+As indicated in the table above, however, there is a difference in behavior for
+the variables we just declared, which occurs in case of overflow. Let's
+consider this C example:
 
 [C]
 
