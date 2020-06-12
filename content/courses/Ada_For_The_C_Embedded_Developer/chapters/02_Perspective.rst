@@ -91,7 +91,17 @@ Run-time libraries consists of:
 The bareboard run-time libraries are provided as customized run-times that are
 configured to target a very specific micro-controller or processor. Therefore,
 for different micro-controllers and processors, the run-time libraries need to
-be ported to your target.
+be ported to your target. These are some examples of what needs to be ported:
+
+- startup code / scripts;
+
+- clock frequency initializations;
+
+- memory mapping / allocation;
+
+- interrupts and interrupt priorities;
+
+- register descriptions.
 
 For more details on the topic, please refer to the following chapters of the
 `GNAT User’s Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx.html>`_:
