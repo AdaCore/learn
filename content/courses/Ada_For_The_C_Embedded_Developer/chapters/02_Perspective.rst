@@ -1277,13 +1277,13 @@ The corresponding code in Ada raises an exception:
 
 .. code-block:: ada
 
-    X : Natural := Natural'Last + 1;
+    X : Unsigned_Int_32 := Unsigned_Int_32'Last + 1;
     --  Overflow: exception is raised!
 
 While the C uses modulo arithmetic for unsigned integer, Ada doesn't use it for
-the :ada:`Natural` subtype. Ada does, however, support modular types via type
-defintions using the :ada:`mod` keyword. In this example, we declare a 32-bit
-modular type:
+the :ada:`Unsigned_Int_32` type. Ada does, however, support modular types
+via type definitions using the :ada:`mod` keyword. In this example, we declare
+a 32-bit modular type:
 
 [Ada]
 
