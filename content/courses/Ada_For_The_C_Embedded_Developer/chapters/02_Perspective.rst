@@ -71,7 +71,9 @@ For each platform, a set of run-time libraries is available. Run-time libraries
 implement a subset of the Ada language for different use cases, and they're
 different for each target platform. They may be selected via an attribute in
 the project's GPR project file or as a command-line switch to
-:program:`GPRbuild`.
+:program:`GPRbuild`. Although the run-time libraries may vary from target to
+target, the user interface stays the same, providing portability for the
+application.
 
 Run-time libraries consists of:
 
