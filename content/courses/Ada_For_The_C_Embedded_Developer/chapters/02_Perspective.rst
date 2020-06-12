@@ -1298,7 +1298,9 @@ In this case, the behavior is the same as in the C declaration above.
 
 Modular types are useful for bitwise operations, which is a typical application
 for unsigned integers in C. In Ada, you can use operators such as :ada:`and`,
-:ada:`or`, :ada:`xor` and :ada:`not`.
+:ada:`or`, :ada:`xor` and :ada:`not`. You can also use typical bit-shifting
+operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
+:ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
 Type Ranges
 ~~~~~~~~~~~
