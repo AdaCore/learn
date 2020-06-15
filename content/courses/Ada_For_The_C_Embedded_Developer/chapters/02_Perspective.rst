@@ -1180,10 +1180,6 @@ separate representation clause for it like:
 
 Note that however, unlike C, values for enumerations in Ada have to be unique.
 
-.. todo::
-
-    Add subsection on modular vs. unsigned types
-
 Type Ranges
 ~~~~~~~~~~~
 
@@ -1268,6 +1264,128 @@ subtype is a type with optional additional constraints. For example:
 
 These declarations don't create new types, just new names for constrained
 ranges of their base types.
+
+Unsigned And Modular Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Unsigned integer numbers are quite common in embedded applications. In C, you
+can use them by declaring :c:`unsigned int` variables. In Ada, you have two
+options:
+
+- declare custom *unsigned* range types;
+
+    - In addition, you can declare custom range *subtypes* or use existing
+      subtypes such as :ada:`Natural`.
+
+- declare custom modular types.
+
+The following table presents the main features of each type. We discuss these
+types right after.
+
++-------------------+-----------------------+----------------------+---------------+
+| Feature           | [C] :c:`unsigned int` | [Ada] Unsigned range | [Ada] Modular |
++===================+=======================+======================+===============+
+| Excludes negative | |check|               | |check|              | |check|       |
+| value             |                       |                      |               |
++-------------------+-----------------------+----------------------+---------------+
+| Wraparound        | |check|               |                      | |check|       |
++-------------------+-----------------------+----------------------+---------------+
+
+When declaring custom range types in Ada, you may use the full range in the
+same way as in C. For example, this is the declaration of a 32-bit unsigned
+integer type and the :ada:`X` variable in Ada:
+
+[Ada]
+
+.. code-block:: ada
+
+    type Unsigned_Int_32 is range 0 .. 2 ** 32 - 1;
+
+    X : Unsigned_Int_32 := 42;
+
+In C, when :c:`unsigned int` has a size of 32 bits, this corresponds to the
+following declaration:
+
+[C]
+
+.. code-block:: c
+
+    unsigned int x = 42;
+
+Another strategy is to declare subtypes for existing signed types and specify
+just the range that excludes negative numbers. For example, let's declare a
+custom 32-bit signed type and its unsigned subtype:
+
+[Ada]
+
+.. code-block:: ada
+
+    type Signed_Int_32 is range -2 ** 31 .. 2 ** 31 - 1;
+
+    subtype Unsigned_Int_31 is Signed_Int_32 range 0 .. Signed_Int_32'Last;
+    --  Equivalent to:
+    --  subtype Unsigned_Int_31 is Signed_Int_32 range 0 .. 2 ** 31 - 1;
+
+    X : Unsigned_Int_31 := 42;
+
+In this case, we're just skipping the sign bit of the :ada:`Signed_Int_32`
+type. In other words, while :ada:`Signed_Int_32` has a size of 32 bits,
+:ada:`Unsigned_Int_31` has a range of 31 bits, even if the base type has
+32 bits.
+
+Note that the declaration above is actually similar to the existing
+:ada:`Natural` subtype. Ada provides the following standard subtypes:
+
+.. code-block:: ada
+
+    subtype Natural  is Integer range 0..Integer'Last;
+    subtype Positive is Integer range 1..Integer'Last;
+
+Since they're standard subtypes, you can declare variables of those subtypes
+directly in your implementation, in the same as you can declare :ada:`Integer`
+variables.
+
+As indicated in the table above, however, there is a difference in behavior for
+the variables we just declared, which occurs in case of overflow. Let's
+consider this C example:
+
+[C]
+
+.. code-block:: c
+
+    unsigned int x = UINT_MAX + 1;
+    /* Now: x == 0 */
+
+The corresponding code in Ada raises an exception:
+
+[Ada]
+
+.. code-block:: ada
+
+    X : Unsigned_Int_32 := Unsigned_Int_32'Last + 1;
+    --  Overflow: exception is raised!
+
+While the C uses modulo arithmetic for unsigned integer, Ada doesn't use it for
+the :ada:`Unsigned_Int_32` type. Ada does, however, support modular types
+via type definitions using the :ada:`mod` keyword. In this example, we declare
+a 32-bit modular type:
+
+[Ada]
+
+.. code-block:: ada
+
+    type Unsigned_32 is mod 2**32;
+
+    X : Unsigned_32 := Unsigned_32'Last + 1;
+    --  Now: X = 0
+
+In this case, the behavior is the same as in the C declaration above.
+
+Modular types are useful for bitwise operations, which is a typical application
+for unsigned integers in C. In Ada, you can use operators such as :ada:`and`,
+:ada:`or`, :ada:`xor` and :ada:`not`. You can also use typical bit-shifting
+operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
+:ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
 Attributes
 ~~~~~~~~~~
