@@ -1,0 +1,7 @@
+# Reclassify `.rst` files as Ada:
+*.rst linguist-language=Ada
+
+# Exclude frontend/backend and internal folders
+backend/*   linguist-vendored
+frontend/*  linguist-vendored
+internal/*  linguist-vendored
