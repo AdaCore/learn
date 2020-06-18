@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import {Area, OutputArea, LabContainer} from './areas';
 import {Button, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
@@ -18,7 +16,7 @@ enum DownloadType {
 /** The Widget class */
 export class Widget {
   private editors: Array<Editor> = [];
-  protected readonly container: JQuery;
+  protected readonly container: HTMLElement;
   private readonly name: string;
   private tabs: Tabs = new Tabs();
   protected outputArea: OutputArea = new OutputArea();
@@ -34,33 +32,37 @@ export class Widget {
 
   private shadowFiles: Array<Resource> = [];
 
-  protected buttonGroup: JQuery;
-  protected outputGroup: JQuery;
+  protected buttonGroup: HTMLElement;
+  protected outputGroup: HTMLElement;
 
   /**
    * Constructs the Widget
-   * @param {JQuery} container - the container for the widget
+   * @param {HTMLElement} container - the container for the widget
    * @param {string} server - the server address:port
    */
-  constructor(container: JQuery, server: string) {
+  constructor(container: HTMLElement, server: string) {
     const resources: Array<Resource> = [];
     this.server = server;
     this.container = container;
 
     // Read attributes from container object to initialize members
-    this.name = container.attr('name');
+    this.name = container.getAttribute('name');
 
-    for (const file of this.container.children('.file')) {
-      const a: Resource = {basename: $(file).attr('basename'),
-        contents: $(file).text()};
-      $(file).text('');
+    const files = this.container.getElementsByClassName('file');
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const a: Resource = {basename: file.getAttribute('basename'),
+        contents: file.textContent};
+      file.textContent = '';
       resources.push(a);
     }
 
-    for (const file of this.container.children('.shadow_file')) {
-      const a: Resource = {basename: $(file).attr('basename'),
-        contents: $(file).text()};
-      $(file).text('');
+    const shadowFiles = this.container.getElementsByClassName('shadow_file');
+    for (let i = 0; i < shadowFiles.length; i++) {
+      const file = shadowFiles[i];
+      const a: Resource = {basename: file.getAttribute('basename'),
+        contents: file.textContent};
+      file.textContent = '';
       this.shadowFiles.push(a);
     }
 
@@ -80,7 +82,7 @@ export class Widget {
 
     // Check which buttons are enabled on container and populate
     for (const mode in Strings.modeDictionary) {
-      if (this.container.attr(mode + '_button')) {
+      if (this.container.getAttribute(mode + '_button')) {
         this.addButton(mode);
       }
     }
@@ -102,13 +104,13 @@ export class Widget {
     const btn: Button = new Button([],
         Strings.modeDictionary[mode].tooltip,
         Strings.modeDictionary[mode].buttonText);
-    btn.registerEvent('click', async (event: JQuery.ClickEvent) => {
+    btn.registerEvent('click', async () => {
       if (this.buttonsDisabled) {
         return;
       }
       this.buttonsDisabled = true;
       try {
-        await this.buttonCB(event, mode);
+        await this.buttonCB(mode);
       } catch (error) {
         this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
         console.error('Error:', error);
@@ -143,11 +145,9 @@ export class Widget {
 
   /**
    * The main callback for the widget buttons
-   * @param {JQuery.ClickEvent} event - the event that triggered the CB
    * @param {string} mode - the mode of the button that triggered the event
    */
-  protected async buttonCB(event: JQuery.ClickEvent,
-      mode: string): Promise<void> {
+  protected async buttonCB(mode: string): Promise<void> {
     this.outputArea.reset();
 
     this.outputArea.add(['output_info', 'console_output'],
@@ -295,7 +295,7 @@ export class Widget {
               this.editors.map((e) => {
                 if (basename == e.getResource().basename) {
                   // Switch to the tab that contains the editor
-                  e.getTab().trigger('click');
+                  e.getTab().click();
 
                   // Jump to the corresponding line
                   e.gotoLine(row, col);
@@ -378,31 +378,29 @@ export class Widget {
 
   /**
    * Render the settings bar for the widget
-   * @return {JQuery} the rendered settings bar
+   * @return {HTMLElement} the rendered settings bar
    */
-  private renderSettingsBar(): JQuery {
-    const settingsBar = $('<div>')
-        .addClass('settings-bar');
+  private renderSettingsBar(): HTMLElement {
+    const settingsBar = document.createElement('div');
+    settingsBar.classList.add('settings-bar');
 
-    const dropdownContainer = $('<div>')
-        .addClass('dropdown-container')
-        .addClass('settingsbar-item')
-        .appendTo(settingsBar);
+    const dropdownContainer = document.createElement('div');
+    dropdownContainer.classList.add('dropdown-container', 'settingsbar-item');
+    settingsBar.appendChild(dropdownContainer);
 
-    $('<button>')
-        .addClass('dropdown-btn')
-        .append(
-            $('<i>').addClass('fas').addClass('fa-cog')
-        )
-        .appendTo(dropdownContainer);
+    const dropdownButton = document.createElement('button');
+    dropdownButton.classList.add('dropdown-btn');
+    dropdownButton.innerHTML = '<i class="fas fa-cog"></i>';
+    dropdownContainer.appendChild(dropdownButton);
 
-    const dropdownContent = $('<div>')
-        .addClass('dropdown-content')
-        .appendTo(dropdownContainer);
+    const dropdownContent = document.createElement('div');
+    dropdownContent.classList.add('dropdown-content');
+    dropdownContainer.appendChild(dropdownContent);
 
-    const tabSetting: CheckBox =
+    const tabSetting =
         new CheckBox(Strings.SETTINGS_TABBED_EDITOR_LABEL, dropdownContent);
-    tabSetting.getCheckBox().prop('checked', true).on('change', () => {
+    tabSetting.getCheckBox().checked = true;
+    tabSetting.getCheckBox().addEventListener('change', () => {
       if (tabSetting.checked()) {
         this.tabs.show(true);
       } else {
@@ -410,9 +408,10 @@ export class Widget {
       }
     });
 
-    const themeSetting: CheckBox =
+    const themeSetting =
         new CheckBox(Strings.SETTINGS_THEME_EDITOR_LABEL, dropdownContent);
-    themeSetting.getCheckBox().on('change', () => {
+
+    themeSetting.getCheckBox().addEventListener('change', () => {
       let theme = EditorTheme.Light;
       if (themeSetting.checked()) {
         theme = EditorTheme.Dark;
@@ -422,56 +421,47 @@ export class Widget {
       });
     });
 
-    $('<button>')
-        .attr('type', 'button')
-        .addClass('settingsbar-item')
-        .addClass('reset-btn')
-        .attr('title', Strings.RESET_TOOLTIP)
-        .append(
-            $('<i>').addClass('fas').addClass('fa-undo')
-        )
-        .appendTo(settingsBar)
-        .on('click', (event: JQuery.ClickEvent) => {
-          if (event.target.disabled) {
-            return;
-          }
-          if (window.confirm(Strings.RESET_CONFIRM_MSG)) {
-            this.resetEditors();
-          }
-        });
+    const resetButton = document.createElement('button');
+    resetButton.setAttribute('type', 'button');
+    resetButton.classList.add('settingsbar-item', 'reset-btn');
+    resetButton.setAttribute('title', Strings.RESET_TOOLTIP);
+    resetButton.innerHTML = '<i class="fas fa-undo"></i>';
+    settingsBar.appendChild(resetButton);
+    resetButton.addEventListener('click', () => {
+      if (window.confirm(Strings.RESET_CONFIRM_MSG)) {
+        this.resetEditors();
+      }
+    });
+
     if (this.dlType != DownloadType.None) {
-      $('<button>')
-          .attr('type', 'button')
-          .addClass('settingsbar-item')
-          .addClass('download-btn')
-          .attr('title', Strings.DOWNLOAD_TOOLTIP)
-          .append(
-              $('<i>').addClass('fas').addClass('fa-file-download')
-          )
-          .appendTo(settingsBar)
-          .on('click', async () => {
-            try {
-              const blobs = await this.downloadExample();
+      const dlButton = document.createElement('button');
+      dlButton.setAttribute('type', 'button');
+      dlButton.classList.add('settingsbar-item', 'download-btn');
+      dlButton.setAttribute('title', Strings.DOWNLOAD_TOOLTIP);
+      dlButton.innerHTML = '<i class="fas fa-file-download"></i>';
+      settingsBar.appendChild(dlButton);
+      dlButton.addEventListener('click', async () => {
+        try {
+          const blobs = await this.downloadExample();
 
-              for (const blob of blobs) {
-                const objURL: string = URL.createObjectURL(blob.blob);
+          for (const blob of blobs) {
+            const objURL: string = URL.createObjectURL(blob.blob);
 
-                const a = $('<a>')
-                    .attr('href', objURL)
-                    .attr('download', blob.filename)
-                    // .hide()
-                    .appendTo('body');
-                a[0].click();
-                a.remove();
+            const a = document.createElement('a');
+            a.setAttribute('href', objURL);
+            a.setAttribute('download', blob.filename);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
 
-                URL.revokeObjectURL(objURL);
-              }
-            } catch (error) {
-              this.outputArea.reset();
-              this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-              console.error('Error:', error);
-            }
-          });
+            URL.revokeObjectURL(objURL);
+          }
+        } catch (error) {
+          this.outputArea.reset();
+          this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+          console.error('Error:', error);
+        }
+      });
     }
 
     return settingsBar;
@@ -482,23 +472,24 @@ export class Widget {
    */
   public render(): void {
     this.tabs.render(this.container);
-    this.renderSettingsBar().appendTo(this.container);
-    const row = $('<div>')
-        .addClass('row output_row')
-        .appendTo(this.container);
+    this.container.appendChild(this.renderSettingsBar());
 
-    this.buttonGroup = $('<div>')
-        .addClass('col-md-3')
-        .appendTo(row);
+    const row = document.createElement('div');
+    row.classList.add('row', 'output_row');
+    this.container.appendChild(row);
+
+    this.buttonGroup = document.createElement('div');
+    this.buttonGroup.classList.add('col-md-3');
+    row.appendChild(this.buttonGroup);
 
     this.buttons.map((b) => {
-      b.render().appendTo(this.buttonGroup);
+      this.buttonGroup.appendChild(b.render());
     });
 
-    this.outputGroup = $('<div>')
-        .addClass('col-md-9')
-        .appendTo(row)
-        .append(this.outputArea.render());
+    this.outputGroup = document.createElement('div');
+    this.outputGroup.classList.add('col-md-9');
+    this.outputGroup.appendChild(this.outputArea.render());
+    row.appendChild(this.outputGroup);
   }
 }
 
@@ -511,10 +502,10 @@ export class LabWidget extends Widget {
 
   /**
    * Constructs the LabWidget
-   * @param {JQuery} container - the container for the widget
+   * @param {HTMLElement} container - the container for the widget
    * @param {string} server - the server address:port
    */
-  constructor(container: JQuery, server: string) {
+  constructor(container: HTMLElement, server: string) {
     super(container, server);
 
     this.addButton('submit');
@@ -524,14 +515,12 @@ export class LabWidget extends Widget {
 
   /**
    * The main callback for the widget buttons
-   * @param {JQuery.ClickEvent} event - the event that triggered the CB
    * @param {string} mode - the mode of the button that triggered the event
    */
-  protected async buttonCB(event: JQuery.ClickEvent,
-      mode: string): Promise<void> {
+  protected async buttonCB(mode: string): Promise<void> {
     this.labContainer.reset();
 
-    await super.buttonCB(event, mode);
+    await super.buttonCB(mode);
 
     this.labContainer.sort();
   }
@@ -581,6 +570,7 @@ export class LabWidget extends Widget {
    */
   public render(): void {
     super.render();
-    this.labContainer.render().appendTo(this.outputGroup);
+    const lc = this.labContainer.render();
+    this.outputGroup.appendChild(lc);
   }
 }

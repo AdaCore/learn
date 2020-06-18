@@ -28,14 +28,14 @@ LEARN.ADACORE.COM
 
     end Learn;
 
-.. container:: content-blocks
+-------------
 
-    .. toctree::
-       :maxdepth: 4
+.. toctree::
+    :maxdepth: 1
 
-       About <about>
-       Courses <courses/courses>
-       Labs <labs/labs>
+    About <about>
+    Courses <courses/courses>
+    Labs <labs/labs>
 
 
 -------------

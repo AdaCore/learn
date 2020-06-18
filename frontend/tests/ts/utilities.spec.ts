@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import 'mocha';
 
 // Import package under test
-import * as util from 'ts/utilities';
+import * as util from '../../src/ts/utilities';
 
 describe('isString', () => {
   it('should return true for a string and false for other', () => {

@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import * as ace from 'brace';
 import 'brace/mode/ada';
 import 'brace/mode/c_cpp';
@@ -19,19 +18,21 @@ enum EditorLanguage {
 
 /** Class representing an Editor **/
 export class Editor {
-  private readonly container: JQuery;
+  private readonly container: HTMLElement;
   private editor: ace.Editor;
   private readonly initialContents: string;
   private readonly basename: string;
-  private tab: JQuery;
+  private tab: HTMLElement;
 
   /**
    * Create an Editor
    * @param {Types.Resource} resource - The resource to load into the editor
    */
   constructor(resource: Types.Resource) {
-    this.container = $('<div>').addClass('editor-container');
-    this.editor = ace.edit(this.container[0]);
+    this.container = document.createElement('div');
+    this.container.classList.add('editor-container');
+
+    this.editor = ace.edit(this.container);
 
     // Set the mode
     if (resource.basename.match(/.ad[sb]$/)) {
@@ -115,9 +116,9 @@ export class Editor {
 
   /**
    * Render the editor
-   * @return {JQuery} The JQuery object holding the editor
+   * @return {HTMLElement} The HTMLElement object holding the editor
    */
-  public render(): JQuery {
+  public render(): HTMLElement {
     return this.container;
   }
 
@@ -131,17 +132,17 @@ export class Editor {
 
   /**
    * Store the tab holding this editor
-   * @param {JQuery} tab - The tab holding this editor
+   * @param {HTMLElement} tab - The tab holding this editor
    */
-  public setTab(tab: JQuery): void {
+  public setTab(tab: HTMLElement): void {
     this.tab = tab;
   }
 
   /**
    * Return the tab holding this editor
-   * @return {JQuery} The tab holding this editor
+   * @return {HTMLElement} The tab holding this editor
    */
-  public getTab(): JQuery {
+  public getTab(): HTMLElement {
     return this.tab;
   }
 

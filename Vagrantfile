@@ -30,7 +30,6 @@ $frontend = <<-SHELL
       fonts-open-sans \
       fonts-dejavu
 
-
   # Install learn deps
   python3 -m venv /vagrant/venv
   source /vagrant/venv/bin/activate
@@ -96,7 +95,6 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
   config.vm.define "web" do |web|
-
     web.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
 
     web.vm.synced_folder './frontend', '/vagrant/frontend'

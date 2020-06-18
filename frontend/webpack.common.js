@@ -1,6 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Chunks2JsonPlugin = require('chunks-2-json-webpack-plugin');
 
@@ -130,10 +129,6 @@ module.exports = function(env) {
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
         filename: 'style.[hash].css',
-      }),
-      new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery"
       }),
       new Chunks2JsonPlugin(),
     ]
