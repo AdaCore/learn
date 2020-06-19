@@ -1,6 +1,10 @@
 The C Developer's Perspective on Ada
 ======================================
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
+
 .. include:: ../../global.txt
 
 What we mean by Embedded Software
