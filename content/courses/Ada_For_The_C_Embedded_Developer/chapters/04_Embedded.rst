@@ -15,7 +15,7 @@ library.
 
 One typical example of high-level constructs that can be cumbersome for direct
 machine code generation is Ada source-code using tasking. In this case, linking
-to a low-level implementation of multitheading support |mdash| for example, an
+to a low-level implementation of multithreading support |mdash| for example, an
 implementation using POSIX threads |mdash| is more straightforward than trying
 to make the compiler generate all the machine code.
 
