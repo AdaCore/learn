@@ -51,6 +51,9 @@ When using configurable run-time library, the compiler checks whether the
 library supports certain features of the language. If a feature isn't
 supported, the compiler will give an error message.
 
+You can find further information about the run-time library on
+`this chapter of the GNAT User's Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx/the_gnat_configurable_run_time_facility.html>`_
+
 Low Level Programming
 ---------------------
 
