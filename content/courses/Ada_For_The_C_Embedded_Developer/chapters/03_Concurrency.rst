@@ -1,6 +1,10 @@
 Concurrency and Real-Time
 ============================
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
+
 .. include:: ../../global.txt
 
 Understanding the various options

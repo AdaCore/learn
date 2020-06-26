@@ -1,6 +1,10 @@
 Enhancing Verification with SPARK and Ada
 ============================================
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
+
 .. include:: ../../global.txt
 
 Dealing or not Dealing with Exceptions

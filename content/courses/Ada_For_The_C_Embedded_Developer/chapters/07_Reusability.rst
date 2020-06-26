@@ -1,6 +1,10 @@
 Handling Variability and Re-usability
 =======================================
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
+
 .. include:: ../../global.txt
 
 Understanding static and dynamic variability
