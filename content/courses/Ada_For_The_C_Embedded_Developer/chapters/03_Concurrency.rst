@@ -34,6 +34,8 @@ Florist for POSIX systems.
 Tasks
 -----
 
+:code-config:`accumulate_code=True`
+
 Ada offers a high level capability called a *task* which is essentially an
 independent thread of execution. In GNAT, these tasks are either mapped on the
 underlying OS threads, or using an dedicated kernel when not available.
@@ -42,21 +44,27 @@ The following example will display the 26 letters of the alphabet twice, using
 two concurrent tasks. Since there is no synchronization between the two threads
 of control in any of the examples, the output may be interspersed.
 
-.. code-block:: ada
+.. code:: ada run_button ada project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task;
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is -- implicitly called by the environment task
+       subtype A_To_Z is Character range 'A' .. 'Z';
+
        task My_Task;
 
        task body My_Task is
        begin
-          for I in 'A' .. 'Z' loop
-             Put_Line (I);
+          for I in A_To_Z'Range loop
+             Put (I);
           end loop;
+          New_Line;
        end My_Task;
     begin
-       for I in 'A' .. 'Z' loop
-          Put_Line (I);
+       for I in A_To_Z'Range loop
+          Put (I);
        end loop;
+       New_Line;
     end Main;
 
 Any number of Ada tasks may be declared in any declarative region. A task
@@ -77,19 +85,32 @@ the :ada:`'Z'` Character.  As with the earlier example, since there is no
 synchronization among the tasks, the output may be interspersed depending on
 the implementation task scheduling algorithm.
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task_Type
 
-    task type My_Task (First : Character);
+    package My_Tasks is
 
-    task body My_Task (First : Character) is
-    begin
-       for I in First .. 'Z' loop
-          Put_Line (I);
-       end loop;
-    end My_Task;
+       task type My_Task (First : Character);
+
+    end My_Tasks;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body My_Tasks is
+
+       task body My_Task is
+       begin
+          for I in First .. 'Z' loop
+             Put (I);
+          end loop;
+          New_Line;
+       end My_Task;
+
+    end My_Tasks;
+
+    with My_Tasks; use My_Tasks;
 
     procedure Main is
-       Tab : array (0 .. 9) of My_Task ('G');
+       Dummy_Tab : array (0 .. 9) of My_Task ('G');
     begin
        null;
     end Main;
@@ -98,15 +119,21 @@ In Ada, a task may be allocated on the heap as opposed to the stack. The task
 will then start as soon as it has been allocated, and terminates when its work
 is completed.
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task_Type
 
-    type Ptr_Task is access My_Task;
+    with My_Tasks; use My_Tasks;
 
     procedure Main is
+       type Ptr_Task is access My_Task;
+
        T : Ptr_Task;
     begin
        T := new My_Task ('G');
     end Main;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 Rendezvous
 ----------
@@ -114,7 +141,7 @@ Rendezvous
 A rendezvous is a synchronization between two tasks, allowing them to exchange
 data and coordinate execution. Let's consider the following example:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Rendezvous
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -150,7 +177,7 @@ statements are executed, the caller is blocked.
 Let's look at a more ambitious example. The rendezvous below accepts parameters
 and executes some code:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Rendezvous_Params
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -215,36 +242,76 @@ feature is illustrated by the task below, which maintains an integer value that
 is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
 :ada:`Get`:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Selective_Rendezvous
 
-    task Counter is
-       entry Get (Result : out Integer);
-       entry Increment;
-       entry Decrement;
-    end Counter;
+    package Counters is
 
-    task body Counter is
-       Value : Integer := 0;
+       task Counter is
+          entry Get (Result : out Integer);
+          entry Increment;
+          entry Decrement;
+       end Counter;
+
+    end Counters;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Counters is
+
+       task body Counter is
+          Value : Integer := 0;
+       begin
+          loop
+             select
+                accept Increment do
+                   Value := Value + 1;
+                end Increment;
+             or
+                accept Decrement do
+                   Value := Value - 1;
+                end Decrement;
+             or
+                accept Get (Result : out Integer) do
+                   Result := Value;
+                end Get;
+             or
+                delay 5.0;
+                Put_Line("Exiting Counter task...");
+                exit;
+             end select;
+          end loop;
+       end Counter;
+
+    end Counters;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Counters;    use Counters;
+
+    procedure Main is
+       V : Integer;
     begin
-       loop
-          select
-             accept Increment do
-                Value := Value + 1;
-             end Increment;
-          or
-             accept Decrement do
-                Value := Value - 1;
-             end Decrement;
-          or
-             accept Get (Result : out Integer) do
-                Result := Value;
-             end Get;
-          or
-             delay 1.0 * Minute;
-             exit;
-          end select;
-       end loop;
-    end Counter;
+       Put_Line ("Main started.");
+
+       Counter.Get (V);
+       Put_Line ("Got value. Value = " & Integer'Image (V));
+
+       Counter.Increment;
+       Put_Line("Incremented value.");
+
+       Counter.Increment;
+       Put_Line("Incremented value.");
+
+       Counter.Get (V);
+       Put_Line ("Got value. Value = " & Integer'Image (V));
+
+       Counter.Decrement;
+       Put_Line("Decremented value.");
+
+       Counter.Get (V);
+       Put_Line ("Got value. Value = " & Integer'Image (V));
+
+       Put_Line ("Main finished.");
+    end Main;
 
 When the task's statement flow reaches the select, it will wait for all four
 events |mdash| three entries and a delay |mdash| in parallel. If the delay of
@@ -287,6 +354,8 @@ the loop there are several possibilities:
 Protected Objects
 -----------------
 
+:code-config:`accumulate_code=True`
+
 Although the rendezvous may be used to implement mutually exclusive access to a
 shared data object, an alternative (and generally preferable) style is through
 a protected object, an efficiently implementable mechanism that makes the
@@ -304,32 +373,40 @@ operations but not concurrent write or read/write operations.
 Let's reimplement our earlier tasking example with a protected object called
 :ada:`Counter`:
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Counter
 
-    protected Counter is
-       function Get return Integer;
-       procedure Increment;
-       procedure Decrement;
-    private
-       Value : Integer := 0;
-    end Counter;
+    package Counters is
 
-    protected body Counter is
-       function Get return Integer is
-       begin
-          return Value;
-       end Get;
+       protected Counter is
+          function Get return Integer;
+          procedure Increment;
+          procedure Decrement;
+       private
+          Value : Integer := 0;
+       end Counter;
 
-       procedure Increment is
-       begin
-          Value := Value + 1;
-       end Increment;
+    end Counters;
 
-       procedure Decrement is
-       begin
-          Value := Value - 1;
-       end Decrement;
-    end Counter;
+    package body Counters is
+
+       protected body Counter is
+          function Get return Integer is
+          begin
+             return Value;
+          end Get;
+
+          procedure Increment is
+          begin
+             Value := Value + 1;
+          end Increment;
+
+          procedure Decrement is
+          begin
+             Value := Value - 1;
+          end Decrement;
+       end Counter;
+
+    end Counters;
 
 Having two completely different ways to implement the same paradigm might seem
 complicated. However, in practice the actual problem to solve usually drives
@@ -338,11 +415,17 @@ protected object).
 
 A protected object can be accessed through prefix notation:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Counter
 
-    Counter.Increment;
-    Counter.Decrement;
-    Put_Line (Integer'Image (Counter.Get));
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Counters;    use Counters;
+
+    procedure Main is
+    begin
+       Counter.Increment;
+       Counter.Decrement;
+       Put_Line (Integer'Image (Counter.Get));
+    end Main;
 
 A protected object may look like a package syntactically, since it contains
 declarations that can be accessed externally using prefix notation. However,
@@ -387,30 +470,85 @@ are reevaluated upon completion of protected procedures and protected entries.
 Here's an example illustrating protected entries: a protected type that models
 a binary semaphore / persistent signal.
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Binary_Semaphore
 
-    protected type Binary_Semaphore is
-       entry Wait;
-       procedure Signal;
-    private
-       Signaled : Boolean := False;
-    end Binary_Semaphore;
+    package Binary_Semaphores is
 
-    protected body Binary_Semaphore is
-       entry Wait when Signaled is
+       protected type Binary_Semaphore is
+          entry Wait;
+          procedure Signal;
+       private
+          Signaled : Boolean := False;
+       end Binary_Semaphore;
+
+    end Binary_Semaphores;
+
+    package body Binary_Semaphores is
+
+       protected body Binary_Semaphore is
+          entry Wait when Signaled is
+          begin
+             Signaled := False;
+          end Wait;
+
+          procedure Signal is
+          begin
+             Signaled := True;
+          end Signal;
+       end Binary_Semaphore;
+
+    end Binary_Semaphores;
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Binary_Semaphores; use Binary_Semaphores;
+
+    procedure Main is
+       B : Binary_Semaphore;
+
+       task T1;
+       task T2;
+
+       task body T1 is
        begin
-          Signaled := False;
-       end Wait;
+          Put_Line ("Task T1 waiting...");
+          B.Wait;
 
-       procedure Signal is
+          Put_Line ("Task T1.");
+          delay 1.0;
+
+          Put_Line ("Task T1 will signal...");
+          B.Signal;
+
+          Put_Line ("Task T1 finished.");
+       end T1;
+
+       task body T2 is
        begin
-          Signaled := True;
-       end Signal;
-    end Binary_Semaphore;
+          Put_Line ("Task T2 waiting...");
+          B.Wait;
+
+          Put_Line ("Task T2");
+          delay 1.0;
+
+          Put_Line ("Task T2 will signal...");
+          B.Signal;
+
+          Put_Line ("Task T2 finished.");
+       end T2;
+
+    begin
+       Put_Line ("Main started.");
+       B.Signal;
+       Put_Line ("Main finished.");
+    end Main;
 
 Ada concurrency features provide much further generality than what's been
 presented here. For additional information please consult one of the works
 cited in the *References* section.
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 Ravenscar
 ---------
