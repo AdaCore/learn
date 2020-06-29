@@ -1,4 +1,4 @@
-import * as ace from 'brace';
+import ace from 'brace';
 import 'brace/mode/ada';
 import 'brace/mode/c_cpp';
 import 'brace/theme/tomorrow';
@@ -11,7 +11,7 @@ export enum EditorTheme {
   Dark = 'ace/theme/tomorrow_night'
 }
 
-enum EditorLanguage {
+export enum EditorLanguage {
   Ada = 'ace/mode/ada',
   C_CPP = 'ace/mode/c_cpp'
 }
