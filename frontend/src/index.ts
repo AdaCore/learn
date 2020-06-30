@@ -1,8 +1,10 @@
-// #if STAGING
-import Cookies from 'js-cookie';
-// #endif
 import './styles/learn.scss';
-import {Widget, LabWidget} from './ts/widget';
+import {widgetFactory} from './ts/widget';
+import {scrollTop} from './ts/scrolltop';
+
+// #if STAGING
+import {stagingRedirect} from './ts/staging';
+// #endif
 
 /**
  * Entrypoint
@@ -10,46 +12,13 @@ import {Widget, LabWidget} from './ts/widget';
  */
 function entrypoint(): void {
   const we = document.getElementsByClassName('widget_editor');
-
-  for (let i = 0; i < we.length; i++) {
-    const element = we[i];
-    const exampleServer = element.getAttribute('example_server');
-
-    if (exampleServer) {
-      const isLab = element.getAttribute('lab');
-      const widget =
-        isLab ? new LabWidget((element as HTMLElement), exampleServer) :
-          new Widget((element as HTMLElement), exampleServer);
-
-      widget.render();
-    } else {
-      throw Error('Malformed widget! No server address specified.');
-    }
-  }
+  widgetFactory(we);
 
   const btn = document.getElementById('scrollToTopBtn');
-  window.addEventListener('scroll', () => {
-    if (document.body.scrollTop > 300) {
-      btn.classList.remove('hide');
-      btn.classList.add('show');
-    } else {
-      btn.classList.remove('show');
-      btn.classList.add('hide');
-    }
-  });
-
-  btn.addEventListener('click', () => {
-    window.scrollTo(0, 0);
-  });
+  scrollTop(btn as HTMLButtonElement);
 
   // #if STAGING
-  if (!Cookies.get('AdaCore_staff')) {
-    const msg = 'You have reached learn-staging, the learn testing site. ' +
-    'This is reserved for testers only. You will be directed to the main ' +
-    'learn.adacore.com site after pressing OK.';
-    alert(msg);
-    window.location.href = 'http://learn.adacore.com';
-  }
+  stagingRedirect();
   // #endif
 }
 

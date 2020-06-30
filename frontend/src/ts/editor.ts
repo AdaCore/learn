@@ -81,7 +81,7 @@ export class Editor {
 
   /**
    * Get the length of the visible lines in the editor
-   * @return {number} - The number of visible lines in the editor
+   * @return {number} - The number of visible rows in the editor
    */
   public getLength(): number {
     const maxLength = this.editor.getOption('maxLines');

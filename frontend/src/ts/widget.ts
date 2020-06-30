@@ -6,7 +6,6 @@ import {Resource, RunProgram, CheckOutput} from './types';
 import * as Strings from './strings';
 import * as util from './utilities';
 
-
 enum DownloadType {
   None,
   Client,
@@ -14,7 +13,7 @@ enum DownloadType {
 }
 
 /** The Widget class */
-export class Widget {
+class Widget {
   private editors: Array<Editor> = [];
   protected readonly container: HTMLElement;
   private readonly name: string;
@@ -497,7 +496,7 @@ export class Widget {
  * The LabWidget class
  * @extends Widget
  */
-export class LabWidget extends Widget {
+class LabWidget extends Widget {
   private readonly labContainer: LabContainer = new LabContainer;
 
   /**
@@ -573,4 +572,33 @@ export class LabWidget extends Widget {
     const lc = this.labContainer.render();
     this.outputGroup.appendChild(lc);
   }
+}
+
+/**
+ * Entrypoint for widget creation
+ *
+ * @export
+ * @param {HTMLCollectionOf<Element>} widgets - The collection of widgets
+ *    found on the page. This is the return value of getElementsByClass
+ * @return {Array<Widget | LabWidget>} The list of widgets on the page
+ */
+export function widgetFactory(widgets: HTMLCollectionOf<Element>):
+    Array<Widget | LabWidget> {
+  const widgetList = [];
+  for (let i = 0; i < widgets.length; i++) {
+    const element = (widgets[i] as HTMLElement);
+    const server = element.getAttribute('example_server');
+
+    if (server) {
+      const lab = element.getAttribute('lab');
+      const widget =
+          lab ? new LabWidget(element, server) : new Widget(element, server);
+      widget.render();
+      widgetList.push(widget);
+    } else {
+      throw Error('Malformed widget! No server address specified.');
+    }
+  }
+
+  return widgetList;
 }

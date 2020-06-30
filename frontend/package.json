@@ -22,8 +22,10 @@
     "@types/chai": "^4.2.11",
     "@types/chai-dom": "^0.0.10",
     "@types/js-cookie": "^2.2.5",
+    "@types/jsdom": "^16.2.3",
     "@types/mocha": "^7.0.2",
     "@types/node": "^14.0.13",
+    "@types/sinon": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "amd-loader": "^0.0.8",
@@ -55,6 +57,7 @@
     "sass-lint": "^1.13.1",
     "sass-lint-webpack": "^1.0.1",
     "sass-loader": "^7.1.0",
+    "sinon": "^9.0.2",
     "source-map-loader": "^0.2.4",
     "terser-webpack-plugin": "^1.4.1",
     "ts-loader": "^6.2.1",
@@ -92,6 +95,9 @@
     "reporter": [
       "lcov",
       "text"
+    ],
+    "exclude": [
+      "src/index.ts"
     ]
   },
   "mocha": {

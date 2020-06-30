@@ -123,12 +123,12 @@ describe('Editor', () => {
     it('should return maxlines if length > maxlines', () => {
       const maxLines = editor.getOption('maxLines');
       for(let i = 0; i < maxLines - 2; i++) {
-        editor.session.doc.insertNewLine({row: 0, column: 0});
+        editor.session.doc.insert({row: 0, column: 0}, '\n');
       }
       expect(inTest.getLength()).to.equal(maxLines - 1);
 
       for(let i = 0; i < 10; i++) {
-        editor.session.doc.insertNewLine({row: 0, column: 0});
+        editor.session.doc.insert({row: 0, column: 0}, '\n');
       }
 
       expect(inTest.getLength()).to.equal(maxLines);
@@ -227,7 +227,7 @@ describe('Editor', () => {
     });
 
     it('should modify the initial contents and move the cursor', () => {
-      editor.session.doc.insertNewLine({row: 0, column: 0});
+      editor.session.doc.insert({row: 0, column: 0}, '\n');
       const row = editor.session.getLength() - 1;
       const column = editor.session.getLine(row).length;
       editor.gotoLine(row + 1, column);
@@ -274,6 +274,68 @@ describe('Editor', () => {
       editor.session.doc.insert({row: 0, column: 0}, '++');
       const newResource = inTest.getResource();
       expect(newResource).to.deep.equal({basename: resource.basename, contents: '++' + resource.contents});
+    });
+  });
+
+  describe('#setTab() and #getTab()', () => {
+    let inTest: Editor;
+    let parent: HTMLElement;
+    let editor: ace.Editor;
+    let tab: HTMLElement;
+
+    const resource: Resource = {
+      basename: 'file.adb',
+      contents: 'file contents',
+    };
+
+    before(() => {
+      inTest = new Editor(resource);
+      parent = inTest.render();
+      editor = ace.edit(parent);
+      tab = document.createElement('div');
+    });
+
+    after(() => {
+      editor.destroy();
+      inTest = null;
+      parent = null;
+    });
+
+    it('should set and get the tab', () => {
+      inTest.setTab(tab);
+      expect(inTest.getTab()).to.equal(tab);
+    });
+  });
+
+  describe('#gotoLine', () => {
+    let inTest: Editor;
+    let parent: HTMLElement;
+    let editor: ace.Editor;
+
+    const resource: Resource = {
+      basename: 'file.adb',
+      contents: 'file contents\nmore contents',
+    };
+
+    before(() => {
+      inTest = new Editor(resource);
+      parent = inTest.render();
+      editor = ace.edit(parent);
+    });
+
+    after(() => {
+      editor.destroy();
+      inTest = null;
+      parent = null;
+    });
+
+    it('should start with the cursor at 0, 0', () => {
+      expect(editor.getCursorPosition()).to.deep.equal({row: 0, column: 0});
+    });
+
+    it('should jump to the second row, second column', () => {
+      inTest.gotoLine(2, 2);
+      expect(editor.getCursorPosition()).to.deep.equal({row: 1, column: 1});
     });
   });
 });
