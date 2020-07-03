@@ -59,7 +59,7 @@ program:
    !main.c
    #include <stdio.h>
 
-   int main()
+   int main(int argc, const char * argv[])
    {
      printf("Hello World\n");
      return 0;
@@ -270,7 +270,7 @@ comments and working with integer variables:
    !main.c
    #include <stdio.h>
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       // variable declarations
       int a = 0, b = 0, c = 100, d;
@@ -338,7 +338,7 @@ write a for loop:
       return (sum / length);
    }
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       int vals[] = { 2, 2, 4, 4 };
 
@@ -363,7 +363,7 @@ write a for loop:
       return (sum / length);
    }
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       int vals[] = { 2, 2, 4, 4 };
 
@@ -447,7 +447,7 @@ newly defined block. The equivalent C code is:
    !main.c
    #include <stdio.h>
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       // variable declarations
       int a = 0, b = 0, c = 100, d;
@@ -483,7 +483,7 @@ an assignment in C can be used in an expression? Let's look at an example:
    !main.c
    #include <stdio.h>
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       int a = 0;
 
@@ -547,7 +547,7 @@ The syntax of an if statement:
    !main.c
    #include <stdio.h>
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       // try changing the initial value to change the
       //    output of the program
@@ -607,7 +607,7 @@ The syntax of a switch/case statement:
    !main.c
    #include <stdio.h>
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       // try changing the initial value to change the
       //    output of the program
@@ -670,7 +670,7 @@ through to the next branch. Here is an example:
    !main.c
    #include <stdio.h>
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       int v = 0;
 
@@ -814,7 +814,7 @@ reverse order?
 
    #define MY_RANGE (10)
 
-   int main()
+   int main(int argc, const char * argv[])
    {
 
       for(int i = MY_RANGE; i >= 0; --i) {
@@ -861,7 +861,7 @@ Let's see an example in action:
 
    #define LIST_LENGTH (100)
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       int list[LIST_LENGTH];
 
@@ -974,7 +974,7 @@ implicit type conversion:
    !main.c
    #include <stdio.h>
 
-   int main()
+   int main(int argc, const char * argv[])
    {
       unsigned char a = 0xFF;
       char b = 0xFF;
@@ -1070,7 +1070,7 @@ following example:
        printf("%f\n", result);
     }
 
-    int main()
+    int main(int argc, const char * argv[])
     {
        weakTyping();
     }
@@ -1980,7 +1980,7 @@ the access type as follows:
     !main.c
     #include <stdlib.h>
 
-    int main (int argc, char *argv[])
+    int main(int argc, const char * argv[])
     {
       int * my_pointer = malloc (sizeof(int));
       free (my_pointer);
