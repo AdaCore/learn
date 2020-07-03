@@ -647,7 +647,7 @@ The syntax of a switch/case statement:
             Put_Line ("Zero");
          when 1 .. 9 =>
             Put_Line ("Positive");
-         when 10 | 12 | 14| 16 | 18 =>
+         when 10 | 12 | 14 | 16 | 18 =>
             Put_Line ("Even number between 10 and 18");
          when others =>
             Put_Line ("Something else");
@@ -1456,7 +1456,7 @@ value into a :ada:`String` and vice-versa. For example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
-       A : Integer := 99;
+       A : Integer := 10;
     begin
        Put_Line (Integer'Image (A));
        A := Integer'Value ("99");
