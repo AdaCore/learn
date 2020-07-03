@@ -2015,7 +2015,7 @@ Pointers to scalar objects in Ada and C look like:
     !main.c
     #include <stdlib.h>
 
-    int main (int argc, char *argv[])
+    int main(int argc, const char * argv[])
     {
       int * Var = malloc (sizeof(int));
       *Var = 0;
