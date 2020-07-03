@@ -54,7 +54,7 @@ Hello World in Ada
 The first piece of code to translate from C to Ada is the usual Hello World
 program:
 
-.. code:: c manual_chop
+.. code:: c run_button manual_chop
 
    !main.c
    #include <stdio.h>
@@ -65,7 +65,7 @@ program:
      return 0;
    }
 
-.. code:: ada
+.. code:: ada run_button
 
    with Ada.Text_IO;
 
@@ -2253,7 +2253,7 @@ if a :ada:`use` clause is employed.
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Using_Pkg_Entities
 
     -- pck.ads
 
