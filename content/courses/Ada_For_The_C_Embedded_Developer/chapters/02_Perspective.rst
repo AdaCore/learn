@@ -1607,6 +1607,8 @@ the above behavior, actual pointer types would have to be defined and used.
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Copy_Ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type (1 .. 2);
@@ -1616,13 +1618,18 @@ the above behavior, actual pointer types would have to be defined and used.
        A1 (2) := 1;
 
        A2 := A1;
-    end;
+
+       for I in A2'Range loop
+          Put_Line (Integer'Image (A2 (I)));
+       end loop;
+    end Main;
 
 [C]
 
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Copy_C
 
     !main.c
+    #include <stdio.h>
     #include <string.h>
 
     int main(int argc, const char * argv[])
@@ -1634,6 +1641,10 @@ the above behavior, actual pointer types would have to be defined and used.
       A1 [1] = 1;
 
       memcpy (A1, A2, sizeof (int) * 2);
+
+      for (int i = 0; i < 2; i++) {
+        printf("%d\n", A2[i]);
+      }
     }
 
 In all of the examples above, the source and destination arrays must have
@@ -1644,13 +1655,19 @@ portion, or slice, of an array. So you can write the following:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Slice
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
-       A1 : Arr_Type (1 .. 10);
-       A2 : Arr_Type (1 .. 5);
+       A1 : Arr_Type (1 .. 10) := (1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+       A2 : Arr_Type (1 .. 5)  := (1, 2, 3, 4, 5);
     begin
        A2 (1 .. 3) := A1 (4 .. 6);
-    end;
+
+       for I in A2'Range loop
+          Put_Line (Integer'Image (A2 (I)));
+       end loop;
+    end Main;
 
 This assigns the 4th, 5th, and 6th elements of :ada:`A1` into the 1st, 2nd, and
 3rd elements of :ada:`A2`. Note that only the length matters here: the values
@@ -1663,15 +1680,17 @@ arrays as opposed to their addresses:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Equal_Ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
-       A1 : Arr_Type (1 .. 2);
-       A2 : Arr_Type (1 .. 2);
+       A1 : Arr_Type (1 .. 2) := (10, 20);
+       A2 : Arr_Type (1 .. 2) := (10, 20);
     begin
        if A1 = A2 then
-         --  ...
-
-         null;
+         Put_Line ("A1 = A2");
+       else
+         Put_Line ("A1 /= A2");
        end if;
     end;
 
@@ -1680,10 +1699,12 @@ arrays as opposed to their addresses:
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Equal_C
 
     !main.c
+    #include <stdio.h>
+
     int main(int argc, const char * argv[])
     {
-      int A1 [2];
-      int A2 [2];
+      int A1 [2] = { 10, 20 };
+      int A2 [2] = { 10, 20 };
 
       int eq = 1;
 
@@ -1695,7 +1716,10 @@ arrays as opposed to their addresses:
       }
 
       if (eq) {
-        /* ... */
+        printf("A1 == A2\n");
+      }
+      else {
+        printf("A1 != A2\n");
       }
     }
 
@@ -1710,6 +1734,8 @@ Therefore, you can write:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Assignment_Ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type := (1, 2, 3, 4, 5, 6, 7, 8, 9);
@@ -1717,8 +1743,20 @@ Therefore, you can write:
     begin
        A1 := (1, 2, 3, others => 10);
 
+       Put_Line ("---- A1 ----");
+       for I in A1'Range loop
+          Put_Line (Integer'Image (I) & " => " &
+                    Integer'Image (A1 (I)));
+       end loop;
+
        -- use a slice to assign A2 elements 11 .. 19 to 1
        A2 (11 .. 19) := (others => 1);
+
+       Put_Line ("---- A2 ----");
+       for I in A2'Range loop
+          Put_Line (Integer'Image (I) & " => " &
+                    Integer'Image (A2 (I)));
+       end loop;
     end;
 
 Heterogeneous Data Structures
@@ -1731,6 +1769,8 @@ are some simple records:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_Ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
        type R is record
           A, B : Integer;
@@ -1740,6 +1780,7 @@ are some simple records:
        V : R;
     begin
        V.A := 0;
+       Put_Line ("V.A = " & Integer'Image (V.A));
     end;
 
 [C]
@@ -1747,6 +1788,8 @@ are some simple records:
 .. code:: ada manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_C
 
     !main.c
+    #include <stdio.h>
+
     struct R {
        int A, B;
        float C;
@@ -1756,6 +1799,7 @@ are some simple records:
     {
       struct R V;
       V.A = 0;
+      printf("V.A = %d\n", V.A);
     }
 
 Ada allows specification of default values for fields just like C. The values
@@ -1767,6 +1811,8 @@ fields not listed will take their default values. For example:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_Default_Ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
 
        type R is record
@@ -1774,13 +1820,24 @@ fields not listed will take their default values. For example:
           C    : Float   := 0.0;
        end record;
 
-       V1 : R := (1, 2, 1.0);
-       V2 : R := (A => 1, B => 2, C => 1.0);
-       V3 : R := (C => 1.0, A => 1, B => 2);
-       V4 : R := (C => 1.0, others => <>);
+       procedure Put_R (V : R; Name : String) is
+       begin
+          Put_Line (Name & " = ("
+                    & Integer'Image (V.A) & ", "
+                    & Integer'Image (V.B) & ", "
+                    & Float'Image (V.C) & ")");
+       end Put_R;
+
+       V1 : constant R := (1, 2, 1.0);
+       V2 : constant R := (A => 1, B => 2, C => 1.0);
+       V3 : constant R := (C => 1.0, A => 1, B => 2);
+       V4 : constant R := (C => 1.0, others => <>);
 
     begin
-       null;
+       Put_R (V1, "V1");
+       Put_R (V2, "V2");
+       Put_R (V3, "V3");
+       Put_R (V4, "V4");
     end;
 
 Pointers
@@ -1804,16 +1861,29 @@ example:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointers_Ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
        type R is record
           A, B : Integer;
        end record;
 
+       procedure Put_R (V : R; Name : String) is
+       begin
+          Put_Line (Name & " = ("
+                    & Integer'Image (V.A) & ", "
+                    & Integer'Image (V.B) & ")");
+       end Put_R;
+
        V1, V2 : R;
+
     begin
        V1.A := 0;
        V2 := V1;
        V2.A := 1;
+
+       Put_R (V1, "V1");
+       Put_R (V2, "V2");
     end;
 
 [C]
@@ -1821,9 +1891,17 @@ example:
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointers_C
 
     !main.c
+    #include <stdio.h>
+
     struct R {
        int A, B;
     };
+
+    void print_r(const struct R *v,
+                 const char     *name)
+    {
+      printf("%s = (%d, %d)\n", name, v->A, v->B);
+    }
 
     int main(int argc, const char * argv[])
     {
@@ -1831,6 +1909,9 @@ example:
       V1.A = 0;
       V2 = V1;
       V2.A = 1;
+
+      print_r(&V1, "V1");
+      print_r(&V2, "V2");
     }
 
 There are many commonalities between the Ada and C semantics above. In Ada and
@@ -1845,11 +1926,21 @@ Here's now a similar example, but using heap allocation instead:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Heap_Alloc_Ada
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     procedure Main is
        type R is record
           A, B : Integer;
        end record;
+
        type R_Access is access R;
+
+       procedure Put_R (V : R; Name : String) is
+       begin
+          Put_Line (Name & " = ("
+                    & Integer'Image (V.A) & ", "
+                    & Integer'Image (V.B) & ")");
+       end Put_R;
 
        V1 : R_Access;
        V2 : R_Access;
@@ -1858,6 +1949,9 @@ Here's now a similar example, but using heap allocation instead:
        V1.A := 0;
        V2 := V1;
        V2.A := 1;
+
+       Put_R (V1.all, "V1");
+       Put_R (V2.all, "V2");
     end;
 
 [C]
@@ -1865,11 +1959,18 @@ Here's now a similar example, but using heap allocation instead:
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Heap_Alloc_C
 
     !main.c
+    #include <stdio.h>
     #include <stdlib.h>
 
     struct R {
        int A, B;
     };
+
+    void print_r(const struct R *v,
+                 const char     *name)
+    {
+      printf("%s = (%d, %d)\n", name, v->A, v->B);
+    }
 
     int main(int argc, const char * argv[])
     {
@@ -1878,6 +1979,9 @@ Here's now a similar example, but using heap allocation instead:
       V1->A = 0;
       V2 = V1;
       V2->A = 0;
+
+      print_r(V1, "V1");
+      print_r(V2, "V2");
     }
 
 In this example, an object of type :ada:`R` is allocated on the heap. The same
