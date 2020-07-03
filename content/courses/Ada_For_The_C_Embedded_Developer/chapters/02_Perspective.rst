@@ -374,7 +374,7 @@ For the fun of it, let's also see the Ada way to do this:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_Ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+   with Ada.Text_IO;
 
    procedure Main is
       type Int_Array is array (Natural range <>) of Integer;
@@ -392,7 +392,7 @@ For the fun of it, let's also see the Ada way to do this:
 
       Vals : constant Int_Array (1 .. 4) := (2, 2, 4, 4);
    begin
-      Put_Line ("Average: " & Integer'Image (Average (Vals)));
+      Ada.Text_IO.Put_Line ("Average: " & Integer'Image (Average (Vals)));
    end Main;
 
 We will explore more about the syntax of loops in Ada in a future section of
