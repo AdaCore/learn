@@ -201,6 +201,8 @@ use-case for the private section in a package is when you want to declare a
 heterogeneous data type, called a record in Ada or a struct in C, but you want
 to stop the user of the package from accessing the record components directly.
 
+:code-config:`accumulate_code=True`
+
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
 
    package Containers is
@@ -258,6 +260,35 @@ However, from the package body, we **can** access :ada:`Data` and :ada:`Top`.
       end Pop;
 
    end Containers;
+
+We can then reference this package in a subprogram. For example:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+
+   with Ada.Text_IO;
+   with Containers;
+
+   procedure Containers_Test is
+      S : Containers.Stack;
+      I : Integer;
+
+   begin
+      I := 10;
+      Ada.Text_IO.Put_Line ("Push: " & Integer'Image (I));
+      Containers.Push (S, I);
+
+      I := 11;
+      Ada.Text_IO.Put_Line ("Push: " & Integer'Image (I));
+      Containers.Push (S, I);
+
+      I := Containers.Pop (S);
+      Ada.Text_IO.Put_Line ("Pop: " & Integer'Image (I));
+
+      I := Containers.Pop (S);
+      Ada.Text_IO.Put_Line ("Pop: " & Integer'Image (I));
+   end Containers_Test;
+
+:code-config:`accumulate_code=False`
 
 Statements and Declarations
 ----------------------------
@@ -1129,6 +1160,22 @@ Ada case, it is still necessary to explicitly convert the final result to
 
     -- Perform an Integer division then convert to Float
     Result := Float (Alpha / Beta);
+
+The complete example would then be:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada_2
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Strong_Typing is
+       Alpha  : constant Integer := 1;
+       Beta   : constant Integer := 10;
+       Result : Float;
+    begin
+       Result := Float (Alpha / Beta);
+
+       Put_Line (Float'Image (Result));
+    end Strong_Typing;
 
 In Ada, a floating point literal must be written with both an integral and
 decimal part. :ada:`10` is not a valid literal for a floating point value,
