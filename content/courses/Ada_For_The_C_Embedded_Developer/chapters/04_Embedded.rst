@@ -46,9 +46,9 @@ representation vs. performance. Let's start with the following example:
 .. code-block:: c
 
     struct R {
-       unsigned int v:8;
-       bool b1;
-       bool b2;
+        unsigned int v:8;
+        bool b1;
+        bool b2;
     };
 
 

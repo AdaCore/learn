@@ -65,14 +65,14 @@ of the type they're being called upon. For example, a swap macro may look like:
 
     int main()
     {
-      int a = 10;
-      int b = 42;
+        int a = 10;
+        int b = 42;
 
-      printf("a = %d, b = %d\n", a, b);
+        printf("a = %d, b = %d\n", a, b);
 
-      SWAP (int, a, b);
+        SWAP (int, a, b);
 
-      printf("a = %d, b = %d\n", a, b);
+        printf("a = %d, b = %d\n", a, b);
     }
 
 Ada offers a way to declare this kind of functions as a generic, that is, a

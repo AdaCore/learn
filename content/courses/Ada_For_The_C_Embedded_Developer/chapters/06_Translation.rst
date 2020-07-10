@@ -57,11 +57,11 @@ Let's start with the following C code:
     #include <stdio.h>
 
     struct my_struct {
-       int A, B;
+        int A, B;
     };
 
     void call (struct my_struct *p) {
-       printf ("%d", p->A);
+        printf ("%d", p->A);
     }
 
 To call that function from Ada, the Ada compiler requires a description of the
@@ -319,11 +319,11 @@ this point:
 
     !call.c
     typedef struct my_struct {
-       int A, B;
+        int A, B;
     };
 
     void call (struct my_struct p) {
-       printf ("%d", p.A);
+        printf ("%d", p.A);
     }
 
 In Ada, a type can be modified so that parameters of this type can always be
@@ -382,7 +382,7 @@ could be translated:
 
     int main(int argc, const char * argv[])
     {
-       registerInterface_Initialize(15);
+        registerInterface_Initialize(15);
     }
 
 [Ada]
@@ -450,7 +450,7 @@ Dynamically allocated arrays can be directly allocated on the stack:
     #include <stdlib.h>
 
     int main() {
-      int *a = malloc(sizeof(int) * 10);
+        int *a = malloc(sizeof(int) * 10);
     }
 
 [Ada]
@@ -476,14 +476,14 @@ discriminant:
     #include <stdlib.h>
 
     typedef struct {
-       int * a;
+        int * a;
     } S;
 
     int main(int argc, const char * argv[])
     {
-       S v;
+        S v;
 
-       v.a = malloc(sizeof(int) * 10);
+        v.a = malloc(sizeof(int) * 10);
     }
 
 [Ada]
@@ -537,7 +537,7 @@ through an :ada:`Address` clause associated to a variable, for example:
     !test_c.c
     int main(int argc, const char * argv[])
     {
-      int * r = (int *)0xFFFF00A0;
+        int * r = (int *)0xFFFF00A0;
     }
 
 [Ada]
@@ -581,9 +581,9 @@ would be done through masks, e.g.:
 
     int main(int argc, const char * argv[])
     {
-      int value = 0;
+        int value = 0;
 
-      value |= FLAG_2 | FLAG_4;
+        value |= FLAG_2 | FLAG_4;
     }
 
 In Ada, the above can be represented through a Boolean array of enumerate
@@ -619,9 +619,9 @@ representation is needed or more complex data are used:
     !struct_map.c
     int main(int argc, const char * argv[])
     {
-       int value = 0;
+        int value = 0;
 
-       value = (2 << 1) | 1;
+        value = (2 << 1) | 1;
     }
 
 [Ada]
