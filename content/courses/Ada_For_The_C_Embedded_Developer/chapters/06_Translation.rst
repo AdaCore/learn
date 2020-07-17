@@ -49,14 +49,19 @@ language.
 
 Let's start with the following C code:
 
-.. code-block:: c
+:code-config:`accumulate_code=True`
 
-    typedef struct my_struct {
-       int A, B;
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
+
+    !call.c
+    #include <stdio.h>
+
+    struct my_struct {
+        int A, B;
     };
 
     void call (struct my_struct *p) {
-       printf ("%d", p->A);
+        printf ("%d", p->A);
     }
 
 To call that function from Ada, the Ada compiler requires a description of the
@@ -65,13 +70,26 @@ capture how the C :c:`struct my_struct` is represented, we can use the
 following record along with a :ada:`pragma Convention`. The pragma directs the
 compiler to lay out the data in memory the way a C compiler would.
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
 
-    type my_struct is record
-       A : Interfaces.C.int;
-       B : Interfaces.C.int;
-    end record;
-    pragma Convention (C, my_struct);
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Interfaces.C;
+
+    procedure Use_My_Struct is
+
+       type my_struct is record
+         A : Interfaces.C.int;
+         B : Interfaces.C.int;
+       end record;
+       pragma Convention (C, my_struct);
+
+       V : my_struct := (A => 1, B => 2);
+    begin
+       Put_Line ("V = ("
+                 & Interfaces.C.int'Image (V.A)
+                 & Interfaces.C.int'Image (V.B)
+                 & ")");
+    end Use_My_Struct;
 
 Describing a foreign subprogram call to Ada code is called *binding* and it is
 performed in two stages. First, an Ada subprogram specification equivalent to
@@ -89,13 +107,29 @@ code, it should invoke the :ada:`Call` function with the C calling convention.
 
 And that's all that's necessary. Here's an example of a call to :ada:`Call`:
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
 
-    declare
+    with Interfaces.C;
+
+    procedure Use_My_Struct is
+
+       type my_struct is record
+         A : Interfaces.C.int;
+         B : Interfaces.C.int;
+       end record;
+       pragma Convention (C, my_struct);
+
+       procedure Call (V : my_struct);
+       pragma Import (C, Call, "call"); -- Third argument optional
+
        V : my_struct := (A => 1, B => 2);
     begin
        Call (V);
-    end;
+    end Use_My_Struct;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 Building and Debugging mixed language code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,24 +171,33 @@ with the GNAT compiler, passing an array is equivalent to passing a pointer to
 its first element. Of course, as there's no notion of boundaries in C, the
 length of the array needs to be passed explicitly. For example:
 
+:code-config:`accumulate_code=True`
+
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_1
 
+    !p.h
     void p (int * a, int length);
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_1
 
-    type Arr is array (Integer range <>) of Integer;
+    procedure Main is
+       type Arr is array (Integer range <>) of Integer;
 
-    procedure P (V : Arr; Length : Integer);
-    pragma Import (C, P);
+       procedure P (V : Arr; Length : Integer);
+       pragma Import (C, P);
 
-    X : Arr (5 .. 15);
+       X : Arr (5 .. 15);
+    begin
+       P (X, X'Length);
+    end Main;
 
-    P (X, X'Length);
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 The other way around |mdash| that is, retrieving an array that has been
 creating on the C side |mdash| is more difficult. Because C doesn't explicitly
@@ -165,21 +208,32 @@ the most flexible, but also the least safe option. It involves creating an
 array with indices over the full range of :ada:`Integer` without ever creating
 it from Ada, but instead retrieving it as an access from C. For example:
 
+:code-config:`accumulate_code=True`
+
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_2
 
+    !f.h
     int * f ();
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_2
 
-    type Arr is array (Integer) of Integer;
-    type Arr_A is access all Arr;
+    procedure Main is
+       type Arr is array (Integer) of Integer;
+       type Arr_A is access all Arr;
 
-    function F return Arr_A;
-    pragma Import (C, F);
+       function F return Arr_A;
+       pragma Import (C, F);
+    begin
+       null;
+    end Main;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 Note that :ada:`Arr` is a constrained type (it doesn't have the :ada:`range <>`
 notation for indices). For that reason, as it would be for C, it's possible to
@@ -192,10 +246,13 @@ one with an array and its size accessible through functions, another one on
 global variables. This time, as we're using an overlay, the function will be
 directly mapped to an Ada function returning an address:
 
+:code-config:`accumulate_code=True`
+
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_3
 
+    !fg.h
     int * f_arr (void);
     int f_size (void);
 
@@ -204,20 +261,40 @@ directly mapped to an Ada function returning an address:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_3
 
-    type Arr is array (Integer range <>) of Integer;
+    with System;
 
-    function F_Arr return System.Address;
-    function F_Size return Integer;
+    package Fg is
 
-    F : Arr (0 .. F_Size - 1) with Address => F_Arr;
+       type Arr is array (Integer range <>) of Integer;
 
-    G_Size : Integer;
-    pragma Import (C, G_Size, "g_size");
+       function F_Arr return System.Address;
+       pragma Import (C, F_Arr, "f_arr");
 
-    G_Arr : Arr (0 .. G_Size - 1);
-    pragma Import (C, G_Arr, "g_arr");
+       function F_Size return Integer;
+       pragma Import (C, F_Size, "f_size");
+
+       F : Arr (0 .. F_Size - 1) with Address => F_Arr;
+
+       G_Size : Integer;
+       pragma Import (C, G_Size, "g_size");
+
+       G_Arr : Arr (0 .. G_Size - 1);
+       pragma Import (C, G_Arr, "g_arr");
+
+    end Fg;
+
+    with Fg;
+
+    procedure Main is
+    begin
+       null;
+    end Main;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 With all solutions though, importing an array from C is a relatively unsafe
 pattern, as there's only so much information on the array as there would be on
@@ -234,32 +311,44 @@ may be cases where the C interface also passes values and not pointers to
 objects. Here's a slightly modified version of a previous example to illustrate
 this point:
 
+:code-config:`accumulate_code=True`
+
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value
 
+    !call.c
     typedef struct my_struct {
-       int A, B;
+        int A, B;
     };
 
     void call (struct my_struct p) {
-       printf ("%d", p.A);
+        printf ("%d", p.A);
     }
 
 In Ada, a type can be modified so that parameters of this type can always be
 passed by copy.
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value
 
-    type my_struct is record
-       A : Interfaces.C.int;
-       B : Interfaces.C.int;
-    end record
-      with Convention => C,
-                         C_Pass_By_Copy;
+    with Interfaces.C;
 
-    procedure Call (V : my_struct);
-    pragma Import (C, Call, "call");
+    procedure Main is
+       type my_struct is record
+          A : Interfaces.C.int;
+          B : Interfaces.C.int;
+       end record
+         with Convention => C_Pass_By_Copy;
+
+       procedure Call (V : my_struct);
+       pragma Import (C, Call, "call");
+    begin
+       null;
+    end Main;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 Note that this cannot be done at the subprogram declaration level, so if there
 is a mix of by-copy and by-reference calls, two different types need to be
@@ -279,23 +368,45 @@ futures packages and should be stripped |mdash| it will be possible to force
 full name if useful. For example, here's how the following declaration and call
 could be translated:
 
+:code-config:`accumulate_code=True`
+
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Namespaces
 
+    !reg_interface.h
     void registerInterface_Initialize (int size);
 
-    registerInterface_Initialize(15);
+    !reg_interface_test.c
+    #include "reg_interface.h"
+
+    int main(int argc, const char * argv[])
+    {
+        registerInterface_Initialize(15);
+    }
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Namespaces
 
     package Register_Interface is
        procedure Initialize(Size : Integer)
+         with Import     => True,
+              Convention => C,
+              External_Name => "registerInterface_Initialize";
+
     end Register_Interface;
 
-    Register_Interface.Initialize (15);
+    with Register_Interface;
+
+    procedure Main is
+    begin
+       Register_Interface.Initialize (15);
+    end Main;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 Note that in the above example, a :ada:`use` clause on
 :ada:`Register_Interface` could allow to omit the prefix.
@@ -333,16 +444,25 @@ Dynamically allocated arrays can be directly allocated on the stack:
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_Stack_Alloc_C
 
-    int [] a = new int [10];
+    !array_decl.c
+    #include <stdlib.h>
+
+    int main() {
+        int *a = malloc(sizeof(int) * 10);
+    }
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_Stack_Alloc_Ada
 
-    type Arr is new Array (Integer range <>) of Integer;
-    A : Arr (0 .. 9);
+    procedure Main is
+       type Arr is array (Integer range <>) of Integer;
+       A : Arr (0 .. 9);
+    begin
+       null;
+    end Main;
 
 It's even possible to create a such an array within a structure, provided that
 the size of the array is known when instantiating this object, using a type
@@ -350,27 +470,37 @@ discriminant:
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Struct_Array_Stack_Alloc_C
 
-    typedef struct S {
-       int * a;
-    };
+    !array_decl.c
+    #include <stdlib.h>
 
-    S v;
+    typedef struct {
+        int * a;
+    } S;
 
-    V.a = new int [10];
+    int main(int argc, const char * argv[])
+    {
+        S v;
+
+        v.a = malloc(sizeof(int) * 10);
+    }
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Struct_Array_Stack_Alloc_Ada
 
-    type Arr is new Array (Integer range <>) of Integer;
+    procedure Main is
+       type Arr is array (Integer range <>) of Integer;
 
-    type S (Last : Integer) is record
-       A : Arr (0 .. Last);
-    end record;
+       type S (Last : Integer) is record
+          A : Arr (0 .. Last);
+       end record;
 
-    V : S (9);
+       V : S (9);
+    begin
+       null;
+    end Main;
 
 With regards to parameter passing, usage mode (input / output) should be
 preferred to implementation mode (by copy or by reference). The Ada compiler
@@ -381,17 +511,20 @@ particular, it differentiates between arrays and scalars. For example:
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_In_Out_C
 
+    !p.h
     void p (int * a, int * b);
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_In_Out_Ada
 
-    type Arr is new Array (Integer range <>) of Integer;
+    package Array_Types is
+       type Arr is array (Integer range <>) of Integer;
 
-    procedure P (A : in out Integer; B : in out Arr);
+       procedure P (A : in out Integer; B : in out Arr);
+    end Array_Types;
 
 Most of the time, access to registers end up in some specific structures
 being mapped onto a specific location in memory. In Ada, this can be achieved
@@ -399,22 +532,25 @@ through an :ada:`Address` clause associated to a variable, for example:
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Address_C
 
-    int * r = 0xFFFF00A0;
+    !test_c.c
+    int main(int argc, const char * argv[])
+    {
+        int * r = (int *)0xFFFF00A0;
+    }
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Address_Ada
 
     with System;
 
     procedure Test is
-       R : Integer
-         with Address => System.To_Address (16#FFFF00A0#);
+       R : Integer with Address => System'To_Address (16#FFFF00A0#);
     begin
        null;
-    end;
+    end Test;
 
 These are some of the most common misuse of pointers in Ada. Previous sections
 of the document deal with specifically using access types if absolutely
@@ -435,32 +571,40 @@ would be done through masks, e.g.:
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Flags_C
 
-    #define flag1 = 0b0001;
-    #define flag2 = 0b0010;
-    #define flag3 = 0b0100;
-    #define flag4 = 0b1000;
+    !flags.c
+    #define FLAG_1 0b0001
+    #define FLAG_2 0b0010
+    #define FLAG_3 0b0100
+    #define FLAG_4 0b1000
 
-    int value = 0;
+    int main(int argc, const char * argv[])
+    {
+        int value = 0;
 
-    value = value | flag2 | flag4;
+        value |= FLAG_2 | FLAG_4;
+    }
 
 In Ada, the above can be represented through a Boolean array of enumerate
 values:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Flags_Ada
 
-    type Values is (Flag_1, Flag_2, Flag_3, Flag_4);
-    type Value_Array is array (Values) of Boolean
-       with Pack;
+    procedure Main is
+       type Values is (Flag_1, Flag_2, Flag_3, Flag_4);
+       type Value_Array is array (Values) of Boolean
+         with Pack;
 
-    Value : Value_Array :=
-       (Flat_2 => True,
-        Flag_4 => True,
-        others => False)
+       Value : Value_Array :=
+          (Flag_2 => True,
+           Flag_4 => True,
+           others => False);
+    begin
+       null;
+    end Main;
 
 Note the :ada:`Pack` directive for the array, which guarantees that the array
 takes as little space as possible.
@@ -470,27 +614,35 @@ representation is needed or more complex data are used:
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Rec_Map_C
 
-    int value = 0;
+    !struct_map.c
+    int main(int argc, const char * argv[])
+    {
+        int value = 0;
 
-    value = (2 << 1) | 1;
+        value = (2 << 1) | 1;
+    }
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Rec_Map_Ada
 
-    type Value_Rec is record
-      V1 : Boolean;
-      V2 : Integer range 0 .. 3;
-    end record;
+    procedure Main is
+       type Value_Rec is record
+         V1 : Boolean;
+         V2 : Integer range 0 .. 3;
+       end record;
 
-    for Value_Rec use record
-       V1 at 0 range 0 .. 0;
-       V2 at 0 range 1 .. 2;
-    end record;
+       for Value_Rec use record
+          V1 at 0 range 0 .. 0;
+          V2 at 0 range 1 .. 2;
+       end record;
 
-    Value : Value_Rec := (V1 => True, V2 => 2);
+       Value : Value_Rec := (V1 => True, V2 => 2);
+    begin
+       null;
+    end Main;
 
 The benefit of using Ada structure instead of bitwise operations is threefold:
 
@@ -508,12 +660,19 @@ above could also be literally translated to:
 
 [C]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitwise_Ops_Ada
 
-    type Value_Type is mod 2 ** 32
-       with Provide_Shift_Operators;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-    Value : Value_Type := Shift_Left (2, 1) or 1;
+    procedure Main is
+       type Value_Type is mod 2 ** 32;
+       pragma Provide_Shift_Operators (Value_Type);
+
+       Value : Value_Type;
+    begin
+       Value := Shift_Left (2, 1) or 1;
+       Put_Line ("Value = " & Value_Type'Image (Value));
+    end Main;
 
 Converting structures to Integer or Addresses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

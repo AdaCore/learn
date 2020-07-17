@@ -51,30 +51,47 @@ of the type they're being called upon. For example, a swap macro may look like:
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Swap_C
 
-    #define SWAP (t, a, b) ({\
-                                t tmp = a; \
-                                a = b; \
-                                b = tmp; \
-                              })
+    !main.c
+    #include <stdio.h>
+    #include <stdlib.h>
 
-    int a = 0;
-    int b = 1;
-    SWAP (int, a, b)
+    #define SWAP(t, a, b) ({\
+                               t tmp = a; \
+                               a = b; \
+                               b = tmp; \
+                            })
+
+    int main()
+    {
+        int a = 10;
+        int b = 42;
+
+        printf("a = %d, b = %d\n", a, b);
+
+        SWAP (int, a, b);
+
+        printf("a = %d, b = %d\n", a, b);
+    }
 
 Ada offers a way to declare this kind of functions as a generic, that is, a
 function that is written after static arguments, such as a parameter:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Swap_Ada
 
-    declare
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+
        generic
           type A_Type is private;
+       procedure Swap (Left, Right : in out A_Type);
+
        procedure Swap (Left, Right : in out A_Type) is
-          Temp : A_Type := Left;
+          Temp : constant A_Type := Left;
        begin
           Left  := Right;
           Right := Temp;
@@ -82,10 +99,22 @@ function that is written after static arguments, such as a parameter:
 
        procedure Swap_I is new Swap (Integer);
 
+       A : Integer := 10;
+       B : Integer := 42;
+
     begin
-       A : Integer;
-       B : Integer;
-       Swap (A, B);
+       Put_Line ("A = "
+                 & Integer'Image (A)
+                 & ", B = "
+                 & Integer'Image (B));
+
+       Swap_I (A, B);
+
+       Put_Line ("A = "
+                 & Integer'Image (A)
+                 & ", B = "
+                 & Integer'Image (B));
+    end Main;
 
 There are a few key differences between the C and the Ada version here. In C,
 the macro can be used directly and essentially get expanded by the preprocessor
@@ -104,7 +133,9 @@ fact, it's much more common to render an entire package generic. In this case
 the instantiation creates a new version of all the entities present in the
 generic, including global variables. For example:
 
-.. code-block:: ada
+:code-config:`accumulate_code=True`
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_1
 
     generic
        type T is private;
@@ -118,9 +149,11 @@ generic, including global variables. For example:
 
 The above can be instantiated and used the following way:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_1
 
-    declare
+    with Gen;
+
+    procedure Main is
        package I1 is new Gen (Integer);
        package I2 is new Gen (Integer);
        subtype Str10 is String (1..10);
@@ -129,7 +162,9 @@ The above can be instantiated and used the following way:
        I1.G := 0;
        I2.G := 1;
        I3.G := 2;
-    end;
+    end Main;
+
+:code-config:`accumulate_code=False`
 
 Here, :ada:`I1.G`, :ada:`I2.G` and :ada:`I3.G` are three distinct variables.
 
@@ -139,7 +174,7 @@ such as variables, subprograms or package instantiations with certain
 properties. For example, the following provides a sort algorithm for any kind
 of array:
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_2
 
     generic
        type Component is private;
@@ -185,7 +220,9 @@ to tagged derivation, which is OOP-related and discussed in a later section.
 
 Let's start from the following example:
 
-.. code-block:: ada
+:code-config:`accumulate_code=True`
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
     package Drivers_1 is
 
@@ -197,6 +234,24 @@ Let's start from the following example:
 
     end Drivers_1 ;
 
+    package body Drivers_1 is
+
+       --  NOTE: unimplemented procedures: Startup, Send, Send_Fast
+       --        mock-up implementation: Receive
+
+       procedure Startup (Device : Device_1) is null;
+
+       procedure Send (Device : Device_1; Data : Integer) is null;
+
+       procedure Send_Fast (Device : Device_1; Data : Integer) is null;
+
+       procedure Receive (Device : Device_1; Data : out Integer) is
+       begin
+          Data := 42;
+       end Receive;
+
+    end Drivers_1 ;
+
 In the above example, :ada:`Device_1` is an empty record type. It may also have
 some fields if required, or be a different type such as a scalar. Then the four
 procedures :ada:`Startup`, :ada:`Send`, :ada:`Send_Fast` and :ada:`Receive` are
@@ -205,10 +260,13 @@ parameter or return type directly referencing this type and declared in the
 same scope. At this stage, there's nothing special with this type: we're using
 it as we would use any other type. For example:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Drivers_1;   use Drivers_1;
 
     procedure Main is
-       Device : Device_1;
+       D : Device_1;
        I : Integer;
     begin
        Startup (D);
@@ -223,16 +281,26 @@ the startup code that has to be done differently. We can create a new type that
 operates exactly like the previous one, but modifies only the behavior of
 :ada:`Startup`:
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
-    Package Drivers_2 is
+    with Drivers_1; use Drivers_1;
+
+    package Drivers_2 is
 
        type Device_2 is new Device_1;
 
        overriding
        procedure Startup (Device : Device_2);
 
-    end Drivers_2
+    end Drivers_2;
+
+    package body Drivers_2 is
+
+       overriding
+       procedure Startup (Device : Device_2) is null;
+
+    end Drivers_2;
+
 
 Here, :ada:`Device_2` is derived from :ada:`Device_1`. It contains all the
 exact same properties and primitives, in particular, :ada:`Startup`,
@@ -241,10 +309,13 @@ change the :ada:`Startup` function and to provide a different implementation.
 We override this function. The main subprogram doesn't change much, except for
 the fact that it now relies on a different type:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Drivers_2;   use Drivers_2;
 
     procedure Main is
-       Device : Device_2;
+       D : Device_2;
        I : Integer;
     begin
        Startup (D);
@@ -260,18 +331,26 @@ of our example, let's assume that the hardware team went back to the
 :ada:`Device_1` way of implementing :ada:`Startup`. We can write this new
 device the following way:
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+
+    with Drivers_1; use Drivers_1;
 
     package Drivers_3 is
 
-       type Device_3 is new Device_2;
+       type Device_3 is new Device_1;
 
        overriding
        procedure Startup (Device : Device_3);
 
-       overriding
-       procedure Send_Fast (Device : Device_1; Data : Integer)
+       procedure Send_Fast (Device : Device_3; Data : Integer)
        is abstract;
+
+    end Drivers_3;
+
+    package body Drivers_3 is
+
+       overriding
+       procedure Startup (Device : Device_3) is null;
 
     end Drivers_3;
 
@@ -281,20 +360,27 @@ To then implement :ada:`Startup` of :ada:`Device_3` as being the same as the
 :ada:`Startup` of :ada:`Device_1`, we can convert the type in the
 implementation:
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+
+    package body Drivers_3 is
 
        overriding
        procedure Startup (Device : Device_3) is
        begin
-          Device_1.Startup (Device_1 (Device));
+          Drivers_1.Startup (Device_1 (Device));
        end Startup;
+
+    end Drivers_3;
 
 Our :ada:`Main` now looks like:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Drivers_3;   use Drivers_3;
 
     procedure Main is
-       Device : Device_3;
+       D : Device_3;
        I : Integer;
     begin
        Startup (D);
@@ -302,6 +388,8 @@ Our :ada:`Main` now looks like:
        Receive (D, I);
        Put_Line (Integer'Image (I));
     end Main;
+
+:code-config:`accumulate_code=False`
 
 Here, the call to :ada:`Send_Fast` will get flagged by the compiler.
 
@@ -312,9 +400,7 @@ application in one unique file. One way to do this is to use the same name for
 all types, and use a renaming to select which package to use. Here's a
 simplified example to illustrate that:
 
-.. code-block:: ada
-
-    -- drivers_1.ads
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
     package Drivers_1 is
 
@@ -324,9 +410,16 @@ simplified example to illustrate that:
 
     end Drivers_1;
 
-.. code-block:: ada
+    package body Drivers_1 is
 
-    -- drivers_2.ads
+       procedure Send (Device : Device_Type; Data : Integer) is null;
+
+       procedure Receive (Device : Device_Type; Data : out Integer) is
+       begin
+          Data := 42;
+       end Receive;
+
+    end Drivers_1;
 
     with Drivers_1;
 
@@ -338,24 +431,31 @@ simplified example to illustrate that:
 
     end Drivers_2;
 
-.. code-block:: ada
+    package body Drivers_2 is
 
-    -- drivers.ads
+       procedure Send (Device : Device_Type; Data : Integer) is null;
+
+       procedure Receive (Device : Device_Type; Data : out Integer) is
+       begin
+          Data := 42;
+       end Receive;
+
+    end Drivers_2;
+
+    with Drivers_1;
 
     package Drivers renames Drivers_1;
 
-.. code-block:: ada
-
-    -- main.ads
-
-    with Drivers;
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Drivers;     use Drivers;
 
     procedure Main is
-       Device : Device_Type;
+       D : Device_Type;
        I : Integer;
     begin
        Send (D, 999);
        Receive (D, I);
+       Put_Line (Integer'Image (I));
     end Main;
 
 In the above example, the whole code can rely on :file:`drivers.ads`, instead
