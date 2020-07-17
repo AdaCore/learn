@@ -553,6 +553,127 @@ cited in the *References* section.
 Ravenscar
 ---------
 
-.. todo::
+The Ravenscar profile is a subset of the Ada concurrency facilities that
+supports determinism, schedulability analysis, constrained memory utilization,
+and certification to the highest integrity levels. Four distinct application
+domains are intended:
 
-    Complete section!
+- hard real-time applications requiring predictability,
+
+- safety-critical systems requiring formal, stringent certification,
+
+- high-integrity applications requiring formal static analysis and
+  verification,
+
+- embedded applications requiring both a small memory footprint and low
+  execution overhead.
+
+Tasking constructs that preclude analysis, either technically or economically,
+are disallowed. You can use the :ada:`pragma Profile (Ravenscar)` to indicate
+that the Ravenscar restrictions must be observed in your program.
+
+Some of the examples we've seen above will be rejected by the compiler when
+using the Ravenscar profile. For example:
+
+.. code-block:: ada
+
+    package My_Tasks is
+
+       task type My_Task (First : Character);
+
+    end My_Tasks;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body My_Tasks is
+
+       task body My_Task is
+       begin
+          for C in First .. 'Z' loop
+             Put (C);
+          end loop;
+       end My_Task;
+
+    end My_Tasks;
+
+    pragma Profile (Ravenscar);
+
+    with My_Tasks; use My_Tasks;
+
+    procedure Main is
+       Tab : array (0 .. 9) of My_Task ('G');
+    begin
+       null;
+    end Main;
+
+This code violates the `No_Task_Hierarchy` restriction of the Ravenscar
+profile. This is due to the declaration of :ada:`Tab` in the :ada:`Main`
+procedure. Ravenscar expects task declarations to be done on a library level.
+Therefore, a simple solution is to create a separate package and reference it
+in the main application:
+
+.. code-block:: ada
+
+    with My_Tasks; use My_Tasks;
+
+    package My_Task_Inst is
+
+       Tab : array (0 .. 9) of My_Task ('G');
+
+    end My_Task_Inst;
+
+    pragma Profile (Ravenscar);
+
+    with My_Task_Inst;
+
+    procedure Main is
+    begin
+       null;
+    end Main;
+
+Also, Ravenscar prohibits entries for tasks. For example, we're not allowed to
+write this declaration:
+
+.. code-block:: ada
+
+    task type My_Task (First : Character) is
+       entry Start;
+    end My_Task;
+
+You can use, however, one entry per protected object. As an example, the
+declaration of the :ada:`Binary_Semaphore` type that we've discussed before
+compiles fine with Ravenscar:
+
+.. code-block:: ada
+
+    protected type Binary_Semaphore is
+       entry Wait;
+       procedure Signal;
+    private
+       Signaled : Boolean := False;
+    end Binary_Semaphore;
+
+We could add more procedures and functions to the declaration of
+:ada:`Binary_Semaphore`, but we wouldn't be able to add another entry when
+using Ravenscar.
+
+Similar to the previous example with the task array declaration, objects of
+:ada:`Binary_Semaphore` cannot be declared in the main application:
+
+.. code-block:: ada
+
+    procedure Main is
+       B : Binary_Semaphore;
+    begin
+       null;
+    end Main;
+
+This violates the `No_Local_Protected_Objects` restriction. Again, Ravenscar
+expects this declaration to be done on a library level, so a solution to make
+this code compile is to have this declaration in a separate package and
+reference it in the :ada:`Main` procedure.
+
+Ravenscar offers many additional restrictions. Covering those would extrapolate
+the scope of this chapter. You can find more examples using the Ravenscar
+profile on
+`this blog post <https://blog.adacore.com/theres-a-mini-rtos-in-my-language>`_.
