@@ -137,7 +137,7 @@ Building and Debugging mixed language code
 The easiest way to build an application using mixed C / Ada code is to create
 a simple project file for :program:`gprbuild` and specify C as an additional
 language. By default, when using :program:`gprbuild` we only compile Ada source
-files. To compile C code files as well, we use the ``Languages`` entry and
+files. To compile C code files as well, we use the ``Languages`` attribute and
 specify ``c`` as an option, as in the following example of a project file named
 `default.gpr`:
 
