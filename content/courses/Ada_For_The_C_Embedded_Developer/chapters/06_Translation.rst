@@ -159,8 +159,9 @@ files to build the executable.
 
 In order to include debug information, you can use ``gprbuild -cargs -g``. This
 option adds debug information based on both C and Ada code to the executable.
-To debug the executable, you can use applications that you would normally use
-to debug C-code-based executables, such as :program:`gdb` or :program:`ddd`. If
+
+To debug the executable, you can use programs such as :program:`gdb` or
+:program:`ddd`, which are suitable for debugging both C and Ada source-code. If
 you prefer a complete IDE, you may want to look into :program:`GNAT Studio`,
 which supports building and debugging an application within a single
 environment, and remotely running applications loaded to various embedded
