@@ -46,7 +46,7 @@ The GNAT Toolchain for Embedded Targets
 
 When we're discussing embedded programming, our target device is often
 different from the host, which is the device we're using to actually write and
-build an application. In this case, we're talking about compilation cross
+build an application. In this case, we're talking about cross compilation
 platforms.
 
 The GNAT toolchain supports cross platform compilation for various
