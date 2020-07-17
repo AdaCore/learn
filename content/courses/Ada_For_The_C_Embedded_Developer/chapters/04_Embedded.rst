@@ -10,9 +10,53 @@ Writing Ada on Embedded Systems
 Understanding the Ada Run-Time
 ------------------------------
 
-.. todo::
+Ada supports a high level of abstractness and expressiveness. In some cases,
+the compiler translates those constructs directly into machine code. However,
+there are many high-level constructs for which a direct compilation would be
+difficult. In those cases, the compiler links to a library containing an
+implementation of those high-level constructs: this is the so-called run-time
+library.
 
-    Complete section!
+One typical example of high-level constructs that can be cumbersome for direct
+machine code generation is Ada source-code using tasking. In this case, linking
+to a low-level implementation of multithreading support |mdash| for example, an
+implementation using POSIX threads |mdash| is more straightforward than trying
+to make the compiler generate all the machine code.
+
+In the case of GNAT, the run-time library is implemented using both C and Ada
+source-code. Also, depending on the operating system, the library will
+interface with low-level functionality from the target operating system.
+
+There are basically two types of run-time libraries:
+
+- the **standard** run-time library: in many cases, this is the run-time
+  library available on desktop operating systems or on some embedded
+  platforms (such as ARM-Linux on a Raspberry-Pi).
+
+- the **configurable** run-time library: this is a capability that is used to
+  create custom run-time libraries for specific target devices.
+
+*Configurable* run-time libraries are usually used for constrained target
+devices where support for the full library would be difficult or even
+impossible. In this case, configurable run-time libraries may support just a
+subset of the full Ada language. There are many reasons that speak for this
+approach:
+
+- Some aspects of the Ada language may not translate well to limited operating
+  systems.
+
+- Memory constraints may require reducing the size of the run-time library, so
+  that developers may need to replace or even remove parts of the library.
+
+- When certification is required, those parts of the library that would require
+  too much certification effort can be removed.
+
+When using configurable run-time library, the compiler checks whether the
+library supports certain features of the language. If a feature isn't
+supported, the compiler will give an error message.
+
+You can find further information about the run-time library on
+`this chapter of the GNAT User's Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx/the_gnat_configurable_run_time_facility.html>`_
 
 Low Level Programming
 ---------------------
