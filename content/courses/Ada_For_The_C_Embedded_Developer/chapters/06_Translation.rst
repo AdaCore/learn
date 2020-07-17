@@ -159,6 +159,26 @@ files to build the executable.
 
 In order to include debug information, you can use ``gprbuild -cargs -g``. This
 option adds debug information based on both C and Ada code to the executable.
+Alternatively, you can specify a ``Builder`` package in the project file and
+include global compilation switches for each language using the
+``Global_Compilation_Switches`` attribute. For example:
+
+.. code-block:: ada
+
+    project Default is
+
+       for Languages use ("ada", "c");
+       for Main use ("main.adb");
+
+       package Builder is
+          for Global_Compilation_Switches ("Ada") use ("-g");
+          for Global_Compilation_Switches ("C") use ("-g");
+       end Builder;
+
+    end Default;
+
+In this case, you can simply run ``gprbuild -P default.gpr`` to build the
+executable.
 
 To debug the executable, you can use programs such as :program:`gdb` or
 :program:`ddd`, which are suitable for debugging both C and Ada source-code. If
