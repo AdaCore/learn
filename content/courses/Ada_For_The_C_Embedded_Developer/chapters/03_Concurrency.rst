@@ -411,13 +411,24 @@ cited in the *References* section.
 Ravenscar
 ---------
 
-Ravenscar is a profile of the Ada language. It provides a subset of the
-language by restricting features that would otherwise be legal Ada code. The
-goal is to provide features for developing real-time systems while avoiding
-typical issues that may come up with concurrency, such as deadlock and
-priority inversion. You can use the :ada:`pragma Profile (Ravenscar)` to
-indicate that the Ravenscar restrictions must be observed for some piece of
-code.
+The Ravenscar profile is a subset of the Ada concurrency facilities that
+supports determinism, schedulability analysis, constrained memory utilization,
+and certification to the highest integrity levels. Four distinct application
+domains are intended:
+
+- hard real-time applications requiring predictability,
+
+- safety-critical systems requiring formal, stringent certification,
+
+- high-integrity applications requiring formal static analysis and
+  verification,
+
+- embedded applications requiring both a small memory footprint and low
+  execution overhead.
+
+Tasking constructs that preclude analysis, either technically or economically,
+are disallowed. You can use the :ada:`pragma Profile (Ravenscar)` to indicate
+that the Ravenscar restrictions must be observed in your program.
 
 Some of the examples we've seen above will be rejected by the compiler when
 using the Ravenscar profile. For example:
