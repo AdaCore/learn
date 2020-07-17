@@ -134,10 +134,40 @@ And that's all that's necessary. Here's an example of a call to :ada:`Call`:
 Building and Debugging mixed language code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+The easiest way to build an application using mixed C / Ada code is to create
+a simple project file for :program:`gprbuild` and specify C as an additional
+language. By default, when using :program:`gprbuild` we only compile Ada source
+files. To compile C code files as well, we use the ``Languages`` entry and
+specify ``c`` as an option, as in the following example of a project file named
+`default.gpr`:
 
-    Complete section!
+.. code-block:: ada
 
+    project Default is
+
+       for Languages use ("ada", "c");
+       for Main use ("main.adb");
+
+    end Default;
+
+Then, we use this project file to build the application by simply calling
+``gprbuild``. Alternatively, we can specify the project file on the
+command-line with the ``-P`` option |mdash| for example,
+``gprbuild -P default.gpr``. In both cases, ``gprbuild`` compiles all C
+source-code file found in the directory and links the corresponding object
+files to build the executable.
+
+In order to include debug information, you can use ``gprbuild -cargs -g``. This
+option adds debug information based on both C and Ada code to the executable.
+To debug the executable, you can use applications that you would normally use
+to debug C-code-based executables, such as :program:`gdb` or :program:`ddd`. If
+you prefer a complete IDE, you may want to look into :program:`GNAT Studio`,
+which supports building and debugging an application within a single
+environment, and remotely running applications loaded to various embedded
+devices. You can find more information about :program:`gprbuild` and
+:program:`GNAT Studio` in the
+`Introduction to GNAT Toolchain <https://learn.adacore.com/courses/GNAT_Toolchain_Intro/index.html>`_
+course.
 
 Automatic interfacing
 ~~~~~~~~~~~~~~~~~~~~~
