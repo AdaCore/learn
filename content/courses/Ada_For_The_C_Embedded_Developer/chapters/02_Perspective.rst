@@ -26,7 +26,7 @@ The GNAT Toolchain
 The toolchain used throughout this book is called GNAT, which is a suite of
 tools with a compiler based on the GCC environment. It can be obtained from
 AdaCore, either as part of a commercial contract with
-`GNAT Pro <https://www.adacore.com/gnatpro)>`_ or at no charge with the
+`GNAT Pro <https://www.adacore.com/gnatpro>`_ or at no charge with the
 `GNAT Community edition <https://www.adacore.com/community>`_. The information
 on this book  will be relevant no matter which edition you're using. Most
 examples will be runnable on the native Linux or Windows version for
@@ -40,13 +40,79 @@ to GNAT, and sometimes to specific platforms supported by GNAT. We'll try to
 make the distinction between what is GNAT-specific and Ada generic as much as
 possible through this book.
 
+For an introduction to the GNAT Toolchain for the GNAT Community edition, you
+may refer to the
+:doc:`Introduction to GNAT Toolchain <courses/GNAT_Toolchain_Intro/index>`
+course.
+
 The GNAT Toolchain for Embedded Targets
 -----------------------------------------
 
-.. todo::
+When we're discussing embedded programming, our target device is often
+different from the host, which is the device we're using to actually write and
+build an application. In this case, we're talking about cross compilation
+platforms.
 
-    AI - Rob: complete this section (explain run-time differences, how to
-    compile, the concept of BSP, etc)
+The GNAT toolchain supports cross platform compilation for various
+target devices. This section provides a short introduction to the topic. For
+more details, please refer to the
+`GNAT User’s Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx.html>`_
+
+GNAT supports two types of cross platforms:
+
+- **cross targets**, where the target device has an embedded operating system.
+
+    - ARM-Linux, which is commonly found in a Raspberry-Pi, is a prominent
+      example.
+
+- **bareboard targets**, where the run-times do not depend on an operating
+  system.
+
+    - In this case, the application communicates directly with the device's
+      processor.
+
+For each platform, a set of run-time libraries is available. Run-time libraries
+implement a subset of the Ada language for different use cases, and they're
+different for each target platform. They may be selected via an attribute in
+the project's GPR project file or as a command-line switch to
+:program:`GPRbuild`. Although the run-time libraries may vary from target to
+target, the user interface stays the same, providing portability for the
+application.
+
+Run-time libraries consists of:
+
+#. Files that are dependent on the target board.
+
+    - These files are responsible for configuring and interacting with the
+      hardware.
+
+    - They are known as Board Support Package |mdash| commonly refer as *BSP*.
+
+#. Code that is target-independent.
+
+    - This code implements language-defined functionality.
+
+The bareboard run-time libraries are provided as customized run-times that are
+configured to target a very specific micro-controller or processor. Therefore,
+for different micro-controllers and processors, the run-time libraries need to
+be ported to your target. These are some examples of what needs to be ported:
+
+- startup code / scripts;
+
+- clock frequency initializations;
+
+- memory mapping / allocation;
+
+- interrupts and interrupt priorities;
+
+- register descriptions.
+
+For more details on the topic, please refer to the following chapters of the
+`GNAT User’s Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx.html>`_:
+
+- `Bareboard Topics <http://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx/bareboard_topics.html>`_
+
+- `Customized Run-Time Libraries <http://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx/customized_run-time_libraries.html>`_
 
 Hello World in Ada
 --------------------
