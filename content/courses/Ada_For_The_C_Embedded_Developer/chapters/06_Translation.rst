@@ -869,7 +869,6 @@ complex data structures as a bitstream. For example:
 
     end My_Recs;
 
-    with Ada.Text_IO; use Ada.Text_IO;
     with Serializer;  use Serializer;
     with My_Recs;     use My_Recs;
 
