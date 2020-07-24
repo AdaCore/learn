@@ -824,7 +824,6 @@ Since we can use this pattern for any arbitrary data type, this allows us to
 easily create a subprogram to serialize data types and, for example, transmit
 complex data structures as a bitstream. For example:
 
-:code-config:`accumulate_code=True`
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization
 
@@ -977,8 +976,6 @@ procedure:
        Display(R2);
        New_Line;
     end Main;
-
-:code-config:`accumulate_code=False`
 
 In the procedure version of :ada:`To_Rec`, we create a bit-field representation
 of the output parameter (:ada:`B_R`) and simply copy the data from the input
