@@ -944,8 +944,8 @@ procedure:
 
        procedure Display (R : Rec) is
        begin
-          Put_Line ("("  & Integer'Image (R.V) & ", "
-                    & (R.S) & ")");
+          Put ("("  & Integer'Image (R.V) & ", "
+               & (R.S) & ")");
        end;
 
     end My_Recs;
