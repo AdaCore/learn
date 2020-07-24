@@ -807,7 +807,7 @@ records. For example:
     begin
        B (2) := True;
        for I in A'Range loop
-          Put_Line ("Value (" & Integer'Image (I)
+          Put_Line ("A (" & Integer'Image (I)
                     & ")= " & Integer'Image (A (I)));
        end loop;
     end Int_Array_Bitfield;
