@@ -812,9 +812,9 @@ records. For example:
        end loop;
     end Int_Array_Bitfield;
 
-In this example, we're using the bit-field to set bit #3 of the first element
-of the array (:ada:`A (1)`). We could set bit #4 of the second element by
-using the size of the data type (in this case, :ada:`Integer'Size`):
+In the Ada example above, we're using the bit-field to set bit #3 of the first
+element of the array (:ada:`A (1)`). We could set bit #4 of the second element
+by using the size of the data type (in this case, :ada:`Integer'Size`):
 
 .. code-block:: ada
 
