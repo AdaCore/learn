@@ -725,9 +725,265 @@ above could also be literally translated to:
        Put_Line ("Value = " & Value_Type'Image (Value));
     end Main;
 
-Converting structures to Integer or Addresses
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Serialization of data types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+In the previous section, we've seen how to perform bitwise operations. In this
+section, we look at how to interpret a data type as a bit-field and perform
+low-level operations on it.
 
-    Complete section!
+In general, you can create a bit-field from any arbitrary data type. First, we
+declare a bit-field type like this:
+
+.. code-block:: ada
+
+    type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+As we've seen previously, the :ada:`Pack` aspect declared at the end of the
+type declaration indicates that the compiler should optimize for size. We must
+use this attribute to be able to interpret data types as a bit-field.
+
+Then, we can use the :ada:`Size` and the :ada:`Address` attributes of an
+object of any type to declare a bit-field for this object. The :ada:`Size`
+attributes indicates the number of bits required to represent the object, while
+the :ada:`Address` attribute indicates the address in memory of that object.
+For example, assuming we've declare a variable :ada:`V`, we can declare an
+actual bit-field object using this pattern:
+
+.. code-block:: ada
+
+    B : Bit_Field (0 .. V'Size - 1) with Address => V'Address;
+
+This technique is called overlays for serialization. Now, any operation that we
+perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
+the same memory location.
+
+Let's look at a simple example:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Bitfield is
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       V : Integer := 0;
+       B : Bit_Field (0 .. V'Size - 1) with Address => V'Address;
+    begin
+       B (2) := True;
+       Put_Line ("V = " & Integer'Image (V));
+    end Simple_Bitfield;
+
+In this example, we first initialize :ada:`V` with zero. Then, we use the
+bit-field :ada:`B` and set the third element (:ada:`B (2)`) to :ada:`True`.
+This automatically sets bit #3 of :ada:`V` to 1. Therefore, as expected,
+the application displays the message :ada:`V = 4`, which corresponds to
+:math:`2^2 = 4`.
+
+Note that, in the declaration of the bit-field type above, we could also have
+used a positive range. For example:
+
+.. code-block:: ada
+
+    type Bit_Field is array (Positive range <>) of Boolean with Pack;
+
+    B : Bit_Field (1 .. V'Size) with Address => V'Address;
+
+The only difference in this case is that the first bit is :ada:`B (1)` instead
+of :ada:`B (0)`.
+
+We can use this pattern for objects of more complex data types like arrays or
+records. For example:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Int_Array_Bitfield is
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       A : array (1 .. 2) of Integer := (others => 0);
+       B : Bit_Field (0 .. A'Size - 1) with Address => A'Address;
+    begin
+       B (2) := True;
+       for I in A'Range loop
+          Put_Line ("Value (" & Integer'Image (I)
+                    & ")= " & Integer'Image (A (I)));
+       end loop;
+    end Int_Array_Bitfield;
+
+In this example, we're using the bit-field to set bit #3 of the first element
+of the array (:ada:`A (1)`). We could set bit #4 of the second element by
+using the size of the data type (in this case, :ada:`Integer'Size`):
+
+.. code-block:: ada
+
+    B (Integer'Size + 3) := True;
+
+Since we can use this pattern for any arbitrary data type, this allows us to
+easily create a subprogram to serialize data types and, for example, transmit
+complex data structures as a bitstream. For example:
+
+:code-config:`accumulate_code=True`
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization
+
+    package Serializer is
+
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       procedure Transmit (B : Bit_Field);
+
+    end Serializer;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Serializer is
+
+       procedure Transmit (B : Bit_Field) is
+
+          procedure Show_Bit (V : Boolean) is
+          begin
+             case V is
+                when False => Put ("0");
+                when True  => Put ("1");
+             end case;
+          end Show_Bit;
+
+       begin
+          Put ("Bits: ");
+          for I in B'Range loop
+             Show_Bit (B (I));
+          end loop;
+          New_Line;
+       end Transmit;
+
+    end Serializer;
+
+    package My_Recs is
+
+       type Rec is record
+          V : Integer;
+          S : String (1 .. 3);
+       end record;
+
+    end My_Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Serializer;  use Serializer;
+    with My_Recs;     use My_Recs;
+
+    procedure Main is
+       R : Rec := (5, "abc");
+       B : Bit_Field (0 .. R'Size - 1) with Address => R'Address;
+    begin
+       Transmit (B);
+    end Main;
+
+In this example, the :ada:`Transmit` procedure from :ada:`Serializer` package
+displays the individual bits of a bit-field. We could have used this strategy
+to actually transmit the information as a bitstream. In the main application,
+we call :ada:`Transmit` for the object :ada:`R` of record type :ada:`Rec`.
+Since :ada:`Transmit` has the bit-field type as a parameter, we can use it
+for any type, as long as we have a corresponding bit-field representation.
+
+Similarly, we can write a subprogram that converts a bit-field |mdash| which
+may have been received as a bitstream |mdash| to a specific type. We can add a
+:ada:`To_Rec` subprogram to the :ada:`My_Recs` package to convert a bit-field
+to the :ada:`Rec` type. This can be used to convert a bitstream that we
+received into the actual data type representation.
+
+As you know, we may write the :ada:`To_Rec` subprogram as a procedure or as a
+function. Since we need to use slightly different strategies for the
+implementation, the following example has both versions of :ada:`To_Rec`.
+
+This is the updated code for the :ada:`My_Recs` package and the :ada:`Main`
+procedure:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization
+
+    with Serializer;  use Serializer;
+
+    package My_Recs is
+
+       type Rec is record
+          V : Integer;
+          S : String (1 .. 3);
+       end record;
+
+       procedure To_Rec (B :     Bit_Field;
+                         R : out Rec);
+
+       function To_Rec (B : Bit_Field) return Rec;
+
+       procedure Display (R : Rec);
+
+    end My_Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body My_Recs is
+
+       procedure To_Rec (B :     Bit_Field;
+                         R : out Rec) is
+          B_R : Bit_Field (0 .. R'Size - 1) with Address => R'Address;
+       begin
+          --  Assigning data from bit-field parameter B to bit-field
+          --  representation of output parameter.
+          B_R := B;
+       end To_Rec;
+
+       function To_Rec (B : Bit_Field) return Rec is
+          R   : Rec;
+          B_R : Bit_Field (0 .. R'Size - 1) with Address => R'Address;
+       begin
+          --  Assigning data from bit-field parameter B to local bit-field B_R.
+          --  R is automatically updated.
+          B_R := B;
+
+          return R;
+       end To_Rec;
+
+       procedure Display (R : Rec) is
+       begin
+          Put_Line ("("  & Integer'Image (R.V) & ", "
+                    & (R.S) & ")");
+       end;
+
+    end My_Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Serializer;  use Serializer;
+    with My_Recs;     use My_Recs;
+
+    procedure Main is
+       R1 : Rec := (5, "abc");
+       R2 : Rec := (0, "zzz");
+
+       B1 : Bit_Field (0 .. R1'Size - 1) with Address => R1'Address;
+    begin
+       Put ("R2 = ");
+       Display(R2);
+       New_Line;
+
+       --  Getting Rec type using data from B1, which is a bit-field
+       --  representation of R1.
+       To_Rec (B1, R2);
+
+       --  We could use the function version of To_Rec:
+       --  R2 := To_Rec (B1);
+
+       Put_Line ("New bitstream received!");
+       Put ("R2 = ");
+       Display(R2);
+       New_Line;
+    end Main;
+
+:code-config:`accumulate_code=False`
+
+In the procedure version of :ada:`To_Rec`, we create a bit-field representation
+of the output parameter (:ada:`B_R`) and simply copy the data from the input
+bit-field to :ada:`B_R`, so that the output parameter is updated. In the
+function version of :ada:`To_Rec`, however, we need to use a local object and a
+corresponding bit-field representation and return this object after updating
+the bit-field.
