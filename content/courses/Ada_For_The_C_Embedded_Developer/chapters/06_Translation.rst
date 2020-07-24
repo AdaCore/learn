@@ -900,6 +900,38 @@ procedure:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_Ada
 
+    package Serializer is
+
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       procedure Transmit (B : Bit_Field);
+
+    end Serializer;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Serializer is
+
+       procedure Transmit (B : Bit_Field) is
+
+          procedure Show_Bit (V : Boolean) is
+          begin
+             case V is
+                when False => Put ("0");
+                when True  => Put ("1");
+             end case;
+          end Show_Bit;
+
+       begin
+          Put ("Bits: ");
+          for I in B'Range loop
+             Show_Bit (B (I));
+          end loop;
+          New_Line;
+       end Transmit;
+
+    end Serializer;
+
     with Serializer;  use Serializer;
 
     package My_Recs is
