@@ -735,6 +735,8 @@ low-level operations on it.
 In general, you can create a bit-field from any arbitrary data type. First, we
 declare a bit-field type like this:
 
+[Ada]
+
 .. code-block:: ada
 
     type Bit_Field is array (Natural range <>) of Boolean with Pack;
@@ -750,6 +752,8 @@ the :ada:`Address` attribute indicates the address in memory of that object.
 For example, assuming we've declare a variable :ada:`V`, we can declare an
 actual bit-field object using this pattern:
 
+[Ada]
+
 .. code-block:: ada
 
     B : Bit_Field (0 .. V'Size - 1) with Address => V'Address;
@@ -759,6 +763,8 @@ perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
 the same memory location.
 
 Let's look at a simple example:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Ada
 
@@ -792,8 +798,28 @@ used a positive range. For example:
 The only difference in this case is that the first bit is :ada:`B (1)` instead
 of :ada:`B (0)`.
 
+In C, we would rely on bit-shifting and masking to set that specific bit:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_C
+
+    !bitfield.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        int v = 0;
+
+        v = v | (1 << 2);
+
+        printf("v = %d\n", v);
+    }
+
 We can use this pattern for objects of more complex data types like arrays or
 records. For example:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_Ada
 
@@ -816,14 +842,40 @@ In the Ada example above, we're using the bit-field to set bit #3 of the first
 element of the array (:ada:`A (1)`). We could set bit #4 of the second element
 by using the size of the data type (in this case, :ada:`Integer'Size`):
 
+[Ada]
+
 .. code-block:: ada
 
     B (Integer'Size + 3) := True;
+
+In C, we would select the specific array position and, again, rely on
+bit-shifting and masking to set that specific bit:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_C
+
+    !bitfield_int_array.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        int i;
+        int a[2] = {0, 0};
+
+        a[0] = a[0] | (1 << 2);
+
+        for (i = 0; i < 2; i++)
+        {
+            printf("a[%d] = %d\n", i, a[i]);
+        }
+    }
 
 Since we can use this pattern for any arbitrary data type, this allows us to
 easily create a subprogram to serialize data types and, for example, transmit
 complex data structures as a bitstream. For example:
 
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_ada
 
@@ -885,6 +937,60 @@ we call :ada:`Transmit` for the object :ada:`R` of record type :ada:`Rec`.
 Since :ada:`Transmit` has the bit-field type as a parameter, we can use it
 for any type, as long as we have a corresponding bit-field representation.
 
+In C, we interpret the input pointer as an array of bytes, and then use
+shifting and masking to access the bits of that byte. Here, we use the
+:c:`char` type because it has a size of one byte in most platforms.
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_C
+
+    !my_recs.h
+    typedef struct {
+        int v;
+        char s[3];
+    } rec;
+
+    !serializer.h
+    void transmit (void *bits, int len);
+
+    !serializer.c
+    #include "serializer.h"
+
+    #include <stdio.h>
+    #include <assert.h>
+
+    void transmit (void *bits, int len)
+    {
+        int i, j;
+        char *c = (char *)bits;
+
+        assert(sizeof(char) == 1);
+
+        printf("Bits: ");
+        for (i = 0; i < len / (sizeof(char) * 8); i++)
+        {
+            for (j = 0; j < sizeof(char) * 8; j++)
+            {
+                printf("%d", c[i] >> j & 1);
+            }
+        }
+        printf("\n");
+    }
+
+    !bitfield_serialization.c
+    #include <stdio.h>
+
+    #include "my_recs.h"
+    #include "serializer.h"
+
+    int main(int argc, const char * argv[])
+    {
+        rec r = {5, "abc"};
+
+        transmit(&r, sizeof(r) * 8);
+    }
+
 Similarly, we can write a subprogram that converts a bit-field |mdash| which
 may have been received as a bitstream |mdash| to a specific type. We can add a
 :ada:`To_Rec` subprogram to the :ada:`My_Recs` package to convert a bit-field
@@ -897,6 +1003,8 @@ implementation, the following example has both versions of :ada:`To_Rec`.
 
 This is the updated code for the :ada:`My_Recs` package and the :ada:`Main`
 procedure:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_Ada
 
@@ -1015,3 +1123,69 @@ bit-field to :ada:`B_R`, so that the output parameter is updated. In the
 function version of :ada:`To_Rec`, however, we need to use a local object and a
 corresponding bit-field representation and return this object after updating
 the bit-field.
+
+In C, we can interpret the input pointer as an array of bytes, and copy the
+individual bytes. For example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_C
+
+    !my_recs.h
+    typedef struct {
+        int v;
+        char s[3];
+    } rec;
+
+    void to_r (void *bits, int len, rec *r);
+
+    void display_r (rec *r);
+
+    !my_recs.c
+    #include "my_recs.h"
+
+    #include <stdio.h>
+    #include <assert.h>
+
+    void to_r (void *bits, int len, rec *r)
+    {
+        int i, j;
+        char *c1 = (char *)bits;
+        char *c2 = (char *)r;
+
+        assert(len == sizeof(rec) * 8);
+
+        for (i = 0; i < len / (sizeof(char) * 8); i++)
+        {
+            c2[i] = c1[i];
+        }
+    }
+
+    void display_r (rec *r)
+    {
+        printf("{%d, %c%c%c}", r->v, r->s[0], r->s[1], r->s[2]);
+    }
+
+    !bitfield_serialization.c
+    #include <stdio.h>
+    #include "my_recs.h"
+
+    int main(int argc, const char * argv[])
+    {
+        rec r1 = {5, "abc"};
+        rec r2 = {0, "zzz"};
+
+        printf("r2 = ");
+        display_r (&r2);
+        printf("\n");
+
+        to_r(&r1, sizeof(r1) * 8, &r2);
+
+        printf("New bitstream received!\n");
+        printf("r2 = ");
+        display_r (&r2);
+        printf("\n");
+    }
+
+Here, :c:`to_r` casts both pointer parameters to pointers to :c:`char` to get
+a byte-aligned pointer. Then, it simply copies the data byte-by-byte.
