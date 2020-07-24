@@ -760,7 +760,7 @@ the same memory location.
 
 Let's look at a simple example:
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -795,7 +795,7 @@ of :ada:`B (0)`.
 We can use this pattern for objects of more complex data types like arrays or
 records. For example:
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -825,7 +825,7 @@ easily create a subprogram to serialize data types and, for example, transmit
 complex data structures as a bitstream. For example:
 
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_ada
 
     package Serializer is
 
@@ -898,7 +898,7 @@ implementation, the following example has both versions of :ada:`To_Rec`.
 This is the updated code for the :ada:`My_Recs` package and the :ada:`Main`
 procedure:
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_Ada
 
     with Serializer;  use Serializer;
 
