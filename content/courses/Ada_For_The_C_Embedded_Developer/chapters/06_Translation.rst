@@ -1052,8 +1052,8 @@ complex data structures as a bitstream. For example:
 
        begin
           Put ("Bits: ");
-          for I in B'Range loop
-             Show_Bit (B (I));
+          for E of B loop
+             Show_Bit (E);
           end loop;
           New_Line;
        end Transmit;
@@ -1182,8 +1182,8 @@ procedure:
 
        begin
           Put ("Bits: ");
-          for I in B'Range loop
-             Show_Bit (B (I));
+          for E of B loop
+             Show_Bit (E);
           end loop;
           New_Line;
        end Transmit;
