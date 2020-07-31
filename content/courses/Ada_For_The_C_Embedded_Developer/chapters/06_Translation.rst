@@ -943,7 +943,8 @@ complex data structures as a bitstream. For example:
 
     procedure Main is
        R : Rec := (5, "abc");
-       B : Bit_Field (0 .. R'Size - 1) with Address => R'Address;
+       B : Bit_Field (0 .. R'Size - 1)
+         with Address => R'Address, Volatile;
     begin
        Transmit (B);
     end Main;
