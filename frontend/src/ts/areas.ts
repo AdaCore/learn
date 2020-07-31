@@ -317,6 +317,7 @@ export class LabContainer {
    */
   public processResults(data: CheckOutput.LabOutput): boolean {
     for (const index in data.cases) {
+      /* istanbul ignore next */
       if ({}.hasOwnProperty.call(data.cases, index)) {
         const test: CheckOutput.TestResult =
           (data.cases[index] as unknown) as CheckOutput.TestResult;

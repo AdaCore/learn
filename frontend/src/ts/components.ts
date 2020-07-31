@@ -61,6 +61,7 @@ export class Tabs {
     for (const c of this.contents) {
       parent.appendChild(c);
     }
+    /* istanbul ignore next */
     if (this.headers.length > 0) {
       this.headers[0].click();
     }
