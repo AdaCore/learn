@@ -235,6 +235,8 @@ Dealing with Absence of FPU with Fixed Point
 
     Complete section!
 
+.. _VolatileAtomicData:
+
 Volatile and Atomic data
 ------------------------
 

@@ -762,6 +762,21 @@ This technique is called overlays for serialization. Now, any operation that we
 perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
 the same memory location.
 
+We should add the :ada:`Volatile` aspect to the declaration to cover the case
+when both objects can still be changed independently |mdash| they need to be
+volatile, otherwise one change might be missed. This is the updated
+declaration:
+
+[Ada]
+
+.. code-block:: ada
+
+    B : Bit_Field (0 .. V'Size - 1) with Address => V'Address, Volatile;
+
+Using the :ada:`Volatile` aspect is important at high level of optimizations.
+You can find further details about this aspect in the section about the
+:ref:`Volatile and Atomic attributes <VolatileAtomicData>`.
+
 Let's look at a simple example:
 
 [Ada]
@@ -774,7 +789,8 @@ Let's look at a simple example:
        type Bit_Field is array (Natural range <>) of Boolean with Pack;
 
        V : Integer := 0;
-       B : Bit_Field (0 .. V'Size - 1) with Address => V'Address;
+       B : Bit_Field (0 .. V'Size - 1)
+         with Address => V'Address, Volatile;
     begin
        B (2) := True;
        Put_Line ("V = " & Integer'Image (V));
@@ -793,7 +809,8 @@ used a positive range. For example:
 
     type Bit_Field is array (Positive range <>) of Boolean with Pack;
 
-    B : Bit_Field (1 .. V'Size) with Address => V'Address;
+    B : Bit_Field (1 .. V'Size)
+      with Address => V'Address, Volatile;
 
 The only difference in this case is that the first bit is :ada:`B (1)` instead
 of :ada:`B (0)`.
@@ -829,7 +846,8 @@ records. For example:
        type Bit_Field is array (Natural range <>) of Boolean with Pack;
 
        A : array (1 .. 2) of Integer := (others => 0);
-       B : Bit_Field (0 .. A'Size - 1) with Address => A'Address;
+       B : Bit_Field (0 .. A'Size - 1)
+         with Address => A'Address, Volatile;
     begin
        B (2) := True;
        for I in A'Range loop
@@ -1064,7 +1082,8 @@ procedure:
 
        procedure To_Rec (B :     Bit_Field;
                          R : out Rec) is
-          B_R : Bit_Field (0 .. R'Size - 1) with Address => R'Address;
+          B_R : Bit_Field (0 .. R'Size - 1)
+            with Address => R'Address, Volatile;
        begin
           --  Assigning data from bit-field parameter B to bit-field
           --  representation of output parameter.
@@ -1073,7 +1092,8 @@ procedure:
 
        function To_Rec (B : Bit_Field) return Rec is
           R   : Rec;
-          B_R : Bit_Field (0 .. R'Size - 1) with Address => R'Address;
+          B_R : Bit_Field (0 .. R'Size - 1)
+            with Address => R'Address, Volatile;
        begin
           --  Assigning data from bit-field parameter B to local bit-field B_R.
           --  R is automatically updated.
@@ -1098,7 +1118,8 @@ procedure:
        R1 : Rec := (5, "abc");
        R2 : Rec := (0, "zzz");
 
-       B1 : Bit_Field (0 .. R1'Size - 1) with Address => R1'Address;
+       B1 : Bit_Field (0 .. R1'Size - 1)
+         with Address => R1'Address, Volatile;
     begin
        Put ("R2 = ");
        Display(R2);
