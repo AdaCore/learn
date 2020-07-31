@@ -799,7 +799,7 @@ Let's look at a simple example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -862,7 +862,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     usually created to analyze and manipulate existing values. Let's look at an
     example where this happens:
 
-    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
+    .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
 
         package P is
 
@@ -916,7 +916,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     compiler to not apply default initialization in the declaration because the
     object is imported. Let's look at the corrected example:
 
-    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Import
+    .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Import
 
         package P is
 
@@ -973,7 +973,7 @@ records. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_Ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1030,7 +1030,7 @@ complex data structures as a bitstream. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_ada
 
     package Serializer is
 
@@ -1160,7 +1160,7 @@ procedure:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_Ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_Ada
 
     package Serializer is
 
