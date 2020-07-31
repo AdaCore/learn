@@ -1098,7 +1098,7 @@ shifting and masking to access the bits of that byte. Here, we use the
     !my_recs.h
     typedef struct {
         int v;
-        char s[3];
+        char s[4];
     } rec;
 
     !serializer.h
