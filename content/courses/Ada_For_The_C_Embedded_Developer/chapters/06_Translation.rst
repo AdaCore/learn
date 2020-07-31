@@ -1214,22 +1214,20 @@ procedure:
 
        procedure To_Rec (B :     Bit_Field;
                          R : out Rec) is
-          B_R : Bit_Field (0 .. R'Size - 1)
-            with Address => R'Address, Import => True, Volatile;
+          B_R : Rec
+            with Address => B'Address, Import => True, Volatile;
        begin
-          --  Assigning data from bit-field parameter B to bit-field
-          --  representation of output parameter.
-          B_R := B;
+          --  Assigning data from overlayed record B_R to output parameter R.
+          R := B_R;
        end To_Rec;
 
        function To_Rec (B : Bit_Field) return Rec is
           R   : Rec;
-          B_R : Bit_Field (0 .. R'Size - 1)
-            with Address => R'Address, Import => True, Volatile;
+          B_R : Rec
+            with Address => B'Address, Import => True, Volatile;
        begin
-          --  Assigning data from bit-field parameter B to local bit-field B_R.
-          --  R is automatically updated.
-          B_R := B;
+          --  Assigning data from overlayed record B_R to local record R.
+          R := B_R;
 
           return R;
        end To_Rec;
@@ -1270,12 +1268,11 @@ procedure:
        New_Line;
     end Main;
 
-In the procedure version of :ada:`To_Rec`, we create a bit-field representation
-of the output parameter (:ada:`B_R`) and simply copy the data from the input
-bit-field to :ada:`B_R`, so that the output parameter is updated. In the
-function version of :ada:`To_Rec`, however, we need to use a local object and a
-corresponding bit-field representation and return this object after updating
-the bit-field.
+In both versions of :ada:`To_Rec`, we declare the record object :ada:`B_R` as
+an overlay of the input bit-field. In the procedure version of :ada:`To_Rec`,
+we then simply copy the data from :ada:`B_R` to the output parameter :ada:`R`.
+In the function version of :ada:`To_Rec`, however, we need to declare a local
+record object :ada:`R`, which we return after the assignment.
 
 In C, we can interpret the input pointer as an array of bytes, and copy the
 individual bytes. For example:
