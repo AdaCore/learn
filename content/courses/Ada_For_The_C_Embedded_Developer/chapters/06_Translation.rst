@@ -952,6 +952,18 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
            Put_Line ("V = " & Integer'Image (V));
         end Main;
 
+    This unwanted side-effect of the initialization by the :ada:`Default_Value`
+    aspect that we've just seen can also happen in these cases:
+
+    - when we set a default value for components of a record type declaration,
+
+    - when we use the :ada:`Default_Component_Value` aspect for array types, or
+
+    - when we set use the :ada:`Initialize_Scalars` pragma for a package.
+
+    Again, using the :ada:`Import` aspect when declaring the overlay eliminates
+    this side-effect.
+
 We can use this pattern for objects of more complex data types like arrays or
 records. For example:
 
