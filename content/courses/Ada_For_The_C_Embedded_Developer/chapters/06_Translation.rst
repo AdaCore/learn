@@ -762,6 +762,10 @@ This technique is called overlays for serialization. Now, any operation that we
 perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
 the same memory location.
 
+The approach that we use in this section relies on the :ada:`Address`
+attribute. Another approach would be to use unchecked conversions, which we'll
+discuss in the :ref:`next section <OverlaysVsUncheckedConversions>`.
+
 We should add the :ada:`Volatile` aspect to the declaration to cover the case
 when both objects can still be changed independently |mdash| they need to be
 volatile, otherwise one change might be missed. This is the updated
@@ -1339,3 +1343,20 @@ individual bytes. For example:
 
 Here, :c:`to_r` casts both pointer parameters to pointers to :c:`char` to get
 a byte-aligned pointer. Then, it simply copies the data byte-by-byte.
+
+.. _OverlaysVsUncheckedConversions:
+
+Overlays vs. Unchecked Conversions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. todo::
+
+    Complete section!
+
+    Explain that overlays are more efficient and allow to have one change
+    automatically reflected by the other object, while Unchecked_Conversions
+    require a copy.
+
+    Unchecked_Conversions are not fundamentally bad and can also be used
+    (they're actually cleaner and safer), but they're not always at the right
+    level of performance / semantics.
