@@ -725,8 +725,8 @@ above could also be literally translated to:
        Put_Line ("Value = " & Value_Type'Image (Value));
     end Main;
 
-Serialization of data types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mapping Structures to Bit-Fields
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the previous section, we've seen how to perform bitwise operations. In this
 section, we look at how to interpret a data type as a bit-field and perform
