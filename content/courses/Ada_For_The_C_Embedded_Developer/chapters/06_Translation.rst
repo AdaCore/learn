@@ -777,6 +777,20 @@ Using the :ada:`Volatile` aspect is important at high level of optimizations.
 You can find further details about this aspect in the section about the
 :ref:`Volatile and Atomic attributes <VolatileAtomicData>`.
 
+Another important aspect is :ada:`Import`, which must be set to :ada:`True`.
+When used in the context of object declarations, it'll avoid default
+initialization which could overwrite the existing content while creating the
+overlay |mdash| see an example in the admonition below. The declaration now
+becomes:
+
+.. code-block:: ada
+
+    B : Bit_Field (0 .. V'Size - 1)
+      with
+        Address => V'Address,
+        Import  => True,
+        Volatile;
+
 Let's look at a simple example:
 
 [Ada]
@@ -790,7 +804,7 @@ Let's look at a simple example:
 
        V : Integer := 0;
        B : Bit_Field (0 .. V'Size - 1)
-         with Address => V'Address, Volatile;
+         with Address => V'Address, Import => True, Volatile;
     begin
        B (2) := True;
        Put_Line ("V = " & Integer'Image (V));
@@ -810,7 +824,7 @@ used a positive range. For example:
     type Bit_Field is array (Positive range <>) of Boolean with Pack;
 
     B : Bit_Field (1 .. V'Size)
-      with Address => V'Address, Volatile;
+      with Address => V'Address, Import => True, Volatile;
 
 The only difference in this case is that the first bit is :ada:`B (1)` instead
 of :ada:`B (0)`.
@@ -833,6 +847,111 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
         printf("v = %d\n", v);
     }
 
+.. admonition:: Important
+
+    The :ada:`Default_Value` aspect is associated with type declarations. When
+    declaring an object whose type has a default value, the object will
+    automatically be initialized with the default value. This also happens when
+    creating an overlay with the :ada:`Address` attribute. The default value is
+    then used to overwrite the content at the memory location indicated by the
+    address. This might not be the behavior we expect, since overlays are
+    usually created to analyze and manipulate existing values. Let's look at an
+    example where this happens:
+
+    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
+
+        package P is
+
+           type Unsigned_8 is mod 2 ** 8 with Default_Value => 0;
+
+           type Byte_Field is array (Natural range <>) of Unsigned_8;
+
+           procedure Display_Bytes_Increment (V : in out Integer);
+        end P;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body P is
+
+           procedure Display_Bytes_Increment (V : in out Integer) is
+              BF  : Byte_Field (1 .. V'Size / 8)
+                with Address => V'Address, Volatile;
+           begin
+              for B of BF loop
+                 Put_Line ("Byte = " & Unsigned_8'Image (B));
+              end loop;
+              Put_Line ("Now incrementing...");
+              V := V + 1;
+           end Display_Bytes_Increment;
+
+        end P;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with P; use P;
+
+        procedure Main is
+           V : Integer := 10;
+        begin
+           Put_Line ("V = " & Integer'Image (V));
+           Display_Bytes_Increment (V);
+           Put_Line ("V = " & Integer'Image (V));
+        end Main;
+
+    In this example, we expect :ada:`Display_Bytes_Increment` to display each
+    byte of the :ada:`V` parameter and then increment it by one. Initially,
+    :ada:`V` is set to 10, and the call to :ada:`Display_Bytes_Increment`
+    should change it to 11. However, due to the default value associated to the
+    :ada:`Unsigned_8` type |mdash| which is set to 0 |mdash| the value of
+    :ada:`V` is overwritten in the declaration of :ada:`BF` (in
+    :ada:`Display_Bytes_Increment`). Therefore, the value of :ada:`V` is 1
+    after the call to :ada:`Display_Bytes_Increment`. Of course, this is not
+    the behavior that we originally intended.
+
+    Using the :ada:`Import` aspect solves this problem. This aspect tells the
+    compiler to not apply default initialization in the declaration because the
+    object is imported. Let's look at the corrected example:
+
+    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Import
+
+        package P is
+
+           type Unsigned_8 is mod 2 ** 8 with Default_Value => 0;
+
+           type Byte_Field is array (Natural range <>) of Unsigned_8;
+
+           procedure Display_Bytes_Increment (V : in out Integer);
+        end P;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body P is
+
+           procedure Display_Bytes_Increment (V : in out Integer) is
+              BF  : Byte_Field (1 .. V'Size / 8)
+                with Address => V'Address, Import => True, Volatile;
+           begin
+              for B of BF loop
+                 Put_Line ("Byte = " & Unsigned_8'Image (B));
+              end loop;
+              Put_Line ("Now incrementing...");
+              V := V + 1;
+           end Display_Bytes_Increment;
+
+        end P;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with P; use P;
+
+        procedure Main is
+           V : Integer := 10;
+        begin
+           Put_Line ("V = " & Integer'Image (V));
+           Display_Bytes_Increment (V);
+           Put_Line ("V = " & Integer'Image (V));
+        end Main;
+
 We can use this pattern for objects of more complex data types like arrays or
 records. For example:
 
@@ -847,7 +966,7 @@ records. For example:
 
        A : array (1 .. 2) of Integer := (others => 0);
        B : Bit_Field (0 .. A'Size - 1)
-         with Address => A'Address, Volatile;
+         with Address => A'Address, Import => True, Volatile;
     begin
        B (2) := True;
        for I in A'Range loop
@@ -944,7 +1063,7 @@ complex data structures as a bitstream. For example:
     procedure Main is
        R : Rec := (5, "abc");
        B : Bit_Field (0 .. R'Size - 1)
-         with Address => R'Address, Volatile;
+         with Address => R'Address, Import => True, Volatile;
     begin
        Transmit (B);
     end Main;
@@ -1084,7 +1203,7 @@ procedure:
        procedure To_Rec (B :     Bit_Field;
                          R : out Rec) is
           B_R : Bit_Field (0 .. R'Size - 1)
-            with Address => R'Address, Volatile;
+            with Address => R'Address, Import => True, Volatile;
        begin
           --  Assigning data from bit-field parameter B to bit-field
           --  representation of output parameter.
@@ -1094,7 +1213,7 @@ procedure:
        function To_Rec (B : Bit_Field) return Rec is
           R   : Rec;
           B_R : Bit_Field (0 .. R'Size - 1)
-            with Address => R'Address, Volatile;
+            with Address => R'Address, Import => True, Volatile;
        begin
           --  Assigning data from bit-field parameter B to local bit-field B_R.
           --  R is automatically updated.
@@ -1120,7 +1239,7 @@ procedure:
        R2 : Rec := (0, "zzz");
 
        B1 : Bit_Field (0 .. R1'Size - 1)
-         with Address => R1'Address, Volatile;
+         with Address => R1'Address, Import => True, Volatile;
     begin
        Put ("R2 = ");
        Display(R2);
