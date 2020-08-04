@@ -1,5 +1,5 @@
 import {Area, OutputArea, LabContainer} from './areas';
-import {Button, CheckBox, Tabs} from './components';
+import {ButtonGroup, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
 import {fetchJSON, fetchBlob, DownloadRequest, DownloadResponse} from './comms';
 import {Resource, RunProgram, CheckOutput} from './types';
@@ -13,25 +13,20 @@ enum DownloadType {
 }
 
 /** The Widget class */
-class Widget {
+export class Widget {
   private editors: Array<Editor> = [];
   protected readonly container: HTMLElement;
   private readonly name: string;
-  private tabs: Tabs = new Tabs();
-  protected outputArea: OutputArea = new OutputArea();
+  private tabs = new Tabs();
+  protected outputArea = new OutputArea();
 
-  private buttons: Array<Button> = [];
-  private buttonsDisabled = false;
+  protected buttons = new ButtonGroup();
 
-  protected lab = false;
-
-  private dlType: DownloadType = DownloadType.Client;
+  private readonly dlType: DownloadType = DownloadType.Client;
 
   private readonly server: string;
 
   private shadowFiles: Array<Resource> = [];
-
-  protected buttonGroup: HTMLElement;
   protected outputGroup: HTMLElement;
 
   /**
@@ -50,18 +45,22 @@ class Widget {
     const files = this.container.getElementsByClassName('file');
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const a: Resource = {basename: file.getAttribute('basename'),
-        contents: file.textContent};
-      file.textContent = '';
+      const a: Resource = {
+        basename: file.getAttribute('basename'),
+        contents: file.textContent,
+      };
+      this.container.removeChild(file);
       resources.push(a);
     }
 
     const shadowFiles = this.container.getElementsByClassName('shadow_file');
     for (let i = 0; i < shadowFiles.length; i++) {
       const file = shadowFiles[i];
-      const a: Resource = {basename: file.getAttribute('basename'),
-        contents: file.textContent};
-      file.textContent = '';
+      const a: Resource = {
+        basename: file.getAttribute('basename'),
+        contents: file.textContent,
+      };
+      this.container.removeChild(file);
       this.shadowFiles.push(a);
     }
 
@@ -72,7 +71,6 @@ class Widget {
 
       const tab = this.tabs.addTab(file.basename, ed.render(), () => {
         const lengths = this.editors.map((e) => e.getLength());
-        // This is a new one: ... is a spread operator
         const max = Math.max(...lengths);
         ed.setLength(max);
       });
@@ -82,43 +80,35 @@ class Widget {
     // Check which buttons are enabled on container and populate
     for (const mode in Strings.modeDictionary) {
       if (this.container.getAttribute(mode + '_button')) {
-        this.addButton(mode);
+        this.buttons.addButton([],
+            Strings.modeDictionary[mode].tooltip,
+            Strings.modeDictionary[mode].buttonText,
+            'click', async () => {
+              await this.buttonCB(mode);
+            });
       }
     }
 
     // if this widget doesn't have a name defined, don't allow for download
-    if (util.isUndefined(this.name)) {
+    if (util.isNull(this.name)) {
       this.dlType = DownloadType.None;
+    } else {
+      // if there are any buttons, the dltype needs to be server
+      if (this.buttons.length() > 0) {
+        this.dlType = DownloadType.Server;
+      } else {
+        this.dlType = DownloadType.Client;
+      }
     }
   }
 
   /**
-   * Add a button to the button list
-   * @param {string} mode - the mode of button to add
+   *  Method to destruct the object. Used primarily for testing.
    */
-  protected addButton(mode: string): void {
-    // if there are any buttons, the dltype needs to be server
-    this.dlType = DownloadType.Server;
-
-    const btn: Button = new Button([],
-        Strings.modeDictionary[mode].tooltip,
-        Strings.modeDictionary[mode].buttonText);
-    btn.registerEvent('click', async () => {
-      if (this.buttonsDisabled) {
-        return;
-      }
-      this.buttonsDisabled = true;
-      try {
-        await this.buttonCB(mode);
-      } catch (error) {
-        this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-        console.error('Error:', error);
-      } finally {
-        this.buttonsDisabled = false;
-      }
-    });
-
-    this.buttons.push(btn);
+  public destructor(): void {
+    for (const ed of this.editors) {
+      ed.destructor();
+    }
   }
 
   /**
@@ -145,21 +135,22 @@ class Widget {
   /**
    * The main callback for the widget buttons
    * @param {string} mode - the mode of the button that triggered the event
+   * @param {boolean} lab - specifies if this is a lab widget
    */
-  protected async buttonCB(mode: string): Promise<void> {
+  protected async buttonCB(mode: string, lab = false): Promise<void> {
     this.outputArea.reset();
 
     this.outputArea.add(['output_info', 'console_output'],
         Strings.CONSOLE_OUTPUT_LABEL + ':');
     this.outputArea.showSpinner(true);
 
-    const files: Array<Resource> = this.collectResources();
+    const files = this.collectResources();
 
     const serverData: RunProgram.TS = {
       files: files,
       mode: mode,
       name: this.name,
-      lab: this.lab,
+      lab: lab,
     };
 
     try {
@@ -172,6 +163,9 @@ class Widget {
       }
 
       await this.getOutputFromIdentifier(json);
+    } catch (error) {
+      this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+      console.error('Error:', error);
     } finally {
       this.outputArea.showSpinner(false);
     }
@@ -351,10 +345,6 @@ class Widget {
     });
 
     if (data.completed) {
-      this.buttons.map((b) => {
-        b.disabled = false;
-      });
-
       if (data.status != 0) {
         this.outputArea.addError(Strings.EXIT_STATUS_LABEL +
             ': ' + data.status);
@@ -477,13 +467,7 @@ class Widget {
     row.classList.add('row', 'output_row');
     this.container.appendChild(row);
 
-    this.buttonGroup = document.createElement('div');
-    this.buttonGroup.classList.add('col-md-3');
-    row.appendChild(this.buttonGroup);
-
-    this.buttons.map((b) => {
-      this.buttonGroup.appendChild(b.render());
-    });
+    row.appendChild(this.buttons.render());
 
     this.outputGroup = document.createElement('div');
     this.outputGroup.classList.add('col-md-9');
@@ -496,7 +480,7 @@ class Widget {
  * The LabWidget class
  * @extends Widget
  */
-class LabWidget extends Widget {
+export class LabWidget extends Widget {
   private readonly labContainer: LabContainer = new LabContainer;
 
   /**
@@ -507,19 +491,23 @@ class LabWidget extends Widget {
   constructor(container: HTMLElement, server: string) {
     super(container, server);
 
-    this.addButton('submit');
-
-    this.lab = true;
+    this.buttons.addButton([],
+        Strings.modeDictionary['submit'].tooltip,
+        Strings.modeDictionary['submit'].buttonText,
+        'click', async () => {
+          await this.buttonCB('submit');
+        });
   }
 
   /**
    * The main callback for the widget buttons
    * @param {string} mode - the mode of the button that triggered the event
+   * @param {boolean} lab - specifies that this is a lab
    */
-  protected async buttonCB(mode: string): Promise<void> {
+  protected async buttonCB(mode: string, lab = true): Promise<void> {
     this.labContainer.reset();
 
-    await super.buttonCB(mode);
+    await super.buttonCB(mode, lab);
 
     this.labContainer.sort();
   }

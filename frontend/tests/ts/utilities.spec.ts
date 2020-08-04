@@ -5,7 +5,7 @@ chai.use(require('chai-dom'));
 // Import package under test
 import * as util from '../../src/ts/utilities';
 
-describe('isString', () => {
+describe('isString()', () => {
   it('should return true for a string and false for other', () => {
     const trueResult = util.isString('Hello');
     expect(trueResult).to.be.true;
@@ -15,7 +15,7 @@ describe('isString', () => {
   });
 });
 
-describe('isNumber', () => {
+describe('isNumber()', () => {
   it('should return true for a number and false for other', () => {
     const trueResult = util.isNumber(5);
     expect(trueResult).to.be.true;
@@ -25,7 +25,7 @@ describe('isNumber', () => {
   });
 });
 
-describe('isArray', () => {
+describe('isArray()', () => {
   it('should return true for an array and false for other', () => {
     const trueResult = util.isArray([1, 2, 3]);
     expect(trueResult).to.be.true;
@@ -35,7 +35,7 @@ describe('isArray', () => {
   });
 });
 
-describe('isFunction', () => {
+describe('isFunction()', () => {
   it('should return true for a function and false for other', () => {
     const trueResult = util.isFunction(util.isFunction);
     expect(trueResult).to.be.true;
@@ -45,7 +45,7 @@ describe('isFunction', () => {
   });
 });
 
-describe('isObject', () => {
+describe('isObject()', () => {
   it('should return true for an object and false for other', () => {
     const trueResult = util.isObject({key: 'value'});
     expect(trueResult).to.be.true;
@@ -55,7 +55,7 @@ describe('isObject', () => {
   });
 });
 
-describe('isNull', () => {
+describe('isNull()', () => {
   it('should return true for null and false for other', () => {
     const trueResult = util.isNull(null);
     expect(trueResult).to.be.true;
@@ -65,7 +65,7 @@ describe('isNull', () => {
   });
 });
 
-describe('isNull', () => {
+describe('isNull()', () => {
   it('should return true for undefined and false for other', () => {
     const trueResult = util.isUndefined(undefined);
     expect(trueResult).to.be.true;
@@ -75,7 +75,7 @@ describe('isNull', () => {
   });
 });
 
-describe('isUndefined', () => {
+describe('isUndefined()', () => {
   it('should return true for undefined and false for other', () => {
     const trueResult = util.isUndefined(undefined);
     expect(trueResult).to.be.true;
@@ -85,7 +85,7 @@ describe('isUndefined', () => {
   });
 });
 
-describe('isBoolean', () => {
+describe('isBoolean()', () => {
   it('should return true for a boolean and false for other', () => {
     const trueResult = util.isBoolean(false);
     expect(trueResult).to.be.true;
@@ -95,7 +95,7 @@ describe('isBoolean', () => {
   });
 });
 
-describe('isRegExp', () => {
+describe('isRegExp()', () => {
   it('should return true for a regular expression and false for other', () => {
     const trueResult = util.isRegExp(/^[1-9]\d{0,2}$/g);
     expect(trueResult).to.be.true;
@@ -105,7 +105,7 @@ describe('isRegExp', () => {
   });
 });
 
-describe('isError', () => {
+describe('isError()', () => {
   it('should return true for an error and false for other', () => {
     const trueResult = util.isError(Error('My Error'));
     expect(trueResult).to.be.true;
@@ -115,7 +115,7 @@ describe('isError', () => {
   });
 });
 
-describe('isDate', () => {
+describe('isDate()', () => {
   it('should return true for a date and false for other', () => {
     const trueResult = util.isDate(new Date());
     expect(trueResult).to.be.true;
@@ -125,7 +125,7 @@ describe('isDate', () => {
   });
 });
 
-describe('isSymbol', () => {
+describe('isSymbol()', () => {
   it('should return true for a symbol and false for other', () => {
     const trueResult = util.isSymbol(Symbol('key'));
     expect(trueResult).to.be.true;

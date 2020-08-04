@@ -37,7 +37,7 @@ describe('Editor', () => {
 
     afterEach(() => {
       counter++;
-      editor.destroy();
+      inTest.destructor();
       inTest = null;
       parent = null;
     });
@@ -78,7 +78,7 @@ describe('Editor', () => {
     });
 
     afterEach(() => {
-      editor.destroy();
+      inTest.destructor();
       inTest = null;
       parent = null;
     });
@@ -111,7 +111,7 @@ describe('Editor', () => {
     });
 
     afterEach(() => {
-      editor.destroy();
+      inTest.destructor();
       inTest = null;
       parent = null;
     });
@@ -152,7 +152,7 @@ describe('Editor', () => {
     });
 
     after(() => {
-      editor.destroy();
+      inTest.destructor();
       inTest = null;
       parent = null;
     });
@@ -189,7 +189,7 @@ describe('Editor', () => {
     });
 
     after(() => {
-      editor.destroy();
+      inTest.destructor();
       inTest = null;
       parent = null;
     });
@@ -221,7 +221,7 @@ describe('Editor', () => {
     });
 
     after(() => {
-      editor.destroy();
+      inTest.destructor();
       inTest = null;
       parent = null;
     });
@@ -260,7 +260,7 @@ describe('Editor', () => {
     });
 
     after(() => {
-      editor.destroy();
+      inTest.destructor();
       inTest = null;
       parent = null;
     });
@@ -296,7 +296,7 @@ describe('Editor', () => {
     });
 
     after(() => {
-      editor.destroy();
+      inTest.destructor();
       inTest = null;
       parent = null;
     });
@@ -324,7 +324,7 @@ describe('Editor', () => {
     });
 
     after(() => {
-      editor.destroy();
+      inTest.destructor();
       inTest = null;
       parent = null;
     });

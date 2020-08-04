@@ -71,6 +71,13 @@ export class Editor {
   }
 
   /**
+   *  Method to destruct the object. Used primarily for testing.
+   */
+  public destructor(): void {
+    this.editor.destroy();
+  }
+
+  /**
    * Set the length of the visible lines in the editor
    * @param {number} length - The number of visible lines in the editor
    */

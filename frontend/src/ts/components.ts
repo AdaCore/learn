@@ -105,7 +105,7 @@ export class Button {
    * @param {string} title - The title to put on the button for tooltip
    * @param {string} text - The text to display on the button
    */
-  constructor(classList: string[], title: string, text: string) {
+  constructor(classList: Array<string>, title: string, text: string) {
     this.obj = document.createElement('button');
     this.obj.setAttribute('type', 'button');
     this.obj.classList.add('btn', 'btn-primary', ...classList);
@@ -136,6 +136,71 @@ export class Button {
    */
   public render(): HTMLElement {
     return this.obj;
+  }
+}
+
+/** Class represents a Group of Buttons */
+export class ButtonGroup {
+  private btnList: Array<Button> = [];
+  private enabled = true;
+
+  /**
+   * Adds a button to the button group
+   * @param {string[]} classList - The list of classes to apply to the button
+   * @param {string} title - The title to put on the button for tooltip
+   * @param {string} text - The text to display on the button
+   * @param {string} type - The type of callback event to register
+   * @param {eventCallback} fn - The function to register the event for
+   */
+  public addButton(classList: Array<string>, title: string, text: string,
+      type: string, fn: () => void): void {
+    const btn: Button = new Button(classList, title, text);
+    this.btnList.push(btn);
+
+    btn.registerEvent(type, async () => {
+      if (this.enabled) {
+        this.disable();
+        await fn();
+        this.enable();
+      }
+    });
+  }
+
+  /**
+   * Return the number of buttons in the group
+   * @return {number} the number of buttons in the group
+   */
+  public length(): number {
+    return this.btnList.length;
+  }
+
+  /**
+   * Disable the buttons in the group
+   */
+  private disable(): void {
+    this.enabled = false;
+  }
+
+  /**
+   * Enable the buttons in the group
+   */
+  private enable(): void {
+    this.enabled = true;
+  }
+
+  /**
+   * Render the button group
+   * @return {HTMLElement} - The rendered elements
+   */
+  public render(): HTMLElement {
+    const elem = document.createElement('div');
+    elem.classList.add('col-md-3');
+
+    for (const b of this.btnList) {
+      elem.appendChild(b.render());
+    }
+
+    return elem;
   }
 }
 

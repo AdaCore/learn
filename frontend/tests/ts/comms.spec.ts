@@ -1,10 +1,12 @@
 // Import testing libs
 import chai, {expect} from 'chai';
+chai.use(require('chai-as-promised'));
+
 import fetchMock from 'fetch-mock';
 
-import {fetchBlob, fetchJSON, DownloadRequest} from '../../src/ts/comms';
+import {fetchBlob, fetchJSON, DownloadRequest, DownloadResponse} from '../../src/ts/comms';
 
-describe('fetchBlob', () => {
+describe('fetchBlob()', () => {
   const blobURL = 'http://example.com/get_blob';
 
   const filename = 'example.zip';
@@ -34,27 +36,30 @@ describe('fetchBlob', () => {
       sendAsJson: false,
     });
 
-    const ret = await fetchBlob(serverData, blobURL);
-    expect(ret.filename).to.equal(filename);
-    // TODO: compare the actual blobs. For now, its fine that we aren't
+    const response: DownloadResponse = {
+      blob: blob,
+      filename: filename
+    };
+
+    const ret = fetchBlob(serverData, blobURL);
 
     const lastCall = fetchMock.lastCall();
     expect(lastCall[0]).to.equal(blobURL);
     expect(lastCall[1]['body']).to.equal(JSON.stringify(serverData));
+
+    // TODO: Figure out how to check the actual blob
+    // return expect(ret).to.become(response);
+    return expect(ret).to.eventually.have.property('filename', filename);
   });
 
-  it('should throw an exception', async () => {
+  it('should throw an exception', () => {
     fetchMock.mock(blobURL, 500);
-    try {
-      expect(await fetchBlob(serverData, blobURL)).to.throw(Error);
-    }
-    catch {
-
-    }
+    const ret = fetchBlob(serverData, blobURL);
+    return expect(ret).to.be.rejectedWith(Error, 'Status: 500 Msg: Internal Server Error');
   });
 });
 
-describe('fetchJSON', () => {
+describe('fetchJSON()', () => {
   const jsonURL = 'http://example.com/get_json';
 
   interface testData {
@@ -85,13 +90,9 @@ describe('fetchJSON', () => {
     expect(ret).to.deep.equal(fromBody);
   });
 
-  it('should throw an exception', async () => {
+  it('should throw an exception', () => {
     fetchMock.mock(jsonURL, 500);
-    try {
-      expect(await fetchJSON<testData, testData>(toBody, jsonURL)).to.throw(Error);
-    }
-    catch {
-
-    }
+    const ret = fetchJSON<testData, testData>(toBody, jsonURL);
+    return expect(ret).to.be.rejectedWith(Error, 'Status: 500 Msg: Internal Server Error');
   });
 });

@@ -3,7 +3,7 @@ import chai, {expect} from 'chai';
 chai.use(require('chai-dom'));
 
 // Import package under test
-import {Tabs, Button, CheckBox} from '../../src/ts/components';
+import {Tabs, Button, ButtonGroup, CheckBox} from '../../src/ts/components';
 
 describe('Tabs', () => {
   const inTest = new Tabs();
@@ -133,6 +133,94 @@ describe('Button', () => {
     it('should call my callback function and set my flag to true', () => {
       parent.click();
       expect(flag).to.be.true;
+    });
+  });
+});
+
+describe('ButtonGroup', () => {
+  let inTest: ButtonGroup;
+
+  beforeEach(() => {
+    inTest =new ButtonGroup();
+  });
+
+  afterEach(() => {
+    inTest = null;
+  });
+
+  describe('#render()', () => {
+    it('should render a button group', () => {
+      const parent = inTest.render();
+      expect(parent).to.have.tagName('div');
+      expect(parent).to.have.class('col-md-3');
+    });
+  });
+  describe('#addButton()', () => {
+    it('should add a button to the group with callback', () => {
+      let flag = false;
+
+      inTest.addButton(['test'], 'title', 'text', 'click', () => {
+        flag = true;
+      });
+
+      const parent = inTest.render();
+
+      expect(parent).to.have.descendants('button').and.have.length(1);
+      const but = parent.querySelector('button');
+      expect(but).to.have.class('test');
+      expect(but).to.have.attr('title', 'title');
+      expect(but).to.have.text('text');
+
+      expect(flag).to.be.false;
+      but.click();
+      expect(flag).to.be.true;
+    });
+
+    it('should add two buttons to the group', () => {
+      inTest.addButton(['test1'], 'title1', 'text1', 'click1', () => {});
+      inTest.addButton(['test2'], 'title2', 'text2', 'click2', () => {});
+
+      const parent = inTest.render();
+      expect(parent).to.have.descendants('button').and.have.length(2);
+    });
+
+    it('should not allow two buttons to run at the same time', async () => {
+      let flag1 = false;
+      let flag2 = false;
+      inTest.addButton(['test1'], 'title1', 'text1', 'click', async () => {
+        setTimeout(() => {
+          flag1 = true;
+          expect(flag1).to.be.true;
+          expect(flag2).to.be.false;
+        }, 10);
+      });
+      inTest.addButton(['test2'], 'title2', 'text2', 'click', () => {
+        flag2 = true;
+      });
+      const parent = inTest.render();
+      const buttons = parent.querySelectorAll('button');
+      expect(flag1).to.be.false;
+      expect(flag2).to.be.false;
+      buttons[0].click();
+      buttons[1].click();
+    });
+  });
+
+  describe('#length()', () => {
+    it('should add one button to the group', () => {
+      inTest.addButton(['test1'], 'title1', 'text1', 'click1', () => {});
+
+      const parent = inTest.render();
+      expect(parent).to.have.descendants('button').and.have.length(1);
+      expect(inTest.length()).to.equal(1);
+    });
+    it('should add two buttons to the group', () => {
+      inTest.addButton(['test1'], 'title1', 'text1', 'click1', () => {});
+      inTest.addButton(['test2'], 'title2', 'text2', 'click2', () => {});
+
+      const parent = inTest.render();
+      expect(parent).to.have.descendants('button').and.have.length(2);
+      expect(inTest.length()).to.equal(2);
     });
   });
 });
