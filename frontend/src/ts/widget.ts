@@ -49,8 +49,12 @@ export class Widget {
         basename: file.getAttribute('basename'),
         contents: file.textContent,
       };
-      this.container.removeChild(file);
       resources.push(a);
+    }
+
+    // Remove the files from the container since they are now editors
+    while (files.length > 0) {
+      this.container.removeChild(files[0]);
     }
 
     const shadowFiles = this.container.getElementsByClassName('shadow_file');
@@ -62,6 +66,11 @@ export class Widget {
       };
       this.container.removeChild(file);
       this.shadowFiles.push(a);
+    }
+
+    // Remove the shadow files from the container since they are now a list
+    while (shadowFiles.length > 0) {
+      this.container.removeChild(shadowFiles[0]);
     }
 
     // fill the contents of the tabs
