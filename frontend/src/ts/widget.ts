@@ -57,6 +57,10 @@ export class Widget {
       resources.push(a);
     }
 
+    if (resources.length == 0) {
+      throw Error('Malformed widget: No files present.');
+    }
+
     for (const file of this.container.children('.shadow_file')) {
       const a: Resource = {basename: $(file).attr('basename'),
         contents: $(file).text()};
