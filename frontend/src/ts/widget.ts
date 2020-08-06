@@ -277,54 +277,57 @@ export class Widget {
         // Intentional: fall through
       case 'stderr':
       case 'stdout': {
-        const outMsg = msg.data;
         const ctRegex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
         const rtRegex = /^raised .+ : ([a-zA-Z._0-9-]+):(\d+) (.+)$/m;
 
-        const ctMatchFound: Array<string> = outMsg.match(ctRegex);
-        const rtMatchFound: Array<string> = outMsg.match(rtRegex);
+        // Split multiline messages into single lines for processing
+        const outMsgList = msg.data.split(/\r?\n/);
+        for (const outMsg of outMsgList) {
+          const ctMatchFound: Array<string> = outMsg.match(ctRegex);
+          const rtMatchFound: Array<string> = outMsg.match(rtRegex);
 
-        if (ctMatchFound || rtMatchFound) {
-          let basename: string;
-          let row: number;
-          let col: number;
+          if (ctMatchFound || rtMatchFound) {
+            let basename: string;
+            let row: number;
+            let col: number;
 
-          // Lines that contain a sloc are clickable:
-          const cb = (): void => {
-            if (window.getSelection().toString() == '') {
-              this.editors.map((e) => {
-                if (basename == e.getResource().basename) {
-                  // Switch to the tab that contains the editor
-                  e.getTab().trigger('click');
+            // Lines that contain a sloc are clickable:
+            const cb = (): void => {
+              if (window.getSelection().toString() == '') {
+                this.editors.map((e) => {
+                  if (basename == e.getResource().basename) {
+                    // Switch to the tab that contains the editor
+                    e.getTab().trigger('click');
 
-                  // Jump to the corresponding line
-                  e.gotoLine(row, col);
-                }
-              });
-            }
-          };
+                    // Jump to the corresponding line
+                    e.gotoLine(row, col);
+                  }
+                });
+              }
+            };
 
-          if (ctMatchFound) {
-            basename = ctMatchFound[1];
-            row = parseInt(ctMatchFound[2]);
-            col = parseInt(ctMatchFound[3]);
+            if (ctMatchFound) {
+              basename = ctMatchFound[1];
+              row = parseInt(ctMatchFound[2]);
+              col = parseInt(ctMatchFound[3]);
 
-            if (ctMatchFound[4].indexOf(' info:') == 0) {
-              homeArea.addInfo(outMsg, cb);
+              if (ctMatchFound[4].indexOf(' info:') == 0) {
+                homeArea.addInfo(outMsg, cb);
+              } else {
+                homeArea.addMsg(outMsg, cb);
+                homeArea.errorCount++;
+              }
             } else {
+              basename = rtMatchFound[1];
+              row = parseInt(rtMatchFound[2]);
+              col = 1;
+
               homeArea.addMsg(outMsg, cb);
               homeArea.errorCount++;
             }
           } else {
-            basename = rtMatchFound[1];
-            row = parseInt(rtMatchFound[2]);
-            col = 1;
-
-            homeArea.addMsg(outMsg, cb);
-            homeArea.errorCount++;
+            homeArea.addLine(outMsg);
           }
-        } else {
-          homeArea.addLine(outMsg);
         }
         break;
       }
