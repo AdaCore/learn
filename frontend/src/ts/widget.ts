@@ -64,7 +64,6 @@ export class Widget {
         basename: file.getAttribute('basename'),
         contents: file.textContent,
       };
-      this.container.removeChild(file);
       this.shadowFiles.push(a);
     }
 
@@ -246,7 +245,7 @@ export class Widget {
 
     if (!rdata.completed) {
       // We have not finished processing the output: call this again
-      await new Promise((resolve) => setTimeout(resolve, 250));
+      await util.delay(250);
       await this.getOutputFromIdentifier(json, lRead, nReq);
     }
   }

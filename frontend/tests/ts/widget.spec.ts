@@ -1,15 +1,16 @@
 // Import testing libs
-import chai, {expect} from 'chai';
+import chai, {expect, util} from 'chai';
 chai.use(require('chai-dom'));
 chai.use(require('chai-as-promised'));
 
 import ace from 'brace';
 
 import fetchMock from 'fetch-mock';
-import { OutputArea } from '../../src/ts/areas';
-import { CONSOLE_OUTPUT_LABEL } from '../../src/ts/strings';
+import {OutputArea} from '../../src/ts/areas';
+import * as Strings from '../../src/ts/strings';
 
 import {widgetFactory, Widget, LabWidget} from '../../src/ts/widget';
+import {delay} from '../../src/ts/utilities';
 
 describe('widgetFactory()', () => {
   let htmlList: HTMLCollectionOf<Element>;
@@ -99,6 +100,12 @@ describe('Widget', () => {
   file2.textContent = 'Hello world \n#2';
   pageWidget.appendChild(file2);
 
+  const shadowDilw = document.createElement('div');
+  shadowDilw.classList.add('shadow_file');
+  shadowDilw.setAttribute('basename', 'shadow.txt');
+  shadowDilw.textContent = 'Hello shadow';
+  pageWidget.appendChild(shadowDilw);
+
   before(() => {
     document.body.appendChild(pageWidget);
     htmlList = document.getElementsByClassName('widget_editor')
@@ -136,7 +143,7 @@ describe('Widget', () => {
 
       const outputArea = new OutputArea();
       outputArea.add(['output_info', 'console_output'],
-          CONSOLE_OUTPUT_LABEL + ':');
+          Strings.CONSOLE_OUTPUT_LABEL + ':');
       outputArea.addConsole(consoleMsg);
       outputArea.addLine(stdoutMsg);
       outputArea.addMsg(clickableStdoutMsg);
@@ -231,7 +238,7 @@ describe('Widget', () => {
         });
 
         button.click();
-        await new Promise((resolve) => setTimeout(resolve, 5 * 250));
+        await delay(5 * 250);
         await fetchMock.flush(true);
       });
 
@@ -251,6 +258,10 @@ describe('Widget', () => {
             {
               'basename': 'test2.adb',
               'contents': 'Hello world \n#2',
+            },
+            {
+              'basename': 'shadow.txt',
+              'contents': 'Hello shadow',
             }
           ],
           'mode': 'run',
@@ -295,7 +306,7 @@ describe('Widget', () => {
         expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
       });
 
-      it('should have two clickable divs', () => {
+      it('should have three clickable divs', () => {
         const outputMsgs = pageWidget.querySelectorAll('div.output_msg');
         expect(outputMsgs).to.have.length(2);
         expect(outputMsgs[0]).to.have.text(clickableStdoutMsg);
@@ -320,6 +331,157 @@ describe('Widget', () => {
         expect(ed1.getCursorPosition()).not.to.deep.equal({row: 0, column: 2});
         (outputMsgs[0] as HTMLElement).click();
         expect(ed1.getCursorPosition()).to.deep.equal({row: 0, column: 2});
+        expect(tabs[0]).to.have.class('active');
+      });
+    });
+
+    describe('test server down handling', ()=> {
+      before(() => {
+        fetchMock.mock(baseURL + '/run_program/', 500);
+      });
+
+      after(() => {
+        fetchMock.reset();
+      });
+
+      it('should catch the error and add text to the output area', async () => {
+        const outputArea = new OutputArea();
+        outputArea.add(['output_info', 'console_output'],
+        Strings.CONSOLE_OUTPUT_LABEL + ':');
+        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+        button.click();
+        await fetchMock.flush(true);
+        const outputAreaHTML = pageWidget.querySelector('div.output_area');
+        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+      });
+    });
+
+    describe('test broken server handling', ()=> {
+      afterEach(() => {
+        fetchMock.reset();
+      });
+
+      it('should catch an error if identifier is blank', async () => {
+        fetchMock.post(baseURL + '/run_program/', {
+          body: {
+            'identifier': '',
+            'message' : 'Pending',
+          },
+        });
+        const outputArea = new OutputArea();
+        outputArea.add(['output_info', 'console_output'],
+          Strings.CONSOLE_OUTPUT_LABEL + ':');
+        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+        button.click();
+        await fetchMock.flush(true);
+        const outputAreaHTML = pageWidget.querySelector('div.output_area');
+        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+      });
+
+      it('should timeout requests to check output', async () => {
+        fetchMock.post(baseURL + '/run_program/', {
+          body: {
+            'identifier': '1234',
+            'message' : 'Pending',
+          },
+        });
+        fetchMock.post(baseURL + '/check_output/', {
+          body: {
+            'completed': false,
+            'message': 'PENDING',
+            'output': [],
+            'status': 0
+          },
+        });
+
+        const outputArea = new OutputArea();
+        outputArea.add(['output_info', 'console_output'],
+         Strings.CONSOLE_OUTPUT_LABEL + ':');
+        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+
+        button.click();
+        await delay(205 * 250);
+        await fetchMock.flush(true);
+
+        expect(fetchMock.calls(baseURL + '/run_program/')).to.have.length(1);
+        expect(fetchMock.calls(baseURL + '/check_output/')).to.have.length(200);
+        const outputAreaHTML = pageWidget.querySelector('div.output_area');
+        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+      });
+
+      it('should throw an error if response has lab ref', async () => {
+        fetchMock.post(baseURL + '/run_program/', {
+          body: {
+            'identifier': '1234',
+            'message' : 'Pending',
+          },
+        });
+        fetchMock.post(baseURL + '/check_output/', {
+          body: {
+            'completed': false,
+            'message': 'PENDING',
+            'output': [
+              {
+                'msg': {
+                  'data': 'test data',
+                  'type': 'console'
+                },
+                'ref': '0'
+              },
+            ],
+            'status': 0
+          }
+        });
+
+        const outputArea = new OutputArea();
+        outputArea.add(['output_info', 'console_output'],
+        Strings.CONSOLE_OUTPUT_LABEL + ':');
+        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+
+        button.click();
+        await delay(2 * 250);
+        await fetchMock.flush(true);
+
+        const outputAreaHTML = pageWidget.querySelector('div.output_area');
+        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+      });
+
+      it('should report internal errors normally', async () => {
+        fetchMock.post(baseURL + '/run_program/', {
+          body: {
+            'identifier': '1234',
+            'message' : 'Pending',
+          },
+        });
+        fetchMock.post(baseURL + '/check_output/', {
+          body: {
+            'completed': true,
+            'message': 'PENDING',
+            'output': [
+              {
+                'msg': {
+                  'data': 'There was an error.',
+                  'type': 'internal_error'
+                },
+              },
+            ],
+            'status': -1
+          }
+        });
+
+        const outputArea = new OutputArea();
+        outputArea.add(['output_info', 'console_output'],
+          Strings.CONSOLE_OUTPUT_LABEL + ':');
+        outputArea.addLine('There was an error. ' + Strings.INTERNAL_ERROR_MESSAGE);
+        outputArea.addError(Strings.EXIT_STATUS_LABEL +
+          ': ' + -1);
+
+        button.click();
+        await delay(2 * 250);
+        await fetchMock.flush(true);
+
+        const outputAreaHTML = pageWidget.querySelector('div.output_area');
+        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
       });
     });
   });

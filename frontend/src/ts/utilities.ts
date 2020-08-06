@@ -105,3 +105,7 @@ export function isDate(value): boolean {
 export function isSymbol(value): boolean {
   return typeof value === 'symbol';
 }
+
+export function delay(ms: number): Promise<unknown> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
