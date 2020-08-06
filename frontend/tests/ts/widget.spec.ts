@@ -137,7 +137,7 @@ describe('Widget', () => {
 
     describe('trigger run sequence', () => {
       const consoleMsg = 'This is a console message';
-      const stdoutMsg = 'This is a stdout message';
+      const clickableInfoMsg = 'test1.adb:1:2: info: This is an info message';
       const clickableStdoutMsg = 'test1.adb:1:3: Clickable stdout message';
       const raisedMsg = 'raised TEST_ERROR : test2.adb:2 explicit raise';
 
@@ -145,7 +145,7 @@ describe('Widget', () => {
       outputArea.add(['output_info', 'console_output'],
           Strings.CONSOLE_OUTPUT_LABEL + ':');
       outputArea.addConsole(consoleMsg);
-      outputArea.addLine(stdoutMsg);
+      outputArea.addInfo(clickableInfoMsg);
       outputArea.addMsg(clickableStdoutMsg);
       outputArea.addMsg(raisedMsg);
 
@@ -191,7 +191,7 @@ describe('Widget', () => {
             'output': [
               {
                 'msg': {
-                  'data': stdoutMsg,
+                  'data': clickableInfoMsg,
                   'type': 'stdout'
                 }
               }
@@ -309,6 +309,10 @@ describe('Widget', () => {
       it('should have three clickable divs', () => {
         const outputMsgs = pageWidget.querySelectorAll('div.output_msg');
         expect(outputMsgs).to.have.length(2);
+        expect(pageWidget).to.have.descendants('div.output_msg_info').and.have.length(1);
+        const infoMsg = pageWidget.querySelector('div.output_msg_info');
+
+        expect(infoMsg).to.have.text(clickableInfoMsg);
         expect(outputMsgs[0]).to.have.text(clickableStdoutMsg);
         expect(outputMsgs[1]).to.have.text(raisedMsg);
 
@@ -332,6 +336,10 @@ describe('Widget', () => {
         (outputMsgs[0] as HTMLElement).click();
         expect(ed1.getCursorPosition()).to.deep.equal({row: 0, column: 2});
         expect(tabs[0]).to.have.class('active');
+
+        expect(ed1.getCursorPosition()).not.to.deep.equal({row: 0, column: 1});
+        (infoMsg as HTMLElement).click();
+        expect(ed1.getCursorPosition()).to.deep.equal({row: 0, column: 1});
       });
     });
 
@@ -483,6 +491,47 @@ describe('Widget', () => {
         const outputAreaHTML = pageWidget.querySelector('div.output_area');
         expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
       });
+
+      it('should throw an error when msg has a bad type', async () => {
+        fetchMock.post(baseURL + '/run_program/', {
+          body: {
+            'identifier': '1234',
+            'message' : 'Pending',
+          },
+        });
+        fetchMock.post(baseURL + '/check_output/', {
+          body: {
+            'completed': false,
+            'message': 'PENDING',
+            'output': [
+              {
+                'msg': {
+                  'data': 'Test message',
+                  'type': 'blahblahblah'
+                },
+              },
+            ],
+            'status': 0
+          }
+        });
+
+        const outputArea = new OutputArea();
+        outputArea.add(['output_info', 'console_output'],
+          Strings.CONSOLE_OUTPUT_LABEL + ':');
+          outputArea.addLine('Test message');
+        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+
+        button.click();
+        await delay(2 * 250);
+        await fetchMock.flush(true);
+
+        const outputAreaHTML = pageWidget.querySelector('div.output_area');
+        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+      });
     });
   });
+
+  // describe('settings bar actions', () => {
+
+  // });
 });

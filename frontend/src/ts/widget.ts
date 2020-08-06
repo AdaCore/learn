@@ -332,7 +332,6 @@ export class Widget {
       default: {
         homeArea.addLine(msg.data);
         throw new Error('Unhandled msg type.');
-        break;
       }
     }
   }
