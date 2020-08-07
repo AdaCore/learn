@@ -553,6 +553,243 @@ is the configuration pragma file for our project:
 
     end Default;
 
+Configuration packages
+~~~~~~~~~~~~~~~~~~~~~~
+
+In C, preprocessing flags are used to create blocks of code that are only
+compiled under certain circumstances. For example, we could have a block that
+is only used for debugging:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Debug_Code_C
+
+    !main.c
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int func(int x)
+    {
+        return x % 4;
+    }
+
+    int main()
+    {
+        int a, b;
+
+        a = 10;
+        b = func(a);
+
+    #ifdef DEBUG
+        printf("func(%d) => %d\n", a, b);
+    #endif
+    }
+
+Here, the block indicated by the :c:`DEBUG` flag is only included in the build
+if we define this preprocessing flag, which is what we expect for a debug
+version of the build. In the release version, however, we want to keep debug
+information out of the build, so we don't use this flag during the build
+process.
+
+Ada doesn't define a preprocessor as part of the language. Some Ada toolchains
+|mdash| like the GNAT toolchain |mdash| do have a preprocessor that could
+create code similar to the one we've just seen. When programming in Ada,
+however, the recommendation is to use configuration packages to select code
+blocks that are meant to be included in the application.
+
+When using a configuration package, the example above can be written as:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Debug_Code_Ada
+
+    package Config is
+
+       Debug : constant Boolean := False;
+
+    end Config;
+
+    function Func (X : Integer) return Integer;
+
+    function Func (X : Integer) return Integer is
+    begin
+        return X mod 4;
+    end Func;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Config;
+    with Func;
+
+    procedure Main is
+       A, B : Integer;
+    begin
+       A := 10;
+       B := Func (A);
+
+       if Config.Debug then
+          Put_Line("Func(" & Integer'Image (A) & ") => "
+                   & Integer'Image (B));
+       end if;
+    end Main;
+
+In this example, :ada:`Config` is a configuration package. The version of
+:ada:`Config` we're seeing here is the release version. The debug version of
+the :ada:`Config` package looks like this:
+
+.. code:: ada
+
+    package Config is
+
+       Debug : constant Boolean := True;
+
+    end Config;
+
+The compiler makes sure to remove dead code. In the case of the release
+version, since :ada:`Config.Debug` is constant and set to :ada:`False`, the
+compiler is smart enough to remove the call to :ada:`Put_Line` from the build.
+
+As you can see, both versions of :ada:`Config` are very similar to each other.
+The general idea is to create packages that declare the same constants, but
+using different values.
+
+In C, we differentiate between the debug and release versions by selecting
+the appropriate preprocessing flags, but in Ada, we select the appropriate
+configuration package during the build process. Since the file name is usually
+the same (:file:`config.ads` for the example above), we may want to store them
+in distinct directories. For the example above, we could have:
+
+- :file:`src/debug/config.ads` for the debug version, and
+
+- :file:`src/release/config.ads` for the release version.
+
+Then, we simply select the appropriate configuration package for each version
+of the build by indicating the correct path to it. When using
+:program:`GPRbuild`, we can select the appropriate directory where the
+:file:`config.ads` file is located. We can use scenario variables in our
+project, which allow for creating different versions of a build. For example:
+
+.. code-block:: none
+
+    project Default is
+
+       type Mode_Type is ("debug", "release");
+
+       Mode : Mode_Type := external ("mode", "debug");
+
+       for Source_Dirs use ("src", "src/" & Mode);
+       for Object_Dir use "obj";
+       for Main use ("main.adb");
+
+    end Default;
+
+In this example, we're defining a scenario type called ``Mode_Type``. Then,
+we're declaring the scenario variable ``Mode`` and using it in the
+``Source_Dirs`` declaration to complete the path to the subdirectory
+containing the :file:`config.ads` file. The expression ``"src/" & Mode``
+concatenates the user-specified mode to select the appropriate subdirectory.
+
+We can then set the mode on the command-line. For example:
+
+.. code-block:: sh
+
+    gprbuild -P default.gpr -Xmode=release
+
+In addition to selecting code blocks for the build, we could also specify
+values that depend on the target build. For our example above, we may want to
+create two versions of the application, each one having a different version of
+a :c:`MOD_VALUE` that is used in the implementation of :c:`func()`. In C, we
+can achieve this by using preprocessing flags and defining the corresponding
+version in :c:`APP_VERSION`. Then, depending on the value of :c:`APP_VERSION`,
+we define the corresponding value of :c:`MOD_VALUE`.
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.App_Version_C
+
+    !defs.h
+    #ifndef APP_VERSION
+    #define APP_VERSION     1
+    #endif
+
+    #if APP_VERSION == 1
+    #define MOD_VALUE       4
+    #endif
+
+    #if APP_VERSION == 2
+    #define MOD_VALUE       5
+    #endif
+
+    !main.c
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    #include "defs.h"
+
+    int func(int x)
+    {
+        return x % MOD_VALUE;
+    }
+
+    int main()
+    {
+        int a, b;
+
+        a = 10;
+        b = func(a);
+    }
+
+If not defined outside, the code above will compile version #1 of the
+application. We can change this by specifying a value for :c:`APP_VERSION`
+during the build (e.g. as a Makefile switch).
+
+For the Ada version of this code, we can create two configuration packages for
+each version of the application. For example:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.App_Version_Ada
+
+    --  ./src/app_1/app_defs.ads
+
+    package App_Defs is
+
+       Mod_Value : constant Integer := 4;
+
+    end App_Defs;
+
+    function Func (X : Integer) return Integer;
+
+    with App_Defs;
+
+    function Func (X : Integer) return Integer is
+    begin
+        return X mod App_Defs.Mod_Value;
+    end Func;
+
+    with Func;
+
+    procedure Main is
+       A, B : Integer;
+    begin
+       A := 10;
+       B := Func (A);
+    end Main;
+
+The code above shows the version #1 of the configuration package. The
+corresponding implementation for version #2 looks like this:
+
+.. code:: ada
+
+    --  ./src/app_2/app_defs.ads
+
+    package App_Defs is
+
+       Mod_Value : constant Integer := 5;
+
+    end App_Defs;
+
+Again, we just need to select the appropriate configuration package for each
+version of the build, which we can easily do when using :program:`GPRbuild`.
 
 Handling variability & reusability dynamically
 ----------------------------------------------
