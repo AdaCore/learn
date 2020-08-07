@@ -234,11 +234,10 @@ export class Widget {
     const rdata =
       await fetchJSON<CheckOutput.TS, CheckOutput.FS>(data,
           this.serverAddress('check_output'));
+    nReq++;
 
-    if (nReq > 200) {
+    if (nReq >= 200) {
       throw new Error('Request timed out. ' + Strings.INTERNAL_ERROR_MESSAGE);
-    } else {
-      nReq++;
     }
 
     lRead += this.processCheckOutput(rdata);

@@ -3,6 +3,8 @@ import chai, {expect, util} from 'chai';
 chai.use(require('chai-dom'));
 chai.use(require('chai-as-promised'));
 
+import sinon from 'sinon';
+
 import ace from 'brace';
 
 import fetchMock from 'fetch-mock';
@@ -100,11 +102,11 @@ describe('Widget', () => {
   file2.textContent = 'Hello world \n#2';
   pageWidget.appendChild(file2);
 
-  const shadowDilw = document.createElement('div');
-  shadowDilw.classList.add('shadow_file');
-  shadowDilw.setAttribute('basename', 'shadow.txt');
-  shadowDilw.textContent = 'Hello shadow';
-  pageWidget.appendChild(shadowDilw);
+  const shadowFile = document.createElement('div');
+  shadowFile.classList.add('shadow_file');
+  shadowFile.setAttribute('basename', 'shadow.txt');
+  shadowFile.textContent = 'Hello shadow';
+  pageWidget.appendChild(shadowFile);
 
   before(() => {
     document.body.appendChild(pageWidget);
@@ -531,7 +533,26 @@ describe('Widget', () => {
     });
   });
 
-  // describe('settings bar actions', () => {
+  describe('settings bar actions', () => {
+    const settingsBar = pageWidget.querySelector('div.settings-bar');
 
-  // });
+    it('should have a settings bar', () => {
+      expect(pageWidget).to.have.descendants('div.settings-bar').and.have.length(1);
+    });
+
+    // describe('settings dropdown tests', () => {
+    //   const settingsButton = settingsBar.querySelector('div.dropdown-container');
+
+    //   it('should have a settings dropdown', () => {
+    //     expect(settingsBar).to.have.descendants('div.dropdown-container').and.have.length(1);
+    //     expect(settingsButton).to.have.descendants('button.dropdown-btn').and.have.length(1);
+    //     expect(settingsButton).to.have.descendants('div.dropdown-content').and.have.length(1);
+    //   });
+
+    // });
+
+    // describe('should have a reset button', () => {
+
+    // });
+  });
 });
