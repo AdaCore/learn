@@ -467,12 +467,91 @@ In the following section, we'll go one step further and demonstrate that this
 selection can be done through a configuration switch selected at build time
 instead of a manual code modification.
 
-Configuration specific files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Configuration pragma files
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+Configuration pragmas are a set of pragmas that modify the compilation of
+source-code files. You may use them to either relax or strengthen requirements.
+For example:
 
-    Complete section!
+.. code-block:: none
+
+    pragma Suppress (Overflow_Check);
+
+In this example, we're suppressing the overflow check, thereby relaxing a
+requirement. Normally, the following program would raise a constraint error due
+to a failed overflow check:
+
+.. code:: ada
+
+    package P is
+       function Add_Max (A : Integer) return Integer;
+    end P;
+
+    package body P is
+       function Add_Max (A : Integer) return Integer is
+       begin
+          return A + Integer'Last;
+       end Add_Max;
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with P;           use P;
+
+    procedure Main is
+       I : Integer := Integer'Last;
+    begin
+       I := Add_Max (I);
+       Put_Line ("I = " & Integer'Image (I));
+    end Main;
+
+When suppressing the overflow check, however, the program doesn't raise an
+exception, and the value that :ada:`Add_Max` returns is ``-2``, which is a
+wraparound of the sum of the maximum integer values
+(:ada:`Integer'Last + Integer'Last`).
+
+We could also strengthen requirements, as in this example:
+
+.. code-block:: none
+
+    pragma Restrictions (No_Floating_Point);
+
+Here, the restriction forbids the use of floating-point types and objects. The
+following program would violate this restriction, so the compiler isn't able to
+compile the program when the restriction is used:
+
+.. code:: ada
+
+    procedure Main is
+       F : Float := 0.0;
+       --  Declaration is not possible with No_Floating_Point restriction.
+    begin
+       null;
+    end Main;
+
+Restrictions are especially useful for high-integrity applications. In fact,
+the Ada Reference Manual has `a separate section for them <http://www.ada-auth.org/standards/12rm/html/RM-H-4.html>`_.
+
+When creating a project, it is practical to list all configuration pragmas in a
+separate file. This is called a configuration pragma file, and it usually has
+an `.adc` file extension. If you use :program:`GPRbuild` for building Ada
+applications, you can specify the configuration pragma file in the
+corresponding project file. For example, here we indicate that :file:`gnat.adc`
+is the configuration pragma file for our project:
+
+.. code-block:: none
+
+    project Default is
+
+       for Source_Dirs use ("src");
+       for Object_Dir use "obj";
+       for Main use ("main.adb");
+
+       package Compiler is
+          for Local_Configuration_Pragmas use "gnat.adc";
+       end Compiler;
+
+    end Default;
 
 
 Handling variability & reusability dynamically
