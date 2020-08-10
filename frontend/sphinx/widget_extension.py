@@ -254,6 +254,9 @@ class WidgetCodeDirective(Directive):
                 files = c_chop(chop_contents)
             else:
                 files = real_gnatchop(chop_contents)
+
+            if len(files) == 0:
+                raise self.error('could not parse files from content')
         except subprocess.CalledProcessError:
             raise self.error("could not gnatchop example")
 
