@@ -533,26 +533,5 @@ describe('Widget', () => {
     });
   });
 
-  describe('settings bar actions', () => {
-    const settingsBar = pageWidget.querySelector('div.settings-bar');
-
-    it('should have a settings bar', () => {
-      expect(pageWidget).to.have.descendants('div.settings-bar').and.have.length(1);
-    });
-
-    // describe('settings dropdown tests', () => {
-    //   const settingsButton = settingsBar.querySelector('div.dropdown-container');
-
-    //   it('should have a settings dropdown', () => {
-    //     expect(settingsBar).to.have.descendants('div.dropdown-container').and.have.length(1);
-    //     expect(settingsButton).to.have.descendants('button.dropdown-btn').and.have.length(1);
-    //     expect(settingsButton).to.have.descendants('div.dropdown-content').and.have.length(1);
-    //   });
-
-    // });
-
-    // describe('should have a reset button', () => {
-
-    // });
-  });
+  // TODO: test the settingsbar HTML
 });
