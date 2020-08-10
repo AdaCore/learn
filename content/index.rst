@@ -11,8 +11,19 @@ LEARN.ADACORE.COM
 
   <a href="https://github.com/AdaCore/learn"><i class="fab fa-github"></i> Edit on GitHub</a><br><br>
 
+What is Ada and SPARK?
+-----------------------
 
-**Learn.adacore.com is an interactive learning platform designed to teach the Ada and SPARK programming languages.**
+Ada is a state-of-the art programming language that development teams worldwide
+are using for critical software: from microkernels and small-footprint,
+real-time embedded systems to large-scale enterprise applications, and
+everything in between.
+
+SPARK is formally analyzable subset of Ada — and toolset that brings
+mathematics-based confidence to software verification.
+
+Try Ada Now:
+-------------
 
 .. code:: ada run_button project=Introduction
 
@@ -28,17 +39,25 @@ LEARN.ADACORE.COM
 
     end Learn;
 
--------------
-
-.. toctree::
-    :maxdepth: 1
-
-    About <about>
-    Courses <courses/courses>
-    Labs <labs/labs>
-
+Check out the interactive
+:doc:`courses <courses/courses>`
+and
+:doc:`labs <labs/labs>`
+to learn more about Ada and SPARK.
 
 -------------
+
+.. container:: content-blocks
+
+    .. toctree::
+       :maxdepth: 4
+
+       About <about>
+       Courses <courses/courses>
+       Labs <labs/labs>
+
+Download Ada and SPARK tools
+------------------------------
 
 .. container:: download-button
 

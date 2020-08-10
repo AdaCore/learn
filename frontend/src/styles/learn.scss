@@ -375,6 +375,11 @@ div.download-button.docutils.container {
     margin: 20px;
 }
 
+// hiding toctree on main page
+div.content-blocks.docutils.container {
+    display: none;
+}
+
 a.pdf_download_button {
     background-color: #F56F23;
     display: block;
