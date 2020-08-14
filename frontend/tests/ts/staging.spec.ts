@@ -1,6 +1,8 @@
 // Import testing libs
 import chai, {expect} from 'chai';
-chai.use(require('chai-dom'));
+import chaiDom from 'chai-dom';
+
+chai.use(chaiDom);
 
 import Cookies from 'js-cookie';
 
@@ -11,7 +13,7 @@ describe('stagingRedirect()', () => {
   const startLoc = window.location.href;
 
   before(() => {
-    window.alert = (msg) => {
+    window.alert = (msg): void => {
       console.log(msg);
     };
   });

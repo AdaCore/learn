@@ -1,6 +1,8 @@
 // Import testing libs
 import chai, {expect} from 'chai';
-chai.use(require('chai-dom'));
+import chaiDom from 'chai-dom';
+
+chai.use(chaiDom);
 
 import {scrollTop} from '../../src/ts/scrolltop';
 

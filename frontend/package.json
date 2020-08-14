@@ -27,7 +27,6 @@
     "@types/jsdom": "^16.2.3",
     "@types/mocha": "^7.0.2",
     "@types/node": "^14.0.13",
-    "@types/sinon": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "amd-loader": "^0.0.8",
@@ -62,7 +61,6 @@
     "sass-lint": "^1.13.1",
     "sass-lint-webpack": "^1.0.1",
     "sass-loader": "^7.1.0",
-    "sinon": "^9.0.2",
     "source-map-loader": "^0.2.4",
     "terser-webpack-plugin": "^1.4.1",
     "ts-loader": "^6.2.1",
@@ -83,7 +81,7 @@
   "scripts": {
     "dev": "webpack-dev-server --open --config webpack.dev.js",
     "tsc": "tsc",
-    "eslint": "eslint --ext .ts src/",
+    "eslint": "eslint --ext .ts src/ tests/",
     "staging": "webpack --env.staging --config webpack.prod.js",
     "production": "webpack --config webpack.prod.js",
     "test": "mocha --exit",
@@ -91,6 +89,23 @@
   },
   "author": "AdaCore",
   "license": "ISC",
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "google"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module"
+    }
+  },
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript",
     "check-coverage": true,

@@ -1,6 +1,7 @@
 // Import testing libs
 import chai, {expect} from 'chai';
-chai.use(require('chai-dom'));
+import chaiDom from 'chai-dom';
+chai.use(chaiDom);
 
 // Import package under test
 import * as util from '../../src/ts/utilities';

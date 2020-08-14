@@ -1,6 +1,7 @@
 // Import testing libs
 import chai, {expect} from 'chai';
-chai.use(require('chai-dom'));
+import chaiDom from 'chai-dom';
+chai.use(chaiDom);
 
 // Import package under test
 import {Tabs, Button, ButtonGroup, CheckBox} from '../../src/ts/components';
@@ -105,7 +106,7 @@ describe('Tabs', () => {
       expect(contentList[1]).to.be.displayed;
     });
   });
-})
+});
 
 describe('Button', () => {
   const myBut = new Button(['myClass1', 'myClass2'], 'myBut', 'Click Me');
@@ -177,8 +178,12 @@ describe('ButtonGroup', () => {
     });
 
     it('should add two buttons to the group', () => {
-      inTest.addButton(['test1'], 'title1', 'text1', 'click1', () => {});
-      inTest.addButton(['test2'], 'title2', 'text2', 'click2', () => {});
+      inTest.addButton(['test1'], 'title1', 'text1', 'click1', () => {
+        return;
+      });
+      inTest.addButton(['test2'], 'title2', 'text2', 'click2', () => {
+        return;
+      });
 
       const parent = inTest.render();
       expect(parent).to.have.descendants('button').and.have.length(2);
@@ -208,15 +213,21 @@ describe('ButtonGroup', () => {
 
   describe('#length()', () => {
     it('should add one button to the group', () => {
-      inTest.addButton(['test1'], 'title1', 'text1', 'click1', () => {});
+      inTest.addButton(['test1'], 'title1', 'text1', 'click1', () => {
+        return;
+      });
 
       const parent = inTest.render();
       expect(parent).to.have.descendants('button').and.have.length(1);
       expect(inTest.length()).to.equal(1);
     });
     it('should add two buttons to the group', () => {
-      inTest.addButton(['test1'], 'title1', 'text1', 'click1', () => {});
-      inTest.addButton(['test2'], 'title2', 'text2', 'click2', () => {});
+      inTest.addButton(['test1'], 'title1', 'text1', 'click1', () => {
+        return;
+      });
+      inTest.addButton(['test2'], 'title2', 'text2', 'click2', () => {
+        return;
+      });
 
       const parent = inTest.render();
       expect(parent).to.have.descendants('button').and.have.length(2);
@@ -247,7 +258,10 @@ describe('CheckBox', () => {
 
     it('should construct a complex checkbox', () => {
       const parent = document.createElement('div');
-      const inTest = new CheckBox('label', parent, ['class1', 'class2'], 'my title');
+      const inTest = new CheckBox('label', parent, [
+        'class1',
+        'class2'],
+      'my title');
       const input = inTest.getCheckBox();
 
       expect(parent).to.contain(input);

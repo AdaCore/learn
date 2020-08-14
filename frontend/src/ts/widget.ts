@@ -51,7 +51,7 @@ export class Widget {
       };
       resources.push(a);
     }
-    
+
     if (resources.length == 0) {
       throw Error('Malformed widget: No files present.');
     }
@@ -589,15 +589,29 @@ export function widgetFactory(widgets: HTMLCollectionOf<Element>):
   for (let i = 0; i < widgets.length; i++) {
     const element = (widgets[i] as HTMLElement);
     const server = element.getAttribute('example_server');
+    try {
+      if (server) {
+        const lab = element.getAttribute('lab');
+        const widget =
+            lab ? new LabWidget(element, server) : new Widget(element, server);
+        widget.render();
+        widgetList.push(widget);
+      } else {
+        throw Error('Malformed widget! No server address specified.');
+      }
+    } catch (error) {
+      // an error has occured parsing the widget
+      console.error('Error:', error);
 
-    if (server) {
-      const lab = element.getAttribute('lab');
-      const widget =
-          lab ? new LabWidget(element, server) : new Widget(element, server);
-      widget.render();
-      widgetList.push(widget);
-    } else {
-      throw Error('Malformed widget! No server address specified.');
+      // clear the offending element to remove any processing that was done
+      element.innerHTML = '';
+
+      // add an error message to the page in its place
+      const errorDiv = document.createElement('div');
+      errorDiv.innerHTML = '<p>An error has occured processing this widget.' +
+      Strings.INTERNAL_ERROR_MESSAGE + '</p>';
+
+      element.appendChild(errorDiv);
     }
   }
 

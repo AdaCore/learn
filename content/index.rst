@@ -4,6 +4,8 @@
 :prev_state: False
 :next_state: False
 
+.. include:: <isopub.txt>
+
 LEARN.ADACORE.COM
 ===================
 

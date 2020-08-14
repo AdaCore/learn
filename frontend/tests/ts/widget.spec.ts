@@ -1,9 +1,10 @@
 // Import testing libs
-import chai, {expect, util} from 'chai';
-chai.use(require('chai-dom'));
-chai.use(require('chai-as-promised'));
+import chai, {expect} from 'chai';
+import chaiDom from 'chai-dom';
+import chaiAsPromised from 'chai-as-promised';
 
-import sinon from 'sinon';
+chai.use(chaiDom);
+chai.use(chaiAsPromised);
 
 import ace from 'brace';
 
@@ -42,7 +43,7 @@ describe('widgetFactory()', () => {
   });
 
   afterEach(() => {
-    for(let inTest of inTestList) {
+    for (const inTest of inTestList) {
       inTest.destructor();
     }
 
@@ -57,9 +58,9 @@ describe('widgetFactory()', () => {
     labWidget.setAttribute('inline', 'True');
     labWidget.setAttribute('lab', 'True');
     document.body.appendChild(labWidget);
-    labWidget.appendChild(file);
+    labWidget.appendChild(file.cloneNode(true));
 
-    htmlList = document.getElementsByClassName('widget_editor')
+    htmlList = document.getElementsByClassName('widget_editor');
     inTestList = widgetFactory(htmlList);
 
     expect(inTestList).to.have.lengthOf(2);
@@ -67,19 +68,35 @@ describe('widgetFactory()', () => {
     expect(inTestList[1]).to.be.an.instanceof(LabWidget);
   });
 
-  it('should be throw an exception with malformed widget', () => {
+  it('should create div with error when no server addr is found', () => {
     pageWidget.removeAttribute('example_server');
-    htmlList = document.getElementsByClassName('widget_editor')
-    const fn = () => {
-      inTestList = widgetFactory(htmlList);
-    };
+    htmlList = document.getElementsByClassName('widget_editor');
+    inTestList = widgetFactory(htmlList);
 
-    expect(fn).to.throw(Error, 'Malformed widget! No server address specified.');
+    expect(inTestList).to.have.length(0);
+    expect(pageWidget).to.have.descendants('div').with.length(1);
+    const errorDiv = pageWidget.querySelector('div');
+    expect(errorDiv).to.have.html(
+        '<p>An error has occured processing this widget.' +
+        Strings.INTERNAL_ERROR_MESSAGE + '</p>');
+  });
+
+  it('should create div with error when no files in widget', () => {
+    pageWidget.removeChild(file);
+    htmlList = document.getElementsByClassName('widget_editor');
+    inTestList = widgetFactory(htmlList);
+
+    expect(inTestList).to.have.length(0);
+    expect(pageWidget).to.have.descendants('div').with.length(1);
+    const errorDiv = pageWidget.querySelector('div');
+    expect(errorDiv).to.have.html(
+        '<p>An error has occured processing this widget.' +
+        Strings.INTERNAL_ERROR_MESSAGE + '</p>');
   });
 });
 
 describe('Widget', () => {
-  const baseURL = 'http://example.com'
+  const baseURL = 'http://example.com';
   let htmlList: HTMLCollectionOf<Element>;
   let inTestList: Array<Widget | LabWidget>;
 
@@ -110,12 +127,12 @@ describe('Widget', () => {
 
   before(() => {
     document.body.appendChild(pageWidget);
-    htmlList = document.getElementsByClassName('widget_editor')
+    htmlList = document.getElementsByClassName('widget_editor');
     inTestList = widgetFactory(htmlList);
   });
 
   after(() => {
-    for(let inTest of inTestList) {
+    for (const inTest of inTestList) {
       inTest.destructor();
     }
 
@@ -123,7 +140,8 @@ describe('Widget', () => {
   });
 
   it('should have two editors', () => {
-    expect(pageWidget).to.have.descendants('div.editor-container').and.have.length(2);
+    expect(pageWidget).to.have.descendants('div.editor-container').
+        and.have.length(2);
   });
 
   describe('test run button click', () => {
@@ -131,7 +149,8 @@ describe('Widget', () => {
     const identifier = 123;
 
     it('should have a run button in the output row', () => {
-      expect(pageWidget).to.have.descendants('div.output_row').and.have.length(1);
+      expect(pageWidget).to.have.descendants('div.output_row').
+          and.have.length(1);
       const outputRow = pageWidget.querySelector('div.output_row');
       expect(outputRow).to.have.descendants('button').and.have.length(1);
       button = outputRow.querySelector('button');
@@ -155,7 +174,7 @@ describe('Widget', () => {
         fetchMock.post(baseURL + '/run_program/', {
           body: {
             'identifier': identifier.toString(),
-            'message' : 'Pending',
+            'message': 'Pending',
           },
         });
         fetchMock.post(baseURL + '/check_output/', {
@@ -163,7 +182,7 @@ describe('Widget', () => {
             'completed': false,
             'message': 'PENDING',
             'output': [],
-            'status': 0
+            'status': 0,
           },
         }, {
           repeat: 1,
@@ -171,34 +190,16 @@ describe('Widget', () => {
         fetchMock.post(baseURL + '/check_output/', {
           body: {
             'completed': false,
-            'message':'PENDING',
+            'message': 'PENDING',
             'output': [
               {
                 'msg': {
                   'data': consoleMsg,
-                  'type': 'console'
-                }
-              }
+                  'type': 'console',
+                },
+              },
             ],
-            'status': 0
-          },
-        }, {
-          repeat: 1,
-          overwriteRoutes: false,
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': false,
-            'message':'PENDING',
-            'output': [
-              {
-                'msg': {
-                  'data': clickableInfoMsg,
-                  'type': 'stdout'
-                }
-              }
-            ],
-            'status': 0
+            'status': 0,
           },
         }, {
           repeat: 1,
@@ -210,18 +211,36 @@ describe('Widget', () => {
             'message': 'PENDING',
             'output': [
               {
-                'msg':{
+                'msg': {
+                  'data': clickableInfoMsg,
+                  'type': 'stdout',
+                },
+              },
+            ],
+            'status': 0,
+          },
+        }, {
+          repeat: 1,
+          overwriteRoutes: false,
+        });
+        fetchMock.post(baseURL + '/check_output/', {
+          body: {
+            'completed': false,
+            'message': 'PENDING',
+            'output': [
+              {
+                'msg': {
                   'data': clickableStdoutMsg,
-                  'type': 'stdout'
-                }
+                  'type': 'stdout',
+                },
               }, {
                 'msg': {
                   'data': raisedMsg,
-                  'type': 'stderr'
-                }
-              }
+                  'type': 'stderr',
+                },
+              },
             ],
-            'status': 0
+            'status': 0,
           },
         }, {
           repeat: 1,
@@ -232,7 +251,7 @@ describe('Widget', () => {
             'completed': true,
             'message': 'SUCCESS',
             'output': [],
-            'status': 0
+            'status': 0,
           },
         }, {
           repeat: 1,
@@ -264,7 +283,7 @@ describe('Widget', () => {
             {
               'basename': 'shadow.txt',
               'contents': 'Hello shadow',
-            }
+            },
           ],
           'mode': 'run',
           'name': 'pageWidget',
@@ -282,28 +301,29 @@ describe('Widget', () => {
 
         expect(checkOutput[0][1]['body']).to.equal(JSON.stringify({
           'identifier': identifier.toString(),
-          'read': 0
+          'read': 0,
         }));
         expect(checkOutput[1][1]['body']).to.equal(JSON.stringify({
           'identifier': identifier.toString(),
-          'read': 0
+          'read': 0,
         }));
         expect(checkOutput[2][1]['body']).to.equal(JSON.stringify({
           'identifier': identifier.toString(),
-          'read': 1
+          'read': 1,
         }));
         expect(checkOutput[3][1]['body']).to.equal(JSON.stringify({
           'identifier': identifier.toString(),
-          'read': 2
+          'read': 2,
         }));
         expect(checkOutput[4][1]['body']).to.equal(JSON.stringify({
           'identifier': identifier.toString(),
-          'read': 4
+          'read': 4,
         }));
       });
 
       it('should have an output area with the received data', () => {
-        expect(pageWidget).to.have.descendants('div.output_area').and.have.length(1);
+        expect(pageWidget).to.have.descendants('div.output_area').
+            and.have.length(1);
         const outputAreaHTML = pageWidget.querySelector('div.output_area');
         expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
       });
@@ -311,7 +331,8 @@ describe('Widget', () => {
       it('should have three clickable divs', () => {
         const outputMsgs = pageWidget.querySelectorAll('div.output_msg');
         expect(outputMsgs).to.have.length(2);
-        expect(pageWidget).to.have.descendants('div.output_msg_info').and.have.length(1);
+        expect(pageWidget).to.have.descendants('div.output_msg_info').
+            and.have.length(1);
         const infoMsg = pageWidget.querySelector('div.output_msg_info');
 
         expect(infoMsg).to.have.text(clickableInfoMsg);
@@ -357,7 +378,7 @@ describe('Widget', () => {
       it('should catch the error and add text to the output area', async () => {
         const outputArea = new OutputArea();
         outputArea.add(['output_info', 'console_output'],
-        Strings.CONSOLE_OUTPUT_LABEL + ':');
+            Strings.CONSOLE_OUTPUT_LABEL + ':');
         outputArea.addError(Strings.MACHINE_BUSY_LABEL);
         button.click();
         await fetchMock.flush(true);
@@ -375,12 +396,12 @@ describe('Widget', () => {
         fetchMock.post(baseURL + '/run_program/', {
           body: {
             'identifier': '',
-            'message' : 'Pending',
+            'message': 'Pending',
           },
         });
         const outputArea = new OutputArea();
         outputArea.add(['output_info', 'console_output'],
-          Strings.CONSOLE_OUTPUT_LABEL + ':');
+            Strings.CONSOLE_OUTPUT_LABEL + ':');
         outputArea.addError(Strings.MACHINE_BUSY_LABEL);
         button.click();
         await fetchMock.flush(true);
@@ -392,7 +413,7 @@ describe('Widget', () => {
         fetchMock.post(baseURL + '/run_program/', {
           body: {
             'identifier': '1234',
-            'message' : 'Pending',
+            'message': 'Pending',
           },
         });
         fetchMock.post(baseURL + '/check_output/', {
@@ -400,13 +421,13 @@ describe('Widget', () => {
             'completed': false,
             'message': 'PENDING',
             'output': [],
-            'status': 0
+            'status': 0,
           },
         });
 
         const outputArea = new OutputArea();
         outputArea.add(['output_info', 'console_output'],
-         Strings.CONSOLE_OUTPUT_LABEL + ':');
+            Strings.CONSOLE_OUTPUT_LABEL + ':');
         outputArea.addError(Strings.MACHINE_BUSY_LABEL);
 
         button.click();
@@ -423,7 +444,7 @@ describe('Widget', () => {
         fetchMock.post(baseURL + '/run_program/', {
           body: {
             'identifier': '1234',
-            'message' : 'Pending',
+            'message': 'Pending',
           },
         });
         fetchMock.post(baseURL + '/check_output/', {
@@ -434,18 +455,18 @@ describe('Widget', () => {
               {
                 'msg': {
                   'data': 'test data',
-                  'type': 'console'
+                  'type': 'console',
                 },
-                'ref': '0'
+                'ref': '0',
               },
             ],
-            'status': 0
-          }
+            'status': 0,
+          },
         });
 
         const outputArea = new OutputArea();
         outputArea.add(['output_info', 'console_output'],
-        Strings.CONSOLE_OUTPUT_LABEL + ':');
+            Strings.CONSOLE_OUTPUT_LABEL + ':');
         outputArea.addError(Strings.MACHINE_BUSY_LABEL);
 
         button.click();
@@ -460,7 +481,7 @@ describe('Widget', () => {
         fetchMock.post(baseURL + '/run_program/', {
           body: {
             'identifier': '1234',
-            'message' : 'Pending',
+            'message': 'Pending',
           },
         });
         fetchMock.post(baseURL + '/check_output/', {
@@ -471,18 +492,19 @@ describe('Widget', () => {
               {
                 'msg': {
                   'data': 'There was an error.',
-                  'type': 'internal_error'
+                  'type': 'internal_error',
                 },
               },
             ],
-            'status': -1
-          }
+            'status': -1,
+          },
         });
 
         const outputArea = new OutputArea();
         outputArea.add(['output_info', 'console_output'],
-          Strings.CONSOLE_OUTPUT_LABEL + ':');
-        outputArea.addLine('There was an error. ' + Strings.INTERNAL_ERROR_MESSAGE);
+            Strings.CONSOLE_OUTPUT_LABEL + ':');
+        outputArea.addLine(
+            'There was an error. ' + Strings.INTERNAL_ERROR_MESSAGE);
         outputArea.addError(Strings.EXIT_STATUS_LABEL +
           ': ' + -1);
 
@@ -498,7 +520,7 @@ describe('Widget', () => {
         fetchMock.post(baseURL + '/run_program/', {
           body: {
             'identifier': '1234',
-            'message' : 'Pending',
+            'message': 'Pending',
           },
         });
         fetchMock.post(baseURL + '/check_output/', {
@@ -509,18 +531,18 @@ describe('Widget', () => {
               {
                 'msg': {
                   'data': 'Test message',
-                  'type': 'blahblahblah'
+                  'type': 'blahblahblah',
                 },
               },
             ],
-            'status': 0
-          }
+            'status': 0,
+          },
         });
 
         const outputArea = new OutputArea();
         outputArea.add(['output_info', 'console_output'],
-          Strings.CONSOLE_OUTPUT_LABEL + ':');
-          outputArea.addLine('Test message');
+            Strings.CONSOLE_OUTPUT_LABEL + ':');
+        outputArea.addLine('Test message');
         outputArea.addError(Strings.MACHINE_BUSY_LABEL);
 
         button.click();

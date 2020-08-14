@@ -1,6 +1,8 @@
 // Import testing libs
 import chai, {expect} from 'chai';
-chai.use(require('chai-dom'));
+import chaiDom from 'chai-dom';
+
+chai.use(chaiDom);
 
 import ace from 'brace';
 
@@ -122,12 +124,12 @@ describe('Editor', () => {
 
     it('should return maxlines if length > maxlines', () => {
       const maxLines = editor.getOption('maxLines');
-      for(let i = 0; i < maxLines - 2; i++) {
+      for (let i = 0; i < maxLines - 2; i++) {
         editor.session.doc.insert({row: 0, column: 0}, '\n');
       }
       expect(inTest.getLength()).to.equal(maxLines - 1);
 
-      for(let i = 0; i < 10; i++) {
+      for (let i = 0; i < 10; i++) {
         editor.session.doc.insert({row: 0, column: 0}, '\n');
       }
 
@@ -175,6 +177,8 @@ describe('Editor', () => {
   describe('#getTheme()', () => {
     let inTest: Editor;
     let parent: HTMLElement;
+
+    // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
     let editor: ace.Editor;
 
     const resource: Resource = {
@@ -273,13 +277,18 @@ describe('Editor', () => {
     it('should return the edited resource', () => {
       editor.session.doc.insert({row: 0, column: 0}, '++');
       const newResource = inTest.getResource();
-      expect(newResource).to.deep.equal({basename: resource.basename, contents: '++' + resource.contents});
+      expect(newResource).to.deep.equal({
+        basename: resource.basename,
+        contents: '++' + resource.contents,
+      });
     });
   });
 
   describe('#setTab() and #getTab()', () => {
     let inTest: Editor;
     let parent: HTMLElement;
+
+    // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
     let editor: ace.Editor;
     let tab: HTMLElement;
 

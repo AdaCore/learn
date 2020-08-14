@@ -1,11 +1,11 @@
 // Import testing libs
 import chai, {expect} from 'chai';
-chai.use(require('chai-dom'));
+import chaiDom from 'chai-dom';
+chai.use(chaiDom);
 
 // Import package under test
 import {Area, OutputArea, LabArea, LabContainer} from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
-import {CheckOutput} from '../../src/ts/types';
 
 describe('Area', () => {
   /**
@@ -92,7 +92,8 @@ describe('Area', () => {
     inTest.addConsole(text);
 
     it('should have text that resembles console output', () => {
-      expect(parent).to.have.descendants('div.output_console').and.have.length(1);
+      expect(parent).to.have.descendants('div.output_console').
+          and.have.length(1);
       const testdiv = parent.querySelector('div.output_console');
       expect(testdiv).to.have.text('$ ' + text);
     });
@@ -105,7 +106,8 @@ describe('Area', () => {
     inTest.addInfo(text);
 
     it('should have specified text', () => {
-      expect(parent).to.have.descendants('div.output_msg_info').and.have.length(1);
+      expect(parent).to.have.descendants('div.output_msg_info').
+          and.have.length(1);
       const testdiv = parent.querySelector('div.output_msg_info');
       expect(testdiv).to.have.text(text);
     });
@@ -238,10 +240,12 @@ describe('LabArea', () => {
 
     it('should have classes and a container and button with classes', () => {
       expect(wrapper).to.have.tagName('div');
-      expect(wrapper).to.have.descendants('div.lab_test_case').and.have.length(1);
+      expect(wrapper).to.have.descendants('div.lab_test_case').
+          and.have.length(1);
       expect(wrapper).to.have.class('acc_wrapper');
 
-      expect(wrapper).to.have.descendants('button.accordion').and.have.length(1);
+      expect(wrapper).to.have.descendants('button.accordion').
+          and.have.length(1);
     });
 
     const container = wrapper.querySelector('div.lab_test_case');
@@ -281,14 +285,14 @@ describe('LabArea', () => {
       status: 'Success',
       out: 'output',
       actual: 'actual',
-      in: 'input'
+      in: 'input',
     };
 
     const failResult = {
       status: 'Fail',
       out: 'output',
       actual: 'actual',
-      in: 'input'
+      in: 'input',
     };
 
     beforeEach(() => {
@@ -305,11 +309,12 @@ describe('LabArea', () => {
       button = null;
     });
 
-    it('should add success classes to button and container and have single result div', () => {
+    it('should add success class and have 1 result div', () => {
       inTest.addResults(passResult);
       expect(button).to.have.class('lab_test_success');
       expect(container).to.have.class('lab_test_success');
-      expect(container).to.have.descendants('div.lab_results').and.have.length(1);
+      expect(container).to.have.descendants('div.lab_results').
+          and.have.length(1);
     });
 
     it('should add fail classes to button and container', () => {
@@ -320,13 +325,16 @@ describe('LabArea', () => {
 
     it('should have the input results in the container', () => {
       inTest.addResults(passResult);
-      expect(container).to.have.descendants('div.lab_results').and.have.length(1);
+      expect(container).to.have.descendants('div.lab_results').
+          and.have.length(1);
       const cased = container.querySelector('div.lab_results');
-      expect(cased).to.have.descendants('div.lab_test_msg.lab_test_input').and.have.length(1);
+      expect(cased).to.have.descendants('div.lab_test_msg.lab_test_input').
+          and.have.length(1);
       const label = cased.querySelector('div.lab_test_msg.lab_test_input');
-      expect(label).to.have.descendants('span.lab_test_msg_title').and.have.length(1);
+      expect(label).to.have.descendants('span.lab_test_msg_title').
+          and.have.length(1);
       const labelMsg = label.querySelector('span.lab_test_msg_title');
-      expect(labelMsg).to.have.text(Strings.LAB_TEST_INPUT_LABEL + ":");
+      expect(labelMsg).to.have.text(Strings.LAB_TEST_INPUT_LABEL + ':');
       expect(label).to.have.descendants('code').and.have.length(1);
       const labelCode = label.querySelector('code');
       expect(labelCode).to.have.text(passResult.in);
@@ -334,13 +342,16 @@ describe('LabArea', () => {
 
     it('should have the output results in the container', () => {
       inTest.addResults(passResult);
-      expect(container).to.have.descendants('div.lab_results').and.have.length(1);
+      expect(container).to.have.descendants('div.lab_results').
+          and.have.length(1);
       const cased = container.querySelector('div.lab_results');
-      expect(cased).to.have.descendants('div.lab_test_msg.lab_test_output').and.have.length(1);
+      expect(cased).to.have.descendants('div.lab_test_msg.lab_test_output').
+          and.have.length(1);
       const label = cased.querySelector('div.lab_test_msg.lab_test_output');
-      expect(label).to.have.descendants('span.lab_test_msg_title').and.have.length(1);
+      expect(label).to.have.descendants('span.lab_test_msg_title').
+          and.have.length(1);
       const labelMsg = label.querySelector('span.lab_test_msg_title');
-      expect(labelMsg).to.have.text(Strings.LAB_TEST_OUTPUT_LABEL + ":");
+      expect(labelMsg).to.have.text(Strings.LAB_TEST_OUTPUT_LABEL + ':');
       expect(label).to.have.descendants('code').and.have.length(1);
       const labelCode = label.querySelector('code');
       expect(labelCode).to.have.text(passResult.out);
@@ -348,13 +359,16 @@ describe('LabArea', () => {
 
     it('should have the actual results in the container', () => {
       inTest.addResults(passResult);
-      expect(container).to.have.descendants('div.lab_results').and.have.length(1);
+      expect(container).to.have.descendants('div.lab_results').
+          and.have.length(1);
       const cased = container.querySelector('div.lab_results');
-      expect(cased).to.have.descendants('div.lab_test_msg.lab_test_actual').and.have.length(1);
+      expect(cased).to.have.descendants('div.lab_test_msg.lab_test_actual').
+          and.have.length(1);
       const label = cased.querySelector('div.lab_test_msg.lab_test_actual');
-      expect(label).to.have.descendants('span.lab_test_msg_title').and.have.length(1);
+      expect(label).to.have.descendants('span.lab_test_msg_title').
+          and.have.length(1);
       const labelMsg = label.querySelector('span.lab_test_msg_title');
-      expect(labelMsg).to.have.text(Strings.LAB_TEST_ACTUAL_LABEL + ":");
+      expect(labelMsg).to.have.text(Strings.LAB_TEST_ACTUAL_LABEL + ':');
       expect(label).to.have.descendants('code').and.have.length(1);
       const labelCode = label.querySelector('code');
       expect(labelCode).to.have.text(passResult.actual);
@@ -362,13 +376,16 @@ describe('LabArea', () => {
 
     it('should have the status results in the container', () => {
       inTest.addResults(passResult);
-      expect(container).to.have.descendants('div.lab_results').and.have.length(1);
+      expect(container).to.have.descendants('div.lab_results').
+          and.have.length(1);
       const cased = container.querySelector('div.lab_results');
-      expect(cased).to.have.descendants('div.lab_test_msg.lab_test_status').and.have.length(1);
+      expect(cased).to.have.descendants('div.lab_test_msg.lab_test_status').
+          and.have.length(1);
       const label = cased.querySelector('div.lab_test_msg.lab_test_status');
-      expect(label).to.have.descendants('span.lab_test_msg_title').and.have.length(1);
+      expect(label).to.have.descendants('span.lab_test_msg_title').
+          and.have.length(1);
       const labelMsg = label.querySelector('span.lab_test_msg_title');
-      expect(labelMsg).to.have.text(Strings.LAB_TEST_STATUS_LABEL + ":");
+      expect(labelMsg).to.have.text(Strings.LAB_TEST_STATUS_LABEL + ':');
       expect(label).to.have.descendants('code').and.have.length(1);
       const labelCode = label.querySelector('code');
       expect(labelCode).to.have.text(passResult.status);
@@ -419,19 +436,23 @@ describe('LabContainer', () => {
     const testCases = {
       success: success,
       cases: [
-        {'1': {
-          status: 'Success',
-          out: 'output1',
-          actual: 'actual1',
-          in: 'input1'
-        }},
-        {'2': {
-          status: 'Fail',
-          out: 'output2',
-          actual: 'actual2',
-          in: 'input2'
-        }}
-      ]
+        {
+          '1': {
+            status: 'Success',
+            out: 'output1',
+            actual: 'actual1',
+            in: 'input1',
+          },
+        },
+        {
+          '2': {
+            status: 'Fail',
+            out: 'output2',
+            actual: 'actual2',
+            in: 'input2',
+          },
+        },
+      ],
     };
 
     it('should return the test status', () => {
@@ -445,19 +466,23 @@ describe('LabContainer', () => {
     const testCases = {
       success: false,
       cases: [
-        {'1': {
-          status: 'Success',
-          out: 'output1',
-          actual: 'actual1',
-          in: 'input1'
-        }},
-        {'2': {
-          status: 'Fail',
-          out: 'output2',
-          actual: 'actual2',
-          in: 'input2'
-        }}
-      ]
+        {
+          '1': {
+            status: 'Success',
+            out: 'output1',
+            actual: 'actual1',
+            in: 'input1',
+          },
+        },
+        {
+          '2': {
+            status: 'Fail',
+            out: 'output2',
+            actual: 'actual2',
+            in: 'input2',
+          },
+        },
+      ],
     };
 
     it('should start empty', () => {
