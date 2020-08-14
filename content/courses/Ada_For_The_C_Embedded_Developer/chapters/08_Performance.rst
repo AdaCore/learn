@@ -1,6 +1,10 @@
 Performance considerations
 ==========================
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
+
 .. include:: ../../global.txt
 
 Overall expectations
@@ -57,17 +61,22 @@ this type without an explicit value for :ada:`V` will issue a call to
 :ada:`Call_To_Some_Function`. More subtle issue may arise with elaboration. For
 example, it's possible to write:
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Performance.Dynamic_Array
 
-    with Some_Function_Call;
-    with Some_Other_Function_Call;
+    package Some_Functions is
+
+       function Some_Function_Call return Integer is (2);
+
+       function Some_Other_Function_Call return Integer is (10);
+
+    end Some_Functions;
+
+    with Some_Functions; use Some_Functions;
 
     package Values is
        A_Start : Integer := Some_Function_Call;
        A_End   : Integer := Some_Other_Function_Call;
     end Values;
-
-.. code-block:: ada
 
     with Values; use Values;
 
@@ -85,7 +94,7 @@ boundaries must be enforced.
 
 Here's a last case which may also be surprising:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Record_With_Arrays
 
     package P is
        type Arr is array (Integer range <>) of Integer;

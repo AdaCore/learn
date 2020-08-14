@@ -59,7 +59,7 @@ Note that :ada:`with` clauses are only allowed at the beginning of files;
 the compiler issues an error if they are used elsewhere:
 
 .. code:: ada manual_chop
-   :class: ada-nocheck
+    :class: ada-nocheck
 
     !hello_world.adb
     procedure Hello_World is

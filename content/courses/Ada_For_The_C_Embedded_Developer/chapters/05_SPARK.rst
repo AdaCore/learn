@@ -1,6 +1,10 @@
 Enhancing Verification with SPARK and Ada
 ============================================
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
+
 .. include:: ../../global.txt
 
 Dealing or not Dealing with Exceptions
@@ -15,16 +19,31 @@ frame up until it either reaches the main subprogram (terminating the
 application) or is caught by an so called exception handler in one of the call
 frames. For example:
 
-.. code-block:: ada
+:code-config:`accumulate_code=True`
 
-    function Read (A : Arr; X, Y : Integer) return Integer is
-    begin
-       return A (X + Y * 10);
-    end Read;
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
 
-.. code-block:: ada
+    package Arrays is
 
-    with Read;
+       type Arr is array (Natural range <>) of Integer;
+
+       function Read (A : Arr; X, Y : Integer) return Integer;
+
+    end Arrays;
+
+    package body Arrays is
+
+       function Read (A : Arr; X, Y : Integer) return Integer is
+       begin
+          return A (X + Y * 10);
+       end Read;
+
+    end Arrays;
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Arrays;      use Arrays;
 
     procedure Some_Process is
        A : Arr (1 .. 100);
@@ -35,7 +54,7 @@ frames. For example:
           Put_Line ("FAILURE");
     end;
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
 
     with Some_Process;
 
@@ -43,6 +62,10 @@ frames. For example:
     begin
        Some_Process;
     end Main;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 On the above code, :ada:`Some_Process` calls :ada:`Read` with values leading to
 an out-of-bound access (:ada:`1 + 10 * 10 = 101`, beyond :ada:`A` last index).
@@ -75,13 +98,37 @@ verified (e.g. through static analysis). This can be done at the file level,
 through the ``-gnatp`` compiler switch, or locally to an area within the
 :ada:`pragma Suppress`. For example, we can write:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Suppress
 
-    function Read (A : Arr, X, Y : Integer) return Integer is
+    package Arrays is
+
+       type Arr is array (Natural range <>) of Integer;
+
+       function Read (A : Arr; X, Y : Integer) return Integer;
+
+    end Arrays;
+
+    package body Arrays is
+
+       function Read (A : Arr; X, Y : Integer) return Integer is
+          pragma Suppress (All_Checks);
+       begin
+          return A (X + Y * 10);
+       end Read;
+
+    end Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Arrays;      use Arrays;
+
+    procedure Some_Process is
+       A : Arr (1 .. 100);
     begin
-       pragma Suppress (All_Checks);
-       return A (X + Y * 10);
-    end Read;
+       Put_Line (Integer'Image (Read (A, 1, 10)));
+    exception
+       when Constraint_Error =>
+          Put_Line ("FAILURE");
+    end;
 
 This will only suppress checks on this function (leading to wrong code
 execution in our case).
@@ -120,31 +167,79 @@ locally, that is in the same scope as the one raising the exception. This
 allows the compiler to translate the exception handling through a simple
 :ada:`goto` statement. For example:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return
 
-    function Read (A : Arr, X, Y : Integer) return Integer is
+    package Arrays is
+
+       type Arr is array (Natural range <>) of Integer;
+
+       function Read (A : Arr; X, Y : Integer) return Integer;
+
+    end Arrays;
+
+    package body Arrays is
+
+       function Read (A : Arr; X, Y : Integer) return Integer is
+       begin
+          return A (X + Y * 10);
+       exception
+          when Constraint_Error =>
+             return 0;
+       end Read;
+
+    end Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Arrays;      use Arrays;
+
+    procedure Some_Process is
+       A : Arr (1 .. 100);
     begin
-       return A (X + Y * 10);
+       Put_Line (Integer'Image (Read (A, 1, 10)));
     exception
-       when Contraint_Error =>
-          return 0;
-    end Read;
+       when Constraint_Error =>
+          Put_Line ("FAILURE");
+    end;
 
 Note that so far, we've only reacted to :ada:`Constraint_Error` exception. It's
 possible to react to different exceptions, and even to have one handler for all
 those that would not have been caught before:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return_Others
 
-    function Read (A : Arr, X, Y : Integer) return Integer is
+    package Arrays is
+
+       type Arr is array (Natural range <>) of Integer;
+
+       function Read (A : Arr; X, Y : Integer) return Integer;
+
+    end Arrays;
+
+    package body Arrays is
+
+       function Read (A : Arr; X, Y : Integer) return Integer is
+       begin
+          return A (X + Y * 10);
+       exception
+          when Constraint_Error =>
+             return 0;
+          when others =>
+             Return -1;
+       end Read;
+
+    end Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Arrays;      use Arrays;
+
+    procedure Some_Process is
+       A : Arr (1 .. 100);
     begin
-       return A (X + Y * 10);
+       Put_Line (Integer'Image (Read (A, 1, 10)));
     exception
-       when Contraint_Error =>
-          return 0;
-       when others =>
-          Return -1;
-    end Read;
+       when Constraint_Error =>
+          Put_Line ("FAILURE");
+    end;
 
 Understanding Dynamic Checks v.s. Formal Proof
 ----------------------------------------------
@@ -159,10 +254,10 @@ set of switches:
 
 .. code-block:: ada
 
-    with GNAT.IO; use GNAT.IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
-       X : Positive;
+       X : Positive := 10;
     begin
        X := X * 5;
        pragma Assert (X > 99);
@@ -179,7 +274,20 @@ set of switches:
 The above call is the default behavior. The assertion isn't checked, but the
 type constraints are. :ada:`X * 5 = 50`, :ada:`X - 99  = -49`, which is
 outside of positive boundaries. As a result, the check on the last assignment
-fails.
+fails. This corresponds to:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Assert
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       X : Positive := 10;
+    begin
+       X := X * 5;
+       --  pragma Assert (X > 99);
+       X := X - 99;
+       Put_Line (Integer'Image (X));
+    end Main;
 
 ::
 
@@ -189,7 +297,21 @@ fails.
 
 On the above example with the ``-gnata`` switch, we're asking to enable manual
 checks, here the assertion. As a result, the code fails one line above, on the
-check requesting that :ada:`X` is supposed to be above 99.
+check requesting that :ada:`X` is supposed to be above 99. This corresponds to:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Assert
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       X : Positive := 10;
+    begin
+       X := X * 5;
+       pragma Assert (X > 99);
+       X := X - 99;
+       Put_Line (Integer'Image (X));
+    end Main;
+
 
 ::
 
@@ -199,7 +321,20 @@ check requesting that :ada:`X` is supposed to be above 99.
 
 On this last example, we removed automatic check with ``-gnatp`` switch. The
 program will run without verification, and here provide a result that is
-inconsistent, -49, on data supposed to be positive.
+inconsistent, -49, on data supposed to be positive. This corresponds to:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Assert
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       X : Positive := 10;
+       pragma Suppress (All_Checks);
+    begin
+       X := X * 5;
+       X := X - 99;
+       Put_Line (Integer'Image (X));
+    end Main;
 
 It's interesting to see in the above example that code inspection could have
 pointed out that there would always be a problem. An alternative to code
@@ -215,14 +350,14 @@ examples what it is about.
 As it turns out, our code is already SPARK compliant. We just need to enable
 SPARK checks with the :ada:`SPARK_Mode` aspect:
 
-.. code-block:: ada
+.. code:: ada prove_button run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Assert
 
-    with GNAT.IO; use GNAT.IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main
       with SPARK_Mode => ON
     is
-       X : Positive;
+       X : Positive := 10;
     begin
        X := X * 5;
        pragma Assert (X > 99);
@@ -290,7 +425,9 @@ contracts:
 These contracts can be built after the values of function, parameters, global
 data or references to the current instance. For example:
 
-.. code-block:: ada
+:code-config:`accumulate_code=True`
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1
 
     function Compute (X, Y : Integer) return Integer
       with Pre => X + Y /= 0,
@@ -302,21 +439,37 @@ dividing by :ada:`X + Y` in :ada:`Compute`. It also provides some guarantees on
 the result, the fact that it has to be different than 0. If we look at a
 piece of code using these:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1
 
-    A := Compute (1, 2);
-    B := Compute (1, -1);
-    C := Compute (A, B);
+    with Compute;
+
+    procedure Main is
+       A, B, C : Integer;
+    begin
+       A := Compute (1, 2);
+       B := Compute (1, -1);
+       C := Compute (A, B);
+    end Main;
 
 From a dynamic analysis perspective, the second statement will fail with an
 assertion failure, as :ada:`-1 + 1 = 0`. This will happen prior to calling any
 of the code within :ada:`Compute`. If we fix the code, for example:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1
 
-    A := Compute (1, 2);
-    B := Compute (1, -2);
-    C := Compute (A, B);
+    with Compute;
+
+    procedure Main is
+       A, B, C : Integer;
+    begin
+       A := Compute (1, 2);
+       B := Compute (1, -2);
+       C := Compute (A, B);
+    end Main;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 :program:`gnatprove` will know from :ada:`Compute` postcondition that :ada:`A`
 has to be above 1, and so does :ada:`B`. It therefore can deduce that the call
@@ -326,25 +479,45 @@ the addition of two numbers above 1 will be different than 0.
 Postconditions can also compare the state prior to a call with the state after
 a call, using the :ada:`'Old` attribute. For example:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_2
 
-    Counter : Integer := 0;
+    package Counters is
 
-    procedure Increment_Counter
-       with Post => Counter = Counter'Old + 1;
+       Counter : Integer := 0;
+
+       procedure Increment_Counter
+          with Pre  => Counter < Integer'Last,
+               Post => Counter = Counter'Old + 1;
+
+    end Counters;
+
+    package body Counters is
+
+       procedure Increment_Counter is
+       begin
+          Counter := Counter + 1;
+       end Increment_Counter;
+
+    end Counters;
 
 This will check that the counter has indeed been incremented after the call.
 
 Contract can also be associated with types through predicates, with will add
 verifications on its values. For example:
 
-.. code-block:: ada
+:code-config:`accumulate_code=True`
 
-    type R is record
-       Initialized : Boolean := False;
-       A, B : Integer;
-    end record
-       with Predicate => (if R.Initialized then R.A /= R.B);
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_3
+
+    package P is
+
+       type R is record
+          Initialized : Boolean := False;
+          A, B : Integer;
+       end record
+          with Predicate => (if R.Initialized then R.A /= R.B);
+
+    end P;
 
 This will verify that if the value of :ada:`Initialize` is true, then :ada:`A`
 and :ada:`B` have to be different. Note that verifications are inserted at
@@ -354,15 +527,27 @@ predicate of a type will not be checked when modifying its subcomponents (which
 allows to do an update in steps). This can lead to some delayed detection that
 can be surprising at first glance. For example:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_3
 
-    declare
+    with P; use P;
+
+    procedure Main is
        V : R;
+
+       procedure Some_Call (V : R) is
+       begin
+          null;
+       end Some_Call;
     begin
        V.Initialized := True;
        V.A := 0;
-       V.B := 0; -- The predicate is not correct but not verified.
-       Some_Call (V) -- The predicate will be checked and raise an error
+       V.B := 0;      --  The predicate is not correct but not verified.
+       Some_Call (V); --  The predicate will be checked and raise an error
+    end Main;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 Absence of Run-Time Errors vs. Functional Correctness
 -----------------------------------------------------
@@ -426,25 +611,32 @@ specification. This has a number of advantages:
 To take an example, let's consider a subprogram that manipulates an array,
 expecting an index of this array as input:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Defensive
 
-    type Arr is array (Integer range <>) of Character;
+    package P is
 
-    Data : Arr (1 .. 100);
-    Index : Integer := 1;
+       type Arr is array (Integer range <>) of Character;
 
-    procedure Read (V : out Value);
+       Data : Arr (1 .. 100);
+       Index : Integer := 1;
 
-    procedure Read (V : out Value) is
-    begin
-       if Index not in Data'Range then
-          V := Character'First;
-          return;
-       end if;
+       procedure Read (V : out Character);
 
-       V := Data (Index);
-       Index := Index + l;
-    end Read ;
+    end P;
+
+    package body P is
+
+       procedure Read (V : out Character) is
+       begin
+          if Index not in Data'Range then
+             V := Character'First;
+             return;
+          end if;
+
+          V := Data (Index);
+          Index := Index + 1;
+       end Read;
+    end P;
 
 This procedure is responsible for reading an element on an array and then
 incrementing the read index. What should it do in case of an invalid index? In
@@ -455,16 +647,29 @@ and return a status in this case, or raise an exception.
 A more efficient way of working would be instead to make sure that this
 subprogram cannot be called if :ada:`Index` is out of the boundaries of data:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Defensive
 
-    procedure Read (V : out Value)
-       with Pre => Index in Data'Range;
+    package P is
 
-    procedure Read (V : out Value) is
-    begin
-       V := Data (Index);
-       Index := Index + l;
-    end Read;
+       type Arr is array (Integer range <>) of Character;
+
+       Data : Arr (1 .. 100);
+       Index : Integer := 1;
+
+       procedure Read (V : out Character)
+          with Pre => Index in Data'Range;
+
+    end P;
+
+    package body P is
+
+       procedure Read (V : out Character) is
+       begin
+          V := Data (Index);
+          Index := Index + 1;
+       end Read;
+
+    end P;
 
 At the point of call, the compiler can insert a dynamic check (with assertion
 enabled) or SPARK can prove that such check will never fail.
@@ -486,44 +691,58 @@ code as long as the ghost computation doesn't influence the non ghost one.
 As an example, let's consider a re-entrant lock that we want to make sure will
 be properly freed. You can write something like:
 
-.. code-block:: ada
+:code-config:`accumulate_code=True`
 
-    Lock_Depth : Integer := 0 with Ghost;
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Ghost_1
 
-    procedure P (X : out Integer)
-    with Post => Lock_Depth = Lock_Depth'Old;
+    package Pkg is
 
-    procedure Lock
-    with Post => Lock_Depth = Lock_Depth'Old + 1;
+       Lock_Depth : Integer := 0 with Ghost;
 
-    procedure Unlock
-    with Post => Lock_Depth = Lock_Depth'Old - 1;
+       procedure P (X : out Integer)
+         with Post => Lock_Depth = Lock_Depth'Old;
+
+       procedure Lock
+         with Post => Lock_Depth = Lock_Depth'Old + 1;
+
+       procedure Unlock
+         with Post => Lock_Depth = Lock_Depth'Old - 1;
+
+    end Pkg;
 
 On the above, :ada:`Lock` and :ada:`Unlock` expect increment and decrement of
 the depth of the lock. We expect :ada:`P` to return the :ada:`Lock` in the
 initial state, so to balance :ada:`Lock` and :ada:`Unlock` calls. The
 implementation may look like:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Ghost_2
 
-    procedure P (X : out Integer) is
-    begin
-      Lock;
-      X := Some_Call;
-      Unlock;
-    end P;
+    package body Pkg is
 
-    procedure Lock is
-    begin
-       Lock_Depth:= Lock_Depth+ 1;
-       Take_The_Lock;
-    end Lock;
+       procedure P (X : out Integer) is
+       begin
+         Lock;
+         --  X := Some_Call;
+         Unlock;
+       end P;
 
-    procedure Unlock is
-    Begin
-       Lock_Depth:= Lock_Depth- 1;
-       Release_The_Lock;
-    end Unlock;
+       procedure Lock is
+       begin
+          Lock_Depth:= Lock_Depth + 1;
+          --  Take_The_Lock;
+       end Lock;
+
+       procedure Unlock is
+       begin
+          Lock_Depth:= Lock_Depth - 1;
+          --  Release_The_Lock;
+       end Unlock;
+
+    end Pkg;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 Note that it's fine to compute new values for the variable :ada:`Lock_Depth` in
 :ada:`Lock` and :ada:`Unlock`. These will be stripped automatically from the
@@ -534,7 +753,7 @@ program when assertion are off. However, the following would be illegal:
     procedure P (X : out Integer) is
     begin
       Lock;
-      X := Lock_Depth;
+      --  X := Lock_Depth;
       Unlock;
     end P;
 
@@ -553,26 +772,34 @@ that all the preconditions of the called subprograms are verified and assuming
 that all the postconditions of such subprograms are also true. Let's take the
 following example:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Locality
 
-    function Add_Abs (V1, V2 : Integer) return Integer
-       with Post => Add'Result >= 0;
+    package Ops is
 
-    function My_Abs (I : Integer);
+       function Add_Abs (V1, V2 : Integer) return Integer
+          with Post => Add_Abs'Result >= 0;
 
-    function Add_Abs (V1, V2 : Integer) return Integer is
-    begin
-       Return My_Abs (V1) + My_Abs (V2);
-    end Add_Abs;
+       function My_Abs (I : Integer) return Integer;
 
-    function My_Abs (I : Integer) is
-    begin
-       if I < 0 then
-          return -I;
-       else
-          return I;
-       end if;
-    end My_Abs;
+    end Ops;
+
+    package body Ops is
+
+       function Add_Abs (V1, V2 : Integer) return Integer is
+       begin
+          return My_Abs (V1) + My_Abs (V2);
+       end Add_Abs;
+
+       function My_Abs (I : Integer) return Integer is
+       begin
+          if I < 0 then
+             return -I;
+          else
+             return I;
+          end if;
+       end My_Abs;
+
+    end Ops;
 
 From the above code, it's quite clear that the result of :ada:`Add_Abs` will
 indeed return a positive result, as the function is calling :ada:`My_Abs` on
@@ -616,21 +843,25 @@ can be written according to the indices/cursors or actual values. Here are a
 few examples based on an array, checking whether all values are positive
 |mdash| or if at least one value is positive:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Quantifier_1
 
-    type Arr is array (Integer range <>) of Integer;
+    package P is
 
-    function All_Is_Positive_1 (V : Arr) return Boolean is
-       (for all I in V'Range => V (I) > 0);
+       type Arr is array (Integer range <>) of Integer;
 
-    function All_Is_Positive_1 (V : Arr) return Boolean is
-       (for all E of V => E > 0);
+       function All_Is_Positive_1 (V : Arr) return Boolean is
+          (for all I in V'Range => V (I) > 0);
 
-    function At_Least_One_Is_Positive_1 (V : Arr) return Boolean is
-       (for some I in V'Range => V (I) > 0);
+       function All_Is_Positive_2 (V : Arr) return Boolean is
+          (for all E of V => E > 0);
 
-    function At_Least_One_Is_Positive_2 (V : Arr) return Boolean is
-       (for some E of V => E > 0);
+       function At_Least_One_Is_Positive_1 (V : Arr) return Boolean is
+          (for some I in V'Range => V (I) > 0);
+
+       function At_Least_One_Is_Positive_2 (V : Arr) return Boolean is
+          (for some E of V => E > 0);
+
+    end P;
 
 Note the qualifier all to verify that a property is true for all element, some
 to check that it's true for at least one, and the difference between iterating
@@ -640,13 +871,17 @@ container.
 Using the above, we could write more complex properties. Here's for example a
 function that places the minimal value in the front of an array:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Quantifier_2
 
-    type Arr is array (Integer range <>) of Integer;
+    package P is
 
-    procedure Put_Min_In_Front (V : in out Arr)
-       with Post =>
-          (for all I in V'First .. V'Last => V (V'First) <= V (I));
+       type Arr is array (Integer range <>) of Integer;
+
+       procedure Put_Min_In_Front (V : in out Arr)
+          with Post =>
+             (for all I in V'First .. V'Last => V (V'First) <= V (I));
+
+    end P;
 
 The post condition could read "either the array size is 1 or less, or the
 element at position :ada:`V'First` is lower or equal to the next." For sake of
@@ -655,20 +890,32 @@ still in the final array.
 
 The code that implements such procedure is quite trivial:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Loop_1
 
-    procedure Put_Min_In_Front (V : in out Arr)
-    is
-       Tmp : Integer;
-    begin
-       for I in V'First .. V'Last loop
-          if V(V'First) > V (I) then
-             Tmp := V (I);
-             V (I) := V (V'First);
-             V(V'First) := Tmp;
-          end if;
-       end loop;
-    end Put_Min_In_Front;
+    package P is
+
+       type Arr is array (Integer range <>) of Integer;
+
+       procedure Put_Min_In_Front (V : in out Arr);
+
+    end P;
+
+    package body P is
+
+       procedure Put_Min_In_Front (V : in out Arr)
+       is
+          Tmp : Integer;
+       begin
+          for I in V'First .. V'Last loop
+             if V(V'First) > V (I) then
+                Tmp := V (I);
+                V (I) := V (V'First);
+                V(V'First) := Tmp;
+             end if;
+          end loop;
+       end Put_Min_In_Front;
+
+    end P;
 
 As you might imagine, the purpose of this example is to show that this can't be
 proven as-is. This is because it's extremely hard for provers to understand
@@ -728,23 +975,35 @@ that at each iteration, all the elements until the current iterated index
 :ada:`I` are greater than the first element. The overall code then looks like
 this:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Loop_2
 
-    procedure Put_Min_In_Front (V : in out Arr)
-    is
-       Tmp : Integer;
-    begin
-       for I in V'First .. V'Last loop
-          if V(V'First) > V (I) then
-             Tmp := V (I);
-             V (I) := V (V'First);
-             V(V'First) := Tmp;
-          end if;
+    package P is
 
-          pragma Loop_Invariant
-             ((for all K in V'First .. I => V (V'First) <= V (K)));
-       end loop;
-    end Put_Min_In_Front;
+       type Arr is array (Integer range <>) of Integer;
+
+       procedure Put_Min_In_Front (V : in out Arr);
+
+    end P;
+
+    package body P is
+
+       procedure Put_Min_In_Front (V : in out Arr)
+       is
+          Tmp : Integer;
+       begin
+          for I in V'First .. V'Last loop
+             if V(V'First) > V (I) then
+                Tmp := V (I);
+                V (I) := V (V'First);
+                V(V'First) := Tmp;
+             end if;
+
+             pragma Loop_Invariant
+                ((for all K in V'First .. I => V (V'First) <= V (K)));
+          end loop;
+       end Put_Min_In_Front;
+
+    end P;
 
 You can replace this invariant in all three path above to get convinced that
 this is indeed true.
@@ -756,42 +1015,57 @@ When a subprogram is manipulating data structures, it's often as important to
 specify what changes as what doesn't change. Let's take the example of a
 simple procedure manipulating a record representing registers:
 
-.. code-block:: ada
+:code-config:`accumulate_code=True`
 
-    type Arr is array (Integer range <>) of Integer;
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Changes_1
 
-    type Stack is record
-       Data : Arr;
-       Top : Integer;
-    end Stack;
+    package P is
 
-    procedure Push_Sum (S : in out Stack)
-       with Post => S.Top := S.Top'Old + 1 and
-                    S.Data(S.Top) = S.Data(S.Top - 1)
-                                    + S.Data(S.Top - 2);
+       type Arr is array (Positive range <>) of Integer;
 
-    procedure Push_Sum (S : in out Stack)
-    is
-    begin
-      S.Data (S.Top + 1) := S.Data (S.Top) + S.Data (S.Top - 1);
-      S.Top := S.Top + 1;
-    end Push_Sum;
+       type Stack (Max : Integer) is record
+           Data : Arr (1 .. Max);
+           Top  : Integer;
+         end record;
+
+       procedure Push_Sum (S : in out Stack)
+          with Post => S.Top = S.Top'Old + 1 and
+                       S.Data(S.Top) = S.Data(S.Top - 1)
+                                       + S.Data(S.Top - 2);
+
+    end P;
+
+    package body P is
+
+       procedure Push_Sum (S : in out Stack) is
+       begin
+          S.Data (S.Top + 1) := S.Data (S.Top) + S.Data (S.Top - 1);
+          S.Top := S.Top + 1;
+       end Push_Sum;
+
+    end P;
 
 Now, for the purpose of this example, we're trying to ensure that the numbers in
 this stack are always positive. We're doing some process on the stack |mdash|
 some sums |mdash| and want to make sure that these numbers are still positive:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Changes_2
 
-    procedure Process (S : Stack)
-       with Pre => (for all E of S.Data (S.Data'First .. S.Top) => E > 0)
+    with P; use P;
+
+    procedure Process (S : in out Stack)
+       with Pre  => (for all E of S.Data (S.Data'First .. S.Top) => E > 0),
             Post => (for all E of S.Data (S.Data'First .. S.Top) => E > 0);
 
-    procedure Process (S : Stack) is
+    procedure Process (S : in out Stack) is
     begin
        Push_Sum (S);
        Push_Sum (S);
     end Process;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 The expectation is that the postcondition should be proven (not taking overflows
 into account). We have a list of positive numbers and push another
@@ -806,7 +1080,7 @@ all others remaining the same:
 .. code-block:: ada
 
     procedure Push_Sum (S : in out Stack)
-       with Post => S.Top := S.Top'Old + 1 and
+       with Post => S.Top = S.Top'Old + 1 and
                     S.Data'Update (Top => S.Data(S.Top - 1) + S.Data(S.Top - 2));
 
 With the above changes, the code should prove fine.
@@ -951,29 +1225,39 @@ be proven. This can help identifying from which point in the program things
 turn not to be correct, a bit like when stepping in a program. Let's illustrate
 this last technique through an example. Consider the following piece of code:
 
-.. code-block:: ada
+:code-config:`accumulate_code=True`
 
-    type Direction is (North, South, West, East, Center);
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Directions
 
-    procedure Move
-       (X, Y : in out Integer; Max, Min : Integer; D : Direction)
-     with Pre => Max > Min and X in Min .. Max and Y in Min .. Max,
-          Post => (if D in North | South then X = X'Old else Y = Y'Old);
+    package Directions is
 
-    procedure Move
-       (X, Y : in out Integer; Max, Min : Integer; D : Direction)
-    is
-    begin
-       if D = North and then Y < Max then
-          Y := Y + 1;
-       elsif D = South and then Y > Min  then
-          Y := Y - 1;
-       elsif D = West and then X > Min then
-          X := X - 1;
-       elsif X < Max then
-          X := X + 1;
-       end if;
-    end Move;
+       type Direction is (North, South, West, East, Center);
+
+       procedure Move
+          (X, Y : in out Integer; Max, Min : Integer; D : Direction)
+        with Pre => Max > Min and X in Min .. Max and Y in Min .. Max,
+            Post => (if D in North | South then X = X'Old else Y = Y'Old);
+
+    end Directions;
+
+    package body Directions is
+
+       procedure Move
+          (X, Y : in out Integer; Max, Min : Integer; D : Direction)
+       is
+       begin
+          if D = North and then Y < Max then
+             Y := Y + 1;
+          elsif D = South and then Y > Min  then
+             Y := Y - 1;
+          elsif D = West and then X > Min then
+             X := X - 1;
+          elsif X < Max then
+             X := X + 1;
+          end if;
+       end Move;
+
+    end Directions;
 
 This function :ada:`Move` moves :ada:`X` and :ada:`Y` according to a direction,
 and ensure that :ada:`North` and :ada:`South` don't move :ada:`X`, and that
@@ -988,59 +1272,68 @@ local variables, which we're going to mark as :ada:`Ghost` since this is only
 going to be used for the purpose of the verification. This would then look
 like:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Directions
 
-    procedure Move
-       (X, Y : in out Integer; Max, Min : Integer; D : Direction)
-    is
-       XInit, YInit : Integer with Ghost;
-    begin
-       XInit := X;
-       YInit := Y;
+    package body Directions is
 
-       if D = North and then Y < Max then
-          Y := Y + 1;
-          pragma Assert
-            ((if D in North | South then X = XInit else Y = YInit));
-       elsif D = South and then Y > Min  then
-          Y := Y - 1;
-          pragma Assert
-            ((if D in North | South then X = XInit else Y = YInit));
-       elsif D = West and then X > Min then
-          X := X - 1;
-          pragma Assert
-            ((if D in North | South then X = XInit else Y = YInit));
-       elsif X < Max then
-          X := X + 1;
-          pragma Assert
-            ((if D in North | South then X = XInit else Y = YInit));
-       end if;
-    end Move;
+       procedure Move
+          (X, Y : in out Integer; Max, Min : Integer; D : Direction)
+       is
+          XInit, YInit : Integer with Ghost;
+       begin
+          XInit := X;
+          YInit := Y;
+
+          if D = North and then Y < Max then
+             Y := Y + 1;
+             pragma Assert
+               ((if D in North | South then X = XInit else Y = YInit));
+          elsif D = South and then Y > Min  then
+             Y := Y - 1;
+             pragma Assert
+               ((if D in North | South then X = XInit else Y = YInit));
+          elsif D = West and then X > Min then
+             X := X - 1;
+             pragma Assert
+               ((if D in North | South then X = XInit else Y = YInit));
+          elsif X < Max then
+             X := X + 1;
+             pragma Assert
+               ((if D in North | South then X = XInit else Y = YInit));
+          end if;
+       end Move;
+
+    end Directions;
 
 Running this to the prover, you'll notice that only the last assertion doesn't
 prove, which indicates that this is the only incorrect branch. Indeed, a case
 where :ada:`D = South and Y <= Min` would end up in this branch. The code can
 be fixed with:
 
-.. code-block:: ada
+.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Directions
 
-    procedure Move
-       (X, Y : in out Integer; Max, Min : Integer; D : Direction)
-    is
-    begin
-       XInit := X;
-       YInit := Y;
+    package body Directions is
 
-       if D = North and then Y < Max then
-          Y := Y + 1;
-       elsif D = South and then Y > Min  then
-          Y := Y - 1;
-       elsif D = West and then X > Min then
-          X := X - 1;
-       elsif D = East and then X < Max then
-          X := X + 1;
-       end if;
-    end Move;
+       procedure Move
+          (X, Y : in out Integer; Max, Min : Integer; D : Direction)
+       is
+       begin
+          if D = North and then Y < Max then
+             Y := Y + 1;
+          elsif D = South and then Y > Min  then
+             Y := Y - 1;
+          elsif D = West and then X > Min then
+             X := X - 1;
+          elsif D = East and then X < Max then
+             X := X + 1;
+          end if;
+       end Move;
+
+    end Directions;
+
+:code-config:`accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
 
 RavenSPARK
 ----------

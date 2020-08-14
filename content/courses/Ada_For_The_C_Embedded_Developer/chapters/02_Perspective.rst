@@ -1,6 +1,10 @@
 The C Developer's Perspective on Ada
 ======================================
 
+:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+
+:code-config:`reset_accumulator=True`
+
 .. include:: ../../global.txt
 
 What we mean by Embedded Software
@@ -22,7 +26,7 @@ The GNAT Toolchain
 The toolchain used throughout this book is called GNAT, which is a suite of
 tools with a compiler based on the GCC environment. It can be obtained from
 AdaCore, either as part of a commercial contract with
-`GNAT Pro <https://www.adacore.com/gnatpro)>`_ or at no charge with the
+`GNAT Pro <https://www.adacore.com/gnatpro>`_ or at no charge with the
 `GNAT Community edition <https://www.adacore.com/community>`_. The information
 on this book  will be relevant no matter which edition you're using. Most
 examples will be runnable on the native Linux or Windows version for
@@ -36,13 +40,79 @@ to GNAT, and sometimes to specific platforms supported by GNAT. We'll try to
 make the distinction between what is GNAT-specific and Ada generic as much as
 possible through this book.
 
+For an introduction to the GNAT Toolchain for the GNAT Community edition, you
+may refer to the
+:doc:`Introduction to GNAT Toolchain <courses/GNAT_Toolchain_Intro/index>`
+course.
+
 The GNAT Toolchain for Embedded Targets
 -----------------------------------------
 
-.. todo::
+When we're discussing embedded programming, our target device is often
+different from the host, which is the device we're using to actually write and
+build an application. In this case, we're talking about cross compilation
+platforms.
 
-    AI - Rob: complete this section (explain run-time differences, how to
-    compile, the concept of BSP, etc)
+The GNAT toolchain supports cross platform compilation for various
+target devices. This section provides a short introduction to the topic. For
+more details, please refer to the
+`GNAT User’s Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx.html>`_
+
+GNAT supports two types of cross platforms:
+
+- **cross targets**, where the target device has an embedded operating system.
+
+    - ARM-Linux, which is commonly found in a Raspberry-Pi, is a prominent
+      example.
+
+- **bareboard targets**, where the run-times do not depend on an operating
+  system.
+
+    - In this case, the application communicates directly with the device's
+      processor.
+
+For each platform, a set of run-time libraries is available. Run-time libraries
+implement a subset of the Ada language for different use cases, and they're
+different for each target platform. They may be selected via an attribute in
+the project's GPR project file or as a command-line switch to
+:program:`GPRbuild`. Although the run-time libraries may vary from target to
+target, the user interface stays the same, providing portability for the
+application.
+
+Run-time libraries consists of:
+
+#. Files that are dependent on the target board.
+
+    - These files are responsible for configuring and interacting with the
+      hardware.
+
+    - They are known as Board Support Package |mdash| commonly refer as *BSP*.
+
+#. Code that is target-independent.
+
+    - This code implements language-defined functionality.
+
+The bareboard run-time libraries are provided as customized run-times that are
+configured to target a very specific micro-controller or processor. Therefore,
+for different micro-controllers and processors, the run-time libraries need to
+be ported to your target. These are some examples of what needs to be ported:
+
+- startup code / scripts;
+
+- clock frequency initializations;
+
+- memory mapping / allocation;
+
+- interrupts and interrupt priorities;
+
+- register descriptions.
+
+For more details on the topic, please refer to the following chapters of the
+`GNAT User’s Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx.html>`_:
+
+- `Bareboard Topics <http://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx/bareboard_topics.html>`_
+
+- `Customized Run-Time Libraries <http://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx/customized_run-time_libraries.html>`_
 
 Hello World in Ada
 --------------------
@@ -50,26 +120,26 @@ Hello World in Ada
 The first piece of code to translate from C to Ada is the usual Hello World
 program:
 
-.. code:: c
+.. code:: c run_button manual_chop
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   int main()
-   {
-     printf("Hello World\n");
-     return 0;
-   }
+    int main(int argc, const char * argv[])
+    {
+        printf("Hello World\n");
+        return 0;
+    }
 
-.. code:: ada
+.. code:: ada run_button
 
-   with Ada.Text_IO;
+    with Ada.Text_IO;
 
-   procedure Hello_World
-   is
-   begin
-      Ada.Text_IO.Put_Line ("Hello World");
-   end Hello_World;
+    procedure Hello_World
+    is
+    begin
+       Ada.Text_IO.Put_Line ("Hello World");
+    end Hello_World;
 
 The resulting program will print :ada:`Hello World` on the screen. Let's now
 dissect the Ada version to describe what is going on:
@@ -165,27 +235,27 @@ package into our application. The package specification has the structure:
 
 .. code-block:: ada
 
-   --  my_package.ads
-   package My_Package is
+    --  my_package.ads
+    package My_Package is
 
-      --  public declarations
+       --  public declarations
 
-   private
+    private
 
-      --  private declarations
+       --  private declarations
 
-   end My_Package;
+    end My_Package;
 
 The package implementation, or body, has the structure:
 
 .. code-block:: ada
 
-   --  my_package.adb
-   package body My_Package is
+    --  my_package.adb
+    package body My_Package is
 
-      --  implementation
+       --  implementation
 
-   end My_Package;
+    end My_Package;
 
 Something that might stick out in this example is the use of the reserve word
 :ada:`private` in the package specification. This acts as a partition in the
@@ -197,27 +267,29 @@ use-case for the private section in a package is when you want to declare a
 heterogeneous data type, called a record in Ada or a struct in C, but you want
 to stop the user of the package from accessing the record components directly.
 
-.. code-block:: ada
+:code-config:`accumulate_code=True`
 
-   package Containers is
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
 
-      type Stack is private;
+    package Containers is
 
-      procedure Push (St   : in out Stack;
-                      Elem : Integer);
-      function Pop (St : in out Stack) return Integer;
+       type Stack is private;
 
-      --  more accessors go here
+       procedure Push (St   : in out Stack;
+                       Elem : Integer);
+       function Pop (St : in out Stack) return Integer;
 
-   private
-      type Integer_Array is array (Natural range <>) of Integer;
+       --  more accessors go here
 
-      type Stack is record
-         Data : Integer_Array (1 .. 100);
-         Top : Natural := 0;
-      end record;
+    private
+       type Integer_Array is array (Natural range <>) of Integer;
 
-   end Containers;
+       type Stack is record
+          Data : Integer_Array (1 .. 100);
+          Top : Natural := 0;
+       end record;
+
+    end Containers;
 
 In this example we have a specification for a Stack data type. We don't really
 want the user to be manipulating the underlying array or index of the top of
@@ -229,31 +301,60 @@ declare the Stack as a record with its components. The user of this package
 
 However, from the package body, we **can** access :ada:`Data` and :ada:`Top`.
 
-.. code-block:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
 
-   package body Containers is
+    package body Containers is
 
-      procedure Push (St   : in out Stack;
-                      Elem : Integer)
-      is
-      begin
-         --  some defensive code should go here
-         St.Top := St.Top + 1;
-         St.Data (St.Top) := Elem;
-      end Push;
+       procedure Push (St   : in out Stack;
+                       Elem : Integer)
+       is
+       begin
+          --  some defensive code should go here
+          St.Top := St.Top + 1;
+          St.Data (St.Top) := Elem;
+       end Push;
 
-      function Pop (St : in out Stack) return Integer
-      is
-         Ret : Integer;
-      begin
-         --  some defensive code should go here
-         Ret := St.Data (St.Top);
-         St.Top := St.Top - 1;
+       function Pop (St : in out Stack) return Integer
+       is
+          Ret : Integer;
+       begin
+          --  some defensive code should go here
+          Ret := St.Data (St.Top);
+          St.Top := St.Top - 1;
 
-         return Ret;
-      end Pop;
+          return Ret;
+       end Pop;
 
-   end Containers;
+    end Containers;
+
+We can then reference this package in a subprogram. For example:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+
+    with Ada.Text_IO;
+    with Containers;
+
+    procedure Containers_Test is
+       S : Containers.Stack;
+       I : Integer;
+
+    begin
+       I := 10;
+       Ada.Text_IO.Put_Line ("Push: " & Integer'Image (I));
+       Containers.Push (S, I);
+
+       I := 11;
+       Ada.Text_IO.Put_Line ("Push: " & Integer'Image (I));
+       Containers.Push (S, I);
+
+       I := Containers.Pop (S);
+       Ada.Text_IO.Put_Line ("Pop: " & Integer'Image (I));
+
+       I := Containers.Pop (S);
+       Ada.Text_IO.Put_Line ("Pop: " & Integer'Image (I));
+    end Containers_Test;
+
+:code-config:`accumulate_code=False`
 
 Statements and Declarations
 ----------------------------
@@ -261,48 +362,48 @@ Statements and Declarations
 The following code samples are all equivalent, and illustrate the use of
 comments and working with integer variables:
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_C
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   int main()
-   {
-      // variable declarations
-      int a = 0, b = 0, c = 100, d;
+    int main(int argc, const char * argv[])
+    {
+        // variable declarations
+        int a = 0, b = 0, c = 100, d;
 
-      // c shorthand for increment
-      a++;
+        // c shorthand for increment
+        a++;
 
-      // regular addition
-      d = a + b + c;
+        // regular addition
+        d = a + b + c;
 
-      // printing the result
-      printf("d = %d\n", d);
+        // printing the result
+        printf("d = %d\n", d);
 
-      return 0;
-   }
+        return 0;
+    }
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Ada
 
-   with Ada.Text_IO;
+    with Ada.Text_IO;
 
-   procedure Main
-   is
-      --  variable declaration
-      A, B : Integer := 0;
-      C    : Integer := 100;
-      D    : Integer;
-   begin
-      --  Ada does not have a shortcut format for increment like in C
-      A := A + 1;
+    procedure Main
+    is
+       --  variable declaration
+       A, B : Integer := 0;
+       C    : Integer := 100;
+       D    : Integer;
+    begin
+       --  Ada does not have a shortcut format for increment like in C
+       A := A + 1;
 
-      --  regular addition
-      D := A + B + C;
+       --  regular addition
+       D := A + B + C;
 
-      --  printing the result
-      Ada.Text_IO.Put_Line ("D =" & D'Img);
-   end Main;
+       --  printing the result
+       Ada.Text_IO.Put_Line ("D =" & D'Img);
+    end Main;
 
 You'll notice that, in both languages, statements are terminated with a
 semicolon. This means that you can have multi-line statements.
@@ -316,51 +417,80 @@ where developers were required to declare their variables at the top of the
 scope block. Most C developers may have run into this before when trying to
 write a for loop:
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_C89
 
-   /* The C89 version */
-   int average(int* list, int length)
-   {
-      int i;
-      int sum = 0;
+    !main.c
+    /* The C89 version */
 
-      for(i = 0; i < length; ++i) {
-         sum += list[i];
-      }
-      return (sum / length);
-   }
+    #include <stdio.h>
 
-.. code-block:: c
+    int average(int* list, int length)
+    {
+        int i;
+        int sum = 0;
 
-   // The modern C way
-   int average(int* list, int length)
-   {
-      int sum = 0;
+        for(i = 0; i < length; ++i) {
+            sum += list[i];
+        }
+        return (sum / length);
+    }
 
-      for(int i = 0; i < length; ++i) {
-         sum += list[i];
-      }
+    int main(int argc, const char * argv[])
+    {
+        int vals[] = { 2, 2, 4, 4 };
 
-      return (sum / length);
-   }
+        printf("Average: %d\n", average(vals, 4));
+    }
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_C_Modern
+
+    !main.c
+    // The modern C way
+
+    #include <stdio.h>
+
+    int average(int* list, int length)
+    {
+        int sum = 0;
+
+        for(int i = 0; i < length; ++i) {
+            sum += list[i];
+        }
+
+        return (sum / length);
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        int vals[] = { 2, 2, 4, 4 };
+
+        printf("Average: %d\n", average(vals, 4));
+    }
 
 For the fun of it, let's also see the Ada way to do this:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_Ada
 
-   type Int_Array is array (Natural range <>) of Integer;
+    with Ada.Text_IO;
 
-   function Average (List : Int_Array) return Integer
-   is
-      Sum : Integer;
-   begin
+    procedure Main is
+       type Int_Array is array (Natural range <>) of Integer;
 
-      for I in List'Range loop
-         Sum := Sum + List (I);
-      end loop;
+       function Average (List : Int_Array) return Integer
+       is
+          Sum : Integer := 0;
+       begin
+          for I in List'Range loop
+             Sum := Sum + List (I);
+          end loop;
 
-      return (Sum / List'Length);
-   end Average;
+          return (Sum / List'Length);
+       end Average;
+
+       Vals : constant Int_Array (1 .. 4) := (2, 2, 4, 4);
+    begin
+       Ada.Text_IO.Put_Line ("Average: " & Integer'Image (Average (Vals)));
+    end Main;
 
 We will explore more about the syntax of loops in Ada in a future section of
 this book; but for now, notice that the :ada:`I` variable used as the loop
@@ -377,64 +507,64 @@ The next block in the Ada example is between the :ada:`begin` and :ada:`end`
 keywords. This is where your statements will live. You can create new scopes by
 using the :ada:`declare` keyword:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Block_Ada
 
-   with Ada.Text_IO;
+    with Ada.Text_IO;
 
-   procedure Main
-   is
-      --  variable declaration
-      A, B : Integer := 0;
-      C    : Integer := 100;
-      D    : Integer;
-   begin
-      --  Ada does not have a shortcut format for increment like in C
-      A := A + 1;
+    procedure Main
+    is
+       --  variable declaration
+       A, B : Integer := 0;
+       C    : Integer := 100;
+       D    : Integer;
+    begin
+       --  Ada does not have a shortcut format for increment like in C
+       A := A + 1;
 
-      --  regular addition
-      D := A + B + C;
+       --  regular addition
+       D := A + B + C;
 
-      --  printing the result
-      Ada.Text_IO.Put_Line ("D =" & D'Img);
+       --  printing the result
+       Ada.Text_IO.Put_Line ("D =" & D'Img);
 
-      declare
-         E : Integer := D * 100;
-      begin
-         --  printing the result
-         Ada.Text_IO.Put_Line ("E =" & E'Img);
-      end;
+       declare
+          E : constant Integer := D * 100;
+       begin
+          --  printing the result
+          Ada.Text_IO.Put_Line ("E =" & E'Img);
+       end;
 
-   end Main;
+    end Main;
 
 Notice that we declared a new variable :ada:`E` whose scope only exists in our
 newly defined block. The equivalent C code is:
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Block_C
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   int main()
-   {
-      // variable declarations
-      int a = 0, b = 0, c = 100, d;
+    int main(int argc, const char * argv[])
+    {
+        // variable declarations
+        int a = 0, b = 0, c = 100, d;
 
-      // c shorthand for increment
-      a++;
+        // c shorthand for increment
+        a++;
 
-      // regular addition
-      d = a + b + c;
+        // regular addition
+        d = a + b + c;
 
-      // printing the result
-      printf("d = %d\n", d);
+        // printing the result
+        printf("d = %d\n", d);
 
-      {
-         int e = d * 100;
-         printf("e = %d\n", e);
-      }
+        {
+            const int e = d * 100;
+            printf("e = %d\n", e);
+        }
 
-      return 0;
-   }
+        return 0;
+    }
 
 .. admonition:: The shortcuts of incrementing and decrementing
 
@@ -445,22 +575,22 @@ newly defined block. The equivalent C code is:
 **Fun Fact** about the C language assignment operator :c:`=`: Did you know that
 an assignment in C can be used in an expression? Let's look at an example:
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Equal_C
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   int main()
-   {
-      int a = 0;
+    int main(int argc, const char * argv[])
+    {
+        int a = 0;
 
-      if(a = 10)
-         printf("True\n");
-      else
-         printf("False\n");
+        if (a = 10)
+            printf("True\n");
+        else
+            printf("False\n");
 
-      return 0;
-   }
+        return 0;
+    }
 
 Run the above code example. What does it output? Is that what you were
 expecting?
@@ -471,21 +601,23 @@ treats assignment as an expression, it was able to evaluate :c:`a = 10`.
 
 Let's look at the equivalent Ada code:
 
-.. code-block:: ada
+.. code:: ada manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Equal_Ada
+    :class: ada-expect-compile-error
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    !main.adb
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Main
-   is
-      A : Integer := 0;
-   begin
+    procedure Main
+    is
+       A : Integer := 0;
+    begin
 
-      if A := 10 then
-         Put_Line ("True");
-      else
-         Put_Line ("False");
-      end if;
-   end Main;
+       if A := 10 then
+          Put_Line ("True");
+       else
+          Put_Line ("False");
+       end if;
+    end Main;
 
 The above code will not compile. This is because Ada does no allow assignment
 as an expression.
@@ -507,49 +639,48 @@ Conditions
 
 The syntax of an if statement:
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Condition_C
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   int main()
-   {
-      // try changing the initial value to change the
-      //    output of the program
-      int v = 0;
+    int main(int argc, const char * argv[])
+    {
+        // try changing the initial value to change the
+        //    output of the program
+        int v = 0;
 
-      if(v > 0) {
-         printf("Positive\n");
-      }
-      else if(v < 0) {
-         printf("Negative\n");
-      }
-      else {
-         printf("Zero\n");
-      }
+        if (v > 0) {
+            printf("Positive\n");
+        }
+        else if (v < 0) {
+            printf("Negative\n");
+        }
+        else {
+            printf("Zero\n");
+        }
 
-      return 0;
-   }
+        return 0;
+    }
 
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Condition_Ada
 
-.. code:: ada
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   with Ada.Text_IO; use Ada.Text_IO;
-
-   procedure Main
-   is
-      --  try changing the initial value to change the
-      --    output of the program
-      V : Integer := 0;
-   begin
-      if v > 0 then
-         Put_Line ("Positive");
-      elsif v < 0 then
-         Put_Line ("Negative");
-      else
-         Put_Line ("Zero");
-      end if;
-   end Main;
+    procedure Main
+    is
+       --  try changing the initial value to change the
+       --    output of the program
+       V : constant Integer := 0;
+    begin
+       if V > 0 then
+          Put_Line ("Positive");
+       elsif V < 0 then
+          Put_Line ("Negative");
+       else
+          Put_Line ("Zero");
+       end if;
+    end Main;
 
 In Ada, everything that appears between the :ada:`if` and :ada:`then` keywords
 is the conditional expression, no parentheses required. Comparison operators
@@ -567,57 +698,57 @@ Or         :c:`||` :ada:`or`
 
 The syntax of a switch/case statement:
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_C
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   int main()
-   {
-      // try changing the initial value to change the
-      //    output of the program
-      int v = 0;
+    int main(int argc, const char * argv[])
+    {
+        // try changing the initial value to change the
+        //    output of the program
+        int v = 0;
 
-      switch(v) {
-         case 0:
-            printf("Zero\n");
-            break;
-         case 1: case 2: case 3: case 4: case 5:
-         case 6: case 7: case 8: case 9:
-            printf("Positive\n");
-            break;
-         case 10: case 12: case 14: case 16: case 18:
-            printf("Even number between 10 and 18\n");
-            break;
-         default:
-            printf("Something else\n");
-            break;
-      }
+        switch(v) {
+            case 0:
+                printf("Zero\n");
+                break;
+            case 1: case 2: case 3: case 4: case 5:
+            case 6: case 7: case 8: case 9:
+                printf("Positive\n");
+                break;
+            case 10: case 12: case 14: case 16: case 18:
+                printf("Even number between 10 and 18\n");
+                break;
+            default:
+                printf("Something else\n");
+                break;
+        }
 
-      return 0;
-   }
+        return 0;
+    }
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Main
-   is
-      --  try changing the initial value to change the
-      --    output of the program
-      V : Integer := 0;
-   begin
-      case V is
-         when 0 =>
-            Put_Line ("Zero");
-         when 1 .. 9 =>
-            Put_Line ("Positive");
-         when 10 | 12 | 14| 16 | 18 =>
-            Put_Line ("Even number between 10 and 18");
-         when others =>
-            Put_Line ("Something else");
-      end case;
-   end Main;
+    procedure Main
+    is
+       --  try changing the initial value to change the
+       --    output of the program
+       V : constant Integer := 0;
+    begin
+       case V is
+          when 0 =>
+             Put_Line ("Zero");
+          when 1 .. 9 =>
+             Put_Line ("Positive");
+          when 10 | 12 | 14 | 16 | 18 =>
+             Put_Line ("Even number between 10 and 18");
+          when others =>
+             Put_Line ("Something else");
+       end case;
+    end Main;
 
 .. admonition:: Switch or Case?
 
@@ -630,26 +761,26 @@ Notice that in Ada, the case statement does not use the :c:`break` keyword. In
 C, we use :c:`break` to stop the execution of a case branch from falling
 through to the next branch. Here is an example:
 
-.. code:: c cli_input
+.. code:: c manual_chop cli_input run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Break_C
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   int main()
-   {
-      int v = 0;
+    int main(int argc, const char * argv[])
+    {
+        int v = 0;
 
-      switch(v) {
-         case 0:
-            printf("Zero\n");
-         case 1:
-            printf("One\n");
-         default:
-            printf("Other\n");
-      }
+        switch(v) {
+            case 0:
+                printf("Zero\n");
+            case 1:
+                printf("One\n");
+            default:
+                printf("Other\n");
+        }
 
-      return 0;
-   }
+        return 0;
+    }
 
 Run the above code with :c:`v = 0`. What prints? What prints when we change the
 assignment to :c:`v = 1`?
@@ -675,78 +806,111 @@ Loops
 
 Let's start with some syntax:
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loops_C
 
-   // this is a while loop
-   while(v < 10000) {
-      v *= 2;
-   }
+    !main.c
+    #include <stdio.h>
 
-   // this is a do while loop
-   do {
-      v *= 2;
-   } while(v < 10000);
+    int main(int argc, const char * argv[])
+    {
+        int v;
 
-   // this is a for loop
-   for(int i = 0; i < 10000; ++i) {
-      v *= (i * i);
-   }
+        // this is a while loop
+        v = 1;
+        while(v < 100) {
+            v *= 2;
+        }
+        printf("v = %d\n", v);
 
-   // this is a forever loop with a conditional exit
-   while(1) {
-      // do stuff here
-      if(condition)
-         break;
-   }
+        // this is a do while loop
+        v = 1;
+        do {
+            v *= 2;
+        } while(v < 200);
+        printf("v = %d\n", v);
 
-   // this is a loop over an array
-   {
-      #define ARR_SIZE (10)
-      int arr[ARR_SIZE];
-      int sum = 0;
+        // this is a for loop
+        v = 0;
+        for(int i = 0; i < 5; ++i) {
+            v += (i * i);
+        }
+        printf("v = %d\n", v);
 
-      for(int i = 0; i < ARR_SIZE; ++i) {
-         sum += arr[i];
-      }
-   }
+        // this is a forever loop with a conditional exit
+        v = 0;
+        while(1) {
+            // do stuff here
+            v += 1;
+            if(v == 10)
+                break;
+        }
+        printf("v = %d\n", v);
 
+        // this is a loop over an array
+        {
+            #define ARR_SIZE (10)
+            const int arr[ARR_SIZE] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            int sum = 0;
 
-.. code-block:: ada
+            for(int i = 0; i < ARR_SIZE; ++i) {
+                sum += arr[i];
+            }
+            printf("sum = %d\n", sum);
+        }
+    }
 
-   --  this is a while loop
-   while V < 10_000 loop
-      V := V * 2;
-   end loop;
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loops_Ada
 
-   --  Ada doesn't have an explicit do while loop
-   --    instead you can use the loop and exit keywords
-   loop
-      V := V * 2;
-      exit when V >= 10_000;
-   end loop;
+    with Ada.Text_IO;
 
-   --  this is a for loop
-   for I in 1 .. 10_000 loop
-      V := V * (I * I);
-   end loop;
+    procedure Main is
+       V : Integer;
+    begin
+       --  this is a while loop
+       V := 1;
+       while V < 100 loop
+          V := V * 2;
+       end loop;
+       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
 
-   --  this is a forever loop with a conditional exit
-   loop
-      --  do stuff here
-      exit when condition;
-   end loop;
+       --  Ada doesn't have an explicit do while loop
+       --    instead you can use the loop and exit keywords
+       V := 1;
+       loop
+          V := V * 2;
+          exit when V >= 200;
+       end loop;
+       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
 
-   --  this is a loop over an array
-   declare
-      type Int_Array is array (Natural range 1 .. 10) of Integer;
+       --  this is a for loop
+       V := 0;
+       for I in 0 .. 4 loop
+          V := V + (I * I);
+       end loop;
+       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
 
-      Arr : Int_Array;
-      Sum : Integer := 0;
-   begin
-      for I in Arr'Range loop
-         Sum := Sum + Arr (I);
-      end loop;
-   end;
+       --  this is a forever loop with a conditional exit
+       V := 0;
+       loop
+          --  do stuff here
+          V := V + 1;
+          exit when V = 10;
+       end loop;
+       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
+
+       --  this is a loop over an array
+       declare
+          type Int_Array is array (Natural range 1 .. 10) of Integer;
+
+          Arr : constant Int_Array := (1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+          Sum : Integer := 0;
+       begin
+          for I in Arr'Range loop
+             Sum := Sum + Arr (I);
+          end loop;
+          Ada.Text_IO.Put_Line("Sum = " & Integer'Image (Sum));
+       end;
+    end Main;
 
 The loop syntax in Ada is pretty straightforward. The :ada:`loop` and :ada:`end
 loop` keywords are used to open and close the loop scope. Instead of using the
@@ -762,9 +926,9 @@ the loop counter.
 
 .. code-block:: c
 
-   for(initialization expression; loop predicate; update expression) {
-      // some statements
-   }
+    for (initialization expression; loop predicate; update expression) {
+        // some statements
+    }
 
 In Ada, you don't declare or initialize a loop counter or specify an update
 expression. You only name the loop counter and give it a range to loop over.
@@ -773,35 +937,35 @@ the loop like you can in C. And the loop counter will increment consecutively
 along the specified range. But what if you want to loop over the range in
 reverse order?
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Counter_C
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   #define MY_RANGE (10)
+    #define MY_RANGE (10)
 
-   int main()
-   {
+    int main(int argc, const char * argv[])
+    {
 
-      for(int i = MY_RANGE; i >= 0; --i) {
-         printf("%d\n", i);
-      }
+        for (int i = MY_RANGE; i >= 0; --i) {
+            printf("%d\n", i);
+        }
 
-      return 0;
-   }
+        return 0;
+    }
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Counter_Ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Main
-   is
-      My_Range : constant := 10;
-   begin
-      for I in reverse 0 .. My_Range loop
-         Put_Line (I'Img);
-      end loop;
-   end Main;
+    procedure Main
+    is
+       My_Range : constant := 10;
+    begin
+       for I in reverse 0 .. My_Range loop
+          Put_Line (I'Img);
+       end loop;
+    end Main;
 
 .. admonition:: Tick Image
 
@@ -820,51 +984,51 @@ In many cases, when we are writing a for loop, it has something to do with
 traversing an array. In C, this is a classic location for off-by-one errors.
 Let's see an example in action:
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_C
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   #define LIST_LENGTH (100)
+    #define LIST_LENGTH (100)
 
-   int main()
-   {
-      int list[LIST_LENGTH];
+    int main(int argc, const char * argv[])
+    {
+        int list[LIST_LENGTH];
 
-      for(int i = LIST_LENGTH; i > 0; --i) {
-         list[i] = LIST_LENGTH - i;
-      }
+        for(int i = LIST_LENGTH; i > 0; --i) {
+            list[i] = LIST_LENGTH - i;
+        }
 
-      for (int i = 0; i < LIST_LENGTH; ++i)
-      {
-         printf("%d ", list[i]);
-      }
-      printf("\n");
+        for (int i = 0; i < LIST_LENGTH; ++i)
+        {
+            printf("%d ", list[i]);
+        }
+        printf("\n");
 
-      return 0;
-   }
+        return 0;
+    }
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_Ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Main
-   is
-      type Int_Array is array (Natural range 1 .. 100) of Integer;
+    procedure Main
+    is
+       type Int_Array is array (Natural range 1 .. 100) of Integer;
 
-      List : Int_Array;
-   begin
+       List : Int_Array;
+    begin
 
-      for I in reverse List'Range loop
-         List (I) := List'Last - I;
-      end loop;
+       for I in reverse List'Range loop
+          List (I) := List'Last - I;
+       end loop;
 
-      for I in List'Range loop
-         Put (List (I)'Img & " ");
-      end loop;
+       for I in List'Range loop
+          Put (List (I)'Img & " ");
+       end loop;
 
-      New_Line;
-   end Main;
+       New_Line;
+    end Main;
 
 The above Ada and C code should initialize an array using a for loop. The
 initial values in the array should be contiguously decreasing from 99 to 0 as
@@ -893,27 +1057,27 @@ indexing direction.
 
 We can actually simplify the Ada for loop a little further using iterators:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_Ada_Simplified
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Main
-   is
-      type Int_Array is array (Natural range 1 .. 100) of Integer;
+    procedure Main
+    is
+       type Int_Array is array (Natural range 1 .. 100) of Integer;
 
-      List : Int_Array;
-   begin
+       List : Int_Array;
+    begin
 
-      for I in reverse List'Range loop
-         List (I) := List'Last - I;
-      end loop;
+       for I in reverse List'Range loop
+          List (I) := List'Last - I;
+       end loop;
 
-      for I of List loop
-         Put (I'Img & " ");
-      end loop;
+       for I of List loop
+          Put (I'Img & " ");
+       end loop;
 
-      New_Line;
-   end Main;
+       New_Line;
+    end Main;
 
 In the second for loop, we changed the syntax to :ada:`for I of List`. Instead
 of I being the index counter, it is now an iterator that references the
@@ -935,26 +1099,26 @@ promotion are fairly straightforward in simple expressions but can get
 confusing very quickly. Let's look at a typical place of confusion with
 implicit type conversion:
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_C
 
-   !main.c
-   #include <stdio.h>
+    !main.c
+    #include <stdio.h>
 
-   int main()
-   {
-      unsigned char a = 0xFF;
-      char b = 0xFF;
+    int main(int argc, const char * argv[])
+    {
+        unsigned char a = 0xFF;
+        char b = 0xFF;
 
-      printf("Does a == b?\n");
-      if(a == b)
-         printf("Yes.\n");
-      else
-         printf("No.\n");
+        printf("Does a == b?\n");
+        if(a == b)
+            printf("Yes.\n");
+        else
+            printf("No.\n");
 
-      printf("a: 0x%08X, b: 0x%08X\n", a, b);
+        printf("a: 0x%08X, b: 0x%08X\n", a, b);
 
-      return 0;
-   }
+        return 0;
+    }
 
 Run the above code. You will notice that :c:`a != b`! If we look at the output
 of the last :c:`printf` statement we will see the problem. :c:`a` is an
@@ -964,29 +1128,29 @@ b treated this as the decimal number :c:`-1`. When we compare the two
 variables, of course they aren't equal; but that's not very intuitive. Let's
 look at the equivalent Ada example:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada
    :class: ada-expect-compile-error
 
-   with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-   procedure Main
-   is
-      type Char is range 0 .. 255;
-      type Unsigned_Char is mod 256;
+    procedure Main
+    is
+       type Char is range 0 .. 255;
+       type Unsigned_Char is mod 256;
 
-      A : Char := 16#FF#;
-      B : Unsigned_Char := 16#FF#;
-   begin
+       A : Char := 16#FF#;
+       B : Unsigned_Char := 16#FF#;
+    begin
 
-      Put_Line ("Does A = B?");
+       Put_Line ("Does A = B?");
 
-      if A = B then
-         Put_Line ("Yes");
-      else
-         Put_Line ("No");
-      end if;
+       if A = B then
+          Put_Line ("Yes");
+       else
+          Put_Line ("No");
+       end if;
 
-   end Main;
+    end Main;
 
 If you try to run this Ada example you will get a compilation error. This is
 because the compiler is telling you that you cannot compare variables of two
@@ -1005,26 +1169,40 @@ following example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada_2
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Strong_Typing is
-       Alpha  : Integer := 1;
-       Beta   : Integer := 10;
+       Alpha  : constant Integer := 1;
+       Beta   : constant Integer := 10;
        Result : Float;
     begin
        Result := Float (Alpha) / Float (Beta);
+
+       Put_Line (Float'Image (Result));
     end Strong_Typing;
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_C_2
+
+    !main.c
+    #include <stdio.h>
 
     void weakTyping (void) {
-       int   alpha = 1;
-       int   beta = 10;
-       float result;
+        const int   alpha = 1;
+        const int   beta = 10;
+        float result;
 
-       result = alpha / beta;
+        result = alpha / beta;
+
+        printf("%f\n", result);
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        weakTyping();
     }
 
 Are the three programs above equivalent? It may seem like Ada is just adding
@@ -1047,6 +1225,22 @@ Ada case, it is still necessary to explicitly convert the final result to
 
     -- Perform an Integer division then convert to Float
     Result := Float (Alpha / Beta);
+
+The complete example would then be:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada_2
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Strong_Typing is
+       Alpha  : constant Integer := 1;
+       Beta   : constant Integer := 10;
+       Result : Float;
+    begin
+       Result := Float (Alpha / Beta);
+
+       Put_Line (Float'Image (Result));
+    end Strong_Typing;
 
 In Ada, a floating point literal must be written with both an integral and
 decimal part. :ada:`10` is not a valid literal for a floating point value,
@@ -1080,7 +1274,7 @@ return a value of that type.
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Application_Defined_Types
    :class: ada-expect-compile-error
 
     procedure Main is
@@ -1116,30 +1310,42 @@ Ada enumerations work similarly to C :c:`enum`:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enumeration_Ada
 
-    type Day is
-      (Monday,
-       Tuesday,
-       Wednesday,
-       Thursday,
-       Friday,
-       Saturday,
-       Sunday);
+    procedure Main is
+       type Day is
+         (Monday,
+          Tuesday,
+          Wednesday,
+          Thursday,
+          Friday,
+          Saturday,
+          Sunday);
+
+       D : Day := Monday;
+    begin
+       null;
+    end Main;
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enumeration_C
 
+    !main.c
     enum Day {
-       Monday,
-       Tuesday,
-       Wednesday,
-       Thursday,
-       Friday,
-       Saturday,
-       Sunday
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday,
+        Sunday
     };
+
+    int main(int argc, const char * argv[])
+    {
+        enum Day d = Monday;
+    }
 
 But even though such enumerations may be implemented using a machine word, at
 the language level Ada will not confuse the fact that :ada:`Monday` is a
@@ -1150,39 +1356,65 @@ original :c:`enum` declaration:
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enumeration_Values_C
+
+    !main.c
+    #include <stdio.h>
 
     enum Day {
-       Monday    = 10,
-       Tuesday   = 11,
-       Wednesday = 12,
-       Thursday  = 13,
-       Friday    = 14,
-       Saturday  = 15,
-       Sunday    = 16
+        Monday    = 10,
+        Tuesday   = 11,
+        Wednesday = 12,
+        Thursday  = 13,
+        Friday    = 14,
+        Saturday  = 15,
+        Sunday    = 16
     };
+
+    int main(int argc, const char * argv[])
+    {
+        enum Day d = Monday;
+
+        printf("d = %d\n", d);
+    }
 
 But in Ada you must use both a type definition for :ada:`Day` as well as a
 separate representation clause for it like:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enumeration_Values
 
-    for Day use
-      (Monday    => 10,
-       Tuesday   => 11,
-       Wednesday => 12,
-       Thursday  => 13,
-       Friday    => 14,
-       Saturday  => 15,
-       Sunday    => 16);
+    with Ada.Text_IO;
+
+    procedure Main is
+       type Day is
+         (Monday,
+          Tuesday,
+          Wednesday,
+          Thursday,
+          Friday,
+          Saturday,
+          Sunday);
+
+       --  Representation clause for Day type:
+       for Day use
+         (Monday    => 10,
+          Tuesday   => 11,
+          Wednesday => 12,
+          Thursday  => 13,
+          Friday    => 14,
+          Saturday  => 15,
+          Sunday    => 16);
+
+       D : Day := Monday;
+       V : Integer;
+    begin
+       V := Day'Enum_Rep (D);
+       Ada.Text_IO.Put_Line (Integer'Image (V));
+    end Main;
 
 Note that however, unlike C, values for enumerations in Ada have to be unique.
-
-.. todo::
-
-    Add subsection on modular vs. unsigned types
 
 Type Ranges
 ~~~~~~~~~~~
@@ -1193,7 +1425,7 @@ define what are considered valid values. The most common kind of contract is a
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Range_Check
     :class: ada-expect-compile-error
 
     procedure Main is
@@ -1233,9 +1465,18 @@ perform the computation in a sufficiently large integer type, for example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Range_And_Explicit_Conversion
 
-    G1 := Grade (Integer (G1) + Integer (G2)) / 2);
+    with Ada.Text_IO;
+
+    procedure Main is
+       type Grade is range 0 .. 100;
+
+       G1, G2 : Grade := 99;
+    begin
+       G1 := Grade ((Integer (G1) + Integer (G2)) / 2);
+       Ada.Text_IO.Put_Line (Grade'Image (G1));
+    end Main;
 
 Range checks are useful for detecting errors as early as possible. However,
 there may be some impact on performance. Modern compilers do know how to remove
@@ -1248,10 +1489,23 @@ type can be associated with new constraints and operations. Going back to the
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enum_Ranges_1
 
-    type Business_Day is new Day range Monday .. Friday;
-    type Weekend_Day is new Day range Saturday .. Sunday;
+    procedure Main is
+       type Day is
+         (Monday,
+          Tuesday,
+          Wednesday,
+          Thursday,
+          Friday,
+          Saturday,
+          Sunday);
+
+       type Business_Day is new Day range Monday .. Friday;
+       type Weekend_Day is new Day range Saturday .. Sunday;
+    begin
+       null;
+    end Main;
 
 Since these are new types, implicit conversions are not allowed. In this case,
 it's more natural to create a new set of constraints for the same type, instead
@@ -1260,14 +1514,193 @@ subtype is a type with optional additional constraints. For example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enum_Ranges_2
 
-    subtype Business_Day is Day range Monday .. Friday;
-    subtype Weekend_Day is Day range Saturday .. Sunday;
-    subtype Dice_Throw is Integer range 1 .. 6;
+    procedure Main is
+       type Day is
+         (Monday,
+          Tuesday,
+          Wednesday,
+          Thursday,
+          Friday,
+          Saturday,
+          Sunday);
+
+       subtype Business_Day is Day range Monday .. Friday;
+       subtype Weekend_Day is Day range Saturday .. Sunday;
+       subtype Dice_Throw is Integer range 1 .. 6;
+    begin
+       null;
+    end Main;
 
 These declarations don't create new types, just new names for constrained
 ranges of their base types.
+
+Unsigned And Modular Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Unsigned integer numbers are quite common in embedded applications. In C, you
+can use them by declaring :c:`unsigned int` variables. In Ada, you have two
+options:
+
+- declare custom *unsigned* range types;
+
+    - In addition, you can declare custom range *subtypes* or use existing
+      subtypes such as :ada:`Natural`.
+
+- declare custom modular types.
+
+The following table presents the main features of each type. We discuss these
+types right after.
+
++-------------------+-----------------------+----------------------+---------------+
+| Feature           | [C] :c:`unsigned int` | [Ada] Unsigned range | [Ada] Modular |
++===================+=======================+======================+===============+
+| Excludes negative | |check|               | |check|              | |check|       |
+| value             |                       |                      |               |
++-------------------+-----------------------+----------------------+---------------+
+| Wraparound        | |check|               |                      | |check|       |
++-------------------+-----------------------+----------------------+---------------+
+
+When declaring custom range types in Ada, you may use the full range in the
+same way as in C. For example, this is the declaration of a 32-bit unsigned
+integer type and the :ada:`X` variable in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Unsigned_32_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       type Unsigned_Int_32 is range 0 .. 2 ** 32 - 1;
+
+       X : Unsigned_Int_32 := 42;
+    begin
+       Put_Line ("X = " & Unsigned_Int_32'Image (X));
+    end Main;
+
+In C, when :c:`unsigned int` has a size of 32 bits, this corresponds to the
+following declaration:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Unsigned_32_C
+
+    !main.c
+    #include <stdio.h>
+    #include <limits.h>
+
+    int main(int argc, const char * argv[])
+    {
+        unsigned int x = 42;
+        printf("x = %u\n", x);
+    }
+
+Another strategy is to declare subtypes for existing signed types and specify
+just the range that excludes negative numbers. For example, let's declare a
+custom 32-bit signed type and its unsigned subtype:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Unsigned_31_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       type Signed_Int_32 is range -2 ** 31 .. 2 ** 31 - 1;
+
+       subtype Unsigned_Int_31 is Signed_Int_32 range 0 .. Signed_Int_32'Last;
+       --  Equivalent to:
+       --  subtype Unsigned_Int_31 is Signed_Int_32 range 0 .. 2 ** 31 - 1;
+
+       X : Unsigned_Int_31 := 42;
+    begin
+       Put_Line("X = " & Unsigned_Int_31'Image (X));
+    end Main;
+
+In this case, we're just skipping the sign bit of the :ada:`Signed_Int_32`
+type. In other words, while :ada:`Signed_Int_32` has a size of 32 bits,
+:ada:`Unsigned_Int_31` has a range of 31 bits, even if the base type has
+32 bits.
+
+Note that the declaration above is actually similar to the existing
+:ada:`Natural` subtype. Ada provides the following standard subtypes:
+
+.. code-block:: ada
+
+    subtype Natural  is Integer range 0..Integer'Last;
+    subtype Positive is Integer range 1..Integer'Last;
+
+Since they're standard subtypes, you can declare variables of those subtypes
+directly in your implementation, in the same as you can declare :ada:`Integer`
+variables.
+
+As indicated in the table above, however, there is a difference in behavior for
+the variables we just declared, which occurs in case of overflow. Let's
+consider this C example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overflow_Wraparound
+
+    !main.c
+    #include <stdio.h>
+    #include <limits.h>
+
+    int main(int argc, const char * argv[])
+    {
+        unsigned int x = UINT_MAX + 1;
+        /* Now: x == 0 */
+
+        printf("x = %u\n", x);
+    }
+
+The corresponding code in Ada raises an exception:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overflow_Wraparound
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       type Unsigned_Int_32 is range 0 .. 2 ** 32 - 1;
+
+       X : Unsigned_Int_32 := Unsigned_Int_32'Last + 1;
+       --  Overflow: exception is raised!
+    begin
+       Put_Line("X = " & Unsigned_Int_32'Image (X));
+    end Main;
+
+While the C uses modulo arithmetic for unsigned integer, Ada doesn't use it for
+the :ada:`Unsigned_Int_32` type. Ada does, however, support modular types
+via type definitions using the :ada:`mod` keyword. In this example, we declare
+a 32-bit modular type:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overflow_Wraparound
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       type Unsigned_32 is mod 2**32;
+
+       X : Unsigned_32 := Unsigned_32'Last + 1;
+       --  Now: X = 0
+    begin
+       Put_Line("X = " & Unsigned_32'Image (X));
+    end Main;
+
+
+In this case, the behavior is the same as in the C declaration above.
+
+Modular types are useful for bitwise operations, which is a typical application
+for unsigned integers in C. In Ada, you can use operators such as :ada:`and`,
+:ada:`or`, :ada:`xor` and :ada:`not`. You can also use typical bit-shifting
+operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
+:ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
 Attributes
 ~~~~~~~~~~
@@ -1285,12 +1718,12 @@ value into a :ada:`String` and vice-versa. For example:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Image_Attribute
 
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
-       A : Integer := 99;
+       A : Integer := 10;
     begin
        Put_Line (Integer'Image (A));
        A := Integer'Value ("99");
@@ -1304,25 +1737,33 @@ to the next character of the ASCII table is:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Character_1
 
-    declare
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
        C : Character := 'a';
     begin
+       Put (C);
        C := Character'Val (Character'Pos (C) + 1);
-    end;
+       Put (C);
+    end Main;
 
 A more concise way to get the next value in Ada is to use the :ada:`'Succ`
 attribute:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Character_1
 
-    declare
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
        C : Character := 'a';
     begin
+       Put (C);
        C := Character'Succ (C);
+       Put (C);
     end;
 
 You can get the previous value using the :ada:`'Pred` attribute. Here is the
@@ -1330,10 +1771,18 @@ equivalent in C:
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_C
 
-    char c = 'a';
-    c++;
+    !main.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        char c = 'a';
+        printf("%c", c);
+        c++;
+        printf("%c", c);
+    }
 
 Other interesting examples are the :ada:`'First` and :ada:`'Last` attributes
 which, respectively, return the first and last values of a scalar type. Using
@@ -1358,7 +1807,7 @@ values from :ada:`'a'` to :ada:`'z'`:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Range_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1377,20 +1826,20 @@ values from :ada:`'a'` to :ada:`'z'`:
 
 [C]
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Range_C
 
     !main.c
     #include <stdio.h>
 
     void main(void)
     {
-      char Arr [26];
-      char C = 'a';
+        char Arr [26];
+        char C = 'a';
 
-      for (int I = 0; I < 26; ++I) {
-        Arr [I] = C++;
-        printf ("%c ", Arr [I]);
-      }
+        for (int I = 0; I < 26; ++I) {
+            Arr [I] = C++;
+            printf ("%c ", Arr [I]);
+        }
     }
 
 In C, only the size of the array is given during declaration. In Ada, array
@@ -1414,18 +1863,30 @@ Ada's predefined :ada:`String` type is very straightforward to use:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Constrained_String
 
-    My_String : String (1 .. 26);
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       My_String : String (1 .. 19) := "This is an example!";
+    begin
+       Put_Line (My_String);
+    end Main;
 
 Unlike C, Ada does not offer escape sequences such as :c:`'\n'`. Instead,
 explicit values from the ASCII package must be concatenated (via the
 concatenation operator, :ada:`&`). Here for example, is how to initialize a
 line of text ending with a new line:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Constrained_String
 
-    My_String : String := "This is a line" & ASCII.LF;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       My_String : String := "This is a line" & ASCII.LF;
+    begin
+       Put (My_String);
+    end Main;
 
 You see here that no constraints are necessary for this variable definition.
 The initial value given allows the automatic determination of
@@ -1439,7 +1900,9 @@ the above behavior, actual pointer types would have to be defined and used.
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Copy_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
@@ -1450,24 +1913,33 @@ the above behavior, actual pointer types would have to be defined and used.
        A1 (2) := 1;
 
        A2 := A1;
-    end;
+
+       for I in A2'Range loop
+          Put_Line (Integer'Image (A2 (I)));
+       end loop;
+    end Main;
 
 [C]
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Copy_C
 
     !main.c
+    #include <stdio.h>
     #include <string.h>
 
     int main(int argc, const char * argv[])
     {
-      int A1 [2];
-      int A2 [2];
+        int A1 [2];
+        int A2 [2];
 
-      A1 [0] = 0;
-      A1 [1] = 1;
+        A1 [0] = 0;
+        A1 [1] = 1;
 
-      memcpy (A1, A2, sizeof (int) * 2);
+        memcpy (A2, A1, sizeof (int) * 2);
+
+        for (int i = 0; i < 2; i++) {
+            printf("%d\n", A2[i]);
+        }
     }
 
 In all of the examples above, the source and destination arrays must have
@@ -1476,15 +1948,21 @@ portion, or slice, of an array. So you can write the following:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Slice
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
-       A1 : Arr_Type (1 .. 10);
-       A2 : Arr_Type (1 .. 5);
+       A1 : Arr_Type (1 .. 10) := (1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+       A2 : Arr_Type (1 .. 5)  := (1, 2, 3, 4, 5);
     begin
        A2 (1 .. 3) := A1 (4 .. 6);
-    end;
+
+       for I in A2'Range loop
+          Put_Line (Integer'Image (A2 (I)));
+       end loop;
+    end Main;
 
 This assigns the 4th, 5th, and 6th elements of :ada:`A1` into the 1st, 2nd, and
 3rd elements of :ada:`A2`. Note that only the length matters here: the values
@@ -1495,42 +1973,49 @@ arrays as opposed to their addresses:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Equal_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
-       A1 : Arr_Type (1 .. 2);
-       A2 : Arr_Type (1 .. 2);
+       A1 : Arr_Type (1 .. 2) := (10, 20);
+       A2 : Arr_Type (1 .. 2) := (10, 20);
     begin
        if A1 = A2 then
-         --  ...
-
-         null;
+         Put_Line ("A1 = A2");
+       else
+         Put_Line ("A1 /= A2");
        end if;
     end;
 
 [C]
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Equal_C
 
     !main.c
+    #include <stdio.h>
+
     int main(int argc, const char * argv[])
     {
-      int A1 [2];
-      int A2 [2];
+        int A1 [2] = { 10, 20 };
+        int A2 [2] = { 10, 20 };
 
-      int eq = 1;
+        int eq = 1;
 
-      for (int i = 0; i < 2; ++i) {
-        if (A1 [i] != A2 [i]) {
-          eq = 0;
-          break;
+        for (int i = 0; i < 2; ++i) {
+            if (A1 [i] != A2 [i]) {
+                eq = 0;
+                break;
+            }
         }
-      }
 
-      if (eq) {
-        /* ... */
-      }
+        if (eq) {
+            printf("A1 == A2\n");
+        }
+        else {
+            printf("A1 != A2\n");
+        }
     }
 
 You can assign to all the elements of an array in each language in different
@@ -1542,7 +2027,9 @@ Therefore, you can write:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Assignment_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
@@ -1551,8 +2038,20 @@ Therefore, you can write:
     begin
        A1 := (1, 2, 3, others => 10);
 
+       Put_Line ("---- A1 ----");
+       for I in A1'Range loop
+          Put_Line (Integer'Image (I) & " => " &
+                    Integer'Image (A1 (I)));
+       end loop;
+
        -- use a slice to assign A2 elements 11 .. 19 to 1
        A2 (11 .. 19) := (others => 1);
+
+       Put_Line ("---- A2 ----");
+       for I in A2'Range loop
+          Put_Line (Integer'Image (I) & " => " &
+                    Integer'Image (A2 (I)));
+       end loop;
     end;
 
 Heterogeneous Data Structures
@@ -1563,7 +2062,9 @@ are some simple records:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        type R is record
@@ -1574,22 +2075,26 @@ are some simple records:
        V : R;
     begin
        V.A := 0;
+       Put_Line ("V.A = " & Integer'Image (V.A));
     end;
 
 [C]
 
-.. code:: c
+.. code:: ada manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_C
 
     !main.c
+    #include <stdio.h>
+
     struct R {
-       int A, B;
-       float C;
+        int A, B;
+        float C;
     };
 
     int main(int argc, const char * argv[])
     {
-      struct R V;
-      V.A = 0;
+        struct R V;
+        V.A = 0;
+        printf("V.A = %d\n", V.A);
     }
 
 Ada allows specification of default values for fields just like C. The values
@@ -1599,7 +2104,9 @@ fields not listed will take their default values. For example:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_Default_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
 
@@ -1608,13 +2115,24 @@ fields not listed will take their default values. For example:
           C    : Float   := 0.0;
        end record;
 
-       V1 : R := (1, 2, 1.0);
-       V2 : R := (A => 1, B => 2, C => 1.0);
-       V3 : R := (C => 1.0, A => 1, B => 2);
-       V4 : R := (C => 1.0, others => <>);
+       procedure Put_R (V : R; Name : String) is
+       begin
+          Put_Line (Name & " = ("
+                    & Integer'Image (V.A) & ", "
+                    & Integer'Image (V.B) & ", "
+                    & Float'Image (V.C) & ")");
+       end Put_R;
+
+       V1 : constant R := (1, 2, 1.0);
+       V2 : constant R := (A => 1, B => 2, C => 1.0);
+       V3 : constant R := (C => 1.0, A => 1, B => 2);
+       V4 : constant R := (C => 1.0, others => <>);
 
     begin
-       null;
+       Put_R (V1, "V1");
+       Put_R (V2, "V2");
+       Put_R (V3, "V3");
+       Put_R (V4, "V4");
     end;
 
 Pointers
@@ -1636,35 +2154,59 @@ example:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointers_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        type R is record
           A, B : Integer;
        end record;
 
+       procedure Put_R (V : R; Name : String) is
+       begin
+          Put_Line (Name & " = ("
+                    & Integer'Image (V.A) & ", "
+                    & Integer'Image (V.B) & ")");
+       end Put_R;
+
        V1, V2 : R;
+
     begin
        V1.A := 0;
        V2 := V1;
        V2.A := 1;
+
+       Put_R (V1, "V1");
+       Put_R (V2, "V2");
     end;
 
 [C]
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointers_C
 
     !main.c
+    #include <stdio.h>
+
     struct R {
-       int A, B;
+        int A, B;
     };
+
+    void print_r(const struct R *v,
+                 const char     *name)
+    {
+        printf("%s = (%d, %d)\n", name, v->A, v->B);
+    }
 
     int main(int argc, const char * argv[])
     {
-      struct R V1, V2;
-      V1.A = 0;
-      V2 = V1;
-      V2.A = 1;
+        struct R V1, V2;
+        V1.A = 0;
+        V2 = V1;
+        V2.A = 1;
+
+        print_r(&V1, "V1");
+        print_r(&V2, "V2");
     }
 
 There are many commonalities between the Ada and C semantics above. In Ada and
@@ -1677,13 +2219,23 @@ Here's now a similar example, but using heap allocation instead:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Heap_Alloc_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        type R is record
           A, B : Integer;
        end record;
+
        type R_Access is access R;
+
+       procedure Put_R (V : R; Name : String) is
+       begin
+          Put_Line (Name & " = ("
+                    & Integer'Image (V.A) & ", "
+                    & Integer'Image (V.B) & ")");
+       end Put_R;
 
        V1 : R_Access;
        V2 : R_Access;
@@ -1692,26 +2244,39 @@ Here's now a similar example, but using heap allocation instead:
        V1.A := 0;
        V2 := V1;
        V2.A := 1;
+
+       Put_R (V1.all, "V1");
+       Put_R (V2.all, "V2");
     end;
 
 [C]
 
-.. code:: c
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Heap_Alloc_C
 
     !main.c
+    #include <stdio.h>
     #include <stdlib.h>
 
     struct R {
-       int A, B;
+        int A, B;
     };
+
+    void print_r(const struct R *v,
+                 const char     *name)
+    {
+        printf("%s = (%d, %d)\n", name, v->A, v->B);
+    }
 
     int main(int argc, const char * argv[])
     {
-      struct R * V1, * V2;
-      V1 = malloc(sizeof(struct R));
-      V1->A = 0;
-      V2 = V1;
-      V2->A = 0;
+        struct R * V1, * V2;
+        V1 = malloc(sizeof(struct R));
+        V1->A = 0;
+        V2 = V1;
+        V2->A = 0;
+
+        print_r(V1, "V1");
+        print_r(V2, "V2");
     }
 
 In this example, an object of type :ada:`R` is allocated on the heap. The same
@@ -1729,7 +2294,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Dereferencing_Ada
 
     procedure Main is
        type A_Int is access Integer;
@@ -1740,16 +2305,16 @@ Pointers to scalar objects in Ada and C look like:
 
 [C]
 
-.. code:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Dereferencing_C
 
     !main.c
     #include <stdlib.h>
 
-    int main (int argc, char *argv[])
+    int main(int argc, const char * argv[])
     {
-      int * Var = malloc (sizeof(int));
-      *Var = 0;
-      return 0;
+        int * Var = malloc (sizeof(int));
+        *Var = 0;
+        return 0;
     }
 
 In Ada, an initializer can be specified with the allocation by appending
@@ -1757,9 +2322,15 @@ In Ada, an initializer can be specified with the allocation by appending
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Alloc_Init
 
-    Var : A_Int := new Integer'(0);
+    procedure Main is
+       type A_Int is access Integer;
+
+       Var : A_Int := new Integer'(0);
+    begin
+       null;
+    end Main;
 
 When using Ada pointers to reference objects on the stack, the referenced
 objects must be declared as being aliased. This directs the compiler to
@@ -1773,18 +2344,26 @@ objects that have gone out of scope. For example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointer_Stack_Ada
 
-    type A_Int is access all Integer;
-    Var : aliased Integer;
-    Ptr : A_Int := Var'Access;
+    procedure Main is
+       type A_Int is access all Integer;
+       Var : aliased Integer;
+       Ptr : A_Int := Var'Access;
+    begin
+       null;
+    end Main;
 
 [C]
 
-.. code-block:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointer_Stack_C
 
-    int Var;
-    int * Ptr = &Var;
+    !main.c
+    int main(int argc, const char * argv[])
+    {
+        int Var;
+        int * Ptr = &Var;
+    }
 
 To deallocate objects from the heap in Ada, it is necessary to use a
 deallocation subprogram that accepts a specific access type. A generic
@@ -1795,9 +2374,10 @@ the access type as follows:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Deallocation_Ada
 
     with Ada.Unchecked_Deallocation;
+
     procedure Main is
        type Integer_Access is access all Integer;
        procedure Free is new Ada.Unchecked_Deallocation (Integer, Integer_Access);
@@ -1808,15 +2388,15 @@ the access type as follows:
 
 [C]
 
-.. code:: c
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Deallocation_C
 
     !main.c
     #include <stdlib.h>
 
-    int main (int argc, char *argv[])
+    int main(int argc, const char * argv[])
     {
-      int * my_pointer = malloc (sizeof(int));
-      free (my_pointer);
+        int * my_pointer = malloc (sizeof(int));
+        free (my_pointer);
     }
 
 Functions and Procedures
@@ -1858,7 +2438,7 @@ Here's a first example:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
 
     procedure Proc
      (Var1 : Integer;
@@ -1900,13 +2480,13 @@ Here's a first example:
 
 [C]
 
-.. code:: c manual_chop
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
 
     !proc.h
     void Proc
-      (int Var1,
-       int * Var2,
-       int * Var3);
+        (int   Var1,
+         int * Var2,
+         int * Var3);
 
     !func.h
     int Func (int Var);
@@ -1915,19 +2495,18 @@ Here's a first example:
     #include "func.h"
 
     void Proc
-      (int Var1,
-       int * Var2,
-       int * Var3)
+        (int   Var1,
+         int * Var2,
+         int * Var3)
     {
-
-       *Var2 = Func (Var1);
-       *Var3 += 1;
+        *Var2 = Func (Var1);
+        *Var3 += 1;
     }
 
     !func.c
     int Func (int Var)
     {
-       return Var + 1;
+        return Var + 1;
     }
 
     !main.c
@@ -1936,13 +2515,13 @@ Here's a first example:
 
     void main (void)
     {
-       int v1, v2;
+        int v1, v2;
 
-       v2 = 2;
-       Proc (5, &v1, &v2);
+        v2 = 2;
+        Proc (5, &v1, &v2);
 
-       printf("v1: %d\n", v1);
-       printf("v2: %d\n", v2);
+        printf("v1: %d\n", v1);
+        printf("v2: %d\n", v2);
     }
 
 The first two declarations for :ada:`Proc` and :ada:`Func` are specifications
@@ -1971,12 +2550,54 @@ the calls to the proper destinations. For example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overloading_Ada
 
-    function Value (Str : String) return Integer;
-    function Value (Str : String) return Float;
+    package Machine is
+       type Status is (Off, On);
+       type Code is new Integer range 0 .. 3;
+       type Threshold is new Float range 0.0 .. 10.0;
 
-    V : Integer := Value ("8");
+       function Get (S : Status) return Code;
+       function Get (S : Status) return Threshold;
+
+    end Machine;
+
+    package body Machine is
+
+       function Get (S : Status) return Code is
+       begin
+          case S is
+             when Off => return 1;
+             when On  => return 3;
+          end case;
+       end Get;
+
+       function Get (S : Status) return Threshold is
+       begin
+          case S is
+             when Off => return  2.0;
+             when On  => return 10.0;
+          end case;
+       end Get;
+
+    end Machine;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Machine;     use Machine;
+
+    procedure Main is
+       S : Status;
+       C : Code;
+       T : Threshold;
+    begin
+       S := On;
+       C := Get (S);
+       T := Get (S);
+
+       Put_Line ("S: " & Status'Image (S));
+       Put_Line ("C: " & Code'Image (C));
+       Put_Line ("T: " & Threshold'Image (T));
+    end Main;
 
 The Ada compiler knows that an assignment to :ada:`V` requires an
 :ada:`Integer`. So, it chooses the :ada:`Value` function that returns an
@@ -1989,9 +2610,51 @@ operator as a function, enclose it in quotes:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overloading_Eq
 
-    function "=" (Left : Day; Right : Integer) return Boolean;
+    package Machine_2 is
+       type Status is (Off, Waiting, On);
+       type Input is new Float range 0.0 .. 10.0;
+
+       function Get (I : Input) return Status;
+
+       function "=" (Left : Input; Right : Status) return Boolean;
+
+    end Machine_2;
+
+    package body Machine_2 is
+
+       function Get (I : Input) return Status is
+       begin
+          if I >= 0.0 and I < 3.0 then
+             return Off;
+          elsif I >= 3.0 and I < 6.5 then
+             return Waiting;
+          else
+             return On;
+          end if;
+       end Get;
+
+       function "=" (Left : Input; Right : Status) return Boolean is
+       begin
+          return Get (Left) = Right;
+       end "=";
+
+    end Machine_2;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Machine_2;   use Machine_2;
+
+    procedure Main is
+       I : Input;
+    begin
+       I := 3.0;
+       if I = Off then
+          Put_Line ("Machine is off.");
+       else
+          Put_Line ("Machine is not off.");
+       end if;
+    end Main;
 
 Packages
 --------
@@ -2025,7 +2688,7 @@ splits the package spec into *public* and *private* parts. For example:
 
 [Ada]
 
-.. code:: ada no_button
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Private_Types
 
     package Types is
        type Type_1 is private;
@@ -2054,7 +2717,7 @@ the following way:
 
 [Ada]
 
-.. code:: ada no_button
+.. code-block:: ada
 
     -- root-child.ads
 
@@ -2086,7 +2749,7 @@ if a :ada:`use` clause is employed.
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Using_Pkg_Entities
 
     -- pck.ads
 
