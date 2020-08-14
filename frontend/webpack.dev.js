@@ -2,7 +2,7 @@ const path = require('path');
 const merge = require('webpack-merge');
 const exec = require('child_process').exec;
 const WatchPlugin = require('webpack-watch-files-plugin').default;
-const ShellPlugin = require('webpack-shell-plugin');
+const ShellPlugin = require('webpack-shell-plugin-next');
 const common = require('./webpack.common.js');
 
 module.exports = function(env) {
@@ -25,8 +25,16 @@ module.exports = function(env) {
     devtool: 'source-map',
     plugins: [
       new ShellPlugin({
-        onBuildStart: ['make cleanall -j4'],
-        onBuildEnd: ['make local -j4'],
+        onBuildStart:{
+          scripts: ['make cleanall -j4'],
+          blocking: true,
+          parallel: false
+        },
+        onBuildExit:{
+          scripts: ['make local -j4'],
+          blocking: false,
+          parallel: true
+        },
         // dev=false here to force every build to trigger make, the default is
         // first build only.
         dev: false,

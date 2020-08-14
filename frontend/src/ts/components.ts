@@ -1,7 +1,7 @@
 /** Class represents Tab component */
 export class Tabs {
-  private headers: Array<JQuery> = [];
-  private contents: Array<JQuery> = [];
+  private headers: Array<HTMLElement> = [];
+  private contents: Array<HTMLElement> = [];
 
   /**
    * The event callback signature for tabs
@@ -12,33 +12,35 @@ export class Tabs {
   /**
    * Add a Tab
    * @param {string} name - The name to put at the tab button
-   * @param {JQuery} content - The content to put inside the tab
+   * @param {HTMLElement} content - The content to put inside the tab
    * @param {tabChange} fn - The function to call when the tab changes
-   * @return {JQuery} The button or header for the new tab
+   * @return {HTMLElement} The button or header for the new tab
    */
-  public addTab(name: string, content: JQuery, fn: () => void): JQuery {
-    const tabContent = $('<div>')
-        .addClass('tab-content')
-        .append(content);
+  public addTab(name: string, content: HTMLElement,
+      fn: () => void): HTMLElement {
+    const tabContent = document.createElement('div');
+    tabContent.classList.add('tab-content');
+    tabContent.appendChild(content);
 
-    const header = $('<button>')
-        .addClass('tab-links')
-        .text(name)
-        .on('click', () => {
-          for (const c of this.contents) {
-            c.hide();
-            c.removeClass('active');
-          }
-          for (const h of this.headers) {
-            h.removeClass('active');
-          }
+    const header = document.createElement('button');
+    header.classList.add('tab-links');
+    header.textContent = name;
+    header.addEventListener('click', () => {
+      for (const c of this.contents) {
+        c.style.display = 'none';
+        c.classList.remove('active');
+      }
+      for (const h of this.headers) {
+        h.classList.remove('active');
+      }
 
-          fn();
+      fn();
 
-          tabContent.addClass('active');
-          tabContent.show();
-          header.addClass('active');
-        });
+      tabContent.classList.add('active');
+      tabContent.style.display = 'block';
+      header.classList.add('active');
+    });
+
     this.headers.push(header);
     this.contents.push(tabContent);
     return header;
@@ -46,18 +48,22 @@ export class Tabs {
 
   /**
    * Render the tab into the parent
-   * @param {JQuery} parent - The parent to put the tab into
+   * @param {HTMLElement} parent - The parent to put the tab into
    */
-  public render(parent: JQuery): void {
-    const headerContainer = $('<div>').addClass('tab').appendTo(parent);
+  public render(parent: HTMLElement): void {
+    const headerContainer = document.createElement('div');
+    headerContainer.classList.add('tab');
+    parent.appendChild(headerContainer);
+
     for (const h of this.headers) {
-      h.appendTo(headerContainer);
+      headerContainer.appendChild(h);
     }
     for (const c of this.contents) {
-      c.appendTo(parent);
+      parent.appendChild(c);
     }
+    /* istanbul ignore next */
     if (this.headers.length > 0) {
-      this.headers[0].trigger('click');
+      this.headers[0].click();
     }
   }
 
@@ -68,21 +74,21 @@ export class Tabs {
   public show(show: boolean): void {
     if (show) {
       for (const h of this.headers) {
-        h.show();
+        h.style.display = 'block';
       }
       for (const c of this.contents) {
-        if (c.hasClass('active')) {
-          c.show();
+        if (c.classList.contains('active')) {
+          c.style.display = 'block';
         } else {
-          c.hide();
+          c.style.display = 'none';
         }
       }
     } else {
       for (const h of this.headers) {
-        h.hide();
+        h.style.display = 'none';
       }
       for (const c of this.contents) {
-        c.show();
+        c.style.display = 'block';
       }
     }
   }
@@ -90,7 +96,7 @@ export class Tabs {
 
 /** Class represents a Button */
 export class Button {
-  private readonly obj: JQuery;
+  private readonly obj: HTMLElement;
   public disabled = false;
 
   /**
@@ -99,23 +105,19 @@ export class Button {
    * @param {string} title - The title to put on the button for tooltip
    * @param {string} text - The text to display on the button
    */
-  constructor(classList: string[], title: string, text: string) {
-    this.obj = $('<button>')
-        .attr('type', 'button')
-        .addClass('btn')
-        .addClass('btn-primary')
-        .attr('title', title)
-        .text(text);
-    for (const c of classList) {
-      this.obj.addClass(c);
-    }
+  constructor(classList: Array<string>, title: string, text: string) {
+    this.obj = document.createElement('button');
+    this.obj.setAttribute('type', 'button');
+    this.obj.classList.add('btn', 'btn-primary', ...classList);
+    this.obj.setAttribute('title', title);
+    this.obj.textContent = text;
   }
 
   /**
    * The event callback signature for buttons
    *
    * @callback eventCallback
-   * @param {JQuery.ClickEvent} event - The event that triggered the call
+   * @param {Event} event - The event that triggered the call
    */
 
   /**
@@ -124,63 +126,129 @@ export class Button {
    * @param {eventCallback} fn - The callback to trigger
    */
   public registerEvent(type: string,
-      fn: (event: JQuery.ClickEvent) => void): void {
-    this.obj.on(type, fn);
+      fn: (event: Event) => void): void {
+    this.obj.addEventListener(type, fn);
   }
 
   /**
    * Render the button
-   * @return {JQuery} The button
+   * @return {HTMLElement} The button
    */
-  public render(): JQuery {
+  public render(): HTMLElement {
     return this.obj;
+  }
+}
+
+/** Class represents a Group of Buttons */
+export class ButtonGroup {
+  private btnList: Array<Button> = [];
+  private enabled = true;
+
+  /**
+   * Adds a button to the button group
+   * @param {string[]} classList - The list of classes to apply to the button
+   * @param {string} title - The title to put on the button for tooltip
+   * @param {string} text - The text to display on the button
+   * @param {string} type - The type of callback event to register
+   * @param {eventCallback} fn - The function to register the event for
+   */
+  public addButton(classList: Array<string>, title: string, text: string,
+      type: string, fn: () => void): void {
+    const btn: Button = new Button(classList, title, text);
+    this.btnList.push(btn);
+
+    btn.registerEvent(type, async () => {
+      if (this.enabled) {
+        this.disable();
+        await fn();
+        this.enable();
+      }
+    });
+  }
+
+  /**
+   * Return the number of buttons in the group
+   * @return {number} the number of buttons in the group
+   */
+  public length(): number {
+    return this.btnList.length;
+  }
+
+  /**
+   * Disable the buttons in the group
+   */
+  private disable(): void {
+    this.enabled = false;
+  }
+
+  /**
+   * Enable the buttons in the group
+   */
+  private enable(): void {
+    this.enabled = true;
+  }
+
+  /**
+   * Render the button group
+   * @return {HTMLElement} - The rendered elements
+   */
+  public render(): HTMLElement {
+    const elem = document.createElement('div');
+    elem.classList.add('col-md-3');
+
+    for (const b of this.btnList) {
+      elem.appendChild(b.render());
+    }
+
+    return elem;
   }
 }
 
 /** Class represents a checkbox */
 export class CheckBox {
-  private readonly container: JQuery;
-  private readonly input: JQuery;
-  private label: JQuery;
+  private readonly container: HTMLElement;
+  private readonly input: HTMLInputElement;
+  private label: HTMLElement;
   private state: boolean;
 
   /**
    * Construct a checkbox
    * @param {string} label - The label text
-   * @param {JQuery} [parent] - The parent to insert the checkbox into
+   * @param {HTMLElement} [parent] - The parent to insert the checkbox into
    * @param {string[]} [classes] - The classes to apply to the checkbox
    * @param {string} [title] - The title for the checkbox, tooltip
    */
   constructor(label: string,
-      parent? : JQuery,
+      parent? : HTMLElement,
       classes? : string[],
       title? : string) {
     if (parent == undefined) {
-      this.container = $('<div>');
+      this.container = document.createElement('div');
     } else {
       this.container = parent;
     }
 
     if (classes != undefined) {
       for (const c of classes) {
-        this.container.addClass(c);
+        this.container.classList.add(c);
       }
     }
 
     const qId = this.generateUniqueId();
-    this.input = $('<input>')
-        .attr('type', 'checkbox')
-        .attr('id', qId)
-        .addClass('checkbox')
-        .appendTo(this.container);
+    this.input = document.createElement('input');
+    this.input.setAttribute('type', 'checkbox');
+    this.input.setAttribute('id', qId);
+    this.input.classList.add('checkbox');
+    this.container.appendChild(this.input);
+
     if (title != undefined) {
-      this.input.attr('title', title);
+      this.input.setAttribute('title', title);
     }
 
-    this.label = $('<label>')
-        .attr('for', qId)
-        .text(label)
-        .appendTo(this.container);
+    this.label = document.createElement('label');
+    this.label.setAttribute('for', qId);
+    this.label.textContent = label;
+    this.container.appendChild(this.label);
   }
 
   /**
@@ -188,22 +256,22 @@ export class CheckBox {
    * @return {boolean} True for checked
    */
   public checked(): boolean {
-    return this.input.is(':checked');
+    return this.input.checked;
   }
 
   /**
-   * Returns the actual checkbox JQuery object
-   * @return {JQuery} The checkbox
+   * Returns the actual checkbox HTMLElement object
+   * @return {HTMLInputElement} The checkbox
    */
-  public getCheckBox(): JQuery {
+  public getCheckBox(): HTMLInputElement {
     return this.input;
   }
 
   /**
    * Renders the checkbox
-   * @return {JQuery} The container with the label and checkbox
+   * @return {HTMLElement} The container with the label and checkbox
    */
-  public render(): JQuery {
+  public render(): HTMLElement {
     return this.container;
   }
 

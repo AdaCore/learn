@@ -1,7 +1,5 @@
 @import 'variables';
 @import '~@fortawesome/fontawesome-free/css/all.css';
-@import '~slick-carousel/slick/slick.css';
-@import '~slick-carousel/slick/slick-theme.css';
 @import 'theme';
 
 
@@ -339,9 +337,20 @@ div#learn-adacore-com>h1 {
     padding: 15px;
     border-radius: 10px;
     font-size: 18px;
+    transition: opacity 600ms;
     &:hover {
         background-color: $color-scroll-button-hover;
     }
+    &.show {
+        opacity: 1;
+    }
+    &.hide {
+        opacity: 0;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 .img-row {
@@ -366,6 +375,11 @@ div.download-button.docutils.container {
     margin: 20px;
 }
 
+// hiding toctree on main page
+div.content-blocks.docutils.container {
+    display: none;
+}
+
 a.pdf_download_button {
     background-color: #F56F23;
     display: block;
@@ -386,110 +400,11 @@ a.pdf_download_button {
 }
 
 // download buttons
-// slick carousel customization
-.slick-slide {
-    margin: 0px 20px;
-    transition: all ease-in-out .3s;
-    opacity: .2;
-    img {
-        width: 100%;
-    }
-}
-
-.slick-current {
-    opacity: 1;
-}
-
-div.content-description.docutils.container {
-    padding: 20px;
-}
 
 div.mwac-banner.docutils.container {
     padding-bottom: 20px;
 }
 
-.responsive-carousel {
-    padding-top: 20px;
-    .slick-prev {
-        left: -10px;
-        margin-top: -15px;
-        &:before {
-            color: #000;
-        }
-    }
-    .slick-next {
-        right: -10px;
-        margin-top: -15px;
-        &:before {
-            color: #000;
-        }
-    }
-    .slick-active {
-        opacity: 1;
-    }
-    div {
-        margin-bottom: 10px;
-        a {
-            display: block;
-            background-color: $color-slider-link-bg;
-            color: $color-slider-link-fg;
-            border-radius: 3px;
-            position: relative;
-            height: 230px;
-            &:hover {
-                background-color: $color-slider-link-bg-hover;
-            }
-            .inner {
-                position: absolute;
-                top: 50%;
-                padding: 20px;
-                -moz-transform: translateY(-50%);
-                -webkit-transform: translateY(-50%);
-                -o-transform: translateY(-50%);
-                -ms-transform: translateY(-50%);
-                transform: translateY(-50%);
-                strong {
-                    font-size: 1.3em;
-                    margin-bottom: 5px;
-                    display: block;
-                }
-                p {
-                    color: rgba(255, 255, 255, 0.7);
-                    font-size: .8em;
-                    line-height: 1.5em;
-                    margin-bottom: 0px;
-                }
-                em {
-                    color: rgba(255, 255, 255, 0.6);
-                    font-style: normal;
-                    font-size: .8em;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                }
-            }
-        }
-        &.courses a {
-            background-color: $color-slider-course;
-            &:hover {
-                background-color: $color-slider-course-hover;
-            }
-        }
-        &.labs a {
-            background-color: $color-slider-lab;
-            &:hover {
-                background-color: $color-slider-lab-hover;
-            }
-        }
-        &.books a {
-            background-color: $color-slider-book;
-            &:hover {
-                background-color: $color-slider-book-hover;
-            }
-        }
-    }
-}
-
-// slick carousel customization
 // lab stuff
 div {
     &.lab_area {
@@ -615,7 +530,6 @@ button {
 
 .lab_test_case {
     padding: 0 18px;
-    display: none;
     overflow: hidden;
     border-bottom-right-radius: 7px;
     border-bottom-left-radius: 7px;

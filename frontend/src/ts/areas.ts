@@ -1,19 +1,17 @@
-import $ from 'jquery';
-
 import * as Strings from './strings';
 import {CheckOutput} from './types';
 
 /** Abstract class representing an Area **/
 export abstract class Area {
-  protected container: JQuery;
+  protected container: HTMLElement;
   public errorCount = 0;
 
   /**
    * Render the Area
    * @abstract
-   * @return {JQuery} The object holding the Area
+   * @return {HTMLElement} The object holding the Area
    */
-  abstract render(): JQuery;
+  abstract render(): HTMLElement;
 
   /**
    * The event callback signature for clickable divs
@@ -28,16 +26,16 @@ export abstract class Area {
    * @param {eventCallback} cb (optional) - The on click function to register
    */
   public add(classes: Array<string>, text: string, cb?: () => void): void {
-    const div = $('<div>');
+    const div = document.createElement('div');
     classes.map((c: string) => {
-      div.addClass(c);
+      div.classList.add(c);
     });
 
-    div.text(text);
-    div.appendTo(this.container);
+    div.textContent = text;
+    this.container.appendChild(div);
 
     if (cb) {
-      div.on('click', cb);
+      div.addEventListener('click', cb);
     }
   }
 
@@ -45,7 +43,9 @@ export abstract class Area {
    * Empty the Area and reset to default state
    */
   public reset(): void {
-    this.container.empty();
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
+    }
     this.errorCount = 0;
   }
 
@@ -91,34 +91,30 @@ export abstract class Area {
  * @extends Area
  */
 export class OutputArea extends Area {
-  private spinner: JQuery;
+  private spinner: HTMLElement;
 
   /**
    * Construct an OutputArea
    */
   constructor() {
     super();
-    this.container = $('<div>')
-        .addClass('output_area');
+    this.container = document.createElement('div');
+    this.container.classList.add('output_area');
 
-    this.spinner = $('<div>')
-        .addClass('spinner')
-        .append(
-            $('<div>').addClass('bounce1')
-        )
-        .append(
-            $('<div>').addClass('bounce2')
-        )
-        .append(
-            $('<div>').addClass('bounce3')
-        );
+    this.spinner = document.createElement('div');
+    this.spinner.classList.add('spinner');
+    for (let i = 1; i < 4; i++) {
+      const b = document.createElement('div');
+      b.classList.add('bounce' + i);
+      this.spinner.appendChild(b);
+    }
   }
 
   /**
    * Render the OutputArea
-   * @return {JQuery} The container of the OutputArea
+   * @return {HTMLElement} The container of the OutputArea
    */
-  public render(): JQuery {
+  public render(): HTMLElement {
     return this.container;
   }
 
@@ -149,9 +145,11 @@ export class OutputArea extends Area {
    */
   public showSpinner(show: boolean): void {
     if (show) {
-      this.spinner.appendTo(this.container);
+      this.container.appendChild(this.spinner);
     } else {
-      this.spinner.remove();
+      if (this.container.contains(this.spinner)) {
+        this.container.removeChild(this.spinner);
+      }
     }
   }
 
@@ -168,10 +166,10 @@ export class OutputArea extends Area {
  * Class representing a LabArea
  * @extends Area
  */
-class LabArea extends Area {
+export class LabArea extends Area {
   private readonly ref: number;
-  private readonly wrapper: JQuery;
-  private button: JQuery;
+  private readonly wrapper: HTMLElement;
+  private button: HTMLElement;
 
   /**
    * Constructs a LabArea
@@ -179,29 +177,64 @@ class LabArea extends Area {
    */
   constructor(ref: number) {
     super();
-    this.wrapper = $('<div>').addClass('acc_wrapper');
+    this.wrapper = document.createElement('div');
+    this.wrapper.classList.add('acc_wrapper');
     this.ref = ref;
 
-    this.button = $('<button>')
-        .addClass('accordion')
-        .appendTo(this.wrapper)
-        .append(
-            $('<span>').text(Strings.TEST_CASE_LABEL + ' #' + this.ref)
-        ).on('click', () => {
-          this.button.toggleClass('active');
-          this.container.toggle();
-        });
-    this.container = $('<div>')
-        .addClass('lab_test_case')
-        .appendTo(this.wrapper);
+    this.button = document.createElement('button');
+    this.button.classList.add('accordion');
+    this.wrapper.appendChild(this.button);
+
+    const span = document.createElement('span');
+    span.textContent = Strings.TEST_CASE_LABEL + ' #' + this.ref;
+    this.button.appendChild(span);
+
+    this.button.addEventListener('click', () => {
+      this.button.classList.toggle('active');
+      if (this.container.style.display == '' ||
+          this.container.style.display == 'block') {
+        this.container.style.display = 'none';
+      } else {
+        this.container.style.display = 'block';
+      }
+    });
+
+    this.container = document.createElement('div');
+    this.container.classList.add('lab_test_case');
+    this.container.style.display = 'none';
+    this.wrapper.appendChild(this.container);
   }
 
   /**
    * Render the LabArea
-   * @return {JQuery} Returns the JQuery object holding the LabArea
+   * @return {HTMLElement} Returns the HTMLElement object holding the LabArea
    */
-  public render(): JQuery {
+  public render(): HTMLElement {
     return this.wrapper;
+  }
+
+  /**
+   * Create the DOM for the lab result
+   * @param {string} divClass - the class to apply to the div
+   * @param {string} spanText - the text to put in the span
+   * @param {string} result - the result text to display
+   * @return {HTMLElement} Returns the HTMLElement for the lab result
+   */
+  private resultHelper(divClass: string, spanText: string,
+      result: string): HTMLElement {
+    const label = document.createElement('div');
+    label.classList.add('lab_test_msg', divClass);
+
+    const labelmsg = document.createElement('span');
+    labelmsg.classList.add('lab_test_msg_title');
+    labelmsg.textContent = spanText + ':';
+    label.appendChild(labelmsg);
+
+    const labelCode = document.createElement('code');
+    labelCode.textContent = result;
+    label.appendChild(labelCode);
+
+    return label;
   }
 
   /**
@@ -210,68 +243,25 @@ class LabArea extends Area {
    */
   public addResults(result: CheckOutput.TestResult): void {
     if (result.status == 'Success') {
-      this.button.addClass('lab_test_success');
-      this.container.addClass('lab_test_success');
+      this.button.classList.add('lab_test_success');
+      this.container.classList.add('lab_test_success');
     } else {
-      this.button.addClass('lab_test_failed');
-      this.container.addClass('lab_test_failed');
+      this.button.classList.add('lab_test_failed');
+      this.container.classList.add('lab_test_failed');
     }
 
-    const caseDiv: JQuery = $('<div>')
-        .addClass('lab_results')
-        .appendTo(this.container);
+    const caseDiv = document.createElement('div');
+    caseDiv.classList.add('lab_results');
+    this.container.appendChild(caseDiv);
 
-    $('<div>')
-        .addClass('lab_test_msg')
-        .addClass('lab_test_input')
-        .append(
-            $('<span>')
-                .addClass('lab_test_msg_title')
-                .text(Strings.LAB_TEST_INPUT_LABEL + ':')
-        )
-        .append(
-            $('<code>').text(result.in)
-        )
-        .appendTo(caseDiv);
-
-    $('<div>')
-        .addClass('lab_test_msg')
-        .addClass('lab_test_output')
-        .append(
-            $('<span>')
-                .addClass('lab_test_msg_title')
-                .text(Strings.LAB_TEST_OUTPUT_LABEL + ':')
-        )
-        .append(
-            $('<code>').text(result.out)
-        )
-        .appendTo(caseDiv);
-
-    $('<div>')
-        .addClass('lab_test_msg')
-        .addClass('lab_test_actual')
-        .append(
-            $('<span>')
-                .addClass('lab_test_msg_title')
-                .text(Strings.LAB_TEST_ACTUAL_LABEL + ':')
-        )
-        .append(
-            $('<code>').text(result.actual)
-        )
-        .appendTo(caseDiv);
-
-    $('<div>')
-        .addClass('lab_test_msg')
-        .addClass('lab_test_status')
-        .append(
-            $('<span>')
-                .addClass('lab_test_msg_title')
-                .text(Strings.LAB_TEST_STATUS_LABEL + ':')
-        )
-        .append(
-            $('<code>').text(result.status)
-        )
-        .appendTo(caseDiv);
+    caseDiv.appendChild(this.resultHelper(
+        'lab_test_input', Strings.LAB_TEST_INPUT_LABEL, result.in));
+    caseDiv.appendChild(this.resultHelper(
+        'lab_test_output', Strings.LAB_TEST_OUTPUT_LABEL, result.out));
+    caseDiv.appendChild(this.resultHelper(
+        'lab_test_actual', Strings.LAB_TEST_ACTUAL_LABEL, result.actual));
+    caseDiv.appendChild(this.resultHelper(
+        'lab_test_status', Strings.LAB_TEST_STATUS_LABEL, result.status));
   }
 
   /**
@@ -286,13 +276,14 @@ class LabArea extends Area {
 /** Class representing the LabContainer */
 export class LabContainer {
   private labList: Array<LabArea> = [];
-  private readonly container: JQuery;
+  private readonly container: HTMLElement;
 
   /**
    * Constructs a LabContainer
    */
   constructor() {
-    this.container = $('<div>').addClass('lab_area');
+    this.container = document.createElement('div');
+    this.container.classList.add('lab_area');
   }
 
   /**
@@ -313,9 +304,9 @@ export class LabContainer {
 
   /**
    * Renders the LabContainer
-   * @return {JQuery} the JQuery object containing the LabContainer
+   * @return {HTMLElement} the HTMLElement object containing the LabContainer
    */
-  public render(): JQuery {
+  public render(): HTMLElement {
     return this.container;
   }
 
@@ -326,6 +317,7 @@ export class LabContainer {
    */
   public processResults(data: CheckOutput.LabOutput): boolean {
     for (const index in data.cases) {
+      /* istanbul ignore next */
       if ({}.hasOwnProperty.call(data.cases, index)) {
         const test: CheckOutput.TestResult =
           (data.cases[index] as unknown) as CheckOutput.TestResult;
@@ -341,7 +333,9 @@ export class LabContainer {
    * Empty and reset the LabContainer
    */
   public reset(): void {
-    this.container.empty();
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
+    }
     this.labList = [];
   }
 
@@ -353,7 +347,9 @@ export class LabContainer {
       return lhs.getRef() - rhs.getRef();
     });
     sorted.map((l) => {
-      return l.render().appendTo(this.container);
+      const render = l.render();
+      this.container.appendChild(render);
+      return render;
     });
   }
 }
