@@ -478,10 +478,178 @@ Configuration specific files
 Preprocessing
 ~~~~~~~~~~~~~
 
-.. todo::
+In the previous sections, we've seen how to avoid traditional preprocessing
+tools by using different strategies, such as configuration pragma files and
+configuration packages. If those strategies don't fit your workflow, however,
+you can still use the preprocessor provided by the GNAT toolchain. Note that
+for C, the preprocessor is part of the C language standard. In contrast, Ada
+doesn't have a standardized preprocessor. The preprocessor we're going to
+describe here is specific to the GNAT toolchain.
 
-    Complete section!
+The GNAT toolchain provides the :program:`gnatprep` tool to preprocess Ada
+source-code files. The syntax used by :program:`gnatprep` reminds us of the C
+and C++ preprocessor. However, you'll notice some differences in the syntax
+from that preprocessor, such as shown in the example below:
 
+[Ada]
+
+.. code-block:: none
+
+    #if VERSION'Defined and then (VERSION >= 4) then
+       --  Implementation for version 4.0 and above...
+    #else
+       --  Standard implementation for older versions...
+    #end if;
+
+The corresponding implementation in C is:
+
+.. code-block:: c
+
+    #if defined (VERSION) && (VERSION >= 4)
+        /* Implementation for version 4.0 and above... */
+    #else
+        /* Standard implementation for older versions... */
+    #endif
+
+.. admonition:: Alternatives
+
+    The example above is a perfect case where we could have avoided the
+    preprocessor entirely by using strategies discussed in previous sections:
+
+    [Ada]
+
+    .. code:: ada
+
+        package Config is
+           Version : constant Integer := 4;
+        end Config;
+
+        with Config;
+        procedure Do_Something is
+        begin
+           if Config.Version >= 4 then
+              null;
+              --  Implementation for version 4.0 and above...
+           else
+              null;
+              --  Standard implementation for older versions...
+           end if;
+        end Do_Something;
+
+As a concrete example, let's implement a dummy :ada:`Do_Something` procedure in
+the :file:`do_something.org.adb` file:
+
+[Ada]
+
+.. code-block:: none
+
+    procedure Do_Something is
+    begin
+       #if VERSION'Defined and then (VERSION >= 4) then
+       --  Implementation for version 4.0 and above...
+       null;
+       #else
+       --  Standard implementation for older versions...
+       null;
+       #end if;
+    end Do_Something;
+
+To preprocess this file and build the application, we call :program:`gnatprep`
+followed by :program:`GPRbuild`:
+
+.. code-block:: sh
+
+    gnatprep do_something.org.adb do_something.adb
+    gprbuild do_something
+
+If we look at the resulting file after preprocessing, we see that the ``#else``
+implementation was selected by :program:`gnatprep`.  To cause it to select the
+newer "version" of the code, we include the symbol and its value in our call to
+:program:`gnatprep`:
+
+.. code-block:: sh
+
+    gnatprep -DVERSION=5 do_something.org.adb do_something.adb
+
+Let's look at the corresponding implementation of :c:`do_something()` in C:
+
+[C]
+
+.. code:: c
+
+    !main.c
+    void do_something()
+    {
+    #if defined (VERSION) && (VERSION >= 4)
+        /* Implementation for version 4.0 and above... */
+    #else
+        /* Standard implementation for older versions... */
+    #endif
+    }
+
+    int main()
+    {
+        do_something();
+    }
+
+In C, the way we define preprocessing symbols depends on the build system. When
+using :program:`make`, we can write a Makefile such as this one:
+
+.. code-block:: none
+
+    CC = gcc
+    VERSION ?= 1
+
+    main:
+        $(CC) -o main -DVERSION=$(VERSION) main.c
+
+    .PHONY: clean
+
+    clean:
+        rm -f main *.o
+
+Then, we can call :program:`make` and set the symbol as a Makefile switch. In
+the following call, we set the ``VERSION`` symbol to 5:
+
+.. code-block:: sh
+
+    make VERSION=5 clean main
+
+.. admonition:: In the GNAT toolchain
+
+    As we've just seen, we can call :program:`gnatprep` and set the symbols
+    directly on the command-line:
+
+    .. code-block:: sh
+
+        gnatprep -DVERSION=5 do_something.org.adb do_something.adb
+
+    A cleaner approach, however, is to create a symbol definition file
+    containing all symbols we use in our implementation. Let's create the
+    :file:`prep.def` file for our example:
+
+    [Ada]
+
+    .. code-block:: none
+
+        VERSION := 5
+
+    Now we just need to specify it to :program:`gnatprep`:
+
+    .. code-block:: sh
+
+        gnatprep do_something.org.adb do_something.adb prep.def
+        gprbuild do_something
+
+    This is similar to having a separate file for the C implementation
+    containing hard-coded values for symbols used in the implementation.
+
+The
+`gnatprep chapter <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#preprocessing-with-gnatprep>`_
+of the GNAT User's Guide contains further details about this tool, such as
+how to integrate :program:`gnatprep` with project files for
+:program:`GPRbuild` and how to replace symbols without using preprocessing
+directives (using the ``$symbol`` syntax).
 
 Handling variability & reusability dynamically
 ----------------------------------------------
