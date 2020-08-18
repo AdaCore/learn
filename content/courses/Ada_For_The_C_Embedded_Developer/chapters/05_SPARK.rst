@@ -10,243 +10,265 @@ Enhancing Verification with SPARK and Ada
 Understanding Exceptions and Dynamic Checks
 -------------------------------------------
 
-In Ada, several common programming errors that are not already detected 
-at compile-time are detected instead at run-time, triggering 
-"exceptions" that interrupt the normal flow of execution. For example, 
-an exception is raised by an attempt to access an array component via an 
-index that is out of bounds, thereby precluding exploits based on buffer 
-overflow. Several other cases also raise language-defined exceptions, 
-such as scalar range constraint violations, and users may declare and 
-raise their own application-specific exceptions. 
+In Ada, several common programming errors that are not already detected
+at compile-time are detected instead at run-time, triggering
+"exceptions" that interrupt the normal flow of execution. For example,
+an exception is raised by an attempt to access an array component via an
+index that is out of bounds. This simple check precludes exploits based
+on buffer overflow. Several other cases also raise language-defined
+exceptions, such as scalar range constraint violations and null pointer
+dereferences. Developers may declare and raise their own
+application-specific exceptions too.
 
-We will loosely define a "frame" as a language construct that has a call
-stack entry when called, for example a procedure or function body. There
-are a few other constructs that are also pertinent but this definition
-will suffice for now.
+Exceptions are raised during execution of what we will loosely define as
+a "frame." A frame is a language construct that has a call stack entry
+when called, for example a procedure or function body. There are a few
+other constructs that are also pertinent but this definition will
+suffice for now.
 
-Frames can have "exception handlers" that specify the response to be
-executed when an exception is "raised." These handlers can be specified to
-"handle" one or more specific exceptions, thus allowing the response to
-be tailored to specific exceptions or generalized to more than one.
+Frames have a sequence of statements implementing their functionality.
+They can also have optional "exception handlers" that specify the
+response when exceptions are "raised" by those statements. These
+exceptions could be raised directly within the statements, or indirectly
+via calls to other procedures and functions.
+
+For example, the frame below is a procedure including three exceptions 
+handlers: 
+
+:code-config:`accumulate_code=True`
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
+
+   procedure P is
+   begin
+      Statements_That_Might_Raise_Exceptions;
+   exception
+      when A =>
+         Handle_A;
+      when B =>
+         Handle_B;
+      when C =>
+         Handle_C;
+   end P;
+
+The three exception handlers each start with the word :ada:`when` (lines 
+5, 7, and 9). Next comes one or more exception identifiers, followed by 
+the so-called "arrow." In Ada, the arrow always associates something on 
+the left side with something on the right side. In this case, the left 
+side is the exception name and the right side is the handler's code for 
+that exception. 
+
+Each handler's code consists of an arbitrary sequence of statements, in
+this case specific procedures called in response to those specific
+exceptions. If exception :ada:`A` is raised we call procedure
+:ada:`Handle_A` (line 6), dedicated to doing the actual work of handling
+that exception. The other two exceptions are dealt with similarly, on
+lines 8 and 10.
 
 Structurally, the exception handlers are grouped together and textually
-separated from the rest of the code in a frame. As a result, there is a
-sequence of statements representing the normal flow of execution,
-distinct from another section representing the error handling. The
-reserved word "exception" separates these two sections. This separation
-helps simplify the overall flow, increasing understandability. In
-particular, status result codes are not required so there is no mixing
-of error checking and normal progress. If no exception is raised the
-exception handler section is automatically skipped during execution.
-
-For example, in the following procedure line 4 separates the two
-sections. Lines 5 through 10 contain the error handling part,
-consisting in this case of three exception handlers:
-
-:code-config:`accumulate_code=True`
-
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
-
-    procedure P is
-    begin
-       Statements_That_Might_Raise_Exceptions;
-    exception
-       when Exception_A =>
-          Handle_Exception_A;
-       when Exception_B =>
-          Handle_Exception_B;
-       when Exception_C =>
-          Handle_Exception_C;
-    end P;
-
-The name :ada:`Exception_A` refers to a specific visible exception
-declared somewhere with that name, as do the other two exceptions
-referenced. Each handler consists of an arbitrary sequence of
-statements, in this case specific procedures called in response to those
-specific exceptions.
+separated from the rest of the code in a frame. As a result, the
+sequence of statements representing the normal flow of execution is
+distinct from the section representing the error handling. The
+reserved word :ada:`exception` separates these two sections (line 4
+above). This separation helps simplify the overall flow, increasing
+understandability. In particular, status result codes are not required
+so there is no mixture of error checking and normal processing. If no
+exception is raised the exception handler section is automatically
+skipped during execution.
 
 Note how the syntactic structure of the exception handling section
-resembles that of a case statement. The resemblance is intentional, to
-suggest similar behavior. When something in the statements of the normal
-execution raises an exception, normal execution is abandoned and the
-corresponding exception handler for that specific exception is executed.
-Only that one handler is executed and then the routine completes. The
-handlers do not "fall through" to the handlers below, again like the
-behavior of case statements.
+resembles that of an Ada case statement. The resemblance is intentional,
+to suggest similar behavior. When something in the statements of the
+normal execution raises an exception, the corresponding exception
+handler for that specific exception is executed. After that, the routine
+completes. The handlers do not "fall through" to the handlers below. For
+example, if exception :ada:`B` is raised, procedure :ada:`Handle_B` is
+called but :ada:`Handle_C` is not called. There's no need for a
+:c:`break` statement, just as there is no need for it in a case
+statement. (There's no break statement in Ada anyway.)
 
-The semantic model is the same as with many other programming languages,
-in which normal execution is unavoidably interrupted in the face of an
-active exception. This design precludes missing (intentionally or
-otherwise) a function status result indicating an error, thus giving the
-developer a strong guarantee that errors are detected and addressed.
+So far, we've seen a frame with three specific exceptions handled. What
+happens if a frame has no handler for the actual exception raised? In
+that case the run-time library code goes "looking" for one.
 
-When no corresponding handler is located in the exception handlers 
-section of a frame, the active exception is propagated up the dynamic 
-call chain. A caller in that chain may chose to handle the exception, in 
-which case that caller returns normally. Otherwise, propagation 
-continues |mdash| and the callers return abnormally |mdash| until the 
-exception is either handled or it reaches the main subprogram 
-(terminating the application). For example, consider the following: 
+Specifically, the active exception is propagated up the dynamic call
+chain. At each point in the chain, normal execution in that caller is
+abandoned and the handlers are examined. If that caller has a handler
+for the exception, the handler is executed. That caller then returns
+normally to its caller and execution continues from there. Otherwise,
+propagation goes up one level in the call chain and the process repeats.
+The search continues until a matching handler is found or no callers
+remain. If a handler is never found the application terminates
+abnormally. If the search reaches the main procedure and it has a
+matching handler it will execute the handler, but, as always, the
+routine completes so once again the application terminates.
+
+For a concrete example, consider the following:
 
 :code-config:`accumulate_code=True`
 
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
 
-    package Arrays is
+   package Arrays is
 
-       type List is array (Natural range <>) of Integer;
+      type List is array (Natural range <>) of Integer;
 
-       function Value (A : List; X, Y : Integer) return Integer;
+      function Value (A : List; X, Y : Integer) return Integer;
 
-    end Arrays;
+   end Arrays;
 
-    package body Arrays is
+   package body Arrays is
 
-       function Value (A : List; X, Y : Integer) return Integer is
-       begin
-          return A (X + Y * 10);
-       end Value;
+      function Value (A : List; X, Y : Integer) return Integer is
+      begin
+         return A (X + Y * 10);
+      end Value;
 
-    end Arrays;
+   end Arrays;
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
+   with Ada.Text_IO; use Ada.Text_IO;
+   with Arrays;      use Arrays;
 
-    with Ada.Text_IO; use Ada.Text_IO;
-    with Arrays;      use Arrays;
+   procedure Some_Process is
+      L : constant List (1 .. 100) := (others => 42);
+   begin
+      Put_Line (Integer'Image (Value (L, 1, 10)));
+   exception
+      when Constraint_Error =>
+         Put_Line ("Constraint_Error caught in Some_Process");
+         Put_Line ("Some_Process completes normally");
+   end Some_Process;
 
-    procedure Some_Process is
-       L : constant List (1 .. 100) := (others => 42);
-    begin
-       Put_Line (Integer'Image (Value (L, 1, 10)));
-    exception
-       when Constraint_Error =>
-          Put_Line ("Constraint_Error caught in Some_Process");
-          Put_Line ("Some_Process completes normally");
-    end Some_Process;
+   with Some_Process;
+   with Ada.Text_IO; use Ada.Text_IO;
 
-    with Some_Process;
-    with Ada.Text_IO; use Ada.Text_IO;
+   procedure Main is
+   begin
+      Some_Process;
+      Put_Line ("Main completes normally");
+   end Main;
 
-    procedure Main is
-    begin
-       Some_Process;
-       Put_Line ("Main completes normally");
-    end Main;
+Procedure :ada:`Main` calls :ada:`Some_Process`, which in turn calls
+function :ada:`Value` (line 7). The call to :ada:`Value` has arguments
+leading to an attempt to access an array component via an out-of-bounds
+index (:ada:`1 + 10 * 10 = 101`, beyond the last index of :ada:`L`).
+This attempt will trigger an exception in :ada:`Value` prior to actually
+accessing the array object's memory. Function :ada:`Value` doesn't have
+any exception handlers so the exception is propagated up to the caller
+:ada:`Some_Process`. Procedure :ada:`Some_Process` has an exception
+handler for :ada:`Constraint_Error` and it so happens that
+:ada:`Constraint_Error` is the exception raised in this case. As a
+result, the code for that handler will be executed, printing some
+messages on the screen. Then procedure :ada:`Some_Process` will return
+to :ada:`Main` normally. :ada:`Main` then continues to execute normally
+after the call to :ada:`Some_Process` and prints its completion message.
 
-:code-config:`accumulate_code=False`
+If procedure :ada:`Some_Process` had also not had a handler for
+:ada:`Constraint_Error`, that procedure call would also have returned
+abnormally and the exception would have been propagated further up the
+call chain to procedure :ada:`Main`. Normal execution in :ada:`Main`
+would likewise be abandoned in search of a handler. But :ada:`Main` does
+not have any handlers so :ada:`Main` would have completed abnormally,
+immediately, without printing its closing message. You can try that
+situation by removing the exception handling section in
+:ada:`Some_Process` (lines 8 through 11) and re-running the code.
 
-:code-config:`reset_accumulator=True`
+This semantic model is the same as with many other programming languages,
+in which the execution of a frame's sequence of statements is
+unavoidably abandoned when an exception is raised. The model is a
+direct reaction to the use of status codes returned from functions as in
+C, where it is all too easy to forget (intentionally or otherwise) to
+check the status values returned. With the exception model errors cannot
+be ignored.
 
-Procedure :ada:`Main` calls :ada:`Some_Process`, which in turn calls 
-function :ada:`Value` (line 7). The call to :ada:`Value` has arguments 
-leading to an attempt to access an array component via an out-of-bounds 
-index (:ada:`1 + 10 * 10 = 101`, beyond the last index of :ada:`L`). 
-This attempt will trigger an exception in :ada:`Value` prior to actually 
-accessing the array object's memory. Function :ada:`Value` doesn't have 
-any exception handlers so the exception is propagated up to the caller 
-:ada:`Some_Process`. Procedure :ada:`Some_Process` has an exception 
-handler for :ada:`Constraint_Error` and it so happens that that
-:ada:`Constraint_Error` is the exception raised in this case. As a 
-result, the code for that handler will be executed, printing some 
-messages on the screen. Then procedure :ada:`Some_Process` will return 
-to :ada:`Main` normally. :ada:`Main` then continues to execute normally 
-after the call to :ada:`Some_Process` and prints its completion message. 
+However, full exception propagation as described above is not the norm
+for embedded applications when the highest levels of integrity are
+required. The run-time library code implementing exception propagation
+can be rather complex and expensive to certify. Those problems apply to
+the application code too, because exception propagation is a form of
+control flow without any explicit construct in the source. Instead of
+the full exception model, designers of high-integrity applications often
+take alternative approaches.
 
-If procedure :ada:`Some_Process` had also not had a matching exception 
-handler for :ada:`Constraint_Error` that procedure call would also have 
-returned abnormally and the exception would have been propagated further 
-up the call chain to procedure :ada:`Main`. Normal execution in 
-:ada:`Main` would likewise be abandoned in search of a handler. But 
-:ada:`Main` does not have any handlers so :ada:`Main` would have 
-completed abnormally, immediately, without printing its closing message. 
-You can try that situation by removing the exception section in 
-:ada:`Some_Process` and re-running the code. 
+One alternative consists of deactivating exceptions altogether, or more
+precisely, deactivating language-defined checks, which means that the
+compiler will not generate code checking for conditions giving rise to
+exceptions. Of course, this makes the code vulnerable to attacks, such
+as buffer overflow, unless otherwise verified (e.g. through static
+analysis). Deactivation can be applied at the unit level, through the
+``-gnatp`` compiler switch, or locally within a unit via the
+:ada:`pragma Suppress`. (Refer to the `GNAT User’s Guide for Native Platforms <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html>`_ for more details about the switch.)
 
-Full exception propagation as described above is not the norm for 
-embedded applications when the highest levels of integrity are required. 
-The run-time library code implementing exception propagation can be 
-rather complex and expensive to certify, as is the application code when 
-control flow can traverse dynamically up the call chain. Instead of the 
-full exception model, high-integrity applications often take alternative 
-approaches. 
-
-One alternative consists of deactivating exceptions altogether, or more 
-precisely, deactivating language-defined checks, which means that the 
-compiler will not generate code checking for conditions giving rise to 
-exceptions. Of course, this makes the code vulnerable to attacks, such 
-as buffer overflow, unless otherwise verified (e.g. through static 
-analysis). Deactivation can be applied at the unit level, through the 
-``-gnatp`` compiler switch, or locally within a unit via the 
-:ada:`pragma Suppress`. For example, we can write the following. Note 
-the pragma on line 4 of "arrays.adb": 
-
+For example, we can write the following. Note
+the pragma on line 4 of :file:`arrays.adb` within function :ada:`Value`:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Suppress
 
-    package Arrays is
+   package Arrays is
 
-       type List is array (Natural range <>) of Integer;
+      type List is array (Natural range <>) of Integer;
 
-       function Value (A : List; X, Y : Integer) return Integer;
+      function Value (A : List; X, Y : Integer) return Integer;
 
-    end Arrays;
+   end Arrays;
 
-    package body Arrays is
+   package body Arrays is
 
-       function Value (A : List; X, Y : Integer) return Integer is
-          pragma Suppress (All_Checks);
-       begin
-          return A (X + Y * 10);
-       end Value;
+      function Value (A : List; X, Y : Integer) return Integer is
+         pragma Suppress (All_Checks);
+      begin
+         return A (X + Y * 10);
+      end Value;
 
-    end Arrays;
+   end Arrays;
 
-    with Ada.Text_IO; use Ada.Text_IO;
-    with Arrays;      use Arrays;
+   with Ada.Text_IO; use Ada.Text_IO;
+   with Arrays;      use Arrays;
 
-    procedure Some_Process is
-       L : constant List (1 .. 100) := (others => 42);
-    begin
-       Put_Line (Integer'Image (Value (L, 1, 10)));
-    exception
-       when Constraint_Error =>
-          Put_Line ("FAILURE");
-    end;
+   procedure Some_Process is
+      L : constant List (1 .. 100) := (others => 42);
+   begin
+      Put_Line (Integer'Image (Value (L, 1, 10)));
+   exception
+      when Constraint_Error =>
+         Put_Line ("FAILURE");
+   end Some_Process;
 
-This placement of the pragma will only suppress checks in the function 
-body. However, that is where the exception would otherwise have been 
-raised, leading to incorrect and unpredictable execution. (Run the 
-program more than once. If it prints the right answer (42), or even the 
-same value each time, it's just a coincidence.) As you can see, 
-suppressing checks negates the guarantee of errors being detected and 
-addressed at run-time. 
+
+This placement of the pragma will only suppress checks in the function
+body. However, that is where the exception would otherwise have been
+raised, leading to incorrect and unpredictable execution. (Run the
+program more than once. If it prints the right answer (42), or even the
+same value each time, it's just a coincidence.) As you can see,
+suppressing checks negates the guarantee of errors being detected and
+addressed at run-time.
 
 Another alternative is to leave checks enabled but not retain full exception
 propagation semantics. There are a couple of approaches available in
 this alternative.
 
-The first approach is for the run-time library to invoke a global "last 
-chance handler" (LCH) when any exception is raised. Instead of the 
-sequence of statements of an ordinary exception handler, the LCH is 
-actually a procedure intended to perform "last-wishes" before the 
-program terminates. No exception handlers are allowed. In this scheme 
-"propagation" is simply a direct call to the LCH procedure. The default 
-implementation provided by GNAT does nothing other than loop infinitely. 
-Users may also define their own replacement implementation. 
+The first approach is for the run-time library to invoke a global "last
+chance handler" (LCH) when any exception is raised. Instead of the
+sequence of statements of an ordinary exception handler, the LCH is
+actually a procedure intended to perform "last-wishes" before the
+program terminates. No exception handlers are allowed. In this scheme
+"propagation" is simply a direct call to the LCH procedure. The default
+implementation provided by GNAT does nothing other than loop infinitely.
+Users may define their own replacement implementation.
 
-The availability of this approach depends on the run-time library. 
-Typically, *Zero Footprint* and *Ravenscar SFP* run-times will provide 
-this mechanism. 
+The availability of this approach depends on the run-time library.
+Typically, *Zero Footprint* and *Ravenscar SFP* run-times will provide
+this mechanism because they are intended for certification.
 
-A user-defined LCH handler can be provided either in C or in Ada, with 
-the following profiles: 
+A user-defined LCH handler can be provided either in C or in Ada, with
+the following profiles:
 
 [Ada]
 
 .. code-block:: ada
 
     procedure Last_Chance_Handler (Source_Location : System.Address; Line : Integer);
-    pragma Export (C, 
+    pragma Export (C,
                    Last_Chance_Handler,
                    "__gnat_last_chance_handler");
 
@@ -257,13 +279,13 @@ the following profiles:
     void __gnat_last_chance_handler (char *source_location,
                                      int line);
 
-We'll go into the details of the :ada:`pragma Export` in a further 
-section on language interfacing. For now, just know that the symbol 
-"__gnat_last_chance_handler" is what the run-time uses to branch 
-immediately to the last-chance handler. Pragma Export associates that 
-symbol with this replacement procedure so it will be invoked instead of 
-the default routine. As a result, the actual procedure name in Ada is 
-immaterial. 
+We'll go into the details of the pragma :ada:`Export` in a further
+section on language interfacing. For now, just know that the symbol
+:c:`__gnat_last_chance_handler` is what the run-time uses to branch
+immediately to the last-chance handler. Pragma :ada:`Export` associates
+that symbol with this replacement procedure so it will be invoked
+instead of the default routine. As a consequence, the actual procedure
+name in Ada is immaterial.
 
 Here is an example implementation that simply blinks an LED
 forever on the target:
@@ -291,56 +313,56 @@ last-chance handler, declared elsewhere. The infinite loop is necessary
 because a last-chance handler must never return to the caller (hence the
 term "last-chance"). The LED changes state every half-second.
 
-Unlike the approach in which there is only the last-chance handler 
-routine, the other approach also allows exception handlers but in a 
-specific idiomatic manner. In particular, whenever an exception is 
-raised, the only handler that can apply is a matching handler located in 
-the same frame in which the exception is raised. Propagation in this 
-context is simply an immediate branch issued by the compiler, directly 
-to the matching handler's sequence of statements. If there is no 
-matching local handler the last chance handler is invoked. For example: 
+Unlike the approach in which there is only the last-chance handler
+routine, the other approach allows exception handlers, but in a
+specific, restricted manner. Whenever an exception is raised, the only
+handler that can apply is a matching handler located in the same frame
+in which the exception is raised. Propagation in this context is simply
+an immediate branch instruction issued by the compiler, going directly
+to the matching handler's sequence of statements. If there is no
+matching local handler the last chance handler is invoked. For example:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return
 
-    package Arrays is
+   package Arrays is
 
-       type List is array (Natural range <>) of Integer;
+      type List is array (Natural range <>) of Integer;
 
-       function Value (A : List; X, Y : Integer) return Integer;
+      function Value (A : List; X, Y : Integer) return Integer;
 
-    end Arrays;
+   end Arrays;
 
-    package body Arrays is
+   package body Arrays is
 
-       function Value (A : List; X, Y : Integer) return Integer is
-       begin
-          return A (X + Y * 10);
-       exception
-          when Constraint_Error =>
-             return 0;
-       end Value;
+      function Value (A : List; X, Y : Integer) return Integer is
+      begin
+         return A (X + Y * 10);
+      exception
+         when Constraint_Error =>
+            return 0;
+      end Value;
 
-    end Arrays;
+   end Arrays;
 
-    with Ada.Text_IO; use Ada.Text_IO;
-    with Arrays;      use Arrays;
+   with Ada.Text_IO; use Ada.Text_IO;
+   with Arrays;      use Arrays;
 
-    procedure Some_Process is
-       L : constant List (1 .. 100) := (others => 42);
-    begin
-       Put_Line (Integer'Image (Value (L, 1, 10)));
-    exception
-       when Constraint_Error =>
-          Put_Line ("FAILURE");
-    end;
+   procedure Some_Process is
+      L : constant List (1 .. 100) := (others => 42);
+   begin
+      Put_Line (Integer'Image (Value (L, 1, 10)));
+   exception
+      when Constraint_Error =>
+         Put_Line ("FAILURE");
+   end;
 
-In both procedure :ada:`Some_Process` and function :ada:`Value` we have 
-an exception handler for :ada:`Constraint_Error`. In this example the 
-exception is raised in :ada:`Value` because the index check fails there. 
-A local handler for that exception is present so the handler applies and 
-the function returns zero, normally. Because the call to the function 
-returns normally, the execution of :ada:`Some_Process` prints zero and 
-then completes normally. 
+In both procedure :ada:`Some_Process` and function :ada:`Value` we have
+an exception handler for :ada:`Constraint_Error`. In this example the
+exception is raised in :ada:`Value` because the index check fails there.
+A local handler for that exception is present so the handler applies and
+the function returns zero, normally. Because the call to the function
+returns normally, the execution of :ada:`Some_Process` prints zero and
+then completes normally.
 
 Let's imagine, however, that function :ada:`Value` did *not* have a
 handler for :ada:`Constraint_Error`. In the context of full exception
@@ -349,7 +371,6 @@ propagation, the function call would return to the caller, i.e.,
 But only local handlers are allowed under the second alternative so the
 lack of a local handler in :ada:`Value` would result in the last-chance
 handler being invoked. The handler for :ada:`Constraint_Error` in
-:ada:`Some_Process` only applies to the code in the body of
 :ada:`Some_Process` under this alternative approach.
 
 So far we've only illustrated handling the :ada:`Constraint_Error`
@@ -396,39 +417,43 @@ example:
     exception
        when Constraint_Error =>
           Put_Line ("FAILURE");
-    end;
+    end Some_Process;
 
-In the code above, the :ada:`Value` function has a handler specifically 
-for :ada:`Constraint_Error` as before, but also now has a handler for 
-all other exceptions. For any exception other than Constraint_Error 
-function :ada:`Value` returns -1. If you remove :ada:`Value`'s handler 
-for :ada:`Constraint_Error` (lines 7 and 8) then the other "anonymous" 
-handler will catch the exception and -1 will be returned instead of zero. 
+In the code above, the :ada:`Value` function has a handler specifically
+for :ada:`Constraint_Error` as before, but also now has a handler for
+all other exceptions. For any exception other than :ada:`Constraint_Error`,
+function :ada:`Value` returns -1. If you remove the function's handler
+for :ada:`Constraint_Error` (lines 7 and 8) then the other "anonymous"
+handler will catch the exception and -1 will be returned instead of zero.
 
+There are additional capabilities for exceptions but now you have a good
+foundation for understanding how they work, especially their dynamic
+nature at run-time.
 
 Understanding Dynamic Checks versus Formal Proof
 ------------------------------------------------
 
 So far, we have discussed language-defined checks inserted by the
-compiler for verification at run-time. We saw that these dynamic checks
-verified semantic conditions ensuring proper execution, such as
-preventing writing past the end of a buffer, or exceeding an
-application-specific integer range constraint, and so on. These checks
-are defined by the language because they apply generally and can be
-expressed in language-defined terms.
+compiler for verification at run-time, leading to exceptions being
+raised. We saw that these dynamic checks verified semantic conditions
+ensuring proper execution, such as preventing writing past the end of a
+buffer, or exceeding an application-specific integer range constraint,
+and so on. These checks are defined by the language because they apply
+generally and can be expressed in language-defined terms.
 
-*Developers* can also define dynamic checks. These checks specify 
-component-specific or application-specific conditions, expressed in 
-terms defined by the component or application. We will refer to these 
-checks as "user-defined" for convenience. 
+*Developers* can also define dynamic checks. These checks specify
+component-specific or application-specific conditions, expressed in
+terms defined by the component or application. We will refer to these
+checks as "user-defined" for convenience. (Be sure you understand that
+we are not talking about user-defined *exceptions* here.)
 
-Like the language-defined checks, user-defined checks must be 
-true at run-time. All checks consist of boolean conditions, which is why 
-we can refer to them as assertions: their conditions are asserted to be 
-true by the developer and can be verified at run-time. 
+Like the language-defined checks, user-defined checks must be
+true at run-time. All checks consist of Boolean conditions, which is why
+we can refer to them as assertions: their conditions are asserted to be
+true by the compiler or developer.
 
 Assertions come in several forms, some relatively low-level,
-such as a simple pragma Assert, and some high-level, such as type
+such as a simple pragma :ada:`Assert`, and some high-level, such as type
 invariants and contracts. These forms will be presented in detail in a
 later section, but we will illustrate some of them here.
 
@@ -439,26 +464,27 @@ control specific forms. The switch is typically used but there are
 reasonable usage cases in which some user-defined checks are enabled,
 and others, although defined, are disabled.
 
-By default in GNAT, language-defined checks are enabled but user-defined 
-checks are disabled. Here's an example of a simple program employing a 
-low-level assertion. We can use it to show the effects of the switches, 
-including the defaults: 
+By default in GNAT, language-defined checks are enabled but user-defined
+checks are disabled. Here's an example of a simple program employing a
+low-level assertion. We can use it to show the effects of the switches,
+including the defaults:
 
-.. code:: ada 
+.. code:: ada
 
-    with Ada.Text_IO; use Ada.Text_IO;
+   with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Main is
-       X : Positive := 10;
-    begin
-       X := X * 5;
-       pragma Assert (X > 99);
-       X := X - 99;
-       Put_Line (Integer'Image (X));
-    end Main;
+   procedure Main is
+      X : Positive := 10;
+   begin
+      X := X * 5;
+      pragma Assert (X > 99);
+      X := X - 99;
+      Put_Line (Integer'Image (X));
+   end Main;
 
-If we compiled this code we would get a warning about the assignment after the 
-pragma Assert, but not one about the Assert itself on line 7. 
+If we compiled this code we would get a warning about the assignment on
+line 8 after the pragma :ada:`Assert`, but not one about the
+:ada:`Assert` itself on line 7.
 
 ::
 
@@ -466,82 +492,83 @@ pragma Assert, but not one about the Assert itself on line 7.
    main.adb:8:11: warning: value not in range of type "Standard.Positive"
    main.adb:8:11: warning: "Constraint_Error" will be raised at run time
 
-No code is generated for the user-defined check expressed via pragma 
-Assert but the language-defined check is emitted. In this case the range 
-constraint on :ada:`X` excludes zero and negative numbers, but :ada:`X * 
-5 = 50`, :ada:`X - 99 = -49`. As a result, the check for the last 
-assignment would fail, raising Constraint_Error when the program runs. 
-These results are the expected behavior for the default switch settings. 
+No code is generated for the user-defined check expressed via pragma
+:ada:`Assert` but the language-defined check is emitted. In this case the range
+constraint on :ada:`X` excludes zero and negative numbers, but :ada:`X *
+5 = 50`, :ada:`X - 99 = -49`. As a result, the check for the last
+assignment would fail, raising :ada:`Constraint_Error` when the program runs.
+These results are the expected behavior for the default switch settings.
 
-But now let's enable user-defined checks. Different output will appear.
+But now let's enable user-defined checks and build it. Different
+compiler output will appear.
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Assert
 
-    with Ada.Text_IO; use Ada.Text_IO;
+   with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Main is
-       X : Positive := 10;
-    begin
-       X := X * 5;
-       pragma Assert (X > 99);
-       X := X - 99;
-       Put_Line (Integer'Image (X));
-    end Main;
+   procedure Main is
+      X : Positive := 10;
+   begin
+      X := X * 5;
+      pragma Assert (X > 99);
+      X := X - 99;
+      Put_Line (Integer'Image (X));
+   end Main;
 
-Now we also get the compiler warning about the pragma Assert condition. 
-When run, the failure of pragma Assert on line 7 raises the exception 
-Ada.Assertions.Assertion_Error. According to the expression in the 
-assertion, :ada:`X` is expected (incorrectly) to be above 99 after the 
-multiplication. (The exception name in the error message, 
-SYSTEM.ASSERTIONS.ASSERT_FAILURE, is a GNAT-specific alias for 
-Ada.Assertions.Assertion_Error.) 
+Now we also get the compiler warning about the pragma :ada:`Assert` condition.
+When run, the failure of pragma :ada:`Assert` on line 7 raises the exception
+:ada:`Ada.Assertions.Assertion_Error`. According to the expression in the
+assertion, :ada:`X` is expected (incorrectly) to be above 99 after the
+multiplication. (The exception name in the error message,
+SYSTEM.ASSERTIONS.ASSERT_FAILURE, is a GNAT-specific alias for
+:ada:`Ada.Assertions.Assertion_Error`.)
 
-It's interesting to see in the output that the compiler can detect some 
-violations at compile-time: 
+It's interesting to see in the output that the compiler can detect some
+violations at compile-time:
 
 ::
 
-    main.adb:7:19: warning: assertion will fail at run time
-    main.adb:7:21: warning: condition can only be True if invalid values present
-    main.adb:8:11: warning: value not in range of type "Standard.Positive"
+   main.adb:7:19: warning: assertion will fail at run time
+   main.adb:7:21: warning: condition can only be True if invalid values present
+   main.adb:8:11: warning: value not in range of type "Standard.Positive"
 
-Generally speaking, a complete analysis of that sort is beyond the scope 
-of compilers and they will not find all errors prior to execution, even 
-ones we can detect ourselves by inspection. More errors can be found by 
-tools dedicated to that purpose, known as static analyzers. But even an 
-automated static analysis tool cannot guarantee it will find all 
-potential problems. 
+Generally speaking, a complete analysis is beyond the scope of compilers
+and they will not find all errors prior to execution, even those we
+might detect ourselves by inspection. More errors can be found by tools
+dedicated to that purpose, known as static analyzers. But even an
+automated static analysis tool cannot guarantee it will find all
+potential problems.
 
-A much more powerful alternative is formal proof, a form of static analysis 
-that can (when possible) give strong guarantees about the checks, for 
-all possible conditions and all possible inputs. Proof can be 
-applied to both language-defined and user-defined checks. 
+A much more powerful alternative is formal proof, a form of static analysis
+that can (when possible) give strong guarantees about the checks, for
+all possible conditions and all possible inputs. Proof can be
+applied to both language-defined and user-defined checks.
 
-Be sure you understand that formal proof, as a form of static analysis, 
-verifies conditions prior to execution, even prior to compilation. That 
-earliness provides significant cost benefits. Removing bugs earlier is 
-far less expensive than doing so later because the cost to fix bugs 
-increases exponentially over the phases of the project life cycle, 
-especially after deployment. Preventing bug introduction into the 
-deployed system is the least expensive approach of all. Furthermore, 
-cost savings during the initial development will be possible as well, 
-for reasons specific to proof. We will revisit this topic later in 
-this section. 
+Be sure you understand that formal proof, as a form of static analysis,
+verifies conditions prior to execution, even prior to compilation. That
+earliness provides significant cost benefits. Removing bugs earlier is
+far less expensive than doing so later because the cost to fix bugs
+increases exponentially over the phases of the project life cycle,
+especially after deployment. Preventing bug introduction into the
+deployed system is the least expensive approach of all. Furthermore,
+cost savings during the initial development will be possible as well,
+for reasons specific to proof. We will revisit this topic later in
+this section.
 
-Formal analysis for proof can be achieved through the SPARK subset of 
-the Ada language combined with the :program:`gnatprove` verification 
-tool. SPARK is a subset encompassing most of the Ada language, except 
-for features that preclude proof. As a disclaimer, this booklet is not 
-aimed at providing a full introduction to proof and the SPARK language, 
-but rather to present in a few examples what it is about and what it can 
-do for us. 
+Formal analysis for proof can be achieved through the SPARK subset of
+the Ada language combined with the :program:`gnatprove` verification
+tool. SPARK is a subset encompassing most of the Ada language, except
+for features that preclude proof. As a disclaimer, this booklet is not
+aimed at providing a full introduction to proof and the SPARK language,
+but rather to present in a few examples what it is about and what it can
+do for us.
 
-As it turns out, our procedure :ada:`Main` is already SPARK compliant so 
-we can start verifying it. 
+As it turns out, our procedure :ada:`Main` is already SPARK compliant so
+we can start verifying it.
 
 .. code:: ada prove_button run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Assert
 
-    with Ada.Text_IO; use Ada.Text_IO;
+   with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        X : Positive := 10;
@@ -565,16 +592,16 @@ a problem. There's indeed a bug here, and :program:`gnatprove` even
 gives us the counterexample (when :ada:`X` is 50). As a result the code
 is not proven and we know we have an error to correct.
 
-Notice that the message says the assertion "might fail" even though 
-clearly :program:`gnatprove` has an example for when failure is certain. 
-That wording is a reflection of the fact that SPARK gives strong 
-guarantees when the assertions are proven to hold, but does not 
-guarantee that flagged problems are indeed problems. In other words, 
-:program:`gnatprove` does not give false positives but false negatives 
-are possible. The result is that if :program:`gnatprove` does not 
-indicate a problem for the code under analysis we can be sure there is 
-no problem, but if the tool does indicate a problem it may be wrong. 
-
+Notice that the message says the assertion "might fail" even though
+clearly :program:`gnatprove` has an example for when failure is certain.
+That wording is a reflection of the fact that SPARK gives strong
+guarantees when the assertions are proven to hold, but does not
+guarantee that flagged problems are indeed problems. In other words,
+:program:`gnatprove` does not give false positives but false negatives
+are possible. The result is that if :program:`gnatprove` does not
+indicate a problem for the code under analysis we can be sure there is
+no problem, but if :program:`gnatprove` does indicate a problem the tool
+may be wrong.
 
 Initialization and Correct Data Flow
 ------------------------------------
@@ -588,8 +615,8 @@ parameters, and data races between concurrent tasks.
 
 In addition, :program:`gnatprove` checks unit specifications for the
 actual data read or written, and the flow of information from inputs to
-outputs. As you can see, this verification provides significant
-benefits, and it can be reached with comparatively low cost. 
+outputs. As you can imagine, this verification provides significant
+benefits, and it can be reached with comparatively low cost.
 
 For example, the following illustrates an initialization failure:
 
@@ -611,10 +638,12 @@ For example, the following illustrates an initialization failure:
    end Main;
 
 Granted, :ada:`Increment` is a silly procedure as-is, but imagine it did
-useful things, and, as part of that, incremented the argument. 
+useful things, and, as part of that, incremented the argument.
+:program:`gnatprove` tells us that the caller has not assigned a value
+to the argument passed to :ada:`Increment`.
 
-Consider this next routine, which contains a serious coding error. Flow 
-analysis will find it for us. 
+Consider this next routine, which contains a serious coding error. Flow
+analysis will find it for us.
 
 .. code:: ada prove_flow_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_0
 
@@ -634,33 +663,33 @@ analysis will find it for us.
       end if;
    end Compute;
 
-:program:`gnatprove` tells us that :ada:`Z` might not be initialized 
-(assigned a value) in :ada:`Compute`, and indeed that is correct. 
-:ada:`Z` is a mode :ada:`out` parameter so the routine should assign a 
-value to it: :ada:`Z` is an output, after all. The fact that 
-:ada:`Compute` does not do so is a significant and nasty bug. Why is it 
-so nasty? In this case, formal parameter :ada:`Z` is of the scalar type 
-:ada:`Integer`, and scalar parameters are always passed by copy in Ada 
-and SPARK. That means that, when returning to the caller, an integer 
-value is copied to the caller's argument passed to :ada:`Z`. But this 
-procedure doesn't always assign the value to be copied back, and in that 
-case an arbitrary value |mdash| whatever is on the stack |mdash| is 
-copied to the caller's argument. The poor programmer must debug the code 
-to find the problem, yet the effect could appear well downstream from 
-the call to :ada:`Compute`. That's not only painful, it is expensive. 
-Better to find the problem before we even compile the code. 
+:program:`gnatprove` tells us that :ada:`Z` might not be initialized
+(assigned a value) in :ada:`Compute`, and indeed that is correct.
+:ada:`Z` is a mode :ada:`out` parameter so the routine should assign a
+value to it: :ada:`Z` is an output, after all. The fact that
+:ada:`Compute` does not do so is a significant and nasty bug. Why is it
+so nasty? In this case, formal parameter :ada:`Z` is of the scalar type
+:ada:`Integer`, and scalar parameters are always passed by copy in Ada
+and SPARK. That means that, when returning to the caller, an integer
+value is copied to the caller's argument passed to :ada:`Z`. But this
+procedure doesn't always assign the value to be copied back, and in that
+case an arbitrary value |mdash| whatever is on the stack |mdash| is
+copied to the caller's argument. The poor programmer must debug the code
+to find the problem, yet the effect could appear well downstream from
+the call to :ada:`Compute`. That's not only painful, it is expensive.
+Better to find the problem before we even compile the code.
 
 
 Contract-Based Programming
 --------------------------
 
-So far, we've seen assertions in a routine's sequence of statements, 
-either through implicit language-defined checks (is the index in the 
-right range?) or explicit user-defined checks. These checks are already 
-useful by themselves but they have an important limitation: the assertions 
-are in the implementation, hidden from the callers of the routine. For 
-example, a call's success or failure may depend upon certain input 
-values but the caller doesn't have that information. 
+So far, we've seen assertions in a routine's sequence of statements,
+either through implicit language-defined checks (is the index in the
+right range?) or explicit user-defined checks. These checks are already
+useful by themselves but they have an important limitation: the assertions
+are in the implementation, hidden from the callers of the routine. For
+example, a call's success or failure may depend upon certain input
+values but the caller doesn't have that information.
 
 Generally speaking, Ada and SPARK put a lot of emphasis on strong,
 complete specifications for the sake of abstraction and analysis.
@@ -670,34 +699,34 @@ possible to go beyond that, however, to specify arbitrary implementation
 constraints and behavior requirements via contracts.
 
 At the language level, contracts are higher-level forms of assertions
-associated with specifications and declarations, rather than sequences
+associated with specifications and declarations rather than sequences
 of statements. Like other assertions they can be activated or
 deactivated at run-time, and can be statically proven. We'll concentrate
 here on two kinds of contracts, both associated especially (but not
 exclusively) with procedures and functions:
 
-- *Preconditions*, those boolean conditions expected to be true *prior* to the call of a given subprogram 
+- *Preconditions*, those Boolean conditions expected to be true *prior* to the call of a given subprogram
 
-- *Postconditions*, those boolean conditions expected to be true *after* a call, when the given subprogram returns normally 
+- *Postconditions*, those Boolean conditions expected to be true *after* a call, when the given subprogram returns normally
 
-In particular, preconditions specify the initial conditions, if any, 
-required for the called routine to correctly execute. Postconditions, on 
-the other hand, specify what the called routine's execution must have 
-done, at least, on completion. Therefore, preconditions are obligations 
-on callers (referred to as "clients") and postconditions are obligations 
-on implementers. By the same token, preconditions are guarantees to the 
-implementers, and postconditions are guarantees to clients. 
+In particular, preconditions specify the initial conditions, if any,
+required for the called routine to correctly execute. Postconditions, on
+the other hand, specify what the called routine's execution must have
+done, at least, on completion. Therefore, preconditions are obligations
+on callers (referred to as "clients") and postconditions are obligations
+on implementers. By the same token, preconditions are guarantees to the
+implementers, and postconditions are guarantees to clients.
 
-Contract-based programming, then, is the specification and rigorous 
-enforcement of these obligations and guarantees. Enforcement is rigorous 
-because it is not manual, but tool-based: dynamically at run-time with 
-exceptions, or, with SPARK, statically, prior to build. 
+Contract-based programming, then, is the specification and rigorous
+enforcement of these obligations and guarantees. Enforcement is rigorous
+because it is not manual, but tool-based: dynamically at run-time with
+exceptions, or, with SPARK, statically, prior to build.
 
-Preconditions are specified via the "Pre" aspect. Postconditions are 
-specified via the "Post" aspect. Usually these aspects appear with 
-subprogram declarations even though they are *about* the bodies. 
-Placement on the declarations allows the obligations and guarantees to 
-be visible to all parties. For example: 
+Preconditions are specified via the "Pre" aspect. Postconditions are
+specified via the "Post" aspect. Usually these aspects appear with
+subprogram declarations even though they are *about* the bodies.
+Placement on the declarations allows the obligations and guarantees to
+be visible to all parties. For example:
 
 :code-config:`accumulate_code=True`
 
@@ -707,14 +736,14 @@ be visible to all parties. For example:
        Pre  => X + Y /= 0,
        Post => Compute'Result > X;
 
-The precondition specifies that, for any given call, the sum of the 
-values passed to parameters :ada:`X` and :ada:`Y` must not be zero. 
-(Perhaps we're dividing by :ada:`X + Y` in the body.) The declaration 
-also provides a guarantee about the function call's result, via the 
-postcondition: for any given call, the value returned will be greater 
-than the value passed to :ada:`X`. 
+The precondition specifies that, for any given call, the sum of the
+values passed to parameters :ada:`X` and :ada:`Y` must not be zero.
+(Perhaps we're dividing by :ada:`X + Y` in the body.) The declaration
+also provides a guarantee about the function call's result, via the
+postcondition: for any given call, the value returned will be greater
+than the value passed to :ada:`X`.
 
-Consider a client calling this function: 
+Consider a client calling this function:
 
 .. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1
 
@@ -730,9 +759,9 @@ Consider a client calling this function:
        Put_Line (C'Image);
     end Main;
 
-:program:`gnatprove` indicates that the assignment to :ada:`B` might 
-fail because of the precondition, i.e., the sum of the inputs shouldn't 
-be 0, yet :ada:`-1 + 1 = 0`. 
+:program:`gnatprove` indicates that the assignment to :ada:`B` (line 8) might
+fail because of the precondition, i.e., the sum of the inputs shouldn't
+be 0, yet :ada:`-1 + 1 = 0`. (We will address the other output message elsewhere.)
 
 Let's change the argument passed to :ada:`Y` in the second call (line 8):
 
@@ -754,19 +783,18 @@ Let's change the argument passed to :ada:`Y` in the second call (line 8):
 
 :code-config:`reset_accumulator=True`
 
-The second call will no longer be flagged for the precondition. In 
-addition, :program:`gnatprove` will know from the postcondition that 
-:ada:`A` has to be greater than 1, as does :ada:`B`, because in both 
-calls 1 was passed to :ada:`X`. Therefore, :program:`gnatprove` can 
-deduce that the precondition will hold for the third call :ada:`C := 
-Compute (A, B);` because the sum of two numbers greater than 1 will 
-never be zero. 
+The second call will no longer be flagged for the precondition. In
+addition, :program:`gnatprove` will know from the postcondition that
+:ada:`A` has to be greater than 1, as does :ada:`B`, because in both
+calls 1 was passed to :ada:`X`. Therefore, :program:`gnatprove` can
+deduce that the precondition will hold for the third call :ada:`C :=
+Compute (A, B);` because the sum of two numbers greater than 1 will
+never be zero.
 
-Postconditions can also compare the state prior to a call with the state 
-after a call, using the :ada:`'Old` attribute. For example: 
+Postconditions can also compare the state prior to a call with the state
+after a call, using the :ada:`'Old` attribute. For example:
 
 .. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_2
-
 
    procedure Increment (Value : in out Integer) with
      Pre  => Value < Integer'Last,
@@ -777,9 +805,9 @@ after a call, using the :ada:`'Old` attribute. For example:
       Value := Value + 1;
    end Increment;
 
-The postcondition specifies that, on return, the argument passed to the 
-parameter :ada:`Value` will be one greater than it was immediately prior 
-to the call. 
+The postcondition specifies that, on return, the argument passed to the
+parameter :ada:`Value` will be one greater than it was immediately prior
+to the call (:ada:`Value'Old`).
 
 :code-config:`accumulate_code=False`
 
@@ -811,90 +839,90 @@ This reduction has a number of advantages:
 - Provides the means to verify that this interface is properly respected, through
   code review, dynamic checking at run-time, or formal static proof.
 
-As an example, consider a procedure :ada:`Read` that returns a component 
-value from an array. Both the array and index are objects visible to the 
-procedure so they are not formal parameters. 
+As an example, consider a procedure :ada:`Read` that returns a component
+value from an array. Both the array and index are objects visible to the
+procedure so they are not formal parameters.
 
 .. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Defensive
 
-    package P is
+   package P is
 
-       type List is array (Integer range <>) of Character;
+      type List is array (Integer range <>) of Character;
 
-       Data  : List (1 .. 100);
-       Index : Integer := Data'First;
+      Data  : List (1 .. 100);
+      Index : Integer := Data'First;
 
-       procedure Read (V : out Character);
+      procedure Read (V : out Character);
 
-    end P;
+   end P;
 
-    package body P is
+   package body P is
 
-       procedure Read (V : out Character) is
-       begin
-          if Index not in Data'Range then
-             V := Character'First;
-             return;
-          end if;
+      procedure Read (V : out Character) is
+      begin
+         if Index not in Data'Range then
+            V := Character'First;
+            return;
+         end if;
 
-          V := Data (Index);
-          Index := Index + 1;
-       end Read;
-    end P;
+         V := Data (Index);
+         Index := Index + 1;
+      end Read;
+   end P;
 
 In addition to procedure :ada:`Read` we would also have a way to load
 the array components in the first place, but we can ignore that for
 the purpose of this discussion.
 
 Procedure :ada:`Read` is responsible for reading an element of the array
-and then incrementing the read index. What should it do in case of an
+and then incrementing the index. What should it do in case of an
 invalid index? In this implementation there is defensive code that returns a
 value arbitrarily chosen. We could also redesign the code to return a
 status in this case, or |mdash| more robust |mdash| raise an exception.
 
-An even more robust and efficient approach would be instead to make sure that
-this subprogram is only called if :ada:`Index` is within the indexing
-boundaries of :ada:`Data`:
+An even more robust approach would be instead to ensure that this
+subprogram is only called when :ada:`Index` is within the indexing
+boundaries of :ada:`Data`. We can express that requirement with a
+precondition (line 9).
 
 .. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Defensive
 
-    package P is
+   package P is
 
-       type List is array (Integer range <>) of Character;
+      type List is array (Integer range <>) of Character;
 
-       Data : List (1 .. 100);
-       Index : Integer := 1;
+      Data : List (1 .. 100);
+      Index : Integer := 1;
 
-       procedure Read (V : out Character)
-          with Pre => Index in Data'Range;
+      procedure Read (V : out Character)
+        with Pre => Index in Data'Range;
 
-    end P;
+   end P;
 
-    package body P is
+   package body P is
 
-       procedure Read (V : out Character) is
-       begin
-          V := Data (Index);
-          Index := Index + 1;
-       end Read;
+      procedure Read (V : out Character) is
+      begin
+         V := Data (Index);
+         Index := Index + 1;
+      end Read;
 
-    end P;
+   end P;
 
-At the point of each call, the compiler can insert a dynamic check for
-the precondition (when assertions are enabled), or we can attempt to
-prove statically that the check will not fail, per call.
+At the point of each call, we can attempt to prove statically that the
+check will not fail, per call, with :program:`gnatprove`.
 
-Assuming that :ada:`Read` is intended to be the only way to get values
-from the array, in a real application (where the principles of software
-engineering apply) we would take advantage of the compile-time
-visibility controls that packages offer. Specifically, we would move all
-the variables' declarations to the private part of the package, or even
-the package body, so that client code could not possibly access the array
-directly. Only procedure :ada:`Read` would remain visible to clients,
-thus remaining the only means of accessing the array. However, that
-change would entail others, and in this chapter we are only concerned
-with introducing the capabilities of SPARK. Therefore, we keep the
-examples as simple as possible.
+Assuming that procedure :ada:`Read` is intended to be the only way to
+get values from the array, in a real application (where the principles
+of software engineering apply) we would take advantage of the
+compile-time visibility controls that packages offer. Specifically, we
+would move all the variables' declarations to the private part of the
+package, or even the package body, so that client code could not
+possibly access the array directly. Only procedure :ada:`Read` would
+remain visible to clients, thus remaining the only means of accessing
+the array. However, that change would entail others, and in this chapter
+we are only concerned with introducing the capabilities of SPARK.
+Therefore, we keep the examples as simple as possible.
 
 
 Proving Absence of Run-Time Errors
@@ -906,15 +934,15 @@ language-defined checks will not raise exceptions at run-time is known
 as proving "Absence of Run-Time Errors" or AoRTE for short. Successful
 proof of these checks is highly significant in itself.
 
-One of the major resulting benefits is that we can deploy the final 
-executable with checks disabled. That has obvious performance benefits, 
-but it is also a safety issue. If we disable the checks we also disable 
-the run-time library support for them, but in that case the language 
-does not define what happens if indeed an exception is raised. Formally 
-speaking, anything could happen. We must have good reason for thinking 
-that exceptions cannot be raised. 
+One of the major resulting benefits is that we can deploy the final
+executable with checks disabled. That has obvious performance benefits,
+but it is also a safety issue. If we disable the checks we also disable
+the run-time library support for them, but in that case the language
+does not define what happens if indeed an exception is raised. Formally
+speaking, anything could happen. We must have good reason for thinking
+that exceptions cannot be raised.
 
-This is such an import issue that proof of AoRTE can be used to comply
+This is such an important issue that proof of AoRTE can be used to comply
 with the objectives of certification standards in various high-integrity
 domains (for example, DO-178B/C in avionics, EN 50128 in railway, IEC
 61508 in many safety-related industries, ECSS-Q-ST-80C in space, IEC
@@ -928,7 +956,7 @@ However, successful proof of AoRTE may require additional assertions,
 especially preconditions. We can see that with procedure :ada:`Increment`, the
 procedure that takes an Integer argument and increments it by one. But
 of course, if the incoming value of the argument is the largest possible
-positive value, the attempt to increment it will raise
+positive value, the attempt to increment it would overflow, raising
 :ada:`Constraint_Error`. (As you have likely already concluded,
 :ada:`Constraint_Error` is the most common exception you will have to
 deal with.) We added a precondition to allow only the integer values up to,
@@ -949,35 +977,35 @@ Prove it, then comment-out the precondition and try proving it again.
 Not only will :program:`gnatprove` tell us what is wrong, it will
 suggest a solution as well.
 
-Without the precondition the check it provides would have to be 
-implemented as defensive code in the body. One or the other is critical 
-here, but note that we should never need both. 
+Without the precondition the check it provides would have to be
+implemented as defensive code in the body. One or the other is critical
+here, but note that we should never need both.
 
 Proving Abstract Properties
 ---------------------------
 
-The postcondition on :ada:`Increment` is in fact a unit level-level 
-requirement. Successfully proving such requirements is another 
-significant robustness and cost benefit. Together with the proofs for 
-initialization and AoRTE, these proofs ensure program integrity, that 
-is, the program executes within safe boundaries: the control flow of the 
-program is correctly programmed and cannot be circumvented through 
-run-time errors, and data cannot be corrupted. 
+The postcondition on :ada:`Increment` is in fact a unit level-level
+requirement. Successfully proving such requirements is another
+significant robustness and cost benefit. Together with the proofs for
+initialization and AoRTE, these proofs ensure program integrity, that
+is, the program executes within safe boundaries: the control flow of the
+program is correctly programmed and cannot be circumvented through
+run-time errors, and data cannot be corrupted.
 
-We can go even further. We can use contracts to express arbitrary 
-abstract properties when such exist. Safety and security properties, for 
-instance, could be expressed as postconditions and then proven by 
-:program:`gnatprove`. 
+We can go even further. We can use contracts to express arbitrary
+abstract properties when such exist. Safety and security properties, for
+instance, could be expressed as postconditions and then proven by
+:program:`gnatprove`.
 
-For example, imagine we have a procedure to move a train to a new 
-position on the track, and we want to do so safely, without leading to a 
-collision with another train. Procedure :ada:`Move`, therefore, takes 
-two inputs: a train identifier specifying which train to move, and the 
-intended new position. The procedure's output is a value indicating a 
-motion command to be given to the train in order to go to that new 
-position. If the train cannot go to that new position safely the output 
-command is to stop the train. Otherwise the command is for the train to 
-continue at an indicated speed: 
+For example, imagine we have a procedure to move a train to a new
+position on the track, and we want to do so safely, without leading to a
+collision with another train. Procedure :ada:`Move`, therefore, takes
+two inputs: a train identifier specifying which train to move, and the
+intended new position. The procedure's output is a value indicating a
+motion command to be given to the train in order to go to that new
+position. If the train cannot go to that new position safely the output
+command is to stop the train. Otherwise the command is for the train to
+continue at an indicated speed:
 
 .. code-block:: ada
 
@@ -1008,30 +1036,29 @@ allow any unsafe movements.
 Final Comments
 --------------
 
-Make sure you understand that :program:`gnatprove` does not attempt to 
-prove the program correct as a whole. It attempts to prove 
-language-defined and user-defined assertions about parts of the program, 
-especially individual routines and calls to those routines. Furthermore, 
-:program:`gnatprove` proves the routines correct only to the extent that 
-the user-defined assertions correctly and sufficiently describe and 
-constrain the implementation of the corresponding routines. 
+Make sure you understand that :program:`gnatprove` does not attempt to
+prove the program correct as a whole. It attempts to prove
+language-defined and user-defined assertions about parts of the program,
+especially individual routines and calls to those routines. Furthermore,
+:program:`gnatprove` proves the routines correct only to the extent that
+the user-defined assertions correctly and sufficiently describe and
+constrain the implementation of the corresponding routines.
 
-Although we are not proving whole program correctness, as you will have 
-seen |mdash| and done |mdash| we can prove properties than make our 
-software far more robust and bug-free than is possible otherwise. But in 
-addition, consider what proving the unit-level requirements for your 
-procedures and functions would do for the cost of unit testing and 
-system integration. The tests would pass the first time. 
+Although we are not proving whole program correctness, as you will have
+seen |mdash| and done |mdash| we can prove properties than make our
+software far more robust and bug-free than is possible otherwise. But in
+addition, consider what proving the unit-level requirements for your
+procedures and functions would do for the cost of unit testing and
+system integration. The tests would pass the first time.
 
-However, within the scope of what SPARK can do, not everything can be 
-proven. In some cases that is because the software behavior is not 
-amenable to expression as boolean conditions (for example, a mouse 
-driver). In other cases the source code is beyond the capabilities of 
-the analyzers that actually do the mathematical proof. In these cases 
-the combination of proof and actual test is appropriate, and still less 
-expensive that testing alone. 
+However, within the scope of what SPARK can do, not everything can be
+proven. In some cases that is because the software behavior is not
+amenable to expression as boolean conditions (for example, a mouse
+driver). In other cases the source code is beyond the capabilities of
+the analyzers that actually do the mathematical proof. In these cases
+the combination of proof and actual test is appropriate, and still less
+expensive that testing alone.
 
-There is, of course, much more to be said about what can be done with 
-SPARK and :program:`gnatprove`. Those topics are reserved for the 
-advanced SPARK course. 
-
+There is, of course, much more to be said about what can be done with
+SPARK and :program:`gnatprove`. Those topics are reserved for the
+:doc:`Introduction to SPARK <courses/intro-to-spark/index>` course.
