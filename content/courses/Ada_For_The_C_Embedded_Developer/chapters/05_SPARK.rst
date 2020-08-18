@@ -32,10 +32,8 @@ response when exceptions are "raised" by those statements. These
 exceptions could be raised directly within the statements, or indirectly
 via calls to other procedures and functions.
 
-For example, the frame below is a procedure including three exceptions 
-handlers: 
-
-:code-config:`accumulate_code=True`
+For example, the frame below is a procedure including three exceptions
+handlers:
 
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
 
@@ -51,12 +49,12 @@ handlers:
          Handle_C;
    end P;
 
-The three exception handlers each start with the word :ada:`when` (lines 
-5, 7, and 9). Next comes one or more exception identifiers, followed by 
-the so-called "arrow." In Ada, the arrow always associates something on 
-the left side with something on the right side. In this case, the left 
-side is the exception name and the right side is the handler's code for 
-that exception. 
+The three exception handlers each start with the word :ada:`when` (lines
+5, 7, and 9). Next comes one or more exception identifiers, followed by
+the so-called "arrow." In Ada, the arrow always associates something on
+the left side with something on the right side. In this case, the left
+side is the exception name and the right side is the handler's code for
+that exception.
 
 Each handler's code consists of an arbitrary sequence of statements, in
 this case specific procedures called in response to those specific
@@ -125,6 +123,8 @@ For a concrete example, consider the following:
       end Value;
 
    end Arrays;
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
 
    with Ada.Text_IO; use Ada.Text_IO;
    with Arrays;      use Arrays;
@@ -197,12 +197,13 @@ exceptions. Of course, this makes the code vulnerable to attacks, such
 as buffer overflow, unless otherwise verified (e.g. through static
 analysis). Deactivation can be applied at the unit level, through the
 ``-gnatp`` compiler switch, or locally within a unit via the
-:ada:`pragma Suppress`. (Refer to the `GNAT User’s Guide for Native Platforms <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html>`_ for more details about the switch.)
+pragma :ada:`Suppress`. (Refer to the `GNAT User’s Guide for Native Platforms <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html>`_ for more details about the switch.)
 
-For example, we can write the following. Note
-the pragma on line 4 of :file:`arrays.adb` within function :ada:`Value`:
+For example, we can write the following. Note the pragma on line 4 of
+:file:`arrays.adb` within function :ada:`Value`:
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Suppress
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Suppress
 
    package Arrays is
 
@@ -221,6 +222,8 @@ the pragma on line 4 of :file:`arrays.adb` within function :ada:`Value`:
       end Value;
 
    end Arrays;
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Suppress
 
    with Ada.Text_IO; use Ada.Text_IO;
    with Arrays;      use Arrays;
@@ -322,7 +325,7 @@ an immediate branch instruction issued by the compiler, going directly
 to the matching handler's sequence of statements. If there is no
 matching local handler the last chance handler is invoked. For example:
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return
 
    package Arrays is
 
@@ -343,6 +346,8 @@ matching local handler the last chance handler is invoked. For example:
       end Value;
 
    end Arrays;
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return
 
    with Ada.Text_IO; use Ada.Text_IO;
    with Arrays;      use Arrays;
@@ -383,7 +388,7 @@ the Ada reserved word :ada:`others`. As in case statements, it covers
 all other choices not explicitly mentioned, and so much come last. For
 example:
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return_Others
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return_Others
 
     package Arrays is
 
@@ -406,6 +411,8 @@ example:
        end Value;
 
     end Arrays;
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return_Others
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Arrays;      use Arrays;
@@ -649,7 +656,7 @@ analysis will find it for us.
 
    with Ada.Numerics.Elementary_Functions;  use Ada.Numerics.Elementary_Functions;
 
-   procedure Compute (K : Float; Z : out Integer; Flag : out Boolean) is
+   procedure Compute_Offset (K : Float; Z : out Integer; Flag : out Boolean) is
       X : constant Float := Sin (K);
    begin
       if X < 0.0 then
@@ -661,13 +668,13 @@ analysis will find it for us.
       else
          Flag := False;
       end if;
-   end Compute;
+   end Compute_Offset;
 
 :program:`gnatprove` tells us that :ada:`Z` might not be initialized
-(assigned a value) in :ada:`Compute`, and indeed that is correct.
+(assigned a value) in :ada:`Compute_Offset`, and indeed that is correct.
 :ada:`Z` is a mode :ada:`out` parameter so the routine should assign a
 value to it: :ada:`Z` is an output, after all. The fact that
-:ada:`Compute` does not do so is a significant and nasty bug. Why is it
+:ada:`Compute_Offset` does not do so is a significant and nasty bug. Why is it
 so nasty? In this case, formal parameter :ada:`Z` is of the scalar type
 :ada:`Integer`, and scalar parameters are always passed by copy in Ada
 and SPARK. That means that, when returning to the caller, an integer
@@ -676,7 +683,7 @@ procedure doesn't always assign the value to be copied back, and in that
 case an arbitrary value |mdash| whatever is on the stack |mdash| is
 copied to the caller's argument. The poor programmer must debug the code
 to find the problem, yet the effect could appear well downstream from
-the call to :ada:`Compute`. That's not only painful, it is expensive.
+the call to :ada:`Compute_Offset`. That's not only painful, it is expensive.
 Better to find the problem before we even compile the code.
 
 
@@ -723,39 +730,40 @@ because it is not manual, but tool-based: dynamically at run-time with
 exceptions, or, with SPARK, statically, prior to build.
 
 Preconditions are specified via the "Pre" aspect. Postconditions are
-specified via the "Post" aspect. Usually these aspects appear with
-subprogram declarations even though they are *about* the bodies.
-Placement on the declarations allows the obligations and guarantees to
-be visible to all parties. For example:
+specified via the "Post" aspect. Usually subprograms have separate
+declarations and these aspects appear with those declarations, even
+though they are *about* the bodies. Placement on the declarations allows
+the obligations and guarantees to be visible to all parties. For
+example:
 
 :code-config:`accumulate_code=True`
 
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1
 
-    function Compute (X, Y : Integer) return Integer with
+    function Mid (X, Y : Integer) return Integer with
        Pre  => X + Y /= 0,
-       Post => Compute'Result > X;
+       Post => Mid'Result > X;
 
-The precondition specifies that, for any given call, the sum of the
+The precondition on line 2 specifies that, for any given call, the sum of the
 values passed to parameters :ada:`X` and :ada:`Y` must not be zero.
 (Perhaps we're dividing by :ada:`X + Y` in the body.) The declaration
 also provides a guarantee about the function call's result, via the
-postcondition: for any given call, the value returned will be greater
+postcondition on line 3: for any given call, the value returned will be greater
 than the value passed to :ada:`X`.
 
 Consider a client calling this function:
 
 .. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1
 
-    with Compute;
+    with Mid;
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        A, B, C : Integer;
     begin
-       A := Compute (1, 2);
-       B := Compute (1, -1);
-       C := Compute (A, B);
+       A := Mid (1, 2);
+       B := Mid (1, -1);
+       C := Mid (A, B);
        Put_Line (C'Image);
     end Main;
 
@@ -763,19 +771,20 @@ Consider a client calling this function:
 fail because of the precondition, i.e., the sum of the inputs shouldn't
 be 0, yet :ada:`-1 + 1 = 0`. (We will address the other output message elsewhere.)
 
-Let's change the argument passed to :ada:`Y` in the second call (line 8):
+Let's change the argument passed to :ada:`Y` in the second call (line 8). Instead
+of -1 we will pass -2:
 
 .. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1
 
-    with Compute;
+    with Mid;
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        A, B, C : Integer;
     begin
-       A := Compute (1, 2);
-       B := Compute (1, -2);
-       C := Compute (A, B);
+       A := Mid (1, 2);
+       B := Mid (1, -2);
+       C := Mid (A, B);
        Put_Line (C'Image);
     end Main;
 
@@ -788,7 +797,7 @@ addition, :program:`gnatprove` will know from the postcondition that
 :ada:`A` has to be greater than 1, as does :ada:`B`, because in both
 calls 1 was passed to :ada:`X`. Therefore, :program:`gnatprove` can
 deduce that the precondition will hold for the third call :ada:`C :=
-Compute (A, B);` because the sum of two numbers greater than 1 will
+Mid (A, B);` because the sum of two numbers greater than 1 will
 never be zero.
 
 Postconditions can also compare the state prior to a call with the state
