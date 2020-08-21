@@ -781,19 +781,16 @@ Using the :ada:`Volatile` aspect is important at high level of optimizations.
 You can find further details about this aspect in the section about the
 :ref:`Volatile and Atomic attributes <VolatileAtomicData>`.
 
-Another important aspect is :ada:`Import`, which must be set to :ada:`True`.
-When used in the context of object declarations, it'll avoid default
-initialization which could overwrite the existing content while creating the
-overlay |mdash| see an example in the admonition below. The declaration now
-becomes:
+Another important aspect that should be added is :ada:`Import`. When used in
+the context of object declarations, it'll avoid default initialization which
+could overwrite the existing content while creating the overlay |mdash| see an
+example in the admonition below. The declaration now becomes:
 
 .. code-block:: ada
 
     B : Bit_Field (0 .. V'Size - 1)
       with
-        Address => V'Address,
-        Import,
-        Volatile;
+        Address => V'Address, Import, Volatile;
 
 Let's look at a simple example:
 
