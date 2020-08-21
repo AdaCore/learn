@@ -179,11 +179,11 @@ requires effort by the developer at first, but proves more efficient once the
 paradigms are understood.
 
 In this book we will also introduce the SPARK subset of the Ada programming
-language. The SPARK subset removes a few features of the language which have
-undefined behavior, like pointer aliasing. By removing these features we can
-write code that is fit for sound static analysis techniques. This means that we
-can run mathematical provers on the SPARK code to prove certain safety or
-security properties about the code.
+language. The SPARK subset removes a few features of the language, i.e., those
+that make proof difficult, such as pointer aliasing. By removing these features
+we can write code that is fit for sound static analysis techniques. This means
+that we can run mathematical provers on the SPARK code to prove certain safety
+or security properties about the code.
 
 This book is split into 5 sections:
 
