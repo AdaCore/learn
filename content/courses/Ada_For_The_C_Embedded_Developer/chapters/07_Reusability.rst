@@ -475,14 +475,6 @@ Configuration specific files
     Complete section!
 
 
-Preprocessing
-~~~~~~~~~~~~~
-
-.. todo::
-
-    Complete section!
-
-
 Handling variability & reusability dynamically
 ----------------------------------------------
 
