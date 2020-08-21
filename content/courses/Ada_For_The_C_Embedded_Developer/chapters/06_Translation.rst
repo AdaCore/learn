@@ -792,7 +792,7 @@ becomes:
     B : Bit_Field (0 .. V'Size - 1)
       with
         Address => V'Address,
-        Import  => True,
+        Import,
         Volatile;
 
 Let's look at a simple example:
@@ -808,7 +808,7 @@ Let's look at a simple example:
 
        V : Integer := 0;
        B : Bit_Field (0 .. V'Size - 1)
-         with Address => V'Address, Import => True, Volatile;
+         with Address => V'Address, Import, Volatile;
     begin
        B (2) := True;
        Put_Line ("V = " & Integer'Image (V));
@@ -828,7 +828,7 @@ used a positive range. For example:
     type Bit_Field is array (Positive range <>) of Boolean with Pack;
 
     B : Bit_Field (1 .. V'Size)
-      with Address => V'Address, Import => True, Volatile;
+      with Address => V'Address, Import, Volatile;
 
 The only difference in this case is that the first bit is :ada:`B (1)` instead
 of :ada:`B (0)`.
@@ -933,7 +933,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
            procedure Display_Bytes_Increment (V : in out Integer) is
               BF  : Byte_Field (1 .. V'Size / 8)
-                with Address => V'Address, Import => True, Volatile;
+                with Address => V'Address, Import, Volatile;
            begin
               for B of BF loop
                  Put_Line ("Byte = " & Unsigned_8'Image (B));
@@ -982,7 +982,7 @@ records. For example:
 
        A : array (1 .. 2) of Integer := (others => 0);
        B : Bit_Field (0 .. A'Size - 1)
-         with Address => A'Address, Import => True, Volatile;
+         with Address => A'Address, Import, Volatile;
     begin
        B (2) := True;
        for I in A'Range loop
@@ -1079,7 +1079,7 @@ complex data structures as a bitstream. For example:
     procedure Main is
        R : Rec := (5, "abc");
        B : Bit_Field (0 .. R'Size - 1)
-         with Address => R'Address, Import => True, Volatile;
+         with Address => R'Address, Import, Volatile;
     begin
        Transmit (B);
     end Main;
@@ -1219,7 +1219,7 @@ procedure:
        procedure To_Rec (B :     Bit_Field;
                          R : out Rec) is
           B_R : Rec
-            with Address => B'Address, Import => True, Volatile;
+            with Address => B'Address, Import, Volatile;
        begin
           --  Assigning data from overlayed record B_R to output parameter R.
           R := B_R;
@@ -1228,7 +1228,7 @@ procedure:
        function To_Rec (B : Bit_Field) return Rec is
           R   : Rec;
           B_R : Rec
-            with Address => B'Address, Import => True, Volatile;
+            with Address => B'Address, Import, Volatile;
        begin
           --  Assigning data from overlayed record B_R to local record R.
           R := B_R;
@@ -1253,7 +1253,7 @@ procedure:
        R2 : Rec := (0, "zzz");
 
        B1 : Bit_Field (0 .. R1'Size - 1)
-         with Address => R1'Address, Import => True, Volatile;
+         with Address => R1'Address, Import, Volatile;
     begin
        Put ("R2 = ");
        Display(R2);
