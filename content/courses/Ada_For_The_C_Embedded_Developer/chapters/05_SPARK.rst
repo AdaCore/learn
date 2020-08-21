@@ -359,7 +359,7 @@ matching local handler the last chance handler is invoked. For example:
    exception
       when Constraint_Error =>
          Put_Line ("FAILURE");
-   end;
+   end Some_Process;
 
 In both procedure :ada:`Some_Process` and function :ada:`Value` we have
 an exception handler for :ada:`Constraint_Error`. In this example the
