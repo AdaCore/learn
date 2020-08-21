@@ -791,6 +791,33 @@ corresponding implementation for version #2 looks like this:
 Again, we just need to select the appropriate configuration package for each
 version of the build, which we can easily do when using :program:`GPRbuild`.
 
+.. admonition:: In Ada 2020
+
+    Ada 2020 allows for using static expression functions, which are evaluated
+    at compile time. An expression function is static when the :ada:`Static`
+    aspect is specified. For example:
+
+    .. code-block:: ada
+
+        procedure Main is
+
+           X1 : constant := (if True then 37 else 42);
+
+           function If_Then_Else (Flag : Boolean; X, Y : Integer)
+             return Integer is
+              (if Flag then X else Y) with Static;
+
+           X2 : constant := If_Then_Else (True, 37, 42);
+
+        begin
+           null;
+        end Main;
+
+    In this example, we declare :ada:`X1` using an expression. In the
+    declaration of :ada:`X2`, we call the static expression function
+    :ada:`If_Then_Else`. Both :ada:`X1` and :ada:`X2` have the same constant
+    value.
+
 Handling variability & reusability dynamically
 ----------------------------------------------
 
