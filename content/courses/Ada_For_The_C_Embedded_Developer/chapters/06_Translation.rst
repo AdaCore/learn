@@ -850,14 +850,62 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
 .. admonition:: Important
 
-    The :ada:`Default_Value` aspect is associated with type declarations. When
-    declaring an object whose type has a default value, the object will
-    automatically be initialized with the default value. This also happens when
+    Ada has the concept of default initialization. For example, you may set the
+    default value of record components:
+
+    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Record_Type
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Main is
+
+           type Rec is record
+              X : Integer := 10;
+              Y : Integer := 11;
+           end record;
+
+           R : Rec;
+        begin
+           Put_Line ("R.X = " & Integer'Image (R.X));
+           Put_Line ("R.Y = " & Integer'Image (R.Y));
+        end Main;
+
+    In the code above, we don't explicitly initialize the components of
+    :ada:`R`, so they still have the default values 10 and 11, which are
+    displayed by the application.
+
+    Likewise, the :ada:`Default_Value` aspect can be used to specify the
+    default value in other kinds of type declarations. For example:
+
+    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Value_Type
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Main is
+
+           type Percentage is range 0 .. 100
+             with Default_Value => 10;
+
+           P : Percentage;
+        begin
+           Put_Line ("P = " & Percentage'Image (P));
+        end Main;
+
+    When declaring an object whose type has a default value, the object will
+    automatically be initialized with the default value. In the example above,
+    :ada:`P` is automatically initialized with 10, which is the default value
+    of the :ada:`Percentage` type.
+
+    Some types have an implicit default value. For example, access types have a
+    default value of :ada:`null`.
+
+    As we've just seen, when declaring objects for types with associated default
+    values, automatic initialization will happen. This can also happens when
     creating an overlay with the :ada:`Address` attribute. The default value is
     then used to overwrite the content at the memory location indicated by the
-    address. This might not be the behavior we expect, since overlays are
-    usually created to analyze and manipulate existing values. Let's look at an
-    example where this happens:
+    address. However, in most situations, this isn't the behavior we expect,
+    since overlays are usually created to analyze and manipulate existing
+    values. Let's look at an example where this happens:
 
     .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
 
