@@ -462,6 +462,9 @@ could be translated:
 Note that in the above example, a :ada:`use` clause on
 :ada:`Register_Interface` could allow to omit the prefix.
 
+
+.. _Pointers:
+
 Pointers
 ~~~~~~~~
 

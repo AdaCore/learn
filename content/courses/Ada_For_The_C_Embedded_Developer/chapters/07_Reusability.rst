@@ -481,9 +481,116 @@ Handling variability & reusability dynamically
 Records with discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+In basic terms, records with discriminants are records that include parameters
+in its type definition. This allows for adding more flexibility to the type
+definition. In the section about :ref:`pointers <Pointers>`, we've seen this
+example:
 
-    Complete section!
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_Ada
+
+    procedure Main is
+       type Arr is array (Integer range <>) of Integer;
+
+       type S (Last : Positive) is record
+          A : Arr (0 .. Last);
+       end record;
+
+       V : S (9);
+    begin
+       null;
+    end Main;
+
+Here, :ada:`Last` is the discriminant for type :ada:`S`. When declaring the
+variable :ada:`V` as :ada:`S (9)`, we specify the actual index of the last
+position of the array component :ada:`A` by setting the :ada:`Last`
+discriminant to 9.
+
+We can create an equivalent implementation in C by declaring a :c:`struct`
+with a pointer to an array:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_C
+
+    !main.c
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    typedef struct {
+        int       * a;
+        const int   last;
+    } S;
+
+    S init_s (int last)
+    {
+        S v = { malloc (sizeof(int) * last + 1), last };
+        return v;
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        S v = init_s (9);
+    }
+
+Here, we need to explicitly allocate the :ada:`a` array of the :ada:`S` struct
+via a call to :ada:`malloc()`, which allocates memory space on the heap. In the
+Ada version, in contrast, the array (:ada:`V.A`) is allocated on the stack and
+we don't need to explicitly allocate it.
+
+Note that the information that we provide as the discriminant to the record
+type (in the Ada code) is constant, so we cannot assign a value to it. For
+example, we cannot write:
+
+.. code-block:: ada
+
+    V.Last := 10;       --  COMPILATION ERROR!
+
+In the C version, we declare the :c:`last` field constant to get the same
+behavior.
+
+.. code-block:: c
+
+    v.last = 10;        //  COMPILATION ERROR!
+
+Note that the information provided as discriminants is visible. In the example
+above, we could display :ada:`Last` by writing:
+
+.. code-block:: ada
+
+    Put_Line ("Last : " & Integer'Image (V.Last));
+
+Also note that, even if a type is private, we can still access the information
+of the discriminants if they are visible in the *public* part of the type
+declaration. Let's rewrite the example above:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_Ada_Private
+
+    package P is
+       type Arr is array (Integer range <>) of Integer;
+
+       type S (Last : Integer) is private;
+
+    private
+       type S (Last : Integer) is record
+          A : Arr (0 .. Last);
+       end record;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with P;           use P;
+
+    procedure Main is
+       V : S (9);
+    begin
+       Put_Line ("Last : " & Integer'Image (V.Last));
+    end Main;
+
+Even though the :ada:`S` type is now private, we can still display :ada:`Last`
+because this discriminant is visible in the *non-private* part of package
+:ada:`P`.
 
 
 Object orientation
