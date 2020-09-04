@@ -97,6 +97,7 @@ publish:
 	  rm -rf * && \
 	  git checkout CNAME ) && \
         cp -R $(BUILDDIR)/html/. learn-html-pages/ && \
+		cp -R $(BUILDDIR)/pdf_books learn-html-pages/ && \
         ( cd learn-html-pages && \
           git add -A && git commit -m "Regenerate" && git push origin gh-pages ) && \
         rm -rf learn-html-pages
