@@ -1213,6 +1213,13 @@ inner :ada:`Select_Driver` procedure, which initializes :ada:`D` (with the
 access to the selected driver). Then, any operation on :ada:`D` triggers a
 dispatching call to the selected driver.
 
+Further resources
+^^^^^^^^^^^^^^^^^
+
+In the appendices, we have a step-by-step
+:ref:`hands-on overview of object-oriented programming <HandsOnOOP>` that
+discusses how to translate a simple system written in C to an equivalent
+system in Ada using object-oriented programming.
 
 Pointer to subprograms
 ~~~~~~~~~~~~~~~~~~~~~~

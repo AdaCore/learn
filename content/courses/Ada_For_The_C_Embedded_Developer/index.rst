@@ -66,3 +66,4 @@ Ada for the C Embedded Developer
    Performance Considerations <chapters/08_Performance>
    Argumentation and Business Perspectives <chapters/09_Business>
    Conclusion <chapters/10_Conclusion>
+   Hands-On: Object-Oriented Programming <chapters/Appendix_A_OOP>
