@@ -415,6 +415,7 @@ simplified example to illustrate that:
        procedure Send (Device : Device_Type; Data : Integer) is null;
 
        procedure Receive (Device : Device_Type; Data : out Integer) is
+          pragma Unreferenced (Device);
        begin
           Data := 42;
        end Receive;
@@ -436,6 +437,7 @@ simplified example to illustrate that:
        procedure Send (Device : Device_Type; Data : Integer) is null;
 
        procedure Receive (Device : Device_Type; Data : out Integer) is
+          pragma Unreferenced (Device);
        begin
           Data := 42;
        end Receive;
