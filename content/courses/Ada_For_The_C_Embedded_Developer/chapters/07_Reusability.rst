@@ -425,7 +425,7 @@ simplified example to illustrate that:
 
     package Drivers_2 is
 
-       type Device_Type is new Device_1.Device_Type;
+       type Device_Type is new Drivers_1.Device_Type;
        procedure Send (Device : Device_Type; Data : Integer);
        procedure Receive (Device : Device_Type; Data : out Integer);
 
