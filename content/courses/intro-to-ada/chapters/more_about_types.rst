@@ -865,7 +865,7 @@ All standard operations are available for fixed-point types. For example:
 
 As expected, :ada:`R` contains 0.75 after the addition of :ada:`A` and :ada:`B`.
 
-In fact the language is more general that these examples imply, since in
+In fact the language is more general than these examples imply, since in
 practice it is typical to need to multiply or divide values from different
 fixed-point types, and obtain a result that may be of a third fixed-point type.
 The details are outside the scope of this introductory course.
