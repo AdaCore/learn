@@ -551,7 +551,7 @@ example renames the :ada:`Ada.Text_IO` package as :ada:`T_IO`:
     end Main;
 
 We can use renaming to improve the readability of our code by using shorter
-package names. In the example above, we write :ada:`T.Put_Line` instead of the
+package names. In the example above, we write :ada:`TIO.Put_Line` instead of the
 longer version (:ada:`Ada.Text_IO.Put_Line`). This approach is especially
 useful when we don't :ada:`use` packages and want to avoid that the code
 becomes too verbose.
