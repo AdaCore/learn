@@ -725,9 +725,683 @@ above could also be literally translated to:
        Put_Line ("Value = " & Value_Type'Image (Value));
     end Main;
 
-Converting structures to Integer or Addresses
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mapping Structures to Bit-Fields
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous section, we've seen how to perform bitwise operations. In this
+section, we look at how to interpret a data type as a bit-field and perform
+low-level operations on it.
+
+In general, you can create a bit-field from any arbitrary data type. First, we
+declare a bit-field type like this:
+
+[Ada]
+
+.. code-block:: ada
+
+    type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+As we've seen previously, the :ada:`Pack` aspect declared at the end of the
+type declaration indicates that the compiler should optimize for size. We must
+use this attribute to be able to interpret data types as a bit-field.
+
+Then, we can use the :ada:`Size` and the :ada:`Address` attributes of an
+object of any type to declare a bit-field for this object. The :ada:`Size`
+attributes indicates the number of bits required to represent the object, while
+the :ada:`Address` attribute indicates the address in memory of that object.
+For example, assuming we've declare a variable :ada:`V`, we can declare an
+actual bit-field object using this pattern:
+
+[Ada]
+
+.. code-block:: ada
+
+    B : Bit_Field (0 .. V'Size - 1) with Address => V'Address;
+
+This technique is called overlays for serialization. Now, any operation that we
+perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
+the same memory location.
+
+The approach that we use in this section relies on the :ada:`Address`
+attribute. Another approach would be to use unchecked conversions, which we'll
+discuss in the :ref:`next section <OverlaysVsUncheckedConversions>`.
+
+We should add the :ada:`Volatile` aspect to the declaration to cover the case
+when both objects can still be changed independently |mdash| they need to be
+volatile, otherwise one change might be missed. This is the updated
+declaration:
+
+[Ada]
+
+.. code-block:: ada
+
+    B : Bit_Field (0 .. V'Size - 1) with Address => V'Address, Volatile;
+
+Using the :ada:`Volatile` aspect is important at high level of optimizations.
+You can find further details about this aspect in the section about the
+:ref:`Volatile and Atomic attributes <VolatileAtomicData>`.
+
+Another important aspect that should be added is :ada:`Import`. When used in
+the context of object declarations, it'll avoid default initialization which
+could overwrite the existing content while creating the overlay |mdash| see an
+example in the admonition below. The declaration now becomes:
+
+.. code-block:: ada
+
+    B : Bit_Field (0 .. V'Size - 1)
+      with
+        Address => V'Address, Import, Volatile;
+
+Let's look at a simple example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Bitfield is
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       V : Integer := 0;
+       B : Bit_Field (0 .. V'Size - 1)
+         with Address => V'Address, Import, Volatile;
+    begin
+       B (2) := True;
+       Put_Line ("V = " & Integer'Image (V));
+    end Simple_Bitfield;
+
+In this example, we first initialize :ada:`V` with zero. Then, we use the
+bit-field :ada:`B` and set the third element (:ada:`B (2)`) to :ada:`True`.
+This automatically sets bit #3 of :ada:`V` to 1. Therefore, as expected,
+the application displays the message :ada:`V = 4`, which corresponds to
+:math:`2^2 = 4`.
+
+Note that, in the declaration of the bit-field type above, we could also have
+used a positive range. For example:
+
+.. code-block:: ada
+
+    type Bit_Field is array (Positive range <>) of Boolean with Pack;
+
+    B : Bit_Field (1 .. V'Size)
+      with Address => V'Address, Import, Volatile;
+
+The only difference in this case is that the first bit is :ada:`B (1)` instead
+of :ada:`B (0)`.
+
+In C, we would rely on bit-shifting and masking to set that specific bit:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_C
+
+    !bitfield.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        int v = 0;
+
+        v = v | (1 << 2);
+
+        printf("v = %d\n", v);
+    }
+
+.. admonition:: Important
+
+    Ada has the concept of default initialization. For example, you may set the
+    default value of record components:
+
+    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Record_Type
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Main is
+
+           type Rec is record
+              X : Integer := 10;
+              Y : Integer := 11;
+           end record;
+
+           R : Rec;
+        begin
+           Put_Line ("R.X = " & Integer'Image (R.X));
+           Put_Line ("R.Y = " & Integer'Image (R.Y));
+        end Main;
+
+    In the code above, we don't explicitly initialize the components of
+    :ada:`R`, so they still have the default values 10 and 11, which are
+    displayed by the application.
+
+    Likewise, the :ada:`Default_Value` aspect can be used to specify the
+    default value in other kinds of type declarations. For example:
+
+    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Value_Type
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Main is
+
+           type Percentage is range 0 .. 100
+             with Default_Value => 10;
+
+           P : Percentage;
+        begin
+           Put_Line ("P = " & Percentage'Image (P));
+        end Main;
+
+    When declaring an object whose type has a default value, the object will
+    automatically be initialized with the default value. In the example above,
+    :ada:`P` is automatically initialized with 10, which is the default value
+    of the :ada:`Percentage` type.
+
+    Some types have an implicit default value. For example, access types have a
+    default value of :ada:`null`.
+
+    As we've just seen, when declaring objects for types with associated default
+    values, automatic initialization will happen. This can also happens when
+    creating an overlay with the :ada:`Address` attribute. The default value is
+    then used to overwrite the content at the memory location indicated by the
+    address. However, in most situations, this isn't the behavior we expect,
+    since overlays are usually created to analyze and manipulate existing
+    values. Let's look at an example where this happens:
+
+    .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
+
+        package P is
+
+           type Unsigned_8 is mod 2 ** 8 with Default_Value => 0;
+
+           type Byte_Field is array (Natural range <>) of Unsigned_8;
+
+           procedure Display_Bytes_Increment (V : in out Integer);
+        end P;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body P is
+
+           procedure Display_Bytes_Increment (V : in out Integer) is
+              BF  : Byte_Field (1 .. V'Size / 8)
+                with Address => V'Address, Volatile;
+           begin
+              for B of BF loop
+                 Put_Line ("Byte = " & Unsigned_8'Image (B));
+              end loop;
+              Put_Line ("Now incrementing...");
+              V := V + 1;
+           end Display_Bytes_Increment;
+
+        end P;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with P; use P;
+
+        procedure Main is
+           V : Integer := 10;
+        begin
+           Put_Line ("V = " & Integer'Image (V));
+           Display_Bytes_Increment (V);
+           Put_Line ("V = " & Integer'Image (V));
+        end Main;
+
+    In this example, we expect :ada:`Display_Bytes_Increment` to display each
+    byte of the :ada:`V` parameter and then increment it by one. Initially,
+    :ada:`V` is set to 10, and the call to :ada:`Display_Bytes_Increment`
+    should change it to 11. However, due to the default value associated to the
+    :ada:`Unsigned_8` type |mdash| which is set to 0 |mdash| the value of
+    :ada:`V` is overwritten in the declaration of :ada:`BF` (in
+    :ada:`Display_Bytes_Increment`). Therefore, the value of :ada:`V` is 1
+    after the call to :ada:`Display_Bytes_Increment`. Of course, this is not
+    the behavior that we originally intended.
+
+    Using the :ada:`Import` aspect solves this problem. This aspect tells the
+    compiler to not apply default initialization in the declaration because the
+    object is imported. Let's look at the corrected example:
+
+    .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Import
+
+        package P is
+
+           type Unsigned_8 is mod 2 ** 8 with Default_Value => 0;
+
+           type Byte_Field is array (Natural range <>) of Unsigned_8;
+
+           procedure Display_Bytes_Increment (V : in out Integer);
+        end P;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body P is
+
+           procedure Display_Bytes_Increment (V : in out Integer) is
+              BF  : Byte_Field (1 .. V'Size / 8)
+                with Address => V'Address, Import, Volatile;
+           begin
+              for B of BF loop
+                 Put_Line ("Byte = " & Unsigned_8'Image (B));
+              end loop;
+              Put_Line ("Now incrementing...");
+              V := V + 1;
+           end Display_Bytes_Increment;
+
+        end P;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with P; use P;
+
+        procedure Main is
+           V : Integer := 10;
+        begin
+           Put_Line ("V = " & Integer'Image (V));
+           Display_Bytes_Increment (V);
+           Put_Line ("V = " & Integer'Image (V));
+        end Main;
+
+    This unwanted side-effect of the initialization by the :ada:`Default_Value`
+    aspect that we've just seen can also happen in these cases:
+
+    - when we set a default value for components of a record type declaration,
+
+    - when we use the :ada:`Default_Component_Value` aspect for array types, or
+
+    - when we set use the :ada:`Initialize_Scalars` pragma for a package.
+
+    Again, using the :ada:`Import` aspect when declaring the overlay eliminates
+    this side-effect.
+
+We can use this pattern for objects of more complex data types like arrays or
+records. For example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Int_Array_Bitfield is
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       A : array (1 .. 2) of Integer := (others => 0);
+       B : Bit_Field (0 .. A'Size - 1)
+         with Address => A'Address, Import, Volatile;
+    begin
+       B (2) := True;
+       for I in A'Range loop
+          Put_Line ("A (" & Integer'Image (I)
+                    & ")= " & Integer'Image (A (I)));
+       end loop;
+    end Int_Array_Bitfield;
+
+In the Ada example above, we're using the bit-field to set bit #3 of the first
+element of the array (:ada:`A (1)`). We could set bit #4 of the second element
+by using the size of the data type (in this case, :ada:`Integer'Size`):
+
+[Ada]
+
+.. code-block:: ada
+
+    B (Integer'Size + 3) := True;
+
+In C, we would select the specific array position and, again, rely on
+bit-shifting and masking to set that specific bit:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_C
+
+    !bitfield_int_array.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        int i;
+        int a[2] = {0, 0};
+
+        a[0] = a[0] | (1 << 2);
+
+        for (i = 0; i < 2; i++)
+        {
+            printf("a[%d] = %d\n", i, a[i]);
+        }
+    }
+
+Since we can use this pattern for any arbitrary data type, this allows us to
+easily create a subprogram to serialize data types and, for example, transmit
+complex data structures as a bitstream. For example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_ada
+
+    package Serializer is
+
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       procedure Transmit (B : Bit_Field);
+
+    end Serializer;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Serializer is
+
+       procedure Transmit (B : Bit_Field) is
+
+          procedure Show_Bit (V : Boolean) is
+          begin
+             case V is
+                when False => Put ("0");
+                when True  => Put ("1");
+             end case;
+          end Show_Bit;
+
+       begin
+          Put ("Bits: ");
+          for E of B loop
+             Show_Bit (E);
+          end loop;
+          New_Line;
+       end Transmit;
+
+    end Serializer;
+
+    package My_Recs is
+
+       type Rec is record
+          V : Integer;
+          S : String (1 .. 3);
+       end record;
+
+    end My_Recs;
+
+    with Serializer;  use Serializer;
+    with My_Recs;     use My_Recs;
+
+    procedure Main is
+       R : Rec := (5, "abc");
+       B : Bit_Field (0 .. R'Size - 1)
+         with Address => R'Address, Import, Volatile;
+    begin
+       Transmit (B);
+    end Main;
+
+In this example, the :ada:`Transmit` procedure from :ada:`Serializer` package
+displays the individual bits of a bit-field. We could have used this strategy
+to actually transmit the information as a bitstream. In the main application,
+we call :ada:`Transmit` for the object :ada:`R` of record type :ada:`Rec`.
+Since :ada:`Transmit` has the bit-field type as a parameter, we can use it
+for any type, as long as we have a corresponding bit-field representation.
+
+In C, we interpret the input pointer as an array of bytes, and then use
+shifting and masking to access the bits of that byte. Here, we use the
+:c:`char` type because it has a size of one byte in most platforms.
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_C
+
+    !my_recs.h
+    typedef struct {
+        int v;
+        char s[4];
+    } rec;
+
+    !serializer.h
+    void transmit (void *bits, int len);
+
+    !serializer.c
+    #include "serializer.h"
+
+    #include <stdio.h>
+    #include <assert.h>
+
+    void transmit (void *bits, int len)
+    {
+        int i, j;
+        char *c = (char *)bits;
+
+        assert(sizeof(char) == 1);
+
+        printf("Bits: ");
+        for (i = 0; i < len / (sizeof(char) * 8); i++)
+        {
+            for (j = 0; j < sizeof(char) * 8; j++)
+            {
+                printf("%d", c[i] >> j & 1);
+            }
+        }
+        printf("\n");
+    }
+
+    !bitfield_serialization.c
+    #include <stdio.h>
+
+    #include "my_recs.h"
+    #include "serializer.h"
+
+    int main(int argc, const char * argv[])
+    {
+        rec r = {5, "abc"};
+
+        transmit(&r, sizeof(r) * 8);
+    }
+
+Similarly, we can write a subprogram that converts a bit-field |mdash| which
+may have been received as a bitstream |mdash| to a specific type. We can add a
+:ada:`To_Rec` subprogram to the :ada:`My_Recs` package to convert a bit-field
+to the :ada:`Rec` type. This can be used to convert a bitstream that we
+received into the actual data type representation.
+
+As you know, we may write the :ada:`To_Rec` subprogram as a procedure or as a
+function. Since we need to use slightly different strategies for the
+implementation, the following example has both versions of :ada:`To_Rec`.
+
+This is the updated code for the :ada:`My_Recs` package and the :ada:`Main`
+procedure:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_Ada
+
+    package Serializer is
+
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       procedure Transmit (B : Bit_Field);
+
+    end Serializer;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Serializer is
+
+       procedure Transmit (B : Bit_Field) is
+
+          procedure Show_Bit (V : Boolean) is
+          begin
+             case V is
+                when False => Put ("0");
+                when True  => Put ("1");
+             end case;
+          end Show_Bit;
+
+       begin
+          Put ("Bits: ");
+          for E of B loop
+             Show_Bit (E);
+          end loop;
+          New_Line;
+       end Transmit;
+
+    end Serializer;
+
+    with Serializer;  use Serializer;
+
+    package My_Recs is
+
+       type Rec is record
+          V : Integer;
+          S : String (1 .. 3);
+       end record;
+
+       procedure To_Rec (B :     Bit_Field;
+                         R : out Rec);
+
+       function To_Rec (B : Bit_Field) return Rec;
+
+       procedure Display (R : Rec);
+
+    end My_Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body My_Recs is
+
+       procedure To_Rec (B :     Bit_Field;
+                         R : out Rec) is
+          B_R : Rec
+            with Address => B'Address, Import, Volatile;
+       begin
+          --  Assigning data from overlayed record B_R to output parameter R.
+          R := B_R;
+       end To_Rec;
+
+       function To_Rec (B : Bit_Field) return Rec is
+          R   : Rec;
+          B_R : Rec
+            with Address => B'Address, Import, Volatile;
+       begin
+          --  Assigning data from overlayed record B_R to local record R.
+          R := B_R;
+
+          return R;
+       end To_Rec;
+
+       procedure Display (R : Rec) is
+       begin
+          Put ("("  & Integer'Image (R.V) & ", "
+               & (R.S) & ")");
+       end;
+
+    end My_Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Serializer;  use Serializer;
+    with My_Recs;     use My_Recs;
+
+    procedure Main is
+       R1 : Rec := (5, "abc");
+       R2 : Rec := (0, "zzz");
+
+       B1 : Bit_Field (0 .. R1'Size - 1)
+         with Address => R1'Address, Import, Volatile;
+    begin
+       Put ("R2 = ");
+       Display(R2);
+       New_Line;
+
+       --  Getting Rec type using data from B1, which is a bit-field
+       --  representation of R1.
+       To_Rec (B1, R2);
+
+       --  We could use the function version of To_Rec:
+       --  R2 := To_Rec (B1);
+
+       Put_Line ("New bitstream received!");
+       Put ("R2 = ");
+       Display(R2);
+       New_Line;
+    end Main;
+
+In both versions of :ada:`To_Rec`, we declare the record object :ada:`B_R` as
+an overlay of the input bit-field. In the procedure version of :ada:`To_Rec`,
+we then simply copy the data from :ada:`B_R` to the output parameter :ada:`R`.
+In the function version of :ada:`To_Rec`, however, we need to declare a local
+record object :ada:`R`, which we return after the assignment.
+
+In C, we can interpret the input pointer as an array of bytes, and copy the
+individual bytes. For example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_C
+
+    !my_recs.h
+    typedef struct {
+        int v;
+        char s[3];
+    } rec;
+
+    void to_r (void *bits, int len, rec *r);
+
+    void display_r (rec *r);
+
+    !my_recs.c
+    #include "my_recs.h"
+
+    #include <stdio.h>
+    #include <assert.h>
+
+    void to_r (void *bits, int len, rec *r)
+    {
+        int i, j;
+        char *c1 = (char *)bits;
+        char *c2 = (char *)r;
+
+        assert(len == sizeof(rec) * 8);
+
+        for (i = 0; i < len / (sizeof(char) * 8); i++)
+        {
+            c2[i] = c1[i];
+        }
+    }
+
+    void display_r (rec *r)
+    {
+        printf("{%d, %c%c%c}", r->v, r->s[0], r->s[1], r->s[2]);
+    }
+
+    !bitfield_serialization.c
+    #include <stdio.h>
+    #include "my_recs.h"
+
+    int main(int argc, const char * argv[])
+    {
+        rec r1 = {5, "abc"};
+        rec r2 = {0, "zzz"};
+
+        printf("r2 = ");
+        display_r (&r2);
+        printf("\n");
+
+        to_r(&r1, sizeof(r1) * 8, &r2);
+
+        printf("New bitstream received!\n");
+        printf("r2 = ");
+        display_r (&r2);
+        printf("\n");
+    }
+
+Here, :c:`to_r` casts both pointer parameters to pointers to :c:`char` to get
+a byte-aligned pointer. Then, it simply copies the data byte-by-byte.
+
+.. _OverlaysVsUncheckedConversions:
+
+Overlays vs. Unchecked Conversions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. todo::
 
     Complete section!
+
+    Explain that overlays are more efficient and allow to have one change
+    automatically reflected by the other object, while Unchecked_Conversions
+    require a copy.
+
+    Unchecked_Conversions are not fundamentally bad and can also be used
+    (they're actually cleaner and safer), but they're not always at the right
+    level of performance / semantics.
