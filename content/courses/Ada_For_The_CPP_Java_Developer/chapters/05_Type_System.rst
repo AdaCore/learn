@@ -184,7 +184,7 @@ The final assignment illustrates an interesting but subtle point. The subexpress
 
 .. code-block:: ada
 
-      G1 := Grade (Integer (G1) + Integer (G2)) / 2);
+      G1 := Grade ((Integer (G1) + Integer (G2)) / 2);
 
 Range checks are useful for detecting errors as early as possible. However, there may be some impact on performance. Modern compilers do know how to remove redundant checks, and you can deactivate these checks altogether if you have sufficient confidence that your code will function correctly.
 
