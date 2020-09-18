@@ -415,7 +415,7 @@ assigned to a variable from the other type. For example:
        Dist_Imperial : Miles;
 
        --  Declare a constant
-       Dist_Metric : constant Meters := 100.0;
+       Dist_Metric : constant Meters := 1000.0;
     begin
        --  Not correct: types mismatch
        Dist_Imperial := Dist_Metric * 621.371e-6;
@@ -434,7 +434,7 @@ Ada, such conversions must be made explicit:
        type Meters is new Float;
        type Miles is new Float;
        Dist_Imperial : Miles;
-       Dist_Metric : constant Meters := 100.0;
+       Dist_Metric : constant Meters := 1000.0;
     begin
        Dist_Imperial := Miles (Dist_Metric) * 621.371e-6;
        --               ^ Type conversion, from Meters to Miles
@@ -463,7 +463,7 @@ introduce conversion functions along with the types.
        end To_Miles;
 
        Dist_Imperial : Miles;
-       Dist_Metric   : constant Meters := 100.0;
+       Dist_Metric   : constant Meters := 1000.0;
     begin
        Dist_Imperial := To_Miles (Dist_Metric);
        Put_Line (Miles'Image (Dist_Imperial));
