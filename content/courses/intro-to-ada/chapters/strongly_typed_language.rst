@@ -418,7 +418,7 @@ assigned to a variable from the other type. For example:
        Dist_Metric : constant Meters := 100.0;
     begin
        --  Not correct: types mismatch
-       Dist_Imperial := (Dist_Metric * 1609.0) / 1000.0;
+       Dist_Imperial := Dist_Metric * 621.371e-6;
        Put_Line (Miles'Image (Dist_Imperial));
     end Illegal_Example;
 
@@ -436,8 +436,8 @@ Ada, such conversions must be made explicit:
        Dist_Imperial : Miles;
        Dist_Metric : constant Meters := 100.0;
     begin
-       Dist_Imperial := (Miles (Dist_Metric) * 1609.0) / 1000.0;
-       --                ^ Type conversion, from Meters to Miles
+       Dist_Imperial := Miles (Dist_Metric) * 621.371e-6;
+       --               ^ Type conversion, from Meters to Miles
        --  Now the code is correct
 
        Put_Line (Miles'Image (Dist_Imperial));
@@ -459,7 +459,7 @@ introduce conversion functions along with the types.
        function To_Miles (M : Meters) return Miles is
        --                             ^ Return type
        begin
-          return (Miles (M) * 1609.0) / 1000.0;
+          return Miles (M) * 621.371e-6;
        end To_Miles;
 
        Dist_Imperial : Miles;
