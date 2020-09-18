@@ -122,3 +122,101 @@ specific, when we use :ada:`D.Year` in the call to :ada:`Put_Line`, we're
 retrieving the information stored in that component. When we write
 :ada:`Some_Day.Year := 2001`, we're overwriting the information that was
 previously stored in the :ada:`Year` component of :ada:`Some_Day`.
+
+.. _RecordCompRenaming:
+
+Renaming
+--------
+
+Record components can be renamed. Instead of writing the full path to a record
+component using the dot notation, we can declare an alias that allows us to
+access the same component. This is useful to simplify the code of a subprogram
+implementation, for example.
+
+We can rename record components by using the :ada:`renames` keyword in a
+varible declaration. For example:
+
+.. code-block:: ada
+
+    Some_Day : Date
+    Y        : Integer renames Some_Day.Year;
+
+Here, :ada:`Y` is an alias, so that every time we using :ada:`Y`, we are really
+using the :ada:`Year` component of :ada:`Some_Day`.
+
+Let's look at a complete example:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Record_Component_Renaming
+    :class: ada-run
+
+    package Dates is
+
+       type Month_Type is
+         (January, February, March, April, May, June, July,
+          August, September, October, November, December);
+
+       type Date is record
+          Day   : Integer range 1 .. 31;
+          Month : Month_Type;
+          Year  : Integer range 1 .. 3000 := 2032;
+       end record;
+
+       procedure Increase_Month (Some_Day : in out Date);
+
+       procedure Display_Month (Some_Day : Date);
+
+    end Dates;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Dates is
+
+       procedure Increase_Month (Some_Day : in out Date) is
+          --  Renaming components from the Date record
+          M : Month_Type renames Some_Day.Month;
+          Y : Integer    renames Some_Day.Year;
+
+          --  Renaming function (for Month_Type enumeration)
+          function Next (M : Month_Type) return Month_Type
+            renames Month_Type'Succ;
+       begin
+          if M = December then
+             M := January;
+             Y := Y + 1;
+          else
+             M := Next (M);
+          end if;
+       end Increase_Month;
+
+       procedure Display_Month (Some_Day : Date) is
+          --  Renaming components from the Date record
+          M : Month_Type renames Some_Day.Month;
+          Y : Integer    renames Some_Day.Year;
+       begin
+          Put_Line ("Month: " & Month_Type'Image (M)
+                    & ", Year:" & Integer'Image (Y));
+       end Display_Month;
+
+    end Dates;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Dates;       use Dates;
+
+    procedure Main is
+       D : Date := (1, January, 2000);
+    begin
+       Display_Month (D);
+
+       Put_Line ("Increasing month...");
+       Increase_Month (D);
+
+       Display_Month (D);
+    end Main;
+
+We apply renaming to two components of the :ada:`Date` record in the
+implementation of the :ada:`Increase_Month` procedure. Then, instead of
+directly using :ada:`Some_Day.Month` and :ada:`Some_Day.Year` in the
+next operations, we simply use the renamed versions :ada:`M` and :ada:`Y`.
+
+Note that, in the example above, we also rename :ada:`Month_Type'Succ` |mdash|
+which is the function that gives us the next month |mdash| to :ada:`Next`.

@@ -570,5 +570,5 @@ example above:
        Say ("Hello");
     end Main;
 
-We'll discuss object renaming :ref:`later in this course <ObjectRenaming>`.
-
+We'll discuss :ref:`record component renaming <RecordCompRenaming>` and
+:ref:`object renaming <ObjectRenaming>` later in this course.
