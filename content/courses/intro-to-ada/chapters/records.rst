@@ -23,7 +23,7 @@ Here is an example of a simple record declaration:
     type Date is record
        --  The following declarations are components of the record
        Day   : Integer range 1 .. 31;
-       Month : Month_Type;
+       Month : Months;
        Year  : Integer range 1 .. 3000; --  You can add custom constraints on fields
     end record;
 
@@ -35,7 +35,7 @@ additional constraints when supplying the subtype of the field.
 
     type Date is record
        Day   : Integer range 1 .. 31;
-       Month : Month_Type := January;
+       Month : Months := January;
        --  This component has a default value
        Year  : Integer range 1 .. 3000 := 2012;
        --                                 ^ Default value
@@ -87,20 +87,20 @@ Let's look at an example:
 
     procedure Record_Selection is
 
-       type Month_Type is
+       type Months is
          (January, February, March, April, May, June, July,
           August, September, October, November, December);
 
        type Date is record
           Day   : Integer range 1 .. 31;
-          Month : Month_Type;
+          Month : Months;
           Year  : Integer range 1 .. 3000 := 2032;
        end record;
 
        procedure Display_Date (D : Date) is
        begin
           Put_Line ("Day:" & Integer'Image (D.Day)
-                    & ", Month: " & Month_Type'Image (D.Month)
+                    & ", Month: " & Months'Image (D.Month)
                     & ", Year:" & Integer'Image (D.Year));
        end Display_Date;
 
@@ -153,13 +153,13 @@ Let's look at a complete example:
 
     package Dates is
 
-       type Month_Type is
+       type Months is
          (January, February, March, April, May, June, July,
           August, September, October, November, December);
 
        type Date is record
           Day   : Integer range 1 .. 31;
-          Month : Month_Type;
+          Month : Months;
           Year  : Integer range 1 .. 3000 := 2032;
        end record;
 
@@ -175,12 +175,12 @@ Let's look at a complete example:
 
        procedure Increase_Month (Some_Day : in out Date) is
           --  Renaming components from the Date record
-          M : Month_Type renames Some_Day.Month;
-          Y : Integer    renames Some_Day.Year;
+          M : Months  renames Some_Day.Month;
+          Y : Integer renames Some_Day.Year;
 
-          --  Renaming function (for Month_Type enumeration)
-          function Next (M : Month_Type) return Month_Type
-            renames Month_Type'Succ;
+          --  Renaming function (for Months enumeration)
+          function Next (M : Months) return Months
+            renames Months'Succ;
        begin
           if M = December then
              M := January;
@@ -192,10 +192,10 @@ Let's look at a complete example:
 
        procedure Display_Month (Some_Day : Date) is
           --  Renaming components from the Date record
-          M : Month_Type renames Some_Day.Month;
-          Y : Integer    renames Some_Day.Year;
+          M : Months  renames Some_Day.Month;
+          Y : Integer renames Some_Day.Year;
        begin
-          Put_Line ("Month: " & Month_Type'Image (M)
+          Put_Line ("Month: " & Months'Image (M)
                     & ", Year:" & Integer'Image (Y));
        end Display_Month;
 
@@ -220,5 +220,5 @@ implementation of the :ada:`Increase_Month` procedure. Then, instead of
 directly using :ada:`Some_Day.Month` and :ada:`Some_Day.Year` in the
 next operations, we simply use the renamed versions :ada:`M` and :ada:`Y`.
 
-Note that, in the example above, we also rename :ada:`Month_Type'Succ` |mdash|
+Note that, in the example above, we also rename :ada:`Months'Succ` |mdash|
 which is the function that gives us the next month |mdash| to :ada:`Next`.
