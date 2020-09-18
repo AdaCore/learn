@@ -73,9 +73,14 @@ Component selection
 -------------------
 
 To access components of a record instance, you use an operation that is
-called component selection:
+called component selection. This is achieved by using the dot notation. For
+example, if we declare a variable :ada:`Some_Day` of the :ada:`Date` record
+type mentioned above, we can access the :ada:`Year` component by writing
+:ada:`Some_Day.Year`.
 
-.. code:: ada project=Courses.Intro_To_Ada.Records.Record_Selection
+Let's look at an example:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Records.Record_Selection
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -92,11 +97,28 @@ called component selection:
           Year  : Integer range 1 .. 3000 := 2032;
        end record;
 
+       procedure Display_Date (D : Date) is
+       begin
+          Put_Line ("Day:" & Integer'Image (D.Day)
+                    & ", Month: " & Month_Type'Image (D.Month)
+                    & ", Year:" & Integer'Image (D.Year));
+       end Display_Date;
+
        Some_Day : Date := (1, January, 2000);
 
     begin
+       Display_Date (Some_Day);
+
+       Put_Line ("Changing year...");
        Some_Day.Year := 2001;
-       Put_Line ("Day:" & Integer'Image (Some_Day.Day)
-                 & ", Month: " & Month_Type'Image (Some_Day.Month)
-                 & ", Year:" & Integer'Image (Some_Day.Year));
+
+       Display_Date (Some_Day);
     end Record_Selection;
+
+As you can see in this example, we can use the dot notation in the expression
+:ada:`D.Year` or :ada:`Some_Day.Year` to access the information stored in that
+component, as well as to modify this information in assignments. To be more
+specific, when we use :ada:`D.Year` in the call to :ada:`Put_Line`, we're
+retrieving the information stored in that component. When we write
+:ada:`Some_Day.Year := 2001`, we're overwriting the information that was
+previously stored in the :ada:`Year` component of :ada:`Some_Day`.
