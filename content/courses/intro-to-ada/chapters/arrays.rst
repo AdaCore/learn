@@ -681,10 +681,11 @@ subtype, constrained by the bounds of the slice.
 Renaming
 --------
 
-Previously, we've discussed
-:ref:`record component renaming <RecordCompRenaming>`. We can also rename
-objects by using the :ada:`renames` keyword. This allows for creating
-alternative names for these objects. Let's look at an example:
+So far, we've seen that the following elements can be renamed:
+:ref:`subprograms <SubprogramRenaming>`, :ref:`packages <PackageRenaming>`, and
+:ref:`record components <RecordCompRenaming>`. We can also rename objects by
+using the :ada:`renames` keyword. This allows for creating alternative names
+for these objects. Let's look at an example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Arrays.Variable_Renaming
 
