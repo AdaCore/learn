@@ -676,15 +676,15 @@ subtype, constrained by the bounds of the slice.
 .. ?? The 'attention' note is the 1st implication that Ada supports more
 .. ?? than one-dimensional arrays
 
-.. _ObjectRenaming:
+.. _Object_Renaming:
 
 Renaming
 --------
 
 So far, we've seen that the following elements can be renamed:
-:ref:`subprograms <SubprogramRenaming>`, :ref:`packages <PackageRenaming>`, and
-:ref:`record components <RecordCompRenaming>`. We can also rename objects by
-using the :ada:`renames` keyword. This allows for creating alternative names
+:ref:`subprograms <Subprogram_Renaming>`, :ref:`packages <Package_Renaming>`,
+and :ref:`record components <Record_Comp_Renaming>`. We can also rename objects
+by using the :ada:`renames` keyword. This allows for creating alternative names
 for these objects. Let's look at an example:
 
 .. code:: ada project=Courses.Intro_To_Ada.Arrays.Variable_Renaming

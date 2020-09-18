@@ -431,7 +431,7 @@ mutually recursive, as in the example below:
        Compute_A (15);
     end Mutually_Recursive_Subprograms;
 
-.. _SubprogramRenaming:
+.. _Subprogram_Renaming:
 
 Renaming
 --------

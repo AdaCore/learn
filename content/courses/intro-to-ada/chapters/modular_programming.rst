@@ -534,15 +534,15 @@ in Ada. Those elements will only be visible in the package body, but nowhere
 else. This isn't, however, the only way to achieve encapsulation in Ada: we'll
 discuss other approaches in the :doc:`./privacy` chapter.
 
-.. _PackageRenaming:
+.. _Package_Renaming:
 
 Renaming
 --------
 
 Previously, we've mentioned that
-:ref:`subprograms can be renamed <SubprogramRenaming>`. We can rename packages,
-too. Again, we use the :ada:`renames` keyword for that. The following example
-renames the :ada:`Ada.Text_IO` package as :ada:`T_IO`:
+:ref:`subprograms can be renamed <Subprogram_Renaming>`. We can rename
+packages, too. Again, we use the :ada:`renames` keyword for that. The following
+example renames the :ada:`Ada.Text_IO` package as :ada:`T_IO`:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Rename_Text_IO
 
@@ -573,6 +573,3 @@ example above:
     begin
        Say ("Hello");
     end Main;
-
-We'll discuss :ref:`record component renaming <RecordCompRenaming>` and
-:ref:`object renaming <ObjectRenaming>` later in this course.
