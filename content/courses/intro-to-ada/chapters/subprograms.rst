@@ -233,8 +233,8 @@ to explicitly store it in a local variable.
 .. ?? It would be better to show an example where the function's side effect is on
 .. ?? a non-local variable.  Maybe for the next version of the course.
 
-Parameters modes
-----------------
+Parameter modes
+---------------
 
 .. amiard TODO: Talk about early returns from procedures, and grouping
    parameters.
@@ -251,7 +251,7 @@ this is realized, but two important points are:
   flexibility of pointers and dynamic memory management, but without the
   latter's drawbacks (such as memory leakage and dangling references).
 
-Parameters modes are a feature that helps achieve the two design goals above. A
+Parameter modes are a feature that helps achieve the two design goals above. A
 subprogram parameter can be specified with a mode, which is one of the
 following:
 
