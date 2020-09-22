@@ -79,3 +79,27 @@ export const MACHINE_BUSY_LABEL =
 export const CONSOLE_OUTPUT_LABEL = 'Console Output';
 
 export const CLI_FILE = 'cli.txt';
+
+export const FORM_SUCCESS =
+'Thanks! Your message has been successfully sent to the ' +
+'learn.adacore.com team.';
+
+export const FORM_FAIL =
+'An error occurred while trying to send your message. ' +
+'Please try again, or submit an issue on our GitHub.';
+
+export const FORM_GDPR_CONSENT = 'I agree to the processing of the above ' +
+'information for the purpose of processing this feedback and with ' +
+'AdaCore\'s privacy policy.';
+
+export const FORM_PRIVACY_POLICY = 'The information above is collected by ' +
+'AdaCore for the purpose of collecting feedback. Please read our ' +
+'<a href=https://www.adacore.com/company/privacy>privacy policy</a> ' +
+'if you want to know more about how we process your information and ' +
+'your rights.';
+
+export const FORM_NAME_ERROR_TEXT = 'Name field cannot be empty.';
+
+export const FORM_EMAIL_ERROR_TEXT = 'Email address is invalid.';
+
+export const FORM_MESSAGE_ERROR_TEXT = 'Message field cannot be empty.';

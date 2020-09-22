@@ -608,7 +608,7 @@ export function widgetFactory(widgets: HTMLCollectionOf<Element>):
 
       // add an error message to the page in its place
       const errorDiv = document.createElement('div');
-      errorDiv.innerHTML = '<p>An error has occured processing this widget.' +
+      errorDiv.innerHTML = '<p>An error has occured processing this widget. ' +
       Strings.INTERNAL_ERROR_MESSAGE + '</p>';
 
       element.appendChild(errorDiv);

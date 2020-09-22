@@ -77,7 +77,7 @@ describe('widgetFactory()', () => {
     expect(pageWidget).to.have.descendants('div').with.length(1);
     const errorDiv = pageWidget.querySelector('div');
     expect(errorDiv).to.have.html(
-        '<p>An error has occured processing this widget.' +
+        '<p>An error has occured processing this widget. ' +
         Strings.INTERNAL_ERROR_MESSAGE + '</p>');
   });
 
@@ -90,7 +90,7 @@ describe('widgetFactory()', () => {
     expect(pageWidget).to.have.descendants('div').with.length(1);
     const errorDiv = pageWidget.querySelector('div');
     expect(errorDiv).to.have.html(
-        '<p>An error has occured processing this widget.' +
+        '<p>An error has occured processing this widget. ' +
         Strings.INTERNAL_ERROR_MESSAGE + '</p>');
   });
 });

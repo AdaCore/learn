@@ -273,6 +273,134 @@ div {
             margin-bottom: 0px;
         }
     }
+
+    &.contact-form {
+        position: relative;
+        padding: 20px;
+        width: 480px;
+
+        form {
+            position: relative;
+        }
+
+        label {
+            margin-top: 15px;
+            margin-bottom: 0px;
+
+            &.required::after {
+                margin-left: 5px;
+                color: $color-theme-bg-dark;
+                content: "(required)";
+            }
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        span {
+            &.form-error {
+                color: red;
+                font-size: 85%;
+            }
+        }
+
+        input {
+            &.field {
+                box-sizing: border-box;
+                border: 0;
+                border-bottom:1px solid $color-theme-bg-dark;
+                font-size: 16px;
+                font-weight: bold;
+                height: 50px;
+                padding:0 20px;
+                position: relative;
+                outline: 0;
+                margin: 10px 0;
+                width: 100%;
+
+                &:focus{
+                    border: 1px solid $color-theme-bg-dark;
+                }
+
+                &.form-error {
+                    border:2px solid red;
+                    color:red;
+                }
+            }
+        }
+        textarea {
+            border: 0;
+            outline: 0;
+            border-bottom: 1px solid $color-theme-bg-dark;
+            box-sizing: border-box;
+            font-size: 16px;
+            font-weight: bold;
+            height: 130px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            padding: 10px 20px 0;
+            resize: none;
+            width: 100%;
+
+            &:focus {
+              border: 1px solid $color-theme-bg-dark;
+            }
+            &.form-error {
+                border:2px solid red;
+                color:red;
+            }
+        }
+        div {
+            &.form-success {
+                margin-top: 15px;
+                color: green;
+            }
+            &.form-fail {
+                color: red;
+                margin-top: 15px;
+            }
+        }
+        button {
+            margin-top: 20px;
+
+            &.disabled {
+                background-color: $color-theme-fg-dark;
+                color: $color-font-grey;
+                pointer-events: none;
+            }
+        }
+
+        div.form-checkbox {
+            display: grid;
+            grid-template-columns: max-content 100%;
+            grid-gap:5px;
+
+            input {
+
+                align-self: center;
+            }
+
+            label {
+
+            }
+
+            &.required {
+                label::after {
+                    margin-left: 5px;
+                    color: $color-theme-bg-dark;
+                    content: "(required)";
+                }
+            }
+
+            &.optional {
+                label::after {
+                    margin-left: 5px;
+                    content: "(optional)";
+                }
+            }
+        }
+    }
 }
 
 .read-only {
@@ -595,6 +723,43 @@ label.custom_check,
         transform: scale(1);
     }
 }
+
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    border: 8px solid #000;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #000 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 
 // lab stuff
 // test stuff

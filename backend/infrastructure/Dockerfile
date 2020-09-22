@@ -1,5 +1,5 @@
 # STAGE: Compile preloader
-from gcc as preloader_stage
+FROM gcc as preloader_stage
 
 # Create the preloader
 COPY preloader.c .

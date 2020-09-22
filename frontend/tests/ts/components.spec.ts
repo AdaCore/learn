@@ -1,10 +1,9 @@
 // Import testing libs
-import chai, {expect} from 'chai';
-import chaiDom from 'chai-dom';
-chai.use(chaiDom);
+import {expect} from 'chai';
 
 // Import package under test
-import {Tabs, Button, ButtonGroup, CheckBox} from '../../src/ts/components';
+import {Tabs, Button,
+  ButtonGroup, CheckBox, ActionState} from '../../src/ts/components';
 
 describe('Tabs', () => {
   const inTest = new Tabs();
@@ -131,9 +130,19 @@ describe('Button', () => {
       flag = true;
     });
 
-    it('should call my callback function and set my flag to true', () => {
+    it('should call my callback function when enabled', () => {
+      myBut.enable();
+      expect(myBut.getActionState()).to.equal(ActionState.Enabled);
       parent.click();
       expect(flag).to.be.true;
+    });
+
+    it('should not call my callback function when disbaled', () => {
+      flag = false;
+      myBut.disable();
+      expect(myBut.getActionState()).to.equal(ActionState.Disabled);
+      parent.click();
+      expect(flag).to.be.false;
     });
   });
 });
@@ -286,6 +295,20 @@ describe('CheckBox', () => {
 
     it('should be false after check action again', () => {
       input.checked = false;
+      expect(inTest.checked()).to.be.false;
+    });
+  });
+
+  describe('#setChecked()', () => {
+    const inTest = new CheckBox('label');
+
+    it('should be true after check action', () => {
+      inTest.setChecked(true);
+      expect(inTest.checked()).to.be.true;
+    });
+
+    it('should be false after check action again', () => {
+      inTest.setChecked(false);
       expect(inTest.checked()).to.be.false;
     });
   });

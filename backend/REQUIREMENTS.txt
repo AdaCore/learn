@@ -3,3 +3,4 @@ Flask==1.1.1
 Flask-Cors
 docker
 python-dotenv
+Flask-Mail

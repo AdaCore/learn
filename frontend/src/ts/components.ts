@@ -94,24 +94,15 @@ export class Tabs {
   }
 }
 
-/** Class represents a Button */
-export class Button {
-  private readonly obj: HTMLElement;
-  public disabled = false;
+export enum ActionState {
+  Disabled,
+  Enabled,
+}
 
-  /**
-   * Constructs a button
-   * @param {string[]} classList - The list of classes to apply to the button
-   * @param {string} title - The title to put on the button for tooltip
-   * @param {string} text - The text to display on the button
-   */
-  constructor(classList: Array<string>, title: string, text: string) {
-    this.obj = document.createElement('button');
-    this.obj.setAttribute('type', 'button');
-    this.obj.classList.add('btn', 'btn-primary', ...classList);
-    this.obj.setAttribute('title', title);
-    this.obj.textContent = text;
-  }
+/** Base class for Actionable Items like Buttons and Checkboxes */
+class ActionItem {
+  protected obj: HTMLElement;
+  private state: ActionState = ActionState.Enabled;
 
   /**
    * The event callback signature for buttons
@@ -121,21 +112,66 @@ export class Button {
    */
 
   /**
-   * Registers an event on the button
+   * Registers an event on the Item
    * @param {string} type - The event type to register ["click", "focus", etc]
    * @param {eventCallback} fn - The callback to trigger
    */
-  public registerEvent(type: string,
-      fn: (event: Event) => void): void {
-    this.obj.addEventListener(type, fn);
+  public registerEvent(type: string, fn: (event: Event) => void): void {
+    this.obj.addEventListener(type, (event: Event) => {
+      if (this.state == ActionState.Enabled) {
+        fn(event);
+      }
+    });
   }
 
   /**
    * Render the button
-   * @return {HTMLElement} The button
+   * @return {HTMLElement} The Item
    */
   public render(): HTMLElement {
     return this.obj;
+  }
+
+  /**
+   * Returns the current state of the ActionItem
+   * @return {ActionState}
+   */
+  public getActionState(): ActionState {
+    return this.state;
+  }
+
+  /**
+   * Enables the ActionItem
+   */
+  public enable(): void {
+    this.state = ActionState.Enabled;
+    this.obj.classList.remove('disabled');
+  }
+
+  /**
+   * Disables the ActionItem
+   */
+  public disable(): void {
+    this.state = ActionState.Disabled;
+    this.obj.classList.add('disabled');
+  }
+}
+
+/** Class represents a Button */
+export class Button extends ActionItem {
+  /**
+   * Constructs a button
+   * @param {string[]} classList - The list of classes to apply to the button
+   * @param {string} title - The title to put on the button for tooltip
+   * @param {string} text - The text to display on the button
+   */
+  constructor(classList: Array<string>, title: string, text: string) {
+    super();
+    this.obj = document.createElement('button');
+    this.obj.setAttribute('type', 'button');
+    this.obj.classList.add('btn', 'btn-primary', ...classList);
+    this.obj.setAttribute('title', title);
+    this.obj.textContent = text;
   }
 }
 
@@ -205,11 +241,9 @@ export class ButtonGroup {
 }
 
 /** Class represents a checkbox */
-export class CheckBox {
-  private readonly container: HTMLElement;
+export class CheckBox extends ActionItem {
   private readonly input: HTMLInputElement;
-  private label: HTMLElement;
-  private state: boolean;
+  private label: HTMLLabelElement;
 
   /**
    * Construct a checkbox
@@ -222,15 +256,16 @@ export class CheckBox {
       parent? : HTMLElement,
       classes? : string[],
       title? : string) {
+    super();
     if (parent == undefined) {
-      this.container = document.createElement('div');
+      this.obj = document.createElement('div');
     } else {
-      this.container = parent;
+      this.obj = parent;
     }
 
     if (classes != undefined) {
       for (const c of classes) {
-        this.container.classList.add(c);
+        this.obj.classList.add(c);
       }
     }
 
@@ -239,7 +274,7 @@ export class CheckBox {
     this.input.setAttribute('type', 'checkbox');
     this.input.setAttribute('id', qId);
     this.input.classList.add('checkbox');
-    this.container.appendChild(this.input);
+    this.obj.appendChild(this.input);
 
     if (title != undefined) {
       this.input.setAttribute('title', title);
@@ -248,7 +283,7 @@ export class CheckBox {
     this.label = document.createElement('label');
     this.label.setAttribute('for', qId);
     this.label.textContent = label;
-    this.container.appendChild(this.label);
+    this.obj.appendChild(this.label);
   }
 
   /**
@@ -260,19 +295,19 @@ export class CheckBox {
   }
 
   /**
+   * Sets whether the checkbox is checked
+   * @param {boolean} checked - True for checked
+   */
+  public setChecked(checked: boolean): void {
+    this.input.checked = checked;
+  }
+
+  /**
    * Returns the actual checkbox HTMLElement object
    * @return {HTMLInputElement} The checkbox
    */
   public getCheckBox(): HTMLInputElement {
     return this.input;
-  }
-
-  /**
-   * Renders the checkbox
-   * @return {HTMLElement} The container with the label and checkbox
-   */
-  public render(): HTMLElement {
-    return this.container;
   }
 
   /**

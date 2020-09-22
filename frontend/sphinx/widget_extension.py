@@ -64,11 +64,19 @@ template = u"""
 </div>
 """
 
-NAME_REGEX = re.compile('(lab|project)=(\S+)')
-LAB_IO_START_REGEX = re.compile("--  START LAB IO BLOCK")
-LAB_IO_END_REGEX = re.compile("--  END LAB IO BLOCK")
+NAME_REGEX = re.compile(r'(lab|project)=(\S+)')
+LAB_IO_START_REGEX = re.compile(r"--  START LAB IO BLOCK")
+LAB_IO_END_REGEX = re.compile(r"--  END LAB IO BLOCK")
 
 LABIO_FILENAME = "lab_io.txt"
+
+contact_template = u"""
+<div class="contact-form" example_server="{server_url}">
+    <h2 class="contact-title">{header_title}</h2>
+    <form>
+    </form>
+</div>
+"""
 
 codeconfig_found = False
 # A safeguard against documents not defining code-config. Is it needed?
@@ -327,6 +335,29 @@ class WidgetCodeDirective(Directive):
                       format='html')
         ] + nodes_latex
 
+
+class ContactFormDirective(Directive):
+    has_content = False
+    required_arguments = 1
+    optional_arguments = 0
+    final_argument_whitespace = True
+    option_spec = {
+        'class': directives.class_option,
+        'name': directives.unchanged,
+    }
+
+    def run(self):
+        if self.arguments:
+            title = self.arguments[0]
+
+        return [
+            nodes.raw('',
+                      contact_template.format(server_url=WIDGETS_SERVER_URL,
+                                              header_title=title),
+                      format='html')
+        ]
+
+
 def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
     """Support the code-config role.
 
@@ -363,6 +394,8 @@ def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
 def on_builder_inited(app):
     # Connect to the "code" directive
     app.add_directive('code', WidgetCodeDirective, override=True)
+     # Connect to the "contact" directive
+    app.add_directive('contact', ContactFormDirective, override=True)
 
 
 def setup(app):

@@ -1,4 +1,5 @@
 import './styles/learn.scss';
+import {contactFactory} from './ts/contact';
 import {widgetFactory} from './ts/widget';
 import {scrollTop} from './ts/scrolltop';
 
@@ -16,6 +17,9 @@ function entrypoint(): void {
 
   const btn = document.getElementById('scrollToTopBtn');
   scrollTop(btn as HTMLButtonElement);
+
+  const cf = document.getElementsByClassName('contact-form');
+  contactFactory(cf);
 
   // #if STAGING
   stagingRedirect();

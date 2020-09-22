@@ -1,12 +1,14 @@
 from flask import Blueprint, make_response, request, send_file
 from flask import current_app as app
 from flask_cors import CORS
+from flask_mail import Mail, Message
 
 from queue import Empty
 from kombu import Queue
 
 import json
 import sys
+import time
 
 from . import tasks, celery
 from .project import Project
@@ -53,6 +55,33 @@ def download_example():
     response.headers.set('Content-Type', 'application/zip')
     response.headers.set('Content-Disposition', 'attachment', filename=archive)
     return response
+
+
+@widget_bp.route('/contact_form/', methods=['POST'])
+def contact_form():
+    """
+    The route for a contact-form submission.The data is sent via email.
+    :return:
+        The success or fail of the email send
+    """
+    data = request.get_json()
+    app.logger.debug(data)
+
+    if not data['GDPRConsent']:
+        success = False
+        app.logger.error('Form submission with GDPR consent = false.')
+    else:
+        time.sleep(5)
+        # mail = Mail(app)
+        # msg = Message(subject=f"LEARN: Message from {data['Name']}",
+        #               body=json.dumps(data, indent=4),
+        #               sender=data["Email"],
+        #               reply_to=data["Email"],
+        #               recipients=["test@test.com"])
+        # mail.send(msg)
+        success = True
+
+    return compose_response({'success': success}, 200)
 
 
 @widget_bp.route('/run_program/', methods=['POST'])

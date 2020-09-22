@@ -57,6 +57,7 @@ to learn more about Ada and SPARK.
        About <about>
        Courses <courses/courses>
        Labs <labs/labs>
+       Contact <contact>
 
 Download Ada and SPARK tools
 ------------------------------
