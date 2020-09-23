@@ -8,7 +8,6 @@ from kombu import Queue
 
 import json
 import sys
-import time
 
 from . import tasks, celery
 from .project import Project
@@ -71,15 +70,18 @@ def contact_form():
         success = False
         app.logger.error('Form submission with GDPR consent = false.')
     else:
-        time.sleep(5)
-        # mail = Mail(app)
-        # msg = Message(subject=f"LEARN: Message from {data['Name']}",
-        #               body=json.dumps(data, indent=4),
-        #               sender=data["Email"],
-        #               reply_to=data["Email"],
-        #               recipients=["test@test.com"])
-        # mail.send(msg)
-        success = True
+        try:
+            mail = Mail(app)
+            msg = Message(subject=f"LEARN: Message from {data['Name']}",
+                        body=json.dumps(data, indent=4),
+                        sender=(data["Name"], data["Email"]),
+                        reply_to=data["Email"],
+                        recipients=["learn@adacore.com"])
+            mail.send(msg)
+            success = True
+        except Exception as ex:
+            app.logger.error(f'Error sending mail: {ex}', exc_info=True)
+            success = False
 
     return compose_response({'success': success}, 200)
 
