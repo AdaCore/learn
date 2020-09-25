@@ -98,7 +98,7 @@ of the Ada language or the functionality provided by
 `conditional compilation section <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#conditional-compilation>`_
 of the GNAT User's Guide discusses how to do this in detail.
 
-Nevertheless, using a preprocessor is ofen the most straightforward
+Nevertheless, using a preprocessor is often the most straightforward
 option in complex cases.  When we encounter such a case, we can use
 :program:`gnatprep`, which provides a syntax that reminds us of the C
 and C++ preprocessor. However, unlike in C and C++, this syntax is not
@@ -115,7 +115,7 @@ syntax from that preprocessor, such as shown in the example below:
     #end if;
 
 Of course, in this simple case, we could have used the Ada language
-directly and avoided the prepocessor entirely:
+directly and avoided the preprocessor entirely:
 
 .. code-block:: ada
 
@@ -136,8 +136,8 @@ directly and avoided the prepocessor entirely:
     end Do_Something;
 
 But for the sake of illustrating the use of :program:`gnatprep`, let's
-use that tool in this simple case. This is the complete package body, which
-we place in file :file:`do_something.org.adb`:
+use that tool in this simple case. This is the complete procedure, which we
+place in file :file:`do_something.org.adb`:
 
 .. code-block:: none
 
@@ -205,7 +205,7 @@ output file :file:`do_something.adb` has the same line numbering as the
 original file (:file:`do_something.org.adb`).
 
 The
-`gnatprep chapter <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#preprocessing-with-gnatprep>`_.
+`gnatprep chapter <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#preprocessing-with-gnatprep>`_
 of the GNAT User's Guide contains further details about this tool, such as
 how to integrate :program:`gnatprep` with project files for
 :program:`GPRbuild` and how to replace symbols without using preprocessing
