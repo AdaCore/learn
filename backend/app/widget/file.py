@@ -250,6 +250,8 @@ class ProjectFile(File):
         The file name
     content : str
         the name of the animal
+    allowed_switches : dict
+        the list of allowed switch to apply to gpr packages
 
     Methods
     -------
@@ -266,6 +268,13 @@ class ProjectFile(File):
     define_mains(mains)
         Inserts the mains for the project into the project file
     """
+
+    allowed_switches = {
+        'Builder': ['-g'],
+        'Compiler': ['-g', '-O0', '-gnata', '-gnatwa', '-gnato', '-gnato0', '-gnato11', '-gnato23',
+                     '-gnato21', '-gnato22']
+    }
+
     def insert_languages(self, languages):
         """
         Inserts languages into the correct place in the project file
@@ -285,3 +294,34 @@ class ProjectFile(File):
         main_list = [f'"{x}"' for x in mains]
         to_insert = f"for Main use ({', '.join(main_list)});"
         self.content = self.content.replace("--MAIN_PLACEHOLDER--", to_insert)
+
+    def insert_switches(self, switch_list):
+        sw_dict = {}
+
+        regex = re.compile(r'(Builder|Compiler)\((.+)\)')
+        for sec in switch_list:
+            match = regex.search(sec)
+            if match:
+                pkg_name = match.group(1)
+                switches = set(match.group(2).split(','))
+                if pkg_name in sw_dict.keys():
+                    sw_dict[pkg_name] = sw_dict[pkg_name] | switches
+                else:
+                    sw_dict[pkg_name] = switches
+
+        for pkg, unfiltered_switches in sw_dict.items():
+            filtered_switches = []
+            for switch in unfiltered_switches:
+                if switch in self.allowed_switches[pkg]:
+                    filtered_switches.append('"' + switch + '"')
+                else:
+                    logger.error(f"Illegal switch requested in pkg {pkg}: {switch}")
+            if filtered_switches:
+                placeholder_str = "--" + pkg.upper() + "_SWITCHES_PLACEHOLDER--"
+                switches_str = ', '.join(filtered_switches)
+                line_str = f'for Switches ("Ada") use ({switches_str});'
+                logger.debug(f"Adding line {line_str} to pkg {pkg}")
+                self.content = self.content.replace(placeholder_str, line_str)
+
+
+

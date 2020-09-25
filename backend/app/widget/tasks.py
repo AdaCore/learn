@@ -33,28 +33,28 @@ def run_program(self, data):
 
 
         if mode == "run":
-            project = RemoteProject(app, container, task_id, data['files'])
+            project = RemoteProject(app, container, task_id, data['files'], data['switches'])
             project.build()
             code, out = project.run()
         elif mode == "submit":
-            project = RemoteProject(app, container, task_id, data['files'])
+            project = RemoteProject(app, container, task_id, data['files'], data['switches'])
             project.build()
             project.submit()
             code = 0
         elif mode == "compile":
-            project = RemoteProject(app, container, task_id, data['files'])
+            project = RemoteProject(app, container, task_id, data['files'], data['switches'])
             code = project.build()
         elif mode == "prove":
-            project = RemoteProject(app, container, task_id, data['files'], True)
+            project = RemoteProject(app, container, task_id, data['files'], data['switches'], True)
             code = project.prove([])
         elif mode == "prove_flow":
-            project = RemoteProject(app, container, task_id, data['files'], True)
+            project = RemoteProject(app, container, task_id, data['files'], data['switches'], True)
             code = project.prove(["--mode=flow"])
         elif mode == "prove_flow_report_all":
-            project = RemoteProject(app, container, task_id, data['files'], True)
+            project = RemoteProject(app, container, task_id, data['files'], data['switches'], True)
             code = project.prove(["--mode=flow", "--report=all"])
         elif mode == "prove_report_all":
-            project = RemoteProject(app, container, task_id, data['files'], True)
+            project = RemoteProject(app, container, task_id, data['files'], data['switches'], True)
             code = project.prove(["--report=all"])
         else:
             raise Exception("Mode not implemented")

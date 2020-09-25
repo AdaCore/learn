@@ -106,6 +106,7 @@ describe('Widget', () => {
   pageWidget.setAttribute('name', 'pageWidget');
   pageWidget.setAttribute('run_button', 'True');
   pageWidget.setAttribute('inline', 'True');
+  pageWidget.setAttribute('switches', 'Pkg1(-test1,test2);Pkg2(-test3,-test4)');
 
   const file1 = document.createElement('div');
   file1.classList.add('file');
@@ -286,6 +287,7 @@ describe('Widget', () => {
             },
           ],
           'mode': 'run',
+          'switches': ['Pkg1(-test1,test2)', 'Pkg2(-test3,-test4)'],
           'name': 'pageWidget',
           'lab': false,
         }));

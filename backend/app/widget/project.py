@@ -43,16 +43,19 @@ project Main is
    --LANGUAGE_PLACEHOLDER--
 
    package Compiler is
-      for Switches ("ada") use ("-g", "-O0", "-gnata", "-gnatwa");
+      for Default_Switches ("Ada") use ("-g", "-O0", "-gnata", "-gnatwa");
+      --COMPILER_SWITCHES_PLACEHOLDER--
    end Compiler;
 
    package Builder is
-      for Switches ("ada") use ("-g");
+      for Default_Switches ("Ada") use ("-g");
+      --BUILDER_SWITCHES_PLACEHOLDER--
       for Global_Configuration_Pragmas use "main.adc";
    end Builder;
 
 end Main;
 """
+
 
 class ProjectError(Exception):
     pass
@@ -98,11 +101,13 @@ class Project:
     zip()
         Zips up the files of the project and returns the byte stream
     """
-    def __init__(self, files, spark_mode=False):
+    def __init__(self, files, switches, spark_mode=False):
         """
         Construct the Project. The list of files passed in are processed and stored based on their types and contents.
         :param files:
             The files to construct the project with
+        :param switches:
+            The list of suggested switches to add to the project
         :param spark_mode:
             Whether this is a spark project
         """
@@ -160,6 +165,10 @@ class Project:
             self.gpr.define_mains([self.main])
 
         self.file_list.append(self.gpr)
+
+        # Add suggested switches to gpr file (safely)
+        if switches:
+            self.gpr.insert_switches(switches)
 
         # Add ADC file to file list
         adc_content = COMMON_ADC
@@ -225,7 +234,7 @@ class RemoteProject(Project):
             Submits the project against the lab_list data. This will run the project against each test case and
             aggregate the results
         """
-    def __init__(self, app, container, task_id, files, spark_mode=False):
+    def __init__(self, app, container, task_id, files, switches, spark_mode=False):
         """
         Constructs the RemoteProject. Calls the super constructor and creates local_tempd and remote_tempd directories
         and pushes files to the container.
@@ -235,6 +244,8 @@ class RemoteProject(Project):
             The task id for the task that created this class
         :param files:
             The files for the project
+        :param switches:
+            The suggested switches for the project
         :param spark_mode:
             Whether or not this is a spark project
         """
@@ -243,7 +254,7 @@ class RemoteProject(Project):
         self.app = app
 
         # Call the Project constructor
-        super().__init__(files, spark_mode)
+        super().__init__(files, switches, spark_mode)
 
         self.container.push_files(self.file_list)
 

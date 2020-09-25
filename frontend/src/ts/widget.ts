@@ -17,6 +17,7 @@ export class Widget {
   private editors: Array<Editor> = [];
   protected readonly container: HTMLElement;
   private readonly name: string;
+  private readonly switches: Array<string> = [];
   private tabs = new Tabs();
   protected outputArea = new OutputArea();
 
@@ -112,6 +113,12 @@ export class Widget {
         this.dlType = DownloadType.Client;
       }
     }
+
+    // check for defined switches in attriburtes
+    const swStr = this.container.getAttribute('switches');
+    if (swStr) {
+      this.switches = swStr.split(';');
+    }
   }
 
   /**
@@ -161,6 +168,7 @@ export class Widget {
     const serverData: RunProgram.TS = {
       files: files,
       mode: mode,
+      switches: this.switches,
       name: this.name,
       lab: lab,
     };
@@ -197,6 +205,7 @@ export class Widget {
       case DownloadType.Server: {
         const serverData: DownloadRequest = {
           files: files,
+          switches: this.switches,
           name: this.name,
         };
 

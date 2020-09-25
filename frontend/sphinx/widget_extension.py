@@ -81,6 +81,7 @@ class Config(object):
     # The list of active buttons. Strings of the form 'xxx_button'.
     accumulate_code = False
     reset_accumulator = False
+    switches = set()
 
 
 config = Config()
@@ -318,6 +319,14 @@ class WidgetCodeDirective(Directive):
                                  argument_list))):
                 extra_attribs += ' {}="True"'.format(x)
 
+        unf_local_switches = list(filter(lambda y: y.startswith('switches='), argument_list))
+        local_switches = [x.split('=')[1] for x in unf_local_switches]
+        switch_list = (config.switches | set(local_switches))
+
+        if switch_list:
+            switch_str = ','.join(switch_list)
+            extra_attribs += f' switches="{switch_str}"'
+
         return [
             nodes.raw('',
                       template.format(server_url=WIDGETS_SERVER_URL,
@@ -347,6 +356,8 @@ def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
             else:
                 if key in config.buttons:
                     config.buttons.remove(key)
+        elif key.startswith('switches'):
+            config.switches.add(value)
         else:
             if not hasattr(config, key):
                 raise inliner.error(
