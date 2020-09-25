@@ -562,7 +562,7 @@ This is the corresponding implementation in Ada:
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Main is
+    procedure Show_Subprogram_Selection is
 
        procedure Show_Msg_V1 (Msg : String) is
        begin
@@ -595,7 +595,7 @@ This is the corresponding implementation in Ada:
           Put_Line ("ERROR: no version of Show_Msg selected!");
        end if;
 
-    end Main;
+    end Show_Subprogram_Selection;
 
 The structure of the code above is very similar to the one used in the C code.
 Again, we have two version of :ada:`Show_Msg`: :ada:`Show_Msg_V1` and
@@ -629,18 +629,18 @@ This approach promotes information hiding and component decoupling because:
   how events are implemented in the event manager.
 
 Let's see an example in C where we have a :c:`process_values()` function that
-calls a callback function (:c:`routine`) to process a list of values:
+calls a callback function (:c:`process_one`) to process a list of values:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Callback_Routine_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Callback_C
 
     !process_values.h
-    typedef int (*callback_routine) (int);
+    typedef int (*process_one_callback) (int);
 
-    void process_values (int              *values,
-                         int               len,
-                         callback_routine  routine);
+    void process_values (int                  *values,
+                         int                   len,
+                         process_one_callback  process_one);
 
     !process_values.c
     #include "process_values.h"
@@ -648,9 +648,9 @@ calls a callback function (:c:`routine`) to process a list of values:
     #include <assert.h>
     #include <stdio.h>
 
-    void process_values (int              *values,
-                         int               len,
-                         callback_routine  routine)
+    void process_values (int                  *values,
+                         int                   len,
+                         process_one_callback  process_one)
     {
         int i;
 
@@ -658,7 +658,7 @@ calls a callback function (:c:`routine`) to process a list of values:
 
         for (i = 0; i < len; i++)
         {
-            values[i] = routine (values[i]);
+            values[i] = process_one (values[i]);
         }
     }
 
@@ -690,7 +690,7 @@ calls a callback function (:c:`routine`) to process a list of values:
     }
 
 As mentioned previously, :c:`process_values()` doesn't have any knowledge about
-what :c:`routine()` does with the integer value it receives as a parameter.
+what :c:`process_one()` does with the integer value it receives as a parameter.
 Also, we could replace :c:`proc_10()` by another function without having to
 change the implementation of :c:`process_values()`.
 
@@ -703,31 +703,31 @@ This is the corresponding implementation in Ada:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Callback_Routine_Ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Callback_Ada
 
-    package Process_Values_Pkg is
+    package Values_Processing is
 
        type Integer_Array is array (Positive range <>) of Integer;
 
-       type Callback_Routine is not null access
+       type Process_One_Callback is not null access
          function (Value : Integer) return Integer;
 
-       procedure Process_Values (Values  : in out Integer_Array;
-                                 Routine :        Callback_Routine);
+       procedure Process_Values (Values      : in out Integer_Array;
+                                 Process_One :        Process_One_Callback);
 
-    end Process_Values_Pkg;
+    end Values_Processing;
 
-    package body Process_Values_Pkg is
+    package body Values_Processing is
 
-       procedure Process_Values (Values  : in out Integer_Array;
-                                 Routine :        Callback_Routine) is
+       procedure Process_Values (Values      : in out Integer_Array;
+                                 Process_One :        Process_One_Callback) is
        begin
           for I in Values'Range loop
-             Values (I) := Routine (Values (I));
+             Values (I) := Process_One (Values (I));
           end loop;
        end Process_Values;
 
-    end Process_Values_Pkg;
+    end Values_Processing;
 
     function Proc_10 (Value : Integer) return Integer;
 
@@ -738,10 +738,10 @@ This is the corresponding implementation in Ada:
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    with Process_Values_Pkg; use Process_Values_Pkg;
+    with Values_Processing; use Values_Processing;
     with Proc_10;
 
-    procedure Main is
+    procedure Show_Callback is
        Values : Integer_Array := (1, 2, 3, 4, 5);
     begin
        Process_Values (Values, Proc_10'Access);
@@ -752,13 +752,13 @@ This is the corresponding implementation in Ada:
                     & "] = "
                     & Integer'Image (Values (I)));
        end loop;
-    end Main;
+    end Show_Callback;
 
 Similar to the implementation in C, the :ada:`Process_Values` procedure
 receives the access to a callback routine, which is then called for each value
 of the :ada:`Values` array.
 
-Note that the declaration of :ada:`Callback_Routine` makes use of the
+Note that the declaration of :ada:`Process_One_Callback` makes use of the
 :ada:`not null access` declaration. By using this approach, we ensure that
 any parameter of this type has a valid value, so we can always call the
 callback routine.
