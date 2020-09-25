@@ -1,7 +1,7 @@
 env:
   global:
     - TOOLS_DIR=$HOME/build_tools
-    - GNAT_INSTALLER_PATH=$TOOLS_DIR/gnat-2020-20200429-x86_64-linux-bin
+    - GNAT_INSTALLER_PATH=$TOOLS_DIR/gnat-2020-20200818-x86_64-linux-bin
     - GNAT_PATH=$TOOLS_DIR/gnat-2020-x86_64-linux-bin
 
 os:
