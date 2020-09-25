@@ -766,7 +766,150 @@ callback routine.
 Design by components using dynamic libraries
 --------------------------------------------
 
-.. todo::
+In the previous sections, we have shown how to use packages to create separate
+components of a system. As we know, when designing a complex system, it is
+advisable to separate concerns into distinct units, so we can use Ada packages
+to represent each unit of a system. In this section, we go one step further and
+create separate dynamic libraries for each component, which we'll then link to
+the main application.
 
-    Complete section!
+Let's suppose we have a main system (:ada:`Main_System`) and a
+component *A* (:ada:`Component_A`) that we want to use in the main system. For
+example:
 
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.System_For_Dyn_Lib
+
+    --
+    --  File: component_a.ads
+    --
+    package Component_A is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       function Average (Data : Float_Array) return Float;
+
+    end Component_A;
+
+    --
+    --  File: component_a.adb
+    --
+    package body Component_A is
+
+       function Average (Data : Float_Array) return Float is
+          Acc : Float := 0.0;
+       begin
+          for Value of Data loop
+             Acc := Acc + Value;
+          end loop;
+          return Acc / Float (Data'Length);
+       end Average;
+
+    end Component_A;
+
+    --
+    --  File: main_system.adb
+    --
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Component_A; use Component_A;
+
+    procedure Main_System is
+       Values        : Float_Array := (10.0, 11.0, 12.0, 13.0);
+       Average_Value : Float;
+    begin
+       Average_Value := Average (Values);
+       Put_Line ("Average = " & Float'Image (Average_Value));
+    end Main_System;
+
+Note that, in the source-code example above, we're indicating the name of each
+file. We'll now see how to organize those files in a structure that is suitable
+for the GNAT build system (:program:`GPRbuild`).
+
+In order to discuss how to create dynamic libraries, we need to dig into some
+details about the build system. With GNAT, we can use project files for
+:program:`GPRbuild` to easily design dynamic libraries. Let's say we use the
+following directory structure for the code above:
+
+.. code-block:: none
+
+    |- component_a
+    |    | component_a.gpr
+    |    |- src
+    |    |    | component_a.adb
+    |    |    | component_a.ads
+    |- main_system
+    |    | main_system.gpr
+    |    |- src
+    |    |    | main_system.adb
+
+Here, we have two directories: `component_a` and `main_system`. Each directory
+contains a project file (with the `.gpr` file extension) and a source-code
+directory (`src`).
+
+In the source-code example above, we've seen the content of files
+:file:`component_a.ads`, :file:`component_a.adb` and :file:`main_system.adb`.
+Now, let's discuss how to write the project file for :ada:`Component_A`
+(:file:`component_a.gpr`), which will build the dynamic library for this
+component:
+
+.. code-block:: none
+
+    library project Component_A is
+
+       for Source_Dirs use ("src");
+       for Object_Dir use "obj";
+       for Create_Missing_Dirs use "True";
+       for Library_Name use "component_a";
+       for Library_Kind use "dynamic";
+       for Library_Dir use "lib";
+
+    end Component_A;
+
+The project is defined as a `library project` instead of `project`. This tells
+:program:`GPRbuild` to build a library instead of an executable binary. We then
+specify the library name using the `Library_Name` attribute, which is required,
+so it must appear in a library project. The next two library-related attributes
+are optional, but important for our use-case. We use:
+
+- `Library_Kind` to specify that we want to create a dynamic library |mdash|
+  by default, this attribute is set to `static`;
+
+- `Library_Dir` to specify the directory where the library is stored.
+
+In the project file of our main system (:file:`main_system.gpr`), we just need
+to reference the project of :ada:`Component_A` using a `with` clause and
+indicating the correct path to that project file:
+
+.. code-block:: none
+
+    with "../component_a/component_a.gpr";
+
+    project Main_System is
+        for Source_Dirs use ("src");
+        for Object_Dir use "obj";
+        for Create_Missing_Dirs use "True";
+        for Main use ("main_system.adb");
+    end Main_System;
+
+:program:`GPRbuild` takes care of selecting the correct settings to link the
+dynamic library created for :ada:`Component_A` with the main application
+(:ada:`Main_System`) and build an executable.
+
+We can use the same strategy to create a :ada:`Component_B` and dynamically
+link to it in the :ada:`Main_System`. We just need to create the separate
+structure for this component |mdash| with the appropriate Ada packages and
+project file |mdash| and include it in the project file of the main system
+using a `with` clause:
+
+.. code-block:: none
+
+    with "../component_a/component_a.gpr";
+    with "../component_b/component_b.gpr";
+
+    ...
+
+Again, :program:`GPRbuild` takes care of selecting the correct settings to link
+both dynamic libraries together with the main application.
+
+You can find more details and special setting for library projects in the
+`GPRbuild documentation <https://docs.adacore.com/gprbuild-docs/html/gprbuild_ug/gnat_project_manager.html#library-projects>`_.
