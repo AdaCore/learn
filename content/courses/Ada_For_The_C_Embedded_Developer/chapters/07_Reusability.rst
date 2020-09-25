@@ -497,10 +497,271 @@ Object orientation
 Pointer to subprograms
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+Pointers to subprograms allow us to dynamically select an appropriate
+subprogram at runtime. This selection might be triggered by an external
+event, or simply by the user. This can be useful when multiple versions of a
+routine exist, and the decision about which one to use cannot be made at
+compilation time.
 
-    Complete section!
+This is an example on how to declare and use pointers to functions in C:
 
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Selecting_Subprogram_C
+
+    !main.c
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    void show_msg_v1 (char *msg)
+    {
+        printf("Using version #1: %s\n", msg);
+    }
+
+    void show_msg_v2 (char *msg)
+    {
+        printf("Using version #2:\n %s\n", msg);
+    }
+
+    int main()
+    {
+        int selection = 1;
+        void (*current_show_msg) (char *);
+
+        switch (selection)
+        {
+            case 1:  current_show_msg = &show_msg_v1;    break;
+            case 2:  current_show_msg = &show_msg_v2;    break;
+            default: current_show_msg = NULL;            break;
+        }
+
+        if (current_show_msg != NULL)
+        {
+            current_show_msg ("Hello there!");
+        }
+        else
+        {
+            printf("ERROR: no version of show_msg() selected!\n");
+        }
+    }
+
+The example above contains two versions of the :c:`show_msg()` function:
+:c:`show_msg_v1()` and :c:`show_msg_v2()`. The function is selected depending
+on the value of :c:`selection`, which initializes the function pointer
+:c:`current_show_msg`. If there's no corresponding value, :c:`current_show_msg`
+is set to :c:`null` |mdash| alternatively, we could have selected a default
+version of :c:`show_msg()` function. By calling
+:c:`current_show_msg ("Hello there!")`, we're calling the function that
+:c:`current_show_msg` is pointing to.
+
+This is the corresponding implementation in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Selecting_Subprogram_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Subprogram_Selection is
+
+       procedure Show_Msg_V1 (Msg : String) is
+       begin
+          Put_Line ("Using version #1: " & Msg);
+       end Show_Msg_V1;
+
+       procedure Show_Msg_V2 (Msg : String) is
+       begin
+          Put_Line ("Using version #2: ");
+          Put_Line (Msg);
+       end Show_Msg_V2;
+
+       type Show_Msg_Proc is access procedure (Msg : String);
+
+       Current_Show_Msg : Show_Msg_Proc;
+       Selection        : Natural;
+
+    begin
+       Selection := 1;
+
+       case Selection is
+          when 1      => Current_Show_Msg := Show_Msg_V1'Access;
+          when 2      => Current_Show_Msg := Show_Msg_V2'Access;
+          when others => Current_Show_Msg := null;
+       end case;
+
+       if Current_Show_Msg /= null then
+          Current_Show_Msg ("Hello there!");
+       else
+          Put_Line ("ERROR: no version of Show_Msg selected!");
+       end if;
+
+    end Show_Subprogram_Selection;
+
+The structure of the code above is very similar to the one used in the C code.
+Again, we have two version of :ada:`Show_Msg`: :ada:`Show_Msg_V1` and
+:ada:`Show_Msg_V2`. We set :ada:`Current_Show_Msg` according to the value of
+:ada:`Selection`. Here, we use :ada:`'Access` to get access to the
+corresponding procedure. If no version of :ada:`Show_Msg` is available, we set
+:ada:`Current_Show_Msg` to :ada:`null`.
+
+Pointers to subprograms are also typically used as callback functions. This
+approach is extensively used in systems that process events, for example. Here,
+we could have a two-layered system:
+
+- A layer of the system (an event manager) triggers events depending on
+  information from sensors.
+
+    - For each event, callback functions can be registered.
+
+    - The event manager calls registered callback functions when an event is
+      triggered.
+
+- Another layer of the system registers callback functions for specific events
+  and decides what to do when those events are triggered.
+
+This approach promotes information hiding and component decoupling because:
+
+- the layer of the system responsible for managing events doesn't need to know
+  what the callback function actually does, while
+
+- the layer of the system that implements callback functions remains
+  agnostic to implementation details of the event manager |mdash| for example,
+  how events are implemented in the event manager.
+
+Let's see an example in C where we have a :c:`process_values()` function that
+calls a callback function (:c:`process_one`) to process a list of values:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Callback_C
+
+    !process_values.h
+    typedef int (*process_one_callback) (int);
+
+    void process_values (int                  *values,
+                         int                   len,
+                         process_one_callback  process_one);
+
+    !process_values.c
+    #include "process_values.h"
+
+    #include <assert.h>
+    #include <stdio.h>
+
+    void process_values (int                  *values,
+                         int                   len,
+                         process_one_callback  process_one)
+    {
+        int i;
+
+        assert (process_one != NULL);
+
+        for (i = 0; i < len; i++)
+        {
+            values[i] = process_one (values[i]);
+        }
+    }
+
+    !main.c
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    #include "process_values.h"
+
+    int proc_10 (int val)
+    {
+        return val + 10;
+    }
+
+    # define LEN_VALUES     5
+
+    int main()
+    {
+
+        int values[LEN_VALUES] = { 1, 2, 3, 4, 5 };
+        int i;
+
+        process_values (values, LEN_VALUES, &proc_10);
+
+        for (i = 0; i < LEN_VALUES; i++)
+        {
+            printf("Value [%d] = %d\n", i, values[i]);
+        }
+    }
+
+As mentioned previously, :c:`process_values()` doesn't have any knowledge about
+what :c:`process_one()` does with the integer value it receives as a parameter.
+Also, we could replace :c:`proc_10()` by another function without having to
+change the implementation of :c:`process_values()`.
+
+Note that :c:`process_values()` calls an :c:`assert()` for the function
+pointer to compare it against :c:`null`. Here, instead of checking the validity
+of the function pointer, we're expecting the caller of :c:`process_values()`
+to provide a valid pointer.
+
+This is the corresponding implementation in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Callback_Ada
+
+    package Values_Processing is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Process_One_Callback is not null access
+         function (Value : Integer) return Integer;
+
+       procedure Process_Values (Values      : in out Integer_Array;
+                                 Process_One :        Process_One_Callback);
+
+    end Values_Processing;
+
+    package body Values_Processing is
+
+       procedure Process_Values (Values      : in out Integer_Array;
+                                 Process_One :        Process_One_Callback) is
+       begin
+          for I in Values'Range loop
+             Values (I) := Process_One (Values (I));
+          end loop;
+       end Process_Values;
+
+    end Values_Processing;
+
+    function Proc_10 (Value : Integer) return Integer;
+
+    function Proc_10 (Value : Integer) return Integer is
+    begin
+       return Value + 10;
+    end Proc_10;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Values_Processing; use Values_Processing;
+    with Proc_10;
+
+    procedure Show_Callback is
+       Values : Integer_Array := (1, 2, 3, 4, 5);
+    begin
+       Process_Values (Values, Proc_10'Access);
+
+       for I in Values'Range loop
+          Put_Line ("Value ["
+                    & Positive'Image (I)
+                    & "] = "
+                    & Integer'Image (Values (I)));
+       end loop;
+    end Show_Callback;
+
+Similar to the implementation in C, the :ada:`Process_Values` procedure
+receives the access to a callback routine, which is then called for each value
+of the :ada:`Values` array.
+
+Note that the declaration of :ada:`Process_One_Callback` makes use of the
+:ada:`not null access` declaration. By using this approach, we ensure that
+any parameter of this type has a valid value, so we can always call the
+callback routine.
 
 Design by components using dynamic libraries
 --------------------------------------------
