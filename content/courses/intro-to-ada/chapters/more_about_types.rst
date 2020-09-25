@@ -218,12 +218,12 @@ Here is how you declare a simple pointer type, or access type, in Ada:
 .. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     package Dates is
-       type Month_Type is (January, February, March, April, May, June, July,
-                           August, September, October, November, December);
+       type Months is (January, February, March, April, May, June, July,
+                       August, September, October, November, December);
 
        type Date is record
           Day   : Integer range 1 .. 31;
-          Month : Month_Type;
+          Month : Months;
           Year  : Integer;
        end record;
     end Dates;
