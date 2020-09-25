@@ -646,6 +646,7 @@ calls a callback function (:c:`routine`) to process a list of values:
     #include "process_values.h"
 
     #include <assert.h>
+    #include <stdio.h>
 
     void process_values (int              *values,
                          int               len,
@@ -653,7 +654,7 @@ calls a callback function (:c:`routine`) to process a list of values:
     {
         int i;
 
-        assert (routine != null);
+        assert (process_one != NULL);
 
         for (i = 0; i < len; i++)
         {
