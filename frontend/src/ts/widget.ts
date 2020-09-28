@@ -152,6 +152,11 @@ export class Widget {
   protected async buttonCB(mode: string, lab = false): Promise<void> {
     this.outputArea.reset();
 
+    // Clear any annotations added from previous button click
+    this.editors.map((e) => {
+      e.clearGutterAnnotation();
+    });
+
     this.outputArea.add(['output_info', 'console_output'],
         Strings.CONSOLE_OUTPUT_LABEL + ':');
     this.outputArea.showSpinner(true);
@@ -315,11 +320,14 @@ export class Widget {
 
               if (ctMatchFound[4].indexOf(' info:') == 0) {
                 homeArea.addInfo(outMsg, cb);
-                annotationType = 'information';
+                annotationType = 'info';
               } else {
+                if (ctMatchFound[4].indexOf(' warning:') == 0) {
+                  annotationType = 'warning';
+                } else {
+                  annotationType = 'error';
+                }
                 homeArea.addMsg(outMsg, cb);
-                homeArea.errorCount++;
-                annotationType = 'error';
               }
             } else {
               basename = rtMatchFound[1];
@@ -327,7 +335,6 @@ export class Widget {
               col = 1;
 
               homeArea.addMsg(outMsg, cb);
-              homeArea.errorCount++;
               annotationType = 'error';
             }
 

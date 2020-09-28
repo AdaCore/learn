@@ -119,7 +119,7 @@ export class Editor {
   public reset(): void {
     this.editor.setValue(this.initialContents);
     this.editor.gotoLine(1);
-    this.editor.getSession().clearAnnotations();
+    this.clearGutterAnnotation();
   }
 
   /**
@@ -173,12 +173,22 @@ export class Editor {
    * @param {string} type - The type of annotation
    */
   public setGutterAnnotation(line: number, col: number, msg: string,
-    type: string): void {
-    this.editor.getSession().setAnnotations([{
+      type: string): void {
+    const session = this.editor.getSession();
+    const oldAnnotations = session.getAnnotations();
+    const newAnnotation = {
       row: line - 1,
       column: col,
       text: msg,
       type: type,
-    }]);
+    };
+    session.setAnnotations([...oldAnnotations, newAnnotation]);
+  }
+
+  /**
+   *  Clear the annotations in the gutter
+   */
+  public clearGutterAnnotation(): void {
+    this.editor.getSession().clearAnnotations();
   }
 }

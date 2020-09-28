@@ -4,7 +4,6 @@ import {CheckOutput} from './types';
 /** Abstract class representing an Area **/
 export abstract class Area {
   protected container: HTMLElement;
-  public errorCount = 0;
 
   /**
    * Render the Area
@@ -46,7 +45,6 @@ export abstract class Area {
     while (this.container.firstChild) {
       this.container.removeChild(this.container.firstChild);
     }
-    this.errorCount = 0;
   }
 
   /**
@@ -151,14 +149,6 @@ export class OutputArea extends Area {
         this.container.removeChild(this.spinner);
       }
     }
-  }
-
-  /**
-   * Get the number of errors recorded in the OutputArea
-   * @return {number} The number of errors counted
-   */
-  public getErrCount(): number {
-    return this.errorCount;
   }
 }
 

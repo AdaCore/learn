@@ -80,7 +80,7 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --open --config webpack.dev.js",
-    "tsc": "tsc",
+    "tsc": "tsc --noEmit",
     "eslint": "eslint --ext .ts src/ tests/",
     "staging": "webpack --env.staging --config webpack.prod.js",
     "production": "webpack --config webpack.prod.js",
