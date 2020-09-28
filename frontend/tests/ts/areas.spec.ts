@@ -72,16 +72,13 @@ describe('Area', () => {
     inTest.add([], 'test area 1');
     inTest.add([], 'test area 2');
 
-    inTest.errorCount = 4;
-
     it('should have two areas in the container', () => {
       expect(parent).to.have.descendants('div').and.have.length(2);
     });
 
-    it('should have 0 areas in the container after reset and 0 errors', () => {
+    it('should have 0 areas in the container after reset', () => {
       inTest.reset();
       expect(parent).not.to.have.descendants('div');
-      expect(inTest.errorCount).to.equal(0);
     });
   });
 
@@ -214,19 +211,6 @@ describe('OutputArea()', () => {
     it('should remove a spinner from the container', () => {
       inTest.showSpinner(false);
       expect(parent).not.to.have.descendants('div.spinner');
-    });
-  });
-
-  describe('#getErrCount()', () => {
-    const inTest = new OutputArea();
-
-    it('should have an error count of 0 to start', () => {
-      expect(inTest.getErrCount()).to.equal(0);
-    });
-
-    it('should have a count of 3 after setting it', () => {
-      inTest.errorCount = 3;
-      expect(inTest.getErrCount()).to.equal(3);
     });
   });
 });
