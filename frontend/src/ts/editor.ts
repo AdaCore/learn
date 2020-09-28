@@ -119,6 +119,7 @@ export class Editor {
   public reset(): void {
     this.editor.setValue(this.initialContents);
     this.editor.gotoLine(1);
+    this.clearGutterAnnotation();
   }
 
   /**
@@ -154,12 +155,40 @@ export class Editor {
   }
 
   /**
-   * Jumo the editor to row:col
+   * Jump the editor to row:col
    * @param {number} line - The line number to goto
    * @param {number} col - The col + 1 to goto
    */
   public gotoLine(line: number, col: number): void {
     this.editor.gotoLine(line, col - 1, true);
     this.editor.focus();
+  }
+
+  /**
+   * Add gutter annotations to the ace editor session
+   *
+   * @param {number} line - The line number
+   * @param {number} col - The column number
+   * @param {string} msg - The corresponding message
+   * @param {string} type - The type of annotation
+   */
+  public setGutterAnnotation(line: number, col: number, msg: string,
+      type: string): void {
+    const session = this.editor.getSession();
+    const oldAnnotations = session.getAnnotations();
+    const newAnnotation = {
+      row: line - 1,
+      column: col,
+      text: msg,
+      type: type,
+    };
+    session.setAnnotations([...oldAnnotations, newAnnotation]);
+  }
+
+  /**
+   *  Clear the annotations in the gutter
+   */
+  public clearGutterAnnotation(): void {
+    this.editor.getSession().clearAnnotations();
   }
 }

@@ -152,6 +152,11 @@ export class Widget {
   protected async buttonCB(mode: string, lab = false): Promise<void> {
     this.outputArea.reset();
 
+    // Clear any annotations added from previous button click
+    this.editors.map((e) => {
+      e.clearGutterAnnotation();
+    });
+
     this.outputArea.add(['output_info', 'console_output'],
         Strings.CONSOLE_OUTPUT_LABEL + ':');
     this.outputArea.showSpinner(true);
@@ -294,19 +299,17 @@ export class Widget {
             let basename: string;
             let row: number;
             let col: number;
+            let ed: Editor;
+            let annotationType: string;
 
             // Lines that contain a sloc are clickable:
             const cb = (): void => {
               if (window.getSelection().toString() == '') {
-                this.editors.map((e) => {
-                  if (basename == e.getResource().basename) {
-                    // Switch to the tab that contains the editor
-                    e.getTab().click();
-
-                    // Jump to the corresponding line
-                    e.gotoLine(row, col);
-                  }
-                });
+                if (ed) {
+                  ed.getTab().click();
+                  // Jump to corresponding line
+                  ed.gotoLine(row, col);
+                }
               }
             };
 
@@ -317,9 +320,14 @@ export class Widget {
 
               if (ctMatchFound[4].indexOf(' info:') == 0) {
                 homeArea.addInfo(outMsg, cb);
+                annotationType = 'info';
               } else {
+                if (ctMatchFound[4].indexOf(' warning:') == 0) {
+                  annotationType = 'warning';
+                } else {
+                  annotationType = 'error';
+                }
                 homeArea.addMsg(outMsg, cb);
-                homeArea.errorCount++;
               }
             } else {
               basename = rtMatchFound[1];
@@ -327,7 +335,17 @@ export class Widget {
               col = 1;
 
               homeArea.addMsg(outMsg, cb);
-              homeArea.errorCount++;
+              annotationType = 'error';
+            }
+
+            this.editors.map((e) => {
+              if (basename == e.getResource().basename) {
+                ed = e;
+              }
+            });
+
+            if (ed) {
+              ed.setGutterAnnotation(row, col, outMsg, annotationType);
             }
           } else {
             homeArea.addLine(outMsg);
