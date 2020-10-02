@@ -43,15 +43,8 @@ $ vagrant ssh server
 
 $ cd /vagrant
 $ source venv/bin/activate
-$ flask run --host=0.0.0.0
-
-# Open another terminal window and run
-
-$ vagrant ssh server
-
-# The following commands will be run inside the vm
-
-$ cd /vagrant
-$ source venv/bin/activate
-$ celery worker -A celery_worker.celery -E --loglevel=DEBUG
+$ ./dev_server.sh
 ```
+
+You can use ctrl-c to quit the bash script which will kill both the flask
+and celery processes.
