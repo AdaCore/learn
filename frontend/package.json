@@ -84,7 +84,7 @@
     "eslint": "eslint --ext .ts src/ tests/",
     "staging": "webpack --env.staging --config webpack.prod.js",
     "production": "webpack --config webpack.prod.js",
-    "test": "mocha --exit",
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"strict\":false}' mocha --exit",
     "cover": "nyc yarn run test"
   },
   "author": "AdaCore",
@@ -134,6 +134,6 @@
       "ts-node/register",
       "jsdom-global/register"
     ],
-    "spec": "tests/**/*.ts"
+    "spec": "tests/**/*.spec.ts"
   }
 }

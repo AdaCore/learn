@@ -1,7 +1,7 @@
 /** Class represents Tab component */
 export class Tabs {
-  private headers: Array<HTMLElement> = [];
-  private contents: Array<HTMLElement> = [];
+  private headers: Array<HTMLButtonElement> = [];
+  private contents: Array<HTMLDivElement> = [];
 
   /**
    * The event callback signature for tabs
@@ -12,12 +12,12 @@ export class Tabs {
   /**
    * Add a Tab
    * @param {string} name - The name to put at the tab button
-   * @param {HTMLElement} content - The content to put inside the tab
+   * @param {HTMLDivElement} content - The content to put inside the tab
    * @param {tabChange} fn - The function to call when the tab changes
-   * @return {HTMLElement} The button or header for the new tab
+   * @return {HTMLDivElement} The button or header for the new tab
    */
-  public addTab(name: string, content: HTMLElement,
-      fn: () => void): HTMLElement {
+  public addTab(name: string, content: HTMLDivElement,
+      fn: () => void): HTMLButtonElement {
     const tabContent = document.createElement('div');
     tabContent.classList.add('tab-content');
     tabContent.appendChild(content);
@@ -48,9 +48,9 @@ export class Tabs {
 
   /**
    * Render the tab into the parent
-   * @param {HTMLElement} parent - The parent to put the tab into
+   * @param {HTMDivLElement} parent - The parent to put the tab into
    */
-  public render(parent: HTMLElement): void {
+  public render(parent: HTMLDivElement): void {
     const headerContainer = document.createElement('div');
     headerContainer.classList.add('tab');
     parent.appendChild(headerContainer);
@@ -96,7 +96,7 @@ export class Tabs {
 
 /** Class represents a Button */
 export class Button {
-  private readonly obj: HTMLElement;
+  private readonly obj: HTMLButtonElement;
   public disabled = false;
 
   /**
@@ -132,9 +132,9 @@ export class Button {
 
   /**
    * Render the button
-   * @return {HTMLElement} The button
+   * @return {HTMLButtonElement} The button
    */
-  public render(): HTMLElement {
+  public render(): HTMLButtonElement {
     return this.obj;
   }
 }
@@ -190,9 +190,9 @@ export class ButtonGroup {
 
   /**
    * Render the button group
-   * @return {HTMLElement} - The rendered elements
+   * @return {HTMLDivElement} - The rendered elements
    */
-  public render(): HTMLElement {
+  public render(): HTMLDivElement {
     const elem = document.createElement('div');
     elem.classList.add('col-md-3');
 
@@ -206,20 +206,20 @@ export class ButtonGroup {
 
 /** Class represents a checkbox */
 export class CheckBox {
-  private readonly container: HTMLElement;
+  private readonly container: HTMLDivElement;
   private readonly input: HTMLInputElement;
-  private label: HTMLElement;
-  private state: boolean;
+  private label: HTMLLabelElement;
+  // private state: boolean;
 
   /**
    * Construct a checkbox
    * @param {string} label - The label text
-   * @param {HTMLElement} [parent] - The parent to insert the checkbox into
+   * @param {HTMLDivElement} [parent] - The parent to insert the checkbox into
    * @param {string[]} [classes] - The classes to apply to the checkbox
    * @param {string} [title] - The title for the checkbox, tooltip
    */
   constructor(label: string,
-      parent? : HTMLElement,
+      parent? : HTMLDivElement,
       classes? : string[],
       title? : string) {
     if (parent == undefined) {
@@ -260,7 +260,7 @@ export class CheckBox {
   }
 
   /**
-   * Returns the actual checkbox HTMLElement object
+   * Returns the actual checkbox HTMLInputElement object
    * @return {HTMLInputElement} The checkbox
    */
   public getCheckBox(): HTMLInputElement {
@@ -269,9 +269,9 @@ export class CheckBox {
 
   /**
    * Renders the checkbox
-   * @return {HTMLElement} The container with the label and checkbox
+   * @return {HTMLDivElement} The container with the label and checkbox
    */
-  public render(): HTMLElement {
+  public render(): HTMLDivElement {
     return this.container;
   }
 

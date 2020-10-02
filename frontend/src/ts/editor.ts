@@ -18,11 +18,11 @@ export enum EditorLanguage {
 
 /** Class representing an Editor **/
 export class Editor {
-  private readonly container: HTMLElement;
+  private readonly container: HTMLDivElement;
   private editor: ace.Editor;
   private readonly initialContents: string;
   private readonly basename: string;
-  private tab: HTMLElement;
+  private tab: HTMLButtonElement | null = null;
 
   /**
    * Create an Editor
@@ -35,7 +35,7 @@ export class Editor {
     this.editor = ace.edit(this.container);
 
     // Set the mode
-    if (resource.basename.match(/.ad[sb]$/)) {
+    if (resource.basename?.match(/.ad[sb]$/)) {
       this.editor.session.setMode(EditorLanguage.Ada);
     } else {
       this.editor.session.setMode(EditorLanguage.C_CPP);
@@ -106,14 +106,6 @@ export class Editor {
   }
 
   /**
-   * Get the theme of the editor
-   * @return {EditorTheme} theme - The ace theme currently set
-   */
-  public getTheme(): EditorTheme {
-    return EditorTheme[this.editor.getTheme()];
-  }
-
-  /**
    * Reset the editor back to default state
    */
   public reset(): void {
@@ -124,9 +116,9 @@ export class Editor {
 
   /**
    * Render the editor
-   * @return {HTMLElement} The HTMLElement object holding the editor
+   * @return {HTMLDivElement} The HTMLDivElement object holding the editor
    */
-  public render(): HTMLElement {
+  public render(): HTMLDivElement {
     return this.container;
   }
 
@@ -140,17 +132,17 @@ export class Editor {
 
   /**
    * Store the tab holding this editor
-   * @param {HTMLElement} tab - The tab holding this editor
+   * @param {HTMLButtonElement} tab - The tab holding this editor
    */
-  public setTab(tab: HTMLElement): void {
+  public setTab(tab: HTMLButtonElement): void {
     this.tab = tab;
   }
 
   /**
    * Return the tab holding this editor
-   * @return {HTMLElement} The tab holding this editor
+   * @return {HTMLButtonElement} The tab holding this editor
    */
-  public getTab(): HTMLElement {
+  public getTab(): HTMLButtonElement | null {
     return this.tab;
   }
 

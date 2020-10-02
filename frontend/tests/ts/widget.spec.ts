@@ -13,13 +13,17 @@ import {OutputArea} from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
 
 import {widgetFactory, Widget, LabWidget} from '../../src/ts/widget';
-import {delay} from '../../src/ts/utilities';
+
+function delay(ms: number): Promise<unknown> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 describe('widgetFactory()', () => {
   let htmlList: HTMLCollectionOf<Element>;
   let inTestList: Array<Widget | LabWidget>;
   let pageWidget: HTMLElement;
-  let file: HTMLElement;
+  let file: HTMLDivElement;
+  let shadowFile: HTMLDivElement;
 
   beforeEach(() => {
     pageWidget = document.createElement('div');
@@ -29,7 +33,7 @@ describe('widgetFactory()', () => {
     pageWidget.setAttribute('inline', 'True');
     document.body.appendChild(pageWidget);
 
-    const shadowFile = document.createElement('div');
+    shadowFile = document.createElement('div');
     shadowFile.classList.add('shadow_file');
     shadowFile.setAttribute('basename', 'shadow.txt');
     shadowFile.textContent = 'Hello shadow';
@@ -83,6 +87,32 @@ describe('widgetFactory()', () => {
 
   it('should create div with error when no files in widget', () => {
     pageWidget.removeChild(file);
+    htmlList = document.getElementsByClassName('widget_editor');
+    inTestList = widgetFactory(htmlList);
+
+    expect(inTestList).to.have.length(0);
+    expect(pageWidget).to.have.descendants('div').with.length(1);
+    const errorDiv = pageWidget.querySelector('div');
+    expect(errorDiv).to.have.html(
+        '<p>An error has occured processing this widget.' +
+        Strings.INTERNAL_ERROR_MESSAGE + '</p>');
+  });
+
+  it('should create div with error when file has no name', () => {
+    file.removeAttribute('basename');
+    htmlList = document.getElementsByClassName('widget_editor');
+    inTestList = widgetFactory(htmlList);
+
+    expect(inTestList).to.have.length(0);
+    expect(pageWidget).to.have.descendants('div').with.length(1);
+    const errorDiv = pageWidget.querySelector('div');
+    expect(errorDiv).to.have.html(
+        '<p>An error has occured processing this widget.' +
+        Strings.INTERNAL_ERROR_MESSAGE + '</p>');
+  });
+
+  it('should create div with error when shadow file has no name', () => {
+    shadowFile.removeAttribute('basename');
     htmlList = document.getElementsByClassName('widget_editor');
     inTestList = widgetFactory(htmlList);
 

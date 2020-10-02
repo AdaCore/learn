@@ -5,7 +5,6 @@ import {fetchBlob, DownloadRequest, DownloadResponse} from './comms';
 import {ServerWorker} from './server';
 import {Resource, RunProgram, CheckOutput} from './types';
 import * as Strings from './strings';
-import * as util from './utilities';
 
 enum DownloadType {
   None,
@@ -16,8 +15,8 @@ enum DownloadType {
 /** The Widget class */
 export class Widget {
   private editors: Array<Editor> = [];
-  protected readonly container: HTMLElement;
-  private readonly name: string;
+  protected readonly container: HTMLDivElement;
+  private readonly name: string | null;
   private tabs = new Tabs();
   protected outputArea = new OutputArea();
 
@@ -28,14 +27,14 @@ export class Widget {
   private readonly server: string;
 
   private shadowFiles: Array<Resource> = [];
-  protected outputGroup: HTMLElement;
+  protected outputGroup: HTMLDivElement | null = null;
 
   /**
    * Constructs the Widget
-   * @param {HTMLElement} container - the container for the widget
+   * @param {HTMLDivElement} container - the container for the widget
    * @param {string} server - the server address:port
    */
-  constructor(container: HTMLElement, server: string) {
+  constructor(container: HTMLDivElement, server: string) {
     const resources: Array<Resource> = [];
     this.server = server;
     this.container = container;
@@ -46,8 +45,11 @@ export class Widget {
     const files = this.container.getElementsByClassName('file');
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      if (!file.hasAttribute('basename') || file.textContent == null) {
+        throw Error('Malform widget: File doesnt have a name');
+      }
       const a: Resource = {
-        basename: file.getAttribute('basename'),
+        basename: file.getAttribute('basename') as string,
         contents: file.textContent,
       };
       resources.push(a);
@@ -65,8 +67,11 @@ export class Widget {
     const shadowFiles = this.container.getElementsByClassName('shadow_file');
     for (let i = 0; i < shadowFiles.length; i++) {
       const file = shadowFiles[i];
+      if (!file.hasAttribute('basename') || file.textContent == null) {
+        throw Error('Malform widget: File doesnt have a name');
+      }
       const a: Resource = {
-        basename: file.getAttribute('basename'),
+        basename: file.getAttribute('basename') as string,
         contents: file.textContent,
       };
       this.shadowFiles.push(a);
@@ -103,7 +108,7 @@ export class Widget {
     }
 
     // if this widget doesn't have a name defined, don't allow for download
-    if (util.isNull(this.name)) {
+    if (this.name == null) {
       this.dlType = DownloadType.None;
     } else {
       // if there are any buttons, the dltype needs to be server
@@ -236,6 +241,22 @@ export class Widget {
     }
     return this.outputArea;
   }
+  /**
+   * Maps a basename to the corresponding editor
+   *
+   * @private
+   * @param {string} basename - The basename to search for
+   * @return {(Editor | null)} - Return the editor of null if not found
+   */
+  private basenameToEditor(basename: string): Editor | null {
+    for (const e of this.editors) {
+      if (basename === e.getResource().basename) {
+        return e;
+      }
+    }
+
+    return null;
+  }
 
   /**
    * Handle the msg data coming back from server
@@ -253,67 +274,53 @@ export class Widget {
         // Intentional: fall through
       case 'stderr':
       case 'stdout': {
-        const ctRegex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
-        const rtRegex = /^raised .+ : ([a-zA-Z._0-9-]+):(\d+) (.+)$/m;
-
         // Split multiline messages into single lines for processing
         const outMsgList = msg.data.split(/\r?\n/);
         for (const outMsg of outMsgList) {
-          const ctMatchFound: Array<string> = outMsg.match(ctRegex);
-          const rtMatchFound: Array<string> = outMsg.match(rtRegex);
+          const ctRegex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
+          const rtRegex = /^raised .+ : ([a-zA-Z._0-9-]+):(\d+) (.+)$/m;
+          const ctMatchFound = outMsg.match(ctRegex);
+          const rtMatchFound = outMsg.match(rtRegex);
+          // Lines that contain a sloc are clickable:
+          const cb = (row: number, col: number, ed: Editor | null): void => {
+            if (window.getSelection()?.toString() == '') {
+              ed?.getTab()?.click();
+              // Jump to corresponding line
+              ed?.gotoLine(row, col);
+            }
+          };
 
-          if (ctMatchFound || rtMatchFound) {
-            let basename: string;
-            let row: number;
-            let col: number;
-            let ed: Editor;
-            let annotationType: string;
+          if (ctMatchFound?.length == 5) {
+            const basename = ctMatchFound[1];
+            const editor = this.basenameToEditor(basename);
+            const row = parseInt(ctMatchFound[2]);
+            const col = parseInt(ctMatchFound[3]);
 
-            // Lines that contain a sloc are clickable:
-            const cb = (): void => {
-              if (window.getSelection().toString() == '') {
-                if (ed) {
-                  ed.getTab().click();
-                  // Jump to corresponding line
-                  ed.gotoLine(row, col);
-                }
-              }
-            };
-
-            if (ctMatchFound) {
-              basename = ctMatchFound[1];
-              row = parseInt(ctMatchFound[2]);
-              col = parseInt(ctMatchFound[3]);
-
-              if (ctMatchFound[4].indexOf(' info:') == 0) {
-                homeArea.addInfo(outMsg, cb);
-                annotationType = 'info';
-              } else {
-                if (ctMatchFound[4].indexOf(' warning:') == 0) {
-                  annotationType = 'warning';
-                } else {
-                  annotationType = 'error';
-                }
-                homeArea.addMsg(outMsg, cb);
-              }
+            if (ctMatchFound[4].indexOf(' info:') === 0) {
+              homeArea.addInfo(outMsg, () => {
+                cb(row, col, editor);
+              });
+              editor?.setGutterAnnotation(row, col, outMsg, 'info');
             } else {
-              basename = rtMatchFound[1];
-              row = parseInt(rtMatchFound[2]);
-              col = 1;
-
-              homeArea.addMsg(outMsg, cb);
-              annotationType = 'error';
-            }
-
-            this.editors.map((e) => {
-              if (basename == e.getResource().basename) {
-                ed = e;
+              if (ctMatchFound[4].indexOf(' warning:') === 0) {
+                editor?.setGutterAnnotation(row, col, outMsg, 'warning');
+              } else {
+                editor?.setGutterAnnotation(row, col, outMsg, 'error');
               }
-            });
-
-            if (ed) {
-              ed.setGutterAnnotation(row, col, outMsg, annotationType);
+              homeArea.addMsg(outMsg, () => {
+                cb(row, col, editor);
+              });
             }
+          } else if (rtMatchFound?.length == 4) {
+            const basename = rtMatchFound[1];
+            const editor = this.basenameToEditor(basename);
+            const row = parseInt(rtMatchFound[2]);
+            const col = 1;
+
+            homeArea.addMsg(outMsg, () => {
+              cb(row, col, editor);
+            });
+            editor?.setGutterAnnotation(row, col, outMsg, 'error');
           } else {
             homeArea.addLine(outMsg);
           }
@@ -365,9 +372,9 @@ export class Widget {
 
   /**
    * Render the settings bar for the widget
-   * @return {HTMLElement} the rendered settings bar
+   * @return {HTMLDivElement} the rendered settings bar
    */
-  private renderSettingsBar(): HTMLElement {
+  private renderSettingsBar(): HTMLDivElement {
     const settingsBar = document.createElement('div');
     settingsBar.classList.add('settings-bar');
 
@@ -483,10 +490,10 @@ export class LabWidget extends Widget {
 
   /**
    * Constructs the LabWidget
-   * @param {HTMLElement} container - the container for the widget
+   * @param {HTMLDivElement} container - the container for the widget
    * @param {string} server - the server address:port
    */
-  constructor(container: HTMLElement, server: string) {
+  constructor(container: HTMLDivElement, server: string) {
     super(container, server);
 
     this.buttons.addButton([],
@@ -556,7 +563,7 @@ export class LabWidget extends Widget {
   public render(): void {
     super.render();
     const lc = this.labContainer.render();
-    this.outputGroup.appendChild(lc);
+    this.outputGroup?.appendChild(lc);
   }
 }
 
@@ -572,7 +579,7 @@ export function widgetFactory(widgets: HTMLCollectionOf<Element>):
     Array<Widget | LabWidget> {
   const widgetList = [];
   for (let i = 0; i < widgets.length; i++) {
-    const element = (widgets[i] as HTMLElement);
+    const element = (widgets[i] as HTMLDivElement);
     const server = element.getAttribute('example_server');
     try {
       if (server) {

@@ -1,7 +1,15 @@
 import {fetchJSON} from './comms';
 import {RunProgram, CheckOutput} from './types';
-import * as Strings from './strings';
-import * as util from './utilities';
+
+/**
+ * Delay function
+ *
+ * @param {number} ms - Number of milliseconds to delay-+
+ * @return {Promise<unknown>} - A promise to await
+ */
+function delay(ms: number): Promise<unknown> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 /**
  * Worker class for server REST sequence
@@ -12,6 +20,8 @@ import * as util from './utilities';
 export class ServerWorker {
   private readonly server: string;
   private readonly cb: (data: CheckOutput.FS) => number;
+  private readonly INTERNAL_ERROR_MESSAGE =
+  'Please report this issue on https://github.com/AdaCore/learn/issues';
 
   /**
    * The data processing callback for server data
@@ -68,14 +78,14 @@ export class ServerWorker {
     nReq++;
 
     if (nReq >= 200) {
-      throw new Error('Request timed out. ' + Strings.INTERNAL_ERROR_MESSAGE);
+      throw new Error('Request timed out. ' + this.INTERNAL_ERROR_MESSAGE);
     }
 
     lRead += this.cb(rdata);
 
     if (!rdata.completed) {
       // We have not finished processing the output: call this again
-      await util.delay(250);
+      await delay(250);
       await this.getOutputFromIdentifier(json, lRead, nReq);
     }
   }
