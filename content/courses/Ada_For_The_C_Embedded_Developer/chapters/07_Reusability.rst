@@ -596,8 +596,9 @@ because this discriminant is visible in the *non-private* part of package
 Variant records
 ~~~~~~~~~~~~~~~
 
-In simple terms, a variant record is a record with discriminants that allows
-for changing its structure. Basically, it's a record containing a :ada:`case`.
+In simple terms, a variant record |mdash| also called *discriminated record*
+in Ada terminology |mdash| is a record with discriminants that allows for
+changing its structure. Basically, it's a record containing a :ada:`case`.
 This is the general structure:
 
 .. code-block:: ada
