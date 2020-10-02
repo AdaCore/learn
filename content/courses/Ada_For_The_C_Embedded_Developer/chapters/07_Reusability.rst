@@ -913,3 +913,9 @@ both dynamic libraries together with the main application.
 
 You can find more details and special setting for library projects in the
 `GPRbuild documentation <https://docs.adacore.com/gprbuild-docs/html/gprbuild_ug/gnat_project_manager.html#library-projects>`_.
+
+.. todo::
+
+    Add link to section of *Embedded Ada* course that presents more advanced
+    features, as the one described in GNAT examples directory
+    (`share\examples\gnat\plugins`).
