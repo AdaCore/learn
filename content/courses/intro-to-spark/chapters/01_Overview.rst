@@ -94,7 +94,7 @@ We start with a simple example of a subprogram in Ada that uses SPARK
 aspects to specify verifiable subprogram contracts. The subprogram, called
 :ada:`Increment`, adds 1 to the value of its parameter :ada:`X`:
 
-.. code:: ada prove_report_all_button switches=Compiler(-gnato21);Builder(-j8,-k)
+.. code:: ada prove_report_all_button
 
    procedure Increment
      (X : in out Integer)
