@@ -921,5 +921,5 @@ You can find more details and special setting for library projects in the
     :file:`share/examples/gnat/plugins` directory of the GNAT toolchain
     installation. As described in the README file from that directory, this
     example "comprises a main program which probes regularly for the existence
-    of shared libraries in known location. If such libraries are present, it
+    of shared libraries in a known location. If such libraries are present, it
     uses them to implement features initially not present in the main program."
