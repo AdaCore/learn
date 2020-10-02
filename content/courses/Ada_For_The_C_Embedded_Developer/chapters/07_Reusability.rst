@@ -589,7 +589,7 @@ procedures for the :ada:`Ext_Rec` type. In Ada, we don't need object-oriented
 programming features to do that: simple (untagged) records can be used to
 derive types, inherit operations and override them. However, in applications
 where the actual subprogram to be called is determined dynamically at run-time,
-we need dispatching calls. In this case, we can use tagged types to implement
+we need dispatching calls. In this case, we must use tagged types to implement
 this.
 
 Comparing untagged and tagged types
