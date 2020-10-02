@@ -99,7 +99,7 @@ Let's start with an implementation in C for the system described above:
 
     int A_is_active (A *a);
 
-    float A_get_val (A *a);
+    float A_value (A *a);
 
     void A_deactivate (A *a);
 
@@ -122,7 +122,7 @@ Let's start with an implementation in C for the system described above:
         return a->active == 1;
     }
 
-    float A_get_val (A *a)
+    float A_value (A *a)
     {
         return (a->val[0] + a->val[1]) / 2.0;
     }
@@ -142,7 +142,7 @@ Let's start with an implementation in C for the system described above:
 
     int B_is_active (B *b);
 
-    float B_get_val (B *b);
+    float B_value (B *b);
 
     void B_deactivate (B *b);
 
@@ -160,7 +160,7 @@ Let's start with an implementation in C for the system described above:
         return b->active == 1;
     }
 
-    float B_get_val (B *b)
+    float B_value (B *b)
     {
         return b->val;
     }
@@ -183,7 +183,7 @@ Let's start with an implementation in C for the system described above:
 
     int AB_is_active (AB *ab);
 
-    float AB_get_val (AB *ab);
+    float AB_value (AB *ab);
 
     int AB_check (AB *ab);
 
@@ -204,16 +204,16 @@ Let's start with an implementation in C for the system described above:
         return A_is_active(&ab->a) && B_is_active(&ab->b);
     }
 
-    float AB_get_val (AB *ab)
+    float AB_value (AB *ab)
     {
-        return (A_get_val (&ab->a) + B_get_val (&ab->b)) / 2;
+        return (A_value (&ab->a) + B_value (&ab->b)) / 2;
     }
 
     int AB_check (AB *ab)
     {
         const float threshold = 0.1;
 
-        return fabs (A_get_val (&ab->a) - B_get_val (&ab->b)) < threshold;
+        return fabs (A_value (&ab->a) - B_value (&ab->b)) < threshold;
     }
 
     void AB_deactivate (AB *ab)
@@ -287,7 +287,7 @@ The direct implementation in Ada is:
 
        function A_Is_Active (E : A) return Boolean;
 
-       function A_Get_Val (E : A) return Float;
+       function A_Value (E : A) return Float;
 
        procedure A_Deactivate (E : in out A);
 
@@ -306,10 +306,10 @@ The direct implementation in Ada is:
           return E.Active;
        end A_Is_Active;
 
-       function A_Get_Val (E : A) return Float is
+       function A_Value (E : A) return Float is
        begin
           return E.Val;
-       end A_Get_Val;
+       end A_Value;
 
        procedure A_Deactivate (E : in out A) is
        begin
@@ -331,7 +331,7 @@ The direct implementation in Ada is:
 
        function B_Is_Active (E : B) return Boolean;
 
-       function B_Get_Val (E : B) return Float;
+       function B_Value (E : B) return Float;
 
        procedure B_Deactivate (E : in out B);
 
@@ -350,10 +350,10 @@ The direct implementation in Ada is:
           return E.Active;
        end B_Is_Active;
 
-       function B_Get_Val (E : B) return Float is
+       function B_Value (E : B) return Float is
        begin
           return (E.Val (1) + E.Val (2)) / 2.0;
-       end B_Get_Val;
+       end B_Value;
 
        procedure B_Deactivate (E : in out B) is
        begin
@@ -376,7 +376,7 @@ The direct implementation in Ada is:
 
        function AB_Is_Active (E : AB) return Boolean;
 
-       function AB_Get_Val (E : AB) return Float;
+       function AB_Value (E : AB) return Float;
 
        function AB_Check (E : AB) return Boolean;
 
@@ -397,15 +397,15 @@ The direct implementation in Ada is:
           return A_Is_Active (E.SA) and B_Is_Active (E.SB);
        end AB_Is_Active;
 
-       function AB_Get_Val (E : AB) return Float is
+       function AB_Value (E : AB) return Float is
        begin
-          return (A_Get_Val (E.SA) + B_Get_Val (E.SB)) / 2.0;
-       end AB_Get_Val;
+          return (A_Value (E.SA) + B_Value (E.SB)) / 2.0;
+       end AB_Value;
 
        function AB_Check (E : AB) return Boolean is
           Threshold : constant := 0.1;
        begin
-          return abs (A_Get_Val (E.SA) - B_Get_Val (E.SB)) < Threshold;
+          return abs (A_Value (E.SA) - B_Value (E.SB)) < Threshold;
        end AB_Check;
 
        procedure AB_Deactivate (E : in out AB) is
@@ -482,7 +482,7 @@ By analyzing this direct implementation, we may notice the following points:
   instead of having :ada:`A_Is_Active` and :ada:`B_Is_Active`, we can simply
   name these functions :ada:`Is_Active` for both types :ada:`A` and :ada:`B`.
 
-- Some of the functions |mdash| such as :ada:`A_Is_Active` and :ada:`A_Get_Val`
+- Some of the functions |mdash| such as :ada:`A_Is_Active` and :ada:`A_Value`
   |mdash| are very simple, so we could simplify them with expression functions.
 
 This is an update to the implementation that addresses all the points above:
@@ -504,7 +504,7 @@ This is an update to the implementation that addresses all the points above:
 
        function Is_Active (E : A) return Boolean;
 
-       function Get_Val (E : A) return Float;
+       function Value (E : A) return Float;
 
        procedure Finalize (E : in out A);
 
@@ -528,7 +528,7 @@ This is an update to the implementation that addresses all the points above:
        function Is_Active (E : A) return Boolean is
           (E.Active);
 
-       function Get_Val (E : A) return Float is
+       function Value (E : A) return Float is
           (E.Val);
 
        procedure Finalize (E : in out A) is
@@ -546,7 +546,7 @@ This is an update to the implementation that addresses all the points above:
 
        function Is_Active (E : B) return Boolean;
 
-       function Get_Val (E : B) return Float;
+       function Value (E : B) return Float;
 
        procedure Finalize (E : in out B);
 
@@ -574,10 +574,10 @@ This is an update to the implementation that addresses all the points above:
           return E.Active;
        end Is_Active;
 
-       function Get_Val (E : B) return Float is
+       function Value (E : B) return Float is
        begin
           return (E.Val (1) + E.Val (2)) / 2.0;
-       end Get_Val;
+       end Value;
 
        procedure Finalize (E : in out B) is
        begin
@@ -597,7 +597,7 @@ This is an update to the implementation that addresses all the points above:
 
        function Is_Active (E : AB) return Boolean;
 
-       function Get_Val (E : AB) return Float;
+       function Value (E : AB) return Float;
 
        function Check (E : AB) return Boolean;
 
@@ -623,13 +623,13 @@ This is an update to the implementation that addresses all the points above:
        function Is_Active (E : AB) return Boolean is
           (Is_Active (E.SA) and Is_Active (E.SB));
 
-       function Get_Val (E : AB) return Float is
-          ((Get_Val (E.SA) + Get_Val (E.SB)) / 2.0);
+       function Value (E : AB) return Float is
+          ((Value (E.SA) + Value (E.SB)) / 2.0);
 
        function Check (E : AB) return Boolean is
           Threshold : constant := 0.1;
        begin
-          return abs (Get_Val (E.SA) - Get_Val (E.SB)) < Threshold;
+          return abs (Value (E.SA) - Value (E.SB)) < Threshold;
        end Check;
 
        procedure Finalize (E : in out AB) is
@@ -701,7 +701,7 @@ We can use this distinction to declare two interface types:
 - :ada:`Activation_IF` for the :ada:`Activate` and :ada:`Deactivate` procedures
   and the :ada:`Is_Active` function;
 
-- :ada:`Value_Retrieval_IF` for the :ada:`Get_Val` function.
+- :ada:`Value_Retrieval_IF` for the :ada:`Value` function.
 
 This is how the declaration could look like:
 
@@ -715,7 +715,7 @@ This is how the declaration could look like:
 
     type Value_Retrieval_IF is interface;
 
-    function Get_Val (E : Value_Retrieval_IF) return Float is abstract;
+    function Value (E : Value_Retrieval_IF) return Float is abstract;
 
 Note that, because we are declaring interface types, all operations on those
 types must be abstract.
@@ -763,23 +763,23 @@ Derived types
 ~~~~~~~~~~~~~
 
 In the declaration of the :ada:`Sys_Base` type we've just seen, we're not
-overriding the :ada:`Get_Val` function |mdash| from the
+overriding the :ada:`Value` function |mdash| from the
 :ada:`Value_Retrieval_IF` interface |mdash| for the :ada:`Sys_Base` type, so it
 remains an abstract function for :ada:`Sys_Base`. Therefore, the
 :ada:`Sys_Base` type itself remains abstract and needs be explicitly declared
 as such.
 
 We use this strategy to ensure that all types derived from :ada:`Sys_Base` need
-to implement their own version of the :ada:`Get_Val` function. For example:
+to implement their own version of the :ada:`Value` function. For example:
 
 .. code-block:: ada
 
    type A is new Sys_Base with private;
 
-   overriding function Get_Val (E : A) return Float;
+   overriding function Value (E : A) return Float;
 
 Here, the :ada:`A` type is derived from the :ada:`Sys_Base` and it includes its
-own version of the :ada:`Get_Val` function by overriding it. Therefore,
+own version of the :ada:`Value` function by overriding it. Therefore,
 :ada:`A` is not an abstract type anymore and can be used to declare objects:
 
 .. code-block:: ada
@@ -789,7 +789,7 @@ own version of the :ada:`Get_Val` function by overriding it. Therefore,
        V   : Float;
     begin
        Obj.Activate;
-       V := Obj.Get_Val;
+       V := Obj.Value;
     end Main;
 
 .. admonition:: Important
@@ -816,7 +816,7 @@ For system A, this is the declaration:
 
        type A is new Sys_Base with private;
 
-       overriding function Get_Val (E : A) return Float;
+       overriding function Value (E : A) return Float;
 
     private
 
@@ -912,7 +912,7 @@ available on system AB. Therefore, we declare these subprograms:
     overriding function Is_Active (E : AB) return Boolean;
     overriding procedure Deactivate (E : in out AB);
 
-    overriding function Get_Val (E : AB) return Float;
+    overriding function Value (E : AB) return Float;
 
     not overriding function Check (E : AB) return Boolean;
 
@@ -935,7 +935,7 @@ Finally, this is the complete source-code example:
 
        type Value_Retrieval_IF is interface;
 
-       function Get_Val (E : Value_Retrieval_IF) return Float is abstract;
+       function Value (E : Value_Retrieval_IF) return Float is abstract;
 
        type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF with private;
 
@@ -974,7 +974,7 @@ Finally, this is the complete source-code example:
 
        overriding procedure Activate (E : in out A);
 
-       overriding function Get_Val (E : A) return Float;
+       overriding function Value (E : A) return Float;
 
     private
 
@@ -992,7 +992,7 @@ Finally, this is the complete source-code example:
           Sys_Base (E).Activate;
        end;
 
-       function Get_Val (E : A) return Float is
+       function Value (E : A) return Float is
          (E.Val);
 
     end Simple.System_A;
@@ -1003,7 +1003,7 @@ Finally, this is the complete source-code example:
 
        overriding procedure Activate (E : in out B);
 
-       overriding function Get_Val (E : B) return Float;
+       overriding function Value (E : B) return Float;
 
     private
 
@@ -1023,11 +1023,11 @@ Finally, this is the complete source-code example:
           Sys_Base (E).Activate;
        end;
 
-       function Get_Val (E : B) return Float is
+       function Value (E : B) return Float is
           pragma Assert (E.Val'Length = 2);
        begin
           return (E.Val (1) + E.Val (2)) / 2.0;
-       end Get_Val;
+       end Value;
 
     end Simple.System_B;
 
@@ -1042,7 +1042,7 @@ Finally, this is the complete source-code example:
        overriding function Is_Active (E : AB) return Boolean;
        overriding procedure Deactivate (E : in out AB);
 
-       overriding function Get_Val (E : AB) return Float;
+       overriding function Value (E : AB) return Float;
 
        not overriding function Check (E : AB) return Boolean;
 
@@ -1072,13 +1072,13 @@ Finally, this is the complete source-code example:
           E.SB.Deactivate;
        end Deactivate;
 
-       function Get_Val (E : AB) return Float is
-         ((E.SA.Get_Val + E.SB.Get_Val) / 2.0);
+       function Value (E : AB) return Float is
+         ((E.SA.Value + E.SB.Value) / 2.0);
 
        function Check (E : AB) return Boolean is
           Threshold : constant := 0.1;
        begin
-          return abs (E.SA.Get_Val - E.SB.Get_Val) < Threshold;
+          return abs (E.SA.Value - E.SB.Value) < Threshold;
        end Check;
 
     end Simple.System_AB;
@@ -1353,7 +1353,7 @@ Finally, this is the complete updated source-code example:
 
        type Value_Retrieval_IF is limited interface;
 
-       function Get_Val (E : Value_Retrieval_IF) return Float is abstract;
+       function Value (E : Value_Retrieval_IF) return Float is abstract;
 
        type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF with
          private;
@@ -1398,7 +1398,7 @@ Finally, this is the complete updated source-code example:
 
        type A is new Sys_Base with private;
 
-       overriding function Get_Val (E : A) return Float;
+       overriding function Value (E : A) return Float;
 
     private
 
@@ -1417,7 +1417,7 @@ Finally, this is the complete updated source-code example:
           E.Val := 0.0;
        end Activation_Reset;
 
-       function Get_Val (E : A) return Float is
+       function Value (E : A) return Float is
          (E.Val);
 
     end Simple.System_A;
@@ -1426,7 +1426,7 @@ Finally, this is the complete updated source-code example:
 
        type B is new Sys_Base with private;
 
-       overriding function Get_Val (E : B) return Float;
+       overriding function Value (E : B) return Float;
 
     private
 
@@ -1447,11 +1447,11 @@ Finally, this is the complete updated source-code example:
           E.Val := (others => 0.0);
        end Activation_Reset;
 
-       function Get_Val (E : B) return Float is
+       function Value (E : B) return Float is
           pragma Assert (E.Val'Length = 2);
        begin
           return (E.Val (1) + E.Val (2)) / 2.0;
-       end Get_Val;
+       end Value;
 
     end Simple.System_B;
 
@@ -1466,7 +1466,7 @@ Finally, this is the complete updated source-code example:
        overriding function Is_Active (E : AB) return Boolean;
        overriding procedure Deactivate (E : in out AB);
 
-       overriding function Get_Val (E : AB) return Float;
+       overriding function Value (E : AB) return Float;
 
        not overriding function Check (E : AB) return Boolean;
 
@@ -1524,16 +1524,54 @@ Finally, this is the complete updated source-code example:
           end loop;
        end Deactivate;
 
-       function Get_Val (E : AB) return Float is
-         ((E.S_Array (1).Get_Val + E.S_Array (2).Get_Val) / 2.0);
+       function Value (E : AB) return Float is
+         ((E.S_Array (1).Value + E.S_Array (2).Value) / 2.0);
 
        function Check (E : AB) return Boolean is
           Threshold : constant := 0.1;
        begin
-          return abs (E.S_Array (1).Get_Val - E.S_Array (2).Get_Val) < Threshold;
+          return abs (E.S_Array (1).Value - E.S_Array (2).Value) < Threshold;
        end Check;
 
     end Simple.System_AB;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    with Simple.System_AB; use Simple.System_AB;
+
+    procedure Main is
+
+       procedure Display_Active (E : AB) is
+       begin
+          if Is_Active (E) then
+             Put_Line ("System AB is active");
+          else
+             Put_Line ("System AB is not active");
+          end if;
+       end Display_Active;
+
+       procedure Display_Check (E : AB) is
+       begin
+          if Check (E) then
+             Put_Line ("System AB check: PASSED");
+          else
+             Put_Line ("System AB check: FAILED");
+          end if;
+       end Display_Check;
+
+       S : AB;
+    begin
+       Put_Line ("Activating system AB...");
+       Activate (S);
+
+       Display_Active (S);
+       Display_Check (S);
+
+       Put_Line ("Deactivating system AB...");
+       Deactivate (S);
+
+       Display_Active (S);
+    end Main;
 
 Naturally, this is by no means the best possible implementation of system AB.
 By applying other software design strategies that we haven't covered here, we
