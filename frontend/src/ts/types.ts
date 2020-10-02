@@ -18,7 +18,7 @@ export namespace RunProgram {
     files: Array<Resource>;
     mode: string;
     switches: Array<string>;
-    name: string;
+    name: string | null;
     lab: boolean;
   }
 }

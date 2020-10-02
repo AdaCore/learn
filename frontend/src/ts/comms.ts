@@ -43,7 +43,7 @@ export async function fetchJSON<R, T>(data: R, url: string): Promise<T> {
 export interface DownloadRequest {
   files: Array<Resource>;
   switches: Array<string>;
-  name: string;
+  name: string | null;
 }
 
 export interface DownloadResponse {
@@ -62,8 +62,15 @@ export async function fetchBlob(data: DownloadRequest, url: string):
   const response = await fetchGeneric<DownloadRequest>(data, url);
   const blob: Blob = await response.blob();
   const disposition = response.headers.get('content-disposition');
-  const filename = disposition.match(
-      /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+  const matches = disposition?.match(
+      /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+  let filename: string | undefined;
+
+  if (matches?.length === 3) {
+    filename = matches[1];
+  } else {
+    filename = 'Download';
+  }
 
   return {
     blob: blob,

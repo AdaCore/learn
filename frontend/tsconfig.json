@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
-        "outDir": "./_src_dist",
         "sourceMap": true,
         "allowJs": true,
         "target": "es5",
         "esModuleInterop": true,
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "strict": true
     },
     "include": [
         "./src/**/*"

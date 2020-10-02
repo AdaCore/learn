@@ -174,40 +174,6 @@ describe('Editor', () => {
     });
   });
 
-  describe('#getTheme()', () => {
-    let inTest: Editor;
-    let parent: HTMLElement;
-
-    // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-    let editor: ace.Editor;
-
-    const resource: Resource = {
-      basename: 'file.adb',
-      contents: 'file contents',
-    };
-
-    before(() => {
-      inTest = new Editor(resource);
-      parent = inTest.render();
-      editor = ace.edit(parent);
-    });
-
-    after(() => {
-      inTest.destructor();
-      inTest = null;
-      parent = null;
-    });
-
-    it('should start with the light theme', () => {
-      expect(inTest.getTheme()).to.equal(EditorTheme[EditorTheme.Light]);
-    });
-
-    it('should set the theme to dark', () => {
-      inTest.setTheme(EditorTheme.Dark);
-      expect(inTest.getTheme()).to.equal(EditorTheme[EditorTheme.Dark]);
-    });
-  });
-
   describe('#reset()', () => {
     let inTest: Editor;
     let parent: HTMLElement;
@@ -286,11 +252,11 @@ describe('Editor', () => {
 
   describe('#setTab() and #getTab()', () => {
     let inTest: Editor;
-    let parent: HTMLElement;
+    let parent: HTMLDivElement;
 
     // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
     let editor: ace.Editor;
-    let tab: HTMLElement;
+    let tab: HTMLButtonElement;
 
     const resource: Resource = {
       basename: 'file.adb',
@@ -301,7 +267,7 @@ describe('Editor', () => {
       inTest = new Editor(resource);
       parent = inTest.render();
       editor = ace.edit(parent);
-      tab = document.createElement('div');
+      tab = document.createElement('button');
     });
 
     after(() => {
