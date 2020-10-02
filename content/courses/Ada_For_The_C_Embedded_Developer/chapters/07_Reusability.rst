@@ -830,9 +830,564 @@ Handling variability & reusability dynamically
 Records with discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+In basic terms, records with discriminants are records that include parameters
+in its type definition. This allows for adding more flexibility to the type
+definition. In the section about :ref:`pointers <Pointers>`, we've seen this
+example:
 
-    Complete section!
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_Ada
+
+    procedure Main is
+       type Arr is array (Integer range <>) of Integer;
+
+       type S (Last : Positive) is record
+          A : Arr (0 .. Last);
+       end record;
+
+       V : S (9);
+    begin
+       null;
+    end Main;
+
+Here, :ada:`Last` is the discriminant for type :ada:`S`. When declaring the
+variable :ada:`V` as :ada:`S (9)`, we specify the actual index of the last
+position of the array component :ada:`A` by setting the :ada:`Last`
+discriminant to 9.
+
+We can create an equivalent implementation in C by declaring a :c:`struct`
+with a pointer to an array:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_C
+
+    !main.c
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    typedef struct {
+        int       * a;
+        const int   last;
+    } S;
+
+    S init_s (int last)
+    {
+        S v = { malloc (sizeof(int) * last + 1), last };
+        return v;
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        S v = init_s (9);
+    }
+
+Here, we need to explicitly allocate the :ada:`a` array of the :ada:`S` struct
+via a call to :ada:`malloc()`, which allocates memory space on the heap. In the
+Ada version, in contrast, the array (:ada:`V.A`) is allocated on the stack and
+we don't need to explicitly allocate it.
+
+Note that the information that we provide as the discriminant to the record
+type (in the Ada code) is constant, so we cannot assign a value to it. For
+example, we cannot write:
+
+.. code-block:: ada
+
+    V.Last := 10;       --  COMPILATION ERROR!
+
+In the C version, we declare the :c:`last` field constant to get the same
+behavior.
+
+.. code-block:: c
+
+    v.last = 10;        //  COMPILATION ERROR!
+
+Note that the information provided as discriminants is visible. In the example
+above, we could display :ada:`Last` by writing:
+
+.. code-block:: ada
+
+    Put_Line ("Last : " & Integer'Image (V.Last));
+
+Also note that, even if a type is private, we can still access the information
+of the discriminants if they are visible in the *public* part of the type
+declaration. Let's rewrite the example above:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_Ada_Private
+
+    package P is
+       type Arr is array (Integer range <>) of Integer;
+
+       type S (Last : Integer) is private;
+
+    private
+       type S (Last : Integer) is record
+          A : Arr (0 .. Last);
+       end record;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with P;           use P;
+
+    procedure Main is
+       V : S (9);
+    begin
+       Put_Line ("Last : " & Integer'Image (V.Last));
+    end Main;
+
+Even though the :ada:`S` type is now private, we can still display :ada:`Last`
+because this discriminant is visible in the *non-private* part of package
+:ada:`P`.
+
+
+Variant records
+~~~~~~~~~~~~~~~
+
+In simple terms, a variant record |mdash| also called *discriminated record*
+in Ada terminology |mdash| is a record with discriminants that allows for
+changing its structure. Basically, it's a record containing a :ada:`case`.
+This is the general structure:
+
+.. code-block:: ada
+
+       type Var_Rec (V : F) is record
+
+          case V is
+            when Opt_1 => F1 : Type_1;
+            when Opt_2 => F2 : Type_2;
+          end case;
+
+       end record;
+
+Let's look at this example:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Var_Rec_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+
+       type Float_Int (Use_Float : Boolean) is record
+          case Use_Float is
+            when True  => F : Float;
+            when False => I : Integer;
+          end case;
+       end record;
+
+       procedure Display (V : Float_Int) is
+       begin
+          if V.Use_Float then
+             Put_Line ("Float value:   " & Float'Image (V.F));
+          else
+             Put_Line ("Integer value: " & Integer'Image (V.I));
+          end if;
+       end Display;
+
+       F : constant Float_Int := (Use_Float => True,  F => 10.0);
+       I : constant Float_Int := (Use_Float => False, I => 9);
+
+    begin
+       Display (F);
+       Display (I);
+    end Main;
+
+Here, we declare :ada:`F` containing a floating-point value, and :ada:`I`
+containing an integer value. In the :ada:`Display` procedure, we present the
+correct information to the user according to the :ada:`Use_Float` discriminant
+of the :ada:`Float_Int` type.
+
+We can implement this example in C by using unions:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Var_Rec_C
+
+    !main.c
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    typedef struct {
+        int use_float;
+        union {
+            float f;
+            int   i;
+        };
+    } float_int;
+
+    float_int init_float (float f)
+    {
+        float_int v;
+
+        v.use_float = 1;
+        v.f         = f;
+        return v;
+    }
+
+    float_int init_int (int i)
+    {
+        float_int v;
+
+        v.use_float = 0;
+        v.i         = i;
+        return v;
+    }
+
+    void display (float_int v)
+    {
+        if (v.use_float) {
+            printf("Float value   : %f\n", v.f);
+        }
+        else {
+            printf("Integer value : %d\n", v.i);
+        }
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        float_int f = init_float (10.0);
+        float_int i = init_int (9);
+
+        display (f);
+        display (i);
+    }
+
+Similar to the Ada code, we declare :ada:`f` containing a floating-point value,
+and :ada:`i` containing an integer value. One difference is that we use the
+:c:`init_float()` and :c:`init_int()` functions to initialize the
+:c:`float_int` struct. These functions initialize the correct field of the
+union and set the :c:`use_float` field accordingly.
+
+Variant records and unions
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There is, however, a difference in accessibility between variant records in Ada
+and unions in C. In C, we're allowed to access any field of the union
+regardless of the initialization:
+
+[C]
+
+.. code-block:: c
+
+        float_int v = init_float (10.0);
+
+        printf("Integer value : %d\n", v.i);
+
+This feature is useful to create overlays. In this specific example, however,
+the information displayed to the user doesn't make sense, since the union was
+initialized with a floating-point value (:c:`v.f`) and, by accessing the
+integer field (:c:`v.i`), we're displaying it as if it was an integer value.
+
+In Ada, accessing the wrong component would raise an exception at run-time
+("discriminant check failed"), since the component is checked before being
+accessed:
+
+[Ada]
+
+.. code-block:: ada
+
+       V : constant Float_Int := (Use_Float => True,  F => 10.0);
+    begin
+       Put_Line ("Integer value: " & Integer'Image (V.I));
+       --                                             ^ Constraint_Error is raised!
+
+Using this method, Ada prevents that wrong information is used in other parts
+of the program.
+
+To get the same behavior in Ada as we do in C, we need to explicitly use the
+:ada:`Unchecked_Union` aspect in the type declaration. This is the modified
+example:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Unchecked_Union_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+
+       type Float_Int_Union (Use_Float : Boolean) is record
+          case Use_Float is
+            when True  => F : Float;
+            when False => I : Integer;
+          end case;
+       end record
+         with Unchecked_Union;
+
+       V : constant Float_Int_Union := (Use_Float => True,  F => 10.0);
+
+    begin
+       Put_Line ("Integer value: " & Integer'Image (V.I));
+    end Main;
+
+Now, we can display the integer component (:ada:`V.I`) even though we
+initialized the floating-point component (:ada:`V.F`). As expected, the
+information displayed by the test application in this case doesn't make sense.
+
+Note that, when using :ada:`Unchecked_Union` aspect in the declaration of a
+variant record, the reference discriminant is not available anymore, since it
+isn't stored as part of the record. Therefore, we cannot access the
+:ada:`Use_Float` discriminant as in the following code:
+
+[Ada]
+
+.. code-block:: ada
+
+       V : constant Float_Int_Union := (Use_Float => True,  F => 10.0);
+    begin
+       if V.Use_Float then       --  COMPILATION ERROR!
+          --  Do something...
+       end if;
+
+We could, however, declare another record with discriminants and use the
+:ada:`Float_Int_Union` type for one of its components. For example:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Unchecked_Union_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+
+       type Float_Int_Union (Use_Float : Boolean) is record
+          case Use_Float is
+            when True  => F : Float;
+            when False => I : Integer;
+          end case;
+       end record
+         with Unchecked_Union;
+
+       type Float_Int (Use_Float : Boolean) is record
+          U : Float_Int_Union (Use_Float);
+       end record;
+
+       V : constant Float_Int := (Use_Float => True,
+                                  U         => (Use_Float => True,  F => 10.0));
+
+    begin
+       Put_Line ("Using float:   " & Boolean'Image (V.Use_Float));
+       Put_Line ("Integer value: " & Integer'Image (V.U.I));
+    end Main;
+
+Unchecked unions are particularly useful in Ada when creating bindings for C
+code.
+
+Optional components
+^^^^^^^^^^^^^^^^^^^
+
+We can also use variant records to specify optional components of a record.
+For example:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Var_Rec_Null_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       type Arr is array (Integer range <>) of Integer;
+
+       type Extra_Info is (No, Yes);
+
+       type S_Var (Last : Integer; Has_Extra_Info : Extra_Info) is record
+          A : Arr (0 .. Last);
+
+          case Has_Extra_Info is
+            when No   => null;
+            when Yes  => B : Arr (0 .. Last);
+          end case;
+       end record;
+
+       V1 : S_Var (Last => 9, Has_Extra_Info => Yes);
+       V2 : S_Var (Last => 9, Has_Extra_Info => No);
+    begin
+       Put_Line ("Size of V1 is: " & Integer'Image (V1'Size));
+       Put_Line ("Size of V2 is: " & Integer'Image (V2'Size));
+    end Main;
+
+Here, in the declaration of :ada:`S_Var`, we don't have any component in case
+:ada:`Has_Extra_Info` is false. The component is simply set to :ada:`null` in
+this case.
+
+When running the example above, we see that the size of :ada:`V1` is greater
+than the size of :ada:`V2` due to the extra :ada:`B` component |mdash| which is
+only included when :ada:`Has_Extra_Info` is true.
+
+Optional output information
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can use optional components to prevent that subprograms generate invalid
+information that could be misused by the caller. Consider the following
+example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Non_Opt_C
+
+    !main.c
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    float calculate (float  f1,
+                     float  f2,
+                     int   *success)
+    {
+        if (f1 < f2) {
+            *success = 1;
+            return f2 - f1;
+        }
+        else {
+            *success = 0;
+            return 0.0;
+        }
+    }
+
+    void display (float v,
+                  int   success)
+    {
+        if (success) {
+            printf("Value = %f\n", v);
+        }
+        else {
+            printf("Calculation error!\n");
+        }
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        float f;
+        int success;
+
+        f = calculate (1.0, 0.5, &success);
+        display (f, success);
+
+        f = calculate (0.5, 1.0, &success);
+        display (f, success);
+    }
+
+In this code, we're using the output parameter :ada:`success` of the
+:ada:`calculate()` function to indicate whether the calculation was successful
+or not. This approach has a major problem: there's no way to prevent that the
+invalid value returned by :ada:`calculate()` in case of an error is misused in
+another computation. For example:
+
+[C]
+
+.. code-block:: c
+
+    int main(int argc, const char * argv[])
+    {
+        float f;
+        int success;
+
+        f = calculate (1.0, 0.5, &success);
+
+        f = f * 0.25;   // Using f in another computation even though
+                        // calculate() returned a dummy value due to error!
+                        // We should have evaluated "success", but we didn't.
+    }
+
+We cannot prevent access to the returned value or, at least, force the caller
+to evaluate :ada:`success` before using the returned value.
+
+This is the corresponding code in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Non_Opt_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+
+       function Calculate (F1, F2  : Float;
+                           Success : out Boolean) return Float is
+       begin
+          if F1 < F2 then
+             Success := True;
+             return F2 - F1;
+          else
+            Success := False;
+            return 0.0;
+          end if;
+       end Calculate;
+
+       procedure Display (V : Float; Success : Boolean) is
+       begin
+          if Success then
+             Put_Line ("Value = " & Float'Image (V));
+          else
+             Put_Line ("Calculation error!");
+          end if;
+       end Display;
+
+       F       : Float;
+       Success : Boolean;
+    begin
+       F := Calculate (1.0, 0.5, Success);
+       Display (F, Success);
+
+       F := Calculate (0.5, 1.0, Success);
+       Display (F, Success);
+    end Main;
+
+The Ada code above suffers from the same drawbacks as the C code. Again,
+there's no way to prevent misuse of the invalid value returned by
+:ada:`Calculate` in case of errors.
+
+However, in Ada, we can use variant records to make the component unavailable
+and therefore prevent misuse of this information. Let's rewrite the original
+example and *wrap* the returned value in a variant record:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Opt_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+
+       type Opt_Float (Success : Boolean) is record
+          case Success is
+            when False => null;
+            when True  => F : Float;
+          end case;
+       end record;
+
+       function Calculate (F1, F2 : Float) return Opt_Float is
+       begin
+          if F1 < F2 then
+             return (Success => True, F => F2 - F1);
+          else
+             return (Success => False);
+          end if;
+       end Calculate;
+
+       procedure Display (V : Opt_Float) is
+       begin
+          if V.Success then
+             Put_Line ("Value = " & Float'Image (V.F));
+          else
+             Put_Line ("Calculation error!");
+          end if;
+       end Display;
+
+    begin
+       Display (Calculate (1.0, 0.5));
+       Display (Calculate (0.5, 1.0));
+    end Main;
+
+In this example, we can determine whether the calculation was successful or not
+by evaluating the :ada:`Success` component of the :ada:`Opt_Float`. If the
+calculation wasn't successful, we won't be able to access the :ada:`F`
+component of the :ada:`Opt_Float`. As mentioned before, trying to access the
+component in this case would raise an exception. Therefore, in case of errors,
+we can ensure that no information is misused after the call to
+:ada:`Calculate`.
 
 
 Object orientation
