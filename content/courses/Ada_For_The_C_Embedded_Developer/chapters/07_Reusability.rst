@@ -914,8 +914,12 @@ both dynamic libraries together with the main application.
 You can find more details and special setting for library projects in the
 `GPRbuild documentation <https://docs.adacore.com/gprbuild-docs/html/gprbuild_ug/gnat_project_manager.html#library-projects>`_.
 
-.. todo::
+.. admonition:: In the GNAT toolchain
 
-    Add link to section of *Embedded Ada* course that presents more advanced
-    features, as the one described in GNAT examples directory
-    (`share\examples\gnat\plugins`).
+    The GNAT toolchain includes a more advanced example focusing on how to load
+    dynamic libraries at runtime. You can find it in the
+    :file:`share/examples/gnat/plugins` directory of the GNAT toolchain
+    installation. As described in the README file from that directory, this
+    example "comprises a main program which probes regularly for the existence
+    of shared libraries in known location. If such libraries are present, it
+    uses them to implement features initially not present in the main program."
