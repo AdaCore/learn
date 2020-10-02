@@ -3,14 +3,21 @@ import {CheckOutput} from './types';
 
 /** Abstract class representing an Area **/
 export abstract class Area {
-  protected container: HTMLElement;
+  protected readonly container: HTMLDivElement;
+
+  /**
+   * Construct an Area
+   */
+  constructor() {
+    this.container = document.createElement('div');
+  }
 
   /**
    * Render the Area
    * @abstract
-   * @return {HTMLElement} The object holding the Area
+   * @return {HTMLDivElement} The object holding the Area
    */
-  abstract render(): HTMLElement;
+  abstract render(): HTMLDivElement;
 
   /**
    * The event callback signature for clickable divs
@@ -89,14 +96,13 @@ export abstract class Area {
  * @extends Area
  */
 export class OutputArea extends Area {
-  private spinner: HTMLElement;
+  private spinner: HTMLDivElement;
 
   /**
    * Construct an OutputArea
    */
   constructor() {
     super();
-    this.container = document.createElement('div');
     this.container.classList.add('output_area');
 
     this.spinner = document.createElement('div');
@@ -110,9 +116,9 @@ export class OutputArea extends Area {
 
   /**
    * Render the OutputArea
-   * @return {HTMLElement} The container of the OutputArea
+   * @return {HTMLDivElement} The container of the OutputArea
    */
-  public render(): HTMLElement {
+  public render(): HTMLDivElement {
     return this.container;
   }
 
@@ -158,8 +164,8 @@ export class OutputArea extends Area {
  */
 export class LabArea extends Area {
   private readonly ref: number;
-  private readonly wrapper: HTMLElement;
-  private button: HTMLElement;
+  private readonly wrapper: HTMLDivElement;
+  private button: HTMLButtonElement;
 
   /**
    * Constructs a LabArea
@@ -189,7 +195,6 @@ export class LabArea extends Area {
       }
     });
 
-    this.container = document.createElement('div');
     this.container.classList.add('lab_test_case');
     this.container.style.display = 'none';
     this.wrapper.appendChild(this.container);
@@ -197,9 +202,9 @@ export class LabArea extends Area {
 
   /**
    * Render the LabArea
-   * @return {HTMLElement} Returns the HTMLElement object holding the LabArea
+   * @return {HTMLDivElement} Returns the obj holding the LabArea
    */
-  public render(): HTMLElement {
+  public render(): HTMLDivElement {
     return this.wrapper;
   }
 
@@ -208,10 +213,10 @@ export class LabArea extends Area {
    * @param {string} divClass - the class to apply to the div
    * @param {string} spanText - the text to put in the span
    * @param {string} result - the result text to display
-   * @return {HTMLElement} Returns the HTMLElement for the lab result
+   * @return {HTMLDivElement} Returns the obj for the lab result
    */
   private resultHelper(divClass: string, spanText: string,
-      result: string): HTMLElement {
+      result: string): HTMLDivElement {
     const label = document.createElement('div');
     label.classList.add('lab_test_msg', divClass);
 
@@ -266,7 +271,7 @@ export class LabArea extends Area {
 /** Class representing the LabContainer */
 export class LabContainer {
   private labList: Array<LabArea> = [];
-  private readonly container: HTMLElement;
+  private readonly container: HTMLDivElement;
 
   /**
    * Constructs a LabContainer
@@ -294,9 +299,9 @@ export class LabContainer {
 
   /**
    * Renders the LabContainer
-   * @return {HTMLElement} the HTMLElement object containing the LabContainer
+   * @return {HTMLDivElement} the object containing the LabContainer
    */
-  public render(): HTMLElement {
+  public render(): HTMLDivElement {
     return this.container;
   }
 

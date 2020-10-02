@@ -6,6 +6,7 @@ chai.use(chaiDom);
 // Import package under test
 import {Area, OutputArea, LabArea, LabContainer} from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
+import {CheckOutput} from '../../src/ts/types';
 
 describe('Area', () => {
   /**
@@ -20,16 +21,14 @@ describe('Area', () => {
      */
     constructor() {
       super();
-
-      this.container = document.createElement('div');
     }
 
     /**
      * Implements the abstract render function
      *
-     * @return {HTMLElement}
+     * @return {HTMLDivElement}
      */
-    public render(): HTMLElement {
+    public render(): HTMLDivElement {
       return this.container;
     }
   }
@@ -163,7 +162,7 @@ describe('OutputArea()', () => {
 
   describe('#addLabStatus()', () => {
     let inTest: OutputArea;
-    let parent: HTMLElement;
+    let parent: HTMLDivElement;
 
     beforeEach(() => {
       inTest = new OutputArea();
@@ -261,9 +260,9 @@ describe('LabArea', () => {
 
   describe('#addResults()', () => {
     let inTest: LabArea;
-    let wrapper: HTMLElement;
-    let container: HTMLElement;
-    let button: HTMLElement;
+    let wrapper: HTMLDivElement;
+    let container: HTMLDivElement;
+    let button: HTMLButtonElement;
 
     const passResult = {
       status: 'Success',
@@ -417,7 +416,7 @@ describe('LabContainer', () => {
   describe('#processResults()', () => {
     const inTest = new LabContainer();
     const success = true;
-    const testCases = {
+    const testCases: CheckOutput.LabOutput = {
       success: success,
       cases: [
         {
@@ -447,7 +446,7 @@ describe('LabContainer', () => {
   describe('#reset()', () => {
     const inTest = new LabContainer();
     const parent = inTest.render();
-    const testCases = {
+    const testCases: CheckOutput.LabOutput = {
       success: false,
       cases: [
         {

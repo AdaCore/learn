@@ -54,6 +54,18 @@ describe('fetchBlob()', () => {
     return expect(ret).to.eventually.have.property('filename', filename);
   });
 
+  it('should return a blob with default name when none is found', async () => {
+    fetchMock.mock(blobURL, {
+      body: blob,
+    },
+    {
+      sendAsJson: false,
+    });
+
+    const ret = fetchBlob(serverData, blobURL);
+    return expect(ret).to.eventually.have.property('filename', 'Download');
+  });
+
   it('should throw an exception', () => {
     fetchMock.mock(blobURL, 500);
     const ret = fetchBlob(serverData, blobURL);
