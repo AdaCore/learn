@@ -796,12 +796,12 @@ example:
     package body Component_A is
 
        function Average (Data : Float_Array) return Float is
-          Acc : Float := 0.0;
+          Total : Float := 0.0;
        begin
           for Value of Data loop
-             Acc := Acc + Value;
+             Total := Total + Value;
           end loop;
-          return Acc / Float (Data'Length);
+          return Total / Float (Data'Length);
        end Average;
 
     end Component_A;
