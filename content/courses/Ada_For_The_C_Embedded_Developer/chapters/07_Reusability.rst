@@ -406,17 +406,17 @@ simplified example to illustrate that:
 
     package Drivers_1 is
 
-       type Device_Type is null record;
-       procedure Send (Device : Device_Type; Data : Integer);
-       procedure Receive (Device : Device_Type; Data : out Integer);
+       type Transceiver is null record;
+       procedure Send (Device : Transceiver; Data : Integer);
+       procedure Receive (Device : Transceiver; Data : out Integer);
 
     end Drivers_1;
 
     package body Drivers_1 is
 
-       procedure Send (Device : Device_Type; Data : Integer) is null;
+       procedure Send (Device : Transceiver; Data : Integer) is null;
 
-       procedure Receive (Device : Device_Type; Data : out Integer) is
+       procedure Receive (Device : Transceiver; Data : out Integer) is
           pragma Unreferenced (Device);
        begin
           Data := 42;
@@ -428,17 +428,17 @@ simplified example to illustrate that:
 
     package Drivers_2 is
 
-       type Device_Type is new Drivers_1.Device_Type;
-       procedure Send (Device : Device_Type; Data : Integer);
-       procedure Receive (Device : Device_Type; Data : out Integer);
+       type Transceiver is new Drivers_1.Transceiver;
+       procedure Send (Device : Transceiver; Data : Integer);
+       procedure Receive (Device : Transceiver; Data : out Integer);
 
     end Drivers_2;
 
     package body Drivers_2 is
 
-       procedure Send (Device : Device_Type; Data : Integer) is null;
+       procedure Send (Device : Transceiver; Data : Integer) is null;
 
-       procedure Receive (Device : Device_Type; Data : out Integer) is
+       procedure Receive (Device : Transceiver; Data : out Integer) is
           pragma Unreferenced (Device);
        begin
           Data := 42;
@@ -454,7 +454,7 @@ simplified example to illustrate that:
     with Drivers;     use Drivers;
 
     procedure Main is
-       D : Device_Type;
+       D : Transceiver;
        I : Integer;
     begin
        Send (D, 999);
@@ -931,10 +931,10 @@ We may derive a type from multiple interfaces by simply writing
 
        procedure Receive (Obj : in out Receive_Interface) is abstract;
 
-       type Device_Type is new Send_Interface and Receive_Interface with null record;
+       type Transceiver is new Send_Interface and Receive_Interface with null record;
 
-       procedure Send (D : in out Device_Type);
-       procedure Receive (D : in out Device_Type);
+       procedure Send (D : in out Transceiver);
+       procedure Receive (D : in out Transceiver);
 
     end Send_Receive_Pkg;
 
@@ -942,13 +942,13 @@ We may derive a type from multiple interfaces by simply writing
 
     package body Send_Receive_Pkg is
 
-       procedure Send (D : in out Device_Type) is
+       procedure Send (D : in out Transceiver) is
           pragma Unreferenced (D);
        begin
           Put_Line ("Sending data...");
        end Send;
 
-       procedure Receive (D : in out Device_Type) is
+       procedure Receive (D : in out Transceiver) is
           pragma Unreferenced (D);
        begin
           Put_Line ("Receiving data...");
@@ -959,16 +959,16 @@ We may derive a type from multiple interfaces by simply writing
     with Send_Receive_Pkg; use Send_Receive_Pkg;
 
     procedure Main is
-       D : Device_Type;
+       D : Transceiver;
     begin
        D.Send;
        D.Receive;
     end Main;
 
 In this example, we're declaring two interfaces (:ada:`Send_Interface` and
-:ada:`Receive_Interface`) and the tagged type :ada:`Device_Type` that derives
+:ada:`Receive_Interface`) and the tagged type :ada:`Transceiver` that derives
 from both interfaces. Since we need to implement the interfaces, we implement
-both :ada:`Send` and :ada:`Receive` for :ada:`Device_Type`.
+both :ada:`Send` and :ada:`Receive` for :ada:`Transceiver`.
 
 Abstract tagged types
 ^^^^^^^^^^^^^^^^^^^^^
@@ -985,11 +985,11 @@ abstract tagged type declared in the :ada:`Abstract_Send_Receive_Pkg` package:
 
     package Abstract_Send_Receive_Pkg is
 
-       type Abstract_Device_Type is abstract new Send_Interface and
+       type Abstract_Transceiver is abstract new Send_Interface and
          Receive_Interface with null record;
 
-       procedure Send (D : in out Abstract_Device_Type);
-       --  We don't implement Receive for Abstract_Device_Type!
+       procedure Send (D : in out Abstract_Transceiver);
+       --  We don't implement Receive for Abstract_Transceiver!
 
     end Abstract_Send_Receive_Pkg;
 
@@ -997,7 +997,7 @@ abstract tagged type declared in the :ada:`Abstract_Send_Receive_Pkg` package:
 
     package body Abstract_Send_Receive_Pkg is
 
-       procedure Send (D : in out Abstract_Device_Type) is
+       procedure Send (D : in out Abstract_Transceiver) is
           pragma Unreferenced (D);
        begin
           Put_Line ("Sending data...");
@@ -1008,24 +1008,24 @@ abstract tagged type declared in the :ada:`Abstract_Send_Receive_Pkg` package:
     with Abstract_Send_Receive_Pkg; use Abstract_Send_Receive_Pkg;
 
     procedure Main is
-       D : Abstract_Device_Type;
+       D : Abstract_Transceiver;
     begin
        D.Send;
        D.Receive;
     end Main;
 
 In this example, we declare the abstract tagged type
-:ada:`Abstract_Device_Type`. Here, we're only partially implementing the
+:ada:`Abstract_Transceiver`. Here, we're only partially implementing the
 interfaces from which this type is derived: we're implementing :ada:`Send`, but
 we're skipping the implementation of :ada:`Receive`. Therefore, :ada:`Receive`
-is an abstract operation of :ada:`Abstract_Device_Type`. Since any type that
+is an abstract operation of :ada:`Abstract_Transceiver`. Since any type that
 has abstract operations is abstract, we must indicate this by adding the
 :ada:`abstract` keyword in type declaration.
 
 Also, when compiling this example, we get an error because we're trying to
-declare an object of :ada:`Abstract_Device_Type` (in the :ada:`Main`
+declare an object of :ada:`Abstract_Transceiver` (in the :ada:`Main`
 procedure), which is not possible. Naturally, if we derive another type from
-:ada:`Abstract_Device_Type` and implement :ada:`Receive` as well, then we can
+:ada:`Abstract_Transceiver` and implement :ada:`Receive` as well, then we can
 declare objects of this derived type. This is what we do in the
 :ada:`Full_Send_Receive_Pkg` below:
 
@@ -1035,8 +1035,8 @@ declare objects of this derived type. This is what we do in the
 
     package Full_Send_Receive_Pkg is
 
-       type Full_Device_Type is new Abstract_Device_Type with null record;
-       procedure Receive (D : in out Full_Device_Type);
+       type Full_Transceiver is new Abstract_Transceiver with null record;
+       procedure Receive (D : in out Full_Transceiver);
 
     end Full_Send_Receive_Pkg;
 
@@ -1044,7 +1044,7 @@ declare objects of this derived type. This is what we do in the
 
     package body Full_Send_Receive_Pkg is
 
-       procedure Receive (D : in out Full_Device_Type) is
+       procedure Receive (D : in out Full_Transceiver) is
           pragma Unreferenced (D);
        begin
           Put_Line ("Receiving data...");
@@ -1055,14 +1055,14 @@ declare objects of this derived type. This is what we do in the
     with Full_Send_Receive_Pkg; use Full_Send_Receive_Pkg;
 
     procedure Main is
-       D : Full_Device_Type;
+       D : Full_Transceiver;
     begin
        D.Send;
        D.Receive;
     end Main;
 
 Here, we implement the :ada:`Receive` procedure for the
-:ada:`Full_Device_Type`. Therefore, the type doesn't have any abstract
+:ada:`Full_Transceiver`. Therefore, the type doesn't have any abstract
 operation, so we can use it to declare objects.
 
 :code-config:`reset_accumulator=True`
@@ -1091,11 +1091,11 @@ calls:
 
     package Drivers_Base is
 
-       type Device_Type is interface;
+       type Transceiver is interface;
 
-       procedure Send (Device : Device_Type; Data : Integer) is abstract;
-       procedure Receive (Device : Device_Type; Data : out Integer) is abstract;
-       procedure Display (Device : Device_Type) is abstract;
+       procedure Send (Device : Transceiver; Data : Integer) is abstract;
+       procedure Receive (Device : Transceiver; Data : out Integer) is abstract;
+       procedure Display (Device : Transceiver) is abstract;
 
     end Drivers_Base;
 
@@ -1103,11 +1103,11 @@ calls:
 
     package Drivers_1 is
 
-       type Device_Type is new Drivers_Base.Device_Type with null record;
+       type Transceiver is new Drivers_Base.Transceiver with null record;
 
-       procedure Send (Device : Device_Type; Data : Integer);
-       procedure Receive (Device : Device_Type; Data : out Integer);
-       procedure Display (Device : Device_Type);
+       procedure Send (Device : Transceiver; Data : Integer);
+       procedure Receive (Device : Transceiver; Data : out Integer);
+       procedure Display (Device : Transceiver);
 
     end Drivers_1;
 
@@ -1115,15 +1115,15 @@ calls:
 
     package body Drivers_1 is
 
-       procedure Send (Device : Device_Type; Data : Integer) is null;
+       procedure Send (Device : Transceiver; Data : Integer) is null;
 
-       procedure Receive (Device : Device_Type; Data : out Integer) is
+       procedure Receive (Device : Transceiver; Data : out Integer) is
           pragma Unreferenced (Device);
        begin
           Data := 42;
        end Receive;
 
-       procedure Display (Device : Device_Type) is
+       procedure Display (Device : Transceiver) is
           pragma Unreferenced (Device);
        begin
           Put_Line ("Using Drivers_1");
@@ -1135,11 +1135,11 @@ calls:
 
     package Drivers_2 is
 
-       type Device_Type is new Drivers_Base.Device_Type with null record;
+       type Transceiver is new Drivers_Base.Transceiver with null record;
 
-       procedure Send (Device : Device_Type; Data : Integer);
-       procedure Receive (Device : Device_Type; Data : out Integer);
-       procedure Display (Device : Device_Type);
+       procedure Send (Device : Transceiver; Data : Integer);
+       procedure Receive (Device : Transceiver; Data : out Integer);
+       procedure Display (Device : Transceiver);
 
     end Drivers_2;
 
@@ -1147,15 +1147,15 @@ calls:
 
     package body Drivers_2 is
 
-       procedure Send (Device : Device_Type; Data : Integer) is null;
+       procedure Send (Device : Transceiver; Data : Integer) is null;
 
-       procedure Receive (Device : Device_Type; Data : out Integer) is
+       procedure Receive (Device : Transceiver; Data : out Integer) is
           pragma Unreferenced (Device);
        begin
           Data := 42;
        end Receive;
 
-       procedure Display (Device : Device_Type) is
+       procedure Display (Device : Transceiver) is
           pragma Unreferenced (Device);
        begin
           Put_Line ("Using Drivers_2");
@@ -1170,9 +1170,9 @@ calls:
     with Drivers_2;
 
     procedure Main is
-       D1 : aliased Drivers_1.Device_Type;
-       D2 : aliased Drivers_2.Device_Type;
-       D  : access Drivers_Base.Device_Type'Class;
+       D1 : aliased Drivers_1.Transceiver;
+       D2 : aliased Drivers_2.Transceiver;
+       D  : access Drivers_Base.Transceiver'Class;
 
        I  : Integer;
 
@@ -1200,12 +1200,12 @@ calls:
        Put_Line (Integer'Image (I));
     end Main;
 
-In this example, we declare the :ada:`Device_Type` interface in the
+In this example, we declare the :ada:`Transceiver` interface in the
 :ada:`Drivers_Base` package. This interface is then used to derive the tagged
-types :ada:`Device_Type` from both :ada:`Drivers_1` and :ada:`Drivers_2`
+types :ada:`Transceiver` from both :ada:`Drivers_1` and :ada:`Drivers_2`
 packages.
 
-In the :ada:`Main` procedure, we use the access to :ada:`Device_Type'Class`
+In the :ada:`Main` procedure, we use the access to :ada:`Transceiver'Class`
 |mdash| from the interface declared in the :ada:`Drivers_Base` package |mdash|
 to declare :ada:`D`. This object :ada:`D` contains the access to the actual
 driver loaded at any specific time. We select the driver at runtime in the
