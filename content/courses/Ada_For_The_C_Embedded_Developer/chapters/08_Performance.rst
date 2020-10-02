@@ -29,10 +29,103 @@ suspects and their resolution.
 Switches and optimizations
 --------------------------
 
-.. todo::
+Clever use of compilation switches might optimize the performance of an
+application significantly. In this section, we'll briefly look into some of
+the switches available in the GNAT toolchain.
 
-    Complete section!
+Optimizations levels
+~~~~~~~~~~~~~~~~~~~~
 
+Optimization levels can be found in many compilers for multiple languages. On
+the lowest level, the compiler doesn't optimize the code at all, while at the
+highest level, the compiler analyses the code and optimizes it by removing
+unnecessary operations and making most use of the target processor's
+capabilities.
+
+By being part of GCC, GNAT offers the same ``-O_`` switches as GCC:
+
++-------------+--------------------------------------------------------------+
+| Switch      | Description                                                  |
++=============+==============================================================+
+| ``-O0``     | No optimization: the generated code is completely            |
+|             | unoptimized. This is the default optimization level.         |
++-------------+--------------------------------------------------------------+
+| ``-O1``     | Moderate optimization.                                       |
++-------------+--------------------------------------------------------------+
+| ``-O2``     | Full optimization.                                           |
++-------------+--------------------------------------------------------------+
+| ``-O3``     | Same optimization level as for ``-O2``. In addition, further |
+|             | optimization strategies, such as aggressive automatic        |
+|             | inlining and vectorization.                                  |
++-------------+--------------------------------------------------------------+
+
+Note that the highest the level, the slowest will be the compilation time. For
+fast compilation during development phase, unless you're working on
+benchmarking algorithms, using ``-O0`` is probably a good idea.
+
+In addition to the levels presented above, GNAT also has the ``-Os`` switch,
+which allows for optimizing code and data usage.
+
+Inlining
+~~~~~~~~
+
+As we've seen in the previous section, the highest optimization level (``-O3``)
+tries to automatic inline subprograms whenever possible. There might be
+situations, however, where this doesn't happen automatically. In those cases,
+manual inlining may help.
+
+In order to inline subprograms, we can use the :ada:`Inline` aspect. Let's
+reuse an example from a previous chapter and inline the :ada:`Average`
+function:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Inlining
+
+    package Float_Arrays is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       function Average (Data : Float_Array) return Float
+         with Inline;
+
+    end Float_Arrays;
+
+    package body Float_Arrays is
+
+       function Average (Data : Float_Array) return Float is
+          Total : Float := 0.0;
+       begin
+          for Value of Data loop
+             Total := Total + Value;
+          end loop;
+          return Total / Float (Data'Length);
+       end Average;
+
+    end Float_Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Float_Arrays; use Float_Arrays;
+
+    procedure Compute_Average is
+       Values        : constant Float_Array := (10.0, 11.0, 12.0, 13.0);
+       Average_Value : Float;
+    begin
+       Average_Value := Average (Values);
+       Put_Line ("Average = " & Float'Image (Average_Value));
+    end Compute_Average;
+
+When compiling this example, the GNAT will inline :ada:`Average` in the
+:ada:`Compute_Average` procedure.
+
+In addition to this aspect, we need to set the optimization level to at least
+``-O1`` and use the ``-gnatn`` switch, which instructs the compiler to take the
+:ada:`Inline` aspect into account.
+
+Note, however, that the :ada:`Inline` aspect is just a *recommendation* to the
+compiler. Sometimes, the compiler might not be able to follow this
+recommendation, so it won't inline the subprogram. If we want to ensure that a
+subprogram is always inlined or else get a compilation error when it isn't, we
+need to use the :ada:`Inline_Always` aspect instead of :ada:`Inline`.
 
 Checks and assertions
 ---------------------
