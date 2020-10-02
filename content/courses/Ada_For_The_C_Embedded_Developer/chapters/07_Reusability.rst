@@ -814,7 +814,7 @@ example:
     with Component_A; use Component_A;
 
     procedure Main_System is
-       Values        : Float_Array := (10.0, 11.0, 12.0, 13.0);
+       Values        : constant Float_Array := (10.0, 11.0, 12.0, 13.0);
        Average_Value : Float;
     begin
        Average_Value := Average (Values);
