@@ -921,7 +921,7 @@ We may derive a type from multiple interfaces by simply writing
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Multiple_Interfaces
 
-    package Send_Receive_Pkg is
+    package Transceivers is
 
        type Send_Interface is interface;
 
@@ -936,11 +936,11 @@ We may derive a type from multiple interfaces by simply writing
        procedure Send (D : in out Transceiver);
        procedure Receive (D : in out Transceiver);
 
-    end Send_Receive_Pkg;
+    end Transceivers;
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    package body Send_Receive_Pkg is
+    package body Transceivers is
 
        procedure Send (D : in out Transceiver) is
           pragma Unreferenced (D);
@@ -954,9 +954,9 @@ We may derive a type from multiple interfaces by simply writing
           Put_Line ("Receiving data...");
        end Receive;
 
-    end Send_Receive_Pkg;
+    end Transceivers;
 
-    with Send_Receive_Pkg; use Send_Receive_Pkg;
+    with Transceivers; use Transceivers;
 
     procedure Main is
        D : Transceiver;
@@ -976,14 +976,14 @@ Abstract tagged types
 We may also declare abstract tagged types. Note that, because the type is
 abstract, we cannot use it to declare objects for it |mdash| this is the same
 as for interfaces. We can only use it to derive other types. Let's look at the
-abstract tagged type declared in the :ada:`Abstract_Send_Receive_Pkg` package:
+abstract tagged type declared in the :ada:`Abstract_Transceivers` package:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Multiple_Interfaces
    :class: ada-expect-compile-error
 
-    with Send_Receive_Pkg; use Send_Receive_Pkg;
+    with Transceivers; use Transceivers;
 
-    package Abstract_Send_Receive_Pkg is
+    package Abstract_Transceivers is
 
        type Abstract_Transceiver is abstract new Send_Interface and
          Receive_Interface with null record;
@@ -991,11 +991,11 @@ abstract tagged type declared in the :ada:`Abstract_Send_Receive_Pkg` package:
        procedure Send (D : in out Abstract_Transceiver);
        --  We don't implement Receive for Abstract_Transceiver!
 
-    end Abstract_Send_Receive_Pkg;
+    end Abstract_Transceivers;
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    package body Abstract_Send_Receive_Pkg is
+    package body Abstract_Transceivers is
 
        procedure Send (D : in out Abstract_Transceiver) is
           pragma Unreferenced (D);
@@ -1003,9 +1003,9 @@ abstract tagged type declared in the :ada:`Abstract_Send_Receive_Pkg` package:
           Put_Line ("Sending data...");
        end Send;
 
-    end Abstract_Send_Receive_Pkg;
+    end Abstract_Transceivers;
 
-    with Abstract_Send_Receive_Pkg; use Abstract_Send_Receive_Pkg;
+    with Abstract_Transceivers; use Abstract_Transceivers;
 
     procedure Main is
        D : Abstract_Transceiver;
@@ -1027,22 +1027,22 @@ declare an object of :ada:`Abstract_Transceiver` (in the :ada:`Main`
 procedure), which is not possible. Naturally, if we derive another type from
 :ada:`Abstract_Transceiver` and implement :ada:`Receive` as well, then we can
 declare objects of this derived type. This is what we do in the
-:ada:`Full_Send_Receive_Pkg` below:
+:ada:`Full_Transceivers` below:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Multiple_Interfaces
 
-    with Abstract_Send_Receive_Pkg; use Abstract_Send_Receive_Pkg;
+    with Abstract_Transceivers; use Abstract_Transceivers;
 
-    package Full_Send_Receive_Pkg is
+    package Full_Transceivers is
 
        type Full_Transceiver is new Abstract_Transceiver with null record;
        procedure Receive (D : in out Full_Transceiver);
 
-    end Full_Send_Receive_Pkg;
+    end Full_Transceivers;
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    package body Full_Send_Receive_Pkg is
+    package body Full_Transceivers is
 
        procedure Receive (D : in out Full_Transceiver) is
           pragma Unreferenced (D);
@@ -1050,9 +1050,9 @@ declare objects of this derived type. This is what we do in the
           Put_Line ("Receiving data...");
        end Receive;
 
-    end Full_Send_Receive_Pkg;
+    end Full_Transceivers;
 
-    with Full_Send_Receive_Pkg; use Full_Send_Receive_Pkg;
+    with Full_Transceivers; use Full_Transceivers;
 
     procedure Main is
        D : Full_Transceiver;
