@@ -460,7 +460,7 @@ could be translated:
 :code-config:`reset_accumulator=True`
 
 Note that in the above example, a :ada:`use` clause on
-:ada:`Register_Interface` could allow to omit the prefix.
+:ada:`Register_Interface` could allow us to omit the prefix.
 
 
 .. _Pointers:
