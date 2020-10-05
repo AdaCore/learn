@@ -42,6 +42,7 @@ export async function fetchJSON<R, T>(data: R, url: string): Promise<T> {
 
 export interface DownloadRequest {
   files: Array<Resource>;
+  switches: Array<string>;
   name: string | null;
 }
 

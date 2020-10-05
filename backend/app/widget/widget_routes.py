@@ -39,7 +39,7 @@ def download_example():
     data = request.get_json()
     app.logger.debug(data)
 
-    project = Project(data['files'])
+    project = Project(data['files'], data['switches'])
     zipfile = project.zip()
 
     archive = data['name'] + '.zip'

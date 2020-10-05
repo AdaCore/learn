@@ -17,6 +17,7 @@ export namespace RunProgram {
   export interface TS {
     files: Array<Resource>;
     mode: string;
+    switches: Array<string>;
     name: string | null;
     lab: boolean;
   }
