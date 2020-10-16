@@ -37,10 +37,95 @@ Switches and optimizations
 Checks and assertions
 ---------------------
 
-.. todo::
+Checks
+~~~~~~
 
-    Complete section!
+Ada provides many runtime checks to ensure that the implementation is working
+as expected. For example, when accessing an array, we would like to make sure
+that we're not accessing a memory position that is not allocated for that
+array. This is achieved by an index check. Another example is the use of
+constrained ranges in numeric applications: when adding two integer numbers, we
+would like to ensure that the result doesn't overflow or underflow. This is
+achieved by an overflow check.
 
+Although runtime checks are very useful and should be used as much as possible,
+they can also increase the overhead of implementations at certain hot-spots.
+For example, checking the index of an array in a sorting algorithm may
+significantly decrease its performance. In those cases, suppressing the check
+may be an option. We can achieve this suppression by using
+:ada:`pragma Suppress (Index_Check)`. For example:
+
+.. code-block:: ada
+
+    procedure Sort (A : in out Integer_Array) is
+       pragma Suppress (Index_Check);
+    begin
+       --  (implementation removed...)
+       null;
+    end Sort;
+
+In case of overflow checks, we can use :ada:`pragma Suppress (Overflow_Check)`
+to suppress them:
+
+.. code-block:: ada
+
+    function Some_Computation (A, B : Int32) return Int32 is
+       pragma Suppress (Overflow_Check);
+    begin
+       --  (implementation removed...)
+       null;
+    end Sort;
+
+We can also deactivate overflow checks for integer types using the ``-gnato``
+switch when compiling a source-code file with GNAT. In this case, overflow
+checks in the whole file are deactivated.
+
+It is also possible to suppress all checks at once using
+:ada:`pragma Suppress (All_Checks)`. In addition, GNAT offers a compilation
+switch called ``-gnatp``, which has the same effect on the whole file.
+
+Note, however, that this kind of suppression is just a recommendation to the
+compiler. There's no guarantee that the compiler will actually suppress any of
+the checks.
+
+Also note that deactiving checks |mdash| while having the benefit of
+potentially improving the performance |mdash| increases the risk of wrong
+behavior of your application. Therefore, the general recommendation is to keep
+checks active for most parts of the application and just deactivate them on the
+hot-spots after careful analysis of the subprogram where the hot-spot is
+located.
+
+Assertions
+~~~~~~~~~~
+
+We've already discussed assertions in
+:ref:`this section of the SPARK chapter <Dynamic_Checks_Vs_Formal_Proof>`.
+Assertions are user-defined checks that you can add to your code using the
+:ada:`pragma Assert`. For example:
+
+.. code-block:: ada
+
+    function Some_Computation (A, B : Int32) return Int32 is
+       Res : Int32;
+    begin
+       --  (implementation removed...)
+
+       pragma Assert (Res >= 0);
+
+       return Res;
+    end Sort;
+
+Assertions that are specified with :ada:`pragma Assert` are not enabled by
+default. You can enable them by setting the assertion policy to *check* |mdash|
+using :ada:`pragma Assertion_Policy (Check)` |mdash| or by using the ``-gnata``
+switch when compiling with GNAT.
+
+Similar to the checks discussed previously, assertions can generate significant
+overhead when used at hot-spots. Restricting those assertions to development
+(e.g. debug version) and turning them off on the release version may be an
+option. In this case, formal proof |mdash| as discussed in the
+:doc:`SPARK chapter <05_SPARK>` |mdash| can help you. By formally proving that
+assertions will never fail at run-time, you can safely deactivate them.
 
 Dynamic v.s static structures
 -----------------------------
