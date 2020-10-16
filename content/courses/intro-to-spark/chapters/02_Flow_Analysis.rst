@@ -140,8 +140,8 @@ checks that each specified parameter mode corresponds to the usage of that
 parameter in the subprogram's body.  It checks that an :ada:`in` parameter
 is never modified, either directly or through a subprogram call, checks
 that the initial value of an :ada:`out` parameter is never read in the
-subprogram (since it may not be defined on subprogram entry), and warn
-whens an :ada:`in out` parameter isn't modified or when its initial value
+subprogram (since it may not be defined on subprogram entry), and warns
+when an :ada:`in out` parameter isn't modified or when its initial value
 isn't used.  All of these may be signs of an error.
 
 We see an example below. The subprogram :ada:`Swap` is incorrect and GNATprove
