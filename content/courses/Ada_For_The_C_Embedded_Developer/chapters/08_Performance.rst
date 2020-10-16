@@ -86,7 +86,10 @@ switch called ``-gnatp``, which has the same effect on the whole file.
 
 Note, however, that this kind of suppression is just a recommendation to the
 compiler. There's no guarantee that the compiler will actually suppress any of
-the checks.
+the checks because the compiler may not be able to do so |mdash| typically
+because the hardware happens to do it. For example, if the machine traps on any
+access via address zero, requesting the removal of null-access value checks in
+the generated code won't prevent them from happening.
 
 It is important to differentiate between required and redundant checks. Let's
 consider the following example in C:
