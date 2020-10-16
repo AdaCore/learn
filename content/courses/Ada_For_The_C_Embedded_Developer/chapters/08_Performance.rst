@@ -114,7 +114,7 @@ function:
        Put_Line ("Average = " & Float'Image (Average_Value));
     end Compute_Average;
 
-When compiling this example, the GNAT will inline :ada:`Average` in the
+When compiling this example, GNAT will inline :ada:`Average` in the
 :ada:`Compute_Average` procedure.
 
 In addition to this aspect, we need to set the optimization level to at least
