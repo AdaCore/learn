@@ -128,9 +128,18 @@ instructs the compiler to take the :ada:`Inline` aspect into account.
 
 Note, however, that the :ada:`Inline` aspect is just a *recommendation* to the
 compiler. Sometimes, the compiler might not be able to follow this
-recommendation, so it won't inline the subprogram. If we want to ensure that a
-subprogram is always inlined or else get a compilation error when it isn't, we
-need to use the :ada:`Inline_Always` aspect instead of :ada:`Inline`.
+recommendation, so it won't inline the subprogram. In this case, we get a
+compilation warning from GNAT.
+
+These are some examples of situations where the compiler might not be able to
+inline a subprogram:
+
+- when the code is too large,
+
+- when it's too complicated |mdash| for example, when it involves exception
+  handling |mdash|, or
+
+- when it contains tasks, etc.
 
 Checks and assertions
 ---------------------
