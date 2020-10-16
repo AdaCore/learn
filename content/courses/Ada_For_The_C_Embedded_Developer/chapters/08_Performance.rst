@@ -69,14 +69,19 @@ which allows for optimizing code and data usage.
 Inlining
 ~~~~~~~~
 
-As we've seen in the previous section, the highest optimization level (``-O3``)
-tries to automatic inline subprograms whenever possible. There might be
-situations, however, where this doesn't happen automatically. In those cases,
-manual inlining may help.
+As we've seen in the previous section, automatic inlining depends on the
+optimization level. The highest optimization level (``-O3``), for example,
+performs aggressive automatic inlining. This could mean that this level inlines
+too much rather than not enough. As a result, the cache may become an issue and
+the overall performance may be worse than the one we would achieve by compiling
+the same code with optimization level 2 (``-O2``). Therefore, the general
+recommendation is to not *just* select ``-O3`` for the optimized version of an
+application, but instead compare it the optimized version built with ``-O2``.
 
-In order to inline subprograms, we can use the :ada:`Inline` aspect. Let's
-reuse an example from a previous chapter and inline the :ada:`Average`
-function:
+In some cases, it's better to reduce the optimization level and perform manual
+inlining instead of automatic inlining. We do that by using the :ada:`Inline`
+aspect. Let's reuse an example from a previous chapter and inline the
+:ada:`Average` function:
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Inlining
 
