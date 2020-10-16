@@ -141,6 +141,17 @@ inline a subprogram:
 
 - when it contains tasks, etc.
 
+In addition to the :ada:`Inline` aspect, we also have the :ada:`Inline_Always`
+aspect. In contrast to the former aspect, however, the :ada:`Inline_Always`
+aspect isn't primarily related to performance. Instead, it should be used when
+the functionality would be incorrect if inlining was not performed by the
+compiler. Examples of this are procedures that insert Assembly instructions
+that only make sense when the procedure is inlined, such as memory barriers.
+
+Similar to the :ada:`Inline` aspect, there might be situations where a
+subprogram has the :ada:`Inline_Always` aspect, but the compiler is unable to
+inline it. In this case, we get a compilation error from GNAT.
+
 Checks and assertions
 ---------------------
 
