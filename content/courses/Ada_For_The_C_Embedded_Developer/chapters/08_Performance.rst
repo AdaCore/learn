@@ -122,9 +122,9 @@ aspect. Let's reuse an example from a previous chapter and inline the
 When compiling this example, GNAT will inline :ada:`Average` in the
 :ada:`Compute_Average` procedure.
 
-In addition to this aspect, we need to set the optimization level to at least
-``-O1`` and use the ``-gnatn`` switch, which instructs the compiler to take the
-:ada:`Inline` aspect into account.
+In order to effectively use this aspect, however, we need to set the
+optimization level to at least ``-O1`` and use the ``-gnatn`` switch, which
+instructs the compiler to take the :ada:`Inline` aspect into account.
 
 Note, however, that the :ada:`Inline` aspect is just a *recommendation* to the
 compiler. Sometimes, the compiler might not be able to follow this
