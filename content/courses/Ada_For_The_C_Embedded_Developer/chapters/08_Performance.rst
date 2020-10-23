@@ -240,6 +240,124 @@ performance-critical pieces of the application.
 Pointers v.s. data copies
 -------------------------
 
-.. todo::
+In the section about :ref:`pointers <Pointers>`, we mentioned that the Ada
+compiler will automatically pass parameters by reference when needed. Also, in
+the section about :ref:`by value vs. by reference <By_Value_Vs_By_Reference>`,
+we mentioned that scalar types and pointers are passed by value, while record
+and array types are always passed by reference. Therefore, unlike C, you don't
+have to use access types in Ada to get better performance when passing arrays
+or records to subprograms. Using :ada:`out` or :ada:`in out` gives you
+equivalent performance and, at the same time, improves the readability of your
+code.
 
-    Complete section!
+Let's look at this example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Passing_Rec_By_Reference_C
+
+    !main.c
+    #include <stdio.h>
+
+    struct Data {
+        int prev, curr;
+    };
+
+    void update(struct Data *d,
+                int          v)
+    {
+        d->prev = d->curr;
+        d->curr = v;
+    }
+
+    void display(const struct Data *d)
+    {
+        printf("Prev : %d\n", d->prev);
+        printf("Curr : %d\n", d->curr);
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        struct Data D1 = { 0, 1 };
+
+        update (&D1, 3);
+        display (&D1);
+    }
+
+In this C code example, we're using pointers to pass :c:`D1` as a reference to
+:c:`update` and :c:`display`. In contrast, the equivalent code in Ada makes use
+of parameter modes to pass :ada:`D1` as an argument to :ada:`Update` and
+:ada:`Display`:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Passing_Rec_By_Reference_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Update_Record is
+
+       type Data is record
+          Prev : Integer;
+          Curr : Integer;
+       end record;
+
+       procedure Update (D : in out Data;
+                         V :        Integer) is
+       begin
+          D.Prev := D.Curr;
+          D.Curr := V;
+       end Update;
+
+       procedure Display (D : Data) is
+       begin
+          Put_Line ("Prev: " & Integer'Image (D.Prev));
+          Put_Line ("Curr: " & Integer'Image (D.Curr));
+       end Display;
+
+       D1 : Data := (0, 1);
+
+    begin
+       Update (D1, 3);
+       Display (D1);
+    end Update_Record;
+
+In the calls to :ada:`Update` and :ada:`Display`, :ada:`D1` is always be passed
+by reference. Because no extra copy takes place, we get a performance that is
+equivalent to the C version. If we had used arrays in the example above,
+:ada:`D1` would have been passed by reference as well:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Passing_Array_By_Reference_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Update_Array is
+
+       type Data_State is (Prev, Curr);
+       type Data is array (Data_State'Range) of Integer;
+
+       procedure Update (D : in out Data;
+                         V :        Integer) is
+       begin
+          D (Prev) := D (Curr);
+          D (Curr) := V;
+       end Update;
+
+       procedure Display (D : Data) is
+       begin
+          Put_Line ("Prev: " & Integer'Image (D (Prev)));
+          Put_Line ("Curr: " & Integer'Image (D (Curr)));
+       end Display;
+
+       D1 : Data := (0, 1);
+
+    begin
+       Update (D1, 3);
+       Display (D1);
+    end Update_Array;
+
+Again, no extra copy is performed in the calls to :ada:`Update` and
+:ada:`Display`, which gives us optimal performance when dealing with arrays and
+avoids that we need to use access types to optimize the code.
