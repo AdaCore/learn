@@ -69,7 +69,7 @@ test_gnat_toolchain_intro:
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
 	@echo ""
 
-test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog
+test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
 	test_advanced_ada test_advanced_spark \
 	test_spark_for_the_misra_c_developer \
 	test_ada_for_the_cpp_java_developer \
