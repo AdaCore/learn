@@ -360,4 +360,4 @@ equivalent to the C version. If we had used arrays in the example above,
 
 Again, no extra copy is performed in the calls to :ada:`Update` and
 :ada:`Display`, which gives us optimal performance when dealing with arrays and
-avoids that we need to use access types to optimize the code.
+avoids the need to use access types to optimize the code.
