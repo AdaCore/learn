@@ -336,7 +336,7 @@ equivalent to the C version. If we had used arrays in the example above,
     procedure Update_Array is
 
        type Data_State is (Prev, Curr);
-       type Data is array (Data_State'Range) of Integer;
+       type Data is array (Data_State) of Integer;
 
        procedure Update (D : in out Data;
                          V :        Integer) is
