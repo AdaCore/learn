@@ -285,9 +285,9 @@ Let's look at this example:
     }
 
 In this C code example, we're using pointers to pass :c:`D1` as a reference to
-:c:`update` and :c:`display`. In contrast, the equivalent code in Ada makes use
-of parameter modes to pass :ada:`D1` as an argument to :ada:`Update` and
-:ada:`Display`:
+:c:`update` and :c:`display`. In contrast, the equivalent code in Ada simply
+uses the parameter modes to specify the data flow directions. The mechanisms
+used to pass the values do not appear in the source code.
 
 [Ada]
 
