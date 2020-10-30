@@ -1395,16 +1395,145 @@ a byte-aligned pointer. Then, it simply copies the data byte-by-byte.
 .. _OverlaysVsUncheckedConversions:
 
 Overlays vs. Unchecked Conversions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. todo::
+Unchecked conversions are another way of converting between unrelated data
+types. This conversion is done by instantiating the generic
+:ada:`Unchecked_Conversions` function for the types you want to convert. Let's
+look at a simple example:
 
-    Complete section!
+[Ada]
 
-    Explain that overlays are more efficient and allow to have one change
-    automatically reflected by the other object, while Unchecked_Conversions
-    require a copy.
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Simple_Unchecked_Conversion
 
-    Unchecked_Conversions are not fundamentally bad and can also be used
-    (they're actually cleaner and safer), but they're not always at the right
-    level of performance / semantics.
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Unchecked_Conversion;
+
+    procedure Simple_Unchecked_Conversion is
+       type State is (Off, State_1, State_2)
+         with Size => Integer'Size;
+
+       for State use (Off => 0, State_1 => 32, State_2 => 64);
+
+       function To_Integer is new Ada.Unchecked_Conversion (Source => State,
+                                                            Target => Integer);
+
+       I : Integer;
+    begin
+       I := To_Integer (State_2);
+       Put_Line ("I = " & Integer'Image (I));
+    end Simple_Unchecked_Conversion;
+
+In this example, :ada:`To_Integer` is an instantiation of
+:ada:`Unchecked_Conversion` to convert between the :ada:`State` enumeration and
+the :ada:`Integer` type. Note that, in order to ensure safe conversion, we're
+declaring :ada:`State` to have the same size as the :ada:`Integer` type we
+want to convert to.
+
+This is the corresponding implementation using overlays:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Simple_Overlay
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Overlay is
+       type State is (Off, State_1, State_2)
+         with Size => Integer'Size;
+
+       for State use (Off => 0, State_1 => 32, State_2 => 64);
+
+       S : State;
+       I : Integer
+         with Address => S'Address, Import, Volatile;
+    begin
+       S := State_2;
+       Put_Line ("I = " & Integer'Image (I));
+    end Simple_Overlay;
+
+Let's look at another example of converting between different numeric formats.
+In this case, we want to convert between a 16-bit fixed-point and a 16-bit
+integer data type. This is how we can do it using :ada:`Unchecked_Conversion`:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Fixed_Int_Unchecked_Conversion
+
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Unchecked_Conversion;
+
+    procedure Fixed_Int_Unchecked_Conversion is
+       Delta_16 : constant := 1.0 / 2.0 ** (16 - 1);
+       Max_16   : constant := 2 ** 15;
+
+       type Fixed_16 is delta Delta_16 range -1.0 .. 1.0 - Delta_16
+         with Size => 16;
+       type Int_16   is range -Max_16 .. Max_16 - 1
+         with Size => 16;
+
+       function To_Int_16 is new Ada.Unchecked_Conversion (Source => Fixed_16,
+                                                           Target => Int_16);
+       function To_Fixed_16 is new Ada.Unchecked_Conversion (Source => Int_16,
+                                                             Target => Fixed_16);
+
+       I : Int_16   := 0;
+       F : Fixed_16 := 0.0;
+    begin
+       F := Fixed_16'Last;
+       I := To_Int_16 (F);
+
+       Put_Line ("F = " & Fixed_16'Image (F));
+       Put_Line ("I = " & Int_16'Image (I));
+    end Fixed_Int_Unchecked_Conversion;
+
+Here, we instantiate :ada:`Unchecked_Conversion` for the :ada:`Int_16` and
+:ada:`Fixed_16` types, and we call the instantiated functions explicitly. In
+this case, we call :ada:`To_Int_16` to get the integer value corresponding to
+:ada:`Fixed_16'Last`.
+
+This is how we can rewrite the implementation above using overlays:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Fixed_Int_Overlay
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Fixed_Int_Overlay is
+       Delta_16 : constant := 1.0 / 2.0 ** (16 - 1);
+       Max_16   : constant := 2 ** 15;
+
+       type Fixed_16 is delta Delta_16 range -1.0 .. 1.0 - Delta_16
+         with Size => 16;
+       type Int_16   is range -Max_16 .. Max_16 - 1
+         with Size => 16;
+
+       I : Int_16   := 0;
+       F : Fixed_16
+         with Address => I'Address, Import, Volatile;
+    begin
+       F := Fixed_16'Last;
+
+       Put_Line ("F = " & Fixed_16'Image (F));
+       Put_Line ("I = " & Int_16'Image (I));
+    end Fixed_Int_Overlay;
+
+Here, the conversion to the integer value is implicit, so we don't need to call
+a conversion function.
+
+Using :ada:`Unchecked_Conversion` has the advantage of making it clear that a
+conversion is happening, since the conversion is written explicitly in the
+code. With overlays, that conversion is automatic and therefore implicit. In
+that sense, using :ada:`Unchecked_Conversion` is a cleaner and safer approach.
+On the other hand, :ada:`Unchecked_Conversion` requires a copy, so it's less
+efficient than overlays, where no copy is performed |mdash| because one change
+in the source object is automatically reflected in the target object (and
+vice-versa). In the end, the choice between unchecked conversions and overlays
+depends on the level of performance that you want to achieve.
+
+Also note that :ada:`Unchecked_Conversion` only works with scalar types.
+Therefore, we wouldn't be able to use :ada:`Unchecked_Conversion` to rewrite
+some examples from the previous section |mdash| specifically the ones where we
+use overlays with bit-fields. In this case, using overlays is the only option
+we have.
