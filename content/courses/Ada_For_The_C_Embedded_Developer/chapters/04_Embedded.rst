@@ -275,6 +275,12 @@ types can be thought of being close to the actual representation on the
 machine. In fact, ordinary fixed-point types make use of the available integer
 shift instructions, for example.
 
+Another difference between floating-point and fixed-point types is that Ada
+doesn't provide standard fixed-point types. While the Ada standard specifies
+floating-point types such as :ada:`Float` and :ada:`Long_Float`, we have to
+declare our own fixed-point types. Note that, in the previous example, we have
+used a fixed-point type named :ada:`Fixed`: this type isn't part of the
+standard, but must be declared somewhere in the source-code of our application.
 
 The syntax for an ordinary fixed-point type is
 
