@@ -231,9 +231,6 @@ Understanding Bare-Metal Environment
 Dealing with Absence of FPU with Fixed Point
 --------------------------------------------
 
-Fixed-point types
-~~~~~~~~~~~~~~~~~
-
 Many numerical applications typically use floating-point types to compute
 values. However, in some platforms, a floating-point unit may not be available.
 Other platforms may have a floating-point unit, but using it in certain
