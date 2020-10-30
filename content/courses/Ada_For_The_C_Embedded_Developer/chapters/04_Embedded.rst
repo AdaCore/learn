@@ -257,7 +257,7 @@ The syntax for an ordinary fixed-point type is
 
 .. code-block:: ada
 
-    type <type-name> is delta <delta-value> range <lower-bound> .. <upper-bound>;
+    type <type_name> is delta <delta_value> range <lower_bound> .. <upper_bound>;
 
 By default the compiler will choose a scale factor, or :ada:`small`, that is a
 power of 2 no greater than <delta-value>.
