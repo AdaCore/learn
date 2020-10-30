@@ -231,9 +231,124 @@ Understanding Bare-Metal Environment
 Dealing with Absence of FPU with Fixed Point
 --------------------------------------------
 
-.. todo::
+Fixed-point types
+~~~~~~~~~~~~~~~~~
 
-    Complete section!
+.. TODO: add link to advanced lesson that discusses 'Delta vs. 'Small
+
+Ordinary fixed-point types are similar to decimal fixed-point types in that the
+values are, in effect, scaled integers.  The difference between them is in the
+scale factor: for a decimal fixed-point type, the scaling, given explicitly by
+the type's :ada:`delta`, is always a power of ten.
+
+In contrast, for an ordinary fixed-point type, the scaling is defined by the
+type's :ada:`small`, which is derived from the specified :ada:`delta` and, by
+default, is a power of two. Therefore, ordinary fixed-point types are sometimes
+called binary fixed-point types.
+
+.. note::
+   Ordinary fixed-point types can be thought of being closer to the actual
+   representation on the machine, since hardware support for decimal
+   fixed-point arithmetic is not widespread (rescalings by a power of ten),
+   while ordinary fixed-point types make use of the available integer shift
+   instructions.
+
+The syntax for an ordinary fixed-point type is
+
+.. code-block:: ada
+
+    type <type-name> is delta <delta-value> range <lower-bound> .. <upper-bound>;
+
+By default the compiler will choose a scale factor, or :ada:`small`, that is a
+power of 2 no greater than <delta-value>.
+
+For example, we may define a normalized range between -1.0 and 1.0 as
+following:
+
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Normalized_Fixed_Point_Type
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Normalized_Fixed_Point_Type is
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+    begin
+       Put_Line ("TQ31 requires " & Integer'Image (TQ31'Size) & " bits");
+       Put_Line ("The delta    value of TQ31 is " & TQ31'Image (TQ31'Delta));
+       Put_Line ("The minimum  value of TQ31 is " & TQ31'Image (TQ31'First));
+       Put_Line ("The maximum  value of TQ31 is " & TQ31'Image (TQ31'Last));
+    end Normalized_Fixed_Point_Type;
+
+In this example, we are defining a 32-bit fixed-point data type for our
+normalized range. When running the application, we notice that the upper
+bound is close to one, but not exact one. This is a typical effect of
+fixed-point data types |mdash| you can find more details in this discussion
+about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
+We may also rewrite this code with an exact type definition:
+
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Normalized_Adapted_Fixed_Point_Type
+
+    procedure Normalized_Adapted_Fixed_Point_Type is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+    begin
+       null;
+    end Normalized_Adapted_Fixed_Point_Type;
+
+We may also use any other range. For example:
+
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Custom_Fixed_Point_Range
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics; use Ada.Numerics;
+
+    procedure Custom_Fixed_Point_Range is
+       type T_Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
+    begin
+       Put_Line ("T_Inv_Trig requires " & Integer'Image (T_Inv_Trig'Size)
+                 & " bits");
+       Put_Line ("The delta    value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Delta));
+       Put_Line ("The minimum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'First));
+       Put_Line ("The maximum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Last));
+    end Custom_Fixed_Point_Range;
+
+In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
+which has a range from :math:`-\pi/2` to :math:`\pi/2`.
+
+All standard operations are available for fixed-point types. For example:
+
+.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Fixed_Point_Op
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Fixed_Point_Op is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+
+       A, B, R : TQ31;
+    begin
+       A := 0.25;
+       B := 0.50;
+       R := A + B;
+       Put_Line ("R is " & TQ31'Image (R));
+    end Fixed_Point_Op;
+
+As expected, :ada:`R` contains 0.75 after the addition of :ada:`A` and :ada:`B`.
+
+In fact the language is more general than these examples imply, since in
+practice it is typical to need to multiply or divide values from different
+fixed-point types, and obtain a result that may be of a third fixed-point type.
+The details are outside the scope of this introductory course.
+
+It is also worth noting, although again the details are outside the scope of
+this course, that you can explicitly specify a value for an ordinary
+fixed-point type's :ada:`small`.  This allows non-binary scaling, for example:
+
+.. code-block:: ada
+
+    type Angle is delta 1.0/3600.0 range 0.0 .. 360.0 - 1.0/3600.0;
+    for Angle'Small use Angle'Delta;
 
 .. _VolatileAtomicData:
 
