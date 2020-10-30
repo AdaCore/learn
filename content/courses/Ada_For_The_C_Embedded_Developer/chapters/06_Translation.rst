@@ -351,6 +351,8 @@ With all solutions though, importing an array from C is a relatively unsafe
 pattern, as there's only so much information on the array as there would be on
 the C side in the first place. These are good places for careful peer reviews.
 
+.. _By_Value_Vs_By_Reference:
+
 By-value v.s. by-reference types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
