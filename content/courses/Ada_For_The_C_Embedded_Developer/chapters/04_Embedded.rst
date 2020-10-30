@@ -259,8 +259,8 @@ The syntax for an ordinary fixed-point type is
 
     type <type_name> is delta <delta_value> range <lower_bound> .. <upper_bound>;
 
-By default the compiler will choose a scale factor, or :ada:`small`, that is a
-power of 2 no greater than <delta-value>.
+By default, the compiler will choose a scale factor, or :ada:`small`, that is a
+power of 2 no greater than ``<delta_value>``.
 
 For example, we may define a normalized range between -1.0 and 1.0 as
 following:
