@@ -96,6 +96,7 @@ In this case, an additional aspect is required: :ada:`Import`. For example:
 .. code-block:: ada
 
     with Interfaces.C; use Interfaces.C;
+    with Ada.Text_IO;  use Ada.Text_IO;
 
     procedure Show_C_Func is
 
@@ -106,8 +107,10 @@ In this case, an additional aspect is required: :ada:`Import`. For example:
        --  Imports function 'my_func' from C.
        --  You can now call it from Ada.
 
+       V : int;
     begin
-       null;
+       V := my_func (2);
+       Put_Line ("Result is " & int'Image (V));
     end Show_C_Func;
 
 This code interfaces with the following declaration in the C header file:
