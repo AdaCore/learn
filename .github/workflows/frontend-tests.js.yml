@@ -3,7 +3,7 @@ name: Sphinx Test Suite
 on: [push, pull_request]
 
 jobs:
-  ts-cover:
+  test:
 
     runs-on: ubuntu-18.04
     defaults:
