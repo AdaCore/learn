@@ -373,6 +373,71 @@ All standard operations are available for fixed-point types. For example:
 
 As expected, :ada:`R` contains 0.75 after the addition of :ada:`A` and :ada:`B`.
 
+In the case of C, since the language doesn't support fixed-point arithmetic, we
+need to emulate it using integer types and custom operations via functions.
+Let's look at this very rudimentary example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_C
+
+    !main.c
+    #include <stdio.h>
+    #include <math.h>
+
+    #define SHIFT_FACTOR  32
+
+    #define TO_FIXED(x)     ((int)   ((x) * pow (2.0, SHIFT_FACTOR - 1)))
+    #define TO_FLOAT(x)     ((float) ((double)(x) * (double)pow (2.0, -(SHIFT_FACTOR - 1))))
+
+    typedef int fixed;
+
+    fixed add (fixed a, fixed b)
+    {
+        return a + b;
+    }
+
+    fixed mult (fixed a, fixed b)
+    {
+        return (fixed)(((long)a * (long)b) >> (SHIFT_FACTOR - 1));
+    }
+
+    void display_fixed (fixed x)
+    {
+        printf("value (integer) = %d\n",    x);
+        printf("value (float)   = %3.5f\n\n", TO_FLOAT (x));
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        int fixed_value = TO_FIXED(0.25);
+
+        printf("Original value\n");
+        display_fixed(fixed_value);
+
+        printf("... + 0.25\n");
+        fixed_value = add(fixed_value, TO_FIXED(0.25));
+        display_fixed(fixed_value);
+
+        printf("... * 0.5\n");
+        fixed_value = mult(fixed_value, TO_FIXED(0.5));
+        display_fixed(fixed_value);
+    }
+
+Here, we declare the fixed-point type :c:`fixed` based on :c:`int` and two
+operations for it: addition (via the :c:`add` function) and multiplication
+(via the :c:`mult` function). Note that, while fixed-point addition is quite
+straightforward, multiplication requires right-shifting to match the correct
+internal representation. In Ada, since fixed-point operations are part of the
+language specification, they don't need to be emulated. Therefore, no extra
+effort is required from the programmer.
+
+Also note that the example above is very rudimentary, so it doesn't take some
+of the side-effects of fixed-point arithmetic into account. In C, all
+side-effects deriving from fixed-point arithmetic need to be manually taken
+into account, while in Ada, the compiler takes care of selecting the right
+operations for you.
+
 .. _VolatileAtomicData:
 
 Volatile and Atomic data
