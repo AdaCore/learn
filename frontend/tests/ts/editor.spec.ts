@@ -7,7 +7,7 @@ chai.use(chaiDom);
 import ace from 'brace';
 
 import {Editor, EditorLanguage, EditorTheme} from '../../src/ts/editor';
-import {Resource} from '../../src/ts/types';
+import {Resource} from '../../src/ts/resource';
 
 describe('Editor', () => {
   describe('#constructor()', () => {

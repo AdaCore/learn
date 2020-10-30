@@ -2,8 +2,9 @@ import {Area, OutputArea, LabContainer} from './areas';
 import {ButtonGroup, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
 import {fetchBlob, DownloadRequest, DownloadResponse} from './comms';
+import {Resource, ResourceSet} from './resource';
 import {ServerWorker} from './server';
-import {Resource, RunProgram, CheckOutput} from './types';
+import {RunProgram, CheckOutput} from './server-types';
 import * as Strings from './strings';
 
 enum DownloadType {
@@ -12,7 +13,12 @@ enum DownloadType {
   Server,
 }
 
-/** The Widget class */
+/**
+ * Defines the widget behavior
+ *
+ * @export
+ * @class Widget
+ */
 export class Widget {
   private editors: Array<Editor> = [];
   protected readonly container: HTMLDivElement;
@@ -27,21 +33,24 @@ export class Widget {
 
   private readonly server: string;
 
-  private shadowFiles: Array<Resource> = [];
+  private shadowFiles: ResourceSet;
   protected outputGroup: HTMLDivElement | null = null;
 
+  private depWidgets: WidgetList = [];
+
   /**
-   * Constructs the Widget
-   * @param {HTMLDivElement} container - the container for the widget
-   * @param {string} server - the server address:port
+   * Creates an instance of Widget.
+   *
+   * @param {HTMLDivElement} elem - the container for the widget
+   * @param {string} url - the server address:port
    */
-  constructor(container: HTMLDivElement, server: string) {
-    const resources: Array<Resource> = [];
-    this.server = server;
-    this.container = container;
+  constructor(elem: HTMLDivElement, url: string) {
+    const resources = new ResourceSet();
+    this.server = url;
+    this.container = elem;
 
     // Read attributes from container object to initialize members
-    this.name = container.getAttribute('name');
+    this.name = this.container.getAttribute('name');
 
     const files = this.container.getElementsByClassName('file');
     for (let i = 0; i < files.length; i++) {
@@ -53,7 +62,7 @@ export class Widget {
         basename: file.getAttribute('basename') as string,
         contents: file.textContent,
       };
-      resources.push(a);
+      resources.addUnique(a);
     }
 
     if (resources.length == 0) {
@@ -65,6 +74,7 @@ export class Widget {
       this.container.removeChild(files[0]);
     }
 
+    this.shadowFiles = new ResourceSet();
     const shadowFiles = this.container.getElementsByClassName('shadow_file');
     for (let i = 0; i < shadowFiles.length; i++) {
       const file = shadowFiles[i];
@@ -75,7 +85,7 @@ export class Widget {
         basename: file.getAttribute('basename') as string,
         contents: file.textContent,
       };
-      this.shadowFiles.push(a);
+      this.shadowFiles.addUnique(a);
     }
 
     // Remove the shadow files from the container since they are now a list
@@ -84,7 +94,7 @@ export class Widget {
     }
 
     // fill the contents of the tabs
-    resources.map((file) => {
+    for (const file of resources) {
       const ed = new Editor(file);
       this.editors.push(ed);
 
@@ -94,7 +104,7 @@ export class Widget {
         ed.setLength(max);
       });
       ed.setTab(tab);
-    });
+    }
 
     // Check which buttons are enabled on container and populate
     for (const mode in Strings.modeDictionary) {
@@ -137,19 +147,60 @@ export class Widget {
   }
 
   /**
-   * Collect the resources loaded in the widget and return as list
-   * @return {Array<Resource>} return the widget resources
+   * Adds a list of dependecy widgets to this widget
+   *
+   * @param {WidgetList} list - the list of widgets that this widget depends on
    */
-  protected collectResources(): Array<Resource> {
-    const files: Array<Resource> = [];
+  public addDepWidgets(list: WidgetList): void {
+    this.depWidgets.concat(list);
+  }
+
+  /**
+   * Gets the visible files from the lsit of dependency widgets
+   *
+   * @private
+   * @return {ResourceSet} - The set of files from dependent widgets
+   */
+  private getDepResources(): ResourceSet {
+    const set = new ResourceSet();
+    for (const w of this.depWidgets) {
+      set.addListOverwrite(w.getVisibleResources());
+    }
+
+    return set;
+  }
+
+  /**
+   * Gets the visible resources in the current Widget and returns the list
+   *
+   * @return {ResourceSet} - The list of files
+   */
+  public getVisibleResources(): ResourceSet {
+    const files = new ResourceSet;
     this.editors.map((e) => {
-      files.push(e.getResource());
+      files.addUnique(e.getResource());
     });
-    return files.concat(this.shadowFiles);
+
+    return files;
+  }
+
+  /**
+   * Collect the resources loaded in the widget and add to the resources
+   *  from dependent widgets and shadow files
+   *
+   * @return {ResourceSet} return the widget resources
+   */
+  protected collectResources(): ResourceSet {
+    const visibleFiles = this.getVisibleResources();
+    const depFiles = this.getDepResources();
+    depFiles.addListOverwrite(visibleFiles);
+    depFiles.addListOverwrite(this.shadowFiles);
+    return depFiles;
   }
 
   /**
    * Construct the server address string
+   *
    * @param {string} url - the url suffix
    * @return {string} - the full constructed url
    */
@@ -159,6 +210,7 @@ export class Widget {
 
   /**
    * The main callback for the widget buttons
+   *
    * @param {string} mode - the mode of the button that triggered the event
    * @param {boolean} lab - specifies if this is a lab widget
    */
@@ -177,7 +229,7 @@ export class Widget {
     const files = this.collectResources();
 
     const serverData: RunProgram.TS = {
-      files: files,
+      files: files.raw,
       mode: mode,
       switches: this.switches,
       name: this.name,
@@ -201,9 +253,12 @@ export class Widget {
 
   /**
    * The download example callback
+   *
+   * @private
+   * @return {Promise<Array<DownloadResponse>>} - A promise of the dl response
    */
   private async downloadExample(): Promise<Array<DownloadResponse>> {
-    const files: Array<Resource> = this.collectResources();
+    const files = this.collectResources();
     const blobList: Array<DownloadResponse> = [];
 
     switch (this.dlType) {
@@ -212,7 +267,7 @@ export class Widget {
       }
       case DownloadType.Server: {
         const serverData: DownloadRequest = {
-          files: files,
+          files: files.raw,
           switches: this.switches,
           name: this.name,
         };
@@ -241,6 +296,7 @@ export class Widget {
 
   /**
    * Returns the correct Area to place data in
+   *
    * @param {number} ref - should be null for Widget
    * @return {Area} the area to place returned data
    */
@@ -269,6 +325,7 @@ export class Widget {
 
   /**
    * Handle the msg data coming back from server
+   *
    * @param {CheckOutput.RunMsg} msg - the returned msg
    * @param {Area} homeArea - the area to place the rendered msg
    */
@@ -576,6 +633,122 @@ export class LabWidget extends Widget {
   }
 }
 
+type WidgetLike = Widget | LabWidget;
+type WidgetList = Array<WidgetLike>;
+
+type WidgetMapElement = {
+  name: string;
+  widgets: WidgetList;
+}
+
+/**
+ * Defines a map of widget name to list of associated widgets
+ *
+ * @export
+ * @class WidgetMap
+ * @implements {Iterable<WidgetMapElement>}
+ */
+export class WidgetMap implements Iterable<WidgetMapElement> {
+  private counter = 0;
+  private map: Array<WidgetMapElement> = [];
+
+  /**
+   * Returns the element matching the name parameter. If there is no matching
+   *  element, the subprogram returns null.
+   *
+   * @param {string} name - the name of the widget to search for
+   * @return {WidgetMapElement | null} - returns the element matched or null
+   */
+  private exists(name: string): WidgetMapElement | null {
+    for (const elem of this.map) {
+      if (elem.name === name) {
+        return elem;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Adds a widget to the map. If the name of the widget is already in the map,
+   *  the widget is added to the list of widgets with the name.
+   *
+   * @param {string} name - the name of the widget
+   * @param {WidgetLike} widget - the widget to add to the map
+   */
+  public addWidget(name: string, widget: WidgetLike): void {
+    const wme = this.exists(name);
+    if (wme) {
+      const wList = wme.widgets;
+      // we already have another widget with the same name
+      widget.addDepWidgets(wList);
+      // then add the widget to the list
+      wList.push(widget);
+    } else {
+      // this is the first widget with this name to be added
+      this.map.push({
+        name: name,
+        widgets: [widget],
+      });
+    }
+  }
+
+  /**
+   * Allows the WidgetMap to be Iterable
+   *
+   * @return {IteratorResult<WidgetMapElement>}
+   */
+  public next(): IteratorResult<WidgetMapElement> {
+    if (this.counter < this.map.length) {
+      return {
+        done: false,
+        value: this.map[this.counter++],
+      };
+    } else {
+      this.counter = 0;
+      return {
+        done: true,
+        value: null,
+      };
+    }
+  }
+
+  /**
+   * Allows the ResourceSet to be looped over
+   *
+   * @return {IterableIterator<WidgetMapElement>}
+   */
+  [Symbol.iterator](): IterableIterator<WidgetMapElement> {
+    return this;
+  }
+
+  /**
+   * Returns the number of names in the map
+   *
+   * @readonly
+   * @return {number} - The length of the set
+   */
+  get length(): number {
+    return this.map.length;
+  }
+
+  /**
+   * Gets the list of widgets associated with the name. Returns null if not
+   *  found.
+   *
+   * @param {string} name - the name to find
+   * @returns {(WidgetList | null)} - Returns the found list or null
+   */
+  public get(name: string): WidgetList | null {
+    const res = this.exists(name);
+    if(res) {
+      return res.widgets;
+    }
+
+    return null;
+  }
+}
+
 /**
  * Entrypoint for widget creation
  *
@@ -584,22 +757,25 @@ export class LabWidget extends Widget {
  *    found on the page. This is the return value of getElementsByClass
  * @return {Array<Widget | LabWidget>} The list of widgets on the page
  */
-export function widgetFactory(widgets: HTMLCollectionOf<Element>):
-    Array<Widget | LabWidget> {
-  const widgetList = [];
+export function widgetFactory(widgets: HTMLCollectionOf<Element>): WidgetMap {
+  const widgetList = new WidgetMap();
   for (let i = 0; i < widgets.length; i++) {
     const element = (widgets[i] as HTMLDivElement);
     const server = element.getAttribute('example_server');
+    const name = element.getAttribute('name');
     try {
-      if (server) {
-        const lab = element.getAttribute('lab');
-        const widget =
-            lab ? new LabWidget(element, server) : new Widget(element, server);
-        widget.render();
-        widgetList.push(widget);
-      } else {
+      if (!server) {
         throw Error('Malformed widget! No server address specified.');
       }
+      if (!name) {
+        throw Error('Malformed widget! No widget name specified.');
+      }
+      const lab = element.getAttribute('lab');
+      const widget =
+          lab ? new LabWidget(element, server) : new Widget(element, server);
+
+      widget.render();
+      widgetList.addWidget(name, widget);
     } catch (error) {
       // an error has occured parsing the widget
       console.error('Error:', error);

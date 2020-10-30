@@ -1,5 +1,5 @@
 import {fetchJSON} from './comms';
-import {RunProgram, CheckOutput} from './types';
+import {RunProgram, CheckOutput} from './server-types';
 
 /**
  * Delay function

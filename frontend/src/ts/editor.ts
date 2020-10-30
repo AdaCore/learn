@@ -4,7 +4,7 @@ import 'brace/mode/c_cpp';
 import 'brace/theme/tomorrow';
 import 'brace/theme/tomorrow_night';
 
-import * as Types from './types';
+import {Resource} from './resource';
 
 export enum EditorTheme {
   Light = 'ace/theme/tomorrow',
@@ -26,9 +26,9 @@ export class Editor {
 
   /**
    * Create an Editor
-   * @param {Types.Resource} resource - The resource to load into the editor
+   * @param {Resource} resource - The resource to load into the editor
    */
-  constructor(resource: Types.Resource) {
+  constructor(resource: Resource) {
     this.container = document.createElement('div');
     this.container.classList.add('editor-container');
 
@@ -124,9 +124,9 @@ export class Editor {
 
   /**
    * Get the resource from the Editor
-   * @return {Types.Resource} The Editor filename and contents
+   * @return {esource} The Editor filename and contents
    */
-  public getResource(): Types.Resource {
+  public getResource(): Resource {
     return {basename: this.basename, contents: this.editor.getValue()};
   }
 

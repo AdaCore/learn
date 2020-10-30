@@ -1,12 +1,9 @@
 /* eslint-disable */
 
+import {ResourceList} from './resource';
+
 // FS - From Server
 // TS - To Server
-
-export interface Resource {
-  basename: string;
-  contents: string;
-}
 
 export namespace RunProgram {
   export interface FS {
@@ -15,7 +12,7 @@ export namespace RunProgram {
   }
 
   export interface TS {
-    files: Array<Resource>;
+    files: ResourceList;
     mode: string;
     switches: Array<string>;
     name: string | null;

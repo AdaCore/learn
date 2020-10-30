@@ -12,15 +12,21 @@ import fetchMock from 'fetch-mock';
 import {OutputArea} from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
 
-import {widgetFactory, Widget, LabWidget} from '../../src/ts/widget';
+import {widgetFactory, Widget, LabWidget, WidgetMap} from '../../src/ts/widget';
 
+/**
+ * Utility delay for mocking HTTP requests
+ *
+ * @param {number} ms - The amount in milliseconds to delay
+ * @return {Promise<unknown>} - Returns a promise
+ */
 function delay(ms: number): Promise<unknown> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 describe('widgetFactory()', () => {
   let htmlList: HTMLCollectionOf<Element>;
-  let inTestList: Array<Widget | LabWidget>;
+  let inTestList: WidgetMap;
   let pageWidget: HTMLElement;
   let file: HTMLDivElement;
   let shadowFile: HTMLDivElement;
@@ -31,6 +37,7 @@ describe('widgetFactory()', () => {
     pageWidget.setAttribute('example_server', 'http://example.com');
     pageWidget.setAttribute('run_button', 'True');
     pageWidget.setAttribute('inline', 'True');
+    pageWidget.setAttribute('name', 'PageWidget');
     document.body.appendChild(pageWidget);
 
     shadowFile = document.createElement('div');
@@ -47,8 +54,10 @@ describe('widgetFactory()', () => {
   });
 
   afterEach(() => {
-    for (const inTest of inTestList) {
-      inTest.destructor();
+    for (const inTestElem of inTestList) {
+      for (const inTest of inTestElem.widgets) {
+        inTest.destructor();
+      }
     }
 
     document.body.innerHTML = '';
@@ -60,6 +69,7 @@ describe('widgetFactory()', () => {
     labWidget.setAttribute('example_server', 'http://example.com');
     labWidget.setAttribute('run_button', 'True');
     labWidget.setAttribute('inline', 'True');
+    labWidget.setAttribute('name', 'LabWidget');
     labWidget.setAttribute('lab', 'True');
     document.body.appendChild(labWidget);
     labWidget.appendChild(file.cloneNode(true));
@@ -68,8 +78,13 @@ describe('widgetFactory()', () => {
     inTestList = widgetFactory(htmlList);
 
     expect(inTestList).to.have.lengthOf(2);
-    expect(inTestList[0]).to.be.an.instanceof(Widget);
-    expect(inTestList[1]).to.be.an.instanceof(LabWidget);
+    const pw = inTestList.get('PageWidget');
+    expect(pw).to.have.length(1);
+    expect(pw[0]).to.be.an.instanceof(Widget);
+
+    const lw = inTestList.get('LabWidget');
+    expect(lw).to.have.length(1);
+    expect(lw[0]).to.be.an.instanceof(LabWidget);
   });
 
   it('should create div with error when no server addr is found', () => {
@@ -128,7 +143,7 @@ describe('widgetFactory()', () => {
 describe('Widget', () => {
   const baseURL = 'http://example.com';
   let htmlList: HTMLCollectionOf<Element>;
-  let inTestList: Array<Widget | LabWidget>;
+  let inTestList: WidgetMap;
 
   const pageWidget = document.createElement('div');
   pageWidget.classList.add('widget_editor');
@@ -163,8 +178,10 @@ describe('Widget', () => {
   });
 
   after(() => {
-    for (const inTest of inTestList) {
-      inTest.destructor();
+    for (const inTestElem of inTestList) {
+      for (const inTest of inTestElem.widgets) {
+        inTest.destructor();
+      }
     }
 
     document.body.innerHTML = '';

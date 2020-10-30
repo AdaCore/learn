@@ -6,7 +6,7 @@ chai.use(chaiDom);
 // Import package under test
 import {Area, OutputArea, LabArea, LabContainer} from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
-import {CheckOutput} from '../../src/ts/types';
+import {CheckOutput} from '../../src/ts/server-types';
 
 describe('Area', () => {
   /**

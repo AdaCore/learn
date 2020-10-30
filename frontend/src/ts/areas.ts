@@ -1,5 +1,5 @@
 import * as Strings from './strings';
-import {CheckOutput} from './types';
+import {CheckOutput} from './server-types';
 
 /** Abstract class representing an Area **/
 export abstract class Area {

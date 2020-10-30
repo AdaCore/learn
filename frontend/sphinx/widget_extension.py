@@ -261,19 +261,19 @@ class WidgetCodeDirective(Directive):
         except subprocess.CalledProcessError:
             raise self.error("could not gnatchop example")
 
-        if config.accumulate_code:
-            # We are accumulating code: store the new code in the
-            # accumulated_files
-            global accumulated_files
-            for f in files:
-                accumulated_files[f[0]] = f[1]
+        # if config.accumulate_code:
+        #     # We are accumulating code: store the new code in the
+        #     # accumulated_files
+        #     global accumulated_files
+        #     for f in files:
+        #         accumulated_files[f[0]] = f[1]
 
         try:
-            if config.accumulate_code:
-                editor_files = set([f[0] for f in files])
-                for k, v in accumulated_files.items():
-                    if k not in editor_files:
-                        shadow_files_divs += get_shadow_div(k, v)
+            # if config.accumulate_code:
+            #     editor_files = set([f[0] for f in files])
+            #     for k, v in accumulated_files.items():
+            #         if k not in editor_files:
+            #             shadow_files_divs += get_shadow_div(k, v)
 
             divs = "\n".join(
                 [u'<div class="file" basename="{}">{}</div>'.format(
@@ -364,9 +364,9 @@ def codeconfig(typ, rawtext, text, lineno, inliner, options={}, content=[]):
                     "wrong key for code-config: {}".format(key))
             setattr(config, key, value.lower() == "true")
 
-    if config.reset_accumulator:
-        accumulated_files = {}
-        config.reset_accumulator = False
+    # if config.reset_accumulator:
+    #     accumulated_files = {}
+    #     config.reset_accumulator = False
 
     return [], []
 
