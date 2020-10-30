@@ -24,5 +24,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install dependencies
-    - run: yarn --frozen-lockfile
-    - run: yarn run cover
+      run: yarn --frozen-lockfile
+    - name: Run tests with Instrumentation
+      run: yarn run cover
