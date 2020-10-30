@@ -1532,8 +1532,53 @@ in the source object is automatically reflected in the target object (and
 vice-versa). In the end, the choice between unchecked conversions and overlays
 depends on the level of performance that you want to achieve.
 
-Also note that :ada:`Unchecked_Conversion` only works with scalar types.
-Therefore, we wouldn't be able to use :ada:`Unchecked_Conversion` to rewrite
-some examples from the previous section |mdash| specifically the ones where we
-use overlays with bit-fields. In this case, using overlays is the only option
-we have.
+Also note that :ada:`Unchecked_Conversion` can only be instantiated for
+constrained types. In order to rewrite the examples using bit-fields that we've
+seen in the previous section, we cannot simply instantiate
+:ada:`Unchecked_Conversion` with the :ada:`Target` indicating the
+*unconstrained* bit-field, such as:
+
+.. code-block:: ada
+
+    Ada.Unchecked_Conversion (Source => Integer,
+                              Target => Bit_Field);
+
+Instead, we have to declare a subtype for the specific range we're interested
+in. This is how we can rewrite one of the previous examples:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Conversion
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Bitfield_Conversion is
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       V : Integer := 4;
+
+       --  Declaring subtype that takes the size of V into account.
+       --
+       subtype Integer_Bit_Field is Bit_Field (0 .. V'Size - 1);
+
+       --  NOTE: we could also use the Integer type in the declaration:
+       --
+       --    subtype Integer_Bit_Field is Bit_Field (0 .. Integer'Size - 1);
+       --
+
+       --  Using the Integer_Bit_Field subtype as the target
+       function As_Bit_Field is new
+         Ada.Unchecked_Conversion (Source => Integer,
+                                   Target => Integer_Bit_Field);
+
+       B : Integer_Bit_Field;
+    begin
+       B := As_Bit_Field (V);
+
+       Put_Line ("V = " & Integer'Image (V));
+    end Simple_Bitfield_Conversion;
+
+In this example, we first declare the subtype :ada:`Integer_Bit_Field` as a
+bit-field with a length that fits the :ada:`V` variable we want to convert to.
+Then, we can use that subtype in the instantiation of
+:ada:`Unchecked_Conversion`.
