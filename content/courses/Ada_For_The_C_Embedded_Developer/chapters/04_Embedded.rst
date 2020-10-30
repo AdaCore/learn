@@ -265,7 +265,7 @@ obvious when looking at this code snippet:
 In this example, the application will show the value 0.5 for both
 :ada:`Float_Value` and :ada:`Fixed_Value`.
 
-The major difference between floating-point and fixed-point types is the way
+The major difference between floating-point and fixed-point types is in the way
 the values are stored. Values of ordinary fixed-point types are, in effect,
 scaled integers. The scaling used for ordinary fixed-point types is defined by
 the type's :ada:`small`, which is derived from the specified :ada:`delta` and,
@@ -433,9 +433,9 @@ language specification, they don't need to be emulated. Therefore, no extra
 effort is required from the programmer.
 
 Also note that the example above is very rudimentary, so it doesn't take some
-of the side-effects of fixed-point arithmetic into account. In C, all
-side-effects deriving from fixed-point arithmetic need to be manually taken
-into account, while in Ada, the compiler takes care of selecting the right
+of the side-effects of fixed-point arithmetic into account. In C, you have to
+manually take all side-effects deriving from fixed-point arithmetic into
+account, while in Ada, the compiler takes care of selecting the right
 operations for you.
 
 .. _VolatileAtomicData:
