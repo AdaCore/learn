@@ -1,4 +1,4 @@
-.. code:: ada project=Training_Material.Fundamentals_Of_Ada.Declarations.named_numbers
+.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Declarations.named_numbers
     :class: ada-run
 
    with Ada.Text_IO; use Ada.Text_IO;

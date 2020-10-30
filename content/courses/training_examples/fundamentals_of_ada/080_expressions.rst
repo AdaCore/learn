@@ -2,7 +2,7 @@
 Expressions
 =============
 
-:code-config:`run_button=True;prove_button=False`
+:code-config:`run_button=False;prove_button=False`
 
 ----------
 Subtypes
