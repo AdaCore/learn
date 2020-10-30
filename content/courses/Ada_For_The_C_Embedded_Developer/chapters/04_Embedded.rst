@@ -373,20 +373,6 @@ All standard operations are available for fixed-point types. For example:
 
 As expected, :ada:`R` contains 0.75 after the addition of :ada:`A` and :ada:`B`.
 
-In fact the language is more general than these examples imply, since in
-practice it is typical to need to multiply or divide values from different
-fixed-point types, and obtain a result that may be of a third fixed-point type.
-The details are outside the scope of this introductory course.
-
-It is also worth noting, although again the details are outside the scope of
-this course, that you can explicitly specify a value for an ordinary
-fixed-point type's :ada:`small`.  This allows non-binary scaling, for example:
-
-.. code-block:: ada
-
-    type Angle is delta 1.0/3600.0 range 0.0 .. 360.0 - 1.0/3600.0;
-    for Angle'Small use Angle'Delta;
-
 .. _VolatileAtomicData:
 
 Volatile and Atomic data
