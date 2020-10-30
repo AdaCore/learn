@@ -1415,16 +1415,16 @@ look at a simple example:
 
        for State use (Off => 0, State_1 => 32, State_2 => 64);
 
-       function To_Integer is new Ada.Unchecked_Conversion (Source => State,
+       function As_Integer is new Ada.Unchecked_Conversion (Source => State,
                                                             Target => Integer);
 
        I : Integer;
     begin
-       I := To_Integer (State_2);
+       I := As_Integer (State_2);
        Put_Line ("I = " & Integer'Image (I));
     end Simple_Unchecked_Conversion;
 
-In this example, :ada:`To_Integer` is an instantiation of
+In this example, :ada:`As_Integer` is an instantiation of
 :ada:`Unchecked_Conversion` to convert between the :ada:`State` enumeration and
 the :ada:`Integer` type. Note that, in order to ensure safe conversion, we're
 declaring :ada:`State` to have the same size as the :ada:`Integer` type we
@@ -1472,16 +1472,16 @@ integer data type. This is how we can do it using :ada:`Unchecked_Conversion`:
        type Int_16   is range -Max_16 .. Max_16 - 1
          with Size => 16;
 
-       function To_Int_16 is new Ada.Unchecked_Conversion (Source => Fixed_16,
+       function As_Int_16 is new Ada.Unchecked_Conversion (Source => Fixed_16,
                                                            Target => Int_16);
-       function To_Fixed_16 is new Ada.Unchecked_Conversion (Source => Int_16,
+       function As_Fixed_16 is new Ada.Unchecked_Conversion (Source => Int_16,
                                                              Target => Fixed_16);
 
        I : Int_16   := 0;
        F : Fixed_16 := 0.0;
     begin
        F := Fixed_16'Last;
-       I := To_Int_16 (F);
+       I := As_Int_16 (F);
 
        Put_Line ("F = " & Fixed_16'Image (F));
        Put_Line ("I = " & Int_16'Image (I));
@@ -1489,7 +1489,7 @@ integer data type. This is how we can do it using :ada:`Unchecked_Conversion`:
 
 Here, we instantiate :ada:`Unchecked_Conversion` for the :ada:`Int_16` and
 :ada:`Fixed_16` types, and we call the instantiated functions explicitly. In
-this case, we call :ada:`To_Int_16` to get the integer value corresponding to
+this case, we call :ada:`As_Int_16` to get the integer value corresponding to
 :ada:`Fixed_16'Last`.
 
 This is how we can rewrite the implementation above using overlays:
