@@ -234,24 +234,16 @@ Dealing with Absence of FPU with Fixed Point
 Fixed-point types
 ~~~~~~~~~~~~~~~~~
 
-.. TODO: add link to advanced lesson that discusses 'Delta vs. 'Small
+The major difference between floating-point and fixed-point types is the way
+the values are stored. Values of ordinary fixed-point types are, in effect,
+scaled integers. The scaling used for ordinary fixed-point types is defined by
+the type's :ada:`small`, which is derived from the specified :ada:`delta` and,
+by default, is a power of two. Therefore, ordinary fixed-point types are
+sometimes called binary fixed-point types. In that sense, ordinary fixed-point
+types can be thought of being close to the actual representation on the
+machine. In fact, ordinary fixed-point types make use of the available integer
+shift instructions, for example.
 
-Ordinary fixed-point types are similar to decimal fixed-point types in that the
-values are, in effect, scaled integers.  The difference between them is in the
-scale factor: for a decimal fixed-point type, the scaling, given explicitly by
-the type's :ada:`delta`, is always a power of ten.
-
-In contrast, for an ordinary fixed-point type, the scaling is defined by the
-type's :ada:`small`, which is derived from the specified :ada:`delta` and, by
-default, is a power of two. Therefore, ordinary fixed-point types are sometimes
-called binary fixed-point types.
-
-.. note::
-   Ordinary fixed-point types can be thought of being closer to the actual
-   representation on the machine, since hardware support for decimal
-   fixed-point arithmetic is not widespread (rescalings by a power of ten),
-   while ordinary fixed-point types make use of the available integer shift
-   instructions.
 
 The syntax for an ordinary fixed-point type is
 
