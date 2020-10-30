@@ -234,6 +234,37 @@ Dealing with Absence of FPU with Fixed Point
 Fixed-point types
 ~~~~~~~~~~~~~~~~~
 
+Many numerical applications typically use floating-point types to compute
+values. However, in some platforms, a floating-point unit may not be available.
+Other platforms may have a floating-point unit, but using it in certain
+numerical algorithms can be prohibitive in terms of performance. For those
+cases, fixed-point arithmetic can be a good alternative.
+
+The difference between fixed-point and floating-point types might not be so
+obvious when looking at this code snippet:
+
+[Ada]
+
+.. code-block:: ada
+
+    --  [...]
+
+       Float_Value : Float := 0.25;
+       Fixed_Value : Fixed := 0.25;
+
+    begin
+
+       Float_Value := Float_Value + 0.25;
+       Fixed_Value := Fixed_Value + 0.25;
+
+       Put_Line ("Float_Value = " & Float'Image (Float_Value));
+       Put_Line ("Fixed_Value = " & Fixed'Image (Fixed_Value));
+
+    --  [...]
+
+In this example, the application will show the value 0.5 for both
+:ada:`Float_Value` and :ada:`Fixed_Value`.
+
 The major difference between floating-point and fixed-point types is the way
 the values are stored. Values of ordinary fixed-point types are, in effect,
 scaled integers. The scaling used for ordinary fixed-point types is defined by
