@@ -265,7 +265,9 @@ power of 2 no greater than <delta-value>.
 For example, we may define a normalized range between -1.0 and 1.0 as
 following:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Normalized_Fixed_Point_Type
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Fixed_Point_Type
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -286,7 +288,9 @@ fixed-point data types |mdash| you can find more details in this discussion
 about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 We may also rewrite this code with an exact type definition:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Normalized_Adapted_Fixed_Point_Type
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Adapted_Fixed_Point_Type
 
     procedure Normalized_Adapted_Fixed_Point_Type is
        type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
@@ -296,7 +300,9 @@ We may also rewrite this code with an exact type definition:
 
 We may also use any other range. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Custom_Fixed_Point_Range
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Custom_Fixed_Point_Range
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -319,7 +325,9 @@ which has a range from :math:`-\pi/2` to :math:`\pi/2`.
 
 All standard operations are available for fixed-point types. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Fixed_Point_Op
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_Op
 
     with Ada.Text_IO; use Ada.Text_IO;
 
