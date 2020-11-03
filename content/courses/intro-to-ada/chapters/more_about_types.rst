@@ -327,7 +327,7 @@ subtype indication, just as you would do in a variable declaration:
        --                                ^ Constraint required
     end Access_Types;
 
-In some cases, though, allocating just by specifiying the type is not ideal, so
+In some cases, though, allocating just by specifying the type is not ideal, so
 Ada also allows you to initialize along with the allocation. This is done via
 the qualified expression syntax:
 
@@ -452,7 +452,7 @@ known at compile time. This is illustrated in the example below:
 
 .. ?? The example code may have elaboration order problems unless
 .. ?? an elaboration pragma is used.
-.. ?? Consider simplfying or restructuring the example to avoid this issue
+.. ?? Consider simplifying or restructuring the example to avoid this issue
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record
 
@@ -676,7 +676,7 @@ applications floating-point is not appropriate since, for example, the roundoff
 error from binary arithmetic may be unacceptable or perhaps the hardware does
 not support floating-point instructions.  Ada provides a category of types, the
 decimal fixed-point types, that allows the programmer to specify the required
-decimal precision (number of digits) as well as the scalaing factor (a power of
+decimal precision (number of digits) as well as the scaling factor (a power of
 ten) and, optionally, a range.  In effect the values will be represented as
 integers implicitly scaled by the specified power of 10. This is useful, for
 example, for financial applications.
