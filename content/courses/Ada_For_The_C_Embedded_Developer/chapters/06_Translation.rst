@@ -755,7 +755,8 @@ object of any type to declare a bit-field for this object. The :ada:`Size`
 aspect indicates the number of bits required to represent the object, while
 the :ada:`Address` aspect indicates the address in memory of that object.
 For example, assuming we've declare a variable :ada:`V`, we can declare an
-actual bit-field object using this pattern:
+actual bit-field object by referring to the :ada:`Address` attribute of
+:ada:`V` and using it in the declaration of the bit-field, as shown here:
 
 [Ada]
 
