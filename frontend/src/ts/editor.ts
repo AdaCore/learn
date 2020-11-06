@@ -4,8 +4,6 @@ import 'brace/mode/c_cpp';
 import 'brace/theme/tomorrow';
 import 'brace/theme/tomorrow_night';
 
-import {Resource} from './resource';
-
 export enum EditorTheme {
   Light = 'ace/theme/tomorrow',
   Dark = 'ace/theme/tomorrow_night'
@@ -16,39 +14,31 @@ export enum EditorLanguage {
   C_CPP = 'ace/mode/c_cpp'
 }
 
+interface SessionData {
+  initialContents: string;
+  session: ace.IEditSession;
+}
+
+type SessionMap = Map<string, SessionData>;
+
 /** Class representing an Editor **/
 export class Editor {
-  private readonly container: HTMLDivElement;
-  private editor: ace.Editor;
-  private readonly initialContents: string;
-  private readonly basename: string;
-  private tab: HTMLButtonElement | null = null;
+  private readonly editor: ace.Editor;
+  private sessions: SessionMap = new Map();
+  private maxLength = 0;
 
   /**
-   * Create an Editor
-   * @param {Resource} resource - The resource to load into the editor
-   */
-  constructor(resource: Resource) {
-    this.container = document.createElement('div');
-    this.container.classList.add('editor-container');
-
-    this.editor = ace.edit(this.container);
-
-    // Set the mode
-    if (resource.basename?.match(/.ad[sb]$/)) {
-      this.editor.session.setMode(EditorLanguage.Ada);
-    } else {
-      this.editor.session.setMode(EditorLanguage.C_CPP);
-    }
+  * Creates an instance of Editor.
+  *
+  * @param {HTMLDivElement} elem - The element that will contain the editor
+  */
+  constructor(elem: HTMLDivElement) {
+    this.editor = ace.edit(elem);
     this.editor.$blockScrolling = Infinity;
 
-    // ... and their contents
-    this.editor.setValue(resource.contents);
+    // ... and content options
     this.editor.setShowPrintMargin(false);
     this.editor.gotoLine(1);
-
-    this.initialContents = resource.contents;
-    this.basename = resource.basename;
 
     this.editor.setOptions({
       highlightActiveLine: false,
@@ -60,12 +50,8 @@ export class Editor {
       maxLines: 50,
     });
 
-    this.editor.resize();
     // place the cursor at 1,1
     this.editor.selection.moveCursorTo(0, 0);
-
-    // clear undo stack to avoid undoing everything we just did
-    this.editor.getSession().setUndoManager(new ace.UndoManager());
 
     this.editor.renderer.setScrollMargin(5, 5, 0, 0);
   }
@@ -78,23 +64,74 @@ export class Editor {
   }
 
   /**
-   * Set the length of the visible lines in the editor
-   * @param {number} length - The number of visible lines in the editor
+   * Add a session to the editor
+   *
+   * @param {string} basename - The name of the file
+   * @param {string} content - The content of the session
    */
-  public setLength(length: number): void {
-    this.editor.setOption('minLines', length);
-    this.editor.resize();
+  public addSession(basename: string, content: string): void {
+    const data: SessionData = {
+      initialContents: content,
+      session: new ace.EditSession(content),
+    };
+
+    // Set the mode
+    if (basename.match(/.ad[sb]$/)) {
+      data.session.setMode(EditorLanguage.Ada);
+    } else {
+      data.session.setMode(EditorLanguage.C_CPP);
+    }
+
+    // Resize the editor base on longest session
+    const sessionLength = data.session.doc.getLength();
+    if (sessionLength > this.maxLength) {
+      this.maxLength = sessionLength;
+      this.editor.setOption('minLines', this.maxLength);
+      this.editor.resize();
+    }
+
+    // clear undo stack to avoid undoing everything we just did
+    data.session.setUndoManager(new ace.UndoManager());
+
+    this.sessions.set(basename, data);
   }
 
   /**
-   * Get the length of the visible lines in the editor
-   * @return {number} - The number of visible rows in the editor
+   * Helper function to get session and throw exception if not found
+   *
+   * @private
+   * @param {string} basename - The session name to get
+   * @return {SessionData} - The session data
    */
-  public getLength(): number {
-    const maxLength = this.editor.getOption('maxLines');
-    const length = this.editor.session.doc.getLength();
+  private getSession(basename: string): SessionData {
+    const session = this.sessions.get(basename);
+    if (!session) {
+      throw Error('Unknown session with name ' + basename);
+    }
 
-    return (length > maxLength) ? maxLength : length;
+    return session;
+  }
+
+  /**
+   * Change the editor active session to the one that corresponds to the
+   * given basename
+   *
+   * @param {string} basename - The name of the session to change to
+   */
+  public setSession(basename: string): void {
+    const session = this.getSession(basename);
+    this.editor.setSession(session.session);
+  }
+
+  /**
+   * Get the content of a session given a basename
+   *
+   * @param {string} basename - The name of the session to get
+   * @return {string} - The content of the named session
+   */
+  public getSessionContent(basename: string): string {
+    const session = this.getSession(basename);
+    return session.session.getValue();
   }
 
   /**
@@ -109,49 +146,22 @@ export class Editor {
    * Reset the editor back to default state
    */
   public reset(): void {
-    this.editor.setValue(this.initialContents);
+    for (const s of this.sessions.values()) {
+      s.session.setValue(s.initialContents);
+    }
     this.editor.gotoLine(1);
     this.clearGutterAnnotation();
   }
 
   /**
-   * Render the editor
-   * @return {HTMLDivElement} The HTMLDivElement object holding the editor
-   */
-  public render(): HTMLDivElement {
-    return this.container;
-  }
-
-  /**
-   * Get the resource from the Editor
-   * @return {esource} The Editor filename and contents
-   */
-  public getResource(): Resource {
-    return {basename: this.basename, contents: this.editor.getValue()};
-  }
-
-  /**
-   * Store the tab holding this editor
-   * @param {HTMLButtonElement} tab - The tab holding this editor
-   */
-  public setTab(tab: HTMLButtonElement): void {
-    this.tab = tab;
-  }
-
-  /**
-   * Return the tab holding this editor
-   * @return {HTMLButtonElement} The tab holding this editor
-   */
-  public getTab(): HTMLButtonElement | null {
-    return this.tab;
-  }
-
-  /**
-   * Jump the editor to row:col
+   * Jump the editor to basename session and row:col
+   *
+   * @param {string} basename - The name of the session to switch to
    * @param {number} line - The line number to goto
    * @param {number} col - The col + 1 to goto
    */
-  public gotoLine(line: number, col: number): void {
+  public gotoLine(basename: string, line: number, col: number): void {
+    this.setSession(basename);
     this.editor.gotoLine(line, col - 1, true);
     this.editor.focus();
   }
@@ -159,28 +169,31 @@ export class Editor {
   /**
    * Add gutter annotations to the ace editor session
    *
+   * @param {string} basename - The name of the session
    * @param {number} line - The line number
    * @param {number} col - The column number
    * @param {string} msg - The corresponding message
    * @param {string} type - The type of annotation
    */
-  public setGutterAnnotation(line: number, col: number, msg: string,
-      type: string): void {
-    const session = this.editor.getSession();
-    const oldAnnotations = session.getAnnotations();
+  public setGutterAnnotation(basename: string, line: number, col: number,
+      msg: string, type: string): void {
+    const session = this.getSession(basename);
+    const oldAnnotations = session.session.getAnnotations();
     const newAnnotation = {
       row: line - 1,
       column: col,
       text: msg,
       type: type,
     };
-    session.setAnnotations([...oldAnnotations, newAnnotation]);
+    session.session.setAnnotations([...oldAnnotations, newAnnotation]);
   }
 
   /**
    *  Clear the annotations in the gutter
    */
   public clearGutterAnnotation(): void {
-    this.editor.getSession().clearAnnotations();
+    for (const s of this.sessions.values()) {
+      s.session.clearAnnotations();
+    }
   }
 }

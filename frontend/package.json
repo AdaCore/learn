@@ -134,6 +134,7 @@
       "ts-node/register",
       "jsdom-global/register"
     ],
-    "spec": "tests/**/*.spec.ts"
+    "spec": "tests/**/*.spec.ts",
+    "exclude": ["tests/ts/widget.spec.ts", "tests/ts/server.spec.ts"]
   }
 }

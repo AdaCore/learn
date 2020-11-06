@@ -12,7 +12,7 @@ import fetchMock from 'fetch-mock';
 import {OutputArea} from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
 
-import {widgetFactory, Widget, LabWidget, WidgetMap} from '../../src/ts/widget';
+import {widgetFactory, Widget, LabWidget} from '../../src/ts/widget';
 
 /**
  * Utility delay for mocking HTTP requests
@@ -36,8 +36,8 @@ describe('widgetFactory()', () => {
     pageWidget.classList.add('widget_editor');
     pageWidget.setAttribute('example_server', 'http://example.com');
     pageWidget.setAttribute('run_button', 'True');
-    pageWidget.setAttribute('inline', 'True');
     pageWidget.setAttribute('name', 'PageWidget');
+
     document.body.appendChild(pageWidget);
 
     shadowFile = document.createElement('div');
@@ -68,7 +68,6 @@ describe('widgetFactory()', () => {
     labWidget.classList.add('widget_editor');
     labWidget.setAttribute('example_server', 'http://example.com');
     labWidget.setAttribute('run_button', 'True');
-    labWidget.setAttribute('inline', 'True');
     labWidget.setAttribute('name', 'LabWidget');
     labWidget.setAttribute('lab', 'True');
     document.body.appendChild(labWidget);
@@ -150,7 +149,6 @@ describe('Widget', () => {
   pageWidget.setAttribute('example_server', baseURL);
   pageWidget.setAttribute('name', 'pageWidget');
   pageWidget.setAttribute('run_button', 'True');
-  pageWidget.setAttribute('inline', 'True');
   pageWidget.setAttribute('switches', 'Pkg1(-test1,test2);Pkg2(-test3,-test4)');
 
   const file1 = document.createElement('div');

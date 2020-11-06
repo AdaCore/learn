@@ -1,0 +1,53 @@
+<widget id="{{ w.id }}" example_server="{{ server_url }}" lab="{{ w.is_lab }}" name="{{ w.name }}" switches="{{ w.switches }}">
+    {% for sf in w.shadow_files %}
+        <div class="shadow_file" style="display:none" basename="{{ sf.basename }}">{{ sf.content }}</div>
+    {% endfor %}
+    {% for f in w.files %}
+        <div class="file" basename="{{ f.basename }}">{{ f.content }}</div>
+    {% endfor %}
+    <div id="{{ w.id }}.tab" class="tab">
+        {% for t in w.files %}
+            <button id="{{ w.id }}.tab.{{ t.basename }}" class="tab-links">{{ t.basename }}</button>
+        {% endfor %}
+    </div>
+    <div id="{{ w.id }}.editor" class="editor-container"></div>
+    <div id="{{ w.id }}.settings-bar" class="settings-bar">
+        <div class="dropdown-container settingsbar-item">
+            <button class="dropdown-btn">
+                <i class="fas fa-cog"></i>
+            </button>
+            <div class="dropdown-content">
+                <label>
+                    <input id="{{ w.id }}.settings-bar.tab-setting" type="checkbox" class="checkbox tab-setting">
+                    Enable tabbed editor view for this editor
+                </label>
+                <label>
+                    <input id="{{ w.id }}.settings-bar.theme-setting" type="checkbox" class="checkbox theme-setting">
+                    Use the dark theme
+                </label>
+            </div>
+        </div>
+        <button id="{{ w.id }}.settings-bar.reset-btn" type="button" class="settingsbar-item reset-btn" title="Reset editor to default state">
+            <i class="fas fa-undo"></i>
+        </button>
+        <button id="{{ w.id }}.settings-bar.download-btn" type="button" class="settingsbar-item download-btn" title="Download source files">
+            <i class="fas fa-file-download"></i>
+        </button>
+    </div>
+    <div class="row output_row">
+        <div id="{{ w.id }}.button-group" class="col-md-3 button-group">
+            {% for b in w.button_group %}
+                <button type="button" class="btn btn-primary" mode="{{ b.mode }}" title="{{ b.title }}">{{ b.name }}</button>
+            {% endfor %}
+        </div>
+        <div class="col-md-9 output-group">
+            {% if w.cli_input %}
+                <textarea id="{{ w.id }}.cli" class="cli" name="cli" rows="4" cols="50"></textarea>
+            {% endif %}
+            <div id="{{ w.id }}.output_area" class="output_area"></div>
+            {% if w.is_lab %}
+                <div id="{{ w.id }}.lab_area" class="lab_area"></div>
+            {% endif %}
+        </div>
+    </div>
+</widget>

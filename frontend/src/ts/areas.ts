@@ -1,23 +1,18 @@
 import * as Strings from './strings';
 import {CheckOutput} from './server-types';
 
-/** Abstract class representing an Area **/
-export abstract class Area {
+/** Class representing an Area **/
+export class Area {
   protected readonly container: HTMLDivElement;
 
   /**
    * Construct an Area
+   *
+   * @param {HTMLDivElement} elem - A parent element.
    */
-  constructor() {
-    this.container = document.createElement('div');
+  constructor(elem: HTMLDivElement) {
+    this.container = elem;
   }
-
-  /**
-   * Render the Area
-   * @abstract
-   * @return {HTMLDivElement} The object holding the Area
-   */
-  abstract render(): HTMLDivElement;
 
   /**
    * The event callback signature for clickable divs
@@ -100,10 +95,12 @@ export class OutputArea extends Area {
 
   /**
    * Construct an OutputArea
+   *
+   * @param {HTMLDivElement} elem (optional) - A parent element. If none is
+   *  specified, one is created.
    */
-  constructor() {
-    super();
-    this.container.classList.add('output_area');
+  constructor(elem: HTMLDivElement) {
+    super(elem);
 
     this.spinner = document.createElement('div');
     this.spinner.classList.add('spinner');
@@ -112,14 +109,6 @@ export class OutputArea extends Area {
       b.classList.add('bounce' + i);
       this.spinner.appendChild(b);
     }
-  }
-
-  /**
-   * Render the OutputArea
-   * @return {HTMLDivElement} The container of the OutputArea
-   */
-  public render(): HTMLDivElement {
-    return this.container;
   }
 
   /**
@@ -170,9 +159,10 @@ export class LabArea extends Area {
   /**
    * Constructs a LabArea
    * @param {number} ref - The ref number of the lab result
+   * @param {HTMLDivElement} container - The container element
    */
-  constructor(ref: number) {
-    super();
+  constructor(ref: number, container: HTMLDivElement) {
+    super(container);
     this.wrapper = document.createElement('div');
     this.wrapper.classList.add('acc_wrapper');
     this.ref = ref;
@@ -268,6 +258,17 @@ export class LabArea extends Area {
   }
 }
 
+/**
+ * Makes a lab area and creates the container element
+ *
+ * @param {number} ref - the lab reference
+ * @return {LabArea} - The created lab area
+ */
+export function makeLabArea(ref: number): LabArea {
+  const container = document.createElement('div');
+  return new LabArea(ref, container);
+}
+
 /** Class representing the LabContainer */
 export class LabContainer {
   private labList: Array<LabArea> = [];
@@ -275,10 +276,11 @@ export class LabContainer {
 
   /**
    * Constructs a LabContainer
+   *
+   * @param {HTMLDivElement} elem - The parents div to render in
    */
-  constructor() {
-    this.container = document.createElement('div');
-    this.container.classList.add('lab_area');
+  constructor(elem: HTMLDivElement) {
+    this.container = elem;
   }
 
   /**
@@ -292,17 +294,9 @@ export class LabContainer {
         return l;
       }
     }
-    const newLab: LabArea = new LabArea(ref);
+    const newLab = makeLabArea(ref);
     this.labList.push(newLab);
     return newLab;
-  }
-
-  /**
-   * Renders the LabContainer
-   * @return {HTMLDivElement} the object containing the LabContainer
-   */
-  public render(): HTMLDivElement {
-    return this.container;
   }
 
   /**
