@@ -58,7 +58,7 @@ Aggregates
 Records have a convenient notation for expressing values, illustrated above.
 This notation is called aggregate notation, and the literals are called
 aggregates. They can be used in a variety of contexts that we will see
-throughout the course, one of which is to initalize records.
+throughout the course, one of which is to initialize records.
 
 An aggregate is a list of values separated by commas and enclosed in
 parentheses. It is allowed in any context where a value of the record is
@@ -136,7 +136,7 @@ component. This is useful to simplify the implementation of a subprogram, for
 example.
 
 We can rename record components by using the :ada:`renames` keyword in a
-varible declaration. For example:
+variable declaration. For example:
 
 .. code-block:: ada
 
