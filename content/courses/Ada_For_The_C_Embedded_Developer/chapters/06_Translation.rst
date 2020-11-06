@@ -748,12 +748,12 @@ declare a bit-field type like this:
 
 As we've seen previously, the :ada:`Pack` aspect declared at the end of the
 type declaration indicates that the compiler should optimize for size. We must
-use this attribute to be able to interpret data types as a bit-field.
+use this aspect to be able to interpret data types as a bit-field.
 
-Then, we can use the :ada:`Size` and the :ada:`Address` attributes of an
+Then, we can use the :ada:`Size` and the :ada:`Address` aspect of an
 object of any type to declare a bit-field for this object. The :ada:`Size`
-attributes indicates the number of bits required to represent the object, while
-the :ada:`Address` attribute indicates the address in memory of that object.
+aspect indicates the number of bits required to represent the object, while
+the :ada:`Address` aspect indicates the address in memory of that object.
 For example, assuming we've declare a variable :ada:`V`, we can declare an
 actual bit-field object using this pattern:
 
@@ -767,8 +767,8 @@ This technique is called overlays for serialization. Now, any operation that we
 perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
 the same memory location.
 
-The approach that we use in this section relies on the :ada:`Address`
-attribute. Another approach would be to use unchecked conversions, which we'll
+The approach that we use in this section relies on the :ada:`Address` aspect.
+Another approach would be to use unchecked conversions, which we'll
 discuss in the :ref:`next section <OverlaysVsUncheckedConversions>`.
 
 We should add the :ada:`Volatile` aspect to the declaration to cover the case
@@ -784,7 +784,7 @@ declaration:
 
 Using the :ada:`Volatile` aspect is important at high level of optimizations.
 You can find further details about this aspect in the section about the
-:ref:`Volatile and Atomic attributes <VolatileAtomicData>`.
+:ref:`Volatile and Atomic aspects <VolatileAtomicData>`.
 
 Another important aspect that should be added is :ada:`Import`. When used in
 the context of object declarations, it'll avoid default initialization which
@@ -906,7 +906,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     As we've just seen, when declaring objects for types with associated default
     values, automatic initialization will happen. This can also happens when
-    creating an overlay with the :ada:`Address` attribute. The default value is
+    creating an overlay with the :ada:`Address` aspect. The default value is
     then used to overwrite the content at the memory location indicated by the
     address. However, in most situations, this isn't the behavior we expect,
     since overlays are usually created to analyze and manipulate existing
