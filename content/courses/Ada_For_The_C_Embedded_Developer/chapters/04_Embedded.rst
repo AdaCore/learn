@@ -240,9 +240,194 @@ Dealing with Absence of FPU with Fixed Point
 Volatile and Atomic data
 ------------------------
 
-.. todo::
+Ada has built-in support for handling both volatile and atomic data. Let's
+start by discussing volatile objects.
 
-    Complete section!
+Volatile
+~~~~~~~~
+
+A `volatile <https://en.wikipedia.org/wiki/Volatile_(computer_programming)>`_
+can be described as an object in memory whose value may change between two
+consecutive memory accesses of a process A |mdash| even if process A itself
+hasn't changed the value. This situation may arise when an object in memory is
+being shared by multiple threads. For example, a thread *B* may modify the
+value of that object between two read accesses of a thread *A*. Another typical
+example is the one of
+`memory-mapped I/O <https://en.wikipedia.org/wiki/Memory-mapped_I/O>`_, where
+the hardware might be constantly changing the value of an object in memory.
+
+Because the value of a volatile object may be constantly changing, a compiler
+cannot store the value of that object into a register and use the value from
+the register in subsequent operations |mdash| because the value stored in the
+register would be outdated if another process had changed the volatile object
+in the meantime. Instead, the compiler must read the value of that object from
+memory for each access. In Ada, the standard specifies that, "for a volatile
+object, all reads and updates of the object as a whole are performed directly
+to memory. This precludes any use of register temporaries, caches, and other
+similar optimizations for that object."
+
+Let's look at a simple example of a volatile variable in C:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Object_C
+
+    !main.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        volatile double val = 0.0;
+        int i;
+
+        for (i = 0; i < 1000; i++)
+        {
+            val += i * 2.0;
+        }
+        printf ("val: %5.3f\n", val);
+    }
+
+In this example, :c:`val` has the modifier :c:`volatile`, which indicates that
+the compiler must handle :c:`val` as a volatile object. Therefore, each read
+and write access in the loop is performed by accessing the value of :c:`val` in
+then memory.
+
+This is the corresponding implementation in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Object_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Object is
+       Val : Long_Float with Volatile;
+    begin
+       Val := 0.0;
+       for I in 0 .. 999 loop
+          Val := Val + 2.0 * Long_Float (I);
+       end loop;
+
+       Put_Line ("Val: " & Long_Float'Image (Val));
+    end Show_Volatile_Object;
+
+In this example, :ada:`Val` has the :ada:`Volatile` aspect, which makes the
+object volatile. We can also use the :ada:`Volatile` aspect in type
+declarations. For example:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Type
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Type is
+       type Volatile_Long_Float is new Long_Float with Volatile;
+
+       Val : Volatile_Long_Float;
+    begin
+       Val := 0.0;
+       for I in 0 .. 999 loop
+          Val := Val + 2.0 * Volatile_Long_Float (I);
+       end loop;
+
+       Put_Line ("Val: " & Volatile_Long_Float'Image (Val));
+    end Show_Volatile_Type;
+
+Here, we're declaring a new type :ada:`Volatile_Long_Float` based on the
+:ada:`Long_Float` type and using the :ada:`Volatile` aspect. Any object of this
+type is automatically volatile.
+
+In addition to that, we can declare components of an array to be volatile. In
+this case, we can use the :ada:`Volatile_Components` aspect in the array
+declaration. For example:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Array_Components
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Array_Components is
+       Arr : array (1 .. 2) of Long_Float with Volatile_Components;
+    begin
+       Arr := (others => 0.0);
+
+       for I in 0 .. 999 loop
+          Arr (1) := Arr (1) +  2.0 * Long_Float (I);
+          Arr (2) := Arr (2) + 10.0 * Long_Float (I);
+       end loop;
+
+       Put_Line ("Arr (1): " & Long_Float'Image (Arr (1)));
+       Put_Line ("Arr (2): " & Long_Float'Image (Arr (2)));
+    end Show_Volatile_Array_Components;
+
+Note that it's possible to use the :ada:`Volatile` aspect for the array
+declaration as well:
+
+[Ada]
+
+.. code-block:: ada
+
+    Arr : array (1 .. 2) of Long_Float with Volatile;
+
+Atomic
+~~~~~~
+
+Operations are said to be atomic when they can be completed without
+interruptions. This is an important requirement when we're performing
+operations on objects in memory that are shared between multiple processes.
+An atomic object is an object that only accepts atomic operations. The Ada
+standard specifies that "for an atomic object (including an atomic component),
+all reads and updates of the object as a whole are indivisible."
+
+Atomicity is important, for example, when dealing with shared hardware
+registers. In Ada, we can use the :ada:`Atomic` aspect to indicate that an
+object is atomic. This is how we can use the aspect to declare a shared
+hardware register:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Atomic_Object
+
+    with System;
+
+    procedure Show_Shared_HW_Register is
+       R   : Integer
+         with Atomic, Address => System'To_Address (16#FFFF00A0#);
+    begin
+       null;
+    end Show_Shared_HW_Register;
+
+Note that the :ada:`Address` aspect allows for assigning a variable to a
+specific location in the memory. In this example, we're using this aspect to
+specify the address of the memory-mapped register. We'll discuss more about the
+:ada:`Address` aspect later in this course.
+
+In addition to atomic objects, we can declare atomic types and atomic array
+components |mdash| similarly to what we've seen before for volatile objects.
+For example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Atomic_Types_Arrays
+
+    with System;
+
+    procedure Show_Shared_HW_Register is
+       type Atomic_Integer is new Integer with Atomic;
+
+       R : Atomic_Integer with Address => System'To_Address (16#FFFF00A0#);
+
+       Arr : array (1 .. 2) of Integer with Atomic_Components;
+    begin
+       null;
+    end Show_Shared_HW_Register;
+
+In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
+atomic type. Objects of this type |mdash| such as :ada:`R` in this example
+|mdash| are automatically atomic. This example also includes the declaration
+of the :ada:`Arr` array, which has atomic components.
 
 ARM and :program:`svd2ada`
 --------------------------
