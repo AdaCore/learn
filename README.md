@@ -2,6 +2,11 @@
 
 Sources for AdaCore's learn.adacore.com website
 
+---
+
+![Typescript Test Suite](https://github.com/AdaCore/learn/workflows/Typescript%20Test%20Suite/badge.svg)
+![Sphinx Test Suite](https://github.com/AdaCore/learn/workflows/Sphinx%20Test%20Suite/badge.svg)
+
 ## Requirements
 
 This project requires Vagrant and VirtualBox
