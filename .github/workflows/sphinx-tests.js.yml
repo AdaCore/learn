@@ -42,17 +42,12 @@ jobs:
         fonts-lmodern \
         fonts-open-sans \
         fonts-dejavu
-    - uses: actions/cache@v2
-      with:
-        path: ./cached_gnat
-        key: ${{ runner.os }}-gnat-ce-2020
     - name: ada-actions/toolchain
       uses: ada-actions/toolchain@v0.2.0
       with:
         distrib: community
         target: native
         community_year: 2020
-        install_dir: ./cached_gnat
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
