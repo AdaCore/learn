@@ -21,7 +21,7 @@ type EditorMap = Map<string, EditorView>;
  * @export
  * @class Widget
  */
-export class Widget {
+class Widget {
   // model object
   private readonly name: string;
   private readonly server: string;
@@ -168,20 +168,18 @@ export class Widget {
     const dlButton = this.getElem('settings-bar', 'download-btn');
     dlButton.addEventListener('click', async () => {
       try {
-        const blobs = await this.downloadExample();
+        const blob = await this.downloadExample();
+        const objURL: string = URL.createObjectURL(blob.blob);
 
-        for (const blob of blobs) {
-          const objURL: string = URL.createObjectURL(blob.blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', objURL);
+        a.setAttribute('download', blob.filename);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
 
-          const a = document.createElement('a');
-          a.setAttribute('href', objURL);
-          a.setAttribute('download', blob.filename);
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+        URL.revokeObjectURL(objURL);
 
-          URL.revokeObjectURL(objURL);
-        }
       } catch (error) {
         this.outputArea.reset();
         this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
@@ -195,21 +193,13 @@ export class Widget {
   }
 
   /**
-   *  Method to destruct the object. Used primarily for testing.
-   */
-  public destructor(): void {
-    for (const t of this.viewMap.values()) {
-      t.editor.destructor();
-    }
-  }
-
-  /**
    * Collect resources from the current view
    *
    * @return {ResourceList} return the widget resources
    */
   protected collectResources(): ResourceList {
     const ret: ResourceList = [];
+    // get files from view
     for (const [basename, view] of this.viewMap) {
       const r: Resource = {
         basename: basename,
@@ -217,6 +207,11 @@ export class Widget {
       };
       ret.push(r);
     }
+    // add shadow files
+    for (const sf of this.shadowFiles) {
+      ret.push(sf);
+    }
+    // TODO: add cli contents to files
     return ret;
   }
 
@@ -298,9 +293,9 @@ export class Widget {
    * The download example callback
    *
    * @private
-   * @return {Promise<Array<DownloadResponse>>} - A promise of the dl response
+   * @return {Promise<DownloadResponse>} - A promise of the dl response
    */
-  private async downloadExample(): Promise<Array<DownloadResponse>> {
+  private async downloadExample(): Promise<DownloadResponse> {
     const files = this.collectResources();
     const blobList: Array<DownloadResponse> = [];
 
@@ -310,10 +305,7 @@ export class Widget {
       name: this.name,
     };
 
-    const ret = await fetchBlob(serverData, this.serverAddress('download'));
-    blobList.push(ret);
-
-    return blobList;
+    return fetchBlob(serverData, this.serverAddress('download'));
   }
 
   /**

@@ -2,16 +2,6 @@ import {fetchJSON} from './comms';
 import {RunProgram, CheckOutput} from './server-types';
 
 /**
- * Delay function
- *
- * @param {number} ms - Number of milliseconds to delay-+
- * @return {Promise<unknown>} - A promise to await
- */
-function delay(ms: number): Promise<unknown> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-/**
  * Worker class for server REST sequence
  *
  * @export
@@ -28,6 +18,7 @@ export class ServerWorker {
    *
    * @callback dataCallback
    * @param {CheckOutput.FS} data - The data to process
+   * @return {number} - The number of lines processed
    */
 
   /**
@@ -53,7 +44,7 @@ export class ServerWorker {
       fetchJSON<RunProgram.TS, RunProgram.FS>(serverData,
           this.serverAddress(address));
     if (json.identifier == '') {
-      throw new Error(json.message);
+      throw new Error('No identifier sent from server.');
     }
 
     await this.getOutputFromIdentifier(json);
@@ -85,7 +76,7 @@ export class ServerWorker {
 
     if (!rdata.completed) {
       // We have not finished processing the output: call this again
-      await delay(250);
+      await ServerWorker.delay(250);
       await this.getOutputFromIdentifier(json, lRead, nReq);
     }
   }
@@ -97,5 +88,15 @@ export class ServerWorker {
    */
   private serverAddress(url: string): string {
     return this.server + '/' + url + '/';
+  }
+
+  /**
+   * Delay function
+   *
+   * @param {number} ms - Number of milliseconds to delay-+
+   * @return {Promise<unknown>} - A promise to await
+   */
+  public static delay(ms: number): Promise<unknown> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

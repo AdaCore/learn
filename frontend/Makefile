@@ -12,6 +12,8 @@ MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
 BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 
 CONTENT_DIR   	= $(MKFILE_DIR)/../content
+TEST_CONTENT    = tests/rst
+TEST_BUILDDIR   = tests/html
 HOST_ADDRESS 	?= localhost
 HOST_PORT    	?= 8000
 
@@ -124,6 +126,10 @@ site-staging: cleanall webpack-staging pdf_books
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
+site-testing: cleantest
+	$(SPHINXBUILD) -M html $(TEST_CONTENT) \
+        "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
 
 pdf_books: $(BOOKS)
@@ -142,6 +148,9 @@ $(BOOKS):
 cleanall:
 	@rm -rf "$(BUILDDIR)"
 	@rm -f $(BUILD_MANIFEST)
+
+cleantest:
+	@rm -rf "$(TEST_BUILDDIR)"
 
 
 # Catch-all target: route all unknown targets to Sphinx using the new

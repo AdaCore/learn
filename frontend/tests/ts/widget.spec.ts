@@ -1,10 +1,12 @@
 // Import testing libs
 import chai, {expect} from 'chai';
-import chaiDom from 'chai-dom';
 import chaiAsPromised from 'chai-as-promised';
-
+import chaiDom from 'chai-dom';
 chai.use(chaiDom);
 chai.use(chaiAsPromised);
+
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
 
 import ace from 'brace';
 
@@ -12,595 +14,585 @@ import fetchMock from 'fetch-mock';
 import {OutputArea} from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
 
-import {widgetFactory, Widget, LabWidget} from '../../src/ts/widget';
+import {DownloadRequest} from '../../src/ts/comms';
+import {widgetFactory} from '../../src/ts/widget';
+import {ServerWorker} from '../../src/ts/server';
+import {RunProgram} from '../../src/ts/server-types';
+import {getElemsByTag, getElemAttr, getElemById, getElemsByClass} from '../../src/ts/dom-utils';
 
-/**
- * Utility delay for mocking HTTP requests
- *
- * @param {number} ms - The amount in milliseconds to delay
- * @return {Promise<unknown>} - Returns a promise
- */
-function delay(ms: number): Promise<unknown> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+function fillDOM(filename: string): void {
+  global.document = window.document;
+
+  const htmlString = readFileSync(resolve(__dirname, '../html/html/' + filename), 'utf8');
+  document.documentElement.innerHTML = htmlString;
 }
 
-describe('widgetFactory()', () => {
-  let htmlList: HTMLCollectionOf<Element>;
-  let inTestList: WidgetMap;
-  let pageWidget: HTMLElement;
-  let file: HTMLDivElement;
-  let shadowFile: HTMLDivElement;
+function clearDOM(): void {
+  document.documentElement.innerHTML = '';
+}
 
-  beforeEach(() => {
-    pageWidget = document.createElement('div');
-    pageWidget.classList.add('widget_editor');
-    pageWidget.setAttribute('example_server', 'http://example.com');
-    pageWidget.setAttribute('run_button', 'True');
-    pageWidget.setAttribute('name', 'PageWidget');
-
-    document.body.appendChild(pageWidget);
-
-    shadowFile = document.createElement('div');
-    shadowFile.classList.add('shadow_file');
-    shadowFile.setAttribute('basename', 'shadow.txt');
-    shadowFile.textContent = 'Hello shadow';
-    pageWidget.appendChild(shadowFile);
-
-    file = document.createElement('div');
-    file.classList.add('file');
-    file.setAttribute('basename', 'test.adb');
-    file.textContent = 'Hello world';
-    pageWidget.appendChild(file);
-  });
-
-  afterEach(() => {
-    for (const inTestElem of inTestList) {
-      for (const inTest of inTestElem.widgets) {
-        inTest.destructor();
-      }
-    }
-
-    document.body.innerHTML = '';
-  });
-
-  it('should be a list with 2 elements', () => {
-    const labWidget = document.createElement('div');
-    labWidget.classList.add('widget_editor');
-    labWidget.setAttribute('example_server', 'http://example.com');
-    labWidget.setAttribute('run_button', 'True');
-    labWidget.setAttribute('name', 'LabWidget');
-    labWidget.setAttribute('lab', 'True');
-    document.body.appendChild(labWidget);
-    labWidget.appendChild(file.cloneNode(true));
-
-    htmlList = document.getElementsByClassName('widget_editor');
-    inTestList = widgetFactory(htmlList);
-
-    expect(inTestList).to.have.lengthOf(2);
-    const pw = inTestList.get('PageWidget');
-    expect(pw).to.have.length(1);
-    expect(pw[0]).to.be.an.instanceof(Widget);
-
-    const lw = inTestList.get('LabWidget');
-    expect(lw).to.have.length(1);
-    expect(lw[0]).to.be.an.instanceof(LabWidget);
-  });
-
-  it('should create div with error when no server addr is found', () => {
-    pageWidget.removeAttribute('example_server');
-    htmlList = document.getElementsByClassName('widget_editor');
-    inTestList = widgetFactory(htmlList);
-
-    expect(inTestList).to.have.length(0);
-    expect(pageWidget).to.have.descendants('div').with.length(1);
-    const errorDiv = pageWidget.querySelector('div');
-    expect(errorDiv).to.have.html(
-        '<p>An error has occured processing this widget.' +
-        Strings.INTERNAL_ERROR_MESSAGE + '</p>');
-  });
-
-  it('should create div with error when no files in widget', () => {
-    pageWidget.removeChild(file);
-    htmlList = document.getElementsByClassName('widget_editor');
-    inTestList = widgetFactory(htmlList);
-
-    expect(inTestList).to.have.length(0);
-    expect(pageWidget).to.have.descendants('div').with.length(1);
-    const errorDiv = pageWidget.querySelector('div');
-    expect(errorDiv).to.have.html(
-        '<p>An error has occured processing this widget.' +
-        Strings.INTERNAL_ERROR_MESSAGE + '</p>');
-  });
-
-  it('should create div with error when file has no name', () => {
-    file.removeAttribute('basename');
-    htmlList = document.getElementsByClassName('widget_editor');
-    inTestList = widgetFactory(htmlList);
-
-    expect(inTestList).to.have.length(0);
-    expect(pageWidget).to.have.descendants('div').with.length(1);
-    const errorDiv = pageWidget.querySelector('div');
-    expect(errorDiv).to.have.html(
-        '<p>An error has occured processing this widget.' +
-        Strings.INTERNAL_ERROR_MESSAGE + '</p>');
-  });
-
-  it('should create div with error when shadow file has no name', () => {
-    shadowFile.removeAttribute('basename');
-    htmlList = document.getElementsByClassName('widget_editor');
-    inTestList = widgetFactory(htmlList);
-
-    expect(inTestList).to.have.length(0);
-    expect(pageWidget).to.have.descendants('div').with.length(1);
-    const errorDiv = pageWidget.querySelector('div');
-    expect(errorDiv).to.have.html(
-        '<p>An error has occured processing this widget.' +
-        Strings.INTERNAL_ERROR_MESSAGE + '</p>');
-  });
-});
+function triggerEvent(element: HTMLElement, eventName: string): void {
+  var event = document.createEvent("HTMLEvents");
+  event.initEvent(eventName, false, true);
+  element.dispatchEvent(event);
+}
 
 describe('Widget', () => {
-  const baseURL = 'http://example.com';
-  let htmlList: HTMLCollectionOf<Element>;
-  let inTestList: WidgetMap;
+  let inTest: Array<HTMLElement>;
+  let root: HTMLElement;
 
-  const pageWidget = document.createElement('div');
-  pageWidget.classList.add('widget_editor');
-  pageWidget.setAttribute('example_server', baseURL);
-  pageWidget.setAttribute('name', 'pageWidget');
-  pageWidget.setAttribute('run_button', 'True');
-  pageWidget.setAttribute('switches', 'Pkg1(-test1,test2);Pkg2(-test3,-test4)');
-
-  const file1 = document.createElement('div');
-  file1.classList.add('file');
-  file1.setAttribute('basename', 'test1.adb');
-  file1.textContent = 'Hello world #1';
-  pageWidget.appendChild(file1);
-
-  const file2 = document.createElement('div');
-  file2.classList.add('file');
-  file2.setAttribute('basename', 'test2.adb');
-  file2.textContent = 'Hello world \n#2';
-  pageWidget.appendChild(file2);
-
-  const shadowFile = document.createElement('div');
-  shadowFile.classList.add('shadow_file');
-  shadowFile.setAttribute('basename', 'shadow.txt');
-  shadowFile.textContent = 'Hello shadow';
-  pageWidget.appendChild(shadowFile);
-
-  before(() => {
-    document.body.appendChild(pageWidget);
-    htmlList = document.getElementsByClassName('widget_editor');
-    inTestList = widgetFactory(htmlList);
-  });
-
-  after(() => {
-    for (const inTestElem of inTestList) {
-      for (const inTest of inTestElem.widgets) {
-        inTest.destructor();
-      }
-    }
-
-    document.body.innerHTML = '';
-  });
-
-  it('should have two editors', () => {
-    expect(pageWidget).to.have.descendants('div.editor-container').
-        and.have.length(2);
-  });
-
-  describe('test run button click', () => {
-    let button: HTMLElement;
-    const identifier = 123;
-
-    it('should have a run button in the output row', () => {
-      expect(pageWidget).to.have.descendants('div.output_row').
-          and.have.length(1);
-      const outputRow = pageWidget.querySelector('div.output_row');
-      expect(outputRow).to.have.descendants('button').and.have.length(1);
-      button = outputRow.querySelector('button');
+  const baseURL = 'https://cloudchecker-staging.r53.adacore.com';
+  describe('Single Widget', () => {
+    before(() => {
+      fillDOM('single.html');
+      inTest = getElemsByTag(document, 'widget');
+      widgetFactory(inTest as Array<HTMLDivElement>);
+      root = inTest[0];
     });
 
-    describe('trigger run sequence', () => {
-      const consoleMsg = 'This is a console message';
-      const clickableInfoMsg = 'test1.adb:1:2: info: This is an info message';
-      const clickableStdoutMsg = 'test1.adb:1:3: Clickable stdout message';
-      const raisedMsg = 'raised TEST_ERROR : test2.adb:2 explicit raise';
-
-      const outputArea = new OutputArea();
-      outputArea.add(['output_info', 'console_output'],
-          Strings.CONSOLE_OUTPUT_LABEL + ':');
-      outputArea.addConsole(consoleMsg);
-      outputArea.addInfo(clickableInfoMsg);
-      outputArea.addMsg(clickableStdoutMsg);
-      outputArea.addMsg(raisedMsg);
-
-      before(async () => {
-        fetchMock.post(baseURL + '/run_program/', {
-          body: {
-            'identifier': identifier.toString(),
-            'message': 'Pending',
-          },
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': false,
-            'message': 'PENDING',
-            'output': [],
-            'status': 0,
-          },
-        }, {
-          repeat: 1,
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': false,
-            'message': 'PENDING',
-            'output': [
-              {
-                'msg': {
-                  'data': consoleMsg,
-                  'type': 'console',
-                },
-              },
-            ],
-            'status': 0,
-          },
-        }, {
-          repeat: 1,
-          overwriteRoutes: false,
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': false,
-            'message': 'PENDING',
-            'output': [
-              {
-                'msg': {
-                  'data': clickableInfoMsg,
-                  'type': 'stdout',
-                },
-              },
-            ],
-            'status': 0,
-          },
-        }, {
-          repeat: 1,
-          overwriteRoutes: false,
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': false,
-            'message': 'PENDING',
-            'output': [
-              {
-                'msg': {
-                  'data': clickableStdoutMsg,
-                  'type': 'stdout',
-                },
-              }, {
-                'msg': {
-                  'data': raisedMsg,
-                  'type': 'stderr',
-                },
-              },
-            ],
-            'status': 0,
-          },
-        }, {
-          repeat: 1,
-          overwriteRoutes: false,
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': true,
-            'message': 'SUCCESS',
-            'output': [],
-            'status': 0,
-          },
-        }, {
-          repeat: 1,
-          overwriteRoutes: false,
-        });
-
-        button.click();
-        await delay(5 * 250);
-        await fetchMock.flush(true);
-      });
-
-      after(() => {
-        fetchMock.reset();
-      });
-
-      it('should trigger a run program post when clicked', () => {
-        const runProgram = fetchMock.calls(baseURL + '/run_program/');
-        expect(runProgram).to.have.length(1);
-        expect(runProgram[0][1]['body']).to.equal(JSON.stringify({
-          'files': [
-            {
-              'basename': 'test1.adb',
-              'contents': 'Hello world #1',
-            },
-            {
-              'basename': 'test2.adb',
-              'contents': 'Hello world \n#2',
-            },
-            {
-              'basename': 'shadow.txt',
-              'contents': 'Hello shadow',
-            },
-          ],
-          'mode': 'run',
-          'switches': ['Pkg1(-test1,test2)', 'Pkg2(-test3,-test4)'],
-          'name': 'pageWidget',
-          'lab': false,
-        }));
-      });
-
-      it('should stop after 5 calls to check output', () => {
-        const checkOutput = fetchMock.calls(baseURL + '/check_output/');
-        expect(checkOutput).to.have.length(5);
-      });
-
-      it('should send back how many lines it has read', () => {
-        const checkOutput = fetchMock.calls(baseURL + '/check_output/');
-
-        expect(checkOutput[0][1]['body']).to.equal(JSON.stringify({
-          'identifier': identifier.toString(),
-          'read': 0,
-        }));
-        expect(checkOutput[1][1]['body']).to.equal(JSON.stringify({
-          'identifier': identifier.toString(),
-          'read': 0,
-        }));
-        expect(checkOutput[2][1]['body']).to.equal(JSON.stringify({
-          'identifier': identifier.toString(),
-          'read': 1,
-        }));
-        expect(checkOutput[3][1]['body']).to.equal(JSON.stringify({
-          'identifier': identifier.toString(),
-          'read': 2,
-        }));
-        expect(checkOutput[4][1]['body']).to.equal(JSON.stringify({
-          'identifier': identifier.toString(),
-          'read': 4,
-        }));
-      });
-
-      it('should have an output area with the received data', () => {
-        expect(pageWidget).to.have.descendants('div.output_area').
-            and.have.length(1);
-        const outputAreaHTML = pageWidget.querySelector('div.output_area');
-        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
-      });
-
-      it('should have three clickable divs', () => {
-        const outputMsgs = pageWidget.querySelectorAll('div.output_msg');
-        expect(outputMsgs).to.have.length(2);
-        expect(pageWidget).to.have.descendants('div.output_msg_info').
-            and.have.length(1);
-        const infoMsg = pageWidget.querySelector('div.output_msg_info');
-
-        expect(infoMsg).to.have.text(clickableInfoMsg);
-        expect(outputMsgs[0]).to.have.text(clickableStdoutMsg);
-        expect(outputMsgs[1]).to.have.text(raisedMsg);
-
-        const HTMLeditors = pageWidget.querySelectorAll('div.editor-container');
-        const ed1 = ace.edit(HTMLeditors[0] as HTMLElement);
-        const ed2 = ace.edit(HTMLeditors[1] as HTMLElement);
-
-        expect(pageWidget).to.have.descendants('div.tab').and.have.length(1);
-        const headers = pageWidget.querySelector('div.tab');
-        expect(headers).to.have.descendants('button').and.have.length(2);
-        const tabs = headers.querySelectorAll('button');
-
-        expect(tabs[1]).not.to.have.class('active');
-        expect(ed2.getCursorPosition()).not.to.deep.equal({row: 1, column: 0});
-        (outputMsgs[1] as HTMLElement).click();
-        expect(ed2.getCursorPosition()).to.deep.equal({row: 1, column: 0});
-        expect(tabs[1]).to.have.class('active');
-
-        expect(tabs[0]).not.to.have.class('active');
-        expect(ed1.getCursorPosition()).not.to.deep.equal({row: 0, column: 2});
-        (outputMsgs[0] as HTMLElement).click();
-        expect(ed1.getCursorPosition()).to.deep.equal({row: 0, column: 2});
-        expect(tabs[0]).to.have.class('active');
-
-        expect(ed1.getCursorPosition()).not.to.deep.equal({row: 0, column: 1});
-        (infoMsg as HTMLElement).click();
-        expect(ed1.getCursorPosition()).to.deep.equal({row: 0, column: 1});
-      });
+    after(() => {
+      clearDOM();
     });
 
-    describe('test server down handling', ()=> {
+    it('should have a single widget on the page', () => {
+      expect(inTest).to.have.length(1);
+    });
+
+    it('should have one tab with active status', () => {
+      const tabs = getElemById(root.id + '.tab');
+      const headers = getElemsByTag(tabs, 'button');
+      expect(headers).to.have.length(1);
+      expect(headers[0]).to.have.class('active');
+    });
+
+    it('should have lab setting false', () => {
+      const lab = getElemAttr(root, 'lab');
+      expect(lab).to.equal('False');
+    });
+
+    it('should not have a lab area', () => {
+      expect(() => {
+        getElemById(root.id + '.lab_area');
+      }).to.throw();
+    });
+
+    it('should not have a cli area', () => {
+      expect(() => {
+        getElemById(root.id + '.cli');
+      }).to.throw();
+    });
+
+    describe('Action Buttons', () => {
+      let buttonGroup: HTMLElement;
+      let outputDiv: HTMLElement;
+      let runButton: HTMLButtonElement;
+      const identifier = 123;
+
       before(() => {
-        fetchMock.mock(baseURL + '/run_program/', 500);
+        buttonGroup = getElemById(root.id + '.button-group');
+        outputDiv = getElemById(root.id + '.output_area');
+
+        // stub scrollIntoView function beacuse JSDOM doesn't have it
+        window.HTMLElement.prototype.scrollIntoView = (arg: any) => {};
       });
 
-      after(() => {
-        fetchMock.reset();
+      it('should have a single run button', () => {
+        const buttons = getElemsByTag(buttonGroup, 'button');
+        expect(buttons).to.have.length(1);
+        runButton = buttons[0] as HTMLButtonElement;
+        const mode = getElemAttr(runButton, 'mode');
+        expect(mode).to.equal('run');
       });
 
-      it('should catch the error and add text to the output area', async () => {
-        const outputArea = new OutputArea();
-        outputArea.add(['output_info', 'console_output'],
-            Strings.CONSOLE_OUTPUT_LABEL + ':');
-        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-        button.click();
-        await fetchMock.flush(true);
-        const outputAreaHTML = pageWidget.querySelector('div.output_area');
-        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+      describe('Normal Behavior', () => {
+        let editor: ace.Editor;
+        const consoleMsg = 'This is a console message';
+        const clickableInfoMsg = 'test.adb:1:2: info: This is an info message';
+        const clickableStdoutMsg = 'test.adb:2:3: Clickable stdout message';
+        const raisedMsg = 'raised TEST_ERROR : test.adb:3 explicit raise';
+
+        before(async () => {
+          const editorDiv = getElemById(root.id + '.editor');
+          editor = ace.edit(editorDiv);
+
+          fetchMock.post(baseURL + '/run_program/', {
+            body: {
+              'identifier': identifier.toString(),
+              'message': 'Pending',
+            },
+          });
+          fetchMock.post(baseURL + '/check_output/', {
+            body: {
+              'completed': false,
+              'message': 'PENDING',
+              'output': [
+                {
+                  'msg': {
+                    'data': consoleMsg,
+                    'type': 'console',
+                  },
+                },
+              ],
+              'status': 0,
+            },
+          }, {
+            repeat: 1,
+          });
+          fetchMock.post(baseURL + '/check_output/', {
+            body: {
+              'completed': false,
+              'message': 'PENDING',
+              'output': [
+                {
+                  'msg': {
+                    'data': clickableInfoMsg,
+                    'type': 'stdout',
+                  },
+                },
+              ],
+              'status': 0,
+            },
+          }, {
+            repeat: 1,
+            overwriteRoutes: false,
+          });
+          fetchMock.post(baseURL + '/check_output/', {
+            body: {
+              'completed': true,
+              'message': 'SUCCESS',
+              'output': [
+                {
+                  'msg': {
+                    'data': clickableStdoutMsg,
+                    'type': 'stdout',
+                  },
+                }, {
+                  'msg': {
+                    'data': raisedMsg,
+                    'type': 'stderr',
+                  },
+                },
+              ],
+              'status': 0,
+            },
+          }, {
+            repeat: 1,
+            overwriteRoutes: false,
+          });
+
+          runButton.click();
+          await ServerWorker.delay(3 * 250);
+          await fetchMock.flush(true);
+        });
+
+        after(() => {
+          fetchMock.reset();
+        });
+
+        it('should trigger a run program post when clicked', () => {
+          const runProgram = fetchMock.calls(baseURL + '/run_program/');
+          expect(runProgram).to.have.length(1);
+
+          const request = JSON.parse(runProgram[0][1]['body'] as string) as RunProgram.TS;
+
+          expect(request.files).to.have.length(1);
+          expect(request.mode).to.equal('run');
+          expect(request.switches).to.have.length(2);
+          expect(request.name).to.equal('Test.Single');
+          expect(request.lab).to.be.false;
+        });
+
+        it('should have an output area with the received data', () => {
+          const fakeOutputAreaDiv = document.createElement('div');
+          const fakeOutputArea = new OutputArea(fakeOutputAreaDiv);
+          fakeOutputArea.add(['output_info', 'console_output'],
+              Strings.CONSOLE_OUTPUT_LABEL + ':');
+          fakeOutputArea.addConsole(consoleMsg);
+          fakeOutputArea.addInfo(clickableInfoMsg);
+          fakeOutputArea.addMsg(clickableStdoutMsg);
+          fakeOutputArea.addMsg(raisedMsg);
+
+          expect(outputDiv).to.have.html(fakeOutputAreaDiv.innerHTML);
+        });
+
+        it('should have a clickable info div', () => {
+          const infoMsg = getElemsByClass(outputDiv, 'output_msg_info');
+
+          // remove active class from header before click to see if click cb
+          //  worked properly
+          const header = getElemById(root.id + '.tab.test.adb');
+          header.classList.remove('active');
+          infoMsg[0].click();
+          expect(header).to.have.class('active');
+          expect(editor.getCursorPosition()).to.deep.equal({
+            row: 0, column: 1});
+        });
+      });
+
+      describe('Error Behavior', () => {
+        let fakeDiv: HTMLDivElement;
+        let fakeOA: OutputArea;
+        let realDiv: HTMLElement;
+
+        beforeEach(() => {
+          fakeDiv = document.createElement('div') as HTMLDivElement;
+          fakeOA = new OutputArea(fakeDiv);
+          fakeOA.add(['output_info', 'console_output'],
+              Strings.CONSOLE_OUTPUT_LABEL + ':');
+          realDiv = getElemById(root.id + '.output_area');
+        });
+
+        afterEach(() => {
+          fetchMock.reset();
+        });
+
+        it('should handle an error if ServerWorker throws', async () => {
+          fetchMock.post(baseURL + '/run_program/', {
+            body: {
+              'identifier': '',
+              'message': 'Pending',
+            },
+          });
+
+          fakeOA.addError(Strings.MACHINE_BUSY_LABEL);
+          runButton.click();
+          await fetchMock.flush(true);
+
+          expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
+        });
+
+        it('should handle an error if response has lab ref', async () => {
+          fetchMock.post(baseURL + '/run_program/', {
+            body: {
+              'identifier': '1234',
+              'message': 'Pending',
+            },
+          });
+          fetchMock.post(baseURL + '/check_output/', {
+            body: {
+              'completed': false,
+              'message': 'PENDING',
+              'output': [
+                {
+                  'msg': {
+                    'data': 'test data',
+                    'type': 'console',
+                  },
+                  'ref': '0',
+                },
+              ],
+              'status': 0,
+            },
+          });
+
+          fakeOA.addError(Strings.MACHINE_BUSY_LABEL);
+
+          runButton.click();
+          await ServerWorker.delay(2 * 250);
+          await fetchMock.flush(true);
+
+          expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
+        });
+
+        it('should report internal errors normally', async () => {
+          fetchMock.post(baseURL + '/run_program/', {
+            body: {
+              'identifier': '1234',
+              'message': 'Pending',
+            },
+          });
+          fetchMock.post(baseURL + '/check_output/', {
+            body: {
+              'completed': true,
+              'message': 'PENDING',
+              'output': [
+                {
+                  'msg': {
+                    'data': 'There was an error.',
+                    'type': 'internal_error',
+                  },
+                },
+              ],
+              'status': -1,
+            },
+          });
+
+          fakeOA.addLine(
+              'There was an error. ' + Strings.INTERNAL_ERROR_MESSAGE);
+          fakeOA.addError(Strings.EXIT_STATUS_LABEL +
+            ': ' + -1);
+
+          runButton.click();
+          await ServerWorker.delay(2 * 250);
+          await fetchMock.flush(true);
+
+          expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
+        });
+
+        it('should throw an error when msg has a bad type', async () => {
+          fetchMock.post(baseURL + '/run_program/', {
+            body: {
+              'identifier': '1234',
+              'message': 'Pending',
+            },
+          });
+          fetchMock.post(baseURL + '/check_output/', {
+            body: {
+              'completed': false,
+              'message': 'PENDING',
+              'output': [
+                {
+                  'msg': {
+                    'data': 'Test message',
+                    'type': 'blahblahblah',
+                  },
+                },
+              ],
+              'status': 0,
+            },
+          });
+
+          fakeOA.addLine('Test message');
+          fakeOA.addError(Strings.MACHINE_BUSY_LABEL);
+
+          runButton.click();
+          await ServerWorker.delay(2 * 250);
+          await fetchMock.flush(true);
+
+          expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
+        });
       });
     });
 
-    describe('test broken server handling', ()=> {
-      afterEach(() => {
-        fetchMock.reset();
+    describe('Settings Bar', () => {
+      let settingsBar: HTMLElement;
+      let editor: ace.Editor;
+
+      before(() => {
+        settingsBar = getElemById(root.id + '.settings-bar');
+        const editorDiv = getElemById(root.id + '.editor');
+        editor = ace.edit(editorDiv);
       });
 
-      it('should catch an error if identifier is blank', async () => {
-        fetchMock.post(baseURL + '/run_program/', {
-          body: {
-            'identifier': '',
-            'message': 'Pending',
-          },
-        });
-        const outputArea = new OutputArea();
-        outputArea.add(['output_info', 'console_output'],
-            Strings.CONSOLE_OUTPUT_LABEL + ':');
-        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-        button.click();
-        await fetchMock.flush(true);
-        const outputAreaHTML = pageWidget.querySelector('div.output_area');
-        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+      it('should have a checkbox that switches editor theme', () => {
+        const box = getElemById(root.id + '.settings-bar.theme-setting') as HTMLInputElement;
+        const origTheme = editor.getTheme();
+        box.checked = !box.checked;
+        triggerEvent(box, 'change');
+        expect(editor.getTheme()).to.not.equal(origTheme);
       });
 
-      it('should timeout requests to check output', async () => {
-        fetchMock.post(baseURL + '/run_program/', {
-          body: {
-            'identifier': '1234',
-            'message': 'Pending',
-          },
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': false,
-            'message': 'PENDING',
-            'output': [],
-            'status': 0,
-          },
-        });
-
-        const outputArea = new OutputArea();
-        outputArea.add(['output_info', 'console_output'],
-            Strings.CONSOLE_OUTPUT_LABEL + ':');
-        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-
-        button.click();
-        await delay(205 * 250);
-        await fetchMock.flush(true);
-
-        expect(fetchMock.calls(baseURL + '/run_program/')).to.have.length(1);
-        expect(fetchMock.calls(baseURL + '/check_output/')).to.have.length(200);
-        const outputAreaHTML = pageWidget.querySelector('div.output_area');
-        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+      it('should have a checkbox that switches tab setting', () => {
+        const box = getElemById(root.id + '.settings-bar.tab-setting') as HTMLInputElement;
+        expect.fail('Test not implemented.');
       });
 
-      it('should throw an error if response has lab ref', async () => {
-        fetchMock.post(baseURL + '/run_program/', {
-          body: {
-            'identifier': '1234',
-            'message': 'Pending',
-          },
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': false,
-            'message': 'PENDING',
-            'output': [
-              {
-                'msg': {
-                  'data': 'test data',
-                  'type': 'console',
-                },
-                'ref': '0',
-              },
-            ],
-            'status': 0,
-          },
-        });
+      it('should have a button that resets the editor', () => {
 
-        const outputArea = new OutputArea();
-        outputArea.add(['output_info', 'console_output'],
-            Strings.CONSOLE_OUTPUT_LABEL + ':');
-        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+        const btn = getElemById(root.id + '.settings-bar.reset-btn') as HTMLButtonElement;
 
-        button.click();
-        await delay(2 * 250);
-        await fetchMock.flush(true);
+        const session = editor.getSession();
+        const origContent = session.getValue();
 
-        const outputAreaHTML = pageWidget.querySelector('div.output_area');
-        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+        session.doc.insert({row: 0, column: 0}, '\n');
+        expect(session.getValue()).to.not.equal(origContent);
+
+        // overwrite window.confirm because jsdom doesn't implement this
+        window.confirm = () => true;
+
+        btn.click();
+
+        expect(session.getValue()).to.equal(origContent);
       });
 
-      it('should report internal errors normally', async () => {
-        fetchMock.post(baseURL + '/run_program/', {
-          body: {
-            'identifier': '1234',
-            'message': 'Pending',
-          },
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': true,
-            'message': 'PENDING',
-            'output': [
-              {
-                'msg': {
-                  'data': 'There was an error.',
-                  'type': 'internal_error',
-                },
-              },
-            ],
-            'status': -1,
-          },
+      describe('Download Button', () => {
+        let btn: HTMLButtonElement;
+
+        before(() => {
+          btn = getElemById(root.id + '.settings-bar.download-btn') as HTMLButtonElement;
+          // stub this because JSDOM doesn't have it
+          global.URL.createObjectURL = (object: any): string => {
+            return '#';
+          };
+          global.URL.revokeObjectURL = (url: any): void => {};
         });
 
-        const outputArea = new OutputArea();
-        outputArea.add(['output_info', 'console_output'],
-            Strings.CONSOLE_OUTPUT_LABEL + ':');
-        outputArea.addLine(
-            'There was an error. ' + Strings.INTERNAL_ERROR_MESSAGE);
-        outputArea.addError(Strings.EXIT_STATUS_LABEL +
-          ': ' + -1);
-
-        button.click();
-        await delay(2 * 250);
-        await fetchMock.flush(true);
-
-        const outputAreaHTML = pageWidget.querySelector('div.output_area');
-        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
-      });
-
-      it('should throw an error when msg has a bad type', async () => {
-        fetchMock.post(baseURL + '/run_program/', {
-          body: {
-            'identifier': '1234',
-            'message': 'Pending',
-          },
-        });
-        fetchMock.post(baseURL + '/check_output/', {
-          body: {
-            'completed': false,
-            'message': 'PENDING',
-            'output': [
-              {
-                'msg': {
-                  'data': 'Test message',
-                  'type': 'blahblahblah',
-                },
-              },
-            ],
-            'status': 0,
-          },
+        afterEach(() => {
+          fetchMock.reset();
         });
 
-        const outputArea = new OutputArea();
-        outputArea.add(['output_info', 'console_output'],
-            Strings.CONSOLE_OUTPUT_LABEL + ':');
-        outputArea.addLine('Test message');
-        outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+        it('should have a button that downloads the project', async () => {
+          const filename = 'test.zip';
+          const blob = new Blob(['test'], {type: 'text/plain;charset=utf-8'});
 
-        button.click();
-        await delay(2 * 250);
-        await fetchMock.flush(true);
+          fetchMock.post(baseURL + '/download/', {
+            body: blob,
+            headers: {
+              'Content-Disposition': 'attachment; filename=' + filename,
+            },
+          },
+          {
+            sendAsJson: false,
+          });
 
-        const outputAreaHTML = pageWidget.querySelector('div.output_area');
-        expect(outputAreaHTML).to.have.html(outputArea.render().innerHTML);
+          btn.click();
+          await fetchMock.flush(true);
+
+          const downloadRequest = fetchMock.calls(baseURL + '/download/');
+          expect(downloadRequest).to.have.length(1);
+
+          const request = JSON.parse(downloadRequest[0][1]['body'] as string) as DownloadRequest;
+          expect(request.files).to.have.length(1);
+          expect(request.switches).to.have.length(2);
+          expect(request.name).to.equal('Test.Single');
+        });
+
+        it('should handle an exception', async () => {
+          fetchMock.post(baseURL + '/download/', 500);
+          const fakeDiv = document.createElement('div');
+          const fakeOA = new OutputArea(fakeDiv);
+          fakeOA.addError(Strings.MACHINE_BUSY_LABEL);
+
+          const realOA = getElemById(root.id + '.output_area');
+
+          btn.click();
+          await fetchMock.flush(true);
+          expect(realOA.innerHTML).to.equal(fakeDiv.innerHTML);
+        });
       });
     });
   });
 
-  // TODO: test the settingsbar HTML
+  describe('Lab Widget', () => {
+    before(() => {
+      fillDOM('lab.html');
+      inTest = getElemsByTag(document, 'widget');
+      widgetFactory(inTest as Array<HTMLDivElement>);
+      root = inTest[0];
+    });
+
+    after(() => {
+      clearDOM();
+    });
+
+    it('should have a single LabWidget on the page', () => {
+      expect(inTest).to.have.length(1);
+    });
+
+    it('should have lab setting true', () => {
+      const lab = getElemAttr(root, 'lab');
+      expect(lab).to.equal('True');
+    });
+
+    it('should have a lab area', () => {
+      expect(() => {
+        getElemById(root.id + '.lab_area');
+      }).not.to.throw();
+    });
+
+    it('should have a shadow file', () => {
+      expect(root).to.have.descendants('.shadow_file').and.have.length(1);
+    });
+
+    describe('Action Buttons', () => {
+      let buttonGroup: HTMLElement;
+      let outputDiv: HTMLElement;
+      let submitButton: HTMLButtonElement;
+
+      before(() => {
+        buttonGroup = getElemById(root.id + '.button-group');
+        outputDiv = getElemById(root.id + '.output_area');
+      });
+
+      it('should have a single submit button', () => {
+        const buttons = getElemsByTag(buttonGroup, 'button');
+        expect(buttons).to.have.length(1);
+        submitButton = buttons[0] as HTMLButtonElement;
+        const mode = getElemAttr(submitButton, 'mode');
+        expect(mode).to.equal('submit');
+      });
+
+      describe('Normal Behavior', () => {
+        const identifier = 123;
+        const consoleMsg = 'General message';
+
+        before(async () => {
+          fetchMock.post(baseURL + '/run_program/', {
+            body: {
+              'identifier': identifier.toString(),
+              'message': 'Pending',
+            },
+          });
+
+          fetchMock.post(baseURL + '/check_output/', {
+            body: {
+              'completed': true,
+              'message': 'SUCCESS',
+              'output': [
+                {
+                  'msg': {
+                    'data': consoleMsg,
+                    'type': 'console',
+                  }
+                },{
+                  'msg': {
+                    'data': 'test ref 0',
+                    'type': 'console',
+                  },
+                  'ref': '0',
+                },{
+                  'msg': {
+                    'data': {
+                      'cases': {
+                        '0': {
+                          'actual': 'actual',
+                          'in': [],
+                          'out': 'out',
+                          'status': 'Success',
+                        },
+                      },
+                      'success': true,
+                    },
+                    'type': 'lab',
+                  }
+                }
+              ],
+              'status':0,
+            },
+          });
+
+          submitButton.click();
+          await ServerWorker.delay(3 * 250);
+          await fetchMock.flush(true);
+        });
+
+        after(() => {
+          fetchMock.reset();
+        });
+
+        it('should trigger a submit post when clicked', () => {
+          const submission = fetchMock.calls(baseURL + '/run_program/');
+          expect(submission).to.have.length(1);
+
+          const request = JSON.parse(submission[0][1]['body'] as string) as RunProgram.TS;
+
+          expect(request.files).to.have.length(2);
+          expect(request.mode).to.equal('submit');
+          expect(request.name).to.equal('Test.Lab');
+          expect(request.lab).to.be.true;
+        });
+
+        it('should have an output area with the received data', () => {
+          const fakeOutputAreaDiv = document.createElement('div');
+          const fakeOutputArea = new OutputArea(fakeOutputAreaDiv);
+          fakeOutputArea.add(['output_info', 'console_output'],
+              Strings.CONSOLE_OUTPUT_LABEL + ':');
+          fakeOutputArea.addConsole(consoleMsg);
+          fakeOutputArea.addLabStatus(true);
+
+          expect(outputDiv).to.have.html(fakeOutputAreaDiv.innerHTML);
+        });
+      });
+    });
+  });
 });

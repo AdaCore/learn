@@ -26,7 +26,7 @@
     "@types/js-cookie": "^2.2.5",
     "@types/jsdom": "^16.2.3",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^14.0.13",
+    "@types/node": "^14.14.7",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "amd-loader": "^0.0.8",
@@ -134,7 +134,6 @@
       "ts-node/register",
       "jsdom-global/register"
     ],
-    "spec": "tests/**/*.spec.ts",
-    "exclude": ["tests/ts/widget.spec.ts", "tests/ts/server.spec.ts"]
+    "spec": "tests/**/*.spec.ts"
   }
 }
