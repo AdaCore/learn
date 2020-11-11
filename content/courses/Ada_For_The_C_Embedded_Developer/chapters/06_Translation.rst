@@ -351,6 +351,8 @@ With all solutions though, importing an array from C is a relatively unsafe
 pattern, as there's only so much information on the array as there would be on
 the C side in the first place. These are good places for careful peer reviews.
 
+.. _By_Value_Vs_By_Reference:
+
 By-value v.s. by-reference types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -746,14 +748,15 @@ declare a bit-field type like this:
 
 As we've seen previously, the :ada:`Pack` aspect declared at the end of the
 type declaration indicates that the compiler should optimize for size. We must
-use this attribute to be able to interpret data types as a bit-field.
+use this aspect to be able to interpret data types as a bit-field.
 
-Then, we can use the :ada:`Size` and the :ada:`Address` attributes of an
+Then, we can use the :ada:`Size` and the :ada:`Address` aspect of an
 object of any type to declare a bit-field for this object. The :ada:`Size`
-attributes indicates the number of bits required to represent the object, while
-the :ada:`Address` attribute indicates the address in memory of that object.
+aspect indicates the number of bits required to represent the object, while
+the :ada:`Address` aspect indicates the address in memory of that object.
 For example, assuming we've declare a variable :ada:`V`, we can declare an
-actual bit-field object using this pattern:
+actual bit-field object by referring to the :ada:`Address` attribute of
+:ada:`V` and using it in the declaration of the bit-field, as shown here:
 
 [Ada]
 
@@ -765,8 +768,8 @@ This technique is called overlays for serialization. Now, any operation that we
 perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
 the same memory location.
 
-The approach that we use in this section relies on the :ada:`Address`
-attribute. Another approach would be to use unchecked conversions, which we'll
+The approach that we use in this section relies on the :ada:`Address` aspect.
+Another approach would be to use unchecked conversions, which we'll
 discuss in the :ref:`next section <OverlaysVsUncheckedConversions>`.
 
 We should add the :ada:`Volatile` aspect to the declaration to cover the case
@@ -782,7 +785,7 @@ declaration:
 
 Using the :ada:`Volatile` aspect is important at high level of optimizations.
 You can find further details about this aspect in the section about the
-:ref:`Volatile and Atomic attributes <VolatileAtomicData>`.
+:ref:`Volatile and Atomic aspects <VolatileAtomicData>`.
 
 Another important aspect that should be added is :ada:`Import`. When used in
 the context of object declarations, it'll avoid default initialization which
@@ -904,7 +907,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     As we've just seen, when declaring objects for types with associated default
     values, automatic initialization will happen. This can also happens when
-    creating an overlay with the :ada:`Address` attribute. The default value is
+    creating an overlay with the :ada:`Address` aspect. The default value is
     then used to overwrite the content at the memory location indicated by the
     address. However, in most situations, this isn't the behavior we expect,
     since overlays are usually created to analyze and manipulate existing
@@ -1395,16 +1398,190 @@ a byte-aligned pointer. Then, it simply copies the data byte-by-byte.
 .. _OverlaysVsUncheckedConversions:
 
 Overlays vs. Unchecked Conversions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. todo::
+Unchecked conversions are another way of converting between unrelated data
+types. This conversion is done by instantiating the generic
+:ada:`Unchecked_Conversions` function for the types you want to convert. Let's
+look at a simple example:
 
-    Complete section!
+[Ada]
 
-    Explain that overlays are more efficient and allow to have one change
-    automatically reflected by the other object, while Unchecked_Conversions
-    require a copy.
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Simple_Unchecked_Conversion
 
-    Unchecked_Conversions are not fundamentally bad and can also be used
-    (they're actually cleaner and safer), but they're not always at the right
-    level of performance / semantics.
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Unchecked_Conversion;
+
+    procedure Simple_Unchecked_Conversion is
+       type State is (Off, State_1, State_2)
+         with Size => Integer'Size;
+
+       for State use (Off => 0, State_1 => 32, State_2 => 64);
+
+       function As_Integer is new Ada.Unchecked_Conversion (Source => State,
+                                                            Target => Integer);
+
+       I : Integer;
+    begin
+       I := As_Integer (State_2);
+       Put_Line ("I = " & Integer'Image (I));
+    end Simple_Unchecked_Conversion;
+
+In this example, :ada:`As_Integer` is an instantiation of
+:ada:`Unchecked_Conversion` to convert between the :ada:`State` enumeration and
+the :ada:`Integer` type. Note that, in order to ensure safe conversion, we're
+declaring :ada:`State` to have the same size as the :ada:`Integer` type we
+want to convert to.
+
+This is the corresponding implementation using overlays:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Simple_Overlay
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Overlay is
+       type State is (Off, State_1, State_2)
+         with Size => Integer'Size;
+
+       for State use (Off => 0, State_1 => 32, State_2 => 64);
+
+       S : State;
+       I : Integer
+         with Address => S'Address, Import, Volatile;
+    begin
+       S := State_2;
+       Put_Line ("I = " & Integer'Image (I));
+    end Simple_Overlay;
+
+Let's look at another example of converting between different numeric formats.
+In this case, we want to convert between a 16-bit fixed-point and a 16-bit
+integer data type. This is how we can do it using :ada:`Unchecked_Conversion`:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Fixed_Int_Unchecked_Conversion
+
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Unchecked_Conversion;
+
+    procedure Fixed_Int_Unchecked_Conversion is
+       Delta_16 : constant := 1.0 / 2.0 ** (16 - 1);
+       Max_16   : constant := 2 ** 15;
+
+       type Fixed_16 is delta Delta_16 range -1.0 .. 1.0 - Delta_16
+         with Size => 16;
+       type Int_16   is range -Max_16 .. Max_16 - 1
+         with Size => 16;
+
+       function As_Int_16 is new Ada.Unchecked_Conversion (Source => Fixed_16,
+                                                           Target => Int_16);
+       function As_Fixed_16 is new Ada.Unchecked_Conversion (Source => Int_16,
+                                                             Target => Fixed_16);
+
+       I : Int_16   := 0;
+       F : Fixed_16 := 0.0;
+    begin
+       F := Fixed_16'Last;
+       I := As_Int_16 (F);
+
+       Put_Line ("F = " & Fixed_16'Image (F));
+       Put_Line ("I = " & Int_16'Image (I));
+    end Fixed_Int_Unchecked_Conversion;
+
+Here, we instantiate :ada:`Unchecked_Conversion` for the :ada:`Int_16` and
+:ada:`Fixed_16` types, and we call the instantiated functions explicitly. In
+this case, we call :ada:`As_Int_16` to get the integer value corresponding to
+:ada:`Fixed_16'Last`.
+
+This is how we can rewrite the implementation above using overlays:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Fixed_Int_Overlay
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Fixed_Int_Overlay is
+       Delta_16 : constant := 1.0 / 2.0 ** (16 - 1);
+       Max_16   : constant := 2 ** 15;
+
+       type Fixed_16 is delta Delta_16 range -1.0 .. 1.0 - Delta_16
+         with Size => 16;
+       type Int_16   is range -Max_16 .. Max_16 - 1
+         with Size => 16;
+
+       I : Int_16   := 0;
+       F : Fixed_16
+         with Address => I'Address, Import, Volatile;
+    begin
+       F := Fixed_16'Last;
+
+       Put_Line ("F = " & Fixed_16'Image (F));
+       Put_Line ("I = " & Int_16'Image (I));
+    end Fixed_Int_Overlay;
+
+Here, the conversion to the integer value is implicit, so we don't need to call
+a conversion function.
+
+Using :ada:`Unchecked_Conversion` has the advantage of making it clear that a
+conversion is happening, since the conversion is written explicitly in the
+code. With overlays, that conversion is automatic and therefore implicit. In
+that sense, using :ada:`Unchecked_Conversion` is a cleaner and safer approach.
+On the other hand, :ada:`Unchecked_Conversion` requires a copy, so it's less
+efficient than overlays, where no copy is performed |mdash| because one change
+in the source object is automatically reflected in the target object (and
+vice-versa). In the end, the choice between unchecked conversions and overlays
+depends on the level of performance that you want to achieve.
+
+Also note that :ada:`Unchecked_Conversion` can only be instantiated for
+constrained types. In order to rewrite the examples using bit-fields that we've
+seen in the previous section, we cannot simply instantiate
+:ada:`Unchecked_Conversion` with the :ada:`Target` indicating the
+*unconstrained* bit-field, such as:
+
+.. code-block:: ada
+
+    Ada.Unchecked_Conversion (Source => Integer,
+                              Target => Bit_Field);
+
+Instead, we have to declare a subtype for the specific range we're interested
+in. This is how we can rewrite one of the previous examples:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Conversion
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Bitfield_Conversion is
+       type Bit_Field is array (Natural range <>) of Boolean with Pack;
+
+       V : Integer := 4;
+
+       --  Declaring subtype that takes the size of V into account.
+       --
+       subtype Integer_Bit_Field is Bit_Field (0 .. V'Size - 1);
+
+       --  NOTE: we could also use the Integer type in the declaration:
+       --
+       --    subtype Integer_Bit_Field is Bit_Field (0 .. Integer'Size - 1);
+       --
+
+       --  Using the Integer_Bit_Field subtype as the target
+       function As_Bit_Field is new
+         Ada.Unchecked_Conversion (Source => Integer,
+                                   Target => Integer_Bit_Field);
+
+       B : Integer_Bit_Field;
+    begin
+       B := As_Bit_Field (V);
+
+       Put_Line ("V = " & Integer'Image (V));
+    end Simple_Bitfield_Conversion;
+
+In this example, we first declare the subtype :ada:`Integer_Bit_Field` as a
+bit-field with a length that fits the :ada:`V` variable we want to convert to.
+Then, we can use that subtype in the instantiation of
+:ada:`Unchecked_Conversion`.
