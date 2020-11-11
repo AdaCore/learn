@@ -22,5 +22,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: yarn --frozen-lockfile
+      - name: Build HTML test pages
+        run: make site-testing
       - name: Run Typescript tests
         run: yarn run cover
