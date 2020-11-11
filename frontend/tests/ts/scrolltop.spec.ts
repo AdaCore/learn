@@ -6,13 +6,25 @@ chai.use(chaiDom);
 
 import {scrollTop} from '../../src/ts/scrolltop';
 
+/**
+ * Helper function to trigger window event
+ *
+ * @param {Window} element - The window element
+ * @param {string} eventName - The event to do
+ */
 function triggerEvent(element: Window, eventName: string): void {
-  var event = document.createEvent("HTMLEvents");
+  const event = document.createEvent('HTMLEvents');
   event.initEvent(eventName, false, true);
   element.dispatchEvent(event);
 }
 
-function scrollTo (x: number, y: number): void {
+/**
+ * Helper function used to override default non implemented version in JSDOM
+ *
+ * @param {number} x
+ * @param {number} y
+ */
+function scrollTo(x: number, y: number): void {
   document.body.scrollTop = y;
   triggerEvent(window, 'scroll');
 }
@@ -25,6 +37,7 @@ describe('scrollTop()', () => {
     scrollTop(btn);
 
     // override window.scrollTo because JSDOM doesn't have it
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     window.scrollTo = scrollTo as any;
   });
 

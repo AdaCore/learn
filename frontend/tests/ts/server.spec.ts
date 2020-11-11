@@ -16,7 +16,7 @@ describe('ServerWorker', () => {
   const baseURL = 'http://test.com';
 
   before(() => {
-    inTest = new ServerWorker(baseURL, (data: CheckOutput.FS): number  => {
+    inTest = new ServerWorker(baseURL, (data: CheckOutput.FS): number => {
       cbCount++;
       return data.output.length;
     });
@@ -134,10 +134,11 @@ describe('ServerWorker', () => {
           fetchMock.reset();
         });
 
-        it('should throw an exception when no identifier is returned', async () => {
-          await expect(inTest.request(serverData, 'run_program')).to.
-            eventually.be.rejectedWith('No identifier sent from server.');
-        });
+        it('should throw an exception when no identifier is returned',
+            async () => {
+              await expect(inTest.request(serverData, 'run_program')).to.
+                  eventually.be.rejectedWith('No identifier sent from server.');
+            });
       });
 
       describe('Max poll test', () => {
@@ -164,11 +165,12 @@ describe('ServerWorker', () => {
 
         it('should time out after many server polls', async () => {
           await expect(inTest.request(serverData, 'run_program')).to.
-            eventually.be.rejectedWith(
-              'Request timed out. Please report this issue on '
-              + 'https://github.com/AdaCore/learn/issues');
+              eventually.be.rejectedWith(
+                  'Request timed out. Please report this issue on '
+                  + 'https://github.com/AdaCore/learn/issues');
           expect(fetchMock.calls(baseURL + '/run_program/')).to.have.length(1);
-          expect(fetchMock.calls(baseURL + '/check_output/')).to.have.length(200);
+          expect(fetchMock.calls(baseURL + '/check_output/')).to.have.
+              length(200);
         });
       });
     });

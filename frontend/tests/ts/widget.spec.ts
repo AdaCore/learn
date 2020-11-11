@@ -18,21 +18,38 @@ import {DownloadRequest} from '../../src/ts/comms';
 import {widgetFactory} from '../../src/ts/widget';
 import {ServerWorker} from '../../src/ts/server';
 import {RunProgram} from '../../src/ts/server-types';
-import {getElemsByTag, getElemAttr, getElemById, getElemsByClass} from '../../src/ts/dom-utils';
+import {getElemsByTag, getElemAttr, getElemById, getElemsByClass}
+  from '../../src/ts/dom-utils';
 
+/**
+ * Helper function to fill DOM from a file
+ *
+ * @param {string} filename - The filename to use
+ */
 function fillDOM(filename: string): void {
   global.document = window.document;
 
-  const htmlString = readFileSync(resolve(__dirname, '../html/html/' + filename), 'utf8');
+  const htmlString = readFileSync(resolve(__dirname, '../html/html/' +
+      filename), 'utf8');
   document.documentElement.innerHTML = htmlString;
 }
 
+/**
+ * Clears the DOM
+ *
+ */
 function clearDOM(): void {
   document.documentElement.innerHTML = '';
 }
 
+/**
+ * Helper function to trigger an event
+ *
+ * @param {HTMLElement} element - The element to trigger the event on
+ * @param {string} eventName - The event name to trigger
+ */
 function triggerEvent(element: HTMLElement, eventName: string): void {
-  var event = document.createEvent("HTMLEvents");
+  const event = document.createEvent('HTMLEvents');
   event.initEvent(eventName, false, true);
   element.dispatchEvent(event);
 }
@@ -93,7 +110,9 @@ describe('Widget', () => {
         outputDiv = getElemById(root.id + '.output_area');
 
         // stub scrollIntoView function beacuse JSDOM doesn't have it
-        window.HTMLElement.prototype.scrollIntoView = (arg: any) => {};
+        // eslint-disable-next-line max-len
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+        window.HTMLElement.prototype.scrollIntoView = (arg: any): void => {};
       });
 
       it('should have a single run button', () => {
@@ -193,7 +212,8 @@ describe('Widget', () => {
           const runProgram = fetchMock.calls(baseURL + '/run_program/');
           expect(runProgram).to.have.length(1);
 
-          const request = JSON.parse(runProgram[0][1]['body'] as string) as RunProgram.TS;
+          const request =
+              JSON.parse(runProgram[0][1]['body'] as string) as RunProgram.TS;
 
           expect(request.files).to.have.length(1);
           expect(request.mode).to.equal('run');
@@ -365,17 +385,16 @@ describe('Widget', () => {
     });
 
     describe('Settings Bar', () => {
-      let settingsBar: HTMLElement;
       let editor: ace.Editor;
 
       before(() => {
-        settingsBar = getElemById(root.id + '.settings-bar');
         const editorDiv = getElemById(root.id + '.editor');
         editor = ace.edit(editorDiv);
       });
 
       it('should have a checkbox that switches editor theme', () => {
-        const box = getElemById(root.id + '.settings-bar.theme-setting') as HTMLInputElement;
+        const box = getElemById(root.id + '.settings-bar.theme-setting') as
+            HTMLInputElement;
         const origTheme = editor.getTheme();
         box.checked = !box.checked;
         triggerEvent(box, 'change');
@@ -383,13 +402,14 @@ describe('Widget', () => {
       });
 
       it('should have a checkbox that switches tab setting', () => {
-        const box = getElemById(root.id + '.settings-bar.tab-setting') as HTMLInputElement;
+        // const box = getElemById(root.id + '.settings-bar.tab-setting') as
+        //     HTMLInputElement;
         expect.fail('Test not implemented.');
       });
 
       it('should have a button that resets the editor', () => {
-
-        const btn = getElemById(root.id + '.settings-bar.reset-btn') as HTMLButtonElement;
+        const btn = getElemById(root.id + '.settings-bar.reset-btn') as
+            HTMLButtonElement;
 
         const session = editor.getSession();
         const origContent = session.getValue();
@@ -398,7 +418,7 @@ describe('Widget', () => {
         expect(session.getValue()).to.not.equal(origContent);
 
         // overwrite window.confirm because jsdom doesn't implement this
-        window.confirm = () => true;
+        window.confirm = (): boolean => true;
 
         btn.click();
 
@@ -409,11 +429,16 @@ describe('Widget', () => {
         let btn: HTMLButtonElement;
 
         before(() => {
-          btn = getElemById(root.id + '.settings-bar.download-btn') as HTMLButtonElement;
+          btn = getElemById(root.id + '.settings-bar.download-btn') as
+              HTMLButtonElement;
           // stub this because JSDOM doesn't have it
+          // eslint-disable-next-line max-len
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
           global.URL.createObjectURL = (object: any): string => {
             return '#';
           };
+          // eslint-disable-next-line max-len
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
           global.URL.revokeObjectURL = (url: any): void => {};
         });
 
@@ -441,7 +466,9 @@ describe('Widget', () => {
           const downloadRequest = fetchMock.calls(baseURL + '/download/');
           expect(downloadRequest).to.have.length(1);
 
-          const request = JSON.parse(downloadRequest[0][1]['body'] as string) as DownloadRequest;
+          const request =
+              JSON.parse(downloadRequest[0][1]['body'] as string) as
+              DownloadRequest;
           expect(request.files).to.have.length(1);
           expect(request.switches).to.have.length(2);
           expect(request.name).to.equal('Test.Single');
@@ -533,14 +560,14 @@ describe('Widget', () => {
                   'msg': {
                     'data': consoleMsg,
                     'type': 'console',
-                  }
-                },{
+                  },
+                }, {
                   'msg': {
                     'data': 'test ref 0',
                     'type': 'console',
                   },
                   'ref': '0',
-                },{
+                }, {
                   'msg': {
                     'data': {
                       'cases': {
@@ -554,10 +581,10 @@ describe('Widget', () => {
                       'success': true,
                     },
                     'type': 'lab',
-                  }
-                }
+                  },
+                },
               ],
-              'status':0,
+              'status': 0,
             },
           });
 
@@ -574,7 +601,8 @@ describe('Widget', () => {
           const submission = fetchMock.calls(baseURL + '/run_program/');
           expect(submission).to.have.length(1);
 
-          const request = JSON.parse(submission[0][1]['body'] as string) as RunProgram.TS;
+          const request = JSON.parse(submission[0][1]['body'] as string) as
+            RunProgram.TS;
 
           expect(request.files).to.have.length(2);
           expect(request.mode).to.equal('submit');

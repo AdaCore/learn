@@ -179,7 +179,6 @@ class Widget {
         document.body.removeChild(a);
 
         URL.revokeObjectURL(objURL);
-
       } catch (error) {
         this.outputArea.reset();
         this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
@@ -297,7 +296,6 @@ class Widget {
    */
   private async downloadExample(): Promise<DownloadResponse> {
     const files = this.collectResources();
-    const blobList: Array<DownloadResponse> = [];
 
     const serverData: DownloadRequest = {
       files: files,
