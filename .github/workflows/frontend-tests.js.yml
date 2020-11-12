@@ -8,8 +8,6 @@ defaults:
 
 
 jobs:
-  provision:
-    name: Provision the
   test:
 
     runs-on: ubuntu-18.04
