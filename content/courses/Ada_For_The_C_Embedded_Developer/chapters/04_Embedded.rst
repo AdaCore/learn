@@ -209,9 +209,124 @@ GNAT Reference manual.
 Interrupt Handling
 ------------------
 
+Handling interrupts is an important aspect when programming embedded devices.
+Interrupts are used, for example, to indicate that a hardware or software
+event has happened. Therefore, by handling interrupts, an application can react
+to external events.
+
+Ada provides built-in support for handling interrupts. We can process
+interrupts by attaching a handler |mdash| which must be a protected procedure
+|mdash| to it. In the declaration of the protected procedure, we use the
+:ada:`Attach_Handler` attribute and indicate which interrupt we want to handle.
+
+Let's look into a code example that *traps* the quit interrupt (``SIGQUIT``)
+on Linux:
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Quit_Handler
+
+    with System.OS_Interface;
+
+    package Signal_Handlers is
+
+       protected type Quit_Handler is
+          function Requested return Boolean;
+       private
+          Quit_Request : Boolean := False;
+
+          --
+          --  Declaration of an interrupt handler for the "quit" interrupt:
+          --
+          procedure Handle_Quit_Signal
+            with Attach_Handler => System.OS_Interface.SIGQUIT;
+       end Quit_Handler;
+
+    end Signal_Handlers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Signal_Handlers is
+
+       protected body Quit_Handler is
+
+          function Requested return Boolean is
+            (Quit_Request);
+
+          procedure Handle_Quit_Signal is
+          begin
+             Put_Line ("Quit request detected!");
+             Quit_Request := True;
+          end Handle_Quit_Signal;
+
+       end Quit_Handler;
+
+    end Signal_Handlers;
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+    with Signal_Handlers;
+
+    procedure Test_Quit_Handler is
+       Quit : Signal_Handlers.Quit_Handler;
+
+    begin
+       while True loop
+          delay 1.0;
+          exit when Quit.Requested;
+       end loop;
+
+       Put_Line ("Exiting application...");
+    end Test_Quit_Handler;
+
+The specification of the :ada:`Signal_Handlers` package from this example
+contains the declaration of :ada:`Quit_Handler`, which is a protected type.
+In the private part of this protected type, we declare the
+:ada:`Handle_Quit_Signal` procedure. By using the :ada:`Attach_Handler`
+attribute in the declaration of :ada:`Handle_Quit_Signal` and indicating the
+quit interrupt (:ada:`System.OS_Interface.SIGQUIT`), we're instructing the
+operating system to call this procedure for any quit request. So when the user
+presses ``CTRL+\`` on their keyboard, for example, the application will behave
+as follows:
+
+- the operating system calls the :ada:`Handle_Quit_Signal` procedure , which
+  displays a message to the user ("Quit request detected!") and sets a Boolean
+  variable |mdash| :ada:`Quit_Request`, which is declared in the
+  :ada:`Quit_Handler` type;
+
+- the main application checks the status of the quit handler by calling the
+  :ada:`Requested` function as part of the :ada:`while True` loop;
+
+    - This call is in the :ada:`exit when Quit.Requested` line.
+
+    - The :ada:`Requested` function returns :ada:`True` in this case because
+      the :ada:`Quit_Request` flag was set by the :ada:`Handle_Quit_Signal`
+      procedure.
+
+- the main applications exits the loop, displays a message and finishes.
+
+Note that the code example above isn't portable because it makes use of
+interrupts from the Linux operating system. When programming embedded devices,
+we would use instead the interrupts available on those specific devices.
+
+Also note that, in the example above, we're declaring a static handler at
+compilation time. If you need to make use of dynamic handlers, which can be
+configured at runtime, you can use the subprograms from the
+:ada:`Ada.Interrupts` package. This package includes not only a version of
+:ada:`Attach_Handler` as a procedure, but also other procedures such as:
+
+- :ada:`Exchange_Handler`, which lets us exchange, at runtime, the current
+  handler associated with a specific interrupt by a different handler;
+
+- :ada:`Detach_Handler`, which we can use to remove the handler currently
+  associated with a given interrupt.
+
+Details about the :ada:`Ada.Interrupts` package are out of scope for this
+course. We'll discuss them in a separate, more advanced course in the future.
+You can find some information about it in the
+`Interrupts appendix of the Ada Reference Manual <https://www.adaic.org/resources/add_content/standards/12aarm/html/AA-C-3-2.html>`_.
+
 .. todo::
 
-    Complete section!
+    Once available, add link to section from a more advanced embedded course
+    that explains the :ada:`Ada.Interrupts` package.
 
 Interfacing with Devices
 ------------------------
