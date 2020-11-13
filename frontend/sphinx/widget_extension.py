@@ -151,7 +151,7 @@ class WidgetCodeDirective(Directive):
 
             # insert widget into the template
             template = jinja_env.get_template('widget.html')
-            html = template.render(server_url=WIDGETS_SERVER_URL, w=widget)
+            html = template.render(url=WIDGETS_SERVER_URL, w=widget)
         except Exception as err:
             raise self.error(err)
 

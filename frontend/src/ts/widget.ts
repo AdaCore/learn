@@ -1,7 +1,7 @@
 import {Area, OutputArea, LabContainer} from './areas';
 import {Editor, EditorTheme} from './editor';
 import {fetchBlob, DownloadRequest, DownloadResponse} from './comms';
-import {getElemAttr, getElemsByClass, getElemById, getElemsByTag}
+import {getElemsByClass, getElemById, getElemsByTag}
   from './dom-utils';
 import {Resource, ResourceList} from './resource';
 import {ServerWorker} from './server';
@@ -26,7 +26,6 @@ class Widget {
   private readonly name: string;
   private readonly server: string;
   private readonly id: string;
-  private readonly switches: Array<string> = [];
   private readonly shadowFiles: ResourceList = [];
 
   // view objects
@@ -41,18 +40,16 @@ class Widget {
    * Creates an instance of Widget and attaches logic to DOM
    *
    * @param {HTMLDivElement} elem - the container for the widget
-   * @param {string} url - the server address:port
    * @param {(EditorMap | undefined)} dep - The view of widgets with the same
    *  name on the current page
    */
-  constructor(elem: HTMLDivElement, url: string, dep: EditorMap | undefined) {
-    this.server = url;
+  constructor(elem: HTMLDivElement, dep: EditorMap | undefined) {
+    this.server = elem.dataset.url as string;
     this.container = elem;
 
     // Read attributes from container object to initialize members
     this.id = this.container.id;
-    this.name = getElemAttr(this.container, 'name');
-    this.switches = getElemAttr(this.container, 'switches').split(';');
+    this.name = elem.dataset.name as string;
 
     // add widget dependencies from up page to the EditorView
     if (dep) {
@@ -73,7 +70,7 @@ class Widget {
       throw Error('Malformed widget: No files present.');
     }
     for (const file of files) {
-      const basename = getElemAttr(file, 'basename');
+      const basename = file.dataset.basename as string;
       const content = file.textContent ? file.textContent : '';
       this.editor.addSession(basename, content);
     }
@@ -82,7 +79,7 @@ class Widget {
     const shadowFiles = getElemsByClass(this.container, 'shadow_file');
     for (const file of shadowFiles) {
       const a: Resource = {
-        basename: getElemAttr(file, 'basename'),
+        basename: file.dataset.basename as string,
         contents: file.textContent ? file.textContent : '',
       };
       this.shadowFiles.push(a);
@@ -116,7 +113,7 @@ class Widget {
     const buttonGroup = this.getElem('button-group');
     const buttons = getElemsByTag(buttonGroup, 'button');
     for (const btn of buttons) {
-      const mode = getElemAttr(btn, 'mode');
+      const mode = btn.dataset.mode as string;
       btn.addEventListener('click', async () => {
         await this.buttonCB(mode);
       });
@@ -268,7 +265,7 @@ class Widget {
     const serverData: RunProgram.TS = {
       files: files,
       mode: mode,
-      switches: this.switches,
+      switches: JSON.parse(this.container.dataset.switches as string),
       name: this.name,
       lab: lab,
     };
@@ -299,7 +296,7 @@ class Widget {
 
     const serverData: DownloadRequest = {
       files: files,
-      switches: this.switches,
+      switches: JSON.parse(this.container.dataset.switches as string),
       name: this.name,
     };
 
@@ -458,12 +455,11 @@ export class LabWidget extends Widget {
    * Creates an instance of LabWidget and attaches logic to DOM
    *
    * @param {HTMLDivElement} elem - the container for the widget
-   * @param {string} url - the server address:port
    * @param {(EditorMap | undefined)} dep - The view of widgets with the same
    *  name on the current page
    */
-  constructor(elem: HTMLDivElement, url: string, dep: EditorMap | undefined) {
-    super(elem, url, dep);
+  constructor(elem: HTMLDivElement, dep: EditorMap | undefined) {
+    super(elem, dep);
     const labArea = this.getElem('lab_area') as HTMLDivElement;
     this.labContainer = new LabContainer(labArea);
   }
@@ -535,15 +531,15 @@ export function widgetFactory(widgets: Array<HTMLDivElement>): void {
   for (const element of widgets) {
     try {
       let widget: WidgetLike;
-      const server = getElemAttr(element, 'example_server');
-      const name = getElemAttr(element, 'name');
-      const lab = getElemAttr(element, 'lab');
+      // Get data from element
+      const name = element.dataset.name as string;
+      const lab = element.dataset.lab as string;
       const depList = widgetList.get(name);
 
       if (lab === 'True') {
-        widget = new LabWidget(element, server, depList);
+        widget = new LabWidget(element, depList);
       } else {
-        widget = new Widget(element, server, depList);
+        widget = new Widget(element, depList);
       }
 
       // reset the view for this widget with the newly computed view

@@ -1,9 +1,10 @@
-<widget id="{{ w.id }}" example_server="{{ server_url }}" lab="{{ w.is_lab }}" name="{{ w.name }}" switches="{{ w.switches }}">
+{% autoescape true %}
+<widget id="{{ w.id }}" data-url="{{ url }}" data-name="{{ w.name }}" data-lab="{{ w.is_lab }}" data-switches='{{ w.switches | tojson }}' data-include='{{ w.include | tojson }} data-hidden="{{ w.hidden }}">
     {% for sf in w.shadow_files %}
-        <div class="shadow_file" style="display:none" basename="{{ sf.basename }}">{{ sf.content }}</div>
+        <div class="shadow_file" style="display:none" data-basename="{{ sf.basename }}">{{ sf.content }}</div>
     {% endfor %}
     {% for f in w.files %}
-        <div class="file" basename="{{ f.basename }}">{{ f.content }}</div>
+        <div class="file" data-basename="{{ f.basename }}">{{ f.content }}</div>
     {% endfor %}
     <div id="{{ w.id }}.tab" class="tab">
         {% for t in w.files %}
@@ -37,7 +38,7 @@
     <div class="row output_row">
         <div id="{{ w.id }}.button-group" class="col-md-3 button-group">
             {% for b in w.button_group %}
-                <button type="button" class="btn btn-primary" mode="{{ b.mode }}" title="{{ b.title }}">{{ b.name }}</button>
+                <button type="button" class="btn btn-primary" data-mode="{{ b.mode }}" title="{{ b.title }}">{{ b.name }}</button>
             {% endfor %}
         </div>
         <div class="col-md-9 output-group">
@@ -51,3 +52,4 @@
         </div>
     </div>
 </widget>
+{% endautoescape %}

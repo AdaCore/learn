@@ -4,7 +4,7 @@ import chaiDom from 'chai-dom';
 
 chai.use(chaiDom);
 
-import {getElemById, getElemAttr, getElemsByClass, getElemsByTag}
+import {getElemById, getElemsByClass, getElemsByTag}
   from '../../src/ts/dom-utils';
 
 describe('getElemById()', () => {
@@ -27,24 +27,6 @@ describe('getElemById()', () => {
     expect(() => {
       getElemById(unknownId);
     }).to.throw('Malformed DOM. Cannot find elem ' + unknownId);
-  });
-});
-
-describe('getElemAttr()', () => {
-  const attr = 'test';
-  const inTest = document.createElement('div');
-  inTest.setAttribute('myAttr', attr);
-
-  it('should return the attribute on the elem', () => {
-    const a = getElemAttr(inTest, 'myAttr');
-    expect(a).to.equal(attr);
-  });
-
-  it('should throw an error if an unknown attr is queried', () => {
-    const unknownAttr = 'unknown';
-    expect(() => {
-      getElemAttr(inTest, unknownAttr);
-    }).to.throw('Malformed elem. Cannot get attribute: ' + unknownAttr);
   });
 });
 

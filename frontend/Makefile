@@ -127,7 +127,7 @@ site-staging: cleanall webpack-staging pdf_books
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 site-testing: cleantest
-	$(SPHINXBUILD) -M html $(TEST_CONTENT) \
+	FRONTEND_TESTING=true $(SPHINXBUILD) -M html $(TEST_CONTENT) \
         "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)

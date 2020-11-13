@@ -167,8 +167,7 @@ class Project:
         self.file_list.append(self.gpr)
 
         # Add suggested switches to gpr file (safely)
-        if switches:
-            self.gpr.insert_switches(switches)
+        self.gpr.insert_switches(switches)
 
         # Add ADC file to file list
         adc_content = COMMON_ADC

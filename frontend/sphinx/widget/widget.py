@@ -1,6 +1,6 @@
 from itertools import count
 import re
-from typing import List, Match
+from typing import List, Match, Dict
 
 from .button import Button
 from .chop import c_chop, cheapo_gnatchop, real_gnatchop, ChopStrategy
@@ -26,24 +26,14 @@ class Widget:
         self.cli_input = False
         self.id = next(self.__count)
 
-        self.__switches: str = None
+        self.switches: Dict[str, List[str]] = {}
         self.__files: List[Resource] = []
         self.__button_group: List[Button] = []
         self.__name: str = None
         self.__no_button: bool = False
         self.__chop_strategy: ChopStrategy = None
-
-    @property
-    def switches(self) -> str:
-        """Property for switches access
-
-        Returns:
-            str: The switches, or "" if nothing specified
-        """
-        if self.__switches:
-            return self.__switches
-        else:
-            return ""
+        self.hidden: bool = False
+        self.include: List[str] = []
 
     @property
     def button_group(self) -> List[Button]:
@@ -118,17 +108,24 @@ class Widget:
             self.is_lab = False
         self.__name = match.group(2)
 
-    def __parseSwitches(self, switches: str):
+    def __parseSwitches(self, arg: str):
         """Parses switches from Directive args
 
         Args:
-            switches (str): The switches to parse
+            arg (str): The switches to parse
         """
-        new_switches = switches.split('=')[1]
-        if self.__switches:
-            self.__switches += ';' + new_switches
-        else:
-            self.__switches = new_switches
+        sw_str = arg.split('=')[1]
+        sw_types = sw_str.split(';')
+        for t in sw_types:
+            regex = re.compile(r"(.+)\((.+)\)")
+            match = regex.search(t)
+            if match:
+                pkg = match.group(1)
+                sw = match.group(2).split(',')
+                if pkg in self.switches.keys():
+                    self.switches[pkg].extend(sw)
+                else:
+                    self.switches[pkg] = sw
 
     def __parseLabIO(self, content: List[str]) -> List[str]:
         """Parses lab io data from Directive content
@@ -185,6 +182,10 @@ class Widget:
         # if we reach here, we never found an end block
         raise Exception('No end block found before start in Lab IO')
 
+    def __parseInclude(self, arg: str):
+        includes = arg.split('=')[1]
+        self.include.extend(includes.split(','))
+
     def parseArgs(self, args: List[str]):
         """Parses Directive arguments
 
@@ -211,10 +212,13 @@ class Widget:
             elif arg == 'ada':
                 self.__chop_strategy = ChopStrategy.REAL
             elif arg.startswith('switches='):
-                # this is a switches argument
                 self.__parseSwitches(arg)
             elif arg == 'cli_input':
                 self.cli_input = True
+            elif arg == 'hidden':
+                self.hidden = True
+            elif arg.startswith('include='):
+                self.__parseInclude(arg)
             else:
                 raise ValueError(f'Invalid argument: {arg}')
 

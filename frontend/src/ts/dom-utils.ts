@@ -14,24 +14,7 @@ export function getElemById(id: string): HTMLElement {
   }
   return res;
 }
-/**
- * Safely gets an attribute from an element.
- *
- * If the attribute is not found, an exception is thrown.
- *
- * @export
- * @param {HTMLElement} elem - The element to query
- * @param {string} attr - The attribute name to get
- * @return {string} - The attribute value
- */
-export function getElemAttr(elem: HTMLElement, attr: string): string {
-  const res = elem.getAttribute(attr);
-  if (res == null) {
-    throw Error('Malformed elem. Cannot get attribute: ' + attr);
-  }
 
-  return res;
-}
 /**
  * Gets all child elements of root with a speciic class.
  *

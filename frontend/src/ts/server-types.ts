@@ -11,11 +11,15 @@ export namespace RunProgram {
     message: string;
   }
 
+  interface SwitchType {
+    [key : string]: Array<string>;
+  }
+
   export interface TS {
     files: ResourceList;
     mode: string;
-    switches: Array<string>;
-    name: string | null;
+    switches: SwitchType;
+    name: string;
     lab: boolean;
   }
 }

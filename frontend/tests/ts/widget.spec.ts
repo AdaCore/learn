@@ -18,7 +18,7 @@ import {DownloadRequest} from '../../src/ts/comms';
 import {widgetFactory} from '../../src/ts/widget';
 import {ServerWorker} from '../../src/ts/server';
 import {RunProgram} from '../../src/ts/server-types';
-import {getElemsByTag, getElemAttr, getElemById, getElemsByClass}
+import {getElemsByTag, getElemById, getElemsByClass}
   from '../../src/ts/dom-utils';
 
 /**
@@ -83,7 +83,7 @@ describe('Widget', () => {
     });
 
     it('should have lab setting false', () => {
-      const lab = getElemAttr(root, 'lab');
+      const lab = root.dataset.lab;
       expect(lab).to.equal('False');
     });
 
@@ -119,7 +119,7 @@ describe('Widget', () => {
         const buttons = getElemsByTag(buttonGroup, 'button');
         expect(buttons).to.have.length(1);
         runButton = buttons[0] as HTMLButtonElement;
-        const mode = getElemAttr(runButton, 'mode');
+        const mode = runButton.dataset.mode;
         expect(mode).to.equal('run');
       });
 
@@ -212,12 +212,17 @@ describe('Widget', () => {
           const runProgram = fetchMock.calls(baseURL + '/run_program/');
           expect(runProgram).to.have.length(1);
 
+          const expectSwitches = {
+            'Builder': ['-test'],
+            'Compiler': ['-test'],
+          };
+
           const request =
               JSON.parse(runProgram[0][1]['body'] as string) as RunProgram.TS;
 
           expect(request.files).to.have.length(1);
           expect(request.mode).to.equal('run');
-          expect(request.switches).to.have.length(2);
+          expect(request.switches).to.deep.equal(expectSwitches);
           expect(request.name).to.equal('Test.Single');
           expect(request.lab).to.be.false;
         });
@@ -466,11 +471,16 @@ describe('Widget', () => {
           const downloadRequest = fetchMock.calls(baseURL + '/download/');
           expect(downloadRequest).to.have.length(1);
 
+          const expectSwitches = {
+            'Builder': ['-test'],
+            'Compiler': ['-test'],
+          };
+
           const request =
               JSON.parse(downloadRequest[0][1]['body'] as string) as
               DownloadRequest;
           expect(request.files).to.have.length(1);
-          expect(request.switches).to.have.length(2);
+          expect(request.switches).to.deep.equal(expectSwitches);
           expect(request.name).to.equal('Test.Single');
         });
 
@@ -507,7 +517,7 @@ describe('Widget', () => {
     });
 
     it('should have lab setting true', () => {
-      const lab = getElemAttr(root, 'lab');
+      const lab = root.dataset.lab;
       expect(lab).to.equal('True');
     });
 
@@ -535,7 +545,7 @@ describe('Widget', () => {
         const buttons = getElemsByTag(buttonGroup, 'button');
         expect(buttons).to.have.length(1);
         submitButton = buttons[0] as HTMLButtonElement;
-        const mode = getElemAttr(submitButton, 'mode');
+        const mode = submitButton.dataset.mode;
         expect(mode).to.equal('submit');
       });
 
