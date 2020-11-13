@@ -217,7 +217,7 @@ to external events.
 Ada provides built-in support for handling interrupts. We can process
 interrupts by attaching a handler |mdash| which must be a protected procedure
 |mdash| to it. In the declaration of the protected procedure, we use the
-:ada:`Attach_Handler` attribute and indicate which interrupt we want to handle.
+:ada:`Attach_Handler` aspect and indicate which interrupt we want to handle.
 
 Let's look into a code example that *traps* the quit interrupt (``SIGQUIT``)
 on Linux:
@@ -280,7 +280,7 @@ The specification of the :ada:`Signal_Handlers` package from this example
 contains the declaration of :ada:`Quit_Handler`, which is a protected type.
 In the private part of this protected type, we declare the
 :ada:`Handle_Quit_Signal` procedure. By using the :ada:`Attach_Handler`
-attribute in the declaration of :ada:`Handle_Quit_Signal` and indicating the
+aspect in the declaration of :ada:`Handle_Quit_Signal` and indicating the
 quit interrupt (:ada:`System.OS_Interface.SIGQUIT`), we're instructing the
 operating system to call this procedure for any quit request. So when the user
 presses ``CTRL+\`` on their keyboard, for example, the application will behave
