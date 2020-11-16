@@ -74,6 +74,20 @@ GNAT Community includes the Ada compiler and toolchain, the SPARK verifier and p
 
 --------------
 
+**Teachers and graduate students** who are interested in teaching Ada or SPARK can take
+advantage of AdaCore's `GNAT Academic Program (GAP) <http://www.adacore.com/academia>`_.
+
+GAP's primary objective is to help put Ada and SPARK at the forefront of university study by
+building a community of academic professionals. GAP members receive a comprehensive
+toolset and professional support package specifically designed to provide the tools
+needed to teach and use Ada and SPARK in an academic setting. Best of all, AdaCore
+provides the GAP Package to eligible members at no cost.
+`Register <https://www.adacore.com/academia/gap-registration>`_ for membership
+today and join over 100 member universities in 35 countries currently teaching
+Ada and SPARK using GAP.
+
+--------------
+
 .. container:: mwac-banner
 
     .. image:: https://hackster.imgix.net/uploads/attachments/1164282/_UAa0j7WX8u.blob?auto=compress%2Cformat&w=1600&h=400&fit=min
