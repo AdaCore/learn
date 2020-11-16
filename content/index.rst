@@ -74,6 +74,9 @@ GNAT Community includes the Ada compiler and toolchain, the SPARK verifier and p
 
 --------------
 
+GNAT Academic Program
+------------------------
+
 **Teachers and graduate students** who are interested in teaching Ada or SPARK can take
 advantage of AdaCore's `GNAT Academic Program (GAP) <http://www.adacore.com/academia>`_.
 
