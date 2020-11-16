@@ -375,6 +375,15 @@ div.download-button.docutils.container {
     margin: 20px;
 }
 
+// gap logo
+div.gap-logo.docutils.container {
+    float: left;
+    width: 280px;
+    margin-right: 5px;
+    margin-top: 45px;
+    margin-bottom: 45px;
+}
+
 // hiding toctree on main page
 div.content-blocks.docutils.container {
     display: none;

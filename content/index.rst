@@ -65,7 +65,7 @@ Download Ada and SPARK tools
 
     .. image:: images/GNAT-Community-download.png
         :target: https://www.adacore.com/download
-        :alt: Gnatcommunity Download
+        :alt: GNAT Community Download
         :width: 100pc
 
 **Try Ada and SPARK now with GNAT Community edition.**
@@ -79,6 +79,13 @@ GNAT Academic Program
 
 **Teachers and graduate students** who are interested in teaching Ada or SPARK can take
 advantage of AdaCore's `GNAT Academic Program (GAP) <http://www.adacore.com/academia>`_.
+
+.. container:: gap-logo
+
+    .. image:: images/gap_logo.png
+        :target: http://www.adacore.com/academia
+        :alt: GNAT Academic Program
+        :width: 100pc
 
 GAP's primary objective is to help put Ada and SPARK at the forefront of university study by
 building a community of academic professionals. GAP members receive a comprehensive
@@ -97,4 +104,4 @@ Ada and SPARK using GAP.
         :target: https://www.hackster.io/contests/adacore3
         :width: 100pc
 
-.. centered:: We’re calling on developers across the globe to build cool embedded applications using the Ada and SPARK programming languages and are offering over $9,000 in total prizes! Click on the banner above to learn more.
+We’re calling on **developers across the globe** to build cool embedded applications using the Ada and SPARK programming languages and are offering **over $9,000 in total prizes!** Click on the banner above to learn more.
