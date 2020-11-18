@@ -64,7 +64,7 @@ test_gnat_toolchain_intro:
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
 	@echo ""
 
-test_trainining_fundamentals:
+test_training_fundamentals:
 	@echo "===== FUNDAMENTALS OF ADA ====="
 	@$(TEST_DRIVER) $(CONTENT_DIR)/training_examples/fundamentals_of_ada/*.rst
 	@echo ""
