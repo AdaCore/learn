@@ -1,7 +1,7 @@
 {% autoescape true %}
-<widget id="{{ w.id }}" data-url="{{ url }}" data-name="{{ w.name }}" data-lab="{{ w.is_lab }}" data-switches='{{ w.switches | tojson }}' data-include='{{ w.include | tojson }} data-hidden="{{ w.hidden }}">
+<widget id="{{ w.id }}" data-url="{{ url }}" data-name="{{ w.name }}" data-lab="{{ w.is_lab }}" data-switches='{{ w.switches | tojson }}' data-include='{{ w.include | tojson }}' data-hidden="{{ w.hidden }}">
     {% for sf in w.shadow_files %}
-        <div class="shadow_file" style="display:none" data-basename="{{ sf.basename }}">{{ sf.content }}</div>
+        <div class="shadow-file" style="display:none" data-basename="{{ sf.basename }}">{{ sf.content }}</div>
     {% endfor %}
     {% for f in w.files %}
         <div class="file" data-basename="{{ f.basename }}">{{ f.content }}</div>
@@ -35,7 +35,7 @@
             <i class="fas fa-file-download"></i>
         </button>
     </div>
-    <div class="row output_row">
+    <div class="row output-row">
         <div id="{{ w.id }}.button-group" class="col-md-3 button-group">
             {% for b in w.button_group %}
                 <button type="button" class="btn btn-primary" data-mode="{{ b.mode }}" title="{{ b.title }}">{{ b.name }}</button>
@@ -45,9 +45,9 @@
             {% if w.cli_input %}
                 <textarea id="{{ w.id }}.cli" class="cli" name="cli" rows="4" cols="50"></textarea>
             {% endif %}
-            <div id="{{ w.id }}.output_area" class="output_area"></div>
+            <div id="{{ w.id }}.output-area" class="output-area"></div>
             {% if w.is_lab %}
-                <div id="{{ w.id }}.lab_area" class="lab_area"></div>
+                <div id="{{ w.id }}.lab-area" class="lab-area"></div>
             {% endif %}
         </div>
     </div>

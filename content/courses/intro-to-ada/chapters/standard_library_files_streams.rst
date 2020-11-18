@@ -1,8 +1,6 @@
 Standard library: Files and streams
 ===================================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 Ada provides different approaches for file input/output (I/O):
@@ -44,7 +42,7 @@ information on the console. However, this procedure also accepts a
 :ada:`File_Type` parameter. For example, you can select between standard
 output and standard error by setting this parameter explicitly:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Std_Text_Out
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Std_Text_Out
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -152,7 +150,7 @@ the same file for reading:
 
 In this example, we create the file by calling :ada:`Create` and then
 delete it by calling :ada:`Delete`. After the call to :ada:`Delete`, we can
-no longer use the :ada:`File_Type` element`. After deleting the file, we
+no longer use the :ada:`File_Type` element. After deleting the file, we
 try to open the non-existent file, which raises a :ada:`Name_Error`
 exception.
 

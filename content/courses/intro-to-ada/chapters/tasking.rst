@@ -64,7 +64,7 @@ Note that:
   - This task also starts automatically and runs *concurrently* with
     both task :ada:`T` and the main task. For example:
 
-    .. code:: ada
+    .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Multiple_Simple_Task
 
         with Ada.Text_IO; use Ada.Text_IO;
 

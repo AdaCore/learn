@@ -76,7 +76,7 @@ class Widget {
     }
 
     // Parse shadow files
-    const shadowFiles = getElemsByClass(this.container, 'shadow_file');
+    const shadowFiles = getElemsByClass(this.container, 'shadow-file');
     for (const file of shadowFiles) {
       const a: Resource = {
         basename: file.dataset.basename as string,
@@ -184,7 +184,7 @@ class Widget {
     });
 
     // grab reference to output area in the HTML and construct area
-    const outputArea = this.getElem('output_area') as HTMLDivElement;
+    const outputArea = this.getElem('output-area') as HTMLDivElement;
     this.outputArea = new OutputArea(outputArea);
   }
 
@@ -460,7 +460,7 @@ export class LabWidget extends Widget {
    */
   constructor(elem: HTMLDivElement, dep: EditorMap | undefined) {
     super(elem, dep);
-    const labArea = this.getElem('lab_area') as HTMLDivElement;
+    const labArea = this.getElem('lab-area') as HTMLDivElement;
     this.labContainer = new LabContainer(labArea);
   }
 

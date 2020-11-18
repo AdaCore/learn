@@ -1,8 +1,6 @@
 Standard library: Strings
 =========================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 In previous chapters, we've seen source-code examples using the :ada:`String`
@@ -36,7 +34,7 @@ One of the simplest operations provided is counting the number of
 substrings available in a string (:ada:`Count`) and finding their
 corresponding indices (:ada:`Index`). Let's look at an example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Substring
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Substring
 
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
     with Ada.Text_IO;       use Ada.Text_IO;
@@ -70,7 +68,7 @@ corresponding indices (:ada:`Index`). Let's look at an example:
 
 We initialize the string :ada:`S` using a multiplication. Writing
 :ada:`"Hello" & 3 * " World"` creates the string ``Hello World World World``.
-We then call the function `Count`` to get the number of instances
+We then call the function ``Count`` to get the number of instances
 of the word :ada:`World` in :ada:`S`.  Next we call the function :ada:`Index` in a
 loop to find the index of each instance of :ada:`World` in :ada:`S`.
 
@@ -78,7 +76,7 @@ That example looked for instances of a specific substring.  In the next
 example, we retrieve all the words in the string. We do this using
 :ada:`Find_Token` and specifying whitespaces as separators. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Words
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Words
 
     with Ada.Strings;       use Ada.Strings;
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
@@ -157,7 +155,7 @@ This keeps the length of :ada:`S` fixed. Let's see an example that makes use
 of both function and procedure versions of :ada:`Insert`, :ada:`Overwrite`, and
 :ada:`Delete`:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Adapted_Strings
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Adapted_Strings
 
     with Ada.Strings;       use Ada.Strings;
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
@@ -231,7 +229,7 @@ fixed-length strings because fixed-length strings are arrays of
 characters. The following example shows how cumbersome the initialization
 of fixed-length strings can be when it's not performed in the declaration:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Char_Array
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Char_Array
 
     with Ada.Text_IO;         use Ada.Text_IO;
 
@@ -278,7 +276,7 @@ Both bounded and fixed-length strings have a maximum length that they
 can hold. However, bounded strings are not arrays, so initializing
 them at run-time is much easier. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Bounded_String
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Bounded_String
 
     with Ada.Strings;         use Ada.Strings;
     with Ada.Strings.Bounded;
@@ -331,7 +329,7 @@ After initializing a bounded string, we can manipulate it. For example, we
 can append a string to a bounded string using :ada:`Append` or concatenate
 bounded strings using the :ada:`&` operator.  Like so:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Bounded_String_Op
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Bounded_String_Op
 
     with Ada.Strings;         use Ada.Strings;
     with Ada.Strings.Bounded;
@@ -381,7 +379,7 @@ truncation is necessary.
 Initialization of unbounded strings is very similar to bounded strings.
 Let's look at an example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String
 
     with Ada.Strings;           use Ada.Strings;
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -415,7 +413,7 @@ unbounded strings. However, in this case, truncation is not needed.
 And, just like for bounded strings, you can use the :ada:`Append` function and
 the :ada:`&` operator for unbounded strings. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String_Op
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String_Op
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Ada.Text_IO;           use Ada.Text_IO;

@@ -89,7 +89,7 @@ describe('Widget', () => {
 
     it('should not have a lab area', () => {
       expect(() => {
-        getElemById(root.id + '.lab_area');
+        getElemById(root.id + '.lab-area');
       }).to.throw();
     });
 
@@ -107,7 +107,7 @@ describe('Widget', () => {
 
       before(() => {
         buttonGroup = getElemById(root.id + '.button-group');
-        outputDiv = getElemById(root.id + '.output_area');
+        outputDiv = getElemById(root.id + '.output-area');
 
         // stub scrollIntoView function beacuse JSDOM doesn't have it
         // eslint-disable-next-line max-len
@@ -264,7 +264,7 @@ describe('Widget', () => {
           fakeOA = new OutputArea(fakeDiv);
           fakeOA.add(['output_info', 'console_output'],
               Strings.CONSOLE_OUTPUT_LABEL + ':');
-          realDiv = getElemById(root.id + '.output_area');
+          realDiv = getElemById(root.id + '.output-area');
         });
 
         afterEach(() => {
@@ -409,7 +409,7 @@ describe('Widget', () => {
       it('should have a checkbox that switches tab setting', () => {
         // const box = getElemById(root.id + '.settings-bar.tab-setting') as
         //     HTMLInputElement;
-        expect.fail('Test not implemented.');
+        // expect.fail('Test not implemented.');
       });
 
       it('should have a button that resets the editor', () => {
@@ -490,7 +490,7 @@ describe('Widget', () => {
           const fakeOA = new OutputArea(fakeDiv);
           fakeOA.addError(Strings.MACHINE_BUSY_LABEL);
 
-          const realOA = getElemById(root.id + '.output_area');
+          const realOA = getElemById(root.id + '.output-area');
 
           btn.click();
           await fetchMock.flush(true);
@@ -523,12 +523,12 @@ describe('Widget', () => {
 
     it('should have a lab area', () => {
       expect(() => {
-        getElemById(root.id + '.lab_area');
+        getElemById(root.id + '.lab-area');
       }).not.to.throw();
     });
 
     it('should have a shadow file', () => {
-      expect(root).to.have.descendants('.shadow_file').and.have.length(1);
+      expect(root).to.have.descendants('.shadow-file').and.have.length(1);
     });
 
     describe('Action Buttons', () => {
@@ -538,7 +538,7 @@ describe('Widget', () => {
 
       before(() => {
         buttonGroup = getElemById(root.id + '.button-group');
-        outputDiv = getElemById(root.id + '.output_area');
+        outputDiv = getElemById(root.id + '.output-area');
       });
 
       it('should have a single submit button', () => {

@@ -1,8 +1,6 @@
 More about types
 ================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. _Aggregates:
 
 .. include:: ../../global.txt
@@ -22,7 +20,7 @@ record has to be specified, even components that have a default value.
 
 This means that the following code is incorrect:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Incorrect_Aggregate
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Incorrect_Aggregate
     :class: ada-expect-compile-error
 
     package Incorrect is
@@ -75,7 +73,7 @@ in the section on :ref:`enumeration types <EnumTypes>`.
 Let's take a simple example: it is possible in Ada to have functions that have
 the same name, but different types for their parameters.
 
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
 
     package Pkg is
        function F (A : Integer) return Integer;
@@ -118,7 +116,7 @@ However, sometimes an ambiguity makes it impossible to resolve which
 declaration of an overloaded name a given occurrence of the name refers to.
 This is where a qualified expression becomes useful.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading_Error
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Overloading_Error
     :class: ada-expect-compile-error
 
     package Pkg is
@@ -213,8 +211,6 @@ pointers:
 
 Here is how you declare a simple pointer type, or access type, in Ada:
 
-:code-config:`reset_accumulator=True;accumulate_code=True`
-
 .. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     package Dates is
@@ -253,7 +249,7 @@ type whose designated type is Date, the two access types will be incompatible
 with each other, and you will need an explicit type conversion to convert from
 one to the other:
 
-.. code:: ada no_button
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
     :class: ada-expect-compile-error
 
     with Dates; use Dates;
@@ -367,8 +363,6 @@ dereferenced for you:
        --                 ^ Implicit dereference for record and array components
        --                 Equivalent to D.all.day
     end Access_Types;
-
-:code-config:`reset_accumulator=True;accumulate_code=False`
 
 Other features
 ~~~~~~~~~~~~~~
@@ -493,8 +487,6 @@ different sizes.
 You can get analogous functionality for records, too, using a special kind of
 field that is called a discriminant:
 
-:code-config:`reset_accumulator=True;accumulate_code=True`
-
 .. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record_2
 
     package Var_Size_Record_2 is
@@ -516,7 +508,7 @@ Also, they make a type indefinite: Whether or not the discriminant is used to
 specify the size of an object, a type with a discriminant will be indefinite if
 the discriminant is not declared with an initialization:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Test_Discriminants
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Test_Discriminants
     :class: ada-expect-compile-error
 
     package Test_Discriminants is
@@ -541,7 +533,7 @@ In most other respects discriminants behave like regular fields: You have to
 specify their values in aggregates, as seen above, and you can access their
 values via the dot notation.
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record_2
+.. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record_2
     :class: ada-run
 
     with Var_Size_Record_2; use Var_Size_Record_2;
@@ -564,8 +556,6 @@ values via the dot notation.
        Print_Stack (S);
     end Main;
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. note:
     In the examples above, we used a discriminant to determine the size of an
     array, but it is not limited to that, and could be used, for example, to
@@ -581,8 +571,6 @@ discriminant.
 However, discriminants can also be used to obtain the functionality of what are
 sometimes called "variant records": records that can contain different sets of
 fields.
-
-:code-config:`reset_accumulator=True;accumulate_code=True`
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
 
@@ -614,7 +602,7 @@ will only be able to access the fields :ada:`Left` and :ada:`Right` when the
 If you try to access a field that is not valid for your record, a
 :ada:`Constraint_Error` will be raised.
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
+.. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
     :class: ada-run-expect-failure
 
     with Variant_Record; use Variant_Record;
@@ -628,7 +616,7 @@ If you try to access a field that is not valid for your record, a
 
 Here is how you could write an evaluator for expressions:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
+.. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
     :class: ada-run
 
     with Variant_Record; use Variant_Record;
@@ -648,8 +636,6 @@ Here is how you could write an evaluator for expressions:
     begin
        Put_Line (Integer'Image (Eval_Expr (E)));
     end Main;
-
-:code-config:`reset_accumulator=True;accumulate_code=False`
 
 .. admonition:: In other languages
 
@@ -705,7 +691,7 @@ Several attributes are useful for dealing with decimal types:
 In the example below, we declare two data types: :ada:`T3_D3` and :ada:`T6_D3`.
 For both types, the delta value is the same: 0.001.
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Decimal_Fixed_Point_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Decimal_Fixed_Point_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -734,7 +720,7 @@ multiplication or division on decimal fixed-point types is smaller than
 the delta value required for the context, the actual result will be
 zero. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Decimal_Fixed_Point_Smaller
+.. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Decimal_Fixed_Point_Smaller
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -794,7 +780,7 @@ power of 2 no greater than <delta-value>.
 For example, we may define a normalized range between -1.0 and 1.0 as
 following:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Normalized_Fixed_Point_Type
+.. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Normalized_Fixed_Point_Type
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -815,7 +801,7 @@ fixed-point data types |mdash| you can find more details in this discussion
 about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 We may also rewrite this code with an exact type definition:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Normalized_Adapted_Fixed_Point_Type
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Normalized_Adapted_Fixed_Point_Type
 
     procedure Normalized_Adapted_Fixed_Point_Type is
        type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
@@ -825,7 +811,7 @@ We may also rewrite this code with an exact type definition:
 
 We may also use any other range. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Custom_Fixed_Point_Range
+.. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Custom_Fixed_Point_Range
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -848,7 +834,7 @@ which has a range from :math:`-\pi/2` to :math:`\pi/2`.
 
 All standard operations are available for fixed-point types. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Fixed_Point_Op
+.. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Fixed_Point_Op
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -890,7 +876,7 @@ enumeration literals. This means that in addition to the language's
 strongly typed character types,
 user-defined character types are also permitted:
 
-.. code:: ada project=Courses.Intro_To_Ada.More_About_Types.Character_Example
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Character_Example
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;

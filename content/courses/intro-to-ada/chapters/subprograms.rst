@@ -376,7 +376,7 @@ acts like an uninitialized variable when the subprogram is invoked.
     GNAT will detect simple cases of incorrect use of out parameters.
     For example, the compiler will emit a warning for the following program:
 
-    .. code:: ada
+    .. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Out_Params
 
         procedure Outp is
            procedure Foo (A : out Integer) is

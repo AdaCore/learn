@@ -1,9 +1,6 @@
 Interfacing with C
 ==================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=True`
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Ada allows us to interface with code in many languages, including C
@@ -423,7 +420,7 @@ creating as the operand to ``fdump-ada-spec``:
 
 This creates the file :file:`ext_c_code-test_h.ads`:
 
-.. code:: ada
+.. code-block:: ada
     :class: ada-syntax-only
 
     package Ext_C_Code.test_h is

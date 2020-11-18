@@ -1,8 +1,6 @@
 Standard library: Containers
 ============================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../../courses/global.txt
 
 Simple todo list

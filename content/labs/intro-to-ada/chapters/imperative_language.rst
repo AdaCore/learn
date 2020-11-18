@@ -1,8 +1,6 @@
 Imperative language
 ===================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../../courses/global.txt
 
 For the exercises below (except for the first one), don't worry about the
