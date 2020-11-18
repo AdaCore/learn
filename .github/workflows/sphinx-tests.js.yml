@@ -43,7 +43,7 @@ jobs:
         fonts-open-sans \
         fonts-dejavu
     - name: ada-actions/toolchain
-      uses: ada-actions/toolchain@v0.2.0
+      uses: ada-actions/toolchain@ce2020
       with:
         distrib: community
         target: native
