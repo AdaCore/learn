@@ -71,6 +71,9 @@ test_content: test_ada_intro test_spark_intro test_advanced_ada test_advanced_sp
 	test_ada_for_the_cpp_java_developer \
 	test_gnat_toolchain_intro
 
+test_parser:
+	@coverage run --source=widget -m unittest discover --start-directory sphinx
+	@coverage report -m
 
 publish-staging:
 	@echo "Publishing current branch to learn-staging..."

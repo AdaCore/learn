@@ -42,7 +42,8 @@ def c_chop(lines: List[str]) -> List[Resource]:
         match = re_fn.match(j)
         if match:
             # we found a new file
-            results.append(Resource(match.group(1)))
+            r = Resource(match.group(1))
+            results.append(r)
         elif results:
             # we append this line to the last file we found
             results[-1].append(j)
@@ -76,10 +77,12 @@ def cheapo_gnatchop(lines: List[str]) -> List[Resource]:
             # we found a new body file
             newBasename = to_base_filename(bodyMatch.group(2)) + ".adb"
             results.append(Resource(newBasename))
+            results[-1].append(j)
         elif specMatch:
             # we found a new spec file
             newBasename = to_base_filename(specMatch.group(2)) + ".ads"
             results.append(Resource(newBasename))
+            results[-1].append(j)
         elif results:
             # we append this line to the last file we found
             results[-1].append(j)

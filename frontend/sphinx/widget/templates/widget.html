@@ -1,5 +1,5 @@
 {% autoescape true %}
-<widget id="{{ w.id }}" data-url="{{ url }}" data-name="{{ w.name }}" data-lab="{{ w.is_lab }}" data-switches='{{ w.switches | tojson }}' data-include='{{ w.include | tojson }}' data-hidden="{{ w.hidden }}">
+<widget id="{{ w.id }}" data-url="{{ url }}" data-name="{{ w.name }}" data-lab="{{ w.is_lab }}" data-switches='{{ w.switches | tojson }}'>
     {% for sf in w.shadow_files %}
         <div class="shadow-file" style="display:none" data-basename="{{ sf.basename }}">{{ sf.content }}</div>
     {% endfor %}
@@ -42,9 +42,6 @@
             {% endfor %}
         </div>
         <div class="col-md-9 output-group">
-            {% if w.cli_input %}
-                <textarea id="{{ w.id }}.cli" class="cli" name="cli" rows="4" cols="50"></textarea>
-            {% endif %}
             <div id="{{ w.id }}.output-area" class="output-area"></div>
             {% if w.is_lab %}
                 <div id="{{ w.id }}.lab-area" class="lab-area"></div>

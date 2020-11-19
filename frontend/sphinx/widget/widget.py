@@ -6,6 +6,25 @@ from .button import Button
 from .chop import c_chop, cheapo_gnatchop, real_gnatchop, ChopStrategy
 from .resource import Resource
 
+class ButtonException(Exception):
+    pass
+
+
+class NameException(Exception):
+    pass
+
+
+class ChopException(Exception):
+    pass
+
+
+class LabException(Exception):
+    pass
+
+
+class FileException(Exception):
+    pass
+
 
 class Widget:
     """The Widget class defines the layout of a widget
@@ -23,7 +42,6 @@ class Widget:
         """
         self.shadow_files: List[Resource] = []
         self.is_lab: bool = False
-        self.cli_input = False
         self.id = next(self.__count)
 
         self.switches: Dict[str, List[str]] = {}
@@ -32,8 +50,6 @@ class Widget:
         self.__name: str = None
         self.__no_button: bool = False
         self.__chop_strategy: ChopStrategy = None
-        self.hidden: bool = False
-        self.include: List[str] = []
 
     @property
     def button_group(self) -> List[Button]:
@@ -49,7 +65,7 @@ class Widget:
             return []
         else:
             if not self.__button_group:
-                raise Exception('No buttons specified on widget')
+                raise ButtonException('No buttons specified on widget')
             return self.__button_group
 
     @property
@@ -65,7 +81,7 @@ class Widget:
         if self.__name:
             return self.__name
         else:
-            raise Exception('No name specified on widget')
+            raise NameException('No name specified on widget')
 
     @property
     def files(self) -> List[Resource]:
@@ -80,7 +96,7 @@ class Widget:
         if self.__files:
             return self.__files
         else:
-            raise Exception('No files present on widget')
+            raise FileException('No files present on widget')
 
     def __parseButton(self, btn: str):
         """Parse a button specified in a Directive arg
@@ -158,7 +174,7 @@ class Widget:
                 # we found a start block
                 if lab_resource:
                     # this must be a duplicate start block
-                    raise Exception('Duplicate start block found in Lab io')
+                    raise LabException('Duplicate start block found in Lab io')
                 else:
                     lab_resource = Resource(labio_filename)
             elif end_match:
@@ -170,7 +186,7 @@ class Widget:
                     return result
                 else:
                     # this must be an end before a start
-                    raise Exception('End block found before start in Lab io')
+                    raise LabException('End block found before start in Lab io')
             elif lab_resource:
                 # this must be lab io data
                 lab_resource.append(j)
@@ -180,11 +196,7 @@ class Widget:
             i += 1
 
         # if we reach here, we never found an end block
-        raise Exception('No end block found before start in Lab IO')
-
-    def __parseInclude(self, arg: str):
-        includes = arg.split('=')[1]
-        self.include.extend(includes.split(','))
+        raise LabException('No end block found before start in Lab IO')
 
     def parseArgs(self, args: List[str]):
         """Parses Directive arguments
@@ -213,12 +225,6 @@ class Widget:
                 self.__chop_strategy = ChopStrategy.REAL
             elif arg.startswith('switches='):
                 self.__parseSwitches(arg)
-            elif arg == 'cli_input':
-                self.cli_input = True
-            elif arg == 'hidden':
-                self.hidden = True
-            elif arg.startswith('include='):
-                self.__parseInclude(arg)
             else:
                 raise ValueError(f'Invalid argument: {arg}')
 
@@ -264,3 +270,5 @@ class Widget:
             self.__files = cheapo_gnatchop(content)
         elif self.__chop_strategy is ChopStrategy.REAL:
             self.__files = real_gnatchop(content)
+        else:
+            raise ChopException('No chop strategy defined')

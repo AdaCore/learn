@@ -6,7 +6,7 @@ class Resource:
     Resource represents a file object and has a filename (basename) and
     contents.
     """
-    def __init__(self, basename: str, content: List[str] = []):
+    def __init__(self, basename: str, content: List[str] = None):
         """Constructs a Resource
 
         Args:
@@ -14,7 +14,10 @@ class Resource:
             content (List[str], optional): Initial contents. Defaults to [].
         """
         self.basename = basename
-        self.__content = content
+        if content:
+            self.__content = content
+        else:
+            self.__content = []
 
     def append(self, content: str):
         """Appends a string to the Resource's contents
