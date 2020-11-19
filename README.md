@@ -4,7 +4,9 @@ Sources for AdaCore's learn.adacore.com website
 
 ---
 
-![Frontend Test Suite](https://github.com/AdaCore/learn/workflows/Frontend%20Test%20Suite/badge.svg)
+![Typescript Test Suite](https://github.com/AdaCore/learn/workflows/Typescript%20Test%20Suite/badge.svg)
+![Sphinx Plugin Tests](https://github.com/AdaCore/learn/workflows/Sphinx%20Plugin%20Tests/badge.svg)
+![Sphinx Content Tests](https://github.com/AdaCore/learn/workflows/Sphinx%20Content%20Tests/badge.svg)
 
 ## Requirements
 
