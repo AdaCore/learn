@@ -372,12 +372,13 @@ declaration as well:
 Atomic
 ~~~~~~
 
-Operations are said to be atomic when they can be completed without
-interruptions. This is an important requirement when we're performing
-operations on objects in memory that are shared between multiple processes.
-An atomic object is an object that only accepts atomic operations. The Ada
-standard specifies that "for an atomic object (including an atomic component),
-all reads and updates of the object as a whole are indivisible."
+An atomic object is an object that only accepts atomic reads and updates. The
+Ada standard specifies that "for an atomic object (including an atomic
+component), all reads and updates of the object as a whole are indivisible."
+In this case, the compiler must generate Assembly code in such a way that reads
+and updates of an atomic object must be done in a single instruction, so that
+no other instruction could execute on that same object before the read or
+update completes.
 
 Atomicity may be important, for example, when dealing with shared hardware
 registers. In fact, for certain architectures, the hardware may require that
