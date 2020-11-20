@@ -247,8 +247,8 @@ Volatile
 ~~~~~~~~
 
 A `volatile <https://en.wikipedia.org/wiki/Volatile_(computer_programming)>`_
-can be described as an object in memory whose value may change between two
-consecutive memory accesses of a process A |mdash| even if process A itself
+object can be described as an object in memory whose value may change between
+two consecutive memory accesses of a process A |mdash| even if process A itself
 hasn't changed the value. This situation may arise when an object in memory is
 being shared by multiple threads. For example, a thread *B* may modify the
 value of that object between two read accesses of a thread *A*. Another typical
