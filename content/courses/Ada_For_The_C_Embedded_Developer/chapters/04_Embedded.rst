@@ -108,7 +108,10 @@ way around: the developer specifies the range of values required and the
 compiler decides how to represent things, optimizing for speed or size. The
 :ada:`Pack` aspect declared at the end of the record specifies that the
 compiler should optimize for size even at the expense of decreased speed in
-accessing record components.
+accessing record components. We'll see more details about the :ada:`Pack`
+aspect in the sections about :ref:`bitwise operations <Bitwise_Operations>` and
+:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` in
+chapter 6.
 
 Other representation clauses can be specified as well, along with compile-time
 consistency checks between requirements in terms of available values and
