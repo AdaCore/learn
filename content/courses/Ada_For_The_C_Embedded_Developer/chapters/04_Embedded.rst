@@ -380,6 +380,31 @@ and updates of an atomic object must be done in a single instruction, so that
 no other instruction could execute on that same object before the read or
 update completes.
 
+.. admonition:: In other contexts
+
+    Generally, we can say that operations are said to be atomic when they can
+    be completed without interruptions. This is an important requirement when
+    we're performing operations on objects in memory that are shared between
+    multiple processes.
+
+    This definition of atomicity above is used, for example, when implementing
+    databases. However, for this section, we're using the term "atomic"
+    differently. Here, it really means that reads and updates must be performed
+    with a single Assembly instruction.
+
+    For example, if we have a 32-bit object composed of four 8-bit bytes, the
+    compiler cannot generate code to read or update the object using four 8-bit
+    store / load instructions, or even two 16-bit store / load instructions.
+    In this case, in order to maintain atomicity, the compiler must generate
+    code using one 32-bit store / load instruction.
+
+    Because of this strict definition, we might have objects for which the
+    :ada:`Atomic` aspect cannot be specified. Lots of machines support integer
+    types that are larger than the native word-sized integer. For example, a
+    16-bit machine probably supports both 16-bit and 32-bit integers, but only
+    16-bit integer objects can be marked as atomic |mdash| or, more generally,
+    only objects that fit into at most 16 bits.
+
 Atomicity may be important, for example, when dealing with shared hardware
 registers. In fact, for certain architectures, the hardware may require that
 memory-mapped registers are handled atomically. In Ada, we can use the
