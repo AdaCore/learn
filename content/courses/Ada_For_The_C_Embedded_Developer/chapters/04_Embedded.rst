@@ -335,14 +335,6 @@ Interfacing with Devices
 
     Complete section!
 
-Understanding Bare-Metal Environment
-------------------------------------
-
-.. todo::
-
-    Complete section!
-
-
 Dealing with Absence of FPU with Fixed Point
 --------------------------------------------
 
