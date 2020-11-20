@@ -379,10 +379,11 @@ An atomic object is an object that only accepts atomic operations. The Ada
 standard specifies that "for an atomic object (including an atomic component),
 all reads and updates of the object as a whole are indivisible."
 
-Atomicity is important, for example, when dealing with shared hardware
-registers. In Ada, we can use the :ada:`Atomic` aspect to indicate that an
-object is atomic. This is how we can use the aspect to declare a shared
-hardware register:
+Atomicity may be important, for example, when dealing with shared hardware
+registers. In fact, for certain architectures, the hardware may require that
+memory-mapped registers are handled atomically. In Ada, we can use the
+:ada:`Atomic` aspect to indicate that an object is atomic. This is how we can
+use the aspect to declare a shared hardware register:
 
 [Ada]
 
