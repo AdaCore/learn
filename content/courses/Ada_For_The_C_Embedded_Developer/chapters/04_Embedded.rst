@@ -328,13 +328,6 @@ You can find some information about it in the
     Once available, add link to section from a more advanced embedded course
     that explains the :ada:`Ada.Interrupts` package.
 
-Interfacing with Devices
-------------------------
-
-.. todo::
-
-    Complete section!
-
 Dealing with Absence of FPU with Fixed Point
 --------------------------------------------
 
@@ -560,6 +553,13 @@ In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
 atomic type. Objects of this type |mdash| such as :ada:`R` in this example
 |mdash| are automatically atomic. This example also includes the declaration
 of the :ada:`Arr` array, which has atomic components.
+
+Interfacing with Devices
+------------------------
+
+.. todo::
+
+    Complete section!
 
 ARM and :program:`svd2ada`
 --------------------------
