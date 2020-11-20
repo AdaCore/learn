@@ -612,6 +612,8 @@ These are some of the most common misuse of pointers in Ada. Previous sections
 of the document deal with specifically using access types if absolutely
 necessary.
 
+.. _Bitwise_Operations:
+
 Bitwise Operations
 ~~~~~~~~~~~~~~~~~~
 
@@ -729,6 +731,8 @@ above could also be literally translated to:
        Value := Shift_Left (2, 1) or 1;
        Put_Line ("Value = " & Value_Type'Image (Value));
     end Main;
+
+.. _Mapping_Structures_To_Bit_Fields:
 
 Mapping Structures to Bit-Fields
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
