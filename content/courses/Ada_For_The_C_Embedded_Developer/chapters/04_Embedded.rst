@@ -257,14 +257,12 @@ example is the one of
 the hardware might be constantly changing the value of an object in memory.
 
 Because the value of a volatile object may be constantly changing, a compiler
-cannot store the value of that object into a register and use the value from
-the register in subsequent operations |mdash| because the value stored in the
-register would be outdated if another process had changed the volatile object
-in the meantime. Instead, the compiler must read the value of that object from
-memory for each access. In Ada, the standard specifies that, "for a volatile
-object, all reads and updates of the object as a whole are performed directly
-to memory. This precludes any use of register temporaries, caches, and other
-similar optimizations for that object."
+cannot generate code that stores the value of that object into a register and
+use the value from the register in subsequent operations. Storing into a
+register is avoided because, if the value is stored there, it would be outdated
+if another process had changed the volatile object in the meantime. Instead,
+the compiler generates code in such a way that the process must read the value
+of the volatile object from memory for each access.
 
 Let's look at a simple example of a volatile variable in C:
 
