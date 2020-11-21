@@ -571,6 +571,165 @@ with hardware, drivers, or communication protocols. In this section, we'll
 extend this concept for two specific use-cases: register overlays and data
 streams.
 
+Register overlays
+~~~~~~~~~~~~~~~~~
+
+Register overlays make use of representation clauses to create a structure that
+facilitates manipulating bits from registers. Let's look at a simplified
+example of a power management controller containing registers such as a system
+clock enable register. Note that this example is based on an actual
+architecture:
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.PMC_Peripheral
+
+    with System;
+
+    package Registers is
+
+       type Bit    is mod 2 ** 1
+         with Size => 1;
+       type UInt5  is mod 2 ** 5
+         with Size => 5;
+       type UInt10 is mod 2 ** 10
+         with Size => 10;
+
+       subtype USB_Clock_Enable is Bit;
+
+       --  System Clock Enable Register
+       type PMC_SCER_Register is record
+          --  Reserved bits
+          Reserved_0_4   : UInt5            := 16#0#;
+          --  Write-only. Enable USB FS Clock
+          USBCLK         : USB_Clock_Enable := 16#0#;
+          --  Reserved bits
+          Reserved_6_15  : UInt10           := 16#0#;
+       end record
+         with
+           Volatile,
+           Size      => 16,
+           Bit_Order => System.Low_Order_First;
+
+       for PMC_SCER_Register use record
+          Reserved_0_4   at 0 range 0 .. 4;
+          USBCLK         at 0 range 5 .. 5;
+          Reserved_6_15  at 0 range 6 .. 15;
+       end record;
+
+       --  Power Management Controller
+       type PMC_Peripheral is record
+          --  System Clock Enable Register
+          PMC_SCER       : aliased PMC_SCER_Register;
+          --  System Clock Disable Register
+          PMC_SCDR       : aliased PMC_SCER_Register;
+       end record
+         with Volatile;
+
+       for PMC_Peripheral use record
+          --  16-bit register at byte 0
+          PMC_SCER       at 16#0# range 0 .. 15;
+          --  16-bit register at byte 2
+          PMC_SCDR       at 16#2# range 0 .. 15;
+       end record;
+
+       --  Power Management Controller
+       PMC_Periph : aliased PMC_Peripheral
+         with Import, Address => System'To_Address (16#400E0600#);
+
+    end Registers;
+
+First, we declare the system clock enable register |mdash| this is
+:ada:`PMC_SCER_Register` type in the code example. Most of the bits in that
+register are reserved. However, we're interested in bit #5, which is used to
+activate or deactivate the system clock. To achieve a correct representation of
+this bit, we do the following:
+
+- We declare the :ada:`USBCLK` component of this record using the
+  :ada:`USB_Clock_Enable` type, which has a size of one bit; and
+
+- we use a representation clause to indicate that the :ada:`USBCLK` component
+  is specifically at bit #5 of byte #0.
+
+After declaring the system clock enable register and specifying its individual
+bits as components of a record type, we declare the power management controller
+type |mdash| :ada:`PMC_Peripheral` record type in the code example. Here, we
+declare two 16-bit registers as record components of :ada:`PMC_Peripheral`.
+These registers are used to enable or disable the system clock. The strategy
+we use in the declaration is similar to the one we've just seen above:
+
+- We declare these registers as components of the :ada:`PMC_Peripheral` record
+  type;
+
+- we use a representation clause to specify that the :ada:`PMC_SCER` register
+  is at byte #0 and the :ada:`PMC_SCDR` register is at byte #2.
+
+  - Since these registers have 16 bits, we use a range of bits from 0 to 15.
+
+The actual power management controller becomes accessible by the declaration of
+the :ada:`PMC_Periph` object of :ada:`PMC_Peripheral` type. Here, we specify
+the actual address of the memory-mapped registers (`400E0600` in hexadecimal)
+using the :ada:`Address` aspect in the declaration. When we use the
+:ada:`Address` aspect in an object declaration, we're indicating the address in
+memory of that object.
+
+Because we specify the address of the memory-mapped registers in the
+declaration of :ada:`PMC_Periph`, this object is now an overlay for those
+registers. This also means that any operation on this object corresponds to an
+actual operation on the registers of the power management controller. We'll
+discuss more details about overlays in the section about
+:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` (in
+chapter 6).
+
+Finally, in a test application, we can access any bit of any register of the
+power management controller with simple record component selection. For
+example, we can set the :ada:`USBCLK` bit of the :ada:`PMC_SCER` register by
+using :ada:`PMC_Periph.PMC_SCER.USBCLK`:
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Register_Overlay_1
+
+    with Registers;
+
+    procedure Set_Bit_In_Register is
+    begin
+       Registers.PMC_Periph.PMC_SCER.USBCLK := 1;
+    end Set_Bit_In_Register;
+
+This code example makes use of many aspects and keywords of the Ada language.
+One of them is the :ada:`Volatile` aspect, which we've discussed in the section
+about :ref:`volatile and atomic objects <VolatileAtomicData>`. Using the
+:ada:`Volatile` aspect for the :ada:`PMC_SCER_Register` type ensures that
+objects of this type won't be stored in a register.
+
+In the declaration of the :ada:`PMC_SCER_Register` record type of the example,
+we use the :ada:`Bit_Order` aspect to specify the bit ordering |mdash| also
+known as `endianess <https://en.wikipedia.org/wiki/Endianness>`_ |mdash| of the
+record type. Here, we can select one of these options:
+
+- :ada:`High_Order_First` (big endian): first bit of the record is the most
+  significant bit;
+
+- :ada:`Low_Order_First` (little endian): first bit of the record is the least
+  significant bit.
+
+The declarations from the :ada:`Registers` package also makes use of aspects
+that we haven't seen yet. Aspects :ada:`Size` and :ada:`Import` will be
+discussed in the section that explains how to
+:ref:`map structures to bit-fields <Mapping_Structures_To_Bit_Fields>` in
+chapter 6. Please refer to that chapter for more details. This is a brief
+explanation of these aspects:
+
+- The :ada:`Size` aspect indicates the number of bits required to represent an
+  object.
+
+- The :ada:`Import` is necessary when creating overlays. When used in the
+  context of object declarations, it avoids default initialization.
+
+In the declaration of the components of the :ada:`PMC_Peripheral` record type,
+we use the :ada:`aliased` keyword to specify that those record components
+cannot be stored in registers. This makes sense because we want to ensure
+that we're accessing specific memory-mapped registers, and not registers
+assigned  by the compiler. Note that, for the same reason, we also use the
+:ada:`aliased` keyword in the declaration of the :ada:`PMC_Periph` object.
+
 
 ARM and :program:`svd2ada`
 --------------------------
