@@ -532,7 +532,9 @@ use the aspect to declare a shared hardware register:
 Note that the :ada:`Address` aspect allows for assigning a variable to a
 specific location in the memory. In this example, we're using this aspect to
 specify the address of the memory-mapped register. We'll discuss more about the
-:ada:`Address` aspect later in this course.
+:ada:`Address` aspect later in the section about
+:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` (in
+chapter 6).
 
 In addition to atomic objects, we can declare atomic types and atomic array
 components |mdash| similarly to what we've seen before for volatile objects.
