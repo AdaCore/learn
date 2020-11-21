@@ -730,6 +730,289 @@ that we're accessing specific memory-mapped registers, and not registers
 assigned  by the compiler. Note that, for the same reason, we also use the
 :ada:`aliased` keyword in the declaration of the :ada:`PMC_Periph` object.
 
+Data streams
+~~~~~~~~~~~~
+
+Creating data streams |mdash| in the context of interfacing with devices
+|mdash| means the serialization of arbitrary information and its transmission
+over a communication channel. For example, we might want to transmit the
+content of memory-mapped registers as byte streams using a serial port. To do
+this, we first need to get a serialized representation of those registers as an
+array of bytes, which we can then transmit over the serial port.
+
+Serialization of arbitrary record types |mdash| including register overlays
+|mdash| can be achieved by declaring an array of bytes as an overlay. By doing
+this, we're basically interpreting the information from those record types as
+bytes while ignoring their actual structure |mdash| i.e. their components and
+representation clause. We'll discuss details about overlays in the section
+about
+:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` (in
+chapter 6).
+
+Let's look at a simple example of serialization of an arbitrary record type:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream_Declaration
+
+    package Arbitrary_Types is
+
+       type Arbitrary_Record is record
+          A : Integer;
+          B : Integer;
+          C : Integer;
+       end record;
+
+    end Arbitrary_Types;
+
+    with Arbitrary_Types;
+
+    procedure Serialize_Data (Some_Object : Arbitrary_Types.Arbitrary_Record);
+
+    with Arbitrary_Types;
+
+    procedure Serialize_Data (Some_Object : Arbitrary_Types.Arbitrary_Record) is
+       type UByte is new Natural range 0 .. 255
+         with Size => 8;
+
+       type UByte_Array is array (Positive range <>) of UByte;
+
+       --
+       --  We can access the serialized data in Raw_TX, which is our overlay
+       --
+       Raw_TX : UByte_Array (1 .. Some_Object'Size / 8)
+         with Address => Some_Object'Address;
+    begin
+       null;
+       --
+       --  Now, we could stream the data from Some_Object.
+       --
+       --  For example, we could send the bytes (from Raw_TX) via the
+       --  serial port.
+       --
+    end Serialize_Data;
+
+    with Arbitrary_Types;
+    with Serialize_Data;
+
+    procedure Data_Stream_Declaration is
+       Dummy_Object : Arbitrary_Types.Arbitrary_Record;
+
+    begin
+        Serialize_Data (Dummy_Object);
+    end Data_Stream_Declaration;
+
+The most important part of this example is the implementation of the
+:ada:`Serialize_Data` procedure, where we declare :ada:`Raw_TX` as an overlay
+for our arbitrary object (:ada:`Some_Object` of :ada:`Arbitrary_Record` type).
+In simple terms, by writing :ada:`with Address => Some_Object'Address;` in the
+declaration of :ada:`Raw_TX`, we're specifying that :ada:`Raw_TX` and
+:ada:`Some_Object` have the same address in memory. Here, we are:
+
+- taking the address of :ada:`Some_Object` |mdash| using the :ada:`Address`
+  attribute |mdash|, and then
+
+- using it as the address of :ada:`Raw_TX` |mdash| which is specified with
+  the :ada:`Address` aspect.
+
+By doing this, we're essentially saying that both :ada:`Raw_TX` and
+:ada:`Some_Object` are different representations of the same object in memory.
+
+Because the :ada:`Raw_TX` overlay is completely agnostic about the actual
+structure of the  record type, the :ada:`Arbitrary_Record` type could really be
+anything. By declaring :ada:`Raw_TX`, we create an array of bytes that we can
+use to stream the information from :ada:`Some_Object`.
+
+We can use this approach and create a data stream for the register overlay
+example that we've seen before. This is the corresponding implementation:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream
+
+    with System;
+
+    package Registers is
+
+       type Bit is mod 2 ** 1
+         with Size => 1;
+       type UInt5 is mod 2 ** 5
+         with Size => 5;
+       type UInt10 is mod 2 ** 10
+         with Size => 10;
+
+       subtype USB_Clock_Enable is Bit;
+
+       --  System Clock Register
+       type PMC_SCER_Register is record
+          --  Reserved bits
+          Reserved_0_4   : UInt5 := 16#0#;
+          --  Write-only. Enable USB FS Clock
+          USBCLK         : USB_Clock_Enable := 16#0#;
+          --  Reserved bits
+          Reserved_6_15  : UInt10 := 16#0#;
+       end record
+         with
+           Volatile,
+           Size      => 16,
+           Bit_Order => System.Low_Order_First;
+
+       for PMC_SCER_Register use record
+          Reserved_0_4   at 0 range 0 .. 4;
+          USBCLK         at 0 range 5 .. 5;
+          Reserved_6_15  at 0 range 6 .. 15;
+       end record;
+
+       --  Power Management Controller
+       type PMC_Peripheral is record
+          --  System Clock Enable Register
+          PMC_SCER       : aliased PMC_SCER_Register;
+          --  System Clock Disable Register
+          PMC_SCDR       : aliased PMC_SCER_Register;
+       end record
+         with Volatile;
+
+       for PMC_Peripheral use record
+          --  16-bit register at byte 0
+          PMC_SCER       at 16#0# range 0 .. 15;
+          --  16-bit register at byte 2
+          PMC_SCDR       at 16#2# range 0 .. 15;
+       end record;
+
+       --  Power Management Controller
+       PMC_Periph : aliased PMC_Peripheral;
+    --     with Import, Address => System'To_Address (16#400E0600#);
+
+    end Registers;
+
+    package Serial_Ports is
+
+       type UByte is new Natural range 0 .. 255
+         with Size => 8;
+
+       type UByte_Array is array (Positive range <>) of UByte;
+
+       type Serial_Port is null record;
+
+       procedure Read (Port : in out Serial_Port;
+                       Data :    out UByte_Array);
+
+       procedure Write (Port : in out Serial_Port;
+                        Data :        UByte_Array);
+
+    end Serial_Ports;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Serial_Ports is
+
+       procedure Display (Data : UByte_Array) is
+       begin
+          Put_Line ("---- Data ----");
+          for E of Data loop
+             Put_Line (UByte'Image (E));
+          end loop;
+          Put_Line ("--------------");
+       end Display;
+
+       procedure Read (Port : in out Serial_Port;
+                       Data :    out UByte_Array) is
+          pragma Unreferenced (Port);
+       begin
+          Put_Line ("Reading data...");
+          Data := (0, 0, 32, 0);
+       end Read;
+
+       procedure Write (Port : in out Serial_Port;
+                        Data :        UByte_Array) is
+          pragma Unreferenced (Port);
+       begin
+          Put_Line ("Writing data...");
+          Display (Data);
+       end Write;
+
+    end Serial_Ports;
+
+    with Serial_Ports; use Serial_Ports;
+    with Registers;    use Registers;
+
+    package Data_Stream is
+
+       procedure Send (Port : in out Serial_Port;
+                       PMC  :        PMC_Peripheral);
+
+       procedure Receive (Port : in out Serial_Port;
+                          PMC  :    out PMC_Peripheral);
+
+    end Data_Stream;
+
+    package body Data_Stream is
+
+       procedure Send (Port : in out Serial_Port;
+                       PMC  :        PMC_Peripheral)
+       is
+          Raw_TX : UByte_Array (1 .. PMC'Size / 8)
+            with Address => PMC'Address;
+       begin
+          Write (Port => Port,
+                 Data => Raw_TX);
+       end Send;
+
+       procedure Receive (Port : in out Serial_Port;
+                          PMC  :    out PMC_Peripheral)
+       is
+          Raw_TX : UByte_Array (1 .. PMC'Size / 8)
+            with Address => PMC'Address;
+       begin
+          Read (Port => Port,
+                Data => Raw_TX);
+       end Receive;
+
+    end Data_Stream;
+
+    with Ada.Text_IO;
+
+    with Registers;
+    with Data_Stream;
+    with Serial_Ports;
+
+    procedure Test_Data_Stream is
+
+       procedure Display_Registers is
+          use Ada.Text_IO;
+       begin
+          Put_Line ("---- Registers ----");
+          Put_Line ("PMC_SCER.USBCLK: "
+                    & Registers.PMC_Periph.PMC_SCER.USBCLK'Image);
+          Put_Line ("PMC_SCDR.USBCLK: "
+                    & Registers.PMC_Periph.PMC_SCDR.USBCLK'Image);
+          Put_Line ("-------------- ----");
+       end Display_Registers;
+
+       Port : Serial_Ports.Serial_Port;
+    begin
+       Registers.PMC_Periph.PMC_SCER.USBCLK := 1;
+       Registers.PMC_Periph.PMC_SCDR.USBCLK := 1;
+
+       Display_Registers;
+
+       Data_Stream.Send (Port => Port,
+                         PMC  => Registers.PMC_Periph);
+
+       Data_Stream.Receive (Port => Port,
+                            PMC  => Registers.PMC_Periph);
+
+       Display_Registers;
+    end Test_Data_Stream;
+
+In this example, we can find the overlay in the implementation of the
+:ada:`Send` and :ada:`Receive` procedures from the :ada:`Data_Stream` package.
+Because the overlay doesn't need to know the internals of the
+:ada:`PMC_Peripheral` type, we're declaring it in the same way as in the
+previous example (where we created an overlay for :ada:`Some_Object`). In this
+case, we're creating an overlay for the :ada:`PMC` parameter.
+
+Note that, for this section, we're not really interested in the details about
+the serial port. Thus, package :ada:`Serial_Ports` in this example is just a
+stub. However, because the :ada:`Serial_Port` type in that package only *sees*
+arrays of bytes, after implementing an actual serial port interface for a
+specific device, we could create data streams for any type.
 
 ARM and :program:`svd2ada`
 --------------------------
