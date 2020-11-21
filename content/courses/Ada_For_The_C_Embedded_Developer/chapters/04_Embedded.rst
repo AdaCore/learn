@@ -564,9 +564,13 @@ of the :ada:`Arr` array, which has atomic components.
 Interfacing with Devices
 ------------------------
 
-.. todo::
+Previously, we've seen that we can use
+:ref:`representation clauses <Representation_Clauses>` to specify a particular
+layout for a record type. As mentioned before, this is useful when interfacing
+with hardware, drivers, or communication protocols. In this section, we'll
+extend this concept for two specific use-cases: register overlays and data
+streams.
 
-    Complete section!
 
 ARM and :program:`svd2ada`
 --------------------------
