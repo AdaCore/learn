@@ -3,7 +3,7 @@ import re
 from typing import List, Match, Dict
 
 from .button import Button
-from .chop import c_chop, cheapo_gnatchop, real_gnatchop, ChopStrategy
+from .chop import manual_chop, cheapo_gnatchop, real_gnatchop, ChopStrategy
 from .resource import Resource
 
 class ButtonException(Exception):
@@ -218,9 +218,9 @@ class Widget:
                 # this is the name argument
                 self.__parseName(nameMatch)
             elif arg == 'manual_chop':
-                self.__chop_strategy = ChopStrategy.C
+                self.__chop_strategy = ChopStrategy.MANUAL
             elif arg == 'c':
-                self.__chop_strategy = ChopStrategy.C
+                self.__chop_strategy = ChopStrategy.MANUAL
             elif arg == 'ada':
                 self.__chop_strategy = ChopStrategy.REAL
             elif arg.startswith('switches='):
@@ -264,8 +264,8 @@ class Widget:
         if self.is_lab:
             content = self.__parseLabIO(content)
 
-        if self.__chop_strategy is ChopStrategy.C:
-            self.__files = c_chop(content)
+        if self.__chop_strategy is ChopStrategy.MANUAL:
+            self.__files = manual_chop(content)
         elif self.__chop_strategy is ChopStrategy.CHEAPO:
             self.__files = cheapo_gnatchop(content)
         elif self.__chop_strategy is ChopStrategy.REAL:

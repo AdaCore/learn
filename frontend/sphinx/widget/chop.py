@@ -16,18 +16,18 @@ class ChopStrategy(Enum):
     These correspond to the chop functions defined in this file. A Widget uses
     these based on the file type it is processing.
     """
-    C = auto()
+    MANUAL = auto()
     CHEAPO = auto()
     REAL = auto()
 
 
-def c_chop(lines: List[str]) -> List[Resource]:
-    """Chops the text of a C file
+def manual_chop(lines: List[str]) -> List[Resource]:
+    """Manually chops the text of a C or Ada source-code file
 
     This function assumes that the filename is being provided as the first line
     in the given form:
 
-    !<filename>.c|.h
+    !<filename>.c|.h|.adb|.ads
 
     Args:
         lines (List[str]): The lines of the source file to process
@@ -36,7 +36,7 @@ def c_chop(lines: List[str]) -> List[Resource]:
         List[Resource]: Returns a list of Resources after chopping
     """
     results: List[Resource] = []
-    re_fn = re.compile(r"\!(.+\.(?:c|h))")
+    re_fn = re.compile(r"\!(.+\.(?:c|h|adb|ads))")
 
     for j in lines:
         match = re_fn.match(j)
