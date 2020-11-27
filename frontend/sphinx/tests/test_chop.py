@@ -1,10 +1,10 @@
 import unittest
 
-from widget.chop import c_chop, cheapo_gnatchop, real_gnatchop
+from widget.chop import manual_chop, cheapo_gnatchop, real_gnatchop
 from widget.resource import Resource
 
 
-class TestC_Chop(unittest.TestCase):
+class TestManual_Chop(unittest.TestCase):
     input = """Garbage
 More garbage
 !fake_file.txt
@@ -23,9 +23,9 @@ test.h
 
 test.h"""
 
-    def test_c_chop(self):
+    def test_manual_chop(self):
         split = self.input.splitlines()
-        inTest = c_chop(split)
+        inTest = manual_chop(split)
         self.assertEqual(len(inTest), 2, msg="c chop returned more/less than 2 resources")
         self.assertEqual(inTest[0].basename, "test.c", msg="basename parsing failed")
         self.assertEqual(inTest[1].basename, "test.h", msg="basename parsing failed")
