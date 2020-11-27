@@ -3,10 +3,6 @@
 Introduction
 ==============
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 So, what is this Ada thing anyway?
@@ -26,7 +22,7 @@ they are trying to solve using the language of the physical hardware.
 Let's look at an example of this problem in action by comparing the same
 program in Ada and C:
 
-.. code:: c cli_input
+.. code:: c no_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_C;
 
    !main.c
    #include <stdio.h>
@@ -60,7 +56,7 @@ program in Ada and C:
      return 0;
    }
 
-.. code:: ada cli_input
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_Ada;
 
    with Ada.Command_Line; use Ada.Command_Line;
    with Ada.Text_IO; use Ada.Text_IO;

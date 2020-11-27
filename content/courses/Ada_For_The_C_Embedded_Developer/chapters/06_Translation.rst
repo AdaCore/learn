@@ -1,10 +1,6 @@
 C to Ada Translation Patterns
 =================================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Naming conventions and casing considerations
@@ -49,9 +45,7 @@ language.
 
 Let's start with the following C code:
 
-:code-config:`accumulate_code=True`
-
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct_C
 
     !call.c
     #include <stdio.h>
@@ -70,7 +64,7 @@ capture how the C :c:`struct my_struct` is represented, we can use the
 following record along with a :ada:`pragma Convention`. The pragma directs the
 compiler to lay out the data in memory the way a C compiler would.
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct_Ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Interfaces.C;
@@ -107,7 +101,7 @@ code, it should invoke the :ada:`Call` function with the C calling convention.
 
 And that's all that's necessary. Here's an example of a call to :ada:`Call`:
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct_Ada
 
     with Interfaces.C;
 
@@ -126,10 +120,6 @@ And that's all that's necessary. Here's an example of a call to :ada:`Call`:
     begin
        Call (V);
     end Use_My_Struct;
-
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
 
 Building and Debugging mixed language code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -222,18 +212,16 @@ with the GNAT compiler, passing an array is equivalent to passing a pointer to
 its first element. Of course, as there's no notion of boundaries in C, the
 length of the array needs to be passed explicitly. For example:
 
-:code-config:`accumulate_code=True`
-
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_1
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_1
 
     !p.h
     void p (int * a, int length);
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_1
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_1
 
     procedure Main is
        type Arr is array (Integer range <>) of Integer;
@@ -246,10 +234,6 @@ length of the array needs to be passed explicitly. For example:
        P (X, X'Length);
     end Main;
 
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 The other way around |mdash| that is, retrieving an array that has been
 creating on the C side |mdash| is more difficult. Because C doesn't explicitly
 carry boundaries, they need to be recreated in some way.
@@ -259,18 +243,16 @@ the most flexible, but also the least safe option. It involves creating an
 array with indices over the full range of :ada:`Integer` without ever creating
 it from Ada, but instead retrieving it as an access from C. For example:
 
-:code-config:`accumulate_code=True`
-
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_2
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_2
 
     !f.h
     int * f ();
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_2
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_2
 
     procedure Main is
        type Arr is array (Integer) of Integer;
@@ -281,10 +263,6 @@ it from Ada, but instead retrieving it as an access from C. For example:
     begin
        null;
     end Main;
-
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
 
 Note that :ada:`Arr` is a constrained type (it doesn't have the :ada:`range <>`
 notation for indices). For that reason, as it would be for C, it's possible to
@@ -297,11 +275,9 @@ one with an array and its size accessible through functions, another one on
 global variables. This time, as we're using an overlay, the function will be
 directly mapped to an Ada function returning an address:
 
-:code-config:`accumulate_code=True`
-
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_3
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_3
 
     !fg.h
     int * f_arr (void);
@@ -312,7 +288,7 @@ directly mapped to an Ada function returning an address:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_3
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_3
 
     with System;
 
@@ -343,10 +319,6 @@ directly mapped to an Ada function returning an address:
        null;
     end Main;
 
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 With all solutions though, importing an array from C is a relatively unsafe
 pattern, as there's only so much information on the array as there would be on
 the C side in the first place. These are good places for careful peer reviews.
@@ -364,11 +336,9 @@ may be cases where the C interface also passes values and not pointers to
 objects. Here's a slightly modified version of a previous example to illustrate
 this point:
 
-:code-config:`accumulate_code=True`
-
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value_C
 
     !call.c
     typedef struct my_struct {
@@ -382,7 +352,7 @@ this point:
 In Ada, a type can be modified so that parameters of this type can always be
 passed by copy.
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value_Ada
 
     with Interfaces.C;
 
@@ -398,10 +368,6 @@ passed by copy.
     begin
        null;
     end Main;
-
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
 
 Note that this cannot be done at the subprogram declaration level, so if there
 is a mix of by-copy and by-reference calls, two different types need to be
@@ -421,11 +387,9 @@ futures packages and should be stripped |mdash| it will be possible to force
 full name if useful. For example, here's how the following declaration and call
 could be translated:
 
-:code-config:`accumulate_code=True`
-
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Namespaces
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Namespaces
 
     !reg_interface.h
     void registerInterface_Initialize (int size);
@@ -440,7 +404,7 @@ could be translated:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Namespaces
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Namespaces
 
     package Register_Interface is
        procedure Initialize(Size : Integer)
@@ -456,10 +420,6 @@ could be translated:
     begin
        Register_Interface.Initialize (15);
     end Main;
-
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
 
 Note that in the above example, a :ada:`use` clause on
 :ada:`Register_Interface` could allow us to omit the prefix.
@@ -500,7 +460,7 @@ Dynamically allocated arrays can be directly allocated on the stack:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_Stack_Alloc_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_Stack_Alloc_C
 
     !array_decl.c
     #include <stdlib.h>
@@ -567,14 +527,14 @@ particular, it differentiates between arrays and scalars. For example:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_In_Out_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_In_Out_C
 
     !p.h
     void p (int * a, int * b);
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_In_Out_Ada
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_In_Out_Ada
 
     package Array_Types is
        type Arr is array (Integer range <>) of Integer;
@@ -802,7 +762,7 @@ Let's look at a simple example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Ada
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -913,7 +873,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     since overlays are usually created to analyze and manipulate existing
     values. Let's look at an example where this happens:
 
-    .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
+    .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
 
         package P is
 
@@ -967,7 +927,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     compiler to not apply default initialization in the declaration because the
     object is imported. Let's look at the corrected example:
 
-    .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Import
+    .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Import
 
         package P is
 
@@ -1024,7 +984,7 @@ records. For example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_Ada
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1081,7 +1041,7 @@ complex data structures as a bitstream. For example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_ada
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_ada
 
     package Serializer is
 
@@ -1211,7 +1171,7 @@ procedure:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_Ada
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_Ada
 
     package Serializer is
 
@@ -1437,7 +1397,7 @@ This is the corresponding implementation using overlays:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Simple_Overlay
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Simple_Overlay
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1499,7 +1459,7 @@ This is how we can rewrite the implementation above using overlays:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Fixed_Int_Overlay
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Fixed_Int_Overlay
 
     with Ada.Text_IO; use Ada.Text_IO;
 

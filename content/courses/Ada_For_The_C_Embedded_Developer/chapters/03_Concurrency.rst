@@ -1,10 +1,6 @@
 Concurrency and Real-Time
 ============================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Understanding the various options
@@ -33,8 +29,6 @@ Florist for POSIX systems.
 
 Tasks
 -----
-
-:code-config:`accumulate_code=True`
 
 Ada offers a high level capability called a *task* which is essentially an
 independent thread of execution. In GNAT, these tasks are either mapped on the
@@ -130,10 +124,6 @@ is completed.
     begin
        T := new My_Task ('G');
     end Main;
-
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
 
 Rendezvous
 ----------
@@ -354,8 +344,6 @@ the loop there are several possibilities:
 Protected Objects
 -----------------
 
-:code-config:`accumulate_code=True`
-
 Although the rendezvous may be used to implement mutually exclusive access to a
 shared data object, an alternative (and generally preferable) style is through
 a protected object, an efficiently implementable mechanism that makes the
@@ -373,7 +361,7 @@ operations but not concurrent write or read/write operations.
 Let's reimplement our earlier tasking example with a protected object called
 :ada:`Counter`:
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Counter
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Counter
 
     package Counters is
 
@@ -545,10 +533,6 @@ a binary semaphore / persistent signal.
 Ada concurrency features provide much further generality than what's been
 presented here. For additional information please consult one of the works
 cited in the *References* section.
-
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
 
 Ravenscar
 ---------

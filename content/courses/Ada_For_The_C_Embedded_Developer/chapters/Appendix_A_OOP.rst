@@ -3,10 +3,6 @@
 Appendix A: Hands-On Object-Oriented Programming
 ================================================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 The goal of this appendix is to present a hands-on view on how to translate a

@@ -1,10 +1,6 @@
 Performance considerations
 ==========================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Overall expectations
@@ -179,7 +175,7 @@ this type without an explicit value for :ada:`V` will issue a call to
 :ada:`Call_To_Some_Function`. More subtle issue may arise with elaboration. For
 example, it's possible to write:
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Performance.Dynamic_Array
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Dynamic_Array
 
     package Some_Functions is
 

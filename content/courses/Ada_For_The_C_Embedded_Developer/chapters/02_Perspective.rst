@@ -1,10 +1,6 @@
 The C Developer's Perspective on Ada
 ======================================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 What we mean by Embedded Software
@@ -120,7 +116,7 @@ Hello World in Ada
 The first piece of code to translate from C to Ada is the usual Hello World
 program:
 
-.. code:: c run_button manual_chop
+.. code:: c run_button manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_C;
 
     !main.c
     #include <stdio.h>
@@ -131,7 +127,7 @@ program:
         return 0;
     }
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_Ada;
 
     with Ada.Text_IO;
 
@@ -267,9 +263,7 @@ use-case for the private section in a package is when you want to declare a
 heterogeneous data type, called a record in Ada or a struct in C, but you want
 to stop the user of the package from accessing the record components directly.
 
-:code-config:`accumulate_code=True`
-
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
 
     package Containers is
 
@@ -301,7 +295,7 @@ declare the Stack as a record with its components. The user of this package
 
 However, from the package body, we **can** access :ada:`Data` and :ada:`Top`.
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
 
     package body Containers is
 
@@ -353,8 +347,6 @@ We can then reference this package in a subprogram. For example:
        I := Containers.Pop (S);
        Ada.Text_IO.Put_Line ("Pop: " & Integer'Image (I));
     end Containers_Test;
-
-:code-config:`accumulate_code=False`
 
 Statements and Declarations
 ----------------------------
@@ -761,7 +753,7 @@ Notice that in Ada, the case statement does not use the :c:`break` keyword. In
 C, we use :c:`break` to stop the execution of a case branch from falling
 through to the next branch. Here is an example:
 
-.. code:: c manual_chop cli_input run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Break_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Break_C
 
     !main.c
     #include <stdio.h>
@@ -2305,7 +2297,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Dereferencing_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Dereferencing_C
 
     !main.c
     #include <stdlib.h>
@@ -2356,7 +2348,7 @@ objects that have gone out of scope. For example:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointer_Stack_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointer_Stack_C
 
     !main.c
     int main(int argc, const char * argv[])
@@ -2388,7 +2380,7 @@ the access type as follows:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Deallocation_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Deallocation_C
 
     !main.c
     #include <stdlib.h>
@@ -2438,7 +2430,7 @@ Here's a first example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
 
     procedure Proc
      (Var1 : Integer;
@@ -2480,7 +2472,7 @@ Here's a first example:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
 
     !proc.h
     void Proc
@@ -2690,7 +2682,7 @@ splits the package spec into *public* and *private* parts. For example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Private_Types
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Private_Types
 
     package Types is
        type Type_1 is private;
