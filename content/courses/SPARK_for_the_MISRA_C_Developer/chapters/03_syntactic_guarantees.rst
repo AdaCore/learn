@@ -1,5 +1,3 @@
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-
 Enforcing Basic Syntactic Guarantees
 ------------------------------------
 
@@ -95,9 +93,7 @@ two calls to :ada:`F` in the following are detected as unused, even though the r
 of the function call is assigned to a variable, which is itself used in
 the second case:
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Func_Return
 
     package Fun is
        function F return Integer is (1);
@@ -115,8 +111,6 @@ the second case:
 
        Z := F;
     end Use_F;
-
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Only the result of the third call is used to influence the value of an output
 of :ada:`Use_F`, here the output parameter :ada:`Z` of the procedure.
@@ -148,8 +142,10 @@ can be modified |mdash| and these are prohibited from functions in SPARK
 assigning to a parameter of mode :ada:`in` (the default parameter mode if
 omitted) results in compilation errors:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Swap
     :class: ada-expect-compile-error
+
+    procedure Swap (X, Y : Integer);
 
     procedure Swap (X, Y : Integer) is
        Tmp : Integer := X;
@@ -178,9 +174,9 @@ Here is the output of AdaCore's GNAT compiler:
 The correct version of :ada:`Swap` in SPARK takes parameters of mode
 :ada:`in out`:
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Swap
 
-.. code:: ada prove_flow_report_all_button
+    procedure Swap (X, Y : in out Integer);
 
     procedure Swap (X, Y : in out Integer) is
        Tmp : constant Integer := X;
@@ -188,8 +184,6 @@ The correct version of :ada:`Swap` in SPARK takes parameters of mode
        X := Y;
        Y := Tmp;
     end Swap;
-
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Ensuring Control Structures Are Not Abused
 ******************************************
@@ -247,9 +241,9 @@ blocks of statements have explicit :ada:`begin` and :ada:`end` markers, which
 prevents mistakes that are possible in C. The SPARK (also Ada) version of the
 above C code is as follows:
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Semicolon
 
-.. code:: ada prove_flow_report_all_button compile_button
+    function Func return Integer;
 
     function Func return Integer is
     begin
@@ -261,8 +255,6 @@ above C code is as follows:
        end loop;
        return 0;
     end Func;
-
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Avoiding Complex Switch Statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -288,7 +280,7 @@ with control automatically exiting after one of the case alternatives is execute
 the compiler checking that the alternatives are disjoint (like in C) and
 complete (unlike in C). So the following code is rejected by the compiler:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Case_Statement
     :class: ada-expect-compile-error
 
     package Sign_Domain is
@@ -336,9 +328,7 @@ useless in :ada:`Opposite` and :ada:`Multiply`, as all :ada:`Sign` values are co
 
 Here is a correct version of the same code:
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-.. code:: ada prove_flow_report_all_button compile_button
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Case_Statement
 
     package Sign_Domain is
 
@@ -372,8 +362,6 @@ Here is a correct version of the same code:
        end Get_Sign;
 
     end Sign_Domain;
-
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Avoiding Complex Loops
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -410,7 +398,7 @@ this rule:
 The equivalent SPARK (and Ada) code does not compile, because of the attempt
 to modify the value of the loop counter:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Well_Formed_Loop
     :class: ada-expect-compile-error
 
     procedure Well_Formed_Loop (C : Boolean) is
@@ -458,7 +446,7 @@ closing symbol for an if-statement. This makes it possible to write the
 following code, which appears to try to return the absolute value of its
 argument, while it actually does the opposite:
 
-.. code:: c run_button
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Dangling_Else_C
 
    !main.c
    #include <stdio.h>
@@ -490,7 +478,7 @@ statement"`. That's the same rule as the one shown earlier for
 :ref:`Preventing the Semicolon Mistake`. So the code for :c:`absval` must be
 written:
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Dangling_Else_MISRA_C
 
    !main.c
    #include <stdio.h>
@@ -518,9 +506,9 @@ which has the expected behavior.
 In SPARK (as in Ada), each if-statement has a matching end marker :c:`end if;`
 so the dangling-else problem cannot arise. The above C code is written as follows:
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
+.. code:: ada prove_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Dangling_Else_Ada
 
-.. code:: ada prove_button
+    function Absval (X : Integer) return Integer;
 
     function Absval (X : Integer) return Integer is
        Result : Integer := X;
@@ -534,8 +522,6 @@ so the dangling-else problem cannot arise. The above C code is written as follow
        end if;
        return Result;
     end Absval;
-
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Interestingly, SPARK analysis detects here that the negation operation on line
 9 might overflow. That's an example of runtime error detection which will be

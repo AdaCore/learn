@@ -1,5 +1,3 @@
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-
 Enforcing Basic Program Consistency
 -----------------------------------
 
@@ -46,7 +44,7 @@ SPARK (and more generally Ada) does not suffer from these problems, as it
 relies on semantic inclusion of context instead of textual inclusion of content,
 using :ada:`with` clauses:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Hello_World
 
     with Ada.Text_IO;
 
@@ -58,7 +56,7 @@ using :ada:`with` clauses:
 Note that :ada:`with` clauses are only allowed at the beginning of files;
 the compiler issues an error if they are used elsewhere:
 
-.. code:: ada manual_chop
+.. code:: ada manual_chop run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Hello_World
     :class: ada-nocheck
 
     !hello_world.adb
@@ -72,7 +70,7 @@ Importing a unit (i.e., specifying it in a :ada:`with` clause) multiple times is
 harmless, as it is equivalent to importing it once, but a compiler warning lets
 us know about the redundancy:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Hello_World
 
     with Ada.Text_IO;
     with Ada.Text_IO; -- Legal but useless
@@ -91,7 +89,7 @@ defines. So we can define our own version of :ada:`Put_Line` in some :ada:`Helpe
 unit and import it together with the standard version defined in
 :ada:`Ada.Text_IO`:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Hello_World
 
     package Helper is
        procedure Put_Line (S : String);
@@ -122,7 +120,7 @@ directly, without using the qualified name :ada:`Ada.Text_IO.Put_Line` or
 :ada:`Helper.Put_Line`. The :ada:`use` clause makes public declarations from a
 unit available directly:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Hello_World
     :class: ada-expect-compile-error
 
     package Helper is
@@ -191,9 +189,7 @@ single source for declaring the type of a variable or function. If a file
 :file:`origin.c` defines a variable :c:`var` and functions :c:`fun` and
 :c:`print`:
 
-:code-config:`accumulate_code=True`
-
-.. code:: c no_button
+.. code:: c no_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Origin
 
    !origin.c
    #include <stdio.h>
@@ -209,7 +205,7 @@ single source for declaring the type of a variable or function. If a file
 and the corresponding header file :file:`origin.h` declares :c:`var`, :c:`fun`
 and :c:`print` as having external linkage:
 
-.. code:: c no_button
+.. code:: c no_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Origin
 
    !origin.h
    extern int var;
@@ -219,7 +215,7 @@ and :c:`print` as having external linkage:
 then client code can include :file:`origin.h` with declarations
 for :c:`var` and :c:`fun`:
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Origin
 
    !main.c
    #include "origin.h"
@@ -232,7 +228,7 @@ for :c:`var` and :c:`fun`:
 
 or, equivalently, repeat these declarations directly:
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Origin
 
    !main.c
    extern int var;
@@ -244,8 +240,6 @@ or, equivalently, repeat these declarations directly:
       print();
       return 0;
    }
-
-:code-config:`accumulate_code=False`
 
 Then, if an inconsistency is introduced in the type of :c:`var` of :c:`fun`
 between these alternative declarations and their actual type, the compiler
@@ -305,7 +299,7 @@ visible from other units when they import (:ada:`with`) the package. In fact, on
 declarations from what is called the "visible part" of the spec
 (before the keyword :ada:`private`) are visible from units that :ada:`with` the package.
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Hello_World
     :class: ada-expect-compile-error
 
     package Helper is
@@ -374,7 +368,7 @@ simply declaring the type name in the public ("visible") part of the spec. This 
 client code |mdash| i.e., code that :ada:`with`'s the package |mdash| can use the type,
 typically through a public API, but have no access to how the type is implemented:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Program_Consistency.Hacker
     :class: ada-expect-compile-error
 
     package Vault is
