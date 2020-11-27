@@ -1,6 +1,3 @@
-:code-config:`run_button=False;prove_button=False;accumulate_code=True`
-:code-config:`reset_accumulator=True`
-
 Limited Types
 =============
 
@@ -14,12 +11,10 @@ Limited types and aggregates
 Full coverage rules
 ~~~~~~~~~~~~~~~~~~~
 
-:code-config:`reset_accumulator=True`
-
 One interesting feature of Ada is the *full coverage rules* for
 aggregates. For example, suppose we have a record type:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
@@ -34,7 +29,7 @@ aggregates. For example, suppose we have a record type:
 
 We can create an object of the type using an aggregate:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Persons; use Persons;
@@ -48,13 +43,11 @@ We can create an object of the type using an aggregate:
        null;
     end Show_Aggregate_Init;
 
-:code-config:`reset_accumulator=True`
-
 The full coverage rules say that every component of :ada:`Person` must be
 accounted for in the aggregate. If we later modify type :ada:`Person` by
 adding a component:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
@@ -76,7 +69,7 @@ Of course, we can defeat the full coverage rules by using :ada:`others`
 (usually for array aggregates and case statements, but occasionally useful
 for record aggregates):
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Persons; use Persons;
@@ -100,13 +93,11 @@ invented yet.
 Full coverage rules for limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:code-config:`reset_accumulator=True`
-
 The full coverage rules have been aiding maintenance since Ada 83. Since
 Ada 2005, however, we can also use them for limited types. Suppose we have
 the following limited type:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
@@ -136,7 +127,7 @@ Prior to Ada 2005, aggregates were illegal for limited types. Therefore,
 we would be faced with a difficult choice: Make the type limited, and
 initialize it like this:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Persons; use Persons;
@@ -154,7 +145,7 @@ aggregates, but lose the ability to prevent copies.
 
 Since Ada 2005, an aggregate is allowed to be limited; we can say:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Persons; use Persons;
@@ -187,7 +178,7 @@ aggregates is available: :ada:`<>` means "use the default value, if any".
 
 Here, we can say:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
     with Persons; use Persons;
@@ -215,7 +206,7 @@ record-component default, then there is no default value.
 
 For example, if we have an aggregate of type :ada:`String`, like this:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.String_Box_Init
 
     procedure Show_String_Box_Init is
         Uninitialized_String_Const : constant String := (1 .. 10 => <>);
@@ -226,7 +217,7 @@ For example, if we have an aggregate of type :ada:`String`, like this:
 we end up with a 10-character string all of whose characters are invalid
 values. Note that this is no more nor less dangerous than this:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Dangerous_String
 
     procedure Show_Dangerous_String is
         Uninitialized_String_Var : String (1 .. 10);  --  no initialization
@@ -241,15 +232,13 @@ As always, one must be careful about uninitialized scalar objects.
 Constructor functions for limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:code-config:`reset_accumulator=True`
-
 Given that we can use build-in-place aggregates for limited types,
 the obvious next step is to allow such aggregates to be wrapped in an
 abstraction |mdash| namely, to return them from functions. After all,
 interesting types are usually private, and we need some way for clients
 to create and initialize objects.
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
@@ -293,7 +282,7 @@ new objects and return them) were not allowed for limited types. Since
 Ada 2005, fully-general constructor functions are allowed. Given the
 above, clients can say:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
 
     with P; use P;
 
@@ -307,7 +296,7 @@ As for aggregates, the result of :ada:`Make_T` is built in place (that is,
 in :ada:`My_T`), rather than being created and then copied into
 :ada:`My_T`. Adding another level of function call, we can do:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
 
     with P; use P;
 
@@ -344,8 +333,6 @@ prevents clients from creating default-initialized objects (that is,
 an object of type :ada:`T` is created, giving package :ada:`P` full
 control over initialization of objects.
 
-:code-config:`reset_accumulator=True`
-
 Ideally, limited and non-limited types should be just the same, except for
 the essential difference: you can't copy limited objects. By allowing
 functions and aggregates for limited types, we're very close to this goal.
@@ -356,7 +343,7 @@ only way to *construct* on declaration was via default values, which
 limits you to one constructor. And the only way to pass parameters to that
 construction was via discriminants. Consider the following package:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
 
     with Ada.Containers.Ordered_Sets;
 
@@ -365,8 +352,6 @@ construction was via discriminants. Consider the following package:
           with package OS is new Ada.Containers.Ordered_Sets (<>);
        function Gen_Singleton_Set (Element : OS.Element_Type) return OS.Set;
     end Aux;
-
-.. code:: ada
 
     package body Aux is
        function Gen_Singleton_Set  (Element : OS.Element_Type) return OS.Set is
@@ -379,7 +364,7 @@ construction was via discriminants. Consider the following package:
 
 Since Ada 2005, we can say:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
 
     with Ada.Containers.Ordered_Sets;
     with Aux;
@@ -401,7 +386,7 @@ Since Ada 2005, we can say:
 whether or not :ada:`Set` is limited. :ada:`This_Set : Set := Empty_Set;`
 seems clearer than:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
 
     with Ada.Containers.Ordered_Sets;
 
@@ -427,12 +412,10 @@ Return objects
 Extended return statements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:code-config:`reset_accumulator=True`
-
 A common idiom in Ada is to build up a function result in a local
 object, and then return that object:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Simple_Return
 
     procedure Show_Return is
 
@@ -455,7 +438,7 @@ Since Ada 2005, a notation called the :ada:`extended_return_statement`,
 which allows you to declare the result object and return it as part of one
 statement, is available. It looks like this:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return
 
     procedure Show_Extended_Return is
 
@@ -482,12 +465,10 @@ as the function result.
 Extended return statements for limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:code-config:`reset_accumulator=True`
-
 For most types, extended return statements are no big deal |mdash| it's just
 syntactic sugar. But for limited types, this syntax is almost essential:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Limited
     :class: ada-expect-compile-error
 
     package Task_Construct_Error is
@@ -519,7 +500,7 @@ The return statement here is illegal, because :ada:`Result` is local to
 sense (which is why task types are limited). Since Ada 2005, we can write
 constructor functions for task types:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Limited
 
     package Task_Construct is
 
@@ -548,7 +529,7 @@ constructor functions for task types:
 
 If we call it like this:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Limited
 
     with Task_Construct; use Task_Construct;
 
@@ -573,13 +554,11 @@ never happen, because the task will never be activated.
 Other usages of extended return statements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:code-config:`reset_accumulator=True`
-
 While the :ada:`extended_return_statement` was added to the language
 specifically to support limited constructor functions, it comes in handy
 whenever you want a local name for the function result:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Other_Usages
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -619,12 +598,10 @@ Building objects from constructors
 
 .. sectionauthor:: Bob Duff
 
-:code-config:`reset_accumulator=True`
-
 We've earlier seen examples of constructor functions for limited types
 similar to this:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
@@ -679,7 +656,7 @@ similar to this:
 It is useful to consider the various contexts in which these functions may
 be called. We've already seen things like:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -695,7 +672,7 @@ This object will be finalized whenever the surrounding scope is left.
 
 We can also do:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -712,7 +689,7 @@ return from :ada:`Do_Something`.
 
 We can allocate initialized objects on the heap:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -744,7 +721,7 @@ which will be finalized when the scope of :ada:`T_Ref` is left (long after
 We can create another limited type with a component of type :ada:`T`, and
 use an aggregate:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -769,7 +746,7 @@ As usual, the function results are built in place, directly in
 The one case where we *cannot* call such constructor functions is in an
 assignment statement:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
     :class: ada-expect-compile-error
 
     with P;     use P;
@@ -784,7 +761,7 @@ assignment statement:
 which is illegal because assignment statements involve copying. Likewise,
 we can't copy a limited object into some other object:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
     :class: ada-expect-compile-error
 
     with P;     use P;
@@ -802,11 +779,9 @@ Default initialization
 
 .. sectionauthor:: Bob Duff
 
-:code-config:`reset_accumulator=True`
-
 Prior to Ada 2005, the following style was common:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
 
     package Type_Defaults is
        type Color_Enum is (Red, Blue, Green);
@@ -823,7 +798,7 @@ Prior to Ada 2005, the following style was common:
        procedure Do_Something;
     end Type_Defaults;
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
 
     package body Type_Defaults is
 
@@ -844,7 +819,7 @@ Since Ada 2005, the :ada:`<>` notation comes to the rescue. If we want to
 say, "make :ada:`Count` equal :ada:`100`, but initialize :ada:`Color` and
 :ada:`Is_Gnarly` to their defaults", we can do this:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
 
     package body Type_Defaults is
 
@@ -859,7 +834,7 @@ On the other hand, if we want to say, "make :ada:`Count` equal :ada:`100`,
 but initialize all other components, including the ones we might add next
 week, to their defaults", we can do this:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
 
     package body Type_Defaults is
 
@@ -873,7 +848,7 @@ Note that if we add a component :ada:`Glorp : Integer;` to type :ada:`T`,
 then the :ada:`others` case leaves :ada:`Glorp` undefined just as this
 code would do:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
 
     package body Type_Defaults is
 

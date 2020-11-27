@@ -1,8 +1,5 @@
 :orphan:
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=True`
-:code-config:`reset_accumulator=True`
-
 Object-Oriented Programming
 ===========================
 
@@ -18,7 +15,7 @@ Using new interfaces
 
 Let's assume we have the following interface:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.OO_Prog.Extending_Interfaces
 
     package Animals is
 
@@ -31,7 +28,7 @@ Let's assume we have the following interface:
 All types implementing the :ada:`Animal` interface have to override the
 :ada:`Eat` operation:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.OO_Prog.Extending_Interfaces
 
     package Animals.Cats is
 
@@ -51,7 +48,7 @@ All types implementing the :ada:`Animal` interface have to override the
 
     end Animals.Cats;
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.OO_Prog.Extending_Interfaces
 
     with Animals.Cats; use Animals.Cats;
 
@@ -77,7 +74,7 @@ they're just happy eating some random amount of anonymous food. Extending
 this interface is just not the way to go --- so the extension has to be
 done separately, in a new interface, such as:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.OO_Prog.Extending_Interfaces
 
     package Animals.Extensions is
 
@@ -94,7 +91,7 @@ done separately, in a new interface, such as:
 So now, :ada:`Animals` that need to rely on this new way of eating will
 need to be declared, such as:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.OO_Prog.Extending_Interfaces
 
     with Animals.Extensions; use Animals.Extensions;
 
@@ -126,7 +123,7 @@ need to be declared, such as:
 
     end Animals.Cats;
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.OO_Prog.Extending_Interfaces
 
     with Animals.Cats;       use Animals.Cats;
     with Animals.Extensions; use Animals.Extensions;
@@ -159,7 +156,7 @@ work though, as we'll first have to check that the type of an
 :ada:`Animal_Extension_1`, and perform a conversion to that interface's
 class, before calling the new version of :ada:`Eat`:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.OO_Prog.Extending_Interfaces
 
     with Animals;            use Animals;
     with Animals.Cats;       use Animals.Cats;
@@ -175,8 +172,6 @@ class, before calling the new version of :ada:`Eat`:
           Animal_Extension_1'Class (A).Eat (T);
        end if;
     end Show_Animal_Eat;
-
-:code-config:`reset_accumulator=True`
 
 Using null procedures
 ~~~~~~~~~~~~~~~~~~~~~
@@ -195,7 +190,7 @@ declare the interface's :ada:`Eat` primitive as follows:
 
 This is adapted code:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.OO_Prog.Null_Procedures
 
     package Animals is
 
@@ -246,7 +241,7 @@ declaration does not break source compatibility with the contract of the
 lot easier to make calls to this subprogram --- no more need to check
 membership or write a type conversion, and we can just write:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.OO_Prog.Null_Procedures
 
     with Animals;            use Animals;
     with Animals.Cats;       use Animals.Cats;
@@ -276,7 +271,7 @@ for languages that allow multiple inheritance of implementation).
 In Ada, things are slightly more complicated. Let's take an example, using
 the traditional geometric classes that are often found in text books:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.OO_Prog.Call_Inherited_Subprograms
 
     package Geometric_Forms is
 
@@ -299,7 +294,7 @@ square specific setups. To do this, we need to use type conversions to
 change the view of :ada:`Self`, so that the compiler statically knows
 which :ada:`Initialize` to call. The code thus looks like:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.OO_Prog.Call_Inherited_Subprograms
 
     package body Geometric_Forms is
 
@@ -316,7 +311,7 @@ which :ada:`Initialize` to call. The code thus looks like:
 
     end Geometric_Forms;
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.OO_Prog.Call_Inherited_Subprograms
 
     with Geometric_Forms; use Geometric_Forms;
 
@@ -332,7 +327,7 @@ we suddenly realize that a :ada:`Square` is after all a special case of a
 :ada:`Rectangle`, and thus decide to add the new rectangle class, the code
 needs to be changed (and not just in the spec), as in:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.OO_Prog.Call_Inherited_Subprograms
 
     package Geometric_Forms is
 
@@ -374,7 +369,7 @@ needs to be changed (and not just in the spec), as in:
 
     end Geometric_Forms;
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.OO_Prog.Call_Inherited_Subprograms
 
     with Geometric_Forms; use Geometric_Forms;
 
@@ -389,15 +384,13 @@ procedure of the :ada:`Square` type --- is easy to forget when one
 modifies the inheritance tree, and its omission would result in not
 initializing the :ada:`Rectangle` specific data.
 
-:code-config:`reset_accumulator=True`
-
 Let's look into how the code should best be organized to limit the risks
 here. An interesting idiom is the one that makes use of parent subtypes.
 The trick is to always define a :ada:`Parent` subtype every time one
 extends a type, and use that subtype when calling the inherited procedure.
 Here is a full example:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.OO_Prog.Call_Inherited_Subprograms_2
 
     package Geo_Forms with Pure is
 
@@ -485,7 +478,7 @@ Here is a full example:
 
     end Geo_Forms.Squares;
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.OO_Prog.Call_Inherited_Subprograms_2
 
     with Ada.Text_IO;       use Ada.Text_IO;
     with Geo_Forms.Squares; use Geo_Forms.Squares;

@@ -1,6 +1,3 @@
-:code-config:`run_button=False;prove_button=False;accumulate_code=True`
-:code-config:`reset_accumulator=True`
-
 Access Types
 ============
 
@@ -19,7 +16,7 @@ singly-linked list can be null-terminated. A :ada:`Lookup` function can
 return :ada:`null` to mean "not found", presuming the result is of an
 access type:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Null_Return
     :class: ada-syntax-only
 
     package Show_Null_Return is
@@ -34,7 +31,7 @@ access type:
 
 An alternative design for :ada:`Lookup` would be to raise an exception:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Not_Found_Exception
     :class: ada-syntax-only
 
     package Show_Not_Found_Exception is
@@ -54,7 +51,7 @@ idea to document whether things can be null or not, especially for formal
 parameters and function results. Prior to Ada 2005, we would do that with
 comments. Since Ada 2005, we can use the :ada:`not null` syntax:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Not_Null_Return
     :class: ada-syntax-only
 
     package Show_Not_Null_Return is
@@ -68,7 +65,7 @@ comments. Since Ada 2005, we can use the :ada:`not null` syntax:
 
 This is a complete package for the code snippets above:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Complete_Null_Return
 
     package Example is
 
@@ -135,8 +132,6 @@ This is a complete package for the code snippets above:
 
     end Example;
 
-.. code:: ada run_button
-
     with Example; use Example;
 
     procedure Show_Example is
@@ -167,11 +162,9 @@ had better initialize it explicitly, or you will get
 :ada:`Constraint_Error`. :ada:`not null` is more often useful on
 parameters and function results, for this reason.
 
-:code-config:`reset_accumulator=True`
-
 Here's another example, first with :ada:`null`:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Null_Procedure
     :class: ada-syntax-only
 
     package Show_Null_Procedure is
@@ -193,7 +186,7 @@ Here's another example, first with :ada:`null`:
 
 and without :ada:`null`:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Null_Procedure
     :class: ada-syntax-only
 
     package Show_Null_Procedure is
@@ -214,14 +207,12 @@ and without :ada:`null`:
 
     end Show_Null_Procedure;
 
-:code-config:`reset_accumulator=True`
-
 The style of the second :ada:`Iterate` is clearly better because it makes
 use of the syntax to indicate that a procedure is expected. This is a
 complete package that includes both versions of the :ada:`Iterate`
 procedure:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Complete_Not_Null_Procedure
 
     package Example is
 
@@ -276,8 +267,6 @@ procedure:
 
     end Example;
 
-.. code:: ada run_button
-
     with Example; use Example;
 
     procedure Show_Example is
@@ -294,7 +283,7 @@ other way around.
 Another advantage of :ada:`not null` over comments is for efficiency.
 Consider procedures :ada:`P` and :ada:`Q` in this example:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Complete_Not_Null_Procedure
 
     package Example.Processing is
 
@@ -332,12 +321,10 @@ the call site is usually beneficial because
        above, where the compiler knows that :ada:`An_Element'Access` cannot
        be :ada:`null`.
 
-:code-config:`reset_accumulator=True`
-
 This is analogous to the situation with other run-time checks, such as
 array bounds checks:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Process_Array
 
     package Show_Process_Array is
 
@@ -360,8 +347,6 @@ array bounds checks:
 If :ada:`X (Index)` occurs inside :ada:`Process_Array`, there is no need
 to check that :ada:`Index` is in range, because the check is pushed to the
 caller.
-
-:code-config:`reset_accumulator=True`
 
 Accessibility checks
 --------------------
@@ -387,7 +372,7 @@ level allowed by the context so that no dangling pointers can occur.
 
 Consider the following example:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Static_Check
     :class: ada-expect-compile-error
 
     procedure Static_Check is
@@ -418,7 +403,7 @@ the accessibility level that an entity will have during program execution.
 In these cases, the compiler will insert a run-time check to raise an
 exception if a dangling pointer can be created:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Access_Params
     :class: ada-run-expect-failure
 
     procedure Access_Params is
@@ -458,8 +443,6 @@ an exception if it would.
 In summary, when it comes to dangling references, Ada makes it very hard
 for you to shoot yourself in the foot!
 
-:code-config:`reset_accumulator=True`
-
 Anonymous access types
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -479,7 +462,7 @@ Another rule that allows for static accessibility checks relates to
 derived types: a type derivation does not create new accessibility level
 for the derived type, but just takes that of the parent type:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Anonymous_1
     :class: ada-expect-compile-error
 
      procedure Example_1 is
@@ -517,7 +500,7 @@ access types. In this case, the accessibility level of the object is
 statically determined by the scope of the function declaration. Consider
 the following example:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Anonymous_2
     :class: ada-expect-compile-error
 
     procedure Example_2 is
@@ -568,7 +551,7 @@ Ada 2005, access discriminants are permitted for non-limited types.
 Consequently, it's necessary to disallow defaults for access discriminants
 of non-limited types. Thus, the following declaration is illegal:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Default_Access
     :class: ada-expect-compile-error
 
     procedure Example_Default_Access is
@@ -594,7 +577,7 @@ with allocators and return statements. The accessibility rules require the
 compiler to perform static checks when new objects containing access
 discriminants are created or returned. Consider the following example:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Anonymous_3
     :class: ada-expect-compile-error
 
     procedure Example_3 is
@@ -636,8 +619,6 @@ it a part of the stack or some other storage pool, with a shorter
 lifetime, thus preventing the discriminant from pointing to a nonexistent
 object.
 
-:code-config:`reset_accumulator=True`
-
 Unchecked Access
 ~~~~~~~~~~~~~~~~
 
@@ -666,7 +647,7 @@ such as a doubly-linked list, with locking. We keep a stack of objects,
 implemented as a linked list via :ada:`Stack_Top` and chained through the
 :ada:`Prev` component.
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Access
 
     private with Ada.Finalization;
 
@@ -747,8 +728,6 @@ implemented as a linked list via :ada:`Stack_Top` and chained through the
 
     end Objects;
 
-.. code:: ada run_button
-
     with Ada.Text_IO; use Ada;
     with Objects; use Objects;
 
@@ -784,5 +763,3 @@ visibility on the objects it is printing.
 
 Observe that :ada:`That_Object` is not printed by the second call to
 :ada:`Print_All_Objects`, because it no longer exists at that time.
-
-:code-config:`reset_accumulator=True`

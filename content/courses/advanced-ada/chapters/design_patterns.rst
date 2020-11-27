@@ -1,8 +1,5 @@
 :orphan:
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=True`
-:code-config:`reset_accumulator=True`
-
 Design Patterns
 ===============
 
@@ -19,7 +16,7 @@ Factory Functions
 Suppose we have a generic package that declares a stack class. The root of
 the hierarchy would be as follows:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions
 
     generic
        type Element_Type is private;
@@ -38,7 +35,7 @@ stack (that automatically grows as necessary) and a bounded stack
 Now suppose we want to assign one stack to another, irrespective of the
 specific stack type, something like this:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions
 
     generic
     package Stacks.Ops is
@@ -76,7 +73,7 @@ single controlled operand.)
 
 The assign operation would be declared like this:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions
 
     generic
        type Element_Type is private;
@@ -99,7 +96,7 @@ The assign operation would be declared like this:
 
 which would allow us to rewrite the above assignment statement as:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions
 
     generic
     package Stacks.Ops_2 is
@@ -122,7 +119,7 @@ Each type in the class will have to override :ada:`Assign`. As an example,
 let's follow the steps the necessary to implement the operation for the
 bounded stack type. Its spec would look like this:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions
 
     generic
     package Stacks.Bounded_G is
@@ -164,7 +161,7 @@ allocated. The interesting part is implementing the :ada:`Assign`
 operation, since we need some way to iterate over items in the source
 stack. Here's a skeleton of the implementation:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions
 
     package body Stacks.Bounded_G is
 
@@ -217,9 +214,7 @@ must be class-wide. We now introduce type :ada:`Cursor`, the root of the
 stack iterator hierarchy, and amend the stack class with a factory
 function for cursors:
 
-:code-config:`reset_accumulator=True`
-
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions_2
 
     generic
        type Element_Type is private;
@@ -261,7 +256,7 @@ cursor that can be used to visit the items in that stack object. We can
 now complete our implementation of the :ada:`Assign` operation for bounded
 stacks as follows:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions_2
 
     generic
     package Stacks.Bounded_G is
@@ -300,8 +295,6 @@ stacks as follows:
        is (Container.Top_Index);
 
     end Stacks.Bounded_G;
-
-.. code:: ada
 
     package body Stacks.Bounded_G is
 
@@ -347,11 +340,9 @@ dispatch. The function call :ada:`C.Element` returns the element of
 advances the cursor to the next position (towards the bottom of the
 stack).
 
-:code-config:`reset_accumulator=True`
-
 This is the complete source-code:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions_3
 
     generic
        type Element_Type is private;
@@ -398,8 +389,6 @@ This is the complete source-code:
        procedure Previous (Position : in out Cursor) is abstract;
 
     end Stacks;
-
-.. code:: ada
 
     generic
     package Stacks.Bounded_G is
@@ -459,8 +448,6 @@ This is the complete source-code:
        procedure Previous (Position : in out Cursor);
 
     end Stacks.Bounded_G;
-
-.. code:: ada
 
     private with Ada.Finalization;
 
@@ -534,8 +521,6 @@ This is the complete source-code:
        procedure Previous (Position : in out Cursor);
 
     end Stacks.Unbounded_G;
-
-.. code:: ada
 
     with System;  use type System.Address;
 
@@ -683,8 +668,6 @@ This is the complete source-code:
        end Previous;
 
     end Stacks.Bounded_G;
-
-.. code:: ada
 
     with Ada.Unchecked_Deallocation;
     with System;  use type System.Address;
@@ -915,8 +898,6 @@ This is the complete source-code:
 
     end Stacks.Unbounded_G;
 
-.. code:: ada run_button
-
     with Stacks;
     with Stacks.Bounded_G;
 
@@ -954,8 +935,6 @@ This is the complete source-code:
 
     end Simple_Test;
 
-:code-config:`reset_accumulator=True`
-
 Scope Locks
 -----------
 
@@ -974,7 +953,7 @@ makes calls to procedures and functions provided by a package. Inside the
 package are variables that are manipulated by the procedures and
 functions. For example:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Scope_Locks
 
     package P is
 
@@ -1020,7 +999,7 @@ example, to ensure serial execution of the exported operations, one could
 declare a lock at the package level, and have each operation acquire and
 release it. The lock can be implemented using a binary semaphore:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Scope_Locks
 
     package Semaphores is
 
@@ -1064,7 +1043,7 @@ assume it is a protected type with classic semaphore semantics.
 
 This is the updated package :ada:`P` that makes use of semaphores:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Scope_Locks
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1131,7 +1110,7 @@ scope |mdash| is sufficient to acquire the referenced lock.
 To define the :ada:`Scope_Lock` type, we declare it with a discriminant
 designating a :ada:`Mutual_Exclusion` object:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Design_Patterns.Scope_Locks
 
     with Semaphores;  use Semaphores;
 
@@ -1164,9 +1143,7 @@ manually.
 Each overridden procedure simply references the semaphore object
 designated by the formal parameter's discriminant:
 
-.. code:: ada
-
-    with Ada.Finalization;
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Scope_Locks
 
     package body Locks is
 
@@ -1187,7 +1164,7 @@ acquired, no matter how long that takes. When the procedure or function is
 done, for any reason, finalization will release the lock. The resulting
 user code is thus almost unchanged from the original sequential code:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Scope_Locks
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1221,8 +1198,6 @@ protected object is not an option. By taking advantage of the automatic
 calls to :ada:`Initialize` and :ada:`Finalize`, the resulting user code is
 much more robust and requires very little change.
 
-:code-config:`reset_accumulator=True`
-
 Visitor
 -------
 
@@ -1253,7 +1228,7 @@ below also includes the specification of a visitor class, which will be
 overridden by the user code, for instance, to provide a code generator, a
 model checker, and so on:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Design_Patterns.Visitor
 
     limited with Visitors;
 
@@ -1311,8 +1286,6 @@ model checker, and so on:
 
     end Visitors;
 
-.. code:: ada
-
     package body Visitors is
 
        procedure Visit_CClass
@@ -1341,7 +1314,7 @@ model checker, and so on:
 We then need to add one primitive :ada:`Visit` operation to each of the
 types created from the UML metamodel:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Visitor
 
     with Visitors; use Visitors;
 
@@ -1393,7 +1366,7 @@ explicitly.
 
 The code would be something like the following:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Design_Patterns.Visitor
 
     with UML;      use UML;
     with Visitors; use Visitors;
@@ -1418,8 +1391,6 @@ The code would be something like the following:
        end Visit_CClass;
 
     end Code_Generator_Pkg;
-
-.. code:: ada run_button
 
     with UML;                use UML;
     with Visitors;           use Visitors;
@@ -1459,8 +1430,6 @@ see the UML types for the same reason. One possibility is to put all the
 types in the same package. Another is to use :ada:`limited with` to give
 visibility on access types, and then pass an access to :ada:`Visitor'Class`
 as a parameter to :ada:`Visit`, as we've implemented above.
-
-:code-config:`reset_accumulator=True`
 
 Overridable Class Attributes
 ----------------------------
@@ -1520,7 +1489,7 @@ important point here is that we want to be able to override the template
 name in child classes, so we cannot use a simple constant in the package
 spec or body.
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Design_Patterns.Text_Blocks
 
     package Text_Blocks is
 
@@ -1545,7 +1514,7 @@ function.
 
 This is the package body with the implementation of :ada:`Render`:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Design_Patterns.Text_Blocks
 
     package body Text_Blocks is
 
@@ -1562,7 +1531,7 @@ This is the package body with the implementation of :ada:`Render`:
 A child of :ada:`Text_Block` would override :ada:`Template` using the same
 notation:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Design_Patterns.Text_Blocks
 
     package Text_Blocks.Html is
 
@@ -1580,7 +1549,7 @@ because some of the children could provide a more complex body for
 variable (as in Python). In fact, we can do this in the spec itself by
 using a conditional expression:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_Ada.Design_Patterns.Text_Blocks
 
     package Text_Blocks.Selectable is
 
@@ -1595,7 +1564,7 @@ using a conditional expression:
 
 This is a test application that makes use of the packages above:
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Advanced_Ada.Design_Patterns.Text_Blocks
 
     with Ada.Text_IO;            use Ada.Text_IO;
     with Text_Blocks;            use Text_Blocks;
@@ -1612,5 +1581,3 @@ This is a test application that makes use of the packages above:
        Put_Line ("B2 : " & B2.Render);
 
     end Test_Blocks;
-
-:code-config:`reset_accumulator=True`
