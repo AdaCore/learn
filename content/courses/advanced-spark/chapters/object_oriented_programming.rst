@@ -1,6 +1,3 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=True`
-:code-config:`reset_accumulator=True`
-
 Object-oriented Programming
 =====================================================================
 
@@ -36,7 +33,7 @@ Prototypes and Scopes in SPARK
 
 - Types in SPARK come with methods aka primitive operations
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Type_Primitives
 
     package Show_Type_Primitives is
 
@@ -62,7 +59,7 @@ Classes in SPARK
 
 - Classes in SPARK are tagged records
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Classes
 
     package Show_Classes is
 
@@ -94,7 +91,7 @@ Methods in SPARK
 
 - Derived methods can be overriding or not
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Derived_Methods
 
     package Show_Derived_Methods is
 
@@ -157,7 +154,7 @@ Methods in SPARK
 
 - Method called depends on static type
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Derived_Methods
 
     with Show_Derived_Methods; use Show_Derived_Methods;
 
@@ -181,7 +178,7 @@ Dynamic dispatching in SPARK
 
     - method called depends on dynamic type
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Derived_Methods
 
     with Show_Derived_Methods; use Show_Derived_Methods;
 
@@ -209,7 +206,7 @@ Dynamic dispatching in SPARK
 
     - in SPARK, manipulated through parameter passing
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Derived_Methods
 
     with Show_Derived_Methods; use Show_Derived_Methods;
 
@@ -233,7 +230,7 @@ A trivial example
 
 - what is called here?
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Trivial_Example
 
     procedure Show_Trivial_Example is
 
@@ -286,7 +283,7 @@ LSP – the SPARK solution to dynamic dispatching problems
 
     - :ada:`Post'Class` specifies weakest postcondition for the hierarchy
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.LSP
 
     package Show_LSP is
 
@@ -308,7 +305,7 @@ LSP – the SPARK solution to dynamic dispatching problems
 
     end Show_LSP;
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.LSP
 
     package Show_LSP is
 
@@ -330,7 +327,7 @@ LSP – the SPARK solution to dynamic dispatching problems
 
     end Show_LSP;
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.LSP
 
     package Show_LSP is
 
@@ -357,7 +354,7 @@ Verification of dynamic dispatching calls
 
 - Class-wide contracts used for dynamic dispatching calls
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.LSP
 
     with Show_LSP; use Show_LSP;
 
@@ -394,7 +391,7 @@ Class-wide contracts and data abstraction
 
 - Typically use expression functions for abstraction
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Classwide_Contracts
 
     package Show_Classwide_Contracts is
 
@@ -428,7 +425,7 @@ Class-wide contracts, data abstraction and overriding
 
     - overriding needs not be weaker or stronger than overridden
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Contract_Override
 
     package Show_Contract_Override is
 
@@ -448,7 +445,7 @@ Class-wide contracts, data abstraction and overriding
 
     end Show_Contract_Override;
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Contract_Override
 
     package Show_Contract_Override is
 
@@ -470,7 +467,7 @@ Class-wide contracts, data abstraction and overriding
 
 - Inherited contract reinterpreted for derived class
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Contract_Override
 
     package Show_Contract_Override is
 
@@ -523,7 +520,7 @@ Redispatching and Extensions_Visible aspect
     - formal parameter cannot be converted to class-wide type when
       :ada:`Extensions_Visible` is :ada:`False`
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Contract_Override
 
     with Show_Contract_Override; use Show_Contract_Override;
 
@@ -542,7 +539,7 @@ Redispatching and Extensions_Visible aspect
 
     - parameter mode used also for hidden components
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Contract_Override
 
     with Show_Contract_Override; use Show_Contract_Override;
 
@@ -564,7 +561,7 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_01
     :class: ada-expect-compile-error
 
     package OO_Example_01 is
@@ -585,7 +582,7 @@ records.
 Example #2
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_02
 
     package OO_Example_02 is
 
@@ -611,7 +608,7 @@ postcondition (plain postcondition used for plain calls).
 Example #3
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_03
 
     package OO_Example_03 is
 
@@ -656,7 +653,7 @@ stronger than the one of ``Int.Bump``.
 Example #4
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_04
     :class: ada-expect-compile-error
 
     package OO_Example_04 is
@@ -684,7 +681,7 @@ overridden.
 Example #5
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_05
 
     package OO_Example_05 is
 
@@ -710,7 +707,7 @@ overridden ``Reset`` is subject to :ada:`Extensions_Visible`
 Example #6
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_06
 
     package OO_Example_06 is
 
@@ -746,7 +743,7 @@ This code is not correct. High: extension of ``Arg`` is not initialized in
 Example #7
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_07
 
     package OO_Example_07 is
 
@@ -770,8 +767,6 @@ Example #7
 
     end OO_Example_07;
 
-.. code:: ada
-
     package body OO_Example_07 is
 
        function Zero return Int is
@@ -794,7 +789,7 @@ initialized on return.
 Example #8
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_08
 
     package File_System is
 
@@ -828,8 +823,6 @@ Example #8
 
     end File_System;
 
-.. code:: ada
-
     package body File_System is
 
        procedure Create (F : out File) is
@@ -849,8 +842,6 @@ Example #8
        end Close;
 
     end File_System;
-
-.. code:: ada
 
     with File_System; use File_System;
 
@@ -874,7 +865,7 @@ respected.
 Example #9
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_08
 
     package File_System.Sync is
 
@@ -903,8 +894,6 @@ Example #9
 
     end File_System.Sync;
 
-.. code:: ada
-
     package body File_System.Sync is
 
        procedure Create (F : out File) is
@@ -926,8 +915,6 @@ Example #9
        end Close;
 
     end File_System.Sync;
-
-.. code:: ada
 
     with File_System.Sync; use File_System.Sync;
 
@@ -951,7 +938,7 @@ stronger than overridden one
 Example #10
 ~~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_08
 
     package File_System.Sync is
 
@@ -982,8 +969,6 @@ Example #10
 
     end File_System.Sync;
 
-.. code:: ada
-
     package body File_System.Sync is
 
        procedure Create (F : out File) is
@@ -1005,8 +990,6 @@ Example #10
        end Close;
 
     end File_System.Sync;
-
-.. code:: ada
 
     with File_System.Sync; use File_System.Sync;
 

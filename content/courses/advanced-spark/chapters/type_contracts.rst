@@ -1,5 +1,3 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
-
 Type Contracts
 =====================================================================
 
@@ -41,7 +39,7 @@ Static Predicate
     - Removes the constraint to define enumeration values in an order that
       allows defining interesting subtypes
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Static_Predicate
 
     package Show_Static_Predicate is
 
@@ -75,7 +73,7 @@ Dynamic Predicate
 
     - Property for dynamic predicate can be anything
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Dynamic_Predicate
 
     package Show_Dynamic_Predicate is
 
@@ -142,7 +140,7 @@ Dynamic Checking of Predicates
 
 - Static predicate does not mean verification at compile time!
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Type_Contracts.Static_Predicate_Verified_At_Runtime
 
     package Show_Static_Predicate_Verified_At_Runtime is
 
@@ -157,8 +155,6 @@ Dynamic Checking of Predicates
        procedure Process_Day (This_Day : Day);
 
     end Show_Static_Predicate_Verified_At_Runtime;
-
-.. code:: ada
 
     package body Show_Static_Predicate_Verified_At_Runtime is
 
@@ -198,7 +194,7 @@ Temporary Violations of the Dynamic Predicate
 
     - Conversions between these types at subprogram boundary
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Temp_Violation_Dyn_Predicate
 
     package Show_Temp_Violation_Dyn_Predicate is
 
@@ -232,7 +228,7 @@ Type Invariant
     - Or on the completion of the type in the private part of the package
       (makes more sense in general, only option in SPARK)
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Type_Invariant
 
     package Show_Type_Invariant is
 
@@ -272,7 +268,7 @@ Dynamic Checking of Type Invariants
     - Choice between predicate and type invariants depends on the need for
       such internal subprograms without checking
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Type_Contracts.Type_Invariant
 
     package Show_Type_Invariant is
 
@@ -311,7 +307,7 @@ Inheritance of Predicates and Type Invariants
     - Allows to structure a hierarchy of subtypes, from least to most
       constrained
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Predicate_Inheritance
 
     package Show_Predicate_Inheritance is
 
@@ -373,7 +369,7 @@ Default Initial Condition
     - Used in the formal containers library to state that containers are
       initially empty
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Default_Init_Cond
 
     with Ada.Containers;
 
@@ -406,8 +402,9 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-.. code-block:: ada
+.. code:: ada manual_chop no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_01
 
+    !example_01.ads
     package Example_01 is
 
        type Day is (Monday,   Tuesday, Wednesday,
@@ -427,7 +424,7 @@ sets of values. A predicate should be used instead.
 Example #2
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_02
 
     package Example_02 is
 
@@ -450,7 +447,7 @@ one expected by the user. ``Day_Off`` has the same constraint as
 Example #3
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_03
 
     package Example_03 is
 
@@ -472,7 +469,7 @@ a :ada:`Static_Predicate` would be allowed.
 Example #4
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Type_Contracts.Example_04
 
     package Week is
 
@@ -486,8 +483,6 @@ Example #4
          Static_Predicate => Day_Off in Wednesday | Weekend;
 
     end Week;
-
-.. code:: ada
 
     with Week; use Week;
 
@@ -514,7 +509,7 @@ not true for :ada:`Dynamic_Predicate`.
 Example #5
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_05
 
     package Example_05 is
 
@@ -549,7 +544,7 @@ reasoning if ``Valid`` could be public.
 Example #6
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_06
 
     package Example_06 is
 
@@ -577,8 +572,9 @@ This code is correct. This version is valid in both Ada and SPARK.
 Example #7
 ~~~~~~~~~~
 
-.. code-block:: ada
+.. code:: ada manual_chop no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_07
 
+    !example_07.ads
     package Example_07 is
 
        subtype Sorted_String is String with
@@ -610,7 +606,7 @@ This code is not correct. There are 3 problems in this code:
 Example #8
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_08
 
     package Example_08 is
 
@@ -642,7 +638,7 @@ in SPARK, one will need to change slightly the property of
 Example #9
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_09
 
     package Example_09 is
 
@@ -672,7 +668,7 @@ This code is not correct. The default initial condition is not satisfied.
 Example #10
 ~~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_10
 
     package Example_10 is
 

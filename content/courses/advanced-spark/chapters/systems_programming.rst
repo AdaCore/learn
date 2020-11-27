@@ -1,5 +1,3 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
-
 Systems Programming
 =====================================================================
 
@@ -58,7 +56,7 @@ Systems Programming – How can SPARK help?
 Systems Programming – A trivial example
 ---------------------------------------------------------------------
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.Trivial_Sys_Prog
 
     package Show_Trivial_Sys_Prog is
 
@@ -140,7 +138,7 @@ Using ``Async_Readers`` / ``Async_Writers``
 
     - always initialized,  always has an unknown value
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.Volatile_Vars
 
     package Volatile_Vars is
 
@@ -172,7 +170,7 @@ Using ``Async_Readers`` / ``Async_Writers``
        Ext := (others => 0);
     end Volatile_Vars;
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Systems_Programming.Volatile_Vars
 
     with Volatile_Vars;
 
@@ -197,7 +195,7 @@ Using ``Effective_Reads`` / ``Effective_Writes``
 
     - Final value of variable is seen as a sequence of values it took
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.Volatile_Vars
 
     package Volatile_Vars is
 
@@ -232,7 +230,7 @@ Using ``Effective_Reads`` / ``Effective_Writes``
        Ext := (others => 0);
     end Volatile_Vars;
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Systems_Programming.Volatile_Vars
 
     with Volatile_Vars;
 
@@ -280,7 +278,7 @@ Constraints on Volatile Variables
 
     - a function cannot read a variable with :ada:`ER=True`
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.Volatile_Vars
 
     package Volatile_Vars is
 
@@ -340,7 +338,7 @@ Constraints on Volatile Variables
        Ext := (others => 0);
     end Volatile_Vars;
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Systems_Programming.Volatile_Vars
 
     with Volatile_Vars;
 
@@ -371,7 +369,7 @@ Constraints on Volatile Functions
     - calls to volatile functions are restricted like reads of
       :ada:`Async_Writers`
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.Volatile_Vars
 
     package Volatile_Vars is
 
@@ -451,7 +449,7 @@ Constraints on Volatile Functions
        Ext := (others => 0);
     end Volatile_Vars;
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Systems_Programming.Volatile_Vars
 
     with Volatile_Vars;
 
@@ -472,7 +470,7 @@ State Abstraction on Volatile Variables
 
     - Default if none specified is all True
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.State_Abstraction_1
 
     package P1 with
       Abstract_State => (S with External)
@@ -482,7 +480,7 @@ State Abstraction on Volatile Variables
 
     end P1;
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.State_Abstraction_2
 
     package P2 with
       Abstract_State => (S with External =>
@@ -503,7 +501,7 @@ Constraints on Address Attribute
 
 - Address of volatile variable can be specified
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.Address_Attribute
 
     package Show_Address_Attribute is
 
@@ -525,7 +523,7 @@ Constraints on Address Attribute
 
     - GNATprove does not model the resulting aliasing
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.Address_Overlay
 
     procedure Show_Address_Overlay is
 
@@ -555,7 +553,7 @@ Can something be known of volatile variables?
 
 - GNATprove also assumes all values are valid (:ada:`X'Valid`)
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.Provable_Volatile_Var
 
     package Show_Provable_Volatile_Var is
 
@@ -606,7 +604,7 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_01
 
     package Example_01 is
 
@@ -637,7 +635,7 @@ hence it is also an output.
 Example #2
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_02
 
     package Example_02 is
 
@@ -668,7 +666,7 @@ is only an input.
 Example #3
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_03
 
     package Example_03 is
 
@@ -700,7 +698,7 @@ to be tested in a larger expression.
 Example #4
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_04
 
     package Example_04 is
 
@@ -733,7 +731,7 @@ hence it is also an output.
 Example #5
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Systems_Programming.Example_05
 
     package Example_05 is
 
@@ -755,7 +753,7 @@ cannot appear as the expression in an expression function.
 Example #6
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_06
 
     package Example_06 is
 
@@ -787,7 +785,7 @@ This code is not correct. ``Regval`` is a volatile type, hence variable
 Example #7
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_07
 
     package Example_07 is
 
@@ -819,7 +817,7 @@ aspect :ada:`Volatile_Function`. No volatile variable is declared locally.
 Example #8
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_08
 
     package Example_08 with
       Abstract_State => (State with External),
@@ -852,7 +850,7 @@ variables in an external abstract state.
 Example #9
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_09
 
     package Example_09 is
 
@@ -887,7 +885,7 @@ have been written between the successive reads of ``X.U`` and ``X.V``.
 Example #10
 ~~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_10
 
     package Example_10 is
 
