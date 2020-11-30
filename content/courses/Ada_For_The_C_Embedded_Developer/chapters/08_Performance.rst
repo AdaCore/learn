@@ -361,3 +361,146 @@ equivalent to the C version. If we had used arrays in the example above,
 Again, no extra copy is performed in the calls to :ada:`Update` and
 :ada:`Display`, which gives us optimal performance when dealing with arrays and
 avoids the need to use access types to optimize the code.
+
+Function returns
+~~~~~~~~~~~~~~~~
+
+Previously, we've discussed the cost of passing complex records as arguments to
+subprograms. We've seen that the performance is still optimal when using
+subprograms that have :ada:`in out` or :ada:`out` parameters, so we don't
+have to use access types to get better performance in Ada. In this section,
+we'll briefly discuss the cost of function returns.
+
+In general, we can implement subprograms that initialize a data structure
+either as procedures or functions. Let's look at this example in C:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Init_Rec_Proc_And_Func_C
+
+    !main.c
+    #include <stdio.h>
+
+    struct Data {
+        int prev, curr;
+    };
+
+    void init_data(struct Data *d)
+    {
+        d->prev = 0;
+        d->curr = 1;
+    }
+
+    struct Data get_init_data()
+    {
+        struct Data d  = { 0, 1 };
+
+        return d;
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        struct Data D1;
+
+        D1 = get_init_data();
+
+        init_data(&D1);
+    }
+
+This code example contains two subprograms that initialize the :c:`Data`
+structure:
+
+- :c:`init_data()`, which receives the data structure as a reference (using
+  a pointer) and initializes it, and
+
+- :c:`get_init_data()`, which returns the initialized structure.
+
+In C, we generally avoid implementing functions such as :c:`get_init_data()`
+because of the extra copy that is needed for the function return.
+
+This is the corresponding implementation in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Init_Rec_Proc_And_Func_Ada
+
+    procedure Init_Record is
+
+       type Data is record
+          Prev : Integer;
+          Curr : Integer;
+       end record;
+
+       procedure Init (D : out Data) is
+       begin
+          D := (Prev => 0, Curr => 1);
+       end Init;
+
+       function Init return Data is
+          D : constant Data := (Prev => 0, Curr => 1);
+       begin
+          return D;
+       end Init;
+
+       D1 : Data;
+
+       pragma Unreferenced (D1);
+    begin
+       D1 := Init;
+
+       Init (D1);
+    end Init_Record;
+
+In this example, we have two versions of :ada:`Init`: one using a procedural
+form, and the other one using a functional form. Note that, because of Ada's
+support for subprogram overloading, we can use the same name for both
+subprograms.
+
+In terms of performance, the same recomendations apply to Ada code: for complex
+types such as records, we should avoid writing functions such as the
+:ada:`Init` function above. Instead, we should use the procedural form of
+:ada:`Init`. The reason is that the compiler generates an extra copy for the
+:ada:`Init` function, while the :ada:`Init` procedure uses a reference for the
+output parameter, so that the actual record initialization is performed in
+place.
+
+An exception to this is when we use limited types. Here, GNAT is able to remove
+the extra copy that is usually needed for function returns, so that the actual
+assignment is done in place. We could, for example, rewrite the example above
+using limited types:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Init_Lim_Rec_Proc_And_Func_Ada
+
+    procedure Init_Limited_Record is
+
+       type Data is limited record
+          Prev : Integer;
+          Curr : Integer;
+       end record;
+
+       function Init return Data is
+       begin
+          return D : Data do
+             D.Prev := 0;
+             D.Curr := 1;
+          end return;
+       end Init;
+
+       D1 : Data := Init;
+
+       pragma Unreferenced (D1);
+    begin
+       null;
+    end Init_Limited_Record;
+
+In this example, :ada:`D1 : Data := Init;` has the same cost as the call to the
+procedural form |mdash| :ada:`Init (D1);` |mdash| that we've seen in the
+previous example. This is because the assignment is done in place.
+
+Note that limited types require the use of the extended return statements
+(:ada:`return ... do ... end return`) in function implementations. Also note
+that, because the :ada:`Data` type is limited, we can only use the :ada:`Init`
+function in the declaration of :ada:`D1`; a statement in the code such as
+:ada:`D1 := Init;` is therefore forbidden.
