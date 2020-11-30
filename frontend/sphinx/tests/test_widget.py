@@ -1,6 +1,6 @@
 import unittest
 
-from widget.widget import Widget, NameException, ButtonException, ChopException, LabException, FileException
+from widget.widget import Widget, NameException, ButtonException, ChopException, LabException, FileException, MainException
 
 class TestWidget(unittest.TestCase):
     def setUp(self):
@@ -45,6 +45,46 @@ class TestWidget(unittest.TestCase):
         }
         self.widget.parseArgs(["switches=" + switches_in])
         self.assertDictEqual(self.widget.switches, switches_out)
+
+    def test_parseArgs_nomain(self):
+        self.assertEqual(self.widget.main, "")
+
+    def test_parseArgs_main(self):
+        ada = """package body A is
+
+end A;
+
+package A is
+
+end A;
+
+procedure Test is
+begin
+   null;
+end Test;
+"""
+        self.widget.parseArgs(["main=test.adb", "ada"])
+        self.widget.parseContent(ada.splitlines())
+        self.assertEqual(self.widget.main, "test.adb")
+
+    def test_parseArgs_wrongmain(self):
+        ada = """package body A is
+
+end A;
+
+package A is
+
+end A;
+
+procedure Test is
+begin
+   null;
+end Test;
+"""
+        self.widget.parseArgs(["main=wrong.adb", "ada"])
+        self.widget.parseContent(ada.splitlines())
+        with self.assertRaises(MainException):
+            self.widget.main
 
     def test_parseArgs_invalid(self):
         with self.assertRaises(ValueError):

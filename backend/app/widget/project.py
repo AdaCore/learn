@@ -101,13 +101,11 @@ class Project:
     zip()
         Zips up the files of the project and returns the byte stream
     """
-    def __init__(self, files, switches, spark_mode=False):
+    def __init__(self, data, spark_mode=False):
         """
         Construct the Project. The list of files passed in are processed and stored based on their types and contents.
-        :param files:
-            The files to construct the project with
-        :param switches:
-            The list of suggested switches to add to the project
+        :param data:
+            The object containing project configuration data
         :param spark_mode:
             Whether this is a spark project
         """
@@ -120,7 +118,7 @@ class Project:
         self.gpr = new_file("main.gpr", MAIN_GPR)
 
         # strip cli and labio files from files
-        for file in files:
+        for file in data['files']:
             if file['basename'] == CLI_FILE:
                 self.cli = file['contents'].split()
             elif file['basename'] == LAB_IO_FILE:
@@ -145,20 +143,23 @@ class Project:
         self.gpr.insert_languages(languages)
 
         # Figure out which files are mains
-        mains = find_mains(self.file_list)
-
-        if len(mains) > 1:
-            main_match = [i for i in mains if "main.adb" in i]
-            if len(main_match) > 1:
-                raise ProjectError("More than one main.adb found in project")
-            elif len(main_match) < 1:
-                self.main = None
-            else:
-                self.main = main_match[0]
-        elif len(mains) == 1:
-            self.main = mains[0]
+        if data['main']:
+            self.main = data['main']
         else:
-            self.main = None
+            mains = find_mains(self.file_list)
+
+            if len(mains) > 1:
+                main_match = [i for i in mains if "main.adb" in i]
+                if len(main_match) > 1:
+                    raise ProjectError("More than one main.adb found in project")
+                elif len(main_match) < 1:
+                    self.main = None
+                else:
+                    self.main = main_match[0]
+            elif len(mains) == 1:
+                self.main = mains[0]
+            else:
+                self.main = None
 
         if self.main:
             self.main = self.main.split('.')[0]
@@ -167,7 +168,7 @@ class Project:
         self.file_list.append(self.gpr)
 
         # Add suggested switches to gpr file (safely)
-        self.gpr.insert_switches(switches)
+        self.gpr.insert_switches(data['switches'])
 
         # Add ADC file to file list
         adc_content = COMMON_ADC
@@ -233,7 +234,7 @@ class RemoteProject(Project):
             Submits the project against the lab_list data. This will run the project against each test case and
             aggregate the results
         """
-    def __init__(self, app, container, task_id, files, switches, spark_mode=False):
+    def __init__(self, app, container, task_id, data, spark_mode=False):
         """
         Constructs the RemoteProject. Calls the super constructor and creates local_tempd and remote_tempd directories
         and pushes files to the container.
@@ -241,10 +242,8 @@ class RemoteProject(Project):
             The container to use
         :param task_id:
             The task id for the task that created this class
-        :param files:
-            The files for the project
-        :param switches:
-            The suggested switches for the project
+        :param data:
+            The object containing project configuration data
         :param spark_mode:
             Whether or not this is a spark project
         """
@@ -253,7 +252,7 @@ class RemoteProject(Project):
         self.app = app
 
         # Call the Project constructor
-        super().__init__(files, switches, spark_mode)
+        super().__init__(data, spark_mode)
 
         self.container.push_files(self.file_list)
 

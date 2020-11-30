@@ -25,6 +25,7 @@ describe('ServerWorker', () => {
   describe('#request()', () => {
     const serverData: RunProgram.TS = {
       files: [],
+      main: 'test',
       mode: 'test',
       switches: {},
       name: 'test',

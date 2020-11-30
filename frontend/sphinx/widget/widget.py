@@ -26,6 +26,10 @@ class FileException(Exception):
     pass
 
 
+class MainException(Exception):
+    pass
+
+
 class Widget:
     """The Widget class defines the layout of a widget
 
@@ -50,6 +54,7 @@ class Widget:
         self.__name: str = None
         self.__no_button: bool = False
         self.__chop_strategy: ChopStrategy = None
+        self.__main = None
 
     @property
     def button_group(self) -> List[Button]:
@@ -97,6 +102,25 @@ class Widget:
             return self.__files
         else:
             raise FileException('No files present on widget')
+
+    @property
+    def main(self) -> str:
+        """Property for main access
+
+        Raises:
+            Exception: If specified main doesn't exist
+
+        Returns:
+            str: The main or empty string if not specified
+        """
+        if not self.__main:
+            return ""
+
+        if any(f.basename == self.__main for f in self.__files):
+            return self.__main
+        else:
+            raise MainException('Specified main does not exist')
+
 
     def __parseButton(self, btn: str):
         """Parse a button specified in a Directive arg
@@ -225,6 +249,8 @@ class Widget:
                 self.__chop_strategy = ChopStrategy.REAL
             elif arg.startswith('switches='):
                 self.__parseSwitches(arg)
+            elif arg.startswith('main='):
+                self.__main = arg.split('=')[1]
             else:
                 raise ValueError(f'Invalid argument: {arg}')
 

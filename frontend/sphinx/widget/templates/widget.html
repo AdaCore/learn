@@ -1,5 +1,5 @@
 {% autoescape true %}
-<widget id="{{ w.id }}" data-url="{{ url }}" data-name="{{ w.name }}" data-lab="{{ w.is_lab }}" data-switches='{{ w.switches | tojson }}'>
+<widget id="{{ w.id }}" data-url="{{ url }}" data-name="{{ w.name }}" data-lab="{{ w.is_lab }}" data-switches='{{ w.switches | tojson }}' data-main="{{ w.main }}">
     {% for sf in w.shadow_files %}
         <div class="shadow-file" style="display:none" data-basename="{{ sf.basename }}">{{ sf.content }}</div>
     {% endfor %}

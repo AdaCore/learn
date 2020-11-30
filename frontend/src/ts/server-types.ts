@@ -17,6 +17,7 @@ export namespace RunProgram {
 
   export interface TS {
     files: ResourceList;
+    main: string;
     mode: string;
     switches: SwitchType;
     name: string;

@@ -24,6 +24,7 @@ type EditorMap = Map<string, EditorView>;
 class Widget {
   // model object
   private readonly name: string;
+  private readonly main: string;
   private readonly server: string;
   private readonly id: string;
   private readonly shadowFiles: ResourceList = [];
@@ -50,6 +51,7 @@ class Widget {
     // Read attributes from container object to initialize members
     this.id = this.container.id;
     this.name = elem.dataset.name as string;
+    this.main = elem.dataset.main as string;
 
     // add widget dependencies from up page to the EditorView
     if (dep) {
@@ -264,6 +266,7 @@ class Widget {
 
     const serverData: RunProgram.TS = {
       files: files,
+      main: this.main,
       mode: mode,
       switches: JSON.parse(this.container.dataset.switches as string),
       name: this.name,
