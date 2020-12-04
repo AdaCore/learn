@@ -559,7 +559,7 @@ that the Ravenscar restrictions must be observed in your program.
 Some of the examples we've seen above will be rejected by the compiler when
 using the Ravenscar profile. For example:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Ravenscar
 
     package My_Tasks is
 
@@ -596,7 +596,7 @@ procedure. Ravenscar expects task declarations to be done on a library level.
 Therefore, a simple solution is to create a separate package and reference it
 in the main application:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Ravenscar
 
     with My_Tasks; use My_Tasks;
 
