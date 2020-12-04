@@ -718,7 +718,19 @@ This is how the declaration could look like:
     function Value (E : Value_Retrieval_IF) return Float is abstract;
 
 Note that, because we are declaring interface types, all operations on those
-types must be abstract.
+types must be abstract or, in case of procedures, they can also be declared
+:ada:`null`. For example, we could change the declaration of the procedures
+above to this:
+
+.. code-block:: ada
+
+    procedure Activate (E : in out Activation_IF) is null;
+    procedure Deactivate (E : in out Activation_IF) is null;
+
+When an operation is declared abstract, we must override it for the type that
+derives from the interface. When a procedure is declared :ada:`null`, it acts
+as a do-nothing default. In this case, overriding the operation is optional for
+the type that derives from this interface.
 
 Base type
 ~~~~~~~~~
