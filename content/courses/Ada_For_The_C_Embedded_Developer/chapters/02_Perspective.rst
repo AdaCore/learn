@@ -2430,7 +2430,7 @@ Here's a first example:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
+.. code:: ada run_button main=main.adb project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
 
     procedure Proc
      (Var1 : Integer;
@@ -2472,7 +2472,7 @@ Here's a first example:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
+.. code:: c manual_chop run_button main=main.c project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
 
     !proc.h
     void Proc

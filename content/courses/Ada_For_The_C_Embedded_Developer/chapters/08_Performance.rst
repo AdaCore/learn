@@ -175,7 +175,7 @@ this type without an explicit value for :ada:`V` will issue a call to
 :ada:`Call_To_Some_Function`. More subtle issue may arise with elaboration. For
 example, it's possible to write:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Dynamic_Array
+.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Dynamic_Array
 
     package Some_Functions is
 
@@ -208,7 +208,7 @@ boundaries must be enforced.
 
 Here's a last case which may also be surprising:
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Record_With_Arrays
+.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Record_With_Arrays
 
     package P is
        type Arr is array (Integer range <>) of Integer;
