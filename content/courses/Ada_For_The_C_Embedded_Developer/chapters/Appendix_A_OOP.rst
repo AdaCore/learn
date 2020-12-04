@@ -720,7 +720,7 @@ This is how the declaration could look like:
     function Value (E : Value_Retrieval_IF) return Float is abstract;
 
 Note that, because we are declaring interface types, all operations on those
-types must be abstract or, in case of procedures, they can also be declared
+types must be abstract or, in the case of procedures, they can also be declared
 :ada:`null`. For example, we could change the declaration of the procedures
 above to this:
 
