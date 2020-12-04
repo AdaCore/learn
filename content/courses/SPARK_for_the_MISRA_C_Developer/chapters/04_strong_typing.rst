@@ -767,7 +767,7 @@ applies both between types of a different `essential type category` as MISRA C
 puts it, as well as between types that are structurally the same but declared as
 different types.
 
-.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_Ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_Bad_Ada
     :class: ada-expect-compile-error
 
     procedure Bad_Conversions is
@@ -796,7 +796,7 @@ Adding explicit conversions makes the assignments to :ada:`F` and :ada:`M` valid
 since SPARK (and Ada) allow conversions between numeric types and between a derived
 type and its parent type, but all other conversions are illegal:
 
-.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_Ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_Bad_Ada
     :class: ada-expect-compile-error
 
     procedure Bad_Conversions is
@@ -832,7 +832,7 @@ exception is raised.
 Hence, the following is valid SPARK (and Ada) code; :ada:`Character` is defined as
 an enumeration type:
 
-.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_Ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_Ok_Ada
 
     procedure Ok_Conversions is
        pragma Warnings (Off);
