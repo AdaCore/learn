@@ -328,6 +328,8 @@ You can find some information about it in the
     Once available, add link to section from a more advanced embedded course
     that explains the :ada:`Ada.Interrupts` package.
 
+.. _Interfacing_With_Devices:
+
 Interfacing with Devices
 ------------------------
 
@@ -564,6 +566,18 @@ of the :ada:`Arr` array, which has atomic components.
 ARM and :program:`svd2ada`
 --------------------------
 
-.. todo::
+As we've seen in the previous section about
+:ref:`interfacing with devices <Interfacing_With_Devices>`, Ada offers powerful
+features to describe low-level details about the hardware architecture without
+abdicating from its strong typing capabilities. However, it can be cumbersome
+to create a specification for all those low-level details when you have a
+complex architecture. Fortunately, for ARM Cortex-M devices, the GNAT toolchain
+offers an Ada binding generator called :program:`svd2ada`, which takes
+CMSIS-SVD descriptions for those devices and creates Ada specifications that
+match the architecture. CMSIS-SVD description files are based on the Cortex
+Microcontroller Software Interface Standard (CMSIS), which is a hardware
+abstraction layer for ARM Cortex microcontrollers.
 
-    Complete section!
+Please refer to the
+`svd2ada project page <https://github.com/AdaCore/svd2ada>`_ for details about
+this tool.
