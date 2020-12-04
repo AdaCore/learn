@@ -799,10 +799,10 @@ own version of the :ada:`Value` function by overriding it. Therefore,
     out, and the code would still compile. However, if provided, the compiler
     will check whether the information is correct.
 
-    Using the :ada:`overriding`  keyword can help avoiding bad surprises
+    Using the :ada:`overriding` keyword can help to avoid bad surprises
     |mdash| when you *may think* that you're overriding a subprogram, but
     you're actually not. Similarly, you can also write :ada:`not overriding` to
-    be explicitly about subprograms that are new primitives of a derived type.
+    be explicit about subprograms that are new primitives of a derived type.
     For example:
 
     .. code-block:: ada
@@ -1251,8 +1251,8 @@ declaration could look like:
 .. admonition:: Important
 
     Note that we're now using the :ada:`limited` keyword in the declaration of
-    type :ada:`AB`. That is necessary because we want to avoid that objects of
-    type :ada:`AB` can be copied by assignment, which would lead to two objects
+    type :ada:`AB`. That is necessary because we want to prevent objects of
+    type :ada:`AB` being copied by assignment, which would lead to two objects
     having the same (dynamically allocated) subsystems A and B internally. This
     change requires that both :ada:`Activation_IF` and
     :ada:`Value_Retrieval_IF` are declared limited as well.
