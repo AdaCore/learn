@@ -242,13 +242,23 @@ obvious when looking at this code snippet:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button
 
-    --  [...]
+    package Fixed_Definitions is
 
+       D : constant := 2.0 ** (-31);
+
+       type Fixed is delta D range -1.0 .. 1.0 - D;
+
+    end Fixed_Definitions;
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    with Fixed_Definitions; use Fixed_Definitions;
+
+    procedure Show_Float_And_Fixed_Point is
        Float_Value : Float := 0.25;
        Fixed_Value : Fixed := 0.25;
-
     begin
 
        Float_Value := Float_Value + 0.25;
@@ -256,8 +266,7 @@ obvious when looking at this code snippet:
 
        Put_Line ("Float_Value = " & Float'Image (Float_Value));
        Put_Line ("Fixed_Value = " & Fixed'Image (Fixed_Value));
-
-    --  [...]
+    end Show_Float_And_Fixed_Point;
 
 In this example, the application will show the value 0.5 for both
 :ada:`Float_Value` and :ada:`Fixed_Value`.
