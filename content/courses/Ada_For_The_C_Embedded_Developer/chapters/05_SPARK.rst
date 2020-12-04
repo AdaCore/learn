@@ -445,6 +445,8 @@ There are additional capabilities for exceptions but now you have a good
 foundation for understanding how they work, especially their dynamic
 nature at run-time.
 
+.. _Dynamic_Checks_Vs_Formal_Proof:
+
 Understanding Dynamic Checks versus Formal Proof
 ------------------------------------------------
 

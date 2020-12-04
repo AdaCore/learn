@@ -155,10 +155,211 @@ inline it. In this case, we get a compilation error from GNAT.
 Checks and assertions
 ---------------------
 
-.. todo::
+Checks
+~~~~~~
 
-    Complete section!
+Ada provides many runtime checks to ensure that the implementation is working
+as expected. For example, when accessing an array, we would like to make sure
+that we're not accessing a memory position that is not allocated for that
+array. This is achieved by an index check.
 
+Another example of runtime check is the verification of valid ranges. For
+example, when adding two integer numbers, we would like to ensure that the
+result is still in the valid range |mdash| e.g., it shouldn't overflow or
+underflow. This is achieved by an overflow check.
+
+Although runtime checks are very useful and should be used as much as possible,
+they can also increase the overhead of implementations at certain hot-spots.
+For example, checking the index of an array in a sorting algorithm may
+significantly decrease its performance. In those cases, suppressing the check
+may be an option. We can achieve this suppression by using
+:ada:`pragma Suppress (Index_Check)`. For example:
+
+.. code-block:: ada
+
+    procedure Sort (A : in out Integer_Array) is
+       pragma Suppress (Index_Check);
+    begin
+       --  (implementation removed...)
+       null;
+    end Sort;
+
+In case of overflow checks, we can use :ada:`pragma Suppress (Overflow_Check)`
+to suppress them:
+
+.. code-block:: ada
+
+    function Some_Computation (A, B : Int32) return Int32 is
+       pragma Suppress (Overflow_Check);
+    begin
+       --  (implementation removed...)
+       null;
+    end Sort;
+
+We can also deactivate overflow checks for integer types using the ``-gnato``
+switch when compiling a source-code file with GNAT. In this case, overflow
+checks in the whole file are deactivated.
+
+It is also possible to suppress all checks at once using
+:ada:`pragma Suppress (All_Checks)`. In addition, GNAT offers a compilation
+switch called ``-gnatp``, which has the same effect on the whole file.
+
+Note, however, that this kind of suppression is just a recommendation to the
+compiler. There's no guarantee that the compiler will actually suppress any of
+the checks because the compiler may not be able to do so |mdash| typically
+because the hardware happens to do it. For example, if the machine traps on any
+access via address zero, requesting the removal of null-access value checks in
+the generated code won't prevent them from happening.
+
+It is important to differentiate between required and redundant checks. Let's
+consider the following example in C:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero
+
+    !main.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        int a = 8, b = 0, res;
+
+        res = a / b;
+
+        // printing the result
+        printf("res = %d\n", res);
+
+        return 0;
+    }
+
+Because C doesn't have language-defined checks, as soon as the application
+tries to divide a value by zero in :c:`res = a / b`, it'll break |mdash| on
+Linux, for example, you may get the following error message by the operating
+system: ``Floating point exception (core dumped)``. Therefore, we need to
+manually introduce a check for zero before this operation. For example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero_Check
+
+    !main.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        int a = 8, b = 0, res;
+
+        if (b != 0) {
+            res = a / b;
+
+            // printing the result
+            printf("res = %d\n", res);
+        }
+        else
+        {
+            // printing error message
+            printf("Error: cannot calculate value (division by zero)\n");
+        }
+
+        return 0;
+    }
+
+This is the corresponding code in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Division_By_Zero is
+       A   : Integer := 8;
+       B   : Integer := 0;
+       Res : Integer;
+    begin
+       Res := A / B;
+
+       Put_Line ("Res = " & Integer'Image (Res));
+    end Show_Division_By_Zero;
+
+Similar to the first version of the C code, we're not checking for a potential
+division by zero here. In Ada, however, this check is *automatically
+introduced* by the language itself. When running the application above, an
+exception is raised when the application tries to divide the value in :ada:`A`
+by zero. We could introduce exception handling in our example, so that we get
+the same message as we did in the second version of the C code:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Division_By_Zero is
+       A   : Integer := 8;
+       B   : Integer := 0;
+       Res : Integer;
+    begin
+       Res := A / B;
+
+       Put_Line ("Res = " & Integer'Image (Res));
+    exception
+       when Constraint_Error =>
+          Put_Line ("Error: cannot calculate value (division by zero)");
+       when others =>
+          null;
+    end Show_Division_By_Zero;
+
+This example demonstrates that the division check for :ada:`Res := A / B` is
+required and shouldn't be suppressed. In contrast, a check is redundant |mdash|
+and therefore not required |mdash| when we know that the condition that leads
+to a failure can never happen. In many cases, the compiler itself detects
+redundant checks and eliminates them (for higher optimization levels).
+Therefore, when improving the performance of your application, you should:
+
+#. keep all checks active for most parts of the application;
+
+#. identify the hot-spots of your application;
+
+#. identify which checks haven't been eliminated by the optimizer on these
+   hot-spots;
+
+#. identify which of those checks are redundant;
+
+#. only suppress those checks that are redundant, and keep the required ones.
+
+Assertions
+~~~~~~~~~~
+
+We've already discussed assertions in
+:ref:`this section of the SPARK chapter <Dynamic_Checks_Vs_Formal_Proof>`.
+Assertions are user-defined checks that you can add to your code using the
+:ada:`pragma Assert`. For example:
+
+.. code-block:: ada
+
+    function Some_Computation (A, B : Int32) return Int32 is
+       Res : Int32;
+    begin
+       --  (implementation removed...)
+
+       pragma Assert (Res >= 0);
+
+       return Res;
+    end Sort;
+
+Assertions that are specified with :ada:`pragma Assert` are not enabled by
+default. You can enable them by setting the assertion policy to *check* |mdash|
+using :ada:`pragma Assertion_Policy (Check)` |mdash| or by using the ``-gnata``
+switch when compiling with GNAT.
+
+Similar to the checks discussed previously, assertions can generate significant
+overhead when used at hot-spots. Restricting those assertions to development
+(e.g. debug version) and turning them off on the release version may be an
+option. In this case, formal proof |mdash| as discussed in the
+:doc:`SPARK chapter <05_SPARK>` |mdash| can help you. By formally proving that
+assertions will never fail at run-time, you can safely deactivate them.
 
 Dynamic v.s static structures
 -----------------------------
