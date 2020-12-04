@@ -43,10 +43,12 @@ Checks
 Ada provides many runtime checks to ensure that the implementation is working
 as expected. For example, when accessing an array, we would like to make sure
 that we're not accessing a memory position that is not allocated for that
-array. This is achieved by an index check. Another example is the use of
-constrained ranges in numeric applications: when adding two integer numbers, we
-would like to ensure that the result doesn't overflow or underflow. This is
-achieved by an overflow check.
+array. This is achieved by an index check.
+
+Another example of runtime check is the verification of valid ranges. For
+example, when adding two integer numbers, we would like to ensure that the
+result is still in the valid range |mdash| e.g., it shouldn't overflow or
+underflow. This is achieved by an overflow check.
 
 Although runtime checks are very useful and should be used as much as possible,
 they can also increase the overhead of implementations at certain hot-spots.
