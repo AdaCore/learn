@@ -267,6 +267,8 @@ proceed to display the activation state and the result of the system's health
 check. Finally, we deactivate the system and display the activation state
 again.
 
+.. _Initial_Translation_To_Ada:
+
 Initial translation to Ada
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -718,7 +720,19 @@ This is how the declaration could look like:
     function Value (E : Value_Retrieval_IF) return Float is abstract;
 
 Note that, because we are declaring interface types, all operations on those
-types must be abstract.
+types must be abstract or, in the case of procedures, they can also be declared
+:ada:`null`. For example, we could change the declaration of the procedures
+above to this:
+
+.. code-block:: ada
+
+    procedure Activate (E : in out Activation_IF) is null;
+    procedure Deactivate (E : in out Activation_IF) is null;
+
+When an operation is declared abstract, we must override it for the type that
+derives from the interface. When a procedure is declared :ada:`null`, it acts
+as a do-nothing default. In this case, overriding the operation is optional for
+the type that derives from this interface.
 
 Base type
 ~~~~~~~~~
@@ -799,10 +813,10 @@ own version of the :ada:`Value` function by overriding it. Therefore,
     out, and the code would still compile. However, if provided, the compiler
     will check whether the information is correct.
 
-    Using the :ada:`overriding`  keyword can help avoiding bad surprises
+    Using the :ada:`overriding` keyword can help to avoid bad surprises
     |mdash| when you *may think* that you're overriding a subprogram, but
     you're actually not. Similarly, you can also write :ada:`not overriding` to
-    be explicitly about subprograms that are new primitives of a derived type.
+    be explicit about subprograms that are new primitives of a derived type.
     For example:
 
     .. code-block:: ada
@@ -1176,7 +1190,8 @@ above:
        procedure Activate (E : in out Sys_Base) is
        begin
           --  NOTE: calling "E.Activation_Reset" does NOT dispatch!
-          --        We need to use the 'Class attribute:
+          --        We need to use the 'Class attribute here --- not using this
+          --        attribute is an error that will be caught by the compiler.
           Sys_Base'Class (E).Activation_Reset;
 
           E.Active := True;
@@ -1211,7 +1226,10 @@ An important detail is that, in the implementation of :ada:`Activate`, we use
 :ada:`Sys_Base'Class` to ensure that the call to :ada:`Activation_Reset` will
 dispatch. If we had just written :ada:`E.Activation_Reset` instead, then we
 would be calling the :ada:`Activation_Reset` procedure of :ada:`Sys_Base`
-itself, which is not what we actually want here.
+itself, which is not what we actually want here. The compiler will catch the
+error if you don't do the conversion to the class-wide type, because it would
+otherwise be a statically-bound call to an abstract procedure, which is illegal
+at compile-time.
 
 Dynamic allocation
 ~~~~~~~~~~~~~~~~~~
@@ -1251,8 +1269,8 @@ declaration could look like:
 .. admonition:: Important
 
     Note that we're now using the :ada:`limited` keyword in the declaration of
-    type :ada:`AB`. That is necessary because we want to avoid that objects of
-    type :ada:`AB` can be copied by assignment, which would lead to two objects
+    type :ada:`AB`. That is necessary because we want to prevent objects of
+    type :ada:`AB` being copied by assignment, which would lead to two objects
     having the same (dynamically allocated) subsystems A and B internally. This
     change requires that both :ada:`Activation_IF` and
     :ada:`Value_Retrieval_IF` are declared limited as well.
@@ -1490,7 +1508,6 @@ Finally, this is the complete updated source-code example:
     with Simple.System_A; use Simple.System_A;
     with Simple.System_B; use Simple.System_B;
 
-
     package body Simple.System_AB is
 
        overriding procedure Initialize (E : in out AB) is
@@ -1576,4 +1593,7 @@ Finally, this is the complete updated source-code example:
 Naturally, this is by no means the best possible implementation of system AB.
 By applying other software design strategies that we haven't covered here, we
 could most probably think of different ways to use object-oriented programming
-to improve this implementation.
+to improve this implementation. Also, in comparison to the
+:ref:`original implementation <Initial_Translation_To_Ada>`, we recognize that
+the amount of source-code has grown. On the other hand, we now have a system
+that is factored nicely, and also more extensible.
