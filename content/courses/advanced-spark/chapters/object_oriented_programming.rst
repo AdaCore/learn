@@ -789,7 +789,7 @@ initialized on return.
 Example #8
 ~~~~~~~~~~
 
-.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_08
+.. code:: ada run_button main=oo_example_08.adb project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_08
 
     package File_System is
 
@@ -865,7 +865,7 @@ respected.
 Example #9
 ~~~~~~~~~~
 
-.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_08
+.. code:: ada run_button main=oo_example_09.adb project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_08
 
     package File_System.Sync is
 
@@ -938,7 +938,7 @@ stronger than overridden one
 Example #10
 ~~~~~~~~~~~
 
-.. code:: ada run_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_08
+.. code:: ada run_button main=oo_example_10.adb project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_08
 
     package File_System.Sync is
 
