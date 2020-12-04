@@ -267,6 +267,8 @@ proceed to display the activation state and the result of the system's health
 check. Finally, we deactivate the system and display the activation state
 again.
 
+.. _Initial_Translation_To_Ada:
+
 Initial translation to Ada
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1506,7 +1508,6 @@ Finally, this is the complete updated source-code example:
     with Simple.System_A; use Simple.System_A;
     with Simple.System_B; use Simple.System_B;
 
-
     package body Simple.System_AB is
 
        overriding procedure Initialize (E : in out AB) is
@@ -1592,4 +1593,7 @@ Finally, this is the complete updated source-code example:
 Naturally, this is by no means the best possible implementation of system AB.
 By applying other software design strategies that we haven't covered here, we
 could most probably think of different ways to use object-oriented programming
-to improve this implementation.
+to improve this implementation. Also, in comparison to the
+:ref:`original implementation <Initial_Translation_To_Ada>`, we recognize that
+the amount of source-code has grown. On the other hand, we now have a system
+that is factored nicely, and also more extensible.
