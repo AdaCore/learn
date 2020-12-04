@@ -1188,7 +1188,8 @@ above:
        procedure Activate (E : in out Sys_Base) is
        begin
           --  NOTE: calling "E.Activation_Reset" does NOT dispatch!
-          --        We need to use the 'Class attribute:
+          --        We need to use the 'Class attribute here --- not using this
+          --        attribute is an error that will be caught by the compiler.
           Sys_Base'Class (E).Activation_Reset;
 
           E.Active := True;
@@ -1223,7 +1224,10 @@ An important detail is that, in the implementation of :ada:`Activate`, we use
 :ada:`Sys_Base'Class` to ensure that the call to :ada:`Activation_Reset` will
 dispatch. If we had just written :ada:`E.Activation_Reset` instead, then we
 would be calling the :ada:`Activation_Reset` procedure of :ada:`Sys_Base`
-itself, which is not what we actually want here.
+itself, which is not what we actually want here. The compiler will catch the
+error if you don't do the conversion to the class-wide type, because it would
+otherwise be a statically-bound call to an abstract procedure, which is illegal
+at compile-time.
 
 Dynamic allocation
 ~~~~~~~~~~~~~~~~~~
