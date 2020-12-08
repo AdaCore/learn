@@ -15,7 +15,7 @@ Ada for the C Embedded Developer
 
     .. container:: content-copyright
 
-        Copyright © 2020, AdaCore
+        Copyright © 2020 |ndash| 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -41,7 +41,8 @@ Ada for the C Embedded Developer
     language, which  removes a few features of the language with undefined
     behavior, so that the code is fit for sound static analysis techniques.
 
-    This book was written by Quentin Ochem and Robert Tice.
+    This book was written by Quentin Ochem, Robert Tice, Patrick Rogers, and
+    Gustavo A. Hoffmann.
 
 .. only:: builder_html
 

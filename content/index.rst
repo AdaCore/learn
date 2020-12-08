@@ -65,12 +65,36 @@ Download Ada and SPARK tools
 
     .. image:: images/GNAT-Community-download.png
         :target: https://www.adacore.com/download
-        :alt: Gnatcommunity Download
+        :alt: GNAT Community Download
         :width: 100pc
 
 **Try Ada and SPARK now with GNAT Community edition.**
 
 GNAT Community includes the Ada compiler and toolchain, the SPARK verifier and provers, and the GNAT Studio IDE.
+
+--------------
+
+GNAT Academic Program
+------------------------
+
+**Teachers and graduate students** who are interested in teaching or using Ada or SPARK can take
+advantage of AdaCore's `GNAT Academic Program (GAP) <http://www.adacore.com/academia>`_.
+
+.. container:: gap-logo
+
+    .. image:: images/gap_logo.png
+        :target: http://www.adacore.com/academia
+        :alt: GNAT Academic Program
+        :width: 100pc
+
+GAP's primary objective is to help put Ada and SPARK at the forefront of university study by
+building a community of academic professionals. GAP members receive a comprehensive
+toolset and professional support package specifically designed to provide the tools
+needed to teach and use Ada and SPARK in an academic setting. Best of all, AdaCore
+provides the GAP Package to eligible members at no cost.
+`Register <https://www.adacore.com/academia/gap-registration>`_ for membership
+today and join over 100 member universities in 35 countries currently teaching
+Ada and SPARK using GAP.
 
 --------------
 
@@ -80,4 +104,4 @@ GNAT Community includes the Ada compiler and toolchain, the SPARK verifier and p
         :target: https://www.hackster.io/contests/adacore3
         :width: 100pc
 
-.. centered:: We’re calling on developers across the globe to build cool embedded applications using the Ada and SPARK programming languages and are offering over $9,000 in total prizes! Click on the banner above to learn more.
+We’re calling on **developers across the globe** to build cool embedded applications using the Ada and SPARK programming languages and are offering **over $9,000 in total prizes!** Click on the banner above to learn more.

@@ -328,6 +328,8 @@ You can find some information about it in the
     Once available, add link to section from a more advanced embedded course
     that explains the :ada:`Ada.Interrupts` package.
 
+.. _Interfacing_With_Devices:
+
 Interfacing with Devices
 ------------------------
 
@@ -335,33 +337,458 @@ Interfacing with Devices
 
     Complete section!
 
-Understanding Bare-Metal Environment
-------------------------------------
-
-.. todo::
-
-    Complete section!
-
-
 Dealing with Absence of FPU with Fixed Point
 --------------------------------------------
 
-.. todo::
+Many numerical applications typically use floating-point types to compute
+values. However, in some platforms, a floating-point unit may not be available.
+Other platforms may have a floating-point unit, but using it in certain
+numerical algorithms can be prohibitive in terms of performance. For those
+cases, fixed-point arithmetic can be a good alternative.
 
-    Complete section!
+The difference between fixed-point and floating-point types might not be so
+obvious when looking at this code snippet:
+
+[Ada]
+
+.. code:: ada run_button
+
+    package Fixed_Definitions is
+
+       D : constant := 2.0 ** (-31);
+
+       type Fixed is delta D range -1.0 .. 1.0 - D;
+
+    end Fixed_Definitions;
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    with Fixed_Definitions; use Fixed_Definitions;
+
+    procedure Show_Float_And_Fixed_Point is
+       Float_Value : Float := 0.25;
+       Fixed_Value : Fixed := 0.25;
+    begin
+
+       Float_Value := Float_Value + 0.25;
+       Fixed_Value := Fixed_Value + 0.25;
+
+       Put_Line ("Float_Value = " & Float'Image (Float_Value));
+       Put_Line ("Fixed_Value = " & Fixed'Image (Fixed_Value));
+    end Show_Float_And_Fixed_Point;
+
+In this example, the application will show the value 0.5 for both
+:ada:`Float_Value` and :ada:`Fixed_Value`.
+
+The major difference between floating-point and fixed-point types is in the way
+the values are stored. Values of ordinary fixed-point types are, in effect,
+scaled integers. The scaling used for ordinary fixed-point types is defined by
+the type's :ada:`small`, which is derived from the specified :ada:`delta` and,
+by default, is a power of two. Therefore, ordinary fixed-point types are
+sometimes called binary fixed-point types. In that sense, ordinary fixed-point
+types can be thought of being close to the actual representation on the
+machine. In fact, ordinary fixed-point types make use of the available integer
+shift instructions, for example.
+
+Another difference between floating-point and fixed-point types is that Ada
+doesn't provide standard fixed-point types |mdash| except for the
+:ada:`Duration` type, which is used to represent an interval of time in
+seconds. While the Ada standard specifies floating-point types such as
+:ada:`Float` and :ada:`Long_Float`, we have to declare our own fixed-point
+types. Note that, in the previous example, we have used a fixed-point type
+named :ada:`Fixed`: this type isn't part of the standard, but must be declared
+somewhere in the source-code of our application.
+
+The syntax for an ordinary fixed-point type is
+
+.. code-block:: ada
+
+    type <type_name> is delta <delta_value> range <lower_bound> .. <upper_bound>;
+
+By default, the compiler will choose a scale factor, or :ada:`small`, that is a
+power of 2 no greater than ``<delta_value>``.
+
+For example, we may define a normalized range between -1.0 and 1.0 as
+following:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Fixed_Point_Type
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Normalized_Fixed_Point_Type is
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+    begin
+       Put_Line ("TQ31 requires " & Integer'Image (TQ31'Size) & " bits");
+       Put_Line ("The delta    value of TQ31 is " & TQ31'Image (TQ31'Delta));
+       Put_Line ("The minimum  value of TQ31 is " & TQ31'Image (TQ31'First));
+       Put_Line ("The maximum  value of TQ31 is " & TQ31'Image (TQ31'Last));
+    end Normalized_Fixed_Point_Type;
+
+In this example, we are defining a 32-bit fixed-point data type for our
+normalized range. When running the application, we notice that the upper
+bound is close to one, but not exact one. This is a typical effect of
+fixed-point data types |mdash| you can find more details in this discussion
+about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
+We may also rewrite this code with an exact type definition:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Adapted_Fixed_Point_Type
+
+    procedure Normalized_Adapted_Fixed_Point_Type is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+    begin
+       null;
+    end Normalized_Adapted_Fixed_Point_Type;
+
+We may also use any other range. For example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Custom_Fixed_Point_Range
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics; use Ada.Numerics;
+
+    procedure Custom_Fixed_Point_Range is
+       type T_Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
+    begin
+       Put_Line ("T_Inv_Trig requires " & Integer'Image (T_Inv_Trig'Size)
+                 & " bits");
+       Put_Line ("The delta    value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Delta));
+       Put_Line ("The minimum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'First));
+       Put_Line ("The maximum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Last));
+    end Custom_Fixed_Point_Range;
+
+In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
+which has a range from :math:`-\pi/2` to :math:`\pi/2`.
+
+All standard operations are available for fixed-point types. For example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_Op
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Fixed_Point_Op is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+
+       A, B, R : TQ31;
+    begin
+       A := 0.25;
+       B := 0.50;
+       R := A + B;
+       Put_Line ("R is " & TQ31'Image (R));
+    end Fixed_Point_Op;
+
+As expected, :ada:`R` contains 0.75 after the addition of :ada:`A` and :ada:`B`.
+
+In the case of C, since the language doesn't support fixed-point arithmetic, we
+need to emulate it using integer types and custom operations via functions.
+Let's look at this very rudimentary example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_C
+
+    !main.c
+    #include <stdio.h>
+    #include <math.h>
+
+    #define SHIFT_FACTOR  32
+
+    #define TO_FIXED(x)     ((int)   ((x) * pow (2.0, SHIFT_FACTOR - 1)))
+    #define TO_FLOAT(x)     ((float) ((double)(x) * (double)pow (2.0, -(SHIFT_FACTOR - 1))))
+
+    typedef int fixed;
+
+    fixed add (fixed a, fixed b)
+    {
+        return a + b;
+    }
+
+    fixed mult (fixed a, fixed b)
+    {
+        return (fixed)(((long)a * (long)b) >> (SHIFT_FACTOR - 1));
+    }
+
+    void display_fixed (fixed x)
+    {
+        printf("value (integer) = %d\n",    x);
+        printf("value (float)   = %3.5f\n\n", TO_FLOAT (x));
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        int fixed_value = TO_FIXED(0.25);
+
+        printf("Original value\n");
+        display_fixed(fixed_value);
+
+        printf("... + 0.25\n");
+        fixed_value = add(fixed_value, TO_FIXED(0.25));
+        display_fixed(fixed_value);
+
+        printf("... * 0.5\n");
+        fixed_value = mult(fixed_value, TO_FIXED(0.5));
+        display_fixed(fixed_value);
+    }
+
+Here, we declare the fixed-point type :c:`fixed` based on :c:`int` and two
+operations for it: addition (via the :c:`add` function) and multiplication
+(via the :c:`mult` function). Note that, while fixed-point addition is quite
+straightforward, multiplication requires right-shifting to match the correct
+internal representation. In Ada, since fixed-point operations are part of the
+language specification, they don't need to be emulated. Therefore, no extra
+effort is required from the programmer.
+
+Also note that the example above is very rudimentary, so it doesn't take some
+of the side-effects of fixed-point arithmetic into account. In C, you have to
+manually take all side-effects deriving from fixed-point arithmetic into
+account, while in Ada, the compiler takes care of selecting the right
+operations for you.
 
 .. _VolatileAtomicData:
 
 Volatile and Atomic data
 ------------------------
 
-.. todo::
+Ada has built-in support for handling both volatile and atomic data. Let's
+start by discussing volatile objects.
 
-    Complete section!
+Volatile
+~~~~~~~~
+
+A `volatile <https://en.wikipedia.org/wiki/Volatile_(computer_programming)>`_
+object can be described as an object in memory whose value may change between
+two consecutive memory accesses of a process A |mdash| even if process A itself
+hasn't changed the value. This situation may arise when an object in memory is
+being shared by multiple threads. For example, a thread *B* may modify the
+value of that object between two read accesses of a thread *A*. Another typical
+example is the one of
+`memory-mapped I/O <https://en.wikipedia.org/wiki/Memory-mapped_I/O>`_, where
+the hardware might be constantly changing the value of an object in memory.
+
+Because the value of a volatile object may be constantly changing, a compiler
+cannot generate code that stores the value of that object into a register and
+use the value from the register in subsequent operations. Storing into a
+register is avoided because, if the value is stored there, it would be outdated
+if another process had changed the volatile object in the meantime. Instead,
+the compiler generates code in such a way that the process must read the value
+of the volatile object from memory for each access.
+
+Let's look at a simple example of a volatile variable in C:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Object_C
+
+    !main.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        volatile double val = 0.0;
+        int i;
+
+        for (i = 0; i < 1000; i++)
+        {
+            val += i * 2.0;
+        }
+        printf ("val: %5.3f\n", val);
+    }
+
+In this example, :c:`val` has the modifier :c:`volatile`, which indicates that
+the compiler must handle :c:`val` as a volatile object. Therefore, each read
+and write access in the loop is performed by accessing the value of :c:`val` in
+then memory.
+
+This is the corresponding implementation in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Object_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Object is
+       Val : Long_Float with Volatile;
+    begin
+       Val := 0.0;
+       for I in 0 .. 999 loop
+          Val := Val + 2.0 * Long_Float (I);
+       end loop;
+
+       Put_Line ("Val: " & Long_Float'Image (Val));
+    end Show_Volatile_Object;
+
+In this example, :ada:`Val` has the :ada:`Volatile` aspect, which makes the
+object volatile. We can also use the :ada:`Volatile` aspect in type
+declarations. For example:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Type
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Type is
+       type Volatile_Long_Float is new Long_Float with Volatile;
+
+       Val : Volatile_Long_Float;
+    begin
+       Val := 0.0;
+       for I in 0 .. 999 loop
+          Val := Val + 2.0 * Volatile_Long_Float (I);
+       end loop;
+
+       Put_Line ("Val: " & Volatile_Long_Float'Image (Val));
+    end Show_Volatile_Type;
+
+Here, we're declaring a new type :ada:`Volatile_Long_Float` based on the
+:ada:`Long_Float` type and using the :ada:`Volatile` aspect. Any object of this
+type is automatically volatile.
+
+In addition to that, we can declare components of an array to be volatile. In
+this case, we can use the :ada:`Volatile_Components` aspect in the array
+declaration. For example:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Array_Components
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Array_Components is
+       Arr : array (1 .. 2) of Long_Float with Volatile_Components;
+    begin
+       Arr := (others => 0.0);
+
+       for I in 0 .. 999 loop
+          Arr (1) := Arr (1) +  2.0 * Long_Float (I);
+          Arr (2) := Arr (2) + 10.0 * Long_Float (I);
+       end loop;
+
+       Put_Line ("Arr (1): " & Long_Float'Image (Arr (1)));
+       Put_Line ("Arr (2): " & Long_Float'Image (Arr (2)));
+    end Show_Volatile_Array_Components;
+
+Note that it's possible to use the :ada:`Volatile` aspect for the array
+declaration as well:
+
+[Ada]
+
+.. code-block:: ada
+
+    Arr : array (1 .. 2) of Long_Float with Volatile;
+
+Atomic
+~~~~~~
+
+An atomic object is an object that only accepts atomic reads and updates. The
+Ada standard specifies that "for an atomic object (including an atomic
+component), all reads and updates of the object as a whole are indivisible."
+In this case, the compiler must generate Assembly code in such a way that reads
+and updates of an atomic object must be done in a single instruction, so that
+no other instruction could execute on that same object before the read or
+update completes.
+
+.. admonition:: In other contexts
+
+    Generally, we can say that operations are said to be atomic when they can
+    be completed without interruptions. This is an important requirement when
+    we're performing operations on objects in memory that are shared between
+    multiple processes.
+
+    This definition of atomicity above is used, for example, when implementing
+    databases. However, for this section, we're using the term "atomic"
+    differently. Here, it really means that reads and updates must be performed
+    with a single Assembly instruction.
+
+    For example, if we have a 32-bit object composed of four 8-bit bytes, the
+    compiler cannot generate code to read or update the object using four 8-bit
+    store / load instructions, or even two 16-bit store / load instructions.
+    In this case, in order to maintain atomicity, the compiler must generate
+    code using one 32-bit store / load instruction.
+
+    Because of this strict definition, we might have objects for which the
+    :ada:`Atomic` aspect cannot be specified. Lots of machines support integer
+    types that are larger than the native word-sized integer. For example, a
+    16-bit machine probably supports both 16-bit and 32-bit integers, but only
+    16-bit integer objects can be marked as atomic |mdash| or, more generally,
+    only objects that fit into at most 16 bits.
+
+Atomicity may be important, for example, when dealing with shared hardware
+registers. In fact, for certain architectures, the hardware may require that
+memory-mapped registers are handled atomically. In Ada, we can use the
+:ada:`Atomic` aspect to indicate that an object is atomic. This is how we can
+use the aspect to declare a shared hardware register:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Atomic_Object
+
+    with System;
+
+    procedure Show_Shared_HW_Register is
+       R   : Integer
+         with Atomic, Address => System'To_Address (16#FFFF00A0#);
+    begin
+       null;
+    end Show_Shared_HW_Register;
+
+Note that the :ada:`Address` aspect allows for assigning a variable to a
+specific location in the memory. In this example, we're using this aspect to
+specify the address of the memory-mapped register. We'll discuss more about the
+:ada:`Address` aspect later in this course.
+
+In addition to atomic objects, we can declare atomic types and atomic array
+components |mdash| similarly to what we've seen before for volatile objects.
+For example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Atomic_Types_Arrays
+
+    with System;
+
+    procedure Show_Shared_HW_Register is
+       type Atomic_Integer is new Integer with Atomic;
+
+       R : Atomic_Integer with Address => System'To_Address (16#FFFF00A0#);
+
+       Arr : array (1 .. 2) of Integer with Atomic_Components;
+    begin
+       null;
+    end Show_Shared_HW_Register;
+
+In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
+atomic type. Objects of this type |mdash| such as :ada:`R` in this example
+|mdash| are automatically atomic. This example also includes the declaration
+of the :ada:`Arr` array, which has atomic components.
 
 ARM and :program:`svd2ada`
 --------------------------
 
-.. todo::
+As we've seen in the previous section about
+:ref:`interfacing with devices <Interfacing_With_Devices>`, Ada offers powerful
+features to describe low-level details about the hardware architecture without
+abdicating from its strong typing capabilities. However, it can be cumbersome
+to create a specification for all those low-level details when you have a
+complex architecture. Fortunately, for ARM Cortex-M devices, the GNAT toolchain
+offers an Ada binding generator called :program:`svd2ada`, which takes
+CMSIS-SVD descriptions for those devices and creates Ada specifications that
+match the architecture. CMSIS-SVD description files are based on the Cortex
+Microcontroller Software Interface Standard (CMSIS), which is a hardware
+abstraction layer for ARM Cortex microcontrollers.
 
-    Complete section!
+Please refer to the
+`svd2ada project page <https://github.com/AdaCore/svd2ada>`_ for details about
+this tool.

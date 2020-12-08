@@ -39,6 +39,11 @@ test_spark_intro:
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/intro-to-spark/chapters/*.rst
 	@echo ""
 
+test_intro_to_embedded_sys_prog:
+	@echo "===== INTRO TO EMBEDDED SYS PROG ====="
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/intro-to-embedded-sys-prog/chapters/*.rst
+	@echo ""
+
 test_advanced_ada:
 	@echo "===== ADVANCED ADA ====="
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/advanced-ada/chapters/*.rst
@@ -69,7 +74,8 @@ test_training_fundamentals:
 	@$(TEST_DRIVER) $(CONTENT_DIR)/training_examples/fundamentals_of_ada/*.rst
 	@echo ""
 
-test_content: test_ada_intro test_spark_intro test_advanced_ada test_advanced_spark \
+test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
+	test_advanced_ada test_advanced_spark \
 	test_spark_for_the_misra_c_developer \
 	test_ada_for_the_cpp_java_developer \
 	test_training_fundamentals \
