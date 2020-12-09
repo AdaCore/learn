@@ -1117,7 +1117,7 @@ When instantiating a hashed map from
   whether two keys are to be considered equal.
 
   - If the type specified in :ada:`Key_Type` has a standard operator, you can
-    use it, which you do by specifying using that operator as the value of
+    use it, which you do by specifying that operator as the value of
     :ada:`Equivalent_Keys`.
 
 In the next example, we'll use a string as a key type. We'll use the
