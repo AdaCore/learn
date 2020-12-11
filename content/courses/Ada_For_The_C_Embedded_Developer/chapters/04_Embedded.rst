@@ -930,8 +930,10 @@ explanation of these aspects:
 - The :ada:`Size` aspect indicates the number of bits required to represent an
   object.
 
-- The :ada:`Import` is necessary when creating overlays. When used in the
-  context of object declarations, it avoids default initialization.
+- The :ada:`Import` is sometimes necessary when creating overlays. When used in
+  the context of object declarations, it avoids default initialization (for
+  data types that have it.)
+
 
 In the declaration of the components of the :ada:`PMC_Peripheral` record type,
 we use the :ada:`aliased` keyword to specify that those record components
