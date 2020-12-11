@@ -336,9 +336,220 @@ You can find some information about it in the
 Dealing with Absence of FPU with Fixed Point
 --------------------------------------------
 
-.. todo::
+Many numerical applications typically use floating-point types to compute
+values. However, in some platforms, a floating-point unit may not be available.
+Other platforms may have a floating-point unit, but using it in certain
+numerical algorithms can be prohibitive in terms of performance. For those
+cases, fixed-point arithmetic can be a good alternative.
 
-    Complete section!
+The difference between fixed-point and floating-point types might not be so
+obvious when looking at this code snippet:
+
+[Ada]
+
+.. code:: ada run_button
+
+    package Fixed_Definitions is
+
+       D : constant := 2.0 ** (-31);
+
+       type Fixed is delta D range -1.0 .. 1.0 - D;
+
+    end Fixed_Definitions;
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    with Fixed_Definitions; use Fixed_Definitions;
+
+    procedure Show_Float_And_Fixed_Point is
+       Float_Value : Float := 0.25;
+       Fixed_Value : Fixed := 0.25;
+    begin
+
+       Float_Value := Float_Value + 0.25;
+       Fixed_Value := Fixed_Value + 0.25;
+
+       Put_Line ("Float_Value = " & Float'Image (Float_Value));
+       Put_Line ("Fixed_Value = " & Fixed'Image (Fixed_Value));
+    end Show_Float_And_Fixed_Point;
+
+In this example, the application will show the value 0.5 for both
+:ada:`Float_Value` and :ada:`Fixed_Value`.
+
+The major difference between floating-point and fixed-point types is in the way
+the values are stored. Values of ordinary fixed-point types are, in effect,
+scaled integers. The scaling used for ordinary fixed-point types is defined by
+the type's :ada:`small`, which is derived from the specified :ada:`delta` and,
+by default, is a power of two. Therefore, ordinary fixed-point types are
+sometimes called binary fixed-point types. In that sense, ordinary fixed-point
+types can be thought of being close to the actual representation on the
+machine. In fact, ordinary fixed-point types make use of the available integer
+shift instructions, for example.
+
+Another difference between floating-point and fixed-point types is that Ada
+doesn't provide standard fixed-point types |mdash| except for the
+:ada:`Duration` type, which is used to represent an interval of time in
+seconds. While the Ada standard specifies floating-point types such as
+:ada:`Float` and :ada:`Long_Float`, we have to declare our own fixed-point
+types. Note that, in the previous example, we have used a fixed-point type
+named :ada:`Fixed`: this type isn't part of the standard, but must be declared
+somewhere in the source-code of our application.
+
+The syntax for an ordinary fixed-point type is
+
+.. code-block:: ada
+
+    type <type_name> is delta <delta_value> range <lower_bound> .. <upper_bound>;
+
+By default, the compiler will choose a scale factor, or :ada:`small`, that is a
+power of 2 no greater than ``<delta_value>``.
+
+For example, we may define a normalized range between -1.0 and 1.0 as
+following:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Fixed_Point_Type
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Normalized_Fixed_Point_Type is
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+    begin
+       Put_Line ("TQ31 requires " & Integer'Image (TQ31'Size) & " bits");
+       Put_Line ("The delta    value of TQ31 is " & TQ31'Image (TQ31'Delta));
+       Put_Line ("The minimum  value of TQ31 is " & TQ31'Image (TQ31'First));
+       Put_Line ("The maximum  value of TQ31 is " & TQ31'Image (TQ31'Last));
+    end Normalized_Fixed_Point_Type;
+
+In this example, we are defining a 32-bit fixed-point data type for our
+normalized range. When running the application, we notice that the upper
+bound is close to one, but not exact one. This is a typical effect of
+fixed-point data types |mdash| you can find more details in this discussion
+about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
+We may also rewrite this code with an exact type definition:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Adapted_Fixed_Point_Type
+
+    procedure Normalized_Adapted_Fixed_Point_Type is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+    begin
+       null;
+    end Normalized_Adapted_Fixed_Point_Type;
+
+We may also use any other range. For example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Custom_Fixed_Point_Range
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Numerics; use Ada.Numerics;
+
+    procedure Custom_Fixed_Point_Range is
+       type T_Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
+    begin
+       Put_Line ("T_Inv_Trig requires " & Integer'Image (T_Inv_Trig'Size)
+                 & " bits");
+       Put_Line ("The delta    value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Delta));
+       Put_Line ("The minimum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'First));
+       Put_Line ("The maximum  value of T_Inv_Trig is "
+                 & T_Inv_Trig'Image (T_Inv_Trig'Last));
+    end Custom_Fixed_Point_Range;
+
+In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
+which has a range from :math:`-\pi/2` to :math:`\pi/2`.
+
+All standard operations are available for fixed-point types. For example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_Op
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Fixed_Point_Op is
+       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+
+       A, B, R : TQ31;
+    begin
+       A := 0.25;
+       B := 0.50;
+       R := A + B;
+       Put_Line ("R is " & TQ31'Image (R));
+    end Fixed_Point_Op;
+
+As expected, :ada:`R` contains 0.75 after the addition of :ada:`A` and :ada:`B`.
+
+In the case of C, since the language doesn't support fixed-point arithmetic, we
+need to emulate it using integer types and custom operations via functions.
+Let's look at this very rudimentary example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_C
+
+    !main.c
+    #include <stdio.h>
+    #include <math.h>
+
+    #define SHIFT_FACTOR  32
+
+    #define TO_FIXED(x)     ((int)   ((x) * pow (2.0, SHIFT_FACTOR - 1)))
+    #define TO_FLOAT(x)     ((float) ((double)(x) * (double)pow (2.0, -(SHIFT_FACTOR - 1))))
+
+    typedef int fixed;
+
+    fixed add (fixed a, fixed b)
+    {
+        return a + b;
+    }
+
+    fixed mult (fixed a, fixed b)
+    {
+        return (fixed)(((long)a * (long)b) >> (SHIFT_FACTOR - 1));
+    }
+
+    void display_fixed (fixed x)
+    {
+        printf("value (integer) = %d\n",    x);
+        printf("value (float)   = %3.5f\n\n", TO_FLOAT (x));
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        int fixed_value = TO_FIXED(0.25);
+
+        printf("Original value\n");
+        display_fixed(fixed_value);
+
+        printf("... + 0.25\n");
+        fixed_value = add(fixed_value, TO_FIXED(0.25));
+        display_fixed(fixed_value);
+
+        printf("... * 0.5\n");
+        fixed_value = mult(fixed_value, TO_FIXED(0.5));
+        display_fixed(fixed_value);
+    }
+
+Here, we declare the fixed-point type :c:`fixed` based on :c:`int` and two
+operations for it: addition (via the :c:`add` function) and multiplication
+(via the :c:`mult` function). Note that, while fixed-point addition is quite
+straightforward, multiplication requires right-shifting to match the correct
+internal representation. In Ada, since fixed-point operations are part of the
+language specification, they don't need to be emulated. Therefore, no extra
+effort is required from the programmer.
+
+Also note that the example above is very rudimentary, so it doesn't take some
+of the side-effects of fixed-point arithmetic into account. In C, you have to
+manually take all side-effects deriving from fixed-point arithmetic into
+account, while in Ada, the compiler takes care of selecting the right
+operations for you.
 
 .. _VolatileAtomicData:
 
@@ -560,6 +771,8 @@ In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
 atomic type. Objects of this type |mdash| such as :ada:`R` in this example
 |mdash| are automatically atomic. This example also includes the declaration
 of the :ada:`Arr` array, which has atomic components.
+
+.. _Interfacing_With_Devices:
 
 Interfacing with Devices
 ------------------------
@@ -1017,6 +1230,18 @@ specific device, we could create data streams for any type.
 ARM and :program:`svd2ada`
 --------------------------
 
-.. todo::
+As we've seen in the previous section about
+:ref:`interfacing with devices <Interfacing_With_Devices>`, Ada offers powerful
+features to describe low-level details about the hardware architecture without
+abdicating from its strong typing capabilities. However, it can be cumbersome
+to create a specification for all those low-level details when you have a
+complex architecture. Fortunately, for ARM Cortex-M devices, the GNAT toolchain
+offers an Ada binding generator called :program:`svd2ada`, which takes
+CMSIS-SVD descriptions for those devices and creates Ada specifications that
+match the architecture. CMSIS-SVD description files are based on the Cortex
+Microcontroller Software Interface Standard (CMSIS), which is a hardware
+abstraction layer for ARM Cortex microcontrollers.
 
-    Complete section!
+Please refer to the
+`svd2ada project page <https://github.com/AdaCore/svd2ada>`_ for details about
+this tool.

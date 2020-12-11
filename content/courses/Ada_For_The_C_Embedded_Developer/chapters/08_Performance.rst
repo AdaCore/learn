@@ -155,10 +155,211 @@ inline it. In this case, we get a compilation error from GNAT.
 Checks and assertions
 ---------------------
 
-.. todo::
+Checks
+~~~~~~
 
-    Complete section!
+Ada provides many runtime checks to ensure that the implementation is working
+as expected. For example, when accessing an array, we would like to make sure
+that we're not accessing a memory position that is not allocated for that
+array. This is achieved by an index check.
 
+Another example of runtime check is the verification of valid ranges. For
+example, when adding two integer numbers, we would like to ensure that the
+result is still in the valid range |mdash| e.g., it shouldn't overflow or
+underflow. This is achieved by an overflow check.
+
+Although runtime checks are very useful and should be used as much as possible,
+they can also increase the overhead of implementations at certain hot-spots.
+For example, checking the index of an array in a sorting algorithm may
+significantly decrease its performance. In those cases, suppressing the check
+may be an option. We can achieve this suppression by using
+:ada:`pragma Suppress (Index_Check)`. For example:
+
+.. code-block:: ada
+
+    procedure Sort (A : in out Integer_Array) is
+       pragma Suppress (Index_Check);
+    begin
+       --  (implementation removed...)
+       null;
+    end Sort;
+
+In case of overflow checks, we can use :ada:`pragma Suppress (Overflow_Check)`
+to suppress them:
+
+.. code-block:: ada
+
+    function Some_Computation (A, B : Int32) return Int32 is
+       pragma Suppress (Overflow_Check);
+    begin
+       --  (implementation removed...)
+       null;
+    end Sort;
+
+We can also deactivate overflow checks for integer types using the ``-gnato``
+switch when compiling a source-code file with GNAT. In this case, overflow
+checks in the whole file are deactivated.
+
+It is also possible to suppress all checks at once using
+:ada:`pragma Suppress (All_Checks)`. In addition, GNAT offers a compilation
+switch called ``-gnatp``, which has the same effect on the whole file.
+
+Note, however, that this kind of suppression is just a recommendation to the
+compiler. There's no guarantee that the compiler will actually suppress any of
+the checks because the compiler may not be able to do so |mdash| typically
+because the hardware happens to do it. For example, if the machine traps on any
+access via address zero, requesting the removal of null-access value checks in
+the generated code won't prevent them from happening.
+
+It is important to differentiate between required and redundant checks. Let's
+consider the following example in C:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero
+
+    !main.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        int a = 8, b = 0, res;
+
+        res = a / b;
+
+        // printing the result
+        printf("res = %d\n", res);
+
+        return 0;
+    }
+
+Because C doesn't have language-defined checks, as soon as the application
+tries to divide a value by zero in :c:`res = a / b`, it'll break |mdash| on
+Linux, for example, you may get the following error message by the operating
+system: ``Floating point exception (core dumped)``. Therefore, we need to
+manually introduce a check for zero before this operation. For example:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero_Check
+
+    !main.c
+    #include <stdio.h>
+
+    int main(int argc, const char * argv[])
+    {
+        int a = 8, b = 0, res;
+
+        if (b != 0) {
+            res = a / b;
+
+            // printing the result
+            printf("res = %d\n", res);
+        }
+        else
+        {
+            // printing error message
+            printf("Error: cannot calculate value (division by zero)\n");
+        }
+
+        return 0;
+    }
+
+This is the corresponding code in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Division_By_Zero is
+       A   : Integer := 8;
+       B   : Integer := 0;
+       Res : Integer;
+    begin
+       Res := A / B;
+
+       Put_Line ("Res = " & Integer'Image (Res));
+    end Show_Division_By_Zero;
+
+Similar to the first version of the C code, we're not checking for a potential
+division by zero here. In Ada, however, this check is *automatically
+introduced* by the language itself. When running the application above, an
+exception is raised when the application tries to divide the value in :ada:`A`
+by zero. We could introduce exception handling in our example, so that we get
+the same message as we did in the second version of the C code:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Division_By_Zero is
+       A   : Integer := 8;
+       B   : Integer := 0;
+       Res : Integer;
+    begin
+       Res := A / B;
+
+       Put_Line ("Res = " & Integer'Image (Res));
+    exception
+       when Constraint_Error =>
+          Put_Line ("Error: cannot calculate value (division by zero)");
+       when others =>
+          null;
+    end Show_Division_By_Zero;
+
+This example demonstrates that the division check for :ada:`Res := A / B` is
+required and shouldn't be suppressed. In contrast, a check is redundant |mdash|
+and therefore not required |mdash| when we know that the condition that leads
+to a failure can never happen. In many cases, the compiler itself detects
+redundant checks and eliminates them (for higher optimization levels).
+Therefore, when improving the performance of your application, you should:
+
+#. keep all checks active for most parts of the application;
+
+#. identify the hot-spots of your application;
+
+#. identify which checks haven't been eliminated by the optimizer on these
+   hot-spots;
+
+#. identify which of those checks are redundant;
+
+#. only suppress those checks that are redundant, and keep the required ones.
+
+Assertions
+~~~~~~~~~~
+
+We've already discussed assertions in
+:ref:`this section of the SPARK chapter <Dynamic_Checks_Vs_Formal_Proof>`.
+Assertions are user-defined checks that you can add to your code using the
+:ada:`pragma Assert`. For example:
+
+.. code-block:: ada
+
+    function Some_Computation (A, B : Int32) return Int32 is
+       Res : Int32;
+    begin
+       --  (implementation removed...)
+
+       pragma Assert (Res >= 0);
+
+       return Res;
+    end Sort;
+
+Assertions that are specified with :ada:`pragma Assert` are not enabled by
+default. You can enable them by setting the assertion policy to *check* |mdash|
+using :ada:`pragma Assertion_Policy (Check)` |mdash| or by using the ``-gnata``
+switch when compiling with GNAT.
+
+Similar to the checks discussed previously, assertions can generate significant
+overhead when used at hot-spots. Restricting those assertions to development
+(e.g. debug version) and turning them off on the release version may be an
+option. In this case, formal proof |mdash| as discussed in the
+:doc:`SPARK chapter <05_SPARK>` |mdash| can help you. By formally proving that
+assertions will never fail at run-time, you can safely deactivate them.
 
 Dynamic v.s static structures
 -----------------------------
@@ -361,3 +562,146 @@ equivalent to the C version. If we had used arrays in the example above,
 Again, no extra copy is performed in the calls to :ada:`Update` and
 :ada:`Display`, which gives us optimal performance when dealing with arrays and
 avoids the need to use access types to optimize the code.
+
+Function returns
+~~~~~~~~~~~~~~~~
+
+Previously, we've discussed the cost of passing complex records as arguments to
+subprograms. We've seen that the performance is still optimal when using
+subprograms that have :ada:`in out` or :ada:`out` parameters, so we don't
+have to use access types to get better performance in Ada. In this section,
+we'll briefly discuss the cost of function returns.
+
+In general, we can implement subprograms that initialize a data structure
+either as procedures or functions. Let's look at this example in C:
+
+[C]
+
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Init_Rec_Proc_And_Func_C
+
+    !main.c
+    #include <stdio.h>
+
+    struct Data {
+        int prev, curr;
+    };
+
+    void init_data(struct Data *d)
+    {
+        d->prev = 0;
+        d->curr = 1;
+    }
+
+    struct Data get_init_data()
+    {
+        struct Data d  = { 0, 1 };
+
+        return d;
+    }
+
+    int main(int argc, const char * argv[])
+    {
+        struct Data D1;
+
+        D1 = get_init_data();
+
+        init_data(&D1);
+    }
+
+This code example contains two subprograms that initialize the :c:`Data`
+structure:
+
+- :c:`init_data()`, which receives the data structure as a reference (using
+  a pointer) and initializes it, and
+
+- :c:`get_init_data()`, which returns the initialized structure.
+
+In C, we generally avoid implementing functions such as :c:`get_init_data()`
+because of the extra copy that is needed for the function return.
+
+This is the corresponding implementation in Ada:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Init_Rec_Proc_And_Func_Ada
+
+    procedure Init_Record is
+
+       type Data is record
+          Prev : Integer;
+          Curr : Integer;
+       end record;
+
+       procedure Init (D : out Data) is
+       begin
+          D := (Prev => 0, Curr => 1);
+       end Init;
+
+       function Init return Data is
+          D : constant Data := (Prev => 0, Curr => 1);
+       begin
+          return D;
+       end Init;
+
+       D1 : Data;
+
+       pragma Unreferenced (D1);
+    begin
+       D1 := Init;
+
+       Init (D1);
+    end Init_Record;
+
+In this example, we have two versions of :ada:`Init`: one using a procedural
+form, and the other one using a functional form. Note that, because of Ada's
+support for subprogram overloading, we can use the same name for both
+subprograms.
+
+In terms of performance, the same recomendations apply to Ada code: for complex
+types such as records, we should avoid writing functions such as the
+:ada:`Init` function above. Instead, we should use the procedural form of
+:ada:`Init`. The reason is that the compiler generates an extra copy for the
+:ada:`Init` function, while the :ada:`Init` procedure uses a reference for the
+output parameter, so that the actual record initialization is performed in
+place.
+
+An exception to this is when we use limited types. Here, GNAT is able to remove
+the extra copy that is usually needed for function returns, so that the actual
+assignment is done in place. We could, for example, rewrite the example above
+using limited types:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Init_Lim_Rec_Proc_And_Func_Ada
+
+    procedure Init_Limited_Record is
+
+       type Data is limited record
+          Prev : Integer;
+          Curr : Integer;
+       end record;
+
+       function Init return Data is
+       begin
+          return D : Data do
+             D.Prev := 0;
+             D.Curr := 1;
+          end return;
+       end Init;
+
+       D1 : Data := Init;
+
+       pragma Unreferenced (D1);
+    begin
+       null;
+    end Init_Limited_Record;
+
+In this example, :ada:`D1 : Data := Init;` has the same cost as the call to the
+procedural form |mdash| :ada:`Init (D1);` |mdash| that we've seen in the
+previous example. This is because the assignment is done in place.
+
+Note that limited types require the use of the extended return statements
+(:ada:`return ... do ... end return`) in function implementations. Also note
+that, because the :ada:`Data` type is limited, we can only use the :ada:`Init`
+function in the declaration of :ada:`D1`; a statement in the code such as
+:ada:`D1 := Init;` is therefore forbidden.

@@ -1536,6 +1536,22 @@ subtype is a type with optional additional constraints. For example:
 These declarations don't create new types, just new names for constrained
 ranges of their base types.
 
+The purpose of numeric ranges is to express some application-specific
+constraint that we want the compiler to help us enforce. More importantly,
+we want the compiler to tell us when that constraint cannot be met |mdash| when
+the underlying hardware cannot support the range given. There are two things to
+consider:
+
+- just a range constraint, such as :ada:`A : Integer range 0 .. 10;`, or
+
+- a type declaration, such as :ada:`type Result is range 0 .. 1_000_000_000;`.
+
+Both represent some sort of application-specific constraint, but in addition,
+the type declaration promotes portability because it won't compile on targets
+that do not have a sufficiently large hardware numeric type. That's a
+definition of portability that is preferable to having something compile
+anywhere but not run correctly, as in C.
+
 Unsigned And Modular Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
