@@ -429,7 +429,7 @@ following:
 
 In this example, we are defining a 32-bit fixed-point data type for our
 normalized range. When running the application, we notice that the upper
-bound is close to one, but not exact one. This is a typical effect of
+bound is close to one, but not exactly one. This is a typical effect of
 fixed-point data types |mdash| you can find more details in this discussion
 about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 We may also rewrite this code with an exact type definition:
