@@ -913,15 +913,12 @@ about :ref:`volatile and atomic objects <VolatileAtomicData>`. Using the
 objects of this type won't be stored in a register.
 
 In the declaration of the :ada:`PMC_SCER_Register` record type of the example,
-we use the :ada:`Bit_Order` aspect to specify the bit ordering |mdash| also
-known as `endianess <https://en.wikipedia.org/wiki/Endianness>`_ |mdash| of the
+we use the :ada:`Bit_Order` aspect to specify the bit ordering of the
 record type. Here, we can select one of these options:
 
-- :ada:`High_Order_First` (big endian): first bit of the record is the most
-  significant bit;
+- :ada:`High_Order_First`: first bit of the record is the most significant bit;
 
-- :ada:`Low_Order_First` (little endian): first bit of the record is the least
-  significant bit.
+- :ada:`Low_Order_First`: first bit of the record is the least significant bit.
 
 The declarations from the :ada:`Registers` package also makes use of aspects
 that we haven't seen yet. Aspects :ada:`Size` and :ada:`Import` will be
