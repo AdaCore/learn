@@ -901,10 +901,10 @@ using :ada:`PMC_Periph.PMC_SCER.USBCLK`:
 
     with Registers;
 
-    procedure Set_Bit_In_Register is
+    procedure Enable_USB_Clock is
     begin
        Registers.PMC_Periph.PMC_SCER.USBCLK := 1;
-    end Set_Bit_In_Register;
+    end Enable_USB_Clock;
 
 This code example makes use of many aspects and keywords of the Ada language.
 One of them is the :ada:`Volatile` aspect, which we've discussed in the section
