@@ -41,8 +41,8 @@ Ada for the C Embedded Developer
     language, which  removes a few features of the language with undefined
     behavior, so that the code is fit for sound static analysis techniques.
 
-    This book was written by Quentin Ochem, Robert Tice, Patrick Rogers, and
-    Gustavo A. Hoffmann.
+    This book was written by Quentin Ochem, Robert Tice, Gustavo A. Hoffmann,
+    and Patrick Rogers.
 
 .. only:: builder_html
 
