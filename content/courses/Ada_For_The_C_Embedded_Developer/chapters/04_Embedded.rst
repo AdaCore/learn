@@ -938,7 +938,7 @@ explanation of these aspects:
 
 .. admonition:: Details about :ada:`'Size`
 
-    When applied to a type, the :ada:`Size` aspects is telling the compiler
+    When applied to a type, the :ada:`Size` aspect is telling the compiler
     to not make record or array components of a type :ada:`T` any smaller than
     :ada:`X` bits. Therefore, a common usage for this aspect is to just confirm
     expectations: developers specify :ada:`'Size` to tell the compiler that
