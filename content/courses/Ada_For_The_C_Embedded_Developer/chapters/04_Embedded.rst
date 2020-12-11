@@ -429,7 +429,7 @@ following:
 
 In this example, we are defining a 32-bit fixed-point data type for our
 normalized range. When running the application, we notice that the upper
-bound is close to one, but not exact one. This is a typical effect of
+bound is close to one, but not exactly one. This is a typical effect of
 fixed-point data types |mdash| you can find more details in this discussion
 about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 We may also rewrite this code with an exact type definition:
@@ -454,19 +454,19 @@ We may also use any other range. For example:
     with Ada.Numerics; use Ada.Numerics;
 
     procedure Custom_Fixed_Point_Range is
-       type T_Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
+       type Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
     begin
-       Put_Line ("T_Inv_Trig requires " & Integer'Image (T_Inv_Trig'Size)
+       Put_Line ("Inv_Trig requires " & Integer'Image (Inv_Trig'Size)
                  & " bits");
-       Put_Line ("The delta    value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'Delta));
-       Put_Line ("The minimum  value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'First));
-       Put_Line ("The maximum  value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'Last));
+       Put_Line ("The delta    value of Inv_Trig is "
+                 & Inv_Trig'Image (Inv_Trig'Delta));
+       Put_Line ("The minimum  value of Inv_Trig is "
+                 & Inv_Trig'Image (Inv_Trig'First));
+       Put_Line ("The maximum  value of Inv_Trig is "
+                 & Inv_Trig'Image (Inv_Trig'Last));
     end Custom_Fixed_Point_Range;
 
-In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
+In this example, we are defining a 16-bit type called :ada:`Inv_Trig`,
 which has a range from :math:`-\pi/2` to :math:`\pi/2`.
 
 All standard operations are available for fixed-point types. For example:
@@ -780,7 +780,7 @@ ARM and :program:`svd2ada`
 As we've seen in the previous section about
 :ref:`interfacing with devices <Interfacing_With_Devices>`, Ada offers powerful
 features to describe low-level details about the hardware architecture without
-abdicating from its strong typing capabilities. However, it can be cumbersome
+giving up its strong typing capabilities. However, it can be cumbersome
 to create a specification for all those low-level details when you have a
 complex architecture. Fortunately, for ARM Cortex-M devices, the GNAT toolchain
 offers an Ada binding generator called :program:`svd2ada`, which takes
