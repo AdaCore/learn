@@ -780,7 +780,7 @@ ARM and :program:`svd2ada`
 As we've seen in the previous section about
 :ref:`interfacing with devices <Interfacing_With_Devices>`, Ada offers powerful
 features to describe low-level details about the hardware architecture without
-abdicating from its strong typing capabilities. However, it can be cumbersome
+giving up its strong typing capabilities. However, it can be cumbersome
 to create a specification for all those low-level details when you have a
 complex architecture. Fortunately, for ARM Cortex-M devices, the GNAT toolchain
 offers an Ada binding generator called :program:`svd2ada`, which takes
