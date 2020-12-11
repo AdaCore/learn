@@ -454,19 +454,19 @@ We may also use any other range. For example:
     with Ada.Numerics; use Ada.Numerics;
 
     procedure Custom_Fixed_Point_Range is
-       type T_Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
+       type Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
     begin
-       Put_Line ("T_Inv_Trig requires " & Integer'Image (T_Inv_Trig'Size)
+       Put_Line ("Inv_Trig requires " & Integer'Image (Inv_Trig'Size)
                  & " bits");
-       Put_Line ("The delta    value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'Delta));
-       Put_Line ("The minimum  value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'First));
-       Put_Line ("The maximum  value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'Last));
+       Put_Line ("The delta    value of Inv_Trig is "
+                 & Inv_Trig'Image (Inv_Trig'Delta));
+       Put_Line ("The minimum  value of Inv_Trig is "
+                 & Inv_Trig'Image (Inv_Trig'First));
+       Put_Line ("The maximum  value of Inv_Trig is "
+                 & Inv_Trig'Image (Inv_Trig'Last));
     end Custom_Fixed_Point_Range;
 
-In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
+In this example, we are defining a 16-bit type called :ada:`Inv_Trig`,
 which has a range from :math:`-\pi/2` to :math:`\pi/2`.
 
 All standard operations are available for fixed-point types. For example:
