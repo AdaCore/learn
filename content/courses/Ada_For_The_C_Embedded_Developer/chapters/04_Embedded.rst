@@ -61,6 +61,8 @@ You can find further information about the run-time library on
 Low Level Programming
 ---------------------
 
+.. _Representation_Clauses:
+
 Representation Clauses
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -108,7 +110,10 @@ way around: the developer specifies the range of values required and the
 compiler decides how to represent things, optimizing for speed or size. The
 :ada:`Pack` aspect declared at the end of the record specifies that the
 compiler should optimize for size even at the expense of decreased speed in
-accessing record components.
+accessing record components. We'll see more details about the :ada:`Pack`
+aspect in the sections about :ref:`bitwise operations <Bitwise_Operations>` and
+:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` in
+chapter 6.
 
 Other representation clauses can be specified as well, along with compile-time
 consistency checks between requirements in terms of available values and
@@ -327,15 +332,6 @@ You can find some information about it in the
 
     Once available, add link to section from a more advanced embedded course
     that explains the :ada:`Ada.Interrupts` package.
-
-.. _Interfacing_With_Devices:
-
-Interfacing with Devices
-------------------------
-
-.. todo::
-
-    Complete section!
 
 Dealing with Absence of FPU with Fixed Point
 --------------------------------------------
@@ -747,7 +743,9 @@ use the aspect to declare a shared hardware register:
 Note that the :ada:`Address` aspect allows for assigning a variable to a
 specific location in the memory. In this example, we're using this aspect to
 specify the address of the memory-mapped register. We'll discuss more about the
-:ada:`Address` aspect later in this course.
+:ada:`Address` aspect later in the section about
+:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` (in
+chapter 6).
 
 In addition to atomic objects, we can declare atomic types and atomic array
 components |mdash| similarly to what we've seen before for volatile objects.
@@ -773,6 +771,505 @@ In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
 atomic type. Objects of this type |mdash| such as :ada:`R` in this example
 |mdash| are automatically atomic. This example also includes the declaration
 of the :ada:`Arr` array, which has atomic components.
+
+.. _Interfacing_With_Devices:
+
+Interfacing with Devices
+------------------------
+
+Previously, we've seen that we can use
+:ref:`representation clauses <Representation_Clauses>` to specify a particular
+layout for a record type. As mentioned before, this is useful when interfacing
+with hardware, drivers, or communication protocols. In this section, we'll
+extend this concept for two specific use-cases: register overlays and data
+streams.
+
+Register overlays
+~~~~~~~~~~~~~~~~~
+
+Register overlays make use of representation clauses to create a structure that
+facilitates manipulating bits from registers. Let's look at a simplified
+example of a power management controller containing registers such as a system
+clock enable register. Note that this example is based on an actual
+architecture:
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.PMC_Peripheral
+
+    with System;
+
+    package Registers is
+
+       type Bit    is mod 2 ** 1
+         with Size => 1;
+       type UInt5  is mod 2 ** 5
+         with Size => 5;
+       type UInt10 is mod 2 ** 10
+         with Size => 10;
+
+       subtype USB_Clock_Enable is Bit;
+
+       --  System Clock Enable Register
+       type PMC_SCER_Register is record
+          --  Reserved bits
+          Reserved_0_4   : UInt5            := 16#0#;
+          --  Write-only. Enable USB FS Clock
+          USBCLK         : USB_Clock_Enable := 16#0#;
+          --  Reserved bits
+          Reserved_6_15  : UInt10           := 16#0#;
+       end record
+         with
+           Volatile,
+           Size      => 16,
+           Bit_Order => System.Low_Order_First;
+
+       for PMC_SCER_Register use record
+          Reserved_0_4   at 0 range 0 .. 4;
+          USBCLK         at 0 range 5 .. 5;
+          Reserved_6_15  at 0 range 6 .. 15;
+       end record;
+
+       --  Power Management Controller
+       type PMC_Peripheral is record
+          --  System Clock Enable Register
+          PMC_SCER       : aliased PMC_SCER_Register;
+          --  System Clock Disable Register
+          PMC_SCDR       : aliased PMC_SCER_Register;
+       end record
+         with Volatile;
+
+       for PMC_Peripheral use record
+          --  16-bit register at byte 0
+          PMC_SCER       at 16#0# range 0 .. 15;
+          --  16-bit register at byte 2
+          PMC_SCDR       at 16#2# range 0 .. 15;
+       end record;
+
+       --  Power Management Controller
+       PMC_Periph : aliased PMC_Peripheral
+         with Import, Address => System'To_Address (16#400E0600#);
+
+    end Registers;
+
+First, we declare the system clock enable register |mdash| this is
+:ada:`PMC_SCER_Register` type in the code example. Most of the bits in that
+register are reserved. However, we're interested in bit #5, which is used to
+activate or deactivate the system clock. To achieve a correct representation of
+this bit, we do the following:
+
+- We declare the :ada:`USBCLK` component of this record using the
+  :ada:`USB_Clock_Enable` type, which has a size of one bit; and
+
+- we use a representation clause to indicate that the :ada:`USBCLK` component
+  is specifically at bit #5 of byte #0.
+
+After declaring the system clock enable register and specifying its individual
+bits as components of a record type, we declare the power management controller
+type |mdash| :ada:`PMC_Peripheral` record type in the code example. Here, we
+declare two 16-bit registers as record components of :ada:`PMC_Peripheral`.
+These registers are used to enable or disable the system clock. The strategy
+we use in the declaration is similar to the one we've just seen above:
+
+- We declare these registers as components of the :ada:`PMC_Peripheral` record
+  type;
+
+- we use a representation clause to specify that the :ada:`PMC_SCER` register
+  is at byte #0 and the :ada:`PMC_SCDR` register is at byte #2.
+
+  - Since these registers have 16 bits, we use a range of bits from 0 to 15.
+
+The actual power management controller becomes accessible by the declaration of
+the :ada:`PMC_Periph` object of :ada:`PMC_Peripheral` type. Here, we specify
+the actual address of the memory-mapped registers (`400E0600` in hexadecimal)
+using the :ada:`Address` aspect in the declaration. When we use the
+:ada:`Address` aspect in an object declaration, we're indicating the address in
+memory of that object.
+
+Because we specify the address of the memory-mapped registers in the
+declaration of :ada:`PMC_Periph`, this object is now an overlay for those
+registers. This also means that any operation on this object corresponds to an
+actual operation on the registers of the power management controller. We'll
+discuss more details about overlays in the section about
+:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` (in
+chapter 6).
+
+Finally, in a test application, we can access any bit of any register of the
+power management controller with simple record component selection. For
+example, we can set the :ada:`USBCLK` bit of the :ada:`PMC_SCER` register by
+using :ada:`PMC_Periph.PMC_SCER.USBCLK`:
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Register_Overlay_1
+
+    with Registers;
+
+    procedure Enable_USB_Clock is
+    begin
+       Registers.PMC_Periph.PMC_SCER.USBCLK := 1;
+    end Enable_USB_Clock;
+
+This code example makes use of many aspects and keywords of the Ada language.
+One of them is the :ada:`Volatile` aspect, which we've discussed in the section
+about :ref:`volatile and atomic objects <VolatileAtomicData>`. Using the
+:ada:`Volatile` aspect for the :ada:`PMC_SCER_Register` type ensures that
+objects of this type won't be stored in a register.
+
+In the declaration of the :ada:`PMC_SCER_Register` record type of the example,
+we use the :ada:`Bit_Order` aspect to specify the bit ordering of the
+record type. Here, we can select one of these options:
+
+- :ada:`High_Order_First`: first bit of the record is the most significant bit;
+
+- :ada:`Low_Order_First`: first bit of the record is the least significant bit.
+
+The declarations from the :ada:`Registers` package also makes use of aspects
+that we haven't seen yet. Aspects :ada:`Size` and :ada:`Import` will be
+discussed in the section that explains how to
+:ref:`map structures to bit-fields <Mapping_Structures_To_Bit_Fields>` in
+chapter 6. Please refer to that chapter for more details. This is a brief
+explanation of these aspects:
+
+- The :ada:`Size` aspect indicates the minimum number of bits required to
+  represent an object, and it can be used to confirm expectations. In the case
+  of the :ada:`PMC_SCER_Register` type above, it has the compiler confirm that
+  the record type will fit into the expected 16 bits.
+
+- The :ada:`Import` is sometimes necessary when creating overlays. When used in
+  the context of object declarations, it avoids default initialization (for
+  data types that have it.)
+
+.. admonition:: Details about :ada:`'Size`
+
+    When applied to a type, the :ada:`Size` aspect is telling the compiler
+    to not make record or array components of a type :ada:`T` any smaller than
+    :ada:`X` bits. Therefore, a common usage for this aspect is to just confirm
+    expectations: developers specify :ada:`'Size` to tell the compiler that
+    :ada:`T` should fit :ada:`X` bits, and the compiler will tell them if they
+    are right (or wrong).
+
+    That's what the aspect does for type :ada:`PMC_SCER_Register` in the
+    example above, as well as for the types :ada:`Bit`, :ada:`UInt5` and
+    :ada:`UInt10`. For example, we may declare a stand-alone object of type
+    :ada:`Bit`:
+
+    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Bit_Declaration
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Bit_Declaration is
+
+           type Bit    is mod 2 ** 1
+             with Size => 1;
+
+           B : constant Bit := 0;
+           --  ^ Although Bit'Size is 1, B'Size is almost certainly 8
+        begin
+           Put_Line ("Bit'Size = " & Positive'Image (Bit'Size));
+           Put_Line ("B'Size   = " & Positive'Image (B'Size));
+        end Show_Bit_Declaration;
+
+    In this case, :ada:`B` is almost certainly going to be 8-bits wide on a
+    typical machine, even though the language requires that :ada:`Bit'Size` is
+    1 by default.
+
+    When the specified size value is larger than necessary, it can cause
+    objects to be bigger in memory than they would be otherwise. For example,
+    for some enumeration types, we could say :ada:`for type Enum'Size use 32;`
+    when the number of literals would otherwise have required only a byte.
+    That's useful for unchecked conversions because the sizes of the two types
+    need to be the same. Likewise, it's useful for interfacing with C, where
+    :c:`enum` types are just mapped to the :ada:`int` type, and thus larger
+    than Ada might otherwise require.
+
+In the declaration of the components of the :ada:`PMC_Peripheral` record type,
+we use the :ada:`aliased` keyword to specify that those record components are
+accessible via other paths besides the component name. Therefore, the compiler
+won't store them in registers. This makes sense because we want to ensure
+that we're accessing specific memory-mapped registers, and not registers
+assigned  by the compiler. Note that, for the same reason, we also use the
+:ada:`aliased` keyword in the declaration of the :ada:`PMC_Periph` object.
+
+Data streams
+~~~~~~~~~~~~
+
+Creating data streams |mdash| in the context of interfacing with devices
+|mdash| means the serialization of arbitrary information and its transmission
+over a communication channel. For example, we might want to transmit the
+content of memory-mapped registers as byte streams using a serial port. To do
+this, we first need to get a serialized representation of those registers as an
+array of bytes, which we can then transmit over the serial port.
+
+Serialization of arbitrary record types |mdash| including register overlays
+|mdash| can be achieved by declaring an array of bytes as an overlay. By doing
+this, we're basically interpreting the information from those record types as
+bytes while ignoring their actual structure |mdash| i.e. their components and
+representation clause. We'll discuss details about overlays in the section
+about
+:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` (in
+chapter 6).
+
+Let's look at a simple example of serialization of an arbitrary record type:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream_Declaration
+
+    package Arbitrary_Types is
+
+       type Arbitrary_Record is record
+          A : Integer;
+          B : Integer;
+          C : Integer;
+       end record;
+
+    end Arbitrary_Types;
+
+    with Arbitrary_Types;
+
+    procedure Serialize_Data (Some_Object : Arbitrary_Types.Arbitrary_Record);
+
+    with Arbitrary_Types;
+
+    procedure Serialize_Data (Some_Object : Arbitrary_Types.Arbitrary_Record) is
+       type UByte is new Natural range 0 .. 255
+         with Size => 8;
+
+       type UByte_Array is array (Positive range <>) of UByte;
+
+       --
+       --  We can access the serialized data in Raw_TX, which is our overlay
+       --
+       Raw_TX : UByte_Array (1 .. Some_Object'Size / 8)
+         with Address => Some_Object'Address;
+    begin
+       null;
+       --
+       --  Now, we could stream the data from Some_Object.
+       --
+       --  For example, we could send the bytes (from Raw_TX) via the
+       --  serial port.
+       --
+    end Serialize_Data;
+
+    with Arbitrary_Types;
+    with Serialize_Data;
+
+    procedure Data_Stream_Declaration is
+       Dummy_Object : Arbitrary_Types.Arbitrary_Record;
+
+    begin
+        Serialize_Data (Dummy_Object);
+    end Data_Stream_Declaration;
+
+The most important part of this example is the implementation of the
+:ada:`Serialize_Data` procedure, where we declare :ada:`Raw_TX` as an overlay
+for our arbitrary object (:ada:`Some_Object` of :ada:`Arbitrary_Record` type).
+In simple terms, by writing :ada:`with Address => Some_Object'Address;` in the
+declaration of :ada:`Raw_TX`, we're specifying that :ada:`Raw_TX` and
+:ada:`Some_Object` have the same address in memory. Here, we are:
+
+- taking the address of :ada:`Some_Object` |mdash| using the :ada:`Address`
+  attribute |mdash|, and then
+
+- using it as the address of :ada:`Raw_TX` |mdash| which is specified with
+  the :ada:`Address` aspect.
+
+By doing this, we're essentially saying that both :ada:`Raw_TX` and
+:ada:`Some_Object` are different representations of the same object in memory.
+
+Because the :ada:`Raw_TX` overlay is completely agnostic about the actual
+structure of the  record type, the :ada:`Arbitrary_Record` type could really be
+anything. By declaring :ada:`Raw_TX`, we create an array of bytes that we can
+use to stream the information from :ada:`Some_Object`.
+
+We can use this approach and create a data stream for the register overlay
+example that we've seen before. This is the corresponding implementation:
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream
+
+    with System;
+
+    package Registers is
+
+       type Bit is mod 2 ** 1
+         with Size => 1;
+       type UInt5 is mod 2 ** 5
+         with Size => 5;
+       type UInt10 is mod 2 ** 10
+         with Size => 10;
+
+       subtype USB_Clock_Enable is Bit;
+
+       --  System Clock Register
+       type PMC_SCER_Register is record
+          --  Reserved bits
+          Reserved_0_4   : UInt5 := 16#0#;
+          --  Write-only. Enable USB FS Clock
+          USBCLK         : USB_Clock_Enable := 16#0#;
+          --  Reserved bits
+          Reserved_6_15  : UInt10 := 16#0#;
+       end record
+         with
+           Volatile,
+           Size      => 16,
+           Bit_Order => System.Low_Order_First;
+
+       for PMC_SCER_Register use record
+          Reserved_0_4   at 0 range 0 .. 4;
+          USBCLK         at 0 range 5 .. 5;
+          Reserved_6_15  at 0 range 6 .. 15;
+       end record;
+
+       --  Power Management Controller
+       type PMC_Peripheral is record
+          --  System Clock Enable Register
+          PMC_SCER       : aliased PMC_SCER_Register;
+          --  System Clock Disable Register
+          PMC_SCDR       : aliased PMC_SCER_Register;
+       end record
+         with Volatile;
+
+       for PMC_Peripheral use record
+          --  16-bit register at byte 0
+          PMC_SCER       at 16#0# range 0 .. 15;
+          --  16-bit register at byte 2
+          PMC_SCDR       at 16#2# range 0 .. 15;
+       end record;
+
+       --  Power Management Controller
+       PMC_Periph : aliased PMC_Peripheral;
+    --     with Import, Address => System'To_Address (16#400E0600#);
+
+    end Registers;
+
+    package Serial_Ports is
+
+       type UByte is new Natural range 0 .. 255
+         with Size => 8;
+
+       type UByte_Array is array (Positive range <>) of UByte;
+
+       type Serial_Port is null record;
+
+       procedure Read (Port : in out Serial_Port;
+                       Data :    out UByte_Array);
+
+       procedure Write (Port : in out Serial_Port;
+                        Data :        UByte_Array);
+
+    end Serial_Ports;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Serial_Ports is
+
+       procedure Display (Data : UByte_Array) is
+       begin
+          Put_Line ("---- Data ----");
+          for E of Data loop
+             Put_Line (UByte'Image (E));
+          end loop;
+          Put_Line ("--------------");
+       end Display;
+
+       procedure Read (Port : in out Serial_Port;
+                       Data :    out UByte_Array) is
+          pragma Unreferenced (Port);
+       begin
+          Put_Line ("Reading data...");
+          Data := (0, 0, 32, 0);
+       end Read;
+
+       procedure Write (Port : in out Serial_Port;
+                        Data :        UByte_Array) is
+          pragma Unreferenced (Port);
+       begin
+          Put_Line ("Writing data...");
+          Display (Data);
+       end Write;
+
+    end Serial_Ports;
+
+    with Serial_Ports; use Serial_Ports;
+    with Registers;    use Registers;
+
+    package Data_Stream is
+
+       procedure Send (Port : in out Serial_Port;
+                       PMC  :        PMC_Peripheral);
+
+       procedure Receive (Port : in out Serial_Port;
+                          PMC  :    out PMC_Peripheral);
+
+    end Data_Stream;
+
+    package body Data_Stream is
+
+       procedure Send (Port : in out Serial_Port;
+                       PMC  :        PMC_Peripheral)
+       is
+          Raw_TX : UByte_Array (1 .. PMC'Size / 8)
+            with Address => PMC'Address;
+       begin
+          Write (Port => Port,
+                 Data => Raw_TX);
+       end Send;
+
+       procedure Receive (Port : in out Serial_Port;
+                          PMC  :    out PMC_Peripheral)
+       is
+          Raw_TX : UByte_Array (1 .. PMC'Size / 8)
+            with Address => PMC'Address;
+       begin
+          Read (Port => Port,
+                Data => Raw_TX);
+       end Receive;
+
+    end Data_Stream;
+
+    with Ada.Text_IO;
+
+    with Registers;
+    with Data_Stream;
+    with Serial_Ports;
+
+    procedure Test_Data_Stream is
+
+       procedure Display_Registers is
+          use Ada.Text_IO;
+       begin
+          Put_Line ("---- Registers ----");
+          Put_Line ("PMC_SCER.USBCLK: "
+                    & Registers.PMC_Periph.PMC_SCER.USBCLK'Image);
+          Put_Line ("PMC_SCDR.USBCLK: "
+                    & Registers.PMC_Periph.PMC_SCDR.USBCLK'Image);
+          Put_Line ("-------------- ----");
+       end Display_Registers;
+
+       Port : Serial_Ports.Serial_Port;
+    begin
+       Registers.PMC_Periph.PMC_SCER.USBCLK := 1;
+       Registers.PMC_Periph.PMC_SCDR.USBCLK := 1;
+
+       Display_Registers;
+
+       Data_Stream.Send (Port => Port,
+                         PMC  => Registers.PMC_Periph);
+
+       Data_Stream.Receive (Port => Port,
+                            PMC  => Registers.PMC_Periph);
+
+       Display_Registers;
+    end Test_Data_Stream;
+
+In this example, we can find the overlay in the implementation of the
+:ada:`Send` and :ada:`Receive` procedures from the :ada:`Data_Stream` package.
+Because the overlay doesn't need to know the internals of the
+:ada:`PMC_Peripheral` type, we're declaring it in the same way as in the
+previous example (where we created an overlay for :ada:`Some_Object`). In this
+case, we're creating an overlay for the :ada:`PMC` parameter.
+
+Note that, for this section, we're not really interested in the details about
+the serial port. Thus, package :ada:`Serial_Ports` in this example is just a
+stub. However, because the :ada:`Serial_Port` type in that package only *sees*
+arrays of bytes, after implementing an actual serial port interface for a
+specific device, we could create data streams for any type.
 
 ARM and :program:`svd2ada`
 --------------------------
