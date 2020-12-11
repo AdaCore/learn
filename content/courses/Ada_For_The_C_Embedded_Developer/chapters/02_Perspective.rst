@@ -2096,7 +2096,7 @@ are some simple records:
 
 [C]
 
-.. code:: ada manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_C
 
     !main.c
     #include <stdio.h>
