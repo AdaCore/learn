@@ -23,7 +23,7 @@ file. For example, it expects the specification of a package
 :ada:`Pkg.Child` to be stored in a file named :file:`pkg-child.ads`.
 
 However, we may not want to use that convention for our project.  For
-example, we may have multiple Ada packages contain in a single
+example, we may have multiple Ada packages contained in a single
 file. Consider a file :file:`example.ada` containing the following:
 
 .. code-block:: ada
