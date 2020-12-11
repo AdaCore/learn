@@ -980,8 +980,9 @@ explanation of these aspects:
     than Ada might otherwise require.
 
 In the declaration of the components of the :ada:`PMC_Peripheral` record type,
-we use the :ada:`aliased` keyword to specify that those record components
-cannot be stored in registers. This makes sense because we want to ensure
+we use the :ada:`aliased` keyword to specify that those record components are
+accessible via other paths besides the component name. Therefore, the compiler
+won't store them in registers. This makes sense because we want to ensure
 that we're accessing specific memory-mapped registers, and not registers
 assigned  by the compiler. Note that, for the same reason, we also use the
 :ada:`aliased` keyword in the declaration of the :ada:`PMC_Periph` object.
