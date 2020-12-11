@@ -927,13 +927,57 @@ discussed in the section that explains how to
 chapter 6. Please refer to that chapter for more details. This is a brief
 explanation of these aspects:
 
-- The :ada:`Size` aspect indicates the number of bits required to represent an
-  object.
+- The :ada:`Size` aspect indicates the minimum number of bits required to
+  represent an object, and it can be used to confirm expectations. In the case
+  of the :ada:`PMC_SCER_Register` type above, it has the compiler confirm that
+  the record type will fit into the expected 16 bits.
 
 - The :ada:`Import` is sometimes necessary when creating overlays. When used in
   the context of object declarations, it avoids default initialization (for
   data types that have it.)
 
+.. admonition:: Details about :ada:`'Size`
+
+    When applied to a type, the :ada:`Size` aspects is telling the compiler
+    to not make record or array components of a type :ada:`T` any smaller than
+    :ada:`X` bits. Therefore, a common usage for this aspect is to just confirm
+    expectations: developers specify :ada:`'Size` to tell the compiler that
+    :ada:`T` should fit :ada:`X` bits, and the compiler will tell them if they
+    are right (or wrong).
+
+    That's what the aspect does for type :ada:`PMC_SCER_Register` in the
+    example above, as well as for the types :ada:`Bit`, :ada:`UInt5` and
+    :ada:`UInt10`. For example, we may declare a stand-alone object of type
+    :ada:`Bit`:
+
+    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Bit_Declaration
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Bit_Declaration is
+
+           type Bit    is mod 2 ** 1
+             with Size => 1;
+
+           B : constant Bit := 0;
+           --  ^ Although Bit'Size is 1, B'Size is almost certainly 8
+        begin
+           Put_Line ("Bit'Size = " & Positive'Image (Bit'Size));
+           Put_Line ("B'Size   = " & Positive'Image (B'Size));
+        end Show_Bit_Declaration;
+
+    In this case, :ada:`B` is almost certainly going to be 8-bits wide on a
+    typical machine, even though the language requires that :ada:`Bit'Size` is
+    1 by default.
+
+    When the specified size value is larger than necessary, it can cause
+    objects to be bigger in memory than they would be otherwise. For example,
+    for some enumeration types, we could say :ada:`for type Enum'Size use 32;`
+    when the number of literals would otherwise have required only a byte.
+    That's useful for unchecked conversions because the sizes of the two types
+    need to be the same. Likewise, it's useful for interfacing with C, where
+    :c:`enum` types are just mapped to the :ada:`int` type, and thus larger
+    than Ada might otherwise require.
 
 In the declaration of the components of the :ada:`PMC_Peripheral` record type,
 we use the :ada:`aliased` keyword to specify that those record components
