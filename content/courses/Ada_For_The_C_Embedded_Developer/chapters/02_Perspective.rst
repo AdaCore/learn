@@ -17,7 +17,7 @@ meaning, a platform with a microprocessor such as ARM, PowerPC, x86, or RISC-V.
 The application may be running on top of an embedded operating system, such as
 an embedded Linux, or directly on bare metal. And the application domain can
 range from small entities such as firmware or device controllers to flight
-management system, communication based train control systems, or advanced
+management systems, communication based train control systems, or advanced
 driver assistance systems.
 
 The GNAT Toolchain
@@ -28,7 +28,7 @@ tools with a compiler based on the GCC environment. It can be obtained from
 AdaCore, either as part of a commercial contract with
 `GNAT Pro <https://www.adacore.com/gnatpro>`_ or at no charge with the
 `GNAT Community edition <https://www.adacore.com/community>`_. The information
-on this book  will be relevant no matter which edition you're using. Most
+in this book  will be relevant no matter which edition you're using. Most
 examples will be runnable on the native Linux or Windows version for
 convenience. Some will only be relevant in the context of a cross toolchain, in
 which case we'll be using the embedded ARM bare metal toolchain.
@@ -38,7 +38,7 @@ offers a project management system. Because we're talking about embedded
 platforms, there are a lot of topics that we'll go over which will be specific
 to GNAT, and sometimes to specific platforms supported by GNAT. We'll try to
 make the distinction between what is GNAT-specific and Ada generic as much as
-possible through this book.
+possible throughout this book.
 
 For an introduction to the GNAT Toolchain for the GNAT Community edition, you
 may refer to the
@@ -51,7 +51,7 @@ The GNAT Toolchain for Embedded Targets
 When we're discussing embedded programming, our target device is often
 different from the host, which is the device we're using to actually write and
 build an application. In this case, we're talking about cross compilation
-platforms.
+platforms (concisely referred to as cross platforms).
 
 The GNAT toolchain supports cross platform compilation for various
 target devices. This section provides a short introduction to the topic. For
@@ -86,7 +86,7 @@ Run-time libraries consists of:
     - These files are responsible for configuring and interacting with the
       hardware.
 
-    - They are known as Board Support Package |mdash| commonly refer as *BSP*.
+    - They are known as a Board Support Package |mdash| commonly referred to by their abbrevation *BSP*.
 
 #. Code that is target-independent.
 
@@ -95,7 +95,7 @@ Run-time libraries consists of:
 The bareboard run-time libraries are provided as customized run-times that are
 configured to target a very specific micro-controller or processor. Therefore,
 for different micro-controllers and processors, the run-time libraries need to
-be ported to your target. These are some examples of what needs to be ported:
+be ported to the specific target. These are some examples of what needs to be ported:
 
 - startup code / scripts;
 
@@ -148,7 +148,7 @@ The first line of the Ada code is giving us access to the :ada:`Ada.Text_IO`
 library which contains the :ada:`Put_Line` function we will use to print the
 text to the console. This is similar to C's :c:`#include <stdio.h>`. We then
 create a procedure which executes :ada:`Put_Line` which prints to the console.
-This is similar to C's :c:`printf` statement. For now, we can assume these Ada
+This is similar to C's :c:`printf` function. For now, we can assume these Ada
 and C features have similar functionality. In reality, they are very different.
 We will explore that more as we delve further into the Ada language.
 
@@ -156,9 +156,9 @@ You may have noticed that the Ada syntax is more verbose than C. Instead of
 using braces :c:`{}` to declare scope, Ada uses keywords. :ada:`is` opens a
 declarative scope |mdash| which is empty here as there's no variable to
 declare. :ada:`begin` opens a sequence of statements. Within this sequence,
-we're calling the function :ada:`Put_Line`, prefixing explicitly by the name of
+we're calling the function :ada:`Put_Line`, prefixing explicitly with the name of
 the library unit where it's declared, :ada:`Ada.Text_IO`. The absence of the
-end of line :c:`\n` can also be noted, as :ada:`Put_Line` always terminates by
+end of line :c:`\\n` can also be noted, as :ada:`Put_Line` always terminates by
 an end of line.
 
 The Ada Syntax
@@ -169,9 +169,12 @@ it's not derived from the popular C style of notation with its ample use of
 brackets; rather, it uses a more expository syntax coming from Pascal. In many
 ways, Ada is a more explicit language |mdash| its syntax was designed to
 increase readability and maintainability, rather than making it faster to write
-in a condensed manner. For example, full words like :ada:`begin` and :ada:`end`
-are used in place of curly braces. Conditions are written using :ada:`if`,
-:ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada's assignment
+in a condensed manner. For example:
+- full words like :ada:`begin` and :ada:`end`
+are used in place of curly braces.
+- Conditions are written using :ada:`if`,
+:ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`.
+- Ada's assignment
 operator does not double as an expression, eliminating potential mistakes that
 could be caused by :c:`=` being used where :c:`==` should be.
 
@@ -264,7 +267,7 @@ other units that may :ada:`with` this package. Anything declared after the
 private keyword is only visible to the package implementation. A package
 specification, or spec, does not require a private section. One typical
 use-case for the private section in a package is when you want to declare a
-heterogeneous data type, called a record in Ada or a struct in C, but you want
+heterogeneous data type, called a :c:`record' in Ada or a :c:`struct' in C, but you want
 to stop the user of the package from accessing the record components directly.
 
 :code-config:`accumulate_code=True`
@@ -407,6 +410,12 @@ comments and working with integer variables:
 
 You'll notice that, in both languages, statements are terminated with a
 semicolon. This means that you can have multi-line statements.
+
+.. admonition:: The shortcuts of incrementing and decrementing
+
+    You may have noticed that Ada does not have something similar to the
+    :c:`a++` or :c:`a--` operators. Instead you must use the full assignment
+    :ada:`A := A + 1` or :ada:`A := A - 1`.
 
 In the Ada example above, there are two distinct sections to the
 :ada:`procedure Main`. This first section is delimited by the :ada:`is` keyword
@@ -566,12 +575,6 @@ newly defined block. The equivalent C code is:
         return 0;
     }
 
-.. admonition:: The shortcuts of incrementing and decrementing
-
-    You may have noticed that Ada does not have something similar to the
-    :c:`a++` or :c:`a--` operators. Instead you must use the full assignment
-    :ada:`A := A + 1` or :ada:`A := A - 1`.
-
 **Fun Fact** about the C language assignment operator :c:`=`: Did you know that
 an assignment in C can be used in an expression? Let's look at an example:
 
@@ -632,7 +635,7 @@ as an expression.
     in the call to subprograms of that package. The use clause is something to
     use with caution. For example: if we use the :ada:`Ada.Text_IO` package and
     we also have a :ada:`Put_Line` subprogram in our current compilation unit
-    with the same signature, we have a conflict!
+    with the same signature, we have a collision!
 
 Conditions
 ------------
@@ -683,7 +686,7 @@ The syntax of an if statement:
     end Main;
 
 In Ada, everything that appears between the :ada:`if` and :ada:`then` keywords
-is the conditional expression, no parentheses required. Comparison operators
+is the conditional expression, no parentheses are required. Comparison operators
 are the same except for:
 
 ========== ======= ==========
@@ -1649,7 +1652,7 @@ Note that the declaration above is actually similar to the existing
     subtype Positive is Integer range 1..Integer'Last;
 
 Since they're standard subtypes, you can declare variables of those subtypes
-directly in your implementation, in the same as you can declare :ada:`Integer`
+directly in your implementation, in the same way as you can declare :ada:`Integer`
 variables.
 
 As indicated in the table above, however, there is a difference in behavior for
@@ -2155,7 +2158,7 @@ Pointers
 ~~~~~~~~
 
 As a foreword to the topic of pointers, it's important to keep in mind the fact
-that most situation that would require a pointer in C do not in Ada. In the
+that most situations that would require a pointer in C do not in Ada. In the
 vast majority of cases, indirect memory management can be hidden from the
 developer and thus saves from many potential errors. However, there are
 situation that do require the use of pointers, or said differently that require
@@ -2289,14 +2292,14 @@ Here's now a similar example, but using heap allocation instead:
         V1 = malloc(sizeof(struct R));
         V1->A = 0;
         V2 = V1;
-        V2->A = 0;
+        V2->A = 1;
 
         print_r(V1, "V1");
         print_r(V2, "V2");
     }
 
 In this example, an object of type :ada:`R` is allocated on the heap. The same
-object is then referred to through :ada:`V1` and :ada:`V2`. As for C, there's
+object is then referred to through :ada:`V1` and :ada:`V2`. As in C, there's
 no garbage collector in Ada, so objects allocated by the new operator need to
 be expressly freed (which is not the case here).
 
@@ -2436,10 +2439,10 @@ Parameters can be passed in three distinct modes:
 
 - :ada:`in out` is a parameter with an initial value provided by the caller,
   which can be modified by the subprogram and returned to the caller (more or
-  less the equivalent of a non-constant reference in C).
+  less the equivalent of a non-constant pointer in C).
 
-Ada also provides :ada:`access` and :ada:`aliased` parameters, in effect an
-explicit pass-by-reference indicator.
+Ada also provides :ada:`access` and :ada:`aliased` parameters, which are in effect
+explicit pass-by-reference indicators.
 
 In Ada, the programmer specifies how the parameter will be used and in general
 the compiler decides how it will be passed (i.e., by copy or by reference). C
@@ -2545,8 +2548,7 @@ of the subprograms which are being provided later. Although optional here, it's
 still considered good practice to separately define specifications and
 implementations in order to make it easier to read the program. In Ada and C, a
 function that has not yet been seen cannot be used. Here, :ada:`Proc` can call
-:ada:`Func` because its specification has been declared. In Java, it's fine to
-have the declaration of the subprogram later.
+:ada:`Func` because its specification has been declared.
 
 Parameters in Ada subprogram declarations are separated with semicolons,
 because commas are reserved for listing multiple parameters of the same type.
@@ -2560,7 +2562,7 @@ of the subprogram.
 Overloading
 ~~~~~~~~~~~
 
-In C, function names must be unique. Ada allow overloading, that is two
+In C, function names must be unique. Ada allows overloading, that is two
 subprograms that share the same name but can be resolved though differences in
 profile. As long as the subprogram signatures (subprogram name, parameter
 types, and return types) are different, the compiler will be able to resolve
