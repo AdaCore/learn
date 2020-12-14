@@ -12,13 +12,13 @@ Understanding the various options
 
 When it comes to implementing concurrency and real time, Ada offers several
 options. The most common one is on systems known as "full run-time", which
-offers entire Ada semantics. In the GNAT case, this is typically the case when
+offers the entirity of Ada semantics. In the GNAT case, this is typically the case when
 running on top of an OS (e.g. Linux). In this case, Ada provides high level
 constructions such as tasks and protected objects to handle concurrency and
 synchronization. On more constrained systems, such are bare metal or some RTOS,
 a subset of the Ada tasking capabilities known as Ravenscar is available.
-Though restricted, this subset also has nice properties, in particular absence
-of deadlock, absence of priority inversion, schedulability and very small
+Though restricted, this subset also has nice properties, in particular: an absence
+of deadlock, an absence of priority inversion, a scheduler and a very small memory
 footprint. On bare metal systems, this also essentially means that Ada comes
 with its own real-time kernel.
 
@@ -28,7 +28,7 @@ doesn’t require any change as far as the creation of threads or handling of
 mutexes goes. However, in some situations, it’s critical to be able to rely
 directly on the services provided by the platform. In this case, it’s always
 possible to make direct system calls bound to Ada. Several targets of the GNAT
-compiler provide these API by default, for example win32ada for Windows and
+compiler provide this API by default, for example win32ada for Windows and
 Florist for POSIX systems.
 
 Tasks
@@ -37,8 +37,8 @@ Tasks
 :code-config:`accumulate_code=True`
 
 Ada offers a high level capability called a *task* which is essentially an
-independent thread of execution. In GNAT, these tasks are either mapped on the
-underlying OS threads, or using an dedicated kernel when not available.
+independent thread of execution. In GNAT, these tasks are either mapped to the
+underlying OS threads, or use a dedicated kernel when not available.
 
 The following example will display the 26 letters of the alphabet twice, using
 two concurrent tasks. Since there is no synchronization between the two threads
@@ -83,7 +83,7 @@ argument to a constructor in Java. The following example creates 10 tasks, each
 of which displays a subset of the alphabet contained between the parameter and
 the :ada:`'Z'` Character.  As with the earlier example, since there is no
 synchronization among the tasks, the output may be interspersed depending on
-the implementation task scheduling algorithm.
+the implementation of the task scheduling algorithm.
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task_Type
 
@@ -163,8 +163,8 @@ data and coordinate execution. Let's consider the following example:
     end;
 
 The :ada:`Go` entry declared in :ada:`After` is the external interface to the
-task. In the task body, the accept statement causes the task to wait for a call
-on the entry. This particular entry and accept pair doesn't do much more than
+task. In the task body, the :ada:`accept` statement causes the task to wait for a call
+on the entry. This particular :ada`entry` and :ada`accept` pair doesn't do much more than
 cause the task to wait until :ada:`Main` calls :ada:`After.Go`. So, even though
 the two tasks start simultaneously and execute independently, they can
 coordinate via :ada:`Go`. Then, they both continue execution independently
@@ -185,7 +185,7 @@ and executes some code:
 
        task After is
           entry Go (Text : String);
-       end After ;
+       end After;
 
        task body After is
        begin
@@ -342,14 +342,14 @@ the loop there are several possibilities:
 
 * There is a call pending on exactly one of the entries.  In this case control
   passes to the :ada:`select` branch with an :ada:`accept` statement for that
-  entry.  The choice of which caller to accept, if more than one, depends on
-  the queuing policy, which can be specified via a :ada:`pragma` defined in the
-  Real-Time Systems Annex of the Ada standard; the default is
-  *First-In First-Out*.
+  entry.
 
 * There are calls pending on more than one entry.  In this case one of the
   entries with pending callers is chosen, and then one of the callers is chosen
-  to be de-queued (the choices depend on the queueing policy).
+  to be de-queued. The choice of which caller to accept depends on
+  the queuing policy, which can be specified via a :ada:`pragma` defined in the
+  Real-Time Systems Annex of the Ada standard; the default is
+  *First-In First-Out*.
 
 Protected Objects
 -----------------
