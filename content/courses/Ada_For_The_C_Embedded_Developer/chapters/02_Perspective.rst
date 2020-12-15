@@ -158,7 +158,7 @@ declarative scope |mdash| which is empty here as there's no variable to
 declare. :ada:`begin` opens a sequence of statements. Within this sequence,
 we're calling the function :ada:`Put_Line`, prefixing explicitly with the name of
 the library unit where it's declared, :ada:`Ada.Text_IO`. The absence of the
-end of line :c:`\\n` can also be noted, as :ada:`Put_Line` always terminates by
+end of line ``\n`` can also be noted, as :ada:`Put_Line` always terminates by
 an end of line.
 
 The Ada Syntax
