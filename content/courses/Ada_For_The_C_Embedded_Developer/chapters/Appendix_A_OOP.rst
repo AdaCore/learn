@@ -280,8 +280,10 @@ The direct implementation in Ada is:
 
     package System_A is
 
+       type Val_Array is array (Positive range <>) of Float;
+	   
        type A is record
-          Val    : Float;
+          Val    : Val_Array (1 .. 2);
           Active : Boolean;
        end record;
 
@@ -299,7 +301,7 @@ The direct implementation in Ada is:
 
        procedure A_Activate (E : in out A) is
        begin
-          E.Val    := 0.0;
+		  E.Val    := (others => 0.0);
           E.Active := True;
        end A_Activate;
 
@@ -310,7 +312,7 @@ The direct implementation in Ada is:
 
        function A_Value (E : A) return Float is
        begin
-          return E.Val;
+	      return (E.Val (1) + E.Val (2)) / 2.0;
        end A_Value;
 
        procedure A_Deactivate (E : in out A) is
@@ -322,10 +324,8 @@ The direct implementation in Ada is:
 
     package System_B is
 
-       type Val_Array is array (Positive range <>) of Float;
-
        type B is record
-          Val    : Val_Array (1 .. 2);
+		  Val    : Float;
           Active : Boolean;
        end record;
 
@@ -343,7 +343,7 @@ The direct implementation in Ada is:
 
        procedure B_Activate (E : in out B) is
        begin
-          E.Val    := (others => 0.0);
+          E.Val    := 0.0;
           E.Active := True;
        end B_Activate;
 
@@ -354,7 +354,7 @@ The direct implementation in Ada is:
 
        function B_Value (E : B) return Float is
        begin
-          return (E.Val (1) + E.Val (2)) / 2.0;
+          return E.Val;
        end B_Value;
 
        procedure B_Deactivate (E : in out B) is
@@ -511,9 +511,11 @@ This is an update to the implementation that addresses all the points above:
        procedure Finalize (E : in out A);
 
     private
-
+	   
+	   type Val_Array is array (Positive range <>) of Float;         
+	   
        type A is record
-          Val    : Float;
+          Val    : Val_Array (1 .. 2);
           Active : Boolean;
        end record;
 
@@ -523,7 +525,7 @@ This is an update to the implementation that addresses all the points above:
 
        procedure Activate (E : in out A) is
        begin
-          E.Val    := 0.0;
+          E.Val    := (others => 0.0);
           E.Active := True;
        end Activate;
 
@@ -531,7 +533,9 @@ This is an update to the implementation that addresses all the points above:
           (E.Active);
 
        function Value (E : A) return Float is
-          (E.Val);
+	   begin
+          return (E.Val (1) + E.Val (2)) / 2.0;
+       end Value;
 
        procedure Finalize (E : in out A) is
        begin
@@ -554,10 +558,8 @@ This is an update to the implementation that addresses all the points above:
 
     private
 
-       type Val_Array is array (Positive range <>) of Float;
-
        type B is record
-          Val    : Val_Array (1 .. 2);
+	      Val    : Float;
           Active : Boolean;
        end record;
 
@@ -567,7 +569,7 @@ This is an update to the implementation that addresses all the points above:
 
        procedure Activate (E : in out B) is
        begin
-          E.Val    := (others => 0.0);
+	      E.Val    := 0.0;
           E.Active := True;
        end Activate;
 
@@ -577,9 +579,7 @@ This is an update to the implementation that addresses all the points above:
        end Is_Active;
 
        function Value (E : B) return Float is
-       begin
-          return (E.Val (1) + E.Val (2)) / 2.0;
-       end Value;
+	   (E.Val);
 
        procedure Finalize (E : in out B) is
        begin
@@ -833,9 +833,11 @@ For system A, this is the declaration:
        overriding function Value (E : A) return Float;
 
     private
+		
+	   type Val_Array is array (Positive range <>) of Float;
 
        type A is new Sys_Base with record
-          Val : Float;
+          Val : Val_Array (1 .. 2);
        end record;
 
 Subprograms from parent
@@ -870,7 +872,7 @@ example:
 
    overriding procedure Activate (E : in out A) is
    begin
-      E.Val := 0.0;
+      E.Val := (others => 0.0);
       Sys_Base (E).Activate;    --  Calling Activate for Sys_Base type:
                                 --  this call initializes the Active flag.
    end;
@@ -992,8 +994,10 @@ Finally, this is the complete source-code example:
 
     private
 
+	   type Val_Array is array (Positive range <>) of Float;
+
        type A is new Sys_Base with record
-          Val : Float;
+          Val : Val_Array (1 .. 2);
        end record;
 
     end Simple.System_A;
@@ -1002,12 +1006,15 @@ Finally, this is the complete source-code example:
 
        procedure Activate (E : in out A) is
        begin
-          E.Val := 0.0;
+	      E.Val := (others => 0.0);
           Sys_Base (E).Activate;
        end;
 
        function Value (E : A) return Float is
-         (E.Val);
+          pragma Assert (E.Val'Length = 2);
+       begin
+          return (E.Val (1) + E.Val (2)) / 2.0;
+       end Value;
 
     end Simple.System_A;
 
@@ -1021,10 +1028,8 @@ Finally, this is the complete source-code example:
 
     private
 
-       type Val_Array is array (Positive range <>) of Float;
-
        type B is new Sys_Base with record
-          Val : Val_Array (1 .. 2);
+          Val : Float;
        end record;
 
     end Simple.System_B;
@@ -1033,15 +1038,12 @@ Finally, this is the complete source-code example:
 
        procedure Activate (E : in out B) is
        begin
-          E.Val := (others => 0.0);
+          E.Val := 0.0;
           Sys_Base (E).Activate;
        end;
 
        function Value (E : B) return Float is
-          pragma Assert (E.Val'Length = 2);
-       begin
-          return (E.Val (1) + E.Val (2)) / 2.0;
-       end Value;
+         (E.Val);
 
     end Simple.System_B;
 
@@ -1155,7 +1157,7 @@ the implementation of the overriding :ada:`Activate` procedure. For example:
 
        procedure Activate (E : in out A) is
        begin
-          E.Val := 0.0;
+          E.Val := (others => 0.0);
           Activate (Sys_Base (E));
        end;
 
@@ -1204,9 +1206,11 @@ above:
        type A is new Sys_Base with private;
 
     private
+      
+	   type Val_Array is array (Positive range <>) of Float;
 
        type A is new Sys_Base with record
-          Val : Float;
+          Val : Val_Array (1 .. 2);
        end record;
 
        overriding procedure Activation_Reset (E : in out A);
@@ -1217,7 +1221,7 @@ above:
 
        procedure Activation_Reset (E : in out A) is
        begin
-          E.Val := 0.0;
+	      E.Val    := (others => 0.0);
        end Activation_Reset;
 
     end Simple.System_A;
@@ -1420,8 +1424,10 @@ Finally, this is the complete updated source-code example:
 
     private
 
+       type Val_Array is array (Positive range <>) of Float;
+
        type A is new Sys_Base with record
-          Val : Float;
+          Val : Val_Array (1 .. 2);
        end record;
 
        overriding procedure Activation_Reset (E : in out A);
@@ -1432,11 +1438,14 @@ Finally, this is the complete updated source-code example:
 
        procedure Activation_Reset (E : in out A) is
        begin
-          E.Val := 0.0;
+	      E.Val := (others => 0.0);
        end Activation_Reset;
 
        function Value (E : A) return Float is
-         (E.Val);
+          pragma Assert (E.Val'Length = 2);
+       begin
+          return (E.Val (1) + E.Val (2)) / 2.0;
+       end Value;
 
     end Simple.System_A;
 
@@ -1448,10 +1457,8 @@ Finally, this is the complete updated source-code example:
 
     private
 
-       type Val_Array is array (Positive range <>) of Float;
-
        type B is new Sys_Base with record
-          Val : Val_Array (1 .. 2);
+          Val : Float;
        end record;
 
        overriding procedure Activation_Reset (E : in out B);
@@ -1462,14 +1469,11 @@ Finally, this is the complete updated source-code example:
 
        procedure Activation_Reset (E : in out B) is
        begin
-          E.Val := (others => 0.0);
+          E.Val := 0.0;
        end Activation_Reset;
 
        function Value (E : B) return Float is
-          pragma Assert (E.Val'Length = 2);
-       begin
-          return (E.Val (1) + E.Val (2)) / 2.0;
-       end Value;
+         (E.Val);
 
     end Simple.System_B;
 
