@@ -396,7 +396,7 @@ Our :ada:`Main` now looks like:
 Here, the call to :ada:`Send_Fast` will get flagged by the compiler.
 
 Note that the fact that the code of :ada:`Main` has to be changed for every
-implementation isn't necessary satisfactory. We may want to go one step
+implementation isn't necessarily satisfactory. We may want to go one step
 further, and isolate the selection of the device kind to be used for the whole
 application in one unique file. One way to do this is to use the same name for
 all types, and use a renaming to select which package to use. Here's a
@@ -2050,7 +2050,7 @@ calls:
        procedure Receive (Device : Transceiver; Data : out Integer) is
           pragma Unreferenced (Device);
        begin
-          Data := 42;
+          Data := 7;
        end Receive;
 
        procedure Display (Device : Transceiver) is
