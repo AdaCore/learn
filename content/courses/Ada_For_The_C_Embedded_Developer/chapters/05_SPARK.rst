@@ -441,8 +441,8 @@ function :ada:`Value` returns -1. If you remove the function's handler
 for :ada:`Constraint_Error` (lines 7 and 8) then the other "anonymous"
 handler will catch the exception and -1 will be returned instead of zero.
 
-There are additional capabilities for exceptions but now you have a good
-foundation for understanding how they work, especially their dynamic
+There are additional capabilities for exceptions, but for now you have a good
+basic understanding of how exceptions work, especially their dynamic
 nature at run-time.
 
 .. _Dynamic_Checks_Vs_Formal_Proof:
@@ -869,7 +869,7 @@ This reduction has a number of advantages:
   code review, dynamic checking at run-time, or formal static proof.
 
 As an example, consider a procedure :ada:`Read` that returns a component
-value from an array. Both the array and index are objects visible to the
+value from an array. Both the :ada'Data' and :ada:'Index' are objects visible to the
 procedure so they are not formal parameters.
 
 :code-config:`reset_accumulator=True`
@@ -945,18 +945,6 @@ precondition (line 9).
 Now we don't need the defensive code in the procedure body. That's safe
 because SPARK will attempt to prove statically that the check will not
 fail at the point of each call.
-
-Assuming that procedure :ada:`Read` is intended to be the only way to
-get values from the array, in a real application (where the principles
-of software engineering apply) we would take advantage of the
-compile-time visibility controls that packages offer. Specifically, we
-would move all the variables' declarations to the private part of the
-package, or even the package body, so that client code could not
-possibly access the array directly. Only procedure :ada:`Read` would
-remain visible to clients, thus remaining the only means of accessing
-the array. However, that change would entail others, and in this chapter
-we are only concerned with introducing the capabilities of SPARK.
-Therefore, we keep the examples as simple as possible.
 
 
 Proving Absence of Run-Time Errors
