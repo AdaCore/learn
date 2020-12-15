@@ -59,7 +59,7 @@ By being part of GCC, GNAT offers the same ``-O_`` switches as GCC:
 |             | inlining and vectorization.                                  |
 +-------------+--------------------------------------------------------------+
 
-Note that the highest the level, the slowest will be the compilation time. For
+Note that the higher the level, the longer the compilation time will be. For
 fast compilation during development phase, unless you're working on
 benchmarking algorithms, using ``-O0`` is probably a good idea.
 
@@ -435,7 +435,7 @@ point to two different arrays.
 Generally speaking, when values are used in data structures, it's useful to
 always consider where they're coming from, and if their value is static
 (computed by the compiler) or dynamic (only known at run-time). There's nothing
-fundamentally wrong with dynamically constrained types, unless they appear is
+fundamentally wrong with dynamically constrained types, unless they appear in
 performance-critical pieces of the application.
 
 Pointers v.s. data copies
