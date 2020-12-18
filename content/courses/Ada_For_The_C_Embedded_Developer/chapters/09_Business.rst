@@ -108,7 +108,7 @@ for Ada-based technologies.
 
 AdaCore being the author of this booklet, it's difficult for us to be fair in
 our description of other Ada compilation technologies. We will leave to the
-reader the responsibility of forging hir or her own opinion. If they present a
+readers the responsibility of forging their own opinion. If they present a
 credible alternative to the GNAT compiler, then this whole section can be
 considered as void.
 
