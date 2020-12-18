@@ -417,7 +417,7 @@ names in their type.
 In Ada, the package is a namespace |mdash| two entities declared in two
 different packages are clearly identified and can always be specifically
 designated. The C names are usually a good indication of the names of the
-futures packages and should be stripped |mdash| it is possible to the full name
+future packages and should be stripped |mdash| it is possible to the full name
 if useful. For example, here's how the following declaration and call
 could be translated:
 
