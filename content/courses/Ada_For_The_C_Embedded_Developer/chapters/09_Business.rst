@@ -26,7 +26,7 @@ system where the occurrence of a software failure is a relatively costly event.
 From a qualitative standpoint, there are various times in the software
 development life cycle where defects can be found:
 
-#. on the developer 's desk
+#. on the developer's desk
 
 #. during component testing
 
