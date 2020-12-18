@@ -5,3 +5,7 @@
 backend/*   linguist-vendored
 frontend/*  linguist-vendored
 internal/*  linguist-vendored
+
+# Force files to use LF for EOL
+*.rst text eol=lf
+*.sh text eol=lf

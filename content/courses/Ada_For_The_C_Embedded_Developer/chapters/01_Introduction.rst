@@ -184,15 +184,3 @@ that make proof difficult, such as pointer aliasing. By removing these features
 we can write code that is fit for sound static analysis techniques. This means
 that we can run mathematical provers on the SPARK code to prove certain safety
 or security properties about the code.
-
-This book is split into 5 sections:
-
-#. Ada Basics |mdash| An Introduction to Ada semantics and concepts
-
-#. Ada and SPARK verification capabilities
-
-#. Ada vs C programming patterns
-
-#. Ada use cases in embedded applications
-
-#. Migration from C to Ada

@@ -204,6 +204,8 @@ types:
     type T is digits <>; -- T is a floating point type
     type T is access T2; -- T is an access type to T2
 
+For a more complete list please reference the `Generic Formal Types Appendix <https://learn.adacore.com/courses/intro-to-ada/chapters/appendices.html#appendix-a-generic-formal-types>`_.
+
 .. _SimpleDerivation:
 
 Simple derivation
@@ -396,7 +398,7 @@ Our :ada:`Main` now looks like:
 Here, the call to :ada:`Send_Fast` will get flagged by the compiler.
 
 Note that the fact that the code of :ada:`Main` has to be changed for every
-implementation isn't necessary satisfactory. We may want to go one step
+implementation isn't necessarily satisfactory. We may want to go one step
 further, and isolate the selection of the device kind to be used for the whole
 application in one unique file. One way to do this is to use the same name for
 all types, and use a renaming to select which package to use. Here's a
@@ -794,33 +796,6 @@ corresponding implementation for version #2 looks like this:
 
 Again, we just need to select the appropriate configuration package for each
 version of the build, which we can easily do when using :program:`GPRbuild`.
-
-.. admonition:: In Ada 2020
-
-    Ada 2020 allows for using static expression functions, which are evaluated
-    at compile time. An expression function is static when the :ada:`Static`
-    aspect is specified. For example:
-
-    .. code-block:: ada
-
-        procedure Main is
-
-           X1 : constant := (if True then 37 else 42);
-
-           function If_Then_Else (Flag : Boolean; X, Y : Integer)
-             return Integer is
-              (if Flag then X else Y) with Static;
-
-           X2 : constant := If_Then_Else (True, 37, 42);
-
-        begin
-           null;
-        end Main;
-
-    In this example, we declare :ada:`X1` using an expression. In the
-    declaration of :ada:`X2`, we call the static expression function
-    :ada:`If_Then_Else`. Both :ada:`X1` and :ada:`X2` have the same constant
-    value.
 
 Handling variability & reusability dynamically
 ----------------------------------------------
@@ -2050,7 +2025,7 @@ calls:
        procedure Receive (Device : Transceiver; Data : out Integer) is
           pragma Unreferenced (Device);
        begin
-          Data := 42;
+          Data := 7;
        end Receive;
 
        procedure Display (Device : Transceiver) is

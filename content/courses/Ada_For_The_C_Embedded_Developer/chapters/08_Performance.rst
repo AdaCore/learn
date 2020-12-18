@@ -19,12 +19,11 @@ other. Furthermore, the two languages are fairly similar in the way they
 implement imperative semantics, in particular with regards to memory management
 or control flow. They should be equivalent on average.
 
-However, it's not uncommon to have projects developing similar pieces of code
-in Ada and C to confirm relative performances, and to observe differences from
-20 |ndash| 30% to sometimes 5 or 20 times slower. This usually comes from the
-fact that, while the two piece appear semantically equivalent, they happen to
-be actually quite different. This section will list some of the most common
-suspects and their resolution.
+When comparing the performance of C and Ada code, differences might be
+observed. This usually comes from the fact that, while the two piece *appear*
+semantically equivalent, they happen to be actually quite different; C code
+semantics do not implicitly apply the same run-time checks that Ada does.
+This section will present common ways for improving Ada code performance.
 
 Switches and optimizations
 --------------------------
@@ -59,7 +58,7 @@ By being part of GCC, GNAT offers the same ``-O_`` switches as GCC:
 |             | inlining and vectorization.                                  |
 +-------------+--------------------------------------------------------------+
 
-Note that the highest the level, the slowest will be the compilation time. For
+Note that the higher the level, the longer the compilation time will be. For
 fast compilation during development phase, unless you're working on
 benchmarking algorithms, using ``-O0`` is probably a good idea.
 
@@ -435,7 +434,7 @@ point to two different arrays.
 Generally speaking, when values are used in data structures, it's useful to
 always consider where they're coming from, and if their value is static
 (computed by the compiler) or dynamic (only known at run-time). There's nothing
-fundamentally wrong with dynamically constrained types, unless they appear is
+fundamentally wrong with dynamically constrained types, unless they appear in
 performance-critical pieces of the application.
 
 Pointers v.s. data copies
