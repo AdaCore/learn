@@ -4,11 +4,11 @@ Argumentation and Business Perspectives
 .. include:: ../../global.txt
 
 The technical benefits of a migration from C to Ada are usually relatively
-straightforward to demonstrate. Hopefully, this booklet provides a good basis for
-it. However, when faced with an actual business decision to make, additional
-considerations need to be taken into account, such as return on investment,
-perennity of the solution, tool support, etc. This section will cover a number
-of usual questions and provide elements of answers.
+straightforward to demonstrate. Hopefully, this booklet provides a good basis
+for it. However, when faced with an actual business decision to make,
+additional considerations need to be taken into account, such as return on
+investment, perennity of the solution, tool support, etc. This section will
+cover a number of usual questions and provide elements of answers.
 
 What's the expected ROI of a C to Ada transition?
 -------------------------------------------------
@@ -23,8 +23,8 @@ provide qualitative and quantitative arguments here, from the perspective of a
 project that has to reach relatively high level of integrity, that is to say a
 system where the occurrence of a software failure is a relatively costly event.
 
-From a qualitative standpoint, there are various times in the software development life cycle where
-defects can be found:
+From a qualitative standpoint, there are various times in the software
+development life cycle where defects can be found:
 
 #. on the developer 's desk
 
@@ -36,17 +36,17 @@ defects can be found:
 
 #. during maintenance
 
-Numbers from studies vary greatly on the relative costs of defects found at each of
-these phases, but there's a clear ordering between them. For example, a defect
-found while developing is orders of magnitude less expensive to fix than a
-defect found e.g. at integration time, which may involve costly debugging
-sessions and slow down the entire system acceptance. The whole purpose of Ada
-and SPARK is to push defect detection to the developer's desk as much as
-possible; at least for all of these defects that can be identified at that
-level. While the strict act of writing software may be taking more effort
+Numbers from studies vary greatly on the relative costs of defects found at
+each of these phases, but there's a clear ordering between them. For example,
+a defect found while developing is orders of magnitude less expensive to fix
+than a defect found e.g. at integration time, which may involve costly
+debugging sessions and slow down the entire system acceptance. The whole
+purpose of Ada and SPARK is to push defect detection to the developer's desk as
+much as possible; at least for all of these defects that can be identified at
+that level. While the strict act of writing software may be taking more effort
 because of all of the additional safeguards, this should have a significant and
-positive impact down the line and help to control costs overall. The exact value this
-may translate into is highly business dependent.
+positive impact down the line and help to control costs overall. The exact
+value this may translate into is highly business dependent.
 
 From a quantitative standpoint, two studies have been done almost 25 years
 apart and provide similar insights:
@@ -54,8 +54,8 @@ apart and provide similar insights:
 - Rational Software in 1995 found that the cost of developing software in Ada
   was overall half as much as the cost of developing software in C.
 
-- VDC ran a study in 2018, finding that the cost savings of developing with Ada over
-  C ranged from 6% to 38% in savings.
+- VDC ran a study in 2018, finding that the cost savings of developing with Ada
+  over C ranged from 6% to 38% in savings.
 
 From a qualitative standpoint, in particular with regards to Ada and C from a
 formal proof perspective, an interesting presentation was made in 2017 by two
@@ -70,7 +70,8 @@ to Ada is made. This is assuming everything else is equal, in particular that
 the level of integrity is the same. In many situations, the migration to Ada is
 justified by an increase in terms of integrity expectations, in which case it's
 expected that development costs will raise (it's more expensive to develop
-better software) and Ada is viewed as a means to mitigate this rise in development costs.
+better software) and Ada is viewed as a means to mitigate this rise in
+development costs.
 
 That being said, the point of this argument is not to say that it's not
 possible to write very safe and secure software with languages different than
@@ -100,16 +101,16 @@ mission critical software.
 What is the future of the Ada technology?
 -----------------------------------------
 
-The first piece of the answer lies in the user base of the Ada language, as seen in
-the previous question. Projects using Ada in the aerospace and defence domain
-maintain source code over decades, providing healthy funding foundation for
-Ada-based technologies.
+The first piece of the answer lies in the user base of the Ada language, as
+seen in the previous question. Projects using Ada in the aerospace and defence
+domain maintain source code over decades, providing healthy funding foundation
+for Ada-based technologies.
 
 AdaCore being the author of this booklet, it's difficult for us to be fair in
 our description of other Ada compilation technologies. We will leave to the
-reader the responsibility of forging hir or her own opinion. If they present a credible
-alternative to the GNAT compiler, then this whole section can be considered as
-void.
+reader the responsibility of forging hir or her own opinion. If they present a
+credible alternative to the GNAT compiler, then this whole section can be
+considered as void.
 
 Assuming GNAT is the only option available, and acknowledging that this is an
 argument that we're hearing from a number of Ada adopters, let's discuss the
@@ -133,8 +134,8 @@ vendors occupying a specific niche that was left uncovered , or hobbyists
 developing their own builds.
 
 With that in mind, it's clear that the "sole source" provider issue is a
-circumstantial |mdash| nothing is preventing other vendors from emerging if the conditions are
-met.
+circumstantial |mdash| nothing is preventing other vendors from emerging if the
+conditions are met.
 
 Is the Ada toolset complete?
 ----------------------------
@@ -197,8 +198,8 @@ to Ada or SPARK is of course not practical and counterproductive.
 
 Most team select either a small piece of existing code which deserves
 particular attention, or new modules to develop, and concentrate on this.
-Developing this module or part of the application will also help in developing the
-coding patterns to be used for the particular project and company. This
+Developing this module or part of the application will also help in developing
+the coding patterns to be used for the particular project and company. This
 typically concentrates an effort of a few people on a few thousands lines of
 code. The resulting code can be linked to the rest of the C application.
 From there, the newly established practices and their benefit can slowly

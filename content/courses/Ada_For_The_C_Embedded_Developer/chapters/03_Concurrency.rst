@@ -163,12 +163,12 @@ data and coordinate execution. Let's consider the following example:
     end;
 
 The :ada:`Go` entry declared in :ada:`After` is the external interface to the
-task. In the task body, the :ada:`accept` statement causes the task to wait for a call
-on the entry. This particular :ada`entry` and :ada`accept` pair doesn't do much more than
-cause the task to wait until :ada:`Main` calls :ada:`After.Go`. So, even though
-the two tasks start simultaneously and execute independently, they can
-coordinate via :ada:`Go`. Then, they both continue execution independently
-after the rendezvous.
+task. In the task body, the :ada:`accept` statement causes the task to wait for
+a call on the entry. This particular :ada:`entry` and :ada:`accept` pair
+doesn't do much more than cause the task to wait until :ada:`Main` calls
+:ada:`After.Go`. So, even though the two tasks start simultaneously and execute
+independently, they can coordinate via :ada:`Go`. Then, they both continue
+execution independently after the rendezvous.
 
 The :ada:`entry`/:ada:`accept` pair can take/pass parameters, and the
 :ada:`accept` statement can contain a sequence of statements; while these

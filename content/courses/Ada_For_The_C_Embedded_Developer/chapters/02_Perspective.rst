@@ -268,8 +268,9 @@ other units that may :ada:`with` this package. Anything declared after the
 private keyword is only visible to the package implementation. A package
 specification, or spec, does not require a private section. One typical
 use-case for the private section in a package is when you want to declare a
-heterogeneous data type, called a :c:`record' in Ada or a :c:`struct` in C, but you want
-to stop the user of the package from accessing the record components directly.
+heterogeneous data type, called a :c:`record` in Ada or a :c:`struct` in C, but
+you want to stop the user of the package from accessing the record components
+directly.
 
 :code-config:`accumulate_code=True`
 

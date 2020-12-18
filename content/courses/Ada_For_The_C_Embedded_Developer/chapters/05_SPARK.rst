@@ -869,8 +869,8 @@ This reduction has a number of advantages:
   code review, dynamic checking at run-time, or formal static proof.
 
 As an example, consider a procedure :ada:`Read` that returns a component
-value from an array. Both the :ada'Data' and :ada:'Index' are objects visible to the
-procedure so they are not formal parameters.
+value from an array. Both the :ada:`Data` and :ada:`Index` are objects visible
+to the procedure so they are not formal parameters.
 
 :code-config:`reset_accumulator=True`
 
