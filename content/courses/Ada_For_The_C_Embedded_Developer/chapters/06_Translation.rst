@@ -622,8 +622,8 @@ pieces of data into a larger structure. In Ada, this can be done by describing
 the structure layout at the type level through representation clauses, and then
 accessing this structure as any other.
 
-Consider the case of using a C primitive type's bits to represent various
-flags. In C, this would be done through masks, e.g.:
+Consider the case of using a C primitive type as a container for single bit
+boolean flags. In C, this would be done through masks, e.g.:
 
 [C]
 
