@@ -19,12 +19,11 @@ other. Furthermore, the two languages are fairly similar in the way they
 implement imperative semantics, in particular with regards to memory management
 or control flow. They should be equivalent on average.
 
-However, it's not uncommon to have projects developing similar pieces of code
-in Ada and C to confirm relative performances, and to observe differences from
-20 |ndash| 30% to sometimes 5 or 20 times slower. This usually comes from the
-fact that, while the two piece appear semantically equivalent, they happen to
-be actually quite different. This section will list some of the most common
-suspects and their resolution.
+When comparing the performance of C and Ada code, differences might be
+observed. This usually comes from the fact that, while the two piece *appear*
+semantically equivalent, they happen to be actually quite different; C code
+semantics do not implicitly apply the same run-time checks that Ada does.
+This section will present common ways for improving Ada code performance.
 
 Switches and optimizations
 --------------------------

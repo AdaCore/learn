@@ -232,7 +232,7 @@ Here's a possible execution trace, assuming a uniprocessor:
 The above description is a conceptual model; in practice the implementation can
 perform various optimizations to avoid unnecessary context switches.
 
-Selective Rendez-vous
+Selective Rendezvous
 ---------------------
 
 The :ada:`accept` statement by itself can only wait for a single event (call)

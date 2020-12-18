@@ -68,8 +68,7 @@ GNAT supports two types of cross platforms:
 - **bareboard targets**, where the run-times do not depend on an operating
   system.
 
-    - In this case, the application communicates directly with the device's
-      processor.
+    - In this case, the application has direct access to the system hardware.
 
 For each platform, a set of run-time libraries is available. Run-time libraries
 implement a subset of the Ada language for different use cases, and they're
@@ -236,8 +235,13 @@ compilation units are stored in files with an .ads extension for specifications
 and with an .adb extension for implementations.
 
 One main difference between the C and Ada compilation structure is that Ada
-compilation units are structured into something called packages. A
-specification defines a package and the implementation implements the package.
+compilation units are structured into something called packages.
+
+Packages
+--------
+The package is the basic modularization unit of the Ada language, as is the
+class for Java and the header and implementation pair for C.
+A specification defines a package and the implementation implements the package.
 We saw this in an earlier example when we included the :ada:`Ada.Text_IO`
 package into our application. The package specification has the structure:
 
@@ -265,105 +269,118 @@ The package implementation, or body, has the structure:
 
     end My_Package;
 
-Something that might stick out in this example is the use of the reserve word
-:ada:`private` in the package specification. This acts as a partition in the
-package |mdash| anything declared before this keyword is publicly visible to
-other units that may :ada:`with` this package. Anything declared after the
-private keyword is only visible to the package implementation. A package
-specification, or spec, does not require a private section. One typical
-use-case for the private section in a package is when you want to declare a
-heterogeneous data type, called a :c:`record` in Ada or a :c:`struct` in C, but
-you want to stop the user of the package from accessing the record components
-directly.
 
-:code-config:`accumulate_code=True`
+Declaration Protection
+~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+ An Ada package
+contains three parts that, for GNAT, are separated into two files: :file:`.ads`
+files contain public and private Ada specifications, and :file:`.adb` files
+contain the implementation, or Ada bodies.
 
-    package Containers is
+[Ada]
 
-       type Stack is private;
+.. code-block:: ada
 
-       procedure Push (St   : in out Stack;
-                       Elem : Integer);
-       function Pop (St : in out Stack) return Integer;
-
-       --  more accessors go here
-
+    package Package_Name is
+       -- public specifications
     private
-       type Integer_Array is array (Natural range <>) of Integer;
+       -- private specifications
+    end Package_Name;
 
-       type Stack is record
-          Data : Integer_Array (1 .. 100);
-          Top : Natural := 0;
+    package body Package_Name is
+       -- implementation
+    end Package_Name;
+
+Private types are useful for preventing the users of a package's types from
+depending on the types' implementation details. Another use-case is the prevention
+of package users from accessing package state/data arbitrarily. The private
+reserved word splits the package spec into *public* and *private* parts.
+For example:
+
+[Ada]
+
+.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Private_Types
+
+    package Types is
+       type Type_1 is private;
+       type Type_2 is private;
+       type Type_3 is private;
+       procedure P (X : Type_1);
+       --  ...
+    private
+       procedure Q (Y : Type_1);
+       type Type_1 is new Integer range 1 .. 1000;
+       type Type_2 is array (Integer range 1 .. 1000) of Integer;
+       type Type_3 is record
+          A, B : Integer;
        end record;
+    end Types;
 
-    end Containers;
+Subprograms declared above the :ada:`private` separator (such as :ada:`P`) will
+be visible to the package user, and the ones below (such as :ada:`Q`) will not.
+The body of the package, the implementation, has access to both parts. 
+A package specification does not require a private section.
 
-In this example we have a specification for a Stack data type. We don't really
-want the user to be manipulating the underlying array or index of the top of
-the array directly. To accomplish this "hiding" we can, in the public section
-of the package, declare a Stack data type as a private type and some accessors
-which take a parameter of type stack. In the private section we actually
-declare the Stack as a record with its components. The user of this package
-**cannot** access :ada:`Data` or :ada:`Top` directly in this example.
+Hierarchical Packages
+~~~~~~~~~~~~~~~~~~~~~
 
-However, from the package body, we **can** access :ada:`Data` and :ada:`Top`.
+Ada packages can be organized into hierarchies. A child unit can be declared in
+the following way:
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+[Ada]
 
-    package body Containers is
+.. code-block:: ada
 
-       procedure Push (St   : in out Stack;
-                       Elem : Integer)
-       is
-       begin
-          --  some defensive code should go here
-          St.Top := St.Top + 1;
-          St.Data (St.Top) := Elem;
-       end Push;
+    -- root-child.ads
 
-       function Pop (St : in out Stack) return Integer
-       is
-          Ret : Integer;
-       begin
-          --  some defensive code should go here
-          Ret := St.Data (St.Top);
-          St.Top := St.Top - 1;
+    package Root.Child is
+       --  package spec goes here
+    end Root.Child;
 
-          return Ret;
-       end Pop;
+    -- root-child.adb
 
-    end Containers;
+    package body Root.Child is
+       --  package body goes here
+    end Root.Child;
 
-We can then reference this package in a subprogram. For example:
+Here, :ada:`Root.Child` is a child package of :ada:`Root`. The public part of
+:ada:`Root.Child` has access to the public part of :ada:`Root`. The private
+part of :ada:`Child` has access to the private part of :ada:`Root`, which is
+one of the main advantages of child packages. However, there is no visibility
+relationship between the two bodies. One common way to use this capability is
+to define subsystems around a hierarchical naming scheme.
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+Using Entities from Packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    with Ada.Text_IO;
-    with Containers;
+Entities declared in the visible part of a package specification can be made
+accessible using a :ada:`with` clause that references the package, which is
+similar to the C :c:`#include` directive. After a :ada:`with` clause, entities
+needs to be prefixed by the name of their package. This prefix can be omitted
+if a :ada:`use` clause is employed.
 
-    procedure Containers_Test is
-       S : Containers.Stack;
-       I : Integer;
+[Ada]
 
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Using_Pkg_Entities
+
+    -- pck.ads
+
+    package Pck is
+       My_Glob : Integer;
+    end Pck;
+
+    -- main.adb
+
+    with Pck;
+
+    procedure Main is
     begin
-       I := 10;
-       Ada.Text_IO.Put_Line ("Push: " & Integer'Image (I));
-       Containers.Push (S, I);
+       Pck.My_Glob := 0;
+    end Main;
 
-       I := 11;
-       Ada.Text_IO.Put_Line ("Push: " & Integer'Image (I));
-       Containers.Push (S, I);
-
-       I := Containers.Pop (S);
-       Ada.Text_IO.Put_Line ("Pop: " & Integer'Image (I));
-
-       I := Containers.Pop (S);
-       Ada.Text_IO.Put_Line ("Pop: " & Integer'Image (I));
-    end Containers_Test;
-
-:code-config:`accumulate_code=False`
+In contrast to C, Ada :ada:`with` clause is a *semantic inclusion* mechanism rather than a *text inclusion* mechanism;
+for more information on this difference please refer to `Packages <https://learn.adacore.com/courses/intro-to-ada/chapters/modular_programming.html>`_ .
 
 Statements and Declarations
 ----------------------------
@@ -1251,10 +1268,12 @@ The complete example would then be:
        Put_Line (Float'Image (Result));
     end Strong_Typing;
 
-In Ada, a floating point literal must be written with both an integral and
-decimal part. :ada:`10` is not a valid literal for a floating point value,
-while :ada:`10.0` is.
+.. admonition:: Floating Point Literals
 
+	In Ada, a floating point literal must be written with both an integral and
+	decimal part. :ada:`10` is not a valid literal for a floating point value,
+	while :ada:`10.0` is.
+	
 Language-Defined Types
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2319,7 +2338,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Dereferencing_Ada
+.. code-block:: ada
 
     procedure Main is
        type A_Int is access Integer;
@@ -2330,7 +2349,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Dereferencing_C
+.. code-block:: c
 
     !main.c
     #include <stdlib.h>
@@ -2347,7 +2366,7 @@ In Ada, an initializer can be specified with the allocation by appending
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Alloc_Init
+.. code-block:: ada
 
     procedure Main is
        type A_Int is access Integer;
@@ -2369,7 +2388,7 @@ objects that have gone out of scope. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointer_Stack_Ada
+.. code-block:: ada
 
     procedure Main is
        type A_Int is access all Integer;
@@ -2381,7 +2400,7 @@ objects that have gone out of scope. For example:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointer_Stack_C
+.. code-block:: c
 
     !main.c
     int main(int argc, const char * argv[])
@@ -2399,7 +2418,7 @@ the access type as follows:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Deallocation_Ada
+.. code-block:: ada
 
     with Ada.Unchecked_Deallocation;
 
@@ -2413,7 +2432,7 @@ the access type as follows:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Deallocation_C
+.. code-block:: c
 
     !main.c
     #include <stdlib.h>
@@ -2463,7 +2482,7 @@ Here's a first example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
 
     procedure Proc
      (Var1 : Integer;
@@ -2505,7 +2524,7 @@ Here's a first example:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
+.. code:: c run_button manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
 
     !proc.h
     void Proc
@@ -2563,15 +2582,41 @@ including default values for parameters. If there are no parameters, the
 parentheses must be omitted entirely from both the declaration and invocation
 of the subprogram.
 
+.. admonition:: In Ada 202X
+
+    Ada 202X allows for using static expression functions, which are evaluated
+    at compile time. An expression function is static when the :ada:`Static`
+    aspect is specified. For example:
+
+    .. code-block:: ada
+
+        procedure Main is
+
+           X1 : constant := (if True then 37 else 42);
+
+           function If_Then_Else (Flag : Boolean; X, Y : Integer)
+             return Integer is
+              (if Flag then X else Y) with Static;
+
+           X2 : constant := If_Then_Else (True, 37, 42);
+
+        begin
+           null;
+        end Main;
+
+    In this example, we declare :ada:`X1` using an expression. In the
+    declaration of :ada:`X2`, we call the static expression function
+    :ada:`If_Then_Else`. Both :ada:`X1` and :ada:`X2` have the same constant
+    value.
+
 .. _Overloading:
 
 Overloading
 ~~~~~~~~~~~
 
 In C, function names must be unique. Ada allows overloading, that is two
-subprograms that share the same name but can be resolved though differences in
-profile. As long as the subprogram signatures (subprogram name, parameter
-types, and return types) are different, the compiler will be able to resolve
+subprograms can share the same name as long as the subprogram signatures (subprogram name, parameter
+types, and return types) are different; the compiler will be able to resolve
 the calls to the proper destinations. For example:
 
 [Ada]
@@ -2682,112 +2727,3 @@ operator as a function, enclose it in quotes:
        end if;
     end Main;
 
-Packages
---------
-
-Declaration Protection
-~~~~~~~~~~~~~~~~~~~~~~
-
-The package is the basic modularization unit of the Ada language, as is the
-class for Java and the header and implementation pair for C. An Ada package
-contains three parts that, for GNAT, are separated into two files: :file:`.ads`
-files contain public and private Ada specifications, and :file:`.adb` files
-contain the implementation, or Ada bodies.
-
-[Ada]
-
-.. code-block:: ada
-
-    package Package_Name is
-       -- public specifications
-    private
-       -- private specifications
-    end Package_Name;
-
-    package body Package_Name is
-       -- implementation
-    end Package_Name;
-
-Private types are useful for preventing the users of a package's types from
-depending on the types' implementation details. The private reserved word
-splits the package spec into *public* and *private* parts. For example:
-
-[Ada]
-
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Private_Types
-
-    package Types is
-       type Type_1 is private;
-       type Type_2 is private;
-       type Type_3 is private;
-       procedure P (X : Type_1);
-       --  ...
-    private
-       procedure Q (Y : Type_1);
-       type Type_1 is new Integer range 1 .. 1000;
-       type Type_2 is array (Integer range 1 .. 1000) of Integer;
-       type Type_3 is record
-          A, B : Integer;
-       end record;
-    end Types;
-
-Subprograms declared above the :ada:`private` separator (such as :ada:`P`) will
-be visible to the package user, and the ones below (such as :ada:`Q`) will not.
-The body of the package, the implementation, has access to both parts.
-
-Hierarchical Packages
-~~~~~~~~~~~~~~~~~~~~~
-
-Ada packages can be organized into hierarchies. A child unit can be declared in
-the following way:
-
-[Ada]
-
-.. code-block:: ada
-
-    -- root-child.ads
-
-    package Root.Child is
-       --  package spec goes here
-    end Root.Child;
-
-    -- root-child.adb
-
-    package body Root.Child is
-       --  package body goes here
-    end Root.Child;
-
-Here, :ada:`Root.Child` is a child package of :ada:`Root`. The public part of
-:ada:`Root.Child` has access to the public part of :ada:`Root`. The private
-part of :ada:`Child` has access to the private part of :ada:`Root`, which is
-one of the main advantages of child packages. However, there is no visibility
-relationship between the two bodies. One common way to use this capability is
-to define subsystems around a hierarchical naming scheme.
-
-Using Entities from Packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Entities declared in the visible part of a package specification can be made
-accessible using a :ada:`with` clause that references the package, which is
-similar to the C :c:`#include` directive. After a :ada:`with` clause, entities
-needs to be prefixed by the name of their package. This prefix can be omitted
-if a :ada:`use` clause is employed.
-
-[Ada]
-
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Using_Pkg_Entities
-
-    -- pck.ads
-
-    package Pck is
-       My_Glob : Integer;
-    end Pck;
-
-    -- main.adb
-
-    with Pck;
-
-    procedure Main is
-    begin
-       Pck.My_Glob := 0;
-    end Main;
