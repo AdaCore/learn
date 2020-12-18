@@ -96,7 +96,8 @@ Run-time libraries consists of:
 The bareboard run-time libraries are provided as customized run-times that are
 configured to target a very specific micro-controller or processor. Therefore,
 for different micro-controllers and processors, the run-time libraries need to
-be ported to the specific target. These are some examples of what needs to be ported:
+be ported to the specific target. These are some examples of what needs to be
+ported:
 
 - startup code / scripts;
 
@@ -157,8 +158,8 @@ You may have noticed that the Ada syntax is more verbose than C. Instead of
 using braces :c:`{}` to declare scope, Ada uses keywords. :ada:`is` opens a
 declarative scope |mdash| which is empty here as there's no variable to
 declare. :ada:`begin` opens a sequence of statements. Within this sequence,
-we're calling the function :ada:`Put_Line`, prefixing explicitly with the name of
-the library unit where it's declared, :ada:`Ada.Text_IO`. The absence of the
+we're calling the function :ada:`Put_Line`, prefixing explicitly with the name
+of the library unit where it's declared, :ada:`Ada.Text_IO`. The absence of the
 end of line ``\n`` can also be noted, as :ada:`Put_Line` always terminates by
 an end of line.
 
