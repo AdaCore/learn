@@ -172,13 +172,16 @@ brackets; rather, it uses a more expository syntax coming from Pascal. In many
 ways, Ada is a more explicit language |mdash| its syntax was designed to
 increase readability and maintainability, rather than making it faster to write
 in a condensed manner. For example:
-- full words like :ada:`begin` and :ada:`end`
-are used in place of curly braces.
-- Conditions are written using :ada:`if`,
-:ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`.
-- Ada's assignment
-operator does not double as an expression, eliminating potential mistakes that
-could be caused by :c:`=` being used where :c:`==` should be.
+
+- full words like :ada:`begin` and :ada:`end` are used in place of curly
+  braces.
+
+- Conditions are written using :ada:`if`, :ada:`then`, :ada:`elsif`,
+  :ada:`else`, and :ada:`end if`.
+
+- Ada's assignment operator does not double as an expression, eliminating
+  potential mistakes that could be caused by :c:`=` being used where :c:`==`
+  should be.
 
 All languages provide one or more ways to express comments. In Ada, two
 consecutive hyphens :ada:`--` mark the start of a comment that continues to the
