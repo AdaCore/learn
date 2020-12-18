@@ -27,9 +27,11 @@ combined system AB:
 
     - The system can be activated and deactivated.
 
-        - During activation, the system's value is reset.
+        - During activation, the system's values are reset.
 
     - Its current value (in floating-point) can be retrieved.
+
+        - This value is the average of the two internal floating-point values.
 
     - Its current state (activated or deactivated) can be retrieved.
 
@@ -37,11 +39,9 @@ combined system AB:
 
     - The system can be activated and deactivated.
 
-        - During activation, the system's values are reset.
+        - During activation, the system's value is reset.
 
     - Its current value (in floating-point) can be retrieved.
-
-        - This value is the average of the two internal floating-point values.
 
     - Its current state (activated or deactivated) can be retrieved.
 
