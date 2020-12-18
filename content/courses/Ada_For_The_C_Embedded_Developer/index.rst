@@ -42,7 +42,8 @@ Ada for the C Embedded Developer
     behavior, so that the code is fit for sound static analysis techniques.
 
     This book was written by Quentin Ochem, Robert Tice, Gustavo A. Hoffmann,
-    and Patrick Rogers.
+    and Patrick Rogers and reviewed by Patrick Rogers, Filip Gajowniczek, and
+    Tucker Taft.
 
 .. only:: builder_html
 
