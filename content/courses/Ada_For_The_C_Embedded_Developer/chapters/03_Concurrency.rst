@@ -12,15 +12,15 @@ Understanding the various options
 
 When it comes to implementing concurrency and real time, Ada offers several
 options. The most common one is on systems known as "full run-time", which
-offers the entirity of Ada semantics. In the GNAT case, this is typically the case when
-running on top of an OS (e.g. Linux). In this case, Ada provides high level
-constructions such as tasks and protected objects to handle concurrency and
-synchronization. On more constrained systems, such are bare metal or some RTOS,
-a subset of the Ada tasking capabilities known as Ravenscar is available.
-Though restricted, this subset also has nice properties, in particular: an absence
-of deadlock, an absence of priority inversion, a scheduler and a very small memory
-footprint. On bare metal systems, this also essentially means that Ada comes
-with its own real-time kernel.
+offers the entirity of Ada semantics. In the GNAT case, this is typically the
+case when running on top of an OS (e.g. Linux). In this case, Ada provides high
+level constructions such as tasks and protected objects to handle concurrency
+and synchronization. On more constrained systems, such are bare metal or some
+RTOS, a subset of the Ada tasking capabilities known as Ravenscar is available.
+Though restricted, this subset also has nice properties, in particular: an
+absence of deadlock, an absence of priority inversion, a scheduler and a very
+small memory footprint. On bare metal systems, this also essentially means that
+Ada comes with its own real-time kernel.
 
 The advantage of using the full Ada tasking model or the restricted Ravenscar
 one is to enhance portability. For example, migrating from Windows to Linux
