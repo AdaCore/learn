@@ -1221,7 +1221,7 @@ above:
 
        procedure Activation_Reset (E : in out A) is
        begin
-	      E.Val    := (others => 0.0);
+          E.Val    := (others => 0.0);
        end Activation_Reset;
 
     end Simple.System_A;
