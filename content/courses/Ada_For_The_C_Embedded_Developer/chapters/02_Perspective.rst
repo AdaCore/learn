@@ -273,10 +273,9 @@ The package implementation, or body, has the structure:
 Declaration Protection
 ~~~~~~~~~~~~~~~~~~~~~~
 
- An Ada package
-contains three parts that, for GNAT, are separated into two files: :file:`.ads`
-files contain public and private Ada specifications, and :file:`.adb` files
-contain the implementation, or Ada bodies.
+An Ada package contains three parts that, for GNAT, are separated into two files:
+:file:`.ads` files contain public and private Ada specifications, and
+:file:`.adb` files contain the implementation, or Ada bodies.
 
 [Ada]
 
