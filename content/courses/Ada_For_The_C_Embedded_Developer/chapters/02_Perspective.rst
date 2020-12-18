@@ -86,7 +86,8 @@ Run-time libraries consists of:
     - These files are responsible for configuring and interacting with the
       hardware.
 
-    - They are known as a Board Support Package |mdash| commonly referred to by their abbrevation *BSP*.
+    - They are known as a Board Support Package |mdash| commonly referred to by
+      their abbrevation *BSP*.
 
 #. Code that is target-independent.
 
