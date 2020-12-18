@@ -417,9 +417,9 @@ names in their type.
 In Ada, the package is a namespace |mdash| two entities declared in two
 different packages are clearly identified and can always be specifically
 designated. The C names are usually a good indication of the names of the
-future packages and should be stripped |mdash| it is possible to the full name
-if useful. For example, here's how the following declaration and call
-could be translated:
+future packages and should be stripped |mdash| it is possible to use the
+full name if useful. For example, here's how the following declaration and
+call could be translated:
 
 :code-config:`accumulate_code=True`
 
@@ -1167,7 +1167,7 @@ shifting and masking to access the bits of that byte. Here, we use the
 
     void transmit (void *bits, int len)
     {
-        int i;
+        int i, j;
         char *c = (char *)bits;
 
         assert(sizeof(char) == 1);
@@ -1354,7 +1354,7 @@ individual bytes. For example:
 
     void to_r (void *bits, int len, rec *r)
     {
-        int i, j;
+        int i;
         char *c1 = (char *)bits;
         char *c2 = (char *)r;
 

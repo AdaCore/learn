@@ -2337,7 +2337,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button
 
     procedure Main is
        type A_Int is access Integer;
@@ -2348,7 +2348,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [C]
 
-.. code-block:: c
+.. code:: c run_button
 
     !main.c
     #include <stdlib.h>
@@ -2365,7 +2365,7 @@ In Ada, an initializer can be specified with the allocation by appending
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button
 
     procedure Main is
        type A_Int is access Integer;
@@ -2387,7 +2387,7 @@ objects that have gone out of scope. For example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button
 
     procedure Main is
        type A_Int is access all Integer;
@@ -2399,7 +2399,7 @@ objects that have gone out of scope. For example:
 
 [C]
 
-.. code-block:: c
+.. code:: c run_button
 
     !main.c
     int main(int argc, const char * argv[])
@@ -2417,7 +2417,7 @@ the access type as follows:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button
 
     with Ada.Unchecked_Deallocation;
 
@@ -2431,7 +2431,7 @@ the access type as follows:
 
 [C]
 
-.. code-block:: c
+.. code:: c run_button
 
     !main.c
     #include <stdlib.h>

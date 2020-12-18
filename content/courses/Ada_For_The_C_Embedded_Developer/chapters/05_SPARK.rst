@@ -946,6 +946,17 @@ Now we don't need the defensive code in the procedure body. That's safe
 because SPARK will attempt to prove statically that the check will not
 fail at the point of each call.
 
+Assuming that procedure :ada:`Read` is intended to be the only way to
+get values from the array, in a real application (where the principles
+of software engineering apply) we would take advantage of the
+compile-time visibility controls that packages offer. Specifically, we
+would move all the variables' declarations to the private part of the
+package, or even the package body, so that client code could not
+possibly access the array directly. Only procedure :ada:`Read` would
+remain visible to clients, thus remaining the only means of accessing
+the array. However, that change would entail others, and in this chapter
+we are only concerned with introducing the capabilities of SPARK.
+Therefore, we keep the examples as simple as possible.
 
 Proving Absence of Run-Time Errors
 ----------------------------------
