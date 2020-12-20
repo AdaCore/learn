@@ -60,9 +60,11 @@ passing of large structures as parameters, access to registers, etc.
 
 Because of the absence of namespaces, global names in C tend to be very long.
 Also, because of the absence of overloading, they can even encode type names in
-their name. In Ada, a package is a namespace. Also, we can use packages to
-declare private types, which are useful for preventing users from directly
-accessing record components, for example.
+their name. In Ada, a package is a namespace. Also, we can use the private part
+of a package to declare private types and private subprograms. In fact, private
+types are useful for preventing the users of those types from depending on the
+implementation details. Another use-case is the prevention of package users
+from accessing the package state/data arbitrarily.
 
 Ada has a dedicated set of features for interfacing with other languages, so we
 can easily interface with our existing C code before translating it to Ada.
