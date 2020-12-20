@@ -172,6 +172,7 @@ can deploy the final executable with checks disabled.
 
 In many situations, the migration of C code to Ada is justified by an increase
 in terms of integrity expectations, in which case it's expected that
-development costs will raise. However, because Ada reduces the level of
-processes, expertise and tools needed in a project, it makes it possible to
-write very safe and secure software at a lower cost than languages such as C.
+development costs will raise. However, Ada is a more expressive, powerful
+language, designed to reduce errors earlier in the life-cycle, thus reducing
+costs. Therefore, Ada makes it possible to write very safe and secure software
+at a lower cost than languages such as C.
