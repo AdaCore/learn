@@ -72,7 +72,7 @@ cost-effective, we can selectively translate modules from C to Ada.
 
 When it comes to implementing concurrency and real time, Ada offers several
 options. Ada provides high level constructions such as tasks and protected
-objects to handle concurrency and synchronization, which can be used when
+objects to express concurrency and synchronization, which can be used when
 running on top of an operating system such as Linux. On more constrained
 systems, such as bare metal or some real-time operating systems, a subset of
 the Ada tasking capabilities |mdash| known as Ravenscar |mdash| is available.
