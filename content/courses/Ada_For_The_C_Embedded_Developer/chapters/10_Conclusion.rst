@@ -44,7 +44,7 @@ suppressed. Any discrete type can serve as an array index, and we can specify
 both the starting and ending bounds. In addition, Ada offers high-level
 operations for copying, slicing, and assigning values to arrays.
 
-Although Ada supports pointers, most situation that would require a pointer in
+Although Ada supports pointers, most situations that would require a pointer in
 C do not in Ada. In the vast majority of the cases, indirect memory management
 can be hidden from the developer and thus prevent many potential errors. In
 C, pointers are typically used to pass references to subprograms, for example.
@@ -67,7 +67,7 @@ accessing record components, for example.
 Ada has a dedicated set of features for interfacing with other languages, so we
 can easily interface with our existing C code before translating it to Ada.
 Also, GNAT includes automatic binding generators. Therefore, instead of
-re-writing the entire C code upfront, which isn't practical or nor
+re-writing the entire C code upfront, which isn't practical or
 cost-effective, we can selectively translate modules from C to Ada.
 
 When it comes to implementing concurrency and real time, Ada offers several
