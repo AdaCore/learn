@@ -36,9 +36,9 @@ Optimizations levels
 ~~~~~~~~~~~~~~~~~~~~
 
 Optimization levels can be found in many compilers for multiple languages. On
-the lowest level, the compiler doesn't optimize the code at all, while at the
-highest level, the compiler analyses the code and optimizes it by removing
-unnecessary operations and making most use of the target processor's
+the lowest level, the GNAT compiler doesn't optimize the code at all, while at the
+higher levels, the compiler analyses the code and optimizes it by removing
+unnecessary operations and making the most use of the target processor's
 capabilities.
 
 By being part of GCC, GNAT offers the same ``-O_`` switches as GCC:
@@ -58,7 +58,7 @@ By being part of GCC, GNAT offers the same ``-O_`` switches as GCC:
 |             | inlining and vectorization.                                  |
 +-------------+--------------------------------------------------------------+
 
-Note that the higher the level, the longer the compilation time will be. For
+Note that the higher the level, the longer the compilation time. For
 fast compilation during development phase, unless you're working on
 benchmarking algorithms, using ``-O0`` is probably a good idea.
 
@@ -164,8 +164,9 @@ array. This is achieved by an index check.
 
 Another example of runtime check is the verification of valid ranges. For
 example, when adding two integer numbers, we would like to ensure that the
-result is still in the valid range |mdash| e.g., it shouldn't overflow or
-underflow. This is achieved by an overflow check.
+result is still in the valid range |mdash| that the value is neither too large
+nor too small. This is achieved by an range check. Likewise, arithmetic operations
+shouldn't overflow or underflow. This is achieved by an overflow check.
 
 Although runtime checks are very useful and should be used as much as possible,
 they can also increase the overhead of implementations at certain hot-spots.
@@ -207,8 +208,8 @@ Note, however, that this kind of suppression is just a recommendation to the
 compiler. There's no guarantee that the compiler will actually suppress any of
 the checks because the compiler may not be able to do so |mdash| typically
 because the hardware happens to do it. For example, if the machine traps on any
-access via address zero, requesting the removal of null-access value checks in
-the generated code won't prevent them from happening.
+access via address zero, requesting the removal of null access value checks in
+the generated code won't prevent the checks from happening.
 
 It is important to differentiate between required and redundant checks. Let's
 consider the following example in C:
@@ -282,9 +283,9 @@ This is the corresponding code in Ada:
        Put_Line ("Res = " & Integer'Image (Res));
     end Show_Division_By_Zero;
 
-Similar to the first version of the C code, we're not checking for a potential
+Similar to the first version of the C code, we're not explicitly checking for a potential
 division by zero here. In Ada, however, this check is *automatically
-introduced* by the language itself. When running the application above, an
+inserted* by the language itself. When running the application above, an
 exception is raised when the application tries to divide the value in :ada:`A`
 by zero. We could introduce exception handling in our example, so that we get
 the same message as we did in the second version of the C code:
@@ -403,8 +404,8 @@ example, it's possible to write:
     end P;
 
 It may indeed be appealing to be able to change the values of :ada:`A_Start`
-and :ada:`A_End` at startup as to align a series of arrays dynamically. The
-consequence, however, is that these values will not be know statically, so any
+and :ada:`A_End` at startup so as to align a series of arrays dynamically. The
+consequence, however, is that these values will not be known statically, so any
 code that needs to access to boundaries of the array will need to read data
 from memory. While it's perfectly fine most of the time, there may be
 situations where performances are so critical that static values for array
@@ -440,15 +441,42 @@ performance-critical pieces of the application.
 Pointers v.s. data copies
 -------------------------
 
-In the section about :ref:`pointers <Pointers>`, we mentioned that the Ada
-compiler will automatically pass parameters by reference when needed. Also, in
-the section about :ref:`by value vs. by reference <By_Value_Vs_By_Reference>`,
-we mentioned that scalar types and pointers are passed by value, while record
-and array types are always passed by reference. Therefore, unlike C, you don't
-have to use access types in Ada to get better performance when passing arrays
-or records to subprograms. Using :ada:`out` or :ada:`in out` gives you
-equivalent performance and, at the same time, improves the readability of your
-code.
+In the section about :ref:`pointers <Pointers>`, we mentioned that the
+Ada compiler will automatically pass parameters by reference when
+needed. Let's look into what "when needed" means. The fundamental point
+to understand is that the parameter types determine how the parameters
+are passed in and/or out. The parameter modes do not control how parameters
+are passed.
+
+Specifically, the language standards specifies that scalar types are
+always passed by value, and that some other types are always passed by
+reference. It would not make sense to make a copy of a task when passing
+it as a parameter, for example. So parameters that can be passed
+reasonably by value will be, and those that must be passed by reference
+will be. That's the safest approach.
+
+But the language also specifies that when the parameter is an array type
+or a record type, and the record/array components are all by-value
+types, then the compiler decides: it can pass the parameter using either
+mechanism. The critical case is when such a parameter is large, e.g., a
+large matrix. We don't want the compiler to pass it by value because
+that would entail a large copy, and indeed the compiler will not do so.
+But if the array or record parameter is small, say the same size as an
+address, then it doesn't matter how it is passed and by copy is just as
+fast as by reference. That's why the language gives the choice to the
+compiler. Although the language does not mandate that large parameters
+be passed by reference, any reasonable implementation will do the right
+thing.
+
+The modes do have an effect, but not in determining how the parameters
+are passed. Their effect, for parameters passed by value, is to
+determine how many times the value is copied. For :ada:`mode in` and
+:ada:`mode out` there is just one copy. For :ada:`mode in out` there
+will be two copies, one in each direction.
+
+Therefore, unlike C, you don't have to use access types in Ada to get
+better performance when passing arrays or records to subprograms. The
+compiler will almost certainly do the right thing for you.
 
 Let's look at this example:
 
@@ -565,14 +593,13 @@ avoids the need to use access types to optimize the code.
 Function returns
 ~~~~~~~~~~~~~~~~
 
-Previously, we've discussed the cost of passing complex records as arguments to
-subprograms. We've seen that the performance is still optimal when using
-subprograms that have :ada:`in out` or :ada:`out` parameters, so we don't
-have to use access types to get better performance in Ada. In this section,
-we'll briefly discuss the cost of function returns.
+Previously, we've discussed the cost of passing complex records as
+arguments to subprograms. We've seen that we don't have to use explicit
+access type parameters to get better performance in Ada. In this
+section, we'll briefly discuss the cost of function returns.
 
-In general, we can implement subprograms that initialize a data structure
-either as procedures or functions. Let's look at this example in C:
+In general, we can use either procedures or functions to initialize a
+data structure. Let's look at this example in C:
 
 [C]
 
@@ -651,23 +678,32 @@ This is the corresponding implementation in Ada:
        Init (D1);
     end Init_Record;
 
-In this example, we have two versions of :ada:`Init`: one using a procedural
-form, and the other one using a functional form. Note that, because of Ada's
-support for subprogram overloading, we can use the same name for both
-subprograms.
+In this example, we have two versions of :ada:`Init`: one using a
+procedural form, and the other one using a functional form. Note that,
+because of Ada's support for subprogram overloading, we can use the same
+name for both subprograms.
 
-In terms of performance, the same recomendations apply to Ada code: for complex
-types such as records, we should avoid writing functions such as the
-:ada:`Init` function above. Instead, we should use the procedural form of
-:ada:`Init`. The reason is that the compiler generates an extra copy for the
-:ada:`Init` function, while the :ada:`Init` procedure uses a reference for the
-output parameter, so that the actual record initialization is performed in
-place.
+The issue is that assignment of a function result entails a copy, just
+as if we assigned one variable to another. For example, when assigning a
+function result to a constant, the function result is copied into the
+memory for the constant. That's what is happening in the above examples
+for the initialized variables.
 
-An exception to this is when we use limited types. Here, GNAT is able to remove
-the extra copy that is usually needed for function returns, so that the actual
-assignment is done in place. We could, for example, rewrite the example above
-using limited types:
+Therefore, in terms of performance, the same recommendations apply: for
+large types we should avoid writing functions like the :ada:`Init`
+function above. Instead, we should use the procedural form of
+:ada:`Init`. The reason is that the compiler necessarily generates a
+copy for the :ada:`Init` function, while the :ada:`Init` procedure uses
+a reference for the output parameter, so that the actual record
+initialization is performed in place in the caller's argument.
+
+An exception to this is when we use functions returning values of
+limited types, which by definition do not allow assignment. Here, to
+avoid allowing something that would otherwise look suspiciously like an
+assignment, the compiler generates the function body so that it builds
+the result directly into the object being assigned. No copy takes place.
+
+We could, for example, rewrite the example above using limited types:
 
 [Ada]
 

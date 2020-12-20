@@ -318,7 +318,7 @@ For example:
 
 Subprograms declared above the :ada:`private` separator (such as :ada:`P`) will
 be visible to the package user, and the ones below (such as :ada:`Q`) will not.
-The body of the package, the implementation, has access to both parts. 
+The body of the package, the implementation, has access to both parts.
 A package specification does not require a private section.
 
 Hierarchical Packages
@@ -355,9 +355,10 @@ Using Entities from Packages
 
 Entities declared in the visible part of a package specification can be made
 accessible using a :ada:`with` clause that references the package, which is
-similar to the C :c:`#include` directive. After a :ada:`with` clause, entities
-needs to be prefixed by the name of their package. This prefix can be omitted
-if a :ada:`use` clause is employed.
+similar to the C :c:`#include` directive. After a :ada:`with` clause makes a package available,
+references to the package contents require the name of the package as a prefix,
+with a dot after the package name.
+This prefix can be omitted if a :ada:`use` clause is employed.
 
 [Ada]
 
@@ -657,7 +658,7 @@ as an expression.
     in the call to subprograms of that package. The use clause is something to
     use with caution. For example: if we use the :ada:`Ada.Text_IO` package and
     we also have a :ada:`Put_Line` subprogram in our current compilation unit
-    with the same signature, we have a collision!
+    with the same signature, we have a (potential) collision!
 
 Conditions
 ------------
@@ -818,7 +819,7 @@ from the previous example where we want a specific branch to execute for
 multiple inputs. Ada solves this a different way because it is possible, or
 even probable, that the developer might forget a :c:`break` statement
 accidentally. So Ada does not allow fall through. Instead, you can use Ada's
-semantic to identify when a specific branch can be executed by more than one
+syntax to identify when a specific branch can be executed by more than one
 input. If you want a range of values for a specific branch you can use the
 :ada:`First .. Last` notation. If you want a few non-consecutive values you can
 use the :ada:`Value1 | Value2 | Value3` notation.
@@ -1272,14 +1273,16 @@ The complete example would then be:
 	In Ada, a floating point literal must be written with both an integral and
 	decimal part. :ada:`10` is not a valid literal for a floating point value,
 	while :ada:`10.0` is.
-	
+
 Language-Defined Types
 ~~~~~~~~~~~~~~~~~~~~~~
 
 The principal scalar types predefined by Ada are :ada:`Integer`, :ada:`Float`,
 :ada:`Boolean`, and :ada:`Character`. These correspond to :c:`int`, :c:`float`,
 :c:`int` (when used for Booleans), and :c:`char`, respectively. The names for
-these types are not reserved words; they are regular identifiers.
+these types are not reserved words; they are regular identifiers. There are
+other language-defined integer and floating-point types as well. All have
+implementation-defined ranges and precision.
 
 Application-Defined Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1374,7 +1377,7 @@ Ada enumerations work similarly to C :c:`enum`:
         enum Day d = Monday;
     }
 
-But even though such enumerations may be implemented using a machine word, at
+But even though such enumerations may be implemented by the compiler as numeric values, at
 the language level Ada will not confuse the fact that :ada:`Monday` is a
 :ada:`Day` and is not an :ada:`Integer`. You can compare a :ada:`Day` with
 another :ada:`Day`, though. To specify implementation details like the numeric
@@ -1739,7 +1742,7 @@ a 32-bit modular type:
 
 In this case, the behavior is the same as in the C declaration above.
 
-Modular types are useful for bitwise operations, which is a typical application
+Modular types, unlike Ada's signed integers, also provide bit-wise operations, a typical application
 for unsigned integers in C. In Ada, you can use operators such as :ada:`and`,
 :ada:`or`, :ada:`xor` and :ada:`not`. You can also use typical bit-shifting
 operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
@@ -2448,7 +2451,7 @@ Functions and Procedures
 General Form
 ~~~~~~~~~~~~
 
-Subroutines in C are always expressed as function which may or may not return a
+Subroutines in C are always expressed as functions which may or may not return a
 value. Ada explicitly differentiates between functions and procedures.
 Functions must return a value and procedures must not. Ada uses the more
 general term *subprogram* to refer to both functions and procedures.
@@ -2576,7 +2579,7 @@ function that has not yet been seen cannot be used. Here, :ada:`Proc` can call
 
 Parameters in Ada subprogram declarations are separated with semicolons,
 because commas are reserved for listing multiple parameters of the same type.
-Parameter declaration syntax is the same as variable declaration syntax,
+Parameter declaration syntax is the same as variable declaration syntax (except for the modes),
 including default values for parameters. If there are no parameters, the
 parentheses must be omitted entirely from both the declaration and invocation
 of the subprogram.
@@ -2613,10 +2616,10 @@ of the subprogram.
 Overloading
 ~~~~~~~~~~~
 
-In C, function names must be unique. Ada allows overloading, that is two
+In C, function names must be unique. Ada allows overloading, in which multiple
 subprograms can share the same name as long as the subprogram signatures (subprogram name, parameter
-types, and return types) are different; the compiler will be able to resolve
-the calls to the proper destinations. For example:
+types, and return types) are different. The compiler will be able to resolve
+the calls to the proper routines or it will reject the calls. For example:
 
 [Ada]
 
@@ -2669,14 +2672,14 @@ the calls to the proper destinations. For example:
        Put_Line ("T: " & Threshold'Image (T));
     end Main;
 
-The Ada compiler knows that an assignment to :ada:`V` requires an
-:ada:`Integer`. So, it chooses the :ada:`Value` function that returns an
-:ada:`Integer` to satisfy this requirement.
+The Ada compiler knows that an assignment to :ada:`C` requires a
+:ada:`Code` value. So, it chooses the :ada:`Get` function that returns a
+:ada:`Code` to satisfy this requirement.
 
-Operators in Ada can be treated as functions too. This allows you to define
+Operators in Ada are functions too. This allows you to define
 local operators that override operators defined at an outer scope, and provide
-overloaded operators that operate on and compare different types. To express an
-operator as a function, enclose it in quotes:
+overloaded operators that operate on and compare different types. To declare an
+operator as a function, enclose its "name" in quotes:
 
 [Ada]
 

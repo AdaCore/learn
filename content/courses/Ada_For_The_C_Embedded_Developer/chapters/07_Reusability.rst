@@ -172,7 +172,7 @@ So far, we've only looked at generics with one kind of parameter: a so-called
 private type. There's actually much more that can be described in this section,
 such as variables, subprograms or package instantiations with certain
 properties. For example, the following provides a sort algorithm for any kind
-of array:
+of structurally compatible array type:
 
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_2
 
@@ -328,7 +328,7 @@ the fact that it now relies on a different type:
        Put_Line (Integer'Image (I));
     end Main;
 
-We can continue with approach and introduce a new generation of devices. This
+We can continue with this approach and introduce a new generation of devices. This
 new device doesn't implement the :ada:`Send_Fast` service so we want
 to remove it from the list of available services. Furthermore, for the purpose
 of our example, let's assume that the hardware team went back to the
@@ -465,7 +465,7 @@ simplified example to illustrate that:
     end Main;
 
 In the above example, the whole code can rely on :file:`drivers.ads`, instead
-of relying on the specific driver. Here, :ada:`Driver`  is an alias to
+of relying on the specific driver. Here, :ada:`Drivers` is another name for
 :ada:`Driver_1`. In order to switch to :ada:`Driver_2`, the project only has to
 replace that one :file:`drivers.ads` file.
 
@@ -805,8 +805,8 @@ Handling variability & reusability dynamically
 Records with discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In basic terms, records with discriminants are records that include parameters
-in its type definition. This allows for adding more flexibility to the type
+In basic terms, records with discriminants are records that include "parameters"
+in their type definitions. This allows for adding more flexibility to the type
 definition. In the section about :ref:`pointers <Pointers>`, we've seen this
 example:
 
@@ -920,7 +920,7 @@ because this discriminant is visible in the *non-private* part of package
 Variant records
 ~~~~~~~~~~~~~~~
 
-In simple terms, a variant record |mdash| also called *discriminated record*
+In simple terms, a variant record |mdash| a *discriminated record*
 in Ada terminology |mdash| is a record with discriminants that allows for
 changing its structure. Basically, it's a record containing a :ada:`case`.
 This is the general structure:
@@ -1069,7 +1069,7 @@ accessed:
        Put_Line ("Integer value: " & Integer'Image (V.I));
        --                                             ^ Constraint_Error is raised!
 
-Using this method, Ada prevents that wrong information is used in other parts
+Using this method prevents wrong information being used in other parts
 of the program.
 
 To get the same behavior in Ada as we do in C, we need to explicitly use the
@@ -1102,7 +1102,7 @@ Now, we can display the integer component (:ada:`V.I`) even though we
 initialized the floating-point component (:ada:`V.F`). As expected, the
 information displayed by the test application in this case doesn't make sense.
 
-Note that, when using :ada:`Unchecked_Union` aspect in the declaration of a
+Note that, when using the :ada:`Unchecked_Union` aspect in the declaration of a
 variant record, the reference discriminant is not available anymore, since it
 isn't stored as part of the record. Therefore, we cannot access the
 :ada:`Use_Float` discriminant as in the following code:
@@ -1195,7 +1195,7 @@ only included when :ada:`Has_Extra_Info` is true.
 Optional output information
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We can use optional components to prevent that subprograms generate invalid
+We can use optional components to prevent subprograms from generating invalid
 information that could be misused by the caller. Consider the following
 example:
 
@@ -1891,7 +1891,7 @@ In this example, we declare the abstract tagged type
 :ada:`Abstract_Transceiver`. Here, we're only partially implementing the
 interfaces from which this type is derived: we're implementing :ada:`Send`, but
 we're skipping the implementation of :ada:`Receive`. Therefore, :ada:`Receive`
-is an abstract operation of :ada:`Abstract_Transceiver`. Since any type that
+is an abstract operation of :ada:`Abstract_Transceiver`. Since any tagged type that
 has abstract operations is abstract, we must indicate this by adding the
 :ada:`abstract` keyword in type declaration.
 

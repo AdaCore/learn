@@ -393,7 +393,7 @@ define a single handler for all other exceptions that might be
 encountered in the handled sequence of statements, beyond those
 explicitly named. The "name" for this otherwise anonymous exception is
 the Ada reserved word :ada:`others`. As in case statements, it covers
-all other choices not explicitly mentioned, and so much come last. For
+all other choices not explicitly mentioned, and so must come last. For
 example:
 
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return_Others
@@ -532,7 +532,7 @@ compiler output will appear.
       Put_Line (Integer'Image (X));
    end Main;
 
-Now we also get the compiler warns us about the pragma :ada:`Assert` condition.
+Now we also get the compiler warning about the pragma :ada:`Assert` condition.
 When run, the failure of pragma :ada:`Assert` on line 7 raises the exception
 :ada:`Ada.Assertions.Assertion_Error`. According to the expression in the
 assertion, :ada:`X` is expected (incorrectly) to be above 99 after the
@@ -550,7 +550,7 @@ violations at compile-time:
    main.adb:8:11: warning: value not in range of type "Standard.Positive"
 
 Generally speaking, a complete analysis is beyond the scope of compilers
-and they will not find all errors prior to execution, even those we
+and they may not find all errors prior to execution, even those we
 might detect ourselves by inspection. More errors can be found by tools
 dedicated to that purpose, known as static analyzers. But even an
 automated static analysis tool cannot guarantee it will find all
