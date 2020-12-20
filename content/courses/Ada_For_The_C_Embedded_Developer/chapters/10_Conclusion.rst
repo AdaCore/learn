@@ -48,8 +48,8 @@ Although Ada supports pointers, most situations that would require a pointer in
 C do not in Ada. In the vast majority of the cases, indirect memory management
 can be hidden from the developer and thus prevent many potential errors. In
 C, pointers are typically used to pass references to subprograms, for example.
-In contrast, Ada supports output parameters (:ada:`out` mode), as well as
-:ada:`in out` parameters.
+In contrast, Ada parameter modes indicate the flow of information to the
+reader, leaving the means of passing that information to the compiler.
 
 When translating pointers from C code to Ada, we need to assess whether they
 are needed in the first place. Ada pointers (access types) should only be used
