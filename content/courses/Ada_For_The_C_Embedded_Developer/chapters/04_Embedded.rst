@@ -51,7 +51,7 @@ approach:
 - When certification is required, those parts of the library that would require
   too much certification effort can be removed.
 
-When using configurable run-time library, the compiler checks whether the
+When using a configurable run-time library, the compiler checks whether the
 library supports certain features of the language. If a feature isn't
 supported, the compiler will give an error message.
 

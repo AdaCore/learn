@@ -66,8 +66,8 @@ program in Ada and C:
    with Ada.Text_IO; use Ada.Text_IO;
 
 
-   procedure Sum_Angles
-   is
+   procedure Sum_Angles is
+   
       DEGREES_MAX : constant := 360;
       type Degrees is mod DEGREES_MAX;
 

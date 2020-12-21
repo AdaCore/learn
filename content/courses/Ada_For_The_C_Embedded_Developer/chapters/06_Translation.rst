@@ -10,24 +10,26 @@ C to Ada Translation Patterns
 Naming conventions and casing considerations
 --------------------------------------------
 
-One question that may arise relatively soon when converting from C to Ada is
-the style of identifiers. The Ada language doesn't impose any particular style
-and for many reasons, it may seem attractive to keep a C-like style |mdash| for
-example, camel casing |mdash| to the Ada program.
+One question that may arise relatively soon when converting from C to
+Ada is the style of source code presentation. The Ada language doesn't
+impose any particular style and for many reasons, it may seem attractive
+to keep a C-like style |mdash| for example, camel casing |mdash| to the
+Ada program.
 
-However, the Ada run-time library |mdash| in particular the one provided by
-GNAT |mdash| is following a specific style, so that using a different style for
-the rest of the program leads to inconsistencies, thereby decreasing readability
-and confusing automatic style checkers. For those reasons, it's usually
-advisable to adopt the Ada style |mdash| which each word is an upper case letter
-followed by lower cases (several upper case letters at the start are OK), with
-an underscore separating two words.
+However, the code in the Ada language standard, most third-party code,
+and the libraries provided by GNAT follow a specific style for
+identifiers and reserved words. Using a different style for the rest of
+the program leads to inconsistencies, thereby decreasing readability and
+confusing automatic style checkers. For those reasons, it's usually
+advisable to adopt the Ada style |mdash| in which each identifier starts
+with an upper case letter, followed by lower case letters (or digits),
+with an underscore separating two "distinct" words within the
+identifier. Acronyms within identifiers are in upper case. For example,
+there is a language-defined package named Ada.Text_IO. Reserved words
+are all lower case.
 
-Following this scheme doesn't preclude adding additional layers of compatible
-rules. For example, Ada being a strongly typed language, it's not rare to create
-a type for only one instance and not to have a different word to identify the
-variable and its type. Therefore, some styles systematically add a leading
-``T_`` or trailing ``_T`` to all type names.
+Following this scheme doesn't preclude adding additional,
+project-specific rules.
 
 Interfacing C and Ada
 ---------------------
@@ -358,8 +360,7 @@ By-value v.s. by-reference types
 
 When interfacing Ada and C, the rules of parameter passing are a bit different
 with regards to what's a reference and what's a copy. Scalar types and pointers
-are passed by value, record and arrays are always passed by reference (recall
-that, in pure Ada, this may vary from the size of the object). However, there
+are passed by value, whereas record and arrays are (almost) always passed by reference. However, there
 may be cases where the C interface also passes values and not pointers to
 objects. Here's a slightly modified version of a previous example to illustrate
 this point:
@@ -664,7 +665,7 @@ values:
        null;
     end Main;
 
-Note the :ada:`Pack` directive for the array, which guarantees that the array
+Note the :ada:`Pack` directive for the array, which requests that the array
 takes as little space as possible.
 
 It is also possible to map records on memory when additional control over the
