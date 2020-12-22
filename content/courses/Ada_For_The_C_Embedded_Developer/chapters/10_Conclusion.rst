@@ -77,12 +77,13 @@ options. Ada provides high level constructs such as tasks and protected
 objects to express concurrency and synchronization, which can be used when
 running on top of an operating system such as Linux. On more constrained
 systems, such as bare metal or some real-time operating systems, a subset of
-the Ada tasking capabilities |mdash| known as Ravenscar |mdash| is available.
-Though restricted, this subset also has nice properties, in particular the
-absence of deadlock,the absence of priority inversion, schedulability and very
-small footprint. On bare metal systems, this also essentially means that Ada
-comes with its own real-time kernel. The advantage of using the full Ada
-tasking model or the restricted Ravenscar one is to enhance portability.
+the Ada tasking capabilities |mdash| known as the Ravenscar and Jorvik profiles
+|mdash| is available. Though restricted, this subset also has nice properties,
+in particular the absence of deadlock,the absence of priority inversion,
+schedulability and very small footprint. On bare metal systems, this also
+essentially means that Ada comes with its own real-time kernel. The advantage
+of using the full Ada tasking model or the restricted profiles is to enhance
+portability.
 
 Ada includes many features typically used for embedded programming:
 
