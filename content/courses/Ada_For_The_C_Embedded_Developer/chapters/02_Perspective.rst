@@ -2115,6 +2115,16 @@ side:
        end loop;
     end;
 
+Since :ada:`A1` is initialized with an aggregate of 9 elements, :ada:`A1`
+automatically has 9 elements. Also, we're not specifying any range in the
+declaration of :ada:`A1`. Therefore, the compiler uses the default range of the
+underlying array type :ada:`Arr_Type`, which has an unconstrained range based
+on the :ada:`Integer` type. The compiler selects the first element of that type
+(:ada:`Integer'First`) as the start index of :ada:`A1`. If you replaced
+:ada:`Integer range <>` in the declaration of the :ada:`Arr_Type` by
+:ada:`Positive range <>`, then :ada:`A1`'s start index would be
+:ada:`Positive'First` |mdash| which corresponds to one.
+
 Heterogeneous Data Structures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
