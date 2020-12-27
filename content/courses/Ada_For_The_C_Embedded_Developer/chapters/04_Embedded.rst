@@ -434,10 +434,10 @@ We may also rewrite this code with an exact type definition:
 
 .. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Adapted_Fixed_Point_Type
 
-    procedure Normalized_Adapted_Fixed_Point_Type is
+    package Normalized_Adapted_Fixed_Point_Type is
+
        type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
-    begin
-       null;
+
     end Normalized_Adapted_Fixed_Point_Type;
 
 We may also use any other range. For example:
