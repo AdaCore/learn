@@ -465,8 +465,7 @@ But if the array or record parameter is small, say the same size as an
 address, then it doesn't matter how it is passed and by copy is just as
 fast as by reference. That's why the language gives the choice to the
 compiler. Although the language does not mandate that large parameters
-be passed by reference, any reasonable implementation will do the right
-thing.
+be passed by reference, any reasonable compiler will do the right thing.
 
 The modes do have an effect, but not in determining how the parameters
 are passed. Their effect, for parameters passed by value, is to
