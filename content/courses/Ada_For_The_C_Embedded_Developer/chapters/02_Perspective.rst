@@ -379,9 +379,9 @@ This prefix can be omitted if a :ada:`use` clause is employed.
        Pck.My_Glob := 0;
     end Main;
 
-In contrast to C, Ada :ada:`with` clause is a *semantic inclusion* mechanism
-rather than a *text inclusion* mechanism; for more information on this
-difference please refer to
+In contrast to C, the Ada :ada:`with` clause is a *semantic inclusion*
+mechanism rather than a *text inclusion* mechanism; for more information on
+this difference please refer to
 `Packages <https://learn.adacore.com/courses/intro-to-ada/chapters/modular_programming.html>`_ .
 
 Statements and Declarations
