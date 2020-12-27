@@ -409,7 +409,7 @@ following:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Fixed_Point_Type
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Fixed_Point_Type
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -432,7 +432,7 @@ We may also rewrite this code with an exact type definition:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Adapted_Fixed_Point_Type
+.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Adapted_Fixed_Point_Type
 
     procedure Normalized_Adapted_Fixed_Point_Type is
        type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
@@ -444,7 +444,7 @@ We may also use any other range. For example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Custom_Fixed_Point_Range
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Custom_Fixed_Point_Range
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -469,7 +469,7 @@ All standard operations are available for fixed-point types. For example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_Op
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_Op
 
     with Ada.Text_IO; use Ada.Text_IO;
 
