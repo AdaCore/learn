@@ -860,9 +860,9 @@ with a pointer to an array:
         S v = init_s (9);
     }
 
-Here, we need to explicitly allocate the :ada:`a` array of the :ada:`S` struct
-via a call to :ada:`malloc()`, which allocates memory space on the heap. In the
-Ada version, in contrast, the array (:ada:`V.A`) is allocated on the stack and
+Here, we need to explicitly allocate the :c:`a` array of the :c:`S` struct
+via a call to :c:`malloc()`, which allocates memory space on the heap. In the
+Ada version, in contrast, the array (:c:`V.A`) is allocated on the stack and
 we don't need to explicitly allocate it.
 
 Note that the information that we provide as the discriminant to the record

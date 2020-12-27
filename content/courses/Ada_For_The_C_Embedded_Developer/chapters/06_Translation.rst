@@ -25,7 +25,7 @@ advisable to adopt the Ada style |mdash| in which each identifier starts
 with an upper case letter, followed by lower case letters (or digits),
 with an underscore separating two "distinct" words within the
 identifier. Acronyms within identifiers are in upper case. For example,
-there is a language-defined package named Ada.Text_IO. Reserved words
+there is a language-defined package named :ada:`Ada.Text_IO`. Reserved words
 are all lower case.
 
 Following this scheme doesn't preclude adding additional,
