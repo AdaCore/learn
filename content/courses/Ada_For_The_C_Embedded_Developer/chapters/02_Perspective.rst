@@ -2470,6 +2470,8 @@ the access type as follows:
         free (my_pointer);
     }
 
+We'll discuss generics later :ref:`in this section <Genericity>`.
+
 Functions and Procedures
 ------------------------
 

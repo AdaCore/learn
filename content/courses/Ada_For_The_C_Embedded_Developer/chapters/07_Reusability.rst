@@ -43,6 +43,8 @@ same object need to exist concurrently in the same application.
 Handling variability & reusability statically
 ---------------------------------------------
 
+.. _Genericity:
+
 Genericity
 ~~~~~~~~~~
 
