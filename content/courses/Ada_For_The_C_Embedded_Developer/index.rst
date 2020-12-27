@@ -38,7 +38,7 @@ Ada for the C Embedded Developer
     in C.
 
     This book also introduces you to the SPARK subset of the Ada programming
-    language, which  removes a few features of the language with undefined
+    language, which removes a few features of the language with undefined
     behavior, so that the code is fit for sound static analysis techniques.
 
     This book was written by Quentin Ochem, Robert Tice, Gustavo A. Hoffmann,
