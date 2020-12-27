@@ -360,10 +360,10 @@ By-value v.s. by-reference types
 
 When interfacing Ada and C, the rules of parameter passing are a bit different
 with regards to what's a reference and what's a copy. Scalar types and pointers
-are passed by value, whereas record and arrays are (almost) always passed by reference. However, there
-may be cases where the C interface also passes values and not pointers to
-objects. Here's a slightly modified version of a previous example to illustrate
-this point:
+are passed by value, whereas record and arrays are (almost) always passed by
+reference. However, there may be cases where the C interface also passes values
+and not pointers to objects. Here's a slightly modified version of a previous
+example to illustrate this point:
 
 :code-config:`accumulate_code=True`
 
@@ -910,13 +910,13 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     Some types have an implicit default value. For example, access types have a
     default value of :ada:`null`.
 
-    As we've just seen, when declaring objects for types with associated default
-    values, automatic initialization will happen. This can also happens when
-    creating an overlay with the :ada:`Address` aspect. The default value is
-    then used to overwrite the content at the memory location indicated by the
-    address. However, in most situations, this isn't the behavior we expect,
-    since overlays are usually created to analyze and manipulate existing
-    values. Let's look at an example where this happens:
+    As we've just seen, when declaring objects for types with associated
+    default values, automatic initialization will happen. This can also happens
+    when creating an overlay with the :ada:`Address` aspect. The default value
+    is then used to overwrite the content at the memory location indicated by
+    the address. However, in most situations, this isn't the behavior we
+    expect, since overlays are usually created to analyze and manipulate
+    existing values. Let's look at an example where this happens:
 
     .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
 

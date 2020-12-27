@@ -355,9 +355,9 @@ Using Entities from Packages
 
 Entities declared in the visible part of a package specification can be made
 accessible using a :ada:`with` clause that references the package, which is
-similar to the C :c:`#include` directive. After a :ada:`with` clause makes a package available,
-references to the package contents require the name of the package as a prefix,
-with a dot after the package name.
+similar to the C :c:`#include` directive. After a :ada:`with` clause makes a
+package available, references to the package contents require the name of the
+package as a prefix, with a dot after the package name.
 This prefix can be omitted if a :ada:`use` clause is employed.
 
 [Ada]
@@ -379,8 +379,10 @@ This prefix can be omitted if a :ada:`use` clause is employed.
        Pck.My_Glob := 0;
     end Main;
 
-In contrast to C, Ada :ada:`with` clause is a *semantic inclusion* mechanism rather than a *text inclusion* mechanism;
-for more information on this difference please refer to `Packages <https://learn.adacore.com/courses/intro-to-ada/chapters/modular_programming.html>`_ .
+In contrast to C, Ada :ada:`with` clause is a *semantic inclusion* mechanism
+rather than a *text inclusion* mechanism; for more information on this
+difference please refer to
+`Packages <https://learn.adacore.com/courses/intro-to-ada/chapters/modular_programming.html>`_ .
 
 Statements and Declarations
 ----------------------------
@@ -1270,9 +1272,9 @@ The complete example would then be:
 
 .. admonition:: Floating Point Literals
 
-	In Ada, a floating point literal must be written with both an integral and
-	decimal part. :ada:`10` is not a valid literal for a floating point value,
-	while :ada:`10.0` is.
+    In Ada, a floating point literal must be written with both an integral and
+    decimal part. :ada:`10` is not a valid literal for a floating point value,
+    while :ada:`10.0` is.
 
 Language-Defined Types
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -1377,9 +1379,9 @@ Ada enumerations work similarly to C :c:`enum`:
         enum Day d = Monday;
     }
 
-But even though such enumerations may be implemented by the compiler as numeric values, at
-the language level Ada will not confuse the fact that :ada:`Monday` is a
-:ada:`Day` and is not an :ada:`Integer`. You can compare a :ada:`Day` with
+But even though such enumerations may be implemented by the compiler as numeric
+values, at the language level Ada will not confuse the fact that :ada:`Monday`
+is a :ada:`Day` and is not an :ada:`Integer`. You can compare a :ada:`Day` with
 another :ada:`Day`, though. To specify implementation details like the numeric
 values that correspond with enumeration values in C you include them in the
 original :c:`enum` declaration:
@@ -1679,8 +1681,8 @@ Note that the declaration above is actually similar to the existing
     subtype Positive is Integer range 1..Integer'Last;
 
 Since they're standard subtypes, you can declare variables of those subtypes
-directly in your implementation, in the same way as you can declare :ada:`Integer`
-variables.
+directly in your implementation, in the same way as you can declare
+:ada:`Integer` variables.
 
 As indicated in the table above, however, there is a difference in behavior for
 the variables we just declared, which occurs in case of overflow. Let's
@@ -1742,10 +1744,10 @@ a 32-bit modular type:
 
 In this case, the behavior is the same as in the C declaration above.
 
-Modular types, unlike Ada's signed integers, also provide bit-wise operations, a typical application
-for unsigned integers in C. In Ada, you can use operators such as :ada:`and`,
-:ada:`or`, :ada:`xor` and :ada:`not`. You can also use typical bit-shifting
-operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
+Modular types, unlike Ada's signed integers, also provide bit-wise operations,
+a typical application for unsigned integers in C. In Ada, you can use operators
+such as :ada:`and`, :ada:`or`, :ada:`xor` and :ada:`not`. You can also use
+typical bit-shifting operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
 :ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
 Attributes
@@ -2495,8 +2497,8 @@ Parameters can be passed in three distinct modes:
   which can be modified by the subprogram and returned to the caller (more or
   less the equivalent of a non-constant pointer in C).
 
-Ada also provides :ada:`access` and :ada:`aliased` parameters, which are in effect
-explicit pass-by-reference indicators.
+Ada also provides :ada:`access` and :ada:`aliased` parameters, which are in
+effect explicit pass-by-reference indicators.
 
 In Ada, the programmer specifies how the parameter will be used and in general
 the compiler decides how it will be passed (i.e., by copy or by reference). C
@@ -2606,10 +2608,10 @@ function that has not yet been seen cannot be used. Here, :ada:`Proc` can call
 
 Parameters in Ada subprogram declarations are separated with semicolons,
 because commas are reserved for listing multiple parameters of the same type.
-Parameter declaration syntax is the same as variable declaration syntax (except for the modes),
-including default values for parameters. If there are no parameters, the
-parentheses must be omitted entirely from both the declaration and invocation
-of the subprogram.
+Parameter declaration syntax is the same as variable declaration syntax (except
+for the modes), including default values for parameters. If there are no
+parameters, the parentheses must be omitted entirely from both the declaration
+and invocation of the subprogram.
 
 .. admonition:: In Ada 202X
 
@@ -2644,9 +2646,10 @@ Overloading
 ~~~~~~~~~~~
 
 In C, function names must be unique. Ada allows overloading, in which multiple
-subprograms can share the same name as long as the subprogram signatures (subprogram name, parameter
-types, and return types) are different. The compiler will be able to resolve
-the calls to the proper routines or it will reject the calls. For example:
+subprograms can share the same name as long as the subprogram signatures
+(subprogram name, parameter types, and return types) are different. The
+compiler will be able to resolve the calls to the proper routines or it will
+reject the calls. For example:
 
 [Ada]
 

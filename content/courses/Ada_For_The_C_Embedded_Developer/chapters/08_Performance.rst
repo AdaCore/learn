@@ -36,8 +36,8 @@ Optimizations levels
 ~~~~~~~~~~~~~~~~~~~~
 
 Optimization levels can be found in many compilers for multiple languages. On
-the lowest level, the GNAT compiler doesn't optimize the code at all, while at the
-higher levels, the compiler analyses the code and optimizes it by removing
+the lowest level, the GNAT compiler doesn't optimize the code at all, while at
+the higher levels, the compiler analyses the code and optimizes it by removing
 unnecessary operations and making the most use of the target processor's
 capabilities.
 
@@ -283,8 +283,8 @@ This is the corresponding code in Ada:
        Put_Line ("Res = " & Integer'Image (Res));
     end Show_Division_By_Zero;
 
-Similar to the first version of the C code, we're not explicitly checking for a potential
-division by zero here. In Ada, however, this check is *automatically
+Similar to the first version of the C code, we're not explicitly checking for a
+potential division by zero here. In Ada, however, this check is *automatically
 inserted* by the language itself. When running the application above, an
 exception is raised when the application tries to divide the value in :ada:`A`
 by zero. We could introduce exception handling in our example, so that we get
@@ -429,8 +429,8 @@ respectively constrained by the discriminant :ada:`D1` and :ada:`D2`. The
 consequence is, however, that to access :ada:`F2`, the run-time needs to know
 how large :ada:`F1` is, which is dynamically constrained when creating an
 instance. Therefore, accessing to :ada:`F2` requires a computation involving
-:ada:`D1` which is slower than, let's say, two pointers in an C array that would
-point to two different arrays.
+:ada:`D1` which is slower than, let's say, two pointers in an C array that
+would point to two different arrays.
 
 Generally speaking, when values are used in data structures, it's useful to
 always consider where they're coming from, and if their value is static
