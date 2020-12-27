@@ -12,13 +12,13 @@ Understanding static and dynamic variability
 
 It is common to see embedded software being used in a variety of configurations
 that require small changes to the code for each instance. For example, the same
-application may need to be portable between two different architectures (ARM and
-x86), or two different platforms with different set of devices available. Maybe
-the same application is used for two different generations of the product, so it
-needs to account for absence or presence of new features, or it's used for
-different projects which may select different components or configurations. All
-these cases, and many others, require variability in the software in order to
-ensure its reusability.
+application may need to be portable between two different architectures (ARM
+and x86), or two different platforms with different set of devices available.
+Maybe the same application is used for two different generations of the
+product, so it needs to account for absence or presence of new features, or
+it's used for different projects which may select different components or
+configurations. All these cases, and many others, require variability in the
+software in order to ensure its reusability.
 
 In C, variability is usually achieved through macros and function pointers, the
 former being tied to static variability (variability in different
@@ -34,11 +34,11 @@ If you're familiar with object-oriented programming (OOP) |mdash| supported in
 languages such as C++ and Java |mdash|, you might also be interested in knowing
 that OOP is supported by Ada and can be used to implement variability. This
 should, however, be used with care, as OOP brings its own set of problems, such
-as loss of efficiency |mdash| dispatching calls can't be inlined and require one
-level  of indirection |mdash| or loss of analyzability |mdash| the target of a
-dispatching call isn't known at run time. As a rule of thumb, OOP should be
-considered only for cases of dynamic variability, where several versions of the
-same object need to exist concurrently in the same application.
+as loss of efficiency |mdash| dispatching calls can't be inlined and require
+one level  of indirection |mdash| or loss of analyzability |mdash| the target
+of a dispatching call isn't known at run time. As a rule of thumb, OOP should
+be considered only for cases of dynamic variability, where several versions of
+the same object need to exist concurrently in the same application.
 
 Handling variability & reusability statically
 ---------------------------------------------
@@ -330,8 +330,8 @@ the fact that it now relies on a different type:
        Put_Line (Integer'Image (I));
     end Main;
 
-We can continue with this approach and introduce a new generation of devices. This
-new device doesn't implement the :ada:`Send_Fast` service so we want
+We can continue with this approach and introduce a new generation of devices.
+This new device doesn't implement the :ada:`Send_Fast` service so we want
 to remove it from the list of available services. Furthermore, for the purpose
 of our example, let's assume that the hardware team went back to the
 :ada:`Device_1` way of implementing :ada:`Startup`. We can write this new
@@ -807,10 +807,10 @@ Handling variability & reusability dynamically
 Records with discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In basic terms, records with discriminants are records that include "parameters"
-in their type definitions. This allows for adding more flexibility to the type
-definition. In the section about :ref:`pointers <Pointers>`, we've seen this
-example:
+In basic terms, records with discriminants are records that include
+"parameters" in their type definitions. This allows for adding more flexibility
+to the type definition. In the section about :ref:`pointers <Pointers>`, we've
+seen this example:
 
 [Ada]
 
@@ -860,9 +860,9 @@ with a pointer to an array:
         S v = init_s (9);
     }
 
-Here, we need to explicitly allocate the :ada:`a` array of the :ada:`S` struct
-via a call to :ada:`malloc()`, which allocates memory space on the heap. In the
-Ada version, in contrast, the array (:ada:`V.A`) is allocated on the stack and
+Here, we need to explicitly allocate the :c:`a` array of the :c:`S` struct
+via a call to :c:`malloc()`, which allocates memory space on the heap. In the
+Ada version, in contrast, the array (:c:`V.A`) is allocated on the stack and
 we don't need to explicitly allocate it.
 
 Note that the information that we provide as the discriminant to the record
@@ -1893,8 +1893,8 @@ In this example, we declare the abstract tagged type
 :ada:`Abstract_Transceiver`. Here, we're only partially implementing the
 interfaces from which this type is derived: we're implementing :ada:`Send`, but
 we're skipping the implementation of :ada:`Receive`. Therefore, :ada:`Receive`
-is an abstract operation of :ada:`Abstract_Transceiver`. Since any tagged type that
-has abstract operations is abstract, we must indicate this by adding the
+is an abstract operation of :ada:`Abstract_Transceiver`. Since any tagged type
+that has abstract operations is abstract, we must indicate this by adding the
 :ada:`abstract` keyword in type declaration.
 
 Also, when compiling this example, we get an error because we're trying to

@@ -26,7 +26,7 @@ means in effect that Ada comes with its own real-time kernel.
 
 Enhanced portability and expressive power are the primary advantages of
 using the standard concurrency facilities, potentially resulting in
-considerable cost savings. For example, with little effort is is
+considerable cost savings. For example, with little effort, it is
 possible to migrate from Windows to Linux to a bare machine without
 requiring any changes to the code. Thread management and synchronization
 is all done by the implementation, transparently. However, in some
@@ -38,7 +38,7 @@ and Florist for POSIX systems.
 
 On native and RTOS-based platforms GNAT typically provides the full
 concurrency facilities. In contrast, on bare metal platforms GNAT typically
-provides the two standard subsets, Ravenscar and Jorvik.
+provides the two standard subsets: Ravenscar and Jorvik.
 
 
 Tasks

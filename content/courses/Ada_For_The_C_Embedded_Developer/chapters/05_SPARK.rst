@@ -204,7 +204,9 @@ exceptions. Of course, this makes the code vulnerable to attacks, such
 as buffer overflow, unless otherwise verified (e.g. through static
 analysis). Deactivation can be applied at the unit level, through the
 ``-gnatp`` compiler switch, or locally within a unit via the
-pragma :ada:`Suppress`. (Refer to the `GNAT User’s Guide for Native Platforms <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html>`_ for more details about the switch.)
+pragma :ada:`Suppress`. (Refer to the
+`GNAT User’s Guide for Native Platforms <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html>`_
+for more details about the switch.)
 
 For example, we can write the following. Note the pragma on line 4 of
 :file:`arrays.adb` within function :ada:`Value`:
@@ -726,9 +728,11 @@ deactivated at run-time, and can be statically proven. We'll concentrate
 here on two kinds of contracts, both associated especially (but not
 exclusively) with procedures and functions:
 
-- *Preconditions*, those Boolean conditions required to be true *prior* to a call of the corresponding subprogram
+- *Preconditions*, those Boolean conditions required to be true *prior* to a
+  call of the corresponding subprogram
 
-- *Postconditions*, those Boolean conditions required to be true *after* a call, as a result of the corresponding subprogram's execution
+- *Postconditions*, those Boolean conditions required to be true *after* a
+  call, as a result of the corresponding subprogram's execution
 
 In particular, preconditions specify the initial conditions, if any,
 required for the called routine to correctly execute. Postconditions, on
@@ -783,10 +787,11 @@ Consider a client calling this function:
 
 :program:`gnatprove` indicates that the assignment to :ada:`B` (line 8) might
 fail because of the precondition, i.e., the sum of the inputs shouldn't
-be 0, yet :ada:`-1 + 1 = 0`. (We will address the other output message elsewhere.)
+be 0, yet :ada:`-1 + 1 = 0`. (We will address the other output message
+elsewhere.)
 
-Let's change the argument passed to :ada:`Y` in the second call (line 8). Instead
-of -1 we will pass -2:
+Let's change the argument passed to :ada:`Y` in the second call (line 8).
+Instead of -1 we will pass -2:
 
 :code-config:`reset_accumulator=True`
 
@@ -865,8 +870,8 @@ This reduction has a number of advantages:
   call the subprogram, moving from an implementer responsibility to mitigate
   invalid input to a user responsibility to fulfill the expected interface.
 
-- Provides the means to verify that this interface is properly respected, through
-  code review, dynamic checking at run-time, or formal static proof.
+- Provides the means to verify that this interface is properly respected,
+  through code review, dynamic checking at run-time, or formal static proof.
 
 As an example, consider a procedure :ada:`Read` that returns a component
 value from an array. Both the :ada:`Data` and :ada:`Index` are objects visible
