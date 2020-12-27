@@ -2079,8 +2079,32 @@ Therefore, you can write:
 
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
+       A1 : Arr_Type (-2 .. 42) := (others => 0);
+    begin
+       -- use a slice to assign A1 elements 11 .. 19 to 1
+       A1 (11 .. 19) := (others => 1);
+
+       Put_Line ("---- A1 ----");
+       for I in A1'Range loop
+          Put_Line (Integer'Image (I) & " => " &
+                    Integer'Image (A1 (I)));
+       end loop;
+    end;
+
+In this example, we're specifying that :ada:`A1` has a range between -2 and 42.
+We use :ada:`(others => 0)` to initialize all array elements with zero. In the
+next example, the number of elements is determined by looking at the right-hand
+side:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Assignment_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type := (1, 2, 3, 4, 5, 6, 7, 8, 9);
-       A2 : Arr_Type (-2 .. 42) := (others => 0);
     begin
        A1 := (1, 2, 3, others => 10);
 
@@ -2089,16 +2113,17 @@ Therefore, you can write:
           Put_Line (Integer'Image (I) & " => " &
                     Integer'Image (A1 (I)));
        end loop;
-
-       -- use a slice to assign A2 elements 11 .. 19 to 1
-       A2 (11 .. 19) := (others => 1);
-
-       Put_Line ("---- A2 ----");
-       for I in A2'Range loop
-          Put_Line (Integer'Image (I) & " => " &
-                    Integer'Image (A2 (I)));
-       end loop;
     end;
+
+Since :ada:`A1` is initialized with an aggregate of 9 elements, :ada:`A1`
+automatically has 9 elements. Also, we're not specifying any range in the
+declaration of :ada:`A1`. Therefore, the compiler uses the default range of the
+underlying array type :ada:`Arr_Type`, which has an unconstrained range based
+on the :ada:`Integer` type. The compiler selects the first element of that type
+(:ada:`Integer'First`) as the start index of :ada:`A1`. If you replaced
+:ada:`Integer range <>` in the declaration of the :ada:`Arr_Type` by
+:ada:`Positive range <>`, then :ada:`A1`'s start index would be
+:ada:`Positive'First` |mdash| which corresponds to one.
 
 Heterogeneous Data Structures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
