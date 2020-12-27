@@ -2647,9 +2647,9 @@ Overloading
 
 In C, function names must be unique. Ada allows overloading, in which multiple
 subprograms can share the same name as long as the subprogram signatures
-(subprogram name, parameter types, and return types) are different. The
-compiler will be able to resolve the calls to the proper routines or it will
-reject the calls. For example:
+(number of parameters, the parameter types, and function return types) are
+different. The compiler will be able to resolve the calls to the proper
+routines or it will reject the calls. For example:
 
 [Ada]
 
