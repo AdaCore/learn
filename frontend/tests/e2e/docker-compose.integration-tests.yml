@@ -1,0 +1,19 @@
+version: '3'
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.integration-tests
+    volumes:
+      - "./integration-tests:/integration-tests"
+    command: "wait-for-it.sh web:80 -- mocha -r ts-node/register /integration-tests/**/*.spec.ts"
+    depends_on:
+      - web
+  web:
+    image: nginx
+    volumes:
+      - ../../dist/html:/usr/share/nginx/html
+    expose:
+      - "80"
+    ports:
+      - "8000:8000"
