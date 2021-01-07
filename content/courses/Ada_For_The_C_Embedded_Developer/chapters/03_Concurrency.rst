@@ -31,9 +31,9 @@ means in effect that Ada comes with its own real-time kernel.
     can be found elsewhere [Jorvik]_.
 
     .. [Jorvik] A New Ravenscar-Based Profile by P. Rogers, J. Ruiz, T. Gingold
-                and P. Bernardi, in Reliable Software Technologies – Ada Europe
-                2017, Springer-Verlag Lecture Notes in Computer Science, Number
-                10300.
+                and P. Bernardi, in Reliable Software Technologies |mdash| Ada
+                Europe 2017, Springer-Verlag Lecture Notes in Computer Science,
+                Number 10300.
 
 Enhanced portability and expressive power are the primary advantages of
 using the standard concurrency facilities, potentially resulting in
