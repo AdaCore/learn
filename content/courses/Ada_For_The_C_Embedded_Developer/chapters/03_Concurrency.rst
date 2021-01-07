@@ -24,6 +24,17 @@ deadlock, bounded blocking, absence of priority inversion, a real-time
 scheduler, and a small memory footprint. On bare metal systems, this
 means in effect that Ada comes with its own real-time kernel.
 
+.. admonition:: For further information
+
+    We'll discuss the Ravenscar profile
+    :ref:`later in this chapter <Ravenscar>`. Details about the Jorvik profile
+    can be found elsewhere [Jorvik]_.
+
+    .. [Jorvik] A New Ravenscar-Based Profile by P. Rogers, J. Ruiz, T. Gingold
+                and P. Bernardi, in Reliable Software Technologies – Ada Europe
+                2017, Springer-Verlag Lecture Notes in Computer Science, Number
+                10300.
+
 Enhanced portability and expressive power are the primary advantages of
 using the standard concurrency facilities, potentially resulting in
 considerable cost savings. For example, with little effort, it is
@@ -559,6 +570,8 @@ cited in the *References* section.
 :code-config:`accumulate_code=False`
 
 :code-config:`reset_accumulator=True`
+
+.. _Ravenscar:
 
 Ravenscar
 ---------
