@@ -2866,6 +2866,5 @@ or of an object:
 
 :code-config:`accumulate_code=False`
 
-We'll explain both :ada:`Size` aspect and :ada:`Size` attribute in subsequent
-chapters.
-
+We'll explain both :ada:`Size` aspect and :ada:`Size` attribute
+:ref:`later in this course <Size_Aspect_Attribute>`.
