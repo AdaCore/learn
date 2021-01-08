@@ -26,6 +26,8 @@ they are trying to solve using the language of the physical hardware.
 Let's look at an example of this problem in action by comparing the same
 program in Ada and C:
 
+[C]
+
 .. code:: c cli_input
 
    !main.c
@@ -60,6 +62,8 @@ program in Ada and C:
      return 0;
    }
 
+[Ada]
+
 .. code:: ada cli_input
 
    with Ada.Command_Line; use Ada.Command_Line;
@@ -67,7 +71,7 @@ program in Ada and C:
 
 
    procedure Sum_Angles is
-   
+
       DEGREES_MAX : constant := 360;
       type Degrees is mod DEGREES_MAX;
 
