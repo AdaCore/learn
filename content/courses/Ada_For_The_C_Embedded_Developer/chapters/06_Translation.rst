@@ -355,8 +355,8 @@ the C side in the first place. These are good places for careful peer reviews.
 
 .. _By_Value_Vs_By_Reference:
 
-By-value v.s. by-reference types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+By-value vs. by-reference types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When interfacing Ada and C, the rules of parameter passing are a bit different
 with regards to what's a reference and what's a copy. Scalar types and pointers

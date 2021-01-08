@@ -363,7 +363,7 @@ option. In this case, formal proof |mdash| as discussed in the
 :doc:`SPARK chapter <05_SPARK>` |mdash| can help you. By formally proving that
 assertions will never fail at run-time, you can safely deactivate them.
 
-Dynamic v.s static structures
+Dynamic vs. static structures
 -----------------------------
 
 Ada generally speaking provides more ways than C or C++ to write simple dynamic
@@ -440,8 +440,8 @@ always consider where they're coming from, and if their value is static
 fundamentally wrong with dynamically constrained types, unless they appear in
 performance-critical pieces of the application.
 
-Pointers v.s. data copies
--------------------------
+Pointers vs. data copies
+------------------------
 
 In the section about :ref:`pointers <Pointers>`, we mentioned that the
 Ada compiler will automatically pass parameters by reference when
