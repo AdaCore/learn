@@ -1783,6 +1783,15 @@ value into a :ada:`String` and vice-versa. For example:
        Put_Line (Integer'Image (A));
     end;
 
+.. admonition:: Important
+
+    Semantically, attributes are equivalent to subprograms. For example,
+    :ada:`Integer'Image` is defined as follows:
+
+    .. code-block:: ada
+
+        function Integer'Image(Arg : Integer'Base) return String;
+
 Certain attributes are provided only for certain kinds of types. For example,
 the :ada:`'Val` and :ada:`'Pos` attributes for an enumeration type associates a
 discrete value with its position among its peers. One circuitous way of moving
