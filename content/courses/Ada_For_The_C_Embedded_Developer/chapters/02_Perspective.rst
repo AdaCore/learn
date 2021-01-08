@@ -1005,6 +1005,9 @@ reverse order?
     the numerical value stored in I. We have to do this because Put_Line is
     expecting a string as an input parameter.
 
+    We'll discuss attributes in more details
+    :ref:`later in this chapter <Attributes>`.
+
 In the above example, we are traversing over the range in reverse order. In
 Ada, we use the :ada:`reverse` keyword to accomplish this.
 
@@ -1750,6 +1753,7 @@ such as :ada:`and`, :ada:`or`, :ada:`xor` and :ada:`not`. You can also use
 typical bit-shifting operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
 :ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
+.. _Attributes:
 Attributes
 ~~~~~~~~~~
 
