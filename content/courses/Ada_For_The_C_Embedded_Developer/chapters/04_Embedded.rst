@@ -791,12 +791,12 @@ streams. Before we discuss those use-cases, though, we'll first explain the
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The :ada:`Size` aspect indicates the minimum number of bits required to
-represent an object, and it can be used to confirm expectations. When applied
-to a type, the :ada:`Size` aspect is telling the compiler to not make record or
-array components of a type :ada:`T` any smaller than :ada:`X` bits. Therefore,
-a common usage for this aspect is to just confirm expectations: developers
-specify :ada:`'Size` to tell the compiler that :ada:`T` should fit :ada:`X`
-bits, and the compiler will tell them if they are right (or wrong).
+represent an object. When applied to a type, the :ada:`Size` aspect is telling
+the compiler to not make record or array components of a type :ada:`T` any
+smaller than :ada:`X` bits. Therefore, a common usage for this aspect is to
+just confirm expectations: developers specify :ada:`'Size` to tell the compiler
+that :ada:`T` should fit :ada:`X` bits, and the compiler will tell them if they
+are right (or wrong).
 
 When the specified size value is larger than necessary, it can cause objects to
 be bigger in memory than they would be otherwise. For example, for some
