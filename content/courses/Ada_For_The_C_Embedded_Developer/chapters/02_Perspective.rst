@@ -1754,6 +1754,7 @@ typical bit-shifting operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
 :ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
 .. _Attributes:
+
 Attributes
 ~~~~~~~~~~
 
