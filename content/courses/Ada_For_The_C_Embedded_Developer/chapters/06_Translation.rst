@@ -53,6 +53,8 @@ Let's start with the following C code:
 
 :code-config:`accumulate_code=True`
 
+[C]
+
 .. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
 
     !call.c
@@ -71,6 +73,8 @@ data structure to pass as well as a description of the function itself. To
 capture how the C :c:`struct my_struct` is represented, we can use the
 following record along with a :ada:`pragma Convention`. The pragma directs the
 compiler to lay out the data in memory the way a C compiler would.
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
 
@@ -108,6 +112,8 @@ The :ada:`Import` pragma specifies that whenever :ada:`Call` is invoked by Ada
 code, it should invoke the :ada:`Call` function with the C calling convention.
 
 And that's all that's necessary. Here's an example of a call to :ada:`Call`:
+
+[Ada]
 
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
 
@@ -382,6 +388,8 @@ example to illustrate this point:
 
 In Ada, a type can be modified so that parameters of this type can always be
 passed by copy.
+
+[Ada]
 
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value
 
@@ -868,6 +876,8 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     Ada has the concept of default initialization. For example, you may set the
     default value of record components:
 
+    [Ada]
+
     .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Record_Type
 
         with Ada.Text_IO; use Ada.Text_IO;
@@ -891,6 +901,8 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     Likewise, the :ada:`Default_Value` aspect can be used to specify the
     default value in other kinds of type declarations. For example:
+
+    [Ada]
 
     .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Value_Type
 
@@ -921,6 +933,8 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     the address. However, in most situations, this isn't the behavior we
     expect, since overlays are usually created to analyze and manipulate
     existing values. Let's look at an example where this happens:
+
+    [Ada]
 
     .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
 
@@ -975,6 +989,8 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     Using the :ada:`Import` aspect solves this problem. This aspect tells the
     compiler to not apply default initialization in the declaration because the
     object is imported. Let's look at the corrected example:
+
+    [Ada]
 
     .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Import
 

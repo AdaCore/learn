@@ -121,6 +121,8 @@ Hello World in Ada
 The first piece of code to translate from C to Ada is the usual Hello World
 program:
 
+[C]
+
 .. code:: c run_button manual_chop
 
     !main.c
@@ -131,6 +133,8 @@ program:
         printf("Hello World\n");
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button
 
@@ -244,6 +248,8 @@ class for Java and the header and implementation pair for C.
 A specification defines a package and the implementation implements the package.
 We saw this in an earlier example when we included the :ada:`Ada.Text_IO`
 package into our application. The package specification has the structure:
+
+[Ada]
 
 .. code-block:: ada
 
@@ -390,6 +396,8 @@ Statements and Declarations
 The following code samples are all equivalent, and illustrate the use of
 comments and working with integer variables:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_C
 
     !main.c
@@ -411,6 +419,8 @@ comments and working with integer variables:
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Ada
 
@@ -451,6 +461,8 @@ where developers were required to declare their variables at the top of the
 scope block. Most C developers may have run into this before when trying to
 write a for loop:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_C89
 
     !main.c
@@ -475,6 +487,8 @@ write a for loop:
 
         printf("Average: %d\n", average(vals, 4));
     }
+
+[C]
 
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_C_Modern
 
@@ -502,6 +516,8 @@ write a for loop:
     }
 
 For the fun of it, let's also see the Ada way to do this:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_Ada
 
@@ -541,6 +557,8 @@ The next block in the Ada example is between the :ada:`begin` and :ada:`end`
 keywords. This is where your statements will live. You can create new scopes by
 using the :ada:`declare` keyword:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Block_Ada
 
     with Ada.Text_IO;
@@ -573,6 +591,8 @@ using the :ada:`declare` keyword:
 Notice that we declared a new variable :ada:`E` whose scope only exists in our
 newly defined block. The equivalent C code is:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Block_C
 
     !main.c
@@ -603,6 +623,8 @@ newly defined block. The equivalent C code is:
 **Fun Fact** about the C language assignment operator :c:`=`: Did you know that
 an assignment in C can be used in an expression? Let's look at an example:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Equal_C
 
     !main.c
@@ -628,6 +650,8 @@ the if statement but accidentally typed :c:`=` instead of :c:`==`. Because C
 treats assignment as an expression, it was able to evaluate :c:`a = 10`.
 
 Let's look at the equivalent Ada code:
+
+[Ada]
 
 .. code:: ada manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Equal_Ada
     :class: ada-expect-compile-error
@@ -667,6 +691,8 @@ Conditions
 
 The syntax of an if statement:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Condition_C
 
     !main.c
@@ -690,6 +716,8 @@ The syntax of an if statement:
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Condition_Ada
 
@@ -726,6 +754,8 @@ Or         :c:`||` :ada:`or`
 
 The syntax of a switch/case statement:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_C
 
     !main.c
@@ -755,6 +785,8 @@ The syntax of a switch/case statement:
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Ada
 
@@ -788,6 +820,8 @@ The syntax of a switch/case statement:
 Notice that in Ada, the case statement does not use the :c:`break` keyword. In
 C, we use :c:`break` to stop the execution of a case branch from falling
 through to the next branch. Here is an example:
+
+[C]
 
 .. code:: c manual_chop cli_input run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Break_C
 
@@ -833,6 +867,8 @@ Loops
 ------
 
 Let's start with some syntax:
+
+[C]
 
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loops_C
 
@@ -886,6 +922,8 @@ Let's start with some syntax:
             printf("sum = %d\n", sum);
         }
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loops_Ada
 
@@ -952,6 +990,8 @@ specify a loop predicate, or an expression that indicates when the loop should
 continue executing or complete, and last you specify an expression to update
 the loop counter.
 
+[C]
+
 .. code-block:: c
 
     for (initialization expression; loop predicate; update expression) {
@@ -964,6 +1004,8 @@ The loop counter is **read-only**! You cannot modify the loop counter inside
 the loop like you can in C. And the loop counter will increment consecutively
 along the specified range. But what if you want to loop over the range in
 reverse order?
+
+[C]
 
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Counter_C
 
@@ -981,6 +1023,8 @@ reverse order?
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Counter_Ada
 
@@ -1015,6 +1059,8 @@ In many cases, when we are writing a for loop, it has something to do with
 traversing an array. In C, this is a classic location for off-by-one errors.
 Let's see an example in action:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_C
 
     !main.c
@@ -1038,6 +1084,8 @@ Let's see an example in action:
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_Ada
 
@@ -1088,6 +1136,8 @@ indexing direction.
 
 We can actually simplify the Ada for loop a little further using iterators:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_Ada_Simplified
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1130,6 +1180,8 @@ promotion are fairly straightforward in simple expressions but can get
 confusing very quickly. Let's look at a typical place of confusion with
 implicit type conversion:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_C
 
     !main.c
@@ -1158,6 +1210,8 @@ in both variables, but :c:`a` treated this as the decimal number :c:`255` while
 b treated this as the decimal number :c:`-1`. When we compare the two
 variables, of course they aren't equal; but that's not very intuitive. Let's
 look at the equivalent Ada example:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada
    :class: ada-expect-compile-error
@@ -1258,6 +1312,8 @@ Ada case, it is still necessary to explicitly convert the final result to
     Result := Float (Alpha / Beta);
 
 The complete example would then be:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada_2
 
@@ -1939,6 +1995,8 @@ Unlike C, Ada does not offer escape sequences such as :c:`'\n'`. Instead,
 explicit values from the ASCII package must be concatenated (via the
 concatenation operator, :ada:`&`). Here for example, is how to initialize a
 line of text ending with a new line:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Constrained_String
 
@@ -2800,6 +2858,8 @@ declaration using the :ada:`with` keyword after the declaration:
 For example, you can inline a subprogram by specifying the :ada:`Inline`
 aspect:
 
+[Ada]
+
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
 
     package Float_Arrays is
@@ -2816,6 +2876,8 @@ We'll discuss inlining :ref:`later in this course <Inlining>`.
 Aspect specifications were introduced in Ada 2012. In previous versions of Ada,
 you had to use a :ada:`pragma` instead. The previous example would be written
 as follows:
+
+[Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
 

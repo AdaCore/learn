@@ -65,6 +65,8 @@ The following example will display the 26 letters of the alphabet twice, using
 two concurrent tasks. Since there is no synchronization between the two threads
 of control in any of the examples, the output may be interspersed.
 
+[Ada]
+
 .. code:: ada run_button ada project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -106,6 +108,8 @@ the :ada:`'Z'` Character.  As with the earlier example, since there is no
 synchronization among the tasks, the output may be interspersed depending on
 the underlying implementation of the task scheduling algorithm.
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task_Type
 
     package My_Tasks is
@@ -140,6 +144,8 @@ In Ada, a task may be dynamically allocated rather than declared
 statically. The task will then start as soon as it has been allocated,
 and terminates when its work is completed.
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task_Type
 
     with My_Tasks; use My_Tasks;
@@ -161,6 +167,8 @@ Rendezvous
 
 A rendezvous is a synchronization between two tasks, allowing them to exchange
 data and coordinate execution. Let's consider the following example:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Rendezvous
 
@@ -197,6 +205,8 @@ statements are executed, the caller is blocked.
 
 Let's look at a more ambitious example. The rendezvous below accepts parameters
 and executes some code:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Rendezvous_Params
 
@@ -262,6 +272,8 @@ events simultaneously, and then to deal with the first event to occur. This
 feature is illustrated by the task below, which maintains an integer value that
 is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
 :ada:`Get`:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Selective_Rendezvous
 
@@ -394,6 +406,8 @@ operations but not concurrent write or read/write operations.
 Let's reimplement our earlier tasking example with a protected object called
 :ada:`Counter`:
 
+[Ada]
+
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Counter
 
     package Counters is
@@ -435,6 +449,8 @@ the choice between an active structure (a task) or a passive structure (a
 protected object).
 
 A protected object can be accessed through prefix notation:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Counter
 
@@ -490,6 +506,8 @@ are reevaluated upon completion of protected procedures and protected entries.
 
 Here's an example illustrating protected entries: a protected type that models
 a binary semaphore / persistent signal.
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Binary_Semaphore
 
@@ -598,6 +616,8 @@ that the Ravenscar restrictions must be observed in your program.
 Some of the examples we've seen above will be rejected by the compiler when
 using the Ravenscar profile. For example:
 
+[Ada]
+
 .. code-block:: ada
 
     package My_Tasks is
@@ -634,6 +654,8 @@ profile. This is due to the declaration of :ada:`Tab` in the :ada:`Main`
 procedure. Ravenscar requires task declarations to be done at the library level.
 Therefore, a simple solution is to create a separate package and reference it
 in the main application:
+
+[Ada]
 
 .. code-block:: ada
 

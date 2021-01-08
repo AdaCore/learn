@@ -122,6 +122,8 @@ necessary; for example when interfacing with hardware, a driver, or a
 communication protocol. Here's how to specify a specific data layout based on
 the previous example:
 
+[Ada]
+
 .. code-block:: ada
 
     type R is record
@@ -168,6 +170,8 @@ inputs and places an unsigned 64-bit value split between the ``edx`` and
 GNAT provides a subprogram called :ada:`System.Machine_Code.Asm` that can be
 used for assembly code insertion. You can specify a string to pass to the
 assembler as well as source-level variables to be used for input and output:
+
+[Ada]
 
 .. code-block:: ada
 
@@ -226,6 +230,8 @@ interrupts by attaching a handler |mdash| which must be a protected procedure
 
 Let's look into a code example that *traps* the quit interrupt (``SIGQUIT``)
 on Linux:
+
+[Ada]
 
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Quit_Handler
 
@@ -871,6 +877,8 @@ example of a power management controller containing registers such as a system
 clock enable register. Note that this example is based on an actual
 architecture:
 
+[Ada]
+
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.PMC_Peripheral
 
     with System;
@@ -975,6 +983,8 @@ power management controller with simple record component selection. For
 example, we can set the :ada:`USBCLK` bit of the :ada:`PMC_SCER` register by
 using :ada:`PMC_Periph.PMC_SCER.USBCLK`:
 
+[Ada]
+
 .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Embedded.Register_Overlay_1
 
     with Registers;
@@ -1067,6 +1077,8 @@ chapter 6).
 
 Let's look at a simple example of serialization of an arbitrary record type:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream_Declaration
 
     package Arbitrary_Types is
@@ -1139,6 +1151,8 @@ use to stream the information from :ada:`Some_Object`.
 
 We can use this approach and create a data stream for the register overlay
 example that we've seen before. This is the corresponding implementation:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream
 
