@@ -24,7 +24,7 @@ import sys
 # -- Project information -----------------------------------------------------
 
 project = u'learn.adacore.com'
-copyright = u'2018 – 2020, AdaCore'
+copyright = u'2018 – 2021, AdaCore'
 author = u'AdaCore' if 'SPHINX_AUTHOR' not in os.environ else \
     os.environ['SPHINX_AUTHOR']
 title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
@@ -33,7 +33,7 @@ title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
 # The short X.Y version
 version = u''
 # The full version, including alpha/beta/rc tags
-release = u'2020-05'
+release = u'2021-01'
 
 
 # -- General configuration ---------------------------------------------------
