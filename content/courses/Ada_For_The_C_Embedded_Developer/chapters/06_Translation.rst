@@ -755,10 +755,11 @@ As we've seen previously, the :ada:`Pack` aspect declared at the end of the
 type declaration indicates that the compiler should optimize for size. We must
 use this aspect to be able to interpret data types as a bit-field.
 
-Then, we can use the :ada:`Size` and the :ada:`Address` aspect of an
-object of any type to declare a bit-field for this object. The :ada:`Size`
-aspect indicates the number of bits required to represent the object, while
-the :ada:`Address` aspect indicates the address in memory of that object.
+Then, we can use the :ada:`Size` and the :ada:`Address` attributes of an
+object of any type to declare a bit-field for this object. We've discussed the
+:ada:`Size` attribute :ref:`earlier in this course <Size_Aspect_Attribute>`.
+
+The :ada:`Address` attribute indicates the address in memory of that object.
 For example, assuming we've declare a variable :ada:`V`, we can declare an
 actual bit-field object by referring to the :ada:`Address` attribute of
 :ada:`V` and using it in the declaration of the bit-field, as shown here:
@@ -768,6 +769,9 @@ actual bit-field object by referring to the :ada:`Address` attribute of
 .. code-block:: ada
 
     B : Bit_Field (0 .. V'Size - 1) with Address => V'Address;
+
+Note that, in this declaration, we're using the :ada:`Address` attribute of
+:ada:`V` for the :ada:`Address` aspect of :ada:`B`.
 
 This technique is called overlays for serialization. Now, any operation that we
 perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
