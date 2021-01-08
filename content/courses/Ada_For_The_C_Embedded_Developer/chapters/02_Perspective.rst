@@ -2830,8 +2830,8 @@ as follows:
     end Float_Arrays;
 
 Aspects and attributes might refer to the same kind of information. For
-example, we can use the :ada:`Size` aspect to define the expected size of
-objects of a certain type:
+example, we can use the :ada:`Size` aspect to define the expected minimum size
+of objects of a certain type:
 
 :code-config:`accumulate_code=True`
 
