@@ -770,6 +770,9 @@ actual bit-field object by referring to the :ada:`Address` attribute of
 
     B : Bit_Field (0 .. V'Size - 1) with Address => V'Address;
 
+Note that, in this declaration, we're using the :ada:`Address` attribute of
+:ada:`V` for the :ada:`Address` aspect of :ada:`B`.
+
 This technique is called overlays for serialization. Now, any operation that we
 perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
 the same memory location.
