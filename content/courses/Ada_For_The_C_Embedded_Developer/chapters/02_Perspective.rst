@@ -2630,7 +2630,10 @@ and invocation of the subprogram.
 .. admonition:: In Ada 202X
 
     Ada 202X allows for using static expression functions, which are evaluated
-    at compile time. An expression function is static when the :ada:`Static`
+    at compile time. To achieve this, we can use an aspect |mdash| we'll
+    discuss aspects :ref:`later in this chapter <Aspects>`.
+
+    An expression function is static when the :ada:`Static`
     aspect is specified. For example:
 
     .. code-block:: ada
