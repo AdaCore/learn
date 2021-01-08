@@ -2773,3 +2773,96 @@ operator as a function, enclose its "name" in quotes:
        end if;
     end Main;
 
+.. _Aspects:
+
+Aspects
+~~~~~~~
+
+Aspect specifications allow you to define certain characteristics of a
+declaration using the :ada:`with` keyword after the declaration:
+
+.. code-block:: ada
+
+    procedure Some_Procedure is <procedure_definition>
+      with Some_Aspect => <aspect_specification>;
+
+    function Some_Function is <function_definition>
+      with Some_Aspect => <aspect_specification>;
+
+    type Some_Type is <type_definition>
+      with Some_Aspect => <aspect_specification>;
+
+    Obj : Some_Type with Some_Aspect => <aspect_specification>;
+
+For example, you can inline a subprogram by specifying the :ada:`Inline`
+aspect:
+
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
+
+    package Float_Arrays is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       function Average (Data : Float_Array) return Float
+         with Inline;
+
+    end Float_Arrays;
+
+We'll discuss inlining :ref:`later in this course <Inlining>`.
+
+Aspect specifications were introduced in Ada 2012. In previous versions of Ada,
+you had to use a :ada:`pragma` instead. The previous example would be written
+as follows:
+
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
+
+    package Float_Arrays is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       function Average (Data : Float_Array) return Float;
+
+       pragma Inline (Average);
+
+    end Float_Arrays;
+
+Aspects and attributes might refer to the same kind of information. For
+example, we can use the :ada:`Size` aspect to define the expected size of
+objects of a certain type:
+
+:code-config:`accumulate_code=True`
+
+[Ada]
+
+.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+
+    package My_Device_Types is
+
+       type UInt10 is mod 2 ** 10
+         with Size => 10;
+
+    end My_Device_Types;
+
+In the same way, we can use the size attribute to retrieve the size of a type
+or of an object:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+
+    with My_Device_Types; use My_Device_Types;
+
+    procedure Show_Device_Types is
+       UInt10_Obj : constant UInt10 := 0;
+    begin
+       Put_Line ("Size of UInt10 type:   " & Positive'Image (UInt10'Size));
+       Put_Line ("Size of UInt10 object: " & Positive'Image (UInt10_Obj'Size));
+    end Show_Device_Types;
+
+:code-config:`accumulate_code=False`
+
+We'll explain both :ada:`Size` aspect and :ada:`Size` attribute in subsequent
+chapters.
+
