@@ -65,6 +65,8 @@ benchmarking algorithms, using ``-O0`` is probably a good idea.
 In addition to the levels presented above, GNAT also has the ``-Os`` switch,
 which allows for optimizing code and data usage.
 
+.. _Inlining:
+
 Inlining
 ~~~~~~~~
 

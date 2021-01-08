@@ -1005,6 +1005,9 @@ reverse order?
     the numerical value stored in I. We have to do this because Put_Line is
     expecting a string as an input parameter.
 
+    We'll discuss attributes in more details
+    :ref:`later in this chapter <Attributes>`.
+
 In the above example, we are traversing over the range in reverse order. In
 Ada, we use the :ada:`reverse` keyword to accomplish this.
 
@@ -1750,6 +1753,8 @@ such as :ada:`and`, :ada:`or`, :ada:`xor` and :ada:`not`. You can also use
 typical bit-shifting operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
 :ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
+.. _Attributes:
+
 Attributes
 ~~~~~~~~~~
 
@@ -1777,6 +1782,15 @@ value into a :ada:`String` and vice-versa. For example:
        A := Integer'Value ("99");
        Put_Line (Integer'Image (A));
     end;
+
+.. admonition:: Important
+
+    Semantically, attributes are equivalent to subprograms. For example,
+    :ada:`Integer'Image` is defined as follows:
+
+    .. code-block:: ada
+
+        function Integer'Image(Arg : Integer'Base) return String;
 
 Certain attributes are provided only for certain kinds of types. For example,
 the :ada:`'Val` and :ada:`'Pos` attributes for an enumeration type associates a
@@ -2616,7 +2630,10 @@ and invocation of the subprogram.
 .. admonition:: In Ada 202X
 
     Ada 202X allows for using static expression functions, which are evaluated
-    at compile time. An expression function is static when the :ada:`Static`
+    at compile time. To achieve this, we can use an aspect |mdash| we'll
+    discuss aspects :ref:`later in this chapter <Aspects>`.
+
+    An expression function is static when the :ada:`Static`
     aspect is specified. For example:
 
     .. code-block:: ada
@@ -2758,4 +2775,97 @@ operator as a function, enclose its "name" in quotes:
           Put_Line ("Machine is not off.");
        end if;
     end Main;
+
+.. _Aspects:
+
+Aspects
+~~~~~~~
+
+Aspect specifications allow you to define certain characteristics of a
+declaration using the :ada:`with` keyword after the declaration:
+
+.. code-block:: ada
+
+    procedure Some_Procedure is <procedure_definition>
+      with Some_Aspect => <aspect_specification>;
+
+    function Some_Function is <function_definition>
+      with Some_Aspect => <aspect_specification>;
+
+    type Some_Type is <type_definition>
+      with Some_Aspect => <aspect_specification>;
+
+    Obj : Some_Type with Some_Aspect => <aspect_specification>;
+
+For example, you can inline a subprogram by specifying the :ada:`Inline`
+aspect:
+
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
+
+    package Float_Arrays is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       function Average (Data : Float_Array) return Float
+         with Inline;
+
+    end Float_Arrays;
+
+We'll discuss inlining :ref:`later in this course <Inlining>`.
+
+Aspect specifications were introduced in Ada 2012. In previous versions of Ada,
+you had to use a :ada:`pragma` instead. The previous example would be written
+as follows:
+
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
+
+    package Float_Arrays is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       function Average (Data : Float_Array) return Float;
+
+       pragma Inline (Average);
+
+    end Float_Arrays;
+
+Aspects and attributes might refer to the same kind of information. For
+example, we can use the :ada:`Size` aspect to define the expected minimum size
+of objects of a certain type:
+
+:code-config:`accumulate_code=True`
+
+[Ada]
+
+.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+
+    package My_Device_Types is
+
+       type UInt10 is mod 2 ** 10
+         with Size => 10;
+
+    end My_Device_Types;
+
+In the same way, we can use the size attribute to retrieve the size of a type
+or of an object:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+
+    with My_Device_Types; use My_Device_Types;
+
+    procedure Show_Device_Types is
+       UInt10_Obj : constant UInt10 := 0;
+    begin
+       Put_Line ("Size of UInt10 type:   " & Positive'Image (UInt10'Size));
+       Put_Line ("Size of UInt10 object: " & Positive'Image (UInt10_Obj'Size));
+    end Show_Device_Types;
+
+:code-config:`accumulate_code=False`
+
+We'll explain both :ada:`Size` aspect and :ada:`Size` attribute in subsequent
+chapters.
 
