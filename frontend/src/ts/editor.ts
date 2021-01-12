@@ -1,4 +1,4 @@
-import ace, { Split } from 'brace';
+import ace from 'brace';
 import 'brace/mode/ada';
 import 'brace/mode/c_cpp';
 import 'brace/theme/tomorrow';
