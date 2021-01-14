@@ -47,7 +47,9 @@ language.
 
 Let's start with the following C code:
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct_C
+[C]
+
+.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct_C
 
     !call.c
     #include <stdio.h>
@@ -65,6 +67,8 @@ data structure to pass as well as a description of the function itself. To
 capture how the C :c:`struct my_struct` is represented, we can use the
 following record along with a :ada:`pragma Convention`. The pragma directs the
 compiler to lay out the data in memory the way a C compiler would.
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct_Ada
 
@@ -103,7 +107,9 @@ code, it should invoke the :ada:`Call` function with the C calling convention.
 
 And that's all that's necessary. Here's an example of a call to :ada:`Call`:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct_Ada
+[Ada]
+
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
 
     with Interfaces.C;
 
@@ -327,8 +333,8 @@ the C side in the first place. These are good places for careful peer reviews.
 
 .. _By_Value_Vs_By_Reference:
 
-By-value v.s. by-reference types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+By-value vs. by-reference types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When interfacing Ada and C, the rules of parameter passing are a bit different
 with regards to what's a reference and what's a copy. Scalar types and pointers
@@ -352,6 +358,8 @@ example to illustrate this point:
 
 In Ada, a type can be modified so that parameters of this type can always be
 passed by copy.
+
+[Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value_Ada
 
@@ -715,10 +723,11 @@ As we've seen previously, the :ada:`Pack` aspect declared at the end of the
 type declaration indicates that the compiler should optimize for size. We must
 use this aspect to be able to interpret data types as a bit-field.
 
-Then, we can use the :ada:`Size` and the :ada:`Address` aspect of an
-object of any type to declare a bit-field for this object. The :ada:`Size`
-aspect indicates the number of bits required to represent the object, while
-the :ada:`Address` aspect indicates the address in memory of that object.
+Then, we can use the :ada:`Size` and the :ada:`Address` attributes of an
+object of any type to declare a bit-field for this object. We've discussed the
+:ada:`Size` attribute :ref:`earlier in this course <Size_Aspect_Attribute>`.
+
+The :ada:`Address` attribute indicates the address in memory of that object.
 For example, assuming we've declare a variable :ada:`V`, we can declare an
 actual bit-field object by referring to the :ada:`Address` attribute of
 :ada:`V` and using it in the declaration of the bit-field, as shown here:
@@ -728,6 +737,9 @@ actual bit-field object by referring to the :ada:`Address` attribute of
 .. code-block:: ada
 
     B : Bit_Field (0 .. V'Size - 1) with Address => V'Address;
+
+Note that, in this declaration, we're using the :ada:`Address` attribute of
+:ada:`V` for the :ada:`Address` aspect of :ada:`B`.
 
 This technique is called overlays for serialization. Now, any operation that we
 perform on :ada:`B` will have a direct impact on :ada:`V`, since both are using
@@ -824,6 +836,8 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     Ada has the concept of default initialization. For example, you may set the
     default value of record components:
 
+    [Ada]
+
     .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Record_Type
 
         with Ada.Text_IO; use Ada.Text_IO;
@@ -847,6 +861,8 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     Likewise, the :ada:`Default_Value` aspect can be used to specify the
     default value in other kinds of type declarations. For example:
+
+    [Ada]
 
     .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Value_Type
 
@@ -878,7 +894,9 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     expect, since overlays are usually created to analyze and manipulate
     existing values. Let's look at an example where this happens:
 
-    .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
+    [Ada]
+
+    .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
 
         package P is
 
@@ -931,6 +949,8 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     Using the :ada:`Import` aspect solves this problem. This aspect tells the
     compiler to not apply default initialization in the declaration because the
     object is imported. Let's look at the corrected example:
+
+    [Ada]
 
     .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Import
 

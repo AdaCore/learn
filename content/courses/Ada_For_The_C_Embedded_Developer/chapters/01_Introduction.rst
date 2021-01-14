@@ -22,7 +22,9 @@ they are trying to solve using the language of the physical hardware.
 Let's look at an example of this problem in action by comparing the same
 program in Ada and C:
 
-.. code:: c no_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_C;
+[C]
+
+.. code:: c cli_input no_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_C
 
    !main.c
    #include <stdio.h>
@@ -56,14 +58,16 @@ program in Ada and C:
      return 0;
    }
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_Ada;
+[Ada]
+
+.. code:: ada cli_input no_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_Ada
 
    with Ada.Command_Line; use Ada.Command_Line;
    with Ada.Text_IO; use Ada.Text_IO;
 
 
    procedure Sum_Angles is
-   
+
       DEGREES_MAX : constant := 360;
       type Degrees is mod DEGREES_MAX;
 

@@ -118,6 +118,8 @@ necessary; for example when interfacing with hardware, a driver, or a
 communication protocol. Here's how to specify a specific data layout based on
 the previous example:
 
+[Ada]
+
 .. code-block:: ada
 
     type R is record
@@ -164,6 +166,8 @@ inputs and places an unsigned 64-bit value split between the ``edx`` and
 GNAT provides a subprogram called :ada:`System.Machine_Code.Asm` that can be
 used for assembly code insertion. You can specify a string to pass to the
 assembler as well as source-level variables to be used for input and output:
+
+[Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Assembly_Code
 
@@ -222,6 +226,8 @@ interrupts by attaching a handler |mdash| which must be a protected procedure
 
 Let's look into a code example that *traps* the quit interrupt (``SIGQUIT``)
 on Linux:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Quit_Handler
 
@@ -778,7 +784,85 @@ Previously, we've seen that we can use
 layout for a record type. As mentioned before, this is useful when interfacing
 with hardware, drivers, or communication protocols. In this section, we'll
 extend this concept for two specific use-cases: register overlays and data
-streams.
+streams. Before we discuss those use-cases, though, we'll first explain the
+:ada:`Size` aspect and the :ada:`Size` attribute.
+
+.. _Size_Aspect_Attribute:
+
+:ada:`Size` aspect and attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The :ada:`Size` aspect indicates the minimum number of bits required to
+represent an object. When applied to a type, the :ada:`Size` aspect is telling
+the compiler to not make record or array components of a type :ada:`T` any
+smaller than :ada:`X` bits. Therefore, a common usage for this aspect is to
+just confirm expectations: developers specify :ada:`'Size` to tell the compiler
+that :ada:`T` should fit :ada:`X` bits, and the compiler will tell them if they
+are right (or wrong).
+
+When the specified size value is larger than necessary, it can cause objects to
+be bigger in memory than they would be otherwise. For example, for some
+enumeration types, we could say :ada:`for type Enum'Size use 32;` when the
+number of literals would otherwise have required only a byte. That's useful for
+unchecked conversions because the sizes of the two types need to be the same.
+Likewise, it's useful for interfacing with C, where :c:`enum` types are just
+mapped to the :ada:`int` type, and thus larger than Ada might otherwise
+require. We'll discuss unchecked conversions
+:ref:`later in the course <OverlaysVsUncheckedConversions>`.
+
+Let's look at an example from an earlier chapter:
+
+:code-config:`accumulate_code=True`
+
+[Ada]
+
+.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+
+    package My_Device_Types is
+
+       type UInt10 is mod 2 ** 10
+         with Size => 10;
+
+    end My_Device_Types;
+
+Here, we're saying that objects of type :ada:`UInt10` must have at least 10
+bits. In this case, if the code compiles, it is a confirmation that such values
+can be represented in 10 bits when packed into an enclosing record or array
+type.
+
+If the size specified was larger than what the compiler would use by default,
+then it could affect the size of objects. For example, for :ada:`UInt10`,
+anything up to and including 16 would make no difference on a typical machine.
+However, anything over 16 would then push the compiler to use a larger object
+representation. That would be important for unchecked conversions, for example.
+
+The :ada:`Size` attribute indicates the number of bits required to represent a
+type or an object. We can use the size attribute to retrieve the size of a type
+or of an object:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+
+    with My_Device_Types; use My_Device_Types;
+
+    procedure Show_Device_Types is
+       UInt10_Obj : constant UInt10 := 0;
+    begin
+       Put_Line ("Size of UInt10 type:   " & Positive'Image (UInt10'Size));
+       Put_Line ("Size of UInt10 object: " & Positive'Image (UInt10_Obj'Size));
+    end Show_Device_Types;
+
+:code-config:`accumulate_code=False`
+
+Here, we're retrieving the actual sizes of the :ada:`UInt10` type and an
+object of that type. Note that the sizes don't necessarily need to match. For
+example, although the size of :ada:`UInt10` type is expected to be 10 bits, the
+size of :ada:`UInt10_Obj` may be 16 bits, depending on the platform. Also,
+components of this type within composite types (arrays, records) will probably
+be 16 bits as well unless they are packed.
 
 Register overlays
 ~~~~~~~~~~~~~~~~~
@@ -788,6 +872,8 @@ facilitates manipulating bits from registers. Let's look at a simplified
 example of a power management controller containing registers such as a system
 clock enable register. Note that this example is based on an actual
 architecture:
+
+[Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.PMC_Peripheral
 
@@ -893,6 +979,8 @@ power management controller with simple record component selection. For
 example, we can set the :ada:`USBCLK` bit of the :ada:`PMC_SCER` register by
 using :ada:`PMC_Periph.PMC_SCER.USBCLK`:
 
+[Ada]
+
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Register_Overlay_1
 
     with Registers;
@@ -916,30 +1004,20 @@ record type. Here, we can select one of these options:
 
 - :ada:`Low_Order_First`: first bit of the record is the least significant bit.
 
-The declarations from the :ada:`Registers` package also makes use of aspects
-that we haven't seen yet. Aspects :ada:`Size` and :ada:`Import` will be
-discussed in the section that explains how to
+The declarations from the :ada:`Registers` package also makes use of the
+:ada:`Import`, which is sometimes necessary when creating overlays. When used
+in the context of object declarations, it avoids default initialization (for
+data types that have it.). Aspect :ada:`Import` will be discussed in the
+section that explains how to
 :ref:`map structures to bit-fields <Mapping_Structures_To_Bit_Fields>` in
-chapter 6. Please refer to that chapter for more details. This is a brief
-explanation of these aspects:
-
-- The :ada:`Size` aspect indicates the minimum number of bits required to
-  represent an object, and it can be used to confirm expectations. In the case
-  of the :ada:`PMC_SCER_Register` type above, it has the compiler confirm that
-  the record type will fit into the expected 16 bits.
-
-- The :ada:`Import` is sometimes necessary when creating overlays. When used in
-  the context of object declarations, it avoids default initialization (for
-  data types that have it.)
+chapter 6. Please refer to that chapter for more details.
 
 .. admonition:: Details about :ada:`'Size`
 
-    When applied to a type, the :ada:`Size` aspect is telling the compiler
-    to not make record or array components of a type :ada:`T` any smaller than
-    :ada:`X` bits. Therefore, a common usage for this aspect is to just confirm
-    expectations: developers specify :ada:`'Size` to tell the compiler that
-    :ada:`T` should fit :ada:`X` bits, and the compiler will tell them if they
-    are right (or wrong).
+    In the example above, we're using the :ada:`Size` aspect in the declaration
+    of the :ada:`PMC_SCER_Register` type. In this case, the effect is that it
+    has the compiler confirm that the record type will fit into the expected
+    16 bits.
 
     That's what the aspect does for type :ada:`PMC_SCER_Register` in the
     example above, as well as for the types :ada:`Bit`, :ada:`UInt5` and
@@ -965,15 +1043,6 @@ explanation of these aspects:
     In this case, :ada:`B` is almost certainly going to be 8-bits wide on a
     typical machine, even though the language requires that :ada:`Bit'Size` is
     1 by default.
-
-    When the specified size value is larger than necessary, it can cause
-    objects to be bigger in memory than they would be otherwise. For example,
-    for some enumeration types, we could say :ada:`for type Enum'Size use 32;`
-    when the number of literals would otherwise have required only a byte.
-    That's useful for unchecked conversions because the sizes of the two types
-    need to be the same. Likewise, it's useful for interfacing with C, where
-    :c:`enum` types are just mapped to the :ada:`int` type, and thus larger
-    than Ada might otherwise require.
 
 In the declaration of the components of the :ada:`PMC_Peripheral` record type,
 we use the :ada:`aliased` keyword to specify that those record components are
@@ -1003,6 +1072,8 @@ about
 chapter 6).
 
 Let's look at a simple example of serialization of an arbitrary record type:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream_Declaration
 
@@ -1076,6 +1147,8 @@ use to stream the information from :ada:`Some_Object`.
 
 We can use this approach and create a data stream for the register overlay
 example that we've seen before. This is the corresponding implementation:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream
 

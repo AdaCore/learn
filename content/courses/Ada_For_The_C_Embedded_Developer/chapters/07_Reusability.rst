@@ -131,6 +131,8 @@ fact, it's much more common to render an entire package generic. In this case
 the instantiation creates a new version of all the entities present in the
 generic, including global variables. For example:
 
+[Ada]
+
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_1
 
     generic
@@ -167,6 +169,8 @@ private type. There's actually much more that can be described in this section,
 such as variables, subprograms or package instantiations with certain
 properties. For example, the following provides a sort algorithm for any kind
 of structurally compatible array type:
+
+[Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_2
 
@@ -218,6 +222,8 @@ to tagged derivation, which is OOP-related and discussed in a later section.
 
 Let's start from the following example:
 
+[Ada]
+
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
     package Drivers_1 is
@@ -256,6 +262,8 @@ parameter or return type directly referencing this type and declared in the
 same scope. At this stage, there's nothing special with this type: we're using
 it as we would use any other type. For example:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -276,6 +284,8 @@ Let's now assume that we need to implement a new generation of device,
 the startup code that has to be done differently. We can create a new type that
 operates exactly like the previous one, but modifies only the behavior of
 :ada:`Startup`:
+
+[Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
@@ -305,6 +315,8 @@ change the :ada:`Startup` function and to provide a different implementation.
 We override this function. The main subprogram doesn't change much, except for
 the fact that it now relies on a different type:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -326,6 +338,8 @@ to remove it from the list of available services. Furthermore, for the purpose
 of our example, let's assume that the hardware team went back to the
 :ada:`Device_1` way of implementing :ada:`Startup`. We can write this new
 device the following way:
+
+[Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
@@ -356,6 +370,8 @@ To then implement :ada:`Startup` of :ada:`Device_3` as being the same as the
 :ada:`Startup` of :ada:`Device_1`, we can convert the type in the
 implementation:
 
+[Ada]
+
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
     package body Drivers_3 is
@@ -369,6 +385,8 @@ implementation:
     end Drivers_3;
 
 Our :ada:`Main` now looks like:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
@@ -393,6 +411,8 @@ further, and isolate the selection of the device kind to be used for the whole
 application in one unique file. One way to do this is to use the same name for
 all types, and use a renaming to select which package to use. Here's a
 simplified example to illustrate that:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
 
@@ -477,6 +497,8 @@ For example:
 In this example, we're suppressing the overflow check, thereby relaxing a
 requirement. Normally, the following program would raise a constraint error due
 to a failed overflow check:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Constraint_Error_Detection
 
@@ -857,12 +879,16 @@ Note that the information that we provide as the discriminant to the record
 type (in the Ada code) is constant, so we cannot assign a value to it. For
 example, we cannot write:
 
+[Ada]
+
 .. code-block:: ada
 
     V.Last := 10;       --  COMPILATION ERROR!
 
 In the C version, we declare the :c:`last` field constant to get the same
 behavior.
+
+[C]
 
 .. code-block:: c
 
@@ -871,6 +897,8 @@ behavior.
 Note that the information provided as discriminants is visible. In the example
 above, we could display :ada:`Last` by writing:
 
+[Ada]
+
 .. code-block:: ada
 
     Put_Line ("Last : " & Integer'Image (V.Last));
@@ -878,6 +906,8 @@ above, we could display :ada:`Last` by writing:
 Also note that, even if a type is private, we can still access the information
 of the discriminants if they are visible in the *public* part of the type
 declaration. Let's rewrite the example above:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_Ada_Private
 
@@ -914,6 +944,8 @@ In simple terms, a variant record |mdash| a *discriminated record*
 in Ada terminology |mdash| is a record with discriminants that allows for
 changing its structure. Basically, it's a record containing a :ada:`case`.
 This is the general structure:
+
+[Ada]
 
 .. code-block:: ada
 
@@ -1641,6 +1673,8 @@ Let's look more closely at the dispatching calls implemented above. First, we
 declare the :ada:`X_Tagged_Rec_Array` array and initialize it with the access
 to objects of both parent and derived tagged types:
 
+[Ada]
+
 .. code-block:: ada
 
        X_Tagged_Rec       : aliased Tagged_Rec;
@@ -1654,6 +1688,8 @@ Here, we use the :ada:`aliased` keyword to be able to get access to the objects
 
 Then, we loop over this array and call the :ada:`Reset` and :ada:`Display`
 procedures:
+
+[Ada]
 
 .. code-block:: ada
 
@@ -1687,6 +1723,8 @@ In this case, we can define abstract operations, and implement them in the
 derived tagged types. We declare an interface by simply writing
 :ada:`type T is interface`. For example:
 
+[Ada]
+
 .. code-block:: ada
 
     type My_Interface is interface;
@@ -1705,6 +1743,8 @@ actual implementation, we cannot declare objects for it.
 We can derive tagged types from an interface and implement the actual
 operations of that interface:
 
+[Ada]
+
 .. code-block:: ada
 
     type My_Derived is new My_Interface with null record;
@@ -1715,6 +1755,8 @@ Note that we're not using the :ada:`tagged` keyword in the declaration because
 any type derived from an interface is automatically tagged.
 
 Let's look at an example with an interface and two derived tagged types:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Interfaces_1
 
@@ -1780,6 +1822,8 @@ Deriving from multiple interfaces
 We may derive a type from multiple interfaces by simply writing
 :ada:`type Derived_T is new T1 and T2 with null record`. For example:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Multiple_Interfaces
 
     package Transceivers is
@@ -1839,6 +1883,8 @@ abstract, we cannot use it to declare objects for it |mdash| this is the same
 as for interfaces. We can only use it to derive other types. Let's look at the
 abstract tagged type declared in the :ada:`Abstract_Transceivers` package:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Multiple_Interfaces
    :class: ada-expect-compile-error
 
@@ -1890,6 +1936,8 @@ procedure), which is not possible. Naturally, if we derive another type from
 declare objects of this derived type. This is what we do in the
 :ada:`Full_Transceivers` below:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Multiple_Interfaces
 
     with Abstract_Transceivers; use Abstract_Transceivers;
@@ -1933,6 +1981,8 @@ In the :ref:`section about simple derivation <SimpleDerivation>`, we've seen an
 example where the actual selection was done at *implementation* time by
 renaming one of the packages:
 
+[Ada]
+
 .. code-block:: ada
 
     with Drivers_1;
@@ -1943,6 +1993,8 @@ Although this approach is useful in many cases, there might be situations where
 we need to select the actual driver dynamically at runtime. Let's look at how
 we could rewrite that example using interfaces, tagged types and dispatching
 calls:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Tagged_Drivers
 
@@ -2360,6 +2412,8 @@ the main application.
 Let's suppose we have a main system (:ada:`Main_System`) and a
 component *A* (:ada:`Component_A`) that we want to use in the main system. For
 example:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.System_For_Dyn_Lib
 

@@ -24,7 +24,7 @@ import sys
 # -- Project information -----------------------------------------------------
 
 project = u'learn.adacore.com'
-copyright = u'2018 – 2020, AdaCore'
+copyright = u'2018 – 2021, AdaCore'
 author = u'AdaCore' if 'SPHINX_AUTHOR' not in os.environ else \
     os.environ['SPHINX_AUTHOR']
 title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
@@ -33,7 +33,7 @@ title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
 # The short X.Y version
 version = u''
 # The full version, including alpha/beta/rc tags
-release = u'2020-05'
+release = u'2021-01'
 
 
 # -- General configuration ---------------------------------------------------
@@ -100,7 +100,6 @@ exclude_patterns = [u'_build',
 # Exclude internal and unfinished material from final site build
 if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
     exclude_patterns += ['**internal/**',
-                         '**courses/Ada_For_The_C_Embedded_Developer/**',
                          '**courses/intro-to-embedded-sys-prog/**',
                          '**courses/advanced-ada/**',
                          '**courses/advanced-spark/**']

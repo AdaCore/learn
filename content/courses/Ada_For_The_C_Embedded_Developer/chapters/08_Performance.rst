@@ -61,6 +61,8 @@ benchmarking algorithms, using ``-O0`` is probably a good idea.
 In addition to the levels presented above, GNAT also has the ``-Os`` switch,
 which allows for optimizing code and data usage.
 
+.. _Inlining:
+
 Inlining
 ~~~~~~~~
 
@@ -77,6 +79,8 @@ In some cases, it's better to reduce the optimization level and perform manual
 inlining instead of automatic inlining. We do that by using the :ada:`Inline`
 aspect. Let's reuse an example from a previous chapter and inline the
 :ada:`Average` function:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Inlining
 
@@ -170,6 +174,8 @@ For example, checking the index of an array in a sorting algorithm may
 significantly decrease its performance. In those cases, suppressing the check
 may be an option. We can achieve this suppression by using
 :ada:`pragma Suppress (Index_Check)`. For example:
+
+[Ada]
 
 .. code-block:: ada
 
@@ -333,6 +339,8 @@ We've already discussed assertions in
 Assertions are user-defined checks that you can add to your code using the
 :ada:`pragma Assert`. For example:
 
+[Ada]
+
 .. code-block:: ada
 
     function Some_Computation (A, B : Int32) return Int32 is
@@ -357,13 +365,15 @@ option. In this case, formal proof |mdash| as discussed in the
 :doc:`SPARK chapter <05_SPARK>` |mdash| can help you. By formally proving that
 assertions will never fail at run-time, you can safely deactivate them.
 
-Dynamic v.s static structures
+Dynamic vs. static structures
 -----------------------------
 
 Ada generally speaking provides more ways than C or C++ to write simple dynamic
 structures, that is to say structures that have constraints computed after
 variables. For example, it's quite typical to have initial values in record
 types:
+
+[Ada]
 
 .. code-block:: ada
 
@@ -409,6 +419,8 @@ boundaries must be enforced.
 
 Here's a last case which may also be surprising:
 
+[Ada]
+
 .. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Record_With_Arrays
 
     package P is
@@ -434,8 +446,8 @@ always consider where they're coming from, and if their value is static
 fundamentally wrong with dynamically constrained types, unless they appear in
 performance-critical pieces of the application.
 
-Pointers v.s. data copies
--------------------------
+Pointers vs. data copies
+------------------------
 
 In the section about :ref:`pointers <Pointers>`, we mentioned that the
 Ada compiler will automatically pass parameters by reference when

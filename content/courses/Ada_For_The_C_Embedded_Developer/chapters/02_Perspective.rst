@@ -117,7 +117,9 @@ Hello World in Ada
 The first piece of code to translate from C to Ada is the usual Hello World
 program:
 
-.. code:: c run_button manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_C;
+[C]
+
+.. code:: c run_button manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_C
 
     !main.c
     #include <stdio.h>
@@ -128,7 +130,9 @@ program:
         return 0;
     }
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_Ada;
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_Ada
 
     with Ada.Text_IO;
 
@@ -240,6 +244,8 @@ class for Java and the header and implementation pair for C.
 A specification defines a package and the implementation implements the package.
 We saw this in an earlier example when we included the :ada:`Ada.Text_IO`
 package into our application. The package specification has the structure:
+
+[Ada]
 
 .. code-block:: ada
 
@@ -386,6 +392,8 @@ Statements and Declarations
 The following code samples are all equivalent, and illustrate the use of
 comments and working with integer variables:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_C
 
     !main.c
@@ -407,6 +415,8 @@ comments and working with integer variables:
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Ada
 
@@ -447,6 +457,8 @@ where developers were required to declare their variables at the top of the
 scope block. Most C developers may have run into this before when trying to
 write a for loop:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_C89
 
     !main.c
@@ -471,6 +483,8 @@ write a for loop:
 
         printf("Average: %d\n", average(vals, 4));
     }
+
+[C]
 
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_C_Modern
 
@@ -498,6 +512,8 @@ write a for loop:
     }
 
 For the fun of it, let's also see the Ada way to do this:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_Ada
 
@@ -537,6 +553,8 @@ The next block in the Ada example is between the :ada:`begin` and :ada:`end`
 keywords. This is where your statements will live. You can create new scopes by
 using the :ada:`declare` keyword:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Block_Ada
 
     with Ada.Text_IO;
@@ -569,6 +587,8 @@ using the :ada:`declare` keyword:
 Notice that we declared a new variable :ada:`E` whose scope only exists in our
 newly defined block. The equivalent C code is:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Block_C
 
     !main.c
@@ -599,6 +619,8 @@ newly defined block. The equivalent C code is:
 **Fun Fact** about the C language assignment operator :c:`=`: Did you know that
 an assignment in C can be used in an expression? Let's look at an example:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Equal_C
 
     !main.c
@@ -624,6 +646,8 @@ the if statement but accidentally typed :c:`=` instead of :c:`==`. Because C
 treats assignment as an expression, it was able to evaluate :c:`a = 10`.
 
 Let's look at the equivalent Ada code:
+
+[Ada]
 
 .. code:: ada manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Equal_Ada
     :class: ada-expect-compile-error
@@ -663,6 +687,8 @@ Conditions
 
 The syntax of an if statement:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Condition_C
 
     !main.c
@@ -686,6 +712,8 @@ The syntax of an if statement:
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Condition_Ada
 
@@ -722,6 +750,8 @@ Or         :c:`||` :ada:`or`
 
 The syntax of a switch/case statement:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_C
 
     !main.c
@@ -751,6 +781,8 @@ The syntax of a switch/case statement:
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Ada
 
@@ -785,7 +817,9 @@ Notice that in Ada, the case statement does not use the :c:`break` keyword. In
 C, we use :c:`break` to stop the execution of a case branch from falling
 through to the next branch. Here is an example:
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Break_C
+[C]
+
+.. code:: c manual_chop cli_input run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Break_C
 
     !main.c
     #include <stdio.h>
@@ -829,6 +863,8 @@ Loops
 ------
 
 Let's start with some syntax:
+
+[C]
 
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loops_C
 
@@ -882,6 +918,8 @@ Let's start with some syntax:
             printf("sum = %d\n", sum);
         }
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loops_Ada
 
@@ -948,6 +986,8 @@ specify a loop predicate, or an expression that indicates when the loop should
 continue executing or complete, and last you specify an expression to update
 the loop counter.
 
+[C]
+
 .. code-block:: c
 
     for (initialization expression; loop predicate; update expression) {
@@ -960,6 +1000,8 @@ The loop counter is **read-only**! You cannot modify the loop counter inside
 the loop like you can in C. And the loop counter will increment consecutively
 along the specified range. But what if you want to loop over the range in
 reverse order?
+
+[C]
 
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Counter_C
 
@@ -977,6 +1019,8 @@ reverse order?
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Counter_Ada
 
@@ -1001,12 +1045,17 @@ reverse order?
     the numerical value stored in I. We have to do this because Put_Line is
     expecting a string as an input parameter.
 
+    We'll discuss attributes in more details
+    :ref:`later in this chapter <Attributes>`.
+
 In the above example, we are traversing over the range in reverse order. In
 Ada, we use the :ada:`reverse` keyword to accomplish this.
 
 In many cases, when we are writing a for loop, it has something to do with
 traversing an array. In C, this is a classic location for off-by-one errors.
 Let's see an example in action:
+
+[C]
 
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_C
 
@@ -1031,6 +1080,8 @@ Let's see an example in action:
 
         return 0;
     }
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_Ada
 
@@ -1081,6 +1132,8 @@ indexing direction.
 
 We can actually simplify the Ada for loop a little further using iterators:
 
+[Ada]
+
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_Ada_Simplified
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1123,6 +1176,8 @@ promotion are fairly straightforward in simple expressions but can get
 confusing very quickly. Let's look at a typical place of confusion with
 implicit type conversion:
 
+[C]
+
 .. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_C
 
     !main.c
@@ -1151,6 +1206,8 @@ in both variables, but :c:`a` treated this as the decimal number :c:`255` while
 b treated this as the decimal number :c:`-1`. When we compare the two
 variables, of course they aren't equal; but that's not very intuitive. Let's
 look at the equivalent Ada example:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada
    :class: ada-expect-compile-error
@@ -1251,6 +1308,8 @@ Ada case, it is still necessary to explicitly convert the final result to
     Result := Float (Alpha / Beta);
 
 The complete example would then be:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada_2
 
@@ -1746,6 +1805,8 @@ such as :ada:`and`, :ada:`or`, :ada:`xor` and :ada:`not`. You can also use
 typical bit-shifting operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
 :ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
+.. _Attributes:
+
 Attributes
 ~~~~~~~~~~
 
@@ -1773,6 +1834,15 @@ value into a :ada:`String` and vice-versa. For example:
        A := Integer'Value ("99");
        Put_Line (Integer'Image (A));
     end;
+
+.. admonition:: Important
+
+    Semantically, attributes are equivalent to subprograms. For example,
+    :ada:`Integer'Image` is defined as follows:
+
+    .. code-block:: ada
+
+        function Integer'Image(Arg : Integer'Base) return String;
 
 Certain attributes are provided only for certain kinds of types. For example,
 the :ada:`'Val` and :ada:`'Pos` attributes for an enumeration type associates a
@@ -1921,6 +1991,8 @@ Unlike C, Ada does not offer escape sequences such as :c:`'\n'`. Instead,
 explicit values from the ASCII package must be concatenated (via the
 concatenation operator, :ada:`&`). Here for example, is how to initialize a
 line of text ending with a new line:
+
+[Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Constrained_String
 
@@ -2612,7 +2684,10 @@ and invocation of the subprogram.
 .. admonition:: In Ada 202X
 
     Ada 202X allows for using static expression functions, which are evaluated
-    at compile time. An expression function is static when the :ada:`Static`
+    at compile time. To achieve this, we can use an aspect |mdash| we'll
+    discuss aspects :ref:`later in this chapter <Aspects>`.
+
+    An expression function is static when the :ada:`Static`
     aspect is specified. For example:
 
     .. code-block:: ada
@@ -2754,3 +2829,100 @@ operator as a function, enclose its "name" in quotes:
           Put_Line ("Machine is not off.");
        end if;
     end Main;
+
+.. _Aspects:
+
+Aspects
+~~~~~~~
+
+Aspect specifications allow you to define certain characteristics of a
+declaration using the :ada:`with` keyword after the declaration:
+
+.. code-block:: ada
+
+    procedure Some_Procedure is <procedure_definition>
+      with Some_Aspect => <aspect_specification>;
+
+    function Some_Function is <function_definition>
+      with Some_Aspect => <aspect_specification>;
+
+    type Some_Type is <type_definition>
+      with Some_Aspect => <aspect_specification>;
+
+    Obj : Some_Type with Some_Aspect => <aspect_specification>;
+
+For example, you can inline a subprogram by specifying the :ada:`Inline`
+aspect:
+
+[Ada]
+
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
+
+    package Float_Arrays is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       function Average (Data : Float_Array) return Float
+         with Inline;
+
+    end Float_Arrays;
+
+We'll discuss inlining :ref:`later in this course <Inlining>`.
+
+Aspect specifications were introduced in Ada 2012. In previous versions of Ada,
+you had to use a :ada:`pragma` instead. The previous example would be written
+as follows:
+
+[Ada]
+
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
+
+    package Float_Arrays is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       function Average (Data : Float_Array) return Float;
+
+       pragma Inline (Average);
+
+    end Float_Arrays;
+
+Aspects and attributes might refer to the same kind of information. For
+example, we can use the :ada:`Size` aspect to define the expected minimum size
+of objects of a certain type:
+
+:code-config:`accumulate_code=True`
+
+[Ada]
+
+.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+
+    package My_Device_Types is
+
+       type UInt10 is mod 2 ** 10
+         with Size => 10;
+
+    end My_Device_Types;
+
+In the same way, we can use the size attribute to retrieve the size of a type
+or of an object:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+
+    with My_Device_Types; use My_Device_Types;
+
+    procedure Show_Device_Types is
+       UInt10_Obj : constant UInt10 := 0;
+    begin
+       Put_Line ("Size of UInt10 type:   " & Positive'Image (UInt10'Size));
+       Put_Line ("Size of UInt10 object: " & Positive'Image (UInt10_Obj'Size));
+    end Show_Device_Types;
+
+:code-config:`accumulate_code=False`
+
+We'll explain both :ada:`Size` aspect and :ada:`Size` attribute
+:ref:`later in this course <Size_Aspect_Attribute>`.
