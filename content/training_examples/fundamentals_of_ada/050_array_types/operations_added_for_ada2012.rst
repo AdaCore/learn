@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Array_Types.operations_added_for_ada2012
-    :class: ada-run
 
    with Ada.Text_IO; use Ada.Text_IO;
    procedure Operations_Added_For_Ada2012 is

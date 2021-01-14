@@ -26,3 +26,9 @@ Default Values
 
 .. include:: 060_record_types/default_values.rst
 
+-----------------
+Variant Records
+-----------------
+
+.. include:: 060_record_types/variant_records.rst
+

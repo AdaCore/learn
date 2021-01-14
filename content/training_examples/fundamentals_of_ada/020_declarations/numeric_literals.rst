@@ -1,5 +1,4 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Declarations.numeric_literals
-    :class: ada-run
 
    package Numeric_Literals is
    

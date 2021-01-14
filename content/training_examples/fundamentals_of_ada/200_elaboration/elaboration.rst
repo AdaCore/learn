@@ -1,5 +1,4 @@
-.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.elab.elab
-   :class: ada-run
+.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Elaboration.elaboration
 
    with Initializer; use Initializer;
    package Elab_1 is

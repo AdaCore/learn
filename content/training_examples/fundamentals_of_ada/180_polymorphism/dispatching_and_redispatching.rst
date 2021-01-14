@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Polymorphism.dispatching_and_redispatching
-   :class: ada-run
 
    package Types is
    

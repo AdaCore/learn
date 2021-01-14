@@ -2,18 +2,6 @@
 Program Structure
 ===================
 
----------------
-Library Units
----------------
-
-.. include:: 130_program_structure/library_units.rst
-
---------------
-With Clauses
---------------
-
-.. include:: 130_program_structure/with_clauses.rst
-
 ----------------------
 Limited With Clauses
 ----------------------
@@ -37,22 +25,4 @@ Private Children
 ------------------
 
 .. include:: 130_program_structure/private_children.rst
-
--------------
-Use Clauses
--------------
-
-.. include:: 130_program_structure/use_clauses.rst
-
-------------------
-Use Type Clauses
-------------------
-
-.. include:: 130_program_structure/use_type_clauses.rst
-
-----------------------
-Use All Type Clauses
-----------------------
-
-.. include:: 130_program_structure/use_all_type_clauses.rst
 

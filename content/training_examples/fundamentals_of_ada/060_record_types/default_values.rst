@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Record_Types.default_values
-    :class: ada-run
 
    with Ada.Text_IO; use Ada.Text_IO;
    procedure Default_Values is
