@@ -1,5 +1,4 @@
-.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Program_Structure.library_units
-   :class: ada-run
+.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Library_Units.library_units
 
    package Named_Common is
       X : Integer; -- valid object for life of application

@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Expressions.subtypes
-    :class: ada-run
 
    with Ada.Text_IO; use Ada.Text_IO;
    procedure Subtypes is
@@ -34,11 +33,9 @@
    
       Weekday := Weekdays_T'Last;
       Day     := Days_T'Last;
+
       Put_Line (Weekdays_T'Image (Weekday) & " / " & Days_T'Image (Day));
-   
       Put_Line (Days_T'Image (Weekdays_T'Succ (Weekday)));
-   
       Put_Line (Integer'Image (Matrix_3x3_T'Length (1)));
       Put_Line (Integer'Image (Line_T'Length (1)));
-   
    end Subtypes;

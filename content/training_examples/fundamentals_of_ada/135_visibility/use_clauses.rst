@@ -1,5 +1,4 @@
-.. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Program_Structure.use_clauses
-   :class: ada-run
+.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Visibility.use_clauses
 
    package Pkg_A is
       Constant_A  : constant := 1;
@@ -21,27 +20,21 @@
    with Pkg_B;
    with Pkg_B.Child;
    package P is
-      type Type_1 is range
-          Constant_A .. -- visible without dot-notation
-   
-            Pkg_B.Constant_B; -- not visible without dot-notation
+      type Type_1 is range Constant_A .. -- visible without dot-notation
+                           Pkg_B.Constant_B; -- not visible without dot-notation
    
       use Pkg_B;
       -- Constant_B is now visible without dot-notation
       type Type_2 is range Constant_Aa .. Constant_Bb;
    
-      Constant_Bb : Integer := 33;
-      -- with or without "use", Constant_Bb will always be the local version
+      Constant_Bb : Integer := 33; -- Constant_Bb will always be the local version
       function Bb return Integer is (Constant_Bb);
    
       function Is_Initialized return Boolean is
-      -- Need dot-notation to resolve ambiguity
-   
-        (Pkg_A.Initialized and Pkg_B.Initialized);
+        (Pkg_A.Initialized and Pkg_B.Initialized); -- Dot-notation to resolve ambiguity
    
       -- we "use" Pkg_B, so Child is directly visible
       Object : Integer := Child.Constant_Bbb;
-   
    end P;
 
    with Ada.Text_IO; use Ada.Text_IO;
@@ -55,8 +48,6 @@
       declare
          use P; -- make everything visible (including operators)
       begin
-         A := A + 1;
-         B := B + 1;
          C := A + B; -- now legal
          Put_Line (C'Image);
       end;

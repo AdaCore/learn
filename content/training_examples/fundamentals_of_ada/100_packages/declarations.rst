@@ -1,5 +1,4 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Packages.declarations
-   :class: ada-run
 
    package Global_Data is
       Object : Integer := 100;

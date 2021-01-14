@@ -1,5 +1,4 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Array_Types.unconstrained_array_types
-    :class: ada-run
 
    package Unconstrained_Array_Types is
    

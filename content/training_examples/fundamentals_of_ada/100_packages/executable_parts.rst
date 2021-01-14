@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Packages.executable_parts
-   :class: ada-run
 
    package Executable_Part is
       Visible_Seed : Integer;
@@ -25,7 +24,7 @@
       Global_Data : array (1 .. 10) of Integer;
    end Force_Body;
 
-   -- without elaborate_body, this is illegal
+   -- without Elaborate_Body, this is illegal
    with Ada.Text_IO; use Ada.Text_IO;
    package body Force_Body is
    begin

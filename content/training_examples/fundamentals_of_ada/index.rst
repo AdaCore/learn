@@ -1,18 +1,3 @@
-.. fundamentals_of_ada documentation master file
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-:prev_state: False
-:next_state: False
-
-Fundamentals Of Ada
-===================
-
-.. container:: content-description
-
-    This pages contain interactive widgets designed to accompany the
-    Fundamentals of Ada training class.
-
 .. toctree::
    :maxdepth: 4
    :caption: Contents:
@@ -25,16 +10,19 @@ Fundamentals Of Ada
    Subprograms <070_subprograms>
    Expressions <080_expressions>
    Overloading <090_overloading>
+   Library Units <095_library_units>
    Packages <100_packages>
    Private Types <110_private_types>
    Limited Types <120_limited_types>
    Program Structure <130_program_structure>
+   Visibility <135_visibility>
    Access Types <140_access_types>
    Genericity <160_genericity>
    Inheritance <170_inheritance>
    Polymorphism <180_polymorphism>
    Exceptions <190_exceptions>
    Elaboration <200_elaboration>
-   Contracts <210_contracts>
+   Subprogram Contracts <210_subprogram_contracts>
+   Type Contracts <215_type_contracts>
    Low Level Programming <220_low_level_programming>
    Tasking <240_tasking>

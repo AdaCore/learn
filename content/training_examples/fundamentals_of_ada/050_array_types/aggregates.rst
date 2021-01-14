@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Array_Types.aggregates
-    :class: ada-run
 
    procedure Aggregates is
    
@@ -17,8 +16,8 @@
       Week := (8.0, 8.0, 8.0, 8.0, 8.0, 0.0, 0.0);
       Week := (Sat => 0.0, Sun => 0.0, Mon .. Fri => 8.0);
       Week := (Sat | Sun => 0.0, Mon .. Fri => 8.0);
-      -- Week := (8.0, 8.0, 8.0, 8.0, 8.0, Sat => 0.0, Sun => 0.0); -- compile
-      -- error
+      -- Compile error
+      -- Week := (8.0, 8.0, 8.0, 8.0, 8.0, Sat => 0.0, Sun => 0.0);
    
       if Week = (10.0, 10.0, 10.0, 10.0, 0.0, 0.0, 0.0) then
          null; -- four-day week

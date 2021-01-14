@@ -1,5 +1,4 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Access_Types.access_types
-   :class: ada-run
 
    package Access_Types is
    

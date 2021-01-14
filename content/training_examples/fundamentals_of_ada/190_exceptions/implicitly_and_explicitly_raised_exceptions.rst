@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Exceptions.implicitly_and_explicitly_raised_exceptions
-   :class: ada-run
 
    with Ada.Text_IO; use Ada.Text_IO;
    package body Implicit_Exceptions is
@@ -18,7 +17,6 @@
             return Array_Object (X) > 0;
          end if;
       end Raise_Program_Error;
-   
    end Implicit_Exceptions;
 
    with Ada.Text_IO; use Ada.Text_IO;
@@ -36,7 +34,6 @@
    with Implicit_Exceptions; use Implicit_Exceptions;
    with Explicit_Exceptions; use Explicit_Exceptions;
    procedure Test_Exceptions is
-   
       procedure Test_Constraint_Error (X : Integer) is
       begin
          Raise_Constraint_Error (X);
@@ -68,7 +65,6 @@
       end Test_Storage_Error;
    
    begin
-   
       Test_Constraint_Error (20);
       Test_Constraint_Error (0);
       Test_Constraint_Error (Integer'Last);
@@ -76,7 +72,6 @@
       Test_Program_Error (Integer'Last);
       Test_Storage_Error (Integer'First);
       Test_Storage_Error (Integer'Last);
-   
    end Test_Exceptions;
 
    package Implicit_Exceptions is

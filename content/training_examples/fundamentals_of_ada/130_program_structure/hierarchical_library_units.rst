@@ -1,10 +1,7 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Program_Structure.hierarchical_library_units
-   :class: ada-run
 
    package Complex is
       type Number is private;
-      function "*" (Left, Right : Number) return Number;
-      function "/" (Left, Right : Number) return Number;
       function "+" (Left, Right : Number) return Number;
       function "-" (Left, Right : Number) return Number;
    private
@@ -24,13 +21,12 @@
    end Complex.Utils;
 
    package Complex.Debug is
-      -- "with Complex;" not needed for visibility to number
+      -- "with Complex;" not needed for visibility to Number
       procedure Print (C : Number);
    end Complex.Debug;
 
    with Ada.Text_IO;
-   -- "with Complex.Utils" needed for visibility to "To_String"
-   with Complex.Utils;
+   with Complex.Utils; -- needed for visibility to "To_String"
    package body Complex.Debug is
       procedure Print (C : Number) is
       begin
@@ -40,8 +36,6 @@
    end Complex.Debug;
 
    package body Complex is
-      function "*" (Left, Right : Number) return Number is (Left);
-      function "/" (Left, Right : Number) return Number is (Left);
       function "+" (Left, Right : Number) return Number is (Left);
       function "-" (Left, Right : Number) return Number is (Left);
    end Complex;

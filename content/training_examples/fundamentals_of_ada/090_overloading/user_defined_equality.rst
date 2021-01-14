@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Overloading.user_defined_equality
-   :class: ada-run
 
    with Ada.Text_IO; use Ada.Text_IO;
    procedure User_Defined_Equality is
