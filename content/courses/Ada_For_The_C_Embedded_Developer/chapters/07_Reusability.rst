@@ -8,13 +8,13 @@ Understanding static and dynamic variability
 
 It is common to see embedded software being used in a variety of configurations
 that require small changes to the code for each instance. For example, the same
-application may need to be portable between two different architectures (ARM and
-x86), or two different platforms with different set of devices available. Maybe
-the same application is used for two different generations of the product, so it
-needs to account for absence or presence of new features, or it's used for
-different projects which may select different components or configurations. All
-these cases, and many others, require variability in the software in order to
-ensure its reusability.
+application may need to be portable between two different architectures (ARM
+and x86), or two different platforms with different set of devices available.
+Maybe the same application is used for two different generations of the
+product, so it needs to account for absence or presence of new features, or
+it's used for different projects which may select different components or
+configurations. All these cases, and many others, require variability in the
+software in order to ensure its reusability.
 
 In C, variability is usually achieved through macros and function pointers, the
 former being tied to static variability (variability in different
@@ -30,14 +30,16 @@ If you're familiar with object-oriented programming (OOP) |mdash| supported in
 languages such as C++ and Java |mdash|, you might also be interested in knowing
 that OOP is supported by Ada and can be used to implement variability. This
 should, however, be used with care, as OOP brings its own set of problems, such
-as loss of efficiency |mdash| dispatching calls can't be inlined and require one
-level  of indirection |mdash| or loss of analyzability |mdash| the target of a
-dispatching call isn't known at run time. As a rule of thumb, OOP should be
-considered only for cases of dynamic variability, where several versions of the
-same object need to exist concurrently in the same application.
+as loss of efficiency |mdash| dispatching calls can't be inlined and require
+one level  of indirection |mdash| or loss of analyzability |mdash| the target
+of a dispatching call isn't known at run time. As a rule of thumb, OOP should
+be considered only for cases of dynamic variability, where several versions of
+the same object need to exist concurrently in the same application.
 
 Handling variability & reusability statically
 ---------------------------------------------
+
+.. _Genericity:
 
 Genericity
 ~~~~~~~~~~
@@ -164,7 +166,7 @@ So far, we've only looked at generics with one kind of parameter: a so-called
 private type. There's actually much more that can be described in this section,
 such as variables, subprograms or package instantiations with certain
 properties. For example, the following provides a sort algorithm for any kind
-of array:
+of structurally compatible array type:
 
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_2
 
@@ -195,6 +197,8 @@ types:
     type T is range <>; -- T is an integer type
     type T is digits <>; -- T is a floating point type
     type T is access T2; -- T is an access type to T2
+
+For a more complete list please reference the `Generic Formal Types Appendix <https://learn.adacore.com/courses/intro-to-ada/chapters/appendices.html#appendix-a-generic-formal-types>`_.
 
 .. _SimpleDerivation:
 
@@ -316,8 +320,8 @@ the fact that it now relies on a different type:
        Put_Line (Integer'Image (I));
     end Main;
 
-We can continue with approach and introduce a new generation of devices. This
-new device doesn't implement the :ada:`Send_Fast` service so we want
+We can continue with this approach and introduce a new generation of devices.
+This new device doesn't implement the :ada:`Send_Fast` service so we want
 to remove it from the list of available services. Furthermore, for the purpose
 of our example, let's assume that the hardware team went back to the
 :ada:`Device_1` way of implementing :ada:`Startup`. We can write this new
@@ -384,7 +388,7 @@ Our :ada:`Main` now looks like:
 Here, the call to :ada:`Send_Fast` will get flagged by the compiler.
 
 Note that the fact that the code of :ada:`Main` has to be changed for every
-implementation isn't necessary satisfactory. We may want to go one step
+implementation isn't necessarily satisfactory. We may want to go one step
 further, and isolate the selection of the device kind to be used for the whole
 application in one unique file. One way to do this is to use the same name for
 all types, and use a renaming to select which package to use. Here's a
@@ -451,7 +455,7 @@ simplified example to illustrate that:
     end Main;
 
 In the above example, the whole code can rely on :file:`drivers.ads`, instead
-of relying on the specific driver. Here, :ada:`Driver`  is an alias to
+of relying on the specific driver. Here, :ada:`Drivers` is another name for
 :ada:`Driver_1`. In order to switch to :ada:`Driver_2`, the project only has to
 replace that one :file:`drivers.ads` file.
 
@@ -783,33 +787,6 @@ corresponding implementation for version #2 looks like this:
 Again, we just need to select the appropriate configuration package for each
 version of the build, which we can easily do when using :program:`GPRbuild`.
 
-.. admonition:: In Ada 2020
-
-    Ada 2020 allows for using static expression functions, which are evaluated
-    at compile time. An expression function is static when the :ada:`Static`
-    aspect is specified. For example:
-
-    .. code-block:: ada
-
-        procedure Main is
-
-           X1 : constant := (if True then 37 else 42);
-
-           function If_Then_Else (Flag : Boolean; X, Y : Integer)
-             return Integer is
-              (if Flag then X else Y) with Static;
-
-           X2 : constant := If_Then_Else (True, 37, 42);
-
-        begin
-           null;
-        end Main;
-
-    In this example, we declare :ada:`X1` using an expression. In the
-    declaration of :ada:`X2`, we call the static expression function
-    :ada:`If_Then_Else`. Both :ada:`X1` and :ada:`X2` have the same constant
-    value.
-
 Handling variability & reusability dynamically
 ----------------------------------------------
 
@@ -818,10 +795,10 @@ Handling variability & reusability dynamically
 Records with discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In basic terms, records with discriminants are records that include parameters
-in its type definition. This allows for adding more flexibility to the type
-definition. In the section about :ref:`pointers <Pointers>`, we've seen this
-example:
+In basic terms, records with discriminants are records that include
+"parameters" in their type definitions. This allows for adding more flexibility
+to the type definition. In the section about :ref:`pointers <Pointers>`, we've
+seen this example:
 
 [Ada]
 
@@ -871,9 +848,9 @@ with a pointer to an array:
         S v = init_s (9);
     }
 
-Here, we need to explicitly allocate the :ada:`a` array of the :ada:`S` struct
-via a call to :ada:`malloc()`, which allocates memory space on the heap. In the
-Ada version, in contrast, the array (:ada:`V.A`) is allocated on the stack and
+Here, we need to explicitly allocate the :c:`a` array of the :c:`S` struct
+via a call to :c:`malloc()`, which allocates memory space on the heap. In the
+Ada version, in contrast, the array (:c:`V.A`) is allocated on the stack and
 we don't need to explicitly allocate it.
 
 Note that the information that we provide as the discriminant to the record
@@ -933,7 +910,7 @@ because this discriminant is visible in the *non-private* part of package
 Variant records
 ~~~~~~~~~~~~~~~
 
-In simple terms, a variant record |mdash| also called *discriminated record*
+In simple terms, a variant record |mdash| a *discriminated record*
 in Ada terminology |mdash| is a record with discriminants that allows for
 changing its structure. Basically, it's a record containing a :ada:`case`.
 This is the general structure:
@@ -1082,7 +1059,7 @@ accessed:
        Put_Line ("Integer value: " & Integer'Image (V.I));
        --                                             ^ Constraint_Error is raised!
 
-Using this method, Ada prevents that wrong information is used in other parts
+Using this method prevents wrong information being used in other parts
 of the program.
 
 To get the same behavior in Ada as we do in C, we need to explicitly use the
@@ -1115,7 +1092,7 @@ Now, we can display the integer component (:ada:`V.I`) even though we
 initialized the floating-point component (:ada:`V.F`). As expected, the
 information displayed by the test application in this case doesn't make sense.
 
-Note that, when using :ada:`Unchecked_Union` aspect in the declaration of a
+Note that, when using the :ada:`Unchecked_Union` aspect in the declaration of a
 variant record, the reference discriminant is not available anymore, since it
 isn't stored as part of the record. Therefore, we cannot access the
 :ada:`Use_Float` discriminant as in the following code:
@@ -1208,7 +1185,7 @@ only included when :ada:`Has_Extra_Info` is true.
 Optional output information
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We can use optional components to prevent that subprograms generate invalid
+We can use optional components to prevent subprograms from generating invalid
 information that could be misused by the caller. Consider the following
 example:
 
@@ -1902,8 +1879,8 @@ In this example, we declare the abstract tagged type
 :ada:`Abstract_Transceiver`. Here, we're only partially implementing the
 interfaces from which this type is derived: we're implementing :ada:`Send`, but
 we're skipping the implementation of :ada:`Receive`. Therefore, :ada:`Receive`
-is an abstract operation of :ada:`Abstract_Transceiver`. Since any type that
-has abstract operations is abstract, we must indicate this by adding the
+is an abstract operation of :ada:`Abstract_Transceiver`. Since any tagged type
+that has abstract operations is abstract, we must indicate this by adding the
 :ada:`abstract` keyword in type declaration.
 
 Also, when compiling this example, we get an error because we're trying to
@@ -2032,7 +2009,7 @@ calls:
        procedure Receive (Device : Transceiver; Data : out Integer) is
           pragma Unreferenced (Device);
        begin
-          Data := 42;
+          Data := 7;
        end Receive;
 
        procedure Display (Device : Transceiver) is

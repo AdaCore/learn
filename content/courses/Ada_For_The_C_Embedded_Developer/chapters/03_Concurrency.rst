@@ -6,33 +6,43 @@ Concurrency and Real-Time
 Understanding the various options
 ---------------------------------
 
-When it comes to implementing concurrency and real time, Ada offers several
-options. The most common one is on systems known as "full run-time", which
-offers entire Ada semantics. In the GNAT case, this is typically the case when
-running on top of an OS (e.g. Linux). In this case, Ada provides high level
-constructions such as tasks and protected objects to handle concurrency and
-synchronization. On more constrained systems, such are bare metal or some RTOS,
-a subset of the Ada tasking capabilities known as Ravenscar is available.
-Though restricted, this subset also has nice properties, in particular absence
-of deadlock, absence of priority inversion, schedulability and very small
-footprint. On bare metal systems, this also essentially means that Ada comes
-with its own real-time kernel.
+Concurrent and real-time programming are standard parts of the Ada
+language. As such, they have the same semantics, whether executing on a
+native target with an OS such as Linux, on a real-time operating system
+(RTOS) such as VxWorks, or on a bare metal target with no OS or RTOS at
+all.
 
-The advantage of using the full Ada tasking model or the restricted Ravenscar
-one is to enhance portability. For example, migrating from Windows to Linux
-doesn’t require any change as far as the creation of threads or handling of
-mutexes goes. However, in some situations, it’s critical to be able to rely
-directly on the services provided by the platform. In this case, it’s always
-possible to make direct system calls bound to Ada. Several targets of the GNAT
-compiler provide these API by default, for example win32ada for Windows and
-Florist for POSIX systems.
+For resource-constrained systems, two subsets of the Ada concurrency
+facilities are defined, known as the Ravenscar and Jorvik profiles.
+Though restricted, these subsets have highly desirable properties,
+including: efficiency, predictability, analyzability, absence of
+deadlock, bounded blocking, absence of priority inversion, a real-time
+scheduler, and a small memory footprint. On bare metal systems, this
+means in effect that Ada comes with its own real-time kernel.
+
+Enhanced portability and expressive power are the primary advantages of
+using the standard concurrency facilities, potentially resulting in
+considerable cost savings. For example, with little effort, it is
+possible to migrate from Windows to Linux to a bare machine without
+requiring any changes to the code. Thread management and synchronization
+is all done by the implementation, transparently. However, in some
+situations, it’s critical to be able to access directly the services
+provided by the platform. In this case, it’s always possible to make
+direct system calls from Ada code. Several targets of the GNAT compiler
+provide this sort of API by default, for example win32ada for Windows
+and Florist for POSIX systems.
+
+On native and RTOS-based platforms GNAT typically provides the full
+concurrency facilities. In contrast, on bare metal platforms GNAT typically
+provides the two standard subsets: Ravenscar and Jorvik.
+
 
 Tasks
 -----
 
-Ada offers a high level capability called a *task* which is essentially an
-independent thread of execution. In GNAT, these tasks are either mapped on the
-underlying OS threads, or using an dedicated kernel when not available.
+Ada offers a high level construct called a *task* which is an
+independent thread of execution. In GNAT, tasks are either mapped to the
+underlying OS threads, or use a dedicated kernel when not available.
 
 The following example will display the 26 letters of the alphabet twice, using
 two concurrent tasks. Since there is no synchronization between the two threads
@@ -72,12 +82,12 @@ has the same behavior. A declared object of a task type is started within the
 scope where it is declared, and control does not leave that scope until the
 task has terminated.
 
-Task types can be parametrized; the parameter serves the same purpose as an
+Task types can be parameterized; the parameter serves the same purpose as an
 argument to a constructor in Java. The following example creates 10 tasks, each
 of which displays a subset of the alphabet contained between the parameter and
 the :ada:`'Z'` Character.  As with the earlier example, since there is no
 synchronization among the tasks, the output may be interspersed depending on
-the implementation task scheduling algorithm.
+the underlying implementation of the task scheduling algorithm.
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task_Type
 
@@ -109,9 +119,9 @@ the implementation task scheduling algorithm.
        null;
     end Main;
 
-In Ada, a task may be allocated on the heap as opposed to the stack. The task
-will then start as soon as it has been allocated, and terminates when its work
-is completed.
+In Ada, a task may be dynamically allocated rather than declared
+statically. The task will then start as soon as it has been allocated,
+and terminates when its work is completed.
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task_Type
 
@@ -150,15 +160,15 @@ data and coordinate execution. Let's consider the following example:
     begin
        Put_Line ("Before");
        After.Go;
-    end;
+    end Main;
 
-The :ada:`Go` entry declared in :ada:`After` is the external interface to the
-task. In the task body, the accept statement causes the task to wait for a call
-on the entry. This particular entry and accept pair doesn't do much more than
-cause the task to wait until :ada:`Main` calls :ada:`After.Go`. So, even though
-the two tasks start simultaneously and execute independently, they can
-coordinate via :ada:`Go`. Then, they both continue execution independently
-after the rendezvous.
+The :ada:`Go` entry declared in :ada:`After` is the client interface to the
+task. In the task body, the :ada:`accept` statement causes the task to wait for
+a call on the entry. This particular :ada:`entry` and :ada:`accept` pair
+simply causes the task to wait until :ada:`Main` calls
+:ada:`After.Go`. So, even though the two tasks start simultaneously and execute
+independently, they can coordinate via :ada:`Go`. Then, they both continue
+execution independently after the rendezvous.
 
 The :ada:`entry`/:ada:`accept` pair can take/pass parameters, and the
 :ada:`accept` statement can contain a sequence of statements; while these
@@ -175,7 +185,7 @@ and executes some code:
 
        task After is
           entry Go (Text : String);
-       end After ;
+       end After;
 
        task body After is
        begin
@@ -187,7 +197,7 @@ and executes some code:
     begin
        Put_Line ("Before");
        After.Go ("Main");
-    end;
+    end Main;
 
 In the above example, the :ada:`Put_Line` is placed in the accept statement.
 Here's a possible execution trace, assuming a uniprocessor:
@@ -222,7 +232,7 @@ Here's a possible execution trace, assuming a uniprocessor:
 The above description is a conceptual model; in practice the implementation can
 perform various optimizations to avoid unnecessary context switches.
 
-Selective Rendez-vous
+Selective Rendezvous
 ---------------------
 
 The :ada:`accept` statement by itself can only wait for a single event (call)
@@ -305,7 +315,7 @@ is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
 
 When the task's statement flow reaches the select, it will wait for all four
 events |mdash| three entries and a delay |mdash| in parallel. If the delay of
-one minute is exceeded, the task will execute the statements following the
+five seconds is exceeded, the task will execute the statements following the
 :ada:`delay` statement (and in this case will exit the loop, in effect
 terminating the task). The :ada:`accept` bodies for the :ada:`Increment`,
 :ada:`Decrement`, or :ada:`Get` entries will be otherwise executed as they're
@@ -328,18 +338,18 @@ the loop there are several possibilities:
 * There is no call pending on any of the entries.  In this case :ada:`Counter`
   is suspended.  It will be awakened by the first of two events: a call on one
   of its entries (which will then be immediately accepted), or the expiration
-  of the one minute delay (whose effect was noted above).
+  of the five second delay (whose effect was noted above).
 
 * There is a call pending on exactly one of the entries.  In this case control
   passes to the :ada:`select` branch with an :ada:`accept` statement for that
-  entry.  The choice of which caller to accept, if more than one, depends on
-  the queuing policy, which can be specified via a :ada:`pragma` defined in the
-  Real-Time Systems Annex of the Ada standard; the default is
-  *First-In First-Out*.
+  entry.
 
 * There are calls pending on more than one entry.  In this case one of the
   entries with pending callers is chosen, and then one of the callers is chosen
-  to be de-queued (the choices depend on the queueing policy).
+  to be de-queued. The choice of which caller to accept depends on
+  the queuing policy, which can be specified via a :ada:`pragma` defined in the
+  Real-Time Systems Annex of the Ada standard; the default is
+  *First-In First-Out*.
 
 Protected Objects
 -----------------
@@ -592,7 +602,7 @@ using the Ravenscar profile. For example:
 
 This code violates the `No_Task_Hierarchy` restriction of the Ravenscar
 profile. This is due to the declaration of :ada:`Tab` in the :ada:`Main`
-procedure. Ravenscar expects task declarations to be done on a library level.
+procedure. Ravenscar requires task declarations to be done at the library level.
 Therefore, a simple solution is to create a separate package and reference it
 in the main application:
 
@@ -657,7 +667,7 @@ expects this declaration to be done on a library level, so a solution to make
 this code compile is to have this declaration in a separate package and
 reference it in the :ada:`Main` procedure.
 
-Ravenscar offers many additional restrictions. Covering those would extrapolate
+Ravenscar offers many additional restrictions. Covering those would exceed
 the scope of this chapter. You can find more examples using the Ravenscar
 profile on
 `this blog post <https://blog.adacore.com/theres-a-mini-rtos-in-my-language>`_.

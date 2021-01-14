@@ -196,7 +196,9 @@ exceptions. Of course, this makes the code vulnerable to attacks, such
 as buffer overflow, unless otherwise verified (e.g. through static
 analysis). Deactivation can be applied at the unit level, through the
 ``-gnatp`` compiler switch, or locally within a unit via the
-pragma :ada:`Suppress`. (Refer to the `GNAT User’s Guide for Native Platforms <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html>`_ for more details about the switch.)
+pragma :ada:`Suppress`. (Refer to the
+`GNAT User’s Guide for Native Platforms <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html>`_
+for more details about the switch.)
 
 For example, we can write the following. Note the pragma on line 4 of
 :file:`arrays.adb` within function :ada:`Value`:
@@ -384,7 +386,7 @@ define a single handler for all other exceptions that might be
 encountered in the handled sequence of statements, beyond those
 explicitly named. The "name" for this otherwise anonymous exception is
 the Ada reserved word :ada:`others`. As in case statements, it covers
-all other choices not explicitly mentioned, and so much come last. For
+all other choices not explicitly mentioned, and so must come last. For
 example:
 
 .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return_Others
@@ -432,9 +434,11 @@ function :ada:`Value` returns -1. If you remove the function's handler
 for :ada:`Constraint_Error` (lines 7 and 8) then the other "anonymous"
 handler will catch the exception and -1 will be returned instead of zero.
 
-There are additional capabilities for exceptions but now you have a good
-foundation for understanding how they work, especially their dynamic
+There are additional capabilities for exceptions, but for now you have a good
+basic understanding of how exceptions work, especially their dynamic
 nature at run-time.
+
+.. _Dynamic_Checks_Vs_Formal_Proof:
 
 Understanding Dynamic Checks versus Formal Proof
 ------------------------------------------------
@@ -521,7 +525,7 @@ compiler output will appear.
       Put_Line (Integer'Image (X));
    end Main;
 
-Now we also get the compiler warns us about the pragma :ada:`Assert` condition.
+Now we also get the compiler warning about the pragma :ada:`Assert` condition.
 When run, the failure of pragma :ada:`Assert` on line 7 raises the exception
 :ada:`Ada.Assertions.Assertion_Error`. According to the expression in the
 assertion, :ada:`X` is expected (incorrectly) to be above 99 after the
@@ -539,7 +543,7 @@ violations at compile-time:
    main.adb:8:11: warning: value not in range of type "Standard.Positive"
 
 Generally speaking, a complete analysis is beyond the scope of compilers
-and they will not find all errors prior to execution, even those we
+and they may not find all errors prior to execution, even those we
 might detect ourselves by inspection. More errors can be found by tools
 dedicated to that purpose, known as static analyzers. But even an
 automated static analysis tool cannot guarantee it will find all
@@ -711,9 +715,11 @@ deactivated at run-time, and can be statically proven. We'll concentrate
 here on two kinds of contracts, both associated especially (but not
 exclusively) with procedures and functions:
 
-- *Preconditions*, those Boolean conditions required to be true *prior* to a call of the corresponding subprogram
+- *Preconditions*, those Boolean conditions required to be true *prior* to a
+  call of the corresponding subprogram
 
-- *Postconditions*, those Boolean conditions required to be true *after* a call, as a result of the corresponding subprogram's execution
+- *Postconditions*, those Boolean conditions required to be true *after* a
+  call, as a result of the corresponding subprogram's execution
 
 In particular, preconditions specify the initial conditions, if any,
 required for the called routine to correctly execute. Postconditions, on
@@ -766,10 +772,11 @@ Consider a client calling this function:
 
 :program:`gnatprove` indicates that the assignment to :ada:`B` (line 8) might
 fail because of the precondition, i.e., the sum of the inputs shouldn't
-be 0, yet :ada:`-1 + 1 = 0`. (We will address the other output message elsewhere.)
+be 0, yet :ada:`-1 + 1 = 0`. (We will address the other output message
+elsewhere.)
 
-Let's change the argument passed to :ada:`Y` in the second call (line 8). Instead
-of -1 we will pass -2:
+Let's change the argument passed to :ada:`Y` in the second call (line 8).
+Instead of -1 we will pass -2:
 
 .. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1 switches=Compiler(-gnato23);
 
@@ -837,12 +844,12 @@ This reduction has a number of advantages:
   call the subprogram, moving from an implementer responsibility to mitigate
   invalid input to a user responsibility to fulfill the expected interface.
 
-- Provides the means to verify that this interface is properly respected, through
-  code review, dynamic checking at run-time, or formal static proof.
+- Provides the means to verify that this interface is properly respected,
+  through code review, dynamic checking at run-time, or formal static proof.
 
 As an example, consider a procedure :ada:`Read` that returns a component
-value from an array. Both the array and index are objects visible to the
-procedure so they are not formal parameters.
+value from an array. Both the :ada:`Data` and :ada:`Index` are objects visible
+to the procedure so they are not formal parameters.
 
 .. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Defensive
 
@@ -925,7 +932,6 @@ remain visible to clients, thus remaining the only means of accessing
 the array. However, that change would entail others, and in this chapter
 we are only concerned with introducing the capabilities of SPARK.
 Therefore, we keep the examples as simple as possible.
-
 
 Proving Absence of Run-Time Errors
 ----------------------------------

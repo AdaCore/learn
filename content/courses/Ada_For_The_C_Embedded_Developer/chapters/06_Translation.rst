@@ -6,24 +6,26 @@ C to Ada Translation Patterns
 Naming conventions and casing considerations
 --------------------------------------------
 
-One question that may arise relatively soon when converting from C to Ada is
-the style of identifiers. The Ada language doesn't impose any particular style
-and for many reasons, it may seem attractive to keep a C-like style |mdash| for
-example, camel casing |mdash| to the Ada program.
+One question that may arise relatively soon when converting from C to
+Ada is the style of source code presentation. The Ada language doesn't
+impose any particular style and for many reasons, it may seem attractive
+to keep a C-like style |mdash| for example, camel casing |mdash| to the
+Ada program.
 
-However, the Ada run-time library |mdash| in particular the one provided by
-GNAT |mdash| is following a specific style, so that using a different style for
-the rest of the program leads to inconsistencies, thereby decreasing readability
-and confusing automatic style checkers. For those reasons, it's usually
-advisable to adopt the Ada style |mdash| which each word is an upper case letter
-followed by lower cases (several upper case letter at start are OK), with an
-underscore separating two words.
+However, the code in the Ada language standard, most third-party code,
+and the libraries provided by GNAT follow a specific style for
+identifiers and reserved words. Using a different style for the rest of
+the program leads to inconsistencies, thereby decreasing readability and
+confusing automatic style checkers. For those reasons, it's usually
+advisable to adopt the Ada style |mdash| in which each identifier starts
+with an upper case letter, followed by lower case letters (or digits),
+with an underscore separating two "distinct" words within the
+identifier. Acronyms within identifiers are in upper case. For example,
+there is a language-defined package named :ada:`Ada.Text_IO`. Reserved words
+are all lower case.
 
-Following this scheme doesn't prevent to have an extra layer of compatible
-rules. For example, Ada being a strongly typed language, it's not rare to create
-a type for only one instance and not to have a different word to identify the
-variable and its type. Therefore, some styles add systematically a leading ``T_``
-or trailing ``_T`` to all type names.
+Following this scheme doesn't preclude adding additional,
+project-specific rules.
 
 Interfacing C and Ada
 ---------------------
@@ -31,11 +33,11 @@ Interfacing C and Ada
 Manual Interfacing
 ~~~~~~~~~~~~~~~~~~
 
-Before even considering translating code from C to Ada, it's worthwhile
-evaluating the possibility of keeping portion of the C code intact, and only
+Before even considering translating code from C to Ada, it's worthwhile to
+evaluate the possibility of keeping a portion of the C code intact, and only
 translating selected modules to Ada. This is a necessary evil when introducing
-Ada to an existing large C codebase, where re-writing the entire code upfront is
-not practical or not cost-effective.
+Ada to an existing large C codebase, where re-writing the entire code upfront
+is not practical nor cost-effective.
 
 Fortunately, Ada has a dedicated set of features for interfacing with other
 languages. The :ada:`Interfaces` package hierarchy and the pragmas
@@ -330,11 +332,10 @@ By-value v.s. by-reference types
 
 When interfacing Ada and C, the rules of parameter passing are a bit different
 with regards to what's a reference and what's a copy. Scalar types and pointers
-are passed by value, record and arrays are always passed by reference (recall
-that, in pure Ada, this may vary from the size of the object). However, there
-may be cases where the C interface also passes values and not pointers to
-objects. Here's a slightly modified version of a previous example to illustrate
-this point:
+are passed by value, whereas record and arrays are (almost) always passed by
+reference. However, there may be cases where the C interface also passes values
+and not pointers to objects. Here's a slightly modified version of a previous
+example to illustrate this point:
 
 [C]
 
@@ -383,9 +384,9 @@ names in their type.
 In Ada, the package is a namespace |mdash| two entities declared in two
 different packages are clearly identified and can always be specifically
 designated. The C names are usually a good indication of the names of the
-futures packages and should be stripped |mdash| it will be possible to force
-full name if useful. For example, here's how the following declaration and call
-could be translated:
+future packages and should be stripped |mdash| it is possible to use the
+full name if useful. For example, here's how the following declaration and
+call could be translated:
 
 [C]
 
@@ -446,12 +447,12 @@ would need a pointer in C, but do not in Ada, in particular:
 
 - ... others
 
-This is not to say that no pointers is used in these cases, but, more often than
-not, the pointer is hidden from the user and automatically handled by the code
-generated by the compiler, thus avoiding possible mistakes to be made. Generally
-speaking, when looking at C code, it's good practice to start by analyzing how
-many pointers are used and to translate as many as possible into *pointerless*
-Ada structures.
+This is not to say that pointers aren't used in these cases but, more often
+than not, the pointer is hidden from the user and automatically handled by the
+code generated by the compiler; thus avoiding possible mistakes from being
+made. Generally speaking, when looking at C code, it's good practice to start
+by analyzing how many pointers are used and to translate as many as possible
+into *pointerless* Ada structures.
 
 Here are a few examples of such patterns |mdash| additional examples can be
 found throughout this document.
@@ -572,6 +573,8 @@ These are some of the most common misuse of pointers in Ada. Previous sections
 of the document deal with specifically using access types if absolutely
 necessary.
 
+.. _Bitwise_Operations:
+
 Bitwise Operations
 ~~~~~~~~~~~~~~~~~~
 
@@ -582,8 +585,8 @@ pieces of data into a larger structure. In Ada, this can be done by describing
 the structure layout at the type level through representation clauses, and then
 accessing this structure as any other.
 
-This is the case of an array of bytes representing various flags. In C, this
-would be done through masks, e.g.:
+Consider the case of using a C primitive type as a container for single bit
+boolean flags. In C, this would be done through masks, e.g.:
 
 [C]
 
@@ -622,7 +625,7 @@ values:
        null;
     end Main;
 
-Note the :ada:`Pack` directive for the array, which guarantees that the array
+Note the :ada:`Pack` directive for the array, which requests that the array
 takes as little space as possible.
 
 It is also possible to map records on memory when additional control over the
@@ -669,8 +672,8 @@ The benefit of using Ada structure instead of bitwise operations is threefold:
 - The compiler can run consistency checks (for example, check that the value
   indeed fit in the expected size).
 
-Note that, in case where bitwise operators are needed, Ada provides modular
-types with :ada:`and`, :ada:`or` and :ada:`xor` operators. Further shifts
+Note that, in cases where bitwise operators are needed, Ada provides modular
+types with :ada:`and`, :ada:`or` and :ada:`xor` operators. Further shift
 operators can also be provided upon request through a :ada:`pragma`. So the
 above could also be literally translated to:
 
@@ -689,6 +692,8 @@ above could also be literally translated to:
        Value := Shift_Left (2, 1) or 1;
        Put_Line ("Value = " & Value_Type'Image (Value));
     end Main;
+
+.. _Mapping_Structures_To_Bit_Fields:
 
 Mapping Structures to Bit-Fields
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -865,13 +870,13 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     Some types have an implicit default value. For example, access types have a
     default value of :ada:`null`.
 
-    As we've just seen, when declaring objects for types with associated default
-    values, automatic initialization will happen. This can also happens when
-    creating an overlay with the :ada:`Address` aspect. The default value is
-    then used to overwrite the content at the memory location indicated by the
-    address. However, in most situations, this isn't the behavior we expect,
-    since overlays are usually created to analyze and manipulate existing
-    values. Let's look at an example where this happens:
+    As we've just seen, when declaring objects for types with associated
+    default values, automatic initialization will happen. This can also happens
+    when creating an overlay with the :ada:`Address` aspect. The default value
+    is then used to overwrite the content at the memory location indicated by
+    the address. However, in most situations, this isn't the behavior we
+    expect, since overlays are usually created to analyze and manipulate
+    existing values. Let's look at an example where this happens:
 
     .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
 
@@ -1314,7 +1319,7 @@ individual bytes. For example:
 
     void to_r (void *bits, int len, rec *r)
     {
-        int i, j;
+        int i;
         char *c1 = (char *)bits;
         char *c2 = (char *)r;
 

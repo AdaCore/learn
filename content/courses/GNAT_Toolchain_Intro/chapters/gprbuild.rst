@@ -59,7 +59,7 @@ the simplest form of a project file is the following:
 In this example, we declare a project named ``Default``. The
 ``for Main use`` expression indicates that the ``main.adb`` file is used
 as the entry point (main source-code file) of the project. The main file
-doesn't necessary be called ``main.adb``; we could use any source-code
+doesn't necessary need to be called ``main.adb``; we could use any source-code
 implementing a main application, or even have a list of multiple main
 files. The ``for Source_Dirs use`` expression indicates that the ``src``
 directory contains the source-file for the application (including the main

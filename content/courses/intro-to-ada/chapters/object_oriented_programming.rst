@@ -46,7 +46,7 @@ added:
   Ada, but instead at the package level.
 
 - Subtyping can be implemented using, well, subtypes, which have a full and
-  permissive static substitability model. The substitution will fail at runtime
+  permissive static substitutability model. The substitution will fail at runtime
   if the dynamic constraints of the subtype are not fulfilled.
 
 - Runtime polymorphism can be implemented using variant records.

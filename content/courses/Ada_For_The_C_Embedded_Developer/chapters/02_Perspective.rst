@@ -13,7 +13,7 @@ meaning, a platform with a microprocessor such as ARM, PowerPC, x86, or RISC-V.
 The application may be running on top of an embedded operating system, such as
 an embedded Linux, or directly on bare metal. And the application domain can
 range from small entities such as firmware or device controllers to flight
-management system, communication based train control systems, or advanced
+management systems, communication based train control systems, or advanced
 driver assistance systems.
 
 The GNAT Toolchain
@@ -24,7 +24,7 @@ tools with a compiler based on the GCC environment. It can be obtained from
 AdaCore, either as part of a commercial contract with
 `GNAT Pro <https://www.adacore.com/gnatpro>`_ or at no charge with the
 `GNAT Community edition <https://www.adacore.com/community>`_. The information
-on this book  will be relevant no matter which edition you're using. Most
+in this book  will be relevant no matter which edition you're using. Most
 examples will be runnable on the native Linux or Windows version for
 convenience. Some will only be relevant in the context of a cross toolchain, in
 which case we'll be using the embedded ARM bare metal toolchain.
@@ -34,7 +34,7 @@ offers a project management system. Because we're talking about embedded
 platforms, there are a lot of topics that we'll go over which will be specific
 to GNAT, and sometimes to specific platforms supported by GNAT. We'll try to
 make the distinction between what is GNAT-specific and Ada generic as much as
-possible through this book.
+possible throughout this book.
 
 For an introduction to the GNAT Toolchain for the GNAT Community edition, you
 may refer to the
@@ -47,7 +47,7 @@ The GNAT Toolchain for Embedded Targets
 When we're discussing embedded programming, our target device is often
 different from the host, which is the device we're using to actually write and
 build an application. In this case, we're talking about cross compilation
-platforms.
+platforms (concisely referred to as cross platforms).
 
 The GNAT toolchain supports cross platform compilation for various
 target devices. This section provides a short introduction to the topic. For
@@ -64,8 +64,7 @@ GNAT supports two types of cross platforms:
 - **bareboard targets**, where the run-times do not depend on an operating
   system.
 
-    - In this case, the application communicates directly with the device's
-      processor.
+    - In this case, the application has direct access to the system hardware.
 
 For each platform, a set of run-time libraries is available. Run-time libraries
 implement a subset of the Ada language for different use cases, and they're
@@ -82,7 +81,8 @@ Run-time libraries consists of:
     - These files are responsible for configuring and interacting with the
       hardware.
 
-    - They are known as Board Support Package |mdash| commonly refer as *BSP*.
+    - They are known as a Board Support Package |mdash| commonly referred to by
+      their abbrevation *BSP*.
 
 #. Code that is target-independent.
 
@@ -91,7 +91,8 @@ Run-time libraries consists of:
 The bareboard run-time libraries are provided as customized run-times that are
 configured to target a very specific micro-controller or processor. Therefore,
 for different micro-controllers and processors, the run-time libraries need to
-be ported to your target. These are some examples of what needs to be ported:
+be ported to the specific target. These are some examples of what needs to be
+ported:
 
 - startup code / scripts;
 
@@ -144,7 +145,7 @@ The first line of the Ada code is giving us access to the :ada:`Ada.Text_IO`
 library which contains the :ada:`Put_Line` function we will use to print the
 text to the console. This is similar to C's :c:`#include <stdio.h>`. We then
 create a procedure which executes :ada:`Put_Line` which prints to the console.
-This is similar to C's :c:`printf` statement. For now, we can assume these Ada
+This is similar to C's :c:`printf` function. For now, we can assume these Ada
 and C features have similar functionality. In reality, they are very different.
 We will explore that more as we delve further into the Ada language.
 
@@ -152,9 +153,9 @@ You may have noticed that the Ada syntax is more verbose than C. Instead of
 using braces :c:`{}` to declare scope, Ada uses keywords. :ada:`is` opens a
 declarative scope |mdash| which is empty here as there's no variable to
 declare. :ada:`begin` opens a sequence of statements. Within this sequence,
-we're calling the function :ada:`Put_Line`, prefixing explicitly by the name of
-the library unit where it's declared, :ada:`Ada.Text_IO`. The absence of the
-end of line :c:`\n` can also be noted, as :ada:`Put_Line` always terminates by
+we're calling the function :ada:`Put_Line`, prefixing explicitly with the name
+of the library unit where it's declared, :ada:`Ada.Text_IO`. The absence of the
+end of line ``\n`` can also be noted, as :ada:`Put_Line` always terminates by
 an end of line.
 
 The Ada Syntax
@@ -165,11 +166,17 @@ it's not derived from the popular C style of notation with its ample use of
 brackets; rather, it uses a more expository syntax coming from Pascal. In many
 ways, Ada is a more explicit language |mdash| its syntax was designed to
 increase readability and maintainability, rather than making it faster to write
-in a condensed manner. For example, full words like :ada:`begin` and :ada:`end`
-are used in place of curly braces. Conditions are written using :ada:`if`,
-:ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada's assignment
-operator does not double as an expression, eliminating potential mistakes that
-could be caused by :c:`=` being used where :c:`==` should be.
+in a condensed manner. For example:
+
+- full words like :ada:`begin` and :ada:`end` are used in place of curly
+  braces.
+
+- Conditions are written using :ada:`if`, :ada:`then`, :ada:`elsif`,
+  :ada:`else`, and :ada:`end if`.
+
+- Ada's assignment operator does not double as an expression, eliminating
+  potential mistakes that could be caused by :c:`=` being used where :c:`==`
+  should be.
 
 All languages provide one or more ways to express comments. In Ada, two
 consecutive hyphens :ada:`--` mark the start of a comment that continues to the
@@ -224,8 +231,13 @@ compilation units are stored in files with an .ads extension for specifications
 and with an .adb extension for implementations.
 
 One main difference between the C and Ada compilation structure is that Ada
-compilation units are structured into something called packages. A
-specification defines a package and the implementation implements the package.
+compilation units are structured into something called packages.
+
+Packages
+--------
+The package is the basic modularization unit of the Ada language, as is the
+class for Java and the header and implementation pair for C.
+A specification defines a package and the implementation implements the package.
 We saw this in an earlier example when we included the :ada:`Ada.Text_IO`
 package into our application. The package specification has the structure:
 
@@ -253,100 +265,120 @@ The package implementation, or body, has the structure:
 
     end My_Package;
 
-Something that might stick out in this example is the use of the reserve word
-:ada:`private` in the package specification. This acts as a partition in the
-package |mdash| anything declared before this keyword is publicly visible to
-other units that may :ada:`with` this package. Anything declared after the
-private keyword is only visible to the package implementation. A package
-specification, or spec, does not require a private section. One typical
-use-case for the private section in a package is when you want to declare a
-heterogeneous data type, called a record in Ada or a struct in C, but you want
-to stop the user of the package from accessing the record components directly.
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+Declaration Protection
+~~~~~~~~~~~~~~~~~~~~~~
 
-    package Containers is
+An Ada package contains three parts that, for GNAT, are separated into two files:
+:file:`.ads` files contain public and private Ada specifications, and
+:file:`.adb` files contain the implementation, or Ada bodies.
 
-       type Stack is private;
+[Ada]
 
-       procedure Push (St   : in out Stack;
-                       Elem : Integer);
-       function Pop (St : in out Stack) return Integer;
+.. code-block:: ada
 
-       --  more accessors go here
-
+    package Package_Name is
+       -- public specifications
     private
-       type Integer_Array is array (Natural range <>) of Integer;
+       -- private specifications
+    end Package_Name;
 
-       type Stack is record
-          Data : Integer_Array (1 .. 100);
-          Top : Natural := 0;
+    package body Package_Name is
+       -- implementation
+    end Package_Name;
+
+Private types are useful for preventing the users of a package's types from
+depending on the types' implementation details. Another use-case is the prevention
+of package users from accessing package state/data arbitrarily. The private
+reserved word splits the package spec into *public* and *private* parts.
+For example:
+
+[Ada]
+
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Private_Types
+
+    package Types is
+       type Type_1 is private;
+       type Type_2 is private;
+       type Type_3 is private;
+       procedure P (X : Type_1);
+       --  ...
+    private
+       procedure Q (Y : Type_1);
+       type Type_1 is new Integer range 1 .. 1000;
+       type Type_2 is array (Integer range 1 .. 1000) of Integer;
+       type Type_3 is record
+          A, B : Integer;
        end record;
+    end Types;
 
-    end Containers;
+Subprograms declared above the :ada:`private` separator (such as :ada:`P`) will
+be visible to the package user, and the ones below (such as :ada:`Q`) will not.
+The body of the package, the implementation, has access to both parts.
+A package specification does not require a private section.
 
-In this example we have a specification for a Stack data type. We don't really
-want the user to be manipulating the underlying array or index of the top of
-the array directly. To accomplish this "hiding" we can, in the public section
-of the package, declare a Stack data type as a private type and some accessors
-which take a parameter of type stack. In the private section we actually
-declare the Stack as a record with its components. The user of this package
-**cannot** access :ada:`Data` or :ada:`Top` directly in this example.
+Hierarchical Packages
+~~~~~~~~~~~~~~~~~~~~~
 
-However, from the package body, we **can** access :ada:`Data` and :ada:`Top`.
+Ada packages can be organized into hierarchies. A child unit can be declared in
+the following way:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+[Ada]
 
-    package body Containers is
+.. code-block:: ada
 
-       procedure Push (St   : in out Stack;
-                       Elem : Integer)
-       is
-       begin
-          --  some defensive code should go here
-          St.Top := St.Top + 1;
-          St.Data (St.Top) := Elem;
-       end Push;
+    -- root-child.ads
 
-       function Pop (St : in out Stack) return Integer
-       is
-          Ret : Integer;
-       begin
-          --  some defensive code should go here
-          Ret := St.Data (St.Top);
-          St.Top := St.Top - 1;
+    package Root.Child is
+       --  package spec goes here
+    end Root.Child;
 
-          return Ret;
-       end Pop;
+    -- root-child.adb
 
-    end Containers;
+    package body Root.Child is
+       --  package body goes here
+    end Root.Child;
 
-We can then reference this package in a subprogram. For example:
+Here, :ada:`Root.Child` is a child package of :ada:`Root`. The public part of
+:ada:`Root.Child` has access to the public part of :ada:`Root`. The private
+part of :ada:`Child` has access to the private part of :ada:`Root`, which is
+one of the main advantages of child packages. However, there is no visibility
+relationship between the two bodies. One common way to use this capability is
+to define subsystems around a hierarchical naming scheme.
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Stack
+Using Entities from Packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    with Ada.Text_IO;
-    with Containers;
+Entities declared in the visible part of a package specification can be made
+accessible using a :ada:`with` clause that references the package, which is
+similar to the C :c:`#include` directive. After a :ada:`with` clause makes a
+package available, references to the package contents require the name of the
+package as a prefix, with a dot after the package name.
+This prefix can be omitted if a :ada:`use` clause is employed.
 
-    procedure Containers_Test is
-       S : Containers.Stack;
-       I : Integer;
+[Ada]
 
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Using_Pkg_Entities
+
+    -- pck.ads
+
+    package Pck is
+       My_Glob : Integer;
+    end Pck;
+
+    -- main.adb
+
+    with Pck;
+
+    procedure Main is
     begin
-       I := 10;
-       Ada.Text_IO.Put_Line ("Push: " & Integer'Image (I));
-       Containers.Push (S, I);
+       Pck.My_Glob := 0;
+    end Main;
 
-       I := 11;
-       Ada.Text_IO.Put_Line ("Push: " & Integer'Image (I));
-       Containers.Push (S, I);
-
-       I := Containers.Pop (S);
-       Ada.Text_IO.Put_Line ("Pop: " & Integer'Image (I));
-
-       I := Containers.Pop (S);
-       Ada.Text_IO.Put_Line ("Pop: " & Integer'Image (I));
-    end Containers_Test;
+In contrast to C, the Ada :ada:`with` clause is a *semantic inclusion*
+mechanism rather than a *text inclusion* mechanism; for more information on
+this difference please refer to
+`Packages <https://learn.adacore.com/courses/intro-to-ada/chapters/modular_programming.html>`_ .
 
 Statements and Declarations
 ----------------------------
@@ -399,6 +431,12 @@ comments and working with integer variables:
 
 You'll notice that, in both languages, statements are terminated with a
 semicolon. This means that you can have multi-line statements.
+
+.. admonition:: The shortcuts of incrementing and decrementing
+
+    You may have noticed that Ada does not have something similar to the
+    :c:`a++` or :c:`a--` operators. Instead you must use the full assignment
+    :ada:`A := A + 1` or :ada:`A := A - 1`.
 
 In the Ada example above, there are two distinct sections to the
 :ada:`procedure Main`. This first section is delimited by the :ada:`is` keyword
@@ -558,12 +596,6 @@ newly defined block. The equivalent C code is:
         return 0;
     }
 
-.. admonition:: The shortcuts of incrementing and decrementing
-
-    You may have noticed that Ada does not have something similar to the
-    :c:`a++` or :c:`a--` operators. Instead you must use the full assignment
-    :ada:`A := A + 1` or :ada:`A := A - 1`.
-
 **Fun Fact** about the C language assignment operator :c:`=`: Did you know that
 an assignment in C can be used in an expression? Let's look at an example:
 
@@ -624,7 +656,7 @@ as an expression.
     in the call to subprograms of that package. The use clause is something to
     use with caution. For example: if we use the :ada:`Ada.Text_IO` package and
     we also have a :ada:`Put_Line` subprogram in our current compilation unit
-    with the same signature, we have a conflict!
+    with the same signature, we have a (potential) collision!
 
 Conditions
 ------------
@@ -675,7 +707,7 @@ The syntax of an if statement:
     end Main;
 
 In Ada, everything that appears between the :ada:`if` and :ada:`then` keywords
-is the conditional expression, no parentheses required. Comparison operators
+is the conditional expression, no parentheses are required. Comparison operators
 are the same except for:
 
 ========== ======= ==========
@@ -785,7 +817,7 @@ from the previous example where we want a specific branch to execute for
 multiple inputs. Ada solves this a different way because it is possible, or
 even probable, that the developer might forget a :c:`break` statement
 accidentally. So Ada does not allow fall through. Instead, you can use Ada's
-semantic to identify when a specific branch can be executed by more than one
+syntax to identify when a specific branch can be executed by more than one
 input. If you want a range of values for a specific branch you can use the
 :ada:`First .. Last` notation. If you want a few non-consecutive values you can
 use the :ada:`Value1 | Value2 | Value3` notation.
@@ -1234,9 +1266,11 @@ The complete example would then be:
        Put_Line (Float'Image (Result));
     end Strong_Typing;
 
-In Ada, a floating point literal must be written with both an integral and
-decimal part. :ada:`10` is not a valid literal for a floating point value,
-while :ada:`10.0` is.
+.. admonition:: Floating Point Literals
+
+    In Ada, a floating point literal must be written with both an integral and
+    decimal part. :ada:`10` is not a valid literal for a floating point value,
+    while :ada:`10.0` is.
 
 Language-Defined Types
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -1244,7 +1278,9 @@ Language-Defined Types
 The principal scalar types predefined by Ada are :ada:`Integer`, :ada:`Float`,
 :ada:`Boolean`, and :ada:`Character`. These correspond to :c:`int`, :c:`float`,
 :c:`int` (when used for Booleans), and :c:`char`, respectively. The names for
-these types are not reserved words; they are regular identifiers.
+these types are not reserved words; they are regular identifiers. There are
+other language-defined integer and floating-point types as well. All have
+implementation-defined ranges and precision.
 
 Application-Defined Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1339,9 +1375,9 @@ Ada enumerations work similarly to C :c:`enum`:
         enum Day d = Monday;
     }
 
-But even though such enumerations may be implemented using a machine word, at
-the language level Ada will not confuse the fact that :ada:`Monday` is a
-:ada:`Day` and is not an :ada:`Integer`. You can compare a :ada:`Day` with
+But even though such enumerations may be implemented by the compiler as numeric
+values, at the language level Ada will not confuse the fact that :ada:`Monday`
+is a :ada:`Day` and is not an :ada:`Integer`. You can compare a :ada:`Day` with
 another :ada:`Day`, though. To specify implementation details like the numeric
 values that correspond with enumeration values in C you include them in the
 original :c:`enum` declaration:
@@ -1528,6 +1564,22 @@ subtype is a type with optional additional constraints. For example:
 These declarations don't create new types, just new names for constrained
 ranges of their base types.
 
+The purpose of numeric ranges is to express some application-specific
+constraint that we want the compiler to help us enforce. More importantly,
+we want the compiler to tell us when that constraint cannot be met |mdash| when
+the underlying hardware cannot support the range given. There are two things to
+consider:
+
+- just a range constraint, such as :ada:`A : Integer range 0 .. 10;`, or
+
+- a type declaration, such as :ada:`type Result is range 0 .. 1_000_000_000;`.
+
+Both represent some sort of application-specific constraint, but in addition,
+the type declaration promotes portability because it won't compile on targets
+that do not have a sufficiently large hardware numeric type. That's a
+definition of portability that is preferable to having something compile
+anywhere but not run correctly, as in C.
+
 Unsigned And Modular Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1625,8 +1677,8 @@ Note that the declaration above is actually similar to the existing
     subtype Positive is Integer range 1..Integer'Last;
 
 Since they're standard subtypes, you can declare variables of those subtypes
-directly in your implementation, in the same as you can declare :ada:`Integer`
-variables.
+directly in your implementation, in the same way as you can declare
+:ada:`Integer` variables.
 
 As indicated in the table above, however, there is a difference in behavior for
 the variables we just declared, which occurs in case of overflow. Let's
@@ -1688,10 +1740,10 @@ a 32-bit modular type:
 
 In this case, the behavior is the same as in the C declaration above.
 
-Modular types are useful for bitwise operations, which is a typical application
-for unsigned integers in C. In Ada, you can use operators such as :ada:`and`,
-:ada:`or`, :ada:`xor` and :ada:`not`. You can also use typical bit-shifting
-operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
+Modular types, unlike Ada's signed integers, also provide bit-wise operations,
+a typical application for unsigned integers in C. In Ada, you can use operators
+such as :ada:`and`, :ada:`or`, :ada:`xor` and :ada:`not`. You can also use
+typical bit-shifting operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
 :ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
 Attributes
@@ -2025,8 +2077,32 @@ Therefore, you can write:
 
     procedure Main is
        type Arr_Type is array (Integer range <>) of Integer;
+       A1 : Arr_Type (-2 .. 42) := (others => 0);
+    begin
+       -- use a slice to assign A1 elements 11 .. 19 to 1
+       A1 (11 .. 19) := (others => 1);
+
+       Put_Line ("---- A1 ----");
+       for I in A1'Range loop
+          Put_Line (Integer'Image (I) & " => " &
+                    Integer'Image (A1 (I)));
+       end loop;
+    end;
+
+In this example, we're specifying that :ada:`A1` has a range between -2 and 42.
+We use :ada:`(others => 0)` to initialize all array elements with zero. In the
+next example, the number of elements is determined by looking at the right-hand
+side:
+
+[Ada]
+
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Assignment_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Main is
+       type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type := (1, 2, 3, 4, 5, 6, 7, 8, 9);
-       A2 : Arr_Type (-2 .. 42) := (others => 0);
     begin
        A1 := (1, 2, 3, others => 10);
 
@@ -2035,16 +2111,17 @@ Therefore, you can write:
           Put_Line (Integer'Image (I) & " => " &
                     Integer'Image (A1 (I)));
        end loop;
-
-       -- use a slice to assign A2 elements 11 .. 19 to 1
-       A2 (11 .. 19) := (others => 1);
-
-       Put_Line ("---- A2 ----");
-       for I in A2'Range loop
-          Put_Line (Integer'Image (I) & " => " &
-                    Integer'Image (A2 (I)));
-       end loop;
     end;
+
+Since :ada:`A1` is initialized with an aggregate of 9 elements, :ada:`A1`
+automatically has 9 elements. Also, we're not specifying any range in the
+declaration of :ada:`A1`. Therefore, the compiler uses the default range of the
+underlying array type :ada:`Arr_Type`, which has an unconstrained range based
+on the :ada:`Integer` type. The compiler selects the first element of that type
+(:ada:`Integer'First`) as the start index of :ada:`A1`. If you replaced
+:ada:`Integer range <>` in the declaration of the :ada:`Arr_Type` by
+:ada:`Positive range <>`, then :ada:`A1`'s start index would be
+:ada:`Positive'First` |mdash| which corresponds to one.
 
 Heterogeneous Data Structures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2072,7 +2149,7 @@ are some simple records:
 
 [C]
 
-.. code:: ada manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_C
 
     !main.c
     #include <stdio.h>
@@ -2131,7 +2208,7 @@ Pointers
 ~~~~~~~~
 
 As a foreword to the topic of pointers, it's important to keep in mind the fact
-that most situation that would require a pointer in C do not in Ada. In the
+that most situations that would require a pointer in C do not in Ada. In the
 vast majority of cases, indirect memory management can be hidden from the
 developer and thus saves from many potential errors. However, there are
 situation that do require the use of pointers, or said differently that require
@@ -2265,14 +2342,14 @@ Here's now a similar example, but using heap allocation instead:
         V1 = malloc(sizeof(struct R));
         V1->A = 0;
         V2 = V1;
-        V2->A = 0;
+        V2->A = 1;
 
         print_r(V1, "V1");
         print_r(V2, "V2");
     }
 
 In this example, an object of type :ada:`R` is allocated on the heap. The same
-object is then referred to through :ada:`V1` and :ada:`V2`. As for C, there's
+object is then referred to through :ada:`V1` and :ada:`V2`. As in C, there's
 no garbage collector in Ada, so objects allocated by the new operator need to
 be expressly freed (which is not the case here).
 
@@ -2286,7 +2363,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Dereferencing_Ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_To_Scalars
 
     procedure Main is
        type A_Int is access Integer;
@@ -2297,7 +2374,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Dereferencing_C
+.. code:: c run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointers_To_Scalars
 
     !main.c
     #include <stdlib.h>
@@ -2314,7 +2391,7 @@ In Ada, an initializer can be specified with the allocation by appending
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Alloc_Init
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_Initialization
 
     procedure Main is
        type A_Int is access Integer;
@@ -2336,7 +2413,7 @@ objects that have gone out of scope. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointer_Stack_Ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_All
 
     procedure Main is
        type A_Int is access all Integer;
@@ -2348,7 +2425,7 @@ objects that have gone out of scope. For example:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointer_Stack_C
+.. code:: c run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_All_C
 
     !main.c
     int main(int argc, const char * argv[])
@@ -2366,7 +2443,7 @@ the access type as follows:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Deallocation_Ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Unchecked_Deallocation
 
     with Ada.Unchecked_Deallocation;
 
@@ -2380,7 +2457,7 @@ the access type as follows:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Deallocation_C
+.. code:: c run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Free
 
     !main.c
     #include <stdlib.h>
@@ -2391,13 +2468,15 @@ the access type as follows:
         free (my_pointer);
     }
 
+We'll discuss generics later :ref:`in this section <Genericity>`.
+
 Functions and Procedures
 ------------------------
 
 General Form
 ~~~~~~~~~~~~
 
-Subroutines in C are always expressed as function which may or may not return a
+Subroutines in C are always expressed as functions which may or may not return a
 value. Ada explicitly differentiates between functions and procedures.
 Functions must return a value and procedures must not. Ada uses the more
 general term *subprogram* to refer to both functions and procedures.
@@ -2412,10 +2491,10 @@ Parameters can be passed in three distinct modes:
 
 - :ada:`in out` is a parameter with an initial value provided by the caller,
   which can be modified by the subprogram and returned to the caller (more or
-  less the equivalent of a non-constant reference in C).
+  less the equivalent of a non-constant pointer in C).
 
-Ada also provides :ada:`access` and :ada:`aliased` parameters, in effect an
-explicit pass-by-reference indicator.
+Ada also provides :ada:`access` and :ada:`aliased` parameters, which are in
+effect explicit pass-by-reference indicators.
 
 In Ada, the programmer specifies how the parameter will be used and in general
 the compiler decides how it will be passed (i.e., by copy or by reference). C
@@ -2430,7 +2509,7 @@ Here's a first example:
 
 [Ada]
 
-.. code:: ada run_button main=main.adb project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
 
     procedure Proc
      (Var1 : Integer;
@@ -2472,7 +2551,7 @@ Here's a first example:
 
 [C]
 
-.. code:: c manual_chop run_button main=main.c project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
+.. code:: c run_button manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
 
     !proc.h
     void Proc
@@ -2521,26 +2600,52 @@ of the subprograms which are being provided later. Although optional here, it's
 still considered good practice to separately define specifications and
 implementations in order to make it easier to read the program. In Ada and C, a
 function that has not yet been seen cannot be used. Here, :ada:`Proc` can call
-:ada:`Func` because its specification has been declared. In Java, it's fine to
-have the declaration of the subprogram later.
+:ada:`Func` because its specification has been declared.
 
 Parameters in Ada subprogram declarations are separated with semicolons,
 because commas are reserved for listing multiple parameters of the same type.
-Parameter declaration syntax is the same as variable declaration syntax,
-including default values for parameters. If there are no parameters, the
-parentheses must be omitted entirely from both the declaration and invocation
-of the subprogram.
+Parameter declaration syntax is the same as variable declaration syntax (except
+for the modes), including default values for parameters. If there are no
+parameters, the parentheses must be omitted entirely from both the declaration
+and invocation of the subprogram.
+
+.. admonition:: In Ada 202X
+
+    Ada 202X allows for using static expression functions, which are evaluated
+    at compile time. An expression function is static when the :ada:`Static`
+    aspect is specified. For example:
+
+    .. code-block:: ada
+
+        procedure Main is
+
+           X1 : constant := (if True then 37 else 42);
+
+           function If_Then_Else (Flag : Boolean; X, Y : Integer)
+             return Integer is
+              (if Flag then X else Y) with Static;
+
+           X2 : constant := If_Then_Else (True, 37, 42);
+
+        begin
+           null;
+        end Main;
+
+    In this example, we declare :ada:`X1` using an expression. In the
+    declaration of :ada:`X2`, we call the static expression function
+    :ada:`If_Then_Else`. Both :ada:`X1` and :ada:`X2` have the same constant
+    value.
 
 .. _Overloading:
 
 Overloading
 ~~~~~~~~~~~
 
-In C, function names must be unique. Ada allow overloading, that is two
-subprograms that share the same name but can be resolved though differences in
-profile. As long as the subprogram signatures (subprogram name, parameter
-types, and return types) are different, the compiler will be able to resolve
-the calls to the proper destinations. For example:
+In C, function names must be unique. Ada allows overloading, in which multiple
+subprograms can share the same name as long as the subprogram signatures
+(the parameter types, and function return types) are different. The compiler
+will be able to resolve the calls to the proper routines or it will reject the
+calls. For example:
 
 [Ada]
 
@@ -2593,14 +2698,14 @@ the calls to the proper destinations. For example:
        Put_Line ("T: " & Threshold'Image (T));
     end Main;
 
-The Ada compiler knows that an assignment to :ada:`V` requires an
-:ada:`Integer`. So, it chooses the :ada:`Value` function that returns an
-:ada:`Integer` to satisfy this requirement.
+The Ada compiler knows that an assignment to :ada:`C` requires a
+:ada:`Code` value. So, it chooses the :ada:`Get` function that returns a
+:ada:`Code` to satisfy this requirement.
 
-Operators in Ada can be treated as functions too. This allows you to define
+Operators in Ada are functions too. This allows you to define
 local operators that override operators defined at an outer scope, and provide
-overloaded operators that operate on and compare different types. To express an
-operator as a function, enclose it in quotes:
+overloaded operators that operate on and compare different types. To declare an
+operator as a function, enclose its "name" in quotes:
 
 [Ada]
 
@@ -2648,114 +2753,4 @@ operator as a function, enclose it in quotes:
        else
           Put_Line ("Machine is not off.");
        end if;
-    end Main;
-
-Packages
---------
-
-Declaration Protection
-~~~~~~~~~~~~~~~~~~~~~~
-
-The package is the basic modularization unit of the Ada language, as is the
-class for Java and the header and implementation pair for C. An Ada package
-contains three parts that, for GNAT, are separated into two files: :file:`.ads`
-files contain public and private Ada specifications, and :file:`.adb` files
-contain the implementation, or Ada bodies.
-
-[Ada]
-
-.. code-block:: ada
-
-    package Package_Name is
-       -- public specifications
-    private
-       -- private specifications
-    end Package_Name;
-
-    package body Package_Name is
-       -- implementation
-    end Package_Name;
-
-Private types are useful for preventing the users of a package's types from
-depending on the types' implementation details. The private reserved word
-splits the package spec into *public* and *private* parts. For example:
-
-[Ada]
-
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Private_Types
-
-    package Types is
-       type Type_1 is private;
-       type Type_2 is private;
-       type Type_3 is private;
-       procedure P (X : Type_1);
-       --  ...
-    private
-       procedure Q (Y : Type_1);
-       type Type_1 is new Integer range 1 .. 1000;
-       type Type_2 is array (Integer range 1 .. 1000) of Integer;
-       type Type_3 is record
-          A, B : Integer;
-       end record;
-    end Types;
-
-Subprograms declared above the :ada:`private` separator (such as :ada:`P`) will
-be visible to the package user, and the ones below (such as :ada:`Q`) will not.
-The body of the package, the implementation, has access to both parts.
-
-Hierarchical Packages
-~~~~~~~~~~~~~~~~~~~~~
-
-Ada packages can be organized into hierarchies. A child unit can be declared in
-the following way:
-
-[Ada]
-
-.. code-block:: ada
-
-    -- root-child.ads
-
-    package Root.Child is
-       --  package spec goes here
-    end Root.Child;
-
-    -- root-child.adb
-
-    package body Root.Child is
-       --  package body goes here
-    end Root.Child;
-
-Here, :ada:`Root.Child` is a child package of :ada:`Root`. The public part of
-:ada:`Root.Child` has access to the public part of :ada:`Root`. The private
-part of :ada:`Child` has access to the private part of :ada:`Root`, which is
-one of the main advantages of child packages. However, there is no visibility
-relationship between the two bodies. One common way to use this capability is
-to define subsystems around a hierarchical naming scheme.
-
-Using Entities from Packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Entities declared in the visible part of a package specification can be made
-accessible using a :ada:`with` clause that references the package, which is
-similar to the C :c:`#include` directive. After a :ada:`with` clause, entities
-needs to be prefixed by the name of their package. This prefix can be omitted
-if a :ada:`use` clause is employed.
-
-[Ada]
-
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Using_Pkg_Entities
-
-    -- pck.ads
-
-    package Pck is
-       My_Glob : Integer;
-    end Pck;
-
-    -- main.adb
-
-    with Pck;
-
-    procedure Main is
-    begin
-       Pck.My_Glob := 0;
     end Main;
