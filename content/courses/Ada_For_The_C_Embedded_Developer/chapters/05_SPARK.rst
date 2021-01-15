@@ -1024,7 +1024,7 @@ here, but note that we should never need both.
 Proving Abstract Properties
 ---------------------------
 
-The postcondition on :ada:`Increment` is in fact a unit level-level
+The postcondition on :ada:`Increment` expresses what is, in fact, a unit-level
 requirement. Successfully proving such requirements is another
 significant robustness and cost benefit. Together with the proofs for
 initialization and AoRTE, these proofs ensure program integrity, that
