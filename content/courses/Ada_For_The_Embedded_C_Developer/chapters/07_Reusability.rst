@@ -160,7 +160,7 @@ The above can be instantiated and used the following way:
     procedure Main is
        package I1 is new Gen (Integer);
        package I2 is new Gen (Integer);
-       subtype Str10 is String (1..10);
+       subtype Str10 is String (1 .. 10);
        package I3 is new Gen (Str10);
     begin
        I1.G := 0;
@@ -244,7 +244,7 @@ Let's start from the following example:
        procedure Send_Fast (Device : Device_1; Data : Integer);
        procedure Receive (Device : Device_1; Data : out Integer);
 
-    end Drivers_1 ;
+    end Drivers_1;
 
     package body Drivers_1 is
 
@@ -262,7 +262,7 @@ Let's start from the following example:
           Data := 42;
        end Receive;
 
-    end Drivers_1 ;
+    end Drivers_1;
 
 In the above example, :ada:`Device_1` is an empty record type. It may also have
 some fields if required, or be a different type such as a scalar. Then the four
@@ -316,7 +316,6 @@ operates exactly like the previous one, but modifies only the behavior of
        procedure Startup (Device : Device_2) is null;
 
     end Drivers_2;
-
 
 Here, :ada:`Device_2` is derived from :ada:`Device_1`. It contains all the
 exact same properties and primitives, in particular, :ada:`Startup`,
@@ -399,6 +398,7 @@ Our :ada:`Main` now looks like:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
+    :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Drivers_3;   use Drivers_3;
@@ -657,8 +657,8 @@ When using a configuration package, the example above can be written as:
        B := Func (A);
 
        if Config.Debug then
-          Put_Line("Func(" & Integer'Image (A) & ") => "
-                   & Integer'Image (B));
+          Put_Line ("Func(" & Integer'Image (A) & ") => "
+                    & Integer'Image (B));
        end if;
     end Main;
 
@@ -923,7 +923,7 @@ declaration. Let's rewrite the example above:
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Rec_Disc_Ada_Private
 
-    package P is
+    package Array_Definition is
        type Arr is array (Integer range <>) of Integer;
 
        type S (Last : Integer) is private;
@@ -933,10 +933,10 @@ declaration. Let's rewrite the example above:
           A : Arr (0 .. Last);
        end record;
 
-    end P;
+    end Array_Definition;
 
-    with Ada.Text_IO; use Ada.Text_IO;
-    with P;           use P;
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Array_Definition; use Array_Definition;
 
     procedure Main is
        V : S (9);
@@ -944,9 +944,11 @@ declaration. Let's rewrite the example above:
        Put_Line ("Last : " & Integer'Image (V.Last));
     end Main;
 
+:code-config:`reset_accumulator=True`
+
 Even though the :ada:`S` type is now private, we can still display :ada:`Last`
 because this discriminant is visible in the *non-private* part of package
-:ada:`P`.
+:ada:`Array_Definition`.
 
 
 Variant records
@@ -1515,26 +1517,26 @@ types based on this example:
           V : Integer;
        end record;
 
-       procedure Display (R : in Rec);
+       procedure Display (R : Rec);
        procedure Reset (R : out Rec);
 
        type New_Rec is new Rec;
 
-       overriding procedure Display (R : in New_Rec);
+       overriding procedure Display (R : New_Rec);
        not overriding procedure New_Op (R : in out New_Rec);
 
        type Tagged_Rec is tagged record
           V : Integer;
        end record;
 
-       procedure Display (R : in Tagged_Rec);
+       procedure Display (R : Tagged_Rec);
        procedure Reset (R : out Tagged_Rec);
 
        type Ext_Tagged_Rec is new Tagged_Rec with record
           V2 : Integer;
        end record;
 
-       overriding procedure Display (R : in Ext_Tagged_Rec);
+       overriding procedure Display (R : Ext_Tagged_Rec);
        overriding procedure Reset (R : out Ext_Tagged_Rec);
        not overriding procedure New_Op (R : in out Ext_Tagged_Rec);
 
@@ -1544,7 +1546,7 @@ types based on this example:
 
     package body P is
 
-       procedure Display (R : in Rec) is
+       procedure Display (R : Rec) is
        begin
           Put_Line ("TYPE: REC");
           Put_Line ("Rec.V = " & Integer'Image (R.V));
@@ -1556,7 +1558,7 @@ types based on this example:
           R.V := 0;
        end Reset;
 
-       procedure Display (R : in New_Rec) is
+       procedure Display (R : New_Rec) is
        begin
           Put_Line ("TYPE: NEW_REC");
           Put_Line ("New_Rec.V = " & Integer'Image (R.V));
@@ -1568,7 +1570,7 @@ types based on this example:
           R.V := R.V + 1;
        end New_Op;
 
-       procedure Display (R : in Tagged_Rec) is
+       procedure Display (R : Tagged_Rec) is
        begin
           --  Using External_Tag attribute to retrieve the tag as a string
           Put_Line ("TYPE: " & Tagged_Rec'External_Tag);
@@ -1581,7 +1583,7 @@ types based on this example:
           R.V := 0;
        end Reset;
 
-       procedure Display (R : in Ext_Tagged_Rec) is
+       procedure Display (R : Ext_Tagged_Rec) is
        begin
           --  Using External_Tag attribute to retrieve the tag as a string
           Put_Line ("TYPE: " & Ext_Tagged_Rec'External_Tag);
@@ -1812,7 +1814,7 @@ Let's look at an example with an interface and two derived tagged types:
        procedure Dispatching_Display (D : Display_Interface'Class) is
        begin
           D.Display;
-       end;
+       end Dispatching_Display;
 
     begin
        Dispatching_Display (D_Small);
@@ -1850,7 +1852,8 @@ We may derive a type from multiple interfaces by simply writing
 
        procedure Receive (Obj : in out Receive_Interface) is abstract;
 
-       type Transceiver is new Send_Interface and Receive_Interface with null record;
+       type Transceiver is new Send_Interface and Receive_Interface
+         with null record;
 
        procedure Send (D : in out Transceiver);
        procedure Receive (D : in out Transceiver);

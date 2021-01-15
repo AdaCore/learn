@@ -452,7 +452,7 @@ call could be translated:
 .. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Translation.Namespaces
 
     package Register_Interface is
-       procedure Initialize(Size : Integer)
+       procedure Initialize (Size : Integer)
          with Import     => True,
               Convention => C,
               External_Name => "registerInterface_Initialize";
@@ -1316,7 +1316,7 @@ procedure:
        begin
           Put ("("  & Integer'Image (R.V) & ", "
                & (R.S) & ")");
-       end;
+       end Display;
 
     end My_Recs;
 
@@ -1332,7 +1332,7 @@ procedure:
          with Address => R1'Address, Import, Volatile;
     begin
        Put ("R2 = ");
-       Display(R2);
+       Display (R2);
        New_Line;
 
        --  Getting Rec type using data from B1, which is a bit-field
@@ -1344,7 +1344,7 @@ procedure:
 
        Put_Line ("New bitstream received!");
        Put ("R2 = ");
-       Display(R2);
+       Display (R2);
        New_Line;
     end Main;
 
@@ -1578,7 +1578,8 @@ in. This is how we can rewrite one of the previous examples:
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Conversion
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Unchecked_Conversion;
 
     procedure Simple_Bitfield_Conversion is
        type Bit_Field is array (Natural range <>) of Boolean with Pack;

@@ -36,7 +36,7 @@ via calls to other procedures and functions.
 For example, the frame below is a procedure including three exceptions
 handlers:
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
+.. code-block:: ada
 
    procedure P is
    begin

@@ -953,7 +953,8 @@ Finally, this is the complete source-code example:
 
        function Value (E : Value_Retrieval_IF) return Float is abstract;
 
-       type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF with private;
+       type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF
+         with private;
 
        overriding procedure Activate (E : in out Sys_Base);
        overriding function Is_Active (E : Sys_Base) return Boolean;
@@ -961,7 +962,8 @@ Finally, this is the complete source-code example:
 
     private
 
-       type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF with record
+       type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF
+         with record
           Active : Boolean;
        end record;
 
@@ -1008,7 +1010,7 @@ Finally, this is the complete source-code example:
        begin
           E.Val := (others => 0.0);
           Sys_Base (E).Activate;
-       end;
+       end Activate;
 
        function Value (E : A) return Float is
           pragma Assert (E.Val'Length = 2);
@@ -1040,7 +1042,7 @@ Finally, this is the complete source-code example:
        begin
           E.Val := 0.0;
           Sys_Base (E).Activate;
-       end;
+       end Activate;
 
        function Value (E : B) return Float is
          (E.Val);

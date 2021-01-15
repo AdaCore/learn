@@ -178,7 +178,7 @@ data and coordinate execution. Let's consider the following example:
 
        task After is
           entry Go;
-       end After ;
+       end After;
 
        task body After is
        begin
@@ -309,7 +309,7 @@ is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
                 end Get;
              or
                 delay 5.0;
-                Put_Line("Exiting Counter task...");
+                Put_Line ("Exiting Counter task...");
                 exit;
              end select;
           end loop;
@@ -329,16 +329,16 @@ is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
        Put_Line ("Got value. Value = " & Integer'Image (V));
 
        Counter.Increment;
-       Put_Line("Incremented value.");
+       Put_Line ("Incremented value.");
 
        Counter.Increment;
-       Put_Line("Incremented value.");
+       Put_Line ("Incremented value.");
 
        Counter.Get (V);
        Put_Line ("Got value. Value = " & Integer'Image (V));
 
        Counter.Decrement;
-       Put_Line("Decremented value.");
+       Put_Line ("Decremented value.");
 
        Counter.Get (V);
        Put_Line ("Got value. Value = " & Integer'Image (V));
