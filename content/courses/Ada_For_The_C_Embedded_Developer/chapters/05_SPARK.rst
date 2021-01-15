@@ -577,7 +577,7 @@ this section.
 Formal analysis for proof can be achieved through the SPARK subset of
 the Ada language combined with the :program:`gnatprove` verification
 tool. SPARK is a subset encompassing most of the Ada language, except
-for features that preclude proof. As a disclaimer, this booklet is not
+for features that preclude proof. As a disclaimer, this course is not
 aimed at providing a full introduction to proof and the SPARK language,
 but rather to present in a few examples what it is about and what it can
 do for us.

@@ -4,7 +4,7 @@ Argumentation and Business Perspectives
 .. include:: ../../global.txt
 
 The technical benefits of a migration from C to Ada are usually relatively
-straightforward to demonstrate. Hopefully, this booklet provides a good basis
+straightforward to demonstrate. Hopefully, this course provides a good basis
 for it. However, when faced with an actual business decision to make,
 additional considerations need to be taken into account, such as return on
 investment, perennity of the solution, tool support, etc. This section will
@@ -106,7 +106,7 @@ seen in the previous question. Projects using Ada in the aerospace and defence
 domain maintain source code over decades, providing healthy funding foundation
 for Ada-based technologies.
 
-AdaCore being the author of this booklet, it's difficult for us to be fair in
+AdaCore being the author of this course, it's difficult for us to be fair in
 our description of other Ada compilation technologies. We will leave to the
 readers the responsibility of forging their own opinion. If they present a
 credible alternative to the GNAT compiler, then this whole section can be
@@ -182,7 +182,7 @@ hire new staff with prior Ada experience.
 
 Fortunately, Ada's base semantics are very close to those of C/C++, so that a
 good embedded software developer should be able to learn it relatively easily.
-This booklet is definitely a resource available to get started. Online training
+This course is definitely a resource available to get started. Online training
 material is also available, together with on-site in person training.
 
 In general, getting an engineer operational in Ada and SPARK shouldn't take
