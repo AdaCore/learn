@@ -25,18 +25,18 @@ Ada for the C Embedded Developer
 
 .. container:: content-description
 
-    This book introduces you to the Ada language by comparing it to C. It
+    This course introduces you to the Ada language by comparing it to C. It
     assumes that you have good knowledge of the C language. It also assumes
     that the choice of learning Ada is guided by considerations linked to
     reliability, safety or security. In that sense, it teaches you Ada
     paradigms that should be applied in replacement of those usually applied
     in C.
 
-    This book also introduces you to the SPARK subset of the Ada programming
+    This course also introduces you to the SPARK subset of the Ada programming
     language, which removes a few features of the language with undefined
     behavior, so that the code is fit for sound static analysis techniques.
 
-    This book was written by Quentin Ochem, Robert Tice, Gustavo A. Hoffmann,
+    This course was written by Quentin Ochem, Robert Tice, Gustavo A. Hoffmann,
     and Patrick Rogers and reviewed by Patrick Rogers, Filip Gajowniczek, and
     Tucker Taft.
 

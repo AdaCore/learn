@@ -23,12 +23,12 @@ driver assistance systems.
 The GNAT Toolchain
 -------------------
 
-The toolchain used throughout this book is called GNAT, which is a suite of
+The toolchain used throughout this course is called GNAT, which is a suite of
 tools with a compiler based on the GCC environment. It can be obtained from
 AdaCore, either as part of a commercial contract with
 `GNAT Pro <https://www.adacore.com/gnatpro>`_ or at no charge with the
 `GNAT Community edition <https://www.adacore.com/community>`_. The information
-in this book  will be relevant no matter which edition you're using. Most
+in this course  will be relevant no matter which edition you're using. Most
 examples will be runnable on the native Linux or Windows version for
 convenience. Some will only be relevant in the context of a cross toolchain, in
 which case we'll be using the embedded ARM bare metal toolchain.
@@ -38,7 +38,7 @@ offers a project management system. Because we're talking about embedded
 platforms, there are a lot of topics that we'll go over which will be specific
 to GNAT, and sometimes to specific platforms supported by GNAT. We'll try to
 make the distinction between what is GNAT-specific and Ada generic as much as
-possible throughout this book.
+possible throughout this course.
 
 For an introduction to the GNAT Toolchain for the GNAT Community edition, you
 may refer to the
@@ -543,7 +543,7 @@ For the fun of it, let's also see the Ada way to do this:
     end Main;
 
 We will explore more about the syntax of loops in Ada in a future section of
-this book; but for now, notice that the :ada:`I` variable used as the loop
+this course; but for now, notice that the :ada:`I` variable used as the loop
 index is not declared in the declarative section!
 
 .. admonition:: Declaration Flippy Floppy
