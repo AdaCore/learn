@@ -409,9 +409,9 @@ example, it's possible to write:
 
     with Values; use Values;
 
-    package P is
+    package Arr_Def is
        type Arr is array (Integer range A_Start .. A_End) of Integer;
-    end P;
+    end Arr_Def;
 
 It may indeed be appealing to be able to change the values of :ada:`A_Start`
 and :ada:`A_End` at startup so as to align a series of arrays dynamically. The
@@ -427,14 +427,14 @@ Here's a last case which may also be surprising:
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Record_With_Arrays
 
-    package P is
+    package Arr_Def is
        type Arr is array (Integer range <>) of Integer;
 
        type R (D1, D2 : Integer) is record
           F1 : Arr (1 .. D1);
           F2 : Arr (1 .. D2);
        end record;
-    end P;
+    end Arr_Def;
 
 In the code above, :ada:`R` contains two arrays, :ada:`F1` and :ada:`F2`,
 respectively constrained by the discriminant :ada:`D1` and :ada:`D2`. The

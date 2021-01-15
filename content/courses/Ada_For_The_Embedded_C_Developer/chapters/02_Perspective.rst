@@ -370,13 +370,13 @@ This prefix can be omitted if a :ada:`use` clause is employed.
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Using_Pkg_Entities
 
-    -- pck.ads
+    --  pck.ads
 
     package Pck is
        My_Glob : Integer;
     end Pck;
 
-    -- main.adb
+    --  main.adb
 
     with Pck;
 
@@ -654,7 +654,7 @@ Let's look at the equivalent Ada code:
 [Ada]
 
 .. code:: ada manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Equal_Ada
-    :class: ada-expect-compile-error
+    :class: ada-nocheck
 
     !main.adb
     with Ada.Text_IO; use Ada.Text_IO;
@@ -937,23 +937,23 @@ Let's start with some syntax:
        while V < 100 loop
           V := V * 2;
        end loop;
-       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
+       Ada.Text_IO.Put_Line ("V = " & Integer'Image (V));
 
        --  Ada doesn't have an explicit do while loop
-       --    instead you can use the loop and exit keywords
+       --  instead you can use the loop and exit keywords
        V := 1;
        loop
           V := V * 2;
           exit when V >= 200;
        end loop;
-       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
+       Ada.Text_IO.Put_Line ("V = " & Integer'Image (V));
 
        --  this is a for loop
        V := 0;
        for I in 0 .. 4 loop
           V := V + (I * I);
        end loop;
-       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
+       Ada.Text_IO.Put_Line ("V = " & Integer'Image (V));
 
        --  this is a forever loop with a conditional exit
        V := 0;
@@ -962,7 +962,7 @@ Let's start with some syntax:
           V := V + 1;
           exit when V = 10;
        end loop;
-       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
+       Ada.Text_IO.Put_Line ("V = " & Integer'Image (V));
 
        --  this is a loop over an array
        declare
@@ -974,7 +974,7 @@ Let's start with some syntax:
           for I in Arr'Range loop
              Sum := Sum + Arr (I);
           end loop;
-          Ada.Text_IO.Put_Line("Sum = " & Integer'Image (Sum));
+          Ada.Text_IO.Put_Line ("Sum = " & Integer'Image (Sum));
        end;
     end Main;
 
@@ -1525,12 +1525,12 @@ define what are considered valid values. The most common kind of contract is a
        G1, G2  : Grade;
        N       : Integer;
     begin
-       --  ...            -- Initialization of N
-       G1 := 80;          -- OK
-       G1 := N;           -- Illegal (type mismatch)
-       G1 := Grade (N);   -- Legal, run-time range check
-       G2 := G1 + 10;     -- Legal, run-time range check
-       G1 := (G1 + G2)/2; -- Legal, run-time range check
+       --  ...              --  Initialization of N
+       G1 := 80;            --  OK
+       G1 := N;             --  Illegal (type mismatch)
+       G1 := Grade (N);     --  Legal, run-time range check
+       G2 := G1 + 10;       --  Legal, run-time range check
+       G1 := (G1 + G2) / 2; --  Legal, run-time range check
     end Main;
 
 In the above example, :ada:`Grade` is a new integer type associated with a
@@ -1723,7 +1723,7 @@ custom 32-bit signed type and its unsigned subtype:
 
        X : Unsigned_Int_31 := 42;
     begin
-       Put_Line("X = " & Unsigned_Int_31'Image (X));
+       Put_Line ("X = " & Unsigned_Int_31'Image (X));
     end Main;
 
 In this case, we're just skipping the sign bit of the :ada:`Signed_Int_32`
@@ -1777,7 +1777,7 @@ The corresponding code in Ada raises an exception:
        X : Unsigned_Int_32 := Unsigned_Int_32'Last + 1;
        --  Overflow: exception is raised!
     begin
-       Put_Line("X = " & Unsigned_Int_32'Image (X));
+       Put_Line ("X = " & Unsigned_Int_32'Image (X));
     end Main;
 
 While the C uses modulo arithmetic for unsigned integer, Ada doesn't use it for
@@ -1797,9 +1797,8 @@ a 32-bit modular type:
        X : Unsigned_32 := Unsigned_32'Last + 1;
        --  Now: X = 0
     begin
-       Put_Line("X = " & Unsigned_32'Image (X));
+       Put_Line ("X = " & Unsigned_32'Image (X));
     end Main;
-
 
 In this case, the behavior is the same as in the C declaration above.
 
@@ -1837,7 +1836,7 @@ value into a :ada:`String` and vice-versa. For example:
        Put_Line (Integer'Image (A));
        A := Integer'Value ("99");
        Put_Line (Integer'Image (A));
-    end;
+    end Main;
 
 .. admonition:: Important
 
@@ -1882,7 +1881,7 @@ attribute:
        Put (C);
        C := Character'Succ (C);
        Put (C);
-    end;
+    end Main;
 
 You can get the previous value using the :ada:`'Pred` attribute. Here is the
 equivalent in C:
@@ -1940,7 +1939,7 @@ values from :ada:`'a'` to :ada:`'z'`:
 
           Put (Arr (I) & " ");
        end loop;
-    end;
+    end Main;
 
 [C]
 
@@ -2107,7 +2106,7 @@ arrays as opposed to their addresses:
        else
          Put_Line ("A1 /= A2");
        end if;
-    end;
+    end Main;
 
 [C]
 
@@ -2155,7 +2154,7 @@ Therefore, you can write:
        type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type (-2 .. 42) := (others => 0);
     begin
-       -- use a slice to assign A1 elements 11 .. 19 to 1
+       --  use a slice to assign A1 elements 11 .. 19 to 1
        A1 (11 .. 19) := (others => 1);
 
        Put_Line ("---- A1 ----");
@@ -2163,7 +2162,7 @@ Therefore, you can write:
           Put_Line (Integer'Image (I) & " => " &
                     Integer'Image (A1 (I)));
        end loop;
-    end;
+    end Main;
 
 In this example, we're specifying that :ada:`A1` has a range between -2 and 42.
 We use :ada:`(others => 0)` to initialize all array elements with zero. In the
@@ -2187,7 +2186,7 @@ side:
           Put_Line (Integer'Image (I) & " => " &
                     Integer'Image (A1 (I)));
        end loop;
-    end;
+    end Main;
 
 Since :ada:`A1` is initialized with an aggregate of 9 elements, :ada:`A1`
 automatically has 9 elements. Also, we're not specifying any range in the
@@ -2221,7 +2220,7 @@ are some simple records:
     begin
        V.A := 0;
        Put_Line ("V.A = " & Integer'Image (V.A));
-    end;
+    end Main;
 
 [C]
 
@@ -2278,7 +2277,7 @@ fields not listed will take their default values. For example:
        Put_R (V2, "V2");
        Put_R (V3, "V3");
        Put_R (V4, "V4");
-    end;
+    end Main;
 
 Pointers
 ~~~~~~~~
@@ -2324,7 +2323,7 @@ example:
 
        Put_R (V1, "V1");
        Put_R (V2, "V2");
-    end;
+    end Main;
 
 [C]
 
@@ -2392,7 +2391,7 @@ Here's now a similar example, but using heap allocation instead:
 
        Put_R (V1.all, "V1");
        Put_R (V2.all, "V2");
-    end;
+    end Main;
 
 [C]
 
