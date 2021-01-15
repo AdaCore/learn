@@ -100,6 +100,7 @@ exclude_patterns = [u'_build',
 # Exclude internal and unfinished material from final site build
 if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
     exclude_patterns += ['**internal/**',
+                         '**training_examples/**',
                          '**courses/intro-to-embedded-sys-prog/**',
                          '**courses/advanced-ada/**',
                          '**courses/advanced-spark/**']
