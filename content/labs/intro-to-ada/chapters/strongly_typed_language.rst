@@ -241,8 +241,8 @@ Integers
     #. Functions :ada:`To_D_50` and :ada:`To_S_50` saturate the input values if
        they are out of range.
 
-       - For example, if the input for :ada:`To_D_50` is 100, the output of the
-         function is 50.
+	   - If the input is less than 10 the output should be 10.
+	   - If the input is greater than 50 the output should be 50.
 
     #. Function :ada:`To_I_100` converts from the :ada:`D_50` type to the
        :ada:`I_100` type.
@@ -564,6 +564,7 @@ Temperatures
        --  Include type declaration for Celsius!
        --
        --  Celsius is [...];
+	   --  Int_Celsius is [...];
        --
 
        function To_Celsius (T : Int_Celsius) return Celsius;
