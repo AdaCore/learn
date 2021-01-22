@@ -33,6 +33,7 @@ For example, the frame below is a procedure including three exceptions
 handlers:
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
+    :class: ada-nocheck
 
    procedure P is
    begin

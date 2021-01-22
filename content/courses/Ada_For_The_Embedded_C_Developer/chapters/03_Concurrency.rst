@@ -604,6 +604,7 @@ using the Ravenscar profile. For example:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Ravenscar
+    :class: ada-expect-compile-error
 
     package My_Tasks is
 
