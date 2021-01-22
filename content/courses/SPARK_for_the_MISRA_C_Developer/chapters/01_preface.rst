@@ -111,6 +111,8 @@ In this document, we show how SPARK can be used to achieve
 high code quality with guarantees that go beyond what would be feasible
 with MISRA C.
 
-An on-line and interactive version of this document is available at
-`AdaCore's learn.adacore.com site
-<https://learn.adacore.com/courses/SPARK_for_the_MISRA_C_Developer>`_.
+.. only:: builder_latex
+
+   An on-line and interactive version of this document is available at
+   `AdaCore's learn.adacore.com site
+   <https://learn.adacore.com/courses/SPARK_for_the_MISRA_C_Developer>`_.
