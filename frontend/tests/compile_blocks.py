@@ -37,6 +37,7 @@ class Block(object):
     @staticmethod
     def get_blocks(input_text):
         lang_re = re.compile("\s*.. code::\s*(\w+)?\s*")
+        project_re = re.compile("\s*.. code::.*project=(\S+)?")
         code_config_re = re.compile(":code-config:`(.*)?`")
         classes_re = re.compile("\s*:class:\s*(.+)")
 
@@ -71,6 +72,7 @@ class Block(object):
                         i,
                         "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
                         lang,
+                        project,
                         classes
                     ))
 
@@ -87,6 +89,7 @@ class Block(object):
                         i + 1,
                         lang_re.match(line).groups()[0]
                     )
+                    project = project_re.match(line).groups()[0]
                 elif line[indent:].startswith(":code-config:"):
                     blocks.append(ConfigBlock(**dict(
                         kv.split('=')
@@ -98,11 +101,12 @@ class Block(object):
 
 
 class CodeBlock(Block):
-    def __init__(self, line_start, line_end, text, language, classes):
+    def __init__(self, line_start, line_end, text, language, project, classes):
         self.line_start = line_start
         self.line_end = line_end
         self.text = text
         self.language = language
+        self.project = project
         self.classes = classes
         self.run = True
 
