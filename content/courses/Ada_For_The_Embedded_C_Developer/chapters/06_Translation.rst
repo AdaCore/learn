@@ -49,7 +49,7 @@ Let's start with the following C code:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_Embedded_C_Dev.Translation.My_Struct_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.My_Struct_C
 
     !call.c
     #include <stdio.h>
