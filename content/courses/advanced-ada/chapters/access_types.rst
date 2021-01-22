@@ -139,7 +139,7 @@ This is a complete package for the code snippets above:
        E : Ref_Element;
     begin
        E := Lookup (T);
-    end;
+    end Show_Example;
 
 In general, it's better to use the language proper for documentation, when
 possible, rather than comments, because compile-time and/or run-time
@@ -273,7 +273,7 @@ procedure:
        T : Table;
     begin
        Iterate_2 (T);
-    end;
+    end Show_Example;
 
 The :ada:`not null access procedure` is quite a mouthful, but it's
 worthwhile, and anyway, as mentioned earlier, the compatibility
