@@ -465,29 +465,29 @@ for the derived type, but just takes that of the parent type:
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Anonymous_1
     :class: ada-expect-compile-error
 
-     procedure Example_1 is
+    procedure Example_1 is
 
-        type Node is record
-           N : access Integer;
-        end record;
+       type Node is record
+          N : access Integer;
+       end record;
 
-        List : Node;
+       List : Node;
 
-        procedure P is
-           type Other_Node is new Node;
-        begin
-           declare
-              L : aliased Integer := 1;
-              Data : Other_Node := Other_Node'(N => L'Access);
-              --  L'Access is illegal!
-           begin
-              List := Node (Data);
-           end;
-        end P;
+       procedure P is
+          type Other_Node is new Node;
+       begin
+          declare
+             L : aliased Integer := 1;
+             Data : Other_Node := Other_Node'(N => L'Access);
+             --  L'Access is illegal!
+          begin
+             List := Node (Data);
+          end;
+       end P;
 
-     begin
-        P;
-     end Example_1;
+    begin
+       P;
+    end Example_1;
 
 In the above example, we don't need to worry about expensive run-time
 checks on assignment or return of an object of type :ada:`Other_Node`; we
