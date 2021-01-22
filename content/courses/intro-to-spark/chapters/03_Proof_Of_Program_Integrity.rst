@@ -266,7 +266,7 @@ violation. Another way, one that doesn't require guessing the needed
 inputs, is to run GNATprove.
 
 .. code:: ada run_button prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Precondition_Violation
-   :class: ada-run-expect-failure
+    :class: ada-run-expect-failure
 
     procedure Show_Precondition_Violation is
 
@@ -291,7 +291,7 @@ require finding the inputs needed to demonstrate the error, is to run
 GNATprove.
 
 .. code:: ada run_button prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Postcondition_Violation
-   :class: ada-run-expect-failure
+    :class: ada-run-expect-failure
 
     procedure Show_Postcondition_Violation is
 
@@ -340,7 +340,7 @@ because they can make it harder to specify an appropriate precondition.  We
 see this in the function :ada:`Add` below.
 
 .. code:: ada run_button prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Executable_Semantics
-   :class: ada-run-expect-failure
+    :class: ada-run-expect-failure
 
     procedure Show_Executable_Semantics
       with SPARK_Mode => On
