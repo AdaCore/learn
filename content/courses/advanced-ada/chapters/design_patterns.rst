@@ -257,6 +257,7 @@ now complete our implementation of the :ada:`Assign` operation for bounded
 stacks as follows:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Design_Patterns.Factory_Functions_2
+    :class: ada-nocheck
 
     generic
     package Stacks.Bounded_G is

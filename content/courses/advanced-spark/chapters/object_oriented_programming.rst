@@ -744,6 +744,7 @@ Example #7
 ~~~~~~~~~~
 
 .. code:: ada compile_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_07
+    :class: ada-syntax-only
 
     package OO_Example_07 is
 

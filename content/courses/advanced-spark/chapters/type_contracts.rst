@@ -403,6 +403,7 @@ Example #1
 ~~~~~~~~~~
 
 .. code:: ada manual_chop no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_01
+    :class: ada-nocheck
 
     !example_01.ads
     package Example_01 is
@@ -573,6 +574,7 @@ Example #7
 ~~~~~~~~~~
 
 .. code:: ada manual_chop no_button project=Courses.Advanced_SPARK.Type_Contracts.Example_07
+    :class: ada-nocheck
 
     !example_07.ads
     package Example_07 is
