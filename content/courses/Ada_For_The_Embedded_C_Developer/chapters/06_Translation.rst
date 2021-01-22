@@ -896,7 +896,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     [Ada]
 
-    .. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Translation.Overlay_Default_Init_Overwrite
+    .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Overlay_Default_Init_Overwrite
 
         package P is
 
@@ -1506,6 +1506,7 @@ This is how we can rewrite the implementation above using overlays:
        Put_Line ("F = " & Fixed_16'Image (F));
        Put_Line ("I = " & Int_16'Image (I));
     end Fixed_Int_Overlay;
+
 Here, the conversion to the integer value is implicit, so we don't need to call
 a conversion function.
 
