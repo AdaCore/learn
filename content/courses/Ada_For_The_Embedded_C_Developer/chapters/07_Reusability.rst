@@ -932,8 +932,6 @@ declaration. Let's rewrite the example above:
        Put_Line ("Last : " & Integer'Image (V.Last));
     end Main;
 
-:code-config:`reset_accumulator=True`
-
 Even though the :ada:`S` type is now private, we can still display :ada:`Last`
 because this discriminant is visible in the *non-private* part of package
 :ada:`Array_Definition`.

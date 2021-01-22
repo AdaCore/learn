@@ -2890,8 +2890,6 @@ Aspects and attributes might refer to the same kind of information. For
 example, we can use the :ada:`Size` aspect to define the expected minimum size
 of objects of a certain type:
 
-:code-config:`accumulate_code=True`
-
 [Ada]
 
 .. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Size_Aspect
@@ -2920,8 +2918,6 @@ or of an object:
        Put_Line ("Size of UInt10 type:   " & Positive'Image (UInt10'Size));
        Put_Line ("Size of UInt10 object: " & Positive'Image (UInt10_Obj'Size));
     end Show_Device_Types;
-
-:code-config:`accumulate_code=False`
 
 We'll explain both :ada:`Size` aspect and :ada:`Size` attribute
 :ref:`later in this course <Size_Aspect_Attribute>`.

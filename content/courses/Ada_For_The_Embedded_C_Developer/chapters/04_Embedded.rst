@@ -812,8 +812,6 @@ require. We'll discuss unchecked conversions
 
 Let's look at an example from an earlier chapter:
 
-:code-config:`accumulate_code=True`
-
 [Ada]
 
 .. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Size_Aspect
@@ -854,8 +852,6 @@ or of an object:
        Put_Line ("Size of UInt10 type:   " & Positive'Image (UInt10'Size));
        Put_Line ("Size of UInt10 object: " & Positive'Image (UInt10_Obj'Size));
     end Show_Device_Types;
-
-:code-config:`accumulate_code=False`
 
 Here, we're retrieving the actual sizes of the :ada:`UInt10` type and an
 object of that type. Note that the sizes don't necessarily need to match. For
