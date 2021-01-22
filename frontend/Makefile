@@ -64,6 +64,11 @@ test_ada_for_the_cpp_java_developer:
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
 	@echo ""
 
+test_ada_for_the_embedded_c_developer:
+	@echo "===== ADA FOR THE EMBEDDED C DEV ====="
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/Ada_For_The_Embedded_C_Developer/chapters/*.rst
+	@echo ""
+
 test_gnat_toolchain_intro:
 	@echo "===== GNAT TOOLCHAIN INTRO ====="
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
@@ -78,6 +83,7 @@ test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
 	test_advanced_ada test_advanced_spark \
 	test_spark_for_the_misra_c_developer \
 	test_ada_for_the_cpp_java_developer \
+	test_ada_for_the_embedded_c_developer \
 	test_training_fundamentals \
 	test_gnat_toolchain_intro
 

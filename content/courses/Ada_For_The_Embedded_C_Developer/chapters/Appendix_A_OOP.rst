@@ -87,7 +87,7 @@ Let's start with an implementation in C for the system described above:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.HandsOnOOP.System_AB_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.HandsOnOOP.System_AB_C
 
     !system_a.h
     typedef struct {
@@ -276,7 +276,7 @@ The direct implementation in Ada is:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.HandsOnOOP.System_AB_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.HandsOnOOP.System_AB_Ada
 
     package System_A is
 
@@ -491,7 +491,7 @@ This is an update to the implementation that addresses all the points above:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.HandsOnOOP.System_AB_Ada_Enhanced
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.HandsOnOOP.System_AB_Ada_Enhanced
 
     package Simple
       with Pure
@@ -939,7 +939,7 @@ Finally, this is the complete source-code example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.HandsOnOOP.System_AB_Ada_OOP_1
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.HandsOnOOP.System_AB_Ada_OOP_1
 
     package Simple is
 
@@ -953,7 +953,8 @@ Finally, this is the complete source-code example:
 
        function Value (E : Value_Retrieval_IF) return Float is abstract;
 
-       type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF with private;
+       type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF
+         with private;
 
        overriding procedure Activate (E : in out Sys_Base);
        overriding function Is_Active (E : Sys_Base) return Boolean;
@@ -961,7 +962,8 @@ Finally, this is the complete source-code example:
 
     private
 
-       type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF with record
+       type Sys_Base is abstract new Activation_IF and Value_Retrieval_IF
+         with record
           Active : Boolean;
        end record;
 
@@ -1008,7 +1010,7 @@ Finally, this is the complete source-code example:
        begin
           E.Val := (others => 0.0);
           Sys_Base (E).Activate;
-       end;
+       end Activate;
 
        function Value (E : A) return Float is
           pragma Assert (E.Val'Length = 2);
@@ -1040,7 +1042,7 @@ Finally, this is the complete source-code example:
        begin
           E.Val := 0.0;
           Sys_Base (E).Activate;
-       end;
+       end Activate;
 
        function Value (E : B) return Float is
          (E.Val);
@@ -1363,7 +1365,7 @@ Finally, this is the complete updated source-code example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.HandsOnOOP.System_AB_Ada_OOP_2
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.HandsOnOOP.System_AB_Ada_OOP_2
 
     package Simple is
 

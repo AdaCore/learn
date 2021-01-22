@@ -305,7 +305,7 @@ For example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Perspective.Private_Types
+.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Perspective.Private_Types
 
     package Types is
        type Type_1 is private;
@@ -368,15 +368,15 @@ This prefix can be omitted if a :ada:`use` clause is employed.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Using_Pkg_Entities
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Using_Pkg_Entities
 
-    -- pck.ads
+    --  pck.ads
 
     package Pck is
        My_Glob : Integer;
     end Pck;
 
-    -- main.adb
+    --  main.adb
 
     with Pck;
 
@@ -398,7 +398,7 @@ comments and working with integer variables:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Var_Decl_C
 
     !main.c
     #include <stdio.h>
@@ -422,7 +422,7 @@ comments and working with integer variables:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Var_Decl_Ada
 
     with Ada.Text_IO;
 
@@ -463,7 +463,7 @@ write a for loop:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_C89
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Average_C89
 
     !main.c
     /* The C89 version */
@@ -490,7 +490,7 @@ write a for loop:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_C_Modern
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Average_C_Modern
 
     !main.c
     // The modern C way
@@ -519,7 +519,7 @@ For the fun of it, let's also see the Ada way to do this:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Average_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Average_Ada
 
     with Ada.Text_IO;
 
@@ -559,7 +559,7 @@ using the :ada:`declare` keyword:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Block_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Var_Decl_Block_Ada
 
     with Ada.Text_IO;
 
@@ -593,7 +593,7 @@ newly defined block. The equivalent C code is:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Var_Decl_Block_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Var_Decl_Block_C
 
     !main.c
     #include <stdio.h>
@@ -625,7 +625,7 @@ an assignment in C can be used in an expression? Let's look at an example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Equal_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Equal_C
 
     !main.c
     #include <stdio.h>
@@ -653,8 +653,8 @@ Let's look at the equivalent Ada code:
 
 [Ada]
 
-.. code:: ada manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Equal_Ada
-    :class: ada-expect-compile-error
+.. code:: ada manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Equal_Ada
+    :class: ada-nocheck
 
     !main.adb
     with Ada.Text_IO; use Ada.Text_IO;
@@ -693,7 +693,7 @@ The syntax of an if statement:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Condition_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Condition_C
 
     !main.c
     #include <stdio.h>
@@ -719,7 +719,7 @@ The syntax of an if statement:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Condition_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Condition_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -756,7 +756,7 @@ The syntax of a switch/case statement:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Switch_Case_C
 
     !main.c
     #include <stdio.h>
@@ -788,7 +788,7 @@ The syntax of a switch/case statement:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Switch_Case_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -823,7 +823,7 @@ through to the next branch. Here is an example:
 
 [C]
 
-.. code:: c manual_chop cli_input run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Switch_Case_Break_C
+.. code:: c manual_chop cli_input run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Switch_Case_Break_C
 
     !main.c
     #include <stdio.h>
@@ -870,7 +870,7 @@ Let's start with some syntax:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loops_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Loops_C
 
     !main.c
     #include <stdio.h>
@@ -925,7 +925,7 @@ Let's start with some syntax:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loops_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Loops_Ada
 
     with Ada.Text_IO;
 
@@ -937,23 +937,23 @@ Let's start with some syntax:
        while V < 100 loop
           V := V * 2;
        end loop;
-       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
+       Ada.Text_IO.Put_Line ("V = " & Integer'Image (V));
 
        --  Ada doesn't have an explicit do while loop
-       --    instead you can use the loop and exit keywords
+       --  instead you can use the loop and exit keywords
        V := 1;
        loop
           V := V * 2;
           exit when V >= 200;
        end loop;
-       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
+       Ada.Text_IO.Put_Line ("V = " & Integer'Image (V));
 
        --  this is a for loop
        V := 0;
        for I in 0 .. 4 loop
           V := V + (I * I);
        end loop;
-       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
+       Ada.Text_IO.Put_Line ("V = " & Integer'Image (V));
 
        --  this is a forever loop with a conditional exit
        V := 0;
@@ -962,7 +962,7 @@ Let's start with some syntax:
           V := V + 1;
           exit when V = 10;
        end loop;
-       Ada.Text_IO.Put_Line("V = " & Integer'Image (V));
+       Ada.Text_IO.Put_Line ("V = " & Integer'Image (V));
 
        --  this is a loop over an array
        declare
@@ -974,7 +974,7 @@ Let's start with some syntax:
           for I in Arr'Range loop
              Sum := Sum + Arr (I);
           end loop;
-          Ada.Text_IO.Put_Line("Sum = " & Integer'Image (Sum));
+          Ada.Text_IO.Put_Line ("Sum = " & Integer'Image (Sum));
        end;
     end Main;
 
@@ -1007,7 +1007,7 @@ reverse order?
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Counter_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Loop_Counter_C
 
     !main.c
     #include <stdio.h>
@@ -1026,7 +1026,7 @@ reverse order?
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Counter_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Loop_Counter_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1061,7 +1061,7 @@ Let's see an example in action:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Loop_Reverse_C
 
     !main.c
     #include <stdio.h>
@@ -1087,7 +1087,7 @@ Let's see an example in action:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Loop_Reverse_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1138,7 +1138,7 @@ We can actually simplify the Ada for loop a little further using iterators:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_Ada_Simplified
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Loop_Reverse_Ada_Simplified
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1182,7 +1182,7 @@ implicit type conversion:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Strong_Typing_C
 
     !main.c
     #include <stdio.h>
@@ -1213,7 +1213,7 @@ look at the equivalent Ada example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Strong_Typing_Ada
    :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1254,7 +1254,7 @@ following example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada_2
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Strong_Typing_Ada_2
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1270,7 +1270,7 @@ following example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_C_2
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Strong_Typing_C_2
 
     !main.c
     #include <stdio.h>
@@ -1315,7 +1315,7 @@ The complete example would then be:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Strong_Typing_Ada_2
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Strong_Typing_Ada_2
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1365,7 +1365,7 @@ return a value of that type.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Application_Defined_Types
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Application_Defined_Types
    :class: ada-expect-compile-error
 
     procedure Main is
@@ -1401,7 +1401,7 @@ Ada enumerations work similarly to C :c:`enum`:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enumeration_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Enumeration_Ada
 
     procedure Main is
        type Day is
@@ -1420,7 +1420,7 @@ Ada enumerations work similarly to C :c:`enum`:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enumeration_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Enumeration_C
 
     !main.c
     enum Day {
@@ -1447,7 +1447,7 @@ original :c:`enum` declaration:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enumeration_Values_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Enumeration_Values_C
 
     !main.c
     #include <stdio.h>
@@ -1474,7 +1474,7 @@ separate representation clause for it like:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enumeration_Values
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Enumeration_Values
 
     with Ada.Text_IO;
 
@@ -1516,7 +1516,7 @@ define what are considered valid values. The most common kind of contract is a
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Range_Check
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Range_Check
     :class: ada-expect-compile-error
 
     procedure Main is
@@ -1525,12 +1525,12 @@ define what are considered valid values. The most common kind of contract is a
        G1, G2  : Grade;
        N       : Integer;
     begin
-       --  ...            -- Initialization of N
-       G1 := 80;          -- OK
-       G1 := N;           -- Illegal (type mismatch)
-       G1 := Grade (N);   -- Legal, run-time range check
-       G2 := G1 + 10;     -- Legal, run-time range check
-       G1 := (G1 + G2)/2; -- Legal, run-time range check
+       --  ...              --  Initialization of N
+       G1 := 80;            --  OK
+       G1 := N;             --  Illegal (type mismatch)
+       G1 := Grade (N);     --  Legal, run-time range check
+       G2 := G1 + 10;       --  Legal, run-time range check
+       G1 := (G1 + G2) / 2; --  Legal, run-time range check
     end Main;
 
 In the above example, :ada:`Grade` is a new integer type associated with a
@@ -1556,7 +1556,7 @@ perform the computation in a sufficiently large integer type, for example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Range_And_Explicit_Conversion
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Range_And_Explicit_Conversion
 
     with Ada.Text_IO;
 
@@ -1580,7 +1580,7 @@ type can be associated with new constraints and operations. Going back to the
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enum_Ranges_1
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Enum_Ranges_1
 
     procedure Main is
        type Day is
@@ -1605,7 +1605,7 @@ subtype is a type with optional additional constraints. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Enum_Ranges_2
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Enum_Ranges_2
 
     procedure Main is
        type Day is
@@ -1675,7 +1675,7 @@ integer type and the :ada:`X` variable in Ada:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Unsigned_32_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Unsigned_32_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1692,7 +1692,7 @@ following declaration:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Unsigned_32_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Unsigned_32_C
 
     !main.c
     #include <stdio.h>
@@ -1710,7 +1710,7 @@ custom 32-bit signed type and its unsigned subtype:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Unsigned_31_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Unsigned_31_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1723,7 +1723,7 @@ custom 32-bit signed type and its unsigned subtype:
 
        X : Unsigned_Int_31 := 42;
     begin
-       Put_Line("X = " & Unsigned_Int_31'Image (X));
+       Put_Line ("X = " & Unsigned_Int_31'Image (X));
     end Main;
 
 In this case, we're just skipping the sign bit of the :ada:`Signed_Int_32`
@@ -1749,7 +1749,7 @@ consider this C example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overflow_Wraparound
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound
 
     !main.c
     #include <stdio.h>
@@ -1767,7 +1767,7 @@ The corresponding code in Ada raises an exception:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overflow_Wraparound
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1777,7 +1777,7 @@ The corresponding code in Ada raises an exception:
        X : Unsigned_Int_32 := Unsigned_Int_32'Last + 1;
        --  Overflow: exception is raised!
     begin
-       Put_Line("X = " & Unsigned_Int_32'Image (X));
+       Put_Line ("X = " & Unsigned_Int_32'Image (X));
     end Main;
 
 While the C uses modulo arithmetic for unsigned integer, Ada doesn't use it for
@@ -1787,7 +1787,7 @@ a 32-bit modular type:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overflow_Wraparound
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1797,9 +1797,8 @@ a 32-bit modular type:
        X : Unsigned_32 := Unsigned_32'Last + 1;
        --  Now: X = 0
     begin
-       Put_Line("X = " & Unsigned_32'Image (X));
+       Put_Line ("X = " & Unsigned_32'Image (X));
     end Main;
-
 
 In this case, the behavior is the same as in the C declaration above.
 
@@ -1827,7 +1826,7 @@ value into a :ada:`String` and vice-versa. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Image_Attribute
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Image_Attribute
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1837,7 +1836,7 @@ value into a :ada:`String` and vice-versa. For example:
        Put_Line (Integer'Image (A));
        A := Integer'Value ("99");
        Put_Line (Integer'Image (A));
-    end;
+    end Main;
 
 .. admonition:: Important
 
@@ -1855,7 +1854,7 @@ to the next character of the ASCII table is:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Character_1
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Character_1
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1872,7 +1871,7 @@ attribute:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Character_1
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Character_1
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1882,14 +1881,14 @@ attribute:
        Put (C);
        C := Character'Succ (C);
        Put (C);
-    end;
+    end Main;
 
 You can get the previous value using the :ada:`'Pred` attribute. Here is the
 equivalent in C:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Loop_Reverse_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Loop_Reverse_C
 
     !main.c
     #include <stdio.h>
@@ -1925,7 +1924,7 @@ values from :ada:`'a'` to :ada:`'z'`:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Range_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Array_Range_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1940,11 +1939,11 @@ values from :ada:`'a'` to :ada:`'z'`:
 
           Put (Arr (I) & " ");
        end loop;
-    end;
+    end Main;
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Range_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Array_Range_C
 
     !main.c
     #include <stdio.h>
@@ -1981,7 +1980,7 @@ Ada's predefined :ada:`String` type is very straightforward to use:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Constrained_String
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Constrained_String
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1998,7 +1997,7 @@ line of text ending with a new line:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Constrained_String
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Constrained_String
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2020,7 +2019,7 @@ the above behavior, actual pointer types would have to be defined and used.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Copy_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Array_Copy_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2041,7 +2040,7 @@ the above behavior, actual pointer types would have to be defined and used.
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Copy_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Array_Copy_C
 
     !main.c
     #include <stdio.h>
@@ -2068,7 +2067,7 @@ portion, or slice, of an array. So you can write the following:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Slice
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Array_Slice
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2093,7 +2092,7 @@ arrays as opposed to their addresses:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Equal_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Array_Equal_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2107,11 +2106,11 @@ arrays as opposed to their addresses:
        else
          Put_Line ("A1 /= A2");
        end if;
-    end;
+    end Main;
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Equal_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Array_Equal_C
 
     !main.c
     #include <stdio.h>
@@ -2147,7 +2146,7 @@ Therefore, you can write:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Assignment_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Array_Assignment_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2155,7 +2154,7 @@ Therefore, you can write:
        type Arr_Type is array (Integer range <>) of Integer;
        A1 : Arr_Type (-2 .. 42) := (others => 0);
     begin
-       -- use a slice to assign A1 elements 11 .. 19 to 1
+       --  use a slice to assign A1 elements 11 .. 19 to 1
        A1 (11 .. 19) := (others => 1);
 
        Put_Line ("---- A1 ----");
@@ -2163,7 +2162,7 @@ Therefore, you can write:
           Put_Line (Integer'Image (I) & " => " &
                     Integer'Image (A1 (I)));
        end loop;
-    end;
+    end Main;
 
 In this example, we're specifying that :ada:`A1` has a range between -2 and 42.
 We use :ada:`(others => 0)` to initialize all array elements with zero. In the
@@ -2172,7 +2171,7 @@ side:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Array_Assignment_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Array_Assignment_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2187,7 +2186,7 @@ side:
           Put_Line (Integer'Image (I) & " => " &
                     Integer'Image (A1 (I)));
        end loop;
-    end;
+    end Main;
 
 Since :ada:`A1` is initialized with an aggregate of 9 elements, :ada:`A1`
 automatically has 9 elements. Also, we're not specifying any range in the
@@ -2207,7 +2206,7 @@ are some simple records:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Struct_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2221,11 +2220,11 @@ are some simple records:
     begin
        V.A := 0;
        Put_Line ("V.A = " & Integer'Image (V.A));
-    end;
+    end Main;
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Struct_C
 
     !main.c
     #include <stdio.h>
@@ -2249,7 +2248,7 @@ fields not listed will take their default values. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Struct_Default_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Struct_Default_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2278,7 +2277,7 @@ fields not listed will take their default values. For example:
        Put_R (V2, "V2");
        Put_R (V3, "V3");
        Put_R (V4, "V4");
-    end;
+    end Main;
 
 Pointers
 ~~~~~~~~
@@ -2299,7 +2298,7 @@ example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointers_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Pointers_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2324,11 +2323,11 @@ example:
 
        Put_R (V1, "V1");
        Put_R (V2, "V2");
-    end;
+    end Main;
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointers_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Pointers_C
 
     !main.c
     #include <stdio.h>
@@ -2364,7 +2363,7 @@ Here's now a similar example, but using heap allocation instead:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Heap_Alloc_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Heap_Alloc_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2392,11 +2391,11 @@ Here's now a similar example, but using heap allocation instead:
 
        Put_R (V1.all, "V1");
        Put_R (V2.all, "V2");
-    end;
+    end Main;
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Heap_Alloc_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Heap_Alloc_C
 
     !main.c
     #include <stdio.h>
@@ -2585,7 +2584,7 @@ Here's a first example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Subroutines_Ada
 
     procedure Proc
      (Var1 : Integer;
@@ -2627,7 +2626,7 @@ Here's a first example:
 
 [C]
 
-.. code:: c run_button manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Subroutines_C
+.. code:: c run_button manual_chop project=Courses.Ada_For_Embedded_C_Dev.Perspective.Subroutines_C
 
     !proc.h
     void Proc
@@ -2728,7 +2727,7 @@ calls. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overloading_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overloading_Ada
 
     package Machine is
        type Status is (Off, On);
@@ -2788,7 +2787,7 @@ operator as a function, enclose its "name" in quotes:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Overloading_Eq
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overloading_Eq
 
     package Machine_2 is
        type Status is (Off, Waiting, On);
@@ -2860,7 +2859,7 @@ aspect:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Inline_Aspect
 
     package Float_Arrays is
 
@@ -2879,7 +2878,7 @@ as follows:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Inline_Aspect
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Inline_Aspect
 
     package Float_Arrays is
 
@@ -2899,7 +2898,7 @@ of objects of a certain type:
 
 [Ada]
 
-.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Size_Aspect
 
     package My_Device_Types is
 
@@ -2913,7 +2912,7 @@ or of an object:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Size_Aspect
 
     with Ada.Text_IO;     use Ada.Text_IO;
 

@@ -1,7 +1,7 @@
 :prev_state: False
 :next_state: False
 
-Ada for the C Embedded Developer
+Ada for the Embedded C Developer
 ===================================
 
 .. include:: ../global.txt
@@ -46,7 +46,7 @@ Ada for the C Embedded Developer
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/Ada_For_The_C_Embedded_Developer.pdf">
+            <a class="pdf_download_button" href="/pdf_books/courses/Ada_For_The_Embedded_C_Developer.pdf">
                 Download PDF
             </a>
 
