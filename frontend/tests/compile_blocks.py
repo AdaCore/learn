@@ -243,7 +243,27 @@ def analyze_file(rst_file):
             projects[b.project] = list()
         projects[b.project].append((i, b))
 
+    work_dir = os.getcwd()
+    base_project_dir = "projects"
+
     for project in projects:
+
+        def init_project_dir(project):
+            project_dir = base_project_dir + "/" + project.replace(".", "/")
+
+            if os.path.exists(project_dir):
+                shutil.rmtree(args.build_dir)
+
+            try:
+                os.makedirs(project_dir)
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise
+
+            os.chdir(project_dir)
+
+        init_project_dir(project)
+
         for i, block in projects[project]:
             if isinstance(block, ConfigBlock):
                 current_config.update(block)
@@ -370,12 +390,12 @@ def analyze_file(rst_file):
             if args.all_diagnostics:
                 print_diags()
 
-            if source_files and not current_config.accumulate_code:
-                for source_file in source_files:
-                    os.remove(source_file)
+        os.chdir(work_dir)
+
+    if os.path.exists(base_project_dir):
+        shutil.rmtree(base_project_dir)
 
     return analysis_error
-
 # Remove the build dir, but only if the user didn't ask for a specific
 # subset of code_blocks
 if os.path.exists(args.build_dir) and not args.code_block:
