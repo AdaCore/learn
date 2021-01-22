@@ -251,6 +251,9 @@ class Widget:
                 self.__parseSwitches(arg)
             elif arg.startswith('main='):
                 self.__main = arg.split('=')[1]
+            elif arg == 'cli_input':
+                # TODO: implement this feature
+                pass
             else:
                 raise ValueError(f'Invalid argument: {arg}')
 
