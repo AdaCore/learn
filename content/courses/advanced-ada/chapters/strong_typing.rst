@@ -174,6 +174,15 @@ Of course, the client now needs to be adapted to this new interface:
 .. code:: ada run_button project=Courses.Advanced_Ada.Strong_Typing.Taint_2
 
     with Taint; use Taint;
+    procedure Sensitive (X : Trusted_Value);
+
+    procedure Sensitive (X : Trusted_Value) is
+    begin
+       --  Missing implementation!
+       null;
+    end Sensitive;
+
+    with Taint; use Taint;
     with Sensitive;
 
     procedure Good is

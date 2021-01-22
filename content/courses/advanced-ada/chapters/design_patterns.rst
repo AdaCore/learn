@@ -299,6 +299,11 @@ stacks as follows:
 
     package body Stacks.Bounded_G is
 
+       --  Missing implementation!
+       procedure Push
+         (Container : in out Stack;
+          Item      :        Element_Type) is null;
+
        procedure Assign
          (Target : in out Stack;
           Source : Stacks.Stack'Class)
@@ -1417,7 +1422,6 @@ The code would be something like the following:
        end loop;
 
     end Main;
-
 
 If we wanted to do model checking, we would create a type
 :ada:`Model_Checker`, derived from :ada:`Visitor`, that overrides some of
