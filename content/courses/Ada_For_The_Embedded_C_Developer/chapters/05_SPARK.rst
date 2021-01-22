@@ -32,7 +32,7 @@ via calls to other procedures and functions.
 For example, the frame below is a procedure including three exceptions
 handlers:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
 
    procedure P is
    begin
@@ -100,7 +100,7 @@ routine completes so once again the application terminates.
 
 For a concrete example, consider the following:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
 
    package Arrays is
 
@@ -110,7 +110,7 @@ For a concrete example, consider the following:
 
    end Arrays;
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
 
    package body Arrays is
 
@@ -121,7 +121,7 @@ For a concrete example, consider the following:
 
    end Arrays;
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
 
    with Ada.Text_IO; use Ada.Text_IO;
    with Arrays;      use Arrays;
@@ -136,7 +136,7 @@ For a concrete example, consider the following:
          Put_Line ("Some_Process completes normally");
    end Some_Process;
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exceptions
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
 
    with Some_Process;
    with Ada.Text_IO; use Ada.Text_IO;
@@ -203,7 +203,7 @@ for more details about the switch.)
 For example, we can write the following. Note the pragma on line 4 of
 :file:`arrays.adb` within function :ada:`Value`:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Suppress
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Suppress
 
    package Arrays is
 
@@ -223,7 +223,7 @@ For example, we can write the following. Note the pragma on line 4 of
 
    end Arrays;
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Suppress
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Suppress
 
    with Ada.Text_IO; use Ada.Text_IO;
    with Arrays;      use Arrays;
@@ -326,7 +326,7 @@ to the matching handler's sequence of statements. If there is no
 matching local handler the last chance handler is invoked. For example
 consider the body of function :ada:`Value` in the body of package :ada:`Arrays`:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Return
 
    package Arrays is
 
@@ -348,7 +348,7 @@ consider the body of function :ada:`Value` in the body of package :ada:`Arrays`:
 
    end Arrays;
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Return
 
    with Ada.Text_IO; use Ada.Text_IO;
    with Arrays;      use Arrays;
@@ -389,7 +389,7 @@ the Ada reserved word :ada:`others`. As in case statements, it covers
 all other choices not explicitly mentioned, and so must come last. For
 example:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return_Others
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Return_Others
 
     package Arrays is
 
@@ -413,7 +413,7 @@ example:
 
     end Arrays;
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Exception_Return_Others
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Return_Others
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Arrays;      use Arrays;
@@ -479,7 +479,7 @@ checks are disabled. Here's an example of a simple program employing a
 low-level assertion. We can use it to show the effects of the switches,
 including the defaults:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Low_Level_Assertion
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Low_Level_Assertion
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -512,7 +512,7 @@ These results are the expected behavior for the default switch settings.
 But now let's enable user-defined checks and build it. Different
 compiler output will appear.
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Assert
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Assert
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -568,7 +568,7 @@ this section.
 Formal analysis for proof can be achieved through the SPARK subset of
 the Ada language combined with the :program:`gnatprove` verification
 tool. SPARK is a subset encompassing most of the Ada language, except
-for features that preclude proof. As a disclaimer, this booklet is not
+for features that preclude proof. As a disclaimer, this course is not
 aimed at providing a full introduction to proof and the SPARK language,
 but rather to present in a few examples what it is about and what it can
 do for us.
@@ -576,7 +576,7 @@ do for us.
 As it turns out, our procedure :ada:`Main` is already SPARK compliant so
 we can start verifying it.
 
-.. code:: ada prove_button run_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Assert
+.. code:: ada prove_button run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Assert
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -630,7 +630,7 @@ benefits, and it can be reached with comparatively low cost.
 
 For example, the following illustrates an initialization failure:
 
-.. code:: ada prove_flow_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_0
+.. code:: ada prove_flow_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_0
 
    with Increment;
    with Ada.Text_IO; use Ada.Text_IO;
@@ -655,7 +655,7 @@ to the argument passed to :ada:`Increment`.
 Consider this next routine, which contains a serious coding error. Flow
 analysis will find it for us.
 
-.. code:: ada prove_flow_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_0
+.. code:: ada prove_flow_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_0
 
    with Ada.Numerics.Elementary_Functions;  use Ada.Numerics.Elementary_Functions;
 
@@ -741,7 +741,7 @@ though they are *about* the bodies. Placement on the declarations allows
 the obligations and guarantees to be visible to all parties. For
 example:
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1
 
     function Mid (X, Y : Integer) return Integer with
        Pre  => X + Y /= 0,
@@ -756,7 +756,7 @@ than the value passed to :ada:`X`.
 
 Consider a client calling this function:
 
-.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1 switches=Compiler(-gnato23);
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1 switches=Compiler(-gnato23);
 
     with Mid;
     with Ada.Text_IO; use Ada.Text_IO;
@@ -778,7 +778,7 @@ elsewhere.)
 Let's change the argument passed to :ada:`Y` in the second call (line 8).
 Instead of -1 we will pass -2:
 
-.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_1 switches=Compiler(-gnato23);
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1 switches=Compiler(-gnato23);
 
     with Mid;
     with Ada.Text_IO; use Ada.Text_IO;
@@ -807,7 +807,7 @@ never be zero.
 Postconditions can also compare the state prior to a call with the state
 after a call, using the :ada:`'Old` attribute. For example:
 
-.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_2
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2
 
    procedure Increment (Value : in out Integer) with
      Pre  => Value < Integer'Last,
@@ -851,7 +851,7 @@ As an example, consider a procedure :ada:`Read` that returns a component
 value from an array. Both the :ada:`Data` and :ada:`Index` are objects visible
 to the procedure so they are not formal parameters.
 
-.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Defensive
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Defensive
 
    package P is
 
@@ -893,7 +893,7 @@ subprogram is only called when :ada:`Index` is within the indexing
 boundaries of :ada:`Data`. We can express that requirement with a
 precondition (line 9).
 
-.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Defensive
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Defensive
 
    package P is
 
@@ -970,7 +970,7 @@ positive value, the attempt to increment it would overflow, raising
 deal with.) We added a precondition to allow only the integer values up to,
 but not including, the largest positive value:
 
-.. code:: ada prove_button project=Courses.Ada_For_C_Embedded_Dev.SPARK.Contracts_2
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2
 
    procedure Increment (Value : in out Integer) with
      Pre  => Value < Integer'Last,
@@ -992,7 +992,7 @@ here, but note that we should never need both.
 Proving Abstract Properties
 ---------------------------
 
-The postcondition on :ada:`Increment` is in fact a unit level-level
+The postcondition on :ada:`Increment` expresses what is, in fact, a unit-level
 requirement. Successfully proving such requirements is another
 significant robustness and cost benefit. Together with the proofs for
 initialization and AoRTE, these proofs ensure program integrity, that

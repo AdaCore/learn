@@ -82,7 +82,7 @@ aspect. Let's reuse an example from a previous chapter and inline the
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Inlining
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Inlining
 
     package Float_Arrays is
 
@@ -218,7 +218,7 @@ consider the following example in C:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero
 
     !main.c
     #include <stdio.h>
@@ -243,7 +243,7 @@ manually introduce a check for zero before this operation. For example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero_Check
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero_Check
 
     !main.c
     #include <stdio.h>
@@ -271,7 +271,7 @@ This is the corresponding code in Ada:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -294,7 +294,7 @@ the same message as we did in the second version of the C code:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Division_By_Zero
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -386,7 +386,7 @@ this type without an explicit value for :ada:`V` will issue a call to
 :ada:`Call_To_Some_Function`. More subtle issue may arise with elaboration. For
 example, it's possible to write:
 
-.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Dynamic_Array
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Dynamic_Array
 
     package Some_Functions is
 
@@ -405,9 +405,9 @@ example, it's possible to write:
 
     with Values; use Values;
 
-    package P is
+    package Arr_Def is
        type Arr is array (Integer range A_Start .. A_End) of Integer;
-    end P;
+    end Arr_Def;
 
 It may indeed be appealing to be able to change the values of :ada:`A_Start`
 and :ada:`A_End` at startup so as to align a series of arrays dynamically. The
@@ -421,16 +421,16 @@ Here's a last case which may also be surprising:
 
 [Ada]
 
-.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Record_With_Arrays
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Record_With_Arrays
 
-    package P is
+    package Arr_Def is
        type Arr is array (Integer range <>) of Integer;
 
        type R (D1, D2 : Integer) is record
           F1 : Arr (1 .. D1);
           F2 : Arr (1 .. D2);
        end record;
-    end P;
+    end Arr_Def;
 
 In the code above, :ada:`R` contains two arrays, :ada:`F1` and :ada:`F2`,
 respectively constrained by the discriminant :ada:`D1` and :ada:`D2`. The
@@ -489,7 +489,7 @@ Let's look at this example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Passing_Rec_By_Reference_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Passing_Rec_By_Reference_C
 
     !main.c
     #include <stdio.h>
@@ -526,7 +526,7 @@ used to pass the values do not appear in the source code.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Passing_Rec_By_Reference_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Passing_Rec_By_Reference_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -564,7 +564,7 @@ equivalent to the C version. If we had used arrays in the example above,
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Passing_Array_By_Reference_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Passing_Array_By_Reference_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -610,7 +610,7 @@ data structure. Let's look at this example in C:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Init_Rec_Proc_And_Func_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Init_Rec_Proc_And_Func_C
 
     !main.c
     #include <stdio.h>
@@ -656,7 +656,7 @@ This is the corresponding implementation in Ada:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Init_Rec_Proc_And_Func_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Init_Rec_Proc_And_Func_Ada
 
     procedure Init_Record is
 
@@ -714,7 +714,7 @@ We could, for example, rewrite the example above using limited types:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Performance.Init_Lim_Rec_Proc_And_Func_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Init_Lim_Rec_Proc_And_Func_Ada
 
     procedure Init_Limited_Record is
 

@@ -229,7 +229,7 @@ on Linux:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Quit_Handler
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Quit_Handler
 
     with System.OS_Interface;
 
@@ -411,7 +411,7 @@ following:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Fixed_Point_Type
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Normalized_Fixed_Point_Type
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -434,7 +434,7 @@ We may also rewrite this code with an exact type definition:
 
 [Ada]
 
-.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Normalized_Adapted_Fixed_Point_Type
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Normalized_Adapted_Fixed_Point_Type
 
     package Normalized_Adapted_Fixed_Point_Type is
 
@@ -446,7 +446,7 @@ We may also use any other range. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Custom_Fixed_Point_Range
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Custom_Fixed_Point_Range
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -471,7 +471,7 @@ All standard operations are available for fixed-point types. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_Op
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Fixed_Point_Op
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -494,7 +494,7 @@ Let's look at this very rudimentary example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Fixed_Point_C
 
     !main.c
     #include <stdio.h>
@@ -586,7 +586,7 @@ Let's look at a simple example of a volatile variable in C:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Object_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Volatile_Object_C
 
     !main.c
     #include <stdio.h>
@@ -612,7 +612,7 @@ This is the corresponding implementation in Ada:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Object_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Volatile_Object_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -633,7 +633,7 @@ declarations. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Type
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Volatile_Type
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -660,7 +660,7 @@ declaration. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Volatile_Array_Components
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Volatile_Array_Components
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -731,7 +731,7 @@ use the aspect to declare a shared hardware register:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Atomic_Object
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Atomic_Object
 
     with System;
 
@@ -755,7 +755,7 @@ For example:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Atomic_Types_Arrays
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Atomic_Types_Arrays
 
     with System;
 
@@ -816,7 +816,7 @@ Let's look at an example from an earlier chapter:
 
 [Ada]
 
-.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Size_Aspect
 
     package My_Device_Types is
 
@@ -842,7 +842,7 @@ or of an object:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Size_Aspect
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Size_Aspect
 
     with Ada.Text_IO;     use Ada.Text_IO;
 
@@ -875,7 +875,7 @@ architecture:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.PMC_Peripheral
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.PMC_Peripheral
 
     with System;
 
@@ -981,7 +981,7 @@ using :ada:`PMC_Periph.PMC_SCER.USBCLK`:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Register_Overlay_1
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Register_Overlay_1
 
     with Registers;
 
@@ -1024,7 +1024,7 @@ chapter 6. Please refer to that chapter for more details.
     :ada:`UInt10`. For example, we may declare a stand-alone object of type
     :ada:`Bit`:
 
-    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Bit_Declaration
+    .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Bit_Declaration
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1075,7 +1075,7 @@ Let's look at a simple example of serialization of an arbitrary record type:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream_Declaration
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Data_Stream_Declaration
 
     package Arbitrary_Types is
 
@@ -1150,7 +1150,7 @@ example that we've seen before. This is the corresponding implementation:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Data_Stream
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Data_Stream
 
     with System;
 

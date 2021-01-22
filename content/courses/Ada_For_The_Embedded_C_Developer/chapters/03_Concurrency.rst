@@ -61,7 +61,7 @@ of control in any of the examples, the output may be interspersed.
 
 [Ada]
 
-.. code:: ada run_button ada project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task;
+.. code:: ada run_button ada project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task;
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -104,7 +104,7 @@ the underlying implementation of the task scheduling algorithm.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task_Type
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task_Type
 
     package My_Tasks is
 
@@ -140,7 +140,7 @@ and terminates when its work is completed.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.My_Task_Type
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task_Type
 
     with My_Tasks; use My_Tasks;
 
@@ -160,7 +160,7 @@ data and coordinate execution. Let's consider the following example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Rendezvous
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Rendezvous
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -168,7 +168,7 @@ data and coordinate execution. Let's consider the following example:
 
        task After is
           entry Go;
-       end After ;
+       end After;
 
        task body After is
        begin
@@ -198,7 +198,7 @@ and executes some code:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Rendezvous_Params
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Rendezvous_Params
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -265,7 +265,7 @@ is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Selective_Rendezvous
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Selective_Rendezvous
 
     package Counters is
 
@@ -299,7 +299,7 @@ is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
                 end Get;
              or
                 delay 5.0;
-                Put_Line("Exiting Counter task...");
+                Put_Line ("Exiting Counter task...");
                 exit;
              end select;
           end loop;
@@ -319,16 +319,16 @@ is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
        Put_Line ("Got value. Value = " & Integer'Image (V));
 
        Counter.Increment;
-       Put_Line("Incremented value.");
+       Put_Line ("Incremented value.");
 
        Counter.Increment;
-       Put_Line("Incremented value.");
+       Put_Line ("Incremented value.");
 
        Counter.Get (V);
        Put_Line ("Got value. Value = " & Integer'Image (V));
 
        Counter.Decrement;
-       Put_Line("Decremented value.");
+       Put_Line ("Decremented value.");
 
        Counter.Get (V);
        Put_Line ("Got value. Value = " & Integer'Image (V));
@@ -396,7 +396,7 @@ Let's reimplement our earlier tasking example with a protected object called
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Counter
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Protected_Counter
 
     package Counters is
 
@@ -440,7 +440,7 @@ A protected object can be accessed through prefix notation:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Counter
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Protected_Counter
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Counters;    use Counters;
@@ -497,7 +497,7 @@ a binary semaphore / persistent signal.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Protected_Binary_Semaphore
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Protected_Binary_Semaphore
 
     package Binary_Semaphores is
 

@@ -49,7 +49,7 @@ of the type they're being called upon. For example, a swap macro may look like:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Swap_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Swap_C
 
     !main.c
     #include <stdio.h>
@@ -78,7 +78,7 @@ function that is written after static arguments, such as a parameter:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Swap_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Swap_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -133,7 +133,7 @@ generic, including global variables. For example:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_1
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Gen_Pkg_1
 
     generic
        type T is private;
@@ -147,14 +147,14 @@ generic, including global variables. For example:
 
 The above can be instantiated and used the following way:
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_1
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Gen_Pkg_1
 
     with Gen;
 
     procedure Main is
        package I1 is new Gen (Integer);
        package I2 is new Gen (Integer);
-       subtype Str10 is String (1..10);
+       subtype Str10 is String (1 .. 10);
        package I3 is new Gen (Str10);
     begin
        I1.G := 0;
@@ -172,7 +172,7 @@ of structurally compatible array type:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Gen_Pkg_2
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Gen_Pkg_2
 
     generic
        type Component is private;
@@ -224,7 +224,7 @@ Let's start from the following example:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     package Drivers_1 is
 
@@ -234,7 +234,7 @@ Let's start from the following example:
        procedure Send_Fast (Device : Device_1; Data : Integer);
        procedure Receive (Device : Device_1; Data : out Integer);
 
-    end Drivers_1 ;
+    end Drivers_1;
 
     package body Drivers_1 is
 
@@ -252,7 +252,7 @@ Let's start from the following example:
           Data := 42;
        end Receive;
 
-    end Drivers_1 ;
+    end Drivers_1;
 
 In the above example, :ada:`Device_1` is an empty record type. It may also have
 some fields if required, or be a different type such as a scalar. Then the four
@@ -264,7 +264,7 @@ it as we would use any other type. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Drivers_1;   use Drivers_1;
@@ -287,7 +287,7 @@ operates exactly like the previous one, but modifies only the behavior of
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     with Drivers_1; use Drivers_1;
 
@@ -307,7 +307,6 @@ operates exactly like the previous one, but modifies only the behavior of
 
     end Drivers_2;
 
-
 Here, :ada:`Device_2` is derived from :ada:`Device_1`. It contains all the
 exact same properties and primitives, in particular, :ada:`Startup`,
 :ada:`Send`, :ada:`Send_Fast` and :ada:`Receive`. However, here, we decided to
@@ -317,7 +316,7 @@ the fact that it now relies on a different type:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Drivers_2;   use Drivers_2;
@@ -341,7 +340,7 @@ device the following way:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     with Drivers_1; use Drivers_1;
 
@@ -372,7 +371,7 @@ implementation:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     package body Drivers_3 is
 
@@ -388,7 +387,8 @@ Our :ada:`Main` now looks like:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
+    :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Drivers_3;   use Drivers_3;
@@ -414,7 +414,7 @@ simplified example to illustrate that:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Derived_Drivers
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     package Drivers_1 is
 
@@ -500,7 +500,7 @@ to a failed overflow check:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Constraint_Error_Detection
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Constraint_Error_Detection
 
     package P is
        function Add_Max (A : Integer) return Integer;
@@ -580,7 +580,7 @@ is only used for debugging:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Debug_Code_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Debug_Code_C
 
     !main.c
     #include <stdio.h>
@@ -619,7 +619,7 @@ When using a configuration package, the example above can be written as:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Debug_Code_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Debug_Code_Ada
 
     package Config is
 
@@ -645,8 +645,8 @@ When using a configuration package, the example above can be written as:
        B := Func (A);
 
        if Config.Debug then
-          Put_Line("Func(" & Integer'Image (A) & ") => "
-                   & Integer'Image (B));
+          Put_Line ("Func(" & Integer'Image (A) & ") => "
+                    & Integer'Image (B));
        end if;
     end Main;
 
@@ -722,7 +722,7 @@ we define the corresponding value of :c:`MOD_VALUE`.
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.App_Version_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.App_Version_C
 
     !defs.h
     #ifndef APP_VERSION
@@ -765,7 +765,7 @@ each version of the application. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.App_Version_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.App_Version_Ada
 
     --  ./src/app_1/app_defs.ads
 
@@ -824,7 +824,7 @@ seen this example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Rec_Disc_Ada
 
     procedure Main is
        type Arr is array (Integer range <>) of Integer;
@@ -848,7 +848,7 @@ with a pointer to an array:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Rec_Disc_C
 
     !main.c
     #include <stdio.h>
@@ -909,9 +909,9 @@ declaration. Let's rewrite the example above:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Rec_Disc_Ada_Private
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Rec_Disc_Ada_Private
 
-    package P is
+    package Array_Definition is
        type Arr is array (Integer range <>) of Integer;
 
        type S (Last : Integer) is private;
@@ -921,10 +921,10 @@ declaration. Let's rewrite the example above:
           A : Arr (0 .. Last);
        end record;
 
-    end P;
+    end Array_Definition;
 
-    with Ada.Text_IO; use Ada.Text_IO;
-    with P;           use P;
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Array_Definition; use Array_Definition;
 
     procedure Main is
        V : S (9);
@@ -932,9 +932,11 @@ declaration. Let's rewrite the example above:
        Put_Line ("Last : " & Integer'Image (V.Last));
     end Main;
 
+:code-config:`reset_accumulator=True`
+
 Even though the :ada:`S` type is now private, we can still display :ada:`Last`
 because this discriminant is visible in the *non-private* part of package
-:ada:`P`.
+:ada:`Array_Definition`.
 
 
 Variant records
@@ -962,7 +964,7 @@ Let's look at this example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Var_Rec_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Var_Rec_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1001,7 +1003,7 @@ We can implement this example in C by using unions:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Var_Rec_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Var_Rec_C
 
     !main.c
     #include <stdio.h>
@@ -1100,7 +1102,7 @@ example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Unchecked_Union_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Unchecked_Union_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1144,7 +1146,7 @@ We could, however, declare another record with discriminants and use the
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Unchecked_Union_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Unchecked_Union_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1181,7 +1183,7 @@ For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Var_Rec_Null_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Var_Rec_Null_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1223,7 +1225,7 @@ example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Non_Opt_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Non_Opt_C
 
     !main.c
     #include <stdio.h>
@@ -1295,7 +1297,7 @@ This is the corresponding code in Ada:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Non_Opt_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Non_Opt_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1342,7 +1344,7 @@ example and *wrap* the returned value in a variant record:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Opt_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Opt_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1403,7 +1405,7 @@ example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Tagged_Type_Decl
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Tagged_Type_Decl
 
     procedure Main is
 
@@ -1430,7 +1432,7 @@ example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Tagged_Type_Extension_Decl
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Tagged_Type_Extension_Decl
 
     procedure Main is
 
@@ -1495,7 +1497,7 @@ types based on this example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Tagged_Type_Extension_Decl
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Tagged_Type_Extension_Decl
 
     package P is
 
@@ -1503,26 +1505,26 @@ types based on this example:
           V : Integer;
        end record;
 
-       procedure Display (R : in Rec);
+       procedure Display (R : Rec);
        procedure Reset (R : out Rec);
 
        type New_Rec is new Rec;
 
-       overriding procedure Display (R : in New_Rec);
+       overriding procedure Display (R : New_Rec);
        not overriding procedure New_Op (R : in out New_Rec);
 
        type Tagged_Rec is tagged record
           V : Integer;
        end record;
 
-       procedure Display (R : in Tagged_Rec);
+       procedure Display (R : Tagged_Rec);
        procedure Reset (R : out Tagged_Rec);
 
        type Ext_Tagged_Rec is new Tagged_Rec with record
           V2 : Integer;
        end record;
 
-       overriding procedure Display (R : in Ext_Tagged_Rec);
+       overriding procedure Display (R : Ext_Tagged_Rec);
        overriding procedure Reset (R : out Ext_Tagged_Rec);
        not overriding procedure New_Op (R : in out Ext_Tagged_Rec);
 
@@ -1532,7 +1534,7 @@ types based on this example:
 
     package body P is
 
-       procedure Display (R : in Rec) is
+       procedure Display (R : Rec) is
        begin
           Put_Line ("TYPE: REC");
           Put_Line ("Rec.V = " & Integer'Image (R.V));
@@ -1544,7 +1546,7 @@ types based on this example:
           R.V := 0;
        end Reset;
 
-       procedure Display (R : in New_Rec) is
+       procedure Display (R : New_Rec) is
        begin
           Put_Line ("TYPE: NEW_REC");
           Put_Line ("New_Rec.V = " & Integer'Image (R.V));
@@ -1556,7 +1558,7 @@ types based on this example:
           R.V := R.V + 1;
        end New_Op;
 
-       procedure Display (R : in Tagged_Rec) is
+       procedure Display (R : Tagged_Rec) is
        begin
           --  Using External_Tag attribute to retrieve the tag as a string
           Put_Line ("TYPE: " & Tagged_Rec'External_Tag);
@@ -1569,7 +1571,7 @@ types based on this example:
           R.V := 0;
        end Reset;
 
-       procedure Display (R : in Ext_Tagged_Rec) is
+       procedure Display (R : Ext_Tagged_Rec) is
        begin
           --  Using External_Tag attribute to retrieve the tag as a string
           Put_Line ("TYPE: " & Ext_Tagged_Rec'External_Tag);
@@ -1758,7 +1760,7 @@ Let's look at an example with an interface and two derived tagged types:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Interfaces_1
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Interfaces_1
 
     package P is
 
@@ -1800,7 +1802,7 @@ Let's look at an example with an interface and two derived tagged types:
        procedure Dispatching_Display (D : Display_Interface'Class) is
        begin
           D.Display;
-       end;
+       end Dispatching_Display;
 
     begin
        Dispatching_Display (D_Small);
@@ -1824,7 +1826,7 @@ We may derive a type from multiple interfaces by simply writing
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Multiple_Interfaces
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Multiple_Interfaces
 
     package Transceivers is
 
@@ -1836,7 +1838,8 @@ We may derive a type from multiple interfaces by simply writing
 
        procedure Receive (Obj : in out Receive_Interface) is abstract;
 
-       type Transceiver is new Send_Interface and Receive_Interface with null record;
+       type Transceiver is new Send_Interface and Receive_Interface
+         with null record;
 
        procedure Send (D : in out Transceiver);
        procedure Receive (D : in out Transceiver);
@@ -1885,7 +1888,7 @@ abstract tagged type declared in the :ada:`Abstract_Transceivers` package:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Multiple_Interfaces
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Multiple_Interfaces
    :class: ada-expect-compile-error
 
     with Transceivers; use Transceivers;
@@ -1938,7 +1941,7 @@ declare objects of this derived type. This is what we do in the
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Multiple_Interfaces
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Multiple_Interfaces
 
     with Abstract_Transceivers; use Abstract_Transceivers;
 
@@ -1996,7 +1999,7 @@ calls:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Tagged_Drivers
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Tagged_Drivers
 
     package Drivers_Base is
 
@@ -2143,7 +2146,7 @@ This is an example on how to declare and use pointers to functions in C:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Selecting_Subprogram_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Selecting_Subprogram_C
 
     !main.c
     #include <stdio.h>
@@ -2194,7 +2197,7 @@ This is the corresponding implementation in Ada:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Selecting_Subprogram_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Selecting_Subprogram_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2269,7 +2272,7 @@ calls a callback function (:c:`process_one`) to process a list of values:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Callback_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Callback_C
 
     !process_values.h
     typedef int (*process_one_callback) (int);
@@ -2339,7 +2342,7 @@ This is the corresponding implementation in Ada:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.Callback_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Callback_Ada
 
     package Values_Processing is
 
@@ -2415,7 +2418,7 @@ example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Reusability.System_For_Dyn_Lib
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.System_For_Dyn_Lib
 
     --
     --  File: component_a.ads

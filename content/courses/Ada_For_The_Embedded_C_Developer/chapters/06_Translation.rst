@@ -49,7 +49,7 @@ Let's start with the following C code:
 
 [C]
 
-.. code:: c manual_chop project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct_C
+.. code:: c manual_chop project=Courses.Ada_For_Embedded_C_Dev.Translation.My_Struct_C
 
     !call.c
     #include <stdio.h>
@@ -70,7 +70,7 @@ compiler to lay out the data in memory the way a C compiler would.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.My_Struct_Ada
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Interfaces.C;
@@ -109,7 +109,7 @@ And that's all that's necessary. Here's an example of a call to :ada:`Call`:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.My_Struct
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.My_Struct
 
     with Interfaces.C;
 
@@ -222,14 +222,14 @@ length of the array needs to be passed explicitly. For example:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_1
+.. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Arr_1
 
     !p.h
     void p (int * a, int length);
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_1
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Arr_1
 
     procedure Main is
        type Arr is array (Integer range <>) of Integer;
@@ -253,14 +253,14 @@ it from Ada, but instead retrieving it as an access from C. For example:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_2
+.. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Arr_2
 
     !f.h
     int * f ();
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_2
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Arr_2
 
     procedure Main is
        type Arr is array (Integer) of Integer;
@@ -285,7 +285,7 @@ directly mapped to an Ada function returning an address:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_3
+.. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Arr_3
 
     !fg.h
     int * f_arr (void);
@@ -296,7 +296,7 @@ directly mapped to an Ada function returning an address:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Arr_3
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Arr_3
 
     with System;
 
@@ -345,7 +345,7 @@ example to illustrate this point:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Param_By_Value_C
 
     !call.c
     typedef struct my_struct {
@@ -361,7 +361,7 @@ passed by copy.
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Param_By_Value_Ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Param_By_Value_Ada
 
     with Interfaces.C;
 
@@ -398,7 +398,7 @@ call could be translated:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Namespaces
+.. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Namespaces
 
     !reg_interface.h
     void registerInterface_Initialize (int size);
@@ -413,10 +413,10 @@ call could be translated:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Namespaces
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Namespaces
 
     package Register_Interface is
-       procedure Initialize(Size : Integer)
+       procedure Initialize (Size : Integer)
          with Import     => True,
               Convention => C,
               External_Name => "registerInterface_Initialize";
@@ -469,7 +469,7 @@ Dynamically allocated arrays can be directly allocated on the stack:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_Stack_Alloc_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Array_Stack_Alloc_C
 
     !array_decl.c
     #include <stdlib.h>
@@ -480,7 +480,7 @@ Dynamically allocated arrays can be directly allocated on the stack:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_Stack_Alloc_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Array_Stack_Alloc_Ada
 
     procedure Main is
        type Arr is array (Integer range <>) of Integer;
@@ -495,7 +495,7 @@ discriminant:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Struct_Array_Stack_Alloc_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Struct_Array_Stack_Alloc_C
 
     !array_decl.c
     #include <stdlib.h>
@@ -513,7 +513,7 @@ discriminant:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Struct_Array_Stack_Alloc_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Struct_Array_Stack_Alloc_Ada
 
     procedure Main is
        type Arr is array (Integer range <>) of Integer;
@@ -536,14 +536,14 @@ particular, it differentiates between arrays and scalars. For example:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_In_Out_C
+.. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Array_In_Out_C
 
     !p.h
     void p (int * a, int * b);
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Array_In_Out_Ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Array_In_Out_Ada
 
     package Array_Types is
        type Arr is array (Integer range <>) of Integer;
@@ -557,7 +557,7 @@ through an :ada:`Address` clause associated to a variable, for example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Address_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Address_C
 
     !test_c.c
     int main(int argc, const char * argv[])
@@ -567,7 +567,7 @@ through an :ada:`Address` clause associated to a variable, for example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Address_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Address_Ada
 
     with System;
 
@@ -598,7 +598,7 @@ boolean flags. In C, this would be done through masks, e.g.:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Flags_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Flags_C
 
     !flags.c
     #define FLAG_1 0b0001
@@ -618,7 +618,7 @@ values:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Flags_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Flags_Ada
 
     procedure Main is
        type Values is (Flag_1, Flag_2, Flag_3, Flag_4);
@@ -641,7 +641,7 @@ representation is needed or more complex data are used:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Rec_Map_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Rec_Map_C
 
     !struct_map.c
     int main(int argc, const char * argv[])
@@ -653,7 +653,7 @@ representation is needed or more complex data are used:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Rec_Map_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Rec_Map_Ada
 
     procedure Main is
        type Value_Rec is record
@@ -687,7 +687,7 @@ above could also be literally translated to:
 
 [C]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitwise_Ops_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitwise_Ops_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -779,7 +779,7 @@ Let's look at a simple example:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -817,7 +817,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_C
 
     !bitfield.c
     #include <stdio.h>
@@ -838,7 +838,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     [Ada]
 
-    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Record_Type
+    .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Default_Record_Type
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -864,7 +864,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     [Ada]
 
-    .. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Default_Value_Type
+    .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Default_Value_Type
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -896,7 +896,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     [Ada]
 
-    .. code:: ada project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Overwrite
+    .. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Translation.Overlay_Default_Init_Overwrite
 
         package P is
 
@@ -952,7 +952,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     [Ada]
 
-    .. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Overlay_Default_Init_Import
+    .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Overlay_Default_Init_Import
 
         package P is
 
@@ -1009,7 +1009,7 @@ records. For example:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_Ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Int_Array_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1042,7 +1042,7 @@ bit-shifting and masking to set that specific bit:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Int_Array_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Int_Array_C
 
     !bitfield_int_array.c
     #include <stdio.h>
@@ -1066,7 +1066,7 @@ complex data structures as a bitstream. For example:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Serialization_ada
 
     package Serializer is
 
@@ -1133,7 +1133,7 @@ shifting and masking to access the bits of that byte. Here, we use the
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Serialization_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Serialization_C
 
     !my_recs.h
     typedef struct {
@@ -1196,7 +1196,7 @@ procedure:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_Ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Deserialization_Ada
 
     package Serializer is
 
@@ -1276,7 +1276,7 @@ procedure:
        begin
           Put ("("  & Integer'Image (R.V) & ", "
                & (R.S) & ")");
-       end;
+       end Display;
 
     end My_Recs;
 
@@ -1292,7 +1292,7 @@ procedure:
          with Address => R1'Address, Import, Volatile;
     begin
        Put ("R2 = ");
-       Display(R2);
+       Display (R2);
        New_Line;
 
        --  Getting Rec type using data from B1, which is a bit-field
@@ -1304,7 +1304,7 @@ procedure:
 
        Put_Line ("New bitstream received!");
        Put ("R2 = ");
-       Display(R2);
+       Display (R2);
        New_Line;
     end Main;
 
@@ -1319,7 +1319,7 @@ individual bytes. For example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Deserialization_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Deserialization_C
 
     !my_recs.h
     typedef struct {
@@ -1392,7 +1392,7 @@ look at a simple example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Simple_Unchecked_Conversion
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Simple_Unchecked_Conversion
 
     with Ada.Text_IO;              use Ada.Text_IO;
     with Ada.Unchecked_Conversion;
@@ -1422,7 +1422,7 @@ This is the corresponding implementation using overlays:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Simple_Overlay
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Simple_Overlay
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1446,7 +1446,7 @@ integer data type. This is how we can do it using :ada:`Unchecked_Conversion`:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Fixed_Int_Unchecked_Conversion
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Fixed_Int_Unchecked_Conversion
 
     with Ada.Text_IO;              use Ada.Text_IO;
     with Ada.Unchecked_Conversion;
@@ -1484,7 +1484,7 @@ This is how we can rewrite the implementation above using overlays:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Fixed_Int_Overlay
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Fixed_Int_Overlay
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1506,7 +1506,6 @@ This is how we can rewrite the implementation above using overlays:
        Put_Line ("F = " & Fixed_16'Image (F));
        Put_Line ("I = " & Int_16'Image (I));
     end Fixed_Int_Overlay;
-
 Here, the conversion to the integer value is implicit, so we don't need to call
 a conversion function.
 
@@ -1536,9 +1535,10 @@ in. This is how we can rewrite one of the previous examples:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Translation.Bitfield_Conversion
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Conversion
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Unchecked_Conversion;
 
     procedure Simple_Bitfield_Conversion is
        type Bit_Field is array (Natural range <>) of Boolean with Pack;
