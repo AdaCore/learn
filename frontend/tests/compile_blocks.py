@@ -243,8 +243,8 @@ def analyze_file(rst_file):
             projects[b.project] = list()
         projects[b.project].append((i, b))
 
-    if True:
-        for i, block in blocks:
+    for project in projects:
+        for i, block in projects[project]:
             if isinstance(block, ConfigBlock):
                 current_config.update(block)
                 continue
