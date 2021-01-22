@@ -45,6 +45,5 @@ jobs:
         pip install -r requirements.txt
     - name: Run SPHINX engine tests
       run: make SPHINXOPTS="-W" test_engine
-    # TODO: This is to be replaced with E2E testing
-    # - name: Run SPHINX content tests
-    #   run: make -k test_content
+    - name: Run SPHINX content tests
+      run: make -k test_content
