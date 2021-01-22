@@ -236,6 +236,13 @@ def analyze_file(rst_file):
                 diags.append(Diag(f, int(l), int(c), t))
         return diags
 
+    projects = dict()
+
+    for (i, b) in code_blocks:
+        if not b.project in projects:
+            projects[b.project] = list()
+        projects[b.project].append((i, b))
+
     for i, block in blocks:
         if isinstance(block, ConfigBlock):
             current_config.update(block)
