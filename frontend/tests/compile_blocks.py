@@ -243,135 +243,136 @@ def analyze_file(rst_file):
             projects[b.project] = list()
         projects[b.project].append((i, b))
 
-    for i, block in blocks:
-        if isinstance(block, ConfigBlock):
-            current_config.update(block)
-            continue
+    if True:
+        for i, block in blocks:
+            if isinstance(block, ConfigBlock):
+                current_config.update(block)
+                continue
 
-        has_error = False
-        loc = "at {}:{} (code block #{})".format(
-            rst_file, block.line_start, i)
+            has_error = False
+            loc = "at {}:{} (code block #{})".format(
+                rst_file, block.line_start, i)
 
-        all_output = []
+            all_output = []
 
-        def print_diags():
-            diags = extract_diagnostics(all_output)
-            for diag in diags:
-                diag.line = diag.line + block.line_start
-                diag.file = rst_file
-                print(diag)
+            def print_diags():
+                diags = extract_diagnostics(all_output)
+                for diag in diags:
+                    diag.line = diag.line + block.line_start
+                    diag.file = rst_file
+                    print(diag)
 
-        def print_error(*error_args):
-            error(*error_args)
-            print_diags()
+            def print_error(*error_args):
+                error(*error_args)
+                print_diags()
 
-        if 'ada-nocheck' in block.classes:
+            if 'ada-nocheck' in block.classes:
+                if args.verbose:
+                    print("Skipping code block {}".format(loc))
+                continue
+
             if args.verbose:
-                print("Skipping code block {}".format(loc))
-            continue
+                print(header("Checking code block {}".format(loc)))
 
-        if args.verbose:
-            print(header("Checking code block {}".format(loc)))
+            with open(u"code.ada", u"w") as code_file:
+                code_file.write(block.text)
 
-        with open(u"code.ada", u"w") as code_file:
-            code_file.write(block.text)
-
-        try:
-            out = run("gnatchop", "-r", "-w", "code.ada").splitlines()
-        except S.CalledProcessError:
-            print_error(loc, "Failed to chop example, skipping\n")
-            analysis_error = True
-            continue
-
-        idx = -1
-        for i, line in enumerate(out):
-            if line.endswith("into:"):
-                idx = i + 1
-                break
-
-        if idx == -1:
-            print_error(loc, "Failed to chop example, skipping\n")
-            analysis_error = True
-            continue
-
-        source_files = [s.strip() for s in out[idx:]]
-
-        for source_file in source_files:
             try:
-                out = run("gcc", "-c", "-gnats", "-gnatyg0-s", source_file)
+                out = run("gnatchop", "-r", "-w", "code.ada").splitlines()
             except S.CalledProcessError:
-                print_error(loc, "Failed to syntax check example")
-                has_error = True
+                print_error(loc, "Failed to chop example, skipping\n")
+                analysis_error = True
+                continue
 
-            if out:
-                print_error(loc, "Failed to syntax check example")
-                has_error = True
+            idx = -1
+            for i, line in enumerate(out):
+                if line.endswith("into:"):
+                    idx = i + 1
+                    break
 
-        if 'ada-syntax-only' in block.classes or not block.run:
-            continue
+            if idx == -1:
+                print_error(loc, "Failed to chop example, skipping\n")
+                analysis_error = True
+                continue
 
-        compile_error = False
+            source_files = [s.strip() for s in out[idx:]]
 
-        if (
-            'ada-run' in block.classes
-            or 'ada-run-expect-failure' in block.classes
-        ):
-            if len(source_files) == 1:
-                main_file = source_files[0]
+            for source_file in source_files:
+                try:
+                    out = run("gcc", "-c", "-gnats", "-gnatyg0-s", source_file)
+                except S.CalledProcessError:
+                    print_error(loc, "Failed to syntax check example")
+                    has_error = True
+
+                if out:
+                    print_error(loc, "Failed to syntax check example")
+                    has_error = True
+
+            if 'ada-syntax-only' in block.classes or not block.run:
+                continue
+
+            compile_error = False
+
+            if (
+                'ada-run' in block.classes
+                or 'ada-run-expect-failure' in block.classes
+            ):
+                if len(source_files) == 1:
+                    main_file = source_files[0]
+                else:
+                    main_file = 'main.adb'
+
+                try:
+                    out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f", main_file)
+                except S.CalledProcessError as e:
+                    print_error(loc, "Failed to compile example")
+                    print(e.output)
+                    has_error = True
+
+                if not has_error:
+                    try:
+                        run("./{}".format(P.splitext(main_file)[0]))
+
+                        if 'ada-run-expect-failure' in block.classes:
+                            print_error(
+                                loc, "Running of example should have failed"
+                            )
+                            has_error = True
+
+                    except S.CalledProcessError:
+                        if 'ada-run-expect-failure' in block.classes:
+                            if args.verbose:
+                                print("Running of example expectedly failed")
+                        else:
+                            print_error(loc, "Running of example failed")
+                            has_error = True
+
             else:
-                main_file = 'main.adb'
+                for source_file in source_files:
+                    try:
+                        run("gcc", "-c", "-gnatc", "-gnatyg0-s", source_file)
+                    except S.CalledProcessError:
+                        if 'ada-expect-compile-error' in block.classes:
+                            compile_error = True
+                        else:
+                            print_error(loc, "Failed to compile example")
+                            has_error = True
 
-            try:
-                out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f", main_file)
-            except S.CalledProcessError as e:
-                print_error(loc, "Failed to compile example")
-                print(e.output)
+            if 'ada-expect-compile-error' in block.classes and not compile_error:
+                print_error(loc, "Expected compile error, got none!")
                 has_error = True
 
-            if not has_error:
-                try:
-                    run("./{}".format(P.splitext(main_file)[0]))
+            if has_error:
+                analysis_error = True
+            elif args.verbose:
+                print(C.col("SUCCESS", C.Colors.GREEN))
 
-                    if 'ada-run-expect-failure' in block.classes:
-                        print_error(
-                            loc, "Running of example should have failed"
-                        )
-                        has_error = True
+            if args.all_diagnostics:
+                print_diags()
 
-                except S.CalledProcessError:
-                    if 'ada-run-expect-failure' in block.classes:
-                        if args.verbose:
-                            print("Running of example expectedly failed")
-                    else:
-                        print_error(loc, "Running of example failed")
-                        has_error = True
-
-        else:
-            for source_file in source_files:
-                try:
-                    run("gcc", "-c", "-gnatc", "-gnatyg0-s", source_file)
-                except S.CalledProcessError:
-                    if 'ada-expect-compile-error' in block.classes:
-                        compile_error = True
-                    else:
-                        print_error(loc, "Failed to compile example")
-                        has_error = True
-
-        if 'ada-expect-compile-error' in block.classes and not compile_error:
-            print_error(loc, "Expected compile error, got none!")
-            has_error = True
-
-        if has_error:
-            analysis_error = True
-        elif args.verbose:
-            print(C.col("SUCCESS", C.Colors.GREEN))
-
-        if args.all_diagnostics:
-            print_diags()
-
-        if source_files and not current_config.accumulate_code:
-            for source_file in source_files:
-                os.remove(source_file)
+            if source_files and not current_config.accumulate_code:
+                for source_file in source_files:
+                    os.remove(source_file)
 
     return analysis_error
 
