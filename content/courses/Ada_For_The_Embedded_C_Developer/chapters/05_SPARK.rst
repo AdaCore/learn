@@ -35,17 +35,17 @@ handlers:
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
     :class: ada-nocheck
 
-   procedure P is
-   begin
-      Statements_That_Might_Raise_Exceptions;
-   exception
-      when A =>
-         Handle_A;
-      when B =>
-         Handle_B;
-      when C =>
-         Handle_C;
-   end P;
+    procedure P is
+    begin
+       Statements_That_Might_Raise_Exceptions;
+    exception
+       when A =>
+          Handle_A;
+       when B =>
+          Handle_B;
+       when C =>
+          Handle_C;
+    end P;
 
 The three exception handlers each start with the word :ada:`when` (lines
 5, 7, and 9). Next comes one or more exception identifiers, followed by
