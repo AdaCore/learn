@@ -977,7 +977,7 @@ using :ada:`PMC_Periph.PMC_SCER.USBCLK`:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Register_Overlay_1
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.PMC_Peripheral
 
     with Registers;
 
