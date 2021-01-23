@@ -285,6 +285,10 @@ def analyze_file(rst_file):
 
         init_project_dir(project)
 
+        if args.verbose:
+            print(header("Checking project {}".format(project)))
+            print("Number of code blocks: {}".format(len(projects[project])))
+
         for i, block in projects[project]:
             if isinstance(block, ConfigBlock):
                 current_config.update(block)
