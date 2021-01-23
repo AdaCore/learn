@@ -29,6 +29,7 @@ Pointers in C provide a low-level view of the addressable memory as a set of
 integer addresses. To write at address 42, just go through a pointer:
 
 .. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Pointers_C
+   :class: c-nocheck
 
    !main.c
    int main() {
