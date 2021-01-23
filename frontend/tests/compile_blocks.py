@@ -39,6 +39,7 @@ class Block(object):
     def get_blocks(input_text):
         lang_re = re.compile("\s*.. code::\s*(\w+)?\s*")
         project_re = re.compile("\s*.. code::.*project=(\S+)?")
+        manual_chop_re = re.compile("\s*.. code::.*manual_chop?")
         code_config_re = re.compile(":code-config:`(.*)?`")
         classes_re = re.compile("\s*:class:\s*(.+)")
 
@@ -74,7 +75,8 @@ class Block(object):
                         "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
                         lang,
                         project,
-                        classes
+                        classes,
+                        manual_chop
                     ))
 
                     classes, cb_start, cb_indent, lang = [], -1, -1, ""
@@ -91,6 +93,10 @@ class Block(object):
                         lang_re.match(line).groups()[0]
                     )
                     project = project_re.match(line).groups()[0]
+                    if lang == "c":
+                        manual_chop = True
+                    else:
+                        manual_chop = (manual_chop_re.match(line) is not None)
                 elif line[indent:].startswith(":code-config:"):
                     blocks.append(ConfigBlock(**dict(
                         kv.split('=')
@@ -102,13 +108,15 @@ class Block(object):
 
 
 class CodeBlock(Block):
-    def __init__(self, line_start, line_end, text, language, project, classes):
+    def __init__(self, line_start, line_end, text, language, project, classes,
+                 manual_chop):
         self.line_start = line_start
         self.line_end = line_end
         self.text = text
         self.language = language
         self.project = project
         self.classes = classes
+        self.manual_chop = manual_chop
         self.run = True
 
 
@@ -299,7 +307,12 @@ def analyze_file(rst_file):
                 code_file.write(block.text)
 
             split = block.text.splitlines()
-            source_files = real_gnatchop(split)
+
+            source_files = list()
+            if block.manual_chop:
+                source_files = manual_chop(split)
+            else:
+                source_files = real_gnatchop(split)
 
             if len(source_files) == 0:
                 print_error(loc, "Failed to chop example, skipping\n")
