@@ -41,6 +41,7 @@ class Block(object):
         project_re = re.compile("\s*.. code::.*project=(\S+)?")
         main_re = re.compile("\s*.. code::.*main=(\S+)?")
         manual_chop_re = re.compile("\s*.. code::.*manual_chop?")
+        button_re = re.compile("\s+(\S+)_button")
         code_config_re = re.compile(":code-config:`(.*)?`")
         classes_re = re.compile("\s*:class:\s*(.+)")
 
@@ -78,7 +79,8 @@ class Block(object):
                         project,
                         main_file,
                         classes,
-                        manual_chop
+                        manual_chop,
+                        buttons
                     ))
 
                     classes, cb_start, cb_indent, lang = [], -1, -1, ""
@@ -103,6 +105,8 @@ class Block(object):
                         manual_chop = True
                     else:
                         manual_chop = (manual_chop_re.match(line) is not None)
+                    buttons = button_re.findall(line)
+
                 elif line[indent:].startswith(":code-config:"):
                     blocks.append(ConfigBlock(**dict(
                         kv.split('=')
@@ -115,7 +119,7 @@ class Block(object):
 
 class CodeBlock(Block):
     def __init__(self, line_start, line_end, text, language, project,
-                 main_file, classes, manual_chop):
+                 main_file, classes, manual_chop, buttons):
         self.line_start = line_start
         self.line_end = line_end
         self.text = text
@@ -124,6 +128,7 @@ class CodeBlock(Block):
         self.main_file = main_file
         self.classes = classes
         self.manual_chop = manual_chop
+        self.buttons = buttons
         self.run = True
 
 
