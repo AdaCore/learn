@@ -369,18 +369,24 @@ def analyze_file(rst_file):
                         out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f",
                                   main_file)
                     except S.CalledProcessError as e:
-                        print_error(loc, "Failed to compile example")
-                        print(e.output)
-                        has_error = True
+                        if 'ada-expect-compile-error' in block.classes:
+                            compile_error = True
+                        else:
+                            print_error(loc, "Failed to compile example")
+                            print(e.output)
+                            has_error = True
                 elif block.language == "c":
                     try:
                         out = run("gcc", "-c", main_file)
                     except S.CalledProcessError as e:
-                        print_error(loc, "Failed to compile example")
-                        print(e.output)
-                        has_error = True
+                        if 'ada-expect-compile-error' in block.classes:
+                            compile_error = True
+                        else:
+                            print_error(loc, "Failed to compile example")
+                            print(e.output)
+                            has_error = True
 
-                if not has_error:
+                if not compile_error and not has_error:
                     if block.language == "ada":
                         try:
                             run("./{}".format(P.splitext(main_file)[0]))
