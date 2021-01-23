@@ -101,6 +101,7 @@ Unlike some other languages, Ada requires that operations on integers should be
 checked for overflow.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Overflow_Check
+    :class: ada-run-expect-failure
 
     procedure Main is
        A : Integer := Integer'Last;
@@ -364,6 +365,7 @@ exception :ada:`Constraint_Error` is raised when assigning :ada:`2.0` to the
 variable :ada:`A`:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Floating_Point_Range_Exception
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 

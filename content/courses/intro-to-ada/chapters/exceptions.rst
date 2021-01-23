@@ -32,6 +32,7 @@ Raising an exception
 To raise an exception of our newly declared exception kind, do the following:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Exceptions.Show_Exception
+    :class: ada-run-expect-failure
 
     with Exceptions; use Exceptions;
 
@@ -55,6 +56,7 @@ libraries that we call. The neat thing in Ada is that you can add an
 exception handler to any statement block as follows:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Exceptions.Show_Exception_Handling
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Exceptions;  use Ada.Exceptions;
@@ -105,6 +107,7 @@ can add it to the statements block of your current subprogram:
     example, in the following code, the exception will not be caught.
 
     .. code:: ada run_button project=Courses.Intro_To_Ada.Exceptions.Be_Careful
+        :class: ada-run-expect-failure
 
         with Ada.Text_IO; use Ada.Text_IO;
         with Ada.Exceptions;  use Ada.Exceptions;

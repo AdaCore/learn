@@ -774,7 +774,6 @@ whose capacity is initialized from an external configuration during
 elaboration.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_01
-    :class: ada-expect-compile-error
 
     package Configuration is
 
@@ -1004,7 +1003,7 @@ Example #6
 
 Let's consider yet another version of our abstract stack unit.
 
-.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_06
+.. code:: ada compile_button prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_06
     :class: ada-expect-compile-error
 
     package Stack with

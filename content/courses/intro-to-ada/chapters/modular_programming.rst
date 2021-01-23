@@ -166,8 +166,6 @@ in the package body.
 
     end Operations;
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Operations
-
     package body Operations is
 
        Last_Increment : Integer := 1;

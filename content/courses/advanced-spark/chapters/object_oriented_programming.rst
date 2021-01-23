@@ -562,7 +562,6 @@ Example #1
 ~~~~~~~~~~
 
 .. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_01
-    :class: ada-expect-compile-error
 
     package OO_Example_01 is
 
@@ -654,7 +653,6 @@ Example #4
 ~~~~~~~~~~
 
 .. code:: ada no_button project=Courses.Advanced_SPARK.Object_Oriented_Programming.Example_04
-    :class: ada-expect-compile-error
 
     package OO_Example_04 is
 

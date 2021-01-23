@@ -803,7 +803,7 @@ This is the corresponding body of the :ada:`Data` package:
 Finally, we implement the :ada:`Test_Data_Container` procedure, which
 makes use of the data container:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Generics.In_Out_Formal_Object
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.In_Out_Formal_Object
 
     with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
     with Ada.Calendar.Formatting;

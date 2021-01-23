@@ -391,7 +391,6 @@ Here's an example of trying to break that abstraction in the subprogram
 :ada:`Peek` below.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_Model
-    :class: ada-expect-compile-error
 
     package Stacks is
 
@@ -1119,7 +1118,7 @@ Example #2
 Instead of using a ghost function, :ada:`Get_Model`, to retrieve the contents
 of the ring buffer, we're now using a global ghost variable, :ada:`Model`.
 
-.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_02
+.. code:: ada compile_button prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_02
     :class: ada-expect-compile-error
 
     package Ring_Buffer is
@@ -1240,7 +1239,7 @@ Example #4
 We're now modifying :ada:`Push_Last` to share the computation of the new
 length between the operational and ghost code.
 
-.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_04
+.. code:: ada compile_button prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_04
     :class: ada-expect-compile-error
 
     package Ring_Buffer is

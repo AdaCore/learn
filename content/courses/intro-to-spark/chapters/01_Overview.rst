@@ -705,7 +705,6 @@ Let's put together the new spec for package :ada:`P` with the body of :ada:`P` s
 previously.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_08
-    :class: ada-expect-compile-error
 
     package P
       with SPARK_Mode => On

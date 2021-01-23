@@ -209,7 +209,6 @@ Attribute ``'Old``
       not limited!)
 
 .. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Attribute_Old
-    :class: ada-expect-compile-error
 
     package Show_Attribute_Old is
 
@@ -454,7 +453,6 @@ Example #4
 ~~~~~~~~~~
 
 .. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_04
-    :class: ada-expect-compile-error
 
     procedure Example_04 is
 
@@ -552,7 +550,6 @@ Example #8
 ~~~~~~~~~~
 
 .. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_08
-    :class: ada-expect-compile-error
 
     package Example_08 is
 
@@ -577,7 +574,6 @@ Example #9
 ~~~~~~~~~~
 
 .. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_09
-    :class: ada-expect-compile-error
 
     package Example_09 is
 

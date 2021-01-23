@@ -1036,7 +1036,6 @@ correct the missing initializations.  We want to know if the :ada:`Global`
 contract of :ada:`Test_Index` is correct.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_08
-    :class: ada-expect-compile-error
 
     package Show_Biggest_Increasing_Sequence is
 

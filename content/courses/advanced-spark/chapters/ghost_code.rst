@@ -525,7 +525,6 @@ Example #3
 ~~~~~~~~~~
 
 .. code:: ada no_button project=Courses.Advanced_SPARK.Ghost_Code.Example_03
-    :class: ada-expect-compile-error
 
     package Example_03 is
 
