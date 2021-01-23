@@ -1362,7 +1362,7 @@ return a value of that type.
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Application_Defined_Types
-   :class: ada-expect-compile-error
+    :class: ada-expect-compile-error
 
     procedure Main is
        type Distance is new Float;
