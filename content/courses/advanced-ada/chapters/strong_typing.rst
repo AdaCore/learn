@@ -666,7 +666,7 @@ and the *unordered index*. This is achieved by the mapping stored in
 :ada:`M`.
 
 If we'd use the ordered array of chunks, we could use the index from
-:ada:`S` directly, as illustrated in the following function:
+:ada:`S` directly, as illustrated in the following procedure:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
 
