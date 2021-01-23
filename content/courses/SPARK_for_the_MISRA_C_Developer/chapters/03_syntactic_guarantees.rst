@@ -93,7 +93,7 @@ two calls to :ada:`F` in the following are detected as unused, even though the r
 of the function call is assigned to a variable, which is itself used in
 the second case:
 
-.. code:: ada prove_flow_button run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Func_Return
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Func_Return
 
     package Fun is
        function F return Integer is (1);

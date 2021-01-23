@@ -71,7 +71,7 @@ standard type :ada:`System.Address` is used for addresses, and conversions to/fr
 integers are provided in a standard package :ada:`System.Storage_Elements`. The
 previous C code can be written as follows in Ada:
 
-.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Pointers_Ada
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Pointers_Ada
 
     with System;
     with System.Storage_Elements;
@@ -275,7 +275,7 @@ go further in SPARK and show that the value returned by :ada:`Count` is no great
 than the length of parameter :ada:`P` by stating this property in the postcondition of
 :ada:`Count` and asking the SPARK analysis tool to prove it:
 
-.. code:: ada prove_report_all_button run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Arrays_Ada
+.. code:: ada prove_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Arrays_Ada
 
     package Types is
        type Int_Array is array (Positive range <>) of Integer;
