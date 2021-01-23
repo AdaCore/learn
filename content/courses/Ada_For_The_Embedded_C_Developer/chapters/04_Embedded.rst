@@ -230,6 +230,7 @@ on Linux:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Quit_Handler
+    :class: ada-norun
 
     with System.OS_Interface;
 

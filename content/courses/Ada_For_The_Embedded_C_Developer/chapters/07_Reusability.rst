@@ -387,7 +387,7 @@ Our :ada:`Main` now looks like:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -501,6 +501,7 @@ to a failed overflow check:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Constraint_Error_Detection
+    :class: ada-run-expect-failure
 
     package P is
        function Add_Max (A : Integer) return Integer;
@@ -1886,7 +1887,7 @@ abstract tagged type declared in the :ada:`Abstract_Transceivers` package:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Multiple_Interfaces
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Multiple_Interfaces
    :class: ada-expect-compile-error
 
     with Transceivers; use Transceivers;

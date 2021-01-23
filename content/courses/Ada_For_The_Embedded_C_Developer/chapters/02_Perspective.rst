@@ -1209,8 +1209,8 @@ look at the equivalent Ada example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Strong_Typing_Ada
-   :class: ada-expect-compile-error
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Strong_Typing_Ada
+    :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1361,7 +1361,7 @@ return a value of that type.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Application_Defined_Types
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Application_Defined_Types
     :class: ada-expect-compile-error
 
     procedure Main is
@@ -1512,7 +1512,7 @@ define what are considered valid values. The most common kind of contract is a
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Range_Check
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Range_Check
     :class: ada-expect-compile-error
 
     procedure Main is
@@ -1764,6 +1764,7 @@ The corresponding code in Ada raises an exception:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 

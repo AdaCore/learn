@@ -272,6 +272,7 @@ This is the corresponding code in Ada:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 

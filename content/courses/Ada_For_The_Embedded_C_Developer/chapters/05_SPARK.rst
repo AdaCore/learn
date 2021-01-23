@@ -514,6 +514,7 @@ But now let's enable user-defined checks and build it. Different
 compiler output will appear.
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Assert
+   :class: ada-run-expect-failure
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -578,6 +579,7 @@ As it turns out, our procedure :ada:`Main` is already SPARK compliant so
 we can start verifying it.
 
 .. code:: ada prove_button run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Assert
+   :class: ada-run-expect-failure
 
    with Ada.Text_IO; use Ada.Text_IO;
 
