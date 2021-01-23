@@ -199,7 +199,7 @@ def analyze_file(rst_file):
         content = f.read()
 
     blocks = list(enumerate(filter(
-        lambda b: b.language == "ada" if isinstance(b, CodeBlock) else True,
+        lambda b: b.language in ["ada", "c"] if isinstance(b, CodeBlock) else True,
         Block.get_blocks(content)
     )))
 
@@ -295,7 +295,9 @@ def analyze_file(rst_file):
                 error(*error_args)
                 print_diags()
 
-            if 'ada-nocheck' in block.classes:
+            no_check = any(sphinx_class in ["ada-nocheck", "c-nocheck"]
+                           for sphinx_class in block.classes)
+            if no_check:
                 if args.verbose:
                     print("Skipping code block {}".format(loc))
                 continue
@@ -322,8 +324,11 @@ def analyze_file(rst_file):
                     code_file.write(source_file.content)
 
                 try:
-                    out = run("gcc", "-c", "-gnats", "-gnatyg0-s",
-                              source_file.basename)
+                    if block.language == "ada":
+                        out = run("gcc", "-c", "-gnats", "-gnatyg0-s",
+                                  source_file.basename)
+                    elif block.language == "c":
+                        out = run("gcc", "-c", source_file.basename)
 
                     if out:
                         print_error(loc, "Failed to syntax check example")
@@ -346,42 +351,53 @@ def analyze_file(rst_file):
                 else:
                     main_file = 'main.adb'
 
-                try:
-                    out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f", main_file)
-                except S.CalledProcessError as e:
-                    print_error(loc, "Failed to compile example")
-                    print(e.output)
-                    has_error = True
+                if block.language == "ada":
+                    try:
+                        out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f",
+                                  main_file)
+                    except S.CalledProcessError as e:
+                        print_error(loc, "Failed to compile example")
+                        print(e.output)
+                        has_error = True
+                elif block.language == "c":
+                    try:
+                        out = run("gcc", "-c", main_file)
+                    except S.CalledProcessError as e:
+                        print_error(loc, "Failed to compile example")
+                        print(e.output)
+                        has_error = True
 
                 if not has_error:
-                    try:
-                        run("./{}".format(P.splitext(main_file)[0]))
+                    if block.language == "ada":
+                        try:
+                            run("./{}".format(P.splitext(main_file)[0]))
 
-                        if 'ada-run-expect-failure' in block.classes:
-                            print_error(
-                                loc, "Running of example should have failed"
-                            )
-                            has_error = True
+                            if 'ada-run-expect-failure' in block.classes:
+                                print_error(
+                                    loc, "Running of example should have failed"
+                                )
+                                has_error = True
 
-                    except S.CalledProcessError:
-                        if 'ada-run-expect-failure' in block.classes:
-                            if args.verbose:
-                                print("Running of example expectedly failed")
-                        else:
-                            print_error(loc, "Running of example failed")
-                            has_error = True
+                        except S.CalledProcessError:
+                            if 'ada-run-expect-failure' in block.classes:
+                                if args.verbose:
+                                    print("Running of example expectedly failed")
+                            else:
+                                print_error(loc, "Running of example failed")
+                                has_error = True
 
             else:
                 for source_file in source_files:
-                    try:
-                        run("gcc", "-c", "-gnatc", "-gnatyg0-s",
-                            source_file.basename)
-                    except S.CalledProcessError:
-                        if 'ada-expect-compile-error' in block.classes:
-                            compile_error = True
-                        else:
-                            print_error(loc, "Failed to compile example")
-                            has_error = True
+                    if block.language == "ada":
+                        try:
+                            run("gcc", "-c", "-gnatc", "-gnatyg0-s",
+                                source_file.basename)
+                        except S.CalledProcessError:
+                            if 'ada-expect-compile-error' in block.classes:
+                                compile_error = True
+                            else:
+                                print_error(loc, "Failed to compile example")
+                                has_error = True
 
             if 'ada-expect-compile-error' in block.classes and not compile_error:
                 print_error(loc, "Expected compile error, got none!")
