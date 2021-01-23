@@ -357,6 +357,7 @@ def analyze_file(rst_file):
             if (
                 'ada-run' in block.classes
                 or 'ada-run-expect-failure' in block.classes
+                or 'run' in block.buttons
             ):
                 if block.main_file is not None:
                     main_file = block.main_file
@@ -398,7 +399,8 @@ def analyze_file(rst_file):
                                 print_error(loc, "Running of example failed")
                                 has_error = True
 
-            else:
+            elif 'compile' in block.buttons:
+
                 for source_file in source_files:
                     if block.language == "ada":
                         try:
