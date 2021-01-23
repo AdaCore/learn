@@ -354,10 +354,10 @@ def analyze_file(rst_file):
 
             compile_error = False
 
-            if (
-                'ada-run' in block.classes
-                or 'ada-run-expect-failure' in block.classes
-                or 'run' in block.buttons
+            if (('ada-run' in block.classes
+                 or 'ada-run-expect-failure' in block.classes
+                 or 'run' in block.buttons)
+                and not 'ada-norun' in block.classes
             ):
                 if block.main_file is not None:
                     main_file = block.main_file
