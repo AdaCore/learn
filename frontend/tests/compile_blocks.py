@@ -298,34 +298,27 @@ def analyze_file(rst_file):
             with open(u"code.ada", u"w") as code_file:
                 code_file.write(block.text)
 
-            try:
-                out = run("gnatchop", "-r", "-w", "code.ada").splitlines()
-            except S.CalledProcessError:
+            split = block.text.splitlines()
+            source_files = real_gnatchop(split)
+
+            if len(source_files) == 0:
                 print_error(loc, "Failed to chop example, skipping\n")
                 analysis_error = True
                 continue
-
-            idx = -1
-            for i, line in enumerate(out):
-                if line.endswith("into:"):
-                    idx = i + 1
-                    break
-
-            if idx == -1:
-                print_error(loc, "Failed to chop example, skipping\n")
-                analysis_error = True
-                continue
-
-            source_files = [s.strip() for s in out[idx:]]
 
             for source_file in source_files:
-                try:
-                    out = run("gcc", "-c", "-gnats", "-gnatyg0-s", source_file)
-                except S.CalledProcessError:
-                    print_error(loc, "Failed to syntax check example")
-                    has_error = True
 
-                if out:
+                with open(source_file.basename, u"w") as code_file:
+                    code_file.write(source_file.content)
+
+                try:
+                    out = run("gcc", "-c", "-gnats", "-gnatyg0-s",
+                              source_file.basename)
+
+                    if out:
+                        print_error(loc, "Failed to syntax check example")
+                        has_error = True
+                except S.CalledProcessError:
                     print_error(loc, "Failed to syntax check example")
                     has_error = True
 
@@ -339,7 +332,7 @@ def analyze_file(rst_file):
                 or 'ada-run-expect-failure' in block.classes
             ):
                 if len(source_files) == 1:
-                    main_file = source_files[0]
+                    main_file = source_files[0].basename
                 else:
                     main_file = 'main.adb'
 
@@ -371,7 +364,8 @@ def analyze_file(rst_file):
             else:
                 for source_file in source_files:
                     try:
-                        run("gcc", "-c", "-gnatc", "-gnatyg0-s", source_file)
+                        run("gcc", "-c", "-gnatc", "-gnatyg0-s",
+                            source_file.basename)
                     except S.CalledProcessError:
                         if 'ada-expect-compile-error' in block.classes:
                             compile_error = True
