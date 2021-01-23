@@ -356,7 +356,7 @@ def analyze_file(rst_file):
                 if block.main_file is not None:
                     main_file = block.main_file
                 else:
-                    main_file = 'main.adb'
+                    main_file = source_files[-1].basename
 
                 if block.language == "ada":
                     try:
