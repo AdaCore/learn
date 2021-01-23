@@ -4,7 +4,7 @@ SPHINXBUILD   	= sphinx-build
 SPHINXPROJ    	= learnadacorecom
 SPHINXCONF    	= sphinx
 BUILDDIR      	= dist
-TEST_DRIVER   	= python3 tests/compile_blocks.py -B $(BUILDDIR)/test_output
+TEST_DRIVER   	= PYTHONPATH="$PYTHONPATH:sphinx" python3 tests/compile_blocks.py -B $(BUILDDIR)/test_output
 
 MKFILE_PATH  	:= $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR   	:= $(dir $(MKFILE_PATH))

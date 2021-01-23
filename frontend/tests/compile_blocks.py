@@ -31,6 +31,7 @@ from os import path as P
 import colors as C
 import shutil
 import re
+from widget.chop import manual_chop, cheapo_gnatchop, real_gnatchop
 
 
 class Block(object):
