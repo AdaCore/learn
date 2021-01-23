@@ -419,8 +419,18 @@ def analyze_file(rst_file):
                                 print_error(loc, "Failed to compile example")
                                 has_error = True
 
-            if 'ada-expect-compile-error' in block.classes and not compile_error:
-                print_error(loc, "Expected compile error, got none!")
+            if 'ada-expect-compile-error' in block.classes:
+                if not any(b in ['compile', 'run'] for b in block.buttons):
+                    print_error(loc, "Expected compile or run button, got none!")
+                    has_error = True
+                if not compile_error:
+                    print_error(loc, "Expected compile error, got none!")
+                    has_error = True
+
+            if (any (c in ['ada-run','ada-run-expect-failure','ada-norun'] for
+                     c in block.classes)
+                and not 'run' in block.buttons):
+                print_error(loc, "Expected run button, got none!")
                 has_error = True
 
             if has_error:
