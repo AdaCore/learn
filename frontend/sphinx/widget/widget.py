@@ -278,6 +278,9 @@ class Widget:
                 elif opt == 'ada-run':
                     # this is for testing, nothing to do here
                     continue
+                elif opt == 'ada-norun':
+                    # this is for testing, nothing to do here
+                    continue
                 elif opt == 'ada-run-expect-failure':
                     # this is for testing, nothing to do here
                     continue
