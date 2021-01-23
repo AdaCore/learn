@@ -303,9 +303,6 @@ def analyze_file(rst_file):
             if args.verbose:
                 print(header("Checking code block {}".format(loc)))
 
-            with open(u"code.ada", u"w") as code_file:
-                code_file.write(block.text)
-
             split = block.text.splitlines()
 
             source_files = list()
