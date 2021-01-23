@@ -419,6 +419,10 @@ def analyze_file(rst_file):
                                 print_error(loc, "Failed to compile example")
                                 has_error = True
 
+            if len(block.buttons) == 0:
+                print_error(loc, "Expected at least 'no_button' indicator, got none!")
+                has_error = True
+
             if 'ada-expect-compile-error' in block.classes:
                 if not any(b in ['compile', 'run'] for b in block.buttons):
                     print_error(loc, "Expected compile or run button, got none!")
