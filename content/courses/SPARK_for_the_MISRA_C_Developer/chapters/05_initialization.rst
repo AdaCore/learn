@@ -24,8 +24,15 @@ passed in argument to :c:`f` in cases where it has not been initialized:
 
 .. code:: c no_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Read_Uninitialized_Data_C
 
+   !f.h
+   #include <stdint.h>
+
+   void f ( int b, uint16_t *p );
+
    !f.c
-   static void f ( bool_t b, uint16_t *p )
+   #include "f.h"
+
+   void f ( int b, uint16_t *p )
    {
      if ( b )
      {
@@ -34,11 +41,14 @@ passed in argument to :c:`f` in cases where it has not been initialized:
    }
 
    !g.c
+   #include <stdint.h>
+   #include "f.h"
+
    static void g (void)
    {
       uint16_t u;
 
-      f ( false, &u );
+      f ( 0, &u );
 
       if ( u == 3U )
       {
