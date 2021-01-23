@@ -348,7 +348,9 @@ example to illustrate this point:
 .. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Param_By_Value_C
 
     !call.c
-    typedef struct my_struct {
+    #include <stdio.h>
+
+    struct my_struct {
         int A, B;
     };
 
