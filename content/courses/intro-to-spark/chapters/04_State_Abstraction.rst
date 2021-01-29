@@ -42,7 +42,7 @@ implementation.
 
 Take a look at the example code shown below.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.No_Abstraction
 
     procedure Increase (X : in out Integer) with
       Global => null,
@@ -73,7 +73,7 @@ For example, callers of the subprogram :ada:`Increase` can assume that it
 always strictly increases the value of its argument. In the code snippet
 shown below, this means the loop must terminate.
 
-.. code:: ada prove_button
+.. code:: ada prove_button project=Courses.Intro_To_Spark.State_Abstraction.Using_Abstraction
 
     procedure Increase (X : in out Integer) with
       Global => null,
@@ -194,7 +194,7 @@ abstraction. For example, we must add a :ada:`Refined_State` aspect on our
 the entire hidden state of the package, which consists of both :ada:`Content`
 and :ada:`Top`.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Refined_State
 
     package Stack with
       Abstract_State => The_Stack
@@ -245,7 +245,7 @@ variable's declaration.
 state annotation, you must link all the hidden variables defined in its
 private part to a state abstraction. For example:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Private_Variables
 
     package Stack with
       Abstract_State => The_Stack
@@ -294,7 +294,7 @@ must be listed in :ada:`P`'s state refinement.
 We see this in the example below, where the package :ada:`Hidden_Nested`'s
 hidden state is part of :ada:`P`'s hidden state.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Nested_Packages
 
     package P with
        Abstract_State => State
@@ -362,7 +362,7 @@ refinement.
 
 Let's look at this example.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Constants_And_Variables
 
     package Stack with
       Abstract_State => The_Stack
@@ -434,7 +434,7 @@ into a single dependency.
 Let's add :ada:`Global` and :ada:`Depends` contracts to the :ada:`Pop`
 procedure in our stack.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Global_Depends
 
     package Stack with
        Abstract_State => (Top_State, Content_State)
@@ -458,7 +458,7 @@ Let's contrast this example with a different representation of
 :ada:`Global` and :ada:`Depends` contracts, this time using a single
 abstract state.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Global_Single_Abstract_State
 
     package Stack with
       Abstract_State => The_Stack
@@ -496,7 +496,7 @@ compute them to check the package's implementation.
 
 For our :ada:`Stack` example, we could add refined contracts as shown below.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Global_Refined
 
     package Stack with
       Abstract_State => The_Stack
@@ -559,7 +559,7 @@ For example, we can query the state of the stack with functions
 :ada:`Is_Empty` and :ada:`Is_Full` and call these in the contracts of procedures
 :ada:`Pop` and :ada:`Push`:
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions
 
     package Stack is
        type Element is new Integer;
@@ -625,7 +625,7 @@ For example, we can refine the postconditions in the bodies of :ada:`Pop` and
 :ada:`Push` to be more detailed than what we wrote for them in their
 specification.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions
 
     package Stack is
        type Element is new Integer;
@@ -691,7 +691,7 @@ be derived by GNATprove.
 
 For our :ada:`Stack` example, we could add an :ada:`Initializes` aspect.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Local_Init
 
     package Stack with
       Abstract_State => The_Stack,
@@ -733,7 +733,7 @@ arrow following that variable's name.
 
 Let's look at this example:
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Initializes
 
     package Q is
        External_Variable : Integer := 2;
@@ -773,8 +773,7 @@ Package :ada:`Communication` defines a hidden local package, :ada:`Ring_Buffer`,
 whose capacity is initialized from an external configuration during
 elaboration.
 
-.. code:: ada prove_flow_button
-    :class: ada-expect-compile-error
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_01
 
     package Configuration is
 
@@ -823,7 +822,7 @@ Let's add :ada:`Part_Of` to the state of hidden local package :ada:`Ring_Buffer`
 but this time we hide variable :ada:`Capacity` inside the private part of
 :ada:`Ring_Buffer`.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Example_02
 
     package Configuration is
 
@@ -872,7 +871,7 @@ Package :ada:`Counting` defines two counters: :ada:`Black_Counter` and
 :ada:`Red_Counter`. It provides separate initialization procedures for each,
 both called from the main procedure.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_03
 
     package Counting with
       Abstract_State => State
@@ -920,7 +919,7 @@ Example #4
 
 Let's remove the abstract state on package :ada:`Counting`.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Example_04
 
     package Counting is
        procedure Reset_Black_Count;
@@ -961,7 +960,7 @@ Let's restore the abstract state to package :ada:`Counting`, but this time
 provide a procedure :ada:`Reset_All` that calls the initialization procedures
 :ada:`Reset_Black_Counter` and :ada:`Reset_Red_Counter`.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Example_05
 
     package Counting with
       Abstract_State => State
@@ -1004,7 +1003,7 @@ Example #6
 
 Let's consider yet another version of our abstract stack unit.
 
-.. code:: ada prove_flow_button
+.. code:: ada compile_button prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_06
     :class: ada-expect-compile-error
 
     package Stack with
@@ -1060,7 +1059,7 @@ assert that after we push an element on the stack, either the stack is
 unchanged (if it was already full) or its top element is equal to the
 element just pushed.
 
-.. code:: ada prove_button
+.. code:: ada prove_button project=Courses.Intro_To_Spark.State_Abstraction.Example_07
 
     package Stack with
       Abstract_State => The_Stack
@@ -1137,7 +1136,7 @@ Example #8
 Let's move the definition of :ada:`Get_Stack` and other expression functions
 inside the private part of the spec of :ada:`Stack`.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Example_08
 
     package Stack with
       Abstract_State => The_Stack
@@ -1216,7 +1215,7 @@ Package :ada:`Data` defines three variables, :ada:`Data_1`, :ada:`Data_2` and
 :ada:`Data_3`, that are initialized at elaboration (in :ada:`Data`'s package
 body) from an external interface that reads the file system.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_09
 
     package External_Interface with
       Abstract_State => File_System,
@@ -1274,7 +1273,7 @@ Example #10
 
 Let's remove the :ada:`Initializes` contract on package :ada:`Data`.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Example_10
 
     package External_Interface with
       Abstract_State => File_System,

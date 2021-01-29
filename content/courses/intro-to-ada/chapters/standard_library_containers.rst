@@ -3,8 +3,6 @@
 Standard library: Containers
 ============================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 In previous chapters, we've used arrays as the standard way to group multiple
@@ -30,7 +28,7 @@ Instantiation
 Here's an example showing the instantiation and declaration of a
 vector :ada:`V`:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Inst
+.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Inst
 
     with Ada.Containers.Vectors;
 
@@ -71,7 +69,7 @@ Initialization
 One way to initialize a vector is from a concatenation of elements.
 We use the :ada:`&` operator, as shown in the following example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Init
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Init
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -106,7 +104,7 @@ You add elements to a vector using the :ada:`Prepend` and :ada:`Append`
 operations. As the names suggest, these operations add elements to the
 beginning or end of a vector, respectively. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Append
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Append
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -155,7 +153,7 @@ Accessing first and last elements
 We access the first and last elements of a vector using the
 :ada:`First_Element` and :ada:`Last_Element` functions. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_First_Last_Element
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_First_Last_Element
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -192,7 +190,7 @@ container and process individual elements from it.
 With these operations, we're able to write code to swap the first and last
 elements of a vector:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_First_Last_Element
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_First_Last_Element
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -228,7 +226,7 @@ The easiest way to iterate over a container is to use a
 element at the current position. We can then use :ada:`E` directly.
 For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Iteration
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Iteration
 
     with Ada.Containers.Vectors;
 
@@ -275,7 +273,7 @@ similar to a loop over array elements: we use a
 :ada:`V.Last_Index`. We can access the current element by using it as an
 array index: :ada:`V (I)`.  For example:
 
-.. code:: ada  project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Index_Iteration
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Index_Iteration
 
     with Ada.Containers.Vectors;
 
@@ -324,7 +322,7 @@ format :ada:`for C in V.Iterate loop`. Like the previous example using
 indices, you can again access the current element by using the cursor as an
 array index: :ada:`V (C)`. For example:
 
-.. code:: ada  project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Cursor_Iteration
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Cursor_Iteration
 
     with Ada.Containers.Vectors;
 
@@ -409,7 +407,7 @@ procedure*, which takes an individual element and does some processing on
 it.  You can call :ada:`Update_Element` and pass both a cursor and an access
 to the process procedure. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Update
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Update
 
     with Ada.Containers.Vectors;
 
@@ -447,7 +445,7 @@ You can locate a specific element in a vector by retrieving its index.
 you're looking for. Alternatively, you can use :ada:`Find` to retrieve a
 cursor referencing that element. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Vector_Element
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Find_Vector_Element
 
     with Ada.Containers.Vectors;
 
@@ -515,7 +513,7 @@ You may want to insert an element at a specific position, e.g.  before a
 certain element in the vector.  You do this by calling :ada:`Insert`. For
 example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Insert
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Insert
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -575,7 +573,7 @@ cursor to the :ada:`Delete` procedure. If we combine this with the functions
 :ada:`Find_Index` and :ada:`Find` from the previous section, we can write a
 program that searches for a specific element and deletes it, if found:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Remove_Vector_Element
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Remove_Vector_Element
 
     with Ada.Containers.Vectors;
 
@@ -616,7 +614,7 @@ We can extend this approach to delete all elements matching a certain
 value. We just need to keep searching for the element in a loop until we
 get an invalid index or cursor. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Remove_Vector_Elements
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Remove_Vector_Elements
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -718,7 +716,7 @@ sort the vector and :ada:`Merge` to merge one vector into another.
 The following example presents code that manipulates three vectors (:ada:`V1`,
 :ada:`V2`, :ada:`V3`) using the concatenation, sorting and merging operations:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Ops
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Ops
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -825,7 +823,7 @@ vectors. This gives you a reference to each element in the set.
 
 Let's see an example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Set_Init
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Set_Init
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Ordered_Sets;
@@ -899,7 +897,7 @@ exist.  You can use either function to search for elements in a set.
 
 Let's look at an example that makes use of these operations:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Set_Element_Ops
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Set_Element_Ops
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Ordered_Sets;
@@ -992,7 +990,7 @@ operations and its associated operator:
 
 The following example makes use of these operators:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Set_Ops
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Set_Ops
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Ordered_Sets;
@@ -1133,7 +1131,7 @@ above in the section on sets).
 
 Let's see an example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Hashed_Map
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Hashed_Map
 
     with Ada.Containers.Indefinite_Hashed_Maps;
     with Ada.Strings.Hash;
@@ -1190,7 +1188,7 @@ Ordered maps share many features with hashed maps. The main differences are:
 
 Let's see an example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Ordered_Map
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Ordered_Map
 
     with Ada.Containers.Indefinite_Ordered_Maps;
 

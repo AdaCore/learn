@@ -1,5 +1,3 @@
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-
 Enforcing Strong Typing
 -----------------------
 
@@ -30,7 +28,8 @@ Enforcing Strong Typing for Pointers
 Pointers in C provide a low-level view of the addressable memory as a set of
 integer addresses. To write at address 42, just go through a pointer:
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Pointers_C
+   :class: c-nocheck
 
    !main.c
    int main() {
@@ -72,7 +71,7 @@ standard type :ada:`System.Address` is used for addresses, and conversions to/fr
 integers are provided in a standard package :ada:`System.Storage_Elements`. The
 previous C code can be written as follows in Ada:
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Pointers_Ada
 
     with System;
     with System.Storage_Elements;
@@ -126,9 +125,7 @@ parameter :ada:`P` of procedure :ada:`Rotate_X` either by copy or by reference, 
 regardless of the choice the postcondition of :ada:`Rotate_X` will hold:
 the final value of :ada:`P` will be modified by rotation around the :ada:`X` axis.
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Geometry
 
     package Geometry is
 
@@ -152,8 +149,6 @@ the final value of :ada:`P` will be modified by rotation around the :ada:`X` axi
 
     end Geometry;
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-
 SPARK's analysis tool can mathematically prove that the postcondition is true.
 
 Pointers Are Not Arrays
@@ -172,7 +167,7 @@ accessing arrays, this is just a thin syntactic layer on top of pointers. Thus:
 Consider a function that counts the number of times a value is present in an
 array. In C, this could be written:
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Arrays_C
 
    !main.c
    #include <stdio.h>
@@ -208,7 +203,7 @@ even if we rewrite the loop in :c:`count` to respect all decidable MISRA C
 rules, the program's correctness still depends on the caller of :c:`count`
 passing a correct value of :c:`len`:
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Arrays_MISRA_C
 
    !main.c
    #include <stdio.h>
@@ -236,13 +231,15 @@ undecidable MISRA C Rules 18.1 (pointer arithmetic should stay within bounds)
 and 1.3 (no undefined behavior). Contrast this with the same function in SPARK
 (and Ada):
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Arrays_Ada
 
     package Types is
        type Int_Array is array (Positive range <>) of Integer;
     end Types;
 
     with Types; use Types;
+
+    function Count (P : Int_Array; V : Integer) return Natural;
 
     function Count (P : Int_Array; V : Integer) return Natural is
        Count : Natural := 0;
@@ -278,9 +275,7 @@ go further in SPARK and show that the value returned by :ada:`Count` is no great
 than the length of parameter :ada:`P` by stating this property in the postcondition of
 :ada:`Count` and asking the SPARK analysis tool to prove it:
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Arrays_Ada
 
     package Types is
        type Int_Array is array (Positive range <>) of Integer;
@@ -289,7 +284,9 @@ than the length of parameter :ada:`P` by stating this property in the postcondit
     with Types; use Types;
 
     function Count (P : Int_Array; V : Integer) return Natural with
-      Post => Count'Result <= P'Length
+      Post => Count'Result <= P'Length;
+
+    function Count (P : Int_Array; V : Integer) return Natural
     is
        Count : Natural := 0;
     begin
@@ -301,8 +298,6 @@ than the length of parameter :ada:`P` by stating this property in the postcondit
        end loop;
        return Count;
     end Count;
-
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 The only help that SPARK analysis required from the programmer, in order to prove the
 postcondition, is a loop invariant (a special kind of assertion) that reflects
@@ -317,7 +312,7 @@ which makes it a convenient way to simulate C++ style templates. Consider the fo
 code which indirectly applies :c:`assign_int` to integer :c:`i` and
 :c:`assign_float` to floating-point :c:`f` by calling :c:`assign` on both:
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Typed_Pointers_C
 
    !main.c
    #include <stdio.h>
@@ -363,7 +358,7 @@ Generics in SPARK (and Ada) can implement the desired functionality in a fully
 typed way, with any errors caught at compile time, where procedure :ada:`Assign`
 applies its parameter procedure :ada:`Initialize` to its parameter :ada:`V`:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Typed_Pointers_Ada
 
     generic
        type T is private;
@@ -472,7 +467,7 @@ Arithmetic Operations on Arithmetic Types
 Adding two Boolean values, or an Apple and an Orange, might sound like a
 bad idea, but it is easily done in C:
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Pointer_Arith_C
 
    !main.c
    #include <stdbool.h>
@@ -504,7 +499,7 @@ for signed or unsigned integers.
 
 Here's an attempt to simulate the above C code in SPARK (and Ada):
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Pointer_Arith_Ada
     :class: ada-expect-compile-error
 
     package Bad_Arith is
@@ -547,7 +542,7 @@ It is possible, however, to get the predecessor of a Boolean or enumerated
 value with :ada:`Value'Pred` and its successor with :ada:`Value'Succ`, as well as
 to iterate over all values of the type:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Pointer_Arith_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -582,7 +577,7 @@ Boolean Operations on Boolean
 
 "Two bee or not two bee? Let's C":
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Boolean_C
 
    !main.c
    #include <stdbool.h>
@@ -610,7 +605,7 @@ operands, and the language also supplies short-circuit forms that evaluate
 the left operand and only evaluate the right operand when its value may affect
 the result.
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Boolean_Ada
     :class: ada-expect-compile-error
 
     package Bad_Hamlet is
@@ -628,7 +623,7 @@ Bitwise Operations on Unsigned Integers
 Here's a genetic engineering example that combines a Bee with a Dog to produce
 a Cat, by manipulating the atomic structure (the bits in its representation):
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Bitwise_C
 
    !main.c
    #include <stdbool.h>
@@ -655,7 +650,7 @@ Below is an attempt to do the same in SPARK (and Ada). The bitwise operators are
 :ada:`Shift_Left`, :ada:`Shift_Right`, :ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left`
 and :ada:`Rotate_Right`:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Bitwise_Ada
    :class: ada-expect-compile-error
 
    package Bad_Genetics is
@@ -671,9 +666,7 @@ listed above.  If we really wanted to achieve the effect of the above code
 in legal SPARK (or Ada), then the following approach will work (the type :ada:`Unsigned_8`
 is an 8-bit modular type declared in the predefined package :ada:`Interfaces`).
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-.. code:: ada prove_flow_report_all_button compile_button
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Bitwise_Ada_2
 
     with Interfaces; use Interfaces;
     package Unethical_Genetics is
@@ -684,8 +677,6 @@ is an 8-bit modular type declared in the predefined package :ada:`Interfaces`).
        Mutant : Animal := Animal'Val (A (Bee) xor A (Dog));
        pragma Assert (Mutant = Cat);
     end Unethical_Genetics;
-
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
 
 Note that :ada:`and`, :ada:`or`, :ada:`not` and :ada:`xor` are used both as logical operators
 and as bitwise operators, but there is no possible confusion between these two uses.
@@ -740,7 +731,7 @@ conversions. For example, the Shakespearian code in section
 :ref:`Boolean Operations on Boolean` can be reformulated to
 satisfy both Rules 10.1 and 10.5:
 
-.. code:: c
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_C
 
    !main.c
    #include <stdbool.h>
@@ -777,7 +768,7 @@ applies both between types of a different `essential type category` as MISRA C
 puts it, as well as between types that are structurally the same but declared as
 different types.
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_Bad_Ada
     :class: ada-expect-compile-error
 
     procedure Bad_Conversions is
@@ -806,7 +797,7 @@ Adding explicit conversions makes the assignments to :ada:`F` and :ada:`M` valid
 since SPARK (and Ada) allow conversions between numeric types and between a derived
 type and its parent type, but all other conversions are illegal:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_Bad_Ada
     :class: ada-expect-compile-error
 
     procedure Bad_Conversions is
@@ -842,7 +833,7 @@ exception is raised.
 Hence, the following is valid SPARK (and Ada) code; :ada:`Character` is defined as
 an enumeration type:
 
-.. code:: ada
+.. code:: ada run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_Ok_Ada
 
     procedure Ok_Conversions is
        pragma Warnings (Off);

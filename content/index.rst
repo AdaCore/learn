@@ -27,7 +27,7 @@ mathematics-based confidence to software verification.
 Try Ada Now:
 -------------
 
-.. code:: ada run_button project=Introduction
+.. code:: ada run_button project=Introduction main=learn.adb
 
     with Ada.Text_IO; use Ada.Text_IO;
 

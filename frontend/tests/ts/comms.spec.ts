@@ -20,7 +20,7 @@ describe('fetchBlob()', () => {
       basename: 'test.adb',
       contents: 'This is a test',
     }],
-    switches: [],
+    switches: '',
     name: 'Test',
   };
 

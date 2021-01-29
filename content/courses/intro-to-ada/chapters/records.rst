@@ -1,8 +1,6 @@
 Records
 =======
 
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 So far, all the types we have encountered have values that are not

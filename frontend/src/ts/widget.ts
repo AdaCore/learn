@@ -1,155 +1,221 @@
 import {Area, OutputArea, LabContainer} from './areas';
-import {ButtonGroup, CheckBox, Tabs} from './components';
 import {Editor, EditorTheme} from './editor';
 import {fetchBlob, DownloadRequest, DownloadResponse} from './comms';
+import {getElemsByClass, getElemById, getElemsByTag}
+  from './dom-utils';
+import {Resource, ResourceList} from './resource';
 import {ServerWorker} from './server';
-import {Resource, RunProgram, CheckOutput} from './types';
+import {RunProgram, CheckOutput} from './server-types';
 import * as Strings from './strings';
 
-enum DownloadType {
-  None,
-  Client,
-  Server,
+interface EditorView {
+  readonly header: HTMLButtonElement;
+  readonly editor: Editor;
 }
 
-/** The Widget class */
-export class Widget {
-  private editors: Array<Editor> = [];
-  protected readonly container: HTMLDivElement;
-  private readonly name: string | null;
-  private readonly switches: Array<string> = [];
-  private tabs = new Tabs();
-  protected outputArea = new OutputArea();
+type EditorMap = Map<string, EditorView>;
 
-  protected buttons = new ButtonGroup();
-
-  private readonly dlType: DownloadType = DownloadType.Client;
-
+/**
+ * Defines the widget behavior
+ *
+ * @export
+ * @class Widget
+ */
+class Widget {
+  // model object
+  private readonly name: string;
+  private readonly main: string;
   private readonly server: string;
+  private readonly id: string;
+  private readonly shadowFiles: ResourceList = [];
 
-  private shadowFiles: Array<Resource> = [];
-  protected outputGroup: HTMLDivElement | null = null;
+  // view objects
+  protected readonly container: HTMLDivElement;
+  protected readonly outputArea: OutputArea;
+  public readonly viewMap: EditorMap = new Map();
+
+  // other object
+  private readonly editor: Editor;
 
   /**
-   * Constructs the Widget
-   * @param {HTMLDivElement} container - the container for the widget
-   * @param {string} server - the server address:port
+   * Creates an instance of Widget and attaches logic to DOM
+   *
+   * @param {HTMLDivElement} elem - the container for the widget
+   * @param {(EditorMap | undefined)} dep - The view of widgets with the same
+   *  name on the current page
    */
-  constructor(container: HTMLDivElement, server: string) {
-    const resources: Array<Resource> = [];
-    this.server = server;
-    this.container = container;
+  constructor(elem: HTMLDivElement, dep: EditorMap | undefined) {
+    this.server = elem.dataset.url as string;
+    this.container = elem;
 
     // Read attributes from container object to initialize members
-    this.name = container.getAttribute('name');
+    this.id = this.container.id;
+    this.name = elem.dataset.name as string;
+    this.main = elem.dataset.main as string;
 
-    const files = this.container.getElementsByClassName('file');
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (!file.hasAttribute('basename') || file.textContent == null) {
-        throw Error('Malform widget: File doesnt have a name');
+    // add widget dependencies from up page to the EditorView
+    if (dep) {
+      // Shallow copy the dep map into our map
+      for (const [k, v] of dep.entries()) {
+        this.viewMap.set(k, v);
       }
-      const a: Resource = {
-        basename: file.getAttribute('basename') as string,
-        contents: file.textContent,
-      };
-      resources.push(a);
     }
 
-    if (resources.length == 0) {
+    // Initialize editor
+    const edDiv = this.getElem('editor') as HTMLDivElement;
+    this.editor = new Editor(edDiv);
+
+    // Parse files
+    const files = getElemsByClass(this.container, 'file');
+    // Check to make sure we have files in the widget
+    if (files.length == 0) {
       throw Error('Malformed widget: No files present.');
     }
-
-    // Remove the files from the container since they are now editors
-    while (files.length > 0) {
-      this.container.removeChild(files[0]);
+    for (const file of files) {
+      const basename = file.dataset.basename as string;
+      const content = file.textContent ? file.textContent : '';
+      this.editor.addSession(basename, content);
     }
 
-    const shadowFiles = this.container.getElementsByClassName('shadow_file');
-    for (let i = 0; i < shadowFiles.length; i++) {
-      const file = shadowFiles[i];
-      if (!file.hasAttribute('basename') || file.textContent == null) {
-        throw Error('Malform widget: File doesnt have a name');
-      }
+    // Parse shadow files
+    const shadowFiles = getElemsByClass(this.container, 'shadow-file');
+    for (const file of shadowFiles) {
       const a: Resource = {
-        basename: file.getAttribute('basename') as string,
-        contents: file.textContent,
+        basename: file.dataset.basename as string,
+        contents: file.textContent ? file.textContent : '',
       };
       this.shadowFiles.push(a);
     }
 
-    // Remove the shadow files from the container since they are now a list
-    while (shadowFiles.length > 0) {
-      this.container.removeChild(shadowFiles[0]);
-    }
+    // Setup editor tabs
+    const tab = this.getElem('tab');
+    const headers = getElemsByTag(tab, 'button');
+    for (const h of headers) {
+      const basename = h.textContent ? h.textContent : '';
+      const newView: EditorView = {
+        header: this.getElem('tab', basename) as HTMLButtonElement,
+        editor: this.editor,
+      };
 
-    // fill the contents of the tabs
-    resources.map((file) => {
-      const ed = new Editor(file);
-      this.editors.push(ed);
-
-      const tab = this.tabs.addTab(file.basename, ed.render(), () => {
-        const lengths = this.editors.map((e) => e.getLength());
-        const max = Math.max(...lengths);
-        ed.setLength(max);
+      h.addEventListener('click', () => {
+        for (const i of headers) {
+          i.classList.remove('active');
+        }
+        h.classList.add('active');
+        this.editor.setSession(basename);
       });
-      ed.setTab(tab);
+
+      this.viewMap.set(basename, newView);
+    }
+
+    // simulate click on the first tab to show it
+    headers[0].click();
+
+    // attach button logic
+    const buttonGroup = this.getElem('button-group');
+    const buttons = getElemsByTag(buttonGroup, 'button');
+    for (const btn of buttons) {
+      const mode = btn.dataset.mode as string;
+      btn.addEventListener('click', async () => {
+        await this.buttonCB(mode);
+      });
+    }
+
+    // attach handlers to the settings bar items
+    const tabSetting =
+      this.getElem('settings-bar', 'tab-setting') as HTMLInputElement;
+    tabSetting.checked = true;
+    tabSetting.addEventListener('change', () => {
+      // TODO: figure out how to do this
+      // if (tabSetting.checked) {
+      //   for (const t of this.viewMap.values()) {
+      //     t.header.style.display = 'block';
+      //     if (t.content.classList.contains('active')) {
+      //       t.content.style.display = 'block';
+      //     } else {
+      //       t.content.style.display = 'none';
+      //     }
+      //   }
+      // } else {
+      //   for (const t of this.viewMap.values()) {
+      //     t.header.style.display = 'none';
+      //     t.content.style.display = 'block';
+      //   }
+      // }
     });
 
-    // Check which buttons are enabled on container and populate
-    for (const mode in Strings.modeDictionary) {
-      if (this.container.getAttribute(mode + '_button')) {
-        this.buttons.addButton([],
-            Strings.modeDictionary[mode].tooltip,
-            Strings.modeDictionary[mode].buttonText,
-            'click', async () => {
-              await this.buttonCB(mode);
-            });
+    const themeSetting =
+      this.getElem('settings-bar', 'theme-setting') as HTMLInputElement;
+    themeSetting.addEventListener('change', () => {
+      let theme = EditorTheme.Light;
+      if (themeSetting.checked) {
+        theme = EditorTheme.Dark;
       }
-    }
-
-    // if this widget doesn't have a name defined, don't allow for download
-    if (this.name == null) {
-      this.dlType = DownloadType.None;
-    } else {
-      // if there are any buttons, the dltype needs to be server
-      if (this.buttons.length() > 0) {
-        this.dlType = DownloadType.Server;
-      } else {
-        this.dlType = DownloadType.Client;
+      for (const t of this.viewMap.values()) {
+        t.editor.setTheme(theme);
       }
-    }
+    });
 
-    // check for defined switches in attriburtes
-    const swStr = this.container.getAttribute('switches');
-    if (swStr) {
-      this.switches = swStr.split(';');
-    }
+    const resetButton =
+      this.getElem('settings-bar', 'reset-btn') as HTMLButtonElement;
+    resetButton.addEventListener('click', () => {
+      if (window.confirm(Strings.RESET_CONFIRM_MSG)) {
+        this.resetEditors();
+      }
+    });
+
+    const dlButton = this.getElem('settings-bar', 'download-btn');
+    dlButton.addEventListener('click', async () => {
+      try {
+        const blob = await this.downloadExample();
+        const objURL: string = URL.createObjectURL(blob.blob);
+
+        const a = document.createElement('a');
+        a.setAttribute('href', objURL);
+        a.setAttribute('download', blob.filename);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        URL.revokeObjectURL(objURL);
+      } catch (error) {
+        this.outputArea.reset();
+        this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+        console.error('Error:', error);
+      }
+    });
+
+    // grab reference to output area in the HTML and construct area
+    const outputArea = this.getElem('output-area') as HTMLDivElement;
+    this.outputArea = new OutputArea(outputArea);
   }
 
   /**
-   *  Method to destruct the object. Used primarily for testing.
+   * Collect resources from the current view
+   *
+   * @return {ResourceList} return the widget resources
    */
-  public destructor(): void {
-    for (const ed of this.editors) {
-      ed.destructor();
+  protected collectResources(): ResourceList {
+    const ret: ResourceList = [];
+    // get files from view
+    for (const [basename, view] of this.viewMap) {
+      const r: Resource = {
+        basename: basename,
+        contents: view.editor.getSessionContent(basename),
+      };
+      ret.push(r);
     }
-  }
-
-  /**
-   * Collect the resources loaded in the widget and return as list
-   * @return {Array<Resource>} return the widget resources
-   */
-  protected collectResources(): Array<Resource> {
-    const files: Array<Resource> = [];
-    this.editors.map((e) => {
-      files.push(e.getResource());
-    });
-    return files.concat(this.shadowFiles);
+    // add shadow files
+    for (const sf of this.shadowFiles) {
+      ret.push(sf);
+    }
+    // TODO: add cli contents to files
+    return ret;
   }
 
   /**
    * Construct the server address string
+   *
    * @param {string} url - the url suffix
    * @return {string} - the full constructed url
    */
@@ -158,7 +224,29 @@ export class Widget {
   }
 
   /**
+   * Gets an element by its id inside the current widget layout
+   *
+   * The ids inside the widget are in the form:
+   * <widget number>.<item>.<sub item>
+   *
+   * This function will prepend the widget number to the args passed in.
+   * An example would be:
+   *
+   * this.getElem('foo', 'bar) would return an element with the ID
+   * <widget number>.foo.bar
+   *
+   * @protected
+   * @param {...Array<string>} args - The list of args to append
+   * @return {HTMLElement} - The element with the ID
+   */
+  protected getElem(...args: Array<string>): HTMLElement {
+    const fullId = [this.id].concat(args).join('.');
+    return getElemById(fullId);
+  }
+
+  /**
    * The main callback for the widget buttons
+   *
    * @param {string} mode - the mode of the button that triggered the event
    * @param {boolean} lab - specifies if this is a lab widget
    */
@@ -166,9 +254,9 @@ export class Widget {
     this.outputArea.reset();
 
     // Clear any annotations added from previous button click
-    this.editors.map((e) => {
-      e.clearGutterAnnotation();
-    });
+    for (const t of this.viewMap.values()) {
+      t.editor.clearGutterAnnotation();
+    }
 
     this.outputArea.add(['output_info', 'console_output'],
         Strings.CONSOLE_OUTPUT_LABEL + ':');
@@ -178,8 +266,9 @@ export class Widget {
 
     const serverData: RunProgram.TS = {
       files: files,
+      main: this.main,
       mode: mode,
-      switches: this.switches,
+      switches: JSON.parse(this.container.dataset.switches as string),
       name: this.name,
       lab: lab,
     };
@@ -201,46 +290,25 @@ export class Widget {
 
   /**
    * The download example callback
+   *
+   * @private
+   * @return {Promise<DownloadResponse>} - A promise of the dl response
    */
-  private async downloadExample(): Promise<Array<DownloadResponse>> {
-    const files: Array<Resource> = this.collectResources();
-    const blobList: Array<DownloadResponse> = [];
+  private async downloadExample(): Promise<DownloadResponse> {
+    const files = this.collectResources();
 
-    switch (this.dlType) {
-      case DownloadType.None: {
-        throw new Error('No download available for this exercise.');
-      }
-      case DownloadType.Server: {
-        const serverData: DownloadRequest = {
-          files: files,
-          switches: this.switches,
-          name: this.name,
-        };
+    const serverData: DownloadRequest = {
+      files: files,
+      switches: JSON.parse(this.container.dataset.switches as string),
+      name: this.name,
+    };
 
-        const ret = await fetchBlob(serverData,
-            this.serverAddress('download'));
-        blobList.push(ret);
-
-        break;
-      }
-      case DownloadType.Client: {
-        this.editors.map((e): void => {
-          const resource: Resource = e.getResource();
-
-          blobList.push({
-            blob: new Blob([resource.contents], {type: 'text/plain'}),
-            filename: resource.basename,
-          });
-        });
-        break;
-      }
-    }
-
-    return blobList;
+    return fetchBlob(serverData, this.serverAddress('download'));
   }
 
   /**
    * Returns the correct Area to place data in
+   *
    * @param {number} ref - should be null for Widget
    * @return {Area} the area to place returned data
    */
@@ -250,25 +318,10 @@ export class Widget {
     }
     return this.outputArea;
   }
-  /**
-   * Maps a basename to the corresponding editor
-   *
-   * @private
-   * @param {string} basename - The basename to search for
-   * @return {(Editor | null)} - Return the editor of null if not found
-   */
-  private basenameToEditor(basename: string): Editor | null {
-    for (const e of this.editors) {
-      if (basename === e.getResource().basename) {
-        return e;
-      }
-    }
-
-    return null;
-  }
 
   /**
    * Handle the msg data coming back from server
+   *
    * @param {CheckOutput.RunMsg} msg - the returned msg
    * @param {Area} homeArea - the area to place the rendered msg
    */
@@ -291,45 +344,59 @@ export class Widget {
           const ctMatchFound = outMsg.match(ctRegex);
           const rtMatchFound = outMsg.match(rtRegex);
           // Lines that contain a sloc are clickable:
-          const cb = (row: number, col: number, ed: Editor | null): void => {
+          const cb = (basename: string, row: number, col: number,
+              view: EditorView): void => {
             if (window.getSelection()?.toString() == '') {
-              ed?.getTab()?.click();
+              view.header.scrollIntoView(true);
+              view.header.click();
               // Jump to corresponding line
-              ed?.gotoLine(row, col);
+              view.editor.gotoLine(basename, row, col);
             }
           };
 
           if (ctMatchFound?.length == 5) {
             const basename = ctMatchFound[1];
-            const editor = this.basenameToEditor(basename);
+            const view = this.viewMap.get(basename);
             const row = parseInt(ctMatchFound[2]);
             const col = parseInt(ctMatchFound[3]);
 
+            if (!view) {
+              throw Error('Basename not found: ' + basename);
+            }
+
             if (ctMatchFound[4].indexOf(' info:') === 0) {
               homeArea.addInfo(outMsg, () => {
-                cb(row, col, editor);
+                cb(basename, row, col, view);
               });
-              editor?.setGutterAnnotation(row, col, outMsg, 'info');
+              view.editor.setGutterAnnotation(basename, row, col, outMsg,
+                  'info');
             } else {
               if (ctMatchFound[4].indexOf(' warning:') === 0) {
-                editor?.setGutterAnnotation(row, col, outMsg, 'warning');
+                view.editor.setGutterAnnotation(basename, row, col, outMsg,
+                    'warning');
               } else {
-                editor?.setGutterAnnotation(row, col, outMsg, 'error');
+                view.editor.setGutterAnnotation(basename, row, col, outMsg,
+                    'error');
               }
               homeArea.addMsg(outMsg, () => {
-                cb(row, col, editor);
+                cb(basename, row, col, view);
               });
             }
           } else if (rtMatchFound?.length == 4) {
             const basename = rtMatchFound[1];
-            const editor = this.basenameToEditor(basename);
+            const view = this.viewMap.get(basename);
             const row = parseInt(rtMatchFound[2]);
             const col = 1;
 
+            if (!view) {
+              throw Error('Basename not found: ' + basename);
+            }
+
             homeArea.addMsg(outMsg, () => {
-              cb(row, col, editor);
+              cb(basename, row, col, view);
             });
-            editor?.setGutterAnnotation(row, col, outMsg, 'error');
+            view.editor.setGutterAnnotation(basename, row, col, outMsg,
+                'error');
           } else {
             homeArea.addLine(outMsg);
           }
@@ -351,12 +418,12 @@ export class Widget {
   private processCheckOutput(data: CheckOutput.FS): number {
     let readLines = 0;
 
-    data.output.map((ol) => {
+    for (const ol of data.output) {
       const homeArea = this.getHomeArea(ol.ref);
       readLines++;
 
       this.handleMsgType(ol.msg, homeArea);
-    });
+    }
 
     if (data.completed) {
       if (data.status != 0) {
@@ -374,119 +441,9 @@ export class Widget {
   protected resetEditors(): void {
     this.outputArea.reset();
 
-    this.editors.map((e) => {
-      e.reset();
-    });
-  }
-
-  /**
-   * Render the settings bar for the widget
-   * @return {HTMLDivElement} the rendered settings bar
-   */
-  private renderSettingsBar(): HTMLDivElement {
-    const settingsBar = document.createElement('div');
-    settingsBar.classList.add('settings-bar');
-
-    const dropdownContainer = document.createElement('div');
-    dropdownContainer.classList.add('dropdown-container', 'settingsbar-item');
-    settingsBar.appendChild(dropdownContainer);
-
-    const dropdownButton = document.createElement('button');
-    dropdownButton.classList.add('dropdown-btn');
-    dropdownButton.innerHTML = '<i class="fas fa-cog"></i>';
-    dropdownContainer.appendChild(dropdownButton);
-
-    const dropdownContent = document.createElement('div');
-    dropdownContent.classList.add('dropdown-content');
-    dropdownContainer.appendChild(dropdownContent);
-
-    const tabSetting =
-        new CheckBox(Strings.SETTINGS_TABBED_EDITOR_LABEL, dropdownContent);
-    tabSetting.getCheckBox().checked = true;
-    tabSetting.getCheckBox().addEventListener('change', () => {
-      if (tabSetting.checked()) {
-        this.tabs.show(true);
-      } else {
-        this.tabs.show(false);
-      }
-    });
-
-    const themeSetting =
-        new CheckBox(Strings.SETTINGS_THEME_EDITOR_LABEL, dropdownContent);
-
-    themeSetting.getCheckBox().addEventListener('change', () => {
-      let theme = EditorTheme.Light;
-      if (themeSetting.checked()) {
-        theme = EditorTheme.Dark;
-      }
-      this.editors.map((e) => {
-        e.setTheme(theme);
-      });
-    });
-
-    const resetButton = document.createElement('button');
-    resetButton.setAttribute('type', 'button');
-    resetButton.classList.add('settingsbar-item', 'reset-btn');
-    resetButton.setAttribute('title', Strings.RESET_TOOLTIP);
-    resetButton.innerHTML = '<i class="fas fa-undo"></i>';
-    settingsBar.appendChild(resetButton);
-    resetButton.addEventListener('click', () => {
-      if (window.confirm(Strings.RESET_CONFIRM_MSG)) {
-        this.resetEditors();
-      }
-    });
-
-    if (this.dlType != DownloadType.None) {
-      const dlButton = document.createElement('button');
-      dlButton.setAttribute('type', 'button');
-      dlButton.classList.add('settingsbar-item', 'download-btn');
-      dlButton.setAttribute('title', Strings.DOWNLOAD_TOOLTIP);
-      dlButton.innerHTML = '<i class="fas fa-file-download"></i>';
-      settingsBar.appendChild(dlButton);
-      dlButton.addEventListener('click', async () => {
-        try {
-          const blobs = await this.downloadExample();
-
-          for (const blob of blobs) {
-            const objURL: string = URL.createObjectURL(blob.blob);
-
-            const a = document.createElement('a');
-            a.setAttribute('href', objURL);
-            a.setAttribute('download', blob.filename);
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            URL.revokeObjectURL(objURL);
-          }
-        } catch (error) {
-          this.outputArea.reset();
-          this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-          console.error('Error:', error);
-        }
-      });
+    for (const t of this.viewMap.values()) {
+      t.editor.reset();
     }
-
-    return settingsBar;
-  }
-
-  /**
-   * Render the widget by putting it into this.container
-   */
-  public render(): void {
-    this.tabs.render(this.container);
-    this.container.appendChild(this.renderSettingsBar());
-
-    const row = document.createElement('div');
-    row.classList.add('row', 'output_row');
-    this.container.appendChild(row);
-
-    row.appendChild(this.buttons.render());
-
-    this.outputGroup = document.createElement('div');
-    this.outputGroup.classList.add('col-md-9');
-    this.outputGroup.appendChild(this.outputArea.render());
-    row.appendChild(this.outputGroup);
   }
 }
 
@@ -495,22 +452,19 @@ export class Widget {
  * @extends Widget
  */
 export class LabWidget extends Widget {
-  private readonly labContainer: LabContainer = new LabContainer;
+  private readonly labContainer: LabContainer;
 
   /**
-   * Constructs the LabWidget
-   * @param {HTMLDivElement} container - the container for the widget
-   * @param {string} server - the server address:port
+   * Creates an instance of LabWidget and attaches logic to DOM
+   *
+   * @param {HTMLDivElement} elem - the container for the widget
+   * @param {(EditorMap | undefined)} dep - The view of widgets with the same
+   *  name on the current page
    */
-  constructor(container: HTMLDivElement, server: string) {
-    super(container, server);
-
-    this.buttons.addButton([],
-        Strings.modeDictionary['submit'].tooltip,
-        Strings.modeDictionary['submit'].buttonText,
-        'click', async () => {
-          await this.buttonCB('submit');
-        });
+  constructor(elem: HTMLDivElement, dep: EditorMap | undefined) {
+    super(elem, dep);
+    const labArea = this.getElem('lab-area') as HTMLDivElement;
+    this.labContainer = new LabContainer(labArea);
   }
 
   /**
@@ -520,9 +474,7 @@ export class LabWidget extends Widget {
    */
   protected async buttonCB(mode: string, lab = true): Promise<void> {
     this.labContainer.reset();
-
     await super.buttonCB(mode, lab);
-
     this.labContainer.sort();
   }
 
@@ -565,41 +517,36 @@ export class LabWidget extends Widget {
     super.resetEditors();
     this.labContainer.reset();
   }
-
-  /**
-   * Render the widget by putting it into this.container
-   */
-  public render(): void {
-    super.render();
-    const lc = this.labContainer.render();
-    this.outputGroup?.appendChild(lc);
-  }
 }
 
+type WidgetMap = Map<string, EditorMap>
+type WidgetLike = Widget | LabWidget;
 /**
  * Entrypoint for widget creation
  *
  * @export
- * @param {HTMLCollectionOf<Element>} widgets - The collection of widgets
- *    found on the page. This is the return value of getElementsByClass
- * @return {Array<Widget | LabWidget>} The list of widgets on the page
+ * @param {Array<HTMLDivElement>} widgets - The collection of widgets
+ *    found on the page
  */
-export function widgetFactory(widgets: HTMLCollectionOf<Element>):
-    Array<Widget | LabWidget> {
-  const widgetList = [];
-  for (let i = 0; i < widgets.length; i++) {
-    const element = (widgets[i] as HTMLDivElement);
-    const server = element.getAttribute('example_server');
+export function widgetFactory(widgets: Array<HTMLDivElement>): void {
+  const widgetList: WidgetMap = new Map();
+
+  for (const element of widgets) {
     try {
-      if (server) {
-        const lab = element.getAttribute('lab');
-        const widget =
-            lab ? new LabWidget(element, server) : new Widget(element, server);
-        widget.render();
-        widgetList.push(widget);
+      let widget: WidgetLike;
+      // Get data from element
+      const name = element.dataset.name as string;
+      const lab = element.dataset.lab as string;
+      const depList = widgetList.get(name);
+
+      if (lab === 'True') {
+        widget = new LabWidget(element, depList);
       } else {
-        throw Error('Malformed widget! No server address specified.');
+        widget = new Widget(element, depList);
       }
+
+      // reset the view for this widget with the newly computed view
+      widgetList.set(name, widget.viewMap);
     } catch (error) {
       // an error has occured parsing the widget
       console.error('Error:', error);
@@ -615,6 +562,4 @@ export function widgetFactory(widgets: HTMLCollectionOf<Element>):
       element.appendChild(errorDiv);
     }
   }
-
-  return widgetList;
 }

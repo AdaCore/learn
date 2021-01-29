@@ -2,8 +2,6 @@
 Packages
 ==========
 
-:code-config:`run_button=False;prove_button=False`
-
 --------------
 Declarations
 --------------

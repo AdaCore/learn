@@ -1,4 +1,5 @@
 import './styles/learn.scss';
+import {getElemsByTag, getElemById} from './ts/dom-utils';
 import {widgetFactory} from './ts/widget';
 import {scrollTop} from './ts/scrolltop';
 
@@ -11,13 +12,17 @@ import {stagingRedirect} from './ts/staging';
  *  The main entrypoint for the application
  */
 function entrypoint(): void {
-  const we = document.getElementsByClassName('widget_editor');
-  widgetFactory(we);
+  // get list of all widgets on the page
+  const we = getElemsByTag(document, 'widget');
+  widgetFactory(we as Array<HTMLDivElement>);
 
-  const btn = document.getElementById('scrollToTopBtn');
+  // register scroll to top btn functionality
+  const btn = getElemById('scrollToTopBtn');
   scrollTop(btn as HTMLButtonElement);
 
   // #if STAGING
+  // This is used to redirect non AdaCore staff to the main site if
+  //  the staging site is accidentally reached
   stagingRedirect();
   // #endif
 }

@@ -2,8 +2,6 @@
 Array Types
 =============
 
-:code-config:`run_button=False;prove_button=False`
-
 -------------------------
 Constrained Array Types
 -------------------------

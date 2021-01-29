@@ -1,10 +1,6 @@
 Performance considerations
 ==========================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Overall expectations
@@ -276,6 +272,7 @@ This is the corresponding code in Ada:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -390,7 +387,7 @@ this type without an explicit value for :ada:`V` will issue a call to
 :ada:`Call_To_Some_Function`. More subtle issue may arise with elaboration. For
 example, it's possible to write:
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Performance.Dynamic_Array
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Dynamic_Array
 
     package Some_Functions is
 
@@ -425,7 +422,7 @@ Here's a last case which may also be surprising:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Record_With_Arrays
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Record_With_Arrays
 
     package Arr_Def is
        type Arr is array (Integer range <>) of Integer;

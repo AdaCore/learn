@@ -1,10 +1,6 @@
 Writing Ada on Embedded Systems
 =================================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Understanding the Ada Run-Time
@@ -173,7 +169,7 @@ assembler as well as source-level variables to be used for input and output:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Assembly_Code
 
     with System.Machine_Code; use System.Machine_Code;
     with Interfaces;          use Interfaces;
@@ -233,7 +229,8 @@ on Linux:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Embedded.Quit_Handler
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Quit_Handler
+    :class: ada-norun
 
     with System.OS_Interface;
 
@@ -353,7 +350,7 @@ obvious when looking at this code snippet:
 
 [Ada]
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point
 
     package Fixed_Definitions is
 
@@ -735,7 +732,7 @@ use the aspect to declare a shared hardware register:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Embedded.Atomic_Object
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Atomic_Object
 
     with System;
 
@@ -759,7 +756,7 @@ For example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Embedded.Atomic_Types_Arrays
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Atomic_Types_Arrays
 
     with System;
 
@@ -816,8 +813,6 @@ require. We'll discuss unchecked conversions
 
 Let's look at an example from an earlier chapter:
 
-:code-config:`accumulate_code=True`
-
 [Ada]
 
 .. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Size_Aspect
@@ -859,8 +854,6 @@ or of an object:
        Put_Line ("Size of UInt10 object: " & Positive'Image (UInt10_Obj'Size));
     end Show_Device_Types;
 
-:code-config:`accumulate_code=False`
-
 Here, we're retrieving the actual sizes of the :ada:`UInt10` type and an
 object of that type. Note that the sizes don't necessarily need to match. For
 example, although the size of :ada:`UInt10` type is expected to be 10 bits, the
@@ -879,7 +872,7 @@ architecture:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Embedded.PMC_Peripheral
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.PMC_Peripheral
 
     with System;
 
@@ -985,7 +978,7 @@ using :ada:`PMC_Periph.PMC_SCER.USBCLK`:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Embedded.Register_Overlay_1
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.PMC_Peripheral
 
     with Registers;
 

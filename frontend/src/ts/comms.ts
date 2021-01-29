@@ -1,6 +1,6 @@
 import 'whatwg-fetch';
 
-import {Resource} from './types';
+import {ResourceList} from './resource';
 
 /**
 * Perform a POST via the fetch method to retrieve data
@@ -41,9 +41,9 @@ export async function fetchJSON<R, T>(data: R, url: string): Promise<T> {
 }
 
 export interface DownloadRequest {
-  files: Array<Resource>;
-  switches: Array<string>;
-  name: string | null;
+  files: ResourceList;
+  switches: string;
+  name: string;
 }
 
 export interface DownloadResponse {

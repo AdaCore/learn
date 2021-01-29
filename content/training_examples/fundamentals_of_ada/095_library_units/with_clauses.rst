@@ -1,5 +1,4 @@
-.. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Program_Structure.with_clauses
-   :class: ada-run
+.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Library_Units.with_clauses
 
    with Ada.Text_IO;
    package Base_Types is

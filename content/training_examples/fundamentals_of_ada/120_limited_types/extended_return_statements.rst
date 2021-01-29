@@ -1,5 +1,4 @@
-.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Limited_Types.creating_values
-   :class: ada-run
+.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Limited_Types.extended_return_statements
 
    with Interfaces; use Interfaces;
    package Multiprocessor_Mutex is

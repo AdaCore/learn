@@ -1,8 +1,6 @@
 Subprograms
 ===========
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-
 .. _Subprograms:
 
 .. include:: ../../global.txt
@@ -46,8 +44,6 @@ section at all, for example:
 
 Here's another variation on the previous example:
 
-:code-config:`reset_accumulator=True;accumulate_code=True`
-
 .. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
 
     function Increment_By
@@ -75,7 +71,7 @@ Subprogram calls
 
 We can then call our subprogram this way:
 
-.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Increment_By
+.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -146,7 +142,7 @@ For the previous example, we can move the duplicated code (call to
 :ada:`Put_Line`) to a separate procedure. This is a shortened version with
 the nested :ada:`Display_Result` procedure.
 
-.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Increment_By
+.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -169,8 +165,6 @@ the nested :ada:`Display_Result` procedure.
        Display_Result;
     end Show_Increment;
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 Function calls
 ~~~~~~~~~~~~~~
 
@@ -180,7 +174,7 @@ call cannot be ignored; that is, a function call cannot be used as a statement.
 If you want to call a function and do not need its result, you will still need
 to explicitly store it in a local variable.
 
-.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Quadruple
+.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Quadruple
     :class: ada-expect-compile-error
 
     function Quadruple (I : Integer) return Integer is
@@ -281,7 +275,7 @@ The first mode for parameters is the one we have been implicitly using so far.
 Parameters passed using this mode cannot be modified, so that the following
 program will cause an error:
 
-.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Swap
+.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Swap
     :class: ada-expect-compile-error
 
     procedure Swap (A, B : Integer) is
@@ -304,7 +298,7 @@ In out parameters
 
 To correct our code above, we can use an "in out" parameter.
 
-.. code:: ada project=Courses.Intro_To_Ada.Subprograms.In_Out_Params
+.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.In_Out_Params
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -382,7 +376,7 @@ acts like an uninitialized variable when the subprogram is invoked.
     GNAT will detect simple cases of incorrect use of out parameters.
     For example, the compiler will emit a warning for the following program:
 
-    .. code:: ada
+    .. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Out_Params
 
         procedure Outp is
            procedure Foo (A : out Integer) is
@@ -405,7 +399,7 @@ mutually recursive, as in the example below:
 .. ?? example would be in the context of recursive data structures and
 .. ?? mutually dependent types, which have not been covered yet.
 
-.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Mutually_Recursive_Subprograms
+.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Mutually_Recursive_Subprograms
     :class: ada-run
 
     procedure Mutually_Recursive_Subprograms is
@@ -436,10 +430,6 @@ mutually recursive, as in the example below:
 Renaming
 --------
 
-:code-config:`run_button=False;prove_button=False`
-
-:code-config:`reset_accumulator=True;accumulate_code=True`
-
 Subprograms can be renamed by using the :ada:`renames` keyword and declaring a
 new name for a subprogram:
 
@@ -451,7 +441,7 @@ This can be useful, for example, to improve the readability of your application
 when you're using code from external sources that cannot be changed in your
 system. Let's look at an example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
+.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
 
     procedure A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed
       (A_Message : String);
@@ -486,8 +476,6 @@ declaration. For example:
 Note that the original name
 (:ada:`A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed`) is still visible
 after the declaration of the :ada:`Show` procedure.
-
-:code-config:`reset_accumulator=True;accumulate_code=False`
 
 We may also rename subprograms from the standard library. For example, we may
 rename :ada:`Integer'Image` to :ada:`Img`:

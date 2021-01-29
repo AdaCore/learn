@@ -4,53 +4,40 @@ import chaiDom from 'chai-dom';
 chai.use(chaiDom);
 
 // Import package under test
-import {Area, OutputArea, LabArea, LabContainer} from '../../src/ts/areas';
+import {Area, OutputArea, LabArea, makeLabArea, LabContainer}
+  from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
-import {CheckOutput} from '../../src/ts/types';
+import {CheckOutput} from '../../src/ts/server-types';
 
 describe('Area', () => {
-  /**
-   * Mock Area for testing
-   *
-   * @class MockArea
-   * @extends {Area}
-   */
-  class MockArea extends Area {
-    /**
-     * Creates an instance of MockArea.
-     */
-    constructor() {
-      super();
-    }
-
-    /**
-     * Implements the abstract render function
-     *
-     * @return {HTMLDivElement}
-     */
-    public render(): HTMLDivElement {
-      return this.container;
-    }
-  }
+  let parent: HTMLDivElement;
+  let inTest: Area;
 
   describe('#add()', () => {
+    let testdiv: HTMLDivElement;
     const classList = ['classA', 'classB'];
     const lineText = 'Line Text';
-    const inTest = new MockArea();
 
     let flag = false;
 
-    inTest.add(classList, lineText, () => {
-      flag = true;
+    before(() => {
+      parent = document.createElement('div');
+      inTest = new Area(parent);
+      inTest.add(classList, lineText, () => {
+        flag = true;
+      });
+      testdiv = parent.querySelector('div');
     });
 
-    const parent = inTest.render();
+    after(() => {
+      parent = null;
+      inTest = null;
+    });
+
     it('should add a single area to the container', () => {
-      expect(parent).to.have.tagName('div');
       expect(parent).to.have.descendants('div').and.have.length(1);
     });
 
-    const testdiv = parent.querySelector('div');
     it('should have the classes and text specified', () => {
       for (const c of classList) {
         expect(testdiv).to.have.class(c);
@@ -66,10 +53,18 @@ describe('Area', () => {
   });
 
   describe('#reset()', () => {
-    const inTest = new MockArea();
-    const parent = inTest.render();
-    inTest.add([], 'test area 1');
-    inTest.add([], 'test area 2');
+    before(() => {
+      parent = document.createElement('div');
+      inTest = new Area(parent);
+      inTest.add([], 'test area 1');
+      inTest.add([], 'test area 2');
+    });
+
+    after(() => {
+      parent = null;
+      inTest = null;
+    });
+
 
     it('should have two areas in the container', () => {
       expect(parent).to.have.descendants('div').and.have.length(2);
@@ -83,9 +78,16 @@ describe('Area', () => {
 
   describe('#addConsole()', () => {
     const text = 'my text';
-    const inTest = new MockArea();
-    const parent = inTest.render();
-    inTest.addConsole(text);
+    before(() => {
+      parent = document.createElement('div');
+      inTest = new Area(parent);
+      inTest.addConsole(text);
+    });
+
+    after(() => {
+      parent = null;
+      inTest = null;
+    });
 
     it('should have text that resembles console output', () => {
       expect(parent).to.have.descendants('div.output_console').
@@ -97,9 +99,16 @@ describe('Area', () => {
 
   describe('#addInfo()', () => {
     const text = 'my text';
-    const inTest = new MockArea();
-    const parent = inTest.render();
-    inTest.addInfo(text);
+    before(() => {
+      parent = document.createElement('div');
+      inTest = new Area(parent);
+      inTest.addInfo(text);
+    });
+
+    after(() => {
+      parent = null;
+      inTest = null;
+    });
 
     it('should have specified text', () => {
       expect(parent).to.have.descendants('div.output_msg_info').
@@ -111,9 +120,16 @@ describe('Area', () => {
 
   describe('#addMsg()', () => {
     const text = 'my text';
-    const inTest = new MockArea();
-    const parent = inTest.render();
-    inTest.addMsg(text);
+    before(() => {
+      parent = document.createElement('div');
+      inTest = new Area(parent);
+      inTest.addMsg(text);
+    });
+
+    after(() => {
+      parent = null;
+      inTest = null;
+    });
 
     it('should have specified text', () => {
       expect(parent).to.have.descendants('div.output_msg').and.have.length(1);
@@ -124,9 +140,16 @@ describe('Area', () => {
 
   describe('#addLine()', () => {
     const text = 'my text';
-    const inTest = new MockArea();
-    const parent = inTest.render();
-    inTest.addLine(text);
+    before(() => {
+      parent = document.createElement('div');
+      inTest = new Area(parent);
+      inTest.addLine(text);
+    });
+
+    after(() => {
+      parent = null;
+      inTest = null;
+    });
 
     it('should have specified text', () => {
       expect(parent).to.have.descendants('div.output_line').and.have.length(1);
@@ -137,23 +160,24 @@ describe('Area', () => {
 });
 
 describe('OutputArea()', () => {
-  describe('#constructor', () => {
-    const inTest = new OutputArea();
-    const obj = inTest.render();
+  let parent: HTMLDivElement;
+  let inTest: OutputArea;
 
-    it('should have a div with specified class', () => {
-      expect(obj).to.have.tagName('div');
-      expect(obj).to.have.class('output_area');
-    });
+  beforeEach(() => {
+    parent = document.createElement('div');
+    inTest = new OutputArea(parent);
+  });
+
+  afterEach(() => {
+    parent = null;
+    inTest = null;
   });
 
   describe('#addError()', () => {
-    const inTest = new OutputArea();
-    const parent = inTest.render();
     const msg = 'my message';
-    inTest.addError(msg);
 
     it('should add an error to the output area', () => {
+      inTest.addError(msg);
       expect(parent).to.have.descendants('div.output_error').and.have.length(1);
       const testdiv = parent.querySelector('div.output_error');
       expect(testdiv).to.have.text(msg);
@@ -161,19 +185,6 @@ describe('OutputArea()', () => {
   });
 
   describe('#addLabStatus()', () => {
-    let inTest: OutputArea;
-    let parent: HTMLDivElement;
-
-    beforeEach(() => {
-      inTest = new OutputArea();
-      parent = inTest.render();
-    });
-
-    afterEach(() => {
-      inTest = null;
-      parent = null;
-    });
-
     it('should add a pass lab status to the area', () => {
       inTest.addLabStatus(true);
 
@@ -192,9 +203,6 @@ describe('OutputArea()', () => {
   });
 
   describe('#showSpinner()', () => {
-    const inTest = new OutputArea();
-    const parent = inTest.render();
-
     it('should not remove anything yet', () => {
       expect(parent).not.to.have.descendants('div.spinner');
 
@@ -216,10 +224,23 @@ describe('OutputArea()', () => {
 
 describe('LabArea', () => {
   const ref = 5;
-
+  let wrapper: HTMLDivElement;
+  let inTest: LabArea;
   describe('#constructor()', () => {
-    const inTest = new LabArea(ref);
-    const wrapper = inTest.render();
+    let container: HTMLDivElement;
+    let button: HTMLButtonElement;
+
+    before(() => {
+      inTest = makeLabArea(ref);
+      wrapper = inTest.render();
+      container = wrapper.querySelector('div.lab_test_case');
+      button = wrapper.querySelector('button.accordion');
+    });
+
+    after(() => {
+      wrapper = null;
+      inTest = null;
+    });
 
     it('should have classes and a container and button with classes', () => {
       expect(wrapper).to.have.tagName('div');
@@ -230,9 +251,6 @@ describe('LabArea', () => {
       expect(wrapper).to.have.descendants('button.accordion').
           and.have.length(1);
     });
-
-    const container = wrapper.querySelector('div.lab_test_case');
-    const button = wrapper.querySelector('button.accordion');
 
     it('should have a button wo active and container hidden', () => {
       expect(button).not.to.have.class('active');
@@ -259,11 +277,6 @@ describe('LabArea', () => {
   });
 
   describe('#addResults()', () => {
-    let inTest: LabArea;
-    let wrapper: HTMLDivElement;
-    let container: HTMLDivElement;
-    let button: HTMLButtonElement;
-
     const passResult = {
       status: 'Success',
       out: 'output',
@@ -279,21 +292,19 @@ describe('LabArea', () => {
     };
 
     beforeEach(() => {
-      inTest = new LabArea(ref);
+      inTest = makeLabArea(ref);
       wrapper = inTest.render();
-      container = wrapper.querySelector('div.lab_test_case');
-      button = wrapper.querySelector('button.accordion');
     });
 
     afterEach(() => {
-      inTest = null;
       wrapper = null;
-      container = null;
-      button = null;
+      inTest = null;
     });
 
     it('should add success class and have 1 result div', () => {
       inTest.addResults(passResult);
+      const container = wrapper.querySelector('div.lab_test_case');
+      const button = wrapper.querySelector('button.accordion');
       expect(button).to.have.class('lab_test_success');
       expect(container).to.have.class('lab_test_success');
       expect(container).to.have.descendants('div.lab_results').
@@ -302,12 +313,15 @@ describe('LabArea', () => {
 
     it('should add fail classes to button and container', () => {
       inTest.addResults(failResult);
+      const container = wrapper.querySelector('div.lab_test_case');
+      const button = wrapper.querySelector('button.accordion');
       expect(button).to.have.class('lab_test_failed');
       expect(container).to.have.class('lab_test_failed');
     });
 
     it('should have the input results in the container', () => {
       inTest.addResults(passResult);
+      const container = wrapper.querySelector('div.lab_test_case');
       expect(container).to.have.descendants('div.lab_results').
           and.have.length(1);
       const cased = container.querySelector('div.lab_results');
@@ -325,6 +339,7 @@ describe('LabArea', () => {
 
     it('should have the output results in the container', () => {
       inTest.addResults(passResult);
+      const container = wrapper.querySelector('div.lab_test_case');
       expect(container).to.have.descendants('div.lab_results').
           and.have.length(1);
       const cased = container.querySelector('div.lab_results');
@@ -342,6 +357,7 @@ describe('LabArea', () => {
 
     it('should have the actual results in the container', () => {
       inTest.addResults(passResult);
+      const container = wrapper.querySelector('div.lab_test_case');
       expect(container).to.have.descendants('div.lab_results').
           and.have.length(1);
       const cased = container.querySelector('div.lab_results');
@@ -359,6 +375,7 @@ describe('LabArea', () => {
 
     it('should have the status results in the container', () => {
       inTest.addResults(passResult);
+      const container = wrapper.querySelector('div.lab_test_case');
       expect(container).to.have.descendants('div.lab_results').
           and.have.length(1);
       const cased = container.querySelector('div.lab_results');
@@ -376,7 +393,15 @@ describe('LabArea', () => {
   });
 
   describe('#getRef()', () => {
-    const inTest = new LabArea(ref);
+    before(() => {
+      inTest = makeLabArea(ref);
+      wrapper = inTest.render();
+    });
+
+    after(() => {
+      wrapper = null;
+      inTest = null;
+    });
 
     it('should return ref', () => {
       expect(inTest.getRef()).to.be.equal(ref);
@@ -385,18 +410,9 @@ describe('LabArea', () => {
 });
 
 describe('LabContainer', () => {
-  describe('#constructor()', () => {
-    const inTest = new LabContainer();
-    const parent = inTest.render();
-
-    it('should have a div with a class', () => {
-      expect(parent).to.have.tagName('div');
-      expect(parent).to.have.class('lab_area');
-    });
-  });
-
   describe('#getLabArea()', () => {
-    const inTest = new LabContainer();
+    const parent = document.createElement('div');
+    const inTest = new LabContainer(parent);
     const labArea1 = inTest.getLabArea(1);
     const labArea2 = inTest.getLabArea(2);
 
@@ -414,7 +430,8 @@ describe('LabContainer', () => {
   });
 
   describe('#processResults()', () => {
-    const inTest = new LabContainer();
+    const parent = document.createElement('div');
+    const inTest = new LabContainer(parent);
     const success = true;
     const testCases: CheckOutput.LabOutput = {
       success: success,
@@ -444,8 +461,8 @@ describe('LabContainer', () => {
   });
 
   describe('#reset()', () => {
-    const inTest = new LabContainer();
-    const parent = inTest.render();
+    const parent = document.createElement('div');
+    const inTest = new LabContainer(parent);
     const testCases: CheckOutput.LabOutput = {
       success: false,
       cases: [

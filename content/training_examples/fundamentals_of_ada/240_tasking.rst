@@ -2,8 +2,6 @@
 Tasking
 =========
 
-:code-config:`run_button=False;prove_button=False`
-
 -------
 Tasks
 -------

@@ -30,7 +30,7 @@ raised when using the result of the function :ada:`Find` below, it may be
 enough to know that the result is either 0 or in the range of :ada:`A`. We can
 express this as a postcondition of :ada:`Find`.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
 
     package Show_Find is
 
@@ -63,7 +63,7 @@ ensure it returns an index of :ada:`A` where :ada:`E` is stored and returns 0
 only if :ada:`E` is nowhere in :ada:`A`. Again, we can express this as a
 postcondition of :ada:`Find`.
 
-.. code:: ada prove_button
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
 
     package Show_Find is
 
@@ -114,7 +114,7 @@ example, during testing, the postcondition of the subprogram :ada:`Find` shown
 below is checked dynamically for the set of inputs for which :ada:`Find` is
 called in that test, but just for that set.
 
-.. code:: ada prove_button run_button
+.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
 
     package Show_Find is
 
@@ -184,7 +184,7 @@ as subprogram contracts. Type predicates, which must hold for every object
 of a given type, are usually a better match for this purpose. Here's an
 example.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Sort
 
     package Show_Sort is
 
@@ -236,7 +236,7 @@ Consider the procedure :ada:`Do_Something` below, which calls a complex
 function on its input, :ada:`X`, and wants to check that the initial and
 modified values of :ada:`X` are related in that complex way.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost
 
     package Show_Ghost is
 
@@ -279,7 +279,7 @@ performed by the call to :ada:`Do_Some_Complex_Stuff` modified the value of
 However, :ada:`X_Init` can't be used in normal code, for example to restore
 the initial value of :ada:`X`.
 
-.. code:: ada prove_button run_button
+.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost
     :class: ada-expect-compile-error
 
     package Show_Ghost is
@@ -350,7 +350,7 @@ information without making it available to normal client code.
 
 Let's look at the following example.
 
-.. code:: ada prove_button
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_Functions
 
     package Stacks is
 
@@ -390,8 +390,7 @@ stack.  However, we don't want code that uses the :ada:`Stack` package to use
 Here's an example of trying to break that abstraction in the subprogram
 :ada:`Peek` below.
 
-.. code:: ada prove_button
-    :class: ada-expect-compile-error
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_Model
 
     package Stacks is
 
@@ -447,7 +446,7 @@ accesses a state :ada:`B`. We use the ghost variable :ada:`Last_Accessed_Is_A` t
 specify that :ada:`B` can't be accessed twice in a row without accessing :ada:`A`
 in between.
 
-.. code:: ada prove_button run_button
+.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Global_Ghost_Vars
     :class: ada-run-expect-failure
 
     package Call_Sequence is
@@ -507,7 +506,7 @@ be written in SPARK because quantification is restricted to
 Finally, supplying the value of the variable may help the prover verify the
 contracts.
 
-.. code:: ada prove_button
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Intermediate_Values
 
     package Action_Sequence is
 
@@ -584,7 +583,7 @@ In the example below, we want to help GNATprove verify the postcondition of
 represent this value and writing an assertion in both branches of an
 :ada:`if` statement that repeats the postcondition, but using :ada:`X_Init`.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Local_Ghost
 
     package Show_Local_Ghost is
 
@@ -655,7 +654,7 @@ allowed are assignments to ghost variables and calls to ghost procedures.
 As an example, the :ada:`for` loop contained in :ada:`Increase_A` couldn't
 appear by itself in normal code.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_Proc
 
     package Show_Ghost_Proc is
 
@@ -750,7 +749,7 @@ loop.
 For example, consider the function :ada:`Find` which iterates over the array
 :ada:`A` and searches for an element where :ada:`E` is stored in :ada:`A`.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop
 
     package Show_Find is
 
@@ -808,7 +807,7 @@ iteration assuming it held in the previous iteration.  This is called
 As an example, let's add a loop invariant to the :ada:`Find` function stating
 that the first element of :ada:`A` is not :ada:`E`.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant
 
     package Show_Find is
 
@@ -855,7 +854,7 @@ Let's look at a version of :ada:`Find` where we use a loop invariant instead
 of an assertion to state that none of the array elements seen so far are
 equal to :ada:`E`.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant
 
     package Show_Find is
 
@@ -936,7 +935,7 @@ determine at which point it can no longer be proved.
 As an example, let's look at a loop that iterates through an array :ada:`A`
 and applies a function :ada:`F` to each of its elements.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_2
 
     package Show_Map is
 
@@ -997,7 +996,7 @@ you'll have to provide one as a loop invariant. For example, consider a
 version of :ada:`Map` where the result of applying :ada:`F` to an element at
 index :ada:`K` is stored at index :ada:`K-1`:
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_2
 
     package Show_Map is
 
@@ -1049,7 +1048,7 @@ of a ring buffer of length :ada:`Length` are obtained by starting at index
 ghost function :ada:`Get_Model` to return the contents of the ring buffer for
 use in contracts.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_01
 
     package Ring_Buffer is
 
@@ -1119,7 +1118,7 @@ Example #2
 Instead of using a ghost function, :ada:`Get_Model`, to retrieve the contents
 of the ring buffer, we're now using a global ghost variable, :ada:`Model`.
 
-.. code:: ada prove_button
+.. code:: ada compile_button prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_02
     :class: ada-expect-compile-error
 
     package Ring_Buffer is
@@ -1180,7 +1179,7 @@ Example #3
 Let's mark :ada:`Valid_Model` as :ada:`Ghost` and update :ada:`Model` inside
 :ada:`Push_Last`.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_03
 
     package Ring_Buffer is
 
@@ -1240,7 +1239,7 @@ Example #4
 We're now modifying :ada:`Push_Last` to share the computation of the new
 length between the operational and ghost code.
 
-.. code:: ada prove_button
+.. code:: ada compile_button prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_04
     :class: ada-expect-compile-error
 
     package Ring_Buffer is
@@ -1306,7 +1305,7 @@ Let's move the code updating :ada:`Model` inside a local ghost procedure,
 :ada:`Update_Model`, but still using a local variable, :ada:`New_Length`, to
 compute the length.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_05
 
     package Ring_Buffer is
 
@@ -1376,7 +1375,7 @@ The function :ada:`Max_Array` takes two arrays of the same length (but not
 necessarily with the same bounds) as arguments and returns an array with
 each entry being the maximum values of both arguments at that index.
 
-.. code:: ada prove_button
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_06
 
     package Array_Util is
 
@@ -1422,7 +1421,7 @@ Let's add a loop invariant that states that :ada:`J` stays in the index range
 of :ada:`B` and let's protect the increment to :ada:`J` by checking that it's not
 already the maximal integer value.
 
-.. code:: ada prove_button
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_07
 
     package Array_Util is
 
@@ -1472,7 +1471,7 @@ We now consider a version of :ada:`Max_Array` which takes arguments that have
 the same bounds. We want to prove that :ada:`Max_Array` returns an array of
 the maximum values of both its arguments at each index.
 
-.. code:: ada prove_button run_button
+.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_08
     :class: ada-run-expect-failure
 
     package Array_Util is
@@ -1531,7 +1530,7 @@ first argument instead of returning a new array. We want to prove that
 :ada:`Max_Array` sets the maximum values of both its arguments into each index
 in its first argument.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_09
 
     package Array_Util is
 
@@ -1575,7 +1574,7 @@ Example #10
 
 Let's remove the frame condition from the previous example.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_10
 
     package Array_Util is
 

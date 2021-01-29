@@ -1,10 +1,6 @@
 Handling Variability and Re-usability
 =======================================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Understanding static and dynamic variability
@@ -135,11 +131,9 @@ fact, it's much more common to render an entire package generic. In this case
 the instantiation creates a new version of all the entities present in the
 generic, including global variables. For example:
 
-:code-config:`accumulate_code=True`
-
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Reusability.Gen_Pkg_1
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Gen_Pkg_1
 
     generic
        type T is private;
@@ -168,8 +162,6 @@ The above can be instantiated and used the following way:
        I3.G := 2;
     end Main;
 
-:code-config:`accumulate_code=False`
-
 Here, :ada:`I1.G`, :ada:`I2.G` and :ada:`I3.G` are three distinct variables.
 
 So far, we've only looked at generics with one kind of parameter: a so-called
@@ -180,7 +172,7 @@ of structurally compatible array type:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Reusability.Gen_Pkg_2
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Gen_Pkg_2
 
     generic
        type Component is private;
@@ -230,11 +222,9 @@ to tagged derivation, which is OOP-related and discussed in a later section.
 
 Let's start from the following example:
 
-:code-config:`accumulate_code=True`
-
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     package Drivers_1 is
 
@@ -297,7 +287,7 @@ operates exactly like the previous one, but modifies only the behavior of
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     with Drivers_1; use Drivers_1;
 
@@ -350,7 +340,7 @@ device the following way:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     with Drivers_1; use Drivers_1;
 
@@ -381,7 +371,7 @@ implementation:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
 
     package body Drivers_3 is
 
@@ -397,7 +387,7 @@ Our :ada:`Main` now looks like:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Derived_Drivers
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -412,8 +402,6 @@ Our :ada:`Main` now looks like:
        Receive (D, I);
        Put_Line (Integer'Image (I));
     end Main;
-
-:code-config:`accumulate_code=False`
 
 Here, the call to :ada:`Send_Fast` will get flagged by the compiler.
 
@@ -512,7 +500,8 @@ to a failed overflow check:
 
 [Ada]
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Constraint_Error_Detection
+    :class: ada-run-expect-failure
 
     package P is
        function Add_Max (A : Integer) return Integer;
@@ -550,7 +539,7 @@ Here, the restriction forbids the use of floating-point types and objects. The
 following program would violate this restriction, so the compiler isn't able to
 compile the program when the restriction is used:
 
-.. code:: ada
+.. code-block:: ada
 
     procedure Main is
        F : Float := 0.0;
@@ -666,7 +655,7 @@ In this example, :ada:`Config` is a configuration package. The version of
 :ada:`Config` we're seeing here is the release version. The debug version of
 the :ada:`Config` package looks like this:
 
-.. code:: ada
+.. code-block:: ada
 
     package Config is
 
@@ -808,7 +797,7 @@ each version of the application. For example:
 The code above shows the version #1 of the configuration package. The
 corresponding implementation for version #2 looks like this:
 
-.. code:: ada
+.. code-block:: ada
 
     --  ./src/app_2/app_defs.ads
 
@@ -943,8 +932,6 @@ declaration. Let's rewrite the example above:
     begin
        Put_Line ("Last : " & Integer'Image (V.Last));
     end Main;
-
-:code-config:`reset_accumulator=True`
 
 Even though the :ada:`S` type is now private, we can still display :ada:`Last`
 because this discriminant is visible in the *non-private* part of package
@@ -1833,8 +1820,6 @@ a dispatching call depending on the actual type of :ada:`D`.
 Deriving from multiple interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:code-config:`accumulate_code=True`
-
 We may derive a type from multiple interfaces by simply writing
 :ada:`type Derived_T is new T1 and T2 with null record`. For example:
 
@@ -1902,7 +1887,7 @@ abstract tagged type declared in the :ada:`Abstract_Transceivers` package:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Multiple_Interfaces
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Multiple_Interfaces
    :class: ada-expect-compile-error
 
     with Transceivers; use Transceivers;
@@ -1990,10 +1975,6 @@ declare objects of this derived type. This is what we do in the
 Here, we implement the :ada:`Receive` procedure for the
 :ada:`Full_Transceiver`. Therefore, the type doesn't have any abstract
 operation, so we can use it to declare objects.
-
-:code-config:`reset_accumulator=True`
-
-:code-config:`accumulate_code=False`
 
 From simple derivation to OOP
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

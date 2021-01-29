@@ -1,8 +1,6 @@
 Strongly typed language
 =======================
 
-:code-config:`run_button=True;reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 Ada is a strongly typed language. It is interestingly modern in that
@@ -40,7 +38,7 @@ In fact, the definitional mechanism that Ada provides forms the semantic basis
 for the predefined integer types.  There is no "magical" built-in type in that
 regard, which is unlike most languages, and arguably very elegant.
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Integer_Type_Example
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Integer_Type_Example
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -102,7 +100,8 @@ Operational semantics
 Unlike some other languages, Ada requires that operations on integers should be
 checked for overflow.
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Overflow_Check
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Overflow_Check
+    :class: ada-run-expect-failure
 
     procedure Main is
        A : Integer := Integer'Last;
@@ -126,7 +125,7 @@ Mainly for efficiency reasons, while machine level overflow always results in
 an exception, type level overflows will only be checked at specific boundaries,
 like assignment:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Overflow_Check_2
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Overflow_Check_2
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -160,7 +159,7 @@ For machine sized modular types, for example a modulus of 2**32, this mimics
 the most common implementation behavior of unsigned types. However, an
 advantage of Ada is that the modulus is more general:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Unsigned_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Unsigned_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -199,7 +198,7 @@ describe later but one context that we have already seen is a case statement.
 
 .. TODO: add link to section on discrete features
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Enumeration_Example
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Enumeration_Example
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -239,7 +238,7 @@ Basic properties
 Like most languages, Ada supports floating-point types. The most commonly used
 floating-point type is :ada:`Float`:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Floating_Point_Demo
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Floating_Point_Demo
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -257,7 +256,7 @@ the mantissa) for Float; on a typical 32-bit machine the precision will be 6.
 All common operations that could be expected for floating-point types are
 available, including absolute value and exponentiation.  For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Floating_Point_Operations
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Floating_Point_Operations
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -296,7 +295,7 @@ floating-point type declaration is:
 The compiler will choose a floating-point representation that supports the
 required precision. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Custom_Floating_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Custom_Floating_Types
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -319,7 +318,7 @@ bits for :ada:`T18`.  This includes both the mantissa and the exponent.
 The number of digits specified in the data type is also used in the format
 when displaying floating-point variables. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Display_Custom_Floating_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Display_Custom_Floating_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -348,7 +347,7 @@ types |mdash| using the :ada:`range` keyword.  This simple example creates a new
 floating-point type based on the type :ada:`Float`, for a normalized range
 between :ada:`-1.0` and :ada:`1.0`:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Floating_Point_Range
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Floating_Point_Range
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -365,7 +364,8 @@ within this range; otherwise an exception is raised. In this example, the
 exception :ada:`Constraint_Error` is raised when assigning :ada:`2.0` to the
 variable :ada:`A`:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Floating_Point_Range_Exception
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Floating_Point_Range_Exception
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -379,7 +379,7 @@ variable :ada:`A`:
 
 Ranges can also be specified for custom floating-point types. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Custom_Range_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Custom_Range_Types
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -402,7 +402,7 @@ same family are incompatible with each other; a value of one type cannot be
 assigned to a variable from the other type. For example:
 
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Imperial_Metric_Error
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Imperial_Metric_Error
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -427,7 +427,7 @@ expression like :ada:`2 * 3.0` will trigger a compilation error. In a language
 like C or Python, such expressions are made valid by implicit conversions. In
 Ada, such conversions must be made explicit:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Imperial_Metric
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Imperial_Metric
 
     with Ada.Text_IO; use Ada.Text_IO;
     procedure Conv is
@@ -447,7 +447,7 @@ Of course, we probably do not want to write the conversion code every time we
 convert from meters to miles. The idiomatic Ada way in that case would be to
 introduce conversion functions along with the types.
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Imperial_Metric_Func
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Imperial_Metric_Func
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -511,7 +511,7 @@ will in turn prevent some subtle errors.
     The following Ada code, based on the erroneous example in C, will not
     compile:
 
-    .. code:: ada
+    .. code:: ada compile_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Implicit_Cast
         :class: ada-expect-compile-error
 
         procedure Main is
@@ -539,7 +539,7 @@ In Ada you can create new types based on existing ones. This is very useful:
 you get a type that has the same properties as some existing type but is
 treated as a distinct type in the interest of strong typing.
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Derived_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Derived_Types
     :class: ada-expect-compile-error
 
     procedure Main is
@@ -577,7 +577,7 @@ derived scalar type (such as integer, floating-point and enumeration).
 
 The syntax for enumerations uses the :ada:`range <range>` syntax:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Days
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Days
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -599,7 +599,7 @@ the valid range of values. However, we sometimes want to enforce constraints on
 some values while staying within a single type.  This is where subtypes come
 into play.  A subtype does not introduce a new type.
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Days_Subtype
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Days_Subtype
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -641,7 +641,7 @@ While subtypes of a type are statically compatible with each other,
 constraints are enforced at run time: if you violate a subtype constraint,
 an exception will be raised.
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Days_Subtype_Error
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Days_Subtype_Error
     :class: ada-run, ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -675,7 +675,7 @@ We achieve this in Ada by using subtypes without new constraints. In this case,
 however, we don't get all of the benefits of Ada's strong type checking. Let's
 rewrite an example using type aliases:
 
-.. code:: ada project=Courses.Intro_To_Ada.Strongly_Typed_Language.Undetected_Imperial_Metric_Error
+.. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Undetected_Imperial_Metric_Error
 
     with Ada.Text_IO; use Ada.Text_IO;
 

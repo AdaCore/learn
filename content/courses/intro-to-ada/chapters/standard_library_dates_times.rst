@@ -1,8 +1,6 @@
 Standard library: Dates & Times
 ===============================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 The standard library supports processing of dates and times using two
@@ -26,7 +24,7 @@ Date and time handling
 The :ada:`Ada.Calendar` package supports handling of dates and times. Let's
 look at a simple example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Time
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Time
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
@@ -44,7 +42,7 @@ call to the :ada:`Clock` function. We call the function :ada:`Image` from the
 date and time. We could instead retrieve each component using the :ada:`Split`
 function. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Year
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Year
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Text_IO;             use Ada.Text_IO;
@@ -77,7 +75,7 @@ You can delay an application so that it restarts at a specific date and
 time. We saw something similar in the chapter on tasking.  You do this
 using a :ada:`delay until` statement. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Specific_Time
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Specific_Time
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
@@ -127,7 +125,7 @@ We could achieve a similar result by initializing :ada:`Next` with a
 :ada:`String`. We can do this with a call to :ada:`Value` from the
 :ada:`Ada.Calendar.Formatting` package. This is the modified code:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Specific_Time
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Specific_Time
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
@@ -157,7 +155,7 @@ Just like we saw in the tasking chapter, we could instead specify the
 delay relative to the current time. For example, we could delay by 5
 seconds, using the current time:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next
 
     with Ada.Calendar;            use Ada.Calendar;
     with Ada.Text_IO;             use Ada.Text_IO;
@@ -194,7 +192,7 @@ In the previous section, we used the :ada:`Time` type from the
 application by 5 seconds. We could have used the :ada:`Ada.Real_Time`
 package instead. Let's modify that example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Real_Time
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Real_Time
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -222,7 +220,7 @@ One interesting application using the :ada:`Ada.Real_Time` package is
 benchmarking. We've used that package before in a previous section when
 discussing tasking. Let's look at an example of benchmarking:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -260,7 +258,7 @@ A similar application is benchmarking of CPU time.  We can implement this
 using the :ada:`Execution_Time` package. Let's modify the previous example
 to measure CPU time:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_CPU_Time
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_CPU_Time
 
     with Ada.Text_IO;        use Ada.Text_IO;
     with Ada.Real_Time;      use Ada.Real_Time;
@@ -299,7 +297,7 @@ different if we change the implementation of
 :ada:`Computational_Intensive_App` to use a mathematical functions in a long
 loop. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_Math
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_Math
 
     with Ada.Text_IO;        use Ada.Text_IO;
     with Ada.Real_Time;      use Ada.Real_Time;

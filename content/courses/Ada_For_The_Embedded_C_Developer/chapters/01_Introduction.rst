@@ -3,10 +3,6 @@
 Introduction
 ==============
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 So, what is this Ada thing anyway?
@@ -28,7 +24,7 @@ program in Ada and C:
 
 [C]
 
-.. code:: c cli_input
+.. code:: c cli_input run_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_C
 
    !main.c
    #include <stdio.h>
@@ -64,7 +60,7 @@ program in Ada and C:
 
 [Ada]
 
-.. code:: ada cli_input
+.. code:: ada cli_input run_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_Ada
 
    with Ada.Command_Line; use Ada.Command_Line;
    with Ada.Text_IO; use Ada.Text_IO;

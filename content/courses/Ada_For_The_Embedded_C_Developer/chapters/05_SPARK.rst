@@ -1,10 +1,6 @@
 Enhancing Verification with SPARK and Ada
 ============================================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Understanding Exceptions and Dynamic Checks
@@ -36,19 +32,20 @@ via calls to other procedures and functions.
 For example, the frame below is a procedure including three exceptions
 handlers:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
+    :class: ada-nocheck
 
-   procedure P is
-   begin
-      Statements_That_Might_Raise_Exceptions;
-   exception
-      when A =>
-         Handle_A;
-      when B =>
-         Handle_B;
-      when C =>
-         Handle_C;
-   end P;
+    procedure P is
+    begin
+       Statements_That_Might_Raise_Exceptions;
+    exception
+       when A =>
+          Handle_A;
+       when B =>
+          Handle_B;
+       when C =>
+          Handle_C;
+    end P;
 
 The three exception handlers each start with the word :ada:`when` (lines
 5, 7, and 9). Next comes one or more exception identifiers, followed by
@@ -104,8 +101,6 @@ routine completes so once again the application terminates.
 
 For a concrete example, consider the following:
 
-:code-config:`accumulate_code=True`
-
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
 
    package Arrays is
@@ -152,8 +147,6 @@ For a concrete example, consider the following:
       Some_Process;
       Put_Line ("Main completes normally");
    end Main;
-
-:code-config:`reset_accumulator=True`
 
 Procedure :ada:`Main` calls :ada:`Some_Process`, which in turn calls
 function :ada:`Value` (line 7). :ada:`Some_Process` declares the array
@@ -211,8 +204,7 @@ for more details about the switch.)
 For example, we can write the following. Note the pragma on line 4 of
 :file:`arrays.adb` within function :ada:`Value`:
 
-
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Suppress
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Suppress
 
    package Arrays is
 
@@ -335,7 +327,7 @@ to the matching handler's sequence of statements. If there is no
 matching local handler the last chance handler is invoked. For example
 consider the body of function :ada:`Value` in the body of package :ada:`Arrays`:
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Return
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Return
 
    package Arrays is
 
@@ -398,7 +390,7 @@ the Ada reserved word :ada:`others`. As in case statements, it covers
 all other choices not explicitly mentioned, and so must come last. For
 example:
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Return_Others
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exception_Return_Others
 
     package Arrays is
 
@@ -488,7 +480,7 @@ checks are disabled. Here's an example of a simple program employing a
 low-level assertion. We can use it to show the effects of the switches,
 including the defaults:
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Low_Level_Assertion
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -522,6 +514,7 @@ But now let's enable user-defined checks and build it. Different
 compiler output will appear.
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Assert
+   :class: ada-run-expect-failure
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -586,6 +579,7 @@ As it turns out, our procedure :ada:`Main` is already SPARK compliant so
 we can start verifying it.
 
 .. code:: ada prove_button run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Assert
+   :class: ada-run-expect-failure
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -597,8 +591,6 @@ we can start verifying it.
        X := X - 99;
        Put_Line (Integer'Image (X));
     end Main;
-
-:code-config:`reset_accumulator=True`
 
 The "Prove" button invokes :program:`gnatprove` on :file:`main.adb`. You
 can ignore the parameters to the invocation. For the purpose of this
@@ -657,8 +649,6 @@ For example, the following illustrates an initialization failure:
    begin
        Value := Value + 1;
    end Increment;
-
-:code-config:`reset_accumulator=True`
 
 Granted, :ada:`Increment` is a silly procedure as-is, but imagine it did
 useful things, and, as part of that, incremented the argument.
@@ -754,9 +744,7 @@ though they are *about* the bodies. Placement on the declarations allows
 the obligations and guarantees to be visible to all parties. For
 example:
 
-:code-config:`reset_accumulator=True`
-
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1
 
     function Mid (X, Y : Integer) return Integer with
        Pre  => X + Y /= 0,
@@ -793,8 +781,6 @@ elsewhere.)
 Let's change the argument passed to :ada:`Y` in the second call (line 8).
 Instead of -1 we will pass -2:
 
-:code-config:`reset_accumulator=True`
-
 .. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1 switches=Compiler(-gnato23);
 
     with Mid;
@@ -812,10 +798,6 @@ Instead of -1 we will pass -2:
     function Mid (X, Y : Integer) return Integer with
        Pre  => X + Y /= 0,
        Post => Mid'Result > X;
-
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
 
 The second call will no longer be flagged for the precondition. In
 addition, :program:`gnatprove` will know from the postcondition that
@@ -842,11 +824,6 @@ after a call, using the :ada:`'Old` attribute. For example:
 The postcondition specifies that, on return, the argument passed to the
 parameter :ada:`Value` will be one greater than it was immediately prior
 to the call (:ada:`Value'Old`).
-
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 
 Replacing Defensive Code
 ------------------------
@@ -876,8 +853,6 @@ This reduction has a number of advantages:
 As an example, consider a procedure :ada:`Read` that returns a component
 value from an array. Both the :ada:`Data` and :ada:`Index` are objects visible
 to the procedure so they are not formal parameters.
-
-:code-config:`reset_accumulator=True`
 
 .. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Defensive
 
@@ -920,8 +895,6 @@ An even more robust approach would be instead to ensure that this
 subprogram is only called when :ada:`Index` is within the indexing
 boundaries of :ada:`Data`. We can express that requirement with a
 precondition (line 9).
-
-:code-config:`reset_accumulator=True`
 
 .. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Defensive
 
@@ -999,8 +972,6 @@ positive value, the attempt to increment it would overflow, raising
 :ada:`Constraint_Error` is the most common exception you will have to
 deal with.) We added a precondition to allow only the integer values up to,
 but not including, the largest positive value:
-
-:code-config:`reset_accumulator=True`
 
 .. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2
 

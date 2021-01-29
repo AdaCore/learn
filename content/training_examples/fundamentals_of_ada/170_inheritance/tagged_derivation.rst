@@ -1,5 +1,4 @@
-.. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Inheritance.Tagged_derivation
-   :class: ada-run
+.. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Inheritance.tagged_derivation
 
    package Tagged_Derivation is
    
@@ -38,8 +37,8 @@
       Put_Line ("Child: " & Primitive_2 (Child));
       Root := Root_T (Child);
       Put_Line ("Root from Child: " & Primitive_2 (Root));
-      -- Child := Child_T ( Root ); -- illegal put_line ( "Child from Root: " &
-      -- primitive_2 ( Child ) );
+      -- Child := Child_T ( Root ); -- illegal
+      -- Put_Line ( "Child from Root: " & Primitive_2 ( Child ) ); -- illegal
       Child := (Root with Child_Field => 999);
       Put_Line ("Child from Root via aggregate: " & Primitive_2 (Child));
    end Test_Tagged_Derivation;

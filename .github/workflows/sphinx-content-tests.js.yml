@@ -1,0 +1,49 @@
+name: Sphinx Content Tests
+
+on: [push, pull_request]
+
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  sphinx-content:
+
+    runs-on: ubuntu-18.04
+
+    strategy:
+      matrix:
+        python-version: [3.x]
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install OS Deps
+      run: |
+        sudo apt-get install -y \
+        graphviz
+    - name: Install dependencies
+      run: yarn --frozen-lockfile
+    - name: ada-actions/toolchain
+      uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+        target: native
+        community_year: 2020
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run SPHINX engine tests
+      run: make SPHINXOPTS="-W" test_engine
+    - name: Run SPHINX content tests
+      run: make -k test_content

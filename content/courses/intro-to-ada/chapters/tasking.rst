@@ -1,8 +1,6 @@
 Tasking
 =======
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 Tasks and protected objects allow the implementation of concurrency in
@@ -27,7 +25,7 @@ Simple task
 Tasks are declared using the keyword :ada:`task`. The task implementation
 is specified in a :ada:`task body` block. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -66,7 +64,7 @@ Note that:
   - This task also starts automatically and runs *concurrently* with
     both task :ada:`T` and the main task. For example:
 
-    .. code:: ada
+    .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Multiple_Simple_Task
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -99,7 +97,7 @@ terminate. In other words, this waiting process provides synchronization
 between the main task and its subtasks.  After this synchronization, the
 main task will terminate. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Simple_Sync
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Simple_Sync
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -125,8 +123,6 @@ Synchronization also occurs if we move the task to a separate package. In
 the example below, we declare a task :ada:`T` in the package
 :ada:`Simple_Sync_Pkg`.
 
-:code-config:`reset_accumulator=True;accumulate_code=True`
-
 .. code:: ada no_button project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
 
     package Simple_Sync_Pkg is
@@ -151,7 +147,7 @@ This is the corresponding package body:
 Because the package is :ada:`with`'ed by the main procedure, the task :ada:`T`
 defined in the package is part of the main task. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
 
     with Simple_Sync_Pkg;
 
@@ -164,8 +160,6 @@ defined in the package is part of the main task. For example:
 Again, as soon as the main task reaches its end, it synchronizes with task
 :ada:`T` from :ada:`Simple_Sync_Pkg` before terminating.
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 Delay
 ~~~~~
 
@@ -173,7 +167,7 @@ We can introduce a delay by using the keyword :ada:`delay`. This puts the
 task to sleep for the length of time (in seconds) specified in the delay
 statement. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Delay
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Delay
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -221,7 +215,7 @@ synchronize with it. Specifically,
 This synchronization between tasks is called *rendez-vous*. Let's see an
 example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Rendezvous
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Rendezvous
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -268,7 +262,7 @@ statement. In simple terms, this statement allows the master task to
 automatically terminate the subtask when the master task finishes.  For
 example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Rendezvous_Loop
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Rendezvous_Loop
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -369,8 +363,6 @@ the elapsed time (:ada:`Show_Elapsed_Time`) and a dummy
 :ada:`Computational_Intensive_App` procedure which is simulated by using a
 simple delay. This is the package specification:
 
-:code-config:`reset_accumulator=True;accumulate_code=True`
-
 .. code:: ada no_button project=Courses.Intro_To_Ada.Tasking.Show_Time
 
     with Ada.Real_Time; use Ada.Real_Time;
@@ -420,14 +412,14 @@ And this is the package body:
 Using this auxiliary package, we're now ready to write our time-drifting
 application:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Time
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Time
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
 
     with Delay_Aux_Pkg;
 
-    procedure Show_Time_Drifting_Task is
+    procedure Show_Time_Task is
        package Aux renames Delay_Aux_Pkg;
 
        task T;
@@ -449,7 +441,7 @@ application:
 
     begin
        null;
-    end Show_Time_Drifting_Task;
+    end Show_Time_Task;
 
 We can see by running the application that we already have a time
 difference of about four seconds after three iterations of the loop due to
@@ -457,14 +449,14 @@ the drift introduced by :ada:`Computational_Intensive_App`. Using the
 :ada:`delay until` statement, however, we're able to avoid this time drift
 and have a regular interval of exactly one second:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Time
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Time
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
 
     with Delay_Aux_Pkg;
 
-    procedure Show_Cycling_Task is
+    procedure Show_Time_Task is
        package Aux renames Delay_Aux_Pkg;
 
        task T;
@@ -493,13 +485,11 @@ and have a regular interval of exactly one second:
 
     begin
        null;
-    end Show_Cycling_Task;
+    end Show_Time_Task;
 
 Now, as we can see by running the application, the :ada:`delay until`
 statement ensures that the :ada:`Computational_Intensive_App` doesn't disturb
 the regular interval of one second between iterations.
-
-:code-config:`reset_accumulator=True;accumulate_code=False`
 
 Protected objects
 -----------------
@@ -533,7 +523,7 @@ syntax is similar to that used for packages: you can declare operations
 part. The corresponding implementation of the operations is included in the
 :ada:`protected body` of the object. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Protected_Objects
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Protected_Objects
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -597,7 +587,7 @@ The following example implements the barrier for the :ada:`Obj.Get`
 operation. It also contains two concurrent subprograms (main task and task
 :ada:`T`) that try to access the protected object.
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Protected_Objects_Entries
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Protected_Objects_Entries
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -680,7 +670,7 @@ objects are only created by variable definitions, not type definitions.
 
 To illustrate this, we repeat our first example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -699,7 +689,7 @@ We now rewrite it by replacing :ada:`task T` with :ada:`task type TT`.  We
 declare a task (:ada:`A_Task`) based on the task type :ada:`TT` after its
 definition:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task_Type
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task_Type
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -722,7 +712,7 @@ task types: :ada:`array (<>) of Task_Type`. Also, we can pass information
 to the individual tasks by defining a :ada:`Start` entry. Here's the updated
 example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Task_Type_Array
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Task_Type_Array
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -766,7 +756,7 @@ for creating arrays (or other composite objects) of protected objects.
 
 We can reuse a previous example and rewrite it to use a protected type:
 
-.. code:: ada project=Courses.Intro_To_Ada.Tasking.Show_Protected_Object_Type
+.. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Protected_Object_Type
 
     with Ada.Text_IO; use Ada.Text_IO;
 

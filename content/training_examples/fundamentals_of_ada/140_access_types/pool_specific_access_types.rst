@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Access_Types.pool_specific_access_types
-   :class: ada-run
 
    package Pool_Specific is
       type Pointed_To_T is new Integer;

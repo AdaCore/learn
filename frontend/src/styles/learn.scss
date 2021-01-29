@@ -28,7 +28,7 @@
 
 // theme overrides
 // widget
-.widget_editor {
+widget {
     padding-bottom: 10px;
     position: relative;
 }
@@ -256,7 +256,7 @@ div {
         padding-right: 3px;
         font-weight: $fontweight-bold;
     }
-    &.output_area {
+    &.output-area {
         font-family: $mono-font;
         font-size: 12px;
         font-style: normal;
@@ -265,7 +265,7 @@ div {
         max-height: 250px;
         overflow-y: auto;
     }
-    &.output_row {
+    &.output-row {
         margin-right: 0px;
         button {
             margin-right: 4px;
@@ -416,7 +416,7 @@ div.mwac-banner.docutils.container {
 
 // lab stuff
 div {
-    &.lab_area {
+    &.lab-area {
         font-family: $mono-font;
         font-size: 12px;
         font-weight: $fontweight-normal;

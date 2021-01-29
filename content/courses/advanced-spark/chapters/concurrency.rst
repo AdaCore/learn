@@ -1,5 +1,3 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
-
 Concurrency
 =====================================================================
 
@@ -101,7 +99,7 @@ Ravenscar – the SPARK solution to concurrency problems
 Concurrency – A trivial example
 ---------------------------------------------------------------------
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Concurrency.Trivial_Task
 
     package Show_Trivial_Task is
 
@@ -197,7 +195,7 @@ Communication Between Tasks in Ravenscar
 
     - all PO private data initialized by default in SPARK
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Protected_Object
 
     package Show_Protected_Object is
 
@@ -234,7 +232,7 @@ Protected Objects in Ravenscar
       contain a volatile component. The array type is implicitly volatile
       when its component type is volatile.
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Protected_Object_Ravenscar
 
     package Show_Protected_Object_Ravenscar is
 
@@ -256,8 +254,6 @@ Protected Objects in Ravenscar
        PR : PRT;
 
     end Show_Protected_Object_Ravenscar;
-
-.. code:: ada
 
     package body Show_Protected_Object_Ravenscar is
 
@@ -311,7 +307,7 @@ Blocking Communication with Entries
 
     - guard is a :ada:`Boolean` component of PO in Ravenscar
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Blocking_Communication
 
     package Show_Blocking_Communication is
 
@@ -323,8 +319,6 @@ Blocking Communication with Entries
        end PT;
 
     end Show_Blocking_Communication;
-
-.. code:: ada
 
     package body Show_Blocking_Communication is
 
@@ -348,7 +342,7 @@ Relaxed Constraints on Entries with Extended Ravenscar
 
     - and allows multiple tasks to call the same entry
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Relaxed_Constraints_On_Entries
 
     package Show_Relaxed_Constraints_On_Entries is
 
@@ -360,8 +354,6 @@ Relaxed Constraints on Entries with Extended Ravenscar
        end Mailbox;
 
     end Show_Relaxed_Constraints_On_Entries;
-
-.. code:: ada
 
     package body Show_Relaxed_Constraints_On_Entries is
 
@@ -392,7 +384,7 @@ Interrupt Handlers in Ravenscar
     - with aspect :ada:`Interrupt_Priority` on the PO specifying the
       priority
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Concurrency.Interrupt_Handlers
 
     with System; use System;
     with Ada.Interrupts.Names; use Ada.Interrupts.Names;
@@ -452,7 +444,7 @@ Data and Flow Dependencies of Tasks
 
     - explicit dependency
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Concurrency.Data_And_Flow_Dependencies
 
     package Show_Data_And_Flow_Dependencies is
 
@@ -474,7 +466,7 @@ State Abstraction over Synchronized Variables
 - Synchronized objects can be abstracted in synchronized abstract state
   with aspect :ada:`Synchronous`
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.State_Abstraction
 
     package Show_State_Abstraction with
       Abstract_State => (State with Synchronous, External)
@@ -489,8 +481,6 @@ State Abstraction over Synchronized Variables
        task type Task_Type;
 
     end Show_State_Abstraction;
-
-.. code:: ada
 
     package body Show_State_Abstraction with
       Refined_State => (State => (A, P, T))
@@ -556,7 +546,7 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Concurrency.Example_01
 
     procedure Rendezvous is
        task T1 is
@@ -580,7 +570,7 @@ violation of restriction :ada:`No_Task_Hierarchy`
 Example #2
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Example_02
 
     package Example_02 is
 
@@ -591,8 +581,6 @@ Example #2
     private
        Data : Boolean := False;
     end Example_02;
-
-.. code:: ada
 
     package body Example_02 is
 
@@ -613,7 +601,7 @@ Violation of restriction :ada:`Simple_Barriers` (for Ravenscar) or
 Example #3
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Example_03
 
     package Example_03 is
 
@@ -627,8 +615,6 @@ Example #3
        T1, T2 : TT;
 
     end Example_03;
-
-.. code:: ada
 
     package body Example_03 is
 
@@ -659,7 +645,7 @@ object shared between tasks
 Example #4
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Example_04
 
     package Example_04 is
 
@@ -675,8 +661,6 @@ Example #4
        T1, T2 : TT;
 
     end Example_04;
-
-.. code:: ada
 
     package body Example_04 is
 
@@ -705,7 +689,7 @@ only accesses to ``Data`` are through ``P``.
 Example #5
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Example_05
 
     package Example_05 is
 
@@ -725,8 +709,6 @@ Example #5
        T1, T2 : TT;
 
     end Example_05;
-
-.. code:: ada
 
     package body Example_05 is
 
@@ -763,7 +745,7 @@ not an entry (possibly blocking).
 Example #6
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Example_06
 
     package Example_06 is
 
@@ -777,8 +759,6 @@ Example #6
        end Mailbox;
 
     end Example_06;
-
-.. code:: ada
 
     package body Example_06 is
 
@@ -812,7 +792,7 @@ This code is not correct. Integer range cannot be proved correct.
 Example #7
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Example_07
 
     package Example_07 is
 
@@ -824,8 +804,6 @@ Example #7
        end Mailbox;
 
     end Example_07;
-
-.. code:: ada
 
     package body Example_07 is
 
@@ -852,7 +830,7 @@ prove checks.
 Example #8
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Example_08
 
     package Example_08 is
 
@@ -875,8 +853,6 @@ Example #8
        end Mailbox;
 
     end Example_08;
-
-.. code:: ada
 
     package body Example_08 is
 
@@ -913,7 +889,7 @@ prove checks. Predicate is preserved.
 Example #9
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Example_09
 
     --% src_file: Example_09.ads
     --% cflags: -gnaty
@@ -933,8 +909,6 @@ Example #9
        T1, T2 : T;
 
     end Example_09;
-
-.. code:: ada
 
     package body Example_09 is
 
@@ -972,7 +946,7 @@ multiple tasks or protected objects.
 Example #10
 ~~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Concurrency.Example_10
 
     package Example_10 is
 
@@ -995,8 +969,6 @@ Example #10
        T1, T2 : T;
 
     end Example_10;
-
-.. code:: ada
 
     package body Example_10 is
 

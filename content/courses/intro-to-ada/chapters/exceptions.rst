@@ -1,8 +1,6 @@
 Exceptions
 ==========
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 Ada uses exceptions for error handling.  Unlike many other languages,
@@ -16,9 +14,7 @@ Ada exceptions are not types, but instead objects, which may be
 peculiar to you if you're used to the way Java or Python support
 exceptions. Here's how you declare an exception:
 
-:code-config:`reset_accumulator=True;accumulate_code=True`
-
-.. code:: ada no_button
+.. code:: ada no_button project=Courses.Intro_To_Ada.Exceptions.Show_Exception
 
     package Exceptions is
         My_Except : exception;
@@ -35,7 +31,8 @@ Raising an exception
 
 To raise an exception of our newly declared exception kind, do the following:
 
-.. code:: ada project=Courses.Intro_To_Ada.Exceptions.Show_Exception
+.. code:: ada run_button project=Courses.Intro_To_Ada.Exceptions.Show_Exception
+    :class: ada-run-expect-failure
 
     with Exceptions; use Exceptions;
 
@@ -51,8 +48,6 @@ To raise an exception of our newly declared exception kind, do the following:
        --  it is caught.
     end Main;
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 Handling an exception
 ---------------------
 
@@ -60,7 +55,8 @@ Next, we address how to handle exceptions that were raised by us or
 libraries that we call. The neat thing in Ada is that you can add an
 exception handler to any statement block as follows:
 
-.. code:: ada project=Courses.Intro_To_Ada.Exceptions.Show_Exception_Handling
+.. code:: ada run_button project=Courses.Intro_To_Ada.Exceptions.Show_Exception_Handling
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Exceptions;  use Ada.Exceptions;
@@ -88,7 +84,7 @@ associated with the exception as a string.
 You don't need to introduce a block just to handle an exception: you
 can add it to the statements block of your current subprogram:
 
-.. code:: ada project=Courses.Intro_To_Ada.Exceptions.Show_Exception_Message
+.. code:: ada run_button project=Courses.Intro_To_Ada.Exceptions.Show_Exception_Message
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Exceptions;  use Ada.Exceptions;
@@ -110,7 +106,8 @@ can add it to the statements block of your current subprogram:
     section are not caught by the handlers of that block. So for
     example, in the following code, the exception will not be caught.
 
-    .. code:: ada project=Courses.Intro_To_Ada.Exceptions.Be_Careful
+    .. code:: ada run_button project=Courses.Intro_To_Ada.Exceptions.Be_Careful
+        :class: ada-run-expect-failure
 
         with Ada.Text_IO; use Ada.Text_IO;
         with Ada.Exceptions;  use Ada.Exceptions;

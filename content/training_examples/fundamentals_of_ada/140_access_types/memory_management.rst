@@ -1,11 +1,9 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Access_Types.memory_management
-   :class: ada-run
 
    with Ada.Unchecked_Deallocation;
    package Memory_Management_Types is
       type Integer_Access_T is access all Integer;
-      procedure Free is new Ada.Unchecked_Deallocation
-        (Integer, Integer_Access_T);
+      procedure Free is new Ada.Unchecked_Deallocation (Integer, Integer_Access_T);
    end Memory_Management_Types;
 
    with Memory_Management_Types; use Memory_Management_Types;
@@ -32,7 +30,7 @@
          Free (Object);
       exception
          when Err : others =>
-            Put_Line ("double_deallocation error: " & Exception_Name (Err));
+            Put_Line ("Double_Deallocation error: " & Exception_Name (Err));
       end Double_Deallocation;
    
       procedure Accessing_Deallocated_Memory is
@@ -44,24 +42,19 @@
          Put_Line ("Object = " & Integer'Image (Object.all));
       exception
          when Err : others =>
-            Put_Line
-              ("accessing_deallocated_memory error: " & Exception_Name (Err));
+            Put_Line ("Accessing_Deallocated_Memory error: " & Exception_Name (Err));
       end Accessing_Deallocated_Memory;
    
       procedure Memory_Leak is
          Object  : Integer_Access_T;
-         Counter : Integer := 1;
       begin
-         while Counter < Integer'Last loop
+         for Counter in Integer'Range loop
             Object  := new Integer'(Counter);
-            Counter := Counter + 1;
          end loop;
-         Put_Line ("Counter = " & Counter'Image);
+         Put_Line ("Complete" );
       exception
          when Err : others =>
-            Put_Line
-              ("memory_leak error: " & Counter'Image & " " &
-               Exception_Name (Err));
+            Put_Line ("Memory_Leak error: " & Exception_Name (Err));
       end Memory_Leak;
    
    begin

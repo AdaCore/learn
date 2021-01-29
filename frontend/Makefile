@@ -4,7 +4,7 @@ SPHINXBUILD   	= sphinx-build
 SPHINXPROJ    	= learnadacorecom
 SPHINXCONF    	= sphinx
 BUILDDIR      	= dist
-TEST_DRIVER   	= python3 tests/compile_blocks.py -B $(BUILDDIR)/test_output
+TEST_DRIVER   	= PYTHONPATH="$PYTHONPATH:sphinx" python3 tests/compile_blocks.py -B $(BUILDDIR)/test_output
 
 MKFILE_PATH  	:= $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
@@ -12,6 +12,8 @@ MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
 BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 
 CONTENT_DIR   	= $(MKFILE_DIR)/../content
+TEST_CONTENT    = tests/rst
+TEST_BUILDDIR   = tests/html
 HOST_ADDRESS 	?= localhost
 HOST_PORT    	?= 8000
 
@@ -87,6 +89,9 @@ test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
 	test_training_fundamentals \
 	test_gnat_toolchain_intro
 
+test_parser:
+	@coverage run --source=widget -m unittest discover --start-directory sphinx
+	@coverage report --fail-under=90 -m
 
 publish-staging:
 	@echo "Publishing current branch to learn-staging..."
@@ -142,6 +147,10 @@ site-staging: cleanall webpack-staging pdf_books
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
+site-testing: cleantest
+	FRONTEND_TESTING=true $(SPHINXBUILD) -M html $(TEST_CONTENT) \
+        "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
 
 pdf_books: $(BOOKS)
@@ -160,6 +169,9 @@ $(BOOKS):
 cleanall:
 	@rm -rf "$(BUILDDIR)"
 	@rm -f $(BUILD_MANIFEST)
+
+cleantest:
+	@rm -rf "$(TEST_BUILDDIR)"
 
 
 # Catch-all target: route all unknown targets to Sphinx using the new

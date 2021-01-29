@@ -1,10 +1,6 @@
 The C Developer's Perspective on Ada
 ======================================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 What we mean by Embedded Software
@@ -123,7 +119,7 @@ program:
 
 [C]
 
-.. code:: c run_button manual_chop
+.. code:: c run_button manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_C
 
     !main.c
     #include <stdio.h>
@@ -136,7 +132,7 @@ program:
 
 [Ada]
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_Ada
 
     with Ada.Text_IO;
 
@@ -305,7 +301,7 @@ For example:
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Perspective.Private_Types
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Private_Types
 
     package Types is
        type Type_1 is private;
@@ -1213,8 +1209,8 @@ look at the equivalent Ada example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Strong_Typing_Ada
-   :class: ada-expect-compile-error
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Strong_Typing_Ada
+    :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1365,8 +1361,8 @@ return a value of that type.
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Application_Defined_Types
-   :class: ada-expect-compile-error
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Application_Defined_Types
+    :class: ada-expect-compile-error
 
     procedure Main is
        type Distance is new Float;
@@ -1516,7 +1512,7 @@ define what are considered valid values. The most common kind of contract is a
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Range_Check
+.. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Range_Check
     :class: ada-expect-compile-error
 
     procedure Main is
@@ -1768,6 +1764,7 @@ The corresponding code in Ada raises an exception:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2438,7 +2435,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [Ada]
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_To_Scalars
 
     procedure Main is
        type A_Int is access Integer;
@@ -2449,7 +2446,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [C]
 
-.. code:: c run_button
+.. code:: c run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointers_To_Scalars
 
     !main.c
     #include <stdlib.h>
@@ -2466,7 +2463,7 @@ In Ada, an initializer can be specified with the allocation by appending
 
 [Ada]
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_Initialization
 
     procedure Main is
        type A_Int is access Integer;
@@ -2488,7 +2485,7 @@ objects that have gone out of scope. For example:
 
 [Ada]
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_All
 
     procedure Main is
        type A_Int is access all Integer;
@@ -2500,7 +2497,7 @@ objects that have gone out of scope. For example:
 
 [C]
 
-.. code:: c run_button
+.. code:: c run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_All_C
 
     !main.c
     int main(int argc, const char * argv[])
@@ -2518,7 +2515,7 @@ the access type as follows:
 
 [Ada]
 
-.. code:: ada run_button
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Unchecked_Deallocation
 
     with Ada.Unchecked_Deallocation;
 
@@ -2532,7 +2529,7 @@ the access type as follows:
 
 [C]
 
-.. code:: c run_button
+.. code:: c run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Free
 
     !main.c
     #include <stdlib.h>
@@ -2894,8 +2891,6 @@ Aspects and attributes might refer to the same kind of information. For
 example, we can use the :ada:`Size` aspect to define the expected minimum size
 of objects of a certain type:
 
-:code-config:`accumulate_code=True`
-
 [Ada]
 
 .. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Size_Aspect
@@ -2924,8 +2919,6 @@ or of an object:
        Put_Line ("Size of UInt10 type:   " & Positive'Image (UInt10'Size));
        Put_Line ("Size of UInt10 object: " & Positive'Image (UInt10_Obj'Size));
     end Show_Device_Types;
-
-:code-config:`accumulate_code=False`
 
 We'll explain both :ada:`Size` aspect and :ada:`Size` attribute
 :ref:`later in this course <Size_Aspect_Attribute>`.

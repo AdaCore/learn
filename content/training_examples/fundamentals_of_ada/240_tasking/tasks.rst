@@ -1,18 +1,14 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Tasking.tasks
-   :class: ada-run
 
    package Tasks is
-   
       task T is
          entry Start;
          entry Receive_Message (V : String);
       end T;
-   
    end Tasks;
 
    with Ada.Text_IO; use Ada.Text_IO;
    package body Tasks is
-   
       task body T is
       begin
          loop
@@ -24,7 +20,6 @@
             end Receive_Message;
          end loop;
       end T;
-   
    end Tasks;
 
    with Ada.Text_IO; use Ada.Text_IO;

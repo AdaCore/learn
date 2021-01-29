@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Subprograms.potential_pitfalls
-    :class: ada-run
 
    with Ada.Text_IO; use Ada.Text_IO;
    procedure Potential_Pitfalls is
@@ -25,10 +24,9 @@
          Put_Line (Integer'Image (X) & " / " & Integer'Image (Y));
       end Order_Dependent_Code;
    
-      procedure Aliasing
-        (Param : in     String;
-         I1    : in out Integer;
-         I2    : in out Integer) is
+      procedure Aliasing (Param : in     String;
+                          I1    : in out Integer;
+                          I2    : in out Integer) is
       begin
          Global_S := "World";
          I1       := I1 * 2;
@@ -37,17 +35,14 @@
       end Aliasing;
    
    begin
-   
       Unassigned_Out (-1, Global_P);
       Put_Line ("Global_P = " & Positive'Image (Global_P));
    
       Order_Dependent_Code (Global_I, Cause_Side_Effect);
    
       Global_P := Positive'First;
-   
-      -- compile error Aliasing (Global_S, Global_I, Global_I);
+      -- Aliasing (Global_S, Global_I, Global_I); -- compile error
       Aliasing (Global_S, Global_I, Global_P);
       Put_Line ("Global_S: " & Global_S);
       Put_Line ("Global_P: " & Global_P'Image);
-   
    end Potential_Pitfalls;

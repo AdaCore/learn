@@ -1,5 +1,3 @@
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
 Controlling Side Effects
 ------------------------
 
@@ -67,7 +65,7 @@ confusing, if the programmer wrongly thinks that the side effects are
 guaranteed to occur. Consider the function :c:`decrease_until_one_is_null`
 below, which decreases both arguments until one is null:
 
-.. code:: c run_button
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Side_Effect_C
 
    !main.c
    #include <stdio.h>
@@ -134,7 +132,7 @@ There are two possible side effects when evaluating an expression:
 Reads of volatile variables in SPARK are restricted to appear immediately at
 statement level, so the following is not allowed:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read
 
     package Volatile_Read is
        X : Integer with Volatile;
@@ -151,7 +149,7 @@ statement level, so the following is not allowed:
 Instead, every read of a volatile variable must occur immediately before being
 assigned to another variable, as follows:
 
-.. code:: ada prove_flow_report_all_button compile_button
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read
 
     package Volatile_Read is
        X : Integer with Volatile;
@@ -178,7 +176,7 @@ result from its inputs, which may be passed as parameters or as global
 variables. In particular, SPARK functions cannot have :ada:`out` or :ada:`in out`
 parameters:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Function_With_Out_Param
 
    function Bad_Function (X, Y : Integer; Sum, Max : out Integer) return Boolean;
    --  ERROR, since "out" parameters are not allowed
@@ -187,7 +185,7 @@ More generally, SPARK does not allow functions that have a side effect
 in addition to returning their result, as is typical of many idioms in other
 languages, for example when setting a new value and returning the previous one:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Side_Effect_Ada
 
     package Bad_Functions is
        function Set (V : Integer) return Integer;
@@ -213,7 +211,7 @@ GNATprove detects that function :ada:`Set` has a side effect on global variable
 :ada:`Value` and issues an error. The correct idiom in SPARK for such a case is to
 use a procedure with an :ada:`out` parameter to return the desired result:
 
-.. code:: ada prove_flow_report_all_button compile_button
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.No_Side_Effect_Ada
 
     package Ok_Subprograms is
        procedure Set (V : Integer; Prev : out Integer);

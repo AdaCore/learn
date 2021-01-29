@@ -295,21 +295,8 @@ class ProjectFile(File):
         to_insert = f"for Main use ({', '.join(main_list)});"
         self.content = self.content.replace("--MAIN_PLACEHOLDER--", to_insert)
 
-    def insert_switches(self, switch_list):
-        sw_dict = {}
-
-        regex = re.compile(r'(Builder|Compiler)\((.+)\)')
-        for sec in switch_list:
-            match = regex.search(sec)
-            if match:
-                pkg_name = match.group(1)
-                switches = set(match.group(2).split(','))
-                if pkg_name in sw_dict.keys():
-                    sw_dict[pkg_name] = sw_dict[pkg_name] | switches
-                else:
-                    sw_dict[pkg_name] = switches
-
-        for pkg, unfiltered_switches in sw_dict.items():
+    def insert_switches(self, requested):
+        for pkg, unfiltered_switches in requested.items():
             filtered_switches = []
             for switch in unfiltered_switches:
                 if switch in self.allowed_switches[pkg]:

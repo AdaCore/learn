@@ -50,7 +50,7 @@ we've neglected to initialize the value of :ada:`Max` prior to entering the
 loop. As a consequence, the value read by the condition of the if statement
 may be uninitialized. Flow analysis detects and reports this error.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Uninitialized
 
     package Show_Uninitialized is
 
@@ -95,7 +95,7 @@ statement to be ineffective.  That ineffective statement is not an error in
 itself, but flow analysis produces a warning since it can be indicative of
 an error, as it is here.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Ineffective_Statements
 
     package Show_Ineffective_Statements is
 
@@ -147,7 +147,7 @@ isn't used.  All of these may be signs of an error.
 We see an example below. The subprogram :ada:`Swap` is incorrect and GNATprove
 warns about an input which isn't read:
 
-.. code:: ada prove_button
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Flow_Analysis.Incorrect_Param_Mode
 
     package Show_Incorrect_Param_Mode is
 
@@ -239,7 +239,7 @@ see this in the case of the declaration of :ada:`Get_Value_Of_X`. Finally, if
 a subprogram, such as :ada:`Incr_Parameter_X`, doesn't reference any global
 variables, you set the value of the global contract to :ada:`null`.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Global_Contracts
 
     package Show_Global_Contracts is
 
@@ -307,7 +307,7 @@ For example, here we indicate that the final value of each parameter of
 subprogram is a function, we list its result as an output, using the
 :ada:`Result` attribute, as we do for :ada:`Get_Value_Of_X` below.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Depends_Contracts
 
     package Show_Depends_Contracts is
 
@@ -386,7 +386,7 @@ This can produce error messages on perfectly correct subprograms.  An
 example is :ada:`Set_X_To_Y_Plus_Z` below, which only sets its :ada:`out`
 parameter :ada:`X` when :ada:`Overflow` is :ada:`False`.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Set_X_To_Y_Plus_Z
 
     procedure Set_X_To_Y_Plus_Z
       (Y, Z     :     Natural;
@@ -430,7 +430,7 @@ resolve this issue, you can either use a simpler loop over the full range of
 the array, or (even better) an aggregate assignment, or, if that's not possible,
 verify initialization of the object manually.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Composite_Types_Shortcoming
 
     package Show_Composite_Types_Shortcoming is
 
@@ -476,7 +476,7 @@ components, flow analysis knows that the entire object is initialized.
 However, record objects are still treated as single objects when analyzed
 as an input or output of a subprogram.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Record_Flow_Analysis
 
     package Show_Record_Flow_Analysis is
 
@@ -504,7 +504,7 @@ Flow analysis complains when a procedure call initializes only some
 components of a record object.  It'll notify you of uninitialized
 components, as we see in subprogram :ada:`Init_F2` below.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Record_Flow_Analysis
 
     package Show_Record_Flow_Analysis is
 
@@ -550,7 +550,7 @@ computes that :ada:`R` is uninitialized on a path that enters neither of the
 two conditional statements. Because it doesn't consider values of
 expressions, it can't know that such a path is impossible.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Absolute_Value
 
     procedure Absolute_Value
       (X :     Integer;
@@ -569,7 +569,7 @@ expressions, it can't know that such a path is impossible.
 To avoid this problem, you should make the control flow explicit, as in
 this second version of :ada:`Absolute_Value`:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Absolute_Value
 
     procedure Absolute_Value
       (X :     Integer;
@@ -619,7 +619,7 @@ The procedure :ada:`Search_Array` searches for an occurrence of element :ada:`E`
 in an array :ada:`A`. If it finds one, it stores the index of the element in
 :ada:`Result`.  Otherwise, it sets :ada:`Found` to :ada:`False`.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_01
 
     package Show_Search_Array is
 
@@ -671,7 +671,7 @@ Example #2
 To avoid the message previously issued by GNATprove, we modify
 :ada:`Search_Array` to raise an exception when :ada:`E` isn't found in :ada:`A`:
 
-.. code:: ada prove_button
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_02
 
     package Show_Search_Array is
 
@@ -721,7 +721,7 @@ such a structure, the place to store the index at which :ada:`E` was found
 exists only when :ada:`E` was indeed found.  So if it wasn't found, there's
 nothing to be initialized.
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_03
 
     package Show_Search_Array is
 
@@ -784,7 +784,7 @@ it updates the largest value seen so far in this sequence.  If not, it
 means it's found the end of a sequence, so it computes the size of that
 sequence and stores it in :ada:`Size_Of_Seq`.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_04
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -857,7 +857,7 @@ identity, where the :ada:`I`'th elements is at the :ada:`I`'th
 position. :ada:`Cyclic_Permutation` calls :ada:`Init` and then swaps elements to
 construct a cyclic permutation.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_05
 
     package Show_Permutation is
 
@@ -916,7 +916,7 @@ This program is the same as the previous one except that we've changed the
 mode of :ada:`A` in the specification of :ada:`Init` to :ada:`in out` to avoid
 the message from flow analysis on array assignment.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_07
 
     package Show_Permutation is
 
@@ -977,7 +977,7 @@ through :ada:`A` to increment every element by the value of :ada:`Increment`,
 saturating at a specified threshold value. We specified a :ada:`Global`
 contract for :ada:`Incr_Until_Threshold`.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_07
 
     package Show_Increments is
 
@@ -1035,8 +1035,7 @@ We now go back to the procedure :ada:`Test_Index` from :ref:`Example #4` and
 correct the missing initializations.  We want to know if the :ada:`Global`
 contract of :ada:`Test_Index` is correct.
 
-.. code:: ada prove_flow_button
-    :class: ada-expect-compile-error
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_08
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -1102,7 +1101,7 @@ Next, we change the :ada:`Global` contract of :ada:`Test_Index` into a
 the set of global variables accessed can be deduced from the :ada:`Depends`
 contract.
 
-.. code:: ada prove_flow_report_all_button
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_09
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -1170,7 +1169,7 @@ The subprogram :ada:`Identity` swaps the value of its parameter two times. Its
 :ada:`Depends` contract says that the final value of :ada:`X` only depends on
 its initial value and likewise for :ada:`Y`.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_10
 
     package Show_Swap is
 

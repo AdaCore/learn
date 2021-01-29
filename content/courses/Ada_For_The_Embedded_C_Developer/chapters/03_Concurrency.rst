@@ -1,10 +1,6 @@
 Concurrency and Real-Time
 ============================
 
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Understanding the various options
@@ -54,8 +50,6 @@ provides the two standard subsets: Ravenscar and Jorvik.
 
 Tasks
 -----
-
-:code-config:`accumulate_code=True`
 
 Ada offers a high level construct called a *task* which is an
 independent thread of execution. In GNAT, tasks are either mapped to the
@@ -157,10 +151,6 @@ and terminates when its work is completed.
     begin
        T := new My_Task ('G');
     end Main;
-
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
 
 Rendezvous
 ----------
@@ -387,8 +377,6 @@ the loop there are several possibilities:
 Protected Objects
 -----------------
 
-:code-config:`accumulate_code=True`
-
 Although the rendezvous may be used to implement mutually exclusive access to a
 shared data object, an alternative (and generally preferable) style is through
 a protected object, an efficiently implementable mechanism that makes the
@@ -408,7 +396,7 @@ Let's reimplement our earlier tasking example with a protected object called
 
 [Ada]
 
-.. code:: ada project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Protected_Counter
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Protected_Counter
 
     package Counters is
 
@@ -585,9 +573,6 @@ Ada concurrency features provide much further generality than what's been
 presented here. For additional information please consult one of the works
 cited in the *References* section.
 
-:code-config:`accumulate_code=False`
-
-:code-config:`reset_accumulator=True`
 
 .. _Ravenscar:
 
@@ -618,7 +603,8 @@ using the Ravenscar profile. For example:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Ravenscar
+    :class: ada-expect-compile-error
 
     package My_Tasks is
 
@@ -657,7 +643,7 @@ in the main application:
 
 [Ada]
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Concurrency.Ravenscar
 
     with My_Tasks; use My_Tasks;
 

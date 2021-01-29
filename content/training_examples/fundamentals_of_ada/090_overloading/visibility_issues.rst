@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Overloading.visibility_issues
-   :class: ada-run
 
    procedure Visibility_Issues is
       procedure Foo (I : Integer) is

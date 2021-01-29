@@ -4,8 +4,6 @@
 .. meta::
     :author: AdaCore
 
-:code-config:`accumulate_code=False;reset_accumulator=True`
-
 Let's Build a Stack
 =====================
 

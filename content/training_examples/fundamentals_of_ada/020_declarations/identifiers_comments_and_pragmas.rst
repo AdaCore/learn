@@ -1,5 +1,4 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Declarations.identifiers_comments_and_pragmas
-    :class: ada-run
 
    package Identifiers_Comments_And_Pragmas is
    
