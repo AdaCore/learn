@@ -442,15 +442,19 @@ def analyze_file(rst_file):
 
             compile_error = False
 
+            def get_main_filename(block):
+                if block.main_file is not None:
+                    main_file = block.main_file
+                else:
+                    main_file = source_files[-1].basename
+                return main_file
+
             if (('ada-run' in block.classes
                  or 'ada-run-expect-failure' in block.classes
                  or 'run' in block.buttons)
                 and not 'ada-norun' in block.classes
             ):
-                if block.main_file is not None:
-                    main_file = block.main_file
-                else:
-                    main_file = source_files[-1].basename
+                main_file = get_main_filename(block)
 
                 if block.language == "ada":
                     try:
