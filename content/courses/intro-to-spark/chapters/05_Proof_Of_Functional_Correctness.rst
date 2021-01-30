@@ -64,6 +64,7 @@ only if :ada:`E` is nowhere in :ada:`A`. Again, we can express this as a
 postcondition of :ada:`Find`.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+    :class: ada-expect-prove-error
 
     package Show_Find is
 
@@ -115,6 +116,7 @@ below is checked dynamically for the set of inputs for which :ada:`Find` is
 called in that test, but just for that set.
 
 .. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+    :class: ada-expect-prove-error
 
     package Show_Find is
 
@@ -391,6 +393,7 @@ Here's an example of trying to break that abstraction in the subprogram
 :ada:`Peek` below.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_Model
+    :class: ada-expect-prove-error
 
     package Stacks is
 
@@ -750,6 +753,7 @@ For example, consider the function :ada:`Find` which iterates over the array
 :ada:`A` and searches for an element where :ada:`E` is stored in :ada:`A`.
 
 .. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop
+    :class: ada-expect-prove-error
 
     package Show_Find is
 
@@ -808,6 +812,7 @@ As an example, let's add a loop invariant to the :ada:`Find` function stating
 that the first element of :ada:`A` is not :ada:`E`.
 
 .. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_1
+    :class: ada-expect-prove-error
 
     package Show_Find is
 
@@ -997,6 +1002,7 @@ version of :ada:`Map` where the result of applying :ada:`F` to an element at
 index :ada:`K` is stored at index :ada:`K-1`:
 
 .. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_4
+    :class: ada-expect-prove-error
 
     package Show_Map is
 
@@ -1376,6 +1382,7 @@ necessarily with the same bounds) as arguments and returns an array with
 each entry being the maximum values of both arguments at that index.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_06
+    :class: ada-expect-prove-error
 
     package Array_Util is
 
@@ -1422,6 +1429,7 @@ of :ada:`B` and let's protect the increment to :ada:`J` by checking that it's no
 already the maximal integer value.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_07
+    :class: ada-expect-prove-error
 
     package Array_Util is
 
