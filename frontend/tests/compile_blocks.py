@@ -44,6 +44,8 @@ class Block(object):
         button_re = re.compile("\s+(\S+)_button")
         code_config_re = re.compile(":code-config:`(.*)?`")
         classes_re = re.compile("\s*:class:\s*(.+)")
+        switches_re = re.compile("\s*.. code::.*switches=(\S+)?")
+        compiler_switches_re = re.compile("Compiler[(](\S+)?[)]")
 
         blocks = []
         lines = input_text.splitlines()
@@ -57,6 +59,7 @@ class Block(object):
         indents = map(first_nonws, lines)
 
         classes = []
+        compiler_switches = []
         cb_start = -1
         cb_indent = -1
         lang = ""
@@ -107,6 +110,16 @@ class Block(object):
                         manual_chop = (manual_chop_re.match(line) is not None)
                     buttons = button_re.findall(line)
 
+                    all_switches = switches_re.match(line)
+
+                    if all_switches is not None:
+                        all_switches = all_switches.groups()[0]
+                        compiler_switches = compiler_switches_re.match(all_switches)
+                        if compiler_switches is not None:
+                            compiler_switches = [str.strip(l)
+                                for l in compiler_switches.groups()[0].split(",")]
+                        else:
+                            compiler_switches = []
                 elif line[indent:].startswith(":code-config:"):
                     blocks.append(ConfigBlock(**dict(
                         kv.split('=')
