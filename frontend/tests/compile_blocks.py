@@ -81,6 +81,7 @@ class Block(object):
                         lang,
                         project,
                         main_file,
+                        compiler_switches,
                         classes,
                         manual_chop,
                         buttons
@@ -120,6 +121,7 @@ class Block(object):
                                 for l in compiler_switches.groups()[0].split(",")]
                         else:
                             compiler_switches = []
+
                 elif line[indent:].startswith(":code-config:"):
                     blocks.append(ConfigBlock(**dict(
                         kv.split('=')
@@ -132,13 +134,14 @@ class Block(object):
 
 class CodeBlock(Block):
     def __init__(self, line_start, line_end, text, language, project,
-                 main_file, classes, manual_chop, buttons):
+                 main_file, compiler_switches, classes, manual_chop, buttons):
         self.line_start = line_start
         self.line_end = line_end
         self.text = text
         self.language = language
         self.project = project
         self.main_file = main_file
+        self.compiler_switches = compiler_switches
         self.classes = classes
         self.manual_chop = manual_chop
         self.buttons = buttons
