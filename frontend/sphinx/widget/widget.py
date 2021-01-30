@@ -275,6 +275,9 @@ class Widget:
                 elif opt == 'ada-expect-compile-error':
                     # this is for testing, nothing to do here
                     continue
+                elif opt == 'ada-expect-prove-error':
+                    # this is for testing, nothing to do here
+                    continue
                 elif opt == 'ada-run':
                     # this is for testing, nothing to do here
                     continue
