@@ -441,6 +441,11 @@ def analyze_file(rst_file):
                 continue
 
             compile_error = False
+            prove_error = False
+            is_prove_error_class = False
+
+            prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",
+                             "prove_report_all"]
 
             def get_main_filename(block):
                 if block.main_file is not None:
@@ -511,6 +516,47 @@ def analyze_file(rst_file):
                                 print_error(loc, "Failed to compile example")
                                 has_error = True
 
+            if any(b in prove_buttons for b in block.buttons):
+
+                if block.language == "ada":
+                    main_file = get_main_filename(block)
+                    spark_mode = True
+                    project_filename = write_project_file(main_file,
+                                                          block.compiler_switches,
+                                                          spark_mode)
+
+                    is_prove_error_class = any(c in ['ada-expect-prove-error',
+                                     'ada-expect-compile-error',
+                                     'ada-run-expect-failure']
+                               for c in block.classes)
+                    extra_args = []
+
+                    if 'prove_flow' in block.buttons:
+                        extra_args = ["--mode=flow"]
+                    elif 'prove_flow_report_all' in block.buttons:
+                        extra_args = ["--mode=flow", "--report=all"]
+                    elif 'prove_report_all' in block.buttons:
+                        extra_args = ["--report=all"]
+
+                    line = ["gnatprove", "-P", project_filename,
+                            "--checks-as-errors", "--level=0",
+                            "--no-axiom-guard"]
+                    line.extend(extra_args)
+
+                    try:
+                        out = run(*line)
+                    except S.CalledProcessError as e:
+                        if is_prove_error_class:
+                            prove_error = True
+                        else:
+                            print_error(loc, "Failed to prove example")
+                            print(e.output)
+                            has_error = True
+                else:
+                    print_error(loc, "Wrong language selected for prove button")
+                    print(e.output)
+                    has_error = True
+
             if len(block.buttons) == 0:
                 print_error(loc, "Expected at least 'no_button' indicator, got none!")
                 has_error = True
@@ -521,6 +567,16 @@ def analyze_file(rst_file):
                     has_error = True
                 if not compile_error:
                     print_error(loc, "Expected compile error, got none!")
+                    has_error = True
+
+            if 'ada-expect-prove-error' in block.classes:
+                if not any(b in prove_buttons for b in block.buttons):
+                    print_error(loc, "Expected prove button, got none!")
+                    has_error = True
+
+            if any(b in prove_buttons for b in block.buttons):
+                if is_prove_error_class and not prove_error:
+                    print_error(loc, "Expected prove error, got none!")
                     has_error = True
 
             if (any (c in ['ada-run','ada-run-expect-failure','ada-norun'] for
