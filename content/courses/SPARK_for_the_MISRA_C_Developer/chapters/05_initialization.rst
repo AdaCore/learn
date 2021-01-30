@@ -76,6 +76,7 @@ Hence, given the following code translated from C, GNATprove reports that
 function :ada:`F` might not always initialize output parameter :ada:`P`:
 
 .. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Read_Uninitialized_Data_Ada
+    :class: ada-expect-prove-error
 
     with Interfaces; use Interfaces;
 
@@ -152,6 +153,7 @@ all-zeros might not be valid data for the application. Here's a variation of
 the above code where variable :ada:`U` is now global:
 
 .. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Read_Uninitialized_Data_Ada
+    :class: ada-expect-prove-error
 
     with Interfaces; use Interfaces;
 
@@ -205,6 +207,7 @@ this is done with a `data dependency` contract introduced with aspect :ada:`Glob
 following the declaration of procedure :ada:`G`:
 
 .. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Read_Uninitialized_Data_Ada
+    :class: ada-expect-prove-error
 
     with Interfaces; use Interfaces;
 
@@ -347,6 +350,7 @@ SPARK analysis rejects such use when it leads to components not being
 initialized, both for records:
 
 .. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record
+    :class: ada-expect-prove-error
 
     package Init_Record is
        type Rec is record

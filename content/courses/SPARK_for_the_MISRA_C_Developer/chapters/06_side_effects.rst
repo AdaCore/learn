@@ -133,6 +133,7 @@ Reads of volatile variables in SPARK are restricted to appear immediately at
 statement level, so the following is not allowed:
 
 .. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read
+    :class: ada-expect-prove-error
 
     package Volatile_Read is
        X : Integer with Volatile;
@@ -177,6 +178,7 @@ variables. In particular, SPARK functions cannot have :ada:`out` or :ada:`in out
 parameters:
 
 .. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Function_With_Out_Param
+    :class: ada-expect-prove-error
 
     function Bad_Function (X, Y : Integer; Sum, Max : out Integer) return Boolean;
     --  ERROR, since "out" parameters are not allowed
@@ -186,6 +188,7 @@ in addition to returning their result, as is typical of many idioms in other
 languages, for example when setting a new value and returning the previous one:
 
 .. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Side_Effect_Ada
+    :class: ada-expect-prove-error
 
     package Bad_Functions is
        function Set (V : Integer) return Integer;
