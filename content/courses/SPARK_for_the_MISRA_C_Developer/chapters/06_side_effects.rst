@@ -178,8 +178,8 @@ parameters:
 
 .. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Function_With_Out_Param
 
-   function Bad_Function (X, Y : Integer; Sum, Max : out Integer) return Boolean;
-   --  ERROR, since "out" parameters are not allowed
+    function Bad_Function (X, Y : Integer; Sum, Max : out Integer) return Boolean;
+    --  ERROR, since "out" parameters are not allowed
 
 More generally, SPARK does not allow functions that have a side effect
 in addition to returning their result, as is typical of many idioms in other
