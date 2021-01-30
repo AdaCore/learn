@@ -219,6 +219,74 @@ args = parser.parse_args()
 
 args.rst_files = [os.path.abspath(f) for f in args.rst_files]
 
+COMMON_ADC = """
+pragma Restrictions (No_Specification_of_Aspect => Import);
+pragma Restrictions (No_Use_Of_Pragma => Import);
+pragma Restrictions (No_Use_Of_Pragma => Interface);
+pragma Restrictions (No_Use_Of_Pragma => Linker_Options);
+pragma Restrictions (No_Dependence => System.Machine_Code);
+pragma Restrictions (No_Dependence => Machine_Code);
+"""
+
+SPARK_ADC = """
+pragma Profile(GNAT_Extended_Ravenscar);
+pragma Partition_Elaboration_Policy(Sequential);
+pragma SPARK_Mode (On);
+pragma Warnings (Off, "no Global contract available");
+pragma Warnings (Off, "subprogram * has no effect");
+pragma Warnings (Off, "file name does not match");
+"""
+
+MAIN_GPR="""
+project Main is
+
+   --MAIN_PLACEHOLDER--
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-g", "-O0", "-gnata", "-gnatwa");
+      --COMPILER_SWITCHES_PLACEHOLDER--
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("Ada") use ("-g");
+      for Global_Configuration_Pragmas use "main.adc";
+   end Builder;
+
+end Main;
+"""
+
+def write_project_file(main_file, compiler_switches, spark_mode):
+    gpr_filename = "main.gpr"
+    adc_filename = "main.adc"
+
+    adc_content = COMMON_ADC
+    if spark_mode:
+        adc_content += '\n' + SPARK_ADC
+
+    with open(gpr_filename, u"w") as gpr_file:
+        main_gpr = MAIN_GPR
+
+        filtered_switches = []
+        for switch in compiler_switches:
+            filtered_switches.append('"' + switch + '"')
+        if filtered_switches:
+            placeholder_str = "--COMPILER_SWITCHES_PLACEHOLDER--"
+            switches_str = ', '.join(filtered_switches)
+            line_str = f'for Switches ("Ada") use ({switches_str});'
+            main_gpr = main_gpr.replace(placeholder_str, line_str)
+
+        mains = [main_file]
+        main_list = [f'"{x}"' for x in mains]
+        to_insert = f"for Main use ({', '.join(main_list)});"
+        main_gpr = main_gpr.replace("--MAIN_PLACEHOLDER--", to_insert)
+
+        gpr_file.write(main_gpr)
+
+    with open(adc_filename, u"w") as adc_file:
+        adc_file.write(adc_content)
+
+    return gpr_filename
+
 def analyze_file(rst_file):
 
     analysis_error = False
