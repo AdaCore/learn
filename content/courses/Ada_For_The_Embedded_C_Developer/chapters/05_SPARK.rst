@@ -759,7 +759,7 @@ than the value passed to :ada:`X`.
 
 Consider a client calling this function:
 
-.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1 switches=Compiler(-gnato23);
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2 switches=Compiler(-gnato23);
 
     with Mid;
     with Ada.Text_IO; use Ada.Text_IO;
@@ -781,7 +781,7 @@ elsewhere.)
 Let's change the argument passed to :ada:`Y` in the second call (line 8).
 Instead of -1 we will pass -2:
 
-.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1 switches=Compiler(-gnato23);
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_3 switches=Compiler(-gnato23);
 
     with Mid;
     with Ada.Text_IO; use Ada.Text_IO;
@@ -810,7 +810,7 @@ never be zero.
 Postconditions can also compare the state prior to a call with the state
 after a call, using the :ada:`'Old` attribute. For example:
 
-.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_4
 
    procedure Increment (Value : in out Integer) with
      Pre  => Value < Integer'Last,
