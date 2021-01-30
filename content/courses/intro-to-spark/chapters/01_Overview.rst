@@ -188,6 +188,7 @@ produces an error for the following equivalent code that is accepted by the
 Ada compiler:
 
 .. code:: ada prove_flow_button run_button project=Courses.Intro_To_Spark.Overview.Illegal_SPARK_Code
+    :class: ada-expect-prove-error
 
     procedure Show_Illegal_SPARK_Code is
 
@@ -231,6 +232,7 @@ functions :ada:`Incr` and :ada:`Incr_And_Log` have the same signature, but only
 the global variable :ada:`Call_Count`.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Side_Effects
+    :class: ada-expect-prove-error
 
     package Side_Effects is
 
@@ -283,7 +285,7 @@ Procedure :ada:`Move_To_Total` is an example where the possibility of aliasing
 wasn't taken into account by the programmer:
 
 .. code:: ada run_button prove_flow_button project=Courses.Intro_To_Spark.Overview.Aliasing
-    :class: ada-run-expect-failure
+    :class: ada-run-expect-failure, ada-expect-prove-error
 
     procedure No_Aliasing is
 
@@ -336,6 +338,7 @@ Procedure :ada:`Ownership_Transfer` is an example of code that is legal in Ada b
 rejected in SPARK due to aliasing:
 
 .. code:: ada run_button prove_flow_button project=Courses.Intro_To_Spark.Overview.Ownership_Transfer
+    :class: ada-expect-prove-error
 
     procedure Ownership_Transfer is
        type Int_Ptr is access Integer;
@@ -422,6 +425,7 @@ in SPARK) of :ada:`Element` objects along with some subprograms providing the
 usual functionalities of stacks. It's marked as being in the SPARK subset.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_01
+    :class: ada-expect-prove-error
 
     package Stack_Package
       with SPARK_Mode => On
@@ -455,6 +459,7 @@ this stripped-down version, only the function :ada:`Pop` is available to
 clients. The package spec and body are marked as being in the SPARK subset.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_02
+    :class: ada-expect-prove-error
 
     package Global_Stack
       with SPARK_Mode => On
@@ -592,6 +597,7 @@ of a record: :ada:`Swap_Indexes` calls :ada:`Swap` on values stored in the array
 :ada:`A`.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_05
+    :class: ada-expect-prove-error
 
     package P
       with SPARK_Mode => On
@@ -635,6 +641,7 @@ containing a word per letter. The procedure :ada:`Store` allows us to insert a
 word at the correct index in a dictionary.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_06
+    :class: ada-expect-prove-error
 
     package P
       with SPARK_Mode => On
@@ -705,6 +712,7 @@ Let's put together the new spec for package :ada:`P` with the body of :ada:`P` s
 previously.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_08
+    :class: ada-expect-prove-error
 
     package P
       with SPARK_Mode => On
@@ -798,6 +806,7 @@ inside an array :ada:`A`. The first raises an exception if 0 isn't found in
 :ada:`A` while the other simply returns 0 in that case.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Overview.Example_10
+    :class: ada-expect-prove-error
 
     package P
       with SPARK_Mode => On

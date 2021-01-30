@@ -30,6 +30,7 @@ single statement.  Look at the assignment statement setting the
 :ada:`I + J`'th cell of an array :ada:`A` to the value :ada:`P /Q`.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Runtime_Errors
+    :class: ada-expect-prove-error
 
     package Show_Runtime_Errors is
 
@@ -171,7 +172,8 @@ that the value of :ada:`X` after the call is always less than
 :ada:`Integer'Last`. Therefore, it can't prove that the addition following
 the call to :ada:`Increment` can't overflow.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity_1
+    :class: ada-expect-prove-error
 
     procedure Show_Modularity is
 
@@ -201,7 +203,7 @@ contracts can be inlined if they're simple enough and are neither recursive
 nor have multiple return points. If we remove the contract from
 :ada:`Increment`, it fits the criteria for inlining.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity_2
 
     procedure Show_Modularity is
 
@@ -230,7 +232,7 @@ as the postcondition on the result of the function.
 In our example, replacing :ada:`Increment` with an expression function allows
 GNATprove to successfully verify the overflow check in the addition.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity_3
 
     procedure Show_Modularity is
 
@@ -266,7 +268,7 @@ violation. Another way, one that doesn't require guessing the needed
 inputs, is to run GNATprove.
 
 .. code:: ada run_button prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Precondition_Violation
-    :class: ada-run-expect-failure
+    :class: ada-run-expect-failure, ada-expect-prove-error
 
     procedure Show_Precondition_Violation is
 
@@ -291,7 +293,7 @@ require finding the inputs needed to demonstrate the error, is to run
 GNATprove.
 
 .. code:: ada run_button prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Postcondition_Violation
-    :class: ada-run-expect-failure
+    :class: ada-run-expect-failure, ada-expect-prove-error
 
     procedure Show_Postcondition_Violation is
 
@@ -340,7 +342,7 @@ because they can make it harder to specify an appropriate precondition.  We
 see this in the function :ada:`Add` below.
 
 .. code:: ada run_button prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Executable_Semantics
-    :class: ada-run-expect-failure
+    :class: ada-run-expect-failure, ada-expect-prove-error
 
     procedure Show_Executable_Semantics
       with SPARK_Mode => On
@@ -452,6 +454,7 @@ procedure :ada:`Incr_Until` below which makes its :ada:`Contract_Cases`
 unprovable.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
+    :class: ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is
 
@@ -485,7 +488,7 @@ contracts. In this case, testing :ada:`Incr_Until` with an input greater than
 1000 raises an exception at runtime.
 
 .. code:: ada run_button prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
-    :class: ada-run-expect-failure
+    :class: ada-run-expect-failure, ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is
 
@@ -553,6 +556,7 @@ there's some information missing. As an example, GNATprove finds the
 postcondition of :ada:`Increase` to be unprovable.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
+    :class: ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is
 
@@ -617,6 +621,7 @@ calculates the value of the :ada:`GCD` of two positive numbers using Euclide's
 algorithm |mdash| can't be verified with GNATprove's default settings.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
+    :class: ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is
 
@@ -651,6 +656,7 @@ one |mdash| using the option ``--prover`` of GNATprove (or the dialog box). For
 our postcondition, we tried Alt-Ergo, CVC4, and Z3 without any luck.
 
 .. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
+    :class: ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is
 
@@ -713,6 +719,7 @@ index :ada:`J`. The postcondition of :ada:`Link` uses :ada:`Goes_To` to state th
 there must be a link between its arguments once :ada:`Link` completes.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Example_01
+    :class: ada-expect-prove-error
 
     package Lists with SPARK_Mode is
 
@@ -819,6 +826,7 @@ procedure that adds an element at the top of the stack and a function
 (without removing it).
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Example_03
+    :class: ada-expect-prove-error
 
     package Stacks with SPARK_Mode is
 
@@ -869,6 +877,7 @@ We now change the behavior of :ada:`Push` so it raises an exception when the
 stack is full instead of returning.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Example_04
+    :class: ada-expect-prove-error
 
     package Stacks with SPARK_Mode is
 
@@ -979,6 +988,7 @@ data starting at index :ada:`From` out of the chunk represented by the value
 of :ada:`Memory`.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Example_06
+    :class: ada-expect-prove-error
 
     package Memories is
 
@@ -1026,6 +1036,7 @@ Example #7
 Let's rewrite the precondition of :ada:`Read_One` to avoid any possible overflow.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Example_07
+    :class: ada-expect-prove-error
 
     package Memories is
 
@@ -1124,6 +1135,7 @@ The computation performed depends on its input range and is reflected in
 its contract, which we express using a :ada:`Contract_Cases` aspect.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Example_09
+    :class: ada-expect-prove-error
 
     procedure Compute (X : in out Integer) with
       Contract_Cases => ((X in -100 .. 100) => X = X'Old * 2,
@@ -1159,6 +1171,7 @@ Example #10
 Let's rewrite the contract of :ada:`Compute` to avoid overlapping cases.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Example_10
+    :class: ada-expect-prove-error
 
     procedure Compute (X : in out Integer) with
       Contract_Cases => ((X in    0 ..  199) => X >= X'Old,

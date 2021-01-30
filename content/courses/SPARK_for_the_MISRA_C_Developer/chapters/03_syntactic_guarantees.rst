@@ -507,6 +507,7 @@ In SPARK (as in Ada), each if-statement has a matching end marker :c:`end if;`
 so the dangling-else problem cannot arise. The above C code is written as follows:
 
 .. code:: ada prove_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Dangling_Else_Ada
+    :class: ada-expect-prove-error
 
     function Absval (X : Integer) return Integer;
 

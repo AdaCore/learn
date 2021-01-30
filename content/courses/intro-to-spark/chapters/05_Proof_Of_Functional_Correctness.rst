@@ -64,6 +64,7 @@ only if :ada:`E` is nowhere in :ada:`A`. Again, we can express this as a
 postcondition of :ada:`Find`.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+    :class: ada-expect-prove-error
 
     package Show_Find is
 
@@ -115,6 +116,7 @@ below is checked dynamically for the set of inputs for which :ada:`Find` is
 called in that test, but just for that set.
 
 .. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+    :class: ada-expect-prove-error
 
     package Show_Find is
 
@@ -391,6 +393,7 @@ Here's an example of trying to break that abstraction in the subprogram
 :ada:`Peek` below.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_Model
+    :class: ada-expect-prove-error
 
     package Stacks is
 
@@ -750,6 +753,7 @@ For example, consider the function :ada:`Find` which iterates over the array
 :ada:`A` and searches for an element where :ada:`E` is stored in :ada:`A`.
 
 .. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop
+    :class: ada-expect-prove-error
 
     package Show_Find is
 
@@ -807,7 +811,8 @@ iteration assuming it held in the previous iteration.  This is called
 As an example, let's add a loop invariant to the :ada:`Find` function stating
 that the first element of :ada:`A` is not :ada:`E`.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_1
+    :class: ada-expect-prove-error
 
     package Show_Find is
 
@@ -854,7 +859,7 @@ Let's look at a version of :ada:`Find` where we use a loop invariant instead
 of an assertion to state that none of the array elements seen so far are
 equal to :ada:`E`.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_2
 
     package Show_Find is
 
@@ -935,7 +940,7 @@ determine at which point it can no longer be proved.
 As an example, let's look at a loop that iterates through an array :ada:`A`
 and applies a function :ada:`F` to each of its elements.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_2
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_3
 
     package Show_Map is
 
@@ -996,7 +1001,8 @@ you'll have to provide one as a loop invariant. For example, consider a
 version of :ada:`Map` where the result of applying :ada:`F` to an element at
 index :ada:`K` is stored at index :ada:`K-1`:
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_2
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Loop_Invariant_4
+    :class: ada-expect-prove-error
 
     package Show_Map is
 
@@ -1376,6 +1382,7 @@ necessarily with the same bounds) as arguments and returns an array with
 each entry being the maximum values of both arguments at that index.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_06
+    :class: ada-expect-prove-error
 
     package Array_Util is
 
@@ -1422,6 +1429,7 @@ of :ada:`B` and let's protect the increment to :ada:`J` by checking that it's no
 already the maximal integer value.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_07
+    :class: ada-expect-prove-error
 
     package Array_Util is
 

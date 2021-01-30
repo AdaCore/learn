@@ -51,6 +51,7 @@ loop. As a consequence, the value read by the condition of the if statement
 may be uninitialized. Flow analysis detects and reports this error.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Uninitialized
+    :class: ada-expect-prove-error
 
     package Show_Uninitialized is
 
@@ -387,6 +388,7 @@ example is :ada:`Set_X_To_Y_Plus_Z` below, which only sets its :ada:`out`
 parameter :ada:`X` when :ada:`Overflow` is :ada:`False`.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Set_X_To_Y_Plus_Z
+    :class: ada-expect-prove-error
 
     procedure Set_X_To_Y_Plus_Z
       (Y, Z     :     Natural;
@@ -431,6 +433,7 @@ the array, or (even better) an aggregate assignment, or, if that's not possible,
 verify initialization of the object manually.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Composite_Types_Shortcoming
+    :class: ada-expect-prove-error
 
     package Show_Composite_Types_Shortcoming is
 
@@ -505,6 +508,7 @@ components of a record object.  It'll notify you of uninitialized
 components, as we see in subprogram :ada:`Init_F2` below.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Record_Flow_Analysis
+    :class: ada-expect-prove-error
 
     package Show_Record_Flow_Analysis is
 
@@ -551,6 +555,7 @@ two conditional statements. Because it doesn't consider values of
 expressions, it can't know that such a path is impossible.
 
 .. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Absolute_Value
+    :class: ada-expect-prove-error
 
     procedure Absolute_Value
       (X :     Integer;
@@ -620,6 +625,7 @@ in an array :ada:`A`. If it finds one, it stores the index of the element in
 :ada:`Result`.  Otherwise, it sets :ada:`Found` to :ada:`False`.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_01
+    :class: ada-expect-prove-error
 
     package Show_Search_Array is
 
@@ -672,6 +678,7 @@ To avoid the message previously issued by GNATprove, we modify
 :ada:`Search_Array` to raise an exception when :ada:`E` isn't found in :ada:`A`:
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_02
+    :class: ada-expect-prove-error
 
     package Show_Search_Array is
 
@@ -785,6 +792,7 @@ means it's found the end of a sequence, so it computes the size of that
 sequence and stores it in :ada:`Size_Of_Seq`.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_04
+    :class: ada-expect-prove-error
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -858,6 +866,7 @@ position. :ada:`Cyclic_Permutation` calls :ada:`Init` and then swaps elements to
 construct a cyclic permutation.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_05
+    :class: ada-expect-prove-error
 
     package Show_Permutation is
 
@@ -917,6 +926,7 @@ mode of :ada:`A` in the specification of :ada:`Init` to :ada:`in out` to avoid
 the message from flow analysis on array assignment.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_07
+    :class: ada-expect-prove-error
 
     package Show_Permutation is
 
@@ -978,6 +988,7 @@ saturating at a specified threshold value. We specified a :ada:`Global`
 contract for :ada:`Incr_Until_Threshold`.
 
 .. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_07
+    :class: ada-expect-prove-error
 
     package Show_Increments is
 
@@ -1036,6 +1047,7 @@ correct the missing initializations.  We want to know if the :ada:`Global`
 contract of :ada:`Test_Index` is correct.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_08
+    :class: ada-expect-prove-error
 
     package Show_Biggest_Increasing_Sequence is
 
@@ -1170,6 +1182,7 @@ The subprogram :ada:`Identity` swaps the value of its parameter two times. Its
 its initial value and likewise for :ada:`Y`.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_10
+    :class: ada-expect-prove-error
 
     package Show_Swap is
 
