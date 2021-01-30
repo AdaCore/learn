@@ -493,7 +493,7 @@ def analyze_file(rst_file):
                                 print_error(loc, "Running of example failed")
                                 has_error = True
 
-            elif 'compile' in block.buttons:
+            if 'compile' in block.buttons:
 
                 for source_file in source_files:
                     if block.language == "ada":
