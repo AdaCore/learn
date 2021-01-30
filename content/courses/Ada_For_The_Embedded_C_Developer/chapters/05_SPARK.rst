@@ -659,6 +659,7 @@ Consider this next routine, which contains a serious coding error. Flow
 analysis will find it for us.
 
 .. code:: ada prove_flow_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_0
+   :class: ada-expect-prove-error
 
    with Ada.Numerics.Elementary_Functions;  use Ada.Numerics.Elementary_Functions;
 
@@ -760,6 +761,7 @@ than the value passed to :ada:`X`.
 Consider a client calling this function:
 
 .. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2 switches=Compiler(-gnato23);
+    :class: ada-expect-prove-error
 
     with Mid;
     with Ada.Text_IO; use Ada.Text_IO;
