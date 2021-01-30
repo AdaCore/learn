@@ -171,7 +171,7 @@ that the value of :ada:`X` after the call is always less than
 :ada:`Integer'Last`. Therefore, it can't prove that the addition following
 the call to :ada:`Increment` can't overflow.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity_1
 
     procedure Show_Modularity is
 
@@ -201,7 +201,7 @@ contracts can be inlined if they're simple enough and are neither recursive
 nor have multiple return points. If we remove the contract from
 :ada:`Increment`, it fits the criteria for inlining.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity_2
 
     procedure Show_Modularity is
 
@@ -230,7 +230,7 @@ as the postcondition on the result of the function.
 In our example, replacing :ada:`Increment` with an expression function allows
 GNATprove to successfully verify the overflow check in the addition.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Modularity_3
 
     procedure Show_Modularity is
 
