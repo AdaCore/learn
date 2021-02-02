@@ -143,7 +143,7 @@ class Project:
         self.gpr.insert_languages(languages)
 
         # Figure out which files are mains
-        if data['main']:
+        if 'main' in data.keys():
             self.main = data['main']
         else:
             mains = find_mains(self.file_list)
