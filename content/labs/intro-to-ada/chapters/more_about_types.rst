@@ -320,7 +320,8 @@ Simple todo list
 
     #. :ada:`Todo_List` type is the container for all to-do items.
 
-        #. It should be declared as a record with discriminant.
+        #. This record type must have a discriminant for the maximum number of
+           elements of the list.
 
         #. In order to store the to-do items, it must contain a component named
            :ada:`Items` of :ada:`Todo_Items` type.
