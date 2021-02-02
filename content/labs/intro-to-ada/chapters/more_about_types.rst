@@ -408,7 +408,7 @@ Simple todo list
          (Todo_List_Chk);
 
        procedure Check (TC : Test_Case_Index) is
-          T : Todo_List (1 .. 10);
+          T : Todo_List (10);
        begin
           case TC is
              when Todo_List_Chk =>
