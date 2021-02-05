@@ -130,7 +130,8 @@ Simple todo list
 List of unique integers
 -----------------------
 
-**Goal**: create function that removes duplicates from and orders a collection of elements.
+**Goal**: create function that removes duplicates from and orders a collection 
+of elements.
 
 **Steps**:
 
@@ -272,4 +273,3 @@ List of unique integers
           end;
        end if;
     end Main;
-
