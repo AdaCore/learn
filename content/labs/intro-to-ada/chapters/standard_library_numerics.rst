@@ -401,7 +401,9 @@ circle after rotation.
                 Point #4:  -90.00 degrees (= 270 degrees)
                 Point #5:    0.00 degrees
 
-		#. To rotate a complex number simply multiply it by a unit vector whose arg is the radian angle to be rotated: :math:`Z = e^\frac{2 \pi}{N}`
+            #. To rotate a complex number simply multiply it by a unit vector
+               whose arg is the radian angle to be rotated:
+               :math:`Z = e^\frac{2 \pi}{N}`
 
 .. code:: ada lab=Standard_Library.Rotation
 
