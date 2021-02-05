@@ -362,6 +362,7 @@ initialized, both for records:
 and for arrays:
 
 .. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array_3
+    :class: ada-expect-prove-error
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
