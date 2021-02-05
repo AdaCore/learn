@@ -925,7 +925,7 @@ This program is the same as the previous one except that we've changed the
 mode of :ada:`A` in the specification of :ada:`Init` to :ada:`in out` to avoid
 the message from flow analysis on array assignment.
 
-.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_07
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_06
     :class: ada-expect-prove-error
 
     package Show_Permutation is
@@ -988,7 +988,6 @@ saturating at a specified threshold value. We specified a :ada:`Global`
 contract for :ada:`Incr_Until_Threshold`.
 
 .. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Example_07
-    :class: ada-expect-prove-error
 
     package Show_Increments is
 

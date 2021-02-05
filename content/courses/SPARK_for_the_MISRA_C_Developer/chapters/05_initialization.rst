@@ -302,7 +302,7 @@ In SPARK and Ada, the aggregate used to initialize an array or a record must ful
 cover the components of the array or record. Violations lead to compilation
 errors, both for records:
 
-.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record_1
     :class: ada-expect-compile-error
 
     package Init_Record is
@@ -314,7 +314,7 @@ errors, both for records:
 
 and for arrays:
 
-.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array_1
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
@@ -323,7 +323,7 @@ and for arrays:
 
 Similarly, redundant initialization leads to compilation errors for records:
 
-.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record_2
     :class: ada-expect-compile-error
 
     package Init_Record is
@@ -335,7 +335,7 @@ Similarly, redundant initialization leads to compilation errors for records:
 
 and for arrays:
 
-.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array_2
     :class: ada-expect-compile-error
 
     package Init_Array is
@@ -349,7 +349,7 @@ initialization of the type is used, which may be no initialization at all),
 SPARK analysis rejects such use when it leads to components not being
 initialized, both for records:
 
-.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record_3
     :class: ada-expect-prove-error
 
     package Init_Record is
@@ -361,7 +361,8 @@ initialized, both for records:
 
 and for arrays:
 
-.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array_3
+    :class: ada-expect-prove-error
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;

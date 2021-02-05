@@ -132,7 +132,7 @@ There are two possible side effects when evaluating an expression:
 Reads of volatile variables in SPARK are restricted to appear immediately at
 statement level, so the following is not allowed:
 
-.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read_1
     :class: ada-expect-prove-error
 
     package Volatile_Read is
@@ -150,7 +150,7 @@ statement level, so the following is not allowed:
 Instead, every read of a volatile variable must occur immediately before being
 assigned to another variable, as follows:
 
-.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read_2
 
     package Volatile_Read is
        X : Integer with Volatile;
