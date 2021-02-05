@@ -414,7 +414,7 @@ keep track of assets.
     #. Procedure :ada:`Add` adds an item to the assets.
 
         #. Since we want to keep track of the assets, the implementation must
-           accumulate the total value of each item's inventory, the product of the item quanitity and its price.
+           accumulate the total value of each item's inventory, the result of multiplying the item quantity and its price.
 
 .. code:: ada lab=Records.Inventory
 
