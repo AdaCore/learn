@@ -492,7 +492,7 @@ States #4
 
 **Requirements**:
 
-    #. Implement same state machine as in the previous exercise.
+    #. Implement the same state machine as in the previous exercise.
 
     #. Procedure :ada:`Set_Next` updates the machine's state with the next one
        in a *circular* manner:

@@ -228,7 +228,8 @@ Generic Protected Queue
 
         #. Entry :ada:`Push` stores an element in the queue.
 
-        #. Entry :ada:`Pop` removes an element from the queue.
+        #. Entry :ada:`Pop` removes an element from the queue and returns the 
+           element via output parameter.
 
 
 **Remarks**:

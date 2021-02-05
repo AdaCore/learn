@@ -107,14 +107,14 @@ List of events
     #. The :ada:`Event_Item` type (from the :ada:`Events` package) contains the
        *description of an event*.
 
-       #. This description should be stored in an access-to-string type.
+       #. This description shall be stored in an access-to-string type.
 
     #. The :ada:`Event_Items` type stores a list of events.
 
         #. This will be used later to represent multiple events for a specific
            date.
 
-        #. You can use a vector for this type.
+        #. You shall use a vector for this type.
 
     #. The :ada:`Events.Lists` package contains the subprograms that are used
        in the test application.
@@ -124,10 +124,10 @@ List of events
 
         #. You must use the :ada:`Event_Items` type for the list of events.
 
-        #. You should use the :ada:`Time` type from the :ada:`Ada.Calendar`
+        #. You shall use the :ada:`Time` type from the :ada:`Ada.Calendar`
            package for the dates.
 
-        #. Since we expect the events to be ordered by the date, you should
+        #. Since we expect the events to be ordered by the date, you shall
            use ordered maps for the :ada:`Event_List` type.
 
     #. Procedure :ada:`Add` adds an event into the list of events for a
