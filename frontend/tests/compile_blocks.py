@@ -44,6 +44,8 @@ class Block(object):
         button_re = re.compile("\s+(\S+)_button")
         code_config_re = re.compile(":code-config:`(.*)?`")
         classes_re = re.compile("\s*:class:\s*(.+)")
+        switches_re = re.compile("\s*.. code::.*switches=(\S+)?")
+        compiler_switches_re = re.compile("Compiler[(](\S+)?[)]")
 
         blocks = []
         lines = input_text.splitlines()
@@ -57,6 +59,7 @@ class Block(object):
         indents = map(first_nonws, lines)
 
         classes = []
+        compiler_switches = []
         cb_start = -1
         cb_indent = -1
         lang = ""
@@ -78,6 +81,7 @@ class Block(object):
                         lang,
                         project,
                         main_file,
+                        compiler_switches,
                         classes,
                         manual_chop,
                         buttons
@@ -107,6 +111,17 @@ class Block(object):
                         manual_chop = (manual_chop_re.match(line) is not None)
                     buttons = button_re.findall(line)
 
+                    all_switches = switches_re.match(line)
+
+                    if all_switches is not None:
+                        all_switches = all_switches.groups()[0]
+                        compiler_switches = compiler_switches_re.match(all_switches)
+                        if compiler_switches is not None:
+                            compiler_switches = [str.strip(l)
+                                for l in compiler_switches.groups()[0].split(",")]
+                        else:
+                            compiler_switches = []
+
                 elif line[indent:].startswith(":code-config:"):
                     blocks.append(ConfigBlock(**dict(
                         kv.split('=')
@@ -119,13 +134,14 @@ class Block(object):
 
 class CodeBlock(Block):
     def __init__(self, line_start, line_end, text, language, project,
-                 main_file, classes, manual_chop, buttons):
+                 main_file, compiler_switches, classes, manual_chop, buttons):
         self.line_start = line_start
         self.line_end = line_end
         self.text = text
         self.language = language
         self.project = project
         self.main_file = main_file
+        self.compiler_switches = compiler_switches
         self.classes = classes
         self.manual_chop = manual_chop
         self.buttons = buttons
@@ -202,6 +218,74 @@ parser.add_argument('--code-block-at', type=int, default=0)
 args = parser.parse_args()
 
 args.rst_files = [os.path.abspath(f) for f in args.rst_files]
+
+COMMON_ADC = """
+pragma Restrictions (No_Specification_of_Aspect => Import);
+pragma Restrictions (No_Use_Of_Pragma => Import);
+pragma Restrictions (No_Use_Of_Pragma => Interface);
+pragma Restrictions (No_Use_Of_Pragma => Linker_Options);
+pragma Restrictions (No_Dependence => System.Machine_Code);
+pragma Restrictions (No_Dependence => Machine_Code);
+"""
+
+SPARK_ADC = """
+pragma Profile(GNAT_Extended_Ravenscar);
+pragma Partition_Elaboration_Policy(Sequential);
+pragma SPARK_Mode (On);
+pragma Warnings (Off, "no Global contract available");
+pragma Warnings (Off, "subprogram * has no effect");
+pragma Warnings (Off, "file name does not match");
+"""
+
+MAIN_GPR="""
+project Main is
+
+   --MAIN_PLACEHOLDER--
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-g", "-O0", "-gnata", "-gnatwa");
+      --COMPILER_SWITCHES_PLACEHOLDER--
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("Ada") use ("-g");
+      for Global_Configuration_Pragmas use "main.adc";
+   end Builder;
+
+end Main;
+"""
+
+def write_project_file(main_file, compiler_switches, spark_mode):
+    gpr_filename = "main.gpr"
+    adc_filename = "main.adc"
+
+    adc_content = COMMON_ADC
+    if spark_mode:
+        adc_content += '\n' + SPARK_ADC
+
+    with open(gpr_filename, u"w") as gpr_file:
+        main_gpr = MAIN_GPR
+
+        filtered_switches = []
+        for switch in compiler_switches:
+            filtered_switches.append('"' + switch + '"')
+        if filtered_switches:
+            placeholder_str = "--COMPILER_SWITCHES_PLACEHOLDER--"
+            switches_str = ', '.join(filtered_switches)
+            line_str = f'for Switches ("Ada") use ({switches_str});'
+            main_gpr = main_gpr.replace(placeholder_str, line_str)
+
+        mains = [main_file]
+        main_list = [f'"{x}"' for x in mains]
+        to_insert = f"for Main use ({', '.join(main_list)});"
+        main_gpr = main_gpr.replace("--MAIN_PLACEHOLDER--", to_insert)
+
+        gpr_file.write(main_gpr)
+
+    with open(adc_filename, u"w") as adc_file:
+        adc_file.write(adc_content)
+
+    return gpr_filename
 
 def analyze_file(rst_file):
 
@@ -357,16 +441,25 @@ def analyze_file(rst_file):
                 continue
 
             compile_error = False
+            prove_error = False
+            is_prove_error_class = False
+
+            prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",
+                             "prove_report_all"]
+
+            def get_main_filename(block):
+                if block.main_file is not None:
+                    main_file = block.main_file
+                else:
+                    main_file = source_files[-1].basename
+                return main_file
 
             if (('ada-run' in block.classes
                  or 'ada-run-expect-failure' in block.classes
                  or 'run' in block.buttons)
                 and not 'ada-norun' in block.classes
             ):
-                if block.main_file is not None:
-                    main_file = block.main_file
-                else:
-                    main_file = source_files[-1].basename
+                main_file = get_main_filename(block)
 
                 if block.language == "ada":
                     try:
@@ -409,7 +502,7 @@ def analyze_file(rst_file):
                                 print_error(loc, "Running of example failed")
                                 has_error = True
 
-            elif 'compile' in block.buttons:
+            if 'compile' in block.buttons:
 
                 for source_file in source_files:
                     if block.language == "ada":
@@ -423,6 +516,47 @@ def analyze_file(rst_file):
                                 print_error(loc, "Failed to compile example")
                                 has_error = True
 
+            if any(b in prove_buttons for b in block.buttons):
+
+                if block.language == "ada":
+                    main_file = get_main_filename(block)
+                    spark_mode = True
+                    project_filename = write_project_file(main_file,
+                                                          block.compiler_switches,
+                                                          spark_mode)
+
+                    is_prove_error_class = any(c in ['ada-expect-prove-error',
+                                     'ada-expect-compile-error',
+                                     'ada-run-expect-failure']
+                               for c in block.classes)
+                    extra_args = []
+
+                    if 'prove_flow' in block.buttons:
+                        extra_args = ["--mode=flow"]
+                    elif 'prove_flow_report_all' in block.buttons:
+                        extra_args = ["--mode=flow", "--report=all"]
+                    elif 'prove_report_all' in block.buttons:
+                        extra_args = ["--report=all"]
+
+                    line = ["gnatprove", "-P", project_filename,
+                            "--checks-as-errors", "--level=0",
+                            "--no-axiom-guard"]
+                    line.extend(extra_args)
+
+                    try:
+                        out = run(*line)
+                    except S.CalledProcessError as e:
+                        if is_prove_error_class:
+                            prove_error = True
+                        else:
+                            print_error(loc, "Failed to prove example")
+                            print(e.output)
+                            has_error = True
+                else:
+                    print_error(loc, "Wrong language selected for prove button")
+                    print(e.output)
+                    has_error = True
+
             if len(block.buttons) == 0:
                 print_error(loc, "Expected at least 'no_button' indicator, got none!")
                 has_error = True
@@ -433,6 +567,16 @@ def analyze_file(rst_file):
                     has_error = True
                 if not compile_error:
                     print_error(loc, "Expected compile error, got none!")
+                    has_error = True
+
+            if 'ada-expect-prove-error' in block.classes:
+                if not any(b in prove_buttons for b in block.buttons):
+                    print_error(loc, "Expected prove button, got none!")
+                    has_error = True
+
+            if any(b in prove_buttons for b in block.buttons):
+                if is_prove_error_class and not prove_error:
+                    print_error(loc, "Expected prove error, got none!")
                     has_error = True
 
             if (any (c in ['ada-run','ada-run-expect-failure','ada-norun'] for

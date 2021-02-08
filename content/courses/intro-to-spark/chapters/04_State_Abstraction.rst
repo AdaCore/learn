@@ -74,6 +74,7 @@ always strictly increases the value of its argument. In the code snippet
 shown below, this means the loop must terminate.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.State_Abstraction.Using_Abstraction
+    :class: ada-expect-prove-error
 
     procedure Increase (X : in out Integer) with
       Global => null,
@@ -774,6 +775,7 @@ whose capacity is initialized from an external configuration during
 elaboration.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_01
+    :class: ada-expect-prove-error
 
     package Configuration is
 
@@ -872,6 +874,7 @@ Package :ada:`Counting` defines two counters: :ada:`Black_Counter` and
 both called from the main procedure.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_03
+    :class: ada-expect-prove-error
 
     package Counting with
       Abstract_State => State
@@ -1060,6 +1063,7 @@ unchanged (if it was already full) or its top element is equal to the
 element just pushed.
 
 .. code:: ada prove_button project=Courses.Intro_To_Spark.State_Abstraction.Example_07
+    :class: ada-expect-prove-error
 
     package Stack with
       Abstract_State => The_Stack
@@ -1216,6 +1220,7 @@ Package :ada:`Data` defines three variables, :ada:`Data_1`, :ada:`Data_2` and
 body) from an external interface that reads the file system.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_09
+    :class: ada-expect-prove-error
 
     package External_Interface with
       Abstract_State => File_System,

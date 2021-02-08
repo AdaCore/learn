@@ -132,7 +132,8 @@ There are two possible side effects when evaluating an expression:
 Reads of volatile variables in SPARK are restricted to appear immediately at
 statement level, so the following is not allowed:
 
-.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read_1
+    :class: ada-expect-prove-error
 
     package Volatile_Read is
        X : Integer with Volatile;
@@ -149,7 +150,7 @@ statement level, so the following is not allowed:
 Instead, every read of a volatile variable must occur immediately before being
 assigned to another variable, as follows:
 
-.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Volatile_Read_2
 
     package Volatile_Read is
        X : Integer with Volatile;
@@ -177,15 +178,17 @@ variables. In particular, SPARK functions cannot have :ada:`out` or :ada:`in out
 parameters:
 
 .. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Function_With_Out_Param
+    :class: ada-expect-prove-error
 
-   function Bad_Function (X, Y : Integer; Sum, Max : out Integer) return Boolean;
-   --  ERROR, since "out" parameters are not allowed
+    function Bad_Function (X, Y : Integer; Sum, Max : out Integer) return Boolean;
+    --  ERROR, since "out" parameters are not allowed
 
 More generally, SPARK does not allow functions that have a side effect
 in addition to returning their result, as is typical of many idioms in other
 languages, for example when setting a new value and returning the previous one:
 
 .. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Side_Effect.Side_Effect_Ada
+    :class: ada-expect-prove-error
 
     package Bad_Functions is
        function Set (V : Integer) return Integer;
