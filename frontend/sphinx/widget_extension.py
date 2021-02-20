@@ -90,6 +90,7 @@ class WidgetCodeDirective(Directive):
             List[nodes]: Returns a list of Latex nodes
         """
         nodes_latex = []
+
         for f in widget.files:
             # Based on sphinx/directives/code.py
 
@@ -118,7 +119,8 @@ class WidgetCodeDirective(Directive):
             known_info_type : Dict[str, str] = {
                 'build'   : '\\textbf{Build output}',
                 'run'     : '\\textbf{Runtime output}',
-                'compile' : '\\textbf{Compilation output}'
+                'compile' : '\\textbf{Compilation output}',
+                'prove'   : '\\textbf{Prover output}'
             }
             if info_type in known_info_type:
                 return known_info_type[info_type]
