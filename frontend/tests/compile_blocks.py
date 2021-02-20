@@ -30,6 +30,7 @@ import subprocess as S
 from os import path as P
 import colors as C
 import shutil
+import glob
 import re
 from widget.chop import manual_chop, cheapo_gnatchop, real_gnatchop
 
