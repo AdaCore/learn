@@ -24,7 +24,7 @@ program in Ada and C:
 
 [C]
 
-.. code:: c cli_input run_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_C
+.. code:: c cli_input run_button project=Courses.Ada_For_Embedded_C_Dev.Introduction.Add_Angles_C
 
    !main.c
    #include <stdio.h>
@@ -60,7 +60,7 @@ program in Ada and C:
 
 [Ada]
 
-.. code:: ada cli_input run_button project=Courses.Ada_For_C_Embedded_Dev.Introduction.Add_Angles_Ada
+.. code:: ada cli_input run_button project=Courses.Ada_For_Embedded_C_Dev.Introduction.Add_Angles_Ada
 
    with Ada.Command_Line; use Ada.Command_Line;
    with Ada.Text_IO; use Ada.Text_IO;
