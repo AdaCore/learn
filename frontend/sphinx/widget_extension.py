@@ -55,6 +55,7 @@ from docutils.parsers.rst import Directive, directives
 
 # Widget lib
 from widget.widget import Widget
+from code_block_info import CodeBlockInfo
 
 # specifies the server address to set on the widgets
 WIDGETS_SERVER_URL = os.environ.get(
@@ -77,7 +78,7 @@ class WidgetCodeDirective(Directive):
         'name': directives.unchanged,
     }
 
-    def latex(self, widget: Widget):
+    def latex(self, widget: Widget, code_block_info : CodeBlockInfo):
         """Performs Latex parsing on nodes
 
         Used to create the PDF builds of the site.
@@ -147,7 +148,10 @@ class WidgetCodeDirective(Directive):
 
             # Attemping to detect HTML or Latex output by checking for 'html' in tags
             if 'html' not in self.state.state_machine.document.settings.env.app.tags.tags:
-                nodes_latex = self.latex(widget)
+                code_block_info = CodeBlockInfo(project_name=widget.name,
+                                                filename=self.content.items[0][0],
+                                                line_number=self.content.items[0][1] - 1)
+                nodes_latex = self.latex(widget, code_block_info)
 
             # insert widget into the template
             template = jinja_env.get_template('widget.html')
