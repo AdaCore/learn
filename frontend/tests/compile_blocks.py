@@ -100,7 +100,10 @@ class Block(object):
                         i + 1,
                         lang_re.match(line).groups()[0]
                     )
-                    project = project_re.match(line).groups()[0]
+                    project = project_re.match(line)
+                    if project is not None:
+                        project = project.groups()[0]
+
                     main_file = main_re.match(line)
                     if main_file is not None:
                         # Retrieve actual main filename
@@ -344,6 +347,11 @@ def analyze_file(rst_file):
     projects = dict()
 
     for (i, b) in code_blocks:
+        if b.project is None:
+            print ("Error: project not set in {} at line {}".format(
+                rst_file, str(b.line_start)))
+            exit(1)
+
         if not b.project in projects:
             projects[b.project] = list()
         projects[b.project].append((i, b))
