@@ -30,7 +30,17 @@ jobs:
     - name: Install OS Deps
       run: |
         sudo apt-get install -y \
-        graphviz
+        graphviz \
+        texlive-latex-base \
+        texlive-latex-recommended \
+        texlive-latex-extra \
+        texlive-fonts-recommended \
+        texlive-fonts-extra \
+        latexmk \
+        texlive-xetex \
+        fonts-lmodern \
+        fonts-open-sans \
+        fonts-dejavu
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: ada-actions/toolchain
