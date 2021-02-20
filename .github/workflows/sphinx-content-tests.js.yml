@@ -47,3 +47,5 @@ jobs:
       run: make SPHINXOPTS="-W" test_engine
     - name: Run SPHINX content tests
       run: make -k test_content
+    - name: Build PDF books including build/runtime output
+      run: make pdf_books
