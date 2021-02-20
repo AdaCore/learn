@@ -678,7 +678,8 @@ def analyze_file(rst_file):
 
 # Remove the build dir, but only if the user didn't ask for a specific
 # subset of code_blocks
-if os.path.exists(args.build_dir) and not args.code_block:
+if (os.path.exists(args.build_dir) and not args.code_block
+    and not args.keep_files):
     shutil.rmtree(args.build_dir)
 
 if not os.path.exists(args.build_dir):
