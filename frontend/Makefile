@@ -4,7 +4,8 @@ SPHINXBUILD   	= sphinx-build
 SPHINXPROJ    	= learnadacorecom
 SPHINXCONF    	= sphinx
 BUILDDIR      	= dist
-TEST_DRIVER   	= PYTHONPATH="$PYTHONPATH:sphinx" python3 tests/compile_blocks.py -B $(BUILDDIR)/test_output
+SRC_TEST_DIR  	= $(BUILDDIR)/test_output
+TEST_DRIVER   	= PYTHONPATH="$PYTHONPATH:sphinx:../backend" python3 tests/compile_blocks.py --keep_files -B $(SRC_TEST_DIR)
 
 MKFILE_PATH  	:= $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
@@ -162,6 +163,7 @@ $(BOOKS):
 	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
 	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
 	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
+	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	$(SPHINXBUILD) -M latexpdf $@ \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
