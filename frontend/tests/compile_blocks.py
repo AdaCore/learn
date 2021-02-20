@@ -648,7 +648,7 @@ def analyze_file(rst_file):
                     print_error(loc, "Expected prove error, got none!")
                     has_error = True
 
-            if (any (c in ['ada-run','ada-run-expect-failure','ada-norun'] for
+            if (any (c in ['ada-run-expect-failure','ada-norun'] for
                      c in block.classes)
                 and not 'run' in block.buttons):
                 print_error(loc, "Expected run button, got none!")
