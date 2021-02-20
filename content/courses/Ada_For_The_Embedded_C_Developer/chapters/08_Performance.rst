@@ -219,6 +219,7 @@ consider the following example in C:
 [C]
 
 .. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero
+    :class: c-run-expect-failure
 
     !main.c
     #include <stdio.h>
