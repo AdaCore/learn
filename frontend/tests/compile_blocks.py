@@ -595,6 +595,8 @@ def analyze_file(rst_file):
             if any(b in prove_buttons for b in block.buttons):
 
                 if block.language == "ada":
+                    project_block_dir = make_project_block_dir()
+
                     main_file = get_main_filename(block)
                     spark_mode = True
                     project_filename = write_project_file(main_file,
@@ -628,6 +630,10 @@ def analyze_file(rst_file):
                             print_error(loc, "Failed to prove example")
                             print(e.output)
                             has_error = True
+                        out = str(e.output.decode("utf-8"))
+
+                    with open(project_block_dir + "/prove.log", u"w") as logfile:
+                        logfile.write(out)
                 else:
                     print_error(loc, "Wrong language selected for prove button")
                     print(e.output)
