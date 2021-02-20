@@ -462,12 +462,20 @@ def analyze_file(rst_file):
                     main_file = source_files[-1].basename
                 return main_file
 
+            def make_project_block_dir():
+                project_block_dir = str(block.line_start)
+                os.makedirs(project_block_dir)
+
+                return project_block_dir
+
             if (('ada-run' in block.classes
                  or 'ada-run-expect-failure' in block.classes
                  or 'run' in block.buttons)
                 and not 'ada-norun' in block.classes
             ):
                 main_file = get_main_filename(block)
+
+                project_block_dir = make_project_block_dir()
 
                 if block.language == "ada":
                     try:
@@ -481,6 +489,8 @@ def analyze_file(rst_file):
                             print(e.output)
                             has_error = True
                         out = str(e.output.decode("utf-8"))
+                    with open(project_block_dir + "/build.log", u"w") as logfile:
+                        logfile.write(out)
                 elif block.language == "c":
                     try:
                         out = run("gcc", "-c", main_file)
@@ -492,6 +502,8 @@ def analyze_file(rst_file):
                             print(e.output)
                             has_error = True
                         out = str(e.output.decode("utf-8"))
+                    with open(project_block_dir + "/build.log", u"w") as logfile:
+                        logfile.write(out)
 
                 if not compile_error and not has_error:
                     if block.language == "ada":
@@ -513,7 +525,12 @@ def analyze_file(rst_file):
                                 has_error = True
 
                             out = str(e.output.decode("utf-8"))
+
+                        with open(project_block_dir + "/run.log", u"w") as logfile:
+                            logfile.write(out)
             if 'compile' in block.buttons:
+
+                project_block_dir = make_project_block_dir()
 
                 for source_file in source_files:
                     if block.language == "ada":
@@ -528,6 +545,8 @@ def analyze_file(rst_file):
                                 has_error = True
                             out = str(e.output.decode("utf-8"))
 
+                        with open(project_block_dir + "/compile.log", u"w+") as logfile:
+                            logfile.write(out)
             if any(b in prove_buttons for b in block.buttons):
 
                 if block.language == "ada":
