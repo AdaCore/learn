@@ -214,6 +214,8 @@ parser.add_argument('--build-dir', '-B', type=str, default="build",
 parser.add_argument('--verbose', '-v', type=bool, default=False,
                     help='Show more information')
 
+parser.add_argument('--keep_files', '-k', action='store_true',
+                    help='Keep files generated in the test')
 parser.add_argument('--code-block', '-b', type=str, default=0)
 parser.add_argument('--all-diagnostics', '-A', action='store_true')
 parser.add_argument('--code-block-at', type=int, default=0)
@@ -491,6 +493,7 @@ def analyze_file(rst_file):
                         out = str(e.output.decode("utf-8"))
                     with open(project_block_dir + "/build.log", u"w") as logfile:
                         logfile.write(out)
+
                 elif block.language == "c":
                     try:
                         out = run("gcc", "-c", main_file)
@@ -664,7 +667,7 @@ def analyze_file(rst_file):
 
         os.chdir(work_dir)
 
-    if os.path.exists(base_project_dir):
+    if os.path.exists(base_project_dir) and not args.keep_files:
         shutil.rmtree(base_project_dir)
 
     return analysis_error
