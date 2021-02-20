@@ -365,7 +365,7 @@ def analyze_file(rst_file):
             project_dir = base_project_dir + "/" + project.replace(".", "/")
 
             if os.path.exists(project_dir):
-                shutil.rmtree(args.build_dir)
+                shutil.rmtree(project_dir)
 
             try:
                 os.makedirs(project_dir)
