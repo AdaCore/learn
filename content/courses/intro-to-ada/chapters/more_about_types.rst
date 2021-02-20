@@ -534,7 +534,6 @@ specify their values in aggregates, as seen above, and you can access their
 values via the dot notation.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record_2
-    :class: ada-run
 
     with Var_Size_Record_2; use Var_Size_Record_2;
     with Ada.Text_IO; use Ada.Text_IO;
@@ -617,7 +616,6 @@ If you try to access a field that is not valid for your record, a
 Here is how you could write an evaluator for expressions:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
-    :class: ada-run
 
     with Variant_Record; use Variant_Record;
     with Ada.Text_IO; use Ada.Text_IO;

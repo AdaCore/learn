@@ -296,7 +296,6 @@ The compiler will choose a floating-point representation that supports the
 required precision. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Custom_Floating_Types
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -600,7 +599,6 @@ some values while staying within a single type.  This is where subtypes come
 into play.  A subtype does not introduce a new type.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Days_Subtype
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -642,7 +640,7 @@ constraints are enforced at run time: if you violate a subtype constraint,
 an exception will be raised.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Days_Subtype_Error
-    :class: ada-run, ada-run-expect-failure
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 

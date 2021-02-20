@@ -341,7 +341,6 @@ type, namely an object of a classwide type.
     affect the original one.
 
     .. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
-        :class: ada-run
 
         with P; use P;
 
@@ -400,7 +399,6 @@ the dot notation. Any remaining parameter are passed normally:
 
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
-    :class: ada-run
 
     with P; use P;
 

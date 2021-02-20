@@ -38,7 +38,6 @@ Here is an example of a package declaration in Ada:
 And here is how you use it:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Week
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Week;
@@ -121,7 +120,6 @@ In fact, we have been using the :ada:`use` clause since almost the beginning of
 this tutorial.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Week
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
     --                    ^ Make every entity of the Ada.Text_IO package
@@ -306,7 +304,6 @@ we can use elements from this child package in a subprogram by simply writing
 we write :ada:`use Week.Child` in addition. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Week.Child;  use Week.Child;
@@ -348,7 +345,6 @@ same way as before: we can reuse the previous test application and adapt the
 :ada:`with` and :ada:`use`, and the function call. This is the updated code:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
-    :class: ada-run
 
     with Ada.Text_IO;           use Ada.Text_IO;
     with Week.Child.Grandchild; use Week.Child.Grandchild;
@@ -397,7 +393,6 @@ This is the corresponding package body of :ada:`Week.Child_2`:
 We can now reference both children in our test application:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
-    :class: ada-run
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Week.Child;   use Week.Child;
@@ -510,7 +505,6 @@ string. Likewise, we can use this strategy to implement the
 This is a simple test application for the packages above:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
-    :class: ada-run
 
     with Ada.Text_IO;                use Ada.Text_IO;
     with Book.Additional_Operations; use Book.Additional_Operations;
