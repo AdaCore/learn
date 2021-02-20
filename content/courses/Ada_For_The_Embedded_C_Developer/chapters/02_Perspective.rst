@@ -1945,7 +1945,7 @@ values from :ada:`'a'` to :ada:`'z'`:
     !main.c
     #include <stdio.h>
 
-    void main(void)
+    int main(int argc, const char * argv[])
     {
         char Arr [26];
         char C = 'a';
@@ -2656,7 +2656,7 @@ Here's a first example:
     #include <stdio.h>
     #include "proc.h"
 
-    void main (void)
+    int main(int argc, const char * argv[])
     {
         int v1, v2;
 
