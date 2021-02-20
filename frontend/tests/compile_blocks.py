@@ -480,6 +480,7 @@ def analyze_file(rst_file):
                             print_error(loc, "Failed to compile example")
                             print(e.output)
                             has_error = True
+                        out = str(e.output.decode("utf-8"))
                 elif block.language == "c":
                     try:
                         out = run("gcc", "-c", main_file)
@@ -490,11 +491,12 @@ def analyze_file(rst_file):
                             print_error(loc, "Failed to compile example")
                             print(e.output)
                             has_error = True
+                        out = str(e.output.decode("utf-8"))
 
                 if not compile_error and not has_error:
                     if block.language == "ada":
                         try:
-                            run("./{}".format(P.splitext(main_file)[0]))
+                            out = run("./{}".format(P.splitext(main_file)[0]))
 
                             if 'ada-run-expect-failure' in block.classes:
                                 print_error(
@@ -502,7 +504,7 @@ def analyze_file(rst_file):
                                 )
                                 has_error = True
 
-                        except S.CalledProcessError:
+                        except S.CalledProcessError as e:
                             if 'ada-run-expect-failure' in block.classes:
                                 if args.verbose:
                                     print("Running of example expectedly failed")
@@ -510,19 +512,21 @@ def analyze_file(rst_file):
                                 print_error(loc, "Running of example failed")
                                 has_error = True
 
+                            out = str(e.output.decode("utf-8"))
             if 'compile' in block.buttons:
 
                 for source_file in source_files:
                     if block.language == "ada":
                         try:
-                            run("gcc", "-c", "-gnatc", "-gnatyg0-s",
-                                source_file.basename)
-                        except S.CalledProcessError:
+                            out = run("gcc", "-c", "-gnatc", "-gnatyg0-s",
+                                      source_file.basename)
+                        except S.CalledProcessError as e:
                             if 'ada-expect-compile-error' in block.classes:
                                 compile_error = True
                             else:
                                 print_error(loc, "Failed to compile example")
                                 has_error = True
+                            out = str(e.output.decode("utf-8"))
 
             if any(b in prove_buttons for b in block.buttons):
 
