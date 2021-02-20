@@ -272,19 +272,21 @@ class Widget:
                     self.__no_button = True
                 elif opt == 'ada-syntax-only':
                     self.__no_button = True
-                elif opt == 'ada-expect-compile-error':
+                elif opt in ['ada-expect-compile-error',
+                             'c-expect-compile-error']:
                     # this is for testing, nothing to do here
                     continue
                 elif opt == 'ada-expect-prove-error':
                     # this is for testing, nothing to do here
                     continue
-                elif opt == 'ada-run':
+                elif opt in ['ada-run', 'c-run']:
                     # this is for testing, nothing to do here
                     continue
-                elif opt == 'ada-norun':
+                elif opt in ['ada-norun', 'c-norun']:
                     # this is for testing, nothing to do here
                     continue
-                elif opt == 'ada-run-expect-failure':
+                elif opt in ['ada-run-expect-failure',
+                             'c-run-expect-failure']:
                     # this is for testing, nothing to do here
                     continue
                 else:
