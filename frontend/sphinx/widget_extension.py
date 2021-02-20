@@ -114,6 +114,55 @@ class WidgetCodeDirective(Directive):
 
             nodes_latex.append(container_node)
 
+        def get_info_preamble(info_type : str) -> str:
+            known_info_type : Dict[str, str] = {
+                'build'   : '\\textbf{Build output}',
+                'run'     : '\\textbf{Runtime output}',
+                'compile' : '\\textbf{Compilation output}'
+            }
+            if info_type in known_info_type:
+                return known_info_type[info_type]
+            else:
+                return "Let's " + info_type + " the example:"
+
+        block_info : Dict[str, str] = code_block_info.get_info()
+
+        for info_type in sorted(block_info):
+
+            if block_info[info_type] == "":
+                # Do not show empty boxes
+                continue
+
+            preamble_node = nodes.container(
+                '', literal_block=False,
+                classes=[])
+
+            preamble_raw = nodes.raw('',
+                                     get_info_preamble(info_type),
+                                     format='latex')
+
+            preamble_node += preamble_raw
+
+            container_node = nodes.container(
+                '', literal_block=True,
+                classes=['literal-block-wrapper'])
+
+            literal = nodes.literal_block('',
+                                          block_info[info_type],
+                                          format='latex')
+            literal['language'] = 'none'
+            literal['source'] = info_type
+
+            caption = nodes.caption('', info_type)
+            caption.source = literal.source
+            caption.line = literal.line
+
+            # container_node += caption
+            container_node += literal
+
+            nodes_latex.append(preamble_node)
+            nodes_latex.append(container_node)
+
         return nodes_latex
 
     def run(self):
