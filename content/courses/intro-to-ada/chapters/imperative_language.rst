@@ -35,24 +35,26 @@ Here's a very simple imperative Ada program:
 
 which we'll assume is in the source file :file:`greet.adb`.
 
-If you compile that source with the GNAT compiler and run the executable,
-you will get an unsurprising result.
+.. only:: builder_html
 
-.. code-block:: sh
+    If you compile that source with the GNAT compiler and run the executable,
+    you will get an unsurprising result.
 
-    $ gprbuild greet.adb
-    using project file [...]_default.gpr
-    Compile
-       [Ada]          greet.adb
-    Bind
-       [gprbind]      greet.bexch
-       [Ada]          greet.ali
-    Link
-       [link]         greet.adb
+    .. code-block:: sh
 
-     $ ./greet
-    Hello, World!
-     $
+        $ gprbuild greet.adb
+        using project file [...]_default.gpr
+        Compile
+           [Ada]          greet.adb
+        Bind
+           [gprbind]      greet.bexch
+           [Ada]          greet.ali
+        Link
+           [link]         greet.adb
+
+         $ ./greet
+        Hello, World!
+         $
 
 There are several noteworthy things in the above program:
 
@@ -251,16 +253,17 @@ discrete range.
        end loop;
     end Greet_5a;
 
-Executing this procedure yields the following output:
+.. only:: builder_html
 
-.. code-block:: sh
+    Executing this procedure yields the following output:
 
-   Hello, World! 1
-   Hello, World! 2
-   Hello, World! 3
-   Hello, World! 4
-   Hello, World! 5
+    .. code-block:: sh
 
+       Hello, World! 1
+       Hello, World! 2
+       Hello, World! 3
+       Hello, World! 4
+       Hello, World! 5
 
 A few things to note:
 
@@ -298,15 +301,17 @@ To iterate backwards over a range, use the :ada:`reverse` keyword:
        end loop;
     end Greet_5a_Reverse;
 
-Executing this procedure yields the following output:
+.. only:: builder_html
 
-.. code-block:: sh
+    Executing this procedure yields the following output:
 
-   Hello, World! 5
-   Hello, World! 4
-   Hello, World! 3
-   Hello, World! 2
-   Hello, World! 1
+    .. code-block:: sh
+
+       Hello, World! 5
+       Hello, World! 4
+       Hello, World! 3
+       Hello, World! 2
+       Hello, World! 1
 
 The bounds of a :ada:`for` loop may be computed at run-time; they
 are evaluated once, before the loop body is executed.  If the value of the
