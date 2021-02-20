@@ -496,7 +496,9 @@ def analyze_file(rst_file):
 
                 elif block.language == "c":
                     try:
-                        out = run("gcc", "-c", main_file)
+                        cmd = ["gcc", "-o",
+                               P.splitext(main_file)[0]] + glob.glob('*.c')
+                        out = run(*cmd)
                     except S.CalledProcessError as e:
                         if 'c-expect-compile-error' in block.classes:
                             compile_error = True
