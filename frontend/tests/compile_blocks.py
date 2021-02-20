@@ -467,7 +467,8 @@ def analyze_file(rst_file):
 
             def make_project_block_dir():
                 project_block_dir = str(block.line_start)
-                os.makedirs(project_block_dir)
+                if not os.path.exists(project_block_dir):
+                    os.makedirs(project_block_dir)
 
                 return project_block_dir
 
