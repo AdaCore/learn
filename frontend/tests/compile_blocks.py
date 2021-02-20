@@ -495,7 +495,7 @@ def analyze_file(rst_file):
                     try:
                         out = run("gcc", "-c", main_file)
                     except S.CalledProcessError as e:
-                        if 'ada-expect-compile-error' in block.classes:
+                        if 'c-expect-compile-error' in block.classes:
                             compile_error = True
                         else:
                             print_error(loc, "Failed to compile example")
@@ -528,6 +528,29 @@ def analyze_file(rst_file):
 
                         with open(project_block_dir + "/run.log", u"w") as logfile:
                             logfile.write(out)
+
+                    elif block.language == "c":
+                        try:
+                            out = run("./{}".format(P.splitext(main_file)[0]))
+
+                            if 'c-run-expect-failure' in block.classes:
+                                print_error(
+                                    loc, "Running of example should have failed"
+                                )
+                                has_error = True
+
+                        except S.CalledProcessError as e:
+                            if 'c-run-expect-failure' in block.classes:
+                                if args.verbose:
+                                    print("Running of example expectedly failed")
+                            else:
+                                print_error(loc, "Running of example failed")
+                                has_error = True
+                            out = str(e.output.decode("utf-8"))
+
+                        with open(project_block_dir + "/run.log", u"w") as logfile:
+                            logfile.write(out)
+
             if 'compile' in block.buttons:
 
                 project_block_dir = make_project_block_dir()
@@ -547,6 +570,21 @@ def analyze_file(rst_file):
 
                         with open(project_block_dir + "/compile.log", u"w+") as logfile:
                             logfile.write(out)
+
+                    elif block.language == "c":
+                        try:
+                            out = run("gcc", "-c", source_file.basename)
+                        except S.CalledProcessError as e:
+                            if 'c-expect-compile-error' in block.classes:
+                                compile_error = True
+                            else:
+                                print_error(loc, "Failed to compile example")
+                                has_error = True
+                            out = str(e.output.decode("utf-8"))
+
+                        with open(project_block_dir + "/compile.log", u"w+") as logfile:
+                            logfile.write(out)
+
             if any(b in prove_buttons for b in block.buttons):
 
                 if block.language == "ada":
