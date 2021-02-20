@@ -47,7 +47,7 @@ Abstract data types
 With this high-level granularity, it might not seem obvious how to hide the
 implementation details of a type. Here is how it can be done in Ada:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Privacy.Stacks
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Privacy.Stacks
 
     package Stacks is
        type Stack is private;

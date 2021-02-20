@@ -76,7 +76,7 @@ brushed on, but not really covered, up to now:
 You can create one or more new types from every type in Ada. Type
 derivation is built into the language.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Newtypes
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Newtypes
 
     package Newtypes is
        type Point is record
@@ -184,7 +184,7 @@ functionality is added:
 
 Let's see our first tagged type declarations:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     package P is
        type My_Class is tagged null record;
@@ -433,8 +433,7 @@ applied to tagged types, as we'll see in this section.
 
 This is an example of a tagged private type:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Private_Types
-    :class: ada-syntax-only
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Private_Types
 
     package P is
        type T is tagged private;
@@ -446,8 +445,7 @@ This is an example of a tagged private type:
 
 This is an example of a tagged limited type:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Types
-    :class: ada-syntax-only
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Types
 
     package P is
        type T is tagged limited record
@@ -512,8 +510,7 @@ In this section, we'll discuss an useful pattern for object-oriented programming
 in Ada: classwide access type. Let's start with an example where we declare a
 tagged type :ada:`T` and a derived type :ada:`T_New`:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Error
-    :class: ada-syntax-only
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Error
 
     package P is
        type T is tagged null record;

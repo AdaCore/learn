@@ -21,7 +21,7 @@ Packages
 
 Here is an example of a package declaration in Ada:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Week
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Week
 
     package Week is
 
@@ -151,7 +151,7 @@ declarations and no body. That's not a mistake: in a package specification,
 which is what is illustrated above, you cannot declare bodies. Those have to be
 in the package body.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Operations
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Operations
 
     package Operations is
 
@@ -253,7 +253,7 @@ is called :ada:`Text_IO`. In the previous examples, we've been using the
 Let's begin our discussion on child packages by taking our previous
 :ada:`Week` package:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
 
     package Week is
 
@@ -269,7 +269,7 @@ Let's begin our discussion on child packages by taking our previous
 
 If we want to create a child package for :ada:`Week`, we may write:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
 
     package Week.Child is
 
@@ -280,7 +280,7 @@ If we want to create a child package for :ada:`Week`, we may write:
 Here, :ada:`Week` is the parent package and :ada:`Child` is the child
 package. This is the corresponding package body of :ada:`Week.Child`:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
 
     package body Week.Child is
 
@@ -323,7 +323,7 @@ the hierarchy of the previous source-code example by declaring a
 be the parent of the :ada:`Grandchild` package. Let's consider this
 implementation:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
 
     package Week.Child.Grandchild is
 
@@ -365,7 +365,7 @@ So far, we've seen a single child package of a parent package. However, a
 parent package can also have multiple children. We could extend the example
 above and implement a :ada:`Week.Child_2` package. For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
 
     package Week.Child_2 is
 
@@ -379,7 +379,7 @@ but it's also the parent of the :ada:`Child_2` package. In the same way,
 
 This is the corresponding package body of :ada:`Week.Child_2`:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
 
     package body Week.Child_2 is
 
@@ -414,7 +414,7 @@ for elements declared in the package body of a parent package.
 Let's consider the package :ada:`Book` and its child
 :ada:`Additional_Operations`:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
 
     package Book is
 
@@ -436,7 +436,7 @@ Let's consider the package :ada:`Book` and its child
 
 This is the body of both packages:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
 
     package body Book is
 
@@ -486,7 +486,7 @@ implementation of the :ada:`Get_Extended_Author` function to retrieve this
 string. Likewise, we can use this strategy to implement the
 :ada:`Get_Extended_Title` function. This is the adapted code:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
 
     package body Book.Additional_Operations is
 

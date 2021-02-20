@@ -48,7 +48,7 @@ convenient:
 However, note that as soon as you used a named association, all subsequent
 components likewise need to be specified with names associations.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Points
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Points
 
     package Points is
        type Point is record
@@ -73,7 +73,7 @@ in the section on :ref:`enumeration types <EnumTypes>`.
 Let's take a simple example: it is possible in Ada to have functions that have
 the same name, but different types for their parameters.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
 
     package Pkg is
        function F (A : Integer) return Integer;
@@ -87,7 +87,7 @@ overloading.
 One of the novel aspects of Ada's overloading facility is the ability to
 resolve overloading based on the return type of a function.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
 
     package Pkg is
        type SSID is new Integer;
@@ -150,7 +150,7 @@ This is where a qualified expression becomes useful.
 Syntactically the target of a qualified expression can be either any expression
 in parentheses, or an aggregate:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Qual_Expr
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Qual_Expr
 
     package Qual_Expr is
        type Point is record
@@ -211,7 +211,7 @@ pointers:
 
 Here is how you declare a simple pointer type, or access type, in Ada:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     package Dates is
        type Months is (January, February, March, April, May, June, July,
@@ -295,7 +295,7 @@ Once we have declared an access type, we need a way to give variables of the
 types a meaningful value! You can allocate a value of an access type
 with the :ada:`new` keyword in Ada.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     with Dates; use Dates;
 
@@ -309,7 +309,7 @@ with the :ada:`new` keyword in Ada.
 If the type you want to allocate needs constraints, you can put them in the
 subtype indication, just as you would do in a variable declaration:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     with Dates; use Dates;
 
@@ -327,7 +327,7 @@ In some cases, though, allocating just by specifying the type is not ideal, so
 Ada also allows you to initialize along with the allocation. This is done via
 the qualified expression syntax:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     with Dates; use Dates;
 
@@ -348,7 +348,7 @@ pointer. Dereferencing a pointer uses the :ada:`.all` syntax in Ada, but is
 often not needed - in many cases, the access value will be implicitly
 dereferenced for you:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     with Dates; use Dates;
 
@@ -417,7 +417,7 @@ naturally defined through two types, a record type and an access type, that are
 mutually dependent.  To declare mutually dependent types, you can use an
 incomplete type declaration:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Simple_List
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Simple_List
 
     package Simple_List is
        type Node;
@@ -448,7 +448,7 @@ known at compile time. This is illustrated in the example below:
 .. ?? an elaboration pragma is used.
 .. ?? Consider simplifying or restructuring the example to avoid this issue
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record
 
     package Runtime_Length is
        function Compute_Max_Len return Natural;
@@ -487,7 +487,7 @@ different sizes.
 You can get analogous functionality for records, too, using a special kind of
 field that is called a discriminant:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record_2
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record_2
 
     package Var_Size_Record_2 is
         type Items_Array is array (Positive range <>) of Integer;
@@ -571,7 +571,7 @@ However, discriminants can also be used to obtain the functionality of what are
 sometimes called "variant records": records that can contain different sets of
 fields.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
 
     package Variant_Record is
        type Expr;                       --  Forward declaration of Expr
@@ -799,7 +799,7 @@ fixed-point data types |mdash| you can find more details in this discussion
 about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 We may also rewrite this code with an exact type definition:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Normalized_Adapted_Fixed_Point_Type
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Normalized_Adapted_Fixed_Point_Type
 
     procedure Normalized_Adapted_Fixed_Point_Type is
        type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
