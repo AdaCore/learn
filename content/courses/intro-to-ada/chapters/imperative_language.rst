@@ -272,13 +272,13 @@ A few things to note:
 -  :ada:`I` is local to the loop, so you cannot refer to :ada:`I`
    outside the loop.
 
--  Although the value of `I` is incremented at each iteration, from the
+-  Although the value of :ada:`I` is incremented at each iteration, from the
    program's perspective it is constant. An attempt to modify its value
    is illegal; the compiler would reject the program.
 
 -  Integer'Image is a function that takes an Integer and converts it to a
    String.  It is an example of a language construct known as an *attribute*,
-   indicated by the "'" syntax, which will be covered in more detail later.
+   indicated by the :Ada:`'` syntax, which will be covered in more detail later.
 
 -  The :ada:`&` symbol is the concatenation operator for String values
 
