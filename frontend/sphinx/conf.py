@@ -33,7 +33,7 @@ title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
 # The short X.Y version
 version = u''
 # The full version, including alpha/beta/rc tags
-release = u'2021-01'
+release = u'2021-02'
 
 
 # -- General configuration ---------------------------------------------------

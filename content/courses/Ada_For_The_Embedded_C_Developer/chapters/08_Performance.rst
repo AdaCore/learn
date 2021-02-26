@@ -519,6 +519,8 @@ Let's look at this example:
 
         update (&D1, 3);
         display (&D1);
+
+        return 0;
     }
 
 In this C code example, we're using pointers to pass :c:`D1` as a reference to
@@ -641,6 +643,8 @@ data structure. Let's look at this example in C:
         D1 = get_init_data();
 
         init_data(&D1);
+
+        return 0;
     }
 
 This code example contains two subprograms that initialize the :c:`Data`

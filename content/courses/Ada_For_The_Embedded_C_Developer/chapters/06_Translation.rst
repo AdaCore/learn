@@ -411,6 +411,8 @@ call could be translated:
     int main(int argc, const char * argv[])
     {
         registerInterface_Initialize(15);
+
+        return 0;
     }
 
 [Ada]
@@ -478,6 +480,8 @@ Dynamically allocated arrays can be directly allocated on the stack:
 
     int main() {
         int *a = malloc(sizeof(int) * 10);
+
+        return 0;
     }
 
 [Ada]
@@ -511,6 +515,8 @@ discriminant:
         S v;
 
         v.a = malloc(sizeof(int) * 10);
+
+        return 0;
     }
 
 [Ada]
@@ -565,6 +571,8 @@ through an :ada:`Address` clause associated to a variable, for example:
     int main(int argc, const char * argv[])
     {
         int * r = (int *)0xFFFF00A0;
+
+        return 0;
     }
 
 [Ada]
@@ -613,6 +621,8 @@ boolean flags. In C, this would be done through masks, e.g.:
         int value = 0;
 
         value |= FLAG_2 | FLAG_4;
+
+        return 0;
     }
 
 In Ada, the above can be represented through a Boolean array of enumerate
@@ -651,6 +661,8 @@ representation is needed or more complex data are used:
         int value = 0;
 
         value = (2 << 1) | 1;
+
+        return 0;
     }
 
 [Ada]
@@ -782,6 +794,7 @@ Let's look at a simple example:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -831,6 +844,8 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
         v = v | (1 << 2);
 
         printf("v = %d\n", v);
+
+        return 0;
     }
 
 .. admonition:: Important
@@ -899,6 +914,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     [Ada]
 
     .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Overlay_Default_Init_Overwrite
+        :class: ada-run
 
         package P is
 
@@ -955,6 +971,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     [Ada]
 
     .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Overlay_Default_Init_Import
+        :class: ada-run
 
         package P is
 
@@ -1012,6 +1029,7 @@ records. For example:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Int_Array_Ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1060,6 +1078,8 @@ bit-shifting and masking to set that specific bit:
         {
             printf("a[%d] = %d\n", i, a[i]);
         }
+
+        return 0;
     }
 
 Since we can use this pattern for any arbitrary data type, this allows us to
@@ -1069,6 +1089,7 @@ complex data structures as a bitstream. For example:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Serialization_ada
+    :class: ada-run
 
     package Serializer is
 
@@ -1181,6 +1202,8 @@ shifting and masking to access the bits of that byte. Here, we use the
         rec r = {5, "abc"};
 
         transmit(&r, sizeof(r) * 8);
+
+        return 0;
     }
 
 Similarly, we can write a subprogram that converts a bit-field |mdash| which
@@ -1199,6 +1222,7 @@ procedure:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Deserialization_Ada
+    :class: ada-run
 
     package Serializer is
 
@@ -1377,6 +1401,8 @@ individual bytes. For example:
         printf("r2 = ");
         display_r (&r2);
         printf("\n");
+
+        return 0;
     }
 
 Here, :c:`to_r` casts both pointer parameters to pointers to :c:`char` to get
@@ -1425,6 +1451,7 @@ This is the corresponding implementation using overlays:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Simple_Overlay
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1487,6 +1514,7 @@ This is how we can rewrite the implementation above using overlays:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Fixed_Int_Overlay
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 

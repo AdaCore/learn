@@ -538,6 +538,8 @@ Let's look at this very rudimentary example:
         printf("... * 0.5\n");
         fixed_value = mult(fixed_value, TO_FIXED(0.5));
         display_fixed(fixed_value);
+
+        return 0;
     }
 
 Here, we declare the fixed-point type :c:`fixed` based on :c:`int` and two
@@ -602,6 +604,8 @@ Let's look at a simple example of a volatile variable in C:
             val += i * 2.0;
         }
         printf ("val: %5.3f\n", val);
+
+        return 0;
     }
 
 In this example, :c:`val` has the modifier :c:`volatile`, which indicates that

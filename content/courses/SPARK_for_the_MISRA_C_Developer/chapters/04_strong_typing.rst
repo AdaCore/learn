@@ -515,28 +515,30 @@ Here's an attempt to simulate the above C code in SPARK (and Ada):
 
     end Bad_Arith;
 
-Here is the output from AdaCore's GNAT compiler:
+.. only:: builder_html
 
-::
+    Here is the output from AdaCore's GNAT compiler:
 
-     1.     package Bad_Arith is
-     2.
-     3.        B1 : constant Boolean := True;
-     4.        B2 : constant Boolean := False;
-     5.        B3 : constant Boolean := B1 + B2;
+    ::
+
+         1.     package Bad_Arith is
+         2.
+         3.        B1 : constant Boolean := True;
+         4.        B2 : constant Boolean := False;
+         5.        B3 : constant Boolean := B1 + B2;
                                            |
-        >>> there is no applicable operator "+" for type "Standard.Boolean"
+            >>> there is no applicable operator "+" for type "Standard.Boolean"
 
-     6.
-     7.        type Fruit is (Apple, Orange);
-     8.        F1 : constant Fruit := Apple;
-     9.        F2 : constant Fruit := Orange;
-    10.        F3 : constant Fruit := F1 + F2;
+         6.
+         7.        type Fruit is (Apple, Orange);
+         8.        F1 : constant Fruit := Apple;
+         9.        F2 : constant Fruit := Orange;
+        10.        F3 : constant Fruit := F1 + F2;
                                          |
-        >>> there is no applicable operator "+" for type "Fruit" defined at line 7
+            >>> there is no applicable operator "+" for type "Fruit" defined at line 7
 
-    11.
-    12.     end Bad_Arith;
+        11.
+        12.     end Bad_Arith;
 
 It is possible, however, to get the predecessor of a Boolean or enumerated
 value with :ada:`Value'Pred` and its successor with :ada:`Value'Succ`, as well as
