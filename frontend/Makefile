@@ -164,7 +164,7 @@ $(BOOKS):
 	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
 	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
-	$(SPHINXBUILD) -M latexpdf $@ \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $@ \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
 
