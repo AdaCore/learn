@@ -64,5 +64,5 @@ jobs:
       with:
         name: learn-pdf-books
         path: |
-          frontend/dist/pdf_books/*.*
+          frontend/dist/pdf_books
         retention-days: 1
