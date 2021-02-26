@@ -794,6 +794,7 @@ Let's look at a simple example:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -913,6 +914,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     [Ada]
 
     .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Overlay_Default_Init_Overwrite
+        :class: ada-run
 
         package P is
 
@@ -969,6 +971,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     [Ada]
 
     .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Overlay_Default_Init_Import
+        :class: ada-run
 
         package P is
 
@@ -1026,6 +1029,7 @@ records. For example:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Int_Array_Ada
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1085,6 +1089,7 @@ complex data structures as a bitstream. For example:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Serialization_ada
+    :class: ada-run
 
     package Serializer is
 
@@ -1217,6 +1222,7 @@ procedure:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitfield_Deserialization_Ada
+    :class: ada-run
 
     package Serializer is
 
@@ -1445,6 +1451,7 @@ This is the corresponding implementation using overlays:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Simple_Overlay
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1507,6 +1514,7 @@ This is how we can rewrite the implementation above using overlays:
 [Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Fixed_Int_Overlay
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
