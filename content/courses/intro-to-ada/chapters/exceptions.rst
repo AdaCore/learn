@@ -14,7 +14,7 @@ Ada exceptions are not types, but instead objects, which may be
 peculiar to you if you're used to the way Java or Python support
 exceptions. Here's how you declare an exception:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Exceptions.Show_Exception
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Exceptions.Show_Exception
 
     package Exceptions is
         My_Except : exception;
@@ -99,7 +99,7 @@ can add it to the statements block of your current subprogram:
           Put ("Cannot open input file");
     end Open_File;
 
-.. attention::
+.. admonition:: Attention
 
     Exception handlers have an important restriction that
     you need to be careful about: Exceptions raised in the declarative

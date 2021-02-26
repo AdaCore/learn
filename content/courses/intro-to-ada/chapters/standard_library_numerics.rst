@@ -14,7 +14,7 @@ The :ada:`Ada.Numerics.Elementary_Functions` package provides common
 operations for floating-point types, such as square root, logarithm,
 and the trigonometric functions (e.g., sin, cos). For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Elem_Math
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Elem_Math
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;

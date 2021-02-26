@@ -17,13 +17,13 @@ does not.
 
 This example shows the declaration and definition of a function:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Increment
 
     function Increment (I : Integer) return Integer;
     --  We declare (but don't define) a function with one
     --  parameter, returning an integer value
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Increment
 
     --  We define the Increment function
 
@@ -44,7 +44,7 @@ section at all, for example:
 
 Here's another variation on the previous example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
 
     function Increment_By
       (I    : Integer := 0;
@@ -57,7 +57,7 @@ C/C++, a call to a subprogram without parameters does not include parentheses.
 
 This is the implementation of the function above:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
 
     function Increment_By
       (I    : Integer := 0;
@@ -441,7 +441,7 @@ This can be useful, for example, to improve the readability of your application
 when you're using code from external sources that cannot be changed in your
 system. Let's look at an example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
 
     procedure A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed
       (A_Message : String);

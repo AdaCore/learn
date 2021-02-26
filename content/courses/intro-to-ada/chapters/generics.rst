@@ -15,7 +15,7 @@ by using the keyword :ada:`generic`. For example:
 .. raph-amiard: We are lacking a definition/link of metaprogramming.
 
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Simple_Generic
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Generics.Show_Simple_Generic
 
     generic
        type T is private;
@@ -37,7 +37,7 @@ want to create an algorithm that works on any integer type, or even on
 any type at all, whether a numeric type or not. The following example
 declares a formal type :ada:`T` for the :ada:`Set` procedure.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Type_Declaration
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Type_Declaration
 
     generic
        type T is private;
@@ -71,7 +71,7 @@ Formal object declaration
 Formal objects are similar to subprogram parameters. They can reference
 formal types declared in the formal specification. For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Object_Declaration
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Object_Declaration
 
     generic
        type T is private;
@@ -95,7 +95,7 @@ We don't repeat the :ada:`generic` keyword for the body declaration of a
 generic subprogram or package.  Instead, we start with the actual
 declaration and use the generic types and objects we declared. For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Generic_Body_Definition
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Generics.Show_Generic_Body_Definition
 
     generic
        type T is private;

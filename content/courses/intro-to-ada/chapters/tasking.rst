@@ -123,7 +123,7 @@ Synchronization also occurs if we move the task to a separate package. In
 the example below, we declare a task :ada:`T` in the package
 :ada:`Simple_Sync_Pkg`.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
 
     package Simple_Sync_Pkg is
        task T;
@@ -131,7 +131,7 @@ the example below, we declare a task :ada:`T` in the package
 
 This is the corresponding package body:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -363,7 +363,7 @@ the elapsed time (:ada:`Show_Elapsed_Time`) and a dummy
 :ada:`Computational_Intensive_App` procedure which is simulated by using a
 simple delay. This is the package specification:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Tasking.Show_Time
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Tasking.Show_Time
 
     with Ada.Real_Time; use Ada.Real_Time;
 
@@ -385,7 +385,7 @@ simple delay. This is the package specification:
 
 And this is the package body:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Tasking.Show_Time
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Tasking.Show_Time
 
     with Ada.Text_IO; use Ada.Text_IO;
 

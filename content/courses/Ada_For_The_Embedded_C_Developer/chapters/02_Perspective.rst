@@ -119,7 +119,7 @@ program:
 
 [C]
 
-.. code:: c run_button manual_chop project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_C
+.. code:: c run_button manual_chop project=Courses.Ada_For_Embedded_C_Dev.Perspective.Hello_World_C
 
     !main.c
     #include <stdio.h>
@@ -132,7 +132,7 @@ program:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Hello_World_Ada
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Hello_World_Ada
 
     with Ada.Text_IO;
 
@@ -1945,7 +1945,7 @@ values from :ada:`'a'` to :ada:`'z'`:
     !main.c
     #include <stdio.h>
 
-    void main(void)
+    int main(int argc, const char * argv[])
     {
         char Arr [26];
         char C = 'a';
@@ -2435,7 +2435,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_To_Scalars
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Access_To_Scalars
 
     procedure Main is
        type A_Int is access Integer;
@@ -2446,7 +2446,7 @@ Pointers to scalar objects in Ada and C look like:
 
 [C]
 
-.. code:: c run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Pointers_To_Scalars
+.. code:: c run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Pointers_To_Scalars
 
     !main.c
     #include <stdlib.h>
@@ -2463,7 +2463,7 @@ In Ada, an initializer can be specified with the allocation by appending
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_Initialization
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Access_Initialization
 
     procedure Main is
        type A_Int is access Integer;
@@ -2485,7 +2485,7 @@ objects that have gone out of scope. For example:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_All
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Access_All
 
     procedure Main is
        type A_Int is access all Integer;
@@ -2497,7 +2497,7 @@ objects that have gone out of scope. For example:
 
 [C]
 
-.. code:: c run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Access_All_C
+.. code:: c run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Access_All_C
 
     !main.c
     int main(int argc, const char * argv[])
@@ -2515,7 +2515,7 @@ the access type as follows:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Unchecked_Deallocation
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Unchecked_Deallocation
 
     with Ada.Unchecked_Deallocation;
 
@@ -2529,7 +2529,7 @@ the access type as follows:
 
 [C]
 
-.. code:: c run_button project=Courses.Ada_For_C_Embedded_Dev.Perspective.Free
+.. code:: c run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Free
 
     !main.c
     #include <stdlib.h>
@@ -2656,7 +2656,7 @@ Here's a first example:
     #include <stdio.h>
     #include "proc.h"
 
-    void main (void)
+    int main(int argc, const char * argv[])
     {
         int v1, v2;
 

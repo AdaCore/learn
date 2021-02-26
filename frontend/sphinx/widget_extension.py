@@ -55,6 +55,7 @@ from docutils.parsers.rst import Directive, directives
 
 # Widget lib
 from widget.widget import Widget
+from code_block_info import CodeBlockInfo
 
 # specifies the server address to set on the widgets
 WIDGETS_SERVER_URL = os.environ.get(
@@ -77,7 +78,7 @@ class WidgetCodeDirective(Directive):
         'name': directives.unchanged,
     }
 
-    def latex(self, widget: Widget):
+    def latex(self, widget: Widget, code_block_info : CodeBlockInfo):
         """Performs Latex parsing on nodes
 
         Used to create the PDF builds of the site.
@@ -89,6 +90,7 @@ class WidgetCodeDirective(Directive):
             List[nodes]: Returns a list of Latex nodes
         """
         nodes_latex = []
+
         for f in widget.files:
             # Based on sphinx/directives/code.py
 
@@ -108,9 +110,59 @@ class WidgetCodeDirective(Directive):
             caption.source = literal.source
             caption.line = literal.line
 
-#           container_node += caption
+            container_node += caption
             container_node += literal
 
+            nodes_latex.append(container_node)
+
+        def get_info_preamble(info_type : str) -> str:
+            known_info_type : Dict[str, str] = {
+                'build'   : '\\textbf{Build output}',
+                'run'     : '\\textbf{Runtime output}',
+                'compile' : '\\textbf{Compilation output}',
+                'prove'   : '\\textbf{Prover output}'
+            }
+            if info_type in known_info_type:
+                return known_info_type[info_type]
+            else:
+                return "Let's " + info_type + " the example:"
+
+        block_info : Dict[str, str] = code_block_info.get_info()
+
+        for info_type in sorted(block_info):
+
+            if block_info[info_type] == "":
+                # Do not show empty boxes
+                continue
+
+            preamble_node = nodes.container(
+                '', literal_block=False,
+                classes=[])
+
+            preamble_raw = nodes.raw('',
+                                     get_info_preamble(info_type),
+                                     format='latex')
+
+            preamble_node += preamble_raw
+
+            container_node = nodes.container(
+                '', literal_block=True,
+                classes=['literal-block-wrapper'])
+
+            literal = nodes.literal_block('',
+                                          block_info[info_type],
+                                          format='latex')
+            literal['language'] = 'none'
+            literal['source'] = info_type
+
+            caption = nodes.caption('', info_type)
+            caption.source = literal.source
+            caption.line = literal.line
+
+            # container_node += caption
+            container_node += literal
+
+            nodes_latex.append(preamble_node)
             nodes_latex.append(container_node)
 
         return nodes_latex
@@ -147,7 +199,10 @@ class WidgetCodeDirective(Directive):
 
             # Attemping to detect HTML or Latex output by checking for 'html' in tags
             if 'html' not in self.state.state_machine.document.settings.env.app.tags.tags:
-                nodes_latex = self.latex(widget)
+                code_block_info = CodeBlockInfo(project_name=widget.name,
+                                                filename=self.content.items[0][0],
+                                                line_number=self.content.items[0][1] - 1)
+                nodes_latex = self.latex(widget, code_block_info)
 
             # insert widget into the template
             template = jinja_env.get_template('widget.html')

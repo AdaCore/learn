@@ -169,7 +169,7 @@ assembler as well as source-level variables to be used for input and output:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Assembly_Code
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Assembly_Code
 
     with System.Machine_Code; use System.Machine_Code;
     with Interfaces;          use Interfaces;
@@ -350,7 +350,7 @@ obvious when looking at this code snippet:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_C_Embedded_Dev.Embedded.Fixed_Point
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Embedded.Fixed_Point
 
     package Fixed_Definitions is
 

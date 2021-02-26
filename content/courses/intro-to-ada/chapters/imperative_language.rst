@@ -35,24 +35,26 @@ Here's a very simple imperative Ada program:
 
 which we'll assume is in the source file :file:`greet.adb`.
 
-If you compile that source with the GNAT compiler and run the executable,
-you will get an unsurprising result.
+.. only:: builder_html
 
-.. code-block:: sh
+    If you compile that source with the GNAT compiler and run the executable,
+    you will get an unsurprising result.
 
-    $ gprbuild greet.adb
-    using project file [...]_default.gpr
-    Compile
-       [Ada]          greet.adb
-    Bind
-       [gprbind]      greet.bexch
-       [Ada]          greet.ali
-    Link
-       [link]         greet.adb
+    .. code-block:: sh
 
-     $ ./greet
-    Hello, World!
-     $
+        $ gprbuild greet.adb
+        using project file [...]_default.gpr
+        Compile
+           [Ada]          greet.adb
+        Bind
+           [gprbind]      greet.bexch
+           [Ada]          greet.ali
+        Link
+           [link]         greet.adb
+
+         $ ./greet
+        Hello, World!
+         $
 
 There are several noteworthy things in the above program:
 
@@ -118,7 +120,7 @@ and subprogram parameter modes.
 
 Ada's :ada:`if` statement is pretty unsurprising in form and function:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -156,7 +158,7 @@ integer value).
 Here's a slight variation on the example, which illustrates an :ada:`if` statement
 with an :ada:`else` part:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive_2
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive_2
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -180,7 +182,7 @@ displays the value followed by the String " is not a positive number".
 Our final variation illustrates an :ada:`if` statement with :ada:`elsif`
 sections:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -251,16 +253,17 @@ discrete range.
        end loop;
     end Greet_5a;
 
-Executing this procedure yields the following output:
+.. only:: builder_html
 
-.. code-block:: sh
+    Executing this procedure yields the following output:
 
-   Hello, World! 1
-   Hello, World! 2
-   Hello, World! 3
-   Hello, World! 4
-   Hello, World! 5
+    .. code-block:: sh
 
+       Hello, World! 1
+       Hello, World! 2
+       Hello, World! 3
+       Hello, World! 4
+       Hello, World! 5
 
 A few things to note:
 
@@ -298,15 +301,17 @@ To iterate backwards over a range, use the :ada:`reverse` keyword:
        end loop;
     end Greet_5a_Reverse;
 
-Executing this procedure yields the following output:
+.. only:: builder_html
 
-.. code-block:: sh
+    Executing this procedure yields the following output:
 
-   Hello, World! 5
-   Hello, World! 4
-   Hello, World! 3
-   Hello, World! 2
-   Hello, World! 1
+    .. code-block:: sh
+
+       Hello, World! 5
+       Hello, World! 4
+       Hello, World! 3
+       Hello, World! 2
+       Hello, World! 1
 
 The bounds of a :ada:`for` loop may be computed at run-time; they
 are evaluated once, before the loop body is executed.  If the value of the
@@ -418,7 +423,7 @@ but with some important differences.
 Here's an example, a variation of a program that was shown earlier
 with an :ada:`if` statement:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction_2
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction_2
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -542,7 +547,7 @@ A declaration cannot appear as a statement. If you need to declare a local
 variable amidst the statements, you can introduce a new declarative region with
 a block statement:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_6
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_6
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -589,7 +594,7 @@ If expressions
 Here's an alternative version of an example we saw earlier; the :ada:`if`
 statement has been replaced by an :ada:`if` expression:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;

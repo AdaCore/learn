@@ -28,7 +28,7 @@ Instantiation
 Here's an example showing the instantiation and declaration of a
 vector :ada:`V`:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Inst
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Standard_Library.Show_Vector_Inst
 
     with Ada.Containers.Vectors;
 

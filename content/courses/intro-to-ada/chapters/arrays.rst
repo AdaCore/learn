@@ -12,7 +12,6 @@ Arrays in Ada are used to define contiguous collections of elements that can be
 selected by indexing. Here's a simple example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Greet
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -72,7 +71,6 @@ to index into the array.
     equivalence between an array and a pointer to its initial element.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Array_Bounds_Example
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -113,7 +111,6 @@ Since you can use any discrete type to index an array, enumeration types
 are permitted.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Month_Example
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -192,7 +189,7 @@ an element outside of the bounds of the array, you will get a run-time error
 instead of accessing random memory as in unsafe languages.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Greet_3
-    :class: ada-run, ada-run-expect-failure
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -317,7 +314,6 @@ in that case, the bounds will need to be provided when creating instances of
 the type.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Unconstrained_Array_Example
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -414,7 +410,6 @@ literals, as we can see in the example below.
         end String_Literals;
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Greet_4
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -439,7 +434,6 @@ type if you supply an initialization, since the bounds can be deduced from the
 initialization expression.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Greet_5
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -510,7 +504,8 @@ cases like this one, it is impossible for a compiler to know in the general
 case if you are assigning a value of the correct length, so this violation will
 generally result in a run-time error.
 
-.. attention::
+.. admonition:: Attention
+
     While we will learn more about this later, it is important to know
     that arrays are not the only types whose instances might be of unknown
     size at compile-time.
