@@ -110,7 +110,7 @@ class WidgetCodeDirective(Directive):
             caption.source = literal.source
             caption.line = literal.line
 
-#           container_node += caption
+            container_node += caption
             container_node += literal
 
             nodes_latex.append(container_node)
