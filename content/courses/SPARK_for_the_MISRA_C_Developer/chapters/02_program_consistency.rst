@@ -150,25 +150,28 @@ unit available directly:
 
 Here, both units :ada:`Ada.Text_IO` and :ada:`Helper` define a procedure
 :ada:`Put_Line` taking a :ada:`String` as argument, so the compiler cannot
-disambiguate the direct call to :ada:`Put_Line` and issues an error. Here is
-output from AdaCore's GNAT Ada compiler:
+disambiguate the direct call to :ada:`Put_Line` and issues an error.
 
-::
+.. only:: builder_html
 
-     1.     with Ada.Text_IO; use Ada.Text_IO;
-     2.     with Helper; use Helper;
-     3.
-     4.     procedure Hello_World is
-     5.     begin
-     6.        Ada.Text_IO.Put_Line ("hello, world!");
-     7.        Helper.Put_Line ("hello, world!");
-     8.        Put_Line ("hello, world!");  --  ERROR
+    Here is output from AdaCore's GNAT Ada compiler:
+
+    ::
+
+         1.     with Ada.Text_IO; use Ada.Text_IO;
+         2.     with Helper; use Helper;
+         3.
+         4.     procedure Hello_World is
+         5.     begin
+         6.        Ada.Text_IO.Put_Line ("hello, world!");
+         7.        Helper.Put_Line ("hello, world!");
+         8.        Put_Line ("hello, world!");  --  ERROR
                |
-        >>> ambiguous expression (cannot resolve "Put_Line")
-        >>> possible interpretation at helper.ads:2
-        >>> possible interpretation at a-textio.ads:508
+            >>> ambiguous expression (cannot resolve "Put_Line")
+            >>> possible interpretation at helper.ads:2
+            >>> possible interpretation at a-textio.ads:508
 
-     9.     end Hello_World;
+         9.     end Hello_World;
 
 Note that it helpfully points to
 candidate declarations, so that the user can decide which qualified name to use
@@ -336,26 +339,27 @@ declarations from what is called the "visible part" of the spec
        Body_Put_Line ("hello, world!");  --  ERROR
     end Hello_World;
 
-Here's the output from AdaCore's GNAT compiler:
+.. only:: builder_html
 
-::
+    Here's the output from AdaCore's GNAT compiler:
 
-     1.     with Helper; use Helper;
-     2.
-     3.     procedure Hello_World is
-     4.     begin
-     5.        Public_Put_Line ("hello, world!");
-     6.        Private_Put_Line ("hello, world!");  --  ERROR
-               |
-        >>> "Private_Put_Line" is not visible
-        >>> non-visible (private) declaration at helper.ads:4
+    ::
 
-     7.        Body_Put_Line ("hello, world!");  --  ERROR
-               |
-        >>> "Body_Put_Line" is undefined
+         1.     with Helper; use Helper;
+         2.
+         3.     procedure Hello_World is
+         4.     begin
+         5.        Public_Put_Line ("hello, world!");
+         6.        Private_Put_Line ("hello, world!");  --  ERROR
+                   |
+            >>> "Private_Put_Line" is not visible
+            >>> non-visible (private) declaration at helper.ads:4
 
-     8.     end Hello_World;
+         7.        Body_Put_Line ("hello, world!");  --  ERROR
+                   |
+            >>> "Body_Put_Line" is undefined
 
+         8.     end Hello_World;
 
 Note the different errors on the calls to the private and body versions of
 :ada:`Put_Line`. In the first case the compiler can locate the candidate procedure
