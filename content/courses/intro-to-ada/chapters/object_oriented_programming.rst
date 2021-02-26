@@ -329,7 +329,9 @@ type, namely an object of a classwide type.
        --  Dispatching: Calls My_Class.Foo
     end Main;
 
-.. attention:: You can convert an object of type :ada:`Derived` to an
+.. admonition:: Attention
+
+    You can convert an object of type :ada:`Derived` to an
     object of type :ada:`My_Class`. This is called a *view conversion* in
     Ada parlance and is useful, for example, if you want to call a
     parent method.

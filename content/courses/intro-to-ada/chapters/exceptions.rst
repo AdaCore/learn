@@ -99,7 +99,7 @@ can add it to the statements block of your current subprogram:
           Put ("Cannot open input file");
     end Open_File;
 
-.. attention::
+.. admonition:: Attention
 
     Exception handlers have an important restriction that
     you need to be careful about: Exceptions raised in the declarative

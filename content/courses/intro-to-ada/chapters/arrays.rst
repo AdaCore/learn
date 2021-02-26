@@ -504,7 +504,8 @@ cases like this one, it is impossible for a compiler to know in the general
 case if you are assigning a value of the correct length, so this violation will
 generally result in a run-time error.
 
-.. attention::
+.. admonition:: Attention
+
     While we will learn more about this later, it is important to know
     that arrays are not the only types whose instances might be of unknown
     size at compile-time.
