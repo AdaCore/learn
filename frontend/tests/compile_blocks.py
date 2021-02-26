@@ -482,6 +482,10 @@ def analyze_file(rst_file):
                 project_block_dir = make_project_block_dir()
 
                 if block.language == "ada":
+
+                    def remove_string(some_text, rem):
+                        return re.sub(".*" + rem + ".*\n?","", some_text)
+
                     try:
                         out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f",
                                   main_file)
@@ -493,6 +497,8 @@ def analyze_file(rst_file):
                             print(e.output)
                             has_error = True
                         out = str(e.output.decode("utf-8"))
+
+                    out = remove_string(out, "using project")
                     with open(project_block_dir + "/build.log", u"w") as logfile:
                         logfile.write(out)
 
