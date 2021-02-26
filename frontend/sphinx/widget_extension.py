@@ -102,8 +102,7 @@ class WidgetCodeDirective(Directive):
                                             f.content,
                                             format='latex')
             literal['language'] = self.arguments[0].split(' ')[0]
-            literal['linenos'] = 'linenos' in self.options or \
-                'lineno-start' in self.options
+            literal['linenos'] = True
             literal['source'] = f.basename
 
             caption = nodes.caption('', f.basename)
