@@ -71,6 +71,8 @@ of the type they're being called upon. For example, a swap macro may look like:
         SWAP (int, a, b);
 
         printf("a = %d, b = %d\n", a, b);
+
+        return 0;
     }
 
 Ada offers a way to declare this kind of functions as a generic, that is, a
@@ -602,6 +604,8 @@ is only used for debugging:
     #ifdef DEBUG
         printf("func(%d) => %d\n", a, b);
     #endif
+
+        return 0;
     }
 
 Here, the block indicated by the :c:`DEBUG` flag is only included in the build
@@ -755,6 +759,8 @@ we define the corresponding value of :c:`MOD_VALUE`.
 
         a = 10;
         b = func(a);
+
+        return 0;
     }
 
 If not defined outside, the code above will compile version #1 of the
@@ -869,6 +875,8 @@ with a pointer to an array:
     int main(int argc, const char * argv[])
     {
         S v = init_s (9);
+
+        return 0;
     }
 
 Here, we need to explicitly allocate the :c:`a` array of the :c:`S` struct
@@ -1051,6 +1059,8 @@ We can implement this example in C by using unions:
 
         display (f);
         display (i);
+
+        return 0;
     }
 
 Similar to the Ada code, we declare :ada:`f` containing a floating-point value,
@@ -1265,6 +1275,8 @@ example:
 
         f = calculate (0.5, 1.0, &success);
         display (f, success);
+
+        return 0;
     }
 
 In this code, we're using the output parameter :ada:`success` of the
@@ -1287,6 +1299,8 @@ another computation. For example:
         f = f * 0.25;   // Using f in another computation even though
                         // calculate() returned a dummy value due to error!
                         // We should have evaluated "success", but we didn't.
+
+        return 0;
     }
 
 We cannot prevent access to the returned value or, at least, force the caller
@@ -2181,6 +2195,8 @@ This is an example on how to declare and use pointers to functions in C:
         {
             printf("ERROR: no version of show_msg() selected!\n");
         }
+
+        return 0;
     }
 
 The example above contains two versions of the :c:`show_msg()` function:
@@ -2325,6 +2341,8 @@ calls a callback function (:c:`process_one`) to process a list of values:
         {
             printf("Value [%d] = %d\n", i, values[i]);
         }
+
+        return 0;
     }
 
 As mentioned previously, :c:`process_values()` doesn't have any knowledge about

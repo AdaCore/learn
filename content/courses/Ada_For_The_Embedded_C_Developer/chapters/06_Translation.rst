@@ -411,6 +411,8 @@ call could be translated:
     int main(int argc, const char * argv[])
     {
         registerInterface_Initialize(15);
+
+        return 0;
     }
 
 [Ada]
@@ -478,6 +480,8 @@ Dynamically allocated arrays can be directly allocated on the stack:
 
     int main() {
         int *a = malloc(sizeof(int) * 10);
+
+        return 0;
     }
 
 [Ada]
@@ -511,6 +515,8 @@ discriminant:
         S v;
 
         v.a = malloc(sizeof(int) * 10);
+
+        return 0;
     }
 
 [Ada]
@@ -565,6 +571,8 @@ through an :ada:`Address` clause associated to a variable, for example:
     int main(int argc, const char * argv[])
     {
         int * r = (int *)0xFFFF00A0;
+
+        return 0;
     }
 
 [Ada]
@@ -613,6 +621,8 @@ boolean flags. In C, this would be done through masks, e.g.:
         int value = 0;
 
         value |= FLAG_2 | FLAG_4;
+
+        return 0;
     }
 
 In Ada, the above can be represented through a Boolean array of enumerate
@@ -651,6 +661,8 @@ representation is needed or more complex data are used:
         int value = 0;
 
         value = (2 << 1) | 1;
+
+        return 0;
     }
 
 [Ada]
@@ -831,6 +843,8 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
         v = v | (1 << 2);
 
         printf("v = %d\n", v);
+
+        return 0;
     }
 
 .. admonition:: Important
@@ -1060,6 +1074,8 @@ bit-shifting and masking to set that specific bit:
         {
             printf("a[%d] = %d\n", i, a[i]);
         }
+
+        return 0;
     }
 
 Since we can use this pattern for any arbitrary data type, this allows us to
@@ -1181,6 +1197,8 @@ shifting and masking to access the bits of that byte. Here, we use the
         rec r = {5, "abc"};
 
         transmit(&r, sizeof(r) * 8);
+
+        return 0;
     }
 
 Similarly, we can write a subprogram that converts a bit-field |mdash| which
@@ -1377,6 +1395,8 @@ individual bytes. For example:
         printf("r2 = ");
         display_r (&r2);
         printf("\n");
+
+        return 0;
     }
 
 Here, :c:`to_r` casts both pointer parameters to pointers to :c:`char` to get

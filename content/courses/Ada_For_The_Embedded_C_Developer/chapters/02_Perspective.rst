@@ -482,6 +482,8 @@ write a for loop:
         int vals[] = { 2, 2, 4, 4 };
 
         printf("Average: %d\n", average(vals, 4));
+
+        return 0;
     }
 
 [C]
@@ -509,6 +511,8 @@ write a for loop:
         int vals[] = { 2, 2, 4, 4 };
 
         printf("Average: %d\n", average(vals, 4));
+
+        return 0;
     }
 
 For the fun of it, let's also see the Ada way to do this:
@@ -917,6 +921,8 @@ Let's start with some syntax:
             }
             printf("sum = %d\n", sum);
         }
+
+        return 0;
     }
 
 [Ada]
@@ -1284,6 +1290,8 @@ following example:
     int main(int argc, const char * argv[])
     {
         weakTyping();
+
+        return 0;
     }
 
 Are the three programs above equivalent? It may seem like Ada is just adding
@@ -1432,6 +1440,8 @@ Ada enumerations work similarly to C :c:`enum`:
     int main(int argc, const char * argv[])
     {
         enum Day d = Monday;
+
+        return 0;
     }
 
 But even though such enumerations may be implemented by the compiler as numeric
@@ -1463,6 +1473,8 @@ original :c:`enum` declaration:
         enum Day d = Monday;
 
         printf("d = %d\n", d);
+
+        return 0;
     }
 
 But in Ada you must use both a type definition for :ada:`Day` as well as a
@@ -1698,6 +1710,8 @@ following declaration:
     {
         unsigned int x = 42;
         printf("x = %u\n", x);
+
+        return 0;
     }
 
 Another strategy is to declare subtypes for existing signed types and specify
@@ -1757,6 +1771,8 @@ consider this C example:
         /* Now: x == 0 */
 
         printf("x = %u\n", x);
+
+        return 0;
     }
 
 The corresponding code in Ada raises an exception:
@@ -1896,6 +1912,8 @@ equivalent in C:
         printf("%c", c);
         c++;
         printf("%c", c);
+
+        return 0;
     }
 
 Other interesting examples are the :ada:`'First` and :ada:`'Last` attributes
@@ -1954,6 +1972,8 @@ values from :ada:`'a'` to :ada:`'z'`:
             Arr [I] = C++;
             printf ("%c ", Arr [I]);
         }
+
+        return 0;
     }
 
 In C, only the size of the array is given during declaration. In Ada, array
@@ -2056,6 +2076,8 @@ the above behavior, actual pointer types would have to be defined and used.
         for (int i = 0; i < 2; i++) {
             printf("%d\n", A2[i]);
         }
+
+        return 0;
     }
 
 In all of the examples above, the source and destination arrays must have
@@ -2132,6 +2154,8 @@ arrays as opposed to their addresses:
         else {
             printf("A1 != A2\n");
         }
+
+        return 0;
     }
 
 You can assign to all the elements of an array in each language in different
@@ -2236,6 +2260,8 @@ are some simple records:
         struct R V;
         V.A = 0;
         printf("V.A = %d\n", V.A);
+
+        return 0;
     }
 
 Ada allows specification of default values for fields just like C. The values
@@ -2348,6 +2374,8 @@ example:
 
         print_r(&V1, "V1");
         print_r(&V2, "V2");
+
+        return 0;
     }
 
 There are many commonalities between the Ada and C semantics above. In Ada and
@@ -2418,6 +2446,8 @@ Here's now a similar example, but using heap allocation instead:
 
         print_r(V1, "V1");
         print_r(V2, "V2");
+
+        return 0;
     }
 
 In this example, an object of type :ada:`R` is allocated on the heap. The same
@@ -2504,6 +2534,8 @@ objects that have gone out of scope. For example:
     {
         int Var;
         int * Ptr = &Var;
+
+        return 0;
     }
 
 To deallocate objects from the heap in Ada, it is necessary to use a
@@ -2538,6 +2570,8 @@ the access type as follows:
     {
         int * my_pointer = malloc (sizeof(int));
         free (my_pointer);
+
+        return 0;
     }
 
 We'll discuss generics later :ref:`in this section <Genericity>`.
@@ -2665,6 +2699,8 @@ Here's a first example:
 
         printf("v1: %d\n", v1);
         printf("v2: %d\n", v2);
+
+        return 0;
     }
 
 The first two declarations for :ada:`Proc` and :ada:`Func` are specifications
