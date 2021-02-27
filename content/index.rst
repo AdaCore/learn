@@ -84,17 +84,17 @@ Download the courses as PDF books for offline reading:
 
     .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
         :target: https://learn.adacore.com/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf
-        :alt: Ada_For_The_CPP_Java_Developer.pdf
+        :alt: Ada for the C++ and Java Developer (PDF)
         :width: 149pt
 
     .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
         :target: https://learn.adacore.com/pdf_books/courses/Ada_For_The_Embedded_C_Developer.pdf
-        :alt: Ada_For_The_Embedded_C_Developer.pdf
+        :alt: Ada for the Embedded C Developer (PDF)
         :width: 149pt
 
     .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
         :target: https://learn.adacore.com/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf
-        :alt: SPARK_for_the_MISRA_C_Developer.pdf
+        :alt: SPARK for the MISRA-C Developer (PDF)
         :width: 149pt
 
 -------------
