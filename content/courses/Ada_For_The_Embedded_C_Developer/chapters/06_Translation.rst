@@ -27,11 +27,9 @@ are all lower case.
 Following this scheme doesn't preclude adding additional,
 project-specific rules.
 
-Interfacing C and Ada
----------------------
 
-Manual Interfacing
-~~~~~~~~~~~~~~~~~~
+Manually interfacing C and Ada
+------------------------------
 
 Before even considering translating code from C to Ada, it's worthwhile to
 evaluate the possibility of keeping a portion of the C code intact, and only
@@ -130,7 +128,7 @@ And that's all that's necessary. Here's an example of a call to :ada:`Call`:
     end Use_My_Struct;
 
 Building and Debugging mixed language code
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------
 
 The easiest way to build an application using mixed C / Ada code is to create
 a simple project file for :program:`gprbuild` and specify C as an additional
@@ -189,7 +187,7 @@ devices. You can find more information about :program:`gprbuild` and
 course.
 
 Automatic interfacing
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 It may be useful to start interfacing Ada and C by using automatic binding
 generators. These can be done either by invoking :program:`gcc`
@@ -213,7 +211,7 @@ However, the automatic binding generator helps having a starting point which
 ensures compatibility of the Ada and the C code.
 
 Using Arrays in C interfaces
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
 
 It is relatively straightforward to pass an array from Ada to C. In particular,
 with the GNAT compiler, passing an array is equivalent to passing a pointer to
@@ -334,7 +332,7 @@ the C side in the first place. These are good places for careful peer reviews.
 .. _By_Value_Vs_By_Reference:
 
 By-value vs. by-reference types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 When interfacing Ada and C, the rules of parameter passing are a bit different
 with regards to what's a reference and what's a copy. Scalar types and pointers
@@ -385,7 +383,7 @@ is a mix of by-copy and by-reference calls, two different types need to be
 used on the Ada side.
 
 Naming and prefixes
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Because of the absence of namespaces, any global name in C tends to be very
 long. And because of the absence of overloading, they can even encode type
@@ -441,7 +439,7 @@ Note that in the above example, a :ada:`use` clause on
 .. _Pointers:
 
 Pointers
-~~~~~~~~
+--------
 
 The first thing to ask when translating pointers from C to Ada is: are they
 needed in the first place? In Ada, pointers (or access types) should only be
@@ -594,7 +592,7 @@ necessary.
 .. _Bitwise_Operations:
 
 Bitwise Operations
-~~~~~~~~~~~~~~~~~~
+------------------
 
 Bitwise operations such as masks and shifts in Ada should be relatively rarely
 needed, and, when translating C code, it's good practice to consider
@@ -718,7 +716,7 @@ above could also be literally translated to:
 .. _Mapping_Structures_To_Bit_Fields:
 
 Mapping Structures to Bit-Fields
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
 In the previous section, we've seen how to perform bitwise operations. In this
 section, we look at how to interpret a data type as a bit-field and perform
@@ -1411,7 +1409,7 @@ a byte-aligned pointer. Then, it simply copies the data byte-by-byte.
 .. _OverlaysVsUncheckedConversions:
 
 Overlays vs. Unchecked Conversions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Unchecked conversions are another way of converting between unrelated data
 types. This conversion is done by instantiating the generic
