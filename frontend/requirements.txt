@@ -1,4 +1,4 @@
-git+http://github.com/pygments/pygments/#egg=pygments==2.7.1.dev20201023
+Pygments==2.8.0
 Sphinx==2.2.1
 ipython==5.7.0
 sphinx_rtd_theme==0.5.0
