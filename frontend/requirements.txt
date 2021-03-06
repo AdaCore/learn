@@ -1,8 +1,8 @@
-git+http://github.com/pygments/pygments/#egg=pygments
+git+http://github.com/pygments/pygments/#egg=pygments==2.7.1.dev20201023
 Sphinx==2.2.1
 ipython==5.7.0
-sphinx_rtd_theme
-pydot-ng
-pyparsing
-graphviz
+sphinx_rtd_theme==0.5.0
+pydot-ng==2.0.0
+pyparsing==2.4.7
+graphviz==0.14.2
 coverage
