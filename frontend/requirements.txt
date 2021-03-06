@@ -5,4 +5,4 @@ sphinx_rtd_theme==0.5.0
 pydot-ng==2.0.0
 pyparsing==2.4.7
 graphviz==0.14.2
-coverage
+coverage==5.5
