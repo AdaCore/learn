@@ -51,7 +51,7 @@ declares a formal type :ada:`T` for the :ada:`Set` procedure.
     end Set;
 
 The declaration of :ada:`T` as :ada:`private` indicates that you can map
-any type to it. But you can also restrict the declaration to allow
+any definite type to it. But you can also restrict the declaration to allow
 only some types to be mapped to that formal type.  Here are some
 examples:
 
