@@ -48,7 +48,7 @@ Advanced Ada
     :caption: Contents:
 
 
-    Typing <chapters/typing>
+    Subprograms <chapters/subprograms>
     Strong Typing <chapters/strong_typing>
     Access Types <chapters/access_types>
     Limited Types <chapters/limited_types>

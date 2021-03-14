@@ -1,5 +1,5 @@
-Typing
-======
+Subprograms
+===========
 
 .. include:: ../../global.txt
 
