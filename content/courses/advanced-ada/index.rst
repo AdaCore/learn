@@ -53,8 +53,11 @@ Advanced Ada
 
 
     Subprograms <chapters/subprograms>
+    Packages <chapters/packages>
+    Object-Oriented Programming <chapters/oo_prog>
     Strong Typing <chapters/strong_typing>
     Access Types <chapters/access_types>
     Limited Types <chapters/limited_types>
     Generics <chapters/generics>
+    Design Patterns <chapters/design_patterns>
     Interfacing With C/C++ <chapters/interfacing_with_cpp>
