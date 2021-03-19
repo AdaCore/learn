@@ -359,8 +359,8 @@ Incidentally, the similar but distinct problem of input sanitization,
 where possibly invalid data is transformed into something that is known
 valid prior to use, can be handled in the same way.
 
-Table access
-------------
+Example: Table access
+---------------------
 
 In this section, we discuss an application that accesses a two-dimensional
 table. We first look into a typical implementation, and then discuss how
