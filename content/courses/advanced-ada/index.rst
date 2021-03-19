@@ -33,6 +33,10 @@ Advanced Ada
 
     This course will teach you advanced topics of the Ada programming language.
 
+    This document was written by Gustavo A. Hoffmann and Bob Duff, with
+    contributions by Patrick Rogers, Ramón Fernández, Quentin Ochem,
+    Emmanuel Briot, and Yannick Moy.
+
 .. only:: builder_html
 
     .. container:: pdf-download
