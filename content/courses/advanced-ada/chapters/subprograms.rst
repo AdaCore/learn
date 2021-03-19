@@ -22,7 +22,7 @@ In most languages that support overloading, overload resolution is done
 constructs. As usual, computer folks draw their trees upside-down, with
 the root at the top. For example, if we have two procedures :ada:`Print`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Overloading
 
     procedure Show_Overloading is
 
@@ -47,7 +47,7 @@ the type of :ada:`X` determines which :ada:`Print` is meant in the call.
 
 Ada is unusual in that it supports top-down overload resolution as well:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Overloading
 
     procedure Show_Top_Down_Overloading is
 
@@ -78,7 +78,7 @@ top-down information.
 
 If we overload things too heavily, we can cause ambiguities:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Overloading
     :class: ada-expect-compile-error
 
     procedure Show_Overloading_Error is
@@ -127,7 +127,7 @@ at it, for example appending ``L`` (letter el) means "the type of this
 literal is long int". That sort of kludge won't work in Ada, because we
 have an open-ended set of integer types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Literal_Resolution
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Literal_Resolution
 
     procedure Show_Literal_Resolution is
 
@@ -152,7 +152,7 @@ literal notation as being overloaded on all integer types.
 Developers sometimes wonder why the compiler can't resolve something that
 seems obvious. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Literal_Resolution_Error
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Literal_Resolution_Error
     :class: ada-expect-compile-error
 
     procedure Show_Literal_Resolution_Error is
@@ -187,7 +187,7 @@ the context in which the aggregate appears). Bottom-up information is not
 used; that is, the compiler does not look inside the aggregate in order to
 determine its type.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Record_Resolution_Error
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Record_Resolution_Error
     :class: ada-expect-compile-error
 
     procedure Show_Record_Resolution_Error is
