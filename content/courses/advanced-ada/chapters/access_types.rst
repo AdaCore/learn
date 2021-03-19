@@ -6,7 +6,11 @@ Access Types
 Null & Not Null Access
 ----------------------
 
-.. sectionauthor:: Bob Duff
+.. note::
+
+    This section was originally written by Bob Duff and published as
+    `Gem #23: Null Considered Harmful <https://www.adacore.com/gems/ada-gem-23>`_
+    and `Gem #24 <https://www.adacore.com/gems/ada-gem-24>`_.
 
 Ada, like many languages, defines a special :ada:`null` value for access
 types. All values of an access type designate some object of the
@@ -351,9 +355,13 @@ caller.
 Accessibility checks
 --------------------
 
-.. sectionauthor:: Ramón Fernández
+.. note::
 
-.. sectionauthor:: Bob Duff
+    This section was originally written by Ramón Fernández and Bob Duff, and
+    published as
+    `Gem #33: Accessibility Checks <https://www.adacore.com/gems/gem-33>`_,
+    `Gem #41 <https://www.adacore.com/gems/gem-41>`_ and
+    `Gem #44: <https://www.adacore.com/gems/gem-44>`_.
 
 Introduction
 ~~~~~~~~~~~~

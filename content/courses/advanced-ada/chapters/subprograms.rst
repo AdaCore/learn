@@ -6,7 +6,10 @@ Subprograms
 Overloading
 -----------
 
-.. sectionauthor:: Bob Duff
+.. note::
+
+    This section was originally written by Bob Duff and published as
+    `Gem #50: Overload Resolution <https://www.adacore.com/gems/gem-50>`_.
 
 Ada allows overloading of subprograms, which means that two or more
 subprogram declarations with the same name can be visible at the same

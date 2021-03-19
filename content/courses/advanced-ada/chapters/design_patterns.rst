@@ -11,6 +11,11 @@ Design Patterns
 Scope Locks
 -----------
 
+.. note::
+
+    This section was originally written by Patrick Rogers and published as
+    `Gem #70: The Scope Locks Idiom <https://www.adacore.com/gems/gem-70>`_
+
 Like the classical *monitor* concept on which they are based, protected
 types provide mutually exclusive access to internal variables. Clients can
 only access these variables indirectly, by means of a procedural
@@ -274,6 +279,11 @@ much more robust and requires very little change.
 Visitor
 -------
 
+.. note::
+
+    This section was originally published as
+    `Gem #113: Visitor Pattern in Ada <https://www.adacore.com/gems/gem-113-visitor-pattern-in-ada>`_
+
 Imagine that you have a UML model and you want to generate code from it.
 A convenient approach is to have a *code generator* object, which has a
 set of subprograms to handle each kind of UML element (one that generates
@@ -505,6 +515,11 @@ as a parameter to :ada:`Visit`, as we've implemented above.
 
 Overridable Class Attributes
 ----------------------------
+
+.. note::
+
+    This section was originally published as
+    `Gem #117: Design Pattern: Overridable Class Attributes in Ada <https://www.adacore.com/gems/gem-117-design-pattern-overridable-class-attributes-in-ada-2012>`_
 
 Most object-oriented programming languages provide a facility for
 declaring variables that are shared by all objects of a given class. In

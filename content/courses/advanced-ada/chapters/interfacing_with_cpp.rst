@@ -3,8 +3,6 @@ Interfacing with C and C++
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
 Interfacing with C
 ------------------
 

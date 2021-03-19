@@ -6,7 +6,12 @@ Limited Types
 Limited types and aggregates
 ----------------------------
 
-.. sectionauthor:: Bob Duff
+.. note::
+
+    This section was originally written by Bob Duff and published as
+    `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_,
+    `Gem #2 <https://www.adacore.com/gems/gem-2>`_, and
+    `Gem #3 <https://www.adacore.com/gems/gem-3>`_.
 
 Full coverage rules
 ~~~~~~~~~~~~~~~~~~~
@@ -407,7 +412,10 @@ which might mean "default-initialize to the empty set" or might mean
 Return objects
 --------------
 
-.. sectionauthor:: Bob Duff
+.. note::
+
+    This section was originally written by Bob Duff and published as
+    `Gem #10: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-10>`_.
 
 Extended return statements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -596,7 +604,10 @@ whenever you want a local name for the function result:
 Building objects from constructors
 ----------------------------------
 
-.. sectionauthor:: Bob Duff
+.. note::
+
+    This section was originally written by Bob Duff and published as
+    `Gem #11: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-11>`_.
 
 We've earlier seen examples of constructor functions for limited types
 similar to this:
@@ -777,7 +788,10 @@ we can't copy a limited object into some other object:
 Default initialization
 ----------------------
 
-.. sectionauthor:: Bob Duff
+.. note::
+
+    This section was originally written by Bob Duff and published as
+    `Gem #12: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-12>`_.
 
 Prior to Ada 2005, the following style was common:
 

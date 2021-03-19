@@ -3,8 +3,6 @@ Generics
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
 .. _FormalPackages:
 
 Formal packages

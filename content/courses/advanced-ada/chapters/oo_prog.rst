@@ -8,7 +8,10 @@ Object-Oriented Programming
 Extending Interfaces
 --------------------
 
-.. sectionauthor:: Quentin Ochem
+.. note::
+
+    This section was originally written by Quentin Ochem and published as
+    `Gem #48: Extending Interfaces in Ada 2005 <https://www.adacore.com/gems/gem-48>`_.
 
 Using new interfaces
 ~~~~~~~~~~~~~~~~~~~~
@@ -261,7 +264,11 @@ overridden the primitive.
 Calling inherited subprograms
 -----------------------------
 
-.. sectionauthor:: Emmanuel Briot
+.. note::
+
+    This section was originally written by Emmanuel Briot and published as blog
+    post
+    `Calling inherited subprograms in Ada <https://blog.adacore.com/calling-inherited-subprograms-in-ada>`_.
 
 In object-oriented code, it is often the case that we need to call
 inherited subprograms. Some programing languages make it very easy by
