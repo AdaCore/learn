@@ -3,6 +3,46 @@ Limited Types
 
 .. include:: ../../global.txt
 
+Assignment and equality
+-----------------------
+
+.. todo::
+
+    Complete section!
+
+
+Limited types as parameter
+--------------------------
+
+.. todo::
+
+    Complete section!
+
+
+Initialization and function return
+----------------------------------
+
+.. todo::
+
+    Complete section!
+
+
+Limited record elements
+-----------------------
+
+.. todo::
+
+    Complete section!
+
+
+Private implementation of limited types
+---------------------------------------
+
+.. todo::
+
+    Complete section!
+
+
 Limited types and aggregates
 ----------------------------
 

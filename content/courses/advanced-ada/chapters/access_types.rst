@@ -3,6 +3,67 @@ Access Types
 
 .. include:: ../../global.txt
 
+Ragged arrays
+-------------
+
+.. todo::
+
+    Complete section!
+
+
+Access to subprograms
+---------------------
+
+.. todo::
+
+    Complete section!
+
+
+Aliasing
+--------
+
+.. admonition:: Relevant topics
+
+    - aliased objects
+    - aliased parameters
+
+.. todo::
+
+    Complete section!
+
+
+Dereferencing
+-------------
+
+.. todo::
+
+    Complete section!
+
+
+Implicit Dereferencing
+----------------------
+
+.. todo::
+
+    Complete section!
+
+
+Accessibility levels
+--------------------
+
+.. todo::
+
+    Complete section!
+
+
+Unchecked access
+----------------
+
+.. todo::
+
+    Complete section!
+
+
 Null & Not Null Access
 ----------------------
 
@@ -771,3 +832,12 @@ visibility on the objects it is printing.
 
 Observe that :ada:`That_Object` is not printed by the second call to
 :ada:`Print_All_Objects`, because it no longer exists at that time.
+
+
+Anonymous access types
+----------------------
+
+.. todo::
+
+    Complete section!
+

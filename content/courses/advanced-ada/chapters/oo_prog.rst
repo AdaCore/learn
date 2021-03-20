@@ -3,6 +3,31 @@ Object-Oriented Programming
 
 .. include:: ../../global.txt
 
+Primitives
+----------
+
+.. todo::
+
+    Complete section!
+
+
+Abstract types and subprograms
+------------------------------
+
+.. todo::
+
+    Complete section!
+
+
+Interfaces
+----------
+
+.. todo::
+
+    Complete section!
+
+
+
 Example: Extending Interfaces
 -----------------------------
 
@@ -504,3 +529,42 @@ change is needed for the body.
 This is not a new syntax nor a new idiom, but is worth considering it when
 one is developing a complex hierarchy of types, or at least a hierarchy
 that is likely to change regularly in the future.
+
+
+Dynamic Polymorphism
+--------------------
+
+.. todo::
+
+    Complete section!
+
+
+References
+----------
+
+.. note::
+
+    This section was originally written by Maxim Reznik and Nicolas Setton, and
+    published as blog post
+    `Using reference types to handle persistent objects <http://blog.adacore.com/use-ref-types-to-persistent-object>`_.
+
+.. todo::
+
+    Complete section!
+
+
+Controlled types
+----------------
+
+.. todo::
+
+    Complete section!
+
+
+``Ada.Tags`` package
+--------------------
+
+.. todo::
+
+    Complete section!
+

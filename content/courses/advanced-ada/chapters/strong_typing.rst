@@ -925,3 +925,14 @@ and reduces development time. At the same time, we're improving the
 documentation of the source-code and facilitating further improvements
 to the application.
 
+
+Discriminants
+-------------
+
+.. admonition:: Relevant topics
+
+    - discriminants in the context of strong typing
+
+.. todo::
+
+    Complete section!

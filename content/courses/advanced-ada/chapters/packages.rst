@@ -147,3 +147,32 @@ This is the test application in this case:
        Put_Line (Get_Extended_Title);
        Put_Line (Get_Extended_Author);
     end Main;
+
+
+Private packages
+----------------
+
+.. todo::
+
+    Complete section!
+
+
+Partial dependencies
+--------------------
+
+.. todo::
+
+    Complete section!
+
+
+Elaboration
+-----------
+
+.. admonition:: Relevant topics
+
+    - Pure packages
+    - `Elaboration control <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-10-2-1.html>`_
+
+.. todo::
+
+    Complete section!

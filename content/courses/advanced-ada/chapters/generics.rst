@@ -879,6 +879,32 @@ two instantiations of the :ada:`Display` procedure:
 - :ada:`Display_Name_Birthday`, which displays the full name and birthday
   of each person.
 
+Formal definite and indefinite types
+------------------------------------
+
+.. admonition:: Relevant topics
+
+    - definite and indefinite (sub)types in the context of generics
+    - discriminants
+        - :ada:`A'Constrained`
+
+.. todo::
+
+    Complete section!
+
+
+Formal private and derived types
+--------------------------------
+
+.. admonition:: Relevant topics
+
+    - `Formal Private and Derived Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-12-5-1.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Formal interfaces
 -----------------
 
