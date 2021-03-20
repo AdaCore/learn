@@ -3,8 +3,8 @@ Object-Oriented Programming
 
 .. include:: ../../global.txt
 
-Extending Interfaces
---------------------
+Example: Extending Interfaces
+-----------------------------
 
 .. note::
 
