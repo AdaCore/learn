@@ -38,7 +38,8 @@ Advanced Ada
 
     This document was written by Gustavo A. Hoffmann and Bob Duff, with
     contributions by Patrick Rogers, Ramón Fernández, Quentin Ochem,
-    Emmanuel Briot, and Yannick Moy.
+    Emmanuel Briot, Yannick Moy, Maxim Reznik, Nicolas Setton, Javier Miranda,
+    Arnaud Charlet, Franco Gasperoni, and Robert Dewar.
 
 .. only:: builder_html
 
