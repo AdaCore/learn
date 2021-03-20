@@ -1743,7 +1743,8 @@ Finally, the main application doesn't require adaptations:
        C.Set (2.1);
     end Show_Gen_Sync_Interface;
 
-Generic numeric types
+
+Formal numeric types
 ---------------------
 
 Ada supports the use of numeric types for generics. This can be used to
@@ -1761,7 +1762,7 @@ This is the corresponding syntax:
 In this section, we discuss generic floating-point and binary fixed-point
 types.
 
-Generic floating-point types
+Formal floating-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simple generic package
@@ -2013,8 +2014,8 @@ In this case, because the formal type is now based on :ada:`My_Float`, the
 corresponding operator for :ada:`My_Float` is used in the :ada:`Acc`
 procedure.
 
-Generic fixed-point types
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Formal fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simple generic package
 ^^^^^^^^^^^^^^^^^^^^^^
