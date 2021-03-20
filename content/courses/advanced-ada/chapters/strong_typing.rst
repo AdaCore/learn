@@ -474,8 +474,8 @@ need to maintain this application can immediately identify the purpose of
 :ada:`X` and use the variable accordingly.
 
 
-Multiple indices
-----------------
+Example: Multiple indices
+-------------------------
 
 In this section, we discuss another example where the use of strong typing
 is relevant. Let's consider an application with the following
