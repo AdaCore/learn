@@ -50,7 +50,7 @@ Appendix B: Standard Packages
     Complete section!
 
 :ada:`Interfaces` packages
-----------------------
+--------------------------
 
 .. admonition:: Relevant topics
 
