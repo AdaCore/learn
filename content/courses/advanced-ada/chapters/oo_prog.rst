@@ -539,20 +539,6 @@ Dynamic Polymorphism
     Complete section!
 
 
-References
-----------
-
-.. note::
-
-    This section was originally written by Maxim Reznik and Nicolas Setton, and
-    published as blog post
-    `Using reference types to handle persistent objects <http://blog.adacore.com/use-ref-types-to-persistent-object>`_.
-
-.. todo::
-
-    Complete section!
-
-
 Controlled types
 ----------------
 
@@ -563,6 +549,20 @@ Controlled types
 
 ``Ada.Tags`` package
 --------------------
+
+.. todo::
+
+    Complete section!
+
+
+References
+----------
+
+.. note::
+
+    This section was originally written by Maxim Reznik and Nicolas Setton, and
+    published as blog post
+    `Using reference types to handle persistent objects <http://blog.adacore.com/use-ref-types-to-persistent-object>`_.
 
 .. todo::
 
