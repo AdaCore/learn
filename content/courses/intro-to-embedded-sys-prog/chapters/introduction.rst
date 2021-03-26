@@ -116,9 +116,9 @@ general-purpose application. That said, the hardware details can be
 managed in Ada so that portability is maximized to the extent possible 
 for the application. 
 
-Strictly speaking, not all software can or should be absolutely 
+But strictly speaking, not all software can or should be absolutely 
 portable! If a specific device is required, well, the program won't work 
-with some other device. But tot he extent possible portability is 
+with some other device. But to the extent possible portability is 
 obviously a good thing. 
 
 Separation Principle
@@ -163,8 +163,8 @@ as well, but let's focus on the address.
 If the hardware presents an interface consisting of multiple fields 
 within individual memory cells, we can use a record type instead of a 
 single unsigned type representing a single word. Ada allows us to 
-specify the exact record layout, own to the individual bit level, for 
-any type we may need to use for the record components. Then when we 
+specify the exact record layout, down to the individual bit level, for 
+any types we may need to use for the record components. When we 
 declare the object we use that record type, again specifying the 
 starting address. Then we can just refer to the object's record 
 components as usual, having the compiler compute the address offsets 
@@ -185,3 +185,6 @@ products. Device drivers for timers, I2C, SPI, A/D and D/A converters,
 DMA, General Purpose I/O, LCD displays, sensors, and other devices are 
 included. The ADL is available on GitHub for both non-proprietary and 
 commercial use here: https://github.com/AdaCore/Ada_Drivers_Library. 
+
+An extensive description of a project using the ADL is available here:
+https://blog.adacore.com/making-an-rc-car-with-ada-and-spark
