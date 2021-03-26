@@ -76,7 +76,9 @@
   },
   "resolutions": {
     "minimist": "^1.2.2",
-    "acorn": "^7.1.1"
+    "acorn": "^7.1.1",
+    "is-svg": "^4.2.2",
+    "ssri": "^8.0.1"
   },
   "scripts": {
     "dev": "webpack-dev-server --open --config webpack.dev.js",
