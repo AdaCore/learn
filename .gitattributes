@@ -1,11 +1,6 @@
 # Reclassify `.rst` files as Ada:
 *.rst linguist-language=Ada
 
-# Exclude frontend/backend and internal folders
-#backend/*   linguist-vendored
-#frontend/*  linguist-vendored
-#internal/*  linguist-vendored
-
 # Force files to use LF for EOL
 *.rst text eol=lf
 *.sh text eol=lf
