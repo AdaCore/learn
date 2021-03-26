@@ -20,8 +20,9 @@ ROI, to be consistent. Of course, it's incredibly difficult to provide a firm
 answer to how much money can be saved by transitioning, as this is highly
 dependent on specific project objectives and constraints. We're going to
 provide qualitative and quantitative arguments here, from the perspective of a
-project that has to reach relatively high level of integrity, that is to say a
-system where the occurrence of a software failure is a relatively costly event.
+project that has to reach a relatively high level of integrity, that is to say
+a system where the occurrence of a software failure is a relatively costly 
+event.
 
 From a qualitative standpoint, there are various times in the software
 development life cycle where defects can be found:
@@ -69,7 +70,7 @@ of what to expect in terms of savings once the initial investment in switching
 to Ada is made. This is assuming everything else is equal, in particular that
 the level of integrity is the same. In many situations, the migration to Ada is
 justified by an increase in terms of integrity expectations, in which case it's
-expected that development costs will raise (it's more expensive to develop
+expected that development costs will rise (it's more expensive to develop
 better software) and Ada is viewed as a means to mitigate this rise in
 development costs.
 
