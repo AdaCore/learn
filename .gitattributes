@@ -2,9 +2,9 @@
 *.rst linguist-language=Ada
 
 # Exclude frontend/backend and internal folders
-backend/*   linguist-vendored
-frontend/*  linguist-vendored
-internal/*  linguist-vendored
+#backend/*   linguist-vendored
+#frontend/*  linguist-vendored
+#internal/*  linguist-vendored
 
 # Force files to use LF for EOL
 *.rst text eol=lf
