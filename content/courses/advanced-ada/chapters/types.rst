@@ -55,14 +55,6 @@ Type view
     Complete section!
 
 
-Extension Aggregates
---------------------
-
-.. todo::
-
-    Complete section!
-
-
 Data Representation
 -------------------
 

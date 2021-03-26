@@ -58,6 +58,7 @@ Advanced Ada
     Subprograms <chapters/subprograms>
     Packages <chapters/packages>
     Types <chapters/types>
+    Aggregates <chapters/aggregates>
     Object-Oriented Programming <chapters/oo_prog>
     Strong Typing <chapters/strong_typing>
     Arrays <chapters/arrays>
