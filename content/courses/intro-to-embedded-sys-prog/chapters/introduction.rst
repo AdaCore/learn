@@ -185,3 +185,6 @@ products. Device drivers for timers, I2C, SPI, A/D and D/A converters,
 DMA, General Purpose I/O, LCD displays, sensors, and other devices are 
 included. The ADL is available on GitHub for both non-proprietary and 
 commercial use here: https://github.com/AdaCore/Ada_Drivers_Library. 
+
+An extensive description of a project using the ADL is available here:
+https://blog.adacore.com/making-an-rc-car-with-ada-and-spark
