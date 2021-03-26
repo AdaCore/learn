@@ -62,6 +62,7 @@ Advanced Ada
     Object-Oriented Programming <chapters/oo_prog>
     Strong Typing <chapters/strong_typing>
     Arrays <chapters/arrays>
+    Strings <chapters/strings>
     Access Types <chapters/access_types>
     Limited Types <chapters/limited_types>
     Contracts <chapters/contracts>
