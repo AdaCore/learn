@@ -169,7 +169,7 @@ package. These include (as of 2019):
 - An Ada parser to develop custom tools (libadalang)
 
 Ada is, however, an internationally standardized language, and many companies
-are providing third party solution to complete the toolset. Overall, the
+are providing third party solutions to complete the toolset. Overall, the
 language can be and is used with tools on par with their equivalent C
 counterparts.
 
@@ -193,11 +193,11 @@ How to introduce Ada and SPARK in an existing code base?
 --------------------------------------------------------
 
 The most common scenario when introducing Ada and SPARK to a project or a team
-is to do it within an pre-existing C codebase, which can already spread over
+is to do it within a pre-existing C codebase, which can already spread over
 hundreds of thousands if not millions lines of code. Re-writing this software
 to Ada or SPARK is of course not practical and counterproductive.
 
-Most team select either a small piece of existing code which deserves
+Most teams select either a small piece of existing code which deserves
 particular attention, or new modules to develop, and concentrate on this.
 Developing this module or part of the application will also help in developing
 the coding patterns to be used for the particular project and company. This
