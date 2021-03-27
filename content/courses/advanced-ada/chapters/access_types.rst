@@ -849,3 +849,15 @@ Anonymous access types
 
     Complete section!
 
+
+Unchecked Deallocation
+----------------------
+
+.. admonition:: Relevant topics
+
+    - `Unchecked Storage Deallocation <http://www.ada-auth.org/standards/2xrm/html/RM-13-11-2.html>`_
+
+.. todo::
+
+    Complete section!
+

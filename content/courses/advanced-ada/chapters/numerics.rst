@@ -38,3 +38,42 @@ Operations
 .. todo::
 
     Complete section!
+
+
+Big Numbers
+-----------
+
+.. admonition:: Relevant topics
+
+    - `Big Numbers <http://www.ada-auth.org/standards/2xrm/html/RM-A-5-5.html>`_
+    - `Big Integers <http://www.ada-auth.org/standards/2xrm/html/RM-A-5-6.html>`_
+    - `Big Reals <http://www.ada-auth.org/standards/2xrm/html/RM-A-5-7.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Model of Floating-Point Arithmetic
+----------------------------------
+
+.. admonition:: Relevant topics
+
+    - Brief overview of `Model of Floating Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-1.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Model of Fixed-Point Arithmetic
+-------------------------------
+
+.. admonition:: Relevant topics
+
+    - Brief overview of `Model of Fixed Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-3.html>`_
+
+.. todo::
+
+    Complete section!
+

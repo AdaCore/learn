@@ -20,6 +20,32 @@ Size Information
     Complete section!
 
 
+Address vs. access
+------------------
+
+.. admonition:: Relevant topics
+
+    - `The Package System.Address_To_Access_Conversions <http://www.ada-auth.org/standards/2xrm/html/RM-13-7-2.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Finalization
+------------
+
+.. admonition:: Relevant topics
+
+    - `Assignment and Finalization <http://www.ada-auth.org/standards/2xrm/html/RM-7-6.html>`_
+    - `Completion and Finalization <http://www.ada-auth.org/standards/2xrm/html/RM-7-6-1.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+
 Memory pools
 ------------
 

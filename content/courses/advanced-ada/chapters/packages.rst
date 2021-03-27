@@ -169,6 +169,14 @@ Partial dependencies
     Complete section!
 
 
+Visibility
+----------
+
+.. todo::
+
+    Complete section!
+
+
 Elaboration
 -----------
 
@@ -178,6 +186,19 @@ Elaboration
     - `Elaboration control <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-10-2-1.html>`_
     - `Preelaboration Requirements <http://www.ada-auth.org/standards/2xrm/html/RM-C-4.html>`_
     - `Elaboration Control Pragmas <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-14.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Use type clause
+---------------
+
+.. admonition:: Relevant topics
+
+    - :ada:`use type` clause mentioned in
+      `Use Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-8-4.html>`_
 
 .. todo::
 

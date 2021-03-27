@@ -11,6 +11,42 @@ Expression functions
     Complete section!
 
 
+Quantified Expressions
+----------------------
+
+.. admonition:: Relevant topics
+
+    - `Quantified Expressions <http://www.ada-auth.org/standards/2xrm/html/RM-4-5-8.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Declare Expressions
+-------------------
+
+.. admonition:: Relevant topics
+
+    - `Declare Expressions <http://www.ada-auth.org/standards/2xrm/html/RM-4-5-9.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Reduction Expressions
+---------------------
+
+.. admonition:: Relevant topics
+
+    - `Reduction Expressions <http://www.ada-auth.org/standards/2xrm/html/RM-4-5-10.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Overloading
 -----------
 
@@ -229,3 +265,61 @@ the compiler look inside and make sure :ada:`Re` and :ada:`Im` make sense.
 This not-too-smart rule for aggregates helps prevent confusion on the part
 of developers reading the code. It also simplifies the compiler, and
 makes the overload resolution algorithm reasonably efficient.
+
+
+Operator Overloading
+--------------------
+
+.. todo::
+
+    Complete section!
+
+
+:ada:`separate` compilation
+---------------------------
+
+.. admonition:: Relevant topics
+
+    - `Subunits of Compilation Units <http://www.ada-auth.org/standards/2xrm/html/RM-10-1-3.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Nonreturning procedures
+-----------------------
+
+.. admonition:: Relevant topics
+
+    - `Nonreturning Procedures <http://www.ada-auth.org/standards/2xrm/html/RM-6-5-1.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Inline subprograms
+------------------
+
+.. admonition:: Relevant topics
+
+    - **Briefly** mention :ada:`Inline` aspect mentioned in
+      `Inline Expansion of Subprograms <http://www.ada-auth.org/standards/2xrm/html/RM-6-3-2.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Null Procedures
+---------------
+
+.. admonition:: Relevant topics
+
+    - `Null Procedures <http://www.ada-auth.org/standards/2xrm/html/RM-6-7.html>`_
+    - Mention application for (non-tagged) type extensions
+
+.. todo::
+
+    Complete section!

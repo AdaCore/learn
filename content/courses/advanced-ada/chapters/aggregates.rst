@@ -3,6 +3,20 @@ Aggregates
 
 .. include:: ../../global.txt
 
+Null records
+------------
+
+.. admonition:: Relevant topics
+
+    - Null records mentioned in
+      `Record Aggregates <http://www.ada-auth.org/standards/12rm/html/RM-4-3-1.html>`_
+    - Mention application for prototyping (using non-tagged types)
+
+.. todo::
+
+    Complete section!
+
+
 Extension Aggregates
 --------------------
 

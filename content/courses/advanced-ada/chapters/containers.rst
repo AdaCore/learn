@@ -61,3 +61,17 @@ Holder container
 .. todo::
 
     Complete section!
+
+
+User-Defined Iterator Types
+---------------------------
+
+.. admonition:: Relevant topics
+
+    - `User-Defined Iterator Types <http://www.ada-auth.org/standards/12rm/html/RM-5-5-1.html>`_
+    - `Generalized Loop Iteration <http://www.ada-auth.org/standards/12rm/html/RM-5-5-2.html>`_
+    - `Procedural Iterators <http://www.ada-auth.org/standards/2xrm/html/RM-5-5-3.html>`_
+
+.. todo::
+
+    Complete section!

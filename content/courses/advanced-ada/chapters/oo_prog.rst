@@ -11,6 +11,20 @@ Primitives
     Complete section!
 
 
+Overriding indicators
+---------------------
+
+.. admonition:: Relevant topics
+
+    - **Briefly** discuss :ada:`overriding` and :ada:`not overriding` mentioned
+      in
+      `Overriding Indicators <http://www.ada-auth.org/standards/2xrm/html/RM-8-3-1.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Abstract types and subprograms
 ------------------------------
 
@@ -572,3 +586,14 @@ References
 
     Complete section!
 
+
+User-defined indexing
+---------------------
+
+.. admonition:: Relevant topics
+
+    - `User-Defined Indexing <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-6.html>`_
+
+.. todo::
+
+    Complete section!

@@ -893,6 +893,32 @@ Formal definite and indefinite types
     Complete section!
 
 
+Formal incomplete type
+----------------------
+
+.. admonition:: Relevant topics
+
+    - Formal incomplete type mentioned in
+      `Formal Types <http://www.ada-auth.org/standards/2xrm/html/RM-12-5.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Default subtype mark
+--------------------
+
+.. admonition:: Relevant topics
+
+    - Default subtype mark (:ada:`or use`) mentioned in
+      `Formal Types <http://www.ada-auth.org/standards/2xrm/html/RM-12-5.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Formal private and derived types
 --------------------------------
 
@@ -2297,3 +2323,28 @@ selecting the standard operator. Alternatively, we could make use of the
     package Gen_Fixed_Acc is
        procedure Acc (V : in out F; S : F);
     end Gen_Fixed_Acc;
+
+
+Generic Renaming
+----------------
+
+.. admonition:: Relevant topics
+
+    - `Generic Renaming Declarations <http://www.ada-auth.org/standards/2xrm/html/RM-8-5-5.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Elaboration check
+-----------------
+
+.. admonition:: Relevant topics
+
+    - Elaboration check mentioned in
+      `Generic Bodies <http://www.ada-auth.org/standards/2xrm/html/RM-12-2.html>`_
+
+.. todo::
+
+    Complete section!
