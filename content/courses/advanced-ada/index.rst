@@ -76,6 +76,7 @@ Advanced Ada
     Design Patterns <chapters/design_patterns>
     File I/O <chapters/file_io>
     Numerics <chapters/numerics>
+    Restrictions <chapters/restrictions>
     Interfacing With C/C++ <chapters/interfacing_with_cpp>
     System Annexes <chapters/system_annexes>
     Appendix A: Pragmas, Aspects and Attributes <chapters/appendix_pragmas_aspects_attributes>
