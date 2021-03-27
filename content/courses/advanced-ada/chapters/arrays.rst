@@ -18,6 +18,8 @@ Unconstrained Arrays
 
     - Unconstrained vs. unbounded strings
 
+    - `The Constrained Attribute <http://www.ada-auth.org/standards/2xrm/html/RM-J-4.html>`_
+
 .. todo::
 
     Complete section!

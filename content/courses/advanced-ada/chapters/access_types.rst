@@ -43,6 +43,10 @@ Dereferencing
 Implicit Dereferencing
 ----------------------
 
+.. admonition:: Relevant topics
+
+    - `User-Defined References <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-5.html>`_
+
 .. todo::
 
     Complete section!
@@ -58,6 +62,10 @@ Accessibility levels
 
 Unchecked access
 ----------------
+
+.. admonition:: Relevant topics
+
+    - `Unchecked Access Value Creation <http://www.ada-auth.org/standards/2xrm/html/RM-13-10.html>`_
 
 .. todo::
 

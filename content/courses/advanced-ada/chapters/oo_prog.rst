@@ -564,6 +564,10 @@ References
     published as blog post
     `Using reference types to handle persistent objects <http://blog.adacore.com/use-ref-types-to-persistent-object>`_.
 
+.. admonition:: Relevant topics
+
+    - `User-Defined References <http://www.ada-auth.org/standards/12rm/html/RM-4-1-5.html>`_
+
 .. todo::
 
     Complete section!

@@ -49,6 +49,13 @@ Abort statements
 Task IDs and attributes
 -----------------------
 
+.. admonition:: Relevant topics
+
+    - `Task and Entry Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-9-9.html>`_
+    - `The Package Task_Identification <http://www.ada-auth.org/standards/2xrm/html/RM-C-7-1.html>`_
+    - `The Package Task_Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-C-7-2.html>`_
+    - `The Package Task_Termination <http://www.ada-auth.org/standards/2xrm/html/RM-C-7-3.html>`_
+
 .. todo::
 
     Complete section!

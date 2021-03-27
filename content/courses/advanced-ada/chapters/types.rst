@@ -10,7 +10,7 @@ Enumerations
 
     - enumerations as parameterless functions
     - enumeration overloading
-    - enumeration representation clauses
+    - `Enumeration representation clauses <http://www.ada-auth.org/standards/2xrm/html/RM-13-4.html>`_
 
 .. todo::
 
@@ -67,6 +67,10 @@ Data Representation
 .. admonition:: Relevant topics
 
     - Include: ``Object_Size``, ``Value_Size``, ``Alignment``, ``T'Base``
+    - `Operational and Representation Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-13-3.html>`_
+    - `Packed Types <http://www.ada-auth.org/standards/2xrm/html/RM-13-2.html>`_
+    - `Bit Ordering <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-3.html>`_
+    - `At Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-J-7.html>`_
 
 .. todo::
 

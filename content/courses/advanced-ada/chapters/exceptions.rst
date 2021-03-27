@@ -11,6 +11,10 @@ Exceptions
     This section was originally  published as
     `Gem #142 : Exception-ally <https://www.adacore.com/gems/gem-142-exceptions>`_
 
+.. admonition:: Relevant topics
+
+    - `The Package Exceptions <http://www.ada-auth.org/standards/2xrm/html/RM-11-4-1.html>`_
+
 .. todo::
 
     Complete section!
