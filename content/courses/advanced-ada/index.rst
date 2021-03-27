@@ -56,6 +56,7 @@ Advanced Ada
     :caption: Contents:
 
     Subprograms <chapters/subprograms>
+    Statements <chapters/statements>
     Packages <chapters/packages>
     Types <chapters/types>
     Aggregates <chapters/aggregates>
