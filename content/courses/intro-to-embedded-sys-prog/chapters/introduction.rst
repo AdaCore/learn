@@ -121,70 +121,17 @@ portable! If a specific device is required, well, the program won't work
 with some other device. But to the extent possible portability is 
 obviously a good thing. 
 
-Separation Principle
---------------------
-
-There is a language design principle underlying the Ada facilities 
-intended for implementing embedded software. This design principle 
-directly affects how the language is used, and therefore, the 
-portability and readability of the resulting application code. 
-
-This language design principle is known as the "separation principle." 
-What's being separated? The low-level, less portable aspects of some 
-piece of code are separated from the usage of that piece of code. 
-
-Don't confuse this with hiding unnecessary implementation details via 
-compile-time visibility control (i.e., information hiding and 
-encapsulation). That certainly should be done too. Instead, because of 
-the separation principle, we specify the low-level properties of 
-something once, when we declare it. From then on, we can use regular Ada 
-code to interact with it. That way the bulk of the code -- the usage -- 
-is like any other Ada code, and doesn't propagate the low-level details 
-all over the client code. This greatly simplifies usage and 
-understandability as well as easing porting to new hardware-specific 
-aspects. You change things in one place, rather than everywhere. 
-
-For example, consider a device mapped to the memory address space of the 
-processor. To interact with the device we interact with one or more 
-memory cells. Reading input from the device amounts to reading the value 
-at the associated memory location. Likewise, sending output to the 
-device amounts to writing to that location. 
-
-To represent this device mapping we declare a variable of an appropriate 
-type and specify the starting address the object should occupy. (There 
-are other ways too, but for a single, statically mapped object this is 
-the simplest approach.) We'd want to specify some other characteristics 
-as well, but let's focus on the address. 
-
-.. image:: images/memory-mapped-device.png
-  :width: 600
-  :alt: Memory-mapped device with Ada object declared at specific address
-
-If the hardware presents an interface consisting of multiple fields 
-within individual memory cells, we can use a record type instead of a 
-single unsigned type representing a single word. Ada allows us to 
-specify the exact record layout, down to the individual bit level, for 
-any types we may need to use for the record components. When we 
-declare the object we use that record type, again specifying the 
-starting address. Then we can just refer to the object's record 
-components as usual, having the compiler compute the address offsets 
-required to access the components representing the individual hardware 
-fields. 
-
-Note that we aren't saying that other languages cannot do this too. Many 
-can, using good programming practices. What we're saying is that those 
-practices are designed into the Ada way of doing it. 
-
 The Ada Drivers Library
 -----------------------
 
-Speaking of memory-mapped devices and SoC computers, there is a library 
-of freely-available device drivers in Ada. Known as the Ada Driver 
-Library (ADL), it supports many devices on a number of vendors' 
-products. Device drivers for timers, I2C, SPI, A/D and D/A converters, 
-DMA, General Purpose I/O, LCD displays, sensors, and other devices are 
-included. The ADL is available on GitHub for both non-proprietary and 
-commercial use here: https://github.com/AdaCore/Ada_Drivers_Library. 
+Speaking of SoC computers, there is a library of freely-available device 
+drivers in Ada. Known as the Ada Driver Library (ADL), it supports many 
+devices on a number of vendors' products. Device drivers for timers, 
+I2C, SPI, A/D and D/A converters, DMA, General Purpose I/O, LCD 
+displays, sensors, and other devices are included. The ADL is available 
+on GitHub for both non-proprietary and commercial use here: 
+https://github.com/AdaCore/Ada_Drivers_Library. 
+
 
 An extensive description of a project using the ADL is available here:
 https://blog.adacore.com/making-an-rc-car-with-ada-and-spark
