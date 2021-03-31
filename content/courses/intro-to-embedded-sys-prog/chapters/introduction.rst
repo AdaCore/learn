@@ -11,10 +11,10 @@ Introduction
 This is a course about embedded systems programming. Embedded systems 
 are everywhere today, including, for example, the thermostats that 
 control a building's temperature, the power-steering controller in 
-modern automobiles, and the control systems in charge of jet 
-engines. (A jet engine controller, when designed to have absolute 
-control, is known as a Full Authority Digital Engine Controller, or 
-FADEC for short. If they fail, very bad things can happen.) 
+modern automobiles, and the control systems in charge of jet engines. 
+(When a jet engine controller is designed to have absolute control, it 
+is known as a Full Authority Digital Engine Controller, or FADEC for 
+short. If they fail, very bad things can happen to many people.) 
 
 Clearly, much can depend on these systems operating correctly. Using Ada 
 can help you get it right, and for less cost than other languages, if 
@@ -47,14 +47,16 @@ to specific addresses, when and how to do unchecked programming (and
 how not to), and how to determine the validity of incoming data, e.g., 
 data from sensors that are occasionally faulty. 
 
-We will discuss development using more than Ada alone, nowadays a quite common 
-approach. Specifically, how to interface with code and data written in 
-other languages, and how (and why) to work with assembly language. 
+We will discuss development using more than Ada alone, nowadays a quite 
+common approach. Specifically, how to interface with code and data 
+written in other languages, and how (and why) to work with assembly 
+language. 
 
-Embedded systems work with embedded devices, such as A/D converters, 
-timers, and so forth. Frequently these devices are mapped into the 
-target memory address space. We will cover how to define and interact 
-with these memory-mapped devices. 
+Embedded systems interact with the outside world via embedded devices, 
+such as A/D converters, timers, actuators, sensors, and so forth. 
+Frequently these devices are mapped into the target memory address 
+space. We will cover how to define and interact with these memory-mapped 
+devices. 
 
 Finally, we will show how to handle interrupts in Ada, using portable 
 constructs. 
@@ -69,7 +71,7 @@ system's primary function. These computers are said to be "embedded" in
 the larger system: the enclosing thermostat controlling the temperature, 
 the power steering controller in the enclosing automobile, and the FADEC 
 embedded in the enclosing aircraft. So these are not stand-alone 
-computers available general purpose application execution. 
+computers for general purpose application execution. 
 
 As such, embedded systems typically have reduced resources available, 
 especially power, which means reduced processor speed and reduced memory 
