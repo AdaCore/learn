@@ -9,9 +9,9 @@ This is a course about embedded systems programming. Embedded systems
 are everywhere today, including, for example, the thermostats that 
 control a building's temperature, the power-steering controller in 
 modern automobiles, and the control systems in charge of jet engines. 
-(When a jet engine controller is designed to have absolute control, it 
-is known as a Full Authority Digital Engine Controller, or FADEC for 
-short. If they fail, very bad things can happen to many people.) 
+(When a jet engine controller is designed to have absolute control, it
+is known as a Full Authority Digital Engine Controller, or FADEC for
+short. If a FADEC fails, very bad things can happen.)
 
 Clearly, much can depend on these systems operating correctly. Using Ada 
 can help you get it right, and for less cost than other languages, if 
