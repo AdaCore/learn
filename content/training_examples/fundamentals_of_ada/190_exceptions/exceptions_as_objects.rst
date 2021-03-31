@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Exceptions.exceptions_as_objects
-   :class: ada-run
 
    package Exception_Objects_Example is
    

@@ -1,8 +1,6 @@
 Records
 =======
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../../courses/global.txt
 
 Directions
@@ -36,8 +34,7 @@ Directions
 **Remarks**:
 
     #. We make use of the algorithm implemented in the :ada:`Check_Direction`
-       procedure (see chapter on
-       :doc:`chapter on imperative language <courses/intro-to-ada/chapters/imperative_language>`).
+       procedure (:doc:`chapter on imperative language <courses/intro-to-ada/chapters/imperative_language>`).
 
     #. For the sake of this exercise, we use the concept of *extended angles*.
        This includes the actual geometric angle and the corresponding direction
@@ -415,7 +412,8 @@ keep track of assets.
     #. Procedure :ada:`Add` adds an item to the assets.
 
         #. Since we want to keep track of the assets, the implementation must
-           accumulate the total amount of each item.
+           accumulate the total value of each item's inventory, the result of 
+           multiplying the item quantity and its price.
 
 .. code:: ada lab=Records.Inventory
 

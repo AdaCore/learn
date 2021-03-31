@@ -1,5 +1,4 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Packages.idioms
-   :class: ada-run
 
    package Constants is
       Polar_Radius      : constant := 20_856_010.51;

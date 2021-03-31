@@ -33,7 +33,7 @@ title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
 # The short X.Y version
 version = u''
 # The full version, including alpha/beta/rc tags
-release = u'2021-01'
+release = u'2021-02'
 
 
 # -- General configuration ---------------------------------------------------
@@ -267,22 +267,23 @@ intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
 
 
 def setup(app):
-    try:
-        manifest = os.path.join(os.getcwd(), "build-manifest.json")
-        with open(manifest, 'r') as infile:
-            data = json.load(infile)
+    if not os.getenv('FRONTEND_TESTING'):
+        try:
+            manifest = os.path.join(os.getcwd(), "build-manifest.json")
+            with open(manifest, 'r') as infile:
+                data = json.load(infile)
 
-        for chunk, files in data.items():
-            if "css" in files.keys():
-                for css in files["css"]:
-                    print("Adding {} to css...".format(css))
-                    app.add_stylesheet(css)
-            if "js" in files.keys():
-                for js in files["js"]:
-                    print("Adding {} to js...".format(js))
-                    app.add_javascript(js)
-    except FileNotFoundError as e:
-        print("Warning: build-manifest.json not available")
+            for chunk, files in data.items():
+                if "css" in files.keys():
+                    for css in files["css"]:
+                        print("Adding {} to css...".format(css))
+                        app.add_stylesheet(css)
+                if "js" in files.keys():
+                    for js in files["js"]:
+                        print("Adding {} to js...".format(js))
+                        app.add_javascript(js)
+        except FileNotFoundError as e:
+            print("Warning: build-manifest.json not available")
 
-        if not os.getenv('SPHINX_LOCAL_BUILD'):
-            raise e
+            if not os.getenv('SPHINX_LOCAL_BUILD'):
+                raise e

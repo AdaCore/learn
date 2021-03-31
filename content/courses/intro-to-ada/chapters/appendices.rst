@@ -3,8 +3,6 @@
 Appendices
 ==========
 
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Appendix A: Generic Formal Types

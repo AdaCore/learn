@@ -18,6 +18,7 @@ $frontend = <<-SHELL
       graphviz \
       make \
       gnat \
+      gprbuild \
       yarn \
       texlive-latex-base \
       texlive-latex-recommended \

@@ -1,8 +1,6 @@
 Privacy
 =======
 
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 One of the main principles of modular programming, as well as object oriented
@@ -22,7 +20,7 @@ package level.
 Basic encapsulation
 -------------------
 
-.. code:: ada project=Courses.Intro_To_Ada.Privacy.Encapsulate
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Privacy.Encapsulate
     :class: ada-expect-compile-error
 
     package Encapsulate is
@@ -49,7 +47,7 @@ Abstract data types
 With this high-level granularity, it might not seem obvious how to hide the
 implementation details of a type. Here is how it can be done in Ada:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Privacy.Stacks
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Privacy.Stacks
 
     package Stacks is
        type Stack is private;
@@ -125,7 +123,7 @@ Limited types
 Ada's *limited type* facility allows you to declare a type for which
 assignment and comparison operations are not automatically provided.
 
-.. code:: ada project=Courses.Intro_To_Ada.Privacy.Limited_Stacks
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Privacy.Limited_Stacks
     :class: ada-expect-compile-error
 
     package Stacks is

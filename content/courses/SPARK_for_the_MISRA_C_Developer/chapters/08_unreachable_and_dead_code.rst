@@ -1,5 +1,3 @@
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
 Detecting Unreachable Code and Dead Code
 ----------------------------------------
 
@@ -46,7 +44,9 @@ precise construction of a dependency graph linking a subprogram's statements
 to all its inputs and outputs. This analysis might not be able to
 detect complex cases, but it goes well beyond what other analyses do in general.
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Unreachable_And_Dead_Code.Much_Ado_About_Little
+
+    procedure Much_Ado_About_Little (X, Y, Z : Integer; Success : out Boolean);
 
     procedure Much_Ado_About_Little (X, Y, Z : Integer; Success : out Boolean) is
 

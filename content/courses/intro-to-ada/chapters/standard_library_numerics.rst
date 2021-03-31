@@ -1,8 +1,6 @@
 Standard library: Numerics
 ==========================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 The standard library provides support for common numeric operations on
@@ -16,7 +14,7 @@ The :ada:`Ada.Numerics.Elementary_Functions` package provides common
 operations for floating-point types, such as square root, logarithm,
 and the trigonometric functions (e.g., sin, cos). For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Elem_Math
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Elem_Math
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -77,7 +75,7 @@ The :ada:`Ada.Numerics.Float_Random` package provides a simple random
 number generator for the range between 0.0 and 1.0. To use it, declare a
 generator :ada:`G`, which you pass to :ada:`Random`. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Float_Random_Num
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Float_Random_Num
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
@@ -104,7 +102,7 @@ discrete type. This allows you to specify a range for the generator. In the
 following example, we create an application that displays random integers
 between 1 and 10:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Discrete_Random_Num
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Discrete_Random_Num
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics.Discrete_Random;
@@ -148,7 +146,7 @@ you can use the :ada:`Ada.Text_IO.Complex_IO` package to perform I/O
 operations on complex numbers. In the following example, we declare
 variables of the :ada:`Complex` type and initialize them using an aggregate:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Elem_Math
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Elem_Math
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics; use Ada.Numerics;
@@ -263,7 +261,7 @@ respectively.
 The following example uses some of the operations from the
 :ada:`Ada.Numerics.Real_Arrays` package:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Matrix
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Matrix
 
     with Ada.Text_IO;  use Ada.Text_IO;
 

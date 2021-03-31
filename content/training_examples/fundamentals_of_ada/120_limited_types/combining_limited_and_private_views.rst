@@ -1,5 +1,4 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Limited_Types.combining_limited_and_private_views
-   :class: ada-run
 
    with Interfaces; use Interfaces;
    package Multiprocessor_Mutex is
@@ -10,8 +9,7 @@
    private
       type Limited_T is limited -- no internal copying allowed
       record
-         -- users cannot see this field
-         Flag : Interfaces.Unsigned_8;
+         Flag : Interfaces.Unsigned_8; -- users cannot see this
       end record;
    end Multiprocessor_Mutex;
 

@@ -1,29 +1,23 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Tasking.some_advanced_concepts
-   :class: ada-run
 
    package Some_Advanced_Concepts is
-   
       Termination_Flag : Boolean := False;
-   
       task Select_Loop_Task is
          entry Start;
          entry Receive_Message (V : String);
          entry Send_Message (V : String);
          entry Stop;
       end Select_Loop_Task;
-   
    end Some_Advanced_Concepts;
 
    with Ada.Calendar; use Ada.Calendar;
    with Ada.Text_IO;  use Ada.Text_IO;
    package body Some_Advanced_Concepts is
-   
       task body Select_Loop_Task is
       begin
          accept Start do
-            Put_Line
-              ("Select_Loop_Task started at" &
-               Day_Duration'Image (Seconds (Clock)));
+            Put_Line ("Select_Loop_Task started at" &
+                      Day_Duration'Image (Seconds (Clock)));
          end Start;
          loop
             select
@@ -38,8 +32,7 @@
                accept Stop;
             or
                delay 5.0;
-               Put_Line
-                 ("No more waiting at" & Day_Duration'Image (Seconds (Clock)));
+               Put_Line ("No more waiting at" & Day_Duration'Image (Seconds (Clock)));
                exit;
             end select;
          end loop;

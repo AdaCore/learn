@@ -1,8 +1,6 @@
 More About Types
 ================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../../courses/global.txt
 
 Aggregate Initialization
@@ -320,7 +318,8 @@ Simple todo list
 
     #. :ada:`Todo_List` type is the container for all to-do items.
 
-        #. It should be declared as a record with discriminant.
+        #. This record type must have a discriminant for the maximum number of
+           elements of the list.
 
         #. In order to store the to-do items, it must contain a component named
            :ada:`Items` of :ada:`Todo_Items` type.
@@ -408,7 +407,7 @@ Simple todo list
          (Todo_List_Chk);
 
        procedure Check (TC : Test_Case_Index) is
-          T : Todo_List (1 .. 10);
+          T : Todo_List (10);
        begin
           case TC is
              when Todo_List_Chk =>

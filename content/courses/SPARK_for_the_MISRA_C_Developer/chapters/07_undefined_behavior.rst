@@ -1,5 +1,3 @@
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
 .. _Detecting Undefined Behavior:
 
 Detecting Undefined Behavior
@@ -85,7 +83,8 @@ is outside the range :ada:`0 .. T'Pos(T'Last)`.
 The :ada:`Update` procedure below contains what appears to be a simple assignment
 statement, which sets the value of array element :ada:`A(I+J)`  to :ada:`P/Q`.
 
-.. code:: ada prove_button
+.. code:: ada prove_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Undefined_Behavior.Runtime_Errors
+    :class: ada-expect-prove-error
 
     package Show_Runtime_Errors is
 
@@ -216,7 +215,7 @@ errors entails:
 For example, here is a revised version of the previous example, which
 can guarantee through proof that no possible run-time error can be raised:
 
-.. code:: ada prove_report_all_button
+.. code:: ada prove_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Undefined_Behavior.No_Runtime_Errors
 
     package No_Runtime_Errors is
 

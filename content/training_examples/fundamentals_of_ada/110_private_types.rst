@@ -2,8 +2,6 @@
 Private Types
 ===============
 
-:code-config:`run_button=False;prove_button=False`
-
 --------------------------------------------
 Implementing Abstract Data Types Via Views
 --------------------------------------------

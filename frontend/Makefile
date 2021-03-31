@@ -4,7 +4,8 @@ SPHINXBUILD   	= sphinx-build
 SPHINXPROJ    	= learnadacorecom
 SPHINXCONF    	= sphinx
 BUILDDIR      	= dist
-TEST_DRIVER   	= python3 tests/compile_blocks.py -B $(BUILDDIR)/test_output
+SRC_TEST_DIR  	= $(BUILDDIR)/test_output
+TEST_DRIVER   	= PYTHONPATH="$PYTHONPATH:sphinx:../backend" python3 tests/compile_blocks.py --keep_files -B $(SRC_TEST_DIR)
 
 MKFILE_PATH  	:= $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
@@ -12,6 +13,8 @@ MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
 BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 
 CONTENT_DIR   	= $(MKFILE_DIR)/../content
+TEST_CONTENT    = tests/rst
+TEST_BUILDDIR   = tests/html
 HOST_ADDRESS 	?= localhost
 HOST_PORT    	?= 8000
 
@@ -64,6 +67,11 @@ test_ada_for_the_cpp_java_developer:
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
 	@echo ""
 
+test_ada_for_the_embedded_c_developer:
+	@echo "===== ADA FOR THE EMBEDDED C DEV ====="
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/Ada_For_The_Embedded_C_Developer/chapters/*.rst
+	@echo ""
+
 test_gnat_toolchain_intro:
 	@echo "===== GNAT TOOLCHAIN INTRO ====="
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
@@ -78,9 +86,13 @@ test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
 	test_advanced_ada test_advanced_spark \
 	test_spark_for_the_misra_c_developer \
 	test_ada_for_the_cpp_java_developer \
+	test_ada_for_the_embedded_c_developer \
 	test_training_fundamentals \
 	test_gnat_toolchain_intro
 
+test_parser:
+	@coverage run --source=widget -m unittest discover --start-directory sphinx
+	@coverage report --fail-under=90 -m
 
 publish-staging:
 	@echo "Publishing current branch to learn-staging..."
@@ -136,6 +148,10 @@ site-staging: cleanall webpack-staging pdf_books
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
+site-testing: cleantest
+	FRONTEND_TESTING=true $(SPHINXBUILD) -M html $(TEST_CONTENT) \
+        "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
 
 pdf_books: $(BOOKS)
@@ -147,13 +163,17 @@ $(BOOKS):
 	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
 	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
 	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
-	$(SPHINXBUILD) -M latexpdf $@ \
+	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $@ \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
 
 cleanall:
 	@rm -rf "$(BUILDDIR)"
 	@rm -f $(BUILD_MANIFEST)
+
+cleantest:
+	@rm -rf "$(TEST_BUILDDIR)"
 
 
 # Catch-all target: route all unknown targets to Sphinx using the new

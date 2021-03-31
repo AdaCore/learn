@@ -2,8 +2,6 @@
 Access Types
 ==============
 
-:code-config:`run_button=False;prove_button=False`
-
 ----------------------------
 Pool Specific Access Types
 ----------------------------

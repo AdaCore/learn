@@ -1,5 +1,3 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
-
 Subprogram Contracts
 =====================================================================
 
@@ -66,7 +64,7 @@ Dynamic Behavior when Subprogram Contracts Fail
 
     - Idiom allows to select another exception
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Dynamic_Behavior
 
     with Ada.Numerics; use Ada.Numerics;
 
@@ -90,7 +88,7 @@ Precondition
 
 - Better alternative to defensive programming, compare
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Precondition
 
     with Ada.Numerics; use Ada.Numerics;
 
@@ -103,7 +101,7 @@ Precondition
 
 and
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Precondition
 
     with Ada.Numerics; use Ada.Numerics;
 
@@ -113,8 +111,6 @@ and
        function Sqrt (X : Float) return Float;
 
     end Show_Precondition;
-
-.. code:: ada
 
     package body Show_Precondition is
 
@@ -179,7 +175,7 @@ Contract Cases
 
     - Can be used in combination with precondition/postcondition
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Contract_Cases
 
     package Show_Contract_Cases is
 
@@ -212,8 +208,7 @@ Attribute ``'Old``
     - :ada:`X` can be a variable, a function call, a qualification (but
       not limited!)
 
-.. code:: ada
-    :class: ada-expect-compile-error
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Attribute_Old
 
     package Show_Attribute_Old is
 
@@ -276,7 +271,7 @@ Reasoning by Cases
 
     - Can sometimes be an alternative to contract cases
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Case_Expression
 
     with Ada.Text_IO;
 
@@ -369,7 +364,7 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_01
 
     with Ada.Assertions; use Ada.Assertions;
 
@@ -399,7 +394,7 @@ passes :ada:`False` as value for ``Condition``.
 Example #2
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_02
 
     with Interfaces.C; use Interfaces.C;
 
@@ -428,7 +423,7 @@ precondition and postcondition of ``Memset``, calling the imported
 Example #3
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_03
 
     procedure Example_03 is
 
@@ -457,8 +452,7 @@ preconditions are activated.
 Example #4
 ~~~~~~~~~~
 
-.. code:: ada
-    :class: ada-expect-compile-error
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_04
 
     procedure Example_04 is
 
@@ -486,7 +480,7 @@ available.
 Example #5
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_05
 
     procedure Example_05 is
 
@@ -511,7 +505,7 @@ returns.
 Example #6
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_06
 
     procedure Example_06 is
 
@@ -533,7 +527,7 @@ correctly describes normal returns.
 Example #7
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_07
 
     procedure Example_07 is
 
@@ -555,8 +549,7 @@ Postcondition is always satisfied.
 Example #8
 ~~~~~~~~~~
 
-.. code:: ada
-    :class: ada-expect-compile-error
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_08
 
     package Example_08 is
 
@@ -580,8 +573,7 @@ variable is not allowed.
 Example #9
 ~~~~~~~~~~
 
-.. code:: ada
-    :class: ada-expect-compile-error
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_09
 
     package Example_09 is
 
@@ -603,7 +595,7 @@ expression is allowed only when :ada:`Expr` is a variable.
 Example #10
 ~~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Subprogram_Contracts.Example_10
 
     package Example_10 is
 

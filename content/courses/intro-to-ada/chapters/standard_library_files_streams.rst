@@ -1,8 +1,6 @@
 Standard library: Files and streams
 ===================================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 Ada provides different approaches for file input/output (I/O):
@@ -44,7 +42,7 @@ information on the console. However, this procedure also accepts a
 :ada:`File_Type` parameter. For example, you can select between standard
 output and standard error by setting this parameter explicitly:
 
-.. code:: ada project=Courses.Intro_To_Ada.Standard_Library.Show_Std_Text_Out
+.. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Std_Text_Out
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -70,6 +68,7 @@ Let's see an example that writes information into a new text file and then
 reads it back from the same file:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Simple_Text_File_IO
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -95,6 +94,7 @@ library also includes a :ada:`Reset` procedure, which, as the name implies,
 resets (erases) all the information from the file. For example:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Text_File_Reset
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -129,6 +129,7 @@ that context. The following example deletes a file and then tries to open
 the same file for reading:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Text_File_Input_Except
+    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -152,7 +153,7 @@ the same file for reading:
 
 In this example, we create the file by calling :ada:`Create` and then
 delete it by calling :ada:`Delete`. After the call to :ada:`Delete`, we can
-no longer use the :ada:`File_Type` element`. After deleting the file, we
+no longer use the :ada:`File_Type` element. After deleting the file, we
 try to open the non-existent file, which raises a :ada:`Name_Error`
 exception.
 
@@ -172,6 +173,7 @@ In the following example, we instantiate the :ada:`Ada.Sequential_IO`
 package for floating-point types:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Seq_Float_IO
+    :class: ada-run
 
     with Ada.Text_IO;
     with Ada.Sequential_IO;
@@ -206,6 +208,7 @@ following example uses a record that includes a Boolean and a
 floating-point value:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Seq_Rec_IO
+    :class: ada-run
 
     with Ada.Text_IO;
     with Ada.Sequential_IO;
@@ -267,6 +270,7 @@ the :ada:`Ada.Sequential_IO` package by the :ada:`Ada.Direct_IO`
 package. This is the new source code:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Dir_Float_IO
+    :class: ada-run
 
     with Ada.Text_IO;
     with Ada.Direct_IO;
@@ -306,6 +310,7 @@ the new position / index.  You can use the :ada:`Index` function to retrieve
 the current index. Let's see an example:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Dir_Float_In_Out_File
+    :class: ada-run
 
     with Ada.Text_IO;
     with Ada.Direct_IO;
@@ -372,6 +377,7 @@ Let's look at a version of the :ada:`Show_Dir_Float_IO` procedure from the
 previous section that makes use of stream I/O instead of direct I/O:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_Float_Stream
+    :class: ada-run
 
     with Ada.Text_IO;
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
@@ -423,6 +429,7 @@ The following example shows file I/O that mixes both strings of
 different lengths and floating-point values:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Standard_Library.Show_String_Stream
+    :class: ada-run
 
     with Ada.Text_IO;
     with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;

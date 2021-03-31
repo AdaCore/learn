@@ -1,5 +1,4 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Genericity.generic_data
-   :class: ada-run
 
    package Generic_Data is
       generic
@@ -13,15 +12,15 @@
          type Private_T is private;
          type Unconstrained_T (<>) is private;
       package Parameter_Properties is
-         procedure Discrete_Proc (Param : Discrete_T);
-         procedure Integer_Proc (Param : Integer_T);
-         procedure Float_Proc (Param : Float_T);
-         procedure Indefinite_Proc (Param : access Indefinite_T);
-         procedure Tagged_Proc (Param : Tagged_T);
-         procedure Array_Proc (Param : Array_T);
-         procedure Access_Proc (Param : Access_T);
-         procedure Private_Proc (Param : Private_T);
-         procedure Unconstrained_Proc (Param : Unconstrained_T);
+         procedure Do_Something ( Discrete_Param      : Discrete_T;
+                                  Integer_Param       : Integer_T;
+                                  Float_Param         : Float_T;
+                                  Indefinite_Param    : access Indefinite_T;
+                                  Tagged_Param        : Tagged_T;
+                                  Array_Param         : Array_T;
+                                  Access_Param        : Access_T;
+                                  Private_Param       : Private_T;
+                                  Unconstrained_Param : Unconstrained_T);
       end Parameter_Properties;
    
       generic
@@ -30,10 +29,9 @@
          type Index_T is (<>);
          type Array_T is array (Index_T range <>) of Access_Item_T;
       package Combination is
-         procedure Add
-           (List  : in out Array_T;
-            Index : in     Index_T;
-            Item  : in     Item_T);
+         procedure Add (List  : in out Array_T;
+                        Index : in     Index_T;
+                        Item  : in     Item_T);
       end Combination;
    end Generic_Data;
 
@@ -57,22 +55,21 @@
 
    package body Generic_Data is
       package body Parameter_Properties is
-         procedure Discrete_Proc (Param : Discrete_T) is null;
-         procedure Integer_Proc (Param : Integer_T) is null;
-         procedure Float_Proc (Param : Float_T) is null;
-         procedure Indefinite_Proc (Param : access Indefinite_T) is null;
-         procedure Tagged_Proc (Param : Tagged_T) is null;
-         procedure Array_Proc (Param : Array_T) is null;
-         procedure Access_Proc (Param : Access_T) is null;
-         procedure Private_Proc (Param : Private_T) is null;
-         procedure Unconstrained_Proc (Param : Unconstrained_T) is null;
+         procedure Do_Something ( Discrete_Param      : Discrete_T;
+                                  Integer_Param       : Integer_T;
+                                  Float_Param         : Float_T;
+                                  Indefinite_Param    : access Indefinite_T;
+                                  Tagged_Param        : Tagged_T;
+                                  Array_Param         : Array_T;
+                                  Access_Param        : Access_T;
+                                  Private_Param       : Private_T;
+                                  Unconstrained_Param : Unconstrained_T) is null;
       end Parameter_Properties;
    
       package body Combination is
-         procedure Add
-           (List  : in out Array_T;
-            Index : in     Index_T;
-            Item  : in     Item_T) is
+         procedure Add (List  : in out Array_T;
+                        Index : in     Index_T;
+                        Item  : in     Item_T) is
          begin
             List (Index) := new Item_T'(Item);
          end Add;

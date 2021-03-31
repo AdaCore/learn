@@ -2,8 +2,6 @@
 Low Level Programming
 =======================
 
-:code-config:`run_button=False;prove_button=False`
-
 ---------------------
 Data Representation
 ---------------------

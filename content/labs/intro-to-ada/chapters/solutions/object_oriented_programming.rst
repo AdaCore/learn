@@ -3,8 +3,6 @@
 Solutions
 =========
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. role:: ada(code)
    :language: ada
 

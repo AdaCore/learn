@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Tasking.task_and_protected_types
-   :class: ada-run
 
    package Tasks is
       task type T is
@@ -65,11 +64,9 @@
             Id := My_Id;
          end Initialize;
          procedure Set (Caller : Character; V : Integer) is
-            Str : constant String :=
-              "Task-" & Caller & " Object-" & Id & " => " & V'Image;
          begin
             Local := V;
-            Put_Line (Str);
+            Put_Line ( "Task-" & Caller & " Object-" & Id & " => " & V'Image );
          end Set;
          function Get return Integer is
          begin

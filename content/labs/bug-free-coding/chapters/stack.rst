@@ -4,8 +4,6 @@
 .. meta::
     :author: AdaCore
 
-:code-config:`accumulate_code=False;reset_accumulator=True`
-
 Let's Build a Stack
 =====================
 
@@ -125,7 +123,9 @@ Sample Output
 .. only:: builder_html
 
     Note that, in order to prove the code below, you need to click on the
-    *Prove* button.
+    *Prove* button. Note also that errors are expected initially |mdash| it is
+    up to you to use the output from the prover to correct these and produce a
+    working, fully proved stack!
 
 .. code:: ada lab=MLH_Stack prove_button
 

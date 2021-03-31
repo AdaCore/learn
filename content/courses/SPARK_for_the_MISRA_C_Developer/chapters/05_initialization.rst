@@ -1,5 +1,3 @@
-:code-config:`run_button=False;prove_button=False;accumulate_code=False`
-
 Initializing Data Before Use
 ----------------------------
 
@@ -24,9 +22,17 @@ function :c:`f` initializes an output parameter :c:`p` only in some cases, and
 the caller :c:`g` of :c:`f` ends up reading the value of the variable :c:`u`
 passed in argument to :c:`f` in cases where it has not been initialized:
 
-.. code-block:: c
+.. code:: c no_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Read_Uninitialized_Data_C
 
-   static void f ( bool_t b, uint16_t *p )
+   !f.h
+   #include <stdint.h>
+
+   void f ( int b, uint16_t *p );
+
+   !f.c
+   #include "f.h"
+
+   void f ( int b, uint16_t *p )
    {
      if ( b )
      {
@@ -34,11 +40,15 @@ passed in argument to :c:`f` in cases where it has not been initialized:
      }
    }
 
+   !g.c
+   #include <stdint.h>
+   #include "f.h"
+
    static void g (void)
    {
       uint16_t u;
 
-      f ( false, &u );
+      f ( 0, &u );
 
       if ( u == 3U )
       {
@@ -65,7 +75,8 @@ constraints:
 Hence, given the following code translated from C, GNATprove reports that
 function :ada:`F` might not always initialize output parameter :ada:`P`:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Read_Uninitialized_Data_Ada
+    :class: ada-expect-prove-error
 
     with Interfaces; use Interfaces;
 
@@ -98,7 +109,7 @@ function :ada:`F` might not always initialize output parameter :ada:`P`:
 We can correct the program by initializing :ada:`P` to value 0 when condition :ada:`B` is
 not satisfied:
 
-.. code:: ada prove_flow_report_all_button compile_button
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Read_Uninitialized_Data_Ada
 
     with Interfaces; use Interfaces;
 
@@ -141,7 +152,8 @@ considers global data as always initialized even if the default value of
 all-zeros might not be valid data for the application. Here's a variation of
 the above code where variable :ada:`U` is now global:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Read_Uninitialized_Data_Ada
+    :class: ada-expect-prove-error
 
     with Interfaces; use Interfaces;
 
@@ -194,7 +206,8 @@ It is possible in SPARK to specify that :ada:`G` should initialize variable :ada
 this is done with a `data dependency` contract introduced with aspect :ada:`Global`
 following the declaration of procedure :ada:`G`:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Read_Uninitialized_Data_Ada
+    :class: ada-expect-prove-error
 
     with Interfaces; use Interfaces;
 
@@ -246,7 +259,7 @@ structure or array at declaration. These rules attempt to patch holes created
 by the lax syntax and rules in C standard. For example, here are five valid
 initializations of an array of 10 elements in C:
 
-.. code:: c run_button
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Redundant_Init
 
    !main.c
    int main() {
@@ -268,7 +281,7 @@ initialized twice).
 The same holds for initialization of structures. Here is an equivalent set of
 declarations with the same potential issues:
 
-.. code:: c run_button
+.. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Redundant_Init
 
    !main.c
    int main() {
@@ -289,7 +302,7 @@ In SPARK and Ada, the aggregate used to initialize an array or a record must ful
 cover the components of the array or record. Violations lead to compilation
 errors, both for records:
 
-.. code:: ada run_button
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record_1
     :class: ada-expect-compile-error
 
     package Init_Record is
@@ -301,7 +314,7 @@ errors, both for records:
 
 and for arrays:
 
-.. code:: ada run_button
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array_1
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;
@@ -310,7 +323,7 @@ and for arrays:
 
 Similarly, redundant initialization leads to compilation errors for records:
 
-.. code:: ada run_button
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record_2
     :class: ada-expect-compile-error
 
     package Init_Record is
@@ -322,7 +335,7 @@ Similarly, redundant initialization leads to compilation errors for records:
 
 and for arrays:
 
-.. code:: ada run_button
+.. code:: ada compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array_2
     :class: ada-expect-compile-error
 
     package Init_Array is
@@ -336,7 +349,8 @@ initialization of the type is used, which may be no initialization at all),
 SPARK analysis rejects such use when it leads to components not being
 initialized, both for records:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Record_3
+    :class: ada-expect-prove-error
 
     package Init_Record is
        type Rec is record
@@ -347,7 +361,8 @@ initialized, both for records:
 
 and for arrays:
 
-.. code:: ada prove_flow_button
+.. code:: ada prove_flow_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Initialization.Init_Array_3
+    :class: ada-expect-prove-error
 
     package Init_Array is
        type Arr is array (1 .. 10) of Integer;

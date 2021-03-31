@@ -1,5 +1,4 @@
 .. code:: ada compile_button project=Training_Material.Fundamentals_Of_Ada.Program_Structure.private_children
-   :class: ada-run
 
    package Os is
       type File_T is private;

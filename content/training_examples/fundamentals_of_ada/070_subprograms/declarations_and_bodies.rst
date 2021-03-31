@@ -1,5 +1,4 @@
 .. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Subprograms.declarations_and_bodies
-    :class: ada-run
 
    with Ada.Text_IO; use Ada.Text_IO;
    procedure Declarations_And_Bodies is

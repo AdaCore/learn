@@ -1,8 +1,6 @@
 Standard library: Numerics
 ==========================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../../courses/global.txt
 
 Decibel Factor
@@ -350,7 +348,7 @@ circle after rotation.
 **Remarks**:
 
     #. Complex numbers are particularly useful in computer graphics to simplify
-       the calculation.
+       the calculation of rotations.
 
         #. For example, let's assume you've drawn an object on your screen on
            position (1.0, 0.0).
@@ -400,6 +398,10 @@ circle after rotation.
                 Point #3:  180.00 degrees
                 Point #4:  -90.00 degrees (= 270 degrees)
                 Point #5:    0.00 degrees
+
+            #. To rotate a complex number simply multiply it by a unit vector
+               whose arg is the radian angle to be rotated:
+               :math:`Z = e^\frac{2 \pi}{N}`
 
 .. code:: ada lab=Standard_Library.Rotation
 

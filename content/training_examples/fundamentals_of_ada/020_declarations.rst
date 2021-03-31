@@ -2,8 +2,6 @@
 Declarations
 ==============
 
-:code-config:`run_button=False;prove_button=False`
-
 ----------------------------------
 Identifiers Comments And Pragmas
 ----------------------------------

@@ -1,5 +1,4 @@
-.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.elab.elab
-   :class: ada-run
+.. code:: ada run_button project=Training_Material.Fundamentals_Of_Ada.Elaboration.elaboration_control
 
    package Pure_P is
       pragma Pure;

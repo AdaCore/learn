@@ -5,7 +5,7 @@ GNAT Studio
 
 This chapter presents an introduction to the GNAT Studio, which provides an IDE
 to develop applications in Ada. For a detailed overview, please refer to the
-`GNAT Studio tutorial <http://docs.adacore.com/live/wave/gps/html/gps_tutorial>`_.
+`GNAT Studio tutorial <https://docs.adacore.com/live/wave/gps/html/gps_tutorial/index.html>`_.
 Also, you can refer to the
 `GNAT Studio product page <https://www.adacore.com/gnatpro/toolsuite/gps>`_ for
 some introductory videos.

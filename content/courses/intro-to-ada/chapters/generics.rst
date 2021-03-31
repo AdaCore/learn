@@ -1,9 +1,6 @@
 Generics
 ========
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Introduction
@@ -18,7 +15,7 @@ by using the keyword :ada:`generic`. For example:
 .. raph-amiard: We are lacking a definition/link of metaprogramming.
 
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Simple_Generic
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Generics.Show_Simple_Generic
 
     generic
        type T is private;
@@ -40,7 +37,7 @@ want to create an algorithm that works on any integer type, or even on
 any type at all, whether a numeric type or not. The following example
 declares a formal type :ada:`T` for the :ada:`Set` procedure.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Type_Declaration
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Type_Declaration
 
     generic
        type T is private;
@@ -54,7 +51,7 @@ declares a formal type :ada:`T` for the :ada:`Set` procedure.
     end Set;
 
 The declaration of :ada:`T` as :ada:`private` indicates that you can map
-any type to it. But you can also restrict the declaration to allow
+any definite type to it. But you can also restrict the declaration to allow
 only some types to be mapped to that formal type.  Here are some
 examples:
 
@@ -74,7 +71,7 @@ Formal object declaration
 Formal objects are similar to subprogram parameters. They can reference
 formal types declared in the formal specification. For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Object_Declaration
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Object_Declaration
 
     generic
        type T is private;
@@ -98,7 +95,7 @@ We don't repeat the :ada:`generic` keyword for the body declaration of a
 generic subprogram or package.  Instead, we start with the actual
 declaration and use the generic types and objects we declared. For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Generics.Show_Generic_Body_Definition
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Generics.Show_Generic_Body_Definition
 
     generic
        type T is private;
@@ -118,7 +115,7 @@ Generic subprograms or packages can't be used directly. Instead, they
 need to be instantiated, which we do using the :ada:`new` keyword, as
 shown in the following example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Generic_Instantiation
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Show_Generic_Instantiation
 
     generic
        type T is private;
@@ -171,7 +168,7 @@ continue with formal declarations. The only difference is that
 
 Here's an example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Generic_Package
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Show_Generic_Package
 
     generic
        type T is private;
@@ -262,7 +259,7 @@ We use the :ada:`with` keyword to declare a formal subprogram. In the
 example below, we declare a formal function (:ada:`Comparison`) to be
 used by the generic procedure :ada:`Check`.
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Formal_Subprogram
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Show_Formal_Subprogram
 
     generic
        Description : String;
@@ -319,7 +316,7 @@ instance of the :ada:`Float_IO` package, and it's defined as:
 
 You can use it directly with any object of floating-point type. For example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Float_Text_IO
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Show_Float_Text_IO
 
     with Ada.Float_Text_IO;
 
@@ -335,7 +332,7 @@ Instantiating generic I/O packages can be useful for derived types. For example,
 let's create a new type :ada:`Price` that must be displayed with two decimal
 digits after the point, and no exponent.
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Float_IO_Inst
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Show_Float_IO_Inst
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -389,7 +386,7 @@ packages are available from :ada:`Ada.Text_IO`:
 
 In fact, we could rewrite the example above using decimal types:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Decimal_IO_Inst
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Show_Decimal_IO_Inst
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -422,7 +419,7 @@ section <Containers>`).
 
 A typical example of an ADT is a stack:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Show_Stack
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Show_Stack
 
     generic
        Max : Positive;
@@ -511,7 +508,7 @@ Example: Swap
 Let's look at a simple procedure that swaps variables of type
 :ada:`Color`:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Swap_Colors
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Swap_Colors
 
     package Colors is
        type Color is (Black, Red, Green, Blue, White);
@@ -566,7 +563,7 @@ In the example below, we create a generic version of :ada:`Swap_Colors`
 and name it :ada:`Generic_Swap`. This generic version can operate on any
 type due to the declaration of formal type :ada:`T`.
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Swap_Colors
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Test_Swap_Colors
 
     generic
        type T is private;
@@ -628,7 +625,7 @@ reversing elements of an array. First, let's start with a non-generic
 version of the algorithm, one that works specifically for the :ada:`Color`
 type:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Reverse_Colors
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Reverse_Colors
 
     package Colors is
 
@@ -699,7 +696,7 @@ the algorithm:
 
 This is a generic version of the algorithm:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Reverse_Colors
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Test_Reverse_Colors
 
     generic
        type T is private;
@@ -791,7 +788,7 @@ Note that :ada:`Image` and :ada:`Test` are examples of formal subprograms and
 Here is a version of the test application making use of the generic
 :ada:`Perform_Test` procedure:
 
-.. code:: ada project=Courses.Intro_To_Ada.Generics.Test_Reverse_Colors_2
+.. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Test_Reverse_Colors_2
 
     generic
        type T is private;

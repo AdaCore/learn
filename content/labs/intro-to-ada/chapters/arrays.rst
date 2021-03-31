@@ -1,8 +1,6 @@
 Arrays
 ======
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../../courses/global.txt
 
 Constrained Array
@@ -810,6 +808,12 @@ String_10
 
     #. Function :ada:`To_String_10` returns constrained strings of
        :ada:`String_10` type based on an input parameter of :ada:`String` type.
+	   
+	   - For strings that are more than 10 characters, omit everything 
+	     after the 11th character.
+	   
+	   - For strings that are fewer than 10 characters, pad the string 
+	     with ' ' characters until it is 10 characters.
 
 **Remarks**:
 
@@ -1118,4 +1122,3 @@ List of Names
 
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
-

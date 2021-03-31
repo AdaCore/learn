@@ -1,8 +1,6 @@
 Subprograms
 ===========
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../../courses/global.txt
 
 Subtract procedure
@@ -339,7 +337,7 @@ States #2
     #. You can implement a function returning a string by simply using quotes in
        a return statement. For example:
 
-        .. code:: ada run_button
+        .. code:: ada run_button project=Subprograms.States_2_Example
 
             function Get_Hello return String;
 
@@ -494,7 +492,7 @@ States #4
 
 **Requirements**:
 
-    #. Implement same state machine as in the previous exercise.
+    #. Implement the same state machine as in the previous exercise.
 
     #. Procedure :ada:`Set_Next` updates the machine's state with the next one
        in a *circular* manner:

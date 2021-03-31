@@ -1,8 +1,6 @@
 Imperative language
 ===================
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 .. include:: ../../global.txt
 
 Ada is a multi-paradigm language with support for object orientation
@@ -25,7 +23,7 @@ Hello world
 
 Here's a very simple imperative Ada program:
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Greet
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Greet
 
     with Ada.Text_IO;
 
@@ -37,24 +35,26 @@ Here's a very simple imperative Ada program:
 
 which we'll assume is in the source file :file:`greet.adb`.
 
-If you compile that source with the GNAT compiler and run the executable,
-you will get an unsurprising result.
+.. only:: builder_html
 
-.. code-block:: sh
+    If you compile that source with the GNAT compiler and run the executable,
+    you will get an unsurprising result.
 
-    $ gprbuild greet.adb
-    using project file [...]_default.gpr
-    Compile
-       [Ada]          greet.adb
-    Bind
-       [gprbind]      greet.bexch
-       [Ada]          greet.ali
-    Link
-       [link]         greet.adb
+    .. code-block:: sh
 
-     $ ./greet
-    Hello, World!
-     $
+        $ gprbuild greet.adb
+        using project file [...]_default.gpr
+        Compile
+           [Ada]          greet.adb
+        Bind
+           [gprbind]      greet.bexch
+           [Ada]          greet.ali
+        Link
+           [link]         greet.adb
+
+         $ ./greet
+        Hello, World!
+         $
 
 There are several noteworthy things in the above program:
 
@@ -96,7 +96,7 @@ There are several noteworthy things in the above program:
 
 Here is a minor variant of the "Hello, World" example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Greet_2
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_2
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -120,7 +120,7 @@ and subprogram parameter modes.
 
 Ada's :ada:`if` statement is pretty unsurprising in form and function:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -158,7 +158,7 @@ integer value).
 Here's a slight variation on the example, which illustrates an :ada:`if` statement
 with an :ada:`else` part:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive_2
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive_2
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -182,7 +182,7 @@ displays the value followed by the String " is not a positive number".
 Our final variation illustrates an :ada:`if` statement with :ada:`elsif`
 sections:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -241,7 +241,7 @@ For loops
 The first kind of loop is the :ada:`for` loop, which allows iteration through a
 discrete range.
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Greet_5a
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_5a
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -253,16 +253,17 @@ discrete range.
        end loop;
     end Greet_5a;
 
-Executing this procedure yields the following output:
+.. only:: builder_html
 
-.. code-block:: sh
+    Executing this procedure yields the following output:
 
-   Hello, World! 1
-   Hello, World! 2
-   Hello, World! 3
-   Hello, World! 4
-   Hello, World! 5
+    .. code-block:: sh
 
+       Hello, World! 1
+       Hello, World! 2
+       Hello, World! 3
+       Hello, World! 4
+       Hello, World! 5
 
 A few things to note:
 
@@ -274,13 +275,13 @@ A few things to note:
 -  :ada:`I` is local to the loop, so you cannot refer to :ada:`I`
    outside the loop.
 
--  Although the value of `I`` is incremented at each iteration, from the
+-  Although the value of :ada:`I` is incremented at each iteration, from the
    program's perspective it is constant. An attempt to modify its value
    is illegal; the compiler would reject the program.
 
 -  Integer'Image is a function that takes an Integer and converts it to a
    String.  It is an example of a language construct known as an *attribute*,
-   indicated by the "'" syntax, which will be covered in more detail later.
+   indicated by the :Ada:`'` syntax, which will be covered in more detail later.
 
 -  The :ada:`&` symbol is the concatenation operator for String values
 
@@ -289,7 +290,7 @@ A few things to note:
 The "step" of the loop is limited to 1 (forward direction) and -1 (backward).
 To iterate backwards over a range, use the :ada:`reverse` keyword:
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Greet_5a_Reverse
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_5a_Reverse
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -300,15 +301,17 @@ To iterate backwards over a range, use the :ada:`reverse` keyword:
        end loop;
     end Greet_5a_Reverse;
 
-Executing this procedure yields the following output:
+.. only:: builder_html
 
-.. code-block:: sh
+    Executing this procedure yields the following output:
 
-   Hello, World! 5
-   Hello, World! 4
-   Hello, World! 3
-   Hello, World! 2
-   Hello, World! 1
+    .. code-block:: sh
+
+       Hello, World! 5
+       Hello, World! 4
+       Hello, World! 3
+       Hello, World! 2
+       Hello, World! 1
 
 The bounds of a :ada:`for` loop may be computed at run-time; they
 are evaluated once, before the loop body is executed.  If the value of the
@@ -316,7 +319,7 @@ upper bound is less than the value of the lower bound, then the
 loop is not executed at all.  This is the case also for :ada:`reverse` loops.
 Thus no output is produced in the following example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Greet_No_Op
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_No_Op
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -336,7 +339,7 @@ Bare loops
 The simplest loop in Ada is the bare loop, which forms the foundation of
 the other kinds of Ada loops.
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Greet_5b
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_5b
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -381,7 +384,7 @@ While loops
 
 The last kind of loop in Ada is the :ada:`while` loop.
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Greet_5c
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_5c
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -420,7 +423,7 @@ but with some important differences.
 Here's an example, a variation of a program that was shown earlier
 with an :ada:`if` statement:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction_2
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction_2
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -508,7 +511,7 @@ We've briefly mentioned variable declarations in previous subsection. Let's look
 at a simple example, where we declare an integer variable :ada:`X` in the
 declarative region and perform an initialization and an addition on it:
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Variable_Declaration
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Variable_Declaration
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -526,7 +529,7 @@ declarative region and perform an initialization and an addition on it:
 
 Let's look at an example of a nested procedure:
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Nested_Procedure
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Nested_Procedure
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -544,7 +547,7 @@ A declaration cannot appear as a statement. If you need to declare a local
 variable amidst the statements, you can introduce a new declarative region with
 a block statement:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_6
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Greet_6
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -591,7 +594,7 @@ If expressions
 Here's an alternative version of an example we saw earlier; the :ada:`if`
 statement has been replaced by an :ada:`if` expression:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
@@ -628,7 +631,7 @@ there are a few differences that stem from the fact that it is an expression:
 
 Here's another example:
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Even_Odd
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Even_Odd
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -648,7 +651,7 @@ Case expressions
 Analogous to :ada:`if` expressions, Ada also has :ada:`case` expressions.
 They work just as you would expect.
 
-.. code:: ada project=Courses.Intro_To_Ada.Imperative_Language.Case_Expression
+.. code:: ada run_button project=Courses.Intro_To_Ada.Imperative_Language.Case_Expression
 
     with Ada.Text_IO; use Ada.Text_IO;
 

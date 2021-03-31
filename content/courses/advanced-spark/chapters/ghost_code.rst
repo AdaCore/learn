@@ -1,5 +1,3 @@
-:code-config:`run_button=False;prove_button=True;accumulate_code=False`
-
 Ghost Code
 =====================================================================
 
@@ -34,7 +32,7 @@ Ghost code – A trivial example
 
 - how to express it?
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Ghost_Code.Trivial_Example
 
     package Show_Trivial_Example is
 
@@ -70,7 +68,7 @@ Ghost variables – aka auxiliary variables
 
     - assignment is discarded by compiler when ghost code ignored
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Ghost_Code.Ghost_Variable
 
     package Show_Ghost_Variable is
 
@@ -110,7 +108,7 @@ Ghost variables – non-interference rules
        Free := Free + 1;
     end if;
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Non_Interference
     :class: ada-expect-compile-error
 
     procedure Show_Non_Interference is
@@ -149,7 +147,7 @@ Ghost statements
 
     - calls to ghost procedures
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Ghost_Statements
 
     procedure Show_Ghost_Statements is
 
@@ -229,7 +227,7 @@ Ghost functions
 
     - or in body – only proof of unit can use expression
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Ghost_Code.Ghost_Function
 
     package Show_Ghost_Function is
 
@@ -275,7 +273,7 @@ Imported ghost functions
 
         - type is abstract for GNATprove
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Ghost_Code.Imported_Ghost_Function
 
     package Show_Imported_Ghost_Function
       with SPARK_Mode => On is
@@ -312,7 +310,7 @@ Ghost packages and ghost abstract state
 
 - Ghost abstract state can only represent ghost variables
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Ghost_Code.Ghost_Package
 
     package Show_Ghost_Package
       with Abstract_State => (State with Ghost) is
@@ -320,8 +318,6 @@ Ghost packages and ghost abstract state
        function Free_Memory return Natural with Ghost;
 
     end Show_Ghost_Package;
-
-.. code:: ada
 
     package body Show_Ghost_Package
       with Refined_State => (State => (Data, Free, Free_Init)) is
@@ -354,7 +350,7 @@ Executing ghost code
 
     - SPARK rules enforce consistency – in particular no write disabled
 
-.. code:: ada
+.. code:: ada no_button project=Courses.Advanced_SPARK.Ghost_Code.Exec_Ghost_Code
 
     package Show_Exec_Ghost_Code is
 
@@ -463,7 +459,7 @@ Code Examples / Pitfalls
 Example #1
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Example_01
     :class: ada-expect-compile-error
 
     procedure Example_01 is
@@ -493,7 +489,7 @@ This code is not correct. A ghost entity cannot appear in this context.
 Example #2
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Example_02
 
     procedure Example_02 is
 
@@ -528,8 +524,7 @@ This code is correct. Note that procedure ``Check`` is inlined for proof
 Example #3
 ~~~~~~~~~~
 
-.. code:: ada
-    :class: ada-expect-compile-error
+.. code:: ada no_button project=Courses.Advanced_SPARK.Ghost_Code.Example_03
 
     package Example_03 is
 
@@ -555,7 +550,7 @@ accepts this code as it enables all ghost code and assertions.
 Example #4
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Ghost_Code.Example_04
 
     package Example_04 is
 
@@ -565,8 +560,6 @@ Example #4
        function Free_Memory return Natural with Ghost;
 
     end Example_04;
-
-.. code:: ada
 
     package body Example_04 is
 
@@ -593,7 +586,7 @@ allow proving the postcondition on ``Alloc``.
 Example #5
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada compile_button project=Courses.Advanced_SPARK.Ghost_Code.Example_05
 
     package Example_05 is
 
@@ -603,8 +596,6 @@ Example #5
        function Free_Memory return Natural with Ghost;
 
     end Example_05;
-
-.. code:: ada
 
     package body Example_05 is
 
@@ -628,7 +619,7 @@ expression function.
 Example #6
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Example_06
 
     procedure Example_06 is
 
@@ -662,7 +653,7 @@ proof (``Sum`` may not return).
 Example #7
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Example_07
 
     procedure Example_07 is
 
@@ -696,7 +687,7 @@ of ``Sum`` here.
 Example #8
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Example_08
 
     procedure Example_08 is
 
@@ -730,7 +721,7 @@ recursive definition of ``Sum``.
 Example #9
 ~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Example_09
 
     with Ada.Containers.Functional_Vectors;
 
@@ -766,7 +757,7 @@ postcondition.
 Example #10
 ~~~~~~~~~~~
 
-.. code:: ada
+.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Example_10
 
     with Ada.Containers.Functional_Vectors;
 

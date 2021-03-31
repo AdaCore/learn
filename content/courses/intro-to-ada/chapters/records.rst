@@ -1,8 +1,6 @@
 Records
 =======
 
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 So far, all the types we have encountered have values that are not
@@ -81,7 +79,6 @@ type mentioned above, we can access the :ada:`Year` component by writing
 Let's look at an example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Records.Record_Selection
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -149,7 +146,6 @@ using the :ada:`Year` component of :ada:`Some_Day`.
 Let's look at a complete example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Record_Component_Renaming
-    :class: ada-run
 
     package Dates is
 

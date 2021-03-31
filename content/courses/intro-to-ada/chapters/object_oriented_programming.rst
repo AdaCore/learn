@@ -1,9 +1,6 @@
 Object-oriented programming
 ===========================
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-:code-config:`reset_accumulator=True`
-
 .. role:: ada(code)
    :language: ada
 
@@ -79,7 +76,7 @@ brushed on, but not really covered, up to now:
 You can create one or more new types from every type in Ada. Type
 derivation is built into the language.
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Newtypes
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Newtypes
 
     package Newtypes is
        type Point is record
@@ -107,7 +104,7 @@ defined in the same scope as the type.
     1. The subprogram is declared in the same scope as the type and
     2. The type and the subprogram are declared in a package
 
-.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Primitives
+.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Primitives
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -187,9 +184,7 @@ functionality is added:
 
 Let's see our first tagged type declarations:
 
-:code-config:`reset_accumulator=True;accumulate_code=True`
-
-.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     package P is
        type My_Class is tagged null record;
@@ -237,7 +232,7 @@ descendent derives tagged type".
 In Ada, we call this the *classwide type*. It's used in OOP as soon as
 you need polymorphism. For example, you can't do the following:
 
-.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
     :class: ada-expect-compile-error
 
     with P; use P;
@@ -263,7 +258,7 @@ programmer is "I want O3 to be able to hold an object of type
 :ada:`My_Class` or any type descending from :ada:`My_Class`". Here's how you
 do that:
 
-.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -309,7 +304,7 @@ In other words, to make a dispatching call, you must first have an
 object that can be either of a type or any type derived from this
 type, namely an object of a classwide type.
 
-.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -334,7 +329,9 @@ type, namely an object of a classwide type.
        --  Dispatching: Calls My_Class.Foo
     end Main;
 
-.. attention:: You can convert an object of type :ada:`Derived` to an
+.. admonition:: Attention
+
+    You can convert an object of type :ada:`Derived` to an
     object of type :ada:`My_Class`. This is called a *view conversion* in
     Ada parlance and is useful, for example, if you want to call a
     parent method.
@@ -345,8 +342,7 @@ type, namely an object of a classwide type.
     modify the state of an object: changes to converted object will
     affect the original one.
 
-    .. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
-        :class: ada-run
+    .. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
         with P; use P;
 
@@ -374,7 +370,7 @@ You can also call primitives of tagged types with a notation that's
 more familiar to object oriented programmers. Given the Foo primitive
 above, you can also write the above program this way:
 
-.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -404,8 +400,7 @@ which is the case in our examples, you can call the primitive using
 the dot notation. Any remaining parameter are passed normally:
 
 
-.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
-    :class: ada-run
+.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
 
     with P; use P;
 
@@ -431,8 +426,6 @@ the dot notation. Any remaining parameter are passed normally:
        Obj.Foo;
     end Main;
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 Private & Limited
 -----------------
 
@@ -442,8 +435,7 @@ applied to tagged types, as we'll see in this section.
 
 This is an example of a tagged private type:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Private_Types
-    :class: ada-syntax-only
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Private_Types
 
     package P is
        type T is tagged private;
@@ -455,8 +447,7 @@ This is an example of a tagged private type:
 
 This is an example of a tagged limited type:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Types
-    :class: ada-syntax-only
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Types
 
     package P is
        type T is tagged limited record
@@ -467,7 +458,7 @@ This is an example of a tagged limited type:
 Naturally, you can combine both *limited* and *private* types and declare a
 tagged limited private type:
 
-.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Private_Types
+.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Limited_Private_Types
 
     package P is
        type T is tagged limited private;
@@ -517,14 +508,11 @@ compilation errors would also occur for non-tagged types.
 Classwide access types
 ----------------------
 
-:code-config:`reset_accumulator=True;accumulate_code=True`
-
 In this section, we'll discuss an useful pattern for object-oriented programming
 in Ada: classwide access type. Let's start with an example where we declare a
 tagged type :ada:`T` and a derived type :ada:`T_New`:
 
-.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Error
-    :class: ada-syntax-only
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Error
 
     package P is
        type T is tagged null record;
@@ -586,7 +574,7 @@ and dispatch according to the actual type of each individual element:
 
 However, it's not possible to declare an array of type :ada:`T'Class` directly:
 
-.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Error
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Error
     :class: ada-expect-compile-error
 
     with P; use P;
@@ -610,15 +598,13 @@ which have the following format:
 
     type T_Class is access T'Class;
 
-:code-config:`reset_accumulator=True;accumulate_code=False`
-
 We can rewrite the previous example using the :ada:`T_Class` type. In this
 case, dynamically allocated objects of this type will dispatch according to
 the actual type used during the allocation. Also, let's introduce an
 :ada:`Init` procedure that won't be overridden for the derived :ada:`T_New`
 type. This is the adapted code:
 
-.. code:: ada project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Access
+.. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Classwide_Access
 
     package P is
        type T is tagged record
