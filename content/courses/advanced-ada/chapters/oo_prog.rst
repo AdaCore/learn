@@ -568,32 +568,28 @@ Controlled types
 
     Complete section!
 
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-References
-----------
+    References
+    ----------
 
-.. note::
+    .. note::
 
-    This section was originally written by Maxim Reznik and Nicolas Setton, and
-    published as blog post
-    `Using reference types to handle persistent objects <http://blog.adacore.com/use-ref-types-to-persistent-object>`_.
+        This section was originally written by Maxim Reznik and Nicolas Setton, and
+        published as blog post
+        `Using reference types to handle persistent objects <http://blog.adacore.com/use-ref-types-to-persistent-object>`_.
 
-.. admonition:: Relevant topics
+    .. admonition:: Relevant topics
 
-    - `User-Defined References <http://www.ada-auth.org/standards/12rm/html/RM-4-1-5.html>`_
+        - `User-Defined References <http://www.ada-auth.org/standards/12rm/html/RM-4-1-5.html>`_
 
-.. todo::
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-    Complete section!
+    User-defined indexing
+    ---------------------
 
+    .. admonition:: Relevant topics
 
-User-defined indexing
----------------------
-
-.. admonition:: Relevant topics
-
-    - `User-Defined Indexing <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-6.html>`_
-
-.. todo::
-
-    Complete section!
+        - `User-Defined Indexing <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-6.html>`_

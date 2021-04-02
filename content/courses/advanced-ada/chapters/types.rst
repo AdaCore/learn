@@ -67,16 +67,15 @@ Default initial conditions
     Complete section!
 
 
-Stable Properties of a Type
----------------------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Stable Properties of a Type
+    ---------------------------
 
-    - `Stable Properties of a Type <http://www.ada-auth.org/standards/2xrm/html/RM-7-3-4.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
-
-    Complete section!
+        - `Stable Properties of a Type <http://www.ada-auth.org/standards/2xrm/html/RM-7-3-4.html>`_
 
 
 Deferred Constants

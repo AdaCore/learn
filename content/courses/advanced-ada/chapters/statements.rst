@@ -43,14 +43,13 @@ Extended return statement
     Complete section!
 
 
-Parallel loops
---------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Parallel loops
+    --------------
 
-    - Parallel loops mentioned in
-      `Loop Statements <http://www.ada-auth.org/standards/2xrm/html/RM-5-5.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
-
-    Complete section!
+        - Parallel loops mentioned in
+        `Loop Statements <http://www.ada-auth.org/standards/2xrm/html/RM-5-5.html>`_

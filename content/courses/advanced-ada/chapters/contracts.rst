@@ -24,16 +24,15 @@ Entry index attribute
     Complete section!
 
 
-Global Aspect Definition
-------------------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Global Aspect Definition
+    ------------------------
 
-    - `The Global and Global'Class Aspects <http://www.ada-auth.org/standards/2xrm/html/RM-6-1-2.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
-
-    Complete section!
+        - `The Global and Global'Class Aspects <http://www.ada-auth.org/standards/2xrm/html/RM-6-1-2.html>`_
 
 
 Predicate failure
