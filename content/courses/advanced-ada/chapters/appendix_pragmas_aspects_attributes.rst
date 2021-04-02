@@ -1,5 +1,5 @@
-Appendix A: Pragmas, Aspects and Attributes
-===========================================
+Pragmas, Aspects and Attributes
+===============================
 
 .. include:: ../../global.txt
 

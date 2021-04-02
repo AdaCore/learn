@@ -1,5 +1,5 @@
-Appendix C: Incompatibilities between Ada standards
-===================================================
+Incompatibilities between Ada standards
+=======================================
 
 .. include:: ../../global.txt
 

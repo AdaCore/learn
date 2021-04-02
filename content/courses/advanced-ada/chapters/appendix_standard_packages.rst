@@ -1,5 +1,5 @@
-Appendix B: Standard Packages
-=============================
+Standard Packages
+=================
 
 .. include:: ../../global.txt
 
