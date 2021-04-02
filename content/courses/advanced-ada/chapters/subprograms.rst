@@ -275,18 +275,6 @@ Operator Overloading
     Complete section!
 
 
-:ada:`separate` compilation
----------------------------
-
-.. admonition:: Relevant topics
-
-    - `Subunits of Compilation Units <http://www.ada-auth.org/standards/2xrm/html/RM-10-1-3.html>`_
-
-.. todo::
-
-    Complete section!
-
-
 Nonreturning procedures
 -----------------------
 
