@@ -54,9 +54,25 @@ to learn more about Ada and SPARK.
     .. toctree::
        :maxdepth: 4
 
-       About <about>
-       Courses <courses/courses>
-       Labs <labs/labs>
+        About <about>
+
+    .. toctree::
+        :maxdepth: 1
+        :caption: Courses
+
+        Introduction to Ada <courses/intro-to-ada/index>
+        Introduction to SPARK <courses/intro-to-spark/index>
+        Ada for the C++ or Java Developer <courses/Ada_For_The_CPP_Java_Developer/index>
+        Ada for the Embedded C Developer <courses/Ada_For_The_Embedded_C_Developer/index>
+        SPARK Ada for the MISRA C Developer <courses/SPARK_for_the_MISRA_C_Developer/index>
+        Introduction to GNAT Toolchain <courses/GNAT_Toolchain_Intro/index>
+
+    .. toctree::
+        :maxdepth: 1
+        :caption: Labs
+
+        Introduction to Ada <labs/intro-to-ada/index>
+        Bug Free Coding <labs/bug-free-coding/index>
 
 Books
 ------------------------------
