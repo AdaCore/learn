@@ -52,7 +52,7 @@ to learn more about Ada and SPARK.
 .. container:: content-blocks
 
     .. toctree::
-       :maxdepth: 4
+        :maxdepth: 4
 
         About <about>
 
