@@ -54,26 +54,27 @@ Big Numbers
     Complete section!
 
 
-Model of Floating-Point Arithmetic
-----------------------------------
+Floating-Point Types
+--------------------
 
 .. admonition:: Relevant topics
 
-    - Brief overview of `Model of Floating Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-1.html>`_
+    - Brief mentioning relevant parts of
+      `Model of Floating Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-1.html>`_
 
 .. todo::
 
     Complete section!
 
 
-Model of Fixed-Point Arithmetic
--------------------------------
+Fixed-Point Types
+-----------------
 
 .. admonition:: Relevant topics
 
-    - Brief overview of `Model of Fixed Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-3.html>`_
+    - Brief mentioning relevant parts of
+      `Model of Fixed Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-3.html>`_
 
 .. todo::
 
     Complete section!
-
