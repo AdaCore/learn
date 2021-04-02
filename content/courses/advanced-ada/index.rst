@@ -55,30 +55,13 @@ Advanced Ada
     :maxdepth: 4
     :caption: Contents:
 
-    Subprograms <chapters/subprograms>
-    Statements <chapters/statements>
-    Packages <chapters/packages>
-    Types <chapters/types>
-    Aggregates <chapters/aggregates>
-    Object-Oriented Programming <chapters/oo_prog>
-    Strong Typing <chapters/strong_typing>
-    Arrays <chapters/arrays>
-    Strings <chapters/strings>
-    Access Types <chapters/access_types>
-    Limited Types <chapters/limited_types>
-    Contracts <chapters/contracts>
-    Freezing <chapters/freezing>
-    Exceptions <chapters/exceptions>
-    Memory Management <chapters/memory_management>
-    Generics <chapters/generics>
-    Containers <chapters/containers>
-    Tasking <chapters/tasking>
-    Design Patterns <chapters/design_patterns>
-    File I/O <chapters/file_io>
-    Numerics <chapters/numerics>
-    Restrictions <chapters/restrictions>
-    Interfacing With C/C++ <chapters/interfacing_with_cpp>
-    System Annexes <chapters/system_annexes>
-    Appendix A: Pragmas, Aspects and Attributes <chapters/appendix_pragmas_aspects_attributes>
-    Appendix B: Standard Packages <chapters/appendix_standard_packages>
-    Appendix C: Incompatibilities between Ada standards <chapters/appendix_incompatibilities>
+    chapters/data_types
+    chapters/control_flow
+    chapters/packages
+    chapters/resource_management
+    chapters/abstraction_oriented_prog
+    chapters/contracts
+    chapters/initialization
+    chapters/tasking
+    chapters/interfacing_external
+    chapters/appendices
