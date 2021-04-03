@@ -338,7 +338,7 @@ For example, say you want to express an "overlay," in which an object of
 one type is placed at the same memory location as a distinct object of a
 distinct type, thus overlaying one object over the other. Doing so
 allows you to interact with those memory locations in more than one way:
-one way per type, specifically. This is known as "type punning" in
+one way per type, specifically. This is known as `type punning <https://en.wikipedia.org/wiki/Type_punning>`_ in
 computer programming. There are other was to achieve that effect as
 well, but realize that doing so circumvents the static strong typing
 used by Ada to protect us from ourselves and from others. Use it with
