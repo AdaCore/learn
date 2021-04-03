@@ -293,7 +293,7 @@ the if-statement expression to check more than :ada:`Default_Bit_Order`,
 because the code could have used a pragma to change the default scalar
 storage order. That's more detail than worth going into here.)
 
-Another important set of declarations in package `System` define the 
+Another important set of declarations in package :ada:`System` define the 
 values for priorities, including interrupt priorities. We will ignore 
 them until we get to the section on interrupt handling. 
 
