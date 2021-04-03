@@ -283,8 +283,8 @@ formal type. We can instantiate this generic for lots of different kinds
 of types, as long as their values occupy four bytes. (We have removed the
 code that checks the size, for the sake of simplicity.) Don't worry
 about some of the details for now, we'll get there eventually. The point
-here is the if-statement: the expression compares the Default_Bit_Order
-constant to `High_Order_First` to see if this execution is on a
+here is the if-statement: the expression compares the :ada:`Default_Bit_Order`
+constant to :ada:`High_Order_First` to see if this execution is on a
 big-endian machine. If not, it swaps the bytes because the incoming
 bytes are always received in "wire-order," i.e., big-endian order.
 
