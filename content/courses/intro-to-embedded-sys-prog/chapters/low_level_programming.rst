@@ -152,7 +152,7 @@ machine can handle. That's specified by `Max_Nonbinary_Modulus`, the
 largest (positive) value allowed as the modulus of a modular type
 definition.
 
-`Max_Base_Digits` is the largest value allowed for the requested decimal
+:ada:`Max_Base_Digits` is the largest value allowed for the requested decimal
 precision in a floating-point type's definition.
 
 We won't go over all of the above, you get the idea. Let's examine the
