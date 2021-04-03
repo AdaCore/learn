@@ -360,7 +360,7 @@ composite value.
 
 But there's a problem: inside the procedure we want to overlay our 
 record object onto the address of one of the bytes in the buffer. But we 
-didn't declare the Buffer ourselves, at a known location. It is passed 
+didn't declare the :ada:`Buffer` ourselves, at a known location. It is passed 
 to the procedure as an argument. Therefore, when writing the procedure 
 we don't already know the address of the buffer, nor the addresses of 
 the bytes within. As a result, we don't know the address to use in our 
