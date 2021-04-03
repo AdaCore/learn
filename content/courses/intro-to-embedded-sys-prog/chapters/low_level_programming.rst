@@ -304,8 +304,8 @@ Finally, and perhaps surprisingly, a few declarations in package
    type Name is implementation-defined-enumeration-type;
    System_Name : constant Name := implementation-defined;
 
-Values of type `Name` are the names of alternative machine 
-configurations supported by the implementation. `System_Name` represents 
+Values of type :ada:`Name` are the names of alternative machine 
+configurations supported by the implementation. :ada:`System_Name` represents 
 the current machine configuration. We've never seen any actual use of 
 this. 
 
