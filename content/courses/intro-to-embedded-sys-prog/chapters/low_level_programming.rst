@@ -173,7 +173,7 @@ the individually addressable memory elements. A "byte" would correspond
 to a storage element with the above constant value.
 
 Consider a typical idiom for determining the number of whole storage
-elements an object named X occupies:
+elements an object named :ada:X occupies:
 
 .. code-block:: ada
 
