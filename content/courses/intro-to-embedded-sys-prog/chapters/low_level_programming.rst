@@ -190,7 +190,7 @@ on a 64-bit machine it would probably be 64, and so on.
 :ada:`Storage_Unit` and :ada:`Word_Size` are obviously related. For this Arm target a
 word consists of four eight-bit storage elements.
 
-Another frequently referenced declaration in package System is that of
+Another frequently referenced declaration in package :ada:`System` is that of
 the type representing memory addresses, along with a constant for the
 null address designating no storage element.
 
