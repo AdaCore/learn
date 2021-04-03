@@ -147,8 +147,8 @@ integer values supported by the machine.
 modular type definition.
 
 But a modular type need not be defined in terms of powers of two. An
-arbitrary modulus is allowed, as long is it is not bigger than the
-machine can handle. That's specified by `Max_Nonbinary_Modulus`, the
+arbitrary modulus is allowed, as long as it is not bigger than the
+machine can handle. That's specified by :ada:`Max_Nonbinary_Modulus`, the
 largest (positive) value allowed as the modulus of a modular type
 definition.
 
