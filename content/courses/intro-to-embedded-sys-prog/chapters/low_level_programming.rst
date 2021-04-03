@@ -187,7 +187,7 @@ example of the sort of thing you might do with that constant.
 manipulates. On a 32-bit machine we'd expect :ada:`Word` to have a value of 32;
 on a 64-bit machine it would probably be 64, and so on.
 
-`Storage_Unit` and `Word_Size` are obviously related. For this Arm target a
+:ada:`Storage_Unit` and :ada:`Word_Size` are obviously related. For this Arm target a
 word consists of four eight-bit storage elements.
 
 Another frequently referenced declaration in package System is that of
