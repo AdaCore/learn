@@ -1,9 +1,6 @@
 Low Level Programming
 =====================
 
-:code-config:`run_button=True;prove_button=False;accumulate_code=False`
-:code-config:`reset_accumulator=True`
-
 .. include:: ../../global.txt
 
 Separation Principle
@@ -147,8 +144,8 @@ integer values supported by the machine.
 modular type definition.
 
 But a modular type need not be defined in terms of powers of two. An
-arbitrary modulus is allowed, as long is it is not bigger than the
-machine can handle. That's specified by `Max_Nonbinary_Modulus`, the
+arbitrary modulus is allowed, as long as it is not bigger than the
+machine can handle. That's specified by :ada:`Max_Nonbinary_Modulus`, the
 largest (positive) value allowed as the modulus of a modular type
 definition.
 
@@ -250,8 +247,10 @@ as follows:
    type Bit_Order is (High_Order_First, Low_Order_First);
    Default_Bit_Order : constant Bit_Order := implementation-defined;
 
-:ada:`High_Order_First` corresponds to "big-endian" and :ada:`Low_Order_First` to
-little-endian. Here is a real-word example of use, in which we retrieve arbitrarily-typed values from a given buffer starting at a given index:
+:ada:`High_Order_First` corresponds to "big-endian" and 
+:ada:`Low_Order_First` to little-endian. Here is a real-word example of 
+use, in which we retrieve arbitrarily-typed values from a given buffer 
+starting at a given index: 
 
 .. code-block:: ada
 
@@ -391,10 +390,11 @@ Here's the generic procedure again, now showing the overlay:
       end if;
    end Retrieve_4_Bytes;
 
-When we declare the :ada:`Buffer_Overlay` object we also specify its address 
-|mdash| strictly speaking its starting address |mdash| which, not 
-surprisingly, is the address of the :ada:`Buffer` component at index :ada:`Start`. 
-Applying the :ada:`Address` attribute gives us that location. 
+When we declare the :ada:`Buffer_Overlay` object we also specify its 
+address |mdash| strictly speaking its starting address |mdash| which, 
+not surprisingly, is the address of the :ada:`Buffer` component at index 
+:ada:`Start`. Applying the :ada:`Address` attribute gives us that 
+location. 
 
 There are other characteristics we might want to query too. For example, 
 we might want to ask the compiler what size and alignment it chose for a 
