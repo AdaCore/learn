@@ -242,7 +242,7 @@ Note that :ada:`Address` is the type of the result of the query attribute
 
 We mentioned potentially needing to swap bytes in networking
 communications software, due to the differences in the "endianness" of
-the machines communicating. That characteristic is specified in `System`
+the machines communicating. That characteristic is specified in :ada:`System`
 as follows:
 
 .. code-block:: ada
