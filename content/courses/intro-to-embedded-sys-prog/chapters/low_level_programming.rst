@@ -199,7 +199,7 @@ null address designating no storage element.
    type Address is private;
    Null_Address : constant Address;
 
-You may be wondering why type Address is a private type, since that
+You may be wondering why type :ada:`Address` is a private type, since that
 choice means that we programmers cannot treat it like an ordinary
 (unsigned) integer value. Portability is of course the issue, because
 addressing, and thus address representation, varies among computer
