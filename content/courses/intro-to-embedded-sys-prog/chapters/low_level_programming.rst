@@ -289,7 +289,7 @@ big-endian machine. If not, it swaps the bytes because the incoming
 bytes are always received in "wire-order," i.e., big-endian order.
 
 (In reality we would change the left-hand side of the call to "/=" in
-the if-statement expression to check more than Default_Bit_Order,
+the if-statement expression to check more than :ada:`Default_Bit_Order`,
 because the code could have used a pragma to change the default scalar
 storage order. That's more detail than worth going into here.)
 
