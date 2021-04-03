@@ -347,7 +347,7 @@ For a concrete example, imagine a sensor providing a stream of bytes as
 input, and you know that groups of those bytes comprise a composite
 value, i.e., a value of some record type. The buffered array of inputs
 bytes would be declared in terms of a numeric, probably unsigned integer
-Byte type, whereas the composite type would, of course, be the record
+:ada:`Byte` type, whereas the composite type would, of course, be the record
 type. The clients of the sensor driver call a driver-defined procedure
 to get the latest value, passing an output argument of the record type. The
 procedure gets the next buffered bytes, converts them to the record type
