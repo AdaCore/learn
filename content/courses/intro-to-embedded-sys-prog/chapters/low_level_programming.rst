@@ -206,7 +206,7 @@ addressing, and thus address representation, varies among computer
 architectures. Not all architectures have a flat address space directly
 referenced by numeric values, although that is common. Some are
 represented by a base address plus an offset, for example. Therefore,
-the representation for type Address is hidden from us, the clients.
+the representation for type :ada:`Address` is hidden from us, the clients.
 Consequently we cannot simply treat address values as numeric values.
 Don't worry, though. The operations we need are provided.
 
