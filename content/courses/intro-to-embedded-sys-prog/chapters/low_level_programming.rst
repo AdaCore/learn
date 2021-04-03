@@ -250,7 +250,7 @@ as follows:
    type Bit_Order is (High_Order_First, Low_Order_First);
    Default_Bit_Order : constant Bit_Order := implementation-defined;
 
-`High_Order_First` corresponds to "big-endian" and `Low_Order_First` to
+:ada:`High_Order_First` corresponds to "big-endian" and :ada:`Low_Order_First` to
 little-endian. Here is a real-word example of use, in which we retrieve arbitrarily-typed values from a given buffer starting at a given index:
 
 .. code-block:: ada
