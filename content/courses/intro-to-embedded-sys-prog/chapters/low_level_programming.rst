@@ -278,7 +278,7 @@ little-endian. Here is a real-word example of use, in which we retrieve arbitrar
       end if;
    end Retrieve_4_Bytes;
 
-`Value` is the output parameter of type `Retrieved`, which is a generic
+:ada:`Value` is the output parameter of type :ada:`Retrieved`, which is a generic
 formal type. We can instantiate this generic for lots of different kinds
 of types, as long as their values occupy four bytes. (We have removed the
 code that checks the size, for the sake of simplicity.) Don't worry
