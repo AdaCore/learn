@@ -298,7 +298,7 @@ values for priorities, including interrupt priorities. We will ignore
 them until we get to the section on interrupt handling. 
 
 Finally, and perhaps surprisingly, a few declarations in package
-`System` are almost always (if not actually always) ignored. 
+:ada:`System` are almost always (if not actually always) ignored. 
 
 .. code-block:: ada
 
