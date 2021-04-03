@@ -237,8 +237,8 @@ speaking, required by the language. Doing so is a good idea for the
 reasons given above, and is common among vendors. Not all vendors do,
 though.
 
-Note that `Address` is the type of the result of the query attribute
-`Address`.
+Note that :ada:`Address` is the type of the result of the query attribute
+:ada:`Address`.
 
 We mentioned potentially needing to swap bytes in networking
 communications software, due to the differences in the "endianness" of
