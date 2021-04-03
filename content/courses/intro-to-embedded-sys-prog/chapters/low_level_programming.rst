@@ -179,7 +179,7 @@ elements an object named :ada:X occupies:
 
   Units : constant Integer := (X'Size + Storage_Unit - 1) / Storage_Unit;
 
-Remember that `'Size` returns a value in terms of bits. There are more
+Remember that :ada:`'Size` returns a value in terms of bits. There are more
 direct ways to determine that size information but this will serve as an
 example of the sort of thing you might do with that constant.
 
