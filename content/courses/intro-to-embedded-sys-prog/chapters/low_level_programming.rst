@@ -143,7 +143,7 @@ for the numeric limits of an Ada compiler for an Arm 32-bit SoC:
 :ada:`Min_Int` and :ada:`Max_Int` supply the most-negative and most-positive
 integer values supported by the machine.
 
-`Max_Binary_Modulus` is the largest power allowed as the modulus of a
+:ada:`Max_Binary_Modulus` is the largest power allowed as the modulus of a
 modular type definition.
 
 But a modular type need not be defined in terms of powers of two. An
