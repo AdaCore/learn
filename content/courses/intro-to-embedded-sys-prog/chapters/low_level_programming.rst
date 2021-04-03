@@ -309,7 +309,7 @@ configurations supported by the implementation. `System_Name` represents
 the current machine configuration. We've never seen any actual use of 
 this. 
 
-`Memory_Size` is an implementation-defined value that is intended to
+:ada:`Memory_Size` is an implementation-defined value that is intended to
 reflect the memory size of the configuration, in units of storage
 elements. What the value actually refers to is not specified. Is it the
 size of the address space, the amount of physical memory on the machine,
