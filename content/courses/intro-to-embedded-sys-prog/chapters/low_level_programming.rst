@@ -232,7 +232,7 @@ provided by package `System.Storage_Elements`, a child package we will
 cover later. We should say though, that the need for address arithmetic
 in Ada is rare, especially compared to C.
 
-Having type `Address` presented as a private type is not, strictly
+Having type :ada:`Address` presented as a private type is not, strictly
 speaking, required by the language. Doing so is a good idea for the
 reasons given above, and is common among vendors. Not all vendors do,
 though.
