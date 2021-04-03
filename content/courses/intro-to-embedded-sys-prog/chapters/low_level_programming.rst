@@ -62,14 +62,15 @@ practices are designed into the Ada way of doing it.
 Guaranteed Level of Support
 ---------------------------
 
-The Ada reference manual has an entire section dedicated to low-level
-programming. That's section 13, "Representation Issues," which provides
-facilities for developers to query and control aspects of various
-entities in their code, and for interfacing to hardware. Want to specify
-the exact layout for a record type's components? See section 13. Want to
-specify the alignment of a type? See section 13. And that's just the
-beginning. We'll talk about these facilities as we go, but there's
-another point to make about this section.
+The Ada reference manual has an entire section dedicated to low-level 
+programming. That's section 13, "Representation Issues," which provides 
+facilities for developers to query and control aspects of various 
+entities in their code, and for interfacing to hardware. Want to specify 
+the exact layout for a record type's components? Easy, and the compiler 
+will check your layout too. Want to specify the alignment of a type? 
+That's easy too. And that's just the beginning. We'll talk about these 
+facilities as we go, but there's another point to make about this 
+section. 
 
 In particular, section 13 includes recommended levels of support to be
 provided by language implementations, i.e., compilers and other
@@ -347,7 +348,7 @@ For a concrete example, imagine a sensor providing a stream of bytes as
 input, and you know that groups of those bytes comprise a composite
 value, i.e., a value of some record type. The buffered array of inputs
 bytes would be declared in terms of a numeric, probably unsigned integer
-Byte type, whereas the composite type would, of course, be the record
+:ada:`Byte` type, whereas the composite type would, of course, be the record
 type. The clients of the sensor driver call a driver-defined procedure
 to get the latest value, passing an output argument of the record type. The
 procedure gets the next buffered bytes, converts them to the record type
