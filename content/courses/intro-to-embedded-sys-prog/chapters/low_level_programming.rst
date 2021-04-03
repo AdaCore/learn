@@ -368,8 +368,8 @@ overlay.
 
 Of course, there is a solution. We can query the address of objects, and
 other things too, but objects, especially variables, are the most common
-case. In particular, we can say `X'Address` to query the (starting)
-address of object X, including the case where X is a 
+case. In particular, we can say :ada:`X'Address` to query the (starting)
+address of object :ada:`X`, including the case where :ada:`X` is a 
 component of an array. With that information we know what address to
 specify for our record object overlay.
 
