@@ -228,7 +228,7 @@ Any private type directly supports the equality function, and
 consequently the inequality function, as well as assignment. What we
 don't get here is address arithmetic, again because we don't have a
 compile-time view of the actual representation. That functionality is
-provided by package `System.Storage_Elements`, a child package we will
+provided by package :ada:`System.Storage_Elements`, a child package we will
 cover later. We should say though, that the need for address arithmetic
 in Ada is rare, especially compared to C.
 
