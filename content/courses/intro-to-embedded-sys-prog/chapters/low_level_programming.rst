@@ -391,10 +391,10 @@ Here's the generic procedure again, now showing the overlay:
       end if;
    end Retrieve_4_Bytes;
 
-When we declare the `Buffer_Overlay` object we also specify its address 
+When we declare the :ada:`Buffer_Overlay` object we also specify its address 
 |mdash| strictly speaking its starting address |mdash| which, not 
-surprisingly, is the address of the `Buffer` component at index `Start`. 
-Applying the `Address` attribute gives us that location. 
+surprisingly, is the address of the :ada:`Buffer` component at index :ada:`Start`. 
+Applying the :ada:`Address` attribute gives us that location. 
 
 There are other characteristics we might want to query too. For example, 
 we might want to ask the compiler what size and alignment it chose for a 
