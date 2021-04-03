@@ -183,7 +183,7 @@ Remember that :ada:`'Size` returns a value in terms of bits. There are more
 direct ways to determine that size information but this will serve as an
 example of the sort of thing you might do with that constant.
 
-`Word_Size` is the number of bits in the units that the machine natively
+:ada:`Word_Size` is the number of bits in the units that the machine natively
 manipulates. On a 32-bit machine we'd expect Word to have a value of 32;
 on a 64-bit machine it would probably be 64, and so on.
 
