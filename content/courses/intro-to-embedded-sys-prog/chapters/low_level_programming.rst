@@ -167,7 +167,7 @@ following, especially the first. (The values here are again for the Arm
    Storage_Unit : constant := 8;
    Word_Size    : constant := 32;
 
-`Storage_Unit` is the number of bits per memory storage element. Storage
+:ada:`Storage_Unit` is the number of bits per memory storage element. Storage
 elements are the components of memory cells, and typically correspond to
 the individually addressable memory elements. A "byte" would correspond
 to a storage element with the above constant value.
