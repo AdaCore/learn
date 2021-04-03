@@ -140,7 +140,7 @@ for the numeric limits of an Ada compiler for an Arm 32-bit SoC:
    Max_Mantissa          : constant := 63;
    Fine_Delta            : constant := 2.0 ** (-Max_Mantissa);
 
-`Min_Int` and `Max_Int` supply the most-negative and most-positive
+:ada:`Min_Int` and :ada:`Max_Int` supply the most-negative and most-positive
 integer values supported by the machine.
 
 `Max_Binary_Modulus` is the largest power allowed as the modulus of a
