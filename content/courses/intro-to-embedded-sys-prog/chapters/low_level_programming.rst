@@ -81,7 +81,7 @@ recommendations are meant to be followed.
 
 For example, section 13.3 says that, for some entity named X, "X'Address
 should produce a useful result if X is an object that is aliased or of a
-by-reference type, or is an entity whose Address has been specified."
+by-reference type, or is an entity whose :ada:`Address` has been specified."
 So, for example, if the programmer specifies the address for a
 memory-mapped variable, the compiler cannot ignore that specification
 and instead, for the sake of performance, represent that variable using a
@@ -419,4 +419,3 @@ Unchecked Programming
 .. todo::
 
     Complete section!
-
