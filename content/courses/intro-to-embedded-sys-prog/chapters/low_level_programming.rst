@@ -315,7 +315,7 @@ elements. What the value actually refers to is not specified. Is it the
 size of the address space, the amount of physical memory on the machine,
 or what? In any case, the amount of memory available to a given computer
 is neither dependent upon, nor reflected by, this constant. Consequently,
-`Memory_Size` is not useful either.
+:ada:`Memory_Size` is not useful either.
 
 Why have something defined in the language that nobody uses? In short, 
 it seemed like a good idea at the time when Ada was first defined. 
