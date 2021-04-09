@@ -9,7 +9,11 @@ be used to avoid common implementation and maintenance issues.
 Type-based security
 -------------------
 
-.. sectionauthor:: Yannick Moy
+.. note::
+
+    This section was originally written by Yannick Moy and published as
+    `Gem #82: Type-Based Security 1 <https://www.adacore.com/gems/gem-82>`_ and
+    `Gem #83: Type-Based Security 2 <https://www.adacore.com/gems/gem-83>`_.
 
 The notions of tainted data and trusted data usually refer to data coming
 from the user vs. data coming from the application. Tainting is viral, in
@@ -355,10 +359,8 @@ Incidentally, the similar but distinct problem of input sanitization,
 where possibly invalid data is transformed into something that is known
 valid prior to use, can be handled in the same way.
 
-Table access
-------------
-
-.. sectionauthor:: Gustavo A. Hoffmann
+Example: Table access
+---------------------
 
 In this section, we discuss an application that accesses a two-dimensional
 table. We first look into a typical implementation, and then discuss how
@@ -472,10 +474,8 @@ need to maintain this application can immediately identify the purpose of
 :ada:`X` and use the variable accordingly.
 
 
-Multiple indices
-----------------
-
-.. sectionauthor:: Gustavo A. Hoffmann
+Example: Multiple indices
+-------------------------
 
 In this section, we discuss another example where the use of strong typing
 is relevant. Let's consider an application with the following
@@ -925,3 +925,14 @@ and reduces development time. At the same time, we're improving the
 documentation of the source-code and facilitating further improvements
 to the application.
 
+
+Discriminants
+-------------
+
+.. admonition:: Relevant topics
+
+    - discriminants in the context of strong typing
+
+.. todo::
+
+    Complete section!

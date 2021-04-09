@@ -3,8 +3,6 @@ Generics
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
 .. _FormalPackages:
 
 Formal packages
@@ -881,6 +879,62 @@ two instantiations of the :ada:`Display` procedure:
 - :ada:`Display_Name_Birthday`, which displays the full name and birthday
   of each person.
 
+Formal definite and indefinite types
+------------------------------------
+
+.. admonition:: Relevant topics
+
+    - definite and indefinite (sub)types in the context of generics
+
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
+
+    - discriminants
+        - :ada:`A'Constrained`
+
+.. todo::
+
+    Complete section!
+
+
+Formal incomplete type
+----------------------
+
+.. admonition:: Relevant topics
+
+    - Formal incomplete type mentioned in
+      `Formal Types <http://www.ada-auth.org/standards/2xrm/html/RM-12-5.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Default subtype mark
+--------------------
+
+.. admonition:: Relevant topics
+
+    - Default subtype mark (:ada:`or use`) mentioned in
+      `Formal Types <http://www.ada-auth.org/standards/2xrm/html/RM-12-5.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Formal private and derived types
+--------------------------------
+
+.. admonition:: Relevant topics
+
+    - `Formal Private and Derived Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-12-5-1.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Formal interfaces
 -----------------
 
@@ -1745,7 +1799,8 @@ Finally, the main application doesn't require adaptations:
        C.Set (2.1);
     end Show_Gen_Sync_Interface;
 
-Generic numeric types
+
+Formal numeric types
 ---------------------
 
 Ada supports the use of numeric types for generics. This can be used to
@@ -1763,7 +1818,7 @@ This is the corresponding syntax:
 In this section, we discuss generic floating-point and binary fixed-point
 types.
 
-Generic floating-point types
+Formal floating-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simple generic package
@@ -2015,8 +2070,8 @@ In this case, because the formal type is now based on :ada:`My_Float`, the
 corresponding operator for :ada:`My_Float` is used in the :ada:`Acc`
 procedure.
 
-Generic fixed-point types
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Formal fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simple generic package
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -2272,3 +2327,28 @@ selecting the standard operator. Alternatively, we could make use of the
     package Gen_Fixed_Acc is
        procedure Acc (V : in out F; S : F);
     end Gen_Fixed_Acc;
+
+
+Generic Renaming
+----------------
+
+.. admonition:: Relevant topics
+
+    - `Generic Renaming Declarations <http://www.ada-auth.org/standards/2xrm/html/RM-8-5-5.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Elaboration check
+-----------------
+
+.. admonition:: Relevant topics
+
+    - Elaboration check mentioned in
+      `Generic Bodies <http://www.ada-auth.org/standards/2xrm/html/RM-12-2.html>`_
+
+.. todo::
+
+    Complete section!

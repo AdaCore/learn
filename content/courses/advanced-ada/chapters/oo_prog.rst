@@ -1,14 +1,54 @@
-:orphan:
-
 Object-Oriented Programming
 ===========================
 
 .. include:: ../../global.txt
 
-Extending Interfaces
---------------------
+Primitives
+----------
 
-.. sectionauthor:: Quentin Ochem
+.. todo::
+
+    Complete section!
+
+
+Overriding indicators
+---------------------
+
+.. admonition:: Relevant topics
+
+    - **Briefly** discuss :ada:`overriding` and :ada:`not overriding` mentioned
+      in
+      `Overriding Indicators <http://www.ada-auth.org/standards/2xrm/html/RM-8-3-1.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Abstract types and subprograms
+------------------------------
+
+.. todo::
+
+    Complete section!
+
+
+Interfaces
+----------
+
+.. todo::
+
+    Complete section!
+
+
+
+Example: Extending Interfaces
+-----------------------------
+
+.. note::
+
+    This section was originally written by Quentin Ochem and published as
+    `Gem #48: Extending Interfaces in Ada 2005 <https://www.adacore.com/gems/gem-48>`_.
 
 Using new interfaces
 ~~~~~~~~~~~~~~~~~~~~
@@ -261,7 +301,11 @@ overridden the primitive.
 Calling inherited subprograms
 -----------------------------
 
-.. sectionauthor:: Emmanuel Briot
+.. note::
+
+    This section was originally written by Emmanuel Briot and published as blog
+    post
+    `Calling inherited subprograms in Ada <https://blog.adacore.com/calling-inherited-subprograms-in-ada>`_.
 
 In object-oriented code, it is often the case that we need to call
 inherited subprograms. Some programing languages make it very easy by
@@ -499,3 +543,53 @@ change is needed for the body.
 This is not a new syntax nor a new idiom, but is worth considering it when
 one is developing a complex hierarchy of types, or at least a hierarchy
 that is likely to change regularly in the future.
+
+
+Dynamic Polymorphism
+--------------------
+
+.. todo::
+
+    Complete section!
+
+
+Controlled types
+----------------
+
+.. todo::
+
+    Complete section!
+
+
+``Ada.Tags`` package
+--------------------
+
+.. todo::
+
+    Complete section!
+
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
+
+    References
+    ----------
+
+    .. note::
+
+        This section was originally written by Maxim Reznik and Nicolas Setton, and
+        published as blog post
+        `Using reference types to handle persistent objects <http://blog.adacore.com/use-ref-types-to-persistent-object>`_.
+
+    .. admonition:: Relevant topics
+
+        - `User-Defined References <http://www.ada-auth.org/standards/12rm/html/RM-4-1-5.html>`_
+
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
+
+    User-defined indexing
+    ---------------------
+
+    .. admonition:: Relevant topics
+
+        - `User-Defined Indexing <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-6.html>`_

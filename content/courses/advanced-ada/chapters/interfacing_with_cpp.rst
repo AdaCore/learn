@@ -3,8 +3,6 @@ Interfacing with C and C++
 
 .. include:: ../../global.txt
 
-.. sectionauthor:: Gustavo A. Hoffmann
-
 Interfacing with C
 ------------------
 
@@ -349,3 +347,18 @@ And this is the adapted Ada application:
 
     end Show_Cpp_Class;
 
+
+C++ constructors
+~~~~~~~~~~~~~~~~
+
+.. note::
+
+    This section was originally written by Javier Miranda and Arnaud Charlet,
+    and published as
+    `Gem #61: Interfacing with C++ constructors <https://www.adacore.com/gems/gem-61>`_
+    and
+    `Gem #62: C++ constructors and Ada 2005 <https://www.adacore.com/gems/gem-62>`_
+
+.. todo::
+
+    Complete section!

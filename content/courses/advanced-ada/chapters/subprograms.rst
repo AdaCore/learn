@@ -1,12 +1,59 @@
-Typing
-======
+Subprograms
+===========
 
 .. include:: ../../global.txt
+
+Expression functions
+--------------------
+
+.. todo::
+
+    Complete section!
+
+
+Quantified Expressions
+----------------------
+
+.. admonition:: Relevant topics
+
+    - `Quantified Expressions <http://www.ada-auth.org/standards/2xrm/html/RM-4-5-8.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Declare Expressions
+-------------------
+
+.. admonition:: Relevant topics
+
+    - `Declare Expressions <http://www.ada-auth.org/standards/2xrm/html/RM-4-5-9.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Reduction Expressions
+---------------------
+
+.. admonition:: Relevant topics
+
+    - `Reduction Expressions <http://www.ada-auth.org/standards/2xrm/html/RM-4-5-10.html>`_
+
+.. todo::
+
+    Complete section!
+
 
 Overloading
 -----------
 
-.. sectionauthor:: Bob Duff
+.. note::
+
+    This section was originally written by Bob Duff and published as
+    `Gem #50: Overload Resolution <https://www.adacore.com/gems/gem-50>`_.
 
 Ada allows overloading of subprograms, which means that two or more
 subprogram declarations with the same name can be visible at the same
@@ -19,7 +66,7 @@ In most languages that support overloading, overload resolution is done
 constructs. As usual, computer folks draw their trees upside-down, with
 the root at the top. For example, if we have two procedures :ada:`Print`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Overloading
 
     procedure Show_Overloading is
 
@@ -44,7 +91,7 @@ the type of :ada:`X` determines which :ada:`Print` is meant in the call.
 
 Ada is unusual in that it supports top-down overload resolution as well:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Overloading
 
     procedure Show_Top_Down_Overloading is
 
@@ -75,7 +122,7 @@ top-down information.
 
 If we overload things too heavily, we can cause ambiguities:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Overloading
     :class: ada-expect-compile-error
 
     procedure Show_Overloading_Error is
@@ -124,7 +171,7 @@ at it, for example appending ``L`` (letter el) means "the type of this
 literal is long int". That sort of kludge won't work in Ada, because we
 have an open-ended set of integer types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Literal_Resolution
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Literal_Resolution
 
     procedure Show_Literal_Resolution is
 
@@ -149,7 +196,7 @@ literal notation as being overloaded on all integer types.
 Developers sometimes wonder why the compiler can't resolve something that
 seems obvious. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Literal_Resolution_Error
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Literal_Resolution_Error
     :class: ada-expect-compile-error
 
     procedure Show_Literal_Resolution_Error is
@@ -184,7 +231,7 @@ the context in which the aggregate appears). Bottom-up information is not
 used; that is, the compiler does not look inside the aggregate in order to
 determine its type.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Typing.Record_Resolution_Error
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Record_Resolution_Error
     :class: ada-expect-compile-error
 
     procedure Show_Record_Resolution_Error is
@@ -218,3 +265,49 @@ the compiler look inside and make sure :ada:`Re` and :ada:`Im` make sense.
 This not-too-smart rule for aggregates helps prevent confusion on the part
 of developers reading the code. It also simplifies the compiler, and
 makes the overload resolution algorithm reasonably efficient.
+
+
+Operator Overloading
+--------------------
+
+.. todo::
+
+    Complete section!
+
+
+Nonreturning procedures
+-----------------------
+
+.. admonition:: Relevant topics
+
+    - `Nonreturning Procedures <http://www.ada-auth.org/standards/2xrm/html/RM-6-5-1.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Inline subprograms
+------------------
+
+.. admonition:: Relevant topics
+
+    - **Briefly** mention :ada:`Inline` aspect mentioned in
+      `Inline Expansion of Subprograms <http://www.ada-auth.org/standards/2xrm/html/RM-6-3-2.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Null Procedures
+---------------
+
+.. admonition:: Relevant topics
+
+    - `Null Procedures <http://www.ada-auth.org/standards/2xrm/html/RM-6-7.html>`_
+    - Mention application for (non-tagged) type extensions
+
+.. todo::
+
+    Complete section!

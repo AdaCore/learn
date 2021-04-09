@@ -16,7 +16,7 @@ Advanced Ada
 
     .. container:: content-copyright
 
-        Copyright © 2020, AdaCore
+        Copyright © 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -32,6 +32,14 @@ Advanced Ada
 .. container:: content-description
 
     This course will teach you advanced topics of the Ada programming language.
+    The
+    `Introduction to Ada <https://learn.adacore.com/courses/intro-to-ada/index.html>`_
+    course is a prerequisite for this course.
+
+    This document was written by Gustavo A. Hoffmann and Bob Duff, with
+    contributions by Patrick Rogers, Quentin Ochem, Emmanuel Briot,
+    Yannick Moy, Javier Miranda,
+    Arnaud Charlet, Franco Gasperoni, and Robert Dewar.
 
 .. only:: builder_html
 
@@ -47,10 +55,13 @@ Advanced Ada
     :maxdepth: 4
     :caption: Contents:
 
-
-    Typing <chapters/typing>
-    Strong Typing <chapters/strong_typing>
-    Access Types <chapters/access_types>
-    Limited Types <chapters/limited_types>
-    Generics <chapters/generics>
-    Interfacing With C/C++ <chapters/interfacing_with_cpp>
+    chapters/data_types
+    chapters/control_flow
+    chapters/packages
+    chapters/resource_management
+    chapters/abstraction_oriented_prog
+    chapters/contracts
+    chapters/initialization
+    chapters/tasking
+    chapters/interfacing_external
+    chapters/appendices
