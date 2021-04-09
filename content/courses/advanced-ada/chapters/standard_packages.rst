@@ -1,3 +1,5 @@
+:orphan:
+
 Standard Packages
 =================
 
@@ -16,48 +18,44 @@ Standard Packages
           chapter nor mentioned elsewhere in the book.
 
 
-:ada:`Ada` packages
--------------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    :ada:`Ada` packages
+    -------------------
 
-    - List of :ada:`Ada.*` packages
+    .. admonition:: Relevant topics
 
-        - For example, :ada:`Ada.Directories` and
-          :ada:`Ada.Environment_Variables` packages.
+        - List of :ada:`Ada.*` packages
 
-        - Include link to parts of the book where these packages are explained.
+            - For example, :ada:`Ada.Directories` and
+            :ada:`Ada.Environment_Variables` packages.
 
-.. todo::
+            - Include link to parts of the book where these packages are explained.
 
-    Complete section!
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
+    :ada:`System` packages
+    ----------------------
 
-:ada:`System` packages
-----------------------
+    .. admonition:: Relevant topics
 
-.. admonition:: Relevant topics
+        - List of :ada:`System.*` packages
 
-    - List of :ada:`System.*` packages
+            - For example, :ada:`System.Storage_Elements` and
+            :ada:`System.Address_To_Access_Conversions` packages.
 
-        - For example, :ada:`System.Storage_Elements` and
-          :ada:`System.Address_To_Access_Conversions` packages.
+            - Include link to parts of the book where these packages are explained.
 
-        - Include link to parts of the book where these packages are explained.
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. todo::
+    :ada:`Interfaces` packages
+    --------------------------
 
-    Complete section!
+    .. admonition:: Relevant topics
 
-:ada:`Interfaces` packages
---------------------------
+        - List of :ada:`Interfaces.*` packages
 
-.. admonition:: Relevant topics
-
-    - List of :ada:`Interfaces.*` packages
-
-        - Include link to parts of the book where these packages are explained.
-
-.. todo::
-
-    Complete section!
+            - Include link to parts of the book where these packages are explained.

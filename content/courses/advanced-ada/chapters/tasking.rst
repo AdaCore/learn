@@ -102,49 +102,46 @@ Protected Subprograms and Protected Actions
     Complete section!
 
 
-Multiprocessors
----------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Multiprocessors
+    ---------------
 
-    - **Briefly** discuss :ada:`CPU` aspect, as mentioned in
-      `Pragma CPU <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-9.html>`_
-    - **Briefly** discuss :ada:`Dispatching_Domain`, as mentioned in
-      `Pragma Dispatching_Domain <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-10.html>`_
-    - **Briefly** discuss priorities, as mentioned in
-      `Pragmas Priority and Interrupt_Priority <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-11.html>`_
-    - **Briefly** discuss relative deadlines, as mentioned in
-      `Pragma Relative_Deadline <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-12.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
-
-    Complete section!
-
-
-Policies
---------
-
-.. admonition:: Relevant topics
-
-    - **Briefly** discuss policies, as mentioned in
-      `Conflict Check Policies <http://www.ada-auth.org/standards/2xrm/html/RM-9-10-1.html>`_
-
-.. todo::
-
-    Complete section!
+        - **Briefly** discuss :ada:`CPU` aspect, as mentioned in
+        `Pragma CPU <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-9.html>`_
+        - **Briefly** discuss :ada:`Dispatching_Domain`, as mentioned in
+        `Pragma Dispatching_Domain <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-10.html>`_
+        - **Briefly** discuss priorities, as mentioned in
+        `Pragmas Priority and Interrupt_Priority <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-11.html>`_
+        - **Briefly** discuss relative deadlines, as mentioned in
+        `Pragma Relative_Deadline <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-12.html>`_
 
 
-Interrupts
-----------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Policies
+    --------
 
-    - **Briefly** discuss interrupts
-    - `Interrupt Support <http://www.ada-auth.org/standards/2xrm/html/RM-C-3.html>`_
-    - `Protected Procedure Handlers <http://www.ada-auth.org/standards/2xrm/html/RM-C-3-1.html>`_
-    - `The Package Interrupts <http://www.ada-auth.org/standards/2xrm/html/RM-C-3-2.html>`_
-    - `Interrupt Entries <http://www.ada-auth.org/standards/2xrm/html/RM-J-7-1.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
+        - **Briefly** discuss policies, as mentioned in
+        `Conflict Check Policies <http://www.ada-auth.org/standards/2xrm/html/RM-9-10-1.html>`_
 
-    Complete section!
+
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
+
+    Interrupts
+    ----------
+
+    .. admonition:: Relevant topics
+
+        - **Briefly** discuss interrupts
+        - `Interrupt Support <http://www.ada-auth.org/standards/2xrm/html/RM-C-3.html>`_
+        - `Protected Procedure Handlers <http://www.ada-auth.org/standards/2xrm/html/RM-C-3-1.html>`_
+        - `The Package Interrupts <http://www.ada-auth.org/standards/2xrm/html/RM-C-3-2.html>`_
+        - `Interrupt Entries <http://www.ada-auth.org/standards/2xrm/html/RM-J-7-1.html>`_

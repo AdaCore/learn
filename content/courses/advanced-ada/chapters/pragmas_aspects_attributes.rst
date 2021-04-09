@@ -1,3 +1,5 @@
+:orphan:
+
 Pragmas, Aspects and Attributes
 ===============================
 
@@ -15,43 +17,40 @@ Pragmas, Aspects and Attributes
         - Point to the RM if an element is not explained neither in this
           chapter nor mentioned elsewhere in the book.
 
-Pragmas
--------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Pragmas
+    -------
 
-    - List of pragmas
+    .. admonition:: Relevant topics
 
-.. todo::
-
-    Complete section!
-
-
-Aspects
--------
-
-.. admonition:: Relevant topics
-
-    - List of aspects
-
-        - Include link to parts of the book where some of the aspects
-          are explained
-
-.. todo::
-
-    Complete section!
+        - List of pragmas
 
 
-Attributes
-----------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Aspects
+    -------
 
-    - List of attributes
+    .. admonition:: Relevant topics
 
-        - Include link to parts of the book where some of the attribute
-          are explained
+        - List of aspects
 
-.. todo::
+            - Include link to parts of the book where some of the aspects
+            are explained
 
-    Complete section!
+
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
+
+    Attributes
+    ----------
+
+    .. admonition:: Relevant topics
+
+        - List of attributes
+
+            - Include link to parts of the book where some of the attribute
+            are explained

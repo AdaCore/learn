@@ -27,16 +27,15 @@ String Encoding
     Complete section!
 
 
-Universal text buffer
----------------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Universal text buffer
+    ---------------------
 
-    - `Universal Text Buffers <http://www.ada-auth.org/standards/2xrm/html/RM-A-4-12.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
-
-    Complete section!
+        - `Universal Text Buffers <http://www.ada-auth.org/standards/2xrm/html/RM-A-4-12.html>`_
 
 
 Image attribute

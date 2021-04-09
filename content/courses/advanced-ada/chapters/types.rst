@@ -178,14 +178,13 @@ Variable control
     Complete section!
 
 
-Discarding names
-----------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Discarding names
+    ----------------
 
-    - **Briefly** discuss discarding name mentioned in
-      `Aspect Discard_Names <http://www.ada-auth.org/standards/2xrm/html/RM-C-5.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
-
-    Complete section!
+        - **Briefly** discuss discarding name mentioned in
+        `Aspect Discard_Names <http://www.ada-auth.org/standards/2xrm/html/RM-C-5.html>`_

@@ -1,39 +1,38 @@
+:orphan:
+
 System Annexes
 ==============
 
 .. include:: ../../global.txt
 
-Real-Time Systems Annex
------------------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Real-Time Systems Annex
+    -----------------------
 
-    - Brief explanation of the Real-Time Systems Annex
+    .. admonition:: Relevant topics
 
-.. todo::
-
-    Complete section!
-
-
-Distributed Systems Annex
--------------------------
-
-.. admonition:: Relevant topics
-
-    - Brief explanation of the Distributed Systems Annex
-
-.. todo::
-
-    Complete section!
+        - Brief explanation of the Real-Time Systems Annex
 
 
-High Integrity Systems Annex
-----------------------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Distributed Systems Annex
+    -------------------------
 
-    - Brief explanation of the High Integrity Systems Annex
+    .. admonition:: Relevant topics
 
-.. todo::
+        - Brief explanation of the Distributed Systems Annex
 
-    Complete section!
+
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
+
+    High Integrity Systems Annex
+    ----------------------------
+
+    .. admonition:: Relevant topics
+
+        - Brief explanation of the High Integrity Systems Annex
