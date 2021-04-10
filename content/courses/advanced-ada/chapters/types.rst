@@ -85,7 +85,7 @@ Now, we can use both :ada:`Monday` or :ada:`Mon` to refer to Monday of the
     begin
        if D1 = D2 then
           Put_Line ("D1 = D2");
-          Put_Line (Day'Image(D1) & " =  " & Day'Image (D2));
+          Put_Line (Day'Image (D1) & " =  " & Day'Image (D2));
        end if;
     end Show_Renaming;
 
@@ -130,7 +130,7 @@ is just another name to refer to the actual enumeration (:ada:`Mon`).
         procedure Show_Renaming is
            D1 : constant Day := Monday;
         begin
-           Put_Line (Day'Image(D1));
+           Put_Line (Day'Image (D1));
         end Show_Renaming;
 
     Note that the call to :ada:`Put_Line` still display ``Mon`` instead of
