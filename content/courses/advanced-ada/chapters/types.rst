@@ -6,16 +6,411 @@ Types
 Enumerations
 ------------
 
-.. admonition:: Relevant topics
+We've introduced enumerations back in the
+:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/strongly_typed_language>`.
+In this section, we'll discuss a few useful features of enumerations, such as
+enumeration renaming, enumeration overloading and representation clauses.
 
-    - enumerations as parameterless functions
-    - enumeration overloading
-    - `Enumeration representation clauses <http://www.ada-auth.org/standards/2xrm/html/RM-13-4.html>`_
+Enumerations as functions
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+If you have used programming language such as C in the past, you're familiar
+with the concept of enumerations being constants with integer values. In Ada,
+however, enumerations are not integers. In fact, they're actually parameterless
+functions! Let's consider this example:
 
-    Complete section!
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Enumeration_As_Function
 
+    package Days is
+
+       type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+       --  Essentially, we're declaring these functions:
+       --
+       --  function Mon return Day;
+       --  function Tue return Day;
+       --  function Wed return Day;
+       --  function Thu return Day;
+       --  function Fri return Day;
+       --  function Sat return Day;
+       --  function Sun return Day;
+
+    end Days;
+
+In the package :ada:`Days`, we're declaring the enumeration type :ada:`Day`.
+When we do this, we're essentially declaring seven parameterless functions, one
+for each enumeration. For example, the :ada:`Mon` enumeration corresponds to
+:ada:`function Mon return Day`. You can see all seven function declarations in
+the comments of the example above.
+
+Note that this has no direct relation to how an Ada compiler generates machine
+code for enumeration. Even though enumerations are parameterless functions, a
+typical Ada compiler doesn't generate function calls for code that deals with
+enumerations.
+
+Enumeration renaming
+^^^^^^^^^^^^^^^^^^^^
+
+The idea that enumerations are parameterless functions can be used when we want
+to rename enumerations. For example, we could rename the enumerations of the
+:ada:`Day` type like this:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Enumeration_Renaming
+
+    package Enumeration_Example is
+
+       type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+       function Monday    return Day renames Mon;
+       function Tuesday   return Day renames Tue;
+       function Wednesday return Day renames Wed;
+       function Thursday  return Day renames Thu;
+       function Friday    return Day renames Fri;
+       function Saturday  return Day renames Sat;
+       function Sunday    return Day renames Sun;
+
+    end Enumeration_Example;
+
+Now, we can use both :ada:`Monday` or :ada:`Mon` to refer to Monday of the
+:ada:`Day` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Renaming
+
+    with Ada.Text_IO;         use Ada.Text_IO;
+    with Enumeration_Example; use Enumeration_Example;
+
+    procedure Show_Renaming is
+       D1 : constant Day := Mon;
+       D2 : constant Day := Monday;
+    begin
+       if D1 = D2 then
+          Put_Line ("D1 = D2");
+          Put_Line (Day'Image(D1) & " =  " & Day'Image (D2));
+       end if;
+    end Show_Renaming;
+
+When running this application, we can confirm that :ada:`D1` is equal to
+:ada:`D2`. Also, even though we've assigned :ada:`Monday` to :ada:`D2` (instead
+of :ada:`Mon`), the application displays ``Mon = Mon``, since :ada:`Monday`
+is just another name to refer to the actual enumeration (:ada:`Mon`).
+
+.. admonition:: Hint
+
+    If you just want to have a single (renamed) enumeration visible in your
+    application |mdash| and make the original enumeration invisible |mdash|,
+    you can use a separate package. For example:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Renaming
+
+        package Enumeration_Example is
+
+           type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+        end Enumeration_Example;
+
+        with Enumeration_Example;
+
+        package Enumeration_Renaming is
+
+           subtype Day is Enumeration_Example.Day;
+
+           function Monday    return Day renames Enumeration_Example.Mon;
+           function Tuesday   return Day renames Enumeration_Example.Tue;
+           function Wednesday return Day renames Enumeration_Example.Wed;
+           function Thursday  return Day renames Enumeration_Example.Thu;
+           function Friday    return Day renames Enumeration_Example.Fri;
+           function Saturday  return Day renames Enumeration_Example.Sat;
+           function Sunday    return Day renames Enumeration_Example.Sun;
+
+        end Enumeration_Renaming;
+
+        with Ada.Text_IO;          use Ada.Text_IO;
+        with Enumeration_Renaming; use Enumeration_Renaming;
+
+        procedure Show_Renaming is
+           D1 : constant Day := Monday;
+        begin
+           Put_Line (Day'Image(D1));
+        end Show_Renaming;
+
+    Note that the call to :ada:`Put_Line` still display ``Mon`` instead of
+    ``Monday``.
+
+Enumeration overloading
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Enumerations can be overloaded. In simple terms, this means that the same name
+can be used to declare an enumeration of different types. A typical example is
+the declaration of colors:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Enumeration_Overloading
+
+    package Colors is
+
+       type Color is
+         (Salmon,
+          Firebrick,
+          Red,
+          Darkred,
+          Lime,
+          Forestgreen,
+          Green,
+          Darkgreen,
+          Blue,
+          Mediumblue,
+          Darkblue);
+
+       type Primary_Color is
+         (Red,
+          Green,
+          Blue);
+
+    end Colors;
+
+Note that we have :ada:`Red` as an enumeration of type :ada:`Color` and of type
+:ada:`Primary_Color`. The same applies to :ada:`Green` and :ada:`Blue`. Because
+Ada is a strongly-typed language, in most cases, the enumeration that we're
+referring to is clear from the context. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Overloading
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Colors;      use Colors;
+
+    procedure Red_Colors is
+       C1 : constant Color         := Red;   --  Using Red from Color
+       C2 : constant Primary_Color := Red;   --  Using Red from Primary_Color
+    begin
+       if C1 = Red then
+          Put_Line ("C1 = Red");
+       end if;
+       if C2 = Red then
+          Put_Line ("C2 = Red");
+       end if;
+    end Red_Colors;
+
+When assigning :ada:`Red` to :ada:`C1` and :ada:`C2`, it is clear that, in the
+first case, we're referring to :ada:`Red` of :ada:`Color` type, while in the
+second case, we're referring to :ada:`Red` of the :ada:`Primary_Color` type.
+The same logic applies to comparisons such as the one in
+:ada:`if C1 = Red`: because the type of :ada:`C1` is defined
+(:ada:`Color`), it's clear that the :ada:`Red` enumeration is the one of
+:ada:`Color` type.
+
+Enumeration subtypes
+^^^^^^^^^^^^^^^^^^^^
+
+Note that enumeration overloading is not the same as enumeration subtypes. For
+example, we could define the following subtype:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Types.Enumeration_Overloading
+
+    package Colors.Shades is
+
+       subtype Blue_Shades is Colors range Blue .. Darkblue;
+
+    end Colors.Shades;
+
+In this case, :ada:`Blue` of :ada:`Blue_Shades` and :ada:`Blue` of
+:ada:`Colors` are the same enumeration.
+
+Enumeration ambiguities
+^^^^^^^^^^^^^^^^^^^^^^^
+
+A situation where enumeration overloading might lead to ambiguities is when we
+use them in ranges. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Ambiguities
+    :class: ada-expect-compile-error
+
+    package Colors is
+
+       type Color is
+         (Salmon,
+          Firebrick,
+          Red,
+          Darkred,
+          Lime,
+          Forestgreen,
+          Green,
+          Darkgreen,
+          Blue,
+          Mediumblue,
+          Darkblue);
+
+       type Primary_Color is
+         (Red,
+          Green,
+          Blue);
+
+    end Colors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Colors;      use Colors;
+
+    procedure Color_Loop is
+    begin
+       for C in Red .. Blue loop       --  ERROR: range is ambiguous!
+          Put_Line (Color'Image (C));
+       end loop;
+    end Color_Loop;
+
+Here, it's not clear whether the range in the loop is of :ada:`Color` type or
+of :ada:`Primary_Color` type. Therefore, we get a compilation error for this
+code example. The next line in the code example |mdash| the one with the call
+to :ada:`Put_Line` |mdash| gives us a hint about the developer's intention to
+refer to the :ada:`Color` type. In this case, we can use qualification |mdash|
+for example, :ada:`Color'(Red)` |mdash| to resolve the ambiguity:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Ambiguities
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Colors;      use Colors;
+
+    procedure Color_Loop is
+    begin
+       for C in Color'(Red) .. Color'(Blue) loop
+          Put_Line (Color'Image (C));
+       end loop;
+    end Color_Loop;
+
+Note that, in the case of ranges, we can also rewrite the loop by using a range
+declaration:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Ambiguities
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Colors;      use Colors;
+
+    procedure Color_Loop is
+    begin
+       for C in Color range Red .. Blue loop
+          Put_Line (Color'Image (C));
+       end loop;
+    end Color_Loop;
+
+Alternatively, :ada:`Color range Red .. Blue` could be used in a subtype
+declaration, so we could rewrite the example above using a subtype (such as
+:ada:`Red_To_Blue`) in the loop:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Ambiguities
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Colors;      use Colors;
+
+    procedure Color_Loop is
+       subtype Red_To_Blue is Color range Red .. Blue;
+    begin
+       for C in Red_To_Blue loop
+          Put_Line (Color'Image (C));
+       end loop;
+    end Color_Loop;
+
+Enumeration representation clauses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we've said above, a typical Ada compiler doesn't generate function calls for
+code that deals with enumerations. On the contrary, each enumeration has values
+associated with it, and the compiler uses those values instead.
+
+Each enumeration has:
+
+- a position value, which is a natural value indicating the position of the
+  enumeration in the enumeration type; and
+
+- an internal code, which, by default, in most cases, is the same as the
+  position value.
+
+Also, by default, the value of the first position is zero, the value of the
+second position is one, and so on. We can see this by listing each enumeration
+of the :ada:`Day` type and displaying the value of the corresponding position:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Values
+
+    package Days is
+
+       type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+    end Days;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Days;        use Days;
+
+    procedure Show_Days is
+    begin
+       for D in Day loop
+          Put_Line (Day'Image (D) & " position      = "
+                    & Integer'Image (Day'Pos (D)));
+          Put_Line (Day'Image (D) & " internal code = "
+                    & Integer'Image (Day'Enum_Rep (D)));
+       end loop;
+    end Show_Days;
+
+Note that this application also displays the internal code, which, in this
+case, is equivalent to the position value for all enumerations.
+
+We may, however, change the internal code of an enumeration using a
+representation clause, which has the following format:
+
+.. code-block:: ada
+
+    for Primary_Color is (Red   =>    1,
+                          Green =>    5,
+                          Blue  => 1000);
+
+The value of each code in a representation clause must be distinct. However, as
+you can see above, we don't need to use sequential values |mdash| the values
+must, however, increase for each enumeration.
+
+We can rewrite the previous example using a representation clause:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Values
+
+    package Days is
+
+       type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+       for Day use (Mon => 2#00000001#, Tue => 2#00000010#,
+                    Wed => 2#00000100#, Thu => 2#00001000#,
+                    Fri => 2#00010000#, Sat => 2#00100000#,
+                    Sun => 2#01000000#);
+
+    end Days;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Days;        use Days;
+
+    procedure Show_Days is
+    begin
+       for D in Day loop
+          Put_Line (Day'Image (D) & " position      = "
+                    & Integer'Image (Day'Pos (D)));
+          Put_Line (Day'Image (D) & " internal code = "
+                    & Integer'Image (Day'Enum_Rep (D)));
+       end loop;
+    end Show_Days;
+
+Now, the value of the internal code is the one that we've specified in the
+representation clause instead of being equivalent to the value of the
+enumeration position.
+
+In the example above, we're using binary values for each enumeration |mdash|
+basically viewing the integer value as a bit-field and assigning one bit for
+each enumeration. As long as we maintain an increasing order, we can use
+totally arbitrary values as well. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Enumeration_Values
+
+    package Days is
+
+       type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+       for Day use (Mon =>  5, Tue =>  9,
+                    Wed => 42, Thu => 49,
+                    Fri => 50, Sat => 66,
+                    Sun => 99);
+
+    end Days;
 
 Definite and Indefinite Types
 -----------------------------
