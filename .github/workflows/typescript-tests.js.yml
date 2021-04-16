@@ -1,6 +1,12 @@
 name: Typescript Test Suite
 
-on: [push, pull_request]
+on:
+  push: 
+    paths:
+      - 'frontend/**/*.ts'
+  pull_request:
+    branches:
+      - master
 
 defaults:
   run:
