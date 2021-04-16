@@ -60,6 +60,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.graphviz',
     'widget_extension',
+    'sphinx_rtd_theme',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -122,7 +123,8 @@ nitpicky = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'learn_theme'
+#html_theme = 'learn_theme'
+html_theme = 'sphinx_rtd_theme'
 
 html_title = "learn.adacore.com"
 smartquotes = False
@@ -134,8 +136,17 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 # documentation.
 #
 html_theme_options = {
-    "beta": False,
+    'logo_only': True,
+    'display_version': False,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    # Toc options
+    'collapse_navigation': False,
     'sticky_navigation': False,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
 }
 
 html_logo = "img/logo.svg"
