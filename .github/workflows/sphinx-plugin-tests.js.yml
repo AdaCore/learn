@@ -1,6 +1,13 @@
 name: Sphinx Plugin Tests
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'frontend/sphinx/tests/**'
+      - 'frontend/sphinx/widget/**'
+  pull_request:
+    branches:
+      -master
 
 defaults:
   run:
