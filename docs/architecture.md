@@ -4,7 +4,7 @@
 
 - Flask: server framework
 - Celery: task queue
-- LXC: Linux containers
+- Docker: containers
 
 ---
 ## Flask
@@ -36,7 +36,7 @@ When the blueprint is registered with the app, the routes defined in the widget_
 - /run_program/
     - this route is called via POST with a JSON object payload. The payload is passed to the celery task queue to spawn a task. When the task is queued, a reference id is returned which defines the task. This task id is passed back to the frontend so the API user can poll the task for completion.
 - /check_output/
-    - this route is called via POST with a JSON object payload. The payload contains a task id previously obtained via the run_program route. This route is used to poll a running task for status. 
+    - this route is called via POST with a JSON object payload. The payload contains a task id previously obtained via the run_program route. This route is used to poll a running task for status.
     - this route communicates with the running task via a message queue to receive intermediate task results.
 - /download/
     - this route is called via POST with a JSON object describing files that the user would like to zip. The files are inserted into the base project. After the project is computed, the files are zipped and passed back to the user.
@@ -63,11 +63,9 @@ The flask app and celery queues communicate with each other over RabbitMQ. Tasks
     - A project is created and the files are inserted.
     - The data is passed to the container to be executed.
     - Stdout and stderr from the container are passed back to flask via message queues.
-    
-## LXC
 
-Linux Containers are currently being used to sandbox the build/run/prove workflow for security protection.
+## Docker
 
-We are using the pylxd Python interface to the lxc/lxd tools. 
+Docker is currently being used to sandbox the build/run/prove workflow for security protection.
 
-LXC configuration and provisioning occur via the infrastructure/Makefile and the infrastructure/cloud-config.yml.
+We are using the Docker Python interface.
