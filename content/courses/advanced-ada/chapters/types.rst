@@ -417,9 +417,10 @@ totally arbitrary values as well. For example:
 Definite and Indefinite Types
 -----------------------------
 
-Definite and indefinite types were mentioned back in the
+Indefinite types were mentioned back in the
 :doc:`Introduction to Ada course <courses/intro-to-ada/chapters/more_about_types>`.
-In this section, we'll recapitulate and extend on this topic.
+In this section, we'll recapitulate and extend on both definite and indefinite
+types.
 
 Definite types are the basic kind of types we commonly use when programming
 applications. For example, we can only declare variables of definite types;
