@@ -591,7 +591,8 @@ could have a long *chain* of procedure calls using indefinite types in their
 parameters, we still use a (definite) object at the beginning of this chain.
 For example, for the :ada:`A_5` object, we have this chain:
 
-..
+::
+
     A_5
 
         ==> Show_Integer_Array_With_Header (AA => A_5, ...);
