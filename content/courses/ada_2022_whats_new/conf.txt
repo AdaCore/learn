@@ -1,0 +1,2 @@
+title=Ada 2022: What's New
+author=Maxim Reznik
