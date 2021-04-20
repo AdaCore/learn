@@ -90,7 +90,7 @@ store a negative value in it.
 
 The compiler generates checks in the executable code corresponding to each
 of those runtime errors.  Each check raises an exception if it fails.  For
-the above asssignment statement, we can see examples of exceptions raised
+the above assignment statement, we can see examples of exceptions raised
 due to failed checks for each of the different cases above.
 
 .. code-block:: ada
@@ -544,7 +544,7 @@ can happen for two reasons:
 
 - The property may be unprovable because the code is missing some
   assertion. One category of these cases is due to the modularity of the
-  analysis which, as we disussed above, means that GNATprove only knows
+  analysis which, as we discussed above, means that GNATprove only knows
   about the properties of your subprograms that you have explicitly
   written.
 
@@ -607,7 +607,7 @@ Debugging Prover Limitations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Finally, there are cases where GNATprove provides a perfectly valid
-verification condition for a property, but it's neverthless not proved by
+verification condition for a property, but it's nevertheless not proved by
 the automatic prover that runs in the later stages of the tool's
 execution. This is quite common. Indeed, GNATprove produces its
 verification conditions in first-order logic, which is not decidable,
