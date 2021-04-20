@@ -20,6 +20,14 @@
     }
 }
 
+.wy-menu {
+    p {
+        margin-left: 20px;
+        margin-bottom: 7px;
+        margin-top: 10px;
+    }
+}
+
 .admonition-in-other-languages {
     background: $color-theme-alt-bg;
     padding: 12px;
@@ -102,6 +110,11 @@ widget {
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
             padding: 8px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
 
             a {
                 color: black;
@@ -121,70 +134,6 @@ widget {
             }
             .dropdown-btn {
                 opacity: 1.0;
-            }
-        }
-
-        .checkbox {
-            position: absolute;
-            opacity: 0;
-
-            & + label {
-                position: relative;
-                cursor: pointer;
-                padding: 0;
-                white-space: nowrap;
-            }
-
-            // Box.
-            & + label:before {
-                content: '';
-                margin-right: 10px;
-                display: inline-block;
-                vertical-align: middle;
-                width: 20px;
-                height: 20px;
-                background: #ddd;
-            }
-
-            // Box hover
-            &:hover + label:before {
-                background: $color-theme-bg-dark;
-            }
-
-            // Box checked
-            &:checked + label:before {
-                background: $color-theme-bg-dark;
-            }
-
-            // Disabled state label.
-            &:disabled + label {
-                color: #b8b8b8;
-                cursor: auto;
-            }
-
-            // Disabled box.
-            &:disabled + label:before {
-                box-shadow: none;
-                background: #ddd;
-            }
-
-            // Checkmark. Could be replaced with an image
-            &:checked + label:after {
-                content: '';
-                position: absolute;
-                left: 5px;
-                top: 9px;
-                background: white;
-                width: 2px;
-                height: 2px;
-                box-shadow:
-                  2px 0 0 white,
-                  4px 0 0 white,
-                  4px -2px 0 white,
-                  4px -4px 0 white,
-                  4px -6px 0 white,
-                  4px -8px 0 white;
-                transform: rotate(45deg);
             }
         }
     }
