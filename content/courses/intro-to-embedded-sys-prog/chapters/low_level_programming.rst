@@ -443,29 +443,30 @@ kind of type.
 
 For scalar types, i.e., those without components such as integers and
 enumerations, the attribute returns the *minimum* number of bits
-required to represent all the values of the type. Consider type Boolean,
+required to represent all the values of the type. Consider type :ada:`Boolean`,
 which has two possible values. One bit will suffice, and indeed the
-language standard requires Boolean'Size to be the value 1.
+language standard requires :ada:`Boolean'Size` to be the value 1.
 
 This meaning also applies to subtypes, which can constrain the number of
-values for a scalar type. Consider subtype Natural. That's a subtype
-defined by the language to be type Integer but with a range of 0 ..
-Integer'Last. On a 32-bit machine we would expect Integer to be a native
-type, and thus 32-bits. On such a machine if we say Integer'Size we will
-indeed get 32. But if we say Natural'Size we will get 31, not 32,
+values for a scalar type. Consider subtype :ada:`Natural`. That's a subtype
+defined by the language to be type :ada:`Integer` but with a range of 
+:ada:`0 .. Integer'Last`. 
+On a 32-bit machine we would expect Integer to be a native type, and
+thus 32-bits. On such a machine if we say :ada:`Integer'Size` we will
+indeed get 32. But if we say :ada:`Natural'Size` we will get 31, not 32,
 because only 31 bits are needed to represent that range on that machine.
 
 The size of objects, on the other hand, cannot be just a matter of the
-possible values. Consider type Boolean again, where Boolean'Size is
-required to be 1. No compiler is likely to allocate one bit to a Boolean
+possible values. Consider type :ada:`Boolean` again, where :ada:`Boolean'Size`
+is required to be 1. No compiler is likely to allocate one bit to a :ada:`Boolean`
 variable, because typical machines don't support
 individually-addressable bits. Instead, addresses refer to storage
-elements, of a size indicated by the Storage_Unit constant. The compiler
+elements, of a size indicated by the :ada:`Storage_Unit` constant. The compiler
 will allocate the smallest number of storage elements necessary,
 consistent with other considerations such as alignment. Therefore, for a
-machine that has Storage_Unit set to a value of eight, we can assume
-that a compiler for that machine will allocate an entire eight-bit
-storage element to a stand-alone Boolean variable. The other seven bits
+machine that has :ada:`Storage_Unit` set to a value of eight, we can 
+assume that a compiler for that machine will allocate an entire eight-bit
+storage element to a stand-alone :ada:`Boolean` variable. The other seven bits
 are simply not used by that variable. Moreover, those seven bits are not
 used by any other stand-alone object either, because access would be far
 less efficient, and such sharing would require some kind of locking to
@@ -508,26 +509,27 @@ For example, consider this record type and its components:
 
 In the figure, we see a record type with some components, and a sample
 layout for that record type assuming the compiler does not reorder the
-components. Observe that some bytes allocated to objects of type R are
+components. Observe that some bytes allocated to objects of type :ada:`R` are
 unused (the darkly shaded ones). In this case that's because the
-alignment of subtype S happens to be 4 on this machine. The component X
-of that subtype S cannot start at byte offset 1, or 2, or 3, because
-those addresses would not satisfy the alignment constraint of S. (We're
-assuming byte 0 is at a word-aligned address.) Therefore, X starts at
-the object's starting address plus 4. Components B and C are of types
-that have an alignment of 1, so they can start at any storage element.
-They immediately follow the bytes allocated to component X. Therefore,
-R'Size is 80, or 10 bytes. The three bytes following component M are simply not
-used.
+alignment of subtype :ada:`S` happens to be 4 on this machine. The component
+:ada:`X` of that subtype :ada:`S` cannot start at byte offset 1, or 2, or 3, 
+because those addresses would not satisfy the alignment constraint of 
+:ada:`S`. (We're assuming byte 0 is at a word-aligned address.) Therefore,
+:ada:`X` starts at the object's starting address plus 4. Components
+:ada:`B` and :ada:`C` are of types that have an alignment of 1, so they 
+can start at any storage element.
+They immediately follow the bytes allocated to component :ada:`X`. 
+Therefore, :ada:`R'Size` is 80, or 10 bytes. The three bytes following 
+component :ada:`M` are simply not used.
 
-But what about the two bytes following component C? They could be
+But what about the two bytes following component :ada:`C`? They could be
 allocated to stand-alone objects if they would fit. More likely, though,
-the compiler will allocate those two bytes to objects of type R, that
+the compiler will allocate those two bytes to objects of type :ada:`R`, that
 is, 12 bytes instead of 10 are allocated. As a result, 96 bits are
 actually used in memory. The extra, unused 16 bits are "padding."
 
-Why add unused padding? It simplifies the memory allocation of objects
-of type R. Suppose some array type has components of record type R.
+Why add unused padding? It simplifies the memory allocation of objects of type
+:ada:`R`. Suppose some array type has components of record type :ada:`R`.
 Assuming the first component is aligned properly, every following
 component will also be aligned properly, automatically, because the two
 padding bytes are considered parts of the components.
@@ -536,9 +538,9 @@ To make that work, the compiler takes the most stringent alignment of
 all the record type's components and uses that for the alignment of the
 overall record type. That way, any address that satisfies the record
 object's alignment will satisfy the components' alignment requirements.
-The alignment is component X, of subtype S, is 4. The other components
-have an alignment of 1, therefore R'Alignment is 4. An aligned address
-plus 12 will also be an aligned address.
+The alignment is component :ada:`X`, of subtype :ada:`S`, is 4. The other 
+components have an alignment of 1, therefore :ada:`R'Alignment` is 4. An
+aligned address plus 12 will also be an aligned address.
 
 This rounding up based on alignment is recommended behavior for the
 compiler, not a requirement, but is reasonable and typical among
@@ -553,7 +555,7 @@ to care about the alignment of the components and overall record type.
 
 Ada compilers are allowed to reorder the components of record types in
 order to minimize these gaps or satisfy the alignment requirements of
-the components. Some compilers do, some don't. Consider the type R
+the components. Some compilers do, some don't. Consider the type :ada:`R`
 again, this time with the first two components switched in the component
 declaration order:
 
@@ -561,11 +563,12 @@ declaration order:
   :width: 600
   :alt: Memory allocated to a record with optimized layout
 
-Now R'Size will report 56 bits instead of 80. The one trailing byte will
+Now :ada:`R'Size` will report 56 bits instead of 80. The one trailing byte will
 still be padding, but only that one.
 
-What about unbounded types, for example type String? Querying the 'Size
-in that case would provide an implementation-defined result. A somewhat
+What about unbounded types, for example type :ada:`String`? Querying the
+:ada:`'Size` in that case would provide an implementation-defined result. 
+A somewhat
 silly thing to do, really, since the type |mdash| by definition |mdash|
 doesn't specify how many components are involved.
 
@@ -576,9 +579,9 @@ sending values over the wire, the code should query the size of the
 bits are really needed.
 
 One last point. GNAT, and now Ada 202x, define an attribute named
-Object_Size. It does just what the name suggests: what 'Size does when
-applied to objects rather than types. GNAT also defines another
-attribute, named Value_Size, that does what 'Size does when applied to
+:ada:`Object_Size`. It does just what the name suggests: what :ada:`'Size` does
+when applied to objects rather than types. GNAT also defines another attribute, 
+named :ada:`Value_Size`, that does what :ada:`'Size` does when applied to
 types. The former is far more useful so Ada has standardized it.
 
 
@@ -586,11 +589,11 @@ Specifying Representation
 -------------------------
 
 
-Recall that we said Boolean'Size is always 1. Suppose we have an array
+Recall that we said :ada:`Boolean'Size` is always 1. Suppose we have an array
 of 16 Boolean components. How big are objects of the type? For the sake
 of efficient access, each component is almost certainly allocated an
 individual byte rather than a single bit. Our array of 16 Booleans will
-be reported by 'Size to be 128 bits. If you wanted a bit-mask, in which
+be reported by :ada:`'Size` to be 128 bits. If you wanted a bit-mask, in which
 each Boolean component is allocated a single, you have a problem. Naturally
 there is a solution.
 
