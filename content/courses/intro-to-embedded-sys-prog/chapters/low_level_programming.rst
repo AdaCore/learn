@@ -428,7 +428,7 @@ portability became a problem.
 
 For example, suppose you want to convert some value to a series of bytes
 in order to send the value over the wire. To do that you need to know
-how many bytes are require to represent the value. Many applications
+how many bytes are required to represent the value. Many applications
 queried the size of the type to determine that, and then, when porting
 to a new vendor's compiler, found that their code no longer worked
 correctly. The new vendor's implementation wasn't wrong, it was just
