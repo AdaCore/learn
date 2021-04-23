@@ -597,12 +597,11 @@ be reported by :ada:`'Size` to be 128 bits. If you wanted a bit-mask, in which
 each Boolean component is allocated a single, you have a problem. Naturally
 there is a solution.
 
-
-
-
 As you saw earlier, it can pay to consider the component alignments when
 declaring the components your record types, because there's no guarantee that the
-compiler will optimize (reorder) the layout for you. That said, what you should really do is specify the actual record layout you want. But when you do, keep the component alignments in mind.
+compiler will optimize (reorder) the layout for you. That said, what you should
+really do is specify the actual record layout you want. But when you do, keep 
+the component alignments in mind.
 
 
 
