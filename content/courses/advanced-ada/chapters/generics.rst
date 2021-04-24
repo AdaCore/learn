@@ -3,6 +3,87 @@ Generics
 
 .. include:: ../../global.txt
 
+.. _Formal_Incomplete_Types:
+
+Formal incomplete types
+-----------------------
+
+A formal incomplete type has the following syntax:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Simple_Formal_Incomplete_Type
+
+    generic
+      type Formal_Incomplete;
+    package Using_Formal_Incomplete
+      with Pure is
+    end Using_Formal_Incomplete;
+
+We can use them to map incomplete types when instantiating generic packages or
+subprograms. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Simple_Formal_Incomplete_Type
+
+    with Using_Formal_Incomplete;
+
+    package Show_Inst_Formal_Incomplete is
+
+       type R;
+
+       package R_Pkg is new Using_Formal_Incomplete (R);
+
+       type R is record
+          I : Integer;
+       end record;
+
+    end Show_Inst_Formal_Incomplete;
+
+As we've seen before, incomplete types are rather restricted in terms of usage.
+Therefore, formal incomplete types are typically used in conjunction with other
+generic packages or subprograms. We explain later how to use them to create
+:ref:`signature packages <SignaturePackages>`.
+
+A formal incomplete type can also be tagged:
+
+.. code-block:: ada
+
+    generic
+      type Incomplete_Tagged is tagged;
+    package Dummy;
+
+Let's see an example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Formal_Incomplete_Tagged_Types
+
+    generic
+      type Incomplete_Tagged is tagged;
+      with function Test (V : Incomplete_Tagged) return Boolean;
+    package Formal_Incomplete_Tagged_Type_Example is
+
+       procedure Perform_Test (I : Incomplete_Tagged);
+
+    end Formal_Incomplete_Tagged_Type_Example;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Formal_Incomplete_Tagged_Type_Example is
+
+       procedure Perform_Test (I : Incomplete_Tagged) is
+       begin
+          if Test (I) then
+             Put_Line ("Test passed!");
+          else
+             Put_Line ("Test failed!");
+          end if;
+       end Perform_Test;
+
+    end Formal_Incomplete_Tagged_Type_Example;
+
+Note that this example only compiles because :ada:`Incomplete_Tagged` is
+tagged. If it was an *untagged* formal incomplete type, we wouldn't be allowed
+to call the :ada:`Test` function in the body of :ada:`Perform_Test`. This is
+possible, however, with tagged formal incomplete types |mdash| as well as with
+other kinds of formal types.
+
 .. _FormalPackages:
 
 Formal packages
