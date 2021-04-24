@@ -429,10 +429,62 @@ Definite and Indefinite Types
 Incomplete types
 ----------------
 
-.. todo::
+Incomplete types |mdash| as the name suggests |mdash| are types that have
+missing information in their declaration. This is a simple example:
 
-    Complete section!
+.. code-block:: ada
 
+    type Incomplete;
+
+Because this type declaration is incomplete, we need to provide the missing
+information at some later point. Consider the incomplete type :ada:`R` in the
+following example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Incomplete_Types
+
+    package Incomplete_Type_Example is
+
+       type R;
+       --  Incomplete type declaration!
+
+       type R is record
+          I : Integer;
+       end record;
+       --  type R is now complete!
+
+    end Incomplete_Type_Example;
+
+The first declaration of type :ada:`R` is incomplete. However, in the second
+declaration of :ada:`R`, we specify that :ada:`R` is a record. By providing
+this missing information, we're completing the type declaration of :ada:`R`.
+
+It's also possible to declare an incomplete type in the private part of a
+package specification and its complete form in the package body. Let's rewrite
+the example above accordingly:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Incomplete_Types_2
+
+    package Incomplete_Type_Example is
+
+    private
+
+       type R;
+       --  Incomplete type declaration!
+
+    end Incomplete_Type_Example;
+
+    package body Incomplete_Type_Example is
+
+       type R is record
+          I : Integer;
+       end record;
+       --  type R is now complete!
+
+    end Incomplete_Type_Example;
+
+Incomplete types are useful to declare mutually dependent types, as we'll
+see in the next section. Also, we can also have formal incomplete types, as
+we'll discuss :ref:`later <Formal_Incomplete_Types>`.
 
 Mutually dependent types
 ------------------------
