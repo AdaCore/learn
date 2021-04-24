@@ -644,6 +644,9 @@ declaration of :ada:`A_Plus` becomes :ada:`A_Plus : Integer_Array (1 .. 5);`.
 Therefore, it becomes clear that the compiler needs to allocate five elements
 for :ada:`A_Plus`.
 
+We'll see later how definite and indefinite types apply to
+:ref:`formal parameters <Definite_Indefinite_Types>`.
+
 Incomplete types
 ----------------
 
