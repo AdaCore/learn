@@ -649,6 +649,31 @@ Finally, we can use this package in an application:
        Show_Int (V);
     end Main;
 
+We can also use formal incomplete types for signature packages. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Signature_Package_Formal_Incomplete_Type
+
+    generic
+      type Incomplete;
+      with function "+" (V1, V2 : Incomplete) return Incomplete;
+      with function "-" (V1, V2 : Incomplete) return Incomplete;
+    package Formal_Incomplete_Type_Example
+      with Pure is
+    end Formal_Incomplete_Type_Example;
+
+This allows us to map other formal incomplete types, for example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Signature_Package_Formal_Incomplete_Type
+
+    with Formal_Incomplete_Type_Example;
+
+    generic
+       type T;
+       with package P is new Formal_Incomplete_Type_Example (T, others => <>);
+    package Map_Incomplete_Type_Example
+      with Pure is
+    end Map_Incomplete_Type_Example;
+
 In general, signature packages aren't used in isolation, but in
 combination with other generic packages. Also, they don't define anything
 themselves. In this sense, signature packages don't have an associated
