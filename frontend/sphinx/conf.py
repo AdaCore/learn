@@ -170,7 +170,7 @@ html_static_path = ['img',]
 #
 # html_sidebars = {}
 
-html_copy_source = False
+html_copy_source = True
 
 html_context = {
     'year': datetime.date.today().strftime('%Y'),
@@ -288,11 +288,11 @@ def setup(app):
                 if "css" in files.keys():
                     for css in files["css"]:
                         print("Adding {} to css...".format(css))
-                        app.add_stylesheet(css)
+                        app.add_css_file(css)
                 if "js" in files.keys():
                     for js in files["js"]:
                         print("Adding {} to js...".format(js))
-                        app.add_javascript(js)
+                        app.add_js_file(js)
         except FileNotFoundError as e:
             print("Warning: build-manifest.json not available")
 

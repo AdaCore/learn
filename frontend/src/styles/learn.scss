@@ -11,15 +11,15 @@
 a {
     color: #e1641b;
     text-decoration: none;
-    cursor: pointer
-}
+    cursor: pointer;
 
-a:hover {
-    color: #bc4600
-}
+    &:hover {
+        color: #bc4600;
+    }
 
-a:visited {
-    color: #eba177
+    &:visited {
+        color: #eba177;
+    }
 }
 
 .wy-side-nav-search {
@@ -32,7 +32,7 @@ a:visited {
 
 .wy-menu-vertical li.current a {
     color: $color-theme-bg-dark;
-    padding: .4045em 2.427em
+    padding: .4045em 2.427em;
 }
 
 .wy-nav-top {
@@ -375,28 +375,27 @@ html {
     bottom: 0px;
 }
 
-
-
 // layout customizations
-// download buttons
-div.download-button.docutils.container {
-    float: right;
-    width: 300px;
-    margin: 20px;
-}
+div {
+    &.download-button.docutils.container {
+        float: right;
+        width: 300px;
+        margin: 20px;
+    }
 
-// gap logo
-div.gap-logo.docutils.container {
-    float: left;
-    width: 280px;
-    margin-right: 5px;
-    margin-top: 45px;
-    margin-bottom: 45px;
-}
+    // gap logo
+    &.gap-logo.docutils.container {
+        float: left;
+        width: 280px;
+        margin-right: 5px;
+        margin-top: 45px;
+        margin-bottom: 45px;
+    }
 
-// hiding toctree on main page
-div.content-blocks.docutils.container {
-    display: none;
+    // hiding toctree on main page
+    &.content-blocks.docutils.container {
+        display: none;
+    }
 }
 
 a.pdf_download_button {
