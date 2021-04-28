@@ -30,9 +30,32 @@ a {
     }
 }
 
-.wy-menu-vertical li.current a {
-    color: $color-theme-bg-dark;
-    padding: .4045em 2.427em;
+.wy-menu-vertical {
+    p.caption {
+        color: #fff;
+    }
+    li {
+        a {
+            color: #e8e8e8;
+
+            &:hover {
+                color: #bc4600;
+            }
+
+            &:visited {
+                color: #e8e8e8;
+                &:hover {
+                    color: #bc4600;
+                }
+            }
+        }
+        &.current {
+            a {
+                color: $color-theme-bg-dark;
+                padding: .4045em 2.427em;
+            }
+        }
+    }
 }
 
 .wy-nav-top {
@@ -40,6 +63,21 @@ a {
     img {
         border-radius: 0 !important;
         background-color: transparent !important;
+    }
+
+    a {
+        color: #e8e8e8;
+
+        &:hover {
+            color: #bc4600;
+        }
+
+        &:visited {
+            color: #e8e8e8;
+            &:hover {
+                color: #bc4600;
+            }
+        }
     }
 }
 
@@ -49,8 +87,10 @@ a {
     margin-bottom: 24px;
 }
 
-.rst-content .highlight {
-    background: #ebf4f9;
+.rst-content {
+    .highlight {
+        background: #ebf4f9;
+    }
 }
 
 // theme overrides
