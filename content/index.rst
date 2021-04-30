@@ -41,11 +41,8 @@ Try Ada Now:
 
     end Learn;
 
-Check out the interactive
-:doc:`courses <courses/courses>`
-and
-:doc:`labs <labs/labs>`
-to learn more about Ada and SPARK.
+Check out the interactive courses and labs listed on the left side to learn
+more about Ada and SPARK.
 
 -------------
 
