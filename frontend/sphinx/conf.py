@@ -60,6 +60,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.graphviz',
     'widget_extension',
+    'sphinx_rtd_theme',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -122,20 +123,30 @@ nitpicky = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'learn_theme'
+#html_theme = 'learn_theme'
+html_theme = 'sphinx_rtd_theme'
 
 html_title = "learn.adacore.com"
 smartquotes = False
 
-html_theme_path = ['.'] # make sphinx search for themes in current dir
+# html_theme_path = ['.'] # make sphinx search for themes in current dir
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
 html_theme_options = {
-    "beta": False,
+    'logo_only': True,
+    'display_version': False,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    # Toc options
+    'collapse_navigation': False,
     'sticky_navigation': False,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
 }
 
 html_logo = "img/logo.svg"
@@ -159,7 +170,8 @@ html_static_path = ['img',]
 #
 # html_sidebars = {}
 
-html_copy_source = False
+# Keep this as True. Setting to False makes the search have no descriptions
+html_copy_source = True
 
 html_context = {
     'year': datetime.date.today().strftime('%Y'),
@@ -277,11 +289,11 @@ def setup(app):
                 if "css" in files.keys():
                     for css in files["css"]:
                         print("Adding {} to css...".format(css))
-                        app.add_stylesheet(css)
+                        app.add_css_file(css)
                 if "js" in files.keys():
                     for js in files["js"]:
                         print("Adding {} to js...".format(js))
-                        app.add_javascript(js)
+                        app.add_js_file(js)
         except FileNotFoundError as e:
             print("Warning: build-manifest.json not available")
 

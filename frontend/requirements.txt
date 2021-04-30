@@ -1,7 +1,7 @@
 Pygments==2.8.0
-Sphinx==2.2.1
+Sphinx==3.5.4
 ipython==5.7.0
-sphinx_rtd_theme==0.5.0
+sphinx_rtd_theme==0.5.2
 pydot-ng==2.0.0
 pyparsing==2.4.7
 graphviz==0.14.2
