@@ -129,7 +129,7 @@ html_theme = 'sphinx_rtd_theme'
 html_title = "learn.adacore.com"
 smartquotes = False
 
-html_theme_path = ['.'] # make sphinx search for themes in current dir
+# html_theme_path = ['.'] # make sphinx search for themes in current dir
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -170,6 +170,7 @@ html_static_path = ['img',]
 #
 # html_sidebars = {}
 
+# Keep this as True. Setting to False makes the search have no descriptions
 html_copy_source = True
 
 html_context = {

@@ -6,6 +6,10 @@
 .btn {
     background-color: $color-theme-bg-dark;
     color: #fff;
+
+    &:hover {
+        background-color: lighten($color-theme-bg-dark, 10%);
+    }
 }
 
 a {
