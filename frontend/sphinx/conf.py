@@ -61,6 +61,7 @@ extensions = [
     'sphinx.ext.graphviz',
     'widget_extension',
     'sphinx_rtd_theme',
+    'sphinx_reredirects',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
