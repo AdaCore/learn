@@ -217,7 +217,8 @@ class, before calling the new version of :ada:`Eat`:
 Using null procedures
 ~~~~~~~~~~~~~~~~~~~~~
 
-Since Ada 2005, we have the notion of null procedures. A null procedure is
+Since Ada 2005, we have the notion of null procedures. As
+:ref:`discussed previously <Null_Procedures>`, a null procedure is
 a procedure that is declared using :ada:`is null` and logically has an
 empty body. Fortunately, null procedures are allowed in interface
 definitions --- they define the default behavior of such a subprogram as

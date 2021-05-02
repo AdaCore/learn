@@ -300,6 +300,8 @@ Inline subprograms
     Complete section!
 
 
+.. _Null_Procedures:
+
 Null Procedures
 ---------------
 
