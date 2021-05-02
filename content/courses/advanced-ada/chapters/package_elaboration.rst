@@ -23,6 +23,7 @@ Elaboration control
 
     - `Elaboration control <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-10-2-1.html>`_
     - `Elaboration Control Pragmas <http://www.ada-auth.org/standards/2xrm/html/RM-J-15-14.html>`_
+    - GNAT's static model
 
 .. todo::
 

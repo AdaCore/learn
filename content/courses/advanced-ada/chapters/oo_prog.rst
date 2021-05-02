@@ -19,6 +19,7 @@ Overriding indicators
     - **Briefly** discuss :ada:`overriding` and :ada:`not overriding` mentioned
       in
       `Overriding Indicators <http://www.ada-auth.org/standards/2xrm/html/RM-8-3-1.html>`_
+    - Mention that :ada:`not overriding` is not recommended.
 
 .. todo::
 
