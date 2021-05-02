@@ -3,13 +3,13 @@ Generics
 
 .. include:: ../../global.txt
 
-.. _Formal_Definite_Indefinite_Types:
+.. _Formal_Definite_Indefinite_Subtypes:
 
-Mapping of Definite and Indefinite Types
-----------------------------------------
+Mapping of Definite and Indefinite Subtypes
+-------------------------------------------
 
 Earlier on, we had a discussion about
-:ref:`definite and indefinite types <Definite_Indefinite_Types>`. In this
+:ref:`definite and indefinite subtypes <Definite_Indefinite_Subtypes>`. In this
 section, we look into formal definite and indefinite types and how those types
 are mapped.
 

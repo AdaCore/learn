@@ -412,10 +412,10 @@ totally arbitrary values as well. For example:
 
     end Days;
 
-.. _Definite_Indefinite_Types:
+.. _Definite_Indefinite_Subtypes:
 
-Definite and Indefinite Types
------------------------------
+Definite and Indefinite Subtypes
+--------------------------------
 
 Indefinite types were mentioned back in the
 :doc:`Introduction to Ada course <courses/intro-to-ada/chapters/more_about_types>`.
@@ -645,7 +645,7 @@ Therefore, it becomes clear that the compiler needs to allocate five elements
 for :ada:`A_Plus`.
 
 We'll see later how definite and indefinite types apply to
-:ref:`formal parameters <Definite_Indefinite_Types>`.
+:ref:`formal parameters <Formal_Definite_Indefinite_Subtypes>`.
 
 Incomplete types
 ----------------
