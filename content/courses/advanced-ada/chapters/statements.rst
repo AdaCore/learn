@@ -16,17 +16,16 @@ Exit loop statement
     Complete section!
 
 
-Block Statements
-----------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Block Statements
+    ----------------
 
-    - `Block Statements <http://www.ada-auth.org/standards/2xrm/html/RM-5-6.html>`_
-    - `Parallel Block Statements <http://www.ada-auth.org/standards/2xrm/html/RM-5-6-1.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
-
-    Complete section!
+        - `Block Statements <http://www.ada-auth.org/standards/2xrm/html/RM-5-6.html>`_
+        - `Parallel Block Statements <http://www.ada-auth.org/standards/2xrm/html/RM-5-6-1.html>`_
 
 
 Extended return statement
