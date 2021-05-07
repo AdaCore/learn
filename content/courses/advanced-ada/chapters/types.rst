@@ -437,10 +437,80 @@ Incomplete types
 Mutually dependent types
 ------------------------
 
-.. todo::
+In this section, we discuss how to use incomplete types to declare mutually
+dependent types. Let's start with this example:
 
-    Complete section!
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Mutually_Dependent
+    :class: ada-expect-compile-error
 
+    package Mutually_Dependent is
+
+       type T1 is record
+          B : T2;
+       end record;
+
+       type T2 is record
+          A : T1;
+       end record;
+
+    end Mutually_Dependent;
+
+When you try to compile this example, you get a compilation error. The first
+problem with this code is that, in the declaration of the :ada:`T1` record, the
+compiler doesn't know anything about :ada:`T2`. We could solve this by
+declaring an incomplete type (:ada:`type T2;`) before the declaration of
+:ada:`T1`. This, however, doesn't solve all the problems in the code: the
+compiler still doesn't know the size of :ada:`T2`, so we cannot create a
+component of this type. We could, instead, declare an access type and use it
+here, or simply use an anonymous access to :ada:`T2`. By doing this, even
+though the compiler doesn't know the internals of :ada:`T2`, it can still
+allocate an access to an object of this type.
+
+To summarize, in order to solve the compilation error above, we need to:
+
+- use at least one incomplete type;
+- declare at least one component as an access to an object.
+
+For example, we could declare an incomplete type :ada:`T2` and then declare
+the component :ada:`B` of the :ada:`T1` record as an access to :ada:`T2`.
+This is the corrected version:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Mutually_Dependent
+
+    package Mutually_Dependent is
+
+       type T2;
+
+       type T1 is record
+          B : access T2;
+       end record;
+
+       type T2 is record
+          A : T1;
+       end record;
+
+    end Mutually_Dependent;
+
+We could strive for consistency and declare two incomplete types and two
+accesses, but this isn't strictly necessary in this case. Here's the adapted
+code:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Mutually_Dependent
+
+    package Mutually_Dependent is
+
+       type T1;
+       type T2;
+
+       type T1 is record
+          B : access T2;
+       end record;
+
+       type T2 is record
+          A : access T1;
+       end record;
+
+    end Mutually_Dependent;
 
 Type view
 ---------
