@@ -1092,7 +1092,7 @@ the layout specification won't compile in the first place. In the
 following diagram, both layouts, the default, and the one resulting from 
 the record representation clause, are depicted for comparison: 
 
-.. image:: images/record_layout_with_rep_clause.png.png
+.. image:: images/record_layout_with_rep_clause.png
   :width: 600
   :alt: Memory allocated to a record with optimized layout
   
