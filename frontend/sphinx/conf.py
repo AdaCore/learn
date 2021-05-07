@@ -61,6 +61,7 @@ extensions = [
     'sphinx.ext.graphviz',
     'widget_extension',
     'sphinx_rtd_theme',
+    'sphinx_reredirects',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -177,6 +178,10 @@ html_context = {
     'year': datetime.date.today().strftime('%Y'),
 }
 
+redirects = {
+    "courses/Ada_For_The_C_Embedded_Developer/index": "../Ada_For_The_Embedded_C_Developer/",
+    "courses/GNAT_Toolchain_Getting_Started/index": "../GNAT_Toolchain_Intro/"
+}
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
