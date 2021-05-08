@@ -1066,8 +1066,8 @@ the components:
   :width: 600
   :alt: Memory allocated to a record with unoptimized layout
    
-As a result, R'Size will be 80 bits (10 bytes), but those last two bytes 
-will be will be allocated to objects, for an Object_Size of 96 bits (12 
+As a result, :ada:`R'Size` will be 80 bits (10 bytes), but those last two bytes 
+will be will be allocated to objects, for an :ada:`Object_Size` of 96 bits (12 
 bytes). We'll change that with an explicit layout specification.
 
 Having declared the record type, the second step consists of defining 
@@ -1097,26 +1097,26 @@ the record representation clause, are depicted for comparison:
   :width: 600
   :alt: Memory allocated to a record with optimized layout
   
-R'Size will be 56 bits (7 bytes), but that last padding byte will also 
-be allocated to objects, so the Object_Size will be 64 bits (8 bytes). 
+:ada:`R'Size` will be 56 bits (7 bytes), but that last padding byte will also 
+be allocated to objects, so the :ada:`Object_Size` will be 64 bits (8 bytes). 
   
 Notice how we gave each component an offset, after the reserved word 
-"at". These offsets are in terms of storage elements, and specify their 
+:ada:`at`. These offsets are in terms of storage elements, and specify their 
 positions within the record object as a whole. They are relative to the 
 beginning of the memory allocated to the record object so they are 
-numbered starting at zero. We want the X component to be the very first 
+numbered starting at zero. We want the :ada:`X` component to be the very first 
 component in the allocated memory so the offset for that one is zero. 
-The M component, in comparison, starts at an offset of 4 because we are 
-allocating 4 bytes to the prior component X: bytes 0 through 3 
-specifically. M just occupies one storage element so the next component, 
-B, starts at offset 5. Likewise, component C starts at offset 6. 
+The :ada:`M` component, in comparison, starts at an offset of 4 because we are 
+allocating 4 bytes to the prior component :ada:`X`: bytes 0 through 3 
+specifically. :ada:`M` just occupies one storage element so the next component, 
+:ada:`B`, starts at offset 5. Likewise, component :ada:`C` starts at offset 6. 
 
 An individual component may occupy part of a single storage element, all 
 of a single storage element, multiple contiguous storage elements, or a 
 combination of those (i.e., some number of whole storage elements but 
 also part of another). The bit "range" specifies this bit-specific 
 layout, per component, by specifying the first and last bits occupied. 
-The X component occupies 4 complete 8-bit storage elements, so the bit 
+The :ada:`X` component occupies 4 complete 8-bit storage elements, so the bit 
 range is 0 through 31, for a total of 32 bits. All the other components 
 each occupy an entire single storage element so their bit ranges are 0 
 through 7, for a total of 8 bits. 
@@ -1162,7 +1162,7 @@ specific representation, such as the component taking no bits whatsoever
 example rules about how a component name can be used within the overall 
 record layout construct, but not restrictions on the types allowed for 
 individual components. For example, here is a record layout containing a 
-String component, arbitrarily set to contain 11 characters: 
+:ada:`String` component, arbitrarily set to contain 11 characters: 
 
 .. code-block:: ada
 
@@ -1176,13 +1176,13 @@ String component, arbitrarily set to contain 11 characters:
       B at 11 range 0 .. 7;
    end record;
    
-Component S is to be the first component in memory in this example, 
-hence the position offset is 0, for the first byte of S. Next, S is 11 
+Component :ada:`S` is to be the first component in memory in this example, 
+hence the position offset is 0, for the first byte of :ada:`S`. Next, :ada:`S` is 11 
 characters long, or 88 bits, so the bit range is 0 .. 87. That's 11 
-bytes of course, so S occupies storage elements 0 .. 10. Therefore, the 
+bytes of course, so :ada:`S` occupies storage elements 0 .. 10. Therefore, the 
 next component position must be at least 11, unless there is to be a 
-gap, in which case it would be greater than 11. We'll place B 
-immediately after the last character of S, so B is at storage element 
+gap, in which case it would be greater than 11. We'll place :ada:`B` 
+immediately after the last character of :ada:`S`, so :ada:`B` is at storage element 
 offset 11 and occupying all that one byte's bits. 
 
 We'll have more to say about record type layouts but first we need to talk 
@@ -1240,10 +1240,10 @@ default.
 
 Specifying alignment for record types is so useful that in the first 
 version of Ada there was no syntax to specify alignment for anything 
-other than record types (via the obsolete "at mod" clause on record 
+other than record types (via the obsolete :ada:`at mod` clause on record 
 representation clauses). 
 
-For that reason GNAT provides a pragma named Optimize_Alignment. This is 
+For that reason GNAT provides a pragma named :ada:`Optimize_Alignment`. This is 
 a configuration pragma that affects the compiler's choice of default 
 alignments where no alignment is explicitly specified. There is a 
 time/space trade-off in the selection of these values, as we've seen. 
@@ -1257,9 +1257,9 @@ done for the other types and objects not explicitly specified.
 Now let's look into the details. We'll use a case study for this 
 purpose, including specifying sizes as well as alignments. 
 
-The code for the case study is as follows. It uses Size clauses to 
-specify the Sizes, instead of the Size aspect, just to emphasize that 
-the the clause approach is not obsolete. 
+The code for the case study is as follows. It uses :ada:`Size` clauses to 
+specify the :ada:`Size`s, instead of the :ada:`Size` aspect, just to emphasize that 
+the :ada:`Size` clause approach is not obsolete. 
 
 .. code-block:: ada
 
@@ -1287,7 +1287,7 @@ the the clause approach is not obsolete.
    end Some_Types;
      
 When we compile this, the compiler will complain that the size for 
-"List" is too small, i.e., that the minimum allowed is 96 bits instead 
+:ada:`List` is too small, i.e., that the minimum allowed is 96 bits instead 
 of the 72 we specified. We specified 24 * 3 because we said the record 
 size should be 24 bits, and we want our array to contain 3 record 
 components of that size, so 72 seems right.
@@ -1299,20 +1299,20 @@ type. In this case, the compiler says we need 96 total bits for the
 array type, meaning that each of the 3 array components is 32 bits wide 
 instead of 24. 
 
-Why is it 32 bits? Because the alignment for Info is 2 (on this 
+Why is it 32 bits? Because the alignment for :ada:`Info` is 2 (on this 
 machine). The record alignment is a multiple of the largest 
-alignment of the enclosed components. The alignment for type Temperature 
-(2), is larger than the alignment for type Identity (1), therefore the 
+alignment of the enclosed components. The alignment for type :ada:`Temperature` 
+(2), is larger than the alignment for type :ada:`Identity` (1), therefore the 
 alignment for the whole record type is 2. We need to go from that number 
 of storage elements to a number of bits for the size. 
 
 Here's where it gets subtle. The alignment is in terms of storage 
 elements. Each storage element is of a size in bits given by 
-System.Storage_Unit. We've said that on our hypothetical machine 
-Storage_Unit is 8, so storage elements are 8 bits wide on this machine. 
+:ada:`System.Storage_Unit`. We've said that on our hypothetical machine 
+:ada:`Storage_Unit` is 8, so storage elements are 8 bits wide on this machine. 
 Bytes, in other words. Therefore, to get the required size in bits, we 
 have to find a multiple of the two 8-bit bytes (specified by the 
-alignment) that has at least the number of bits we gave in the Size 
+alignment) that has at least the number of bits we gave in the :ada:`Size` 
 clause. Two bytes only provides 16 bits, so that's not big enough, we 
 need at least 24 bits. The next multiple of 2 bytes is 4 bytes, 
 providing 32 bits, which is indeed larger than 24. Therefore, the 
@@ -1325,7 +1325,7 @@ bits for the array type (and that we want three array components).
 That's the size we specified, after all. So how do we get the record 
 type to be 24 bits instead of 32? Yes, you guessed it, we change the 
 alignment for the record type. If we change it from 2 to 1, the size of 
-24 bits will work. Adding this Alignment clause line will do that: 
+24 bits will work. Adding this :ada:`Alignment` clause line will do that: 
 
 .. code-block:: ada
 
@@ -1336,21 +1336,21 @@ addresses refer to entire storage elements. (An alignment of 0 would
 mean that the address need not start on a storage element boundary, but 
 we know of no such machines.) 
 
-We can even entirely replace the Size clause with the Alignment clause, 
-because the Size clause specifying 24 bits is just confirming: it's the 
-value that 'Size would return anyway. The problem is the object size. 
+We can even entirely replace the :ada:`Size` clause with the :ada:`Alignment` clause, 
+because the :ada:`Size` clause specifying 24 bits is just confirming: it's the 
+value that :ada:`'Size` would return anyway. The problem is the object size. 
 
 Now, you may be wondering why an alignment of 1 would work, given that 
-the alignment of the Temperature component is 2. Wouldn't it slow down 
+the alignment of the :ada:`Temperature` component is 2. Wouldn't it slow down 
 the code, or even trap? Well, maybe. It depends on the machine. If it 
 doesn't work we would just have to use 32 bits for the record type, with 
 the original alignment of 2, for a larger total array size. 
 
 We said earlier that there are only a small number of reasons to specify 
-:ada:`'Size` for a type. We can mention one of them now. Setting 'Size 
+:ada:`'Size` for a type. We can mention one of them now. Setting :ada:`'Size` 
 can be useful to give the minimum number of bits to use for a component 
 of a packed composite type, that is, within either a record type or an 
-array type that is explicitly packed via the aspect or pragma Pack. It 
+array type that is explicitly packed via the aspect or pragma :ada:`Pack`. It 
 says that the compiler, when giving its best effort, shouldn't compress 
 components of the type any smaller than the number of bits specified. 
 No, it isn't earth-shattering, but other uses are more valuable, to be 
@@ -1374,7 +1374,7 @@ of other useful cases. Both involve storage allocation.
 
 One useful scenario concerns tasking. We can specify the number of 
 storage elements reserved for the execution of a task object, or all 
-objects of a task type. You use the Storage_Size aspect to do so: 
+objects of a task type. You use the :ada:`Storage_Size` aspect to do so: 
 
 .. code-block:: ada
 
@@ -1425,7 +1425,7 @@ storage on your target might be limited. Some of the GNAT bare-metal
 embedded targets have very small amounts of memory available, so much so that 
 the default task stack allocations would exhaust the memory available 
 quickly. That's what the example above does: empirical data showed that 
-the Servo task could run with just 1K bytes allocated, so we reduced it 
+the :ada:`Servo` task could run with just 1K bytes allocated, so we reduced it 
 from the default accordingly. (We specified the size with that 
 expression for the sake of readability, relative to using literals 
 directly.) 
@@ -1434,7 +1434,7 @@ Notice we said "empirical data" above. How do we know that we exercised
 the task's thread of control exhaustively, such that the arrived-at 
 allocation value covers the worst case? We don't, not with certainty. If 
 we really must know the allocation will suffice for all cases, say 
-because this is a high-integrity application, we would use GNATstack. 
+because this is a high-integrity application, we would use :program:`GNATstack`. 
 GNATstack is an offline tool that exploits data generated by the 
 compiler to compute worst-case stack requirements per subprogram and per 
 task. As a static analysis tool, its computation is based on information 
@@ -1461,7 +1461,7 @@ pool.
 Several access types can share the same pool. By default, the 
 implementation might choose to have a single global storage pool, used 
 by all such access types. This global pool might consist merely of calls 
-to operating system routines (e.g., "malloc"), or it might be a 
+to operating system routines (e.g., :c:`malloc`), or it might be a 
 vendor-defined pool instead. Alternatively, the implementation might 
 choose to create a new pool for each access-to-object type, reclaiming 
 the pool's memory when the access type goes out of scope (if ever). 
@@ -1485,7 +1485,7 @@ Alternatively, you can specify :ada:`Storage_Size` for the access type.
 In this case, an implementation-defined pool is used for the access 
 type, and the storage available is at least the amount requested, maybe 
 more (it might round up to some advantageous block size, for example). 
-If the implementation cannot satisfy the request, Storage_Error is 
+If the implementation cannot satisfy the request, :ada:`Storage_Error` is 
 raised. 
 
 It should be clear that that the two alternatives are mutually 
