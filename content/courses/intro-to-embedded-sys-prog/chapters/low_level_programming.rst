@@ -284,7 +284,7 @@ Let's take that example of swapping the bytes in a received Ethernet
 packet. The "wire" format is Big Endian so if we are running on a Little 
 Endian machine we must swap the bytes received.
 
-Suppose we want retrieve typed values from a 
+Suppose we want to retrieve typed values from a 
 given buffer or bytes. We get the bytes from the buffer into a variable named :ada:`Value`, of the type of
 interest, and then swap those bytes within :ada:`Value` if necessary.
 
@@ -658,7 +658,7 @@ sending values over the wire, the code should query the size of the
 *parameter* holding the value to be sent. That will tell you how many
 bits are really needed.
 
-One last point. GNAT, and now Ada 202x, define an attribute named 
+One last point: GNAT, and now Ada 202x, define an attribute named 
 :ada:`Object_Size`. It does just what the name suggests: what 
 :ada:`'Size` does when applied to objects rather than types. GNAT also 
 defines another attribute, named :ada:`Value_Size`, that does what 
@@ -1001,7 +1001,7 @@ performance issues. Why would we have such a confirming clause now? It
 might be left over from the original version of the language, written 
 before the Ada 95 change. Some projects have lifetimes of several 
 decades, after all, and changing the code can be expensive (certified 
-code, for example). Whether the compiler does recognize confimring 
+code, for example). Whether the compiler does recognize confirming 
 clauses is a feature of the compiler implementation. We can expect a 
 mature compiler to do so, but there's no guarantee. 
 
@@ -1235,7 +1235,7 @@ the components are already aligned. As a result the overall size could
 be larger than we want for the sake of space. Additionally, when we pass 
 such objects to code written in other languages, we want to ensure that 
 the starting address of these objects is aligned as the external code 
-expects. The compiler might not chose that required alignment by 
+expects. The compiler might not choose that required alignment by 
 default. 
 
 Specifying alignment for record types is so useful that in the first 
