@@ -276,7 +276,7 @@ least significant bit.
 Strictly speaking, this constant gives us the default order for bits 
 within storage elements in record representation clauses, not the order 
 of bytes within words. However, we can usually use it for the byte order 
-too. In particular, if Word_Size is greater than Storage_Unit, a word 
+too. In particular, if :ada:`Word_Size` is greater than :ada:`Storage_Unit`, a word 
 necessarily consists of multiple storage elements, so the default bit 
 ordering is the same as the ordering of storage elements in a word. 
 
@@ -285,7 +285,8 @@ packet. The "wire" format is Big Endian so if we are running on a Little
 Endian machine we must swap the bytes received.
 
 Suppose we want retrieve typed values from a 
-given buffer or bytes. We get the bytes from the buffer into a variable named Value, of the type of interest, and then swap those bytes within Value if necessary.
+given buffer or bytes. We get the bytes from the buffer into a variable named :ada:`Value`, of the type of
+interest, and then swap those bytes within :ada:`Value` if necessary.
 
 .. code-block:: ada
 
@@ -298,8 +299,8 @@ given buffer or bytes. We get the bytes from the buffer into a variable named Va
       end if;
    end Retrieve_4_Bytes;
 
-We have elided the code that gets the bytes into Value, for the sake of 
-simplicity. How the bytes are actually swapped by function Byte_Swapped 
+We have elided the code that gets the bytes into :ada:`Value`, for the sake of 
+simplicity. How the bytes are actually swapped by function :ada:`Byte_Swapped`
 is also irrelevant. The point here is the if-statement: the expression 
 compares the :ada:`Default_Bit_Order` constant to 
 :ada:`High_Order_First` to see if this execution is on a Big Endian 
@@ -346,7 +347,7 @@ hardware and the compiler's representation choices can come to the
 forefront. You can, therefore, query many such choices. 
 
 For example, let's say we want to query the addresses of some objects
-because we are calling the imported C "memcpy" function. That function
+because we are calling the imported C c:`memcpy` function. That function
 requires two addresses to be passed to the call: one for the source, and
 one for the destination. We can use the :ada:`'Address` attribute to get
 those values.
@@ -387,9 +388,9 @@ likewise, if we misunderstand the result the postcondition will let us
 know (at least to the extent that the return value does that). 
 
 For a sample call to our imported routine, imagine that we have a 
-procedure that copies the bytes of a String parameter into a Buffer 
+procedure that copies the bytes of a :ada:`String` parameter into a :ada:`Buffer` 
 parameter, which is just a contiguous array of bytes. We need to tell 
-MemCopy the addresses of the arguments passed so we apply the attribute 
+:ada:`MemCopy` the addresses of the arguments passed so we apply the attribute 
 accordingly: 
 
 .. code-block:: ada
@@ -406,26 +407,26 @@ The order of the address parameters is easily confused so we use the
 named association format for specifying the actual parameters in the 
 call. 
 
-Although we assign Result we don't otherwise use it, so we tell the
+Although we assign :ada:`Result` we don't otherwise use it, so we tell the
 compiler this is not a mistake via the :ada:`Unreferenced` aspect. And if we
 do turn around and reference it the compiler will complain, as it should.
 
-(We don't show the preconditions for Put, but they would have specified 
-that Start must be a valid index into This particular Buffer, and that 
-there must be room in the Buffer argument for the number of bytes in 
-Value when starting at the Start index, so that we don't copy past the 
-end of the Buffer argument.) 
+(We don't show the preconditions for :ada:`Put`, but they would have specified 
+that :ada:`Start` must be a valid index into this particular buffer, and that 
+there must be room in the :ada:`Buffer` argument for the number of bytes in 
+:ada:`Value` when starting at the :ada:`Start` index, so that we don't copy past the 
+end of the :ada:`Buffer` argument.) 
 
 There are other characteristics we might want to query too. 
 
 We might want to ask the compiler what alignment it chose for a given 
-object (or type, for all such objects). For a type, an Alignment of zero 
+object (or type, for all such objects). For a type, an :ada:`Alignment` of zero 
 means that objects of the type are not normally aligned on a storage 
 element boundary at all. That could happen if the type is packed down 
-into a composite object, such as an array of Booleans. We'll discuss 
+into a composite object, such as an array of :ada:`Booleans`. We'll discuss 
 "packing" soon. More commonly, the smallest likely value is 1, meaning 
 that any storage element's address will suffice. If the machine has no 
-particular natural alignments, then all type Alignments will probably 
+particular natural alignments, then all type :ada:`Alignment`s will probably 
 be 1 by default. That would be somewhat rare today, though, because 
 modern processors usually have comparatively strict alignment requirements. 
 
@@ -443,7 +444,7 @@ designate only variables ("access-to-object") and those that can also
 designate constants. Constants are never allocated dynamically so we can 
 ignore them. Each access-to-object type has an associated storage pool. 
 The storage allocated by :ada:`new` comes from the pool, and instances 
-of Unchecked_Deallocation return storage to the pool. 
+of :ada:`Unchecked_Deallocation` return storage to the pool. 
 
 When applied to an access-to-object type, :ada:`Storage_Size` gives us 
 the number of storage elements reserved for the corresponding pool. 
@@ -669,7 +670,7 @@ Specifying Representation
 -------------------------
 
 Recall that we said :ada:`Boolean'Size` is required to be 1, and that
-stand-alone objects of type Boolean are very likely allocated some
+stand-alone objects of type :ada:`Boolean` are very likely allocated some
 integral number of storage elements (e.g., bytes) in memory, typically
 one. What about arrays of Booleans? Suppose we have an array of 16
 Boolean components. How big are objects of the array type? It depends on
@@ -709,9 +710,9 @@ a number of bits as it can:
    type Bits16 is array (0 .. 15) of Boolean with
      Pack;
 
-That likely does what you want: Bits16'Size will probably be 16.
+That likely does what you want: :ada:`Bits16'Size` will probably be 16.
 
-But realize that the Pack aspect (and corresponding pragma) is merely a
+But realize that the :ada:`Pack` aspect (and corresponding pragma) is merely a
 request that the compiler do its best to minimize the number of bits
 allocated, not necessarily that it do exactly what you expected or
 required.
@@ -723,21 +724,21 @@ We could set the size of the entire array type:
    type Bits16 is array (0 .. 15) of Boolean with
      Size => 16;
 
-But the language standard says that a Size clause on array and record 
+But the language standard says that a :ada:`Size` clause on array and record 
 types should not affect the internal layout of their components. That's 
 Implementation Advice, so not normative, but implementations are really 
 expected to follow the advice, absent some compelling reason. That's 
-what the Pack aspect, record_representation_clauses, and Component_Size 
-clauses are for. (We'll talk about record_representation_clauses 
+what the :ada:`Pack` aspect, record representation clauses, and :ada:`Component_Size` 
+clauses are for. (We'll talk about record representation clauses
 momentarily.) That said, at least one other vendor's compiler would have 
-changed the size of the array type because of the Size clause, so GNAT 
-defines a configuration pragma named Implicit_Packing that overrides the 
-default behavior. With that pragma applied, the Size clause would 
+changed the size of the array type because of the :ada:`Size` clause, so GNAT 
+defines a configuration pragma named :ada:`Implicit_Packing` that overrides the 
+default behavior. With that pragma applied, the :ada:`Size` clause would 
 compile and suffice to make the overall size be 16. That's a 
 vendor-defined pragma though, so not portable. 
 
 Therefore, the best way to set the size for the array type is to set the 
-size of the individual components, via the Component_Size aspect as the 
+size of the individual components, via the :ada:`Component_Size` aspect as the 
 Implementation Advice indicates. That will say what we really want, 
 rather than a "best effort" request for the compiler, and is portable: 
 
@@ -777,7 +778,7 @@ We can query the addresses of objects, and other things too, but
 objects, especially variables, are the most common case. In the above, 
 we say :ada:`X'Address` to query the starting address of object 
 :ada:`X`. With that information we know what address to specify for our 
-bit-mask overlay Y. Now X and Y are aliases, and therefore we can 
+bit-mask overlay :ada:`Y`. Now :ada:`X` and :ada:`Y` are aliases, and therefore we can 
 manipulate those memory bytes as either an integer or as an array of 
 individual bits. (Note that we could have used a modular type as the 
 overlay if all we wanted was an unsigned view.) 
@@ -788,7 +789,7 @@ otherwise apply in the absence of aliases. That's necessary,
 functionally, but implies degraded performance, so keep it in mind. 
 Aliasing precludes some desirable optimizations. 
 
-You may be asking yourself how to know that type Integer is 32 bits 
+You may be asking yourself how to know that type :ada:`Integer` is 32 bits 
 wide, so that we know what size array to use for the bit-mask. The 
 answer is that you just have to know the target well when doing 
 low-level programming, and that portability is not the controlling 
@@ -814,7 +815,7 @@ size of the object's type. The object size won't be smaller, but it
 could be larger. Why? For a stand-alone object or a parameter, most 
 implementations will round the size up to a storage element boundary, or 
 more, so the object size might be greater than that of the type. Think 
-back to Boolean, where Size is required to be 1, but stand-alone objects 
+back to :ada:`Boolean`, where :ada:`Size` is required to be 1, but stand-alone objects 
 are probably allocated 8 bits, i.e., an entire storage element (on our 
 hypothetical byte-addressed machine). 
 
@@ -838,8 +839,8 @@ That will compile successfully, because there will be a signed integer
 hardware type with at least that range. (Not necessarily, legally 
 speaking, but realistically speaking, there will be such a hardware 
 type.) Indeed, it may be an 8-bit signed integer, in which case 
-Device_Register'Size will give us 5, but objects of the type will have a 
-size of 8, unavoidably, even though we set Size to 5.
+:ada:`Device_Register'Size` will give us 5, but objects of the type will have a 
+size of 8, unavoidably, even though we set :ada:`Size` to 5.
 
 The difference between the type and object sizes can lead to potentially 
 problematic code: 
@@ -856,15 +857,15 @@ processor memory space. The actual address is elided as it is not
 important here. 
 
 That code might work too, but it might not. We might think that 
-My_Device'Size is 8, and that My_Device'Address points at an 8-bit 
+:ada:`My_Device'Size` is 8, and that :ada:`My_Device'Address` points at an 8-bit 
 location. However, this isn't necessarily so, as we saw with the 
 supposedly 5-bit example earlier. Maybe the smallest signed integer the 
 hardware has is 16-bits wide. The code would compile because a 16-bit 
 signed numeric type can certainly handle the 8-bit range requested. 
-My_Device'Size would be then 16, and because 'Address gives us the 
-*starting* storage element, My_Device'Address might designate the 
+:ada:`My_Device'Size` would be then 16, and because :ada:`'Address` gives us the 
+*starting* storage element, :ada:`My_Device'Address` might designate the 
 high-order byte of the overall 16-bit object. When the compiler reads 
-the two bytes for My_Device what will happen? One of the bytes will be 
+the two bytes for :ada:`My_Device` what will happen? One of the bytes will be 
 the data presented by the hardware device mapped to the memory. The 
 other byte will contain undefined junk, whatever happens to be in the 
 memory cell at the time. We might have to debug the code a long time to 
@@ -884,8 +885,8 @@ object instead of the type:
 If the compiler cannot support stand-alone 8-bit objects, the code
 won't compile. 
 
-Alternatively, we could change the earlier Size clause on the 
-type to apply Object_Size instead: 
+Alternatively, we could change the earlier :ada:`Size` clause on the 
+type to apply :ada:`Object_Size` instead: 
 
 .. code-block:: ada
 
@@ -898,19 +899,19 @@ With either approach, if the implementation cannot support 8-bit
 stand-alone objects, we find out that there is a problem at 
 compile-time. That's always cheaper than debugging. 
 
-You might conclude that setting the Size for a type serves no purpose. 
+You might conclude that setting the :ada:`Size` for a type serves no purpose. 
 That's not an unreasonable conclusion, given what you've seen, but in 
 fact there are reasons to do so. However, there are only a few specific 
 cases so we will save the reasons for the discussions of the specific 
 cases. 
 
-There is one general case, though, for setting the 'Size of a type. 
+There is one general case, though, for setting the :ada:`'Size` of a type. 
 Specifically, you may want to specify the size that you think is the 
 minimum possible, and you want the compiler to confirm that belief. This 
 would be one of the so-called "confirming" representation clauses, in 
 which the representation detail is what the compiler would have chosen 
 anyway, absent the specification. You're not actually changing anything, 
-you're just getting confirmation via whether or not the compiler accepts 
+you're just getting confirmation via :ada:`Size` whether or not the compiler accepts 
 the clause. Suppose, for example, that you have an enumeration type with 
 256 values. For enumeration types, the compiler allocates the smallest 
 number of bits required to represent all the values, rounded up to the 
@@ -945,7 +946,7 @@ want because you're interacting with some device and the commands are
 encoded with values other than 0 and 1. Maybe you want to use an 
 enumeration type because you want to specify all the possible values 
 actually used by clients. If you just used some numeric type instead and 
-made up constants for On and Off, there's nothing to keep clients from 
+made up constants for :ada:`On` and :ada:`Off`, there's nothing to keep clients from 
 using other numeric values in place of the two constants (absent some 
 comparatively heavy code to prevent that from happening). Better to use 
 the compiler to make that impossible in the first place, rather than 
@@ -1012,14 +1013,14 @@ reorder record components in physical memory. In other words, the
 textual order in the source code is not necessarily the physical order 
 in memory. That's different from, say, C, where what you write is what 
 you get, and you better know what you're doing. On some targets a 
-misaligned struct component access will perform very poorly, or even 
+misaligned :c:`struct` component access will perform very poorly, or even 
 trap and halt, but that's not the C compiler's fault. There's no 
 guarantee that the Ada compiler will reorder the components to avoid 
 this problem either. Indeed, GNAT did not reorder components until 
 relatively recently but does now, at least for the more egregious 
 performance cases. It does this reordering silently, too, although there 
 is a switch to have it warn you when it does. To prevent reordering, 
-GNAT defines a pragma named No_Component_Reorder that does what the name 
+GNAT defines a pragma named :ada:`No_Component_Reorder` that does what the name 
 suggests. You can apply it to individual record types, or globally, as a 
 configuration pragma. But of course because the pragma is vendor defined 
 it is not portable. 
