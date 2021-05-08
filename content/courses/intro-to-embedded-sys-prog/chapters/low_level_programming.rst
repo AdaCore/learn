@@ -518,7 +518,7 @@ For scalar types, the attribute returns the *minimum* number of bits
 required to represent all the values of the type. Here's a diagram 
 showing what the category "scalar types" includes: 
 
-.. image:: images/scalar_types_tree.png.png
+.. image:: images/scalar_types_tree.png
   :width: 600
   :alt: Scalar types tree
 
@@ -1573,4 +1573,3 @@ Data Validity
 .. todo::
 
     Complete section!
-
