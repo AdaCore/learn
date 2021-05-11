@@ -1406,8 +1406,7 @@ task.
 The GNAT run-time library allocates a default stack amount to each task, 
 with different defaults depending on the underlying O.S., or lack 
 thereof, and the target. You need to read the documentation to find the 
-actual amount, or, with GNAT, read the code (or just ask for help via 
-your GNAT account number). 
+actual amount, or, with GNAT, read the code. 
 
 You would need to specify this amount in order to either increase or 
 decrease the allocated storage. If the task won't run properly, perhaps 
