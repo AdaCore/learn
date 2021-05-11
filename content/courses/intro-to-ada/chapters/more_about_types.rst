@@ -531,8 +531,7 @@ Point values, because the size of a Point is not known.
 
 As mentioned in the example above, we could provide a default value for the
 discriminants, so that we could legally declare :ada:`Point` values without
-specifying the discriminants. For the example above, this is how it would look
-like:
+specifying the discriminants. For the example above, this is how it would look:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Test_Discriminants
 
