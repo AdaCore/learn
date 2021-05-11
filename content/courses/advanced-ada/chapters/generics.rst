@@ -3,6 +3,215 @@ Generics
 
 .. include:: ../../global.txt
 
+.. _Formal_Definite_Indefinite_Subtypes:
+
+Mapping of Definite and Indefinite Subtypes
+-------------------------------------------
+
+Earlier on, we had a discussion about
+:ref:`definite and indefinite subtypes <Definite_Indefinite_Subtypes>`. In this
+section, we look into formal definite and indefinite types and how those types
+are mapped.
+
+We can distinguish between the definite and indefinite version of many formal
+types. For example, consider the simple formal type :ada:`type T is private`,
+which is the definite version of a formal nonlimited private type. The
+indefinite version of this formal type is :ada:`type T (<>) is private`. Here,
+the syntax :ada:`(<>)` is used to distinguish the indefinite form from the
+definite form.
+
+Let's create a generic package using the definite form of the formal nonlimited
+private type and map an actual data type to it:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Definite_Formal_Type
+
+    generic
+       type T is private;
+    package Definite_Formal_Type_Example is
+       Dummy : T;
+    end Definite_Formal_Type_Example;
+
+    with Definite_Formal_Type_Example;
+
+    package Show_Map_To_Definite_Formal_Type is
+
+       type Null_Record is null record;
+
+       package Map_Definite_Type is new
+         Definite_Formal_Type_Example (T => Null_Record);
+
+    end Show_Map_To_Definite_Formal_Type;
+
+We can map any nonlimited, definite type to the type :ada:`T` above. However,
+we cannot map indefinite types to it:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Definite_Formal_Type
+    :class: ada-expect-compile-error
+
+    with Definite_Formal_Type_Example;
+
+    package Show_Map_To_Definite_Formal_Type is
+
+       type Simple_Record (Extended : Boolean) is record
+          V : Integer;
+          case Extended is
+             when False =>
+                null;
+             when True  =>
+                V_Float : Float;
+          end case;
+       end record;
+
+       package Map_Indefinite_Type is new
+         Definite_Formal_Type_Example (T => Simple_Record);
+       --  ERROR: trying to map an indefinite type to a formal definite type!
+
+    end Show_Map_To_Definite_Formal_Type;
+
+When we try to compile this example, we get a compilation error at the
+declaration of the :ada:`Map_Indefinite_Type` package. We could solve this
+problem by changing type :ada:`T` to a formal indefinite type, for example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Indefinite_Formal_Type
+
+    generic
+       type T (<>) is private;
+    package Indefinite_Formal_Type_Example is
+       function Dummy (Unused : T) return Boolean is (True);
+    end Indefinite_Formal_Type_Example;
+
+    with Indefinite_Formal_Type_Example;
+
+    package Show_Map_To_Indefinite_Formal_Type is
+
+       type Simple_Record (Extended : Boolean) is record
+          V : Integer;
+          case Extended is
+             when False =>
+                null;
+             when True  =>
+                V_Float : Float;
+          end case;
+       end record;
+
+       package Map_Indefinite_Type is new
+         Indefinite_Formal_Type_Example (T => Simple_Record);
+
+    end Show_Map_To_Indefinite_Formal_Type;
+
+Now, we don't get a compilation error because type :ada:`T` allows us to map an
+indefinite type. Note that we could still map a definite type to type :ada:`T`.
+For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Indefinite_Formal_Type
+
+    with Indefinite_Formal_Type_Example;
+
+    package Show_Map_To_Indefinite_Formal_Type is
+
+       type Null_Record is null record;
+
+       package Map_Definite_Type is new
+         Indefinite_Formal_Type_Example (T => Null_Record);
+
+    end Show_Map_To_Indefinite_Formal_Type;
+
+In other words, we can map any nonlimited type |mdash| indefinite or definite
+|mdash| to a formal indefinite nonlimited private type.
+
+Many instances of formal types have an indefinite and a definite version. Here
+are a few examples:
+
+    - Formal limited private type:
+
+        - Definite version: :ada:`type T is limited private`
+        - Indefinite version: :ada:`type T (<>) is limited private`
+
+    - Tagged private type:
+
+        - Definite version: :ada:`type T is tagged private`
+        - Indefinite version: :ada:`type T (<>) is tagged private`
+
+    - Abstract tagged limited private type:
+
+        - Definite version: :ada:`type T is abstract tagged limited private`
+        - Indefinite version: :ada:`type T (<>) is abstract tagged limited private`
+
+Appendix A of the :doc:`Introduction to Ada course <courses/intro-to-ada/chapters/appendices>` provides a detailed list of formal types and their variations.
+
+Note that, instead of just using a formal indefinite nonlimited private type,
+we could be more specific about the discriminants that we use for type
+:ada:`T`. Consider the following example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Formal_Type_Discriminants
+
+    generic
+       type T (B : Boolean) is private;
+    package Formal_Type_Discriminants_Example is
+       function Dummy (Unused : T) return Boolean is (True);
+    end Formal_Type_Discriminants_Example;
+
+    with Formal_Type_Discriminants_Example;
+
+    package Show_Map_To_Formal_Type_With_Discrimants is
+
+       type Simple_Record (Extended : Boolean) is record
+          V : Integer;
+          case Extended is
+             when False =>
+                null;
+             when True  =>
+                V_Float : Float;
+          end case;
+       end record;
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Simple_Record_2 (Last : Integer) is record
+          A : Integer_Array (1 .. Last);
+       end record;
+
+       type Null_Record is null record;
+
+       package Map_Boolean_Discriminant is new
+         Formal_Type_Discriminants_Example (T => Simple_Record);
+
+    end Show_Map_To_Formal_Type_With_Discrimants;
+
+Here, we replaced :ada:`(<>)` by :ada:`(B : Boolean)` in the declaration of
+type :ada:`T`. This means that, now, we can only map indefinite types with that
+specific list of discriminants. For example, we cannot map the following types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Generics.Formal_Type_Discriminants
+    :class: ada-expect-compile-error
+
+    with Formal_Type_Discriminants_Example;
+
+    package Show_Map_To_Formal_Type_With_Discrimants is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Simple_Record_2 (Last : Integer) is record
+          A : Integer_Array (1 .. Last);
+       end record;
+
+       type Null_Record is null record;
+
+       package Map_Type_With_Integer_Discriminant is new
+         Formal_Type_Discriminants_Example (T => Simple_Record_2);
+
+       package Map_Definite_Type is new
+         Formal_Type_Discriminants_Example (T => Null_Record);
+
+    end Show_Map_To_Formal_Type_With_Discrimants;
+
+The compilation of this example fails as expected because, as soon as we
+specify a list of discriminants for a formal type, we can only map actual types
+that have the exact same discriminants. We cannot use a type with a different
+set of discriminants |mdash| as in the declaration of
+:ada:`Map_Type_With_Integer_Discriminant` |mdash| nor a definite type |mdash|
+as in the declaration of :ada:`Map_Definite_Type`.
+
 .. _Formal_Incomplete_Types:
 
 Formal incomplete types
