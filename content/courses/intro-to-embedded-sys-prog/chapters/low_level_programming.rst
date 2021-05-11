@@ -426,7 +426,7 @@ element boundary at all. That could happen if the type is packed down
 into a composite object, such as an array of :ada:`Booleans`. We'll discuss 
 "packing" soon. More commonly, the smallest likely value is 1, meaning 
 that any storage element's address will suffice. If the machine has no 
-particular natural alignments, then all type :ada:`Alignment`s will probably 
+particular natural alignments, then all type alignments will probably 
 be 1 by default. That would be somewhat rare today, though, because 
 modern processors usually have comparatively strict alignment requirements. 
 
