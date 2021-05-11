@@ -484,7 +484,7 @@ the example above accordingly:
 
 A typical application of incomplete types is to create linked lists using
 access types based on those incomplete types. This kind of type is called
-recursive type. For example:
+a recursive type. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Linked_List_Example
 
