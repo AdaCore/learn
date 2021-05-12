@@ -440,9 +440,8 @@ this number, but it could be.
 
 :ada:`Storage_Size` is also defined for access types. The meaning is a 
 little complicated. Access types can be classified into those that 
-designate only variables ("access-to-object") and those that can also 
-designate constants. Constants are never allocated dynamically so we can 
-ignore them. Each access-to-object type has an associated storage pool. 
+designate only variables and constants ("access-to-object") and those that can  
+designate subprograms. Each access-to-object type has an associated storage pool. 
 The storage allocated by :ada:`new` comes from the pool, and instances 
 of :ada:`Unchecked_Deallocation` return storage to the pool. 
 
@@ -1450,7 +1449,7 @@ objects can "contain" entries and protected subprograms, so there's a lot
 of expressive power available. You just don't dynamically 
 allocate procedures or functions as such. 
 
-First, a little background.
+First, a little background on access types, to supplement what we said earlier.
 
 By default, the implementation chooses a standard storage pool for each 
 access-to-object type. The storage allocated by an allocator (i.e., 
@@ -1516,23 +1515,6 @@ implementation associates an actual pool with each access type, the
 pool's storage would be wasted since you never intend to allocate any 
 storage from it. Specifying a size of 0 tells the implementation not to 
 waste that storage. 
-
-We didn't mention :ada:`Storage_Size` when we covered querying 
-representation choices, earlier. It is worth mentioning, however, now 
-that you know about how things work under the hood. 
-
-When you have specified :ada:`Storage_Size` for some access-to-object 
-type, querying it just returns the number you specified. 
-
-Alternatively, if :ada:`Storage_Pool` and a pool object was specified, 
-querying :ada:`Storage_Size` returns the value indicated by the pool 
-object you specified. 
- 
-Finally, if neither :ada:`Storage_Pool` nor :ada:`Storage_Size` were 
-specified, the meaning of querying :ada:`Storage_Size` is 
-implementation-defined. There are many choices possible when you leave 
-it up to the implementation, so only the implementation can say what the 
-query would mean. 
 
 Before we end this section, there is a GNAT compiler switch you should 
 know about. Th ``-gnatR?`` switch instructs the compiler to list the 
