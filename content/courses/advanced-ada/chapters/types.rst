@@ -463,8 +463,9 @@ declaring an incomplete type (:ada:`type T2;`) before the declaration of
 compiler still doesn't know the size of :ada:`T2`, so we cannot create a
 component of this type. We could, instead, declare an access type and use it
 here, or simply use an anonymous access to :ada:`T2`. By doing this, even
-though the compiler doesn't know the internals of :ada:`T2`, it can still
-allocate an access to an object of this type.
+though the compiler doesn't know the size of :ada:`T2`, it knows the 
+size of an access type designating :ada:`T2`, so the record component 
+can be of such an access type (anonymous or not)."
 
 To summarize, in order to solve the compilation error above, we need to:
 
