@@ -68,6 +68,7 @@ class Block(object):
         project = None
         main_file = None
         manual_chop = None
+        last_line_number = -1
 
         def is_empty(line):
             return (not line) or line.isspace()
@@ -141,6 +142,8 @@ class Block(object):
 
 
         for i, (line, indent) in enumerate(zip(lines, indents)):
+            last_line_number = i
+
             if cb_start != -1:
                 process_block(i, line, indent)
             else:
@@ -148,6 +151,17 @@ class Block(object):
                     start_code_block(i, line, indent)
                 elif line[indent:].startswith(":code-config:"):
                     start_config_block(i, line, indent)
+
+        if cb_start != -1:
+            print("{}: code block (start: {}, project: {}) doesn't have explanatory section!".format(
+                    C.col("WARNING", C.Colors.YELLOW), cb_start, project))
+            process_block(last_line_number + 1, "END", 0)
+
+            # Error: unable to process last code block
+            if cb_start != -1:
+                print("{}: code block (start: {}, project: {}) hasn't been successfully processed!".format(
+                    C.col("ERROR", C.Colors.RED), cb_start, project))
+                exit(1)
 
         return blocks
 
