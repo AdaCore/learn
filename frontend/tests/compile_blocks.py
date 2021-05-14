@@ -61,77 +61,93 @@ class Block(object):
 
         classes = []
         compiler_switches = []
+        buttons = []
         cb_start = -1
         cb_indent = -1
         lang = ""
+        project = None
+        main_file = None
+        manual_chop = None
 
         def is_empty(line):
             return (not line) or line.isspace()
 
+        def process_block(i, line, indent):
+            nonlocal classes, cb_start, cb_indent, lang
+
+            if cb_indent == -1 and not is_empty(line):
+                cb_indent = indent
+
+            if indent < cb_indent and not is_empty(line):
+                blocks.append(CodeBlock(
+                    cb_start,
+                    i,
+                    "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
+                    lang,
+                    project,
+                    main_file,
+                    compiler_switches,
+                    classes,
+                    manual_chop,
+                    buttons
+                ))
+
+                classes, cb_start, cb_indent, lang = [], -1, -1, ""
+
+            m = classes_re.match(line)
+
+            if m:
+                classes = [str.strip(l) for l in m.groups()[0].split(",")]
+                cb_start = i + 1
+
+        def start_code_block(i, line, indent):
+            nonlocal cb_start, lang, project, main_file, manual_chop, \
+                     buttons, compiler_switches
+
+            cb_start, lang = (
+                i + 1,
+                lang_re.match(line).groups()[0]
+            )
+            project = project_re.match(line)
+            if project is not None:
+                project = project.groups()[0]
+
+            main_file = main_re.match(line)
+            if main_file is not None:
+                # Retrieve actual main filename
+                main_file = main_file.groups()[0]
+            if lang == "c":
+                manual_chop = True
+            else:
+                manual_chop = (manual_chop_re.match(line) is not None)
+            buttons = button_re.findall(line)
+
+            all_switches = switches_re.match(line)
+
+            compiler_switches = []
+            if all_switches is not None:
+                all_switches = all_switches.groups()[0]
+                compiler_switches = compiler_switches_re.match(all_switches)
+                if compiler_switches is not None:
+                    compiler_switches = [str.strip(l)
+                        for l in compiler_switches.groups()[0].split(",")]
+
+        def start_config_block(i, line, indent):
+            blocks.append(ConfigBlock(**dict(
+                kv.split('=')
+                for kv
+                in code_config_re.findall(line)[0].split(";")
+            )))
+
+
         for i, (line, indent) in enumerate(zip(lines, indents)):
             if cb_start != -1:
-
-                if cb_indent == -1 and not is_empty(line):
-                    cb_indent = indent
-
-                if indent < cb_indent and not is_empty(line):
-                    blocks.append(CodeBlock(
-                        cb_start,
-                        i,
-                        "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
-                        lang,
-                        project,
-                        main_file,
-                        compiler_switches,
-                        classes,
-                        manual_chop,
-                        buttons
-                    ))
-
-                    classes, cb_start, cb_indent, lang = [], -1, -1, ""
-
-                m = classes_re.match(line)
-
-                if m:
-                    classes = [str.strip(l) for l in m.groups()[0].split(",")]
-                    cb_start = i + 1
+                process_block(i, line, indent)
             else:
                 if line[indent:].startswith(".. code::"):
-                    cb_start, lang = (
-                        i + 1,
-                        lang_re.match(line).groups()[0]
-                    )
-                    project = project_re.match(line)
-                    if project is not None:
-                        project = project.groups()[0]
-
-                    main_file = main_re.match(line)
-                    if main_file is not None:
-                        # Retrieve actual main filename
-                        main_file = main_file.groups()[0]
-                    if lang == "c":
-                        manual_chop = True
-                    else:
-                        manual_chop = (manual_chop_re.match(line) is not None)
-                    buttons = button_re.findall(line)
-
-                    all_switches = switches_re.match(line)
-
-                    if all_switches is not None:
-                        all_switches = all_switches.groups()[0]
-                        compiler_switches = compiler_switches_re.match(all_switches)
-                        if compiler_switches is not None:
-                            compiler_switches = [str.strip(l)
-                                for l in compiler_switches.groups()[0].split(",")]
-                        else:
-                            compiler_switches = []
-
+                    start_code_block(i, line, indent)
                 elif line[indent:].startswith(":code-config:"):
-                    blocks.append(ConfigBlock(**dict(
-                        kv.split('=')
-                        for kv
-                        in code_config_re.findall(line)[0].split(";")
-                    )))
+                    start_config_block(i, line, indent)
 
         return blocks
 
