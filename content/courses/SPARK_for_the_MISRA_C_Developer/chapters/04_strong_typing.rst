@@ -854,5 +854,5 @@ an enumeration type:
        I := Boolean'Pos (B);
        I := Character'Pos (C);
        I := Integer (F);
-       A := Animal'Val(2);
+       A := Animal'Val (2);
     end Ok_Conversions;

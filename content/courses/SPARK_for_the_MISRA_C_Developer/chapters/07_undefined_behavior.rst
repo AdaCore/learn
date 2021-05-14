@@ -223,7 +223,9 @@ can guarantee through proof that no possible run-time error can be raised:
 
        type Nat_Array is array (Index_Range range <>) of Natural;
 
-       procedure Update (A : in out Nat_Array; I, J : Index_Range; P, Q : Positive)
+       procedure Update (A    : in out Nat_Array;
+                         I, J : Index_Range;
+                         P, Q : Positive)
        with
          Pre => I + J in A'Range;
 
@@ -231,7 +233,9 @@ can guarantee through proof that no possible run-time error can be raised:
 
     package body No_Runtime_Errors is
 
-       procedure Update (A : in out Nat_Array; I, J : Index_Range; P, Q : Positive) is
+       procedure Update (A    : in out Nat_Array;
+                         I, J : Index_Range;
+                         P, Q : Positive) is
        begin
           A (I + J) := P / Q;
        end Update;
