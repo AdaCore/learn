@@ -820,6 +820,75 @@ Type view
     Complete section!
 
 
+Default initial values
+----------------------
+
+In the
+:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/records>`,
+we've seen that records can have default values. In this section, we'll
+extend the concept of default values to other kinds of type declarations,
+such as enumerations and arrays.
+
+Let's start with an example that shows how to assign a default value of an enumeration, an new integer type, a record, and an array type.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults
+
+    package Defaults is
+
+       type E is (E1, E2, E3) with Default_Value => E1;
+
+       type T is new Integer with Default_Value => -1;
+
+       --  We cannot specify default values for subtypes:
+       --
+       --  subtype T is Integer with Default_Value => -1;
+
+       type R is record
+         X : Positive := 1;
+         Y : Positive := 10;
+       end record;
+
+       type Arr is array (Positive range <>) of Integer
+         with Default_Component_Value => -1;
+
+    end Defaults;
+
+To assign a default value for a type declaration |mdash| such as an enumeration
+and a new integer |mdash|, we use the :ada:`Default_Value` aspect. For record
+types, we assign values to the individual record components. For array types,
+we use the :ada:`Default_Component_Value` aspect. Note that we cannot specify a
+default value for a subtype |mdash| as indicated in the example above.
+
+In the example below, we declare variables of the types from the
+:ada:`Defaults` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Defaults
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Defaults; use Defaults;
+
+    procedure Main is
+       E1 : E;
+       T1 : T;
+       R1 : R;
+       A1 : Arr (1 .. 5);
+    begin
+       Put_Line ("Enumeration:  " & E'Image (E1));
+       Put_Line ("Integer type: " & T'Image (T1));
+       Put_Line ("Record type:  " & Positive'Image (R1.X)
+                 & ", " & Positive'Image (R1.Y));
+
+       Put ("Array type:   ");
+       for V of A1 loop
+          Put (Integer'Image (V) & " ");
+       end loop;
+       New_Line;
+    end Main;
+
+As we see in the application above, all variables still have their default
+values, since we haven't assigned any value to them.
+
+
 ..
     REMOVED! TO BE RE-EVALUATED IN 2022:
 
