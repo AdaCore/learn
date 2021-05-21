@@ -867,7 +867,7 @@ In the example below, we declare variables of the types from the
     with Ada.Text_IO; use Ada.Text_IO;
     with Defaults; use Defaults;
 
-    procedure Main is
+    procedure Use_Defaults is
        E1 : E;
        T1 : T;
        R1 : R;
@@ -883,10 +883,10 @@ In the example below, we declare variables of the types from the
           Put (Integer'Image (V) & " ");
        end loop;
        New_Line;
-    end Main;
+    end Use_Defaults;
 
-As we see in the application above, all variables still have their default
-values, since we haven't assigned any value to them.
+As we see in the :ada:`Use_Defaults` procedure, all variables still have their
+default values, since we haven't assigned any value to them.
 
 
 ..
