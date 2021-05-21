@@ -762,8 +762,8 @@ declaring an incomplete type (:ada:`type T2;`) before the declaration of
 compiler still doesn't know the size of :ada:`T2`, so we cannot create a
 component of this type. We could, instead, declare an access type and use it
 here, or simply use an anonymous access to :ada:`T2`. By doing this, even
-though the compiler doesn't know the size of :ada:`T2`, it knows the 
-size of an access type designating :ada:`T2`, so the record component 
+though the compiler doesn't know the size of :ada:`T2`, it knows the
+size of an access type designating :ada:`T2`, so the record component
 can be of such an access type (anonymous or not)."
 
 To summarize, in order to solve the compilation error above, we need to:
@@ -820,16 +820,115 @@ Type view
     Complete section!
 
 
-Default initial conditions
---------------------------
+Default initial values
+----------------------
 
-.. admonition:: Relevant topics
+In the
+:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/records>`,
+we've seen that record components can have default values. For example:
 
-    - `Default Initial Conditions <http://www.ada-auth.org/standards/2xrm/html/RM-7-3-3.html>`_
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_1
 
-.. todo::
+    package Defaults is
 
-    Complete section!
+       type R is record
+         X : Positive := 1;
+         Y : Positive := 10;
+       end record;
+
+    end Defaults;
+
+In this section, we'll extend the concept of default values to other kinds of
+type declarations, such as scalar types and arrays.
+
+To assign a default value for a scalar type declaration |mdash| such as an
+enumeration and a new integer |mdash|, we use the :ada:`Default_Value` aspect:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_2
+
+    package Defaults is
+
+       type E is (E1, E2, E3) with Default_Value => E1;
+
+       type T is new Integer with Default_Value => -1;
+
+    end Defaults;
+
+Note that we cannot specify a default value for a subtype:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_3
+    :class: ada-expect-compile-error
+
+    package Defaults is
+
+       subtype T is Integer with Default_Value => -1;
+       --  ERROR!!
+
+    end Defaults;
+
+For array types, we use the :ada:`Default_Component_Value` aspect:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_4
+
+    package Defaults is
+
+       type Arr is array (Positive range <>) of Integer
+         with Default_Component_Value => -1;
+
+    end Defaults;
+
+This is a package containing the declarations we've just seen:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults
+
+    package Defaults is
+
+       type E is (E1, E2, E3) with Default_Value => E1;
+
+       type T is new Integer with Default_Value => -1;
+
+       --  We cannot specify default values for subtypes:
+       --
+       --  subtype T is Integer with Default_Value => -1;
+
+       type R is record
+         X : Positive := 1;
+         Y : Positive := 10;
+       end record;
+
+       type Arr is array (Positive range <>) of Integer
+         with Default_Component_Value => -1;
+
+    end Defaults;
+
+In the example below, we declare variables of the types from the
+:ada:`Defaults` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Defaults
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Defaults; use Defaults;
+
+    procedure Use_Defaults is
+       E1 : E;
+       T1 : T;
+       R1 : R;
+       A1 : Arr (1 .. 5);
+    begin
+       Put_Line ("Enumeration:  " & E'Image (E1));
+       Put_Line ("Integer type: " & T'Image (T1));
+       Put_Line ("Record type:  " & Positive'Image (R1.X)
+                 & ", " & Positive'Image (R1.Y));
+
+       Put ("Array type:   ");
+       for V of A1 loop
+          Put (Integer'Image (V) & " ");
+       end loop;
+       New_Line;
+    end Use_Defaults;
+
+As we see in the :ada:`Use_Defaults` procedure, all variables still have their
+default values, since we haven't assigned any value to them.
 
 
 ..
