@@ -869,7 +869,6 @@ Note that we cannot specify a default value for a subtype:
 For array types, we use the :ada:`Default_Component_Value` aspect:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_4
-    :class: ada-expect-compile-error
 
     package Defaults is
 
