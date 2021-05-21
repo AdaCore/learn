@@ -827,12 +827,16 @@ In the
 :doc:`Introduction to Ada course <courses/intro-to-ada/chapters/records>`,
 we've seen that record components can have default values. For example:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_1
 
-    type R is record
-      X : Positive := 1;
-      Y : Positive := 10;
-    end record;
+    package Defaults is
+
+       type R is record
+         X : Positive := 1;
+         Y : Positive := 10;
+       end record;
+
+    end Defaults;
 
 In this section, we'll extend the concept of default values to other kinds of
 type declarations, such as scalar types and arrays.
@@ -840,25 +844,39 @@ type declarations, such as scalar types and arrays.
 To assign a default value for a scalar type declaration |mdash| such as an
 enumeration and a new integer |mdash|, we use the :ada:`Default_Value` aspect:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_2
 
-    type E is (E1, E2, E3) with Default_Value => E1;
+    package Defaults is
 
-    type T is new Integer with Default_Value => -1;
+       type E is (E1, E2, E3) with Default_Value => E1;
+
+       type T is new Integer with Default_Value => -1;
+
+    end Defaults;
 
 Note that we cannot specify a default value for a subtype:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_3
+    :class: ada-expect-compile-error
 
-    subtype T is Integer with Default_Value => -1;
-    --  ERROR!!
+    package Defaults is
+
+       subtype T is Integer with Default_Value => -1;
+       --  ERROR!!
+
+    end Defaults;
 
 For array types, we use the :ada:`Default_Component_Value` aspect:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_4
+    :class: ada-expect-compile-error
 
-    type Arr is array (Positive range <>) of Integer
-      with Default_Component_Value => -1;
+    package Defaults is
+
+       type Arr is array (Positive range <>) of Integer
+         with Default_Component_Value => -1;
+
+    end Defaults;
 
 This is a package containing the declarations we've just seen:
 
