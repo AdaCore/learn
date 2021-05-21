@@ -825,11 +825,42 @@ Default initial values
 
 In the
 :doc:`Introduction to Ada course <courses/intro-to-ada/chapters/records>`,
-we've seen that records can have default values. In this section, we'll
-extend the concept of default values to other kinds of type declarations,
-such as enumerations and arrays.
+we've seen that record components can have default values. For example:
 
-Let's start with an example that shows how to assign a default value of an enumeration, an new integer type, a record, and an array type.
+.. code-block:: ada
+
+    type R is record
+      X : Positive := 1;
+      Y : Positive := 10;
+    end record;
+
+In this section, we'll extend the concept of default values to other kinds of
+type declarations, such as scalar types and arrays.
+
+To assign a default value for a scalar type declaration |mdash| such as an
+enumeration and a new integer |mdash|, we use the :ada:`Default_Value` aspect:
+
+.. code-block:: ada
+
+    type E is (E1, E2, E3) with Default_Value => E1;
+
+    type T is new Integer with Default_Value => -1;
+
+Note that we cannot specify a default value for a subtype:
+
+.. code-block:: ada
+
+    subtype T is Integer with Default_Value => -1;
+    --  ERROR!!
+
+For array types, we use the :ada:`Default_Component_Value` aspect:
+
+.. code-block:: ada
+
+    type Arr is array (Positive range <>) of Integer
+      with Default_Component_Value => -1;
+
+This is a package containing the declarations we've just seen:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults
 
@@ -852,12 +883,6 @@ Let's start with an example that shows how to assign a default value of an enume
          with Default_Component_Value => -1;
 
     end Defaults;
-
-To assign a default value for a type declaration |mdash| such as an enumeration
-and a new integer |mdash|, we use the :ada:`Default_Value` aspect. For record
-types, we assign values to the individual record components. For array types,
-we use the :ada:`Default_Component_Value` aspect. Note that we cannot specify a
-default value for a subtype |mdash| as indicated in the example above.
 
 In the example below, we declare variables of the types from the
 :ada:`Defaults` package:
