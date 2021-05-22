@@ -985,7 +985,7 @@ we can declare the :c:`light` constant in a C file:
 Then, we can import this constant in the :ada:`Deferred_Constants` package:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Types.Deferred_Constant_C
-    :class: ada-run
+    :class: ada-syntax-only
 
     package Deferred_Constants is
 
@@ -996,15 +996,6 @@ Then, we can import this constant in the :ada:`Deferred_Constants` package:
        --      ^ deferred constant declaration; imported from C file
 
     end Deferred_Constants;
-
-    with Ada.Text_IO;        use Ada.Text_IO;
-    with Deferred_Constants; use Deferred_Constants;
-
-    procedure Show_Speed is
-
-    begin
-       Put_Line ("Speed of light : " & Speed'Image (Light));
-    end Show_Speed;
 
 In this case, we don't have a full declaration in the :ada:`Deferred_Constants`
 package, as the :ada:`Light` constant is imported from the :file:`constants.c`
