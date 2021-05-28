@@ -945,13 +945,119 @@ default values, since we haven't assigned any value to them.
 Deferred Constants
 ------------------
 
-.. admonition:: Relevant topics
+Deferred constants are declarations where the value of the constant is not
+specified immediately, but rather *deferred* to a later point. In that sense,
+if a constant declaration is deferred, it is actually declared twice:
 
-    - `Deferred Constants <http://www.ada-auth.org/standards/2xrm/html/RM-7-4.html>`_
+1. in the deferred constant declaration, and
+2. in the full constant declaration.
 
-.. todo::
+The simplest form of deferred constant is the one that has a full constant
+declaration in the private part of the package specification. For example:
 
-    Complete section!
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Deferred_Constant_Private
+
+    package Deferred_Constants is
+
+       type Speed is new Long_Float;
+
+       Light : constant Speed;
+       --      ^ deferred constant declaration
+
+    private
+
+       Light : constant Speed := 299_792_458.0;
+       --      ^ full constant declaration
+
+    end Deferred_Constants;
+
+Another form of deferred constant is the one that imports a constant from an
+external implementation |mdash| using the :ada:`Import` keyword. We can use
+this to import a constant declaration from an implementation in C. For example,
+we can declare the :c:`light` constant in a C file:
+
+.. code:: c no_button manual_chop project=Courses.Advanced_Ada.Types.Deferred_Constant_C
+    :class: ada-syntax-only
+
+    !constants.c
+    double light = 299792458.0;
+
+Then, we can import this constant in the :ada:`Deferred_Constants` package:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Types.Deferred_Constant_C
+    :class: ada-syntax-only
+
+    package Deferred_Constants is
+
+       type Speed is new Long_Float;
+
+       Light : constant Speed with
+         Import, Convention => C;
+       --      ^ deferred constant declaration; imported from C file
+
+    end Deferred_Constants;
+
+In this case, we don't have a full declaration in the :ada:`Deferred_Constants`
+package, as the :ada:`Light` constant is imported from the :file:`constants.c`
+file.
+
+As a rule, the deferred and the full declarations should match |mdash| except,
+of course, for the actual value that is missing in the deferred declaration.
+For instance, we're not allowed to use different types in both declarations.
+However, we may use a subtype in the full declaration |mdash| as long as it's
+compatible with the type that was used in the deferred declaration. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Deferred_Constant_Subtype
+
+    package Deferred_Constants is
+
+       type Speed is new Long_Float;
+
+       subtype Positive_Speed is Speed range 0.0 .. Speed'Last;
+
+       Light : constant Speed;
+       --      ^ deferred constant declaration
+
+    private
+
+       Light : constant Positive_Speed := 299_792_458.0;
+       --      ^ full constant declaration using a subtype
+
+    end Deferred_Constants;
+
+Here, we're using the :ada:`Speed` type in the deferred declaration of the
+:ada:`Light` constant, but we're using the :ada:`Positive_Speed` subtype in
+the full declaration.
+
+A useful application of deferred constants is when the value of the constant is
+calculated using entities not meant to be compile-time visible to clients.
+As such, these other entities are only visible in the private part of the
+package, so that's where the value of the deferred constant must be computed.
+For example, the full constant declaration may be computed by a call to an
+expression function:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Deferred_Constant_Function
+
+    package Deferred_Constants is
+
+       type Speed is new Long_Float;
+
+       Light : constant Speed;
+       --      ^ deferred constant declaration
+
+    private
+
+       function Calculate_Light return Speed is (299_792_458.0);
+
+       Light : constant Speed := Calculate_Light;
+       --      ^ full constant declaration calling a private function
+
+    end Deferred_Constants;
+
+Here, we call the :ada:`Calculate_Light` function |mdash| declared in the
+private part of the :ada:`Deferred_Constants` package |mdash| for the full
+declaration of the :ada:`Light` constant.
 
 
 User-defined literals
