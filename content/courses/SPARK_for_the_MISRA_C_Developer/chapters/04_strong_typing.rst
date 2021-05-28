@@ -407,7 +407,7 @@ a compile-time error:
 
    procedure Assign_I is new Assign (Integer, Assign_Float);
 
-.. _Enforcing Strong Typing for Scalars:
+.. _Enforcing_Strong_Typing_For_Scalars:
 
 Enforcing Strong Typing for Scalars
 ***********************************
@@ -572,7 +572,7 @@ to iterate over all values of the type:
        end loop;
     end Ok_Arith;
 
-.. _Boolean Operations on Boolean:
+.. _Boolean_Operations_On_Boolean:
 
 Boolean Operations on Boolean
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -730,7 +730,7 @@ Rules 10.1 and 10.5 restrict operations on types and explicit
 conversions. That's not enough to avoid problematic C programs; a program
 violating one of these rules can be expressed using only implicit type
 conversions. For example, the Shakespearian code in section
-:ref:`Boolean Operations on Boolean` can be reformulated to
+:ref:`Boolean_Operations_On_Boolean` can be reformulated to
 satisfy both Rules 10.1 and 10.5:
 
 .. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_C

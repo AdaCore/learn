@@ -8,7 +8,7 @@ their declaration, which makes it possible to unintentionally read
 uninitialized data. This is a case of undefined behavior, which can sometimes
 be used to attack the program.
 
-.. _Detecting Read of Uninitialized Data:
+.. _Detecting_Read_Of_Uninitialized_Data:
 
 Detecting Reads of Uninitialized Data
 *************************************

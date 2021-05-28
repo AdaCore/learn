@@ -532,7 +532,7 @@ Guide Proof
 Since properties of interest for functional correctness are more complex
 than those involved in proofs of program integrity, we expect GNATprove to
 initially be unable to verify them even though they're valid. You'll find
-the techniques we discussed in :ref:`Debugging Failed Proof Attempts` to
+the techniques we discussed in :ref:`Debugging_Failed_Proof_Attempts` to
 come in handy here. We now go beyond those techniques and focus on more
 ways of improving results in the cases where the property is valid but
 GNATprove can't prove it in a reasonable amount of time.
@@ -789,7 +789,7 @@ deduce that it's true for all the indexes smaller than :ada:`I`, so it can't
 prove the first assertion.
 
 
-.. _Loop Invariants:
+.. _Loop_Invariants:
 
 Loop Invariants
 ~~~~~~~~~~~~~~~
@@ -917,8 +917,8 @@ invariant:
 Let's look at each of these in turn.  First, the loop invariant should be
 provable in the first iteration of the loop (INIT). If your invariant fails
 to achieve this property, you can debug the loop invariant's initialization
-like any failing proof attempt using strategies for :ref:`Debugging Failed
-Proof Attempts`.
+like any failing proof attempt using strategies for
+:ref:`Debugging_Failed_Proof_Attempts`.
 
 Second, the loop invariant should be precise enough to allow GNATprove to
 prove absence of runtime errors in both statements from the loop's body
@@ -1463,8 +1463,8 @@ already the maximal integer value.
     end Array_Util;
 
 The loop invariant now allows verifying that no runtime error can occur in
-the loop's body (property INSIDE seen in section :ref:`Loop
-Invariants`). Unfortunately, GNATprove fails to verify that the invariant
+the loop's body (property INSIDE seen in section :ref:`Loop_Invariants`).
+Unfortunately, GNATprove fails to verify that the invariant
 stays valid after the first iteration of the loop (property
 PRESERVE). Indeed, knowing that :ada:`J` is in :ada:`B'Range` in a given
 iteration isn't enough to prove it'll remain so in the next iteration. We
@@ -1523,8 +1523,8 @@ the maximum values of both its arguments at each index.
     end Main;
 
 Here, GNATprove doesn't manage to prove the loop invariant even for the
-first loop iteration (property INIT seen in section :ref:`Loop
-Invariants`). In fact, the loop invariant is incorrect, as you can see by
+first loop iteration (property INIT seen in section :ref:`Loop_Invariants`).
+In fact, the loop invariant is incorrect, as you can see by
 executing the function :ada:`Max_Array` with assertions enabled: at each loop
 iteration, :ada:`R` contains the maximum of :ada:`A` and :ada:`B` only until
 :ada:`I - 1` because the :ada:`I`'th index wasn't yet handled.
