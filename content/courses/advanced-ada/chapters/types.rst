@@ -1031,9 +1031,11 @@ Here, we're using the :ada:`Speed` type in the deferred declaration of the
 the full declaration.
 
 A useful application of deferred constants is when the value of the constant is
-calculated in a function instead of being a literal. In this case, the full
-declaration may call an expression function declared in the private part of the
-package specification. For example:
+calculated using entities not meant to be compile-time visible to clients.
+As such, these other entities are only visible in the private part of the
+package, so that's where the value of the deferred constant must be computed.
+For example, the full constant declaration may be computed by a call to an
+expression function:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Deferred_Constant_Function
 
