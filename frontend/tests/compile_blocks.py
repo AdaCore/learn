@@ -654,7 +654,7 @@ def analyze_file(rst_file):
 
                     line = ["gnatprove", "-P", project_filename,
                             "--checks-as-errors", "--level=0",
-                            "--no-axiom-guard"]
+                            "--no-axiom-guard", "--output=oneline"]
                     line.extend(extra_args)
 
                     try:
