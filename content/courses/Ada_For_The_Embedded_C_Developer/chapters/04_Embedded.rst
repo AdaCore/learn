@@ -94,12 +94,12 @@ representation vs. performance. Let's start with the following example:
     };
 
 
-The Ada and the C++ code above both represent efforts to create an object
+The Ada and the C code above both represent efforts to create an object
 that's as small as possible. Controlling data size is not possible in Java, but
 the language does specify the size of values for the primitive types.
 
-Although the C++ and Ada code are equivalent in this particular example,
-there's an interesting semantic difference. In C++, the number of bits required
+Although the C and Ada code are equivalent in this particular example,
+there's an interesting semantic difference. In C, the number of bits required
 by each field needs to be specified. Here, we're stating that :ada:`v` is only
 8 bits, effectively representing values from 0 to 255. In Ada, it's the other
 way around: the developer specifies the range of values required and the
