@@ -815,10 +815,125 @@ code:
 Type view
 ---------
 
-.. todo::
+Ada distinguishes between the partial and the full view of a type. The full
+view is a type declaration that contains all the information needed by the
+compiler. For example, the following declaration of type :ada:`R` represents
+the full view of this type:
 
-    Complete section!
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Full_View
 
+    package Full_View is
+
+       --  Full view of the R type:
+       type R is record
+          I : Integer;
+       end record;
+
+    end Full_View;
+
+As soon as we start applying encapsulation and information hiding |mdash| via
+the :ada:`private` keyword |mdash| to a specific type, we are introducing a
+partial view and making only that view compile-time visible to clients. Doing
+so requires us to introduce the private part of the package (unless already
+present). For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Partial_Full_View
+
+    package Partial_Full_Views is
+
+       --  Partial view of the R type:
+       type R is private;
+
+    private
+
+       --  Full view of the R type:
+       type R is record
+          I : Integer;
+       end record;
+
+    end Partial_Full_Views;
+
+As indicated in the example, the :ada:`type R is private` declaration is the
+partial view of the :ada:`R` type, while the :ada:`type R is record [...]`
+declaration in the private part of the package is the full view.
+
+Although the partial view doesn't contain the full type declaration, it
+contains very important information for the users of the package where it's
+declared. In fact, the partial view of a private type is all that users
+actually need to know to effectively use this type, while the full view is only
+needed by the compiler.
+
+In the previous example, the partial view indicates that :ada:`R` is a private
+type, which means that, even though users cannot directly access any
+information stored in this type |mdash| for example, read the value of the
+:ada:`I` component of :ada:`R` |mdash|, they can use the :ada:`R` type to
+declare objects. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Partial_Full_View
+
+    with Partial_Full_Views; use Partial_Full_Views;
+
+    procedure Main is
+       --  Partial view of R indicates that R exists as a private type,
+       --  so we can declare objects of this type:
+       C : R;
+    begin
+       --  But we cannot directly access any information declared in the full
+       --  view of R:
+       --
+       --  C.I := 42;
+       --
+       null;
+    end Main;
+
+In many cases, the restrictions applied to the partial and full views must
+match. For example, if we declare a limited type in the full view of a private
+type, its partial view must also be limited:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Limited_Private
+
+    package Limited_Private_Example is
+
+       --  Partial view must be limited, since the
+       --  full view is limited.
+       type R is limited private;
+
+    private
+
+       type R is limited record
+          I : Integer;
+       end record;
+
+    end Limited_Private_Example;
+
+There are, however, situations where the full view may contain additional
+requirements that aren't mentioned in the partial view. For example, a type may
+be declared as non-tagged in the partial view, but, at the same time, be tagged
+in the full view:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Tagged_Full_View
+
+    package Tagged_Full_View_Example is
+
+       --  Partial view using non-tagged type:
+       type R is private;
+
+    private
+
+       --  Full view using tagged type:
+       type R is tagged record
+          I : Integer;
+       end record;
+
+    end Tagged_Full_View_Example;
+
+In this case, from a user's perspective, the :ada:`R` type is non-tagged, so
+that users cannot use any object-oriented programming features for this type.
+In the package body of :ada:`Tagged_Full_View_Example`, however, this type is
+tagged, so that all object-oriented programming features are available for
+subprograms of the package body that make use of this type. Again, the partial
+view of the private type contains the most important information for users that
+want to declare objects of this type.
 
 Default initial values
 ----------------------
