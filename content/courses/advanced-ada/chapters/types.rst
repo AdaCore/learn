@@ -461,9 +461,11 @@ the full view of this type:
 
     end Full_View;
 
-As soon as we start applying encapsulation |mdash| via the :ada:`private`
-keyword |mdash| to a specific type, we need to split the type declaration into
-a partial view and a full view. For example:
+As soon as we start applying encapsulation and information hiding |mdash| via
+the :ada:`private` keyword |mdash| to a specific type, we are introducing a
+partial view and making only that view compile-time visible to clients. Doing
+so requires us to introduce the private part of the package (unless already
+present). For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Partial_Full_View
 
