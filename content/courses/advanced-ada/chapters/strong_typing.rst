@@ -748,7 +748,7 @@ of the application. This is the updated specification of the main package:
 
     end Indirect_Ordering;
 
-By declaring these new types, we can avoid that the wrong index is used.
+By declaring these new types, we can avoid using the wrong index.
 Moreover, we're documenting |mdash| using the syntax provided by the
 language |mdash| which index is expected in each array or function from
 the package.

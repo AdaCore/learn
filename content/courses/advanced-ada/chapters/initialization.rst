@@ -6,3 +6,4 @@ Initialization
 
     freezing
     package_elaboration
+    elaboration_of_generics

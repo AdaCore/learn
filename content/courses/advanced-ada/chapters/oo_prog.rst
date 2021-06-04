@@ -19,6 +19,7 @@ Overriding indicators
     - **Briefly** discuss :ada:`overriding` and :ada:`not overriding` mentioned
       in
       `Overriding Indicators <http://www.ada-auth.org/standards/2xrm/html/RM-8-3-1.html>`_
+    - Mention that :ada:`not overriding` is not recommended.
 
 .. todo::
 
@@ -216,7 +217,8 @@ class, before calling the new version of :ada:`Eat`:
 Using null procedures
 ~~~~~~~~~~~~~~~~~~~~~
 
-Since Ada 2005, we have the notion of null procedures. A null procedure is
+Since Ada 2005, we have the notion of null procedures. As
+:ref:`discussed previously <Null_Procedures>`, a null procedure is
 a procedure that is declared using :ada:`is null` and logically has an
 empty body. Fortunately, null procedures are allowed in interface
 definitions --- they define the default behavior of such a subprogram as

@@ -48,7 +48,7 @@ Limited types and aggregates
 
 .. note::
 
-    This section was originally written by Bob Duff and published as
+    This section was originally written by Robert A. Duff and published as
     `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_,
     `Gem #2 <https://www.adacore.com/gems/gem-2>`_, and
     `Gem #3 <https://www.adacore.com/gems/gem-3>`_.
@@ -454,7 +454,7 @@ Return objects
 
 .. note::
 
-    This section was originally written by Bob Duff and published as
+    This section was originally written by Robert A. Duff and published as
     `Gem #10: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-10>`_.
 
 Extended return statements
@@ -646,7 +646,7 @@ Building objects from constructors
 
 .. note::
 
-    This section was originally written by Bob Duff and published as
+    This section was originally written by Robert A. Duff and published as
     `Gem #11: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-11>`_.
 
 We've earlier seen examples of constructor functions for limited types
@@ -830,7 +830,7 @@ Default initialization
 
 .. note::
 
-    This section was originally written by Bob Duff and published as
+    This section was originally written by Robert A. Duff and published as
     `Gem #12: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-12>`_.
 
 Prior to Ada 2005, the following style was common:
