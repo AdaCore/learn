@@ -1,4 +1,4 @@
-.. _Flow Analysis:
+.. _Flow_Analysis:
 
 Flow Analysis
 =====================================================================
@@ -25,7 +25,7 @@ subprogram, scope variables look very much like global variables
 Flow analysis is usually fast, roughly as fast as compilation. It detects
 various types of errors and finds violations of some SPARK legality rules,
 such as the absence of aliasing and freedom of expressions from
-side-effects.  We discussed these rules in the :ref:`SPARK Overview`.
+side-effects.  We discussed these rules in the :ref:`SPARK_Overview`.
 
 Flow analysis is *sound*: if it doesn't detect any errors of a type it's
 supposed to detect, we know for sure there are no such errors.
@@ -777,7 +777,7 @@ the value of the :ada:`Result` in argument can be set to any variant of the
 record type :ada:`Search_Result`, specifically to either the variant where
 :ada:`E` was found and where it wasn't.
 
-.. _Example #4:
+.. _Flow_Analysis_Example_4:
 
 Example #4
 ~~~~~~~~~~
@@ -1041,7 +1041,8 @@ static constant.
 Example #8
 ~~~~~~~~~~
 
-We now go back to the procedure :ada:`Test_Index` from :ref:`Example #4` and
+We now go back to the procedure :ada:`Test_Index` from
+:ref:`Flow_Analysis_Example_4` and
 correct the missing initializations.  We want to know if the :ada:`Global`
 contract of :ada:`Test_Index` is correct.
 

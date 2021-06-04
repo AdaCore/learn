@@ -605,6 +605,7 @@ Example #1
 ~~~~~~~~~~
 
 .. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_01
+    :class: ada-expect-compile-error
 
     package Example_01 is
 
@@ -636,6 +637,7 @@ Example #2
 ~~~~~~~~~~
 
 .. code:: ada compile_button project=Courses.Advanced_SPARK.Systems_Programming.Example_02
+    :class: ada-expect-compile-error
 
     package Example_02 is
 

@@ -1,6 +1,6 @@
 :prev_state: False
 
-.. _SPARK Overview:
+.. _SPARK_Overview:
 
 SPARK Overview
 =====================================================================

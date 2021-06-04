@@ -61,7 +61,9 @@ regard, which is unlike most languages, and arguably very elegant.
 This example illustrates the declaration of a signed integer type, and
 several things we can do with them.
 
-Every type declaration in Ada starts with the :ada:`type` keyword (except for :ref:`task types <TaskTypes>`). After the type, we can see a range that looks a lot like
+Every type declaration in Ada starts with the :ada:`type` keyword (except for
+:ref:`task types <TaskTypes>`). After the type, we can see a range that looks
+a lot like
 the ranges that we use in for loops, that defines the low and high bound of the
 type. Every integer in the inclusive range of the bounds is a valid value for
 the type.
