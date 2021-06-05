@@ -1178,13 +1178,350 @@ declaration of the :ada:`Light` constant.
 User-defined literals
 ---------------------
 
-.. admonition:: Relevant topics
+Any type definition has a kind of literal associated with it. For example,
+integer types are associated with integer literals. Therefore, we can
+initialize an object of integer type with an integer literal:
 
-    - `User-Defined Literals <http://www.ada-auth.org/standards/2xrm/html/RM-4-2-1.html>`_
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Simple_Integer_Literal
 
-.. todo::
+    with Ada.Text_IO; use Ada.Text_IO;
 
-    Complete section!
+    procedure Simple_Integer_Literal is
+       V : Integer;
+    begin
+       V := 10;
+
+       Put_Line (Integer'Image (V));
+    end Simple_Integer_Literal;
+
+Here, :ada:`10` is the integer literal that we use to initialize the integer
+variable :ada:`V`. Other examples of literals are real literals and string
+literals, as we'll see later.
+
+When we declare an enumeration type, we limit the set of literals that we can
+use to initialize objects of that type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Simple_Enumeration
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Enumeration is
+       type Activation_State is (Unknown, Off, On);
+
+       S : Activation_State;
+    begin
+       S := On;
+       Put_Line (Activation_State'Image (S));
+    end Simple_Enumeration;
+
+For objects of :ada:`Activation_State` type, such as :ada:`S`, the only
+possible literals that we can use are :ada:`Unknown`, :ada:`Off` and :ada:`On`.
+In this sense, types have a constrained set of literals that can be used for
+objects of that type.
+
+User-defined literals allow us to extend this set of literals. We could, for
+example, extend the type declaration of :ada:`Activation_State` and allow the
+use of integer literals for objects of that type. In this case, we need to use
+the :ada:`Integer_Literal` aspect and specify a function that implements the
+conversion from literals to the type we're declaring. For this conversion from
+integer literals to the :ada:`Activation_State` type, we could specify that 0
+corresponds to :ada:`Off`, 1 corresponds to :ada:`On` and other values
+correspond to :ada:`Unknown`. We'll see the corresponding implementation later.
+
+.. note:: This feature was first introduced in Ada 2020 and might not be
+          available in older compilers.
+
+These are the three kinds of literals and their corresponding aspect:
+
++----------+----------+-------------------------+
+| Literal  | Example  | Aspect                  |
++==========+==========+=========================+
+| Integer  |        1 | :ada:`Integer_Literal`  |
++----------+----------+-------------------------+
+| Real     |      1.0 | :ada:`Real_Literal`     |
++----------+----------+-------------------------+
+| String   |     "On" | :ada:`String_Literal`   |
++----------+----------+-------------------------+
+
+For our previous :ada:`Activation_States` type, we could declare a function
+:ada:`Integer_To_Activation_State` that converts integer literals to one of the
+enumeration literals that we've specified for the :ada:`Activation_States`
+type:
+
+.. code:: ada manual_chop no_button project=Courses.Advanced_Ada.Types.User_Defined_Literals
+
+    !activation_states.ads
+    package Activation_States is
+
+       type Activation_State is (Unknown, Off, On)
+         with Integer_Literal => Integer_To_Activation_State;
+
+       function Integer_To_Activation_State (S : String)
+                                             return Activation_State;
+
+    end Activation_States;
+
+Based on this specification, we can now use an integer literal to initialize an
+object :ada:`S` of :ada:`Activation_State` type:
+
+.. code-block:: ada
+
+    S : Activation_State := 1;
+
+Note that we have a string parameter in the declaration of the
+:ada:`Integer_To_Activation_State` function, even though the function itself is
+only used to convert integer literals (but not string literals) to the
+:ada:`Activation_State` type. It's our job to process that string parameter in
+the implementation of the :ada:`Integer_To_Activation_State` function and
+convert it to an integer value |mdash| using :ada:`Integer'Value`, for example:
+
+.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Types.User_Defined_Literals
+
+    !activation_states.adb
+    package body Activation_States is
+
+       function Integer_To_Activation_State (S : String)
+                                             return Activation_State is
+       begin
+          case Integer'Value (S) is
+             when 0      => return Off;
+             when 1      => return On;
+             when others => return Unknown;
+          end case;
+       end Integer_To_Activation_State;
+
+    end Activation_States;
+
+Let's look at a complete example that makes use of all three kinds of literals:
+
+.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Types.Activation_States
+
+    !activation_states.ads
+    package Activation_States is
+
+       type Activation_State is (Unknown, Off, On)
+         with String_Literal  => To_Activation_State,
+              Integer_Literal => Integer_To_Activation_State,
+              Real_Literal    => Real_To_Activation_State;
+
+       function To_Activation_State (S : Wide_Wide_String)
+                                     return Activation_State;
+
+       function Integer_To_Activation_State (S : String)
+                                             return Activation_State;
+
+       function Real_To_Activation_State (S : String)
+                                          return Activation_State;
+
+    end Activation_States;
+
+    !activation_states.adb
+    package body Activation_States is
+
+       function To_Activation_State (S : Wide_Wide_String)
+                                     return Activation_State is
+       begin
+          if S = "Off" then
+             return Off;
+          elsif S = "On" then
+             return On;
+          else
+             return Unknown;
+          end if;
+       end To_Activation_State;
+
+       function Integer_To_Activation_State (S : String)
+                                             return Activation_State is
+       begin
+          case Integer'Value (S) is
+             when 0      => return Off;
+             when 1      => return On;
+             when others => return Unknown;
+          end case;
+       end Integer_To_Activation_State;
+
+       function Real_To_Activation_State (S : String)
+                                          return Activation_State is
+          V : constant Float := Float'Value (S);
+       begin
+          if V < 0.0 then
+             return Unknown;
+          elsif V < 1.0 then
+             return Off;
+          else
+             return On;
+          end if;
+       end Real_To_Activation_State;
+
+    end Activation_States;
+
+    !activation_examples.adb
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Activation_States; use Activation_States;
+
+    procedure Activation_Examples is
+       S : Activation_State;
+    begin
+       S := "Off";
+       Put_Line ("String: Off  => " & Activation_State'Image (S));
+
+       S := 1;
+       Put_Line ("Integer: 1   => " & Activation_State'Image (S));
+
+       S := 1.5;
+       Put_Line ("Real:    1.5 => " & Activation_State'Image (S));
+    end Activation_Examples;
+
+In this example, we're extending the declaration of the :ada:`Activation_State`
+type to include string and real literals. For string literals, we use the
+:ada:`To_Activation_State` function, which converts:
+
+    - the :ada:`"Off"` string to :ada:`Off`,
+
+    - the :ada:`"On"` string to :ada:`On`, and
+
+    - any other string to :ada:`Unknown`.
+
+For real literals, we use the :ada:`Real_To_Activation_State` function, which
+converts:
+
+    - any negative number to :ada:`Unknown`,
+
+    - a value in the interval :math:`[0, 1)` to :ada:`Off`, and
+
+    - a value equal or above 1.0 to :ada:`On`.
+
+Note that the string parameter of :ada:`To_Activation_State` function |mdash|
+which converts string literals |mdash| is of :ada:`Wide_Wide_String` type, and
+not of :ada:`String` type, as it's the case for the other conversion functions.
+
+In the :ada:`Activation_Examples` procedure, we show how we can initialize an
+object of :ada:`Activation_State` type with all kinds of literals (string,
+integer and real literals).
+
+With the definition of the :ada:`Activation_State` type that we've seen in the
+complete example, we can initialize an object of this type with an enumeration
+literal or a string, as both forms are defined in the type specification:
+
+.. code:: ada manual_chop run_button main=using_string_literal.adb project=Courses.Advanced_Ada.Types.Activation_States
+
+    !using_string_literal.adb
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Activation_States; use Activation_States;
+
+    procedure Using_String_Literal is
+       S1 : constant Activation_State := On;
+       S2 : constant Activation_State := "On";
+    begin
+       Put_Line (Activation_State'Image (S1));
+       Put_Line (Activation_State'Image (S2));
+    end Using_String_Literal;
+
+Note we need to be very careful when designing conversion functions. For
+example, the use of string literals may limit the kind of checks that we can
+do. Consider the following misspelling of the :ada:`Off` literal:
+
+.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Types.Activation_States
+    :class: ada-expect-compile-error
+
+    !misspelling_example.adb
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Activation_States; use Activation_States;
+
+    procedure Misspelling_Example is
+       S : constant Activation_State := Offf;
+       --                               ^ Error: Off is misspelled.
+    begin
+       Put_Line (Activation_State'Image (S));
+    end Misspelling_Example;
+
+As expected, the compiler detects this error. However, this error is accepted
+when using the corresponding string literal:
+
+.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Types.Activation_States
+
+    !misspelling_example.adb
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Activation_States; use Activation_States;
+
+    procedure Misspelling_Example is
+       S : constant Activation_State := "Offf";
+       --                               ^ Error: Off is misspelled.
+    begin
+       Put_Line (Activation_State'Image (S));
+    end Misspelling_Example;
+
+Here, our implementation of :ada:`To_Activation_State` simply returns
+:ada:`Unknown`. In some cases, this might be exactly the behavior that we want.
+However, let's assume that we'd prefer better error handling instead. In this
+case, we could change the implementation of :ada:`To_Activation_State` to check
+all literals that we want to allow, and indicate an error otherwise |mdash| by
+raising an exception, for example. Alternatively, we could specify this in the
+preconditions of the conversion function:
+
+.. code-block:: ada
+
+       function To_Activation_State (S : Wide_Wide_String)
+                                     return Activation_State
+         with Pre => S = "Off" or S = "On" or S = "Unknown";
+
+In this case, the precondition explicitly indicates which string literals are
+allowed for the :ada:`To_Activation_State` type.
+
+User-defined literals can also be used for more complex types, such as records.
+For example:
+
+.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Types.Record_Literals
+
+    !silly_records.ads
+    package Silly_Records is
+
+       type Silly is record
+          X : Integer;
+          Y : Float;
+       end record
+         with String_Literal => To_Silly;
+
+       function To_Silly (S : Wide_Wide_String) return Silly;
+    end Silly_Records;
+
+    !silly_records.adb
+    package body Silly_Records is
+
+       function To_Silly (S : Wide_Wide_String) return Silly is
+       begin
+          if S = "Magic" then
+             return (X => 42, Y => 42.0);
+          else
+             return (X => 0, Y => 0.0);
+          end if;
+       end To_Silly;
+
+    end Silly_Records;
+
+    !silly_magic.adb
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Silly_Records; use Silly_Records;
+
+    procedure Silly_Magic is
+       R1 : Silly;
+    begin
+       R1 := "Magic";
+       Put_Line (R1.X'Image & ", " & R1.Y'Image);
+    end Silly_Magic;
+
+In this example, when we initialize an object of :ada:`Silly` type with a
+string, its components are:
+
+- set to 42 when using the "Magic" string; or
+
+- simply set to zero when using any other string.
+
+Obviously, this example isn't particularly useful. However, the goal is to
+show that this approach is useful for more complex types where a string literal
+(or a numeric literal) might simplify handling those types. Used-defined
+literals let you design types in ways that, otherwise, would only be possible
+when using a preprocessor or a domain-specific language.
 
 
 Data Representation
