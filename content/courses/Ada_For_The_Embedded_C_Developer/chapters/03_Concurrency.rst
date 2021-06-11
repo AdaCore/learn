@@ -61,7 +61,7 @@ of control in any of the examples, the output may be interspersed.
 
 [Ada]
 
-.. code:: ada run_button ada project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task;
+.. code:: ada run_button ada project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task
 
     with Ada.Text_IO; use Ada.Text_IO;
 
