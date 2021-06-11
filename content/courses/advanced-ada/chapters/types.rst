@@ -1190,12 +1190,6 @@ User-defined literals
 Data Representation
 -------------------
 
-.. note::
-
-    This section was originally written by Robert Dewar and published as
-    `Gem #27: Changing Data Representation <https://www.adacore.com/gems/gem-27>`_
-    and `Gem #28 <https://www.adacore.com/gems/gem-28>`_.
-
 .. admonition:: Relevant topics
 
     - Include: ``Object_Size``, ``Value_Size``, ``Alignment``, ``T'Base``
@@ -1222,6 +1216,16 @@ Record Representation and storage clauses
 .. todo::
 
     Complete section!
+
+
+Changing Data Representation
+----------------------------
+
+.. note::
+
+    This section was originally written by Robert Dewar and published as
+    `Gem #27: Changing Data Representation <https://www.adacore.com/gems/gem-27>`_
+    and `Gem #28 <https://www.adacore.com/gems/gem-28>`_.
 
 
 Valid
