@@ -206,6 +206,7 @@ latex_elements = {
     #
     'preamble': r'''
 \usepackage{pmboxdraw} \usepackage{unicode-math}
+\usepackage{pdfpages}
 \fvset{fontsize=\small}
 ''',
 
@@ -238,6 +239,15 @@ TitleColor={named}{MidnightBlue}
     # Inline code cannot be highlighted, see
     # https://github.com/sphinx-doc/sphinx/issues/5157
 }
+
+if ('SPHINX_FRONTPAGE' in os.environ and
+    os.environ['SPHINX_FRONTPAGE'] != ""):
+    latex_elements['maketitle'] = r'''
+\begin{titlepage}
+\includepdf{''' + os.environ['SPHINX_FRONTPAGE'] + r'''}
+\sphinxmaketitle
+\end{titlepage}
+'''
 
 latex_logo = 'img/logo.png'
 
