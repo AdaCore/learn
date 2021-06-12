@@ -1231,7 +1231,9 @@ A powerful feature of Ada is the ability to specify the exact data layout. This
 is particularly important when you have an external device or program that
 requires a very specific format. Some examples are:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Com_Packet
+
+    package Communication is
 
        type Com_Packet is record
           Key : Boolean;
@@ -1245,23 +1247,33 @@ requires a very specific format. Some examples are:
           Val at 0 range 9 .. 15;
        end record;
 
+    end Communication;
+
 which lays out the fields of a record, and in the case of :ada:`Val`, forces a
 biased representation in which all zero bits represents 100. Another example
 is:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Array_Rep
+
+    package Array_Representation is
 
        type Val is (A,B,C,D,E,F,G,H);
        type Arr is array (1 .. 16) of Val;
        for Arr'Component_Size use 3;
 
+    end Array_Representation;
+
 which forces the components to take only 3 bits, crossing byte boundaries as
 needed. A final example is:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Enum_Rep
+
+    package Enumeration_Representation is
 
        type Status is (Off, On, Unknown);
        for Status use (Off => 2#001#, On => 2#010#, Unknown => 2#100#);
+
+    end Enumeration_Representation;
 
 which allows specified values for an enumeration type, instead of the efficient
 default values of 0, 1, 2.
@@ -1285,7 +1297,9 @@ The idea is to use type derivation, where one type has the specified format and
 the other has the normal default format. For instance for the array case above,
 we would write:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Array_Rep
+
+    package Array_Representation is
 
        type Val is (A,B,C,D,E,F,G,H);
        type Arr is array (1 .. 16) of Val;
@@ -1293,24 +1307,31 @@ we would write:
        type External_Arr is new Arr;
        for External_Arr'Component_Size use 3;
 
+    end Array_Representation;
+
 Now we read and write the data using the :ada:`External_Arr` type. When we want
 to convert to the efficient form, :ada:`Arr`, we simply use a type conversion.
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Array_Rep
 
-    Input_Data  : External_Arr;
-    Work_Data   : Arr;
-    Output_Data : External_Arr;
+    with Array_Representation; use Array_Representation;
 
-    (read data into Input_Data)
+    procedure Using_Array_For_IO is
+       Input_Data  : External_Arr;
+       Work_Data   : Arr;
+       Output_Data : External_Arr;
+    begin
+       --  (read data into Input_Data)
 
-    --  Now convert to internal form
-    Work_Data := Arr (Input_Data);
+       --  Now convert to internal form
+        Work_Data := Arr (Input_Data);
 
-    (computations using efficient Work_Data form)
+       --  (computations using efficient Work_Data form)
 
-    --  Convert back to external form
-    Output_Data := External_Arr (Work_Data);
+       --  Convert back to external form
+       Output_Data := External_Arr (Work_Data);
+
+    end Using_Array_For_IO;
 
 Using this approach, the quite complex task of copying all the data of the
 array from one form to another, with all the necessary masking and shift
@@ -1320,13 +1341,17 @@ Similar code can be used in the record and enumeration type cases. It is even
 possible to specify two different representations for the two types, and
 convert from one form to the other, as in:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Enum_Rep
+
+    package Enumeration_Representation is
 
        type Status_In is (Off, On, Unknown);
        type Status_Out is new Status_In;
 
        for Status_In use (Off => 2#001#, On => 2#010#, Unknown => 2#100#);
        for Status_Out use (Off => 103, On => 1045, Unknown => 7700);
+
+    end Enumeration_Representation;
 
 There are two restrictions that must be kept in mind when using this feature.
 First, you have to use a derived type. You can't put representation clauses on
@@ -1342,7 +1367,10 @@ All the representation clauses that are interesting from the point of view of
 change of representation are "type related", so for example, the following
 sequence would be illegal:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Array_Rep_2
+    :class: ada-expect-compile-error
+
+    package Array_Representation is
 
        type Val is (A,B,C,D,E,F,G,H);
        type Arr is array (1 .. 16) of Val;
@@ -1351,6 +1379,8 @@ sequence would be illegal:
 
        type External_Arr is new Arr;
        for External_Arr'Component_Size use 3;
+
+    end Array_Representation;
 
 Why these restrictions? Well, the answer is a little complex, and has to do
 with efficiency considerations, which we will address below.
@@ -1422,13 +1452,24 @@ representation. Let's have a look at how type derivation works when there are
 primitive subprograms defined at the point of derivation. Consider this
 example:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.My_Int
 
-      type My_Int_1 is range 1 .. 10;
+    package My_Ints is
 
-      function Odd (Arg : My_Int_1) return Boolean;
+       type My_Int_1 is range 1 .. 10;
 
-      type My_Int_2 is new My_Int_1;
+       function Odd (Arg : My_Int_1) return Boolean;
+
+       type My_Int_2 is new My_Int_1;
+
+    end My_Ints;
+
+    package body My_Ints is
+
+       function Odd (Arg : My_Int_1) return Boolean is (True);
+       --  Dummy implementation!
+
+    end My_Ints;
 
 Now when we do the type derivation, we inherit the function :ada:`Odd` for
 :ada:`My_Int_2`. But where does this function come from? We haven't
@@ -1440,21 +1481,38 @@ which :ada:`My_Int_2` replaces :ada:`My_Int_1`, but that would be impractical
 and expensive. The actual mechanism avoids the need to do this by use of
 implicit type conversions. Suppose after the above declarations, we write:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.My_Int
 
-      Var : My_Int_2;
-      ...
-      if Odd (Var) then
-         ...
+    with My_Ints; use My_Ints;
+
+    procedure Using_My_Int is
+       Var : My_Int_2;
+    begin
+
+       if Odd (Var) then
+          --   ^ Calling Odd function for My_Int_2 type.
+          null;
+       end if;
+
+    end Using_My_Int;
 
 The compiler translates this as:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.My_Int
 
-      Var : My_Int_2;
-      ...
-      if Odd (My_Int_1 (Var)) then
-         ...
+    with My_Ints; use My_Ints;
+
+    procedure Using_My_Int is
+       Var : My_Int_2;
+    begin
+
+       if Odd (My_Int_1 (Var)) then
+          --   ^ Converting My_Int_2 to My_Int_1 type before
+          --     calling Odd function.
+          null;
+       end if;
+
+    end Using_My_Int;
 
 This implicit conversion is a nice trick, it means that we can get the effect
 of inheriting a new operation without actually having to create it.
