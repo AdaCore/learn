@@ -1257,7 +1257,7 @@ is:
 
     package Array_Representation is
 
-       type Val is (A,B,C,D,E,F,G,H);
+       type Val is (A, B, C, D, E, F, G, H);
        type Arr is array (1 .. 16) of Val;
        for Arr'Component_Size use 3;
 
@@ -1301,7 +1301,7 @@ we would write:
 
     package Array_Representation is
 
-       type Val is (A,B,C,D,E,F,G,H);
+       type Val is (A, B, C, D, E, F, G, H);
        type Arr is array (1 .. 16) of Val;
 
        type External_Arr is new Arr;
@@ -1372,7 +1372,7 @@ sequence would be illegal:
 
     package Array_Representation is
 
-       type Val is (A,B,C,D,E,F,G,H);
+       type Val is (A, B, C, D, E, F, G, H);
        type Arr is array (1 .. 16) of Val;
 
        procedure Rearrange (Arg : in out Arr);
