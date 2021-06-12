@@ -1264,12 +1264,12 @@ needed. A final example is:
        for Status use (Off => 2#001#, On => 2#010#, Unknown => 2#100#);
 
 which allows specified values for an enumeration type, instead of the efficient
-default values of 0,1,2.
+default values of 0, 1, 2.
 
 In all these cases, we might use these representation clauses to match external
 specifications, which can be very useful. The disadvantage of such layouts is
-that they are inefficient, and accessing individual components, or in the case
-of the enumeration type, looping through the values, can increase space and
+that they are inefficient, and accessing individual components, or, in the case
+of the enumeration type, looping through the values can increase space and
 time requirements for the program code.
 
 One approach that is often effective is to read or write the data in question
@@ -1374,7 +1374,7 @@ Let's have a look at the ``-gnatG`` expanded code to see what is hidden under
 the covers here. For example, the conversion :ada:`Arr (Input_Data)` from the
 previous example generates the following expanded code:
 
-.. code-block:: ada
+.. code-block::
 
        B26b : declare
           [subtype p__TarrD1 is integer range 1 .. 16]
@@ -1398,7 +1398,7 @@ yourself.
 
 Given that the conversion can be pretty inefficient, you don't want to convert
 backwards and forwards more than you have to, and the whole approach is only
-worth while if will be doing extensive computations involving the value.
+worthwhile if we'll be doing extensive computations involving the value.
 
 The expense of the conversion explains two aspects of this feature that are not
 obvious. First, why do we require derived types instead of just allowing
@@ -1430,8 +1430,8 @@ example:
 
       type My_Int_2 is new My_Int_1;
 
-Now when we do the type derivation, we inherit the function
-:ada:`Odd for My_Int_2`. But where does this function come from? We haven't
+Now when we do the type derivation, we inherit the function :ada:`Odd` for
+:ada:`My_Int_2`. But where does this function come from? We haven't
 written it explicitly, so the compiler somehow materializes this new implicit
 function. How does it do that?
 
