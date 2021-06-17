@@ -59,8 +59,8 @@ from code_block_info import CodeBlockInfo
 
 # specifies the server address to set on the widgets
 WIDGETS_SERVER_URL = os.environ.get(
-    "CODE_SERVER_URL",
-    "https://cloudchecker-staging.r53.adacore.com")
+    "CODE_SERVER_URL", "https://cloudchecker-staging.learn.r53.adacore.com"
+)
 
 
 class WidgetCodeDirective(Directive):
