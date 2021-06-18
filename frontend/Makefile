@@ -139,9 +139,9 @@ webpack-production:
 webpack-staging:
 	yarn run staging
 
-# Build the site pointing to 'cloudchecker.r53.adacore.com'
+# Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
 site: cleanall webpack-production pdf_books
-	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	CODE_SERVER_URL="https://cloudchecker.learn.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 site-staging: cleanall webpack-staging pdf_books
