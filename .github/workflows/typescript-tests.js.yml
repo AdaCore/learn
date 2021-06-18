@@ -1,7 +1,7 @@
 name: Typescript Test Suite
 
 on:
-  push: 
+  push:
     paths:
       - 'frontend/**/*.ts'
   pull_request:
@@ -37,11 +37,11 @@ jobs:
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: ada-actions/toolchain
-      uses: ada-actions/toolchain@ce2020
+      uses: ada-actions/toolchain@ce2021
       with:
         distrib: community
         target: native
-        community_year: 2020
+        community_year: 2021
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip

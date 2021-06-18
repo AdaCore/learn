@@ -1,3 +1,4 @@
 title=Introduction to SPARK
 author=Claire Dross \\and Yannick Moy
+cover_page=cover-A4.pdf
 

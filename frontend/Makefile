@@ -160,13 +160,13 @@ $(BOOKS):
 	$(eval SPHINX_PDF := $(shell basename $(shell dirname $@)).pdf)
 	$(eval SPHINX_TITLE := $(shell cat $@/conf.txt | grep title | sed -e 's#title=##'))
 	$(eval SPHINX_AUTHOR := $(shell cat $@/conf.txt | grep author | sed -e 's#author=##'))
-	$(eval SPHINX_FRONTPAGE := $(shell cat $@/conf.txt | grep frontpage | sed -e 's#frontpage=##'))
+	$(eval SPHINX_COVER_PAGE := $(shell cat $@/conf.txt | grep cover_page | sed -e 's#cover_page=##'))
 	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
 	@mkdir -p $(BUILDDIR)/latex
-	@[ -n "$(SPHINX_FRONTPAGE)" ] && cp $@/$(SPHINX_FRONTPAGE) $(BUILDDIR)/latex || echo "PDF: no frontpage available for $(SPHINX_PDF)"
+	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $@/$(SPHINX_COVER_PAGE) $(BUILDDIR)/latex || echo "PDF: no cover page available for $(SPHINX_PDF)"
 	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
 	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
-	  export SPHINX_FRONTPAGE="$(SPHINX_FRONTPAGE)"; \
+	  export SPHINX_COVER_PAGE="$(SPHINX_COVER_PAGE)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $@ \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
