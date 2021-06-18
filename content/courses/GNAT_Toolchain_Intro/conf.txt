@@ -1,2 +1,3 @@
 title=Introduction to GNAT Toolchain
 author=Gustavo A. Hoffmann
+frontpage=cover-A4.pdf

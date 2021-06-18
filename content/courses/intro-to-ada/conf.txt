@@ -1,3 +1,4 @@
 title=Introduction to Ada
 author=Raphaël Amiard \\and Gustavo A. Hoffmann
+frontpage=cover-A4.pdf
 
