@@ -58,7 +58,7 @@ describe('Widget', () => {
   let inTest: Array<HTMLElement>;
   let root: HTMLElement;
 
-  const baseURL = 'https://cloudchecker-staging.r53.adacore.com';
+  const baseURL = 'https://cloudchecker-staging.learn.r53.adacore.com';
   describe('Single Widget', () => {
     before(() => {
       fillDOM('single.html');
