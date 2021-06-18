@@ -240,11 +240,11 @@ TitleColor={named}{MidnightBlue}
     # https://github.com/sphinx-doc/sphinx/issues/5157
 }
 
-if ('SPHINX_FRONTPAGE' in os.environ and
-    os.environ['SPHINX_FRONTPAGE'] != ""):
+if ('SPHINX_COVER_PAGE' in os.environ and
+    os.environ['SPHINX_COVER_PAGE'] != ""):
     latex_elements['maketitle'] = r'''
 \begin{titlepage}
-\includepdf{''' + os.environ['SPHINX_FRONTPAGE'] + r'''}
+\includepdf{''' + os.environ['SPHINX_COVER_PAGE'] + r'''}
 \sphinxmaketitle
 \end{titlepage}
 '''
