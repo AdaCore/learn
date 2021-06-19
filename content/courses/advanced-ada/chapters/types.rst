@@ -3,6 +3,19 @@ Types
 
 .. include:: ../../global.txt
 
+Scalar Types
+------------
+
+.. admonition:: Relevant topics
+
+    - Include: :ada:`T'Base`, :ada:`S'Width`, :ada:`S'Value`
+    - `Scalar Types <http://www.ada-auth.org/standards/2xrm/html/RM-3-5.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Enumerations
 ------------
 
@@ -1192,7 +1205,7 @@ Data Representation
 
 .. admonition:: Relevant topics
 
-    - Include: ``Object_Size``, ``Value_Size``, ``Alignment``, ``T'Base``
+    - Include: ``Object_Size``, ``Value_Size``, ``Alignment``
     - `Operational and Representation Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-13-3.html>`_
     - `Packed Types <http://www.ada-auth.org/standards/2xrm/html/RM-13-2.html>`_
     - `Bit Ordering <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-3.html>`_
