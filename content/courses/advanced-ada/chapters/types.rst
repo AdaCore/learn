@@ -1598,6 +1598,118 @@ want to see. For example, having an exception being raised when the allocated
 memory for this data type has reached its limit might allow the application to
 have enough memory to at least handle the exception gracefully.
 
+Alignment
+~~~~~~~~~
+
+For many algorithms, it's important to ensure that we're using the appropriate
+alignment. This can be done by using the :ada:`Alignment` attribute and the
+:ada:`Alignment` aspect. Let's look at this example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Alignment
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type Aligned_UInt_7 is new UInt_7
+         with Alignment => 4;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Alignment is
+       V         : constant UInt_7         := 0;
+       Aligned_V : constant Aligned_UInt_7 := 0;
+    begin
+       Put_Line ("UInt_7'Alignment:           " & UInt_7'Alignment'Image);
+       Put_Line ("UInt_7'Size:                " & UInt_7'Size'Image);
+       Put_Line ("UInt_7'Object_Size:         " & UInt_7'Object_Size'Image);
+       Put_Line ("V'Alignment:                " & V'Alignment'Image);
+       Put_Line ("V'Size:                     " & V'Size'Image);
+       New_Line;
+
+       Put_Line ("Aligned_UInt_7'Alignment:   " & Aligned_UInt_7'Alignment'Image);
+       Put_Line ("Aligned_UInt_7'Size:        " & Aligned_UInt_7'Size'Image);
+       Put_Line ("Aligned_UInt_7'Object_Size: "
+                 & Aligned_UInt_7'Object_Size'Image);
+       Put_Line ("Aligned_V'Alignment:        " & Aligned_V'Alignment'Image);
+       Put_Line ("Aligned_V'Size:             " & Aligned_V'Size'Image);
+       New_Line;
+    end Show_Alignment;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7'Alignment:            1
+    UInt_7'Size:                 7
+    UInt_7'Object_Size:          8
+    V'Alignment:                 1
+    V'Size:                      8
+
+    Aligned_UInt_7'Alignment:    4
+    Aligned_UInt_7'Size:         7
+    Aligned_UInt_7'Object_Size:  32
+    Aligned_V'Alignment:         4
+    Aligned_V'Size:              32
+
+In this example, we're reusing the :ada:`UInt_7` type that we've already been
+using in previous examples. Because we haven't specified any alignment for the
+:ada:`UInt_7` type, it has an alignment of 1 storage unit (or 8 bits). However,
+in the declaration of the :ada:`Aligned_UInt_7` type, we're using the
+:ada:`Alignment` aspect to request an alignment of 4 storage units (or 32
+bits):
+
+.. code-block:: ada
+
+    type Aligned_UInt_7 is new UInt_7
+      with Alignment => 4;
+
+When using the :ada:`Alignment` attribute for the :ada:`Aligned_UInt_7` type,
+we can confirm that its alignment is indeed 4 storage units (bytes).
+
+Note that we can use the :ada:`Alignment` attribute for both data types and
+objects |mdash| in the code above, we're using :ada:`UInt_7'Alignment` and
+:ada:`V'Alignment`, for example.
+
+Because of the alignment we're specifying for the :ada:`Aligned_UInt_7` type,
+its size |mdash| indicated by the :ada:`Object_Size` attribute |mdash| is 32
+bits instead of 8 bits as for the :ada:`UInt_7` type.
+
+Note that you can also retrieve the alignment associated with a class using
+:ada:`S'Class'Alignment`. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Class_Alignment
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Class_Alignment is
+
+       type Point_1D is tagged record
+          X : Integer;
+       end record;
+
+       type Point_2D is new Point_1D with record
+          Y : Integer;
+       end record
+         with Alignment => 16;
+
+       type Point_3D is new Point_2D with record
+          Z : Integer;
+       end record;
+
+    begin
+       Put_Line ("1D_Point'Alignment:       " & Point_1D'Alignment'Image);
+       Put_Line ("1D_Point'Class'Alignment: " & Point_1D'Class'Alignment'Image);
+       Put_Line ("2D_Point'Alignment:       " & Point_2D'Alignment'Image);
+       Put_Line ("2D_Point'Class'Alignment: " & Point_2D'Class'Alignment'Image);
+       Put_Line ("3D_Point'Alignment:       " & Point_3D'Alignment'Image);
+       Put_Line ("3D_Point'Class'Alignment: " & Point_3D'Class'Alignment'Image);
+    end Show_Class_Alignment;
+
 .. admonition:: Relevant topics
 
     - Include: ``Object_Size``, ``Alignment``
