@@ -1327,6 +1327,110 @@ this:
     (Ada compiler) "For the target platform that you selected, I cannot
     possibly do it! COMPILATION ERROR!"
 
+Component size
+^^^^^^^^^^^^^^
+
+Let's continue our discussion on sizes with an example that makes use of the
+:ada:`Component_Size` attribute:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type UInt_7_Array is array (Positive range <>) of UInt_7;
+
+       type UInt_7_Array_Comp_32 is array (Positive range <>) of UInt_7
+         with Component_Size => 32;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+       Arr_1 : UInt_7_Array (1 .. 20);
+       Arr_2 : UInt_7_Array_Comp_32 (1 .. 20);
+    begin
+       Put_Line ("UInt_7_Array'Size:                   "
+                 & UInt_7_Array'Size'Image);
+       Put_Line ("UInt_7_Array'Object_Size:            "
+                 & UInt_7_Array'Object_Size'Image);
+       Put_Line ("UInt_7_Array'Component_Size:         "
+                 & UInt_7_Array'Component_Size'Image);
+       Put_Line ("Arr_1'Component_Size:                "
+                 & Arr_1'Component_Size'Image);
+       Put_Line ("Arr_1'Size:                          "
+                 & Arr_1'Size'Image);
+       New_Line;
+
+       Put_Line ("UInt_7_Array_Comp_32'Object_Size:    "
+                 & UInt_7_Array_Comp_32'Size'Image);
+       Put_Line ("UInt_7_Array_Comp_32'Object_Size:    "
+                 & UInt_7_Array_Comp_32'Object_Size'Image);
+       Put_Line ("UInt_7_Array_Comp_32'Component_Size: "
+                 & UInt_7_Array_Comp_32'Component_Size'Image);
+       Put_Line ("Arr_2'Component_Size:                "
+                 & Arr_2'Component_Size'Image);
+       Put_Line ("Arr_2'Size:                          "
+                 & Arr_2'Size'Image);
+       New_Line;
+    end Show_Sizes;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7_Array'Size:                    17179869176
+    UInt_7_Array'Object_Size:             17179869176
+    UInt_7_Array'Component_Size:          8
+    Arr_1'Component_Size:                 8
+    Arr_1'Size:                           160
+
+    UInt_7_Array_Comp_32'Size:            68719476704
+    UInt_7_Array_Comp_32'Object_Size:     68719476704
+    UInt_7_Array_Comp_32'Component_Size:  32
+    Arr_2'Component_Size:                 32
+    Arr_2'Size:                           640
+
+Here, the value we get for :ada:`Component_Size` of the :ada:`UInt_7_Array`
+type is 8 bits, which matches the :ada:`UInt_7'Object_Size` |mdash| as we've
+seen in the previous subsection. In general, we expect the component size to
+match the object size of the underlying type.
+
+However, we might have component sizes that aren't equal to the object size of
+the component's type. For example, in the declaration of the
+:ada:`UInt_7_Array_Comp_32` type, we're using the :ada:`Component_Size` aspect
+to query whether the size of each component can be 32 bits:
+
+.. code-block:: ada
+
+    type UInt_7_Array_Comp_32 is array (Positive range <>) of UInt_7
+      with Component_Size => 32;
+
+If the code compiles, we see this value when we use the :ada:`Component_Size`
+attribute. In this case, even though :ada:`UInt_7'Object_Size` is 8 bits, the
+component size of the array type (:ada:`UInt_7_Array_Comp_32'Component_Size`)
+is 32 bits.
+
+Note that we can use the :ada:`Component_Size` attribute with data types, as
+well as with actual objects of that data type. Therefore, we can write
+:ada:`UInt_7_Array'Component_Size` and :ada:`Arr_1'Component_Size`, for
+example.
+
+This big number (17179869176 bits) for :ada:`UInt_7_Array'Size` and
+:ada:`UInt_7_Array'Object_Size` might be surprising for you. This is due to the
+fact that Ada is reporting the size of the :ada:`UInt_7_Array` type for the
+case when the complete range is used. Considering that we specified a positive
+range in the declaration of the :ada:`UInt_7_Array` type, the maximum length
+on this machine is :math:`2^{31} -1`. The object size of an array type is
+calculated by multiplying the maximum length by the component size. Therefore,
+the object size of the :ada:`UInt_7_Array` type corresponds to the
+multiplication of :math:`2^{31} -1` components (maximum length) by 8 bits
+(component size).
+
 .. admonition:: Relevant topics
 
     - Include: ``Object_Size``, ``Alignment``
