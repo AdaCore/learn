@@ -1244,7 +1244,7 @@ understand the differences among those attributes.
 Size attribute and aspect
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Let's start with the :ada:`Size` attribute:
+Let's start with a code example using the :ada:`Size` attribute:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
 
