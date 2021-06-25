@@ -1536,8 +1536,6 @@ this data type:
     with Custom_Types; use Custom_Types;
 
     procedure Show_Sizes is
-       V : UInt_7;
-
        RAV1, RAV2 : UInt_7_Reserved_Access;
     begin
        Put_Line ("UInt_7_Reserved_Access'Storage_Size:        "
