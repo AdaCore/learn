@@ -1217,6 +1217,30 @@ To read a thorough overview on this topic, please refer to the
 
     ``Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/low_level_programming>``
 
+Sizes
+~~~~~
+
+Ada offers multiple attributes to retrieve the size of a type or an object:
+
++-----------------------+-----------------------------------------------------+
+| Attribute             | Description                                         |
++=======================+=====================================================+
+| :ada:`Size`           | Size of the representation of a subtype or an       |
+|                       | object.                                             |
++-----------------------+-----------------------------------------------------+
+| :ada:`Object_Size`    | Size of a component or an aliased object.           |
+|                       |                                                     |
++-----------------------+-----------------------------------------------------+
+| :ada:`Component_Size` | Size of a component of an array.                    |
++-----------------------+-----------------------------------------------------+
+| :ada:`Storage_Size`   | Number of storage elements reserved for an access   |
+|                       | type or a task object.                              |
++-----------------------+-----------------------------------------------------+
+
+In all cases, the size information is in bits. Note that the size information
+depends your target architecture. We'll discuss some examples to better
+understand the differences among those attributes.
+
 .. admonition:: Relevant topics
 
     - Include: ``Object_Size``, ``Alignment``
