@@ -1241,6 +1241,92 @@ In all cases, the size information is in bits. Note that the size information
 depends your target architecture. We'll discuss some examples to better
 understand the differences among those attributes.
 
+Size attribute and aspect
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let's start with the :ada:`Size` attribute:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type UInt_7_S32 is range 0 .. 127
+         with Size => 32;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+       V1 : UInt_7;
+       V2 : UInt_7_S32;
+    begin
+       Put_Line ("UInt_7'Size:            " & UInt_7'Size'Image);
+       Put_Line ("UInt_7'Object_Size:     " & UInt_7'Object_Size'Image);
+       Put_Line ("V1'Size:                " & V1'Size'Image);
+       New_Line;
+
+       Put_Line ("UInt_7_S32'Size:        " & UInt_7_S32'Size'Image);
+       Put_Line ("UInt_7_S32'Object_Size: " & UInt_7_S32'Object_Size'Image);
+       Put_Line ("V2'Size:                " & V2'Size'Image);
+    end Show_Sizes;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7'Size:             7
+    UInt_7'Object_Size:      8
+    V1'Size:                 8
+
+    UInt_7_S32'Size:         32
+    UInt_7_S32'Object_Size:  32
+    V2'Size:                 32
+
+When we use the :ada:`Size` attribute for a type :ada:`T`, we're retrieving the
+minimum number of bits necessary to represent objects of that type. Note that
+this is not the same as the actual size of an object of type :ada:`T` because
+the compiler will select an object size that is appropriate for the target
+architecture.
+
+In the example above, the size of the :ada:`UInt_7` is 7 bits, while the most
+appropriate size to store objects of this type in the memory of our target
+architecture is 8 bits. To be more specific, the range of :ada:`UInt_7`
+(0 .. 127) can be perfectly represented in 7 bits. However, most target
+architectures don't offer 7-bit registers or 7-bit memory storage, so 8 bits is
+the most appropriate size in this case.
+
+We can retrieve the size of an object of type :ada:`T` by using the
+:ada:`Object_Size`. Alternatively, we can use the :ada:`Size` attribute
+directly on objects of type :ada:`T` to retrieve their actual size |mdash| in
+our example, we write :ada:`V1'Size` to retrieve the size of :ada:`V1`.
+
+In the example above, we've used both the :ada:`Size` attribute (for example,
+:ada:`UInt_7'Size`) and the :ada:`Size` aspect (:ada:`with Size => 32`).
+While the size attribute is a function that returns the size, the size aspect
+is a request to the compiler to verify that the expected size can be used on
+the target platform. You can think of this attribute as a dialog between the
+developer and the compiler:
+
+    (Developer) "I think that :ada:`UInt_7_S32` should be stored using at
+    least 32 bits. Do you agree?"
+
+    (Ada compiler) "For the target platform that you selected, I can confirm
+    that this is indeed the case."
+
+Depending on the target platform, however, the conversation might play out like
+this:
+
+    (Developer) "I think that :ada:`UInt_7_S32` should be stored using at
+    least 32 bits. Do you agree?"
+
+    (Ada compiler) "For the target platform that you selected, I cannot
+    possibly do it! COMPILATION ERROR!"
+
 .. admonition:: Relevant topics
 
     - Include: ``Object_Size``, ``Alignment``
