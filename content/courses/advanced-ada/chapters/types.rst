@@ -1208,7 +1208,6 @@ Data Representation
     - Include: ``Object_Size``, ``Value_Size``, ``Alignment``
     - `Operational and Representation Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-13-3.html>`_
     - `Packed Types <http://www.ada-auth.org/standards/2xrm/html/RM-13-2.html>`_
-    - `Bit Ordering <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-3.html>`_
 
 .. todo::
 
