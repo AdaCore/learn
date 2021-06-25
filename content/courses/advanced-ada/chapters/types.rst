@@ -1203,6 +1203,20 @@ User-defined literals
 Data Representation
 -------------------
 
+This section provides a glimpse on attributes and aspects used for data
+representation. They are usually used for embedded applications because of
+strict requirements that are often found there. Therefore, unless you have
+very specific requirements for your application, in most cases, you won't need
+them. However, you should at least have a rudimentary understanding of them.
+To read a thorough overview on this topic, please refer to the
+*Introduction to Embedded Systems Programming* course.
+
+.. todo::
+
+    Add link once available:
+
+    ``Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/low_level_programming>``
+
 .. admonition:: Relevant topics
 
     - Include: ``Object_Size``, ``Alignment``
