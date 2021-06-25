@@ -1431,6 +1431,175 @@ the object size of the :ada:`UInt_7_Array` type corresponds to the
 multiplication of :math:`2^{31} -1` components (maximum length) by 8 bits
 (component size).
 
+Storage size
+^^^^^^^^^^^^
+
+To complete our discussion on sizes, let's look at this example of storage
+sizes:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type UInt_7_Access is access UInt_7;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with System;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+       V : UInt_7;
+
+       AV1, AV2   : UInt_7_Access;
+    begin
+       Put_Line ("UInt_7_Access'Storage_Size:          "
+                 & UInt_7_Access'Storage_Size'Image);
+       Put_Line ("UInt_7_Access'Storage_Size (bits):   "
+                 & Integer'Image(UInt_7_Access'Storage_Size
+                   * System.Storage_Unit));
+
+       Put_Line ("UInt_7'Size:               " & UInt_7'Size'Image);
+       Put_Line ("UInt_7_Access'Size:        " & UInt_7_Access'Size'Image);
+       Put_Line ("UInt_7_Access'Object_Size: " & UInt_7_Access'Object_Size'Image);
+       Put_Line ("AV1'Size:                  " & AV1'Size'Image);
+       New_Line;
+
+       Put_Line ("Allocating AV1...");
+       AV1 := new UInt_7;
+       Put_Line ("Allocating AV2...");
+       AV2 := new UInt_7;
+       New_Line;
+
+       Put_Line ("AV1.all'Size:              " & AV1.all'Size'Image);
+       New_Line;
+    end Show_Sizes;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7_Access'Storage_Size:           0
+    UInt_7_Access'Storage_Size (bits):    0
+
+    UInt_7'Size:                7
+    UInt_7_Access'Size:         64
+    UInt_7_Access'Object_Size:  64
+    AV1'Size:                   64
+
+    Allocating AV1...
+    Allocating AV2...
+
+    AV1.all'Size:               8
+
+As we've mentioned earlier on, :ada:`Storage_Size` corresponds to the number of
+storage elements reserved for an access type or a task object. In this case,
+we see that the storage size of the :ada:`UInt_7_Access` type is zero. This is
+because we haven't indicated that memory should be reserved for this data type.
+Thus, the compiler doesn't reserve memory and simply sets the size to zero.
+
+Because :ada:`Storage_Size` gives us the number of storage elements, we have
+to multiply this value by :ada:`System.Storage_Unit` |mdash| which gives
+us the size (in bits) of a single storage element |mdash| to get the total
+storage size in bits. (In this particular example, however, the multiplication
+doesn't make any difference, as the number of storage elements is zero.)
+
+Note that the size of our original data type :ada:`UInt_7` is 7 bits, while the
+size of its corresponding access type :ada:`UInt_7_Access` (and the access
+object :ada:`AV1`) is 64 bits. This is due to the fact that the access type
+doesn't contain an object, but rather memory information about an object. You
+can retrieve the size of an object allocated via :ada:`new` by first
+dereferencing it |mdash| in our example, we do this by writing
+:ada:`AV1.all'Size`.
+
+Now, let's use the :ada:`Storage_Size` aspect to actually reserve memory for
+this data type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type UInt_7_Reserved_Access is access UInt_7
+         with Storage_Size => 8;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with System;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+       V : UInt_7;
+
+       RAV1, RAV2 : UInt_7_Reserved_Access;
+    begin
+       Put_Line ("UInt_7_Reserved_Access'Storage_Size:        "
+                 & UInt_7_Reserved_Access'Storage_Size'Image);
+       Put_Line ("UInt_7_Reserved_Access'Storage_Size (bits): "
+                 & Integer'Image(UInt_7_Reserved_Access'Storage_Size
+                   * System.Storage_Unit));
+
+       Put_Line ("UInt_7_Reserved_Access'Size:        "
+                 & UInt_7_Reserved_Access'Size'Image);
+       Put_Line ("UInt_7_Reserved_Access'Object_Size: "
+                 & UInt_7_Reserved_Access'Object_Size'Image);
+       Put_Line ("RAV1'Size:                          " & RAV1'Size'Image);
+       New_Line;
+
+       Put_Line ("Allocating RAV1...");
+       RAV1 := new UInt_7;
+       Put_Line ("Allocating RAV2...");
+       RAV2 := new UInt_7;
+       New_Line;
+    end Show_Sizes;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7_Reserved_Access'Storage_Size:         8
+    UInt_7_Reserved_Access'Storage_Size (bits):  64
+
+    UInt_7_Reserved_Access'Size:         64
+    UInt_7_Reserved_Access'Object_Size:  64
+    RAV1'Size:                           64
+
+    Allocating RAV1...
+    Allocating RAV2...
+
+    raised STORAGE_ERROR : s-poosiz.adb:108 explicit raise
+
+In this case, we're reserving 8 storage elements in the declaration of
+:ada:`UInt_7_Reserved_Access`.
+
+.. code-block:: ada
+
+    type UInt_7_Reserved_Access is access UInt_7
+      with Storage_Size => 8;
+
+Since each storage unit corresponds to one byte (8 bits) in this architecture,
+we're reserving a maximum of 64 bits for the :ada:`UInt_7_Reserved_Access`
+type.
+
+This example raises an exception at runtime |mdash| a storage error, to be more
+specific. This is because the maximum reserved size is 64 bits, and the size of
+a single access object is 64 bits as well. Therefore, after the first
+allocation, the reserved storage space is already consumed, so we cannot
+allocate a second access object.
+
+This behavior might be quite limiting in many cases. However, for certain
+applications where memory is very constrained, this might be exactly what we
+want to see. For example, having an exception being raised when the allocated
+memory for this data type has reached its limit might allow the application to
+have enough memory to at least handle the exception gracefully.
+
 .. admonition:: Relevant topics
 
     - Include: ``Object_Size``, ``Alignment``
