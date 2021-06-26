@@ -1710,6 +1710,141 @@ Note that you can also retrieve the alignment associated with a class using
        Put_Line ("3D_Point'Class'Alignment: " & Point_3D'Class'Alignment'Image);
     end Show_Class_Alignment;
 
+Overlapping Storage
+~~~~~~~~~~~~~~~~~~~
+
+Algorithms can be designed to perform in-place or out-of-place processing. In
+other words, they can take advantage of the fact that input and output arrays
+share the same storage space or not.
+
+We can use the :ada:`Has_Same_Storage` and the :ada:`Overlaps_Storage`
+attributes to retrieve more information about how the storage space of two
+objects related to each other:
+
+- the :ada:`Has_Same_Storage` attribute indicates whether two objects have the
+  exact same storage.
+
+  - A typical example is when both objects are exactly the same, so they
+    obviously share the same storage. For example, for arrray :ada:`A`,
+    :ada:`A'Has_Same_Storage (A)` is always :ada:`True`.
+
+- the :ada:`Overlaps_Storage` attribute indicates whether two objects have at
+  least one bit in common.
+
+  - Note that, if two objects have the same storage, this implies that their
+    storage also overlaps. In other words, :ada:`A'Has_Same_Storage (B) = True`
+    implies that :ada:`A'Overlaps_Storage (B) = True`.
+
+
+Let's look at this example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Overlapping_Storage
+
+    package Int_Array_Processing is
+
+       type Int_Array is array (Positive range <>) of Integer;
+
+       procedure Show_Storage (X : Int_Array;
+                               Y : Int_Array);
+
+       procedure Process (X :     Int_Array;
+                          Y : out Int_Array);
+
+    end Int_Array_Processing;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Int_Array_Processing is
+
+       procedure Show_Storage (X : Int_Array;
+                               Y : Int_Array) is
+       begin
+          if X'Has_Same_Storage (Y) then
+             Put_Line ("Info: X and Y have the same storage.");
+          else
+             Put_Line ("Info: X and Y don't the have same storage.");
+          end if;
+          if X'Overlaps_Storage (Y) then
+             Put_Line ("Info: X and Y overlap.");
+          else
+             Put_Line ("Info: X and Y don't overlap.");
+          end if;
+       end Show_Storage;
+
+       procedure Process (X :     Int_Array;
+                          Y : out Int_Array) is
+       begin
+          Put_Line ("==== PROCESS ====");
+          Show_Storage (X, Y);
+
+          if X'Has_Same_Storage (Y) then
+             Put_Line ("In-place processing...");
+          else
+             if not X'Overlaps_Storage (Y) then
+                Put_Line ("Out-of-place processing...");
+             else
+                Put_Line ("Cannot process overlapping arrays...");
+             end if;
+          end if;
+          New_Line;
+       end Process;
+
+    end Int_Array_Processing;
+
+    with Int_Array_Processing; use Int_Array_Processing;
+
+    procedure Main is
+       A : Int_Array (1 .. 20) := (others => 3);
+       B : Int_Array (1 .. 20) := (others => 4);
+    begin
+       Process (A, A);
+       --  In-place processing: sharing the exact same storage
+
+       Process (A (1 .. 10), A (10 .. 20));
+       --  Overlapping one component: A (10)
+
+       Process (A (1 .. 10), A (11 .. 20));
+       --  Out-of-place processing: same array, but not sharing any storage
+
+       Process (A, B);
+       --  Out-of-place processing: two different arrays
+    end Main;
+
+In this code example, we implement two procedures:
+
+- :ada:`Show_Storage`, which shows storage information about two arrays by
+  using the :ada:`Has_Same_Storage` and :ada:`Overlaps_Storage` attributes.
+
+- :ada:`Process`, which are supposed to process an input array :ada:`X` and
+  store the processed data in the output array :ada:`Y`.
+
+    - Note that the implementation of this procedure is actually just a
+      mock-up, so that no processing is actually taking place.
+
+We have four different instances of how we can call the :ada:`Process`
+procedure:
+
+- in the :ada:`Process (A, A)` call, we're using the same array for the input
+  and output arrays. This is a perfect example of in-place processing. Because
+  the input and the output arrays arguments are actually the same object, they
+  obviously share the exact same storage.
+
+- in the :ada:`Process (A (1 .. 10), A (10 .. 20))` call, we're using two
+  slices of the :ada:`A` array as input and output arguments. In this case, a
+  single component of the :ada:`A` array is shared: :ada:`A (10)`. Because the
+  storage space is overlapping, but not exactly the same, neither in-place nor
+  out-of-place processing can usually be used in this case.
+
+- in the :ada:`Process (A (1 .. 10), A (11 .. 20))` call, even though we're
+  using the same array :ada:`A` for the input and output arguments, we're using
+  slices that are completely independent from each other, so that the input and
+  output arrays are not sharing any storage in this case. Therefore, we can use
+  out-of-place processing.
+
+- in the :ada:`Process (A, B)` call, we have two different arrays |mdash| which
+  obviously don't share any storage space |mdash|, so we can use out-of-place
+  processing.
+
 .. admonition:: Relevant topics
 
     - `Operational and Representation Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-13-3.html>`_
