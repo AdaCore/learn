@@ -1453,8 +1453,6 @@ sizes:
     with Custom_Types; use Custom_Types;
 
     procedure Show_Sizes is
-       V : UInt_7;
-
        AV1, AV2   : UInt_7_Access;
     begin
        Put_Line ("UInt_7_Access'Storage_Size:          "
