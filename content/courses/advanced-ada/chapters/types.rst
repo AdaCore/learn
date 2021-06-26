@@ -2011,15 +2011,6 @@ the normal representation.
 We elaborate on the topic of converting between data representations in the
 section on :ref:`changing data representation <Changing_Data_Representation>`.
 
-.. admonition:: Relevant topics
-
-    - `Packed Types <http://www.ada-auth.org/standards/2xrm/html/RM-13-2.html>`_
-
-.. todo::
-
-    Complete section!
-
-
 Record Representation and storage clauses
 -----------------------------------------
 
