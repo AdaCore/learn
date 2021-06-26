@@ -1453,12 +1453,12 @@ sizes:
     with Custom_Types; use Custom_Types;
 
     procedure Show_Sizes is
-       AV1, AV2   : UInt_7_Access;
+       AV1, AV2 : UInt_7_Access;
     begin
        Put_Line ("UInt_7_Access'Storage_Size:          "
                  & UInt_7_Access'Storage_Size'Image);
        Put_Line ("UInt_7_Access'Storage_Size (bits):   "
-                 & Integer'Image(UInt_7_Access'Storage_Size
+                 & Integer'Image (UInt_7_Access'Storage_Size
                    * System.Storage_Unit));
 
        Put_Line ("UInt_7'Size:               " & UInt_7'Size'Image);
@@ -1539,7 +1539,7 @@ this data type:
        Put_Line ("UInt_7_Reserved_Access'Storage_Size:        "
                  & UInt_7_Reserved_Access'Storage_Size'Image);
        Put_Line ("UInt_7_Reserved_Access'Storage_Size (bits): "
-                 & Integer'Image(UInt_7_Reserved_Access'Storage_Size
+                 & Integer'Image (UInt_7_Reserved_Access'Storage_Size
                    * System.Storage_Unit));
 
        Put_Line ("UInt_7_Reserved_Access'Size:        "
