@@ -1845,6 +1845,172 @@ procedure:
   obviously don't share any storage space |mdash|, so we can use out-of-place
   processing.
 
+Packed Representation
+~~~~~~~~~~~~~~~~~~~~~
+
+As we've seen previously, the minimum number of bits required to represent a
+data type might be less than the actual number of bits used to store an object
+of that same type. We've seen an example where :ada:`UInt_7'Size` was 7 bits,
+while :ada:`UInt_7'Object_Size` was 8 bits. The most extreme case is the one
+for the :ada:`Boolean` type: in this case, :ada:`Boolean'Size` is 1 bit, while
+:ada:`Boolean'Object_Size` might be 8 bits (or even more on certain
+architectures). In such cases, we have 7 (or more) unused bits in memory for
+each object of :ada:`Boolean` type. In other words, we're simply wasting
+memory.
+
+The situation is even worse when implementing bit-fields, which can be
+declared as an array of :ada:`Boolean` components. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Non_Packed_Flags
+
+    package Flag_Definitions is
+
+       type Flags is array (Positive range <>) of Boolean;
+
+    end Flag_Definitions;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Flag_Definitions; use Flag_Definitions;
+
+    procedure Show_Flags is
+       Flags_1 : Flags (1 .. 8);
+    begin
+       Put_Line ("Boolean'Size:           " & Boolean'Size'Image);
+       Put_Line ("Boolean'Object_Size:    " & Boolean'Object_Size'Image);
+       Put_Line ("Flags_1'Size:           " & Flags_1'Size'Image);
+       Put_Line ("Flags_1'Component_Size: " & Flags_1'Component_Size'Image);
+    end Show_Flags;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    Boolean'Size:            1
+    Boolean'Object_Size:     8
+    Flags_1'Size:            64
+    Flags_1'Component_Size:  8
+
+In this example, we're declaring the :ada:`Flags` type as an array of
+:ada:`Boolean` components. As we can see in this case, although the size of the
+:ada:`Boolean` type is just 1 bit, an object of this type has a size of 8 bits.
+Consequently, each component of the :ada:`Flags` type has a size of 8 bits.
+Moreover, an array with 8 components of :ada:`Boolean` type |mdash| such as
+the :ada:`Flags_1` array |mdash| has a size of 64 bits.
+
+Therefore, having a way to compact the representation |mdash| so that we can
+store multiple objects without wasting storage space |mdash| may help us
+improving memory usage. This is actually possible by using the :ada:`Pack`
+aspect. For example, we could extend the previous example and declare a
+:ada:`Packed_Flags` type that makes use of this aspect:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Packed_Flags
+
+    package Flag_Definitions is
+
+       type Flags is array (Positive range <>) of Boolean;
+
+       type Packed_Flags is array (Positive range <>) of Boolean
+         with Pack;
+
+    end Flag_Definitions;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Flag_Definitions; use Flag_Definitions;
+
+    procedure Show_Packed_Flags is
+       Flags_1 : Flags (1 .. 8);
+       Flags_2 : Packed_Flags (1 .. 8);
+    begin
+       Put_Line ("Boolean'Size:           " & Boolean'Size'Image);
+       Put_Line ("Boolean'Object_Size:    " & Boolean'Object_Size'Image);
+       Put_Line ("Flags_1'Size:           " & Flags_1'Size'Image);
+       Put_Line ("Flags_1'Component_Size: " & Flags_1'Component_Size'Image);
+       Put_Line ("Flags_2'Size:           " & Flags_2'Size'Image);
+       Put_Line ("Flags_2'Component_Size: " & Flags_2'Component_Size'Image);
+    end Show_Packed_Flags;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    Boolean'Size:            1
+    Boolean'Object_Size:     8
+    Flags_1'Size:            64
+    Flags_1'Component_Size:  8
+    Flags_2'Size:            8
+    Flags_2'Component_Size:  1
+
+In this example, we're declaring the :ada:`Flags_2` array of
+:ada:`Packed_Flags` type. Its size is 8 bits |mdash| instead of the 64 bits
+required for the :ada:`Flags_1` array. Because the array type
+:ada:`Packed_Flags` is packed, we can now effectively use this type to store an
+object of :ada:`Boolean` type using just 1 bit of the memory, as indicated by
+the :ada:`Flags_2'Component_Size` attribute.
+
+In many cases, we need to convert between a *normal* representation (such as
+the one used for the :ada:`Flags_1` array above) to a packed representation
+(such as the one for the :ada:`Flags_2` array). In many programming languages,
+this conversion may require writing custom code with manual bit-shifting and
+bit-masking to get the proper target representation. In Ada, however, we just
+need to indicate the actual type conversion, and the compiler takes care of
+generating code containing bit-shifting and bit-masking to performs the type
+conversion.
+
+Let's modify the previous example and introduce this type conversion:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Flag_Conversion
+
+    package Flag_Definitions is
+
+       type Flags is array (Positive range <>) of Boolean;
+
+       type Packed_Flags is array (Positive range <>) of Boolean
+         with Pack;
+
+       Default_Flags : constant Flags := (True, True, False, True,
+                                          False, False, True, True);
+
+    end Flag_Definitions;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Flag_Definitions; use Flag_Definitions;
+
+    procedure Show_Flag_Conversion is
+       Flags_1 : Flags (1 .. 8);
+       Flags_2 : Packed_Flags (1 .. 8);
+    begin
+       Flags_1 := Default_Flags;
+       Flags_2 := Packed_Flags (Flags_1);
+
+       for I in Flags_2'Range loop
+          Put_Line (I'Image & ": "
+                    & Flags_1 (I)'Image & ", "
+                    & Flags_2 (I)'Image);
+       end loop;
+    end Show_Flag_Conversion;
+
+In this extended example, we're now declaring :ada:`Default_Flags` as an array
+of constant flags, which we use to initialize :ada:`Flags_1`.
+
+The actual conversion happens with :ada:`Flags_2 := Packed_Flags (Flags_1)`.
+Here, the type conversion :ada:`Packed_Flags()` indicates that we're converting
+from the normal representation (used for the :ada:`Flags` type) to the packed
+representation (used for :ada:`Packed_Flags` type). We don't need to write more
+code than that to perform the correct type conversion.
+
+Also, by using the same strategy, we could read information from a packed
+representation. For example:
+
+.. code-block:: ada
+
+    Flags_1 := Flags (Flags_2);
+
+In this case, we use :ada:`Flags()` to convert from a packed representation to
+the normal representation.
+
+We elaborate on the topic of converting between data representations in the
+section on :ref:`changing data representation <Changing_Data_Representation>`.
+
 .. admonition:: Relevant topics
 
     - `Packed Types <http://www.ada-auth.org/standards/2xrm/html/RM-13-2.html>`_
