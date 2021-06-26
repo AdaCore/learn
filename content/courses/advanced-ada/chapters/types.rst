@@ -1847,7 +1847,6 @@ procedure:
 
 .. admonition:: Relevant topics
 
-    - `Operational and Representation Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-13-3.html>`_
     - `Packed Types <http://www.ada-auth.org/standards/2xrm/html/RM-13-2.html>`_
 
 .. todo::
