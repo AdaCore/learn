@@ -1518,6 +1518,7 @@ Now, let's use the :ada:`Storage_Size` aspect to actually reserve memory for
 this data type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
+    :class: ada-run-expect-failure
 
     package Custom_Types is
 
