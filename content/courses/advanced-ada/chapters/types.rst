@@ -1212,16 +1212,6 @@ Data Representation
 Record Representation and storage clauses
 -----------------------------------------
 
-.. admonition:: Relevant topics
-
-    - **Briefly** discuss record representation and storage clauses
-    - `Record Representation Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-1.html>`_
-    - `Storage Place Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-2.html>`_
-
-.. todo::
-
-    Complete section!
-
 
 Valid
 -----
