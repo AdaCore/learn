@@ -1217,7 +1217,6 @@ Record Representation and storage clauses
     - **Briefly** discuss record representation and storage clauses
     - `Record Representation Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-1.html>`_
     - `Storage Place Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-2.html>`_
-    - `Mod Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-J-8.html>`_
 
 .. todo::
 
