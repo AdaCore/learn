@@ -666,7 +666,7 @@ initialized on the path that falls through from the loop. Even though this
 program is correct, you shouldn't ignore the message: it means flow
 analysis cannot guarantee that :ada:`Result` is always initialized at the call
 site and so assumes any read of :ada:`Result` at the call site will read
-initialized data.  Therefore, you should either initialize :ada:`Result` when
+uninitialized data.  Therefore, you should either initialize :ada:`Result` when
 :ada:`Found` is false, which silences flow analysis, or verify this assumption
 at each call site by other means.
 
