@@ -1269,12 +1269,12 @@ The mock-up data includes valid and invalid states.
        F : File_Type;
     begin
        Create (F, Out_File, File_Name);
-       Write (F,  0);
        Write (F,  1);
        Write (F,  2);
+       Write (F,  4);
+       Write (F,  3);
+       Write (F,  2);
        Write (F,  10);
-       Write (F,  1);
-       Write (F,  20);
        Close (F);
     end Create_Test_File;
 
@@ -1285,7 +1285,7 @@ The mock-up data includes valid and invalid states.
        type State is (Off, On, Waiting)
          with Size => Integer'Size;
 
-       for State use (Off => 0, On => 1, Waiting => 2);
+       for State use (Off => 1, On => 2, Waiting => 4);
 
        package State_Sequential_IO is new Ada.Sequential_IO (State);
 
@@ -1384,7 +1384,7 @@ before displaying the actual information from :ada:`S`. If the value stored in
 simply displaying a message indicating that an invalid value was detected. If
 we didn't have this check, the :ada:`Constraint_Error` exception would be
 raised when trying to use invalid data stored in :ada:`S` |mdash| this would
-happen, for example, after reading the integer value 10 from the input file.
+happen, for example, after reading the integer value 3 from the input file.
 
 In summary, using the :ada:`Valid` attribute is a good strategy we can employ
 when we know that information stored in memory might be corrupted.
