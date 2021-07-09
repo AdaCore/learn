@@ -542,9 +542,11 @@ the proof or strip it down to a small number of easily-reviewable
 assumptions. For this purpose, you can add assertions to break complex
 proofs into smaller steps.
 
-..
-   TODO: This might confuse people, what is the difference between the
-   first two assertions provided here?
+.. todo::
+    
+    This might confuse people, what is the difference between the
+    first two assertions provided here?
+    
 .. code-block:: ada
 
     pragma Assert (Assertion_Checked_By_The_Tool);
@@ -646,16 +648,20 @@ property.
 
 Ghost Procedures
 ~~~~~~~~~~~~~~~~
-..
-   TODO: This section still seems very abstract. Can a more concrete example be developed?
+
+.. todo::
+    
+    This section still seems very abstract. Can a more concrete example be developed?
 
 Ghost procedures can't affect the value of normal variables, so they're
 mostly used to perform operations on ghost variables or to group together a
 set of intermediate assertions.
 
-.. 
-   TODO: Hard to understand what this first sentence is trying to express;
-   specifically the word "treatment".
+.. todo::
+
+    Hard to understand what this first sentence is trying to express;
+    specifically the word "treatment".
+    
 Abstracting away the treatment of assertions and ghost variables inside a
 ghost procedure has several advantages. First, you're allowed to use these
 variables in any way you choose in code inside ghost procedures.  This
@@ -695,8 +701,9 @@ isn't part of the functional behavior of the subprogram. Finally, it can
 help GNATprove by abstracting away assertions that would otherwise make its
 job more complex.
 
-..
-  TODO: What is a Prrof Context? I don't think this is defined anywhere.
+.. todo::
+    What is a Proof Context? I don't think this is defined anywhere.
+
 In the example below, calling :ada:`Prove_P` with :ada:`X` as an operand only
 adds :ada:`P (X)` to the proof context instead of the larger set of assertions
 required to verify it. In addition, the proof of :ada:`P` need only be done
@@ -1046,8 +1053,10 @@ index :ada:`K` is stored at index :ada:`K-1`:
 
     end Show_Map;
 
-..
-   TODO: Uncommenting the code did not result in successful analysis.
+.. todo::
+    
+    Uncommenting the code did not result in successful analysis.
+    
 You need to uncomment the second loop invariant containing the frame condition
 in order to prove the assertion after the loop.
 
