@@ -1399,6 +1399,7 @@ doing so, we avoid that :ada:`Use_Enum` is set to the *wrong* component. For
 example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Types.Unchecked_State_Or_Integer
+    :class: ada-run-expect-failure
 
     with States; use States;
 
