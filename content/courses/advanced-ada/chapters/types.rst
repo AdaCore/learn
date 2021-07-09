@@ -1239,15 +1239,240 @@ Valid
 Unchecked Union
 ---------------
 
-.. admonition:: Relevant topics
+We've introduced variant records back in the
+:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/more_about_types>`.
+In simple terms, a variant record |mdash| or *discriminated record* in Ada
+terminology |mdash| is a record with discriminants that allows for changing its
+structure. Basically, it's a record containing a :ada:`case`.
 
-    - **Briefly** discuss unchecked unions, as mentioned in
-      `Unchecked Union Types <http://www.ada-auth.org/standards/2xrm/html/RM-B-3-3.html>`_
+The :ada:`State_Or_Integer` declaration in the :ada:`States` package below is
+an example of a variant record:
 
-.. todo::
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.State_Or_Integer
 
-    Complete section!
+    package States is
 
+       type State is (Off, On, Waiting)
+         with Size => Integer'Size;
+
+       for State use (Off => 0, On => 1, Waiting => 2);
+
+       type State_Or_Integer (Use_Enum : Boolean) is record
+          case Use_Enum is
+             when False => I : Integer;
+             when True  => S : State;
+          end case;
+       end record;
+
+       procedure Display_State_Value (V : State_Or_Integer);
+
+    end States;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body States is
+
+       procedure Display_State_Value (V : State_Or_Integer) is
+       begin
+          Put_Line ("State: " & V.S'Image);
+          Put_Line ("Value: " & V.I'Image);
+       end Display_State_Value;
+
+    end States;
+
+As mentioned in the previous course, if you try to access a component that is
+not valid for your record, a :ada:`Constraint_Error` exception is raised. For
+example, in the implementation of the :ada:`Display_State_Value` procedure,
+we're trying to retrieve the value of the integer component (:ada:`I`) of the
+:ada:`V` record. When calling this procedure, the :ada:`Constraint_Error`
+exception is raised as expected because :ada:`Use_Enum` is set to :ada:`True`,
+so that the :ada:`I` component is invalid |mdash| only the :ada:`S` component
+is valid in this case.
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.State_Or_Integer
+    :class: ada-run-expect-failure
+
+    with States; use States;
+
+    procedure Show_Variant_Rec_Error is
+       V : State_Or_Integer (Use_Enum => True);
+    begin
+       V.S := On;
+       Display_State_Value (V);
+    end Show_Variant_Rec_Error;
+
+In addition to not being able to read the value of a component that isn't
+valid, assigning a value to a component that isn't valid also raises an
+exception at runtime. In this example, we cannot assign to :ada:`V.I`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.State_Or_Integer
+    :class: ada-run-expect-failure
+
+    with States; use States;
+
+    procedure Show_Variant_Rec_Error is
+       V : State_Or_Integer (Use_Enum => True);
+    begin
+       V.I := 10;
+       --  Error: V.I cannot be accessed because Use_Enum is set to True.
+    end Show_Variant_Rec_Error;
+
+We may circumvent this limitation by using the :ada:`Unchecked_Union` aspect.
+For example, we can derive a new type from :ada:`State_Or_Integer` and use
+this aspect in its declaration. We do this in the declaration of the
+:ada:`Unchecked_State_Or_Integer` type below.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Unchecked_State_Or_Integer
+
+    package States is
+
+       type State is (Off, On, Waiting)
+         with Size => Integer'Size;
+
+       for State use (Off => 0, On => 1, Waiting => 2);
+
+       type State_Or_Integer (Use_Enum : Boolean) is record
+          case Use_Enum is
+             when False => I : Integer;
+             when True  => S : State;
+          end case;
+       end record;
+
+       type Unchecked_State_Or_Integer (Use_Enum : Boolean) is
+         new State_Or_Integer (Use_Enum) with Unchecked_Union;
+
+       procedure Display_State_Value (V : Unchecked_State_Or_Integer);
+
+    end States;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body States is
+
+       procedure Display_State_Value (V : Unchecked_State_Or_Integer) is
+       begin
+          Put_Line ("State: " & V.S'Image);
+          Put_Line ("Value: " & V.I'Image);
+       end Display_State_Value;
+
+    end States;
+
+Because we now use the :ada:`Unchecked_State_Or_Integer` type for the input
+parameter of the :ada:`Display_State_Value` procedure, no exception is raised
+at runtime, as both components are now accessible. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Unchecked_State_Or_Integer
+
+    with States; use States;
+
+    procedure Show_Unchecked_Union is
+       V : State_Or_Integer (Use_Enum => True);
+    begin
+       V.S := On;
+       Display_State_Value (Unchecked_State_Or_Integer (V));
+    end Show_Unchecked_Union;
+
+Note that, in the call to the :ada:`Display_State_Value` procedure, we first
+need to convert the :ada:`V` argument from the :ada:`State_Or_Integer` to the
+:ada:`Unchecked_State_Or_Integer` type.
+
+Also, we can assign to any of the components of a record that has the
+:ada:`Unchecked_Union` aspect. In our example, we can now assign to both the
+:ada:`S` and the :ada:`I` components of the :ada:`V` record:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Unchecked_State_Or_Integer
+
+    with States; use States;
+
+    procedure Show_Unchecked_Union is
+       V : Unchecked_State_Or_Integer (Use_Enum => True);
+    begin
+       V := (Use_Enum => True, S => On);
+       Display_State_Value (V);
+
+       V := (Use_Enum => False, I => 2);
+       Display_State_Value (V);
+    end Show_Unchecked_Union;
+
+In the example above, we're use an aggregate in the assignments to :ada:`V`. By
+doing so, we avoid that :ada:`Use_Enum` is set to the *wrong* component. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Unchecked_State_Or_Integer
+
+    with States; use States;
+
+    procedure Show_Unchecked_Union is
+       V : Unchecked_State_Or_Integer (Use_Enum => True);
+    begin
+       V.S := On;
+       Display_State_Value (V);
+
+       V.I := 2;  --  Error: cannot directly assign to V.I, as Use_Enum is
+                  --         set to True.
+       Display_State_Value (V);
+    end Show_Unchecked_Union;
+
+Here, even though the record has the :ada:`Unchecked_Union` attribute, we
+cannot directly assign to the :ada:`I` component because :ada:`Use_Enum` is set
+to :ada:`True`, so only the :ada:`S` is accessible. We can, however, read its
+value, as we do in the :ada:`Display_State_Value` procedure.
+
+Be aware that, due to the fact the union is not checked, we might write invalid
+data to the record. In the example below, we initialize the :ada:`I` component
+with 10, which is a valid integer value, but results in an invalid value for
+the :ada:`S` component, as the value 10 cannot be mapped to the representation
+of the :ada:`State` type.
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Unchecked_State_Or_Integer
+    :class: ada-run-expect-failure
+
+    with States; use States;
+
+    procedure Show_Unchecked_Union is
+       V : Unchecked_State_Or_Integer (Use_Enum => True);
+    begin
+       V := (Use_Enum => False, I => 10);
+       Display_State_Value (V);
+    end Show_Unchecked_Union;
+
+To mitigate this problem, we could use the :ada:`Valid` attribute |mdash|
+discussed in the previous section |mdash| for the :ada:`S` component before
+trying to use its value in the implementation of the :ada:`Display_State_Value`
+procedure:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Unchecked_State_Or_Integer
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body States is
+
+       procedure Display_State_Value (V : Unchecked_State_Or_Integer) is
+       begin
+          if V.S'Valid then
+             Put_Line ("State: " & V.S'Image);
+          else
+             Put_Line ("State: <invalid>");
+          end if;
+          Put_Line ("Value: " & V.I'Image);
+       end Display_State_Value;
+
+    end States;
+
+    with States; use States;
+
+    procedure Show_Unchecked_Union is
+       V : Unchecked_State_Or_Integer (Use_Enum => True);
+    begin
+       V := (Use_Enum => False, I => 10);
+       Display_State_Value (V);
+    end Show_Unchecked_Union;
+
+
+However, in general, you should avoid using the :ada:`Unchecked_Union` aspect
+due to the potential issues you might introduce into your application. In most
+cases, unless you're doing low-level programming or interfacing with C code,
+you won't really need this aspect.
 
 Variable control
 ----------------
