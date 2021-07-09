@@ -1255,7 +1255,7 @@ an example of a variant record:
        type State is (Off, On, Waiting)
          with Size => Integer'Size;
 
-       for State use (Off => 0, On => 1, Waiting => 2);
+       for State use (Off => 1, On => 2, Waiting => 4);
 
        type State_Or_Integer (Use_Enum : Boolean) is record
           case Use_Enum is
@@ -1313,7 +1313,7 @@ exception at runtime. In this example, we cannot assign to :ada:`V.I`:
     procedure Show_Variant_Rec_Error is
        V : State_Or_Integer (Use_Enum => True);
     begin
-       V.I := 10;
+       V.I := 4;
        --  Error: V.I cannot be accessed because Use_Enum is set to True.
     end Show_Variant_Rec_Error;
 
@@ -1329,7 +1329,7 @@ this aspect in its declaration. We do this in the declaration of the
        type State is (Off, On, Waiting)
          with Size => Integer'Size;
 
-       for State use (Off => 0, On => 1, Waiting => 2);
+       for State use (Off => 1, On => 2, Waiting => 4);
 
        type State_Or_Integer (Use_Enum : Boolean) is record
           case Use_Enum is
@@ -1390,7 +1390,7 @@ Also, we can assign to any of the components of a record that has the
        V := (Use_Enum => True, S => On);
        Display_State_Value (V);
 
-       V := (Use_Enum => False, I => 2);
+       V := (Use_Enum => False, I => 4);
        Display_State_Value (V);
     end Show_Unchecked_Union;
 
@@ -1409,7 +1409,7 @@ example:
        V.S := On;
        Display_State_Value (V);
 
-       V.I := 2;  --  Error: cannot directly assign to V.I, as Use_Enum is
+       V.I := 4;  --  Error: cannot directly assign to V.I, as Use_Enum is
                   --         set to True.
        Display_State_Value (V);
     end Show_Unchecked_Union;
@@ -1421,8 +1421,8 @@ value, as we do in the :ada:`Display_State_Value` procedure.
 
 Be aware that, due to the fact the union is not checked, we might write invalid
 data to the record. In the example below, we initialize the :ada:`I` component
-with 10, which is a valid integer value, but results in an invalid value for
-the :ada:`S` component, as the value 10 cannot be mapped to the representation
+with 3, which is a valid integer value, but results in an invalid value for
+the :ada:`S` component, as the value 3 cannot be mapped to the representation
 of the :ada:`State` type.
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Types.Unchecked_State_Or_Integer
@@ -1433,7 +1433,7 @@ of the :ada:`State` type.
     procedure Show_Unchecked_Union is
        V : Unchecked_State_Or_Integer (Use_Enum => True);
     begin
-       V := (Use_Enum => False, I => 10);
+       V := (Use_Enum => False, I => 3);
        Display_State_Value (V);
     end Show_Unchecked_Union;
 
@@ -1465,7 +1465,7 @@ procedure:
     procedure Show_Unchecked_Union is
        V : Unchecked_State_Or_Integer (Use_Enum => True);
     begin
-       V := (Use_Enum => False, I => 10);
+       V := (Use_Enum => False, I => 3);
        Display_State_Value (V);
     end Show_Unchecked_Union;
 
