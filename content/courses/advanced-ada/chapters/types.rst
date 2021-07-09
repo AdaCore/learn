@@ -1227,14 +1227,166 @@ Record Representation and storage clauses
 Valid
 -----
 
-.. admonition:: Relevant topics
+When receiving data from external sources, we're subjected to problems such as
+transmission errors. If not handled properly, erroneous data can lead to major
+issues in an application.
 
-    - `The Valid Attribute <http://www.ada-auth.org/standards/2xrm/html/RM-13-9-2.html>`_
+One of those issues originates from the fact that transmission errors might
+lead to invalid information stored in memory. When proper checks are activate,
+using invalid information is detected at runtime and an exception is raised at
+this point, which might then be handled by the application.
 
-.. todo::
+Instead of relying on exception handling, however, we could instead ensure that
+the information we're about to use is valid. We can do this by using the
+:ada:`Valid` attribute. For example, if we have a variable :ada:`Var`, we can
+verify that the value stored in :ada:`Var` is valid by writing
+:ada:`Var'Valid`, which returns a :ada:`Boolean` value. Therefore, if the value
+of :ada:`Var` isn't valid, :ada:`Var'Valid` returns :ada:`False`, so we can
+have code that handles this situation before we actually make use of
+:ada:`Var`. In other words, instead of handling a potential exception in other
+parts of the application, we can proactively verify that input information is
+correct and avoid that an exception is raised.
 
-    Complete section!
+In the next example, we show an application that
 
+- generates a file containing mock-up data, and then
+
+- reads information from this file as state values.
+
+The mock-up data includes valid and invalid states.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Valid_States
+
+    procedure Create_Test_File (File_Name : String);
+
+    with Ada.Sequential_IO;
+
+    procedure Create_Test_File (File_Name : String) is
+       package Integer_Sequential_IO is new Ada.Sequential_IO (Integer);
+       use Integer_Sequential_IO;
+
+       F : File_Type;
+    begin
+       Create (F, Out_File, File_Name);
+       Write (F,  0);
+       Write (F,  1);
+       Write (F,  2);
+       Write (F,  10);
+       Write (F,  1);
+       Write (F,  20);
+       Close (F);
+    end Create_Test_File;
+
+    with Ada.Sequential_IO;
+
+    package States is
+
+       type State is (Off, On, Waiting)
+         with Size => Integer'Size;
+
+       for State use (Off => 0, On => 1, Waiting => 2);
+
+       package State_Sequential_IO is new Ada.Sequential_IO (State);
+
+       procedure Read_Display_States (File_Name : String);
+
+    end States;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body States is
+
+       procedure Read_Display_States (File_Name : String) is
+          use State_Sequential_IO;
+
+          F : State_Sequential_IO.File_Type;
+          S : State;
+
+          procedure Display_State (S : State) is
+          begin
+             --  Before displaying the value, check whether it's valid or not.
+             if S'Valid then
+                Put_Line (S'Image);
+             else
+                Put_Line ("Invalid value detected!");
+             end if;
+          end Display_State;
+
+       begin
+          Open (F, In_File, File_Name);
+
+          while not End_Of_File (F) loop
+             Read (F, S);
+             Display_State (S);
+          end loop;
+
+          Close (F);
+       end Read_Display_States;
+
+    end States;
+
+    with States;           use States;
+    with Create_Test_File;
+
+    procedure Show_States_From_File is
+       File_Name : constant String := "data.bin";
+    begin
+       Create_Test_File (File_Name);
+       Read_Display_States (File_Name);
+    end Show_States_From_File;
+
+.. only:: builder_html
+
+    When running the application, you'd see this output:
+
+    ::
+
+        OFF
+        ON
+        WAITING
+        Invalid value detected!
+        ON
+        Invalid value detected!
+
+Let's start our discussion on this example with the :ada:`States` package,
+which contains the declaration of the :ada:`State` type. This type is a simple
+enumeration containing three states: :ada:`Off`, :ada:`On` and :ada:`Waiting`.
+We're assigning specific integer values for this type by declaring an
+enumeration representation clause. Note that we're using the :ada:`Size` aspect
+to request that objects of this type have the same size as the :ada:`Integer`
+type. This becomes important later on when parsing data from the file.
+
+In the :ada:`Create_Test_File` procedure, we create a file containing integer
+values, which is parsed later by the :ada:`Read_Display_States` procedure. The
+:ada:`Create_Test_File` procedure doesn't contain any reference to the
+:ada:`State` type, so we're not constrained to just writing information that is
+valid for this type. On the contrary, this procedure makes use of the
+:ada:`Integer` type, so we can write any integer value to the file. We use this
+strategy to write both valid and invalid values of :ada:`State` to the file.
+This allows us to simulate an environment where transmission errors occur.
+
+We call the :ada:`Read_Display_States` procedure to read information from the
+file and display each state stored in the file. In the main loop of this
+procedure, we call :ada:`Read` to read a state from the file and store it in
+the :ada:`S` variable. We then call the nested :ada:`Display_State` procedure
+to display the actual state stored in :ada:`S`. The most important line of code
+in the :ada:`Display_State` procedure is the one that uses the :ada:`Valid`
+attribute:
+
+.. code-block:: ada
+
+    if S'Valid then
+
+In this line, we're verifying that the :ada:`S` variable contains a valid state
+before displaying the actual information from :ada:`S`. If the value stored in
+:ada:`S` isn't valid, we can handle the issue accordingly. In this case, we're
+simply displaying a message indicating that an invalid value was detected. If
+we didn't have this check, the :ada:`Constraint_Error` exception would be
+raised when trying to use invalid data stored in :ada:`S` |mdash| this would
+happen, for example, after reading the integer value 10 from the input file.
+
+In summary, using the :ada:`Valid` attribute is a good strategy we can employ
+when we know that information stored in memory might be corrupted.
 
 Unchecked Union
 ---------------
