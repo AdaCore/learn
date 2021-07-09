@@ -680,8 +680,10 @@ Initialization of Local Variables
 As part of flow analysis, GNATprove checks for the proper initialization of
 variables. Therefore, flow analysis needs to know which variables are
 initialized during the package's elaboration.
-..
-   TODO: What is the target audience of this book? If its people who have no
+
+.. todo::
+
+   What is the target audience of this book? If its people who have no
    Ada experience then they likely have no idea what elaboration is.
    One option is to add the prerequisite knowledge for this book in the intro,
    and link to the Introduction to Ada (which also does not discuss elaboration).
