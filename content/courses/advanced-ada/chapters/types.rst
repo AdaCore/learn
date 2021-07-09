@@ -1232,7 +1232,7 @@ transmission errors. If not handled properly, erroneous data can lead to major
 issues in an application.
 
 One of those issues originates from the fact that transmission errors might
-lead to invalid information stored in memory. When proper checks are activate,
+lead to invalid information stored in memory. When proper checks are active,
 using invalid information is detected at runtime and an exception is raised at
 this point, which might then be handled by the application.
 
