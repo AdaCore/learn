@@ -1471,9 +1471,10 @@ procedure:
 
 
 However, in general, you should avoid using the :ada:`Unchecked_Union` aspect
-due to the potential issues you might introduce into your application. In most
-cases, unless you're doing low-level programming or interfacing with C code,
-you won't really need this aspect.
+due to the potential issues you might introduce into your application. In the
+majority of the cases, you don't need it at all |mdash| except for special
+cases such as when interfacing with C code that makes use of union types or
+solving very specific problems when doing low-level programming.
 
 Variable control
 ----------------
