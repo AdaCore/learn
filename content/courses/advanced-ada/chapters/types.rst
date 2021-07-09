@@ -1256,6 +1256,7 @@ In the next example, we show an application that
 The mock-up data includes valid and invalid states.
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Valid_States
+    :class: ada-run
 
     procedure Create_Test_File (File_Name : String);
 
