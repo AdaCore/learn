@@ -3377,7 +3377,8 @@ For example:
 In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
 atomic type. Objects of this type |mdash| such as :ada:`R` in this example
 |mdash| are automatically atomic. This example also includes the declaration
-of the :ada:`Arr` array, which has atomic components.
+of the :ada:`Arr` array, which has atomic components |mdash| the atomicity of
+its components is indicated by using the :ada:`Atomic_Components` aspect.
 
 .. admonition:: Relevant topics
 
