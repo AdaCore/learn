@@ -3299,6 +3299,86 @@ declaration as well:
 
     Arr : array (1 .. 2) of Long_Float with Volatile;
 
+Atomic
+~~~~~~
+
+An atomic object is an object that only accepts atomic reads and updates. The
+Ada standard specifies that "for an atomic object (including an atomic
+component), all reads and updates of the object as a whole are indivisible."
+In this case, the compiler must generate Assembly code in such a way that reads
+and updates of an atomic object must be done in a single instruction, so that
+no other instruction could execute on that same object before the read or
+update completes.
+
+.. admonition:: In other contexts
+
+    Generally, we can say that operations are said to be atomic when they can
+    be completed without interruptions. This is an important requirement when
+    we're performing operations on objects in memory that are shared between
+    multiple processes.
+
+    This definition of atomicity above is used, for example, when implementing
+    databases. However, for this section, we're using the term "atomic"
+    differently. Here, it really means that reads and updates must be performed
+    with a single Assembly instruction.
+
+    For example, if we have a 32-bit object composed of four 8-bit bytes, the
+    compiler cannot generate code to read or update the object using four 8-bit
+    store / load instructions, or even two 16-bit store / load instructions.
+    In this case, in order to maintain atomicity, the compiler must generate
+    code using one 32-bit store / load instruction.
+
+    Because of this strict definition, we might have objects for which the
+    :ada:`Atomic` aspect cannot be specified. Lots of machines support integer
+    types that are larger than the native word-sized integer. For example, a
+    16-bit machine probably supports both 16-bit and 32-bit integers, but only
+    16-bit integer objects can be marked as atomic |mdash| or, more generally,
+    only objects that fit into at most 16 bits.
+
+Atomicity may be important, for example, when dealing with shared hardware
+registers. In fact, for certain architectures, the hardware may require that
+memory-mapped registers are handled atomically. In Ada, we can use the
+:ada:`Atomic` aspect to indicate that an object is atomic. This is how we can
+use the aspect to declare a shared hardware register:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Object
+
+    with System;
+
+    procedure Show_Shared_HW_Register is
+       R   : Integer
+         with Atomic, Address => System'To_Address (16#FFFF00A0#);
+    begin
+       null;
+    end Show_Shared_HW_Register;
+
+Note that the :ada:`Address` aspect allows for assigning a variable to a
+specific location in the memory. In this example, we're using this aspect to
+specify the address of the memory-mapped register.
+
+In addition to atomic objects, we can declare atomic types and atomic array
+components |mdash| similarly to what we've seen before for volatile objects.
+For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Types_Arrays
+
+    with System;
+
+    procedure Show_Shared_HW_Register is
+       type Atomic_Integer is new Integer with Atomic;
+
+       R : Atomic_Integer with Address => System'To_Address (16#FFFF00A0#);
+
+       Arr : array (1 .. 2) of Integer with Atomic_Components;
+    begin
+       null;
+    end Show_Shared_HW_Register;
+
+In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
+atomic type. Objects of this type |mdash| such as :ada:`R` in this example
+|mdash| are automatically atomic. This example also includes the declaration
+of the :ada:`Arr` array, which has atomic components.
+
 .. admonition:: Relevant topics
 
     - **Briefly** discuss :ada:`Atomic`, :ada:`Volatile`, :ada:`Independent`,
