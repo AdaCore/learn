@@ -3209,12 +3209,17 @@ Variable control
     - **Briefly** discuss :ada:`Atomic`, :ada:`Volatile`, :ada:`Independent`,
       :ada:`Full_Access_Only`, etc
     - `Shared Variable Control <http://www.ada-auth.org/standards/2xrm/html/RM-C-6.html>`_
-    - `The Package System.Atomic_Operations <http://www.ada-auth.org/standards/2xrm/html/RM-C-6-1.html>`_
 
 .. todo::
 
     Complete section!
 
+..
+    REMOVED FROM THIS SECTION, TO BE RE-EVALUATED:
+
+    .. admonition:: Relevant topics
+
+        - `The Package System.Atomic_Operations <http://www.ada-auth.org/standards/2xrm/html/RM-C-6-1.html>`_
 
 ..
     REMOVED! TO BE RE-EVALUATED IN 2022:
