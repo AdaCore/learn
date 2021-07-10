@@ -3356,11 +3356,10 @@ Note that the :ada:`Address` aspect allows for assigning a variable to a
 specific location in the memory. In this example, we're using this aspect to
 specify the address of the memory-mapped register.
 
-In addition to atomic objects, we can declare atomic types and atomic array
-components |mdash| similarly to what we've seen before for volatile objects.
-For example:
+In addition to atomic objects, we can declare atomic types |mdash| similarly to
+what we've seen before for volatile objects. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Types_Arrays
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Types
 
     with System;
 
@@ -3368,17 +3367,27 @@ For example:
        type Atomic_Integer is new Integer with Atomic;
 
        R : Atomic_Integer with Address => System'To_Address (16#FFFF00A0#);
-
-       Arr : array (1 .. 2) of Integer with Atomic_Components;
     begin
        null;
     end Show_Shared_HW_Register;
 
 In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
 atomic type. Objects of this type |mdash| such as :ada:`R` in this example
-|mdash| are automatically atomic. This example also includes the declaration
-of the :ada:`Arr` array, which has atomic components |mdash| the atomicity of
-its components is indicated by using the :ada:`Atomic_Components` aspect.
+|mdash| are automatically atomic.
+
+We can also declare atomic array components:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Array_Components
+
+    procedure Show_Shared_HW_Register is
+       Arr : array (1 .. 2) of Integer with Atomic_Components;
+    begin
+       null;
+    end Show_Shared_HW_Register;
+
+This example shows the declaration of the :ada:`Arr` array, which has atomic
+components |mdash| the atomicity of its components is indicated by the
+:ada:`Atomic_Components` aspect.
 
 .. admonition:: Relevant topics
 
