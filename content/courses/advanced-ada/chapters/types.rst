@@ -3201,8 +3201,8 @@ majority of the cases, you don't need it at all |mdash| except for special
 cases such as when interfacing with C code that makes use of union types or
 solving very specific problems when doing low-level programming.
 
-Variable control
-----------------
+Shared variable control
+-----------------------
 
 Ada has built-in support for handling both volatile and atomic data. Let's
 start by discussing volatile objects.
