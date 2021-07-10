@@ -3251,11 +3251,16 @@ declarations. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Types.Volatile_Type
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    package Shared_Var_Types is
 
-    procedure Show_Volatile_Type is
        type Volatile_Long_Float is new Long_Float with Volatile;
 
+    end Shared_Var_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Shared_Var_Types; use Shared_Var_Types;
+
+    procedure Show_Volatile_Type is
        Val : Volatile_Long_Float;
     begin
        Val := 0.0;
@@ -3266,9 +3271,10 @@ declarations. For example:
        Put_Line ("Val: " & Volatile_Long_Float'Image (Val));
     end Show_Volatile_Type;
 
-Here, we're declaring a new type :ada:`Volatile_Long_Float` based on the
-:ada:`Long_Float` type and using the :ada:`Volatile` aspect. Any object of this
-type is automatically volatile.
+Here, we're declaring a new type :ada:`Volatile_Long_Float` in the
+:ada:`Shared_Var_Types` package. This type is based on the :ada:`Long_Float`
+type and uses the :ada:`Volatile` aspect. Any object of this type is
+automatically volatile.
 
 In addition to that, we can declare components of an array to be volatile. In
 this case, we can use the :ada:`Volatile_Components` aspect in the array
@@ -3295,9 +3301,14 @@ declaration. For example:
 Note that it's possible to use the :ada:`Volatile` aspect for the array
 declaration as well:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Volatile_Array
 
-    Arr : array (1 .. 2) of Long_Float with Volatile;
+    package Shared_Var_Types is
+
+    private
+       Arr : array (1 .. 2) of Long_Float with Volatile;
+
+    end Shared_Var_Types;
 
 Atomic
 ~~~~~~
@@ -3345,12 +3356,13 @@ use the aspect to declare a shared hardware register:
 
     with System;
 
-    procedure Show_Shared_HW_Register is
+    package Shared_Var_Types is
+
+    private
        R   : Integer
          with Atomic, Address => System'To_Address (16#FFFF00A0#);
-    begin
-       null;
-    end Show_Shared_HW_Register;
+
+    end Shared_Var_Types;
 
 Note that the :ada:`Address` aspect allows for assigning a variable to a
 specific location in the memory. In this example, we're using this aspect to
@@ -3363,13 +3375,14 @@ what we've seen before for volatile objects. For example:
 
     with System;
 
-    procedure Show_Shared_HW_Register is
+    package Shared_Var_Types is
+
        type Atomic_Integer is new Integer with Atomic;
 
+    private
        R : Atomic_Integer with Address => System'To_Address (16#FFFF00A0#);
-    begin
-       null;
-    end Show_Shared_HW_Register;
+
+    end Shared_Var_Types;
 
 In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
 atomic type. Objects of this type |mdash| such as :ada:`R` in this example
@@ -3379,11 +3392,12 @@ We can also declare atomic array components:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Array_Components
 
-    procedure Show_Shared_HW_Register is
+    package Shared_Var_Types is
+
+    private
        Arr : array (1 .. 2) of Integer with Atomic_Components;
-    begin
-       null;
-    end Show_Shared_HW_Register;
+
+    end Shared_Var_Types;
 
 This example shows the declaration of the :ada:`Arr` array, which has atomic
 components |mdash| the atomicity of its components is indicated by the
