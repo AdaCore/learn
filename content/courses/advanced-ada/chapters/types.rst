@@ -3204,6 +3204,101 @@ solving very specific problems when doing low-level programming.
 Variable control
 ----------------
 
+Ada has built-in support for handling both volatile and atomic data. Let's
+start by discussing volatile objects.
+
+Volatile
+~~~~~~~~
+
+A `volatile <https://en.wikipedia.org/wiki/Volatile_(computer_programming)>`_
+object can be described as an object in memory whose value may change between
+two consecutive memory accesses of a process A |mdash| even if process A itself
+hasn't changed the value. This situation may arise when an object in memory is
+being shared by multiple threads. For example, a thread *B* may modify the
+value of that object between two read accesses of a thread *A*. Another typical
+example is the one of
+`memory-mapped I/O <https://en.wikipedia.org/wiki/Memory-mapped_I/O>`_, where
+the hardware might be constantly changing the value of an object in memory.
+
+Because the value of a volatile object may be constantly changing, a compiler
+cannot generate code that stores the value of that object into a register and
+use the value from the register in subsequent operations. Storing into a
+register is avoided because, if the value is stored there, it would be outdated
+if another process had changed the volatile object in the meantime. Instead,
+the compiler generates code in such a way that the process must read the value
+of the volatile object from memory for each access.
+
+Let's look at a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Volatile_Object_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Object is
+       Val : Long_Float with Volatile;
+    begin
+       Val := 0.0;
+       for I in 0 .. 999 loop
+          Val := Val + 2.0 * Long_Float (I);
+       end loop;
+
+       Put_Line ("Val: " & Long_Float'Image (Val));
+    end Show_Volatile_Object;
+
+In this example, :ada:`Val` has the :ada:`Volatile` aspect, which makes the
+object volatile. We can also use the :ada:`Volatile` aspect in type
+declarations. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Volatile_Type
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Type is
+       type Volatile_Long_Float is new Long_Float with Volatile;
+
+       Val : Volatile_Long_Float;
+    begin
+       Val := 0.0;
+       for I in 0 .. 999 loop
+          Val := Val + 2.0 * Volatile_Long_Float (I);
+       end loop;
+
+       Put_Line ("Val: " & Volatile_Long_Float'Image (Val));
+    end Show_Volatile_Type;
+
+Here, we're declaring a new type :ada:`Volatile_Long_Float` based on the
+:ada:`Long_Float` type and using the :ada:`Volatile` aspect. Any object of this
+type is automatically volatile.
+
+In addition to that, we can declare components of an array to be volatile. In
+this case, we can use the :ada:`Volatile_Components` aspect in the array
+declaration. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Volatile_Array_Components
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Array_Components is
+       Arr : array (1 .. 2) of Long_Float with Volatile_Components;
+    begin
+       Arr := (others => 0.0);
+
+       for I in 0 .. 999 loop
+          Arr (1) := Arr (1) +  2.0 * Long_Float (I);
+          Arr (2) := Arr (2) + 10.0 * Long_Float (I);
+       end loop;
+
+       Put_Line ("Arr (1): " & Long_Float'Image (Arr (1)));
+       Put_Line ("Arr (2): " & Long_Float'Image (Arr (2)));
+    end Show_Volatile_Array_Components;
+
+Note that it's possible to use the :ada:`Volatile` aspect for the array
+declaration as well:
+
+.. code-block:: ada
+
+    Arr : array (1 .. 2) of Long_Float with Volatile;
+
 .. admonition:: Relevant topics
 
     - **Briefly** discuss :ada:`Atomic`, :ada:`Volatile`, :ada:`Independent`,
