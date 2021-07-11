@@ -1,5 +1,5 @@
 Pygments==2.8.0
-Sphinx==3.5.4
+Sphinx==4.0.3
 ipython==5.7.0
 sphinx_rtd_theme==0.5.2
 sphinx-reredirects==0.0.1
