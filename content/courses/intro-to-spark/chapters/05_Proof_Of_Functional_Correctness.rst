@@ -702,6 +702,7 @@ help GNATprove by abstracting away assertions that would otherwise make its
 job more complex.
 
 .. todo::
+
     What is a Proof Context? I don't think this is defined anywhere.
 
 In the example below, calling :ada:`Prove_P` with :ada:`X` as an operand only
