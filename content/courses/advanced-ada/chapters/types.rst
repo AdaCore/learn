@@ -3310,6 +3310,198 @@ declaration as well:
 
     end Shared_Var_Types;
 
+Independent
+~~~~~~~~~~~
+
+When you write code to access a single object in memory, you might actually be
+accessing multiple objects at once. For example, when you declare types that
+make use of representation clauses |mdash| as we've seen in previous sections
+|mdash|, you might be accessing multiple objects that are grouped together in
+a single storage unit. For example, if you have components :ada:`A` and
+:ada:`B` stored in the same storage unit, you cannot update :ada:`A` without
+actually writing (the same value) to :ada:`B`. Those objects aren't
+independently addressable because, in order to access one of them, we have to
+actually address multiple objects at once.
+
+When an object is independently addressable, we call it an independent object.
+In this case, we make sure that, when accessing that object, we won't be
+simultaneously accessing another object. As a consequence, this feature limits
+the way objects can be represented in memory, as we'll see next.
+
+To indicate that an object is independent, we use the :ada:`Independent`
+aspect:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Object
+
+    package Shared_Var_Types is
+
+       I : Integer with Independent;
+
+    end Shared_Var_Types;
+
+Similarly, we can use this aspect when declaring types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Type
+
+    package Shared_Var_Types is
+
+       type Independent_Boolean is new Boolean with Independent;
+
+       type Flags is record
+          F1 : Independent_Boolean;
+          F2 : Independent_Boolean;
+       end record;
+
+    end Shared_Var_Types;
+
+In this example, we're declaring the :ada:`Independent_Boolean` type and using
+it in the declaration of the :ada:`Flag` record type. Let's now derive the
+:ada:`Flags` type and use a representation clause for the derived type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Type
+    :class: ada-expect-compile-error
+
+    package Shared_Var_Types.Representation is
+
+       type Rep_Flags is new Flags;
+
+       for Rep_Flags use record
+          F1 at 0 range 0 .. 0;
+          F2 at 0 range 1 .. 1;
+          --            ^  ERROR: start position of F2
+          --                      is wrong!
+          --    ^          ERROR: F1 and F2 share the
+          --                      same storage unit!
+       end record;
+
+    end Shared_Var_Types.Representation;
+
+As you can see when trying to compile this example, the representation clause
+that we used for :ada:`Rep_Flags` isn't following these limitations:
+
+1. The size of each independent component must be a multiple of a storage unit.
+
+2. The start position of each independent component must be a multiple of a
+   storage unit.
+
+For example, for architectures that have a storage unit of one byte |mdash|
+such as standard desktop computers |mdash|, this means that the size and the
+position of independent components must be a multiple of a byte. Let's correct
+the issues in the code above by:
+
+- setting the size of each independent component to correspond to
+  :ada:`Storage_Unit` |mdash| using a range between 0 and
+  :ada:`Storage_Unit - 1` |mdash|, and
+
+- setting the start position to zero.
+
+This is the corrected version:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Type
+
+    with System;
+
+    package Shared_Var_Types.Representation is
+
+       type Rep_Flags is new Flags;
+
+       for Rep_Flags use record
+          F1 at 0 range 0 .. System.Storage_Unit - 1;
+          F2 at 1 range 0 .. System.Storage_Unit - 1;
+       end record;
+
+    end Shared_Var_Types.Representation;
+
+Note that the representation that we're now using for :ada:`Rep_Flags` is most
+likely the representation that the compiler would have chosen for this data
+type. We could, however, have added an empty storage unit between :ada:`F1` and
+:ada:`F2` |mdash| by simply writing :ada:`F2 at 2 ...`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Type
+
+    with System;
+
+    package Shared_Var_Types.Representation is
+
+       type Rep_Flags is new Flags;
+
+       for Rep_Flags use record
+          F1 at 0 range 0 .. System.Storage_Unit - 1;
+          F2 at 2 range 0 .. System.Storage_Unit - 1;
+       end record;
+
+    end Shared_Var_Types.Representation;
+
+As long as we follow the rules for independent objects, we're still allowed to
+use representation clauses that don't correspond to the one that the compiler
+might select.
+
+For arrays, we can use the :ada:`Independent_Components` aspect:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Components
+
+    package Shared_Var_Types is
+
+       Flags : array (1 .. 8) of Boolean with Independent_Components;
+
+    end Shared_Var_Types;
+
+We've just seen in a previous example that some representation clauses might
+not work with objects and types that have the :ada:`Independent` aspect. The
+same restrictions apply when we use the :ada:`Independent_Components` aspect.
+For example, this aspect prevents that array components are packed when the
+:ada:`Pack` aspect is used. Let's discuss the following erroneous code example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Packed_Independent_Components
+    :class: ada-expect-compile-error
+
+    package Shared_Var_Types is
+
+       type Flags is array (Positive range <>) of Boolean
+         with Independent_Components, Pack;
+
+       F : Flags (1 .. 8) with Size => 8;
+
+    end Shared_Var_Types;
+
+As expected, this code doesn't compile. Here, we can have either independent
+components, or packed components. We cannot have both at the same time because
+packed components aren't independently addressable. The compiler warns us that
+the :ada:`Pack` aspect won't have any effect on independent components. When we
+use the :ada:`Size` aspect in the declaration of :ada:`F`, we confirm this
+limitation. If we remove the :ada:`Size` aspect, however, the code is compiled
+successfully because the compiler ignores the :ada:`Pack` aspect and allocates
+a larger size for :ada:`F`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Packed_Independent_Components
+
+    package Shared_Var_Types is
+
+       type Flags is array (Positive range <>) of Boolean
+         with Independent_Components, Pack;
+
+    end Shared_Var_Types;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with System;
+
+    with Shared_Var_Types; use Shared_Var_Types;
+
+    procedure Show_Flags_Size is
+       F : Flags (1 .. 8);
+    begin
+       Put_Line ("Flags'Size:      "
+                 & F'Size'Image & " bits");
+       Put_Line ("Flags (1)'Size:  "
+                 & F (1)'Size'Image & " bits");
+       Put_Line ("# storage units: "
+                 & Integer'Image (F'Size / System.Storage_Unit));
+    end Show_Flags_Size;
+
+As you can see in the output of the application, even though we specify the
+:ada:`Pack` aspect for the :ada:`Flags` type, the compiler allocates eight
+storage units, one per each component of the :ada:`F` array.
+
 Atomic
 ~~~~~~
 
