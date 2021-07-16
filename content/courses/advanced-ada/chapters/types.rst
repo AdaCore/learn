@@ -3310,6 +3310,12 @@ declaration as well:
 
     end Shared_Var_Types;
 
+Note that, if the :ada:`Volatile` aspect is specified for an object, then the
+:ada:`Volatile_Components` aspect is also specified automatically |mdash| if it
+makes sense in the context, of course. In the example above, even though
+:ada:`Volatile_Components` isn't specified in the declaration of the :ada:`Arr`
+array , it's automatically set as well.
+
 Independent
 ~~~~~~~~~~~
 
