@@ -3602,46 +3602,33 @@ components |mdash| the atomicity of its components is indicated by the
 :ada:`Atomic_Components` aspect.
 
 Note that if an object is atomic, it is also volatile and independent. In other
-words, this declaration:
+words, these type declarations are equivalent:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
 
     package Shared_Var_Types is
 
-       type Atomic_Integer is new Integer with Atomic;
+       type Atomic_Integer_1 is new Integer with Atomic;
 
-    end Shared_Var_Types;
-
-is equivalent to this one:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
-
-    package Shared_Var_Types is
-
-       type Atomic_Integer is new Integer
+       type Atomic_Integer_2 is new Integer
          with Atomic,
               Volatile,
               Independent;
 
     end Shared_Var_Types;
 
-A simular rule applies to components of an array. This declaration:
+A simular rule applies to components of an array. When we use the
+:ada:`Atomic_Components`, the following aspects are implied: :ada:`Volatile`,
+:ada:`Volatile_Components` and :ada:`Independent_Components`. For example,
+these array declarations are equivalent:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
 
     package Shared_Var_Types is
 
-       Arr : array (1 .. 2) of Integer with Atomic_Components;
+       Arr_1 : array (1 .. 2) of Integer with Atomic_Components;
 
-    end Shared_Var_Types;
-
-is equivalent to this one:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
-
-    package Shared_Var_Types is
-
-       Arr : array (1 .. 2) of Integer
+       Arr_2 : array (1 .. 2) of Integer
          with Atomic_Components,
               Volatile,
               Volatile_Components,
@@ -3649,9 +3636,6 @@ is equivalent to this one:
 
     end Shared_Var_Types;
 
-Those three aspects are implied when we use the :ada:`Atomic_Components`
-aspect: :ada:`Volatile`, :ada:`Volatile_Components` and
-:ada:`Independent_Components`.
 
 .. admonition:: Relevant topics
 
