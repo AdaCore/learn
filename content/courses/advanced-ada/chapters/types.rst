@@ -3595,6 +3595,58 @@ This example shows the declaration of the :ada:`Arr` array, which has atomic
 components |mdash| the atomicity of its components is indicated by the
 :ada:`Atomic_Components` aspect.
 
+Note that if an object is atomic, it is also volatile and independent. In other
+words, this declaration:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
+
+    package Shared_Var_Types is
+
+       type Atomic_Integer is new Integer with Atomic;
+
+    end Shared_Var_Types;
+
+is equivalent to this one:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
+
+    package Shared_Var_Types is
+
+       type Atomic_Integer is new Integer
+         with Atomic,
+              Volatile,
+              Independent;
+
+    end Shared_Var_Types;
+
+A simular rule applies to components of an array. This declaration:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
+
+    package Shared_Var_Types is
+
+       Arr : array (1 .. 2) of Integer with Atomic_Components;
+
+    end Shared_Var_Types;
+
+is equivalent to this one:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
+
+    package Shared_Var_Types is
+
+       Arr : array (1 .. 2) of Integer
+         with Atomic_Components,
+              Volatile,
+              Volatile_Components,
+              Independent_Components;
+
+    end Shared_Var_Types;
+
+Those three aspects are implied when we use the :ada:`Atomic_Components`
+aspect: :ada:`Volatile`, :ada:`Volatile_Components` and
+:ada:`Independent_Components`.
+
 .. admonition:: Relevant topics
 
     - **Briefly** discuss :ada:`Atomic`, :ada:`Volatile`, :ada:`Independent`,
