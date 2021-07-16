@@ -1212,16 +1212,434 @@ Data Representation
 Record Representation and storage clauses
 -----------------------------------------
 
-.. admonition:: Relevant topics
+In this section, we discuss how to use record representation clauses to specify
+how a record is represented in memory. Our goal is to provide a brief
+introduction into the topic. If you're interested in more details, you can find
+a thorough discussion about record representation clauses in the
+*Introduction to Embedded Systems Programming* course.
 
-    - **Briefly** discuss record representation and storage clauses
-    - `Record Representation Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-1.html>`_
-    - `Storage Place Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-2.html>`_
-    - `Mod Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-J-8.html>`_
+Let's start with the simple approach of declaring a record type without
+providing further information. In this case, we're basically asking the
+compiler to select a reasonable representation for that record in the memory of
+our target architecture.
 
-.. todo::
+Let's see a simple example:
 
-    Complete section!
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Rep_Clauses_1
+
+    package P is
+
+       type R is record
+          A : Integer;
+          B : Integer;
+       end record;
+
+    end P;
+
+Considering a typical 64-bit PC architecture with 8-bit storage units, and
+:ada:`Integer` defined as a 32-bit type, we get this memory representation:
+
+.. graphviz::
+
+    digraph foo {
+        "Record_R" [
+            label = "{ position | component } | { { 0 | 1 | 2 | 3 } | A } | { { 4 | 5 | 6 | 7 } | B }"
+            shape = "record"
+        ];
+   }
+
+Each storage unit is a position in memory. In the graph above, the numbers on
+the top (0, 1, 2, ...) represent those positions for record :ada:`R`.
+
+In addition, we can show the bits that are used for components :ada:`A` and
+:ada:`B`:
+
+.. graphviz::
+
+    digraph foo {
+        "Record_R" [
+            label = "{ position | bits | component } |  { { { 0 | #0 .. 7 } | { 1 | #8 .. #15 } | { 2 | #16 .. #23 } | { 3 | #24 .. #31 } } | A } | { { { 4 | #0 .. 7 } | { 5 | #8 .. #15 } | { 6 | #16 .. #23 } | { 7 | #24 .. #31 } } | B }"
+            shape = "record"
+        ];
+   }
+
+The memory representation we see in the graph above can be described in Ada
+using representation clauses, as you can see in the code starting at the
+:ada:`for R use record` line in the code example below |mdash| we'll discuss
+the syntax and further details right after this example.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Rep_Clauses_2
+
+    package P is
+
+       type R is record
+          A : Integer;
+          B : Integer;
+       end record;
+
+       --  Representation clause for record R:
+       for R use record
+          A at 0 range 0 .. 31;
+          --   ^ starting memory position
+          B at 4 range 0 .. 31;
+          --           ^ first bit .. last bit
+       end record;
+
+    end P;
+
+Here, we're specifying that the :ada:`A` component is stored in the bits #0 up
+to #31 starting at position #0. Note that the position itself doesn't represent
+an absolute address in the device's memory; instead, it's relative to the
+memory space reserved for that record. The :ada:`B` component has the same
+32-bit range, but starts at position #4.
+
+This is a generalized view of the syntax:
+
+.. code-block:: ada
+
+    for Record_Type use record
+       Component_Name at Start_Position range First_Bit .. Last_Bit;
+    end record;
+
+These are the elements we see above:
+
+- :ada:`Component_Name`: name of the component (from the record type
+  declaration);
+
+- :ada:`Start_Position`: start position |mdash| in storage units |mdash| of the
+  memory space reserved for that component;
+
+- :ada:`First_Bit`: first bit (in the start position) of the component;
+
+- :ada:`Last_Bit`: last bit of the component.
+
+Note that the last bit of a component might be in a different storage unit.
+Since the :ada:`Integer` type has a larger width (32 bits) than the storage
+unit (8 bits), components of that type span over multiple storage units.
+Therefore, in our example, the first bit of component :ada:`A` is at position
+#0, while the last bit is at position #3.
+
+Also note that the last eight bits of component :ada:`A` are bits #24 .. #31.
+If we think in terms of storage units, this corresponds to bits #0 .. #7 of
+position #3. However, when specifying the last bit in Ada, we always use the
+:ada:`First_Bit` value as a reference, not the position where those bits might
+end up. Therefore, we write :ada:`range 0 .. 31`, well knowing that those 32
+bits span over four storage units (positions #0 .. #3).
+
+Storage Place Attributes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can retrieve information about the start position, and the first and last
+bits of a component by using the storage place attributes:
+
+- :ada:`Position`, which retrieves the start position of a component;
+
+- :ada:`First_Bit`, which retrieves the first bit of a component;
+
+- :ada:`Last_Bit`, which retrieves the last bit of a component.
+
+Note, however, that these attributes can only be used with actual records, and
+not with record types.
+
+We can revisit the previous example and verify how the compiler represents the
+:ada:`R` type in memory:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Storage_Place_Attributes
+
+    package P is
+
+       type R is record
+          A : Integer;
+          B : Integer;
+       end record;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with System;
+
+    with P;           use P;
+
+    procedure Show_Storage is
+       R1 : R;
+    begin
+       Put_Line ("R'Size:              " & R'Size'Image);
+       Put_Line ("R'Object_Size:       " & R'Object_Size'Image);
+       New_Line;
+
+       Put_Line ("System.Storage_Unit: " & System.Storage_Unit'Image);
+       New_Line;
+
+       Put_Line ("R1.A'Position  : " & R1.A'Position'Image);
+       Put_Line ("R1.A'First_Bit : " & R1.A'First_Bit'Image);
+       Put_Line ("R1.A'Last_Bit  : " & R1.A'Last_Bit'Image);
+       New_Line;
+
+       Put_Line ("R1.B'Position  : " & R1.B'Position'Image);
+       Put_Line ("R1.B'First_Bit : " & R1.B'First_Bit'Image);
+       Put_Line ("R1.B'Last_Bit  : " & R1.B'Last_Bit'Image);
+    end Show_Storage;
+
+.. only:: builder_html
+
+    On a typical 64-bit PC architecture, you probably see this output:
+
+    ::
+
+        R'Size:               64
+        R'Object_Size:        64
+        System.Storage_Unit:  8
+
+        R1.A'Position  :  0
+        R1.A'First_Bit :  0
+        R1.A'Last_Bit  :  31
+
+        R1.B'Position  :  4
+        R1.B'First_Bit :  0
+        R1.B'Last_Bit  :  31
+
+First of all, we see that the size of the :ada:`R` type is 64 bits, which can
+be explained by those two 32-bit integer components. Then, we see that
+components :ada:`A` and :ada:`B` start at positions #0 and #4, and each one
+makes use of bits in the range from #0 to #31. This matches the graph we've
+seen above.
+
+Using Representation Clauses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use representation clauses to change the way the compiler handles
+memory for a record type. For example, let's say we want to have an empty
+storage unit between components :ada:`A` and :ada:`B`. We can use a
+representation clause where we specify that component :ada:`B` starts at
+position #5 instead of #4, leaving an empty byte after component :ada:`A` and
+before component :ada:`B`:
+
+.. graphviz::
+
+    digraph foo {
+        "Record_R" [
+            label = "{ position | bits | component } |  { { { 0 | #0 .. 7 } | { 1 | #8 .. #15 } | { 2 | #16 .. #23 } | { 3 | #24 .. #31 } } | A } | { 4 |  |  } | { { { 5 | #0 .. 7 } | { 6 | #8 .. #15 } | { 7 | #16 .. #23 } | { 8 | #24 .. #31 } } | B }"
+            shape = "record"
+        ];
+   }
+
+This is the code that implements that:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Rep_Clauses_Empty_Byte
+
+    package P is
+
+       type R is record
+          A : Integer;
+          B : Integer;
+       end record;
+
+       for R use record
+          A at 0 range 0 .. 31;
+          B at 5 range 0 .. 31;
+       end record;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with P;           use P;
+
+    procedure Show_Empty_Byte is
+    begin
+       Put_Line ("R'Size:        " & R'Size'Image);
+       Put_Line ("R'Object_Size: " & R'Object_Size'Image);
+    end Show_Empty_Byte;
+
+When running the application above, we see that, due to the extra byte in the
+record representation, the sizes increase. On a typical 64-bit PC,
+:ada:`R'Size` is now 76 bits, which reflects the additional eight bits that we
+introduced between components :ada:`A` and :ada:`B`. Depending on the target
+architecture, you may also see that :ada:`R'Object_Size` is now 96 bits, which
+is the size the compiler selects as the most appropriate for this record type.
+As we've mentioned in the previous section, we can use aspects to request a
+specific size to the compiler. In this case, we could use the
+:ada:`Object_Size` aspect:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Rep_Clauses_Empty_Byte
+
+    package P is
+
+       type R is record
+          A : Integer;
+          B : Integer;
+       end record
+         with Object_Size => 72;
+
+       for R use record
+          A at 0 range 0 .. 31;
+          B at 5 range 0 .. 31;
+       end record;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with P;           use P;
+
+    procedure Show_Empty_Byte is
+    begin
+       Put_Line ("R'Size:        " & R'Size'Image);
+       Put_Line ("R'Object_Size: " & R'Object_Size'Image);
+    end Show_Empty_Byte;
+
+If the code compiles, :ada:`R'Size` and :ada:`R'Object_Size` should now have
+the same value.
+
+Derived Types And Representation Clauses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In some cases, you might want to modify the memory representation of a record
+without impacting existing code. For example, you might want to use a record
+type that was declared in a package that you're not allowed to change. Also,
+you would like to modify its memory representation in your application. A nice
+strategy is to derive a type and use a representation clause for the derived
+type.
+
+We can apply this strategy on our previous example. Let's say we would like to
+use record type :ada:`R` from package :ada:`P` in our application, but we're
+not allowed to modify package :ada:`P` |mdash| or the record type, for that
+matter. In this case, we could simply derive :ada:`R` as :ada:`R_New` and use a
+representation clause for :ada:`R_New`. This is exactly what we do in the
+specification of the child package :ada:`P.Rep`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Derived_Rep_Clauses_Empty_Byte
+
+    package P is
+
+       type R is record
+          A : Integer;
+          B : Integer;
+       end record;
+
+    end P;
+
+    package P.Rep is
+
+       type R_New is new R
+         with Object_Size => 72;
+
+       for R_New use record
+          A at 0 range 0 .. 31;
+          B at 5 range 0 .. 31;
+       end record;
+
+    end P.Rep;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with P;           use P;
+    with P.Rep;       use P.Rep;
+
+    procedure Show_Empty_Byte is
+    begin
+       Put_Line ("R'Size:        " & R'Size'Image);
+       Put_Line ("R'Object_Size: " & R'Object_Size'Image);
+
+       Put_Line ("R_New'Size:        " & R_New'Size'Image);
+       Put_Line ("R_New'Object_Size: " & R_New'Object_Size'Image);
+    end Show_Empty_Byte;
+
+When running this example, we see that the :ada:`R` type retains the memory
+representation selected by the compiler for the target architecture, while the
+:ada:`R_New` has the memory representation that we specified.
+
+Representation on Bit Level
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A very common application of representation clauses is to specify individual
+bits of a record. This is particularly useful, for example, when mapping
+registers or implementing protocols.
+
+Let's consider the following fictitious register as an example:
+
+.. graphviz::
+
+    digraph foo {
+        "Record_R" [
+            label = "{ bit | component } | { { 0 | 1 }  | S } | { { 2 | 3 } | (reserved) } | { 4 | Error } | { { 5 | 6 | 7 } | V1 }"
+            shape = "record"
+        ];
+   }
+
+Here, :ada:`S` is the current status, :ada:`Error` is a flag, and :ada:`V1`
+contains a value. Due to the fact that we can use representation clauses to
+describe individual bits of a register as records, the implementation becomes
+as simple as this:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Rep_Clauses_Simple_Reg
+
+    package P is
+
+      type Status is (Ready, Waiting, Processing, Done);
+      type UInt_3 is range 0 .. 2 ** 3 - 1;
+
+       type Simple_Reg is record
+          S     : Status;
+          Error : Boolean;
+          V1    : UInt_3;
+       end record;
+
+       for Simple_Reg use record
+          S     at 0 range 0 .. 1;
+          --  Bit #2 and 3: reserved!
+          Error at 0 range 4 .. 4;
+          V1    at 0 range 5 .. 7;
+       end record;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with P;           use P;
+
+    procedure Show_Simple_Reg is
+    begin
+       Put_Line ("Simple_Reg'Size:        " & Simple_Reg'Size'Image);
+       Put_Line ("Simple_Reg'Object_Size: " & Simple_Reg'Object_Size'Image);
+    end Show_Simple_Reg;
+
+As we can see in the declaration of the :ada:`Simple_Reg` type, each component
+represents a field from our register, and it has a fixed location (which
+matches the register representation we see in the graph above). Any operation
+on the register is as simple as accessing the record component. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Rep_Clauses_Simple_Reg
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with P;           use P;
+
+    procedure Show_Simple_Reg is
+       Default : constant Simple_Reg := (S => Ready, Error => False, V1 => 0);
+
+       R : Simple_Reg := Default;
+    begin
+       Put_Line ("R.S:  " & R.S'Image);
+
+       R.V1 := 4;
+
+       Put_Line ("R.V1: " & R.V1'Image);
+    end Show_Simple_Reg;
+
+As we can see in the example, to retrieve the current status of the register,
+we just have to write :ada:`R.S`. To update the *V1* field of the register with
+the value 4, we just have to write :ada:`R.V1 := 4`. No extra code |mdash|
+such as bit-masking or bit-shifting |mdash| is needed here.
+
+.. admonition:: In other languages
+
+    Some programming languages require that developers use complicated,
+    error-prone approaches |mdash| which may include manually bit-shifting and
+    bit-masking variables |mdash| to retrieve information from or store
+    information to individual bits or registers. In Ada, however, this is
+    efficiently handled by the compiler, so that developers only need to
+    correctly describe the register mapping using representation clauses.
 
 
 Valid
