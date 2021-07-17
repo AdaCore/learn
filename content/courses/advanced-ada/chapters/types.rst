@@ -3636,17 +3636,6 @@ these array declarations are equivalent:
 
     end Shared_Var_Types;
 
-
-.. admonition:: Relevant topics
-
-    - **Briefly** discuss :ada:`Atomic`, :ada:`Volatile`, :ada:`Independent`,
-      :ada:`Full_Access_Only`, etc
-    - `Shared Variable Control <http://www.ada-auth.org/standards/2xrm/html/RM-C-6.html>`_
-
-.. todo::
-
-    Complete section!
-
 ..
     REMOVED FROM THIS SECTION, TO BE RE-EVALUATED:
 
