@@ -311,9 +311,12 @@ def write_project_file(main_file, compiler_switches, spark_mode):
             line_str = f'for Switches ("Ada") use ({switches_str});'
             main_gpr = main_gpr.replace(placeholder_str, line_str)
 
-        mains = [main_file]
-        main_list = [f'"{x}"' for x in mains]
-        to_insert = f"for Main use ({', '.join(main_list)});"
+        if main_file is not None:
+            mains = [main_file]
+            main_list = [f'"{x}"' for x in mains]
+            to_insert = f"for Main use ({', '.join(main_list)});"
+        else:
+            to_insert = f""
         main_gpr = main_gpr.replace("--MAIN_PLACEHOLDER--", to_insert)
 
         gpr_file.write(main_gpr)
