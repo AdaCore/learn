@@ -491,6 +491,12 @@ def analyze_file(rst_file):
             prove_error = False
             is_prove_error_class = False
 
+            run_block = (('ada-run' in block.classes
+                          or 'ada-run-expect-failure' in block.classes
+                          or 'run' in block.buttons)
+                         and not 'ada-norun' in block.classes)
+            compile_block = run_block or ('compile' in block.buttons)
+
             prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",
                              "prove_report_all"]
 
@@ -510,11 +516,8 @@ def analyze_file(rst_file):
 
                 return project_block_dir
 
-            if (('ada-run' in block.classes
-                 or 'ada-run-expect-failure' in block.classes
-                 or 'run' in block.buttons)
-                and not 'ada-norun' in block.classes
-            ):
+            if compile_block:
+
                 main_file = get_main_filename(block)
 
                 project_block_dir = make_project_block_dir()
@@ -553,7 +556,7 @@ def analyze_file(rst_file):
                     with open(project_block_dir + "/build.log", u"w") as logfile:
                         logfile.write(out)
 
-                if not compile_error and not has_error:
+                if not compile_error and not has_error and run_block:
                     if block.language == "ada":
                         try:
                             out = run("./{}".format(P.splitext(main_file)[0]))
@@ -599,9 +602,7 @@ def analyze_file(rst_file):
                         with open(project_block_dir + "/run.log", u"w") as logfile:
                             logfile.write(out)
 
-            if 'compile' in block.buttons:
-
-                project_block_dir = make_project_block_dir()
+            if False:
 
                 for source_file in source_files:
                     if block.language == "ada":
