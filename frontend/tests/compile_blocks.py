@@ -522,11 +522,19 @@ def analyze_file(rst_file):
 
                 project_block_dir = make_project_block_dir()
 
+                main_file = None
+                if run_block:
+                    main_file = get_main_filename(block)
+                spark_mode = False
+                project_filename = write_project_file(main_file,
+                                                      block.compiler_switches,
+                                                      spark_mode)
+
                 if block.language == "ada":
 
                     try:
-                        out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f",
-                                  main_file)
+                        run("gprclean", "-P", project_filename)
+                        out = run("gprbuild", "-q", "-P", project_filename)
                     except S.CalledProcessError as e:
                         if 'ada-expect-compile-error' in block.classes:
                             compile_error = True
