@@ -3652,6 +3652,7 @@ these array declarations are equivalent:
 
     .. admonition:: Relevant topics
 
+        - **Briefly** discuss :ada:`Full_Access_Only`
         - `The Package System.Atomic_Operations <http://www.ada-auth.org/standards/2xrm/html/RM-C-6-1.html>`_
 
 ..
