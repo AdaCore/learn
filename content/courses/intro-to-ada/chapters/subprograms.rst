@@ -44,7 +44,8 @@ section at all, for example:
 
 Here's another variation on the previous example:
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
+.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
+    :class: ada-syntax-only
 
     function Increment_By
       (I    : Integer := 0;

@@ -73,7 +73,8 @@ in the section on :ref:`enumeration types <EnumTypes>`.
 Let's take a simple example: it is possible in Ada to have functions that have
 the same name, but different types for their parameters.
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+    :class: ada-syntax-only
 
     package Pkg is
        function F (A : Integer) return Integer;
@@ -87,7 +88,8 @@ overloading.
 One of the novel aspects of Ada's overloading facility is the ability to
 resolve overloading based on the return type of a function.
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+    :class: ada-syntax-only
 
     package Pkg is
        type SSID is new Integer;
@@ -116,8 +118,8 @@ However, sometimes an ambiguity makes it impossible to resolve which
 declaration of an overloaded name a given occurrence of the name refers to.
 This is where a qualified expression becomes useful.
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Overloading_Error
-    :class: ada-expect-compile-error
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading_Error
+    :class: ada-syntax-only, ada-expect-compile-error
 
     package Pkg is
        type SSID is new Integer;
@@ -448,7 +450,8 @@ known at compile time. This is illustrated in the example below:
 .. ?? an elaboration pragma is used.
 .. ?? Consider simplifying or restructuring the example to avoid this issue
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record
+    :class: ada-syntax-only
 
     package Runtime_Length is
        function Compute_Max_Len return Natural;

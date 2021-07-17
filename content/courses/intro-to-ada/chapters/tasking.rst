@@ -123,7 +123,8 @@ Synchronization also occurs if we move the task to a separate package. In
 the example below, we declare a task :ada:`T` in the package
 :ada:`Simple_Sync_Pkg`.
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
+.. code:: ada no_button project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
+    :class: ada-syntax-only
 
     package Simple_Sync_Pkg is
        task T;
