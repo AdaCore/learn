@@ -491,6 +491,8 @@ def analyze_file(rst_file):
             prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",
                              "prove_report_all"]
 
+            prove_block = any(b in prove_buttons for b in block.buttons)
+
             def get_main_filename(block):
                 if block.main_file is not None:
                     main_file = block.main_file
@@ -628,7 +630,7 @@ def analyze_file(rst_file):
                         with open(project_block_dir + "/compile.log", u"w+") as logfile:
                             logfile.write(out)
 
-            if any(b in prove_buttons for b in block.buttons):
+            if prove_block:
 
                 if block.language == "ada":
                     project_block_dir = make_project_block_dir()
@@ -689,11 +691,11 @@ def analyze_file(rst_file):
                     has_error = True
 
             if 'ada-expect-prove-error' in block.classes:
-                if not any(b in prove_buttons for b in block.buttons):
+                if not prove_block:
                     print_error(loc, "Expected prove button, got none!")
                     has_error = True
 
-            if any(b in prove_buttons for b in block.buttons):
+            if prove_block:
                 if is_prove_error_class and not prove_error:
                     print_error(loc, "Expected prove error, got none!")
                     has_error = True
