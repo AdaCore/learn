@@ -23,11 +23,8 @@ This example shows the declaration and definition of a function:
     --  We declare (but don't define) a function with one
     --  parameter, returning an integer value
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Increment
-
-    --  We define the Increment function
-
     function Increment (I : Integer) return Integer is
+       --  We define the Increment function
     begin
         return I + 1;
     end Increment;

@@ -362,7 +362,7 @@ how the :ada:`delay until` statement circumvents the problem. But before we
 do that, we look at a package containing a procedure allowing us to measure
 the elapsed time (:ada:`Show_Elapsed_Time`) and a dummy
 :ada:`Computational_Intensive_App` procedure which is simulated by using a
-simple delay. This is the package specification:
+simple delay. This is the complete package:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Tasking.Show_Time
 
@@ -383,10 +383,6 @@ simple delay. This is the package specification:
        function Get_Start_Time return Time is (Start_Time);
 
     end Delay_Aux_Pkg;
-
-And this is the package body:
-
-.. code:: ada compile_button project=Courses.Intro_To_Ada.Tasking.Show_Time
 
     with Ada.Text_IO; use Ada.Text_IO;
 
