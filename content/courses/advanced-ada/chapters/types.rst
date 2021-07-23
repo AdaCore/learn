@@ -3,6 +3,19 @@ Types
 
 .. include:: ../../global.txt
 
+Scalar Types
+------------
+
+.. admonition:: Relevant topics
+
+    - Include: :ada:`T'Base`, :ada:`S'Width`, :ada:`S'Value`
+    - `Scalar Types <http://www.ada-auth.org/standards/2xrm/html/RM-3-5.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Enumerations
 ------------
 
@@ -1190,24 +1203,844 @@ User-defined literals
 Data Representation
 -------------------
 
-.. note::
-
-    This section was originally written by Robert Dewar and published as
-    `Gem #27: Changing Data Representation <https://www.adacore.com/gems/gem-27>`_
-    and `Gem #28 <https://www.adacore.com/gems/gem-28>`_.
-
-.. admonition:: Relevant topics
-
-    - Include: ``Object_Size``, ``Value_Size``, ``Alignment``, ``T'Base``
-    - `Operational and Representation Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-13-3.html>`_
-    - `Packed Types <http://www.ada-auth.org/standards/2xrm/html/RM-13-2.html>`_
-    - `Bit Ordering <http://www.ada-auth.org/standards/2xrm/html/RM-13-5-3.html>`_
-    - `At Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-J-7.html>`_
+This section provides a glimpse on attributes and aspects used for data
+representation. They are usually used for embedded applications because of
+strict requirements that are often found there. Therefore, unless you have
+very specific requirements for your application, in most cases, you won't need
+them. However, you should at least have a rudimentary understanding of them.
+To read a thorough overview on this topic, please refer to the
+*Introduction to Embedded Systems Programming* course.
 
 .. todo::
 
-    Complete section!
+    Add link once available:
 
+    ``Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/low_level_programming>``
+
+Sizes
+~~~~~
+
+Ada offers multiple attributes to retrieve the size of a type or an object:
+
++-----------------------+-----------------------------------------------------+
+| Attribute             | Description                                         |
++=======================+=====================================================+
+| :ada:`Size`           | Size of the representation of a subtype or an       |
+|                       | object.                                             |
++-----------------------+-----------------------------------------------------+
+| :ada:`Object_Size`    | Size of a component or an aliased object.           |
+|                       |                                                     |
++-----------------------+-----------------------------------------------------+
+| :ada:`Component_Size` | Size of a component of an array.                    |
++-----------------------+-----------------------------------------------------+
+| :ada:`Storage_Size`   | Number of storage elements reserved for an access   |
+|                       | type or a task object.                              |
++-----------------------+-----------------------------------------------------+
+
+For the first three attributes, the size is measured in bits. In the case of
+:ada:`Storage_Size`, the size is measured in storage elements. Note that the
+size information depends your target architecture. We'll discuss some examples
+to better understand the differences among those attributes.
+
+Size attribute and aspect
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let's start with a code example using the :ada:`Size` attribute:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type UInt_7_S32 is range 0 .. 127
+         with Size => 32;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+       V1 : UInt_7;
+       V2 : UInt_7_S32;
+    begin
+       Put_Line ("UInt_7'Size:            " & UInt_7'Size'Image);
+       Put_Line ("UInt_7'Object_Size:     " & UInt_7'Object_Size'Image);
+       Put_Line ("V1'Size:                " & V1'Size'Image);
+       New_Line;
+
+       Put_Line ("UInt_7_S32'Size:        " & UInt_7_S32'Size'Image);
+       Put_Line ("UInt_7_S32'Object_Size: " & UInt_7_S32'Object_Size'Image);
+       Put_Line ("V2'Size:                " & V2'Size'Image);
+    end Show_Sizes;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7'Size:             7
+    UInt_7'Object_Size:      8
+    V1'Size:                 8
+
+    UInt_7_S32'Size:         32
+    UInt_7_S32'Object_Size:  32
+    V2'Size:                 32
+
+When we use the :ada:`Size` attribute for a type :ada:`T`, we're retrieving the
+minimum number of bits necessary to represent objects of that type. Note that
+this is not the same as the actual size of an object of type :ada:`T` because
+the compiler will select an object size that is appropriate for the target
+architecture.
+
+In the example above, the size of the :ada:`UInt_7` is 7 bits, while the most
+appropriate size to store objects of this type in the memory of our target
+architecture is 8 bits. To be more specific, the range of :ada:`UInt_7`
+(0 .. 127) can be perfectly represented in 7 bits. However, most target
+architectures don't offer 7-bit registers or 7-bit memory storage, so 8 bits is
+the most appropriate size in this case.
+
+We can retrieve the size of an object of type :ada:`T` by using the
+:ada:`Object_Size`. Alternatively, we can use the :ada:`Size` attribute
+directly on objects of type :ada:`T` to retrieve their actual size |mdash| in
+our example, we write :ada:`V1'Size` to retrieve the size of :ada:`V1`.
+
+In the example above, we've used both the :ada:`Size` attribute (for example,
+:ada:`UInt_7'Size`) and the :ada:`Size` aspect (:ada:`with Size => 32`).
+While the size attribute is a function that returns the size, the size aspect
+is a request to the compiler to verify that the expected size can be used on
+the target platform. You can think of this attribute as a dialog between the
+developer and the compiler:
+
+    (Developer) "I think that :ada:`UInt_7_S32` should be stored using at
+    least 32 bits. Do you agree?"
+
+    (Ada compiler) "For the target platform that you selected, I can confirm
+    that this is indeed the case."
+
+Depending on the target platform, however, the conversation might play out like
+this:
+
+    (Developer) "I think that :ada:`UInt_7_S32` should be stored using at
+    least 32 bits. Do you agree?"
+
+    (Ada compiler) "For the target platform that you selected, I cannot
+    possibly do it! COMPILATION ERROR!"
+
+Component size
+^^^^^^^^^^^^^^
+
+Let's continue our discussion on sizes with an example that makes use of the
+:ada:`Component_Size` attribute:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type UInt_7_Array is array (Positive range <>) of UInt_7;
+
+       type UInt_7_Array_Comp_32 is array (Positive range <>) of UInt_7
+         with Component_Size => 32;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+       Arr_1 : UInt_7_Array (1 .. 20);
+       Arr_2 : UInt_7_Array_Comp_32 (1 .. 20);
+    begin
+       Put_Line ("UInt_7_Array'Size:                   "
+                 & UInt_7_Array'Size'Image);
+       Put_Line ("UInt_7_Array'Object_Size:            "
+                 & UInt_7_Array'Object_Size'Image);
+       Put_Line ("UInt_7_Array'Component_Size:         "
+                 & UInt_7_Array'Component_Size'Image);
+       Put_Line ("Arr_1'Component_Size:                "
+                 & Arr_1'Component_Size'Image);
+       Put_Line ("Arr_1'Size:                          "
+                 & Arr_1'Size'Image);
+       New_Line;
+
+       Put_Line ("UInt_7_Array_Comp_32'Object_Size:    "
+                 & UInt_7_Array_Comp_32'Size'Image);
+       Put_Line ("UInt_7_Array_Comp_32'Object_Size:    "
+                 & UInt_7_Array_Comp_32'Object_Size'Image);
+       Put_Line ("UInt_7_Array_Comp_32'Component_Size: "
+                 & UInt_7_Array_Comp_32'Component_Size'Image);
+       Put_Line ("Arr_2'Component_Size:                "
+                 & Arr_2'Component_Size'Image);
+       Put_Line ("Arr_2'Size:                          "
+                 & Arr_2'Size'Image);
+       New_Line;
+    end Show_Sizes;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7_Array'Size:                    17179869176
+    UInt_7_Array'Object_Size:             17179869176
+    UInt_7_Array'Component_Size:          8
+    Arr_1'Component_Size:                 8
+    Arr_1'Size:                           160
+
+    UInt_7_Array_Comp_32'Size:            68719476704
+    UInt_7_Array_Comp_32'Object_Size:     68719476704
+    UInt_7_Array_Comp_32'Component_Size:  32
+    Arr_2'Component_Size:                 32
+    Arr_2'Size:                           640
+
+Here, the value we get for :ada:`Component_Size` of the :ada:`UInt_7_Array`
+type is 8 bits, which matches the :ada:`UInt_7'Object_Size` |mdash| as we've
+seen in the previous subsection. In general, we expect the component size to
+match the object size of the underlying type.
+
+However, we might have component sizes that aren't equal to the object size of
+the component's type. For example, in the declaration of the
+:ada:`UInt_7_Array_Comp_32` type, we're using the :ada:`Component_Size` aspect
+to query whether the size of each component can be 32 bits:
+
+.. code-block:: ada
+
+    type UInt_7_Array_Comp_32 is array (Positive range <>) of UInt_7
+      with Component_Size => 32;
+
+If the code compiles, we see this value when we use the :ada:`Component_Size`
+attribute. In this case, even though :ada:`UInt_7'Object_Size` is 8 bits, the
+component size of the array type (:ada:`UInt_7_Array_Comp_32'Component_Size`)
+is 32 bits.
+
+Note that we can use the :ada:`Component_Size` attribute with data types, as
+well as with actual objects of that data type. Therefore, we can write
+:ada:`UInt_7_Array'Component_Size` and :ada:`Arr_1'Component_Size`, for
+example.
+
+This big number (17179869176 bits) for :ada:`UInt_7_Array'Size` and
+:ada:`UInt_7_Array'Object_Size` might be surprising for you. This is due to the
+fact that Ada is reporting the size of the :ada:`UInt_7_Array` type for the
+case when the complete range is used. Considering that we specified a positive
+range in the declaration of the :ada:`UInt_7_Array` type, the maximum length
+on this machine is :math:`2^{31} -1`. The object size of an array type is
+calculated by multiplying the maximum length by the component size. Therefore,
+the object size of the :ada:`UInt_7_Array` type corresponds to the
+multiplication of :math:`2^{31} -1` components (maximum length) by 8 bits
+(component size).
+
+Storage size
+^^^^^^^^^^^^
+
+To complete our discussion on sizes, let's look at this example of storage
+sizes:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type UInt_7_Access is access UInt_7;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with System;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+       AV1, AV2 : UInt_7_Access;
+    begin
+       Put_Line ("UInt_7_Access'Storage_Size:          "
+                 & UInt_7_Access'Storage_Size'Image);
+       Put_Line ("UInt_7_Access'Storage_Size (bits):   "
+                 & Integer'Image (UInt_7_Access'Storage_Size
+                   * System.Storage_Unit));
+
+       Put_Line ("UInt_7'Size:               " & UInt_7'Size'Image);
+       Put_Line ("UInt_7_Access'Size:        " & UInt_7_Access'Size'Image);
+       Put_Line ("UInt_7_Access'Object_Size: " & UInt_7_Access'Object_Size'Image);
+       Put_Line ("AV1'Size:                  " & AV1'Size'Image);
+       New_Line;
+
+       Put_Line ("Allocating AV1...");
+       AV1 := new UInt_7;
+       Put_Line ("Allocating AV2...");
+       AV2 := new UInt_7;
+       New_Line;
+
+       Put_Line ("AV1.all'Size:              " & AV1.all'Size'Image);
+       New_Line;
+    end Show_Sizes;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7_Access'Storage_Size:           0
+    UInt_7_Access'Storage_Size (bits):    0
+
+    UInt_7'Size:                7
+    UInt_7_Access'Size:         64
+    UInt_7_Access'Object_Size:  64
+    AV1'Size:                   64
+
+    Allocating AV1...
+    Allocating AV2...
+
+    AV1.all'Size:               8
+
+As we've mentioned earlier on, :ada:`Storage_Size` corresponds to the number of
+storage elements reserved for an access type or a task object. In this case,
+we see that the storage size of the :ada:`UInt_7_Access` type is zero. This is
+because we haven't indicated that memory should be reserved for this data type.
+Thus, the compiler doesn't reserve memory and simply sets the size to zero.
+
+Because :ada:`Storage_Size` gives us the number of storage elements, we have
+to multiply this value by :ada:`System.Storage_Unit` |mdash| which gives
+us the size (in bits) of a single storage element |mdash| to get the total
+storage size in bits. (In this particular example, however, the multiplication
+doesn't make any difference, as the number of storage elements is zero.)
+
+Note that the size of our original data type :ada:`UInt_7` is 7 bits, while the
+size of its corresponding access type :ada:`UInt_7_Access` (and the access
+object :ada:`AV1`) is 64 bits. This is due to the fact that the access type
+doesn't contain an object, but rather memory information about an object. You
+can retrieve the size of an object allocated via :ada:`new` by first
+dereferencing it |mdash| in our example, we do this by writing
+:ada:`AV1.all'Size`.
+
+Now, let's use the :ada:`Storage_Size` aspect to actually reserve memory for
+this data type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Sizes
+    :class: ada-run-expect-failure
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type UInt_7_Reserved_Access is access UInt_7
+         with Storage_Size => 8;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with System;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+       RAV1, RAV2 : UInt_7_Reserved_Access;
+    begin
+       Put_Line ("UInt_7_Reserved_Access'Storage_Size:        "
+                 & UInt_7_Reserved_Access'Storage_Size'Image);
+       Put_Line ("UInt_7_Reserved_Access'Storage_Size (bits): "
+                 & Integer'Image (UInt_7_Reserved_Access'Storage_Size
+                   * System.Storage_Unit));
+
+       Put_Line ("UInt_7_Reserved_Access'Size:        "
+                 & UInt_7_Reserved_Access'Size'Image);
+       Put_Line ("UInt_7_Reserved_Access'Object_Size: "
+                 & UInt_7_Reserved_Access'Object_Size'Image);
+       Put_Line ("RAV1'Size:                          " & RAV1'Size'Image);
+       New_Line;
+
+       Put_Line ("Allocating RAV1...");
+       RAV1 := new UInt_7;
+       Put_Line ("Allocating RAV2...");
+       RAV2 := new UInt_7;
+       New_Line;
+    end Show_Sizes;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7_Reserved_Access'Storage_Size:         8
+    UInt_7_Reserved_Access'Storage_Size (bits):  64
+
+    UInt_7_Reserved_Access'Size:         64
+    UInt_7_Reserved_Access'Object_Size:  64
+    RAV1'Size:                           64
+
+    Allocating RAV1...
+    Allocating RAV2...
+
+    raised STORAGE_ERROR : s-poosiz.adb:108 explicit raise
+
+In this case, we're reserving 8 storage elements in the declaration of
+:ada:`UInt_7_Reserved_Access`.
+
+.. code-block:: ada
+
+    type UInt_7_Reserved_Access is access UInt_7
+      with Storage_Size => 8;
+
+Since each storage unit corresponds to one byte (8 bits) in this architecture,
+we're reserving a maximum of 64 bits for the :ada:`UInt_7_Reserved_Access`
+type.
+
+This example raises an exception at runtime |mdash| a storage error, to be more
+specific. This is because the maximum reserved size is 64 bits, and the size of
+a single access object is 64 bits as well. Therefore, after the first
+allocation, the reserved storage space is already consumed, so we cannot
+allocate a second access object.
+
+This behavior might be quite limiting in many cases. However, for certain
+applications where memory is very constrained, this might be exactly what we
+want to see. For example, having an exception being raised when the allocated
+memory for this data type has reached its limit might allow the application to
+have enough memory to at least handle the exception gracefully.
+
+Alignment
+~~~~~~~~~
+
+For many algorithms, it's important to ensure that we're using the appropriate
+alignment. This can be done by using the :ada:`Alignment` attribute and the
+:ada:`Alignment` aspect. Let's look at this example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Alignment
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type Aligned_UInt_7 is new UInt_7
+         with Alignment => 4;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Alignment is
+       V         : constant UInt_7         := 0;
+       Aligned_V : constant Aligned_UInt_7 := 0;
+    begin
+       Put_Line ("UInt_7'Alignment:           " & UInt_7'Alignment'Image);
+       Put_Line ("UInt_7'Size:                " & UInt_7'Size'Image);
+       Put_Line ("UInt_7'Object_Size:         " & UInt_7'Object_Size'Image);
+       Put_Line ("V'Alignment:                " & V'Alignment'Image);
+       Put_Line ("V'Size:                     " & V'Size'Image);
+       New_Line;
+
+       Put_Line ("Aligned_UInt_7'Alignment:   " & Aligned_UInt_7'Alignment'Image);
+       Put_Line ("Aligned_UInt_7'Size:        " & Aligned_UInt_7'Size'Image);
+       Put_Line ("Aligned_UInt_7'Object_Size: "
+                 & Aligned_UInt_7'Object_Size'Image);
+       Put_Line ("Aligned_V'Alignment:        " & Aligned_V'Alignment'Image);
+       Put_Line ("Aligned_V'Size:             " & Aligned_V'Size'Image);
+       New_Line;
+    end Show_Alignment;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    UInt_7'Alignment:            1
+    UInt_7'Size:                 7
+    UInt_7'Object_Size:          8
+    V'Alignment:                 1
+    V'Size:                      8
+
+    Aligned_UInt_7'Alignment:    4
+    Aligned_UInt_7'Size:         7
+    Aligned_UInt_7'Object_Size:  32
+    Aligned_V'Alignment:         4
+    Aligned_V'Size:              32
+
+In this example, we're reusing the :ada:`UInt_7` type that we've already been
+using in previous examples. Because we haven't specified any alignment for the
+:ada:`UInt_7` type, it has an alignment of 1 storage unit (or 8 bits). However,
+in the declaration of the :ada:`Aligned_UInt_7` type, we're using the
+:ada:`Alignment` aspect to request an alignment of 4 storage units (or 32
+bits):
+
+.. code-block:: ada
+
+    type Aligned_UInt_7 is new UInt_7
+      with Alignment => 4;
+
+When using the :ada:`Alignment` attribute for the :ada:`Aligned_UInt_7` type,
+we can confirm that its alignment is indeed 4 storage units (bytes).
+
+Note that we can use the :ada:`Alignment` attribute for both data types and
+objects |mdash| in the code above, we're using :ada:`UInt_7'Alignment` and
+:ada:`V'Alignment`, for example.
+
+Because of the alignment we're specifying for the :ada:`Aligned_UInt_7` type,
+its size |mdash| indicated by the :ada:`Object_Size` attribute |mdash| is 32
+bits instead of 8 bits as for the :ada:`UInt_7` type.
+
+Note that you can also retrieve the alignment associated with a class using
+:ada:`S'Class'Alignment`. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Class_Alignment
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Class_Alignment is
+
+       type Point_1D is tagged record
+          X : Integer;
+       end record;
+
+       type Point_2D is new Point_1D with record
+          Y : Integer;
+       end record
+         with Alignment => 16;
+
+       type Point_3D is new Point_2D with record
+          Z : Integer;
+       end record;
+
+    begin
+       Put_Line ("1D_Point'Alignment:       " & Point_1D'Alignment'Image);
+       Put_Line ("1D_Point'Class'Alignment: " & Point_1D'Class'Alignment'Image);
+       Put_Line ("2D_Point'Alignment:       " & Point_2D'Alignment'Image);
+       Put_Line ("2D_Point'Class'Alignment: " & Point_2D'Class'Alignment'Image);
+       Put_Line ("3D_Point'Alignment:       " & Point_3D'Alignment'Image);
+       Put_Line ("3D_Point'Class'Alignment: " & Point_3D'Class'Alignment'Image);
+    end Show_Class_Alignment;
+
+Overlapping Storage
+~~~~~~~~~~~~~~~~~~~
+
+Algorithms can be designed to perform in-place or out-of-place processing. In
+other words, they can take advantage of the fact that input and output arrays
+share the same storage space or not.
+
+We can use the :ada:`Has_Same_Storage` and the :ada:`Overlaps_Storage`
+attributes to retrieve more information about how the storage space of two
+objects related to each other:
+
+- the :ada:`Has_Same_Storage` attribute indicates whether two objects have the
+  exact same storage.
+
+  - A typical example is when both objects are exactly the same, so they
+    obviously share the same storage. For example, for array :ada:`A`,
+    :ada:`A'Has_Same_Storage (A)` is always :ada:`True`.
+
+- the :ada:`Overlaps_Storage` attribute indicates whether two objects have at
+  least one bit in common.
+
+  - Note that, if two objects have the same storage, this implies that their
+    storage also overlaps. In other words, :ada:`A'Has_Same_Storage (B) = True`
+    implies that :ada:`A'Overlaps_Storage (B) = True`.
+
+
+Let's look at this example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Overlapping_Storage
+
+    package Int_Array_Processing is
+
+       type Int_Array is array (Positive range <>) of Integer;
+
+       procedure Show_Storage (X : Int_Array;
+                               Y : Int_Array);
+
+       procedure Process (X :     Int_Array;
+                          Y : out Int_Array);
+
+    end Int_Array_Processing;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Int_Array_Processing is
+
+       procedure Show_Storage (X : Int_Array;
+                               Y : Int_Array) is
+       begin
+          if X'Has_Same_Storage (Y) then
+             Put_Line ("Info: X and Y have the same storage.");
+          else
+             Put_Line ("Info: X and Y don't the have same storage.");
+          end if;
+          if X'Overlaps_Storage (Y) then
+             Put_Line ("Info: X and Y overlap.");
+          else
+             Put_Line ("Info: X and Y don't overlap.");
+          end if;
+       end Show_Storage;
+
+       procedure Process (X :     Int_Array;
+                          Y : out Int_Array) is
+       begin
+          Put_Line ("==== PROCESS ====");
+          Show_Storage (X, Y);
+
+          if X'Has_Same_Storage (Y) then
+             Put_Line ("In-place processing...");
+          else
+             if not X'Overlaps_Storage (Y) then
+                Put_Line ("Out-of-place processing...");
+             else
+                Put_Line ("Cannot process overlapping arrays...");
+             end if;
+          end if;
+          New_Line;
+       end Process;
+
+    end Int_Array_Processing;
+
+    with Int_Array_Processing; use Int_Array_Processing;
+
+    procedure Main is
+       A : Int_Array (1 .. 20) := (others => 3);
+       B : Int_Array (1 .. 20) := (others => 4);
+    begin
+       Process (A, A);
+       --  In-place processing: sharing the exact same storage
+
+       Process (A (1 .. 10), A (10 .. 20));
+       --  Overlapping one component: A (10)
+
+       Process (A (1 .. 10), A (11 .. 20));
+       --  Out-of-place processing: same array, but not sharing any storage
+
+       Process (A, B);
+       --  Out-of-place processing: two different arrays
+    end Main;
+
+In this code example, we implement two procedures:
+
+- :ada:`Show_Storage`, which shows storage information about two arrays by
+  using the :ada:`Has_Same_Storage` and :ada:`Overlaps_Storage` attributes.
+
+- :ada:`Process`, which are supposed to process an input array :ada:`X` and
+  store the processed data in the output array :ada:`Y`.
+
+    - Note that the implementation of this procedure is actually just a
+      mock-up, so that no processing is actually taking place.
+
+We have four different instances of how we can call the :ada:`Process`
+procedure:
+
+- in the :ada:`Process (A, A)` call, we're using the same array for the input
+  and output arrays. This is a perfect example of in-place processing. Because
+  the input and the output arrays arguments are actually the same object, they
+  obviously share the exact same storage.
+
+- in the :ada:`Process (A (1 .. 10), A (10 .. 20))` call, we're using two
+  slices of the :ada:`A` array as input and output arguments. In this case, a
+  single component of the :ada:`A` array is shared: :ada:`A (10)`. Because the
+  storage space is overlapping, but not exactly the same, neither in-place nor
+  out-of-place processing can usually be used in this case.
+
+- in the :ada:`Process (A (1 .. 10), A (11 .. 20))` call, even though we're
+  using the same array :ada:`A` for the input and output arguments, we're using
+  slices that are completely independent from each other, so that the input and
+  output arrays are not sharing any storage in this case. Therefore, we can use
+  out-of-place processing.
+
+- in the :ada:`Process (A, B)` call, we have two different arrays |mdash| which
+  obviously don't share any storage space |mdash|, so we can use out-of-place
+  processing.
+
+Packed Representation
+~~~~~~~~~~~~~~~~~~~~~
+
+As we've seen previously, the minimum number of bits required to represent a
+data type might be less than the actual number of bits used to store an object
+of that same type. We've seen an example where :ada:`UInt_7'Size` was 7 bits,
+while :ada:`UInt_7'Object_Size` was 8 bits. The most extreme case is the one
+for the :ada:`Boolean` type: in this case, :ada:`Boolean'Size` is 1 bit, while
+:ada:`Boolean'Object_Size` might be 8 bits (or even more on certain
+architectures). In such cases, we have 7 (or more) unused bits in memory for
+each object of :ada:`Boolean` type. In other words, we're wasting memory. On
+the other hand, we're gaining speed of access because we can directly access
+each element without having to first change its internal representation back
+and forth. We'll come back to this point later.
+
+The situation is even worse when implementing bit-fields, which can be
+declared as an array of :ada:`Boolean` components. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Non_Packed_Flags
+
+    package Flag_Definitions is
+
+       type Flags is array (Positive range <>) of Boolean;
+
+    end Flag_Definitions;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Flag_Definitions; use Flag_Definitions;
+
+    procedure Show_Flags is
+       Flags_1 : Flags (1 .. 8);
+    begin
+       Put_Line ("Boolean'Size:           " & Boolean'Size'Image);
+       Put_Line ("Boolean'Object_Size:    " & Boolean'Object_Size'Image);
+       Put_Line ("Flags_1'Size:           " & Flags_1'Size'Image);
+       Put_Line ("Flags_1'Component_Size: " & Flags_1'Component_Size'Image);
+    end Show_Flags;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    Boolean'Size:            1
+    Boolean'Object_Size:     8
+    Flags_1'Size:            64
+    Flags_1'Component_Size:  8
+
+In this example, we're declaring the :ada:`Flags` type as an array of
+:ada:`Boolean` components. As we can see in this case, although the size of the
+:ada:`Boolean` type is just 1 bit, an object of this type has a size of 8 bits.
+Consequently, each component of the :ada:`Flags` type has a size of 8 bits.
+Moreover, an array with 8 components of :ada:`Boolean` type |mdash| such as
+the :ada:`Flags_1` array |mdash| has a size of 64 bits.
+
+Therefore, having a way to compact the representation |mdash| so that we can
+store multiple objects without wasting storage space |mdash| may help us
+improving memory usage. This is actually possible by using the :ada:`Pack`
+aspect. For example, we could extend the previous example and declare a
+:ada:`Packed_Flags` type that makes use of this aspect:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Packed_Flags
+
+    package Flag_Definitions is
+
+       type Flags is array (Positive range <>) of Boolean;
+
+       type Packed_Flags is array (Positive range <>) of Boolean
+         with Pack;
+
+    end Flag_Definitions;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Flag_Definitions; use Flag_Definitions;
+
+    procedure Show_Packed_Flags is
+       Flags_1 : Flags (1 .. 8);
+       Flags_2 : Packed_Flags (1 .. 8);
+    begin
+       Put_Line ("Boolean'Size:           " & Boolean'Size'Image);
+       Put_Line ("Boolean'Object_Size:    " & Boolean'Object_Size'Image);
+       Put_Line ("Flags_1'Size:           " & Flags_1'Size'Image);
+       Put_Line ("Flags_1'Component_Size: " & Flags_1'Component_Size'Image);
+       Put_Line ("Flags_2'Size:           " & Flags_2'Size'Image);
+       Put_Line ("Flags_2'Component_Size: " & Flags_2'Component_Size'Image);
+    end Show_Packed_Flags;
+
+Depending on your target architecture, you may see this output:
+
+::
+
+    Boolean'Size:            1
+    Boolean'Object_Size:     8
+    Flags_1'Size:            64
+    Flags_1'Component_Size:  8
+    Flags_2'Size:            8
+    Flags_2'Component_Size:  1
+
+In this example, we're declaring the :ada:`Flags_2` array of
+:ada:`Packed_Flags` type. Its size is 8 bits |mdash| instead of the 64 bits
+required for the :ada:`Flags_1` array. Because the array type
+:ada:`Packed_Flags` is packed, we can now effectively use this type to store an
+object of :ada:`Boolean` type using just 1 bit of the memory, as indicated by
+the :ada:`Flags_2'Component_Size` attribute.
+
+In many cases, we need to convert between a *normal* representation (such as
+the one used for the :ada:`Flags_1` array above) to a packed representation
+(such as the one for the :ada:`Flags_2` array). In many programming languages,
+this conversion may require writing custom code with manual bit-shifting and
+bit-masking to get the proper target representation. In Ada, however, we just
+need to indicate the actual type conversion, and the compiler takes care of
+generating code containing bit-shifting and bit-masking to performs the type
+conversion.
+
+Let's modify the previous example and introduce this type conversion:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Flag_Conversion
+
+    package Flag_Definitions is
+
+       type Flags is array (Positive range <>) of Boolean;
+
+       type Packed_Flags is array (Positive range <>) of Boolean
+         with Pack;
+
+       Default_Flags : constant Flags := (True, True, False, True,
+                                          False, False, True, True);
+
+    end Flag_Definitions;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Flag_Definitions; use Flag_Definitions;
+
+    procedure Show_Flag_Conversion is
+       Flags_1 : Flags (1 .. 8);
+       Flags_2 : Packed_Flags (1 .. 8);
+    begin
+       Flags_1 := Default_Flags;
+       Flags_2 := Packed_Flags (Flags_1);
+
+       for I in Flags_2'Range loop
+          Put_Line (I'Image & ": "
+                    & Flags_1 (I)'Image & ", "
+                    & Flags_2 (I)'Image);
+       end loop;
+    end Show_Flag_Conversion;
+
+In this extended example, we're now declaring :ada:`Default_Flags` as an array
+of constant flags, which we use to initialize :ada:`Flags_1`.
+
+The actual conversion happens with :ada:`Flags_2 := Packed_Flags (Flags_1)`.
+Here, the type conversion :ada:`Packed_Flags()` indicates that we're converting
+from the normal representation (used for the :ada:`Flags` type) to the packed
+representation (used for :ada:`Packed_Flags` type). We don't need to write more
+code than that to perform the correct type conversion.
+
+Also, by using the same strategy, we could read information from a packed
+representation. For example:
+
+.. code-block:: ada
+
+    Flags_1 := Flags (Flags_2);
+
+In this case, we use :ada:`Flags()` to convert from a packed representation to
+the normal representation.
+
+We elaborate on the topic of converting between data representations in the
+section on :ref:`changing data representation <Changing_Data_Representation>`.
+
+Trade-offs
+^^^^^^^^^^
+
+As indicated previously, when we're using a packed representation (vs. using a
+standard *unpacked* representation), we're trading off speed of access for less
+memory consumption. The following table summarizes this:
+
++----------------+----------------------+-------------------------+
+| Representation | More speed of access | Less memory consumption |
++================+======================+=========================+
+| Unpacked       | X                    |                         |
++----------------+----------------------+-------------------------+
+| Packed         |                      | X                       |
++----------------+----------------------+-------------------------+
+
+On one hand, we have better memory usage when we apply packed representations
+because we may save many bits for each object. On the other hand, there's a
+cost associated with accessing those packed objects because they need to be
+unpacked before we can actually access them. In fact, the compiler generates
+code |mdash| using bit-shifting and bit-masking |mdash| that converts a packed
+representation into an unpacked representation, which we can then access. Also,
+when storing a packed object, the compiler generates code that converts the
+unpacked representation of the object into the packed representation.
+
+This packing and unpacking mechanism has a performance cost associated with it,
+which results in less speed of access for packed objects. As usual in those
+circumstances, before using packed representation, we should assess whether
+memory constraints are more important than speed in our target architecture.
 
 Record Representation and storage clauses
 -----------------------------------------
@@ -1641,6 +2474,327 @@ such as bit-masking or bit-shifting |mdash| is needed here.
     efficiently handled by the compiler, so that developers only need to
     correctly describe the register mapping using representation clauses.
 
+
+.. _Changing_Data_Representation:
+
+Changing Data Representation
+----------------------------
+
+.. note::
+
+    This section was originally written by Robert Dewar and published as
+    `Gem #27: Changing Data Representation <https://www.adacore.com/gems/gem-27>`_
+    and `Gem #28 <https://www.adacore.com/gems/gem-28>`_.
+
+A powerful feature of Ada is the ability to specify the exact data layout. This
+is particularly important when you have an external device or program that
+requires a very specific format. Some examples are:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Com_Packet
+
+    package Communication is
+
+       type Com_Packet is record
+          Key : Boolean;
+          Id  : Character;
+          Val : Integer range 100 .. 227;
+       end record;
+
+       for Com_Packet use record
+          Key at 0 range 0 .. 0;
+          Id  at 0 range 1 .. 8;
+          Val at 0 range 9 .. 15;
+       end record;
+
+    end Communication;
+
+which lays out the fields of a record, and in the case of :ada:`Val`, forces a
+biased representation in which all zero bits represents 100. Another example
+is:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Array_Rep
+
+    package Array_Representation is
+
+       type Val is (A, B, C, D, E, F, G, H);
+
+       type Arr is array (1 .. 16) of Val
+         with Component_Size => 3;
+
+    end Array_Representation;
+
+which forces the components to take only 3 bits, crossing byte boundaries as
+needed. A final example is:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Enum_Rep
+
+    package Enumeration_Representation is
+
+       type Status is (Off, On, Unknown);
+       for Status use (Off => 2#001#, On => 2#010#, Unknown => 2#100#);
+
+    end Enumeration_Representation;
+
+which allows specified values for an enumeration type, instead of the efficient
+default values of 0, 1, 2.
+
+In all these cases, we might use these representation clauses to match external
+specifications, which can be very useful. The disadvantage of such layouts is
+that they are inefficient, and accessing individual components, or, in the case
+of the enumeration type, looping through the values can increase space and
+time requirements for the program code.
+
+One approach that is often effective is to read or write the data in question
+in this specified form, but internally in the program represent the data in the
+normal default layout, allowing efficient access, and do all internal
+computations with this more efficient form.
+
+To follow this approach, you will need to convert between the efficient format
+and the specified format. Ada provides a very convenient method for doing this,
+as described in RM 13.6 "Change of Representation".
+
+The idea is to use type derivation, where one type has the specified format and
+the other has the normal default format. For instance for the array case above,
+we would write:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Array_Rep
+
+    package Array_Representation is
+
+       type Val is (A, B, C, D, E, F, G, H);
+       type Arr is array (1 .. 16) of Val;
+
+       type External_Arr is new Arr
+         with Component_Size => 3;
+
+    end Array_Representation;
+
+Now we read and write the data using the :ada:`External_Arr` type. When we want
+to convert to the efficient form, :ada:`Arr`, we simply use a type conversion.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Array_Rep
+
+    with Array_Representation; use Array_Representation;
+
+    procedure Using_Array_For_IO is
+       Input_Data  : External_Arr;
+       Work_Data   : Arr;
+       Output_Data : External_Arr;
+    begin
+       --  (read data into Input_Data)
+
+       --  Now convert to internal form
+        Work_Data := Arr (Input_Data);
+
+       --  (computations using efficient Work_Data form)
+
+       --  Convert back to external form
+       Output_Data := External_Arr (Work_Data);
+
+    end Using_Array_For_IO;
+
+Using this approach, the quite complex task of copying all the data of the
+array from one form to another, with all the necessary masking and shift
+operations, is completely automatic.
+
+Similar code can be used in the record and enumeration type cases. It is even
+possible to specify two different representations for the two types, and
+convert from one form to the other, as in:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Enum_Rep
+
+    package Enumeration_Representation is
+
+       type Status_In is (Off, On, Unknown);
+       type Status_Out is new Status_In;
+
+       for Status_In use (Off => 2#001#, On => 2#010#, Unknown => 2#100#);
+       for Status_Out use (Off => 103, On => 1045, Unknown => 7700);
+
+    end Enumeration_Representation;
+
+There are two restrictions that must be kept in mind when using this feature.
+First, you have to use a derived type. You can't put representation clauses on
+subtypes, which means that the conversion must always be explicit. Second,
+there is a rule RM 13.1(10) that restricts the placement of interesting
+representation clauses:
+
+    10 For an untagged derived type, no type-related representation items are
+    allowed if the parent type is a by-reference type, or has any user-defined
+    primitive subprograms.
+
+All the representation clauses that are interesting from the point of view of
+change of representation are "type related", so for example, the following
+sequence would be illegal:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Array_Rep_2
+    :class: ada-expect-compile-error
+
+    package Array_Representation is
+
+       type Val is (A, B, C, D, E, F, G, H);
+       type Arr is array (1 .. 16) of Val;
+
+       procedure Rearrange (Arg : in out Arr);
+
+       type External_Arr is new Arr
+         with Component_Size => 3;
+
+    end Array_Representation;
+
+Why these restrictions? Well, the answer is a little complex, and has to do
+with efficiency considerations, which we will address below.
+
+Restrictions
+~~~~~~~~~~~~
+
+In the previous subsection, we discussed the use of derived types and
+representation clauses to achieve automatic change of representation. More
+accurately, this feature is not completely automatic, since it requires you to
+write an explicit conversion. In fact there is a principle behind the design
+here which says that a change of representation should never occur implicitly
+behind the back of the programmer without such an explicit request by means of
+a type conversion.
+
+The reason for that is that the change of representation operation can be very
+expensive, since in general it can require component by component copying,
+changing the representation on each component.
+
+Let's have a look at the ``-gnatG`` expanded code to see what is hidden under
+the covers here. For example, the conversion :ada:`Arr (Input_Data)` from the
+previous example generates the following expanded code:
+
+.. code-block::
+
+       B26b : declare
+          [subtype p__TarrD1 is integer range 1 .. 16]
+          R25b : p__TarrD1 := 1;
+       begin
+          for L24b in 1 .. 16 loop
+             [subtype p__arr___XP3 is
+               system__unsigned_types__long_long_unsigned range 0 ..
+               16#FFFF_FFFF_FFFF#]
+             work_data := p__arr___XP3!((work_data and not shift_left!(
+               16#7#, 3 * (integer(L24b - 1)))) or shift_left!(p__arr___XP3!
+               (input_data (R25b)), 3 * (integer(L24b - 1))));
+             R25b := p__TarrD1'succ(R25b);
+          end loop;
+       end B26b;
+
+That's pretty horrible! In fact, we could have simplified it for this section,
+but we have left it in its original form, so that you can see why it is nice to
+let the compiler generate all this stuff so you don't have to worry about it
+yourself.
+
+Given that the conversion can be pretty inefficient, you don't want to convert
+backwards and forwards more than you have to, and the whole approach is only
+worthwhile if we'll be doing extensive computations involving the value.
+
+The expense of the conversion explains two aspects of this feature that are not
+obvious. First, why do we require derived types instead of just allowing
+subtypes to have different representations, avoiding the need for an explicit
+conversion?
+
+The answer is precisely that the conversions are expensive, and you don't want
+them happening behind your back. So if you write the explicit conversion, you
+get all the gobbledygook listed above, but you can be sure that this never
+happens unless you explicitly ask for it.
+
+This also explains the restriction we mentioned in previous subsection from
+RM 13.1(10):
+
+    10 For an untagged derived type, no type-related representation items are
+    allowed if the parent type is a by-reference type, or has any user-defined
+    primitive subprograms.
+
+It turns out this restriction is all about avoiding implicit changes of
+representation. Let's have a look at how type derivation works when there are
+primitive subprograms defined at the point of derivation. Consider this
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.My_Int
+
+    package My_Ints is
+
+       type My_Int_1 is range 1 .. 10;
+
+       function Odd (Arg : My_Int_1) return Boolean;
+
+       type My_Int_2 is new My_Int_1;
+
+    end My_Ints;
+
+    package body My_Ints is
+
+       function Odd (Arg : My_Int_1) return Boolean is (True);
+       --  Dummy implementation!
+
+    end My_Ints;
+
+Now when we do the type derivation, we inherit the function :ada:`Odd` for
+:ada:`My_Int_2`. But where does this function come from? We haven't
+written it explicitly, so the compiler somehow materializes this new implicit
+function. How does it do that?
+
+We might think that a complete new function is created including a body in
+which :ada:`My_Int_2` replaces :ada:`My_Int_1`, but that would be impractical
+and expensive. The actual mechanism avoids the need to do this by use of
+implicit type conversions. Suppose after the above declarations, we write:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.My_Int
+
+    with My_Ints; use My_Ints;
+
+    procedure Using_My_Int is
+       Var : My_Int_2;
+    begin
+
+       if Odd (Var) then
+          --   ^ Calling Odd function for My_Int_2 type.
+          null;
+       end if;
+
+    end Using_My_Int;
+
+The compiler translates this as:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.My_Int
+
+    with My_Ints; use My_Ints;
+
+    procedure Using_My_Int is
+       Var : My_Int_2;
+    begin
+
+       if Odd (My_Int_1 (Var)) then
+          --   ^ Converting My_Int_2 to My_Int_1 type before
+          --     calling Odd function.
+          null;
+       end if;
+
+    end Using_My_Int;
+
+This implicit conversion is a nice trick, it means that we can get the effect
+of inheriting a new operation without actually having to create it.
+Furthermore, in a case like this, the type conversion generates no code,
+since :ada:`My_Int_1` and :ada:`My_Int_2` have the same representation.
+
+But the whole point is that they might not have the same representation if one
+of them had a representation clause that made the representations different,
+and in this case the implicit conversion inserted by the compiler could be
+expensive, perhaps generating the junk we quoted above for the :ada:`Arr` case.
+Since we never want that to happen implicitly, there is a rule to prevent it.
+
+The business of forbidding by-reference types (which includes all tagged
+types) is also driven by this consideration. If the representations are the
+same, it is fine to pass by reference, even in the presence of the conversion,
+but if there was a change of representation, it would force a copy, which would
+violate the by-reference requirement.
+
+So to summarize this section, on the one hand Ada gives you a very convenient
+way to trigger these complex conversions between different representations. On
+the other hand, Ada guarantees that you never get these potentially expensive
+conversions happening unless you explicitly ask for them.
 
 Valid
 -----
