@@ -1855,8 +1855,10 @@ while :ada:`UInt_7'Object_Size` was 8 bits. The most extreme case is the one
 for the :ada:`Boolean` type: in this case, :ada:`Boolean'Size` is 1 bit, while
 :ada:`Boolean'Object_Size` might be 8 bits (or even more on certain
 architectures). In such cases, we have 7 (or more) unused bits in memory for
-each object of :ada:`Boolean` type. In other words, we're simply wasting
-memory.
+each object of :ada:`Boolean` type. In other words, we're wasting memory. On
+the other hand, we're gaining speed of access because we can directly access
+each element without having to first change its internal representation back
+and forth. We'll come back to this point later.
 
 The situation is even worse when implementing bit-fields, which can be
 declared as an array of :ada:`Boolean` components. For example:
