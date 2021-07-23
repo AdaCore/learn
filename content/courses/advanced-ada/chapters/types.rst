@@ -2013,6 +2013,35 @@ the normal representation.
 We elaborate on the topic of converting between data representations in the
 section on :ref:`changing data representation <Changing_Data_Representation>`.
 
+Trade-offs
+^^^^^^^^^^
+
+As indicated previously, when we're using a packed representation (vs. using a
+standard *unpacked* representation), we're trading off speed of access for less
+memory consumption. The following table summarizes this:
+
++----------------+----------------------+-------------------------+
+| Representation | More speed of access | Less memory consumption |
++================+======================+=========================+
+| Unpacked       | X                    |                         |
++----------------+----------------------+-------------------------+
+| Packed         |                      | X                       |
++----------------+----------------------+-------------------------+
+
+On one hand, we have better memory usage when we apply packed representations
+because we may save many bits for each object. On the other hand, there's a
+cost associated with accessing those packed objects because they need to be
+unpacked before we can actually access them. In fact, the compiler generates
+code |mdash| using bit-shifting and bit-masking |mdash| that converts a packed
+representation into an unpacked representation, which we can then access. Also,
+when storing a packed object, the compiler generates code that converts the
+unpacked representation of the object into the packed representation.
+
+This packing and unpacking mechanism has a performance cost associated with it,
+which results in less speed of access for packed objects. As usual in those
+circumstances, before using packed representation, we should assess whether
+memory constraints are more important than speed in our target architecture.
+
 Record Representation and storage clauses
 -----------------------------------------
 
