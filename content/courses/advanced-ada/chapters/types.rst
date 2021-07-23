@@ -1237,9 +1237,10 @@ Ada offers multiple attributes to retrieve the size of a type or an object:
 |                       | type or a task object.                              |
 +-----------------------+-----------------------------------------------------+
 
-In all cases, the size information is in bits. Note that the size information
-depends your target architecture. We'll discuss some examples to better
-understand the differences among those attributes.
+For the first three attributes, the size is measured in bits. In the case of
+:ada:`Storage_Size`, the size is measured in storage elements. Note that the
+size information depends your target architecture. We'll discuss some examples
+to better understand the differences among those attributes.
 
 Size attribute and aspect
 ^^^^^^^^^^^^^^^^^^^^^^^^^
