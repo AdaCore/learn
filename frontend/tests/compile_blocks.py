@@ -256,12 +256,12 @@ args = parser.parse_args()
 args.rst_files = [os.path.abspath(f) for f in args.rst_files]
 
 COMMON_ADC = """
-pragma Restrictions (No_Specification_of_Aspect => Import);
-pragma Restrictions (No_Use_Of_Pragma => Import);
-pragma Restrictions (No_Use_Of_Pragma => Interface);
-pragma Restrictions (No_Use_Of_Pragma => Linker_Options);
-pragma Restrictions (No_Dependence => System.Machine_Code);
-pragma Restrictions (No_Dependence => Machine_Code);
+--  pragma Restrictions (No_Specification_of_Aspect => Import);
+--  pragma Restrictions (No_Use_Of_Pragma => Import);
+--  pragma Restrictions (No_Use_Of_Pragma => Interface);
+--  pragma Restrictions (No_Use_Of_Pragma => Linker_Options);
+--  pragma Restrictions (No_Dependence => System.Machine_Code);
+--  pragma Restrictions (No_Dependence => Machine_Code);
 """
 
 SPARK_ADC = """
@@ -311,9 +311,12 @@ def write_project_file(main_file, compiler_switches, spark_mode):
             line_str = f'for Switches ("Ada") use ({switches_str});'
             main_gpr = main_gpr.replace(placeholder_str, line_str)
 
-        mains = [main_file]
-        main_list = [f'"{x}"' for x in mains]
-        to_insert = f"for Main use ({', '.join(main_list)});"
+        if main_file is not None:
+            mains = [main_file]
+            main_list = [f'"{x}"' for x in mains]
+            to_insert = f"for Main use ({', '.join(main_list)});"
+        else:
+            to_insert = f""
         main_gpr = main_gpr.replace("--MAIN_PLACEHOLDER--", to_insert)
 
         gpr_file.write(main_gpr)
@@ -488,8 +491,16 @@ def analyze_file(rst_file):
             prove_error = False
             is_prove_error_class = False
 
+            run_block = (('ada-run' in block.classes
+                          or 'ada-run-expect-failure' in block.classes
+                          or 'run' in block.buttons)
+                         and not 'ada-norun' in block.classes)
+            compile_block = run_block or ('compile' in block.buttons)
+
             prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",
                              "prove_report_all"]
+
+            prove_block = any(b in prove_buttons for b in block.buttons)
 
             def get_main_filename(block):
                 if block.main_file is not None:
@@ -505,20 +516,25 @@ def analyze_file(rst_file):
 
                 return project_block_dir
 
-            if (('ada-run' in block.classes
-                 or 'ada-run-expect-failure' in block.classes
-                 or 'run' in block.buttons)
-                and not 'ada-norun' in block.classes
-            ):
+            if compile_block:
+
                 main_file = get_main_filename(block)
 
                 project_block_dir = make_project_block_dir()
 
+                main_file = None
+                if run_block:
+                    main_file = get_main_filename(block)
+                spark_mode = False
+                project_filename = write_project_file(main_file,
+                                                      block.compiler_switches,
+                                                      spark_mode)
+
                 if block.language == "ada":
 
                     try:
-                        out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f",
-                                  main_file)
+                        run("gprclean", "-P", project_filename)
+                        out = run("gprbuild", "-q", "-P", project_filename)
                     except S.CalledProcessError as e:
                         if 'ada-expect-compile-error' in block.classes:
                             compile_error = True
@@ -548,7 +564,7 @@ def analyze_file(rst_file):
                     with open(project_block_dir + "/build.log", u"w") as logfile:
                         logfile.write(out)
 
-                if not compile_error and not has_error:
+                if not compile_error and not has_error and run_block:
                     if block.language == "ada":
                         try:
                             out = run("./{}".format(P.splitext(main_file)[0]))
@@ -594,9 +610,7 @@ def analyze_file(rst_file):
                         with open(project_block_dir + "/run.log", u"w") as logfile:
                             logfile.write(out)
 
-            if 'compile' in block.buttons:
-
-                project_block_dir = make_project_block_dir()
+            if False:
 
                 for source_file in source_files:
                     if block.language == "ada":
@@ -628,7 +642,7 @@ def analyze_file(rst_file):
                         with open(project_block_dir + "/compile.log", u"w+") as logfile:
                             logfile.write(out)
 
-            if any(b in prove_buttons for b in block.buttons):
+            if prove_block:
 
                 if block.language == "ada":
                     project_block_dir = make_project_block_dir()
@@ -689,11 +703,11 @@ def analyze_file(rst_file):
                     has_error = True
 
             if 'ada-expect-prove-error' in block.classes:
-                if not any(b in prove_buttons for b in block.buttons):
+                if not prove_block:
                     print_error(loc, "Expected prove button, got none!")
                     has_error = True
 
-            if any(b in prove_buttons for b in block.buttons):
+            if prove_block:
                 if is_prove_error_class and not prove_error:
                     print_error(loc, "Expected prove error, got none!")
                     has_error = True
