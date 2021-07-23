@@ -1724,7 +1724,7 @@ objects related to each other:
   exact same storage.
 
   - A typical example is when both objects are exactly the same, so they
-    obviously share the same storage. For example, for arrray :ada:`A`,
+    obviously share the same storage. For example, for array :ada:`A`,
     :ada:`A'Has_Same_Storage (A)` is always :ada:`True`.
 
 - the :ada:`Overlaps_Storage` attribute indicates whether two objects have at
