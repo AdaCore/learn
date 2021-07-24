@@ -284,8 +284,8 @@ primitive subprograms to operate on them.
 This example shows that, even though the types we've declared are *just* null
 records, they can still be used to represent dependencies in our application.
 
-Implementing prototype
-~~~~~~~~~~~~~~~~~~~~~~
+Implementing API
+~~~~~~~~~~~~~~~~
 
 Let's focus again on the previous example. After we have an initial prototype,
 we can start implementing some of the functionality needed for the
