@@ -374,6 +374,61 @@ we've been hinting in the beginning, using null records makes it easy for us to
 first create a prototype |mdash| as we did in the :ada:`Show_Device` procedure
 |mdash| and postpone the API implementation to a later phase of the project.
 
+Tagged null records
+~~~~~~~~~~~~~~~~~~~
+
+A null record may be tagged, as we can see in this example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Tagged_Null_Record
+
+    package Null_Recs is
+
+       type Tagged_Null_Record is tagged null record;
+
+       type Abstract_Tagged_Null_Record is abstract tagged null record;
+
+    end Null_Recs;
+
+As we see in this example, a type can be :ada:`tagged`, or even
+:ada:`abstract tagged`. We discuss abstract types
+:ref:`later on in the course <Abstract_Types_And_Subprograms>`.
+
+As expected, in addition to deriving from tagged types, we can also extend
+them. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Extended_Device
+
+    package Devices is
+
+       type Device is private;
+
+       function Create (Active : Boolean) return Device;
+
+       type Derived_Device is private;
+
+    private
+
+       type Device is tagged null record;
+
+       function Create (Active : Boolean) return Device
+         is (null record);
+
+       type Derived_Device is new Device with record
+          Active : Boolean;
+       end record;
+
+       function Create (Active : Boolean) return Derived_Device
+         is (Active => Active);
+
+    end Devices;
+
+In this example, we derive :ada:`Derived_Device` from the :ada:`Device` type
+and extend it with the :ada:`Active` component. (Because we have a type
+extension, we also need to override the :ada:`Create` function.)
+
+Since we're now introducing elements from object-oriented programming, we could
+consider using interfaces instead of null records. We'll discuss this topic
+later on in the course.
 
 Extension Aggregates
 --------------------
