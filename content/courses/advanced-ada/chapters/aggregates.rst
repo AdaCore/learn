@@ -3,6 +3,8 @@ Aggregates
 
 .. include:: ../../global.txt
 
+.. _Null_Records:
+
 Null records
 ------------
 
@@ -428,7 +430,7 @@ extension, we also need to override the :ada:`Create` function.)
 
 Since we're now introducing elements from object-oriented programming, we could
 consider using interfaces instead of null records. We'll discuss this topic
-later on in the course.
+:ref:`later on in the course <Null_Records_Vs_Interfaces>`.
 
 Extension Aggregates
 --------------------
