@@ -8,8 +8,8 @@ Aggregates
 Null records
 ------------
 
-A null record is a record that doesn't have any component. Consequently, it
-cannot store any information on it. When declaring a null record, we simply
+A null record is a record that doesn't have any components. Consequently, it
+cannot store any information. When declaring a null record, we simply
 write :ada:`null` instead of declaring actual components, as we usually do for
 records. For example:
 
@@ -70,11 +70,11 @@ Simple Prototyping
 ~~~~~~~~~~~~~~~~~~
 
 A null record doesn't provide much functionality on itself, as we're not
-storing any information on it. However, it's far from being useless. For
+storing any information in it. However, it's far from being useless. For
 example, we can make use of null records to design an API, which we can then
-use in a application without having to implement the actual functionality of
+use in an application without having to implement the actual functionality of
 the API. This allows us to design a prototype without having to think about all
-the implementation details of the API on a first stage.
+the implementation details of the API in the first stage.
 
 Consider this example:
 
