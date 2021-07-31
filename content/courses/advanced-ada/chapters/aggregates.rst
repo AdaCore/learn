@@ -769,15 +769,6 @@ appropriate view, we're able to initialize an object of ascending type
 (:ada:`Point_2D`), which contains less components, using an object of a
 descendent type (:ada:`Point_3D`), which contains more components.
 
-.. admonition:: Relevant topics
-
-    - `Extension Aggregates <http://www.ada-auth.org/standards/2xrm/html/RM-4-3-2.html>`_
-
-.. todo::
-
-    Complete section!
-
-
 Delta Aggregates
 ----------------
 
