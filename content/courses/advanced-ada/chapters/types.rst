@@ -2966,9 +2966,8 @@ Unchecked Union
 
 We've introduced variant records back in the
 :doc:`Introduction to Ada course <courses/intro-to-ada/chapters/more_about_types>`.
-In simple terms, a variant record |mdash| or *discriminated record* in Ada
-terminology |mdash| is a record with discriminants that allows for changing its
-structure. Basically, it's a record containing a :ada:`case`.
+In simple terms, a variant record is a record with discriminants that allows
+for changing its structure. Basically, it's a record containing a :ada:`case`.
 
 The :ada:`State_Or_Integer` declaration in the :ada:`States` package below is
 an example of a variant record:
