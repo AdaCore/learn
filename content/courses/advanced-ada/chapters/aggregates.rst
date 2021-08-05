@@ -443,7 +443,7 @@ complex aggregates.
 Assignments to objects of derived types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before we discuss extension aggregates in more details, though, let's start
+Before we discuss extension aggregates in more detail, though, let's start
 with a simple use-case. Let's say we have:
 
 - an object :ada:`A` of tagged type :ada:`T1`, and
@@ -527,8 +527,8 @@ one, two and three-dimensional point types:
 
     end Points;
 
-Let's now focus on the :ada:`Show_Points` procedure, where we initialize a
-two-dimensional point using a one-dimensional point.
+Let's now focus on the :ada:`Show_Points` procedure below, where we initialize
+a two-dimensional point using a one-dimensional point.
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Extension_Aggregate_Points
 
