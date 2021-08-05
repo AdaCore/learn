@@ -448,7 +448,7 @@ with a simple use-case. Let's say we have:
 
 - an object :ada:`A` of tagged type :ada:`T1`, and
 
-- an object :ada:`B` of tagged type :ada:`T2`, which is derived from :ada:`T1`.
+- an object :ada:`B` of tagged type :ada:`T2`, which extends :ada:`T1`.
 
 We can initialize object :ada:`B` by:
 
