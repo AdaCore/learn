@@ -435,10 +435,12 @@ consider using interfaces instead of null records. We'll discuss this topic
 Extension Aggregates
 --------------------
 
-Extension aggregates allow us to express information for record types with
-type extension using a single expression. They are similar to record
-aggregates, but include the :ada:`with` keyword, and are used to write more
-complex aggregates.
+Extension aggregates provide a convenient way to express an aggregate for a
+type that extends |mdash| adds components to |mdash| some existing type (the
+"ancestor"). Although mainly a matter of convenience, an extension aggregate is
+essential when we want to express an aggregate for an extension of a private
+ancestor type, that is, when we don't have compile-time visibility to the
+ancestor type's components.
 
 Assignments to objects of derived types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
