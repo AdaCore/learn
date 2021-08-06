@@ -376,7 +376,7 @@ arrow association. :ada:`1 => 2` thus means
 
 Although different instances of the same unconstrained array type can have different
 bounds, a specific instance has the same bounds throughout its lifetime.
-This allows Ada to implement unbounded arrays efficiently; instances can be
+This allows Ada to implement unconstrained arrays efficiently; instances can be
 stored on the stack and do not require heap allocation as in languages like Java.
 
 Predefined array type: String
