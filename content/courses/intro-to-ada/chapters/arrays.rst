@@ -371,7 +371,7 @@ arrow association. :ada:`1 => 2` thus means
     first-class values in the language. You can pass them as parameters to
     subprograms or return them from functions, and they implicitly contain
     their bounds as part of their value.  This means that it is useless to pass
-    the bounds or length of an array explictly along with the array, because
+    the bounds or length of an array explicitly along with the array, because
     they are accessible via the :ada:`'First`, :ada:`'Last`, :ada:`'Range` and
     :ada:`'Length` attributes explained earlier.
 
@@ -719,7 +719,7 @@ alternative name :ada:`T` have the same values:
 - first, they show the value 5.0
 - after the addition, they show the value 7.5.
 
-This is because they are essentialy referring to the same object, but with two
+This is because they are essentially referring to the same object, but with two
 different names.
 
 Note that, in the example above, we're using :ada:`Degrees` as an alias of
