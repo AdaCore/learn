@@ -444,25 +444,28 @@ Extension Aggregates
     Complete section!
 
 
-Delta Aggregates
-----------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Delta Aggregates
+    ----------------
 
-    - `Delta Aggregates <http://www.ada-auth.org/standards/2xrm/html/RM-4-3-4.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
+        - `Delta Aggregates <http://www.ada-auth.org/standards/2xrm/html/RM-4-3-4.html>`_
 
-    Complete section!
+    .. todo::
+
+        Complete section!
 
 
-Container Aggregates
---------------------
+    Container Aggregates
+    --------------------
 
-.. admonition:: Relevant topics
+    .. admonition:: Relevant topics
 
-    - `Container Aggregates <http://www.ada-auth.org/standards/2xrm/html/RM-4-3-5.html>`_
+        - `Container Aggregates <http://www.ada-auth.org/standards/2xrm/html/RM-4-3-5.html>`_
 
-.. todo::
+    .. todo::
 
-    Complete section!
+        Complete section!
