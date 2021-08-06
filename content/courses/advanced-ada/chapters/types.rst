@@ -718,15 +718,15 @@ verify whether objects are constrained before assigning to them. For objects
 that are not constrained, we can simply assign another object to it |mdash| as
 we do with the :ada:`R := Zero_Extended` statement. When an object is
 constrained, however, the discriminants must match. If we assign an object to
-:ada:`R`, the discriminants of that object must match the discriminants of
+:ada:`R`, the discriminant of that object must match the discriminant of
 :ada:`R`. This is the kind of verification that we do in the :ada:`else` part
 of that procedure: we check the state of the :ada:`Extended` discriminant
 before assigning an object to the :ada:`R` parameter.
 
 The :ada:`Using_Constrained_Attribute` procedure below declares two objects of
 :ada:`Simple_Record` type: :ada:`R1` and :ada:`R2`. Because the
-:ada:`Simple_Record` type has default values for its discriminants, we can
-declare objects of this type without specifying a value for the discriminants.
+:ada:`Simple_Record` type has default values for its discriminant, we can
+declare objects of this type without specifying a value for the discriminant.
 This is exactly what we do in the declaration of :ada:`R1`. Here, we don't
 specify any constraints, so that it takes the default value
 (:ada:`Extended => False`).  In the declaration of :ada:`R2`, however, we
