@@ -725,7 +725,7 @@ before assigning an object to the :ada:`R` parameter.
 
 The :ada:`Using_Constrained_Attribute` procedure below declares two objects of
 :ada:`Simple_Record` type: :ada:`R1` and :ada:`R2`. Because the
-:ada:`Simple_Record` type has default values for its discriminant, we can
+:ada:`Simple_Record` type has a default value for its discriminant, we can
 declare objects of this type without specifying a value for the discriminant.
 This is exactly what we do in the declaration of :ada:`R1`. Here, we don't
 specify any constraints, so that it takes the default value
