@@ -106,27 +106,6 @@ container has to reallocate memory in the background due to that new element.
 Therefore, arrays are more efficient, as the memory allocation only happens
 once for each object.
 
-.. admonition:: Relevant topics
-
-    - Explain unbounded arrays. From "Introduction to Ada" course:
-
-        > Although different instances of the same unconstrained array type can
-        > have different bounds, a specific instance has the same bounds
-        > throughout its lifetime. This allows Ada to implement unbounded
-        > arrays efficiently; instances can be stored on the stack and do not
-        > require heap allocation as in languages like Java.
-
-    - Unconstrained vs. unbounded strings
-
-    - `The Constrained Attribute <http://www.ada-auth.org/standards/2xrm/html/RM-J-4.html>`_
-
-    - Mention that :ada:`Ada.Containers.Vectors` can be used if you want
-      "arrays" that change length.
-
-.. todo::
-
-    Complete section!
-
 
 Multidimensional Arrays
 -----------------------
