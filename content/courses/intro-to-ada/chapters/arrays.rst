@@ -55,7 +55,8 @@ expression for an integer. The notation is very powerful, with a number of
 properties that we will introduce later. A detailed overview appears in the
 notation of :ref:`aggregate types <Aggregates>`.
 
-Unrelated to arrays, the example also illustrated two procedures from Ada.Text_IO:
+Unrelated to arrays, the example also illustrated two procedures from
+:ada:`Ada.Text_IO`:
 
 *  :ada:`Put`, which displays a string without a terminating end of line
 
@@ -291,8 +292,8 @@ could also have been applied to the array type name, and not just the array
 instances.
 
 Although not illustrated in the above examples, another useful attribute for an
-array instance :ada:`A`  is :ada:`A'Length`, which is the number of elements that A
-contains.
+array instance :ada:`A`  is :ada:`A'Length`, which is the number of elements
+that :ada:`A` contains.
 
 It is legal and sometimes useful to have a "null array", which contains no
 elements.  To get this effect, define an index range whose upper bound is less
@@ -371,8 +372,8 @@ arrow association. :ada:`1 => 2` thus means
     subprograms or return them from functions, and they implicitly contain
     their bounds as part of their value.  This means that it is useless to pass
     the bounds or length of an array explictly along with the array, because
-    they are accessible via the 'First, 'Last, 'Range and 'Length attributes
-    explained earlier.
+    they are accessible via the :ada:`'First`, :ada:`'Last`, :ada:`'Range` and
+    :ada:`'Length` attributes explained earlier.
 
 Although different instances of the same unconstrained array type can have different
 bounds, a specific instance has the same bounds throughout its lifetime.
@@ -385,7 +386,7 @@ Predefined array type: String
 A recurring theme in our introduction to Ada types has been the way important
 built-in types like :ada:`Boolean` or :ada:`Integer` are defined through the
 same facilities that are available to the user. This is also true for strings:
-The String type in Ada is a simple array.
+The :ada:`String` type in Ada is a simple array.
 
 Here is how the string type is defined in Ada:
 
@@ -398,7 +399,7 @@ literals, as we can see in the example below.
 
 .. hint::
     String literals are a syntactic sugar for aggregates, so that in the
-    following example, A and B have the same value.
+    following example, :ada:`A` and :ada:`B` have the same value.
 
     .. code:: ada no_button project=Courses.Intro_To_Ada.Arrays.String_Literals
 
@@ -463,9 +464,10 @@ initialization expression.
     end Main;
 
 .. attention::
-    As you can see above, the standard String type in Ada is an array. As such,
-    it shares the advantages and drawbacks of arrays: a String value is stack
-    allocated, it is accessed efficiently, and its bounds are immutable.
+    As you can see above, the standard ada:`String` type in Ada is an array. As
+    such, it shares the advantages and drawbacks of arrays: a :ada:`String`
+    value is stack allocated, it is accessed efficiently, and its bounds are
+    immutable.
 
     If you want something akin to C++'s :cpp:`std::string`, you can use
     :ref:`Unbounded Strings <UnboundedStrings>` from Ada's standard library.
@@ -572,8 +574,9 @@ For example, this is a function that returns an unconstrained :ada:`String`:
     end Main;
 
 (This example is for illustrative purposes only.  There is a built-in mechanism,
-the 'Image attribute for scalar types, that returns the name (as a String) of
-any element of an enumeration type.  For example Days'Image(Monday) is "MONDAY".)
+the :ada:`'Image` attribute for scalar types, that returns the name (as a
+:ada:`String`) of any element of an enumeration type.  For example
+:ada:`Days'Image(Monday)` is :ada:`"MONDAY"`.)
 
 .. admonition:: In other languages
 
@@ -598,8 +601,8 @@ Declaring arrays (2)
 While we can have array types whose size and bounds are determined at run time,
 the array's component type needs to be of a definite and constrained type.
 
-Thus, if you need to declare, for example, an array of Strings, the String
-subtype used as component will need to have a fixed size.
+Thus, if you need to declare, for example, an array of strings, the
+:ada:`String` subtype used as component will need to have a fixed size.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Day_Name_2
 
