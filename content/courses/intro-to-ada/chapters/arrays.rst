@@ -615,11 +615,11 @@ Thus, if you need to declare, for example, an array of strings, the
        subtype Day_Name is String (1 .. 2);
        --  Subtype of string with known size
 
-       type Days_Name_Type
-       is array (Days) of Day_Name;
-       --        ^ Type of the index
-       --                 ^ Type of the element. Must be
-       --                   definite
+       type Days_Name_Type is
+         array (Days) of Day_Name;
+       --       ^ Type of the index
+       --                ^ Type of the element. Must be
+       --                  definite
 
        Names : constant Days_Name_Type :=
          ("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su");
