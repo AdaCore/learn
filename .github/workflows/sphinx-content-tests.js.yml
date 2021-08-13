@@ -64,3 +64,10 @@ jobs:
         path: |
           frontend/dist/pdf_books
         retention-days: 1
+    - name: Archive HTML files in artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: learn-html
+        path: |
+          frontend/dist/html
+        retention-days: 1
