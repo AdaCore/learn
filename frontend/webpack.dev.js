@@ -1,5 +1,5 @@
 const path = require('path');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const exec = require('child_process').exec;
 const WatchPlugin = require('webpack-watch-files-plugin').default;
 const ShellPlugin = require('webpack-shell-plugin-next');
