@@ -55,8 +55,12 @@ jobs:
         pip install -r requirements.txt
     - name: Run SPHINX engine tests
       run: make SPHINXOPTS="-W" test_engine
-    - name: Build learn site
-      run: make site
+    - name: Run Webpack production
+      run: make cleanall webpack-production
+    - name: Run SPHINX content tests
+      run: make -k test_content
+    - name: Build PDF books including build/runtime output
+      run: make pdf_books
     - name: Archive PDF books in artifact
       uses: actions/upload-artifact@v2
       with:
