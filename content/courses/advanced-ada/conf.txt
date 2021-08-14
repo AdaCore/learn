@@ -1,3 +1,4 @@
 title=Advanced Ada
 author=Gustavo A. Hoffmann \\and Robert A. Duff
+version=0.0
 

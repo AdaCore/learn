@@ -1,3 +1,4 @@
 title=Ada for the C++ and Java Developer
 author=Quentin Ochem
 cover_page=cover-A4.pdf
+version=1.6

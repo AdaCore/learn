@@ -1,3 +1,4 @@
 title=Introduction to Ada: Laboratories
 author=Gustavo A. Hoffmann
+version=1.2
 

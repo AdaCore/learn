@@ -1,2 +1,3 @@
 title=Introduction to Embedded Systems Programming
 author=Patrick Rogers
+version=0.0
