@@ -2,7 +2,7 @@ $frontend = <<-SHELL
   #!/bin/sh -eux
 
   # Enable the NodeSource repository
-  curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+  curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 
   # Add yarn to apt-get
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
