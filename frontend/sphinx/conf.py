@@ -37,7 +37,7 @@ release_date = datetime.date.today().strftime('%Y-%m')
 release = release_date
 release_name = 'Release'
 
-if 'SPHINX_VERSION' in os.environ:
+if 'SPHINX_VERSION' in os.environ and os.environ['SPHINX_VERSION'] != "":
     version = os.environ['SPHINX_VERSION']
     release = os.environ['SPHINX_VERSION']
     release_name = 'Version'
