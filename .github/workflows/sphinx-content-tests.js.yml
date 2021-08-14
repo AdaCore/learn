@@ -9,7 +9,7 @@ defaults:
 jobs:
   sphinx-content:
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     strategy:
       matrix:
@@ -55,6 +55,8 @@ jobs:
         pip install -r requirements.txt
     - name: Run SPHINX engine tests
       run: make SPHINXOPTS="-W" test_engine
+    - name: Run Webpack production
+      run: make cleanall webpack-production
     - name: Run SPHINX content tests
       run: make -k test_content
     - name: Build PDF books including build/runtime output
@@ -65,4 +67,11 @@ jobs:
         name: learn-pdf-books
         path: |
           frontend/dist/pdf_books
+        retention-days: 1
+    - name: Archive HTML files in artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: learn-html
+        path: |
+          frontend/dist/html
         retention-days: 1
