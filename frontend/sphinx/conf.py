@@ -31,10 +31,11 @@ title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
     os.environ['SPHINX_TITLE']
 
 # Automatic version/release string based on date
+version_date = datetime.date.today().strftime('%Y.%m')
 release_date = datetime.date.today().strftime('%Y-%m')
 
 # The short X.Y version
-version = u'0.0'
+version = version_date
 
 # The full version, including alpha/beta/rc tags
 release = release_date
