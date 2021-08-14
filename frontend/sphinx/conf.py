@@ -31,10 +31,16 @@ title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
     os.environ['SPHINX_TITLE']
 
 # The short X.Y version
-version = u''
+version = u'0.0'
 # The full version, including alpha/beta/rc tags
-release = u'2021-07'
+release_date = datetime.date.today().strftime('%Y-%m')
+release = release_date
+release_name = 'Release'
 
+if 'SPHINX_VERSION' in os.environ:
+    version = os.environ['SPHINX_VERSION']
+    release = os.environ['SPHINX_VERSION']
+    release_name = 'Version'
 
 # -- General configuration ---------------------------------------------------
 
@@ -238,6 +244,8 @@ TitleColor={named}{MidnightBlue}
 
     # Inline code cannot be highlighted, see
     # https://github.com/sphinx-doc/sphinx/issues/5157
+
+    'releasename': release_name,
 }
 
 if ('SPHINX_COVER_PAGE' in os.environ and
