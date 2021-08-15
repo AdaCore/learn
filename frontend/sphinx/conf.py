@@ -275,6 +275,50 @@ latex_documents = [
      author, 'manual'),
 ]
 
+# -- Options for Epub output ---------------------------------------------------
+
+epub_title = u'AdaCore book'
+epub_author = u'AdaCore'
+epub_publisher = u'AdaCore'
+epub_copyright = u'2021, AdaCore'
+
+epub_version = 3.0
+
+# epub_theme = 'epub2'
+
+# The scheme of the identifier. Typical schemes are ISBN or URL.
+#epub_scheme = ''
+
+# The unique identifier of the text. This can be a ISBN number
+# or the project homepage.
+#epub_identifier = ''
+
+# A unique identification for the text.
+#epub_uid = ''
+
+# A tuple containing the cover image and cover page html template filenames.
+# epub_cover = ("_static/cover.png", "epub-cover.html")
+
+# HTML files that should be inserted before the pages created by sphinx.
+# The format is a list of tuples containing the path and title.
+#epub_pre_files = []
+
+# HTML files shat should be inserted after the pages created by sphinx.
+# The format is a list of tuples containing the path and title.
+#epub_post_files = []
+
+# A list of files that should not be packed into the epub file.
+# epub_exclude_files = []
+#    ['_static/opensearch.xml', '_static/doctools.js',
+#    '_static/jquery.js', '_static/searchtools.js', '_static/underscore.js',
+#    '_static/basic.css', 'search.html', '_static/websupport.js']
+
+# The depth of the table of contents in toc.ncx.
+epub_tocdepth = 3
+
+# Allow duplicate toc entries.
+epub_tocdup = False
+
 
 # -- Options for manual page output ------------------------------------------
 
