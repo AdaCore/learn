@@ -30,14 +30,18 @@ author = u'AdaCore' if 'SPHINX_AUTHOR' not in os.environ else \
 title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
     os.environ['SPHINX_TITLE']
 
-# The short X.Y version
-version = u'0.0'
-# The full version, including alpha/beta/rc tags
+# Automatic version/release string based on date
+version_date = datetime.date.today().strftime('%Y.%m')
 release_date = datetime.date.today().strftime('%Y-%m')
+
+# The short X.Y version
+version = version_date
+
+# The full version, including alpha/beta/rc tags
 release = release_date
 release_name = 'Release'
 
-if 'SPHINX_VERSION' in os.environ:
+if 'SPHINX_VERSION' in os.environ and os.environ['SPHINX_VERSION'] != "":
     version = os.environ['SPHINX_VERSION']
     release = os.environ['SPHINX_VERSION']
     release_name = 'Version'
