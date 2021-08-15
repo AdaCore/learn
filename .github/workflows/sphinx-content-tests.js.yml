@@ -58,6 +58,13 @@ jobs:
       run: make SPHINXOPTS="-W" test_engine
     - name: Run Webpack production
       run: make cleanall webpack-production
+    - name: Archive HTML files in artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: learn-html
+        path: |
+          frontend/dist/html
+        retention-days: 1
     - name: Run SPHINX content tests
       run: make -k test_content
     - name: Build PDF books including build/runtime output
@@ -86,11 +93,4 @@ jobs:
         name: learn-mobi-books
         path: |
           frontend/dist/mobi_books
-        retention-days: 1
-    - name: Archive HTML files in artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: learn-html
-        path: |
-          frontend/dist/html
         retention-days: 1
