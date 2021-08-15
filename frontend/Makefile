@@ -220,6 +220,7 @@ MOBI_BOOKS_DIR := $(BUILDDIR)/mobi_books
 
 $(MOBI_BOOKS_DIR)/%.mobi: $(EPUB_BOOKS_DIR)/%.epub
 	@echo Building $@
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
 	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
 	@ebook-convert $^ $@
 
