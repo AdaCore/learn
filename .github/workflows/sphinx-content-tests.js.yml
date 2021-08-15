@@ -60,6 +60,15 @@ jobs:
       run: make cleanall webpack-production
     - name: Run SPHINX content tests
       run: make -k test_content
+    - name: Build PDF books including build/runtime output
+      run: make pdf_books
+    - name: Archive PDF books in artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: learn-pdf-books
+        path: |
+          frontend/dist/pdf_books
+        retention-days: 1
     - name: Build EPUB books including build/runtime output
       run: make epub_books
     - name: Archive EPUB books in artifact
