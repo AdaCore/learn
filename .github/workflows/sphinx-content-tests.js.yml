@@ -30,18 +30,7 @@ jobs:
     - name: Install OS Deps
       run: |
         sudo apt-get install -y \
-        graphviz \
-        calibre \
-        texlive-latex-base \
-        texlive-latex-recommended \
-        texlive-latex-extra \
-        texlive-fonts-recommended \
-        texlive-fonts-extra \
-        latexmk \
-        texlive-xetex \
-        fonts-lmodern \
-        fonts-open-sans \
-        fonts-dejavu
+        graphviz
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: ada-actions/toolchain
@@ -64,33 +53,4 @@ jobs:
         name: learn-html
         path: |
           frontend/dist/html
-        retention-days: 1
-    - name: Run SPHINX content tests
-      run: make -k test_content
-    - name: Build PDF books including build/runtime output
-      run: make pdf_books
-    - name: Archive PDF books in artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: learn-pdf-books
-        path: |
-          frontend/dist/pdf_books
-        retention-days: 1
-    - name: Build EPUB books including build/runtime output
-      run: make epub_books
-    - name: Archive EPUB books in artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: learn-epub-books
-        path: |
-          frontend/dist/epub_books
-        retention-days: 1
-    - name: Build MOBI books including build/runtime output
-      run: make mobi_books
-    - name: Archive MOBI books in artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: learn-mobi-books
-        path: |
-          frontend/dist/mobi_books
         retention-days: 1
