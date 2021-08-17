@@ -73,7 +73,8 @@ in the section on :ref:`enumeration types <EnumTypes>`.
 Let's take a simple example: it is possible in Ada to have functions that have
 the same name, but different types for their parameters.
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+    :class: ada-syntax-only
 
     package Pkg is
        function F (A : Integer) return Integer;
@@ -87,7 +88,8 @@ overloading.
 One of the novel aspects of Ada's overloading facility is the ability to
 resolve overloading based on the return type of a function.
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading
+    :class: ada-syntax-only
 
     package Pkg is
        type SSID is new Integer;
@@ -116,8 +118,8 @@ However, sometimes an ambiguity makes it impossible to resolve which
 declaration of an overloaded name a given occurrence of the name refers to.
 This is where a qualified expression becomes useful.
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Overloading_Error
-    :class: ada-expect-compile-error
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Overloading_Error
+    :class: ada-syntax-only, ada-expect-compile-error
 
     package Pkg is
        type SSID is new Integer;
@@ -448,7 +450,8 @@ known at compile time. This is illustrated in the example below:
 .. ?? an elaboration pragma is used.
 .. ?? Consider simplifying or restructuring the example to avoid this issue
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record
+.. code:: ada no_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record
+    :class: ada-syntax-only
 
     package Runtime_Length is
        function Compute_Max_Len return Natural;
@@ -528,6 +531,31 @@ the discriminant is not declared with an initialization:
 
 This also means that, in the example above, you cannot declare an array of
 Point values, because the size of a Point is not known.
+
+As mentioned in the example above, we could provide a default value for the
+discriminants, so that we could legally declare :ada:`Point` values without
+specifying the discriminants. For the example above, this is how it would look:
+
+.. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Test_Discriminants
+
+    package Test_Discriminants is
+       type Point (X, Y : Natural := 0) is record
+          null;
+       end record;
+
+       P : Point;
+       --  We can now simply declare a "Point" without further ado.
+       --  In this case, we're using the default values (0) for X and Y
+
+       P2 : Point (1, 2);
+       P3 : Point := (1, 2);
+       --  We can still specify discriminants.
+
+    end Test_Discriminants;
+
+Also note that, even though the :ada:`Point` type now has default
+discriminants, we can still specify discriminants, as we're doing in the
+declarations of :ada:`P2` and :ada:`P3`.
 
 In most other respects discriminants behave like regular fields: You have to
 specify their values in aggregates, as seen above, and you can access their

@@ -1,9 +1,9 @@
-Pygments==2.8.0
-Sphinx==3.5.4
-ipython==5.7.0
+Pygments==2.9.0
+Sphinx==4.1.2
+ipython==7.26.0
 sphinx_rtd_theme==0.5.2
 sphinx-reredirects==0.0.1
 pydot-ng==2.0.0
 pyparsing==2.4.7
-graphviz==0.14.2
+graphviz==0.17
 coverage==5.5

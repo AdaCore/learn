@@ -44,7 +44,7 @@ Directions
 
     --  START LAB IO BLOCK
     in 0:Direction_Chk
-    out 0:Angle:  0 => EAST. Angle:  30 => NORTHWEST. Angle:  45 => NORTHWEST. Angle:  90 => NORTH. Angle:  91 => NORTHWEST. Angle:  120 => NORTHWEST. Angle:  180 => WEST. Angle:  250 => SOUTHWEST. Angle:  270 => SOUTH.
+    out 0:Angle:  0 => NORTH. Angle:  30 => NORTHEAST. Angle:  45 => NORTHEAST. Angle:  90 => EAST. Angle:  91 => SOUTHEAST. Angle:  120 => SOUTHEAST. Angle:  180 => SOUTH. Angle:  250 => SOUTHWEST. Angle:  270 => WEST.
     --  END LAB IO BLOCK
 
     package Directions is
@@ -53,12 +53,13 @@ Directions
 
        type Direction is
          (North,
-          Northwest,
-          West,
-          Southwest,
-          South,
+          Northeast,
+          East,
           Southeast,
-          East);
+          South,
+          Southwest,
+          West,
+          Northwest);
 
        function To_Direction (N: Angle_Mod) return Direction;
 
@@ -94,14 +95,14 @@ Directions
        function To_Direction (N : Angle_Mod) return Direction is
        begin
           case N is
-             when   0        => return East;
-             when   1 ..  89 => return Northwest;
-             when  90        => return North;
-             when  91 .. 179 => return Northwest;
-             when 180        => return West;
+             when   0        => return North;
+             when   1 ..  89 => return Northeast;
+             when  90        => return East;
+             when  91 .. 179 => return Southeast;
+             when 180        => return South;
              when 181 .. 269 => return Southwest;
-             when 270        => return South;
-             when 271 .. 359 => return Southeast;
+             when 270        => return West;
+             when 271 .. 359 => return Northwest;
           end case;
        end To_Direction;
 
@@ -412,7 +413,7 @@ keep track of assets.
     #. Procedure :ada:`Add` adds an item to the assets.
 
         #. Since we want to keep track of the assets, the implementation must
-           accumulate the total value of each item's inventory, the result of 
+           accumulate the total value of each item's inventory, the result of
            multiplying the item quantity and its price.
 
 .. code:: ada lab=Records.Inventory

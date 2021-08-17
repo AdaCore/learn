@@ -30,11 +30,21 @@ author = u'AdaCore' if 'SPHINX_AUTHOR' not in os.environ else \
 title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
     os.environ['SPHINX_TITLE']
 
-# The short X.Y version
-version = u''
-# The full version, including alpha/beta/rc tags
-release = u'2021-02'
+# Automatic version/release string based on date
+version_date = datetime.date.today().strftime('%Y.%m')
+release_date = datetime.date.today().strftime('%Y-%m')
 
+# The short X.Y version
+version = version_date
+
+# The full version, including alpha/beta/rc tags
+release = release_date
+release_name = 'Release'
+
+if 'SPHINX_VERSION' in os.environ and os.environ['SPHINX_VERSION'] != "":
+    version = os.environ['SPHINX_VERSION']
+    release = os.environ['SPHINX_VERSION']
+    release_name = 'Version'
 
 # -- General configuration ---------------------------------------------------
 
@@ -206,6 +216,7 @@ latex_elements = {
     #
     'preamble': r'''
 \usepackage{pmboxdraw} \usepackage{unicode-math}
+\usepackage{pdfpages}
 \fvset{fontsize=\small}
 ''',
 
@@ -237,7 +248,18 @@ TitleColor={named}{MidnightBlue}
 
     # Inline code cannot be highlighted, see
     # https://github.com/sphinx-doc/sphinx/issues/5157
+
+    'releasename': release_name,
 }
+
+if ('SPHINX_COVER_PAGE' in os.environ and
+    os.environ['SPHINX_COVER_PAGE'] != ""):
+    latex_elements['maketitle'] = r'''
+\begin{titlepage}
+\includepdf{''' + os.environ['SPHINX_COVER_PAGE'] + r'''}
+\sphinxmaketitle
+\end{titlepage}
+'''
 
 latex_logo = 'img/logo.png'
 

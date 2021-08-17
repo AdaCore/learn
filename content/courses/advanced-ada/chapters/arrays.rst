@@ -20,6 +20,9 @@ Unconstrained Arrays
 
     - `The Constrained Attribute <http://www.ada-auth.org/standards/2xrm/html/RM-J-4.html>`_
 
+    - Mention that :ada:`Ada.Containers.Vectors` can be used if you want
+      "arrays" that change length.
+
 .. todo::
 
     Complete section!

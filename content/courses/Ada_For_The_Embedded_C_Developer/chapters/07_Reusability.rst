@@ -949,9 +949,8 @@ because this discriminant is visible in the *non-private* part of package
 Variant records
 ~~~~~~~~~~~~~~~
 
-In simple terms, a variant record |mdash| a *discriminated record*
-in Ada terminology |mdash| is a record with discriminants that allows for
-changing its structure. Basically, it's a record containing a :ada:`case`.
+In simple terms, a variant record is a record with discriminants that allows
+for changing its structure. Basically, it's a record containing a :ada:`case`.
 This is the general structure:
 
 [Ada]
@@ -1149,37 +1148,6 @@ isn't stored as part of the record. Therefore, we cannot access the
        if V.Use_Float then       --  COMPILATION ERROR!
           --  Do something...
        end if;
-
-We could, however, declare another record with discriminants and use the
-:ada:`Float_Int_Union` type for one of its components. For example:
-
-[Ada]
-
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Reusability.Unchecked_Union_Ada
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Main is
-
-       type Float_Int_Union (Use_Float : Boolean) is record
-          case Use_Float is
-            when True  => F : Float;
-            when False => I : Integer;
-          end case;
-       end record
-         with Unchecked_Union;
-
-       type Float_Int (Use_Float : Boolean) is record
-          U : Float_Int_Union (Use_Float);
-       end record;
-
-       V : constant Float_Int := (Use_Float => True,
-                                  U         => (Use_Float => True,  F => 10.0));
-
-    begin
-       Put_Line ("Using float:   " & Boolean'Image (V.Use_Float));
-       Put_Line ("Integer value: " & Integer'Image (V.U.I));
-    end Main;
 
 Unchecked unions are particularly useful in Ada when creating bindings for C
 code.

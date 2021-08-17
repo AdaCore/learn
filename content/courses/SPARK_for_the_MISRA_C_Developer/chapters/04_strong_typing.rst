@@ -100,9 +100,9 @@ The added syntax helps first in making clear what is happening and, second,
 in ensuring that a potentially dangerous feature (assigning to a value at a
 specific machine address) is not used inadvertently.
 
-The above example is legal Ada but not SPARK, since SPARK does not support
-pointers (they significantly complicate formal analysis). SPARK does allow
-addresses, however.
+The above example is legal in SPARK, but the SPARK analysis tool issues
+warnings as it cannot control how the program or its environment may update the
+memory cell at address 42.
 
 Pointers Are Not References
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -117,13 +117,14 @@ persists after the first object has ceased to exist"`. Unfortunately, enforcing
 this rule is difficult, as it is undecidable.
 
 In SPARK, parameters can be passed by reference, but no pointer to the
-parameter can be stored, which completely solves this issue. In fact, the
-decision to pass a parameter by copy or by reference rests in many cases with
-the compiler, but such compiler dependency has no effect on the functional
-behavior of a SPARK program. In the example below, the compiler may decide to pass
-parameter :ada:`P` of procedure :ada:`Rotate_X` either by copy or by reference, but
-regardless of the choice the postcondition of :ada:`Rotate_X` will hold:
-the final value of :ada:`P` will be modified by rotation around the :ada:`X` axis.
+parameter can be stored past the return point of the function, which completely
+solves this issue. In fact, the decision to pass a parameter by copy or by
+reference rests in many cases with the compiler, but such compiler dependency
+has no effect on the functional behavior of a SPARK program. In the example
+below, the compiler may decide to pass parameter :ada:`P` of procedure
+:ada:`Rotate_X` either by copy or by reference, but regardless of the choice
+the postcondition of :ada:`Rotate_X` will hold: the final value of :ada:`P`
+will be modified by rotation around the :ada:`X` axis.
 
 .. code:: ada prove_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Geometry
 
@@ -407,7 +408,7 @@ a compile-time error:
 
    procedure Assign_I is new Assign (Integer, Assign_Float);
 
-.. _Enforcing Strong Typing for Scalars:
+.. _Enforcing_Strong_Typing_For_Scalars:
 
 Enforcing Strong Typing for Scalars
 ***********************************
@@ -572,7 +573,7 @@ to iterate over all values of the type:
        end loop;
     end Ok_Arith;
 
-.. _Boolean Operations on Boolean:
+.. _Boolean_Operations_On_Boolean:
 
 Boolean Operations on Boolean
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -730,7 +731,7 @@ Rules 10.1 and 10.5 restrict operations on types and explicit
 conversions. That's not enough to avoid problematic C programs; a program
 violating one of these rules can be expressed using only implicit type
 conversions. For example, the Shakespearian code in section
-:ref:`Boolean Operations on Boolean` can be reformulated to
+:ref:`Boolean_Operations_On_Boolean` can be reformulated to
 satisfy both Rules 10.1 and 10.5:
 
 .. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_C
@@ -854,5 +855,5 @@ an enumeration type:
        I := Boolean'Pos (B);
        I := Character'Pos (C);
        I := Integer (F);
-       A := Animal'Val(2);
+       A := Animal'Val (2);
     end Ok_Conversions;

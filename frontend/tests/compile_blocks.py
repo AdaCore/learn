@@ -61,77 +61,107 @@ class Block(object):
 
         classes = []
         compiler_switches = []
+        buttons = []
         cb_start = -1
         cb_indent = -1
         lang = ""
+        project = None
+        main_file = None
+        manual_chop = None
+        last_line_number = -1
 
         def is_empty(line):
             return (not line) or line.isspace()
 
+        def process_block(i, line, indent):
+            nonlocal classes, cb_start, cb_indent, lang
+
+            if cb_indent == -1 and not is_empty(line):
+                cb_indent = indent
+
+            if indent < cb_indent and not is_empty(line):
+                blocks.append(CodeBlock(
+                    cb_start,
+                    i,
+                    "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
+                    lang,
+                    project,
+                    main_file,
+                    compiler_switches,
+                    classes,
+                    manual_chop,
+                    buttons
+                ))
+
+                classes, cb_start, cb_indent, lang = [], -1, -1, ""
+
+            m = classes_re.match(line)
+
+            if m:
+                classes = [str.strip(l) for l in m.groups()[0].split(",")]
+                cb_start = i + 1
+
+        def start_code_block(i, line, indent):
+            nonlocal cb_start, lang, project, main_file, manual_chop, \
+                     buttons, compiler_switches
+
+            cb_start, lang = (
+                i + 1,
+                lang_re.match(line).groups()[0]
+            )
+            project = project_re.match(line)
+            if project is not None:
+                project = project.groups()[0]
+
+            main_file = main_re.match(line)
+            if main_file is not None:
+                # Retrieve actual main filename
+                main_file = main_file.groups()[0]
+            if lang == "c":
+                manual_chop = True
+            else:
+                manual_chop = (manual_chop_re.match(line) is not None)
+            buttons = button_re.findall(line)
+
+            all_switches = switches_re.match(line)
+
+            compiler_switches = []
+            if all_switches is not None:
+                all_switches = all_switches.groups()[0]
+                compiler_switches = compiler_switches_re.match(all_switches)
+                if compiler_switches is not None:
+                    compiler_switches = [str.strip(l)
+                        for l in compiler_switches.groups()[0].split(",")]
+
+        def start_config_block(i, line, indent):
+            blocks.append(ConfigBlock(**dict(
+                kv.split('=')
+                for kv
+                in code_config_re.findall(line)[0].split(";")
+            )))
+
+
         for i, (line, indent) in enumerate(zip(lines, indents)):
+            last_line_number = i
+
             if cb_start != -1:
-
-                if cb_indent == -1 and not is_empty(line):
-                    cb_indent = indent
-
-                if indent < cb_indent and not is_empty(line):
-                    blocks.append(CodeBlock(
-                        cb_start,
-                        i,
-                        "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
-                        lang,
-                        project,
-                        main_file,
-                        compiler_switches,
-                        classes,
-                        manual_chop,
-                        buttons
-                    ))
-
-                    classes, cb_start, cb_indent, lang = [], -1, -1, ""
-
-                m = classes_re.match(line)
-
-                if m:
-                    classes = [str.strip(l) for l in m.groups()[0].split(",")]
-                    cb_start = i + 1
+                process_block(i, line, indent)
             else:
                 if line[indent:].startswith(".. code::"):
-                    cb_start, lang = (
-                        i + 1,
-                        lang_re.match(line).groups()[0]
-                    )
-                    project = project_re.match(line)
-                    if project is not None:
-                        project = project.groups()[0]
-
-                    main_file = main_re.match(line)
-                    if main_file is not None:
-                        # Retrieve actual main filename
-                        main_file = main_file.groups()[0]
-                    if lang == "c":
-                        manual_chop = True
-                    else:
-                        manual_chop = (manual_chop_re.match(line) is not None)
-                    buttons = button_re.findall(line)
-
-                    all_switches = switches_re.match(line)
-
-                    if all_switches is not None:
-                        all_switches = all_switches.groups()[0]
-                        compiler_switches = compiler_switches_re.match(all_switches)
-                        if compiler_switches is not None:
-                            compiler_switches = [str.strip(l)
-                                for l in compiler_switches.groups()[0].split(",")]
-                        else:
-                            compiler_switches = []
-
+                    start_code_block(i, line, indent)
                 elif line[indent:].startswith(":code-config:"):
-                    blocks.append(ConfigBlock(**dict(
-                        kv.split('=')
-                        for kv
-                        in code_config_re.findall(line)[0].split(";")
-                    )))
+                    start_config_block(i, line, indent)
+
+        if cb_start != -1:
+            print("{}: code block (start: {}, project: {}) doesn't have explanatory section!".format(
+                    C.col("WARNING", C.Colors.YELLOW), cb_start, project))
+            process_block(last_line_number + 1, "END", 0)
+
+            # Error: unable to process last code block
+            if cb_start != -1:
+                print("{}: code block (start: {}, project: {}) hasn't been successfully processed!".format(
+                    C.col("ERROR", C.Colors.RED), cb_start, project))
+                exit(1)
 
         return blocks
 
@@ -226,12 +256,12 @@ args = parser.parse_args()
 args.rst_files = [os.path.abspath(f) for f in args.rst_files]
 
 COMMON_ADC = """
-pragma Restrictions (No_Specification_of_Aspect => Import);
-pragma Restrictions (No_Use_Of_Pragma => Import);
-pragma Restrictions (No_Use_Of_Pragma => Interface);
-pragma Restrictions (No_Use_Of_Pragma => Linker_Options);
-pragma Restrictions (No_Dependence => System.Machine_Code);
-pragma Restrictions (No_Dependence => Machine_Code);
+--  pragma Restrictions (No_Specification_of_Aspect => Import);
+--  pragma Restrictions (No_Use_Of_Pragma => Import);
+--  pragma Restrictions (No_Use_Of_Pragma => Interface);
+--  pragma Restrictions (No_Use_Of_Pragma => Linker_Options);
+--  pragma Restrictions (No_Dependence => System.Machine_Code);
+--  pragma Restrictions (No_Dependence => Machine_Code);
 """
 
 SPARK_ADC = """
@@ -281,9 +311,12 @@ def write_project_file(main_file, compiler_switches, spark_mode):
             line_str = f'for Switches ("Ada") use ({switches_str});'
             main_gpr = main_gpr.replace(placeholder_str, line_str)
 
-        mains = [main_file]
-        main_list = [f'"{x}"' for x in mains]
-        to_insert = f"for Main use ({', '.join(main_list)});"
+        if main_file is not None:
+            mains = [main_file]
+            main_list = [f'"{x}"' for x in mains]
+            to_insert = f"for Main use ({', '.join(main_list)});"
+        else:
+            to_insert = f""
         main_gpr = main_gpr.replace("--MAIN_PLACEHOLDER--", to_insert)
 
         gpr_file.write(main_gpr)
@@ -458,8 +491,16 @@ def analyze_file(rst_file):
             prove_error = False
             is_prove_error_class = False
 
+            run_block = (('ada-run' in block.classes
+                          or 'ada-run-expect-failure' in block.classes
+                          or 'run' in block.buttons)
+                         and not 'ada-norun' in block.classes)
+            compile_block = run_block or ('compile' in block.buttons)
+
             prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",
                              "prove_report_all"]
+
+            prove_block = any(b in prove_buttons for b in block.buttons)
 
             def get_main_filename(block):
                 if block.main_file is not None:
@@ -475,20 +516,25 @@ def analyze_file(rst_file):
 
                 return project_block_dir
 
-            if (('ada-run' in block.classes
-                 or 'ada-run-expect-failure' in block.classes
-                 or 'run' in block.buttons)
-                and not 'ada-norun' in block.classes
-            ):
+            if compile_block:
+
                 main_file = get_main_filename(block)
 
                 project_block_dir = make_project_block_dir()
 
+                main_file = None
+                if run_block:
+                    main_file = get_main_filename(block)
+                spark_mode = False
+                project_filename = write_project_file(main_file,
+                                                      block.compiler_switches,
+                                                      spark_mode)
+
                 if block.language == "ada":
 
                     try:
-                        out = run("gprbuild", "-gnata", "-gnatyg0-s", "-f",
-                                  main_file)
+                        run("gprclean", "-P", project_filename)
+                        out = run("gprbuild", "-q", "-P", project_filename)
                     except S.CalledProcessError as e:
                         if 'ada-expect-compile-error' in block.classes:
                             compile_error = True
@@ -518,7 +564,7 @@ def analyze_file(rst_file):
                     with open(project_block_dir + "/build.log", u"w") as logfile:
                         logfile.write(out)
 
-                if not compile_error and not has_error:
+                if not compile_error and not has_error and run_block:
                     if block.language == "ada":
                         try:
                             out = run("./{}".format(P.splitext(main_file)[0]))
@@ -564,9 +610,7 @@ def analyze_file(rst_file):
                         with open(project_block_dir + "/run.log", u"w") as logfile:
                             logfile.write(out)
 
-            if 'compile' in block.buttons:
-
-                project_block_dir = make_project_block_dir()
+            if False:
 
                 for source_file in source_files:
                     if block.language == "ada":
@@ -598,7 +642,7 @@ def analyze_file(rst_file):
                         with open(project_block_dir + "/compile.log", u"w+") as logfile:
                             logfile.write(out)
 
-            if any(b in prove_buttons for b in block.buttons):
+            if prove_block:
 
                 if block.language == "ada":
                     project_block_dir = make_project_block_dir()
@@ -624,7 +668,7 @@ def analyze_file(rst_file):
 
                     line = ["gnatprove", "-P", project_filename,
                             "--checks-as-errors", "--level=0",
-                            "--no-axiom-guard"]
+                            "--no-axiom-guard", "--output=oneline"]
                     line.extend(extra_args)
 
                     try:
@@ -659,11 +703,11 @@ def analyze_file(rst_file):
                     has_error = True
 
             if 'ada-expect-prove-error' in block.classes:
-                if not any(b in prove_buttons for b in block.buttons):
+                if not prove_block:
                     print_error(loc, "Expected prove button, got none!")
                     has_error = True
 
-            if any(b in prove_buttons for b in block.buttons):
+            if prove_block:
                 if is_prove_error_class and not prove_error:
                     print_error(loc, "Expected prove error, got none!")
                     has_error = True

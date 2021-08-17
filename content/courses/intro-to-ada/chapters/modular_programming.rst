@@ -269,7 +269,8 @@ Let's begin our discussion on child packages by taking our previous
 
 If we want to create a child package for :ada:`Week`, we may write:
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+    :class: ada-syntax-only
 
     package Week.Child is
 
@@ -365,7 +366,8 @@ So far, we've seen a single child package of a parent package. However, a
 parent package can also have multiple children. We could extend the example
 above and implement a :ada:`Week.Child_2` package. For example:
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
+    :class: ada-syntax-only
 
     package Week.Child_2 is
 
@@ -414,7 +416,8 @@ for elements declared in the package body of a parent package.
 Let's consider the package :ada:`Book` and its child
 :ada:`Additional_Operations`:
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
+.. code:: ada no_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
+    :class: ada-syntax-only
 
     package Book is
 

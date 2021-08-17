@@ -19,11 +19,13 @@ Overriding indicators
     - **Briefly** discuss :ada:`overriding` and :ada:`not overriding` mentioned
       in
       `Overriding Indicators <http://www.ada-auth.org/standards/2xrm/html/RM-8-3-1.html>`_
+    - Mention that :ada:`not overriding` is not recommended.
 
 .. todo::
 
     Complete section!
 
+.. _Abstract_Types_And_Subprograms:
 
 Abstract types and subprograms
 ------------------------------
@@ -40,7 +42,146 @@ Interfaces
 
     Complete section!
 
+.. _Null_Records_Vs_Interfaces:
 
+Null records vs. interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:ref:`Earlier on <Null_Records>` in the course, we discussed how to use null
+records to create a prototype. We could also consider using interfaces instead.
+However, as we've just learned, the consequences are that:
+
+- we can only create an API for the package specification, but we cannot use
+  that interface type in an application in the same way as we do with null
+  records;
+
+- we're forced to use object-oriented programming |mdash| which, depending on
+  our goal, might be more complex than actually needed.
+
+Let's revisit a previous example from the section on null records:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.OO_Prog.Device
+
+    package Devices is
+
+       type Device is private;
+
+       function Create (Active : Boolean) return Device;
+
+       procedure Reset (D : out Device) is null;
+
+       procedure Process (D : in out Device) is null;
+
+       procedure Activate (D : in out Device) is null;
+
+       procedure Deactivate (D : in out Device) is null;
+
+    private
+
+       type Device is null record;
+
+       function Create (Active : Boolean) return Device
+         is (null record);
+
+    end Devices;
+
+We can easily rewrite this specification using interfaces:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.OO_Prog.Device_Interface
+
+    package Devices is
+
+       type Device is interface;
+
+       function Create (Active : Boolean) return Device
+         is abstract;
+
+       procedure Reset (D : out Device) is null;
+
+       procedure Process (D : in out Device) is null;
+
+       procedure Activate (D : in out Device) is null;
+
+       procedure Deactivate (D : in out Device) is null;
+
+    end Devices;
+
+These are the only changes we made:
+
+- :ada:`Device` is now an interface, and
+
+- :ada:`Create` is now an abstract function.
+
+Keep in mind, however, that a null record isn't an abstract type, even though
+it *looks* abstract (as it doesn't store any information). This contrasts
+with interfaces, which are abstract and therefore more restricted. For example,
+as indicated above, we cannot use the interface from the :ada:`Devices` package
+in an application, as we cannot declare objects of an abstract type. The
+following application |mdash| which works fine when :ada:`Device` is a null
+record |mdash| doesn't compile when :ada:`Device` is an interface:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.OO_Prog.Device_Interface
+    :class: ada-expect-compile-error
+
+    with Devices; use Devices;
+
+    procedure Show_Device is
+       A : Device;
+    begin
+       A := Create (Active => True);
+       Process (A);
+       Deactivate (A);
+       Activate (A);
+       Reset (A);
+    end Show_Device;
+
+A possible compromise is, of course, to reintroduce null records in our
+specification as a derived type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.OO_Prog.Device_Interface
+
+    package Devices is
+
+       type Abstract_Device is interface;
+
+       function Create (Active : Boolean) return Abstract_Device
+         is abstract;
+
+       procedure Reset (D : out Abstract_Device) is null;
+
+       procedure Process (D : in out Abstract_Device) is null;
+
+       procedure Activate (D : in out Abstract_Device) is null;
+
+       procedure Deactivate (D : in out Abstract_Device) is null;
+
+       type Device is new Abstract_Device with private;
+
+    private
+
+       type Device is new Abstract_Device with null record;
+
+       function Create (Active : Boolean) return Device
+         is (null record);
+
+    end Devices;
+
+    with Devices; use Devices;
+
+    procedure Show_Device is
+       A : Device;
+    begin
+       A := Create (Active => True);
+       Process (A);
+       Deactivate (A);
+       Activate (A);
+       Reset (A);
+    end Show_Device;
+
+Now, our interface was renamed to :ada:`Abstract_Device` and we're just using
+it to specify our API. We derive the :ada:`Device` from this interface type
+(:ada:`Abstract_Device`) as a null record. In a prototype |mdash| such as the
+:ada:`Show_Device` procedure |mdash| we can use the null record as expected.
 
 Example: Extending Interfaces
 -----------------------------
@@ -216,10 +357,11 @@ class, before calling the new version of :ada:`Eat`:
 Using null procedures
 ~~~~~~~~~~~~~~~~~~~~~
 
-Since Ada 2005, we have the notion of null procedures. A null procedure is
+Since Ada 2005, we have the notion of null procedures. As
+:ref:`discussed previously <Null_Procedures>`, a null procedure is
 a procedure that is declared using :ada:`is null` and logically has an
 empty body. Fortunately, null procedures are allowed in interface
-definitions --- they define the default behavior of such a subprogram as
+definitions |mdash| they define the default behavior of such a subprogram as
 doing nothing. Back to the :ada:`Animal` example, the programmer can
 declare the interface's :ada:`Eat` primitive as follows:
 

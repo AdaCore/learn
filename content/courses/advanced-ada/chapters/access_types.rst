@@ -75,7 +75,7 @@ Null & Not Null Access
 
 .. note::
 
-    This section was originally written by Bob Duff and published as
+    This section was originally written by Robert A. Duff and published as
     `Gem #23: Null Considered Harmful <https://www.adacore.com/gems/ada-gem-23>`_
     and `Gem #24 <https://www.adacore.com/gems/ada-gem-24>`_.
 
@@ -427,7 +427,7 @@ caller.
 
     .. note::
 
-        This section was originally written by Ramón Fernández and Bob Duff, and
+        This section was originally written by Ramón Fernández and Robert A. Duff, and
         published as
         `Gem #33: Accessibility Checks <https://www.adacore.com/gems/gem-33>`_,
         `Gem #41 <https://www.adacore.com/gems/gem-41>`_ and

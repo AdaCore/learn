@@ -139,12 +139,12 @@ webpack-production:
 webpack-staging:
 	yarn run staging
 
-# Build the site pointing to 'cloudchecker.r53.adacore.com'
-site: cleanall webpack-production pdf_books
-	CODE_SERVER_URL="https://cloudchecker.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+# Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
+site: cleanall webpack-production test_content pdf_books
+	CODE_SERVER_URL="https://cloudchecker.learn.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-site-staging: cleanall webpack-staging pdf_books
+site-staging: cleanall webpack-staging test_content pdf_books
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
@@ -160,9 +160,15 @@ $(BOOKS):
 	$(eval SPHINX_PDF := $(shell basename $(shell dirname $@)).pdf)
 	$(eval SPHINX_TITLE := $(shell cat $@/conf.txt | grep title | sed -e 's#title=##'))
 	$(eval SPHINX_AUTHOR := $(shell cat $@/conf.txt | grep author | sed -e 's#author=##'))
+	$(eval SPHINX_COVER_PAGE := $(shell cat $@/conf.txt | grep cover_page | sed -e 's#cover_page=##'))
+	$(eval SPHINX_VERSION := $(shell cat $@/conf.txt | grep version | sed -e 's#version=##'))
 	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
+	@mkdir -p $(BUILDDIR)/latex
+	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $@/$(SPHINX_COVER_PAGE) $(BUILDDIR)/latex || echo "PDF: no cover page available for $(SPHINX_PDF)"
 	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
 	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
+	  export SPHINX_COVER_PAGE="$(SPHINX_COVER_PAGE)"; \
+	  export SPHINX_VERSION="$(SPHINX_VERSION)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $@ \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"

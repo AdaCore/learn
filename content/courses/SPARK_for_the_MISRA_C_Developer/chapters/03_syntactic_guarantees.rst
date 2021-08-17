@@ -193,7 +193,7 @@ example of a control structure being abused, due to the permissive syntax
 of C. There are many such examples, and MISRA C contains a number of guidelines
 to prevent such abuse.
 
-.. _Preventing the Semicolon Mistake:
+.. _Preventing_The_Semicolon_Mistake:
 
 Preventing the Semicolon Mistake
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -475,7 +475,7 @@ inner if-statement.
 MISRA C Rule 15.6 avoids the problem: `"The body of an
 iteration-statement or a selection-statement shall be a compound
 statement"`. That's the same rule as the one shown earlier for
-:ref:`Preventing the Semicolon Mistake`. So the code for :c:`absval` must be
+:ref:`Preventing_The_Semicolon_Mistake`. So the code for :c:`absval` must be
 written:
 
 .. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Dangling_Else_MISRA_C
@@ -526,4 +526,4 @@ so the dangling-else problem cannot arise. The above C code is written as follow
 
 Interestingly, SPARK analysis detects here that the negation operation on line
 9 might overflow. That's an example of runtime error detection which will be
-covered in the chapter on :ref:`Detecting Undefined Behavior`.
+covered in the chapter on :ref:`Detecting_Undefined_Behavior`.

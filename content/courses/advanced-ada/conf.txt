@@ -1,3 +1,3 @@
 title=Advanced Ada
-author=Gustavo A. Hoffmann \\and Bob Duff
+author=Gustavo A. Hoffmann \\and Robert A. Duff
 

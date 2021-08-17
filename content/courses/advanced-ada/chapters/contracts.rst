@@ -11,6 +11,18 @@ Class-wide contracts
     Complete section!
 
 
+Default initial conditions
+--------------------------
+
+.. admonition:: Relevant topics
+
+    - `Default Initial Conditions <http://www.ada-auth.org/standards/2xrm/html/RM-7-3-3.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Entry index attribute
 ---------------------
 

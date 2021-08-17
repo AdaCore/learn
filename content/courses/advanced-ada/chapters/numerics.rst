@@ -8,7 +8,7 @@ Modular Types
 
 .. note::
 
-    This section was originally written by Bob Duff and published as
+    This section was originally written by Robert A. Duff and published as
     `Gem #26: The Mod Attribute <https://www.adacore.com/gems/gem-26>`_.
 
 .. todo::

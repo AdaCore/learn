@@ -61,7 +61,7 @@ of control in any of the examples, the output may be interspersed.
 
 [Ada]
 
-.. code:: ada run_button ada project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task;
+.. code:: ada run_button ada project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -129,7 +129,7 @@ the underlying implementation of the task scheduling algorithm.
     with My_Tasks; use My_Tasks;
 
     procedure Main is
-       Dummy_Tab : array (0 .. 9) of My_Task ('G');
+       Dummy_Tab : array (0 .. 3) of My_Task ('W');
     begin
        null;
     end Main;
@@ -149,7 +149,7 @@ and terminates when its work is completed.
 
        T : Ptr_Task;
     begin
-       T := new My_Task ('G');
+       T := new My_Task ('W');
     end Main;
 
 Rendezvous
@@ -621,6 +621,7 @@ using the Ravenscar profile. For example:
           for C in First .. 'Z' loop
              Put (C);
           end loop;
+          New_Line;
        end My_Task;
 
     end My_Tasks;
@@ -630,7 +631,7 @@ using the Ravenscar profile. For example:
     with My_Tasks; use My_Tasks;
 
     procedure Main is
-       Tab : array (0 .. 9) of My_Task ('G');
+       Tab : array (0 .. 3) of My_Task ('W');
     begin
        null;
     end Main;
@@ -649,7 +650,7 @@ in the main application:
 
     package My_Task_Inst is
 
-       Tab : array (0 .. 9) of My_Task ('G');
+       Tab : array (0 .. 3) of My_Task ('W');
 
     end My_Task_Inst;
 

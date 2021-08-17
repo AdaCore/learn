@@ -23,11 +23,8 @@ This example shows the declaration and definition of a function:
     --  We declare (but don't define) a function with one
     --  parameter, returning an integer value
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Increment
-
-    --  We define the Increment function
-
     function Increment (I : Integer) return Integer is
+       --  We define the Increment function
     begin
         return I + 1;
     end Increment;
@@ -44,7 +41,8 @@ section at all, for example:
 
 Here's another variation on the previous example:
 
-.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
+.. code:: ada no_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
+    :class: ada-syntax-only
 
     function Increment_By
       (I    : Integer := 0;

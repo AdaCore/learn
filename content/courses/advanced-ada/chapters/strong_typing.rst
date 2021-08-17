@@ -543,23 +543,6 @@ This is a typical specification of the main package:
 
     end Indirect_Ordering;
 
-And this is a typical specification of the :ada:`Test` child package:
-
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
-
-    package Indirect_Ordering.Test is
-
-       function Get_Ordered_Chunks (C : Chunks) return Chunks;
-
-       function Get_Selected_Chunks (C : Chunks;
-                                     S : Selector) return Chunks;
-
-    end Indirect_Ordering.Test;
-
-This is the corresponding body of the main package:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
-
     package body Indirect_Ordering is
 
        function Get_Mapping (C : Chunks) return Mapping is
@@ -573,9 +556,18 @@ This is the corresponding body of the main package:
 
     end Indirect_Ordering;
 
-This is the corresponding body of the :ada:`Test` child package:
+And this is a typical specification of the :ada:`Test` child package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
+.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
+
+    package Indirect_Ordering.Test is
+
+       function Get_Ordered_Chunks (C : Chunks) return Chunks;
+
+       function Get_Selected_Chunks (C : Chunks;
+                                     S : Selector) return Chunks;
+
+    end Indirect_Ordering.Test;
 
     package body Indirect_Ordering.Test is
 
@@ -748,7 +740,7 @@ of the application. This is the updated specification of the main package:
 
     end Indirect_Ordering;
 
-By declaring these new types, we can avoid that the wrong index is used.
+By declaring these new types, we can avoid using the wrong index.
 Moreover, we're documenting |mdash| using the syntax provided by the
 language |mdash| which index is expected in each array or function from
 the package.

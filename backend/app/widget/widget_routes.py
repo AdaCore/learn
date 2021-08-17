@@ -29,6 +29,16 @@ def compose_response(obj, code):
     return response
 
 
+@widget_bp.route("/", methods=["GET"])
+def health_check():
+    """
+    The route to be used by a load balancer to check backend health.
+    :return:
+         A OK response indicating the endpoint is reachable
+    """
+    return compose_response({"message": "OK"}, 200)
+
+
 @widget_bp.route('/download/', methods=['POST'])
 def download_example():
     """
