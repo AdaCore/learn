@@ -1650,7 +1650,7 @@ some floating point type and it will specify the number of decimal
 digits.
 
 If instead we tried to match that formal with some actual that is an
-integer type, or an array type |mash| or anything other than a
+integer type, or an array type |mdash| or anything other than a
 floating-point type |mdash| the compiler will reject the instantiation.
 Therefore, within the generic body, the implementation code can be
 written with the assurance that the characteristics and capabilities of
