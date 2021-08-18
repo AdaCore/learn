@@ -31,7 +31,6 @@ jobs:
       run: |
         sudo apt-get install -y \
         graphviz \
-        calibre \
         texlive-latex-base \
         texlive-latex-recommended \
         texlive-latex-extra \
@@ -42,6 +41,11 @@ jobs:
         fonts-lmodern \
         fonts-open-sans \
         fonts-dejavu
+    - name: Install Calibre
+      run: |
+        sudo -v && \
+        wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | \
+            sudo sh /dev/stdin
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: ada-actions/toolchain
