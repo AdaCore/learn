@@ -154,25 +154,35 @@ site-testing: cleantest
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
 
-pdf_books: $(BOOKS)
-$(BOOKS):
-	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname $@))))
-	$(eval SPHINX_PDF := $(shell basename $(shell dirname $@)).pdf)
-	$(eval SPHINX_TITLE := $(shell cat $@/conf.txt | grep title | sed -e 's#title=##'))
-	$(eval SPHINX_AUTHOR := $(shell cat $@/conf.txt | grep author | sed -e 's#author=##'))
-	$(eval SPHINX_COVER_PAGE := $(shell cat $@/conf.txt | grep cover_page | sed -e 's#cover_page=##'))
-	$(eval SPHINX_VERSION := $(shell cat $@/conf.txt | grep version | sed -e 's#version=##'))
+%.pdf:
+	@echo Building $@
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
+	$(eval SPHINX_PDF := $(shell basename $@ .pdf))
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF))
+	$(eval SPHINX_TITLE := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep title | sed -e 's#title=##'))
+	$(eval SPHINX_AUTHOR := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep author | sed -e 's#author=##'))
+	$(eval SPHINX_COVER_PAGE := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep cover_page | sed -e 's#cover_page=##'))
+	$(eval SPHINX_VERSION := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep version | sed -e 's#version=##'))
 	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
 	@mkdir -p $(BUILDDIR)/latex
-	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $@/$(SPHINX_COVER_PAGE) $(BUILDDIR)/latex || echo "PDF: no cover page available for $(SPHINX_PDF)"
+	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $(SPHINX_CONTENT_DIR)/$(SPHINX_COVER_PAGE) $(BUILDDIR)/latex || echo "PDF: no cover page available for $(SPHINX_PDF)"
 	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
 	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
 	  export SPHINX_COVER_PAGE="$(SPHINX_COVER_PAGE)"; \
 	  export SPHINX_VERSION="$(SPHINX_VERSION)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
-	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $@ \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
+	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
+
+# Generate list: PDF_BOOKS
+$(foreach book_dir, $(BOOKS), \
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
+	$(eval SPHINX_PDF := $(shell basename $(shell dirname ${book_dir})).pdf) \
+	$(eval PDF_BOOKS += $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)) \
+	)
+
+pdf_books: $(PDF_BOOKS)
 
 cleanall:
 	@rm -rf "$(BUILDDIR)"
