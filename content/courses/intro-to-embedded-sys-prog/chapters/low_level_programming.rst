@@ -1541,14 +1541,14 @@ switch is your best friend.
 Unchecked Programming
 ---------------------
 
-Ada is designed to be a reliable language by default, based as it is on 
-static strong typing and high-level semantics. Many of the pitfalls that 
-a developer must keep in the back of their mind with other languages do 
-not apply in Ada, and are typically impossible. That protection extends 
-to low-level programming as well, e.g., the Separation Principle. 
-Nevertheless, low-level programming occasionally does require the 
-ability to go beyond the safety net provided by the type rules and 
-high-level language constructs. 
+Ada is designed to be a reliable language by default, based as it is on
+static strong typing and high-level semantics. Many of the pitfalls that
+a developer must keep in the back of their mind with other languages do
+not apply in Ada, and are typically impossible. That protection extends
+to low-level programming as well, e.g., the Separation Principle.
+Nevertheless, low-level programming occasionally does require the
+ability to go beyond the safety net provided by the type rules and
+high-level language constructs.
 
 One such mechanism provides a way to circumvent the type system, a
 system otherwise rigidly enforced by the compiler (to our benefit). Note
@@ -1562,17 +1562,17 @@ conversions are said to be "checked" because only specific kinds of
 types are allowed, and the compiler checks that such conversions are
 indeed between these allowed types.
 
-Instead, this section discusses "unchecked" programming, so-called 
-because the compiler does not check for meaningful semantics. There are 
-multiple mechanisms for unchecked programming in Ada: in addition to 
-circumventing the type system, we can also deallocate a 
-previously-allocated object, and can create an access value without the 
-usual checks. In all cases the responsibility for correct meaning and 
-behavior rests on the developer. Very few, if any, checks are done by 
-the compiler. If we convert a value to another type that generally makes 
-no sense, for example a task object converted to a record type, we are 
-on our own. If we deallocate an allocated object more than once, it is 
-our fault and Bad Things inevitably result. 
+Instead, this section discusses "unchecked" programming, so-called
+because the compiler does not check for meaningful semantics. There are
+multiple mechanisms for unchecked programming in Ada: in addition to
+circumventing the type system, we can also deallocate a
+previously-allocated object, and can create an access value without the
+usual checks. In all cases the responsibility for correct meaning and
+behavior rests on the developer. Very few, if any, checks are done by
+the compiler. If we convert a value to another type that generally makes
+no sense, for example a task object converted to a record type, we are
+on our own. If we deallocate an allocated object more than once, it is
+our fault and Bad Things inevitably result.
 
 Likened to "escape hatches," the facilities for unchecked programming
 are explicit in Ada. Their use is very clear in the source code, and is
@@ -1581,19 +1581,19 @@ of a generic library function that must be specified in a context clause
 ("with-clause") at the top of the file, and then instantiated prior to
 use (like any generic).
 
-You should understand that the explicitly unchecked facilities in Ada 
-are no more unsafe than the implicitly unchecked facilities in other 
-languages. There's no reason to "drop down" to C, for example, to do 
-low-level programming. For that matter, the low-level programming 
-facilities in Ada are at least as powerful as those in other languages, 
-and typically more so. 
+You should understand that the explicitly unchecked facilities in Ada
+are no more unsafe than the implicitly unchecked facilities in other
+languages. There's no reason to "drop down" to C, for example, to do
+low-level programming. For that matter, the low-level programming
+facilities in Ada are at least as powerful as those in other languages,
+and typically more so.
 
 We will explore unchecked storage deallocation in a separate book so
 let's focus on unchecked type conversions.
 
-Unchecked type conversions are achieved by instantiating this 
-language-defined generic library function, a "child" of the root package 
-named "Ada": 
+Unchecked type conversions are achieved by instantiating this
+language-defined generic library function, a "child" of the root package
+named "Ada":
 
 .. code-block:: ada
 
@@ -1650,13 +1650,14 @@ some floating point type and it will specify the number of decimal
 digits.
 
 If instead we tried to match that formal with some actual that is an
-integer type, or an array type |mdash| or anything other than a
+integer type, or an array type |mdash| anything other than a
 floating-point type |mdash| the compiler will reject the instantiation.
 Therefore, within the generic body, the implementation code can be
-written with the assurance that the characteristics and capabilities of
-the type will actually be available. The requirements are a matter of
-the generic unit's purpose and implementation, so the formal types
-reflect those requirements and the compiler ensures they will be met.
+written with the assurance that the characteristics and capabilities
+required of the type will actually be available. That's the Contract
+Model in full: the requirements are a matter of the generic unit's
+purpose and implementation, so the formal types reflect those
+requirements and the compiler ensures they will be met.
 
 Some generic units, though, do not require specifically numeric actual
 types. These generics can use less specific syntax for their formal types,
@@ -1691,22 +1692,22 @@ one for the "private" part of the package spec and the package body,
 known as the "full" view. The differences between the two views are a
 function of compile-time visibility.
 
-The partial view is what clients (i.e., users) of the code have: the
+The partial view is what clients (i.e., users) of the package have: the
 ability to do things that a type name provides, such as declarations of
 objects, as well as some basic operations such as assignment, some
-functions for equality and inequality, some conversions, and, whatever
+functions for equality and inequality, some conversions, and whatever
 subprograms work on the type (the procedure Do_Something above).
 Practically speaking, that's about all that the partial view provides.
 That's quite a lot, in fact, and corresponds to the classic definition
 of an "abstract data type."
 
-The full view is what the code in the package private part and package
-body has. This code has compile-time visibility to the full definition
-for type Foo, so there are additional capabilities available to this
-code. For example, if the full definition for Foo is as an array
-type, then indexing will be available with the private part and body. If
-Foo is fully defined as some numeric type, then arithmetic operations
-will be possible within the package, and so on.
+The code within the package private part and package body has the full
+view. This code has compile-time visibility to the full definition for
+type Foo, so there are additional capabilities available to this code.
+For example, if the full definition for Foo is as an array type,
+indexing will be available with the private part and body. If Foo is
+fully defined as some numeric type, arithmetic operations will be
+possible within the package, and so on.
 
 Therefore, the full view provides capabilities for type Foo that users
 of the type cannot access via the partial view. Only the implementation
@@ -1739,9 +1740,8 @@ to implement the body of Exchange: only assignment and object
 declaration are required. Any additional capabilities that the generic
 actual type may have |mdash| array indexing, arithmetic operators,
 whatever |mdash| are immaterial because they are not required. That's
-the Contract Model: only the given view's required capabilities are
-important. Anything else the type can do is immaterial to validating the
-contract.
+the Contract Model: only the specified view's required capabilities are
+important. Anything else the type can also do is not relevant.
 
 But consider limited types. Those types don't allow assignment, by
 definition. Therefore, an instantiation that specified a limited actual
@@ -1755,7 +1755,7 @@ that. But not all types are sufficient, by their name alone, to declare
 objects. Unconstrained array types, such as type String, are a familiar
 example: they require the bounds to be specified when declaring objects;
 the name String alone is insufficient. Therefore, such types would also
-violate the contract and would be rejected by the compiler when
+violate the contract and, therefore, would be rejected by the compiler when
 attempting to instate generic procedure Exchange.
 
 Suppose, however, that we have some other generic unit whose
@@ -1799,7 +1799,7 @@ neither Source nor Target will be used to declare objects (the "(<>)"
 syntax). Likewise, neither type will be used in an assignment statement
 (the "limited" reserved word). And finally, no particular kind of type
 is required for Source or Target (the "private" reserved word). That's a
-very restricted usage within the generic implementation, but as a result
+fairly restricted usage within the generic implementation, but as a result
 the contract can be very permissive: the generic can be instantiated
 with almost any type. It doesn't matter if the actual is limited or not,
 private or not, and indefinite or not. The generic implementation
@@ -1816,14 +1816,10 @@ Returning the value by-reference is not possible when the Source type is
 a by-copy type, however.
 [??? pointer to course defining which types are by-reference ????????????????????????]
 
-The compiler can restrict instantiations but implementers are advised by 
-the language standard to avoid them unless they are required by the 
-target environment. For example, an instantiation for types for which 
-unchecked conversion doesn't make sense might be disallowed. GNAT tries 
-to be permissive. For example, if the types are of unequal sizes, then 
-in the case of discrete types, a shorter source is first zero or sign 
-extended as necessary, and a shorter target is simply truncated on the 
-left. See the GNAT RM for the other details.
+The compiler can restrict instantiations but implementers are advised by
+the language standard to avoid them unless they are required by the
+target environment. For example, an instantiation for types for which
+unchecked conversion can't possibly make sense might be disallowed.
 
 Clients can apply language- and vendor-defined restrictions as well,
 via pragma Restrictions. In particular, the language defines
@@ -1835,10 +1831,10 @@ the generic for unchecked conversion:
 
 hence there would be no use of unchecked conversion.
 
-From the Contract Model's point of view most any type can be converted 
-to some other type via this generic function. But practically speaking, 
-some limitations are necessary. The following must all be true for the 
-conversion effect to be defined by the language: 
+From the Contract Model's point of view most any type can be converted
+to some other type via this generic function. But practically speaking,
+some limitations are necessary. The following must all be true for the
+conversion effect to be defined by the language:
 
    * S'Size = Target'Size
 
@@ -1851,7 +1847,7 @@ conversion effect to be defined by the language:
    * The representation of S is a representation of an object of the target subtype
 
 We will examine these requirements in turn, but realize that they are
-not a matter of legality. Compilers could allow instantiations that
+not a matter of legality. Compilers can allow instantiations that
 violate these requirements. Rather, they are requirements for
 conversions to have the defined effect.
 
@@ -1861,18 +1857,21 @@ reasonable if you consider it. What would it mean to convert, for
 example, a 32-bit value to an 8-bit value? Which 8 bits should be used?
 
 As a result, one of the few reasons for setting the size of a type (as
-opposed to the size of an object) is for the sake of unchecked
-conversions. We might make the size larger than it would need to be,
+opposed to the size of an object) is for the sake of well-defined unchecked
+conversions. We might make the size larger than it would need to be
 because we want to convert a value of that type to what would otherwise
 be a larger Target type.
 
-Because converting between types that are not the same size is so
-unlikely to be meaningful (at least not meaningful and portable), most
-compilers will issue a warning when the sizes are not the same. Some
-will even reject the instantiation. GNAT will issue a warning for these
-cases when enabled, but will allow the instantiation. We're supposed to
-know what we are doing, after all. The warning is enabled via the
-specific "-gnatwz" switch or the more general "-gnatwa" switch.
+Because converting between types that are not the same size is so open
+to interpretation, most compilers will issue a warning when the sizes
+are not the same. Some will even reject the instantiation. GNAT will
+issue a warning for these cases when the warnings are enabled, but will
+allow the instantiation. We're supposed to know what we are doing, after
+all. The warning is enabled via the specific "-gnatwz" switch or the
+more general "-gnatwa" switch. GNAT tries to be permissive. For example,
+in the case of discrete types, a shorter source is first zero or sign
+extended as necessary, and a shorter target is simply truncated on the
+left. See the GNAT RM for the other details.
 
 The next requirement concerns alignment. As we mentioned earlier, modern
 architectures tend to have strict alignment requirements. We can
@@ -1880,15 +1879,15 @@ meaningfully convert to a type with a stricter alignment, or to a type
 with no alignment requirement, but converting in the other direction is
 not reasonable.
 
-Next, recall that objects of unconstrained types, such as unconstrained 
-array types or discriminated record types, must have their constraints 
-specified when the objects are declared. We cannot just declare a String 
-object, for example, we must also specify the lower and upper bounds. 
-Those bounds are stored in memory, logically as part of the String 
-object, since each object could have different bounds (that's the point, 
-after all). What, then, would it mean to convert some value of a type 
-that has no bounds to a type that requires bounds? The third requirement 
-says that it is not meaningful to do so. 
+Next, recall that objects of unconstrained types, such as unconstrained
+array types or discriminated record types, must have their constraints
+specified when the objects are declared. We cannot just declare a String
+object, for example, we must also specify the lower and upper bounds.
+Those bounds are stored in memory, logically as part of the String
+object, since each object could have different bounds (that's the point,
+after all). What, then, would it mean to convert some value of a type
+that has no bounds to a type that requires bounds? The third requirement
+says that it is not meaningful to do so.
 
 The next requirement is that the argument for S, and the conversion
 target type Target, have a contiguous representation in memory. In other
@@ -1902,16 +1901,16 @@ Ada.Unchecked_Conversion just takes the bits of S and treats them as if
 they are bits for a value of type Target (more or less), and does not
 handles issues of segmentation.
 
-The last requirement merely states that the bits of the argument S, when 
-treated as a value of type Target, must actually be a bit-pattern 
-representing a value of type Target (strictly, the subtype). For 
-example, with signed integers, any bit pattern (of the right size) 
-represents a valid value for those types. In contrast, consider an 
-enumeration type. By default, the underlying representational values are 
-the same as the position values, i.e., starting at zero and increasing 
-by one. But users can override that representation: they can start with 
-any value and, although the values must increase, they need not increase 
-by one: 
+The last requirement merely states that the bits of the argument S, when
+treated as a value of type Target, must actually be a bit-pattern
+representing a value of type Target (strictly, the subtype). For
+example, with signed integers, any bit pattern (of the right size)
+represents a valid value for those types. In contrast, consider an
+enumeration type. By default, the underlying representational values are
+the same as the position values, i.e., starting at zero and increasing
+by one. But users can override that representation: they can start with
+any value and, although the values must increase, they need not increase
+by one:
 
 .. code-block:: ada
 
@@ -1937,7 +1936,7 @@ e.g., record types, access types, task types, and so on.
 
 When the requirements for meaningful instantiations are not respected
 and the Target type is a scalar type, the result returned from the call
-is implementation defined and can be an invalid representation. For
+is implementation defined and is potentially an invalid representation. For
 example, type Toggle_Switch is an enumeration type, hence it is a scalar
 type. Therefore, if we covert an unsigned integer (of the right size) to
 a Toggle_Switch value, and the Source value is neither 0 nor 4, the
@@ -1982,13 +1981,13 @@ call or later. For example:
       Put_Line (T2'Image);
    end Demo;
 
-In the execution of the code above, the invalid representation value in 
-T1 is not detected, except that it is copied into T2, where it is 
-eventually detected when 'Image is applied to T2. The invalid 
-representation is not detected in the assignment statement or the 
-comparison because we want the optimizer to be able to avoid emitting a 
-check prior to every use of the value. Otherwise the generated code 
-would be too slow. (The language explicitly allows this optimization.) 
+In the execution of the code above, the invalid representation value in
+T1 is not detected, except that it is copied into T2, where it is
+eventually detected when 'Image is applied to T2. The invalid
+representation is not detected in the assignment statement or the
+comparison because we want the optimizer to be able to avoid emitting a
+check prior to every use of the value. Otherwise the generated code
+would be too slow. (The language explicitly allows this optimization.)
 
 The evaluation of an object having an invalid representation value due
 to unchecked conversion is a so-called "bounded error" because the
@@ -2008,25 +2007,25 @@ possible run-time behavior is unpredictable and, consequently, from the
 language rules point of view anything is possible. Such execution is
 said to be "erroneous."
 
-Why the difference based on scalar versus non-scalar types? Scalar types 
-have a simple representation: their bits directly represent their 
-values. Non-scalar types don't always have a simple representation that 
-can be verified by examining their bits. 
+Why the difference based on scalar versus non-scalar types? Scalar types
+have a simple representation: their bits directly represent their
+values. Non-scalar types don't always have a simple representation that
+can be verified by examining their bits.
 
-For example, we can have record types with discriminants that control 
-the size of the corresponding objects because the record type contains 
-an array component that uses the discriminant to set the upper bound. 
-These record types might have multiple discriminants, and multiple 
-dependent components. As a result, an implementation could have hidden, 
-internal record components. These internal components might be used to 
-store the starting address of the dependent components, for example, or 
-might use pointers to provide a level of indirection. If an unchecked 
-conversion did not provide correct values for these internal components, 
-the effect of referencing the record object would be unpredictable. 
+For example, we can have record types with discriminants that control
+the size of the corresponding objects because the record type contains
+an array component that uses the discriminant to set the upper bound.
+These record types might have multiple discriminants, and multiple
+dependent components. As a result, an implementation could have hidden,
+internal record components. These internal components might be used to
+store the starting address of the dependent components, for example, or
+might use pointers to provide a level of indirection. If an unchecked
+conversion did not provide correct values for these internal components,
+the effect of referencing the record object would be unpredictable.
 
-Even a comparatively simple record type with one such dependent 
-component is sufficient to illustrate the problem. There are no 
-internal, hidden components involved: 
+Even a comparatively simple record type with one such dependent
+component is sufficient to illustrate the problem. There are no
+internal, hidden components involved:
 
 .. code-block:: ada
 
@@ -2036,9 +2035,9 @@ internal, hidden components involved:
    with System.Storage_Elements; use System.Storage_Elements;
 
    procedure Demo_Erroneous is
-     
+
       subtype Buffer_Size is Storage_Offset range 1 .. Storage_Offset'Last;
-         
+
       type Bounded_Buffer (Capacity : Buffer_Size) is record
          Content : Storage_Array (1 .. Capacity);
          Length  : Storage_Offset := 0;
@@ -2050,15 +2049,15 @@ internal, hidden components involved:
 
       function As_OneK_Bounded_Buffer is new Ada.Unchecked_Conversion
         (Source => Storage_Array, Target => OneK_Bounded_Buffer);
-         
+
       Buffer   : OneK_Bounded_Buffer;
       Sequence : Storage_Array (1 .. Buffer'Size / Storage_Unit);
-      
+
       procedure Show_Capacity (This : Bounded_Buffer) is
       begin
          Put_line ("This.Capacity is" & This.Capacity'Image);
       end Show_Capacity;
-         
+
    begin
       Buffer := As_OneK_Bounded_Buffer (Sequence);
       Put_Line ("Buffer capacity is" & Buffer.Capacity'Image);
@@ -2066,94 +2065,136 @@ internal, hidden components involved:
       Put_Line ("Done");
    end Demo_Erroneous;
 
-In the above, the type Bounded_Buffer has an array component Content 
-that depends on the discriminant Capacity for the number of array 
-components. This is an extremely common idiom. However, unchecked 
-conversion is only meaningful, as defined earlier, when converting to 
-constrained target types. Bounded_Buffer is not constrained, so we 
-define a constrained subtype (OneK_Bounded_Buffer) for the sake of the 
-conversion. 
+In the above, the type Bounded_Buffer has an array component Content
+that depends on the discriminant Capacity for the number of array
+components. This is an extremely common idiom. However, unchecked
+conversion is only meaningful, as defined earlier, when converting to
+constrained target types. Bounded_Buffer is not constrained, so we
+define a constrained subtype (OneK_Bounded_Buffer) for the sake of the
+conversion.
 
-The specific Buffer object is 8320 bits (1024 * 8, plus 2 * 64), as is 
-the Sequence object, so the sizes are the same. 
+The specific Buffer object is 8320 bits (1024 * 8, plus 2 * 64), as is
+the Sequence object, so the sizes are the same.
 
-The alignment of OneK_Bounded_Buffer is 8, and Storage_Array's alignment 
-is 1, so the Target type is a multiple of the Source type, as required. 
+The alignment of OneK_Bounded_Buffer is 8, and Storage_Array's alignment
+is 1, so the Target type is a multiple of the Source type, as required.
 
-Both types have a contiguous representation, and the sequence of bytes 
-can be a valid representation for the record type, although it certainly 
-might not be valid. For example, if we change the discriminant from what 
-the subtype specifies, we would have an invalid representation for that 
-subtype. 
+Both types have a contiguous representation, and the sequence of bytes
+can be a valid representation for the record type, although it certainly
+might not be valid. For example, if we change the discriminant from what
+the subtype specifies, we would have an invalid representation for that
+subtype.
 
-So we can reasonably invoke an unchecked conversion between the array of 
-bytes and the record type. However, as you can see in the code and as 
-the compiler warns, we never assigned a value to the Sequence array 
-object. The unchecked conversion from that Sequence of bytes includes the 
-discriminant value, so it is very possible that we will get a 
-discriminant value that is not 1K. 
+So we can reasonably invoke an unchecked conversion between the array of
+bytes and the record type. However, as you can see in the code and as
+the compiler warns, we never assigned a value to the Sequence array
+object. The unchecked conversion from that Sequence of bytes includes the
+discriminant value, so it is very possible that we will get a
+discriminant value that is not 1K.
 
-We can test that possibility by running the program. In the first call 
-to Put_Line, the program prints the Capacity discriminant for the Buffer 
-object. The compiler knew it was 1024, so it doesn't get the 
-discriminant component from memory, it just directly prints 1024. 
-However, we can force the compiler to query the discriminant in memory. 
-We can pass Buffer to procedure Show_Capacity, which takes any 
-Bounded_Buffer, and there query (print) the Capacity component under 
-that different view. That works because the view inside the procedure 
-Show_Capacity is as of Bounded_Buffer, in which the discriminant value 
-is unknown at compile-time. 
+We can test that possibility by running the program. In the first call
+to Put_Line, the program prints the Capacity discriminant for the Buffer
+object. The compiler knew it was 1024, so it doesn't get the
+discriminant component from memory, it just directly prints 1024.
+However, we can force the compiler to query the discriminant in memory.
+We can pass Buffer to procedure Show_Capacity, which takes any
+Bounded_Buffer, and there query (print) the Capacity component under
+that different view. That works because the view inside the procedure
+Show_Capacity is as of Bounded_Buffer, in which the discriminant value
+is unknown at compile-time.
 
-As you can see, you should use unchecked conversions with considerable 
-care and thought. Moreover, because unchecked programming is such a 
-low-level activity, and has vendor-defined implementation issues, it is 
-not only less portable than high-level coding, it is also less portable 
-than other low-level programming. You will be well served if you limit 
-the use of unchecked conversions overall. If your application code is 
-performing unchecked conversions all over the code, something is very 
-likely wrong, or at least very questionable. A well-designed Ada program 
-should not need ubiquitous unchecked conversions. 
+In the above examples, we are responsible for ensuring that the
+enumeration representation encoding and the record discriminant value
+are correct when converted from some other type. That's not too hard to
+recognize because we can literally see in the source code
+that there is something to be maintained by the conversions. However,
+there might be hidden implementation artifacts that we cannot see in the
+source code but that must be maintained nevertheless.
 
-That said, of course sometimes unchecked conversions are reasonable. But 
-even then, it is better to isolate and hide their use via compile-time 
-visibility controls. For example, instead of having clients invoke 
-unchecked conversion instances many times, have a procedure that is 
-invoked many times, and let the procedure body do the conversion. That 
-way, the clients see a high-level specification of functionality, and, 
-if the conversion needs to be changed later, there is only that one 
-conversion usage (the procedure body) to change. This approach is really 
-just another example of isolating and hiding code that might need to 
-change in the future. 
+For example, the compiler's implementation for some record type might
+use dynamic memory allocations instead of directly representing some
+components. That would not appear in the source code. As a simpler
+example of invisible implementation issues, consider again our earlier
+record type:
+
+.. image:: images/unoptimized-record-component-order.png
+  :width: 600
+  :alt: A record type layout with unused bytes
+
+As we discussed earlier, between the bytes that are allocated to the 
+record components are some other bytes that are not used at all. As 
+usual, the compiler must implement the language-defined equality 
+operator for the record type. One way to implement that function would 
+be to generate code that checks the equality for each component 
+individually, ignoring any unused bytes. But suppose you have a large 
+record type with many components. The code for checking record level 
+equality will be extensive and inefficient. An alternative 
+implementation for the compiler would be to use a "block compare" 
+machine instruction to check the equality of the entire record at once, 
+rather than component-by-component. That will be considerably more 
+efficient because the block-compare instruction just compares the bits 
+from one starting address to another ending address. But in that case 
+the "unused" bytes are not skipped so the values within those bytes are 
+significant. Comparison of those unused bytes will only work if their 
+values are defined and assigned in each record object. Compilers that 
+may use a block-comparison approach will, therefore, always set those 
+unused bytes to a known value (typically zero). That is part of the 
+valid representation for values of the type, and consequently must be 
+maintained by our unchecked conversions. This being a non-scalar target 
+type, failure to do so results in erroneous execution, i.e., undefined 
+behavior. "There be dragons" as ancient maps of the unknown world once 
+said. 
+
+As you can see, you should use unchecked conversions with considerable
+care and thought. Moreover, because unchecked programming is such a
+low-level activity, and has vendor-defined implementation issues, it is
+not only less portable than high-level coding, it is also less portable
+than other low-level programming. You will be well served if you limit
+the use of unchecked conversions overall. If your application code is
+performing unchecked conversions all over the code, something is very
+likely wrong, or at least very questionable. A well-designed Ada program
+should not need ubiquitous unchecked conversions.
+
+That said, of course sometimes unchecked conversions are reasonable. But
+even then, it is better to isolate and hide their use via compile-time
+visibility controls. For example, instead of having clients invoke
+unchecked conversion instances many times, have a procedure that is
+invoked many times, and let the procedure body do the conversion. That
+way, the clients see a high-level specification of functionality, and,
+if the conversion needs to be changed later, there is only that one
+conversion usage (the procedure body) to change. This approach is really
+just another example of isolating and hiding code that might need to
+change in the future.
 
 Data Validity
 -------------
 
-Our earlier demo program assigned an incorrect value via unchecked 
-conversion into an object of an enumeration type that had non-standard 
-representation values. The value assigned was not one of those 
-representation values so the object had an invalid representation. The 
-execution of the assignment statement itself was not erroneous, even 
-though the value was invalid. A few minor other operations are also 
-possible like that. But most use of an invalid representation value will 
-be erroneous, and we saw that the effect of erroneous execution was 
-unpredictable and unbounded. 
+Our earlier demo program assigned an incorrect value via unchecked
+conversion into an object of an enumeration type that had non-standard
+representation values. The value assigned was not one of those
+representation values so the object had an invalid representation. The
+execution of the assignment statement itself was not erroneous, even
+though the value was invalid. A few minor other operations are also
+possible like that. But most use of an invalid representation value will
+be erroneous, and we saw that the effect of erroneous execution was
+unpredictable and unbounded.
 
-That example was somewhat artificial, for the sake of illustration. But 
-we might get an invalid value in a real-world application. For example, 
-we could get an invalid value from a sensor. Hardware sensors are 
-frequently unreliable and noisy. We might get an invalid value from a 
-call to an imported function implemented in some other language. 
-Whenever an assignment is aborted, the target of the assignment might 
-not be fully assigned, leading to abnormal values. Other causes are also 
-possible. The problem is not unusual in low-level programming. 
+That example was somewhat artificial, for the sake of illustration. But
+we might get an invalid value in a real-world application. For example,
+we could get an invalid value from a sensor. Hardware sensors are
+frequently unreliable and noisy. We might get an invalid value from a
+call to an imported function implemented in some other language.
+Whenever an assignment is aborted, the target of the assignment might
+not be fully assigned, leading to abnormal values. Other causes are also
+possible. The problem is not unusual in low-level programming.
 
 How do we avoid the resulting bounded errors and erroneous execution?
 
-In addition to assignment statements, we can safely apply the Valid attribute 
-to the object. This language-defined attribute returns a Boolean value 
-indicating whether or not the object's value is a valid representation 
-for the object's subtype. (More details in a moment). There is no 
-portable alternative to check an object's validity. Here's an example: 
+In addition to assignment statements, we can safely apply the Valid attribute
+to the object. This language-defined attribute returns a Boolean value
+indicating whether or not the object's value is a valid representation
+for the object's subtype. (More details in a moment). There is no
+portable alternative to check an object's validity. Here's an example:
 
 .. code-block:: ada
 
@@ -2170,14 +2211,14 @@ portable alternative to check an object's validity. Here's an example:
       T1 : Toggle_Switch;
 
       function Sensor_Reading (Default : Toggle_Switch) return Toggle_Switch is
-      
+
          function As_Toggle_Switch is new Ada.Unchecked_Conversion
            (Source => Unsigned_8, Target => Toggle_Switch);
 
          Result : Toggle_Switch;
          Sensor : Unsigned_8;
          --  for Sensor'Address use System'To_Address (...);
-         
+
       begin
          Result := As_Toggle_Switch (Sensor);
          return (if Result'Valid then Result else Default);
@@ -2188,47 +2229,47 @@ portable alternative to check an object's validity. Here's an example:
       Put_Line (T1'Image);
    end Demo_Validity_Check;
 
-In the above, Sensor_Reading is the high-level, functional API provided 
-to clients. The function hides the use of the unchecked conversion, and 
-also hides the memory-mapped hardware interface named Sensor. We've 
-commented out the address clause since we don't really have a memory 
-mapped device available. You can experiment with this program by 
-changing the code to assign a value to Sensor (e.g., when it is 
-declared). It is an unsigned 8-bit quantity so any value in the 
-corresponding range would be allowed. 
+In the above, Sensor_Reading is the high-level, functional API provided
+to clients. The function hides the use of the unchecked conversion, and
+also hides the memory-mapped hardware interface named Sensor. We've
+commented out the address clause since we don't really have a memory
+mapped device available. You can experiment with this program by
+changing the code to assign a value to Sensor (e.g., when it is
+declared). It is an unsigned 8-bit quantity so any value in the
+corresponding range would be allowed.
 
-In addition to checking for a valid representation, thus preventing the 
-bounded error, Valid also checks that the object is not abnormal, so 
-erroneous execution can be prevented too. (It also checks that any 
-subtype predicate defined for the Target type is also satisfied, but 
-that's a lesson for another day.) 
+In addition to checking for a valid representation, thus preventing the
+bounded error, Valid also checks that the object is not abnormal, so
+erroneous execution can be prevented too. (It also checks that any
+subtype predicate defined for the Target type is also satisfied, but
+that's a lesson for another day.)
 
-However, the Valid attribute can be applied only to scalar types. There 
-is no language-defined attribute for checking composite types. That's 
-because it would be very hard to implement for some types, if not 
-impossible. For example, given a typical run-time model, it is 
-impossible to check the validity of an access value component. 
-Therefore, you must individually check the validity of scalar record or 
-array components. 
+However, the Valid attribute can be applied only to scalar types. There
+is no language-defined attribute for checking composite types. That's
+because it would be very hard to implement for some types, if not
+impossible. For example, given a typical run-time model, it is
+impossible to check the validity of an access value component.
+Therefore, you must individually check the validity of scalar record or
+array components.
 
-At least, you would have to check them individually in standard Ada. 
-GNAT defines another Boolean attribute, named Valid_Scalars, to check 
-them all for us. This attribute returns True if the evaluation of Valid 
-returns True for every scalar component of the enclosing composite type. 
+At least, you would have to check them individually in standard Ada.
+GNAT defines another Boolean attribute, named Valid_Scalars, to check
+them all for us. This attribute returns True if the evaluation of Valid
+returns True for every scalar component of the enclosing composite type.
 It also returns True when there are no scalar components. See the GNAT RM
-for more information. 
+for more information.
 
-Finally, for the sake of optimization, GNAT also defines a pragma 
-regarding invalid values. The point is to enable more optimization than 
-the compiler might otherwise be in a position to perform in this regard. 
+Finally, for the sake of optimization, GNAT also defines a pragma
+regarding invalid values. The point is to enable more optimization than
+the compiler might otherwise be in a position to perform in this regard.
 This configuration pragma, named Assume_No_Invalid_Values, takes an argument of either "Off"
 or "On".
 
-The pragma controls the assumptions made by the compiler about the 
-occurrence of invalid representations (invalid values) in the code. The 
-default behavior (corresponding to an argument of Off), is to assume 
-that values may in general be invalid unless the compiler can prove they 
-are valid. Consider the following example: 
+The pragma controls the assumptions made by the compiler about the
+occurrence of invalid representations (invalid values) in the code. The
+default behavior (corresponding to an argument of Off), is to assume
+that values may in general be invalid unless the compiler can prove they
+are valid. Consider the following example:
 
 .. code-block:: ada
 
@@ -2239,18 +2280,18 @@ are valid. Consider the following example:
       ...
    end loop;
 
-If V1 and V2 have valid values, the loop is known at compile time not to 
-execute since the lower bound must be greater than the upper bound. As a 
-result, no code for the loop need be generated by the compiler. However, 
-in default mode, no such assumption is made, and the loop may execute. 
-If Assume_No_Invalid_Values (On) is given, the compiler will assume that 
-any occurrence of a variable other than in an explicit 'Valid test 
-always has a valid value, and the loop above will be optimized away. The 
-use of Assume_No_Invalid_Values (On) is appropriate if you know your 
-code is free of uninitialized variables and other possible sources of 
-invalid representations, and may result in more efficient code. A 
-program that accesses an invalid representation with this pragma in 
-effect is erroneous, so no guarantees can be made about its behavior. 
-See the GNAT RM for more information. 
+If V1 and V2 have valid values, the loop is known at compile time not to
+execute since the lower bound must be greater than the upper bound. As a
+result, no code for the loop need be generated by the compiler. However,
+in default mode, no such assumption is made, and the loop may execute.
+If Assume_No_Invalid_Values (On) is given, the compiler will assume that
+any occurrence of a variable other than in an explicit 'Valid test
+always has a valid value, and the loop above will be optimized away. The
+use of Assume_No_Invalid_Values (On) is appropriate if you know your
+code is free of uninitialized variables and other possible sources of
+invalid representations, and may result in more efficient code. A
+program that accesses an invalid representation with this pragma in
+effect is erroneous, so no guarantees can be made about its behavior.
+See the GNAT RM for more information.
 
 
