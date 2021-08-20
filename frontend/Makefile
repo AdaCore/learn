@@ -154,6 +154,8 @@ site-testing: cleantest
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
 
+PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
+
 %.pdf:
 	@echo Building $@
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
@@ -163,7 +165,7 @@ BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/
 	$(eval SPHINX_AUTHOR := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep author | sed -e 's#author=##'))
 	$(eval SPHINX_COVER_PAGE := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep cover_page | sed -e 's#cover_page=##'))
 	$(eval SPHINX_VERSION := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep version | sed -e 's#version=##'))
-	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
+	@mkdir -p $(PDF_BOOKS_DIR)/$(SPHINX_DIR)
 	@mkdir -p $(BUILDDIR)/latex
 	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $(SPHINX_CONTENT_DIR)/$(SPHINX_COVER_PAGE) $(BUILDDIR)/latex || echo "PDF: no cover page available for $(SPHINX_PDF)"
 	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
@@ -179,10 +181,57 @@ BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
 	$(eval SPHINX_PDF := $(shell basename $(shell dirname ${book_dir})).pdf) \
-	$(eval PDF_BOOKS += $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)) \
+	$(eval PDF_BOOKS += $(PDF_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF)) \
 	)
 
 pdf_books: $(PDF_BOOKS)
+	@echo $@ completed.
+
+EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
+
+%.epub:
+	@echo Building $@ EPUB
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
+	$(eval SPHINX_EPUB := $(shell basename $@ .epub))
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB))
+	$(eval SPHINX_TITLE := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep title | sed -e 's#title=##'))
+	$(eval SPHINX_AUTHOR := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep author | sed -e 's#author=##'))
+	$(eval SPHINX_COVER_PAGE := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep cover_page | sed -e 's#cover_page=##'))
+	$(eval SPHINX_VERSION := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep version | sed -e 's#version=##'))
+	@mkdir -p $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)
+	@rm   -rf $(BUILDDIR)/epub
+	@mkdir -p $(BUILDDIR)/epub
+	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $@/$(SPHINX_COVER_PAGE) $(BUILDDIR)/epub || echo "EPUB: no cover page available for $(SPHINX_EPUB)"
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
+	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
+
+# Generate list: EPUB_BOOKS
+$(foreach book_dir, $(BOOKS), \
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
+	$(eval SPHINX_EPUB := $(shell basename $(shell dirname ${book_dir})).epub) \
+	$(eval EPUB_BOOKS += $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB)) \
+	)
+
+epub_books: $(EPUB_BOOKS)
+	@echo $@ completed.
+
+MOBI_BOOKS_DIR := $(BUILDDIR)/mobi_books
+
+$(MOBI_BOOKS_DIR)/%.mobi: $(EPUB_BOOKS_DIR)/%.epub
+	@echo Building $@
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
+	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
+	@ebook-convert $^ $@
+
+$(foreach book_dir, $(BOOKS), \
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
+	$(eval SPHINX_MOBI := $(shell basename $(shell dirname ${book_dir})).mobi) \
+	$(eval MOBI_BOOKS += $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_MOBI)) \
+	)
+
+mobi_books: $(MOBI_BOOKS)
+	@echo $@ completed.
 
 cleanall:
 	@rm -rf "$(BUILDDIR)"
@@ -199,4 +248,5 @@ cleantest:
 	$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-.PHONY: Makefile help test_content test_engine pdf_books $(BOOKS)
+.PHONY: Makefile help test_content test_engine pdf_books epub_books \
+	mobi_books $(BOOKS)

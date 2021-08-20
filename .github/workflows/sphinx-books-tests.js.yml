@@ -1,0 +1,91 @@
+name: Sphinx Books Tests
+
+on: [push, pull_request]
+
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  sphinx-books:
+
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        python-version: [3.x]
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install OS Deps
+      run: |
+        sudo apt-get install -y \
+        graphviz \
+        texlive-latex-base \
+        texlive-latex-recommended \
+        texlive-latex-extra \
+        texlive-fonts-recommended \
+        texlive-fonts-extra \
+        latexmk \
+        texlive-xetex \
+        fonts-lmodern \
+        fonts-open-sans \
+        fonts-dejavu
+    - name: Install Calibre
+      run: |
+        sudo -v && \
+        wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | \
+            sudo sh /dev/stdin
+    - name: Install dependencies
+      run: yarn --frozen-lockfile
+    - name: ada-actions/toolchain
+      uses: ada-actions/toolchain@ce2021
+      with:
+        distrib: community
+        target: native
+        community_year: 2021
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Webpack production
+      run: make cleanall webpack-production
+    - name: Run SPHINX content tests
+      run: make -k test_content
+    - name: Build PDF books including build/runtime output
+      run: make pdf_books
+    - name: Archive PDF books in artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: learn-pdf-books
+        path: |
+          frontend/dist/pdf_books
+        retention-days: 1
+    - name: Build EPUB books including build/runtime output
+      run: make epub_books
+    - name: Archive EPUB books in artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: learn-epub-books
+        path: |
+          frontend/dist/epub_books
+        retention-days: 1
+    - name: Build MOBI books including build/runtime output
+      run: make mobi_books
+    - name: Archive MOBI books in artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: learn-mobi-books
+        path: |
+          frontend/dist/mobi_books
+        retention-days: 1
