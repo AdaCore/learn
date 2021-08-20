@@ -1814,7 +1814,10 @@ Note that the result value is returned by-reference whenever possible,
 in which case it is just a view of the Source bits in S and not a copy.
 Returning the value by-reference is not possible when the Source type is
 a by-copy type, however.
-[??? pointer to course defining which types are by-reference ????????????????????????]
+
+.. todo::
+
+    Add pointer to course defining which types are by-reference.
 
 The compiler can restrict instantiations but implementers are advised by
 the language standard to avoid them unless they are required by the
