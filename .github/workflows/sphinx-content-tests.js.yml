@@ -45,9 +45,9 @@ jobs:
         pip install -r requirements.txt
     - name: Run SPHINX engine tests
       run: make SPHINXOPTS="-W" test_engine
-    - name: Build HTML files
+    - name: Build HTML content
       run: make cleanall webpack-production sphinx-production
-    - name: Archive HTML files in artifact
+    - name: Archive HTML content in artifact
       uses: actions/upload-artifact@v2
       with:
         name: learn-html
