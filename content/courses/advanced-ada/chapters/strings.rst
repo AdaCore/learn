@@ -309,7 +309,7 @@ and other requirements.
 A common UTF format is UTF-8, which encodes strings using up to four
 (8-bit) bytes and is backwards-compatible with the ASCII format. While
 encoding of ASCII characters requires only one byte, Chinese characters
-require three bytes.
+require three bytes, for example.
 
 In Ada applications, UTF-8 strings are indicated by using the
 :ada:`UTF_8_String` from the :ada:`Ada.Strings.UTF_Encoding` package.
