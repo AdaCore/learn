@@ -381,18 +381,6 @@ Let's look at an example:
 
     end Show_WW_UTF_String;
 
-By running this application, we notice that, although our input string
-has 14 characters in total, the corresponding UTF-8 string encoding
-requires 21 bytes. The 8-bit character representation used by the
-:ada:`UTF_8_String` type is good enough for storing information. However,
-it is not suitable for direct string manipulation. In this case, we need
-to use the :ada:`Wide_String` and :ada:`Wide_Wide_String` types. In our
-example, when converting ``S8`` to ``WWS`` with a call to ``Decode``, we
-create a new string that correctly stores the individual characters. Also,
-we can convert back-and-forth between :ada:`UTF_8_String` and
-:ada:`Wide_Wide_String` types. In the last block of our example, we
-display the individual characters from the string by encoding each
-character into UTF-8 format and displaying it.
 
 
 .. admonition:: Relevant topics
