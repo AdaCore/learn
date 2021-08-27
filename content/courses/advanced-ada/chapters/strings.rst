@@ -313,11 +313,24 @@ require three bytes, for example.
 
 In Ada applications, UTF-8 strings are indicated by using the
 :ada:`UTF_8_String` from the :ada:`Ada.Strings.UTF_Encoding` package.
-In order to encode from and to UTF-8 strings, we can use the ``Encode``
-and ``Decode`` functions from the child packages
-:ada:`Strings`, :ada:`Wide_Strings` and :ada:`Wide_Wide_Strings`,
-depending on the precision of the string type that we're using. Let's look
-at an example:
+In order to encode from and to UTF-8 strings, we can use the :ada:`Encode`
+and :ada:`Decode` functions. Those functions are specified in the child
+packages of the `Ada.Strings.UTF_Encoding` package. We select the appropriate
+child package depending on the string type we're using, as you can see in the
+following table:
+
++---------------------------------+------------------------------+
+| Child Package of                | Convert from / to            |
+| :ada:`Ada.Strings.UTF_Encoding` |                              |
++=================================+==============================+
+| :ada:`.Strings`                 | :ada:`String` type           |
++---------------------------------+------------------------------+
+| :ada:`.Wide_Strings`            | :ada:`Wide_String` type      |
++---------------------------------+------------------------------+
+| :ada:`.Wide_Wide_Strings`       | :ada:`Wide_Wide_String` type |
++---------------------------------+------------------------------+
+
+Let's look at an example:
 
 .. code-block:: ada
 
