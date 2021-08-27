@@ -296,57 +296,6 @@ All the operations we're using here are similar to the ones for
 String Encoding
 ---------------
 
-String encoding and wide strings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-For applications that deal with characters other than the Latin alphabet,
-we need to make use of wider precision for character types and encodings
-that are suitable for these characters. The following sections will
-discuss these topics.
-
-Wide strings
-^^^^^^^^^^^^
-
-Standard characters are represented by the :ada:`Character` type and its
-corresponding array format (:ada:`String`). In order to represent
-characters with wider precision, we need to make use of the
-:ada:`Wide_Character` and :ada:`Wide_Wide_Character` types. The
-corresponding string types are :ada:`Wide_String` and
-:ada:`Wide_Wide_String`, respectively. The following example shows that,
-although strings using wider precision have the same length, their sizes
-are different due to the precision used for each character:
-
-.. code-block:: ada
-
-    with Ada.Text_IO;
-    with Ada.Wide_Text_IO;
-    with Ada.Wide_Wide_Text_IO;
-
-    procedure Show_Wide_String is
-       package TI   renames Ada.Text_IO;
-       package WTI  renames Ada.Wide_Text_IO;
-       package WWTI renames Ada.Wide_Wide_Text_IO;
-
-       S   : String           := "hello";
-       WS  : Wide_String      := "hello";
-       WWS : Wide_Wide_String := "hello";
-    begin
-       TI.Put_Line ("String:           " & S);
-       TI.Put_Line ("Length:           " & Integer'Image (S'Length));
-       TI.Put_Line ("Size:             " & Integer'Image (S'Size));
-       TI.New_Line;
-
-       WTI.Put_Line ("Wide string:      " & WS);
-       TI.Put_Line ("Length:           " & Integer'Image (WS'Length));
-       TI.Put_Line ("Size:             " & Integer'Image (WS'Size));
-       TI.New_Line;
-
-       WWTI.Put_Line ("Wide-wide string: " & WWS);
-       TI.Put_Line ("Length:           " & Integer'Image (WWS'Length));
-       TI.Put_Line ("Size:             " & Integer'Image (WWS'Size));
-       TI.New_Line;
-    end Show_Wide_String;
-
 UTF encoding
 ^^^^^^^^^^^^
 
