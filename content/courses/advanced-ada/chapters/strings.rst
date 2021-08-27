@@ -364,8 +364,8 @@ Let's look at an example:
        Show_WW_String : declare
           WWS : constant Wide_Wide_String := To_WWS (UWWS);
        begin
-          Put_Line ("Wide_Wide_String Length: " & Integer'Image (WWS'Length));
-          Put_Line ("Wide_Wide_String Size:   " & Integer'Image (WWS'Size));
+          Put_Line ("Wide_Wide_String Length: " & WWS'Length'Image);
+          Put_Line ("Wide_Wide_String Size:   " & WWS'Size'Image);
        end Show_WW_String;
 
        Put_Line ("---------------------------------------");
@@ -375,8 +375,8 @@ Let's look at an example:
           S_UTF_8 : constant UTF_8_String := Encode (To_WWS (UWWS));
        begin
           Put_Line ("UTF-8 String:        " & S_UTF_8);
-          Put_Line ("UTF-8 String Length: " & Integer'Image (S_UTF_8'Length));
-          Put_Line ("UTF-8 String Size:   " & Integer'Image (S_UTF_8'Size));
+          Put_Line ("UTF-8 String Length: " & S_UTF_8'Length'Image);
+          Put_Line ("UTF-8 String Size:   " & S_UTF_8'Size'Image);
        end Show_UTF_8_String;
 
     end Show_WW_UTF_String;
