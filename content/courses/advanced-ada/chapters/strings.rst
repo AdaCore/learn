@@ -296,15 +296,15 @@ All the operations we're using here are similar to the ones for
 String Encoding
 ---------------
 
-UTF encoding
-^^^^^^^^^^^^
-
 Unicode is one of the most widespread standards for encoding writing
 systems other than the Latin alphabet. It defines a format called
 `Unicode Transformation Format (UTF) <https://unicode.org/faq/utf_bom.html#gen2>`_
 in various versions, which vary
 according to the underlying precision, support for backwards-compatibility
 and other requirements.
+
+UTF-8 encoding and decoding
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A common UTF format is UTF-8, which encodes strings using up to four
 (8-bit) bytes and is backwards-compatible with the ASCII format. While
