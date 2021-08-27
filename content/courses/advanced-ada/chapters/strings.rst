@@ -400,6 +400,68 @@ Also, in the :ada:`Show_UTF_8_String` block, we use the :ada:`Encode` function
 to convert that string from :ada:`Wide_Wide_String` type to then
 :ada:`UTF_8_String` type |mdash| we store it in the :ada:`S_UTF_8` constant.
 
+UTF-8 size and length
+~~~~~~~~~~~~~~~~~~~~~
+
+As you can see when running the last code example from the previous subsection,
+we have different sizes and lengths depending on the string type:
+
++--------------------------+-------+--------+
+| String type              | Size  | Length |
++==========================+=======+========+
+| :ada:`Wide_Wide_String`  |   832 |     26 |
++--------------------------+-------+--------+
+| :ada:`UTF_8_String`      |   296 |     37 |
++--------------------------+-------+--------+
+
+The size needed for storing the string when using the :ada:`Wide_Wide_String`
+type is bigger than the one when using the :ada:`UTF_8_String` type. This is
+expected, as the :ada:`Wide_Wide_String` uses 32-bit characters, while the
+:ada:`UTF_8_String` type uses 8-bit characters to store the string in a more
+efficient way (memory-wise).
+
+The length of the string using the :ada:`Wide_Wide_String` type is equivalent
+to the number of symbols we have in the original string: 26 characters /
+symbols. When using UTF-8, however, we may need more 8-bit characters to
+represent one symbol from the original string, so we may end up with a length
+value that is bigger than the actual number of symbols from the original string
+|mdash| as it is the case in this source-code example.
+
+This difference in sizes might not always be the case. In fact, the sizes
+match when encoding a symbol in UTF-8 that requires four 8-bit characters. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Emoji
+
+    with Ada.Text_IO;                       use Ada.Text_IO;
+    with Ada.Strings.UTF_Encoding;          use Ada.Strings.UTF_Encoding;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    procedure Show_Emoji is
+
+       Emoji_Symbol     : constant UTF_8_String := "😀";
+       WWS_Emoji_Symbol : constant Wide_Wide_String :=
+                            Decode (Emoji_Symbol);
+
+    begin
+       Put_Line ("Wide_Wide_String Length: "
+                 & WWS_Emoji_Symbol'Length'Image);
+       Put_Line ("Wide_Wide_String Size:   "
+                 & WWS_Emoji_Symbol'Size'Image);
+       Put_Line ("UTF-8 String Length:     "
+                 & Emoji_Symbol'Length'Image);
+       Put_Line ("UTF-8 String Size:       "
+                 & Emoji_Symbol'Size'Image);
+       New_Line;
+       Put_Line ("UTF-8 String:            "
+                 & Emoji_Symbol);
+    end Show_Emoji;
+
+In this case, both strings |mdash| using the :ada:`Wide_Wide_String` type or
+the :ada:`UTF_8_String` type |mdash| have the same size: 32 bits.
+
 
 .. admonition:: Relevant topics
 
