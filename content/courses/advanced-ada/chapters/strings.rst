@@ -381,6 +381,24 @@ Let's look at an example:
 
     end Show_WW_UTF_String;
 
+In this application, we start by storing a string in Arabic in the
+:ada:`Hello_World_Arabic` constant. We then use the :ada:`Decode` function to
+convert that string from :ada:`UTF_8_String` type to :ada:`Wide_Wide_String`
+type |mdash| we store it in the :ada:`WWS_Hello_World_Arabic` constant.
+
+We use a variable of type :ada:`Unbounded_Wide_Wide_String` (:ada:`UWWS`) to
+manipulate strings: we append the string in Arabic to the "Hello World: "
+string and store it in :ada:`UWWS`.
+
+In the :ada:`Show_WW_String` block, we convert the string |mdash| stored in
+:ada:`UWWS` |mdash| from the :ada:`Unbounded_Wide_Wide_String` type to the
+:ada:`Wide_Wide_String` type and display the length and size of the string. We
+do something similar in the :ada:`Show_UTF_8_String` block, but there, we
+convert to the :ada:`UTF_8_String` type.
+
+Also, in the :ada:`Show_UTF_8_String` block, we use the :ada:`Encode` function
+to convert that string from :ada:`Wide_Wide_String` type to then
+:ada:`UTF_8_String` type |mdash| we store it in the :ada:`S_UTF_8` constant.
 
 
 .. admonition:: Relevant topics
