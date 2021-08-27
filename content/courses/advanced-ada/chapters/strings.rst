@@ -332,53 +332,52 @@ following table:
 
 Let's look at an example:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.WW_UTF_String
 
     with Ada.Text_IO;                       use Ada.Text_IO;
     with Ada.Strings.UTF_Encoding;          use Ada.Strings.UTF_Encoding;
-    with Ada.Strings.UTF_Encoding.Strings;  use Ada.Strings.UTF_Encoding.Strings;
 
     with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
     use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
 
-    with Ada.Wide_Wide_Text_IO;
+    with Ada.Strings.Wide_Wide_Unbounded;
+    use  Ada.Strings.Wide_Wide_Unbounded;
 
     procedure Show_WW_UTF_String is
-       package WWT_IO renames Ada.Wide_Wide_Text_IO;
 
-       S8       : UTF_8_String := "World: العالَم";
-       WWS      : Wide_Wide_String := Decode (S8);
+       function To_UWWS (Source : Wide_Wide_String)
+                         return Unbounded_Wide_Wide_String
+                         renames To_Unbounded_Wide_Wide_String;
+
+       function To_WWS (Source : Unbounded_Wide_Wide_String)
+                         return Wide_Wide_String
+                         renames To_Wide_Wide_String;
+
+       Hello_World_Arabic     : constant UTF_8_String := "مرحبا يا عالم";
+       WWS_Hello_World_Arabic : constant Wide_Wide_String :=
+                                  Decode (Hello_World_Arabic);
+
+       UWWS : Unbounded_Wide_Wide_String;
     begin
-       Put_Line ("Encoding: " & Encoding (S8)'Image);
+       UWWS := "Hello World: " & To_UWWS (WWS_Hello_World_Arabic);
 
-       WWT_IO.Put_Line ("String (Wide_Wide): " & WWS);
-       Put_Line ("Length: " & Integer'Image (WWS'Length));
-       New_Line;
-
-       Put_Line ("String (UTF-8):     " & S8);
-       Put_Line ("Length: " & Integer'Image (S8'Length));
-       New_Line;
-
-       Put_Line ("Converting Wide_Wide_String to UTF-8...");
-       New_Line;
-       declare
-          S8 : UTF_8_String := Encode (WWS);
+       Show_WW_String : declare
+          WWS : constant Wide_Wide_String := To_WWS (UWWS);
        begin
-          Put_Line ("String (UTF-8):     " & S8);
-          Put_Line ("Length: " & Integer'Image (S8'Length));
-       end;
-       New_Line;
+          Put_Line ("Wide_Wide_String Length: " & Integer'Image (WWS'Length));
+          Put_Line ("Wide_Wide_String Size:   " & Integer'Image (WWS'Size));
+       end Show_WW_String;
 
-       --  Display individual characters from string
-       Put ("String:     ");
-       for I in WWS'Range loop
-          declare
-             S8 : UTF_8_String := Encode (WWS (I .. I));
-          begin
-             Put (S8 & " ");
-          end;
-       end loop;
-       New_Line;
+       Put_Line ("---------------------------------------");
+       Put_Line ("Converting Wide_Wide_String to UTF-8...");
+
+       Show_UTF_8_String : declare
+          S_UTF_8 : constant UTF_8_String := Encode (To_WWS (UWWS));
+       begin
+          Put_Line ("UTF-8 String:        " & S_UTF_8);
+          Put_Line ("UTF-8 String Length: " & Integer'Image (S_UTF_8'Length));
+          Put_Line ("UTF-8 String Size:   " & Integer'Image (S_UTF_8'Size));
+       end Show_UTF_8_String;
 
     end Show_WW_UTF_String;
 
