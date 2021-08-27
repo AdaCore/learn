@@ -104,7 +104,7 @@ best choice, as it covers all possible use-cases.
 Text I/O
 ~~~~~~~~
 
-Note that, in the previous example, we were use different versions of the
+Note that, in the previous example, we were using different versions of the
 :ada:`Ada.Text_IO` package depending on the string type we were using:
 
 - :ada:`Ada.Text_IO` for objects of :ada:`String` type,
