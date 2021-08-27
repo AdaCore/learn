@@ -462,6 +462,51 @@ example:
 In this case, both strings |mdash| using the :ada:`Wide_Wide_String` type or
 the :ada:`UTF_8_String` type |mdash| have the same size: 32 bits.
 
+Portability of UTF-8 in source-code files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous code example, we were assuming that the format that we use for
+the source-code file itself is UTF-8. This allows us to simply use emojis
+|mdash| and other Unicode symbols |mdash| directly in strings:
+
+.. code-block:: ada
+
+    Emoji_Symbol : constant UTF_8_String := "😀";
+
+This approach, however, might not be portable. For example, if the compiler
+uses a different string encoding for source-code files, it might interpret that
+Unicode symbol as something else |mdash| or just throw a compilation error.
+
+If you're afraid that format mismatches might happen in your compilation
+environment, you may want to write strings in your code in a completely
+portable fashion, which consists in entering the exact sequence of codes in
+bytes |mdash| using the :ada:`Character'Val` function |mdash| for the symbols
+you want to use.
+
+We can reuse parts of the previous example and replace the UTF-8 symbol with
+the corresponding UTF-8 code:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Emoji
+
+    with Ada.Text_IO;                       use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    procedure Show_Emoji is
+
+       Emoji_Symbol     : constant UTF_8_String
+         := Character'Val(16#f0#) & Character'Val(16#9f#) &
+            Character'Val(16#98#) & Character'Val(16#80#);
+
+    begin
+       Put_Line ("UTF-8 String:            "
+                 & Emoji_Symbol);
+    end Show_Emoji;
+
+Here, we use a sequence of four calls to the :ada:`Character'Val(code)`
+function for the UTF-8 code that corresponds to the "😀" symbol.
+
 
 .. admonition:: Relevant topics
 
