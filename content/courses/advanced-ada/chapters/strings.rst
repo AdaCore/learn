@@ -433,8 +433,8 @@ example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.Emoji
 
-    with Ada.Text_IO;                       use Ada.Text_IO;
-    with Ada.Strings.UTF_Encoding;          use Ada.Strings.UTF_Encoding;
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
 
     with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
     use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
@@ -488,10 +488,8 @@ the corresponding UTF-8 code:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.Emoji
 
-    with Ada.Text_IO;                       use Ada.Text_IO;
-
-    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
-    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
 
     procedure Show_Emoji is
 
