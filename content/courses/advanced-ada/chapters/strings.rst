@@ -494,8 +494,8 @@ the corresponding UTF-8 code:
     procedure Show_Emoji is
 
        Emoji_Symbol     : constant UTF_8_String
-         := Character'Val(16#f0#) & Character'Val(16#9f#) &
-            Character'Val(16#98#) & Character'Val(16#80#);
+         := Character'Val (16#f0#) & Character'Val (16#9f#) &
+            Character'Val (16#98#) & Character'Val (16#80#);
 
     begin
        Put_Line ("UTF-8 String:            "
@@ -605,8 +605,8 @@ example:
 
     procedure Show_WW_UTF16_String is
        World_Emoji_UTF_16   : constant UTF_16_Wide_String
-         := Wide_Character'Val(16#D83C#) &
-            Wide_Character'Val(16#DF10#);
+         := Wide_Character'Val (16#D83C#) &
+            Wide_Character'Val (16#DF10#);
        --   ^ Calling Wide_Character'Val
        --     to specify the UTF-16 code for "🌐"
 
