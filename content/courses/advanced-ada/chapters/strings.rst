@@ -353,9 +353,10 @@ Let's look at an example:
                          return Wide_Wide_String
                          renames To_Wide_Wide_String;
 
-       Hello_World_Arabic     : constant UTF_8_String := "مرحبا يا عالم";
-       WWS_Hello_World_Arabic : constant Wide_Wide_String :=
-                                  Decode (Hello_World_Arabic);
+       Hello_World_Arabic     : constant
+         UTF_8_String     := "مرحبا يا عالم";
+       WWS_Hello_World_Arabic : constant
+         Wide_Wide_String := Decode (Hello_World_Arabic);
 
        UWWS : Unbounded_Wide_Wide_String;
     begin
