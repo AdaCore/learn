@@ -334,8 +334,8 @@ Let's look at an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.WW_UTF_String
 
-    with Ada.Text_IO;                       use Ada.Text_IO;
-    with Ada.Strings.UTF_Encoding;          use Ada.Strings.UTF_Encoding;
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
 
     with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
     use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
