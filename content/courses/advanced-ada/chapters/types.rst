@@ -6,14 +6,432 @@ Types
 Scalar Types
 ------------
 
-.. admonition:: Relevant topics
+In general terms, scalar types are the most basic types that we can get. As
+we know, we can classify them as follows:
 
-    - Include: :ada:`T'Base`, :ada:`S'Width`, :ada:`S'Value`
-    - `Scalar Types <http://www.ada-auth.org/standards/2xrm/html/RM-3-5.html>`_
++-------------+----------+----------+
+| Category    | Discrete | Numeric  |
++=============+==========+==========+
+| Enumeration | Yes      | No       |
++-------------+----------+----------+
+| Integer     | Yes      | Yes      |
++-------------+----------+----------+
+| Real        | No       | Yes      |
++-------------+----------+----------+
 
-.. todo::
+Many attributes exist for scalar types. For example, we can use the
+:ada:`Image` and :ada:`Value` attributes to convert between a given type and a
+string type. The following table presents the main attributes for scalar types:
 
-    Complete section!
++------------+-----------------+----------------------------------------------+
+| Category   | Attribute       | Returned value                               |
++============+=================+==============================================+
+| Ranges     | :ada:`First`    | First value of the discrete subtype's range. |
++            +-----------------+----------------------------------------------+
+|            | :ada:`Last`     | Last value of the discrete subtype's range.  |
++            +-----------------+----------------------------------------------+
+|            | :ada:`Range`    | Range of the discrete subtype (corresponds   |
+|            |                 | to :ada:`Subtype'First .. Subtype'Last`).    |
++------------+-----------------+----------------------------------------------+
+| Iterators  | :ada:`Pred`     | Predecessor of the input value.              |
++            +-----------------+----------------------------------------------+
+|            | :ada:`Succ`     | Successor of the input value.                |
++------------+-----------------+----------------------------------------------+
+| Comparison | :ada:`Min`      | Minimum of two values.                       |
++            +-----------------+----------------------------------------------+
+|            | :ada:`Max`      | Maximum of two values.                       |
++------------+-----------------+----------------------------------------------+
+| String     | :ada:`Image`    | String representation of the input value.    |
++ conversion +-----------------+----------------------------------------------+
+|            | :ada:`Value`    | Value of a subtype based on input string.    |
++------------+-----------------+----------------------------------------------+
+
+We already discussed most of these attributes in the
+:doc:`Introduction to Ada course <courses/intro-to-ada/index>`. In this
+section, we'll discuss some aspects that have been left out of the previous
+course.
+
+Ranges
+~~~~~~
+
+We've seen that the :ada:`First` and :ada:`Last` attributes can be used with
+discrete types. Those attributes are also available for real types. Here's an
+example using the :ada:`Float` type and a subtype of it:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Ranges_Real_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_First_Last_Real is
+       subtype Norm is Float range 0.0 .. 1.0;
+
+       N : Norm;
+    begin
+       Put_Line ("Float'First: " & Float'First'Image);
+       Put_Line ("Float'Last:  " & Float'Last'Image);
+       Put_Line ("Norm'First:  " & Norm'First'Image);
+       Put_Line ("Norm'Last:   " & Norm'Last'Image);
+    end Show_First_Last_Real;
+
+This program displays the first and last values of both the :ada:`Float` type
+and the :ada:`Norm` subtype. In the case of the :ada:`Float` type, we see the
+full range, while for the :ada:`Norm` subtype, we get the values we used in the
+declaration of the subtype (i.e. 0.0 and 1.0).
+
+Predecessor and Successor
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use the :ada:`Pred` and :ada:`Succ` attributes to get the predecessor
+and successor of a specific value. For discrete types, this is simply the next
+discrete value. For example, :ada:`Pred (2)` is 1 and :ada:`Succ (2)` is 3.
+Let's look at a complete source-code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Show_Succ_Pred_Discrete
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Succ_Pred_Discrete is
+       type State is (Idle, Started, Processing, Stopped);
+
+       Machine_State : constant State := Started;
+
+       I : constant Integer := 2;
+    begin
+       Put_Line ("State                     : "
+                 & Machine_State'Image);
+       Put_Line ("State'Pred (Machine_State): "
+                 & State'Pred (Machine_State)'Image);
+       Put_Line ("State'Succ (Machine_State): "
+                 & State'Succ (Machine_State)'Image);
+       Put_Line ("----------");
+
+       Put_Line ("I               : "
+                 & I'Image);
+       Put_Line ("Integer'Pred (I): "
+                 & Integer'Pred (I)'Image);
+       Put_Line ("Integer'Succ (I): "
+                 & Integer'Succ (I)'Image);
+    end Show_Succ_Pred_Discrete;
+
+In this example, we use the :ada:`Pred` and :ada:`Succ` attributes for a
+variable of enumeration type (:ada:`State`) and a variable of :ada:`Integer`
+type.
+
+We can also use the :ada:`Pred` and :ada:`Succ` attributes with real types. In
+this case, however, the value we get depends on the actual type we're using:
+
+- for fixed-point types, the value is calculated using the smallest value
+  (:ada:`Small`), which is derived from the declaration of the fixed-point
+  type;
+
+- for floating-point types, the value used in the calculation depends on
+  representation constraints of the actual target machine.
+
+Let's look at this example with a decimal type (:ada:`Decimal`) and a
+floating-point type (:ada:`My_Float`):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Show_Succ_Pred_Real
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Succ_Pred_Real is
+       subtype My_Float is Float range 0.0 .. 0.5;
+
+       type Decimal is delta 0.1 digits 2 range 0.0 .. 0.5;
+
+       D : Decimal;
+       N : My_Float;
+    begin
+       Put_Line ("---- DECIMAL -----");
+       Put_Line ("Small: " & Decimal'Small'Image);
+       Put_Line ("----- Succ -------");
+       D := Decimal'First;
+       loop
+          Put_Line (D'Image);
+          D := Decimal'Succ (D);
+
+          exit when D = Decimal'Last;
+       end loop;
+       Put_Line ("----- Pred -------");
+
+       D := Decimal'Last;
+       loop
+          Put_Line (D'Image);
+          D := Decimal'Pred (D);
+
+          exit when D = Decimal'First;
+       end loop;
+       Put_Line ("==================");
+
+       Put_Line ("---- MY_FLOAT ----");
+       Put_Line ("----- Succ -------");
+       N := My_Float'First;
+       for I in 1 .. 5 loop
+          Put_Line (N'Image);
+          N := My_Float'Succ (N);
+       end loop;
+       Put_Line ("----- Pred -------");
+
+       for I in 1 .. 5 loop
+          Put_Line (N'Image);
+          N := My_Float'Pred (N);
+       end loop;
+    end Show_Succ_Pred_Real;
+
+As the output of the program indicates, the smallest value (see
+:ada:`Decimal'Small` in the example) is used to calculate the previous and next
+values of :ada:`Decimal` type.
+
+In the case of the :ada:`My_Float` type, the difference between the current
+and the previous or next values is 1.40130E-45 (or :math:`2^{-149}`) on a
+standard PC.
+
+Scalar To String Conversion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We've seen that we can use the :ada:`Image` and :ada:`Value` attributes to
+perform conversions between values of a given subtype and a string:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Image_Value_Attr
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Image_Value_Attr is
+       I : constant Integer := Integer'Value ("42");
+    begin
+       Put_Line (I'Image);
+    end Show_Image_Value_Attr;
+
+The :ada:`Image` and :ada:`Value` attributes are used for the :ada:`String`
+type specifically. In addition to them, there are also attributes for different
+string types |mdash| namely :ada:`Wide_String` and :ada:`Wide_Wide_String`.
+This is the complete list of available attributes:
+
++-----------------------+-------------------------+---------------------------+
+| Conversion type       | Attribute               | String type               |
++=======================+=========================+===========================+
+| Conversion to string  | :ada:`Image`            | :ada:`String`             |
++                       +-------------------------+---------------------------+
+|                       | :ada:`Wide_Image`       | :ada:`Wide_String`        |
++                       +-------------------------+---------------------------+
+|                       | :ada:`Wide_Wide_Image`  | :ada:`Wide_Wide_String`   |
++-----------------------+-------------------------+---------------------------+
+| Conversion to subtype | :ada:`Value`            | :ada:`String`             |
++                       +-------------------------+---------------------------+
+|                       | :ada:`Wide_Value`       | :ada:`Wide_String`        |
++                       +-------------------------+---------------------------+
+|                       | :ada:`Wide_Wide_Value`  | :ada:`Wide_Wide_String`   |
++-----------------------+-------------------------+---------------------------+
+
+We discuss more about :ada:`Wide_String` and :ada:`Wide_Wide_String` in
+:ref:`another section <Wide_Wide_Strings>`.
+
+Width attribute
+~~~~~~~~~~~~~~~
+
+When converting a value to a string by using the :ada:`Image` attribute, we get
+a string with variable width. We can assess the maximum width of that string
+for a specific subtype by using the :ada:`Width` attribute. For example,
+:ada:`Integer'Width` gives us the maximum width returned by the :ada:`Image`
+attribute when converting a value of :ada:`Integer` type to a string of
+:ada:`String` type.
+
+This attribute is useful when we're using bounded strings in our code to store
+the string returned by the :ada:`Image` attribute. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Width_Attr
+
+    with Ada.Text_IO;         use Ada.Text_IO;
+    with Ada.Strings;         use Ada.Strings;
+    with Ada.Strings.Bounded;
+
+    procedure Show_Width_Attr is
+       package B_Str is new
+         Ada.Strings.Bounded.Generic_Bounded_Length (Max => Integer'Width);
+       use B_Str;
+
+       Str_I : Bounded_String;
+
+       I : constant Integer := 42;
+       J : constant Integer := 103;
+    begin
+       Str_I := To_Bounded_String (I'Image);
+       Put_Line ("Value:         " & To_String (Str_I));
+       Put_Line ("String Length: " & Length (Str_I)'Image);
+       Put_Line ("----");
+
+       Str_I := To_Bounded_String (J'Image);
+       Put_Line ("Value:         " & To_String (Str_I));
+       Put_Line ("String Length: " & Length (Str_I)'Image);
+    end Show_Width_Attr;
+
+In this example, we're storing the string returned by :ada:`Image` in the
+:ada:`Str_I` variable of :ada:`Bounded_String` type.
+
+Similar to the :ada:`Image` and :ada:`Value` attributes, the :ada:`Width`
+attribute is also available for string types other than :ada:`String`. In fact,
+we can use:
+
+- the :ada:`Wide_Width` attribute for strings returned by :ada:`Wide_Image`;
+  and
+
+- the :ada:`Wide_Wide_Width` attribute for strings returned by
+  :ada:`Wide_Wide_Image`.
+
+Base
+~~~~
+
+The :ada:`Base` attribute gives us the unconstrained version of a subtype. As
+an example, let's say we declared a subtype of the :ada:`Integer` type named
+:ada:`One_To_Ten`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Base_Attr
+
+    package My_Integers is
+
+       subtype One_To_Ten is Integer range 1 .. 10;
+
+    end My_Integers;
+
+If we then use the :ada:`Base` attribute |mdash| by writing
+:ada:`One_To_Ten'Base` |mdash|, we're actually referring to the
+:ada:`Integer` type (because the :ada:`Integer` type was used as the base
+subtype of the :ada:`One_To_Ten` subtype).
+
+The following example shows how the attribute affects the bounds of a variable:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Base_Attr
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with My_Integers; use My_Integers;
+
+    procedure Show_Base is
+       C : constant One_To_Ten := One_To_Ten'Last;
+    begin
+       Using_Constrained_Subtype : declare
+          V : One_To_Ten := C;
+       begin
+          Put_Line ("Increasing value for One_To_Ten...");
+          V := One_To_Ten'Succ (V);
+       exception
+          when others =>
+             Put_Line ("Exception raised!");
+       end Using_Constrained_Subtype;
+
+       Using_Base : declare
+          V : One_To_Ten'Base := C;
+       begin
+          Put_Line ("Increasing value for One_To_Ten'Base...");
+          V := One_To_Ten'Succ (V);
+       exception
+          when others =>
+             Put_Line ("Exception raised!");
+       end Using_Base;
+
+       Put_Line ("One_To_Ten'Last: "      & One_To_Ten'Last'Image);
+       Put_Line ("One_To_Ten'Base'Last: " & One_To_Ten'Base'Last'Image);
+    end Show_Base;
+
+In the first block of the example (:ada:`Using_Constrained_Subtype`), we're
+asking for the next value after the last value of a range |mdash| in this case,
+:ada:`One_To_Ten'Succ (One_To_Ten'Last)`. As expected, since the last value of
+the range doesn't have a successor, a constraint exception is raised.
+
+In the :ada:`Using_Base` block, we're declaring a variable :ada:`V` of
+:ada:`One_To_Ten'Base` subtype. In this case, the next value exists |mdash|
+because the condition :ada:`One_To_Ten'Last + 1 <= One_To_Ten'Base'Last` is
+true |mdash|, so we can use the :ada:`Succ` attribute without having an
+exception being raised.
+
+In the following example, we adjust the result of additions and subtractions
+to avoid constraint errors:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Base_Attr_Sat
+
+    package My_Integers is
+
+       subtype One_To_Ten is Integer range 1 .. 10;
+
+       function Sat_Add (V1, V2 : One_To_Ten'Base) return One_To_Ten;
+
+       function Sat_Sub (V1, V2 : One_To_Ten'Base) return One_To_Ten;
+
+    end My_Integers;
+
+    --  with Ada.Text_IO; use Ada.Text_IO;
+
+    package body My_Integers is
+
+       function Saturate (V : One_To_Ten'Base) return One_To_Ten is
+       begin
+          --  Put_Line ("SATURATE " & V'Image);
+
+          if V < One_To_Ten'First then
+             return One_To_Ten'First;
+          elsif V > One_To_Ten'Last then
+             return One_To_Ten'Last;
+          else
+             return V;
+          end if;
+       end Saturate;
+
+       function Sat_Add (V1, V2 : One_To_Ten'Base) return One_To_Ten is
+       begin
+          return Saturate (V1 + V2);
+       end Sat_Add;
+
+       function Sat_Sub (V1, V2 : One_To_Ten'Base) return One_To_Ten is
+       begin
+          return Saturate (V1 - V2);
+       end Sat_Sub;
+
+    end My_Integers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with My_Integers; use My_Integers;
+
+    procedure Show_Base is
+
+       type Display_Saturate_Op is (Add, Sub);
+
+       procedure Display_Saturate (V1, V2 : One_To_Ten;
+                                   Op     : Display_Saturate_Op) is
+          Res : One_To_Ten;
+       begin
+          case Op is
+          when Add =>
+             Res := Sat_Add (V1, V2);
+          when Sub =>
+             Res := Sat_Sub (V1, V2);
+          end case;
+          Put_Line ("SATURATE " & Op'Image
+                    & " (" & V1'Image
+                    & ", " & V2'Image
+                    & ") = " & Res'Image);
+       end Display_Saturate;
+
+    begin
+       Display_Saturate (1,  1, Add);
+       Display_Saturate (10, 8, Add);
+       Display_Saturate (1,  8, Sub);
+    end Show_Base;
+
+In this example, we're using the :ada:`Base` attribute to declare the
+parameters of the :ada:`Sat_Add`, :ada:`Sat_Sub` and :ada:`Saturate` functions.
+Note that the parameters of the :ada:`Display_Saturate` procedure are of
+:ada:`One_To_Ten` type, while the parameters of the :ada:`Sat_Add`,
+:ada:`Sat_Sub` and :ada:`Saturate` functions are of the (unconstrained) base
+subtype (:ada:`One_To_Ten'Base`). In those functions, we perform operations
+using the parameters of unconstrained subtype and adjust the result |mdash| in
+the :ada:`Saturate` function |mdash| before returning it as a constrained value
+of :ada:`One_To_Ten` subtype.
+
+The code in the body of the :ada:`My_Integers` package contains lines that were
+commented out |mdash| to be more precise, a call to :ada:`Put_Line` call in the
+:ada:`Saturate` function. If you uncomment them, you'll see the value of the
+input parameter :ada:`V` (of :ada:`One_To_Ten'Base` type) in the runtime output
+of the program before it's adapted to fit the constraints of the
+:ada:`One_To_Ten` subtype.
 
 
 Enumerations
