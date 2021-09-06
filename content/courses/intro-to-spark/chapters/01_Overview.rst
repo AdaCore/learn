@@ -81,7 +81,7 @@ The tool for formal verification of the SPARK language is called
 `GNATprove`. It checks for conformance with the SPARK subset and performs
 flow analysis and proof of the source code. Several other tools support the
 SPARK language, including both the `GNAT compiler
-<https://www.adacore.com/gnatpro>`_ and the `GPS integrated development
+<https://www.adacore.com/gnatpro>`_ and the `GNAT Studio integrated development
 environment <https://www.adacore.com/gnatpro/toolsuite/gps>`_.
 
 
@@ -144,7 +144,7 @@ specification and sound verification.
 
 The most notable restrictions from Ada are related to exceptions and access
 types, both of which are known to considerably increase the amount of
-user-written annotations required for full support. Goto statements and
+user-written annotations required for full support. Backwards goto statements and
 controlled types are also not supported since they introduce non-trivial
 control flow. The two remaining restrictions relate to side-effects in
 expressions and aliasing of names, which we now cover in more detail.

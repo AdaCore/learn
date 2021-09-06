@@ -649,7 +649,7 @@ algorithm |mdash| can't be verified with GNATprove's default settings.
 
 The first thing we try is increasing the amount of time the prover is
 allowed to spend on each verification condition using the ``--timeout``
-option of GNATprove (e.g., by using the dialog box in GPS). In this
+option of GNATprove (e.g., by using the dialog box in GNAT Studio). In this
 example, increasing it to one minute, which is relatively high, doesn't
 help. We can also specify an alternative automatic prover |mdash| if we have
 one |mdash| using the option ``--prover`` of GNATprove (or the dialog box). For
