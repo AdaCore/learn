@@ -30,7 +30,7 @@ raised when using the result of the function :ada:`Find` below, it may be
 enough to know that the result is either 0 or in the range of :ada:`A`. We can
 express this as a postcondition of :ada:`Find`.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find_1
 
     package Show_Find is
 
@@ -63,7 +63,7 @@ ensure it returns an index of :ada:`A` where :ada:`E` is stored and returns 0
 only if :ada:`E` is nowhere in :ada:`A`. Again, we can express this as a
 postcondition of :ada:`Find`.
 
-.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find_2
     :class: ada-expect-prove-error
 
     package Show_Find is
@@ -115,7 +115,7 @@ example, during testing, the postcondition of the subprogram :ada:`Find` shown
 below is checked dynamically for the set of inputs for which :ada:`Find` is
 called in that test, but just for that set.
 
-.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find_3
     :class: ada-expect-prove-error
 
     package Show_Find is
@@ -238,7 +238,7 @@ Consider the procedure :ada:`Do_Something` below, which calls a complex
 function on its input, :ada:`X`, and wants to check that the initial and
 modified values of :ada:`X` are related in that complex way.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_1
 
     package Show_Ghost is
 
@@ -281,7 +281,7 @@ performed by the call to :ada:`Do_Some_Complex_Stuff` modified the value of
 However, :ada:`X_Init` can't be used in normal code, for example to restore
 the initial value of :ada:`X`.
 
-.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost
+.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_2
     :class: ada-expect-compile-error
 
     package Show_Ghost is
