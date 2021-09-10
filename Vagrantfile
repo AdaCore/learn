@@ -19,17 +19,7 @@ $frontend = <<-SHELL
       make \
       gnat \
       gprbuild \
-      yarn \
-      texlive-latex-base \
-      texlive-latex-recommended \
-      texlive-latex-extra \
-      texlive-fonts-recommended \
-      texlive-fonts-extra \
-      latexmk \
-      texlive-xetex \
-      fonts-lmodern \
-      fonts-open-sans \
-      fonts-dejavu
+      yarn
 
   # Install learn deps
   python3 -m venv /vagrant/venv
