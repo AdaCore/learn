@@ -579,6 +579,7 @@ pre {
     font-family: monospace;
     overflow: auto;
     overflow-y: hidden;
+    font-size: 0.8em;
 }
 
 td.linenos pre {
