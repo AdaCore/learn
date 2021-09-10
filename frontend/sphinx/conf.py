@@ -350,23 +350,27 @@ intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
 
 
 def setup(app):
-    if not os.getenv('FRONTEND_TESTING'):
-        try:
-            manifest = os.path.join(os.getcwd(), "build-manifest.json")
-            with open(manifest, 'r') as infile:
-                data = json.load(infile)
 
-            for chunk, files in data.items():
-                if "css" in files.keys():
-                    for css in files["css"]:
-                        print("Adding {} to css...".format(css))
-                        app.add_css_file(css)
-                if "js" in files.keys():
-                    for js in files["js"]:
-                        print("Adding {} to js...".format(js))
-                        app.add_js_file(js)
-        except FileNotFoundError as e:
-            print("Warning: build-manifest.json not available")
+    # TODO: find a better way to retrieve the current target (html/latex/epub)
+    if 'html' in app.outdir:
 
-            if not os.getenv('SPHINX_LOCAL_BUILD'):
-                raise e
+        if not os.getenv('FRONTEND_TESTING'):
+            try:
+                manifest = os.path.join(os.getcwd(), "build-manifest.json")
+                with open(manifest, 'r') as infile:
+                    data = json.load(infile)
+
+                for chunk, files in data.items():
+                    if "css" in files.keys():
+                        for css in files["css"]:
+                            print("Adding {} to css...".format(css))
+                            app.add_css_file(css)
+                    if "js" in files.keys():
+                        for js in files["js"]:
+                            print("Adding {} to js...".format(js))
+                            app.add_js_file(js)
+            except FileNotFoundError as e:
+                print("Warning: build-manifest.json not available")
+
+                if not os.getenv('SPHINX_LOCAL_BUILD'):
+                    raise e
