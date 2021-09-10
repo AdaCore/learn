@@ -36,11 +36,6 @@ $frontend = <<-SHELL
   source /vagrant/venv/bin/activate
   pip3 install -r /vagrant/frontend/requirements.txt
 
-  # Install Calibre
-  sudo -v && \
-  wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | \
-    sudo sh /dev/stdin
-
   cd /vagrant/frontend
   yarn
 
@@ -100,6 +95,11 @@ $epub = <<-SHELL
   python3 -m venv /vagrant/venv
   source /vagrant/venv/bin/activate
   pip3 install -r /vagrant/frontend/requirements.txt
+
+  # Install Calibre
+  sudo -v && \
+  wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | \
+    sudo sh /dev/stdin
 
   cd /vagrant/frontend
   yarn
