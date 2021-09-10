@@ -40,7 +40,8 @@ jobs:
         texlive-xetex \
         fonts-lmodern \
         fonts-open-sans \
-        fonts-dejavu
+        fonts-dejavu \
+        poppler-utils
     - name: Install Calibre
       run: |
         sudo -v && \

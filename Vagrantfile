@@ -63,6 +63,7 @@ $epub = <<-SHELL
       fonts-lmodern \
       fonts-open-sans \
       fonts-dejavu \
+      poppler-utils \
       build-essential \
       ca-certificates \
       git \
