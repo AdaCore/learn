@@ -316,27 +316,33 @@ String Encoding
         - `Universal Text Buffers <http://www.ada-auth.org/standards/2xrm/html/RM-A-4-12.html>`_
 
 
-Image attribute
----------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    Image attribute
+    ---------------
 
-    - Image attribute mentioned in
-      `Image Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-4-10.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
+        - Image attribute mentioned in
+        `Image Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-4-10.html>`_
 
-    Complete section!
+    .. todo::
+
+        Complete section!
 
 
-:ada:`Put_Image` aspect
------------------------
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-.. admonition:: Relevant topics
+    :ada:`Put_Image` aspect
+    -----------------------
 
-    - :ada:`Put_Image` aspect mentioned in
-      `Image Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-4-10.html>`_
+    .. admonition:: Relevant topics
 
-.. todo::
+        - :ada:`Put_Image` aspect mentioned in
+        `Image Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-4-10.html>`_
 
-    Complete section!
+    .. todo::
+
+        Complete section!
