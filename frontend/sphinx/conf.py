@@ -17,6 +17,8 @@ import json
 import os
 import sys
 
+from pdf2image import convert_from_path
+
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -292,7 +294,7 @@ epub_theme = '_epub_theme'
 #epub_uid = ''
 
 # A tuple containing the cover image and cover page html template filenames.
-# epub_cover = ("_static/cover.png", "epub-cover.html")
+epub_cover = ("_static/cover.png", "epub-cover.html")
 
 # HTML files that should be inserted before the pages created by sphinx.
 # The format is a list of tuples containing the path and title.
@@ -303,7 +305,7 @@ epub_theme = '_epub_theme'
 #epub_post_files = []
 
 # A list of files that should not be packed into the epub file.
-# epub_exclude_files = []
+epub_exclude_files = ['cover-A4.pdf']
 #    ['_static/opensearch.xml', '_static/doctools.js',
 #    '_static/jquery.js', '_static/searchtools.js', '_static/underscore.js',
 #    '_static/basic.css', 'search.html', '_static/websupport.js']
@@ -380,3 +382,11 @@ def setup(app):
 
                 if not os.getenv('SPHINX_LOCAL_BUILD'):
                     raise e
+    elif 'epub' in app.outdir:
+        if ('SPHINX_COVER_PAGE' in os.environ and
+            os.environ['SPHINX_COVER_PAGE'] != ""):
+
+            pages = convert_from_path(app.outdir + "/" + os.environ['SPHINX_COVER_PAGE'], 500)
+
+            for page in pages:
+                page.save(app.outdir + "/" + '_static/cover.png', 'PNG')

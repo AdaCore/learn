@@ -7,3 +7,4 @@ pydot-ng==2.0.0
 pyparsing==2.4.7
 graphviz==0.17
 coverage==5.5
+pdf2image==1.16.0

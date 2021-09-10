@@ -206,7 +206,7 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	$(eval SPHINX_VERSION := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep version | sed -e 's#version=##'))
 	@mkdir -p $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)
 	@rm   -rf $(BUILDDIR)/epub
-	@mkdir -p $(BUILDDIR)/epub
+	@mkdir -p $(BUILDDIR)/epub/_static
 	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $(SPHINX_CONTENT_DIR)/$(SPHINX_COVER_PAGE) $(BUILDDIR)/epub || echo "EPUB: no cover page available for $(SPHINX_EPUB)"
 	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
 	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
