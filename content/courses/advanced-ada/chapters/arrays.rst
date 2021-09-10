@@ -241,7 +241,7 @@ example:
 Here, we're declaring the one-dimensional type :ada:`F1`, the two-dimensional
 type :ada:`F2` and the three-dimensional type :ada:`F3`.
 
-As it's the case with unidimensional arrays, we must specify the bounds when
+As is the case with unidimensional arrays, we must specify the bounds when
 declaring objects of unconstrained multidimensional array types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Arrays.Unconstrained_Multidimensional_Arrays
