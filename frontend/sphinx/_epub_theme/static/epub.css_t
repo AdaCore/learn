@@ -608,6 +608,8 @@ div.code-block-caption span.caption-number {
 }
 
 div.code-block-caption span.caption-text {
+    font-size: 0.9em;
+    font-family: monospace;
 }
 
 div.literal-block-wrapper {
