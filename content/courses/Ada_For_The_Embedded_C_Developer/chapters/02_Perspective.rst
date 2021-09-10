@@ -1081,8 +1081,11 @@ Let's see an example in action:
         for (int i = 0; i < LIST_LENGTH; ++i)
         {
             printf("%d ", list[i]);
+
+            if (i % 10 == 0) {
+                printf("\n");
+            }
         }
-        printf("\n");
 
         return 0;
     }
@@ -1106,9 +1109,12 @@ Let's see an example in action:
 
        for I in List'Range loop
           Put (List (I)'Img & " ");
+
+          if I mod 10 = 0 then
+             New_Line;
+          end if;
        end loop;
 
-       New_Line;
     end Main;
 
 The above Ada and C code should initialize an array using a for loop. The
@@ -1157,9 +1163,12 @@ We can actually simplify the Ada for loop a little further using iterators:
 
        for I of List loop
           Put (I'Img & " ");
+
+          if I mod 10 = 0 then
+             New_Line;
+          end if;
        end loop;
 
-       New_Line;
     end Main;
 
 In the second for loop, we changed the syntax to :ada:`for I of List`. Instead
@@ -1953,6 +1962,10 @@ values from :ada:`'a'` to :ada:`'z'`:
           C := Character'Succ (C);
 
           Put (Arr (I) & " ");
+
+          if I mod 7 = 0 then
+             New_Line;
+          end if;
        end loop;
     end Main;
 
@@ -1971,6 +1984,10 @@ values from :ada:`'a'` to :ada:`'z'`:
         for (int I = 0; I < 26; ++I) {
             Arr [I] = C++;
             printf ("%c ", Arr [I]);
+
+            if ((I + 1) % 7 == 0) {
+                printf ("\n");
+            }
         }
 
         return 0;
