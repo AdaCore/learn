@@ -3221,7 +3221,7 @@ example is the one of
 the hardware might be constantly changing the value of an object in memory.
 
 Because the value of a volatile object may be constantly changing, a compiler
-cannot generate code that stores the value of that object into a register and
+cannot generate code to store the value of that object in a register and then
 use the value from the register in subsequent operations. Storing into a
 register is avoided because, if the value is stored there, it would be outdated
 if another process had changed the volatile object in the meantime. Instead,
@@ -3566,7 +3566,7 @@ Note that the :ada:`Address` aspect allows for assigning a variable to a
 specific location in the memory. In this example, we're using this aspect to
 specify the address of the memory-mapped register.
 
-In addition to atomic objects, we can declare atomic types |mdash| similarly to
+In addition to atomic objects, we can declare atomic types |mdash| similar to
 what we've seen before for volatile objects. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Types
