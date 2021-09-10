@@ -188,11 +188,6 @@ html_context = {
     'year': datetime.date.today().strftime('%Y'),
 }
 
-redirects = {
-    "courses/Ada_For_The_C_Embedded_Developer/index": "../Ada_For_The_Embedded_C_Developer/",
-    "courses/GNAT_Toolchain_Getting_Started/index": "../GNAT_Toolchain_Intro/"
-}
-
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
@@ -348,12 +343,21 @@ texinfo_documents = [
 
 intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
 
+# -- Options for redirects extension -----------------------------------------
+
+redirects = { }
+
 
 def setup(app):
 
     # TODO: find a better way to retrieve the current target (html/latex/epub)
     if 'html' in app.outdir:
         templates_path.append('_templates')
+
+        redirects.extend({
+            "courses/Ada_For_The_C_Embedded_Developer/index": "../Ada_For_The_Embedded_C_Developer/",
+            "courses/GNAT_Toolchain_Getting_Started/index": "../GNAT_Toolchain_Intro/"
+        })
 
 
         if not os.getenv('FRONTEND_TESTING'):
