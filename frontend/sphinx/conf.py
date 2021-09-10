@@ -357,7 +357,7 @@ def setup(app):
     if 'html' in app.outdir:
         templates_path.append('_templates')
 
-        redirects.extend({
+        redirects.update({
             "courses/Ada_For_The_C_Embedded_Developer/index": "../Ada_For_The_Embedded_C_Developer/",
             "courses/GNAT_Toolchain_Getting_Started/index": "../GNAT_Toolchain_Intro/"
         })
