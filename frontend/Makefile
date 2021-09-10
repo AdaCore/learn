@@ -207,7 +207,7 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	@mkdir -p $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)
 	@rm   -rf $(BUILDDIR)/epub
 	@mkdir -p $(BUILDDIR)/epub
-	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $@/$(SPHINX_COVER_PAGE) $(BUILDDIR)/epub || echo "EPUB: no cover page available for $(SPHINX_EPUB)"
+	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $(SPHINX_CONTENT_DIR)/$(SPHINX_COVER_PAGE) $(BUILDDIR)/epub || echo "EPUB: no cover page available for $(SPHINX_EPUB)"
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
