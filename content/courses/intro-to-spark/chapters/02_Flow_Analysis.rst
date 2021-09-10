@@ -479,7 +479,7 @@ components, flow analysis knows that the entire object is initialized.
 However, record objects are still treated as single objects when analyzed
 as an input or output of a subprogram.
 
-.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Record_Flow_Analysis
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Record_Flow_Analysis_1
 
     package Show_Record_Flow_Analysis is
 
@@ -507,7 +507,7 @@ Flow analysis complains when a procedure call initializes only some
 components of a record object.  It'll notify you of uninitialized
 components, as we see in subprogram :ada:`Init_F2` below.
 
-.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Record_Flow_Analysis
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Record_Flow_Analysis_2
     :class: ada-expect-prove-error
 
     package Show_Record_Flow_Analysis is
@@ -554,7 +554,7 @@ computes that :ada:`R` is uninitialized on a path that enters neither of the
 two conditional statements. Because it doesn't consider values of
 expressions, it can't know that such a path is impossible.
 
-.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Absolute_Value
+.. code:: ada prove_flow_report_all_button project=Courses.Intro_To_Spark.Flow_Analysis.Absolute_Value_1
     :class: ada-expect-prove-error
 
     procedure Absolute_Value
@@ -574,7 +574,7 @@ expressions, it can't know that such a path is impossible.
 To avoid this problem, you should make the control flow explicit, as in
 this second version of :ada:`Absolute_Value`:
 
-.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Absolute_Value
+.. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Flow_Analysis.Absolute_Value_2
 
     procedure Absolute_Value
       (X :     Integer;
