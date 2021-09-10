@@ -206,7 +206,8 @@ This is the complete code for this application:
 We recommend that you spend some time analyzing this example. Also, we'd like
 to highlight the following aspects:
 
-- We access a value from a multidimensional array by using commas. For example:
+- We access a value from a multidimensional array by using commas to separate
+  the index values within the parentheses. For example:
   :ada:`M (D, H)` allows us to access the value on day :ada:`D` and hour
   :ada:`H` from the multidimensional array :ada:`M`.
 
