@@ -386,7 +386,10 @@ def setup(app):
         if ('SPHINX_COVER_PAGE' in os.environ and
             os.environ['SPHINX_COVER_PAGE'] != ""):
 
-            pages = convert_from_path(app.outdir + "/" + os.environ['SPHINX_COVER_PAGE'], 500)
+            pdf_cover_page = app.outdir + "/" + os.environ['SPHINX_COVER_PAGE']
+            png_cover_page = app.outdir + "/" + '_static/cover.png'
+
+            pages = convert_from_path(pdf_cover_page, 500)
 
             for page in pages:
-                page.save(app.outdir + "/" + '_static/cover.png', 'PNG')
+                page.save(png_cover_page, 'PNG')
