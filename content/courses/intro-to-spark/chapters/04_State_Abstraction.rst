@@ -560,7 +560,7 @@ For example, we can query the state of the stack with functions
 :ada:`Is_Empty` and :ada:`Is_Full` and call these in the contracts of procedures
 :ada:`Pop` and :ada:`Push`:
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions_1
 
     package Stack is
        type Element is new Integer;
@@ -626,7 +626,7 @@ For example, we can refine the postconditions in the bodies of :ada:`Pop` and
 :ada:`Push` to be more detailed than what we wrote for them in their
 specification.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions_2
 
     package Stack is
        type Element is new Integer;
