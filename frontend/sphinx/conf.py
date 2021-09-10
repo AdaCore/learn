@@ -305,7 +305,7 @@ epub_cover = ("_static/cover.png", "epub-cover.html")
 #epub_post_files = []
 
 # A list of files that should not be packed into the epub file.
-epub_exclude_files = ['cover-A4.pdf']
+epub_exclude_files = ['cover-A4.pdf', '.nojekyll', '_static/favicon.ico']
 #    ['_static/opensearch.xml', '_static/doctools.js',
 #    '_static/jquery.js', '_static/searchtools.js', '_static/underscore.js',
 #    '_static/basic.css', 'search.html', '_static/websupport.js']
