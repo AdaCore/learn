@@ -615,7 +615,7 @@ div.code-block-caption span.caption-text {
 }
 
 div.literal-block-wrapper {
-    padding: 1em 1em 0;
+    padding: 0.1em 1em 0;
 }
 
 div.literal-block-preamble {
