@@ -618,6 +618,10 @@ div.literal-block-wrapper {
     padding: 1em 1em 0;
 }
 
+div.literal-block-preamble {
+    font-weight: bold;
+}
+
 div.literal-block-wrapper div.highlight {
     margin: 0;
 }

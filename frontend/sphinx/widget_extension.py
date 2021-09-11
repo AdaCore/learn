@@ -128,10 +128,10 @@ class WidgetCodeDirective(Directive):
                 }
             if node_format == 'html':
                 known_info_type = {
-                    'build'   : '<b>Build output</b>',
-                    'run'     : '<b>Runtime output</b>',
-                    'compile' : '<b>Compilation output</b>',
-                    'prove'   : '<b>Prover output</b>'
+                    'build'   : r"<div class='literal-block-preamble'>Build output</div>",
+                    'run'     : r"<div class='literal-block-preamble'>Runtime output</div>",
+                    'compile' : r"<div class='literal-block-preamble'>Compilation output</div>",
+                    'prove'   : r"<div class='literal-block-preamble'>Prover output</div>"
                 }
 
             if info_type in known_info_type:
