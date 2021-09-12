@@ -126,12 +126,12 @@ class WidgetCodeDirective(Directive):
                     'compile' : '\\textbf{Compilation output}',
                     'prove'   : '\\textbf{Prover output}'
                 }
-            if node_format == 'epub':
+            if node_format == 'html':
                 known_info_type = {
-                    'build'   : '<b>Build output</b>',
-                    'run'     : '<b>Runtime output</b>',
-                    'compile' : '<b>Compilation output</b>',
-                    'prove'   : '<b>Prover output</b>'
+                    'build'   : r"<div class='literal-block-preamble'>Build output</div>",
+                    'run'     : r"<div class='literal-block-preamble'>Runtime output</div>",
+                    'compile' : r"<div class='literal-block-preamble'>Compilation output</div>",
+                    'prove'   : r"<div class='literal-block-preamble'>Prover output</div>"
                 }
 
             if info_type in known_info_type:
@@ -230,7 +230,7 @@ class WidgetCodeDirective(Directive):
                     nodes_latex = self.create_static_node(widget, code_block_info, 'latex')
                 if ('builder_epub' in self.state.state_machine.document.settings.env.app.tags.tags
                     and self.state.state_machine.document.settings.env.app.tags.tags['builder_epub']):
-                    nodes_epub = self.create_static_node(widget, code_block_info, 'epub')
+                    nodes_epub = self.create_static_node(widget, code_block_info, 'html')
 
         except Exception as err:
             raise self.error(err)
