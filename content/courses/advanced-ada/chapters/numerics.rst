@@ -97,30 +97,6 @@ A small feature added to Ada 2005 solves the problem: the :ada:`Mod` attribute:
 The :ada:`Mod` attribute will correctly convert from any integer type to a
 given modular type, using wraparound semantics.
 
-This is a generic version:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Mod_Attribute
-
-    generic
-       type Formal_Modular is mod <>;
-    package Mod_Attribute is
-       function F return Formal_Modular;
-    end Mod_Attribute;
-
-    package body Mod_Attribute is
-
-       A_Signed_Integer : Integer := -1;
-
-       function F return Formal_Modular is
-       begin
-          return Formal_Modular'Mod (A_Signed_Integer);
-       end F;
-
-    end Mod_Attribute;
-
-In this example, :ada:`F` will return the all-ones bit pattern, for whatever
-modular type is passed to :ada:`Formal_Modular`.
-
 .. todo::
 
     Complete section!
