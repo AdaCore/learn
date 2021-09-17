@@ -8,7 +8,17 @@ Modular Types
 
 In the
 :doc:`Introduction to Ada course <courses/intro-to-ada/chapters/strongly_typed_language>`,
-we've seen that Ada has two kinds of integer type: signed and modular.
+we've seen that Ada has two kinds of integer type: signed and modular. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Modular_1
+
+    package Num_Types is
+
+       type Signed_Integer is range 1 .. 1_000_000;
+       type Modular is mod 2**32;
+
+    end Num_Types;
 
 In this section, we discuss two attributes of modular types: :ada:`Modulus`
 and :ada:`Mod`.
@@ -21,17 +31,6 @@ and :ada:`Mod`.
 
     This section was originally written by Robert A. Duff and published as
     `Gem #26: The Mod Attribute <https://www.adacore.com/gems/gem-26>`_.
-
-Ada has two kinds of integer type: signed and modular:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Modular_1
-
-    package Num_Types is
-
-       type Signed_Integer is range 1 .. 1_000_000;
-       type Modular is mod 2**32;
-
-    end Num_Types;
 
 Operations on signed integers can overflow: if the result is outside the base
 range, :ada:`Constraint_Error` will be raised. The base range of
