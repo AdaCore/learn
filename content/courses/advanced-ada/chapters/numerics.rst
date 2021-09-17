@@ -79,6 +79,26 @@ malfunction if the source and target types are of different sizes.
 
 A small feature added to Ada 2005 solves the problem: the :ada:`Mod` attribute:
 
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Modular_1
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Num_Types;   use Num_Types;
+
+    procedure Show_Modular is
+
+       I : constant Integer := -1;
+       X : Modular := 1;
+    begin
+       X := Modular'Mod (I);
+       Put_Line (X'Image);
+    end Show_Modular;
+
+The :ada:`Mod` attribute will correctly convert from any integer type to a
+given modular type, using wraparound semantics.
+
+This is a generic version:
+
 .. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Mod_Attribute
 
     generic
@@ -98,10 +118,8 @@ A small feature added to Ada 2005 solves the problem: the :ada:`Mod` attribute:
 
     end Mod_Attribute;
 
-The :ada:`Mod` attribute will correctly convert from any integer type to a
-given modular type, using wraparound semantics. Thus, :ada:`F` will return the
-all-ones bit pattern, for whatever modular type is passed to
-:ada:`Formal_Modular`.
+In this example, :ada:`F` will return the all-ones bit pattern, for whatever
+modular type is passed to :ada:`Formal_Modular`.
 
 .. todo::
 
