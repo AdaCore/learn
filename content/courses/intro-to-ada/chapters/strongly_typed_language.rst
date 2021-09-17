@@ -179,12 +179,11 @@ advantage of Ada is that the modulus is more general:
        end loop;
     end Main;
 
-.. ?? WHICH BEHAVIOR?
-
-Unlike in C/C++, since this behavior is guaranteed by the Ada specification,
-you can rely on it to implement portable code. Also, being able to leverage the
-wrapping on arbitrary bounds is very useful -- the modulus does not need to be
-a power of 2 -- to implement certain algorithms and data structures, such as
+Unlike in C/C++, since this wraparound behavior is guaranteed by the Ada
+specification, you can rely on it to implement portable code. Also, being able
+to leverage the wrapping on arbitrary bounds is very useful |mdash| the modulus
+does not need to be a power of 2 |mdash| to implement certain algorithms and
+data structures, such as
 `ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`_.
 
 .. _EnumTypes:
