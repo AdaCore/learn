@@ -6,6 +6,14 @@ Numerics
 Modular Types
 -------------
 
+In the
+:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/strongly_typed_language>`,
+we've seen that Ada has two kinds of integer type: signed and modular.
+
+In this section, we discuss two attributes of modular types: :ada:`Modulus`
+and :ada:`Mod`.
+
+
 :ada:`Mod` Attribute
 ~~~~~~~~~~~~~~~~~~~~
 
