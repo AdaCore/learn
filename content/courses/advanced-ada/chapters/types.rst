@@ -360,7 +360,8 @@ itself.)
     (That's why the range has to be static in the source code, unlike for
     explicit subtypes.)
 
-The following example shows how the attribute affects the bounds of a variable:
+The following example shows how the :ada:`Base` attribute affects the bounds of
+a variable:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Types.Base_Attr
 
