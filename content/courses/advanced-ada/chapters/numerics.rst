@@ -13,10 +13,14 @@ Modular Types
 
 Ada has two kinds of integer type: signed and modular:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Modular_1
 
-    type Signed_Integer is range 1..1_000_000;
-    type Modular is mod 2**32;
+    package Num_Types is
+
+       type Signed_Integer is range 1..1_000_000;
+       type Modular is mod 2**32;
+
+    end Num_Types;
 
 Operations on signed integers can overflow: if the result is outside the base
 range, :ada:`Constraint_Error` will be raised. The base range of
@@ -28,10 +32,21 @@ Operations on modular integers use modular (wraparound) arithmetic.
 
 For example:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Modular_1
 
-      X : Modular := 1;
-      X := - X;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Num_Types;   use Num_Types;
+
+    procedure Show_Modular is
+       X : Modular;
+    begin
+       X := 1;
+       Put_Line (X'Image);
+
+       X := -X;
+       Put_Line (X'Image);
+    end Show_Modular;
 
 Negating X gives -1, which wraps around to :ada:`2**32-1`, i.e. all-one-bits.
 
@@ -41,10 +56,20 @@ wrap around)? The answer in Ada is the former |mdash| that is, if you try to
 convert, say, :ada:`Integer'(-1)` to :ada:`Modular`, you will get
 :ada:`Constraint_Error`:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Modular_1
+    :class: ada-run-expect-failure
 
-      I : Integer := -1;
-      X := Modular (I);  --  raises Constraint_Error
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Num_Types;   use Num_Types;
+
+    procedure Show_Modular is
+       I : Integer := -1;
+       X : Modular := 1;
+    begin
+       X := Modular (I);  --  raises Constraint_Error
+       Put_Line (X'Image);
+    end Show_Modular;
 
 In Ada 95, the only way to do that conversion is to use
 :ada:`Unchecked_Conversion`, which is somewhat uncomfortable. Furthermore, if
@@ -54,7 +79,7 @@ malfunction if the source and target types are of different sizes.
 
 A small feature added to Ada 2005 solves the problem: the :ada:`Mod` attribute:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Mod_Attribute
 
     generic
        type Formal_Modular is mod <>;
