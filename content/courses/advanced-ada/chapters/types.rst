@@ -3,6 +3,8 @@ Types
 
 .. include:: ../../global.txt
 
+.. _Scalar_Types:
+
 Scalar Types
 ------------
 
