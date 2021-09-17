@@ -42,7 +42,7 @@ declared the :ada:`Signed_Integer` type:
 
 The base range of :ada:`Signed_Integer` is the range of
 :ada:`Signed_Integer'Base`, which is chosen by the compiler, but is likely to
-be something like :ada:`-2**31 .. 2**31-1`. (Note: we discussed the
+be something like :ada:`-2**31 .. 2**31 - 1`. (Note: we discussed the
 :ada:`Base` attribute in the section on :ref:`scalar types <Scalar_Types>`.)
 
 Operations on modular integers use modular (wraparound) arithmetic.
@@ -65,7 +65,8 @@ For example:
        Put_Line (X'Image);
     end Show_Modular;
 
-Negating X gives -1, which wraps around to :ada:`2**32-1`, i.e. all-one-bits.
+Negating X gives -1, which wraps around to :ada:`2**32 - 1`, i.e.
+all-one-bits.
 
 But what about a type conversion from signed to modular? Is that a signed
 operation (so it should overflow) or is it a modular operation (so it should
