@@ -6,6 +6,9 @@ Numerics
 Modular Types
 -------------
 
+:ada:`Mod` Attribute
+~~~~~~~~~~~~~~~~~~~~
+
 .. note::
 
     This section was originally written by Robert A. Duff and published as
