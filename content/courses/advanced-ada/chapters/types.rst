@@ -281,9 +281,9 @@ we can use:
 Base
 ~~~~
 
-The :ada:`Base` attribute gives us the unconstrained version of a subtype. As
-an example, let's say we declared a subtype of the :ada:`Integer` type named
-:ada:`One_To_Ten`:
+The :ada:`Base` attribute gives us the unconstrained underlying hardware
+representation selected for a given numeric type. As an example, let's say we
+declared a subtype of the :ada:`Integer` type named :ada:`One_To_Ten`:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Base_Attr
 
@@ -294,9 +294,13 @@ an example, let's say we declared a subtype of the :ada:`Integer` type named
     end My_Integers;
 
 If we then use the :ada:`Base` attribute |mdash| by writing
-:ada:`One_To_Ten'Base` |mdash|, we're actually referring to the
-:ada:`Integer` type (because the :ada:`Integer` type was used as the base
-subtype of the :ada:`One_To_Ten` subtype).
+:ada:`One_To_Ten'Base` |mdash|, we're actually referring to the unconstrained
+underlying hardware representation selected for :ada:`One_To_Ten`. As
+:ada:`One_To_Ten` is a subtype of the :ada:`Integer` type, this also means that
+:ada:`One_To_Ten'Base` is equivalent to :ada:`Integer'Base`, i.e. they refer to
+the same base type. (This base type is the underlying hardware type
+representing the :ada:`Integer` type |mdash| but is not the :ada:`Integer` type
+itself.)
 
 The following example shows how the attribute affects the bounds of a variable:
 
