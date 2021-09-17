@@ -33,10 +33,16 @@ and :ada:`Mod`.
     `Gem #26: The Mod Attribute <https://www.adacore.com/gems/gem-26>`_.
 
 Operations on signed integers can overflow: if the result is outside the base
-range, :ada:`Constraint_Error` will be raised. The base range of
-:ada:`Signed_Integer` is the range of :ada:`Signed_Integer'Base`, which is
-chosen by the compiler, but is likely to be something like
-:ada:`-2**31 .. 2**31-1`.
+range, :ada:`Constraint_Error` will be raised. In our previous example, we
+declared the :ada:`Signed_Integer` type:
+
+.. code-block:: ada
+
+    type Signed_Integer is range 1 .. 1_000_000;
+
+The base range of :ada:`Signed_Integer` is the range of
+:ada:`Signed_Integer'Base`, which is chosen by the compiler, but is likely to
+be something like :ada:`-2**31 .. 2**31-1`.
 
 Operations on modular integers use modular (wraparound) arithmetic.
 
