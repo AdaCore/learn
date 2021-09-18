@@ -170,6 +170,109 @@ given modular type, using wraparound semantics.
     In this example, :ada:`F` will return the all-ones bit pattern, for
     whatever modular type is passed to :ada:`Formal_Modular`.
 
+Operations on modular types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Modular types are particularly useful for bit manipulation. For example, you
+can use the :ada:`and`, :ada:`or` and :ada:`xor` operators for modular types.
+
+Also, you can perform bit-shifting by multiplying or dividing a modular object
+with a power of two. For example, if :ada:`M` is a variable of modular type,
+then :ada:`M := M * 2 ** 3;` shifts the bits to the left by three bits.
+Likewise, :ada:`M := M / 2 ** 3` shifts the bits to the right. Note that the
+compiler selects the appropriate shifting operator when translating these
+operations to machine code |mdash| no actual multiplication or division will be
+performed.
+
+Let's see a simple implementation of the CRC-CCITT (0x1D0F) algorithm:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Mod_Crc_CCITT_Ada
+
+    package Crc_Defs is
+
+        type Byte is mod 2 ** 8;
+        type Crc  is mod 2 ** 16;
+
+        type Byte_Array is array (Positive range <>) of Byte;
+
+        function Crc_CCITT (A : Byte_Array) return Crc;
+
+        procedure Display (Crc_A : Crc);
+
+        procedure Display (A : Byte_Array);
+
+    end Crc_Defs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Crc_Defs is
+
+        package Byte_IO is new Modular_IO (Byte);
+        package Crc_IO  is new Modular_IO (Crc);
+
+        function Crc_CCITT (A : Byte_Array) return Crc is
+           X : Byte;
+           Crc_A : Crc := 16#1d0f#;
+        begin
+           for I in A'Range loop
+              X := Byte (Crc_A / 2 ** 8) xor A (I);
+              X := X xor (X / 2 ** 4);
+              declare
+                 Crc_X : constant Crc := Crc (X);
+              begin
+                 Crc_A := Crc_A * 2 ** 8  xor
+                          Crc_X * 2 ** 12 xor
+                          Crc_X * 2 ** 5  xor
+                          Crc_X;
+              end;
+           end loop;
+
+           return Crc_A;
+        end Crc_CCITT;
+
+        procedure Display (Crc_A : Crc) is
+        begin
+           Crc_IO.Put (Crc_A);
+           New_Line;
+        end Display;
+
+        procedure Display (A : Byte_Array) is
+        begin
+           for E of A loop
+              Byte_IO.Put (E);
+              Put (", ");
+           end loop;
+           New_Line;
+        end Display;
+
+    begin
+       Byte_IO.Default_Width := 1;
+       Byte_IO.Default_Base  := 16;
+       Crc_IO.Default_Width  := 1;
+       Crc_IO.Default_Base   := 16;
+    end Crc_Defs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Crc_Defs;    use Crc_Defs;
+
+    procedure Show_Crc is
+       AA    : constant Byte_Array := (16#0#, 16#20#, 16#30#);
+       Crc_A : Crc;
+    begin
+       Crc_A := Crc_CCITT (AA);
+
+       Put ("Input array: ");
+       Display (AA);
+
+       Put ("CRC-CCITT: ");
+       Display (Crc_A);
+    end Show_Crc;
+
+In this example, the core of the algorithm is implemented in the
+:ada:`Crc_CCITT` function. There, we use bit shifting |mdash| for instance,
+:ada:`* 2 ** 8` and :ada:`/ 2 ** 8`, which shift left and right, respectively,
+by eight bits. We also use the :ada:`xor` operator.
+
 .. todo::
 
     Complete section!
