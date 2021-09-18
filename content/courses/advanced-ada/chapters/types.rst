@@ -3,8 +3,6 @@ Types
 
 .. include:: ../../global.txt
 
-.. _Scalar_Types:
-
 Scalar Types
 ------------
 
@@ -279,6 +277,8 @@ we can use:
 
 - the :ada:`Wide_Wide_Width` attribute for strings returned by
   :ada:`Wide_Wide_Image`.
+
+.. _Base_Attribute:
 
 Base
 ~~~~

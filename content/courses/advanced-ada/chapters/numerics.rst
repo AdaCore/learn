@@ -64,7 +64,7 @@ declared the :ada:`Signed_Integer` type:
 The base range of :ada:`Signed_Integer` is the range of
 :ada:`Signed_Integer'Base`, which is chosen by the compiler, but is likely to
 be something like :ada:`-2**31 .. 2**31 - 1`. (Note: we discussed the
-:ada:`Base` attribute in the section on :ref:`scalar types <Scalar_Types>`.)
+:ada:`Base` attribute :ref:`in this section <Base_Attribute>`.)
 
 Operations on modular integers use modular (wraparound) arithmetic.
 
