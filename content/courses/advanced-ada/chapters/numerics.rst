@@ -267,10 +267,6 @@ In this example, the core of the algorithm is implemented in the
 :ada:`* 2 ** 8` and :ada:`/ 2 ** 8`, which shift left and right, respectively,
 by eight bits. We also use the :ada:`xor` operator.
 
-.. todo::
-
-    Complete section!
-
 
 Numeric Literals
 ----------------
