@@ -21,7 +21,7 @@ example:
     end Num_Types;
 
 In this section, we discuss two attributes of modular types: :ada:`Modulus`
-and :ada:`Mod`.
+and :ada:`Mod`. We also discuss operations on modular types.
 
 
 :ada:`Modulus` Attribute
