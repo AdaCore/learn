@@ -110,13 +110,7 @@ convert, say, :ada:`Integer'(-1)` to :ada:`Modular`, you will get
        Put_Line (X'Image);
     end Show_Modular;
 
-In Ada 95, the only way to do that conversion is to use
-:ada:`Unchecked_Conversion`, which is somewhat uncomfortable. Furthermore, if
-you're trying to convert to a generic formal modular type, how do you know what
-size of signed integer type to use? Note that :ada:`Unchecked_Conversion` might
-malfunction if the source and target types are of different sizes.
-
-A small feature added to Ada 2005 solves the problem: the :ada:`Mod` attribute:
+To solve this problem, we can use the :ada:`Mod` attribute:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Modular_1
 
