@@ -67,9 +67,8 @@ The base range of :ada:`Signed_Integer` is the range of
 be something like :ada:`-2**31 .. 2**31 - 1`. (Note: we discussed the
 :ada:`Base` attribute :ref:`in this section <Base_Attribute>`.)
 
-Operations on modular integers use modular (wraparound) arithmetic.
-
-For example:
+Operations on modular integers use modular (wraparound) arithmetic. For
+example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Modular_1
 
