@@ -28,9 +28,9 @@ and :ada:`Mod`. We also discuss operations on modular types.
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 The :ada:`Modulus` attribute returns the modulus of the modular type as an
-universal integer value. For the 32-bit :ada:`Modular` type that we've declared
-in the :ada:`Num_Types` package of the previous example, we get :ada:`2**32`
-(which is equal to 4294967296), as we can see in this example:
+universal integer value. Let's get the modulus of the 32-bit :ada:`Modular`
+type that we've declared in the :ada:`Num_Types` package of the previous
+example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Modular_1
 
@@ -44,6 +44,7 @@ in the :ada:`Num_Types` package of the previous example, we get :ada:`2**32`
        Put_Line (Modulus_Value'Image);
     end Show_Modular;
 
+When we run this example, we get 4294967296, which is equal to :ada:`2**32`.
 
 :ada:`Mod` Attribute
 ~~~~~~~~~~~~~~~~~~~~
