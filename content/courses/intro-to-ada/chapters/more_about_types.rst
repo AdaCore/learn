@@ -46,7 +46,7 @@ convenient:
   sequence of indices in an array.
 
 However, note that as soon as you used a named association, all subsequent
-components likewise need to be specified with names associations.
+components likewise need to be specified with named associations.
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Points
 
