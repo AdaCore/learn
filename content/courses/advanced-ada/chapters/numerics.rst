@@ -168,7 +168,8 @@ Operations on modular types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Modular types are particularly useful for bit manipulation. For example, we
-can use the :ada:`and`, :ada:`or` and :ada:`xor` operators for modular types.
+can use the :ada:`and`, :ada:`or`, :ada:`xor` and :ada:`not` operators for
+modular types.
 
 Also, we can perform bit-shifting by multiplying or dividing a modular object
 with a power of two. For example, if :ada:`M` is a variable of modular type,
