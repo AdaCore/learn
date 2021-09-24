@@ -471,8 +471,8 @@ different from writing:
     One_Third_Approx : constant := 0.33333333333333333333333333333;
     Zero_Approx      : constant := 1.0 - 3.0 * One_Third_Approx;
 
-where :ada:`Zero_Approx` is really :ada:`1.0e-29` (and that will show up in
-your numerical computations). The above is quite handy when we want to write
+where :ada:`Zero_Approx` is really :ada:`1.0e-29` |mdash| and that will show up
+in your numerical computations. The above is quite handy when we want to write
 fractions without any loss of precision. Along these same lines, we can write:
 
 .. code-block:: ada
