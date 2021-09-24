@@ -529,9 +529,7 @@ different from writing:
 
 where :ada:`Zero_Approx` is really :ada:`1.0e-29` |mdash| and that will show up
 in your numerical computations. The above is quite handy when we want to write
-fractions without any loss of precision.
-
-Here's the complete code:
+fractions without any loss of precision. Here's the complete code:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Literals
 
