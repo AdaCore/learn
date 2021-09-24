@@ -373,15 +373,48 @@ separate groups of digits. For example,
 readable and less error prone to type than
 :ada:`3.14159265358979323846264338327950288419716939937510`.
 
+Here's the complete code:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Pi_Literals
+
+    with Ada.Text_IO;
+
+    procedure Ada_Numeric_Literals is
+       Pi   : constant := 3.14159_26535_89793_23846_26433_83279_50288_41971_69399_37510;
+       Pi2  : constant := 3.14159265358979323846264338327950288419716939937510;
+       Z    : constant := Pi - Pi2;
+       pragma Assert (Z = 0.0);
+
+       use Ada.Text_IO;
+    begin
+       Put_Line ("Z = " & Float'Image (Z));
+    end Ada_Numeric_Literals;
+
 Also, when using based literals, Ada allows any base from 2 to 16. Thus, we can
 write the decimal number 136 in any one of the following notations:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Based_Literals
 
-    2#1000_1000#
-    8#210#
-    10#136#
-    16#88#
+    with Ada.Text_IO;
+
+    procedure Ada_Numeric_Literals is
+       Bin_136 : constant := 2#1000_1000#;
+       Oct_136 : constant := 8#210#;
+       Dec_136 : constant := 10#136#;
+       Hex_136 : constant := 16#88#;
+       pragma Assert (Bin_136 = 136);
+       pragma Assert (Oct_136 = 136);
+       pragma Assert (Dec_136 = 136);
+       pragma Assert (Hex_136 = 136);
+
+       use Ada.Text_IO;
+
+    begin
+       Put_Line ("Bin_136 = " & Integer'Image (Bin_136));
+       Put_Line ("Oct_136 = " & Integer'Image (Oct_136));
+       Put_Line ("Dec_136 = " & Integer'Image (Dec_136));
+       Put_Line ("Hex_136 = " & Integer'Image (Hex_136));
+    end Ada_Numeric_Literals;
 
 .. admonition:: In other languages
 
@@ -407,6 +440,28 @@ and have the ability to turn on/off the lights as follows:
     Output_Devices := Output_Devices  or   Lights_On;
     Output_Devices := Output_Devices  and  Lights_Off;
 
+Here's the complete example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Literal_Lights
+
+    with Ada.Text_IO;
+
+    procedure Ada_Numeric_Literals is
+       Lights_On  : constant := 2#1000_1000#;
+       Lights_Off : constant := 2#0111_0111#;
+
+       type Byte is mod 256;
+       Output_Devices : Byte := 0;
+       --  for Output_Devices'Address use 16#DEAD_BEEF#;  --  Memory mapped Output
+
+       use Ada.Text_IO;
+    begin
+       Output_Devices := Output_Devices  or   Lights_On;
+       Put_Line ("Output_Devices (lights on ) = " & Byte'Image (Output_Devices));
+       Output_Devices := Output_Devices  and  Lights_Off;
+       Put_Line ("Output_Devices (lights off) = " & Byte'Image (Output_Devices));
+    end Ada_Numeric_Literals;
+
 Of course, we can also use
 :ref:`records with representation clauses <Record_Representation_Storage_Clauses>`
 to do the above, which is even more elegant.
@@ -414,16 +469,18 @@ to do the above, which is even more elegant.
 The notion of base in Ada allows for exponents, which is particularly pleasant.
 For instance, we can write:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Literal_Binary
 
-     Kilobinary  : constant := 2#1#e+10;
-     Megabinary  : constant := 2#1#e+20;
-     Gigabinary  : constant := 2#1#e+30;
-     Terabinary  : constant := 2#1#e+40;
-     Petabinary  : constant := 2#1#e+50;
-     Exabinary   : constant := 2#1#e+60;
-     Zettabinary : constant := 2#1#e+70;
-     Yottabinary : constant := 2#1#e+80;
+    package Literal_Binaries is
+       Kilobyte  : constant := 2#1#e+10;
+       Megabyte  : constant := 2#1#e+20;
+       Gigabyte  : constant := 2#1#e+30;
+       Terabyte  : constant := 2#1#e+40;
+       Petabyte  : constant := 2#1#e+50;
+       Exabyte   : constant := 2#1#e+60;
+       Zettabyte : constant := 2#1#e+70;
+       Yottabyte : constant := 2#1#e+80;
+    end Literal_Binaries;
 
 In based literals, the exponent |mdash| like the base |mdash| uses the regular
 decimal notation and specifies the power of the base that the based literal
@@ -475,21 +532,56 @@ where :ada:`Zero_Approx` is really :ada:`1.0e-29` |mdash| and that will show up
 in your numerical computations. The above is quite handy when we want to write
 fractions without any loss of precision.
 
+Here's the complete code:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Literals
+
+    with Ada.Text_IO;
+
+    procedure Ada_Numeric_Literals is
+       One_Third : constant := 3#1.0#e-1;  --  same as 1.0/3.0
+       Zero      : constant := 1.0 - 3.0 * One_Third;
+       pragma Assert (Zero = 0.0);
+
+       One_Third_Approx : constant := 0.33333333333333333333333333333;
+       Zero_Approx      : constant := 1.0 - 3.0 * One_Third_Approx;
+
+       use Ada.Text_IO;
+
+    begin
+       Put_Line ("Zero        = " & Float'Image (Zero));
+       Put_Line ("Zero_Approx = " & Float'Image (Zero_Approx));
+    end Ada_Numeric_Literals;
+
 Along these same lines, we can write:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Literal_Binary
 
-    Big_Sum : constant := 1           +
-                          Kilobinary  +
-                          Megabinary  +
-                          Gigabinary  +
-                          Terabinary  +
-                          Petabinary  +
-                          Exabinary   +
-                          Zettabinary;
+    with Ada.Text_IO;
 
-    Result : constant := (Yottabinary - 1) / (Kilobinary - 1);
-    Nil : constant := Result - Big_Sum;
+    with Literal_Binaries; use Literal_Binaries;
+
+    procedure Ada_Numeric_Literals is
+
+       Big_Sum : constant := 1         +
+                             Kilobyte  +
+                             Megabyte  +
+                             Gigabyte  +
+                             Terabyte  +
+                             Petabyte  +
+                             Exabyte   +
+                             Zettabyte;
+
+       Result : constant := (Yottabyte - 1) / (Kilobyte - 1);
+
+       Nil : constant := Result - Big_Sum;
+       pragma Assert (Nil = 0);
+
+       use Ada.Text_IO;
+
+    begin
+       Put_Line ("Nil         = " & Integer'Image (Nil));
+    end Ada_Numeric_Literals;
 
 and be guaranteed that :ada:`Nil` is equal to zero.
 
