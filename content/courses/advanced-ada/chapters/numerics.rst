@@ -279,7 +279,7 @@ We've already discussed basic characteristics of numeric literals in the
 :doc:`Introduction to Ada course <courses/intro-to-ada/chapters/strongly_typed_language>`.
 We've seen that there are two kinds of numeric literals in Ada: integer
 literals and real literals. They are distinguished by the absence or presence
-of a point. For example:
+of a radix point. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Real_Integer_Literals
 
@@ -353,9 +353,10 @@ literals and based literals. For example:
     end Decimal_Based_Literals;
 
 Based literals use the ``base#number#`` format. Also, they aren't limited to
-simple integer literals such as :ada:`16#16D#`. In fact, we can use a point or
-an exponent in based literals, as well as underscores. In addition, we can use
-any base from 2 up to 16. We discuss these aspects further in the next section.
+simple integer literals such as :ada:`16#16D#`. In fact, we can use a radix
+point or an exponent in based literals, as well as underscores. In addition, we
+can use any base from 2 up to 16. We discuss these aspects further in the next
+section.
 
 
 Features and Flexibility
