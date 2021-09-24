@@ -3011,6 +3011,8 @@ which results in less speed of access for packed objects. As usual in those
 circumstances, before using packed representation, we should assess whether
 memory constraints are more important than speed in our target architecture.
 
+.. _Record_Representation_Storage_Clauses:
+
 Record Representation and storage clauses
 -----------------------------------------
 
