@@ -414,8 +414,9 @@ and have the ability to turn on/off the lights as follows:
     Output_Devices := Output_Devices  or   Lights_On;
     Output_Devices := Output_Devices  and  Lights_Off;
 
-Of course, we can also use records with representation clauses to do the above,
-which is even more elegant.
+Of course, we can also use
+:ref:`records with representation clauses <Record_Representation_Storage_Clauses>`
+to do the above, which is even more elegant.
 
 The notion of base in Ada allows for exponents, which is particularly pleasant.
 For instance, we can write:
