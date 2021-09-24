@@ -272,6 +272,95 @@ by eight bits. We also use the :ada:`xor` operator.
 Numeric Literals
 ----------------
 
+Classification
+~~~~~~~~~~~~~~
+
+We've already discussed basic characteristics of numeric literals in the
+:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/strongly_typed_language>`.
+We've seen that there are two kinds of numeric literals in Ada: integer
+literals and real literals. They are distinguished by the absence or presence
+of a point. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Real_Integer_Literals
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Real_Integer_Literals is
+       Integer_Literal : constant := 365;
+       Real_Literal    : constant := 365.2564;
+    begin
+       Put_Line ("Integer Literal: " & Integer_Literal'Image);
+       Put_Line ("Real Literal:    " & Real_Literal'Image);
+    end Real_Integer_Literals;
+
+Another classification takes the use of a base indicator into account.
+(Remember that, when writing a literal such as :ada:`2#1011#`, the base is the
+element before the first ``#`` sign.) So here we distinguish between decimal
+literals and based literals. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Decimal_Based_Literals
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Decimal_Based_Literals is
+
+       package F_IO is new Ada.Text_IO.Float_IO (Float);
+
+       --
+       --  DECIMAL LITERALS
+       --
+
+       Dec_Integer  : constant := 365;
+
+       Dec_Real     : constant := 365.2564;
+       Dec_Real_Exp : constant := 0.365_256_4e3;
+
+       --
+       --  BASED LITERALS
+       --
+
+       Based_Integer     : constant := 16#16D#;
+       Based_Integer_Exp : constant := 5#243#e1;
+
+       Based_Real        : constant :=
+         2#1_0110_1101.0100_0001_1010_0011_0111#;
+       Based_Real_Exp    : constant := 7#1.031_153_643#e3;
+    begin
+       F_IO.Default_Fore := 3;
+       F_IO.Default_Aft  := 4;
+       F_IO.Default_Exp  := 0;
+
+       Put_Line ("Dec_Integer:       " & Dec_Integer'Image);
+
+       Put ("Dec_Real:           ");
+       F_IO.Put (Item => Dec_Real);
+       New_Line;
+
+       Put ("Dec_Real_Exp:       ");
+       F_IO.Put (Item => Dec_Real_Exp);
+       New_Line;
+
+       Put_Line ("Based_Integer:     " & Based_Integer'Image);
+       Put_Line ("Based_Integer_Exp: " & Based_Integer_Exp'Image);
+
+       Put ("Based_Real:         ");
+       F_IO.Put (Item => Based_Real);
+       New_Line;
+
+       Put ("Based_Real_Exp:     ");
+       F_IO.Put (Item => Based_Real_Exp);
+       New_Line;
+    end Decimal_Based_Literals;
+
+Based literals use the ``base#number#`` format. Also, they aren't limited to
+simple integer literals such as :ada:`16#16D#`. In fact, we can use a point or
+an exponent in based literals, as well as underscores. In addition, we can use
+any base from 2 up to 16. We discuss these aspects further in the next section.
+
+
+Features and Flexibility
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 .. note::
 
     This section was originally written by Franco Gasperoni and published as
