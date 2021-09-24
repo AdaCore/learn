@@ -368,17 +368,10 @@ Features and Flexibility
 
 Ada provides a simple and elegant way of expressing numeric literals. One of
 those simple, yet powerful aspects is the ability to use underscores to
-separate groups of digits. For example:
-
-.. code-block:: ada
-
-    3.14159_26535_89793_23846_26433_83279_50288_41971_69399_37510
-
-is more readable and less error prone to type than
-
-.. code-block:: ada
-
-    3.14159265358979323846264338327950288419716939937510
+separate groups of digits. For example,
+:ada:`3.14159_26535_89793_23846_26433_83279_50288_41971_69399_37510` is more
+readable and less error prone to type than
+:ada:`3.14159265358979323846264338327950288419716939937510`.
 
 Also, when using based literals, Ada allows any base from 2 to 16. Thus, we can
 write the decimal number 136 in any one of the following notations:
