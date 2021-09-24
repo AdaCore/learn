@@ -571,7 +571,7 @@ Along these same lines, we can write:
 
        Result : constant := (Yottabyte - 1) / (Kilobyte - 1);
 
-       Nil : constant := Result - Big_Sum;
+       Nil    : constant := Result - Big_Sum;
        pragma Assert (Nil = 0);
 
        use Ada.Text_IO;
