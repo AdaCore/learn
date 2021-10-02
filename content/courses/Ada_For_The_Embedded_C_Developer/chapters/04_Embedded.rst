@@ -466,7 +466,7 @@ We may also use any other range. For example:
     end Custom_Fixed_Point_Range;
 
 In this example, we are defining a 16-bit type called :ada:`Inv_Trig`,
-which has a range from :math:`-\pi/2` to :math:`\pi/2`.
+which has a range from -π/2 to π/2.
 
 All standard operations are available for fixed-point types. For example:
 
