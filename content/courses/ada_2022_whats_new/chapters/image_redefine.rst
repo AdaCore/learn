@@ -3,9 +3,9 @@
 Redefining the :ada:`'Image` attribute
 ======================================
 
-In Ada 2022 you can redefine 'Image attribute for your type. Corresponding
-syntax has been changed several times. Let's see how does it work in GNAT
-Community 2021.
+In Ada 2022 you can redefine :ada:`'Image` attribute for your type.
+Corresponding syntax has been changed several times. Let's see how
+does it work in GNAT Community 2021.
 
 .. note::
 
@@ -57,12 +57,6 @@ aspect on the type:
       Ada.Text_IO.Put_Line (Line_10'Image);
    end Main;
 
-Output is:
-
-.. code-block::
-
-   10:1
-
 What's the Root_Buffer_Type?
 ----------------------------
 
@@ -102,8 +96,8 @@ In that case :ada:`My_Put_Image` looks like:
    end My_Put_Image;
 
 
-References:
------------
+References
+----------
 
 * `ARM 4.10 Image Attributes`_
 * AI12-0020-1_
