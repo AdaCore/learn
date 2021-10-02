@@ -14,8 +14,8 @@ Older compilers use :ada:`pragma Ada_2020;` or `-gnat2020` instead.
 Square brackets syntax and :ada:`'Reduce` expression also need
 :ada:`pragma Extensions_Allowed (On);` or `-gnatX` swith.
 
-References:
------------
+References
+----------
 
 * Draft `Ada 2022 Standard`_
 * `Ada 202x support in GNAT`_ blog post

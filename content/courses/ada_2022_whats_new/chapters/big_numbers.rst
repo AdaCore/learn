@@ -153,8 +153,8 @@ Besides Big_Integer, Ada 2022 provides `Big Reals`_.
    Don't use Big_Numbers for cryptography because it is vulnerable to
    timing side-channels attacks.
 
-References:
------------
+References
+----------
 
 * `ARM A.5.6 Big Integers`_
 * `ARM A.5.7 Big Reals`_

@@ -13,9 +13,9 @@
 :ada:`'Image` attribute for a value
 -----------------------------------
 
-If you missed `Technical Corrigendum 1`_ changes (they were published
-in February 2016) then you probably don't know that the :ada:`'Image`
-attribute can be applied now to a value. So, instead of
+With the publication of the `Technical Corrigendum 1`_ in February
+2016, the :ada:`'Image` attribute can now be applied to a value. So, 
+instead of
 :ada:`My_Type'Image (Value)` you can just write :ada:`Value'Image`,
 but only if the :ada:`Value` is a name_. So, these two statements are equal:
 
@@ -32,51 +32,10 @@ but only if the :ada:`Value` is a name_. So, these two statements are equal:
 :ada:`'Image` attribute for any type
 ------------------------------------
 
-Now you can apply :ada:`'Image` attribute for any type, including records,
-array, access and private types. Let's see how this works. Define an array,
-record, access types and corresponding objects:
-
-.. code-block:: ada
-
-   type Vector is array (Positive range <>) of Integer;
-
-   V1 : aliased Vector := (1, 2, 3);
-
-   type Text_Position is record
-      Line, Column : Positive;
-   end record;
-
-   Pos : constant Text_Position := (Line => 10, Column => 3);
-
-   type Vector_Access is access all Vector;
-
-   V1_Ptr : constant Vector_Access := V1'Access;
-
-Now you can convert these objects to string and print:
-
-.. code-block:: ada
-
-   Ada.Text_IO.Put_Line (V1'Image);
-
-   Ada.Text_IO.Put_Line (Pos'Image);
-   Ada.Text_IO.New_Line;
-   Ada.Text_IO.Put_Line (V1_Ptr'Image);
-
-Output is:
-
-.. code-block:: ada
-
-   [ 1,  2,  3]
-
-   (LINE =>  10,
-    COLUMN =>  3)
-
-   (access 7ff5c5717138)
-
-Note square brackets in array image. In Ada 2022 array aggregates could
-be written this way!
-
-Complete code snippet:
+In Ada 2022 you can apply :ada:`'Image` attribute for any type, including
+records, array, access and private types. Let's see how this works. Define
+an array, record, access types and corresponding objects and then convert
+these objects to string and print:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Image_Attribute
 
@@ -106,8 +65,11 @@ Complete code snippet:
       Ada.Text_IO.Put_Line (V1_Ptr'Image);
    end Main;
 
-References:
------------
+Note square brackets in array image output. In Ada 2022 array aggregates could
+be written this way!
+
+References
+----------
 
 * `ARM 4.10 Image Attributes`_
 * AI12-0020-1_

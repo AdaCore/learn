@@ -116,8 +116,8 @@ custom :ada:`+` operator:
       Print ("5" + 3);
    end Main;
 
-References:
------------
+References
+----------
 
 * `ARM 4.2.1 User-Defined Literals`_
 * AI12-0249-1_

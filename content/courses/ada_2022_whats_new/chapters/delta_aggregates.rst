@@ -23,8 +23,9 @@ Delta aggregate for records
 
 The delta aggregate for a record type looks like this:
 
-.. code-block:: ada
+.. code:: ada no_button manual_chop project=Courses.Ada_2022_Whats_New.Delta_Aggregates.Record
 
+   !main.adb
    type Vector is record
       X, Y, Z : Float;
    end record;
@@ -43,8 +44,9 @@ There is also the delta aggregate for arrays. You can change array
 elements with it, but you can't change array bounds. Also, it works
 only for one-dimention arrays of non-limited components.
 
-.. code-block:: ada
+.. code:: ada no_button manual_chop project=Courses.Ada_2022_Whats_New.Delta_Aggregates.Array
 
+   !main.adb
    type Vector_3D is array (1 .. 3) of Float;
 
    Point_2 : constant Vector_3D := (1.0, 2.0, 3.0);
@@ -86,8 +88,8 @@ Complete code snippet:
    end Main;
 
 
-References:
------------
+References
+----------
 
 * `ARM 4.3.4 Delta Aggregates`_
 * AI12-0127-1_

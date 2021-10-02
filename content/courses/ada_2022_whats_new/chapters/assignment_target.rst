@@ -21,43 +21,77 @@ The target name symbol denotes a constant, so you can't pass it into
 
 As an example, let's calculate some statistic for My_Data array:
 
-.. code-block:: ada
+.. code:: ada compile_button manual_chop project=Courses.Ada_2022_Whats_New.Assignment_Tagged_Intro
 
-   type Statistic is record
-      Count : Natural := 0;
-      Total : Float := 0.0;
-   end record;
+   !statistics.ads
+   pragma Ada_2022;
 
-   My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
+   package Statistics is
 
-   Statistic_For_My_Data : Statistic;
+      type Statistic is record
+         Count : Natural := 0;
+         Total : Float := 0.0;
+      end record;
+   
+      My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
+   
+      Statistic_For_My_Data : Statistic;
+   
+   end Statistics;
 
 To do this we just loop over :ada:`My_Data` elements:
 
-.. code-block:: ada
+.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Assignment_Tagged_Loop
 
-   for Data of My_Data loop
-      Statistic_For_My_Data.Count := @ + 1;
-      Statistic_For_My_Data.Total := @ + Data;
-   end loop;
+   !main.adb
+   pragma Ada_2022;
+   with Ada.Text_IO;
 
-   Ada.Text_IO.Put_Line (Statistic_For_My_Data'Image);
+   procedure Main is
+
+      type Statistic is record
+         Count : Natural := 0;
+         Total : Float := 0.0;
+      end record;
+   
+      My_Data : constant array (1 .. 5) of Float :=
+        (for J in 1 .. 5 => Float (J));
+   
+      Statistic_For_My_Data : Statistic;
+
+   begin
+      for Data of My_Data loop
+         Statistic_For_My_Data.Count := @ + 1;
+         Statistic_For_My_Data.Total := @ + Data;
+      end loop;
+   
+      Ada.Text_IO.Put_Line (Statistic_For_My_Data'Image);
+   end Main;
 
 The left hand side evaluated just once, no matter how many :ada:`@` it
 has. Let's check this by introducing a function call. This function
 prints a line each time it's called:
 
-.. code-block:: ada
+.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Assignment_Tagged_To_Index
 
-   function To_Index (Value : Positive) return Positive is
+   !main.adb
+   pragma Ada_2022;
+   with Ada.Text_IO;
+
+   procedure Main is
+
+      My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
+   
+      function To_Index (Value : Positive) return Positive is
+      begin
+         Ada.Text_IO.Put_Line ("To_Index is called.");
+         return Value;
+      end To_Index;
+
    begin
-      Ada.Text_IO.Put_Line ("To_Index is called.");
-      return Value;
-   end To_Index;
-
-.. code-block:: ada
-
-   My_Data (To_Index (1)) := @ ** 2 - 3.0 * @;
+      My_Data (To_Index (1)) := @ ** 2 - 3.0 * @;
+      Ada.Text_IO.Put_Line (My_Data'Image);
+   end Main;
 
 Perhaps, it looks a bit cryptic, but no better solution was found.
 Comparing with other languages :c:`(like sum += x;)` this approach
@@ -89,49 +123,8 @@ Here we use a new shorten form of the rename declaration, but anyway
 this looks too heavy. But even worse, this can't be used for
 discriminant dependent-components.
 
-Complete code snippet:
-
-.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Assignment_Tagged
-
-   !main.adb
-   pragma Ada_2022;
-
-   with Ada.Text_IO;
-
-   procedure Main is
-
-      type Statistic is record
-         Count : Natural := 0;
-         Total : Float := 0.0;
-      end record;
-
-      My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
-
-      Statistic_For_My_Data : Statistic;
-
-      function To_Index (Value : Positive) return Positive is
-      begin
-         Ada.Text_IO.Put_Line ("To_Index is called.");
-         return Value;
-      end To_Index;
-
-   begin
-      for Data of My_Data loop
-         Statistic_For_My_Data.Count := @ + 1;
-         Statistic_For_My_Data.Total := @ + Data;
-      end loop;
-
-      Ada.Text_IO.Put (Float'Image (Statistic_For_My_Data.Total));
-      Ada.Text_IO.Put (" /");
-      Ada.Text_IO.Put (Natural'Image (Statistic_For_My_Data.Count));
-      Ada.Text_IO.New_Line;
-
-      My_Data (To_Index (1)) := @ ** 2 - 3.0 * @;
-   end Main;
-
-
-References:
------------
+References
+----------
 
 * `ARM 5.2.1 Target Name Symbols`_
 * AI12-0125-3_

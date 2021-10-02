@@ -17,15 +17,23 @@ In Ada 2022 you can use square brackets in array aggregates. Square
 brackets usage simplifies writing of an empty aggregate and a single
 element aggregate. Consider this:
 
-.. code-block:: ada
+.. code:: ada compile_button manual_chop project=Courses.Ada_2022_Whats_New.Show_Square_Brackets
 
-   type Integer_Array is array (Positive range <>) of Integer;
+   !show_square_brackets.ads
+   pragma Ada_2022;
+   pragma Extensions_Allowed (On);
 
-   Old_Style_Empty : Integer_Array := (1 .. 0 => <>);
-   New_Style_Empty : Integer_Array := [];
+   package Show_Square_Brackets is
 
-   Old_Style_One_Item : Integer_Array := (1 => 5);
-   New_Style_One_Item : Integer_Array := [5];
+      type Integer_Array is array (Positive range <>) of Integer;
+
+      Old_Style_Empty : Integer_Array := (1 .. 0 => <>);
+      New_Style_Empty : Integer_Array := [];
+
+      Old_Style_One_Item : Integer_Array := (1 => 5);
+      New_Style_One_Item : Integer_Array := [5];
+
+   end Show_Square_Brackets;
 
 Apart from zero and one element aggregates, there is no other difference
 between brackets and parentheses in array aggregates.
@@ -86,8 +94,8 @@ Complete code snippet:
       Ada.Text_IO.Put_Line (Matrix'Image);
    end Main;
 
-References:
------------
+References
+----------
 
 * `ARM 4.3.3 Array Aggregates`_
 * AI12-0212-1_

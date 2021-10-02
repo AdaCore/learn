@@ -97,7 +97,7 @@ for Ada-to-C interfacing facility.
 
 Complete code snippet:
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Variadic_Import
+.. code:: ada no_button project=Courses.Ada_2022_Whats_New.Variadic_Import
 
    with Interfaces.C;
 
@@ -114,8 +114,8 @@ Complete code snippet:
       printf_int (Interfaces.C.To_C ("d=%d"), 5);
    end Main;
 
-References:
------------
+References
+----------
 
 * `ARM B.3 Interfacing with C and C++`_
 * AI12-0028-1_
