@@ -273,8 +273,8 @@ latex_documents = [
 
 # -- Options for Epub output ---------------------------------------------------
 
-epub_title = u'AdaCore book'
-epub_author = u'AdaCore'
+epub_title = title
+epub_author = author.replace(' \\and', ' and')
 epub_publisher = u'AdaCore'
 epub_copyright = u'2021, AdaCore'
 
