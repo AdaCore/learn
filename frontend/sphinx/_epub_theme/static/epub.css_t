@@ -627,6 +627,12 @@ div.literal-block-wrapper div.highlight {
     margin: 0;
 }
 
+div.literal-block-wrapper span.caption-text {
+    background: #eee;
+    color: #06287e;
+    text-decoration: underline;
+}
+
 code.descname {
     background-color: transparent;
     font-weight: bold;
