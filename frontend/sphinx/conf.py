@@ -293,7 +293,7 @@ epub_theme = '_epub_theme'
 #epub_uid = ''
 
 # A tuple containing the cover image and cover page html template filenames.
-epub_cover = ("_static/cover.png", "epub-cover.html")
+epub_cover = ("_static/cover.jpeg", "epub-cover.html")
 
 # HTML files that should be inserted before the pages created by sphinx.
 # The format is a list of tuples containing the path and title.
@@ -387,9 +387,10 @@ def setup(app):
             os.environ['SPHINX_COVER_PAGE'] != ""):
 
             pdf_cover_page = app.outdir + "/" + os.environ['SPHINX_COVER_PAGE']
-            png_cover_page = app.outdir + "/" + '_static/cover.png'
+            png_cover_page = app.outdir + "/" + '_static/cover.jpeg'
 
-            pages = convert_from_path(pdf_cover_page, 500)
+            pages = convert_from_path(pdf_path=pdf_cover_page,
+                                      size=(2560, None))
 
             for page in pages:
-                page.save(png_cover_page, 'PNG')
+                page.save(png_cover_page, 'JPEG')
