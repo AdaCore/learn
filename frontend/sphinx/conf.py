@@ -390,6 +390,7 @@ def setup(app):
             png_cover_page = app.outdir + "/" + '_static/cover.jpeg'
 
             pages = convert_from_path(pdf_path=pdf_cover_page,
+                                      dpi=72,
                                       size=(2560, None))
 
             for page in pages:
