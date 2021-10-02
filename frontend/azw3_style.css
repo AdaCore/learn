@@ -1,0 +1,13 @@
+ul p {
+    margin-block-start: 0.1em;
+    margin-block-end: 0.1em;
+}
+
+ol p {
+    margin-block-start: 0.1em;
+    margin-block-end: 0.1em;
+}
+
+code.code {
+    font-size: 1.0em;
+}

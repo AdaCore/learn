@@ -233,7 +233,15 @@ $(AZW3_BOOKS_DIR)/%.azw3: $(EPUB_BOOKS_DIR)/%.epub
 	@echo Building $@
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
 	@mkdir -p $(AZW3_BOOKS_DIR)/$(SPHINX_DIR)
-	@ebook-convert $^ $@
+	@ebook-convert $^ $@ \
+		--expand-css \
+		--keep-ligatures \
+		--filter-css "margin-top,margin-bottom" \
+		--pretty-print \
+		--prefer-metadata-cover \
+		--minimum-line-height 100 \
+		--extra-css $(MKFILE_DIR)/azw3_style.css \
+		--output-profile kindle
 
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
