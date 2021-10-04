@@ -286,7 +286,7 @@ div.body p.centered {
 /* -- tables ---------------------------------------------------------------- */
 
 table.docutils {
-    border: 0;
+    border: 1px solid;
     border-collapse: collapse;
 }
 
@@ -302,7 +302,8 @@ table.docutils td, table.docutils th {
     border-top: 0;
     border-left: 0;
     border-right: 0;
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid;
+    border: 1px solid;
 }
 
 table.footnote td, table.footnote th {
@@ -624,6 +625,12 @@ div.literal-block-preamble {
 
 div.literal-block-wrapper div.highlight {
     margin: 0;
+}
+
+div.literal-block-wrapper span.caption-text {
+    background: #eee;
+    color: #06287e;
+    text-decoration: underline;
 }
 
 code.descname {

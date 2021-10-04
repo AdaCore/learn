@@ -227,21 +227,29 @@ $(foreach book_dir, $(BOOKS), \
 epub_books: $(EPUB_BOOKS)
 	@echo $@ completed.
 
-MOBI_BOOKS_DIR := $(BUILDDIR)/mobi_books
+AZW3_BOOKS_DIR := $(BUILDDIR)/azw3_books
 
-$(MOBI_BOOKS_DIR)/%.mobi: $(EPUB_BOOKS_DIR)/%.epub
+$(AZW3_BOOKS_DIR)/%.azw3: $(EPUB_BOOKS_DIR)/%.epub
 	@echo Building $@
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
-	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
-	@ebook-convert $^ $@
+	@mkdir -p $(AZW3_BOOKS_DIR)/$(SPHINX_DIR)
+	@ebook-convert $^ $@ \
+		--expand-css \
+		--keep-ligatures \
+		--filter-css "margin-top,margin-bottom" \
+		--pretty-print \
+		--prefer-metadata-cover \
+		--minimum-line-height 100 \
+		--extra-css $(MKFILE_DIR)/azw3_style.css \
+		--output-profile kindle
 
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_MOBI := $(shell basename $(shell dirname ${book_dir})).mobi) \
-	$(eval MOBI_BOOKS += $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_MOBI)) \
+	$(eval SPHINX_AZW3 := $(shell basename $(shell dirname ${book_dir})).azw3) \
+	$(eval AZW3_BOOKS += $(AZW3_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_AZW3)) \
 	)
 
-mobi_books: $(MOBI_BOOKS)
+azw3_books: $(AZW3_BOOKS)
 	@echo $@ completed.
 
 cleanall:
@@ -260,4 +268,4 @@ cleantest:
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 .PHONY: Makefile help test_content test_engine pdf_books epub_books \
-	mobi_books $(BOOKS)
+	azw3_books $(BOOKS)

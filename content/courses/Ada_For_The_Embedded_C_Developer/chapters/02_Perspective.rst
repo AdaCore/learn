@@ -1306,10 +1306,10 @@ following example:
 Are the three programs above equivalent? It may seem like Ada is just adding
 extra complexity by forcing you to make the conversion from :ada:`Integer` to
 :ada:`Float` explicit. In fact, it significantly changes the behavior of the
-computation. While the Ada code performs a floating point operation :math:`1.0
-/ 10.0` and stores :math:`0.1` in :ada:`Result`, the C version instead store
-:math:`0.0` in :c:`result`. This is because the C version perform an integer
-operation between two integer variables: :math:`1 / 10` is :math:`0`. The
+computation. While the Ada code performs a floating point operation 1.0 / 10.0
+and stores 0.1 in :ada:`Result`, the C version instead store 0.0 in
+:c:`result`. This is because the C version perform an integer operation between
+two integer variables: 1 / 10 is 0. The
 result of the integer division is then converted to a :c:`float` and stored.
 Errors of this sort can be very hard to locate in complex pieces of code, and
 systematic specification of how the operation should be interpreted helps to
@@ -1927,8 +1927,8 @@ equivalent in C:
 
 Other interesting examples are the :ada:`'First` and :ada:`'Last` attributes
 which, respectively, return the first and last values of a scalar type. Using
-32-bit integers, for instance, :ada:`Integer'First` returns :math:`-2^{31}` and
-:ada:`Integer'Last` returns :math:`2^{31} - 1`.
+32-bit integers, for instance, :ada:`Integer'First` returns -2\ :sup:`31` and
+:ada:`Integer'Last` returns 2\ :sup:`31` - 1.
 
 Arrays and Strings
 ~~~~~~~~~~~~~~~~~~

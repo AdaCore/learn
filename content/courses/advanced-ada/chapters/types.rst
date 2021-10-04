@@ -183,7 +183,7 @@ As the output of the program indicates, the smallest value (see
 values of :ada:`Decimal` type.
 
 In the case of the :ada:`My_Float` type, the difference between the current
-and the previous or next values is 1.40130E-45 (or :math:`2^{-149}`) on a
+and the previous or next values is 1.40130E-45 (or 2\ :sup:`-149`) on a
 standard PC.
 
 Scalar To String Conversion
@@ -2032,7 +2032,7 @@ converts:
 
     - any negative number to :ada:`Unknown`,
 
-    - a value in the interval :math:`[0, 1)` to :ada:`Off`, and
+    - a value in the interval [0, 1) to :ada:`Off`, and
 
     - a value equal or above 1.0 to :ada:`On`.
 
@@ -2395,10 +2395,10 @@ This big number (17179869176 bits) for :ada:`UInt_7_Array'Size` and
 fact that Ada is reporting the size of the :ada:`UInt_7_Array` type for the
 case when the complete range is used. Considering that we specified a positive
 range in the declaration of the :ada:`UInt_7_Array` type, the maximum length
-on this machine is :math:`2^{31} -1`. The object size of an array type is
+on this machine is 2\ :sup:`31` - 1. The object size of an array type is
 calculated by multiplying the maximum length by the component size. Therefore,
 the object size of the :ada:`UInt_7_Array` type corresponds to the
-multiplication of :math:`2^{31} -1` components (maximum length) by 8 bits
+multiplication of 2\ :sup:`31` - 1 components (maximum length) by 8 bits
 (component size).
 
 Storage size

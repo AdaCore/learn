@@ -811,7 +811,7 @@ In this example, we first initialize :ada:`V` with zero. Then, we use the
 bit-field :ada:`B` and set the third element (:ada:`B (2)`) to :ada:`True`.
 This automatically sets bit #3 of :ada:`V` to 1. Therefore, as expected,
 the application displays the message :ada:`V = 4`, which corresponds to
-:math:`2^2 = 4`.
+2\ :sup:`2` = 4.
 
 Note that, in the declaration of the bit-field type above, we could also have
 used a positive range. For example:

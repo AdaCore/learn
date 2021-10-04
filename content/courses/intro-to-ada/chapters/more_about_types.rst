@@ -765,7 +765,7 @@ zero. For example:
        Put_Line ("The value of A * B is " & T6_D6'Image (C));
     end Decimal_Fixed_Point_Smaller;
 
-In this example, the result of the operation :math:`0.001 * 0.5` is
+In this example, the result of the operation 0.001 * 0.5 is
 0.0005. Since this value is not representable for the :ada:`T3_D3` type
 because the delta value is 0.001, the actual value stored in variable
 :ada:`A` is zero. However, accuracy is preserved during the arithmetic
@@ -856,7 +856,7 @@ We may also use any other range. For example:
     end Custom_Fixed_Point_Range;
 
 In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
-which has a range from :math:`-\pi/2` to :math:`\pi/2`.
+which has a range from -π/2 to π/2.
 
 All standard operations are available for fixed-point types. For example:
 
