@@ -1579,14 +1579,16 @@ are explicit in Ada. Their use is very clear in the source code, and is
 relatively heavy: each mechanism is provided by the language in the form
 of a generic library function that must be specified in a context clause
 ("with-clause") at the top of the file, and then instantiated prior to
-use (like any generic).
+use (like any generic). For an introduction to generic units in Ada, see
+that section in the introductory Ada course: 
+:doc:`Introduction to Ada <courses/intro-to-ada/chapters/generics>`
 
 You should understand that the explicitly unchecked facilities in Ada
 are no more unsafe than the implicitly unchecked facilities in other
-languages. There's no reason to "drop down" to C, for example, to do
+languages. There's no safety-oriented reason to "drop down" to C, for example, to do
 low-level programming. For that matter, the low-level programming
 facilities in Ada are at least as powerful as those in other languages,
-and typically more so.
+and probably more so.
 
 We will explore unchecked storage deallocation in a separate book so
 let's focus on unchecked type conversions.
