@@ -489,8 +489,8 @@ For instance, we can write:
 In based literals, the exponent |mdash| like the base |mdash| uses the regular
 decimal notation and specifies the power of the base that the based literal
 should be multiplied with to obtain the final value. For instance
-:ada:`2#1#e+10` = :math:`1 \times 2^{10}` = :ada:`1_024` (in base 10), whereas
-:ada:`16#F#e+2` = :math:`15 \times 16^2 = 15 \times 256` = :ada:`3_840` (in
+:ada:`2#1#e+10` = 1 x 2\ :sup:`10` = :ada:`1_024` (in base 10), whereas
+:ada:`16#F#e+2` = 15 x 16\ :sup:`2` = 15 x 256 = :ada:`3_840` (in
 base 10).
 
 Based numbers apply equally well to real literals. We can, for instance, write:
