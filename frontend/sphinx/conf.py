@@ -36,6 +36,22 @@ if 'SPHINX_CONF_INI' in os.environ and os.environ['SPHINX_CONF_INI'] != "":
         print ("Cannot access file: " + os.environ['SPHINX_CONF_INI'])
         sys.exit(1)
 
+def get_file_from_conf_ini(path_to_file):
+    """Get path to file indicated in "conf.ini" file
+
+    Convert relative to absolute path if necessary.
+    """
+    f = Path(path_to_file)
+
+    if not f.is_file():
+        # Try relative path to conf.ini file
+        conf_ini_dir = os.path.dirname(os.environ['SPHINX_CONF_INI'])
+        f = Path(conf_ini_dir + "/" + path_to_file)
+
+    assert f.is_file(), f"Cannot find file: {f}"
+
+    return str(f)
+
 
 # -- Project information -----------------------------------------------------
 
@@ -263,9 +279,11 @@ TitleColor={named}{MidnightBlue}
 }
 
 if config.has_option('', 'cover_page'):
+    pdf_cover_page = get_file_from_conf_ini(config['DEFAULT']['cover_page'])
+
     latex_elements['maketitle'] = r'''
 \begin{titlepage}
-\includepdf{''' + config['DEFAULT']['cover_page'] + r'''}
+\includepdf{''' + pdf_cover_page + r'''}
 \sphinxmaketitle
 \end{titlepage}
 '''
@@ -397,8 +415,7 @@ def setup(app):
                     raise e
     elif 'epub' in app.outdir:
         if config.has_option('', 'cover_page'):
-
-            pdf_cover_page = app.outdir + "/" + config['DEFAULT']['cover_page']
+            pdf_cover_page = get_file_from_conf_ini(config['DEFAULT']['cover_page'])
             png_cover_page = app.outdir + "/" + '_static/cover.jpeg'
 
             pages = convert_from_path(pdf_path=pdf_cover_page,
