@@ -167,17 +167,11 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
 	$(eval SPHINX_PDF := $(shell basename $@ .pdf))
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF))
-	$(eval SPHINX_TITLE := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep title | sed -e 's#title=##'))
-	$(eval SPHINX_AUTHOR := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep author | sed -e 's#author=##'))
-	$(eval SPHINX_COVER_PAGE := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep cover_page | sed -e 's#cover_page=##'))
-	$(eval SPHINX_VERSION := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep version | sed -e 's#version=##'))
+	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
 	@mkdir -p $(PDF_BOOKS_DIR)/$(SPHINX_DIR)
 	@mkdir -p $(BUILDDIR)/latex
 	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $(SPHINX_CONTENT_DIR)/$(SPHINX_COVER_PAGE) $(BUILDDIR)/latex || echo "PDF: no cover page available for $(SPHINX_PDF)"
-	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
-	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
-	  export SPHINX_COVER_PAGE="$(SPHINX_COVER_PAGE)"; \
-	  export SPHINX_VERSION="$(SPHINX_VERSION)"; \
+	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
@@ -200,18 +194,12 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
 	$(eval SPHINX_EPUB := $(shell basename $@ .epub))
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB))
-	$(eval SPHINX_TITLE := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep title | sed -e 's#title=##'))
-	$(eval SPHINX_AUTHOR := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep author | sed -e 's#author=##'))
-	$(eval SPHINX_COVER_PAGE := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep cover_page | sed -e 's#cover_page=##'))
-	$(eval SPHINX_VERSION := $(shell cat ${SPHINX_CONTENT_DIR}/conf.txt | grep version | sed -e 's#version=##'))
+	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
 	@mkdir -p $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)
 	@rm   -rf $(BUILDDIR)/epub
 	@mkdir -p $(BUILDDIR)/epub/_static
 	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $(SPHINX_CONTENT_DIR)/$(SPHINX_COVER_PAGE) $(BUILDDIR)/epub || echo "EPUB: no cover page available for $(SPHINX_EPUB)"
-	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
-	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
-	  export SPHINX_COVER_PAGE="$(SPHINX_COVER_PAGE)"; \
-	  export SPHINX_VERSION="$(SPHINX_VERSION)"; \
+	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
