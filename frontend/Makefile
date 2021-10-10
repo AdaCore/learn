@@ -170,7 +170,6 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
 	@mkdir -p $(PDF_BOOKS_DIR)/$(SPHINX_DIR)
 	@mkdir -p $(BUILDDIR)/latex
-	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $(SPHINX_CONTENT_DIR)/$(SPHINX_COVER_PAGE) $(BUILDDIR)/latex || echo "PDF: no cover page available for $(SPHINX_PDF)"
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
@@ -198,7 +197,6 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	@mkdir -p $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)
 	@rm   -rf $(BUILDDIR)/epub
 	@mkdir -p $(BUILDDIR)/epub/_static
-	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $(SPHINX_CONTENT_DIR)/$(SPHINX_COVER_PAGE) $(BUILDDIR)/epub || echo "EPUB: no cover page available for $(SPHINX_EPUB)"
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
