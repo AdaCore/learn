@@ -1,5 +1,5 @@
 Abstraction-oriented programming
-================================
+********************************
 
 .. toctree::
     :maxdepth: 3
