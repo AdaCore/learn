@@ -302,6 +302,9 @@ latex_documents = [
      author, 'manual'),
 ]
 
+if config.has_option('', 'latex_toplevel_sectioning'):
+    latex_toplevel_sectioning = config['DEFAULT']['latex_toplevel_sectioning']
+
 # -- Options for Epub output ---------------------------------------------------
 
 epub_title = title
