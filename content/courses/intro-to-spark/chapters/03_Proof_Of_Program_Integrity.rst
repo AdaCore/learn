@@ -10,7 +10,7 @@ performing proof of your program's integrity is to ensure the absence of
 runtime errors during its execution.
 
 The analysis steps discussed here are only sound if you've previously
-performed :ref:`Flow_Analysis`.  You shouldn't proceed further if there you
+performed :ref:`Flow_Analysis`.  You shouldn't proceed further if you
 still have unjustified flow analysis messages for your program.
 
 
@@ -317,7 +317,7 @@ testing easier.  Early failure detection also allows an easier recovery and
 facilitates debugging, so you may want to enable these checks at runtime to
 terminate execution before some damaging or hard-to-debug action occurs.
 
-GNATprove statically analyses preconditions and postcondition. It verifies
+GNATprove statically analyses preconditions and postconditions. It verifies
 preconditions every time a subprogram is called, which is the runtime
 semantics of contracts.  Postconditions, on the other hand, are verified
 once as part of the verification of the subprogram's body. For example,
