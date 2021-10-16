@@ -588,8 +588,35 @@ Along these same lines, we can write:
 and be guaranteed that :ada:`Nil` is equal to zero.
 
 
-Operations
-----------
+Floating-Point Types
+--------------------
+
+.. admonition:: Relevant topics
+
+    - Brief mentioning relevant parts of
+      `Model of Floating Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-1.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Fixed-Point Types
+-----------------
+
+.. admonition:: Relevant topics
+
+    - Brief mentioning relevant parts of
+      `Model of Fixed Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-3.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Operations and Attributes
+-------------------------
+
 
 .. admonition:: Relevant topics
 
@@ -611,32 +638,6 @@ Big Numbers
     - `Big Numbers <http://www.ada-auth.org/standards/2xrm/html/RM-A-5-5.html>`_
     - `Big Integers <http://www.ada-auth.org/standards/2xrm/html/RM-A-5-6.html>`_
     - `Big Reals <http://www.ada-auth.org/standards/2xrm/html/RM-A-5-7.html>`_
-
-.. todo::
-
-    Complete section!
-
-
-Floating-Point Types
---------------------
-
-.. admonition:: Relevant topics
-
-    - Brief mentioning relevant parts of
-      `Model of Floating Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-1.html>`_
-
-.. todo::
-
-    Complete section!
-
-
-Fixed-Point Types
------------------
-
-.. admonition:: Relevant topics
-
-    - Brief mentioning relevant parts of
-      `Model of Fixed Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-3.html>`_
 
 .. todo::
 
