@@ -591,6 +591,326 @@ and be guaranteed that :ada:`Nil` is equal to zero.
 Floating-Point Types
 --------------------
 
+Representation-oriented attributes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:ada:`'Machine_Radix`
+^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Machine_Radix
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Machine_Radix is
+    begin
+       Put_Line ("Float'Machine_Radix:           "
+                 & Float'Machine_Radix'Image);
+       Put_Line ("Long_Float'Machine_Radix:      "
+                 & Long_Float'Machine_Radix'Image);
+       Put_Line ("Long_Long_Float'Machine_Radix: "
+                 & Long_Long_Float'Machine_Radix'Image);
+    end Show_Machine_Radix;
+
+:ada:`'Machine_Mantissa`, :ada:`'Machine_Emin` and :ada:`Machine_Emax`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Machine_Emin_Emax
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Machine_Emin_Emax is
+    begin
+       Put_Line ("Float'Machine_Mantissa:           " &
+                 Float'Machine_Mantissa'Image);
+       Put_Line ("Long_Float'Machine_Mantissa:      " &
+                 Long_Float'Machine_Mantissa'Image);
+       Put_Line ("Long_Long_Float'Machine_Mantissa: " &
+                 Long_Long_Float'Machine_Mantissa'Image);
+       Put_Line ("Float'Machine_Emin:               " &
+                 Float'Machine_Emin'Image);
+       Put_Line ("Float'Machine_Emax:               " &
+                 Float'Machine_Emax'Image);
+       Put_Line ("Long_Float'Machine_Emin:          " &
+                 Long_Float'Machine_Emin'Image);
+       Put_Line ("Long_Float'Machine_Emax:          " &
+                 Long_Float'Machine_Emax'Image);
+       Put_Line ("Long_Long_Float'Machine_Emin:     " &
+                 Long_Long_Float'Machine_Emin'Image);
+       Put_Line ("Long_Long_Float'Machine_Emax:     " &
+                 Long_Long_Float'Machine_Emax'Image);
+    end Show_Machine_Emin_Emax;
+
+
+:ada:`'Denorm`, :ada:`Signed_Zeros`, :ada:`'Machine_Rounds`, :ada:`Machine_Overflows`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Machine_Rounds_Overflows
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Boolean_Attributes is
+    begin
+       Put_Line ("Float'Denorm:           " &
+                 Float'Denorm'Image);
+       Put_Line ("Long_Float'Denorm:      " &
+                 Long_Float'Denorm'Image);
+       Put_Line ("Long_Long_Float'Denorm: " &
+                 Long_Long_Float'Denorm'Image);
+       Put_Line ("Float'Signed_Zeros:           " &
+                 Float'Signed_Zeros'Image);
+       Put_Line ("Long_Float'Signed_Zeros:      " &
+                 Long_Float'Signed_Zeros'Image);
+       Put_Line ("Long_Long_Float'Signed_Zeros: " &
+                 Long_Long_Float'Signed_Zeros'Image);
+       Put_Line ("Float'Machine_Rounds:           " &
+                 Float'Machine_Rounds'Image);
+       Put_Line ("Long_Float'Machine_Rounds:      " &
+                 Long_Float'Machine_Rounds'Image);
+       Put_Line ("Long_Long_Float'Machine_Rounds: " &
+                 Long_Long_Float'Machine_Rounds'Image);
+       Put_Line ("Float'Machine_Overflows:           " &
+                 Float'Machine_Overflows'Image);
+       Put_Line ("Long_Float'Machine_Overflows:      " &
+                 Long_Float'Machine_Overflows'Image);
+       Put_Line ("Long_Long_Float'Machine_Overflows: " &
+                 Long_Long_Float'Machine_Overflows'Image);
+    end Show_Boolean_Attributes;
+
+
+Primitive function attributes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:ada:`'Exponent`, :ada:`'Fraction` and :ada:`Compose`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Exponent_Fraction
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Exponent_Fraction_Compose is
+    begin
+       Put_Line ("Float'Exponent (1.0):     "
+                 & Float'Exponent (1.0)'Image);
+       Put_Line ("Float'Exponent (0.25):    "
+                 & Float'Exponent (0.25)'Image);
+       Put_Line ("Float'Exponent (1.0e-25): "
+                 & Float'Exponent (1.0e-25)'Image);
+       Put_Line ("Float'Fraction (1.0):     "
+                 & Float'Fraction (1.0)'Image);
+       Put_Line ("Float'Fraction (0.25):    "
+                 & Float'Fraction (0.25)'Image);
+       Put_Line ("Float'Fraction (1.0e-25): "
+                 & Float'Fraction (1.0e-25)'Image);
+       Put_Line ("Float'Compose (5.00000e-01, 1):   "
+                 & Float'Compose (5.00000e-01, 1)'Image);
+       Put_Line ("Float'Compose (5.00000e-01, -1):  "
+                 & Float'Compose (5.00000e-01, -1)'Image);
+       Put_Line ("Float'Compose (9.67141E-01, -83): "
+                 & Float'Compose (9.67141E-01, -83)'Image);
+    end Show_Exponent_Fraction_Compose;
+
+
+:ada:`'Scaling`
+^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Scaling
+    :class: ada-run-expect-failure
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Scaling is
+    begin
+       Put_Line ("Float'Scaling (0.25, 1): "
+                 & Float'Scaling (0.25, 1)'Image);
+       Put_Line ("Float'Scaling (0.25, 2): "
+                 & Float'Scaling (0.25, 2)'Image);
+       Put_Line ("Float'Scaling (0.25, 3): "
+                 & Float'Scaling (0.25, 3)'Image);
+    end Show_Scaling;
+
+
+:ada:`'Floor`, :ada:`Ceiling`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Floor_Ceiling
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Floor_Ceiling is
+    begin
+       Put_Line ("Float'Floor (0.25):   " &
+                 Float'Floor (0.25)'Image);
+       Put_Line ("Float'Ceiling (0.25): " &
+                 Float'Ceiling (0.25)'Image);
+    end Show_Floor_Ceiling;
+
+
+:ada:`'Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Rounding
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Roundings is
+    begin
+       Put_Line ("Float'Rounding (0.5): "
+                 & Float'Rounding (0.5)'Image);
+       Put_Line ("Float'Rounding (1.5): "
+                 & Float'Rounding (1.5)'Image);
+       Put_Line ("Float'Unbiased_Rounding (0.5): "
+                 & Float'Unbiased_Rounding (0.5)'Image);
+       Put_Line ("Float'Unbiased_Rounding (1.5): "
+                 & Float'Unbiased_Rounding (1.5)'Image);
+       Put_Line ("Float'Machine_Rounding (0.5): "
+                 & Float'Machine_Rounding (0.5)'Image);
+       Put_Line ("Float'Machine_Rounding (1.5): "
+                 & Float'Machine_Rounding (1.5)'Image);
+    end Show_Roundings;
+
+
+:ada:`'Truncation`, :ada:`Remainder`, :ada:`Adjacent`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Truncation_Remainder
+    :class: ada-run-expect-failure
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Truncation_Remainder_Adjacent is
+    begin
+       Put_Line ("Float'Truncation (1.55):  "
+                 & Float'Truncation (1.55)'Image);
+       Put_Line ("Float'Truncation (-1.55): "
+                 & Float'Truncation (-1.55)'Image);
+       Put_Line ("Float'Remainder (1.25, 0.25): "
+                 & Float'Remainder (1.25, 0.25)'Image);
+       Put_Line ("Float'Remainder (1.25, 0.5):  "
+                 & Float'Remainder (1.25, 0.5)'Image);
+       Put_Line ("Float'Remainder (1.25, 1.0):  "
+                 & Float'Remainder (1.25, 1.0)'Image);
+       Put_Line ("Float'Remainder (1.25, 2.0):  "
+                 & Float'Remainder (1.25, 2.0)'Image);
+       Put_Line ("Float'Adjacent (1.0e-83, 0.0): "
+                 & Float'Adjacent (1.0e-83, 0.0)'Image);
+       Put_Line ("Float'Adjacent (1.0e-83, 1.0): "
+                 & Float'Adjacent (1.0e-83, 1.0)'Image);
+    end Show_Truncation_Remainder_Adjacent;
+
+
+:ada:`'Copy_Sign`, :ada:`Leading_Part`, :ada:`Machine`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Sign_Leading
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Copy_Sign_Leading_Part_Machine is
+    begin
+       Put_Line ("Float'Copy_Sign (1.0, -10.0): "
+                 & Float'Copy_Sign (1.0, -10.0)'Image);
+       Put_Line ("Float'Copy_Sign (1.0,  10.0): "
+                 & Float'Copy_Sign (1.0,  10.0)'Image);
+       Put_Line ("Float'Copy_Sign (1.0, -0.0):  "
+                 & Float'Copy_Sign (1.0, -0.0)'Image);
+       Put_Line ("Float'Copy_Sign (1.0,  0.0):  "
+                 & Float'Copy_Sign (1.0,  0.0)'Image);
+       Put_Line ("Float'Leading_Part (1.75, 1): "
+                 & Float'Leading_Part (1.75, 1)'Image);
+       Put_Line ("Float'Leading_Part (1.75, 2): "
+                 & Float'Leading_Part (1.75, 2)'Image);
+       Put_Line ("Float'Leading_Part (1.75, 3): "
+                 & Float'Leading_Part (1.75, 3)'Image);
+    end Show_Copy_Sign_Leading_Part_Machine;
+
+
+Model-oriented attributes
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:ada:`'Model_Mantissa`, :ada:`'Model_Emin`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Mantissa
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Model_Mantissa_Emin is
+    begin
+       Put_Line ("Float'Model_Mantissa:           " &
+                 Float'Model_Mantissa'Image);
+       Put_Line ("Long_Float'Model_Mantissa:      " &
+                 Long_Float'Model_Mantissa'Image);
+       Put_Line ("Long_Long_Float'Model_Mantissa: " &
+                 Long_Long_Float'Model_Mantissa'Image);
+       Put_Line ("Float'Model_Emin:               " &
+                 Float'Model_Emin'Image);
+       Put_Line ("Long_Float'Model_Emin:          " &
+                 Long_Float'Model_Emin'Image);
+       Put_Line ("Long_Long_Float'Model_Emin:     " &
+                 Long_Long_Float'Model_Emin'Image);
+    end Show_Model_Mantissa_Emin;
+
+
+:ada:`'Model_Epsilon`, :ada:`Model_Small`, :ada:`Model`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Epsilon_Small
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Model_Epsilon_Small is
+    begin
+       Put_Line ("Float'Model_Epsilon:           " &
+                 Float'Model_Epsilon'Image);
+       Put_Line ("Long_Float'Model_Epsilon:      " &
+                 Long_Float'Model_Epsilon'Image);
+       Put_Line ("Long_Long_Float'Model_Epsilon: " &
+                 Long_Long_Float'Model_Epsilon'Image);
+       Put_Line ("Float'Model_Small:           " &
+                 Float'Model_Small'Image);
+       Put_Line ("Long_Float'Model_Small:      " &
+                 Long_Float'Model_Small'Image);
+       Put_Line ("Long_Long_Float'Model_Small: " &
+                 Long_Long_Float'Model_Small'Image);
+    end Show_Model_Epsilon_Small;
+
+
+:ada:`'Safe_First` and :ada:`Safe_Last`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Safe_First_Last
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Safe_First_Last is
+    begin
+       Put_Line ("Float'First:                " &
+                 Float'First'Image);
+       Put_Line ("Float'Last:                 " &
+                 Float'Last'Image);
+       Put_Line ("Float'Safe_First:           " &
+                 Float'Safe_First'Image);
+       Put_Line ("Float'Safe_Last:            " &
+                 Float'Safe_Last'Image);
+       Put_Line ("Long_Float'First:           " &
+                 Long_Float'First'Image);
+       Put_Line ("Long_Float'Last:            " &
+                 Long_Float'Last'Image);
+       Put_Line ("Long_Float'Safe_First:      " &
+                 Long_Float'Safe_First'Image);
+       Put_Line ("Long_Float'Safe_Last:       " &
+                 Long_Float'Safe_Last'Image);
+       Put_Line ("Long_Long_Float'First:      " &
+                 Long_Long_Float'First'Image);
+       Put_Line ("Long_Long_Float'Last:       " &
+                 Long_Long_Float'Last'Image);
+       Put_Line ("Long_Long_Float'Safe_First: " &
+                 Long_Long_Float'Safe_First'Image);
+       Put_Line ("Long_Long_Float'Safe_Last:  " &
+                 Long_Long_Float'Safe_Last'Image);
+    end Show_Safe_First_Last;
+
+
 .. admonition:: Relevant topics
 
     - Brief mentioning relevant parts of
