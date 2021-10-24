@@ -670,6 +670,28 @@ for the :ada:`Float` type on a typical PC:
     - In our target platform, this is
       2\ :sup:`128`  = 3.40282366920938463463 x 10\ :sup:`38`.
 
+Attribute: :ada:`'Digits`
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:ada:`'Digits` is an attribute that returns the decimal precision of a
+floating-point subtype. Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Digits
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Digits is
+    begin
+       Put_Line ("Float'Digits:           " &
+                 Float'Digits'Image);
+       Put_Line ("Long_Float'Digits:      " &
+                 Long_Float'Digits'Image);
+       Put_Line ("Long_Long_Float'Digits: " &
+                 Long_Long_Float'Digits'Image);
+    end Show_Digits;
+
+On a typical desktop PC, the decimal precision of the :ada:`Float` type is six
+digits.
 
 Attributes: :ada:`'Denorm`, :ada:`Signed_Zeros`, :ada:`'Machine_Rounds`, :ada:`Machine_Overflows`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
