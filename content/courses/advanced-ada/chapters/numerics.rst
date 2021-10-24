@@ -1183,6 +1183,68 @@ universal real, while :ada:`Float'First` is limited to the precision of the
 Fixed-Point Types
 -----------------
 
+Attributes of fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Attribute: :ada:`'Machine_Radix`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:ada:`'Machine_Radix` is an attribute that returns the radix of the hardware
+representation of a type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Fixed_Machine_Radix
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Fixed_Machine_Radix is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+    begin
+       Put_Line ("T3_D3'Machine_Radix: " &
+                 T3_D3'Machine_Radix'Image);
+       Put_Line ("TQ31'Machine_Radix:  " &
+                 TQ31'Machine_Radix'Image);
+    end Show_Fixed_Machine_Radix;
+
+Usually, this value is two, as the radix is based on a binary system.
+
+
+Attribute: :ada:`'Machine_Rounds` and :ada:`'Machine_Overflows`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this section, we discuss attributes that return :ada:`Boolean` values
+indicating whether a feature is available or not in the target architecture:
+
+- :ada:`'Machine_Rounds` is an attribute that indicates whether rounding is
+  used when the result of a fixed-point operation is inexact.
+
+- :ada:`Machine_Overflows` is an attribute that indicates whether a
+  :ada:`Constraint_Error` is raised when a fixed-point operation with that type
+  produces an overflow or divide-by-zero.
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Fixed_Machine_Rounds_Overflows
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Boolean_Attributes is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+    begin
+       Put_Line ("T3_D3'Machine_Rounds:    " &
+                 T3_D3'Machine_Rounds'Image);
+       Put_Line ("TQ31'Machine_Rounds:     " &
+                 TQ31'Machine_Rounds'Image);
+       Put_Line ("T3_D3'Machine_Overflows: " &
+                 T3_D3'Machine_Overflows'Image);
+       Put_Line ("TQ31'Machine_Overflows:  " &
+                 TQ31'Machine_Overflows'Image);
+    end Show_Boolean_Attributes;
+
+
 .. admonition:: Relevant topics
 
     - Brief mentioning relevant parts of
