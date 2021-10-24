@@ -714,7 +714,6 @@ Attribute: :ada:`'Scaling`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Scaling
-    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -773,7 +772,6 @@ Attributes: :ada:`'Truncation`, :ada:`Remainder`, :ada:`Adjacent`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Truncation_Remainder
-    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 
