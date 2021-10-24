@@ -987,6 +987,26 @@ Let's see some examples:
                  & Float'Leading_Part (1.75, 3)'Image);
     end Show_Copy_Sign_Leading_Part_Machine;
 
+.. todo::
+
+    Add discussion about :ada:`Machine`.
+
+    .. code-block:: ada
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Copy_Sign_Leading_Part_Machine is
+        begin
+           --  NOTE: no clear usage for 'Machine!!
+           Put_Line (Float'(1.000015)'Image);
+           Put_Line (Float'Machine (1.000015)'Image);
+
+           Put_Line (Float'Image (Float'Machine (1.000015) - Float'(1.0000)));
+           Put_Line (Float'Image (Float'(1.000015) - Float'(1.0000)));
+
+           Put_Line (Float'Fraction (Float'Machine (1.000015))'Image);
+           Put_Line (Float'Exponent (Float'Machine (1.000015))'Image);
+        end Show_Copy_Sign_Leading_Part_Machine;
 
 Model-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1065,6 +1085,20 @@ Let's see some examples:
                  Long_Long_Float'Model_Small'Image);
     end Show_Model_Epsilon_Small;
 
+.. todo::
+
+    Add discussion about :ada:`'Machine`.
+
+    .. code-block:: ada
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Model_Epsilon_Small is
+        begin
+           Put_Line (Float'(1.000015)'Image);
+           Put_Line (Float'Model (1.000015)'Image);
+
+        end Show_Model_Epsilon_Small;
 
 Attributes: :ada:`'Safe_First` and :ada:`Safe_Last`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
