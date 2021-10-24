@@ -594,8 +594,8 @@ Floating-Point Types
 Representation-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:ada:`'Machine_Radix`
-^^^^^^^^^^^^^^^^^^^^^
+Attribute: :ada:`'Machine_Radix`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Machine_Radix
 
@@ -611,8 +611,8 @@ Representation-oriented attributes
                  & Long_Long_Float'Machine_Radix'Image);
     end Show_Machine_Radix;
 
-:ada:`'Machine_Mantissa`, :ada:`'Machine_Emin` and :ada:`Machine_Emax`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Machine_Mantissa`, :ada:`'Machine_Emin` and :ada:`Machine_Emax`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Machine_Emin_Emax
 
@@ -641,8 +641,8 @@ Representation-oriented attributes
     end Show_Machine_Emin_Emax;
 
 
-:ada:`'Denorm`, :ada:`Signed_Zeros`, :ada:`'Machine_Rounds`, :ada:`Machine_Overflows`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Denorm`, :ada:`Signed_Zeros`, :ada:`'Machine_Rounds`, :ada:`Machine_Overflows`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Machine_Rounds_Overflows
 
@@ -680,8 +680,8 @@ Representation-oriented attributes
 Primitive function attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:ada:`'Exponent`, :ada:`'Fraction` and :ada:`Compose`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Fraction`, :ada:`'Exponent` and :ada:`Compose`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Exponent_Fraction
 
@@ -710,8 +710,8 @@ Primitive function attributes
     end Show_Exponent_Fraction_Compose;
 
 
-:ada:`'Scaling`
-^^^^^^^^^^^^^^^
+Attribute: :ada:`'Scaling`
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Scaling
     :class: ada-run-expect-failure
@@ -729,8 +729,8 @@ Primitive function attributes
     end Show_Scaling;
 
 
-:ada:`'Floor`, :ada:`Ceiling`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Floor`, :ada:`Ceiling`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Floor_Ceiling
 
@@ -745,8 +745,8 @@ Primitive function attributes
     end Show_Floor_Ceiling;
 
 
-:ada:`'Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Rounding
 
@@ -769,8 +769,8 @@ Primitive function attributes
     end Show_Roundings;
 
 
-:ada:`'Truncation`, :ada:`Remainder`, :ada:`Adjacent`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Truncation`, :ada:`Remainder`, :ada:`Adjacent`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Truncation_Remainder
     :class: ada-run-expect-failure
@@ -798,8 +798,8 @@ Primitive function attributes
     end Show_Truncation_Remainder_Adjacent;
 
 
-:ada:`'Copy_Sign`, :ada:`Leading_Part`, :ada:`Machine`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Copy_Sign` and :ada:`Leading_Part`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Sign_Leading
 
@@ -827,8 +827,8 @@ Primitive function attributes
 Model-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:ada:`'Model_Mantissa`, :ada:`'Model_Emin`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Model_Mantissa`, :ada:`'Model_Emin`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Mantissa
 
@@ -851,8 +851,8 @@ Model-oriented attributes
     end Show_Model_Mantissa_Emin;
 
 
-:ada:`'Model_Epsilon`, :ada:`Model_Small`, :ada:`Model`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Model_Epsilon` and :ada:`Model_Small`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Epsilon_Small
 
@@ -875,8 +875,8 @@ Model-oriented attributes
     end Show_Model_Epsilon_Small;
 
 
-:ada:`'Safe_First` and :ada:`Safe_Last`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`'Safe_First` and :ada:`Safe_Last`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Safe_First_Last
 
