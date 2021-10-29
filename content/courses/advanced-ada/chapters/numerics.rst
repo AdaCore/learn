@@ -1220,7 +1220,7 @@ indicating whether a feature is available or not in the target architecture:
 - :ada:`'Machine_Rounds` is an attribute that indicates whether rounding is
   used when the result of a fixed-point operation is inexact.
 
-- :ada:`Machine_Overflows` is an attribute that indicates whether a
+- :ada:`'Machine_Overflows` is an attribute that indicates whether a
   :ada:`Constraint_Error` is raised when a fixed-point operation with that type
   produces an overflow or divide-by-zero.
 
