@@ -1338,10 +1338,10 @@ same as the :ada:`TD3'Delta`. On a typical desktop PC, :ada:`TD3'Small` is
 fixed-point types, the small is always a power of two, even if the delta is a
 power of ten.
 
-In the case of :ada:`TQ15` type, however, we're specifying the *small* by using
-the :ada:`'Small` aspect. In this case, the underlying size of the :ada:`TQ15`
+In the case of :ada:`TQ15` type, we're specifying the *small* by using the
+:ada:`'Small` aspect. In this case, the underlying size of the :ada:`TQ15`
 type is 32 bits, while the accuracy we get when operating with this type is
-16 bits. Let's see another example:
+16 bits. Let's see a specific example for this type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Fixed_Small_Delta
 
