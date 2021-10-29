@@ -591,6 +591,8 @@ and be guaranteed that :ada:`Nil` is equal to zero.
 Floating-Point Types
 --------------------
 
+In this section, we discuss various attributes related to floating-point types.
+
 Representation-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1182,6 +1184,9 @@ universal real, while :ada:`Float'First` is limited to the precision of the
 
 Fixed-Point Types
 -----------------
+
+In this section, we discuss various attributes and operations related to
+floating-point types.
 
 Attributes of fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
