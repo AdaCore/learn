@@ -1177,7 +1177,7 @@ Fixed-Point Types
 -----------------
 
 In this section, we discuss various attributes and operations related to
-floating-point types.
+fixed-point types.
 
 Attributes of fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
