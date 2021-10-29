@@ -1276,6 +1276,8 @@ Let's see an example:
 
        type T3_D3 is delta D3 digits 3;
 
+       type TD3   is delta D3 range -1.0 .. 1.0 - D3;
+
        D31 : constant := 2.0 ** (-31);
        D15 : constant := 2.0 ** (-15);
 
@@ -1299,6 +1301,14 @@ Let's see an example:
                  T3_D3'Size'Image);
        Put_Line ("--------------------");
 
+       Put_Line ("TD3'Small: " &
+                 TD3'Small'Image);
+       Put_Line ("TD3'Delta: " &
+                 TD3'Delta'Image);
+       Put_Line ("TD3'Size: " &
+                 TD3'Size'Image);
+       Put_Line ("--------------------");
+
        Put_Line ("TQ31'Small: " &
                  TQ31'Small'Image);
        Put_Line ("TQ31'Delta: " &
@@ -1317,9 +1327,16 @@ Let's see an example:
 
 As we can see in the output of the code example, the :ada:`'Delta` attribute
 returns the value we used for :ada:`delta` in the type definition of the
-:ada:`T3_D3`, :ada:`TQ31` and :ada:`TQ15` types. Also, for the :ada:`T3_D3` and
-:ada:`TQ31` types, the *small* that was selected by the compiler is equal to
-the delta of the type.
+:ada:`T3_D3`, :ada:`TD3`, :ada:`TQ31` and :ada:`TQ15` types. Also, for the
+:ada:`T3_D3` and :ada:`TQ31` types, the *small* that was selected by the
+compiler is equal to the delta of the type.
+
+The :ada:`TD3` type is a binary fixed-point type with the the same delta as the
+decimal :ada:`T3_D3` type. In this case, however, :ada:`TD3'Small` is not the
+same as the :ada:`TD3'Delta`. On a typical desktop PC, :ada:`TD3'Small` is
+2\ :sup:`-10`, while the delta is 10\ :sup:`-3`. Remember that, for binary
+fixed-point types, the small is always a power of two, even if the delta is a
+power of ten.
 
 In the case of :ada:`TQ15` type, however, we're specifying the *small* by using
 the :ada:`'Small` aspect. In this case, the underlying size of the :ada:`TQ15`
