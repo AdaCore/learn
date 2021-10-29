@@ -1172,15 +1172,6 @@ values are similar. However, :ada:`Float'Safe_First` has the precision of an
 universal real, while :ada:`Float'First` is limited to the precision of the
 :ada:`Float` type.
 
-.. admonition:: Relevant topics
-
-    - Brief mentioning relevant parts of
-      `Model of Floating Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-1.html>`_
-
-.. todo::
-
-    Complete section!
-
 
 Fixed-Point Types
 -----------------
@@ -1508,15 +1499,6 @@ Here, the :ada:`T3_D3` has a precision of three digits. Therefore, to fit this
 precision, 0.2774 is rounded to 0.277, and 0.2777 is rounded to 0.278. Note
 that the :ada:`X` input of a :ada:`S'Round (X)` call is a universal real value,
 while the returned value is of :ada:`S'Base` type.
-
-.. admonition:: Relevant topics
-
-    - Brief mentioning relevant parts of
-      `Model of Fixed Point Arithmetic <http://www.ada-auth.org/standards/2xrm/html/RM-G-2-3.html>`_
-
-.. todo::
-
-    Complete section!
 
 
 Operations and Attributes
