@@ -1111,7 +1111,7 @@ Let's see some examples:
 
 .. todo::
 
-    Add discussion about :ada:`'Machine`.
+    Add discussion about :ada:`'Model`.
 
     .. code-block:: ada
 
