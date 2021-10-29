@@ -1245,6 +1245,265 @@ indicating whether a feature is available or not in the target architecture:
     end Show_Boolean_Attributes;
 
 
+Operations of fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Attribute: :ada:`'Small` and :ada:`'Delta`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The :ada:`'Small` and :ada:`'Delta` attributes denote a small number used in
+the type definition of a fixed-point type. This small number indicates the
+numeric precision of the type. In many cases, the :ada:`'Small` of a type
+:ada:`T` is equal to the :ada:`'Delta` of that type |mdash| i.e.
+:ada:`T'Small = T'Delta`. Let's discuss each attribute and how they distinguish
+from each other.
+
+The :ada:`'Delta` attribute returns the value for the :ada:`delta` that was
+used in the type definition. For example, if we declare
+:ada:`type T3_D3 is delta 10.0 ** (-3) digits D`, then the value of
+:ada:`T3_D3'Delta` is the :ada:`10.0 ** (-3)` that we used in the type
+definition.
+
+The :ada:`'Small` attribute returns the "small" of a type, i.e. the smallest
+value used in the machine representation of the type. The *small* must be at
+least equal to or smaller than the *delta*. Unless it's specified, the *small*
+is automatically selected by the compiler, and, in many cases it's equal to the
+*delta* of the type. For ordinary (binary) fixed-point types, we can specify a
+specific *small* by using the :ada:`Small` attribute.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Fixed_Small_Delta
+
+    package Fixed_Small_Delta is
+       D3 : constant := 10.0 ** (-3);
+
+       type T3_D3 is delta D3 digits 3;
+
+       D31 : constant := 2.0 ** (-31);
+       D15 : constant := 2.0 ** (-15);
+
+       type TQ31 is delta D31 range -1.0 .. 1.0 - D31;
+
+       type TQ15 is delta D15 range -1.0 .. 1.0 - D15
+         with Small => D31;
+    end Fixed_Small_Delta;
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    with Fixed_Small_Delta; use Fixed_Small_Delta;
+
+    procedure Show_Fixed_Small_Delta is
+    begin
+       Put_Line ("T3_D3'Small: " &
+                 T3_D3'Small'Image);
+       Put_Line ("T3_D3'Delta: " &
+                 T3_D3'Delta'Image);
+       Put_Line ("T3_D3'Size: " &
+                 T3_D3'Size'Image);
+
+       Put_Line ("TQ31'Small: " &
+                 TQ31'Small'Image);
+       Put_Line ("TQ31'Delta: " &
+                 TQ31'Delta'Image);
+       Put_Line ("TQ32'Size: " &
+                 TQ31'Size'Image);
+
+       Put_Line ("TQ15'Small: " &
+                 TQ15'Small'Image);
+       Put_Line ("TQ15'Delta: " &
+                 TQ15'Delta'Image);
+       Put_Line ("TQ15'Size: " &
+                 TQ15'Size'Image);
+    end Show_Fixed_Small_Delta;
+
+As we can see in the output of the code example, the :ada:`'Delta` attribute
+returns the value we used for :ada:`delta` in the type definition of the
+:ada:`T3_D3`, :ada:`TQ31` and :ada:`TQ15` types. Also, for the :ada:`T3_D3` and
+:ada:`TQ31` types, the *small* that was selected by the compiler is equal to
+the delta of the type.
+
+In the case of :ada:`TQ15` type, however, we're specifying the *small* by using
+the :ada:`'Small` aspect. In this case, the underlying size of the :ada:`TQ15`
+type is 32 bits, while the accuracy we get when operating with this type is
+16 bits. Let's see another example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Fixed_Small_Delta
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    with Fixed_Small_Delta; use Fixed_Small_Delta;
+
+    procedure Show_Fixed_Small_Delta is
+       V : TQ15;
+    begin
+       V := TQ15'Small;
+       Put_Line ("V: " & V'Image);
+
+       V := TQ15'Delta;
+       Put_Line ("V: " & V'Image);
+    end Show_Fixed_Small_Delta;
+
+In the first assignment, we assign :ada:`TQ15'Small` (2\ :sup:`-31`) to
+:ada:`V`. This value isn't within the type's accuracy |mdash| even though
+:ada:`V'Size` is 32 bits |mdash| because its delta has an accuracy of 16 bits,
+and this value needs 32 bits to be represented correctly. Therefore, as a
+result, :ada:`V` has a value of zero after this assignment. When assigning
+:ada:`TQ15'Delta` (2\ :sup:`-15`) to :ada:`V`, however, we see that :ada:`V`
+has the value of the *delta* as expected.
+
+Note that we cannot use the :ada:`Small` aspect in the declaration of decimal
+fixed-point types. This is only possible for ordinary (binary) fixed-point
+types.
+
+
+Attributes: :ada:`'Fore` and :ada:`'Aft`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The :ada:`'Fore` and :ada:`'Aft` attributes indicate the number of characters
+or digits needed for displaying a value in decimal representation. To be more
+precise:
+
+- the :ada:`'Fore` attribute returns the minimum number of characters needed
+  before the decimal point, while
+
+- the :ada:`'Aft` attribute returns the number of decimal digits that is needed
+  to represent the delta after the decimal point.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Fixed_Fore_Aft
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Fixed_Fore_Aft is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+
+       Dec : constant T3_D3 := - 0.123;
+       Fix : constant TQ31  := - TQ31'Delta;
+    begin
+       Put_Line ("T3_D3'Fore: " &
+                 T3_D3'Fore'Image);
+       Put_Line ("T3_D3'Aft:  " &
+                 T3_D3'Aft'Image);
+
+       Put_Line ("TQ31'Fore: " &
+                 TQ31'Fore'Image);
+       Put_Line ("TQ31'Aft:  " &
+                 TQ31'Aft'Image);
+       Put_Line ("----");
+       Put_Line ("Dec: " & Dec'Image);
+       Put_Line ("Fix: " & Fix'Image);
+    end Show_Fixed_Fore_Aft;
+
+As we can see in the output of the :ada:`Dec` and :ada:`Fix` variables at the
+bottom, the value of :ada:`'Fore` is two for both :ada:`T3_D3` and :ada:`TQ31`.
+This value corresponds to the length of the string "-0" displayed in the output
+for these variables (the first two characters of "-0.123" and "-0.0000000005").
+
+The value of :ada:`Dec'Aft` is three, which matches the number of digits after
+the decimal point in "-0.123". Similarly, the value of :ada:`Fix'Aft` is 10,
+which matches the number of digits after the decimal point in "-0.0000000005".
+
+
+Operations of decimal fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The attributes presented in this subsection are only available for decimal
+fixed-point types.
+
+Attribute: :ada:`'Digits`
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:ada:`'Digits` is an attribute that returns the decimal precision of a
+decimal fixed-point subtype. This corresponds to the value that we use for the
+:ada:`digits` in the definition of a decimal fixed-point type.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Decimal_Digits
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+       type T3_D6 is delta 10.0 ** (-3) digits 6;
+       subtype T3_D2 is T3_D6 digits 2;
+    begin
+       Put_Line ("T3_D6'Digits: " &
+                 T3_D6'Digits'Image);
+       Put_Line ("T3_D2'Digits: " &
+                 T3_D2'Digits'Image);
+    end Show_Decimal_Digits;
+
+In this example, :ada:`T3_D6'Digits` is six, which matches the value that we
+used for :ada:`digits` in the type definition of :ada:`T3_D6`. The same logic
+applies for subtypes, as we can see in the value of :ada:`T3_D2'Digits`. Here,
+the value is two, which was used in the declaration of the :ada:`T3_D2`
+subtype.
+
+
+Attribute: :ada:`'Scale`
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+The :ada:`'Scale` attribute returns the scale value used in the delta of a
+decimal fixed-point type. It corresponds to the N used in the
+:ada:`delta 10.0 ** (–N)` expression of the type declaration. For example, if
+we write :ada:`delta 10.0 ** (-3)` in the declaration of a type :ada:`T`, then
+the value of :ada:`T'Scale` is three.
+
+Let's look at this complete example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Decimal_Scale
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Scale is
+       type T3_D6  is delta 10.0 ** (-3) digits 6;
+       type T9_D12 is delta 10.0 ** (-9) digits 12;
+    begin
+       Put_Line ("T3_D6'Scale: " &
+                 T3_D6'Scale'Image);
+       Put_Line ("T9_D12'Scale: " &
+                 T9_D12'Scale'Image);
+    end Show_Decimal_Scale;
+
+In this example, :ada:`T3_D6'Scale` is three, while :ada:`T9_D12` is nine,
+which corresponds to the scale we used for the delta of the respective type
+declarations.
+
+
+Attribute: :ada:`'Round`
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+The :ada:`'Round` attribute returns a rounded value appropriate for a decimal
+type according to its number of digits. For example, if we have a type :ada:`T`
+with three digits, and we use a value with 10 digits (after the decimal point)
+in a call to :ada:`T'Round`, the resulting value will have three digits after
+the decimal point.
+
+Let's look at this example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Decimal_Round
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Round is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+    begin
+       Put_Line ("T3_D3'Round (0.2774): " &
+                 T3_D3'Round (0.2774)'Image);
+       Put_Line ("T3_D3'Round (0.2777): " &
+                 T3_D3'Round (0.2777)'Image);
+    end Show_Decimal_Round;
+
+Here, the :ada:`T3_D3` has a precision of three digits. Therefore, to fit this
+precision, 0.2774 is rounded to 0.277, and 0.2777 is rounded to 0.278. Note
+that the :ada:`X` input of a :ada:`S'Round (X)` call is a universal real value,
+while the returned value is of :ada:`S'Base` type.
+
 .. admonition:: Relevant topics
 
     - Brief mentioning relevant parts of
