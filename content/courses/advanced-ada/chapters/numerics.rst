@@ -1501,22 +1501,6 @@ that the :ada:`X` input of a :ada:`S'Round (X)` call is a universal real value,
 while the returned value is of :ada:`S'Base` type.
 
 
-Operations and Attributes
--------------------------
-
-
-.. admonition:: Relevant topics
-
-    - operations on floating-point types: :ada:`S'Digits`
-
-    - operations on fixed-point types: :ada:`S'Small`, :ada:`S'Delta`,
-      :ada:`S'Fore`, :ada:`S'Aft`, :ada:`S'Digits`, ...
-
-.. todo::
-
-    Complete section!
-
-
 Big Numbers
 -----------
 
