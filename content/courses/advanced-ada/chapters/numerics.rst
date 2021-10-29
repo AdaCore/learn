@@ -1397,8 +1397,8 @@ Let's see an example:
        D : constant := 2.0 ** (-31);
        type TQ31 is delta D range -1.0 .. 1.0 - D;
 
-       Dec : constant T3_D3 := - 0.123;
-       Fix : constant TQ31  := - TQ31'Delta;
+       Dec : constant T3_D3 := -0.123;
+       Fix : constant TQ31  := -TQ31'Delta;
     begin
        Put_Line ("T3_D3'Fore: " &
                  T3_D3'Fore'Image);
