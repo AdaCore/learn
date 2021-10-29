@@ -1297,6 +1297,7 @@ Let's see an example:
                  T3_D3'Delta'Image);
        Put_Line ("T3_D3'Size: " &
                  T3_D3'Size'Image);
+       Put_Line ("--------------------");
 
        Put_Line ("TQ31'Small: " &
                  TQ31'Small'Image);
@@ -1304,6 +1305,7 @@ Let's see an example:
                  TQ31'Delta'Image);
        Put_Line ("TQ32'Size: " &
                  TQ31'Size'Image);
+       Put_Line ("--------------------");
 
        Put_Line ("TQ15'Small: " &
                  TQ15'Small'Image);
