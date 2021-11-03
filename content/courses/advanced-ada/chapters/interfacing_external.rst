@@ -1,5 +1,5 @@
 Interfacing with the external world
-===================================
+***********************************
 
 .. toctree::
     :maxdepth: 3

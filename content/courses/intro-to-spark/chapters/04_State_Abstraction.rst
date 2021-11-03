@@ -560,7 +560,7 @@ For example, we can query the state of the stack with functions
 :ada:`Is_Empty` and :ada:`Is_Full` and call these in the contracts of procedures
 :ada:`Pop` and :ada:`Push`:
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions_1
 
     package Stack is
        type Element is new Integer;
@@ -615,7 +615,7 @@ contracts when their implementation is visible.
 You may often need a more constraining contract to verify the package's
 implementation but want to be less strict outside the abstraction.  You do
 this using the :ada:`Refined_Post` aspect. This aspect, when placed on a
-subprogram's body, provides stronger guaranties to internal callers of a
+subprogram's body, provides stronger guarantees to internal callers of a
 subprogram. If you provide one, the refined postcondition must imply the
 subprogram's postcondition. This is checked by GNATprove, which reports a
 failing postcondition if the refined postcondition is too weak, even if
@@ -626,7 +626,7 @@ For example, we can refine the postconditions in the bodies of :ada:`Pop` and
 :ada:`Push` to be more detailed than what we wrote for them in their
 specification.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.State_Abstraction.Pre_Postconditions_2
 
     package Stack is
        type Element is new Integer;
@@ -680,6 +680,13 @@ Initialization of Local Variables
 As part of flow analysis, GNATprove checks for the proper initialization of
 variables. Therefore, flow analysis needs to know which variables are
 initialized during the package's elaboration.
+
+.. todo::
+
+   What is the target audience of this book? If its people who have no
+   Ada experience then they likely have no idea what elaboration is.
+   One option is to add the prerequisite knowledge for this book in the intro,
+   and link to the Introduction to Ada (which also does not discuss elaboration).
 
 You can use the :ada:`Initializes` aspect to specify the set of visible
 variables and state abstractions that are initialized during the
@@ -911,8 +918,8 @@ This program doesn't read any uninitialized data, but GNATprove fails to
 verify that. This is because we provided a state abstraction for package
 :ada:`Counting`, so flow analysis computes the effects of subprograms in terms
 of this state abstraction and thus considers :ada:`State` to be an in-out
-global consisting of both :ada:`Reset_Black_Counter` and
-:ada:`Reset_Red_Counter`. So it issues the message requiring that :ada:`State` be
+global consisting of both :ada:`Black_Counter` and
+:ada:`Red_Counter`. So it issues the message requiring that :ada:`State` be
 initialized after elaboration as well as the warning that no procedure in
 package :ada:`Counting` can initialize its state.
 
@@ -1268,9 +1275,9 @@ body) from an external interface that reads the file system.
        end;
     end Data;
 
-This example isn't correct. The dependency between :ada:`Data_1`'s initial
-value and :ada:`File_System` must be listed in :ada:`Data`'s :ada:`Initializes`
-aspect.
+This example isn't correct. The dependency between :ada:`Data_1`'s, :ada:`Data_2`'s, and
+:ada:`Data_3`'s initial values and :ada:`File_System` must be listed in
+:ada:`Data`'s :ada:`Initializes` aspect.
 
 
 Example #10

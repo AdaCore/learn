@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.x]
+        python-version: [3.9]
         node-version: [16.x]
 
     steps:
@@ -30,17 +30,7 @@ jobs:
     - name: Install OS Deps
       run: |
         sudo apt-get install -y \
-        graphviz \
-        texlive-latex-base \
-        texlive-latex-recommended \
-        texlive-latex-extra \
-        texlive-fonts-recommended \
-        texlive-fonts-extra \
-        latexmk \
-        texlive-xetex \
-        fonts-lmodern \
-        fonts-open-sans \
-        fonts-dejavu
+        graphviz
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: ada-actions/toolchain
@@ -55,20 +45,9 @@ jobs:
         pip install -r requirements.txt
     - name: Run SPHINX engine tests
       run: make SPHINXOPTS="-W" test_engine
-    - name: Run Webpack production
-      run: make cleanall webpack-production
-    - name: Run SPHINX content tests
-      run: make -k test_content
-    - name: Build PDF books including build/runtime output
-      run: make pdf_books
-    - name: Archive PDF books in artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: learn-pdf-books
-        path: |
-          frontend/dist/pdf_books
-        retention-days: 1
-    - name: Archive HTML files in artifact
+    - name: Build HTML content
+      run: make cleanall webpack-production sphinx-production
+    - name: Archive HTML content in artifact
       uses: actions/upload-artifact@v2
       with:
         name: learn-html

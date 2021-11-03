@@ -1,5 +1,5 @@
 Resource Management
-===================
+*******************
 
 .. toctree::
     :maxdepth: 3

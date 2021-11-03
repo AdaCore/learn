@@ -16,19 +16,51 @@ import datetime
 import json
 import os
 import sys
+import configparser
 
-# import sys
+from pdf2image import convert_from_path
+from pathlib import Path
+
 # sys.path.insert(0, os.path.abspath('.'))
+
+
+# -- INI configuration file --------------------------------------------------
+
+config = configparser.ConfigParser()
+
+if 'SPHINX_CONF_INI' in os.environ and os.environ['SPHINX_CONF_INI'] != "":
+    ini_file = Path(os.environ['SPHINX_CONF_INI'])
+    if ini_file.is_file():
+        config.read(os.environ['SPHINX_CONF_INI'])
+    else:
+        print ("Cannot access file: " + os.environ['SPHINX_CONF_INI'])
+        sys.exit(1)
+
+def get_file_from_conf_ini(path_to_file):
+    """Get path to file indicated in "conf.ini" file
+
+    Convert relative to absolute path if necessary.
+    """
+    f = Path(path_to_file)
+
+    if not f.is_file():
+        # Try relative path to conf.ini file
+        conf_ini_dir = os.path.dirname(os.environ['SPHINX_CONF_INI'])
+        f = Path(conf_ini_dir + "/" + path_to_file)
+
+    assert f.is_file(), f"Cannot find file: {f}"
+
+    return str(f)
 
 
 # -- Project information -----------------------------------------------------
 
 project = u'learn.adacore.com'
 copyright = u'2018 – 2021, AdaCore'
-author = u'AdaCore' if 'SPHINX_AUTHOR' not in os.environ else \
-    os.environ['SPHINX_AUTHOR']
-title = u'Learn Ada (Complete)' if 'SPHINX_TITLE' not in os.environ else \
-    os.environ['SPHINX_TITLE']
+author = u'AdaCore' if not config.has_option('', 'author') else \
+    config['DEFAULT']['author']
+title = u'Learn Ada (Complete)' if not config.has_option('', 'title') else \
+    config['DEFAULT']['title']
 
 # Automatic version/release string based on date
 version_date = datetime.date.today().strftime('%Y.%m')
@@ -41,9 +73,9 @@ version = version_date
 release = release_date
 release_name = 'Release'
 
-if 'SPHINX_VERSION' in os.environ and os.environ['SPHINX_VERSION'] != "":
-    version = os.environ['SPHINX_VERSION']
-    release = os.environ['SPHINX_VERSION']
+if config.has_option('', 'version'):
+    version = config['DEFAULT']['version']
+    release = config['DEFAULT']['version']
     release_name = 'Version'
 
 # -- General configuration ---------------------------------------------------
@@ -64,7 +96,6 @@ import widget_extension
 extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
-    'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
 #    'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
@@ -75,7 +106,7 @@ extensions = [
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = []
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -140,7 +171,7 @@ html_theme = 'sphinx_rtd_theme'
 html_title = "learn.adacore.com"
 smartquotes = False
 
-# html_theme_path = ['.'] # make sphinx search for themes in current dir
+html_theme_path = ['.'] # make sphinx search for themes in current dir
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -186,11 +217,6 @@ html_copy_source = True
 
 html_context = {
     'year': datetime.date.today().strftime('%Y'),
-}
-
-redirects = {
-    "courses/Ada_For_The_C_Embedded_Developer/index": "../Ada_For_The_Embedded_C_Developer/",
-    "courses/GNAT_Toolchain_Getting_Started/index": "../GNAT_Toolchain_Intro/"
 }
 
 # -- Options for HTMLHelp output ---------------------------------------------
@@ -252,11 +278,12 @@ TitleColor={named}{MidnightBlue}
     'releasename': release_name,
 }
 
-if ('SPHINX_COVER_PAGE' in os.environ and
-    os.environ['SPHINX_COVER_PAGE'] != ""):
+if config.has_option('', 'cover_page'):
+    pdf_cover_page = get_file_from_conf_ini(config['DEFAULT']['cover_page'])
+
     latex_elements['maketitle'] = r'''
 \begin{titlepage}
-\includepdf{''' + os.environ['SPHINX_COVER_PAGE'] + r'''}
+\includepdf{''' + pdf_cover_page + r'''}
 \sphinxmaketitle
 \end{titlepage}
 '''
@@ -274,6 +301,54 @@ latex_documents = [
     (master_doc, 'learnadacorecom.tex', title,
      author, 'manual'),
 ]
+
+if config.has_option('', 'latex_toplevel_sectioning'):
+    latex_toplevel_sectioning = config['DEFAULT']['latex_toplevel_sectioning']
+
+# -- Options for Epub output ---------------------------------------------------
+
+epub_title = title
+epub_author = author.replace(' \\and', ' and')
+epub_publisher = u'AdaCore'
+epub_copyright = u'2021, AdaCore'
+
+epub_version = 3.0
+
+epub_theme = '_epub_theme'
+
+# The scheme of the identifier. Typical schemes are ISBN or URL.
+#epub_scheme = ''
+
+# The unique identifier of the text. This can be a ISBN number
+# or the project homepage.
+#epub_identifier = ''
+
+# A unique identification for the text.
+#epub_uid = ''
+
+# A tuple containing the cover image and cover page html template filenames.
+epub_cover = ("_static/cover.jpeg", "epub-cover.html")
+
+# HTML files that should be inserted before the pages created by sphinx.
+# The format is a list of tuples containing the path and title.
+#epub_pre_files = []
+
+# HTML files shat should be inserted after the pages created by sphinx.
+# The format is a list of tuples containing the path and title.
+#epub_post_files = []
+
+# A list of files that should not be packed into the epub file.
+epub_exclude_files = ['cover-A4.pdf', '.nojekyll', '_static/favicon.ico',
+                      'learn_meta_image.jpeg']
+#    ['_static/opensearch.xml', '_static/doctools.js',
+#    '_static/jquery.js', '_static/searchtools.js', '_static/underscore.js',
+#    '_static/basic.css', 'search.html', '_static/websupport.js']
+
+# The depth of the table of contents in toc.ncx.
+epub_tocdepth = 3
+
+# Allow duplicate toc entries.
+epub_tocdup = False
 
 
 # -- Options for manual page output ------------------------------------------
@@ -304,25 +379,51 @@ texinfo_documents = [
 
 intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
 
+# -- Options for redirects extension -----------------------------------------
+
+redirects = { }
+
 
 def setup(app):
-    if not os.getenv('FRONTEND_TESTING'):
-        try:
-            manifest = os.path.join(os.getcwd(), "build-manifest.json")
-            with open(manifest, 'r') as infile:
-                data = json.load(infile)
 
-            for chunk, files in data.items():
-                if "css" in files.keys():
-                    for css in files["css"]:
-                        print("Adding {} to css...".format(css))
-                        app.add_css_file(css)
-                if "js" in files.keys():
-                    for js in files["js"]:
-                        print("Adding {} to js...".format(js))
-                        app.add_js_file(js)
-        except FileNotFoundError as e:
-            print("Warning: build-manifest.json not available")
+    # TODO: find a better way to retrieve the current target (html/latex/epub)
+    if 'html' in app.outdir:
+        templates_path.append('_templates')
 
-            if not os.getenv('SPHINX_LOCAL_BUILD'):
-                raise e
+        redirects.update({
+            "courses/Ada_For_The_C_Embedded_Developer/index": "../Ada_For_The_Embedded_C_Developer/",
+            "courses/GNAT_Toolchain_Getting_Started/index": "../GNAT_Toolchain_Intro/"
+        })
+
+
+        if not os.getenv('FRONTEND_TESTING'):
+            try:
+                manifest = os.path.join(os.getcwd(), "build-manifest.json")
+                with open(manifest, 'r') as infile:
+                    data = json.load(infile)
+
+                for chunk, files in data.items():
+                    if "css" in files.keys():
+                        for css in files["css"]:
+                            print("Adding {} to css...".format(css))
+                            app.add_css_file(css)
+                    if "js" in files.keys():
+                        for js in files["js"]:
+                            print("Adding {} to js...".format(js))
+                            app.add_js_file(js)
+            except FileNotFoundError as e:
+                print("Warning: build-manifest.json not available")
+
+                if not os.getenv('SPHINX_LOCAL_BUILD'):
+                    raise e
+    elif 'epub' in app.outdir:
+        if config.has_option('', 'cover_page'):
+            pdf_cover_page = get_file_from_conf_ini(config['DEFAULT']['cover_page'])
+            png_cover_page = app.outdir + "/" + '_static/cover.jpeg'
+
+            pages = convert_from_path(pdf_path=pdf_cover_page,
+                                      dpi=72,
+                                      size=(2560, None))
+
+            for page in pages:
+                page.save(png_cover_page, 'JPEG')

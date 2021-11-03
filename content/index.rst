@@ -74,7 +74,7 @@ more about Ada and SPARK.
 Books
 ------------------------------
 
-Download the courses as PDF books for offline reading:
+Download the courses and laboratories as PDF books for offline reading:
 
 .. container:: pdf-row-1
 
@@ -83,17 +83,22 @@ Download the courses as PDF books for offline reading:
         :alt: Introduction to Ada (PDF)
         :width: 149pt
 
+    .. image:: images/page-1-of-intro-to-ada-labs.jpeg
+        :target: https://learn.adacore.com/pdf_books/labs/intro-to-ada.pdf
+        :alt: Introduction to Ada: Laboratories (PDF)
+        :width: 149pt
+
     .. image:: images/page-1-of-intro-to-spark.jpeg
         :target: https://learn.adacore.com/pdf_books/courses/intro-to-spark.pdf
         :alt: Introduction to SPARK (PDF)
         :width: 149pt
 
+.. container:: pdf-row-2
+
     .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
         :target: https://learn.adacore.com/pdf_books/courses/GNAT_Toolchain_Intro.pdf
         :alt: Introduction to GNAT Toolchain (PDF)
         :width: 149pt
-
-.. container:: pdf-row-2
 
     .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
         :target: https://learn.adacore.com/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf
@@ -104,6 +109,8 @@ Download the courses as PDF books for offline reading:
         :target: https://learn.adacore.com/pdf_books/courses/Ada_For_The_Embedded_C_Developer.pdf
         :alt: Ada for the Embedded C Developer (PDF)
         :width: 149pt
+
+.. container:: pdf-row-3
 
     .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
         :target: https://learn.adacore.com/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf

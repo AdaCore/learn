@@ -76,7 +76,7 @@ the signed integer type :c:`int` instead of the target unsigned type
 :c:`uint32_t`. Thus the multiplication of two unsigned 16-bit values may lead to
 an overflow of the 32-bit intermediate signed result, which is an occurrence of
 an undefined behavior. In such a case, a compiler is free to assume that the
-value of :c:`prod` cannot exceed :math:`2^{31} - 1` (the maximal value of a
+value of :c:`prod` cannot exceed 2\ :sup:`31` - 1 (the maximal value of a
 signed 32-bit integer) as otherwise an undefined behavior would have been
 triggered. For example, the undefined behavior with values 65535 for :c:`qty`
 and :c:`time_step` is reported when running the code compiled by either the GCC

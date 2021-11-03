@@ -57,11 +57,11 @@ Advanced Ada
 
     chapters/data_types
     chapters/control_flow
-    chapters/packages
+    chapters/modular_prog
     chapters/resource_management
     chapters/abstraction_oriented_prog
-    chapters/contracts
+    chapters/design_by_contracts
     chapters/initialization
-    chapters/tasking
+    chapters/multithreading
     chapters/interfacing_external
     chapters/appendices

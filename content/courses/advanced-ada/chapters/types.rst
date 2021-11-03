@@ -6,14 +6,497 @@ Types
 Scalar Types
 ------------
 
-.. admonition:: Relevant topics
+In general terms, scalar types are the most basic types that we can get. As
+we know, we can classify them as follows:
 
-    - Include: :ada:`T'Base`, :ada:`S'Width`, :ada:`S'Value`
-    - `Scalar Types <http://www.ada-auth.org/standards/2xrm/html/RM-3-5.html>`_
++-------------+----------+----------+
+| Category    | Discrete | Numeric  |
++=============+==========+==========+
+| Enumeration | Yes      | No       |
++-------------+----------+----------+
+| Integer     | Yes      | Yes      |
++-------------+----------+----------+
+| Real        | No       | Yes      |
++-------------+----------+----------+
 
-.. todo::
+Many attributes exist for scalar types. For example, we can use the
+:ada:`Image` and :ada:`Value` attributes to convert between a given type and a
+string type. The following table presents the main attributes for scalar types:
 
-    Complete section!
++------------+-----------------+----------------------------------------------+
+| Category   | Attribute       | Returned value                               |
++============+=================+==============================================+
+| Ranges     | :ada:`First`    | First value of the discrete subtype's range. |
++            +-----------------+----------------------------------------------+
+|            | :ada:`Last`     | Last value of the discrete subtype's range.  |
++            +-----------------+----------------------------------------------+
+|            | :ada:`Range`    | Range of the discrete subtype (corresponds   |
+|            |                 | to :ada:`Subtype'First .. Subtype'Last`).    |
++------------+-----------------+----------------------------------------------+
+| Iterators  | :ada:`Pred`     | Predecessor of the input value.              |
++            +-----------------+----------------------------------------------+
+|            | :ada:`Succ`     | Successor of the input value.                |
++------------+-----------------+----------------------------------------------+
+| Comparison | :ada:`Min`      | Minimum of two values.                       |
++            +-----------------+----------------------------------------------+
+|            | :ada:`Max`      | Maximum of two values.                       |
++------------+-----------------+----------------------------------------------+
+| String     | :ada:`Image`    | String representation of the input value.    |
++ conversion +-----------------+----------------------------------------------+
+|            | :ada:`Value`    | Value of a subtype based on input string.    |
++------------+-----------------+----------------------------------------------+
+
+We already discussed most of these attributes in the
+:doc:`Introduction to Ada course <courses/intro-to-ada/index>`. In this
+section, we'll discuss some aspects that have been left out of the previous
+course.
+
+Ranges
+~~~~~~
+
+We've seen that the :ada:`First` and :ada:`Last` attributes can be used with
+discrete types. Those attributes are also available for real types. Here's an
+example using the :ada:`Float` type and a subtype of it:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Ranges_Real_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_First_Last_Real is
+       subtype Norm is Float range 0.0 .. 1.0;
+
+       N : Norm;
+    begin
+       Put_Line ("Float'First: " & Float'First'Image);
+       Put_Line ("Float'Last:  " & Float'Last'Image);
+       Put_Line ("Norm'First:  " & Norm'First'Image);
+       Put_Line ("Norm'Last:   " & Norm'Last'Image);
+    end Show_First_Last_Real;
+
+This program displays the first and last values of both the :ada:`Float` type
+and the :ada:`Norm` subtype. In the case of the :ada:`Float` type, we see the
+full range, while for the :ada:`Norm` subtype, we get the values we used in the
+declaration of the subtype (i.e. 0.0 and 1.0).
+
+Predecessor and Successor
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use the :ada:`Pred` and :ada:`Succ` attributes to get the predecessor
+and successor of a specific value. For discrete types, this is simply the next
+discrete value. For example, :ada:`Pred (2)` is 1 and :ada:`Succ (2)` is 3.
+Let's look at a complete source-code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Show_Succ_Pred_Discrete
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Succ_Pred_Discrete is
+       type State is (Idle, Started, Processing, Stopped);
+
+       Machine_State : constant State := Started;
+
+       I : constant Integer := 2;
+    begin
+       Put_Line ("State                     : "
+                 & Machine_State'Image);
+       Put_Line ("State'Pred (Machine_State): "
+                 & State'Pred (Machine_State)'Image);
+       Put_Line ("State'Succ (Machine_State): "
+                 & State'Succ (Machine_State)'Image);
+       Put_Line ("----------");
+
+       Put_Line ("I               : "
+                 & I'Image);
+       Put_Line ("Integer'Pred (I): "
+                 & Integer'Pred (I)'Image);
+       Put_Line ("Integer'Succ (I): "
+                 & Integer'Succ (I)'Image);
+    end Show_Succ_Pred_Discrete;
+
+In this example, we use the :ada:`Pred` and :ada:`Succ` attributes for a
+variable of enumeration type (:ada:`State`) and a variable of :ada:`Integer`
+type.
+
+We can also use the :ada:`Pred` and :ada:`Succ` attributes with real types. In
+this case, however, the value we get depends on the actual type we're using:
+
+- for fixed-point types, the value is calculated using the smallest value
+  (:ada:`Small`), which is derived from the declaration of the fixed-point
+  type;
+
+- for floating-point types, the value used in the calculation depends on
+  representation constraints of the actual target machine.
+
+Let's look at this example with a decimal type (:ada:`Decimal`) and a
+floating-point type (:ada:`My_Float`):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Show_Succ_Pred_Real
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Succ_Pred_Real is
+       subtype My_Float is Float range 0.0 .. 0.5;
+
+       type Decimal is delta 0.1 digits 2 range 0.0 .. 0.5;
+
+       D : Decimal;
+       N : My_Float;
+    begin
+       Put_Line ("---- DECIMAL -----");
+       Put_Line ("Small: " & Decimal'Small'Image);
+       Put_Line ("----- Succ -------");
+       D := Decimal'First;
+       loop
+          Put_Line (D'Image);
+          D := Decimal'Succ (D);
+
+          exit when D = Decimal'Last;
+       end loop;
+       Put_Line ("----- Pred -------");
+
+       D := Decimal'Last;
+       loop
+          Put_Line (D'Image);
+          D := Decimal'Pred (D);
+
+          exit when D = Decimal'First;
+       end loop;
+       Put_Line ("==================");
+
+       Put_Line ("---- MY_FLOAT ----");
+       Put_Line ("----- Succ -------");
+       N := My_Float'First;
+       for I in 1 .. 5 loop
+          Put_Line (N'Image);
+          N := My_Float'Succ (N);
+       end loop;
+       Put_Line ("----- Pred -------");
+
+       for I in 1 .. 5 loop
+          Put_Line (N'Image);
+          N := My_Float'Pred (N);
+       end loop;
+    end Show_Succ_Pred_Real;
+
+As the output of the program indicates, the smallest value (see
+:ada:`Decimal'Small` in the example) is used to calculate the previous and next
+values of :ada:`Decimal` type.
+
+In the case of the :ada:`My_Float` type, the difference between the current
+and the previous or next values is 1.40130E-45 (or 2\ :sup:`-149`) on a
+standard PC.
+
+Scalar To String Conversion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We've seen that we can use the :ada:`Image` and :ada:`Value` attributes to
+perform conversions between values of a given subtype and a string:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Image_Value_Attr
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Image_Value_Attr is
+       I : constant Integer := Integer'Value ("42");
+    begin
+       Put_Line (I'Image);
+    end Show_Image_Value_Attr;
+
+The :ada:`Image` and :ada:`Value` attributes are used for the :ada:`String`
+type specifically. In addition to them, there are also attributes for different
+string types |mdash| namely :ada:`Wide_String` and :ada:`Wide_Wide_String`.
+This is the complete list of available attributes:
+
++-----------------------+-------------------------+---------------------------+
+| Conversion type       | Attribute               | String type               |
++=======================+=========================+===========================+
+| Conversion to string  | :ada:`Image`            | :ada:`String`             |
++                       +-------------------------+---------------------------+
+|                       | :ada:`Wide_Image`       | :ada:`Wide_String`        |
++                       +-------------------------+---------------------------+
+|                       | :ada:`Wide_Wide_Image`  | :ada:`Wide_Wide_String`   |
++-----------------------+-------------------------+---------------------------+
+| Conversion to subtype | :ada:`Value`            | :ada:`String`             |
++                       +-------------------------+---------------------------+
+|                       | :ada:`Wide_Value`       | :ada:`Wide_String`        |
++                       +-------------------------+---------------------------+
+|                       | :ada:`Wide_Wide_Value`  | :ada:`Wide_Wide_String`   |
++-----------------------+-------------------------+---------------------------+
+
+We discuss more about :ada:`Wide_String` and :ada:`Wide_Wide_String` in
+:ref:`another section <Wide_Wide_Strings>`.
+
+Width attribute
+~~~~~~~~~~~~~~~
+
+When converting a value to a string by using the :ada:`Image` attribute, we get
+a string with variable width. We can assess the maximum width of that string
+for a specific subtype by using the :ada:`Width` attribute. For example,
+:ada:`Integer'Width` gives us the maximum width returned by the :ada:`Image`
+attribute when converting a value of :ada:`Integer` type to a string of
+:ada:`String` type.
+
+This attribute is useful when we're using bounded strings in our code to store
+the string returned by the :ada:`Image` attribute. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Width_Attr
+
+    with Ada.Text_IO;         use Ada.Text_IO;
+    with Ada.Strings;         use Ada.Strings;
+    with Ada.Strings.Bounded;
+
+    procedure Show_Width_Attr is
+       package B_Str is new
+         Ada.Strings.Bounded.Generic_Bounded_Length (Max => Integer'Width);
+       use B_Str;
+
+       Str_I : Bounded_String;
+
+       I : constant Integer := 42;
+       J : constant Integer := 103;
+    begin
+       Str_I := To_Bounded_String (I'Image);
+       Put_Line ("Value:         " & To_String (Str_I));
+       Put_Line ("String Length: " & Length (Str_I)'Image);
+       Put_Line ("----");
+
+       Str_I := To_Bounded_String (J'Image);
+       Put_Line ("Value:         " & To_String (Str_I));
+       Put_Line ("String Length: " & Length (Str_I)'Image);
+    end Show_Width_Attr;
+
+In this example, we're storing the string returned by :ada:`Image` in the
+:ada:`Str_I` variable of :ada:`Bounded_String` type.
+
+Similar to the :ada:`Image` and :ada:`Value` attributes, the :ada:`Width`
+attribute is also available for string types other than :ada:`String`. In fact,
+we can use:
+
+- the :ada:`Wide_Width` attribute for strings returned by :ada:`Wide_Image`;
+  and
+
+- the :ada:`Wide_Wide_Width` attribute for strings returned by
+  :ada:`Wide_Wide_Image`.
+
+.. _Base_Attribute:
+
+Base
+~~~~
+
+The :ada:`Base` attribute gives us the unconstrained underlying hardware
+representation selected for a given numeric type. As an example, let's say we
+declared a subtype of the :ada:`Integer` type named :ada:`One_To_Ten`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Base_Attr
+
+    package My_Integers is
+
+       subtype One_To_Ten is Integer range 1 .. 10;
+
+    end My_Integers;
+
+If we then use the :ada:`Base` attribute |mdash| by writing
+:ada:`One_To_Ten'Base` |mdash|, we're actually referring to the unconstrained
+underlying hardware representation selected for :ada:`One_To_Ten`. As
+:ada:`One_To_Ten` is a subtype of the :ada:`Integer` type, this also means that
+:ada:`One_To_Ten'Base` is equivalent to :ada:`Integer'Base`, i.e. they refer to
+the same base type. (This base type is the underlying hardware type
+representing the :ada:`Integer` type |mdash| but is not the :ada:`Integer` type
+itself.)
+
+.. admonition:: For further reading...
+
+    The Ada standard defines that the minimum range of the :ada:`Integer` type
+    is :ada:`-2**15 + 1 .. 2**15 - 1`. In modern 64-bit systems |mdash|
+    where wider types such as :ada:`Long_Integer` are defined |mdash| the range
+    is at least :ada:`-2**31 + 1 .. 2**31 - 1`. Therefore, we could think of
+    the :ada:`Integer` type as having the following declaration:
+
+    .. code-block:: ada
+
+        type Integer is range -2 ** 31 .. 2 ** 31 - 1;
+
+    However, even though :ada:`Integer` is a predefined Ada type, it's actually
+    a subtype of an anonymous type. That anonymous "type" is the hardware's
+    representation for the numeric type as chosen by the compiler based on the
+    requested range (for the signed integer types) or digits of precision (for
+    floating-point types). In other words, these types are actually subtypes of
+    something that does not have a specific name in Ada, and that is not
+    constrained.
+
+    In effect,
+
+    .. code-block:: ada
+
+        type Integer is range -2 ** 31 .. 2 ** 31 - 1;
+
+    is really as if we said this:
+
+    .. code-block:: ada
+
+        subtype Integer is Some_Hardware_Type_With_Sufficient_Range
+          range -2 ** 31 .. 2 ** 31 - 1;
+
+    Since the :ada:`Some_Hardware_Type_With_Sufficient_Range` type is anonymous
+    and we therefore cannot refer to it in the code, we just say that
+    :ada:`Integer` is a type rather than a subtype.
+
+    Let's focus on signed integers |mdash| as the other numerics work the same
+    way. When we declare a signed integer type, we have to specify the required
+    range, statically. If the compiler cannot find a hardware-defined or
+    supported signed integer type with at least the range requested, the
+    compilation is rejected. For example, in current architectures, the code
+    below most likely won't compile:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Very_Big_Range
+        :class: ada-expect-compile-error
+
+        package Int_Def is
+
+           type Too_Big_To_Fail is range -2 ** 255 .. 2 ** 255 - 1;
+
+        end Int_Def;
+
+    Otherwise, the compiler maps the named Ada type to the hardware "type",
+    presumably choosing the smallest one that supports the requested range.
+    (That's why the range has to be static in the source code, unlike for
+    explicit subtypes.)
+
+The following example shows how the :ada:`Base` attribute affects the bounds of
+a variable:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Base_Attr
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with My_Integers; use My_Integers;
+
+    procedure Show_Base is
+       C : constant One_To_Ten := One_To_Ten'Last;
+    begin
+       Using_Constrained_Subtype : declare
+          V : One_To_Ten := C;
+       begin
+          Put_Line ("Increasing value for One_To_Ten...");
+          V := One_To_Ten'Succ (V);
+       exception
+          when others =>
+             Put_Line ("Exception raised!");
+       end Using_Constrained_Subtype;
+
+       Using_Base : declare
+          V : One_To_Ten'Base := C;
+       begin
+          Put_Line ("Increasing value for One_To_Ten'Base...");
+          V := One_To_Ten'Succ (V);
+       exception
+          when others =>
+             Put_Line ("Exception raised!");
+       end Using_Base;
+
+       Put_Line ("One_To_Ten'Last: "      & One_To_Ten'Last'Image);
+       Put_Line ("One_To_Ten'Base'Last: " & One_To_Ten'Base'Last'Image);
+    end Show_Base;
+
+In the first block of the example (:ada:`Using_Constrained_Subtype`), we're
+asking for the next value after the last value of a range |mdash| in this case,
+:ada:`One_To_Ten'Succ (One_To_Ten'Last)`. As expected, since the last value of
+the range doesn't have a successor, a constraint exception is raised.
+
+In the :ada:`Using_Base` block, we're declaring a variable :ada:`V` of
+:ada:`One_To_Ten'Base` subtype. In this case, the next value exists |mdash|
+because the condition :ada:`One_To_Ten'Last + 1 <= One_To_Ten'Base'Last` is
+true |mdash|, so we can use the :ada:`Succ` attribute without having an
+exception being raised.
+
+In the following example, we adjust the result of additions and subtractions
+to avoid constraint errors:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Base_Attr_Sat
+
+    package My_Integers is
+
+       subtype One_To_Ten is Integer range 1 .. 10;
+
+       function Sat_Add (V1, V2 : One_To_Ten'Base) return One_To_Ten;
+
+       function Sat_Sub (V1, V2 : One_To_Ten'Base) return One_To_Ten;
+
+    end My_Integers;
+
+    --  with Ada.Text_IO; use Ada.Text_IO;
+
+    package body My_Integers is
+
+       function Saturate (V : One_To_Ten'Base) return One_To_Ten is
+       begin
+          --  Put_Line ("SATURATE " & V'Image);
+
+          if V < One_To_Ten'First then
+             return One_To_Ten'First;
+          elsif V > One_To_Ten'Last then
+             return One_To_Ten'Last;
+          else
+             return V;
+          end if;
+       end Saturate;
+
+       function Sat_Add (V1, V2 : One_To_Ten'Base) return One_To_Ten is
+       begin
+          return Saturate (V1 + V2);
+       end Sat_Add;
+
+       function Sat_Sub (V1, V2 : One_To_Ten'Base) return One_To_Ten is
+       begin
+          return Saturate (V1 - V2);
+       end Sat_Sub;
+
+    end My_Integers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with My_Integers; use My_Integers;
+
+    procedure Show_Base is
+
+       type Display_Saturate_Op is (Add, Sub);
+
+       procedure Display_Saturate (V1, V2 : One_To_Ten;
+                                   Op     : Display_Saturate_Op) is
+          Res : One_To_Ten;
+       begin
+          case Op is
+          when Add =>
+             Res := Sat_Add (V1, V2);
+          when Sub =>
+             Res := Sat_Sub (V1, V2);
+          end case;
+          Put_Line ("SATURATE " & Op'Image
+                    & " (" & V1'Image
+                    & ", " & V2'Image
+                    & ") = " & Res'Image);
+       end Display_Saturate;
+
+    begin
+       Display_Saturate (1,  1, Add);
+       Display_Saturate (10, 8, Add);
+       Display_Saturate (1,  8, Sub);
+    end Show_Base;
+
+In this example, we're using the :ada:`Base` attribute to declare the
+parameters of the :ada:`Sat_Add`, :ada:`Sat_Sub` and :ada:`Saturate` functions.
+Note that the parameters of the :ada:`Display_Saturate` procedure are of
+:ada:`One_To_Ten` type, while the parameters of the :ada:`Sat_Add`,
+:ada:`Sat_Sub` and :ada:`Saturate` functions are of the (unconstrained) base
+subtype (:ada:`One_To_Ten'Base`). In those functions, we perform operations
+using the parameters of unconstrained subtype and adjust the result |mdash| in
+the :ada:`Saturate` function |mdash| before returning it as a constrained value
+of :ada:`One_To_Ten` subtype.
+
+The code in the body of the :ada:`My_Integers` package contains lines that were
+commented out |mdash| to be more precise, a call to :ada:`Put_Line` call in the
+:ada:`Saturate` function. If you uncomment them, you'll see the value of the
+input parameter :ada:`V` (of :ada:`One_To_Ten'Base` type) in the runtime output
+of the program before it's adapted to fit the constraints of the
+:ada:`One_To_Ten` subtype.
 
 
 Enumerations
@@ -1340,13 +1823,350 @@ declaration of the :ada:`Light` constant.
 User-defined literals
 ---------------------
 
-.. admonition:: Relevant topics
+Any type definition has a kind of literal associated with it. For example,
+integer types are associated with integer literals. Therefore, we can
+initialize an object of integer type with an integer literal:
 
-    - `User-Defined Literals <http://www.ada-auth.org/standards/2xrm/html/RM-4-2-1.html>`_
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Simple_Integer_Literal
 
-.. todo::
+    with Ada.Text_IO; use Ada.Text_IO;
 
-    Complete section!
+    procedure Simple_Integer_Literal is
+       V : Integer;
+    begin
+       V := 10;
+
+       Put_Line (Integer'Image (V));
+    end Simple_Integer_Literal;
+
+Here, :ada:`10` is the integer literal that we use to initialize the integer
+variable :ada:`V`. Other examples of literals are real literals and string
+literals, as we'll see later.
+
+When we declare an enumeration type, we limit the set of literals that we can
+use to initialize objects of that type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Simple_Enumeration
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Enumeration is
+       type Activation_State is (Unknown, Off, On);
+
+       S : Activation_State;
+    begin
+       S := On;
+       Put_Line (Activation_State'Image (S));
+    end Simple_Enumeration;
+
+For objects of :ada:`Activation_State` type, such as :ada:`S`, the only
+possible literals that we can use are :ada:`Unknown`, :ada:`Off` and :ada:`On`.
+In this sense, types have a constrained set of literals that can be used for
+objects of that type.
+
+User-defined literals allow us to extend this set of literals. We could, for
+example, extend the type declaration of :ada:`Activation_State` and allow the
+use of integer literals for objects of that type. In this case, we need to use
+the :ada:`Integer_Literal` aspect and specify a function that implements the
+conversion from literals to the type we're declaring. For this conversion from
+integer literals to the :ada:`Activation_State` type, we could specify that 0
+corresponds to :ada:`Off`, 1 corresponds to :ada:`On` and other values
+correspond to :ada:`Unknown`. We'll see the corresponding implementation later.
+
+.. note:: This feature was first introduced in Ada 2020 and might not be
+          available in older compilers.
+
+These are the three kinds of literals and their corresponding aspect:
+
++----------+----------+-------------------------+
+| Literal  | Example  | Aspect                  |
++==========+==========+=========================+
+| Integer  |        1 | :ada:`Integer_Literal`  |
++----------+----------+-------------------------+
+| Real     |      1.0 | :ada:`Real_Literal`     |
++----------+----------+-------------------------+
+| String   |     "On" | :ada:`String_Literal`   |
++----------+----------+-------------------------+
+
+For our previous :ada:`Activation_States` type, we could declare a function
+:ada:`Integer_To_Activation_State` that converts integer literals to one of the
+enumeration literals that we've specified for the :ada:`Activation_States`
+type:
+
+.. code:: ada manual_chop no_button project=Courses.Advanced_Ada.Types.User_Defined_Literals
+
+    !activation_states.ads
+    package Activation_States is
+
+       type Activation_State is (Unknown, Off, On)
+         with Integer_Literal => Integer_To_Activation_State;
+
+       function Integer_To_Activation_State (S : String)
+                                             return Activation_State;
+
+    end Activation_States;
+
+Based on this specification, we can now use an integer literal to initialize an
+object :ada:`S` of :ada:`Activation_State` type:
+
+.. code-block:: ada
+
+    S : Activation_State := 1;
+
+Note that we have a string parameter in the declaration of the
+:ada:`Integer_To_Activation_State` function, even though the function itself is
+only used to convert integer literals (but not string literals) to the
+:ada:`Activation_State` type. It's our job to process that string parameter in
+the implementation of the :ada:`Integer_To_Activation_State` function and
+convert it to an integer value |mdash| using :ada:`Integer'Value`, for example:
+
+.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Types.User_Defined_Literals
+
+    !activation_states.adb
+    package body Activation_States is
+
+       function Integer_To_Activation_State (S : String)
+                                             return Activation_State is
+       begin
+          case Integer'Value (S) is
+             when 0      => return Off;
+             when 1      => return On;
+             when others => return Unknown;
+          end case;
+       end Integer_To_Activation_State;
+
+    end Activation_States;
+
+Let's look at a complete example that makes use of all three kinds of literals:
+
+.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Types.Activation_States
+
+    !activation_states.ads
+    package Activation_States is
+
+       type Activation_State is (Unknown, Off, On)
+         with String_Literal  => To_Activation_State,
+              Integer_Literal => Integer_To_Activation_State,
+              Real_Literal    => Real_To_Activation_State;
+
+       function To_Activation_State (S : Wide_Wide_String)
+                                     return Activation_State;
+
+       function Integer_To_Activation_State (S : String)
+                                             return Activation_State;
+
+       function Real_To_Activation_State (S : String)
+                                          return Activation_State;
+
+    end Activation_States;
+
+    !activation_states.adb
+    package body Activation_States is
+
+       function To_Activation_State (S : Wide_Wide_String)
+                                     return Activation_State is
+       begin
+          if S = "Off" then
+             return Off;
+          elsif S = "On" then
+             return On;
+          else
+             return Unknown;
+          end if;
+       end To_Activation_State;
+
+       function Integer_To_Activation_State (S : String)
+                                             return Activation_State is
+       begin
+          case Integer'Value (S) is
+             when 0      => return Off;
+             when 1      => return On;
+             when others => return Unknown;
+          end case;
+       end Integer_To_Activation_State;
+
+       function Real_To_Activation_State (S : String)
+                                          return Activation_State is
+          V : constant Float := Float'Value (S);
+       begin
+          if V < 0.0 then
+             return Unknown;
+          elsif V < 1.0 then
+             return Off;
+          else
+             return On;
+          end if;
+       end Real_To_Activation_State;
+
+    end Activation_States;
+
+    !activation_examples.adb
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Activation_States; use Activation_States;
+
+    procedure Activation_Examples is
+       S : Activation_State;
+    begin
+       S := "Off";
+       Put_Line ("String: Off  => " & Activation_State'Image (S));
+
+       S := 1;
+       Put_Line ("Integer: 1   => " & Activation_State'Image (S));
+
+       S := 1.5;
+       Put_Line ("Real:    1.5 => " & Activation_State'Image (S));
+    end Activation_Examples;
+
+In this example, we're extending the declaration of the :ada:`Activation_State`
+type to include string and real literals. For string literals, we use the
+:ada:`To_Activation_State` function, which converts:
+
+    - the :ada:`"Off"` string to :ada:`Off`,
+
+    - the :ada:`"On"` string to :ada:`On`, and
+
+    - any other string to :ada:`Unknown`.
+
+For real literals, we use the :ada:`Real_To_Activation_State` function, which
+converts:
+
+    - any negative number to :ada:`Unknown`,
+
+    - a value in the interval [0, 1) to :ada:`Off`, and
+
+    - a value equal or above 1.0 to :ada:`On`.
+
+Note that the string parameter of :ada:`To_Activation_State` function |mdash|
+which converts string literals |mdash| is of :ada:`Wide_Wide_String` type, and
+not of :ada:`String` type, as it's the case for the other conversion functions.
+
+In the :ada:`Activation_Examples` procedure, we show how we can initialize an
+object of :ada:`Activation_State` type with all kinds of literals (string,
+integer and real literals).
+
+With the definition of the :ada:`Activation_State` type that we've seen in the
+complete example, we can initialize an object of this type with an enumeration
+literal or a string, as both forms are defined in the type specification:
+
+.. code:: ada manual_chop run_button main=using_string_literal.adb project=Courses.Advanced_Ada.Types.Activation_States
+
+    !using_string_literal.adb
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Activation_States; use Activation_States;
+
+    procedure Using_String_Literal is
+       S1 : constant Activation_State := On;
+       S2 : constant Activation_State := "On";
+    begin
+       Put_Line (Activation_State'Image (S1));
+       Put_Line (Activation_State'Image (S2));
+    end Using_String_Literal;
+
+Note we need to be very careful when designing conversion functions. For
+example, the use of string literals may limit the kind of checks that we can
+do. Consider the following misspelling of the :ada:`Off` literal:
+
+.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Types.Activation_States
+    :class: ada-expect-compile-error
+
+    !misspelling_example.adb
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Activation_States; use Activation_States;
+
+    procedure Misspelling_Example is
+       S : constant Activation_State := Offf;
+       --                               ^ Error: Off is misspelled.
+    begin
+       Put_Line (Activation_State'Image (S));
+    end Misspelling_Example;
+
+As expected, the compiler detects this error. However, this error is accepted
+when using the corresponding string literal:
+
+.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Types.Activation_States
+
+    !misspelling_example.adb
+    with Ada.Text_IO;       use Ada.Text_IO;
+    with Activation_States; use Activation_States;
+
+    procedure Misspelling_Example is
+       S : constant Activation_State := "Offf";
+       --                               ^ Error: Off is misspelled.
+    begin
+       Put_Line (Activation_State'Image (S));
+    end Misspelling_Example;
+
+Here, our implementation of :ada:`To_Activation_State` simply returns
+:ada:`Unknown`. In some cases, this might be exactly the behavior that we want.
+However, let's assume that we'd prefer better error handling instead. In this
+case, we could change the implementation of :ada:`To_Activation_State` to check
+all literals that we want to allow, and indicate an error otherwise |mdash| by
+raising an exception, for example. Alternatively, we could specify this in the
+preconditions of the conversion function:
+
+.. code-block:: ada
+
+       function To_Activation_State (S : Wide_Wide_String)
+                                     return Activation_State
+         with Pre => S = "Off" or S = "On" or S = "Unknown";
+
+In this case, the precondition explicitly indicates which string literals are
+allowed for the :ada:`To_Activation_State` type.
+
+User-defined literals can also be used for more complex types, such as records.
+For example:
+
+.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Types.Record_Literals
+
+    !silly_records.ads
+    package Silly_Records is
+
+       type Silly is record
+          X : Integer;
+          Y : Float;
+       end record
+         with String_Literal => To_Silly;
+
+       function To_Silly (S : Wide_Wide_String) return Silly;
+    end Silly_Records;
+
+    !silly_records.adb
+    package body Silly_Records is
+
+       function To_Silly (S : Wide_Wide_String) return Silly is
+       begin
+          if S = "Magic" then
+             return (X => 42, Y => 42.0);
+          else
+             return (X => 0, Y => 0.0);
+          end if;
+       end To_Silly;
+
+    end Silly_Records;
+
+    !silly_magic.adb
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Silly_Records; use Silly_Records;
+
+    procedure Silly_Magic is
+       R1 : Silly;
+    begin
+       R1 := "Magic";
+       Put_Line (R1.X'Image & ", " & R1.Y'Image);
+    end Silly_Magic;
+
+In this example, when we initialize an object of :ada:`Silly` type with a
+string, its components are:
+
+- set to 42 when using the "Magic" string; or
+
+- simply set to zero when using any other string.
+
+Obviously, this example isn't particularly useful. However, the goal is to
+show that this approach is useful for more complex types where a string literal
+(or a numeric literal) might simplify handling those types. Used-defined
+literals let you design types in ways that, otherwise, would only be possible
+when using a preprocessor or a domain-specific language.
 
 
 Data Representation
@@ -1575,10 +2395,10 @@ This big number (17179869176 bits) for :ada:`UInt_7_Array'Size` and
 fact that Ada is reporting the size of the :ada:`UInt_7_Array` type for the
 case when the complete range is used. Considering that we specified a positive
 range in the declaration of the :ada:`UInt_7_Array` type, the maximum length
-on this machine is :math:`2^{31} -1`. The object size of an array type is
+on this machine is 2\ :sup:`31` - 1. The object size of an array type is
 calculated by multiplying the maximum length by the component size. Therefore,
 the object size of the :ada:`UInt_7_Array` type corresponds to the
-multiplication of :math:`2^{31} -1` components (maximum length) by 8 bits
+multiplication of 2\ :sup:`31` - 1 components (maximum length) by 8 bits
 (component size).
 
 Storage size
@@ -2190,6 +3010,8 @@ This packing and unpacking mechanism has a performance cost associated with it,
 which results in less speed of access for packed objects. As usual in those
 circumstances, before using packed representation, we should assess whether
 memory constraints are more important than speed in our target architecture.
+
+.. _Record_Representation_Storage_Clauses:
 
 Record Representation and storage clauses
 -----------------------------------------
@@ -3349,19 +4171,448 @@ majority of the cases, you don't need it at all |mdash| except for special
 cases such as when interfacing with C code that makes use of union types or
 solving very specific problems when doing low-level programming.
 
-Variable control
-----------------
+Shared variable control
+-----------------------
 
-.. admonition:: Relevant topics
+Ada has built-in support for handling both volatile and atomic data. Let's
+start by discussing volatile objects.
 
-    - **Briefly** discuss :ada:`Atomic`, :ada:`Volatile`, etc
-    - `Shared Variable Control <http://www.ada-auth.org/standards/2xrm/html/RM-C-6.html>`_
-    - `The Package System.Atomic_Operations <http://www.ada-auth.org/standards/2xrm/html/RM-C-6-1.html>`_
+Volatile
+~~~~~~~~
 
-.. todo::
+A `volatile <https://en.wikipedia.org/wiki/Volatile_(computer_programming)>`_
+object can be described as an object in memory whose value may change between
+two consecutive memory accesses of a process A |mdash| even if process A itself
+hasn't changed the value. This situation may arise when an object in memory is
+being shared by multiple threads. For example, a thread *B* may modify the
+value of that object between two read accesses of a thread *A*. Another typical
+example is the one of
+`memory-mapped I/O <https://en.wikipedia.org/wiki/Memory-mapped_I/O>`_, where
+the hardware might be constantly changing the value of an object in memory.
 
-    Complete section!
+Because the value of a volatile object may be constantly changing, a compiler
+cannot generate code to store the value of that object in a register and then
+use the value from the register in subsequent operations. Storing into a
+register is avoided because, if the value is stored there, it would be outdated
+if another process had changed the volatile object in the meantime. Instead,
+the compiler generates code in such a way that the process must read the value
+of the volatile object from memory for each access.
 
+Let's look at a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Volatile_Object_Ada
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Object is
+       Val : Long_Float with Volatile;
+    begin
+       Val := 0.0;
+       for I in 0 .. 999 loop
+          Val := Val + 2.0 * Long_Float (I);
+       end loop;
+
+       Put_Line ("Val: " & Long_Float'Image (Val));
+    end Show_Volatile_Object;
+
+In this example, :ada:`Val` has the :ada:`Volatile` aspect, which makes the
+object volatile. We can also use the :ada:`Volatile` aspect in type
+declarations. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Volatile_Type
+
+    package Shared_Var_Types is
+
+       type Volatile_Long_Float is new Long_Float with Volatile;
+
+    end Shared_Var_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Shared_Var_Types; use Shared_Var_Types;
+
+    procedure Show_Volatile_Type is
+       Val : Volatile_Long_Float;
+    begin
+       Val := 0.0;
+       for I in 0 .. 999 loop
+          Val := Val + 2.0 * Volatile_Long_Float (I);
+       end loop;
+
+       Put_Line ("Val: " & Volatile_Long_Float'Image (Val));
+    end Show_Volatile_Type;
+
+Here, we're declaring a new type :ada:`Volatile_Long_Float` in the
+:ada:`Shared_Var_Types` package. This type is based on the :ada:`Long_Float`
+type and uses the :ada:`Volatile` aspect. Any object of this type is
+automatically volatile.
+
+In addition to that, we can declare components of an array to be volatile. In
+this case, we can use the :ada:`Volatile_Components` aspect in the array
+declaration. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Volatile_Array_Components
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Volatile_Array_Components is
+       Arr : array (1 .. 2) of Long_Float with Volatile_Components;
+    begin
+       Arr := (others => 0.0);
+
+       for I in 0 .. 999 loop
+          Arr (1) := Arr (1) +  2.0 * Long_Float (I);
+          Arr (2) := Arr (2) + 10.0 * Long_Float (I);
+       end loop;
+
+       Put_Line ("Arr (1): " & Long_Float'Image (Arr (1)));
+       Put_Line ("Arr (2): " & Long_Float'Image (Arr (2)));
+    end Show_Volatile_Array_Components;
+
+Note that it's possible to use the :ada:`Volatile` aspect for the array
+declaration as well:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Volatile_Array
+
+    package Shared_Var_Types is
+
+    private
+       Arr : array (1 .. 2) of Long_Float with Volatile;
+
+    end Shared_Var_Types;
+
+Note that, if the :ada:`Volatile` aspect is specified for an object, then the
+:ada:`Volatile_Components` aspect is also specified automatically |mdash| if it
+makes sense in the context, of course. In the example above, even though
+:ada:`Volatile_Components` isn't specified in the declaration of the :ada:`Arr`
+array , it's automatically set as well.
+
+Independent
+~~~~~~~~~~~
+
+When you write code to access a single object in memory, you might actually be
+accessing multiple objects at once. For example, when you declare types that
+make use of representation clauses |mdash| as we've seen in previous sections
+|mdash|, you might be accessing multiple objects that are grouped together in
+a single storage unit. For example, if you have components :ada:`A` and
+:ada:`B` stored in the same storage unit, you cannot update :ada:`A` without
+actually writing (the same value) to :ada:`B`. Those objects aren't
+independently addressable because, in order to access one of them, we have to
+actually address multiple objects at once.
+
+When an object is independently addressable, we call it an independent object.
+In this case, we make sure that, when accessing that object, we won't be
+simultaneously accessing another object. As a consequence, this feature limits
+the way objects can be represented in memory, as we'll see next.
+
+To indicate that an object is independent, we use the :ada:`Independent`
+aspect:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Object
+
+    package Shared_Var_Types is
+
+       I : Integer with Independent;
+
+    end Shared_Var_Types;
+
+Similarly, we can use this aspect when declaring types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Type
+
+    package Shared_Var_Types is
+
+       type Independent_Boolean is new Boolean with Independent;
+
+       type Flags is record
+          F1 : Independent_Boolean;
+          F2 : Independent_Boolean;
+       end record;
+
+    end Shared_Var_Types;
+
+In this example, we're declaring the :ada:`Independent_Boolean` type and using
+it in the declaration of the :ada:`Flag` record type. Let's now derive the
+:ada:`Flags` type and use a representation clause for the derived type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Type
+    :class: ada-expect-compile-error
+
+    package Shared_Var_Types.Representation is
+
+       type Rep_Flags is new Flags;
+
+       for Rep_Flags use record
+          F1 at 0 range 0 .. 0;
+          F2 at 0 range 1 .. 1;
+          --            ^  ERROR: start position of F2
+          --                      is wrong!
+          --    ^          ERROR: F1 and F2 share the
+          --                      same storage unit!
+       end record;
+
+    end Shared_Var_Types.Representation;
+
+As you can see when trying to compile this example, the representation clause
+that we used for :ada:`Rep_Flags` isn't following these limitations:
+
+1. The size of each independent component must be a multiple of a storage unit.
+
+2. The start position of each independent component must be a multiple of a
+   storage unit.
+
+For example, for architectures that have a storage unit of one byte |mdash|
+such as standard desktop computers |mdash|, this means that the size and the
+position of independent components must be a multiple of a byte. Let's correct
+the issues in the code above by:
+
+- setting the size of each independent component to correspond to
+  :ada:`Storage_Unit` |mdash| using a range between 0 and
+  :ada:`Storage_Unit - 1` |mdash|, and
+
+- setting the start position to zero.
+
+This is the corrected version:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Type
+
+    with System;
+
+    package Shared_Var_Types.Representation is
+
+       type Rep_Flags is new Flags;
+
+       for Rep_Flags use record
+          F1 at 0 range 0 .. System.Storage_Unit - 1;
+          F2 at 1 range 0 .. System.Storage_Unit - 1;
+       end record;
+
+    end Shared_Var_Types.Representation;
+
+Note that the representation that we're now using for :ada:`Rep_Flags` is most
+likely the representation that the compiler would have chosen for this data
+type. We could, however, have added an empty storage unit between :ada:`F1` and
+:ada:`F2` |mdash| by simply writing :ada:`F2 at 2 ...`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Type
+
+    with System;
+
+    package Shared_Var_Types.Representation is
+
+       type Rep_Flags is new Flags;
+
+       for Rep_Flags use record
+          F1 at 0 range 0 .. System.Storage_Unit - 1;
+          F2 at 2 range 0 .. System.Storage_Unit - 1;
+       end record;
+
+    end Shared_Var_Types.Representation;
+
+As long as we follow the rules for independent objects, we're still allowed to
+use representation clauses that don't correspond to the one that the compiler
+might select.
+
+For arrays, we can use the :ada:`Independent_Components` aspect:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Independent_Components
+
+    package Shared_Var_Types is
+
+       Flags : array (1 .. 8) of Boolean with Independent_Components;
+
+    end Shared_Var_Types;
+
+We've just seen in a previous example that some representation clauses might
+not work with objects and types that have the :ada:`Independent` aspect. The
+same restrictions apply when we use the :ada:`Independent_Components` aspect.
+For example, this aspect prevents that array components are packed when the
+:ada:`Pack` aspect is used. Let's discuss the following erroneous code example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Packed_Independent_Components
+    :class: ada-expect-compile-error
+
+    package Shared_Var_Types is
+
+       type Flags is array (Positive range <>) of Boolean
+         with Independent_Components, Pack;
+
+       F : Flags (1 .. 8) with Size => 8;
+
+    end Shared_Var_Types;
+
+As expected, this code doesn't compile. Here, we can have either independent
+components, or packed components. We cannot have both at the same time because
+packed components aren't independently addressable. The compiler warns us that
+the :ada:`Pack` aspect won't have any effect on independent components. When we
+use the :ada:`Size` aspect in the declaration of :ada:`F`, we confirm this
+limitation. If we remove the :ada:`Size` aspect, however, the code is compiled
+successfully because the compiler ignores the :ada:`Pack` aspect and allocates
+a larger size for :ada:`F`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Packed_Independent_Components
+
+    package Shared_Var_Types is
+
+       type Flags is array (Positive range <>) of Boolean
+         with Independent_Components, Pack;
+
+    end Shared_Var_Types;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with System;
+
+    with Shared_Var_Types; use Shared_Var_Types;
+
+    procedure Show_Flags_Size is
+       F : Flags (1 .. 8);
+    begin
+       Put_Line ("Flags'Size:      "
+                 & F'Size'Image & " bits");
+       Put_Line ("Flags (1)'Size:  "
+                 & F (1)'Size'Image & " bits");
+       Put_Line ("# storage units: "
+                 & Integer'Image (F'Size / System.Storage_Unit));
+    end Show_Flags_Size;
+
+As you can see in the output of the application, even though we specify the
+:ada:`Pack` aspect for the :ada:`Flags` type, the compiler allocates eight
+storage units, one per each component of the :ada:`F` array.
+
+Atomic
+~~~~~~
+
+An atomic object is an object that only accepts atomic reads and updates. The
+Ada standard specifies that "for an atomic object (including an atomic
+component), all reads and updates of the object as a whole are indivisible."
+In this case, the compiler must generate Assembly code in such a way that reads
+and updates of an atomic object must be done in a single instruction, so that
+no other instruction could execute on that same object before the read or
+update completes.
+
+.. admonition:: In other contexts
+
+    Generally, we can say that operations are said to be atomic when they can
+    be completed without interruptions. This is an important requirement when
+    we're performing operations on objects in memory that are shared between
+    multiple processes.
+
+    This definition of atomicity above is used, for example, when implementing
+    databases. However, for this section, we're using the term "atomic"
+    differently. Here, it really means that reads and updates must be performed
+    with a single Assembly instruction.
+
+    For example, if we have a 32-bit object composed of four 8-bit bytes, the
+    compiler cannot generate code to read or update the object using four 8-bit
+    store / load instructions, or even two 16-bit store / load instructions.
+    In this case, in order to maintain atomicity, the compiler must generate
+    code using one 32-bit store / load instruction.
+
+    Because of this strict definition, we might have objects for which the
+    :ada:`Atomic` aspect cannot be specified. Lots of machines support integer
+    types that are larger than the native word-sized integer. For example, a
+    16-bit machine probably supports both 16-bit and 32-bit integers, but only
+    16-bit integer objects can be marked as atomic |mdash| or, more generally,
+    only objects that fit into at most 16 bits.
+
+Atomicity may be important, for example, when dealing with shared hardware
+registers. In fact, for certain architectures, the hardware may require that
+memory-mapped registers are handled atomically. In Ada, we can use the
+:ada:`Atomic` aspect to indicate that an object is atomic. This is how we can
+use the aspect to declare a shared hardware register:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Object
+
+    with System;
+
+    package Shared_Var_Types is
+
+    private
+       R   : Integer
+         with Atomic, Address => System'To_Address (16#FFFF00A0#);
+
+    end Shared_Var_Types;
+
+Note that the :ada:`Address` aspect allows for assigning a variable to a
+specific location in the memory. In this example, we're using this aspect to
+specify the address of the memory-mapped register.
+
+In addition to atomic objects, we can declare atomic types |mdash| similar to
+what we've seen before for volatile objects. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Types
+
+    with System;
+
+    package Shared_Var_Types is
+
+       type Atomic_Integer is new Integer with Atomic;
+
+    private
+       R : Atomic_Integer with Address => System'To_Address (16#FFFF00A0#);
+
+    end Shared_Var_Types;
+
+In this example, we're declaring the :ada:`Atomic_Integer` type, which is an
+atomic type. Objects of this type |mdash| such as :ada:`R` in this example
+|mdash| are automatically atomic.
+
+We can also declare atomic array components:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Array_Components
+
+    package Shared_Var_Types is
+
+    private
+       Arr : array (1 .. 2) of Integer with Atomic_Components;
+
+    end Shared_Var_Types;
+
+This example shows the declaration of the :ada:`Arr` array, which has atomic
+components |mdash| the atomicity of its components is indicated by the
+:ada:`Atomic_Components` aspect.
+
+Note that if an object is atomic, it is also volatile and independent. In other
+words, these type declarations are equivalent:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
+
+    package Shared_Var_Types is
+
+       type Atomic_Integer_1 is new Integer with Atomic;
+
+       type Atomic_Integer_2 is new Integer
+         with Atomic,
+              Volatile,
+              Independent;
+
+    end Shared_Var_Types;
+
+A simular rule applies to components of an array. When we use the
+:ada:`Atomic_Components`, the following aspects are implied: :ada:`Volatile`,
+:ada:`Volatile_Components` and :ada:`Independent_Components`. For example,
+these array declarations are equivalent:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Atomic_Volatile_Independent
+
+    package Shared_Var_Types is
+
+       Arr_1 : array (1 .. 2) of Integer with Atomic_Components;
+
+       Arr_2 : array (1 .. 2) of Integer
+         with Atomic_Components,
+              Volatile,
+              Volatile_Components,
+              Independent_Components;
+
+    end Shared_Var_Types;
+
+..
+    REMOVED FROM THIS SECTION, TO BE RE-EVALUATED:
+
+    .. admonition:: Relevant topics
+
+        - **Briefly** discuss :ada:`Full_Access_Only`
+        - `The Package System.Atomic_Operations <http://www.ada-auth.org/standards/2xrm/html/RM-C-6-1.html>`_
 
 ..
     REMOVED! TO BE RE-EVALUATED IN 2022:

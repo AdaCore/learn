@@ -143,9 +143,9 @@ This example puts elements into the vector in the following sequence: (100,
 
 The Reference Manual specifies that the worst-case complexity must be:
 
-- O(:math:`log N`) for the :ada:`Append` operation, and
+- O(log N) for the :ada:`Append` operation, and
 
-- O(:math:`N log N`) for the :ada:`Prepend` operation.
+- O(N log N) for the :ada:`Prepend` operation.
 
 Accessing first and last elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -400,7 +400,7 @@ looks like when using both indices and cursors:
        end loop;
 
 The Reference Manual requires that the worst-case complexity for
-accessing an element be O(:math:`log N`).
+accessing an element be O(log N).
 
 Another way of modifing elements of a vector is using a *process
 procedure*, which takes an individual element and does some processing on
@@ -789,8 +789,8 @@ The following example presents code that manipulates three vectors (:ada:`V1`,
     end Show_Vector_Ops;
 
 The Reference Manual requires that the worst-case complexity of a call to
-:ada:`Sort` be O(:math:`N^2`) and the average complexity be better than
-O(:math:`N^2`).
+:ada:`Sort` be O(N\ :sup:`2`) and the average complexity be better than
+O(N\ :sup:`2`).
 
 Sets
 ----
@@ -952,17 +952,19 @@ In addition to ordered sets used in the examples above, the standard
 library also offers hashed sets. The Reference Manual requires the
 following average complexity of each operation:
 
+.. |LOGN_2| replace:: (log N)\ :sup:`2`
+
 +-----------------------+-------------------------+---------------------+
 | Operations            | :ada:`Ordered_Sets`     | :ada:`Hashed_Sets`  |
 +=======================+=========================+=====================+
-| - Insert              | O(:math:`(log N)^2)`    | :math:`O(log N)`    |
+| - Insert              | O(|LOGN_2|)             | O(log N)            |
 | - Include             | or better               |                     |
 | - Replace             |                         |                     |
 | - Delete              |                         |                     |
 | - Exclude             |                         |                     |
 | - Find                |                         |                     |
 +-----------------------+-------------------------+---------------------+
-| Subprogram using      | O(:math:`1`)            | O(:math:`1`)        |
+| Subprogram using      | O(1)                    | O(1)                |
 | cursor                |                         |                     |
 +-----------------------+-------------------------+---------------------+
 
@@ -1180,7 +1182,7 @@ Ordered maps share many features with hashed maps. The main differences are:
 
 - A hash function isn't needed. Instead, you must provide an ordering
   function (:ada:`<` operator), which the ordered map will use to order
-  elements and allow fast access, :math:`O(log n)`, using a binary search.
+  elements and allow fast access, O(log N), using a binary search.
 
   - If the type specified in :ada:`Key_Type` has a standard :ada:`<` operator,
     you can use it in a similar way as we did for :ada:`Equivalent_Keys` above
@@ -1246,13 +1248,13 @@ operations:
 +-----------------------+-------------------------+---------------------+
 | Operations            | :ada:`Ordered_Maps`     | :ada:`Hashed_Maps`  |
 +=======================+=========================+=====================+
-| - Insert              | O(:math:`(log N)^2)`    | :math:`O(log N)`    |
-| - Include             | or better               |                     |
+| - Insert              | O(|LOGN_2|) or better   | O(log N)            |
+| - Include             |                         |                     |
 | - Replace             |                         |                     |
 | - Delete              |                         |                     |
 | - Exclude             |                         |                     |
 | - Find                |                         |                     |
 +-----------------------+-------------------------+---------------------+
-| Subprogram using      | O(:math:`1`)            | O(:math:`1`)        |
+| Subprogram using      | O(1)                    | O(1)                |
 | cursor                |                         |                     |
 +-----------------------+-------------------------+---------------------+

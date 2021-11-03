@@ -282,7 +282,7 @@ You can get the previous value using the :ada:`'Pred` attribute. Here is the equ
    char c = 'a';
    c++;
 
-Other interesting examples are the :ada:`'First` and :ada:`'Last` attributes which, respectively, return the first and last values of a scalar type. Using 32-bit integers, for instance, :ada:`Integer'First` returns :math:`-2^{31}` and :ada:`Integer'Last` returns :math:`2^{31} - 1`.
+Other interesting examples are the :ada:`'First` and :ada:`'Last` attributes which, respectively, return the first and last values of a scalar type. Using 32-bit integers, for instance, :ada:`Integer'First` returns -2\ :sup:`31` and :ada:`Integer'Last` returns 2\ :sup:`31` - 1.
 
 Arrays and Strings
 ~~~~~~~~~~~~~~~~~~~~~

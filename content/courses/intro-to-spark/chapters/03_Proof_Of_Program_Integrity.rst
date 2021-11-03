@@ -10,7 +10,7 @@ performing proof of your program's integrity is to ensure the absence of
 runtime errors during its execution.
 
 The analysis steps discussed here are only sound if you've previously
-performed :ref:`Flow_Analysis`.  You shouldn't proceed further if there you
+performed :ref:`Flow_Analysis`.  You shouldn't proceed further if you
 still have unjustified flow analysis messages for your program.
 
 
@@ -317,7 +317,7 @@ testing easier.  Early failure detection also allows an easier recovery and
 facilitates debugging, so you may want to enable these checks at runtime to
 terminate execution before some damaging or hard-to-debug action occurs.
 
-GNATprove statically analyses preconditions and postcondition. It verifies
+GNATprove statically analyses preconditions and postconditions. It verifies
 preconditions every time a subprogram is called, which is the runtime
 semantics of contracts.  Postconditions, on the other hand, are verified
 once as part of the verification of the subprogram's body. For example,
@@ -453,7 +453,7 @@ the specification may be incorrect. As an example, there's an error in our
 procedure :ada:`Incr_Until` below which makes its :ada:`Contract_Cases`
 unprovable.
 
-.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt_1
     :class: ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is
@@ -487,7 +487,7 @@ sets of inputs. This allows you to find bugs in both the code and its
 contracts. In this case, testing :ada:`Incr_Until` with an input greater than
 1000 raises an exception at runtime.
 
-.. code:: ada run_button prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
+.. code:: ada run_button prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt_2
     :class: ada-run-expect-failure, ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is
@@ -555,7 +555,7 @@ Let's look at the case where the code and the specification are correct but
 there's some information missing. As an example, GNATprove finds the
 postcondition of :ada:`Increase` to be unprovable.
 
-.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt_3
     :class: ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is
@@ -620,7 +620,7 @@ For example, the postcondition of our :ada:`GCD` function below |mdash| which
 calculates the value of the :ada:`GCD` of two positive numbers using Euclide's
 algorithm |mdash| can't be verified with GNATprove's default settings.
 
-.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt_4
     :class: ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is
@@ -649,13 +649,13 @@ algorithm |mdash| can't be verified with GNATprove's default settings.
 
 The first thing we try is increasing the amount of time the prover is
 allowed to spend on each verification condition using the ``--timeout``
-option of GNATprove (e.g., by using the dialog box in GPS). In this
+option of GNATprove (e.g., by using the dialog box in GNAT Studio). In this
 example, increasing it to one minute, which is relatively high, doesn't
 help. We can also specify an alternative automatic prover |mdash| if we have
 one |mdash| using the option ``--prover`` of GNATprove (or the dialog box). For
 our postcondition, we tried Alt-Ergo, CVC4, and Z3 without any luck.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt_5
     :class: ada-expect-prove-error
 
     package Show_Failed_Proof_Attempt is

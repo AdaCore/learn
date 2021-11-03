@@ -1,5 +1,5 @@
 Initialization
-==============
+**************
 
 .. toctree::
     :maxdepth: 3
