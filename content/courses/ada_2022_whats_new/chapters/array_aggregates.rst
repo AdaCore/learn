@@ -10,6 +10,8 @@ Advanced Array Aggregates
     * GNAT Community Edition 2020
     * GCC 11
 
+.. _array_aggregates:
+
 Square brackets
 ---------------
 

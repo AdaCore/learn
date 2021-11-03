@@ -13,7 +13,7 @@ Container Aggregates
 Ada 2022 introduces container aggregates. 
 They can be used to easily create values for vectors, lists, maps, etc.
 Container aggregates leverage array aggregate syntax when the container
-doecn't have keys. On the other side hashed and ordered maps use record
+doesn't have keys. On the other side hashed and ordered maps use record
 aggregate syntax.
 Consider this:
 
@@ -41,7 +41,7 @@ Consider this:
       Ada.Text_IO.Put_Line (Y'Image);
    end Main;
 
-In run time compiler creates an empty container and then populates it
+At run time compiler creates an empty container and then populates it
 with elements one by one. So, if you define a new container type, then
 you can specify a new :ada:`Aggregate` aspect to let the compiler know
 two construction subprograms and enable container aggregates for your

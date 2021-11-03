@@ -68,7 +68,7 @@ put any float argument, because there is no float parameter in the
 Ada wrapper function declaration). As result, you will get crash,
 stack corruption or any other undefined behavior.
 
-To fix this, Ada 2020 provides a new family of calling convention
+To fix this, Ada 2022 provides a new family of calling convention
 names - C_Variadic_N:
 
    The convention C_Variadic_n is the calling convention for a variadic

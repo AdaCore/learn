@@ -9,10 +9,10 @@ in GNAT Ada compiler.
 
 Some of these features require a compiler command line switch or
 pragma to work. Compilers since `GNAT Community Edition 2021`_ or
-`GCC 11`_ uses :ada:`pragma Ada_2022;` or `-gnat2022` swith.
-Older compilers use :ada:`pragma Ada_2020;` or `-gnat2020` instead.
+`GCC 11`_ uses :ada:`pragma Ada_2022;` or ``-gnat2022`` swith.
+Older compilers use :ada:`pragma Ada_2020;` or ``-gnat2020`` instead.
 Square brackets syntax and :ada:`'Reduce` expression also need
-:ada:`pragma Extensions_Allowed (On);` or `-gnatX` swith.
+:ada:`pragma Extensions_Allowed (On);` or ``-gnatX`` swith.
 
 References
 ----------
