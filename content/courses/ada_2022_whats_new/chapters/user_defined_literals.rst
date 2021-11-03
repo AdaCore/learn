@@ -61,9 +61,10 @@ component for internal representation:
       Print (2.99_792_458e+8);
    end Main;
 
-As you see real and integer literals are presented in exact form, while for
-string literals compiler drops surrounding quotes and escapes. The compiler
-translates these literals into function calls.
+As you see, real and integer literals are turned into strings preserving the
+formatting from the source code, while string literals are decoded:
+:ada:`From_String` is passed the denoted string value.
+In any case, the compiler translates these literals into function calls.
 
 Turn Ada into JavaScript
 ------------------------
@@ -115,6 +116,9 @@ custom :ada:`+` operator:
    begin
       Print ("5" + 3);
    end Main;
+
+Jokes aside, this feature is very useful, for example it allows
+a "native-looking API" for :ref:`big integers<big_integers>`.
 
 References
 ----------

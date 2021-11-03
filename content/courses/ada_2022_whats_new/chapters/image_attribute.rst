@@ -65,8 +65,18 @@ these objects to string and print:
       Ada.Text_IO.Put_Line (V1_Ptr'Image);
    end Main;
 
+.. code-block::
+
+   $ gprbuild -q -P main.gpr
+     Build completed successfully.
+   $ ./main
+     [ 1,  2,  3]
+     (LINE =>  10,
+      COLUMN =>  3)
+     (access 7fff64b23988)
+
 Note square brackets in array image output. In Ada 2022 array aggregates could
-be written this way!
+be written :ref:`this way<array_aggregates>`!
 
 References
 ----------

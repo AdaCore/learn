@@ -94,7 +94,7 @@ prints a line each time it's called:
    end Main;
 
 Perhaps, it looks a bit cryptic, but no better solution was found.
-Comparing with other languages :c:`(like sum += x;)` this approach
+Comparing with other languages (like :c:`sum += x;`) this approach
 let you mention :ada:`@` several times on the right side of an
 assigment statement, so it's more flexible.
 

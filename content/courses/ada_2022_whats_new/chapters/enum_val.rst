@@ -144,6 +144,9 @@ And an extra type conversion needed:
 But this solution doesn't work for generic formal type (because
 :ada:`T'Size` should be a static value)!
 
+We should note that these new attributes may already be familiar to GNAT
+users, beause they have been introduced in GNAT compiler years ago.
+
 References
 ----------
 
