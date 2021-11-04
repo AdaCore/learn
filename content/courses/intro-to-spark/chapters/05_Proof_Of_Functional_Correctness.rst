@@ -30,7 +30,7 @@ raised when using the result of the function :ada:`Find` below, it may be
 enough to know that the result is either 0 or in the range of :ada:`A`. We can
 express this as a postcondition of :ada:`Find`.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find_1
 
     package Show_Find is
 
@@ -63,7 +63,7 @@ ensure it returns an index of :ada:`A` where :ada:`E` is stored and returns 0
 only if :ada:`E` is nowhere in :ada:`A`. Again, we can express this as a
 postcondition of :ada:`Find`.
 
-.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find_2
     :class: ada-expect-prove-error
 
     package Show_Find is
@@ -115,7 +115,7 @@ example, during testing, the postcondition of the subprogram :ada:`Find` shown
 below is checked dynamically for the set of inputs for which :ada:`Find` is
 called in that test, but just for that set.
 
-.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find
+.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Find_3
     :class: ada-expect-prove-error
 
     package Show_Find is
@@ -238,7 +238,7 @@ Consider the procedure :ada:`Do_Something` below, which calls a complex
 function on its input, :ada:`X`, and wants to check that the initial and
 modified values of :ada:`X` are related in that complex way.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_1
 
     package Show_Ghost is
 
@@ -281,7 +281,7 @@ performed by the call to :ada:`Do_Some_Complex_Stuff` modified the value of
 However, :ada:`X_Init` can't be used in normal code, for example to restore
 the initial value of :ada:`X`.
 
-.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost
+.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_2
     :class: ada-expect-compile-error
 
     package Show_Ghost is
@@ -542,6 +542,11 @@ the proof or strip it down to a small number of easily-reviewable
 assumptions. For this purpose, you can add assertions to break complex
 proofs into smaller steps.
 
+.. todo::
+    
+    This might confuse people, what is the difference between the
+    first two assertions provided here?
+    
 .. code-block:: ada
 
     pragma Assert (Assertion_Checked_By_The_Tool);
@@ -644,10 +649,19 @@ property.
 Ghost Procedures
 ~~~~~~~~~~~~~~~~
 
+.. todo::
+    
+    This section still seems very abstract. Can a more concrete example be developed?
+
 Ghost procedures can't affect the value of normal variables, so they're
 mostly used to perform operations on ghost variables or to group together a
 set of intermediate assertions.
 
+.. todo::
+
+    Hard to understand what this first sentence is trying to express;
+    specifically the word "treatment".
+    
 Abstracting away the treatment of assertions and ghost variables inside a
 ghost procedure has several advantages. First, you're allowed to use these
 variables in any way you choose in code inside ghost procedures.  This
@@ -687,6 +701,10 @@ isn't part of the functional behavior of the subprogram. Finally, it can
 help GNATprove by abstracting away assertions that would otherwise make its
 job more complex.
 
+.. todo::
+
+    What is a Proof Context? I don't think this is defined anywhere.
+
 In the example below, calling :ada:`Prove_P` with :ada:`X` as an operand only
 adds :ada:`P (X)` to the proof context instead of the larger set of assertions
 required to verify it. In addition, the proof of :ada:`P` need only be done
@@ -707,7 +725,7 @@ Handling of Loops
 
 When the program involves a loop, you're almost always required to provide
 additional annotations to allow GNATprove to complete a proof because the
-verification techniques used by GNATprove doesn't handle cycles in a
+verification techniques used by GNATprove don't handle cycles in a
 subprogram's control flow. Instead, loops are flattened by dividing them
 into several acyclic parts.
 
@@ -1036,6 +1054,10 @@ index :ada:`K` is stored at index :ada:`K-1`:
 
     end Show_Map;
 
+.. todo::
+    
+    Uncommenting the code did not result in successful analysis.
+    
 You need to uncomment the second loop invariant containing the frame condition
 in order to prove the assertion after the loop.
 

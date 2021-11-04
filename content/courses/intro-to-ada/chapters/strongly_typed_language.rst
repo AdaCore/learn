@@ -88,12 +88,12 @@ them. Here is how :ada:`Integer` might be defined for a typical processor:
     type Integer is range -(2 ** 31) .. +(2 ** 31 - 1);
 
 :ada:`**` is the exponent operator, which means that the first valid
-value for :ada:`Integer` is :math:`-2^{31}`, and the last valid value is
-:math:`2^{31}-1`.
+value for :ada:`Integer` is -2\ :sup:`31`, and the last valid value is
+2\ :sup:`31` - 1.
 
 Ada does not mandate the range of the built-in type Integer. An implementation
-for a 16-bit target would likely  choose the range :math:`-2^{15}` through
-:math:`2^{15}-1`.
+for a 16-bit target would likely  choose the range -2\ :sup:`15` through
+2\ :sup:`15` - 1.
 
 
 Operational semantics
@@ -157,8 +157,8 @@ Ada also features unsigned Integer types. They're called *modular* types in Ada
 parlance. The reason for this designation is due to their behavior in case of
 overflow: They simply "wrap around", as if a modulo operation was applied.
 
-For machine sized modular types, for example a modulus of 2**32, this mimics
-the most common implementation behavior of unsigned types. However, an
+For machine sized modular types, for example a modulus of 2\ :sup:`32`, this
+mimics the most common implementation behavior of unsigned types. However, an
 advantage of Ada is that the modulus is more general:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Unsigned_Types
@@ -179,12 +179,11 @@ advantage of Ada is that the modulus is more general:
        end loop;
     end Main;
 
-.. ?? WHICH BEHAVIOR?
-
-Unlike in C/C++, since this behavior is guaranteed by the Ada specification,
-you can rely on it to implement portable code. Also, being able to leverage the
-wrapping on arbitrary bounds is very useful -- the modulus does not need to be
-a power of 2 -- to implement certain algorithms and data structures, such as
+Unlike in C/C++, since this wraparound behavior is guaranteed by the Ada
+specification, you can rely on it to implement portable code. Also, being able
+to leverage the wrapping on arbitrary bounds is very useful |mdash| the modulus
+does not need to be a power of 2 |mdash| to implement certain algorithms and
+data structures, such as
 `ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`_.
 
 .. _EnumTypes:
@@ -392,7 +391,7 @@ Ranges can also be specified for custom floating-point types. For example:
     end Custom_Range_Types;
 
 In this example, we are defining a type called :ada:`T6_Inv_Trig`, which has a
-range from :math:`-\pi/2` to :math:`\pi/2` with a minimum precision of 6
+range from -π / 2 to π / 2 with a minimum precision of 6
 digits. (:ada:`Pi` is defined in the predefined package :ada:`Ada.Numerics`.)
 
 Strong typing

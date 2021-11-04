@@ -629,8 +629,7 @@ Product info
     #. Array type :ada:`Currency_Array` is used to represent a list of total
        values of individual products (see more details below).
 
-    #. Procedure :ada:`Total` receives an input array of quantities and an
-       input array of amounts for each product.
+    #. Procedure :ada:`Total` receives an input array of products.
 
         #. It outputs an array with the total value of each product using the
            :ada:`Currency_Array` type.

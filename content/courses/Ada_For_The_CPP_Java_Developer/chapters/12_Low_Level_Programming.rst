@@ -91,8 +91,8 @@ GNAT provides a subprogram called :ada:`System.Machine_Code.Asm` that can be use
    begin
       Asm ("rdtsc",
            Outputs =>
-             (Unsigned_32'Asm_Output ("=a", High),
-              Unsigned_32'Asm_Output ("=d", Low)),
+             (Unsigned_32'Asm_Output ("=a", Low),
+              Unsigned_32'Asm_Output ("=d", High)),
            Volatile => True);
 
       Counter :=

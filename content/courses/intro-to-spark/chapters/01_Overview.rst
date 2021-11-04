@@ -81,7 +81,7 @@ The tool for formal verification of the SPARK language is called
 `GNATprove`. It checks for conformance with the SPARK subset and performs
 flow analysis and proof of the source code. Several other tools support the
 SPARK language, including both the `GNAT compiler
-<https://www.adacore.com/gnatpro>`_ and the `GPS integrated development
+<https://www.adacore.com/gnatpro>`_ and the `GNAT Studio integrated development
 environment <https://www.adacore.com/gnatpro/toolsuite/gps>`_.
 
 
@@ -144,7 +144,7 @@ specification and sound verification.
 
 The most notable restrictions from Ada are related to exceptions and access
 types, both of which are known to considerably increase the amount of
-user-written annotations required for full support. Goto statements and
+user-written annotations required for full support. Backwards goto statements and
 controlled types are also not supported since they introduce non-trivial
 control flow. The two remaining restrictions relate to side-effects in
 expressions and aliasing of names, which we now cover in more detail.
@@ -643,11 +643,15 @@ word at the correct index in a dictionary.
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_06
     :class: ada-expect-prove-error
 
+    with Ada.Finalization;
+
     package P
       with SPARK_Mode => On
     is
        subtype Letter is Character range 'a' .. 'z';
-       type String_Access is access all String;
+       type String_Access is new Ada.Finalization.Controlled with record
+          Ptr : access String;
+       end record;
        type Dictionary is array (Letter) of String_Access;
 
        procedure Store (D : in out Dictionary; W : String);
@@ -659,27 +663,26 @@ word at the correct index in a dictionary.
        procedure Store (D : in out Dictionary; W : String) is
           First_Letter : constant Letter := W (W'First);
        begin
-          D (First_Letter) := new String'(W);
+          D (First_Letter).Ptr := new String'(W);
        end Store;
     end P;
 
-This code is not correct: general access types are not part of the SPARK
-subset. Note that we could use here a pool-specific access type for
-:ada:`String_Access` by removing the keyword :ada:`all` in its definition. In the
-case where it's necessary to keep a general access type (for example to be able
-to store pointers to variables on the stack), another solution here is to use
-:ada:`SPARK_Mode` to separate the definition of :ada:`String_Access` from the rest
-of the code in a fine grained manner.
+This code is not correct: controlled types are not part of the SPARK
+subset. The solution here is to use :ada:`SPARK_Mode` to separate the
+definition of :ada:`String_Access` from the rest of the code in a fine
+grained manner.
 
 
 Example #7
 ~~~~~~~~~~
 
 Here's a new version of the previous example, which we've modified to hide the
-general access type inside the private part of package :ada:`P`, using ``pragma
+controlled type inside the private part of package :ada:`P`, using ``pragma
 SPARK_Mode (Off)`` at the start of the private part.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_07
+
+    with Ada.Finalization;
 
     package P
       with SPARK_Mode => On
@@ -695,13 +698,15 @@ SPARK_Mode (Off)`` at the start of the private part.
     private
        pragma SPARK_Mode (Off);
 
-       type String_Access is access all String;
+       type String_Access is new Ada.Finalization.Controlled with record
+          Ptr : access String;
+       end record;
 
        function New_String_Access (W : String) return String_Access is
-         (new String'(W));
+         (Ada.Finalization.Controlled with Ptr => new String'(W));
     end P;
 
-Since the general access type is defined and used inside of a part of the code
+Since the controlled type is defined and used inside of a part of the code
 ignored by GNATprove, this code is correct.
 
 
@@ -714,6 +719,8 @@ previously.
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_08
     :class: ada-expect-prove-error
 
+    with Ada.Finalization;
+
     package P
       with SPARK_Mode => On
     is
@@ -728,10 +735,12 @@ previously.
     private
        pragma SPARK_Mode (Off);
 
-       type String_Access is access all String;
+       type String_Access is new Ada.Finalization.Controlled with record
+          Ptr : access String;
+       end record;
 
        function New_String_Access (W : String) return String_Access is
-         (new String'(W));
+         (Ada.Finalization.Controlled with Ptr => new String'(W));
     end P;
 
     package body P
@@ -758,6 +767,8 @@ another package named :ada:`Q`.
 
 .. code:: ada prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_09
 
+    with Ada.Finalization;
+
     package P
       with SPARK_Mode => On
     is
@@ -770,10 +781,12 @@ another package named :ada:`Q`.
     private
        pragma SPARK_Mode (Off);
 
-       type String_Access is access all String;
+       type String_Access is new Ada.Finalization.Controlled with record
+          Ptr : access String;
+       end record;
 
        function New_String_Access (W : String) return String_Access is
-         (new String'(W));
+         (Ada.Finalization.Controlled with Ptr => new String'(W));
     end P;
 
     with P; use P;
@@ -793,7 +806,7 @@ another package named :ada:`Q`.
        end Store;
     end Q;
 
-And now everything is fine: we've managed to retain the use of the access
+And now everything is fine: we've managed to retain the use of the controlled
 type while having most of our code in the SPARK subset so GNATprove is able
 to analyze it.
 

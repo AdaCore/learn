@@ -78,7 +78,9 @@ class WidgetCodeDirective(Directive):
         'name': directives.unchanged,
     }
 
-    def latex(self, widget: Widget, code_block_info : CodeBlockInfo):
+    def create_static_node(self, widget: Widget,
+                           code_block_info : CodeBlockInfo,
+                           node_format : str):
         """Performs Latex parsing on nodes
 
         Used to create the PDF builds of the site.
@@ -89,7 +91,7 @@ class WidgetCodeDirective(Directive):
         Returns:
             List[nodes]: Returns a list of Latex nodes
         """
-        nodes_latex = []
+        static_nodes = []
 
         for f in widget.files:
             # Based on sphinx/directives/code.py
@@ -99,8 +101,8 @@ class WidgetCodeDirective(Directive):
                 classes=['literal-block-wrapper'])
 
             literal = nodes.literal_block('',
-                                            f.content,
-                                            format='latex')
+                                          f.content,
+                                          format=node_format)
             literal['language'] = self.arguments[0].split(' ')[0]
             literal['linenos'] = True
             literal['source'] = f.basename
@@ -112,15 +114,26 @@ class WidgetCodeDirective(Directive):
             container_node += caption
             container_node += literal
 
-            nodes_latex.append(container_node)
+            static_nodes.append(container_node)
 
         def get_info_preamble(info_type : str) -> str:
-            known_info_type : Dict[str, str] = {
-                'build'   : '\\textbf{Build output}',
-                'run'     : '\\textbf{Runtime output}',
-                'compile' : '\\textbf{Compilation output}',
-                'prove'   : '\\textbf{Prover output}'
-            }
+            known_info_type : Dict[str, str]
+
+            if node_format == 'latex':
+                known_info_type = {
+                    'build'   : '\\textbf{Build output}',
+                    'run'     : '\\textbf{Runtime output}',
+                    'compile' : '\\textbf{Compilation output}',
+                    'prove'   : '\\textbf{Prover output}'
+                }
+            if node_format == 'html':
+                known_info_type = {
+                    'build'   : r"<div class='literal-block-preamble'>Build output</div>",
+                    'run'     : r"<div class='literal-block-preamble'>Runtime output</div>",
+                    'compile' : r"<div class='literal-block-preamble'>Compilation output</div>",
+                    'prove'   : r"<div class='literal-block-preamble'>Prover output</div>"
+                }
+
             if info_type in known_info_type:
                 return known_info_type[info_type]
             else:
@@ -140,7 +153,7 @@ class WidgetCodeDirective(Directive):
 
             preamble_raw = nodes.raw('',
                                      get_info_preamble(info_type),
-                                     format='latex')
+                                     format=node_format)
 
             preamble_node += preamble_raw
 
@@ -150,7 +163,7 @@ class WidgetCodeDirective(Directive):
 
             literal = nodes.literal_block('',
                                           block_info[info_type],
-                                          format='latex')
+                                          format=node_format)
             literal['language'] = 'none'
             literal['source'] = info_type
 
@@ -161,10 +174,11 @@ class WidgetCodeDirective(Directive):
             # container_node += caption
             container_node += literal
 
-            nodes_latex.append(preamble_node)
-            nodes_latex.append(container_node)
+            static_nodes.append(preamble_node)
+            static_nodes.append(container_node)
 
-        return nodes_latex
+        return static_nodes
+
 
     def run(self):
         """The main entrypoint for the WidgetDirective
@@ -177,7 +191,9 @@ class WidgetCodeDirective(Directive):
             List[nodes]: Returns a list of nodes (HTML and Latex)
         """
         widget = Widget()
+        nodes_html = []
         nodes_latex = []
+        nodes_epub = []
 
         jinja_env = Environment(
             loader=PackageLoader('widget'),
@@ -197,19 +213,29 @@ class WidgetCodeDirective(Directive):
             widget.parseContent(self.content)
 
             # Attemping to detect HTML or Latex output by checking for 'html' in tags
-            if 'html' not in self.state.state_machine.document.settings.env.app.tags.tags:
+            if ('builder_html' in self.state.state_machine.document.settings.env.app.tags.tags
+                and self.state.state_machine.document.settings.env.app.tags.tags['builder_html']):
+
+                # insert widget into the template
+                template = jinja_env.get_template('widget.html')
+                html = template.render(url=WIDGETS_SERVER_URL, w=widget)
+
+                nodes_html = [nodes.raw('', html, format='html')]
+            else:
                 code_block_info = CodeBlockInfo(project_name=widget.name,
                                                 filename=self.content.items[0][0],
                                                 line_number=self.content.items[0][1] - 1)
-                nodes_latex = self.latex(widget, code_block_info)
+                if ('builder_latex' in self.state.state_machine.document.settings.env.app.tags.tags
+                    and self.state.state_machine.document.settings.env.app.tags.tags['builder_latex']):
+                    nodes_latex = self.create_static_node(widget, code_block_info, 'latex')
+                if ('builder_epub' in self.state.state_machine.document.settings.env.app.tags.tags
+                    and self.state.state_machine.document.settings.env.app.tags.tags['builder_epub']):
+                    nodes_epub = self.create_static_node(widget, code_block_info, 'html')
 
-            # insert widget into the template
-            template = jinja_env.get_template('widget.html')
-            html = template.render(url=WIDGETS_SERVER_URL, w=widget)
         except Exception as err:
             raise self.error(err)
 
-        return [nodes.raw('', html, format='html')] + nodes_latex
+        return nodes_html + nodes_latex + nodes_epub
 
 
 def on_builder_inited(app):

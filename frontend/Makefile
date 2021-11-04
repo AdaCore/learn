@@ -139,14 +139,20 @@ webpack-production:
 webpack-staging:
 	yarn run staging
 
-# Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
-site: cleanall webpack-production test_content pdf_books
+sphinx-production:
 	CODE_SERVER_URL="https://cloudchecker.learn.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-site-staging: cleanall webpack-staging test_content pdf_books
+sphinx-staging:
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+
+# Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
+site: cleanall webpack-production sphinx-production test_content pdf_books
+	@echo Building $@
+
+site-staging: cleanall webpack-staging sphinx-staging test_content pdf_books
+	@echo Building $@
 
 site-testing: cleantest
 	FRONTEND_TESTING=true $(SPHINXBUILD) -M html $(TEST_CONTENT) \
@@ -154,25 +160,83 @@ site-testing: cleantest
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
 
-pdf_books: $(BOOKS)
-$(BOOKS):
-	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname $@))))
-	$(eval SPHINX_PDF := $(shell basename $(shell dirname $@)).pdf)
-	$(eval SPHINX_TITLE := $(shell cat $@/conf.txt | grep title | sed -e 's#title=##'))
-	$(eval SPHINX_AUTHOR := $(shell cat $@/conf.txt | grep author | sed -e 's#author=##'))
-	$(eval SPHINX_COVER_PAGE := $(shell cat $@/conf.txt | grep cover_page | sed -e 's#cover_page=##'))
-	$(eval SPHINX_VERSION := $(shell cat $@/conf.txt | grep version | sed -e 's#version=##'))
-	@mkdir -p $(BUILDDIR)/pdf_books/$(SPHINX_DIR)
+PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
+
+%.pdf:
+	@echo Building $@
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
+	$(eval SPHINX_PDF := $(shell basename $@ .pdf))
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF))
+	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
+	@mkdir -p $(PDF_BOOKS_DIR)/$(SPHINX_DIR)
 	@mkdir -p $(BUILDDIR)/latex
-	@[ -n "$(SPHINX_COVER_PAGE)" ] && cp $@/$(SPHINX_COVER_PAGE) $(BUILDDIR)/latex || echo "PDF: no cover page available for $(SPHINX_PDF)"
-	@export SPHINX_TITLE="$(SPHINX_TITLE)"; \
-	  export SPHINX_AUTHOR="$(SPHINX_AUTHOR)"; \
-	  export SPHINX_COVER_PAGE="$(SPHINX_COVER_PAGE)"; \
-	  export SPHINX_VERSION="$(SPHINX_VERSION)"; \
+	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
-	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $@ \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $(BUILDDIR)/pdf_books/$(SPHINX_DIR)/$(SPHINX_PDF)
+	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
+
+# Generate list: PDF_BOOKS
+$(foreach book_dir, $(BOOKS), \
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
+	$(eval SPHINX_PDF := $(shell basename $(shell dirname ${book_dir})).pdf) \
+	$(eval PDF_BOOKS += $(PDF_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF)) \
+	)
+
+pdf_books: $(PDF_BOOKS)
+	@echo $@ completed.
+
+EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
+
+%.epub:
+	@echo Building $@ EPUB
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
+	$(eval SPHINX_EPUB := $(shell basename $@ .epub))
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB))
+	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
+	@mkdir -p $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)
+	@rm   -rf $(BUILDDIR)/epub
+	@mkdir -p $(BUILDDIR)/epub/_static
+	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
+	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
+	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
+
+# Generate list: EPUB_BOOKS
+$(foreach book_dir, $(BOOKS), \
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
+	$(eval SPHINX_EPUB := $(shell basename $(shell dirname ${book_dir})).epub) \
+	$(eval EPUB_BOOKS += $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB)) \
+	)
+
+epub_books: $(EPUB_BOOKS)
+	@echo $@ completed.
+
+AZW3_BOOKS_DIR := $(BUILDDIR)/azw3_books
+
+$(AZW3_BOOKS_DIR)/%.azw3: $(EPUB_BOOKS_DIR)/%.epub
+	@echo Building $@
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
+	@mkdir -p $(AZW3_BOOKS_DIR)/$(SPHINX_DIR)
+	@ebook-convert $^ $@ \
+		--expand-css \
+		--keep-ligatures \
+		--filter-css "margin-top,margin-bottom" \
+		--pretty-print \
+		--prefer-metadata-cover \
+		--minimum-line-height 100 \
+		--extra-css $(MKFILE_DIR)/azw3_style.css \
+		--output-profile kindle
+
+$(foreach book_dir, $(BOOKS), \
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
+	$(eval SPHINX_AZW3 := $(shell basename $(shell dirname ${book_dir})).azw3) \
+	$(eval AZW3_BOOKS += $(AZW3_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_AZW3)) \
+	)
+
+azw3_books: $(AZW3_BOOKS)
+	@echo $@ completed.
 
 cleanall:
 	@rm -rf "$(BUILDDIR)"
@@ -189,4 +253,5 @@ cleantest:
 	$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-.PHONY: Makefile help test_content test_engine pdf_books $(BOOKS)
+.PHONY: Makefile help test_content test_engine pdf_books epub_books \
+	azw3_books $(BOOKS)

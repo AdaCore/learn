@@ -48,3 +48,12 @@ Ada 2022: What's New
 
     chapters/introduction
     chapters/image_attribute
+    chapters/image_redefine
+    chapters/user_defined_literals
+    chapters/array_aggregates
+    chapters/container_aggregates
+    chapters/delta_aggregates
+    chapters/assignment_target
+    chapters/enum_val
+    chapters/big_numbers
+    chapters/importing_variadic_functions

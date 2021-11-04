@@ -1,0 +1,108 @@
+.. include:: ../../global.txt
+
+Redefining the :ada:`'Image` attribute
+======================================
+
+In Ada 2022 you can redefine :ada:`'Image` attribute for your type.
+Corresponding syntax has been changed several times. Let's see how
+does it work in GNAT Community 2021.
+
+.. note::
+
+    Attribute :ada:`'Image` redefinition is supported by
+
+    * GNAT Community Edition 2021 (using Text_Buffers)
+    * GNAT Community Edition 2020 (using Text_Output.Utils)
+    * GCC 11 (using Text_Output.Utils)
+
+As an example, let's redefine :ada:`'Image` attribute for the location
+in a source code. To do this we should provide a new :ada:`Put_Image`
+aspect on the type:
+
+.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Image_Redefine
+
+   !main.adb
+   pragma Ada_2022;
+
+   with Ada.Text_IO;
+   with Ada.Strings.Text_Buffers;
+
+   procedure Main is
+
+      type Source_Location is record
+         Line   : Positive;
+         Column : Positive;
+      end record
+        with Put_Image => My_Put_Image;
+
+      procedure My_Put_Image
+        (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
+         Value  : Source_Location);
+
+      procedure My_Put_Image
+        (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
+         Value  : Source_Location)
+      is
+         Line   : constant String := Value.Line'Image;
+         Column : constant String := Value.Column'Image;
+         Result : constant String :=
+           Line (2 .. Line'Last) & ':' & Column (2 .. Column'Last);
+      begin
+          Output.Put (Result);
+      end My_Put_Image;
+
+      Line_10 : constant Source_Location := (Line => 10, Column => 1);
+
+   begin
+      Ada.Text_IO.Put_Line (Line_10'Image);
+   end Main;
+
+What's the Root_Buffer_Type?
+----------------------------
+
+Let's see how it is defined in :ada:`Ada.Strings.Text_Buffers` package.
+
+.. code-block:: ada
+
+   type Root_Buffer_Type is abstract tagged limited private;
+
+   procedure Put
+     (Buffer : in out Root_Buffer_Type;
+      Item   : in     String) is abstract;
+
+Besides :ada:`Put` there are also :ada:`Wide_Put`, :ada:`Wide_Wide_Put`,
+:ada:`Put_UTF_8`, :ada:`Wide_Put_UTF_16`. And :ada:`New_Line`,
+:ada:`Increase_Indent`, :ada:`Decrease_Indent`.
+
+Outdated draft implementation
+-----------------------------
+
+GNAT Community Edition 2020 and GCC 11 both provide the draft
+implementation that is incompatible with Ada 2022 specification.
+In that case :ada:`My_Put_Image` looks like:
+
+.. code-block:: ada
+
+   procedure My_Put_Image
+     (Sink  : in out Ada.Strings.Text_Output.Sink'Class;
+      Value : Source_Location)
+   is
+      Line   : constant String := Value.Line'Image;
+      Column : constant String := Value.Column'Image;
+      Result : constant String :=
+        Line (2 .. Line'Last) & ':' & Column (2 .. Column'Last);
+   begin
+       Ada.Strings.Text_Output.Utils.Put_UTF_8 (Sink, Result);
+   end My_Put_Image;
+
+
+References
+----------
+
+* `ARM 4.10 Image Attributes`_
+* AI12-0020-1_
+* AI12-0384-2_
+
+ .. _`ARM 4.10 Image Attributes`: http://www.ada-auth.org/standards/2xaarm/html/AA-4-10.html
+ .. _AI12-0020-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0020-1.TXT
+ .. _AI12-0384-2: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ai12s/AI12-0384-2.TXT
