@@ -5,7 +5,7 @@ Multi-Language Development
 
 Software projects often involve more than one programming language. Typically that's because there is existing code that already does something we need done and, for that specific code, it doesn't make economic sense to redevelop it in some other language. Consider the rotor blade model in a high-fidelity helicopter simulation. Nobody touches the code for that model except for a few specialists, because the code is extraordinarily complex. (This complexity is unavoidable because a rotor blade's dynamic behavior is so complex. You can't even model it as one physical piece because the tip is traveling so much faster than the other end.) Complex and expensive models like that are a simulator company's crown jewels; their cost is meant to be amortized over as many projects as possible. Nobody would imagine redeveloping it simply because a new project is to be written in a different language.
 
-Therefore, Ada includes extensive facilities to "import" foreign entities into Ada code, and to "export" Ada entities to code in foreign languages. In practice, these entities consist of data and subprograms, but the language doesn't impose many restrictions. The facilities are so useful that Ada has been used purely as "glue code" to allow code written in two other programming languages to be used together.
+Therefore, Ada includes extensive facilities to "import" foreign entities into Ada code, and to "export" Ada entities to code in foreign languages. The facilities are so useful that Ada has been used purely as "glue code" to allow code written in two other programming languages to be used together.
 
 You're already seen an introduction to Ada and C code working together in the "Interfacing" section of the Ada introductory course, https://learn.adacore.com/courses/intro-to-ada/chapters/interfacing_with_c.html. If you have not seen that material, be sure to see it first. We will cover some further details not already discussed there, and then go into the details of the facilities not covered elsewhere, but we assume you're familiar with it.
 
@@ -127,6 +127,8 @@ We would specify additional aspects beyond that of :ada:`Convention` but these h
 Aspect/Pragma Import and Export
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+You've already seen these aspects in the Ada Introduction course, but for completeness: :ada:`Import` brings a foreign entity into Ada code, and :ada:`Export` makes an Ada entity available to foreign code. In practice, these entities consist of objects and subprograms, but the language doesn't impose many restrictions. It is up to the vendor to decide what makes sense for their specific target.
+
 The aspects :ada:`Import` and :ada:`Export` are so-called Boolean aspects because their value is either :ada:`True` or :ada:`False`. For example:
 
 .. code-block:: ada
@@ -142,6 +144,26 @@ For any Boolean-valued aspect the default is :ada:`True` so you only need to giv
    Obj : Matrix with
       Export,
       ...
+      
+Recall that objects of some types are initialized automatically during the objects' elaboration, unless they are explicitly initialized as part of their declarations. Access types are like that, for example. Objects of these types are default initialized to :ada:`null` as part of ensuring that their values are always meaningful (absent unchecked conversion). 
+
+.. code-block:: ada
+
+   type Reference is access Integer;
+
+   Obj : Reference;
+   
+In the above the value of :ada:`Obj` is :ada:`null`, just as if we had explicitly set it that way.
+
+But that initialization is a problem if we are importing an object of an access type. Presumably the value is set by the foreign code, so automatic initialization to null would overwrite the incoming value. Therefore, the language guarantees that implicit initialization won't be applied to imported objects.
+
+.. code-block:: ada
+
+   type Reference is access Integer;
+
+   Obj : Reference with Import;
+
+Now the value of :ada:`Obj` is whatever the foreign code sets it to, and is not, in other words, overwritten during elaboration of the declaration.
 
 Aspect/Pragma External_Name and Link_Name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -447,15 +469,16 @@ Now to the more complicated cases. First, some C ABIs (application binary interf
 On the C side we expect that p is passed by copy and indeed that is how we find it. That said, passing record to structs by reference is the more common mechanism.
 
 Next, consider passing array values, both to and from C. When passing an array value to C, remember that Ada array types have bounds. Those bounds are either specified at compile time when they are declared, or, for unconstrained array types, specified elsewhere, including at run-time.
-Array types are not first-class types in C, and C has no notion of unconstrained array types, or even of upper bounds. Therefore, passing an unconstrained array type value is a little tricky. One approach is to avoid them. Instead, declare a large constrained array as a subtype of the unconstrained array type, and then just pass the actual upper bound you want, along with the array object itself.
+
+Array types are not first-class types in C, and C has no notion of unconstrained array types, or even of upper bounds. Therefore, passing an unconstrained array type value is interesting. One approach is to avoid them. Instead, declare a sufficiently large constrained array as a subtype of the unconstrained array type, and then just pass the actual upper bound you want, along with the array object itself.
 
 .. code-block:: ada
 
    type List is array (Integer range <>) of Interfaces.C.int;
 
-   subtype Constrained_List is List (Positive);
+   subtype Constrained_List is List (1 .. 100);
 
-   procedure P (V : Constrained_List;  Size : Int);
+   procedure P (V : Constrained_List;  Size : Interfaces.C.int);
    pragma Import (C, P, "p");
 
    Obj : Constrained_List := (others => 42);  -- arbitrary values
@@ -469,28 +492,30 @@ With that, we can just pass the value by reference as usual on the C side:
      // whatever
    }
 
-But really, it would work to use the unconstrained array type as the formal parameter type instead:
+But that's assuming we know how many array components are sufficient from the C code's point of view. In the example above we'll pass a value up to 100 to the :ada:`Size` parameter and hope that is sufficient.
+
+Really, it would work to use the unconstrained array type as the formal parameter type instead:
 
 .. code-block:: ada
 
    type List is array (Integer range <>) of Interfaces.C.int;
 
-   procedure P (V : List;  Size : Int);
+   procedure P (V : List;  Size : Interfaces.C.int);
    pragma Import (C, P, "p");
 
-The C function wouldn't change. But why does this work? With values of unconstrained array types, the bounds are part of the value. Typically they are store just ahead of the first component, but it is implementation-defined. So why doesn't the above accidentally pass the bounds instead of the first array component itself? It works because we are guaranteed by the Ada language that passing an array will pass (the address of) the components, not the bounds, even for Ada unconstrained array types.
+The C function profile wouldn't change. But why does this work? With values of unconstrained array types, the bounds are stored with the value. Typically they are stored just ahead of the first component, but it is implementation-defined. So why doesn't the above accidentally pass the bounds instead of the first array component itself? It works because we are guaranteed by the Ada language that passing an array will pass (the address of) the components, not the bounds, even for Ada unconstrained array types.
 
-Now for the other direction: passing an array from C to Ada. Here the lack of bounds information on the C side really makes a difference. We can't just pass the array by itself because that would not include the bounds, unlike an Ada call to an Ada routine. In this case the approach is the first alternative described above, in which we declare a very large subtype and then pass the bounds explicitly:
+Now for the other direction: passing an array from C to Ada. Here the lack of bounds information on the C side really makes a difference. We can't just pass the array by itself because that would not include the bounds, unlike an Ada call to an Ada routine. In this case the approach is the similar to the first alternative described above, in which we declare a very large array and then pass the bounds explicitly:
 
 .. code-block:: ada
 
-   type List is array (0 .. Integer'Last) of int;
+   type List is array (Natural) of int;
    --  DO NOT DECLARE AN OBJECT OF THIS TYPE
 
-   procedure P (V : List; Size : int);
+   procedure P (V : List; Size : Interfaces.C.int);
    pragma Export (C, P, "p");
 
-   procedure P (V : List; Size : int) is
+   procedure P (V : List; Size : Interfaces.C.int) is
    begin
       for J in 0 .. Size – 1 loop
          -- whatever
@@ -505,7 +530,7 @@ Now for the other direction: passing an array from C to Ada. Here the lack of bo
 
    p (x, 100);  // call to Ada routine, passing x
 
-The fundamental idea is to declare an Ada type big enough to handle anything sent from the C side. Just be sure never to declare an object of that type. You'll almost certainly run out of storage on an embedded system.
+The fundamental idea is to declare an Ada type big enough to handle anything conceivably sent from the C side. Subtype :ada:`Natural` means :ada:`0 .. Integer'Last` so :ada:`List` is quite large indeed. Just be sure never to declare an object of that type. You'll probably run out of storage on an embedded target.
 
 Earlier we said that it is the Ada type that determines how parameters are passed, and that scalars and elementary types are always passed by copy. For mode :ada:`in` that's simple, the copy to the C formal parameter is done and that's all there is to it. But suppose the mode is instead :ada:`out` or :ada:`in out`? In that case the presumably updated value must be returned to the caller, but C doesn't do that by copy. Here the compiler will come to the rescue and make it work, transparently. Specifically, we just declare the Ada subprogram's formal parameter type as usual, but on the C formal we use a reference. We're talking about scalar and elementary types so let's use :ada:`int` arbitrarily. We make the mode :ada:`in out` but :ada:`out` would also serve:
 
