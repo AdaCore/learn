@@ -15,7 +15,7 @@ All these interfacing capabilities are defined in Annex B of the language standa
 
 
 General Interfacing
----------------------
+-------------------
 
 In the "Interfacing" section of the Ada introductory course you saw that Ada defines aspects and pragmas for working with foreign languages. These aspects and pragmas are functionally interchangeable, and we will use whichever one of the two that is most convenient in our discussion. The pragmas are officially "obsolescent," but that merely means that a newer approach is available, in this case the corresponding aspects. You can use either one without concern for future support because language constructs that are obsolescent are not removed from the language. Any compiler that supports such constructs will almost certainly support them forever, for the sake of not invalidating existing customers' code. The pragmas have been in the language since Ada 95 so there's a lot of existing code using them. Changing the compiler isn't cost-free, after all, so why spend the money to potentially lose a customer? Likewise, a brand new compiler will also probably support them, for the sake of potentially gaining a customer.
 
@@ -30,7 +30,7 @@ Subprograms often have a separate declaration. Sometimes that's required, for ex
 For data that are imported or exported, we'll have the declaration of the object in Ada to which we can apply the necessary interfacing aspects/pragmas. But we will also have the types for these objects, and as you will see, the types can be part for interfacing too.
 
 
-Aspect/Pragma :ada:`Convention`
+Aspect/Pragma Convention
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 As you saw in the "Interfacing" section of the Ada introductory course, https://learn.adacore.com/courses/intro-to-ada/chapters/interfacing_with_c.html, when importing and exporting you'll also specify the "convention" for the entity in question. The pragmas for importing and exporting include a parameter for this purpose. When using the aspects, you'll specify the :ada:`Convention` aspect too.
@@ -124,8 +124,8 @@ Intrinsic subprograms are a good way to access interesting capabilities of the t
 We would specify additional aspects beyond that of :ada:`Convention` but these have not yet been discussed. That's what the ellipses indicate in the various examples above.
 
 
-Aspect/Pragma :ada:`Import` and :ada:`Export`
-~~~~~~~~~~~~~~~~~~~~~~~~
+Aspect/Pragma Import and Export
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The aspects :ada:`Import` and :ada:`Export` are so-called Boolean aspects because their value is either :ada:`True` or :ada:`False`. For example:
 
@@ -143,8 +143,8 @@ For any Boolean-valued aspect the default is :ada:`True` so you only need to giv
       Export,
       ...
 
-Aspect/Pragma :ada:`External_Name` and :ada:`Link_Name`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Aspect/Pragma External_Name and Link_Name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For an entity with a :ada:`True` :ada:`Import` or :ada:`Export` aspect, we can also specify a so-called external name or link name. These names are specified via aspects :ada:`External_Name` and :ada:`Link_Name` respectively.
 
@@ -212,8 +212,8 @@ The first pragma parameter is for the convention. The next parameter, the Entity
 You will see later that there are other convention identifiers as well, but we will wait for the Specific Interfacing section to introduce those.
 
 
-Package :ada:`Interfaces`
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Package Interfaces
+~~~~~~~~~~~~~~~~~~
 
 Package :ada:`Interfaces` must be provided by all Ada implementations. The package is intended to provide types that reflect the actual numeric types provided by the target hardware. Of course, the standard has no way to know what hardware is involved, therefore the actual content is implementation-defined. But even so, it is possible standardize the names for these types, and that is what the language standard does.
 
@@ -309,8 +309,8 @@ Even though we do not consider C to be appropriate for large development project
 
 What about C++? Interfacing to C++ is tricky compared to C, because of the vendor-defined name-mangling, automatic invocations of constructors and destructors, exceptions, and so on.  Generally, interfacing with C++ code can be facilitated by preventing much of those difficulties using the "extern "C" {... }" linkage-specification. Doing so then makes the bracketed C++ code look like C, so the C interfacing facilities then can be used.
 
-Package :ada:`Interfaces.C`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Package Interfaces.C
+~~~~~~~~~~~~~~~~~~~~
 
 The child package :ada:`Interfaces.C` supports interfacing with units written in the C programming language. Support is in the form of Ada constants and types. The constants correspond to C’s "limits.h" header file, and the Ada types correspond to types for C's int, short, long
 unsigned, unsigned_short, unsigned_long, unsigned_char, size_t, and so on. There is also support for converting Ada's type String to/from char_array, and similarly for type Wide_String, etc.
@@ -523,8 +523,8 @@ There are other aspects to interfacing with C, such as variadic functions that t
 
 Next, we examine the child packages under :ada:`Interfaces.C`. These packages are not used as much as the parent :ada:`Interfaces.C` package so we will provide an overview. You can look up the contents within GNAT Studio or the Ada language standard.
 
-Package :ada:`Interfaces.C.Strings`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Package Interfaces.C.Strings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Package :ada:`Interfaces.C` declares types and subprograms allowing an Ada program to allocate, reference, update, and free C-style strings. In particular, the private type :ada:`chars_ptr` corresponds to a common use of :ada:`char *` in C programs, and an object of this type can be passed to imported subprograms for which :ada:`char *` is the type of the argument of the C function.  A subset of the package content is as follows:
 
@@ -562,16 +562,16 @@ Note that allocation might be via malloc, or via Ada’s allocator :ada:`new`. I
 An amusing point is that you can overwrite the end of the char array just like you can in C, via procedure :ada:`Update`. The :ada:`Check` parameter indicates whether overwriting past the end is checked. The default is :ada:`True`, unlike in C, but you could pass an explicit :ada:`False` if you felt the need to do something questionable.
 
 
-Package :ada:`Interfaces.C.Pointers`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Package Interfaces.C.Pointers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The generic package :ada:`Interfaces.C.Pointers` allows us to perform C-style operations on pointers. It includes an access type named :ada:`Pointer`, various :ada:`Value` functions that dereference a :ada:`Pointer` value and deliver the designated array, several pointer arithmetic operations, and "copy" procedures that copy the contents of a source pointer into the array designated by a destination pointer.
 
 To be frank I don't find this facility all that useful, given that arrays are first-class types and that address arithmetic can be done in Ada.
 
 
-Package :ada:`Interfaces.Fortran`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Package Interfaces.Fortran
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Like Interfaces.C, package Interfaces.Fortran defines Ada types to be used when working with subprograms using the Fortran calling convention. These types have representations that are identical to the default representations of the Fortran intrinsic types Integer, Real, Double Precision, Complex, Logical, and Character in some supported Fortran implementation. And like the C package, the ways that parameters of various types are passed are also specified.
 
@@ -589,7 +589,7 @@ The right way is to express the precise assembly code sequence explicitly within
 
 As an example of the need for this capability, consider the GPIO (General Purpose I/O) port on an STM32 Arm microcontroller. Each port contains 16 individual I/O pins, each of which can be configured as an independent discrete input or output, or as a control line for a device, with pull-up or pull-down registers, with different clock speeds, and so on. Different on-chip devices use various collections of pins in ways specific to the devices, and require exclusive assignment of the pins. However, any given pin can be used by several different devices. For example, pin 11 on port A ("PA11") can be used by USART #1 as the clear-to-send ("CTS) line, or the CAN #1 bus Rx line, or Channel 4 of Timer 1, among others. Therefore, one of the responsibilities of the system designer is to allocate pins to devices, ensuring that they are allocated uniquely. It is difficult to debug the case in which a pin is accidentally configured for one device and then reconfigured for use with another device (assuming the first device remains in use). To help ensure exclusive allocations, every GPIO port on this Arm implementation has a way of locking the configuration of each I/O pin. That way, some other part of the software can't successfully change the configuration accidentally, for use with for some other device. Even if the same configuration was to be used for another device, the lock prevents the accidental update so we find out about the unintentional sharing.
 
-To lock a pin on a port requires a special sequence of reads and writes to a GPIO register for that port. A specific bit pattern is required during the reads and writes. The sequence and bit pattern is such that accidentally locking the pin is highly unlikely. 
+To lock a pin on a port requires a special sequence of reads and writes to a GPIO register for that port. A specific bit pattern is required during the reads and writes. The sequence and bit pattern is such that accidentally locking the pin is highly unlikely.
 
 Once we see how to express assembly language sequences in general we will see how to get the necessary sequence to lock a port/pin pair. Unfortunately, although you can express exactly the code sequence required, such a sequence of assembly language instructions is clearly target hardware-specific. That means portability is inherently limited. Moreover, the syntax for expressing it varies with the vendor, even for the same target hardware. Being able to insert it at the Ada source level doesn't help with either portability issue. You should understand that the use-case for machine code insertion is for small |mdash| very small |mdash| sequences. Otherwise you would write the code in assembly language directly, in a separate file. That might obtain a degree of vendor independence, at least for the given target, but not necessarily. The use of inline assembler is intended for cases in which a separate file containing assembly language is not simpler.
 
@@ -603,7 +603,7 @@ Package :ada:`System.Machine_Code` contains types whose values provide a way of 
 
    Short_Instruction'(Command => HLT);
 
-Each of :ada:`Short_Instruction`, :ada:`Command`, and :ada:`HLT` are defined by the vendor in this hypothetical version of package :ada:`System.Machine_Code`. You can see why we say that it is both a statement (note the semicolon) and a qualified expression (note the apostrophe). 
+Each of :ada:`Short_Instruction`, :ada:`Command`, and :ada:`HLT` are defined by the vendor in this hypothetical version of package :ada:`System.Machine_Code`. You can see why we say that it is both a statement (note the semicolon) and a qualified expression (note the apostrophe).
 
 Code statements must appear in a subprogram body, after the :ada:`begin`. Only code statements are allowed in such a body, and no exception handlers are allowed. The complete example would be as follows:
 
@@ -643,7 +643,7 @@ In GNAT, the content of :ada:`System.Machine_Code` looks something like this:
        Clobber  : String  := "";
        Volatile : Boolean := False) return Asm_Insn;
 
-The :ada:`Template` parameter in a string containing one or assembly language op-codes. :ada:`Outputs` provides mappings from registers to source-level entities that are updated by the assembly statement(s). :ada:`Inputs` provides mappings from source-level entities to registers for inputs. :ada:`Volatile`, when True, tells the compiler not to optimize the call away, and :ada:`Clobber` tells the compiler which registers, or memory, are altered by the instruction. ("Clobber" is colloquial English for "destroy.") That last is important because the compiler was possibly already using some of those registers so it will need to restore them after the call. 
+The :ada:`Template` parameter in a string containing one or assembly language op-codes. :ada:`Outputs` provides mappings from registers to source-level entities that are updated by the assembly statement(s). :ada:`Inputs` provides mappings from source-level entities to registers for inputs. :ada:`Volatile`, when True, tells the compiler not to optimize the call away, and :ada:`Clobber` tells the compiler which registers, or memory, are altered by the instruction. ("Clobber" is colloquial English for "destroy.") That last is important because the compiler was possibly already using some of those registers so it will need to restore them after the call.
 
 We could say, for example, the following, taking all the defaults except for :ada:`Volatile`:
 
@@ -677,9 +677,9 @@ There are 16 GPIO pins per port, represented by the lower 16 bits of the registe
 
 Graphically that looks like this:
 
-.. image:: images/lckr_and_lcck_for_gpio_pin locking.png
+.. image:: images/lckr_and_lcck_for_gpio_pin_locking.png
   :width: 600
-  :alt: Memory-mapped device with Ada object declared at specific address
+  :alt: gpio pin locking register
 
 Therefore, the Ada types are:
 
@@ -689,9 +689,9 @@ Therefore, the Ada types are:
       (Pin_0, Pin_1, Pin_2,  Pin_3,  Pin_4,  Pin_5,  Pin_6,  Pin_7,
        Pin_8, Pin_9, Pin_10, Pin_11, Pin_12, Pin_13, Pin_14, Pin_15);
 
-   for GPIO_Pin use (Pin_0  => 16#0001#, 
-                     Pin_1  => 16#0002#, 
-                     Pin_2  => 16#0004#, 
+   for GPIO_Pin use (Pin_0  => 16#0001#,
+                     Pin_1  => 16#0002#,
+                     Pin_2  => 16#0004#,
                      ...
                      Pin_15 => 16#8000#);
 
@@ -705,7 +705,7 @@ With that in place, let's lock a pin. A specific sequence is required to set a p
 4) read the entire LCKR register
 5) read the entire LCKR register again (optional)
 
-Throughout the sequence the same value for the lower 16 bits of the word must be maintained (i.e., the pin mask), including when clearing the LCCK bit in the upper half.  
+Throughout the sequence the same value for the lower 16 bits of the word must be maintained (i.e., the pin mask), including when clearing the LCCK bit in the upper half.
 
 If we wrote this in Ada it would look like this:
 
