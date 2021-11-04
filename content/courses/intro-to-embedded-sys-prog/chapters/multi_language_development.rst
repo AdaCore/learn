@@ -27,7 +27,7 @@ If we are exporting, then the entity is implemented in Ada. For a subprogram tha
 
 Subprograms often have a separate declaration. Sometimes that's required, for example when we want to include a subprogram as part of a package's API, but at other times it is optional. Remember that a subprogram body acts as a corresponding declaration when there is no separate declaration defined. Thus, either way, we have a subprogram declaration available for the interfacing aspects and/or pragmas.
 
-For data that are imported or exported, we'll have the declaration of the object in Ada to which we can apply the necessary interfacing aspects/pragmas. But we will also have the types for these objects, and as you will see, the types can be part for interfacing too.
+For data that are imported or exported, we'll have the declaration of the object in Ada to which we can apply the necessary interfacing aspects/pragmas. But we will also have the types for these objects, and as you will see, the types can be part of interfacing too.
 
 
 Aspect/Pragma Convention
@@ -144,15 +144,15 @@ For any Boolean-valued aspect the default is :ada:`True` so you only need to giv
    Obj : Matrix with
       Export,
       ...
-      
-Recall that objects of some types are initialized automatically during the objects' elaboration, unless they are explicitly initialized as part of their declarations. Access types are like that, for example. Objects of these types are default initialized to :ada:`null` as part of ensuring that their values are always meaningful (absent unchecked conversion). 
+
+Recall that objects of some types are initialized automatically during the objects' elaboration, unless they are explicitly initialized as part of their declarations. Access types are like that, for example. Objects of these types are default initialized to :ada:`null` as part of ensuring that their values are always meaningful (absent unchecked conversion).
 
 .. code-block:: ada
 
    type Reference is access Integer;
 
    Obj : Reference;
-   
+
 In the above the value of :ada:`Obj` is :ada:`null`, just as if we had explicitly set it that way.
 
 But that initialization is a problem if we are importing an object of an access type. Presumably the value is set by the foreign code, so automatic initialization to null would overwrite the incoming value. Therefore, the language guarantees that implicit initialization won't be applied to imported objects.
@@ -184,7 +184,7 @@ An external name is a string value indicating the name for some entity as known 
      Convention    => Intrinsic,
      External_Name => "__sync_bool_compare_and_swap_1";
 
-The :ada:`External_Name` and :ada:`Link_Name` values are strings because the foreign unit names don't necessary follow the Ada rules for identifiers (the leading underscores in this case). Note that the ending digit in the name above is different as well.
+The :ada:`External_Name` and :ada:`Link_Name` values are strings because the foreign unit names don't necessary follow the Ada rules for identifiers (the leading underscores in this case). Note that the ending digit in the name above is different from the declared Ada name.
 
 Usually, the name of the imported or exported entity is precisely known and hence exactly specified by :ada:`External_Name`. Sometimes, however, a compilation system may have a linker "preprocessor" that augments the name actually used by the linkage step. For example, an implementation might always prepend "_" and then pass the result to the system linker. In that case we don't want to specify the exact name. Instead, we want to provide the "starting point" for the name modification. That's the purpose of the aspect :ada:`Link_Name`.
 
@@ -192,13 +192,13 @@ If you don't specify either :ada:`External_Name` or :ada:`Link_Name` the compila
 
 As you can see, it really wouldn't make sense to specify both :ada:`External_Name` and :ada:`Link_Name` since the semantics of the two conflict. But if both are specified for some reason, the :ada:`External_Name` value is ignored.
 
-Note that :ada:`Link_Name` cannot be specified for :ada:`Intrinsic` subprograms because there is no actual unit being linked into the executable |mdash| intrinsics are built-in. In this case you must use the :ada:`External_Name`.
+Note that :ada:`Link_Name` cannot be specified for :ada:`Intrinsic` subprograms because there is no actual unit being linked into the executable, because intrinsics are built-in. In this case you must specify the :ada:`External_Name`.
 
 Finally, because you will see a lot the pragma usage we should go into enough detail so that you know what you're looking at when you see them.
 
 Pragma :ada:`Import` and pragma :ada:`Export` work almost like a subprogram call. Parameters cannot be omitted unless named notation is used. Reordering the parameters is not permitted, however, unlike subprogram calls.
 
-The syntax is as follows. We show Import, but Export has identical parameters:
+The BNF syntax is as follows. We show Import, but Export has identical parameters:
 
 .. code-block:: ada
 
@@ -208,8 +208,7 @@ The syntax is as follows. We show Import, but Export has identical parameters:
     [, [External_Name =>] external_name_string_expression]
     [, [Link_Name =>] link_name_string_expression]);
 
-
-As you can see, the parameters correspond to the individual aspects :ada:`Convention`, :ada:`External_Name`, and :ada:`Link_Name`. When using aspects you don't need to say which Ada entity you're applying the aspects to, because the aspects are part of the entity declaration syntax. Here, the pragma is distinct from the declaration so we must specify what's being imported or exported via the :ada:`Entity` parameter. That's the declared Ada name, in other words. Note that both the :ada:`External_Name` and :ada:`Link_Name` parameters are optional.
+As you can see, the parameters correspond to the individual aspects :ada:`Convention`, :ada:`External_Name`, and :ada:`Link_Name`. When using aspects you don't need to say which Ada entity you're applying the aspects to, because the aspects are part of the entity declaration syntax. In contrast, the pragma is distinct from the declaration so we must specify what's being imported or exported via the :ada:`Entity` parameter. That's the declared Ada name, in other words. Note that both the :ada:`External_Name` and :ada:`Link_Name` parameters are optional.
 
 Here's that same built-in function, using the pragma to import it:
 
@@ -334,8 +333,7 @@ What about C++? Interfacing to C++ is tricky compared to C, because of the vendo
 Package Interfaces.C
 ~~~~~~~~~~~~~~~~~~~~
 
-The child package :ada:`Interfaces.C` supports interfacing with units written in the C programming language. Support is in the form of Ada constants and types. The constants correspond to C’s "limits.h" header file, and the Ada types correspond to types for C's int, short, long
-unsigned, unsigned_short, unsigned_long, unsigned_char, size_t, and so on. There is also support for converting Ada's type String to/from char_array, and similarly for type Wide_String, etc.
+The child package :ada:`Interfaces.C` supports interfacing with units written in the C programming language. Support is in the form of Ada constants and types, and some subprograms. The constants correspond to C’s "limits.h" header file, and the Ada types correspond to types for C's int, short, long unsigned, unsigned_short, unsigned_long, unsigned_char, size_t, and so on. There is also support for converting Ada's type String to/from char_array, and similarly for type Wide_String, etc.
 
 It's a large package so we will elide parts. The idea is to give you a feel for what's there. If you want the details, see either the Ada reference manual or bring up the source code in GNAT Studio.
 
@@ -417,7 +415,7 @@ Now the object size will be 32, the same as :ada:`int`.
 
 Speaking of enumeration types, note that Ada 2022 added a boolean type to :ada:`Interfaces.C` named :ada:`C_Bool` to match that of C99, so you should use it instead of Ada's :ada:`Boolean` type for formal parameters.
 
-A simple Ada record type is compatible with a C struct, but remember that the Ada compiler is allowed to reorder the record components. The compiler would do that if it saw that the layout was inefficient, but the point here is that the compiler could do it silently. As a result, you should specify the record layout explicitly using a record representation clause, matching that of the C struct in question. Then there will be no question of the layouts matching. Once your record types get more complicated, for example with discriminants or tagged record extensions, things get tricky. Your best bet it to stick with the simple cases when interfacing to C.
+A simple Ada record type is compatible with a C struct, but remember that the Ada compiler is allowed to reorder the record components. The compiler would do that if it saw that the layout was inefficient, but the point here is that the compiler could do it silently. As a result, you should specify the record layout explicitly using a record representation clause, matching the layout of the C struct in question. Then there will be no question of the layouts matching. Once your record types get more complicated, for example with discriminants or tagged record extensions, things get tricky. Your best bet it to stick with the simple cases when interfacing to C.
 
 Some types that you might think would correspond do not, at least not necessarily. For example, an Ada access type's value might be represented as a simple address, but it might not. In GNAT, an access value designating a value of some unconstrained array type (e.g., String) is comprised of two addresses, by default. One designates the characters and the other designates the bounds. You can override that with a pragma, but you must know to do so. For example, if we run the following program, we will see that the object size for the access type :ada:`Name` is twice the object size of :ada:`System.Address`:
 
@@ -435,13 +433,13 @@ Some types that you might think would correspond do not, at least not necessaril
       Put_Line (Name'Object_Size'Image);
    end Demo;
 
-Some Ada types simply have no corresponding type in C, such as record extensions, task types, and protected types. You'll have to pass those as an "opaque" type, usually as an address. It isn't clear that a C function would know what to do with values of these types, but the general notion of passing an opaque type as an address is useful and not uncommon.
+Some Ada types simply have no corresponding type in C, such as record extensions, task types, and protected types. You'll have to pass those as an "opaque" type, usually as an address. It isn't clear that a C function would know what to do with values of these types, but the general notion of passing an opaque type as an address is useful and not uncommon. Of course, that approach forgoes all type safety, so avoid it when possible.
 
-In addition to the types for the formal parameters, you'll also need to know how to pass the parameters. That can affect the subprogram's parameter profile. The text in Annex B for :ada:`Interfaces.C` specifies how parameters are to be passed back and forth between Ada and C so that your subprogram declarations can be portable. That's the approach for each supported programming language, i.e., in the discussion of the corresponding child package under :ada:`Interfaces`.
+In addition to the types for the formal parameters, you'll also need to know how parameters are passed to and from C functions. That affects the parameter profiles on both sides, Ada and C. The text in Annex B for :ada:`Interfaces.C` specifies how parameters are to be passed back and forth between Ada and C so that your subprogram declarations can be portable. That's the approach for each supported programming language, i.e., in the discussion of the corresponding child package under :ada:`Interfaces`.
 
 The rules are expressed in terms of scalar types, "elementary" types, array types, and record types. Remember that scalar types are composed of the discrete types and the real types, so we're talking about the signed and modular integers, enumerations, floating-point, and the two fixed-point types. The "elementary" types consist of the scalars and access types. The rules are fairly intuitive, but throw in Ada's access parameters and parameter modes and some subtleties arise. We won't cover all the various rules but will explore some of the subtleties.
 
-For, the easy cases: mode :ada:`in` scalar parameters, such as :ada:`int`, as simply passed by copy. Scalar parameters are passed by copy anyway in Ada so the mechanism aligns with C in a straightforward manner. A record type :ada:`T` is passed by reference, so on the C side we'd see :ada:`t*` where :ada:`t` is a C struct corresponding to :ada:`T`. A constrained array type in Ada with a component type :ada:`T` would correspond to a C formal parameter :ada:`t*` where :ada:`t` corresponds to :ada:`T`. An Ada access parameter :ada:`access T` corresponds on the C side to :ada:`t*` where :ada:`t` corresponds to :ada:`T`. And finally, a private type is passed according to the full definition of the type; the fact that it is private is just a matter of the controlling the client view, being private doesn't affect how it is passed. There are other simple cases, such as access-to-subprogram types, but we can leave that to the Annex.
+First, the easy cases: mode :ada:`in` scalar parameters, such as :ada:`int`, as simply passed by copy. Scalar parameters are passed by copy anyway in Ada so the mechanism aligns with C in a straightforward manner. A record type :ada:`T` is passed by reference, so on the C side we'd see :ada:`t*` where :ada:`t` is a C struct corresponding to :ada:`T`. A constrained array type in Ada with a component type :ada:`T` would correspond to a C formal parameter :ada:`t*` where :ada:`t` corresponds to :ada:`T`. An Ada access parameter :ada:`access T` corresponds on the C side to :ada:`t*` where :ada:`t` corresponds to :ada:`T`. And finally, a private type is passed according to the full definition of the type; the fact that it is private is just a matter of the controlling the client view, being private doesn't affect how it is passed. There are other simple cases, such as access-to-subprogram types, but we can leave that to the Annex.
 
 Now to the more complicated cases. First, some C ABIs (application binary interfaces) pass small structs by copy instead of by reference. That can make sense, in particular when the struct is small, say the size of an address or smaller. In that case there's no performance benefit to be had by passing a reference. When that situation applies, there is another convention we have not yet mentioned: :ada:`C_Pass_By_Copy`. As a result the record parameter will be passed by copy instead of the default, by reference, as long as the mode is :ada:`in`. For example:
 
@@ -466,9 +464,9 @@ Now to the more complicated cases. First, some C ABIs (application binary interf
 
    void f2 (R2 p);
 
-On the C side we expect that p is passed by copy and indeed that is how we find it. That said, passing record to structs by reference is the more common mechanism.
+On the C side we expect that p is passed by copy and indeed that is how we find it. That said, passing record values to structs by reference is the more common mechanism. Like arrays, records are typically larger than an address.
 
-Next, consider passing array values, both to and from C. When passing an array value to C, remember that Ada array types have bounds. Those bounds are either specified at compile time when they are declared, or, for unconstrained array types, specified elsewhere, including at run-time.
+Next, consider passing array values, both to and from C. When passing an array value to C, remember that Ada array types have bounds. Those bounds are either specified at compile time when they are declared, or, for unconstrained array types, specified elsewhere, at run-time.
 
 Array types are not first-class types in C, and C has no notion of unconstrained array types, or even of upper bounds. Therefore, passing an unconstrained array type value is interesting. One approach is to avoid them. Instead, declare a sufficiently large constrained array as a subtype of the unconstrained array type, and then just pass the actual upper bound you want, along with the array object itself.
 
@@ -503,7 +501,7 @@ Really, it would work to use the unconstrained array type as the formal paramete
    procedure P (V : List;  Size : Interfaces.C.int);
    pragma Import (C, P, "p");
 
-The C function profile wouldn't change. But why does this work? With values of unconstrained array types, the bounds are stored with the value. Typically they are stored just ahead of the first component, but it is implementation-defined. So why doesn't the above accidentally pass the bounds instead of the first array component itself? It works because we are guaranteed by the Ada language that passing an array will pass (the address of) the components, not the bounds, even for Ada unconstrained array types.
+The C function parameter profile wouldn't change. But why does this work? With values of unconstrained array types, the bounds are stored with the value. Typically they are stored just ahead of the first component, but it is implementation-defined. So why doesn't the above accidentally pass the bounds instead of the first array component itself? It works because we are guaranteed by the Ada language that passing an array will pass (the address of) the components, not the bounds, even for Ada unconstrained array types.
 
 Now for the other direction: passing an array from C to Ada. Here the lack of bounds information on the C side really makes a difference. We can't just pass the array by itself because that would not include the bounds, unlike an Ada call to an Ada routine. In this case the approach is the similar to the first alternative described above, in which we declare a very large array and then pass the bounds explicitly:
 
@@ -530,7 +528,7 @@ Now for the other direction: passing an array from C to Ada. Here the lack of bo
 
    p (x, 100);  // call to Ada routine, passing x
 
-The fundamental idea is to declare an Ada type big enough to handle anything conceivably sent from the C side. Subtype :ada:`Natural` means :ada:`0 .. Integer'Last` so :ada:`List` is quite large indeed. Just be sure never to declare an object of that type. You'll probably run out of storage on an embedded target.
+The fundamental idea is to declare an Ada type big enough to handle anything conceivably needed on the C side. Subtype :ada:`Natural` means :ada:`0 .. Integer'Last` so :ada:`List` is quite large indeed. Just be sure never to declare an object of that type. You'll probably run out of storage on an embedded target.
 
 Earlier we said that it is the Ada type that determines how parameters are passed, and that scalars and elementary types are always passed by copy. For mode :ada:`in` that's simple, the copy to the C formal parameter is done and that's all there is to it. But suppose the mode is instead :ada:`out` or :ada:`in out`? In that case the presumably updated value must be returned to the caller, but C doesn't do that by copy. Here the compiler will come to the rescue and make it work, transparently. Specifically, we just declare the Ada subprogram's formal parameter type as usual, but on the C formal we use a reference. We're talking about scalar and elementary types so let's use :ada:`int` arbitrarily. We make the mode :ada:`in out` but :ada:`out` would also serve:
 
@@ -592,7 +590,7 @@ Package Interfaces.C.Pointers
 
 The generic package :ada:`Interfaces.C.Pointers` allows us to perform C-style operations on pointers. It includes an access type named :ada:`Pointer`, various :ada:`Value` functions that dereference a :ada:`Pointer` value and deliver the designated array, several pointer arithmetic operations, and "copy" procedures that copy the contents of a source pointer into the array designated by a destination pointer.
 
-To be frank I don't find this facility all that useful, given that arrays are first-class types and that address arithmetic can be done in Ada.
+We won't go into the details further. See the Ada RM for more.
 
 
 Package Interfaces.Fortran
@@ -616,13 +614,13 @@ As an example of the need for this capability, consider the GPIO (General Purpos
 
 To lock a pin on a port requires a special sequence of reads and writes to a GPIO register for that port. A specific bit pattern is required during the reads and writes. The sequence and bit pattern is such that accidentally locking the pin is highly unlikely.
 
-Once we see how to express assembly language sequences in general we will see how to get the necessary sequence to lock a port/pin pair. Unfortunately, although you can express exactly the code sequence required, such a sequence of assembly language instructions is clearly target hardware-specific. That means portability is inherently limited. Moreover, the syntax for expressing it varies with the vendor, even for the same target hardware. Being able to insert it at the Ada source level doesn't help with either portability issue. You should understand that the use-case for machine code insertion is for small |mdash| very small |mdash| sequences. Otherwise you would write the code in assembly language directly, in a separate file. That might obtain a degree of vendor independence, at least for the given target, but not necessarily. The use of inline assembler is intended for cases in which a separate file containing assembly language is not simpler.
+Once we see how to express assembly language sequences in general we will see how to get the necessary sequence to lock a port/pin pair. Unfortunately, although you can express exactly the code sequence required, such a sequence of assembly language instructions is clearly target hardware-specific. That means portability is inherently limited. Moreover, the syntax for expressing it varies with the vendor, even for the same target hardware. Being able to insert it at the Ada source level doesn't help with either portability issue. You should understand that the use-case for machine code insertion is for small, short sequences. Otherwise you would write the code in assembly language directly, in a separate file. That might obtain a degree of vendor independence, at least for the given target, but not necessarily. The use of inline assembler is intended for cases in which a separate file containing assembly language is not simpler.
 
 With those caveats in place, let's first examine how to do it in general and then how to express it GNAT specifically.
 
 The right way to express an arbitrary sequence of one or more assembly language statements is to use so-called "code statements." A code statement is an Ada statement, but it is also a qualified expression of a type defined in package :ada:`System.Machine_Code`. The content of that package, and the details of code statements, are implementation-defined. Although that affects portability there really is no alternative because we are talking about machine instruction sets, which vary considerably and cannot be standardized at this level.
 
-Package :ada:`System.Machine_Code` contains types whose values provide a way of expressing assembly instructions. For example, let's say that there is a "HLT" instruction that halts the processor for some target. There is no other parameter required, just the op-code. Let's also say that one of the types in :ada:`System.Machine_Code` is for such so-called "short" instructions consisting just of an op-code. The syntax for the type declaration might then allow us to say the following:
+Package :ada:`System.Machine_Code` contains types whose values provide a way of expressing assembly instructions. For example, let's say that there is a "HLT" instruction that halts the processor for some target. There is no other parameter required, just that op-code. Let's also say that one of the types in :ada:`System.Machine_Code` is for these "short" instructions consisting only of an op-code. The syntax for the type declaration would then allow the following code statement:
 
 .. code-block:: ada
 
@@ -630,7 +628,7 @@ Package :ada:`System.Machine_Code` contains types whose values provide a way of 
 
 Each of :ada:`Short_Instruction`, :ada:`Command`, and :ada:`HLT` are defined by the vendor in this hypothetical version of package :ada:`System.Machine_Code`. You can see why we say that it is both a statement (note the semicolon) and a qualified expression (note the apostrophe).
 
-Code statements must appear in a subprogram body, after the :ada:`begin`. Only code statements are allowed in such a body, and no exception handlers are allowed. The complete example would be as follows:
+Code statements must appear in a subprogram body, after the :ada:`begin`. Only code statements are allowed in such a body, only use-clauses can be in the declarative part, and no exception handlers are allowed. The complete example would be as follows:
 
 .. code-block:: ada
 
@@ -667,8 +665,10 @@ In GNAT, the content of :ada:`System.Machine_Code` looks something like this:
        Inputs   : Asm_Input_Operand  := No_Input_Operands;
        Clobber  : String  := "";
        Volatile : Boolean := False) return Asm_Insn;
+       
+With this package content, the expression in a code statement is of type Asm_Insn, short for "assembly instruction." Multiple overloaded functions named :ada:`Asm` return values of that type.
 
-The :ada:`Template` parameter in a string containing one or assembly language op-codes. :ada:`Outputs` provides mappings from registers to source-level entities that are updated by the assembly statement(s). :ada:`Inputs` provides mappings from source-level entities to registers for inputs. :ada:`Volatile`, when True, tells the compiler not to optimize the call away, and :ada:`Clobber` tells the compiler which registers, or memory, are altered by the instruction. ("Clobber" is colloquial English for "destroy.") That last is important because the compiler was possibly already using some of those registers so it will need to restore them after the call.
+The :ada:`Template` parameter in a string containing one or more assembly language instructions. These instructions are specific to the target machine. The parameter :ada:`Outputs` provides mappings from registers to source-level entities that are updated by the assembly statement(s). :ada:`Inputs` provides mappings from source-level entities to registers for inputs. :ada:`Volatile`, when True, tells the compiler not to optimize the call away, and :ada:`Clobber` tells the compiler which registers, or memory, if any, are altered by the instructions in :Ada:`Template`. ("Clobber" is colloquial English for "destroy.") That last is important because the compiler was likely already using some of those registers so the compiler will need to restore them after the call.
 
 We could say, for example, the following, taking all the defaults except for :ada:`Volatile`:
 
@@ -678,7 +678,7 @@ We could say, for example, the following, taking all the defaults except for :ad
 
 As you can imagine the full details are extensive, beyond the scope of this introduction. See the GNAT User Guide ("Inline Assembler") for all the gory details.
 
-Now, back to our GPIO port/bin locking example. The :ada:`Port' type is declared as follows:
+Now, back to our GPIO port/bin locking example. The port type is declared as follows:
 
 .. code-block:: ada
 
@@ -688,7 +688,7 @@ Now, back to our GPIO port/bin locking example. The :ada:`Port' type is declared
       ...
    end record with …
 
-We've elided all but the :ada:`LCKR' component representing that register within any given port. We'd have a record representation clause to ensure the required layout but that's not important here. :ada:`Word` is an unsigned (modular) 32-bit integer type. One of the hardware requirements for accessing the lock register is that the entire register has to be read or written whenever any bits within it are accessed. The compiler cannot, for example, write one of the bytes within the register in order to set or clear a bit within that part of the register. Therefore we mark the register as Atomic. If the compiler cannot honor that aspect the compilation will fail, so we would know there is a problem.
+We've elided all but the :ada:`LCKR' component representing the "lock register" within each port. We'd have a record representation clause to ensure the required layout but that's not important here. :ada:`Word` is an unsigned (modular) 32-bit integer type. One of the hardware requirements for accessing the lock register is that the entire register has to be read or written whenever any bits within it are accessed. The compiler must not, for example, write one of the bytes within the register in order to set or clear a bit within that part of the register. Therefore we mark the register as Atomic. If the compiler cannot honor that aspect the compilation will fail, so we would know there is a problem.
 
 Per the ST Micro Reference Manual, the lock control bit is referred to as :ada:`LCKK` and is bit #16, i.e., the first in the upper half of the :ada:`LCKR` register word.
 
@@ -720,7 +720,7 @@ Therefore, the Ada types are:
                      ...
                      Pin_15 => 16#8000#);
 
-Note that we had to override the default enumeration representation so that each pin would occupy a single dedicated bit in the bit-mask.
+Note that we had to override the default enumeration representation so that each pin |mdash| each enumeral value  |mdash| would occupy a single dedicated bit in the bit-mask.
 
 With that in place, let's lock a pin. A specific sequence is required to set a pin's lock bit. The sequence writes and reads values from the port's LCKR register. Remember that this 32-bit register has 16 bits for the pin mask (0 .. 15), with bit #16 used as the "lock control bit".
 
@@ -762,23 +762,23 @@ The Ada procedure works, but only if the optimizer is enabled (which also preclu
    procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
       use System.Machine_Code, ASCII, System;
    begin
-      Asm ("orr  r3, %1, #65536"  & LF & HT &  -- Temp := LCCK or Pin, ie both set (others 0)
-           "str  r3, [%0, #28]"   & LF & HT &  -- Port.LCKR := Temp
-           "str  %1, [%0, #28]"   & LF & HT &  -- Port.LCKR := Pin alone, clearing LCCK bit
-           "str  r3, [%0, #28]"   & LF & HT &  -- Port.LCKR := Temp
-           "ldr  r3, [%0, #28]"   & LF & HT &  -- Temp := Port.LCKR
-           "ldr  r3, [%0, #28]"   & LF & HT,   -- Temp := Port.LCKR
+      Asm ("orr  r3, %1, #65536"  & LF & HT &  -- 0) Temp := LCCK or Pin, ie both set (others 0)
+           "str  r3, [%0, #28]"   & LF & HT &  -- 1) Port.LCKR := Temp
+           "str  %1, [%0, #28]"   & LF & HT &  -- 2) Port.LCKR := Pin alone, clearing LCCK bit
+           "str  r3, [%0, #28]"   & LF & HT &  -- 3) Port.LCKR := Temp
+           "ldr  r3, [%0, #28]"   & LF & HT &  -- 4) Temp := Port.LCKR
+           "ldr  r3, [%0, #28]"   & LF & HT,   -- 5) Temp := Port.LCKR
            Inputs => (Address'Asm_Input ("r", This'Address), -- %0
                      (GPIO_Pin'Asm_Input ("r", Pin))),       -- %1
            Volatile => True,
            Clobber  => ("r3"));
    end Lock;
 
-We've combined the instructions into one :ada:`Asm` expression. As a result, we can use ASCII line-feed and horizontal tab characters to format the listing produced by the compiler so that each op-code is on a separate line and aligned with the previous instruction, as if we had written the sequence in assembly language directly. That enhances readability later, during examination of the compiler output to verify the required sequence was emitted.
+We've combined the instructions into one :ada:`Asm` expression. As a result, we can use ASCII line-feed and horizontal tab characters to format the listing produced by the compiler so that each instruction is on a separate line and aligned with the previous instruction, as if we had written the sequence in assembly language directly. That enhances readability later, during examination of the compiler output to verify the required sequence was emitted.
 
 In the above, :ada:`%0` is the first input, containing the address of the :ada:`Port` parameter. :ada:`%1` is the other input, the value of the :ada:`Pin` parameter. We're using register :ada:`r3` explicitly, as the "temporary" variable, so we tell the compiler that it has been "clobbered."
 
-If we examine the assembly language output from compiling the file, we find the body of procedure Lock as hoped:
+If we examine the assembly language output from compiling the file, we find the body of procedure Lock is as hoped:
 
 ..code-block:: asm
 
@@ -792,7 +792,7 @@ If we examine the assembly language output from compiling the file, we find the 
 	ldr  r3, [r2, #28]
 	ldr  r3, [r2, #28]
 
-The first two statements load register 2 (r2) and register 1 (r1) with the subprogram parameters, that is, the port and pin, respectively. Register 2 gets the starting address of the port record, in particular. (Offset #28 is the location of the LCKR register. The port is passed by reference so that address is actually that of the hardware device.)
+The first two statements load register 2 (r2) and register 1 (r1) with the subprogram parameters, i.e., the port and pin, respectively. Register 2 gets the starting address of the port record, in particular. (Offset #28 is the location of the LCKR register. The port is passed by reference so that address is actually that of the hardware device.)
 
 We will have separately declared procedure :ada:`Lock` with inlining enabled, so whenever we call the procedure we will get the exact assembly language sequence required to lock the indicated pin on the given port, without any additional code for a procedure call.
 
