@@ -333,7 +333,7 @@ What about C++? Interfacing to C++ is tricky compared to C, because of the vendo
 Package Interfaces.C
 ~~~~~~~~~~~~~~~~~~~~
 
-The child package :ada:`Interfaces.C` supports interfacing with units written in the C programming language. Support is in the form of Ada constants and types, and some subprograms. The constants correspond to C’s "limits.h" header file, and the Ada types correspond to types for C's int, short, long unsigned, unsigned_short, unsigned_long, unsigned_char, size_t, and so on. There is also support for converting Ada's type String to/from char_array, and similarly for type Wide_String, etc.
+The child package :ada:`Interfaces.C` supports interfacing with units written in the C programming language. Support is in the form of Ada constants and types, and some subprograms. The constants correspond to C's "limits.h" header file, and the Ada types correspond to types for C's int, short, long unsigned, unsigned_short, unsigned_long, unsigned_char, size_t, and so on. There is also support for converting Ada's type String to/from char_array, and similarly for type Wide_String, etc.
 
 It's a large package so we will elide parts. The idea is to give you a feel for what's there. If you want the details, see either the Ada reference manual or bring up the source code in GNAT Studio.
 
