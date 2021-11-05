@@ -816,7 +816,7 @@ The main function in the other language is intended to import these routines and
 
 For example:
 
-.. code-block:: ada
+.. code-block:: c
 
    #include "stdio.h"
 
