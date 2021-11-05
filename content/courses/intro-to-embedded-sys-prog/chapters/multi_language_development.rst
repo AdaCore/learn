@@ -200,7 +200,7 @@ Pragma :ada:`Import` and pragma :ada:`Export` work almost like a subprogram call
 
 The BNF syntax is as follows. We show Import, but Export has identical parameters:
 
-.. code-block:: ada
+.. code-block::
 
    pragma Import(
        [Convention =>] convention_identifier,
