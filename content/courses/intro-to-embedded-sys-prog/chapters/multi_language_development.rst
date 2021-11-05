@@ -515,7 +515,7 @@ Now for the other direction: passing an array from C to Ada. Here the lack of bo
 
    procedure P (V : List; Size : Interfaces.C.int) is
    begin
-      for J in 0 .. Size – 1 loop
+      for J in 0 .. Size - 1 loop
          -- whatever
       end loop;
    end P;
