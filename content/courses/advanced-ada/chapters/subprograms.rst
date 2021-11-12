@@ -150,6 +150,133 @@ instead:
     end My_Data;
 
 
+Conditional Expressions
+-----------------------
+
+In the previous section, we've seen simple expressions such as :ada:`I = 0` or
+:ada:`D.Valid`. A conditional expression, as the name implies, is an
+expression that contains a condition. This might be an "if-expression" (in the
+:ada:`if ... then ... else` form) or a "case-expression" (in the
+:ada:`case ... is when =>` form). The result of a conditional expression is
+always a Boolean value.
+
+The :ada:`Max` function in the following code example is an expression function
+implemented with a conditional expression |mdash| an if-expression, to be more
+precise:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Simple_Conditional_If_Expressions
+
+    package Expr_Func is
+
+       function Max (A, B : Integer) return Integer is
+         (if A >= B then A else B);
+
+    end Expr_Func;
+
+
+Let's say we a have a system with four states :ada:`Off`, :ada:`On`,
+:ada:`Waiting`, and :ada:`Invalid`. For this system, we want to implement a
+function named :ada:`Toggled` that returns the *toggled* value of a state
+:ada:`S`. If the current value of the state :ada:`S` is either :ada:`Off` or
+:ada:`On`, the function toggles from :ada:`Off` to :ada:`On` (or from :ada:`On`
+to :ada:`Off`). For other states, the state remains unchanged |mdash| i.e. the
+returned value is the same as the input value. This is the implementation using
+a conditional expression:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Conditional_If_Expressions_1
+
+    package Expr_Func is
+
+       type State is (Off, On, Waiting, Invalid);
+
+       function Toggled (S : State) return State is
+         (if S = Off then On elsif S = On then Off else S);
+
+    end Expr_Func;
+
+As you can see, if-expressions may contain an :ada:`elsif` branch.
+
+The code above corresponds to this more verbose version:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Conditional_If_Expressions_2
+
+    package Expr_Func is
+
+       type State is (Off, On, Waiting, Invalid);
+
+       function Toggled (S : State) return State;
+
+    end Expr_Func;
+
+    package body Expr_Func is
+
+       function Toggled (S : State) return State is
+       begin
+          if S = Off then
+             return On;
+          elsif S = On then
+             return Off;
+          else
+             return S;
+          end if;
+       end Toggled;
+
+    end Expr_Func;
+
+If we compare the if-block of this code example to the if-expression of the
+previous example, we notice that the if-expression is just a simplified version
+without the :ada:`return` keyword and the :ada:`end if;`. In fact, converting
+an if-block to an if-expression is quite straightforward.
+
+We could also replace the if-expression used in the :ada:`Toggled` function
+above with a case-expression. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Conditional_Case_Expressions_1
+
+    package Expr_Func is
+
+       type State is (Off, On, Waiting, Invalid);
+
+       function Toggled (S : State) return State is
+         (case S is
+           when Off    => On,
+           when On     => Off,
+           when others => S);
+
+    end Expr_Func;
+
+Note that a case-expression uses commas to separate the alternatives (the
+:ada:`when` expressions). The code above corresponds to this more verbose
+version:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Conditional_Case_Expressions_2
+
+    package Expr_Func is
+
+       type State is (Off, On, Waiting, Invalid);
+
+       function Toggled (S : State) return State;
+
+    end Expr_Func;
+
+    package body Expr_Func is
+
+       function Toggled (S : State) return State is
+       begin
+          case S is
+             when Off    => return On;
+             when On     => return Off;
+             when others => return S;
+          end case;
+       end Toggled;
+
+    end Expr_Func;
+
+If we compare the case block of this code example to the case-expression of the
+previous example, we notice that the case-expression is just a simplified
+version of the case block without the :ada:`return` keyword and the
+:ada:`end case;`, and with alternatives separated by commas instead of
+semicolons.
 
 
 Quantified Expressions
