@@ -282,13 +282,173 @@ semicolons.
 Quantified Expressions
 ----------------------
 
-.. admonition:: Relevant topics
+Quantified expressions are :ada:`for` expressions using a quantifier |mdash|
+which can be either :ada:`all` or :ada:`some` |mdash| and a predicate. This
+kind of expressions let us formalize statements such as:
 
-    - `Quantified Expressions <http://www.ada-auth.org/standards/2xrm/html/RM-4-5-8.html>`_
+- "all values of array :ada:`A` must be zero" into
+  :ada:`for all I in A'Range => A (I) = 0`, and
 
-.. todo::
+- "at least one value of array :ada:`A` must be zero" into
+  :ada:`for some I in A'Range => A (I) = 0`.
 
-    Complete section!
+The result of a quantified expression is always a Boolean value.
+
+For example, we could use the quantified expressions above and implement these
+two functions:
+
+- :ada:`Is_Zero`, which checks whether all components of an array :ada:`A` are
+  zero, and
+
+- :ada:`Has_Zero`, which checks whether array :ada:`A` has at least one
+  component of the array :ada:`A` is zero.
+
+This is the complete code:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Quantified_Expression_1
+
+    package Int_Arrays is
+
+       type Integer_Arr is array (Positive range <>) of Integer;
+
+       function Is_Zero (A : Integer_Arr) return Boolean is
+          (for all I in A'Range => A (I) = 0);
+
+       function Has_Zero (A : Integer_Arr) return Boolean is
+          (for some I in A'Range => A (I) = 0);
+
+       procedure Display_Array (A : Integer_Arr; Name : String);
+
+    end Int_Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Int_Arrays is
+
+       procedure Display_Array (A    : Integer_Arr;
+                                Name : String) is
+       begin
+          Put (Name & ": ");
+          for E of A loop
+             Put (E'Image & " ");
+          end loop;
+          New_Line;
+       end Display_Array;
+
+    end Int_Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Int_Arrays;  use Int_Arrays;
+
+    procedure Test_Int_Arrays is
+       A : Integer_Arr := (0, 0, 1);
+    begin
+       Display_Array (A, "A");
+       Put_Line ("Is_Zero: "  & Boolean'Image (Is_Zero (A)));
+       Put_Line ("Has_Zero: " & Boolean'Image (Has_Zero (A)));
+
+       A := (0, 0, 0);
+
+       Display_Array (A, "A");
+       Put_Line ("Is_Zero: "  & Boolean'Image (Is_Zero (A)));
+       Put_Line ("Has_Zero: " & Boolean'Image (Has_Zero (A)));
+    end Test_Int_Arrays;
+
+As you might have expected, we can rewrite a quantified expression as a loop
+in the :ada:`for I in A'Range loop if ... return ...` form. In the code below,
+we rewrite the implementations of :ada:`Is_Zero` and :ada:`Has_Zero` using
+loops and conditions:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Quantified_Expression_2
+
+    package Int_Arrays is
+
+       type Integer_Arr is array (Positive range <>) of Integer;
+
+       function Is_Zero (A : Integer_Arr) return Boolean;
+
+       function Has_Zero (A : Integer_Arr) return Boolean;
+
+       procedure Display_Array (A : Integer_Arr; Name : String);
+
+    end Int_Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Int_Arrays is
+
+       function Is_Zero (A : Integer_Arr) return Boolean is
+       begin
+          for I in A'Range loop
+             if A (I) /= 0 then
+                return False;
+             end if;
+          end loop;
+
+          return True;
+       end Is_Zero;
+
+       function Has_Zero (A : Integer_Arr) return Boolean is
+       begin
+          for I in A'Range loop
+            if A (I) = 0 then
+               return True;
+            end if;
+          end loop;
+
+          return False;
+       end Has_Zero;
+
+       procedure Display_Array (A    : Integer_Arr;
+                                Name : String) is
+       begin
+          Put (Name & ": ");
+          for E of A loop
+             Put (E'Image & " ");
+          end loop;
+          New_Line;
+       end Display_Array;
+
+    end Int_Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Int_Arrays;  use Int_Arrays;
+
+    procedure Test_Int_Arrays is
+       A : Integer_Arr := (0, 0, 1);
+    begin
+       Display_Array (A, "A");
+       Put_Line ("Is_Zero: "  & Boolean'Image (Is_Zero (A)));
+       Put_Line ("Has_Zero: " & Boolean'Image (Has_Zero (A)));
+
+       A := (0, 0, 0);
+
+       Display_Array (A, "A");
+       Put_Line ("Is_Zero: "  & Boolean'Image (Is_Zero (A)));
+       Put_Line ("Has_Zero: " & Boolean'Image (Has_Zero (A)));
+    end Test_Int_Arrays;
+
+So far, we've seen the quantified expressions using indices |mdash| e.g.
+:ada:`for all I in A'Range => ...`. We could avoid indices and write quantified
+expressions by simply using the :ada:`E of A` form. In this case, we can just
+write :ada:`for all E of A => ...`. Let's adapt the implementation of
+:ada:`Is_Zero` and :ada:`Has_Zero` using this form:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Quantified_Expression_3
+
+    package Int_Arrays is
+
+       type Integer_Arr is array (Positive range <>) of Integer;
+
+       function Is_Zero (A : Integer_Arr) return Boolean is
+          (for all E of A => E = 0);
+
+       function Has_Zero (A : Integer_Arr) return Boolean is
+          (for some E of A => E = 0);
+
+    end Int_Arrays;
 
 
 Declare Expressions
