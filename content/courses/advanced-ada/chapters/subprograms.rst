@@ -14,9 +14,9 @@ simple expression in parentheses, such as :ada:`(X);`. In this case, we don't
 use a :ada:`begin ... end;` block or a :ada:`return` statement.
 
 As an example of an expression, let's say we want to implement a function
-named :ada:`Is_Zero` that checks the integer :ada:`I`. We can implement
-this function with the expression :ada:`I = 0`. In the standard approach, we
-would create the implementation by writing
+named :ada:`Is_Zero` that checks if the value of the integer parameter :ada:`I`
+is zero. We can implement this function with the expression :ada:`I = 0`. In
+the standard approach, we would create the implementation by writing
 :ada:`is begin return I = 0; end Is_Zero;`. When using expression functions,
 however, we can simplify the implementation by just writing
 :ada:`is (I = 0);`. This is the complete code of :ada:`Is_Zero` using an
@@ -98,7 +98,7 @@ package:
 
     end Expr_Func;
 
-In addition, an expression function can be used in the private part of a
+In addition, we can use expression functions in the private part of a
 package specification. For example, the following code declares the
 :ada:`Is_Valid` function in the specification of the :ada:`My_Data` package,
 while its implementation is an expression function in the private part of the
@@ -174,12 +174,12 @@ precise:
     end Expr_Func;
 
 
-Let's say we a have a system with four states :ada:`Off`, :ada:`On`,
+Let's say we have a system with four states :ada:`Off`, :ada:`On`,
 :ada:`Waiting`, and :ada:`Invalid`. For this system, we want to implement a
 function named :ada:`Toggled` that returns the *toggled* value of a state
-:ada:`S`. If the current value of the state :ada:`S` is either :ada:`Off` or
-:ada:`On`, the function toggles from :ada:`Off` to :ada:`On` (or from :ada:`On`
-to :ada:`Off`). For other states, the state remains unchanged |mdash| i.e. the
+:ada:`S`. If the current value of :ada:`S` is either :ada:`Off` or :ada:`On`,
+the function toggles from :ada:`Off` to :ada:`On` (or from :ada:`On`
+to :ada:`Off`). For other values, the state remains unchanged |mdash| i.e. the
 returned value is the same as the input value. This is the implementation using
 a conditional expression:
 
@@ -194,7 +194,8 @@ a conditional expression:
 
     end Expr_Func;
 
-As you can see, if-expressions may contain an :ada:`elsif` branch.
+As you can see, if-expressions may contain an :ada:`elsif` branch (and
+therefore be more complicated).
 
 The code above corresponds to this more verbose version:
 
@@ -245,7 +246,7 @@ above with a case-expression. For example:
 
     end Expr_Func;
 
-Note that a case-expression uses commas to separate the alternatives (the
+Note that we use commas in case-expressions to separate the alternatives (the
 :ada:`when` expressions). The code above corresponds to this more verbose
 version:
 
@@ -292,7 +293,10 @@ kind of expressions let us formalize statements such as:
 - "at least one value of array :ada:`A` must be zero" into
   :ada:`for some I in A'Range => A (I) = 0`.
 
-The result of a quantified expression is always a Boolean value.
+In the quantified expression :ada:`for all I in A'Range => A (I) = 0`, the
+quantifier is :ada:`all` and the predicate is :ada:`A (I) = 0`. In the second
+expression, the quantifier is :ada:`some`. The result of a quantified
+expression is always a Boolean value.
 
 For example, we could use the quantified expressions above and implement these
 two functions:
@@ -357,8 +361,8 @@ This is the complete code:
 
 As you might have expected, we can rewrite a quantified expression as a loop
 in the :ada:`for I in A'Range loop if ... return ...` form. In the code below,
-we rewrite the implementations of :ada:`Is_Zero` and :ada:`Has_Zero` using
-loops and conditions:
+we're implementing :ada:`Is_Zero` and :ada:`Has_Zero` using loops and
+conditions instead of quantified expressions:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Quantified_Expression_2
 
@@ -430,8 +434,8 @@ loops and conditions:
        Put_Line ("Has_Zero: " & Boolean'Image (Has_Zero (A)));
     end Test_Int_Arrays;
 
-So far, we've seen the quantified expressions using indices |mdash| e.g.
-:ada:`for all I in A'Range => ...`. We could avoid indices and write quantified
+So far, we've seen quantified expressions using indices |mdash| e.g.
+:ada:`for all I in A'Range => ...`. We could avoid indices in quantified
 expressions by simply using the :ada:`E of A` form. In this case, we can just
 write :ada:`for all E of A => ...`. Let's adapt the implementation of
 :ada:`Is_Zero` and :ada:`Has_Zero` using this form:
@@ -449,6 +453,9 @@ write :ada:`for all E of A => ...`. Let's adapt the implementation of
           (for some E of A => E = 0);
 
     end Int_Arrays;
+
+Here, we're checking the components :ada:`E` of the array :ada:`A` and
+comparing them against zero.
 
 
 Declare Expressions
