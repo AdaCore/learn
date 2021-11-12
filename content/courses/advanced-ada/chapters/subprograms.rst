@@ -6,9 +6,150 @@ Subprograms
 Expression functions
 --------------------
 
-.. todo::
+Usually, we implement Ada functions with a construct like this:
+:ada:`begin return X; end;`. In other words, we create a :ada:`begin ... end;`
+block and we have at least one :ada:`return` statement in that block. An
+expression function, in contrast, is a function that is implemented with a
+simple expression in parentheses, such as :ada:`(X);`. In this case, we don't
+use a :ada:`begin ... end;` block or a :ada:`return` statement.
 
-    Complete section!
+As an example of an expression, let's say we want to implement a function
+named :ada:`Is_Zero` that checks the integer :ada:`I`. We can implement
+this function with the expression :ada:`I = 0`. In the standard approach, we
+would create the implementation by writing
+:ada:`is begin return I = 0; end Is_Zero;`. When using expression functions,
+however, we can simplify the implementation by just writing
+:ada:`is (I = 0);`. This is the complete code of :ada:`Is_Zero` using an
+expression function:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Simple_Expression_Function_1
+
+    package Expr_Func is
+
+       function Is_Zero (I : Integer) return Boolean is
+         (I = 0);
+
+    end Expr_Func;
+
+An expression function has the same effect as the standard, more verbose
+version using a block. In fact, the code above is similar to this
+implementation of the :ada:`Is_Zero` function using a block:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Simple_Expression_Function_2
+
+    package Expr_Func is
+
+       function Is_Zero (I : Integer) return Boolean;
+
+    end Expr_Func;
+
+    package body Expr_Func is
+
+       function Is_Zero (I : Integer) return Boolean is
+       begin
+          return I = 0;
+       end Is_Zero;
+
+    end Expr_Func;
+
+The only difference between these two versions of the :ada:`Expr_Func` packages
+is that, in the first version, the package specification contains the
+implementation of the :ada:`Is_Zero` function, while, in the second version,
+the implementation is in the body of the :ada:`Expr_Func` package.
+
+An expression function can be, at same time, the specification and the
+implementation of a function. Therefore, in the first version of the
+:ada:`Expr_Func` package above, we don't have a separate implementation of the
+:ada:`Is_Zero` function because :ada:`(I = 0)` is the actual implementation of
+the function. Note that this is only possible for expression functions; you
+cannot have a function implemented with a block in a package specification. For
+example, the following code is wrong and won't compile:
+
+.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Numerics.Simple_Expression_Function_3
+    :class: ada-expect-compile-error
+
+    !expr_func.ads
+    package Expr_Func is
+
+       function Is_Zero (I : Integer) return Boolean is
+       begin
+          return I = 0;
+       end Is_Zero;
+
+    end Expr_Func;
+
+We can, of course, separate the function declaration from its implementation as
+an expression function. For example, we can rewrite the first version of the
+:ada:`Expr_Func` package and move the expression function to the body of the
+package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Simple_Expression_Function_2
+
+    package Expr_Func is
+
+       function Is_Zero (I : Integer) return Boolean;
+
+    end Expr_Func;
+
+    package body Expr_Func is
+
+       function Is_Zero (I : Integer) return Boolean is
+         (I = 0);
+
+    end Expr_Func;
+
+In addition, an expression function can be used in the private part of a
+package specification. For example, the following code declares the
+:ada:`Is_Valid` function in the specification of the :ada:`My_Data` package,
+while its implementation is an expression function in the private part of the
+package specification:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Private_Expression_Function
+
+    package My_Data is
+
+       type Data is private;
+
+       function Is_Valid (D : Data) return Boolean;
+
+    private
+
+       type Data is record
+          Valid : Boolean;
+       end record;
+
+       function Is_Valid (D : Data) return Boolean is
+          (D.Valid);
+
+    end My_Data;
+
+Naturally, we could write the function implementation in the package body
+instead:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Private_Expression_Function_2
+
+    package My_Data is
+
+       type Data is private;
+
+       function Is_Valid (D : Data) return Boolean;
+
+    private
+
+       type Data is record
+          Valid : Boolean;
+       end record;
+
+    end My_Data;
+
+    package body My_Data is
+
+       function Is_Valid (D : Data) return Boolean is
+          (D.Valid);
+
+    end My_Data;
+
+
 
 
 Quantified Expressions
