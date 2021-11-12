@@ -66,7 +66,7 @@ cannot have a function implemented with a block in a package specification. For
 example, the following code is wrong and won't compile:
 
 .. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Numerics.Simple_Expression_Function_3
-    :class: ada-expect-compile-error
+    :class: ada-nocheck
 
     !expr_func.ads
     package Expr_Func is
