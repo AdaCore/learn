@@ -83,7 +83,7 @@ an expression function. For example, we can rewrite the first version of the
 :ada:`Expr_Func` package and move the expression function to the body of the
 package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Simple_Expression_Function_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Simple_Expression_Function_4
 
     package Expr_Func is
 
@@ -104,7 +104,7 @@ package specification. For example, the following code declares the
 while its implementation is an expression function in the private part of the
 package specification:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Private_Expression_Function
+.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Private_Expression_Function_1
 
     package My_Data is
 
