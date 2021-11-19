@@ -148,10 +148,10 @@ sphinx-staging:
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
-site: cleanall webpack-production sphinx-production test_content pdf_books
+site: cleanall webpack-production sphinx-production test_content all_books
 	@echo Building $@
 
-site-staging: cleanall webpack-staging sphinx-staging test_content pdf_books
+site-staging: cleanall webpack-staging sphinx-staging test_content all_books
 	@echo Building $@
 
 site-testing: cleantest
@@ -239,6 +239,8 @@ $(foreach book_dir, $(BOOKS), \
 
 mobi_books: $(MOBI_BOOKS)
 	@echo $@ completed.
+
+all_books: pdf_books epub_books mobi_books
 	@echo $@ completed.
 
 cleanall:
