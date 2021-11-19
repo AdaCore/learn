@@ -218,26 +218,29 @@ including their versions (standard, bounded, unbounded, indefinite):
 +===========+====================================+=====+=========+===========+============+
 | Vector    | ``Vectors``                        |  Y  |    Y    |           |     Y      |
 +-----------+------------------------------------+-----+---------+-----------+------------+
-| List      | ``Doubly_Linked_Lists``            |  Y  |    Y    |           |     Y      |
+| List      | ``Doubly Linked Lists``            |  Y  |    Y    |           |     Y      |
 +-----------+------------------------------------+-----+---------+-----------+------------+
-| Map       | ``Hashed_Maps``                    |  Y  |    Y    |           |     Y      |
+| Map       | ``Hashed Maps``                    |  Y  |    Y    |           |     Y      |
 +-----------+------------------------------------+-----+---------+-----------+------------+
-| Map       | ``Ordered_Maps``                   |  Y  |    Y    |           |     Y      |
+| Map       | ``Ordered Maps``                   |  Y  |    Y    |           |     Y      |
 +-----------+------------------------------------+-----+---------+-----------+------------+
-| Set       | ``Hashed_Sets``                    |  Y  |    Y    |           |     Y      |
+| Set       | ``Hashed Sets``                    |  Y  |    Y    |           |     Y      |
 +-----------+------------------------------------+-----+---------+-----------+------------+
-| Set       | ``Ordered_Sets``                   |  Y  |    Y    |           |     Y      |
+| Set       | ``Ordered Sets``                   |  Y  |    Y    |           |     Y      |
 +-----------+------------------------------------+-----+---------+-----------+------------+
-| Tree      | ``Multiway_Trees``                 |  Y  |    Y    |           |     Y      |
+| Tree      | ``Multiway Trees``                 |  Y  |    Y    |           |     Y      |
 +-----------+------------------------------------+-----+---------+-----------+------------+
 | Generic   | ``Holders``                        |     |         |           |     Y      |
 +-----------+------------------------------------+-----+---------+-----------+------------+
-| Queue     | ``Synchronized_Queue_Interfaces``  |  Y  |         |           |            |
+| Queue     | ``Synchronized Queue Interfaces``  |  Y  |         |           |            |
 +-----------+------------------------------------+-----+---------+-----------+------------+
-| Queue     | ``Synchronized_Queues``            |     |    Y    |     Y     |            |
+| Queue     | ``Synchronized Queues``            |     |    Y    |     Y     |            |
 +-----------+------------------------------------+-----+---------+-----------+------------+
-| Queue     | ``Priority_Queues``                |     |    Y    |     Y     |            |
+| Queue     | ``Priority Queues``                |     |    Y    |     Y     |            |
 +-----------+------------------------------------+-----+---------+-----------+------------+
+
+NOTE: to get the correct container name, replace the whitespace by ``_`` in the
+names above. (For example, ``Hashed Maps`` becomes :ada:`Hashed_Maps`.)
 
 The following table presents the prefixing applied to the container
 name that depends on its version. As indicated in the table, the

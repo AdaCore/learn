@@ -19,15 +19,20 @@ selected by indexing. Here's a simple example:
        type My_Int is range 0 .. 1000;
        type Index is range 1 .. 5;
 
-       type My_Int_Array is array (Index) of My_Int;
-       --                                    ^ Type of elements
-       --                          ^ Bounds of the array
+       type My_Int_Array is
+         array (Index) of My_Int;
+       --                 ^ Type of elements
+       --       ^ Bounds of the array
        Arr : My_Int_Array := (2, 3, 5, 7, 11);
-       --                    ^ Array literal, called aggregate in Ada
+       --                    ^ Array literal
+       --                      (aggregate)
+
+       V : My_Int;
     begin
        for I in Index loop
-          Put (My_Int'Image (Arr (I)));
-          --                     ^ Take the Ith element
+          V := Arr (I);
+          --        ^ Take the Ith element
+          Put (My_Int'Image (V));
        end loop;
        New_Line;
     end Greet;
@@ -80,7 +85,7 @@ to index into the array.
        type Index is range 11 .. 15;
        --                  ^ Low bound can be any value
        type My_Int_Array is array (Index) of My_Int;
-       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+       Tab : constant My_Int_Array := (2, 3, 5, 7, 11);
     begin
        for I in Index loop
           Put (My_Int'Image (Tab (I)));
@@ -117,18 +122,22 @@ are permitted.
 
     procedure Month_Example is
        type Month_Duration is range 1 .. 31;
-       type Month is (Jan, Feb, Mar, Apr, May, Jun,
-                      Jul, Aug, Sep, Oct, Nov, Dec);
+       type Month is (Jan, Feb, Mar, Apr,
+                      May, Jun, Jul, Aug,
+                      Sep, Oct, Nov, Dec);
 
-       type My_Int_Array is array (Month) of Month_Duration;
-       --                          ^ Can use an enumeration type as the
-       --                            index
+       type My_Int_Array is
+         array (Month) of Month_Duration;
+       --       ^ Can use an enumeration type
+       --         as the index
 
        Tab : constant My_Int_Array :=
-       --    ^ constant is like a variable but cannot be
-       --      modified
-         (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-       --  Maps months to number of days (ignoring leap years)
+       --    ^ constant is like a variable but
+       --      cannot be modified
+         (31, 28, 31, 30, 31, 30,
+          31, 31, 30, 31, 30, 31);
+       --  Maps months to number of days
+       --  (ignoring leap years)
 
        Feb_Days : Month_Duration := Tab (Feb);
        --  Number of days in February
@@ -136,8 +145,9 @@ are permitted.
        for M in Month loop
           Put_Line
             (Month'Image (M) & " has "
-             & Month_Duration'Image (Tab (M))  & " days.");
-             --                                ^ Concatenation operator
+             & Month_Duration'Image (Tab (M))
+             & " days.");
+       --    ^ Concatenation operator
        end loop;
     end Month_Example;
 
@@ -202,8 +212,9 @@ instead of accessing random memory as in unsafe languages.
     begin
        for I in Index range 2 .. 6 loop
           Put (My_Int'Image (Tab (I)));
-          --                      ^ Will raise an exception when
-          --                      I = 6
+          --                      ^ Will raise an
+          --                        exception when
+          --                        I = 6
        end loop;
        New_Line;
     end Greet;
@@ -224,10 +235,10 @@ that, too.
        type My_Int is range 0 .. 1000;
        type My_Int_Array is array (1 .. 5) of My_Int;
        --                          ^ Subtype of Integer
-       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+       Tab : constant My_Int_Array := (2, 3, 5, 7, 11);
     begin
        for I in 1 .. 5 loop
-       --       ^ Likewise
+       --       ^ Subtype of Integer
           Put (My_Int'Image (Tab (I)));
        end loop;
        New_Line;
@@ -259,7 +270,7 @@ refer to the range.  Ada solves that via several attributes of array objects:
     procedure Range_Example is
        type My_Int is range 0 .. 1000;
        type My_Int_Array is array (1 .. 5) of My_Int;
-       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+       Tab : constant My_Int_Array := (2, 3, 5, 7, 11);
     begin
        for I in Tab'Range loop
        --          ^ Gets the range of Tab
@@ -281,7 +292,8 @@ If you want more fine grained control, you can use the separate attributes
        Tab : My_Int_Array := (2, 3, 5, 7, 11);
     begin
        for I in Tab'First .. Tab'Last - 1 loop
-       --          ^ Iterate on every index except the last
+       --          ^ Iterate on every index
+       --            except the last
           Put (My_Int'Image (Tab (I)));
        end loop;
        New_Line;
@@ -320,16 +332,19 @@ the type.
 
     procedure Unconstrained_Array_Example is
        type Days is (Monday, Tuesday, Wednesday,
-                     Thursday, Friday, Saturday, Sunday);
+                     Thursday, Friday,
+                     Saturday, Sunday);
 
-       type Workload_Type is array (Days range <>) of Natural;
+       type Workload_Type is
+         array (Days range <>) of Natural;
        --  Indefinite array type
-       --                           ^ Bounds are of type Days,
-       --                             but not known
+       --       ^ Bounds are of type Days,
+       --         but not known
 
-       Workload : constant Workload_Type (Monday .. Friday) :=
-       --                                 ^ Specify the bounds
-       --                                   when declaring
+       Workload : constant
+         Workload_Type (Monday .. Friday) :=
+       --               ^ Specify the bounds
+       --                 when declaring
           (Friday => 7, others => 8);
        --               ^ Default value
        --  ^ Specify element by name of index
@@ -406,8 +421,9 @@ literals, as we can see in the example below.
         package String_Literals is
             --  Those two declarations are equivalent
             A : String (1 .. 11) := "Hello World";
-            B : String (1 .. 11) := ('H', 'e', 'l', 'l', 'o', ' ',
-                                     'W', 'o', 'r', 'l', 'd');
+            B : String (1 .. 11) :=
+                ('H', 'e', 'l', 'l', 'o', ' ',
+                 'W', 'o', 'r', 'l', 'd');
         end String_Literals;
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Greet_4
@@ -440,8 +456,9 @@ initialization expression.
 
     procedure Greet is
        Message : constant String := "dlroW olleH";
-       --                 ^ Bounds are automatically computed
-       --                   from initialization value
+       --                 ^ Bounds are automatically
+       --                   computed from
+       --                   initialization value
     begin
        for I in reverse Message'Range loop
           Put (Message (I));
@@ -457,8 +474,9 @@ initialization expression.
        type Integer_Array is array (Natural range <>) of Integer;
 
        My_Array : constant Integer_Array := (1, 2, 3, 4);
-       --                  ^ Bounds are automatically computed
-       --                    from initialization value
+       --                  ^ Bounds are automatically
+       --                    computed from
+       --                    initialization value
     begin
         null;
     end Main;
@@ -533,7 +551,9 @@ generally result in a run-time error.
            --  Definite subtype
 
            C : String (1 .. Get_Number);
-           --  Indefinite subtype (Get_Number's value is computed at run-time)
+           --  Indefinite subtype
+           --  (Get_Number's value is computed at
+           --  run-time)
         begin
            null;
         end Indefinite_Subtypes;
@@ -554,23 +574,26 @@ For example, this is a function that returns an unconstrained :ada:`String`:
     procedure Main is
 
        type Days is (Monday, Tuesday, Wednesday,
-                     Thursday, Friday, Saturday, Sunday);
+                     Thursday, Friday,
+                     Saturday, Sunday);
 
-       function Get_Day_Name (Day : Days := Monday) return String is
+       function Get_Day_Name (Day : Days := Monday)
+                              return String is
        begin
           return
             (case Day is
-             when Monday => "Monday",
-             when Tuesday => "Tuesday",
+             when Monday    => "Monday",
+             when Tuesday   => "Tuesday",
              when Wednesday => "Wednesday",
-             when Thursday => "Thursday",
-             when Friday => "Friday",
-             when Saturday => "Saturday",
-             when Sunday => "Sunday");
+             when Thursday  => "Thursday",
+             when Friday    => "Friday",
+             when Saturday  => "Saturday",
+             when Sunday    => "Sunday");
        end Get_Day_Name;
 
     begin
-       Put_Line ("First day is " & Get_Day_Name (Days'First));
+       Put_Line ("First day is "
+                 & Get_Day_Name (Days'First));
     end Main;
 
 (This example is for illustrative purposes only.  There is a built-in mechanism,
@@ -610,7 +633,8 @@ Thus, if you need to declare, for example, an array of strings, the
 
     procedure Show_Days is
        type Days is (Monday, Tuesday, Wednesday,
-                     Thursday, Friday, Saturday, Sunday);
+                     Thursday, Friday,
+                     Saturday, Sunday);
 
        subtype Day_Name is String (1 .. 2);
        --  Subtype of string with known size
@@ -618,8 +642,8 @@ Thus, if you need to declare, for example, an array of strings, the
        type Days_Name_Type is
          array (Days) of Day_Name;
        --       ^ Type of the index
-       --                ^ Type of the element. Must be
-       --                  definite
+       --                ^ Type of the element.
+       --                  Must be definite
 
        Names : constant Days_Name_Type :=
          ("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su");
@@ -647,12 +671,15 @@ elements) as a name or a value.
         Full_Name : String := "John Smith";
     begin
         Buf (7 .. 9) := "Bob";
-        --  Careful! This works because the string on the right side is the
-        --  same length as the replaced slice!
+        --  Careful! This works because the string
+        --  on the right side is the same length as
+        --  the replaced slice!
 
-        Put_Line (Buf);  --  Prints "Hello Bob"
+        --  Prints "Hello Bob"
+        Put_Line (Buf);
 
-        Put_Line ("Hi " & Full_Name (1 .. 4)); --  Prints "Hi John"
+         --  Prints "Hi John"
+        Put_Line ("Hi " & Full_Name (1 .. 4));
     end Main;
 
 As we can see above, you can use a slice on the left side of an assignment, to
@@ -698,17 +725,20 @@ for these objects. Let's look at an example:
     procedure Main is
        subtype Degrees is Measurements.Degree_Celsius;
 
-       T : Degrees renames Measurements.Current_Temperature;
+       T : Degrees
+         renames Measurements.Current_Temperature;
     begin
         T := 5.0;
 
         Put_Line (Degrees'Image (T));
-        Put_Line (Degrees'Image (Measurements.Current_Temperature));
+        Put_Line (Degrees'Image
+          (Measurements.Current_Temperature));
 
         T := T + 2.5;
 
         Put_Line (Degrees'Image (T));
-        Put_Line (Degrees'Image (Measurements.Current_Temperature));
+        Put_Line (Degrees'Image
+          (Measurements.Current_Temperature));
     end Main;
 
 In the example above, we declare a variable :ada:`T` by renaming the
@@ -737,7 +767,8 @@ renaming them. Let's look at the following example:
 
        type Color is (Black, Red, Green, Blue, White);
 
-       type Color_Array is array (Positive range <>) of Color;
+       type Color_Array is
+         array (Positive range <>) of Color;
 
        procedure Reverse_It (X : in out Color_Array);
 
@@ -750,8 +781,10 @@ renaming them. Let's look at the following example:
           for I in X'First .. (X'Last + X'First) / 2 loop
              declare
                 Tmp     : Color;
-                X_Left  : Color renames X (I);
-                X_Right : Color renames X (X'Last + X'First - I);
+                X_Left  : Color
+                  renames X (I);
+                X_Right : Color
+                  renames X (X'Last + X'First - I);
              begin
                 Tmp     := X_Left;
                 X_Left  := X_Right;
@@ -768,7 +801,8 @@ renaming them. Let's look at the following example:
 
     procedure Test_Reverse_Colors is
 
-       My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
+       My_Colors : Color_Array (1 .. 5) :=
+         (Black, Red, Green, Blue, White);
 
     begin
        for C of My_Colors loop

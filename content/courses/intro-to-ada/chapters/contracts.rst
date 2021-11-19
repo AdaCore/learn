@@ -41,7 +41,8 @@ The following code shows an example of preconditions:
 
     procedure Show_Simple_Precondition is
 
-       procedure DB_Entry (Name : String; Age  : Natural)
+       procedure DB_Entry (Name : String;
+                           Age  : Natural)
          with Pre => Name'Length > 0
        is
        begin
@@ -50,7 +51,9 @@ The following code shows an example of preconditions:
        end DB_Entry;
     begin
        DB_Entry ("John", 30);
-       DB_Entry ("",     21);  --  Precondition will fail!
+
+       --  Precondition will fail!
+       DB_Entry ("",     21);
     end Show_Simple_Precondition;
 
 In this example, we want to prevent the name field in our database from
@@ -101,11 +104,13 @@ We illustrate postconditions using the following example:
 
        type Int_8 is range -2 ** 7 .. 2 ** 7 - 1;
 
-       type Int_8_Array is array (Integer range <>) of Int_8;
+       type Int_8_Array is
+         array (Integer range <>) of Int_8;
 
        function Square (A : Int_8) return Int_8 is
          (A * A)
-         with Post => (if abs A in 0 | 1 then Square'Result = abs A
+         with Post => (if abs A in 0 | 1
+                       then Square'Result = abs A
                        else Square'Result > A);
 
        procedure Square (A : in out Int_8_Array)
@@ -121,13 +126,15 @@ We illustrate postconditions using the following example:
        V : Int_8_Array := (-2, -1, 0, 1, 10, 11);
     begin
        for E of V loop
-          Put_Line ("Original: " & Int_8'Image (E));
+          Put_Line ("Original: "
+                    & Int_8'Image (E));
        end loop;
        New_Line;
 
        Square (V);
        for E of V loop
-          Put_Line ("Square:   " & Int_8'Image (E));
+          Put_Line ("Square:   "
+                    & Int_8'Image (E));
        end loop;
     end Show_Simple_Postcondition;
 
@@ -158,9 +165,11 @@ subprogram. For example:
        function Square (A : Int_8) return Int_8 is
          (A * A)
          with
-              Pre  => (Integer'Size >= Int_8'Size * 2 and
-                       Integer (A) * Integer (A) < Integer (Int_8'Last)),
-              Post => (if abs A in 0 | 1 then Square'Result = abs A
+              Pre  => (Integer'Size >= Int_8'Size * 2
+                       and Integer (A) * Integer (A) <
+                           Integer (Int_8'Last)),
+              Post => (if abs A in 0 | 1
+                       then Square'Result = abs A
                        else Square'Result > A);
 
        V : Int_8;
@@ -168,7 +177,8 @@ subprogram. For example:
        V := Square (11);
        Put_Line ("Square of 11 is " & Int_8'Image (V));
 
-       V := Square (12);   --  Precondition will fail...
+       --  Precondition will fail...
+       V := Square (12);
        Put_Line ("Square of 12 is " & Int_8'Image (V));
     end Show_Simple_Contract;
 
@@ -219,13 +229,16 @@ Let's use the following example to illustrate dynamic predicates:
              Start_Date : Time;
              End_Date   : Time;
           end record
-            with Dynamic_Predicate => Course.Start_Date <= Course.End_Date;
+            with Dynamic_Predicate =>
+              Course.Start_Date <= Course.End_Date;
 
-          procedure Add (CC : in out Course_Container; C : Course);
+          procedure Add (CC : in out Course_Container;
+                         C  :        Course);
        private
-          package Course_Vectors is new Ada.Containers.Vectors
-            (Index_Type   => Natural,
-             Element_Type => Course);
+          package Course_Vectors is new
+            Ada.Containers.Vectors
+              (Index_Type   => Natural,
+               Element_Type => Course);
 
           type Course_Container is record
              V : Course_Vectors.Vector;
@@ -233,7 +246,8 @@ Let's use the following example to illustrate dynamic predicates:
        end Courses;
 
        package body Courses is
-          procedure Add (CC : in out Course_Container; C : Course) is
+          procedure Add (CC : in out Course_Container;
+                         C  :        Course) is
           begin
              CC.V.Append (C);
           end Add;
@@ -245,14 +259,17 @@ Let's use the following example to illustrate dynamic predicates:
     begin
        Add (CC,
             Course'(
-              Name       => To_Unbounded_String ("Intro to Photography"),
+              Name       => To_Unbounded_String
+                             ("Intro to Photography"),
               Start_Date => Time_Of (2018, 5, 1),
               End_Date   => Time_Of (2018, 5, 10)));
 
-       --  This should trigger an error in the dynamic predicate check
+       --  This should trigger an error in the
+       --  dynamic predicate check
        Add (CC,
             Course'(
-              Name       => To_Unbounded_String ("Intro to Video Recording"),
+              Name       => To_Unbounded_String
+                             ("Intro to Video Recording"),
               Start_Date => Time_Of (2019, 5, 1),
               End_Date   => Time_Of (2018, 5, 10)));
 
@@ -312,48 +329,59 @@ Let's look at a complete example:
 
     procedure Show_Predicates is
 
-       type Week is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+       type Week is (Mon, Tue, Wed, Thu,
+                     Fri, Sat, Sun);
 
        subtype Work_Week is Week range Mon .. Fri;
 
        subtype Test_Days is Work_Week
-         with Static_Predicate => Test_Days in Mon | Wed | Fri;
+         with Static_Predicate =>
+           Test_Days in Mon | Wed | Fri;
 
        type Tests_Week is array (Week) of Natural
          with Dynamic_Predicate =>
            (for all I in Tests_Week'Range =>
               (case I is
-                   when Test_Days => Tests_Week (I) > 0,
-                   when others    => Tests_Week (I) = 0));
+                   when Test_Days =>
+                      Tests_Week (I) > 0,
+                   when others    =>
+                      Tests_Week (I) = 0));
 
        Num_Tests : Tests_Week :=
                      (Mon => 3, Tue => 0,
                       Wed => 4, Thu => 0,
-                      Fri => 2, Sat => 0, Sun => 0);
+                      Fri => 2, Sat => 0,
+                      Sun => 0);
 
        procedure Display_Tests (N : Tests_Week) is
        begin
           for I in Test_Days loop
-             Put_Line ("# tests on " & Test_Days'Image (I)
-                       & " => "      & Integer'Image (N (I)));
+             Put_Line ("# tests on "
+                       & Test_Days'Image (I)
+                       & " => "
+                       & Integer'Image (N (I)));
           end loop;
        end Display_Tests;
 
     begin
        Display_Tests (Num_Tests);
 
-       --  Assigning non-conformant values to individual elements of
-       --  the Tests_Week type does not trigger a predicate check:
+       --  Assigning non-conformant values to
+       --  individual elements of the Tests_Week
+       --  type does not trigger a predicate
+       --  check:
        Num_Tests (Tue) := 2;
 
-       --  However, assignments with the "complete" Tests_Week type
-       --  trigger a predicate check. For example:
+       --  However, assignments with the "complete"
+       --  Tests_Week type trigger a predicate
+       --  check. For example:
        --
        --  Num_Tests := (others => 0);
 
-       --  Also, calling any subprogram with parameters of Tests_Week
-       --  type triggers a predicate check.
-       --  Therefore, the following line will fail:
+       --  Also, calling any subprogram with
+       --  parameters of Tests_Week type
+       --  triggers a predicate check. Therefore,
+       --  the following line will fail:
        Display_Tests (Num_Tests);
     end Show_Predicates;
 
@@ -428,10 +456,12 @@ type invariants. It would look like this:
 
           type Course_Container is private;
 
-          procedure Add (CC : in out Course_Container; C : Course);
+          procedure Add (CC : in out Course_Container;
+                         C  :        Course);
 
           function Init
-            (Name : String; Start_Date, End_Date : Time) return Course;
+            (Name                 : String;
+             Start_Date, End_Date : Time) return Course;
 
           function Check (C : Course) return Boolean;
 
@@ -442,12 +472,13 @@ type invariants. It would look like this:
              End_Date   : Time;
           end record;
 
-          function Check (C         : Course) return Boolean is
+          function Check (C : Course) return Boolean is
             (C.Start_Date <= C.End_Date);
 
-          package Course_Vectors is new Ada.Containers.Vectors
-            (Index_Type   => Natural,
-             Element_Type => Course);
+          package Course_Vectors is new
+            Ada.Containers.Vectors
+              (Index_Type   => Natural,
+               Element_Type => Course);
 
           type Course_Container is record
              V : Course_Vectors.Vector;
@@ -455,17 +486,20 @@ type invariants. It would look like this:
        end Courses;
 
        package body Courses is
-          procedure Add (CC : in out Course_Container; C : Course) is
+          procedure Add (CC : in out Course_Container;
+                         C  :        Course) is
           begin
              CC.V.Append (C);
           end Add;
 
           function Init
-            (Name : String; Start_Date, End_Date : Time) return Course is
+            (Name                 : String;
+             Start_Date, End_Date : Time) return Course is
           begin
-             return Course'(Name       => To_Unbounded_String (Name),
-                            Start_Date => Start_Date,
-                            End_Date   => End_Date);
+             return
+               Course'(Name       => To_Unbounded_String (Name),
+                       Start_Date => Start_Date,
+                       End_Date   => End_Date);
           end Init;
        end Courses;
 
@@ -478,7 +512,8 @@ type invariants. It would look like this:
                   Start_Date => Time_Of (2018, 5, 1),
                   End_Date   => Time_Of (2018, 5, 10)));
 
-       --  This should trigger an error in the type-invariant check
+       --  This should trigger an error in the
+       --  type-invariant check
        Add (CC,
             Init (Name       => "Intro to Video Recording",
                   Start_Date => Time_Of (2019, 5, 1),

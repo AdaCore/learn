@@ -36,11 +36,12 @@ the :ada:`Convention` aspect on the corresponding Ada type
 declaration. In the following example, we interface with the
 :ada:`C_Enum` enumeration declared in a C source file:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Enum
 
     procedure Show_C_Enum is
 
-       type C_Enum is (A, B, C) with Convention => C;
+       type C_Enum is (A, B, C)
+         with Convention => C;
        --  Use C convention for C_Enum
     begin
        null;
@@ -49,7 +50,7 @@ declaration. In the following example, we interface with the
 To interface with C's built-in types, we use the :ada:`Interfaces.C`
 package, which contains most of the type definitions we need. For example:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Struct
 
     with Interfaces.C; use Interfaces.C;
 
@@ -71,8 +72,9 @@ Here, we're interfacing with a C struct (:ada:`C_Struct`) and using the
 corresponding data types in C (:c:`int`, :c:`long`, :c:`unsigned` and
 :c:`double`). This is the declaration in C:
 
-.. code-block:: c
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Struct
 
+    !c_struct.h
     struct c_struct
     {
         int         a;
@@ -88,9 +90,28 @@ Calling C subprograms in Ada
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We use a similar approach when interfacing with subprograms written in C.
-In this case, an additional aspect is required: :ada:`Import`. For example:
+Consider the following declaration in the C header file:
 
-.. code-block:: ada
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Func
+
+    !my_func.h
+    int my_func (int a);
+
+Here's the corresponding C definition:
+
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Func
+
+    !my_func.c
+    #include "my_func.h"
+
+    int my_func (int a)
+    {
+        return a * 2;
+    }
+
+We can interface this code in Ada using the :ada:`Import` aspect. For example:
+
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Func
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -101,6 +122,7 @@ In this case, an additional aspect is required: :ada:`Import`. For example:
          with
            Import        => True,
            Convention    => C;
+
        --  Imports function 'my_func' from C.
        --  You can now call it from Ada.
 
@@ -110,27 +132,10 @@ In this case, an additional aspect is required: :ada:`Import`. For example:
        Put_Line ("Result is " & int'Image (V));
     end Show_C_Func;
 
-This code interfaces with the following declaration in the C header file:
-
-.. code-block:: c
-
-    int my_func (int a);
-
-Here's the corresponding C definition:
-
-.. code-block:: c
-
-    #include "my_func.h"
-
-    int my_func (int a)
-    {
-        return a * 2;
-    }
-
 If you want, you can use a different subprogram name in the Ada code. For
 example, we could call the C function :ada:`Get_Value`:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Func
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -158,7 +163,7 @@ Calling Ada subprograms in C
 You can also call Ada subprograms from C applications. You do this with
 the :ada:`Export` aspect. For example:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Func
 
     with Interfaces.C; use Interfaces.C;
 
@@ -174,7 +179,7 @@ the :ada:`Export` aspect. For example:
 
 This is the corresponding body that implements that function:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Func
 
     package body C_API is
 
@@ -188,8 +193,9 @@ This is the corresponding body that implements that function:
 On the C side, we do the same as we would if the function were written
 in C: simply declare it using the :c:`extern` keyword.  For example:
 
-.. code-block:: c
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Func
 
+    !main.c
     #include <stdio.h>
 
     extern int my_func (int a);
@@ -217,18 +223,18 @@ Let's reuse an example from the previous section. We'll add a global
 variable (:c:`func_cnt`) to count the number of times the function
 (:c:`my_func`) is called:
 
-.. code-block:: c
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Vars
 
-    /*% filename: test.h */
-
+    !test.h
     extern int func_cnt;
 
     int my_func (int a);
 
 The variable is declared in the C file and incremented in :c:`my_func`:
 
-.. code-block:: c
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Vars
 
+    !test.c
     #include "test.h"
 
     int func_cnt = 0;
@@ -242,7 +248,7 @@ The variable is declared in the C file and incremented in :c:`my_func`:
 
 In the Ada application, we just reference the foreign variable:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Vars
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -251,8 +257,8 @@ In the Ada application, we just reference the foreign variable:
 
        function my_func (a : int) return int
          with
-           Import        => True,
-           Convention    => C;
+           Import     => True,
+           Convention => C;
 
        V : int;
 
@@ -260,7 +266,8 @@ In the Ada application, we just reference the foreign variable:
          with
            Import        => True,
            Convention    => C;
-       --  We can access the func_cnt variable from test.c
+       --  We can access the func_cnt variable
+       --  from test.c
 
     begin
        V := my_func (1);
@@ -268,7 +275,9 @@ In the Ada application, we just reference the foreign variable:
        V := my_func (3);
        Put_Line ("Result is " & int'Image (V));
 
-       Put_Line ("Function was called " & int'Image (func_cnt) & " times");
+       Put_Line ("Function was called "
+                 & int'Image (func_cnt)
+                 & " times");
     end Show_C_Func;
 
 As we see by running the application, the value of the counter is the
@@ -288,7 +297,7 @@ the same way as we did for subprograms, you do this with the
 Let's reuse a past example and add a counter, as in the previous
 example, but this time have the counter incremented in Ada code:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Vars
 
     with Interfaces.C; use Interfaces.C;
 
@@ -309,9 +318,8 @@ example, but this time have the counter incremented in Ada code:
 
 The variable is then increment in :ada:`My_Func`:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Vars
 
-    --% filename: c_api.adb
     package body C_API is
 
        function My_Func (a : int) return int is
@@ -324,8 +332,9 @@ The variable is then increment in :ada:`My_Func`:
 
 In the C application, we just need to declare the variable and use it:
 
-.. code-block:: c
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Vars
 
+    !main.c
     #include <stdio.h>
 
     extern int my_func (int a);
@@ -361,8 +370,9 @@ revisiting our previous example.
 
 This was our C header file:
 
-.. code-block:: c
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds
 
+    !my_func.c
     extern int func_cnt;
 
     int my_func (int a);
@@ -375,7 +385,7 @@ To create Ada bindings, we'll call the compiler like this:
 
 The result is an Ada spec file called :file:`test_h.ads`:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds
 
     pragma Ada_2005;
     pragma Style_Checks (Off);
@@ -394,7 +404,7 @@ The result is an Ada spec file called :file:`test_h.ads`:
 
 Now we simply refer to this :file:`test_h` package in our Ada application:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -408,7 +418,9 @@ Now we simply refer to this :file:`test_h` package in our Ada application:
        V := my_func (3);
        Put_Line ("Result is " & int'Image (V));
 
-       Put_Line ("Function was called " & int'Image (func_cnt) & " times");
+       Put_Line ("Function was called "
+                 & int'Image (func_cnt)
+                 & " times");
     end Show_C_Func;
 
 You can specify the name of the parent unit for the bindings you're
@@ -420,7 +432,7 @@ creating as the operand to ``fdump-ada-spec``:
 
 This creates the file :file:`ext_c_code-test_h.ads`:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_2
     :class: ada-syntax-only
 
     package Ext_C_Code.test_h is
@@ -444,10 +456,9 @@ illustrates this issue.
 
 Let's start with this C header file:
 
-.. code-block:: c
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
-    /*% filename: test.h */
-
+    !test.h
     struct test;
 
     struct test * test_create(void);
@@ -464,8 +475,9 @@ Let's start with this C header file:
 
 And the corresponding C implementation:
 
-.. code-block:: c
+.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
+    !test.c
     #include <stdlib.h>
     #include <string.h>
     #include <stdio.h>
@@ -530,7 +542,7 @@ Next, we'll create our bindings:
 
 This creates the following specification in :file:`test_h.ads`:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
     pragma Ada_2005;
     pragma Style_Checks (Off);
@@ -569,7 +581,7 @@ are replaced by addresses (:ada:`System.Address`). Nevertheless, these
 bindings are good enough to allow us to create a test application in
 Ada:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
     with Interfaces.C;         use Interfaces.C;
     with Interfaces.C.Strings; use Interfaces.C.Strings;
@@ -580,8 +592,10 @@ Ada:
 
     procedure Show_Automatic_C_Struct_Bindings is
 
-       Name    : constant chars_ptr := New_String ("John Doe");
-       Address : constant chars_ptr := New_String ("Small Town");
+       Name    : constant chars_ptr :=
+         New_String ("John Doe");
+       Address : constant chars_ptr :=
+         New_String ("Small Town");
 
        T : System.Address := test_create;
 
@@ -609,7 +623,7 @@ adapt them to our needs. For example, we can:
 
 This is the resulting specification:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
     with Interfaces.C; use Interfaces.C;
     with System;
@@ -643,19 +657,20 @@ This is the resulting specification:
 
 And this is the corresponding Ada body:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
     with Interfaces.C;         use Interfaces.C;
     with Interfaces.C.Strings; use Interfaces.C.Strings;
-    with Ada.Text_IO;          use  Ada.Text_IO;
     with adapted_test_h;       use  adapted_test_h;
 
     with System;
 
     procedure Show_Adapted_C_Struct_Bindings is
 
-       Name    : constant chars_ptr := New_String ("John Doe");
-       Address : constant chars_ptr := New_String ("Small Town");
+       Name    : constant chars_ptr :=
+         New_String ("John Doe");
+       Address : constant chars_ptr :=
+         New_String ("Small Town");
 
        T : Test := Create;
 
