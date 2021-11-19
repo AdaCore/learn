@@ -61,6 +61,7 @@ author = u'AdaCore' if not config.has_option('', 'author') else \
     config['DEFAULT']['author']
 title = u'Learn Ada (Complete)' if not config.has_option('', 'title') else \
     config['DEFAULT']['title']
+publisher = u'AdaCore'
 
 # Automatic version/release string based on date
 version_date = datetime.date.today().strftime('%Y.%m')
@@ -309,8 +310,9 @@ if config.has_option('', 'latex_toplevel_sectioning'):
 
 epub_title = title
 epub_author = author.replace(' \\and', ' and')
-epub_publisher = u'AdaCore'
-epub_copyright = u'2021, AdaCore'
+epub_publisher = publisher
+epub_copyright = copyright
+epub_description = release_name + " " + release
 
 epub_version = 3.0
 
