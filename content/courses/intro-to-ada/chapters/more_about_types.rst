@@ -55,13 +55,19 @@ components likewise need to be specified with named associations.
           X, Y : Integer := 0;
        end record;
 
-       type Point_Array is array (Positive range <>) of Point;
+       type Point_Array is
+         array (Positive range <>) of Point;
 
-       Origin   : Point := (X | Y => <>);   -- use the default values
-       Origin_2 : Point := (others => <>);  -- likewise use the defaults
+       --  use the default values
+       Origin   : Point := (X | Y => <>);
+
+       --  likewise, use the defaults
+       Origin_2 : Point := (others => <>);
 
        Points_1 : Point_Array := ((1, 2), (3, 4));
-       Points_2 : Point_Array := (1 => (1, 2), 2 => (3, 4), 3 .. 20 => <>);
+       Points_2 : Point_Array := (1       => (1, 2),
+                                  2       => (3, 4),
+                                  3 .. 20 => <>);
     end Points;
 
 Overloading and qualified expressions
@@ -103,7 +109,8 @@ resolve overloading based on the return type of a function.
 
     procedure Main is
        S : String := Convert (123_145_299);
-       --            ^ Valid, will choose the proper Convert
+       --            ^ Valid, will choose the
+       --              proper Convert
     begin
        Put_Line (S);
     end Main;
@@ -134,11 +141,13 @@ This is where a qualified expression becomes useful.
 
     procedure Main is
        S : String := Convert (123_145_299);
-       --            ^ Invalid, which convert should we call?
+       --            ^ Invalid, which convert
+       --              should we call?
 
        S2 : String := Convert (SSID'(123_145_299));
-       --                     ^ We specify that the type of the expression is
-       --                       SSID.
+       --                     ^ We specify that the
+       --                       type of the expression
+       --                       is SSID.
 
        --  We could also have declared a temporary
 
@@ -216,8 +225,10 @@ Here is how you declare a simple pointer type, or access type, in Ada:
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types
 
     package Dates is
-       type Months is (January, February, March, April, May, June, July,
-                       August, September, October, November, December);
+       type Months is
+         (January, February, March, April,
+          May, June, July, August, September,
+          October, November, December);
 
        type Date is record
           Day   : Integer range 1 .. 31;
@@ -232,10 +243,12 @@ Here is how you declare a simple pointer type, or access type, in Ada:
         --  Declare an access type
         type Date_Acc is access Date;
         --                      ^ "Designated type"
-        --                      ^ Date_Acc values point to Date objects
+        --                      ^ Date_Acc values point
+        --                        to Date objects
 
         D : Date_Acc := null;
-        --              ^ Literal for "access to nothing"
+        --              ^ Literal for
+        --                "access to nothing"
         --  ^ Access to date
     end Access_Types;
 
@@ -317,12 +330,14 @@ subtype indication, just as you would do in a variable declaration:
 
     package Access_Types is
        type String_Acc is access String;
-       --                        ^ Access to unconstrained array type
+       --                        ^
+       --  Access to unconstrained array type
        Msg : String_Acc;
        --    ^ Default value is null
 
-       Buffer : String_Acc := new String (1 .. 10);
-       --                                ^ Constraint required
+       Buffer : String_Acc :=
+         new String (1 .. 10);
+       --            ^ Constraint required
     end Access_Types;
 
 In some cases, though, allocating just by specifying the type is not ideal, so
@@ -362,8 +377,9 @@ dereferenced for you:
        Today : Date := D.all;
        --              ^ Access value dereference
        J     : Integer := D.Day;
-       --                 ^ Implicit dereference for record and array components
-       --                 Equivalent to D.all.day
+       --                 ^ Implicit dereference for
+       --                   record and array components
+       --                   Equivalent to D.all.day
     end Access_Types;
 
 Other features
@@ -423,8 +439,9 @@ incomplete type declaration:
 
     package Simple_List is
        type Node;
-       --  This is an incomplete type declaration, which is
-       --  completed in the same declarative region.
+       --  This is an incomplete type declaration,
+       --  which is completed in the same
+       --  declarative region.
 
        type Node_Acc is access Node;
 
@@ -460,17 +477,19 @@ known at compile time. This is illustrated in the example below:
     with Runtime_Length; use Runtime_Length;
 
     package Var_Size_Record is
-        Max_Len : constant Natural := Compute_Max_Len;
-        --                            ^ Not known at compile time
+        Max_Len : constant Natural
+          := Compute_Max_Len;
+        --   ^ Not known at compile time
 
-        type Items_Array is array (Positive range <>) of Integer;
+        type Items_Array is array (Positive range <>)
+          of Integer;
 
         type Growable_Stack is record
            Items : Items_Array (1 .. Max_Len);
            Len   : Natural;
         end record;
-        --  Growable_Stack is a definite type, but size is not known at compile
-        --  time.
+        --  Growable_Stack is a definite type, but
+        --  size is not known at compile time.
 
         G : Growable_Stack;
     end Var_Size_Record;
@@ -493,14 +512,18 @@ field that is called a discriminant:
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Var_Size_Record_2
 
     package Var_Size_Record_2 is
-        type Items_Array is array (Positive range <>) of Integer;
+        type Items_Array is array (Positive range <>)
+          of Integer;
 
-        type Growable_Stack (Max_Len : Natural) is record
-        --                   ^ Discriminant. Cannot be modified once initialized.
+        type Growable_Stack (Max_Len : Natural) is
+        record
+        --                   ^ Discriminant. Cannot be
+        --                     modified once initialized.
            Items : Items_Array (1 .. Max_Len);
            Len   : Natural := 0;
         end record;
-        --  Growable_Stack is an indefinite type (like an array)
+        --  Growable_Stack is an indefinite type
+        --  (like an array)
     end Var_Size_Record_2;
 
 Discriminants, in their simple forms, are constant: You cannot modify them once
@@ -520,7 +543,8 @@ the discriminant is not declared with an initialization:
        end record;
 
        P : Point;
-       --  ERROR: Point is indefinite, so you need to specify the discriminants
+       --  ERROR: Point is indefinite, so you
+       --  need to specify the discriminants
        --  or give a default value
 
        P2 : Point (1, 2);
@@ -544,8 +568,10 @@ specifying the discriminants. For the example above, this is how it would look:
        end record;
 
        P : Point;
-       --  We can now simply declare a "Point" without further ado.
-       --  In this case, we're using the default values (0) for X and Y
+       --  We can now simply declare a "Point"
+       --  without further ado. In this case,
+       --  we're using the default values (0)
+       --  for X and Y.
 
        P2 : Point (1, 2);
        P3 : Point := (1, 2);
@@ -578,7 +604,9 @@ values via the dot notation.
        end Print_Stack;
 
        S : Growable_Stack :=
-         (Max_Len => 128, Items => (1, 2, 3, 4, others => <>), Len => 4);
+         (Max_Len => 128,
+          Items   => (1, 2, 3, 4, others => <>),
+          Len     => 4);
     begin
        Print_Stack (S);
     end Main;
@@ -602,22 +630,29 @@ fields.
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Variant_Record
 
     package Variant_Record is
-       type Expr;                       --  Forward declaration of Expr
-       type Expr_Access is access Expr; --  Access to a Expr
+       --  Forward declaration of Expr
+       type Expr;
 
-       type Expr_Kind_Type is (Bin_Op_Plus, Bin_Op_Minus, Num);
+       --  Access to a Expr
+       type Expr_Access is access Expr;
+
+       type Expr_Kind_Type is (Bin_Op_Plus,
+                               Bin_Op_Minus,
+                               Num);
        --  A regular enumeration type
 
        type Expr (Kind : Expr_Kind_Type) is record
-          --      ^ The discriminant is an enumeration value
+          --      ^ The discriminant is an
+          --        enumeration value
           case Kind is
              when Bin_Op_Plus | Bin_Op_Minus =>
                 Left, Right : Expr_Access;
              when Num =>
                 Val : Integer;
           end case;
-          --  Variant part. Only one, at the end of the record
-          --  definition, but can be nested
+          --  Variant part. Only one, at the end of
+          --  the record definition, but can be
+          --  nested
        end record;
     end Variant_Record;
 
@@ -651,13 +686,16 @@ Here is how you could write an evaluator for expressions:
     procedure Main is
        function Eval_Expr (E : Expr) return Integer is
          (case E.Kind is
-          when Bin_Op_Plus => Eval_Expr (E.Left.all) + Eval_Expr (E.Right.all),
-          when Bin_Op_Minus => Eval_Expr (E.Left.all) - Eval_Expr (E.Right.all),
+          when Bin_Op_Plus  => Eval_Expr (E.Left.all)
+                               + Eval_Expr (E.Right.all),
+          when Bin_Op_Minus => Eval_Expr (E.Left.all)
+                               - Eval_Expr (E.Right.all),
           when Num => E.Val);
 
        E : Expr := (Bin_Op_Plus,
                     new Expr'(Bin_Op_Minus,
-                              new Expr'(Num, 12), new Expr'(Num, 15)),
+                              new Expr'(Num, 12),
+                              new Expr'(Num, 15)),
                     new Expr'(Num, 3));
     begin
        Put_Line (Integer'Image (Eval_Expr (E)));
@@ -725,13 +763,20 @@ For both types, the delta value is the same: 0.001.
        type T3_D3 is delta 10.0 ** (-3) digits 3;
        type T6_D3 is delta 10.0 ** (-3) digits 6;
     begin
-       Put_Line ("The delta    value of T3_D3 is " & T3_D3'Image (T3_D3'Delta));
-       Put_Line ("The minimum  value of T3_D3 is " & T3_D3'Image (T3_D3'First));
-       Put_Line ("The maximum  value of T3_D3 is " & T3_D3'Image (T3_D3'Last));
+       Put_Line ("The delta    value of T3_D3 is "
+                 & T3_D3'Image (T3_D3'Delta));
+       Put_Line ("The minimum  value of T3_D3 is "
+                 & T3_D3'Image (T3_D3'First));
+       Put_Line ("The maximum  value of T3_D3 is "
+                 & T3_D3'Image (T3_D3'Last));
        New_Line;
-       Put_Line ("The delta    value of T6_D3 is " & T6_D3'Image (T6_D3'Delta));
-       Put_Line ("The minimum  value of T6_D3 is " & T6_D3'Image (T6_D3'First));
-       Put_Line ("The maximum  value of T6_D3 is " & T6_D3'Image (T6_D3'Last));
+
+       Put_Line ("The delta    value of T6_D3 is "
+                 & T6_D3'Image (T6_D3'Delta));
+       Put_Line ("The minimum  value of T6_D3 is "
+                 & T6_D3'Image (T6_D3'First));
+       Put_Line ("The maximum  value of T6_D3 is "
+                 & T6_D3'Image (T6_D3'Last));
     end Decimal_Fixed_Point_Types;
 
 When running the application, we see that the delta value of both
@@ -757,12 +802,17 @@ zero. For example:
        B : T3_D3 := 0.5;
        C : T6_D6;
     begin
-       Put_Line ("The value of A     is " & T3_D3'Image (A));
+       Put_Line ("The value of A     is "
+                 & T3_D3'Image (A));
+
        A := A * B;
-       Put_Line ("The value of A * B is " & T3_D3'Image (A));
+       Put_Line ("The value of A * B is "
+                 & T3_D3'Image (A));
+
        A := T3_D3'Delta;
        C := A * B;
-       Put_Line ("The value of A * B is " & T6_D6'Image (C));
+       Put_Line ("The value of A * B is "
+                 & T6_D6'Image (C));
     end Decimal_Fixed_Point_Smaller;
 
 In this example, the result of the operation 0.001 * 0.5 is
@@ -798,7 +848,9 @@ The syntax for an ordinary fixed-point type is
 
 .. code-block:: ada
 
-    type <type-name> is delta <delta-value> range <lower-bound> .. <upper-bound>;
+    type <type-name> is
+      delta <delta-value>
+      range <lower-bound> .. <upper-bound>;
 
 By default the compiler will choose a scale factor, or :ada:`small`, that is a
 power of 2 no greater than <delta-value>.
@@ -814,10 +866,15 @@ following:
        D : constant := 2.0 ** (-31);
        type TQ31 is delta D range -1.0 .. 1.0 - D;
     begin
-       Put_Line ("TQ31 requires " & Integer'Image (TQ31'Size) & " bits");
-       Put_Line ("The delta    value of TQ31 is " & TQ31'Image (TQ31'Delta));
-       Put_Line ("The minimum  value of TQ31 is " & TQ31'Image (TQ31'First));
-       Put_Line ("The maximum  value of TQ31 is " & TQ31'Image (TQ31'Last));
+       Put_Line ("TQ31 requires "
+                 & Integer'Image (TQ31'Size)
+                 & " bits");
+       Put_Line ("The delta    value of TQ31 is "
+                 & TQ31'Image (TQ31'Delta));
+       Put_Line ("The minimum  value of TQ31 is "
+                 & TQ31'Image (TQ31'First));
+       Put_Line ("The maximum  value of TQ31 is "
+                 & TQ31'Image (TQ31'Last));
     end Normalized_Fixed_Point_Type;
 
 In this example, we are defining a 32-bit fixed-point data type for our
@@ -830,7 +887,9 @@ We may also rewrite this code with an exact type definition:
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Normalized_Adapted_Fixed_Point_Type
 
     procedure Normalized_Adapted_Fixed_Point_Type is
-       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+       type TQ31 is
+         delta 2.0 ** (-31)
+         range -1.0 .. 1.0 - 2.0 ** (-31);
     begin
        null;
     end Normalized_Adapted_Fixed_Point_Type;
@@ -843,9 +902,12 @@ We may also use any other range. For example:
     with Ada.Numerics; use Ada.Numerics;
 
     procedure Custom_Fixed_Point_Range is
-       type T_Inv_Trig is delta 2.0 ** (-15) * Pi range -Pi / 2.0 .. Pi / 2.0;
+       type T_Inv_Trig is
+         delta 2.0 ** (-15) * Pi
+         range -Pi / 2.0 .. Pi / 2.0;
     begin
-       Put_Line ("T_Inv_Trig requires " & Integer'Image (T_Inv_Trig'Size)
+       Put_Line ("T_Inv_Trig requires "
+                 & Integer'Image (T_Inv_Trig'Size)
                  & " bits");
        Put_Line ("The delta    value of T_Inv_Trig is "
                  & T_Inv_Trig'Image (T_Inv_Trig'Delta));
@@ -865,7 +927,9 @@ All standard operations are available for fixed-point types. For example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Fixed_Point_Op is
-       type TQ31 is delta 2.0 ** (-31) range -1.0 .. 1.0 - 2.0 ** (-31);
+       type TQ31 is
+         delta 2.0 ** (-31)
+         range -1.0 .. 1.0 - 2.0 ** (-31);
 
        A, B, R : TQ31;
     begin
@@ -888,7 +952,9 @@ fixed-point type's :ada:`small`.  This allows non-binary scaling, for example:
 
 .. code-block:: ada
 
-    type Angle is delta 1.0/3600.0 range 0.0 .. 360.0 - 1.0/3600.0;
+    type Angle is
+      delta 1.0/3600.0
+      range 0.0 .. 360.0 - 1.0 / 3600.0;
     for Angle'Small use Angle'Delta;
 
 
@@ -909,27 +975,35 @@ user-defined character types are also permitted:
 
     procedure Character_Example is
        type My_Char is ('a', 'b', 'c');
-       --  Our custom character type, an enumeration type with 3 valid values.
+       --  Our custom character type, an
+       --  enumeration type with 3 valid values.
 
        C : Character;
-       --  ^ Built-in character type (it's an enumeration type)
+       --  ^ Built-in character type
+       --    (it's an enumeration type)
 
        M : My_Char;
     begin
        C := '?';
-       --   ^ Character literal (enumeration literal)
+       --   ^ Character literal
+       --     (enumeration literal)
 
        M := 'a';
 
        C := 65;
-       --   ^ Invalid: 65 is not a Character value
+       --   ^ Invalid: 65 is not a
+       --     Character value
 
        C := Character'Val (65);
-       --  Assign the character at position 65 in the enumeration (which is 'A')
+       --  Assign the character at
+       --  position 65 in the
+       --  enumeration (which is 'A')
 
        M := C;
-       --   ^ Invalid: C is of type Character, and M is a My_Char
+       --   ^ Invalid: C is of type Character,
+       --     and M is a My_Char
 
        M := 'd';
-       --   ^ Invalid: 'd' is not a valid literal for type My_Char
+       --   ^ Invalid: 'd' is not a valid
+       --     literal for type My_Char
     end Character_Example;

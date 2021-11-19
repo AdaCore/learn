@@ -52,16 +52,19 @@ implementation details of a type. Here is how it can be done in Ada:
 
     package Stacks is
        type Stack is private;
-       --  Declare a private type: You cannot depend on its
-       --  implementation. You can only assign and test for
-       --  equality.
+       --  Declare a private type: You cannot depend
+       --  on its implementation. You can only assign
+       --  and test for equality.
 
-       procedure Push (S : in out Stack; Val : Integer);
-       procedure Pop (S : in out Stack; Val : out Integer);
+       procedure Push (S   : in out Stack;
+                       Val :        Integer);
+       procedure Pop (S   : in out Stack;
+                      Val :    out Integer);
     private
 
        subtype Stack_Index is Natural range 1 .. 10;
-       type Content_Type is array (Stack_Index) of Natural;
+       type Content_Type is array (Stack_Index)
+         of Natural;
 
        type Stack is record
           Top     : Stack_Index;
@@ -96,8 +99,10 @@ for you.
     package Stacks is
        type Stack is private;
 
-       procedure Push (S : in out Stack; Val : Integer);
-       procedure Pop (S : in out Stack; Val : out Integer);
+       procedure Push (S   : in out Stack;
+                       Val :        Integer);
+       procedure Pop (S   : in out Stack;
+                      Val :    out Integer);
     private
        ...
     end Stacks;
@@ -131,11 +136,14 @@ assignment and comparison operations are not automatically provided.
        type Stack is limited private;
        --  Limited type. Cannot assign nor compare.
 
-       procedure Push (S : in out Stack; Val : Integer);
-       procedure Pop (S : in out Stack; Val : out Integer);
+       procedure Push (S   : in out Stack;
+                       Val :        Integer);
+       procedure Pop (S   : in out Stack;
+                      Val :    out Integer);
     private
        subtype Stack_Index is Natural range 1 .. 10;
-       type Content_Type is array (Stack_Index) of Natural;
+       type Content_Type is
+         array (Stack_Index) of Natural;
 
        type Stack is limited record
           Top     : Stack_Index;
@@ -247,7 +255,8 @@ of the :ada:`Child` package:
 
        procedure Hello3 is
        begin
-          --  Using private procedure Hello2 from the parent package
+          --  Using private procedure Hello2
+          --  from the parent package
           Hello2;
           Put_Line ("Hello #3");
        end Hello3;
@@ -292,7 +301,8 @@ example:
 
        procedure Display (E : Priv_Rec) is
        begin
-          Put_Line ("Priv_Rec.Number: " & Integer'Image (E.Number));
+          Put_Line ("Priv_Rec.Number: "
+                    & Integer'Image (E.Number));
        end Display;
 
     end My_Types.Ops;
@@ -307,8 +317,11 @@ example:
     begin
        Put_Line ("Presenting information:");
 
-       --  The following line would trigger a compilation error here:
-       --  Put_Line ("Priv_Rec.Number: " & Integer'Image (E.Number));
+       --  The following code would trigger a
+       --  compilation error here:
+       --
+       --  Put_Line ("Priv_Rec.Number: "
+       --            & Integer'Image (E.Number));
 
        Display (E);
     end Main;

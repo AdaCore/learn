@@ -51,7 +51,8 @@ corresponding indices (:ada:`Index`). Let's look at an example:
           Pattern => P);
 
        Put_Line ("String: " & S);
-       Put_Line ("Count for '" & P & "': " & Natural'Image (Cnt));
+       Put_Line ("Count for '" & P & "': "
+                 & Natural'Image (Cnt));
 
        Idx := 0;
        for I in 1 .. Cnt loop
@@ -60,7 +61,8 @@ corresponding indices (:ada:`Index`). Let's look at an example:
              Pattern => P,
              From    => Idx + 1);
 
-          Put_Line ("Found instance of '" & P & "' at position: "
+          Put_Line ("Found instance of '"
+                    & P & "' at position: "
                     & Natural'Image (Idx));
        end loop;
 
@@ -94,7 +96,8 @@ example, we retrieve all the words in the string. We do this using
          To_Set (' ');
     begin
        Put_Line ("String: " & S);
-       Put_Line ("String length: " & Integer'Image (S'Length));
+       Put_Line ("String length: "
+                 & Integer'Image (S'Length));
 
        while I in S'Range loop
           Find_Token
@@ -177,26 +180,50 @@ of both function and procedure versions of :ada:`Insert`, :ada:`Overwrite`, and
           S_Ovr_In : String := Source;
           S_Del_In : String := Source;
 
-          S_Ins : String := Insert (Source, Before, New_Item & " ");
-          S_Ovr : String := Overwrite (Source, Before, New_Item);
-          S_Del : String := Trim (Delete (Source,
-                                          Before,
-                                          Before + Pattern'Length - 1),
-                                  Ada.Strings.Right);
+          S_Ins : String :=
+            Insert (Source,
+                    Before,
+                    New_Item & " ");
+          S_Ovr : String :=
+            Overwrite (Source,
+                       Before,
+                       New_Item);
+          S_Del : String :=
+            Trim (Delete (Source,
+                          Before,
+                          Before + Pattern'Length - 1),
+                  Ada.Strings.Right);
        begin
-          Insert (S_Ins_In,    Before, New_Item, Right);
-          Overwrite (S_Ovr_In, Before, New_Item, Right);
-          Delete (S_Del_In,    Before, Before + Pattern'Length - 1);
+          Insert (S_Ins_In,
+                  Before,
+                  New_Item,
+                  Right);
 
-          Put_Line ("Original:  '" & Source & "'");
+          Overwrite (S_Ovr_In,
+                     Before,
+                     New_Item,
+                     Right);
 
-          Put_Line ("Insert:    '" & S_Ins  & "'");
-          Put_Line ("Overwrite: '" & S_Ovr  & "'");
-          Put_Line ("Delete:    '" & S_Del  & "'");
+          Delete (S_Del_In,
+                  Before,
+                  Before + Pattern'Length - 1);
 
-          Put_Line ("Insert    (in-place): '" & S_Ins_In & "'");
-          Put_Line ("Overwrite (in-place): '" & S_Ovr_In & "'");
-          Put_Line ("Delete    (in-place): '" & S_Del_In & "'");
+          Put_Line ("Original:  '"
+                    & Source & "'");
+
+          Put_Line ("Insert:    '"
+                    & S_Ins  & "'");
+          Put_Line ("Overwrite: '"
+                    & S_Ovr  & "'");
+          Put_Line ("Delete:    '"
+                    & S_Del  & "'");
+
+          Put_Line ("Insert    (in-place): '"
+                    & S_Ins_In & "'");
+          Put_Line ("Overwrite (in-place): '"
+                    & S_Ovr_In & "'");
+          Put_Line ("Delete    (in-place): '"
+                    & S_Del_In & "'");
        end Display_Adapted_String;
 
        Idx : Natural;
@@ -245,10 +272,12 @@ of fixed-length strings can be when it's not performed in the declaration:
        --      S (6 .. S'Last) := (others => ' ');
        --
        --  #2:
-       --      S := ('H', 'e', 'l', 'l', 'o', others => ' ');
+       --      S := ('H', 'e', 'l', 'l', 'o',
+       --            others => ' ');
 
        Put_Line ("String: " & S);
-       Put_Line ("String Length: " & Integer'Image (S'Length));
+       Put_Line ("String Length: "
+                 & Integer'Image (S'Length));
     end Show_Char_Array;
 
 In this case, we can't simply write :ada:`S := "Hello"` because the
@@ -292,12 +321,17 @@ them at run-time is much easier. For example:
        procedure Display_String_Info (S : Bounded_String) is
        begin
           Put_Line ("String: " & To_String (S));
-          Put_Line ("String Length: " & Integer'Image (Length (S)));
-          --  String:         S'Length => ok
-          --  Bounded_String: S'Length => compilation error
-          --                              bounded strings are not arrays!
+          Put_Line ("String Length: "
+                    & Integer'Image (Length (S)));
+          --  String:
+          --          S'Length => ok
+          --  Bounded_String:
+          --          S'Length => compilation error:
+          --                      bounded strings are
+          --                      not arrays!
 
-          Put_Line ("Max.   Length: " & Integer'Image (Max_Length));
+          Put_Line ("Max.   Length: "
+                    & Integer'Image (Max_Length));
        end Display_String_Info;
     begin
        S1 := To_Bounded_String ("Hello");
@@ -306,8 +340,9 @@ them at run-time is much easier. For example:
        S2 := To_Bounded_String ("Hello World");
        Display_String_Info (S2);
 
-       S1 := To_Bounded_String ("Something longer to say here...",
-                                Right);
+       S1 := To_Bounded_String
+         ("Something longer to say here...",
+          Right);
        Display_String_Info (S1);
     end Show_Bounded_String;
 
@@ -343,9 +378,13 @@ bounded strings using the :ada:`&` operator.  Like so:
        S1, S2 : Bounded_String;
     begin
        S1 := To_Bounded_String ("Hello");
-       --  Alternatively: A := Null_Bounded_String & "Hello";
+       --  Alternatively:
+       --
+       --  A := Null_Bounded_String & "Hello";
+
        Append (S1, " World");
        --  Alternatively: Append (A, " World", Right);
+
        Put_Line ("String: " & To_String (S1));
 
        S2 := To_Bounded_String ("Hello!");
@@ -391,11 +430,15 @@ Let's look at an example:
        procedure Display_String_Info (S : Unbounded_String) is
        begin
           Put_Line ("String: " & To_String (S));
-          Put_Line ("String Length: " & Integer'Image (Length (S)));
+          Put_Line ("String Length: "
+                    & Integer'Image (Length (S)));
        end Display_String_Info;
     begin
        S1 := To_Unbounded_String ("Hello");
-       --  Alternatively: A := Null_Unbounded_String & "Hello";
+       --  Alternatively:
+       --
+       --  A := Null_Unbounded_String & "Hello";
+
        Display_String_Info (S1);
 
        S2 := To_Unbounded_String ("Hello World");

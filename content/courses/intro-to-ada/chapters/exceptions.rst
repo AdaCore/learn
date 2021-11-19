@@ -39,13 +39,16 @@ To raise an exception of our newly declared exception kind, do the following:
     procedure Main is
     begin
        raise My_Except;
-       --  Execution of current control flow abandoned; an exception of kind
-       --  "My_Except" will bubble up until it is caught.
+       --  Execution of current control flow
+       --  abandoned; an exception of kind
+       --  "My_Except" will bubble up until it
+       --  is caught.
 
        raise My_Except with "My exception message";
-       --  Execution of current control flow abandoned; an exception of
-       --  kind "My_Except" with associated string will bubble up until
-       --  it is caught.
+       --  Execution of current control flow
+       --  abandoned; an exception of kind
+       --  "My_Except" with associated string will
+       --  bubble up until it is caught.
     end Main;
 
 Handling an exception
@@ -125,7 +128,8 @@ can add it to the statements block of your current subprogram:
            begin
               Put_Line (Integer'Image (A));
            exception
-              when Constraint_Error => Put_Line ("error!");
+              when Constraint_Error =>
+                 Put_Line ("error!");
            end;
         end Be_Careful;
 

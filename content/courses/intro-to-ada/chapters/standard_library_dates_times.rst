@@ -61,9 +61,12 @@ function. For example:
               Now_Day,
               Now_Seconds);
 
-       Put_Line ("Current year  is: " & Year_Number'Image (Now_Year));
-       Put_Line ("Current month is: " & Month_Number'Image (Now_Month));
-       Put_Line ("Current day   is: " & Day_Number'Image (Now_Day));
+       Put_Line ("Current year  is: "
+                 & Year_Number'Image (Now_Year));
+       Put_Line ("Current month is: "
+                 & Month_Number'Image (Now_Month));
+       Put_Line ("Current day   is: "
+                 & Day_Number'Image (Now_Day));
     end Display_Current_Year;
 
 Here, we're retrieving each element and displaying it separately.
@@ -84,18 +87,20 @@ using a :ada:`delay until` statement. For example:
 
     procedure Display_Delay_Next_Specific_Time is
        TZ   : Time_Offset := UTC_Time_Offset;
-       Next : Time        := Ada.Calendar.Formatting.Time_Of
-         (Year        => 2018,
-          Month       => 5,
-          Day         => 1,
-          Hour        => 15,
-          Minute      => 0,
-          Second      => 0,
-          Sub_Second  => 0.0,
-          Leap_Second => False,
-          Time_Zone   => TZ);
+       Next : Time        :=
+         Ada.Calendar.Formatting.Time_Of
+           (Year        => 2018,
+            Month       => 5,
+            Day         => 1,
+            Hour        => 15,
+            Minute      => 0,
+            Second      => 0,
+            Sub_Second  => 0.0,
+            Leap_Second => False,
+            Time_Zone   => TZ);
 
-       --  Next = 2018-05-01 15:00:00.00 (local time-zone)
+       --  Next = 2018-05-01 15:00:00.00
+       --         (local time-zone)
     begin
        Put_Line ("Let's wait until...");
        Put_Line (Image (Next, True, TZ));
@@ -134,10 +139,12 @@ We could achieve a similar result by initializing :ada:`Next` with a
 
     procedure Display_Delay_Next_Specific_Time is
        TZ   : Time_Offset := UTC_Time_Offset;
-       Next : Time        := Ada.Calendar.Formatting.Value
-         ("2018-05-01 15:00:00.00", TZ);
+       Next : Time        :=
+         Ada.Calendar.Formatting.Value
+           ("2018-05-01 15:00:00.00", TZ);
 
-       --  Next = 2018-05-01 15:00:00.00 (local time-zone)
+       --  Next = 2018-05-01 15:00:00.00
+       --         (local time-zone)
     begin
        Put_Line ("Let's wait until...");
        Put_Line (Image (Next, True, TZ));
@@ -161,10 +168,13 @@ seconds, using the current time:
     with Ada.Text_IO;             use Ada.Text_IO;
 
     procedure Display_Delay_Next is
-       D    : Duration := 5.0;       --  seconds
+       D    : Duration := 5.0;
+       --                 ^ seconds
        Now  : Time     := Clock;
-       Next : Time     := Now + D;   --  use duration to
-                                     --  specify next point in time
+       Next : Time     := Now + D;
+       --                       ^ use duration to
+       --                         specify next point
+       --                         in time
     begin
        Put_Line ("Let's wait "
                  & Duration'Image (D) & " seconds...");
@@ -202,7 +212,8 @@ package instead. Let's modify that example:
        Next  : Time      := Clock + D;
     begin
        Put_Line ("Let's wait "
-                 & Duration'Image (To_Duration (D)) & " seconds...");
+                 & Duration'Image (To_Duration (D))
+                 & " seconds...");
        delay until Next;
        Put_Line ("Enough waiting!");
     end Display_Delay_Next_Real_Time;

@@ -41,12 +41,13 @@ And here is how you use it:
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Week;
-    --  References the Week package, and adds a dependency from Main
-    --  to Week
+    --  References the Week package, and
+    --  adds a dependency from Main to Week
 
     procedure Main is
     begin
-       Put_Line ("First day of the week is " & Week.Mon);
+       Put_Line ("First day of the week is "
+                 & Week.Mon);
     end Main;
 
 Packages let you make your code modular, separating your programs into
@@ -122,13 +123,15 @@ this tutorial.
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Week
 
     with Ada.Text_IO; use Ada.Text_IO;
-    --                    ^ Make every entity of the Ada.Text_IO package
-    --                      directly visible.
+    --                ^ Make every entity of the
+    --                  Ada.Text_IO package
+    --                  directly visible.
     with Week;
 
     procedure Main is
        use Week;
-       --  Make every entity of the Week package directly visible.
+       --  Make every entity of the Week
+       --  package directly visible.
     begin
        Put_Line ("First day of the week is " & Mon);
     end Main;
@@ -211,8 +214,10 @@ This example shows how :ada:`Last_Increment` is used indirectly:
           Incr : constant Integer := Get_Increment_Value;
        begin
           Put_Line (Integer'Image (I)
-                    & " incremented by " & Integer'Image (Incr)
-                    & " is "             & Integer'Image (R));
+                    & " incremented by "
+                    & Integer'Image (Incr)
+                    & " is "
+                    & Integer'Image (R));
           I := R;
        end Display_Update_Values;
     begin
@@ -311,7 +316,8 @@ we write :ada:`use Week.Child` in addition. For example:
 
     procedure Main is
     begin
-       Put_Line ("First day of the week is " & Get_First_Of_Week);
+       Put_Line ("First day of the week is "
+                 & Get_First_Of_Week);
     end Main;
 
 Child of a child package
@@ -352,7 +358,8 @@ same way as before: we can reuse the previous test application and adapt the
 
     procedure Main is
     begin
-       Put_Line ("Second day of the week is " & Get_Second_Of_Week);
+       Put_Line ("Second day of the week is "
+                 & Get_Second_Of_Week);
     end Main;
 
 Again, this isn't the limit for the package hierarchy. We could continue to
@@ -402,8 +409,10 @@ We can now reference both children in our test application:
 
     procedure Main is
     begin
-       Put_Line ("First day of the week is " & Get_First_Of_Week);
-       Put_Line ("Last day of the week is "  & Get_Last_Of_Week);
+       Put_Line ("First day of the week is "
+                 & Get_First_Of_Week);
+       Put_Line ("Last day of the week is "
+                 & Get_Last_Of_Week);
     end Main;
 
 Visibility
@@ -421,7 +430,8 @@ Let's consider the package :ada:`Book` and its child
 
     package Book is
 
-       Title : constant String := "Visible for my children";
+       Title : constant String :=
+         "Visible for my children";
 
        function Get_Title return String;
 
@@ -443,7 +453,8 @@ This is the body of both packages:
 
     package body Book is
 
-       Author : constant String := "Author not visible for my children";
+       Author : constant String :=
+         "Author not visible for my children";
 
        function Get_Title return String is
        begin
@@ -466,8 +477,9 @@ This is the body of both packages:
 
        function Get_Extended_Author return String is
        begin
-          --  "Author" string declared in the body of Book package is not
-          --  visible here. Therefore, we cannot write:
+          --  "Author" string declared in the body
+          --  of the Book package is not visible
+          --  here. Therefore, we cannot write:
           --
           --  return "Book Author: " & Author;
 
@@ -558,7 +570,8 @@ example above:
     with Ada.Text_IO;
 
     procedure Main is
-       procedure Say (Something : String) renames Ada.Text_IO.Put_Line;
+       procedure Say (Something : String)
+         renames Ada.Text_IO.Put_Line;
     begin
        Say ("Hello");
     end Main;

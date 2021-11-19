@@ -43,18 +43,20 @@ regard, which is unlike most languages, and arguably very elegant.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Integer_Type_Example is
-       --  Declare a signed integer type, and give the bounds
+       --  Declare a signed integer type,
+       --  and give the bounds
        type My_Int is range -1 .. 20;
        --                         ^ High bound
        --                   ^ Low bound
 
-       --  Like variables, type declarations can only appear in
-       --  declarative regions
+       --  Like variables, type declarations can
+       --  only appear in declarative regions.
     begin
        for I in My_Int loop
           Put_Line (My_Int'Image (I));
-          --              ^ 'Image attribute, converts a value to a
-          --                 String
+          --              ^ 'Image attribute
+          --                converts a value
+          --                to a String.
        end loop;
     end Integer_Type_Example;
 
@@ -85,7 +87,8 @@ them. Here is how :ada:`Integer` might be defined for a typical processor:
 
 .. code-block:: ada
 
-    type Integer is range -(2 ** 31) .. +(2 ** 31 - 1);
+    type Integer is
+      range -(2 ** 31) .. +(2 ** 31 - 1);
 
 :ada:`**` is the exponent operator, which means that the first valid
 value for :ada:`Integer` is -2\ :sup:`31`, and the last valid value is
@@ -110,8 +113,8 @@ checked for overflow.
        B : Integer;
     begin
        B := A + 5;
-       --  This operation will overflow, eg. it will
-       --  raise an exception at run time.
+       --  This operation will overflow, eg. it
+       --  will raise an exception at run time.
     end Main;
 
 There are two types of overflow checks:
@@ -136,8 +139,8 @@ like assignment:
        A : My_Int := 12;
        B : My_Int := 15;
        M : My_Int := (A + B) / 2;
-       --  No overflow here, overflow checks are done at
-       --  specific boundaries.
+       --  No overflow here, overflow checks
+       --  are done at specific boundaries.
     begin
        for I in 1 .. M loop
           Put_Line ("Hello, World!");
@@ -169,10 +172,12 @@ advantage of Ada is that the modulus is more general:
        type Mod_Int is mod 2 ** 5;
        --              ^ Range is 0 .. 31
 
-       A : Mod_Int := 20;
-       B : Mod_Int := 15;
-       M : Mod_Int := A + B;
-       --  No overflow here, M = (20 + 15) mod 32 = 3
+       A : constant Mod_Int := 20;
+       B : constant Mod_Int := 15;
+
+       M : constant Mod_Int := A + B;
+       --  No overflow here,
+       --  M = (20 + 15) mod 32 = 3
     begin
        for I in 1 .. M loop
           Put_Line ("Hello, World!");
@@ -205,7 +210,8 @@ describe later but one context that we have already seen is a case statement.
 
     procedure Enumeration_Example is
        type Days is (Monday, Tuesday, Wednesday,
-                     Thursday, Friday, Saturday, Sunday);
+                     Thursday, Friday,
+                     Saturday, Sunday);
        --  An enumeration type
     begin
        for I in Days loop
@@ -214,8 +220,10 @@ describe later but one context that we have already seen is a case statement.
                 Put_Line ("Week end!");
 
              when Monday .. Friday =>
-                Put_Line ("Hello on " & Days'Image (I));
-                --  'Image attribute, works on enums too
+                Put_Line ("Hello on "
+                          & Days'Image (I));
+                --  'Image attribute, works on
+                --  enums too
           end case;
        end loop;
     end Enumeration_Example;
@@ -244,9 +252,10 @@ floating-point type is :ada:`Float`:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Floating_Point_Demo is
-       A : Float := 2.5;
+       A : constant Float := 2.5;
     begin
-       Put_Line ("The value of A is " & Float'Image (A));
+       Put_Line ("The value of A is "
+                 & Float'Image (A));
     end Floating_Point_Demo;
 
 The application will display :ada:`2.5` as the value of :ada:`A`.
@@ -265,9 +274,12 @@ available, including absolute value and exponentiation.  For example:
        A : Float := 2.5;
     begin
        A := abs (A - 4.5);
-       Put_Line ("The value of A is " & Float'Image (A));
+       Put_Line ("The value of A is "
+                 & Float'Image (A));
+
        A := A ** 2 + 1.0;
-       Put_Line ("The value of A is " & Float'Image (A));
+       Put_Line ("The value of A is "
+                 & Float'Image (A));
     end Floating_Point_Operations;
 
 The value of :ada:`A` is :ada:`2.0` after the first operation and :ada:`5.0`
@@ -305,9 +317,15 @@ required precision. For example:
        type T15 is digits 15;
        type T18 is digits 18;
     begin
-       Put_Line ("T3  requires " & Integer'Image (T3'Size) & " bits");
-       Put_Line ("T15 requires " & Integer'Image (T15'Size) & " bits");
-       Put_Line ("T18 requires " & Integer'Image (T18'Size) & " bits");
+       Put_Line ("T3  requires "
+                 & Integer'Image (T3'Size)
+                 & " bits");
+       Put_Line ("T15 requires "
+                 & Integer'Image (T15'Size)
+                 & " bits");
+       Put_Line ("T18 requires "
+                 & Integer'Image (T18'Size)
+                 & " bits");
     end Custom_Floating_Types;
 
 In this example, the attribute :ada:`'Size` is used to retrieve the number of
@@ -328,11 +346,13 @@ when displaying floating-point variables. For example:
 
        C1 : constant := 1.0e-4;
 
-       A : T3  := 1.0 + C1;
-       B : T18 := 1.0 + C1;
+       A : constant T3  := 1.0 + C1;
+       B : constant T18 := 1.0 + C1;
     begin
-       Put_Line ("The value of A is " & T3'Image (A));
-       Put_Line ("The value of B is " & T18'Image (B));
+       Put_Line ("The value of A is "
+                 & T3'Image (A));
+       Put_Line ("The value of B is "
+                 & T18'Image (B));
     end Display_Custom_Floating_Types;
 
 As expected, the application will display the variables according to
@@ -356,7 +376,8 @@ between :ada:`-1.0` and :ada:`1.0`:
        A  : T_Norm;
     begin
        A := 1.0;
-       Put_Line ("The value of A is " & T_Norm'Image (A));
+       Put_Line ("The value of A is "
+                 & T_Norm'Image (A));
     end Floating_Point_Range;
 
 The application is responsible for ensuring that variables of this type stay
@@ -374,7 +395,8 @@ variable :ada:`A`:
        A  : T_Norm;
     begin
        A := 2.0;
-       Put_Line ("The value of A is " & T_Norm'Image (A));
+       Put_Line ("The value of A is "
+                 & T_Norm'Image (A));
     end Floating_Point_Range_Exception;
 
 Ranges can also be specified for custom floating-point types. For example:
@@ -385,7 +407,8 @@ Ranges can also be specified for custom floating-point types. For example:
     with Ada.Numerics; use Ada.Numerics;
 
     procedure Custom_Range_Types is
-       type T6_Inv_Trig  is digits 6 range -Pi / 2.0 .. Pi / 2.0;
+       type T6_Inv_Trig  is
+         digits 6 range -Pi / 2.0 .. Pi / 2.0;
     begin
        null;
     end Custom_Range_Types;
@@ -437,7 +460,8 @@ Ada, such conversions must be made explicit:
        Dist_Metric : constant Meters := 1000.0;
     begin
        Dist_Imperial := Miles (Dist_Metric) * 621.371e-6;
-       --               ^ Type conversion, from Meters to Miles
+       --               ^ Type conversion,
+       --                 from Meters to Miles
        --  Now the code is correct
 
        Put_Line (Miles'Image (Dist_Imperial));
@@ -455,7 +479,8 @@ introduce conversion functions along with the types.
        type Meters is new Float;
        type Miles is new Float;
 
-       --  Function declaration, like procedure but returns a value.
+       --  Function declaration, like procedure
+       --  but returns a value.
        function To_Miles (M : Meters) return Miles is
        --                             ^ Return type
        begin
@@ -543,27 +568,38 @@ treated as a distinct type in the interest of strong typing.
     :class: ada-expect-compile-error
 
     procedure Main is
-       --  ID card number type, incompatible with Integer.
-       type Social_Security_Number
-       is new Integer range 0 .. 999_99_9999;
-       --                   ^ Since a SSN has 9 digits max, and cannot be
-       --                     negative, we enforce a validity constraint.
+       --  ID card number type,
+       --  incompatible with Integer.
+       type Social_Security_Number is new Integer
+         range 0 .. 999_99_9999;
+       --      ^ Since a SSN has 9 digits
+       --        max., and cannot be
+       --        negative, we enforce
+       --        a validity constraint.
 
-       SSN : Social_Security_Number := 555_55_5555;
-       --                              ^ You can put underscores as formatting in
-       --                                any number.
+       SSN : Social_Security_Number :=
+         555_55_5555;
+       --   ^ You can put underscores as
+       --     formatting in any number.
 
        I   : Integer;
 
+       --  The value -1 below will cause a
+       --  runtime error and a compile time
+       --  warning with GNAT.
        Invalid : Social_Security_Number := -1;
-       --                                  ^ This will cause a runtime error
-       --                                    (and a compile time warning with
-       --                                     GNAT)
     begin
-       I := SSN;                           -- Illegal, they have different types
-       SSN := I;                           -- Likewise illegal
-       I := Integer (SSN);                 -- OK with explicit conversion
-       SSN := Social_Security_Number (I);  -- Likewise OK
+       --  Illegal, they have different types:
+       I := SSN;
+
+       --  Likewise illegal:
+       SSN := I;
+
+       --  OK with explicit conversion:
+       I := Integer (SSN);
+
+       --  Likewise OK:
+       SSN := Social_Security_Number (I);
     end Main;
 
 The type :ada:`Social_Security` is said to be a *derived type*;
@@ -582,11 +618,14 @@ The syntax for enumerations uses the :ada:`range <range>` syntax:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
-       type Days is (Monday, Tuesday, Wednesday, Thursday,
-                     Friday, Saturday, Sunday);
+       type Days is (Monday, Tuesday, Wednesday,
+                     Thursday, Friday,
+                     Saturday, Sunday);
 
-       type Weekend_Days is new Days range Saturday .. Sunday;
-       --  New type, where only Saturday and Sunday are valid literals.
+       type Weekend_Days is new
+         Days range Saturday .. Sunday;
+       --  New type, where only Saturday and Sunday
+       --  are valid literals.
     begin
        null;
     end Greet;
@@ -604,26 +643,30 @@ into play.  A subtype does not introduce a new type.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
-       type Days is (Monday, Tuesday, Wednesday, Thursday,
-                     Friday, Saturday, Sunday);
+       type Days is (Monday, Tuesday, Wednesday,
+                     Thursday, Friday,
+                     Saturday, Sunday);
 
        --  Declaration of a subtype
-       subtype Weekend_Days is Days range Saturday .. Sunday;
-       --                           ^ Constraint of the subtype
+       subtype Weekend_Days is
+         Days range Saturday .. Sunday;
+       --     ^ Constraint of the subtype
 
        M : Days := Sunday;
 
        S : Weekend_Days := M;
-       --  No error here, Days and Weekend_Days are of the same type.
+       --  No error here, Days and Weekend_Days
+       --  are of the same type.
     begin
        for I in Days loop
           case I is
-             --  Just like a type, a subtype can be used as a
-             --  range
+             --  Just like a type, a subtype can
+             --  be used as a range
              when Weekend_Days =>
                 Put_Line ("Week end!");
              when others =>
-                Put_Line ("Hello on " & Days'Image (I));
+                Put_Line ("Hello on "
+                          & Days'Image (I));
           end case;
        end loop;
     end Greet;
@@ -646,15 +689,19 @@ an exception will be raised.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet is
-       type Days is (Monday, Tuesday, Wednesday, Thursday,
-                     Friday, Saturday, Sunday);
+       type Days is (Monday, Tuesday, Wednesday,
+                     Thursday, Friday,
+                     Saturday, Sunday);
 
-       subtype Weekend_Days is Days range Saturday .. Sunday;
-       Day : Days := Saturday;
+       subtype Weekend_Days is
+         Days range Saturday .. Sunday;
+
+       Day     : Days := Saturday;
        Weekend : Weekend_Days;
     begin
        Weekend := Day;
-       --         ^ Correct: Same type, subtype constraints are respected
+       --         ^ Correct: Same type, subtype
+       --           constraints are respected
        Weekend := Monday;
        --         ^ Wrong value for the subtype
        --           Compiles, but exception at runtime
@@ -756,8 +803,12 @@ Let's look at another example:
 .. code-block:: ada
 
     subtype Degree_Celsius is Float;
-    subtype Liquid_Water_Temperature is Degree_Celsius range 0.0 .. 100.0;
-    subtype Running_Water_Temperature is Liquid_Water_Temperature;
+
+    subtype Liquid_Water_Temperature is
+      Degree_Celsius range 0.0 .. 100.0;
+
+    subtype Running_Water_Temperature is
+      Liquid_Water_Temperature;
 
 In this example, :ada:`Liquid_Water_Temperature` isn't an alias of
 :ada:`Degree_Celsius`, since it adds a new constraint that wasn't part of the

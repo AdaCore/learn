@@ -20,8 +20,8 @@ This example shows the declaration and definition of a function:
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Increment
 
     function Increment (I : Integer) return Integer;
-    --  We declare (but don't define) a function with one
-    --  parameter, returning an integer value
+    --  We declare (but don't define) a function with
+    --  one parameter, returning an integer value
 
     function Increment (I : Integer) return Integer is
        --  We define the Increment function
@@ -79,7 +79,8 @@ We can then call our subprogram this way:
        A, B, C : Integer;
     begin
        C := Increment_By;
-       --              ^ Parameterless call, value of I is 0
+       --              ^ Parameterless call,
+       --                value of I is 0
        --                and Incr is 1
 
        Put_Line ("Using defaults for Increment_By is "
@@ -90,9 +91,12 @@ We can then call our subprogram this way:
        C := Increment_By (A, B);
        --                 ^ Regular parameter passing
 
-       Put_Line ("Increment of " & Integer'Image (A)
-                 & " with "      & Integer'Image (B)
-                 & " is "        & Integer'Image (C));
+       Put_Line ("Increment of "
+                 & Integer'Image (A)
+                 & " with "
+                 & Integer'Image (B)
+                 & " is "
+                 & Integer'Image (C));
 
        A := 20;
        B := 5;
@@ -100,9 +104,12 @@ We can then call our subprogram this way:
                           Incr => B);
         --                ^ Named parameter passing
 
-       Put_Line ("Increment of " & Integer'Image (A)
-                 & " with "      & Integer'Image (B)
-                 & " is "        & Integer'Image (C));
+       Put_Line ("Increment of "
+                 & Integer'Image (A)
+                 & " with "
+                 & Integer'Image (B)
+                 & " is "
+                 & Integer'Image (C));
     end Show_Increment;
 
 Ada allows you to name the parameters when you pass them, whether they have a
@@ -151,9 +158,12 @@ the nested :ada:`Display_Result` procedure.
 
        procedure Display_Result is
        begin
-          Put_Line ("Increment of " & Integer'Image (A)
-                    & " with "      & Integer'Image (B)
-                    & " is "        & Integer'Image (C));
+          Put_Line ("Increment of "
+                    & Integer'Image (A)
+                    & " with "
+                    & Integer'Image (B)
+                    & " is "
+                    & Integer'Image (C));
        end Display_Result;
 
     begin
@@ -182,10 +192,12 @@ to explicitly store it in a local variable.
         end Double;
 
        Res : Integer := Double (Double (I));
-       --               ^ Calling the double function
+       --               ^ Calling the Double
+       --                 function
     begin
        Double (I);
-       --  ERROR: cannot use call to function "Double" as a statement
+       --  ERROR: cannot use call to function
+       --         "Double" as a statement
 
        return Res;
     end Quadruple;
@@ -199,12 +211,16 @@ to explicitly store it in a local variable.
     .. code-block:: ada
 
         function Read_Int
-           (Stream : Network_Stream; Result : out Integer) return Boolean;
+           (Stream :     Network_Stream;
+            Result : out Integer) return Boolean;
 
         procedure Main is
             Stream : Network_Stream := Get_Stream;
             My_Int : Integer;
-            B : Boolean := Read_Int (Stream, My_Int);  -- Warning here, B is never read
+
+            -- Warning: in the line below, B is
+            --          never read.
+            B : Boolean := Read_Int (Stream, My_Int);
         begin
            null;
         end Main;
@@ -281,9 +297,12 @@ program will cause an error:
     begin
        Tmp := A;
 
-       --  Error: assignment to "in" mode parameter not allowed
+       --  Error: assignment to "in" mode
+       --         parameter not allowed
        A := B;
-       --  Error: assignment to "in" mode parameter not allowed
+
+       --  Error: assignment to "in" mode
+       --         parameter not allowed
        B := Tmp;
     end Swap;
 
@@ -306,15 +325,17 @@ To correct our code above, we can use an "in out" parameter.
           Tmp : Integer;
        begin
           Tmp := A;
-          A := B;
-          B := Tmp;
+          A   := B;
+          B   := Tmp;
        end Swap;
 
        A : Integer := 12;
        B : Integer := 44;
     begin
         Swap (A, B);
-        Put_Line (Integer'Image (A)); --  Prints 44
+
+        --  Prints 44
+        Put_Line (Integer'Image (A));
     end In_Out_Params;
 
 An in out parameter will allow read and write access to the object passed as
@@ -359,10 +380,13 @@ the following specifications:
 .. code-block:: ada
 
     procedure Read_Int
-       (Stream : Network_Stream; Success : out Boolean; Result : out Integer);
+       (Stream  :     Network_Stream;
+        Success : out Boolean;
+        Result  : out Integer);
 
     function Read_Int
-       (Stream : Network_Stream; Result : out Integer) return Boolean;
+       (Stream :     Network_Stream;
+        Result : out Integer) return Boolean;
 
 While reading an out variable before writing to it should, ideally, trigger an
 error, imposing that as a rule would cause either inefficient run-time checks
@@ -378,7 +402,9 @@ acts like an uninitialized variable when the subprogram is invoked.
 
         procedure Outp is
            procedure Foo (A : out Integer) is
-              B : Integer := A; -- Warning on reference to uninitialized A
+              B : Integer := A;
+              --             ^ Warning on reference
+              --               to uninitialized A
            begin
               A := B;
            end Foo;
@@ -484,7 +510,8 @@ rename :ada:`Integer'Image` to :ada:`Img`:
 
     procedure Show_Image_Renaming is
 
-       function Img (I : Integer) return String renames Integer'Image;
+       function Img (I : Integer) return String
+         renames Integer'Image;
 
     begin
        Put_Line (Img (2));
@@ -501,8 +528,9 @@ as the default for the :ada:`String` parameter of the :ada:`Show` procedure:
 
     procedure Show_Renaming_Defaults is
 
-       procedure Show (S : String := "Hello World!") renames
-         A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
+       procedure Show (S : String := "Hello World!")
+         renames
+           A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
 
     begin
        Show;

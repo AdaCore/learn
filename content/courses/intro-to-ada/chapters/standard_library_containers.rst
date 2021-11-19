@@ -34,9 +34,10 @@ vector :ada:`V`:
 
     procedure Show_Vector_Inst is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        V : Integer_Vectors.Vector;
     begin
@@ -78,16 +79,18 @@ We use the :ada:`&` operator, as shown in the following example:
 
     procedure Show_Vector_Init is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
        V : Vector := 20 & 10 & 0 & 13;
     begin
        Put_Line ("Vector has "
-                 & Count_Type'Image (V.Length) & " elements");
+                 & Count_Type'Image (V.Length)
+                 & " elements");
     end Show_Vector_Init;
 
 We specify :ada:`use Integer_Vectors`, so we have direct access to the
@@ -113,9 +116,10 @@ beginning or end of a vector, respectively. For example:
 
     procedure Show_Vector_Append is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
@@ -135,7 +139,8 @@ beginning or end of a vector, respectively. For example:
        Put_Line ("Finished prepending.");
 
        Put_Line ("Vector has "
-                 & Count_Type'Image (V.Length) & " elements");
+                 & Count_Type'Image (V.Length)
+                 & " elements");
     end Show_Vector_Append;
 
 This example puts elements into the vector in the following sequence: (100,
@@ -162,24 +167,33 @@ We access the first and last elements of a vector using the
 
     procedure Show_Vector_First_Last_Element is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
-       function Img (I : Integer)    return String renames Integer'Image;
-       function Img (I : Count_Type) return String renames Count_Type'Image;
+       function Img (I : Integer)    return String
+         renames Integer'Image;
+       function Img (I : Count_Type) return String
+         renames Count_Type'Image;
 
        V : Vector := 20 & 10 & 0 & 13;
     begin
-       Put_Line ("Vector has " & Img (V.Length) & " elements");
+       Put_Line ("Vector has "
+                 & Img (V.Length)
+                 & " elements");
 
-       --  Using V.First_Element to retrieve first element
-       Put_Line ("First element is " & Img (V.First_Element));
+       --  Using V.First_Element to
+       --  retrieve first element
+       Put_Line ("First element is "
+                 & Img (V.First_Element));
 
-       --  Using V.Last_Element to retrieve last element
-       Put_Line ("Last element is " & Img (V.Last_Element));
+       --  Using V.Last_Element to
+       --  retrieve last element
+       Put_Line ("Last element is "
+                 & Img (V.Last_Element));
     end Show_Vector_First_Last_Element;
 
 You can swap elements by calling the procedure :ada:`Swap` and retrieving a
@@ -199,23 +213,27 @@ elements of a vector:
 
     procedure Show_Vector_First_Last_Element is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
-       function Img (I : Integer) return String renames Integer'Image;
+       function Img (I : Integer) return String
+         renames Integer'Image;
 
        V : Vector := 20 & 10 & 0 & 13;
     begin
-       --  We use V.First and V.Last to retrieve cursor for first and
-       --  last elements.
+       --  We use V.First and V.Last to retrieve
+       --  cursor for first and last elements.
        --  We use V.Swap to swap elements.
        V.Swap (V.First, V.Last);
 
-       Put_Line ("First element is now " & Img (V.First_Element));
-       Put_Line ("Last element is now " & Img (V.Last_Element));
+       Put_Line ("First element is now "
+                 & Img (V.First_Element));
+       Put_Line ("Last element is now "
+                 & Img (V.Last_Element));
     end Show_Vector_First_Last_Element;
 
 Iterating
@@ -234,13 +252,15 @@ For example:
 
     procedure Show_Vector_Iteration is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
-       function Img (I : Integer) return String renames Integer'Image;
+       function Img (I : Integer) return String
+         renames Integer'Image;
 
        V : Vector := 20 & 10 & 0 & 13;
     begin
@@ -281,9 +301,10 @@ array index: :ada:`V (I)`.  For example:
 
     procedure Show_Vector_Index_Iteration is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
@@ -292,7 +313,8 @@ array index: :ada:`V (I)`.  For example:
        Put_Line ("Vector elements are: ");
 
        --
-       --  Using indices in a "for I in ..." loop to iterate:
+       --  Using indices in a "for I in ..." loop
+       --  to iterate:
        --
        for I in V.First_Index .. V.Last_Index loop
           --  Displaying current index I
@@ -302,8 +324,9 @@ array index: :ada:`V (I)`.  For example:
 
           Put (Integer'Image (V (I)));
 
-          --  We could also use the V.Element (I) function to retrieve the
-          --  element at the current index I
+          --  We could also use the V.Element (I)
+          --  function to retrieve the element at
+          --  the current index I
 
           New_Line;
        end loop;
@@ -330,9 +353,10 @@ array index: :ada:`V (C)`. For example:
 
     procedure Show_Vector_Cursor_Iteration is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
@@ -344,21 +368,23 @@ array index: :ada:`V (C)`. For example:
        --  Use a cursor to iterate in a loop:
        --
        for C in V.Iterate loop
-          --  Using To_Index function to retrieve index
-          --  for the cursor position
+          --  Using To_Index function to retrieve
+          --  the index for the cursor position
           Put ("- ["
                & Extended_Index'Image (To_Index (C))
                & "] ");
 
           Put (Integer'Image (V (C)));
 
-          --  We could use Element (C) to retrieve the vector
-          --  element for the cursor position
+          --  We could use Element (C) to retrieve
+          --  the vector element for the cursor
+          --  position
 
           New_Line;
        end loop;
 
-       --  Alternatively, we could iterate with a while-loop:
+       --  Alternatively, we could iterate with a
+       --  while-loop:
        --
        --  declare
        --     C : Cursor := V.First;
@@ -415,9 +441,10 @@ to the process procedure. For example:
 
     procedure Show_Vector_Update is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
@@ -453,9 +480,10 @@ cursor referencing that element. For example:
 
     procedure Show_Find_Vector_Element is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
@@ -463,12 +491,14 @@ cursor referencing that element. For example:
        Idx : Extended_Index;
        C   : Cursor;
     begin
-       --  Using Find_Index to retrieve index of element with value 10
+       --  Using Find_Index to retrieve the index
+       --  of element with value 10
        Idx := V.Find_Index (10);
        Put_Line ("Index of element with value 10 is "
                  & Extended_Index'Image (Idx));
 
-       --  Using Find to retrieve cursor for element with value 13
+       --  Using Find to retrieve the cursor for
+       --  the element with value 13
        C   := V.Find (13);
        Idx := To_Index (C);
        Put_Line ("Index of element with value 13 is "
@@ -522,9 +552,10 @@ example:
 
     procedure Show_Vector_Insert is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
@@ -532,7 +563,8 @@ example:
        begin
           New_Line;
           Put_Line ("Vector has "
-                    & Count_Type'Image (V.Length) & " elements");
+                    & Count_Type'Image (V.Length)
+                    & " elements");
 
           if not V.Is_Empty then
              Put_Line ("Vector elements are: ");
@@ -551,7 +583,8 @@ example:
        Put_Line ("Adding element with value 9 (before 10)...");
 
        --
-       --  Using V.Insert to insert element into vector
+       --  Using V.Insert to insert the element
+       --  into the vector
        --
        C := V.Find (10);
        if C /= No_Element then
@@ -580,9 +613,10 @@ program that searches for a specific element and deletes it, if found:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Remove_Vector_Element is
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
@@ -590,7 +624,8 @@ program that searches for a specific element and deletes it, if found:
        Idx : Extended_Index;
        C   : Cursor;
     begin
-       --  Use Find_Index to retrieve index of element with value 10
+       --  Use Find_Index to retrieve index of
+       --  the element with value 10
        Idx := V.Find_Index (10);
 
        --  Checking whether index is valid
@@ -599,7 +634,8 @@ program that searches for a specific element and deletes it, if found:
           V.Delete (Idx);
        end if;
 
-       --  Use Find to retrieve cursor for element with value 13
+       --  Use Find to retrieve cursor for
+       --  the element with value 13
        C := V.Find (13);
 
        --  Check whether index is valid
@@ -623,16 +659,19 @@ get an invalid index or cursor. For example:
 
     procedure Show_Remove_Vector_Elements is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        use Integer_Vectors;
 
        procedure Show_Elements (V : Vector) is
        begin
           New_Line;
-          Put_Line ("Vector has " & Count_Type'Image (V.Length) & " elements");
+          Put_Line ("Vector has "
+                    & Count_Type'Image (V.Length)
+                    & " elements");
 
           if not V.Is_Empty then
              Put_Line ("Vector elements are: ");
@@ -725,9 +764,10 @@ The following example presents code that manipulates three vectors (:ada:`V1`,
 
     procedure Show_Vector_Ops is
 
-       package Integer_Vectors is new Ada.Containers.Vectors
-         (Index_Type   => Natural,
-          Element_Type => Integer);
+       package Integer_Vectors is new
+         Ada.Containers.Vectors
+           (Index_Type   => Natural,
+            Element_Type => Integer);
 
        package Integer_Vectors_Sorting is new Integer_Vectors.Generic_Sorting;
 
@@ -737,7 +777,9 @@ The following example presents code that manipulates three vectors (:ada:`V1`,
        procedure Show_Elements (V : Vector) is
        begin
           New_Line;
-          Put_Line ("Vector has " & Count_Type'Image (V.Length) & " elements");
+          Put_Line ("Vector has "
+                    & Count_Type'Image (V.Length)
+                    & " elements");
 
           if not V.Is_Empty then
              Put_Line ("Vector elements are: ");
@@ -832,8 +874,9 @@ Let's see an example:
 
     procedure Show_Set_Init is
 
-       package Integer_Sets is new Ada.Containers.Ordered_Sets
-         (Element_Type => Integer);
+       package Integer_Sets is new
+         Ada.Containers.Ordered_Sets
+           (Element_Type => Integer);
 
        use Integer_Sets;
 
@@ -847,10 +890,12 @@ Let's see an example:
        S.Insert (0);
        S.Insert (13);
 
-       --  Calling S.Insert(0) now would raise Constraint_Error
-       --  because this element is already in the set.
-       --  We instead call a version of Insert that doesn't raise an
-       --  exception but instead returns a Boolean indicating the status
+       --  Calling S.Insert(0) now would raise
+       --  Constraint_Error because this element
+       --  is already in the set. We instead call a
+       --  version of Insert that doesn't raise an
+       --  exception but instead returns a Boolean
+       --  indicating the status
 
        S.Insert (0, C, Ins);
        if not Ins then
@@ -858,12 +903,15 @@ Let's see an example:
        end if;
 
        --  We can also call S.Include instead
-       --  If the element is already present, the set remains unchanged
+       --  If the element is already present,
+       --  the set remains unchanged
        S.Include (0);
        S.Include (13);
        S.Include (14);
 
-       Put_Line ("Set has " & Count_Type'Image (S.Length) & " elements");
+       Put_Line ("Set has "
+                 & Count_Type'Image (S.Length)
+                 & " elements");
 
        --
        --  Iterate over set using for .. of loop
@@ -906,15 +954,18 @@ Let's look at an example that makes use of these operations:
 
     procedure Show_Set_Element_Ops is
 
-       package Integer_Sets is new Ada.Containers.Ordered_Sets
-         (Element_Type => Integer);
+       package Integer_Sets is new
+         Ada.Containers.Ordered_Sets
+           (Element_Type => Integer);
 
        use Integer_Sets;
 
        procedure Show_Elements (S : Set) is
        begin
           New_Line;
-          Put_Line ("Set has " & Count_Type'Image (S.Length) & " elements");
+          Put_Line ("Set has "
+                    & Count_Type'Image (S.Length)
+                    & " elements");
           Put_Line ("Elements:");
           for E of S loop
              Put_Line ("- " & Integer'Image (E));
@@ -930,17 +981,19 @@ Let's look at an example that makes use of these operations:
 
        S.Delete (13);
 
-       --  Calling S.Delete (13) again raises Constraint_Error
-       --  because the element is no longer present
-       --  in the set, so it can't be deleted.
-       --  We can call V.Exclude instead:
+       --  Calling S.Delete (13) again raises
+       --  Constraint_Error because the element
+       --  is no longer present in the set, so
+       --  it can't be deleted. We can call
+       --  V.Exclude instead:
        S.Exclude (13);
 
        if S.Contains (20) then
           Put_Line ("Found element 20 in set");
        end if;
 
-       --  Alternatively, we could use S.Find instead of S.Contains
+       --  Alternatively, we could use S.Find
+       --  instead of S.Contains
        if S.Find (0) /= No_Element then
           Put_Line ("Found element 0 in set");
        end if;
@@ -1001,8 +1054,9 @@ The following example makes use of these operators:
 
     procedure Show_Set_Ops is
 
-       package Integer_Sets is new Ada.Containers.Ordered_Sets
-         (Element_Type => Integer);
+       package Integer_Sets is new
+         Ada.Containers.Ordered_Sets
+           (Element_Type => Integer);
 
        use Integer_Sets;
 
@@ -1018,8 +1072,10 @@ The following example makes use of these operators:
                           Op_Name : String) is
        begin
           New_Line;
-          Put_Line (Op_Name & "(set #1, set #2) has "
-                    & Count_Type'Image (S.Length) & " elements");
+          Put_Line (Op_Name
+                    & "(set #1, set #2) has "
+                    & Count_Type'Image (S.Length)
+                    & " elements");
        end Show_Op;
 
        S1, S2, S3 : Set;
@@ -1152,7 +1208,9 @@ Let's see an example:
        use Integer_Hashed_Maps;
 
        M : Map;
-       --  Same as:  M : Integer_Hashed_Maps.Map;
+       --  Same as:
+       --
+       --  M : Integer_Hashed_Maps.Map;
     begin
        M.Include ("Alice", 24);
        M.Include ("John",  40);
@@ -1170,7 +1228,8 @@ Let's see an example:
 
        New_Line; Put_Line ("Name & Age:");
        for C in M.Iterate loop
-          Put_Line (Key (C) & ": " & Integer'Image (M (C)));
+          Put_Line (Key (C) & ": "
+                    & Integer'Image (M (C)));
        end loop;
 
     end Show_Hashed_Map;
@@ -1222,7 +1281,8 @@ Let's see an example:
 
        New_Line; Put_Line ("Name & Age:");
        for C in M.Iterate loop
-          Put_Line (Key (C) & ": " & Integer'Image (M (C)));
+          Put_Line (Key (C) & ": "
+                    & Integer'Image (M (C)));
        end loop;
 
     end Show_Ordered_Map;

@@ -128,10 +128,15 @@ Ada's :ada:`if` statement is pretty unsurprising in form and function:
     procedure Check_Positive is
        N : Integer;
     begin
-       Put ("Enter an integer value: ");  -- Put a String
-       Get (N);  --  Read in an integer value
+       --  Put a String
+       Put ("Enter an integer value: ");
+
+       --  Read in an integer value
+       Get (N);
+
        if N > 0 then
-          Put (N);  --  Put an Integer
+          --  Put an Integer
+          Put (N);
           Put_Line (" is a positive number");
        end if;
     end Check_Positive;
@@ -166,9 +171,15 @@ with an :ada:`else` part:
     procedure Check_Positive is
        N : Integer;
     begin
-       Put ("Enter an integer value: ");  -- Put a String
-       Get (N);  --  Reads in an integer value
-       Put (N);  --  Put an Integer
+       --  Put a String
+       Put ("Enter an integer value: ");
+
+       --  Reads in an integer value
+       Get (N);
+
+       --  Put an Integer
+       Put (N);
+
        if N > 0 then
           Put_Line (" is a positive number");
        else
@@ -190,9 +201,10 @@ sections:
     procedure Check_Direction is
        N : Integer;
     begin
-       Put ("Enter an integer value: ");  -- Puts a String
-       Get (N);  --  Reads an Integer
-       Put (N);  --  Puts an Integer
+       Put ("Enter an integer value: ");
+       Get (N);
+       Put (N);
+
        if N = 0 or N = 360 then
           Put_Line (" is due north");
        elsif N in 1 .. 89 then
@@ -248,7 +260,8 @@ discrete range.
     procedure Greet_5a is
     begin
        for I in 1 .. 5 loop
-          Put_Line ("Hello, World!" & Integer'Image (I)); --  Procedure call
+          --  Put_Line is a procedure call
+          Put_Line ("Hello, World!" & Integer'Image (I));
           --        ^ Procedure parameter
        end loop;
     end Greet_5a;
@@ -297,7 +310,8 @@ To iterate backwards over a range, use the :ada:`reverse` keyword:
     procedure Greet_5a_Reverse is
     begin
        for I in reverse 1 .. 5 loop
-          Put_Line ("Hello, World!" & Integer'Image (I));
+          Put_Line ("Hello, World!"
+                    & Integer'Image (I));
        end loop;
     end Greet_5a_Reverse;
 
@@ -326,7 +340,8 @@ Thus no output is produced in the following example:
     procedure Greet_No_Op is
     begin
        for I in reverse 5 .. 1 loop
-          Put_Line ("Hello, World!" & Integer'Image (I));
+          Put_Line ("Hello, World!"
+                    & Integer'Image (I));
        end loop;
     end Greet_No_Op;
 
@@ -344,17 +359,23 @@ the other kinds of Ada loops.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet_5b is
-       I : Integer := 1; -- Variable declaration
+       --  Variable declaration:
+       I : Integer := 1;
        --  ^ Type
        --             ^ Initial value
     begin
        loop
-          Put_Line ("Hello, World!" & Integer'Image (I));
-          exit when I = 5; --  Exit statement
+          Put_Line ("Hello, World!"
+                    & Integer'Image (I));
+
+          --  Exit statement:
+          exit when I = 5;
           --        ^ Boolean condition
 
-          --  Assignment
-          I := I + 1; -- There is no I++ short form to increment a variable
+          --  Assignment:
+          I := I + 1;
+          --  There is no I++ short form to
+          --  increment a variable
        end loop;
     end Greet_5b;
 
@@ -391,10 +412,12 @@ The last kind of loop in Ada is the :ada:`while` loop.
     procedure Greet_5c is
        I : Integer := 1;
     begin
-       --  Condition must be a Boolean value (no Integers).
+       --  Condition must be a Boolean value
+       --  (no Integers).
        --  Operator "<=" returns a Boolean
        while I <= 5 loop
-          Put_Line ("Hello, World!" & Integer'Image (I));
+          Put_Line ("Hello, World!"
+                    & Integer'Image (I));
 
           I := I + 1;
        end loop;
@@ -432,9 +455,10 @@ with an :ada:`if` statement:
        N : Integer;
     begin
        loop
-          Put ("Enter an integer value: ");  -- Puts a String
-          Get (N);  --  Reads an Integer
-          Put (N);  --  Puts an Integer
+          Put ("Enter an integer value: ");
+          Get (N);
+          Put (N);
+
           case N is
              when 0 | 360 =>
                 Put_Line (" is due north");
@@ -519,12 +543,14 @@ declarative region and perform an initialization and an addition on it:
        X : Integer;
     begin
        X := 0;
-       Put_Line ("The initial value of X is " & Integer'Image (X));
+       Put_Line ("The initial value of X is "
+                 & Integer'Image (X));
 
        Put_Line ("Performing operation on X...");
        X := X + 1;
 
-       Put_Line ("The value of X now is " & Integer'Image (X));
+       Put_Line ("The value of X now is "
+                 & Integer'Image (X));
     end Main;
 
 Let's look at an example of a nested procedure:
@@ -558,13 +584,14 @@ a block statement:
 
           declare
              Name : String := Get_Line;
-             --               ^ Call to the Get_Line function
+             --               ^ Call to the
+             --                 Get_Line function
           begin
              exit when Name = "";
              Put_Line ("Hi " & Name & "!");
           end;
 
-      --  Name is undefined here
+          --  Name is undefined here
        end loop;
 
       Put_Line ("Bye!");
@@ -602,11 +629,12 @@ statement has been replaced by an :ada:`if` expression:
     procedure Check_Positive is
        N : Integer;
     begin
-       Put ("Enter an integer value: ");  --  Put a String
-       Get (N);  --  Reads in an integer value
-       Put (N);  --  Put an Integer
+       Put ("Enter an integer value: ");
+       Get (N);
+       Put (N);
+
        declare
-          S : String :=
+          S : constant String :=
             (if N > 0 then " is a positive number"
              else " is not a positive number");
        begin
