@@ -309,7 +309,7 @@ if config.has_option('', 'latex_toplevel_sectioning'):
 # -- Options for Epub output ---------------------------------------------------
 
 epub_title = title
-epub_author = author.replace(' \\and', ' and')
+epub_author = author.replace(r' \\and', ' and')
 epub_publisher = publisher
 epub_copyright = copyright
 epub_description = release_name + " " + release
