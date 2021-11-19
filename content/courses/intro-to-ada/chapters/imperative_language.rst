@@ -15,8 +15,8 @@ procedural/imperative language akin to C or Pascal.
     will fail to compile.  This rule supports a useful stylistic principle:
     expressions are intended to deliver values, not to have side effects. It
     can also prevent some programming errors, such as mistakenly using the
-    equality operator "=" instead of the assignment operation ":=" in an
-    assignment statement.
+    equality operator :ada:`=` instead of the assignment operation :ada:`:=` in
+    an assignment statement.
 
 Hello world
 -----------
@@ -292,9 +292,10 @@ A few things to note:
    program's perspective it is constant. An attempt to modify its value
    is illegal; the compiler would reject the program.
 
--  Integer'Image is a function that takes an Integer and converts it to a
-   String.  It is an example of a language construct known as an *attribute*,
-   indicated by the :Ada:`'` syntax, which will be covered in more detail later.
+-  :ada:`Integer'Image` is a function that takes an Integer and converts it to
+   a :ada:`String`.  It is an example of a language construct known as an
+   *attribute*, indicated by the :Ada:`'` syntax, which will be covered in more
+   detail later.
 
 -  The :ada:`&` symbol is the concatenation operator for String values
 
@@ -484,7 +485,7 @@ with an :ada:`if` statement:
     end Check_Direction;
 
 This program repeatedly prompts for an integer value and then, if the value is
-in the range 0..360, displays the associated quadrant or axis.  If the
+in the range :ada:`0 .. 360`, displays the associated quadrant or axis.  If the
 value is an Integer outside this range, the loop (and the program) terminate
 after outputting a farewell message.
 
@@ -494,8 +495,8 @@ multiple range tests.
 
 Notable points about Ada's case statement:
 
--  The case expression (here the variable N) must be of a discrete type, i.e.
-   either an integer type or an enumeration type.  Discrete types will
+-  The case expression (here the variable :ada:`N`) must be of a discrete type,
+   i.e. either an integer type or an enumeration type.  Discrete types will
    be covered in more detail later
    :ref:`discrete types <WhatIsAType>`.
 
@@ -599,11 +600,11 @@ a block statement:
 
 .. attention::
 
-    The Get_Line function allows you to receive input from the user, and get
-    the result as a string. It is more or less equivalent to the :c:`scanf`
+    The :ada:`Get_Line` function allows you to receive input from the user, and
+    get the result as a string. It is more or less equivalent to the :c:`scanf`
     C function.
 
-    It returns a String, which, as we will see later, is an
+    It returns a :ada:`String`, which, as we will see later, is an
     :ref:`Unconstrained array type <UnconstrainedArrayTypes>`. For now we
     simply note that, if you wish to declare a :ada:`String` variable and do
     not know its size in advance, then you need to initialize the variable

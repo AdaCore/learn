@@ -82,11 +82,12 @@ type. This is useful since declaring helper types is common in Ada.
 
 A few words about terminology:
 
-- The Stack type as viewed from the public part is called the partial view of
-  the type. This is what clients have access to.
+- The :ada:`Stack` type as viewed from the public part is called the partial
+  view of the type. This is what clients have access to.
 
-- The Stack type as viewed from the private part or the body of the package is
-  called the full view of the type. This is what implementers have access to.
+- The :ada:`Stack` type as viewed from the private part or the body of the
+  package is called the full view of the type. This is what implementers have
+  access to.
 
 From the point of view of the client (the *with*'ing unit), only the public
 (visible) part is important, and the private part could as well not exist. It

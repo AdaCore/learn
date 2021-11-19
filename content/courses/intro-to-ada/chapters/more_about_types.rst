@@ -362,7 +362,7 @@ Dereferencing
 The last important piece of Ada's access type facility is how to get from an
 access value to the object that is pointed to, that is, how to dereference the
 pointer. Dereferencing a pointer uses the :ada:`.all` syntax in Ada, but is
-often not needed - in many cases, the access value will be implicitly
+often not needed |mdash| in many cases, the access value will be implicitly
 dereferenced for you:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Access_Types

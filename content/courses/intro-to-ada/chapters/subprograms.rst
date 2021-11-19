@@ -277,7 +277,7 @@ have been using :ada:`in` parameters.
 .. admonition:: Historically
 
     Functions and procedures were originally more different in philosophy.
-    Before Ada 2012, functions could only take "in" parameters.
+    Before Ada 2012, functions could only take :ada:`in` parameters.
 
 Subprogram calls
 ----------------
@@ -313,7 +313,7 @@ a mode in which modification is allowed.
 In out parameters
 ~~~~~~~~~~~~~~~~~
 
-To correct our code above, we can use an "in out" parameter.
+To correct our code above, we can use an :ada:`in out` parameter.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.In_Out_Params
     :class: ada-run
@@ -338,9 +338,9 @@ To correct our code above, we can use an "in out" parameter.
         Put_Line (Integer'Image (A));
     end In_Out_Params;
 
-An in out parameter will allow read and write access to the object passed as
-parameter, so in the example above, we can see that A is modified after the
-call to Swap.
+An :ada:`in out` parameter will allow read and write access to the object
+passed as parameter, so in the example above, we can see that :ada:`A` is
+modified after the call to :ada:`Swap`.
 
 .. attention::
 
@@ -351,21 +351,22 @@ call to Swap.
 
     In general, it is better to think of modes as higher level than by-value
     versus by-reference semantics. For the compiler, it means that an array
-    passed as an in parameter might be passed by reference, because it is more
-    efficient (which does not change anything for the user since the parameter
-    is not assignable). However, a parameter of a discrete type will always be
-    passed by copy, regardless of its mode (which is more efficient on most
-    architectures).
+    passed as an :ada:`in` parameter might be passed by reference, because it
+    is more efficient (which does not change anything for the user since the
+    parameter is not assignable). However, a parameter of a discrete type will
+    always be passed by copy, regardless of its mode (which is more efficient
+    on most architectures).
 
 Out parameters
 ~~~~~~~~~~~~~~
 
-The "out" mode applies when the subprogram needs to write to a parameter that
-might be uninitialized at the point of call. Reading the value of an out
-parameter is permitted, but it should only be done after the subprogram has
-assigned a value to the parameter. Out parameters behave a bit like return
-values for functions.  When the subprogram returns, the actual parameter
-(a variable) will have the value of the out parameter at the point of return.
+The :ada:`out` mode applies when the subprogram needs to write to a parameter
+that might be uninitialized at the point of call. Reading the value of an
+:ada:`out` parameter is permitted, but it should only be done after the
+subprogram has assigned a value to the parameter. Out parameters behave a bit
+like return values for functions.  When the subprogram returns, the actual
+parameter (a variable) will have the value of the out parameter at the point
+of return.
 
 .. admonition:: In other languages
 
