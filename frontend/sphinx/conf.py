@@ -354,6 +354,7 @@ epub_tocdepth = 3
 # Allow duplicate toc entries.
 epub_tocdup = False
 
+epub_show_urls = 'footnote'
 
 # -- Options for manual page output ------------------------------------------
 
