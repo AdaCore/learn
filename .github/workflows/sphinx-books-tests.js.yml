@@ -81,12 +81,12 @@ jobs:
         path: |
           frontend/dist/epub_books
         retention-days: 1
-    - name: Build AZW3 books including build/runtime output
-      run: make azw3_books
-    - name: Archive AZW3 books in artifact
+    - name: Build MOBI books including build/runtime output
+      run: make mobi_books
+    - name: Archive MOBI books in artifact
       uses: actions/upload-artifact@v2
       with:
-        name: learn-azw3-books
+        name: learn-mobi-books
         path: |
-          frontend/dist/azw3_books
+          frontend/dist/mobi_books
         retention-days: 1
