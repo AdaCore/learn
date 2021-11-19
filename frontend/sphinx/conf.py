@@ -329,7 +329,9 @@ epub_theme = '_epub_theme'
 #epub_uid = ''
 
 # A tuple containing the cover image and cover page html template filenames.
-epub_cover = ("_static/cover.jpeg", "epub-cover.html")
+epub_cover = ()
+if config.has_option('', 'cover_page'):
+    epub_cover = ("_static/cover.jpeg", "epub-cover.html")
 
 # HTML files that should be inserted before the pages created by sphinx.
 # The format is a list of tuples containing the path and title.
