@@ -35,9 +35,17 @@ Introduction to GNAT Toolchain
 
 .. only:: builder_html
 
-    .. container:: pdf-download
+    .. container:: ebook-download
 
         .. raw:: html
+
+            <a class="ebook_download_button" href="/mobi_books/courses/GNAT_Toolchain_Intro.mobi">
+                Download MOBI
+            </a>
+
+            <a class="ebook_download_button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
+                Download EPUB
+            </a>
 
             <a class="ebook_download_button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
                 Download PDF
