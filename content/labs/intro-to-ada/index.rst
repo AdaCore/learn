@@ -36,7 +36,7 @@ Labs: Introduction to Ada
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/labs/intro-to-ada.pdf">
+            <a class="ebook_download_button" href="/pdf_books/labs/intro-to-ada.pdf">
                 Download PDF
             </a>
 

@@ -35,7 +35,7 @@ Bug Free Coding with SPARK Ada
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/labs/bug-free-coding.pdf">
+            <a class="ebook_download_button" href="/pdf_books/labs/bug-free-coding.pdf">
                 Download PDF
             </a>
 
