@@ -61,6 +61,7 @@ author = u'AdaCore' if not config.has_option('', 'author') else \
     config['DEFAULT']['author']
 title = u'Learn Ada (Complete)' if not config.has_option('', 'title') else \
     config['DEFAULT']['title']
+publisher = u'AdaCore'
 
 # Automatic version/release string based on date
 version_date = datetime.date.today().strftime('%Y.%m')
@@ -308,9 +309,10 @@ if config.has_option('', 'latex_toplevel_sectioning'):
 # -- Options for Epub output ---------------------------------------------------
 
 epub_title = title
-epub_author = author.replace(' \\and', ' and')
-epub_publisher = u'AdaCore'
-epub_copyright = u'2021, AdaCore'
+epub_author = author.replace(r' \\and', ' and')
+epub_publisher = publisher
+epub_copyright = copyright
+epub_description = release_name + " " + release
 
 epub_version = 3.0
 
@@ -327,7 +329,9 @@ epub_theme = '_epub_theme'
 #epub_uid = ''
 
 # A tuple containing the cover image and cover page html template filenames.
-epub_cover = ("_static/cover.jpeg", "epub-cover.html")
+epub_cover = ()
+if config.has_option('', 'cover_page'):
+    epub_cover = ("_static/cover.jpeg", "epub-cover.html")
 
 # HTML files that should be inserted before the pages created by sphinx.
 # The format is a list of tuples containing the path and title.
@@ -350,6 +354,7 @@ epub_tocdepth = 3
 # Allow duplicate toc entries.
 epub_tocdup = False
 
+epub_show_urls = 'footnote'
 
 # -- Options for manual page output ------------------------------------------
 
