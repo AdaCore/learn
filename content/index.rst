@@ -71,7 +71,7 @@ more about Ada and SPARK.
         Introduction to Ada <labs/intro-to-ada/index>
         Bug Free Coding <labs/bug-free-coding/index>
 
-Books
+PDF Books
 ------------------------------
 
 Download the courses and laboratories as PDF books for offline reading:
@@ -115,6 +115,100 @@ Download the courses and laboratories as PDF books for offline reading:
     .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
         :target: https://learn.adacore.com/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf
         :alt: SPARK for the MISRA-C Developer (PDF)
+        :width: 149pt
+
+
+EPUB Books
+------------------------------
+
+Download the courses and laboratories as EPUB books for offline reading:
+
+.. container:: epub-row-1
+
+    .. image:: images/page-1-of-intro-to-ada.jpeg
+        :target: https://learn.adacore.com/epub_books/courses/intro-to-ada.epub
+        :alt: Introduction to Ada (EPUB)
+        :width: 149pt
+
+    .. image:: images/page-1-of-intro-to-ada-labs.jpeg
+        :target: https://learn.adacore.com/epub_books/labs/intro-to-ada.epub
+        :alt: Introduction to Ada: Laboratories (EPUB)
+        :width: 149pt
+
+    .. image:: images/page-1-of-intro-to-spark.jpeg
+        :target: https://learn.adacore.com/epub_books/courses/intro-to-spark.epub
+        :alt: Introduction to SPARK (EPUB)
+        :width: 149pt
+
+.. container:: epub-row-2
+
+    .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
+        :target: https://learn.adacore.com/epub_books/courses/GNAT_Toolchain_Intro.epub
+        :alt: Introduction to GNAT Toolchain (EPUB)
+        :width: 149pt
+
+    .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
+        :target: https://learn.adacore.com/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub
+        :alt: Ada for the C++ and Java Developer (EPUB)
+        :width: 149pt
+
+    .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
+        :target: https://learn.adacore.com/epub_books/courses/Ada_For_The_Embedded_C_Developer.epub
+        :alt: Ada for the Embedded C Developer (EPUB)
+        :width: 149pt
+
+.. container:: epub-row-3
+
+    .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
+        :target: https://learn.adacore.com/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub
+        :alt: SPARK for the MISRA-C Developer (EPUB)
+        :width: 149pt
+
+
+MOBI / Kindle Books
+------------------------------
+
+Download the courses and laboratories as MOBI (Kindle) books for offline reading:
+
+.. container:: mobi-row-1
+
+    .. image:: images/page-1-of-intro-to-ada.jpeg
+        :target: https://learn.adacore.com/mobi_books/courses/intro-to-ada.mobi
+        :alt: Introduction to Ada (MOBI)
+        :width: 149pt
+
+    .. image:: images/page-1-of-intro-to-ada-labs.jpeg
+        :target: https://learn.adacore.com/mobi_books/labs/intro-to-ada.mobi
+        :alt: Introduction to Ada: Laboratories (MOBI)
+        :width: 149pt
+
+    .. image:: images/page-1-of-intro-to-spark.jpeg
+        :target: https://learn.adacore.com/mobi_books/courses/intro-to-spark.mobi
+        :alt: Introduction to SPARK (MOBI)
+        :width: 149pt
+
+.. container:: mobi-row-2
+
+    .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
+        :target: https://learn.adacore.com/mobi_books/courses/GNAT_Toolchain_Intro.mobi
+        :alt: Introduction to GNAT Toolchain (MOBI)
+        :width: 149pt
+
+    .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
+        :target: https://learn.adacore.com/mobi_books/courses/Ada_For_The_CPP_Java_Developer.mobi
+        :alt: Ada for the C++ and Java Developer (MOBI)
+        :width: 149pt
+
+    .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
+        :target: https://learn.adacore.com/mobi_books/courses/Ada_For_The_Embedded_C_Developer.mobi
+        :alt: Ada for the Embedded C Developer (MOBI)
+        :width: 149pt
+
+.. container:: mobi-row-3
+
+    .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
+        :target: https://learn.adacore.com/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi
+        :alt: SPARK for the MISRA-C Developer (MOBI)
         :width: 149pt
 
 -------------
