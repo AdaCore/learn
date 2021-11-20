@@ -38,7 +38,7 @@ Ada 2022: What's New
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/ada_2022_whats_new.pdf">
+            <a class="ebook_download_button" href="/pdf_books/courses/ada_2022_whats_new.pdf">
                 Download PDF
             </a>
 

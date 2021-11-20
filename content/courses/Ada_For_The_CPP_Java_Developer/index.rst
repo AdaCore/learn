@@ -37,7 +37,7 @@ Ada for the C++ or Java Developer
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
+            <a class="ebook_download_button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
                 Download PDF
             </a>
 

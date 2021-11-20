@@ -39,7 +39,7 @@ Introduction to Embedded Systems Programming
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/intro-to-embedded-sys-prog.pdf">
+            <a class="ebook_download_button" href="/pdf_books/courses/intro-to-embedded-sys-prog.pdf">
                 Download PDF
             </a>
 

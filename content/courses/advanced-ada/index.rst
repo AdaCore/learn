@@ -47,7 +47,7 @@ Advanced Ada
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/advanced-ada.pdf">
+            <a class="ebook_download_button" href="/pdf_books/courses/advanced-ada.pdf">
                 Download PDF
             </a>
 

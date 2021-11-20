@@ -38,7 +38,7 @@ SPARK Ada for the MISRA C Developer
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+            <a class="ebook_download_button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
                 Download PDF
             </a>
 

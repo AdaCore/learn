@@ -38,7 +38,7 @@ Intro To SPARK
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/intro-to-spark.pdf">
+            <a class="ebook_download_button" href="/pdf_books/courses/intro-to-spark.pdf">
                 Download PDF
             </a>
 

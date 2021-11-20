@@ -39,7 +39,7 @@ Introduction to GNAT Toolchain
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
+            <a class="ebook_download_button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
                 Download PDF
             </a>
 
