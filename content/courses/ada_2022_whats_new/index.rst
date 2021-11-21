@@ -34,11 +34,19 @@ Ada 2022: What's New
 
 .. only:: builder_html
 
-    .. container:: pdf-download
+    .. container:: ebook-download
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/ada_2022_whats_new.pdf">
+            <a class="ebook_download_button" href="/mobi_books/courses/ada_2022_whats_new.mobi">
+                Download MOBI
+            </a>
+
+            <a class="ebook_download_button" href="/epub_books/courses/ada_2022_whats_new.epub">
+                Download EPUB
+            </a>
+
+            <a class="ebook_download_button" href="/pdf_books/courses/ada_2022_whats_new.pdf">
                 Download PDF
             </a>
 

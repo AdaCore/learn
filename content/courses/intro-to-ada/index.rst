@@ -40,11 +40,19 @@ Introduction to Ada
 
 .. only:: builder_html
 
-    .. container:: pdf-download
+    .. container:: ebook-download
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/intro-to-ada.pdf">
+            <a class="ebook_download_button" href="/mobi_books/courses/intro-to-ada.mobi">
+                Download MOBI
+            </a>
+
+            <a class="ebook_download_button" href="/epub_books/courses/intro-to-ada.epub">
+                Download EPUB
+            </a>
+
+            <a class="ebook_download_button" href="/pdf_books/courses/intro-to-ada.pdf">
                 Download PDF
             </a>
 

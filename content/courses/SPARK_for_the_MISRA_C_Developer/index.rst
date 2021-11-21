@@ -34,11 +34,19 @@ SPARK Ada for the MISRA C Developer
 
 .. only:: builder_html
 
-    .. container:: pdf-download
+    .. container:: ebook-download
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+            <a class="ebook_download_button" href="/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi">
+                Download MOBI
+            </a>
+
+            <a class="ebook_download_button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
+                Download EPUB
+            </a>
+
+            <a class="ebook_download_button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
                 Download PDF
             </a>
 
