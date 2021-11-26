@@ -8,7 +8,13 @@ Ada 2022: What's New
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
@@ -24,6 +30,7 @@ Ada 2022: What's New
         `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+            :width: 108pt
 
 .. container:: content-description
 

@@ -11,11 +11,17 @@ Introduction to Ada
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
-        Copyright © 2018 |ndash| 2020, AdaCore
+        Copyright © 2018 |ndash| 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -27,6 +33,7 @@ Introduction to Ada
         `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+            :width: 108pt
 
 .. container:: content-description
 

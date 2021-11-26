@@ -6,7 +6,13 @@ Intro To SPARK
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
@@ -22,6 +28,7 @@ Intro To SPARK
         `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+            :width: 108pt
 
 .. container:: content-description
 

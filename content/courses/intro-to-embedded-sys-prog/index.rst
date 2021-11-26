@@ -8,7 +8,13 @@ Introduction to Embedded Systems Programming
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
@@ -24,6 +30,7 @@ Introduction to Embedded Systems Programming
         `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+            :width: 108pt
 
 .. container:: content-description
 
