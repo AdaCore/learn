@@ -6,7 +6,7 @@ Introduction to GNAT Toolchain
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 

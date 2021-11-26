@@ -6,7 +6,7 @@ Bug Free Coding with SPARK Ada
 
 .. include:: ../../courses/global.txt
 
-.. only:: builder_latex
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 

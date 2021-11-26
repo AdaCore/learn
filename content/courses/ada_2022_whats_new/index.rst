@@ -8,7 +8,7 @@ Ada 2022: What's New
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
