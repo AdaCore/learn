@@ -421,6 +421,51 @@ a.ebook_download_button {
     }
 }
 
+a.frontpage-ebook-download-button {
+    background-color: #F56F23;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #FFF;
+    font-weight: 600;
+    float: none;
+    font-family: sans-serif;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+    &:before {
+        font-family: $icon-font;
+        font-style: normal;
+        font-weight: $icon-weight;
+        content: $download-icon;
+        margin-right: 3px;
+    }
+}
+
+div.frontpage-ebook-download {
+    float: right;
+}
+
+div.frontpage-ebook-and-buttons-block {
+    margin-right: 20px;
+    display: block;
+    float: left;
+    padding-bottom: 20px;
+    flex-shrink: 0;
+}
+
+div.frontpage-ebooks-row {
+    display: block;
+}
+
+div.frontpage-ebooks {
+    display: block;
+    float: none;
+    border: 5px solid transparent;
+    overflow: hidden;
+}
+
 // download buttons
 
 div.mwac-banner.docutils.container {
