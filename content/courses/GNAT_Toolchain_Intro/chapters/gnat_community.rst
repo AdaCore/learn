@@ -100,7 +100,7 @@ warnings, their purpose, and how you activate them.
 ``-gnatwa`` switch and warning suppression
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. sectionauthor:: Bob Duff
+.. sectionauthor:: Robert Duff
 
 We first need to understand the difference between a *warning* and an
 *error*. Errors are violations of the Ada language rules as specified
