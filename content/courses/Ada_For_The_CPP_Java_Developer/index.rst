@@ -6,6 +6,12 @@ Ada for the C++ or Java Developer
 
 .. include:: ../global.txt
 
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
 .. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
