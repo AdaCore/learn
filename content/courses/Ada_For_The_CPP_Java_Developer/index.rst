@@ -44,15 +44,15 @@ Ada for the C++ or Java Developer
 
         .. raw:: html
 
-            <a class="ebook_download_button" href="/mobi_books/courses/Ada_For_The_CPP_Java_Developer.mobi">
+            <a class="ebook-download-button" href="/mobi_books/courses/Ada_For_The_CPP_Java_Developer.mobi">
                 Download MOBI
             </a>
 
-            <a class="ebook_download_button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
+            <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook_download_button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
+            <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
                 Download PDF
             </a>
 

@@ -54,15 +54,15 @@ Advanced Ada
 
         .. raw:: html
 
-            <a class="ebook_download_button" href="/mobi_books/courses/advanced-ada.mobi">
+            <a class="ebook-download-button" href="/mobi_books/courses/advanced-ada.mobi">
                 Download MOBI
             </a>
 
-            <a class="ebook_download_button" href="/epub_books/courses/advanced-ada.epub">
+            <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook_download_button" href="/pdf_books/courses/advanced-ada.pdf">
+            <a class="ebook-download-button" href="/pdf_books/courses/advanced-ada.pdf">
                 Download PDF
             </a>
 

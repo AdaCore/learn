@@ -90,15 +90,15 @@ We offer you the following formats: PDF, EPUB and MOBI (for Kindle devices).
             .. raw:: html
 
                     <div class="frontpage-ebook-download">
-                        <a class="frontpage-ebook-download-button" href="/pdf_books/courses/intro-to-ada.pdf">
+                        <a class="ebook-download-button" href="/pdf_books/courses/intro-to-ada.pdf">
                             PDF
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/epub_books/courses/intro-to-ada.epub">
+                        <a class="ebook-download-button" href="/epub_books/courses/intro-to-ada.epub">
                             EPUB
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/mobi_books/courses/intro-to-ada.mobi">
+                        <a class="ebook-download-button" href="/mobi_books/courses/intro-to-ada.mobi">
                             MOBI
                         </a>
                     </div>
@@ -112,15 +112,15 @@ We offer you the following formats: PDF, EPUB and MOBI (for Kindle devices).
             .. raw:: html
 
                     <div class="frontpage-ebook-download">
-                        <a class="frontpage-ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
+                        <a class="ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
                             PDF
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
+                        <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
                             EPUB
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/mobi_books/labs/intro-to-ada.mobi">
+                        <a class="ebook-download-button" href="/mobi_books/labs/intro-to-ada.mobi">
                             MOBI
                         </a>
                     </div>
@@ -137,15 +137,15 @@ We offer you the following formats: PDF, EPUB and MOBI (for Kindle devices).
             .. raw:: html
 
                     <div class="frontpage-ebook-download">
-                        <a class="frontpage-ebook-download-button" href="/pdf_books/courses/intro-to-spark.pdf">
+                        <a class="ebook-download-button" href="/pdf_books/courses/intro-to-spark.pdf">
                             PDF
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/epub_books/courses/intro-to-spark.epub">
+                        <a class="ebook-download-button" href="/epub_books/courses/intro-to-spark.epub">
                             EPUB
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/mobi_books/courses/intro-to-spark.mobi">
+                        <a class="ebook-download-button" href="/mobi_books/courses/intro-to-spark.mobi">
                             MOBI
                         </a>
                     </div>
@@ -159,15 +159,15 @@ We offer you the following formats: PDF, EPUB and MOBI (for Kindle devices).
             .. raw:: html
 
                     <div class="frontpage-ebook-download">
-                        <a class="frontpage-ebook-download-button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
+                        <a class="ebook-download-button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
                             PDF
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
+                        <a class="ebook-download-button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
                             EPUB
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/mobi_books/courses/GNAT_Toolchain_Intro.mobi">
+                        <a class="ebook-download-button" href="/mobi_books/courses/GNAT_Toolchain_Intro.mobi">
                             MOBI
                         </a>
                     </div>
@@ -183,15 +183,15 @@ We offer you the following formats: PDF, EPUB and MOBI (for Kindle devices).
             .. raw:: html
 
                     <div class="frontpage-ebook-download">
-                        <a class="frontpage-ebook-download-button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
+                        <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
                             PDF
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
+                        <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
                             EPUB
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/mobi_books/courses/Ada_For_The_CPP_Java_Developer.mobi">
+                        <a class="ebook-download-button" href="/mobi_books/courses/Ada_For_The_CPP_Java_Developer.mobi">
                             MOBI
                         </a>
                     </div>
@@ -205,15 +205,15 @@ We offer you the following formats: PDF, EPUB and MOBI (for Kindle devices).
             .. raw:: html
 
                     <div class="frontpage-ebook-download">
-                        <a class="frontpage-ebook-download-button" href="/pdf_books/courses/Ada_For_The_Embedded_C_Developer.pdf">
+                        <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_Embedded_C_Developer.pdf">
                             PDF
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/epub_books/courses/Ada_For_The_Embedded_C_Developer.epub">
+                        <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_Embedded_C_Developer.epub">
                             EPUB
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/mobi_books/courses/Ada_For_The_Embedded_C_Developer.mobi">
+                        <a class="ebook-download-button" href="/mobi_books/courses/Ada_For_The_Embedded_C_Developer.mobi">
                             MOBI
                         </a>
                     </div>
@@ -229,15 +229,15 @@ We offer you the following formats: PDF, EPUB and MOBI (for Kindle devices).
             .. raw:: html
 
                     <div class="frontpage-ebook-download">
-                        <a class="frontpage-ebook-download-button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+                        <a class="ebook-download-button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
                             PDF
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
+                        <a class="ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
                             EPUB
                         </a>
 
-                        <a class="frontpage-ebook-download-button" href="/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi">
+                        <a class="ebook-download-button" href="/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi">
                             MOBI
                         </a>
                     </div>
