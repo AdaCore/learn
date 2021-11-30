@@ -423,6 +423,13 @@ a.ebook-download-button {
     }
 }
 
+div.ebook-download {
+    display: block;
+    float: right;
+    border: 5px solid transparent;
+    overflow: hidden;
+}
+
 div.frontpage-ebook-download {
     float: right;
 }
