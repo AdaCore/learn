@@ -42,16 +42,16 @@ Bug Free Coding with SPARK Ada
 
         .. raw:: html
 
-            <a class="ebook-download-button" href="/mobi_books/labs/bug-free-coding.mobi">
-                Download MOBI
+            <a class="ebook-download-button" href="/pdf_books/labs/bug-free-coding.pdf">
+                Download PDF
             </a>
 
             <a class="ebook-download-button" href="/epub_books/labs/bug-free-coding.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/pdf_books/labs/bug-free-coding.pdf">
-                Download PDF
+            <a class="ebook-download-button" href="/mobi_books/labs/bug-free-coding.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

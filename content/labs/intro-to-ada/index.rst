@@ -43,16 +43,16 @@ Labs: Introduction to Ada
 
         .. raw:: html
 
-            <a class="ebook-download-button" href="/mobi_books/labs/intro-to-ada.mobi">
-                Download MOBI
+            <a class="ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
+                Download PDF
             </a>
 
             <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
-                Download PDF
+            <a class="ebook-download-button" href="/mobi_books/labs/intro-to-ada.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

@@ -45,16 +45,16 @@ Intro To SPARK
 
         .. raw:: html
 
-            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-spark.mobi">
-                Download MOBI
+            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-spark.pdf">
+                Download PDF
             </a>
 
             <a class="ebook-download-button" href="/epub_books/courses/intro-to-spark.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-spark.pdf">
-                Download PDF
+            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-spark.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

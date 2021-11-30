@@ -45,16 +45,16 @@ SPARK Ada for the MISRA C Developer
 
         .. raw:: html
 
-            <a class="ebook-download-button" href="/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi">
-                Download MOBI
+            <a class="ebook-download-button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+                Download PDF
             </a>
 
             <a class="ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
-                Download PDF
+            <a class="ebook-download-button" href="/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

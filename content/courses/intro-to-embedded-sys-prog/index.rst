@@ -46,16 +46,16 @@ Introduction to Embedded Systems Programming
 
         .. raw:: html
 
-            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-embedded-sys-prog.mobi">
-                Download MOBI
+            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-embedded-sys-prog.pdf">
+                Download PDF
             </a>
 
             <a class="ebook-download-button" href="/epub_books/courses/intro-to-embedded-sys-prog.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-embedded-sys-prog.pdf">
-                Download PDF
+            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-embedded-sys-prog.mobi">
+                Download MOBI
             </a>
 
 .. toctree::
