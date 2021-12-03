@@ -77,7 +77,7 @@
         :maxdepth: 1
         :caption: Labs
 
-        Introduction to Ada <labs/intro-to-ada/index>
+        Introduction to Ada: Laboratories <labs/intro-to-ada/index>
         Bug Free Coding <labs/bug-free-coding/index>
 
 .. only:: builder_html

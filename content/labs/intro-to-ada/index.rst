@@ -1,8 +1,8 @@
 :prev_state: False
 :next_state: False
 
-Labs: Introduction to Ada
-=========================
+Introduction to Ada: Laboratories
+=================================
 
 .. include:: ../../courses/global.txt
 
