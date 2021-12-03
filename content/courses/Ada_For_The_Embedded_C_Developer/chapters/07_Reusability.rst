@@ -205,7 +205,7 @@ types:
     type T is access T2; -- T is an access type to T2
 
 For a more complete list please reference the Generic Formal Types in the
-:doc:`Appendix of the Introduction to Ada course </courses/intro-to-ada/chapters/appendices>`_.
+:doc:`Appendix of the Introduction to Ada course </courses/intro-to-ada/chapters/appendices>`.
 
 .. _SimpleDerivation:
 
