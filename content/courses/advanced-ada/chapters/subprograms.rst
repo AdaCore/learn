@@ -16,7 +16,7 @@ use a :ada:`begin ... end;` block or a :ada:`return` statement.
 As an example of an expression, let's say we want to implement a function
 named :ada:`Is_Zero` that checks if the value of the integer parameter :ada:`I`
 is zero. We can implement this function with the expression :ada:`I = 0`. In
-the standard approach, we would create the implementation by writing
+the usual approach, we would create the implementation by writing
 :ada:`is begin return I = 0; end Is_Zero;`. When using expression functions,
 however, we can simplify the implementation by just writing
 :ada:`is (I = 0);`. This is the complete code of :ada:`Is_Zero` using an
@@ -31,9 +31,9 @@ expression function:
 
     end Expr_Func;
 
-An expression function has the same effect as the standard, more verbose
-version using a block. In fact, the code above is similar to this
-implementation of the :ada:`Is_Zero` function using a block:
+An expression function has the same effect as the usual version using a block.
+In fact, the code above is similar to this implementation of the :ada:`Is_Zero`
+function using a block:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Simple_Expression_Function_2
 
