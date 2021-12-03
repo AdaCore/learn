@@ -15,7 +15,7 @@ SPARK Ada for the MISRA C Developer
 
     .. container:: content-copyright
 
-        Copyright © 2018 |ndash| 2020, AdaCore
+        Copyright © 2018 |ndash| 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -45,16 +45,16 @@ SPARK Ada for the MISRA C Developer
 
         .. raw:: html
 
-            <a class="ebook_download_button" href="/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi">
-                Download MOBI
+            <a class="ebook-download-button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+                Download PDF
             </a>
 
-            <a class="ebook_download_button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
+            <a class="ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook_download_button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
-                Download PDF
+            <a class="ebook-download-button" href="/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

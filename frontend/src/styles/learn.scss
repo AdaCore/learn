@@ -401,27 +401,7 @@ div {
     }
 }
 
-a.ebook_download_button {
-    background-color: #F56F23;
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #FFF;
-    font-weight: 600;
-    float: right;
-    font-family: sans-serif;
-    margin-right: 10px;
-
-    &:before {
-        font-family: $icon-font;
-        font-style: normal;
-        font-weight: $icon-weight;
-        content: $download-icon;
-        margin-right: 3px;
-    }
-}
-
-a.frontpage-ebook-download-button {
+a.ebook-download-button {
     background-color: #F56F23;
     display: block;
     padding: 10px 15px;
@@ -441,6 +421,13 @@ a.frontpage-ebook-download-button {
         content: $download-icon;
         margin-right: 3px;
     }
+}
+
+div.ebook-download {
+    display: block;
+    float: right;
+    border: 5px solid transparent;
+    overflow: hidden;
 }
 
 div.frontpage-ebook-download {

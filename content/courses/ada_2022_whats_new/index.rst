@@ -45,16 +45,16 @@ Ada 2022: What's New
 
         .. raw:: html
 
-            <a class="ebook_download_button" href="/mobi_books/courses/ada_2022_whats_new.mobi">
-                Download MOBI
+            <a class="ebook-download-button" href="/pdf_books/courses/ada_2022_whats_new.pdf">
+                Download PDF
             </a>
 
-            <a class="ebook_download_button" href="/epub_books/courses/ada_2022_whats_new.epub">
+            <a class="ebook-download-button" href="/epub_books/courses/ada_2022_whats_new.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook_download_button" href="/pdf_books/courses/ada_2022_whats_new.pdf">
-                Download PDF
+            <a class="ebook-download-button" href="/mobi_books/courses/ada_2022_whats_new.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

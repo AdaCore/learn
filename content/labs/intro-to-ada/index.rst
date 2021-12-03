@@ -16,7 +16,7 @@ Labs: Introduction to Ada
 
     .. container:: content-copyright
 
-        Copyright © 2019 |ndash| 2020, AdaCore
+        Copyright © 2019 |ndash| 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -43,16 +43,16 @@ Labs: Introduction to Ada
 
         .. raw:: html
 
-            <a class="ebook_download_button" href="/mobi_books/labs/intro-to-ada.mobi">
-                Download MOBI
+            <a class="ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
+                Download PDF
             </a>
 
-            <a class="ebook_download_button" href="/epub_books/labs/intro-to-ada.epub">
+            <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook_download_button" href="/pdf_books/labs/intro-to-ada.pdf">
-                Download PDF
+            <a class="ebook-download-button" href="/mobi_books/labs/intro-to-ada.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

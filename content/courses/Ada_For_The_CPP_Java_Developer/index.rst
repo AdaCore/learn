@@ -16,7 +16,7 @@ Ada for the C++ or Java Developer
 
     .. container:: content-copyright
 
-        Copyright © 2013 |ndash| 2020, AdaCore
+        Copyright © 2013 |ndash| 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -44,16 +44,16 @@ Ada for the C++ or Java Developer
 
         .. raw:: html
 
-            <a class="ebook_download_button" href="/mobi_books/courses/Ada_For_The_CPP_Java_Developer.mobi">
-                Download MOBI
+            <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
+                Download PDF
             </a>
 
-            <a class="ebook_download_button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
+            <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
                 Download EPUB
             </a>
 
-            <a class="ebook_download_button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
-                Download PDF
+            <a class="ebook-download-button" href="/mobi_books/courses/Ada_For_The_CPP_Java_Developer.mobi">
+                Download MOBI
             </a>
 
 .. toctree::
