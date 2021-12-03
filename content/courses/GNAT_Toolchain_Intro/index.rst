@@ -38,7 +38,7 @@ Introduction to GNAT Toolchain
     (GPRbuild) and the integrated development environment (GNAT Studio).
 
     This document was written by Gustavo A. Hoffmann, with contributions and
-    review from Richard Kenner and Bob Duff.
+    review from Richard Kenner and Robert Duff.
 
 .. only:: builder_html
 
