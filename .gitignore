@@ -4,3 +4,5 @@ env
 .idea
 .vagrant
 .vscode
+*.bkp
+*.log
