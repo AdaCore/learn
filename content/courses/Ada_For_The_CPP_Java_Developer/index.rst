@@ -16,7 +16,7 @@ Ada for the C++ or Java Developer
 
     .. container:: content-copyright
 
-        Copyright © 2013 |ndash| 2020, AdaCore
+        Copyright © 2013 |ndash| 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content

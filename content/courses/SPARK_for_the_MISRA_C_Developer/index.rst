@@ -15,7 +15,7 @@ SPARK Ada for the MISRA C Developer
 
     .. container:: content-copyright
 
-        Copyright © 2018 |ndash| 2020, AdaCore
+        Copyright © 2018 |ndash| 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
