@@ -351,6 +351,8 @@ epub_exclude_files = ['cover-A4.pdf', '.nojekyll', '_static/favicon.ico',
 
 # The depth of the table of contents in toc.ncx.
 epub_tocdepth = 3
+if config.has_option('', 'epub_tocdepth'):
+    epub_tocdepth = int(config['DEFAULT']['epub_tocdepth'])
 
 # Allow duplicate toc entries.
 epub_tocdup = False
