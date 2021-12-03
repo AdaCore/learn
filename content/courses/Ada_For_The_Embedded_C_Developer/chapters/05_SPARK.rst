@@ -1074,4 +1074,4 @@ expensive that testing alone.
 
 There is, of course, much more to be said about what can be done with
 SPARK and :program:`gnatprove`. Those topics are reserved for the
-:doc:`Introduction to SPARK <courses/intro-to-spark/index>` course.
+:doc:`Introduction to SPARK </courses/intro-to-spark/index>` course.

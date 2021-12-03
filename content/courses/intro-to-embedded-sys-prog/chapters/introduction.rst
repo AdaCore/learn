@@ -24,7 +24,7 @@ language already, preferably even some of the more advanced concepts.
 You don't need to know how to use Ada constructs for embedded systems,
 of course, but you do need to know at least the language basics.
 If you need that introduction, see the course
-:doc:`Introduction to Ada <courses/intro-to-ada/index>`.
+:doc:`Introduction to Ada </courses/intro-to-ada/index>`.
 
 We also assume that you already have some programming experience so we
 won't cover CS-101.

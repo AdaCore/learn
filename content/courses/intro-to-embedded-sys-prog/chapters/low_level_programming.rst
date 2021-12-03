@@ -1581,7 +1581,7 @@ of a generic library function that must be specified in a context clause
 ("with-clause") at the top of the file, and then instantiated prior to
 use (like any generic). For an introduction to generic units in Ada, see
 that section in the introductory Ada course:
-:doc:`Introduction to Ada <courses/intro-to-ada/chapters/generics>`
+:doc:`Introduction to Ada </courses/intro-to-ada/chapters/generics>`
 
 You should understand that the explicitly unchecked facilities in Ada
 are no more unsafe than the implicitly unchecked facilities in other
