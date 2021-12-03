@@ -6,6 +6,11 @@
 
 .. include:: <isopub.txt>
 
+.. only:: builder_latex or builder_epub
+
+    Everything Ada and SPARK
+    ========================
+
 .. only:: builder_html
 
     LEARN.ADACORE.COM
