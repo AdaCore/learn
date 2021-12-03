@@ -160,6 +160,8 @@ site-testing: cleantest
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
 
+COMPLETE_BOOK = everything_ada_spark
+
 PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 
 %.pdf:
@@ -169,6 +171,18 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF))
 	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
 	@mkdir -p $(PDF_BOOKS_DIR)/$(SPHINX_DIR)
+	@mkdir -p $(BUILDDIR)/latex
+	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
+	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
+	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
+
+$(PDF_BOOKS_DIR)/$(COMPLETE_BOOK).pdf:
+	@echo Building $@ PDF
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
+	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
+	@mkdir -p $(PDF_BOOKS_DIR)
 	@mkdir -p $(BUILDDIR)/latex
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
@@ -203,6 +217,19 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
 
+$(EPUB_BOOKS_DIR)/$(COMPLETE_BOOK).epub:
+	@echo Building $@
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
+	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
+	@mkdir -p $(EPUB_BOOKS_DIR)
+	@rm   -rf $(BUILDDIR)/epub
+	@mkdir -p $(BUILDDIR)/epub/_static
+	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
+	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
+	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
+
 # Generate list: EPUB_BOOKS
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
@@ -216,6 +243,21 @@ epub_books: $(EPUB_BOOKS)
 MOBI_BOOKS_DIR := $(BUILDDIR)/mobi_books
 
 $(MOBI_BOOKS_DIR)/%.mobi: $(EPUB_BOOKS_DIR)/%.epub
+	@echo Building $@
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
+	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
+	@ebook-convert $^ $@ \
+		--expand-css \
+		--keep-ligatures \
+		--filter-css "margin-top,margin-bottom" \
+		--mobi-file-type both \
+		--pretty-print \
+		--prefer-metadata-cover \
+		--minimum-line-height 100 \
+		--extra-css $(MKFILE_DIR)/azw3_style.css \
+		--output-profile kindle
+
+$(MOBI_BOOKS_DIR)/$(COMPLETE_BOOK).mobi: $(EPUB_BOOKS_DIR)/$(COMPLETE_BOOK).epub
 	@echo Building $@
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
 	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
