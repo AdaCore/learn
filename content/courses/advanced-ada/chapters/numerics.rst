@@ -7,7 +7,7 @@ Modular Types
 -------------
 
 In the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/strongly_typed_language>`,
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/strongly_typed_language>`,
 we've seen that Ada has two kinds of integer type: signed and modular. For
 example:
 
@@ -276,7 +276,7 @@ Classification
 ~~~~~~~~~~~~~~
 
 We've already discussed basic characteristics of numeric literals in the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/strongly_typed_language>`.
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/strongly_typed_language>`.
 We've seen that there are two kinds of numeric literals in Ada: integer
 literals and real literals. They are distinguished by the absence or presence
 of a radix point. For example:

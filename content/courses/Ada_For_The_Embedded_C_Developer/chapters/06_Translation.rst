@@ -183,7 +183,7 @@ which supports building and debugging an application within a single
 environment, and remotely running applications loaded to various embedded
 devices. You can find more information about :program:`gprbuild` and
 :program:`GNAT Studio` in the
-`Introduction to GNAT Toolchain <https://learn.adacore.com/courses/GNAT_Toolchain_Intro/index.html>`_
+:doc:`Introduction to GNAT Toolchain </courses/GNAT_Toolchain_Intro/index>`
 course.
 
 Automatic interfacing

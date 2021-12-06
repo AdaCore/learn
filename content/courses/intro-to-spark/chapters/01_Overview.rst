@@ -10,7 +10,7 @@ SPARK Overview
 This tutorial is an introduction to the SPARK programming
 language and its formal verification tools. You need not know any specific
 programming language (although going over the
-:doc:`Introduction to Ada course <courses/intro-to-ada/index>` first may help)
+:doc:`Introduction to Ada course </courses/intro-to-ada/index>` first may help)
 or have experience in formal verification.
 
 .. only:: builder_html

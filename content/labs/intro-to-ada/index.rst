@@ -1,8 +1,8 @@
 :prev_state: False
 :next_state: False
 
-Labs: Introduction to Ada
-=========================
+Introduction to Ada: Laboratories
+=================================
 
 .. include:: ../../courses/global.txt
 
@@ -32,7 +32,8 @@ Labs: Introduction to Ada
 
 .. container:: content-description
 
-    These labs contain exercises for the Introduction to Ada course.
+    These labs contain exercises for the
+    :doc:`Introduction to Ada </courses/intro-to-ada/index>` course.
 
     This document was written by Gustavo A. Hoffmann and reviewed by Michael
     Frank.

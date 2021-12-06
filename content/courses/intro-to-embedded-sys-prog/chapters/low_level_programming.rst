@@ -1580,8 +1580,8 @@ relatively heavy: each mechanism is provided by the language in the form
 of a generic library function that must be specified in a context clause
 ("with-clause") at the top of the file, and then instantiated prior to
 use (like any generic). For an introduction to generic units in Ada, see
-that section in the introductory Ada course: 
-:doc:`Introduction to Ada <courses/intro-to-ada/chapters/generics>`
+that section in the introductory Ada course:
+:doc:`Introduction to Ada </courses/intro-to-ada/chapters/generics>`
 
 You should understand that the explicitly unchecked facilities in Ada
 are no more unsafe than the implicitly unchecked facilities in other
@@ -2126,29 +2126,29 @@ record type:
   :width: 600
   :alt: A record type layout with unused bytes
 
-As we discussed earlier, between the bytes that are allocated to the 
-record components are some other bytes that are not used at all. As 
-usual, the compiler must implement the language-defined equality 
-operator for the record type. One way to implement that function would 
-be to generate code that checks the equality for each component 
-individually, ignoring any unused bytes. But suppose you have a large 
-record type with many components. The code for checking record level 
-equality will be extensive and inefficient. An alternative 
-implementation for the compiler would be to use a "block compare" 
-machine instruction to check the equality of the entire record at once, 
-rather than component-by-component. That will be considerably more 
-efficient because the block-compare instruction just compares the bits 
-from one starting address to another ending address. But in that case 
-the "unused" bytes are not skipped so the values within those bytes are 
-significant. Comparison of those unused bytes will only work if their 
-values are defined and assigned in each record object. Compilers that 
-may use a block-comparison approach will, therefore, always set those 
-unused bytes to a known value (typically zero). That is part of the 
-valid representation for values of the type, and consequently must be 
-maintained by our unchecked conversions. This being a non-scalar target 
-type, failure to do so results in erroneous execution, i.e., undefined 
-behavior. "There be dragons" as ancient maps of the unknown world once 
-said. 
+As we discussed earlier, between the bytes that are allocated to the
+record components are some other bytes that are not used at all. As
+usual, the compiler must implement the language-defined equality
+operator for the record type. One way to implement that function would
+be to generate code that checks the equality for each component
+individually, ignoring any unused bytes. But suppose you have a large
+record type with many components. The code for checking record level
+equality will be extensive and inefficient. An alternative
+implementation for the compiler would be to use a "block compare"
+machine instruction to check the equality of the entire record at once,
+rather than component-by-component. That will be considerably more
+efficient because the block-compare instruction just compares the bits
+from one starting address to another ending address. But in that case
+the "unused" bytes are not skipped so the values within those bytes are
+significant. Comparison of those unused bytes will only work if their
+values are defined and assigned in each record object. Compilers that
+may use a block-comparison approach will, therefore, always set those
+unused bytes to a known value (typically zero). That is part of the
+valid representation for values of the type, and consequently must be
+maintained by our unchecked conversions. This being a non-scalar target
+type, failure to do so results in erroneous execution, i.e., undefined
+behavior. "There be dragons" as ancient maps of the unknown world once
+said.
 
 As you can see, you should use unchecked conversions with considerable
 care and thought. Moreover, because unchecked programming is such a

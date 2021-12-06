@@ -170,7 +170,7 @@ Wide and Wide-Wide String Handling
 
 As we've just seen, we have different versions of the :ada:`Ada.Text_IO`
 package. The same applies to string handling packages. As we've seen in the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/standard_library_strings>`,
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/standard_library_strings>`,
 we can use the :ada:`Ada.Strings.Fixed` and :ada:`Ada.Strings.Maps` packages
 for string handling. For other formats, we have these packages:
 
@@ -180,7 +180,7 @@ for string handling. For other formats, we have these packages:
 - :ada:`Ada.Strings.Wide_Wide_Maps`.
 
 Let's look at this example from the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/standard_library_strings>`,
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/standard_library_strings>`,
 which we adapted for wide-wide strings:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Wide_String_Handling
@@ -232,7 +232,7 @@ Bounded and Unbounded Wide and Wide-Wide Strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We've seen in the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/standard_library_strings>`
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/standard_library_strings>`
 that other kinds of :ada:`String` types are available. For example, we can
 use bounded and unbounded strings |mdash| those correspond to the
 :ada:`Bounded_String` and :ada:`Unbounded_String` types.

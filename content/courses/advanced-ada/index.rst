@@ -40,7 +40,7 @@ Advanced Ada
 
     This course will teach you advanced topics of the Ada programming language.
     The
-    `Introduction to Ada <https://learn.adacore.com/courses/intro-to-ada/index.html>`_
+    :doc:`Introduction to Ada </courses/intro-to-ada/index>`
     course is a prerequisite for this course.
 
     This document was written by Gustavo A. Hoffmann and Robert A. Duff, with
