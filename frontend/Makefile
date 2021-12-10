@@ -160,7 +160,7 @@ site-testing: cleantest
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
 
-COMPLETE_BOOK = everything_ada_spark
+COMPLETE_BOOK = learning-ada
 
 PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 
