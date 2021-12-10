@@ -6,15 +6,17 @@
 
 .. include:: <isopub.txt>
 
+.. only:: builder_html
+
+    LEARN.ADACORE.COM
+    ===================
+
 .. only:: builder_latex or builder_epub
 
     Learning Ada
     ============
 
 .. only:: builder_html
-
-    LEARN.ADACORE.COM
-    ===================
 
     .. raw:: html
 
