@@ -148,10 +148,10 @@ sphinx-staging:
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
-site: cleanall webpack-production sphinx-production test_content all_books
+site: cleanall webpack-production sphinx-production test_content all_books complete_site_books
 	@echo Building $@
 
-site-staging: cleanall webpack-staging sphinx-staging test_content all_books
+site-staging: cleanall webpack-staging sphinx-staging test_content all_books complete_site_books
 	@echo Building $@
 
 site-testing: cleantest
@@ -160,7 +160,7 @@ site-testing: cleantest
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
 
-COMPLETE_BOOK = everything_ada_spark
+COMPLETE_SITE_BOOK = learning-ada
 
 PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 
@@ -178,7 +178,7 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
 
-$(PDF_BOOKS_DIR)/$(COMPLETE_BOOK).pdf:
+$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf: clean-doctrees
 	@echo Building $@ PDF
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
 	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
@@ -217,7 +217,7 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
 
-$(EPUB_BOOKS_DIR)/$(COMPLETE_BOOK).epub:
+$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub: clean-doctrees
 	@echo Building $@
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
 	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
@@ -257,7 +257,7 @@ $(MOBI_BOOKS_DIR)/%.mobi: $(EPUB_BOOKS_DIR)/%.epub
 		--extra-css $(MKFILE_DIR)/azw3_style.css \
 		--output-profile kindle
 
-$(MOBI_BOOKS_DIR)/$(COMPLETE_BOOK).mobi: $(EPUB_BOOKS_DIR)/$(COMPLETE_BOOK).epub
+$(MOBI_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).mobi: $(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub
 	@echo Building $@
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
 	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
@@ -282,8 +282,16 @@ $(foreach book_dir, $(BOOKS), \
 mobi_books: $(MOBI_BOOKS)
 	@echo $@ completed.
 
+complete_site_books: 	$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf \
+			$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub \
+			$(MOBI_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).mobi
+	@echo $@ completed.
+
 all_books: pdf_books epub_books mobi_books
 	@echo $@ completed.
+
+clean-doctrees:
+	@rm -rf "$(BUILDDIR)/doctrees"
 
 cleanall:
 	@rm -rf "$(BUILDDIR)"

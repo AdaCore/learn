@@ -6,15 +6,17 @@
 
 .. include:: <isopub.txt>
 
-.. only:: builder_latex or builder_epub
-
-    Everything Ada and SPARK
-    ========================
-
 .. only:: builder_html
 
     LEARN.ADACORE.COM
     ===================
+
+.. only:: builder_latex or builder_epub
+
+    Learning Ada
+    ============
+
+.. only:: builder_html
 
     .. raw:: html
 
@@ -85,8 +87,37 @@
     E-books
     ------------------------------
 
-    You may download the courses and laboratories as e-books for offline reading.
-    We offer you the following formats: PDF, EPUB and MOBI (for Kindle devices).
+    Download the contents of the entire website as an e-book for offline
+    reading. You can select the following formats: PDF, EPUB and MOBI (for
+    Kindle devices).
+
+    .. container:: frontpage-ebooks
+
+        .. container:: frontpage-ebooks-row
+
+            .. container:: frontpage-ebook-and-buttons-block
+
+                .. image:: images/page-1-of-learning-ada.jpeg
+                    :alt: Learning Ada (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/learning-ada.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/learning-ada.epub">
+                                EPUB
+                            </a>
+
+                            <a class="ebook-download-button" href="/mobi_books/learning-ada.mobi">
+                                MOBI
+                            </a>
+                        </div>
+
+    Alternatively, download individual courses and laboratories as e-books:
 
     .. container:: frontpage-ebooks
 
@@ -95,7 +126,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-intro-to-ada.jpeg
-                    :alt: Introduction to Ada (PDF)
+                    :alt: Introduction to Ada (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -117,7 +148,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-intro-to-ada-labs.jpeg
-                    :alt: Introduction to Ada: Laboratories (PDF)
+                    :alt: Introduction to Ada: Laboratories (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -142,7 +173,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-intro-to-spark.jpeg
-                    :alt: Introduction to SPARK (PDF)
+                    :alt: Introduction to SPARK (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -164,7 +195,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
-                    :alt: Introduction to GNAT Toolchain (PDF)
+                    :alt: Introduction to GNAT Toolchain (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -188,7 +219,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
-                    :alt: Ada for the C++ and Java Developer (PDF)
+                    :alt: Ada for the C++ and Java Developer (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -210,7 +241,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
-                    :alt: Ada for the Embedded C Developer (PDF)
+                    :alt: Ada for the Embedded C Developer (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -234,7 +265,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
-                    :alt: SPARK for the MISRA-C Developer (PDF)
+                    :alt: SPARK for the MISRA-C Developer (e-book)
                     :width: 149pt
 
                 .. raw:: html
