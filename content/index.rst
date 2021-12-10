@@ -8,8 +8,8 @@
 
 .. only:: builder_latex or builder_epub
 
-    Everything Ada and SPARK
-    ========================
+    Learning Ada
+    ============
 
 .. only:: builder_html
 
