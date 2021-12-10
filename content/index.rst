@@ -85,8 +85,37 @@
     E-books
     ------------------------------
 
-    You may download the courses and laboratories as e-books for offline reading.
-    We offer you the following formats: PDF, EPUB and MOBI (for Kindle devices).
+    Download the contents of the entire website as an e-book for offline
+    reading. You can select the following formats: PDF, EPUB and MOBI (for
+    Kindle devices).
+
+    .. container:: frontpage-ebooks
+
+        .. container:: frontpage-ebooks-row
+
+            .. container:: frontpage-ebook-and-buttons-block
+
+                .. image:: images/page-1-of-learning-ada.jpeg
+                    :alt: Learning Ada (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/learning-ada.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/learning-ada.epub">
+                                EPUB
+                            </a>
+
+                            <a class="ebook-download-button" href="/mobi_books/learning-ada.mobi">
+                                MOBI
+                            </a>
+                        </div>
+
+    Alternatively, download individual courses and laboratories as e-books:
 
     .. container:: frontpage-ebooks
 
