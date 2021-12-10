@@ -178,7 +178,7 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
 
-$(PDF_BOOKS_DIR)/$(COMPLETE_BOOK).pdf:
+$(PDF_BOOKS_DIR)/$(COMPLETE_BOOK).pdf: clean-doctrees
 	@echo Building $@ PDF
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
 	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
@@ -217,7 +217,7 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
 
-$(EPUB_BOOKS_DIR)/$(COMPLETE_BOOK).epub:
+$(EPUB_BOOKS_DIR)/$(COMPLETE_BOOK).epub: clean-doctrees
 	@echo Building $@
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
 	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
@@ -284,6 +284,9 @@ mobi_books: $(MOBI_BOOKS)
 
 all_books: pdf_books epub_books mobi_books
 	@echo $@ completed.
+
+clean-doctrees:
+	@rm -rf "$(BUILDDIR)/doctrees"
 
 cleanall:
 	@rm -rf "$(BUILDDIR)"
