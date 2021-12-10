@@ -95,7 +95,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-intro-to-ada.jpeg
-                    :alt: Introduction to Ada (PDF)
+                    :alt: Introduction to Ada (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -117,7 +117,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-intro-to-ada-labs.jpeg
-                    :alt: Introduction to Ada: Laboratories (PDF)
+                    :alt: Introduction to Ada: Laboratories (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -142,7 +142,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-intro-to-spark.jpeg
-                    :alt: Introduction to SPARK (PDF)
+                    :alt: Introduction to SPARK (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -164,7 +164,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
-                    :alt: Introduction to GNAT Toolchain (PDF)
+                    :alt: Introduction to GNAT Toolchain (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -188,7 +188,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
-                    :alt: Ada for the C++ and Java Developer (PDF)
+                    :alt: Ada for the C++ and Java Developer (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -210,7 +210,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
-                    :alt: Ada for the Embedded C Developer (PDF)
+                    :alt: Ada for the Embedded C Developer (e-book)
                     :width: 149pt
 
                 .. raw:: html
@@ -234,7 +234,7 @@
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
-                    :alt: SPARK for the MISRA-C Developer (PDF)
+                    :alt: SPARK for the MISRA-C Developer (e-book)
                     :width: 149pt
 
                 .. raw:: html
