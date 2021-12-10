@@ -1,8 +1,8 @@
 :prev_state: False
 :next_state: False
 
-Intro To SPARK
-===============
+Introduction To SPARK
+=====================
 
 .. include:: ../global.txt
 
