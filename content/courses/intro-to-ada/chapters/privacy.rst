@@ -32,6 +32,20 @@ Basic encapsulation
        --  Not visible from external units
     end Encapsulate;
 
+    package body Encapsulate is
+
+       procedure Hello is
+       begin
+          Put_Line ("Hello");
+       end Hello;
+
+       procedure Hello2 is
+       begin
+          Put_Line ("Hello #2");
+       end Hello2;
+
+    end Encapsulate;
+
     with Encapsulate;
 
     procedure Main is
@@ -70,6 +84,24 @@ implementation details of a type. Here is how it can be done in Ada:
           Top     : Stack_Index;
           Content : Content_Type;
        end record;
+    end Stacks;
+
+    package body Stacks is
+
+       procedure Push (S   : in out Stack;
+                       Val :        Integer) is
+       begin
+          --  Missing implementation!
+          null;
+       end Push;
+
+       procedure Pop (S   : in out Stack;
+                      Val :    out Integer) is
+       begin
+          --  Dummy implementation!
+          Val := 0;
+       end Pop;
+
     end Stacks;
 
 In the above example, we define a stack type in the public part (known as the
@@ -150,6 +182,24 @@ assignment and comparison operations are not automatically provided.
           Top     : Stack_Index;
           Content : Content_Type;
        end record;
+    end Stacks;
+
+    package body Stacks is
+
+       procedure Push (S   : in out Stack;
+                       Val :        Integer) is
+       begin
+          --  Missing implementation!
+          null;
+       end Push;
+
+       procedure Pop (S   : in out Stack;
+                      Val :    out Integer) is
+       begin
+          --  Dummy implementation!
+          Val := 0;
+       end Pop;
+
     end Stacks;
 
     with Stacks; use Stacks;
