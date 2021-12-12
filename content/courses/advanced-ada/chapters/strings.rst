@@ -103,6 +103,10 @@ information you're processing is in standard English. In case any kind of
 internationalization is needed, using :ada:`Wide_Wide_String` is probably the
 best choice, as it covers all possible use-cases.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `3.6.3 String Types <http://www.ada-auth.org/standards/12rm/html/RM-3-6-3.html>`_
+
 Text I/O
 ~~~~~~~~
 
@@ -304,6 +308,10 @@ systems other than the Latin alphabet. It defines a format called
 in various versions, which vary
 according to the underlying precision, support for backwards-compatibility
 and other requirements.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `A.4.11 String Encoding <http://www.ada-auth.org/standards/12rm/html/RM-A-4-11.html>`_
 
 UTF-8 encoding and decoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

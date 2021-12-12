@@ -66,6 +66,10 @@ subprograms for it. For example, we could specify an addition operation for it:
        A := A + B;
     end Show_Null_Rec;
 
+.. admonition:: In the Ada Reference Manual
+
+    - `4.3.1 Record Aggregates <http://www.ada-auth.org/standards/12rm/html/RM-4-3-1.html>`_
+
 Simple Prototyping
 ~~~~~~~~~~~~~~~~~~
 
@@ -441,6 +445,10 @@ type that extends |mdash| adds components to |mdash| some existing type (the
 essential when we want to express an aggregate for an extension of a private
 ancestor type, that is, when we don't have compile-time visibility to the
 ancestor type's components.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.3.2 Extension Aggregates <http://www.ada-auth.org/standards/12rm/html/RM-4-3-2.html>`_
 
 Assignments to objects of derived types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

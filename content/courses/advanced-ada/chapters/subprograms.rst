@@ -149,6 +149,10 @@ instead:
 
     end My_Data;
 
+.. admonition:: In the Ada Reference Manual
+
+    - `6.8 Expression functions <http://www.ada-auth.org/standards/12rm/html/RM-6-8.html>`_
+
 
 Conditional Expressions
 -----------------------
@@ -277,6 +281,10 @@ previous example, we notice that the case-expression is just a simplified
 version of the case block without the :ada:`return` keyword and the
 :ada:`end case;`, and with alternatives separated by commas instead of
 semicolons.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.5.7 Conditional Expressions <http://www.ada-auth.org/standards/12rm/html/RM-4-5-7.html>`_
 
 
 Quantified Expressions
@@ -455,6 +463,10 @@ write :ada:`for all E of A => ...`. Let's adapt the implementation of
 
 Here, we're checking the components :ada:`E` of the array :ada:`A` and
 comparing them against zero.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.5.8 Quantified Expressions <http://www.ada-auth.org/standards/12rm/html/RM-4-5-8.html>`_
 
 
 Declare Expressions
