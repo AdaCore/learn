@@ -856,10 +856,6 @@ makes the overload resolution algorithm reasonably efficient.
 Operator Overloading
 --------------------
 
-.. todo::
-
-    Complete section!
-
 
 Nonreturning procedures
 -----------------------
