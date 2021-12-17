@@ -286,6 +286,14 @@
 
     -------------
 
+    Professional Ada Training
+    ---------------------------
+
+    **Get professional Ada training** from
+    `Adacore <https://www.adacore.com/training>`_.
+
+    -------------
+
     Download Ada and SPARK tools
     ------------------------------
 
