@@ -23,6 +23,10 @@ example:
 In this section, we discuss two attributes of modular types: :ada:`Modulus`
 and :ada:`Mod`. We also discuss operations on modular types.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `3.5.4 Integer Types <http://www.ada-auth.org/standards/12rm/html/RM-3-5-4.html>`_
+
 
 :ada:`Modulus` Attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~
