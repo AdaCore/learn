@@ -88,7 +88,7 @@ address of a person:
     begin
        Display (John);
        Display (Jane);
-       Put_Line("----------------");
+       Put_Line ("----------------");
 
        Jane := Jane + John;
        Display (Jane);
