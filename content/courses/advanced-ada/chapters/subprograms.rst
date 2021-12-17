@@ -856,6 +856,134 @@ makes the overload resolution algorithm reasonably efficient.
 Operator Overloading
 --------------------
 
+We've seen :ref:`previously <Operators>` that we can define custom operators
+for record types. We can also overload operators of derived types. This allows
+for modifying the behavior of operators for certain types.
+
+To overload an operator of a derived type, we simply implement a function for
+that operator. This is the same as how we implement custom operators (as we've
+seen previously).
+
+As an example, when adding two fixed-point values, the result might be out of
+range, which causes an exception to be raised. A common strategy to avoid
+exceptions in this case is to saturate the resulting value. This strategy is
+typically employed in signal processing algorithms, for example.
+
+In this example, we declare and use the 32-bit fixed-point type :ada:`TQ31`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Fixed_Point_Exception
+
+    package Fixed_Point is
+
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+
+    end Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Fixed_Point; use Fixed_Point;
+
+    procedure Show_Sat_Op is
+       A, B, C : TQ31;
+    begin
+       A := TQ31'Last;
+       B := TQ31'Last;
+       C := A + B;
+
+       Put_Line (A'Image   & " + "
+                 & B'Image & " = "
+                 & C'Image);
+
+       A := TQ31'First;
+       B := TQ31'First;
+       C := A + B;
+
+       Put_Line (A'Image   & " + "
+                 & B'Image & " = "
+                 & C'Image);
+
+    end Show_Sat_Op;
+
+Here, we're using the standard :ada:`+` operator, which raises a
+:ada:`Constraint_Error` exception in the :ada:`C := A + B;` statement due to an
+overflow. Let's now overload the addition operator and enforce saturation when
+the result is out of range:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Fixed_Point_Operator_Overloading
+
+    package Fixed_Point is
+
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+
+       function "+" (Left, Right : TQ31) return TQ31;
+
+    end Fixed_Point;
+
+    package body Fixed_Point is
+
+       function "+" (Left, Right : TQ31) return TQ31 is
+          type TQ31_2 is delta TQ31'Delta
+            range TQ31'First * 2.0 .. TQ31'Last * 2.0;
+
+          L   : constant TQ31_2 := TQ31_2 (Left);
+          R   : constant TQ31_2 := TQ31_2 (Right);
+          Res : TQ31_2;
+       begin
+          Res := L + R;
+
+          if Res > TQ31_2 (TQ31'Last) then
+             return TQ31'Last;
+          elsif Res < TQ31_2 (TQ31'First) then
+             return TQ31'First;
+          else
+             return TQ31 (Res);
+          end if;
+       end "+";
+
+    end Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Fixed_Point; use Fixed_Point;
+
+    procedure Show_Sat_Op is
+       A, B, C : TQ31;
+    begin
+       A := TQ31'Last;
+       B := TQ31'Last;
+       C := A + B;
+
+       Put_Line (A'Image   & " + "
+                 & B'Image & " = "
+                 & C'Image);
+
+       A := TQ31'First;
+       B := TQ31'First;
+       C := A + B;
+
+       Put_Line (A'Image   & " + "
+                 & B'Image & " = "
+                 & C'Image);
+
+    end Show_Sat_Op;
+
+In the implementation of the overloaded :ada:`+` operator of the :ada:`TQ31`
+type, we declare another type (:ada:`TQ31_2`) with a wider range than
+:ada:`TQ31`. We use variables of the :ada:`TQ31_2` type to perform the actual
+addition, and then we verify whether the result is still in :ada:`TQ31`\'s
+range. If it is, we simply convert the result *back* to the :ada:`TQ31` type.
+Otherwise, we saturate it |mdash| using either the first or last value of the
+:ada:`TQ31` type.
+
+When overloading operators, the overloaded operator replaces the original
+one. For example, in the :ada:`A + B` operation of the :ada:`Show_Sat_Op`
+procedure above, we're using the overloaded version of the :ada:`+` operator,
+which performs saturation. Therefore, this operation doesn't raise an
+exception (as it was the case with the original :ada:`+` operator).
+
+.. admonition:: In the Ada Reference Manual
+
+    - `6.6 Overloading of Operators <http://www.ada-auth.org/standards/12rm/html/RM-6-6.html>`_
 
 Nonreturning procedures
 -----------------------
