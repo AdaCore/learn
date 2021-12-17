@@ -833,6 +833,10 @@ inline a subprogram:
     subprogram has the :ada:`Inline_Always` aspect, but the compiler is unable
     to inline it. In this case, we get a compilation error from GNAT.
 
+Note that we can use the :ada:`Inline` aspect for generic subprograms as well.
+When we do this, we indicate to the compiler that we wish it inlines all
+instances of that generic subprogram.
+
 .. admonition:: In the Ada Reference Manual
 
     - `6.3.2 Inline Expansion of Subprograms <http://www.ada-auth.org/standards/12rm/html/RM-6-3-2.html>`_
