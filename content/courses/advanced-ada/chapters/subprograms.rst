@@ -3,6 +3,125 @@ Subprograms
 
 .. include:: ../../global.txt
 
+.. _Operators:
+
+Operators
+---------
+
+Operators are commonly used for variables of scalar types such as
+:ada:`Integer` and :ada:`Float`. In these cases, they replace *usual* function
+calls. (To be more precise, operators are function calls, but written in a
+different format.) For example, we simply write :ada:`A := A + B + C;` when we
+want to add three integer variables. A hypothetical, non-intuitive version of
+this operation could be :ada:`A := Add (Add (A, B), C);`. In such cases,
+operators allow for expressing function calls in a more intuitive way.
+
+Many pre-defined operators exist for scalar types. Obviously, for record types,
+most operators are not defined, as it wouldn't make sense to expect a compiler
+to include an addition operator for a record type with multiple components, for
+example. An exception to this rule are the equality and inequality operators
+(:ada:`=` and :ada:`/=`), which are defined for both scalar and record types.
+
+We can, however, define *custom* operators for record types. For example, we
+could declare two :ada:`+` operators for a record containing the name and
+address of a person:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Rec_Operator
+
+    package Addresses is
+
+       type Person is private;
+
+       function "+" (Name    : String;
+                     Address : String) return Person;
+       function "+" (Left, Right : Person) return Person;
+
+       procedure Display (P : Person);
+
+    private
+
+       subtype Name_String    is String (1 .. 40);
+       subtype Address_String is String (1 .. 100);
+
+       type Person is record
+          Name    : Name_String;
+          Address : Address_String;
+       end record;
+
+    end Addresses;
+
+    with Ada.Strings.Fixed; use Ada.Strings.Fixed;
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    package body Addresses is
+
+       function "+" (Name    : String;
+                     Address : String) return Person is
+       begin
+          return (Name    => Head (Name,
+                                   Name_String'Length),
+                  Address => Head (Address,
+                                   Address_String'Length));
+       end "+";
+
+       function "+" (Left, Right : Person) return Person is
+       begin
+          return (Name    => Left.Name,
+                  Address => Right.Address);
+       end "+";
+
+       procedure Display (P : Person) is
+       begin
+          Put_Line ("Name:    " & P.Name);
+          Put_Line ("Address: " & P.Address);
+          New_Line;
+       end Display;
+
+    end Addresses;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Addresses;   use Addresses;
+
+    procedure Show_Address_Addition is
+       John : Person := "John" + "4 Main Street";
+       Jane : Person := "Jane" + "7 High Street";
+    begin
+       Display (John);
+       Display (Jane);
+       Put_Line("----------------");
+
+       Jane := Jane + John;
+       Display (Jane);
+    end Show_Address_Addition;
+
+In this example, the first :ada:`+` operator takes two strings |mdash| with the
+name and address of a person |mdash| and returns an object of :ada:`Person`
+type. We use this operator to initialize the :ada:`John` and :ada:`Jane`
+variables.
+
+The second :ada:`+` operator in this example brings two people together. Here,
+the person on the left side of the :ada:`+` operator moves to the home of the
+person on the right side. In this specific case, Jane is moving to John's
+house.
+
+In the Ada standard library, operators are defined for the :ada:`Complex` type
+of the :ada:`Ada.Numerics.Generic_Complex_Types` package, for example. This
+package contains not only the definition of the :ada:`+` operator for two
+objects of :ada:`Complex` type, but also for combination of :ada:`Complex` and
+other types. For example:
+
+.. code-block:: ada
+
+    function "+" (Left, Right : Complex) return Complex;
+    function "+" (Left : Complex;   Right : Real'Base) return Complex;
+    function "+" (Left : Real'Base; Right : Complex)   return Complex;
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.5 Operators and Expression Evaluation <http://www.ada-auth.org/standards/12rm/html/RM-4-5.html>`_
+    - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`_
+    - `G.1.1 Complex Types <http://www.ada-auth.org/standards/12rm/html/RM-G-1-1.html>`_
+
 Expression functions
 --------------------
 
