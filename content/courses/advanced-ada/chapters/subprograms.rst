@@ -104,6 +104,27 @@ the person on the left side of the :ada:`+` operator moves to the home of the
 person on the right side. In this specific case, Jane is moving to John's
 house.
 
+As a small remark, we usually expect that the :ada:`+` operator is commutative.
+In other words, changing the order of the elements in the operation doesn't
+change the result. However, in our definition above, this is *not* the case, as
+we can confirm by comparing the operation in both orders:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Rec_Operator
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Addresses;   use Addresses;
+
+    procedure Show_Address_Addition is
+       John : Person := "John" + "4 Main Street";
+       Jane : Person := "Jane" + "7 High Street";
+    begin
+       if Jane + John = John + Jane then
+          Put_Line("It's commutative!");
+       else
+          Put_Line("It's not commutative!");
+       end if;
+    end Show_Address_Addition;
+
 In the Ada standard library, operators are defined for the :ada:`Complex` type
 of the :ada:`Ada.Numerics.Generic_Complex_Types` package, for example. This
 package contains not only the definition of the :ada:`+` operator for two
