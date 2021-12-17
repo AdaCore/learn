@@ -872,6 +872,7 @@ typically employed in signal processing algorithms, for example.
 In this example, we declare and use the 32-bit fixed-point type :ada:`TQ31`:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Fixed_Point_Exception
+    :class: ada-run-expect-failure
 
     package Fixed_Point is
 
