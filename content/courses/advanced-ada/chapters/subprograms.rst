@@ -736,14 +736,106 @@ Nonreturning procedures
 Inline subprograms
 ------------------
 
-.. admonition:: Relevant topics
+`Inlining <https://en.wikipedia.org/wiki/Inline_expansion>`_ refers to a kind
+of optimization where the code of a subprogram is expanded instead of being
+called.
 
-    - **Briefly** mention :ada:`Inline` aspect mentioned in
-      `Inline Expansion of Subprograms <http://www.ada-auth.org/standards/2xrm/html/RM-6-3-2.html>`_
+In modern compilers, inlining depends on the optimization level selected by the
+user. For example, if we select the higher optimization level, the compiler
+will perform automatic inlining agressively.
 
-.. todo::
+.. admonition:: In the GNAT toolchain
 
-    Complete section!
+    The highest optimization level (``-O3``) of GNAT performs aggressive
+    automatic inlining. This could mean that this level inlines too much rather
+    than not enough. As a result, the cache may become an issue and the overall
+    performance may be worse than the one we would achieve by compiling the
+    same code with optimization level 2 (``-O2``). Therefore, the general
+    recommendation is to not *just* select ``-O3`` for the optimized version of
+    an application, but instead compare it the optimized version built with
+    ``-O2``.
+
+It's important to highlight that the inlining we're referring above happens
+automatically, so the decision about which subprogram is inlined depends
+entirely on the compiler. However, in some cases, it's better to reduce the
+optimization level and perform manual inlining instead of automatic inlining.
+We do that by using the :ada:`Inline` aspect.
+
+Let's look at this example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Inlining_Float_Arrays
+
+    package Float_Arrays is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       function Average (Data : Float_Array) return Float
+         with Inline;
+
+    end Float_Arrays;
+
+    package body Float_Arrays is
+
+       function Average (Data : Float_Array) return Float is
+          Total : Float := 0.0;
+       begin
+          for Value of Data loop
+             Total := Total + Value;
+          end loop;
+          return Total / Float (Data'Length);
+       end Average;
+
+    end Float_Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Float_Arrays; use Float_Arrays;
+
+    procedure Compute_Average is
+       Values        : constant Float_Array := (10.0, 11.0, 12.0, 13.0);
+       Average_Value : Float;
+    begin
+       Average_Value := Average (Values);
+       Put_Line ("Average = " & Float'Image (Average_Value));
+    end Compute_Average;
+
+When compiling this example, the compiler will most probably inline
+:ada:`Average` in the :ada:`Compute_Average` procedure. Note, however, that the
+:ada:`Inline` aspect is just a *recommendation* to the compiler. Sometimes, the
+compiler might not be able to follow this recommendation, so it won't inline
+the subprogram.
+
+These are some examples of situations where the compiler might not be able to
+inline a subprogram:
+
+- when the code is too large,
+
+- when it's too complicated |mdash| for example, when it involves exception
+  handling |mdash|, or
+
+- when it contains tasks, etc.
+
+.. admonition:: In the GNAT toolchain
+
+    In order to effectively use the :ada:`Inline` aspect, we need to set the
+    optimization level to at least ``-O1`` and use the ``-gnatn`` switch, which
+    instructs the compiler to take the :ada:`Inline` aspect into account.
+
+    In addition to the :ada:`Inline` aspect, in GNAT, we also have the
+    (implementation-defined) :ada:`Inline_Always` aspect. In contrast to the
+    former aspect, however, the :ada:`Inline_Always` aspect isn't primarily
+    related to performance. Instead, it should be used when the functionality
+    would be incorrect if inlining was not performed by the compiler. Examples
+    of this are procedures that insert Assembly instructions that only make
+    sense when the procedure is inlined, such as memory barriers.
+
+    Similar to the :ada:`Inline` aspect, there might be situations where a
+    subprogram has the :ada:`Inline_Always` aspect, but the compiler is unable
+    to inline it. In this case, we get a compilation error from GNAT.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `6.3.2 Inline Expansion of Subprograms <http://www.ada-auth.org/standards/12rm/html/RM-6-3-2.html>`_
 
 
 .. _Null_Procedures:
