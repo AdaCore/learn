@@ -119,9 +119,9 @@ we can confirm by comparing the operation in both orders:
        Jane : Person := "Jane" + "7 High Street";
     begin
        if Jane + John = John + Jane then
-          Put_Line("It's commutative!");
+          Put_Line ("It's commutative!");
        else
-          Put_Line("It's not commutative!");
+          Put_Line ("It's not commutative!");
        end if;
     end Show_Address_Addition;
 
