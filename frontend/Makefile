@@ -178,8 +178,9 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
 
-$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf: clean-doctrees
+$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf:
 	@echo Building $@ PDF
+	@rm -rf "$(BUILDDIR)/doctrees"
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
 	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
 	@mkdir -p $(PDF_BOOKS_DIR)
@@ -217,8 +218,9 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
 
-$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub: clean-doctrees
+$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub:
 	@echo Building $@
+	@rm -rf "$(BUILDDIR)/doctrees"
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
 	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
 	@mkdir -p $(EPUB_BOOKS_DIR)
@@ -290,9 +292,6 @@ complete_site_books: 	$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf \
 all_books: pdf_books epub_books mobi_books
 	@echo $@ completed.
 
-clean-doctrees:
-	@rm -rf "$(BUILDDIR)/doctrees"
-
 cleanall:
 	@rm -rf "$(BUILDDIR)"
 	@rm -f $(BUILD_MANIFEST)
@@ -308,5 +307,5 @@ cleantest:
 	$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-.PHONY: Makefile help test_content test_engine pdf_books epub_books \
-	mobi_books $(BOOKS)
+.PHONY: Makefile help test_content test_engine \
+	pdf_books epub_books mobi_books $(BOOKS)
