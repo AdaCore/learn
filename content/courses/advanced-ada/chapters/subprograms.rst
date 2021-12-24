@@ -751,11 +751,3 @@ Inline subprograms
 Null Procedures
 ---------------
 
-.. admonition:: Relevant topics
-
-    - `Null Procedures <http://www.ada-auth.org/standards/2xrm/html/RM-6-7.html>`_
-    - Mention application for (non-tagged) type extensions
-
-.. todo::
-
-    Complete section!
