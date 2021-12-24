@@ -127,6 +127,12 @@ def real_gnatchop(lines: List[str]) -> List[Resource]:
                 content = f.read().strip().splitlines()
                 results.append(Resource(basename, content))
     except subprocess.CalledProcessError:
+        print('======== gnatchop error ========\n')
+        for num, line in enumerate(lines, 1):
+            print("{line_num:4d} | {line}".format(
+                  line_num=num,
+                  line=line))
+        print('\n================================')
         raise Exception('Could not chop files with gnatchop')
     finally:
         # remove temp fs
