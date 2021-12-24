@@ -751,3 +751,150 @@ Inline subprograms
 Null Procedures
 ---------------
 
+Null procedures are procedures that don't have any effect, as their body is
+empty. We declare a null procedure by simply writing :ada:`is null` in its
+declaration. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Subprograms.Null_Proc_1
+
+    package Null_Procs is
+
+       procedure Do_Nothing (Msg : String) is null;
+
+    end Null_Procs;
+
+As expected, using a null procedure doesn't have any effect. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Null_Proc_1
+
+    with Null_Procs; use Null_Procs;
+
+    procedure Show_Null_Proc is
+    begin
+       Do_Nothing ("Hello");
+    end Show_Null_Proc;
+
+Null procedures are equivalent to implementing a procedure with a body that
+only contains :ada:`null`. Therefore, the :ada:`Do_Nothing` procedure above is
+equivalent to this:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Subprograms.Null_Proc_1
+
+    package Null_Procs is
+
+       procedure Do_Nothing (Msg : String);
+
+    end Null_Procs;
+
+    package body Null_Procs is
+
+       procedure Do_Nothing (Msg : String) is
+       begin
+          null;
+       end Do_Nothing;
+
+    end Null_Procs;
+
+Null procedures and overriding
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use null procedures as a way to simulate interfaces for non-tagged
+types |mdash| similar to what actual interfaces do for tagged types. For
+example, we may start by declaring a type and null procedures that operate on
+that type. For example, let's model a very simple API:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Subprograms.Simple_Storage_Model
+
+    package Simple_Storage is
+
+       type Storage_Model is null record;
+
+       procedure Set (S : in out Storage_Model;
+                      V :        String) is null;
+       procedure Display (S : Storage_Model) is null;
+
+    end Simple_Storage;
+
+Here, the API of the :ada:`Storage_Model` type consists of the :ada:`Set` and
+:ada:`Display` procedures. Naturally, we can use objects of the
+:ada:`Storage_Model` type in an application, but this won't have any effect:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Simple_Storage_Model
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Simple_Storage; use Simple_Storage;
+
+    procedure Show_Null_Proc is
+       S : Storage_Model;
+    begin
+       Put_Line ("Setting 24...");
+       Set (S, "24");
+       Display (S);
+    end Show_Null_Proc;
+
+By itself, the :ada:`Storage_Model` type is not very useful. However, we can
+derive other types from it and override the null procedures. Let's say we want
+to implement the :ada:`Integer_Storage` type to store an integer value:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Simple_Storage_Model
+
+    package Simple_Storage is
+
+       type Storage_Model is null record;
+
+       procedure Set (S : in out Storage_Model;
+                      V :        String) is null;
+       procedure Display (S : Storage_Model) is null;
+
+       type Integer_Storage is private;
+
+       procedure Set (S : in out Integer_Storage;
+                      V :        String);
+       procedure Display (S : Integer_Storage);
+
+    private
+
+       type Integer_Storage is record
+          V : Integer := 0;
+       end record;
+
+    end Simple_Storage;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Storage is
+
+       procedure Set (S : in out Integer_Storage;
+                      V :        String) is
+       begin
+          S.V := Integer'Value (V);
+       end Set;
+
+       procedure Display (S : Integer_Storage) is
+       begin
+          Put_Line ("Value: " & S.V'Image);
+       end Display;
+
+    end Simple_Storage;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Simple_Storage; use Simple_Storage;
+
+    procedure Show_Null_Proc is
+       S : Integer_Storage;
+    begin
+       Put_Line ("Setting 24...");
+       Set (S, "24");
+       Display (S);
+    end Show_Null_Proc;
+
+In this example, we can view :ada:`Storage_Model` as a sort of interface for
+derived non-tagged types, while the derived types |mdash| such as
+:ada:`Integer_Storage` |mdash| provide the actual implementation.
+
+The section on :ref:`null records <Null_Records>` contains an extended example
+that makes use of null procedures.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `6.7 Null Procedures <http://www.ada-auth.org/standards/12rm/html/RM-6-7.html>`_
