@@ -146,6 +146,7 @@ sphinx-production:
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 sphinx-staging:
+	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
