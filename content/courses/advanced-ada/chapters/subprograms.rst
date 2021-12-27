@@ -267,8 +267,8 @@ we can confirm by comparing the operation in both orders:
     with Addresses;   use Addresses;
 
     procedure Show_Address_Addition is
-       John : Person := "John" + "4 Main Street";
-       Jane : Person := "Jane" + "7 High Street";
+       John : constant Person := "John" + "4 Main Street";
+       Jane : constant Person := "Jane" + "7 High Street";
     begin
        if Jane + John = John + Jane then
           Put_Line ("It's commutative!");
