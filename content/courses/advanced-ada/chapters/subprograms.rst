@@ -277,6 +277,8 @@ we can confirm by comparing the operation in both orders:
        end if;
     end Show_Address_Addition;
 
+In this example, we're using the primitive :ada:`=` operator for the
+:ada:`Person` to assess whether the result of the addition is commutative.
 
 .. admonition:: In the Ada Reference Manual
 
