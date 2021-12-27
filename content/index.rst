@@ -75,6 +75,17 @@
         SPARK Ada for the MISRA C Developer <courses/SPARK_for_the_MISRA_C_Developer/index>
         Introduction to GNAT Toolchain <courses/GNAT_Toolchain_Intro/index>
 
+    .. only:: no_hidden_books
+
+        .. toctree::
+            :maxdepth: 1
+            :caption: Upcoming Courses
+
+            Ada 2022: What's New <courses/ada_2022_whats_new/index>
+            Advanced Ada <courses/advanced-ada/index>
+            Advanced SPARK <courses/advanced-spark/index>
+            Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/index>
+
     .. toctree::
         :maxdepth: 1
         :caption: Labs
