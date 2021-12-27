@@ -860,7 +860,13 @@ We've seen :ref:`previously <Operators>` that we can define custom operators
 for record types. We can also overload operators of derived types. This allows
 for modifying the behavior of operators for certain types.
 
-To overload an operator of a derived type, we simply implement a function for
+Operator Overriding
+-------------------
+
+We can also override operators of derived types. This allows for modifying the
+behavior of operators for certain types.
+
+To override an operator of a derived type, we simply implement a function for
 that operator. This is the same as how we implement custom operators (as we've
 seen previously).
 
@@ -907,7 +913,7 @@ In this example, we declare and use the 32-bit fixed-point type :ada:`TQ31`:
 
 Here, we're using the standard :ada:`+` operator, which raises a
 :ada:`Constraint_Error` exception in the :ada:`C := A + B;` statement due to an
-overflow. Let's now overload the addition operator and enforce saturation when
+overflow. Let's now override the addition operator and enforce saturation when
 the result is out of range:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Fixed_Point_Operator_Overloading
@@ -968,7 +974,7 @@ the result is out of range:
 
     end Show_Sat_Op;
 
-In the implementation of the overloaded :ada:`+` operator of the :ada:`TQ31`
+In the implementation of the overridden :ada:`+` operator of the :ada:`TQ31`
 type, we declare another type (:ada:`TQ31_2`) with a wider range than
 :ada:`TQ31`. We use variables of the :ada:`TQ31_2` type to perform the actual
 addition, and then we verify whether the result is still in :ada:`TQ31`\'s
@@ -976,15 +982,11 @@ range. If it is, we simply convert the result *back* to the :ada:`TQ31` type.
 Otherwise, we saturate it |mdash| using either the first or last value of the
 :ada:`TQ31` type.
 
-When overloading operators, the overloaded operator replaces the original
+When overriding operators, the overridden operator replaces the original
 one. For example, in the :ada:`A + B` operation of the :ada:`Show_Sat_Op`
-procedure above, we're using the overloaded version of the :ada:`+` operator,
+procedure above, we're using the overridden version of the :ada:`+` operator,
 which performs saturation. Therefore, this operation doesn't raise an
 exception (as it was the case with the original :ada:`+` operator).
-
-.. admonition:: In the Ada Reference Manual
-
-    - `6.6 Overloading of Operators <http://www.ada-auth.org/standards/12rm/html/RM-6-6.html>`_
 
 Nonreturning procedures
 -----------------------
