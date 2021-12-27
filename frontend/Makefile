@@ -200,7 +200,9 @@ $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
 	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
 	$(eval SPHINX_PDF := $(SPHINX_BOOK).pdf) \
-	$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))) \
+	$(if $(guile (access? $(HIDDEN_BOOKS) R_OK)), \
+		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+		$(eval HIDDEN_BOOK := 0)) \
 	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval PDF_BOOKS += $(PDF_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF))) \
 	)
 
@@ -245,7 +247,9 @@ $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
 	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
 	$(eval SPHINX_EPUB := $(SPHINX_BOOK).epub) \
-	$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))) \
+	$(if $(guile (access? $(HIDDEN_BOOKS) R_OK)), \
+		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+		$(eval HIDDEN_BOOK := 0)) \
 	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval EPUB_BOOKS += $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB))) \
 	)
 
@@ -289,7 +293,9 @@ $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
 	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
 	$(eval SPHINX_MOBI := $(SPHINX_BOOK).mobi) \
-	$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))) \
+	$(if $(guile (access? $(HIDDEN_BOOKS) R_OK)), \
+		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+		$(eval HIDDEN_BOOK := 0)) \
 	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval MOBI_BOOKS += $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_MOBI))) \
 	)
 
