@@ -16,13 +16,21 @@ want to add three integer variables. A hypothetical, non-intuitive version of
 this operation could be :ada:`A := Add (Add (A, B), C);`. In such cases,
 operators allow for expressing function calls in a more intuitive way.
 
-Many pre-defined operators exist for scalar types. Obviously, for record types,
-most operators are not defined, as it wouldn't make sense to expect a compiler
-to include an addition operator for a record type with multiple components, for
-example. An exception to this rule are the equality and inequality operators
-(:ada:`=` and :ada:`/=`), which are defined for both scalar and record types.
 
-We can, however, define *custom* operators for record types. For example, we
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.5 Operators and Expression Evaluation <http://www.ada-auth.org/standards/12rm/html/RM-4-5.html>`_
+
+User-defined operators
+~~~~~~~~~~~~~~~~~~~~~~
+
+For non-scalar types, not all operators are defined. For example, it wouldn't
+make sense to expect a compiler to include an addition operator for a record
+type with multiple components, for example. An exception to this rule are the
+equality and inequality operators (:ada:`=` and :ada:`/=`), which are defined
+for any type (be it scalar, record types, and array types).
+
 could declare two :ada:`+` operators for a record containing the name and
 address of a person:
 
@@ -128,7 +136,6 @@ we can confirm by comparing the operation in both orders:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.5 Operators and Expression Evaluation <http://www.ada-auth.org/standards/12rm/html/RM-4-5.html>`_
     - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`_
 
 Expression functions
