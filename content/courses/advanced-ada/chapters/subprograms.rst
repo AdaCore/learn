@@ -125,23 +125,11 @@ we can confirm by comparing the operation in both orders:
        end if;
     end Show_Address_Addition;
 
-In the Ada standard library, operators are defined for the :ada:`Complex` type
-of the :ada:`Ada.Numerics.Generic_Complex_Types` package, for example. This
-package contains not only the definition of the :ada:`+` operator for two
-objects of :ada:`Complex` type, but also for combination of :ada:`Complex` and
-other types. For example:
-
-.. code-block:: ada
-
-    function "+" (Left, Right : Complex) return Complex;
-    function "+" (Left : Complex;   Right : Real'Base) return Complex;
-    function "+" (Left : Real'Base; Right : Complex)   return Complex;
 
 .. admonition:: In the Ada Reference Manual
 
     - `4.5 Operators and Expression Evaluation <http://www.ada-auth.org/standards/12rm/html/RM-4-5.html>`_
     - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`_
-    - `G.1.1 Complex Types <http://www.ada-auth.org/standards/12rm/html/RM-G-1-1.html>`_
 
 Expression functions
 --------------------
@@ -859,6 +847,27 @@ Operator Overloading
 We've seen :ref:`previously <Operators>` that we can define custom operators
 for record types. We can also overload operators of derived types. This allows
 for modifying the behavior of operators for certain types.
+
+As another example of operator overloading, in the Ada standard library,
+operators are defined for the :ada:`Complex` type of the
+:ada:`Ada.Numerics.Generic_Complex_Types` package. This package contains not
+only the definition of the :ada:`+` operator for two objects of :ada:`Complex`
+type, but also for combination of :ada:`Complex` and other types. For instance,
+we can find these declarations:
+
+.. code-block:: ada
+
+    function "+" (Left, Right : Complex) return Complex;
+    function "+" (Left : Complex;   Right : Real'Base) return Complex;
+    function "+" (Left : Real'Base; Right : Complex)   return Complex;
+
+This example shows that the :ada:`+` operator |mdash| as well as other
+operators |mdash| are being overloaded in the :ada:`Generic_Complex_Types`
+package.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `G.1.1 Complex Types <http://www.ada-auth.org/standards/12rm/html/RM-G-1-1.html>`_
 
 Operator Overriding
 -------------------
