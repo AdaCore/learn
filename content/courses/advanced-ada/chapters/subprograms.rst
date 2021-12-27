@@ -3,7 +3,7 @@ Subprograms
 
 .. include:: ../../global.txt
 
-.. _Operators:
+.. _Adv_Ada_Operators:
 
 Operators
 ---------
@@ -621,6 +621,8 @@ Reduction Expressions
     Complete section!
 
 
+.. _Adv_Ada_Overloading:
+
 Overloading
 -----------
 
@@ -844,9 +846,11 @@ makes the overload resolution algorithm reasonably efficient.
 Operator Overloading
 --------------------
 
-We've seen :ref:`previously <Operators>` that we can define custom operators
-for record types. We can also overload operators of derived types. This allows
-for modifying the behavior of operators for certain types.
+We've seen :ref:`previously <Adv_Ada_Operators>` that we can define custom
+operators for any type. We've also seen that subprograms can be
+:ref:`overloaded <Adv_Ada_Overloading>`. Since operators are functions, we're
+essentially talking about operator overloading, as we're defining the same
+operator (say :ada:`+` or :ada:`-`) for different types.
 
 As another example of operator overloading, in the Ada standard library,
 operators are defined for the :ada:`Complex` type of the
@@ -867,6 +871,7 @@ package.
 
 .. admonition:: In the Ada Reference Manual
 
+    - `6.6 Overloading of Operators <http://www.ada-auth.org/standards/12rm/html/RM-6-6.html>`_
     - `G.1.1 Complex Types <http://www.ada-auth.org/standards/12rm/html/RM-G-1-1.html>`_
 
 Operator Overriding
