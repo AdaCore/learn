@@ -16,7 +16,24 @@ want to add three integer variables. A hypothetical, non-intuitive version of
 this operation could be :ada:`A := Add (Add (A, B), C);`. In such cases,
 operators allow for expressing function calls in a more intuitive way.
 
+Many primitive operators exist for scalar types. We classify them as follows:
 
++--------------------+--------------------------------------------------------+
+| Category           | Operators                                              |
++====================+========================================================+
+| Logical            | :ada:`and`, :ada:`or`, :ada:`xor`                      |
++--------------------+--------------------------------------------------------+
+| Relational         | :ada:`=`, :ada:`/=`, :ada:`<`, :ada:`<=`, :ada:`>`,    |
+|                    | :ada:`>=`                                              |
++--------------------+--------------------------------------------------------+
+| Unary adding       | :ada:`+`, :ada:`-`                                     |
++--------------------+--------------------------------------------------------+
+| Binary adding      | :ada:`+`, :ada:`-`, :ada:`&`                           |
++--------------------+--------------------------------------------------------+
+| Multiplying        | :ada:`*`, :ada:`/`, :ada:`mod`, :ada:`rem`             |
++--------------------+--------------------------------------------------------+
+| Highest precedence | :ada:`**`, :ada:`abs`, :ada:`not`                      |
++--------------------+--------------------------------------------------------+
 
 .. admonition:: In the Ada Reference Manual
 
