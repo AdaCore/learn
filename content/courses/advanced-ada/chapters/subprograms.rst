@@ -48,6 +48,133 @@ type with multiple components, for example. An exception to this rule are the
 equality and inequality operators (:ada:`=` and :ada:`/=`), which are defined
 for any type (be it scalar, record types, and array types).
 
+For array types, the concatenation operator (:ada:`&`) is a primitive operator:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Integer_Arrays_Concat
+
+    package Integer_Arrays is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+    end Integer_Arrays;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Array_Concatenation is
+       A, B : Integer_Array (1 .. 5);
+       R : Integer_Array (1 .. 10);
+    begin
+       A := (1 & 2 & 3 & 4 & 5);
+       B := (6 & 7 & 8 & 9 & 10);
+       R := A & B;
+
+       for E of R loop
+          Put (E'Image & ' ');
+       end loop;
+       New_Line;
+    end Show_Array_Concatenation;
+
+In this example, we're using the primitive :ada:`&` operator to concatenate the
+:ada:`A` and :ada:`B` arrays in the assignment to :ada:`R`. Similarly, we're
+concatenating individual components (integer values) to create an aggregate
+that we assign to :ada:`A` and :ada:`B`.
+
+In contrast to this, the addition operator is not available for arrays:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Integer_Arrays_Addition
+    :class: ada-expect-compile-error
+
+    package Integer_Arrays is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+    end Integer_Arrays;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Array_Addition is
+       A, B, R : Integer_Array (1 .. 5);
+    begin
+       A := (1 & 2 & 3 & 4 & 5);
+       B := (6 & 7 & 8 & 9 & 10);
+       R := A + B;
+
+       for E of R loop
+          Put (E'Image & ' ');
+       end loop;
+       New_Line;
+
+    end Show_Array_Addition;
+
+We can, however, define *custom* operators for any type. For example, we can
+define an addition operator that adds individual components of the
+:ada:`Integer_Array` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Integer_Arrays_Addition
+
+    package Integer_Arrays is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       function "+" (Left, Right : Integer_Array) return Integer_Array
+         with Post => (for all I in "+"'Result'Range =>
+                         "+"'Result (I) = Left (I) + Right (I));
+
+    end Integer_Arrays;
+
+    package body Integer_Arrays is
+
+       function "+" (Left, Right : Integer_Array) return Integer_Array is
+          R : Integer_Array (Left'Range);
+       begin
+          for I in Left'Range loop
+             R (I) := Left (I) + Right (I);
+          end loop;
+
+          return R;
+       end "+";
+
+    end Integer_Arrays;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Array_Addition is
+       A, B, R : Integer_Array (1 .. 5);
+    begin
+       A := (1 & 2 & 3 & 4 & 5);
+       B := (6 & 7 & 8 & 9 & 10);
+       R := A + B;
+
+       for E of R loop
+          Put (E'Image & ' ');
+       end loop;
+       New_Line;
+
+    end Show_Array_Addition;
+
+Now, the :ada:`R := A + B` line doesn't trigger a compilation error anymore
+because the :ada:`+` operator is defined for the :ada:`Integer_Array` type.
+
+In the implementation of the :ada:`+`, we return an array with the range of the
+:ada:`Left` array where each component is the sum of the :ada:`Left` and
+:ada:`Right` arrays. In the declaration of the :ada:`+` operator, we're
+defining the expected behavior in the postcondition. Here, we're saying that,
+for each index of the resulting array (:ada:`for all I in "+"'Result'Range`),
+the value of each component of the resulting array at that specific index is
+the sum of the components from the :ada:`Left` and :ada:`Right` arrays at the
+same index (:ada:`"+"'Result (I) = Left (I) + Right (I)`). (:ada:`for all`
+denotes a :ref:`quantified expression <Adv_Ada_Quantified_Expressions>`.)
+
+Note that, in this implementation, we assume that the range of :ada:`Right` is
+a subset of the range of :ada:`Left`. If that is not the case, the
+:ada:`Constraint_Error` exception will be raised at runtime in the loop. (You
+can test this by declaring :ada:`B` as :ada:`Integer_Array (5 .. 10)`, for
+example.)
+
+We can also define custom operators for record types. For example, we
 could declare two :ada:`+` operators for a record containing the name and
 address of a person:
 
@@ -438,6 +565,7 @@ semicolons.
 
     - `4.5.7 Conditional Expressions <http://www.ada-auth.org/standards/12rm/html/RM-4-5-7.html>`_
 
+.. _Adv_Ada_Quantified_Expressions:
 
 Quantified Expressions
 ----------------------
