@@ -737,8 +737,8 @@ Inline subprograms
 ------------------
 
 `Inlining <https://en.wikipedia.org/wiki/Inline_expansion>`_ refers to a kind
-of optimization where the code of a subprogram is expanded instead of being
-called.
+of optimization where the code of a subprogram is expanded at the point of
+the call in place of the call itself.
 
 In modern compilers, inlining depends on the optimization level selected by the
 user. For example, if we select the higher optimization level, the compiler
