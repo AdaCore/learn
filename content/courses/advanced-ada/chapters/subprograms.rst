@@ -724,10 +724,11 @@ Operator Overloading
 Nonreturning procedures
 -----------------------
 
-Usually, when calling a procedure, we expect that it returns after a
-reasonable amount of processing time. However, there are situations where a
-procedure never returns. We can indicate this fact by using the
-:ada:`No_Return` aspect in the subprogram declaration.
+Usually, when calling a procedure :ada:`P`, we expect that it returns to the
+caller's *thread of control* after performing some action in the body of
+:ada:`P`. However, there are situations where a procedure never returns. We can
+indicate this fact by using the :ada:`No_Return` aspect in the subprogram
+declaration.
 
 A typical example is that of a server that is designed to run forever until the
 process is killed or the machine where the server runs is switched off. This
