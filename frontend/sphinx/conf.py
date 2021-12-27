@@ -149,12 +149,13 @@ else:
     todo_include_todos = True
 
 if 'HIDDEN_BOOKS' in os.environ and os.environ['HIDDEN_BOOKS'] != "":
-
     hidden_books_file_name = os.environ['HIDDEN_BOOKS']
 
     with open(hidden_books_file_name, 'r') as hidden_books_file:
         for hidden_book in hidden_books_file.readlines():
             exclude_patterns += ["**{}/**".format(hidden_book.strip())]
+else:
+    tags.add('no_hidden_books')
 
 show_authors = True
 
