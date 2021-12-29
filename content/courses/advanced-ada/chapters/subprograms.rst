@@ -724,13 +724,145 @@ Operator Overloading
 Nonreturning procedures
 -----------------------
 
-.. admonition:: Relevant topics
+Usually, when calling a procedure :ada:`P`, we expect that it returns to the
+caller's *thread of control* after performing some action in the body of
+:ada:`P`. However, there are situations where a procedure never returns. We can
+indicate this fact by using the :ada:`No_Return` aspect in the subprogram
+declaration.
 
-    - `Nonreturning Procedures <http://www.ada-auth.org/standards/2xrm/html/RM-6-5-1.html>`_
+A typical example is that of a server that is designed to run forever until the
+process is killed or the machine where the server runs is switched off. This
+server can be implemented as an endless loop. For example:
 
-.. todo::
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Server_Proc
+    :class: ada-norun
 
-    Complete section!
+    package Servers is
+
+       procedure Run_Server
+         with No_Return;
+
+    end Servers;
+
+    package body Servers is
+
+       procedure Run_Server is
+       begin
+          pragma Warnings (Off, "implied return after this statement");
+          while True loop
+             --  Processing happens here...
+             null;
+          end loop;
+       end Run_Server;
+
+    end Servers;
+
+    with Servers; use Servers;
+
+    procedure Show_Endless_Loop is
+    begin
+       Run_Server;
+    end Show_Endless_Loop;
+
+In this example, :ada:`Run_Server` doesn't exit from the :ada:`while True`
+loop, so it never returns to the :ada:`Show_Endless_Loop` procedure.
+
+The same situation happens when we call a procedure that raises an exception
+unconditionally. In that case, exception handling is triggered, so that the
+procedure never returns to the caller. An example is that of a logging
+procedure that writes a message before raising an exception internally:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Log_Exception
+    :class: ada-norun
+
+    package Loggers is
+
+       Logged_Failure : exception;
+
+       procedure Log_And_Raise (Msg : String)
+         with No_Return;
+
+    end Loggers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Loggers is
+
+       procedure Log_And_Raise (Msg : String) is
+       begin
+          Put_Line (Msg);
+          raise Logged_Failure;
+       end Log_And_Raise;
+
+    end Loggers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Loggers;     use Loggers;
+
+    procedure Show_No_Return_Exception is
+       Check_Passed : constant Boolean := False;
+    begin
+       if not Check_Passed then
+          Log_And_Raise ("Check failed!");
+          Put_Line ("This line will not be reached!");
+       end if;
+    end Show_No_Return_Exception;
+
+In this example, :ada:`Log_And_Raise` writes a message to the user and raises
+the :ada:`Logged_Failure`, so it never returns to the
+:ada:`Show_No_Return_Exception` procedure.
+
+We could implement exception handling in the :ada:`Show_No_Return_Exception`
+procedure, so that the :ada:`Logged_Failure` exception could be handled there
+after it's raised in :ada:`Log_And_Raise`. However,  this wouldn't be
+considered a *normal* return to the procedure because it wouldn't return to the
+point where it should (i.e. to the point where :ada:`Put_Line` is about to be
+called, right after the call to the :ada:`Log_And_Raise` procedure).
+
+If a nonreturning procedure returns nevertheless, this is considered a program
+error, so that the :ada:`Program_Error` exception is raised. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Erroneous_Log_Exception
+    :class: ada-run-expect-failure
+
+    package Loggers is
+
+       Logged_Failure : exception;
+
+       procedure Log_And_Raise (Msg : String)
+         with No_Return;
+
+    end Loggers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Loggers is
+
+       procedure Log_And_Raise (Msg : String) is
+       begin
+          Put_Line (Msg);
+       end Log_And_Raise;
+
+    end Loggers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Loggers;     use Loggers;
+
+    procedure Show_No_Return_Exception is
+       Check_Passed : constant Boolean := False;
+    begin
+       if not Check_Passed then
+          Log_And_Raise ("Check failed!");
+          Put_Line ("This line will not be reached!");
+       end if;
+    end Show_No_Return_Exception;
+
+Here, :ada:`Program_Error` is raised when :ada:`Log_And_Raise` returns to the
+:ada:`Show_No_Return_Exception` procedure.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `6.5.1 Nonreturning Subprograms <http://www.ada-auth.org/standards/12rm/html/RM-6-5-1.html>`_
 
 
 Inline subprograms
