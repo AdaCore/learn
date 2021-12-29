@@ -18,6 +18,7 @@ TEST_BUILDDIR   = tests/html
 HOST_ADDRESS 	?= localhost
 HOST_PORT    	?= 8000
 
+HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
 
 help:
 	@echo "make test_content  - run the testsuite"
@@ -140,10 +141,12 @@ webpack-staging:
 	yarn run staging
 
 sphinx-production:
+	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
 	CODE_SERVER_URL="https://cloudchecker.learn.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 sphinx-staging:
+	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
@@ -174,6 +177,7 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 	@mkdir -p $(BUILDDIR)/latex
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
@@ -187,6 +191,7 @@ $(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf:
 	@mkdir -p $(BUILDDIR)/latex
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
@@ -194,8 +199,12 @@ $(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf:
 # Generate list: PDF_BOOKS
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_PDF := $(shell basename $(shell dirname ${book_dir})).pdf) \
-	$(eval PDF_BOOKS += $(PDF_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF)) \
+	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
+	$(eval SPHINX_PDF := $(SPHINX_BOOK).pdf) \
+	$(if $(guile (access? $(HIDDEN_BOOKS) R_OK)), \
+		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+		$(eval HIDDEN_BOOK := 0)) \
+	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval PDF_BOOKS += $(PDF_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF))) \
 	)
 
 pdf_books: $(PDF_BOOKS)
@@ -214,6 +223,7 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	@mkdir -p $(BUILDDIR)/epub/_static
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
@@ -228,6 +238,7 @@ $(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub:
 	@mkdir -p $(BUILDDIR)/epub/_static
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
@@ -235,8 +246,12 @@ $(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub:
 # Generate list: EPUB_BOOKS
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_EPUB := $(shell basename $(shell dirname ${book_dir})).epub) \
-	$(eval EPUB_BOOKS += $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB)) \
+	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
+	$(eval SPHINX_EPUB := $(SPHINX_BOOK).epub) \
+	$(if $(guile (access? $(HIDDEN_BOOKS) R_OK)), \
+		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+		$(eval HIDDEN_BOOK := 0)) \
+	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval EPUB_BOOKS += $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB))) \
 	)
 
 epub_books: $(EPUB_BOOKS)
@@ -277,8 +292,12 @@ $(MOBI_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).mobi: $(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_
 # Generate list: MOBI_BOOKS
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_MOBI := $(shell basename $(shell dirname ${book_dir})).mobi) \
-	$(eval MOBI_BOOKS += $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_MOBI)) \
+	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
+	$(eval SPHINX_MOBI := $(SPHINX_BOOK).mobi) \
+	$(if $(guile (access? $(HIDDEN_BOOKS) R_OK)), \
+		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+		$(eval HIDDEN_BOOK := 0)) \
+	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval MOBI_BOOKS += $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_MOBI))) \
 	)
 
 mobi_books: $(MOBI_BOOKS)

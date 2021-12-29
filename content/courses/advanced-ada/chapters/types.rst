@@ -2200,7 +2200,7 @@ To read a thorough overview on this topic, please refer to the
 
     Add link once available:
 
-    ``Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/low_level_programming>``
+    ``Introduction to Embedded Systems Programming </courses/intro-to-embedded-sys-prog/low_level_programming>``
 
 .. admonition:: In the Ada Reference Manual
 

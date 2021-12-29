@@ -34,7 +34,7 @@ Directions
 **Remarks**:
 
     #. We make use of the algorithm implemented in the :ada:`Check_Direction`
-       procedure (:doc:`chapter on imperative language <courses/intro-to-ada/chapters/imperative_language>`).
+       procedure (:doc:`chapter on imperative language </courses/intro-to-ada/chapters/imperative_language>`).
 
     #. For the sake of this exercise, we use the concept of *extended angles*.
        This includes the actual geometric angle and the corresponding direction

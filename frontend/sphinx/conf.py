@@ -143,16 +143,24 @@ exclude_patterns = [u'_build',
 
 # Exclude internal and unfinished material from final site build
 if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
-    exclude_patterns += ['**internal/**',
-                         '**courses/ada_2022_whats_new/**',
-                         '**courses/intro-to-embedded-sys-prog/**',
-                         '**courses/advanced-ada/**',
-                         '**courses/advanced-spark/**']
-
+    exclude_patterns += ['**internal/**']
 else:
     # When not building final site, `todo` and `todoList` produce output
     todo_include_todos = True
 
+if 'HIDDEN_BOOKS' in os.environ and os.environ['HIDDEN_BOOKS'] != "":
+    hidden_books_file_name = os.environ['HIDDEN_BOOKS']
+
+    f = Path(hidden_books_file_name)
+
+    if f.is_file():
+        with open(hidden_books_file_name, 'r') as hidden_books_file:
+            for hidden_book in hidden_books_file.readlines():
+                exclude_patterns += ["**{}/**".format(hidden_book.strip())]
+    else:
+        print("WARNING: Cannot find file: " + hidden_books_file_name)
+else:
+    tags.add('no_hidden_books')
 
 show_authors = True
 

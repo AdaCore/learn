@@ -1,0 +1,4 @@
+courses/ada_2022_whats_new
+courses/advanced-ada
+courses/advanced-spark
+courses/intro-to-embedded-sys-prog
