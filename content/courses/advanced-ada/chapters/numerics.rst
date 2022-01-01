@@ -1105,6 +1105,14 @@ The :ada:`'Model_Mantissa` attribute is similar to the :ada:`Machine_Mantissa`
 attribute, but it returns the number of bits for the mantissa based on the
 underlying numeric model for floating-point operations.
 
+.. admonition:: Attention
+
+    We can only say that :ada:`'Model_Mantissa` returns the "number of bits" of
+    the mantissa if :ada:`Machine_Radix` is equal to two. As this is typically
+    the case for most machines, this simplification is acceptable. However,
+    if :ada:`Machine_Radix` is *not* equal to two, we're talking about "number
+    of digits" in the :ada:`Machine_Radix`.
+
 The :ada:`'Model_Emin` attribute is similar to the :ada:`Machine_Emin`
 attribute, but it returns the minimum machine exponent based on the underlying
 numeric model for floating-point operations.
