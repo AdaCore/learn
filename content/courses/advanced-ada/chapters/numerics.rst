@@ -680,8 +680,8 @@ for the :ada:`Float` type on a typical PC:
 Attribute: :ada:`'Digits`
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Digits` is an attribute that returns the decimal precision of a
-floating-point subtype. Let's see an example:
+:ada:`'Digits` is an attribute that returns the requested decimal precision of
+a floating-point subtype. Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Digits
 
@@ -697,8 +697,29 @@ floating-point subtype. Let's see an example:
                  Long_Long_Float'Digits'Image);
     end Show_Digits;
 
-On a typical desktop PC, the decimal precision of the :ada:`Float` type is six
-digits.
+On a typical desktop PC, the requested decimal precision of the :ada:`Float`
+type is six digits.
+
+Note that we said that :ada:`Digits` is the *requested* level of precision,
+which is specified as part of declaring a floating point type. We can retrieve
+the actual decimal precision with :ada:`'Base'Digits`. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Base_Digits
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Base_Digits is
+       type Float_D3 is new Float digits 3;
+    begin
+       Put_Line ("Float_D3'Digits:           " &
+                 Float_D3'Digits'Image);
+       Put_Line ("Float_D3'Base'Digits:      " &
+                 Float_D3'Base'Digits'Image);
+    end Show_Base_Digits;
+
+On a typical desktop PC, the requested decimal precision of the :ada:`Float_D3`
+type is three digits, while the actual decimal precision is six digits.
+
 
 Attributes: :ada:`'Denorm`, :ada:`Signed_Zeros`, :ada:`'Machine_Rounds`, :ada:`Machine_Overflows`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
