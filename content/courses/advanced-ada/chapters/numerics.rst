@@ -1083,6 +1083,17 @@ Let's see some examples:
 Model-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+In this section, we discuss model-oriented attributes. Depending on the
+programming languages you're accustomed to, the notion of a "model" of
+arithmetic might sound unfamiliar. This is how the Ada Reference Manual
+defines it:
+
+| Associated with each floating point type is an infinite set of model numbers.
+| The model numbers of a type are used to define the accuracy requirements that
+| have to be satisfied by certain predefined operations of the type; through
+| certain attributes of the model numbers, they are also used to explain the
+| meaning of a user-declared floating point type declaration.
+
 .. admonition:: In the Ada Reference Manual
 
     - `G.2.1 Model of Floating Point Arithmetic <http://www.ada-auth.org/standards/12rm/html/RM-G-2-1.html>`_
