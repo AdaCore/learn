@@ -734,12 +734,13 @@ indicating whether a feature is available or not in the target architecture:
 - :ada:`'Signed_Zeros` is an attribute that indicates whether the type uses a
   sign for zero values, so it can represent both -0.0 and 0.0.
 
-- :ada:`'Machine_Rounds` is an attribute that indicates whether rounding is
-  used when the result of an operation is inexact.
+- :ada:`'Machine_Rounds` is an attribute that indicates whether
+  rounding-to-nearest is used, rather than some other choice (such as
+  rounding-toward-zero).
 
 - :ada:`Machine_Overflows` is an attribute that indicates whether a
-  :ada:`Constraint_Error` is raised when an operation with that type produces
-  an overflow or divide-by-zero.
+  :ada:`Constraint_Error` is (or is not) guaranteed to be raised when an
+  operation with that type produces an overflow or divide-by-zero.
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Machine_Rounds_Overflows
 
@@ -821,6 +822,9 @@ In other words, 0.5 x 2\ :sup:`1` = 1.0. For the value 0.25, we get a fraction
 of 0.5 and a machine exponent of -1, which makes 0.5 x 2\ :sup:`-1` = 0.25.
 We can use the :ada:`'Compose` attribute to perform this calculation. For
 example, :ada:`Float'Compose (0.5, -1) = 0.25`.
+
+Note that :ada:`Fraction` is always between 0.5 and 0.999999 (i.e < 1.0),
+except for denormalized numbers, where it can be < 0.5.
 
 Attribute: :ada:`'Scaling`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
