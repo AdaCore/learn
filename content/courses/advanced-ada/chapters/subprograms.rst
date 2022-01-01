@@ -108,8 +108,31 @@ In contrast to this, the addition operator is not available for arrays:
 
     end Show_Array_Addition;
 
-We can, however, define *custom* operators for any type. For example, we can
-define an addition operator that adds individual components of the
+We can, however, define *custom* operators for any type. For example, if a
+specific type doesn't have a predefined addition operator, we can define our
+own :ada:`+` operator for it.
+
+Note that we're limited to the operator symbols that are already defined by the
+Ada language (see the previous table for the complete list of operators). In
+other words, the operator we define must be selected from one of those existing
+symbols; we cannot use new symbols for custom operators.
+
+.. admonition:: In other languages
+
+    Some programming languages |mdash| such as Haskell |mdash| allow you to
+    define and use custom operator symbols. For example, in Haskell, you can
+    create a new "broken bar" (`¦`) operator for integer values:
+
+    .. code-block::
+
+        (¦) :: Int -> Int -> Int
+        a ¦ b = a + a + b
+
+        main = putStrLn $ show (2 ¦ 3)
+
+    This is not possible in Ada.
+
+Let's define a custom addition operator that adds individual components of the
 :ada:`Integer_Array` type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Integer_Arrays_Addition
