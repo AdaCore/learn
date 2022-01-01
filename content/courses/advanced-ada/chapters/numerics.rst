@@ -998,12 +998,12 @@ Attributes: :ada:`'Copy_Sign` and :ada:`Leading_Part`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :ada:`'Copy_Sign` is an attribute that returns a value where the sign of the
-second floating-point argument is applied to the first floating-point argument.
-For example, :ada:`Float'Copy_Sign (1.0, -10.0)` is -1.0. Here, the sign of the
-second argument (-10.0) is applied to the first argument (1.0), so the result
-is -1.0.
+second floating-point argument is multiplied to the magnitude of the first
+floating-point argument. For example, :ada:`Float'Copy_Sign (1.0, -10.0)` is
+-1.0. Here, the sign of the second argument (-10.0) is multiplied to the
+magnitude of the first argument (1.0), so the result is -1.0.
 
-:ada:`'Leading_Part` is an attribute that returns the *simplified* version of
+:ada:`'Leading_Part` is an attribute that returns the *approximated* version of
 the mantissa of a value based on the specified number of leading bits for the
 mantissa. For example, :ada:`Float'Leading_Part (3.1416, 1)` is 2.0 because
 that's the value we can represent with one leading bit. (Note that
@@ -1022,6 +1022,17 @@ by calculating
 and converting the result to binary format. The -1 value in the formula
 corresponds to the sign bit.)
 
+.. admonition:: Attention
+
+    In this explanation about the :ada:`'Leading_Part` attribute, we're
+    talking about leading bits. Strictly speaking, however, this is actually a
+    simplification, and it's only correct if :ada:`Machine_Radix` is equal to
+    two |mdash| which is the case for most machines. Therefore, in most cases,
+    the explanation above is perfectly acceptable.
+
+    However, if :ada:`Machine_Radix` is *not* equal to two, we cannot use the
+    term "bits" anymore, but rather digits of the :ada:`Machine_Radix`.
+
 Let's see some examples:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Sign_Leading
@@ -1032,6 +1043,8 @@ Let's see some examples:
     begin
        Put_Line ("Float'Copy_Sign (1.0, -10.0): "
                  & Float'Copy_Sign (1.0, -10.0)'Image);
+       Put_Line ("Float'Copy_Sign (-1.0, -10.0): "
+                 & Float'Copy_Sign (-1.0, -10.0)'Image);
        Put_Line ("Float'Copy_Sign (1.0,  10.0): "
                  & Float'Copy_Sign (1.0,  10.0)'Image);
        Put_Line ("Float'Copy_Sign (1.0, -0.0):  "
