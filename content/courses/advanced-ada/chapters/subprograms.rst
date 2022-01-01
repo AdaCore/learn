@@ -44,7 +44,7 @@ User-defined operators
 
 For non-scalar types, not all operators are defined. For example, it wouldn't
 make sense to expect a compiler to include an addition operator for a record
-type with multiple components. An exception to this rule are the
+type with multiple components. Exceptions to this rule are the
 equality and inequality operators (:ada:`=` and :ada:`/=`), which are defined
 for any type (be it scalar, record types, and array types).
 
@@ -1032,7 +1032,7 @@ Operator Overriding
 -------------------
 
 We can also override operators of derived types. This allows for modifying the
-behavior of operators for certain types.
+behavior of operators for the corresponding derived types.
 
 To override an operator of a derived type, we simply implement a function for
 that operator. This is the same as how we implement custom operators (as we've
