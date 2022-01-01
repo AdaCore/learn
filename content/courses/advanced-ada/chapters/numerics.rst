@@ -1102,7 +1102,7 @@ Attributes: :ada:`'Model_Mantissa`, :ada:`'Model_Emin`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The :ada:`'Model_Mantissa` attribute is similar to the :ada:`Machine_Mantissa`
-attribute, but it returns the number of bits for the mantissa based on
+attribute, but it returns the number of bits for the mantissa based on the
 underlying numeric model for floating-point operations.
 
 The :ada:`'Model_Emin` attribute is similar to the :ada:`Machine_Emin`
@@ -1231,7 +1231,7 @@ Let's see a code example with these attributes and compare them to the
     end Show_Safe_First_Last;
 
 When comparing :ada:`Float'First` to :ada:`Float'Safe_First`, we see that the
-values are similar. However, :ada:`Float'Safe_First` has the precision of an
+values are similar. However, :ada:`Float'Safe_First` has the precision of a
 universal real, while :ada:`Float'First` is limited to the precision of the
 :ada:`Float` type.
 
