@@ -943,24 +943,29 @@ Attributes: :ada:`'Truncation`, :ada:`Remainder`, :ada:`Adjacent`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The :ada:`'Truncation` attribute returns the *truncated* value of a
-floating-point value, i.e. the value corresponding to the integer part without
-the fractional part after the radix point. For example, the truncation of 1.55
-is 1.0 because the integer part of 1.55 is 1.
+floating-point value, i.e. the value corresponding to the integer part of a
+number rounded toward zero. This corresponds to the number before the radix
+point. For example, the truncation of 1.55 is 1.0 because the integer part of
+1.55 is 1.
 
 The :ada:`'Remainder` attribute returns the remainder part of a division. For
 example, :ada:`Float'Remainder (1.25, 0.5) = 0.25`. Let's briefly discuss the
 details of this operations. The result of the division 1.25 / 0.5 is 2.5. Here,
 1.25 is the dividend and 0.5 is the divisor. The quotient and remainder of this
 division are 2 and 0.25, respectively. Here, the quotient is an integer number,
-and the remainder is the floating-point part that remains. Also, we can
-calculate the dividend by using this formula:
-quotient x divisor + remainder = dividend, so 2 x 0.5 + 0.25 = 1.25.
+and the remainder is the floating-point part that remains. Note that the
+relation between quotient and remainder is defined in such a way that we get
+the original dividend back when we use the formula: "quotient x divisor +
+remainder = dividend". For the previous example, this means 2 x 0.5 + 0.25
+= 1.25.
 
 The :ada:`Adjacent` attribute is the next machine value towards another value.
 For example, on a typical PC, the adjacent value of a small value |mdash|
 say, 1.0 x 10\ :sup:`-83` |mdash| towards zero is -0.0, while the adjacent
 value of this small value towards 1.0 is another small, but greater value
-|mdash| in fact, it's 1.40130 x 10\ :sup:`-45`.
+|mdash| in fact, it's 1.40130 x 10\ :sup:`-45`. Note that the first parameter
+of the :ada:`Adjacent` attribute is the value we want to analyze and the
+second parameter is the :ada:`Towards` value.
 
 Let's see a code example:
 
