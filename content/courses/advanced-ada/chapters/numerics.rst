@@ -593,6 +593,11 @@ Floating-Point Types
 
 In this section, we discuss various attributes related to floating-point types.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `3.5.8 Operations of Floating Point Types <http://www.ada-auth.org/standards/12rm/html/RM-3-5-8.html>`_
+    - `A.5.3 Attributes of Floating Point Types <http://www.ada-auth.org/standards/12rm/html/RM-A-5-3.html>`_
+
 Representation-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1035,6 +1040,10 @@ Let's see some examples:
 Model-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. admonition:: In the Ada Reference Manual
+
+    - `G.2.1 Model of Floating Point Arithmetic <http://www.ada-auth.org/standards/12rm/html/RM-G-2-1.html>`_
+
 Attributes: :ada:`'Model_Mantissa`, :ada:`'Model_Emin`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1178,6 +1187,11 @@ Fixed-Point Types
 
 In this section, we discuss various attributes and operations related to
 fixed-point types.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.5.10 Operations of Fixed Point Types <http://www.ada-auth.org/standards/12rm/html/RM-3-5-10.html>`_
+    - `A.5.4 Attributes of Fixed Point Types <http://www.ada-auth.org/standards/12rm/html/RM-A-5-4.html>`_
 
 Attributes of fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
