@@ -1579,7 +1579,7 @@ Let's look at this complete example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Decimal_Scale is
-       type TM3_D6 is delta 10.0 ** ( 3) digits 6;
+       type TM3_D6 is delta 10.0 **   3  digits 6;
        type T3_D6  is delta 10.0 ** (-3) digits 6;
        type T9_D12 is delta 10.0 ** (-9) digits 12;
     begin
