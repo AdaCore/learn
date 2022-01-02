@@ -1324,14 +1324,13 @@ indicating whether a feature is available or not in the target architecture:
 Attribute: :ada:`'Small` and :ada:`'Delta`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :ada:`'Small` and :ada:`'Delta` attributes denote a small number used in
-the type definition of a fixed-point type. This small number indicates the
-numeric precision of the type. In many cases, the :ada:`'Small` of a type
-:ada:`T` is equal to the :ada:`'Delta` of that type |mdash| i.e.
+The :ada:`'Small` and :ada:`'Delta` attributes return numbers that indicate the
+numeric precision of a fixed-point type. In many cases, the :ada:`'Small` of a
+type :ada:`T` is equal to the :ada:`'Delta` of that type |mdash| i.e.
 :ada:`T'Small = T'Delta`. Let's discuss each attribute and how they distinguish
 from each other.
 
-The :ada:`'Delta` attribute returns the value for the :ada:`delta` that was
+The :ada:`'Delta` attribute returns the value of the :ada:`delta` that was
 used in the type definition. For example, if we declare
 :ada:`type T3_D3 is delta 10.0 ** (-3) digits D`, then the value of
 :ada:`T3_D3'Delta` is the :ada:`10.0 ** (-3)` that we used in the type
@@ -1339,10 +1338,28 @@ definition.
 
 The :ada:`'Small` attribute returns the "small" of a type, i.e. the smallest
 value used in the machine representation of the type. The *small* must be at
-least equal to or smaller than the *delta*. Unless it's specified, the *small*
-is automatically selected by the compiler, and, in many cases it's equal to the
-*delta* of the type. For ordinary (binary) fixed-point types, we can specify a
-specific *small* by using the :ada:`Small` attribute.
+least equal to or smaller than the *delta* |mdash| in other words, it must
+conform to the :ada:`T'Small <= T'Delta` rule.
+
+.. admonition:: Attention
+
+    The :ada:`Small` and the :ada:`Delta` need not actually be small numbers.
+    They can be arbitrarily large. (They could be 1.0, or 1000.0, for example.)
+
+When we declare an ordinary fixed-point data type, we must specify the *delta*.
+Specifying the *small*, however, is optional:
+
+- If the *small* isn't specified, it is automatically selected by the compiler.
+  In this case, the actual value of the *small* is an implementation-defined
+  power of two |mdash| always following the rule that says:
+  :ada:`T'Small <= T'Delta`.
+
+- If we want, however, to specify the *small*, we can do that by using the
+  :ada:`'Small` aspect. In this case, it doesn't need to be a power of two.
+
+For decimal fixed-point types, we cannot specify the *small*. In this case,
+it's automatically selected by the compiler, and it's always equal to the
+*delta*.
 
 Let's see an example:
 
@@ -1404,20 +1421,18 @@ Let's see an example:
 
 As we can see in the output of the code example, the :ada:`'Delta` attribute
 returns the value we used for :ada:`delta` in the type definition of the
-:ada:`T3_D3`, :ada:`TD3`, :ada:`TQ31` and :ada:`TQ15` types. Also, for the
-:ada:`T3_D3` and :ada:`TQ31` types, the *small* that was selected by the
-compiler is equal to the delta of the type.
+:ada:`T3_D3`, :ada:`TD3`, :ada:`TQ31` and :ada:`TQ15` types.
 
-The :ada:`TD3` type is a binary fixed-point type with the the same delta as the
-decimal :ada:`T3_D3` type. In this case, however, :ada:`TD3'Small` is not the
-same as the :ada:`TD3'Delta`. On a typical desktop PC, :ada:`TD3'Small` is
-2\ :sup:`-10`, while the delta is 10\ :sup:`-3`. Remember that, for binary
-fixed-point types, the small is always a power of two, even if the delta is a
-power of ten.
+The :ada:`TD3` type is an ordinary fixed-point type with the the same delta as
+the decimal :ada:`T3_D3` type. In this case, however, :ada:`TD3'Small` is not
+the same as the :ada:`TD3'Delta`. On a typical desktop PC, :ada:`TD3'Small` is
+2\ :sup:`-10`, while the delta is 10\ :sup:`-3`. (Remember that, for ordinary
+fixed-point types, if we don't specify the *small*, it's automatically selected
+by the compiler as a power of two smaller than or equal to the *delta*.)
 
-In the case of :ada:`TQ15` type, we're specifying the *small* by using the
+In the case of the :ada:`TQ15` type, we're specifying the *small* by using the
 :ada:`'Small` aspect. In this case, the underlying size of the :ada:`TQ15`
-type is 32 bits, while the accuracy we get when operating with this type is
+type is 32 bits, while the precision we get when operating with this type is
 16 bits. Let's see a specific example for this type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Fixed_Small_Delta
@@ -1429,6 +1444,8 @@ type is 32 bits, while the accuracy we get when operating with this type is
     procedure Show_Fixed_Small_Delta is
        V : TQ15;
     begin
+       Put_Line ("V'Size: " & V'Size'Image);
+
        V := TQ15'Small;
        Put_Line ("V: " & V'Image);
 
@@ -1437,16 +1454,14 @@ type is 32 bits, while the accuracy we get when operating with this type is
     end Show_Fixed_Small_Delta;
 
 In the first assignment, we assign :ada:`TQ15'Small` (2\ :sup:`-31`) to
-:ada:`V`. This value isn't within the type's accuracy |mdash| even though
-:ada:`V'Size` is 32 bits |mdash| because its delta has an accuracy of 16 bits,
-and this value needs 32 bits to be represented correctly. Therefore, as a
-result, :ada:`V` has a value of zero after this assignment. When assigning
-:ada:`TQ15'Delta` (2\ :sup:`-15`) to :ada:`V`, however, we see that :ada:`V`
-has the value of the *delta* as expected.
+:ada:`V`. This value is smaller than the type's *delta* (2\ :sup:`-15`). Even
+though :ada:`V'Size` is 32 bits, :ada:`V'Delta` indicates 16-bit precision, and
+:ada:`TQ15'Small` requires 32-bit precision to be represented correctly.
+As a result, :ada:`V` has a value of zero after this assignment.
 
-Note that we cannot use the :ada:`Small` aspect in the declaration of decimal
-fixed-point types. This is only possible for ordinary (binary) fixed-point
-types.
+In contrast, after the second assignment |mdash| where we assign
+:ada:`TQ15'Delta` (2\ :sup:`-15`) to :ada:`V` |mdash| we see, as expected, that
+:ada:`V` has the same value as the *delta*.
 
 
 Attributes: :ada:`'Fore` and :ada:`'Aft`
