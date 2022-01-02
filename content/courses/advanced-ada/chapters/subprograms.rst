@@ -3,6 +3,310 @@ Subprograms
 
 .. include:: ../../global.txt
 
+.. _Adv_Ada_Operators:
+
+Operators
+---------
+
+Operators are commonly used for variables of scalar types such as
+:ada:`Integer` and :ada:`Float`. In these cases, they replace *usual* function
+calls. (To be more precise, operators are function calls, but written in a
+different format.) For example, we simply write :ada:`A := A + B + C;` when we
+want to add three integer variables. A hypothetical, non-intuitive version of
+this operation could be :ada:`A := Add (Add (A, B), C);`. In such cases,
+operators allow for expressing function calls in a more intuitive way.
+
+Many primitive operators exist for scalar types. We classify them as follows:
+
++--------------------+--------------------------------------------------------+
+| Category           | Operators                                              |
++====================+========================================================+
+| Logical            | :ada:`and`, :ada:`or`, :ada:`xor`                      |
++--------------------+--------------------------------------------------------+
+| Relational         | :ada:`=`, :ada:`/=`, :ada:`<`, :ada:`<=`, :ada:`>`,    |
+|                    | :ada:`>=`                                              |
++--------------------+--------------------------------------------------------+
+| Unary adding       | :ada:`+`, :ada:`-`                                     |
++--------------------+--------------------------------------------------------+
+| Binary adding      | :ada:`+`, :ada:`-`, :ada:`&`                           |
++--------------------+--------------------------------------------------------+
+| Multiplying        | :ada:`*`, :ada:`/`, :ada:`mod`, :ada:`rem`             |
++--------------------+--------------------------------------------------------+
+| Highest precedence | :ada:`**`, :ada:`abs`, :ada:`not`                      |
++--------------------+--------------------------------------------------------+
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.5 Operators and Expression Evaluation <http://www.ada-auth.org/standards/12rm/html/RM-4-5.html>`_
+
+User-defined operators
+~~~~~~~~~~~~~~~~~~~~~~
+
+For non-scalar types, not all operators are defined. For example, it wouldn't
+make sense to expect a compiler to include an addition operator for a record
+type with multiple components. Exceptions to this rule are the
+equality and inequality operators (:ada:`=` and :ada:`/=`), which are defined
+for any type (be it scalar, record types, and array types).
+
+For array types, the concatenation operator (:ada:`&`) is a primitive operator:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Integer_Arrays_Concat
+
+    package Integer_Arrays is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+    end Integer_Arrays;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Array_Concatenation is
+       A, B : Integer_Array (1 .. 5);
+       R : Integer_Array (1 .. 10);
+    begin
+       A := (1 & 2 & 3 & 4 & 5);
+       B := (6 & 7 & 8 & 9 & 10);
+       R := A & B;
+
+       for E of R loop
+          Put (E'Image & ' ');
+       end loop;
+       New_Line;
+    end Show_Array_Concatenation;
+
+In this example, we're using the primitive :ada:`&` operator to concatenate the
+:ada:`A` and :ada:`B` arrays in the assignment to :ada:`R`. Similarly, we're
+concatenating individual components (integer values) to create an aggregate
+that we assign to :ada:`A` and :ada:`B`.
+
+In contrast to this, the addition operator is not available for arrays:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Integer_Arrays_Addition
+    :class: ada-expect-compile-error
+
+    package Integer_Arrays is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+    end Integer_Arrays;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Array_Addition is
+       A, B, R : Integer_Array (1 .. 5);
+    begin
+       A := (1 & 2 & 3 & 4 & 5);
+       B := (6 & 7 & 8 & 9 & 10);
+       R := A + B;
+
+       for E of R loop
+          Put (E'Image & ' ');
+       end loop;
+       New_Line;
+
+    end Show_Array_Addition;
+
+We can, however, define *custom* operators for any type. For example, if a
+specific type doesn't have a predefined addition operator, we can define our
+own :ada:`+` operator for it.
+
+Note that we're limited to the operator symbols that are already defined by the
+Ada language (see the previous table for the complete list of operators). In
+other words, the operator we define must be selected from one of those existing
+symbols; we cannot use new symbols for custom operators.
+
+.. admonition:: In other languages
+
+    Some programming languages |mdash| such as Haskell |mdash| allow you to
+    define and use custom operator symbols. For example, in Haskell, you can
+    create a new "broken bar" (`¦`) operator for integer values:
+
+    .. code-block::
+
+        (¦) :: Int -> Int -> Int
+        a ¦ b = a + a + b
+
+        main = putStrLn $ show (2 ¦ 3)
+
+    This is not possible in Ada.
+
+Let's define a custom addition operator that adds individual components of the
+:ada:`Integer_Array` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Integer_Arrays_Addition
+
+    package Integer_Arrays is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       function "+" (Left, Right : Integer_Array) return Integer_Array
+         with Post => (for all I in "+"'Result'Range =>
+                         "+"'Result (I) = Left (I) + Right (I));
+
+    end Integer_Arrays;
+
+    package body Integer_Arrays is
+
+       function "+" (Left, Right : Integer_Array) return Integer_Array is
+          R : Integer_Array (Left'Range);
+       begin
+          for I in Left'Range loop
+             R (I) := Left (I) + Right (I);
+          end loop;
+
+          return R;
+       end "+";
+
+    end Integer_Arrays;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Array_Addition is
+       A, B, R : Integer_Array (1 .. 5);
+    begin
+       A := (1 & 2 & 3 & 4 & 5);
+       B := (6 & 7 & 8 & 9 & 10);
+       R := A + B;
+
+       for E of R loop
+          Put (E'Image & ' ');
+       end loop;
+       New_Line;
+
+    end Show_Array_Addition;
+
+Now, the :ada:`R := A + B` line doesn't trigger a compilation error anymore
+because the :ada:`+` operator is defined for the :ada:`Integer_Array` type.
+
+In the implementation of the :ada:`+`, we return an array with the range of the
+:ada:`Left` array where each component is the sum of the :ada:`Left` and
+:ada:`Right` arrays. In the declaration of the :ada:`+` operator, we're
+defining the expected behavior in the postcondition. Here, we're saying that,
+for each index of the resulting array (:ada:`for all I in "+"'Result'Range`),
+the value of each component of the resulting array at that specific index is
+the sum of the components from the :ada:`Left` and :ada:`Right` arrays at the
+same index (:ada:`"+"'Result (I) = Left (I) + Right (I)`). (:ada:`for all`
+denotes a :ref:`quantified expression <Adv_Ada_Quantified_Expressions>`.)
+
+Note that, in this implementation, we assume that the range of :ada:`Right` is
+a subset of the range of :ada:`Left`. If that is not the case, the
+:ada:`Constraint_Error` exception will be raised at runtime in the loop. (You
+can test this by declaring :ada:`B` as :ada:`Integer_Array (5 .. 10)`, for
+example.)
+
+We can also define custom operators for record types. For example, we
+could declare two :ada:`+` operators for a record containing the name and
+address of a person:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Rec_Operator
+
+    package Addresses is
+
+       type Person is private;
+
+       function "+" (Name    : String;
+                     Address : String) return Person;
+       function "+" (Left, Right : Person) return Person;
+
+       procedure Display (P : Person);
+
+    private
+
+       subtype Name_String    is String (1 .. 40);
+       subtype Address_String is String (1 .. 100);
+
+       type Person is record
+          Name    : Name_String;
+          Address : Address_String;
+       end record;
+
+    end Addresses;
+
+    with Ada.Strings.Fixed; use Ada.Strings.Fixed;
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    package body Addresses is
+
+       function "+" (Name    : String;
+                     Address : String) return Person is
+       begin
+          return (Name    => Head (Name,
+                                   Name_String'Length),
+                  Address => Head (Address,
+                                   Address_String'Length));
+       end "+";
+
+       function "+" (Left, Right : Person) return Person is
+       begin
+          return (Name    => Left.Name,
+                  Address => Right.Address);
+       end "+";
+
+       procedure Display (P : Person) is
+       begin
+          Put_Line ("Name:    " & P.Name);
+          Put_Line ("Address: " & P.Address);
+          New_Line;
+       end Display;
+
+    end Addresses;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Addresses;   use Addresses;
+
+    procedure Show_Address_Addition is
+       John : Person := "John" + "4 Main Street";
+       Jane : Person := "Jane" + "7 High Street";
+    begin
+       Display (John);
+       Display (Jane);
+       Put_Line ("----------------");
+
+       Jane := Jane + John;
+       Display (Jane);
+    end Show_Address_Addition;
+
+In this example, the first :ada:`+` operator takes two strings |mdash| with the
+name and address of a person |mdash| and returns an object of :ada:`Person`
+type. We use this operator to initialize the :ada:`John` and :ada:`Jane`
+variables.
+
+The second :ada:`+` operator in this example brings two people together. Here,
+the person on the left side of the :ada:`+` operator moves to the home of the
+person on the right side. In this specific case, Jane is moving to John's
+house.
+
+As a small remark, we usually expect that the :ada:`+` operator is commutative.
+In other words, changing the order of the elements in the operation doesn't
+change the result. However, in our definition above, this is *not* the case, as
+we can confirm by comparing the operation in both orders:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Rec_Operator
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Addresses;   use Addresses;
+
+    procedure Show_Address_Addition is
+       John : constant Person := "John" + "4 Main Street";
+       Jane : constant Person := "Jane" + "7 High Street";
+    begin
+       if Jane + John = John + Jane then
+          Put_Line ("It's commutative!");
+       else
+          Put_Line ("It's not commutative!");
+       end if;
+    end Show_Address_Addition;
+
+In this example, we're using the primitive :ada:`=` operator for the
+:ada:`Person` to assess whether the result of the addition is commutative.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`_
+
 Expression functions
 --------------------
 
@@ -286,6 +590,7 @@ semicolons.
 
     - `4.5.7 Conditional Expressions <http://www.ada-auth.org/standards/12rm/html/RM-4-5-7.html>`_
 
+.. _Adv_Ada_Quantified_Expressions:
 
 Quantified Expressions
 ----------------------
@@ -492,6 +797,8 @@ Reduction Expressions
 
     Complete section!
 
+
+.. _Adv_Ada_Overloading:
 
 Overloading
 -----------
@@ -716,10 +1023,161 @@ makes the overload resolution algorithm reasonably efficient.
 Operator Overloading
 --------------------
 
-.. todo::
+We've seen :ref:`previously <Adv_Ada_Operators>` that we can define custom
+operators for any type. We've also seen that subprograms can be
+:ref:`overloaded <Adv_Ada_Overloading>`. Since operators are functions, we're
+essentially talking about operator overloading, as we're defining the same
+operator (say :ada:`+` or :ada:`-`) for different types.
 
-    Complete section!
+As another example of operator overloading, in the Ada standard library,
+operators are defined for the :ada:`Complex` type of the
+:ada:`Ada.Numerics.Generic_Complex_Types` package. This package contains not
+only the definition of the :ada:`+` operator for two objects of :ada:`Complex`
+type, but also for combination of :ada:`Complex` and other types. For instance,
+we can find these declarations:
 
+.. code-block:: ada
+
+    function "+" (Left, Right : Complex) return Complex;
+    function "+" (Left : Complex;   Right : Real'Base) return Complex;
+    function "+" (Left : Real'Base; Right : Complex)   return Complex;
+
+This example shows that the :ada:`+` operator |mdash| as well as other
+operators |mdash| are being overloaded in the :ada:`Generic_Complex_Types`
+package.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `6.6 Overloading of Operators <http://www.ada-auth.org/standards/12rm/html/RM-6-6.html>`_
+    - `G.1.1 Complex Types <http://www.ada-auth.org/standards/12rm/html/RM-G-1-1.html>`_
+
+Operator Overriding
+-------------------
+
+We can also override operators of derived types. This allows for modifying the
+behavior of operators for the corresponding derived types.
+
+To override an operator of a derived type, we simply implement a function for
+that operator. This is the same as how we implement custom operators (as we've
+seen previously).
+
+As an example, when adding two fixed-point values, the result might be out of
+range, which causes an exception to be raised. A common strategy to avoid
+exceptions in this case is to saturate the resulting value. This strategy is
+typically employed in signal processing algorithms, for example.
+
+In this example, we declare and use the 32-bit fixed-point type :ada:`TQ31`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Fixed_Point_Exception
+    :class: ada-run-expect-failure
+
+    package Fixed_Point is
+
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+
+    end Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Fixed_Point; use Fixed_Point;
+
+    procedure Show_Sat_Op is
+       A, B, C : TQ31;
+    begin
+       A := TQ31'Last;
+       B := TQ31'Last;
+       C := A + B;
+
+       Put_Line (A'Image   & " + "
+                 & B'Image & " = "
+                 & C'Image);
+
+       A := TQ31'First;
+       B := TQ31'First;
+       C := A + B;
+
+       Put_Line (A'Image   & " + "
+                 & B'Image & " = "
+                 & C'Image);
+
+    end Show_Sat_Op;
+
+Here, we're using the standard :ada:`+` operator, which raises a
+:ada:`Constraint_Error` exception in the :ada:`C := A + B;` statement due to an
+overflow. Let's now override the addition operator and enforce saturation when
+the result is out of range:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Fixed_Point_Operator_Overloading
+
+    package Fixed_Point is
+
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+
+       function "+" (Left, Right : TQ31) return TQ31;
+
+    end Fixed_Point;
+
+    package body Fixed_Point is
+
+       function "+" (Left, Right : TQ31) return TQ31 is
+          type TQ31_2 is delta TQ31'Delta
+            range TQ31'First * 2.0 .. TQ31'Last * 2.0;
+
+          L   : constant TQ31_2 := TQ31_2 (Left);
+          R   : constant TQ31_2 := TQ31_2 (Right);
+          Res : TQ31_2;
+       begin
+          Res := L + R;
+
+          if Res > TQ31_2 (TQ31'Last) then
+             return TQ31'Last;
+          elsif Res < TQ31_2 (TQ31'First) then
+             return TQ31'First;
+          else
+             return TQ31 (Res);
+          end if;
+       end "+";
+
+    end Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Fixed_Point; use Fixed_Point;
+
+    procedure Show_Sat_Op is
+       A, B, C : TQ31;
+    begin
+       A := TQ31'Last;
+       B := TQ31'Last;
+       C := A + B;
+
+       Put_Line (A'Image   & " + "
+                 & B'Image & " = "
+                 & C'Image);
+
+       A := TQ31'First;
+       B := TQ31'First;
+       C := A + B;
+
+       Put_Line (A'Image   & " + "
+                 & B'Image & " = "
+                 & C'Image);
+
+    end Show_Sat_Op;
+
+In the implementation of the overridden :ada:`+` operator of the :ada:`TQ31`
+type, we declare another type (:ada:`TQ31_2`) with a wider range than
+:ada:`TQ31`. We use variables of the :ada:`TQ31_2` type to perform the actual
+addition, and then we verify whether the result is still in :ada:`TQ31`\'s
+range. If it is, we simply convert the result *back* to the :ada:`TQ31` type.
+Otherwise, we saturate it |mdash| using either the first or last value of the
+:ada:`TQ31` type.
+
+When overriding operators, the overridden operator replaces the original
+one. For example, in the :ada:`A + B` operation of the :ada:`Show_Sat_Op`
+procedure above, we're using the overridden version of the :ada:`+` operator,
+which performs saturation. Therefore, this operation doesn't raise an
+exception (as it was the case with the original :ada:`+` operator).
 
 Nonreturning procedures
 -----------------------
