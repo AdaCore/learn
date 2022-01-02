@@ -41,6 +41,8 @@ Advanced Ada
     Yannick Moy, Javier Miranda,
     Arnaud Charlet, Franco Gasperoni, and Robert Dewar.
 
+    This document was reviewed by Patrick Rogers and Tucker Taft.
+
 .. only:: builder_html
 
     .. container:: pdf-download
