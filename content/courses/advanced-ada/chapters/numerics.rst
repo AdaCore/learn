@@ -1612,6 +1612,8 @@ For example, if we have a type :ada:`T` with three digits, and we use a value
 with 10 digits after the decimal point in a call to :ada:`T'Round`, the
 resulting value will have three digits after the decimal point.
 
+Note that the :ada:`X` input of a :ada:`S'Round (X)` call is a universal real
+value, while the returned value is of :ada:`S'Base` type.
 
 Let's look at this example:
 
@@ -1629,9 +1631,7 @@ Let's look at this example:
     end Show_Decimal_Round;
 
 Here, the :ada:`T3_D3` has a precision of three digits. Therefore, to fit this
-precision, 0.2774 is rounded to 0.277, and 0.2777 is rounded to 0.278. Note
-that the :ada:`X` input of a :ada:`S'Round (X)` call is a universal real value,
-while the returned value is of :ada:`S'Base` type.
+precision, 0.2774 is rounded to 0.277, and 0.2777 is rounded to 0.278.
 
 
 Big Numbers
