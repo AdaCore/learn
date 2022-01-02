@@ -1289,12 +1289,16 @@ Attribute: :ada:`'Machine_Rounds` and :ada:`'Machine_Overflows`
 In this section, we discuss attributes that return :ada:`Boolean` values
 indicating whether a feature is available or not in the target architecture:
 
-- :ada:`'Machine_Rounds` is an attribute that indicates whether rounding is
-  used when the result of a fixed-point operation is inexact.
+- :ada:`'Machine_Rounds` is an attribute that indicates what happens when the
+  result of a fixed-point operation is inexact:
+
+  - :ada:`T'Machine_Rounds = True`: inexact result is rounded;
+
+  - :ada:`T'Machine_Rounds = False`: inexact result is truncated.
 
 - :ada:`'Machine_Overflows` is an attribute that indicates whether a
-  :ada:`Constraint_Error` is raised when a fixed-point operation with that type
-  produces an overflow or divide-by-zero.
+  :ada:`Constraint_Error` is guaranteed to be raised when a fixed-point
+  operation with that type produces an overflow or divide-by-zero.
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Fixed_Machine_Rounds_Overflows
 
