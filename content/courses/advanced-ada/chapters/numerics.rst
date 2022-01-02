@@ -1579,18 +1579,26 @@ Let's look at this complete example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Decimal_Scale is
+       type TM3_D6 is delta 10.0 ** ( 3) digits 6;
        type T3_D6  is delta 10.0 ** (-3) digits 6;
        type T9_D12 is delta 10.0 ** (-9) digits 12;
     begin
+       Put_Line ("TM3_D6'Scale: " &
+                 TM3_D6'Scale'Image);
        Put_Line ("T3_D6'Scale: " &
                  T3_D6'Scale'Image);
        Put_Line ("T9_D12'Scale: " &
                  T9_D12'Scale'Image);
     end Show_Decimal_Scale;
 
-In this example, :ada:`T3_D6'Scale` is three, while :ada:`T9_D12` is nine,
-which corresponds to the scale we used for the delta of the respective type
-declarations.
+In this example, we get the following values for the scales:
+
+- :ada:`TM3_D6'Scale = -3`,
+- :ada:`T3_D6'Scale = 3`,
+- :ada:`T9_D12 = 9`.
+
+As you can see, the value of :ada:`'Scale` is directly related to the *delta*
+of the corresponding type declaration.
 
 
 Attribute: :ada:`'Round`
