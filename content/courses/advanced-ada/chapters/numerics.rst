@@ -1556,11 +1556,21 @@ subtype.
 Attribute: :ada:`'Scale`
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :ada:`'Scale` attribute returns the scale value used in the delta of a
-decimal fixed-point type. It corresponds to the N used in the
-:ada:`delta 10.0 ** (–N)` expression of the type declaration. For example, if
-we write :ada:`delta 10.0 ** (-3)` in the declaration of a type :ada:`T`, then
-the value of :ada:`T'Scale` is three.
+According to the Ada Reference Manual, the :ada:`'Scale` attribute "indicates
+the position of the point relative to the rightmost significant digits of
+values" of a decimal type. For example:
+
+- If the value of :ada:`'Scale` is two, then there are two decimal digits after
+  the decimal point.
+
+- If the value of :ada:`'Scale` is negative, that implies that the
+  :ada:`'Delta` is a power of 10 greater than 1, and it would be the number of
+  zero digits that every value would end in.
+
+The :ada:`'Scale` corresponds to the N used in the :ada:`delta 10.0 ** (–N)`
+expression of the type declaration. For example, if we write
+:ada:`delta 10.0 ** (-3)` in the declaration of a type :ada:`T`, then the value
+of :ada:`T'Scale` is three.
 
 Let's look at this complete example:
 
