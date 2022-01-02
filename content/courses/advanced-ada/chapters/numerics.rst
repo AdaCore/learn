@@ -1471,10 +1471,11 @@ The :ada:`'Fore` and :ada:`'Aft` attributes indicate the number of characters
 or digits needed for displaying a value in decimal representation. To be more
 precise:
 
-- the :ada:`'Fore` attribute returns the minimum number of characters needed
-  before the decimal point, while
+- The :ada:`'Fore` attribute refers to the digits before the decimal point and
+  it returns the number of digits plus one for the sign indicator (which is
+  either :ada:`-` or space), and it's always at least two.
 
-- the :ada:`'Aft` attribute returns the number of decimal digits that is needed
+- The :ada:`'Aft` attribute returns the number of decimal digits that is needed
   to represent the delta after the decimal point.
 
 Let's see an example:
