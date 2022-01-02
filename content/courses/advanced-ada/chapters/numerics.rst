@@ -1604,11 +1604,14 @@ of the corresponding type declaration.
 Attribute: :ada:`'Round`
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :ada:`'Round` attribute returns a rounded value appropriate for a decimal
-type according to its number of digits. For example, if we have a type :ada:`T`
-with three digits, and we use a value with 10 digits (after the decimal point)
-in a call to :ada:`T'Round`, the resulting value will have three digits after
-the decimal point.
+The :ada:`'Round` attribute rounds a value of any real type to the nearest
+value that is a multiple of the *delta* of the decimal fixed-point type,
+rounding away from zero if exactly between two such multiples.
+
+For example, if we have a type :ada:`T` with three digits, and we use a value
+with 10 digits after the decimal point in a call to :ada:`T'Round`, the
+resulting value will have three digits after the decimal point.
+
 
 Let's look at this example:
 
