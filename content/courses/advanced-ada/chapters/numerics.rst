@@ -961,7 +961,7 @@ remainder = dividend". For the previous example, this means 2 x 0.5 + 0.25
 
 The :ada:`Adjacent` attribute is the next machine value towards another value.
 For example, on a typical PC, the adjacent value of a small value |mdash|
-say, 1.0 x 10\ :sup:`-83` |mdash| towards zero is -0.0, while the adjacent
+say, 1.0 x 10\ :sup:`-83` |mdash| towards zero is +0.0, while the adjacent
 value of this small value towards 1.0 is another small, but greater value
 |mdash| in fact, it's 1.40130 x 10\ :sup:`-45`. Note that the first parameter
 of the :ada:`Adjacent` attribute is the value we want to analyze and the
