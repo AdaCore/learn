@@ -1526,9 +1526,9 @@ fixed-point types.
 Attribute: :ada:`'Digits`
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Digits` is an attribute that returns the decimal precision of a
-decimal fixed-point subtype. This corresponds to the value that we use for the
-:ada:`digits` in the definition of a decimal fixed-point type.
+:ada:`'Digits` is an attribute that returns the number of significant decimal
+digits of a decimal fixed-point subtype. This corresponds to the value that we
+use for the :ada:`digits` in the definition of a decimal fixed-point type.
 
 Let's see an example:
 
