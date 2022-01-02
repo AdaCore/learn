@@ -1517,7 +1517,7 @@ the decimal point in "-0.123". Similarly, the value of :ada:`Fix'Aft` is 10,
 which matches the number of digits after the decimal point in "-0.0000000005".
 
 
-Operations of decimal fixed-point types
+Attributes of decimal fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The attributes presented in this subsection are only available for decimal
