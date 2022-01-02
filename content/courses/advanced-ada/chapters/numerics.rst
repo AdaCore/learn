@@ -1321,9 +1321,6 @@ indicating whether a feature is available or not in the target architecture:
     end Show_Boolean_Attributes;
 
 
-Operations of fixed-point types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 Attribute: :ada:`'Small` and :ada:`'Delta`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
