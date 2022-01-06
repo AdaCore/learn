@@ -998,9 +998,9 @@ Attributes: :ada:`'Copy_Sign` and :ada:`Leading_Part`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :ada:`'Copy_Sign` is an attribute that returns a value where the sign of the
-second floating-point argument is multiplied to the magnitude of the first
+second floating-point argument is multiplied by the magnitude of the first
 floating-point argument. For example, :ada:`Float'Copy_Sign (1.0, -10.0)` is
--1.0. Here, the sign of the second argument (-10.0) is multiplied to the
+-1.0. Here, the sign of the second argument (-10.0) is multiplied by the
 magnitude of the first argument (1.0), so the result is -1.0.
 
 :ada:`'Leading_Part` is an attribute that returns the *approximated* version of
