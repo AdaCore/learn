@@ -763,7 +763,7 @@ declaration. For example:
 
     end Null_Procs;
 
-As expected, using a null procedure doesn't have any effect. For example:
+As expected, calling a null procedure doesn't have any effect. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Null_Proc_1
 
