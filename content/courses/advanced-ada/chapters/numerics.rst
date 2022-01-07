@@ -1612,7 +1612,7 @@ For example, if we have a type :ada:`T` with three digits, and we use a value
 with 10 digits after the decimal point in a call to :ada:`T'Round`, the
 resulting value will have three digits after the decimal point.
 
-Note that the :ada:`X` input of a :ada:`S'Round (X)` call is a universal real
+Note that the :ada:`X` input of an :ada:`S'Round (X)` call is a universal real
 value, while the returned value is of :ada:`S'Base` type.
 
 Let's look at this example:
