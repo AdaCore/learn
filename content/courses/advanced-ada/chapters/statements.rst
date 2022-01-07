@@ -83,7 +83,7 @@ a :ada:`for` loop:
 
     In addition to labels, loops and block statements allow us to use a
     statement identifier. In simple terms, instead of writing
-    :ada:`<<Some_Label>>`, we write :ada:`Some_Label:`.
+    :ada:`<<Some_Label>>`, we write :ada:`Some_Label :`.
 
     We could rewrite the previous code example using a loop statement
     identifier:
@@ -96,10 +96,10 @@ a :ada:`for` loop:
            Arr   : constant array (1 .. 5) of Integer := (1, 4, 6, 42, 49);
            Found : Boolean := False;
         begin
-           Find_42: for E of Arr loop
+           Find_42 : for E of Arr loop
               if E = 42 then
                  Found := True;
-                 exit;
+                 exit Find_42;
               end if;
            end loop Find_42;
 
