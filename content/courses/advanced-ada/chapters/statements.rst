@@ -53,7 +53,7 @@ Let's see a complete example:
        C := V.First;
        Put_Line ("Vector elements are: ");
 
-       Show_Elements:
+       Show_Elements :
           loop
              exit Show_Elements when C = No_Element;
 
@@ -74,9 +74,9 @@ exit directly from the inner loop:
        Cond : Boolean := True;
     begin
 
-       Outer_Processing: loop
+       Outer_Processing : loop
 
-          Inner_Processing: loop
+          Inner_Processing : loop
              exit Outer_Processing when Cond = True;
           end loop Inner_Processing;
 
