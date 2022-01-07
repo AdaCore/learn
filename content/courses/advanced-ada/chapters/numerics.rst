@@ -27,7 +27,7 @@ and :ada:`Mod`. We also discuss operations on modular types.
 :ada:`Modulus` Attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ada:`Modulus` attribute returns the modulus of the modular type as an
+The :ada:`Modulus` attribute returns the modulus of the modular type as a
 universal integer value. Let's get the modulus of the 32-bit :ada:`Modular`
 type that we've declared in the :ada:`Num_Types` package of the previous
 example:
@@ -631,7 +631,7 @@ Attributes: :ada:`'Machine_Mantissa`, :ada:`'Machine_Emin` and :ada:`Machine_Ema
 reserved for the mantissa of the floating-point type. The :ada:`Machine_Emin`
 and :ada:`Machine_Emax` attributes return the minimum and maximum value,
 respectively, of the machine exponent the floating-point type. Note that, in
-all cases, the returned value is an universal integer. For example:
+all cases, the returned value is a universal integer. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Machine_Emin_Emax
 
@@ -1155,7 +1155,7 @@ representable with the underlying numeric model. It corresponds to
 type, this roughly corresponds to
 :ada:`Float (Float'Machine_Radix) ** (Float'Model_Emin - 1)`, or
 2\ :sup:`(-125 - 1)`. Note that the result of this calculation is of
-:ada:`Float` type, while the result of :ada:`Float'Model_Small` is an universal
+:ada:`Float` type, while the result of :ada:`Float'Model_Small` is a universal
 real.
 
 Let's see some examples:
