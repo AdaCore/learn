@@ -77,7 +77,7 @@ exit directly from the inner loop:
        Outer_Processing : loop
 
           Inner_Processing : loop
-             exit Outer_Processing when Cond = True;
+             exit Outer_Processing when Cond;
           end loop Inner_Processing;
 
        end loop Outer_Processing;
