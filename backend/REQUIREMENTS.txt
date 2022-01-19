@@ -1,4 +1,4 @@
-celery==5.2.3
+celery==5.1.2
 Flask==1.1.1
 Flask-Cors==3.0.10
 docker==5.0.1
