@@ -16,6 +16,8 @@ $frontend = <<-SHELL
       python3-venv \
       nodejs \
       graphviz \
+      poppler-utils \
+      libjpeg-dev \
       make \
       gnat \
       gprbuild \
@@ -64,6 +66,7 @@ $epub = <<-SHELL
       fonts-open-sans \
       fonts-dejavu \
       poppler-utils \
+      libjpeg-dev \
       build-essential \
       ca-certificates \
       git \
