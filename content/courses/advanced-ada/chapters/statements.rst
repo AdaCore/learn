@@ -29,12 +29,9 @@ Here are some examples from each category:
 Labels
 ~~~~~~
 
-We can use labels to identify statements in the code. They are useful as a way
-to document the code or to indicate important statements in the code.
-
-Labels have the following format: :ada:`<<Some_Label>>`. We write them right
-before the statement we want to apply it to. Let's see an example of labels
-with simple statements:
+We can use labels to identify statements in the code. They have the following
+format: :ada:`<<Some_Label>>`. We write them right before the statement we want
+to apply it to. Let's see an example of labels with simple statements:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Statements.Statement_Identifier_1
 
