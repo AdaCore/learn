@@ -18,7 +18,8 @@ Here are some examples from each category:
 +=====================+========================================================+
 | Simple statements   | Null statement, assignment, subprogram call, etc.      |
 +---------------------+--------------------------------------------------------+
-| Compound statements | If statement, case statement, loop, block statement    |
+| Compound statements | If statement, case statement, loop statement,          |
+|                     | block statement                                        |
 +---------------------+--------------------------------------------------------+
 
 .. admonition:: In the Ada Reference Manual
