@@ -6,7 +6,7 @@ Statements
 Simple and Compound Statements
 ------------------------------
 
-We can classify statements in simple and compound statements. Simple statements
+We can classify statements as either simple or compound. Simple statements
 don't contain other statements; think of them as "atomic units" that cannot be
 further divided. Compound statements, on the other hand, may contain other
 |mdash| simple or compound |mdash| statements.
