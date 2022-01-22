@@ -54,6 +54,30 @@ can use multiple labels a single statement. In this code example, we use the
 :ada:`Show_Separator` and :ada:`Show_Block_Separator` labels for the same
 statement.
 
+Labels are mainly used in combination with :ada:`goto` statements. (Although
+pretty much uncommon, we could potentially use labels to indicate important
+statements in the code.) Let's see an example where we use a :ada:`goto label;`
+statement to *jump* to a specific label:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Statements.Label_Goto
+
+    procedure Show_Cleanup is
+       pragma Warnings (Off, "always false");
+
+       Some_Error : Boolean;
+    begin
+       Some_Error := False;
+
+       if Some_Error then
+          goto Cleanup;
+       end if;
+
+       <<Cleanup>> null;
+    end Show_Cleanup;
+
+Here, we transfer the control to the *cleanup* statement as soon as an error is
+detected.
+
 We can use labels with compound statements as well. For example, we can label
 a :ada:`for` loop:
 
@@ -105,27 +129,6 @@ a :ada:`for` loop:
         end Show_Statement_Identifier;
 
     Later in this chapter, we discuss this topic in more details.
-
-Although the usage of :ada:`goto` statements should be avoided as much as
-possible, it's worth mentioning that we can use a :ada:`goto label;` statement
-to *jump* to a specific label. For example:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Statements.Statement_Identifier_3
-
-    procedure Show_Cleanup is
-       Some_Error : Boolean;
-    begin
-       Some_Error := False;
-
-       if Some_Error then
-          goto Cleanup;
-       end if;
-
-       <<Cleanup>> null;
-    end Show_Cleanup;
-
-Here, we transfer the control to the *cleanup* statement as soon as an error is
-detected.
 
 
 Exit loop statement
