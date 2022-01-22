@@ -128,7 +128,8 @@ a :ada:`for` loop:
            Put_Line ("Found: " & Found'Image);
         end Show_Statement_Identifier;
 
-    Later in this chapter, we discuss this topic in more details.
+    Loop statement and block statement identifiers are generally preferred over
+    labels. Later in this chapter, we discuss this topic in more detail.
 
 
 Exit loop statement
