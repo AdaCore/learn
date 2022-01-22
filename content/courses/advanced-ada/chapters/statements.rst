@@ -33,7 +33,7 @@ We can use labels to identify statements in the code. They have the following
 format: :ada:`<<Some_Label>>`. We write them right before the statement we want
 to apply it to. Let's see an example of labels with simple statements:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Statements.Statement_Identifier_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Statements.Simple_Labels
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -57,7 +57,7 @@ statement.
 We can use labels with compound statements as well. For example, we can label
 a :ada:`for` loop:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Statements.Statement_Identifier_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Statements.Loop_Label
 
     with Ada.Text_IO; use Ada.Text_IO;
 
