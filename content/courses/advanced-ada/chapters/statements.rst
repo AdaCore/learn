@@ -78,6 +78,98 @@ statement to *jump* to a specific label:
 Here, we transfer the control to the *cleanup* statement as soon as an error is
 detected.
 
+Another use-case is that of a :ada:`Continue` label in a loop. Consider a loop
+where we want to skip further processing depending on a condition:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Statements.Label_Continue_1
+
+    procedure Show_Continue is
+       function Is_Further_Processing_Needed (Dummy : Integer)
+         return Boolean is
+       begin
+          --  Dummy implementation
+          return False;
+       end Is_Further_Processing_Needed;
+
+       A : constant array (1 .. 10) of Integer :=
+         (others => 0);
+    begin
+       for E of A loop
+
+          --  Some stuff here...
+
+          if Is_Further_Processing_Needed (E) then
+
+             --  Do more stuff...
+
+             null;
+          end if;
+       end loop;
+    end Show_Continue;
+
+In this example, we call the :ada:`Is_Further_Processing_Needed (E)` function to
+check whether further processing is needed or not. If it's needed, we continue
+processing in the :ada:`if` statement. We could simplify this code by just using
+a :ada:`Continue` label at the end of the loop and a :ada:`goto` statement:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Statements.Label_Continue_2
+
+    procedure Show_Continue is
+       function Is_Further_Processing_Needed (Dummy : Integer)
+         return Boolean is
+       begin
+          --  Dummy implementation
+          return False;
+       end Is_Further_Processing_Needed;
+
+       A : constant array (1 .. 10) of Integer :=
+         (others => 0);
+    begin
+       for E of A loop
+
+          --  Some stuff here...
+
+          if not Is_Further_Processing_Needed (E) then
+             goto Continue;
+          end if;
+
+          --  Do more stuff...
+
+          <<Continue>>
+       end loop;
+    end Show_Continue;
+
+Here, we use a :ada:`Continue` label at the end of the loop and jump to it in
+the case that no further processing is needed. Note that, in this example, we
+don't have a statement after the :ada:`Continue` label because the label itself
+is at the end of a statement |mdash| to be more specific, at the end of the loop
+statement. In such cases, there's an implicit :ada:`null` statement.
+
+.. admonition:: Historically
+
+    Since Ada 2012, we can simply write:
+
+    .. code-block:: ada
+
+        loop
+           --  Some statements...
+
+           <<Continue>>
+        end loop;
+
+    If a label is used at the end of a sequence of statements, a :ada:`null`
+    statement is implied. In previous versions of Ada, however, that is not the
+    case. Therefore, when using those versions of the language, we must write at
+    least a :ada:`null` statement:
+
+    .. code-block:: ada
+
+        loop
+           --  Some statements...
+
+           <<Continue>> null;
+        end loop;
+
 We can use labels with compound statements as well. For example, we can label
 a :ada:`for` loop:
 
