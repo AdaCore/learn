@@ -27,7 +27,7 @@ Here are some examples from each category:
     - `5.1 Simple and Compound Statements - Sequences of Statements <http://www.ada-auth.org/standards/12rm/html/RM-5-1.html>`_
 
 Labels
-~~~~~~
+------
 
 We can use labels to identify statements in the code. They have the following
 format: :ada:`<<Some_Label>>`. We write them right before the statement we want
@@ -54,6 +54,13 @@ can use multiple labels a single statement. In this code example, we use the
 :ada:`Show_Separator` and :ada:`Show_Block_Separator` labels for the same
 statement.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `5.1 Simple and Compound Statements - Sequences of Statements <http://www.ada-auth.org/standards/12rm/html/RM-5-1.html>`_
+
+Labels and :ada:`goto` statements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Labels are mainly used in combination with :ada:`goto` statements. (Although
 pretty much uncommon, we could potentially use labels to indicate important
 statements in the code.) Let's see an example where we use a :ada:`goto label;`
@@ -77,6 +84,9 @@ statement to *jump* to a specific label:
 
 Here, we transfer the control to the *cleanup* statement as soon as an error is
 detected.
+
+Use-case: :ada:`Continue`
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Another use-case is that of a :ada:`Continue` label in a loop. Consider a loop
 where we want to skip further processing depending on a condition:
@@ -169,6 +179,10 @@ statement. In such cases, there's an implicit :ada:`null` statement.
 
            <<Continue>> null;
         end loop;
+
+
+Labels and compount statements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We can use labels with compound statements as well. For example, we can label
 a :ada:`for` loop:
