@@ -294,7 +294,7 @@ A few things to note:
 
 -  :ada:`Integer'Image` is a function that takes an Integer and converts it to
    a :ada:`String`.  It is an example of a language construct known as an
-   *attribute*, indicated by the :Ada:`'` syntax, which will be covered in more
+   *attribute*, indicated by the :ada:`'` syntax, which will be covered in more
    detail later.
 
 -  The :ada:`&` symbol is the concatenation operator for String values
