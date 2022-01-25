@@ -482,7 +482,7 @@ initialization expression.
     end Main;
 
 .. attention::
-    As you can see above, the standard ada:`String` type in Ada is an array. As
+    As you can see above, the standard :ada:`String` type in Ada is an array. As
     such, it shares the advantages and drawbacks of arrays: a :ada:`String`
     value is stack allocated, it is accessed efficiently, and its bounds are
     immutable.
