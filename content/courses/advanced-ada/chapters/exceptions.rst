@@ -8,7 +8,8 @@ Asserts
 
 When we want to indicate a condition in the code that must always be valid, we
 can use the pragma :ada:`Assert`. As the name implies, when we use this pragma,
-we're *asserting* some truth about the source-code.
+we're *asserting* some truth about the source-code. (We can also use the
+procedural form, as we'll see later.)
 
 .. admonition:: Important
 
@@ -40,6 +41,21 @@ could also display a message if the assertion is false:
     begin
        null;
     end Show_Pragma_Assert;
+
+Similarly, we can use the procedural form of :ada:`Assert`. For example, the
+code above can implemented as follows:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Procedure_Assert
+    :class: ada-run-expect-failure
+
+    with Ada.Assertions; use Ada.Assertions;
+
+    procedure Show_Procedure_Assert is
+       I : constant Integer := 11;
+
+    begin
+       Assert (I = 10, "I is not 10");
+    end Show_Procedure_Assert;
 
 Note that a call to a pragma is simply translated to a check |mdash| and an
 exception being raised in the case that the check fails. For example, the code
