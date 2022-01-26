@@ -57,9 +57,10 @@ code above can implemented as follows:
        Assert (I = 10, "I is not 10");
     end Show_Procedure_Assert;
 
-Note that a call to :ada:`Assert` is simply translated to a check |mdash| and an
-exception being raised in the case that the check fails. For example, the code
-above roughly corresponds to this:
+Note that a call to :ada:`Assert` is simply translated to a check |mdash| and
+the :ada:`Assertion_Error` exception from the :ada:`Ada.Assertions` package
+being raised in the case that the check fails. For example, the code above
+roughly corresponds to this:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Assertion_Error
     :class: ada-run-expect-failure
