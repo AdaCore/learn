@@ -61,20 +61,20 @@ Note that a call to a pragma is simply translated to a check |mdash| and an
 exception being raised in the case that the check fails. For example, the code
 above roughly corresponds to this:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Assert_3
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Assertion_Error
     :class: ada-run-expect-failure
 
-    with Ada.Assertions;
+    with Ada.Assertions; use Ada.Assertions;
 
-    procedure Show_Pragma_Assert is
+    procedure Show_Assertion_Error is
        I : constant Integer := 11;
 
     begin
        if I /= 10 then
-          raise Ada.Assertions.Assertion_Error with "I is not 10";
+          raise Assertion_Error with "I is not 10";
        end if;
 
-    end Show_Pragma_Assert;
+    end Show_Assertion_Error;
 
 .. admonition:: In the Ada Reference Manual
 
