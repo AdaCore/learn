@@ -6,13 +6,63 @@ Exceptions
 Asserts
 -------
 
-.. admonition:: Relevant topics
+When we want to indicate a condition in the code that must always be valid, we
+can use the pragma :ada:`Assert`. As the name implies, when we use this pragma,
+we're *asserting* some truth about the source-code.
 
-    - `Pragmas Assert and Assertion_Policy <http://www.ada-auth.org/standards/2xrm/html/RM-11-4-2.html>`_
+.. admonition:: Important
 
-.. todo::
+    Another method to assert the truth about the source-code is to use
+    :doc:`pre and post-conditions <./contracts>`.
 
-    Complete section!
+A simple assert has this form:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Assert_1
+
+    procedure Show_Pragma_Assert is
+       I : constant Integer := 10;
+
+       pragma Assert (I = 10);
+    begin
+       null;
+    end Show_Pragma_Assert;
+
+In this example, we're asserting that the value of :ada:`I` is always 10. We
+could also display a message if the assertion is false:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Assert_2
+    :class: ada-run-expect-failure
+
+    procedure Show_Pragma_Assert is
+       I : constant Integer := 11;
+
+       pragma Assert (I = 10, "I is not 10");
+    begin
+       null;
+    end Show_Pragma_Assert;
+
+Note that a call to a pragma is simply translated to a check |mdash| and an
+exception being raised in the case that the check fails. For example, the code
+above roughly corresponds to this:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Assert_3
+    :class: ada-run-expect-failure
+
+    with Ada.Assertions;
+
+    procedure Show_Pragma_Assert is
+       I : constant Integer := 11;
+
+    begin
+       if I /= 10 then
+          raise Ada.Assertions.Assertion_Error with "I is not 10";
+       end if;
+
+    end Show_Pragma_Assert;
+
+.. admonition:: In the Ada Reference Manual
+
+    - `11.4.2 Pragmas Assert and Assertion_Policy <http://www.ada-auth.org/standards/2xrm/html/RM-11-4-2.html>`_
 
 
 ``Ada.Exceptions`` package
