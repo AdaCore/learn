@@ -79,7 +79,7 @@ roughly corresponds to this:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `11.4.2 Pragmas Assert and Assertion_Policy <http://www.ada-auth.org/standards/2xrm/html/RM-11-4-2.html>`_
+    - `11.4.2 Pragmas Assert and Assertion_Policy <http://www.ada-auth.org/standards/12rm/html/RM-11-4-2.html>`_
 
 
 ``Ada.Exceptions`` package
