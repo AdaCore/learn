@@ -57,7 +57,7 @@ code above can implemented as follows:
        Assert (I = 10, "I is not 10");
     end Show_Procedure_Assert;
 
-Note that a call to a pragma is simply translated to a check |mdash| and an
+Note that a call to :ada:`Assert` is simply translated to a check |mdash| and an
 exception being raised in the case that the check fails. For example, the code
 above roughly corresponds to this:
 
