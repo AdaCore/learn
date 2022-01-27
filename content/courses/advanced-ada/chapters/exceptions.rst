@@ -15,6 +15,134 @@ Asserts
     Complete section!
 
 
+Assertion policies
+------------------
+
+We can activate and deactivate assertions based on assertion policies. We can do
+that by using the pragma :ada:`Assertion_Policy`. As an argument to this pragma,
+we indicate whether a specific policy must be checked or ignored.
+
+For example, we can deactivate assertion checks by specifying
+:ada:`Assert => Ignore`. Similarly, we can activate assertion checks by
+specifying :ada:`Assert => Check`. Let's see a code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Assertion_Policy_1
+
+    procedure Show_Pragma_Assertion_Policy is
+       I : constant Integer := 11;
+
+       pragma Assertion_Policy (Assert => Ignore);
+    begin
+       pragma Assert (I = 10);
+    end Show_Pragma_Assertion_Policy;
+
+Here, we're specifying that asserts shall be ignored. Therefore, the call to the
+pragma :ada:`Assert` doesn't raise an exception. If we replace :ada:`Ignore`
+with :ada:`Check` in the call to :ada:`Assertion_Policy`, the assert will raise
+the :ada:`Assertion_Error` exception.
+
+The following table presents all policies that we can set:
+
++----------------------------------+-------------------------------------------+
+| Policy                           | Descripton                                |
++==================================+===========================================+
+| :ada:`Assert`                    | Check assertions                          |
++----------------------------------+-------------------------------------------+
+| :ada:`Static_Predicate`          | Check static predicates                   |
++----------------------------------+-------------------------------------------+
+| :ada:`Dynamic_Predicate`         | Check dynamic predicates                  |
++----------------------------------+-------------------------------------------+
+| :ada:`Pre`                       | Check pre-conditions                      |
++----------------------------------+-------------------------------------------+
+| :ada:`Pre'Class`                 | Check pre-condition of classes of tagged  |
+|                                  | types                                     |
++----------------------------------+-------------------------------------------+
+| :ada:`Post`                      | Check post-conditions                     |
++----------------------------------+-------------------------------------------+
+| :ada:`Post'Class`                | Check post-condition of classes of tagged |
+|                                  | types                                     |
++----------------------------------+-------------------------------------------+
+| :ada:`Type_Invariant`            | Check type invariants                     |
++----------------------------------+-------------------------------------------+
+| :ada:`Type_Invariant'Class`      | Check type invariant of classes of tagged |
+|                                  | types                                     |
++----------------------------------+-------------------------------------------+
+
+.. admonition:: In the GNAT toolchain
+
+    Compilers are free to include policies that go beyond the ones listed above.
+    For example, GNAT includes the following policies |mdash| called
+    *assertion kinds* in this context:
+
+    - :ada:`Assertions`
+    - :ada:`Assert_And_Cut`
+    - :ada:`Assume`
+    - :ada:`Contract_Cases`
+    - :ada:`Debug`
+    - :ada:`Ghost`
+    - :ada:`Initial_Condition`
+    - :ada:`Invariant`
+    - :ada:`Invariant'Class`
+    - :ada:`Loop_Invariant`
+    - :ada:`Loop_Variant`
+    - :ada:`Postcondition`
+    - :ada:`Precondition`
+    - :ada:`Predicate`
+    - :ada:`Refined_Post`
+    - :ada:`Statement_Assertions`
+    - :ada:`Subprogram_Variant`
+
+    Also, in addtion to :ada:`Check` and :ada:`Ignore`, GNAT allows you to set
+    a policy to :ada:`Disable` and :ada:`Suppressible`.
+
+    You can read more about them in the
+    `GNAT Reference Manual <https://gcc.gnu.org/onlinedocs/gnat_rm/Pragma-Assertion_005fPolicy.html>`_.
+
+You can specify multiple policies in a single call to :ada:`Assertion_Policy`.
+For example, you can activate all policies by writing:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Multiple_Assertion_Policies
+
+    procedure Show_Multiple_Assertion_Policies is
+       pragma Assertion_Policy
+         (Assert               => Check,
+          Static_Predicate     => Check,
+          Dynamic_Predicate    => Check,
+          Pre                  => Check,
+          Pre'Class            => Check,
+          Post                 => Check,
+          Post'Class           => Check,
+          Type_Invariant       => Check,
+          Type_Invariant'Class => Check);
+    begin
+       null;
+    end Show_Multiple_Assertion_Policies;
+
+.. admonition:: In the GNAT toolchain
+
+    With GNAT, policies can be specified in multiple ways. In addition to calls
+    to :ada:`Assertion_Policy`, you can use
+    `configuration pragmas files <https://gcc.gnu.org/onlinedocs/gnat_ugn/The-Configuration-Pragmas-Files.html#The-Configuration-Pragmas-Files>`_.
+    You can use these files to specify all pragmas that are relevant to your
+    application, including :ada:`Assertion_Policy`. In addition, you can manage
+    the granularity for those pragmas. For example, you can use a global
+    configuration pragmas file for your complete application, or even different
+    files for each source-code file you have.
+
+    Also, by default, all policies listed in the table above are deactivated,
+    i.e. they're all set to :ada:`Ignore`. You can use the command-line switch
+    :ada:`-gnata` to activate them.
+
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
+
+    :ada:`Default_Initial_Condition` policy
+
+.. admonition:: In the Ada Reference Manual
+
+    - `11.4.2 Pragmas Assert and Assertion_Policy <http://www.ada-auth.org/standards/12rm/html/RM-11-4-2.html>`_
+
+
 ``Ada.Exceptions`` package
 --------------------------
 
