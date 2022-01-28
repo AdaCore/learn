@@ -272,7 +272,7 @@ class ProjectFile(File):
     allowed_switches = {
         'Builder': ['-g'],
         'Compiler': ['-g', '-O0', '-gnata', '-gnatwa', '-gnato', '-gnato0', '-gnato11', '-gnato23',
-                     '-gnato21', '-gnato22']
+                     '-gnato21', '-gnato22', '-gnateE']
     }
 
     def insert_languages(self, languages):
