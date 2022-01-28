@@ -222,8 +222,7 @@ The standard Ada run-time library provides the package :ada:`Ada.Exceptions`.
 This package provides a number of services to help analyze exceptions.
 
 Each exception is associated with a (short) message that can be set by the code
-that raises the exception. Since Ada 2005, these messages can be set very
-simply, as in the following code:
+that raises the exception, as in the following code:
 
 .. code-block:: ada
 
@@ -231,6 +230,8 @@ simply, as in the following code:
 
 .. admonition:: Historically
 
+    Since Ada 2005, we can use the
+    :ada:`raise Constraint_Error with "some message"` syntax.
     In previous versions of Ada, you had to call the :ada:`Raise_Exception`
     procedure:
 
