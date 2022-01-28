@@ -215,7 +215,7 @@ For example, you can activate all policies by writing:
 
 .. note::
 
-    This section was originally published as
+    Parts of this section were originally published as
     `Gem #142 : Exception-ally <https://www.adacore.com/gems/gem-142-exceptions>`_
 
 The standard Ada run-time library provides the package :ada:`Ada.Exceptions`.
@@ -260,11 +260,54 @@ Exceptions also embed information set by the run-time itself that can be
 retrieved by calling the :ada:`Exception_Information` function. The function
 :ada:`Exception_Information` also displays the :ada:`Exception_Message`.
 
+For example:
+
+.. code-block:: ada
+
+    exception
+        when E : others =>
+            Put_Line (Ada.Exceptions.Exception_Information (E));
+
 .. admonition:: In the GNAT toolchain
 
     In the case of GNAT, the information provided by an exception might include
     the source location where the exception was raised and a nonsymbolic
     traceback.
+
+You can also retrieve this information individually. Here, you can use:
+
+    - the :ada:`Exception_Name` functions |mdash| and its derivatives
+      :ada:`Wide_Exception_Name` and :ada:`Wide_Wide_Exception_Name` |mdash| to
+      retrieve the name of an exception.
+
+    - the :ada:`Exception_Message` function to retrieve the message associated
+      with an exception.
+
+Let's see a complete example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Info switches=Compiler(-g);
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Ada.Exceptions; use Ada.Exceptions;
+
+    procedure Show_Exception_Info is
+
+       Custom_Exception : exception;
+
+       procedure Nested is
+       begin
+          raise Custom_Exception with "We got a problem";
+       end Nested;
+
+    begin
+       Nested;
+
+    exception
+       when E : others =>
+          Put_Line ("Exception info: " & Exception_Information (E));
+          Put_Line ("Exception name: " & Exception_Name (E));
+          Put_Line ("Exception msg:  " & Exception_Message (E));
+    end Show_Exception_Info;
 
 
 Debugging exceptions in the GNAT toolchain
