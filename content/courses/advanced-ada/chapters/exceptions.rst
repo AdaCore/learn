@@ -218,13 +218,225 @@ For example, you can activate all policies by writing:
     This section was originally published as
     `Gem #142 : Exception-ally <https://www.adacore.com/gems/gem-142-exceptions>`_
 
-.. admonition:: Relevant topics
+The standard Ada run-time library provides the package :ada:`Ada.Exceptions`.
+This package provides a number of services to help analyze exceptions.
 
-    - `The Package Exceptions <http://www.ada-auth.org/standards/2xrm/html/RM-11-4-1.html>`_
+Each exception is associated with a (short) message that can be set by the code
+that raises the exception. Since Ada 2005, these messages can be set very
+simply, as in the following code:
 
-.. todo::
+.. code-block:: ada
 
-    Complete section!
+    raise Constraint_Error with "some message";
+
+.. admonition:: Historically
+
+    In previous versions of Ada, you had to call the :ada:`Raise_Exception`
+    procedure:
+
+    .. code-block:: ada
+
+        Ada.Exceptions.Raise_Exception         --  Ada 95
+          (Constraint_Error'Identity, "some message");
+
+    The new syntax is now very convenient, and developers should be encouraged
+    to provide as much information as possible along with the exception.
+
+.. admonition:: In the GNAT toolchain
+
+    The length of the message is limited to 200 characters by default in GNAT,
+    and messages longer than that will be truncated.
+
+Exceptions also embed information set by the run-time itself that can be
+retrieved by calling the :ada:`Exception_Information` function. The function
+:ada:`Exception_Information` also displays the :ada:`Exception_Message`.
+
+.. admonition:: In the GNAT toolchain
+
+    In the case of GNAT, the information provided by an exception might include
+    the source location where the exception was raised and a nonsymbolic
+    traceback.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `11.4.1 The Package Exceptions <http://www.ada-auth.org/standards/12rm/html/RM-11-4-1.html>`_
+
+
+Debugging exceptions in the GNAT toolchain
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here is a typical exception handler that catches all unexpected exceptions in
+the application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Information switches=Compiler(-g);
+
+    with Ada.Exceptions;
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    procedure Main is
+
+        procedure Nested is
+        begin
+            raise Constraint_Error with "some message";
+        end Nested;
+
+    begin
+        Nested;
+
+    exception
+        when E : others =>
+            Put_Line (Ada.Exceptions.Exception_Information (E));
+    end Main;
+
+Let's now compile this application with no special command-line option.
+
+.. code-block:: none
+
+    > gnatmake main.adb
+    > ./main
+
+    Exception name: CONSTRAINT_ERROR
+    Message: some message
+
+That's not very informative. To get more information, we need to rerun the
+program in the debugger. To make the session more interesting though, we should
+add debug information in the executable, which means using the ``-g`` switch in
+the gnatmake command.
+
+The session would look like the following (omitting some of the output from the
+debugger):
+
+.. code-block:: none
+
+    > rm *.o      # Cleanup previous compilation
+    > gnatmake -g main.adb
+    > gdb ./main
+    (gdb)  catch exception
+    (gdb)  run
+    Catchpoint 1, CONSTRAINT_ERROR at 0x0000000000402860 in main.nested () at main.adb:8
+    8               raise Constraint_Error with "some message";
+
+    (gdb) bt
+    #0  <__gnat_debug_raise_exception> (e=0x62ec40 <constraint_error>) at s-excdeb.adb:43
+    #1  0x000000000040426f in ada.exceptions.complete_occurrence (x=x@entry=0x637050)
+    at a-except.adb:934
+    #2  0x000000000040427b in ada.exceptions.complete_and_propagate_occurrence (
+    x=x@entry=0x637050) at a-except.adb:943
+    #3  0x00000000004042d0 in <__gnat_raise_exception> (e=0x62ec40 <constraint_error>,
+    message=...) at a-except.adb:982
+    #4  0x0000000000402860 in main.nested ()
+    #5  0x000000000040287c in main ()
+
+And we now know exactly where the exception was raised. But in fact, we could
+have this information directly when running the application. For this, we need
+to bind the application with the switch ``-E``, which tells the binder to store
+exception tracebacks in exception occurrences. Let's recompile and rerun the
+application.
+
+.. code-block:: none
+
+    > rm *.o   # Cleanup previous compilation
+    > gnatmake -g main.adb -bargs -E
+    > ./main
+
+    Exception name: CONSTRAINT_ERROR
+    Message: some message
+    Call stack traceback locations:
+    0x10b7e24d1 0x10b7e24ee 0x10b7e2472
+
+The traceback, as is, is not very useful. We now need to use another tool that
+is bundled with GNAT, called ``addr2line``. Here is an example of its use:
+
+.. code-block:: none
+
+    > addr2line -e main --functions --demangle 0x10b7e24d1 0x10b7e24ee 0x10b7e2472
+    /path/main.adb:8
+    _ada_main
+    /path/main.adb:12
+    main
+    /path/b~main.adb:240
+
+This time we do have a symbolic backtrace, which shows information similar to
+what we got in the debugger.
+
+For users on OSX machines, ``addr2line`` does not exist. On these machines,
+however, an equivalent solution exists. You need to link your application with
+an additional switch, and then use the tool ``atos``, as in:
+
+.. code-block:: none
+
+    > rm *.o
+    > gnatmake -g main.adb -bargs -E -largs -Wl,-no_pie
+    > ./main
+
+    Exception name: CONSTRAINT_ERROR
+    Message: some message
+    Call stack traceback locations:
+    0x1000014d1 0x1000014ee 0x100001472
+    > atos -o main 0x1000014d1 0x1000014ee 0x100001472
+    main__nested.2550 (in main) (main.adb:8)
+    _ada_main (in main) (main.adb:12)
+    main (in main) + 90
+
+We will now discuss a relatively new switch of the compiler, namely ``-gnateE``.
+When used, this switch will generate extra information in exception messages.
+
+Let's amend our test program to:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Information switches=Compiler(-g,-gnateE);
+
+    with Ada.Exceptions;
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    procedure Main is
+
+        procedure Nested (Index : Integer) is
+           type T_Array is array (1 .. 2) of Integer;
+           T : constant T_Array := (10, 20);
+        begin
+           Put_Line (T (Index)'Img);
+        end Nested;
+
+    begin
+        Nested (3);
+
+    exception
+        when E : others =>
+            Put_Line (Ada.Exceptions.Exception_Information (E));
+    end Main;
+
+We compile it with the additional switch and then run it:
+
+.. code-block:: none
+
+    > gnatmake -g main.adb -gnateE -bargs -E -g -largs
+    > ./main
+
+    Exception name: CONSTRAINT_ERROR
+    Message: main.adb:10:18 index check failed
+    index 3 not in 1..2
+    Call stack traceback locations:
+    0x100001429 0x1000014c7 0x1000013c2
+
+The exception information (traceback) is the same as before, but this time the
+exception message is set automatically by the compiler. So we know we got a
+:ada:`Constraint_Error` because an incorrect index was used at the named source
+location (:file:`main.adb`, line 10). But the significant addition is the second
+line of the message, which indicates exactly the cause of the error. Here, we
+wanted to get the element at index 3, in an array whose range of valid indexes
+is from 1 to 2. (No need for a debugger in this case.)
+
+The column information on the first line of the exception message is also very
+useful when dealing with null pointers. For instance, a line such as:
+
+.. code-block:: ada
+
+    A := Rec1.Rec2.Rec3.Rec4.all;
+
+where each of the :ada:`Rec` is itself a pointer, might raise
+:ada:`Constraint_Error` with a message "access check failed". This indicates for
+sure that one of the pointers is null, and by using the column information it is
+generally easy to find out which one it is.
 
 
 Exception renaming
