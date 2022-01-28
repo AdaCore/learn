@@ -215,7 +215,7 @@ For example, you can activate all policies by writing:
 
 .. note::
 
-    This section was originally  published as
+    This section was originally published as
     `Gem #142 : Exception-ally <https://www.adacore.com/gems/gem-142-exceptions>`_
 
 .. admonition:: Relevant topics
