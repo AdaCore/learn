@@ -291,7 +291,8 @@ the application:
 The output we get when running the application is not very informative. To get
 more information, we need to rerun the program in the debugger. To make the
 session more interesting though, we should add debug information in the
-executable, which means using the ``-g`` switch in the gnatmake command.
+executable, which means using the :option:`gnatmake -g` switch in the
+:program:`gnatmake` command.
 
 The session would look like the following (omitting some of the output from the
 debugger):
@@ -319,9 +320,9 @@ debugger):
 
 And we now know exactly where the exception was raised. But in fact, we could
 have this information directly when running the application. For this, we need
-to bind the application with the switch ``-E``, which tells the binder to store
-exception tracebacks in exception occurrences. Let's recompile and rerun the
-application.
+to bind the application with the switch :option:`gnatmake -E`, which tells the
+binder to store exception tracebacks in exception occurrences. Let's recompile
+and rerun the application.
 
 .. code-block:: none
 
@@ -335,7 +336,8 @@ application.
     0x10b7e24d1 0x10b7e24ee 0x10b7e2472
 
 The traceback, as is, is not very useful. We now need to use another tool that
-is bundled with GNAT, called ``addr2line``. Here is an example of its use:
+is bundled with GNAT, called :program:`addr2line`. Here is an example of its
+use:
 
 .. code-block:: none
 
@@ -349,9 +351,10 @@ is bundled with GNAT, called ``addr2line``. Here is an example of its use:
 This time we do have a symbolic backtrace, which shows information similar to
 what we got in the debugger.
 
-For users on OSX machines, ``addr2line`` does not exist. On these machines,
-however, an equivalent solution exists. You need to link your application with
-an additional switch, and then use the tool ``atos``, as in:
+For users on OSX machines, :program:`addr2line` does not exist. On these
+machines, however, an equivalent solution exists. You need to link your
+application with an additional switch, and then use the tool :program:`atos`,
+as in:
 
 .. code-block:: none
 
@@ -368,8 +371,9 @@ an additional switch, and then use the tool ``atos``, as in:
     _ada_main (in main) (main.adb:12)
     main (in main) + 90
 
-We will now discuss a relatively new switch of the compiler, namely ``-gnateE``.
-When used, this switch will generate extra information in exception messages.
+We will now discuss a relatively new switch of the compiler, namely
+:option:`gnatmake -gnateE`. When used, this switch will generate extra
+information in exception messages.
 
 Let's amend our test program to:
 
@@ -415,6 +419,24 @@ where each of the :ada:`Rec` is itself a pointer, might raise
 :ada:`Constraint_Error` with a message "access check failed". This indicates for
 sure that one of the pointers is null, and by using the column information it is
 generally easy to find out which one it is.
+
+.. admonition:: In the GNAT toolchain
+
+    :program:`gnatmake` switches:
+
+    .. program:: gnatmake
+
+    .. option:: -g
+
+        Include debug information.
+
+    .. option:: -E
+
+        Tell binder to store exception tracebacks in exception occurrences.
+
+    .. option:: -gnateE
+
+        Generate extra information in exception messages.
 
 
 Exception renaming
