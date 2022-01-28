@@ -248,6 +248,14 @@ that raises the exception, as in the following code:
     The length of the message is limited to 200 characters by default in GNAT,
     and messages longer than that will be truncated.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `11.4.1 The Package Exceptions <http://www.ada-auth.org/standards/12rm/html/RM-11-4-1.html>`_
+
+
+Retrieving exception information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Exceptions also embed information set by the run-time itself that can be
 retrieved by calling the :ada:`Exception_Information` function. The function
 :ada:`Exception_Information` also displays the :ada:`Exception_Message`.
@@ -257,10 +265,6 @@ retrieved by calling the :ada:`Exception_Information` function. The function
     In the case of GNAT, the information provided by an exception might include
     the source location where the exception was raised and a nonsymbolic
     traceback.
-
-.. admonition:: In the Ada Reference Manual
-
-    - `11.4.1 The Package Exceptions <http://www.ada-auth.org/standards/12rm/html/RM-11-4-1.html>`_
 
 
 Debugging exceptions in the GNAT toolchain
