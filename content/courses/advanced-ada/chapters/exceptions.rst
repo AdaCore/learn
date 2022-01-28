@@ -288,20 +288,10 @@ the application:
             Put_Line (Ada.Exceptions.Exception_Information (E));
     end Main;
 
-Let's now compile this application with no special command-line option.
-
-.. code-block:: none
-
-    > gnatmake main.adb
-    > ./main
-
-    Exception name: CONSTRAINT_ERROR
-    Message: some message
-
-That's not very informative. To get more information, we need to rerun the
-program in the debugger. To make the session more interesting though, we should
-add debug information in the executable, which means using the ``-g`` switch in
-the gnatmake command.
+The output we get when running the application is not very informative. To get
+more information, we need to rerun the program in the debugger. To make the
+session more interesting though, we should add debug information in the
+executable, which means using the ``-g`` switch in the gnatmake command.
 
 The session would look like the following (omitting some of the output from the
 debugger):
@@ -405,23 +395,11 @@ Let's amend our test program to:
             Put_Line (Ada.Exceptions.Exception_Information (E));
     end Main;
 
-We compile it with the additional switch and then run it:
-
-.. code-block:: none
-
-    > gnatmake -g main.adb -gnateE -bargs -E -g -largs
-    > ./main
-
-    Exception name: CONSTRAINT_ERROR
-    Message: main.adb:10:18 index check failed
-    index 3 not in 1..2
-    Call stack traceback locations:
-    0x100001429 0x1000014c7 0x1000013c2
-
-The exception information (traceback) is the same as before, but this time the
-exception message is set automatically by the compiler. So we know we got a
-:ada:`Constraint_Error` because an incorrect index was used at the named source
-location (:file:`main.adb`, line 10). But the significant addition is the second
+When running the application, we see that the exception information (traceback)
+is the same as before, but this time the exception message is set automatically
+by the compiler. So we know we got a :ada:`Constraint_Error` because an
+incorrect index was used at the named source location
+(:file:`main.adb`, line 10). But the significant addition is the second
 line of the message, which indicates exactly the cause of the error. Here, we
 wanted to get the element at index 3, in an array whose range of valid indexes
 is from 1 to 2. (No need for a debugger in this case.)
