@@ -310,6 +310,171 @@ Let's see a complete example:
     end Show_Exception_Info;
 
 
+Collecting exceptions
+~~~~~~~~~~~~~~~~~~~~~
+
+:ada:`Save_Occurrence`
+^^^^^^^^^^^^^^^^^^^^^^
+
+You can save an exception occurrence using the :ada:`Save_Occurrence` procedure.
+(Note that a :ada:`Save_Occurrence` function exists as well.)
+
+For example, the following application collects exceptions into a list and
+displays them after running the :ada:`Test_Exceptions` procedure:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Save_Occurrence switches=Compiler(-g);
+
+    with Ada.Exceptions; use Ada.Exceptions;
+
+    package Exception_Tests is
+
+       Custom_Exception : exception;
+
+       type Exception_Occurrences is
+         array (Positive range <>) of Exception_Occurrence;
+
+       procedure Test_Exceptions
+         (Occurrences    : in out Exception_Occurrences;
+          Last_Occurence :    out Integer);
+
+    end Exception_Tests;
+
+    package body Exception_Tests is
+
+       procedure Save_To_List (E              :        Exception_Occurrence;
+                               Occurrences    : in out Exception_Occurrences;
+                               Last_Occurence : in out Integer) is
+          L : Integer renames Last_Occurence;
+          O : Exception_Occurrences renames Occurrences;
+       begin
+          L := L + 1;
+          if L > O'Last then
+             raise Constraint_Error with  "Cannot save occurrence";
+          end if;
+
+          Save_Occurrence (Target => O (L),
+                           Source => E);
+       end Save_To_List;
+
+       procedure Test_Exceptions
+         (Occurrences    : in out Exception_Occurrences;
+          Last_Occurence :    out Integer)
+       is
+
+          procedure Nested_1 is
+          begin
+             raise Custom_Exception with "We got a problem";
+          exception
+             when E : others =>
+                Save_To_List (E, Occurrences, Last_Occurence);
+          end Nested_1;
+
+          procedure Nested_2 is
+          begin
+             raise Constraint_Error with "Constraint is not correct";
+          exception
+             when E : others =>
+                Save_To_List (E, Occurrences, Last_Occurence);
+          end Nested_2;
+
+       begin
+          Last_Occurence := 0;
+
+          Nested_1;
+          Nested_2;
+       end Test_Exceptions;
+
+    end Exception_Tests;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Ada.Exceptions; use Ada.Exceptions;
+
+    with Exception_Tests; use Exception_Tests;
+
+    procedure Show_Exception_Info is
+       L : Integer;
+       O : Exception_Occurrences (1 .. 10);
+    begin
+       Test_Exceptions (O, L);
+
+       for I in O 'First .. L loop
+          Put_Line (Exception_Information (O (I)));
+       end loop;
+    end Show_Exception_Info;
+
+In the :ada:`Save_To_List` procedure of the :ada:`Exception_Tests` package, we
+call the :ada:`Save_Occurrence` procedure to store the exception occurence to
+the :ada:`Occurrences` array. In the :ada:`Show_Exception_Info`, we display all
+the exception occurrences that we collected.
+
+:ada:`Read` and :ada:`Write` attributes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Similarly, we can use files to read and write exception occurences. To do that,
+we can simply use the :ada:`'Read` and :ada:`'Write` attributes.
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Exceptions.Exception_Occurrence_Stream
+    :class: ada-run
+
+    with Ada.Text_IO;
+    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+    with Ada.Exceptions;        use Ada.Exceptions;
+
+    procedure Exception_Occurrence_Stream is
+
+       Custom_Exception : exception;
+
+       S : Stream_Access;
+
+       procedure Nested_1 is
+       begin
+          raise Custom_Exception with "We got a problem";
+       exception
+          when E : others =>
+             Exception_Occurrence'Write (S, E);
+       end Nested_1;
+
+       procedure Nested_2 is
+       begin
+          raise Constraint_Error with "Constraint is not correct";
+       exception
+          when E : others =>
+             Exception_Occurrence'Write (S, E);
+       end Nested_2;
+
+       F         : File_Type;
+       File_Name : constant String := "exceptions_file.bin";
+    begin
+       Create (F, Out_File, File_Name);
+       S := Stream (F);
+
+       Nested_1;
+       Nested_2;
+
+       Close (F);
+
+       Read_Exceptions : declare
+          E : Exception_Occurrence;
+       begin
+          Open (F, In_File, File_Name);
+          S := Stream (F);
+
+          while not End_Of_File (F) loop
+             Exception_Occurrence'Read (S, E);
+             Ada.Text_IO.Put_Line (Exception_Information (E));
+          end loop;
+          Close (F);
+       end Read_Exceptions;
+
+    end Exception_Occurrence_Stream;
+
+In this example, we store the exceptions raised in the application in the
+`exceptions_file.bin` file. In the exception part of procedures :ada:`Nested_1`
+and :ada:`Nested_2`, we call :ada:`Exception_Occurrence'Write` to store an
+exception occurence in the file. In the :ada:`Read_Exceptions` block, we read
+the exceptions from the the file by calling :ada:`Exception_Occurrence'Read`.
+
+
 Debugging exceptions in the GNAT toolchain
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
