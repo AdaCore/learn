@@ -248,7 +248,6 @@ exception from package :ada:`A` in package :ada:`B`, that exception will become
 visible in package :ada:`B`. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Renaming_View switches=Compiler(-g,-gnateE);
-    :class: ada-run-expect-failure
 
     package Internal_Exceptions is
 
