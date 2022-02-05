@@ -254,7 +254,7 @@ terminates due to an exception. Let's take an example:
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_1
 
     with Ada.Text_IO;  use Ada.Text_IO;
-    procedure Gem is
+    procedure Show_Out_Uninitialized is
 
        procedure Local (A : in out Integer; Error : Boolean) is
        begin
@@ -272,7 +272,7 @@ terminates due to an exception. Let's take an example:
     exception
        when Program_Error =>
           Put_Line ("Value for B is" & Integer'Image (B));  --  "0"
-    end Gem;
+    end Show_Out_Uninitialized;
 
 This program outputs a value of 0 for :ada:`B`, whereas the code indicates that
 :ada:`A` is assigned before raising the exception, and so the reader might
@@ -294,7 +294,7 @@ GNAT has useful warnings here, so that if we simplify the above code to:
 
     with Ada.Text_IO;  use Ada.Text_IO;
 
-    procedure Gem2 is
+    procedure Show_Out_Uninitialized_Warnings is
 
         procedure Local (A : in out Integer) is
         begin
@@ -309,7 +309,7 @@ GNAT has useful warnings here, so that if we simplify the above code to:
     exception
        when others =>
           Put_Line ("Value for B is" & Integer'Image (B));
-    end Gem2;
+    end Show_Out_Uninitialized_Warnings;
 
 We now get a compilation warning that the pass-by-copy formal may have no
 effect.
@@ -325,7 +325,7 @@ will work as expected, updating the actual parameter despite the exception:
 
     with Ada.Text_IO;  use Ada.Text_IO;
 
-    procedure Gem3 is
+    procedure Show_Out_Initialized_Rec is
 
        type Rec is tagged record
           Field : Integer;
@@ -344,7 +344,7 @@ will work as expected, updating the actual parameter despite the exception:
        Local (V);
     exception
        when others => Put_Line ("Value of Field is" & V.Field'Img); -- "1"
-    end Gem3;
+    end Show_Out_Initialized_Rec;
 
 It's worth mentioning that GNAT provides a pragma called :ada:`Export_Procedure`
 that forces reference semantics on :ada:`out` parameters. Use of this pragma
@@ -357,14 +357,14 @@ call to :ada:`Local`:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_4
 
-    package Gem4_Support is
+    package Exported_Procedures is
 
       procedure Local (A : in out Integer; Error : Boolean);
       pragma Export_Procedure (Local, Mechanism => (A => Reference));
 
-    end Gem4_Support;
+    end Exported_Procedures;
 
-    package body Gem4_Support is
+    package body Exported_Procedures is
 
        procedure Local (A : in out Integer; Error : Boolean) is
        begin A := 1;
@@ -373,18 +373,19 @@ call to :ada:`Local`:
           end if;
        end Local;
 
-    end Gem4_Support;
+    end Exported_Procedures;
 
-    with Ada.Text_IO;  use Ada.Text_IO;
-    with Gem4_Support; use Gem4_Support;
-    procedure Gem4 is
+    with Ada.Text_IO;         use Ada.Text_IO;
+    with Exported_Procedures; use Exported_Procedures;
+
+    procedure Show_Out_Reference is
        B : Integer := 0;
     begin
        Local (B, Error => True);
     exception
        when Program_Error =>
           Put_Line ("Value for B is" & Integer'Image (B)); -- "1"
-    end Gem4;
+    end Show_Out_Reference;
 
 In the case of direct assignments to global variables, the behavior in the
 presence of exceptions is somewhat different. For predefined exceptions, most
