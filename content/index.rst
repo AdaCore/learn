@@ -297,14 +297,6 @@
 
     -------------
 
-    Professional Ada Training
-    ---------------------------
-
-    **Get professional Ada training** from
-    `Adacore <https://www.adacore.com/training>`_.
-
-    -------------
-
     Download Ada and SPARK tools
     ------------------------------
 
@@ -318,6 +310,27 @@
     **Try Ada and SPARK now with GNAT Community edition.**
 
     GNAT Community includes the Ada compiler and toolchain, the SPARK verifier and provers, and the GNAT Studio IDE.
+
+    -------------
+
+    Professional Ada Training
+    ---------------------------
+
+    **Get professional Ada training** from
+    `Adacore <https://www.adacore.com/training>`_.
+
+    .. container:: pro-training-logo
+
+        .. image:: images/pro_ada_training_logo.png
+            :target: https://www.adacore.com/training
+            :alt: Ada training
+            :width: 100pc
+
+    Experience has shown that Ada is an extremely learnable language and that
+    programmers with basic knowledge in other languages can quickly get up to
+    speed with Ada. For programmers who already have some Ada experience,
+    AdaCore offers advanced courses in Ada and GNAT Pro/GNAT Studio designed to
+    help developers get the most out of the technology.
 
     --------------
 

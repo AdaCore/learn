@@ -395,6 +395,16 @@ div {
         margin-bottom: 45px;
     }
 
+    // pro-training logo
+    &.pro-training-logo.docutils.container {
+        float: left;
+        width: 253px;
+        margin-left: 12px;
+        margin-right: 20px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
     // hiding toctree on main page
     &.content-blocks.docutils.container {
         display: none;
