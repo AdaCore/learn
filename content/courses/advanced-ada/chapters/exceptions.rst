@@ -286,36 +286,38 @@ for other types (records, for example), including when passing :ada:`out` and
 of :ada:`A` has been copied back into :ada:`B` (the copy will only happen on a
 normal return).
 
-In general, any code that reads the actual object passed to an :ada:`out` or
-:ada:`in out` parameter after an exception is suspect and should be avoided.
-GNAT has useful warnings here, so that if we simplify the above code to:
+.. admonition:: In the GNAT toolchain
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_2
+    In general, any code that reads the actual object passed to an :ada:`out` or
+    :ada:`in out` parameter after an exception is suspect and should be avoided.
+    GNAT has useful warnings here, so that if we simplify the above code to:
 
-    with Ada.Text_IO;  use Ada.Text_IO;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_2
 
-    procedure Show_Out_Uninitialized_Warnings is
+        with Ada.Text_IO;  use Ada.Text_IO;
 
-        procedure Local (A : in out Integer) is
+        procedure Show_Out_Uninitialized_Warnings is
+
+            procedure Local (A : in out Integer) is
+            begin
+               A := 1;
+               raise Program_Error;
+            end Local;
+
+           B : Integer := 0;
+
         begin
-           A := 1;
-           raise Program_Error;
-        end Local;
+           Local (B);
+        exception
+           when others =>
+              Put_Line ("Value for B is" & Integer'Image (B));
+        end Show_Out_Uninitialized_Warnings;
 
-       B : Integer := 0;
+    We now get a compilation warning that the pass-by-copy formal may have no
+    effect.
 
-    begin
-       Local (B);
-    exception
-       when others =>
-          Put_Line ("Value for B is" & Integer'Image (B));
-    end Show_Out_Uninitialized_Warnings;
-
-We now get a compilation warning that the pass-by-copy formal may have no
-effect.
-
-Of course, GNAT is not able to point out all such errors (see first example
-above), which in general would require full flow analysis.
+    Of course, GNAT is not able to point out all such errors (see first example
+    above), which in general would require full flow analysis.
 
 The behavior is different when using parameter types that the standard mandates
 passing by reference, such as tagged types for instance. So the following code
@@ -346,46 +348,49 @@ will work as expected, updating the actual parameter despite the exception:
        when others => Put_Line ("Value of Field is" & V.Field'Img); -- "1"
     end Show_Out_Initialized_Rec;
 
-It's worth mentioning that GNAT provides a pragma called :ada:`Export_Procedure`
-that forces reference semantics on :ada:`out` parameters. Use of this pragma
-would ensure updates of the actual parameter prior to abnormal completion of the
-procedure. However, this pragma only applies to library-level procedures, so the
-examples above have to be rewritten to avoid the use of a nested procedure, and
-really this pragma is intended mainly for use in interfacing with foreign code.
-The code below shows an example that ensures that :ada:`B` is set to 1 after the
-call to :ada:`Local`:
+.. admonition:: In the GNAT toolchain
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_4
+    It's worth mentioning that GNAT provides a pragma called
+    :ada:`Export_Procedure` that forces reference semantics on :ada:`out`
+    parameters. Use of this pragma would ensure updates of the actual parameter
+    prior to abnormal completion of the procedure. However, this pragma only
+    applies to library-level procedures, so the examples above have to be
+    rewritten to avoid the use of a nested procedure, and really this pragma is
+    intended mainly for use in interfacing with foreign code. The code below
+    shows an example that ensures that :ada:`B` is set to 1 after the call to
+    :ada:`Local`:
 
-    package Exported_Procedures is
+    .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_4
 
-      procedure Local (A : in out Integer; Error : Boolean);
-      pragma Export_Procedure (Local, Mechanism => (A => Reference));
+        package Exported_Procedures is
 
-    end Exported_Procedures;
+          procedure Local (A : in out Integer; Error : Boolean);
+          pragma Export_Procedure (Local, Mechanism => (A => Reference));
 
-    package body Exported_Procedures is
+        end Exported_Procedures;
 
-       procedure Local (A : in out Integer; Error : Boolean) is
-       begin A := 1;
-          if Error then
-             raise Program_Error;
-          end if;
-       end Local;
+        package body Exported_Procedures is
 
-    end Exported_Procedures;
+           procedure Local (A : in out Integer; Error : Boolean) is
+           begin A := 1;
+              if Error then
+                 raise Program_Error;
+              end if;
+           end Local;
 
-    with Ada.Text_IO;         use Ada.Text_IO;
-    with Exported_Procedures; use Exported_Procedures;
+        end Exported_Procedures;
 
-    procedure Show_Out_Reference is
-       B : Integer := 0;
-    begin
-       Local (B, Error => True);
-    exception
-       when Program_Error =>
-          Put_Line ("Value for B is" & Integer'Image (B)); -- "1"
-    end Show_Out_Reference;
+        with Ada.Text_IO;         use Ada.Text_IO;
+        with Exported_Procedures; use Exported_Procedures;
+
+        procedure Show_Out_Reference is
+           B : Integer := 0;
+        begin
+           Local (B, Error => True);
+        exception
+           when Program_Error =>
+              Put_Line ("Value for B is" & Integer'Image (B)); -- "1"
+        end Show_Out_Reference;
 
 In the case of direct assignments to global variables, the behavior in the
 presence of exceptions is somewhat different. For predefined exceptions, most
