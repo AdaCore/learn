@@ -251,7 +251,7 @@ Perhaps surprisingly, the Ada standard indicates cases where objects passed to
 :ada:`out` and :ada:`in out` parameters might not be updated when a procedure
 terminates due to an exception. Let's take an example:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_1
 
     with Ada.Text_IO;  use Ada.Text_IO;
     procedure Gem is
@@ -290,9 +290,10 @@ In general, any code that reads the actual object passed to an :ada:`out` or
 :ada:`in out` parameter after an exception is suspect and should be avoided.
 GNAT has useful warnings here, so that if we simplify the above code to:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_2
 
     with Ada.Text_IO;  use Ada.Text_IO;
+
     procedure Gem2 is
 
         procedure Local (A : in out Integer) is
@@ -310,12 +311,8 @@ GNAT has useful warnings here, so that if we simplify the above code to:
           Put_Line ("Value for B is" & Integer'Image (B));
     end Gem2;
 
-We now get a compilation warning:
-
-.. code-block:: none
-
-    gem.adb:6:10: warning: assignment to pass-by-copy formal may have no effect
-    gem.adb:6:10: warning: "raise" statement may result in abnormal return (RM 6.4.1(17))
+We now get a compilation warning that the pass-by-copy formal may have no
+effect.
 
 Of course, GNAT is not able to point out all such errors (see first example
 above), which in general would require full flow analysis.
@@ -324,7 +321,9 @@ The behavior is different when using parameter types that the standard mandates
 passing by reference, such as tagged types for instance. So the following code
 will work as expected, updating the actual parameter despite the exception:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_3
+
+    with Ada.Text_IO;  use Ada.Text_IO;
 
     procedure Gem3 is
 
@@ -356,7 +355,7 @@ really this pragma is intended mainly for use in interfacing with foreign code.
 The code below shows an example that ensures that :ada:`B` is set to 1 after the
 call to :ada:`Local`:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_4
 
     package Gem4_Support is
 
