@@ -200,6 +200,31 @@ For example, you can activate all policies by writing:
     i.e. they're all set to :ada:`Ignore`. You can use the command-line switch
     :ada:`-gnata` to activate them.
 
+Note that the :ada:`Assert` procedure raises an exception independently of the
+assertion policy (:ada:`Assert`). For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Assert_Procedure_Policy
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Ada.Assertions; use Ada.Assertions;
+
+    procedure Show_Assert_Procedure_Policy is
+       pragma Assertion_Policy (Assert => Ignore);
+
+       I : constant Integer := 1;
+    begin
+       Put_Line ("------ Pragma Assert -----");
+       pragma Assert (I = 0);
+
+       Put_Line ("---- Procedure Assert ----");
+       Assert (I = 0);
+
+       Put_Line ("Finished.");
+    end Show_Assert_Procedure_Policy;
+
+Here, the :ada:`pragma Assert` is ignored due to the assertion policy. However,
+the call to :ada:`Assert` is not ignored.
+
 ..
     REMOVED! TO BE RE-EVALUATED IN 2022:
 
