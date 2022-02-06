@@ -201,7 +201,7 @@ For example, you can activate all policies by writing:
     :ada:`-gnata` to activate them.
 
 Note that the :ada:`Assert` procedure raises an exception independently of the
-assertion policy (:ada:`Assert`). For example:
+assertion policy (:ada:`Assertion_Policy (Assert => Ignore)`). For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Assert_Procedure_Policy
 
