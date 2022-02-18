@@ -320,8 +320,9 @@ normal return).
     above), which in general would require full flow analysis.
 
 The behavior is different when using parameter types that the standard mandates
-passing by reference, such as tagged types for instance. So the following code
-will work as expected, updating the actual parameter despite the exception:
+be passed by reference, such as tagged types for instance. So the following
+code will work as expected, updating the actual parameter despite the
+exception:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_3
 
