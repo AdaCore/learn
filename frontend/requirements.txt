@@ -1,6 +1,6 @@
 Pygments==2.11.2
 Sphinx==4.4.0
-ipython==7.16.2
+ipython==7.16.3
 sphinx_rtd_theme==1.0.0
 sphinx-reredirects==0.0.1
 pydot-ng==2.0.0
