@@ -232,13 +232,14 @@ that raises the exception, as in the following code:
 
     Since Ada 2005, we can use the
     :ada:`raise Constraint_Error with "some message"` syntax.
-    In previous versions of Ada, you had to call the :ada:`Raise_Exception`
-    procedure:
+    In Ada 95, you had to call the :ada:`Raise_Exception` procedure:
 
     .. code-block:: ada
 
         Ada.Exceptions.Raise_Exception         --  Ada 95
           (Constraint_Error'Identity, "some message");
+
+    In Ada 83, there was no way to do it at all.
 
     The new syntax is now very convenient, and developers should be encouraged
     to provide as much information as possible along with the exception.
