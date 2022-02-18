@@ -729,9 +729,173 @@ Out and Uninitialized
     This section was originally written by Robert Dewar and published as
     `Gem #150: Out and Uninitialized <https://www.adacore.com/gems/gem-150out-and-uninitialized>`_
 
-.. todo::
+Perhaps surprisingly, the Ada standard indicates cases where objects passed to
+:ada:`out` and :ada:`in out` parameters might not be updated when a procedure
+terminates due to an exception. Let's take an example:
 
-    Complete section!
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_1
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+    procedure Show_Out_Uninitialized is
+
+       procedure Local (A : in out Integer; Error : Boolean) is
+       begin
+          A := 1;
+
+          if Error then
+             raise Program_Error;
+          end if;
+       end Local;
+
+       B : Integer := 0;
+
+    begin
+       Local (B, Error => True);
+    exception
+       when Program_Error =>
+          Put_Line ("Value for B is" & Integer'Image (B));  --  "0"
+    end Show_Out_Uninitialized;
+
+This program outputs a value of 0 for :ada:`B`, whereas the code indicates that
+:ada:`A` is assigned before raising the exception, and so the reader might
+expect :ada:`B` to also be updated.
+
+The catch, though, is that a compiler must by default pass objects of
+elementary types (scalars and access types) by copy and might choose to do so
+for other types (records, for example), including when passing :ada:`out` and
+:ada:`in out` parameters. So what happens is that while the formal parameter
+:ada:`A` is properly initialized, the exception is raised before the new value
+of :ada:`A` has been copied back into :ada:`B` (the copy will only happen on a
+normal return).
+
+.. admonition:: In the GNAT toolchain
+
+    In general, any code that reads the actual object passed to an :ada:`out` or
+    :ada:`in out` parameter after an exception is suspect and should be avoided.
+    GNAT has useful warnings here, so that if we simplify the above code to:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_2
+
+        with Ada.Text_IO;  use Ada.Text_IO;
+
+        procedure Show_Out_Uninitialized_Warnings is
+
+            procedure Local (A : in out Integer) is
+            begin
+               A := 1;
+               raise Program_Error;
+            end Local;
+
+           B : Integer := 0;
+
+        begin
+           Local (B);
+        exception
+           when others =>
+              Put_Line ("Value for B is" & Integer'Image (B));
+        end Show_Out_Uninitialized_Warnings;
+
+    We now get a compilation warning that the pass-by-copy formal may have no
+    effect.
+
+    Of course, GNAT is not able to point out all such errors (see first example
+    above), which in general would require full flow analysis.
+
+The behavior is different when using parameter types that the standard mandates
+be passed by reference, such as tagged types for instance. So the following
+code will work as expected, updating the actual parameter despite the
+exception:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_3
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    procedure Show_Out_Initialized_Rec is
+
+       type Rec is tagged record
+          Field : Integer;
+       end record;
+
+       procedure Local (A : in out Rec) is
+       begin
+          A.Field := 1;
+          raise Program_Error;
+       end Local;
+
+       V : Rec;
+
+    begin
+       V.Field := 0;
+       Local (V);
+    exception
+       when others => Put_Line ("Value of Field is" & V.Field'Img); -- "1"
+    end Show_Out_Initialized_Rec;
+
+.. admonition:: In the GNAT toolchain
+
+    It's worth mentioning that GNAT provides a pragma called
+    :ada:`Export_Procedure` that forces reference semantics on :ada:`out`
+    parameters. Use of this pragma would ensure updates of the actual parameter
+    prior to abnormal completion of the procedure. However, this pragma only
+    applies to library-level procedures, so the examples above have to be
+    rewritten to avoid the use of a nested procedure, and really this pragma is
+    intended mainly for use in interfacing with foreign code. The code below
+    shows an example that ensures that :ada:`B` is set to 1 after the call to
+    :ada:`Local`:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_4
+
+        package Exported_Procedures is
+
+          procedure Local (A : in out Integer; Error : Boolean);
+          pragma Export_Procedure (Local, Mechanism => (A => Reference));
+
+        end Exported_Procedures;
+
+        package body Exported_Procedures is
+
+           procedure Local (A : in out Integer; Error : Boolean) is
+           begin A := 1;
+              if Error then
+                 raise Program_Error;
+              end if;
+           end Local;
+
+        end Exported_Procedures;
+
+        with Ada.Text_IO;         use Ada.Text_IO;
+        with Exported_Procedures; use Exported_Procedures;
+
+        procedure Show_Out_Reference is
+           B : Integer := 0;
+        begin
+           Local (B, Error => True);
+        exception
+           when Program_Error =>
+              Put_Line ("Value for B is" & Integer'Image (B)); -- "1"
+        end Show_Out_Reference;
+
+In the case of direct assignments to global variables, the behavior in the
+presence of exceptions is somewhat different. For predefined exceptions, most
+notably :ada:`Constraint_Error`, the optimization permissions allow some
+flexibility in whether a global variable is or is not updated when an exception
+occurs (see
+`Ada RM 11.6 <http://www.ada-auth.org/standards/12rm/html/RM-11-6.html>`_). For
+instance, the following code makes an incorrect assumption:
+
+.. code-block:: none
+
+    X := 0;     -- about to try addition
+    Y := Y + 1; -- see if addition raises exception
+    X := 1      -- addition succeeded
+
+A program is not justified in assuming that :ada:`X = 0` if the addition raises
+an exception (assuming :ada:`X` is a global here). So any such assumptions in a
+program are incorrect code which should be fixed.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `11.6 Exceptions and Optimization <http://www.ada-auth.org/standards/12rm/html/RM-11-6.html>`_
 
 
 Suppressing checks
