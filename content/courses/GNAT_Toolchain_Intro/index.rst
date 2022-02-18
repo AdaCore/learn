@@ -6,7 +6,13 @@ Introduction to GNAT Toolchain
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
@@ -22,6 +28,7 @@ Introduction to GNAT Toolchain
         `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+            :width: 108pt
 
 .. container:: content-description
 
@@ -31,16 +38,24 @@ Introduction to GNAT Toolchain
     (GPRbuild) and the integrated development environment (GNAT Studio).
 
     This document was written by Gustavo A. Hoffmann, with contributions and
-    review from Richard Kenner and Bob Duff.
+    review from Richard Kenner and Robert Duff.
 
 .. only:: builder_html
 
-    .. container:: pdf-download
+    .. container:: ebook-download
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
+            <a class="ebook-download-button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
                 Download PDF
+            </a>
+
+            <a class="ebook-download-button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
+                Download EPUB
+            </a>
+
+            <a class="ebook-download-button" href="/mobi_books/courses/GNAT_Toolchain_Intro.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

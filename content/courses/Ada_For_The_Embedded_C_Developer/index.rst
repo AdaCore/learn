@@ -6,7 +6,13 @@ Ada for the Embedded C Developer
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
@@ -22,6 +28,7 @@ Ada for the Embedded C Developer
         `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+            :width: 108pt
 
 .. container:: content-description
 
@@ -42,12 +49,20 @@ Ada for the Embedded C Developer
 
 .. only:: builder_html
 
-    .. container:: pdf-download
+    .. container:: ebook-download
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/Ada_For_The_Embedded_C_Developer.pdf">
+            <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_Embedded_C_Developer.pdf">
                 Download PDF
+            </a>
+
+            <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_Embedded_C_Developer.epub">
+                Download EPUB
+            </a>
+
+            <a class="ebook-download-button" href="/mobi_books/courses/Ada_For_The_Embedded_C_Developer.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

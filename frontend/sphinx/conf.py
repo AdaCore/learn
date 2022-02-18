@@ -61,6 +61,7 @@ author = u'AdaCore' if not config.has_option('', 'author') else \
     config['DEFAULT']['author']
 title = u'Learn Ada (Complete)' if not config.has_option('', 'title') else \
     config['DEFAULT']['title']
+publisher = u'AdaCore'
 
 # Automatic version/release string based on date
 version_date = datetime.date.today().strftime('%Y.%m')
@@ -142,15 +143,24 @@ exclude_patterns = [u'_build',
 
 # Exclude internal and unfinished material from final site build
 if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
-    exclude_patterns += ['**internal/**',
-                         '**courses/intro-to-embedded-sys-prog/**',
-                         '**courses/advanced-ada/**',
-                         '**courses/advanced-spark/**']
-
+    exclude_patterns += ['**internal/**']
 else:
     # When not building final site, `todo` and `todoList` produce output
     todo_include_todos = True
 
+if 'HIDDEN_BOOKS' in os.environ and os.environ['HIDDEN_BOOKS'] != "":
+    hidden_books_file_name = os.environ['HIDDEN_BOOKS']
+
+    f = Path(hidden_books_file_name)
+
+    if f.is_file():
+        with open(hidden_books_file_name, 'r') as hidden_books_file:
+            for hidden_book in hidden_books_file.readlines():
+                exclude_patterns += ["**{}/**".format(hidden_book.strip())]
+    else:
+        print("WARNING: Cannot find file: " + hidden_books_file_name)
+else:
+    tags.add('no_hidden_books')
 
 show_authors = True
 
@@ -308,9 +318,10 @@ if config.has_option('', 'latex_toplevel_sectioning'):
 # -- Options for Epub output ---------------------------------------------------
 
 epub_title = title
-epub_author = author.replace(' \\and', ' and')
-epub_publisher = u'AdaCore'
-epub_copyright = u'2021, AdaCore'
+epub_author = author.replace(r' \\and', ' and')
+epub_publisher = publisher
+epub_copyright = copyright
+epub_description = release_name + " " + release
 
 epub_version = 3.0
 
@@ -327,7 +338,9 @@ epub_theme = '_epub_theme'
 #epub_uid = ''
 
 # A tuple containing the cover image and cover page html template filenames.
-epub_cover = ("_static/cover.jpeg", "epub-cover.html")
+epub_cover = ()
+if config.has_option('', 'cover_page'):
+    epub_cover = ("_static/cover.jpeg", "epub-cover.html")
 
 # HTML files that should be inserted before the pages created by sphinx.
 # The format is a list of tuples containing the path and title.
@@ -346,10 +359,13 @@ epub_exclude_files = ['cover-A4.pdf', '.nojekyll', '_static/favicon.ico',
 
 # The depth of the table of contents in toc.ncx.
 epub_tocdepth = 3
+if config.has_option('', 'epub_tocdepth'):
+    epub_tocdepth = int(config['DEFAULT']['epub_tocdepth'])
 
 # Allow duplicate toc entries.
 epub_tocdup = False
 
+epub_show_urls = 'footnote'
 
 # -- Options for manual page output ------------------------------------------
 

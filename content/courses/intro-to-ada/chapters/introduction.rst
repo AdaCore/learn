@@ -106,7 +106,7 @@ the correctness of your code that is much higher than with a regular
 programming language.
 
 There is a dedicated
-:doc:`course for the SPARK language <courses/intro-to-spark/index>`
+:doc:`course for the SPARK language </courses/intro-to-spark/index>`
 but keep in mind that every time we speak about the specification power of Ada
 during this course, it is power that you can leverage in SPARK to help proving
 the correctness of program properties ranging from absence of run-time errors

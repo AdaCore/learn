@@ -395,21 +395,34 @@ div {
         margin-bottom: 45px;
     }
 
+    // pro-training logo
+    &.pro-training-logo.docutils.container {
+        float: left;
+        width: 253px;
+        margin-left: 12px;
+        margin-right: 20px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
     // hiding toctree on main page
     &.content-blocks.docutils.container {
         display: none;
     }
 }
 
-a.pdf_download_button {
+a.ebook-download-button {
     background-color: #F56F23;
     display: block;
     padding: 10px 15px;
     text-decoration: none;
     color: #FFF;
     font-weight: 600;
-    float: right;
+    float: none;
     font-family: sans-serif;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
 
     &:before {
         font-family: $icon-font;
@@ -418,6 +431,36 @@ a.pdf_download_button {
         content: $download-icon;
         margin-right: 3px;
     }
+}
+
+div.ebook-download {
+    display: block;
+    float: right;
+    border: 5px solid transparent;
+    overflow: hidden;
+}
+
+div.frontpage-ebook-download {
+    float: right;
+}
+
+div.frontpage-ebook-and-buttons-block {
+    margin-right: 20px;
+    display: block;
+    float: left;
+    padding-bottom: 20px;
+    flex-shrink: 0;
+}
+
+div.frontpage-ebooks-row {
+    display: block;
+}
+
+div.frontpage-ebooks {
+    display: block;
+    float: none;
+    border: 5px solid transparent;
+    overflow: hidden;
 }
 
 // download buttons

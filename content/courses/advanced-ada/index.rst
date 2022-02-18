@@ -12,7 +12,13 @@ Advanced Ada
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
@@ -28,12 +34,13 @@ Advanced Ada
         `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+            :width: 108pt
 
 .. container:: content-description
 
     This course will teach you advanced topics of the Ada programming language.
     The
-    `Introduction to Ada <https://learn.adacore.com/courses/intro-to-ada/index.html>`_
+    :doc:`Introduction to Ada </courses/intro-to-ada/index>`
     course is a prerequisite for this course.
 
     This document was written by Gustavo A. Hoffmann and Robert A. Duff, with
@@ -41,14 +48,24 @@ Advanced Ada
     Yannick Moy, Javier Miranda,
     Arnaud Charlet, Franco Gasperoni, and Robert Dewar.
 
+    This document was reviewed by Patrick Rogers and Tucker Taft.
+
 .. only:: builder_html
 
-    .. container:: pdf-download
+    .. container:: ebook-download
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/advanced-ada.pdf">
+            <a class="ebook-download-button" href="/pdf_books/courses/advanced-ada.pdf">
                 Download PDF
+            </a>
+
+            <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
+                Download EPUB
+            </a>
+
+            <a class="ebook-download-button" href="/mobi_books/courses/advanced-ada.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

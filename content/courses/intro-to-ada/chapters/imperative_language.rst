@@ -15,8 +15,8 @@ procedural/imperative language akin to C or Pascal.
     will fail to compile.  This rule supports a useful stylistic principle:
     expressions are intended to deliver values, not to have side effects. It
     can also prevent some programming errors, such as mistakenly using the
-    equality operator "=" instead of the assignment operation ":=" in an
-    assignment statement.
+    equality operator :ada:`=` instead of the assignment operation :ada:`:=` in
+    an assignment statement.
 
 Hello world
 -----------
@@ -128,10 +128,15 @@ Ada's :ada:`if` statement is pretty unsurprising in form and function:
     procedure Check_Positive is
        N : Integer;
     begin
-       Put ("Enter an integer value: ");  -- Put a String
-       Get (N);  --  Read in an integer value
+       --  Put a String
+       Put ("Enter an integer value: ");
+
+       --  Read in an integer value
+       Get (N);
+
        if N > 0 then
-          Put (N);  --  Put an Integer
+          --  Put an Integer
+          Put (N);
           Put_Line (" is a positive number");
        end if;
     end Check_Positive;
@@ -166,9 +171,15 @@ with an :ada:`else` part:
     procedure Check_Positive is
        N : Integer;
     begin
-       Put ("Enter an integer value: ");  -- Put a String
-       Get (N);  --  Reads in an integer value
-       Put (N);  --  Put an Integer
+       --  Put a String
+       Put ("Enter an integer value: ");
+
+       --  Reads in an integer value
+       Get (N);
+
+       --  Put an Integer
+       Put (N);
+
        if N > 0 then
           Put_Line (" is a positive number");
        else
@@ -190,9 +201,10 @@ sections:
     procedure Check_Direction is
        N : Integer;
     begin
-       Put ("Enter an integer value: ");  -- Puts a String
-       Get (N);  --  Reads an Integer
-       Put (N);  --  Puts an Integer
+       Put ("Enter an integer value: ");
+       Get (N);
+       Put (N);
+
        if N = 0 or N = 360 then
           Put_Line (" is due north");
        elsif N in 1 .. 89 then
@@ -248,7 +260,8 @@ discrete range.
     procedure Greet_5a is
     begin
        for I in 1 .. 5 loop
-          Put_Line ("Hello, World!" & Integer'Image (I)); --  Procedure call
+          --  Put_Line is a procedure call
+          Put_Line ("Hello, World!" & Integer'Image (I));
           --        ^ Procedure parameter
        end loop;
     end Greet_5a;
@@ -279,9 +292,10 @@ A few things to note:
    program's perspective it is constant. An attempt to modify its value
    is illegal; the compiler would reject the program.
 
--  Integer'Image is a function that takes an Integer and converts it to a
-   String.  It is an example of a language construct known as an *attribute*,
-   indicated by the :Ada:`'` syntax, which will be covered in more detail later.
+-  :ada:`Integer'Image` is a function that takes an Integer and converts it to
+   a :ada:`String`.  It is an example of a language construct known as an
+   *attribute*, indicated by the :ada:`'` syntax, which will be covered in more
+   detail later.
 
 -  The :ada:`&` symbol is the concatenation operator for String values
 
@@ -297,7 +311,8 @@ To iterate backwards over a range, use the :ada:`reverse` keyword:
     procedure Greet_5a_Reverse is
     begin
        for I in reverse 1 .. 5 loop
-          Put_Line ("Hello, World!" & Integer'Image (I));
+          Put_Line ("Hello, World!"
+                    & Integer'Image (I));
        end loop;
     end Greet_5a_Reverse;
 
@@ -326,7 +341,8 @@ Thus no output is produced in the following example:
     procedure Greet_No_Op is
     begin
        for I in reverse 5 .. 1 loop
-          Put_Line ("Hello, World!" & Integer'Image (I));
+          Put_Line ("Hello, World!"
+                    & Integer'Image (I));
        end loop;
     end Greet_No_Op;
 
@@ -344,17 +360,23 @@ the other kinds of Ada loops.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Greet_5b is
-       I : Integer := 1; -- Variable declaration
+       --  Variable declaration:
+       I : Integer := 1;
        --  ^ Type
        --             ^ Initial value
     begin
        loop
-          Put_Line ("Hello, World!" & Integer'Image (I));
-          exit when I = 5; --  Exit statement
+          Put_Line ("Hello, World!"
+                    & Integer'Image (I));
+
+          --  Exit statement:
+          exit when I = 5;
           --        ^ Boolean condition
 
-          --  Assignment
-          I := I + 1; -- There is no I++ short form to increment a variable
+          --  Assignment:
+          I := I + 1;
+          --  There is no I++ short form to
+          --  increment a variable
        end loop;
     end Greet_5b;
 
@@ -391,10 +413,12 @@ The last kind of loop in Ada is the :ada:`while` loop.
     procedure Greet_5c is
        I : Integer := 1;
     begin
-       --  Condition must be a Boolean value (no Integers).
+       --  Condition must be a Boolean value
+       --  (no Integers).
        --  Operator "<=" returns a Boolean
        while I <= 5 loop
-          Put_Line ("Hello, World!" & Integer'Image (I));
+          Put_Line ("Hello, World!"
+                    & Integer'Image (I));
 
           I := I + 1;
        end loop;
@@ -432,9 +456,10 @@ with an :ada:`if` statement:
        N : Integer;
     begin
        loop
-          Put ("Enter an integer value: ");  -- Puts a String
-          Get (N);  --  Reads an Integer
-          Put (N);  --  Puts an Integer
+          Put ("Enter an integer value: ");
+          Get (N);
+          Put (N);
+
           case N is
              when 0 | 360 =>
                 Put_Line (" is due north");
@@ -460,7 +485,7 @@ with an :ada:`if` statement:
     end Check_Direction;
 
 This program repeatedly prompts for an integer value and then, if the value is
-in the range 0..360, displays the associated quadrant or axis.  If the
+in the range :ada:`0 .. 360`, displays the associated quadrant or axis.  If the
 value is an Integer outside this range, the loop (and the program) terminate
 after outputting a farewell message.
 
@@ -470,8 +495,8 @@ multiple range tests.
 
 Notable points about Ada's case statement:
 
--  The case expression (here the variable N) must be of a discrete type, i.e.
-   either an integer type or an enumeration type.  Discrete types will
+-  The case expression (here the variable :ada:`N`) must be of a discrete type,
+   i.e. either an integer type or an enumeration type.  Discrete types will
    be covered in more detail later
    :ref:`discrete types <WhatIsAType>`.
 
@@ -519,12 +544,14 @@ declarative region and perform an initialization and an addition on it:
        X : Integer;
     begin
        X := 0;
-       Put_Line ("The initial value of X is " & Integer'Image (X));
+       Put_Line ("The initial value of X is "
+                 & Integer'Image (X));
 
        Put_Line ("Performing operation on X...");
        X := X + 1;
 
-       Put_Line ("The value of X now is " & Integer'Image (X));
+       Put_Line ("The value of X now is "
+                 & Integer'Image (X));
     end Main;
 
 Let's look at an example of a nested procedure:
@@ -558,13 +585,14 @@ a block statement:
 
           declare
              Name : String := Get_Line;
-             --               ^ Call to the Get_Line function
+             --               ^ Call to the
+             --                 Get_Line function
           begin
              exit when Name = "";
              Put_Line ("Hi " & Name & "!");
           end;
 
-      --  Name is undefined here
+          --  Name is undefined here
        end loop;
 
       Put_Line ("Bye!");
@@ -572,11 +600,11 @@ a block statement:
 
 .. attention::
 
-    The Get_Line function allows you to receive input from the user, and get
-    the result as a string. It is more or less equivalent to the :c:`scanf`
+    The :ada:`Get_Line` function allows you to receive input from the user, and
+    get the result as a string. It is more or less equivalent to the :c:`scanf`
     C function.
 
-    It returns a String, which, as we will see later, is an
+    It returns a :ada:`String`, which, as we will see later, is an
     :ref:`Unconstrained array type <UnconstrainedArrayTypes>`. For now we
     simply note that, if you wish to declare a :ada:`String` variable and do
     not know its size in advance, then you need to initialize the variable
@@ -602,11 +630,12 @@ statement has been replaced by an :ada:`if` expression:
     procedure Check_Positive is
        N : Integer;
     begin
-       Put ("Enter an integer value: ");  --  Put a String
-       Get (N);  --  Reads in an integer value
-       Put (N);  --  Put an Integer
+       Put ("Enter an integer value: ");
+       Get (N);
+       Put (N);
+
        declare
-          S : String :=
+          S : constant String :=
             (if N > 0 then " is a positive number"
              else " is not a positive number");
        begin

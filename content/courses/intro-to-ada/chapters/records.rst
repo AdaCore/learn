@@ -19,10 +19,13 @@ Here is an example of a simple record declaration:
 .. code-block:: ada
 
     type Date is record
-       --  The following declarations are components of the record
+       --  The following declarations are
+       --  components of the record
        Day   : Integer range 1 .. 31;
        Month : Months;
-       Year  : Integer range 1 .. 3000; --  You can add custom constraints on fields
+       --  You can add custom constraints
+       --  on fields
+       Year  : Integer range 1 .. 3000;
     end record;
 
 Fields look a lot like variable declarations, except that they are inside of a
@@ -50,8 +53,10 @@ Aggregates
 .. code-block:: ada
 
     Ada_Birthday    : Date := (10, December, 1815);
-    Leap_Day_2020   : Date := (Day => 29, Month => February, Year => 2020);
-    --                ^ By name
+    Leap_Day_2020   : Date := (Day   => 29,
+                               Month => February,
+                               Year  => 2020);
+    --                         ^ By name
 
 Records have a convenient notation for expressing values, illustrated above.
 This notation is called aggregate notation, and the literals are called
@@ -85,8 +90,9 @@ Let's look at an example:
     procedure Record_Selection is
 
        type Months is
-         (January, February, March, April, May, June, July,
-          August, September, October, November, December);
+         (January, February, March, April,
+          May, June, July, August, September,
+          October, November, December);
 
        type Date is record
           Day   : Integer range 1 .. 31;
@@ -97,8 +103,10 @@ Let's look at an example:
        procedure Display_Date (D : Date) is
        begin
           Put_Line ("Day:" & Integer'Image (D.Day)
-                    & ", Month: " & Months'Image (D.Month)
-                    & ", Year:" & Integer'Image (D.Year));
+                    & ", Month: "
+                    & Months'Image (D.Month)
+                    & ", Year:"
+                    & Integer'Image (D.Year));
        end Display_Date;
 
        Some_Day : Date := (1, January, 2000);
@@ -150,8 +158,9 @@ Let's look at a complete example:
     package Dates is
 
        type Months is
-         (January, February, March, April, May, June, July,
-          August, September, October, November, December);
+         (January, February, March, April,
+          May, June, July, August, September,
+          October, November, December);
 
        type Date is record
           Day   : Integer range 1 .. 31;
@@ -170,11 +179,13 @@ Let's look at a complete example:
     package body Dates is
 
        procedure Increase_Month (Some_Day : in out Date) is
-          --  Renaming components from the Date record
+          --  Renaming components from
+          --  the Date record
           M : Months  renames Some_Day.Month;
           Y : Integer renames Some_Day.Year;
 
-          --  Renaming function (for Months enumeration)
+          --  Renaming function (for Months
+          --  enumeration)
           function Next (M : Months) return Months
             renames Months'Succ;
        begin
@@ -187,12 +198,15 @@ Let's look at a complete example:
        end Increase_Month;
 
        procedure Display_Month (Some_Day : Date) is
-          --  Renaming components from the Date record
+          --  Renaming components from
+          --  the Date record
           M : Months  renames Some_Day.Month;
           Y : Integer renames Some_Day.Year;
        begin
-          Put_Line ("Month: " & Months'Image (M)
-                    & ", Year:" & Integer'Image (Y));
+          Put_Line ("Month: "
+                    & Months'Image (M)
+                    & ", Year:"
+                    & Integer'Image (Y));
        end Display_Month;
 
     end Dates;

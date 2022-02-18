@@ -18,6 +18,7 @@ TEST_BUILDDIR   = tests/html
 HOST_ADDRESS 	?= localhost
 HOST_PORT    	?= 8000
 
+HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
 
 help:
 	@echo "make test_content  - run the testsuite"
@@ -140,18 +141,20 @@ webpack-staging:
 	yarn run staging
 
 sphinx-production:
+	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
 	CODE_SERVER_URL="https://cloudchecker.learn.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 sphinx-staging:
+	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
-site: cleanall webpack-production sphinx-production test_content pdf_books
+site: cleanall webpack-production sphinx-production test_content all_books complete_site_books
 	@echo Building $@
 
-site-staging: cleanall webpack-staging sphinx-staging test_content pdf_books
+site-staging: cleanall webpack-staging sphinx-staging test_content all_books complete_site_books
 	@echo Building $@
 
 site-testing: cleantest
@@ -159,6 +162,8 @@ site-testing: cleantest
         "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
+
+COMPLETE_SITE_BOOK = learning-ada
 
 PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 
@@ -172,6 +177,21 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 	@mkdir -p $(BUILDDIR)/latex
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
+	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
+
+$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf:
+	@echo Building $@ PDF
+	@rm -rf "$(BUILDDIR)/doctrees"
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
+	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
+	@mkdir -p $(PDF_BOOKS_DIR)
+	@mkdir -p $(BUILDDIR)/latex
+	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
+	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
@@ -179,8 +199,12 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 # Generate list: PDF_BOOKS
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_PDF := $(shell basename $(shell dirname ${book_dir})).pdf) \
-	$(eval PDF_BOOKS += $(PDF_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF)) \
+	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
+	$(eval SPHINX_PDF := $(SPHINX_BOOK).pdf) \
+	$(if $(guile (access? $(HIDDEN_BOOKS) R_OK)), \
+		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+		$(eval HIDDEN_BOOK := 0)) \
+	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval PDF_BOOKS += $(PDF_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF))) \
 	)
 
 pdf_books: $(PDF_BOOKS)
@@ -199,6 +223,22 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	@mkdir -p $(BUILDDIR)/epub/_static
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
+	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
+
+$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub:
+	@echo Building $@
+	@rm -rf "$(BUILDDIR)/doctrees"
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
+	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
+	@mkdir -p $(EPUB_BOOKS_DIR)
+	@rm   -rf $(BUILDDIR)/epub
+	@mkdir -p $(BUILDDIR)/epub/_static
+	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
+	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
@@ -206,36 +246,69 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 # Generate list: EPUB_BOOKS
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_EPUB := $(shell basename $(shell dirname ${book_dir})).epub) \
-	$(eval EPUB_BOOKS += $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB)) \
+	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
+	$(eval SPHINX_EPUB := $(SPHINX_BOOK).epub) \
+	$(if $(guile (access? $(HIDDEN_BOOKS) R_OK)), \
+		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+		$(eval HIDDEN_BOOK := 0)) \
+	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval EPUB_BOOKS += $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB))) \
 	)
 
 epub_books: $(EPUB_BOOKS)
 	@echo $@ completed.
 
-AZW3_BOOKS_DIR := $(BUILDDIR)/azw3_books
+MOBI_BOOKS_DIR := $(BUILDDIR)/mobi_books
 
-$(AZW3_BOOKS_DIR)/%.azw3: $(EPUB_BOOKS_DIR)/%.epub
+$(MOBI_BOOKS_DIR)/%.mobi: $(EPUB_BOOKS_DIR)/%.epub
 	@echo Building $@
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
-	@mkdir -p $(AZW3_BOOKS_DIR)/$(SPHINX_DIR)
+	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
 	@ebook-convert $^ $@ \
 		--expand-css \
 		--keep-ligatures \
 		--filter-css "margin-top,margin-bottom" \
+		--mobi-file-type both \
 		--pretty-print \
 		--prefer-metadata-cover \
 		--minimum-line-height 100 \
 		--extra-css $(MKFILE_DIR)/azw3_style.css \
 		--output-profile kindle
 
+$(MOBI_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).mobi: $(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub
+	@echo Building $@
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
+	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
+	@ebook-convert $^ $@ \
+		--expand-css \
+		--keep-ligatures \
+		--filter-css "margin-top,margin-bottom" \
+		--mobi-file-type both \
+		--pretty-print \
+		--prefer-metadata-cover \
+		--minimum-line-height 100 \
+		--extra-css $(MKFILE_DIR)/azw3_style.css \
+		--output-profile kindle
+
+# Generate list: MOBI_BOOKS
 $(foreach book_dir, $(BOOKS), \
 	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_AZW3 := $(shell basename $(shell dirname ${book_dir})).azw3) \
-	$(eval AZW3_BOOKS += $(AZW3_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_AZW3)) \
+	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
+	$(eval SPHINX_MOBI := $(SPHINX_BOOK).mobi) \
+	$(if $(guile (access? $(HIDDEN_BOOKS) R_OK)), \
+		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+		$(eval HIDDEN_BOOK := 0)) \
+	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval MOBI_BOOKS += $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_MOBI))) \
 	)
 
-azw3_books: $(AZW3_BOOKS)
+mobi_books: $(MOBI_BOOKS)
+	@echo $@ completed.
+
+complete_site_books: 	$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf \
+			$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub \
+			$(MOBI_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).mobi
+	@echo $@ completed.
+
+all_books: pdf_books epub_books mobi_books
 	@echo $@ completed.
 
 cleanall:
@@ -253,5 +326,5 @@ cleantest:
 	$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-.PHONY: Makefile help test_content test_engine pdf_books epub_books \
-	azw3_books $(BOOKS)
+.PHONY: Makefile help test_content test_engine \
+	pdf_books epub_books mobi_books $(BOOKS)

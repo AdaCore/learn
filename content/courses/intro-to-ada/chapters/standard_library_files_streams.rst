@@ -179,7 +179,8 @@ package for floating-point types:
     with Ada.Sequential_IO;
 
     procedure Show_Seq_Float_IO is
-       package Float_IO is new Ada.Sequential_IO (Float);
+       package Float_IO is
+         new Ada.Sequential_IO (Float);
        use Float_IO;
 
        F         : Float_IO.File_Type;
@@ -222,7 +223,8 @@ floating-point value:
        procedure Put_Line (N : Num_Info) is
        begin
           if N.Valid then
-             Ada.Text_IO.Put_Line ("(ok,     " & Float'Image (N.Value) & ")");
+             Ada.Text_IO.Put_Line ("(ok,     "
+                                   & Float'Image (N.Value) & ")");
           else
              Ada.Text_IO.Put_Line ("(not ok,  -----------)");
           end if;
@@ -451,7 +453,8 @@ different lengths and floating-point values:
           SV : String := String'Input (S);
           FV : Float  := Float'Input (S);
        begin
-          Ada.Text_IO.Put_Line (Float'Image (FV) & " --- " & SV);
+          Ada.Text_IO.Put_Line (Float'Image (FV)
+                                & " --- " & SV);
        end Input_Display;
 
     begin

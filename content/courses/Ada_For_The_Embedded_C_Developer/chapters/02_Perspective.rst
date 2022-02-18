@@ -38,7 +38,7 @@ possible throughout this course.
 
 For an introduction to the GNAT Toolchain for the GNAT Community edition, you
 may refer to the
-:doc:`Introduction to GNAT Toolchain <courses/GNAT_Toolchain_Intro/index>`
+:doc:`Introduction to GNAT Toolchain </courses/GNAT_Toolchain_Intro/index>`
 course.
 
 The GNAT Toolchain for Embedded Targets
@@ -384,7 +384,7 @@ This prefix can be omitted if a :ada:`use` clause is employed.
 In contrast to C, the Ada :ada:`with` clause is a *semantic inclusion*
 mechanism rather than a *text inclusion* mechanism; for more information on
 this difference please refer to
-`Packages <https://learn.adacore.com/courses/intro-to-ada/chapters/modular_programming.html>`_ .
+:doc:`Packages </courses/intro-to-ada/chapters/modular_programming>`.
 
 Statements and Declarations
 ----------------------------

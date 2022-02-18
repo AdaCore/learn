@@ -137,7 +137,8 @@ are a few examples:
         - Definite version: :ada:`type T is abstract tagged limited private`
         - Indefinite version: :ada:`type T (<>) is abstract tagged limited private`
 
-Appendix A of the :doc:`Introduction to Ada course <courses/intro-to-ada/chapters/appendices>` provides a detailed list of formal types and their variations.
+Appendix A of the :doc:`Introduction to Ada course </courses/intro-to-ada/chapters/appendices>`
+provides a detailed list of formal types and their variations.
 
 Note that, instead of just using a formal indefinite nonlimited private type,
 we could be more specific about the discriminants that we use for type
@@ -303,7 +304,7 @@ Abstracting definitions into packages
 
 In this section and in the next ones, we will reuse the generic
 reversing algorithm that we discussed in the
-:doc:`chapter about generics <courses/intro-to-ada/chapters/generics>`
+:doc:`chapter about generics </courses/intro-to-ada/chapters/generics>`
 from the introductory course.
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Generics.Reverse_Color
@@ -1648,7 +1649,7 @@ we've just seen above, we also have these approaches:
 
 - Formal subprograms, which we've presented in the introductory course
   (in the
-  :doc:`chapter about generics <courses/intro-to-ada/chapters/generics>`).
+  :doc:`chapter about generics </courses/intro-to-ada/chapters/generics>`).
 
 - Signature packages, which we've discussed in a
   :ref:`previous section <SignaturePackages>`.

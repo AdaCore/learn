@@ -111,7 +111,8 @@ main task will terminate. For example:
        end T;
     begin
        null;
-       --  Will wait here until all tasks have terminated
+       --  Will wait here until all tasks
+       --  have terminated
     end Show_Simple_Sync;
 
 The same mechanism is used for other subprograms that contain subtasks: the
@@ -155,7 +156,8 @@ defined in the package is part of the main task. For example:
     procedure Test_Simple_Sync_Pkg is
     begin
        null;
-       --  Will wait here until all tasks have terminated
+       --  Will wait here until all tasks
+       --  have terminated
     end Test_Simple_Sync_Pkg;
 
 Again, as soon as the main task reaches its end, it synchronizes with task
@@ -228,13 +230,18 @@ example:
 
        task body T is
        begin
-          accept Start; -- Waiting for somebody to call the entry
+          accept Start;
+          --     ^ Waiting for somebody
+          --       to call the entry
+
           Put_Line ("In T");
        end T;
 
     begin
        Put_Line ("In Main");
-       T.Start; --  Calling T's entry
+
+       --  Calling T's entry:
+       T.Start;
     end Show_Rendezvous;
 
 In this example, we declare an entry :ada:`Start` for task :ada:`T`.  In the task
@@ -287,7 +294,9 @@ example:
                 accept Increment do
                    Cnt := Cnt + 1;
                 end Increment;
-                Put_Line ("In T's loop (" & Integer'Image (Cnt) & ")");
+                Put_Line ("In T's loop ("
+                          & Integer'Image (Cnt)
+                          & ")");
              or
                 terminate;
              end select;
@@ -298,12 +307,14 @@ example:
        Put_Line ("In Main");
 
        for I in 1 .. 4 loop
-          T.Increment; --  Calling T's entry multiple times
+          --  Calling T's entry multiple times
+          T.Increment;
        end loop;
 
        T.Reset;
        for I in 1 .. 4 loop
-          T.Increment; --  Calling T's entry multiple times
+          --  Calling T's entry multiple times
+          T.Increment;
        end loop;
 
     end Show_Rendezvous_Loop;
@@ -430,7 +441,8 @@ application:
              Aux.Show_Elapsed_Time;
              Aux.Computational_Intensive_App;
 
-             Put_Line ("Cycle # " & Integer'Image (Cnt));
+             Put_Line ("Cycle # "
+                       & Integer'Image (Cnt));
              Cnt  := Cnt + 1;
           end loop;
           Put_Line ("Finished time-drifting loop");
@@ -459,8 +471,10 @@ and have a regular interval of exactly one second:
        task T;
 
        task body T is
-          Cycle : constant Time_Span := Milliseconds (1000);
-          Next  : Time := Aux.Get_Start_Time + Cycle;
+          Cycle : constant Time_Span :=
+            Milliseconds (1000);
+          Next  : Time := Aux.Get_Start_Time
+                          + Cycle;
 
           Cnt   : Integer := 1;
        begin
@@ -470,11 +484,12 @@ and have a regular interval of exactly one second:
              Aux.Show_Elapsed_Time;
              Aux.Computational_Intensive_App;
 
-             --  Calculate next execution time using a
-             --  cycle of one second
+             --  Calculate next execution time
+             --  using a cycle of one second
              Next := Next + Cycle;
 
-             Put_Line ("Cycle # " & Integer'Image (Cnt));
+             Put_Line ("Cycle # "
+                       & Integer'Image (Cnt));
              Cnt  := Cnt + 1;
           end loop;
           Put_Line ("Finished cycling");
@@ -551,7 +566,8 @@ part. The corresponding implementation of the operations is included in the
 
     begin
        Obj.Set (5);
-       Put_Line ("Number is: " & Integer'Image (Obj.Get));
+       Put_Line ("Number is: "
+                 & Integer'Image (Obj.Get));
     end Show_Protected_Objects;
 
 In this example, we define two operations for :ada:`Obj`: :ada:`Set` and
@@ -607,10 +623,12 @@ operation. It also contains two concurrent subprograms (main task and task
 
           entry Get (V : out Integer)
             when Is_Set is
-             --  Entry is blocked until the condition is true.
-             --  The barrier is evaluated at call of entries and at exits of
-             --  procedures and entries.
-             --  The calling task sleeps until the barrier is released.
+             --  Entry is blocked until the
+             --  condition is true. The barrier
+             --  is evaluated at call of entries
+             --  and at exits of procedures and
+             --  entries. The calling task sleeps
+             --  until the barrier is released.
           begin
              V := Local;
              Is_Set := False;
@@ -724,7 +742,8 @@ example:
           accept Start (N : Integer) do
              Task_N := N;
           end Start;
-          Put_Line ("In task T: " & Integer'Image (Task_N));
+          Put_Line ("In task T: "
+                    & Integer'Image (Task_N));
        end TT;
 
        My_Tasks : array (1 .. 5) of TT;
@@ -781,7 +800,8 @@ We can reuse a previous example and rewrite it to use a protected type:
        Obj : Obj_Type;
     begin
        Obj.Set (5);
-       Put_Line ("Number is: " & Integer'Image (Obj.Get));
+       Put_Line ("Number is: "
+                 & Integer'Image (Obj.Get));
     end Show_Protected_Object_Type;
 
 In this example, instead of directly defining the protected object

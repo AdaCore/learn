@@ -110,10 +110,12 @@ defined in the same scope as the type.
 
     procedure Primitives is
       package Week is
-        type Days is (Monday, Tuesday, Wednesday, Thursday,
-                      Friday, Saturday, Sunday);
+        type Days is (Monday, Tuesday, Wednesday,
+                      Thursday, Friday,
+                      Saturday, Sunday);
 
-         --  Print day is a primitive of the type Days
+         --  Print_Day is a primitive
+         --  of the type Days
         procedure Print_Day (D : Days);
       end Week;
 
@@ -125,10 +127,11 @@ defined in the same scope as the type.
       end Week;
 
       use Week;
-      type Weekend_Days is new Days range Saturday .. Sunday;
+      type Weekend_Days is new
+        Days range Saturday .. Sunday;
 
-      --  A procedure Print_Day is automatically inherited here. It is as if
-      --  the procedure
+      --  A procedure Print_Day is automatically
+      --  inherited here. It is as if the procedure
       --
       --  procedure Print_Day (D : Weekend_Days);
       --
@@ -188,13 +191,16 @@ Let's see our first tagged type declarations:
 
     package P is
        type My_Class is tagged null record;
-       --  Just like a regular record, but with tagged qualifier
+       --  Just like a regular record, but
+       --  with tagged qualifier
 
-       --  Methods are outside of the type definition:
+       --  Methods are outside of the type
+       --  definition:
 
        procedure Foo (Self : in out My_Class);
-       --  If you define a procedure taking a My_Class argument
-       --  in the same package, it will be a method.
+       --  If you define a procedure taking a
+       --  My_Class argument in the same package,
+       --  it will be a method.
 
        --  Here's how you derive a tagged type:
 
@@ -204,8 +210,8 @@ Let's see our first tagged type declarations:
        end record;
 
        overriding procedure Foo (Self : in out Derived);
-       --  The "overriding" qualifier is optional, but if it is present,
-       --  it must be valid.
+       --  The "overriding" qualifier is optional,
+       --  but if it is present, it must be valid.
     end P;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -218,7 +224,8 @@ Let's see our first tagged type declarations:
 
        procedure Foo (Self : in out Derived) is
        begin
-          Put_Line ("In Derived.Foo, A = " & Integer'Image (Self.A));
+          Put_Line ("In Derived.Foo, A = "
+                    & Integer'Image (Self.A));
        end Foo;
     end P;
 
@@ -246,7 +253,8 @@ you need polymorphism. For example, you can't do the following:
        --  Declaring an object of type Derived
 
        O3 : My_Class := O2;
-       --  INVALID: Trying to assign a value of type derived to a variable of
+       --  INVALID: Trying to assign a value
+       --  of type derived to a variable of
        --  type My_Class.
     begin
        null;
@@ -270,9 +278,11 @@ do that:
        --  Declare an object of type Derived
 
        O3 : My_Class'Class := O2;
-       --  Now valid: My_Class'Class designates the classwide type for
-       --  My_Class, which is the set of all types descending from My_Class
-       --  (including My_Class).
+       --  Now valid: My_Class'Class designates
+       --  the classwide type for My_Class,
+       --  which is the set of all types
+       --  descending from My_Class (including
+       --  My_Class).
     begin
        null;
     end Main;
@@ -408,11 +418,13 @@ the dot notation. Any remaining parameter are passed normally:
        package Extend is
           type D2 is new Derived with null record;
 
-          procedure Bar (Self : in out D2; Val : Integer);
+          procedure Bar (Self : in out D2;
+                         Val  :        Integer);
        end Extend;
 
        package body Extend is
-          procedure Bar (Self : in out D2; Val : Integer) is
+          procedure Bar (Self : in out D2;
+                         Val  :        Integer) is
           begin
              Self.A := Self.A + Val;
           end Bar;
@@ -487,10 +499,14 @@ tagged limited private type:
       T1.Init;
       T2.Init;
 
-      --  The following line doesn't work because type T is private:
+      --  The following line doesn't work
+      --  because type T is private:
+      --
       --  T1.E := 0;
 
-      --  The following line doesn't work because type T is limited:
+      --  The following line doesn't work
+      --  because type T is limited:
+      --
       --  T2 := T1;
     end Main;
 
@@ -530,12 +546,14 @@ tagged type :ada:`T` and a derived type :ada:`T_New`:
 
        procedure Show (Dummy : T) is
        begin
-          Put_Line ("Using type " & T'External_Tag);
+          Put_Line ("Using type "
+                    & T'External_Tag);
        end Show;
 
        procedure Show (Dummy : T_New) is
        begin
-          Put_Line ("Using type " & T_New'External_Tag);
+          Put_Line ("Using type "
+                    & T_New'External_Tag);
        end Show;
 
     end P;
@@ -569,7 +587,8 @@ and dispatch according to the actual type of each individual element:
 
     for I in T_Arr'Range loop
        T_Arr (I).Show;
-       --  Call Show procedure according to actual type of T_Arr (I)
+       --  Call Show procedure according
+       --  to actual type of T_Arr (I)
     end loop;
 
 However, it's not possible to declare an array of type :ada:`T'Class` directly:
@@ -581,7 +600,8 @@ However, it's not possible to declare an array of type :ada:`T'Class` directly:
 
     procedure Classwide_Compilation_Error is
       T_Arr  : array (1 .. 2) of T'Class;
-      --                         ^ Compilation Error!
+      --                         ^
+      --               Compilation Error!
     begin
       for I in T_Arr'Range loop
          T_Arr (I).Show;
@@ -635,12 +655,14 @@ type. This is the adapted code:
 
        procedure Show (Dummy : T) is
        begin
-          Put_Line ("Using type " & T'External_Tag);
+          Put_Line ("Using type "
+                    & T'External_Tag);
        end Show;
 
        procedure Show (Dummy : T_New) is
        begin
-          Put_Line ("Using type " & T_New'External_Tag);
+          Put_Line ("Using type "
+                    & T_New'External_Tag);
        end Show;
 
     end P;
@@ -655,7 +677,8 @@ type. This is the adapted code:
       T_Arr (2) := new T_New;
 
       for I in T_Arr'Range loop
-         Put_Line ("Element # " & Integer'Image (I));
+         Put_Line ("Element # "
+                   & Integer'Image (I));
 
          T_Arr (I).Init;
          T_Arr (I).Show;

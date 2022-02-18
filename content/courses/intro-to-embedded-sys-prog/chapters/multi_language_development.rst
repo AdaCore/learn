@@ -7,7 +7,9 @@ Software projects often involve more than one programming language. Typically th
 
 Therefore, Ada includes extensive facilities to "import" foreign entities into Ada code, and to "export" Ada entities to code in foreign languages. The facilities are so useful that Ada has been used purely as "glue code" to allow code written in two other programming languages to be used together.
 
-You're already seen an introduction to Ada and C code working together in the "Interfacing" section of the Ada introductory course, https://learn.adacore.com/courses/intro-to-ada/chapters/interfacing_with_c.html. If you have not seen that material, be sure to see it first. We will cover some further details not already discussed there, and then go into the details of the facilities not covered elsewhere, but we assume you're familiar with it.
+You're already seen an introduction to Ada and C code working together in the
+:doc:`"Interfacing" section of the Ada introductory course </courses/intro-to-ada/chapters/interfacing_with_c>`.
+If you have not seen that material, be sure to see it first. We will cover some further details not already discussed there, and then go into the details of the facilities not covered elsewhere, but we assume you're familiar with it.
 
 The Ada foreign language interfacing facilities include both "general" and "language-specific" capabilities. The "general" facilities are known as such because they are not tied to any specific language. These pragmas and aspects work with any of the supported foreign languages. In contrast, the "language-specific" interfacing facilities are collections of Ada declarations that provide Ada analogues for specific foreign language types and subprograms. For example, as you saw in that "Interfacing" section, there is a package with a number of declarations for C types, such as "int," "float," and "double," as well as C "strings", with subprograms to convert back and forth between them and Ada's string type. Other languages are also supported, both by the Ada Standard and by vendor additions. You will frequently use both the "general" and the "language-specific" facilities together.
 
@@ -33,7 +35,7 @@ For data that are imported or exported, we'll have the declaration of the object
 Aspect/Pragma Convention
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-As you saw in the "Interfacing" section of the Ada introductory course, https://learn.adacore.com/courses/intro-to-ada/chapters/interfacing_with_c.html, when importing and exporting you'll also specify the "convention" for the entity in question. The pragmas for importing and exporting include a parameter for this purpose. When using the aspects, you'll specify the :ada:`Convention` aspect too.
+As you saw in the :doc:`"Interfacing" section of the Ada introductory course </courses/intro-to-ada/chapters/interfacing_with_c>`, when importing and exporting you'll also specify the "convention" for the entity in question. The pragmas for importing and exporting include a parameter for this purpose. When using the aspects, you'll specify the :ada:`Convention` aspect too.
 
 For types, though, you will specify the :ada:`Convention` aspect/pragma alone, without :ada:`Import` or :ada:`Export`. In this case the convention specifies the layout for objects of that type, presumably a layout different than the Ada compiler would normally use. You would need to specify this other layout either because you're going to later declare and export an object of the type, or because you are going to declare an object of the type and pass it as a argument to an imported subprogram.
 
@@ -669,10 +671,10 @@ In GNAT, the content of :ada:`System.Machine_Code` looks something like this:
        Inputs   : Asm_Input_Operand  := No_Input_Operands;
        Clobber  : String  := "";
        Volatile : Boolean := False) return Asm_Insn;
-       
+
 With this package content, the expression in a code statement is of type Asm_Insn, short for "assembly instruction." Multiple overloaded functions named :ada:`Asm` return values of that type.
 
-The :ada:`Template` parameter in a string containing one or more assembly language instructions. These instructions are specific to the target machine. The parameter :ada:`Outputs` provides mappings from registers to source-level entities that are updated by the assembly statement(s). :ada:`Inputs` provides mappings from source-level entities to registers for inputs. :ada:`Volatile`, when True, tells the compiler not to optimize the call away, and :ada:`Clobber` tells the compiler which registers, or memory, if any, are altered by the instructions in :Ada:`Template`. ("Clobber" is colloquial English for "destroy.") That last is important because the compiler was likely already using some of those registers so the compiler will need to restore them after the call.
+The :ada:`Template` parameter in a string containing one or more assembly language instructions. These instructions are specific to the target machine. The parameter :ada:`Outputs` provides mappings from registers to source-level entities that are updated by the assembly statement(s). :ada:`Inputs` provides mappings from source-level entities to registers for inputs. :ada:`Volatile`, when True, tells the compiler not to optimize the call away, and :ada:`Clobber` tells the compiler which registers, or memory, if any, are altered by the instructions in :ada:`Template`. ("Clobber" is colloquial English for "destroy.") That last is important because the compiler was likely already using some of those registers so the compiler will need to restore them after the call.
 
 We could say, for example, the following, taking all the defaults except for :ada:`Volatile`:
 

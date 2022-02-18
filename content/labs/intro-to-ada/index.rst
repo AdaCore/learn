@@ -1,16 +1,22 @@
 :prev_state: False
 :next_state: False
 
-Labs: Introduction to Ada
-=========================
+Introduction to Ada: Laboratories
+=================================
 
 .. include:: ../../courses/global.txt
 
-.. only:: builder_latex
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
-        Copyright © 2019 |ndash| 2020, AdaCore
+        Copyright © 2019 |ndash| 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -22,22 +28,32 @@ Labs: Introduction to Ada
         `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+            :width: 108pt
 
 .. container:: content-description
 
-    These labs contain exercises for the Introduction to Ada course.
+    These labs contain exercises for the
+    :doc:`Introduction to Ada </courses/intro-to-ada/index>` course.
 
     This document was written by Gustavo A. Hoffmann and reviewed by Michael
     Frank.
 
 .. only:: builder_html
 
-    .. container:: pdf-download
+    .. container:: ebook-download
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/labs/intro-to-ada.pdf">
+            <a class="ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
                 Download PDF
+            </a>
+
+            <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
+                Download EPUB
+            </a>
+
+            <a class="ebook-download-button" href="/mobi_books/labs/intro-to-ada.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

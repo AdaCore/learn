@@ -66,6 +66,10 @@ subprograms for it. For example, we could specify an addition operation for it:
        A := A + B;
     end Show_Null_Rec;
 
+.. admonition:: In the Ada Reference Manual
+
+    - `4.3.1 Record Aggregates <http://www.ada-auth.org/standards/12rm/html/RM-4-3-1.html>`_
+
 Simple Prototyping
 ~~~~~~~~~~~~~~~~~~
 
@@ -145,8 +149,8 @@ In the :ada:`Show_Device` procedure |mdash| which is an application
 that implements our prototype |mdash|, we declare an object of :ada:`Device`
 type and call all subprograms associated with that type.
 
-Extending prototype
-~~~~~~~~~~~~~~~~~~~
+Extending the prototype
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Because we're either using expression functions or null procedures in the
 specification of the :ada:`Devices` package, we don't have a package body for
@@ -284,8 +288,8 @@ primitive subprograms to operate on them.
 This example shows that, even though the types we've declared are *just* null
 records, they can still be used to represent dependencies in our application.
 
-Implementing API
-~~~~~~~~~~~~~~~~
+Implementing the API
+~~~~~~~~~~~~~~~~~~~~
 
 Let's focus again on the previous example. After we have an initial prototype,
 we can start implementing some of the functionality needed for the
@@ -441,6 +445,10 @@ type that extends |mdash| adds components to |mdash| some existing type (the
 essential when we want to express an aggregate for an extension of a private
 ancestor type, that is, when we don't have compile-time visibility to the
 ancestor type's components.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.3.2 Extension Aggregates <http://www.ada-auth.org/standards/12rm/html/RM-4-3-2.html>`_
 
 Assignments to objects of derived types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

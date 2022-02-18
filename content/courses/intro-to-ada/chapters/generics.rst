@@ -41,8 +41,9 @@ declares a formal type :ada:`T` for the :ada:`Set` procedure.
 
     generic
        type T is private;
-       --  T is a formal type that indicates that any type can be used,
-       --  possibly a numeric type or possibly even a record type.
+       --  T is a formal type that indicates that
+       --  any type can be used, possibly a numeric
+       --  type or possibly even a record type.
     procedure Set (Dummy : T);
 
     procedure Set (Dummy : T) is
@@ -103,7 +104,8 @@ declaration and use the generic types and objects we declared. For example:
     procedure Set (E : T);
 
     procedure Set (E : T) is
-    --  Body definition: "generic" keyword is not used
+    --  Body definition: "generic" keyword
+    --  is not used
     begin
        X := E;
     end Set;
@@ -138,10 +140,12 @@ shown in the following example:
 
        procedure Set_Main is new Set (T => Integer,
                                       X => Main);
-       --  Here, we map the formal parameters to actual types and objects.
+       --  Here, we map the formal parameters to
+       --  actual types and objects.
        --
-       --  The same approach can be used to instantiate functions or
-       --  packages, e.g.:
+       --  The same approach can be used to
+       --  instantiate functions or packages, e.g.:
+       --
        --  function Get_Main is new ...
        --  package Integer_Queue is new ...
 
@@ -149,7 +153,8 @@ shown in the following example:
        Current := 10;
 
        Set_Main (Current);
-       Put_Line ("Value of Main is " & Integer'Image (Main));
+       Put_Line ("Value of Main is "
+                 & Integer'Image (Main));
     end Show_Generic_Instantiation;
 
 In the example above, we instantiate the procedure :ada:`Set` by mapping the
@@ -232,7 +237,8 @@ Here's an example:
        Put_Line ("Initializing...");
        I.Set (5);
        Display_Initialized;
-       Put_Line ("Value is now set to " & Integer'Image (I.Get));
+       Put_Line ("Value is now set to "
+                 & Integer'Image (I.Get));
 
        Put_Line ("Reseting...");
        I.Reset;
@@ -274,11 +280,13 @@ used by the generic procedure :ada:`Check`.
     begin
        Result := Comparison (X, Y);
        if Result then
-          Put_Line ("Comparison (" & Description &
-                    ") between arguments is OK!");
+          Put_Line ("Comparison ("
+                    & Description
+                    & ") between arguments is OK!");
        else
-          Put_Line ("Comparison (" & Description &
-                    ") between arguments is not OK!");
+          Put_Line ("Comparison ("
+                    & Description
+                    & ") between arguments is not OK!");
        end if;
     end Check;
 
@@ -288,11 +296,13 @@ used by the generic procedure :ada:`Check`.
 
        A, B : Integer;
 
-       procedure Check_Is_Equal is new Check (Description => "equality",
-                                              T           => Integer,
-                                              Comparison  => Standard."=");
-       --  Here, we are mapping the standard equality operator for Integer
-       --  types to the Comparison formal function
+       procedure Check_Is_Equal is new
+         Check (Description => "equality",
+                T           => Integer,
+                Comparison  => Standard."=");
+       --  Here, we are mapping the standard
+       --  equality operator for Integer types to
+       --  the Comparison formal function
     begin
        A := 0;
        B := 1;
@@ -340,7 +350,8 @@ digits after the point, and no exponent.
 
        type Price is digits 3;
 
-       package Price_IO is new Ada.Text_IO.Float_IO (Price);
+       package Price_IO is new
+         Ada.Text_IO.Float_IO (Price);
 
        P : Price;
     begin
@@ -366,7 +377,8 @@ Just as a side note, we could also have written:
 
        type Price is new Float;
 
-       package Price_IO is new Ada.Text_IO.Float_IO (Price);
+       package Price_IO is new
+         Ada.Text_IO.Float_IO (Price);
 
     begin
        Price_IO.Default_Aft  := 2;
@@ -394,7 +406,8 @@ In fact, we could rewrite the example above using decimal types:
 
        type Price is delta 10.0 ** (-2) digits 12;
 
-       package Price_IO is new Ada.Text_IO.Decimal_IO (Price);
+       package Price_IO is new
+         Ada.Text_IO.Decimal_IO (Price);
 
        P : Price;
     begin
@@ -434,11 +447,13 @@ A typical example of an ADT is a stack:
 
        function Pop (S : in out Stack) return T;
 
-       procedure Push (S : in out Stack; V : T);
+       procedure Push (S : in out Stack;
+                       V :        T);
 
     private
 
-       type Stack_Array is array (Natural range <>) of T;
+       type Stack_Array is
+         array (Natural range <>) of T;
 
        Min : constant := 1;
 
@@ -469,7 +484,8 @@ A typical example of an ADT is a stack:
           end if;
        end Pop;
 
-       procedure Push (S : in out Stack; V : T) is
+       procedure Push (S : in out Stack;
+                       V :        T) is
        begin
           if Is_Full (S) then
              raise Stack_Overflow;
@@ -486,8 +502,9 @@ A typical example of an ADT is a stack:
 
     procedure Show_Stack is
 
-       package Integer_Stacks is new Stacks (Max => 10,
-                                             T   => Integer);
+       package Integer_Stacks is new
+         Stacks (Max => 10,
+                 T   => Integer);
        use Integer_Stacks;
 
        Values : Integer_Stacks.Stack;
@@ -496,7 +513,8 @@ A typical example of an ADT is a stack:
        Push (Values, 10);
        Push (Values, 20);
 
-       Put_Line ("Last value was " & Integer'Image (Pop (Values)));
+       Put_Line ("Last value was "
+                 & Integer'Image (Pop (Values)));
     end Show_Stack;
 
 In this example, we first create a generic stack package (:ada:`Stacks`)
@@ -511,7 +529,8 @@ Let's look at a simple procedure that swaps variables of type
 .. code:: ada run_button project=Courses.Intro_To_Ada.Generics.Test_Non_Generic_Swap_Colors
 
     package Colors is
-       type Color is (Black, Red, Green, Blue, White);
+       type Color is (Black, Red, Green,
+                      Blue, White);
 
        procedure Swap_Colors (X, Y : in out Color);
     end Colors;
@@ -537,18 +556,24 @@ Let's look at a simple procedure that swaps variables of type
        B := White;
        C := Red;
 
-       Put_Line ("Value of A is " & Color'Image (A));
-       Put_Line ("Value of B is " & Color'Image (B));
-       Put_Line ("Value of C is " & Color'Image (C));
+       Put_Line ("Value of A is "
+                 & Color'Image (A));
+       Put_Line ("Value of B is "
+                 & Color'Image (B));
+       Put_Line ("Value of C is "
+                 & Color'Image (C));
 
        New_Line;
        Put_Line ("Swapping A and C...");
        New_Line;
        Swap_Colors (A, C);
 
-       Put_Line ("Value of A is " & Color'Image (A));
-       Put_Line ("Value of B is " & Color'Image (B));
-       Put_Line ("Value of C is " & Color'Image (C));
+       Put_Line ("Value of A is "
+                 & Color'Image (A));
+       Put_Line ("Value of B is "
+                 & Color'Image (B));
+       Put_Line ("Value of C is "
+                 & Color'Image (C));
     end Test_Non_Generic_Swap_Colors;
 
 In this example, :ada:`Swap_Colors` can only be used for the :ada:`Color`
@@ -580,9 +605,11 @@ type due to the declaration of formal type :ada:`T`.
 
     package Colors is
 
-       type Color is (Black, Red, Green, Blue, White);
+       type Color is (Black, Red, Green,
+                      Blue, White);
 
-       procedure Swap_Colors is new Generic_Swap (T => Color);
+       procedure Swap_Colors is new
+         Generic_Swap (T => Color);
 
     end Colors;
 
@@ -596,18 +623,24 @@ type due to the declaration of formal type :ada:`T`.
        B := White;
        C := Red;
 
-       Put_Line ("Value of A is " & Color'Image (A));
-       Put_Line ("Value of B is " & Color'Image (B));
-       Put_Line ("Value of C is " & Color'Image (C));
+       Put_Line ("Value of A is "
+                 & Color'Image (A));
+       Put_Line ("Value of B is "
+                 & Color'Image (B));
+       Put_Line ("Value of C is "
+                 & Color'Image (C));
 
        New_Line;
        Put_Line ("Swapping A and C...");
        New_Line;
        Swap_Colors (A, C);
 
-       Put_Line ("Value of A is " & Color'Image (A));
-       Put_Line ("Value of B is " & Color'Image (B));
-       Put_Line ("Value of C is " & Color'Image (C));
+       Put_Line ("Value of A is "
+                 & Color'Image (A));
+       Put_Line ("Value of B is "
+                 & Color'Image (B));
+       Put_Line ("Value of C is "
+                 & Color'Image (C));
     end Test_Swap_Colors;
 
 As we can see in the example, we can create the same :ada:`Swap_Colors`
@@ -629,30 +662,35 @@ type:
 
     package Colors is
 
-       type Color is (Black, Red, Green, Blue, White);
+       type Color is (Black, Red, Green,
+                      Blue, White);
 
-       type Color_Array is array (Integer range <>) of Color;
+       type Color_Array is
+         array (Integer range <>) of Color;
 
-       procedure Reverse_Color_Array (X : in out Color_Array);
+       procedure Reverse_It (X : in out Color_Array);
 
     end Colors;
 
     package body Colors is
 
-       procedure Reverse_Color_Array (X : in out Color_Array) is
+       procedure Reverse_It (X : in out Color_Array) is
        begin
-          for I in X'First .. (X'Last + X'First) / 2 loop
+          for I in X'First ..
+                   (X'Last + X'First) / 2 loop
              declare
                 Tmp     : Color;
-                X_Left  : Color renames X (I);
-                X_Right : Color renames X (X'Last + X'First - I);
+                X_Left  : Color
+                  renames X (I);
+                X_Right : Color
+                  renames X (X'Last + X'First - I);
              begin
                 Tmp     := X_Left;
                 X_Left  := X_Right;
                 X_Right := Tmp;
              end;
           end loop;
-       end Reverse_Color_Array;
+       end Reverse_It;
 
     end Colors;
 
@@ -661,7 +699,8 @@ type:
 
     procedure Test_Non_Generic_Reverse_Colors is
 
-       My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
+       My_Colors : Color_Array (1 .. 5) :=
+         (Black, Red, Green, Blue, White);
 
     begin
        for C of My_Colors loop
@@ -671,7 +710,7 @@ type:
        New_Line;
        Put_Line ("Reversing My_Color...");
        New_Line;
-       Reverse_Color_Array (My_Colors);
+       Reverse_It (My_Colors);
 
        for C of My_Colors loop
           Put_Line ("My_Color: " & Color'Image (C));
@@ -679,7 +718,7 @@ type:
 
     end Test_Non_Generic_Reverse_Colors;
 
-The procedure :ada:`Reverse_Color_Array` takes an array of colors, starts by
+The procedure :ada:`Reverse_It` takes an array of colors, starts by
 swapping the first and last elements of the array, and continues doing that
 with successive elements until it reaches the middle of array. At that
 point, the entire array has been reversed, as we see from the output of the
@@ -701,34 +740,42 @@ This is a generic version of the algorithm:
     generic
        type T is private;
        type Index is range <>;
-       type Array_T is array (Index range <>) of T;
-    procedure Generic_Reverse_Array (X : in out Array_T);
+       type Array_T is
+         array (Index range <>) of T;
+    procedure Generic_Reverse (X : in out Array_T);
 
-    procedure Generic_Reverse_Array (X : in out Array_T) is
+    procedure Generic_Reverse (X : in out Array_T) is
     begin
-       for I in X'First .. (X'Last + X'First) / 2 loop
+       for I in X'First ..
+                (X'Last + X'First) / 2 loop
           declare
              Tmp     : T;
-             X_Left  : T renames X (I);
-             X_Right : T renames X (X'Last + X'First - I);
+             X_Left  : T
+               renames X (I);
+             X_Right : T
+               renames X (X'Last + X'First - I);
           begin
              Tmp     := X_Left;
              X_Left  := X_Right;
              X_Right := Tmp;
           end;
        end loop;
-    end Generic_Reverse_Array;
+    end Generic_Reverse;
 
-    with Generic_Reverse_Array;
+    with Generic_Reverse;
 
     package Colors is
 
-       type Color is (Black, Red, Green, Blue, White);
+       type Color is (Black, Red, Green,
+                      Blue, White);
 
-       type Color_Array is array (Integer range <>) of Color;
+       type Color_Array is
+         array (Integer range <>) of Color;
 
-       procedure Reverse_Color_Array is new Generic_Reverse_Array
-         (T => Color, Index => Integer, Array_T => Color_Array);
+       procedure Reverse_It is new
+         Generic_Reverse (T       => Color,
+                          Index   => Integer,
+                          Array_T => Color_Array);
 
     end Colors;
 
@@ -737,20 +784,23 @@ This is a generic version of the algorithm:
 
     procedure Test_Reverse_Colors is
 
-       My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
+       My_Colors : Color_Array (1 .. 5) :=
+         (Black, Red, Green, Blue, White);
 
     begin
        for C of My_Colors loop
-          Put_Line ("My_Color: " & Color'Image (C));
+          Put_Line ("My_Color: "
+                    & Color'Image (C));
        end loop;
 
        New_Line;
        Put_Line ("Reversing My_Color...");
        New_Line;
-       Reverse_Color_Array (My_Colors);
+       Reverse_It (My_Colors);
 
        for C of My_Colors loop
-          Put_Line ("My_Color: " & Color'Image (C));
+          Put_Line ("My_Color: "
+                    & Color'Image (C));
        end loop;
 
     end Test_Reverse_Colors;
@@ -793,28 +843,33 @@ Here is a version of the test application making use of the generic
     generic
        type T is private;
        type Index is range <>;
-       type Array_T is array (Index range <>) of T;
-    procedure Generic_Reverse_Array (X : in out Array_T);
+       type Array_T is
+         array (Index range <>) of T;
+    procedure Generic_Reverse (X : in out Array_T);
 
-    procedure Generic_Reverse_Array (X : in out Array_T) is
+    procedure Generic_Reverse (X : in out Array_T) is
     begin
-       for I in X'First .. (X'Last + X'First) / 2 loop
+       for I in X'First ..
+                (X'Last + X'First) / 2 loop
           declare
              Tmp     : T;
-             X_Left  : T renames X (I);
-             X_Right : T renames X (X'Last + X'First - I);
+             X_Left  : T
+               renames X (I);
+             X_Right : T
+               renames X (X'Last + X'First - I);
           begin
              Tmp     := X_Left;
              X_Left  := X_Right;
              X_Right := Tmp;
           end;
        end loop;
-    end Generic_Reverse_Array;
+    end Generic_Reverse;
 
     generic
        type T is private;
        type Index is range <>;
-       type Array_T is array (Index range <>) of T;
+       type Array_T is
+         array (Index range <>) of T;
        S : String;
        with function Image (E : T) return String is <>;
        with procedure Test (X : in out Array_T);
@@ -838,16 +893,20 @@ Here is a version of the test application making use of the generic
        end loop;
     end Perform_Test;
 
-    with Generic_Reverse_Array;
+    with Generic_Reverse;
 
     package Colors is
 
-       type Color is (Black, Red, Green, Blue, White);
+       type Color is (Black, Red, Green,
+                      Blue, White);
 
-       type Color_Array is array (Integer range <>) of Color;
+       type Color_Array is
+         array (Integer range <>) of Color;
 
-       procedure Reverse_Color_Array is new Generic_Reverse_Array
-         (T => Color, Index => Integer, Array_T => Color_Array);
+       procedure Reverse_It is new
+         Generic_Reverse (T       => Color,
+                          Index   => Integer,
+                          Array_T => Color_Array);
 
     end Colors;
 
@@ -856,22 +915,23 @@ Here is a version of the test application making use of the generic
 
     procedure Test_Reverse_Colors is
 
-       procedure Perform_Test_Reverse_Color_Array is new
+       procedure Perform_Test_Reverse_It is new
          Perform_Test (T       => Color,
                        Index   => Integer,
                        Array_T => Color_Array,
                        S       => "My_Color",
                        Image   => Color'Image,
-                       Test    => Reverse_Color_Array);
+                       Test    => Reverse_It);
 
-       My_Colors : Color_Array (1 .. 5) := (Black, Red, Green, Blue, White);
+       My_Colors : Color_Array (1 .. 5) :=
+         (Black, Red, Green, Blue, White);
 
     begin
-       Perform_Test_Reverse_Color_Array (My_Colors);
+       Perform_Test_Reverse_It (My_Colors);
     end Test_Reverse_Colors;
 
 In this example, we create the procedure
-:ada:`Perform_Test_Reverse_Color_Array` as an instance of the generic
+:ada:`Perform_Test_Reverse_It` as an instance of the generic
 procedure (:ada:`Perform_Test`). Note that:
 
     - For the formal :ada:`Image` function, we use the :ada:`'Image` attribute

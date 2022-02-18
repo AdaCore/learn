@@ -26,28 +26,40 @@ and the trigonometric functions (e.g., sin, cos). For example:
        X : Float;
     begin
        X := 2.0;
-       Put_Line ("Square root of " & Float'Image (X)
-                 & " is " & Float'Image (Sqrt (X)));
+       Put_Line ("Square root of "
+                 & Float'Image (X)
+                 & " is "
+                 & Float'Image (Sqrt (X)));
 
        X := e;
-       Put_Line ("Natural log of " & Float'Image (X)
-                 & " is " & Float'Image (Log (X)));
+       Put_Line ("Natural log of "
+                 & Float'Image (X)
+                 & " is "
+                 & Float'Image (Log (X)));
 
        X := 10.0 ** 6.0;
-       Put_Line ("Log_10      of " & Float'Image (X)
-                 & " is " & Float'Image (Log (X, 10.0)));
+       Put_Line ("Log_10      of "
+                 & Float'Image (X)
+                 & " is "
+                 & Float'Image (Log (X, 10.0)));
 
        X := 2.0 ** 8.0;
-       Put_Line ("Log_2       of " & Float'Image (X)
-                 & " is " & Float'Image (Log (X, 2.0)));
+       Put_Line ("Log_2       of "
+                 & Float'Image (X)
+                 & " is "
+                 & Float'Image (Log (X, 2.0)));
 
        X := Pi;
-       Put_Line ("Cos         of " & Float'Image (X)
-                 & " is " & Float'Image (Cos (X)));
+       Put_Line ("Cos         of "
+                 & Float'Image (X)
+                 & " is "
+                 & Float'Image (Cos (X)));
 
        X := -1.0;
-       Put_Line ("Arccos      of " & Float'Image (X)
-                 & " is " & Float'Image (Arccos (X)));
+       Put_Line ("Arccos      of "
+                 & Float'Image (X)
+                 & " is "
+                 & Float'Image (Arccos (X)));
     end Show_Elem_Math;
 
 Here we use the standard :ada:`e` and :ada:`Pi` constants from the
@@ -87,8 +99,10 @@ generator :ada:`G`, which you pass to :ada:`Random`. For example:
        Reset (G);
 
        Put_Line ("Some random numbers between "
-                 & Float'Image (Uniformly_Distributed'First) & " and "
-                 & Float'Image (Uniformly_Distributed'Last)  & ":");
+                 & Float'Image (Uniformly_Distributed'First)
+                 & " and "
+                 & Float'Image (Uniformly_Distributed'Last)
+                 & ":");
        for I in 1 .. 15 loop
           X := Random (G);
           Put_Line (Float'Image (X));
@@ -111,7 +125,8 @@ between 1 and 10:
 
        subtype Random_Range is Integer range 1 .. 10;
 
-       package R is new Ada.Numerics.Discrete_Random (Random_Range);
+       package R is new
+         Ada.Numerics.Discrete_Random (Random_Range);
        use R;
 
        G : Generator;
@@ -120,8 +135,11 @@ between 1 and 10:
        Reset (G);
 
        Put_Line ("Some random numbers between "
-                 & Integer'Image (Random_Range'First) & " and "
-                 & Integer'Image (Random_Range'Last)  & ":");
+                 & Integer'Image (Random_Range'First)
+                 & " and "
+                 & Integer'Image (Random_Range'Last)
+                 & ":");
+
        for I in 1 .. 15 loop
           X := Random (G);
           Put_Line (Integer'Image (X));
@@ -161,7 +179,8 @@ variables of the :ada:`Complex` type and initialize them using an aggregate:
 
     procedure Show_Elem_Math is
 
-       package C_IO is new Ada.Text_IO.Complex_IO (Complex_Types);
+       package C_IO is new
+         Ada.Text_IO.Complex_IO (Complex_Types);
        use C_IO;
 
        X, Y  : Complex;
@@ -239,10 +258,12 @@ floating-point types. For example:
        use Complex_Types;
 
        package Elementary_Functions is new
-         Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
+         Ada.Numerics.Generic_Complex_Elementary_Functions
+           (Complex_Types);
        use Elementary_Functions;
 
-       package C_IO is new Ada.Text_IO.Complex_IO (Complex_Types);
+       package C_IO is new Ada.Text_IO.Complex_IO
+         (Complex_Types);
        use C_IO;
 
        X, Y  : Complex;

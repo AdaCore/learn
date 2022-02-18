@@ -103,6 +103,10 @@ information you're processing is in standard English. In case any kind of
 internationalization is needed, using :ada:`Wide_Wide_String` is probably the
 best choice, as it covers all possible use-cases.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `3.6.3 String Types <http://www.ada-auth.org/standards/12rm/html/RM-3-6-3.html>`_
+
 Text I/O
 ~~~~~~~~
 
@@ -170,7 +174,7 @@ Wide and Wide-Wide String Handling
 
 As we've just seen, we have different versions of the :ada:`Ada.Text_IO`
 package. The same applies to string handling packages. As we've seen in the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/standard_library_strings>`,
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/standard_library_strings>`,
 we can use the :ada:`Ada.Strings.Fixed` and :ada:`Ada.Strings.Maps` packages
 for string handling. For other formats, we have these packages:
 
@@ -180,7 +184,7 @@ for string handling. For other formats, we have these packages:
 - :ada:`Ada.Strings.Wide_Wide_Maps`.
 
 Let's look at this example from the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/standard_library_strings>`,
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/standard_library_strings>`,
 which we adapted for wide-wide strings:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Wide_String_Handling
@@ -232,7 +236,7 @@ Bounded and Unbounded Wide and Wide-Wide Strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We've seen in the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/standard_library_strings>`
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/standard_library_strings>`
 that other kinds of :ada:`String` types are available. For example, we can
 use bounded and unbounded strings |mdash| those correspond to the
 :ada:`Bounded_String` and :ada:`Unbounded_String` types.
@@ -304,6 +308,10 @@ systems other than the Latin alphabet. It defines a format called
 in various versions, which vary
 according to the underlying precision, support for backwards-compatibility
 and other requirements.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `A.4.11 String Encoding <http://www.ada-auth.org/standards/12rm/html/RM-A-4-11.html>`_
 
 UTF-8 encoding and decoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

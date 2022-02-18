@@ -104,7 +104,7 @@ Debug information
 Before you can debug a project, you need to make sure that debugging
 symbols have been included in the binary build. You can do this by
 manually adding a debug version into your project, as described in the
-previous chapter (see :doc:`gprbuild`).
+previous chapter (see :doc:`./gprbuild`).
 
 Alternatively, you can change the project properties directly in
 :program:`GNAT Studio`. In order to do that, click on ``Edit`` |srarr|

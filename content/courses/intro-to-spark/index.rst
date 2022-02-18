@@ -1,16 +1,22 @@
 :prev_state: False
 :next_state: False
 
-Intro To SPARK
-===============
+Introduction To SPARK
+=====================
 
 .. include:: ../global.txt
 
-.. only:: builder_latex
+.. only:: builder_epub
+
+    Release |release|
+
+    |today|
+
+.. only:: builder_latex or builder_epub
 
     .. container:: content-copyright
 
-        Copyright © 2018 |ndash| 2020, AdaCore
+        Copyright © 2018 |ndash| 2021, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -22,6 +28,7 @@ Intro To SPARK
         `on this page <http://creativecommons.org/licenses/by-sa/4.0>`_
 
         .. image:: ../../images/ccheart_black.png
+            :width: 108pt
 
 .. container:: content-description
 
@@ -34,12 +41,20 @@ Intro To SPARK
 
 .. only:: builder_html
 
-    .. container:: pdf-download
+    .. container:: ebook-download
 
         .. raw:: html
 
-            <a class="pdf_download_button" href="/pdf_books/courses/intro-to-spark.pdf">
+            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-spark.pdf">
                 Download PDF
+            </a>
+
+            <a class="ebook-download-button" href="/epub_books/courses/intro-to-spark.epub">
+                Download EPUB
+            </a>
+
+            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-spark.mobi">
+                Download MOBI
             </a>
 
 .. toctree::

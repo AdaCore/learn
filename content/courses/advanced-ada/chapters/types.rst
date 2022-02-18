@@ -47,9 +47,13 @@ string type. The following table presents the main attributes for scalar types:
 +------------+-----------------+----------------------------------------------+
 
 We already discussed most of these attributes in the
-:doc:`Introduction to Ada course <courses/intro-to-ada/index>`. In this
+:doc:`Introduction to Ada course </courses/intro-to-ada/index>`. In this
 section, we'll discuss some aspects that have been left out of the previous
 course.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.5 Scalar types <http://www.ada-auth.org/standards/12rm/html/RM-3-5.html>`_
 
 Ranges
 ~~~~~~
@@ -503,9 +507,13 @@ Enumerations
 ------------
 
 We've introduced enumerations back in the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/strongly_typed_language>`.
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/strongly_typed_language>`.
 In this section, we'll discuss a few useful features of enumerations, such as
 enumeration renaming, enumeration overloading and representation clauses.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.5.1 Enumeration Types <http://www.ada-auth.org/standards/12rm/html/RM-3-5-1.html>`_
 
 Enumerations as functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -914,7 +922,7 @@ Definite and Indefinite Subtypes
 --------------------------------
 
 Indefinite types were mentioned back in the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/more_about_types>`.
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/more_about_types>`.
 In this section, we'll recapitulate and extend on both definite and indefinite
 types.
 
@@ -1584,7 +1592,7 @@ Default initial values
 ----------------------
 
 In the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/records>`,
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/records>`,
 we've seen that record components can have default values. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_1
@@ -1818,6 +1826,10 @@ expression function:
 Here, we call the :ada:`Calculate_Light` function |mdash| declared in the
 private part of the :ada:`Deferred_Constants` package |mdash| for the full
 declaration of the :ada:`Light` constant.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `7.4 Deferred Constants <http://www.ada-auth.org/standards/12rm/html/RM-7-4.html>`_
 
 
 User-defined literals
@@ -2168,6 +2180,10 @@ show that this approach is useful for more complex types where a string literal
 literals let you design types in ways that, otherwise, would only be possible
 when using a preprocessor or a domain-specific language.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `4.2.1 User-Defined Literals <http://www.ada-auth.org/standards/12rm/html/RM-4-2-1.html>`_
+
 
 Data Representation
 -------------------
@@ -2184,7 +2200,13 @@ To read a thorough overview on this topic, please refer to the
 
     Add link once available:
 
-    ``Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/low_level_programming>``
+    ``Introduction to Embedded Systems Programming </courses/intro-to-embedded-sys-prog/low_level_programming>``
+
+.. admonition:: In the Ada Reference Manual
+
+    - `13.2 Packed Types <http://www.ada-auth.org/standards/12rm/html/RM-13-2.html>`_
+    - `13.3 Operational and Representation Attributes <http://www.ada-auth.org/standards/12rm/html/RM-13-3.html>`_
+    - `13.5.3 Bit Ordering <http://www.ada-auth.org/standards/12rm/html/RM-13-5-3.html>`_
 
 Sizes
 ~~~~~
@@ -3130,6 +3152,10 @@ position #3. However, when specifying the last bit in Ada, we always use the
 end up. Therefore, we write :ada:`range 0 .. 31`, well knowing that those 32
 bits span over four storage units (positions #0 .. #3).
 
+.. admonition:: In the Ada Reference Manual
+
+    - `13.5.1 Record Representation Clauses <http://www.ada-auth.org/standards/12rm/html/RM-13-5-1.html>`_
+
 Storage Place Attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3207,6 +3233,10 @@ be explained by those two 32-bit integer components. Then, we see that
 components :ada:`A` and :ada:`B` start at positions #0 and #4, and each one
 makes use of bits in the range from #0 to #31. This matches the graph we've
 seen above.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `13.5.2 Storage Place Attributes <http://www.ada-auth.org/standards/12rm/html/RM-13-5-2.html>`_
 
 Using Representation Clauses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3932,11 +3962,15 @@ happen, for example, after reading the integer value 3 from the input file.
 In summary, using the :ada:`Valid` attribute is a good strategy we can employ
 when we know that information stored in memory might be corrupted.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `13.9.2 The Valid Attribute <http://www.ada-auth.org/standards/12rm/html/RM-13-9-2.html>`_
+
 Unchecked Union
 ---------------
 
 We've introduced variant records back in the
-:doc:`Introduction to Ada course <courses/intro-to-ada/chapters/more_about_types>`.
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/more_about_types>`.
 In simple terms, a variant record is a record with discriminants that allows
 for changing its structure. Basically, it's a record containing a :ada:`case`.
 
@@ -4171,11 +4205,19 @@ majority of the cases, you don't need it at all |mdash| except for special
 cases such as when interfacing with C code that makes use of union types or
 solving very specific problems when doing low-level programming.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `B.3.3 Unchecked Union Types <http://www.ada-auth.org/standards/12rm/html/RM-B-3-3.html>`_
+
 Shared variable control
 -----------------------
 
 Ada has built-in support for handling both volatile and atomic data. Let's
 start by discussing volatile objects.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `C.6 Shared Variable Control <http://www.ada-auth.org/standards/12rm/html/RM-C-6.html>`_
 
 Volatile
 ~~~~~~~~
