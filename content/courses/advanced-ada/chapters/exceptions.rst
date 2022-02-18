@@ -204,6 +204,7 @@ Note that the :ada:`Assert` procedure raises an exception independently of the
 assertion policy (:ada:`Assertion_Policy (Assert => Ignore)`). For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Assert_Procedure_Policy
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Ada.Assertions; use Ada.Assertions;
