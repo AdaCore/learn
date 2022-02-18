@@ -230,13 +230,62 @@ For example, you can activate all policies by writing:
 Exception renaming
 ------------------
 
-.. admonition:: Relevant topics
+We can rename exceptions by using the an exception renaming declaration in this
+form :ada:`Renamed_Exception : exception renames Existing_Exception;`. For
+example:
 
-    - `Exception Renaming Declarations <http://www.ada-auth.org/standards/2xrm/html/RM-8-5-2.html>`_
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Renaming
+    :class: ada-run-expect-failure
 
-.. todo::
+    procedure Show_Exception_Renaming is
+       CE : exception renames Constraint_Error;
+    begin
+       raise CE;
+    end Show_Exception_Renaming;
 
-    Complete section!
+Exception renaming creates a new view of the original exception. If we rename an
+exception from package :ada:`A` in package :ada:`B`, that exception will become
+visible in package :ada:`B`. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Renaming_View switches=Compiler(-g,-gnateE);
+
+    package Internal_Exceptions is
+
+       Int_E : exception;
+
+    end Internal_Exceptions;
+
+    with Internal_Exceptions;
+
+    package Test_Constraints is
+
+       Ext_E : exception renames Internal_Exceptions.Int_E;
+
+    end Test_Constraints;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Ada.Exceptions; use Ada.Exceptions;
+
+    with Test_Constraints; use Test_Constraints;
+
+    procedure Show_Exception_Renaming_View is
+    begin
+       raise Ext_E;
+    exception
+       when E : others =>
+          Put_Line (Ada.Exceptions.Exception_Information (E));
+    end Show_Exception_Renaming_View;
+
+Here, we're renaming the :ada:`Int_E` exception in the :ada:`Test_Constraints`
+package. The :ada:`Int_E` exception isn't directly visible in the
+:ada:`Show_Exception_Renaming` procedure because we're not :ada:`with`\ing the
+:ada:`Internal_Exceptions` package. However, it is indirectly visible
+in that procedure via the renaming (:ada:`Ext_E`) in the :ada:`Test_Constraints`
+package.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `8.5.2 Exception Renaming Declarations <http://www.ada-auth.org/standards/12rm/html/RM-8-5-2.html>`_
 
 
 Out and Uninitialized
