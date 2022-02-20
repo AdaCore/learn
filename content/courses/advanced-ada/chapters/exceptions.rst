@@ -902,6 +902,144 @@ program are incorrect code which should be fixed.
 Suppressing checks
 ------------------
 
+:ada:`pragma Suppress`
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+    This section was originally written by Gary Dismukes and published as
+    `Gem #63: The Effect of Pragma Suppress <https://www.adacore.com/gems/gem-63>`_.
+
+One of Ada's key strengths has always been its strong typing. The language
+imposes stringent checking of type and subtype properties to help prevent
+accidental violations of the type system that are a common source of program
+bugs in other less-strict languages such as C. This is done using a combination
+of compile-time restrictions (legality rules), that prohibit mixing values of
+different types, together with run-time checks to catch violations of various
+dynamic properties. Examples are checking values against subtype constraints
+and preventing dereferences of null access values.
+
+At the same time, Ada does provide certain "loophole" features, such as
+:ada:`Unchecked_Conversion`, that allow selective bypassing of the normal
+safety features, which is sometimes necessary when interfacing with hardware or
+code written in other languages.
+
+Ada also permits explicit suppression of the run-time checks that are there to
+ensure that various properties of objects are not violated. This suppression
+can be done using :ada:`pragma Suppress`, as well as by using a compile-time
+switch on most implementations |mdash| in the case of GNAT, with the ``-gnatp``
+switch.
+
+In addition to allowing all checks to be suppressed, :ada:`pragma Suppress`
+supports suppression of specific forms of check, such as :ada:`Index_Check` for
+array indexing, :ada:`Range_Check` for scalar bounds checking, and
+:ada:`Access_Check` for dereferencing of access values. (See section 11.5 of
+the Ada Reference Manual for further details.)
+
+Here's a simple example of suppressing index checks within a specific
+subprogram:
+
+.. code-block:: ada
+
+   procedure Main is
+      procedure Sort_Array (A : in out Some_Array) is
+         pragma Suppress (Index_Check);  -- eliminate check overhead
+      begin
+        ...
+      end Sort_Array;
+   end Main;
+
+Unlike a feature such as :ada:`Unchecked_Conversion`, however, the purpose of
+check suppression is not to enable programs to subvert the type system, though
+many programmers seem to have that misconception.
+
+What's important to understand about :ada:`pragma Suppress` is that it only
+gives permission to the implementation to remove checks, but doesn't require
+such elimination. The intention of :ada:`Suppress` is not to allow bypassing of
+Ada semantics, but rather to improve efficiency, and the Ada Reference Manual
+has a clear statement to that effect in the note in RM-11.5, paragraph 29:
+
+    There is no guarantee that a suppressed check is actually removed; hence a
+    :ada:`pragma Suppress` should be used only for efficiency reasons.
+
+There is associated Implementation Advice that recommends that implementations
+should minimize the code executed for checks that have been suppressed, but
+it's still the responsibility of the programmer to ensure that the correct
+functioning of the program doesn't depend on checks not being performed.
+
+There are various reasons why a compiler might choose not to remove a check. On
+some hardware, certain checks may be essentially free, such as null pointer
+checks or arithmetic overflow, and it might be impractical or add extra cost to
+suppress the check. Another example where it wouldn't make sense to remove
+checks is for an operation implemented by a call to a run-time routine, where
+the check might be only a small part of a more expensive operation done out of
+line.
+
+Furthermore, in many cases GNAT can determine at compile time that a given
+run-time check is guaranteed to be violated. In such situations, it gives a
+warning that an exception will be raised, and generates code specifically to
+raise the exception. Here's an example:
+
+.. code-block:: ada
+
+    X : Integer range 1..10 := ...;
+
+    ..
+
+    if A > B then
+       X := X + 1;
+      ..
+    end if;
+
+For the assignment incrementing :ada:`X`, the compiler will normally generate
+machine code equivalent to:
+
+.. code-block:: ada
+
+    Temp := X + 1;
+    if Temp > 10 then
+       raise Constraint_Error;
+    end if;
+    X := Temp;
+
+If range checks are suppressed, then the compiler can just generate the
+increment and assignment. However, if the compiler is able to somehow prove
+that :ada:`X = 10` at this point, it will issue a warning, and replace the
+entire assignment with simply:
+
+.. code-block:: ada
+
+    raise Constraint_Error;
+
+even though checks are suppressed. This is appropriate, because
+
+    1. we don't care about the efficiency of buggy code, and
+
+    2. there is no "extra" cost to the check, because if we reach that point,
+       the code will unconditionally fail.
+
+One other important thing to note about checks and :ada:`pragma Suppress` is
+this statement in the Ada RM (RM-11.5, paragraph 26):
+
+    If a given check has been suppressed, and the corresponding error situation
+    occurs, the execution of the program is erroneous.
+
+In Ada, erroneous execution is a bad situation to be in, because it means that
+the execution of your program could have arbitrary nasty effects, such as
+unintended overwriting of memory. Note also that a program whose "correct"
+execution somehow depends on a given check being suppressed might work as the
+programmer expects, but could still fail when compiled with a different
+compiler, or for a different target, or even with a newer version of the same
+compiler. Other changes such as switching on optimization or making a change to
+a totally unrelated part of the code could also cause the code to start
+failing.
+
+So it's definitely not wise to write code that relies on checks being removed.
+In fact, it really only makes sense to suppress checks once there's good reason
+to believe that the checks can't fail, as a result of testing or other
+analysis. Otherwise, you're removing an important safety feature of Ada that's
+intended to help catch bugs.
+
 .. admonition:: In the Ada Reference Manual
 
     - `11.5 Suppressing Checks <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_
