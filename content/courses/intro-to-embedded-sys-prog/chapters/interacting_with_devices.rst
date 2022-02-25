@@ -31,7 +31,7 @@ are an active hindrance.
 For example, what do you think the following code does? This is real
 code, where :c:`temp` and :c:`temp2` are unsigned 32-bit integers:
 
-..code-block:: C
+.. code-block:: c
 
    temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
    GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
@@ -75,7 +75,7 @@ that GPIO pin configuration code block again. Instead of writing that
 block every time we need to configure the alternate function for a pin,
 suppose we called a function:
 
-..code-block:: C
+.. code-block:: c
 
    GPIO_PinAFConfig(USARTx_TX_GPIO_PORT, USARTx_TX_SOURCE, USARTx_TX_AF);
 
@@ -131,7 +131,7 @@ Obsolescent constructs are still part of the standard.
 If a given target machine has such I/O instructions for the device bus,
 these can be invoked in Ada via machine-code insertions. For example:
 
-..code-block:: ada
+.. code-block:: ada
 
    procedure Send_Control (Device : Port;  Data : Unsigned_16) is
       pragma Suppress (All_Checks);
@@ -356,7 +356,7 @@ readable, therefore maintainable, code. The fact that the code is in C
 is irrelevant; the same approach in Ada would not be any better. Here's
 the complete code for the function body:
 
-..code-block:: C
+.. code-block:: c
 
    void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO_AF)
    {
@@ -495,7 +495,7 @@ layout of the STM32 GPIO Port memory-mapped device.
 Let's compare the two procedure implementations again. Here they are, for
 convenience:
 
-..code-block:: C
+.. code-block:: c
 
    void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO_AF)
    {
@@ -513,7 +513,7 @@ convenience:
      GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
    }
 
-..code-block:: Ada
+.. code-block:: ada
 
    procedure Configure_Alternate_Function
      (Port : in out GPIO_Port;
@@ -649,14 +649,14 @@ Here's a simple concrete example to illustrate the approach. Suppose we
 want to have a utility to swap the two bytes at any arbitrary address.
 Here's the declaration:
 
-..code-block:: Ada
+.. code-block:: ada
 
    procedure Swap2 (Location : System.Address);
 
 Callers pass the address of an object intended to have its (first) two
 bytes swapped:
 
-..code-block:: Ada
+.. code-block:: ada
 
    Swap2 (Z'Address);
 
@@ -666,7 +666,7 @@ only care about swapping the first two bytes.
 
 The incomplete implementation using the conversion idiom could be like so:
 
-..code-block:: Ada
+.. code-block:: ada
 
    procedure Swap2 (Location : System.Address) is
       X : Word renames To_Pointer(Location).all;
@@ -694,7 +694,7 @@ is only evaluated once.
 
 Now for the rest of the implementation not shown earlier.
 
-..code-block:: Ada
+.. code-block:: ada
 
    type Word is new Interfaces.Unsigned_16;
 
@@ -706,7 +706,7 @@ generic package that provides just two functions: one to convert an
 address value to an access type, and one to convert in the opposite
 direction:
 
-..code-block:: Ada
+.. code-block:: ada
 
    generic
       type Object (<>) is limited private;
@@ -744,7 +744,7 @@ particular :ada:`To_Pointer`.
 
 Let's look at the code again, this time with the additional declarations:
 
-..code-block:: Ada
+.. code-block:: ada
 
    type Word is new Interfaces.Unsigned_16;
 
@@ -801,7 +801,7 @@ To at least warn users of the possibility of this problem, the GNAT
 implementation of :ada:`System.Address_To_Access_Conversions` includes
 the following:
 
-..code-block:: Ada
+.. code-block:: ada
 
      pragma Compile_Time_Warning
         (Object'Unconstrained_Array,
@@ -849,7 +849,7 @@ Here's an example illustrating the facilities. The procedure defines an
 array of record values, then walks the array, printing the array
 components as it goes. It is not the way to really write this code.
 
-..code-block:: Ada
+.. code-block:: ada
 
    with Ada.Text_IO;               use Ada.Text_IO;
    with System.Storage_Elements;   use System.Storage_Elements;
@@ -1022,7 +1022,7 @@ happens to be on this machine). We cannot make each Boolean component
 occupy one bit within a given byte if we want them to be independently
 accessed.
 
-..code-block:: Ada
+.. code-block:: ada
 
    package P is
 
@@ -1058,7 +1058,7 @@ device |mdash| then we have more flexibility. We could, for example,
 require that objects of the entire record type be independently
 accessible. To do so, we can apply the aspect to the entire type:
 
-..code-block:: Ada
+.. code-block:: ada
 
    package Q is
 
@@ -1094,7 +1094,7 @@ the :ada:`Access` attribute? For example, given the record type :ada:`R`
 above, and some object :ada:`Foo` of that type, suppose we want to say
 :ada:`Foo.B0'Access`? We'd need to mark the component as :ada:`aliased`:
 
-..code-block:: Ada
+.. code-block:: ada
 
    package QQ is
 
@@ -1192,7 +1192,7 @@ For example, suppose you have a program that writes a value to some
 variable and also writes the string literal "42" to a file. That's is
 absolutely all that the program contains.
 
-..code-block:: Ada
+.. code-block:: ada
 
    with Ada.Text_IO;  use Ada.Text_IO;
 
@@ -1226,7 +1226,7 @@ cannot generate any additional loads or stores to that variable, and it
 cannot reorder loads or stores from their order in the source code.
 "What You See Is What You Get" in other words.
 
-..code-block:: Ada
+.. code-block:: ada
 
    with Ada.Text_IO;  use Ada.Text_IO;
 
