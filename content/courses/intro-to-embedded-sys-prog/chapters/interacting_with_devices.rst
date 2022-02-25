@@ -158,7 +158,7 @@ can't do that any more in application code because modern operating
 systems don't give applications direct access to the hardware, at least
 not by default.)
 
-Although the Low_Level_IO package is no longer part of the language, you
+Although the :ada:`Low_Level_IO` package is no longer part of the language, you
 can write this sort of thing yourself, or vendors can do it. That's
 possible because the Systems Programming Annex, when implemented,
 guarantees fully effective use of machine-code inserts. That means you
@@ -235,7 +235,7 @@ things, and a way to convert those integer values to :ada:`Address`
 values. The function :ada:`To_Address` does that conversion.
 
 As a result, in the Ada code, reading the value of the variable
-Rotary_Switch reads the number on the actual hardware switch.
+:ada:`Rotary_Switch` reads the number on the actual hardware switch.
 
 Note that if you specify the wrong address, it is hard to say what
 happens. Likewise, it is an error for an address clause to disobey the
@@ -251,7 +251,7 @@ What about writing to the variable? Is that meaningful? In this
 particular rotary switch case, no. It is effectively read-only memory.
 But for some other device it very well could be meaningful, certainly.
 It depends on the hardware. But in this case, assigning a value to the
-Rotary_Switch variable would have no effect, which could be confusing to
+:ada:`Rotary_Switch` variable would have no effect, which could be confusing to
 programmers. It looks like a variable, after all. We wouldn't declare it
 as a constant because the human user could rotate the switch, resulting
 in a different value read. Therefore, we would hid the Ada variable
@@ -307,8 +307,8 @@ that are distinguished by their return type.
    end STM32.Device_Id;
 
 The subtype :ada:`Device_Id_Image` is the view of the 96-bits as an
-array of twelve characters. (Using type String here isn't essential. We
-could have defined an array of bytes instead of Character.) Likewise,
+array of twelve characters. (Using type :ada:`String` here isn't essential. We
+could have defined an array of bytes instead of :ada:`Character`.) Likewise,
 subtype :ada:`Device_Id_Tuple` is the view of the 96-bits as an array of
 three 32-bit unsigned integers. Clients can then choose how they want to
 view the unique id by choosing which function to call.
