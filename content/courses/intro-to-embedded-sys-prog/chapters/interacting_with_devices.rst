@@ -659,8 +659,8 @@ bytes swapped:
 
    Swap2 (Z'Address);
 
-In the call, :ada`Z` is of type :ada`Interfaces.Integer_16`, for
-example, or :ada`Unsigned_16`, or even something bigger as long as you
+In the call, :ada:`Z` is of type :ada:`Interfaces.Integer_16`, for
+example, or :ada:`Unsigned_16`, or even something bigger as long as you
 only care about swapping the first two bytes.
 
 The incomplete implementation using the conversion idiom could be like so:
@@ -1601,7 +1601,7 @@ so:
 Everything else in the declaration remains unchanged.
 
 Note that :ada:`Full_Access_Only` can only be applied to :ada:`Volatile`
-types or objects. :ada`Atomic` types are automatically :ada:`Volatile`
+types or objects. :ada:`Atomic` types are automatically :ada:`Volatile`
 too, so either one is allowed. You'd need one of those aspects anyway
 because :ada:`Full_Access_Only` just specifies the accessing instruction
 requirements for the generated code when accessing components.
