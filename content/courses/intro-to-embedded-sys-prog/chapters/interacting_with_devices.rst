@@ -1285,7 +1285,7 @@ and stores. If we wrote this in Ada it would look like this:
       Temp := Port.LCKR;
    end Lock;
 
-:ada:`Temp' is marked volatile for the sake of getting exactly the load
+:ada:`Temp` is marked volatile for the sake of getting exactly the load
 and stores that we express in the source code, corresponding to the
 hardware locking protocol.
 
