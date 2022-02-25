@@ -266,16 +266,15 @@ mapped device.
 
 We choose the type for the representative Ada variable based on the
 interface of the hardware mapped to the memory. If the interface is a
-single monolithic register, for example, then an integer, either signed
-or unsigned, and of the necessary size, will suffice. But suppose the
-interface is several bytes wide, and some of the bytes have different
-purposes from the others? In that case, a record type is the obvious
-solution, with distinct record components dedicated to the different
-parts of the hardware interface. We could use individual bits too, of
-course, if that's what the hardware does. Ada is particularly good at
-this fine-degree of representation because record components of any
-types can be specified in the layout, down to the bit level, within the
-record.
+single monolithic register, for example, then an integer (signed or
+unsigned) of the necessary size will suffice. But suppose the interface
+is several bytes wide, and some of the bytes have different purposes
+from the others? In that case, a record type is the obvious solution,
+with distinct record components dedicated to the different parts of the
+hardware interface. We could use individual bits too, of course, if
+that's what the hardware does. Ada is particularly good at this
+fine-degree of representation because record components of any types can
+be specified in the layout, down to the bit level, within the record.
 
 In addition, we might want to apply more than one type, at any one time,
 to a given memory-mapped device. Doing so allows the client code some
@@ -446,7 +445,36 @@ of the :ada:`AFR`:
 Note that we can use the GPIO :ada:`Pin` parameter directly as the index into
 the array type, obviating any need to massage the :ada:`Pin` value in
 the procedure. That's possible because the type :ada:`GPIO_Pin` is an
-enumeration type.
+enumeration type:
+
+.. code-block:: ada
+
+   type GPIO_Pin is
+     (Pin_0, Pin_1, Pin_2,  Pin_3,  Pin_4,  Pin_5,  Pin_6,  Pin_7,
+      Pin_8, Pin_9, Pin_10, Pin_11, Pin_12, Pin_13, Pin_14, Pin_15);
+
+   for GPIO_Pin use
+     (Pin_0  => 16#0001#,
+      Pin_1  => 16#0002#,
+      Pin_2  => 16#0004#,
+      Pin_3  => 16#0008#,
+      Pin_4  => 16#0010#,
+      Pin_5  => 16#0020#,
+      Pin_6  => 16#0040#,
+      Pin_7  => 16#0080#,
+      Pin_8  => 16#0100#,
+      Pin_9  => 16#0200#,
+      Pin_10 => 16#0400#,
+      Pin_11 => 16#0800#,
+      Pin_12 => 16#1000#,
+      Pin_13 => 16#2000#,
+      Pin_14 => 16#4000#,
+      Pin_15 => 16#8000#);
+
+In the hardware, the GPIO_Pin values don't start at zero and
+monotonically increase. Instead, the values are bit patterns, where one
+bit within each value is used. The enumeration representation clause
+allows us to express that representation.
 
 Type :ada:`Alternate_Function_Fields` is then used to declare the
 :ada:`AFR` record component in the :ada:`GPIO_Port` record type:
@@ -760,7 +788,7 @@ Let's look at the code again, this time with the additional declarations:
 :ada:`use` clause so that we can refer to the visible content of the
 package instance conveniently.
 
-In the reaming expression, :ada:`To_Pointer (Location)` converts the
+In the renaming expression, :ada:`To_Pointer (Location)` converts the
 incoming address in :ada:`Location` to a pointer designating the
 :ada:`Word` at that address. The :ada:`.all` dereferences the resulting
 access value to get the designated :ada:`Word` value. Hence :ada:`X`
@@ -948,7 +976,7 @@ devices, as this course is about embedded systems.
 
 When describing these facilities we will use aspects, but remember that
 the corresponding pragmas are defined as well, except for one. (We'll
-metion it later.) For the other aspects, the pragmas existed first and,
+mention it later.) For the other aspects, the pragmas existed first and,
 although obsolescent, remain part of the language and supported. There's
 no need to change your existing source code using the pragmas to use the
 aspects instead, unless you need to change it for some other reason.
@@ -1270,14 +1298,19 @@ and stores. If we wrote this in Ada it would look like this:
    begin
       --  set the lock control bit and the pin bit, clear the others
       Temp := LCCK or Pin'Enum_Rep;
+
       --  write the lock and pin bits
       Port.LCKR := Temp;
+
       --  clear the lock bit in the upper half
       Port.LCKR := Pin'Enum_Rep;
+
       --  write the lock bit again
       Port.LCKR := Temp;
+
       --  read the lock bit
       Temp := Port.LCKR;
+
       --  read the lock bit again
       Temp := Port.LCKR;
    end Lock;
@@ -1286,14 +1319,14 @@ and stores. If we wrote this in Ada it would look like this:
 and stores that we express in the source code, corresponding to the
 hardware locking protocol.
 
-This high-level coding approach will work, and is simple enough that not
-using MCIs is not unreasonable. However, what really argues against it
-is that the correct sequence requires the optimizer to remove all the
-other cruft that the code generator would otherwise include. (The gcc
-code generator used by the GNAT compiler generates initially poor code,
-by design, relying on the optimizer to clean it up.) In other words,
-we've told the optimizer not to change or add loads and stores for
-:ada:`Temp`, but without the optimizer enabled the code generator
+This high-level coding approach will work, and is simple enough that
+MCIs might not be needed. However, what really argues against it is that
+the correct sequence of emitted code requires the optimizer to remove
+all the other cruft that the code generator would otherwise include.
+(The gcc code generator used by the GNAT compiler generates initially
+poor code, by design, relying on the optimizer to clean it up.) In other
+words, we've told the optimizer not to change or add loads and stores
+for :ada:`Temp`, but without the optimizer enabled the code generator
 generates other code that gets in the way. That's OK in itself, as far
 as procedure :ada:`Lock` is concerned, but if the optimizer is
 sufficiently enabled we cannot debug the rest of the code. Using MCIs
@@ -1412,12 +1445,12 @@ describe it in the next section.
 Finally, there are issues to consider regarding the other aspects
 described in this section.
 
-If you think about about atomic behavior in the context of machine
+If you think about atomic behavior in the context of machine
 instructions, loading and storing from/to memory atomically can only be
 performed for quantities that are independently addressable. For
 example, individual bits don't have distinct addresses on the typical
 machine. Consequently, all atomic objects are considered to be specified as
-independently addressable too. Aspect_specifications and representation
+independently addressable too. Aspect specifications and representation
 items cannot change that fact. You can expect the compiler to reject any
 aspect or representation choice that would prevent this from being true.
 
@@ -1451,7 +1484,7 @@ Ordinarily in Ada we represent such composite hardware interfaces using a
 record type. (Sometimes an array type makes more sense. That doesn't
 change anything here.) Compared to using bit-patterns, and the resulting
 bit shifting and masking in the source code, a record type representation
-and the resulting "dot notation" for accessing components is the far more
+and the resulting "dot notation" for accessing components is far more
 readable. It is also more robust because the compiler does all the work of
 retrieving these individual bits and bit-fields for us, doing any shifting
 and masking required in the generated code. The loads and stores are done
