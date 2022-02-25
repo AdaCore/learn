@@ -668,7 +668,7 @@ The incomplete implementation using the conversion idiom could be like so:
 .. code-block:: ada
 
    procedure Swap2 (Location : System.Address) is
-      X : Word renames To_Pointer(Location).all;
+      X : Word renames To_Pointer (Location).all;
    begin
       X :=  Shift_Left (X, 8) or Shift_Right (X, 8);
    end Swap2;
@@ -679,7 +679,7 @@ In the declaration, :ada:`X` is of type :ada:`Word`, a type (not yet
 shown) derived from :ada:`Interfaces.Unsigned_16`. Hence :ada:`X` can
 have the inherited shift and logical :ada:`or` operations applied.
 
-The :ada:`To_Pointer(Location)` part of the declaration is a function
+The :ada:`To_Pointer (Location)` part of the declaration is a function
 call. The function returns the conversion of the incoming address value
 in :ada:`Location` into an access value designating :ada:`Word` values.
 We'll explain how to do that momentarily. The :ada:`.all` explicitly
@@ -760,7 +760,7 @@ Let's look at the code again, this time with the additional declarations:
 :ada:`use` clause so that we can refer to the visible content of the
 package instance conveniently.
 
-In the reaming expression, :ada:`To_Pointer(Location)` converts the
+In the reaming expression, :ada:`To_Pointer (Location)` converts the
 incoming address in :ada:`Location` to a pointer designating the
 :ada:`Word` at that address. The :ada:`.all` dereferences the resulting
 access value to get the designated :ada:`Word` value. Hence :ada:`X`
@@ -875,7 +875,7 @@ components as it goes. It is not the way to really write this code.
          package R_Pointers is new System.Address_To_Access_Conversions (R);
          use R_Pointers;
 
-          Value : R renames To_Pointer(Location).all;
+          Value : R renames To_Pointer (Location).all;
          --  The above converts the address to a pointer designating an R value
          --  and dereferences it, using the name Value to refer to the
          --  dereferenced R value.
