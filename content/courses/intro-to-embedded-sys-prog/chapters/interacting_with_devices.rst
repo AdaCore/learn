@@ -62,7 +62,7 @@ More complex devices, however, usually rely on software abstraction to
 deal with the complexity. Just as abstraction is a fundamental way to
 combat complexity in software, abstraction also can be used to combat
 the complexity of driving complex hardware. The abstraction is presented
-to users by a software "device driver" that exists as an layer between
+to users by a software "device driver" that exists as a layer between
 the application code and the hardware device. The layer hides the gory
 details of the hardware manipulation behind subprograms, types, and
 parameters.
