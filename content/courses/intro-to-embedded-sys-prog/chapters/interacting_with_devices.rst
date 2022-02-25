@@ -1484,9 +1484,9 @@ Using bit masks and bit patterns to access logical components as an
 alternative to a record type doesn't change the requirement for the
 idiom.
 
-Consider the STM32F4 DMA device. The device contains a 32-bit stream 
-configuration register that requires 32-bit reads and writes. We can map 
-that register to an Ada record type like so: 
+Consider the STM32F4 DMA device. The device contains a 32-bit stream
+configuration register that requires 32-bit reads and writes. We can map
+that register to an Ada record type like so:
 
 .. code-block:: ada
 
@@ -1559,9 +1559,9 @@ controller. Using the read-modify-write idiom we would do it like so:
 That works, and of course the procedural interface presented to clients
 hides the details, as it should.
 
-To be fair, the bit-pattern approach can express the idiom concisely, as 
-long as you're careful. Here's the C code to enable and disable a 
-selected stream: 
+To be fair, the bit-pattern approach can express the idiom concisely, as
+long as you're careful. Here's the C code to enable and disable a
+selected stream:
 
 .. code-block:: c
 
@@ -1573,12 +1573,12 @@ selected stream:
    /* Disable the selected DMAy Streamx by clearing EN bit */
    DMAy_Streamx->CR  &=  ~DMA_SxCR_EN;
 
-The code reads and writes the entire CR register each time it is 
-referenced so the requirement is met. 
+The code reads and writes the entire CR register each time it is
+referenced so the requirement is met.
 
 Nevertheless, the idiom is error-prone. We might forget to use it at all,
 or we might get it wrong in one of the very many places where we need to
-access individual components. 
+access individual components.
 
 Fortunately, Ada provides a way to have the compiler implement the idiom
 for us, in the generated code. Aspect :ada:`Full_Access_Only` specifies
