@@ -760,7 +760,7 @@ Let's look at the code again, this time with the additional declarations:
 :ada:`use` clause so that we can refer to the visible content of the
 package instance conveniently.
 
-In the reaming expression, :ada:`To_Pointer (Location)` converts the
+In the renaming expression, :ada:`To_Pointer (Location)` converts the
 incoming address in :ada:`Location` to a pointer designating the
 :ada:`Word` at that address. The :ada:`.all` dereferences the resulting
 access value to get the designated :ada:`Word` value. Hence :ada:`X`
@@ -948,7 +948,7 @@ devices, as this course is about embedded systems.
 
 When describing these facilities we will use aspects, but remember that
 the corresponding pragmas are defined as well, except for one. (We'll
-metion it later.) For the other aspects, the pragmas existed first and,
+mention it later.) For the other aspects, the pragmas existed first and,
 although obsolescent, remain part of the language and supported. There's
 no need to change your existing source code using the pragmas to use the
 aspects instead, unless you need to change it for some other reason.
@@ -1412,12 +1412,12 @@ describe it in the next section.
 Finally, there are issues to consider regarding the other aspects
 described in this section.
 
-If you think about about atomic behavior in the context of machine
+If you think about atomic behavior in the context of machine
 instructions, loading and storing from/to memory atomically can only be
 performed for quantities that are independently addressable. For
 example, individual bits don't have distinct addresses on the typical
 machine. Consequently, all atomic objects are considered to be specified as
-independently addressable too. Aspect_specifications and representation
+independently addressable too. Aspect specifications and representation
 items cannot change that fact. You can expect the compiler to reject any
 aspect or representation choice that would prevent this from being true.
 
@@ -1451,7 +1451,7 @@ Ordinarily in Ada we represent such composite hardware interfaces using a
 record type. (Sometimes an array type makes more sense. That doesn't
 change anything here.) Compared to using bit-patterns, and the resulting
 bit shifting and masking in the source code, a record type representation
-and the resulting "dot notation" for accessing components is the far more
+and the resulting "dot notation" for accessing components is far more
 readable. It is also more robust because the compiler does all the work of
 retrieving these individual bits and bit-fields for us, doing any shifting
 and masking required in the generated code. The loads and stores are done
