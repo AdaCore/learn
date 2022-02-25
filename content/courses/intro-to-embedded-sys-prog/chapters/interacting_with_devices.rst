@@ -33,10 +33,10 @@ code, where :c:`temp` and :c:`temp2` are unsigned 32-bit integers:
 
 .. code-block:: c
 
-temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
-GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
+   temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+   temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
+   GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
 
 That's unfair to ask, absent any context. The code configures a general
 purpose I/O (GPIO) pin on an Arm microcontroller for one of the
@@ -77,7 +77,7 @@ suppose we called a function:
 
 .. code-block:: c
 
-GPIO_PinAFConfig(USARTx_TX_GPIO_PORT, USARTx_TX_SOURCE, USARTx_TX_AF);
+   GPIO_PinAFConfig(USARTx_TX_GPIO_PORT, USARTx_TX_SOURCE, USARTx_TX_AF);
 
 The :c:`GPIO_PinAFConfig` function is part of the GPIO device driver
 provided by the STM32 Standard Peripherals Library (SPL). Even though
@@ -133,24 +133,24 @@ these can be invoked in Ada via machine-code insertions. For example:
 
 .. code-block:: ada
 
-procedure Send_Control (Device : Port;  Data : Unsigned_16) is
-pragma Suppress (All_Checks);
-begin
-asm ("outw %1, (%0)",
-Inputs  => (Port'Asm_Input("dx",Device), Unsigned_16'Asm_Input("ax",Data)),
-Clobber => "ax, dx");
-end Send_Control;
+   procedure Send_Control (Device : Port;  Data : Unsigned_16) is
+      pragma Suppress (All_Checks);
+   begin
+      asm ("outw %1, (%0)",
+      Inputs  => (Port'Asm_Input("dx",Device), Unsigned_16'Asm_Input("ax",Data)),
+      Clobber => "ax, dx");
+   end Send_Control;
 
 
-procedure Receive_Control (Device : Port;  Data : out Unsigned_16) is
-pragma Suppress (All_Checks);
-begin
-asm ("inw (%1), %0",
-Inputs   => (Port'Asm_Input("dx",Device)),
-Outputs  => (Unsigned_16'Asm_Output("=ax",Data)),
-Clobber  => "ax, dx",
-Volatile => True);
-end Receive_Control;
+   procedure Receive_Control (Device : Port;  Data : out Unsigned_16) is
+      pragma Suppress (All_Checks);
+   begin
+      asm ("inw (%1), %0",
+      Inputs   => (Port'Asm_Input("dx",Device)),
+      Outputs  => (Unsigned_16'Asm_Output("=ax",Data)),
+      Clobber  => "ax, dx",
+      Volatile => True);
+   end Receive_Control;
 
 Applications could use these subprograms to set the frequency of the
 Intel PC tone generator, for example, and to turn it on and off. (You
@@ -192,11 +192,11 @@ and a 32-bit array object:
 
 .. code-block:: ada
 
-type Bits32 is array (0 .. 31) of Boolean
-with Component_Size => 1;
+   type Bits32 is array (0 .. 31) of Boolean
+      with Component_Size => 1;
 
-X : Integer_32;
-Y : Bits32 with Address => X'Address;
+   X : Integer_32;
+   Y : Bits32 with Address => X'Address;
 
 Because one view is as an integer and the other as an array, we can
 access that memory using the two different views' operations. Via the
@@ -221,8 +221,8 @@ simple input to the software running on the computer.
 
 .. code-block:: ada
 
-Rotary_Switch : Unsigned_8 with
-Address => System.Storage_Elements.To_Address (16#FFC0_0801#);
+   Rotary_Switch : Unsigned_8 with
+      Address => System.Storage_Elements.To_Address (16#FFC0_0801#);
 
 We declare the object and also specify the address, but not by querying
 some entity. We already know the address from the hardware
@@ -292,18 +292,18 @@ that are distinguished by their return type.
 
 .. code-block:: ada
 
-package STM32.Device_Id is
+   package STM32.Device_Id is
 
-subtype Device_Id_Image is String (1 .. 12);
+      subtype Device_Id_Image is String (1 .. 12);
 
-function Unique_Id return Device_Id_Image;
+      function Unique_Id return Device_Id_Image;
 
-type Device_Id_Tuple is array (1 .. 3) of UInt32
-with Component_Size => 32;
+      type Device_Id_Tuple is array (1 .. 3) of UInt32
+         with Component_Size => 32;
 
-function Unique_Id return Device_Id_Tuple;
+      function Unique_Id return Device_Id_Tuple;
 
-end STM32.Device_Id;
+   end STM32.Device_Id;
 
 The subtype :ada:`Device_Id_Image` is the view of the 96-bits as an
 array of twelve characters. (Using type :ada:`String` here isn't essential. We
@@ -317,27 +317,27 @@ same shared memory:
 
 .. code-block:: ada
 
-with System;
+   with System;
 
-package body STM32.Device_Id is
+   package body STM32.Device_Id is
 
-ID_Address : constant System.Address := System'To_Address (16#1FFF_7A10#);
+      ID_Address : constant System.Address := System'To_Address (16#1FFF_7A10#);
 
-function Unique_Id return Device_Id_Image is
-Result : Device_Id_Image with
-Address => ID_Address, Import;
-begin
-return Result;
-end Unique_Id;
+      function Unique_Id return Device_Id_Image is
+         Result : Device_Id_Image with
+            Address => ID_Address, Import;
+      begin
+         return Result;
+      end Unique_Id;
 
-function Unique_Id return Device_Id_Tuple is
-Result : Device_Id_Tuple with
-Address => ID_Address, Import;
-begin
-return Result;
-end Unique_Id;
+      function Unique_Id return Device_Id_Tuple is
+         Result : Device_Id_Tuple with
+            Address => ID_Address, Import;
+      begin
+         return Result;
+      end Unique_Id;
 
-end STM32.Device_Id;
+   end STM32.Device_Id;
 
 The GNAT-defined attribute :ada:`System'To_Address` in the declaration
 of :ada:`ID_Address` is the same as the function
@@ -356,21 +356,21 @@ the complete code for the function body:
 
 .. code-block:: c
 
-void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO_AF)
-{
-uint32_t temp = 0x00;
-uint32_t temp_2 = 0x00;
+   void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO_AF)
+   {
+   uint32_t temp = 0x00;
+   uint32_t temp_2 = 0x00;
 
-/* Check the parameters */
-assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
-assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
-assert_param(IS_GPIO_AF(GPIO_AF));
+   /* Check the parameters */
+   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+   assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
+   assert_param(IS_GPIO_AF(GPIO_AF));
 
-temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
-GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
-}
+   temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+   temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
+   GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
+   }
 
 The problem, other than the magic numbers (some named constants would
 have helped), is that the code is doing nearly all the work instead of
@@ -398,14 +398,14 @@ as the index. The resulting Ada procedure body is extremely simple:
 
 .. code-block:: ada
 
-procedure Configure_Alternate_Function
-(Port : in out GPIO_Port;
-Pin  : GPIO_Pin;
-AF   : GPIO_Alternate_Function_Code)
-is
-begin
-Port.AFR (Pin) := AF;
-end Configure_Alternate_Function;
+   procedure Configure_Alternate_Function
+     (Port : in out GPIO_Port;
+      Pin  : GPIO_Pin;
+      AF   : GPIO_Alternate_Function_Code)
+   is
+   begin
+      Port.AFR (Pin) := AF;
+   end Configure_Alternate_Function;
 
 In the Ada version, :ada:`AFR` is a component within the
 :ada:`GPIO_Port` record type, much like in the C code's struct. However,
@@ -416,7 +416,7 @@ First, in Ada we can declare a 4-bit numeric type:
 
 .. code-block:: ada
 
-type Bits_4 is mod 2**4 with Size => 4;
+   type Bits_4 is mod 2**4 with Size => 4;
 
 The :ada:`Bits_4` type was already globally defined elsewhere so we just
 derive our 4-bit "alternate function code" type from it. Doing so allows the
@@ -426,9 +426,9 @@ for the reader:
 
 .. code-block:: ada
 
-type GPIO_Alternate_Function_Code is new Bits_4;
---  We cannot use an enumeration type because there are duplicate binary
---  values
+   type GPIO_Alternate_Function_Code is new Bits_4;
+   --  We cannot use an enumeration type because there are duplicate binary
+   --  values
 
 Hence type :ada:`GPIO_Alternate_Function_Code` is a copy of
 :ada:`Bits_4` in terms of operations and values, but is not the same
@@ -439,8 +439,8 @@ of the :ada:`AFR`:
 
 .. code-block:: ada
 
-type Alternate_Function_Fields is array (GPIO_Pin) of GPIO_Alternate_Function_Code
-with Component_Size => 4, Size => 64;  -- both in units of bits
+   type Alternate_Function_Fields is array (GPIO_Pin) of GPIO_Alternate_Function_Code
+      with Component_Size => 4, Size => 64;  -- both in units of bits
 
 Note that we can use the GPIO :ada:`Pin` parameter directly as the index into
 the array type, obviating any need to massage the :ada:`Pin` value in
@@ -449,27 +449,27 @@ enumeration type:
 
 .. code-block:: ada
 
-type GPIO_Pin is
-(Pin_0, Pin_1, Pin_2,  Pin_3,  Pin_4,  Pin_5,  Pin_6,  Pin_7,
-Pin_8, Pin_9, Pin_10, Pin_11, Pin_12, Pin_13, Pin_14, Pin_15);
+   type GPIO_Pin is
+     (Pin_0, Pin_1, Pin_2,  Pin_3,  Pin_4,  Pin_5,  Pin_6,  Pin_7,
+      Pin_8, Pin_9, Pin_10, Pin_11, Pin_12, Pin_13, Pin_14, Pin_15);
 
-for GPIO_Pin use
-(Pin_0  => 16#0001#,
-Pin_1  => 16#0002#,
-Pin_2  => 16#0004#,
-Pin_3  => 16#0008#,
-Pin_4  => 16#0010#,
-Pin_5  => 16#0020#,
-Pin_6  => 16#0040#,
-Pin_7  => 16#0080#,
-Pin_8  => 16#0100#,
-Pin_9  => 16#0200#,
-Pin_10 => 16#0400#,
-Pin_11 => 16#0800#,
-Pin_12 => 16#1000#,
-Pin_13 => 16#2000#,
-Pin_14 => 16#4000#,
-Pin_15 => 16#8000#);
+   for GPIO_Pin use
+    (Pin_0  => 16#0001#,
+     Pin_1  => 16#0002#,
+     Pin_2  => 16#0004#,
+     Pin_3  => 16#0008#,
+     Pin_4  => 16#0010#,
+     Pin_5  => 16#0020#,
+     Pin_6  => 16#0040#,
+     Pin_7  => 16#0080#,
+     Pin_8  => 16#0100#,
+     Pin_9  => 16#0200#,
+     Pin_10 => 16#0400#,
+     Pin_11 => 16#0800#,
+     Pin_12 => 16#1000#,
+     Pin_13 => 16#2000#,
+     Pin_14 => 16#4000#,
+     Pin_15 => 16#8000#);
 
 In the hardware, the GPIO_Pin values don't start at zero and
 monotonically increase. Instead, the values are bit patterns, where one
@@ -481,40 +481,40 @@ Type :ada:`Alternate_Function_Fields` is then used to declare the
 
 .. code-block:: ada
 
-type GPIO_Port is limited record
-MODER      : Pin_Modes_Register;
-OTYPER     : Output_Types_Register;
-Reserved_1 : Half_Word;
-OSPEEDR    : Output_Speeds_Register;
-PUPDR      : Resistors_Register;
-IDR        : Half_Word;       --  input data register
-Reserved_2 : Half_Word;
-ODR        : Half_Word;       --  output data register
-Reserved_3 : Half_Word;
-BSRR_Set   : Half_Word;       --  bit set register
-BSRR_Reset : Half_Word;       --  bit reset register
-LCKR       : Word with Atomic;
-AFR        : Alternate_Function_Fields;
-Reserved_4 : Reserved_246x32;
-end record with
-Size => 16#400# * 8;
+   type GPIO_Port is limited record
+      MODER      : Pin_Modes_Register;
+      OTYPER     : Output_Types_Register;
+      Reserved_1 : Half_Word;
+      OSPEEDR    : Output_Speeds_Register;
+      PUPDR      : Resistors_Register;
+      IDR        : Half_Word;       --  input data register
+      Reserved_2 : Half_Word;
+      ODR        : Half_Word;       --  output data register
+      Reserved_3 : Half_Word;
+      BSRR_Set   : Half_Word;       --  bit set register
+      BSRR_Reset : Half_Word;       --  bit reset register
+      LCKR       : Word with Atomic;
+      AFR        : Alternate_Function_Fields;
+      Reserved_4 : Reserved_246x32;
+   end record with
+      Size => 16#400# * 8;
 
-for GPIO_Port use record
-MODER      at 0  range 0 .. 31;
-OTYPER     at 4  range 0 .. 15;
-Reserved_1 at 6  range 0 .. 15;
-OSPEEDR    at 8  range 0 .. 31;
-PUPDR      at 12 range 0 .. 31;
-IDR        at 16 range 0 .. 15;
-Reserved_2 at 18 range 0 .. 15;
-ODR        at 20 range 0 .. 15;
-Reserved_3 at 22 range 0 .. 15;
-BSRR_Set   at 24 range 0 .. 15;
-BSRR_Reset at 26 range 0 .. 15;
-LCKR       at 28 range 0 .. 31;
-AFR        at 32 range 0 .. 63;
-Reserved_4 at 40 range 0 .. 7871;
-end record;
+   for GPIO_Port use record
+      MODER      at 0  range 0 .. 31;
+      OTYPER     at 4  range 0 .. 15;
+      Reserved_1 at 6  range 0 .. 15;
+      OSPEEDR    at 8  range 0 .. 31;
+      PUPDR      at 12 range 0 .. 31;
+      IDR        at 16 range 0 .. 15;
+      Reserved_2 at 18 range 0 .. 15;
+      ODR        at 20 range 0 .. 15;
+      Reserved_3 at 22 range 0 .. 15;
+      BSRR_Set   at 24 range 0 .. 15;
+      BSRR_Reset at 26 range 0 .. 15;
+      LCKR       at 28 range 0 .. 31;
+      AFR        at 32 range 0 .. 63;
+      Reserved_4 at 40 range 0 .. 7871;
+   end record;
 
 These declarations define a record type that matches the content and
 layout of the STM32 GPIO Port memory-mapped device.
@@ -524,32 +524,32 @@ convenience:
 
 .. code-block:: c
 
-void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO_AF)
-{
-uint32_t temp = 0x00;
-uint32_t temp_2 = 0x00;
+   void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO_AF)
+   {
+   uint32_t temp = 0x00;
+   uint32_t temp_2 = 0x00;
 
-/* Check the parameters */
-assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
-assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
-assert_param(IS_GPIO_AF(GPIO_AF));
+   /* Check the parameters */
+   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+   assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
+   assert_param(IS_GPIO_AF(GPIO_AF));
 
-temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
-GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
-}
+   temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+   temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
+   GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
+   }
 
 .. code-block:: ada
 
-procedure Configure_Alternate_Function
-(Port : in out GPIO_Port;
-Pin  : GPIO_Pin;
-AF   : GPIO_Alternate_Function_Code)
-is
-begin
-Port.AFR (Pin) := AF;
-end Configure_Alternate_Function;
+   procedure Configure_Alternate_Function
+     (Port : in out GPIO_Port;
+      Pin  : GPIO_Pin;
+      AF   : GPIO_Alternate_Function_Code)
+   is
+   begin
+      Port.AFR (Pin) := AF;
+   end Configure_Alternate_Function;
 
 Which one is correct? Both. But clearly, the Ada version is far simpler,
 so much so that it is immediately obvious that it is correct. Not so for
@@ -613,23 +613,23 @@ should check, therefore, that the documented starting addresses of the
 second and subsequent array components are what you will get with a
 simple array object having components of that record type.
 
-For example, the datasheet for the GPIO ports on the STM32F407 Arm 
-implementation start at address 16#4002_0000#. That's where GPIO_A 
-begins. The next port, GPIO_B, starts at address 16#4002_0400#, or a 
-byte offset of 1024 in decimal (1K). In the STM32F4 Reference Manual, 
-however, the GPIO port register layout indicates a size for any one port 
-that is much less than 1024 bytes. As you saw earlier in the 
-corresponding record type declaration, on the STM32F4 each port only 
-requires 40 (decimal) bytes. Hence there's a gap of unused memory 
-between the ports, including after the last port, of 984 bytes. 
+For example, the datasheet for the GPIO ports on the STM32F407 Arm
+implementation start at address 16#4002_0000#. That's where GPIO_A
+begins. The next port, GPIO_B, starts at address 16#4002_0400#, or a
+byte offset of 1024 in decimal (1K). In the STM32F4 Reference Manual,
+however, the GPIO port register layout indicates a size for any one port
+that is much less than 1024 bytes. As you saw earlier in the
+corresponding record type declaration, on the STM32F4 each port only
+requires 40 (decimal) bytes. Hence there's a gap of unused memory
+between the ports, including after the last port, of 984 bytes.
 
-To represent the gap, an "extra", unused record component was added, 
-with the necessary location and size specified within the record type, 
-so that the unused memory is included in the representation. As a 
-result, each array component will start at the right address (again, as 
-long as the first one does). Telling the compiler, and future 
-maintainers, that this extra component is not meant to be referenced by 
-the software would not hurt. You can use the pragma or aspect 
+To represent the gap, an "extra", unused record component was added,
+with the necessary location and size specified within the record type,
+so that the unused memory is included in the representation. As a
+result, each array component will start at the right address (again, as
+long as the first one does). Telling the compiler, and future
+maintainers, that this extra component is not meant to be referenced by
+the software would not hurt. You can use the pragma or aspect
 :ada:`Unreferenced` for that purpose.  Here's the code again, for
 convenience:
 
@@ -690,22 +690,22 @@ them.
 We also set the size of the entire record type to 16400# since that is
 what we expect to require. As such, this is a "confirming" size clause.
 
-We don't really need to both set the record type size to the larger 
-value, and also declare the reserved gap component at the end to 
-increase the size. Doing both is just making doubly sure we get it 
-right. 
+We don't really need to both set the record type size to the larger
+value, and also declare the reserved gap component at the end to
+increase the size. Doing both is just making doubly sure we get it
+right.
 
 
 Dynamic Address Conversion
 --------------------------
 
-In the overlay example there were two distinct Ada objects, of two 
-different types, sharing one (starting) address. The overlay provides 
-two views of the memory at that address because there are two types 
-involved. In this idiom the address is known when the code is written, 
-either because it is a literal value specified in some hardware spec, or 
-it is simply the address of the other object (in which case the actual 
-address value is neither known nor relevant). 
+In the overlay example there were two distinct Ada objects, of two
+different types, sharing one (starting) address. The overlay provides
+two views of the memory at that address because there are two types
+involved. In this idiom the address is known when the code is written,
+either because it is a literal value specified in some hardware spec, or
+it is simply the address of the other object (in which case the actual
+address value is neither known nor relevant).
 
 When there are several views required, declaring multiple overlaid
 variables at the same address absolutely can work, but can be less
@@ -733,14 +733,14 @@ Here's the declaration:
 
 .. code-block:: ada
 
-procedure Swap2 (Location : System.Address);
+   procedure Swap2 (Location : System.Address);
 
 Callers pass the address of an object intended to have its (first) two
 bytes swapped:
 
 .. code-block:: ada
 
-Swap2 (Z'Address);
+   Swap2 (Z'Address);
 
 In the call, :ada:`Z` is of type :ada:`Interfaces.Integer_16`, for
 example, or :ada:`Unsigned_16`, or even something bigger as long as you
@@ -750,11 +750,11 @@ The incomplete implementation using the conversion idiom could be like so:
 
 .. code-block:: ada
 
-procedure Swap2 (Location : System.Address) is
-X : Word renames To_Pointer (Location).all;
-begin
-X :=  Shift_Left (X, 8) or Shift_Right (X, 8);
-end Swap2;
+   procedure Swap2 (Location : System.Address) is
+      X : Word renames To_Pointer (Location).all;
+   begin
+      X :=  Shift_Left (X, 8) or Shift_Right (X, 8);
+   end Swap2;
 
 The declaration of :ada:`X` is the pertinent part.
 
@@ -778,10 +778,10 @@ Now for the rest of the implementation not shown earlier.
 
 .. code-block:: ada
 
-type Word is new Interfaces.Unsigned_16;
+   type Word is new Interfaces.Unsigned_16;
 
-package Word_Ops is new System.Address_To_Access_Conversions (Word);
-use Word_Ops;
+   package Word_Ops is new System.Address_To_Access_Conversions (Word);
+   use Word_Ops;
 
 :ada:`System.Address_To_Access_Conversions` is a language-defined
 generic package that provides just two functions: one to convert an
@@ -790,19 +790,19 @@ direction:
 
 .. code-block:: ada
 
-generic
-type Object (<>) is limited private;
-package System.Address_To_Access_Conversions is
+   generic
+   type Object (<>) is limited private;
+   package System.Address_To_Access_Conversions is
 
-type Object_Pointer is access all Object;
+   type Object_Pointer is access all Object;
 
-function To_Pointer (Value : Address)        return Object_Pointer;
-function To_Address (Value : Object_Pointer) return Address;
+   function To_Pointer (Value : Address)        return Object_Pointer;
+   function To_Address (Value : Object_Pointer) return Address;
 
-pragma Convention (Intrinsic, To_Pointer);
-pragma Convention (Intrinsic, To_Address);
+   pragma Convention (Intrinsic, To_Pointer);
+   pragma Convention (Intrinsic, To_Address);
 
-end System.Address_To_Access_Conversions;
+   end System.Address_To_Access_Conversions;
 
 :ada:`Object` is the generic formal type parameter, i.e., the type we
 want our converted addresses to designate via the type
@@ -828,16 +828,16 @@ Let's look at the code again, this time with the additional declarations:
 
 .. code-block:: ada
 
-type Word is new Interfaces.Unsigned_16;
+   type Word is new Interfaces.Unsigned_16;
 
-package Word_Ops is new System.Address_To_Access_Conversions (Word);
-use Word_Ops;
+   package Word_Ops is new System.Address_To_Access_Conversions (Word);
+   use Word_Ops;
 
-procedure Swap2 (Location : System.Address) is
-X : Word renames To_Pointer(Location).all;
-begin
-X :=  Shift_Left (X, 8) or Shift_Right (X, 8);
-end Swap2;
+   procedure Swap2 (Location : System.Address) is
+      X : Word renames To_Pointer(Location).all;
+   begin
+      X :=  Shift_Left (X, 8) or Shift_Right (X, 8);
+   end Swap2;
 
 :ada:`Word_Ops` is the generic instance, followed immediately by a
 :ada:`use` clause so that we can refer to the visible content of the
@@ -885,10 +885,10 @@ the following:
 
 .. code-block:: ada
 
-pragma Compile_Time_Warning
-(Object'Unconstrained_Array,
-"Object is unconstrained array type" & ASCII.LF &
-"To_Pointer results may not have bounds");
+   pragma Compile_Time_Warning
+     (Object'Unconstrained_Array,
+      "Object is unconstrained array type" & ASCII.LF &
+      "To_Pointer results may not have bounds");
 
 :ada:`Object` is the generic formal type parameter, i.e., the type we
 want our converted addresses to designate via the type
@@ -933,56 +933,56 @@ components as it goes. It is not the way to really write this code.
 
 .. code-block:: ada
 
-with Ada.Text_IO;               use Ada.Text_IO;
-with System.Storage_Elements;   use System.Storage_Elements;
-with System.Address_To_Access_Conversions;
+   with Ada.Text_IO;               use Ada.Text_IO;
+   with System.Storage_Elements;   use System.Storage_Elements;
+   with System.Address_To_Access_Conversions;
 
-procedure Demo_Address_Arithmetic is
+   procedure Demo_Address_Arithmetic is
 
-type R is record
-X : Integer;
-Y : Integer;
-end record;
+      type R is record
+      X : Integer;
+      Y : Integer;
+      end record;
 
-R_Size : constant Storage_Offset := R'Object_Size / System.Storage_Unit;
+      R_Size : constant Storage_Offset := R'Object_Size / System.Storage_Unit;
 
-Objects : aliased array (1 .. 10) of aliased R;     --  arbitrary bounds
+      Objects : aliased array (1 .. 10) of aliased R;     --  arbitrary bounds
 
-Objects_Base : System.Address;
+      Objects_Base : System.Address;
 
-Offset : Storage_Offset;
+      Offset : Storage_Offset;
 
---  display the object of type R at the address specified by Location
-procedure Display_R (Location : in System.Address) is
+      --  display the object of type R at the address specified by Location
+      procedure Display_R (Location : in System.Address) is
 
-package R_Pointers is new System.Address_To_Access_Conversions (R);
-use R_Pointers;
+      package R_Pointers is new System.Address_To_Access_Conversions (R);
+      use R_Pointers;
 
-Value : R renames To_Pointer (Location).all;
---  The above converts the address to a pointer designating an R value
---  and dereferences it, using the name Value to refer to the
---  dereferenced R value.
-begin
-Put (Integer'Image (Value.X));
-Put (", ");
-Put (Integer'Image (Value.Y));
-New_Line;
-end Display_R;
+      Value : R renames To_Pointer (Location).all;
+      --  The above converts the address to a pointer designating an R value
+      --  and dereferences it, using the name Value to refer to the
+      --  dereferenced R value.
+      begin
+         Put (Integer'Image (Value.X));
+         Put (", ");
+         Put (Integer'Image (Value.Y));
+         New_Line;
+      end Display_R;
 
-begin
-Objects := ((0,0), (1,1), (2,2), (3,3), (4,4),
-(5,5), (6,6), (7,7), (8,8), (9,9));
+   begin
+      Objects := ((0,0), (1,1), (2,2), (3,3), (4,4),
+                  (5,5), (6,6), (7,7), (8,8), (9,9));
 
-Offset := 0;
-Objects_Base := Objects'Address;
+      Offset := 0;
+      Objects_Base := Objects'Address;
 
---  walk the array of R objects, displaying each one individually by
---  adding the offset to the base address of the array
-for K in Objects'Range loop
-Display_R (Objects_Base + Offset);
-Offset := Offset + R_Size;
-end loop;
-end Demo_Address_Arithmetic;
+      --  walk the array of R objects, displaying each one individually by
+      --  adding the offset to the base address of the array
+      for K in Objects'Range loop
+         Display_R (Objects_Base + Offset);
+         Offset := Offset + R_Size;
+      end loop;
+   end Demo_Address_Arithmetic;
 
 Seriously, this is just for the purpose of illustration. It would be
 much better to just index into the array directly.
@@ -1105,28 +1105,28 @@ accessed.
 
 .. code-block:: ada
 
-package P is
+   package P is
 
-type R is record
-B0 : Boolean with Independent;
-B1 : Boolean with Independent;
-B2 : Boolean with Independent;
-B3 : Boolean with Independent;
-B4 : Boolean with Independent;
-B5 : Boolean with Independent;
-end record with
-Size => 8;
+      type R is record
+         B0 : Boolean with Independent;
+         B1 : Boolean with Independent;
+         B2 : Boolean with Independent;
+         B3 : Boolean with Independent;
+         B4 : Boolean with Independent;
+         B5 : Boolean with Independent;
+      end record with
+      Size => 8;
 
-for R use record
-B0 at 0 range 0 .. 0;
-B1 at 0 range 1 .. 1;
-B2 at 0 range 2 .. 2;
-B3 at 0 range 3 .. 3;
-B4 at 0 range 4 .. 4;
-B5 at 0 range 5 .. 5;
-end record;
+      for R use record
+         B0 at 0 range 0 .. 0;
+         B1 at 0 range 1 .. 1;
+         B2 at 0 range 2 .. 2;
+         B3 at 0 range 3 .. 3;
+         B4 at 0 range 4 .. 4;
+         B5 at 0 range 5 .. 5;
+      end record;
 
-end P;
+   end P;
 
 For a typical target machine the compiler will reject that code,
 complaining that the :ada:`Size` for :ada:`R`' must be at least 48 bits,
@@ -1141,29 +1141,29 @@ accessible. To do so, we can apply the aspect to the entire type:
 
 .. code-block:: ada
 
-package Q is
+   package Q is
 
-type R is record
-B0 : Boolean;
-B1 : Boolean;
-B2 : Boolean;
-B3 : Boolean;
-B4 : Boolean;
-B5 : Boolean;
-end record with
-Size => 8,
-Independent;
+      type R is record
+         B0 : Boolean;
+         B1 : Boolean;
+         B2 : Boolean;
+         B3 : Boolean;
+         B4 : Boolean;
+         B5 : Boolean;
+      end record with
+         Size => 8,
+         Independent;
 
-for R use record
-B0 at 0 range 0 .. 0;
-B1 at 0 range 1 .. 1;
-B2 at 0 range 2 .. 2;
-B3 at 0 range 3 .. 3;
-B4 at 0 range 4 .. 4;
-B5 at 0 range 5 .. 5;
-end record;
+      for R use record
+         B0 at 0 range 0 .. 0;
+         B1 at 0 range 1 .. 1;
+         B2 at 0 range 2 .. 2;
+         B3 at 0 range 3 .. 3;
+         B4 at 0 range 4 .. 4;
+         B5 at 0 range 5 .. 5;
+      end record;
 
-end Q;
+   end Q;
 
 This the compiler should accept, assuming a machine that can access
 bytes in memory individually, without having to read some number of
@@ -1177,29 +1177,29 @@ above, and some object :ada:`Foo` of that type, suppose we want to say
 
 .. code-block:: ada
 
-package QQ is
+   package QQ is
 
-type R is record
-B0 : aliased Boolean;
-B1 : Boolean;
-B2 : Boolean;
-B3 : Boolean;
-B4 : Boolean;
-B5 : Boolean;
-end record with
-Size => 8,
-Independent;
+      type R is record
+         B0 : aliased Boolean;
+         B1 : Boolean;
+         B2 : Boolean;
+         B3 : Boolean;
+         B4 : Boolean;
+         B5 : Boolean;
+      end record with
+         Size => 8,
+         Independent;
 
-for R use record
-B0 at 0 range 0 .. 0;
-B1 at 0 range 1 .. 1;
-B2 at 0 range 2 .. 2;
-B3 at 0 range 3 .. 3;
-B4 at 0 range 4 .. 4;
-B5 at 0 range 5 .. 5;
-end record;
+      for R use record
+         B0 at 0 range 0 .. 0;
+         B1 at 0 range 1 .. 1;
+         B2 at 0 range 2 .. 2;
+         B3 at 0 range 3 .. 3;
+         B4 at 0 range 4 .. 4;
+         B5 at 0 range 5 .. 5;
+      end record;
 
-end QQ;
+   end QQ;
 
 The compiler will once again reject the code, complaining that the size
 of B0 must be a multiple of a :ada:`Storage_Unit`, in other words, the
@@ -1275,17 +1275,17 @@ absolutely all that the program contains.
 
 .. code-block:: ada
 
-with Ada.Text_IO;  use Ada.Text_IO;
+   with Ada.Text_IO;  use Ada.Text_IO;
 
-procedure Demo is
-Output : File_Type;
-Silly  : Integer;
-begin
-Silly := 0;
-Create (Output, Out_File, "output.txt");
-Put (Output, "42");
-Close (Output);
-end Demo;
+   procedure Demo is
+      Output : File_Type;
+      Silly  : Integer;
+   begin
+      Silly := 0;
+      Create (Output, Out_File, "output.txt");
+      Put (Output, "42");
+      Close (Output);
+   end Demo;
 
 The value of the variable :ada:`Silly` is not used in any way so there
 is no point in even declaring the variable, much less generating code to
@@ -1309,17 +1309,17 @@ cannot reorder loads or stores from their order in the source code.
 
 .. code-block:: ada
 
-with Ada.Text_IO;  use Ada.Text_IO;
+   with Ada.Text_IO;  use Ada.Text_IO;
 
-procedure Demo is
-Output : File_Type;
-Silly  : Integer with Volatile;
-begin
-Silly := 0;
-Create (Output, Out_File, "output.txt");
-Put (Output, "42");
-Close (Output);
-end Demo;
+   procedure Demo is
+      Output : File_Type;
+      Silly  : Integer with Volatile;
+   begin
+      Silly := 0;
+      Create (Output, Out_File, "output.txt");
+      Put (Output, "42");
+      Close (Output);
+   end Demo;
 
 If we compile the above, even with warnings enabled we won't get any
 because the compiler is now required to generate the assignment for
@@ -1348,27 +1348,27 @@ and stores. If we wrote this in Ada it would look like this:
 
 .. code-block:: ada
 
-procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
-Temp : Word with Volatile;
-begin
---  set the lock control bit and the pin bit, clear the others
-Temp := LCCK or Pin'Enum_Rep;
+   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
+      Temp : Word with Volatile;
+   begin
+      --  set the lock control bit and the pin bit, clear the others
+      Temp := LCCK or Pin'Enum_Rep;
 
---  write the lock and pin bits
-Port.LCKR := Temp;
+      --  write the lock and pin bits
+      Port.LCKR := Temp;
 
---  clear the lock bit in the upper half
-Port.LCKR := Pin'Enum_Rep;
+      --  clear the lock bit in the upper half
+      Port.LCKR := Pin'Enum_Rep;
 
---  write the lock bit again
-Port.LCKR := Temp;
+      --  write the lock bit again
+      Port.LCKR := Temp;
 
---  read the lock bit
-Temp := Port.LCKR;
+      --  read the lock bit
+      Temp := Port.LCKR;
 
---  read the lock bit again
-Temp := Port.LCKR;
-end Lock;
+      --  read the lock bit again
+      Temp := Port.LCKR;
+   end Lock;
 
 :ada:`Temp` is marked volatile for the sake of getting exactly the load
 and stores that we express in the source code, corresponding to the
@@ -1451,13 +1451,13 @@ the lock register component and apply the aspect :ada:`Atomic`:
 
 .. code-block:: ada
 
-type GPIO_Port is limited record
---  ...
-LCKR       : UInt32 with Atomic;
---  ...
-end record with
---  ...
-Size => 16#400# * 8;
+   type GPIO_Port is limited record
+      --  ...
+      LCKR       : UInt32 with Atomic;
+      --  ...
+   end record with
+      --  ...
+      Size => 16#400# * 8;
 
 Hence loads and stores to the :ada:`LCKR` component will be done
 atomically, otherwise the compiler will let us know that it is
@@ -1575,17 +1575,17 @@ that register to an Ada record type like so:
 
 .. code-block:: ada
 
-type Stream_Config_Register is record
---  ...
-Direction         : DMA_Data_Transfer_Direction;
-P_Flow_Controller : Boolean;
-TCI_Enabled       : Boolean;  -- transfer complete interrupt enabled
-HTI_Enabled       : Boolean;  -- half-transfer complete enabled
-TEI_Enabled       : Boolean;  -- transfer error interrupt enabled
-DMEI_Enabled      : Boolean;  -- direct mode error interrupt enabled
-Stream_Enabled    : Boolean;
-end record
-with Atomic, Size => 32;
+   type Stream_Config_Register is record
+      --  ...
+      Direction         : DMA_Data_Transfer_Direction;
+      P_Flow_Controller : Boolean;
+      TCI_Enabled       : Boolean;  -- transfer complete interrupt enabled
+      HTI_Enabled       : Boolean;  -- half-transfer complete enabled
+      TEI_Enabled       : Boolean;  -- transfer error interrupt enabled
+      DMEI_Enabled      : Boolean;  -- direct mode error interrupt enabled
+      Stream_Enabled    : Boolean;
+   end record
+      ith Atomic, Size => 32;
 
 The "confirming" size clause ensures we have declared the type correctly
 such that it will fit into 32-bits. There will also be a record
@@ -1605,15 +1605,15 @@ an enclosing record type representing one entire DMA "stream":
 
 .. code-block:: ada
 
-type DMA_Stream is record
-CR   : Stream_Config_Register;
-NDTR : Word;    -- note that the upper half must remain at reset value
-PAR  : Address; -- peripheral address register
-M0AR : Address; -- memory 0 address register
-M1AR : Address; -- memory 1 address register
-FCR  : FIFO_Control_Register;
-end record
-with Volatile, Size => 192;  -- 24 bytes
+   type DMA_Stream is record
+      CR   : Stream_Config_Register;
+      NDTR : Word;    -- note that the upper half must remain at reset value
+      PAR  : Address; -- peripheral address register
+      M0AR : Address; -- memory 0 address register
+      M1AR : Address; -- memory 1 address register
+      FCR  : FIFO_Control_Register;
+   end record
+      with Volatile, Size => 192;  -- 24 bytes
 
 Hence any individual DMA stream record object has a component named
 :ada:`CR` that represents the corresponding configuration register.
@@ -1629,17 +1629,17 @@ controller. Using the read-modify-write idiom we would do it like so:
 
 .. code-block:: ada
 
-procedure Enable
-(Unit   : in out DMA_Controller;
-Stream : DMA_Stream_Selector)
-is
-Temp : Stream_Config_Register;
---  these registers require 32-bit accesses, hence the temporary
-begin
-Temp := Unit.Streams (Stream).CR;  --  read entire register
-Temp.Stream_Enabled := True;
-Unit.Streams (Stream).CR := Temp;  --  write entire register
-end Enable;
+   procedure Enable
+     (Unit   : in out DMA_Controller;
+      Stream : DMA_Stream_Selector)
+   is
+      Temp : Stream_Config_Register;
+      --  these registers require 32-bit accesses, hence the temporary
+   begin
+      Temp := Unit.Streams (Stream).CR;  --  read entire register
+      Temp.Stream_Enabled := True;
+      Unit.Streams (Stream).CR := Temp;  --  write entire register
+   end Enable;
 
 That works, and of course the procedural interface presented to clients
 hides the details, as it should.
@@ -1650,13 +1650,13 @@ selected stream:
 
 .. code-block:: c
 
-#define DMA_SxCR_EN    ((uint32_t)0x00000001)
+   #define DMA_SxCR_EN    ((uint32_t)0x00000001)
 
-/* Enable the selected DMAy Streamx by setting EN bit */
-DMAy_Streamx->CR  |=  DMA_SxCR_EN;
+   /* Enable the selected DMAy Streamx by setting EN bit */
+   DMAy_Streamx->CR  |=  DMA_SxCR_EN;
 
-/* Disable the selected DMAy Streamx by clearing EN bit */
-DMAy_Streamx->CR  &=  ~DMA_SxCR_EN;
+   /* Disable the selected DMAy Streamx by clearing EN bit */
+   DMAy_Streamx->CR  &=  ~DMA_SxCR_EN;
 
 The code reads and writes the entire CR register each time it is
 referenced so the requirement is met.
@@ -1674,17 +1674,17 @@ so:
 
 .. code-block:: ada
 
-type Stream_Config_Register is record
---  ...
-Direction         : DMA_Data_Transfer_Direction;
-P_Flow_Controller : Boolean;
-TCI_Enabled       : Boolean;  -- transfer complete interrupt enabled
-HTI_Enabled       : Boolean;  -- half-transfer complete enabled
-TEI_Enabled       : Boolean;  -- transfer error interrupt enabled
-DMEI_Enabled      : Boolean;  -- direct mode error interrupt enabled
-Stream_Enabled    : Boolean;
-end record
-with Atomic, Full_Access_Only, Size => 32;
+   type Stream_Config_Register is record
+      --  ...
+      Direction         : DMA_Data_Transfer_Direction;
+      P_Flow_Controller : Boolean;
+      TCI_Enabled       : Boolean;  -- transfer complete interrupt enabled
+      HTI_Enabled       : Boolean;  -- half-transfer complete enabled
+      TEI_Enabled       : Boolean;  -- transfer error interrupt enabled
+      DMEI_Enabled      : Boolean;  -- direct mode error interrupt enabled
+      Stream_Enabled    : Boolean;
+   end record
+      with Atomic, Full_Access_Only, Size => 32;
 
 Everything else in the declaration remains unchanged.
 
@@ -1699,13 +1699,13 @@ Procedure :ada:`Enable` is now merely:
 
 .. code-block:: ada
 
-procedure Enable
-(Unit   : in out DMA_Controller;
-Stream : DMA_Stream_Selector)
-is
-begin
-Unit.Streams (Stream).CR.Stream_Enabled := True;
-end Enable;
+   procedure Enable
+     (Unit   : in out DMA_Controller;
+      Stream : DMA_Stream_Selector)
+   is
+   begin
+      Unit.Streams (Stream).CR.Stream_Enabled := True;
+   end Enable;
 
 This code works because the compiler implements the
 read-modify-write idiom for us in the generated code.
