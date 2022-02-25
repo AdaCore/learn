@@ -358,18 +358,18 @@ the complete code for the function body:
 
    void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO_AF)
    {
-   uint32_t temp = 0x00;
-   uint32_t temp_2 = 0x00;
+      uint32_t temp = 0x00;
+      uint32_t temp_2 = 0x00;
 
-   /* Check the parameters */
-   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
-   assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
-   assert_param(IS_GPIO_AF(GPIO_AF));
+      /* Check the parameters */
+      assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+      assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
+      assert_param(IS_GPIO_AF(GPIO_AF));
 
-   temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-   temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
-   GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
+      temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+      GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+      temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
+      GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
    }
 
 The problem, other than the magic numbers (some named constants would
@@ -526,18 +526,18 @@ convenience:
 
    void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO_AF)
    {
-   uint32_t temp = 0x00;
-   uint32_t temp_2 = 0x00;
+      uint32_t temp = 0x00;
+      uint32_t temp_2 = 0x00;
 
-   /* Check the parameters */
-   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
-   assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
-   assert_param(IS_GPIO_AF(GPIO_AF));
+      /* Check the parameters */
+      assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+      assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
+      assert_param(IS_GPIO_AF(GPIO_AF));
 
-   temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-   temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
-   GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
+      temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+      GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+      temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
+      GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
    }
 
 .. code-block:: ada
@@ -682,7 +682,7 @@ them.
 .. code-block:: ada
 
    type Reserved_246X32 is array (1 ..  246) of Word
-   with Component_Size => 32, Size => 246*32;
+      with Component_Size => 32, Size => 246*32;
    --  this type is used to ensure the necessary gaps between GPIO
    --  ports in memory, as per the STM32F405xx etc. Reference Manual,
    --  RM 0090, Table 1.
@@ -791,16 +791,16 @@ direction:
 .. code-block:: ada
 
    generic
-   type Object (<>) is limited private;
+      type Object (<>) is limited private;
    package System.Address_To_Access_Conversions is
 
-   type Object_Pointer is access all Object;
+      type Object_Pointer is access all Object;
 
-   function To_Pointer (Value : Address)        return Object_Pointer;
-   function To_Address (Value : Object_Pointer) return Address;
+      function To_Pointer (Value : Address)        return Object_Pointer;
+      function To_Address (Value : Object_Pointer) return Address;
 
-   pragma Convention (Intrinsic, To_Pointer);
-   pragma Convention (Intrinsic, To_Address);
+      pragma Convention (Intrinsic, To_Pointer);
+      pragma Convention (Intrinsic, To_Address);
 
    end System.Address_To_Access_Conversions;
 
@@ -940,8 +940,8 @@ components as it goes. It is not the way to really write this code.
    procedure Demo_Address_Arithmetic is
 
       type R is record
-      X : Integer;
-      Y : Integer;
+         X : Integer;
+         Y : Integer;
       end record;
 
       R_Size : constant Storage_Offset := R'Object_Size / System.Storage_Unit;
@@ -1585,7 +1585,7 @@ that register to an Ada record type like so:
       DMEI_Enabled      : Boolean;  -- direct mode error interrupt enabled
       Stream_Enabled    : Boolean;
    end record
-      ith Atomic, Size => 32;
+      with Atomic, Size => 32;
 
 The "confirming" size clause ensures we have declared the type correctly
 such that it will fit into 32-bits. There will also be a record
