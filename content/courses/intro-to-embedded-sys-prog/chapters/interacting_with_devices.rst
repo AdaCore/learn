@@ -176,8 +176,7 @@ it. Fortunately, the annex guarantees that sort of thing cannot happen.
 Memory-Mapped Abstractions
 --------------------------
 
-In another earlier chapter,
-https://learn.adacore.com/courses/intro-to-embedded-sys-prog/chapters/low_level_programming.html,
+In :doc:`another earlier chapter <./low_level_programming>`,
 we said that we could query the address of some object, and we also
 showed how to use that result to specify the address of some other
 object. We used that capability to create an "overlay," in which two
@@ -909,8 +908,7 @@ much better to just index into the array directly.
 General-Purpose Code Generators
 -------------------------------
 
-In another chapter,
-https://learn.adacore.com/courses/intro-to-embedded-sys-prog/chapters/multi_language_development.html,
+In :doc:`another chapter <./multi_language_development>`,
 we mentioned that the best way to get a
 specific set of machine instructions emitted from the compiler is to
 write them ourselves, in the Ada source code, using machine-code
@@ -1254,8 +1252,7 @@ store instructions generated that match those of the Ada code. The
 memory-mapped device will be volatile, in other words, but some other
 variables might need to be volatile too.
 
-For example, elsewhere
-(https://learn.adacore.com/courses/intro-to-embedded-sys-prog/chapters/multi_language_development.html)
+For example, :doc:`elsewhere <./multi_language_development>`
 we said that the best way to achieve exact assembly instruction
 sequences is the use of machine-code inserts (MCI). That's true, but for
 the moment let's say we want to write it in Ada without the MCIs. Our
