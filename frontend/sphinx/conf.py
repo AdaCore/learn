@@ -56,7 +56,7 @@ def get_file_from_conf_ini(path_to_file):
 # -- Project information -----------------------------------------------------
 
 project = u'learn.adacore.com'
-copyright = u'2018 – 2021, AdaCore'
+copyright = u'2018 – 2022, AdaCore'
 author = u'AdaCore' if not config.has_option('', 'author') else \
     config['DEFAULT']['author']
 title = u'Learn Ada (Complete)' if not config.has_option('', 'title') else \
