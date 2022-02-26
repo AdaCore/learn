@@ -495,7 +495,7 @@ Type :ada:`Alternate_Function_Fields` is then used to declare the
       BSRR_Reset : Half_Word;       --  bit reset register
       LCKR       : Word with Atomic;
       AFR        : Alternate_Function_Fields;
-      Reserved_4 : Reserved_246x32;
+      Reserved_4 : Reserved_984x8;
    end record with
      Size => 16#400# * 8;
 
@@ -607,39 +607,90 @@ sake of future expansion of the implementation, e.g., to add new
 features or capacity. The gaps are thus between consecutive hardware
 devices.
 
-These gaps are not necessarily included in the memory layout documented
-for the device. You should check, therefore, that the documented
-starting addresses of the second and subsequent array components are
-what you will get with a simple array object having components of that
-record type.
+These gaps are presumably (hopefully!) included in the memory layout
+documented for the device, but it won't be highlighted particularly. You
+should check, therefore, that the documented starting addresses of the
+second and subsequent array components are what you will get with a
+simple array object having components of that record type.
 
-To represent the gap, an "extra", unused record component can be added,
+For example, the datasheet for the GPIO ports on the STM32F407 Arm
+implementation start at address 16#4002_0000#. That's where GPIO_A begins.
+The next port, GPIO_B, starts at address 16#4002_0400#, or a byte offset
+of 1024 in decimal (1K). In the STM32F4 Reference Manual, however, the
+GPIO port register layout indicates a size for any one port that is much
+less than 1024 bytes. As you saw earlier in the corresponding record type
+declaration, on the STM32F4 each port only requires 40 (decimal) bytes.
+Hence there's a gap of unused memory between the ports, including after
+the last port, of 984 bytes (or 7872 bits).
+
+To represent the gap, an "extra", unused record component was added,
 with the necessary location and size specified within the record type,
-so that the unused memory is included in the software representation.
-Then each port, i.e., array component, will start at the right address
-(again, as long as the first one does). Telling the compiler, and future
+so that the unused memory is included in the representation. As a
+result, each array component will start at the right address (again, as
+long as the first one does). Telling the compiler, and future
 maintainers, that this extra component is not meant to be referenced by
 the software would not hurt. You can use the pragma or aspect
-:ada:`Unreferenced` for that purpose.
+:ada:`Unreferenced` for that purpose.  Here's the code again, for
+convenience:
 
-An equally good |mdash| arguably better |mdash| approach would be to set
-the size of the record type to the larger value, i.e., the nominal size
-plus the gap. Or, set the array component size to that same combined
-value. The reason to prefer setting the record type's size (to the
-larger value) is that doing so would also support individual object
-declarations, as opposed to using an array. Future maintenance might
-cause such a change; at least it is possible. Setting the record size to
-the larger value would ensure that, given some declared variable of the
-record type, no subsequently declared variables would occupy the unused
-part of that record object. Those unrelated variables might not be a
-problem until the vendor started to use that previously unused space
-after a hardware update. If that happened, identifying the problem would
-be slow and expensive. Better to associate the additional space with the
-record type, as opposed to doing it in the array type declaration.
-Functionally, either approach would work, but the software engineering
-aspects argue for setting the record size. In any case we must document
-the additional space allocated, for the sake of future maintainers (one
-of whom might be yourself).
+.. code-block:: ada
+
+   type GPIO_Port is limited record
+      MODER      : Pin_Modes_Register;
+      OTYPER     : Output_Types_Register;
+      Reserved_1 : Half_Word;
+      OSPEEDR    : Output_Speeds_Register;
+      PUPDR      : Resistors_Register;
+      IDR        : Half_Word;       --  input data register
+      Reserved_2 : Half_Word;
+      ODR        : Half_Word;       --  output data register
+      Reserved_3 : Half_Word;
+      BSRR_Set   : Half_Word;       --  bit set register
+      BSRR_Reset : Half_Word;       --  bit reset register
+      LCKR       : Word with Atomic;
+      AFR        : Alternate_Function_Fields;
+      Reserved_4 : Reserved_984x8 with Unreferenced;
+   end record with
+      Size => 16#400# * 8;
+
+   for GPIO_Port use record
+      MODER      at 0  range 0 .. 31;
+      OTYPER     at 4  range 0 .. 15;
+      Reserved_1 at 6  range 0 .. 15;
+      OSPEEDR    at 8  range 0 .. 31;
+      PUPDR      at 12 range 0 .. 31;
+      IDR        at 16 range 0 .. 15;
+      Reserved_2 at 18 range 0 .. 15;
+      ODR        at 20 range 0 .. 15;
+      Reserved_3 at 22 range 0 .. 15;
+      BSRR_Set   at 24 range 0 .. 15;
+      BSRR_Reset at 26 range 0 .. 15;
+      LCKR       at 28 range 0 .. 31;
+      AFR        at 32 range 0 .. 63;
+      Reserved_4 at 40 range 0 .. 7871;
+   end record;
+
+The type for the unused gap, :ada:`Reserved_984x8`, must represent 984
+bytes so we declare an array like so:
+
+.. code-block:: ada
+
+   type Reserved_984x8 is array (1 ..  984) of Byte with
+      Component_Size => Unsigned_8'Size,
+      Size           => 984 * Unsigned_8'Size;
+   --  This type is used to ensure the necessary gaps between GPIO
+   --  ports in memory. As per the STM32F405xx etc. Reference Manual,
+   --  RM 0090, Table 1, that gap is 984 bytes per port.
+
+We also set the size of the entire record type to 16400# bytes since
+that is what we should require. As such, this is a "confirming" size
+clause.
+
+We don't really need to both set the record type size to the larger
+value, and also declare the reserved gap component at the end to
+increase the size. Doing both is just making doubly sure we get it
+right.
+
 
 Dynamic Address Conversion
 --------------------------
