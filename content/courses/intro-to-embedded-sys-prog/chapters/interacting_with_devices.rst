@@ -682,7 +682,7 @@ bytes so we declare an array like so:
    --  ports in memory. As per the STM32F405xx etc. Reference Manual,
    --  RM 0090, Table 1, that gap is 984 bytes per port.
 
-We also set the size of the entire record type to 16400# bytes since
+We also set the size of the entire record type to 16#400# bytes since
 that is what we should require. As such, this is a "confirming" size
 clause.
 
