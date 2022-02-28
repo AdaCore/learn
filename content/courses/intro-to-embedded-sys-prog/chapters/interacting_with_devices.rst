@@ -45,8 +45,9 @@ purpose I/O (GPIO) pin on an Arm microcontroller for one of the
 alternate function number. But let's say you knew that. Is the code
 correct? The longer it takes to know, the less productive you are. (By
 the way, the fact that the code above is in C is beside the point. If we
-wrote it the same way in Ada it would be equally opaque. There are more
-readable approaches.)
+wrote it the same way in Ada it would be equally opaque.) There are more
+readable approaches. Judicious use of record and array types is one. We'll
+say more about that shortly.
 
 Some devices are very simple. In these cases the application may
 interact directly with the device without unduly affecting productivity.
@@ -55,13 +56,12 @@ with sixteen distinct positions. Users could set the switch to whatever
 the application code required, e.g., to indicate some configuration
 information. The entire interface to this device was a single read-only
 8-bit byte in memory. That's all there was to it: you read the memory
-and thus got the numeric setting of the switch. (More on that sort of
-thing in a moment.)
+and thus got the numeric setting of the switch.
 
 More complex devices, however, usually rely on software abstraction to
 deal with the complexity. Just as abstraction is a fundamental way to
 combat complexity in software, abstraction also can be used to combat
-the complexity of driving complex hardware. The abstraction is presented
+the complexity of driving sophisticated hardware. The abstraction is presented
 to users by a software "device driver" that exists as a layer between
 the application code and the hardware device. The layer hides the gory
 details of the hardware manipulation behind subprograms, types, and
@@ -90,19 +90,19 @@ no performance penalty.
 Note the first parameter to the call above: :c:`USARTx_TX_GPIO_PORT`.
 There are multiple GPIO ports on an Arm implementation; the vendor
 decides how many. In this case one of them has been connected to a USART
-(Universal Synchronous Asynchronous Receiver Transmitter), another
-device on the Arm chip. When there are multiple devices, good software
+(Universal Synchronous Asynchronous Receiver Transmitter), an external
+device for sending and receiving serial data. When there are multiple devices, good software
 engineering suggests that the device driver present a given device as
 one of a type. That's what an "abstract data type" (ADT) provides for
 software and so the device driver applies the same design. An ADT is
-essentially a class, in class-oriented languages. In Ada it is a
+essentially a class, in class-oriented languages. In Ada, an ADT is represented as a
 private type declared in a package, along with subprograms that take
 the type as a parameter.
 
 The Ada Drivers Library (ADL) provided by AdaCore and the Ada community
 uses this design to supply Ada drivers for the timers, I2C, A/D and D/A
 converters, and other devices common to microcontrollers. Multiple
-devices are presented as instances abstract data types. A variety of
+devices are presented as instances of abstract data types. A variety of
 development platforms from various vendors are supported, including the
 STM32 series boards. The library is available on GitHub for both
 non-proprietary and commercial use here:
@@ -199,9 +199,9 @@ and a 32-bit array object:
    Y : Bits32 with Address => X'Address;
 
 Because one view is as an integer and the other as an array, we can
-access that memory using the two different views' operations. Via the
+access that memory using the two different views' operations. Using the
 view as an array object (:ada:`Y`) we can access individual bits of the
-memory shared with :ada:`X`. Via the view as an integer (:ada:`X`), we
+memory shared with :ada:`X`. Using the view as an integer (:ada:`X`), we
 can do arithmetic on the contents of that memory. (We could have used an
 unsigned integer instead of the signed type, and thereby gained the
 bit-oriented operations, but that's not the point.)
@@ -248,14 +248,14 @@ execution of the code is erroneous, meaning all bets are off. You need
 to know what you're doing.
 
 What about writing to the variable? Is that meaningful? In this
-particular rotary switch case, no. It is effectively read-only memory.
+particular example, no. It is effectively read-only memory.
 But for some other device it very well could be meaningful, certainly.
 It depends on the hardware. But in this case, assigning a value to the
 :ada:`Rotary_Switch` variable would have no effect, which could be confusing to
 programmers. It looks like a variable, after all. We wouldn't declare it
 as a constant because the human user could rotate the switch, resulting
-in a different value read. Therefore, we would hid the Ada variable
-behind a function, obviating the entire question. Clients of the
+in a different value read. Therefore, we would hide the Ada variable
+behind a function, precluding the entire question. Clients of the
 function can then use it for whatever purpose they require, e.g., as the
 unique identifier for a computer in a rack.
 
@@ -280,15 +280,13 @@ In addition, we might want to apply more than one type, at any one time,
 to a given memory-mapped device. Doing so allows the client code some
 flexibility, or it might facilitate an internal implementation. For
 example, the STM32 boards from ST Microelectronics include a 96-bit
-device unique identifier on-board. Much like the rotary switch example
-above, the unique identifier is located at a fixed memory location.
-(Unlike the rotary switch, the value is a constant.) The primary
-difference in this case is that we provide two different views |mdash|
-types |mdash| for this unique identifier. One type provides the
+device unique identifier on each board. The identifier starts at a fixed memory location.
+In this example we provide two different views |mdash|
+types |mdash| for the value. One type provides the
 identifier as a String containing twelve characters, whereas another
 type provides the value as an array of three 32-bit unsigned words
 (i.e., 12 bytes). The two types are applied by two overloaded functions
-that are distinguished by their return type.
+that are distinguished by their return type:
 
 .. code-block:: ada
 
@@ -306,8 +304,8 @@ that are distinguished by their return type.
    end STM32.Device_Id;
 
 The subtype :ada:`Device_Id_Image` is the view of the 96-bits as an
-array of twelve characters. (Using type :ada:`String` here isn't essential. We
-could have defined an array of bytes instead of :ada:`Character`.) Likewise,
+array of twelve 8-bit characters. (Using type :ada:`String` here isn't essential. We
+could have defined an array of bytes instead of :ada:`Character`.) Similarly,
 subtype :ada:`Device_Id_Tuple` is the view of the 96-bits as an array of
 three 32-bit unsigned integers. Clients can then choose how they want to
 view the unique id by choosing which function to call.
@@ -324,15 +322,13 @@ same shared memory:
       ID_Address : constant System.Address := System'To_Address (16#1FFF_7A10#);
 
       function Unique_Id return Device_Id_Image is
-         Result : Device_Id_Image with
-           Address => ID_Address, Import;
+         Result : Device_Id_Image with Address => ID_Address, Import;
       begin
          return Result;
       end Unique_Id;
 
       function Unique_Id return Device_Id_Tuple is
-         Result : Device_Id_Tuple with
-           Address => ID_Address, Import;
+         Result : Device_Id_Tuple with Address => ID_Address, Import;
       begin
          return Result;
       end Unique_Id;
@@ -348,7 +344,11 @@ require a static expression and where the function call could not be
 used (because the function call is always non-static, even if its argument
 is static).
 
-Earlier we indicated that the bit-pattern oriented implementation of the
+The only difference in the bodies is the return type and matching type
+for the local :ada:`Result` variable. Both functions read from the same
+location in memory.
+
+Earlier we indicated that the bit-pattern implementation of the
 GPIO function could be expressed differently, resulting in more
 readable, therefore maintainable, code. The fact that the code is in C
 is irrelevant; the same approach in Ada would not be any better. Here's
@@ -384,10 +384,10 @@ pins on the port. Those 4-bit quantities specify the "alternate
 functions" that the pin can take on, if needed. The alternate functions
 allow a given pin to do more than act as a single discrete I/O pin. For
 example, a pin could be connected to the incoming lines of a USART. We
-use the configuration routine to apply the specific code representing
+use the configuration routine to apply the specific 4-bit code representing
 the alternate function required for our application.
 
-These 16 4-bit alternate function code fields are contiguous in the
+These 16 4-bit alternate function fields are contiguous in the
 register (hence memory) so we can represent them as an array with a
 total size of 64-bits (i.e., 16 times 4). In the C version this array
 has as two components of type :c:`uint32_t` so it must compute where the
@@ -495,7 +495,7 @@ Type :ada:`Alternate_Function_Fields` is then used to declare the
       BSRR_Reset : Half_Word;       --  bit reset register
       LCKR       : Word with Atomic;
       AFR        : Alternate_Function_Fields;
-      Reserved_4 : Reserved_984x8;
+      Unused     : Unaccessed_Gap;
    end record with
      Size => 16#400# * 8;
 
@@ -513,7 +513,7 @@ Type :ada:`Alternate_Function_Fields` is then used to declare the
       BSRR_Reset at 26 range 0 .. 15;
       LCKR       at 28 range 0 .. 31;
       AFR        at 32 range 0 .. 63;
-      Reserved_4 at 40 range 0 .. 7871;
+      Unused     at 40 range 0 .. 7871;
    end record;
 
 These declarations define a record type that matches the content and
@@ -557,7 +557,8 @@ the coding approach used in the C version, comparatively speaking. It is
 true that the Ada version required a couple more type declarations, but
 those make the procedure body far simpler. That resulting simplicity is
 a reflection of the balance between data structures and executable
-statements that we should always try to achieve.
+statements that we should always try to achieve. Ada just makes that
+easier to achieve than in some other languages.
 
 Of course, the underlying hardware likely has no machine-supported 4-bit
 unsigned type so larger hardware numeric types are used. Hence there are
@@ -586,7 +587,9 @@ array of the :ada:`GPIO_Port` record type to represent all the ports
 implemented. We would just set the array object's address at the address
 specified for the first port object in memory. Then, normal array
 indexing will provide access to any given port in the memory-mapped
-hardware. This array approach requires each array component |mdash| the
+hardware.
+
+This array approach requires each array component |mdash| the
 :ada:`GPIO_Port` record type |mdash| to be the right size so that all
 the array components start on addresses corresponding to the start of
 the next port in hardware.
@@ -602,7 +605,7 @@ fact that is guaranteed by the language), so the array address must be
 set to whatever the vendor documentation specified for the first port.
 
 However, in some cases the vendor will leave gaps of unused memory for
-complicated memory-mapped objects like the ports. They do so for the
+complicated memory-mapped objects like these ports. They do so for the
 sake of future expansion of the implementation, e.g., to add new
 features or capacity. The gaps are thus between consecutive hardware
 devices.
@@ -649,7 +652,7 @@ convenience:
       BSRR_Reset : Half_Word;       --  bit reset register
       LCKR       : Word with Atomic;
       AFR        : Alternate_Function_Fields;
-      Reserved_4 : Reserved_984x8 with Unreferenced;
+      Unused     : Unaccessed_Gap with Unreferenced;
    end record with
       Size => 16#400# * 8;
 
@@ -667,29 +670,42 @@ convenience:
       BSRR_Reset at 26 range 0 .. 15;
       LCKR       at 28 range 0 .. 31;
       AFR        at 32 range 0 .. 63;
-      Reserved_4 at 40 range 0 .. 7871;
+      Unused     at 40 range 0 .. 7871;
    end record;
 
-The type for the unused gap, :ada:`Reserved_984x8`, must represent 984
-bytes so we declare an array like so:
+The type for the gap, :ada:`Unaccessed_Gap`, must represent 984
+bytes so we declared an array like so:
 
 .. code-block:: ada
 
-   type Reserved_984x8 is array (1 ..  984) of Byte with
+   Gap_Size : constant := 984;  -- bytes
+   --  There is a gap of unused, reserved memory after the end of the
+   --  bytes used by any given memory-mapped GPIO port. The size of the
+   --  gap is indicated in the STM32F405xx etc. Reference Manual, RM 0090.
+   --  Specifically, Table 1 shows the starting and ending addresses mapped
+   --  to the GPIO ports, for an allocated size of 16#400#, or 1024 (decimal)
+   --  bytes per port. However, in the same document, the register map for
+   --  these ports shows only 40 bytes currently in use. Presumably this gap is
+   --  for future expansion when additional functionality or capacity is added,
+   --  such as more pins per port.
+
+   type Unaccessed_Gap is array (1 .. Gap_Size) of Unsigned_8 with
       Component_Size => Unsigned_8'Size,
-      Size           => 984 * Unsigned_8'Size;
-   --  This type is used to ensure the necessary gaps between GPIO
-   --  ports in memory. As per the STM32F405xx etc. Reference Manual,
-   --  RM 0090, Table 1, that gap is 984 bytes per port.
+      Size           => Gap_Size * Unsigned_8'Size;
+   --  This type is used to represent the necessary gaps between GPIO
+   --  ports in memory. We explicitly allocate a record component of
+   --  this type at the end of the record type for that purpose.
 
 We also set the size of the entire record type to 16#400# bytes since
-that is what we should require. As such, this is a "confirming" size
-clause.
-
-We don't really need to both set the record type size to the larger
-value, and also declare the reserved gap component at the end to
-increase the size. Doing both is just making doubly sure we get it
-right.
+that is the total of the required bytes plus the gap, as per the
+documentation. As such, this is a "confirming" size clause because the
+reserved gap component increases the required size to that value (which
+is the point). We don't really need to both, i.e., declare the reserved
+gap component and also set the record type size to the larger value. We
+could have done either one alone. One could argue that setting the size
+alone would have been simpler, in that it would obviate the type
+declaration and corresponding record component declaration. Being doubly
+explicit seemed a good idea at the time.
 
 
 Dynamic Address Conversion
@@ -711,7 +727,7 @@ access value provides a view of the memory corresponding to the
 designated type, starting at the converted address value.
 
 For example, perhaps a networking component is given a buffer |mdash| an
-unconstrained array of bytes |mdash| representing a received message. A
+array of bytes |mdash| representing a received message. A
 subprogram is called with the buffer as a parameter, or the parameter
 can be the address of the buffer. If the subprogram must interpret this
 array via different views, this alternative approach works well. We
@@ -845,7 +861,7 @@ incoming address in :ada:`Location` to a pointer designating the
 access value to get the designated :ada:`Word` value. Hence :ada:`X`
 refers to that two-byte value in memory.
 
-We could very likely achieve the same affect by replacing the call to
+We could almost certainly achieve the same affect by replacing the call to
 the function in :ada:`To_Pointer` with a call to an instance of
 :ada:`Ada.Unchecked_Conversion`. The conversion would still be between
 an access type and a value of type :ada:`System.Address`, but the access type
@@ -925,7 +941,8 @@ having the compiler do these computations for you, if possible.
 
 Here's an example illustrating the facilities. The procedure defines an
 array of record values, then walks the array, printing the array
-components as it goes. It is not the way to really write this code.
+components as it goes. (This is not the way to really implement such code.
+It's just an illustration for address arithmetic.)
 
 .. code-block:: ada
 
@@ -993,7 +1010,7 @@ specific set of machine instructions emitted from the compiler is to
 write them ourselves, in the Ada source code, using machine-code
 insertions (MCI). The rationale was that the code generator will make
 reasonable assumptions, including the assumption that performance is of
-uppermost importance, but these assumptions can conflict with device
+uppermost importance, but that these assumptions can conflict with device
 requirements.
 
 For example, the code generator might not issue the specific sequence of
@@ -1033,22 +1050,22 @@ no need to change your existing source code using the pragmas to use the
 aspects instead, unless you need to change it for some other reason.
 
 As this is an introduction, we will not go into absolutely all the details,
-but will, instead, give a sense of what the language provides, and why.
+but will instead give a sense of what the language provides, and why.
 
 
 Aspect :ada:`Independent`
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To interface with a memory-mapped device, there is an Ada object of an
+To interface with a memory-mapped device, there will be an Ada object of an
 appropriate type that is mapped to one or more bytes of memory. The
 software interacts with the device by reading and/or writing to the
 memory locations mapped to the device, using the operations defined by
-the type and performing assignments in terms of Ada semantics.
+the type in terms of normal Ada semantics.
 
 Some memory-mapped devices can be directly represented by a single
-scalar value, usually of some signed or unsigned numeric type. Other,
-more sophisticated devices almost always involve several distinct
-controls and values. Therefore, representation in the software as a
+scalar value, usually of some signed or unsigned numeric type.
+More sophisticated devices almost always involve several distinct
+input and output fields. Therefore, representation in the software as a
 record object is very common. Ada record types have such extensive and
 flexible support for controlling their representation, down to the
 individual bit level, that using a record type makes sense. (And as
@@ -1063,18 +1080,17 @@ Let's say that one of these record components is smaller than the size
 of the smallest addressable memory unit on the machine, which is to say,
 smaller than the machine instructions can read/write memory
 individually. A Boolean record component is a good example, and very
-common. It could be a single numeric bit, just as easily. Mapping that
-bit to a Boolean value tends to make for more readable code. The point
-is that the machine cannot usually read/write single bits in memory, so
-the generated code will almost certainly read a byte to get the enclosed
+common. The machine cannot usually read/write single bits in memory, so
+the generated code will almost certainly read or write a byte to get the enclosed
 single-bit Boolean component. It might use a larger sized access too, a
 half-word or word. Then the generated code masks off the bits that are
-not of interest and does some shifts to get the desired value.
+not of interest and does some shifts to get the desired component.
 
-Reading and writing more than just the single component accessed in the
+Reading and writing the bytes surrounding the component accessed in the
 source code can cause a problem. In particular, some devices react to
 being read or written by doing something physical in the hardware.
-That's the device designer's intent for the software.
+That's the device designer's intent for the software. But we don't want
+that to happen accidentally due to surrounding bytes being accessed.
 
 Therefore, to prevent these "extra" bytes from being accessed, we need a
 way to tell the compiler that we need the read or write accesses for the
@@ -1082,15 +1098,16 @@ given object to be independent of the surrounding memory. If the
 compiler cannot do so, we'll get an error and the compilation will fail.
 That beats debugging every time.
 
-Therefore, the aspect :ada:`Independent` specifies whether the code
-generated by the compiler may access the memory surrounding some object
-when reading or writing that object. It declares that a type, object, or
-component must be independently addressable by the hardware. If applied
-to a type, it applies to all components and objects of the type.
-Likewise, aspect :ada:`Independent_Components` declares that the
-components of an array or record type are independently addressable. The
-compiler will reject the aspect if independent access is not possible
-for the type/object in question.
+Therefore, the aspect :ada:`Independent` specifies that the code
+generated by the compiler must be able to load and store the memory for
+the specified object without also accessing surrounding memory. More
+completely, it declares that a type, object, or component must be
+independently addressable by the hardware. If applied to a type, it
+applies to all components and objects of the type. The compiler will
+reject the aspect if independent access is not possible for the
+type/object in question. Likewise, aspect :ada:`Independent_Components`
+declares that the components of an array or record type are
+independently addressable.
 
 For example, if we try to mark each Boolean component of a record type
 as :ada:`Independent` we can do so, but that will require that each
@@ -1126,7 +1143,7 @@ accessed.
 
 For a typical target machine the compiler will reject that code,
 complaining that the :ada:`Size` for :ada:`R`' must be at least 48 bits,
-i.e, 8 bits per component. That's because the smallest quantity this
+i.e., 8 bits per component. That's because the smallest quantity this
 machine can independently address is an 8-bit byte.
 
 But if we don't really need the individual bits to be independently
@@ -1216,7 +1233,7 @@ about the size of the entire record type. (This applies to arrays types
 too.) The problem is that the by-reference component needs to be
 represented in a manner that supports constructing valid pointers,
 "under the hood" so to speak, because that's what passing by-reference
-does.
+effectively does.
 
 As important as the effect of this aspect is, you probably won't see it
 specified. There are other aspects that are more typically required.
@@ -1285,7 +1302,7 @@ absolutely all that the program contains.
 
 The value of the variable :ada:`Silly` is not used in any way so there
 is no point in even declaring the variable, much less generating code to
-implement assigning a value to it. The update to the variable has only
+implement the assignment. The update to the variable has only
 an internal effect. With warnings enabled we'll receive notice from
 the compiler, but they're just warnings.
 
@@ -1297,7 +1314,7 @@ enabled) would be free to remove any access to the variable
 We can make the compiler recognize that a software object is part of an
 external effect by applying the aspect :ada:`Volatile`. (Aspect
 :ada:`Atomic` is pertinent too. More in a moment.) As a result, the
-compiler will generate load or store instructions for every read or
+compiler will generate memory load or store instructions for every read or
 update to the object that occurs in the source code. Furthermore, it
 cannot generate any additional loads or stores to that variable, and it
 cannot reorder loads or stores from their order in the source code.
@@ -1317,7 +1334,7 @@ cannot reorder loads or stores from their order in the source code.
       Close (Output);
    end Demo;
 
-If we compile the above, even with warnings enabled we won't get any
+If we compile the above, we won't get the warning we got earlier
 because the compiler is now required to generate the assignment for
 :ada:`Silly`.
 
@@ -1325,12 +1342,10 @@ The variable :ada:`Silly` is not even a memory-mapped object, but
 remember that we said these aspects are important to the tasking context
 too, for shared variables. We're ignoring that context in this course.
 
-Perhaps the issue is that you want to write some Ada code that interacts
-with a memory-mapped device, and you want to have exactly the load and
-store instructions generated that match those of the Ada code. The
-memory-mapped device will be volatile, in other words, but some other
-variables might need to be volatile too.
-
+There is another reason to mark a variable as :ada:`Volatile`. Sometimes
+you want to have exactly the load and store instructions generated that
+match those of the Ada code, even though the volatile object is not a
+memory-mapped object.
 For example, :doc:`elsewhere <./multi_language_development>`
 we said that the best way to achieve exact assembly instruction
 sequences is the use of machine-code inserts (MCI). That's true, but for
@@ -1368,7 +1383,9 @@ and stores. If we wrote this in Ada it would look like this:
 
 :ada:`Temp` is marked volatile for the sake of getting exactly the load
 and stores that we express in the source code, corresponding to the
-hardware locking protocol.
+hardware locking protocol. It's true that Port is a memory-mapped
+object, so it too would be volatile, but we also need :ada:`Temp` to be
+volatile.
 
 This high-level coding approach will work, and is simple enough that
 MCIs might not be needed. However, what really argues against it is that
@@ -1392,7 +1409,7 @@ here.)
 When aspect :ada:`Volatile` is applied to a record type or an object of
 such a type, all the record components are automatically volatile too.
 
-For an array type (not a record type), a related aspect
+For an array type (but not a record type), a related aspect
 :ada:`Volatile_Components` declares that the components of the array
 type are volatile. However, if the :ada:`Volatile` aspect is specified,
 then the :ada:`Volatile_Components` aspect is automatically applied too,
@@ -1435,7 +1452,7 @@ store just the single byte that contains the bit or bits in question.
 This indivisibility effect can be specified via aspect :ada:`Atomic`. As
 a result, all reads and updates of such an object as a whole
 are indivisible. In practice that means that the entire object
-is accessed with one instruction per access. For a 16-bit object, all
+is accessed with one load or store instruction. For a 16-bit object, all
 16-bits are loaded and stored at once. For a 32-bit object, all 32-bits
 at once, and so on. The upper limit is the size of the largest machine
 scalar that the processor can manipulate with one instruction, as
@@ -1498,9 +1515,8 @@ described in this section.
 
 If you think about atomic behavior in the context of machine
 instructions, loading and storing from/to memory atomically can only be
-performed for quantities that are independently addressable. For
-example, individual bits don't have distinct addresses on the typical
-machine. Consequently, all atomic objects are considered to be specified as
+performed for quantities that are independently addressable.
+Consequently, all atomic objects are considered to be specified as
 independently addressable too. Aspect specifications and representation
 items cannot change that fact. You can expect the compiler to reject any
 aspect or representation choice that would prevent this from being true.
@@ -1529,7 +1545,7 @@ Many devices have single-bit flags in the hardware that are not
 allocated to distinct bytes. They're packed into bytes and words shared
 with other flags. It isn't just individual bits either. Multi-bit fields
 that are smaller than a byte, e.g., two 4-bit quantities packed into a
-byte, are common.
+byte, are common. We saw that with the GPIO alternate functions codes earlier.
 
 Ordinarily in Ada we represent such composite hardware interfaces using a
 record type. (Sometimes an array type makes more sense. That doesn't
@@ -1590,11 +1606,11 @@ internally as required by the hardware. We don't show that part.
 
 The aspect :ada:`Atomic` is applied to the entire record type, ensuring that
 the memory mapped to the hardware register is loaded and stored only as
-32-bit quantities. It isn't that we want the loads and stores to be
+32-bit quantities. In this example it isn't that we want the loads and stores to be
 indivisible. Rather, we want the generated machine instructions that load
 and store the object to use 32-bit word instructions, even if we are only
 reading or updating a component of the object. That's what the hardware
-requires.
+requires for all accesses.
 
 Next we'd use that type declaration to declare one of the components of
 an enclosing record type representing one entire DMA "stream":
@@ -1632,9 +1648,9 @@ controller. Using the read-modify-write idiom we would do it like so:
       Temp : Stream_Config_Register;
       --  these registers require 32-bit accesses, hence the temporary
    begin
-      Temp := Unit.Streams (Stream).CR;  --  read entire register
+      Temp := Unit.Streams (Stream).CR;  --  read entire CR register
       Temp.Stream_Enabled := True;
-      Unit.Streams (Stream).CR := Temp;  --  write entire register
+      Unit.Streams (Stream).CR := Temp;  --  write entire CR register
    end Enable;
 
 That works, and of course the procedural interface presented to clients
