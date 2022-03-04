@@ -700,7 +700,7 @@ We also set the size of the entire record type to 16#400# bytes since
 that is the total of the required bytes plus the gap, as per the
 documentation. As such, this is a "confirming" size clause because the
 reserved gap component increases the required size to that value (which
-is the point). We don't really need to both, i.e., declare the reserved
+is the point). We don't really need to do both, i.e., declare the reserved
 gap component and also set the record type size to the larger value. We
 could have done either one alone. One could argue that setting the size
 alone would have been simpler, in that it would obviate the type
@@ -1383,7 +1383,7 @@ and stores. If we wrote this in Ada it would look like this:
 
 :ada:`Temp` is marked volatile for the sake of getting exactly the load
 and stores that we express in the source code, corresponding to the
-hardware locking protocol. It's true that Port is a memory-mapped
+hardware locking protocol. It's true that :ada:`Port` is a memory-mapped
 object, so it too would be volatile, but we also need :ada:`Temp` to be
 volatile.
 
