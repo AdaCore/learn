@@ -235,6 +235,50 @@ the call to :ada:`Assert` is not ignored.
 
     - `11.4.2 Pragmas Assert and Assertion_Policy <http://www.ada-auth.org/standards/12rm/html/RM-11-4-2.html>`_
 
+Checks and exceptions
+---------------------
+
+This table shows all available checks and the associated exceptions:
+
++-----------------------------+-------------------------+
+| Check                       | Exception               |
++=============================+=========================+
+| :ada:`Access_Check`         | :ada:`Constraint_Error` |
++-----------------------------+-------------------------+
+| :ada:`Discriminant_Check`   | :ada:`Constraint_Error` |
++-----------------------------+-------------------------+
+| :ada:`Division_Check`       | :ada:`Constraint_Error` |
++-----------------------------+-------------------------+
+| :ada:`Index_Check`          | :ada:`Constraint_Error` |
++-----------------------------+-------------------------+
+| :ada:`Length_Check`         | :ada:`Constraint_Error` |
++-----------------------------+-------------------------+
+| :ada:`Overflow_Check`       | :ada:`Constraint_Error` |
++-----------------------------+-------------------------+
+| :ada:`Range_Check`          | :ada:`Constraint_Error` |
++-----------------------------+-------------------------+
+| :ada:`Tag_Check`            | :ada:`Constraint_Error` |
++-----------------------------+-------------------------+
+| :ada:`Accessibility_Check`  | :ada:`Program_Error`    |
++-----------------------------+-------------------------+
+| :ada:`Allocation_Check`     | :ada:`Program_Error`    |
++-----------------------------+-------------------------+
+| :ada:`Elaboration_Check`    | :ada:`Program_Error`    |
++-----------------------------+-------------------------+
+| :ada:`Storage_Check`        | :ada:`Storage_Error`    |
++-----------------------------+-------------------------+
+
+In addition, we can use :ada:`All_Checks` to refer to all those checks above at
+once.
+
+You may consult the
+`section 11.5 <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_ of
+the Ada Reference Manual for more details on those checks.
+
+.. todo::
+
+    Complete section!
+
 
 ``Ada.Exceptions`` package
 --------------------------
@@ -1043,46 +1087,6 @@ intended to help catch bugs.
 .. admonition:: In the Ada Reference Manual
 
     - `11.5 Suppressing Checks <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_
-
-Checks and exceptions
-~~~~~~~~~~~~~~~~~~~~~
-
-This table shows all available checks and the associated exceptions:
-
-+-----------------------------+-------------------------+
-| Check                       | Exception               |
-+=============================+=========================+
-| :ada:`Access_Check`         | :ada:`Constraint_Error` |
-+-----------------------------+-------------------------+
-| :ada:`Discriminant_Check`   | :ada:`Constraint_Error` |
-+-----------------------------+-------------------------+
-| :ada:`Division_Check`       | :ada:`Constraint_Error` |
-+-----------------------------+-------------------------+
-| :ada:`Index_Check`          | :ada:`Constraint_Error` |
-+-----------------------------+-------------------------+
-| :ada:`Length_Check`         | :ada:`Constraint_Error` |
-+-----------------------------+-------------------------+
-| :ada:`Overflow_Check`       | :ada:`Constraint_Error` |
-+-----------------------------+-------------------------+
-| :ada:`Range_Check`          | :ada:`Constraint_Error` |
-+-----------------------------+-------------------------+
-| :ada:`Tag_Check`            | :ada:`Constraint_Error` |
-+-----------------------------+-------------------------+
-| :ada:`Accessibility_Check`  | :ada:`Program_Error`    |
-+-----------------------------+-------------------------+
-| :ada:`Allocation_Check`     | :ada:`Program_Error`    |
-+-----------------------------+-------------------------+
-| :ada:`Elaboration_Check`    | :ada:`Program_Error`    |
-+-----------------------------+-------------------------+
-| :ada:`Storage_Check`        | :ada:`Storage_Error`    |
-+-----------------------------+-------------------------+
-
-In addition, we can use :ada:`All_Checks` to refer to all those checks above at
-once.
-
-You may consult the
-`section 11.5 <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_ of
-the Ada Reference Manual for more details on those checks.
 
 .. todo::
 
