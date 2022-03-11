@@ -120,10 +120,10 @@ conversion is needed:
       for My_Boolean use (False => 3, True => 6);
       type My_Boolean_Int is range 3 .. 6;
       for My_Boolean_Int'Size use My_Boolean'Size;
-   
+
       function To_Int is new Ada.Unchecked_Conversion
         (My_Boolean, My_Boolean_Int);
-   
+
       function From_Int is new Ada.Unchecked_Conversion
         (My_Boolean_Int, My_Boolean);
 

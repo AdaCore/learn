@@ -31,11 +31,11 @@ As an example, let's calculate some statistics for My_Data array:
          Count : Natural := 0;
          Total : Float := 0.0;
       end record;
-   
+
       My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
-   
+
       Statistic_For_My_Data : Statistic;
-   
+
    end Statistics;
 
 To do this, we loop over :ada:`My_Data` elements:
@@ -52,10 +52,10 @@ To do this, we loop over :ada:`My_Data` elements:
          Count : Natural := 0;
          Total : Float := 0.0;
       end record;
-   
+
       My_Data : constant array (1 .. 5) of Float :=
         (for J in 1 .. 5 => Float (J));
-   
+
       Statistic_For_My_Data : Statistic;
 
    begin
@@ -63,7 +63,7 @@ To do this, we loop over :ada:`My_Data` elements:
          Statistic_For_My_Data.Count := @ + 1;
          Statistic_For_My_Data.Total := @ + Data;
       end loop;
-   
+
       Ada.Text_IO.Put_Line (Statistic_For_My_Data'Image);
    end Main;
 
@@ -80,7 +80,7 @@ prints a line each time it's called:
    procedure Main is
 
       My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
-   
+
       function To_Index (Value : Positive) return Positive is
       begin
          Ada.Text_IO.Put_Line ("To_Index is called.");
