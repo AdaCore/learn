@@ -95,7 +95,7 @@ prints a line each time it's called:
 This use of :ada:`@` may look a bit cryptic, but it's the best solution
 that was found.  Unlike other languages (e.g., :c:`sum += x;` in C), this
 approach lets you use :ada:`@` an arbitrary number of times within the
-right hand side of an assigment statement.
+right hand side of an assignment statement.
 
 Alternatives
 ------------
