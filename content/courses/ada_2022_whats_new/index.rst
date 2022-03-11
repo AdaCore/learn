@@ -37,7 +37,7 @@ Ada 2022: What's New
     This course presents an overview of the new features of the latest Ada 2022
     standard.
 
-    This document was written by Maxim Reznik.
+    This document was written by Maxim Reznik and reviewed by Richard Kenner.
 
 .. only:: builder_html
 
