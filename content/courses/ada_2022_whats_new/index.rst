@@ -18,7 +18,7 @@ Ada 2022: What's New
 
     .. container:: content-copyright
 
-        Copyright © 2021, AdaCore
+        Copyright © 2022, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
