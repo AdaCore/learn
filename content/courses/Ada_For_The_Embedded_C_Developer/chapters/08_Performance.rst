@@ -384,7 +384,7 @@ types:
     end record;
 
 However, the consequences of the above is that any declaration of a instance of
-this type without an explicit value for :ada:`V` will issue a call to
+this type without an explicit value for :ada:`F` will issue a call to
 :ada:`Call_To_Some_Function`. More subtle issue may arise with elaboration. For
 example, it's possible to write:
 
