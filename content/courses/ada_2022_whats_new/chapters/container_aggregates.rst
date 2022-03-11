@@ -49,6 +49,7 @@ aggregate:
 
    !main.adb
    pragma Ada_2022;
+
    procedure Main is
 
       package JSON is
@@ -93,6 +94,7 @@ The equivalent for maps is:
 
    !main.adb
    pragma Ada_2022;
+
    procedure Main is
 
       package JSON is
@@ -142,6 +144,7 @@ code in native JSON.  For example:
 
    !main.adb
    pragma Ada_2022;
+
    procedure Main is
 
       package JSON is
