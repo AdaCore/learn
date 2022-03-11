@@ -44,9 +44,9 @@ Advanced Ada
     course is a prerequisite for this course.
 
     This document was written by Gustavo A. Hoffmann and Robert A. Duff, with
-    contributions from Patrick Rogers, Quentin Ochem, Emmanuel Briot,
-    Yannick Moy, Javier Miranda, Gary Dismukes,
-    Arnaud Charlet, Franco Gasperoni, and Robert Dewar.
+    contributions from Arnaud Charlet, Emmanuel Briot, Franco Gasperoni,
+    Gary Dismukes, Javier Miranda, Patrick Rogers, Quentin Ochem, Robert Dewar,
+    and Yannick Moy.
 
     This document was reviewed by Patrick Rogers and Tucker Taft.
 
