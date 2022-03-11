@@ -47,7 +47,7 @@ We can implement the `RSA algorithm
 <https://en.wikipedia.org/wiki/RSA_(cryptosystem)>`_ in a few lines of
 code. The main operation of RSA is (m\ :sup:`d`) mod n.  But you can't just
 write :ada:`m ** d`, because these are really big numbers and the result
-won't fit into memory. However if you keep intermediate result :ada:`mod
+won't fit into memory. However, if you keep intermediate result :ada:`mod
 n` during the m\ :sup:`d` calculation, it will work. Let's write this operation
 as a function:
 
