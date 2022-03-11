@@ -40,7 +40,7 @@ Tiny RSA implementation
 
 .. note::
 
-   Note that you shouldn't Big_Numbers for cryptography because it's
+   Note that you shouldn't use :ada:`Big_Numbers` for cryptography because it's
    vulnerable to timing side-channels attacks.
 
 We can implement the `RSA algorithm
@@ -151,7 +151,7 @@ Complete code snippet:
 Big Reals
 ---------
 
-In addition to Big_Integer, Ada 2022 provides `Big Reals`_.
+In addition to :ada:`Big_Integer`, Ada 2022 provides `Big Reals`_.
 
 .. _`Big Reals`: http://www.ada-auth.org/standards/2xaarm/html/AA-A-5-7.html
 

@@ -37,12 +37,12 @@ Then we call it as a normal Ada function:
    printf_double (Interfaces.C.To_C ("Pi=%f"), Ada.Numerics.π);
 
 Unfortunately, doing it this way doesn't always work because some
-`ABIs`_ use different calling conventions for variadic functions. For
+`ABI`_\ s use different calling conventions for variadic functions. For
 example, the `AMD64 ABI`_ specifies:
 
- * %rax - with variable arguments passes information about the number
+ * ``%rax`` - with variable arguments passes information about the number
    of vector registers used
- * %xmm0–%xmm1 - used to pass and return floating point arguments
+ * ``%xmm0–%xmm1`` - used to pass and return floating point arguments
 
 This means, if we write (in C):
 
