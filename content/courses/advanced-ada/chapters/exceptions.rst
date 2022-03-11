@@ -1623,6 +1623,74 @@ to believe that the checks can't fail, as a result of testing or other
 analysis. Otherwise, you're removing an important safety feature of Ada that's
 intended to help catch bugs.
 
+:ada:`pragma Unsuppress`
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use :ada:`pragma Unsuppress` to reverse the effect of a
+:ada:`pragma Suppress`. While :ada:`pragma Suppress` gives permission to the
+compiler to remove a specific check, :ada:`pragma Unsuppress` revokes that
+permission.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Unsuppress
+    :class: ada-run-expect-failure
+
+    procedure Show_Index_Check is
+
+       type Integer_Array is array (Positive range <>)
+         of Integer;
+
+       pragma Suppress (Index_Check);
+       --  from now on, the compiler may
+       --  eliminate index checks...
+
+       function Unchecked_Value_Of (A : Integer_Array;
+                     I : Integer) return Integer is
+          type Half_Integer_Array is new
+            Integer_Array (A'First ..
+                           A'First + A'Length / 2);
+
+          A_2 : Half_Integer_Array := (others => 0);
+       begin
+          return A_2 (I);
+       end Unchecked_Value_Of;
+
+       pragma Unsuppress (Index_Check);
+       --  from now on, index checks are
+       --  typically performed...
+
+       function Value_Of (A : Integer_Array;
+                     I : Integer) return Integer is
+          type Half_Integer_Array is new
+            Integer_Array (A'First ..
+                           A'First + A'Length / 2);
+
+          A_2 : Half_Integer_Array := (others => 0);
+       begin
+          return A_2 (I);
+       end Value_Of;
+
+       Arr_1 : Integer_Array (1 .. 10)  := (others => 1);
+
+    begin
+       Arr_1 (10) := Unchecked_Value_Of (Arr_1, 10);
+       Arr_1 (10) := Value_Of (Arr_1, 10);
+
+    end Show_Index_Check;
+
+In this example, we first use a :ada:`pragma Suppress (Index_Check)`, so the
+compiler is allowed to remove the index check from the
+:ada:`Unchecked_Value_Of` function. (Therefore, depending on the compiler, the
+call to the :ada:`Unchecked_Value_Of` function may complete without raising an
+exception.) Of course, in this specific example, suppressing the index check
+masks a severe issue.
+
+In contrast, an index check is performed in the :ada:`Value_Of` function
+because of the :ada:`pragma Unsuppress`. As a result, the index checks fails in
+the call to this function, which raises a :ada:`Constraint_Error` exception.
+
+
 .. admonition:: In the Ada Reference Manual
 
     - `11.5 Suppressing Checks <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_
