@@ -45,7 +45,7 @@ Advanced Ada
 
     This document was written by Gustavo A. Hoffmann and Robert A. Duff, with
     contributions from Patrick Rogers, Quentin Ochem, Emmanuel Briot,
-    Yannick Moy, Javier Miranda,
+    Yannick Moy, Javier Miranda, Gary Dismukes,
     Arnaud Charlet, Franco Gasperoni, and Robert Dewar.
 
     This document was reviewed by Patrick Rogers and Tucker Taft.
