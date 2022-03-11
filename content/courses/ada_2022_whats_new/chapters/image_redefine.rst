@@ -3,21 +3,21 @@
 Redefining the :ada:`'Image` attribute
 ======================================
 
-In Ada 2022 you can redefine :ada:`'Image` attribute for your type.
-Corresponding syntax has been changed several times. Let's see how
-does it work in GNAT Community 2021.
+In Ada 2022, you can redefine :ada:`'Image` attribute for your type,
+though the syntax to do this has been changed several times. Let's see
+how it works in GNAT Community 2021.
 
 .. note::
 
-    Attribute :ada:`'Image` redefinition is supported by
+    Redefining attribute :ada:`'Image` is supported by
 
     * GNAT Community Edition 2021 (using Text_Buffers)
     * GNAT Community Edition 2020 (using Text_Output.Utils)
     * GCC 11 (using Text_Output.Utils)
 
-As an example, let's redefine :ada:`'Image` attribute for the location
-in a source code. To do this we should provide a new :ada:`Put_Image`
-aspect on the type:
+In our example, let's redefine the :ada:`'Image` attribute for a
+location in source code. To do this, we provide a new :ada:`Put_Image`
+aspect for the type:
 
 .. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Image_Redefine
 
@@ -60,7 +60,7 @@ aspect on the type:
 What's the Root_Buffer_Type?
 ----------------------------
 
-Let's see how it is defined in :ada:`Ada.Strings.Text_Buffers` package.
+Let's see how it's defined in the :ada:`Ada.Strings.Text_Buffers` package.
 
 .. code-block:: ada
 
@@ -70,16 +70,16 @@ Let's see how it is defined in :ada:`Ada.Strings.Text_Buffers` package.
      (Buffer : in out Root_Buffer_Type;
       Item   : in     String) is abstract;
 
-Besides :ada:`Put` there are also :ada:`Wide_Put`, :ada:`Wide_Wide_Put`,
-:ada:`Put_UTF_8`, :ada:`Wide_Put_UTF_16`. And :ada:`New_Line`,
-:ada:`Increase_Indent`, :ada:`Decrease_Indent`.
+In addition to :ada:`Put`, there are also :ada:`Wide_Put`,
+:ada:`Wide_Wide_Put`, :ada:`Put_UTF_8`, :ada:`Wide_Put_UTF_16`. And
+also :ada:`New_Line`, :ada:`Increase_Indent`, :ada:`Decrease_Indent`.
 
 Outdated draft implementation
 -----------------------------
 
-GNAT Community Edition 2020 and GCC 11 both provide the draft
-implementation that is incompatible with Ada 2022 specification.
-In that case :ada:`My_Put_Image` looks like:
+GNAT Community Edition 2020 and GCC 11 both provide a draft
+implementation that's incompatible with the Ada 2022 specification.
+For those versions, :ada:`My_Put_Image` looks like:
 
 .. code-block:: ada
 

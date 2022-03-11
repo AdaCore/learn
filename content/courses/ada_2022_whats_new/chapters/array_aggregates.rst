@@ -5,7 +5,7 @@ Advanced Array Aggregates
 
 .. note::
 
-    Such array aggregates are supported by
+    These array aggregates are supported by
 
     * GNAT Community Edition 2020
     * GCC 11
@@ -15,9 +15,9 @@ Advanced Array Aggregates
 Square brackets
 ---------------
 
-In Ada 2022 you can use square brackets in array aggregates. Square
-brackets usage simplifies writing of an empty aggregate and a single
-element aggregate. Consider this:
+In Ada 2022, you can use square brackets in array aggregates. Using
+square brackets simplifies writing both empty aggregates and
+single-element aggregates. Consider this:
 
 .. code:: ada compile_button manual_chop project=Courses.Ada_2022_Whats_New.Show_Square_Brackets
 
@@ -37,8 +37,8 @@ element aggregate. Consider this:
 
    end Show_Square_Brackets;
 
-Apart from zero and one element aggregates, there is no other difference
-between brackets and parentheses in array aggregates.
+Other than the case of zero and one element aggregates, there are no
+differences between brackets and parentheses in array aggregates.
 
 Iterated Component Association
 ------------------------------
@@ -49,13 +49,13 @@ There is a new kind of component association:
 
    Vector : Integer_Array := (for J in 1 .. 5 => J * 2);
 
-The association starts with :ada:`for` keyword, just like a quantified
-expression. It declares an index parameter that can be used in a
-component computation.
+This association starts with :ada:`for` keyword, just like a quantified
+expression. It declares an index parameter that you can use in the
+computation of a component.
 
-Of cource, iterated component association could nest and be nested in
-another associtation (iterated or not). But you can't mix iterated and
-not iterated association in one list. Here is a square matrix definition:
+Iterated component associations can nest and can be nested in another
+association (iterated or not). But you can't mix iterated and not iterated
+association in one list. Here we use this to define a square matrix:
 
 .. code-block:: ada
 
@@ -63,7 +63,7 @@ not iterated association in one list. Here is a square matrix definition:
     (for J in 1 .. 3 =>
       (for K in 1 .. 3 => J * 10 + K));
 
-Intresting that such aggregates were originally proposed more than 25
+It's intresting that such aggregates were originally proposed more than 25
 years ago!
 
 Complete code snippet:

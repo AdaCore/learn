@@ -10,15 +10,16 @@ Interfacing C variadic functions
     * GNAT Community Edition 2020
     * GCC 11
 
-In C, `variadic functions`_ take a variable number of arguments and
-have an ellipsis as the last parameter of the declaration. The typical
-example is
+In C, `variadic functions`_ take a variable number of arguments and an
+ellipsis as the last parameter of the declaration. A typical and well-known
+example is:
 
 .. code-block:: c
 
-   int printf(const char* format, ...);
+   int printf (const char* format, ...);
 
-Usually, in Ada, we bind such a function with required parameters:
+Usually, in Ada, we bind such a function with just the parameters we want
+to use:
 
 .. code-block:: ada
 
@@ -29,15 +30,15 @@ Usually, in Ada, we bind such a function with required parameters:
           Convention    => C,
           External_Name => "printf";
 
-Then we call it as usual Ada function:
+Then we call it as a normal Ada function:
 
 .. code-block:: ada
 
    printf_double (Interfaces.C.To_C ("Pi=%f"), Ada.Numerics.π);
 
-Unfortunately, often it just doesn't work this way. Some `ABI`_ use
-different calling conventions for variadic functions. For instance
-the `AMD64 ABI`_ specifies:
+Unfortunately, doing it this way doesn't always work because some
+`ABIs`_ use different calling conventions for variadic functions. For
+example, the `AMD64 ABI`_ specifies:
 
  * %rax - with variable arguments passes information about the number
    of vector registers used
@@ -49,8 +50,8 @@ This means, if we write (in C):
 
    printf("%d", 5);
 
-Then the compiler will place 0 into %rax, because we don't pass any
-float argument (but we could). And in Ada, if we write:
+The compiler will place 0 into ``%rax``, because we don't pass any float
+argument. But in Ada, if we write:
 
 .. code-block:: ada
 
@@ -63,19 +64,19 @@ float argument (but we could). And in Ada, if we write:
 
    printf_int (Interfaces.C.To_C ("d=%d"), 5);
 
-The Ada compiler will not use %rax register at all (since you can't
-put any float argument, because there is no float parameter in the
-Ada wrapper function declaration). As result, you will get crash,
-stack corruption or any other undefined behavior.
+The compiler won't use the ``%rax`` register at all (you can't include
+any float argument because there's no float parameter in the Ada
+wrapper function declaration). As result, you will get a crash, stack
+corruption, or other undefined behavior.
 
 To fix this, Ada 2022 provides a new family of calling convention
-names - C_Variadic_N:
+names - :ada:`C_Variadic_N`:
 
-   The convention C_Variadic_n is the calling convention for a variadic
+   The convention :ada:`C_Variadic_n` is the calling convention for a variadic
    C function taking `n` fixed parameters and then a variable number of
    additional parameters.
 
-So, the right way to bind printf function is:
+Therefore, the correct way to bind the :c:`printf` function is:
 
 .. code-block:: ada
 
@@ -86,14 +87,15 @@ So, the right way to bind printf function is:
           Convention    => C_Variadic_1,
           External_Name => "printf";
 
-And the next call won't crash on any supported platform:
+And the following call won't crash on any supported platform:
 
 .. code-block:: ada
 
    printf_int (Interfaces.C.To_C ("d=%d"), 5);
 
-This issue is hard to debug. So, I consider this as a very useful fix
-for Ada-to-C interfacing facility.
+Without this convention, problems cause by this mismatch can be very hard
+to debug. So, this is a very useful extension to the Ada-to-C interfacing
+facility.
 
 Complete code snippet:
 

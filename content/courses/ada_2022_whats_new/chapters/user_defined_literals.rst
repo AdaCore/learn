@@ -10,18 +10,18 @@ User-Defined Literals
     * GNAT Community Edition 2020
     * GCC 11
 
-In Ada 2022 you can use string, integer or real literals with your type.
-The compiler will convert such literals to your type at run time using
-a provided function.
-To do so just specify one or more new aspects:
+In Ada 2022, you can define string, integer, or real literals for your
+types.  The compiler will convert such literals to your type at run
+time using a function you provide.  To do so, specify one or more new
+aspects:
 
  * :ada:`Integer_Literal`
  * :ada:`Real_Literal`
  * :ada:`String_Literal`
 
-For the demo let's define all three of them for some simple type and see
-how it works. For simplicity we will use a :ada:`Wide_Wide_String`
-component for internal representation:
+For our example, let's define all three for a simple type and see how
+they work. For simplicity, we use a :ada:`Wide_Wide_String` component
+for the internal representation:
 
 .. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.User_Defined_Literals
 
@@ -61,10 +61,11 @@ component for internal representation:
       Print (2.99_792_458e+8);
    end Main;
 
-As you see, real and integer literals are turned into strings preserving the
-formatting from the source code, while string literals are decoded:
-:ada:`From_String` is passed the denoted string value.
-In any case, the compiler translates these literals into function calls.
+As you see, real and integer literals are converted to strings while
+preserving the formatting in the source code, while string literals
+are decoded: :ada:`From_String` is passed the specified string value.
+In all cases, the compiler translates these literals into function
+calls.
 
 Turn Ada into JavaScript
 ------------------------
@@ -76,8 +77,8 @@ Do you know that `'5'+3` in JavaScript is `53`?
    > '5'+3
    '53'
 
-Now we can get the same success with Ada! But before we need to define a
-custom :ada:`+` operator:
+Now we can get the same result in Ada! But before we do, we need to
+define a custom :ada:`+` operator:
 
 .. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.User_Defined_Literals_JS
 
@@ -117,8 +118,8 @@ custom :ada:`+` operator:
       Print ("5" + 3);
    end Main;
 
-Jokes aside, this feature is very useful, for example it allows
-a "native-looking API" for :ref:`big integers<big_integers>`.
+Jokes aside, this feature is very useful. For example it allows a
+"native-looking API" for :ref:`big integers<big_integers>`.
 
 References
 ----------

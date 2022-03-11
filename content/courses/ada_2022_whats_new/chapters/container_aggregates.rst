@@ -10,12 +10,10 @@ Container Aggregates
     * GNAT Community Edition 2021
     * GCC 11
 
-Ada 2022 introduces container aggregates. 
-They can be used to easily create values for vectors, lists, maps, etc.
-Container aggregates leverage array aggregate syntax when the container
-doesn't have keys. On the other side hashed and ordered maps use record
-aggregate syntax.
-Consider this:
+Ada 2022 introduces container aggregates, which can be used to easily create
+values for vectors, lists, maps, and other aggregates.  Container aggregates
+leverage array aggregate syntax when the container doesn't have keys uses
+record aggregate syntax for hashed and ordered maps.  Here's an example:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Container_Aggregates
 
@@ -41,11 +39,11 @@ Consider this:
       Ada.Text_IO.Put_Line (Y'Image);
    end Main;
 
-At run time compiler creates an empty container and then populates it
-with elements one by one. So, if you define a new container type, then
-you can specify a new :ada:`Aggregate` aspect to let the compiler know
-two construction subprograms and enable container aggregates for your
-container:
+At run time, the compiler creates an empty container and populates it with
+elements one by one. If you define a new container type, you can specify a
+new :ada:`Aggregate` aspect to enable container aggregates for your
+container and let the compiler know what subprograms to use to construct the
+aggregate:
 
 .. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Container_Aggregates.Array
 
@@ -89,7 +87,7 @@ container:
       JSON.Append (List, 3);
    end Main;
 
-For maps this could be:
+The equivalent for maps is:
 
 .. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Container_Aggregates.Map
 
@@ -134,11 +132,11 @@ For maps this could be:
       JSON.Insert (Object, "c", 3);
    end Main;
 
-We can't specify both :ada:`Add_Named` and :ada:`Add_Unnamed` subprograms to
-the same type. This prevents us from define :ada:`JSON_Value` with both
-array and object aggregates defined. But we can define convention functions
-for array and object and get almost the same densed code as in plain JSON.
-Take a look:
+You can't specify both :ada:`Add_Named` and :ada:`Add_Unnamed` subprograms
+for the same type. This prevents you from defining :ada:`JSON_Value` with
+both array and object aggregates present. But we can define conversion
+functions for array and object and get code almost as dense as the same
+code in native JSON.  For example:
 
 .. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Container_Aggregates.Both
 
