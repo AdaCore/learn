@@ -271,6 +271,548 @@ This table shows all available checks and the associated exceptions:
 In addition, we can use :ada:`All_Checks` to refer to all those checks above at
 once.
 
+Let's discuss each check and see code examples where those checks are being
+performed. Note that all examples are erroneous, so please avoid reusing them
+elsewhere.
+
+Access Check
+~~~~~~~~~~~~
+
+As you know, an object of access type might be null. It would be an error to
+dereference this object, as it doesn't indicate a valid position in memory.
+Therefore, the access check verifies that an access object is not null when
+dereferencing it. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Access_Check
+    :class: ada-run-expect-failure
+
+    procedure Show_Access_Check is
+
+       type Access_Integer is access all Integer;
+
+       AI : Access_Integer;
+    begin
+       AI.all := 10;
+    end Show_Access_Check;
+
+Here, the value of :ada:`AI` is null by default, so we cannot dereference it.
+
+The access check also performs this verification when assigning to a subtype
+that excludes null (:ada:`not null access`). For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Access_Check_2
+    :class: ada-run-expect-failure
+
+    procedure Show_Access_Check is
+
+       type Access_Integer is access all Integer;
+       type Non_Null_Access_Integer is not null access all Integer;
+
+       AI   : Access_Integer;
+       NNAI : Non_Null_Access_Integer := new Integer;
+
+    begin
+       NNAI := Non_Null_Access_Integer (AI);
+    end Show_Access_Check;
+
+Here, the value of :ada:`AI` is null (by default), so we cannot assign it to
+:ada:`NNAI` because its type excludes null.
+
+Note that, if we remove the :ada:`:= new Integer` assignment from the
+declaration of :ada:`NNAI`, the null exclusion fails in the declaration
+itself (because the default value of the access type is :ada:`null`).
+
+
+Discriminant Check
+~~~~~~~~~~~~~~~~~~
+
+As we've seen earlier, a variant record is a record with discriminants that
+allows for changing its structure. In operations such as an assignment, it's
+important to ensure that the discriminants of the objects match |mdash| i.e. to
+ensure that the structure of the objects matches. The discriminant check
+verifies whether this is the case. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Discriminant_Check
+    :class: ada-run-expect-failure
+
+    procedure Show_Discriminant_Check is
+
+       type Rec (Valid : Boolean) is record
+          case Valid is
+             when True =>
+                Counter : Integer;
+             when False =>
+                null;
+          end case;
+       end record;
+
+       R : Rec (Valid => False);
+    begin
+       R := (Valid  => True,
+             Counter => 10);
+    end Show_Discriminant_Check;
+
+Here, :ada:`R`\ 's discriminant (:ada:`Valid`) is :ada:`False`, so we cannot
+assign an object whose :ada:`Valid` discriminant is :ada:`True`.
+
+Also, when accessing a component, the discriminant check ensures that this
+component exist (for the current discriminant values):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Discriminant_Check_2
+    :class: ada-run-expect-failure
+
+    procedure Show_Discriminant_Check is
+
+       type Rec (Valid : Boolean) is record
+          case Valid is
+             when True =>
+                Counter : Integer;
+             when False =>
+                null;
+          end case;
+       end record;
+
+       R : Rec (Valid => False);
+       I : Integer;
+    begin
+       I := R.Counter;
+    end Show_Discriminant_Check;
+
+Here, :ada:`R`\ 's discriminant (:ada:`Valid`) is :ada:`False`, so we cannot
+access the :ada:`Counter` component, for it only exists when the :ada:`Valid`
+discriminant is :ada:`True`.
+
+
+Division Check
+~~~~~~~~~~~~~~
+
+The division check verifies that we're not trying to divide a value by zero
+when using the :ada:`/`, :ada:`rem` and :ada:`mod` operators. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Division_Check
+    :class: ada-run-expect-failure
+
+    package Ops is
+       function Div_Op (A, B : Integer) return Integer is
+         (A / B);
+
+       function Rem_Op (A, B : Integer) return Integer is
+         (A rem B);
+
+       function Mod_Op (A, B : Integer) return Integer is
+         (A mod B);
+    end Ops;
+
+    with Ops; use Ops;
+
+    procedure Show_Division_Check is
+       I : Integer;
+    begin
+       I := Div_Op (10, 0);
+       I := Rem_Op (10, 0);
+       I := Mod_Op (10, 0);
+    end Show_Division_Check;
+
+All three calls in the :ada:`Show_Division_Check` procedure |mdash| to
+the :ada:`Div_Op`, :ada:`Rem_Op` and :ada:`Mod_Op` functions |mdash| can raise
+an exception because we're using 0 as the second argument, which makes the
+division check in those functions fail.
+
+
+Index Check
+~~~~~~~~~~~
+
+We use indices to access components of an array. An index check verifies that
+the index we're using to access a specific component is within the array's
+bounds. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Index_Check
+    :class: ada-run-expect-failure
+
+    procedure Show_Index_Check is
+
+       type Integer_Array is array (Positive range <>)
+         of Integer;
+
+       function Value_Of (A : Integer_Array;
+                     I : Integer) return Integer is
+          type Half_Integer_Array is new
+            Integer_Array (A'First ..
+                           A'First + A'Length / 2);
+
+          A_2 : Half_Integer_Array := (others => 0);
+       begin
+          return A_2 (I);
+       end Value_Of;
+
+       Arr_1 : Integer_Array (1 .. 10)  := (others => 1);
+
+    begin
+       Arr_1 (10) := Value_Of (Arr_1, 10);
+
+    end Show_Index_Check;
+
+The range of :ada:`A_2` |mdash| which is passed as an argument to the
+:ada:`Value_Of` function |mdash| is 1 to 6. However, in that function call,
+we're trying to access position 10, which is outside :ada:`A_2` \'s bounds.
+
+Length Check
+~~~~~~~~~~~~
+
+In array assignments, both arrays must have the same length. To ensure that
+this is the case, a length check is performed. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Length_Check
+    :class: ada-run-expect-failure
+
+    procedure Show_Length_Check is
+
+       type Integer_Array is array (Positive range <>)
+         of Integer;
+
+       procedure Assign (To   : out Integer_Array;
+                         From :     Integer_Array) is
+       begin
+          To := From;
+       end Assign;
+
+       Arr_1 : Integer_Array (1 .. 10);
+       Arr_2 : Integer_Array (1 .. 9) := (others => 1);
+
+    begin
+       Assign (Arr_1, Arr_2);
+    end Show_Length_Check;
+
+Here, the length of :ada:`Arr_1` is 10, while the length of :ada:`Arr_2` is 9,
+so we cannot assign :ada:`Arr_2` (:ada:`From` parameter) to :ada:`Arr_1`
+(:ada:`To` parameter) in the :ada:`Assign` procedure.
+
+Overflow Check
+~~~~~~~~~~~~~~
+
+Operations on scalar objects might lead to overflow, which, if not checked,
+lead to wrong information being computed and stored. Therefore, an overflow
+check verifies that the value of a scalar object is within the base range of
+its type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Overflow_Check
+    :class: ada-run-expect-failure
+
+    procedure Show_Overflow_Check is
+       A, B : Integer;
+    begin
+       A := Integer'Last;
+       B := 1;
+
+       A := A + B;
+    end Show_Overflow_Check;
+
+In this example, :ada:`A` already has the last possible value of the
+:ada:`Integer'Base` range, so increasing it by one causes an overflow error.
+
+
+Range Check
+~~~~~~~~~~~
+
+The range check verifies that a scalar value is within a specific range |mdash|
+for instance, the range of a subtype. Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Range_Check
+    :class: ada-run-expect-failure
+
+    procedure Show_Range_Check is
+
+       type Integer_Array is array (Positive range <>)
+         of Integer;
+
+       function Value_Of (A : Integer_Array;
+                          I : Integer) return Integer is
+          (A (I));
+
+       Arr : Integer_Array (1 .. 10) := (others => 1);
+       I   : Integer;
+
+    begin
+       I := Arr (11);
+    end Show_Range_Check;
+
+In this example, the range of the input array :ada:`Arr` |mdash| passed to
+parameter :ada:`A` of the :ada:`Value_Of` function |mdash| is 1 to 10. In the
+call to :ada:`Value_Of`, we're trying to access position 11, which is outside
+this range. Therefore, the range check fails.
+
+
+Tag Check
+~~~~~~~~~
+
+The tag check ensures that the tag of a tagged object matches the expected tag
+in a dispatching operation. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Tag_Check
+    :class: ada-run-expect-failure
+
+    package P is
+
+       type T is tagged null record;
+       type T_Class is access all T'Class;
+
+       function Copy (Obj : T_Class)
+                      return T_Class is
+         (Obj);
+
+       type T1 is new T with null record;
+       type T1_Class is access all T1'Class;
+
+       type T2 is new T with null record;
+       type T2_Class is access all T2'Class;
+
+    end P;
+
+    with P; use P;
+
+    procedure Show_Tag_Check is
+
+       A1 : T1_Class := new T1;
+       A2 : T2_Class := new T2;
+       A3 : T_Class;
+
+    begin
+       A3 := T_Class (A1);
+       A2 := T2_Class (Copy (A3));
+
+    end Show_Tag_Check;
+
+Here, the tag of the object returned by the :ada:`Copy` function is
+:ada:`T1'Tag`. However, we cannot convert an object with this tag to an
+object of :ada:`T2_Class`, so the tag check fails.
+
+
+Accessibility Check
+~~~~~~~~~~~~~~~~~~~
+
+The accessibility check verifies that the accessibility level of an entity
+matches the expected level.
+
+.. todo::
+
+    Add link to "Accessibility levels" section once it's available.
+
+Let's revisit the example from the previous section (that was showing the tag
+check). Now, however, instead of declaring :ada:`A1` and :ada:`A2` as objects
+of the :ada:`T1_Class` and :ada:`T2_Class` types, respectively, we use
+anonymous access types in the declarations. (For example, we replace the
+:ada:`T1_Class` type in the declaration of :ada:`A1` by the anonymous
+:ada:`access T1` type.)
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Accessibility_Check
+    :class: ada-run-expect-failure
+
+    package P is
+
+       type T is tagged null record;
+       type T_Class is access all T'Class;
+
+       function Copy (Obj : T_Class)
+                      return T_Class is
+         (Obj);
+
+       type T1 is new T with null record;
+       type T1_Class is access all T1'Class;
+
+       type T2 is new T with null record;
+       type T2_Class is access all T2'Class;
+
+    end P;
+
+    with P; use P;
+
+    procedure Show_Accessibility_Check is
+
+       A1 : access T1 := new T1;
+       A2 : access T2 := new T2;
+       A3 : T_Class;
+
+    begin
+       A3 := T_Class (A1);
+       A2 := T2_Class (Copy (A3));
+
+    end Show_Accessibility_Check;
+
+The anonymous type used in the declaration of :ada:`A1` (:ada:`access T1`)
+doesn't have the same accessibility level as the :ada:`T1_Class` type.
+Therefore, the accessibility check fails during the :ada:`T_Class (A1)`
+conversion.
+
+We can see the accessibility check failing in this example as well:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Accessibility_Check
+    :class: ada-run-expect-failure
+
+    with P; use P;
+
+    procedure Show_Accessibility_Check is
+
+       A1 : access T1 := new T1;
+
+       procedure P (A : T1_Class) is null;
+
+    begin
+       P (T1_Class (A1));
+
+    end Show_Accessibility_Check;
+
+Again, the check fails in the :ada:`T1_Class (A1)` conversion and raises a
+:ada:`Program_Error` exception.
+
+
+Allocation Check
+~~~~~~~~~~~~~~~~
+
+The allocation check ensures, when a task is about to be created, that its
+master has not been completed or the finalization has not been started.
+
+This is an example adapted from
+`AI-00280 <http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ais/ai-00280.txt?rev=1.12&raw=N>`_:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Allocation_Check
+    :class: ada-run-expect-failure
+
+    with Ada.Finalization;
+    with Ada.Unchecked_Deallocation;
+
+    package P is
+       type T1 is new Ada.Finalization.Controlled with null record;
+       procedure Finalize (X : in out T1);
+
+       type T2 is new Ada.Finalization.Controlled with null record;
+       procedure Finalize (X : in out T2);
+
+       X1 : T1;
+
+       type T2_Ref is access T2;
+       procedure Free is new Ada.Unchecked_Deallocation (T2, T2_Ref);
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body P is
+
+       procedure Finalize (X : in out T1) is
+          X2 : T2_Ref := new T2;
+       begin
+          Put_Line ("Finalizing T1...");
+          Free (X2);
+       end Finalize;
+
+       procedure Finalize (X : in out T2) is
+       begin
+          Put_Line ("Finalizing T2...");
+       end Finalize;
+
+    end P;
+
+    with P; use P;
+
+    procedure Show_Allocation_Check is
+       X2 : T2_Ref := new T2;
+    begin
+       Free (X2);
+    end Show_Allocation_Check;
+
+Here, in the finalization of the :ada:`X1` object of :ada:`T1` type, we're
+trying to create an object of :ada:`T2` type. This is forbidden and, therefore,
+the allocation check raises a :ada:`Program_Error` exception.
+
+
+Elaboration Check
+~~~~~~~~~~~~~~~~~
+
+The elaboration check verifies that subprograms |mdash| or protected entries,
+or task activations |mdash| have been elaborated before being called.
+
+This is an example adapted from
+`AI-00064 <http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ais/ai-00064.txt?rev=1.12&raw=N>`_:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Elaboration_Check
+    :class: ada-run-expect-failure
+
+    function P return Integer;
+
+    function P return Integer is
+    begin
+       return 1;
+    end;
+
+    with P;
+
+    procedure Show_Elaboration_Check is
+
+       function F return Integer;
+
+       type Pointer_To_Func is access function return Integer;
+
+       X : constant Pointer_To_Func := P'Access;
+
+       Y : constant Integer := F;
+       Z : constant Pointer_To_Func := X;
+
+       --  Renaming-as-body
+       function F return Integer renames Z.all;
+    begin
+       null;
+    end Show_Elaboration_Check;
+
+This is a curious example: first, we declare a function :ada:`F` and assign the
+value returned by this function to constant :ada:`Y` in its declaration. Then,
+we declare :ada:`F` as a renamed function, thereby providing a body to :ada:`F`
+|mdash| this is called renaming-as-body. Consequently, the compiler doesn't
+complain that a body is missing for function :ada:`F`. (If you comment out the
+function renaming, you'll see that the compiler can then detect the missing
+body.) Therefore,  at runtime, the elaboration check fails because the body of
+the first declaration of the :ada:`F` function is actually missing.
+
+
+Storage Check
+~~~~~~~~~~~~~
+
+The storage check ensures that the storage pool has enough space when
+allocating memory. Let's revisit an example that we
+:ref:`discussed earlier <Adv_Ada_Types_Storage_Size_Error>`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Storage_Check
+    :class: ada-run-expect-failure
+
+    package Custom_Types is
+
+       type UInt_7 is range 0 .. 127;
+
+       type UInt_7_Reserved_Access is access UInt_7
+         with Storage_Size => 8;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Storage_Check is
+
+       RAV1, RAV2 : UInt_7_Reserved_Access;
+
+    begin
+       Put_Line ("Allocating RAV1...");
+       RAV1 := new UInt_7;
+
+       Put_Line ("Allocating RAV2...");
+       RAV2 := new UInt_7;
+
+       New_Line;
+    end Show_Storage_Check;
+
+On each allocation (:ada:`new UInt_7`), a storage check is performed. Because
+there isn't enough reserved storage space before the second allocation, the
+checks fails and raises a :ada:`Storage_Error` exception.
+
 
 .. admonition:: In the Ada Reference Manual
 
