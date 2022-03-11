@@ -45,11 +45,11 @@ Tiny RSA implementation
 
 We can implement the `RSA algorithm
 <https://en.wikipedia.org/wiki/RSA_(cryptosystem)>`_ in a few lines of
-code. The main operation of RSA is **(mᵈ) mod n**.  But you can't just
+code. The main operation of RSA is (m\ :sup:`d`) mod n.  But you can't just
 write :ada:`m ** d`, because these are really big numbers and the result
 won't fit into memory. However if you keep intermediate result :ada:`mod
-n` during the mᵈ calculation, it will work. Let's write this operation as a
-function:
+n` during the m\ :sup:`d` calculation, it will work. Let's write this operation
+as a function:
 
 .. code-block:: ada
 
@@ -81,7 +81,7 @@ Let's check this with the example from
 `Wikipedia <https://en.wikipedia.org/wiki/RSA_(cryptosystem)>`_.
 In that example, the `public key` is (n = 3233, e = 17) and the message
 is m = 65. The encrypted message is
-mᵉ mod n = 65¹⁷ mod 3233 = 2790 = c.
+m\ :sup:`e` mod n = 65\ :sup:`17` mod 3233 = 2790 = c.
 
 .. code-block:: ada
 
@@ -92,7 +92,7 @@ mᵉ mod n = 65¹⁷ mod 3233 = 2790 = c.
    2790
 
 To decrypt it with the public key (n = 3233, d = 413), we need to
-calculate cᵈ mod n = 2790⁴¹³ mod 3233
+calculate c\ :sup:`d` mod n = 2790\ :sup:`413` mod 3233:
 
 .. code-block:: ada
 
