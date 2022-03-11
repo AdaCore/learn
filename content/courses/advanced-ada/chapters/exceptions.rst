@@ -1694,7 +1694,3 @@ the call to this function, which raises a :ada:`Constraint_Error` exception.
 .. admonition:: In the Ada Reference Manual
 
     - `11.5 Suppressing Checks <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_
-
-.. todo::
-
-    Complete section!
