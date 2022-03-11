@@ -18,7 +18,7 @@ It was introduced to avoid code duplication: instead of retyping a
 constant, so you can't pass it into [:ada:`in`] :ada:`out` arguments of a
 subprogram.
 
-As an example, let's calculate some statistics for My_Data array:
+As an example, let's calculate some statistics for :ada:`My_Data` array:
 
 .. code:: ada compile_button manual_chop project=Courses.Ada_2022_Whats_New.Assignment_Tagged_Intro
 

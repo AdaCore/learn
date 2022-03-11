@@ -11,9 +11,9 @@ how it works in GNAT Community 2021.
 
     Redefining attribute :ada:`'Image` is supported by
 
-    * GNAT Community Edition 2021 (using Text_Buffers)
-    * GNAT Community Edition 2020 (using Text_Output.Utils)
-    * GCC 11 (using Text_Output.Utils)
+    * GNAT Community Edition 2021 (using :ada:`Text_Buffers`)
+    * GNAT Community Edition 2020 (using :ada:`Text_Output.Utils`)
+    * GCC 11 (using :ada:`Text_Output.Utils`)
 
 In our example, let's redefine the :ada:`'Image` attribute for a
 location in source code. To do this, we provide a new :ada:`Put_Image`
