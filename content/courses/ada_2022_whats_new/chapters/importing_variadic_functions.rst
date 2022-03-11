@@ -40,9 +40,9 @@ Unfortunately, doing it this way doesn't always work because some
 `ABI`_\ s use different calling conventions for variadic functions. For
 example, the `AMD64 ABI`_ specifies:
 
- * ``%rax`` - with variable arguments passes information about the number
-   of vector registers used
- * ``%xmm0–%xmm1`` - used to pass and return floating point arguments
+ * ``%rax`` |mdash| with variable arguments passes information about the number
+   of vector registers used;
+ * ``%xmm0–%xmm1`` |mdash| used to pass and return floating point arguments.
 
 This means, if we write (in C):
 
@@ -64,13 +64,13 @@ argument. But in Ada, if we write:
 
    printf_int (Interfaces.C.To_C ("d=%d"), 5);
 
-The compiler won't use the ``%rax`` register at all (you can't include
+the compiler won't use the ``%rax`` register at all. (You can't include
 any float argument because there's no float parameter in the Ada
-wrapper function declaration). As result, you will get a crash, stack
+wrapper function declaration.) As result, you will get a crash, stack
 corruption, or other undefined behavior.
 
 To fix this, Ada 2022 provides a new family of calling convention
-names - :ada:`C_Variadic_N`:
+names |mdash| :ada:`C_Variadic_N`:
 
    The convention :ada:`C_Variadic_n` is the calling convention for a variadic
    C function taking `n` fixed parameters and then a variable number of
