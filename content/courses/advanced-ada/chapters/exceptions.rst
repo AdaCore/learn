@@ -271,13 +271,10 @@ This table shows all available checks and the associated exceptions:
 In addition, we can use :ada:`All_Checks` to refer to all those checks above at
 once.
 
-You may consult the
-`section 11.5 <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_ of
-the Ada Reference Manual for more details on those checks.
 
-.. todo::
+.. admonition:: In the Ada Reference Manual
 
-    Complete section!
+    - `11.5 Suppressing Checks <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_
 
 
 ``Ada.Exceptions`` package
