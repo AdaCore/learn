@@ -97,7 +97,7 @@ Without this convention, problems cause by this mismatch can be very hard
 to debug. So, this is a very useful extension to the Ada-to-C interfacing
 facility.
 
-Complete code snippet:
+Here is the complete code snippet:
 
 .. code:: ada no_button project=Courses.Ada_2022_Whats_New.Variadic_Import
 

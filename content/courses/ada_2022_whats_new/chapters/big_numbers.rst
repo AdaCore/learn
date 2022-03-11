@@ -104,7 +104,7 @@ calculate c\ :sup:`d` mod n = 2790\ :sup:`413` mod 3233:
 
 So :ada:`65` is the original message m. Easy!
 
-Complete code snippet:
+Here is the complete code snippet:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Big_Numbers_Tiny_RSA
 

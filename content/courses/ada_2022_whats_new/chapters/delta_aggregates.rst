@@ -55,7 +55,7 @@ components.
 You can use parentheses for array aggregates, but you can't use square
 brackets for record aggregates.
 
-Complete code snippet:
+Here is the complete code snippet:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Delta_Aggregetes
 
