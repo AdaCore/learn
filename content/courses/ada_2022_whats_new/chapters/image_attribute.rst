@@ -15,7 +15,7 @@
 
 Since the publication of the `Technical Corrigendum 1`_ in February
 2016, the :ada:`'Image` attribute can now be applied to a value. So
-instead of :ada:`My_Type'Image (Value)` you can just write
+instead of :ada:`My_Type'Image (Value)`, you can just write
 :ada:`Value'Image`, as long as the :ada:`Value` is a name_. These two
 statements are equivalent:
 
@@ -32,7 +32,7 @@ statements are equivalent:
 :ada:`'Image` attribute for any type
 ------------------------------------
 
-In Ada 2022 you can apply the :ada:`'Image` attribute to any type,
+In Ada 2022, you can apply the :ada:`'Image` attribute to any type,
 including records, array, access types, and private types. Let's see how
 this works. We'll define array, record, and access types and corresponding
 objects and then convert these objects to strings and print them:

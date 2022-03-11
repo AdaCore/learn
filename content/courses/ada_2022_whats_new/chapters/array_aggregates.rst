@@ -63,7 +63,7 @@ association in one list. Here we use this to define a square matrix:
     (for J in 1 .. 3 =>
       (for K in 1 .. 3 => J * 10 + K));
 
-It's intresting that such aggregates were originally proposed more than 25
+It's interesting that such aggregates were originally proposed more than 25
 years ago!
 
 Complete code snippet:
