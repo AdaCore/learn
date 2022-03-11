@@ -25,6 +25,7 @@ attribute.
 
    with Ada.Text_IO;
    with Ada.Integer_Text_IO;
+
    procedure Main is
    begin
       Ada.Text_IO.Put ("Pos(False) =");
@@ -39,6 +40,7 @@ For the reverse mapping, we use :ada:`Type'Val (Int)`:
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Enum_Val.Val
 
    with Ada.Text_IO;
+
    procedure Main is
    begin
       Ada.Text_IO.Put_Line (Boolean'Val (0)'Image);
@@ -61,6 +63,7 @@ In Ada 2022, we can get an integer value of the representation with
 
    with Ada.Text_IO;
    with Ada.Integer_Text_IO;
+
    procedure Main is
       type My_Boolean is new Boolean;
       for My_Boolean use (False => 3, True => 6);
@@ -78,6 +81,7 @@ And, for the reverse mapping, we can use :ada:`Type'Enum_Val (Int)`:
 
    with Ada.Text_IO;
    with Ada.Integer_Text_IO;
+
    procedure Main is
       type My_Boolean is new Boolean;
       for My_Boolean use (False => 3, True => 6);
