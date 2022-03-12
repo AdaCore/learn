@@ -18,7 +18,7 @@ Ada 2022: What's New
 
     .. container:: content-copyright
 
-        Copyright © 2021, AdaCore
+        Copyright © 2022, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -37,7 +37,7 @@ Ada 2022: What's New
     This course presents an overview of the new features of the latest Ada 2022
     standard.
 
-    This document was written by Maxim Reznik.
+    This document was written by Maxim Reznik and reviewed by Richard Kenner.
 
 .. only:: builder_html
 

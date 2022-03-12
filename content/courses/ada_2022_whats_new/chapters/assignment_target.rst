@@ -10,16 +10,15 @@ Target Name Symbol (@)
     * GNAT Community Edition 2019
     * GCC 9
 
-Ada 2022 introduces a new symbol :ada:`@`. It could appears only at the
-right side of an assignment statement. This symbol works as a name of
-the left side of the assignment statement. It was introduced to avoid
-code duplication. Instead of retyping (potentially long) name you can
-just use :ada:`@` wherever you need it.
+Ada 2022 introduces a new symbol, :ada:`@`, which can only appear on the
+right hand side of an assignment statement. This symbol acts as the
+equivalent of the name on the left hand side of that assignment statement.
+It was introduced to avoid code duplication: instead of retyping a
+(potentially long) name, you can use :ada:`@`. This symbol denotes a
+constant, so you can't pass it into [:ada:`in`] :ada:`out` arguments of a
+subprogram.
 
-The target name symbol denotes a constant, so you can't pass it into
-[:ada:`in`] :ada:`out` argument of a function.
-
-As an example, let's calculate some statistic for My_Data array:
+As an example, let's calculate some statistics for :ada:`My_Data` array:
 
 .. code:: ada compile_button manual_chop project=Courses.Ada_2022_Whats_New.Assignment_Tagged_Intro
 
@@ -32,14 +31,14 @@ As an example, let's calculate some statistic for My_Data array:
          Count : Natural := 0;
          Total : Float := 0.0;
       end record;
-   
+
       My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
-   
+
       Statistic_For_My_Data : Statistic;
-   
+
    end Statistics;
 
-To do this we just loop over :ada:`My_Data` elements:
+To do this, we loop over :ada:`My_Data` elements:
 
 .. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Assignment_Tagged_Loop
 
@@ -53,10 +52,10 @@ To do this we just loop over :ada:`My_Data` elements:
          Count : Natural := 0;
          Total : Float := 0.0;
       end record;
-   
+
       My_Data : constant array (1 .. 5) of Float :=
         (for J in 1 .. 5 => Float (J));
-   
+
       Statistic_For_My_Data : Statistic;
 
    begin
@@ -64,12 +63,12 @@ To do this we just loop over :ada:`My_Data` elements:
          Statistic_For_My_Data.Count := @ + 1;
          Statistic_For_My_Data.Total := @ + Data;
       end loop;
-   
+
       Ada.Text_IO.Put_Line (Statistic_For_My_Data'Image);
    end Main;
 
-The left hand side evaluated just once, no matter how many :ada:`@` it
-has. Let's check this by introducing a function call. This function
+Each right hand side is evaluated only once, no matter how many :ada:`@`
+symbols it contains. Let's verify this by introducing a function call that
 prints a line each time it's called:
 
 .. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Assignment_Tagged_To_Index
@@ -81,7 +80,7 @@ prints a line each time it's called:
    procedure Main is
 
       My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
-   
+
       function To_Index (Value : Positive) return Positive is
       begin
          Ada.Text_IO.Put_Line ("To_Index is called.");
@@ -93,10 +92,10 @@ prints a line each time it's called:
       Ada.Text_IO.Put_Line (My_Data'Image);
    end Main;
 
-Perhaps, it looks a bit cryptic, but no better solution was found.
-Comparing with other languages (like :c:`sum += x;`) this approach
-let you mention :ada:`@` several times on the right side of an
-assigment statement, so it's more flexible.
+This use of :ada:`@` may look a bit cryptic, but it's the best solution
+that was found.  Unlike other languages (e.g., :c:`sum += x;` in C), this
+approach lets you use :ada:`@` an arbitrary number of times within the
+right hand side of an assignment statement.
 
 Alternatives
 ------------
@@ -109,7 +108,7 @@ type (one line longer!):
    auto& a = my_data[to_index(1)];
    a = a * a - 3.0 * a;
 
-In Ada 2022 you can use a corresponding renaming:
+In Ada 2022, you can use a similar renaming:
 
 .. code-block:: ada
 
@@ -119,9 +118,9 @@ In Ada 2022 you can use a corresponding renaming:
       A := A ** 2 - 3.0 * A;
    end;
 
-Here we use a new shorten form of the rename declaration, but anyway
-this looks too heavy. But even worse, this can't be used for
-discriminant dependent-components.
+Here we use a new short form of the rename declaration, but this still
+looks too heavy, and even worse, it can't be used for discriminant
+dependent-components.
 
 References
 ----------

@@ -19,13 +19,13 @@ Big Integers
 ------------
 
 The package :ada:`Ada.Numerics.Big_Numbers.Big_Integers` contains
-a type :ada:`Big_Integer` and corresponding operation like comparison
+a type :ada:`Big_Integer` and corresponding operations such as comparison
 (:ada:`=`, :ada:`<`, :ada:`>`, :ada:`<=`, :ada:`>=`), arithmetic
 (:ada:`+`, :ada:`-`, :ada:`*`, :ada:`/`, :ada:`rem`, :ada:`mod`,
 :ada:`abs`, :ada:`**`), :ada:`Min`, :ada:`Max` and
-:ada:`Greatest_Common_Divisor`. The type has :ada:`Integer_Literal`
-and :ada:`Put_Image` aspects redefined. So you can use it in a natural
-way.
+:ada:`Greatest_Common_Divisor`. The type also has :ada:`Integer_Literal`
+and :ada:`Put_Image` aspects redefined, so you can use it in a natural
+manner.
 
 .. code-block:: ada
 
@@ -40,16 +40,16 @@ Tiny RSA implementation
 
 .. note::
 
-   Don't use Big_Numbers for cryptography because it is vulnerable to
-   timing side-channels attacks.
+   Note that you shouldn't use :ada:`Big_Numbers` for cryptography because it's
+   vulnerable to timing side-channels attacks.
 
-Now we can implement the
-`RSA algorithm <https://en.wikipedia.org/wiki/RSA_(cryptosystem)>`_
-in a few lines of code. The main operation of RSA is **(mᵈ) mod n**.
-But you can't just write :ada:`m ** d`, because these are really big
-numbers and the result doesn't fit the memory. However if you keep
-intermediate result by :ada:`mod n` during mᵈ calculation then it will
-work. Let's write this operation as a function:
+We can implement the `RSA algorithm
+<https://en.wikipedia.org/wiki/RSA_(cryptosystem)>`_ in a few lines of
+code. The main operation of RSA is (m\ :sup:`d`) mod n.  But you can't just
+write :ada:`m ** d`, because these are really big numbers and the result
+won't fit into memory. However, if you keep intermediate result :ada:`mod
+n` during the m\ :sup:`d` calculation, it will work. Let's write this operation
+as a function:
 
 .. code-block:: ada
 
@@ -79,9 +79,9 @@ work. Let's write this operation as a function:
 
 Let's check this with the example from
 `Wikipedia <https://en.wikipedia.org/wiki/RSA_(cryptosystem)>`_.
-In the example the `public key` is (n = 3233, e = 17) and the message
+In that example, the `public key` is (n = 3233, e = 17) and the message
 is m = 65. The encrypted message is
-mᵉ mod n = 65¹⁷ mod 3233 = 2790 = c.
+m\ :sup:`e` mod n = 65\ :sup:`17` mod 3233 = 2790 = c.
 
 .. code-block:: ada
 
@@ -91,8 +91,8 @@ mᵉ mod n = 65¹⁷ mod 3233 = 2790 = c.
 
    2790
 
-To decrypt it with the public key (n = 3233, d = 413) we need to
-calculate cᵈ mod n = 2790⁴¹³ mod 3233
+To decrypt it with the public key (n = 3233, d = 413), we need to
+calculate c\ :sup:`d` mod n = 2790\ :sup:`413` mod 3233:
 
 .. code-block:: ada
 
@@ -104,7 +104,7 @@ calculate cᵈ mod n = 2790⁴¹³ mod 3233
 
 So :ada:`65` is the original message m. Easy!
 
-Complete code snippet:
+Here is the complete code snippet:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Big_Numbers_Tiny_RSA
 
@@ -151,7 +151,7 @@ Complete code snippet:
 Big Reals
 ---------
 
-Besides Big_Integer, Ada 2022 provides `Big Reals`_.
+In addition to :ada:`Big_Integer`, Ada 2022 provides `Big Reals`_.
 
 .. _`Big Reals`: http://www.ada-auth.org/standards/2xaarm/html/AA-A-5-7.html
 

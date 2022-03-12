@@ -3,16 +3,17 @@ Introduction
 
 .. include:: ../../global.txt
 
-This is a collection of short code snippets demonstrating new
-features of ongoing `Ada 2022 Standard`_ as they are implemented
+This is a collection of short code examples demonstrating new
+features of the `Ada 2022 Standard`_ as they are implemented
 in GNAT Ada compiler.
 
-Some of these features require a compiler command line switch or
-pragma to work. Compilers since `GNAT Community Edition 2021`_ or
-`GCC 11`_ uses :ada:`pragma Ada_2022;` or ``-gnat2022`` swith.
-Older compilers use :ada:`pragma Ada_2020;` or ``-gnat2020`` instead.
-Square brackets syntax and :ada:`'Reduce` expression also need
-:ada:`pragma Extensions_Allowed (On);` or ``-gnatX`` swith.
+To use some of these features, you may need to use a compiler command
+line switch or pragma. Compilers starting with `GNAT Community Edition
+2021`_ or `GCC 11`_ use :ada:`pragma Ada_2022;` or the ``-gnat2022``
+switch.  Older compilers use :ada:`pragma Ada_2020;` or
+``-gnat2020``. To use the square brackets syntax or :ada:`'Reduce`
+expressions, you need :ada:`pragma Extensions_Allowed (On);` the or
+``-gnatX`` swith.
 
 References
 ----------

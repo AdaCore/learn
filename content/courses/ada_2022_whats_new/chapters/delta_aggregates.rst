@@ -10,13 +10,13 @@ Delta Aggregates
     * GNAT Community Edition 2019
     * GCC 9
 
-Sometimes you need to create a copy of an object with a few
-modifications. Before Ada 2022 it would involve a dummy object
-declaration or an aggregate with associations for each property.
-The dummy object approach doesn't work in contract aspects.
-A limited component won't work with dummy object approach neither.
-On the other side re-listing properties in an aggregate could be
-too hard. So, in Ada 2022, you can use a `delta aggregates` instead.
+Sometimes you need to create a copy of an object, but with a few
+modifications. Before Ada 2022, doing this involves a dummy object
+declaration or an aggregate with associations for each property.  The dummy
+object approach doesn't work in contract aspects or when there are limited
+components. On the other hand, re-listing properties in an large aggregate
+can be very tedious and error-prone. So, in Ada 2022, you can use a `delta
+aggregate` instead.
 
 Delta aggregate for records
 ---------------------------
@@ -40,9 +40,9 @@ aggregate.
 Delta aggregate for arrays
 --------------------------
 
-There is also the delta aggregate for arrays. You can change array
-elements with it, but you can't change array bounds. Also, it works
-only for one-dimention arrays of non-limited components.
+You can also use delta aggregates for arrays to change elements, but not
+bounds. Moreover, it only works for one-dimensional arrays of non-limited
+components.
 
 .. code:: ada no_button manual_chop project=Courses.Ada_2022_Whats_New.Delta_Aggregates.Array
 
@@ -55,7 +55,7 @@ only for one-dimention arrays of non-limited components.
 You can use parentheses for array aggregates, but you can't use square
 brackets for record aggregates.
 
-Complete code snippet:
+Here is the complete code snippet:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Delta_Aggregetes
 
