@@ -741,7 +741,7 @@ This is an example adapted from
     function P return Integer is
     begin
        return 1;
-    end;
+    end P;
 
     with P;
 
