@@ -52,13 +52,13 @@ Let's see a complete example:
 
     private
 
-        type Data is null record;
+       type Data is null record;
 
     end Data_Processing;
 
     private package Data_Processing.Calculations is
 
-        procedure Calculate (D : in out Data);
+       procedure Calculate (D : in out Data);
 
     end Data_Processing.Calculations;
 
