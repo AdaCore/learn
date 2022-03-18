@@ -3,6 +3,8 @@ Packages
 
 .. include:: ../../global.txt
 
+.. _Adv_Ada_Private_Packages:
+
 Private packages
 ----------------
 
@@ -154,6 +156,9 @@ being a child of a private package |mdash| has the same restricted view as its
 parent package. Therefore, it cannot be visible in the
 :ada:`Test_Data_Processing` procedure as well. We'll discuss more about
 visibility :ref:`later <Adv_Ada_Package_Visibility>`.
+
+Note that subprograms can also be declared private. We'll see this
+:ref:`in another section <Adv_Ada_Private_Subprograms>`.
 
 .. admonition:: In the Ada Reference Manual
 
