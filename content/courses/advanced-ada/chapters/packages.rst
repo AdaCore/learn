@@ -6,9 +6,158 @@ Packages
 Private packages
 ----------------
 
-.. todo::
+In the
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/privacy>`,
+we've seen that encapsulation plays an important role in modular programming.
+By using the private part of a package specification, we can disclose some
+information, but, at the same time, prevent that this information gets
+accessed where it shouldn't be used directly. Similarly, we've seen that we can
+use the private part of a package to distinguish between the
+:ref:`partial and full view <Adv_Ada_Type_View>` of a data type. In this
+section, we discuss a related concept: private packages.
 
-    Complete section!
+We declare private packages by using the :ada:`private` keyword. For example,
+let's say we have a package named :ada:`Data_Processing`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Private_Package_Decl
+
+    package Data_Processing is
+
+    --  ...
+
+    end Data_Processing;
+
+We simply write :ada:`private package` to declare a private child package named
+:ada:`Calculations`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Private_Package_Decl
+
+    private package Data_Processing.Calculations is
+
+    --  ...
+
+    end Data_Processing.Calculations;
+
+Let's see a complete example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Private_Package
+
+    package Data_Processing is
+
+       type Data is private;
+
+       procedure Process (D : in out Data);
+
+    private
+
+        type Data is null record;
+
+    end Data_Processing;
+
+    private package Data_Processing.Calculations is
+
+        procedure Calculate (D : in out Data);
+
+    end Data_Processing.Calculations;
+
+    with Data_Processing.Calculations;
+    use  Data_Processing.Calculations;
+
+    package body Data_Processing is
+
+       procedure Process (D : in out Data) is
+       begin
+          Calculate (D);
+       end Process;
+
+    end Data_Processing;
+
+    package body Data_Processing.Calculations is
+
+       procedure Calculate (D : in out Data) is
+       begin
+          --  Dummy implementation...
+          null;
+       end Calculate;
+
+    end Data_Processing.Calculations;
+
+    with Data_Processing; use Data_Processing;
+
+    procedure Test_Data_Processing is
+       D : Data;
+    begin
+       Process (D);
+    end Test_Data_Processing;
+
+In this example, we refer to the private child package :ada:`Calculations` in
+the body of the :ada:`Data_Processing` package |mdash| by simply writing
+:ada:`with Data_Processing.Calculations`. After that, we can call the
+:ada:`Calculate` procedure normally in the :ada:`Process` procedure.
+
+While we can use a with-clause of the private child package in the body of the
+:ada:`Data_Processing` package, we cannot do the same outside this package. For
+example, we cannot refer to it in the :ada:`Test_Data_Processing` procedure:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Private_Package
+
+    with Data_Processing; use Data_Processing;
+
+    with Data_Processing.Calculations;
+    use  Data_Processing.Calculations;
+
+    procedure Test_Data_Processing is
+       D : Data;
+    begin
+       Calculate (D);
+    end Test_Data_Processing;
+
+As expected, we get a compilation error because :ada:`Calculations` is only
+accessible within the :ada:`Data_Processing`, but not in the
+:ada:`Test_Data_Processing` procedure.
+
+The same restrictions apply to child packages of private packages. For example,
+if we implement a child package of the :ada:`Calculations` package |mdash|
+let's call it :ada:`Calculations.Child` |mdash|, we cannot refer to it in the
+:ada:`Test_Data_Processing` procedure:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Private_Package
+
+    package Data_Processing.Calculations.Child is
+
+       procedure Process (D : in out Data);
+
+    end Data_Processing.Calculations.Child;
+
+    package body Data_Processing.Calculations.Child is
+
+       procedure Process (D : in out Data) is
+       begin
+          Calculate (D);
+       end Process;
+
+    end Data_Processing.Calculations.Child;
+
+    with Data_Processing; use Data_Processing;
+
+    with Data_Processing.Calculations.Child;
+    use  Data_Processing.Calculations.Child;
+
+    procedure Test_Data_Processing is
+       D : Data;
+    begin
+       Calculate (D);
+    end Test_Data_Processing;
+
+Again, as expected, we get an error because :ada:`Calculations.Child` |mdash|
+being a child of a private package |mdash| has the same restricted view as its
+parent package. Therefore, it cannot be visible in the
+:ada:`Test_Data_Processing` procedure as well. We'll discuss more about
+visibility :ref:`later <Adv_Ada_Package_Visibility>`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `10.1.1 Compilation Units - Library Units <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-10-1-1.html>`_
 
 
 .. _Adv_Ada_Private_With_Clauses:
@@ -416,6 +565,8 @@ visible in the private part of :ada:`A`. (Of course, if we revert to full
 visibility by simply removing the :ada:`limited` keyword from the example, the
 code compiles just fine.)
 
+
+.. _Adv_Ada_Package_Visibility:
 
 Visibility
 ----------
