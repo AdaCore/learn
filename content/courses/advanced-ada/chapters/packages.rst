@@ -3,6 +3,140 @@ Packages
 
 .. include:: ../../global.txt
 
+.. _Adv_Ada_Package_Renaming:
+
+Package renaming
+----------------
+
+We've seen in the
+:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/modular_programming>`
+that we can :ref:`rename packages <Package_Renaming>`.
+
+Grouping packages
+~~~~~~~~~~~~~~~~~
+
+A use-case that we haven't mentioned in that course is that we can apply
+package renaming to group individual packages into a common hierarchy. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Package_Renaming_1
+
+    package Driver_M1 is
+
+    end Driver_M1;
+
+    package Driver_M2 is
+
+    end Driver_M2;
+
+    package Drivers
+      with Pure is
+
+    end Drivers;
+
+    with Driver_M1;
+
+    package Drivers.M1 renames Driver_M1;
+
+    with Driver_M2;
+
+    package Drivers.M2 renames Driver_M2;
+
+Here, we're renaming the :ada:`Driver_M1` and :ada:`Driver_M2` packages as
+child packages of the pure :ada:`Drivers` package. (We discuss more about pure
+packages :ref:`later <Adv_Ada_Pure>`.)
+
+
+Child of renamed package
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that we cannot create a child package for a package that has been renamed.
+For example, we cannot declare the :ada:`Drivers.M1.Ext` package:
+
+.. code-block:: ada
+
+    package Drivers.M1.Ext is
+
+    end Drivers.M1.Ext;
+
+In this case, the solution is to extend the original (non-renamed) package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Package_Renaming_1
+
+    package Driver_M1.Ext is
+
+    end Driver_M1.Ext;
+
+    --  A package called Drivers.M1.Ext is
+    --  automatically available!
+
+    with Drivers.M1.Ext;
+
+    procedure Dummy is
+    begin
+       null;
+    end Dummy;
+
+This works fine because any child package of a package :ada:`P` is also a child
+package of a renamed version of :ada:`P`. (Therefore, because :ada:`Ext` is a
+child package of :ada:`Driver_M1`, it is also a child package of the renamed
+:ada:`Drivers.M1` package.)
+
+
+Backwards-compatibility via renaming
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can also use renaming to ensure backwards-compatibility when changing the
+package hierarchy. For example, we could adapt the previous source-code by:
+
+- converting :ada:`Driver_M1` and :ada:`Driver_M2` to child packages of
+  :ada:`Drivers`, and
+
+- using package renaming to *mimic* the original names (:ada:`Driver_M1` and
+  :ada:`Driver_M2`).
+
+This is the adapted code:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Package_Renaming_2
+
+    package Drivers
+      with Pure is
+
+    end Drivers;
+
+    --  We've converted Driver_M1 to
+    --  Drivers.M1:
+
+    package Drivers.M1 is
+
+    end Drivers.M1;
+
+    --  We've converted Driver_M2 to
+    --  Drivers.M2:
+
+    package Drivers.M2 is
+
+    end Drivers.M2;
+
+    --  Original Driver_M1 package still
+    --  available via package renaming:
+
+    with Drivers.M1;
+
+    package Driver_M1 renames Drivers.M1;
+
+    --  Original Driver_M2 package still
+    --  available via package renaming:
+
+    with Drivers.M2;
+
+    package Driver_M2 renames Drivers.M2;
+
+Now, :ada:`M1` and :ada:`M2` are *actual* child packages of :ada:`Drivers`, but
+their original names are still available. By doing so, we ensure that existing
+software that makes use of the original packages doesn't break.
+
+
 .. _Adv_Ada_Private_Packages:
 
 Private packages
