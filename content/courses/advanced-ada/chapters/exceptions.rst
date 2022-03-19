@@ -541,10 +541,9 @@ for instance, the range of a subtype. Let's see an example:
        I := Arr (11);
     end Show_Range_Check;
 
-In this example, the range of the input array :ada:`Arr` |mdash| passed to
-parameter :ada:`A` of the :ada:`Value_Of` function |mdash| is 1 to 10. In the
-call to :ada:`Value_Of`, we're trying to access position 11, which is outside
-this range. Therefore, the range check fails.
+In this example, the range of array :ada:`Arr` is 1 to 10. However, we're
+trying to access position 11, which is outside this range. Therefore, the range
+check fails.
 
 
 Tag Check
