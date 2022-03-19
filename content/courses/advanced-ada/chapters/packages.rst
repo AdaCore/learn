@@ -295,6 +295,45 @@ visibility :ref:`later <Adv_Ada_Package_Visibility>`.
 Note that subprograms can also be declared private. We'll see this
 :ref:`in another section <Adv_Ada_Private_Subprograms>`.
 
+.. admonition:: Important
+
+    We've discussed package renaming
+    :ref:`in a previous section <Adv_Ada_Package_Renaming>`. We can rename a
+    package as a private package, too. For example:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Private_Package_Renaming
+
+        package Driver_M1 is
+
+        end Driver_M1;
+
+        package Drivers
+          with Pure is
+
+        end Drivers;
+
+        with Driver_M1;
+
+        private package Drivers.M1 renames Driver_M1;
+
+    Obviously, :ada:`Drivers.M1` has the same restrictions as any private
+    package:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Private_Package_Renaming
+        :class: ada-expect-compile-error
+
+        with Driver_M1;
+        with Drivers.M1;
+
+        procedure Test_Driver is
+        begin
+           null;
+        end Test_Driver;
+
+    As expected, although we can have the :ada:`Driver_M1` package in a with
+    clause of the :ada:`Test_Driver` procedure, we cannot do the same in the
+    case of the :ada:`Drivers.M1` package because it is private.
+
 .. admonition:: In the Ada Reference Manual
 
     - `10.1.1 Compilation Units - Library Units <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-10-1-1.html>`_
