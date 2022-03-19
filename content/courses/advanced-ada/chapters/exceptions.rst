@@ -271,6 +271,11 @@ This table shows all language-defined checks and the associated exceptions:
 In addition, we can use :ada:`All_Checks` to refer to all those checks above at
 once.
 
+..
+    REMOVED! TO BE RE-EVALUATED IN 2022:
+
+    :ada:`Program_Error_Check` and :ada:`Tasking_Check`
+
 Let's discuss each check and see code examples where those checks are
 performed. Note that all examples are erroneous, so please avoid reusing them
 elsewhere.
