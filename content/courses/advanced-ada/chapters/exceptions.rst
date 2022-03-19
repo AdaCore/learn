@@ -238,7 +238,7 @@ the call to :ada:`Assert` is not ignored.
 Checks and exceptions
 ---------------------
 
-This table shows all available checks and the associated exceptions:
+This table shows all language-defined checks and the associated exceptions:
 
 +-----------------------------+-------------------------+
 | Check                       | Exception               |
@@ -271,14 +271,14 @@ This table shows all available checks and the associated exceptions:
 In addition, we can use :ada:`All_Checks` to refer to all those checks above at
 once.
 
-Let's discuss each check and see code examples where those checks are being
+Let's discuss each check and see code examples where those checks are
 performed. Note that all examples are erroneous, so please avoid reusing them
 elsewhere.
 
 Access Check
 ~~~~~~~~~~~~
 
-As you know, an object of access type might be null. It would be an error to
+As you know, an object of an access type might be null. It would be an error to
 dereference this object, as it doesn't indicate a valid position in memory.
 Therefore, the access check verifies that an access object is not null when
 dereferencing it. For example:
@@ -356,7 +356,7 @@ Here, :ada:`R`\ 's discriminant (:ada:`Valid`) is :ada:`False`, so we cannot
 assign an object whose :ada:`Valid` discriminant is :ada:`True`.
 
 Also, when accessing a component, the discriminant check ensures that this
-component exist (for the current discriminant values):
+component exists for the current discriminant value:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Discriminant_Check_2
     :class: ada-run-expect-failure
