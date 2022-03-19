@@ -259,6 +259,7 @@ let's call it :ada:`Calculations.Child` |mdash|, we cannot refer to it in the
 :ada:`Test_Data_Processing` procedure:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Packages.Private_Package
+    :class: ada-expect-compile-error
 
     package Data_Processing.Calculations.Child is
 
