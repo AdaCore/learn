@@ -530,10 +530,6 @@ for instance, the range of a subtype. Let's see an example:
        type Integer_Array is array (Positive range <>)
          of Integer;
 
-       function Value_Of (A : Integer_Array;
-                          I : Integer) return Integer is
-          (A (I));
-
        Arr : Integer_Array (1 .. 10) := (others => 1);
        I   : Integer;
 
