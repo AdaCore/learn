@@ -255,7 +255,7 @@ accessible within the :ada:`Data_Processing`, but not in the
 
 The same restrictions apply to child packages of private packages. For example,
 if we implement a child package of the :ada:`Calculations` package |mdash|
-let's call it :ada:`Calculations.Child` |mdash|, we cannot refer to it in the
+let's name it :ada:`Calculations.Child` |mdash|, we cannot refer to it in the
 :ada:`Test_Data_Processing` procedure:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Packages.Private_Package
