@@ -12,7 +12,6 @@ can declare private subprograms as well. We do this by using the :ada:`private`
 keyword. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Subprograms.Private_Test_Procedure
-    :class: ada-expect-compile-error
 
     private procedure Test;
 

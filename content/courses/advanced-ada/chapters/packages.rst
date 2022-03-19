@@ -102,6 +102,7 @@ While we can use a with-clause of the private child package in the body of the
 example, we cannot refer to it in the :ada:`Test_Data_Processing` procedure:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Packages.Private_Package
+    :class: ada-expect-compile-error
 
     with Data_Processing; use Data_Processing;
 
