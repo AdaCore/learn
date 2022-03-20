@@ -527,19 +527,17 @@ for instance, the range of a subtype. Let's see an example:
 
     procedure Show_Range_Check is
 
-       type Integer_Array is array (Positive range <>)
-         of Integer;
+       subtype Int_1_10 is Integer range 1 .. 10;
 
-       Arr : Integer_Array (1 .. 10) := (others => 1);
-       I   : Integer;
+       I : Int_1_10;
 
     begin
-       I := Arr (11);
+       I := 11;
     end Show_Range_Check;
 
-In this example, the range of array :ada:`Arr` is 1 to 10. However, we're
-trying to access position 11, which is outside this range. Therefore, the range
-check fails.
+In this example, we're trying to assign 11 to the variable :ada:`I` of the
+:ada:`Int_1_10` subtype, which has a range from 1 to 10. Since 11 is outside
+that range, the range check fails.
 
 
 Tag Check
