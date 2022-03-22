@@ -2506,6 +2506,8 @@ can retrieve the size of an object allocated via :ada:`new` by first
 dereferencing it |mdash| in our example, we do this by writing
 :ada:`AV1.all'Size`.
 
+.. _Adv_Ada_Types_Storage_Size_Error:
+
 Now, let's use the :ada:`Storage_Size` aspect to actually reserve memory for
 this data type:
 
