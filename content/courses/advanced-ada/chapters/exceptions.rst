@@ -552,37 +552,38 @@ in a dispatching operation. For example:
     package P is
 
        type T is tagged null record;
-       type T_Class is access all T'Class;
-
-       function Copy (Obj : T_Class)
-                      return T_Class is
-         (Obj);
-
        type T1 is new T with null record;
-       type T1_Class is access all T1'Class;
-
        type T2 is new T with null record;
-       type T2_Class is access all T2'Class;
 
     end P;
 
-    with P; use P;
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Tags;
+
+    with P;           use P;
 
     procedure Show_Tag_Check is
 
-       A1 : T1_Class := new T1;
-       A2 : T2_Class := new T2;
-       A3 : T_Class;
+       A1 : T'Class := T1'(null record);
+       A2 : T'Class := T2'(null record);
 
     begin
-       A3 := T_Class (A1);
-       A2 := T2_Class (Copy (A3));
+       Put_Line ("A1'Tag: "
+                 & Ada.Tags.Expanded_Name (A1'Tag));
+       Put_Line ("A2'Tag: "
+                 & Ada.Tags.Expanded_Name (A2'Tag));
+
+       A2 := A1;
 
     end Show_Tag_Check;
 
-Here, the tag of the object returned by the :ada:`Copy` function is
-:ada:`T1'Tag`. However, we cannot convert an object with this tag to an
-object of :ada:`T2_Class`, so the tag check fails.
+Here, :ada:`A1` and :ada:`A2` have different tags:
+
+- :ada:`A1'Tag = T1'Tag`, while
+- :ada:`A2'Tag = T2'Tag`.
+
+Since the tags don't match, the tag check fails in the assignment of :ada:`A1`
+to :ada:`A2`.
 
 
 Accessibility Check
@@ -595,12 +596,9 @@ matches the expected level.
 
     Add link to "Accessibility levels" section once it's available.
 
-Let's revisit the example from the previous section (that was showing the tag
-check). Now, however, instead of declaring :ada:`A1` and :ada:`A2` as objects
-of the :ada:`T1_Class` and :ada:`T2_Class` types, respectively, we use
-anonymous access types in the declarations. (For example, we replace the
-:ada:`T1_Class` type in the declaration of :ada:`A1` by the anonymous
-:ada:`access T1` type.)
+Let's look at an example that mixes access types and anonymous access types.
+Here, we use an anonymous access type in the declaration of :ada:`A1` and a
+named access type in the declaration of :ada:`A2`:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Accessibility_Check
     :class: ada-run-expect-failure
@@ -610,35 +608,23 @@ anonymous access types in the declarations. (For example, we replace the
        type T is tagged null record;
        type T_Class is access all T'Class;
 
-       function Copy (Obj : T_Class)
-                      return T_Class is
-         (Obj);
-
-       type T1 is new T with null record;
-       type T1_Class is access all T1'Class;
-
-       type T2 is new T with null record;
-       type T2_Class is access all T2'Class;
-
     end P;
 
     with P; use P;
 
     procedure Show_Accessibility_Check is
 
-       A1 : access T1 := new T1;
-       A2 : access T2 := new T2;
-       A3 : T_Class;
+       A1 : access T'Class := new T;
+       A2 : T_Class;
 
     begin
-       A3 := T_Class (A1);
-       A2 := T2_Class (Copy (A3));
+       A2 := T_Class (A1);
 
     end Show_Accessibility_Check;
 
-The anonymous type used in the declaration of :ada:`A1` (:ada:`access T1`)
-doesn't have the same accessibility level as the :ada:`T1_Class` type.
-Therefore, the accessibility check fails during the :ada:`T_Class (A1)`
+The anonymous type (:ada:`access T'Class`), which is used in the declaration of
+:ada:`A1`, doesn't have the same accessibility level as the :ada:`T_Class`
+type. Therefore, the accessibility check fails during the :ada:`T_Class (A1)`
 conversion.
 
 We can see the accessibility check failing in this example as well:
@@ -650,16 +636,16 @@ We can see the accessibility check failing in this example as well:
 
     procedure Show_Accessibility_Check is
 
-       A1 : access T1 := new T1;
+       A : access T'Class := new T;
 
-       procedure P (A : T1_Class) is null;
+       procedure P (A : T_Class) is null;
 
     begin
-       P (T1_Class (A1));
+       P (T_Class (A));
 
     end Show_Accessibility_Check;
 
-Again, the check fails in the :ada:`T1_Class (A1)` conversion and raises a
+Again, the check fails in the :ada:`T_Class (A)` conversion and raises a
 :ada:`Program_Error` exception.
 
 
