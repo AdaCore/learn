@@ -181,7 +181,7 @@ statement. In such cases, there's an implicit :ada:`null` statement.
         end loop;
 
 
-Labels and compount statements
+Labels and compound statements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We can use labels with compound statements as well. For example, we can label
