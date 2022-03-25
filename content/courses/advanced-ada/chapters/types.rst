@@ -68,8 +68,6 @@ example using the :ada:`Float` type and a subtype of it:
 
     procedure Show_First_Last_Real is
        subtype Norm is Float range 0.0 .. 1.0;
-
-       N : Norm;
     begin
        Put_Line ("Float'First: " & Float'First'Image);
        Put_Line ("Float'Last:  " & Float'Last'Image);
