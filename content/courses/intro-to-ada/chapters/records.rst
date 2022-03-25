@@ -145,7 +145,7 @@ variable declaration. For example:
 
 .. code-block:: ada
 
-    Some_Day : Date
+    Some_Day : Date;
     Y        : Integer renames Some_Day.Year;
 
 Here, :ada:`Y` is an alias, so that every time we using :ada:`Y`, we are really
