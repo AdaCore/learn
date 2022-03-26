@@ -5,6 +5,6 @@ Control Flow
     :maxdepth: 3
 
     expressions
-    subprograms
     statements
+    subprograms
     exceptions
