@@ -6,7 +6,7 @@ Expressions
 Conditional Expressions
 -----------------------
 
-In the previous section, we've seen simple expressions such as :ada:`I = 0` or
+As we've seen before, we can write simple expressions such as :ada:`I = 0` or
 :ada:`D.Valid`. A conditional expression, as the name implies, is an
 expression that contains a condition. This might be an "if-expression" (in the
 :ada:`if ... then ... else` form) or a "case-expression" (in the
