@@ -5,6 +5,7 @@ Data types
     :maxdepth: 3
 
     types
+    types_representation
     aggregates
     arrays
     strings
