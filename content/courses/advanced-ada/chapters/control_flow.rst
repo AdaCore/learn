@@ -4,6 +4,7 @@ Control Flow
 .. toctree::
     :maxdepth: 3
 
-    subprograms
+    expressions
     statements
+    subprograms
     exceptions
