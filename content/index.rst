@@ -205,6 +205,30 @@
 
             .. container:: frontpage-ebook-and-buttons-block
 
+                .. image:: images/page-1-of-whats-new-in-ada-2022.jpeg
+                    :alt: What's New in Ada 2022 (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/courses/whats-new-in-ada-2022.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/courses/whats-new-in-ada-2022.epub">
+                                EPUB
+                            </a>
+
+                            <a class="ebook-download-button" href="/mobi_books/courses/whats-new-in-ada-2022.mobi">
+                                MOBI
+                            </a>
+                        </div>
+
+        .. container:: frontpage-ebooks-row
+
+            .. container:: frontpage-ebook-and-buttons-block
+
                 .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
                     :alt: Introduction to GNAT Toolchain (e-book)
                     :width: 149pt
@@ -224,8 +248,6 @@
                                 MOBI
                             </a>
                         </div>
-
-        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -249,6 +271,8 @@
                             </a>
                         </div>
 
+        .. container:: frontpage-ebooks-row
+
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
@@ -270,8 +294,6 @@
                                 MOBI
                             </a>
                         </div>
-
-        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
