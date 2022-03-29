@@ -3,8 +3,8 @@
 
 :orphan:
 
-Ada 2022: What's New
-====================
+What's New in Ada 2022
+======================
 
 .. include:: ../global.txt
 
