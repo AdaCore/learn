@@ -229,28 +229,6 @@
 
             .. container:: frontpage-ebook-and-buttons-block
 
-                .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
-                    :alt: Introduction to GNAT Toolchain (e-book)
-                    :width: 149pt
-
-                .. raw:: html
-
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
-                                PDF
-                            </a>
-
-                            <a class="ebook-download-button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
-                                EPUB
-                            </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/GNAT_Toolchain_Intro.mobi">
-                                MOBI
-                            </a>
-                        </div>
-
-            .. container:: frontpage-ebook-and-buttons-block
-
                 .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
                     :alt: Ada for the C++ and Java Developer (e-book)
                     :width: 149pt
@@ -270,8 +248,6 @@
                                 MOBI
                             </a>
                         </div>
-
-        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -295,6 +271,8 @@
                             </a>
                         </div>
 
+        .. container:: frontpage-ebooks-row
+
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
@@ -313,6 +291,28 @@
                             </a>
 
                             <a class="ebook-download-button" href="/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi">
+                                MOBI
+                            </a>
+                        </div>
+
+            .. container:: frontpage-ebook-and-buttons-block
+
+                .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
+                    :alt: Introduction to GNAT Toolchain (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
+                                EPUB
+                            </a>
+
+                            <a class="ebook-download-button" href="/mobi_books/courses/GNAT_Toolchain_Intro.mobi">
                                 MOBI
                             </a>
                         </div>
