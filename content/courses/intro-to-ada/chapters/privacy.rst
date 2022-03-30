@@ -32,6 +32,8 @@ Basic encapsulation
        --  Not visible from external units
     end Encapsulate;
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
     package body Encapsulate is
 
        procedure Hello is
