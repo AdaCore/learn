@@ -184,12 +184,18 @@ code in native JSON.  For example:
          type JSON_Object is null record;
          type JSON_Array is null record;
 
-         function To_Value (Text : String) return JSON_Value is (null record);
-         function To_Value (Text : Wide_Wide_String) return JSON_Value is (null record);
-         function New_JSON_Object return JSON_Object is (null record);
-         function New_JSON_Array return JSON_Array is (null record);
-         function From_Object (Self : JSON_Object) return JSON_Value is (null record);
-         function From_Array (Self : JSON_Array) return JSON_Value is (null record);
+         function To_Value (Text : String) return JSON_Value is
+           (null record);
+         function To_Value (Text : Wide_Wide_String) return JSON_Value is
+           (null record);
+         function New_JSON_Object return JSON_Object is
+           (null record);
+         function New_JSON_Array return JSON_Array is
+           (null record);
+         function From_Object (Self : JSON_Object) return JSON_Value is
+           (null record);
+         function From_Array (Self : JSON_Array) return JSON_Value is
+           (null record);
       end JSON;
 
       function "+" (X : JSON.JSON_Object) return JSON.JSON_Value
@@ -199,10 +205,13 @@ code in native JSON.  For example:
 
       Offices : JSON.JSON_Array :=
         (+("name"   => "North American Office",
-           "phones" => -(1_877_787_4628, 1_866_787_4232, 1_212_620_7300),
+           "phones" => -(1_877_787_4628,
+                         1_866_787_4232,
+                         1_212_620_7300),
            "email"  => "info@adacore.com"),
          +("name"   => "European Office",
-           "phones" => -(33_1_49_70_67_16, 33_1_49_70_05_52),
+           "phones" => -(33_1_49_70_67_16,
+                         33_1_49_70_05_52),
            "email"  => "info@adacore.com"));
       -----------------------------------------------------------------
    begin
@@ -215,10 +224,13 @@ The :ada:`Offices` variable is supposed to contain this value:
 .. code-block::
 
      [{"name"  : "North American Office",
-       "phones": [18777874628, 18667874232, 12126207300],
+       "phones": [18777874628,
+                  18667874232,
+                  12126207300],
        "email" : "info@adacore.com"},
       {"name"  : "European Office",
-       "phones": [33149706716, 33149700552],
+       "phones": [33149706716,
+                  33149700552],
        "email" : "info@adacore.com"}];
 
 
