@@ -58,6 +58,11 @@ test_advanced_spark:
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/advanced-spark/chapters/*.rst
 	@echo ""
 
+test_whats_new_in_ada_2022:
+	@echo "===== WHAT'S NEW IN ADA 2022 ====="
+	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/whats-new-in-ada-2022/chapters/*.rst
+	@echo ""
+
 test_spark_for_the_misra_c_developer:
 	@echo "===== SPARK FOR MISRA C DEV ====="
 	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
@@ -85,6 +90,7 @@ test_training_fundamentals:
 
 test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
 	test_advanced_ada test_advanced_spark \
+	test_whats_new_in_ada_2022 \
 	test_spark_for_the_misra_c_developer \
 	test_ada_for_the_cpp_java_developer \
 	test_ada_for_the_embedded_c_developer \
