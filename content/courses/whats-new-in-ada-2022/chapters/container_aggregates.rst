@@ -12,8 +12,8 @@ Container Aggregates
 
 Ada 2022 introduces container aggregates, which can be used to easily create
 values for vectors, lists, maps, and other aggregates.  Container aggregates
-leverage array aggregate syntax when the container doesn't have keys uses
-record aggregate syntax for hashed and ordered maps.  Here's an example:
+leverage array aggregate syntax when the container doesn't have keys, so we can
+use record aggregate syntax for hashed and ordered maps.  Here's an example:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Container_Aggregates
 
