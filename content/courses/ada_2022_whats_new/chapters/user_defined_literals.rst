@@ -57,7 +57,7 @@ for the internal representation:
    begin
       Print ("Test ""string""");
       Print (123);
-      Print (16#DEAD_BEAF#);
+      Print (16#DEAD_BEEF#);
       Print (2.99_792_458e+8);
    end Main;
 
