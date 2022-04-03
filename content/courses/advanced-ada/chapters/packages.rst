@@ -54,6 +54,7 @@ the private part of :ada:`Data`, we can derive a new type :ada:`T2` based on
 :ada:`Data`:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Simple_Private_With_Clause
+    :class: ada-expect-compile-error
 
     private with P;
 
