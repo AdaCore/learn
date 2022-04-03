@@ -37,31 +37,54 @@ single-element aggregates. Consider this:
 
    end Show_Square_Brackets;
 
-Other than the case of zero and one element aggregates, there are no
-differences between brackets and parentheses in array aggregates.
+.. admonition:: Short summary for parentheses and brackets
+
+   * Record aggregates use parentheses
+   * :ref:`Container aggregates <container_aggregates>` use square brackets
+   * Array aggregates can use both square brackets and parentheses, but
+     parentheses usage is obsolescent
 
 Iterated Component Association
 ------------------------------
 
 There is a new kind of component association:
 
-.. code-block:: ada
+.. code-block::
 
-   Vector : Integer_Array := (for J in 1 .. 5 => J * 2);
+   Vector : Integer_Array := [for J in 1 .. 5 => J * 2];
 
 This association starts with :ada:`for` keyword, just like a quantified
 expression. It declares an index parameter that you can use in the
 computation of a component.
 
 Iterated component associations can nest and can be nested in another
-association (iterated or not). You can even mix iterated and not iterated
-associations in one list. Here we use this to define a square matrix:
+association (iterated or not). Here we use this to define a square matrix:
 
-.. code-block:: ada
+.. code-block::
 
    Matrix : array (1 .. 3, 1 .. 3) of Positive :=
-    (for J in 1 .. 3 =>
-      (for K in 1 .. 3 => J * 10 + K));
+    [for J in 1 .. 3 =>
+      [for K in 1 .. 3 => J * 10 + K]];
+
+
+Iterated component associations in this form provide both element indices
+and values, just like named component associations:
+
+.. code-block::
+
+   Data : Integer_Array (1 .. 5) :=
+     [for J in 2 .. 3 => J, 5 => 5, others => 0];
+
+Here :ada:`Data` contains :ada:`(0, 2, 3, 0, 5)`, not :ada:`(2, 3, 5, 0, 0)`.
+
+Another form of iterated component association corresponds to a positional
+component association and provides just values, but no element indices:
+
+.. code-block::
+
+   Vector_2 : Integer_Array := [for X of Vector => X / 2];
+
+You cannot mix these forms in a single aggregate.
 
 It's interesting that such aggregates were originally proposed more than 25
 years ago!
@@ -89,11 +112,18 @@ Complete code snippet:
       Vector : constant Integer_Array := [for J in 1 .. 5 => J * 2];
 
       Matrix : constant array (1 .. 3, 1 .. 3) of Positive :=
-        (for J in 1 .. 3 =>
-          (for K in 1 .. 3 => J * 10 + K));
+        [for J in 1 .. 3 =>
+          [for K in 1 .. 3 => J * 10 + K]];
+
+      Data : Integer_Array (1 .. 5) :=
+        [for J in 2 .. 3 => J, 5 => 5, others => 0];
+
+      Vector_2 : Integer_Array := [for X of Vector => X / 2];
    begin
       Ada.Text_IO.Put_Line (Vector'Image);
       Ada.Text_IO.Put_Line (Matrix'Image);
+      Ada.Text_IO.Put_Line (Data'Image);
+      Ada.Text_IO.Put_Line (Vector_2'Image);
    end Main;
 
 References

@@ -1,5 +1,7 @@
 .. include:: ../../global.txt
 
+.. _container_aggregates:
+
 Container Aggregates
 ====================
 
@@ -11,9 +13,10 @@ Container Aggregates
     * GCC 11
 
 Ada 2022 introduces container aggregates, which can be used to easily create
-values for vectors, lists, maps, and other aggregates.  Container aggregates
-leverage array aggregate syntax when the container doesn't have keys, so we can
-use record aggregate syntax for hashed and ordered maps.  Here's an example:
+values for vectors, lists, maps, and other aggregates.  For containers such
+as maps, the aggregate must use named assоciations to provide keys and values.
+For other containers it uses positional assоciations.  Only square brackets
+are allowed.  Here's an example:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Container_Aggregates
 
@@ -28,12 +31,12 @@ use record aggregate syntax for hashed and ordered maps.  Here's an example:
       package Int_Vectors is new Ada.Containers.Vectors
         (Positive, Integer);
 
-      X : constant Int_Vectors.Vector := (1, 2, 3);
+      X : constant Int_Vectors.Vector := [1, 2, 3];
 
       package Float_Maps is new Ada.Containers.Ordered_Maps
         (Integer, Float);
 
-      Y : constant Float_Maps.Map := (-10 => 1.0, 0 => 2.5, 10 => 5.51);
+      Y : constant Float_Maps.Map := [-10 => 1.0, 0 => 2.5, 10 => 5.51];
    begin
       Ada.Text_IO.Put_Line (X'Image);
       Ada.Text_IO.Put_Line (Y'Image);
@@ -78,7 +81,7 @@ aggregate:
          function New_JSON_Array return JSON_Array is (null record);
       end JSON;
 
-      List : JSON.JSON_Array := (1, 2, 3);
+      List : JSON.JSON_Array := [1, 2, 3];
       ------------------------------------
    begin
       --  Equivalent old initialization code
@@ -124,7 +127,7 @@ The equivalent for maps is:
          function New_JSON_Object return JSON_Object is (null record);
       end JSON;
 
-      Object : JSON.JSON_Object := ("a" => 1, "b" => 2, "c" => 3);
+      Object : JSON.JSON_Object := ["a" => 1, "b" => 2, "c" => 3];
       ------------------------------------------------------------
    begin
       --  Equivalent old initialization code
@@ -204,15 +207,15 @@ code in native JSON.  For example:
         renames JSON.From_Array;
 
       Offices : JSON.JSON_Array :=
-        (+("name"   => "North American Office",
-           "phones" => -(1_877_787_4628,
+        [+["name"   => "North American Office",
+           "phones" => -[1_877_787_4628,
                          1_866_787_4232,
-                         1_212_620_7300),
-           "email"  => "info@adacore.com"),
-         +("name"   => "European Office",
-           "phones" => -(33_1_49_70_67_16,
-                         33_1_49_70_05_52),
-           "email"  => "info@adacore.com"));
+                         1_212_620_7300],
+           "email"  => "info@adacore.com"],
+         +["name"   => "European Office",
+           "phones" => -[33_1_49_70_67_16,
+                         33_1_49_70_05_52],
+           "email"  => "info@adacore.com"]];
       -----------------------------------------------------------------
    begin
       --  Equivalent old initialization code is too long to print it here

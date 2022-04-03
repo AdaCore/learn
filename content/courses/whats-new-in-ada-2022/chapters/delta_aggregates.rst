@@ -47,8 +47,8 @@ components.
 
    type Vector_3D is array (1 .. 3) of Float;
 
-   Point_2 : constant Vector_3D := (1.0, 2.0, 3.0);
-   Projection_2 : constant Vector_3D := (Point_2 with delta 3 => 0.0);
+   Point_2 : constant Vector_3D := [1.0, 2.0, 3.0];
+   Projection_2 : constant Vector_3D := [Point_2 with delta 3 => 0.0];
 
 You can use parentheses for array aggregates, but you can't use square
 brackets for record aggregates.
@@ -72,8 +72,8 @@ Here is the complete code snippet:
 
       type Vector_3D is array (1 .. 3) of Float;
 
-      Point_2 : constant Vector_3D := (1.0, 2.0, 3.0);
-      Projection_2 : constant Vector_3D := (Point_2 with delta 3 => 0.0);
+      Point_2 : constant Vector_3D := [1.0, 2.0, 3.0];
+      Projection_2 : constant Vector_3D := [Point_2 with delta 3 => 0.0];
    begin
       Ada.Text_IO.Put (Float'Image (Projection_1.X));
       Ada.Text_IO.Put (Float'Image (Projection_1.Y));
