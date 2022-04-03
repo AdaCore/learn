@@ -118,9 +118,9 @@ In Ada 2022, you can use a similar renaming:
       A := A ** 2 - 3.0 * A;
    end;
 
-Here we use a new short form of the rename declaration, but this still
-looks too heavy, and even worse, it can't be used for discriminant
-dependent-components.
+Here we use a new short form of the rename declaration, but this still looks
+too heavy, and even worse, it can't be used for discriminant-dependent
+components.
 
 References
 ----------
