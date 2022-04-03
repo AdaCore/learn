@@ -611,7 +611,7 @@ values via the dot notation.
        Print_Stack (S);
     end Main;
 
-.. note:
+.. note::
     In the examples above, we used a discriminant to determine the size of an
     array, but it is not limited to that, and could be used, for example, to
     determine the size of a nested discriminated record.
