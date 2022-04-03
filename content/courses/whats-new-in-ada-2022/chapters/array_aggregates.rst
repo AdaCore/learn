@@ -54,8 +54,8 @@ expression. It declares an index parameter that you can use in the
 computation of a component.
 
 Iterated component associations can nest and can be nested in another
-association (iterated or not). But you can't mix iterated and not iterated
-association in one list. Here we use this to define a square matrix:
+association (iterated or not). You can even mix iterated and not iterated
+associations in one list. Here we use this to define a square matrix:
 
 .. code-block:: ada
 

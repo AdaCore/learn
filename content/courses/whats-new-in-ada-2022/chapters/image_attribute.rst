@@ -33,7 +33,7 @@ statements are equivalent:
 ------------------------------------
 
 In Ada 2022, you can apply the :ada:`'Image` attribute to any type,
-including records, array, access types, and private types. Let's see how
+including records, arrays, access types, and private types. Let's see how
 this works. We'll define array, record, and access types and corresponding
 objects and then convert these objects to strings and print them:
 

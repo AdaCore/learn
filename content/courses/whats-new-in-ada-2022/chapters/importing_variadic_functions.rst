@@ -1,3 +1,5 @@
+:next_state: False
+
 .. include:: ../../global.txt
 
 Interfacing C variadic functions

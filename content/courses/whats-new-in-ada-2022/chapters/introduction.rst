@@ -12,8 +12,8 @@ line switch or pragma. Compilers starting with `GNAT Community Edition
 2021`_ or `GCC 11`_ use :ada:`pragma Ada_2022;` or the ``-gnat2022``
 switch.  Older compilers use :ada:`pragma Ada_2020;` or
 ``-gnat2020``. To use the square brackets syntax or :ada:`'Reduce`
-expressions, you need :ada:`pragma Extensions_Allowed (On);` the or
-``-gnatX`` swith.
+expressions, you need :ada:`pragma Extensions_Allowed (On);` or the
+``-gnatX`` switch.
 
 References
 ----------
