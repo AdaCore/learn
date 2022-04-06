@@ -91,9 +91,8 @@ years ago!
 
 Complete code snippet:
 
-.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Array_Aggregates
+.. code-block:: ada
 
-   !main.adb
    pragma Ada_2022;
    pragma Extensions_Allowed (On);  --  for square brackets
 

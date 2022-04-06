@@ -18,7 +18,7 @@ as maps, the aggregate must use named assоciations to provide keys and values.
 For other containers it uses positional assоciations.  Only square brackets
 are allowed.  Here's an example:
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Container_Aggregates
+.. code-block:: ada
 
    pragma Ada_2022;
 
@@ -48,9 +48,8 @@ new :ada:`Aggregate` aspect to enable container aggregates for your
 container and let the compiler know what subprograms to use to construct the
 aggregate:
 
-.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Container_Aggregates.Array
+.. code-block:: ada
 
-   !main.adb
    pragma Ada_2022;
 
    procedure Main is
@@ -93,9 +92,8 @@ aggregate:
 
 The equivalent for maps is:
 
-.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Container_Aggregates.Map
+.. code-block:: ada
 
-   !main.adb
    pragma Ada_2022;
 
    procedure Main is
@@ -143,9 +141,8 @@ both array and object aggregates present. But we can define conversion
 functions for array and object and get code almost as dense as the same
 code in native JSON.  For example:
 
-.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Container_Aggregates.Both
+.. code-block:: ada
 
-   !main.adb
    pragma Ada_2022;
 
    procedure Main is
