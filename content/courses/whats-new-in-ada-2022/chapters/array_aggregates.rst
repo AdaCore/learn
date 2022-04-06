@@ -19,9 +19,8 @@ In Ada 2022, you can use square brackets in array aggregates. Using
 square brackets simplifies writing both empty aggregates and
 single-element aggregates. Consider this:
 
-.. code:: ada compile_button manual_chop project=Courses.Ada_2022_Whats_New.Show_Square_Brackets
+.. code-block::
 
-   !show_square_brackets.ads
    pragma Ada_2022;
    pragma Extensions_Allowed (On);
 
@@ -91,7 +90,7 @@ years ago!
 
 Complete code snippet:
 
-.. code-block:: ada
+.. code-block::
 
    pragma Ada_2022;
    pragma Extensions_Allowed (On);  --  for square brackets
