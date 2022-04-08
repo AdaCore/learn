@@ -14,6 +14,9 @@ Private packages
 Private with clauses
 --------------------
 
+Definition and usage
+~~~~~~~~~~~~~~~~~~~~
+
 A private with clause allows us to refer to a package in the private part of
 another package. For example, if we want to refer to package :ada:`P` in the
 private part of :ada:`Data`, we can write :ada:`private with P`:
@@ -117,6 +120,9 @@ use it in the body of the :ada:`Data` package:
 In the body of the :ada:`Data`, we can access information from the :ada:`P`
 package |mdash| as we do in the :ada:`P.Process (P.T (A))` statement of the
 :ada:`Process` procedure.
+
+Referring to private child package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There's one case where using a private with clause is the only way to refer to
 a package: when we want to refer to a private child package in another child
