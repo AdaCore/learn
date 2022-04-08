@@ -277,6 +277,56 @@ As expected, the code can now be compiled without issues.
 
     - `10.1.2 Context Clauses - With Clauses <http://www.ada-auth.org/standards/12rm/html/RM-10-1-2.html>`_
 
+Limited view and private with clauses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can apply a limited view to private with clauses that we've discussed
+earlier. For a package :ada:`P`, we do this by simply writing
+:ada:`limited private with P`.
+
+Let's reuse the previous source-code example and convert types :ada:`T1` and
+:ada:`T2` to private types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_View
+
+    limited private with B;
+
+    package A is
+
+       type T1 is private;
+
+    private
+
+       --  Here, we have limited visibility
+       --  of package B
+
+       type T1 is record
+          Ref : access B.T2;
+       end record;
+
+    end A;
+
+    limited private with A;
+
+    package B is
+
+       type T2 is private;
+
+    private
+
+       --  Here, we have limited visibility
+       --  of package A
+
+       type T2 is record
+          Ref : access A.T1;
+       end record;
+
+    end B;
+
+In this updated version of the source-code example, we have not only just a
+limited view of packages :ada:`A` and :ada:`B`, but also, each package is just
+visible in the private part of the other package.
+
 
 .. todo::
 
