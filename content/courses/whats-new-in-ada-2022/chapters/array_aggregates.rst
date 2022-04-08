@@ -10,7 +10,7 @@ Advanced Array Aggregates
     * GNAT Community Edition 2020
     * GCC 11
 
-.. _array_aggregates:
+.. _Whats_New_Ada_2022_Array_Aggregates:
 
 Square brackets
 ---------------

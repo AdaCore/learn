@@ -76,7 +76,7 @@ objects and then convert these objects to strings and print them:
      (access 7fff64b23988)
 
 Note the square brackets in the array image output. In Ada 2022, array
-aggregates could be written :ref:`this way <array_aggregates>`!
+aggregates could be written :ref:`this way <Whats_New_Ada_2022_Array_Aggregates>`!
 
 References
 ----------

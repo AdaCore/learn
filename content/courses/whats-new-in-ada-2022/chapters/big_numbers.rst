@@ -13,7 +13,7 @@ Big Numbers
 
 Ada 2022 introduces big integers and big real types.
 
-.. _big_integers:
+.. _Whats_New_Ada_2022_Big_Integers:
 
 Big Integers
 ------------
