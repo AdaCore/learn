@@ -234,6 +234,123 @@ the body of the :ada:`Data_Processing` package |mdash| by simply writing
 :ada:`with Data_Processing.Calculations`. After that, we can call the
 :ada:`Calculate` procedure normally in the :ada:`Process` procedure.
 
+Sibling private packages
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can introduce another private package :ada:`Advanced_Calculations` as a
+child of :ada:`Data_Processing` and refer to the :ada:`Calculations` package
+in its specification:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Private_Package_2
+
+    package Data_Processing is
+
+       type Data is private;
+
+       procedure Process (D : in out Data);
+
+    private
+
+       type Data is null record;
+
+    end Data_Processing;
+
+    private package Data_Processing.Calculations is
+
+       procedure Calculate (D : in out Data);
+
+    end Data_Processing.Calculations;
+
+    with Data_Processing.Calculations;
+    use  Data_Processing.Calculations;
+
+    private package Data_Processing.Advanced_Calculations is
+
+       procedure Advanced_Calculate (D : in out Data)
+         renames Calculate;
+
+    end Data_Processing.Advanced_Calculations;
+
+    with Data_Processing.Advanced_Calculations;
+    use  Data_Processing.Advanced_Calculations;
+
+    package body Data_Processing is
+
+       procedure Process (D : in out Data) is
+       begin
+          Advanced_Calculate (D);
+       end Process;
+
+    end Data_Processing;
+
+    package body Data_Processing.Calculations is
+
+       procedure Calculate (D : in out Data) is
+       begin
+          --  Dummy implementation...
+          null;
+       end Calculate;
+
+    end Data_Processing.Calculations;
+
+    with Data_Processing; use Data_Processing;
+
+    procedure Test_Data_Processing is
+       D : Data;
+    begin
+       Process (D);
+    end Test_Data_Processing;
+
+Note that, in the body of the :ada:`Data_Processing` package, we're now
+referring to the new :ada:`Advanced_Calculations` package instead of the
+:ada:`Calculations` package.
+
+Referring to a private child package in the specification of another private
+child package is OK, but we cannot do the same in the specification of a
+*non-private* package. For example, let's change the specification of the
+:ada:`Advanced_Calculations` and make it *non-private*:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Private_Package_2
+    :class: ada-expect-compile-error
+
+    with Data_Processing.Calculations;
+    use  Data_Processing.Calculations;
+
+    package Data_Processing.Advanced_Calculations is
+
+       procedure Advanced_Calculate (D : in out Data)
+         renames Calculate;
+
+    end Data_Processing.Advanced_Calculations;
+
+Now, the compilation doesn't work anymore. However, we could still refer to
+:ada:`Calculations` packages in the body of the :ada:`Advanced_Calculations`
+package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Private_Package_2
+
+    package Data_Processing.Advanced_Calculations is
+
+       procedure Advanced_Calculate (D : in out Data);
+
+    end Data_Processing.Advanced_Calculations;
+
+    with Data_Processing.Calculations;
+    use  Data_Processing.Calculations;
+
+    package body Data_Processing.Advanced_Calculations is
+
+       procedure Advanced_Calculate (D : in out Data) is
+       begin
+         Calculate (D);
+       end Advanced_Calculate;
+
+    end Data_Processing.Advanced_Calculations;
+
+This works fine as expected: we can refer to private child packages in the body
+of another package |mdash| as long as both packages belong to the same package
+tree.
+
 Outside the package tree
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
