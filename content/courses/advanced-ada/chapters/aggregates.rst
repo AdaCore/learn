@@ -3,7 +3,7 @@ Aggregates
 
 .. include:: ../../global.txt
 
-.. _Null_Records:
+.. _Adv_Ada_Null_Records:
 
 Null records
 ------------
@@ -143,7 +143,7 @@ null record returned by :ada:`Create` matches the definition of the
 All procedures associated with the :ada:`Device` type are implemented as null
 procedures, which means they don't actually have an implementation nor have any
 effect. We'll discuss this topic
-:ref:`later on in the course <Null_Procedures>`.
+:ref:`later on in the course <Adv_Ada_Null_Procedures>`.
 
 In the :ada:`Show_Device` procedure |mdash| which is an application
 that implements our prototype |mdash|, we declare an object of :ada:`Device`
@@ -397,7 +397,7 @@ A null record may be tagged, as we can see in this example:
 
 As we see in this example, a type can be :ada:`tagged`, or even
 :ada:`abstract tagged`. We discuss abstract types
-:ref:`later on in the course <Abstract_Types_And_Subprograms>`.
+:ref:`later on in the course <Adv_Ada_Abstract_Types_And_Subprograms>`.
 
 As expected, in addition to deriving from tagged types, we can also extend
 them. For example:
@@ -434,7 +434,7 @@ extension, we also need to override the :ada:`Create` function.)
 
 Since we're now introducing elements from object-oriented programming, we could
 consider using interfaces instead of null records. We'll discuss this topic
-:ref:`later on in the course <Null_Records_Vs_Interfaces>`.
+:ref:`later on in the course <Adv_Ada_Null_Records_Vs_Interfaces>`.
 
 Extension Aggregates
 --------------------

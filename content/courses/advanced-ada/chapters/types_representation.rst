@@ -822,7 +822,7 @@ In this case, we use :ada:`Flags()` to convert from a packed representation to
 the normal representation.
 
 We elaborate on the topic of converting between data representations in the
-section on :ref:`changing data representation <Changing_Data_Representation>`.
+section on :ref:`changing data representation <Adv_Ada_Changing_Data_Representation>`.
 
 Trade-offs
 ^^^^^^^^^^
@@ -853,7 +853,7 @@ which results in less speed of access for packed objects. As usual in those
 circumstances, before using packed representation, we should assess whether
 memory constraints are more important than speed in our target architecture.
 
-.. _Record_Representation_Storage_Clauses:
+.. _Adv_Ada_Record_Representation_Storage_Clauses:
 
 Record Representation and storage clauses
 -----------------------------------------
@@ -1296,7 +1296,7 @@ such as bit-masking or bit-shifting |mdash| is needed here.
     correctly describe the register mapping using representation clauses.
 
 
-.. _Changing_Data_Representation:
+.. _Adv_Ada_Changing_Data_Representation:
 
 Changing Data Representation
 ----------------------------

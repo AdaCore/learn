@@ -69,7 +69,7 @@ declared the :ada:`Signed_Integer` type:
 The base range of :ada:`Signed_Integer` is the range of
 :ada:`Signed_Integer'Base`, which is chosen by the compiler, but is likely to
 be something like :ada:`-2**31 .. 2**31 - 1`. (Note: we discussed the
-:ada:`Base` attribute :ref:`in this section <Base_Attribute>`.)
+:ada:`Base` attribute :ref:`in this section <Adv_Ada_Base_Attribute>`.)
 
 Operations on modular integers use modular (wraparound) arithmetic. For
 example:
@@ -471,7 +471,7 @@ Here's the complete example:
     end Ada_Numeric_Literals;
 
 Of course, we can also use
-:ref:`records with representation clauses <Record_Representation_Storage_Clauses>`
+:ref:`records with representation clauses <Adv_Ada_Record_Representation_Storage_Clauses>`
 to do the above, which is even more elegant.
 
 The notion of base in Ada allows for exponents, which is particularly pleasant.

@@ -226,7 +226,7 @@ This is the complete list of available attributes:
 +-----------------------+-------------------------+---------------------------+
 
 We discuss more about :ada:`Wide_String` and :ada:`Wide_Wide_String` in
-:ref:`another section <Wide_Wide_Strings>`.
+:ref:`another section <Adv_Ada_Wide_Wide_Strings>`.
 
 Width attribute
 ~~~~~~~~~~~~~~~
@@ -280,7 +280,7 @@ we can use:
 - the :ada:`Wide_Wide_Width` attribute for strings returned by
   :ada:`Wide_Wide_Image`.
 
-.. _Base_Attribute:
+.. _Adv_Ada_Base_Attribute:
 
 Base
 ~~~~
@@ -914,7 +914,7 @@ totally arbitrary values as well. For example:
 
     end Days;
 
-.. _Definite_Indefinite_Subtypes:
+.. _Adv_Ada_Definite_Indefinite_Subtypes:
 
 Definite and Indefinite Subtypes
 --------------------------------
@@ -1147,7 +1147,7 @@ Therefore, it becomes clear that the compiler needs to allocate five elements
 for :ada:`A_Plus`.
 
 We'll see later how definite and indefinite types apply to
-:ref:`formal parameters <Formal_Definite_Indefinite_Subtypes>`.
+:ref:`formal parameters <Adv_Ada_Formal_Definite_Indefinite_Subtypes>`.
 
 Constrained Attribute
 ~~~~~~~~~~~~~~~~~~~~~
@@ -1382,7 +1382,7 @@ after the declaration of :ada:`Next`.
 
 Incomplete types are useful to declare mutually dependent types, as we'll
 see in the next section. Also, we can also have formal incomplete types, as
-we'll discuss :ref:`later <Formal_Incomplete_Types>`.
+we'll discuss :ref:`later <Adv_Ada_Formal_Incomplete_Types>`.
 
 Mutually dependent types
 ------------------------

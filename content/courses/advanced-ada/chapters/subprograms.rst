@@ -1092,7 +1092,7 @@ instances of that generic subprogram.
     - `6.3.2 Inline Expansion of Subprograms <http://www.ada-auth.org/standards/12rm/html/RM-6-3-2.html>`_
 
 
-.. _Null_Procedures:
+.. _Adv_Ada_Null_Procedures:
 
 Null Procedures
 ---------------
@@ -1238,7 +1238,7 @@ In this example, we can view :ada:`Storage_Model` as a sort of interface for
 derived non-tagged types, while the derived types |mdash| such as
 :ada:`Integer_Storage` |mdash| provide the actual implementation.
 
-The section on :ref:`null records <Null_Records>` contains an extended example
+The section on :ref:`null records <Adv_Ada_Null_Records>` contains an extended example
 that makes use of null procedures.
 
 .. admonition:: In the Ada Reference Manual
