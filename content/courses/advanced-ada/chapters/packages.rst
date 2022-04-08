@@ -152,6 +152,9 @@ use the private part of a package to distinguish between the
 :ref:`partial and full view <Adv_Ada_Type_View>` of a data type. In this
 section, we discuss a related concept: private packages.
 
+Declaration and usage
+~~~~~~~~~~~~~~~~~~~~~
+
 We declare private packages by using the :ada:`private` keyword. For example,
 let's say we have a package named :ada:`Data_Processing`:
 
@@ -230,6 +233,9 @@ In this example, we refer to the private child package :ada:`Calculations` in
 the body of the :ada:`Data_Processing` package |mdash| by simply writing
 :ada:`with Data_Processing.Calculations`. After that, we can call the
 :ada:`Calculate` procedure normally in the :ada:`Process` procedure.
+
+Outside the package tree
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 While we can use a with-clause of the private child package in the body of the
 :ada:`Data_Processing` package, we cannot do the same outside this package. For
