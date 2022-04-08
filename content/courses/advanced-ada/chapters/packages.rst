@@ -184,6 +184,94 @@ of a non-private child package.
 Limited Visibility
 ------------------
 
+Sometimes, we might face the situation where two packages depend on
+information from each other. Let's consider a package :ada:`A` that depends
+on a package :ada:`B`, and vice-versa:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Circular_Dependency
+    :class: ada-expect-compile-error
+
+    with B; use B;
+
+    package A is
+
+       type T1 is record
+          Value : T2;
+       end record;
+
+    end A;
+
+    with A; use A;
+
+    package B is
+
+       type T2 is record
+          Value : T1;
+       end record;
+
+    end B;
+
+Here, we have two
+:ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>` :ada:`T1`
+and :ada:`T2`, which are declared in two packages :ada:`A` and :ada:`B` that
+refer to each other. These with clauses constitute a circular dependency, so
+the compiler cannot compile any of those packages.
+
+One way to solve this problem is by transforming this circular dependency into
+a partial dependency. We do this by declaring a limited view |mdash| using a
+limited with clause. To use a limited with clause for a package :ada:`P`, we
+simply write :ada:`limited with P`.
+
+If a package :ada:`A` has a limited view of a package :ada:`B`, then all types
+from package :ada:`B` are visible as if they had been declared as
+:ref:`incomplete types <Adv_Ada_Incomplete_Types>`. For the specific case of
+the previous source-code example, this would be the limited view of package
+:ada:`B` from package :ada:`A`\ 's perspective:
+
+.. code-block:: ada
+
+    package B is
+
+       --  Incomplete type
+       type T2;
+
+    end B;
+
+As we've seen previously,
+
+- we cannot declare objects of incomplete types, but we can declare access
+  types and anonymous access objects of incomplete types. Also,
+
+- we can use anonymous access types to declare
+  :ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>`.
+
+Keeping this information in mind, we can now correct the previous code by using
+limited with clauses for both packages and declaring the components using
+anonymous access types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_View
+
+    limited with B;
+
+    package A is
+
+       type T1 is record
+          Ref : access B.T2;
+       end record;
+
+    end A;
+
+    limited with A;
+
+    package B is
+
+       type T2 is record
+          Ref : access A.T1;
+       end record;
+
+    end B;
+
+As expected, the code can now be compiled without issues.
 
 .. admonition:: In the Ada Reference Manual
 
