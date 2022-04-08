@@ -43,19 +43,19 @@ You can also use delta aggregates for arrays to change elements, but not
 bounds. Moreover, it only works for one-dimensional arrays of non-limited
 components.
 
-.. code-block:: ada
+.. code-block::
 
    type Vector_3D is array (1 .. 3) of Float;
 
-   Point_2 : constant Vector_3D := (1.0, 2.0, 3.0);
-   Projection_2 : constant Vector_3D := (Point_2 with delta 3 => 0.0);
+   Point_2 : constant Vector_3D := [1.0, 2.0, 3.0];
+   Projection_2 : constant Vector_3D := [Point_2 with delta 3 => 0.0];
 
 You can use parentheses for array aggregates, but you can't use square
 brackets for record aggregates.
 
 Here is the complete code snippet:
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Delta_Aggregetes
+.. code-block::
 
    pragma Ada_2022;
 
@@ -72,8 +72,8 @@ Here is the complete code snippet:
 
       type Vector_3D is array (1 .. 3) of Float;
 
-      Point_2 : constant Vector_3D := (1.0, 2.0, 3.0);
-      Projection_2 : constant Vector_3D := (Point_2 with delta 3 => 0.0);
+      Point_2 : constant Vector_3D := [1.0, 2.0, 3.0];
+      Projection_2 : constant Vector_3D := [Point_2 with delta 3 => 0.0];
    begin
       Ada.Text_IO.Put (Float'Image (Projection_1.X));
       Ada.Text_IO.Put (Float'Image (Projection_1.Y));
