@@ -374,11 +374,6 @@ visibility by simply removing the :ada:`limited` keyword from the example, the
 code compiles just fine.)
 
 
-.. todo::
-
-    Complete section!
-
-
 Visibility
 ----------
 
