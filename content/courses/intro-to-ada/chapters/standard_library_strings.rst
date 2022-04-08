@@ -397,7 +397,7 @@ We can initialize a bounded string with an empty string using the
 and specify the truncation mode like we do with the :ada:`To_Bounded_String`
 function.
 
-.. _UnboundedStrings:
+.. _Intro_Ada_Unbounded_Strings:
 
 Unbounded strings
 -----------------

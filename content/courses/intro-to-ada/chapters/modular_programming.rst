@@ -237,7 +237,7 @@ This example shows how :ada:`Last_Increment` is used indirectly:
        Display_Update_Values;
     end Main;
 
-.. _ChildPackages:
+.. _Intro_Ada_Child_Packages:
 
 Child packages
 --------------
@@ -535,13 +535,13 @@ in Ada. Those elements will only be visible in the package body, but nowhere
 else. This isn't, however, the only way to achieve encapsulation in Ada: we'll
 discuss other approaches in the :doc:`./privacy` chapter.
 
-.. _Package_Renaming:
+.. _Intro_Ada_Package_Renaming:
 
 Renaming
 --------
 
 Previously, we've mentioned that
-:ref:`subprograms can be renamed <Subprogram_Renaming>`. We can rename
+:ref:`subprograms can be renamed <Intro_Ada_Subprogram_Renaming>`. We can rename
 packages, too. Again, we use the :ada:`renames` keyword for that. The following
 example renames the :ada:`Ada.Text_IO` package as :ada:`T_IO`:
 

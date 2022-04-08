@@ -289,10 +289,10 @@ are available in Ada's standard library. Please refer to the following sections
 for more information about:
 
 - the unbounded string type (:ada:`Unbounded_String`):
-  :ref:`Unbounded Strings <UnboundedStrings>` section;
+  :ref:`Unbounded Strings <Intro_Ada_Unbounded_Strings>` section;
 
 - dates and times:
-  :ref:`Dates & Times <DatesTimes>` section.
+  :ref:`Dates & Times <Intro_Ada_Dates_Times>` section.
 
 Static predicates, as mentioned above, are mostly used for scalar types and
 checked during compilation. They're particularly useful for representing

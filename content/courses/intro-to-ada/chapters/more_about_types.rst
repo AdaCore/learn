@@ -1,7 +1,7 @@
 More about types
 ================
 
-.. _Aggregates:
+.. _Intro_Ada_Aggregates:
 
 .. include:: ../../global.txt
 
@@ -74,7 +74,7 @@ Overloading and qualified expressions
 -------------------------------------
 
 Ada has a general concept of name overloading, which we saw earlier
-in the section on :ref:`enumeration types <EnumTypes>`.
+in the section on :ref:`enumeration types <Intro_Ada_Enum_Types>`.
 
 Let's take a simple example: it is possible in Ada to have functions that have
 the same name, but different types for their parameters.
@@ -413,7 +413,7 @@ library APIs.
     covered (such as parameter modes). The language also provides library
     abstractions to avoid pointers:
 
-    1. One is the use of :ref:`containers <Containers>`. Containers help users
+    1. One is the use of :ref:`containers <Intro_Ada_Containers>`. Containers help users
        avoid pointers, because container memory is automatically managed.
 
     2. A container to note in this context is the

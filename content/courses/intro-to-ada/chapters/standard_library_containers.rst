@@ -1,4 +1,4 @@
-.. _Containers:
+.. _Intro_Ada_Containers:
 
 Standard library: Containers
 ============================
@@ -13,7 +13,7 @@ for containers |mdash| such as vectors and sets |mdash| in its standard
 library.
 
 We present an introduction to containers here. For a list of all containers
-available in Ada, see :ref:`Appendix B <ContainersTable>`.
+available in Ada, see :ref:`Appendix B <Intro_Ada_Containers_Table>`.
 
 Vectors
 -------
