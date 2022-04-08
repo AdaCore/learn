@@ -61,7 +61,7 @@ benchmarking algorithms, using ``-O0`` is probably a good idea.
 In addition to the levels presented above, GNAT also has the ``-Os`` switch,
 which allows for optimizing code and data usage.
 
-.. _Inlining:
+.. _Ada_For_Embedded_C_Dev_Inlining:
 
 Inlining
 ~~~~~~~~
@@ -337,7 +337,7 @@ Assertions
 ~~~~~~~~~~
 
 We've already discussed assertions in
-:ref:`this section of the SPARK chapter <Dynamic_Checks_Vs_Formal_Proof>`.
+:ref:`this section of the SPARK chapter <Ada_For_Embedded_C_Dev_Dynamic_Checks_Vs_Formal_Proof>`.
 Assertions are user-defined checks that you can add to your code using the
 :ada:`pragma Assert`. For example:
 
@@ -451,7 +451,7 @@ performance-critical pieces of the application.
 Pointers vs. data copies
 ------------------------
 
-In the section about :ref:`pointers <Pointers>`, we mentioned that the
+In the section about :ref:`pointers <Ada_For_Embedded_C_Dev_Pointers>`, we mentioned that the
 Ada compiler will automatically pass parameters by reference when
 needed. Let's look into what "when needed" means. The fundamental point
 to understand is that the parameter types determine how the parameters

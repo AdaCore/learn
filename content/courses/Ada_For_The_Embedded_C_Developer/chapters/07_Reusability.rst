@@ -39,7 +39,7 @@ the same object need to exist concurrently in the same application.
 Handling variability & reusability statically
 ---------------------------------------------
 
-.. _Genericity:
+.. _Ada_For_Embedded_C_Dev_Genericity:
 
 Genericity
 ~~~~~~~~~~
@@ -207,7 +207,7 @@ types:
 For a more complete list please reference the Generic Formal Types in the
 :doc:`Appendix of the Introduction to Ada course </courses/intro-to-ada/chapters/appendices>`.
 
-.. _SimpleDerivation:
+.. _Ada_For_Embedded_C_Dev_Simple_Derivation:
 
 Simple derivation
 ~~~~~~~~~~~~~~~~~
@@ -820,14 +820,14 @@ version of the build, which we can easily do when using :program:`GPRbuild`.
 Handling variability & reusability dynamically
 ----------------------------------------------
 
-.. _RecordsWithDiscriminants:
+.. _Ada_For_Embedded_C_Dev_Records_With_Discriminants:
 
 Records with discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In basic terms, records with discriminants are records that include
 "parameters" in their type definitions. This allows for adding more flexibility
-to the type definition. In the section about :ref:`pointers <Pointers>`, we've
+to the type definition. In the section about :ref:`pointers <Ada_For_Embedded_C_Dev_Pointers>`, we've
 seen this example:
 
 [Ada]
@@ -1374,7 +1374,7 @@ we can ensure that no information is misused after the call to
 Object orientation
 ~~~~~~~~~~~~~~~~~~
 
-In the :ref:`previous section <RecordsWithDiscriminants>`, we've seen that we
+In the :ref:`previous section <Ada_For_Embedded_C_Dev_Records_With_Discriminants>`, we've seen that we
 can add variability to records by using discriminants. Another approach is to
 use *tagged* records, which are the base for object-oriented programming in
 Ada.
@@ -1962,7 +1962,7 @@ operation, so we can use it to declare objects.
 From simple derivation to OOP
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In the :ref:`section about simple derivation <SimpleDerivation>`, we've seen an
+In the :ref:`section about simple derivation <Ada_For_Embedded_C_Dev_Simple_Derivation>`, we've seen an
 example where the actual selection was done at *implementation* time by
 renaming one of the packages:
 
@@ -2111,7 +2111,7 @@ Further resources
 ^^^^^^^^^^^^^^^^^
 
 In the appendices, we have a step-by-step
-:ref:`hands-on overview of object-oriented programming <HandsOnOOP>` that
+:ref:`hands-on overview of object-oriented programming <Ada_For_Embedded_C_Dev_Hands_On_OOP>` that
 discusses how to translate a simple system written in C to an equivalent
 system in Ada using object-oriented programming.
 

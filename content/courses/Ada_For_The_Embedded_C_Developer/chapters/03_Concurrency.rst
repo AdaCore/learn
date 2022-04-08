@@ -23,7 +23,7 @@ means in effect that Ada comes with its own real-time kernel.
 .. admonition:: For further information
 
     We'll discuss the Ravenscar profile
-    :ref:`later in this chapter <Ravenscar>`. Details about the Jorvik profile
+    :ref:`later in this chapter <Ada_For_Embedded_C_Dev_Ravenscar>`. Details about the Jorvik profile
     can be found elsewhere [Jorvik]_.
 
     .. [Jorvik] A New Ravenscar-Based Profile by P. Rogers, J. Ruiz, T. Gingold
@@ -574,7 +574,7 @@ presented here. For additional information please consult one of the works
 cited in the *References* section.
 
 
-.. _Ravenscar:
+.. _Ada_For_Embedded_C_Dev_Ravenscar:
 
 Ravenscar
 ---------

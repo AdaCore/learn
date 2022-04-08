@@ -1,4 +1,4 @@
-.. _HandsOnOOP:
+.. _Ada_For_Embedded_C_Dev_Hands_On_OOP:
 
 Appendix A: Hands-On Object-Oriented Programming
 ================================================
@@ -263,7 +263,7 @@ proceed to display the activation state and the result of the system's health
 check. Finally, we deactivate the system and display the activation state
 again.
 
-.. _Initial_Translation_To_Ada:
+.. _Ada_For_Embedded_C_Dev_Initial_Translation_To_Ada:
 
 Initial translation to Ada
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -475,7 +475,7 @@ By analyzing this direct implementation, we may notice the following points:
   type declarations to the private part of the corresponding packages.
 
 - Since Ada supports subprogram overloading |mdash| as discussed in
-  :ref:`this section from chapter 2 <Overloading>` |mdash|, we don't need to
+  :ref:`this section from chapter 2 <Ada_For_Embedded_C_Dev_Overloading>` |mdash|, we don't need to
   have different names for subprograms with similar functionality. For example,
   instead of having :ada:`A_Is_Active` and :ada:`B_Is_Active`, we can simply
   name these functions :ada:`Is_Active` for both types :ada:`A` and :ada:`B`.
@@ -1596,6 +1596,6 @@ Naturally, this is by no means the best possible implementation of system AB.
 By applying other software design strategies that we haven't covered here, we
 could most probably think of different ways to use object-oriented programming
 to improve this implementation. Also, in comparison to the
-:ref:`original implementation <Initial_Translation_To_Ada>`, we recognize that
+:ref:`original implementation <Ada_For_Embedded_C_Dev_Initial_Translation_To_Ada>`, we recognize that
 the amount of source-code has grown. On the other hand, we now have a system
 that is factored nicely, and also more extensible.
