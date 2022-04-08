@@ -184,9 +184,11 @@ of a non-private child package.
 Partial dependencies
 --------------------
 
-.. admonition:: Relevant topics
 
-    - `Context Clauses - With Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-10-1-2.html>`_
+.. admonition:: In the Ada Reference Manual
+
+    - `10.1.2 Context Clauses - With Clauses <http://www.ada-auth.org/standards/12rm/html/RM-10-1-2.html>`_
+
 
 .. todo::
 
