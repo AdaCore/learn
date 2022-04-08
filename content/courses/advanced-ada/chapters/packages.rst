@@ -234,7 +234,7 @@ the body of the :ada:`Data_Processing` package |mdash| by simply writing
 :ada:`with Data_Processing.Calculations`. After that, we can call the
 :ada:`Calculate` procedure normally in the :ada:`Process` procedure.
 
-Sibling private packages
+Private sibling packages
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 We can introduce another private package :ada:`Advanced_Calculations` as a
