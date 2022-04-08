@@ -327,6 +327,52 @@ In this updated version of the source-code example, we have not only just a
 limited view of packages :ada:`A` and :ada:`B`, but also, each package is just
 visible in the private part of the other package.
 
+Limited view and other elements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It's important to mention that the limited view only includes type declarations
+|mdash| as incomplete types. All other declarations are not visible when using
+a limited with clause. For example, let's say we have a package :ada:`Info`
+that declares a constant :ada:`Zero_Const` and a function :ada:`Zero_Func`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_View_Other_Elements
+
+    package Info is
+
+       function Zero_Func return Integer is (0);
+
+       Zero_Const : constant := 0;
+
+    end Info;
+
+We want to use this information in package :ada:`A`. If we apply a limited view
+to the :ada:`Info` package, however, this information won't be visible. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_View_Other_Elements
+    :class: ada-expect-compile-error
+
+    limited private with Info;
+
+    package A is
+
+       type T1 is private;
+
+    private
+
+       type T1 is record
+          V : Integer := Info.Zero_Const;
+          W : Integer := Info.Zero_Func;
+       end record;
+
+    end A;
+
+As expected, compilation fails because of the limited visibility |mdash| as
+:ada:`Zero_Const` and :ada:`Zero_Func` from the :ada:`Info` package are not
+visible in the private part of :ada:`A`. (Of course, if we revert to full
+visibility by simply removing the :ada:`limited` keyword from the example, the
+code compiles just fine.)
+
 
 .. todo::
 
