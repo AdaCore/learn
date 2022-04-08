@@ -807,7 +807,7 @@ deduce that it's true for all the indexes smaller than :ada:`I`, so it can't
 prove the first assertion.
 
 
-.. _Loop_Invariants:
+.. _Intro_SPARK_Loop_Invariants:
 
 Loop Invariants
 ~~~~~~~~~~~~~~~

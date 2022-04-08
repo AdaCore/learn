@@ -1,4 +1,4 @@
-.. _Flow_Analysis:
+.. _Intro_SPARK_Flow_Analysis:
 
 Flow Analysis
 =====================================================================
@@ -777,7 +777,7 @@ the value of the :ada:`Result` in argument can be set to any variant of the
 record type :ada:`Search_Result`, specifically to either the variant where
 :ada:`E` was found and where it wasn't.
 
-.. _Flow_Analysis_Example_4:
+.. _Intro_SPARK_Flow_Analysis_Example_4:
 
 Example #4
 ~~~~~~~~~~

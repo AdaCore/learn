@@ -425,7 +425,7 @@ completeness of the guard conditions (meaning that exactly one guard must
 be true for each possible set of input values).
 
 
-.. _Debugging_Failed_Proof_Attempts:
+.. _Intro_SPARK_Debugging_Failed_Proof_Attempts:
 
 Debugging Failed Proof Attempts
 ---------------------------------------------------------------------
