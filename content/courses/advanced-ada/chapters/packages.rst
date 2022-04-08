@@ -181,8 +181,8 @@ possible to access the information from a private package in the private part
 of a non-private child package.
 
 
-Partial dependencies
---------------------
+Limited Visibility
+------------------
 
 
 .. admonition:: In the Ada Reference Manual
