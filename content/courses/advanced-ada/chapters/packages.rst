@@ -186,6 +186,10 @@ child package. In summary, unless both packages are private packages, it's only
 possible to access the information from a private package in the private part
 of a non-private child package.
 
+.. admonition:: In the Ada Reference Manual
+
+    - `10.1.2 Context Clauses - With Clauses <http://www.ada-auth.org/standards/12rm/html/RM-10-1-2.html>`_
+
 
 Partial dependencies
 --------------------
