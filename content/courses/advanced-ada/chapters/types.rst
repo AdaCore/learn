@@ -1298,6 +1298,8 @@ the value of the :ada:`Extended` discriminant). Therefore, with the call to
 :ada:`Reset`, the :ada:`Extended` discriminant of :ada:`R1` changes from
 :ada:`False` to :ada:`True`.
 
+.. _Adv_Ada_Incomplete_Types:
+
 Incomplete types
 ----------------
 
@@ -1383,6 +1385,8 @@ after the declaration of :ada:`Next`.
 Incomplete types are useful to declare mutually dependent types, as we'll
 see in the next section. Also, we can also have formal incomplete types, as
 we'll discuss :ref:`later <Formal_Incomplete_Types>`.
+
+.. _Adv_Ada_Mutually_Dependent_Types:
 
 Mutually dependent types
 ------------------------
