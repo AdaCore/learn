@@ -237,9 +237,10 @@ the body of the :ada:`Data_Processing` package |mdash| by simply writing
 Outside the package tree
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-While we can use a with-clause of the private child package in the body of the
-:ada:`Data_Processing` package, we cannot do the same outside this package. For
-example, we cannot refer to it in the :ada:`Test_Data_Processing` procedure:
+While we can use a with-clause of a private child package in the body of the
+:ada:`Data_Processing` package, we cannot do the same outside the package tree.
+For example, we cannot refer to it in the :ada:`Test_Data_Processing`
+procedure:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Packages.Private_Package
     :class: ada-expect-compile-error
