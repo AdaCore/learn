@@ -28,8 +28,8 @@ Project puts it (during the Linux Security Summit North America 2018):
 
 Even experts sometimes have problems with
 the C programming language rules, as illustrated by Microsoft
-expert David LeBlanc (see :ref:`Enforcing_Strong_Typing_For_Scalars`) or the
-MISRA C Committee itself (see the :ref:`Preface`).
+expert David LeBlanc (see :ref:`SPARK_For_MISRA_C_Dev_Enforcing_Strong_Typing_For_Scalars`) or the
+MISRA C Committee itself (see the :ref:`SPARK_For_MISRA_C_Dev_Preface`).
 
 The rules in MISRA C represent an impressive collective effort to improve the
 reliability of C code in critical applications, with a focus on avoiding
