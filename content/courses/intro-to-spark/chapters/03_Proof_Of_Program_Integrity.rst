@@ -10,7 +10,7 @@ performing proof of your program's integrity is to ensure the absence of
 runtime errors during its execution.
 
 The analysis steps discussed here are only sound if you've previously
-performed :ref:`Flow_Analysis`.  You shouldn't proceed further if you
+performed :ref:`Intro_SPARK_Flow_Analysis`.  You shouldn't proceed further if you
 still have unjustified flow analysis messages for your program.
 
 
