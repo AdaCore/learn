@@ -1,7 +1,7 @@
 Subprograms
 ===========
 
-.. _Subprograms:
+.. _Intro_Ada_Subprograms:
 
 .. include:: ../../global.txt
 
@@ -450,7 +450,7 @@ mutually recursive, as in the example below:
        Compute_A (15);
     end Mutually_Recursive_Subprograms;
 
-.. _Subprogram_Renaming:
+.. _Intro_Ada_Subprogram_Renaming:
 
 Renaming
 --------

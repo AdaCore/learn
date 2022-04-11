@@ -10,7 +10,7 @@ performing proof of your program's integrity is to ensure the absence of
 runtime errors during its execution.
 
 The analysis steps discussed here are only sound if you've previously
-performed :ref:`Flow_Analysis`.  You shouldn't proceed further if you
+performed :ref:`Intro_SPARK_Flow_Analysis`.  You shouldn't proceed further if you
 still have unjustified flow analysis messages for your program.
 
 
@@ -425,7 +425,7 @@ completeness of the guard conditions (meaning that exactly one guard must
 be true for each possible set of input values).
 
 
-.. _Debugging_Failed_Proof_Attempts:
+.. _Intro_SPARK_Debugging_Failed_Proof_Attempts:
 
 Debugging Failed Proof Attempts
 ---------------------------------------------------------------------

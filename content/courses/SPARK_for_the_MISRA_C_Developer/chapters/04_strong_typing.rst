@@ -408,7 +408,7 @@ a compile-time error:
 
    procedure Assign_I is new Assign (Integer, Assign_Float);
 
-.. _Enforcing_Strong_Typing_For_Scalars:
+.. _SPARK_For_MISRA_C_Dev_Enforcing_Strong_Typing_For_Scalars:
 
 Enforcing Strong Typing for Scalars
 ***********************************
@@ -416,7 +416,7 @@ Enforcing Strong Typing for Scalars
 In C, all scalar types can be converted both implicitly and explicitly to any
 other scalar type. The semantics is defined by rules of
 `promotion` and `conversion`, which can confuse even experts.
-One example was noted earlier, in the :ref:`Preface`.
+One example was noted earlier, in the :ref:`SPARK_For_MISRA_C_Dev_Preface`.
 Another example appears in
 `an article introducing a safe library for manipulating scalars
 <https://msdn.microsoft.com/en-us/library/ms972705.aspx>`_ by Microsoft expert
@@ -573,7 +573,7 @@ to iterate over all values of the type:
        end loop;
     end Ok_Arith;
 
-.. _Boolean_Operations_On_Boolean:
+.. _SPARK_For_MISRA_C_Dev_Boolean_Operations_On_Boolean:
 
 Boolean Operations on Boolean
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -731,7 +731,7 @@ Rules 10.1 and 10.5 restrict operations on types and explicit
 conversions. That's not enough to avoid problematic C programs; a program
 violating one of these rules can be expressed using only implicit type
 conversions. For example, the Shakespearian code in section
-:ref:`Boolean_Operations_On_Boolean` can be reformulated to
+:ref:`SPARK_For_MISRA_C_Dev_Boolean_Operations_On_Boolean` can be reformulated to
 satisfy both Rules 10.1 and 10.5:
 
 .. code:: c run_button project=Courses.SPARK_For_The_MISRA_C_Dev.Strong_Typing.Implicit_Conversion_C

@@ -228,7 +228,7 @@ attempts to assign one file to another would be detected as illegal.
 Child packages & privacy
 ------------------------
 
-We've seen previously (in the :ref:`child packages section <ChildPackages>`)
+We've seen previously (in the :ref:`child packages section <Intro_Ada_Child_Packages>`)
 that packages can have child packages. Privacy plays an important role in child
 packages. This section discusses some of the privacy rules that apply to child
 packages.

@@ -16,7 +16,7 @@ approaches:
 
 The following sections present these two approaches.
 
-.. _DatesTimes:
+.. _Intro_Ada_Dates_Times:
 
 Date and time handling
 ----------------------

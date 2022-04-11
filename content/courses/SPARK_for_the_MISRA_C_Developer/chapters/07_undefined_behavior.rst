@@ -1,4 +1,4 @@
-.. _Detecting_Undefined_Behavior:
+.. _SPARK_For_MISRA_C_Dev_Detecting_Undefined_Behavior:
 
 Detecting Undefined Behavior
 ----------------------------
@@ -55,7 +55,7 @@ analysis) and *verification rules* (checked by the formal analysis tool
 GNATprove). Bounded errors and erroneous execution are prevented by a
 combination of legality rules and the `flow analysis` part of GNATprove,
 which in particular detects potential reads of uninitialized data, as described in
-:ref:`Detecting_Read_Of_Uninitialized_Data`. The following discussion focuses
+:ref:`SPARK_For_MISRA_C_Dev_Detecting_Read_Of_Uninitialized_Data`. The following discussion focuses
 on how SPARK can verify that no exceptions can be raised.
 
 Proof of Absence of Run-Time Errors in SPARK

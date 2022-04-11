@@ -44,7 +44,7 @@ with the initial element at index 1 and the last element at index 5.
 
 Although this example used an integer type for the index, Ada is more general:
 any discrete type is permitted to index an array, including
-:ref:`Enum types <EnumTypes>`. We will soon see what that means.
+:ref:`Enum types <Intro_Ada_Enum_Types>`. We will soon see what that means.
 
 Another point to note is that querying an element of the array at a given index
 uses the same syntax as for function calls: that is, the array object followed
@@ -58,7 +58,7 @@ expression. This is another kind of aggregate in Ada, and is in a sense a
 literal expression for an array, in the same way that :ada:`3` is a literal
 expression for an integer. The notation is very powerful, with a number of
 properties that we will introduce later. A detailed overview appears in the
-notation of :ref:`aggregate types <Aggregates>`.
+notation of :ref:`aggregate types <Intro_Ada_Aggregates>`.
 
 Unrelated to arrays, the example also illustrated two procedures from
 :ada:`Ada.Text_IO`:
@@ -311,7 +311,7 @@ It is legal and sometimes useful to have a "null array", which contains no
 elements.  To get this effect, define an index range whose upper bound is less
 than the lower bound.
 
-.. _UnconstrainedArrayTypes:
+.. _Intro_Ada_Unconstrained_Array_Types:
 
 Unconstrained arrays
 --------------------
@@ -488,7 +488,7 @@ initialization expression.
     immutable.
 
     If you want something akin to C++'s :cpp:`std::string`, you can use
-    :ref:`Unbounded Strings <UnboundedStrings>` from Ada's standard library.
+    :ref:`Unbounded Strings <Intro_Ada_Unbounded_Strings>` from Ada's standard library.
     This type is more like a mutable, automatically managed string buffer to
     which you can add content.
 
@@ -698,14 +698,14 @@ subtype, constrained by the bounds of the slice.
 .. ?? The 'attention' note is the 1st implication that Ada supports more
 .. ?? than one-dimensional arrays
 
-.. _Object_Renaming:
+.. _Intro_Ada_Object_Renaming:
 
 Renaming
 --------
 
 So far, we've seen that the following elements can be renamed:
-:ref:`subprograms <Subprogram_Renaming>`, :ref:`packages <Package_Renaming>`,
-and :ref:`record components <Record_Comp_Renaming>`. We can also rename objects
+:ref:`subprograms <Intro_Ada_Subprogram_Renaming>`, :ref:`packages <Intro_Ada_Package_Renaming>`,
+and :ref:`record components <Intro_Ada_Record_Comp_Renaming>`. We can also rename objects
 by using the :ada:`renames` keyword. This allows for creating alternative names
 for these objects. Let's look at an example:
 
@@ -754,7 +754,7 @@ different names.
 
 Note that, in the example above, we're using :ada:`Degrees` as an alias of
 :ada:`Degree_Celsius`. We discussed this method
-:ref:`earlier in the course <SubtypeAliases>`.
+:ref:`earlier in the course <Intro_Ada_Subtype_Aliases>`.
 
 Renaming can be useful for improving the readability of more complicated array
 indexing. Instead of explicitly using indices every time we're accessing certain

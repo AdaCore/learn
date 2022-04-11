@@ -439,7 +439,7 @@ There are additional capabilities for exceptions, but for now you have a good
 basic understanding of how exceptions work, especially their dynamic
 nature at run-time.
 
-.. _Dynamic_Checks_Vs_Formal_Proof:
+.. _Ada_For_Embedded_C_Dev_Dynamic_Checks_Vs_Formal_Proof:
 
 Understanding Dynamic Checks versus Formal Proof
 ------------------------------------------------

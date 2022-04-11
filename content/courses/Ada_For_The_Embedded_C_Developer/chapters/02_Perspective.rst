@@ -1052,7 +1052,7 @@ reverse order?
     expecting a string as an input parameter.
 
     We'll discuss attributes in more details
-    :ref:`later in this chapter <Attributes>`.
+    :ref:`later in this chapter <Ada_For_Embedded_C_Dev_Attributes>`.
 
 In the above example, we are traversing over the range in reverse order. In
 Ada, we use the :ada:`reverse` keyword to accomplish this.
@@ -1830,7 +1830,7 @@ such as :ada:`and`, :ada:`or`, :ada:`xor` and :ada:`not`. You can also use
 typical bit-shifting operations, such as :ada:`Shift_Left`, :ada:`Shift_Right`,
 :ada:`Shift_Right_Arithmetic`, :ada:`Rotate_Left` and :ada:`Rotate_Right`.
 
-.. _Attributes:
+.. _Ada_For_Embedded_C_Dev_Attributes:
 
 Attributes
 ~~~~~~~~~~
@@ -2591,7 +2591,7 @@ the access type as follows:
         return 0;
     }
 
-We'll discuss generics later :ref:`in this section <Genericity>`.
+We'll discuss generics later :ref:`in this section <Ada_For_Embedded_C_Dev_Genericity>`.
 
 Functions and Procedures
 ------------------------
@@ -2738,7 +2738,7 @@ and invocation of the subprogram.
 
     Ada 202X allows for using static expression functions, which are evaluated
     at compile time. To achieve this, we can use an aspect |mdash| we'll
-    discuss aspects :ref:`later in this chapter <Aspects>`.
+    discuss aspects :ref:`later in this chapter <Ada_For_Embedded_C_Dev_Aspects>`.
 
     An expression function is static when the :ada:`Static`
     aspect is specified. For example:
@@ -2764,7 +2764,7 @@ and invocation of the subprogram.
     :ada:`If_Then_Else`. Both :ada:`X1` and :ada:`X2` have the same constant
     value.
 
-.. _Overloading:
+.. _Ada_For_Embedded_C_Dev_Overloading:
 
 Overloading
 ~~~~~~~~~~~
@@ -2883,7 +2883,7 @@ operator as a function, enclose its "name" in quotes:
        end if;
     end Main;
 
-.. _Aspects:
+.. _Ada_For_Embedded_C_Dev_Aspects:
 
 Aspects
 ~~~~~~~
@@ -2920,7 +2920,7 @@ aspect:
 
     end Float_Arrays;
 
-We'll discuss inlining :ref:`later in this course <Inlining>`.
+We'll discuss inlining :ref:`later in this course <Ada_For_Embedded_C_Dev_Inlining>`.
 
 Aspect specifications were introduced in Ada 2012. In previous versions of Ada,
 you had to use a :ada:`pragma` instead. The previous example would be written
@@ -2974,4 +2974,4 @@ or of an object:
     end Show_Device_Types;
 
 We'll explain both :ada:`Size` aspect and :ada:`Size` attribute
-:ref:`later in this course <Size_Aspect_Attribute>`.
+:ref:`later in this course <Ada_For_Embedded_C_Dev_Size_Aspect_Attribute>`.

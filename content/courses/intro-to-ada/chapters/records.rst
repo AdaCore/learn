@@ -128,13 +128,13 @@ retrieving the information stored in that component. When we write
 :ada:`Some_Day.Year := 2001`, we're overwriting the information that was
 previously stored in the :ada:`Year` component of :ada:`Some_Day`.
 
-.. _Record_Comp_Renaming:
+.. _Intro_Ada_Record_Comp_Renaming:
 
 Renaming
 --------
 
-In previous chapters, we've discussed :ref:`subprogram <Subprogram_Renaming>`
-and :ref:`package <Package_Renaming>` renaming. We can rename record
+In previous chapters, we've discussed :ref:`subprogram <Intro_Ada_Subprogram_Renaming>`
+and :ref:`package <Intro_Ada_Package_Renaming>` renaming. We can rename record
 components as well. Instead of writing the full component selection using the
 dot notation, we can declare an alias that allows us to access the same
 component. This is useful to simplify the implementation of a subprogram, for

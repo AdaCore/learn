@@ -57,7 +57,7 @@ You can find further information about the run-time library on
 Low Level Programming
 ---------------------
 
-.. _Representation_Clauses:
+.. _Ada_For_Embedded_C_Dev_Representation_Clauses:
 
 Representation Clauses
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -107,8 +107,8 @@ compiler decides how to represent things, optimizing for speed or size. The
 :ada:`Pack` aspect declared at the end of the record specifies that the
 compiler should optimize for size even at the expense of decreased speed in
 accessing record components. We'll see more details about the :ada:`Pack`
-aspect in the sections about :ref:`bitwise operations <Bitwise_Operations>` and
-:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` in
+aspect in the sections about :ref:`bitwise operations <Ada_For_Embedded_C_Dev_Bitwise_Operations>` and
+:ref:`mapping structures to bit-fields <Ada_For_Embedded_C_Dev_Mapping_Structures_To_Bit_Fields>` in
 chapter 6.
 
 Other representation clauses can be specified as well, along with compile-time
@@ -556,7 +556,7 @@ manually take all side-effects deriving from fixed-point arithmetic into
 account, while in Ada, the compiler takes care of selecting the right
 operations for you.
 
-.. _VolatileAtomicData:
+.. _Ada_For_Embedded_C_Dev_Volatile_Atomic_Data:
 
 Volatile and Atomic data
 ------------------------
@@ -751,7 +751,7 @@ Note that the :ada:`Address` aspect allows for assigning a variable to a
 specific location in the memory. In this example, we're using this aspect to
 specify the address of the memory-mapped register. We'll discuss more about the
 :ada:`Address` aspect later in the section about
-:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` (in
+:ref:`mapping structures to bit-fields <Ada_For_Embedded_C_Dev_Mapping_Structures_To_Bit_Fields>` (in
 chapter 6).
 
 In addition to atomic objects, we can declare atomic types and atomic array
@@ -779,20 +779,20 @@ atomic type. Objects of this type |mdash| such as :ada:`R` in this example
 |mdash| are automatically atomic. This example also includes the declaration
 of the :ada:`Arr` array, which has atomic components.
 
-.. _Interfacing_With_Devices:
+.. _Ada_For_Embedded_C_Dev_Interfacing_With_Devices:
 
 Interfacing with Devices
 ------------------------
 
 Previously, we've seen that we can use
-:ref:`representation clauses <Representation_Clauses>` to specify a particular
+:ref:`representation clauses <Ada_For_Embedded_C_Dev_Representation_Clauses>` to specify a particular
 layout for a record type. As mentioned before, this is useful when interfacing
 with hardware, drivers, or communication protocols. In this section, we'll
 extend this concept for two specific use-cases: register overlays and data
 streams. Before we discuss those use-cases, though, we'll first explain the
 :ada:`Size` aspect and the :ada:`Size` attribute.
 
-.. _Size_Aspect_Attribute:
+.. _Ada_For_Embedded_C_Dev_Size_Aspect_Attribute:
 
 :ada:`Size` aspect and attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -813,7 +813,7 @@ unchecked conversions because the sizes of the two types need to be the same.
 Likewise, it's useful for interfacing with C, where :c:`enum` types are just
 mapped to the :ada:`int` type, and thus larger than Ada might otherwise
 require. We'll discuss unchecked conversions
-:ref:`later in the course <OverlaysVsUncheckedConversions>`.
+:ref:`later in the course <Ada_For_Embedded_C_Dev_Overlays_Vs_Unchecked_Conversions>`.
 
 Let's look at an example from an earlier chapter:
 
@@ -972,7 +972,7 @@ declaration of :ada:`PMC_Periph`, this object is now an overlay for those
 registers. This also means that any operation on this object corresponds to an
 actual operation on the registers of the power management controller. We'll
 discuss more details about overlays in the section about
-:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` (in
+:ref:`mapping structures to bit-fields <Ada_For_Embedded_C_Dev_Mapping_Structures_To_Bit_Fields>` (in
 chapter 6).
 
 Finally, in a test application, we can access any bit of any register of the
@@ -993,7 +993,7 @@ using :ada:`PMC_Periph.PMC_SCER.USBCLK`:
 
 This code example makes use of many aspects and keywords of the Ada language.
 One of them is the :ada:`Volatile` aspect, which we've discussed in the section
-about :ref:`volatile and atomic objects <VolatileAtomicData>`. Using the
+about :ref:`volatile and atomic objects <Ada_For_Embedded_C_Dev_Volatile_Atomic_Data>`. Using the
 :ada:`Volatile` aspect for the :ada:`PMC_SCER_Register` type ensures that
 objects of this type won't be stored in a register.
 
@@ -1010,7 +1010,7 @@ The declarations from the :ada:`Registers` package also makes use of the
 in the context of object declarations, it avoids default initialization (for
 data types that have it.). Aspect :ada:`Import` will be discussed in the
 section that explains how to
-:ref:`map structures to bit-fields <Mapping_Structures_To_Bit_Fields>` in
+:ref:`map structures to bit-fields <Ada_For_Embedded_C_Dev_Mapping_Structures_To_Bit_Fields>` in
 chapter 6. Please refer to that chapter for more details.
 
 .. admonition:: Details about :ada:`'Size`
@@ -1069,7 +1069,7 @@ this, we're basically interpreting the information from those record types as
 bytes while ignoring their actual structure |mdash| i.e. their components and
 representation clause. We'll discuss details about overlays in the section
 about
-:ref:`mapping structures to bit-fields <Mapping_Structures_To_Bit_Fields>` (in
+:ref:`mapping structures to bit-fields <Ada_For_Embedded_C_Dev_Mapping_Structures_To_Bit_Fields>` (in
 chapter 6).
 
 Let's look at a simple example of serialization of an arbitrary record type:
@@ -1345,7 +1345,7 @@ ARM and :program:`svd2ada`
 --------------------------
 
 As we've seen in the previous section about
-:ref:`interfacing with devices <Interfacing_With_Devices>`, Ada offers powerful
+:ref:`interfacing with devices <Ada_For_Embedded_C_Dev_Interfacing_With_Devices>`, Ada offers powerful
 features to describe low-level details about the hardware architecture without
 giving up its strong typing capabilities. However, it can be cumbersome
 to create a specification for all those low-level details when you have a

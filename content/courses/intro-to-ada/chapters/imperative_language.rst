@@ -498,7 +498,7 @@ Notable points about Ada's case statement:
 -  The case expression (here the variable :ada:`N`) must be of a discrete type,
    i.e. either an integer type or an enumeration type.  Discrete types will
    be covered in more detail later
-   :ref:`discrete types <WhatIsAType>`.
+   :ref:`discrete types <Intro_Ada_What_Is_A_Type>`.
 
 -  Every possible value for the case expression needs to be covered by a unique
    branch of the case statement. This will be checked at compile time.
@@ -605,7 +605,7 @@ a block statement:
     C function.
 
     It returns a :ada:`String`, which, as we will see later, is an
-    :ref:`Unconstrained array type <UnconstrainedArrayTypes>`. For now we
+    :ref:`Unconstrained array type <Intro_Ada_Unconstrained_Array_Types>`. For now we
     simply note that, if you wish to declare a :ada:`String` variable and do
     not know its size in advance, then you need to initialize the variable
     during its declaration.

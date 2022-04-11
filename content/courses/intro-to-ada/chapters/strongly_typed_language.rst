@@ -9,7 +9,7 @@ language design, owing to factors such as the growth of statically typed
 functional programming, a big push from the research community in the typing
 domain, and many practical languages with strong type systems.
 
-.. _WhatIsAType:
+.. _Intro_Ada_What_Is_A_Type:
 
 What is a type?
 ---------------
@@ -64,7 +64,7 @@ This example illustrates the declaration of a signed integer type, and
 several things we can do with them.
 
 Every type declaration in Ada starts with the :ada:`type` keyword (except for
-:ref:`task types <TaskTypes>`). After the type, we can see a range that looks
+:ref:`task types <Intro_Ada_Task_Types>`). After the type, we can see a range that looks
 a lot like
 the ranges that we use in for loops, that defines the low and high bound of the
 type. Every integer in the inclusive range of the bounds is a valid value for
@@ -191,7 +191,7 @@ does not need to be a power of 2 |mdash| to implement certain algorithms and
 data structures, such as
 `ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`_.
 
-.. _EnumTypes:
+.. _Intro_Ada_Enum_Types:
 
 Enumerations
 ------------
@@ -707,7 +707,7 @@ an exception will be raised.
        --           Compiles, but exception at runtime
     end Greet;
 
-.. _SubtypeAliases:
+.. _Intro_Ada_Subtype_Aliases:
 
 Subtypes as type aliases
 ~~~~~~~~~~~~~~~~~~~~~~~~

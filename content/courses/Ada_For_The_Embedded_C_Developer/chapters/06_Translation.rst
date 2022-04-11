@@ -329,7 +329,7 @@ With all solutions though, importing an array from C is a relatively unsafe
 pattern, as there's only so much information on the array as there would be on
 the C side in the first place. These are good places for careful peer reviews.
 
-.. _By_Value_Vs_By_Reference:
+.. _Ada_For_Embedded_C_Dev_By_Value_Vs_By_Reference:
 
 By-value vs. by-reference types
 -------------------------------
@@ -436,7 +436,7 @@ Note that in the above example, a :ada:`use` clause on
 :ada:`Register_Interface` could allow us to omit the prefix.
 
 
-.. _Pointers:
+.. _Ada_For_Embedded_C_Dev_Pointers:
 
 Pointers
 --------
@@ -589,7 +589,7 @@ These are some of the most common misuse of pointers in Ada. Previous sections
 of the document deal with specifically using access types if absolutely
 necessary.
 
-.. _Bitwise_Operations:
+.. _Ada_For_Embedded_C_Dev_Bitwise_Operations:
 
 Bitwise Operations
 ------------------
@@ -713,7 +713,7 @@ above could also be literally translated to:
        Put_Line ("Value = " & Value_Type'Image (Value));
     end Main;
 
-.. _Mapping_Structures_To_Bit_Fields:
+.. _Ada_For_Embedded_C_Dev_Mapping_Structures_To_Bit_Fields:
 
 Mapping Structures to Bit-Fields
 --------------------------------
@@ -737,7 +737,7 @@ use this aspect to be able to interpret data types as a bit-field.
 
 Then, we can use the :ada:`Size` and the :ada:`Address` attributes of an
 object of any type to declare a bit-field for this object. We've discussed the
-:ada:`Size` attribute :ref:`earlier in this course <Size_Aspect_Attribute>`.
+:ada:`Size` attribute :ref:`earlier in this course <Ada_For_Embedded_C_Dev_Size_Aspect_Attribute>`.
 
 The :ada:`Address` attribute indicates the address in memory of that object.
 For example, assuming we've declare a variable :ada:`V`, we can declare an
@@ -759,7 +759,7 @@ the same memory location.
 
 The approach that we use in this section relies on the :ada:`Address` aspect.
 Another approach would be to use unchecked conversions, which we'll
-discuss in the :ref:`next section <OverlaysVsUncheckedConversions>`.
+discuss in the :ref:`next section <Ada_For_Embedded_C_Dev_Overlays_Vs_Unchecked_Conversions>`.
 
 We should add the :ada:`Volatile` aspect to the declaration to cover the case
 when both objects can still be changed independently |mdash| they need to be
@@ -774,7 +774,7 @@ declaration:
 
 Using the :ada:`Volatile` aspect is important at high level of optimizations.
 You can find further details about this aspect in the section about the
-:ref:`Volatile and Atomic aspects <VolatileAtomicData>`.
+:ref:`Volatile and Atomic aspects <Ada_For_Embedded_C_Dev_Volatile_Atomic_Data>`.
 
 Another important aspect that should be added is :ada:`Import`. When used in
 the context of object declarations, it'll avoid default initialization which
@@ -1406,7 +1406,7 @@ individual bytes. For example:
 Here, :c:`to_r` casts both pointer parameters to pointers to :c:`char` to get
 a byte-aligned pointer. Then, it simply copies the data byte-by-byte.
 
-.. _OverlaysVsUncheckedConversions:
+.. _Ada_For_Embedded_C_Dev_Overlays_Vs_Unchecked_Conversions:
 
 Overlays vs. Unchecked Conversions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

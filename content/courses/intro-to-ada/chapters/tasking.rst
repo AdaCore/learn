@@ -671,7 +671,7 @@ can, however, generalize tasks and protected objects using type
 definitions. This allows us, for example, to create multiple tasks based on
 just a single task type.
 
-.. _TaskTypes:
+.. _Intro_Ada_Task_Types:
 
 Task types
 ~~~~~~~~~~

@@ -8,7 +8,7 @@ their declaration, which makes it possible to unintentionally read
 uninitialized data. This is a case of undefined behavior, which can sometimes
 be used to attack the program.
 
-.. _Detecting_Read_Of_Uninitialized_Data:
+.. _SPARK_For_MISRA_C_Dev_Detecting_Read_Of_Uninitialized_Data:
 
 Detecting Reads of Uninitialized Data
 *************************************

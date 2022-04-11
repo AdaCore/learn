@@ -119,7 +119,7 @@ define a custom :ada:`+` operator:
    end Main;
 
 Jokes aside, this feature is very useful. For example it allows a
-"native-looking API" for :ref:`big integers<big_integers>`.
+"native-looking API" for :ref:`big integers<Whats_New_Ada_2022_Big_Integers>`.
 
 References
 ----------

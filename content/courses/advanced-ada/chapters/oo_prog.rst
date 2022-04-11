@@ -25,7 +25,7 @@ Overriding indicators
 
     Complete section!
 
-.. _Abstract_Types_And_Subprograms:
+.. _Adv_Ada_Abstract_Types_And_Subprograms:
 
 Abstract types and subprograms
 ------------------------------
@@ -42,12 +42,12 @@ Interfaces
 
     Complete section!
 
-.. _Null_Records_Vs_Interfaces:
+.. _Adv_Ada_Null_Records_Vs_Interfaces:
 
 Null records vs. interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:ref:`Earlier on <Null_Records>` in the course, we discussed how to use null
+:ref:`Earlier on <Adv_Ada_Null_Records>` in the course, we discussed how to use null
 records to create a prototype. We could also consider using interfaces instead.
 However, as we've just learned, the consequences are that:
 
@@ -358,7 +358,7 @@ Using null procedures
 ~~~~~~~~~~~~~~~~~~~~~
 
 Since Ada 2005, we have the notion of null procedures. As
-:ref:`discussed previously <Null_Procedures>`, a null procedure is
+:ref:`discussed previously <Adv_Ada_Null_Procedures>`, a null procedure is
 a procedure that is declared using :ada:`is null` and logically has an
 empty body. Fortunately, null procedures are allowed in interface
 definitions |mdash| they define the default behavior of such a subprogram as

@@ -3,7 +3,7 @@ Strings
 
 .. include:: ../../global.txt
 
-.. _Wide_Wide_Strings:
+.. _Adv_Ada_Wide_Wide_Strings:
 
 Wide and Wide-Wide Strings
 --------------------------

@@ -3,13 +3,13 @@ Generics
 
 .. include:: ../../global.txt
 
-.. _Formal_Definite_Indefinite_Subtypes:
+.. _Adv_Ada_Formal_Definite_Indefinite_Subtypes:
 
 Mapping of Definite and Indefinite Subtypes
 -------------------------------------------
 
 Earlier on, we had a discussion about
-:ref:`definite and indefinite subtypes <Definite_Indefinite_Subtypes>`. In this
+:ref:`definite and indefinite subtypes <Adv_Ada_Definite_Indefinite_Subtypes>`. In this
 section, we look into formal definite and indefinite types and how those types
 are mapped.
 
@@ -213,7 +213,7 @@ set of discriminants |mdash| as in the declaration of
 :ada:`Map_Type_With_Integer_Discriminant` |mdash| nor a definite type |mdash|
 as in the declaration of :ada:`Map_Definite_Type`.
 
-.. _Formal_Incomplete_Types:
+.. _Adv_Ada_Formal_Incomplete_Types:
 
 Formal incomplete types
 -----------------------
@@ -250,7 +250,7 @@ subprograms. For example:
 As we've seen before, incomplete types are rather restricted in terms of usage.
 Therefore, formal incomplete types are typically used in conjunction with other
 generic packages or subprograms. We explain later how to use them to create
-:ref:`signature packages <SignaturePackages>`.
+:ref:`signature packages <Adv_Ada_Signature_Packages>`.
 
 A formal incomplete type can also be tagged:
 
@@ -294,7 +294,7 @@ to call the :ada:`Test` function in the body of :ada:`Perform_Test`. This is
 possible, however, with tagged formal incomplete types |mdash| as well as with
 other kinds of formal types.
 
-.. _FormalPackages:
+.. _Adv_Ada_Formal_Packages:
 
 Formal packages
 ---------------
@@ -461,7 +461,7 @@ package in the instantiation of the generic :ada:`Reverse_Array`
 procedure. Also, in the declaration of the :ada:`My_Colors` array, we make
 use of the array type definition from the :ada:`Color_Pkg` package.
 
-.. _FormalPackageParametrization:
+.. _Adv_Ada_Formal_Package_Parametrization:
 
 Formal package parametrization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -689,7 +689,7 @@ For example:
 
 In this case, however, we're simply using :ada:`(<>)`, as discussed in the
 section on
-:ref:`formal package parametrization <FormalPackageParametrization>`.
+:ref:`formal package parametrization <Adv_Ada_Formal_Package_Parametrization>`.
 This means that :ada:`Perform_Test` makes use of the default definition
 used for the instance of :ada:`Generic_Array_Pkg`.
 
@@ -796,7 +796,7 @@ two:
 We could go even further and move :ada:`Perform_Test` into a separate
 package. However, this will be left as an exercise for the reader.
 
-.. _SignaturePackages:
+.. _Adv_Ada_Signature_Packages:
 
 Signature Packages
 ~~~~~~~~~~~~~~~~~~
@@ -1652,7 +1652,7 @@ we've just seen above, we also have these approaches:
   :doc:`chapter about generics </courses/intro-to-ada/chapters/generics>`).
 
 - Signature packages, which we've discussed in a
-  :ref:`previous section <SignaturePackages>`.
+  :ref:`previous section <Adv_Ada_Signature_Packages>`.
 
 Let's briefly recapitulate these approaches:
 
