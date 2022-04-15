@@ -319,6 +319,87 @@
 
     -------------
 
+.. only:: builder_html and no_hidden_books
+
+    E-books |mdash| Upcoming Courses
+    -------------------------------------
+
+    Download e-books of upcoming courses and laboratories:
+
+    .. container:: frontpage-ebooks
+
+        .. container:: frontpage-ebooks-row
+
+            .. container:: frontpage-ebook-and-buttons-block
+
+                .. image:: images/page-1-of-intro-to-embedded-sys-prog.jpeg
+                    :alt: Introduction to Embedded Systems Programming (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-embedded-sys-prog.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/courses/intro-to-embedded-sys-prog.epub">
+                                EPUB
+                            </a>
+
+                            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-embedded-sys-prog.mobi">
+                                MOBI
+                            </a>
+                        </div>
+
+            .. container:: frontpage-ebook-and-buttons-block
+
+                .. image:: images/page-1-of-advanced-ada.jpeg
+                    :alt: Advanced Ada (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/courses/advanced-ada.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
+                                EPUB
+                            </a>
+
+                            <a class="ebook-download-button" href="/mobi_books/courses/advanced-ada.mobi">
+                                MOBI
+                            </a>
+                        </div>
+
+            .. container:: frontpage-ebook-and-buttons-block
+
+                .. image:: images/page-1-of-advanced-spark.jpeg
+                    :alt: Advanced SPARK (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/courses/advanced-spark.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/courses/advanced-spark.epub">
+                                EPUB
+                            </a>
+
+                            <a class="ebook-download-button" href="/mobi_books/courses/advanced-spark.mobi">
+                                MOBI
+                            </a>
+                        </div>
+
+    -------------
+
+.. only:: builder_html
+
     Download Ada and SPARK tools
     ------------------------------
 

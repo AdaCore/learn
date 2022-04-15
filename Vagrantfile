@@ -93,7 +93,7 @@ $epub = <<-SHELL
   # Install Calibre
   sudo -v && \
   wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | \
-    sudo sh /dev/stdin version=5.29.0
+    sudo sh /dev/stdin version=5.40.0
 
   cd /vagrant/frontend
   yarn
