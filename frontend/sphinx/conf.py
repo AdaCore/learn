@@ -254,6 +254,17 @@ latex_elements = {
 \usepackage{pmboxdraw} \usepackage{unicode-math}
 \usepackage{pdfpages}
 \fvset{fontsize=\small}
+\makeatletter
+  \fancypagestyle{normal}{
+    \fancyhf{}
+    \fancyfoot[LE,RO]{{\py@HeaderFamily\thepage}}
+    \fancyfoot[LO]{{\py@HeaderFamily\nouppercase{\rightmark}}}
+    \fancyfoot[RE]{{\py@HeaderFamily\nouppercase{\leftmark}}}
+    \fancyhead[LE,RO]{{\py@HeaderFamily \@title}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+}
+\makeatother
 ''',
 
     # Font package inclusion
