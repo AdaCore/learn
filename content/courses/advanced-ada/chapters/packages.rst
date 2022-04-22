@@ -273,6 +273,33 @@ limited with clauses for package :ada:`A` and declaring the component of the
 
 As expected, the code can now be compiled without issues.
 
+Note that we can also use limited with clauses for both packages. In
+this case, we must declare all components using anonymous access types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_View_2
+
+    limited with B;
+
+    package A is
+
+       type T1 is record
+          Ref : access B.T2;
+       end record;
+
+    end A;
+
+    limited with A;
+
+    package B is
+
+       type T2 is record
+          Ref : access A.T1;
+       end record;
+
+    end B;
+
+In this case, package :ada:`B` also has limited visibility of package :ada:`A`.
+
 .. admonition:: In the Ada Reference Manual
 
     - `10.1.2 Context Clauses - With Clauses <http://www.ada-auth.org/standards/12rm/html/RM-10-1-2.html>`_
