@@ -3,6 +3,22 @@ Packages
 
 .. include:: ../../global.txt
 
+.. _Adv_Ada_Pure:
+
+Pure program and library units
+------------------------------
+
+.. admonition:: Relevant topics
+
+    - `C.4 Preelaboration Requirements <http://www.ada-auth.org/standards/12rm/html/RM-C-4.html>`_
+    - `10.2.1 Elaboration Control <http://www.ada-auth.org/standards/12rm/html/RM-10-2-1.html>`_
+    - Add link to :ref:`Adv_Ada_Preelaboration` section
+
+.. todo::
+
+    Complete section!
+
+
 .. _Adv_Ada_Package_Renaming:
 
 Package renaming

@@ -28,18 +28,3 @@ Elaboration control
 .. todo::
 
     Complete section!
-
-
-.. _Adv_Ada_Pure:
-
-Pure program and library units
-------------------------------
-
-.. admonition:: Relevant topics
-
-    - `Preelaboration Requirements <http://www.ada-auth.org/standards/2xrm/html/RM-C-4.html>`_
-    - `Elaboration control <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-10-2-1.html>`_
-
-.. todo::
-
-    Complete section!
