@@ -59,13 +59,38 @@ example:
     package Drivers.M2 renames Driver_M2;
 
 Here, we're renaming the :ada:`Driver_M1` and :ada:`Driver_M2` packages as
-child packages of the pure :ada:`Drivers` package.
+child packages of the :ada:`Drivers` package, which is a
+:ref:`pure package <Adv_Ada_Pure>`.
 
-Note that this kind of package renaming only works because the new parent
-package (:ada:`Drivers` in this case) is a pure package. As we've discussed
-:ref:`earlier <Adv_Ada_Pure>`, pure packages have no state, so the
-rearrangement as child packages doesn't make anything in package :ada:`Drivers`
-visible that would not have been visible without the renaming.
+.. admonition:: Important
+
+    Note that a package that is renamed as a child package cannot refer to
+    information from its (non-renamed) parent. In other words,
+    :ada:`Driver_M1` (renamed as :ada:`Drivers.M1`) cannot refer to information
+    from the :ada:`Drivers` package. For example:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Package_Renaming_1_Refer_To_Parent
+        :class: ada-expect-compile-error
+
+        package Driver_M1 is
+
+           Counter_2 : Integer := Drivers.Counter;
+
+        end Driver_M1;
+
+        package Drivers is
+
+           Counter : Integer := 0;
+
+        end Drivers;
+
+        with Driver_M1;
+
+        package Drivers.M1 renames Driver_M1;
+
+    As expected, compilation fails here because :ada:`Drivers.Counter` isn't
+    visible in :ada:`Driver_M1`, even though the renaming (:ada:`Drivers.M1`)
+    creates a virtual hierarchy.
 
 
 Child of renamed package
