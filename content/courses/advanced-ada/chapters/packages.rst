@@ -26,7 +26,7 @@ Package renaming
 
 We've seen in the
 :doc:`Introduction to Ada course </courses/intro-to-ada/chapters/modular_programming>`
-that we can :ref:`rename packages <Package_Renaming>`.
+that we can :ref:`rename packages <Intro_Ada_Package_Renaming>`.
 
 Grouping packages
 ~~~~~~~~~~~~~~~~~
