@@ -273,10 +273,10 @@ limited with clauses for package :ada:`A` and declaring the component of the
 
     end B;
 
-As expected, the code can now be compiled without issues.
+As expected, we can now compile the code without issues.
 
-Note that we can also use limited with clauses for both packages. In
-this case, we must declare all components using anonymous access types:
+Note that we can also use limited with clauses for both packages. If we do
+that, we must declare all components using anonymous access types:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Visibility_2
 
@@ -300,7 +300,7 @@ this case, we must declare all components using anonymous access types:
 
     end B;
 
-In this case, package :ada:`B` also has limited visibility of package :ada:`A`.
+Now, both packages :ada:`A` and :ada:`B` have limited visibility of each other.
 
 .. admonition:: In the Ada Reference Manual
 
