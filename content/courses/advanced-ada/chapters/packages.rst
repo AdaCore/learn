@@ -344,7 +344,9 @@ Let's reuse the previous source-code example and convert types :ada:`T1` and
 
     private
 
-       --  Here, we have limited visibility
+       use A;
+
+       --  Here, we have full visibility
        --  of package A
 
        type T2 is record
