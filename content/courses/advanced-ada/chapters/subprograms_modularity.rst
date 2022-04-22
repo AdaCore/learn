@@ -7,9 +7,9 @@ Private subprograms
 -------------------
 
 We've seen :ref:`previously <Adv_Ada_Private_Packages>` that we can declare
-private packages. Because packages and subprograms are both library units, we
-can declare private subprograms as well. We do this by using the :ada:`private`
-keyword. For example:
+private packages. Because packages and subprograms can both be library units,
+we can declare private subprograms as well. We do this by using the
+:ada:`private` keyword. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Subprograms.Private_Test_Procedure
 
