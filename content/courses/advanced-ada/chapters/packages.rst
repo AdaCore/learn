@@ -246,8 +246,8 @@ As we've seen previously,
   :ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>`.
 
 Keeping this information in mind, we can now correct the previous code by using
-limited with clauses for both packages and declaring the components using
-anonymous access types:
+limited with clauses for package :ada:`A` and declaring the component of the
+:ada:`T1` record using an anonymous access type:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_View
 
@@ -261,12 +261,12 @@ anonymous access types:
 
     end A;
 
-    limited with A;
+    with A; use A;
 
     package B is
 
        type T2 is record
-          Ref : access A.T1;
+          Value : T1;
        end record;
 
     end B;
@@ -306,7 +306,7 @@ Let's reuse the previous source-code example and convert types :ada:`T1` and
 
     end A;
 
-    limited private with A;
+    private with A;
 
     package B is
 
@@ -318,7 +318,7 @@ Let's reuse the previous source-code example and convert types :ada:`T1` and
        --  of package A
 
        type T2 is record
-          Ref : access A.T1;
+          Value : T1;
        end record;
 
     end B;
