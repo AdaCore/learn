@@ -59,8 +59,13 @@ example:
     package Drivers.M2 renames Driver_M2;
 
 Here, we're renaming the :ada:`Driver_M1` and :ada:`Driver_M2` packages as
-child packages of the pure :ada:`Drivers` package. (We discuss more about pure
-packages :ref:`later <Adv_Ada_Pure>`.)
+child packages of the pure :ada:`Drivers` package.
+
+Note that this kind of package renaming only works because the new parent
+package (:ada:`Drivers` in this case) is a pure package. As we've discussed
+:ref:`earlier <Adv_Ada_Pure>`, pure packages have no state, so the
+rearrangement as child packages doesn't make anything in package :ada:`Drivers`
+visible that would not have been visible without the renaming.
 
 
 Child of renamed package

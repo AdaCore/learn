@@ -3,6 +3,8 @@ Package Elaboration
 
 .. include:: ../../global.txt
 
+.. _Adv_Ada_Preelaboration:
+
 Preelaboration
 --------------
 
