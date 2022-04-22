@@ -378,9 +378,9 @@ declares a constant :ada:`Zero_Const` and a function :ada:`Zero_Func`:
 
     end Info;
 
-We want to use this information in package :ada:`A`. If we have limited
-visibility of package :ada:`Info`, however, this information won't be visible.
-For example:
+Also, let's say we want to use the information (from package :ada:`Info`) in
+package :ada:`A`. If we have limited visibility of package :ada:`Info`,
+however, this information won't be visible. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_Visibility_Other_Elements
     :class: ada-expect-compile-error
