@@ -209,6 +209,15 @@ in the Introduction to Ada course. Child packages can serve as internal
 implementation packages within a package hierarchy, not visible to clients of
 the hierarchy.
 
+The main application of private packages is to create private child packages,
+whose purpose is to serve as internal implementation packages within a
+package hierarchy. By doing so, we can expose the internals to other public
+child packages, but prevent that external clients can directly access them.
+
+As we'll see next, there are many rules that ensure that internal visibility is
+enforced for those private child packages. At the same time, the same rules
+ensure that private packages aren't visible outside of the package hierarchy.
+
 Declaration and usage
 ~~~~~~~~~~~~~~~~~~~~~
 
