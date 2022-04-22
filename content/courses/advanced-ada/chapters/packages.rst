@@ -324,8 +324,8 @@ Let's reuse the previous source-code example and convert types :ada:`T1` and
     end B;
 
 In this updated version of the source-code example, we have not only just a
-limited view of packages :ada:`A` and :ada:`B`, but also, each package is just
-visible in the private part of the other package.
+limited view of package :ada:`B`, but also, each package is just visible in the
+private part of the other package.
 
 Limited view and other elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
