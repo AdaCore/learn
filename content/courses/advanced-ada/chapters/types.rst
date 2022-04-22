@@ -1298,6 +1298,8 @@ the value of the :ada:`Extended` discriminant). Therefore, with the call to
 :ada:`Reset`, the :ada:`Extended` discriminant of :ada:`R1` changes from
 :ada:`False` to :ada:`True`.
 
+.. _Adv_Ada_Incomplete_Types:
+
 Incomplete types
 ----------------
 
@@ -1384,6 +1386,8 @@ Incomplete types are useful to declare mutually dependent types, as we'll
 see in the next section. Also, we can also have formal incomplete types, as
 we'll discuss :ref:`later <Adv_Ada_Formal_Incomplete_Types>`.
 
+.. _Adv_Ada_Mutually_Dependent_Types:
+
 Mutually dependent types
 ------------------------
 
@@ -1415,7 +1419,7 @@ component of this type. We could, instead, declare an access type and use it
 here, or simply use an anonymous access to :ada:`T2`. By doing this, even
 though the compiler doesn't know the size of :ada:`T2`, it knows the
 size of an access type designating :ada:`T2`, so the record component
-can be of such an access type (anonymous or not)."
+can be of such an access type (anonymous or not).
 
 To summarize, in order to solve the compilation error above, we need to:
 
