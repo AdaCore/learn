@@ -71,8 +71,10 @@ visible that would not have been visible without the renaming.
 Child of renamed package
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note that we cannot create a child package for a package that has been renamed.
-For example, we cannot declare the :ada:`Drivers.M1.Ext` package:
+Note that we cannot create a child package using a parent package name that was
+introduced by a renaming. For example, let's say we want to create a child
+package :ada:`Ext` for the :ada:`Drivers.M1` package we've seen earlier. We
+cannot just declare a :ada:`Drivers.M1.Ext` package like this:
 
 .. code-block:: ada
 
@@ -80,7 +82,8 @@ For example, we cannot declare the :ada:`Drivers.M1.Ext` package:
 
     end Drivers.M1.Ext;
 
-In this case, the solution is to extend the original (non-renamed) package:
+because the parent unit cannot be a renaming. The solution is to actually
+extend the original (non-renamed) package:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Package_Renaming_1
 
