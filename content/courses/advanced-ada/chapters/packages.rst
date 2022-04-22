@@ -218,15 +218,15 @@ refer to each other. These with clauses constitute a circular dependency, so
 the compiler cannot compile either of those packages.
 
 One way to solve this problem is by transforming this circular dependency into
-a partial dependency. We do this by declaring a limited view |mdash| using a
+a partial dependency. We do this by limiting the visibility |mdash| using a
 limited with clause. To use a limited with clause for a package :ada:`P`, we
 simply write :ada:`limited with P`.
 
-If a package :ada:`A` has a limited view of a package :ada:`B`, then all types
-from package :ada:`B` are visible as if they had been declared as
+If a package :ada:`A` has limited visibility of a package :ada:`B`, then all
+types from package :ada:`B` are visible as if they had been declared as
 :ref:`incomplete types <Adv_Ada_Incomplete_Types>`. For the specific case of
-the previous source-code example, this would be the limited view of package
-:ada:`B` from package :ada:`A`\ 's perspective:
+the previous source-code example, this would be the limited visibility of
+package :ada:`B` from package :ada:`A`\ 's perspective:
 
 .. code-block:: ada
 
@@ -249,7 +249,7 @@ Keeping this information in mind, we can now correct the previous code by using
 limited with clauses for package :ada:`A` and declaring the component of the
 :ada:`T1` record using an anonymous access type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Visibility
 
     limited with B;
 
@@ -276,7 +276,7 @@ As expected, the code can now be compiled without issues.
 Note that we can also use limited with clauses for both packages. In
 this case, we must declare all components using anonymous access types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_View_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Visibility_2
 
     limited with B;
 
@@ -304,17 +304,17 @@ In this case, package :ada:`B` also has limited visibility of package :ada:`A`.
 
     - `10.1.2 Context Clauses - With Clauses <http://www.ada-auth.org/standards/12rm/html/RM-10-1-2.html>`_
 
-Limited view and private with clauses
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Limited visibility and private with clauses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We can apply a limited view to private with clauses that we've discussed
-earlier. For a package :ada:`P`, we do this by simply writing
+We can have limited visibility and private with clauses, which we've discussed
+earlier, at the same time. For a package :ada:`P`, we do this by simply writing
 :ada:`limited private with P`.
 
 Let's reuse the previous source-code example and convert types :ada:`T1` and
 :ada:`T2` to private types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_Visibility
 
     limited private with B;
 
@@ -350,19 +350,20 @@ Let's reuse the previous source-code example and convert types :ada:`T1` and
 
     end B;
 
-In this updated version of the source-code example, we have not only just a
-limited view of package :ada:`B`, but also, each package is just visible in the
-private part of the other package.
+In this updated version of the source-code example, we have not only limited
+visibility of package :ada:`B`, but also, each package is just visible
+in the private part of the other package.
 
-Limited view and other elements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Limited visibility and other elements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It's important to mention that the limited view only includes type declarations
-|mdash| as incomplete types. All other declarations are not visible when using
-a limited with clause. For example, let's say we have a package :ada:`Info`
-that declares a constant :ada:`Zero_Const` and a function :ada:`Zero_Func`:
+It's important to mention that the limited visibility we've been discussing so
+far is restricted to type declarations |mdash| which are seen as incomplete
+types. In fact, when we use a limited with clause, all other declarations have
+no visibility at all! For example, let's say we have a package :ada:`Info` that
+declares a constant :ada:`Zero_Const` and a function :ada:`Zero_Func`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_View_Other_Elements
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_Visibility_Other_Elements
 
     package Info is
 
@@ -372,11 +373,11 @@ that declares a constant :ada:`Zero_Const` and a function :ada:`Zero_Func`:
 
     end Info;
 
-We want to use this information in package :ada:`A`. If we apply a limited view
-to the :ada:`Info` package, however, this information won't be visible. For
-example:
+We want to use this information in package :ada:`A`. If we have limited
+visibility of package :ada:`Info`, however, this information won't be visible.
+For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_View_Other_Elements
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_Visibility_Other_Elements
     :class: ada-expect-compile-error
 
     limited private with Info;
