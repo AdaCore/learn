@@ -204,11 +204,6 @@ accessed where it shouldn't be used directly. Similarly, we've seen that we can
 use the private part of a package to distinguish between the
 :ref:`partial and full view <Adv_Ada_Type_View>` of a data type.
 
-In addition, we've discussed :ref:`child packages <Intro_Ada_Child_Packages>`
-in the Introduction to Ada course. Child packages can serve as internal
-implementation packages within a package hierarchy, not visible to clients of
-the hierarchy.
-
 The main application of private packages is to create private child packages,
 whose purpose is to serve as internal implementation packages within a
 package hierarchy. By doing so, we can expose the internals to other public
