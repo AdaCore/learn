@@ -215,7 +215,7 @@ Here, we have two
 :ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>` :ada:`T1`
 and :ada:`T2`, which are declared in two packages :ada:`A` and :ada:`B` that
 refer to each other. These with clauses constitute a circular dependency, so
-the compiler cannot compile any of those packages.
+the compiler cannot compile either of those packages.
 
 One way to solve this problem is by transforming this circular dependency into
 a partial dependency. We do this by declaring a limited view |mdash| using a
