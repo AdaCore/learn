@@ -11,6 +11,8 @@ Private packages
     Complete section!
 
 
+.. _Adv_Ada_Private_With_Clauses:
+
 Private with clauses
 --------------------
 
@@ -307,8 +309,9 @@ In this case, package :ada:`B` also has limited visibility of package :ada:`A`.
 Limited visibility and private with clauses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We can have limited visibility and private with clauses, which we've discussed
-earlier, at the same time. For a package :ada:`P`, we do this by simply writing
+We can limit the visibility and use
+:ref:`private with clauses <Adv_Ada_Private_With_Clauses>` at the same time.
+For a package :ada:`P`, we do this by simply writing
 :ada:`limited private with P`.
 
 Let's reuse the previous source-code example and convert types :ada:`T1` and
