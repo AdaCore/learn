@@ -1467,6 +1467,8 @@ code:
 
     end Mutually_Dependent;
 
+.. _Adv_Ada_Type_View:
+
 Type view
 ---------
 

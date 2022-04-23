@@ -5,3 +5,4 @@ Modular programming
     :maxdepth: 3
 
     packages
+    subprograms_modularity
