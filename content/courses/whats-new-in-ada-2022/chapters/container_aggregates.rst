@@ -221,7 +221,7 @@ code in native JSON.  For example:
 
 The :ada:`Offices` variable is supposed to contain this value:
 
-.. code-block::
+.. code-block:: json
 
      [{"name"  : "North American Office",
        "phones": [18777874628,
