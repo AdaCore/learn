@@ -231,7 +231,7 @@ The :ada:`Offices` variable is supposed to contain this value:
       {"name"  : "European Office",
        "phones": [33149706716,
                   33149700552],
-       "email" : "info@adacore.com"}];
+       "email" : "info@adacore.com"}]
 
 
 References
