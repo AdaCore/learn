@@ -31,7 +31,7 @@ manner.
 
    Ada.Text_IO.Put_Line (Big_Integer'Image(2 ** 256));
 
-.. code-block::
+.. code-block:: ada
 
    115792089237316195423570985008687907853269984665640564039457584007913129639936
 
@@ -87,7 +87,7 @@ m\ :sup:`e` mod n = 65\ :sup:`17` mod 3233 = 2790 = c.
 
    Ada.Text_IO.Put_Line (Power_Mod (M => 65, D => 17, N => 3233)'Image);
 
-.. code-block::
+.. code-block:: ada
 
    2790
 
@@ -98,7 +98,7 @@ calculate c\ :sup:`d` mod n = 2790\ :sup:`413` mod 3233:
 
    Ada.Text_IO.Put_Line (Power_Mod (M => 2790, D => 413, N => 3233)'Image);
 
-.. code-block::
+.. code-block:: ada
 
    65
 

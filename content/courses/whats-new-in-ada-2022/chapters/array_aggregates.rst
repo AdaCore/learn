@@ -19,7 +19,7 @@ In Ada 2022, you can use square brackets in array aggregates. Using
 square brackets simplifies writing both empty aggregates and
 single-element aggregates. Consider this:
 
-.. code-block::
+.. code-block:: ada
 
    pragma Ada_2022;
    pragma Extensions_Allowed (On);
@@ -48,7 +48,7 @@ Iterated Component Association
 
 There is a new kind of component association:
 
-.. code-block::
+.. code-block:: ada
 
    Vector : Integer_Array := [for J in 1 .. 5 => J * 2];
 
@@ -59,7 +59,7 @@ computation of a component.
 Iterated component associations can nest and can be nested in another
 association (iterated or not). Here we use this to define a square matrix:
 
-.. code-block::
+.. code-block:: ada
 
    Matrix : array (1 .. 3, 1 .. 3) of Positive :=
     [for J in 1 .. 3 =>
@@ -69,7 +69,7 @@ association (iterated or not). Here we use this to define a square matrix:
 Iterated component associations in this form provide both element indices
 and values, just like named component associations:
 
-.. code-block::
+.. code-block:: ada
 
    Data : Integer_Array (1 .. 5) :=
      [for J in 2 .. 3 => J, 5 => 5, others => 0];
@@ -79,7 +79,7 @@ Here :ada:`Data` contains :ada:`(0, 2, 3, 0, 5)`, not :ada:`(2, 3, 5, 0, 0)`.
 Another form of iterated component association corresponds to a positional
 component association and provides just values, but no element indices:
 
-.. code-block::
+.. code-block:: ada
 
    Vector_2 : Integer_Array := [for X of Vector => X / 2];
 
@@ -90,7 +90,7 @@ years ago!
 
 Complete code snippet:
 
-.. code-block::
+.. code-block:: ada
 
    pragma Ada_2022;
    pragma Extensions_Allowed (On);  --  for square brackets
