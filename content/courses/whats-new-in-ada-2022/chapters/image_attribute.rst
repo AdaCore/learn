@@ -65,7 +65,7 @@ objects and then convert these objects to strings and print them:
       Ada.Text_IO.Put_Line (V1_Ptr'Image);
    end Main;
 
-.. code-block::
+.. code-block:: bash
 
    $ gprbuild -q -P main.gpr
      Build completed successfully.
