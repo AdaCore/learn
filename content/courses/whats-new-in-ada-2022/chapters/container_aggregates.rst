@@ -18,7 +18,7 @@ as maps, the aggregate must use named assоciations to provide keys and values.
 For other containers it uses positional assоciations.  Only square brackets
 are allowed.  Here's an example:
 
-.. code-block::
+.. code-block:: ada
 
    pragma Ada_2022;
 
@@ -48,7 +48,7 @@ new :ada:`Aggregate` aspect to enable container aggregates for your
 container and let the compiler know what subprograms to use to construct the
 aggregate:
 
-.. code-block::
+.. code-block:: ada
 
    pragma Ada_2022;
 
@@ -92,7 +92,7 @@ aggregate:
 
 The equivalent for maps is:
 
-.. code-block::
+.. code-block:: ada
 
    pragma Ada_2022;
 
@@ -141,7 +141,7 @@ both array and object aggregates present. But we can define conversion
 functions for array and object and get code almost as dense as the same
 code in native JSON.  For example:
 
-.. code-block::
+.. code-block:: ada
 
    pragma Ada_2022;
 
@@ -221,7 +221,7 @@ code in native JSON.  For example:
 
 The :ada:`Offices` variable is supposed to contain this value:
 
-.. code-block::
+.. code-block:: json
 
      [{"name"  : "North American Office",
        "phones": [18777874628,
@@ -231,7 +231,7 @@ The :ada:`Offices` variable is supposed to contain this value:
       {"name"  : "European Office",
        "phones": [33149706716,
                   33149700552],
-       "email" : "info@adacore.com"}];
+       "email" : "info@adacore.com"}]
 
 
 References

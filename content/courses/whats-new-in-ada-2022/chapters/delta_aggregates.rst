@@ -43,7 +43,7 @@ You can also use delta aggregates for arrays to change elements, but not
 bounds. Moreover, it only works for one-dimensional arrays of non-limited
 components.
 
-.. code-block::
+.. code-block:: ada
 
    type Vector_3D is array (1 .. 3) of Float;
 
@@ -55,7 +55,7 @@ brackets for record aggregates.
 
 Here is the complete code snippet:
 
-.. code-block::
+.. code-block:: ada
 
    pragma Ada_2022;
 
