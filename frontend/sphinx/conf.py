@@ -104,6 +104,7 @@ extensions = [
     'widget_extension',
     'sphinx_rtd_theme',
     'sphinx_reredirects',
+    'sphinxcontrib.plantuml',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

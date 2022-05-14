@@ -16,6 +16,7 @@ $frontend = <<-SHELL
       python3-venv \
       nodejs \
       graphviz \
+      plantuml \
       poppler-utils \
       libjpeg-dev \
       make \
@@ -53,6 +54,7 @@ $epub = <<-SHELL
       python3-venv \
       nodejs \
       graphviz \
+      plantuml \
       make \
       yarn \
       texlive-latex-base \
