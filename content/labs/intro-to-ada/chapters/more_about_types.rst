@@ -348,6 +348,8 @@ Simple todo list
 
     #. Procedure :ada:`Display` is used to display all to-do items.
 
+        #. The header (first line) must be :ada:`TO-DO LIST`.
+
         #. It must display one item per line.
 
 **Remarks**:

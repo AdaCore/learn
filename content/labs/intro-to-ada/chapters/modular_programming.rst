@@ -138,12 +138,12 @@ Operations
         #. Function :ada:`Multiply` performs the multiplication of :ada:`A` and
            :ada:`B` and returns the result;
 
-        #. Function :ada:`Divide`: performs the division of :ada:`A` and
+        #. Function :ada:`Divide` performs the division of :ada:`A` and
            :ada:`B` and returns the result.
 
     #. Package :ada:`Operations.Test` contains the test environment:
 
-        #. Procedure :ada:`Display` must use of the functions from
+        #. Procedure :ada:`Display` must use the functions from
            the parent (:ada:`Operations`) package as indicated by the template
            in the code below.
 

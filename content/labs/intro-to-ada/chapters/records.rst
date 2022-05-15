@@ -29,7 +29,7 @@ Directions
            code below) as a starting point.
 
     #. Function :ada:`To_Ext_Angle` converts a simple angle value to an
-       extended angle (:ada:`Ext_Angle` type)
+       extended angle (:ada:`Ext_Angle` type).
 
 **Remarks**:
 

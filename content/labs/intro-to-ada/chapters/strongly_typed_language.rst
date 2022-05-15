@@ -13,7 +13,7 @@ corresponding names.
 
     #. Implement the :ada:`Color_Types` package.
 
-        #. Declare the :ada:`HTML_Color` enumeration
+        #. Declare the :ada:`HTML_Color` enumeration.
 
         #. Declare the :ada:`Basic_HTML_Color` enumeration.
 
@@ -257,8 +257,8 @@ Integers
    #. The same attributes are available for the :ada:`S_50` type (
       :ada:`S_50'First` and :ada:`S_50'Last`).
 
-#. We could have implement a function :ada:`To_I_100` as well to convert from
-   :ada:`S_100` to :ada:`I_100`. However, we skip this here because explicit
+#. We could have implemented a function :ada:`To_I_100` as well to convert from
+   :ada:`S_50` to :ada:`I_100`. However, we skip this here because explicit
    conversions are not needed for subtypes.
 
 .. code:: ada lab=Strongly_Typed.Integers
@@ -484,7 +484,7 @@ Temperatures
 
         #. Implement the :ada:`To_Int_Celsius` function.
 
-        #. Declare the :ada:`Kelvin` type
+        #. Declare the :ada:`Kelvin` type.
 
         #. Implement the :ada:`To_Celsius` function to convert from the
            :ada:`Kelvin` type.
@@ -500,7 +500,7 @@ Temperatures
        Celsius:
 
        #. :ada:`Celsius` is a floating-point type with a range between -273.15
-          and 5504.85
+          and 5504.85.
 
        #. :ada:`Int_Celsius` is an integer type with a range between -273 and
           5505.
@@ -529,7 +529,8 @@ Temperatures
 
 **Remarks**:
 
-#. When implementing the :ada:`To_Celsius` function for the :ada:`Int_Celsius`:
+#. When implementing the :ada:`To_Celsius` function for the :ada:`Int_Celsius`
+   type:
 
     #. You'll need to check for the minimum and maximum values of the input
        values because of the slightly different ranges.

@@ -312,7 +312,7 @@ used by the generic procedure :ada:`Check`.
 Example: I/O instances
 ----------------------
 
-Ada offers generic I/O packages that can be instatianted for standard and
+Ada offers generic I/O packages that can be instantiated for standard and
 derived types. One example is the generic :ada:`Float_IO` package, which
 provides procedures such as :ada:`Put` and :ada:`Get`. In fact,
 :ada:`Float_Text_IO` |mdash| available from the standard library |mdash| is an
