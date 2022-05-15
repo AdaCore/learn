@@ -3642,12 +3642,12 @@ Uninitialized Value
 
     package Options is
 
-       type Option is (Unitialized,
+       type Option is (Uninitialized,
                        Option_1,
                        Option_2,
                        Option_3);
 
-       Unitialized_Value : exception;
+       Uninitialized_Value : exception;
 
        function Image (O : Option) return String;
 
@@ -3658,8 +3658,8 @@ Uninitialized Value
        function Image (O : Option) return String is
        begin
           case O is
-             when Unitialized =>
-                raise Unitialized_Value with "Uninitialized value detected!";
+             when Uninitialized =>
+                raise Uninitialized_Value with "Uninitialized value detected!";
              when others =>
                 return Option'Image (O);
           end case;
@@ -3683,7 +3683,7 @@ Uninitialized Value
           begin
              Put_Line (Image (O));
           exception
-             when E : Unitialized_Value =>
+             when E : Uninitialized_Value =>
                 Put_Line (Exception_Message (E));
           end Check;
 

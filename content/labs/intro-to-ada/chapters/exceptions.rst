@@ -14,7 +14,7 @@ Uninitialized Value
 
         #. Declare the :ada:`Option` enumeration type.
 
-        #. Declare the :ada:`Unitialized_Value` exception.
+        #. Declare the :ada:`Uninitialized_Value` exception.
 
         #. Implement the :ada:`Image` function.
 
@@ -22,7 +22,7 @@ Uninitialized Value
 
     #. Enumeration :ada:`Option` contains:
 
-        #. the :ada:`Unitialized` value, and
+        #. the :ada:`Uninitialized` value, and
 
         #. the actual options:
 
@@ -32,8 +32,8 @@ Uninitialized Value
 
     #. Function :ada:`Image` returns a string for the :ada:`Option` type.
 
-        #. In case the argument to :ada:`Image` is :ada:`Unitialized`, the
-           function must raise the :ada:`Unitialized_Value` exception.
+        #. In case the argument to :ada:`Image` is :ada:`Uninitialized`, the
+           function must raise the :ada:`Uninitialized_Value` exception.
 
 **Remarks**:
 
@@ -81,7 +81,7 @@ Uninitialized Value
           begin
              Put_Line (Image (O));
           exception
-             when E : Unitialized_Value =>
+             when E : Uninitialized_Value =>
                 Put_Line (Exception_Message (E));
           end Check;
 
@@ -247,7 +247,7 @@ Re-raising Exceptions
     #. Procedure :ada:`Check_Exception` must be extended to *re-raise* any
        exception. When an exception is detected, the procedure must:
 
-        #. display an user message (as implemented in the previous exercise),
+        #. display a user message (as implemented in the previous exercise),
            and then
 
         #. Raise or *re-raise* exception depending on the exception that is

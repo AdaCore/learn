@@ -614,7 +614,7 @@ the :ada:`'Image` attribute for scalar types, that returns the name (as a
 
     Rust follows the C/C++ model, but with safe pointer semantics.
     However, dynamic allocation is still used. Ada can benefit from
-    an eventual performance edge because it can use any model.
+    a possible performance edge because it can use any model.
 
     .. amiard: TODO: say less or say more
 

@@ -32,7 +32,7 @@ Constrained Array
 
     #. Range type :ada:`My_Index` has a range from 1 to 10.
 
-    #. :ada:`My_Array` is a constrainted array of :ada:`Integer` type.
+    #. :ada:`My_Array` is a constrained array of :ada:`Integer` type.
 
         #. It must make use of the :ada:`My_Index` type.
 
@@ -190,7 +190,7 @@ lookup table.
 
         #. Declare the :ada:`To_RGB_Lookup_Table` object and initialize it.
 
-        #. Adapt the implementation of :ada:`To_RGB` function.
+        #. Adapt the implementation of the :ada:`To_RGB` function.
 
 **Requirements**:
 

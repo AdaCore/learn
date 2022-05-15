@@ -255,7 +255,7 @@ summarizes this:
 +-------------------------------+-------------------------------+
 
 The rest of this section shows examples of how this access to private
-information actually works for child packages
+information actually works for child packages.
 
 Let's first look at an example where the body of a child package :ada:`P.C`
 has access to the private part of the specification of its parent :ada:`P`.
