@@ -17,6 +17,7 @@ TEST_CONTENT    = tests/rst
 TEST_BUILDDIR   = tests/html
 HOST_ADDRESS 	?= localhost
 HOST_PORT    	?= 8000
+WEBSOCKET_URL   = wss://TODO
 
 HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
 
@@ -137,7 +138,7 @@ publish:
 # code server.
 # This should only be called from `yarn run dev`
 local:
-	@CODE_SERVER_URL="http://$(HOST_ADDRESS):$(HOST_PORT)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	@CODE_SERVER_URL="$(WEBSOCKET_URL)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack-production:

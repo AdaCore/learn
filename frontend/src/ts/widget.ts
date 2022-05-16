@@ -264,7 +264,7 @@ class Widget {
 
     const files = this.collectResources();
 
-    const serverData: RunProgram.TS = {
+    const serverData: RunProgram.TSData = {
       files: files,
       main: this.main,
       mode: mode,
@@ -274,12 +274,12 @@ class Widget {
     };
 
     const worker = new ServerWorker(this.server,
-        (data: CheckOutput.FS): number => {
+        (data: CheckOutput.FS): boolean => {
           return this.processCheckOutput(data);
         });
 
     try {
-      await worker.request(serverData, 'run_program');
+      await worker.execute(serverData);
     } catch (error) {
       this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
       console.error('Error:', error);
@@ -309,11 +309,11 @@ class Widget {
   /**
    * Returns the correct Area to place data in
    *
-   * @param {number} ref - should be null for Widget
+   * @param {CheckOutput.FS} data - should be null for Widget
    * @return {Area} the area to place returned data
    */
-  protected getHomeArea(ref: number): Area {
-    if (ref != null) {
+  protected getHomeArea(data: CheckOutput.FS): Area {
+    if (data.ref !== undefined) {
       throw new Error('Malformed data packet has ref in non-lab.');
     }
     return this.outputArea;
@@ -326,18 +326,19 @@ class Widget {
    * @param {Area} homeArea - the area to place the rendered msg
    */
   protected handleMsgType(msg: CheckOutput.RunMsg, homeArea: Area): void {
+    let data = msg.data as string;
     switch (msg.type) {
       case 'console': {
-        homeArea.addConsole(msg.data);
+        homeArea.addConsole(data);
         break;
       }
       case 'internal_error':
-        msg.data += ' ' + Strings.INTERNAL_ERROR_MESSAGE;
+        data += ' ' + Strings.INTERNAL_ERROR_MESSAGE;
         // Intentional: fall through
       case 'stderr':
       case 'stdout': {
         // Split multiline messages into single lines for processing
-        const outMsgList = msg.data.split(/\r?\n/);
+        const outMsgList = data.split(/\r?\n/);
         for (const outMsg of outMsgList) {
           const ctRegex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
           const rtRegex = /^raised .+ : ([a-zA-Z._0-9-]+):(\d+) (.+)$/m;
@@ -404,7 +405,7 @@ class Widget {
         break;
       }
       default: {
-        homeArea.addLine(msg.data);
+        homeArea.addLine(data);
         throw new Error('Unhandled msg type.');
       }
     }
@@ -415,14 +416,10 @@ class Widget {
    * @param {CheckOutput.FS} data - The data from check_output
    * @return {number} the number of lines read by this function
    */
-  private processCheckOutput(data: CheckOutput.FS): number {
-    let readLines = 0;
-
-    for (const ol of data.output) {
-      const homeArea = this.getHomeArea(ol.ref);
-      readLines++;
-
-      this.handleMsgType(ol.msg, homeArea);
+  private processCheckOutput(data: CheckOutput.FS): boolean {
+    const homeArea = this.getHomeArea(data);
+    for (const msg of data.output) {
+      this.handleMsgType(msg, homeArea);
     }
 
     if (data.completed) {
@@ -432,7 +429,7 @@ class Widget {
       }
     }
 
-    return readLines;
+    return data.completed;
   }
 
   /**
@@ -480,12 +477,12 @@ export class LabWidget extends Widget {
 
   /**
    * Returns the correct Area to place data in
-   * @param {number} ref - if not null, the lab ref
+   * @param {CheckOutput.FS} data - if not null, the lab ref
    * @return {Area} the area to place returned data
    */
-  protected getHomeArea(ref: number): Area {
-    if (ref != null) {
-      return this.labContainer.getLabArea(ref);
+  protected getHomeArea(data: CheckOutput.FS): Area {
+    if (data.ref !== undefined) {
+      return this.labContainer.getLabArea(data.ref);
     }
     return this.outputArea;
   }
@@ -499,8 +496,7 @@ export class LabWidget extends Widget {
     switch (msg.type) {
       case 'lab': {
         const result =
-          this.labContainer.processResults(
-              (msg.data as unknown) as CheckOutput.LabOutput);
+          this.labContainer.processResults(msg.data as CheckOutput.LabOutput);
         this.outputArea.addLabStatus(result);
         break;
       }

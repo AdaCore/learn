@@ -1,4 +1,3 @@
-import {fetchJSON} from './comms';
 import {RunProgram, CheckOutput} from './server-types';
 
 /**
@@ -9,7 +8,7 @@ import {RunProgram, CheckOutput} from './server-types';
  */
 export class ServerWorker {
   private readonly server: string;
-  private readonly cb: (data: CheckOutput.FS) => number;
+  private readonly cb: (data: CheckOutput.FS) => boolean;
   private readonly INTERNAL_ERROR_MESSAGE =
   'Please report this issue on https://github.com/AdaCore/learn/issues';
 
@@ -26,7 +25,7 @@ export class ServerWorker {
    * @param {string} server - The server address
    * @param {dataCallback} dataCB - The process data callback
    */
-  constructor(server: string, dataCB: (data: CheckOutput.FS) => number) {
+  constructor(server: string, dataCB: (data: CheckOutput.FS) => boolean) {
     this.server = server;
     this.cb = dataCB;
   }
@@ -34,60 +33,47 @@ export class ServerWorker {
   /**
    * Entrypoint for initiating requests to the server
    *
-   * @param {RunProgram.TS} serverData - The data to send
-   * @param {string} address - The suffix to send the request to
+   * @param {RunProgram.TSData} serverData - The data to send
+   * @param {number} timeout - The request timeout in ms
    */
-  public async request(serverData: RunProgram.TS, address: string):
-      Promise<void> {
-    const json =
-      await
-      fetchJSON<RunProgram.TS, RunProgram.FS>(serverData,
-          this.serverAddress(address));
-    if (json.identifier == '') {
-      throw new Error('No identifier sent from server.');
-    }
+  public async execute(serverData: RunProgram.TSData,
+      timeout: number = 60_000): Promise<void> {
+    return new Promise((resolve) => {
+      const ws = new WebSocket(this.server);
+      const ts: RunProgram.TS = {
+        action: 'execute',
+        data: serverData,
+      };
 
-    await this.getOutputFromIdentifier(json);
-  }
+      ws.addEventListener('open', () => {
+        ws.send(JSON.stringify(ts));
+      });
 
-  /**
-   * Get the run output using the return identifier from the button CB
-   * @param {RunProgram.FS} json - the json data returned from button CB
-   * @param {number} lRead - the number of lines already read from the stream
-   * @param {number} nReq - the number of requests sent
-   */
-  private async getOutputFromIdentifier(json: RunProgram.FS,
-      lRead = 0, nReq = 0): Promise<void> {
-    const data: CheckOutput.TS = {
-      identifier: json.identifier,
-      read: lRead,
-    };
+      ws.addEventListener('message', (event) => {
+        const fsData = JSON.parse(event.data);
+        if ('connectionId' in fsData) {
+          throw new Error('Executer gave server error: ' + event.data);
+        }
+        if (this.cb(fsData)) {
+          ws.close();
+        }
+      });
 
-    const rdata =
-      await fetchJSON<CheckOutput.TS, CheckOutput.FS>(data,
-          this.serverAddress('check_output'));
-    nReq++;
+      const connectionTimeout = setTimeout(() => {
+        switch (ws.readyState) {
+          case WebSocket.CONNECTING:
+          case WebSocket.OPEN:
+            ws.close();
+            throw new Error(`Timeout: No response from server in ${timeout}ms`);
+          default:
+        }
+      }, timeout);
 
-    if (nReq >= 200) {
-      throw new Error('Request timed out. ' + this.INTERNAL_ERROR_MESSAGE);
-    }
-
-    lRead += this.cb(rdata);
-
-    if (!rdata.completed) {
-      // We have not finished processing the output: call this again
-      await ServerWorker.delay(250);
-      await this.getOutputFromIdentifier(json, lRead, nReq);
-    }
-  }
-
-  /**
-   * Construct the server address string
-   * @param {string} url - the url suffix
-   * @return {string} - the full constructed url
-   */
-  private serverAddress(url: string): string {
-    return this.server + '/' + url + '/';
+      ws.addEventListener('close', () => {
+        clearTimeout(connectionTimeout);
+        resolve();
+      });
+    });
   }
 
   /**
