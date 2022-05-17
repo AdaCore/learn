@@ -1114,8 +1114,8 @@ part of package :ada:`A` (using :ada:`private with B`):
    }
 
 Here, the information is visible in the private part of package :ada:`A`, as
-well as in its body. Finally, let's see the case where we include the package
-:ada:`B` in the body of package :ada:`A`:
+well as in its body. Finally, let's see the case where we refer to
+package :ada:`B` in the body of package :ada:`A`:
 
 .. uml::
    :align: center
