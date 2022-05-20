@@ -1109,7 +1109,7 @@ stream that generates the interrupts they handle. One object handles
 :ada:`Stream_0` interrupts and the other handles those from
 :ada:`Stream_5`. Package :ada:`Ada.Interrupts.Names` for this target
 (for GNAT) declares distinct names for the streams and devices
-generating the interrupts, hence :ada`DMA2_Stream0_Interrupt` and
+generating the interrupts, hence :ada:`DMA2_Stream0_Interrupt` and
 :ada:`DMA2_Stream5_Interrupt`.
 
 On both objects the priority is the highest interrupt priority (and
