@@ -1189,7 +1189,8 @@ The image below depicts this design.
   :width: 600
   :alt: Diagram for Design Idiom #1
 
-The :ada:`DMA_Interrupt_Controller` described earlier actually uses this design.
+The :ada:`DMA_Interrupt_Controller` described earlier actually uses this
+design.
 
 .. code-block:: ada
 
