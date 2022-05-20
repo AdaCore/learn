@@ -320,51 +320,52 @@ Programming" annex, section 3 "Interrupt Support." The following is the
 text of that section with only a few simplifications and elisions.
 
 * Interrupts are said to occur. An occurrence of an interrupt is separable
-into generation and delivery. Generation of an interrupt is the event in
-the underlying hardware or system that makes the interrupt available to
-the program. Delivery is the action that invokes part of the program as
-response to the interrupt occurrence.
+  into generation and delivery. Generation of an interrupt is the event in
+  the underlying hardware or system that makes the interrupt available to
+  the program. Delivery is the action that invokes part of the program as
+  response to the interrupt occurrence.
 
 * Between generation and delivery, the interrupt occurrence is pending.
 
 * Some or all interrupts may be blocked. When an interrupt is blocked, all
-occurrences of that interrupt are prevented from being delivered.
+  occurrences of that interrupt are prevented from being delivered.
 
 * Certain interrupts are reserved. A reserved interrupt is either an
-interrupt for which user-defined handlers are not supported, or one
-which already has an attached handler by some other
-implementation-defined means. The set of reserved interrupts is
-implementation-defined.
+  interrupt for which user-defined handlers are not supported, or one
+  which already has an attached handler by some other
+  implementation-defined means. The set of reserved interrupts is
+  implementation-defined.
 
 * Program units can be connected to non-reserved interrupts. While
-connected, the program unit is said to be attached to that interrupt.
-The execution of that program unit, the interrupt handler, is invoked
-upon delivery of the interrupt occurrence.
+  connected, the program unit is said to be attached to that interrupt.
+  The execution of that program unit, the interrupt handler, is invoked
+  upon delivery of the interrupt occurrence.
 
 * While a handler is attached to an interrupt, it is called once for each
-delivered occurrence of that interrupt.
+  delivered occurrence of that interrupt.
 
 * The corresponding interrupt is blocked while the handler executes. While
-an interrupt is blocked, all occurrences of that interrupt are prevented
-from being delivered. Whether such occurrences remain pending or are
-lost is implementation-defined.
+  an interrupt is blocked, all occurrences of that interrupt are prevented
+  from being delivered. Whether such occurrences remain pending or are
+  lost is implementation-defined.
 
 * Each interrupt has a default treatment which determines the system's
-response to an occurrence of that interrupt when no user-defined handler
-is attached. The set of possible default treatments is implementation-defined.
+  response to an occurrence of that interrupt when no user-defined handler
+  is attached. The set of possible default treatments is
+  implementation-defined.
 
 * An exception propagated from a handler that is invoked by an interrupt
-has no effect. In particular, it is not propagated out of the handler,
-in the same way that exceptions do not propagate outside of task bodies.
+  has no effect. In particular, it is not propagated out of the handler,
+  in the same way that exceptions do not propagate outside of task bodies.
 
 * If the Ceiling_Locking policy is in effect, the interrupt handler
-executes with the active priority that is the ceiling priority of the
-corresponding protected object. ("Protected object" is abbreviated as
-"PO" for convenience).
+  executes with the active priority that is the ceiling priority of the
+  corresponding protected object. ("Protected object" is abbreviated as
+  "PO" for convenience).
 
 * If the hardware or the underlying system holds pending interrupt
-occurrences, the implementation must provide for later delivery of
-these occurrences to the program.
+  occurrences, the implementation must provide for later delivery of
+  these occurrences to the program.
 
 (The above is not everything in the model but we can ignore the rest in
 this introduction.)
