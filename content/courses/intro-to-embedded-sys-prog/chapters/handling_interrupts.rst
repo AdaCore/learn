@@ -804,7 +804,7 @@ Although interrupt handler protected types must be declared at library
 level, the Ada model allows you to have an object of the type declared
 elsewhere, not necessarily at library level. However, note that the
 Ravenscar and Jorvik profiles require protected interrupt handler
-objects |mash| anonymously-typed or not |mash| to be declared at the
+objects |mdash| anonymously-typed or not |mdash| to be declared at the
 library level too, for the sake of analysis. The profiles also require
 the elaboration-based attachment mechanism we have shown. For the sake
 of the widest applicability, and because the most likely use-case
