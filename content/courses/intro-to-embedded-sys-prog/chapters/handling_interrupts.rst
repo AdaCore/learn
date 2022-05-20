@@ -358,7 +358,7 @@ text of that section with only a few simplifications and elisions.
   has no effect. In particular, it is not propagated out of the handler,
   in the same way that exceptions do not propagate outside of task bodies.
 
-* If the Ceiling_Locking policy is in effect, the interrupt handler
+* If the :ada:`Ceiling_Locking` policy is in effect, the interrupt handler
   executes with the active priority that is the ceiling priority of the
   corresponding protected object. ("Protected object" is abbreviated as
   "PO" for convenience).
@@ -472,7 +472,7 @@ The PO provides unique serial numbers.
 
 Imagine there are multiple assembly lines creating devices of various
 sorts. Each device gets a unique serial number. These assembly lines run
-concurrently, so the calls to Get_Next occur concurrently. Without
+concurrently, so the calls to :ada:`Get_Next` occur concurrently. Without
 mutually exclusive access to the :ada:`Value` variable multiple devices
 could get the same serial number.
 
@@ -510,14 +510,14 @@ Here's an example of a PO with a protected entry:
 This is a PO providing a "Persistent Signal" abstraction. It allows a
 task to wait for a "signal" from another task. The signal is not lost if
 the receiving task is not already waiting, hence the term "persistent."
-Specifically, if :ada:`Signal_Arrived` is False, a caller to :ada:`Wait`
-will be suspended until :ada:`Signal_Arrived` becomes True. A caller to
-:ada:`Send` sets :ada:`Signal_Arrived` to True. If a caller to
+Specifically, if :ada:`Signal_Arrived` is :ada:`False`, a caller to :ada:`Wait`
+will be suspended until :ada:`Signal_Arrived` becomes :ada:`True`. A caller to
+:ada:`Send` sets :ada:`Signal_Arrived` to :ada:`True`. If a caller to
 :ada:`Wait` was already present, suspended, it will be allowed to
 continue execution. If no caller was waiting, eventually some caller
-will arrive, find :ada:`Signal_Arrived` True, and will be allowed to
+will arrive, find :ada:`Signal_Arrived` :ada:`True`, and will be allowed to
 continue. In either case the :ada:`Signal_Arrived` flag will be set back
-to False before the :ada:`Wait` caller is released. Protected objects
+to :ada:`False` before the :ada:`Wait` caller is released. Protected objects
 can have a priority assigned, similar to tasks, so they are integrated
 into the global priority semantics including interrupt priorities.
 
@@ -565,7 +565,7 @@ bare-board systems include a clock that is driven by a dedicated
 interrupt. The application cannot (or at least should not) override the
 interrupt handler for that interrupt. The determination of which
 interrupts are reserved is implementation-defined. Attempting to attach
-a user-defined handler for a reserved interrupt raises Program_Error,
+a user-defined handler for a reserved interrupt raises :ada:`Program_Error`,
 and the existing treatment is unchanged.
 
 
@@ -604,7 +604,7 @@ and will be explained in that section. The package's type
 :ada:`Interrupt_Id`, however, will be use extensively.
 
 A child package :ada:`Ada.Interrupts.Names` defines a target-dependent
-set of constants providing meaningful names for the Interrupt_Id values
+set of constants providing meaningful names for the :ada:`Interrupt_Id` values
 the target supports. Both the number of constants and their names are
 defined by the implementation, reflecting the variations in hardware
 available. This package and the enclosed constants are used all the
@@ -1176,7 +1176,7 @@ well as the interrupt handler procedure. The task suspends on the entry
 when ready for the handler results, controlled by the barrier condition
 as usual. The protected handler procedure responds to interrupts,
 managing data (if any) as required. When ready, based on what the
-handler does, the handler sets the entry barrier to True. That allows
+handler does, the handler sets the entry barrier to :ada:`True`. That allows
 the suspended task to execute the entry body. The entry body can do
 whatever is required, possibly just copying the local protected data to
 the entry parameters. Of course, the entry may be used purely for
@@ -1267,10 +1267,10 @@ the task can get the status via the entry parameter.
 
 In the above, the entry barrier consists of the Boolean variable
 :ada:`No_Transfer_In_Progess`. Procedure :ada:`Start_Transfer` first
-sets that variable to False so that a caller to
+sets that variable to :ada:`False` so that a caller to
 :ada:`Wait_For_Completion` will suspend until the transaction completes
 one way or the other. Eventually the handler sets
-:ada:`No_Transfer_In_Progess` to True.
+:ada:`No_Transfer_In_Progess` to :ada:`True`.
 
 
 .. code-block:: ada
@@ -1325,7 +1325,7 @@ defined in the language standard package
 :ada:`Ada.Synchronous_Task_Control`. Essentially the type provides a
 thread-safe Boolean flag. Callers can suspend themselves (hence the
 package name) until another task resumes them by setting the flag to
-True. Here's the package declaration, somewhat elided:
+:ada:`True`. Here's the package declaration, somewhat elided:
 
 .. code-block:: ada
 
@@ -1348,15 +1348,15 @@ True. Here's the package declaration, somewhat elided:
 
 Tasks call :ada:`Suspend_Until_True` to suspend themselves on some
 object of the type passed as the parameter. The call suspends the caller
-until that object becomes True. If it is already True the caller
+until that object becomes :ada:`True`. If it is already :ada:`True` the caller
 continues immediately. Objects of type :ada:`Suspension_Object` are
-automatically set to False initially, and become True via a call to
-:ada:`Set_True`. As part of the return from a call to
-:ada:`Suspend_Until_True` the flag is set back to False. As a result,
+automatically set to :ada:`False` initially, and become :ada:`True` via a call
+to :ada:`Set_True`. As part of the return from a call to
+:ada:`Suspend_Until_True` the flag is set back to :ada:`False`. As a result,
 you probably only need those two subprograms.
 
 The interrupt handler procedure responds to interrupts, eventually
-setting some visible :ada:`Suspension_Object` to True so that the caller
+setting some visible :ada:`Suspension_Object` to :ada:`True` so that the caller
 will be signaled and resume. Here's an example showing both the protected
 object, with handler, and a :ada:`Suspension_Object` declaration:
 
@@ -1521,7 +1521,7 @@ include support for interrupts generated by a device known to be
 available with that target. For illustration let's imagine the target
 always has a serial port backed by a UART. In addition to handlers as
 protected procedure without parameters, perhaps the implementation
-supports interrupt handlers with a single parameter of type Unsigned_8
+supports interrupt handlers with a single parameter of type :ada:`Unsigned_8`
 (or larger) as supported by the UART.
 
 Overall, the interrupt model defined and supported by Ada is quite close
