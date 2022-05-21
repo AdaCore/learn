@@ -760,7 +760,7 @@ In this attachment model, protected declarations containing interrupt
 handlers must be declared at the library level. That means they must be
 declared in library packages, in other words. (Protected objects cannot
 be library units themselves, just as tasks cannot. They must be declared
-within some other unit.) Here is the full declaration for the the
+within some other unit.) Here is the full declaration for the
 :ada:`RNG_Controller` PO declared within a package |mdash| in this case
 within a package body:
 
