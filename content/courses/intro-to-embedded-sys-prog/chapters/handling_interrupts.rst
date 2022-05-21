@@ -863,7 +863,7 @@ Programming Annex is implemented the range of
 Vendors are not required to have a distinct priority value in
 :ada:`Interrupt_Priority` for each hardware interrupt possible on a
 given target. On a bare-metal target, they probably will have a
-one-to-one correspondence, but might not an a target with an RTOS or
+one-to-one correspondence, but might not in a target with an RTOS or
 host OS.
 
 A PO containing an interrupt handler procedure must be given a priority
