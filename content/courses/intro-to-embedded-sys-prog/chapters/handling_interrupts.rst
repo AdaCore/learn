@@ -327,10 +327,14 @@ Programming" annex, section 3 "Interrupt Support." The following is the
 text of that section with only a few simplifications and elisions.
 
 * Interrupts are said to occur. An occurrence of an interrupt is separable
-  into generation and delivery. Generation of an interrupt is the event in
-  the underlying hardware or system that makes the interrupt available to
-  the program. Delivery is the action that invokes part of the program as
-  response to the interrupt occurrence.
+  into generation and delivery.
+
+  - Generation of an interrupt is the event in
+    the underlying hardware or system that makes the interrupt available to
+    the program.
+
+  - Delivery is the action that invokes part of the program as
+    response to the interrupt occurrence.
 
 * Between generation and delivery, the interrupt occurrence is pending.
 
