@@ -15,12 +15,12 @@ Offloading work to these other devices enables us to get more
 functionality implemented in a target platform that is usually very
 limited in resources. If the processor has to implement everything we
 might miss deadlines or perhaps not fit into the available code space.
-And of course some specialized functionality may simply require an external
+And, of course, some specialized functionality may simply require an external
 device, such as a sensor.
 
 For a simple example, a motor encoder is a device attached to a motor
 shaft that can be used to count the number of full or partial rotations
-that the shaft has completed. When the shaft is rotating quickly the
+that the shaft has completed. When the shaft is rotating quickly, the
 application would need to interact with the encoder frequently to get an
 up-to-date count, representing a non-trivial load on the application
 processor. There are ways to reduce that load, which we discuss shortly,
@@ -29,7 +29,7 @@ hardware: use a timer device driven directly by the encoder. The timer
 is connected to the encoder such that the encoder signals act like an
 external clock driving the timer's internal counter. All the application
 processor must do to get the encoder count is query the timer's counter.
-The timer is almost certainly memory-mapped so querying the timer
+The timer is almost certainly memory-mapped, so querying the timer
 amounts to a memory access.
 
 In some cases, we even offload communication with these external devices
@@ -45,7 +45,7 @@ Known as "bit-banging," that would be a significant load on the
 processor when the overall traffic volume is non-trivial. Fortunately,
 there are dedicated devices |mdash| I2C transceivers |mdash| that will
 implement the protocol for us. To send application data to another
-device using the I2C protocol we just give the transceiver the data and
+device using the I2C protocol, we just give the transceiver the data and
 destination address. The rest is done in the transceiver hardware.
 Receiving data is of course also possible. I2C transceivers are
 ubiquitous because the protocol is so common among device
@@ -76,12 +76,12 @@ the expected time to completion is extremely short, polling can be
 sufficiently efficient to make sense. (In that case we've offloaded
 implementation complexity rather than processor load.)
 
-Usually there's enough time involved so that polling is undesirable. The
+Usually, there's enough time involved so that polling is undesirable. The
 external environment takes time to respond and change state. Maybe a
 sensor has been designed to wait passively for something to happen in
 the external world, and only on the infrequent occurrence of that event
 should the application be notified. Perhaps a switch is to be toggled in
-certain circumstances, or an intruder detected. In this case nothing
+certain circumstances, or an intruder detected. In this case, nothing
 happens for extended intervals.
 
 As a consequence of all this, there's a very good chance that the
@@ -94,7 +94,7 @@ required. Think back to that serial port with a USART again. The USART
 is responsible for composing the arriving characters (or bytes) from
 their individual incoming bits on the receiving line. When all the bits
 for a single character have arrived, what happens next depends on the
-software design. In the simplest case the internal processor copies the
+software design. In the simplest case, the internal processor copies the
 single character from the USART to an internal buffer and then goes back
 to doing something else while the next full character arrives in the
 USART. The response to the USART must be fairly quick because the next
@@ -113,7 +113,7 @@ buffer. A DMA device copies data from one location to another, in this
 case from the address of the USART's one-character memory-mapped
 register to the address of the application buffer in memory. The copy is
 performed by the DMA hardware so it is extremely fast and costs the main
-processor no cycles. But even with this approach we need to notify the
+processor no cycles. But even with this approach, we need to notify the
 application that a complete message is ready for processing. We might
 need to do that quickly so that enough time remains for the application
 to process the message content prior to the arrival of the next message.
@@ -131,7 +131,7 @@ external event can trigger a
 response from the processor by becoming "active." The current state of
 the application is temporarily stored, and then an interrupt response
 routine, known as an "interrupt handler" is executed. Upon completion of
-the handler the original state of the application is restored and the
+the handler, the original state of the application is restored and the
 application continues execution. The time between the interrupt becoming
 active and the start of the responding handler execution is known as the
 "interrupt latency."
@@ -145,7 +145,7 @@ interrupts with lower or equal priority.
 
 Ada defines a model for hardware interrupts and interrupt handling that
 closely adheres to the conceptual model described above. If you have
-experience with interrupt handling you will recognize them in the Ada
+experience with interrupt handling, you will recognize them in the Ada
 model. One very important point to make about the Ada facilities is that
 they are highly portable, so they don't require extensive changes when
 moving to an new target computer. Part of that portability is due to the
@@ -153,7 +153,7 @@ language-defined model.
 
 Before we go into the Ada facility details, there's a final point.
 Sometimes we *do* want the application to wait for the external device.
-When would that be the case? To answer that we need to introduce another
+When would that be the case? To answer that, we need to introduce another
 term. The act of saving and restoring the state of the interrupted
 application software is known as "interrupt context switching." If the
 time for the device to complete the application request is approximately
@@ -203,10 +203,10 @@ In the above, :ada:`Data_Status` is a function that returns a record
 object containing Boolean flags. The if-statement queries one of those
 flags. Thus the loop either detects the desired device status or raises
 an exception after the maximum number of attempts have been made. In
-this version the maximum is a known upper bound so a local constant will
+this version, the maximum is a known upper bound so a local constant will
 suffice. The maximum could be passed as a parameter instead.
 
-Presumably the upper bound on the attempts is either specified by the
+Presumably, the upper bound on the attempts is either specified by the
 device documentation or empirically determined. Sometimes, however, the
 documentation will instead specify a maximum possible response time, for
 instance 30 milliseconds. Any time beyond that maximum indicates a
@@ -235,7 +235,7 @@ If the timeout is not context-specific then we'd use a constant as we
 did above, otherwise we'd allow the caller to specify the timeout. For
 example, here's a polling routine included with the DMA device driver
 we've mentioned a few times now. Some device-specific parts have been
-removed to keep the example simple. The appropriate timeout varies so it
+removed to keep the example simple. The appropriate timeout varies, so it
 is a parameter to the call:
 
 .. code-block:: ada
@@ -259,7 +259,7 @@ is a parameter to the call:
       Clear_Status (This, Stream, Transfer_Complete_Indicated);
    end Poll_For_Completion;
 
-In this approach we compute the deadline as a point on the timeline by
+In this approach, we compute the deadline as a point on the timeline by
 adding the value returned from the :ada:`Clock` function (i.e., "now")
 to the time interval specified by the parameter. Then, within the loop,
 we compare the value of the :ada:`Clock` to that deadline.
@@ -267,8 +267,8 @@ we compare the value of the :ada:`Clock` to that deadline.
 Finally, with another implementation approach we can reduce the
 processor cycles "wasted" when the polled device is not yet ready.
 Specifically, in the polling loop, when the device has not yet completed the
-requested function we can temporarily relinquish the processor so that other tasks
-within the application can execute. That isn't perfect because we're
+requested function, we can temporarily relinquish the processor so that other
+tasks within the application can execute. That isn't perfect because we're
 still checking the device status even though we cannot exit the loop.
 And it requires other tasks to exist in your design, although that's
 probably a good idea for other reasons (e.g., logical threads having
@@ -294,10 +294,10 @@ The code above will check the status of some device every 30
 milliseconds (an arbitrary period just for illustration) until the
 :ada:`Status` function result allows the loop to exit. If the device
 "hangs" the loop is never exited, but as you saw there are ways to
-address that possibility. When the code does not exit the loop the next
+address that possibility. When the code does not exit the loop, the next
 point on the timeline is computed and the task executing the code then
 suspends, allowing the other tasks in the application to execute.
-Eventually the next release point is reached and so the task becomes
+Eventually, the next release point is reached and so the task becomes
 ready to execute again (and will, subject to priorities).
 
 But how long should the polling task suspend when awaiting the device?
@@ -421,8 +421,8 @@ race conditions as multiple tasks acting on shared data.
 
 For example, a "reader" task may be in the act of reading (copying) the
 value of some shared variable, only to be preempted by a "writer" task
-that updates the value of the variable. In that case when the "reader"
-task resumes execution it will finish the read operation but will, as a
+that updates the value of the variable. In that case, when the "reader"
+task resumes execution, it will finish the read operation but will, as a
 result, have a value that is partly from the old value and partly from
 the new value. The effect is unpredictable. An interrupt handler can
 have the same effect on shared data as the preempting "writer" task that
@@ -432,7 +432,7 @@ large record objects if that helps, but it even applies to some scalars.
 
 That scenario applies even if no explicit tasks are declared in the
 application. That's because an implicit "environment task" is executing
-the main subprogram. In that case the main subprogram is the entire
+the main subprogram. In that case, the main subprogram is the entire
 application, but more typically some non-null application code is
 actively executing in one or more tasks. We need some way to prevent
 those potential race conditions.
@@ -442,7 +442,7 @@ communicated to the application, for example to say that updated data
 are available, perhaps a sensor reading or characters from a serial
 port. As we said above, we usually don't want to poll for that fact, so
 the application must be able to suspend until the event has occurred.
-Often we'll have a dedicated task within the application that suspends,
+Often, we'll have a dedicated task within the application that suspends,
 rather than the entire application, but that's an implementation detail.
 
 In addition, we said that interrupts usually have priorities.
@@ -480,11 +480,11 @@ The PO provides unique serial numbers.
 Imagine there are multiple assembly lines creating devices of various
 sorts. Each device gets a unique serial number. These assembly lines run
 concurrently, so the calls to :ada:`Get_Next` occur concurrently. Without
-mutually exclusive access to the :ada:`Value` variable multiple devices
+mutually exclusive access to the :ada:`Value` variable, multiple devices
 could get the same serial number.
 
-Protected entries can suspend a caller until some condition is true, in
-this case the fact that an interrupt has occurred and been handled. (As
+Protected entries can suspend a caller until some condition is true; in
+this case, the fact that an interrupt has occurred and been handled. (As
 we will see, a protected entry is not the only way to synchronize with an
 accessing task, but it is the most robust and general.)
 
@@ -523,7 +523,7 @@ will be suspended until :ada:`Signal_Arrived` becomes :ada:`True`. A caller to
 :ada:`Wait` was already present, suspended, it will be allowed to
 continue execution. If no caller was waiting, eventually some caller
 will arrive, find :ada:`Signal_Arrived` :ada:`True`, and will be allowed to
-continue. In either case the :ada:`Signal_Arrived` flag will be set back
+continue. In either case, the :ada:`Signal_Arrived` flag will be set back
 to :ada:`False` before the :ada:`Wait` caller is released. Protected objects
 can have a priority assigned, similar to tasks, so they are integrated
 into the global priority semantics including interrupt priorities.
@@ -542,7 +542,7 @@ interrupt is blocked. As a consequence, another occurrence of that same
 interrupt will not preempt the handler's execution. However, if the
 hardware does not allow interrupts to be blocked, no blocking occurs and
 a subsequent occurrence would preempt the current execution of the
-handler. In that case your handlers must be written with that
+handler. In that case, your handlers must be written with that
 possibility in mind. Most targets do block interrupts so we will
 assume that behavior in the following descriptions.
 
@@ -664,7 +664,7 @@ In the elaboration-based attachment model, we specify the interrupt to
 be attached to a given protected procedure within a protected object.
 This interrupt specification occurs within the enclosing protected
 object declaration. (Details in a moment.) When the enclosing PO is
-elaborated the run-time library installs that procedure as the handler
+elaborated, the run-time library installs that procedure as the handler
 for that interrupt. A given PO may contain one or more interrupt handler
 procedures, as well as any other protected subprograms and entries.
 
@@ -672,11 +672,11 @@ In particular, we can associate an interrupt with a protected procedure
 by applying the aspect :ada:`Attach_Handler` to that procedure as part
 of its declaration, with the :ada:`Interrupt_Id` value as the aspect
 parameter. The association can also be achieved via a pragma with the
-same name as the aspect. Strictly speaking the pragma
-:ada:`Attach_Handler` is obsolescent but that just means that there is a
+same name as the aspect. Strictly speaking, the pragma
+:ada:`Attach_Handler` is obsolescent, but that just means that there is a
 newer way to make the association (i.e., the aspect). The pragma is not
 illegal and will remain supported. Because the pragma existed in a
-version of Ada prior to aspects you will see a lot of existing code
+version of Ada prior to aspects, you will see a lot of existing code
 using the pragma. There's no language-driven reason to change the source
 code to use the aspect. New code should arguably use the aspect, but
 there's no technical reason to prefer one over the other.
@@ -707,7 +707,7 @@ compiler and run-time library do the rest, automatically.
 
 The local variables are declared in the private part, as required by the
 language, because they are shared data meant to be protected from race
-conditions. Therefore the only compile-time access possible is via visible
+conditions. Therefore, the only compile-time access possible is via visible
 subprograms and entries declare in the visible part. Those subprograms
 and entries execute with mutually exclusive access so no race conditions
 are possible.
@@ -862,7 +862,7 @@ Programming Annex is implemented the range of
 :ada:`System.Interrupt_Priority` must include at least one value.
 Vendors are not required to have a distinct priority value in
 :ada:`Interrupt_Priority` for each hardware interrupt possible on a
-given target. On a bare-metal target they probably will have a
+given target. On a bare-metal target, they probably will have a
 one-to-one correspondence, but might not an a target with an RTOS or
 host OS.
 
@@ -911,14 +911,14 @@ as the aspect and subtype. Here is an example:
 
    end Gyro_Interrupts;
 
-In the above we set the interrupt priority to 245, presumably a value
+In the above, we set the interrupt priority to 245, presumably a value
 conformant with this specific target.
 
 If we don't specify the priority for some protected object containing an
 interrupt handler (using either the pragma or the aspect), the initial
 priority of protected objects of that type is implementation-defined,
 but within the range of the subtype :ada:`Interrupt_Priority`. Generally
-speaking you should specify the priorities per those of the interrupts
+speaking, you should specify the priorities per those of the interrupts
 handled, assuming they have distinct values, so that you can reason
 concretely about the relative blocking behavior at run-time.
 
@@ -946,7 +946,7 @@ when invoked.
 
 While an interrupt handler is executing, the corresponding interrupt is
 blocked. Therefore, the same interrupt will not be delivered again while
-the handler is executing. Plus the protected object semantics mean that
+the handler is executing. Plus, the protected object semantics mean that
 no software caller is also concurrently executing within the protected
 object. So no data race conditions are possible. If the system does not
 support blocking, however, the interrupt is not blocked when the handler
@@ -987,9 +987,9 @@ handled. All interrupts at a priority equal or lower than the PO
 priority are blocked, so no preemption by another handler within that
 same PO is possible. As a result, a handler for a higher priority
 interrupt must be in a different PO. If that higher priority handler is
-invoked it can indeed preempt the execution of the handler for the lower
+invoked, it can indeed preempt the execution of the handler for the lower
 priority interrupt in another PO. But because these two handlers will
-not be in the same PO they will not share the data, so again no race
+not be in the same PO, they will not share the data, so again no race
 condition is possible.
 
 Note also that software callers will execute at the PO priority as well,
@@ -1164,7 +1164,7 @@ task. The handler does the least possible and then signals the task to
 do the rest.
 
 Of course, sometimes the handler does everything required and just needs
-to signal the application. In that case the awakened task does no
+to signal the application. In that case, the awakened task does no
 further "interrupt processing" but simply uses the result.
 
 Regardless, the same issues apply: 1) How do application tasks synchronize
@@ -1240,7 +1240,7 @@ device has not yet completed the DMA transfer. The interrupt handler
 procedure, cleverly named :ada:`Interrupt_Handler`, handles the
 interrupts, one of which indicates that the transfer has completed.
 Device errors also generate interrupts so the handler detects them and
-acts accordingly. Eventually the handler sets the barrier to True and
+acts accordingly. Eventually, the handler sets the barrier to True and
 the task can get the status via the entry parameter.
 
 .. code-block:: ada
@@ -1277,7 +1277,7 @@ In the above, the entry barrier consists of the Boolean variable
 :ada:`No_Transfer_In_Progess`. Procedure :ada:`Start_Transfer` first
 sets that variable to :ada:`False` so that a caller to
 :ada:`Wait_For_Completion` will suspend until the transaction completes
-one way or the other. Eventually the handler sets
+one way or the other. Eventually, the handler sets
 :ada:`No_Transfer_In_Progess` to :ada:`True`.
 
 
@@ -1327,10 +1327,10 @@ The image below depicts this design.
   :width: 600
   :alt: Diagram for Design Idiom #2
 
-In this approach the task synchronizes with the handler using a
+In this approach, the task synchronizes with the handler using a
 :ada:`Suspension_Object` variable. The type :ada:`Suspension_Object` is
 defined in the language standard package
-:ada:`Ada.Synchronous_Task_Control`. Essentially the type provides a
+:ada:`Ada.Synchronous_Task_Control`. Essentially, the type provides a
 thread-safe Boolean flag. Callers can suspend themselves (hence the
 package name) until another task resumes them by setting the flag to
 :ada:`True`. Here's the package declaration, somewhat elided:
@@ -1356,11 +1356,11 @@ package name) until another task resumes them by setting the flag to
 
 Tasks call :ada:`Suspend_Until_True` to suspend themselves on some
 object of the type passed as the parameter. The call suspends the caller
-until that object becomes :ada:`True`. If it is already :ada:`True` the caller
+until that object becomes :ada:`True`. If it is already :ada:`True`, the caller
 continues immediately. Objects of type :ada:`Suspension_Object` are
 automatically set to :ada:`False` initially, and become :ada:`True` via a call
 to :ada:`Set_True`. As part of the return from a call to
-:ada:`Suspend_Until_True` the flag is set back to :ada:`False`. As a result,
+:ada:`Suspend_Until_True`, the flag is set back to :ada:`False`. As a result,
 you probably only need those two subprograms.
 
 The interrupt handler procedure responds to interrupts, eventually
@@ -1464,7 +1464,7 @@ the pertinent parts:
    end L3GD20;
 
 
-With those packages available  we can write a simple main program to use
+With those packages available, we can write a simple main program to use
 the gyro. The real demo displayed the readings on an LCD but we've
 elided all those irrelevant details:
 
@@ -1510,7 +1510,7 @@ executed by the implicit "environment task" so it all still works.
 The operations provided by :ada:`Suspension_Object` are faster than
 protected entries, and noticeably so. However, that performance
 difference is due to the fact that :ada:`Suspension_Object` provides so
-much less capability than entries. In particular there is no notion of
+much less capability than entries. In particular, there is no notion of
 protected actions, nor expressive entry barriers for condition
 synchronization, nor parameters to pass data while synchronized. Most
 importantly, there is no caller queue, so at most one caller can be
@@ -1527,7 +1527,7 @@ As you can see, the semantics of protected objects are a good fit for
 interrupt handling. However, other forms of handlers are allowed to be
 supported. For example, the implementation for a specific target may
 include support for interrupts generated by a device known to be
-available with that target. For illustration let's imagine the target
+available with that target. For illustration, let's imagine the target
 always has a serial port backed by a UART. In addition to handlers as
 protected procedure without parameters, perhaps the implementation
 supports interrupt handlers with a single parameter of type :ada:`Unsigned_8`
