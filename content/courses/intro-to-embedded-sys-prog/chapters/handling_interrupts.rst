@@ -33,8 +33,9 @@ The timer is almost certainly memory-mapped so querying the timer
 amounts to a memory access.
 
 In some cases, we even offload communication with these external devices
-onto other external devices. For example, the "I2C" (Inter-Integrated
-Circuit) protocol is a popular two-wire serial protocol for
+onto other external devices. For example, the
+`I2C <https://en.wikipedia.org/wiki/I%C2%B2C>`_
+(Inter-Integrated Circuit) protocol is a popular two-wire serial protocol for
 communicating between low-level hardware devices. Individual bits of the
 data are sent by driving the data line high and low in time with the
 clock signal on the other line. The protocol has been around for a long
@@ -48,7 +49,10 @@ device using the I2C protocol we just give the transceiver the data and
 destination address. The rest is done in the transceiver hardware.
 Receiving data is of course also possible. I2C transceivers are
 ubiquitous because the protocol is so common among device
-implementations. A USART/UART is a similar example.
+implementations. A
+`USART <https://en.wikipedia.org/wiki/Universal_synchronous_and_asynchronous_receiver-transmitter>`_
+/ `UART <https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter>`_
+is a similar example.
 
 Having offloaded some of the work, the application must have some way to
 interact with the device in order to know what is happening. Maybe the
@@ -102,8 +106,9 @@ the notification from the external device must often be very quick.
 Now, ideally in the USART case, we would further offload the work from
 the internal processor. Instead of having the processor copy each
 arriving character from the USART into an application buffer, we would
-have another external hardware device |mdash| a direct memory access
-(DMA) device |mdash| copy each arriving character from the USART to the
+have another external hardware device |mdash| a
+`direct memory access (DMA) <https://en.wikipedia.org/wiki/Direct_memory_access>`_
+device |mdash| copy each arriving character from the USART to the
 buffer. A DMA device copies data from one location to another, in this
 case from the address of the USART's one-character memory-mapped
 register to the address of the application buffer in memory. The copy is
@@ -120,7 +125,9 @@ response can be sufficiently and predictably quick.
 
 Fortunately, computers already have such a mechanism: interrupts. The
 details vary considerably with the hardware architecture, but the
-overall idea is independent of the ISA: an external event can trigger a
+overall idea is independent of the
+`ISA <https://en.wikipedia.org/wiki/Instruction_set_architecture>`_: an
+external event can trigger a
 response from the processor by becoming "active." The current state of
 the application is temporarily stored, and then an interrupt response
 routine, known as an "interrupt handler" is executed. Upon completion of
@@ -1385,8 +1392,9 @@ PO and the client task.
 
 :ada:`EXTI2_Interrupt` is "external interrupt number 2" on this
 particular microcontroller. It is connected to an external device, not
-on the SoC itself. Specifically, it is connected to a L3GD20 MEMS motion
-sensor, a three-axis digital output gyroscope. This gyroscope can be
+on the SoC itself. Specifically, it is connected to a
+`L3GD20 MEMS motion sensor <https://www.st.com/en/mems-and-sensors/l3gd20.html>`_,
+a three-axis digital output gyroscope. This gyroscope can be
 either polled or generate interrupts when ever data are available. The
 handler is very simple:
 
