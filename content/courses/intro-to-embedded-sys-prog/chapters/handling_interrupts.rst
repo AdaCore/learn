@@ -1240,7 +1240,7 @@ device has not yet completed the DMA transfer. The interrupt handler
 procedure, cleverly named :ada:`Interrupt_Handler`, handles the
 interrupts, one of which indicates that the transfer has completed.
 Device errors also generate interrupts so the handler detects them and
-acts accordingly. Eventually, the handler sets the barrier to True and
+acts accordingly. Eventually, the handler sets the barrier to :ada:`True` and
 the task can get the status via the entry parameter.
 
 .. code-block:: ada
