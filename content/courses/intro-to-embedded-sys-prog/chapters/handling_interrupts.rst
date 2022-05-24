@@ -69,8 +69,7 @@ device has not yet completed the request. After all, the point of
 offloading the work is to allow the application processor to execute
 other functionality. Polling negates that benefit. On the other hand, if
 the expected time to completion is extremely short, polling can be
-sufficiently efficient to make sense. (In that case we've offloaded
-implementation complexity rather than processor load.)
+sufficiently efficient to make sense.
 
 Usually there's enough time involved so that polling is undesirable. The
 external environment takes time to respond and change state. Maybe a
@@ -257,7 +256,7 @@ adding the value returned from the :ada:`Clock` function (i.e., "now")
 to the time interval specified by the parameter. Then, within the loop,
 we compare the value of the :ada:`Clock` to that deadline.
 
-Finally, with another implementation approach we can reduce the
+Finally, with another design approach we can reduce the
 processor cycles "wasted" when the polled device is not yet ready.
 Specifically, in the polling loop, when the device has not yet completed the
 requested function we can temporarily relinquish the processor so that other tasks
@@ -333,8 +332,8 @@ text of that section with only a few simplifications and elisions.
 * Certain interrupts are reserved. A reserved interrupt is either an
   interrupt for which user-defined handlers are not supported, or one
   which already has an attached handler by some other
-  implementation-defined means. The set of reserved interrupts is
-  implementation-defined.
+  RTL-defined means. The set of reserved interrupts is
+  determined by the hardware and RTL.
 
 * Program units can be connected to non-reserved interrupts. While
   connected, the program unit is said to be attached to that interrupt.
@@ -347,12 +346,11 @@ text of that section with only a few simplifications and elisions.
 * The corresponding interrupt is blocked while the handler executes. While
   an interrupt is blocked, all occurrences of that interrupt are prevented
   from being delivered. Whether such occurrences remain pending or are
-  lost is implementation-defined.
+  lost is determined by the hardware and the run-time library (RTL).
 
 * Each interrupt has a default treatment which determines the system's
   response to an occurrence of that interrupt when no user-defined handler
-  is attached. The set of possible default treatments is
-  implementation-defined.
+  is attached. The set of possible default treatments is defined by the RTL.
 
 * An exception propagated from a handler that is invoked by an interrupt
   has no effect. In particular, it is not propagated out of the handler,
@@ -364,7 +362,7 @@ text of that section with only a few simplifications and elisions.
   "PO" for convenience).
 
 * If the hardware or the underlying system holds pending interrupt
-  occurrences, the implementation must provide for later delivery of
+  occurrences, the RTL must provide for later delivery of
   these occurrences to the program.
 
 (The above is not everything in the model but we can ignore the rest in
@@ -436,7 +434,7 @@ are available, perhaps a sensor reading or characters from a serial
 port. As we said above, we usually don't want to poll for that fact, so
 the application must be able to suspend until the event has occurred.
 Often we'll have a dedicated task within the application that suspends,
-rather than the entire application, but that's an implementation detail.
+rather than the entire application, but that's an application detail.
 
 In addition, we said that interrupts usually have priorities.
 
@@ -552,7 +550,7 @@ However, if the hardware can deliver an interrupt that had been blocked,
 the Systems Programming Annex requires the handler to be invoked again
 later, subject to the PO semantics described above.
 
-The default treatment for a given interrupt is implementation dependent.
+The default treatment for a given interrupt depends on the RTL implementation.
 The default may be to jump immediately to system-defined handler that
 merely loops forever, thereby "hanging" the system and preventing any
 further execution of the application. On a bare-board target that would
@@ -564,7 +562,7 @@ application cannot install a replacement handler. For instance, most
 bare-board systems include a clock that is driven by a dedicated
 interrupt. The application cannot (or at least should not) override the
 interrupt handler for that interrupt. The determination of which
-interrupts are reserved is implementation-defined. Attempting to attach
+interrupts are reserved is RTL-defined. Attempting to attach
 a user-defined handler for a reserved interrupt raises :ada:`Program_Error`,
 and the existing treatment is unchanged.
 
@@ -578,7 +576,7 @@ parameter of that type in order to manage the system's interrupts and
 handlers. The package is named :ada:`Ada.Interrupts`, appropriately.
 
 The primary type in that package is named :ada:`Interrupt_Id` and is an
-implementation-defined discrete type, meaning that it is either an
+compiler-defined discrete type, meaning that it is either an
 integer type (signed or not) or an enumeration type. That representation
 is guaranteed so you can be sure that :ada:`Interrupt_Id` can be used,
 for example, as the index for an array type.
@@ -606,7 +604,7 @@ and will be explained in that section. The package's type
 A child package :ada:`Ada.Interrupts.Names` defines a target-dependent
 set of constants providing meaningful names for the :ada:`Interrupt_Id` values
 the target supports. Both the number of constants and their names are
-defined by the implementation, reflecting the variations in hardware
+defined by the compiler, reflecting the variations in hardware
 available. This package and the enclosed constants are used all the
 time. For the sake of illustration, here is part of the package
 declaration for a Cortex M4F microcontroller supported by GNAT:
@@ -629,7 +627,7 @@ Notice :ada:`HASH_RNG_Interrupt`, the name for :ada:`Interrupt_Id` value
 generator hardware uses to signal that a new value is available. We will
 use this interrupt in an example at the end of this chapter.
 
-The representation chosen by the implementation for :ada:`Interrupt_Id`
+The representation chosen by the compiler for :ada:`Interrupt_Id`
 is very likely an integer, as in the above package, so the child package
 provides readable names for the numeric values. If :ada:`Interrupt_Id`
 is represented as an enumeration type the enumeral values are probably
@@ -670,7 +668,7 @@ same name as the aspect. Strictly speaking the pragma
 newer way to make the association (i.e., the aspect). The pragma is not
 illegal and will remain supported. Because the pragma existed in a
 version of Ada prior to aspects you will see a lot of existing code
-using the pragma. There's no language-driven reason to change the source
+using the pragma. You should become familiar with it. There's no language-driven reason to change the source
 code to use the aspect. New code should arguably use the aspect, but
 there's no technical reason to prefer one over the other.
 
@@ -833,16 +831,16 @@ priorities, as if they are declared like so in package :ada:`System`:
 
 .. code-block:: ada
 
-   subtype Any_Priority is Integer range implementation-defined;
+   subtype Any_Priority is Integer range compiler-defined;
 
    subtype Priority is Any_Priority
-      range Any_Priority'First .. implementation-defined;
+      range Any_Priority'First .. compiler-defined;
 
    subtype Interrupt_Priority is Any_Priority
       range Priority'Last + 1 .. Any_Priority'Last;
 
 For example, here are the subtype declarations in the GNAT
-implementation for an Arm Cortex M4 target:
+compiler for an Arm Cortex M4 target:
 
 .. code-block:: ada
 
@@ -850,7 +848,7 @@ implementation for an Arm Cortex M4 target:
    subtype Priority           is Any_Priority range Any_Priority'First .. 240;
    subtype Interrupt_Priority is Any_Priority range Priority'Last + 1  .. Any_Priority'Last;
 
-Although the ranges are implementation-defined, when the Systems
+Although the ranges are compiler-defined, when the Systems
 Programming Annex is implemented the range of
 :ada:`System.Interrupt_Priority` must include at least one value.
 Vendors are not required to have a distinct priority value in
@@ -905,11 +903,13 @@ as the aspect and subtype. Here is an example:
    end Gyro_Interrupts;
 
 In the above we set the interrupt priority to 245, presumably a value
-conformant with this specific target.
+conformant with this specific target. You should be familiar with this
+pragmas too, because there is some much existing code using it. New code
+should use the aspect, ideally.
 
 If we don't specify the priority for some protected object containing an
 interrupt handler (using either the pragma or the aspect), the initial
-priority of protected objects of that type is implementation-defined,
+priority of protected objects of that type is compiler-defined,
 but within the range of the subtype :ada:`Interrupt_Priority`. Generally
 speaking you should specify the priorities per those of the interrupts
 handled, assuming they have distinct values, so that you can reason
@@ -1517,12 +1517,12 @@ Final Points
 
 As you can see, the semantics of protected objects are a good fit for
 interrupt handling. However, other forms of handlers are allowed to be
-supported. For example, the implementation for a specific target may
+supported. For example, the compiler and RTL for a specific target may
 include support for interrupts generated by a device known to be
 available with that target. For illustration let's imagine the target
 always has a serial port backed by a UART. In addition to handlers as
-protected procedure without parameters, perhaps the implementation
-supports interrupt handlers with a single parameter of type :ada:`Unsigned_8`
+protected procedure without parameters, perhaps the compiler and RTL
+support interrupt handlers with a single parameter of type :ada:`Unsigned_8`
 (or larger) as supported by the UART.
 
 Overall, the interrupt model defined and supported by Ada is quite close
