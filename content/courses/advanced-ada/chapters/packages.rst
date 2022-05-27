@@ -936,10 +936,369 @@ code compiles just fine.)
 Visibility
 ----------
 
-.. todo::
+In the previous sections, we already discussed visibility from various angles.
+However, it can be interesting to recapitulate this information with the help
+of diagrams that illustrate the different parts of a package and its relation
+with other units.
 
-    Complete section!
+Automatic visibility
+~~~~~~~~~~~~~~~~~~~~
 
+First, let's consider we have a package :ada:`A`, its children (:ada:`A.G` and
+:ada:`A.H`), and the grandchild :ada:`A.G.T`. As we've seen before, information
+of a parent package is automatically visible in its children. The following
+diagrams illustrates this:
+
+.. uml::
+   :align: center
+
+   allow_mixing
+
+   skinparam ArrowColor DarkBlue
+
+   namespace A {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Private -up--> Public
+
+      Body -up--> Public
+      Body -up--> Private
+   }
+
+   namespace A.G #lightyellow {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Public -up--> A.Public
+
+      Private -up--> Public
+      Private -up--> A.Public
+      Private -up--> A.Private
+
+      Body -up--> Public
+      Body -up--> Private
+      Body ---> A.Public
+      Body ---> A.Private
+   }
+
+   namespace A.H {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Public -up--> A.Public
+
+      Private -up--> Public
+      Private -up--> A.Public
+      Private -up--> A.Private
+
+      Body -up--> Public
+      Body -up--> Private
+      Body ---> A.Public
+      Body ---> A.Private
+   }
+
+   namespace A.G.T #white {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Public -up--> A.Public
+      Public -up--> A.G.Public
+
+      Private -up--> Public
+      Private -up--> A.Public
+      Private -up--> A.Private
+      Private -up--> A.G.Public
+      Private -up--> A.G.Private
+
+      Body -up--> Public
+      Body -up--> Private
+      Body ---> A.Public
+      Body ---> A.Private
+      Body ---> A.G.Public
+      Body ---> A.G.Private
+   }
+
+Because of this automatic visibility, many with clauses would be redundant in
+child packages. For example, we don't have to write
+:ada:`with A; package A.G is`, since the specification of package :ada:`A` is
+already visible in its child packages.
+
+If we focus on package :ada:`A.G` (highlighted in the figure above), we see
+that it only has automatic visibility of its parent :ada:`A`, but not its child
+:ada:`A.G.T`. Also, it doesn't have visibility of its sibling :ada:`A.H`.
+
+
+With clauses and visibility
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the rest of this section, we discuss all the situations where using with
+clauses is necessary to access the information of a package. Let's consider
+this example where we refer to a package :ada:`B` in the specification of a
+package :ada:`A` (using :ada:`with B`):
+
+.. uml::
+   :align: center
+
+   allow_mixing
+
+   skinparam ArrowColor DarkBlue
+
+   namespace B {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Private -up--> Public
+
+      Body -up--> Public
+      Body -up--> Private
+   }
+
+   namespace A {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Public -up--> B.Public #line:DarkGreen;line.bold;text:DarkGreen : with B; package A is
+
+      Private -up--> Public
+      Private -up--> B.Public #line:DarkGreen;line.dotted;text:DarkGreen
+
+      Body -up--> Public
+      Body -up--> Private
+      Body -up--> B.Public #line:DarkGreen;line.dotted;text:DarkGreen
+   }
+
+As we already know, the information from the public part of package :ada:`B` is
+visible in the public part of package :ada:`A`. In addition to that, it's also
+visible in the private part and in the body of package :ada:`A`. This is
+indicated by the dotted green arrows in the figure above.
+
+Now, let's see the case where we refer to package :ada:`B` in the private
+part of package :ada:`A` (using :ada:`private with B`):
+
+.. uml::
+   :align: center
+
+   allow_mixing
+
+   skinparam ArrowColor DarkBlue
+
+   namespace B {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Private -up--> Public
+
+      Body -up--> Public
+      Body -up--> Private
+   }
+
+   namespace A {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Private -up--> Public
+      Private -up-> B.Public #line:DarkGreen;line.bold;text:DarkGreen : private with B; package A is
+
+      Body -up--> Public
+      Body -up--> Private
+      Body -up--> B.Public #line:DarkGreen;line.dotted;text:DarkGreen
+   }
+
+Here, the information is visible in the private part of package :ada:`A`, as
+well as in its body. Finally, let's see the case where we refer to
+package :ada:`B` in the body of package :ada:`A`:
+
+.. uml::
+   :align: center
+
+   allow_mixing
+
+   skinparam ArrowColor DarkBlue
+
+   namespace B {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Private -up--> Public
+
+      Body -up--> Public
+      Body -up--> Private
+   }
+
+   namespace A {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Private -up--> Public
+
+      Body -up--> Public
+      Body -up--> Private
+      Body -up--> B.Public #line:DarkGreen;line.bold;text:DarkGreen : with B; package body A is
+   }
+
+Here, the information is only visible in the body of package :ada:`A`.
+
+
+Circular dependency
+~~~~~~~~~~~~~~~~~~~
+
+Let's return to package :ada:`A` and its descendants. As we've seen in previous
+sections, we cannot refer to a child package in the specification of its parent
+package because that would constitute circular dependency. (For example, we
+cannot write :ada:`with A.G; package A is`.) This situation |mdash| which
+causes a compilation error |mdash| is indicated by the red arrows in the figure
+below:
+
+.. uml::
+   :align: center
+
+   allow_mixing
+
+   skinparam ArrowColor DarkBlue
+
+   namespace A {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Private -up--> Public
+
+      Body -up--> Public
+      Body -up--> Private
+   }
+
+   namespace A.G {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Public -up--> A.Public
+
+      Private -up--> Public
+      Private -up--> A.Public
+      Private -up--> A.Private
+
+      Body -up--> Public
+      Body -up--> Private
+      Body ---> A.Public
+      Body ---> A.Private
+
+      Public x-up- A.Public #line:DarkRed;line.bold;text:DarkRed : with A.G; package A is
+      Public x-- A.Private #line:DarkRed;line.bold;text:DarkRed : private with A.G; package A is
+      Public <--- A.Body #line:DarkGreen;line.bold;text:DarkGreen : with A.G; package body A is
+   }
+
+Note that referring to the child package :ada:`A.G` in the body of its parent
+is perfectly fine.
+
+
+Private packages
+~~~~~~~~~~~~~~~~
+
+The previous examples of this section only showed public packages. As we've
+seen before, we cannot refer to private packages outside of a package
+hierarchy, as we can see in the following example where we try to refer to
+package :ada:`A` and its descendants in the :ada:`Test` procedure:
+
+.. uml::
+   :align: center
+
+   allow_mixing
+
+   left to right direction
+   scale 0.75
+
+   namespace A {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+   }
+
+   namespace A.G << private A.G >> #lightgray {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+   }
+
+   namespace A.H {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+   }
+
+   namespace A.G.T #white {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+   }
+
+   node "procedure Test" as Procedure_Test
+
+   Procedure_Test -up--> A.Public #line:DarkGreen;line.bold;text:DarkGreen   : with A;
+   Procedure_Test -up--> A.H.Public #line:DarkGreen;line.bold;text:DarkGreen   : with A.H;
+   Procedure_Test -up--x A.G.Public #line:DarkRed;line.bold;text:DarkRed : with A.G;
+   Procedure_Test -up--x A.G.T.Public #line:DarkRed;line.bold;text:DarkRed : with A.G.T;
+
+As indicated by the red arrows, we cannot refer to the private child packages
+of :ada:`A` in the :ada:`Test` procedure, only the public child packages.
+Within the package hierarchy itself, we cannot refer to the private package
+:ada:`A.G` in public sibling packages. For example:
+
+.. uml::
+   :align: center
+
+   allow_mixing
+
+   left to right direction
+   scale 0.75
+
+   namespace A {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+   }
+
+   namespace A.G << private A.G >> #lightgray {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Public <--- A.Body #line:DarkGreen;line.bold;text:DarkGreen : with A.G; package body A is
+   }
+
+   namespace A.H {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Public --x A.G.Public #line:DarkRed;line.bold;text:DarkRed : with A.G; package A.H is
+      Private ---> A.G.Public #line:DarkGreen;line.bold;text:DarkGreen : private with A.G; package A.H is
+      Body ---> A.G.Public #line:DarkGreen;line.bold;text:DarkGreen : with A.G; package body A.H is
+   }
+
+   namespace A.I << private A.I >> #lightgray {
+      node Public #white
+      node Private #lightgray
+      node Body #blue
+
+      Public ---> A.G.Public #line:DarkGreen;line.bold;text:DarkGreen : with A.G; private package A.I is
+   }
+
+Here, we cannot refer to the private package :ada:`A.G` in the public package
+:ada:`A.H` |mdash| as indicated by the red arrow. However, we can refer to the
+private package :ada:`A.G` in other private packages, such as :ada:`A.I`
+|mdash| as indicated by the green arrows.
 
 Use type clause
 ---------------
