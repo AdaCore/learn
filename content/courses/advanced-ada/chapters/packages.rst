@@ -1303,11 +1303,156 @@ private package :ada:`A.G` in other private packages, such as :ada:`A.I`
 Use type clause
 ---------------
 
-.. admonition:: Relevant topics
+Back in the :ref:`Introduction to Ada course <Intro_Ada_Use_Clause>`, we've
+seen that use clauses provide direct visibility to a package in the scope where
+they're used.
 
-    - :ada:`use type` clause mentioned in
-      `Use Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-8-4.html>`_
+For example, consider this simple procedure:
 
-.. todo::
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.No_Use_Clause
 
-    Complete section!
+    with Ada.Text_IO;
+
+    procedure Display_Message is
+    begin
+       Ada.Text_IO.Put_Line ("Hello World!");
+    end Display_Message;
+
+By adding :ada:`use Ada.Text_IO` to this code, we make the complete
+:ada:`Ada.Text_IO` package directly visible in the scope of the
+:ada:`Display_Message` procedure, so we can now just write :ada:`Put_Line`
+instead of :ada:`Ada.Text_IO.Put_Line`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Clause
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Display_Message is
+    begin
+       Put_Line ("Hello World!");
+    end Display_Message;
+
+In this section, we discuss other forms of use clauses: :ada:`use type` and
+:ada:`use all type`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `8.4 Use Clauses <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-8-4.html>`_
+
+Another use clause example
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's now consider a simple package called :ada:`Points`, which contains the
+declaration of the :ada:`Point` type and two primitive: an :ada:`Init` function
+and an addition operator.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    package Points is
+
+       type Point is private;
+
+       function Init return Point;
+
+       function "+" (P : Point; I : Integer) return Point;
+
+    private
+
+       type Point is record
+          X, Y : Integer;
+       end record;
+
+       function Init return Point is (0, 0);
+
+       function "+" (P : Point; I : Integer) return Point is
+         (P.X + I, P.Y + I);
+
+    end Points;
+
+We can implement a simple procedure that makes use of this package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    with Points; use Points;
+
+    procedure Show_Point is
+       P : Point;
+    begin
+       P := Init;
+       P := P + 1;
+    end Show_Point;
+
+Here, we have a use clause, so we have direct visibility of the :ada:`Points`
+package.
+
+Visibility and Readability
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In certain situations, however, we might want to avoid the use clause. If
+that's the case, we can rewrite the previous implementation by removing the use
+clause and specifying the :ada:`Points` package in the prefixed form:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    with Points;
+
+    procedure Show_Point is
+       P : Points.Point;
+    begin
+       P := Points.Init;
+       P := Points."+" (P, 1);
+    end Show_Point;
+
+Although this code is correct, it might be difficult to read, as we have to
+specify the package whenever we're referring to a type or a subprogram from
+that package. Even worse: we now have to write operators in the prefixed form
+|mdash| such as :ada:`Points."+" (P, 1)`.
+
+:ada:`use type`
+~~~~~~~~~~~~~~~
+
+As a compromise, we can have direct visibility of the operators of a certain
+type. We do this by using a use clause in the form :ada:`use type`. This allows
+us to simplify the previous example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    with Points;
+
+    procedure Show_Point is
+       use type Points.Point;
+
+       P : Points.Point;
+    begin
+       P := Points.Init;
+       P := P + 1;
+    end Show_Point;
+
+Note that :ada:`use type` just gives us direct visibility of the operators of a
+certain type, but not other primitives. For this reason, we still have to write
+:ada:`Points.Init` in the code example.
+
+:ada:`use all type`
+~~~~~~~~~~~~~~~~~~~
+
+If we want to have direct visibility of all primitives of a certain type (and
+not just its operators), we need to write a use clause in the form
+:ada:`use all type`. This allows us to simplify the previous example even
+further:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    with Points;
+
+    procedure Show_Point is
+       use all type Points.Point;
+
+       P : Points.Point;
+    begin
+       P := Init;
+       P := P + 1;
+    end Show_Point;
+
+Now, we've removed the prefix from all operations on the :ada:`P` variable.
+
+
