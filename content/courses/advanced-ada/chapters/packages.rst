@@ -1481,14 +1481,14 @@ procedure that shows the value of a :ada:`Complex` object:
     generic
        with package Complex_Types is new
          Ada.Numerics.Generic_Complex_Types (<>);
-    procedure Show_Any_Complex (Msg: String;
-                                Val: Complex_Types.Complex);
+    procedure Show_Any_Complex (Msg : String;
+                                Val : Complex_Types.Complex);
 
     with Ada.Text_IO;
     with Ada.Text_IO.Complex_IO;
 
-    procedure Show_Any_Complex (Msg: String;
-                                Val: Complex_Types.Complex)
+    procedure Show_Any_Complex (Msg : String;
+                                Val : Complex_Types.Complex)
     is
        package Complex_Float_Types_IO is new
          Ada.Text_IO.Complex_IO (Complex_Types);
