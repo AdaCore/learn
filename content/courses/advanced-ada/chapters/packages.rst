@@ -1456,3 +1456,243 @@ further:
 Now, we've removed the prefix from all operations on the :ada:`P` variable.
 
 
+Use clause and naming conflicts
+-------------------------------
+
+Visibility issues may arise when we have multiple use clauses. For instance,
+we might have types with the same name declared in multiple packages. This
+constitutes a naming conflict; in this case, the types become hidden |mdash| so
+they're not directly visible anymore, even if we have a use clause.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `8.4 Use Clauses <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-8-4.html>`_
+
+Code example
+~~~~~~~~~~~~
+
+Let's start with a code example. First, we declare and implement a generic
+procedure that shows the value of a :ada:`Complex` object:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics.Generic_Complex_Types;
+
+    generic
+       with package Complex_Types is new
+         Ada.Numerics.Generic_Complex_Types (<>);
+    procedure Show_Any_Complex (Msg: String;
+                                Val: Complex_Types.Complex);
+
+    with Ada.Text_IO;
+    with Ada.Text_IO.Complex_IO;
+
+    procedure Show_Any_Complex (Msg: String;
+                                Val: Complex_Types.Complex)
+    is
+       package Complex_Float_Types_IO is new
+         Ada.Text_IO.Complex_IO (Complex_Types);
+       use Complex_Float_Types_IO;
+
+       use Ada.Text_IO;
+    begin
+       Put (Msg & " ");
+       Put (Val);
+       New_Line;
+    end Show_Any_Complex;
+
+Then, we implement a test procedure where we declare the
+:ada:`Complex_Float_Types` package as an instance of the
+:ada:`Generic_Complex_Types` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use Complex_Float_Types;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       C, D, X : Complex;
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+    end Show_Use;
+
+In this example, we declare variables of the :ada:`Complex` type, initialize
+them and use them in operations. Note that we have direct visibility of the
+package instance because we've added a simple use clause after the package
+instantiation |mdash| see :ada:`use Complex_Float_Types` in the example.
+
+Naming conflict
+~~~~~~~~~~~~~~~
+
+Now, let's add the declaration of the :ada:`Complex_Long_Float_Types` package
+|mdash| a second instantiation of the :ada:`Generic_Complex_Types` package
+|mdash| to the code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+    :class: ada-expect-compile-error
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use Complex_Float_Types;
+
+       package Complex_Long_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+       use Complex_Long_Float_Types;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       C, D, X : Complex;
+       --        ^ ERROR: type is hidden!
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+    end Show_Use;
+
+This example doesn't compile because we have direct visibility of both
+:ada:`Complex_Float_Types` and :ada:`Complex_Long_Float_Types` packages, and
+both of them declare the :ada:`Complex` type. In this case, the type
+declaration becomes hidden, as the compiler cannot decide which declaration of
+:ada:`Complex` it should take.
+
+Circumventing naming conflicts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we know, a simple fix for this compilation error is to add the package
+prefix in the variable declaration:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use Complex_Float_Types;
+
+       package Complex_Long_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+       use Complex_Long_Float_Types;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       C, D, X : Complex_Float_Types.Complex;
+       --        ^ SOLVED: package is now specified.
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+    end Show_Use;
+
+Another possibility is to write a use clause in the form :ada:`use all type`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use all type Complex_Float_Types.Complex;
+
+       package Complex_Long_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+       use all type Complex_Long_Float_Types.Complex;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       C, D, X : Complex_Float_Types.Complex;
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+    end Show_Use;
+
+For the sake of completeness, let's declare and use variables of both
+:ada:`Complex` types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use all type Complex_Float_Types.Complex;
+
+       package Complex_Long_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+       use all type Complex_Long_Float_Types.Complex;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       procedure Show_Complex_Long_Float is new
+         Show_Any_Complex (Complex_Long_Float_Types);
+
+       C, D, X : Complex_Float_Types.Complex;
+       E, F, Y : Complex_Long_Float_Types.Complex;
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+
+       E := Compose_From_Polar (3.0, Pi / 2.0);
+       F := Compose_From_Polar (5.0, Pi / 2.0);
+       Y := E + F;
+
+       Show_Complex_Long_Float ("E:", E);
+       Show_Complex_Long_Float ("F:", F);
+       Show_Complex_Long_Float ("Y:", Y);
+    end Show_Use;
+
+As expected, the code compiles correctly.
