@@ -1456,8 +1456,8 @@ further:
 Now, we've removed the prefix from all operations on the :ada:`P` variable.
 
 
-Use clause and naming conflicts
--------------------------------
+Use clauses and naming conflicts
+--------------------------------
 
 Visibility issues may arise when we have multiple use clauses. For instance,
 we might have types with the same name declared in multiple packages. This
