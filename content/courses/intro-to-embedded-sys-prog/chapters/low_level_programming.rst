@@ -464,19 +464,19 @@ That said, we can create our own pool types and define precisely how
 they are sized and how allocation and deallocation work, so in that case
 querying the size for access types could be more useful.
 
-For an array type or object, :ada`'Component_Size` provides the size in
+For an array type or object, :ada:`'Component_Size` provides the size in
 bits of the individual components.
 
 More useful are the following two attributes that query a degree
 of memory sharing between objects.
 
-Applied to an object, :ada`'Has_Same_Storage` is a Boolean function that takes
+Applied to an object, :ada:`'Has_Same_Storage` is a Boolean function that takes
 another object of any type as the argument. It returns whether the two
 objects' representations occupy exactly the same bits. If the
 representation is contiguous, the objects sit at the same address and
 occupy the same length of memory.
 
-Applied to an object, :ada`'Overlaps_Storage` is a Boolean function that takes
+Applied to an object, :ada:`'Overlaps_Storage` is a Boolean function that takes
 another object of any type as the argument. It returns whether the two
 objects' representations share at least one bit.
 
