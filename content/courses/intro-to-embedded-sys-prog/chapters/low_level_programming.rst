@@ -1783,7 +1783,7 @@ in this case, are allowed but not required.
 
 Now that you understand the Contract Model (perhaps more than you
 cared), we are ready to examine the generic formal type parameters for
-Ada.Unchecked_Conversion. Here's the declaration again:
+:ada:`Ada.Unchecked_Conversion`. Here's the declaration again:
 
 .. code-block:: ada
 
