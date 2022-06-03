@@ -116,7 +116,7 @@ resets (erases) all the information from the file. For example:
     end Show_Text_File_Reset;
 
 By running this program, we notice that, although we've written the first
-string (:ada:`Hello World #1`) to the file, it has been erased because of the
+string (:ada:`"Hello World #1"`) to the file, it has been erased because of the
 call to :ada:`Reset`.
 
 In addition to opening a file for reading or writing, you can also open an

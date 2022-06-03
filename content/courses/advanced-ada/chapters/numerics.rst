@@ -1571,7 +1571,7 @@ values" of a decimal type. For example:
   :ada:`'Delta` is a power of 10 greater than 1, and it would be the number of
   zero digits that every value would end in.
 
-The :ada:`'Scale` corresponds to the N used in the :ada:`delta 10.0 ** (–N)`
+The :ada:`'Scale` corresponds to the N used in the :ada:`delta 10.0 ** (-N)`
 expression of the type declaration. For example, if we write
 :ada:`delta 10.0 ** (-3)` in the declaration of a type :ada:`T`, then the value
 of :ada:`T'Scale` is three.

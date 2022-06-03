@@ -1257,8 +1257,8 @@ Now let's look into the details. We'll use a case study for this
 purpose, including specifying sizes as well as alignments.
 
 The code for the case study is as follows. It uses :ada:`Size` clauses to
-specify the :ada:`Size`s, instead of the :ada:`Size` aspect, just to emphasize that
-the :ada:`Size` clause approach is not obsolete.
+specify the :ada:`Size`\ s, instead of the :ada:`Size` aspect, just to
+emphasize that the :ada:`Size` clause approach is not obsolete.
 
 .. code-block:: ada
 

@@ -694,7 +694,7 @@ Now, back to our GPIO port/bin locking example. The port type is declared as fol
       ...
    end record with ...
 
-We've elided all but the :ada:`LCKR' component representing the "lock register" within each port. We'd have a record representation clause to ensure the required layout but that's not important here. :ada:`Word` is an unsigned (modular) 32-bit integer type. One of the hardware requirements for accessing the lock register is that the entire register has to be read or written whenever any bits within it are accessed. The compiler must not, for example, write one of the bytes within the register in order to set or clear a bit within that part of the register. Therefore we mark the register as Atomic. If the compiler cannot honor that aspect the compilation will fail, so we would know there is a problem.
+We've elided all but the :ada:`LCKR` component representing the "lock register" within each port. We'd have a record representation clause to ensure the required layout but that's not important here. :ada:`Word` is an unsigned (modular) 32-bit integer type. One of the hardware requirements for accessing the lock register is that the entire register has to be read or written whenever any bits within it are accessed. The compiler must not, for example, write one of the bytes within the register in order to set or clear a bit within that part of the register. Therefore we mark the register as Atomic. If the compiler cannot honor that aspect the compilation will fail, so we would know there is a problem.
 
 Per the ST Micro Reference Manual, the lock control bit is referred to as :ada:`LCKK` and is bit #16, i.e., the first in the upper half of the :ada:`LCKR` register word.
 
@@ -782,7 +782,7 @@ The Ada procedure works, but only if the optimizer is enabled (which also preclu
 
 We've combined the instructions into one :ada:`Asm` expression. As a result, we can use ASCII line-feed and horizontal tab characters to format the listing produced by the compiler so that each instruction is on a separate line and aligned with the previous instruction, as if we had written the sequence in assembly language directly. That enhances readability later, during examination of the compiler output to verify the required sequence was emitted.
 
-In the above, :ada:`%0` is the first input, containing the address of the :ada:`Port` parameter. :ada:`%1` is the other input, the value of the :ada:`Pin` parameter. We're using register :ada:`r3` explicitly, as the "temporary" variable, so we tell the compiler that it has been "clobbered."
+In the above, :ada:`"%0"` is the first input, containing the address of the :ada:`Port` parameter. :ada:`"%1"` is the other input, the value of the :ada:`Pin` parameter. We're using register :ada:`r3` explicitly, as the "temporary" variable, so we tell the compiler that it has been "clobbered."
 
 If we examine the assembly language output from compiling the file, we find the body of procedure Lock is as hoped:
 
