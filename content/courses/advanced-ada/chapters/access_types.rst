@@ -11,14 +11,6 @@ Ragged arrays
     Complete section!
 
 
-Access to subprograms
----------------------
-
-.. todo::
-
-    Complete section!
-
-
 Aliasing
 --------
 
