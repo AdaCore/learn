@@ -414,6 +414,11 @@ the stack |mdash| is initialized from a variable in an external package.
 Because of this, we must include :ada:`Max` as part of the state abstraction
 :ada:`The_Stack`.
 
+.. note::
+
+   For more details on state abstractions, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/package_contracts.html#state-abstraction>`__.
+
 
 Subprogram Contracts
 ---------------------------------------------------------------------
@@ -674,6 +679,11 @@ specification.
 
     end Stack;
 
+.. note::
+
+   For more details on refinement in contracts, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#state-abstraction-and-contracts>`__.
+
 Initialization of Local Variables
 ---------------------------------------------------------------------
 
@@ -767,6 +777,11 @@ GNATprove computes dependencies of initial values if you don't supply an
 :ada:`Initializes` aspect for a package, it must be complete: you must list
 every initialized state of the package, along with all its external
 dependencies.
+
+.. note::
+
+   For more details on :ada:`Initializes`, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/package_contracts.html#package-initialization>`__.
 
 
 Code Examples / Pitfalls

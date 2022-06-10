@@ -526,6 +526,11 @@ contracts.
 
     end Action_Sequence;
 
+.. note::
+
+   For more details on ghost code, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/specification_features.html#ghost-code>`__.
+
 Guide Proof
 ---------------------------------------------------------------------
 
@@ -911,6 +916,11 @@ iterations). It also proves that none of the elements of :ada:`A` are equal to
 :ada:`E` after the loop exits by assuming that the loop invariant holds in the
 last iteration of the loop.
 
+.. note::
+
+   For more details on loop invariants, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/assertion_pragmas.html#loop-invariants>`__.
+
 Finding a good loop invariant can turn out to be quite a challenge.  To
 make this task easier, let's review the four good properties of a good loop
 invariant:
@@ -1060,6 +1070,11 @@ index :ada:`K` is stored at index :ada:`K-1`:
     
 You need to uncomment the second loop invariant containing the frame condition
 in order to prove the assertion after the loop.
+
+.. note::
+
+   For more details on how to write a loop invariant, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/how_to_write_loop_invariants.html>`__.
 
 
 Code Examples / Pitfalls
