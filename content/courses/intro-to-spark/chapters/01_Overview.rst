@@ -358,6 +358,11 @@ rejected in SPARK due to aliasing:
 After the assignment of :ada:`X` to :ada:`Y`, variable :ada:`X` cannot be used anymore
 to read or write the underlying allocated memory.
 
+.. note::
+
+   For more details on these limitations, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/language_restrictions.html#language-restrictions>`_.
+
 Designating SPARK Code
 ---------------------------------------------------------------------
 
@@ -412,6 +417,11 @@ subprogram. This prevents setting :ada:`SPARK_Mode` to `On` for subunits of
 a unit with :ada:`SPARK_Mode` `Off` and switching back to :ada:`SPARK_Mode`
 `On` for a part of a given unit where it was set fo `Off` in a previous
 part.
+
+.. note::
+
+   For more details on the use of :ada:`SPARK_Mode`, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/spark_mode.html#>`_.
 
 
 Code Examples / Pitfalls

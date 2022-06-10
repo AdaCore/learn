@@ -76,6 +76,11 @@ may be uninitialized. Flow analysis detects and reports this error.
 
     end Show_Uninitialized;
 
+.. note::
+
+   For more details on how flow analysis verifies data initialization, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/language_restrictions.html#data-initialization-policy>`_.
+
 Ineffective Statements
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -263,6 +268,11 @@ variables, you set the value of the global contract to :ada:`null`.
 
     end Show_Global_Contracts;
 
+.. note::
+
+   For more details on global contracts, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#data-dependencies>`_.
+
 Depends Contracts
 ~~~~~~~~~~~~~~~~~
 
@@ -361,6 +371,11 @@ also silences flow analysis' warning about unused parameters. You can also
 write :ada:`null` on the right of a dependency relation to indicate that an
 output doesn't depend on any input. We do that above for the procedure
 :ada:`Set_X_To_Zero`.
+
+.. note::
+
+   For more details on depends contracts, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#flow-dependencies>`_.
 
 Shortcomings
 ---------------------------------------------------------------------

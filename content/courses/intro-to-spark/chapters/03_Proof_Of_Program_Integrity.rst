@@ -225,6 +225,11 @@ GNATprove now sees the call to :ada:`Increment` exactly as if the increment on
 :ada:`X` was done outside that call, so it can successfully verify that
 neither addition can overflow.
 
+.. note::
+
+   For more details on contextual analysis of subprograms, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/how_to_write_subprogram_contracts.html#contextual-analysis-of-subprograms-without-contracts>`_.
+
 The other case involves functions. If we define a function as an expression
 function, with or without contracts, GNATprove uses the expression itself
 as the postcondition on the result of the function.
@@ -248,6 +253,11 @@ GNATprove to successfully verify the overflow check in the addition.
        X := X + 1;
        --  info: overflow check proved
     end Show_Modularity;
+
+.. note::
+
+   For more details on expression functions, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/specification_features.html#expression-functions>`_.
 
 Contracts
 ---------------------------------------------------------------------
@@ -326,6 +336,10 @@ precondition violation, since a precondition is really a contract for the
 caller. On the other hand, it doesn't need :ada:`Absolute` to be called to
 detect that its postcondition doesn't hold for all its possible inputs.
 
+.. note::
+
+   For more details on pre and postconditions, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#preconditions>`_.
 
 Executable Semantics
 ~~~~~~~~~~~~~~~~~~~~
@@ -371,6 +385,11 @@ digit).  For both, you can either reduce the number of overflow checks (the
 value 2), completely eliminate them (the value 3), or preserve the default
 Ada semantics (the value 1).
 
+.. note::
+
+   For more details on overflow modes, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/overflow_modes.html>`_.
+
 
 Additional Assertions and Contracts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -394,6 +413,11 @@ you must use it with great care.  Here's an example of using it.
        pragma Assume (X < Integer'Last);
        X := X + 1;
     end Incr;
+
+.. note::
+
+   For more details on pragma :ada:`Assume`, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/assertion_pragmas.html#pragma-assume>`_.
 
 The :ada:`Contract_Cases` aspect is another construct introduced for
 GNATprove, but which also acts as an assertion during execution. It allows
@@ -423,6 +447,11 @@ verifies the :ada:`Contract_Cases` only once.  It verifies the validity of
 each consequence (given the truth of its guard) and the disjointness and
 completeness of the guard conditions (meaning that exactly one guard must
 be true for each possible set of input values).
+
+.. note::
+
+   For more details on :ada:`Contract_Cases`, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#contract-cases>`_.
 
 
 .. _Intro_SPARK_Debugging_Failed_Proof_Attempts:
@@ -702,6 +731,11 @@ may seem surprising, but non-linear arithmetic, involving, for example,
 multiplication, modulo, or exponentiation, is a difficult topic for provers
 and is not handled very well in practice by any of the general-purpose ones
 like Alt-Ergo, CVC4, or Z3.
+
+.. note::
+
+   For more details on how to investigate unproved checks, see the
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/how_to_investigate_unproved_checks.html>`_.
 
 
 Code Examples / Pitfalls
