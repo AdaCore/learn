@@ -82,7 +82,7 @@ The tool for formal verification of the SPARK language is called
 flow analysis and proof of the source code. Several other tools support the
 SPARK language, including both the `GNAT compiler
 <https://www.adacore.com/gnatpro>`_ and the `GNAT Studio integrated development
-environment <https://www.adacore.com/gnatpro/toolsuite/gps>`__.
+environment <https://www.adacore.com/gnatpro/toolsuite/gps>`_.
 
 
 A trivial example
@@ -261,7 +261,7 @@ No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Another restriction imposed by the SPARK subset concerns `aliasing
-<https://en.wikipedia.org/wiki/Aliasing_(computing)>`__. We say that two
+<https://en.wikipedia.org/wiki/Aliasing_(computing)>`_. We say that two
 names are `aliased` if they refer to the same object. There are two reasons
 why aliasing is forbidden in SPARK:
 

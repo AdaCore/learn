@@ -829,7 +829,7 @@ invariant in two steps: first, it checks that it holds for the first
 iteration of the loop and then it checks that it holds in an arbitrary
 iteration assuming it held in the previous iteration.  This is called
 `proof by induction
-<https://en.wikipedia.org/wiki/Mathematical_induction>`__.
+<https://en.wikipedia.org/wiki/Mathematical_induction>`_.
 
 As an example, let's add a loop invariant to the :ada:`Find` function stating
 that the first element of :ada:`A` is not :ada:`E`.
@@ -919,7 +919,7 @@ last iteration of the loop.
 .. note::
 
    For more details on loop invariants, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/assertion_pragmas.html#loop-invariants`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/assertion_pragmas.html#loop-invariants>`__.
 
 Finding a good loop invariant can turn out to be quite a challenge.  To
 make this task easier, let's review the four good properties of a good loop
