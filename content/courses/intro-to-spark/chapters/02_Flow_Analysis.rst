@@ -79,7 +79,7 @@ may be uninitialized. Flow analysis detects and reports this error.
 .. note::
 
    For more details on how flow analysis verifies data initialization, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/language_restrictions.html#data-initialization-policy>`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/language_restrictions.html#data-initialization-policy>`__.
 
 Ineffective Statements
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -271,7 +271,7 @@ variables, you set the value of the global contract to :ada:`null`.
 .. note::
 
    For more details on global contracts, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#data-dependencies>`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#data-dependencies>`__.
 
 Depends Contracts
 ~~~~~~~~~~~~~~~~~
@@ -375,7 +375,7 @@ output doesn't depend on any input. We do that above for the procedure
 .. note::
 
    For more details on depends contracts, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#flow-dependencies>`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#flow-dependencies>`__.
 
 Shortcomings
 ---------------------------------------------------------------------

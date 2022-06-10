@@ -529,7 +529,7 @@ contracts.
 .. note::
 
    For more details on ghost code, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/specification_features.html#ghost-code>`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/specification_features.html#ghost-code>`__.
 
 Guide Proof
 ---------------------------------------------------------------------
@@ -829,7 +829,7 @@ invariant in two steps: first, it checks that it holds for the first
 iteration of the loop and then it checks that it holds in an arbitrary
 iteration assuming it held in the previous iteration.  This is called
 `proof by induction
-<https://en.wikipedia.org/wiki/Mathematical_induction>`_.
+<https://en.wikipedia.org/wiki/Mathematical_induction>`__.
 
 As an example, let's add a loop invariant to the :ada:`Find` function stating
 that the first element of :ada:`A` is not :ada:`E`.

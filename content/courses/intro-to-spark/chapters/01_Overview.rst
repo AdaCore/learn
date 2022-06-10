@@ -82,7 +82,7 @@ The tool for formal verification of the SPARK language is called
 flow analysis and proof of the source code. Several other tools support the
 SPARK language, including both the `GNAT compiler
 <https://www.adacore.com/gnatpro>`_ and the `GNAT Studio integrated development
-environment <https://www.adacore.com/gnatpro/toolsuite/gps>`_.
+environment <https://www.adacore.com/gnatpro/toolsuite/gps>`__.
 
 
 A trivial example
@@ -261,7 +261,7 @@ No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Another restriction imposed by the SPARK subset concerns `aliasing
-<https://en.wikipedia.org/wiki/Aliasing_(computing)>`_. We say that two
+<https://en.wikipedia.org/wiki/Aliasing_(computing)>`__. We say that two
 names are `aliased` if they refer to the same object. There are two reasons
 why aliasing is forbidden in SPARK:
 
@@ -361,7 +361,7 @@ to read or write the underlying allocated memory.
 .. note::
 
    For more details on these limitations, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/language_restrictions.html#language-restrictions>`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/language_restrictions.html#language-restrictions>`__.
 
 Designating SPARK Code
 ---------------------------------------------------------------------
@@ -421,7 +421,7 @@ part.
 .. note::
 
    For more details on the use of :ada:`SPARK_Mode`, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/spark_mode.html#>`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/spark_mode.html#>`__.
 
 
 Code Examples / Pitfalls

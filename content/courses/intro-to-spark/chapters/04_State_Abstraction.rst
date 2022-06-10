@@ -417,7 +417,7 @@ Because of this, we must include :ada:`Max` as part of the state abstraction
 .. note::
 
    For more details on state abstractions, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/package_contracts.html#state-abstraction>`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/package_contracts.html#state-abstraction>`__.
 
 
 Subprogram Contracts
@@ -682,7 +682,7 @@ specification.
 .. note::
 
    For more details on refinement in contracts, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#state-abstraction-and-contracts>`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#state-abstraction-and-contracts>`__.
 
 Initialization of Local Variables
 ---------------------------------------------------------------------
@@ -781,7 +781,7 @@ dependencies.
 .. note::
 
    For more details on :ada:`Initializes`, see the
-   `SPARK User's Guide https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/package_contracts.html#package-initialization>`_.
+   `SPARK User's Guide https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/package_contracts.html#package-initialization>`__.
 
 
 Code Examples / Pitfalls
