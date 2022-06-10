@@ -1074,7 +1074,7 @@ in order to prove the assertion after the loop.
 .. note::
 
    For more details on how to write a loop invariant, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/how_to_write_loop_invariants.html`_.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/how_to_write_loop_invariants.html>`__.
 
 
 Code Examples / Pitfalls
