@@ -781,7 +781,7 @@ dependencies.
 .. note::
 
    For more details on :ada:`Initializes`, see the
-   `SPARK User's Guide https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/package_contracts.html#package-initialization>`__.
+   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/package_contracts.html#package-initialization>`__.
 
 
 Code Examples / Pitfalls
