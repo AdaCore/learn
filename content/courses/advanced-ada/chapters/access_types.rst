@@ -3,6 +3,8 @@ Access Types
 
 .. include:: ../../global.txt
 
+.. _Adv_Ada_Ragged_Arrays:
+
 Ragged arrays
 -------------
 
@@ -225,14 +227,488 @@ automatically has the correct range.
 Aliasing
 --------
 
-.. admonition:: Relevant topics
+The term `aliasing <https://en.wikipedia.org/wiki/Aliasing_(computing)>`_
+refers to objects in memory that we can access using more than a single
+reference. In Ada, if we allocate an object via :ada:`new`, we have an
+aliased object. We can then have multiple references to this object:
 
-    - aliased objects
-    - aliased parameters
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Aliasing_Via_Access
 
-.. todo::
+    with Ada.Text_IO; use Ada.Text_IO;
 
-    Complete section!
+    procedure Show_Aliasing is
+       type Integer_Access is access Integer;
+
+       A1, A2 : Integer_Access;
+    begin
+       A1 := new Integer;
+       A2 := A1;
+
+       A1.all := 22;
+       Put_Line ("A1: " & Integer'Image (A1.all));
+       Put_Line ("A2: " & Integer'Image (A2.all));
+
+       A2.all := 24;
+       Put_Line ("A1: " & Integer'Image (A1.all));
+       Put_Line ("A2: " & Integer'Image (A2.all));
+    end Show_Aliasing;
+
+In this example, we access the object allocated via :ada:`new` by using either
+:ada:`A1` or :ada:`A2`, as both refer to the same *aliased* object. In other
+words, :ada:`A1` or :ada:`A2` allow us to access the same object in memory.
+
+.. admonition:: Important
+
+    Note that aliasing is unrelated to renaming. For example, we could use
+    renaming to write a program that looks similar to the one above:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Renaming
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Renaming is
+           A1 : Integer;
+           A2 : Integer renames A1;
+        begin
+           A1 := 22;
+           Put_Line ("A1: " & Integer'Image (A1));
+           Put_Line ("A2: " & Integer'Image (A2));
+
+           A2 := 24;
+           Put_Line ("A1: " & Integer'Image (A1));
+           Put_Line ("A2: " & Integer'Image (A2));
+        end Show_Renaming;
+
+    Here, :ada:`A1` or :ada:`A2` are two different names for the same object.
+    However, the object itself isn't aliased.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`_
+
+
+Aliased objects
+~~~~~~~~~~~~~~~
+
+In addition to using :ada:`new` to declare aliased objects, we can indicate
+that an object is aliased by using the :ada:`aliased` keyword in the object's
+declaration: :ada:`Obj : aliased Integer;`.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Access_Aliased_Obj
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Aliased_Obj is
+       type Integer_Access is access all Integer;
+
+       I_Var : aliased Integer;
+       A1    : Integer_Access;
+    begin
+       A1 := I_Var'Access;
+
+       A1.all := 22;
+       Put_Line ("A1: " & Integer'Image (A1.all));
+    end Show_Aliased_Obj;
+
+Here, we declare :ada:`I_Var` as an aliased integer variable and get a
+reference to it, which we assign to :ada:`A1`. Naturally, we could also have
+two accesses :ada:`A1` and :ada:`A2`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Access_Aliased_Obj
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Aliased_Obj is
+       type Integer_Access is access all Integer;
+
+       I_Var  : aliased Integer;
+       A1, A2 : Integer_Access;
+    begin
+       A1 := I_Var'Access;
+       A2 := A1;
+
+       A1.all := 22;
+       Put_Line ("A1: " & Integer'Image (A1.all));
+       Put_Line ("A2: " & Integer'Image (A2.all));
+
+       A2.all := 24;
+       Put_Line ("A1: " & Integer'Image (A1.all));
+       Put_Line ("A2: " & Integer'Image (A2.all));
+
+    end Show_Aliased_Obj;
+
+In this example, both :ada:`A1` and :ada:`A2` refer to the :ada:`I_Var`
+variable.
+
+Note that these examples make use of these two features:
+
+1. The declaration of an access-to-variable type (:ada:`Integer_Access`)
+   using :ada:`access all`.
+
+2. The retrieval of a reference to :ada:`I_Var` using the :ada:`Access`
+   attribute.
+
+In the next sections, we discuss these features in more details.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.3.1 Object Declarations <http://www.ada-auth.org/standards/12rm/html/RM-3-3-1.html>`_
+    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`_
+
+General access modifiers
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+In addition to the *standard* access type declarations, Ada provides two access
+modifiers:
+
++--------------------+----------------------------------------+
+| Type               | Declaration                            |
++====================+========================================+
+| Access-to-variable | :ada:`type T_Acc is access all T`      |
++--------------------+----------------------------------------+
+| Access-to-constant | :ada:`type T_Acc is access constant T` |
++--------------------+----------------------------------------+
+
+Let's look at an example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Show_Access_Modifiers
+
+    package Integer_Access_Types is
+
+       type Integer_Access is
+         access Integer;
+
+       type Integer_Access_All is
+         access all Integer;
+
+       type Integer_Access_Const is
+         access constant Integer;
+
+    end Integer_Access_Types;
+
+As we've seen previously, we can use a type such as :ada:`Integer_Access` to
+allocate objects dynamically. However, we cannot use this type to refer to
+variables, for example. In this case, we have to use an access-to-variable type
+such as :ada:`Integer_Access_All`. Also, if we want to access constants, we use
+a type such as :ada:`Integer_Access_Const`.
+
+
+Access attribute
+^^^^^^^^^^^^^^^^
+
+To get access to a variable or a constant, we make use of the :ada:`'Access`
+attribute. For example, :ada:`I_Var'Access` gives us access to the :ada:`I_Var`
+object.
+
+Let's look at an example of how to use the integer access types from the
+previous code snippet:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Show_Access_Modifiers
+
+    package Integer_Access_Types is
+
+       type Integer_Access is
+         access Integer;
+
+       type Integer_Access_All is
+         access all Integer;
+
+       type Integer_Access_Const is
+         access constant Integer;
+
+       procedure Show;
+
+    end Integer_Access_Types;
+
+    with Ada.Text_IO;          use Ada.Text_IO;
+
+    package body Integer_Access_Types is
+
+       I_Var : aliased          Integer :=  0;
+       Fact  : aliased constant Integer := 42;
+
+       Dyn_Ptr   : constant Integer_Access       := new Integer'(30);
+       I_Var_Ptr : constant Integer_Access_All   := I_Var'Access;
+       Fact_Ptr  : constant Integer_Access_Const := Fact'Access;
+
+       procedure Show is
+       begin
+          Put_Line ("Dyn_Ptr:   " & Integer'Image (Dyn_Ptr.all));
+          Put_Line ("I_Var_Ptr: " & Integer'Image (I_Var_Ptr.all));
+          Put_Line ("Fact_Ptr:  " & Integer'Image (Fact_Ptr.all));
+       end Show;
+
+    end Integer_Access_Types;
+
+    with Integer_Access_Types;
+
+    procedure Show_Access_Modifiers is
+    begin
+       Integer_Access_Types.Show;
+    end Show_Access_Modifiers;
+
+In this example, :ada:`Dyn_Ptr` refers to a dynamically allocated object,
+:ada:`I_Var_Ptr` refers to the :ada:`I_Var` variable, and :ada:`Fact_Ptr`
+refers to the :ada:`Fact` constant. We get access to the variable and the
+constant objects by using the :ada:`'Access` attribute.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.10.2 Operations of Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10-2.html>`_
+
+
+Non-aliased objects
+^^^^^^^^^^^^^^^^^^^
+
+By default, statically allocated objects |mdash| i.e. without using :ada:`new`
+|mdash| are not aliased. Therefore, we cannot have get a reference to those
+objects. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Access_Non_Aliased_Obj
+    :class: ada-expect-compile-error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Access_Error is
+       type Integer_Access is access all Integer;
+       I_Var : Integer;
+       A1    : Integer_Access;
+    begin
+       A1 := I_Var'Access;
+
+       A1.all := 22;
+       Put_Line ("A1: " & Integer'Image (A1.all));
+    end Show_Access_Error;
+
+In this example, the compiler complains that we cannot get a reference to
+:ada:`I_Var` because :ada:`I_Var` is not aliased.
+
+
+Ragged arrays using aliased objects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can use aliased objects to declare
+:ref:`ragged arrays <Adv_Ada_Ragged_Arrays>`. For example, we can rewrite a
+previous program using aliased constant objects:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Ragged_Array_Aliased_Objs
+
+    package Data_Processing is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+    private
+
+       type Integer_Array_Access is access constant Integer_Array;
+
+       Tab_1 : aliased constant Integer_Array := (1 => 15);
+       Tab_2 : aliased constant Integer_Array := (12, 15, 20);
+       Tab_3 : aliased constant Integer_Array := (12, 15, 20,
+                                                  20, 25, 30);
+
+       Table : constant array (1 .. 3) of Integer_Array_Access :=
+         (1 => Tab_1'Access,
+          2 => Tab_2'Access,
+          3 => Tab_3'Access);
+
+    end Data_Processing;
+
+Here, instead of allocating the constant arrays dynamically via :ada:`new`, we
+declare three aliased arrays (:ada:`Tab_1`, :ada:`Tab_2` and :ada:`Tab_3`) and
+get a reference to them in the declaration of :ada:`Table`.
+
+
+Aliased access objects
+^^^^^^^^^^^^^^^^^^^^^^
+
+It's interesting to mention that access objects can be aliased themselves.
+Consider this example where we declare the :ada:`Integer_Access_Access` type
+to refer to an access object:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Aliased_Access
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Aliased_Access_Obj is
+
+       type Integer_Access        is access all Integer;
+       type Integer_Access_Access is access all Integer_Access;
+
+       I_Var : aliased Integer;
+       A     : aliased Integer_Access;
+       B     : Integer_Access_Access;
+    begin
+       A := I_Var'Access;
+       B := A'Access;
+
+       B.all.all := 22;
+       Put_Line ("A: " & Integer'Image (A.all));
+       Put_Line ("B: " & Integer'Image (B.all.all));
+    end Show_Aliased_Access_Obj;
+
+After the assignments in this example, :ada:`B` refers to :ada:`A`, which in
+turn refers to :ada:`I_Var`. Note that this code only compiles because we
+declare :ada:`A` as an aliased (access) object.
+
+
+Aliased components
+~~~~~~~~~~~~~~~~~~
+
+Components of an array or a record can be aliased. This allows us to get access
+to those components:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Aliased_Components
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Aliased_Components is
+
+       type Integer_Access is access all Integer;
+
+       type Rec is record
+          I_Var_1 :         Integer;
+          I_Var_2 : aliased Integer;
+       end record;
+
+       type Integer_Array is array (Positive range <>) of
+         aliased Integer;
+
+       R   : Rec := (22, 24);
+       Arr : Integer_Array (1 .. 3) := (others => 42);
+       A   : Integer_Access;
+    begin
+       --  A := R.I_Var_1'Access;
+       --                 ^ ERROR: cannot access
+       --                          non-aliased component
+
+       A := R.I_Var_2'Access;
+       Put_Line ("A: " & Integer'Image (A.all));
+
+       A := Arr (2)'Access;
+       Put_Line ("A: " & Integer'Image (A.all));
+    end Show_Aliased_Components;
+
+In this example, we get access to the :ada:`I_Var_2` component of record
+:ada:`R`. (Note that trying to access the :ada:`I_Var_1` component would gives us
+a compilation error, as this component is not aliased.) Similarly, we get
+access to the second component of array :ada:`Arr`.
+
+Declaring components with the :ada:`aliased` keyword allows us to specify that
+those are accessible via other paths besides the component name. Therefore, the
+compiler won't store them in registers. This can be essential when doing with
+low-level programming |mdash| for example, when accessing memory-mapped
+registers. In this case, we want to ensure that the compiler uses the memory
+address we're specifying (instead of assigning registers for those components).
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.6 Array Types <http://www.ada-auth.org/standards/12rm/html/RM-3-6.html>`_
+
+
+Aliased parameters
+~~~~~~~~~~~~~~~~~~
+
+In addition to objects and components, we can declare aliased parameters. This
+allows us to get access to those parameters in the body of a subprogram. We do
+this by using the :ada:`aliased` keyword before the parameter mode.
+
+The parameter mode indicates which type we must use for the access type, as
+we'll discuss soon:
+
++------------------------+--------------------+
+| Parameter mode         | Type               |
++========================+====================+
+| :ada:`aliased in`      | Access-to-constant |
++------------------------+--------------------+
+| :ada:`aliased out`     | Access-to-variable |
++------------------------+--------------------+
+| :ada:`aliased in out`  | Access-to-variable |
++------------------------+--------------------+
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Aliased_Rec_Component
+
+    package Data_Processing is
+
+       procedure Proc (I : aliased in out Integer);
+
+    end Data_Processing;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Data_Processing is
+
+       procedure Show (I : aliased Integer) is
+          --               ^ equivalent to
+          --                 "aliased in Integer"
+
+          type Integer_Constant_Access is access constant Integer;
+
+          A : constant Integer_Constant_Access := I'Access;
+       begin
+          Put_Line ("Value : I " & Integer'Image (A.all));
+       end Show;
+
+       procedure Set_One (I : aliased out Integer) is
+
+          type Integer_Access is access all Integer;
+
+          procedure Local_Set_One (A : Integer_Access) is
+          begin
+             A.all := 1;
+          end Local_Set_One;
+
+       begin
+          Local_Set_One (I'Access);
+       end Set_One;
+
+       procedure Proc (I : aliased in out Integer) is
+
+          type Integer_Access is access all Integer;
+
+          procedure Add_One (A : Integer_Access) is
+          begin
+             A.all := A.all + 1;
+          end Add_One;
+
+       begin
+          Show (I);
+          Add_One (I'Access);
+          Show (I);
+       end Proc;
+
+    end Data_Processing;
+
+    with Data_Processing; use Data_Processing;
+
+    procedure Show_Aliased_Param is
+       I : aliased Integer := 22;
+    begin
+       Proc (I);
+    end Show_Aliased_Param;
+
+Here, :ada:`Proc` has an :ada:`aliased in out` parameter. In :ada:`Proc` \'s
+body, we declare the :ada:`Integer_Access` type as an :ada:`access all` type.
+We use the same approach in body of the :ada:`Set_One` procedure, which has an
+:ada:`aliased out` parameter. Finally, the :ada:`Show` procedure has
+an :ada:`aliased in` parameter. Therefore, we declare the
+:ada:`Integer_Constant_Access` as an :ada:`access constant` type.
+
+Note that parameter aliasing has an influence on how arguments are passed to a
+subprogram when the parameter is of scalar type. When a scalar parameter is
+declared as aliased, the corresponding argument is passed by reference.
+For example, if we had declared :ada:`procedure Show (I : Integer)`, the
+argument for :ada:`I` would be passed by value. However, since we're declaring
+it as :ada:`aliased Integer`, it is passed by reference.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`_
+    - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`_
+    - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`_
 
 
 Dereferencing
