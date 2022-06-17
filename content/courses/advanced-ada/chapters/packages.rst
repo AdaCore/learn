@@ -1332,7 +1332,8 @@ instead of :ada:`Ada.Text_IO.Put_Line`:
        Put_Line ("Hello World!");
     end Display_Message;
 
-In this section, we discuss other forms of use clauses: :ada:`use type` and
+In this section, we discuss another example of use clauses. In addition, we
+introduce two specific forms of use clauses: :ada:`use type` and
 :ada:`use all type`.
 
 .. admonition:: In the Ada Reference Manual
