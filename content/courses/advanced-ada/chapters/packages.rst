@@ -1303,9 +1303,9 @@ private package :ada:`A.G` in other private packages, such as :ada:`A.I`
 Use type clause
 ---------------
 
-Back in the :ref:`Introduction to Ada course <Intro_Ada_Use_Clause>`, we've
-seen that use clauses provide direct visibility to a package in the scope where
-they're used.
+Back in the :ref:`Introduction to Ada course <Intro_Ada_Use_Clause>`, we saw
+that use clauses provide direct visibility |mdash| in the scope where they're
+used |mdash| to the content of a package's visible part.
 
 For example, consider this simple procedure:
 
@@ -1318,7 +1318,7 @@ For example, consider this simple procedure:
        Ada.Text_IO.Put_Line ("Hello World!");
     end Display_Message;
 
-By adding :ada:`use Ada.Text_IO` to this code, we make the complete
+By adding :ada:`use Ada.Text_IO` to this code, we make the visible part of the
 :ada:`Ada.Text_IO` package directly visible in the scope of the
 :ada:`Display_Message` procedure, so we can now just write :ada:`Put_Line`
 instead of :ada:`Ada.Text_IO.Put_Line`:
@@ -1382,8 +1382,8 @@ We can implement a simple procedure that makes use of this package:
        P := P + 1;
     end Show_Point;
 
-Here, we have a use clause, so we have direct visibility of the :ada:`Points`
-package.
+Here, we have a use clause, so we have direct visibility to the content of
+:ada:`Points`\ 's visible part.
 
 Visibility and Readability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
