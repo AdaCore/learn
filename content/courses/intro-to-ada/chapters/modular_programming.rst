@@ -108,6 +108,8 @@ to see immediately which units the code depends on.
     specification), and the :ada:`Main` procedure will be in an ``.adb`` file
     (for Ada body).
 
+.. _Intro_Ada_Use_Clause:
+
 Using a package
 ---------------
 

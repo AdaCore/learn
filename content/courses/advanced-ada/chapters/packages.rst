@@ -748,10 +748,10 @@ a partial dependency. We do this by limiting the visibility |mdash| using a
 limited with clause. To use a limited with clause for a package :ada:`P`, we
 simply write :ada:`limited with P`.
 
-If a package :ada:`A` has limited visibility of a package :ada:`B`, then all
+If a package :ada:`A` has limited visibility to a package :ada:`B`, then all
 types from package :ada:`B` are visible as if they had been declared as
 :ref:`incomplete types <Adv_Ada_Incomplete_Types>`. For the specific case of
-the previous source-code example, this would be the limited visibility of
+the previous source-code example, this would be the limited visibility to
 package :ada:`B` from package :ada:`A`\ 's perspective:
 
 .. code-block:: ada
@@ -824,7 +824,7 @@ that, we must declare all components using anonymous access types:
 
     end B;
 
-Now, both packages :ada:`A` and :ada:`B` have limited visibility of each other.
+Now, both packages :ada:`A` and :ada:`B` have limited visibility to each other.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -880,7 +880,7 @@ Let's reuse the previous source-code example and convert types :ada:`T1` and
     end B;
 
 In this updated version of the source-code example, we have not only limited
-visibility of package :ada:`B`, but also, each package is just visible
+visibility to package :ada:`B`, but also, each package is just visible
 in the private part of the other package.
 
 Limited visibility and other elements
@@ -903,7 +903,7 @@ declares a constant :ada:`Zero_Const` and a function :ada:`Zero_Func`:
     end Info;
 
 Also, let's say we want to use the information (from package :ada:`Info`) in
-package :ada:`A`. If we have limited visibility of package :ada:`Info`,
+package :ada:`A`. If we have limited visibility to package :ada:`Info`,
 however, this information won't be visible. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_Visibility_Other_Elements
@@ -1029,8 +1029,8 @@ child packages. For example, we don't have to write
 already visible in its child packages.
 
 If we focus on package :ada:`A.G` (highlighted in the figure above), we see
-that it only has automatic visibility of its parent :ada:`A`, but not its child
-:ada:`A.G.T`. Also, it doesn't have visibility of its sibling :ada:`A.H`.
+that it only has automatic visibility to its parent :ada:`A`, but not its child
+:ada:`A.G.T`. Also, it doesn't have visibility to its sibling :ada:`A.H`.
 
 
 With clauses and visibility
@@ -1303,11 +1303,397 @@ private package :ada:`A.G` in other private packages, such as :ada:`A.I`
 Use type clause
 ---------------
 
-.. admonition:: Relevant topics
+Back in the :ref:`Introduction to Ada course <Intro_Ada_Use_Clause>`, we saw
+that use clauses provide direct visibility |mdash| in the scope where they're
+used |mdash| to the content of a package's visible part.
 
-    - :ada:`use type` clause mentioned in
-      `Use Clauses <http://www.ada-auth.org/standards/2xrm/html/RM-8-4.html>`_
+For example, consider this simple procedure:
 
-.. todo::
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.No_Use_Clause
 
-    Complete section!
+    with Ada.Text_IO;
+
+    procedure Display_Message is
+    begin
+       Ada.Text_IO.Put_Line ("Hello World!");
+    end Display_Message;
+
+By adding :ada:`use Ada.Text_IO` to this code, we make the visible part of the
+:ada:`Ada.Text_IO` package directly visible in the scope of the
+:ada:`Display_Message` procedure, so we can now just write :ada:`Put_Line`
+instead of :ada:`Ada.Text_IO.Put_Line`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Clause
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Display_Message is
+    begin
+       Put_Line ("Hello World!");
+    end Display_Message;
+
+In this section, we discuss another example of use clauses. In addition, we
+introduce two specific forms of use clauses: :ada:`use type` and
+:ada:`use all type`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `8.4 Use Clauses <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-8-4.html>`_
+
+Another use clause example
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's now consider a simple package called :ada:`Points`, which contains the
+declaration of the :ada:`Point` type and two primitive: an :ada:`Init` function
+and an addition operator.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    package Points is
+
+       type Point is private;
+
+       function Init return Point;
+
+       function "+" (P : Point; I : Integer) return Point;
+
+    private
+
+       type Point is record
+          X, Y : Integer;
+       end record;
+
+       function Init return Point is (0, 0);
+
+       function "+" (P : Point; I : Integer) return Point is
+         (P.X + I, P.Y + I);
+
+    end Points;
+
+We can implement a simple procedure that makes use of this package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    with Points; use Points;
+
+    procedure Show_Point is
+       P : Point;
+    begin
+       P := Init;
+       P := P + 1;
+    end Show_Point;
+
+Here, we have a use clause, so we have direct visibility to the content of
+:ada:`Points`\ 's visible part.
+
+Visibility and Readability
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In certain situations, however, we might want to avoid the use clause. If
+that's the case, we can rewrite the previous implementation by removing the use
+clause and specifying the :ada:`Points` package in the prefixed form:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    with Points;
+
+    procedure Show_Point is
+       P : Points.Point;
+    begin
+       P := Points.Init;
+       P := Points."+" (P, 1);
+    end Show_Point;
+
+Although this code is correct, it might be difficult to read, as we have to
+specify the package whenever we're referring to a type or a subprogram from
+that package. Even worse: we now have to write operators in the prefixed form
+|mdash| such as :ada:`Points."+" (P, 1)`.
+
+:ada:`use type`
+~~~~~~~~~~~~~~~
+
+As a compromise, we can have direct visibility to the operators of a certain
+type. We do this by using a use clause in the form :ada:`use type`. This allows
+us to simplify the previous example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    with Points;
+
+    procedure Show_Point is
+       use type Points.Point;
+
+       P : Points.Point;
+    begin
+       P := Points.Init;
+       P := P + 1;
+    end Show_Point;
+
+Note that :ada:`use type` just gives us direct visibility to the operators of a
+certain type, but not other primitives. For this reason, we still have to write
+:ada:`Points.Init` in the code example.
+
+:ada:`use all type`
+~~~~~~~~~~~~~~~~~~~
+
+If we want to have direct visibility to all primitives of a certain type (and
+not just its operators), we need to write a use clause in the form
+:ada:`use all type`. This allows us to simplify the previous example even
+further:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause
+
+    with Points;
+
+    procedure Show_Point is
+       use all type Points.Point;
+
+       P : Points.Point;
+    begin
+       P := Init;
+       P := P + 1;
+    end Show_Point;
+
+Now, we've removed the prefix from all operations on the :ada:`P` variable.
+
+
+Use clauses and naming conflicts
+--------------------------------
+
+Visibility issues may arise when we have multiple use clauses. For instance,
+we might have types with the same name declared in multiple packages. This
+constitutes a naming conflict; in this case, the types become hidden |mdash| so
+they're not directly visible anymore, even if we have a use clause.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `8.4 Use Clauses <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-8-4.html>`_
+
+Code example
+~~~~~~~~~~~~
+
+Let's start with a code example. First, we declare and implement a generic
+procedure that shows the value of a :ada:`Complex` object:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics.Generic_Complex_Types;
+
+    generic
+       with package Complex_Types is new
+         Ada.Numerics.Generic_Complex_Types (<>);
+    procedure Show_Any_Complex (Msg : String;
+                                Val : Complex_Types.Complex);
+
+    with Ada.Text_IO;
+    with Ada.Text_IO.Complex_IO;
+
+    procedure Show_Any_Complex (Msg : String;
+                                Val : Complex_Types.Complex)
+    is
+       package Complex_Float_Types_IO is new
+         Ada.Text_IO.Complex_IO (Complex_Types);
+       use Complex_Float_Types_IO;
+
+       use Ada.Text_IO;
+    begin
+       Put (Msg & " ");
+       Put (Val);
+       New_Line;
+    end Show_Any_Complex;
+
+Then, we implement a test procedure where we declare the
+:ada:`Complex_Float_Types` package as an instance of the
+:ada:`Generic_Complex_Types` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use Complex_Float_Types;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       C, D, X : Complex;
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+    end Show_Use;
+
+In this example, we declare variables of the :ada:`Complex` type, initialize
+them and use them in operations. Note that we have direct visibility to the
+package instance because we've added a simple use clause after the package
+instantiation |mdash| see :ada:`use Complex_Float_Types` in the example.
+
+Naming conflict
+~~~~~~~~~~~~~~~
+
+Now, let's add the declaration of the :ada:`Complex_Long_Float_Types` package
+|mdash| a second instantiation of the :ada:`Generic_Complex_Types` package
+|mdash| to the code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+    :class: ada-expect-compile-error
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use Complex_Float_Types;
+
+       package Complex_Long_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+       use Complex_Long_Float_Types;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       C, D, X : Complex;
+       --        ^ ERROR: type is hidden!
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+    end Show_Use;
+
+This example doesn't compile because we have direct visibility to both
+:ada:`Complex_Float_Types` and :ada:`Complex_Long_Float_Types` packages, and
+both of them declare the :ada:`Complex` type. In this case, the type
+declaration becomes hidden, as the compiler cannot decide which declaration of
+:ada:`Complex` it should take.
+
+Circumventing naming conflicts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we know, a simple fix for this compilation error is to add the package
+prefix in the variable declaration:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use Complex_Float_Types;
+
+       package Complex_Long_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+       use Complex_Long_Float_Types;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       C, D, X : Complex_Float_Types.Complex;
+       --        ^ SOLVED: package is now specified.
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+    end Show_Use;
+
+Another possibility is to write a use clause in the form :ada:`use all type`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use all type Complex_Float_Types.Complex;
+
+       package Complex_Long_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+       use all type Complex_Long_Float_Types.Complex;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       C, D, X : Complex_Float_Types.Complex;
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+    end Show_Use;
+
+For the sake of completeness, let's declare and use variables of both
+:ada:`Complex` types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
+
+    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics.Generic_Complex_Types;
+
+    with Show_Any_Complex;
+
+    procedure Show_Use is
+       package Complex_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Float);
+       use all type Complex_Float_Types.Complex;
+
+       package Complex_Long_Float_Types is new
+         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+       use all type Complex_Long_Float_Types.Complex;
+
+       procedure Show_Complex_Float is new
+         Show_Any_Complex (Complex_Float_Types);
+
+       procedure Show_Complex_Long_Float is new
+         Show_Any_Complex (Complex_Long_Float_Types);
+
+       C, D, X : Complex_Float_Types.Complex;
+       E, F, Y : Complex_Long_Float_Types.Complex;
+    begin
+       C := Compose_From_Polar (3.0, Pi / 2.0);
+       D := Compose_From_Polar (5.0, Pi / 2.0);
+       X := C + D;
+
+       Show_Complex_Float ("C:", C);
+       Show_Complex_Float ("D:", D);
+       Show_Complex_Float ("X:", X);
+
+       E := Compose_From_Polar (3.0, Pi / 2.0);
+       F := Compose_From_Polar (5.0, Pi / 2.0);
+       Y := E + F;
+
+       Show_Complex_Long_Float ("E:", E);
+       Show_Complex_Long_Float ("F:", F);
+       Show_Complex_Long_Float ("Y:", Y);
+    end Show_Use;
+
+As expected, the code compiles correctly.
