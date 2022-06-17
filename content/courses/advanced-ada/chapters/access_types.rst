@@ -12,7 +12,15 @@ Dereferencing
 
 
 Implicit Dereferencing
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. todo::
+
+    Complete section!
+
+
+User-Defined References
+-----------------------
 
 .. admonition:: Relevant topics
 
