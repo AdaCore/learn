@@ -1,4 +1,4 @@
-git+https://github.com/pygments/pygments.git@0ac8a20677442eb08e56ac0e27aa3758350756f1#egg=pygments
+git+https://github.com/pygments/pygments.git@c4f6764bcf38883b0f2a02f8933e979b20d10ec0#egg=pygments
 Sphinx==5.0.1
 ipython==8.4.0
 sphinx_rtd_theme==1.0.0
