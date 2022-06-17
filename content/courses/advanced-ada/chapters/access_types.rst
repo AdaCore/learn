@@ -1741,7 +1741,7 @@ example |mdash| you don't get any special null-like value unless you ask
 for it. Of course, because Ada 2005 needs to be compatible with previous
 versions of the language, :ada:`not null` cannot be the default for Ada.
 
-One word of caution: access objects are default-initialized to
+One word of caution: access values are default-initialized to
 :ada:`null`, so if you have a :ada:`not null` object (or component) you
 had better initialize it explicitly, or you will get
 :ada:`Constraint_Error`. :ada:`not null` is more often useful on
