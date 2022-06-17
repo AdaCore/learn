@@ -748,10 +748,10 @@ a partial dependency. We do this by limiting the visibility |mdash| using a
 limited with clause. To use a limited with clause for a package :ada:`P`, we
 simply write :ada:`limited with P`.
 
-If a package :ada:`A` has limited visibility of a package :ada:`B`, then all
+If a package :ada:`A` has limited visibility to a package :ada:`B`, then all
 types from package :ada:`B` are visible as if they had been declared as
 :ref:`incomplete types <Adv_Ada_Incomplete_Types>`. For the specific case of
-the previous source-code example, this would be the limited visibility of
+the previous source-code example, this would be the limited visibility to
 package :ada:`B` from package :ada:`A`\ 's perspective:
 
 .. code-block:: ada
@@ -824,7 +824,7 @@ that, we must declare all components using anonymous access types:
 
     end B;
 
-Now, both packages :ada:`A` and :ada:`B` have limited visibility of each other.
+Now, both packages :ada:`A` and :ada:`B` have limited visibility to each other.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -880,7 +880,7 @@ Let's reuse the previous source-code example and convert types :ada:`T1` and
     end B;
 
 In this updated version of the source-code example, we have not only limited
-visibility of package :ada:`B`, but also, each package is just visible
+visibility to package :ada:`B`, but also, each package is just visible
 in the private part of the other package.
 
 Limited visibility and other elements
@@ -903,7 +903,7 @@ declares a constant :ada:`Zero_Const` and a function :ada:`Zero_Func`:
     end Info;
 
 Also, let's say we want to use the information (from package :ada:`Info`) in
-package :ada:`A`. If we have limited visibility of package :ada:`Info`,
+package :ada:`A`. If we have limited visibility to package :ada:`Info`,
 however, this information won't be visible. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Packages.Limited_Private_Visibility_Other_Elements
@@ -1029,8 +1029,8 @@ child packages. For example, we don't have to write
 already visible in its child packages.
 
 If we focus on package :ada:`A.G` (highlighted in the figure above), we see
-that it only has automatic visibility of its parent :ada:`A`, but not its child
-:ada:`A.G.T`. Also, it doesn't have visibility of its sibling :ada:`A.H`.
+that it only has automatic visibility to its parent :ada:`A`, but not its child
+:ada:`A.G.T`. Also, it doesn't have visibility to its sibling :ada:`A.H`.
 
 
 With clauses and visibility
