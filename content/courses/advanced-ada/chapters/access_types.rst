@@ -439,9 +439,9 @@ that calls a procedure :ada:`P`:
       P (I);
    end Proc;
 
-The call to :ada:`P` is static: every time :ada:`Proc` runs and calls :ada:`P`,
-that call is always to the same procedure. In other words, we can determine at
-compilation time which procedure is called.
+The call to :ada:`P` is statically dispatched: every time :ada:`Proc` runs and
+calls :ada:`P`, that call is always to the same procedure. In other words, we
+can determine at compilation time which procedure is called.
 
 In contrast, an access to a subprogram allows us to dynamically indicate which
 subprogram we want to call. For example, if we change :ada:`Proc` in the code
@@ -1077,7 +1077,8 @@ we register the :ada:`Show` procedure of each protected object from
 
     As we've just discussed, this error is due to the fact that
     :ada:`Int_Stor` is now a "local" protected object, and the accessibility
-    rules don't allow mixing it with non-local accesses.
+    rules don't allow mixing it with non-local accesses in order to prevent the
+    possibility of dangling references.
 
 When we call :ada:`WHR.Process_All`, the registry system calls each procedure
 that has been registered with the system. When looking at the values displayed
