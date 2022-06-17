@@ -1411,7 +1411,7 @@ that package. Even worse: we now have to write operators in the prefixed form
 :ada:`use type`
 ~~~~~~~~~~~~~~~
 
-As a compromise, we can have direct visibility of the operators of a certain
+As a compromise, we can have direct visibility to the operators of a certain
 type. We do this by using a use clause in the form :ada:`use type`. This allows
 us to simplify the previous example:
 
@@ -1428,14 +1428,14 @@ us to simplify the previous example:
        P := P + 1;
     end Show_Point;
 
-Note that :ada:`use type` just gives us direct visibility of the operators of a
+Note that :ada:`use type` just gives us direct visibility to the operators of a
 certain type, but not other primitives. For this reason, we still have to write
 :ada:`Points.Init` in the code example.
 
 :ada:`use all type`
 ~~~~~~~~~~~~~~~~~~~
 
-If we want to have direct visibility of all primitives of a certain type (and
+If we want to have direct visibility to all primitives of a certain type (and
 not just its operators), we need to write a use clause in the form
 :ada:`use all type`. This allows us to simplify the previous example even
 further:
@@ -1532,7 +1532,7 @@ Then, we implement a test procedure where we declare the
     end Show_Use;
 
 In this example, we declare variables of the :ada:`Complex` type, initialize
-them and use them in operations. Note that we have direct visibility of the
+them and use them in operations. Note that we have direct visibility to the
 package instance because we've added a simple use clause after the package
 instantiation |mdash| see :ada:`use Complex_Float_Types` in the example.
 
@@ -1575,7 +1575,7 @@ Now, let's add the declaration of the :ada:`Complex_Long_Float_Types` package
        Show_Complex_Float ("X:", X);
     end Show_Use;
 
-This example doesn't compile because we have direct visibility of both
+This example doesn't compile because we have direct visibility to both
 :ada:`Complex_Float_Types` and :ada:`Complex_Long_Float_Types` packages, and
 both of them declare the :ada:`Complex` type. In this case, the type
 declaration becomes hidden, as the compiler cannot decide which declaration of
