@@ -6,9 +6,220 @@ Access Types
 Ragged arrays
 -------------
 
-.. todo::
+Ragged arrays |mdash| also known as jagged arrays |mdash| are non-uniform,
+multidimensional arrays. They can be useful to implement tables with varying
+number of coefficients, as we discuss as an example in this section.
 
-    Complete section!
+Uniform multidimensional arrays
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Consider an algorithm that processes data based on coefficients that depends on
+a selected quality level:
+
++------------------------+--------------+-----+-----+-----+-----+-----+
+| Quality level          | Number of    |   #1|   #2|   #3|   #4|   #5|
+|                        | coefficients |     |     |     |     |     |
++========================+==============+=====+=====+=====+=====+=====+
+| Simplified             |            1 | 0.15|     |     |     |     |
++------------------------+--------------+-----+-----+-----+-----+-----+
+| Better                 |            3 | 0.02| 0.16| 0.27|     |     |
++------------------------+--------------+-----+-----+-----+-----+-----+
+| Best                   |            5 | 0.01| 0.08| 0.12| 0.20| 0.34|
++------------------------+--------------+-----+-----+-----+-----+-----+
+
+(Note that this is just a bogus table with no real purpose, as we're not
+trying to implement any actual algorithm.)
+
+We can implement this table as a two-dimensional array (:ada:`Calc_Table`),
+where each quality level has an associated array:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Uniform_Table
+
+    package Data_Processing is
+
+       type Quality_Level is
+         (Simplified, Better, Best);
+
+    private
+
+       Calc_Table : constant array (Quality_Level, 1 .. 5) of Float :=
+         (Simplified => (0.15, 0.00, 0.00, 0.00, 0.00),
+          Better     => (0.02, 0.16, 0.27, 0.00, 0.00),
+          Best       => (0.01, 0.08, 0.12, 0.20, 0.34));
+
+       Last : constant array (Quality_Level) of Positive :=
+         (Simplified => 1,
+          Better     => 3,
+          Best       => 5);
+
+    end Data_Processing;
+
+Note that, in this implementation, we have a separate table :ada:`Last` that
+indicates the actual number of coefficients of each quality level.
+
+Alternatively, we could use a record (:ada:`Table_Coefficient`) that stores the
+number of coefficients and the actual coefficients:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Uniform_Table
+
+    package Data_Processing is
+
+       type Quality_Level is
+         (Simplified, Better, Best);
+
+       type Data is array (Positive range <>) of Float;
+
+    private
+
+       type Table_Coefficient is record
+          Last : Positive;
+          Coef : Data (1 .. 5);
+       end record;
+
+       Calc_Table : constant array (Quality_Level) of Table_Coefficient :=
+         (Simplified => (1, (0.15, 0.00, 0.00, 0.00, 0.00)),
+          Better     => (3, (0.02, 0.16, 0.27, 0.00, 0.00)),
+          Best       => (5, (0.01, 0.08, 0.12, 0.20, 0.34)));
+
+    end Data_Processing;
+
+In this case, we have a unidimensional array where each component (of
+:ada:`Table_Coefficient` type) contains an array (:ada:`Coef`) with the
+coefficients.
+
+This is an example of a :ada:`Process` procedure that references the
+:ada:`Calc_Table`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Uniform_Table
+
+    package Data_Processing.Operations is
+
+      procedure Process (D : in out Data;
+                         Q :        Quality_Level);
+
+    end Data_Processing.Operations;
+
+    package body Data_Processing.Operations is
+
+       procedure Process (D : in out Data;
+                          Q :        Quality_Level) is
+       begin
+          for I in D'Range loop
+             for J in 1 .. Calc_Table (Q).Last loop
+               --  ... * Calc_Table (Q).Coef (J)
+               null;
+             end loop;
+             --  D (I) := ...
+             null;
+          end loop;
+       end Process;
+
+    end Data_Processing.Operations;
+
+Note that, to loop over the coefficients, we're using
+:ada:`for J in 1 .. Calc_Table (Q).Last loop` instead of
+:ada:`for J in Calc_Table (Q)'Range loop`. As we're trying to make a
+non-uniform array fit in a uniform array, we cannot simply loop over all
+elements using the :ada:`Range` attribute, but must be careful to use the
+correct number of elements in the loop instead.
+
+Also, note that :ada:`Calc_Table` has 15 coefficients in total. Out of those
+coefficients, 6 coefficients (or 40 percent of the table) aren't being used.
+Naturally, this is wasted memory space. We can improve this by using ragged
+arrays.
+
+
+Non-uniform multidimensional array
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ragged arrays are declared by using an access type to an array. By doing that,
+each array can be declared with a different size, thereby creating a
+non-uniform multidimensional array.
+
+For example, we can declare a constant array :ada:`Table` as a ragged array:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Simple_Ragged_Array
+
+    package Data_Processing is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+    private
+
+       type Integer_Array_Access is access constant Integer_Array;
+
+       Table : constant array (1 .. 3) of Integer_Array_Access :=
+         (1 => new Integer_Array'(1 => 15),
+          2 => new Integer_Array'(1 => 12, 2 => 15, 3 => 20),
+          3 => new Integer_Array'(1 => 12, 2 => 15, 3 => 20,
+                                  4 => 20, 5 => 25, 6 => 30));
+
+    end Data_Processing;
+
+Here, each component of :ada:`Table` is an access to another array. As each
+array is allocated via :ada:`new`, those arrays may have different sizes.
+
+We can rewrite the example from the previous subsection using a ragged array
+for the :ada:`Calc_Table`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Ragged_Table
+
+    package Data_Processing is
+
+       type Quality_Level is
+         (Simplified, Better, Best);
+
+       type Data is array (Positive range <>) of Float;
+
+    private
+
+       type Coefficients is access constant Data;
+
+       Calc_Table : constant array (Quality_Level) of Coefficients :=
+         (Simplified => new Data'(1 => 0.15),
+          Better     => new Data'(0.02, 0.16, 0.27),
+          Best       => new Data'(0.01, 0.08, 0.12, 0.20, 0.34));
+
+    end Data_Processing;
+
+Now, we aren't wasting memory space because each data component has the right
+size that is required for each quality level. Also, we don't need to store the
+number of coefficients, as this information is automatically available from the
+array initialization (via the allocation of the :ada:`Data` array for the
+:ada:`Coefficients` type).
+
+This is the adapted :ada:`Process` procedure:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Ragged_Table
+
+
+    package Data_Processing.Operations is
+
+      procedure Process (D : in out Data;
+                         Q :        Quality_Level);
+
+    end Data_Processing.Operations;
+
+    package body Data_Processing.Operations is
+
+       procedure Process (D : in out Data;
+                          Q :        Quality_Level) is
+       begin
+          for I in D'Range loop
+             for J in Calc_Table (Q)'Range loop
+               --  ... * Calc_Table (Q).Coef (J)
+               null;
+             end loop;
+             --  D (I) := ...
+             null;
+          end loop;
+       end Process;
+
+    end Data_Processing.Operations;
+
+Now, we can simply loop over the coefficients by writing
+:ada:`for J in Calc_Table (Q)'Range loop`, as each element of :ada:`Calc_Table`
+automatically has the correct range.
 
 
 Access to subprograms
