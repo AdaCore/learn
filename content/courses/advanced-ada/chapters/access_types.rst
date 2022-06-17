@@ -629,7 +629,7 @@ the :ada:`Log_Procedure` type:
        New_Line;
     end Log_Csv;
 
-Finally, we implement a test application that select each of the logging
+Finally, we implement a test application that selects each of the logging
 procedures that we've just implemented:
 
 .. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Access_Types.Log_Procedure
