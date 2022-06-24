@@ -1548,8 +1548,29 @@ in the source object is automatically reflected in the target object (and
 vice-versa). In the end, the choice between unchecked conversions and overlays
 depends on the level of performance that you want to achieve.
 
-Also note that :ada:`Unchecked_Conversion` can only be instantiated for
-constrained types. In order to rewrite the examples using bit-fields that we've
+Also note that :ada:`Unchecked_Conversion` will only have defined behavior
+when instantiated for constrained types. For example, we shouldn't use this
+kind of conversion:
+
+.. code-block:: ada
+
+   Ada.Unchecked_Conversion (Source => String,
+                             Target => Integer);
+
+Although this compiles, the behavior will only be well-defined in those cases
+when :ada:`Source'Size = Target'Size`. Therefore, instead of using an
+unconstrained type for :ada:`Source`, we should use a subtype that matches this
+expectation:
+
+.. code-block:: ada
+
+   subtype Integer_String is String (1 .. Integer'Size / Character'Size);
+
+   function As_Integer is new
+     Ada.Unchecked_Conversion (Source => Integer_String,
+                               Target => Integer);
+
+Similarly, in order to rewrite the examples using bit-fields that we've
 seen in the previous section, we cannot simply instantiate
 :ada:`Unchecked_Conversion` with the :ada:`Target` indicating the
 *unconstrained* bit-field, such as:
