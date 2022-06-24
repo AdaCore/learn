@@ -11,6 +11,8 @@ Records allow composing a value out of instances of other types. Each of
 those instances will be given a name. The pair consisting of a name and
 an instance of a specific type is called a field, or a component.
 
+.. _Intro_Ada_Record_Type_Declaration:
+
 Record type declaration
 -----------------------
 
@@ -46,6 +48,11 @@ Record components can have default values. When a variable having the record
 type is declared, a field with a default initialization will be automatically
 set to this value. The value can be any expression of the component type, and
 may be run-time computable.
+
+In the remaining sections of this chapter, we see how to use record types. In
+addition to that, we discuss more about records in
+:doc:`another chapter <./more_about_records>`.
+
 
 Aggregates
 ----------

@@ -75,6 +75,9 @@ Introduction to Ada
     Records <chapters/records>
     Arrays <chapters/arrays>
     More About Types <chapters/more_about_types>
+    Access Types <chapters/access_types>
+    More About Records <chapters/more_about_records>
+    Fixed-Point Types <chapters/fixed_point_types>
     Privacy <chapters/privacy>
     Generics <chapters/generics>
     Exceptions <chapters/exceptions>
