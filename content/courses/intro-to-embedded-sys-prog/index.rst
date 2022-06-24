@@ -66,5 +66,6 @@ Introduction to Embedded Systems Programming
     Low Level Programming <chapters/low_level_programming>
     Multi-Language Development <chapters/multi_language_development>
     Interacting with Devices <chapters/interacting_with_devices>
+    General-Purpose Code Generators <chapters/general_purpose_code_generators>
     Handling Interrupts <chapters/handling_interrupts>
     Conclusion <chapters/conclusion>
