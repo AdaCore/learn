@@ -697,7 +697,7 @@ types with :ada:`and`, :ada:`or` and :ada:`xor` operators. Further shift
 operators can also be provided upon request through a :ada:`pragma`. So the
 above could also be literally translated to:
 
-[C]
+[Ada]
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitwise_Ops_Ada
    :class: ada-run
