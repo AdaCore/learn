@@ -71,8 +71,7 @@ This illustrates how to:
 
 In line with Ada's strong typing philosophy, if you declare a second access
 type whose designated type is Date, the two access types will be incompatible
-with each other, and you will need an explicit type conversion to convert from
-one to the other:
+with each other:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Access_Types.Access_Types
     :class: ada-expect-compile-error
@@ -87,9 +86,6 @@ one to the other:
         D  : Date_Acc   := null;
         D2 : Date_Acc_2 := D;
         --                 ^ Invalid! Different types
-
-        D3 : Date_Acc_2 := Date_Acc_2 (D);
-        --                 ^ Valid with type conversion
     end Access_Types;
 
 .. admonition:: In other languages
