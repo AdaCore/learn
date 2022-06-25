@@ -699,7 +699,8 @@ above could also be literally translated to:
 
 [C]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitwise_Ops_Ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitwise_Ops_Ada
+   :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
