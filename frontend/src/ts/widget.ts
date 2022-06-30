@@ -1,6 +1,5 @@
 import {Area, OutputArea, LabContainer} from './areas';
 import {Editor, EditorTheme} from './editor';
-import {fetchBlob, DownloadRequest, DownloadResponse} from './comms';
 import {getElemsByClass, getElemById, getElemsByTag}
   from './dom-utils';
 import {Resource, ResourceList} from './resource';
@@ -272,24 +271,6 @@ class Widget {
     } finally {
       this.outputArea.showSpinner(false);
     }
-  }
-
-  /**
-   * The download example callback
-   *
-   * @private
-   * @return {Promise<DownloadResponse>} - A promise of the dl response
-   */
-  private async downloadExample(): Promise<DownloadResponse> {
-    const files = this.collectResources();
-
-    const serverData: DownloadRequest = {
-      files: files,
-      switches: JSON.parse(this.container.dataset.switches as string),
-      name: this.name,
-    };
-
-    return fetchBlob(serverData, this.serverAddress('download'));
   }
 
   /**
