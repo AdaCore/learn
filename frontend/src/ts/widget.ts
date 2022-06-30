@@ -166,23 +166,9 @@ class Widget {
 
     const dlButton = this.getElem('settings-bar', 'download-btn');
     dlButton.addEventListener('click', async () => {
-      try {
-        const blob = await this.downloadExample();
-        const objURL: string = URL.createObjectURL(blob.blob);
-
-        const a = document.createElement('a');
-        a.setAttribute('href', objURL);
-        a.setAttribute('download', blob.filename);
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        URL.revokeObjectURL(objURL);
-      } catch (error) {
-        this.outputArea.reset();
-        this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-        console.error('Error:', error);
-      }
+      // TODO update this function to generate the download in browser.
+      this.outputArea.reset();
+      this.outputArea.addError(Strings.DOWNLOAD_MAINTENANCE);
     });
 
     // grab reference to output area in the HTML and construct area

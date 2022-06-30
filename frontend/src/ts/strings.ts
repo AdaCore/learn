@@ -6,6 +6,7 @@ export const RESET_CONFIRM_MSG =
 'Are you sure you want to reset the editor?';
 
 export const DOWNLOAD_TOOLTIP = 'Download source files';
+export const DOWNLOAD_MAINTENANCE = 'The download functionilty is currently undergoing maintenance';
 // const SETTINGS_TOOLTIP = 'Modify settings for this editor';
 
 export const SETTINGS_TABBED_EDITOR_LABEL =
