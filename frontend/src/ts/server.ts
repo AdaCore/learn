@@ -37,7 +37,7 @@ export class ServerWorker {
    * @param {number} timeout - The request timeout in ms
    */
   public async execute(serverData: RunProgram.TSData,
-      timeout: number = 60_000): Promise<void> {
+      timeout = 60_000): Promise<void> {
     return new Promise((resolve) => {
       const ws = new WebSocket(this.server);
       const ts: RunProgram.TS = {
