@@ -38,41 +38,51 @@ export class ServerWorker {
    */
   public async execute(serverData: RunProgram.TSData,
       timeout = 60_000): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const ws = new WebSocket(this.server);
       const ts: RunProgram.TS = {
         action: 'execute',
         data: serverData,
       };
 
-      ws.addEventListener('open', () => {
+      ws.onopen = (): void => {
         ws.send(JSON.stringify(ts));
-      });
+      };
 
-      ws.addEventListener('message', (event) => {
+      ws.onmessage = (event): void => {
         const fsData = JSON.parse(event.data);
         if ('connectionId' in fsData) {
-          throw new Error('Executer gave server error: ' + event.data);
-        }
-        if (this.cb(fsData)) {
+          reject(new Error(`Executer gave server error: ${event.data}`));
           ws.close();
+        } else {
+          let finished = true;
+          try {
+            finished = this.cb(fsData);
+          } catch (error) {
+            reject(new Error(`Callback raised error: ${error}`));
+          } finally {
+            if (finished) {
+              ws.close();
+            }
+          }
         }
-      });
+      };
 
       const connectionTimeout = setTimeout(() => {
         switch (ws.readyState) {
           case WebSocket.CONNECTING:
           case WebSocket.OPEN:
             ws.close();
-            throw new Error(`Timeout: No response from server in ${timeout}ms`);
+            const msg = `Timeout: No response from server in ${timeout}ms`;
+            reject(new Error(msg));
           default:
         }
       }, timeout);
 
-      ws.addEventListener('close', () => {
+      ws.onclose = (): void => {
         clearTimeout(connectionTimeout);
         resolve();
-      });
+      };
     });
   }
 

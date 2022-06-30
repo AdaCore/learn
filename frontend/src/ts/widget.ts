@@ -263,14 +263,14 @@ class Widget {
           return this.processCheckOutput(data);
         });
 
-    try {
-      await worker.execute(serverData);
-    } catch (error) {
-      this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
-      console.error('Error:', error);
-    } finally {
-      this.outputArea.showSpinner(false);
-    }
+    worker.execute(serverData)
+        .catch((error: Error) => {
+          this.outputArea.addError(Strings.MACHINE_BUSY_LABEL);
+          console.error('Error:', error.message);
+        })
+        .finally(() => {
+          this.outputArea.showSpinner(false);
+        });
   }
 
   /**
