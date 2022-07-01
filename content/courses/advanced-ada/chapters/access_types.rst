@@ -254,19 +254,49 @@ Implicit Dereferencing
 
     Complete section!
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-    Accessibility levels
-    --------------------
+Anonymous Access Types
+----------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
+
+.. todo::
+
+    Complete section!
 
 
-Unchecked access
+Accessibility Levels: An Introduction
+-------------------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.10.2 Operations of Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10-2.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Unchecked Access
 ----------------
 
 .. admonition:: Relevant topics
 
     - `Unchecked Access Value Creation <http://www.ada-auth.org/standards/2xrm/html/RM-13-10.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Unchecked Deallocation
+----------------------
+
+.. admonition:: Relevant topics
+
+    - `Unchecked Storage Deallocation <http://www.ada-auth.org/standards/2xrm/html/RM-13-11-2.html>`_
 
 .. todo::
 
@@ -339,7 +369,7 @@ comments. Since Ada 2005, we can use the :ada:`not null` syntax:
 
 This is a complete package for the code snippets above:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Complete_Null_Return
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Complete_Null_Return
 
     package Example is
 
@@ -373,6 +403,7 @@ This is a complete package for the code snippets above:
        An_Element : aliased Element;
 
        function Lookup (T : Table) return Ref_Element is
+          pragma Unreferenced (T);
        begin
           --  ...
           return Not_Found;
@@ -404,16 +435,9 @@ This is a complete package for the code snippets above:
           Q (An_Element'Access);
        end R;
 
+      pragma Unreferenced (R);
+
     end Example;
-
-    with Example; use Example;
-
-    procedure Show_Example is
-       T : Table;
-       E : Ref_Element;
-    begin
-       E := Lookup (T);
-    end Show_Example;
 
 In general, it's better to use the language proper for documentation, when
 possible, rather than comments, because compile-time and/or run-time
@@ -436,128 +460,10 @@ had better initialize it explicitly, or you will get
 :ada:`Constraint_Error`. :ada:`not null` is more often useful on
 parameters and function results, for this reason.
 
-Here's another example, first with :ada:`null`:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Null_Procedure
-    :class: ada-syntax-only
-
-    package Show_Null_Procedure is
-       type Element is limited null record;
-       --  Not implemented yet
-
-       type Ref_Element is access all Element;
-
-       type Table is limited null record;
-       --  Not implemented yet
-
-       procedure Iterate
-         (T      : Table;
-          Action : access procedure (X : not null Ref_Element)
-          := null);
-       --  If Action is null, do nothing.
-
-    end Show_Null_Procedure;
-
-and without :ada:`null`:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Null_Procedure
-    :class: ada-syntax-only
-
-    package Show_Null_Procedure is
-       type Element is limited null record;
-       --  Not implemented yet
-
-       type Ref_Element is access all Element;
-
-       type Table is limited null record;
-       --  Not implemented yet
-
-       procedure Do_Nothing (X : not null Ref_Element) is null;
-
-       procedure Iterate
-         (T      : Table;
-          Action : not null access procedure (X : not null Ref_Element)
-          := Do_Nothing'Access);
-
-    end Show_Null_Procedure;
-
-The style of the second :ada:`Iterate` is clearly better because it makes
-use of the syntax to indicate that a procedure is expected. This is a
-complete package that includes both versions of the :ada:`Iterate`
-procedure:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Complete_Not_Null_Procedure
-
-    package Example is
-
-       type Element is limited private;
-       type Ref_Element is access all Element;
-
-       type Table is limited private;
-
-       procedure Iterate
-         (T : Table;
-          Action : access procedure (X : not null Ref_Element)
-                                          := null);
-       --  If Action is null, do nothing.
-
-       procedure Do_Nothing (X : not null Ref_Element) is null;
-       procedure Iterate_2
-         (T : Table;
-          Action : not null access procedure (X : not null Ref_Element)
-                                          := Do_Nothing'Access);
-
-    private
-       type Element is limited
-          record
-             Component : Integer;
-          end record;
-       type Table is limited null record;
-    end Example;
-
-    package body Example is
-
-       An_Element : aliased Element;
-
-       procedure Iterate
-         (T : Table;
-          Action : access procedure (X : not null Ref_Element)
-                                          := null) is
-       begin
-          if Action /= null then
-             Action (An_Element'Access);
-             --  In a real program, this would do something more sensible.
-          end if;
-       end Iterate;
-
-       procedure Iterate_2
-         (T : Table;
-          Action : not null access procedure (X : not null Ref_Element)
-                                          := Do_Nothing'Access) is
-       begin
-          Action (An_Element'Access);
-          --  In a real program, this would do something more sensible.
-       end Iterate_2;
-
-    end Example;
-
-    with Example; use Example;
-
-    procedure Show_Example is
-       T : Table;
-    begin
-       Iterate_2 (T);
-    end Show_Example;
-
-The :ada:`not null access procedure` is quite a mouthful, but it's
-worthwhile, and anyway, as mentioned earlier, the compatibility
-requirement requires that the :ada:`not null` be explicit, rather than the
-other way around.
-
 Another advantage of :ada:`not null` over comments is for efficiency.
 Consider procedures :ada:`P` and :ada:`Q` in this example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Complete_Not_Null_Procedure
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Complete_Null_Return
 
     package Example.Processing is
 
@@ -979,6 +885,131 @@ to :ada:`Process` with :ada:`null` as an argument for the init function, we see
 that the :ada:`Constraint_Error` exception is raised at run time |mdash| as the
 argument cannot be :ada:`null` due to the null exclusion.
 
+.. admonition:: For further reading...
+
+    .. note::
+
+        This example was originally written by Robert A. Duff and was part of
+        the `Gem #24 <https://www.adacore.com/gems/ada-gem-24>`_.
+
+    Here's another example, first with :ada:`null`:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Null_Procedure
+        :class: ada-syntax-only
+
+        package Show_Null_Procedure is
+           type Element is limited null record;
+           --  Not implemented yet
+
+           type Ref_Element is access all Element;
+
+           type Table is limited null record;
+           --  Not implemented yet
+
+           procedure Iterate
+             (T      : Table;
+              Action : access procedure (X : not null Ref_Element)
+              := null);
+           --  If Action is null, do nothing.
+
+        end Show_Null_Procedure;
+
+    and without :ada:`null`:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Null_Procedure
+        :class: ada-syntax-only
+
+        package Show_Null_Procedure is
+           type Element is limited null record;
+           --  Not implemented yet
+
+           type Ref_Element is access all Element;
+
+           type Table is limited null record;
+           --  Not implemented yet
+
+           procedure Do_Nothing (X : not null Ref_Element) is null;
+
+           procedure Iterate
+             (T      : Table;
+              Action : not null access procedure (X : not null Ref_Element)
+              := Do_Nothing'Access);
+
+        end Show_Null_Procedure;
+
+    The style of the second :ada:`Iterate` is clearly better because it makes
+    use of the syntax to indicate that a procedure is expected. This is a
+    complete package that includes both versions of the :ada:`Iterate`
+    procedure:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Complete_Not_Null_Procedure
+
+        package Example is
+
+           type Element is limited private;
+           type Ref_Element is access all Element;
+
+           type Table is limited private;
+
+           procedure Iterate
+             (T : Table;
+              Action : access procedure (X : not null Ref_Element)
+                                          := null);
+           --  If Action is null, do nothing.
+
+           procedure Do_Nothing (X : not null Ref_Element) is null;
+           procedure Iterate_2
+             (T : Table;
+              Action : not null access procedure (X : not null Ref_Element)
+                                              := Do_Nothing'Access);
+
+        private
+           type Element is limited
+              record
+                 Component : Integer;
+              end record;
+           type Table is limited null record;
+        end Example;
+
+        package body Example is
+
+           An_Element : aliased Element;
+
+           procedure Iterate
+             (T : Table;
+              Action : access procedure (X : not null Ref_Element)
+                                              := null) is
+           begin
+              if Action /= null then
+                 Action (An_Element'Access);
+                 --  In a real program, this would do something more sensible.
+              end if;
+           end Iterate;
+
+           procedure Iterate_2
+             (T : Table;
+              Action : not null access procedure (X : not null Ref_Element)
+                                              := Do_Nothing'Access) is
+           begin
+              Action (An_Element'Access);
+              --  In a real program, this would do something more sensible.
+           end Iterate_2;
+
+        end Example;
+
+        with Example; use Example;
+
+        procedure Show_Example is
+           T : Table;
+        begin
+           Iterate_2 (T);
+        end Show_Example;
+
+    The :ada:`not null access procedure` is quite a mouthful, but it's
+    worthwhile, and anyway, as mentioned earlier, the compatibility
+    requirement requires that the :ada:`not null` be explicit, rather than the
+    other way around.
+
 
 Access to protected subprograms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1331,23 +1362,3 @@ the :ada:`Valid_Work_Handler` type.
         `Gem #33: Accessibility Checks <https://www.adacore.com/gems/gem-33>`_,
         `Gem #41 <https://www.adacore.com/gems/gem-41>`_ and
         `Gem #44: <https://www.adacore.com/gems/gem-44>`_.
-
-
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
-
-    Anonymous access types
-    ----------------------
-
-
-Unchecked Deallocation
-----------------------
-
-.. admonition:: Relevant topics
-
-    - `Unchecked Storage Deallocation <http://www.ada-auth.org/standards/2xrm/html/RM-13-11-2.html>`_
-
-.. todo::
-
-    Complete section!
-
