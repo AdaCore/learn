@@ -474,6 +474,7 @@ because it causes the :ref:`access check <Adv_Ada_Access_Check>` to fail. For
 example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Integer_Types; use Integer_Types;
