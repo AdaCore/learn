@@ -254,11 +254,17 @@ Implicit Dereferencing
 
     Complete section!
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-    Accessibility levels
-    --------------------
+Accessibility Levels: An Introduction
+-------------------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.10.2 Operations of Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10-2.html>`_
+
+.. todo::
+
+    Complete section!
 
 
 Unchecked access
