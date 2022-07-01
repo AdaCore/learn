@@ -295,9 +295,9 @@ dereferencing it. For example:
 
     procedure Show_Access_Check is
 
-       type Access_Integer is access all Integer;
+       type Integer_Access is access Integer;
 
-       AI : Access_Integer;
+       AI : Integer_Access;
     begin
        AI.all := 10;
     end Show_Access_Check;
@@ -312,21 +312,21 @@ that excludes null (:ada:`not null access`). For example:
 
     procedure Show_Access_Check is
 
-       type Access_Integer is access all Integer;
-       type Non_Null_Access_Integer is not null access all Integer;
+       type Integer_Access is access all Integer;
+       type Safe_Integer_Access is not null access all Integer;
 
-       AI   : Access_Integer;
-       NNAI : Non_Null_Access_Integer := new Integer;
+       AI  : Integer_Access;
+       SAI : Safe_Integer_Access := new Integer;
 
     begin
-       NNAI := Non_Null_Access_Integer (AI);
+       SAI := Safe_Integer_Access (AI);
     end Show_Access_Check;
 
 Here, the value of :ada:`AI` is null (by default), so we cannot assign it to
-:ada:`NNAI` because its type excludes null.
+:ada:`SAI` because its type excludes null.
 
 Note that, if we remove the :ada:`:= new Integer` assignment from the
-declaration of :ada:`NNAI`, the null exclusion fails in the declaration
+declaration of :ada:`SAI`, the null exclusion fails in the declaration
 itself (because the default value of the access type is :ada:`null`).
 
 
