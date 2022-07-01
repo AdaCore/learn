@@ -280,6 +280,8 @@ Let's discuss each check and see code examples where those checks are
 performed. Note that all examples are erroneous, so please avoid reusing them
 elsewhere.
 
+.. _Adv_Ada_Access_Check:
+
 Access Check
 ~~~~~~~~~~~~
 
