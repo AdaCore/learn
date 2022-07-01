@@ -255,6 +255,18 @@ Implicit Dereferencing
     Complete section!
 
 
+Anonymous Access Types
+----------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Accessibility Levels: An Introduction
 -------------------------------------
 
@@ -1344,13 +1356,6 @@ the :ada:`Valid_Work_Handler` type.
         `Gem #33: Accessibility Checks <https://www.adacore.com/gems/gem-33>`_,
         `Gem #41 <https://www.adacore.com/gems/gem-41>`_ and
         `Gem #44: <https://www.adacore.com/gems/gem-44>`_.
-
-
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
-
-    Anonymous access types
-    ----------------------
 
 
 Unchecked Deallocation
