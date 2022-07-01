@@ -391,6 +391,7 @@ This is a complete package for the code snippets above:
        An_Element : aliased Element;
 
        function Lookup (T : Table) return Ref_Element is
+          pragma Unreferenced (T);
        begin
           --  ...
           return Not_Found;
@@ -421,6 +422,8 @@ This is a complete package for the code snippets above:
        begin
           Q (An_Element'Access);
        end R;
+
+      pragma Unreferenced (R);
 
     end Example;
 
