@@ -305,7 +305,9 @@ dereferencing it. For example:
 Here, the value of :ada:`AI` is null by default, so we cannot dereference it.
 
 The access check also performs this verification when assigning to a subtype
-that excludes null (:ada:`not null access`). For example:
+that excludes null (:ada:`not null access`). (You can find more information
+about this topic in the section about
+:ref:`not null access <Adv_Ada_Not_Null_Access>`.) For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Access_Check_2
     :class: ada-run-expect-failure
