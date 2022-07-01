@@ -357,7 +357,7 @@ comments. Since Ada 2005, we can use the :ada:`not null` syntax:
 
 This is a complete package for the code snippets above:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Complete_Null_Return
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Complete_Null_Return
 
     package Example is
 
@@ -423,15 +423,6 @@ This is a complete package for the code snippets above:
        end R;
 
     end Example;
-
-    with Example; use Example;
-
-    procedure Show_Example is
-       T : Table;
-       E : Ref_Element;
-    begin
-       E := Lookup (T);
-    end Show_Example;
 
 In general, it's better to use the language proper for documentation, when
 possible, rather than comments, because compile-time and/or run-time
