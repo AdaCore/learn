@@ -291,6 +291,18 @@ Unchecked Access
     Complete section!
 
 
+Unchecked Deallocation
+----------------------
+
+.. admonition:: Relevant topics
+
+    - `Unchecked Storage Deallocation <http://www.ada-auth.org/standards/2xrm/html/RM-13-11-2.html>`_
+
+.. todo::
+
+    Complete section!
+
+
 Null & Not Null Access
 ----------------------
 
@@ -1350,16 +1362,3 @@ the :ada:`Valid_Work_Handler` type.
         `Gem #33: Accessibility Checks <https://www.adacore.com/gems/gem-33>`_,
         `Gem #41 <https://www.adacore.com/gems/gem-41>`_ and
         `Gem #44: <https://www.adacore.com/gems/gem-44>`_.
-
-
-Unchecked Deallocation
-----------------------
-
-.. admonition:: Relevant topics
-
-    - `Unchecked Storage Deallocation <http://www.ada-auth.org/standards/2xrm/html/RM-13-11-2.html>`_
-
-.. todo::
-
-    Complete section!
-
