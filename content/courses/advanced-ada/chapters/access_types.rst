@@ -279,7 +279,7 @@ Accessibility Levels: An Introduction
     Complete section!
 
 
-Unchecked access
+Unchecked Access
 ----------------
 
 .. admonition:: Relevant topics
