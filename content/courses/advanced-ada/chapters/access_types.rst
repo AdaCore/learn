@@ -302,6 +302,7 @@ Unchecked Deallocation
 
     Complete section!
 
+.. _Adv_Ada_Not_Null_Access:
 
 Null & Not Null Access
 ----------------------
