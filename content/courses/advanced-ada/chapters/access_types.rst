@@ -451,7 +451,7 @@ parameters and function results, for this reason.
 Another advantage of :ada:`not null` over comments is for efficiency.
 Consider procedures :ada:`P` and :ada:`Q` in this example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Complete_Not_Null_Procedure
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Complete_Null_Return
 
     package Example.Processing is
 
