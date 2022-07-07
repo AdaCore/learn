@@ -1548,7 +1548,7 @@ in the source object is automatically reflected in the target object (and
 vice-versa). In the end, the choice between unchecked conversions and overlays
 depends on the level of performance that you want to achieve.
 
-Also note that an unchecked conversion will only have defined behavior
+Also note that an unchecked conversion only has defined behavior
 when instantiated for constrained types. For example, we shouldn't use this
 kind of conversion:
 
