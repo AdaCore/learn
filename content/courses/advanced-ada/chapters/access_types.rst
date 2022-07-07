@@ -393,7 +393,8 @@ As we've seen previously, we can use a type such as :ada:`Integer_Access` to
 allocate objects dynamically. However, we cannot use this type to refer to
 declared objects, for example. In this case, we have to use an
 access-to-variable type such as :ada:`Integer_Access_All`. Also, if we want to
-access constants, we use a type such as :ada:`Integer_Access_Const`.
+access constants |mdash| or access objects that we want to treat as constants
+|mdash|, we use a type such as :ada:`Integer_Access_Const`.
 
 
 Access attribute
@@ -430,15 +431,17 @@ previous code snippet:
        I_Var : aliased          Integer :=  0;
        Fact  : aliased constant Integer := 42;
 
-       Dyn_Ptr   : constant Integer_Access       := new Integer'(30);
-       I_Var_Ptr : constant Integer_Access_All   := I_Var'Access;
-       Fact_Ptr  : constant Integer_Access_Const := Fact'Access;
+       Dyn_Ptr     : constant Integer_Access       := new Integer'(30);
+       I_Var_Ptr   : constant Integer_Access_All   := I_Var'Access;
+       I_Var_C_Ptr : constant Integer_Access_Const := I_Var'Access;
+       Fact_Ptr    : constant Integer_Access_Const := Fact'Access;
 
        procedure Show is
        begin
-          Put_Line ("Dyn_Ptr:   " & Integer'Image (Dyn_Ptr.all));
-          Put_Line ("I_Var_Ptr: " & Integer'Image (I_Var_Ptr.all));
-          Put_Line ("Fact_Ptr:  " & Integer'Image (Fact_Ptr.all));
+          Put_Line ("Dyn_Ptr:     " & Integer'Image (Dyn_Ptr.all));
+          Put_Line ("I_Var_Ptr:   " & Integer'Image (I_Var_Ptr.all));
+          Put_Line ("I_Var_C_Ptr: " & Integer'Image (I_Var_C_Ptr.all));
+          Put_Line ("Fact_Ptr:    " & Integer'Image (Fact_Ptr.all));
        end Show;
 
     end Integer_Access_Types;
@@ -454,6 +457,11 @@ In this example, :ada:`Dyn_Ptr` refers to a dynamically allocated object,
 :ada:`I_Var_Ptr` refers to the :ada:`I_Var` variable, and :ada:`Fact_Ptr`
 refers to the :ada:`Fact` constant. We get access to the variable and the
 constant objects by using the :ada:`'Access` attribute.
+
+Also, we declare :ada:`I_Var_C_Ptr` as an access-to-constant, but we get
+access to the :ada:`I_Var` variable. This simply means the object
+:ada:`I_Var_C_Ptr` refers to is treated as a constant. Therefore, we can
+write :ada:`I_Var := 22;`, but we cannot write :ada:`I_Var_C_Ptr.all := 22;`.
 
 .. admonition:: In the Ada Reference Manual
 
