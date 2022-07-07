@@ -391,9 +391,9 @@ Let's look at an example:
 
 As we've seen previously, we can use a type such as :ada:`Integer_Access` to
 allocate objects dynamically. However, we cannot use this type to refer to
-variables, for example. In this case, we have to use an access-to-variable type
-such as :ada:`Integer_Access_All`. Also, if we want to access constants, we use
-a type such as :ada:`Integer_Access_Const`.
+declared objects, for example. In this case, we have to use an
+access-to-variable type such as :ada:`Integer_Access_All`. Also, if we want to
+access constants, we use a type such as :ada:`Integer_Access_Const`.
 
 
 Access attribute
