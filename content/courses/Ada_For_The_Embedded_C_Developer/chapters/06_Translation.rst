@@ -1541,14 +1541,14 @@ a conversion function.
 Using :ada:`Unchecked_Conversion` has the advantage of making it clear that a
 conversion is happening, since the conversion is written explicitly in the
 code. With overlays, that conversion is automatic and therefore implicit. In
-that sense, using :ada:`Unchecked_Conversion` is a cleaner and safer approach.
-On the other hand, :ada:`Unchecked_Conversion` requires a copy, so it's less
+that sense, using an unchecked conversion is a cleaner and safer approach.
+On the other hand, an unchecked conversion requires a copy, so it's less
 efficient than overlays, where no copy is performed |mdash| because one change
 in the source object is automatically reflected in the target object (and
 vice-versa). In the end, the choice between unchecked conversions and overlays
 depends on the level of performance that you want to achieve.
 
-Also note that :ada:`Unchecked_Conversion` will only have defined behavior
+Also note that an unchecked conversion will only have defined behavior
 when instantiated for constrained types. For example, we shouldn't use this
 kind of conversion:
 
