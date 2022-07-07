@@ -598,7 +598,7 @@ access to the second component of array :ada:`Arr`.
 
 Declaring components with the :ada:`aliased` keyword allows us to specify that
 those are accessible via other paths besides the component name. Therefore, the
-compiler won't store them in registers. This can be essential when doing with
+compiler won't store them in registers. This can be essential when doing
 low-level programming |mdash| for example, when accessing memory-mapped
 registers. In this case, we want to ensure that the compiler uses the memory
 address we're specifying (instead of assigning registers for those components).
