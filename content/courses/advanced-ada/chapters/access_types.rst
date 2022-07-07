@@ -463,7 +463,7 @@ constant objects by using the :ada:`'Access` attribute.
 Non-aliased objects
 ^^^^^^^^^^^^^^^^^^^
 
-By default, statically allocated objects |mdash| i.e. without using :ada:`new`
+By default, declared objects |mdash| i.e. without using :ada:`new`
 |mdash| are not aliased. Therefore, we cannot have get a reference to those
 objects. For example:
 
