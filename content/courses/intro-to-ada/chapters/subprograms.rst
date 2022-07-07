@@ -70,8 +70,9 @@ This is the implementation of the function above:
    implementation of a subprogram must be stored. In other words, the standard
    doesn't require a specific file structure or specific file name extensions.
    For example, we could save both the specification and the implementation of
-   the :ada:`Increment` function above in a file called :file:`increment.ada`.
-   From the standard's perspective, this would be completely acceptable.
+   the :ada:`Increment` function above in a file called :file:`increment.txt`.
+   (We could even store the entire source-code of a system in a single
+   file.) From the standard's perspective, this would be completely acceptable.
 
    The GNAT toolchain, however, requires the following file naming scheme:
 
