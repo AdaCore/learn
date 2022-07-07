@@ -73,7 +73,7 @@ This is the implementation of the function above:
    the :ada:`Increment` function above in a file called :file:`increment.ada`.
    From the standard's perspective, this would be completely acceptable.
 
-   The GNAT toolchain, however, requires the following file structure:
+   The GNAT toolchain, however, requires the following file naming scheme:
 
    - files with the `.ads` extension contain the specification, while
 
