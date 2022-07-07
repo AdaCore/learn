@@ -291,7 +291,7 @@ words, :ada:`A1` or :ada:`A2` allow us to access the same object in memory.
 Aliased objects
 ~~~~~~~~~~~~~~~
 
-In addition to using :ada:`new` to declare aliased objects, we can indicate
+In addition to using :ada:`new` to create aliased objects, we can indicate
 that an object is aliased by using the :ada:`aliased` keyword in the object's
 declaration: :ada:`Obj : aliased Integer;`.
 
