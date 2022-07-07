@@ -229,8 +229,9 @@ Aliasing
 
 The term `aliasing <https://en.wikipedia.org/wiki/Aliasing_(computing)>`_
 refers to objects in memory that we can access using more than a single
-reference. In Ada, if we allocate an object via :ada:`new`, we have an
-aliased object. We can then have multiple references to this object:
+reference. In Ada, if we allocate an object via :ada:`new`, we have a
+potentially aliased object. We can then have multiple references to this
+object:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Aliasing_Via_Access
 
