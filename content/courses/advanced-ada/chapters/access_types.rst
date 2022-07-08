@@ -623,6 +623,18 @@ dereference :ada:`I_2`. The resulting behavior in this case is undefined.
         - `13.9.1 Data Validity <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-9-1.html>`__
         - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
 
+Again, a possible way to fix the code example is to indicate that :ada:`I_2`
+doesn't refer to any object (when deallocating the object that :ada:`I_1`
+points to):
+
+.. code-block:: ada
+
+       Put_Line ("Freeing I_1");
+       I_2 := null;
+       Free (I_1);
+
+With this fix, :ada:`I_2` isn't a dangling reference anymore after the call to
+:ada:`Free (I_1)`.
 
 
 Restrictions for :ada:`Ada.Unchecked_Deallocation`
