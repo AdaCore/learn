@@ -9,11 +9,11 @@ defaults:
 jobs:
   sphinx-books:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
-        python-version: [3.9]
+        python-version: ['3.10']
         node-version: [16.x]
 
     steps:
@@ -48,7 +48,7 @@ jobs:
       run: |
         sudo -v && \
         wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | \
-            sudo sh /dev/stdin version=5.40.0
+            sudo sh /dev/stdin version=5.44.0
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: ada-actions/toolchain
