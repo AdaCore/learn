@@ -298,9 +298,9 @@ So far, we've seen multiple examples of using :ada:`new` to allocate objects.
 In this section, we discuss how to manually deallocate objects.
 
 Our starting point to manually deallocate an object is the generic
-:ada:`Unchecked_Deallocation` procedure. We first instantiate this procedure
-for an access type whose objects we want to be able to deallocate. For example,
-let's instantiate it for the :ada:`Integer_Access` type:
+:ada:`Ada.Unchecked_Deallocation` procedure. We first instantiate this
+procedure for an access type whose objects we want to be able to deallocate.
+For example, let's instantiate it for the :ada:`Integer_Access` type:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Simple_Unchecked_Deallocation
 
@@ -311,7 +311,7 @@ let's instantiate it for the :ada:`Integer_Access` type:
        type Integer_Access is access Integer;
 
        --
-       --  Instantiation of Unchecked_Deallocation
+       --  Instantiation of Ada.Unchecked_Deallocation
        --  for the Integer_Access type:
        --
        procedure Free is
@@ -323,9 +323,9 @@ let's instantiate it for the :ada:`Integer_Access` type:
 Here, we declare the :ada:`Free` procedure, which we can then use to deallocate
 objects that were allocated for the :ada:`Integer_Access` type.
 
-:ada:`Unchecked_Deallocation` is a generic procedure that we can instantiate
-for access types. When declaring an instance of :ada:`Unchecked_Deallocation`,
-we have to specify arguments for:
+:ada:`Ada.Unchecked_Deallocation` is a generic procedure that we can
+instantiate for access types. When declaring an instance of
+:ada:`Ada.Unchecked_Deallocation`, we have to specify arguments for:
 
 - the formal :ada:`Object` parameter, which indicates the type of actual
   objects that we want to deallocate; and
@@ -336,9 +336,9 @@ In a type declaration such as :ada:`type Integer_Access is access Integer`,
 :ada:`Integer` denotes the :ada:`Object`, while :ada:`Integer_Access` denotes
 the :ada:`Name`.
 
-Because each instance of :ada:`Unchecked_Deallocation` is bound to a specific
-access type, we cannot use it for another access type, even if the type we use
-for the :ada:`Object` parameter is the same:
+Because each instance of :ada:`Ada.Unchecked_Deallocation` is bound to a
+specific access type, we cannot use it for another access type, even if the
+type we use for the :ada:`Object` parameter is the same:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Simple_Unchecked_Deallocation
 
@@ -368,8 +368,8 @@ deallocating objects associated with the :ada:`Another_Integer_Access` type,
 even though both types are declared as :ada:`access Integer`.
 
 Note that we can use any name when instantiating the
-:ada:`Unchecked_Deallocation` procedure. However, naming it :ada:`Free` is very
-common.
+:ada:`Ada.Unchecked_Deallocation` procedure. However, naming it :ada:`Free` is
+very common.
 
 Now, let's see a complete example that includes object allocation and
 deallocation:
@@ -524,10 +524,10 @@ very careful when using unchecked deallocation and avoid creating dangling
 reference.
 
 
-Restrictions for :ada:`Unchecked_Deallocation`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Restrictions for :ada:`Ada.Unchecked_Deallocation`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are two unsurprising restrictions for :ada:`Unchecked_Deallocation`:
+There are two unsurprising restrictions for :ada:`Ada.Unchecked_Deallocation`:
 
 1. It cannot be instantiated for access-to-constant types; and
 
@@ -570,8 +570,8 @@ Let's see an example of these restrictions:
        Free (I);
     end Show_Unchecked_Deallocation_Errors;
 
-Here, we see that trying to instantiate :ada:`Unchecked_Deallocation` for the
-:ada:`Constant_Integer_Access` type is rejected by the compiler. Similarly,
+Here, we see that trying to instantiate :ada:`Ada.Unchecked_Deallocation` for
+the :ada:`Constant_Integer_Access` type is rejected by the compiler. Similarly,
 we cannot allocate or deallocate an object for the :ada:`Integer_Access_Zero`
 type because its storage pool is empty.
 
