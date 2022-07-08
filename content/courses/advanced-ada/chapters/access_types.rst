@@ -465,16 +465,97 @@ simply ignored.
     - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
 
 
-Dereferencing after deallocation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Dangling References
+~~~~~~~~~~~~~~~~~~~
 
 An access value that points to a non-existent object is called a dangling
 reference. Of course, we shouldn't try to dereference a dangling reference
-because it causes the :ref:`access check <Adv_Ada_Access_Check>` to fail. For
-example:
+because it causes the :ref:`access check <Adv_Ada_Access_Check>` to fail.
+
+Let's reuse the last example and introduce :ada:`I_2`, which will point to the
+same object as :ada:`I`:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
     :class: ada-run-expect-failure
+
+    with Integer_Types; use Integer_Types;
+
+    procedure Show_Unchecked_Deallocation is
+
+       I, I_2 : Integer_Access;
+
+    begin
+       I := new Integer;
+
+       I_2 := I;
+
+       --  NOTE: I_2 points to the same
+       --        object as I.
+
+       Free (I);
+
+       --  NOTE: at this point, I_2 is a
+       --        dangling reference!
+
+       --  Calls to Free (I) are OK!
+
+       Free (I);
+       Free (I);
+
+       --  A call to Free (I_2) is
+       --  NOT OK:
+
+       Free (I_2);
+    end Show_Unchecked_Deallocation;
+
+As we've seen before, we can have multiple calls to :ada:`Free (I)`. However,
+the call to :ada:`I_2` fails because it points to an object that doesn't exist
+anymore.
+
+Because of these potential errors, it is the programmer's responsibility to be
+very careful when using unchecked deallocation and avoid creating dangling
+references.
+
+For the example we've just seen, a better approach could be to explicitly
+assign :ada:`null` to :ada:`I_2` to indicate that it doesn't point to any
+specific object:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
+
+    with Integer_Types; use Integer_Types;
+
+    procedure Show_Unchecked_Deallocation is
+
+       I, I_2 : Integer_Access;
+
+    begin
+       I := new Integer;
+
+       I_2 := I;
+
+       --  NOTE: I_2 points to the same
+       --        object as I.
+
+       Free (I);
+
+       I_2 := null;
+
+       --  NOTE: I_2 doesn't point to any
+       --        object, so we can call Free.
+
+       Free (I_2);
+    end Show_Unchecked_Deallocation;
+
+Now, calling :ada:`Free (I_2)` doesn't cause any issues because it doesn't
+point to any object.
+
+
+Dereferencing dangling references
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Of course, we shouldn't try to dereference a dangling reference. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Integer_Types; use Integer_Types;
