@@ -465,7 +465,7 @@ write :ada:`I_Var := 22;`, but we cannot write :ada:`I_Var_C_Ptr.all := 22;`.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10.2 Operations of Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10-2.html>`_
+    - `3.10.2 Operations of Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10-2.html>`__
 
 
 Non-aliased objects
@@ -613,7 +613,7 @@ address we're specifying (instead of assigning registers for those components).
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.6 Array Types <http://www.ada-auth.org/standards/12rm/html/RM-3-6.html>`_
+    - `3.6 Array Types <http://www.ada-auth.org/standards/12rm/html/RM-3-6.html>`__
 
 
 Aliased parameters
@@ -715,9 +715,9 @@ it as :ada:`aliased Integer`, it is passed by reference.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`_
-    - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`_
-    - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`_
+    - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`__
+    - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`__
+    - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`__
 
 
 Dereferencing
@@ -733,7 +733,7 @@ Implicit Dereferencing
 
 .. admonition:: Relevant topics
 
-    - `User-Defined References <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-5.html>`_
+    - `User-Defined References <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-5.html>`__
 
 .. todo::
 
@@ -769,7 +769,7 @@ Unchecked Access
 
 .. admonition:: Relevant topics
 
-    - `Unchecked Access Value Creation <http://www.ada-auth.org/standards/2xrm/html/RM-13-10.html>`_
+    - `Unchecked Access Value Creation <http://www.ada-auth.org/standards/2xrm/html/RM-13-10.html>`__
 
 .. todo::
 
@@ -794,8 +794,8 @@ Null & Not Null Access
 .. note::
 
     This section was originally written by Robert A. Duff and published as
-    `Gem #23: Null Considered Harmful <https://www.adacore.com/gems/ada-gem-23>`_
-    and `Gem #24 <https://www.adacore.com/gems/ada-gem-24>`_.
+    `Gem #23: Null Considered Harmful <https://www.adacore.com/gems/ada-gem-23>`__
+    and `Gem #24 <https://www.adacore.com/gems/ada-gem-24>`__.
 
 Ada, like many languages, defines a special :ada:`null` value for access
 types. All values of an access type designate some object of the
@@ -1844,6 +1844,6 @@ the :ada:`Valid_Work_Handler` type.
 
         This section was originally written by Ramón Fernández and Robert A. Duff, and
         published as
-        `Gem #33: Accessibility Checks <https://www.adacore.com/gems/gem-33>`_,
-        `Gem #41 <https://www.adacore.com/gems/gem-41>`_ and
-        `Gem #44: <https://www.adacore.com/gems/gem-44>`_.
+        `Gem #33: Accessibility Checks <https://www.adacore.com/gems/gem-33>`__,
+        `Gem #41 <https://www.adacore.com/gems/gem-41>`__ and
+        `Gem #44: <https://www.adacore.com/gems/gem-44>`__.
