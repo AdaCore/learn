@@ -355,8 +355,8 @@ In the next sections, we discuss these features in more details.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.3.1 Object Declarations <http://www.ada-auth.org/standards/12rm/html/RM-3-3-1.html>`_
-    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`_
+    - `3.3.1 Object Declarations <http://www.ada-auth.org/standards/12rm/html/RM-3-3-1.html>`__
+    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`__
 
 General access modifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^
