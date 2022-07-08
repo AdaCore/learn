@@ -285,7 +285,7 @@ words, :ada:`A1` or :ada:`A2` allow us to access the same object in memory.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`_
+    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`__
 
 
 Aliased objects
