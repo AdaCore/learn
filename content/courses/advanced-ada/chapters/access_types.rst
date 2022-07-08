@@ -14,6 +14,10 @@ Dereferencing
 Implicit Dereferencing
 ~~~~~~~~~~~~~~~~~~~~~~
 
+.. admonition:: Relevant topics
+
+    - `User-Defined References <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-5.html>`_
+
 .. todo::
 
     Complete section!
