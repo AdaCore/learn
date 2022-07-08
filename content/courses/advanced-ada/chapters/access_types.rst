@@ -3,6 +3,26 @@ Access Types
 
 .. include:: ../../global.txt
 
+Dereferencing
+-------------
+
+.. todo::
+
+    Complete section!
+
+
+Implicit Dereferencing
+----------------------
+
+.. admonition:: Relevant topics
+
+    - `User-Defined References <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-5.html>`__
+
+.. todo::
+
+    Complete section!
+
+
 .. _Adv_Ada_Ragged_Arrays:
 
 Ragged arrays
@@ -718,26 +738,6 @@ it as :ada:`aliased Integer`, it is passed by reference.
     - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`__
     - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`__
     - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`__
-
-
-Dereferencing
--------------
-
-.. todo::
-
-    Complete section!
-
-
-Implicit Dereferencing
-----------------------
-
-.. admonition:: Relevant topics
-
-    - `User-Defined References <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-5.html>`__
-
-.. todo::
-
-    Complete section!
 
 
 Anonymous Access Types
