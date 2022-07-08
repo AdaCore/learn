@@ -595,11 +595,10 @@ check for :ada:`null` to detect a dangling reference and avoid dereferencing
 it.
 
 The strategy of checking for :ada:`null` before trying to dereferencing the
-access value works fine for :ada:`I_1`, but not for :ada:`I_2`, as we can see
-when running the example above. In the case of :ada:`I_2`, the access value is
-not :ada:`null`: :ada:`I_2` points to an object that doesn't exist anymore. As
-expected, dereferencing :ada:`I_2` raises the :ada:`Constraint_Error`
-exception.
+access value works fine for :ada:`I_1`. However, this strategy doesn't work for
+:ada:`I_2`: the access value is not :ada:`null` because it still points to an
+object that existed at some point. Therefore, the application will try to
+dereference :ada:`I_2`. The resulting behavior in this case is undefined.
 
 Because of this potential errors, it is the programmer's responsibility to be
 very careful when using unchecked deallocation and avoid creating dangling
