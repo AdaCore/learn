@@ -488,7 +488,7 @@ example:
        I_2 := I_1;
 
        Put_Line ("I_1 = " & Integer'Image (I_1.all));
-       Put_Line ("I_2 = " & Integer'Image (I_1.all));
+       Put_Line ("I_2 = " & Integer'Image (I_2.all));
 
        Free (I_1);
 
@@ -497,7 +497,7 @@ example:
        end if;
 
        if I_2 /= null then
-          Put_Line ("I_2 = " & Integer'Image (I_1.all));
+          Put_Line ("I_2 = " & Integer'Image (I_2.all));
        end if;
     end Show_Unchecked_Deallocation;
 
