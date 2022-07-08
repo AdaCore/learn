@@ -22,13 +22,481 @@ Implicit Dereferencing
 User-Defined References
 -----------------------
 
+Implicit dereferencing isn't limited to the contexts that Ada supports by
+default: we can also add implicit dereferencing to our own types by using the
+:ada:`Implicit_Dereference` aspect.
+
+To do this, we have to declare:
+
+- a reference type, where we use the :ada:`Implicit_Dereference` aspect to
+  specify the reference discriminant, which is the record discriminant that
+  will be dereferenced; and
+
+- a reference object, which contains an access value that will be dereferenced.
+
+Also, for the reference type, we have to:
+
+- specify the reference discriminant as an access discriminant; and
+
+- indicate the name of the reference discriminant when specifying the
+  :ada:`Implicit_Dereference` aspect.
+
+Let's see a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Simple_User_Defined_References
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_User_Defined_Reference is
+
+       type Id_Number is record
+          Id : Positive;
+       end record;
+
+       --
+       --  Reference type:
+       --
+       type Id_Ref (Ref : access Id_Number) is null record
+       --           ^ reference discriminant
+         with Implicit_Dereference => Ref;
+         --                           ^^^
+         --             name of the reference discriminant
+
+       --
+       --  Access value:
+       --
+       I : constant access Id_Number := new Id_Number'(Id => 42);
+
+       --
+       --  Reference object:
+       --
+       R : Id_Ref (I);
+    begin
+       Put_Line ("ID: "
+                 & Positive'Image (R.Id));
+       --                          ^ Equivalent to:
+       --                              R.Ref.Id
+       --                            or:
+       --                             R.Ref.all.Id
+    end Show_User_Defined_Reference;
+
+Here, we declare a simple record type (:ada:`Id_Number`) and a corresponding
+reference type (:ada:`Id_Ref`). Note that:
+
+- the reference discriminant :ada:`Ref` has an access to the :ada:`Id_Number`
+  type; and
+
+- we indicate this reference discriminant in the :ada:`Implicit_Dereference`
+  aspect.
+
+Then, we declare an access value (the :ada:`I` constant) and use it for the
+:ada:`Ref` discriminant in the declaration of the reference object :ada:`R`.
+
+Finally, we implicitly dereference :ada:`R` and access the :ada:`Id` component
+by simply writing :ada:`R.Id` |mdash| instead of the extended forms
+:ada:`R.Ref.Id` or :ada:`R.Ref.all.Id`.
+
+.. admonition:: Important
+
+    The extended form mentioned in the example that we just saw
+    (:ada:`R.Ref.all.Id`) makes it clear that two steps happen when evaluating
+    :ada:`R.Id`:
+
+    - First, :ada:`R.Ref` is implied from :ada:`R` because of the
+      :ada:`Implicit_Dereference` aspect.
+
+    - Then, :ada:`R.Ref` is implicitly dereferenced to :ada:`R.Ref.all`.
+
+    After these two steps, we can access the actual object. (In our case, we
+    can access the :ada:`Id` component.)
+
+Note that we cannot use access types directly for the reference discriminant.
+For example, if we made the following change in the previous code example, it
+wouldn't compile:
+
+.. code-block:: ada
+
+       type Id_Number_Access is access Id_Number;
+
+       --  Reference type:
+       type Id_Ref (Ref : Id_Number_Access) is null record
+       --                 ^ ERROR: it must be an
+       --                          access discriminant!
+         with Implicit_Dereference => Ref;
+
+However, we could use other forms |mdash| such as :ada:`not null access`
+|mdash| in the reference discriminant:
+
+.. code-block:: ada
+
+       --  Reference type:
+       type Id_Ref (Ref : not null access Id_Number) is null record
+         with Implicit_Dereference => Ref;
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.1.5 User-Defined References <http://www.ada-auth.org/standards/12rm/html/RM-4-1-5.html>`_
+
+Dereferencing of tagged types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Naturally, implicit dereferencing is also possible when calling primitives of a
+tagged type. For example, let's change the declaration of the
+:ada:`Id_Number` type from the previous code example and add a :ada:`Show`
+primitive.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.User_Defined_References
+
+    package Info is
+       type Id_Number (Id : Positive) is tagged private;
+
+       procedure Show (R : Id_Number);
+    private
+       type Id_Number (Id : Positive) is tagged null record;
+    end Info;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Info is
+
+       procedure Show (R : Id_Number) is
+       begin
+          Put_Line ("ID: " & Positive'Image (R.Id));
+       end Show;
+
+    end Info;
+
+Then, let's declare a reference type and a reference object in the test
+application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.User_Defined_References
+
+    with Info; use Info;
+
+    procedure Show_User_Defined_Reference is
+
+       --  Reference type:
+       type Id_Ref (Ref : access Id_Number) is null record
+         with Implicit_Dereference => Ref;
+
+       --  Access value:
+       I : constant access Id_Number := new Id_Number (42);
+
+       --  Reference object:
+       R : Id_Ref (I);
+    begin
+
+       R.Show;
+       --  Equivalent to:
+       --  R.Ref.all.Show;
+
+    end Show_User_Defined_Reference;
+
+Here, we can call the :ada:`Show` procedure by simply writing :ada:`R.Show`
+instead of :ada:`R.Ref.all.Show`.
+
+
+Simple container
+~~~~~~~~~~~~~~~~
+
+A typical application of user-defined references is to create cursors when
+iterating over a container. As an example, let's implement the
+:ada:`National_Date_Info` package to store the national day of a country:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.National_Dates
+
+    package National_Date_Info is
+
+       subtype Country_Code is String (1 .. 3);
+
+       type Time is record
+          Year  : Integer;
+          Month : Positive range 1 .. 12;
+          Day   : Positive range 1 .. 31;
+       end record;
+
+       type National_Date is tagged record
+          Country : Country_Code;
+          Date    : Time;
+       end record;
+
+       type National_Date_Access is access National_Date;
+
+       procedure Show (Nat_Date : National_Date);
+
+    end National_Date_Info;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body National_Date_Info is
+
+       procedure Show (Nat_Date : National_Date) is
+       begin
+          Put_Line ("Country: " & Nat_Date.Country);
+          Put_Line ("Year:    " & Integer'Image (Nat_Date.Date.Year));
+       end Show;
+
+    end National_Date_Info;
+
+Here, :ada:`National_Date` is a record type that we use to store the national
+day information. We can call the :ada:`Show` procedure to display this
+information.
+
+Now, let's implement the :ada:`National_Date_Containers` with a container for
+national days:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.National_Dates
+
+    with National_Date_Info; use National_Date_Info;
+
+    package National_Date_Containers is
+
+       --  Reference type:
+       type National_Date_Reference (Ref : access National_Date) is
+         tagged limited null record
+           with Implicit_Dereference => Ref;
+
+       --  Container (as an array):
+       type National_Dates is array (Positive range <>) of
+         National_Date_Access;
+
+       --  The Find function scans the container to find a
+       --  specific country, which is returned as a reference
+       --  object.
+       function Find (Nat_Dates : National_Dates;
+                      Country   : Country_Code)
+                      return National_Date_Reference;
+
+    end National_Date_Containers;
+
+    package body National_Date_Containers is
+
+       function Find (Nat_Dates : National_Dates;
+                      Country   : Country_Code)
+                      return National_Date_Reference is
+       begin
+          for I in Nat_Dates'Range loop
+             if Nat_Dates (I).Country = Country then
+                return National_Date_Reference'(Ref => Nat_Dates (I));
+                --     ^ Returning reference object with a reference
+                --       to the national day we found.
+             end if;
+          end loop;
+
+          return National_Date_Reference'(Ref => null);
+          --     ^ Returning reference object with a null
+          --       reference in case the country wasn't
+          --       found. This will trigger an exception
+          --       if we try to dereference it.
+       end Find;
+
+    end National_Date_Containers;
+
+Package :ada:`National_Date_Containers` contains the :ada:`National_Dates`
+type, which is an array type for declaring containers that we use to store
+the national day information. We can also see the declaration of the
+:ada:`National_Date_Reference` type, which is the reference type returned by
+the :ada:`Find` function when looking for a specific country in the container.
+
+.. admonition:: Important
+
+    We're declaring the container type (:ada:`National_Dates`) as an array type
+    just to simplify the code. In many cases, however, this approach isn't
+    recommended! Instead, we should use a private type in order to encapsulate
+    |mdash| and better protect |mdash| the information stored in the actual
+    container.
+
+Finally, let's see a test application that stores information for some
+countries into the :ada:`Nat_Dates` container and displays the information for
+a specific country:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.National_Dates
+
+    with National_Date_Info;       use National_Date_Info;
+    with National_Date_Containers; use National_Date_Containers;
+
+    procedure Show_National_Dates is
+
+       Nat_Dates : constant National_Dates (1 .. 5) :=
+         (new National_Date'("USA", Time'(1776,  7,  4)),
+          new National_Date'("FRA", Time'(1789,  7, 14)),
+          new National_Date'("DEU", Time'(1990, 10,  3)),
+          new National_Date'("SPA", Time'(1492, 10, 12)),
+          new National_Date'("BRA", Time'(1822,  9,  7)));
+
+    begin
+       Find (Nat_Dates, "FRA").Show;
+       --                     ^ implicit dereference
+    end Show_National_Dates;
+
+Here, we call the :ada:`Find` function to retrieve a reference object, whose
+reference (access value) has the national day information of France. We then
+implicitly dereference it to get the tagged object (of :ada:`National_Date`
+type) and display its information by calling the :ada:`Show` procedure.
+
 .. admonition:: Relevant topics
 
-    - `User-Defined References <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-5.html>`__
+    The :ada:`National_Date_Containers` package was implemented specifically
+    as an accompanying package for the :ada:`National_Date_Info` package.
+    It is possible, however, to generalize it, so that we can reuse the
+    container for other record types. In fact, this is actually very
+    straightforward:
 
-.. todo::
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.National_Dates
 
-    Complete section!
+        generic
+           type T is private;
+           type T_Access is access T;
+           type T_Cmp is private;
+           with function Matches (E    : T_Access;
+                                  Elem : T_Cmp) return Boolean;
+        package Generic_Containers is
+
+           type Ref_Type (Ref : access T) is
+             tagged limited null record
+               with Implicit_Dereference => Ref;
+
+           type Container is array (Positive range <>) of
+             T_Access;
+
+           function Find (Cont : Container;
+                          Elem : T_Cmp)
+                          return Ref_Type;
+
+        end Generic_Containers;
+
+        package body Generic_Containers is
+
+           function Find (Cont : Container;
+                          Elem : T_Cmp)
+                          return Ref_Type is
+           begin
+              for I in Cont'Range loop
+                 if Matches (Cont (I), Elem) then
+                    return Ref_Type'(Ref => Cont (I));
+                 end if;
+              end loop;
+
+              return Ref_Type'(Ref => null);
+           end Find;
+
+        end Generic_Containers;
+
+    When comparing the :ada:`Generic_Containers` package to the
+    :ada:`National_Date_Containers` package, we see that the main difference is
+    the addition of the :ada:`Matches` function, which indicates whether the
+    current element we're evaluating in the for-loop of the :ada:`Find`
+    function is the one we're looking for.
+
+    In the main application, we can implement the :ada:`Matches` function and
+    declare the :ada:`National_Date_Containers` package as an instance of the
+    :ada:`Generic_Containers` package:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.National_Dates
+
+        with Generic_Containers;
+        with National_Date_Info; use National_Date_Info;
+
+        procedure Show_National_Dates is
+
+           function Matches_Country (E    : National_Date_Access;
+                                     Elem : Country_Code)
+                                     return Boolean is
+             (E.Country = Elem);
+
+           package National_Date_Containers is new
+             Generic_Containers (T        => National_Date,
+                                 T_Access => National_Date_Access,
+                                 T_Cmp    => Country_Code,
+                                 Matches  => Matches_Country);
+
+           use National_Date_Containers;
+
+           subtype National_Dates is Container;
+
+           Nat_Dates : constant National_Dates (1 .. 5) :=
+             (new National_Date'("USA", Time'(1776,  7,  4)),
+              new National_Date'("FRA", Time'(1789,  7, 14)),
+              new National_Date'("DEU", Time'(1990, 10,  3)),
+              new National_Date'("SPA", Time'(1492, 10, 12)),
+              new National_Date'("BRA", Time'(1822,  9,  7)));
+
+        begin
+           Find (Nat_Dates, "FRA").Show;
+        end Show_National_Dates;
+
+    Here, we instantiate the :ada:`Generic_Containers` package with the
+    :ada:`Matches_Country` function, which is an expression function that
+    compares the country component of the current :ada:`National_Date`
+    reference with the name of the country we desire to learn about.
+
+    This generalized approach is actually used for the standard containers
+    from the :ada:`Ada.Containers` packages. For example,
+    the :ada:`Ada.Containers.Vectors` is specified as follows:
+
+    .. code-block:: ada
+
+        with Ada.Iterator_Interfaces;
+
+        generic
+           type Index_Type is range <>;
+           type Element_Type is private;
+           with function "=" (Left, Right : Element_Type)
+                              return Boolean is <>;
+        package Ada.Containers.Vectors
+          with Preelaborate, Remote_Types,
+               Nonblocking, Global => in out synchronized is
+
+           -- OMITTED
+
+           type Reference_Type (Element : not null access Element_Type) is private
+              with Implicit_Dereference => Element,
+                   Nonblocking, Global => in out synchronized,
+                   Default_Initial_Condition => (raise Program_Error);
+
+           -- OMITTED
+
+           function Reference (Container : aliased in out Vector;
+                               Index     : in Index_Type)
+                               return Reference_Type
+              with Pre    => Index in
+                                First_Index (Container) .. Last_Index (Container)
+                                or else raise Constraint_Error,
+                   Post   => Tampering_With_Cursors_Prohibited (Container),
+                   Nonblocking, Global => null, Use_Formal => null;
+
+           -- OMITTED
+
+           function Reference (Container : aliased in out Vector;
+                               Position  : in Cursor)
+                               return Reference_Type
+              with Pre  => (Position /= No_Element
+                               or else raise Constraint_Error) and then
+                            (Has_Element (Container, Position)
+                               or else raise Program_Error),
+                   Post   => Tampering_With_Cursors_Prohibited (Container),
+                   Nonblocking, Global => null, Use_Formal => null;
+
+           -- OMITTED
+
+        end Ada.Containers.Vectors;
+
+    (Note that most parts of the :ada:`Vectors` package were omitted for
+    clarity. Please refer to the Ada Reference Manual for the complete package
+    specification.)
+
+    Here, we see that the :ada:`Implicit_Dereference` aspect is used in the
+    declaration of :ada:`Reference_Type`, which is the reference type returned
+    by the :ada:`Reference` functions for an index or a cursor.
+
+    Also, note that the :ada:`Vectors` package has a formal equality function
+    (:ada:`=`) instead of the :ada:`Matches` function we were using in our
+    :ada:`Generic_Containers` package. The purpose of the formal function,
+    however, is basically the same.
+
+    .. admonition:: In the Ada Reference Manual
+
+        - `A.18.2 The Generic Package Containers.Vectors <http://www.ada-auth.org/standards/12rm/html/RM-A-18-2.html>`_
 
 
 .. _Adv_Ada_Ragged_Arrays:
