@@ -461,8 +461,8 @@ simply ignored.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.8 Allocators <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-4-8.html>`_
-    - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`_
+    - `4.8 Allocators <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-4-8.html>`__
+    - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
 
 
 Dereferencing after deallocation
