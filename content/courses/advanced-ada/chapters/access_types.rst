@@ -600,9 +600,29 @@ access value works fine for :ada:`I_1`. However, this strategy doesn't work for
 object that existed at some point. Therefore, the application will try to
 dereference :ada:`I_2`. The resulting behavior in this case is undefined.
 
-Because of this potential errors, it is the programmer's responsibility to be
-very careful when using unchecked deallocation and avoid creating dangling
-reference.
+.. admonition:: Important
+
+    Dereferencing a dangling reference is erroneous: the behavior in this case
+    is undefined. Sometimes, the compiler is able to detect this situation and
+    introduce an :ref:`access check <Adv_Ada_Access_Check>`, which will fail
+    when trying to dereference the dangling reference, thereby raising the
+    :ada:`Constraint_Error` exception.
+
+    However, the compiler might not always be able to detect this, so the
+    behavior becomes unpredictable. The application might crash when
+    dereferencing the dangling reference, or it might just use some junk value
+    from the memory, giving the impression that everything is OK.
+
+    Because the behavior is erroneous and unpredictable, it should be
+    avoided at all costs! Again, it is the programmer's responsibility to be
+    very careful when using unchecked deallocation and avoid creating dangling
+    references.
+
+    .. admonition:: In the Ada Reference Manual
+
+        - `13.9.1 Data Validity <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-9-1.html>`__
+        - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
+
 
 
 Restrictions for :ada:`Ada.Unchecked_Deallocation`
