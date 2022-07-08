@@ -490,6 +490,7 @@ example:
        Put_Line ("I_1 = " & Integer'Image (I_1.all));
        Put_Line ("I_2 = " & Integer'Image (I_2.all));
 
+       Put_Line ("Freeing I_1");
        Free (I_1);
 
        if I_1 /= null then
