@@ -2,6 +2,7 @@ import {Area, OutputArea, LabContainer} from './areas';
 import {Editor, EditorTheme} from './editor';
 import {getElemsByClass, getElemById, getElemsByTag}
   from './dom-utils';
+import {downloadProject} from './download';
 import {Resource, ResourceList} from './resource';
 import {ServerWorker} from './server';
 import {RunProgram, CheckOutput} from './server-types';
@@ -165,9 +166,11 @@ class Widget {
 
     const dlButton = this.getElem('settings-bar', 'download-btn');
     dlButton.addEventListener('click', async () => {
-      // TODO update this function to generate the download in browser.
       this.outputArea.reset();
-      this.outputArea.addError(Strings.DOWNLOAD_MAINTENANCE);
+      const files = this.collectResources();
+      const switches = this.container.dataset.switches as string;
+      const main = this.container.dataset.main as string;
+      downloadProject(files, switches, main, this.name);
     });
 
     // grab reference to output area in the HTML and construct area
