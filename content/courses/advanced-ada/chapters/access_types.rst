@@ -336,18 +336,6 @@ supported:
 User-Defined References
 -----------------------
 
-.. admonition:: Relevant topics
-
-    - `User-Defined References <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-5.html>`_
-
-.. todo::
-
-    Complete section!
-
-
-User-Defined References
------------------------
-
 Implicit dereferencing isn't limited to the contexts that Ada supports by
 default: we can also add implicit dereferencing to our own types by using the
 :ada:`Implicit_Dereference` aspect.
