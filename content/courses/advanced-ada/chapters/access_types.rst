@@ -536,13 +536,13 @@ specific object:
        --  NOTE: I_2 points to the same
        --        object as I.
 
-       Free (I);
 
        I_2 := null;
 
        --  NOTE: I_2 doesn't point to any
        --        object, so we can call Free.
 
+       Free (I);
        Free (I_2);
     end Show_Unchecked_Deallocation;
 
