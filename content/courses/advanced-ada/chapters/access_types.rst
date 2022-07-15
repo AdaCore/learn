@@ -581,18 +581,18 @@ Of course, we shouldn't try to dereference a dangling reference. For example:
        I_1 := new Integer'(42);
        I_2 := I_1;
 
-       Put_Line ("I_1 = " & Integer'Image (I_1.all));
-       Put_Line ("I_2 = " & Integer'Image (I_2.all));
+       Put_Line ("I_1.all = " & Integer'Image (I_1.all));
+       Put_Line ("I_2.all = " & Integer'Image (I_2.all));
 
        Put_Line ("Freeing I_1");
        Free (I_1);
 
        if I_1 /= null then
-          Put_Line ("I_1 = " & Integer'Image (I_1.all));
+          Put_Line ("I_1.all = " & Integer'Image (I_1.all));
        end if;
 
        if I_2 /= null then
-          Put_Line ("I_2 = " & Integer'Image (I_2.all));
+          Put_Line ("I_2.all = " & Integer'Image (I_2.all));
        end if;
     end Show_Unchecked_Deallocation;
 
