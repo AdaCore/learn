@@ -497,7 +497,8 @@ same object as :ada:`I`:
        --  NOTE: at this point, I_2 is a
        --        dangling reference!
 
-       --  Calls to Free (I) are OK!
+       --  Further calls to Free (I)
+       --  are OK!
 
        Free (I);
        Free (I);
@@ -539,8 +540,9 @@ specific object:
 
        I_2 := null;
 
-       --  NOTE: I_2 doesn't point to any
-       --        object, so we can call Free.
+       --  NOTE: now, I_2 doesn't point to
+       --        any object, so calling
+       --        Free (I_2) is OK.
 
        Free (I);
        Free (I_2);
