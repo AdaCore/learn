@@ -1581,14 +1581,430 @@ Unchecked Access
 Unchecked Deallocation
 ----------------------
 
-.. admonition:: Relevant topics
+So far, we've seen multiple examples of using :ada:`new` to allocate objects.
+In this section, we discuss how to manually deallocate objects.
 
-    - `Unchecked Storage Deallocation <http://www.ada-auth.org/standards/2xrm/html/RM-13-11-2.html>`_
+Our starting point to manually deallocate an object is the generic
+:ada:`Ada.Unchecked_Deallocation` procedure. We first instantiate this
+procedure for an access type whose objects we want to be able to deallocate.
+For example, let's instantiate it for the :ada:`Integer_Access` type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Simple_Unchecked_Deallocation
+
+    with Ada.Unchecked_Deallocation;
+
+    package Integer_Types is
+
+       type Integer_Access is access Integer;
+
+       --
+       --  Instantiation of Ada.Unchecked_Deallocation
+       --  for the Integer_Access type:
+       --
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Object => Integer,
+            Name   => Integer_Access);
+    end Integer_Types;
+
+Here, we declare the :ada:`Free` procedure, which we can then use to deallocate
+objects that were allocated for the :ada:`Integer_Access` type.
+
+:ada:`Ada.Unchecked_Deallocation` is a generic procedure that we can
+instantiate for access types. When declaring an instance of
+:ada:`Ada.Unchecked_Deallocation`, we have to specify arguments for:
+
+- the formal :ada:`Object` parameter, which indicates the type of actual
+  objects that we want to deallocate; and
+
+- the formal :ada:`Name` parameter, which indicates the access type.
+
+In a type declaration such as :ada:`type Integer_Access is access Integer`,
+:ada:`Integer` denotes the :ada:`Object`, while :ada:`Integer_Access` denotes
+the :ada:`Name`.
+
+Because each instance of :ada:`Ada.Unchecked_Deallocation` is bound to a
+specific access type, we cannot use it for another access type, even if the
+type we use for the :ada:`Object` parameter is the same:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Simple_Unchecked_Deallocation
+
+    with Ada.Unchecked_Deallocation;
+
+    package Integer_Types is
+
+       type Integer_Access is access Integer;
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Object => Integer,
+            Name   => Integer_Access);
+
+       type Another_Integer_Access is access Integer;
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Object => Integer,
+            Name   => Another_Integer_Access);
+    end Integer_Types;
+
+Here, we're declaring two :ada:`Free` procedures: one for the
+:ada:`Integer_Access` type, another for the :ada:`Another_Integer_Access`. We
+cannot use the :ada:`Free` procedure for the :ada:`Integer_Access` type when
+deallocating objects associated with the :ada:`Another_Integer_Access` type,
+even though both types are declared as :ada:`access Integer`.
+
+Note that we can use any name when instantiating the
+:ada:`Ada.Unchecked_Deallocation` procedure. However, naming it :ada:`Free` is
+very common.
+
+Now, let's see a complete example that includes object allocation and
+deallocation:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
+
+    with Ada.Unchecked_Deallocation;
+
+    package Integer_Types is
+
+       type Integer_Access is access Integer;
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation (Object => Integer,
+                                         Name   => Integer_Access);
+
+       procedure Show_Is_Null (I : Integer_Access);
+
+    end Integer_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Integer_Types is
+
+       procedure Show_Is_Null (I : Integer_Access) is
+       begin
+          if I = null then
+             Put_Line ("access value is null.");
+          else
+             Put_Line ("access value is NOT null.");
+          end if;
+       end Show_Is_Null;
+
+    end Integer_Types;
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Integer_Types; use Integer_Types;
+
+    procedure Show_Unchecked_Deallocation is
+
+       I : Integer_Access;
+
+    begin
+       Put ("We haven't called new yet... ");
+       Show_Is_Null (I);
+
+       Put ("Calling new... ");
+       I := new Integer;
+       Show_Is_Null (I);
+
+       Put ("Calling Free... ");
+       Free (I);
+       Show_Is_Null (I);
+    end Show_Unchecked_Deallocation;
+
+In the :ada:`Show_Unchecked_Deallocation` procedure, we first allocate an
+object for :ada:`I` and then call :ada:`Free (I)` to deallocate it. Also, we
+call the :ada:`Show_Is_Null` procedure at three different points: before any
+allocation takes place, after allocating an object for :ada:`I`, and after
+deallocating that object.
+
+When we deallocate an object via a call to :ada:`Free`, the corresponding
+access value |mdash| which was previously pointing to an existing object
+|mdash| is set to :ada:`null`. Therefore, :ada:`I = null` after the call to
+:ada:`Free`, which is exactly what we see when running this example code.
+
+Note that it is OK to call :ada:`Free` multiple times for the same access
+object:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
+
+    with Integer_Types; use Integer_Types;
+
+    procedure Show_Unchecked_Deallocation is
+
+       I : Integer_Access;
+
+    begin
+       I := new Integer;
+
+       Free (I);
+       Free (I);
+       Free (I);
+    end Show_Unchecked_Deallocation;
+
+The multiple calls to :ada:`Free` for the same access object don't cause any
+issues. Because the access value is null after the first call to
+:ada:`Free (I)`, we're actually just passing :ada:`null` as an argument in the
+second and third calls to :ada:`Free`. However, any attempt to deallocate an
+access value of null is ignored in the :ada:`Free` procedure, so the second and
+third calls to :ada:`Free` don't have any effect.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.8 Allocators <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-4-8.html>`__
+    - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
+
+
+Dangling References
+~~~~~~~~~~~~~~~~~~~
+
+An access value that points to a non-existent object is called a dangling
+reference. In this section, we discuss the issues of having dangling
+references.
+
+Let's reuse the last example and introduce :ada:`I_2`, which will point to the
+same object as :ada:`I`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
+    :class: ada-run-expect-failure
+
+    with Integer_Types; use Integer_Types;
+
+    procedure Show_Unchecked_Deallocation is
+
+       I, I_2 : Integer_Access;
+
+    begin
+       I := new Integer;
+
+       I_2 := I;
+
+       --  NOTE: I_2 points to the same
+       --        object as I.
+
+       --
+       --  Use I and I_2...
+       --
+       --  ... then deallocate memory...
+       --
+
+       Free (I);
+
+       --  NOTE: at this point, I_2 is a
+       --        dangling reference!
+
+       --  Further calls to Free (I)
+       --  are OK!
+
+       Free (I);
+       Free (I);
+
+       --  A call to Free (I_2) is
+       --  NOT OK:
+
+       Free (I_2);
+    end Show_Unchecked_Deallocation;
+
+As we've seen before, we can have multiple calls to :ada:`Free (I)`.
+However, the call to :ada:`Free (I_2)` is bad because :ada:`I_2` is not null.
+In fact, it is a dangling reference |mdash| i.e. :ada:`I_2` points to an object
+that doesn't exist anymore. Also, the first call to :ada:`Free (I)` will
+reclaim the storage that was allocated for the object that :ada:`I`
+originally referred to. The call to :ada:`Free (I_2)` will then try to reclaim
+the previously-reclaimed object, but it'll fail in an undefined manner.
+
+Because of these potential errors, you should be very careful when using
+unchecked deallocation: it is the programmer's responsibility to avoid creating
+dangling references!
+
+For the example we've just seen, we could avoid creating a dangling reference
+by explicitly assigning :ada:`null` to :ada:`I_2` to indicate that it doesn't
+point to any specific object:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
+
+    with Integer_Types; use Integer_Types;
+
+    procedure Show_Unchecked_Deallocation is
+
+       I, I_2 : Integer_Access;
+
+    begin
+       I := new Integer;
+
+       I_2 := I;
+
+       --  NOTE: I_2 points to the same
+       --        object as I.
+
+       --
+       --  Use I and I_2...
+       --
+       --  ... then deallocate memory...
+       --
+
+       I_2 := null;
+
+       --  NOTE: now, I_2 doesn't point to
+       --        any object, so calling
+       --        Free (I_2) is OK.
+
+       Free (I);
+       Free (I_2);
+    end Show_Unchecked_Deallocation;
+
+Now, calling :ada:`Free (I_2)` doesn't cause any issues because it doesn't
+point to any object.
+
+Note, however, that this code example is just meant to illustrate the issues of
+dangling pointers and how we could circumvent them. We're not suggesting to use
+this approach when designing an implementation. In fact, it's not practical for
+the programmer to make every possible dangling reference become null if the
+calls to :ada:`Free` are strewn throughout the code.
+
+The suggested design is to not use :ada:`Free` in the client code, but
+instead hide its use within bigger abstractions. In that way, all the
+occurrences of the calls to :ada:`Free` are in one package, and the programmer
+of that package can then prevent dangling references. We'll discuss these
+design strategies later on.
 
 .. todo::
 
-    Complete section!
+    Add link to section on design strategies for access types when it becomes
+    available! (See PR #752 for details.)
 
+
+Dereferencing dangling references
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Of course, you shouldn't try to dereference a dangling reference because your
+program becomes erroneous, as we discuss in this section. Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Integer_Types; use Integer_Types;
+
+    procedure Show_Unchecked_Deallocation is
+
+       I_1, I_2 : Integer_Access;
+
+    begin
+       I_1 := new Integer'(42);
+       I_2 := I_1;
+
+       Put_Line ("I_1.all = " & Integer'Image (I_1.all));
+       Put_Line ("I_2.all = " & Integer'Image (I_2.all));
+
+       Put_Line ("Freeing I_1");
+       Free (I_1);
+
+       if I_1 /= null then
+          Put_Line ("I_1.all = " & Integer'Image (I_1.all));
+       end if;
+
+       if I_2 /= null then
+          Put_Line ("I_2.all = " & Integer'Image (I_2.all));
+       end if;
+    end Show_Unchecked_Deallocation;
+
+In this example, we allocate an object for :ada:`I_1` and make :ada:`I_2` point
+to the same object. Then, we call :ada:`Free (I)`, which has the following
+consequences:
+
+- The call to :ada:`Free (I_1)` will try to reclaim the storage for the
+  original object (:ada:`I_1.all`), so it may be reused for other allocations.
+
+- :ada:`I_1 = null` after the call to :ada:`Free (I_1)`.
+
+- :ada:`I_2` becomes a dangling reference by the call to :ada:`Free (I_1)`.
+
+   - In other words, :ada:`I_2` is still non-null, and what it points to is now
+     undefined.
+
+In principle, we could check for :ada:`null` before trying to dereference the
+access value. (Remember that when deallocating an object via a call to
+:ada:`Free`, the corresponding access value is set to :ada:`null`.) In fact,
+this strategy works fine for :ada:`I_1`, but it doesn't work for :ada:`I_2`
+because the access value is not :ada:`null`. As a consequence, the application
+tries to dereference :ada:`I_2`.
+
+Dereferencing a dangling reference is erroneous: the behavior is undefined in
+this case. For the example we've just seen,
+
+- :ada:`I_2.all` might make the application crash;
+
+- :ada:`I_2.all` might give us a different value than before;
+
+- :ada:`I_2.all` might even give us the same value as before (42) if the
+  original object is still available.
+
+Because the effect is unpredictable, it might be really difficult to debug the
+application and identify the cause.
+
+Having dangling pointers in an application should be avoided at all costs!
+Again, it is the programmer's responsibility to be very careful when using
+unchecked deallocation: avoid creating dangling references!
+
+.. admonition:: In the Ada Reference Manual
+
+   - `13.9.1 Data Validity <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-9-1.html>`__
+   - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
+
+
+Restrictions for :ada:`Ada.Unchecked_Deallocation`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are two unsurprising restrictions for :ada:`Ada.Unchecked_Deallocation`:
+
+1. It cannot be instantiated for access-to-constant types; and
+
+2. It cannot be used when the :ada:`Storage_Size` aspect of a type is zero
+   (i.e. when its storage pool is empty).
+
+(Note that this last restriction also applies to the allocation via
+:ada:`new`.)
+
+Let's see an example of these restrictions:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation_Error
+    :class: ada-expect-compile-error
+
+    with Ada.Unchecked_Deallocation;
+
+    procedure Show_Unchecked_Deallocation_Errors is
+
+       type Integer_Access_Zero is access Integer
+         with Storage_Size => 0;
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation (Object => Integer,
+                                         Name   => Integer_Access_Zero);
+
+       type Constant_Integer_Access is access constant Integer;
+
+       --  ERROR: Cannot use access-to-constant type for Name
+       procedure Free is
+         new Ada.Unchecked_Deallocation (Object => Integer,
+                                         Name   => Constant_Integer_Access);
+
+       I : Integer_Access_Zero;
+
+    begin
+       --  ERROR: Cannot allocate objects from empty storage pool
+       I := new Integer;
+
+       --  ERROR: Cannot deallocate objects from empty storage pool
+       Free (I);
+    end Show_Unchecked_Deallocation_Errors;
+
+Here, we see that trying to instantiate :ada:`Ada.Unchecked_Deallocation` for
+the :ada:`Constant_Integer_Access` type is rejected by the compiler. Similarly,
+we cannot allocate or deallocate an object for the :ada:`Integer_Access_Zero`
+type because its storage pool is empty.
+
+
+.. _Adv_Ada_Not_Null_Access:
 
 Null & Not Null Access
 ----------------------
