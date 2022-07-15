@@ -569,6 +569,23 @@ point to any specific object:
 Now, calling :ada:`Free (I_2)` doesn't cause any issues because it doesn't
 point to any object.
 
+Note, however, that this code example is just meant to illustrate the issues of
+dangling pointers and how we could circumvent them. We're not suggesting to use
+this approach when designing an implementation. In fact, it's not practical for
+the programmer to make every possible dangling reference become null if the
+calls to :ada:`Free` are strewn throughout the code.
+
+The suggested design is to not use :ada:`Free` in the client code, but
+instead hide its use within bigger abstractions. In that way, all the
+occurrences of the calls to :ada:`Free` are in one package, and the programmer
+of that package can then prevent dangling references. We'll discuss these
+design strategies later on.
+
+.. todo::
+
+    Add link to section on design strategies for access types when it becomes
+    available! (See PR #752 for details.)
+
 
 Dereferencing dangling references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
