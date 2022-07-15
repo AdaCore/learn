@@ -521,10 +521,10 @@ same object as :ada:`I`:
 As we've seen before, we can have multiple calls to :ada:`Free (I)`.
 However, the call to :ada:`Free (I_2)` is bad because :ada:`I_2` is not null.
 In fact, it is a dangling reference |mdash| i.e. :ada:`I_2` points to an object
-that doesn't exist anymore. Also, the first call to :ada:`Free (I)` will try
-to reclaim the storage that was allocated for the object that :ada:`I`
-originally referred to. The call to :ada:`Free (I_2)` then fails in an
-undefined manner.
+that doesn't exist anymore. Also, the first call to :ada:`Free (I)` will
+reclaim the storage that was allocated for the object that :ada:`I`
+originally referred to. The call to :ada:`Free (I_2)` will then try to reclaim
+the previously-reclaimed object, but it'll fail in an undefined manner.
 
 Because of these potential errors, you should be very careful when using
 unchecked deallocation: it is the programmer's responsibility to avoid creating
