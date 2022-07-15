@@ -492,6 +492,12 @@ same object as :ada:`I`:
        --  NOTE: I_2 points to the same
        --        object as I.
 
+       --
+       --  Use I and I_2...
+       --
+       --  ... then deallocate memory...
+       --
+
        Free (I);
 
        --  NOTE: at this point, I_2 is a
@@ -537,6 +543,11 @@ specific object:
        --  NOTE: I_2 points to the same
        --        object as I.
 
+       --
+       --  Use I and I_2...
+       --
+       --  ... then deallocate memory...
+       --
 
        I_2 := null;
 
