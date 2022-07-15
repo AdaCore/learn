@@ -261,7 +261,7 @@ Finally, let's see an example of implicit dereference when using attributes:
 
 Here, we can write :ada:`Arr'First` and :ada:`Arr'Last` instead of
 :ada:`Arr.all'First` and :ada:`Arr.all'Last`, respectively, because :ada:`Arr`
-is implicitly dereference. The same applies to :ada:`Arr'Component_Size`. Note
+is implicitly dereferenced. The same applies to :ada:`Arr'Component_Size`. Note
 that we can write both :ada:`Arr'Size` and :ada:`Arr.all'Size`, but they have
 different meanings:
 
