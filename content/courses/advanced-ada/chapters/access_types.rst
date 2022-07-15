@@ -519,9 +519,9 @@ As we've seen before, we can have multiple calls to :ada:`Free (I)`. However,
 the call to :ada:`I_2` fails because it points to an object that doesn't exist
 anymore.
 
-Because of these potential errors, it is the programmer's responsibility to be
-very careful when using unchecked deallocation and avoid creating dangling
-references.
+Because of these potential errors, you should be very careful when using
+unchecked deallocation: it is the programmer's responsibility to avoid creating
+dangling references!
 
 For the example we've just seen, a better approach could be to explicitly
 assign :ada:`null` to :ada:`I_2` to indicate that it doesn't point to any
