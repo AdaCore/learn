@@ -162,6 +162,9 @@ the qualified expression syntax:
        Msg : String_Acc := new String'("Hello");
     end Access_Types;
 
+
+.. _Intro_Ada_Access_Dereferencing:
+
 Dereferencing
 -------------
 

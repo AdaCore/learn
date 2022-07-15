@@ -6,13 +6,339 @@ Access Types
 Dereferencing
 -------------
 
-.. todo::
+In the :ref:`Introduction to Ada course <Intro_Ada_Access_Dereferencing>`, we
+discussed the :ada:`.all` syntax to dereference access values:
 
-    Complete section!
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Simple_Dereferencing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Dereferencing is
+
+       --  Declaring access type:
+       type Integer_Access is access Integer;
+
+       --  Declaring access value:
+       A1 : Integer_Access;
+
+    begin
+       A1 := new Integer;
+
+       --  Dereferencing access value:
+       A1.all := 22;
+
+       Put_Line ("A1: " & Integer'Image (A1.all));
+    end Show_Dereferencing;
+
+In this example, we declare :ada:`A1` as an access value, which allows us to
+access objects of :ada:`Integer` type. We dereference :ada:`A1` by writing
+:ada:`A1.all`.
+
+Here's another example, this time with an array:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Array_Dereferencing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Dereferencing is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Integer_Array_Access is access Integer_Array;
+
+       Arr : constant Integer_Array_Access := new Integer_Array (1 .. 6);
+    begin
+       Arr.all := (1, 2, 3, 5, 8, 13);
+
+       for I in Arr'Range loop
+          Put_Line ("Arr (: "
+                    & Integer'Image (I) & "): "
+                    & Integer'Image (Arr.all (I)));
+       end loop;
+    end Show_Dereferencing;
+
+In this example, we dereference the access value by writing :ada:`Arr.all`. We
+then assign an array aggregate to it |mdash| this becomes
+:ada:`Arr.all := (..., ...);`. Similarly, in the loop, we write
+:ada:`Arr.all (I)` to access the :ada:`I` component of the array.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.1 Names <http://www.ada-auth.org/standards/12rm/html/RM-4-1.html>`_
 
 
 Implicit Dereferencing
 ~~~~~~~~~~~~~~~~~~~~~~
+
+Implicit dereferencing allows us to omit the :ada:`.all` suffix without getting
+a compilation error. In this case, the compiler *knows* that the dereferenced
+object is implied, not the access value.
+
+Ada supports implicit dereferencing in these use cases:
+
+- when accessing components of a record or an array |mdash| including array
+  slices.
+
+- when accessing subprograms that have at least one parameter (we
+  discuss this topic later in this chapter);
+
+- when accessing some attributes |mdash| such as some array and task
+  attributes.
+
+Arrays
+^^^^^^
+
+Let's start by looking into an example of implicit dereferencing of arrays. We
+can take the previous code example and replace :ada:`Arr.all (I)` by
+:ada:`Arr (I)`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Array_Implicit_Dereferencing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Dereferencing is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Integer_Array_Access is access Integer_Array;
+
+       Arr : constant Integer_Array_Access := new Integer_Array (1 .. 6);
+    begin
+       Arr.all := (1, 2, 3, 5, 8, 13);
+
+       Arr (1 .. 6) := (1, 2, 3, 5, 8, 13);
+
+       for I in Arr'Range loop
+          Put_Line ("Arr (: "
+                    & Integer'Image (I) & "): "
+                    & Integer'Image (Arr (I)));
+          --                            ^ .all is implicit.
+       end loop;
+    end Show_Dereferencing;
+
+Both forms |mdash| :ada:`Arr.all (I)` and :ada:`Arr (I)` |mdash| are
+equivalent. Note, however, that there's no implicit dereferencing when we want
+to access the whole array. (Therefore, we cannot write
+:ada:`Arr := (1, 2, 3, 5, 8, 13);`.) However, as slices are implicitly
+dereferenced, we can write :ada:`Arr (1 .. 6) := (1, 2, 3, 5, 8, 13);` instead
+of :ada:`Arr.all (1 .. 6) := (1, 2, 3, 5, 8, 13);`. Alternatively, we can
+assign to the array components individually and use implicit dereferencing for
+each component:
+
+.. code-block:: ada
+
+   Arr (1) := 1;
+   Arr (2) := 2;
+   Arr (3) := 3;
+   Arr (4) := 5;
+   Arr (5) := 8;
+   Arr (6) := 13;
+
+Implicit dereferencing isn't available for the whole array because we have to
+distinguish between assigning to access values and assigning to actual arrays.
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Array_Assignments
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Array_Assignments is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Integer_Array_Access is access Integer_Array;
+
+       procedure Show_Array (Name : String;
+                             Arr  : Integer_Array_Access) is
+       begin
+          Put (Name);
+          for E of Arr.all loop
+             Put (Integer'Image (E));
+          end loop;
+          New_Line;
+       end Show_Array;
+
+       Arr_1 : constant Integer_Array_Access := new Integer_Array (1 .. 6);
+       Arr_2 :          Integer_Array_Access := new Integer_Array (1 .. 6);
+    begin
+       Arr_1.all := (1,   2,  3,  5,   8,  13);
+       Arr_2.all := (21, 34, 55, 89, 144, 233);
+
+       --  Array assignment
+       Arr_2.all := Arr_1.all;
+
+       Show_Array ("Arr_2", Arr_2);
+
+       --  Access value assignment
+       Arr_2 := Arr_1;
+
+       Arr_1.all := (377, 610, 987, 1597, 2584, 4181);
+
+       Show_Array ("Arr_2", Arr_2);
+    end Show_Array_Assignments;
+
+Here, :ada:`Arr_2.all := Arr_1.all` is an array assignment, while
+:ada:`Arr_2 := Arr_1` is an access value assignment. By forcing the usage of
+the :ada:`.all` suffix, the distinction is clear. Implicit dereferencing,
+however, could be confusing here. (For example, the :ada:`.all` suffix in
+:ada:`Arr_2 := Arr_1.all` is an oversight by the programmer when the intention
+actually was to use access values on both sides.) Therefore, implicit
+dereferencing is only supported in those cases where there's no risk of
+ambiguities or oversights.
+
+Records
+^^^^^^^
+
+Let's see an example of implicit dereferencing of a record:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Record_Implicit_Dereferencing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Dereferencing is
+
+       type Rec is record
+          I : Integer;
+          F : Float;
+       end record;
+
+       type Rec_Access is access Rec;
+
+       R : constant Rec_Access := new Rec;
+    begin
+       R.all := (I => 1, F => 5.0);
+
+       Put_Line ("R.I: "
+                 & Integer'Image (R.I));
+       Put_Line ("R.F: "
+                 & Float'Image (R.F));
+    end Show_Dereferencing;
+
+Again, we can replace :ada:`R.all.I` by :ada:`R.I`, as record components are
+implicitly dereferenced. Also, we could use implicit dereference when assigning
+to record components individually:
+
+.. code-block:: ada
+
+       R.I := 1;
+       R.F := 5.0;
+
+However, we have to write :ada:`R.all` when assigning to the whole record
+:ada:`R`.
+
+Attributes
+^^^^^^^^^^
+
+Finally, let's see an example of implicit dereference when using attributes:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Array_Implicit_Dereferencing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Dereferencing is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Integer_Array_Access is access Integer_Array;
+
+       Arr : constant Integer_Array_Access := new Integer_Array (1 .. 6);
+    begin
+       Put_Line ("Arr'First: "
+                 & Integer'Image (Arr'First));
+       Put_Line ("Arr'Last: "
+                 & Integer'Image (Arr'Last));
+
+       Put_Line ("Arr'Component_Size: "
+                 & Integer'Image (Arr'Component_Size));
+       Put_Line ("Arr.all'Component_Size: "
+                 & Integer'Image (Arr.all'Component_Size));
+
+       Put_Line ("Arr'Size: "
+                 & Integer'Image (Arr'Size));
+       Put_Line ("Arr.all'Size: "
+                 & Integer'Image (Arr.all'Size));
+    end Show_Dereferencing;
+
+Here, we can write :ada:`Arr'First` and :ada:`Arr'Last` instead of
+:ada:`Arr.all'First` and :ada:`Arr.all'Last`, respectively, because :ada:`Arr`
+is implicitly dereferenced. The same applies to :ada:`Arr'Component_Size`. Note
+that we can write both :ada:`Arr'Size` and :ada:`Arr.all'Size`, but they have
+different meanings:
+
+- :ada:`Arr'Size` is the size of the access value; while
+
+- :ada:`Arr.all'Size` indicates the size of the actual array :ada:`Arr`.
+
+In other words, the :ada:`'Size` attribute is *not* implicitly deferenced.
+In fact, any attribute that could potentially be ambiguous is not implicitly
+dereferenced. Therefore, in those cases, we must explicitly indicate (by using
+:ada:`.all` or not) how we want to use the attribute.
+
+Summary
+^^^^^^^
+
+The following table summarizes all instances where implicit dereferencing is
+supported:
+
++------------------------+-------------------------+--------------------------+
+| Entities               | Standard Usage          | Implicit Dereference     |
++========================+=========================+==========================+
+| Array components       | Arr.all (I)             | Arr (I)                  |
++------------------------+-------------------------+--------------------------+
+| Array slices           | Arr.all (F .. L)        | Arr (F .. L)             |
++------------------------+-------------------------+--------------------------+
+| Record components      | Rec.all.C               | Rec.C                    |
++------------------------+-------------------------+--------------------------+
+| Array attributes       | Arr.all’First           | Arr’First                |
+|                        +-------------------------+--------------------------+
+|                        | Arr.all’First (N)       | Arr’First (N)            |
+|                        +-------------------------+--------------------------+
+|                        | Arr.all’Last            | Arr’Last                 |
+|                        +-------------------------+--------------------------+
+|                        | Arr.all’Last (N)        | Arr’Last (N)             |
+|                        +-------------------------+--------------------------+
+|                        | Arr.all’Range           | Arr’Range                |
+|                        +-------------------------+--------------------------+
+|                        | Arr.all’Range (N)       | Arr’Range (N)            |
+|                        +-------------------------+--------------------------+
+|                        | Arr.all’Length          | Arr’Length               |
+|                        +-------------------------+--------------------------+
+|                        | Arr.all’Length (N)      | Arr’Length (N)           |
+|                        +-------------------------+--------------------------+
+|                        | Arr.all’Component_Size  | Arr’Component_Size       |
++------------------------+-------------------------+--------------------------+
+| Task attributes        | T.all'Identity          | T'Identity               |
+|                        +-------------------------+--------------------------+
+|                        | T.all'Storage_Size      | T'Storage_Size           |
+|                        +-------------------------+--------------------------+
+|                        | T.all'Terminated        | T'Terminated             |
+|                        +-------------------------+--------------------------+
+|                        | T.all'Callable          | T'Callable               |
++------------------------+-------------------------+--------------------------+
+| Tagged type attributes | X.all’Tag               | X’Tag                    |
++------------------------+-------------------------+--------------------------+
+| Other attributes       | X.all'Valid             | X'Valid                  |
+|                        +-------------------------+--------------------------+
+|                        | X.all'Old               | X'Old                    |
+|                        +-------------------------+--------------------------+
+|                        | A.all’Constrained       | A’Constrained            |
++------------------------+-------------------------+--------------------------+
+
+.. admonition:: In the Ada Reference Manual
+
+    - `4.1 Names <http://www.ada-auth.org/standards/12rm/html/RM-4-1.html>`_
+    - `4.1.1 Indexed Components <http://www.ada-auth.org/standards/12rm/html/RM-4-1-1.html>`_
+    - `4.1.2 Slices <http://www.ada-auth.org/standards/12rm/html/RM-4-1-2.html>`_
+    - `4.1.3 Selected Components <http://www.ada-auth.org/standards/12rm/html/RM-4-1-3.html>`_
+    - `4.1.4 Attributes <http://www.ada-auth.org/standards/12rm/html/RM-4-1-4.html>`_
+
+
+User-Defined References
+-----------------------
+
+.. admonition:: Relevant topics
+
+    - `User-Defined References <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-5.html>`_
 
 .. todo::
 
