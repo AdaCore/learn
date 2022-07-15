@@ -436,8 +436,8 @@ access value |mdash| which was previously pointing to an existing object
 |mdash| is set to :ada:`null`. Therefore, :ada:`I = null` after the call to
 :ada:`Free`, which is exactly what we see when running this example code.
 
-Note that it is OK to call :ada:`Free` for an access value that has already
-been deallocated:
+Note that it is OK to call :ada:`Free` multiple times for the same access
+object:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
 
@@ -455,9 +455,12 @@ been deallocated:
        Free (I);
     end Show_Unchecked_Deallocation;
 
-The multiple calls to :ada:`Free` in this example don't cause any issues. In
-fact, calling :ada:`Free` to an access value that is equal to :ada:`null` is
-simply ignored.
+The multiple calls to :ada:`Free` for the same access object don't cause any
+issues. Because the access value is null after the first call to
+:ada:`Free (I)`, we're actually just passing :ada:`null` as an argument in the
+second and third calls to :ada:`Free`. However, any attempt to deallocate an
+access value of null is ignored in the :ada:`Free` procedure, so the second and
+third calls to :ada:`Free` don't have any effect.
 
 .. admonition:: In the Ada Reference Manual
 
