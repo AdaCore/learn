@@ -530,9 +530,9 @@ Because of these potential errors, you should be very careful when using
 unchecked deallocation: it is the programmer's responsibility to avoid creating
 dangling references!
 
-For the example we've just seen, a better approach could be to explicitly
-assign :ada:`null` to :ada:`I_2` to indicate that it doesn't point to any
-specific object:
+For the example we've just seen, we could avoid creating a dangling reference
+by explicitly assigning :ada:`null` to :ada:`I_2` to indicate that it doesn't
+point to any specific object:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
 
