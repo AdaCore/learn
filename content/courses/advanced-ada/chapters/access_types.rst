@@ -472,8 +472,8 @@ Dangling References
 ~~~~~~~~~~~~~~~~~~~
 
 An access value that points to a non-existent object is called a dangling
-reference. Of course, we shouldn't try to dereference a dangling reference
-because it causes the :ref:`access check <Adv_Ada_Access_Check>` to fail.
+reference. In this section, we discuss the issues of having dangling
+references.
 
 Let's reuse the last example and introduce :ada:`I_2`, which will point to the
 same object as :ada:`I`:
@@ -518,9 +518,13 @@ same object as :ada:`I`:
        Free (I_2);
     end Show_Unchecked_Deallocation;
 
-As we've seen before, we can have multiple calls to :ada:`Free (I)`. However,
-the call to :ada:`I_2` fails because it points to an object that doesn't exist
-anymore.
+As we've seen before, we can have multiple calls to :ada:`Free (I)`.
+However, the call to :ada:`Free (I_2)` is bad because :ada:`I_2` is not null.
+In fact, it is a dangling reference |mdash| i.e. :ada:`I_2` points to an object
+that doesn't exist anymore. Also, the previous call to :ada:`Free (I)` will try
+to reclaim the storage that was allocated for the object that :ada:`I`
+originally referred to. The call to :ada:`Free (I_2)` then fails in an
+undefined manner.
 
 Because of these potential errors, you should be very careful when using
 unchecked deallocation: it is the programmer's responsibility to avoid creating
