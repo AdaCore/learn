@@ -590,7 +590,8 @@ design strategies later on.
 Dereferencing dangling references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Of course, we shouldn't try to dereference a dangling reference. For example:
+Of course, you shouldn't try to dereference a dangling reference because your
+program becomes erroneous, as we discuss in this section. Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Unchecked_Deallocation
 
