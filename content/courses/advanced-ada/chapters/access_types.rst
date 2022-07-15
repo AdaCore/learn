@@ -622,57 +622,47 @@ program becomes erroneous, as we discuss in this section. Let's see an example:
     end Show_Unchecked_Deallocation;
 
 In this example, we allocate an object for :ada:`I_1` and make :ada:`I_2` point
-to the same object. Note, however, that we call :ada:`Free` for :ada:`I_1`, but
-not for :ada:`I_2`. Therefore, after that call to :ada:`Free`,
-:ada:`I_1 = null`, but :ada:`I_2` still points to the object originally
-allocated for :ada:`I_1`.
+to the same object. Then, we call :ada:`Free (I)`, which has the following
+consequences:
 
-As mentioned previously, when deallocating an object via a call to :ada:`Free`,
-the corresponding access value is set to :ada:`null`. In this case, we can
-check for :ada:`null` to detect a dangling reference and avoid dereferencing
-it.
+- The call to :ada:`Free (I_1)` will try to reclaim the storage for the
+  original object (:ada:`I_1.all`), so it may be reused for other allocations.
 
-The strategy of checking for :ada:`null` before trying to dereferencing the
-access value works fine for :ada:`I_1`. However, this strategy doesn't work for
-:ada:`I_2`: the access value is not :ada:`null` because it still points to an
-object that existed at some point. Therefore, the application will try to
-dereference :ada:`I_2`. The resulting behavior in this case is undefined.
+- :ada:`I_1 = null` after the call to :ada:`Free (I_1)`.
 
-.. admonition:: Important
+- :ada:`I_2` becomes a dangling reference by the call to :ada:`Free (I_1)`.
 
-    Dereferencing a dangling reference is erroneous: the behavior in this case
-    is undefined. Sometimes, the compiler is able to detect this situation and
-    introduce an :ref:`access check <Adv_Ada_Access_Check>`, which will fail
-    when trying to dereference the dangling reference, thereby raising the
-    :ada:`Constraint_Error` exception.
+   - In other words, :ada:`I_2` is still non-null, and what it points to is now
+     undefined.
 
-    However, the compiler might not always be able to detect this, so the
-    behavior becomes unpredictable. The application might crash when
-    dereferencing the dangling reference, or it might just use some junk value
-    from the memory, giving the impression that everything is OK.
+In principle, we could check for :ada:`null` before trying to dereference the
+access value. (Remember that when deallocating an object via a call to
+:ada:`Free`, the corresponding access value is set to :ada:`null`.) In fact,
+this strategy works fine for :ada:`I_1`, but it doesn't work for :ada:`I_2`
+because the access value is not :ada:`null`. As a consequence, the application
+tries to dereference :ada:`I_2`.
 
-    Because the behavior is erroneous and unpredictable, it should be
-    avoided at all costs! Again, it is the programmer's responsibility to be
-    very careful when using unchecked deallocation and avoid creating dangling
-    references.
+Dereferencing a dangling reference is erroneous: the behavior is undefined in
+this case. For the example we've just seen,
 
-    .. admonition:: In the Ada Reference Manual
+- :ada:`I_2.all` might make the application crash;
 
-        - `13.9.1 Data Validity <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-9-1.html>`__
-        - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
+- :ada:`I_2.all` might give us a different value than before;
 
-Again, a possible way to fix the code example is to indicate that :ada:`I_2`
-doesn't refer to any object (when deallocating the object that :ada:`I_1`
-points to):
+- :ada:`I_2.all` might even give us the same value as before (42) if the
+  original object is still available.
 
-.. code-block:: ada
+Because the effect is unpredictable, it might be really difficult to debug the
+application and identify the cause.
 
-       Put_Line ("Freeing I_1");
-       I_2 := null;
-       Free (I_1);
+Having dangling pointers in an application should be avoided at all costs!
+Again, it is the programmer's responsibility to be very careful when using
+unchecked deallocation: avoid creating dangling references!
 
-With this fix, :ada:`I_2` isn't a dangling reference anymore after the call to
-:ada:`Free (I_1)`.
+.. admonition:: In the Ada Reference Manual
+
+   - `13.9.1 Data Validity <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-9-1.html>`__
+   - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
 
 
 Restrictions for :ada:`Ada.Unchecked_Deallocation`
