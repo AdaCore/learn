@@ -1099,7 +1099,8 @@ Interfacing To Other Languages
 User-Defined References
 -----------------------
 
-Implicit dereferencing isn't limited to the contexts that Ada supports by
+:ref:`Implicit dereferencing <Adv_Ada_Implicit_Dereferencing>`
+isn't limited to the contexts that Ada supports by
 default: we can also add implicit dereferencing to our own types by using the
 :ada:`Implicit_Dereference` aspect.
 
