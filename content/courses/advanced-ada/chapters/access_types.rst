@@ -1062,6 +1062,34 @@ Anonymous Access Types
     Complete section!
 
 
+Anonymous Access-To-Object Types
+--------------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
+
+.. todo::
+
+    Complete section!
+
+
+Drawbacks of Anonymous Access-To-Object Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Anonymous Access discriminants
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Anonymous Access parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Interfacing To Other Languages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 User-Defined References
 -----------------------
 
