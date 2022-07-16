@@ -67,6 +67,8 @@ then assign an array aggregate to it |mdash| this becomes
     - `4.1 Names <http://www.ada-auth.org/standards/12rm/html/RM-4-1.html>`_
 
 
+.. _Adv_Ada_Implicit_Dereferencing:
+
 Implicit Dereferencing
 ~~~~~~~~~~~~~~~~~~~~~~
 
