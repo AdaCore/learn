@@ -2362,6 +2362,10 @@ In addition, we can declare those subprogram parameters using anonymous types:
 
     end Access_To_Subprogram_Params;
 
+We discuss more about
+:ref:`anonymous access-to-subprograms <Adv_Ada_Anonymous_Access_To_Subprograms>`
+later.
+
 Finally, we can get access to a subprogram using the :ada:`Access` attribute:
 
 .. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Access_Types.Access_To_Subprogram_Params
