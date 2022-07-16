@@ -3068,6 +3068,12 @@ have |mdash| as long as the subprograms we want to register are conformant to
 the :ada:`Valid_Work_Handler` type.
 
 
+.. _Adv_Ada_Anonymous_Access_To_Subprograms:
+
+Anonymous Access-To-Subprograms
+-------------------------------
+
+
 ..
     REMOVED! TO BE RE-EVALUATED IN 2022:
 
