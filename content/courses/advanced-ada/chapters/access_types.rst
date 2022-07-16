@@ -1050,6 +1050,8 @@ it as :ada:`aliased Integer`, it is passed by reference.
     - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`__
 
 
+.. _Adv_Ada_Anonymous_Access_Types:
+
 Anonymous Access Types
 ----------------------
 
