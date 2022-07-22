@@ -1080,13 +1080,20 @@ Anonymous Access-To-Object Types
     Complete section!
 
 
+.. _Adv_Ada_Drawbacks_Anonymous_Access_To_Object_Types:
+
+
 Drawbacks of Anonymous Access-To-Object Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+.. _Adv_Ada_Anonymous_Access_Discriminants:
+
 Anonymous Access discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+.. _Adv_Ada_Anonymous_Access_Parameter:
 
 Anonymous Access parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
