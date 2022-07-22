@@ -1383,7 +1383,8 @@ To do this, we have to declare:
 
 Also, for the reference type, we have to:
 
-- specify the reference discriminant as an access discriminant; and
+- specify the reference discriminant as an
+  :ref:`access discriminant <Adv_Ada_Anonymous_Access_Discriminants>`; and
 
 - indicate the name of the reference discriminant when specifying the
   :ada:`Implicit_Dereference` aspect.
