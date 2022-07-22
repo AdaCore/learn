@@ -1057,13 +1057,244 @@ it as :ada:`aliased Integer`, it is passed by reference.
 Anonymous Access Types
 ----------------------
 
+So far, most of the sections in this chapter dealt with access type
+declarations such as this one:
+
+.. code-block:: ada
+
+   type Integer_Access is access all Integer;
+
+   procedure Add_One (A : Integer_Access);
+
+In addition to named access type declarations such as the one in this example,
+Ada also supports anonymous access types, which, as the name implies, don't
+have an actual type declaration.
+
+To declare an access object of anonymous type, we just specify the subtype of
+the object or subprogram we want to have access to. For example:
+
+.. code-block:: ada
+
+   procedure Add_One (A : access Integer);
+
+When we compare this example with the previous one, we see that the declaration
+:ada:`A : Integer_Access` becomes :ada:`A : access Integer`. Here,
+:ada:`access Integer` is the anonymous access type declaration, and :ada:`A` is
+an access object of this anonymous type.
+
+To be more precise, :ada:`A : access Integer` is an
+:ref:`access parameter <Adv_Ada_Anonymous_Access_Parameter>` and it's
+specifying an
+:ref:`anonymous access-to-object type <Adv_Ada_Anonymous_Access_To_Object_Types>`.
+Another flavor of anonymous access types are
+:ref:`anonymous access-to-subprograms <Adv_Ada_Anonymous_Access_To_Subprograms>`.
+We discuss all these topics in more details later.
+
+Let's see a complete example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Simple_Anonymous_Access_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Anonymous_Access_Types is
+       I_Var : aliased Integer;
+
+       A     : access Integer;
+       --      ^ Anonymous access type
+    begin
+       A := I_Var'Access;
+       --   ^ Assignment to object of
+       --     anonymous access type.
+
+       A.all := 22;
+
+       Put_Line ("A.all: " & Integer'Image (A.all));
+    end Show_Anonymous_Access_Types;
+
+Here, :ada:`A` is an access object whose value is initialized with the access
+to :ada:`I_Var`. Because the declaration of :ada:`A` includes the declaration
+of an anonymous access type, we don't declare an extra :ada:`Integer_Access`
+type, as we did in previous code examples.
+
 .. admonition:: In the Ada Reference Manual
 
     - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
 
-.. todo::
 
-    Complete section!
+Relation to named types
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Anonymous access types were not part of the first version of the Ada standard,
+which only had support for named access types. They were introduced later to
+cover some use-cases that were difficult |mdash| or even impossible |mdash|
+with access types.
+
+In this sense, anonymous access types aren't just access types without names.
+Certain accessibility rules for anonymous access types are a bit less strict.
+In those cases, it might be interesting to consider using them instead of named
+access types.
+
+In general, however, we should only use anonymous access types in those
+specific cases where using named access types becomes too cumbersome. As a
+general recommendation, we should give preference to named access types
+whenever possible. (Anonymous access-to-object types have
+:ref:`drawbacks that we discuss later <Adv_Ada_Drawbacks_Anonymous_Access_To_Object_Types>`.)
+
+
+Benefits of anonymous access types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One of the main benefits of anonymous access types is their flexibility:
+since there isn't an explicit access type declaration associated with them,
+we only have to worry about the subtype :ada:`S` we intend to access.
+
+Also, as long as the subtype :ada:`S` in a declaration :ada:`access S` is
+always the same, no conversion is needed between two access objects of that
+anonymous type, and the :ada:`S'Access` attribute always works.
+
+Let's see an example:
+
+.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Access_Types.Anonymous_Access_Object_Assignment
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show (Name : String;
+                    V    : access Integer) is
+    begin
+       Put_Line (Name & ".all: "
+                 & Integer'Image (V.all));
+    end Show;
+
+    with Show;
+
+    procedure Show_Anonymous_Access_Types is
+       I_Var : aliased Integer;
+       A     : access Integer;
+       B     : access Integer;
+    begin
+       A := I_Var'Access;
+       B := A;
+
+       A.all := 22;
+
+       Show ("A", A);
+       Show ("B", B);
+    end Show_Anonymous_Access_Types;
+
+In this example, we have two access objects :ada:`A` and :ada:`B`. Since
+they're objects of anonymous access types that refer to the same subtype
+:ada:`Integer`, we can assign :ada:`A` to :ada:`B` without a type conversion,
+and pass those access objects as an argument to the :ada:`Show` procedure.
+
+(Note that the use of an access parameter in the :ada:`Show` procedure is for
+demonstration purpose only: a simply :ada:`Integer` as the type of this input
+parameter would have been more than sufficient to implement the procedure.
+Actually, in this case, avoiding the access parameter would be the recommended
+approach in terms of clean Ada software design.)
+
+In contrast, if we had used named type declarations, the code would be more
+complicated and more limited:
+
+.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Access_Types.Anonymous_Access_Object_Assignment
+
+    package Aux is
+
+       type Integer_Access is access all Integer;
+
+       procedure Show (Name : String;
+                       V    : Integer_Access);
+
+    end Aux;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Aux is
+
+       procedure Show (Name : String;
+                       V    : Integer_Access) is
+       begin
+          Put_Line (Name & ".all: "
+                    & Integer'Image (V.all));
+       end Show;
+
+    end Aux;
+
+    with Aux; use Aux;
+
+    procedure Show_Anonymous_Access_Types is
+       --  I_Var : aliased Integer;
+
+       A : Integer_Access;
+       B : Integer_Access;
+    begin
+       --  A := I_Var'Access;
+       --       ^ ERROR: non-local pointer cannot
+       --                point to local object.
+
+       A := new Integer;
+       B := A;
+
+       A.all := 22;
+
+       Show ("A", A);
+       Show ("B", B);
+    end Show_Anonymous_Access_Types;
+
+Here, apart from the access type declaration (:ada:`Integer_Access`), we had to
+make two adaptations to convert the previous code example:
+
+1. We had to move the :ada:`Show` procedure to a package (which we simply
+   called :ada:`Aux`) because of the access type declaration.
+
+2. Also, we had to allocate an object for :ada:`A` instead of retrieving the
+   access attribute of :ada:`I_Var` because we cannot use a pointer to a local
+   object in the assignment to a non-local pointer, as indicate in the
+   comments.
+
+This restriction regarding non-local pointer assignments is an example of the
+stricter accessibility rules that apply to named access types. As
+mentioned earlier, the :ada:`S'Access` attribute always works when we use
+anonymous access types |mdash| this is not always the case for named access
+types.
+
+.. admonition:: Important
+
+    As mentioned earlier, if we want to use two access objects in an operation,
+    the rule says that the subtype :ada:`S` of the anonymous type used in their
+    corresponding declaration must match. In the following example, we can see
+    how this rule works:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Anonymous_Access_Subtype_Error
+        :class: ada-expect-compile-error
+
+        procedure Show_Anonymous_Access_Subtype_Error is
+           subtype Integer_1_10 is Integer range 1 .. 10;
+
+           I_Var : aliased Integer;
+           A     : access Integer := I_Var'Access;
+           B     : access Integer_1_10;
+        begin
+           A := I_Var'Access;
+
+           B := A;
+           --  ^ ERROR: subtype doesn't match!
+
+           B := I_Var'Access;
+           --  ^ ERROR: subtype doesn't match!
+        end Show_Anonymous_Access_Subtype_Error;
+
+   Even though :ada:`Integer_1_10` is a subtype of :ada:`Integer`, we cannot
+   assign :ada:`A` to :ada:`B` because the subtype that their access type
+   declarations refer to |mdash| :ada:`Integer` and :ada:`Integer_1_10`,
+   respectively |mdash| doesn't match. The same issue occurs when
+   retrieving the access attribute of :ada:`I_Var` in the assignment to
+   :ada:`B`.
+
+The later sections on
+:ref:`anonymous access-to-object type <Adv_Ada_Anonymous_Access_To_Object_Types>`
+and
+:ref:`anonymous access-to-subprograms <Adv_Ada_Anonymous_Access_To_Subprograms>`
+cover more specific details on anonymous access types.
 
 
 .. _Adv_Ada_Anonymous_Access_To_Object_Types:
