@@ -1324,6 +1324,37 @@ Anonymous Access discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+.. _Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types:
+
+Mutually dependent types using anonymous access types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the section on
+:ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>`, we've seen
+a code example that was using named access types. We could now rewrite it using
+anonymous access types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Mutually_Dependent_Anonymous_Access_Types
+
+    package Mutually_Dependent is
+
+       type T2;
+
+       type T1 is record
+          B : access T2;
+       end record;
+
+       type T2 is record
+          A : access T1;
+       end record;
+
+    end Mutually_Dependent;
+
+In this example, :ada:`T1` and :ada:`T2` are mutually dependent types. We're
+using anonymous access types in the declaration of the :ada:`B` and :ada:`A`
+components.
+
+
 .. _Adv_Ada_Anonymous_Access_Parameter:
 
 Anonymous Access parameters

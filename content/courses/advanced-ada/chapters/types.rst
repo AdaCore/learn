@@ -1470,6 +1470,10 @@ code:
 
     end Mutually_Dependent;
 
+Later on, we'll see that these code examples can be written using
+:ref:`anonymous access types <Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types>`.
+
+
 .. _Adv_Ada_Type_View:
 
 Type view
