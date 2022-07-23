@@ -1593,9 +1593,51 @@ Accessibility Levels and Rules: An Introduction
 Lifetime of objects
 ~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+First, let's talk a bit about
+`lifetime of objects <https://en.wikipedia.org/wiki/Variable_(computer_science)#Scope_and_extent>`_.
+We assume you understand the concept, so this section is very short.
 
-    Complete section!
+In very simple terms, the lifetime of an object indicates when an object still
+has relevant information. For example, if a variable :ada:`V` gets out of
+scope, we say that its lifetime has ended. From this moment on, :ada:`V`
+doesn't have any relevant information anymore.
+
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Lifetime
+    :class: ada-expect-compile-error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Lifetime is
+       I_Var_1 : Integer := 22;
+    begin
+
+       Inner_Block : declare
+          I_Var_2 : Integer := 42;
+       begin
+          Put_Line ("I_Var_1: " & Integer'Image (I_Var_1));
+          Put_Line ("I_Var_2: " & Integer'Image (I_Var_2));
+
+          --  I_Var_2 will get out of scope
+          --  when the block finishes.
+       end Inner_Block;
+
+       --  I_Var_2 is now out of scope...
+
+       Put_Line ("I_Var_1: " & Integer'Image (I_Var_1));
+       Put_Line ("I_Var_2: " & Integer'Image (I_Var_2));
+       --                                     ^^^^^^^
+       --  ERROR: lifetime of I_Var_2 has ended!
+    end Show_Lifetime;
+
+In this example, we declare :ada:`I_Var_1` in the :ada:`Show_Lifetime`
+procedure, and :ada:`I_Var_2` in its :ada:`Inner_Block`.
+
+This example doesn't compile because we're trying to use :ada:`I_Var_2` after
+its lifetime has ended. However, if such a code could compile and run, the last
+call to :ada:`Put_Line` would potentially display garbage to the user.
+(In fact, the actual behavior would be undefined.)
 
 
 .. _Adv_Ada_Dangling_References:
