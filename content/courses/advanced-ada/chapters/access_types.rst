@@ -1633,6 +1633,8 @@ Conversions between Access Types
     Discuss conversions between anonymous access types and named access types.
 
 
+.. _Adv_Ada_Unchecked_Access:
+
 Unchecked Access
 ----------------
 
@@ -1940,6 +1942,8 @@ design strategies later on.
     Add link to section on design strategies for access types when it becomes
     available! (See PR #752 for details.)
 
+
+.. _Adv_Ada_Dereferencing_Dangling_References:
 
 Dereferencing dangling references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
