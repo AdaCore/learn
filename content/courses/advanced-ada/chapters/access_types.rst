@@ -1824,8 +1824,10 @@ third calls to :ada:`Free` don't have any effect.
     - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
 
 
-Dangling References
-~~~~~~~~~~~~~~~~~~~
+.. _Adv_Ada_Unchecked_Deallocation_Dangling_References:
+
+Unchecked Deallocation and Dangling References
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 An access value that points to a non-existent object is called a dangling
 reference. In this section, we discuss the issues of having dangling
