@@ -1582,13 +1582,55 @@ type) and display its information by calling the :ada:`Show` procedure.
 Accessibility Levels and Rules: An Introduction
 -----------------------------------------------
 
+.. todo::
+
+    Complete section!
+
 .. admonition:: In the Ada Reference Manual
 
     - `3.10.2 Operations of Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10-2.html>`_
 
+Lifetime of objects
+~~~~~~~~~~~~~~~~~~~
+
 .. todo::
 
     Complete section!
+
+
+.. _Adv_Ada_Dangling_References:
+
+Dangling References
+~~~~~~~~~~~~~~~~~~~
+
+.. todo::
+
+    Complete section!
+
+
+Accessibility Levels
+~~~~~~~~~~~~~~~~~~~~
+
+.. todo::
+
+    Complete section!
+
+
+Anonymous Access Types and Accessibility Levels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. todo::
+
+    Complete section!
+
+
+Conversions between Access Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. todo::
+
+    Complete section!
+    Discuss conversions between anonymous access types and named access types.
 
 
 Unchecked Access
