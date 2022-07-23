@@ -1645,9 +1645,169 @@ call to :ada:`Put_Line` would potentially display garbage to the user.
 Dangling References
 ~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+An access value that points to a non-existent object is called a dangling
+reference. Later on, we'll discuss how dangling references may occur using
+:ref:`unchecked deallocation <Adv_Ada_Unchecked_Deallocation_Dangling_References>`.
 
-    Complete section!
+Dangling references are created when we have an access value pointing to an
+object whose lifetime has ended, so it becomes a  non-existent object. This
+could occur, for example, when an access value still points to an object
+:ada:`X` that has gone out of scope.
+
+Note, however, that the accessibility rules of the Ada language prevent that
+such situations ever happen! In fact, whenever possible, the compiler applies
+those rules to detect potential dangling references. Of course, when such
+an accessibility rule is violated, the compilation fails.
+
+When the compiler cannot detect dangling references, it'll introduce an
+:ref:`accessibility check <Adv_Ada_Accessibility_Check>`. If this check fails
+at runtime, it raises a :ada:`Program_Error` exception |mdash| thereby
+preventing that a dangling reference gets used.
+
+Let's see an example of how dangling references could occur:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Dangling_Reference_Rules
+    :class: ada-expect-compile-error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Dangling_Reference is
+
+       type Integer_Access is access all Integer;
+
+       I_Var_1 : aliased Integer := 22;
+
+       A1    : Integer_Access;
+    begin
+       A1 := I_Var_1'Access;
+       Put_Line ("A1.all: " & Integer'Image (A1.all));
+
+       Put_Line ("Inner_Block will start now!");
+
+       Inner_Block : declare
+          --
+          --  I_Var_2 only exists in Inner_Block
+          --
+          I_Var_2 : aliased Integer := 42;
+
+          --
+          --  A2 only exists in Inner_Block
+          --
+          A2      : Integer_Access;
+       begin
+          A2 := I_Var_1'Access;
+          Put_Line ("A2.all: " & Integer'Image (A2.all));
+
+          A1 := I_Var_2'Access;
+          --   PROBLEM: A1 and Integer_Access type have longer
+          --            lifetime than I_Var_2
+
+          Put_Line ("A1.all: " & Integer'Image (A1.all));
+
+          A2 := I_Var_2'Access;
+          --   PROBLEM: A2 has the same lifetime as I_Var_2,
+          --            but Integer_Access type has a longer
+          --            lifetime.
+
+          Put_Line ("A2.all: " & Integer'Image (A2.all));
+       end Inner_Block;
+
+       Put_Line ("Inner_Block has ended!");
+       Put_Line ("A1.all: " & Integer'Image (A1.all));
+
+    end Show_Dangling_Reference;
+
+Here, we declare the access objects :ada:`A1` and :ada:`A2` of
+:ada:`Integer_Access` type, and the :ada:`I_Var_1` and :ada:`I_Var_2` objects.
+Moreover, :ada:`A1` and :ada:`I_Var_1` are declared in the scope of the
+:ada:`Show_Dangling_Reference` procedure, while :ada:`A2` and :ada:`I_Var_2`
+are declared in the :ada:`Inner_Block`.
+
+When we try to compile this code, we get two compilation errors due to
+violation of accessibility rules. Let's now discuss what is the problem that
+the accessibility rules are preventing in each case.
+
+1. In the :ada:`A1 := I_Var_2'Access` assignment, the main problem is that
+   :ada:`A1` has a longer lifetime than :ada:`I_Var_2`. After the
+   :ada:`Inner_Block` finishes |mdash| when :ada:`I_Var_2` gets out of scope
+   and its lifetime has ended |mdash|, :ada:`A1` would still be pointing to an
+   object that does not longer exist.
+
+2. In the :ada:`A2 := I_Var_2'Access` assignment, however, both :ada:`A2` and
+   :ada:`I_Var_2` have the same lifetime. In that sense, the assignment might
+   actually look pretty much OK.
+
+   - However, Ada also cares about the lifetime of access types! In fact, since
+     the :ada:`Integer_Access` type is declared outside of the
+     :ada:`Inner_Block`, it has a longer lifetime than :ada:`A2` and
+     :ada:`I_Var_2`.
+
+   - To be more precise, the accessibility rules detect that :ada:`A2` is an
+     access object of a type that has a longer lifetime than :ada:`I_Var_2`.
+
+At first glance, this last accessibility rule might seem too strict, as both
+:ada:`A2` and :ada:`I_Var_2` have the same lifetime |mdash| so nothing bad
+could occur when dereferencing :ada:`A2`. However, consider the following
+change to the code:
+
+.. code-block:: ada
+
+          A2 := I_Var_2'Access;
+
+          A1 := A2;
+          --    PROBLEM: A1 will still be referring to
+          --             I_Var_2 after the Inner_Block,
+          --             i.e. when the lifetime of
+          --             I_Var_2 has ended!
+
+Here, we're introducing the :ada:`A1 := A2` assignment. The problem with this
+is that :ada:`I_Var_2`\ 's lifetime ends when the :ada:`Inner_Block` finishes,
+but :ada:`A1` would continue to refer to an :ada:`I_Var_2` object that doesn't
+exist anymore |mdash| thereby creating a dangling reference.
+
+Even though we're actually not assigning :ada:`A2` to :ada:`A1` in the original
+code, we could have done it. The accessibility rules prevent that such an error
+is ever introduced to the program.
+
+.. admonition:: For further reading...
+
+    In the original code, we can consider the :ada:`A2 := I_Var_2'Access`
+    assignment to be safe, as we're not using the :ada:`A1 := A2` assignment
+    there. Since we're confident that no error could ever occur in the
+    :ada:`Inner_Block` due to the assignment to :ada:`A2`, we could replace it
+    with :ada:`A2 := I_Var_2'Unchecked_Access`, so that the compiler accepts
+    it. We discuss more about the unchecked access attribute
+    :ref:`later in this chapter <Adv_Ada_Unchecked_Access>`.
+
+    Alternatively, we could have solved the compilation issue that we see with
+    the :ada:`A2 := I_Var_2'Access` assignment by declaring another access type
+    locally in the :ada:`Inner_Block`:
+
+    .. code-block:: ada
+
+           Inner_Block : declare
+              type Integer_Local_Access is access all Integer;
+
+              I_Var_2 : aliased Integer := 42;
+
+              A2      : Integer_Local_Access;
+           begin
+              A2 := I_Var_2'Access;
+              --   This assignment is fine because
+              --   the Integer_Local_Access type has
+              --   the same lifetime as I_Var_2.
+           end Inner_Block;
+
+    With this change, :ada:`A2` becomes an access object of a type that has the
+    same lifetime as :ada:`I_Var_2`, so that the assignment doesn't violate the
+    rules anymore.
+
+    (Note that in the :ada:`Inner_Block`, we could have simply named the local
+    access type :ada:`Integer_Access` instead of :ada:`Integer_Local_Access`,
+    thereby masking the :ada:`Integer_Access` type from the outer block.)
+
+We discuss the effects of dereferencing dangling references
+:ref:`later in this chapter <Adv_Ada_Dereferencing_Dangling_References>`.
 
 
 Accessibility Levels
