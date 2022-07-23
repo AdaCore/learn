@@ -590,6 +590,8 @@ Since the tags don't match, the tag check fails in the assignment of :ada:`A1`
 to :ada:`A2`.
 
 
+.. _Adv_Ada_Accessibility_Check:
+
 Accessibility Check
 ~~~~~~~~~~~~~~~~~~~
 
