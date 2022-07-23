@@ -596,11 +596,8 @@ Accessibility Check
 ~~~~~~~~~~~~~~~~~~~
 
 The accessibility check verifies that the accessibility level of an entity
-matches the expected level.
-
-.. todo::
-
-    Add link to "Accessibility levels" section once it's available.
+matches the expected level. We discuss accessibility levels
+:ref:`in a later chapter <Adv_Ada_Accessibility_Levels_Intro>`.
 
 Let's look at an example that mixes access types and anonymous access types.
 Here, we use an anonymous access type in the declaration of :ada:`A1` and a
