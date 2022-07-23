@@ -3135,6 +3135,16 @@ Anonymous Access-To-Subprograms
 -------------------------------
 
 
+.. _Adv_Ada_Accessibility_Rules_Access_To_Subprograms:
+
+Accessibility Rules and Access-To-Subprograms
+---------------------------------------------
+
+.. todo::
+
+    Complete section!
+
+
 ..
     REMOVED! TO BE RE-EVALUATED IN 2022:
 
