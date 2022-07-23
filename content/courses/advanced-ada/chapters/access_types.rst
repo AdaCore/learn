@@ -1829,9 +1829,9 @@ third calls to :ada:`Free` don't have any effect.
 Unchecked Deallocation and Dangling References
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An access value that points to a non-existent object is called a dangling
-reference. In this section, we discuss the issues of having dangling
-references.
+We've discussed :ref:`dangling references <Adv_Ada_Dangling_References>`
+before. In this section, we discuss how unchecked deallocation can create
+dangling references and the issues of having them in an application.
 
 Let's reuse the last example and introduce :ada:`I_2`, which will point to the
 same object as :ada:`I`:
