@@ -48,8 +48,8 @@ interface ParsedSwitches {
 
 /**
  * Generate the value to replace the language placeholder in the gpr file.
- * @param {ResourceList} files list of files to check
- * @return {string} the value to replace the language placeholder
+ * @param {ResourceList} files list of files to check.
+ * @return {string} the value to replace the language placeholder.
  */
 export function getLanguages(files: ResourceList): string {
   const languages = new Set<string>();
@@ -65,8 +65,8 @@ export function getLanguages(files: ResourceList): string {
 
 /**
  * Generate the values to replace the switch placeholders in the gpr file.
- * @param {string} rawSwitches provided by data-switches for the project
- * @return {Switches} parsed switches
+ * @param {string} rawSwitches provided by data-switches for the project.
+ * @return {Switches} parsed switches.
  */
 export function parseSwitches(rawSwitches: string): ParsedSwitches {
   const parsed = JSON.parse(rawSwitches);
@@ -92,8 +92,8 @@ export function parseSwitches(rawSwitches: string): ParsedSwitches {
 
 /**
  * Find which files could potentially contain the main procedure/function.
- * @param {ResourceList} files list of files to check
- * @return {Array<string>} the filenames of each potential 'main' file
+ * @param {ResourceList} files list of files to check.
+ * @return {Array<string>} the filenames of each potential 'main' file.
  */
 export function findMains(files: ResourceList): Array<string> {
   if (files.length == 1) return [files[0].basename];
@@ -116,6 +116,56 @@ export function findMains(files: ResourceList): Array<string> {
 }
 
 /**
+ * Duplicate main finding logic from existing download setup
+ * @param {ResourceList} files to be zipped. Used in main finding logic.
+ * @param {string} main provided by data-main for the project.
+ * @return {string} the file name that contains the main subprogram, with it's
+ *                  file extension removed.
+ */
+export function getMain(files: ResourceList, main: string): string {
+  if (main == '') {
+    const potentialMains = findMains(files);
+    if (potentialMains.length == 1) {
+      main = potentialMains[0];
+    } else if (potentialMains.length > 1) {
+      console.error('More than one main found in project');
+      console.error('Generated gpr may be incorrect');
+    }
+  }
+  main = main.split('.')[0];
+  return main;
+}
+
+/**
+ * Creates the contents of the gpr file for the generated project.
+ * @param {ResourceList} files to be zipped. Used in main finding logic.
+ * @param {string} switches to be included in the gpr file.
+ * @param {string} main provided by data-main for the project.
+ * @return {string} the contents of the gpr file to be generated.
+ */
+export function getGprContents(
+    files: ResourceList,
+    switches: string,
+    main: string
+): string {
+  const languages = getLanguages(files);
+  const parsedSwitches = parseSwitches(switches);
+  const newMain = getMain(files, main);
+  let gpr = MAIN_GPR;
+  gpr = gpr.replace('--MAIN_PLACEHOLDER--', `for Main use ("${newMain}");`);
+  gpr = gpr.replace('--LANGUAGE_PLACEHOLDER--', languages);
+  gpr = gpr.replace(
+      '--BUILDER_SWITCHES_PLACEHOLDER--',
+      parsedSwitches['--BUILDER_SWITCHES_PLACEHOLDER--']
+  );
+  gpr = gpr.replace(
+      '--COMPILER_SWITCHES_PLACEHOLDER--',
+      parsedSwitches['--COMPILER_SWITCHES_PLACEHOLDER--']
+  );
+  return gpr;
+}
+
+/**
  * Download a zip of the current Project
  * @param {ResourceList} files to be zipped
  * @param {string} switches to be included in the gpr file
@@ -128,18 +178,6 @@ export function downloadProject(
     main: string,
     name: string
 ): void {
-  // Duplicate main finding logic from existing download setup
-  if (main == '') {
-    const potentialMains = findMains(files);
-    if (potentialMains.length == 1) {
-      main = potentialMains[0];
-    } else if (potentialMains.length > 1) {
-      console.error('More than one main found in project');
-      console.error('Generated gpr may be incorrect');
-    }
-  }
-  main = main.split('.')[0];
-
   const zip = new JSZip();
 
   // Add the source files to the zip
@@ -151,19 +189,7 @@ export function downloadProject(
   zip.file('main.adc', COMMON_ADC);
 
   // Add the gpr to the zip
-  const languages = getLanguages(files);
-  const parsedSwitches = parseSwitches(switches);
-  let gpr = MAIN_GPR;
-  gpr = gpr.replace('--MAIN_PLACEHOLDER--', `for Main use ("${main}");`);
-  gpr = gpr.replace('--LANGUAGE_PLACEHOLDER--', languages);
-  gpr = gpr.replace(
-      '--BUILDER_SWITCHES_PLACEHOLDER--',
-      parsedSwitches['--BUILDER_SWITCHES_PLACEHOLDER--']
-  );
-  gpr = gpr.replace(
-      '--COMPILER_SWITCHES_PLACEHOLDER--',
-      parsedSwitches['--COMPILER_SWITCHES_PLACEHOLDER--']
-  );
+  const gpr = getGprContents(files, switches, main);
   zip.file('main.gpr', gpr);
 
   // Create and download the zip
