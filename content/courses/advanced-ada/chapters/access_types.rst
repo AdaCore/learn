@@ -1871,14 +1871,6 @@ We discuss the effects of dereferencing dangling references
 :ref:`later in this chapter <Adv_Ada_Dereferencing_Dangling_References>`.
 
 
-Accessibility Levels
-~~~~~~~~~~~~~~~~~~~~
-
-.. todo::
-
-    Complete section!
-
-
 Anonymous Access Types and Accessibility Levels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
