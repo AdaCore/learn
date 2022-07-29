@@ -133,7 +133,8 @@ export function getMain(files: ResourceList, main: string): string {
     }
   }
   main = main.split('.')[0];
-  return main;
+  if (main == '') return '';
+  return `for Main use ("${main}");`;
 }
 
 /**
@@ -152,7 +153,7 @@ export function getGprContents(
   const parsedSwitches = parseSwitches(switches);
   const newMain = getMain(files, main);
   let gpr = MAIN_GPR;
-  gpr = gpr.replace('--MAIN_PLACEHOLDER--', `for Main use ("${newMain}");`);
+  gpr = gpr.replace('--MAIN_PLACEHOLDER--', newMain);
   gpr = gpr.replace('--LANGUAGE_PLACEHOLDER--', languages);
   gpr = gpr.replace(
       '--BUILDER_SWITCHES_PLACEHOLDER--',
