@@ -2187,7 +2187,7 @@ level than :ada:`L0_AO`, which is illegal. (If you comment out the
 assignment, this accessibility check doesn't fail anymore.)
 
 
-Conversions between Named and Anonymous Access Types
+Conversions between Anonymous and Named Access Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
