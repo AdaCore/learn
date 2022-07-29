@@ -1640,6 +1640,67 @@ call to :ada:`Put_Line` would potentially display garbage to the user.
 (In fact, the actual behavior would be undefined.)
 
 
+.. _Adv_Ada_Accessibility_Levels:
+
+Accessibility Levels
+~~~~~~~~~~~~~~~~~~~~
+
+In basic terms, accessibility levels are a mechanism to assess the lifetime
+of objects (as we've just discussed). The starting point is the library level:
+this is the base level, and no level can be deeper than that. We start "moving"
+to deeper levels when we use a library in a subprogram or call other
+subprograms for example.
+
+Suppose we have a procedure :ada:`Proc` that makes use of a package :ada:`Pkg`,
+and there's a block in the :ada:`Proc` procedure:
+
+.. code-block:: ada
+
+    package Pkg is
+
+       --  Library level
+
+    end Pkg;
+
+    with Pkg; use Pkg;
+
+    procedure Proc is
+
+       --  One level deeper than
+       --  library level
+
+    begin
+
+       declare
+          --  Two levels deeper than
+          --  library level
+      begin
+          null;
+       end;
+
+    end Proc;
+
+For this code, we can say that:
+
+- the specification of :ada:`Pkg` is at library level;
+
+- the declarative part of :ada:`Proc` is one level deeper than the library
+  level; and
+
+- the block is two levels deeper than the library level.
+
+(Note that this is still a very simplified overview of accessibility levels.
+Things start getting more complicated when we use information from :ada:`Pkg`
+in :ada:`Proc`. Those details will become more clear in the next sections.)
+
+The levels themselves are not visible to the programmer. For example, there's
+no :ada:`'Access_Level` attribute that returns an integer value indicating the
+level. Also, you cannot write a user message that displays the level at a
+certain point. In this sense, accessibility levels are assessed relatively to
+each other: we can only say that a specific operation is at the same or at a
+deeper level than another one.
+
+
 .. _Adv_Ada_Dangling_References:
 
 Dangling References
