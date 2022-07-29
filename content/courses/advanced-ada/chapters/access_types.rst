@@ -1848,11 +1848,15 @@ It's very important to highlight the fact that:
 
 - objects have the same accessibility level as their types.
 
-When we declare the :ada:`L0_IA_2` object, its accessibility level is at
-library level because its type (the :ada:`L0_Integer_Access` type) is at
-library level. Even though this declaration is in the :ada:`Show_Library_Level`
-procedure |mdash| whose declarative part is one level deeper than the library
-level |mdash|, the object itself has the same accessibility level as its type.
+When we declare the :ada:`L0_IA_2` object in the code example, its
+accessibility level is at library level because its type
+(the :ada:`L0_Integer_Access` type) is at library level. Even though this
+declaration is in the :ada:`Show_Library_Level` procedure |mdash| whose
+declarative part is one level deeper than the library level |mdash|, the object
+itself has the same accessibility level as its type.
+
+Now that we've discuss the accessibility levels in this code example, let's see
+how the accessibility rules use these levels.
 
 
 Operations on Access Types
