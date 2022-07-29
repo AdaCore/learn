@@ -1701,6 +1701,8 @@ each other: we can only say that a specific operation is at the same or at a
 deeper level than another one.
 
 
+.. _Adv_Ada_Accessibility_Rules:
+
 Accessibility Rules
 ~~~~~~~~~~~~~~~~~~~
 
@@ -2082,7 +2084,105 @@ We discuss the effects of dereferencing dangling references
 Anonymous Access Types and Accessibility Rules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+In general, the :ref:`accessibility rules <Adv_Ada_Accessibility_Rules>` we've
+seen earlier also apply to anonymous access types. However, there are some
+subtle differences, which we discuss in this section.
+
+Let's adapt the
+:ref:`code example from that section <Adv_Ada_Accessibility_Rules_Code_Example>`
+to make use of anonymous access types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Accessibility_Library_Level
+    :class: ada-expect-compile-error
+
+    package Library_Level is
+
+       L0_AO  : access Integer;
+
+       L0_Var : aliased Integer;
+
+    end Library_Level;
+
+    with Library_Level; use Library_Level;
+
+    procedure Show_Library_Level is
+       L1_Var : aliased Integer;
+
+       L1_AO  : access Integer;
+
+       procedure Test is
+          L2_AO  : access Integer;
+
+          L2_Var : aliased Integer;
+       begin
+          L1_AO := L2_Var'Access;
+          --       ^^^^^^
+          --       ILLEGAL: L2 object to
+          --                L1 access object
+
+          L2_AO := L2_Var'Access;
+          --       ^^^^^^
+          --       LEGAL: L2 object to
+          --              L2 access object
+       end Test;
+
+    begin
+       L0_AO := new Integer'(22);
+       --       ^^^^^^^^^^^
+       --       LEGAL: L0 object to
+       --              L0 access object
+
+       L0_AO := L1_Var'Access;
+       --       ^^^^^^
+       --       ILLEGAL: L1 object to
+       --                L0 access object
+
+       L1_AO := L0_Var'Access;
+       --       ^^^^^^
+       --       LEGAL: L0 object to
+       --              L1 access object
+
+       L1_AO := L1_Var'Access;
+       --       ^^^^^^
+       --       LEGAL: L1 object to
+       --              L1 access object
+
+       L0_AO := L1_AO;  -- legal!!
+       --       ^^^^^
+       --       LEGAL:   L1 access object to
+       --                L0 access object
+       --
+       --       ILLEGAL: L1 object
+       --                (L1_AO = L1_Var'Access)
+       --                to
+       --                L0 access object
+       --
+       --       This is actually OK at compile time,
+       --       but the accessibility check fails at
+       --       runtime.
+
+       Test;
+    end Show_Library_Level;
+
+In general, most accessibility rules are the same as the ones we've discussed
+when using named access types. For example, an assignment such as
+:ada:`L0_AO := L1_Var'Access` is illegal because we're trying to assign to an
+access object of less deep level.
+
+However, assignment such as :ada:`L0_AO := L1_AO` are possible now: we don't
+get a type mismatch |mdash| as we did with named access types |mdash| because
+both objects are of anonymous access types. Note that the accessibility level
+cannot be determined at compile time: :ada:`L1_AO` can hold an access value at
+library level (which would make the assignment legal) or at a deeper level.
+Therefore, the compiler introduces an accessibility check here.
+
+However, the accessibility check used in :ada:`L0_AO := L1_AO` fails at runtime
+because the corresponding access value (:ada:`L1_Var'Access`) is of a deeper
+level than :ada:`L0_AO`, which is illegal. (If you comment out the
+:ada:`L1_AO := L1_Var'Access` assignment prior to the :ada:`L0_AO := L1_AO`
+assignment, this accessibility check doesn't fail anymore.)
+
+
 
     Complete section!
 
