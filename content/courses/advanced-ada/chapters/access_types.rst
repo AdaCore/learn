@@ -1924,15 +1924,13 @@ object whose lifetime has ended, so it becomes a  non-existent object. This
 could occur, for example, when an access value still points to an object
 :ada:`X` that has gone out of scope.
 
-Note, however, that the accessibility rules of the Ada language prevent that
-such situations ever happen! In fact, whenever possible, the compiler applies
-those rules to detect potential dangling references. Of course, when such
-an accessibility rule is violated, the compilation fails.
-
-When the compiler cannot detect dangling references, it'll introduce an
-:ref:`accessibility check <Adv_Ada_Accessibility_Check>`. If this check fails
-at runtime, it raises a :ada:`Program_Error` exception |mdash| thereby
-preventing that a dangling reference gets used.
+As mentioned in the previous section, the accessibility rules of the Ada
+language prevent that such situations ever happen! In fact, whenever possible,
+the compiler applies those rules to detect potential dangling references at
+compile time. When this detection isn't possible at compile time, the compiler
+introduces an :ref:`accessibility check <Adv_Ada_Accessibility_Check>`. If this
+check fails at runtime, it raises a :ada:`Program_Error` exception |mdash|
+thereby preventing that a dangling reference gets used.
 
 Let's see an example of how dangling references could occur:
 
