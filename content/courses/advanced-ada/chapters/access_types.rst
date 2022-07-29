@@ -1874,8 +1874,9 @@ However, many operations in the code example are illegal. For instance,
 because the target objects in the assignment are *less* deep.
 
 Note that the :ada:`L0_IA := L1_IA` assignment is mainly illegal because the
-access types don't match. (Of course, in addition to that, the assignment is
-also illegal in terms of accessibility rules.)
+access types don't match. (Of course, in addition to that, assigning
+:ada:`L1_Var'Access` to :ada:`L0_IA` is also illegal in terms of accessibility
+rules.)
 
 
 Conversion between Access Types
