@@ -1701,6 +1701,215 @@ each other: we can only say that a specific operation is at the same or at a
 deeper level than another one.
 
 
+Accessibility Rules
+~~~~~~~~~~~~~~~~~~~
+
+The accessibility rules determine whether a specific use of access types or
+objects is legal (or not). Actually, accessibility rules exist to prevent
+:ref:`dangling references <Adv_Ada_Dangling_References>`, which we discuss
+later. Also, they are based on the
+:ref:`accessibility levels <Adv_Ada_Accessibility_Levels>` we discussed
+earlier.
+
+
+.. _Adv_Ada_Accessibility_Rules_Code_Example:
+
+Code example
+^^^^^^^^^^^^
+
+As mentioned earlier, the accessibility level at a specific point isn't visible
+to the programmer. However, to illustrate which level we have at each point, we
+use a prefix (:ada:`L0`, :ada:`L1`, and :ada:`L2`) in the following code
+example to indicate whether we're at the library level (:ada:`L0`) or at a
+deeper level.
+
+Let's now look at the complete code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Accessibility_Library_Level
+    :class: ada-expect-compile-error
+
+    package Library_Level is
+
+       type L0_Integer_Access is access all Integer;
+
+       L0_IA  : L0_Integer_Access;
+
+       L0_Var : aliased Integer;
+
+    end Library_Level;
+
+    with Library_Level; use Library_Level;
+
+    procedure Show_Library_Level is
+       type L1_Integer_Access is access all Integer;
+
+       L0_IA_2 : L0_Integer_Access;
+       L1_IA   : L1_Integer_Access;
+
+       L1_Var : aliased Integer;
+
+       procedure Test is
+          type L2_Integer_Access is access all Integer;
+
+          L2_IA  : L2_Integer_Access;
+
+          L2_Var : aliased Integer;
+       begin
+          L1_IA := L2_Var'Access;
+          --       ^^^^^^
+          --       ILLEGAL: L2 object to
+          --                L1 access object
+
+          L2_IA := L2_Var'Access;
+          --       ^^^^^^
+          --       LEGAL: L2 object to
+          --              L2 access object
+       end Test;
+
+    begin
+       L0_IA := new Integer'(22);
+       --       ^^^^^^^^^^^
+       --       LEGAL: L0 object to
+       --              L0 access object
+
+       L0_IA_2 := new Integer'(22);
+       --         ^^^^^^^^^^^
+       --         LEGAL: L0 object to
+       --                L0 access object
+
+       L0_IA := L1_Var'Access;
+       --       ^^^^^^
+       --       ILLEGAL: L1 object to
+       --                L0 access object
+
+       L0_IA_2 := L1_Var'Access;
+       --         ^^^^^^
+       --         ILLEGAL: L1 object to
+       --                  L0 access object
+
+       L1_IA := L0_Var'Access;
+       --       ^^^^^^
+       --       LEGAL: L0 object to
+       --              L1 access object
+
+       L1_IA := L1_Var'Access;
+       --       ^^^^^^
+       --       LEGAL: L1 object to
+       --              L1 access object
+
+       L0_IA := L1_IA;
+       --       ^^^^^
+       --       ILLEGAL: type mismatch
+
+       L0_IA := L0_Integer_Access (L1_IA);
+       --       ^^^^^^^^^^^^^^^^^
+       --       ILLEGAL: cannot convert
+       --                L1 access object to
+       --                L0 access object
+
+       Test;
+    end Show_Library_Level;
+
+In this example, we declare
+
+- in the :ada:`Library_Level` package: the :ada:`L0_Integer_Access` type, the
+  :ada:`L0_IA` access object, and the :ada:`L0_Var` aliased variable;
+
+- in the :ada:`Show_Library_Level` procedure: the :ada:`L1_Integer_Access`
+  type, the :ada:`L0_IA_2` and :ada:`L1_IA` access objects, and the
+  :ada:`L1_Var` aliased variable;
+
+- in the nested :ada:`Test` procedure: the :ada:`L2_Integer_Access` type, the
+  :ada:`L2_IA`, and the :ada:`L2_Var` aliased variable.
+
+As mentioned earlier, the :ada:`Ln` prefix indicates the level of each type or
+object. Here, the :ada:`n` value is zero at library level. We then increment
+the :ada:`n` value each time we refer to a deeper level.
+
+For instance:
+
+- when we declare the :ada:`L1_Integer_Access` type in the
+  :ada:`Show_Library_Level` procedure, that declaration is one level deeper
+  than the ones in the :ada:`Library_Level` package |mdash| so it has the
+  :ada:`L1` prefix.
+
+- when we declare the :ada:`L2_Integer_Access` type in the :ada:`Test`
+  procedure, that declaration is one level deeper than the ones in the
+  :ada:`Show_Library_Level` package |mdash| so it has the :ada:`L2` prefix.
+
+Types and Accessibility Levels
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It's very important to highlight the fact that:
+
+- types themselves also have an associated level, and
+
+- objects have the same accessibility level as their types.
+
+When we declare the :ada:`L0_IA_2` object, its accessibility level is at
+library level because its type (the :ada:`L0_Integer_Access` type) is at
+library level. Even though this declaration is in the :ada:`Show_Library_Level`
+procedure |mdash| whose declarative part is one level deeper than the library
+level |mdash|, the object itself has the same accessibility level as its type.
+
+
+Operations on Access Types
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In very simple terms, the accessibility rules say that:
+
+- operations on access types at the same accessibility level are legal;
+
+- assigning or converting to a deeper level is legal;
+
+Otherwise, operations targeting objects at a less-deeper level are illegal.
+
+For example, :ada:`L0_IA := new Integer'(22)`, :ada:`L1_IA := L1_Var'Access`
+are legal because we're operating at the same accessibility level. Also,
+:ada:`L1_IA := L0_Var'Access` is legal because ada:`L1_IA` is at a deeper level
+than :ada:`L0_Var'Access`.
+
+However, many operations in the code example are illegal. For instance,
+:ada:`L0_IA := L1_Var'Access` and :ada:`L0_IA_2 := L1_Var'Access` are illegal
+because the target objects in the assignment are *less* deep.
+
+Note that the :ada:`L0_IA := L1_IA` assignment is mainly illegal because the
+access types don't match. (Of course, in addition to that, the assignment is
+also illegal in terms of accessibility rules.)
+
+
+Conversion between Access Types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The same rules apply to the conversion between access types. In the
+code example, the :ada:`L0_Integer_Access (L1_IA)` conversion is illegal
+because the resulting object is less deep. That being said, conversions on the
+same level are fine:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Same_Level_Conversion
+
+    procedure Show_Same_Level_Conversion is
+       type L1_Integer_Access is access all Integer;
+       type L1_B_Integer_Access is access all Integer;
+
+       L1_IA   : L1_Integer_Access;
+       L1_B_IA : L1_B_Integer_Access;
+
+       L1_Var  : aliased Integer;
+    begin
+       L1_IA := L1_Var'Access;
+
+       L1_B_IA := L1_B_Integer_Access (L1_IA);
+       --         ^^^^^^^^^^^^^^^^^^^
+       --         LEGAL: conversion from
+       --                L1 access object to
+       --                L1 access object
+    end Show_Same_Level_Conversion;
+
+Here, we're converting from the :ada:`L1_Integer_Access` type to the
+:ada:`L1_B_Integer_Access`, which are both at the same level.
+
+
 .. _Adv_Ada_Dangling_References:
 
 Dangling References
