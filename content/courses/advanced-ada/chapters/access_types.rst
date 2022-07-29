@@ -1992,8 +1992,8 @@ Moreover, :ada:`A1` and :ada:`I_Var_1` are declared in the scope of the
 are declared in the :ada:`Inner_Block`.
 
 When we try to compile this code, we get two compilation errors due to
-violation of accessibility rules. Let's now discuss what is the problem that
-the accessibility rules are preventing in each case.
+violation of accessibility rules. Let's now discuss these accessibility rules
+in terms of lifetime, and see which problems they are preventing in each case.
 
 1. In the :ada:`A1 := I_Var_2'Access` assignment, the main problem is that
    :ada:`A1` has a longer lifetime than :ada:`I_Var_2`. After the
@@ -2005,10 +2005,10 @@ the accessibility rules are preventing in each case.
    :ada:`I_Var_2` have the same lifetime. In that sense, the assignment may
    actually look pretty much OK.
 
-   - However, Ada also cares about the lifetime of access types! In fact, since
-     the :ada:`Integer_Access` type is declared outside of the
-     :ada:`Inner_Block`, it has a longer lifetime than :ada:`A2` and
-     :ada:`I_Var_2`.
+   - However, as mentioned in the previous section, Ada also cares about the
+     lifetime of access types. In fact, since the :ada:`Integer_Access` type is
+     declared outside of the :ada:`Inner_Block`, it has a longer lifetime than
+     :ada:`A2` and :ada:`I_Var_2`.
 
    - To be more precise, the accessibility rules detect that :ada:`A2` is an
      access object of a type that has a longer lifetime than :ada:`I_Var_2`.
