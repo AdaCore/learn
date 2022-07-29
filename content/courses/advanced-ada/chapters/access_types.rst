@@ -2191,8 +2191,8 @@ assignment, this accessibility check doesn't fail anymore.)
     Complete section!
 
 
-Conversions between Access Types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Conversions between Named and Anonymous Access Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. todo::
 
