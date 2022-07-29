@@ -2002,7 +2002,7 @@ the accessibility rules are preventing in each case.
    object that does not longer exist.
 
 2. In the :ada:`A2 := I_Var_2'Access` assignment, however, both :ada:`A2` and
-   :ada:`I_Var_2` have the same lifetime. In that sense, the assignment might
+   :ada:`I_Var_2` have the same lifetime. In that sense, the assignment may
    actually look pretty much OK.
 
    - However, Ada also cares about the lifetime of access types! In fact, since
@@ -2013,7 +2013,7 @@ the accessibility rules are preventing in each case.
    - To be more precise, the accessibility rules detect that :ada:`A2` is an
      access object of a type that has a longer lifetime than :ada:`I_Var_2`.
 
-At first glance, this last accessibility rule might seem too strict, as both
+At first glance, this last accessibility rule may seem too strict, as both
 :ada:`A2` and :ada:`I_Var_2` have the same lifetime |mdash| so nothing bad
 could occur when dereferencing :ada:`A2`. However, consider the following
 change to the code:
