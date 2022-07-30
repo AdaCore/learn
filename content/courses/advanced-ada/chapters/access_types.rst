@@ -2058,7 +2058,7 @@ is ever introduced to the program.
     it. We discuss more about the unchecked access attribute
     :ref:`later in this chapter <Adv_Ada_Unchecked_Access>`.
 
-    Alternatively, we could have solved the compilation issue that we see with
+    Alternatively, we could have solved the compilation issue that we see in
     the :ada:`A2 := I_Var_2'Access` assignment by declaring another access type
     locally in the :ada:`Inner_Block`:
 
@@ -2083,7 +2083,7 @@ is ever introduced to the program.
 
     (Note that in the :ada:`Inner_Block`, we could have simply named the local
     access type :ada:`Integer_Access` instead of :ada:`Integer_Local_Access`,
-    thereby masking the :ada:`Integer_Access` type from the outer block.)
+    thereby masking the :ada:`Integer_Access` type of the outer block.)
 
 We discuss the effects of dereferencing dangling references
 :ref:`later in this chapter <Adv_Ada_Dereferencing_Dangling_References>`.
@@ -2172,10 +2172,10 @@ to make use of anonymous access types:
        Test;
     end Show_Library_Level;
 
-In general, most accessibility rules are the same as the ones we've discussed
-when using named access types. For example, an assignment such as
-:ada:`L0_AO := L1_Var'Access` is illegal because we're trying to assign to an
-access object of less deep level.
+As we see in the code, in general, most accessibility rules are the same as the
+ones we've discussed when using named access types. For example, an assignment
+such as :ada:`L0_AO := L1_Var'Access` is illegal because we're trying to assign
+to an access object of less deep level.
 
 However, assignment such as :ada:`L0_AO := L1_AO` are possible now: we don't
 get a type mismatch |mdash| as we did with named access types |mdash| because
@@ -2294,10 +2294,10 @@ anonymous access types to it:
        --              L1 access object (named type)
     end Show_Library_Level;
 
-As we can see in this code, mixing access objects of named and anonymous access
-types doesn't change the accessibility rules. Again, the rules are only
-violated when the target object in the assignment is *less* deep. This is the
-case in the :ada:`L0_AO := L1_IA` and the
+As we can see in this code example, mixing access objects of named and
+anonymous access types doesn't change the accessibility rules. Again, the rules
+are only violated when the target object in the assignment is *less* deep. This
+is the case in the :ada:`L0_AO := L1_IA` and the
 :ada:`L0_IA := L0_Integer_Access (L1_AO)` assignments. Otherwise, mixing those
 access objects doesn't impose additional hurdles.
 
