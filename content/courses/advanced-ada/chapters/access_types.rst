@@ -2190,6 +2190,112 @@ assignment, this accessibility check doesn't fail anymore.)
 Conversions between Anonymous and Named Access Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+In the previous sections, we've discussed accessibility rules for named and
+anonymous access types separately. In this section, we see that the same
+accessibility rules apply when mixing both flavors together and converting
+objects of anonymous to named access types.
+
+Let's adapt parts of the previous
+:ref:`code example <Adv_Ada_Accessibility_Rules_Code_Example>` and add
+anonymous access types to it:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Accessibility_Conversions_Named_Anonymous_Access_Types
+    :class: ada-expect-compile-error
+
+    package Library_Level is
+
+       type L0_Integer_Access is access all Integer;
+
+       L0_Var : aliased Integer;
+
+       L0_IA  : L0_Integer_Access;
+       L0_AO  : access Integer;
+
+    end Library_Level;
+
+    with Library_Level; use Library_Level;
+
+    procedure Show_Library_Level is
+       type L1_Integer_Access is access all Integer;
+
+       L1_IA  : L1_Integer_Access;
+       L1_AO  : access Integer;
+
+       L1_Var : aliased Integer;
+
+    begin
+       ---------------------------------------
+       --  From named type to anonymous type
+       ---------------------------------------
+
+       L0_IA := new Integer'(22);
+       L1_IA := new Integer'(42);
+
+       L0_AO := L0_IA;
+       --       ^^^^^
+       --       LEGAL: assignment from
+       --              L0 access object (named type) to
+       --              L0 access object (anonymous type)
+
+       L0_AO := L1_IA;
+       --       ^^^^^
+       --       ILLEGAL: assignment from
+       --                L1 access object (named type)
+       --                to
+       --                L0 access object (anonymous type)
+
+       L1_AO := L0_IA;
+       --       ^^^^^
+       --       LEGAL: assignment from
+       --              L0 access object (named type) to
+       --              L1 access object (anonymous type)
+
+       L1_AO := L1_IA;
+       --       ^^^^^
+       --       LEGAL: assignment from
+       --              L1 access object (named type) to
+       --              L1 access object (anonymous type)
+
+       ---------------------------------------
+       --  From anonymous type to named type
+       ---------------------------------------
+
+       L0_AO := L0_Var'Access;
+       L1_AO := L1_Var'Access;
+
+       L0_IA := L0_Integer_Access (L0_AO);
+       --       ^^^^^^^^^^^^^^^^^
+       --       LEGAL: conversion / assignment from
+       --              L0 access object (anonymous type) to
+       --              L0 access object (named type)
+
+       L0_IA := L0_Integer_Access (L1_AO);
+       --       ^^^^^^^^^^^^^^^^^
+       --       ILLEGAL: conversion / assignment from
+       --                L1 access object (anonymous type)
+       --                to
+       --                L0 access object (named type)
+       --                (accessibility check fails)
+
+       L1_IA := L1_Integer_Access (L0_AO);
+       --       ^^^^^^^^^^^^^^^^^
+       --       LEGAL: conversion / assignment from
+       --              L0 access object (anonymous type) to
+       --              L1 access object (named type)
+
+       L1_IA := L1_Integer_Access (L1_AO);
+       --       ^^^^^^^^^^^^^^^^^
+       --       LEGAL: conversion / assignment from
+       --              L1 access object (anonymous type) to
+       --              L1 access object (named type)
+    end Show_Library_Level;
+
+As we can see in this code, mixing access objects of named and anonymous access
+types doesn't change the accessibility rules. Again, the rules are only
+violated when the target object in the assignment is *less* deep. This is the
+case in the :ada:`L0_AO := L1_IA` and the
+:ada:`L0_IA := L0_Integer_Access (L1_AO)` assignments. Otherwise, mixing those
+access objects doesn't impose additional hurdles.
 
 
 .. _Adv_Ada_Unchecked_Access:
