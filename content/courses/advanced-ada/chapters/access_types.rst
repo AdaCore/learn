@@ -1724,9 +1724,9 @@ Code example
 ^^^^^^^^^^^^
 
 As mentioned earlier, the accessibility level at a specific point isn't visible
-to the programmer. However, to illustrate which level we have at each point, we
-use a prefix (:ada:`L0`, :ada:`L1`, and :ada:`L2`) in the following code
-example to indicate whether we're at the library level (:ada:`L0`) or at a
+to the programmer. However, to illustrate which level we have at each point in
+the following code example, we use a prefix (:ada:`L0`, :ada:`L1`, and
+:ada:`L2`)  to indicate whether we're at the library level (:ada:`L0`) or at a
 deeper level.
 
 Let's now look at the complete code example:
