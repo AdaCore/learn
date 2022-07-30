@@ -1859,8 +1859,8 @@ declaration is in the :ada:`Show_Library_Level` procedure |mdash| whose
 declarative part is one level deeper than the library level |mdash|, the object
 itself has the same accessibility level as its type.
 
-Now that we've discuss the accessibility levels in this code example, let's see
-how the accessibility rules use these levels.
+Now that we've discussed the accessibility levels of this code example, let's
+see how the accessibility rules use those levels.
 
 
 Operations on Access Types
