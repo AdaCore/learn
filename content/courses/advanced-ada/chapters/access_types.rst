@@ -1872,12 +1872,12 @@ In very simple terms, the accessibility rules say that:
 
 - assigning or converting to a deeper level is legal;
 
-Otherwise, operations targeting objects at a *less-deeper* level are illegal.
+Otherwise, operations targeting objects at a *less-deep* level are illegal.
 
-For example, :ada:`L0_IA := new Integer'(22)`, :ada:`L1_IA := L1_Var'Access`
+For example, :ada:`L0_IA := new Integer'(22)` and :ada:`L1_IA := L1_Var'Access`
 are legal because we're operating at the same accessibility level. Also,
-:ada:`L1_IA := L0_Var'Access` is legal because ada:`L1_IA` is at a deeper level
-than :ada:`L0_Var'Access`.
+:ada:`L1_IA := L0_Var'Access` is legal because :ada:`L1_IA` is at a deeper
+level than :ada:`L0_Var'Access`.
 
 However, many operations in the code example are illegal. For instance,
 :ada:`L0_IA := L1_Var'Access` and :ada:`L0_IA_2 := L1_Var'Access` are illegal
