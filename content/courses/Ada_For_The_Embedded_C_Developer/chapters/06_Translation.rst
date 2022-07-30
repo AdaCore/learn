@@ -697,9 +697,10 @@ types with :ada:`and`, :ada:`or` and :ada:`xor` operators. Further shift
 operators can also be provided upon request through a :ada:`pragma`. So the
 above could also be literally translated to:
 
-[C]
+[Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitwise_Ops_Ada
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Bitwise_Ops_Ada
+   :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1541,15 +1542,36 @@ a conversion function.
 Using :ada:`Unchecked_Conversion` has the advantage of making it clear that a
 conversion is happening, since the conversion is written explicitly in the
 code. With overlays, that conversion is automatic and therefore implicit. In
-that sense, using :ada:`Unchecked_Conversion` is a cleaner and safer approach.
-On the other hand, :ada:`Unchecked_Conversion` requires a copy, so it's less
+that sense, using an unchecked conversion is a cleaner and safer approach.
+On the other hand, an unchecked conversion requires a copy, so it's less
 efficient than overlays, where no copy is performed |mdash| because one change
 in the source object is automatically reflected in the target object (and
 vice-versa). In the end, the choice between unchecked conversions and overlays
 depends on the level of performance that you want to achieve.
 
-Also note that :ada:`Unchecked_Conversion` can only be instantiated for
-constrained types. In order to rewrite the examples using bit-fields that we've
+Also note that an unchecked conversion only has defined behavior
+when instantiated for constrained types. For example, we shouldn't use this
+kind of conversion:
+
+.. code-block:: ada
+
+   Ada.Unchecked_Conversion (Source => String,
+                             Target => Integer);
+
+Although this compiles, the behavior will only be well-defined in those cases
+when :ada:`Source'Size = Target'Size`. Therefore, instead of using an
+unconstrained type for :ada:`Source`, we should use a subtype that matches this
+expectation:
+
+.. code-block:: ada
+
+   subtype Integer_String is String (1 .. Integer'Size / Character'Size);
+
+   function As_Integer is new
+     Ada.Unchecked_Conversion (Source => Integer_String,
+                               Target => Integer);
+
+Similarly, in order to rewrite the examples using bit-fields that we've
 seen in the previous section, we cannot simply instantiate
 :ada:`Unchecked_Conversion` with the :ada:`Target` indicating the
 *unconstrained* bit-field, such as:

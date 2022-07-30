@@ -64,6 +64,33 @@ This is the implementation of the function above:
        return I + Incr;
     end Increment_By;
 
+.. admonition:: In the GNAT toolchain
+
+   The Ada standard doesn't mandate in which file the specification or the
+   implementation of a subprogram must be stored. In other words, the standard
+   doesn't require a specific file structure or specific file name extensions.
+   For example, we could save both the specification and the implementation of
+   the :ada:`Increment` function above in a file called :file:`increment.txt`.
+   (We could even store the entire source-code of a system in a single
+   file.) From the standard's perspective, this would be completely acceptable.
+
+   The GNAT toolchain, however, requires the following file naming scheme:
+
+   - files with the `.ads` extension contain the specification, while
+
+   - files with the `.adb` extension contain the implementation.
+
+   Therefore, in the GNAT toolchain, the specification of the :ada:`Increment`
+   function must be stored in the :file:`increment.ads` file, while its
+   implementation must be stored in the :file:`increment.adb` file. This rule
+   always applies to packages, which we discuss
+   :doc:`later <./modular_programming>`. (Note, however, that it's possible to
+   circumvent this rule.) For more details, you may refer to the
+   :doc:`Introduction to GNAT Toolchain </courses/GNAT_Toolchain_Intro/index>`
+   course or the
+   `GPRbuild User’s Guide <https://docs.adacore.com/gprbuild-docs/html/gprbuild_ug.html>`_.
+
+
 Subprogram calls
 ~~~~~~~~~~~~~~~~
 

@@ -24,7 +24,7 @@ One of the main characteristics of Ada is its strong typing (i.e., relative abse
 
 .. code-block:: cpp
 
-   void weakTyping (void) {
+   void weakTyping () {
       int   alpha = 1;
       int   beta = 10;
       float result;

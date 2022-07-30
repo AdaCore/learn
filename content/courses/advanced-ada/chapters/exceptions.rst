@@ -280,6 +280,8 @@ Let's discuss each check and see code examples where those checks are
 performed. Note that all examples are erroneous, so please avoid reusing them
 elsewhere.
 
+.. _Adv_Ada_Access_Check:
+
 Access Check
 ~~~~~~~~~~~~
 
@@ -293,9 +295,9 @@ dereferencing it. For example:
 
     procedure Show_Access_Check is
 
-       type Access_Integer is access all Integer;
+       type Integer_Access is access Integer;
 
-       AI : Access_Integer;
+       AI : Integer_Access;
     begin
        AI.all := 10;
     end Show_Access_Check;
@@ -303,28 +305,30 @@ dereferencing it. For example:
 Here, the value of :ada:`AI` is null by default, so we cannot dereference it.
 
 The access check also performs this verification when assigning to a subtype
-that excludes null (:ada:`not null access`). For example:
+that excludes null (:ada:`not null access`). (You can find more information
+about this topic in the section about
+:ref:`not null access <Adv_Ada_Not_Null_Access>`.) For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Access_Check_2
     :class: ada-run-expect-failure
 
     procedure Show_Access_Check is
 
-       type Access_Integer is access all Integer;
-       type Non_Null_Access_Integer is not null access all Integer;
+       type Integer_Access is access all Integer;
+       type Safe_Integer_Access is not null access all Integer;
 
-       AI   : Access_Integer;
-       NNAI : Non_Null_Access_Integer := new Integer;
+       AI  : Integer_Access;
+       SAI : Safe_Integer_Access := new Integer;
 
     begin
-       NNAI := Non_Null_Access_Integer (AI);
+       SAI := Safe_Integer_Access (AI);
     end Show_Access_Check;
 
 Here, the value of :ada:`AI` is null (by default), so we cannot assign it to
-:ada:`NNAI` because its type excludes null.
+:ada:`SAI` because its type excludes null.
 
 Note that, if we remove the :ada:`:= new Integer` assignment from the
-declaration of :ada:`NNAI`, the null exclusion fails in the declaration
+declaration of :ada:`SAI`, the null exclusion fails in the declaration
 itself (because the default value of the access type is :ada:`null`).
 
 
