@@ -1836,12 +1836,12 @@ For instance:
 
 - when we declare the :ada:`L1_Integer_Access` type in the
   :ada:`Show_Library_Level` procedure, that declaration is one level deeper
-  than the ones in the :ada:`Library_Level` package |mdash| so it has the
+  than the level of the :ada:`Library_Level` package |mdash| so it has the
   :ada:`L1` prefix.
 
 - when we declare the :ada:`L2_Integer_Access` type in the :ada:`Test`
-  procedure, that declaration is one level deeper than the ones in the
-  :ada:`Show_Library_Level` package |mdash| so it has the :ada:`L2` prefix.
+  procedure, that declaration is one level deeper than the level of the
+  :ada:`Show_Library_Level` procedure |mdash| so it has the :ada:`L2` prefix.
 
 Types and Accessibility Levels
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
