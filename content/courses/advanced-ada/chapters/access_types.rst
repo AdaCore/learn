@@ -1582,9 +1582,13 @@ type) and display its information by calling the :ada:`Show` procedure.
 Accessibility Levels and Rules: An Introduction
 -----------------------------------------------
 
-.. todo::
-
-    Complete section!
+This section provides an introduction to accessibility levels and accessibility
+rules. This topic can be very complicated, and by no means do we intend to
+cover all the details here. (In fact, discussing all the details about
+accessibility levels and rules could be a long chapter on its own. If you're
+interested in them, please refer to the Ada Reference Manual.) In any case, the
+goal of this section is to present the intention behind the accessibility rules
+and build intuition on how to best use access types in your code.
 
 .. admonition:: In the Ada Reference Manual
 
