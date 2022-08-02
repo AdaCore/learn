@@ -28,7 +28,7 @@ vice-versa.
         - For the implementation, use :math:`20 * log_{10}(F)`, where *F* is
           the factor/ratio.
 
-    #. Function :ada:`To_Decibel` converts a value in decibels to a
+    #. Function :ada:`To_Factor` converts a value in decibels to a
        multiplication factor (or ratio).
 
         - For the implementation, use :math:`10^{D/20}`, where *D* is the value
