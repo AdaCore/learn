@@ -165,7 +165,7 @@ the order in which the two calls to F are evaluated.  It's therefore not
 legal SPARK.
 
 .. code:: ada prove_flow_button run_button project=Courses.Intro_To_Spark.Overview.Illegal_Ada_Code
-    :class: ada-ada-expect-prove-error, expect-compile-error
+    :class: ada-expect-prove-error, ada-expect-compile-error
 
     procedure Show_Illegal_Ada_Code is
 
