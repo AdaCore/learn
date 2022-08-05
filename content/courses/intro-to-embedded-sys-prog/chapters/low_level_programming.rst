@@ -188,7 +188,9 @@ elements an object named :ada:`X` occupies:
 
 .. code-block:: ada
 
-  Units : constant Integer := (X'Size + Storage_Unit - 1) / Storage_Unit;
+   Units : constant Integer
+     := (X'Size + Storage_Unit - 1) /
+         Storage_Unit;
 
 Remember that :ada:`'Size` returns a value in terms of bits. There are more
 direct ways to determine that size information but this will serve as an
@@ -266,7 +268,9 @@ constant declared in package :ada:`System` as follows:
 .. code-block:: ada
 
    type Bit_Order is (High_Order_First, Low_Order_First);
-   Default_Bit_Order : constant Bit_Order := implementation-defined;
+
+   Default_Bit_Order : constant Bit_Order
+     := implementation-defined;
 
 :ada:`High_Order_First` corresponds to "Big Endian" and
 :ada:`Low_Order_First` to "Little Endian." On a Big Endian machine, bit
@@ -295,7 +299,9 @@ interest, and then swap those bytes within :ada:`Value` if necessary.
    begin
       Value := ...
 
-      if Default_Bit_Order /= High_Order_First then -- we're not on a Big Endian machine
+      if Default_Bit_Order /= High_Order_First then
+         -- we're not on a Big Endian machine
+
          Value := Byte_Swapped (Value);
       end if;
    end Retrieve_4_Bytes;
@@ -317,8 +323,11 @@ Finally, and perhaps surprisingly, a few declarations in package
 
 .. code-block:: ada
 
-   type Name is implementation-defined-enumeration-type;
-   System_Name : constant Name := implementation-defined;
+   type Name is
+     implementation-defined-enumeration-type;
+
+   System_Name : constant Name
+     := implementation-defined;
 
 Values of type :ada:`Name` are the names of alternative machine
 configurations supported by the implementation. :ada:`System_Name` represents
@@ -372,9 +381,12 @@ should be called. Let's assume we have an Ada function declared like so:
      Pre  => Source /= Null_Address      and then
              Destination /= Null_Address and then
              Source /= Destination       and then
-             not Overlapping (Destination, Source, Length),
+             not Overlapping (Destination,
+                              Source,
+                              Length),
      Post => MemCopy'Result = Destination;
-   --  Copies Length bytes from the object designated by Source to the object
+   --  Copies Length bytes from the object
+   --  designated by Source to the object
    --  designated by Destination.
 
 The three aspects that do the importing are specified after the reserved
@@ -396,12 +408,15 @@ attribute accordingly:
 
 .. code-block:: ada
 
-   procedure Put (This : in out Buffer; Start : Index; Value : String) is
+   procedure Put (This  : in out Buffer;
+                  Start :        Index;
+                  Value :        String) is
       Result : System.Address with Unreferenced;
    begin
-      Result := MemCopy (Destination => This (Start)'Address,
-                         Source      => Value'Address,
-                         Length      => Value'Length);
+      Result :=
+        MemCopy (Destination => This (Start)'Address,
+                 Source      => Value'Address,
+                 Length      => Value'Length);
    end Put;
 
 The order of the address parameters is easily confused so we use the
@@ -799,7 +814,9 @@ That said, you could at least verify the assumption:
 
 .. code-block:: ada
 
-   pragma Compile_Time_Error (Integer'Object_Size /= 32, "Integers expected to be 32 bits");
+   pragma Compile_Time_Error
+     (Integer'Object_Size /= 32,
+      "Integers expected to be 32 bits");
    X : Integer;
    Y : Bits32 with Address => X'Address;
 
@@ -833,7 +850,8 @@ For example, let's say we have this declaration:
 
 .. code-block:: ada
 
-   type Device_Register is range 0 .. 2**5 - 1 with Size => 5;
+   type Device_Register is range 0 .. 2**5 - 1
+     with Size => 5;
 
 That will compile successfully, because there will be a signed integer
 hardware type with at least that range. (Not necessarily, legally
@@ -847,7 +865,9 @@ problematic code:
 
 .. code-block:: ada
 
-   type Device_Register is range 0 .. 2**8 - 1 with Size => 8;
+   type Device_Register is range 0 .. 2**8 - 1
+     with Size => 8;
+
    My_Device : Device_Register
      with Address => To_Address (...);
 
@@ -878,6 +898,7 @@ object instead of the type:
 .. code-block:: ada
 
    type Device_Register is range 0 .. 2**8 - 1;
+
    My_Device : Device_Register with
      Size => 8,
      Address => To_Address (...);
@@ -890,9 +911,11 @@ type to apply :ada:`Object_Size` instead:
 
 .. code-block:: ada
 
-   type Device_Register is range 0 .. 2**8 - 1 with Object_Size => 8;
-   My_Device : Device_Register with
-     Address => To_Address (...);
+   type Device_Register is range 0 .. 2**8 - 1
+     with Object_Size => 8;
+
+   My_Device : Device_Register
+     with Address => To_Address (...);
 
 The choice between the two approaches comes down to personal preference.
 With either approach, if the implementation cannot support 8-bit
@@ -932,7 +955,8 @@ For example:
 
    type Commands is (Off, On);
 
-   for Commands use (Off => 0, On => 1);
+   for Commands use (Off => 0,
+                     On  => 1);
 
 As a result, :ada:`Off` is encoded as 0 and :ada:`On` as 1. That specific
 underlying encoding is guaranteed by the language, as of Ada 95, so this is
@@ -956,7 +980,8 @@ specify different encodings, as long as the relative order is maintained
 
 .. code-block:: ada
 
-   for Commands use (Off => 2, On => 4);
+   for Commands use (Off => 2,
+                     On  => 4);
 
 Now the compiler will use those encoding values instead of 0 and 1,
 transparently to client code.
@@ -1604,8 +1629,10 @@ named "Ada":
    generic
       type Source(<>) is limited private;
       type Target(<>) is limited private;
-   function Ada.Unchecked_Conversion (S : Source) return Target
-      with Pure, Nonblocking, Convention => Intrinsic;
+   function Ada.Unchecked_Conversion (S : Source)
+                                      return Target
+      with Pure, Nonblocking,
+           Convention => Intrinsic;
 
 The function, once instantiated and eventually invoked, returns the caller's
 value passed to :ada:`S` (of type :ada:`Source`) as if it is a value of type
@@ -1793,8 +1820,10 @@ cared), we are ready to examine the generic formal type parameters for
    generic
       type Source(<>) is limited private;
       type Target(<>) is limited private;
-   function Ada.Unchecked_Conversion (S : Source) return Target
-      with Pure, Nonblocking, Convention => Intrinsic;
+   function Ada.Unchecked_Conversion (S : Source)
+                                      return Target
+      with Pure, Nonblocking,
+           Convention => Intrinsic;
 
 The two generic formal types, :ada:`Source`, and :ada:`Target`, are the types
 used for the incoming value and the returned value, respectively. Both formals
@@ -1835,7 +1864,10 @@ the :ada:`No_Dependence` restriction, meaning that no client's context clause
 can specify the unit specified. As a result no client can instantiate
 the generic for unchecked conversion:
 
-    pragma Restrictions (No_Dependence => Ada.Unchecked_Conversion);
+.. code-block:: ada
+
+    pragma Restrictions
+      (No_Dependence => Ada.Unchecked_Conversion);
 
 hence there would be no use of unchecked conversion.
 
@@ -1925,7 +1957,8 @@ by one:
 .. code-block:: ada
 
    type Toggle_Switch is (Off, On);
-   for Toggle_Switch use (Off => 0, On => 4);
+   for Toggle_Switch use (Off => 0,
+                          On  => 4);
 
 If we covert an unsigned integer (of the right size) to a :ada:`Toggle_Switch`
 value, what would it mean if the :ada:`Source` value was neither 0 nor 4?
@@ -1967,27 +2000,37 @@ call or later. For example:
 
    procedure Demo is
 
-      type Toggle_Switch is (Off, On) with Size => 8;
-      for Toggle_Switch use (Off => 1, On => 4);
+      type Toggle_Switch is (Off, On)
+        with Size => 8;
 
-      function As_Toggle_Switch is new Ada.Unchecked_Conversion
-        (Source => Unsigned_8, Target => Toggle_Switch);
+      for Toggle_Switch use (Off => 1,
+                             On  => 4);
+
+      function As_Toggle_Switch is new
+        Ada.Unchecked_Conversion
+          (Source => Unsigned_8,
+           Target => Toggle_Switch);
 
       T1 : Toggle_Switch;
       T2 : Toggle_Switch;
    begin
-      T1 := As_Toggle_Switch (12);  -- neither 1 nor 4
+      T1 := As_Toggle_Switch (12);
+      -- neither 1 nor 4
+
       if T1 = Off then
          Put_Line ("T1's off");
       else
          Put_Line ("T1's on");
       end if;
+
       T2 := T1;
+
       if T2 = Off then
          Put_Line ("T2's off");
       else
          Put_Line ("T2's on");
       end if;
+
       Put_Line (T2'Image);
    end Demo;
 
@@ -2040,37 +2083,49 @@ internal, hidden components involved:
 .. code-block:: ada
 
    with Ada.Unchecked_Conversion;
-   with Ada.Text_IO;             use Ada.Text_IO;
-   with System;                  use System;  -- for Storage_Unit
-   with System.Storage_Elements; use System.Storage_Elements;
+
+   with Ada.Text_IO; use Ada.Text_IO;
+   with System;      use System;
+                     -- for Storage_Unit
+
+   with System.Storage_Elements;
+   use  System.Storage_Elements;
 
    procedure Demo_Erroneous is
 
-      subtype Buffer_Size is Storage_Offset range 1 .. Storage_Offset'Last;
+      subtype Buffer_Size is
+        Storage_Offset range 1 .. Storage_Offset'Last;
 
-      type Bounded_Buffer (Capacity : Buffer_Size) is record
+      type Bounded_Buffer (Capacity : Buffer_Size) is
+      record
          Content : Storage_Array (1 .. Capacity);
          Length  : Storage_Offset := 0;
       end record;
 
       procedure Show_Capacity (This : Bounded_Buffer);
 
-      subtype OneK_Bounded_Buffer is Bounded_Buffer (Capacity => 1 * 1024);
+      subtype OneK_Bounded_Buffer is
+        Bounded_Buffer (Capacity => 1 * 1024);
 
-      function As_OneK_Bounded_Buffer is new Ada.Unchecked_Conversion
-        (Source => Storage_Array, Target => OneK_Bounded_Buffer);
+      function As_OneK_Bounded_Buffer is new
+        Ada.Unchecked_Conversion
+          (Source => Storage_Array,
+           Target => OneK_Bounded_Buffer);
 
       Buffer   : OneK_Bounded_Buffer;
-      Sequence : Storage_Array (1 .. Buffer'Size / Storage_Unit);
+      Sequence : Storage_Array
+        (1 .. Buffer'Size / Storage_Unit);
 
       procedure Show_Capacity (This : Bounded_Buffer) is
       begin
-         Put_line ("This.Capacity is" & This.Capacity'Image);
+         Put_line ("This.Capacity is"
+                   & This.Capacity'Image);
       end Show_Capacity;
 
    begin
       Buffer := As_OneK_Bounded_Buffer (Sequence);
-      Put_Line ("Buffer capacity is" & Buffer.Capacity'Image);
+      Put_Line ("Buffer capacity is"
+                & Buffer.Capacity'Image);
       Show_Capacity (Buffer);
       Put_Line ("Done");
    end Demo_Erroneous;
@@ -2216,27 +2271,37 @@ portable alternative to check an object's validity. Here's an example:
 
    procedure Demo_Validity_Check is
 
-      type Toggle_Switch is (Off, On) with Size => 8;
-      for Toggle_Switch use (Off => 1, On => 4);
+      type Toggle_Switch is (Off, On)
+        with Size => 8;
+      for Toggle_Switch use (Off => 1,
+                             On  => 4);
 
       T1 : Toggle_Switch;
 
-      function Sensor_Reading (Default : Toggle_Switch) return Toggle_Switch is
+      function Sensor_Reading (Default : Toggle_Switch)
+                               return Toggle_Switch is
 
-         function As_Toggle_Switch is new Ada.Unchecked_Conversion
-           (Source => Unsigned_8, Target => Toggle_Switch);
+         function As_Toggle_Switch is new
+           Ada.Unchecked_Conversion
+             (Source => Unsigned_8,
+              Target => Toggle_Switch);
 
          Result : Toggle_Switch;
          Sensor : Unsigned_8;
-         --  for Sensor'Address use System'To_Address (...);
+         --  for Sensor'Address use
+         --    System'To_Address (...);
 
       begin
          Result := As_Toggle_Switch (Sensor);
-         return (if Result'Valid then Result else Default);
+
+         return (if Result'Valid then Result
+                                 else Default);
       end Sensor_Reading;
 
    begin
-      T1 := Sensor_Reading (Default => Off); -- arbitrary
+      T1 := Sensor_Reading (Default => Off);
+      -- arbitrary
+
       Put_Line (T1'Image);
    end Demo_Validity_Check;
 
