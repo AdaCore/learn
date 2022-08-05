@@ -1768,7 +1768,7 @@ consider this C example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound_0
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound_C
 
     !main.c
     #include <stdio.h>
@@ -1788,7 +1788,7 @@ The corresponding code in Ada raises an exception:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound_1
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound_Ada
     :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1809,7 +1809,7 @@ a 32-bit modular type:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound_2
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Perspective.Overflow_Wraparound_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
