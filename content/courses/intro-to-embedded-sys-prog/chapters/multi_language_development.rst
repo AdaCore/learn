@@ -1368,20 +1368,25 @@ If we wrote this in Ada it would look like this:
 .. code-block:: ada
 
    procedure Lock (Port : in out GPIO_Port;
-                   Pin  : GPIO_Pin) is
+                   Pin  :        GPIO_Pin) is
       Temp : Word with Volatile;
    begin
       --  set the lock control bit and the
       --  pin bit, clear the others
       Temp := LCCK or Pin'Enum_Rep;
+
       --  write the lock and pin bits
       Port.LCKR := Temp;
+
       --  clear the lock bit in the upper half
       Port.LCKR := Pin'Enum_Rep;
+
       --  write the lock bit again
       Port.LCKR := Temp;
+
       --  read the lock bit
       Temp := Port.LCKR;
+
       --  read the lock bit again
       Temp := Port.LCKR;
    end Lock;
@@ -1400,17 +1405,20 @@ is appropriate for all the reasons presented earlier:
 
 .. code-block:: ada
 
-   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
+   procedure Lock (Port : in out GPIO_Port;
+                   Pin  :        GPIO_Pin) is
       use System.Machine_Code, ASCII, System;
    begin
       Asm ("orr  r3, %1, #65536"  & LF & HT &
-           -- 0) Temp := LCCK or Pin, ie both set (others 0)
+           -- 0) Temp := LCCK or Pin, ie both
+           --    set (others 0)
 
            "str  r3, [%0, #28]"   & LF & HT &
            -- 1) Port.LCKR := Temp
 
            "str  %1, [%0, #28]"   & LF & HT &
-           -- 2) Port.LCKR := Pin alone, clearing LCCK bit
+           -- 2) Port.LCKR := Pin alone,
+           --    clearing LCCK bit
 
            "str  r3, [%0, #28]"   & LF & HT &
            -- 3) Port.LCKR := Temp
@@ -1421,8 +1429,11 @@ is appropriate for all the reasons presented earlier:
            "ldr  r3, [%0, #28]"   & LF & HT,
            -- 5) Temp := Port.LCKR
 
-           Inputs => (Address'Asm_Input ("r", This'Address), -- %0
-                     (GPIO_Pin'Asm_Input ("r", Pin))),       -- %1
+           Inputs =>
+             (Address'Asm_Input ("r", This'Address),
+              -- %0
+             (GPIO_Pin'Asm_Input ("r", Pin))),
+              -- %1
            Volatile => True,
            Clobber  => ("r3"));
    end Lock;

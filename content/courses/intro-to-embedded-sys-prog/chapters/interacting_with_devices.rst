@@ -525,14 +525,18 @@ Type :ada:`Alternate_Function_Fields` is then used to declare the
       PUPDR      : Resistors_Register;
       IDR        : Half_Word;
       --  input data register
+
       Reserved_2 : Half_Word;
       ODR        : Half_Word;
       --  output data register
+
       Reserved_3 : Half_Word;
       BSRR_Set   : Half_Word;
       --  bit set register
+
       BSRR_Reset : Half_Word;
       --  bit reset register
+
       LCKR       : Word with Atomic;
       AFR        : Alternate_Function_Fields;
       Unused     : Unaccessed_Gap;
@@ -694,20 +698,24 @@ convenience:
       PUPDR      : Resistors_Register;
       IDR        : Half_Word;
       --  input data register
+
       Reserved_2 : Half_Word;
       ODR        : Half_Word;
       --  output data register
+
       Reserved_3 : Half_Word;
       BSRR_Set   : Half_Word;
       --  bit set register
+
       BSRR_Reset : Half_Word;
       --  bit reset register
+
       LCKR       : Word with Atomic;
       AFR        : Alternate_Function_Fields;
       Unused     : Unaccessed_Gap
         with Unreferenced;
-   end record with
-      Size => 16#400# * 8;
+   end record
+     with Size => 16#400# * 8;
 
    for GPIO_Port use record
       MODER      at 0  range 0 .. 31;
@@ -968,8 +976,9 @@ the following:
 
      pragma Compile_Time_Warning
         (Object'Unconstrained_Array,
-         "Object is unconstrained array type" & ASCII.LF &
-         "To_Pointer results may not have bounds");
+         "Object is unconstrained array type"
+          & ASCII.LF
+          & "To_Pointer results may not have bounds");
 
 :ada:`Object` is the generic formal type parameter, i.e., the type we
 want our converted addresses to designate via the type
