@@ -218,7 +218,7 @@ consider the following example in C:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero_C
     :class: c-run-expect-failure
 
     !main.c
@@ -244,7 +244,7 @@ manually introduce a check for zero before this operation. For example:
 
 [C]
 
-.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero_Check
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero_Check_C
 
     !main.c
     #include <stdio.h>
@@ -272,7 +272,7 @@ This is the corresponding code in Ada:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero_Ada
     :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -296,7 +296,7 @@ the same message as we did in the second version of the C code:
 
 [Ada]
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Division_By_Zero_Check_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 

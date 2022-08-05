@@ -746,7 +746,7 @@ though they are *about* the bodies. Placement on the declarations allows
 the obligations and guarantees to be visible to all parties. For
 example:
 
-.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2
 
     function Mid (X, Y : Integer) return Integer with
        Pre  => X + Y /= 0,
@@ -976,7 +976,7 @@ positive value, the attempt to increment it would overflow, raising
 deal with.) We added a precondition to allow only the integer values up to,
 but not including, the largest positive value:
 
-.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2
+.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_5
 
    procedure Increment (Value : in out Integer) with
      Pre  => Value < Integer'Last,
