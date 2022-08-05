@@ -579,7 +579,7 @@ As it turns out, our procedure :ada:`Main` is already SPARK compliant so
 we can start verifying it.
 
 .. code:: ada prove_button run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Assert
-   :class: ada-run-expect-failure
+   :class: ada-run-expect-failure, ada-expect-prove-error
 
    with Ada.Text_IO; use Ada.Text_IO;
 
@@ -634,6 +634,7 @@ benefits, and it can be reached with comparatively low cost.
 For example, the following illustrates an initialization failure:
 
 .. code:: ada prove_flow_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_0
+   :class: ada-expect-prove-error
 
    with Increment;
    with Ada.Text_IO; use Ada.Text_IO;
@@ -658,7 +659,7 @@ to the argument passed to :ada:`Increment`.
 Consider this next routine, which contains a serious coding error. Flow
 analysis will find it for us.
 
-.. code:: ada prove_flow_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_0
+.. code:: ada prove_flow_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_1
    :class: ada-expect-prove-error
 
    with Ada.Numerics.Elementary_Functions;  use Ada.Numerics.Elementary_Functions;

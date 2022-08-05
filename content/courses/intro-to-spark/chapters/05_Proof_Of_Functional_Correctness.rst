@@ -282,7 +282,7 @@ However, :ada:`X_Init` can't be used in normal code, for example to restore
 the initial value of :ada:`X`.
 
 .. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Ghost_2
-    :class: ada-expect-compile-error
+    :class: ada-expect-prove-error, ada-expect-compile-error
 
     package Show_Ghost is
 
@@ -450,7 +450,7 @@ specify that :ada:`B` can't be accessed twice in a row without accessing :ada:`A
 in between.
 
 .. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Global_Ghost_Vars
-    :class: ada-run-expect-failure
+    :class: ada-expect-prove-error, ada-run-expect-failure
 
     package Call_Sequence is
 
@@ -1162,7 +1162,7 @@ Instead of using a ghost function, :ada:`Get_Model`, to retrieve the contents
 of the ring buffer, we're now using a global ghost variable, :ada:`Model`.
 
 .. code:: ada compile_button prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_02
-    :class: ada-expect-compile-error
+    :class: ada-expect-compile-error, ada-expect-prove-error
 
     package Ring_Buffer is
 
@@ -1283,7 +1283,7 @@ We're now modifying :ada:`Push_Last` to share the computation of the new
 length between the operational and ghost code.
 
 .. code:: ada compile_button prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_04
-    :class: ada-expect-compile-error
+    :class: ada-expect-compile-error, ada-expect-prove-error
 
     package Ring_Buffer is
 
@@ -1517,7 +1517,7 @@ the same bounds. We want to prove that :ada:`Max_Array` returns an array of
 the maximum values of both its arguments at each index.
 
 .. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_08
-    :class: ada-run-expect-failure
+    :class: ada-expect-prove-error, ada-run-expect-failure
 
     package Array_Util is
 
