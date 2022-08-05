@@ -91,12 +91,12 @@ Note the first parameter to the call above: :c:`USARTx_TX_GPIO_PORT`.
 There are multiple GPIO ports on an Arm implementation; the vendor
 decides how many. In this case one of them has been connected to a USART
 (Universal Synchronous Asynchronous Receiver Transmitter), an external
-device for sending and receiving serial data. When there are multiple devices, good software
-engineering suggests that the device driver present a given device as
-one of a type. That's what an "abstract data type" (ADT) provides for
+device for sending and receiving serial data. When there are multiple devices,
+good software engineering suggests that the device driver present a given
+device as one of a type. That's what an "abstract data type" (ADT) provides for
 software and so the device driver applies the same design. An ADT is
-essentially a class, in class-oriented languages. In Ada, an ADT is represented as a
-private type declared in a package, along with subprograms that take
+essentially a class, in class-oriented languages. In Ada, an ADT is represented
+as a private type declared in a package, along with subprograms that take
 the type as a parameter.
 
 The Ada Drivers Library (ADL) provided by AdaCore and the Ada community
@@ -280,8 +280,8 @@ In addition, we might want to apply more than one type, at any one time,
 to a given memory-mapped device. Doing so allows the client code some
 flexibility, or it might facilitate an internal implementation. For
 example, the STM32 boards from ST Microelectronics include a 96-bit
-device unique identifier on each board. The identifier starts at a fixed memory location.
-In this example we provide two different views |mdash|
+device unique identifier on each board. The identifier starts at a fixed memory
+location. In this example we provide two different views |mdash|
 types |mdash| for the value. One type provides the
 identifier as a String containing twelve characters, whereas another
 type provides the value as an array of three 32-bit unsigned words
@@ -617,10 +617,10 @@ second and subsequent array components are what you will get with a
 simple array object having components of that record type.
 
 For example, the datasheet for the GPIO ports on the STM32F407 Arm
-implementation start at address 16#4002_0000#. That's where GPIO_A begins.
-The next port, GPIO_B, starts at address 16#4002_0400#, or a byte offset
-of 1024 in decimal (1K). In the STM32F4 Reference Manual, however, the
-GPIO port register layout indicates a size for any one port that is much
+implementation start at address :ada:`16#4002_0000#`. That's where ``GPIO_A``
+begins. The next port, ``GPIO_B``, starts at address :ada:`16#4002_0400#`, or a
+byte offset of 1024 in decimal (1K). In the STM32F4 Reference Manual, however,
+the GPIO port register layout indicates a size for any one port that is much
 less than 1024 bytes. As you saw earlier in the corresponding record type
 declaration, on the STM32F4 each port only requires 40 (decimal) bytes.
 Hence there's a gap of unused memory between the ports, including after
@@ -696,7 +696,7 @@ bytes so we declared an array like so:
    --  ports in memory. We explicitly allocate a record component of
    --  this type at the end of the record type for that purpose.
 
-We also set the size of the entire record type to 16#400# bytes since
+We also set the size of the entire record type to :ada:`16#400#` bytes since
 that is the total of the required bytes plus the gap, as per the
 documentation. As such, this is a "confirming" size clause because the
 reserved gap component increases the required size to that value (which

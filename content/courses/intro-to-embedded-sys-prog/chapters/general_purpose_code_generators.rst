@@ -605,8 +605,8 @@ internally as required by the hardware. We don't show that part.
 
 The aspect :ada:`Atomic` is applied to the entire record type, ensuring that
 the memory mapped to the hardware register is loaded and stored only as
-32-bit quantities. In this example it isn't that we want the loads and stores to be
-indivisible. Rather, we want the generated machine instructions that load
+32-bit quantities. In this example it isn't that we want the loads and stores
+to be indivisible. Rather, we want the generated machine instructions that load
 and store the object to use 32-bit word instructions, even if we are only
 reading or updating a component of the object. That's what the hardware
 requires for all accesses.
