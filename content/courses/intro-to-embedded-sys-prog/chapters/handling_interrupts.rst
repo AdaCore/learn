@@ -1125,7 +1125,7 @@ elsewhere.
       procedure Interrupt_Handler
         with Attach_Handler => IRQ;
 
-      No_Transfer_In_Progess : Boolean := True;
+      No_Transfer_In_Progress : Boolean := True;
 
       Last_Status            : DMA_Error_Code
         := DMA_No_Error;
@@ -1286,7 +1286,7 @@ design.
       procedure Interrupt_Handler
         with Attach_Handler => IRQ;
 
-      No_Transfer_In_Progess : Boolean := True;
+      No_Transfer_In_Progress : Boolean := True;
 
       Last_Status            : DMA_Error_Code
         := DMA_No_Error;
@@ -1314,7 +1314,7 @@ the task can get the status via the entry parameter.
        Data_Count  : UInt16)
    is
    begin
-      No_Transfer_In_Progess := False;
+      No_Transfer_In_Progress := False;
 
       Had_Buffer_Error := False;
 
@@ -1334,7 +1334,7 @@ the task can get the status via the entry parameter.
    entry Wait_For_Completion
       (Status : out DMA_Error_Code)
    when
-      No_Transfer_In_Progess
+      No_Transfer_In_Progress
    is
    begin
       Status := Last_Status;
@@ -1342,11 +1342,11 @@ the task can get the status via the entry parameter.
 
 
 In the above, the entry barrier consists of the Boolean variable
-:ada:`No_Transfer_In_Progess`. Procedure :ada:`Start_Transfer` first
+:ada:`No_Transfer_In_Progress`. Procedure :ada:`Start_Transfer` first
 sets that variable to :ada:`False` so that a caller to
 :ada:`Wait_For_Completion` will suspend until the transaction completes
 one way or the other. Eventually, the handler sets
-:ada:`No_Transfer_In_Progess` to :ada:`True`.
+:ada:`No_Transfer_In_Progress` to :ada:`True`.
 
 
 .. code-block:: ada
@@ -1363,23 +1363,23 @@ one way or the other. Eventually, the handler sets
                when FIFO_Error_Indicated =>
                   Last_Status := DMA_FIFO_Error;
                   Had_Buffer_Error := True;
-                  No_Transfer_In_Progess :=
+                  No_Transfer_In_Progress :=
                     not Enabled (Controller.all,
                                  Stream);
 
                when Direct_Mode_Error_Indicated =>
                   Last_Status := DMA_Direct_Mode_Error;
-                  No_Transfer_In_Progess :=
+                  No_Transfer_In_Progress :=
                     not Enabled (Controller.all,
                                  Stream);
 
                when Transfer_Error_Indicated =>
                   Last_Status := DMA_Transfer_Error;
-                  No_Transfer_In_Progess := True;
+                  No_Transfer_In_Progress := True;
 
                when Transfer_Complete_Indicated =>
                   Last_Status := DMA_No_Error;
-                  No_Transfer_In_Progess := True;
+                  No_Transfer_In_Progress := True;
             end case;
 
             Clear_Status (Controller.all,
@@ -1393,8 +1393,8 @@ The device driver doesn't bother with interrupts indicating that
 transfers are half-way complete so that specific status flag is ignored.
 Upon an interrupt, the handler checks each status flag to determine what
 happened. Note the resulting assignments for both the protected
-variables :ada:`Last_Status` and :ada:`No_Transfer_In_Progess`. The
-variable :ada:`No_Transfer_In_Progess` controls the entry, and
+variables :ada:`Last_Status` and :ada:`No_Transfer_In_Progress`. The
+variable :ada:`No_Transfer_In_Progress` controls the entry, and
 :ada:`Last_Status` is passed to the caller via the entry formal
 parameter.
 
