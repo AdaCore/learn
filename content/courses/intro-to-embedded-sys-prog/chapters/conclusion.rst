@@ -12,7 +12,7 @@ compute is not the larger system's primary function. These computers are
 said to be "embedded" in the larger system. That, in itself, sets this kind 
 of programming apart from the more typical host-oriented programming. But 
 the context also implies fewer resources are available, especially memory 
-and electrical power, as well as processor power. Add those limitations to 
+and electrical power, as well as processor power. Add to those limitations
 a frequent reliability requirement and you have a demanding context for 
 development.
 
@@ -29,7 +29,7 @@ of incoming data. Ada has a lot of support for this activity so there was
 much to explore.
 
 Likewise, we examined development using Ada in combination with other 
-languages, nowadays a not an uncommon approach. Specifically, we saw how 
+languages, nowadays a not uncommon approach. Specifically, we saw how 
 to interface with code and data written in other languages, and how (and 
 why) to work with assembly language. Development in just one language is 
 becoming less common over time so these were important aspects to know.
@@ -49,7 +49,7 @@ These constructs provide a way to handle interrupts that is as portable
 as possible, in what is otherwise a very hardware-specific 
 endeavor.
 
-In the course introduction we mentioned a library of freely-available 
+In the course, we mentioned a library of freely-available 
 device drivers in Ada known as the Ada Driver Library (ADL). The ADL is 
 a good resource for learning how Ada can be used to develop software for 
 embedded systems using real-world devices and processors. Becoming 
