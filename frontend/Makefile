@@ -15,9 +15,9 @@ BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 CONTENT_DIR   	= $(MKFILE_DIR)/../content
 TEST_CONTENT    = tests/rst
 TEST_BUILDDIR   = tests/html
-HOST_ADDRESS 	?= localhost
-HOST_PORT    	?= 8000
 WEBSOCKET_URL   = wss://TODO
+# WEBSOCKET_URL   = wss://api.learn.r53.adacore.com
+# WEBSOCKET_URL   = wss://api-staging.learn.r53.adacore.com
 
 HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
 
