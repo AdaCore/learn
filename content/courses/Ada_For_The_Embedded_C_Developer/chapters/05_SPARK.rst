@@ -633,7 +633,7 @@ benefits, and it can be reached with comparatively low cost.
 
 For example, the following illustrates an initialization failure:
 
-.. code:: ada prove_flow_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_0
+.. code:: ada prove_flow_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_0 main=main.adb
    :class: ada-expect-prove-error
 
    with Increment;
