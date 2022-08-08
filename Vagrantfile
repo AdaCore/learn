@@ -78,13 +78,19 @@ $epub = <<-SHELL
       wget \
       libc6-dev
 
-  # Install GNAT Community
-  git clone https://github.com/AdaCore/gnat_community_install_script.git /gnat_installer/script \
-    && wget -q https://community.download.adacore.com/v1/f3a99d283f7b3d07293b2e1d07de00e31e332325?filename=gnat-2021-20210519-x86_64-linux-bin -O /gnat_installer/actual \
-    && sh /gnat_installer/script/install_package.sh /gnat_installer/actual /gnat com.adacore.spark2014_discovery,com.adacore.gnat \
-    && rm -rf /gnat_installer
+  # Install FSF GNAT
+  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.1.0-2/gnat-x86_64-linux-12.1.0-2.tar.gz && \
+  wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-12.1.0-1/gnatprove-x86_64-linux-12.1.0-1.tar.gz && \
+  wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-22.0.0-1/gprbuild-x86_64-linux-22.0.0-1.tar.gz && \
+  tar xzf gnat.tar.gz && \
+  mv gnat-* /usr/local/gnat && \
+  tar xzf gnatprove.tar.gz && \
+  mv gnatprove-* /usr/local/gnatprove && \
+  tar xzf gprbuild.tar.gz && \
+  mv gprbuild-* /usr/local/gprbuild && \
+  rm *.tar.gz
 
-  echo 'export PATH="/gnat/bin:${PATH}"' >> /home/vagrant/.bashrc
+  echo 'export PATH="/usr/local/gnat/bin:/usr/local/gprbuild/bin:/usr/local/gnatprove/bin:${PATH}"' >> /home/vagrant/.bashrc
   source /home/vagrant/.bashrc
 
   # Install learn deps
