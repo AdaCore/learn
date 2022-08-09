@@ -200,14 +200,14 @@ describe('Download', () => {
     it('should default to using the provided main', () => {
       const files: ResourceList = [{basename: 'other.adb', contents: ''}];
       const main = getMain(files, 'main.adb');
-      const expectedResult = 'main';
+      const expectedResult = 'for Main use ("main");';
       expect(main).to.equal(expectedResult);
     });
 
     it('should find a main if one is not provided', () => {
       const files: ResourceList = [{basename: 'other.adb', contents: ''}];
       const main = getMain(files, '');
-      const expectedResult = 'other';
+      const expectedResult = 'for Main use ("other");';
       expect(main).to.equal(expectedResult);
     });
 
