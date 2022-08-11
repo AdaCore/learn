@@ -329,8 +329,8 @@ observations:
       main task waits for the block to complete.
 
 - The main task is calling the :ada:`Increment` entry multiple times in the
-  loop from :ada:`1 .. 4`. It is also calling the :ada:`Reset` entry before and
-  the loop.
+  loop from :ada:`1 .. 4`. It is also calling the :ada:`Reset` entry before
+  the second loop.
 
     - Because task :ada:`T` contains an infinite loop, it always accepts calls
       to the :ada:`Reset` and :ada:`Increment` entries.
