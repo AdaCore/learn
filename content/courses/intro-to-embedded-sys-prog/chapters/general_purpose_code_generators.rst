@@ -771,3 +771,4 @@ Unlike the other aspects above, there is no pragma corresponding to the
 aspect :ada:`Full_Access_Only` defined by Ada 2022. (There is such a
 pragma for the GNAT-specific version named :ada:`Volatile_Full_Access`,
 as well as an aspect.)
+

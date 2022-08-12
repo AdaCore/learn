@@ -1565,3 +1565,4 @@ Both :ada:`adainit` and :ada:`adafinal` have no effect after the first
 invocation. That means you cannot structure your foreign code to iteratively
 call the two routines whenever you want to invoke some Ada code. In practice
 you just call them once in the main and be done with it.
+

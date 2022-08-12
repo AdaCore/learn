@@ -1638,3 +1638,4 @@ support interrupt handlers with a single parameter of type :ada:`Unsigned_8`
 Overall, the interrupt model defined and supported by Ada is quite close
 to the canonical model presented by most programming languages, in part
 because it matches the model presented by typical hardware.
+
