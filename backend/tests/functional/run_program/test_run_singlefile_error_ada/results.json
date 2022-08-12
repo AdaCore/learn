@@ -1,9 +1,0 @@
-{
-    "console": [
-        "gprbuild -q -P main.gpr -gnatwa"
-    ],
-    "stderr": [
-        "test.adb:6:23: missing \";\"\ngprbuild: *** compilation phase failed\n",
-        "Build failed with error code: 4"
-    ]
-}

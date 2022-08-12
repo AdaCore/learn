@@ -2,6 +2,7 @@
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import chaiDom from 'chai-dom';
+import {Client, Server, WebSocket} from 'mock-socket';
 chai.use(chaiDom);
 chai.use(chaiAsPromised);
 
@@ -10,16 +11,16 @@ import {resolve} from 'path';
 
 import ace from 'brace';
 
-import fetchMock from 'fetch-mock';
 import {OutputArea} from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
 
-import {DownloadRequest} from '../../src/ts/comms';
 import {widgetFactory} from '../../src/ts/widget';
 import {ServerWorker} from '../../src/ts/server';
-import {RunProgram} from '../../src/ts/server-types';
+import {CheckOutput, RunProgram} from '../../src/ts/server-types';
 import {getElemsByTag, getElemById, getElemsByClass}
   from '../../src/ts/dom-utils';
+
+global.WebSocket = WebSocket;
 
 /**
  * Helper function to fill DOM from a file
@@ -30,7 +31,7 @@ function fillDOM(filename: string): void {
   global.document = window.document;
 
   const htmlString = readFileSync(resolve(__dirname, '../html/html/' +
-      filename), 'utf8');
+    filename), 'utf8');
   document.documentElement.innerHTML = htmlString;
 }
 
@@ -54,11 +55,38 @@ function triggerEvent(element: HTMLElement, eventName: string): void {
   element.dispatchEvent(event);
 }
 
+/**
+* Remove all event listeners from the server
+*
+* @param {Server} server - The server to remove the listeners from
+*/
+function removeListeners(server: Server): void {
+ for (let type in server.listeners) {
+   server.listeners[type] = [];
+ }
+}
+
 describe('Widget', () => {
   let inTest: Array<HTMLElement>;
   let root: HTMLElement;
+  const baseURL = 'wss://api-staging.learn.r53.adacore.com';
+  const server: Server = new Server(baseURL);
 
-  const baseURL = 'https://cloudchecker-staging.learn.r53.adacore.com';
+  const originalLogFunction = console.log;
+  const originalErrorFunction = console.error;
+
+  before(() => {
+    // This is use to prevent logging from appearing in the test output
+    console.log = () => {};
+    console.error = () => {};
+  });
+
+  after(() => {
+    server.stop();
+    console.log = originalLogFunction;
+    console.error = originalErrorFunction;
+  });
+
   describe('Single Widget', () => {
     before(() => {
       fillDOM('single.html');
@@ -129,109 +157,78 @@ describe('Widget', () => {
         const clickableInfoMsg = 'test.adb:1:2: info: This is an info message';
         const clickableStdoutMsg = 'test.adb:2:3: Clickable stdout message';
         const raisedMsg = 'raised TEST_ERROR : test.adb:3 explicit raise';
+        const serverResponses: Array<CheckOutput.FS> = [
+          {
+            output: [
+              {type: 'console', data: consoleMsg}
+            ],
+            status: 0,
+            completed: false,
+            message: 'PENDING',
+          },
+          {
+            output: [
+              {type: 'stdout', data: clickableInfoMsg}
+            ],
+            status: 0,
+            completed: false,
+            message: 'PENDING',
+          },
+          {
+            output: [
+              {type: 'stdout', data: clickableStdoutMsg},
+              {type: 'stderr', data: raisedMsg}
+            ],
+            status: 0,
+            completed: true,
+            message: 'SUCCESS',
+          },
+        ];
+        let receivedMessages: Array<string> = [];
 
         before(async () => {
           const editorDiv = getElemById(root.id + '.editor');
           editor = ace.edit(editorDiv);
 
-          fetchMock.post(baseURL + '/run_program/', {
-            body: {
-              'identifier': identifier.toString(),
-              'message': 'Pending',
-            },
-          });
-          fetchMock.post(baseURL + '/check_output/', {
-            body: {
-              'completed': false,
-              'message': 'PENDING',
-              'output': [
-                {
-                  'msg': {
-                    'data': consoleMsg,
-                    'type': 'console',
-                  },
-                },
-              ],
-              'status': 0,
-            },
-          }, {
-            repeat: 1,
-          });
-          fetchMock.post(baseURL + '/check_output/', {
-            body: {
-              'completed': false,
-              'message': 'PENDING',
-              'output': [
-                {
-                  'msg': {
-                    'data': clickableInfoMsg,
-                    'type': 'stdout',
-                  },
-                },
-              ],
-              'status': 0,
-            },
-          }, {
-            repeat: 1,
-            overwriteRoutes: false,
-          });
-          fetchMock.post(baseURL + '/check_output/', {
-            body: {
-              'completed': true,
-              'message': 'SUCCESS',
-              'output': [
-                {
-                  'msg': {
-                    'data': clickableStdoutMsg,
-                    'type': 'stdout',
-                  },
-                }, {
-                  'msg': {
-                    'data': raisedMsg,
-                    'type': 'stderr',
-                  },
-                },
-              ],
-              'status': 0,
-            },
-          }, {
-            repeat: 1,
-            overwriteRoutes: false,
+          server.on('connection', (socket) => {
+            socket.on('message', (event) => {
+              receivedMessages.push(event as string);
+              serverResponses.forEach((msg) => {
+                socket.send(JSON.stringify(msg));
+              });
+            });
           });
 
           runButton.click();
           await ServerWorker.delay(3 * 250);
-          await fetchMock.flush(true);
         });
 
         after(() => {
-          fetchMock.reset();
+          removeListeners(server);
         });
 
         it('should trigger a run program post when clicked', () => {
-          const runProgram = fetchMock.calls(baseURL + '/run_program/');
-          expect(runProgram).to.have.length(1);
+          expect(receivedMessages).to.have.length(1);
 
           const expectSwitches = {
             'Builder': ['-test'],
             'Compiler': ['-test'],
           };
 
-          const request =
-              JSON.parse(runProgram[0][1]['body'] as string) as RunProgram.TS;
+          const request: RunProgram.TS = JSON.parse(receivedMessages[0]) as RunProgram.TS;
 
-          expect(request.files).to.have.length(1);
-          expect(request.mode).to.equal('run');
-          expect(request.switches).to.deep.equal(expectSwitches);
-          expect(request.name).to.equal('Test.Single');
-          expect(request.lab).to.be.false;
+          expect(request.data.files).to.have.length(1);
+          expect(request.data.mode).to.equal('run');
+          expect(request.data.switches).to.deep.equal(expectSwitches);
+          expect(request.data.name).to.equal('Test.Single');
+          expect(request.data.lab).to.be.false;
         });
 
         it('should have an output area with the received data', () => {
           const fakeOutputAreaDiv = document.createElement('div');
           const fakeOutputArea = new OutputArea(fakeOutputAreaDiv);
           fakeOutputArea.add(['output_info', 'console_output'],
-              Strings.CONSOLE_OUTPUT_LABEL + ':');
+            Strings.CONSOLE_OUTPUT_LABEL + ':');
           fakeOutputArea.addConsole(consoleMsg);
           fakeOutputArea.addInfo(clickableInfoMsg);
           fakeOutputArea.addMsg(clickableStdoutMsg);
@@ -250,7 +247,8 @@ describe('Widget', () => {
           infoMsg[0].click();
           expect(header).to.have.class('active');
           expect(editor.getCursorPosition()).to.deep.equal({
-            row: 0, column: 1});
+            row: 0, column: 1
+          });
         });
       });
 
@@ -258,6 +256,7 @@ describe('Widget', () => {
         let fakeDiv: HTMLDivElement;
         let fakeOA: OutputArea;
         let realDiv: HTMLElement;
+        let receivedMessages: Array<string> = [];
 
         beforeEach(() => {
           fakeDiv = document.createElement('div') as HTMLDivElement;
@@ -267,79 +266,84 @@ describe('Widget', () => {
           realDiv = getElemById(root.id + '.output-area');
         });
 
-        afterEach(() => {
-          fetchMock.reset();
-        });
-
         it('should handle an error if ServerWorker throws', async () => {
-          fetchMock.post(baseURL + '/run_program/', {
-            body: {
-              'identifier': '',
-              'message': 'Pending',
-            },
+          const serverResponse: CheckOutput.FS_Error = {
+            "message": "Forbidden",
+            "connectionId": "abc_-=2",
+            "requestId": "abc_-=2"
+          };
+          server.on('connection', (socket) => {
+            socket.on('message', (event) => {
+              socket.send(JSON.stringify(serverResponse));
+            });
           });
 
           fakeOA.addError(Strings.MACHINE_BUSY_LABEL);
           runButton.click();
-          await fetchMock.flush(true);
+          await ServerWorker.delay(250);
 
           expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
+          removeListeners(server);
         });
 
         it('should handle an error if response has lab ref', async () => {
-          fetchMock.post(baseURL + '/run_program/', {
-            body: {
-              'identifier': '1234',
-              'message': 'Pending',
-            },
-          });
-          fetchMock.post(baseURL + '/check_output/', {
-            body: {
-              'completed': false,
-              'message': 'PENDING',
-              'output': [
-                {
-                  'msg': {
-                    'data': 'test data',
-                    'type': 'console',
-                  },
-                  'ref': '0',
-                },
+          const serverResponses: Array<CheckOutput.FS> = [
+            {
+              output: [
+                {type: 'console', data: "test data"}
               ],
-              'status': 0,
+              status: 0,
+              completed: false,
+              message: 'PENDING',
+              ref: 0
             },
+            {
+              output: [],
+              status: 0,
+              completed: false,
+              message: 'SUCCESS'
+            }
+          ];
+          server.on('connection', (socket) => {
+            socket.on('message', (event) => {
+              serverResponses.forEach((msg) => {
+                socket.send(JSON.stringify(msg));
+              });
+            });
           });
 
           fakeOA.addError(Strings.MACHINE_BUSY_LABEL);
 
           runButton.click();
-          await ServerWorker.delay(2 * 250);
-          await fetchMock.flush(true);
+          await ServerWorker.delay(250);
 
           expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
+          removeListeners(server);
         });
 
         it('should report internal errors normally', async () => {
-          fetchMock.post(baseURL + '/run_program/', {
-            body: {
-              'identifier': '1234',
-              'message': 'Pending',
-            },
-          });
-          fetchMock.post(baseURL + '/check_output/', {
-            body: {
-              'completed': true,
-              'message': 'PENDING',
-              'output': [
-                {
-                  'msg': {
-                    'data': 'There was an error.',
-                    'type': 'internal_error',
-                  },
-                },
+          const serverResponses: Array<CheckOutput.FS> = [
+            {
+              output: [
+                {type: 'internal_error', data: "There was an error."}
               ],
-              'status': -1,
+              status: -1,
+              completed: false,
+              message: 'PENDING',
             },
+            {
+              output: [],
+              status: -1,
+              completed: true,
+              message: 'SUCCESS'
+            }
+          ];
+          server.on('connection', (socket) => {
+            socket.on('message', (event) => {
+              serverResponses.forEach((msg) => {
+                socket.send(JSON.stringify(msg));
+              });
+            });
           });
 
           fakeOA.addLine(
@@ -348,43 +352,45 @@ describe('Widget', () => {
             ': ' + -1);
 
           runButton.click();
-          await ServerWorker.delay(2 * 250);
-          await fetchMock.flush(true);
+          await ServerWorker.delay(250);
 
           expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
+          removeListeners(server);
         });
 
         it('should throw an error when msg has a bad type', async () => {
-          fetchMock.post(baseURL + '/run_program/', {
-            body: {
-              'identifier': '1234',
-              'message': 'Pending',
-            },
-          });
-          fetchMock.post(baseURL + '/check_output/', {
-            body: {
-              'completed': false,
-              'message': 'PENDING',
-              'output': [
-                {
-                  'msg': {
-                    'data': 'Test message',
-                    'type': 'blahblahblah',
-                  },
-                },
+          const serverResponses: Array<CheckOutput.FS> = [
+            {
+              output: [
+                {type: 'blahblahblah', data: "Test message"}
               ],
-              'status': 0,
+              status: 0,
+              completed: false,
+              message: 'PENDING',
             },
+            {
+              output: [],
+              status: 0,
+              completed: true,
+              message: 'SUCCESS'
+            }
+          ];
+          server.on('connection', (socket) => {
+            socket.on('message', (event) => {
+              serverResponses.forEach((msg) => {
+                socket.send(JSON.stringify(msg));
+              });
+            });
           });
 
           fakeOA.addLine('Test message');
           fakeOA.addError(Strings.MACHINE_BUSY_LABEL);
 
           runButton.click();
-          await ServerWorker.delay(2 * 250);
-          await fetchMock.flush(true);
+          await ServerWorker.delay(250);
 
           expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
+          removeListeners(server);
         });
       });
     });
@@ -399,7 +405,7 @@ describe('Widget', () => {
 
       it('should have a checkbox that switches editor theme', () => {
         const box = getElemById(root.id + '.settings-bar.theme-setting') as
-            HTMLInputElement;
+          HTMLInputElement;
         const origTheme = editor.getTheme();
         box.checked = !box.checked;
         triggerEvent(box, 'change');
@@ -414,7 +420,7 @@ describe('Widget', () => {
 
       it('should have a button that resets the editor', () => {
         const btn = getElemById(root.id + '.settings-bar.reset-btn') as
-            HTMLButtonElement;
+          HTMLButtonElement;
 
         const session = editor.getSession();
         const origContent = session.getValue();
@@ -428,74 +434,6 @@ describe('Widget', () => {
         btn.click();
 
         expect(session.getValue()).to.equal(origContent);
-      });
-
-      describe('Download Button', () => {
-        let btn: HTMLButtonElement;
-
-        before(() => {
-          btn = getElemById(root.id + '.settings-bar.download-btn') as
-              HTMLButtonElement;
-          // stub this because JSDOM doesn't have it
-          // eslint-disable-next-line max-len
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-          global.URL.createObjectURL = (object: any): string => {
-            return '#';
-          };
-          // eslint-disable-next-line max-len
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-          global.URL.revokeObjectURL = (url: any): void => {};
-        });
-
-        afterEach(() => {
-          fetchMock.reset();
-        });
-
-        it('should have a button that downloads the project', async () => {
-          const filename = 'test.zip';
-          const blob = new Blob(['test'], {type: 'text/plain;charset=utf-8'});
-
-          fetchMock.post(baseURL + '/download/', {
-            body: blob,
-            headers: {
-              'Content-Disposition': 'attachment; filename=' + filename,
-            },
-          },
-          {
-            sendAsJson: false,
-          });
-
-          btn.click();
-          await fetchMock.flush(true);
-
-          const downloadRequest = fetchMock.calls(baseURL + '/download/');
-          expect(downloadRequest).to.have.length(1);
-
-          const expectSwitches = {
-            'Builder': ['-test'],
-            'Compiler': ['-test'],
-          };
-
-          const request =
-              JSON.parse(downloadRequest[0][1]['body'] as string) as
-              DownloadRequest;
-          expect(request.files).to.have.length(1);
-          expect(request.switches).to.deep.equal(expectSwitches);
-          expect(request.name).to.equal('Test.Single');
-        });
-
-        it('should handle an exception', async () => {
-          fetchMock.post(baseURL + '/download/', 500);
-          const fakeDiv = document.createElement('div');
-          const fakeOA = new OutputArea(fakeDiv);
-          fakeOA.addError(Strings.MACHINE_BUSY_LABEL);
-
-          const realOA = getElemById(root.id + '.output-area');
-
-          btn.click();
-          await fetchMock.flush(true);
-          expect(realOA.innerHTML).to.equal(fakeDiv.innerHTML);
-        });
       });
     });
   });
@@ -552,72 +490,71 @@ describe('Widget', () => {
       describe('Normal Behavior', () => {
         const identifier = 123;
         const consoleMsg = 'General message';
+        let receivedMessages: Array<string> = [];
 
         before(async () => {
-          fetchMock.post(baseURL + '/run_program/', {
-            body: {
-              'identifier': identifier.toString(),
-              'message': 'Pending',
-            },
-          });
-
-          fetchMock.post(baseURL + '/check_output/', {
-            body: {
-              'completed': true,
-              'message': 'SUCCESS',
-              'output': [
-                {
-                  'msg': {
-                    'data': consoleMsg,
-                    'type': 'console',
-                  },
-                }, {
-                  'msg': {
-                    'data': 'test ref 0',
-                    'type': 'console',
-                  },
-                  'ref': '0',
-                }, {
-                  'msg': {
-                    'data': {
-                      'cases': {
-                        '0': {
-                          'actual': 'actual',
-                          'in': [],
-                          'out': 'out',
-                          'status': 'Success',
-                        },
-                      },
-                      'success': true,
-                    },
-                    'type': 'lab',
-                  },
-                },
+          const serverResponses: Array<CheckOutput.FS> = [
+            {
+              output: [
+                {type: 'console', data: consoleMsg}
               ],
-              'status': 0,
+              status: 0,
+              completed: false,
+              message: 'PENDING',
             },
+            {
+              output: [
+                {type: 'console', data: 'test ref 0'},
+                {
+                  type: 'lab',
+                  data: {
+                    success: true,
+                    cases: [{'0': {
+                      actual: 'actual',
+                      in: '',
+                      out: 'out',
+                      status: 'Success'}}]
+                  }
+                }
+              ],
+              status: 0,
+              completed: false,
+              message: 'PENDING',
+              ref: 0
+            },
+            {
+              output: [],
+              status: 0,
+              completed: true,
+              message: 'SUCCESS'
+            }
+          ];
+          server.on('connection', (socket) => {
+            socket.on('message', (event) => {
+              receivedMessages.push(event as string);
+              serverResponses.forEach((msg) => {
+                socket.send(JSON.stringify(msg));
+              });
+            });
           });
 
           submitButton.click();
-          await ServerWorker.delay(3 * 250);
-          await fetchMock.flush(true);
+          await ServerWorker.delay(250);
         });
 
         after(() => {
-          fetchMock.reset();
+          removeListeners(server);
         });
 
         it('should trigger a submit post when clicked', () => {
-          const submission = fetchMock.calls(baseURL + '/run_program/');
-          expect(submission).to.have.length(1);
+          expect(receivedMessages).to.have.length(1);
 
-          const request = JSON.parse(submission[0][1]['body'] as string) as
-            RunProgram.TS;
+          const request = JSON.parse(receivedMessages[0]) as RunProgram.TS;
 
-          expect(request.files).to.have.length(2);
-          expect(request.mode).to.equal('submit');
-          expect(request.name).to.equal('Test.Lab');
-          expect(request.lab).to.be.true;
+          expect(request.data.files).to.have.length(2);
+          expect(request.data.mode).to.equal('submit');
+          expect(request.data.name).to.equal('Test.Lab');
+          expect(request.data.lab).to.be.true;
         });
 
         it('should have an output area with the received data', () => {

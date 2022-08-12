@@ -1,11 +1,12 @@
 # You can set these variables from the command line.
-SPHINXOPTS    	=
-SPHINXBUILD   	= sphinx-build
-SPHINXPROJ    	= learnadacorecom
-SPHINXCONF    	= sphinx
-BUILDDIR      	= dist
-SRC_TEST_DIR  	= $(BUILDDIR)/test_output
-TEST_DRIVER   	= PYTHONPATH="$PYTHONPATH:sphinx:../backend" python3 tests/compile_blocks.py --keep_files -B $(SRC_TEST_DIR)
+SPHINXOPTS         =
+SPHINXBUILD        = sphinx-build
+SPHINXPROJ         = learnadacorecom
+SPHINXCONF         = sphinx
+BUILDDIR           = dist
+SRC_TEST_DIR       = $(BUILDDIR)/test_output
+TEST_DRIVER        = PYTHONPATH="$PYTHONPATH:sphinx" python3 tests/compile_blocks.py --keep_files -B $(SRC_TEST_DIR)
+TEST_LAMBDA_DRIVER = PYTHONPATH="$PYTHONPATH:sphinx" python3 tests/execute_rst_code_blocks.py --halt-on-failure
 
 MKFILE_PATH  	:= $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
@@ -15,8 +16,9 @@ BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 CONTENT_DIR   	= $(MKFILE_DIR)/../content
 TEST_CONTENT    = tests/rst
 TEST_BUILDDIR   = tests/html
-HOST_ADDRESS 	?= localhost
-HOST_PORT    	?= 8000
+WEBSOCKET_URL   = wss://TODO
+# WEBSOCKET_URL   = wss://api.learn.r53.adacore.com
+# WEBSOCKET_URL   = wss://api-staging.learn.r53.adacore.com
 
 HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
 
@@ -97,6 +99,73 @@ test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
 	test_training_fundamentals \
 	test_gnat_toolchain_intro
 
+test_lambda_ada_intro:
+	@echo "===== INTRO TO ADA ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/intro-to-ada/chapters/*.rst
+	@echo ""
+
+test_lambda_spark_intro:
+	@echo "===== INTRO TO SPARK ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/intro-to-spark/chapters/*.rst
+	@echo ""
+
+test_lambda_intro_to_embedded_sys_prog:
+	@echo "===== INTRO TO EMBEDDED SYS PROG ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/intro-to-embedded-sys-prog/chapters/*.rst
+	@echo ""
+
+test_lambda_advanced_ada:
+	@echo "===== ADVANCED ADA ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/advanced-ada/chapters/*.rst
+	@echo ""
+
+test_lambda_advanced_spark:
+	@echo "===== ADVANCED SPARK ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/advanced-spark/chapters/*.rst
+	@echo ""
+
+test_lambda_whats_new_in_ada_2022:
+	@echo "===== WHAT'S NEW IN ADA 2022 ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/whats-new-in-ada-2022/chapters/*.rst
+	@echo ""
+
+test_lambda_spark_for_the_misra_c_developer:
+	@echo "===== SPARK FOR MISRA C DEV ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
+	@echo ""
+
+test_lambda_ada_for_the_cpp_java_developer:
+	@echo "===== ADA FOR THE CPP JAVA DEV ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
+	@echo ""
+
+test_lambda_ada_for_the_embedded_c_developer:
+	@echo "===== ADA FOR THE EMBEDDED C DEV ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/Ada_For_The_Embedded_C_Developer/chapters/*.rst
+	@echo ""
+
+test_lambda_gnat_toolchain_intro:
+	@echo "===== GNAT TOOLCHAIN INTRO ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
+	@echo ""
+
+test_lambda_training_fundamentals:
+	@echo "===== FUNDAMENTALS OF ADA ====="
+	@$(TEST_LAMBDA_DRIVER) $(CONTENT_DIR)/training_examples/fundamentals_of_ada/*.rst
+	@echo ""
+
+test_lambda_content: test_lambda_ada_intro \
+	test_lambda_spark_intro \
+	test_lambda_intro_to_embedded_sys_prog \
+	test_lambda_advanced_ada \
+	test_lambda_advanced_spark \
+	test_lambda_whats_new_in_ada_2022 \
+	test_lambda_spark_for_the_misra_c_developer \
+	test_lambda_ada_for_the_cpp_java_developer \
+	test_lambda_ada_for_the_embedded_c_developer \
+	test_lambda_training_fundamentals \
+	test_lambda_gnat_toolchain_intro
+
 test_parser:
 	@coverage run --source=widget -m unittest discover --start-directory sphinx
 	@coverage report --fail-under=90 -m
@@ -137,7 +206,7 @@ publish:
 # code server.
 # This should only be called from `yarn run dev`
 local:
-	@CODE_SERVER_URL="http://$(HOST_ADDRESS):$(HOST_PORT)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	@CODE_SERVER_URL="$(WEBSOCKET_URL)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack-production:
