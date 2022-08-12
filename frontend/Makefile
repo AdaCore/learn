@@ -16,11 +16,11 @@ BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 CONTENT_DIR   	= $(MKFILE_DIR)/../content
 TEST_CONTENT    = tests/rst
 TEST_BUILDDIR   = tests/html
-WEBSOCKET_URL   = wss://TODO
-# WEBSOCKET_URL   = wss://api.learn.r53.adacore.com
-# WEBSOCKET_URL   = wss://api-staging.learn.r53.adacore.com
 
 HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
+
+WEBSOCKET_URL_PROD      = wss://api.learn.r53.adacore.com
+export CODE_SERVER_URL := wss://api-staging.learn.r53.adacore.com
 
 help:
 	@echo "make test_content  - run the testsuite"
@@ -206,7 +206,7 @@ publish:
 # code server.
 # This should only be called from `yarn run dev`
 local:
-	@CODE_SERVER_URL="$(WEBSOCKET_URL)" $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	@$(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack-production:
@@ -217,7 +217,7 @@ webpack-staging:
 
 sphinx-production:
 	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
-	CODE_SERVER_URL="https://cloudchecker.learn.r53.adacore.com" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	CODE_SERVER_URL="$(WEBSOCKET_URL_PROD)" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 sphinx-staging:
