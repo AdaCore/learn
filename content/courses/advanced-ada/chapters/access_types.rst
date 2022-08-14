@@ -1592,13 +1592,99 @@ Accessibility Levels: An Introduction
 Unchecked Access
 ----------------
 
-.. admonition:: Relevant topics
+In this section, we discuss the :ada:`'Unchecked_Access` attribute, which we
+can use to circumvent accessibility issues for objects in specific cases. (Note
+that this attribute only exists for objects, not for subprograms.)
 
-    - `Unchecked Access Value Creation <http://www.ada-auth.org/standards/2xrm/html/RM-13-10.html>`__
+We've seen in the previous section that the accessibility levels verify the
+lifetime of access types.
 
 .. todo::
 
-    Complete section!
+    Add link: Adv_Ada_Accessibility_Levels_Intro
+
+Let's see a simplified version of a code example from that section:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Dangling_Reference_Rules
+    :class: ada-expect-compile-error
+
+    package Integers is
+
+       type Integer_Access is access all Integer;
+
+    end Integers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Integers; use Integers;
+
+    procedure Show_Access_Issue is
+       I_Var : aliased Integer := 42;
+
+       A     : Integer_Access;
+    begin
+       A := I_Var'Access;
+       --   PROBLEM: A has the same lifetime as I_Var,
+       --            but Integer_Access type has a longer
+       --            lifetime.
+
+       Put_Line ("A.all: " & Integer'Image (A.all));
+    end Show_Access_Issue;
+
+Here, the compiler complains about the :ada:`A := I_Var'Access` assignment
+because the :ada:`Integer_Access` type has a longer lifetime than :ada:`A`.
+However, we know that this assignment to :ada:`A` |mdash| and further uses of
+:ada:`A` in the code |mdash| won't cause dangling references to be created.
+Therefore, we can assume that assigning the access to :ada:`I_Var` to :ada:`A`
+is safe.
+
+When we're sure that an access assignment cannot possibly generate dangling
+references, we can the use :ada:`'Unchecked_Access` attribute. For instance, we
+can use this attribute to circumvent the compilation error in the previous code
+example, since we know that the erroneous assignment is actually safe:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Dangling_Reference_Rules
+
+    package Integers is
+
+       type Integer_Access is access all Integer;
+
+    end Integers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Integers; use Integers;
+
+    procedure Show_Access_Issue is
+       I_Var : aliased Integer := 42;
+
+       A     : Integer_Access;
+    begin
+       A := I_Var'Unchecked_Access;
+       --   OK: assignment is now accepted.
+
+       Put_Line ("A.all: " & Integer'Image (A.all));
+    end Show_Access_Issue;
+
+When we use the :ada:`'Unchecked_Access` attribute, most rules still apply .
+The only difference to the standard :ada:`'Access` attribute is that unchecked
+access applies the rules as if the object we're getting access to was being
+declared at library level. (For the code example we've just seen, the check
+would be performed as if :ada:`I_Var` was declared in the :ada:`Integers`
+package instead of being declared in the procedure.)
+
+It is strongly recommended to avoid unchecked access in general. You should
+only use it when you can safely assume that the access value will be discarded
+before the object we had access to gets out of scope. Therefore, if this
+situation isn't clear enough, it's best to avoid unchecked access. (Later in
+this chapter, we'll see some of the nasty issues that arrive from creating
+dangling references.) Instead, you should work on improving the software design
+of your application by considering alternatives such as using containers or
+encapsulating access types in well-designed abstract data types.
+
+.. admonition:: In the Ada Reference Manual
+
+   - `13.10 Unchecked Access Value Creation <http://www.ada-auth.org/standards/12rm/html/RM-13-10.html>`_
 
 
 Unchecked Deallocation
