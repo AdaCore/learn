@@ -160,11 +160,9 @@ is the most appropriate software design decision. If we still need assignment
 and equality operators, we can implement custom subprograms for the limited
 type. We'll discuss this topic in the next sections.
 
-In addition to the case when we have components of access types, the
-recommendation to declare a record type limited is also valid when we have
-components of task or protected types. In addition to that, limited types are
-useful when we want to avoid that the same information is copied to multiple
-objects of the same type.
+In addition to the case when we have components of access types, limited types
+are useful for example when we want to avoid that the same information is
+copied to multiple objects of the same type.
 
 .. admonition:: In the Ada Reference Manual
 
