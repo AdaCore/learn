@@ -98,11 +98,6 @@ $epub = <<-SHELL
   source /vagrant/venv/bin/activate
   pip3 install -r /vagrant/frontend/requirements.txt
 
-  # Install Calibre
-  sudo -v && \
-  wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | \
-    sudo sh /dev/stdin version=5.44.0
-
   cd /vagrant/frontend
   yarn
 

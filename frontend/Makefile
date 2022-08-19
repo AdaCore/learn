@@ -334,59 +334,11 @@ $(foreach book_dir, $(BOOKS), \
 epub_books: $(EPUB_BOOKS)
 	@echo $@ completed.
 
-MOBI_BOOKS_DIR := $(BUILDDIR)/mobi_books
-
-$(MOBI_BOOKS_DIR)/%.mobi: $(EPUB_BOOKS_DIR)/%.epub
-	@echo Building $@
-	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
-	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
-	@ebook-convert $^ $@ \
-		--expand-css \
-		--keep-ligatures \
-		--filter-css "margin-top,margin-bottom" \
-		--mobi-file-type both \
-		--pretty-print \
-		--prefer-metadata-cover \
-		--minimum-line-height 100 \
-		--extra-css $(MKFILE_DIR)/azw3_style.css \
-		--output-profile kindle
-
-$(MOBI_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).mobi: $(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub
-	@echo Building $@
-	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
-	@mkdir -p $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)
-	@ebook-convert $^ $@ \
-		--expand-css \
-		--keep-ligatures \
-		--filter-css "margin-top,margin-bottom" \
-		--mobi-file-type both \
-		--pretty-print \
-		--prefer-metadata-cover \
-		--minimum-line-height 100 \
-		--extra-css $(MKFILE_DIR)/azw3_style.css \
-		--output-profile kindle
-
-# Generate list: MOBI_BOOKS
-$(foreach book_dir, $(BOOKS), \
-	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
-	$(eval SPHINX_MOBI := $(SPHINX_BOOK).mobi) \
-	$(eval HIDDEN_BOOKS_FOUND := $(or $(and $(wildcard $(HIDDEN_BOOKS)),1),0)) \
-	$(if $(findstring 1,$(HIDDEN_BOOKS_FOUND)), \
-		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
-		$(eval HIDDEN_BOOK := 0)) \
-	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval MOBI_BOOKS += $(MOBI_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_MOBI))) \
-	)
-
-mobi_books: $(MOBI_BOOKS)
-	@echo $@ completed.
-
 complete_site_books: 	$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf \
-			$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub \
-			$(MOBI_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).mobi
+			$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub
 	@echo $@ completed.
 
-all_books: pdf_books epub_books mobi_books
+all_books: pdf_books epub_books
 	@echo $@ completed.
 
 cleanall:
@@ -405,4 +357,4 @@ cleantest:
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 .PHONY: Makefile help test_content test_engine \
-	pdf_books epub_books mobi_books $(BOOKS)
+	pdf_books epub_books $(BOOKS)
