@@ -54,10 +54,6 @@ Introduction to Embedded Systems Programming
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-embedded-sys-prog.mobi">
-                Download MOBI
-            </a>
-
 .. toctree::
     :maxdepth: 4
     :caption: Contents:
