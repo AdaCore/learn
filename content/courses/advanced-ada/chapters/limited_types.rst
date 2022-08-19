@@ -368,7 +368,7 @@ the :ada:`=` operator ourselves. For example, we can do that for the
        begin
           --  Comparing record components
           return Left.V.all = Right.V.all;
-       end;
+       end "=";
 
     end Limited_Types;
 
