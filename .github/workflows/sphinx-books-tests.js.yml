@@ -44,11 +44,6 @@ jobs:
         fonts-open-sans \
         fonts-dejavu \
         poppler-utils
-    - name: Install Calibre
-      run: |
-        sudo -v && \
-        wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | \
-            sudo sh /dev/stdin version=5.44.0
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: ada-actions/toolchain
@@ -82,13 +77,4 @@ jobs:
         name: learn-epub-books
         path: |
           frontend/dist/epub_books
-        retention-days: 1
-    - name: Build MOBI books including build/runtime output
-      run: make mobi_books
-    - name: Archive MOBI books in artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: learn-mobi-books
-        path: |
-          frontend/dist/mobi_books
         retention-days: 1

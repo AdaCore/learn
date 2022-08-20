@@ -53,10 +53,6 @@ What's New in Ada 2022
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/mobi_books/courses/whats-new-in-ada-2022.mobi">
-                Download MOBI
-            </a>
-
 .. toctree::
     :maxdepth: 4
     :caption: Contents:

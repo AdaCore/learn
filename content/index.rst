@@ -99,8 +99,7 @@
     ------------------------------
 
     Download the contents of the entire website as an e-book for offline
-    reading. You can select the following formats: PDF, EPUB and MOBI (for
-    Kindle devices).
+    reading. Following formats are available: PDF and EPUB.
 
     .. container:: frontpage-ebooks
 
@@ -122,11 +121,8 @@
                             <a class="ebook-download-button" href="/epub_books/learning-ada.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/learning-ada.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
     Alternatively, download individual courses and laboratories as e-books:
 
@@ -150,11 +146,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/intro-to-ada.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-ada.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -171,10 +164,6 @@
 
                             <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
                                 EPUB
-                            </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/labs/intro-to-ada.mobi">
-                                MOBI
                             </a>
                         </div>
 
@@ -197,11 +186,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/intro-to-spark.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-spark.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -219,11 +205,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/whats-new-in-ada-2022.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/whats-new-in-ada-2022.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
         .. container:: frontpage-ebooks-row
 
@@ -243,11 +226,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/Ada_For_The_CPP_Java_Developer.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -265,11 +245,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_Embedded_C_Developer.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/Ada_For_The_Embedded_C_Developer.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
         .. container:: frontpage-ebooks-row
 
@@ -289,11 +266,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/SPARK_for_the_MISRA_C_Developer.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -311,11 +285,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/GNAT_Toolchain_Intro.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
     -------------
 
@@ -346,11 +317,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/intro-to-embedded-sys-prog.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-embedded-sys-prog.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -368,11 +336,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/advanced-ada.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -390,11 +355,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/advanced-spark.epub">
                                 EPUB
                             </a>
-
-                            <a class="ebook-download-button" href="/mobi_books/courses/advanced-spark.mobi">
-                                MOBI
-                            </a>
                         </div>
+
 
     -------------
 
