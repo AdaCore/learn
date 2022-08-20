@@ -121,6 +121,8 @@
                             <a class="ebook-download-button" href="/epub_books/learning-ada.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
     Alternatively, download individual courses and laboratories as e-books:
 
@@ -144,6 +146,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/intro-to-ada.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -161,6 +165,7 @@
                             <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
                                 EPUB
                             </a>
+                        </div>
 
 
         .. container:: frontpage-ebooks-row
@@ -181,6 +186,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/intro-to-spark.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -198,6 +205,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/whats-new-in-ada-2022.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
         .. container:: frontpage-ebooks-row
 
@@ -217,6 +226,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -234,6 +245,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_Embedded_C_Developer.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
         .. container:: frontpage-ebooks-row
 
@@ -253,6 +266,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -270,6 +285,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
     -------------
 
@@ -300,6 +317,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/intro-to-embedded-sys-prog.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -317,6 +336,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -334,6 +355,8 @@
                             <a class="ebook-download-button" href="/epub_books/courses/advanced-spark.epub">
                                 EPUB
                             </a>
+                        </div>
+
 
     -------------
 
