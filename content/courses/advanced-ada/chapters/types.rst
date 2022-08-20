@@ -1592,6 +1592,72 @@ subprograms of the package body that make use of this type. Again, the partial
 view of the private type contains the most important information for users that
 want to declare objects of this type.
 
+.. admonition:: Important
+
+    Although it's very common to declare private types as record types, this is
+    not the only option. In fact, we could declare any type in the full view
+    |mdash| scalars, for example |mdash|, so we could declare a "private
+    integer" type:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Private_Integer
+
+        package Private_Integers is
+
+           --  Partial view of private Integer type:
+           type Private_Integer is private;
+
+        private
+
+           --  Full view of private Integer type:
+           type Private_Integer is new Integer;
+
+        end Private_Integers;
+
+    This code compiles as expected, but isn't very useful. We can improve it by
+    adding operators to it, for example:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Private_Integer
+
+        package Private_Integers is
+
+           --  Partial view of private Integer type:
+           type Private_Integer is private;
+
+           function "+" (Left, Right : Private_Integer)
+                         return Private_Integer;
+
+        private
+
+           --  Full view of private Integer type:
+           type Private_Integer is new Integer;
+
+        end Private_Integers;
+
+        package body Private_Integers is
+
+           function "+" (Left, Right : Private_Integer)
+                         return Private_Integer is
+              Res : constant Integer := Integer (Left)
+                                        + Integer (Right);
+           begin
+              return Private_Integer (Res);
+           end "+";
+
+        end Private_Integers;
+
+    Now, we can use the :ada:`+` operator as a common integer variable:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Private_Integer
+
+        with Private_Integers; use Private_Integers;
+
+        procedure Show_Private_Integers is
+           A, B : Private_Integer;
+        begin
+           A := A + B;
+        end Show_Private_Integers;
+
+
 Default initial values
 ----------------------
 
