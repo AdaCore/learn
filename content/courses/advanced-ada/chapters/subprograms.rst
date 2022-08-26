@@ -3,6 +3,25 @@ Subprograms
 
 .. include:: ../../global.txt
 
+.. _Adv_Ada_Parameter_Modes_Associations:
+
+Parameter Modes and Associations
+--------------------------------
+
+.. todo::
+
+    Brief section on parameter modes:
+
+    - Mention by-copy and by-reference types
+    - Mention: parameter modes, formal and actual parameters
+    - Add link to section on "Aliased Parameters"
+
+.. admonition:: Relevant topics
+
+   - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`_
+   - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`_
+
+
 .. _Adv_Ada_Operators:
 
 Operators
