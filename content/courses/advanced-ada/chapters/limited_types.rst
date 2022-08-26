@@ -78,10 +78,10 @@ not:
 
        Proc (R, AR_Test);
 
-       Put_Line("R'Address (Proc): "
-                & System.Address_Image(AR_Proc));
-       Put_Line("R'Address (Test): "
-                & System.Address_Image(AR_Test));
+       Put_Line ("R'Address (Proc): "
+                 & System.Address_Image (AR_Proc));
+       Put_Line ("R'Address (Test): "
+                 & System.Address_Image (AR_Test));
 
        if AR_Proc = AR_Test then
           Put_Line ("R was passed by reference.");
