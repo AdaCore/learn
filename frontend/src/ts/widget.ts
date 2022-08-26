@@ -117,7 +117,9 @@ class Widget {
     for (const btn of buttons) {
       const mode = btn.dataset.mode as string;
       btn.addEventListener('click', async () => {
+        buttons.forEach((btn) => btn.setAttribute('disabled', ''));
         await this.buttonCB(mode);
+        buttons.forEach((btn) => btn.removeAttribute('disabled'));
       });
     }
 
