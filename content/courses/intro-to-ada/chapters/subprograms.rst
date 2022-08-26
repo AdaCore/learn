@@ -198,6 +198,10 @@ the nested :ada:`Display_Result` procedure.
        B := 3;
        C := Increment_By (A, B);
        Display_Result;
+       A := 20;
+       B := 5;
+       C := Increment_By (A, B);
+       Display_Result;
     end Show_Increment;
 
 Function calls

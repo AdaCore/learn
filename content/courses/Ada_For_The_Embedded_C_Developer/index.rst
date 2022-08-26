@@ -61,10 +61,6 @@ Ada for the Embedded C Developer
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/mobi_books/courses/Ada_For_The_Embedded_C_Developer.mobi">
-                Download MOBI
-            </a>
-
 .. toctree::
    :maxdepth: 4
 

@@ -165,7 +165,7 @@ the order in which the two calls to F are evaluated.  It's therefore not
 legal SPARK.
 
 .. code:: ada prove_flow_button run_button project=Courses.Intro_To_Spark.Overview.Illegal_Ada_Code
-    :class: ada-expect-compile-error
+    :class: ada-expect-prove-error, ada-expect-compile-error
 
     procedure Show_Illegal_Ada_Code is
 
@@ -510,7 +510,7 @@ applies a circular permutation to the value of its three parameters.
 :ada:`Swap` then uses :ada:`Permute` to swap the value of :ada:`X` and :ada:`Y`.
 
 .. code:: ada run_button prove_flow_button project=Courses.Intro_To_Spark.Overview.Example_03
-    :class: ada-expect-compile-error
+    :class: ada-expect-compile-error, ada-expect-prove-error
 
     package P
       with SPARK_Mode => On

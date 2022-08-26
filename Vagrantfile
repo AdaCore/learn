@@ -78,13 +78,19 @@ $epub = <<-SHELL
       wget \
       libc6-dev
 
-  # Install GNAT Community
-  git clone https://github.com/AdaCore/gnat_community_install_script.git /gnat_installer/script \
-    && wget -q https://community.download.adacore.com/v1/f3a99d283f7b3d07293b2e1d07de00e31e332325?filename=gnat-2021-20210519-x86_64-linux-bin -O /gnat_installer/actual \
-    && sh /gnat_installer/script/install_package.sh /gnat_installer/actual /gnat com.adacore.spark2014_discovery,com.adacore.gnat \
-    && rm -rf /gnat_installer
+  # Install FSF GNAT
+  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.1.0-2/gnat-x86_64-linux-12.1.0-2.tar.gz && \
+  wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-12.1.0-1/gnatprove-x86_64-linux-12.1.0-1.tar.gz && \
+  wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-22.0.0-1/gprbuild-x86_64-linux-22.0.0-1.tar.gz && \
+  tar xzf gnat.tar.gz && \
+  mv gnat-* /usr/local/gnat && \
+  tar xzf gnatprove.tar.gz && \
+  mv gnatprove-* /usr/local/gnatprove && \
+  tar xzf gprbuild.tar.gz && \
+  mv gprbuild-* /usr/local/gprbuild && \
+  rm *.tar.gz
 
-  echo 'export PATH="/gnat/bin:${PATH}"' >> /home/vagrant/.bashrc
+  echo 'export PATH="/usr/local/gnat/bin:/usr/local/gprbuild/bin:/usr/local/gnatprove/bin:${PATH}"' >> /home/vagrant/.bashrc
   source /home/vagrant/.bashrc
 
   # Install learn deps
@@ -92,59 +98,9 @@ $epub = <<-SHELL
   source /vagrant/venv/bin/activate
   pip3 install -r /vagrant/frontend/requirements.txt
 
-  # Install Calibre
-  sudo -v && \
-  wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | \
-    sudo sh /dev/stdin version=5.44.0
-
   cd /vagrant/frontend
   yarn
 
-SHELL
-
-$backend = <<-SHELL
-  #!/bin/sh -eux
-
-  # Get docker apt repos
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) \
-    stable"
-
-  # Install system deps
-  DEBIAN_FRONTEND=noninteractive apt-get update
-  DEBIAN_FRONTEND=noninteractive apt-get install -y \
-      python3 \
-      python3-pip \
-      python3-venv \
-      make \
-      rabbitmq-server \
-      apt-transport-https \
-      ca-certificates \
-      curl \
-      gnupg-agent \
-      software-properties-common \
-      docker-ce \
-      docker-ce-cli \
-      containerd.io
-
-  # Add vagrant user to docker to allow interactive container
-  # groupadd docker
-  usermod -aG docker vagrant
-
-  # Install code_examples_server deps
-  python3 -m venv /vagrant/venv
-  source /vagrant/venv/bin/activate
-  pip3 install -r /vagrant/REQUIREMENTS.txt
-
-  cd /vagrant/infrastructure
-  # stop previous containers
-  docker stop $(docker ps -a -q)
-  # remove all images/containers on system
-  docker system prune -a -f
-  # Build docker image
-  docker build -t "safecontainer" .
 SHELL
 
 Vagrant.configure("2") do |config|
@@ -176,14 +132,4 @@ Vagrant.configure("2") do |config|
     epub.vm.provision :shell, inline: $epub
   end
 
-  config.vm.define "server" do |server|
-    server.vm.box = "bento/ubuntu-18.04"
-
-    server.vm.network "forwarded_port", guest: 8000, host: 8000, host_ip: "127.0.0.1"
-    server.vm.network "forwarded_port", guest: 6379, host: 6379, host_ip: "127.0.0.1"
-
-    server.vm.synced_folder './backend', '/vagrant'
-
-    server.vm.provision :shell, inline: $backend
-  end
 end

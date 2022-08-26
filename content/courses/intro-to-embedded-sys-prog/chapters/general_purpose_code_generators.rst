@@ -126,8 +126,8 @@ accessed.
          B3 : Boolean with Independent;
          B4 : Boolean with Independent;
          B5 : Boolean with Independent;
-      end record with
-        Size => 8;
+      end record
+        with Size => 8;
 
       for R use record
          B0 at 0 range 0 .. 0;
@@ -198,9 +198,9 @@ above, and some object :ada:`Foo` of that type, suppose we want to say
          B3 : Boolean;
          B4 : Boolean;
          B5 : Boolean;
-      end record with
-        Size => 8,
-        Independent;
+      end record
+        with Size => 8,
+             Independent;
 
       for R use record
          B0 at 0 range 0 .. 0;
@@ -358,10 +358,12 @@ and stores. If we wrote this in Ada it would look like this:
 
 .. code-block:: ada
 
-   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
+   procedure Lock (Port : in out GPIO_Port;
+                   Pin  :        GPIO_Pin) is
       Temp : Word with Volatile;
    begin
-      --  set the lock control bit and the pin bit, clear the others
+      --  set the lock control bit and the pin
+      --  bit, clear the others
       Temp := LCCK or Pin'Enum_Rep;
 
       --  write the lock and pin bits
@@ -465,11 +467,11 @@ the lock register component and apply the aspect :ada:`Atomic`:
 
    type GPIO_Port is limited record
       --  ...
-      LCKR       : UInt32 with Atomic;
+      LCKR : UInt32 with Atomic;
       --  ...
-   end record with
-     --  ...
-     Size => 16#400# * 8;
+   end record
+     with --  ...
+          Size => 16#400# * 8;
 
 Hence loads and stores to the :ada:`LCKR` component will be done
 atomically, otherwise the compiler will let us know that it is
@@ -590,13 +592,23 @@ that register to an Ada record type like so:
       --  ...
       Direction         : DMA_Data_Transfer_Direction;
       P_Flow_Controller : Boolean;
-      TCI_Enabled       : Boolean;  -- transfer complete interrupt enabled
-      HTI_Enabled       : Boolean;  -- half-transfer complete enabled
-      TEI_Enabled       : Boolean;  -- transfer error interrupt enabled
-      DMEI_Enabled      : Boolean;  -- direct mode error interrupt enabled
+
+      TCI_Enabled       : Boolean;
+      --  transfer complete interrupt enabled
+
+      HTI_Enabled       : Boolean;
+      --  half-transfer complete enabled
+
+      TEI_Enabled       : Boolean;
+      --  transfer error interrupt enabled
+
+      DMEI_Enabled      : Boolean;
+      --  direct mode error interrupt enabled
+
       Stream_Enabled    : Boolean;
    end record
-      with Atomic, Size => 32;
+      with Atomic,
+           Size => 32;
 
 The "confirming" size clause ensures we have declared the type correctly
 such that it will fit into 32-bits. There will also be a record
@@ -605,8 +617,8 @@ internally as required by the hardware. We don't show that part.
 
 The aspect :ada:`Atomic` is applied to the entire record type, ensuring that
 the memory mapped to the hardware register is loaded and stored only as
-32-bit quantities. In this example it isn't that we want the loads and stores to be
-indivisible. Rather, we want the generated machine instructions that load
+32-bit quantities. In this example it isn't that we want the loads and stores
+to be indivisible. Rather, we want the generated machine instructions that load
 and store the object to use 32-bit word instructions, even if we are only
 reading or updating a component of the object. That's what the hardware
 requires for all accesses.
@@ -618,13 +630,23 @@ an enclosing record type representing one entire DMA "stream":
 
    type DMA_Stream is record
       CR   : Stream_Config_Register;
-      NDTR : Word;    -- note that the upper half must remain at reset value
-      PAR  : Address; -- peripheral address register
-      M0AR : Address; -- memory 0 address register
-      M1AR : Address; -- memory 1 address register
+      NDTR : Word;
+      --  note that the upper half must remain
+      --  at reset value
+
+      PAR  : Address;
+      --  peripheral address register
+
+      M0AR : Address;
+      --  memory 0 address register
+
+      M1AR : Address;
+      --  memory 1 address register
+
       FCR  : FIFO_Control_Register;
    end record
-      with Volatile, Size => 192;  -- 24 bytes
+      with Volatile,
+           Size => 192;  -- 24 bytes
 
 Hence any individual DMA stream record object has a component named
 :ada:`CR` that represents the corresponding configuration register.
@@ -642,14 +664,19 @@ controller. Using the read-modify-write idiom we would do it like so:
 
    procedure Enable
       (Unit   : in out DMA_Controller;
-       Stream : DMA_Stream_Selector)
+       Stream :        DMA_Stream_Selector)
    is
       Temp : Stream_Config_Register;
-      --  these registers require 32-bit accesses, hence the temporary
+      --  these registers require 32-bit
+      --  accesses, hence the temporary
    begin
-      Temp := Unit.Streams (Stream).CR;  --  read entire CR register
+      Temp := Unit.Streams (Stream).CR;
+      --  read entire CR register
+
       Temp.Stream_Enabled := True;
-      Unit.Streams (Stream).CR := Temp;  --  write entire CR register
+
+      Unit.Streams (Stream).CR := Temp;
+      --  write entire CR register
    end Enable;
 
 That works, and of course the procedural interface presented to clients
@@ -663,10 +690,12 @@ selected stream:
 
    #define DMA_SxCR_EN    ((uint32_t)0x00000001)
 
-   /* Enable the selected DMAy Streamx by setting EN bit */
+   /* Enable the selected DMAy Streamx
+      by setting EN bit */
    DMAy_Streamx->CR  |=  DMA_SxCR_EN;
 
-   /* Disable the selected DMAy Streamx by clearing EN bit */
+   /* Disable the selected DMAy Streamx
+      by clearing EN bit */
    DMAy_Streamx->CR  &=  ~DMA_SxCR_EN;
 
 The code reads and writes the entire CR register each time it is
@@ -689,13 +718,23 @@ so:
       --  ...
       Direction         : DMA_Data_Transfer_Direction;
       P_Flow_Controller : Boolean;
-      TCI_Enabled       : Boolean;  -- transfer complete interrupt enabled
-      HTI_Enabled       : Boolean;  -- half-transfer complete enabled
-      TEI_Enabled       : Boolean;  -- transfer error interrupt enabled
-      DMEI_Enabled      : Boolean;  -- direct mode error interrupt enabled
+
+      TCI_Enabled       : Boolean;
+      --  transfer complete interrupt enabled
+
+      HTI_Enabled       : Boolean;
+      --  half-transfer complete enabled
+
+      TEI_Enabled       : Boolean;
+      --  transfer error interrupt enabled
+
+      DMEI_Enabled      : Boolean;
+      --  direct mode error interrupt enabled
+
       Stream_Enabled    : Boolean;
    end record
-      with Atomic, Full_Access_Only, Size => 32;
+      with Atomic, Full_Access_Only,
+           Size => 32;
 
 Everything else in the declaration remains unchanged.
 
@@ -712,7 +751,7 @@ Procedure :ada:`Enable` is now merely:
 
    procedure Enable
       (Unit   : in out DMA_Controller;
-       Stream : DMA_Stream_Selector)
+       Stream :        DMA_Stream_Selector)
    is
    begin
       Unit.Streams (Stream).CR.Stream_Enabled := True;

@@ -18,12 +18,10 @@ To setup for development run:
 ```
 $ vagrant up
 ```
-This will spin up three vms:
+This will spin up two vms:
 
 web: Is the the build system for the frontend web content. This includes the
 webpack build system and sphinx build.
-
-server: Is the backend server with the widget API.
 
 epub: Is the publishing server. This includes all packages needed to
 generate the learn website.
@@ -44,19 +42,6 @@ using `make local` which will point the widgets at 127.0.0.1:8000
 You can then point your browser on your host to 127.0.0.1:8080 to see the learn
 website being served from vagrant.
 
-To build and start the development server for the backend, run:
-```
-$ vagrant ssh server
-
-# The following commands will be run inside the vm
-
-$ cd /vagrant
-$ source venv/bin/activate
-$ ./dev_server.sh
-```
-
-You can use ctrl-c to quit the bash script which will kill both the flask
-and celery processes.
 
 To build and start the publishing server, run:
 ```

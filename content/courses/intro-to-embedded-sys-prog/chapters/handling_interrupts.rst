@@ -184,17 +184,22 @@ loop iterations. For example:
 
 .. code-block:: ada
 
-   procedure Await_Data_Ready (This : in out Three_Axis_Gyroscope) is
+   procedure Await_Data_Ready
+     (This : in out Three_Axis_Gyroscope)
+   is
       Max_Status_Attempts : constant := 10_000;
-      --  This upper bound is arbitrary but must be sufficient for the
-      --  slower gyro data rate options and higher clock rates.  It need
-      --  not be as small as possible, the point is not to hang forever.
+      --  This upper bound is arbitrary but must be
+      --  sufficient for the slower gyro data rate
+      --  options and higher clock rates.  It need
+      --  not be as small as possible, the point is
+      --  not to hang forever.
    begin
       Polling: for K in 1 .. Max_Status_Attempts loop
          if Data_Status (This).ZYX_Available then
             return;
          end if;
       end loop Polling;
+
       raise Gyro_Failure;
    end Await_Data_Ready;
 
@@ -248,14 +253,22 @@ is a parameter to the call:
       Deadline : constant Time := Clock + Timeout;
    begin
       Result := DMA_No_Error;  -- initially
+
       Polling : loop
-         exit Polling when Status (This, Stream, Transfer_Complete_Indicated);
+         exit Polling when
+           Status (This,
+                   Stream,
+                   Transfer_Complete_Indicated);
+
          if Clock >= Deadline then
             Result := DMA_Timeout_Error;
             return;
          end if;
       end loop Polling;
-      Clear_Status (This, Stream, Transfer_Complete_Indicated);
+
+      Clear_Status (This,
+                    Stream,
+                    Transfer_Complete_Indicated);
    end Poll_For_Completion;
 
 In this approach, we compute the deadline as a point on the timeline by
@@ -278,7 +291,9 @@ incomplete example):
 
    procedure Poll_With_Delay is
       Next_Release : Time;
-      Period       : constant Time_Span := Milliseconds (30); -- let's say
+
+      Period       : constant Time_Span :=
+        Milliseconds (30); -- let's say
    begin
       Next_Release := Clock;
       loop
@@ -623,13 +638,20 @@ declaration for a Cortex M4F microcontroller supported by GNAT:
 .. code-block:: ada
 
    package Ada.Interrupts.Names is
-      Sys_Tick_Interrupt     : constant Interrupt_ID := 1;
+      Sys_Tick_Interrupt     :
+        constant Interrupt_ID := 1;
       ...
-      EXTI0_Interrupt        : constant Interrupt_ID := 8;
-      ....
-      DMA1_Stream0_Interrupt : constant Interrupt_ID := 13;
+
+      EXTI0_Interrupt        :
+        constant Interrupt_ID := 8;
       ...
-      HASH_RNG_Interrupt     : constant Interrupt_ID := 80;
+
+      DMA1_Stream0_Interrupt :
+        constant Interrupt_ID := 13;
+      ...
+
+      HASH_RNG_Interrupt     :
+        constant Interrupt_ID := 80;
       ...
    end Ada.Interrupts.Names;
 
@@ -700,8 +722,9 @@ random number generator interrupt to the
       Buffer         : Ring_Buffer;
       Data_Available : Boolean := False;
 
-      procedure Interrupt_Handler with
-         Attach_Handler => Ada.Interrupts.Names.HASH_RNG_Interrupt;
+      procedure Interrupt_Handler
+        with Attach_Handler =>
+          Ada.Interrupts.Names.HASH_RNG_Interrupt;
 
    end RNG_Controller;
 
@@ -750,8 +773,9 @@ handler procedure:
       Data_Available : Boolean := False;
 
       procedure Interrupt_Handler;
-      pragma Attach_Handler (Interrupt_Handler,
-                             Ada.Interrupts.Names.HASH_RNG_Interrupt;
+      pragma Attach_Handler
+        (Interrupt_Handler,
+         Ada.Interrupts.Names.HASH_RNG_Interrupt;
 
    end RNG_Controller;
 
@@ -774,7 +798,8 @@ within a package body:
 
    package body STM32.RNG.Interrupts is
 
-      package UInt32_Buffers is new Bounded_Ring_Buffers (Content => UInt32);
+      package UInt32_Buffers is new
+        Bounded_Ring_Buffers (Content => UInt32);
       use UInt32_Buffers;
 
 
@@ -784,11 +809,14 @@ within a package body:
       private
 
          Last_Sample    : UInt32 := 0;
-         Samples        : Ring_Buffer (Upper_Bound => 9);  -- arbitrary
+         Samples        : Ring_Buffer (Upper_Bound => 9);
+         -- arbitrary
+
          Data_Available : Boolean := False;
 
-         procedure Interrupt_Handler with
-           Attach_Handler => Ada.Interrupts.Names.HASH_RNG_Interrupt;
+         procedure Interrupt_Handler
+           with Attach_Handler =>
+             Ada.Interrupts.Names.HASH_RNG_Interrupt;
 
       end RNG_Controller;
 
@@ -843,22 +871,31 @@ priorities, as if they are declared like so in package :ada:`System`:
 
 .. code-block:: ada
 
-   subtype Any_Priority is Integer range compiler-defined;
+   subtype Any_Priority is
+     Integer range compiler-defined;
 
    subtype Priority is Any_Priority
-      range Any_Priority'First .. compiler-defined;
+      range Any_Priority'First
+            .. compiler-defined;
 
    subtype Interrupt_Priority is Any_Priority
-      range Priority'Last + 1 .. Any_Priority'Last;
+      range Priority'Last + 1
+            .. Any_Priority'Last;
 
 For example, here are the subtype declarations in the GNAT
 compiler for an Arm Cortex M4 target:
 
 .. code-block:: ada
 
-   subtype Any_Priority       is Integer      range 0 .. 255;
-   subtype Priority           is Any_Priority range Any_Priority'First .. 240;
-   subtype Interrupt_Priority is Any_Priority range Priority'Last + 1  .. Any_Priority'Last;
+   subtype Any_Priority       is
+     Integer      range 0 .. 255;
+
+   subtype Priority           is
+     Any_Priority range Any_Priority'First .. 240;
+
+   subtype Interrupt_Priority is
+     Any_Priority range Priority'Last + 1
+                        .. Any_Priority'Last;
 
 Although the ranges are compiler-defined, when the Systems
 Programming Annex is implemented the range of
@@ -876,17 +913,21 @@ aspect and the value's required subtype have the same name.
 
 .. code-block:: ada
 
-   with Ada.Interrupts.Names;  use Ada.Interrupts.Names;
-   with System;                use System;
+   with Ada.Interrupts.Names;
+   use  Ada.Interrupts.Names;
+
+   with System; use System;
 
    package Gyro_Interrupts is
 
       protected Handler with
-         Interrupt_Priority => Interrupt_Priority'Last
+         Interrupt_Priority =>
+           Interrupt_Priority'Last
       is
       private
          procedure IRQ_Handler;
-         pragma Attach_Handler (IRQ_Handler, EXTI2_Interrupt);
+         pragma Attach_Handler (IRQ_Handler,
+                                EXTI2_Interrupt);
       end Handler;
 
    end Gyro_Interrupts;
@@ -909,7 +950,8 @@ as the aspect and subtype. Here is an example:
          pragma Interrupt_Priority (245);
       private
          procedure IRQ_Handler;
-         pragma Attach_Handler (IRQ_Handler, EXTI2_Interrupt);
+         pragma Attach_Handler (IRQ_Handler,
+                                EXTI2_Interrupt);
       end Handler;
 
    end Gyro_Interrupts;
@@ -1063,24 +1105,31 @@ elsewhere.
       Interrupt_Priority => IRQ_Priority
    is
 
-      procedure Start_Transfer (Source      : Address;
-                                Destination : Address;
-                                Data_Count  : UInt16);
+      procedure Start_Transfer
+        (Source      : Address;
+         Destination : Address;
+         Data_Count  : UInt16);
 
-      procedure Abort_Transfer (Result : out DMA_Error_Code);
+      procedure Abort_Transfer
+        (Result : out DMA_Error_Code);
 
       procedure Clear_Transfer_State;
 
       function Buffer_Error return Boolean;
 
-      entry Wait_For_Completion (Status : out DMA_Error_Code);
+      entry Wait_For_Completion
+        (Status : out DMA_Error_Code);
 
    private
 
-      procedure Interrupt_Handler with Attach_Handler => IRQ;
+      procedure Interrupt_Handler
+        with Attach_Handler => IRQ;
 
-      No_Transfer_In_Progess : Boolean := True;
-      Last_Status            : DMA_Error_Code := DMA_No_Error;
+      No_Transfer_In_Progress : Boolean := True;
+
+      Last_Status            : DMA_Error_Code
+        := DMA_No_Error;
+
       Had_Buffer_Error       : Boolean := False;
 
    end DMA_Interrupt_Controller;
@@ -1141,14 +1190,16 @@ the index type into arrays. Here is a driver example with only the
 
 .. code-block:: ada
 
-   Device_Priority : constant array (Interrupt_Id) of Interrupt_Priority := ( ... );
+   Device_Priority :
+     constant array (Interrupt_Id) of
+       Interrupt_Priority := ( ... );
 
    protected type Device_Interface
      (IRQ : Interrupt_Id)
-   with
-      Interrupt_Priority => Device_Priority (IRQ)
+   with Interrupt_Priority => Device_Priority (IRQ)
    is
-      procedure Handler with Attach_Handler => IRQ;
+      procedure Handler
+        with Attach_Handler => IRQ;
       ...
    end Device_Interface;
 
@@ -1215,24 +1266,31 @@ design.
       Interrupt_Priority => IRQ_Priority
    is
 
-      procedure Start_Transfer (Source      : Address;
-                                Destination : Address;
-                                Data_Count  : UInt16);
+      procedure Start_Transfer
+        (Source      : Address;
+         Destination : Address;
+         Data_Count  : UInt16);
 
-      procedure Abort_Transfer (Result : out DMA_Error_Code);
+      procedure Abort_Transfer
+        (Result : out DMA_Error_Code);
 
       procedure Clear_Transfer_State;
 
       function Buffer_Error return Boolean;
 
-      entry Wait_For_Completion (Status : out DMA_Error_Code);
+      entry Wait_For_Completion
+        (Status : out DMA_Error_Code);
 
    private
 
-      procedure Interrupt_Handler with Attach_Handler => IRQ;
+      procedure Interrupt_Handler
+        with Attach_Handler => IRQ;
 
-      No_Transfer_In_Progess : Boolean := True;
-      Last_Status            : DMA_Error_Code := DMA_No_Error;
+      No_Transfer_In_Progress : Boolean := True;
+
+      Last_Status            : DMA_Error_Code
+        := DMA_No_Error;
+
       Had_Buffer_Error       : Boolean := False;
 
    end DMA_Interrupt_Controller;
@@ -1256,22 +1314,27 @@ the task can get the status via the entry parameter.
        Data_Count  : UInt16)
    is
    begin
-      No_Transfer_In_Progess := False;
+      No_Transfer_In_Progress := False;
+
       Had_Buffer_Error := False;
+
       Clear_All_Status (Controller.all, Stream);
+
       Start_Transfer_with_Interrupts
-         (Controller.all,
-            Stream,
-            Source,
-            ...,
-            Enabled_Interrupts => (Half_Transfer_Complete_Interrupt => False, others  => True));
+        (Controller.all,
+         Stream,
+         Source,
+         ...,
+         Enabled_Interrupts =>
+           (Half_Transfer_Complete_Interrupt => False,
+            others  => True));
    end Start_Transfer;
 
 
    entry Wait_For_Completion
       (Status : out DMA_Error_Code)
    when
-      No_Transfer_In_Progess
+      No_Transfer_In_Progress
    is
    begin
       Status := Last_Status;
@@ -1279,18 +1342,20 @@ the task can get the status via the entry parameter.
 
 
 In the above, the entry barrier consists of the Boolean variable
-:ada:`No_Transfer_In_Progess`. Procedure :ada:`Start_Transfer` first
+:ada:`No_Transfer_In_Progress`. Procedure :ada:`Start_Transfer` first
 sets that variable to :ada:`False` so that a caller to
 :ada:`Wait_For_Completion` will suspend until the transaction completes
 one way or the other. Eventually, the handler sets
-:ada:`No_Transfer_In_Progess` to :ada:`True`.
+:ada:`No_Transfer_In_Progress` to :ada:`True`.
 
 
 .. code-block:: ada
 
    procedure Interrupt_Handler is
-      subtype Checked_Status_Flag is DMA_Status_Flag with
-         Static_Predicate => Checked_Status_Flag /= Half_Transfer_Complete_Indicated;
+      subtype Checked_Status_Flag is DMA_Status_Flag
+        with Static_Predicate =>
+          Checked_Status_Flag
+            /= Half_Transfer_Complete_Indicated;
    begin
       for Flag in Checked_Status_Flag loop
          if Status (Controller.all, Stream, Flag) then
@@ -1298,18 +1363,28 @@ one way or the other. Eventually, the handler sets
                when FIFO_Error_Indicated =>
                   Last_Status := DMA_FIFO_Error;
                   Had_Buffer_Error := True;
-                  No_Transfer_In_Progess := not Enabled (Controller.all, Stream);
+                  No_Transfer_In_Progress :=
+                    not Enabled (Controller.all,
+                                 Stream);
+
                when Direct_Mode_Error_Indicated =>
                   Last_Status := DMA_Direct_Mode_Error;
-                  No_Transfer_In_Progess := not Enabled (Controller.all, Stream);
+                  No_Transfer_In_Progress :=
+                    not Enabled (Controller.all,
+                                 Stream);
+
                when Transfer_Error_Indicated =>
                   Last_Status := DMA_Transfer_Error;
-                  No_Transfer_In_Progess := True;
+                  No_Transfer_In_Progress := True;
+
                when Transfer_Complete_Indicated =>
                   Last_Status := DMA_No_Error;
-                  No_Transfer_In_Progess := True;
+                  No_Transfer_In_Progress := True;
             end case;
-            Clear_Status (Controller.all, Stream, Flag);
+
+            Clear_Status (Controller.all,
+                          Stream,
+                          Flag);
          end if;
       end loop;
    end Interrupt_Handler;
@@ -1318,8 +1393,8 @@ The device driver doesn't bother with interrupts indicating that
 transfers are half-way complete so that specific status flag is ignored.
 Upon an interrupt, the handler checks each status flag to determine what
 happened. Note the resulting assignments for both the protected
-variables :ada:`Last_Status` and :ada:`No_Transfer_In_Progess`. The
-variable :ada:`No_Transfer_In_Progess` controls the entry, and
+variables :ada:`Last_Status` and :ada:`No_Transfer_In_Progress`. The
+variable :ada:`No_Transfer_In_Progress` controls the entry, and
 :ada:`Last_Status` is passed to the caller via the entry formal
 parameter.
 
@@ -1346,13 +1421,18 @@ package name) until another task resumes them by setting the flag to
 
       type Suspension_Object is limited private;
 
-      procedure Set_True (S : in out Suspension_Object);
+      procedure Set_True
+        (S : in out Suspension_Object);
 
-      procedure Set_False (S : in out Suspension_Object);
+      procedure Set_False
+        (S : in out Suspension_Object);
 
-      function Current_State (S : Suspension_Object) return Boolean;
+      function Current_State
+        (S :        Suspension_Object)
+         return Boolean;
 
-      procedure Suspend_Until_True (S : in out Suspension_Object);
+      procedure Suspend_Until_True
+        (S : in out Suspension_Object);
 
    private
       ...
@@ -1376,7 +1456,9 @@ object, with handler, and a :ada:`Suspension_Object` declaration:
 .. code-block:: ada
 
    with Ada.Interrupts.Names; use Ada.Interrupts.Names;
-   with Ada.Synchronous_Task_Control;  use Ada.Synchronous_Task_Control;
+
+   with Ada.Synchronous_Task_Control;
+   use  Ada.Synchronous_Task_Control;
 
    package Gyro_Interrupts is
 
@@ -1385,8 +1467,8 @@ object, with handler, and a :ada:`Suspension_Object` declaration:
       protected Handler is
          pragma Interrupt_Priority;
       private
-         procedure IRQ_Handler with
-            Attach_Handler => EXTI2_Interrupt;
+         procedure IRQ_Handler
+           with Attach_Handler => EXTI2_Interrupt;
       end Handler;
 
    end Gyro_Interrupts;
@@ -1437,7 +1519,8 @@ the pertinent parts:
 
    package L3GD20 is
 
-      type Three_Axis_Gyroscope is tagged limited private;
+      type Three_Axis_Gyroscope is
+        tagged limited private;
 
       procedure Initialize
          (This        : in out Three_Axis_Gyroscope;
@@ -1446,17 +1529,25 @@ the pertinent parts:
 
       ...
 
-      procedure Enable_Data_Ready_Interrupt  (This : in out Three_Axis_Gyroscope);
+      procedure Enable_Data_Ready_Interrupt
+        (This : in out Three_Axis_Gyroscope);
 
       ...
 
       type Angle_Rate is new Integer_16;
 
       type Angle_Rates is record
-         X : Angle_Rate;  -- pitch, per Figure 2, pg 7 of the Datasheet
-         Y : Angle_Rate;  -- roll
-         Z : Angle_Rate;  -- yaw
-      end record with Size => 3 * 16;
+         X : Angle_Rate;
+         --  pitch, per Figure 2, pg 7
+         --  of the Datasheet
+
+         Y : Angle_Rate;
+         --  roll
+
+         Z : Angle_Rate;
+         --  yaw
+      end record
+        with Size => 3 * 16;
 
       ...
 
@@ -1475,9 +1566,11 @@ elided all those irrelevant details:
 
 .. code-block:: ada
 
+   with Ada.Synchronous_Task_Control;
+   use  Ada.Synchronous_Task_Control;
+
    with Gyro_Interrupts;
-   with Ada.Synchronous_Task_Control;  use Ada.Synchronous_Task_Control;
-   with L3GD20;                        use L3GD20;
+   with L3GD20;          use L3GD20;
    with STM32.Board;
    ...
 
@@ -1487,10 +1580,14 @@ elided all those irrelevant details:
 
       ...
 
-      procedure Await_Raw_Angle_Rates (Rates : out L3GD20.Angle_Rates) is
+      procedure Await_Raw_Angle_Rates
+        (Rates : out L3GD20.Angle_Rates) is
       begin
-         Suspend_Until_True (Gyro_Interrupts.Data_Available);
-         L3GD20.Get_Raw_Angle_Rates (STM32.Board.Gyro, Rates);
+         Suspend_Until_True
+           (Gyro_Interrupts.Data_Available);
+
+         L3GD20.Get_Raw_Angle_Rates
+           (STM32.Board.Gyro, Rates);
       end Await_Raw_Angle_Rates;
 
       ...

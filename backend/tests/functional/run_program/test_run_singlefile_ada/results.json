@@ -1,9 +1,0 @@
-{
-    "console": [
-        "gprbuild -q -P main.gpr -gnatwa",
-        "./test "
-    ],
-    "stdout": [
-        "ABC123\n"
-    ]
-}

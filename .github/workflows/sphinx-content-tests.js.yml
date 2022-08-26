@@ -29,6 +29,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install OS Deps
       run: |
+        sudo apt-get update
         sudo apt-get install -y \
         graphviz \
         plantuml

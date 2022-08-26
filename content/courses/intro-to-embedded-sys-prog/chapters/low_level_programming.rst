@@ -90,7 +90,7 @@ provided by language implementations, i.e., compilers and other
 associated tools. Although the word "recommended" is used, the
 recommendations are meant to be followed.
 
-For example, section 13.3 says that, for some entity named X, "X'Address
+For example, section 13.3 says that, for some entity named X, ":ada:`X'Address`
 should produce a useful result if X is an object that is aliased or of a
 by-reference type, or is an entity whose :ada:`Address` has been specified."
 So, for example, if the programmer specifies the address for a
@@ -120,7 +120,7 @@ precision that a floating-point number can have on this specific
 machine. For networking code, you will need to know the "endianness" of
 the machine so you can know whether to swap the bytes in an Ethernet
 packet. You'd go look in the :file:`limits.h` file in C implementations,
-but in Ada we go to a package named `System` to get this information.
+but in Ada we go to a package named :ada:`System` to get this information.
 
 Clearly, these implementation values will vary with the hardware, so the
 package declares constants with implementation-defined values. The names
@@ -169,7 +169,7 @@ precision in a floating-point type's definition.
 We won't go over all of the above, you get the idea. Let's examine the
 more important contents.
 
-Two of the most frequently referenced constants in System are the
+Two of the most frequently referenced constants in :ada:`System` are the
 following, especially the first. (The values here are again for the Arm
 32-bit SoC):
 
@@ -188,7 +188,9 @@ elements an object named :ada:`X` occupies:
 
 .. code-block:: ada
 
-  Units : constant Integer := (X'Size + Storage_Unit - 1) / Storage_Unit;
+   Units : constant Integer
+     := (X'Size + Storage_Unit - 1) /
+         Storage_Unit;
 
 Remember that :ada:`'Size` returns a value in terms of bits. There are more
 direct ways to determine that size information but this will serve as an
@@ -266,7 +268,9 @@ constant declared in package :ada:`System` as follows:
 .. code-block:: ada
 
    type Bit_Order is (High_Order_First, Low_Order_First);
-   Default_Bit_Order : constant Bit_Order := implementation-defined;
+
+   Default_Bit_Order : constant Bit_Order
+     := implementation-defined;
 
 :ada:`High_Order_First` corresponds to "Big Endian" and
 :ada:`Low_Order_First` to "Little Endian." On a Big Endian machine, bit
@@ -276,8 +280,8 @@ least significant bit.
 Strictly speaking, this constant gives us the default order for bits
 within storage elements in record representation clauses, not the order
 of bytes within words. However, we can usually use it for the byte order
-too. In particular, if :ada:`Word_Size` is greater than :ada:`Storage_Unit`, a word
-necessarily consists of multiple storage elements, so the default bit
+too. In particular, if :ada:`Word_Size` is greater than :ada:`Storage_Unit`, a
+word necessarily consists of multiple storage elements, so the default bit
 ordering is the same as the ordering of storage elements in a word.
 
 Let's take that example of swapping the bytes in a received Ethernet
@@ -285,7 +289,8 @@ packet. The "wire" format is Big Endian so if we are running on a Little
 Endian machine we must swap the bytes received.
 
 Suppose we want to retrieve typed values from a
-given buffer or bytes. We get the bytes from the buffer into a variable named :ada:`Value`, of the type of
+given buffer or bytes. We get the bytes from the buffer into a variable named
+:ada:`Value`, of the type of
 interest, and then swap those bytes within :ada:`Value` if necessary.
 
 .. code-block:: ada
@@ -294,7 +299,9 @@ interest, and then swap those bytes within :ada:`Value` if necessary.
    begin
       Value := ...
 
-      if Default_Bit_Order /= High_Order_First then -- we're not on a Big Endian machine
+      if Default_Bit_Order /= High_Order_First then
+         -- we're not on a Big Endian machine
+
          Value := Byte_Swapped (Value);
       end if;
    end Retrieve_4_Bytes;
@@ -316,8 +323,11 @@ Finally, and perhaps surprisingly, a few declarations in package
 
 .. code-block:: ada
 
-   type Name is implementation-defined-enumeration-type;
-   System_Name : constant Name := implementation-defined;
+   type Name is
+     implementation-defined-enumeration-type;
+
+   System_Name : constant Name
+     := implementation-defined;
 
 Values of type :ada:`Name` are the names of alternative machine
 configurations supported by the implementation. :ada:`System_Name` represents
@@ -371,15 +381,18 @@ should be called. Let's assume we have an Ada function declared like so:
      Pre  => Source /= Null_Address      and then
              Destination /= Null_Address and then
              Source /= Destination       and then
-             not Overlapping (Destination, Source, Length),
+             not Overlapping (Destination,
+                              Source,
+                              Length),
      Post => MemCopy'Result = Destination;
-   --  Copies Length bytes from the object designated by Source to the object
+   --  Copies Length bytes from the object
+   --  designated by Source to the object
    --  designated by Destination.
 
 The three aspects that do the importing are specified after the reserved
 word :ada:`with` but can be ignored for this discussion. We'll talk
 about them later. The preconditions make explicit the otherwise implicit
-requirements for the arguments passed to memcpy, and the postcondition
+requirements for the arguments passed to :c:`memcpy`, and the postcondition
 specifies the expected result returned from a successful call. Neither
 the preconditions nor the postconditions are required for importing
 external entities but they are good "guard-rails" for using those
@@ -388,19 +401,22 @@ likewise, if we misunderstand the result the postcondition will let us
 know (at least to the extent that the return value does that).
 
 For a sample call to our imported routine, imagine that we have a
-procedure that copies the bytes of a :ada:`String` parameter into a :ada:`Buffer`
-parameter, which is just a contiguous array of bytes. We need to tell
-:ada:`MemCopy` the addresses of the arguments passed so we apply the attribute
-accordingly:
+procedure that copies the bytes of a :ada:`String` parameter into a
+:ada:`Buffer` parameter, which is just a contiguous array of bytes. We need to
+tell :ada:`MemCopy` the addresses of the arguments passed so we apply the
+attribute accordingly:
 
 .. code-block:: ada
 
-   procedure Put (This : in out Buffer; Start : Index; Value : String) is
+   procedure Put (This  : in out Buffer;
+                  Start :        Index;
+                  Value :        String) is
       Result : System.Address with Unreferenced;
    begin
-      Result := MemCopy (Destination => This (Start)'Address,
-                         Source      => Value'Address,
-                         Length      => Value'Length);
+      Result :=
+        MemCopy (Destination => This (Start)'Address,
+                 Source      => Value'Address,
+                 Length      => Value'Length);
    end Put;
 
 The order of the address parameters is easily confused so we use the
@@ -414,8 +430,8 @@ do turn around and reference it the compiler will complain, as it should.
 (We don't show the preconditions for :ada:`Put`, but they would have specified
 that :ada:`Start` must be a valid index into this particular buffer, and that
 there must be room in the :ada:`Buffer` argument for the number of bytes in
-:ada:`Value` when starting at the :ada:`Start` index, so that we don't copy past the
-end of the :ada:`Buffer` argument.)
+:ada:`Value` when starting at the :ada:`Start` index, so that we don't copy
+past the end of the :ada:`Buffer` argument.)
 
 There are other characteristics we might want to query too.
 
@@ -441,8 +457,8 @@ this number, but it could be.
 :ada:`Storage_Size` is also defined for access types. The meaning is a
 little complicated. Access types can be classified into those that
 designate only variables and constants ("access-to-object") and those that can
-designate subprograms. Each access-to-object type has an associated storage pool.
-The storage allocated by :ada:`new` comes from the pool, and instances
+designate subprograms. Each access-to-object type has an associated storage
+pool. The storage allocated by :ada:`new` comes from the pool, and instances
 of :ada:`Unchecked_Deallocation` return storage to the pool.
 
 When applied to an access-to-object type, :ada:`Storage_Size` gives us
@@ -530,7 +546,7 @@ This meaning also applies to subtypes, which can constrain the number of
 values for a scalar type. Consider subtype :ada:`Natural`. That's a subtype
 defined by the language to be type :ada:`Integer` but with a range of
 :ada:`0 .. Integer'Last`.
-On a 32-bit machine we would expect Integer to be a native type, and
+On a 32-bit machine we would expect :ada:`Integer` to be a native type, and
 thus 32-bits. On such a machine if we say :ada:`Integer'Size` we will
 indeed get 32. But if we say :ada:`Natural'Size` we will get 31, not 32,
 because only 31 bits are needed to represent that range on that machine.
@@ -602,8 +618,8 @@ They immediately follow the bytes allocated to component :ada:`X`.
 Therefore, :ada:`R'Size` is 80, or 10 bytes. The three bytes following
 component :ada:`M` are simply not used.
 
-But what about the two bytes following the last component :ada:`C`? They could be
-allocated to stand-alone objects if they would fit. More likely, though,
+But what about the two bytes following the last component :ada:`C`? They could
+be allocated to stand-alone objects if they would fit. More likely, though,
 the compiler will allocate those two bytes to objects of type :ada:`R`, that
 is, 12 bytes instead of 10 are allocated. As a result, 96 bits are
 actually used in memory. The extra, unused 16 bits are "padding."
@@ -727,13 +743,13 @@ But the language standard says that a :ada:`Size` clause on array and record
 types should not affect the internal layout of their components. That's
 Implementation Advice, so not normative, but implementations are really
 expected to follow the advice, absent some compelling reason. That's
-what the :ada:`Pack` aspect, record representation clauses, and :ada:`Component_Size`
-clauses are for. (We'll talk about record representation clauses
-momentarily.) That said, at least one other vendor's compiler would have
-changed the size of the array type because of the :ada:`Size` clause, so GNAT
-defines a configuration pragma named :ada:`Implicit_Packing` that overrides the
-default behavior. With that pragma applied, the :ada:`Size` clause would
-compile and suffice to make the overall size be 16. That's a
+what the :ada:`Pack` aspect, record representation clauses, and
+:ada:`Component_Size` clauses are for. (We'll talk about record representation
+clauses momentarily.) That said, at least one other vendor's compiler would
+have changed the size of the array type because of the :ada:`Size` clause, so
+GNAT defines a configuration pragma named :ada:`Implicit_Packing` that
+overrides the default behavior. With that pragma applied, the :ada:`Size`
+clause would compile and suffice to make the overall size be 16. That's a
 vendor-defined pragma though, so not portable.
 
 Therefore, the best way to set the size for the array type is to set the
@@ -777,8 +793,8 @@ We can query the addresses of objects, and other things too, but
 objects, especially variables, are the most common case. In the above,
 we say :ada:`X'Address` to query the starting address of object
 :ada:`X`. With that information we know what address to specify for our
-bit-mask overlay :ada:`Y`. Now :ada:`X` and :ada:`Y` are aliases, and therefore we can
-manipulate those memory bytes as either an integer or as an array of
+bit-mask overlay :ada:`Y`. Now :ada:`X` and :ada:`Y` are aliases, and therefore
+we can manipulate those memory bytes as either an integer or as an array of
 individual bits. (Note that we could have used a modular type as the
 overlay if all we wanted was an unsigned view.)
 
@@ -798,7 +814,9 @@ That said, you could at least verify the assumption:
 
 .. code-block:: ada
 
-   pragma Compile_Time_Error (Integer'Object_Size /= 32, "Integers expected to be 32 bits");
+   pragma Compile_Time_Error
+     (Integer'Object_Size /= 32,
+      "Integers expected to be 32 bits");
    X : Integer;
    Y : Bits32 with Address => X'Address;
 
@@ -814,8 +832,8 @@ size of the object's type. The object size won't be smaller, but it
 could be larger. Why? For a stand-alone object or a parameter, most
 implementations will round the size up to a storage element boundary, or
 more, so the object size might be greater than that of the type. Think
-back to :ada:`Boolean`, where :ada:`Size` is required to be 1, but stand-alone objects
-are probably allocated 8 bits, i.e., an entire storage element (on our
+back to :ada:`Boolean`, where :ada:`Size` is required to be 1, but stand-alone
+objects are probably allocated 8 bits, i.e., an entire storage element (on our
 hypothetical byte-addressed machine).
 
 Likewise, recall that numeric type declarations are mapped to underlying
@@ -832,7 +850,8 @@ For example, let's say we have this declaration:
 
 .. code-block:: ada
 
-   type Device_Register is range 0 .. 2**5 - 1 with Size => 5;
+   type Device_Register is range 0 .. 2**5 - 1
+     with Size => 5;
 
 That will compile successfully, because there will be a signed integer
 hardware type with at least that range. (Not necessarily, legally
@@ -846,7 +865,9 @@ problematic code:
 
 .. code-block:: ada
 
-   type Device_Register is range 0 .. 2**8 - 1 with Size => 8;
+   type Device_Register is range 0 .. 2**8 - 1
+     with Size => 8;
+
    My_Device : Device_Register
      with Address => To_Address (...);
 
@@ -856,13 +877,13 @@ processor memory space. The actual address is elided as it is not
 important here.
 
 That code might work too, but it might not. We might think that
-:ada:`My_Device'Size` is 8, and that :ada:`My_Device'Address` points at an 8-bit
-location. However, this isn't necessarily so, as we saw with the
+:ada:`My_Device'Size` is 8, and that :ada:`My_Device'Address` points at an
+8-bit location. However, this isn't necessarily so, as we saw with the
 supposedly 5-bit example earlier. Maybe the smallest signed integer the
 hardware has is 16-bits wide. The code would compile because a 16-bit
 signed numeric type can certainly handle the 8-bit range requested.
-:ada:`My_Device'Size` would be then 16, and because :ada:`'Address` gives us the
-*starting* storage element, :ada:`My_Device'Address` might designate the
+:ada:`My_Device'Size` would be then 16, and because :ada:`'Address` gives us
+the *starting* storage element, :ada:`My_Device'Address` might designate the
 high-order byte of the overall 16-bit object. When the compiler reads
 the two bytes for :ada:`My_Device` what will happen? One of the bytes will be
 the data presented by the hardware device mapped to the memory. The
@@ -877,6 +898,7 @@ object instead of the type:
 .. code-block:: ada
 
    type Device_Register is range 0 .. 2**8 - 1;
+
    My_Device : Device_Register with
      Size => 8,
      Address => To_Address (...);
@@ -889,9 +911,11 @@ type to apply :ada:`Object_Size` instead:
 
 .. code-block:: ada
 
-   type Device_Register is range 0 .. 2**8 - 1 with Object_Size => 8;
-   My_Device : Device_Register with
-     Address => To_Address (...);
+   type Device_Register is range 0 .. 2**8 - 1
+     with Object_Size => 8;
+
+   My_Device : Device_Register
+     with Address => To_Address (...);
 
 The choice between the two approaches comes down to personal preference.
 With either approach, if the implementation cannot support 8-bit
@@ -910,9 +934,9 @@ minimum possible, and you want the compiler to confirm that belief. This
 would be one of the so-called "confirming" representation clauses, in
 which the representation detail is what the compiler would have chosen
 anyway, absent the specification. You're not actually changing anything,
-you're just getting confirmation via :ada:`Size` whether or not the compiler accepts
-the clause. Suppose, for example, that you have an enumeration type with
-256 values. For enumeration types, the compiler allocates the smallest
+you're just getting confirmation via :ada:`Size` whether or not the compiler
+accepts the clause. Suppose, for example, that you have an enumeration type
+with 256 values. For enumeration types, the compiler allocates the smallest
 number of bits required to represent all the values, rounded up to the
 nearest storage element. (It's not like C, where enums are just named
 int values.) For 256 values, an eight-bit byte would suffice, so setting
@@ -931,11 +955,12 @@ For example:
 
    type Commands is (Off, On);
 
-   for Commands use (Off => 0, On => 1);
+   for Commands use (Off => 0,
+                     On  => 1);
 
-As a result, Off is encoded as 0 and On as 1. That specific underlying
-encoding is guaranteed by the language, as of Ada 95, so this is just a
-confirming representation clause nowadays. But it was not guaranteed in
+As a result, :ada:`Off` is encoded as 0 and :ada:`On` as 1. That specific
+underlying encoding is guaranteed by the language, as of Ada 95, so this is
+just a confirming representation clause nowadays. But it was not guaranteed in
 the original version of the language, so if you wanted to be sure of the
 encoding values you would have specified the above. It wasn't confirming
 before Ada 95, in other words.
@@ -945,8 +970,8 @@ want because you're interacting with some device and the commands are
 encoded with values other than 0 and 1. Maybe you want to use an
 enumeration type because you want to specify all the possible values
 actually used by clients. If you just used some numeric type instead and
-made up constants for :ada:`On` and :ada:`Off`, there's nothing to keep clients from
-using other numeric values in place of the two constants (absent some
+made up constants for :ada:`On` and :ada:`Off`, there's nothing to keep clients
+from using other numeric values in place of the two constants (absent some
 comparatively heavy code to prevent that from happening). Better to use
 the compiler to make that impossible in the first place, rather than
 debug the code to find the incorrect values used. Therefore, we could
@@ -955,7 +980,8 @@ specify different encodings, as long as the relative order is maintained
 
 .. code-block:: ada
 
-   for Commands use (Off => 2, On => 4);
+   for Commands use (Off => 2,
+                     On  => 4);
 
 Now the compiler will use those encoding values instead of 0 and 1,
 transparently to client code.
@@ -1121,12 +1147,12 @@ each occupy an entire single storage element so their bit ranges are 0
 through 7, for a total of 8 bits.
 
 The text specifying the offset and bit range is known as a
-"component_clause" in the syntax productions. Not all components need be
-specified by component_clauses, but (not surprisingly) at most one
+"component clause" in the syntax productions. Not all components need be
+specified by component clauses, but (not surprisingly) at most one
 clause is allowed per component. Really none are required but it would
 be strange not to have some. Typically, all the components are given
-positions. If component_clauses are given for all components, the
-record_representation_clause completely specifies the representation of
+positions. If component clauses are given for all components, the
+record representation clause completely specifies the representation of
 the type and will be obeyed exactly by the implementation.
 
 Components not otherwise given an explicit placement are given positions
@@ -1176,13 +1202,13 @@ individual components. For example, here is a record layout containing a
    end record;
 
 Component :ada:`S` is to be the first component in memory in this example,
-hence the position offset is 0, for the first byte of :ada:`S`. Next, :ada:`S` is 11
-characters long, or 88 bits, so the bit range is 0 .. 87. That's 11
+hence the position offset is 0, for the first byte of :ada:`S`. Next, :ada:`S`
+is 11 characters long, or 88 bits, so the bit range is 0 .. 87. That's 11
 bytes of course, so :ada:`S` occupies storage elements 0 .. 10. Therefore, the
 next component position must be at least 11, unless there is to be a
 gap, in which case it would be greater than 11. We'll place :ada:`B`
-immediately after the last character of :ada:`S`, so :ada:`B` is at storage element
-offset 11 and occupying all that one byte's bits.
+immediately after the last character of :ada:`S`, so :ada:`B` is at storage
+element offset 11 and occupying all that one byte's bits.
 
 We'll have more to say about record type layouts but first we need to talk
 about alignment.
@@ -1335,9 +1361,10 @@ addresses refer to entire storage elements. (An alignment of 0 would
 mean that the address need not start on a storage element boundary, but
 we know of no such machines.)
 
-We can even entirely replace the :ada:`Size` clause with the :ada:`Alignment` clause,
-because the :ada:`Size` clause specifying 24 bits is just confirming: it's the
-value that :ada:`'Size` would return anyway. The problem is the object size.
+We can even entirely replace the :ada:`Size` clause with the :ada:`Alignment`
+clause, because the :ada:`Size` clause specifying 24 bits is just confirming:
+it's the value that :ada:`'Size` would return anyway. The problem is the object
+size.
 
 Now, you may be wondering why an alignment of 1 would work, given that
 the alignment of the :ada:`Temperature` component is 2. Wouldn't it slow down
@@ -1432,9 +1459,9 @@ Notice we said "empirical data" above. How do we know that we exercised
 the task's thread of control exhaustively, such that the arrived-at
 allocation value covers the worst case? We don't, not with certainty. If
 we really must know the allocation will suffice for all cases, say
-because this is a high-integrity application, we would use :program:`GNATstack`.
-GNATstack is an offline tool that exploits data generated by the
-compiler to compute worst-case stack requirements per subprogram and per
+because this is a high-integrity application, we would use
+:program:`GNATstack`. GNATstack is an offline tool that exploits data generated
+by the compiler to compute worst-case stack requirements per subprogram and per
 task. As a static analysis tool, its computation is based on information
 known at compile time. It does not rely on empirical run-time
 information.
@@ -1585,8 +1612,8 @@ that section in the introductory Ada course:
 
 You should understand that the explicitly unchecked facilities in Ada
 are no more unsafe than the implicitly unchecked facilities in other
-languages. There's no safety-oriented reason to "drop down" to C, for example, to do
-low-level programming. For that matter, the low-level programming
+languages. There's no safety-oriented reason to "drop down" to C, for example,
+to do low-level programming. For that matter, the low-level programming
 facilities in Ada are at least as powerful as those in other languages,
 and probably more so.
 
@@ -1602,15 +1629,18 @@ named "Ada":
    generic
       type Source(<>) is limited private;
       type Target(<>) is limited private;
-   function Ada.Unchecked_Conversion (S : Source) return Target
-      with Pure, Nonblocking, Convention => Intrinsic;
+   function Ada.Unchecked_Conversion (S : Source)
+                                      return Target
+      with Pure, Nonblocking,
+           Convention => Intrinsic;
 
 The function, once instantiated and eventually invoked, returns the caller's
-value passed to S (of type Source) as if it is a value of type Target.
-That value can then be used in any way consistent with the Target type.
+value passed to :ada:`S` (of type :ada:`Source`) as if it is a value of type
+:ada:`Target`. That value can then be used in any way consistent with the
+:ada:`Target` type.
 
-The two generic parameters, Source and Target, are defined in a manner
-that makes them very permissive in terms of the types they will accept
+The two generic parameters, :ada:`Source` and :ada:`Target`, are defined in a
+manner that makes them very permissive in terms of the types they will accept
 when instantiated. To understand how, you need to understand a little
 bit of Ada's terminology and design for generic unit parameters. (If you
 are already familiar with generic formal types and how they are matched,
@@ -1618,8 +1648,8 @@ feel free to skip this material.)
 
 First, the terminology. The type parameters defined by a generic unit
 are known as "generic formal types," or "generic formals" for short.
-Types Source and Target are the generic formals in the unit above. When
-instantiating such a generic, clients must specify a type for each
+Types :ada:`Source` and :ada:`Target` are the generic formals in the unit
+above. When instantiating such a generic, clients must specify a type for each
 generic formal type. The types specified by the client are known as
 "generic actual types," or "generic actuals" for short. You can remember
 that by the fact that the actuals are the types "actually" given to the
@@ -1646,7 +1676,7 @@ could be used for the corresponding actual type:
       type Real is digits <>;
 
 The formal parameter syntax reflects the syntax of a floating-point type
-declaration, except that the "<>" (the "box") indicates that the generic
+declaration, except that the :ada:`<>` (the "box") indicates that the generic
 does not care how many digits are available. The generic actual will be
 some floating point type and it will specify the number of decimal
 digits.
@@ -1698,7 +1728,7 @@ The partial view is what clients (i.e., users) of the package have: the
 ability to do things that a type name provides, such as declarations of
 objects, as well as some basic operations such as assignment, some
 functions for equality and inequality, some conversions, and whatever
-subprograms work on the type (the procedure Do_Something above).
+subprograms work on the type (the procedure :ada:`Do_Something` above).
 Practically speaking, that's about all that the partial view provides.
 That's quite a lot, in fact, and corresponds to the classic definition
 of an "abstract data type."
@@ -1706,15 +1736,15 @@ of an "abstract data type."
 The code within the package private part and package body has the full
 view. This code has compile-time visibility to the full definition for
 type Foo, so there are additional capabilities available to this code.
-For example, if the full definition for Foo is as an array type,
+For example, if the full definition for :ada:`Foo` is as an array type,
 indexing will be available with the private part and body. If Foo is
 fully defined as some numeric type, arithmetic operations will be
 possible within the package, and so on.
 
-Therefore, the full view provides capabilities for type Foo that users
+Therefore, the full view provides capabilities for type :ada:`Foo` that users
 of the type cannot access via the partial view. Only the implementation
-for type Foo and procedure Do_Something have the potential to access
-them.
+for type :ada:`Foo` and procedure :ada:`Do_Something` have the potential to
+access them.
 
 Now, back to the generic formal parameter. If the generic unit doesn't
 care what the actual type is, and just needs to be able do assignment
@@ -1735,10 +1765,10 @@ that:
       Right := Old_Left;
    end Exchange;
 
-Inside generic procedure Exchange, the view of type Item is as if Item
-were some private type declared in a package, with only the partial view
-available. But the operations provided by a partial view are sufficient
-to implement the body of Exchange: only assignment and object
+Inside generic procedure :ada:`Exchange`, the view of type :ada:`Item` is as if
+:ada:`Item` were some private type declared in a package, with only the partial
+view available. But the operations provided by a partial view are sufficient
+to implement the body of :ada:`Exchange`: only assignment and object
 declaration are required. Any additional capabilities that the generic
 actual type may have |mdash| array indexing, arithmetic operators,
 whatever |mdash| are immaterial because they are not required. That's
@@ -1751,32 +1781,32 @@ type for the generic formal type Item above would be rejected by the
 compiler. The contract specifies the ability to do assignment so a
 limited type would violate the contract.
 
-Finally, as mentioned, our Exchange generic needs to declare the
-"temporary" object Old_Left. A partial view of a private type allows
+Finally, as mentioned, our :ada:`Exchange` generic needs to declare the
+"temporary" object :ada:`Old_Left`. A partial view of a private type allows
 that. But not all types are sufficient, by their name alone, to declare
-objects. Unconstrained array types, such as type String, are a familiar
+objects. Unconstrained array types, such as type :ada:`String`, are a familiar
 example: they require the bounds to be specified when declaring objects;
-the name String alone is insufficient. Therefore, such types would also
+the name :ada:`String` alone is insufficient. Therefore, such types would also
 violate the contract and, therefore, would be rejected by the compiler when
-attempting to instate generic procedure Exchange.
+attempting to instate generic procedure :ada:`Exchange`.
 
 Suppose, however, that we have some other generic unit whose
 implementation does not need to declare objects of the formal type. In
 that case, a generic actual type that did not support object declaration
 (by the name alone) would be acceptable for an instantiation. The
 generic formal syntax for expressing that contract uses these tokens:
-"(<>)" in addition to the other syntax mentioned earlier:
+:ada:`(<>)` in addition to the other syntax mentioned earlier:
 
 .. code-block:: ada
 
    generic
       type Foo(<>) is private;
 
-In the above, the generic formal type Foo expresses the fact that it can
+In the above, the generic formal type :ada:`Foo` expresses the fact that it can
 allow unconstrained types |mdash| known as "indefinite types" |mdash|
 when instantiated because it will not attempt to use that type name to
 declare objects. Of course, the compiler will also allow constrained
-types (e.g., Integer, Boolean, etc.) in instantiations because it
+types (e.g., :ada:`Integer`, :ada:`Boolean`, etc.) in instantiations because it
 doesn't matter one way or the other inside the generic implementation.
 The Contract Model says that additional capabilities, declaring objects
 in this case, are allowed but not required.
@@ -1790,32 +1820,34 @@ cared), we are ready to examine the generic formal type parameters for
    generic
       type Source(<>) is limited private;
       type Target(<>) is limited private;
-   function Ada.Unchecked_Conversion (S : Source) return Target
-      with Pure, Nonblocking, Convention => Intrinsic;
+   function Ada.Unchecked_Conversion (S : Source)
+                                      return Target
+      with Pure, Nonblocking,
+           Convention => Intrinsic;
 
-The two generic formal types, Source, and Target, are the types used for
-the incoming value and the returned value, respectively. Both formals
+The two generic formal types, :ada:`Source`, and :ada:`Target`, are the types
+used for the incoming value and the returned value, respectively. Both formals
 are "indefinite, limited private types" in the jargon, but now you know
 what that means. Inside the implementation of the generic function,
-neither Source nor Target will be used to declare objects (the "(<>)"
-syntax). Likewise, neither type will be used in an assignment statement
-(the "limited" reserved word). And finally, no particular kind of type
-is required for Source or Target (the "private" reserved word). That's a
-fairly restricted usage within the generic implementation, but as a result
-the contract can be very permissive: the generic can be instantiated
-with almost any type. It doesn't matter if the actual is limited or not,
-private or not, and indefinite or not. The generic implementation
-doesn't need those capabilities to implement a conversion so they are
-not part of the contract expressed by the generic formal types.
+neither :ada:`Source` nor :ada:`Target` will be used to declare objects (the
+:ada:`(<>)` syntax). Likewise, neither type will be used in an assignment
+statement (the "limited" reserved word). And finally, no particular kind of
+type is required for :ada:`Source` or :ada:`Target` (the :ada:`private`
+reserved word). That's a fairly restricted usage within the generic
+implementation, but as a result the contract can be very permissive: the
+generic can be instantiated with almost any type. It doesn't matter if the
+actual is limited or not, private or not, and indefinite or not. The generic
+implementation doesn't need those capabilities to implement a conversion so
+they are not part of the contract expressed by the generic formal types.
 
 What sort of type would be disallowed? Abstract types. However, it is
 impossible to declare an object of an abstract type (for good reasons),
 so an unchecked conversion to or from an abstract type is never needed.
 
 Note that the result value is returned by-reference whenever possible,
-in which case it is just a view of the Source bits in S and not a copy.
-Returning the value by-reference is not possible when the Source type is
-a by-copy type, however.
+in which case it is just a view of the :ada:`Source` bits in :ada:`S` and not a
+copy. Returning the value by-reference is not possible when the :ada:`Source`
+type is a by-copy type, however.
 
 .. todo::
 
@@ -1827,12 +1859,15 @@ target environment. For example, an instantiation for types for which
 unchecked conversion can't possibly make sense might be disallowed.
 
 Clients can apply language- and vendor-defined restrictions as well,
-via pragma Restrictions. In particular, the language defines
-the "No_Dependence" restriction, meaning that no client's context clause
+via pragma :ada:`Restrictions`. In particular, the language defines
+the :ada:`No_Dependence` restriction, meaning that no client's context clause
 can specify the unit specified. As a result no client can instantiate
 the generic for unchecked conversion:
 
-    pragma Restrictions (No_Dependence => Ada.Unchecked_Conversion);
+.. code-block:: ada
+
+    pragma Restrictions
+      (No_Dependence => Ada.Unchecked_Conversion);
 
 hence there would be no use of unchecked conversion.
 
@@ -1841,23 +1876,25 @@ to some other type via this generic function. But practically speaking,
 some limitations are necessary. The following must all be true for the
 conversion effect to be defined by the language:
 
-   * S'Size = Target'Size
+   * :ada:`S'Size = Target'Size`
 
-   * S'Alignment is a multiple of Target'Alignment, or Target'Alignment is 0 (meaning no alignment required whatsoever)
+   * :ada:`S'Alignment` is a multiple of :ada:`Target'Alignment`, or
+     :ada:`Target'Alignment` is 0 (meaning no alignment required whatsoever)
 
-   * Target is not an unconstrained composite type
+   * :ada:`Target` is not an unconstrained composite type
 
-   * S and Target both have a contiguous representation
+   * :ada:`S` and :ada:`Target` both have a contiguous representation
 
-   * The representation of S is a representation of an object of the target subtype
+   * The representation of :ada:`S` is a representation of an object of the
+     target subtype
 
 We will examine these requirements in turn, but realize that they are
 not a matter of legality. Compilers can allow instantiations that
 violate these requirements. Rather, they are requirements for
 conversions to have the defined effect.
 
-The first requirement is that the size (in bits) for the parameter S, of
-type Source, is the same as the size of the Target type. That's
+The first requirement is that the size (in bits) for the parameter :ada:`S`, of
+type :ada:`Source`, is the same as the size of the :ada:`Target` type. That's
 reasonable if you consider it. What would it mean to convert, for
 example, a 32-bit value to an 8-bit value? Which 8 bits should be used?
 
@@ -1872,8 +1909,8 @@ to interpretation, most compilers will issue a warning when the sizes
 are not the same. Some will even reject the instantiation. GNAT will
 issue a warning for these cases when the warnings are enabled, but will
 allow the instantiation. We're supposed to know what we are doing, after
-all. The warning is enabled via the specific "-gnatwz" switch or the
-more general "-gnatwa" switch. GNAT tries to be permissive. For example,
+all. The warning is enabled via the specific ``-gnatwz`` switch or the
+more general ``-gnatwa`` switch. GNAT tries to be permissive. For example,
 in the case of discrete types, a shorter source is first zero or sign
 extended as necessary, and a shorter target is simply truncated on the
 left. See the GNAT RM for the other details.
@@ -1886,29 +1923,29 @@ not reasonable.
 
 Next, recall that objects of unconstrained types, such as unconstrained
 array types or discriminated record types, must have their constraints
-specified when the objects are declared. We cannot just declare a String
+specified when the objects are declared. We cannot just declare a :ada:`String`
 object, for example, we must also specify the lower and upper bounds.
-Those bounds are stored in memory, logically as part of the String
+Those bounds are stored in memory, logically as part of the :ada:`String`
 object, since each object could have different bounds (that's the point,
 after all). What, then, would it mean to convert some value of a type
 that has no bounds to a type that requires bounds? The third requirement
 says that it is not meaningful to do so.
 
-The next requirement is that the argument for S, and the conversion
-target type Target, have a contiguous representation in memory. In other
+The next requirement is that the argument for :ada:`S`, and the conversion
+target type :ada:`Target`, have a contiguous representation in memory. In other
 words, each storage unit must be immediately adjacent, physically, to
 the next logical storage unit in the value. Such a representation for
 any given type is not required by the language, although on typical
 modern architectures it is common. (The type
-System.Storage_Elements.Storage_Array is an exception, in that a
+:ada:`System.Storage_Elements.Storage_Array` is an exception, in that a
 contiguous representation is guaranteed.) An instance of
-Ada.Unchecked_Conversion just takes the bits of S and treats them as if
-they are bits for a value of type Target (more or less), and does not
-handles issues of segmentation.
+:ada:`Ada.Unchecked_Conversion` just takes the bits of :ada:`S` and treats them
+as if they are bits for a value of type :ada:`Target` (more or less), and does
+not handles issues of segmentation.
 
-The last requirement merely states that the bits of the argument S, when
-treated as a value of type Target, must actually be a bit-pattern
-representing a value of type Target (strictly, the subtype). For
+The last requirement merely states that the bits of the argument :ada:`S`, when
+treated as a value of type :ada:`Target`, must actually be a bit-pattern
+representing a value of type :ada:`Target` (strictly, the subtype). For
 example, with signed integers, any bit pattern (of the right size)
 represents a valid value for those types. In contrast, consider an
 enumeration type. By default, the underlying representational values are
@@ -1920,15 +1957,16 @@ by one:
 .. code-block:: ada
 
    type Toggle_Switch is (Off, On);
-   for Toggle_Switch use (Off => 0, On => 4);
+   for Toggle_Switch use (Off => 0,
+                          On  => 4);
 
-If we covert an unsigned integer (of the right size) to a Toggle_Switch
-value, what would it mean if the Source value was neither 0 nor 4?
+If we covert an unsigned integer (of the right size) to a :ada:`Toggle_Switch`
+value, what would it mean if the :ada:`Source` value was neither 0 nor 4?
 
 We've said that the instantiations are likely allowed, hence callable
 functions are created. If the above requirements are not met, what happens?
 
-What happens depends on the Target type, that is, the result type for
+What happens depends on the :ada:`Target` type, that is, the result type for
 the conversion. Specifically, it depends on whether the target type is a
 "scalar" type. As we mentioned earlier, a scalar type is either a
 "discrete" type or a "real" type, which are themselves further defined,
@@ -1940,17 +1978,17 @@ e.g., record types, access types, task types, and so on.
   :alt: Scalar types tree
 
 When the requirements for meaningful instantiations are not respected
-and the Target type is a scalar type, the result returned from the call
+and the :ada:`Target` type is a scalar type, the result returned from the call
 is implementation defined and is potentially an invalid representation. For
-example, type Toggle_Switch is an enumeration type, hence it is a scalar
+example, type :ada:`Toggle_Switch` is an enumeration type, hence it is a scalar
 type. Therefore, if we covert an unsigned integer (of the right size) to
-a Toggle_Switch value, and the Source value is neither 0 nor 4, the
-resulting value is an invalid representation. That's the same as an
-object of type Toggle_Switch that is never assigned a value. The random
-junk in the bits may or may not be a valid Toggle_Switch value. That's
+a :ada:`Toggle_Switch` value, and the :ada:`Source` value is neither 0 nor 4,
+the resulting value is an invalid representation. That's the same as an
+object of type :ada:`Toggle_Switch` that is never assigned a value. The random
+junk in the bits may or may not be a valid :ada:`Toggle_Switch` value. That's
 not a good situation, clearly, but it is well-defined: if it is
-detected, either Constraint_Error or Program_Error is raised. If the
-situation is not detected, execution continues using the invalid
+detected, either :ada:`Constraint_Error` or :ada:`Program_Error` is raised. If
+the situation is not detected, execution continues using the invalid
 representation. In that case it may or may not be detected, near the
 call or later. For example:
 
@@ -1962,33 +2000,43 @@ call or later. For example:
 
    procedure Demo is
 
-      type Toggle_Switch is (Off, On) with Size => 8;
-      for Toggle_Switch use (Off => 1, On => 4);
+      type Toggle_Switch is (Off, On)
+        with Size => 8;
 
-      function As_Toggle_Switch is new Ada.Unchecked_Conversion
-        (Source => Unsigned_8, Target => Toggle_Switch);
+      for Toggle_Switch use (Off => 1,
+                             On  => 4);
+
+      function As_Toggle_Switch is new
+        Ada.Unchecked_Conversion
+          (Source => Unsigned_8,
+           Target => Toggle_Switch);
 
       T1 : Toggle_Switch;
       T2 : Toggle_Switch;
    begin
-      T1 := As_Toggle_Switch (12);  -- neither 1 nor 4
+      T1 := As_Toggle_Switch (12);
+      -- neither 1 nor 4
+
       if T1 = Off then
          Put_Line ("T1's off");
       else
          Put_Line ("T1's on");
       end if;
+
       T2 := T1;
+
       if T2 = Off then
          Put_Line ("T2's off");
       else
          Put_Line ("T2's on");
       end if;
+
       Put_Line (T2'Image);
    end Demo;
 
 In the execution of the code above, the invalid representation value in
-T1 is not detected, except that it is copied into T2, where it is
-eventually detected when 'Image is applied to T2. The invalid
+:ada:`T1` is not detected, except that it is copied into :ada:`T2`, where it is
+eventually detected when :ada:`'Image` is applied to :ada:`T2`. The invalid
 representation is not detected in the assignment statement or the
 comparison because we want the optimizer to be able to avoid emitting a
 check prior to every use of the value. Otherwise the generated code
@@ -2035,54 +2083,67 @@ internal, hidden components involved:
 .. code-block:: ada
 
    with Ada.Unchecked_Conversion;
-   with Ada.Text_IO;             use Ada.Text_IO;
-   with System;                  use System;  -- for Storage_Unit
-   with System.Storage_Elements; use System.Storage_Elements;
+
+   with Ada.Text_IO; use Ada.Text_IO;
+   with System;      use System;
+                     -- for Storage_Unit
+
+   with System.Storage_Elements;
+   use  System.Storage_Elements;
 
    procedure Demo_Erroneous is
 
-      subtype Buffer_Size is Storage_Offset range 1 .. Storage_Offset'Last;
+      subtype Buffer_Size is
+        Storage_Offset range 1 .. Storage_Offset'Last;
 
-      type Bounded_Buffer (Capacity : Buffer_Size) is record
+      type Bounded_Buffer (Capacity : Buffer_Size) is
+      record
          Content : Storage_Array (1 .. Capacity);
          Length  : Storage_Offset := 0;
       end record;
 
       procedure Show_Capacity (This : Bounded_Buffer);
 
-      subtype OneK_Bounded_Buffer is Bounded_Buffer (Capacity => 1 * 1024);
+      subtype OneK_Bounded_Buffer is
+        Bounded_Buffer (Capacity => 1 * 1024);
 
-      function As_OneK_Bounded_Buffer is new Ada.Unchecked_Conversion
-        (Source => Storage_Array, Target => OneK_Bounded_Buffer);
+      function As_OneK_Bounded_Buffer is new
+        Ada.Unchecked_Conversion
+          (Source => Storage_Array,
+           Target => OneK_Bounded_Buffer);
 
       Buffer   : OneK_Bounded_Buffer;
-      Sequence : Storage_Array (1 .. Buffer'Size / Storage_Unit);
+      Sequence : Storage_Array
+        (1 .. Buffer'Size / Storage_Unit);
 
       procedure Show_Capacity (This : Bounded_Buffer) is
       begin
-         Put_line ("This.Capacity is" & This.Capacity'Image);
+         Put_line ("This.Capacity is"
+                   & This.Capacity'Image);
       end Show_Capacity;
 
    begin
       Buffer := As_OneK_Bounded_Buffer (Sequence);
-      Put_Line ("Buffer capacity is" & Buffer.Capacity'Image);
+      Put_Line ("Buffer capacity is"
+                & Buffer.Capacity'Image);
       Show_Capacity (Buffer);
       Put_Line ("Done");
    end Demo_Erroneous;
 
-In the above, the type Bounded_Buffer has an array component Content
-that depends on the discriminant Capacity for the number of array
-components. This is an extremely common idiom. However, unchecked
+In the above, the type :ada:`Bounded_Buffer` has an array component
+:ada:`Content` that depends on the discriminant :ada:`Capacity` for the number
+of array components. This is an extremely common idiom. However, unchecked
 conversion is only meaningful, as defined earlier, when converting to
-constrained target types. Bounded_Buffer is not constrained, so we
-define a constrained subtype (OneK_Bounded_Buffer) for the sake of the
+constrained target types. :ada:`Bounded_Buffer` is not constrained, so we
+define a constrained subtype (:ada:`OneK_Bounded_Buffer`) for the sake of the
 conversion.
 
-The specific Buffer object is 8320 bits (1024 * 8, plus 2 * 64), as is
-the Sequence object, so the sizes are the same.
+The specific :ada:`Buffer` object is 8320 bits (1024 * 8, plus 2 * 64), as is
+the :ada:`Sequence` object, so the sizes are the same.
 
-The alignment of OneK_Bounded_Buffer is 8, and Storage_Array's alignment
-is 1, so the Target type is a multiple of the Source type, as required.
+The alignment of :ada:`OneK_Bounded_Buffer` is 8, and :ada:`Storage_Array`\ 's
+alignment is 1, so the :ada:`Target` type is a multiple of the :ada:`Source`
+type, as required.
 
 Both types have a contiguous representation, and the sequence of bytes
 can be a valid representation for the record type, although it certainly
@@ -2098,15 +2159,15 @@ discriminant value, so it is very possible that we will get a
 discriminant value that is not 1K.
 
 We can test that possibility by running the program. In the first call
-to Put_Line, the program prints the Capacity discriminant for the Buffer
-object. The compiler knew it was 1024, so it doesn't get the
+to :ada:`Put_Line`, the program prints the :ada:`Capacity` discriminant for the
+:ada:`Buffer` object. The compiler knew it was 1024, so it doesn't get the
 discriminant component from memory, it just directly prints 1024.
 However, we can force the compiler to query the discriminant in memory.
-We can pass Buffer to procedure Show_Capacity, which takes any
-Bounded_Buffer, and there query (print) the Capacity component under
-that different view. That works because the view inside the procedure
-Show_Capacity is as of Bounded_Buffer, in which the discriminant value
-is unknown at compile-time.
+We can pass :ada:`Buffer` to procedure :ada:`Show_Capacity`, which takes any
+:ada:`Bounded_Buffer`, and there query (print) the :ada:`Capacity` component
+under that different view. That works because the view inside the procedure
+:ada:`Show_Capacity` is as of :ada:`Bounded_Buffer`, in which the discriminant
+value is unknown at compile-time.
 
 In the above examples, we are responsible for ensuring that the
 enumeration representation encoding and the record discriminant value
@@ -2195,10 +2256,10 @@ possible. The problem is not unusual in low-level programming.
 
 How do we avoid the resulting bounded errors and erroneous execution?
 
-In addition to assignment statements, we can safely apply the Valid attribute
-to the object. This language-defined attribute returns a Boolean value
-indicating whether or not the object's value is a valid representation
-for the object's subtype. (More details in a moment). There is no
+In addition to assignment statements, we can safely apply the :ada:`Valid`
+attribute to the object. This language-defined attribute returns a Boolean
+value indicating whether or not the object's value is a valid representation
+for the object's subtype. (More details in a moment.) There is no
 portable alternative to check an object's validity. Here's an example:
 
 .. code-block:: ada
@@ -2210,46 +2271,56 @@ portable alternative to check an object's validity. Here's an example:
 
    procedure Demo_Validity_Check is
 
-      type Toggle_Switch is (Off, On) with Size => 8;
-      for Toggle_Switch use (Off => 1, On => 4);
+      type Toggle_Switch is (Off, On)
+        with Size => 8;
+      for Toggle_Switch use (Off => 1,
+                             On  => 4);
 
       T1 : Toggle_Switch;
 
-      function Sensor_Reading (Default : Toggle_Switch) return Toggle_Switch is
+      function Sensor_Reading (Default : Toggle_Switch)
+                               return Toggle_Switch is
 
-         function As_Toggle_Switch is new Ada.Unchecked_Conversion
-           (Source => Unsigned_8, Target => Toggle_Switch);
+         function As_Toggle_Switch is new
+           Ada.Unchecked_Conversion
+             (Source => Unsigned_8,
+              Target => Toggle_Switch);
 
          Result : Toggle_Switch;
          Sensor : Unsigned_8;
-         --  for Sensor'Address use System'To_Address (...);
+         --  for Sensor'Address use
+         --    System'To_Address (...);
 
       begin
          Result := As_Toggle_Switch (Sensor);
-         return (if Result'Valid then Result else Default);
+
+         return (if Result'Valid then Result
+                                 else Default);
       end Sensor_Reading;
 
    begin
-      T1 := Sensor_Reading (Default => Off); -- arbitrary
+      T1 := Sensor_Reading (Default => Off);
+      -- arbitrary
+
       Put_Line (T1'Image);
    end Demo_Validity_Check;
 
-In the above, Sensor_Reading is the high-level, functional API provided
+In the above, :ada:`Sensor_Reading` is the high-level, functional API provided
 to clients. The function hides the use of the unchecked conversion, and
-also hides the memory-mapped hardware interface named Sensor. We've
+also hides the memory-mapped hardware interface named :ada:`Sensor`. We've
 commented out the address clause since we don't really have a memory
 mapped device available. You can experiment with this program by
-changing the code to assign a value to Sensor (e.g., when it is
+changing the code to assign a value to :ada:`Sensor` (e.g., when it is
 declared). It is an unsigned 8-bit quantity so any value in the
 corresponding range would be allowed.
 
 In addition to checking for a valid representation, thus preventing the
 bounded error, Valid also checks that the object is not abnormal, so
 erroneous execution can be prevented too. (It also checks that any
-subtype predicate defined for the Target type is also satisfied, but
+subtype predicate defined for the :ada:`Target` type is also satisfied, but
 that's a lesson for another day.)
 
-However, the Valid attribute can be applied only to scalar types. There
+However, the :ada:`Valid` attribute can be applied only to scalar types. There
 is no language-defined attribute for checking composite types. That's
 because it would be very hard to implement for some types, if not
 impossible. For example, given a typical run-time model, it is
@@ -2258,21 +2329,21 @@ Therefore, you must individually check the validity of scalar record or
 array components.
 
 At least, you would have to check them individually in standard Ada.
-GNAT defines another Boolean attribute, named Valid_Scalars, to check
-them all for us. This attribute returns True if the evaluation of Valid
-returns True for every scalar component of the enclosing composite type.
-It also returns True when there are no scalar components. See the GNAT RM
-for more information.
+GNAT defines another Boolean attribute, named :ada:`Valid_Scalars`, to check
+them all for us. This attribute returns :ada:`True` if the evaluation of
+:ada:`Valid` returns :ada:`True` for every scalar component of the enclosing
+composite type. It also returns :ada:`True` when there are no scalar
+components. See the GNAT RM for more information.
 
 Finally, for the sake of optimization, GNAT also defines a pragma
 regarding invalid values. The point is to enable more optimization than
 the compiler might otherwise be in a position to perform in this regard.
-This configuration pragma, named Assume_No_Invalid_Values, takes an argument of either "Off"
-or "On".
+This configuration pragma, named :ada:`Assume_No_Invalid_Values`, takes an
+argument of either :ada:`Off` or :ada:`On`.
 
 The pragma controls the assumptions made by the compiler about the
 occurrence of invalid representations (invalid values) in the code. The
-default behavior (corresponding to an argument of Off), is to assume
+default behavior (corresponding to an argument of :ada:`Off`), is to assume
 that values may in general be invalid unless the compiler can prove they
 are valid. Consider the following example:
 
@@ -2285,14 +2356,14 @@ are valid. Consider the following example:
       ...
    end loop;
 
-If V1 and V2 have valid values, the loop is known at compile time not to
-execute since the lower bound must be greater than the upper bound. As a
+If :ada:`V1` and :ada:`V2` have valid values, the loop is known at compile time
+not to execute since the lower bound must be greater than the upper bound. As a
 result, no code for the loop need be generated by the compiler. However,
 in default mode, no such assumption is made, and the loop may execute.
-If Assume_No_Invalid_Values (On) is given, the compiler will assume that
-any occurrence of a variable other than in an explicit 'Valid test
+If :ada:`Assume_No_Invalid_Values (On)` is given, the compiler will assume that
+any occurrence of a variable other than in an explicit :ada:`'Valid` test
 always has a valid value, and the loop above will be optimized away. The
-use of Assume_No_Invalid_Values (On) is appropriate if you know your
+use of :ada:`Assume_No_Invalid_Values (On)` is appropriate if you know your
 code is free of uninitialized variables and other possible sources of
 invalid representations, and may result in more efficient code. A
 program that accesses an invalid representation with this pragma in
