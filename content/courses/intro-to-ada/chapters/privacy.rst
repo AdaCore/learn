@@ -249,9 +249,9 @@ summarizes this:
 +===============================+===============================+
 | Specification: public part    |                               |
 +-------------------------------+-------------------------------+
-| Specification: private part   | X                             |
+| Specification: private part   | |check|                       |
 +-------------------------------+-------------------------------+
-| Body                          | X                             |
+| Body                          | |check|                       |
 +-------------------------------+-------------------------------+
 
 The rest of this section shows examples of how this access to private

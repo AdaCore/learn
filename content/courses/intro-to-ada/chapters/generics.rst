@@ -647,7 +647,7 @@ As we can see in the example, we can create the same :ada:`Swap_Colors`
 procedure as we had in the non-generic version of the algorithm by
 declaring it as an instance of the generic :ada:`Generic_Swap` procedure. We
 specify that the generic :ada:`T` type will be mapped to the :ada:`Color` type
-by passing it as an argument to the :ada:`Generic_Swap` instantiation,
+by passing it as an argument to the :ada:`Generic_Swap` instantiation.
 
 Example: Reversing
 ------------------
