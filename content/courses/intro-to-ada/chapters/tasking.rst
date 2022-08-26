@@ -256,7 +256,7 @@ reaches this point, it waits for some other task to call its entry.
 This synchronization
 occurs in the :ada:`T.Start` statement. After the rendezvous completes,
 the main task and task :ada:`T` again run concurrently until they synchronize
-one final time when the main subprogram Show_Rendezvous finishes.
+one final time when the main subprogram :ada:`Show_Rendezvous` finishes.
 
 An entry may be used to perform more than a simple task synchronization: it
 also may perform multiple statements during the time both tasks are
