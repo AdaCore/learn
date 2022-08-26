@@ -11,12 +11,150 @@ Assignment and equality
     Complete section!
 
 
+.. _Adv_Ada_Limited_Types_As_Parameters:
+
 Limited types as parameter
 --------------------------
 
-.. todo::
+Previously, we saw that
+:ref:`parameters can be passed by copy or by reference <Adv_Ada_Parameter_Modes_Associations>`.
+Also, we discussed the concept of by-copy and by-reference types. *Explicitly*
+limited types are by-reference types. Consequently, parameters of these types
+are always passed by reference.
 
-    Complete section!
+Here, it's important to understand when a type is explicitly limited and when
+it's not |mdash| using the :ada:`limited` keyword in a part of the declaration
+doesn't necessary ensure this, as we'll see later. Let's start with an example
+of an explicitly limited type:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+
+    with System;
+
+    package Simple_Recs is
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+       procedure Proc (R : in out Rec;
+                       A :    out System.Address);
+
+    end Simple_Recs;
+
+In this example, :ada:`Rec` is a by-reference type because the type declaration
+is an explicit limited record. Therefore, the parameter :ada:`R` of the
+:ada:`Proc` procedure is passed by reference.
+
+We can run the :ada:`Test` application below and compare the address of the
+:ada:`R` object from :ada:`Test` to the address of the :ada:`R` parameter of
+:ada:`Proc` to determine whether both :ada:`R` \s refer to the same object or
+not:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+
+    package body Simple_Recs is
+
+       procedure Proc (R : in out Rec;
+                       A :    out System.Address) is
+       begin
+          R.I := 0;
+          A   := R'Address;
+       end Proc;
+
+    end Simple_Recs;
+
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with System;                use System;
+    with System.Address_Image;
+    with Simple_Recs;           use Simple_Recs;
+
+    procedure Test is
+       R : Rec;
+
+       AR_Proc, AR_Test : System.Address;
+    begin
+       AR_Proc := R'Address;
+
+       Proc (R, AR_Test);
+
+       Put_Line("R'Address (Proc): "
+                & System.Address_Image(AR_Proc));
+       Put_Line("R'Address (Test): "
+                & System.Address_Image(AR_Test));
+
+       if AR_Proc = AR_Test then
+          Put_Line ("R was passed by reference.");
+       else
+          Put_Line ("R was passed by copy.");
+       end if;
+
+    end Test;
+
+When running the :ada:`Test` application, we confirm that :ada:`R` was passed
+by reference. Note, however, that the fact that :ada:`R` was passed by
+reference doesn't automatically imply that :ada:`Rec` is a by-reference type:
+the type could have been ambiguous, and the compiler could have just decided to
+pass the parameter by reference in this case. (We'll discuss this ambiguity
+later.)
+
+The :ada:`Rec` type is also explicitly limited when it's declared private:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+
+    with System;
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+       procedure Proc (R : in out Rec;
+                       A :    out System.Address);
+
+    private
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+In this case, :ada:`Rec` is limited both in the partial and in the full view.
+
+If we make the full view of the :ada:`Rec` non-limited (by removing the
+:ada:`limited` keyword in the private part), then the :ada:`Rec` type
+isn't explicitly limited anymore:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+
+    with System;
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+       procedure Proc (R : in out Rec;
+                       A :    out System.Address);
+
+    private
+
+       type Rec is record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+Now, even though the :ada:`Rec` type was declared as limited private, the full
+view indicates that it's actually a non-limited type, so it isn't explicitly
+limited. In this case, :ada:`Rec` is neither a by-copy nor a by-reference
+type. Therefore, the decision whether the parameter is passed by reference or
+by copy is made by the compiler.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`__
+    - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`__
+    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`__
 
 
 Initialization and function return
