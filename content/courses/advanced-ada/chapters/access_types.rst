@@ -1604,7 +1604,7 @@ We assume you understand the concept, so this section is very short.
 In very simple terms, the lifetime of an object indicates when an object still
 has relevant information. For example, if a variable :ada:`V` gets out of
 scope, we say that its lifetime has ended. From this moment on, :ada:`V`
-doesn't have any relevant information anymore.
+no longer exists.
 
 For example:
 
@@ -1936,7 +1936,7 @@ could occur, for example, when an access value still points to an object
 :ada:`X` that has gone out of scope.
 
 As mentioned in the previous section, the accessibility rules of the Ada
-language prevent that such situations ever happen! In fact, whenever possible,
+language ensure that such situations never happen! In fact, whenever possible,
 the compiler applies those rules to detect potential dangling references at
 compile time. When this detection isn't possible at compile time, the compiler
 introduces an :ref:`accessibility check <Adv_Ada_Accessibility_Check>`. If this
@@ -2045,8 +2045,8 @@ but :ada:`A1` would continue to refer to an :ada:`I_Var_2` object that doesn't
 exist anymore |mdash| thereby creating a dangling reference.
 
 Even though we're actually not assigning :ada:`A2` to :ada:`A1` in the original
-code, we could have done it. The accessibility rules prevent that such an error
-is ever introduced to the program.
+code, we could have done it. The accessibility rules ensure that such an error
+is never introduced into the program.
 
 .. admonition:: For further reading...
 
