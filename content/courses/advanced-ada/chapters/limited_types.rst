@@ -161,8 +161,8 @@ and equality operators, we can implement custom subprograms for the limited
 type. We'll discuss this topic in the next sections.
 
 In addition to the case when we have components of access types, limited types
-are useful for example when we want to avoid that the same information is
-copied to multiple objects of the same type.
+are useful for example when we want to avoid the situation in which the same
+information is copied to multiple objects of the same type.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -172,7 +172,7 @@ copied to multiple objects of the same type.
 Assignments
 ~~~~~~~~~~~
 
-Assignments are forbidden when using objects of limited type. For example:
+Assignments are forbidden when using objects of limited types. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Assignment
     :class: ada-expect-compile-error
@@ -386,8 +386,9 @@ the :ada:`=` operator ourselves. For example, we can do that for the
 
 Here, the :ada:`=` operator compares the dereferenced values of :ada:`Left.V`
 and :ada:`Right.V`, which matches our expectation for the :ada:`Simple_Rec`
-type. Declaring types limited ensures that only reasonable comparisons between
-objects of those types can be made.
+type. Declaring types as limited ensures that we don't have unreasonable
+equality comparisons, and allows us to create reasonable replacements when
+required.
 
 .. admonition:: In other languages
 
