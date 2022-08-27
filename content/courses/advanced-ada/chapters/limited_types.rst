@@ -101,6 +101,7 @@ later.)
 The :ada:`Rec` type is also explicitly limited when it's declared private:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+    :class: ada-syntax-only
 
     with System;
 
@@ -126,6 +127,7 @@ If we make the full view of the :ada:`Rec` non-limited (by removing the
 isn't explicitly limited anymore:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+    :class: ada-syntax-only
 
     with System;
 
