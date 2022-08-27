@@ -787,14 +787,14 @@ We can reuse a previous example and rewrite it to use a protected type:
 
     procedure Show_Protected_Object_Type is
 
-       protected type PObj_Type is
+       protected type P_Obj_Type is
           procedure Set (V : Integer);
           function Get return Integer;
        private
           Local : Integer := 0;
-       end PObj_Type;
+       end P_Obj_Type;
 
-       protected body PObj_Type is
+       protected body P_Obj_Type is
           procedure Set (V : Integer) is
           begin
              Local := V;
@@ -804,9 +804,9 @@ We can reuse a previous example and rewrite it to use a protected type:
           begin
              return Local;
           end Get;
-       end PObj_Type;
+       end P_Obj_Type;
 
-       Obj : PObj_Type;
+       Obj : P_Obj_Type;
     begin
        Obj.Set (5);
        Put_Line ("Number is: "
@@ -814,7 +814,7 @@ We can reuse a previous example and rewrite it to use a protected type:
     end Show_Protected_Object_Type;
 
 In this example, instead of directly defining the protected object
-:ada:`Obj`, we first define a protected type :ada:`PObj_Type` and then
+:ada:`Obj`, we first define a protected type :ada:`P_Obj_Type` and then
 declare :ada:`Obj` as an object of that protected type. Note that the
 main application hasn't changed: we still use :ada:`Obj.Set` and
 :ada:`Obj.Get` to access the protected object, just like in the original
