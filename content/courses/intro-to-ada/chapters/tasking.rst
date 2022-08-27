@@ -342,7 +342,7 @@ observations:
     - Because task :ada:`T` contains an infinite loop, it always accepts calls
       to the :ada:`Reset` and :ada:`Increment` entries.
 
-    - When the master construct of the subtask (the Show_Rendezvous_Loop
+    - When the master construct of the subtask (the :ada:`Show_Rendezvous_Loop`
       subprogram) completes, it checks the status of the :ada:`T`
       task. Even though task :ada:`T` could accept new calls to the
       :ada:`Reset` or :ada:`Increment` entries, the master construct is
