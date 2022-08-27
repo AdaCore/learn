@@ -55,11 +55,11 @@ Note that:
 - Task :ada:`T` is a subtask.
 
   - Each subtask has a master, which represents the program construct in which
-    the subtask is declared, which in this case is the main subprogram
-    :ada:`Show_Simple_Task`.  The master construct is executed by some
-    enclosing task, which we will refer to as the “master task” of the subtask.
+    the subtask is declared. In this case, the main subprogram
+    :ada:`Show_Simple_Task` is :ada:`T` \'s master.
 
-  - Therefore the main task is also the master task of task :ada:`T`.
+  - The master construct is executed by some enclosing task, which we will
+    refer to as the "master task" of the subtask.
 
 - The number of tasks is not limited to one: we could include a
   task :ada:`T2` in the example above.
@@ -219,7 +219,7 @@ synchronize with it. Specifically,
   ready to accept a call to the corresponding entry from the master task.
 
 - The other task calls the task entry, in a manner similar to a procedure
-  call, to synchronize with it.
+  call, to synchronize with the entry.
 
 This synchronization between tasks is called *rendezvous*. Let's see an
 example:
