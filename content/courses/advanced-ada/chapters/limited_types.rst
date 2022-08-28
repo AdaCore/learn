@@ -6,9 +6,423 @@ Limited Types
 Assignment and equality
 -----------------------
 
-.. todo::
+So far, we discussed nonlimited types in most cases. Limited types, in
+contrast, have the following restrictions, which we discussed in the
+:ref:`Introduction to Ada <Intro_Ada_Limited_Types>` course:
 
-    Complete section!
+- copying objects of limited types via direct assignments is forbidden; and
+
+- there's no predefined equality operator for limited types.
+
+(Of course, in the case of nonlimited types, assignments are possible and the
+equality operator is available.)
+
+A good reason for having these restrictions for limited types is that the
+assignment and equality operations may have side-effects that lead to erroneous
+programs, even though they are perfectly OK in many cases. Programs can become
+erroneous when we use those operations on record types that have components of
+access types, for example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Wrong_Assignment_Equality
+
+    package Nonlimited_Types is
+
+       type Simple_Rec is private;
+
+       type Integer_Access is access Integer;
+
+       function Init (I : Integer) return Simple_Rec;
+
+       procedure Set (E : Simple_Rec;
+                      I : Integer);
+
+       procedure Show (E      : Simple_Rec;
+                       E_Name : String);
+
+    private
+
+       type Simple_Rec is record
+          V : Integer_Access;
+       end record;
+
+    end Nonlimited_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Nonlimited_Types is
+
+       function Init (I : Integer) return Simple_Rec is
+       begin
+          return E : Simple_Rec do
+             E.V := new Integer'(I);
+          end return;
+       end Init;
+
+       procedure Set (E : Simple_Rec;
+                      I : Integer) is
+       begin
+          E.V.all := I;
+       end Set;
+
+       procedure Show (E      : Simple_Rec;
+                       E_Name : String) is
+       begin
+          Put_Line (E_Name
+                    & ".V.all = "
+                    & Integer'Image (E.V.all));
+       end Show;
+
+    end Nonlimited_Types;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+    with Nonlimited_Types; use Nonlimited_Types;
+
+    procedure Show_Wrong_Assignment_Equality is
+       A, B : Simple_Rec := Init (0);
+
+       procedure Show_Compare is
+       begin
+          if A = B then
+             Put_Line ("A = B");
+          else
+             Put_Line ("A /= B");
+          end if;
+       end Show_Compare;
+    begin
+
+       Put_Line ("A := Init (0); A := Init (0);");
+       Show (A, "A");
+       Show (B, "B");
+       Show_Compare;
+       Put_Line ("--------");
+
+       Put_Line ("Set (A, 2); Set (B, 3);");
+       Set (A, 2);
+       Set (B, 3);
+
+       Show (A, "A");
+       Show (B, "B");
+       Put_Line ("--------");
+
+       Put_Line ("B := A");
+       B := A;
+
+       Show (A, "A");
+       Show (B, "B");
+       Show_Compare;
+       Put_Line ("--------");
+
+       Put_Line ("Set (B, 7);");
+       Set (B, 7);
+
+       Show (A, "A");
+       Show (B, "B");
+       Show_Compare;
+       Put_Line ("--------");
+
+    end Show_Wrong_Assignment_Equality;
+
+In this code, we declare the :ada:`Simple_Rec` type in the
+:ada:`Nonlimited_Types` package and use it in the
+:ada:`Show_Wrong_Assignment_Equality` procedure. In principle, we're already
+doing many things right here. For example, we're declaring the
+:ada:`Simple_Rec` type private, so that the component :ada:`V` of access
+type is encapsulated. Programmers that declare objects of this type cannot
+simply mess up with the :ada:`V` component. Instead, they have to call the
+:ada:`Init` function and the :ada:`Set` procedure to initialize and change,
+respectively, objects of the :ada:`Simple_Rec` type. That being said, there are
+two problems with this code, which we discuss next.
+
+The first problem we can identify is that the first call to :ada:`Show_Compare`
+shows that :ada:`A` and :ada:`B` are different, although both have the same
+value in the :ada:`V` component (:ada:`A.V.all = 0` and :ada:`B.V.all = 0`)
+|mdash| this was set by the call to the :ada:`Init` function. What's happening
+here is that the :ada:`A = B` expression is comparing the access values
+(:ada:`A.V = B.V`), while we might have been expecting it to compare the actual
+integer values after dereferencing (:ada:`A.V.all = B.V.all`). Therefore, the
+predefined equality function of the :ada:`Simple_Rec` type is useless and
+dangerous for us, as it misleads us to expect something that it doesn't do.
+
+After the assignment of :ada:`A` to :ada:`B` (:ada:`B := A`), the information
+that the application displays seems to be correct |mdash| both :ada:`A.V.all`
+and :ada:`B.V.all` have the same value of two. However, when assigning the
+value seven to :ada:`B` by calling :ada:`Set (B, 7)`, we see that the value of
+:ada:`A.V.all` has also changed. What's happening here is that the previous
+assignment (:ada:`B := A`) has actually assigned access values
+(:ada:`B.V := A.V`), while we might have been expecting it to assign the
+dereferenced values (:ada:`B.V.all := A.V.all`). Therefore, we cannot simply
+directly assign objects of :ada:`Simple_Rec` type, as this operation changes
+the internal structure of the type due to the presence of components of access
+type.
+
+For these reasons, forbidding these operations for the :ada:`Simple_Rec` type
+is the most appropriate software design decision. If we still need assignment
+and equality operators, we can implement custom subprograms for the limited
+type. We'll discuss this topic in the next sections.
+
+In addition to the case when we have components of access types, limited types
+are useful for example when we want to avoid the situation in which the same
+information is copied to multiple objects of the same type.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`_
+
+
+Assignments
+~~~~~~~~~~~
+
+Assignments are forbidden when using objects of limited types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Assignment
+    :class: ada-expect-compile-error
+
+    package Limited_Types is
+
+       type Simple_Rec is limited private;
+
+       type Integer_Access is access Integer;
+
+       function Init (I : Integer) return Simple_Rec;
+
+    private
+
+       type Simple_Rec is limited record
+          V : Integer_Access;
+       end record;
+
+    end Limited_Types;
+
+    package body Limited_Types is
+
+       function Init (I : Integer) return Simple_Rec is
+       begin
+          return E : Simple_Rec do
+             E.V := new Integer'(I);
+          end return;
+       end Init;
+
+    end Limited_Types;
+
+
+    with Limited_Types; use Limited_Types;
+
+    procedure Show_Limited_Assignment is
+       A, B : Simple_Rec := Init (0);
+    begin
+       B := A;
+    end Show_Limited_Assignment;
+
+As expected, we get a compilation error for the :ada:`B := A` statement. If we
+need to copy two objects of limited type, we have to provide a custom procedure
+to do that. For example, we can implement a :ada:`Copy` procedure for the
+:ada:`Simple_Rec` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Assignment
+
+    package Limited_Types is
+
+       type Integer_Access is access Integer;
+
+       type Simple_Rec is limited private;
+
+       function Init (I : Integer) return Simple_Rec;
+
+       procedure Copy (From :        Simple_Rec;
+                       To   : in out Simple_Rec);
+
+    private
+
+       type Simple_Rec is limited record
+          V : Integer_Access;
+       end record;
+
+    end Limited_Types;
+
+    package body Limited_Types is
+
+       function Init (I : Integer) return Simple_Rec is
+       begin
+          return E : Simple_Rec do
+             E.V := new Integer'(I);
+          end return;
+       end Init;
+
+       procedure Copy (From :        Simple_Rec;
+                       To   : in out Simple_Rec) is
+       begin
+          --  Copying record components
+          To.V.all := From.V.all;
+       end Copy;
+
+    end Limited_Types;
+
+
+    with Limited_Types; use Limited_Types;
+
+    procedure Show_Limited_Assignment is
+       A, B : Simple_Rec := Init (0);
+    begin
+       Copy (From => A, To => B);
+    end Show_Limited_Assignment;
+
+The :ada:`Copy` procedure from this example copies the dereferenced values of
+:ada:`From` to :ada:`To`, which matches our expectation for the
+:ada:`Simple_Rec`. Note that we could have also implemented a
+:ada:`Shallow_Copy` procedure to copy the actual access values (i.e.
+:ada:`To.V := From.V`). However, having this kind of procedure can be dangerous
+in many case, so this design decision must be made carefully. In any case,
+using limited types ensures that only the assignment subprograms that are
+explicitly declared in the package specification are available.
+
+
+Equality
+~~~~~~~~
+
+Limited types don't have a predefined equality operator. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Equality
+    :class: ada-expect-compile-error
+
+    package Limited_Types is
+
+       type Integer_Access is access Integer;
+
+       type Simple_Rec is limited private;
+
+       function Init (I : Integer) return Simple_Rec;
+
+    private
+
+       type Simple_Rec is limited record
+          V : Integer_Access;
+       end record;
+
+    end Limited_Types;
+
+    package body Limited_Types is
+
+       function Init (I : Integer) return Simple_Rec is
+       begin
+          return E : Simple_Rec do
+             E.V := new Integer'(I);
+          end return;
+       end Init;
+
+    end Limited_Types;
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Limited_Types; use Limited_Types;
+
+    procedure Show_Limited_Equality is
+       A : Simple_Rec := Init (5);
+       B : Simple_Rec := Init (6);
+    begin
+       if A = B then
+          Put_Line ("A = B");
+       else
+          Put_Line ("A /= B");
+       end if;
+    end Show_Limited_Equality;
+
+As expected, the comparison :ada:`A = B` triggers a compilation error because
+no predefined :ada:`=` operator is available for the :ada:`Simple_Rec` type.
+If we want to be able to compare objects of this type, we have to implement
+the :ada:`=` operator ourselves. For example, we can do that for the
+:ada:`Simple_Rec` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Equality
+
+    package Limited_Types is
+
+       type Integer_Access is access Integer;
+
+       type Simple_Rec is limited private;
+
+       function Init (I : Integer) return Simple_Rec;
+
+       function "=" (Left, Right : Simple_Rec)
+                     return Boolean;
+
+    private
+
+       type Simple_Rec is limited record
+          V : Integer_Access;
+       end record;
+
+    end Limited_Types;
+
+    package body Limited_Types is
+
+       function Init (I : Integer) return Simple_Rec is
+       begin
+          return E : Simple_Rec do
+             E.V := new Integer'(I);
+          end return;
+       end Init;
+
+       function "=" (Left, Right : Simple_Rec)
+                     return Boolean is
+       begin
+          --  Comparing record components
+          return Left.V.all = Right.V.all;
+       end "=";
+
+    end Limited_Types;
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Limited_Types; use Limited_Types;
+
+    procedure Show_Limited_Equality is
+       A : Simple_Rec := Init (5);
+       B : Simple_Rec := Init (6);
+    begin
+       if A = B then
+          Put_Line ("A = B");
+       else
+          Put_Line ("A /= B");
+       end if;
+    end Show_Limited_Equality;
+
+Here, the :ada:`=` operator compares the dereferenced values of :ada:`Left.V`
+and :ada:`Right.V`, which matches our expectation for the :ada:`Simple_Rec`
+type. Declaring types as limited ensures that we don't have unreasonable
+equality comparisons, and allows us to create reasonable replacements when
+required.
+
+.. admonition:: In other languages
+
+    In C++, you can overload the assignment operator. For example:
+
+    .. code-block:: cpp
+
+        class Simple_Rec
+        {
+        public:
+            // Overloaded assignment
+            Simple_Rec& operator= (const Simple_Rec& obj);
+        private:
+        int *V;
+        };
+
+    In Ada, however, we can only define the equality operator (:ada:`=`).
+    Defining the assignment operator (:ada:`:=`) is not possible. The following
+    code triggers a compilation error as expected:
+
+    .. code-block:: ada
+
+        package Limited_Types is
+
+           type Integer_Access is access Integer;
+
+           type Simple_Rec is limited private;
+
+           procedure ":=" (To   : in out Simple_Rec
+                           From :        Simple_Rec);
+
+           -- ...
+
+        end Limited_Types;
 
 
 Limited types as parameter

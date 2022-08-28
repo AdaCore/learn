@@ -158,6 +158,8 @@ Here is how the :ada:`Stacks` package would be used:
        Pop (S, Res);
     end Test_Stack;
 
+.. _Intro_Ada_Limited_Types:
+
 Limited types
 -------------
 
