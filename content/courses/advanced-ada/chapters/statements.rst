@@ -418,9 +418,9 @@ object, and then return that object:
        null;
     end Show_Return;
 
-Since Ada 2005, a notation called the :ada:`extended_return_statement`,
-which allows you to declare the result object and return it as part of one
-statement, is available. It looks like this:
+Since Ada 2005, a notation called the extended return statement is available:
+this allows you to declare the result object and return it as part of one
+statement. It looks like this:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Statements.Extended_Return
 
