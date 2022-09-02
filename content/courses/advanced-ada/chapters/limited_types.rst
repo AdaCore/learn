@@ -1131,7 +1131,7 @@ Default initialization
     This section was originally written by Robert A. Duff and published as
     `Gem #12: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-12>`_.
 
-Prior to Ada 2005, the following style was common:
+Consider the following type declaration:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
 
@@ -1150,26 +1150,8 @@ Prior to Ada 2005, the following style was common:
        procedure Do_Something;
     end Type_Defaults;
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
-
-    package body Type_Defaults is
-
-       Object_100 : constant T :=
-                      (Color => Red, Is_Gnarly => False, Count => 100);
-
-       procedure Do_Something is null;
-
-    end Type_Defaults;
-
-We want :ada:`Object_100` to be a default-initialized :ada:`T`, with
-:ada:`Count` equal to :ada:`100`. It's a little bit annoying that we had
-to write the default values :ada:`Red` and :ada:`False` twice. What if we
-change our mind about :ada:`Red`, and forget to change it in all the
-relevant places?
-
-Since Ada 2005, the :ada:`<>` notation comes to the rescue. If we want to
-say, "make :ada:`Count` equal :ada:`100`, but initialize :ada:`Color` and
-:ada:`Is_Gnarly` to their defaults", we can do this:
+If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
+:ada:`Color` and :ada:`Is_Gnarly` to their defaults", we can do this:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
 
@@ -1181,6 +1163,28 @@ say, "make :ada:`Count` equal :ada:`100`, but initialize :ada:`Color` and
        procedure Do_Something is null;
 
     end Type_Defaults;
+
+.. admonition:: Historically
+
+    Prior to Ada 2005, the following style was common:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
+
+        package body Type_Defaults is
+
+           Object_100 : constant T :=
+                          (Color => Red, Is_Gnarly => False, Count => 100);
+
+           procedure Do_Something is null;
+
+        end Type_Defaults;
+
+    Here, we only wanted :ada:`Object_100` to be a default-initialized
+    :ada:`T`, with :ada:`Count` equal to :ada:`100`. It's a little bit annoying
+    that we had to write the default values :ada:`Red` and :ada:`False` twice.
+    What if we change our mind about :ada:`Red`, and forget to change it in all
+    the relevant places? Since Ada 2005, the :ada:`<>` notation comes to the
+    rescue, as we've just seen.
 
 On the other hand, if we want to say, "make :ada:`Count` equal :ada:`100`,
 but initialize all other components, including the ones we might add next
