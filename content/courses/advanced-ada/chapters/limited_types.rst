@@ -431,9 +431,8 @@ Limited types and aggregates
 .. note::
 
     This section was originally written by Robert A. Duff and published as
-    `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_,
-    `Gem #2 <https://www.adacore.com/gems/gem-2>`_, and
-    `Gem #3 <https://www.adacore.com/gems/gem-3>`_.
+    `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_
+    and `Gem #2 <https://www.adacore.com/gems/gem-2>`_.
 
 Full coverage rules
 ~~~~~~~~~~~~~~~~~~~
@@ -656,8 +655,14 @@ values. Note that this is no more nor less dangerous than this:
 
 As always, one must be careful about uninitialized scalar objects.
 
+
 Constructor functions for limited types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------
+
+.. note::
+
+    This section was originally written by Robert A. Duff and published as
+    `Gem #3 <https://www.adacore.com/gems/gem-3>`_.
 
 Given that we can use build-in-place aggregates for limited types,
 the obvious next step is to allow such aggregates to be wrapped in an
