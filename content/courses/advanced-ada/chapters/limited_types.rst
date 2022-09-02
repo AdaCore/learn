@@ -707,9 +707,11 @@ copied! In this case, :ada:`Make_T` will initialize the :ada:`Name`
 component, and create the :ada:`My_Task` and :ada:`My_Prot` components,
 all directly in :ada:`Rumplestiltskin_Is_My_Name`.
 
-Note that :ada:`Rumplestiltskin_Is_My_Name` is constant. Prior to
-Ada 2005, it was impossible to create a constant limited object, because
-there was no way to initialize it.
+.. admonition:: Historically
+
+    Note that :ada:`Rumplestiltskin_Is_My_Name` is constant. Prior to
+    Ada 2005, it was impossible to create a constant limited object, because
+    there was no way to initialize it.
 
 The :ada:`(<>)` on type :ada:`T` means that it has *unknown
 discriminants* from the point of view of the client. This is a trick that
