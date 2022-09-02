@@ -461,6 +461,11 @@ for limited types. Suppose we have the following limited type:
 
     end Persons;
 
+.. admonition:: Historically
+
+    The full coverage rules have been aiding maintenance since Ada 83. However,
+    prior to Ada 2005, we couldn't use them for limited types.
+
 This type has a self-reference; it doesn't make sense to copy objects,
 because :ada:`Self` would end up pointing to the wrong place. Therefore,
 we would like to make the type limited, to prevent developers from
@@ -469,59 +474,7 @@ developers using this package might not be aware of the problem. We could
 also solve that problem with controlled types, but controlled types are
 expensive, and add unnecessary complexity if not needed.
 
-Prior to Ada 2005, aggregates were illegal for limited types. Therefore,
-we would be faced with a difficult choice: Make the type limited, and
-initialize it like this:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
-
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Persons; use Persons;
-
-    procedure Show_Non_Aggregate_Init is
-       X : Limited_Person;
-    begin
-       X.Name := To_Unbounded_String ("John Doe");
-       X.Age := 25;
-    end Show_Non_Aggregate_Init;
-
-which has the maintenance problem the full coverage rules are supposed to
-prevent. Or, make the type non-limited, and gain the benefits of
-aggregates, but lose the ability to prevent copies.
-
-Since Ada 2005, an aggregate is allowed to be limited; we can say:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
-
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Persons; use Persons;
-
-    procedure Show_Aggregate_Init is
-
-       X : aliased Limited_Person :=
-             (Self      => null, -- Wrong!
-              Name      => To_Unbounded_String ("John Doe"),
-              Age       => 25,
-              Shoe_Size => 10);
-    begin
-       X.Self := X'Unchecked_Access;
-    end Show_Aggregate_Init;
-
-We'll see what to do about that :ada:`Self => null` soon.
-
-One very important requirement should be noted: the implementation is
-required to build the value of :ada:`X` *in place*; it cannot construct
-the aggregate in a temporary variable and then copy it into :ada:`X`,
-because that would violate the whole point of limited objects |mdash|
-you can't copy them.
-
-It seems uncomfortable to set the value of :ada:`Self` to the wrong value
-(:ada:`null`) and then correct it. It also seems annoying that we have a
-(correct) default value for :ada:`Self`, but prior to Ada 2005, we
-couldn't use defaults with aggregates. Since Ada 2005, a new syntax in
-aggregates is available: :ada:`<>` means "use the default value, if any".
-
-Here, we can say:
+We can initialize objects of limited type with an aggregate. Here, we can say:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
@@ -544,35 +497,90 @@ appears inside the type declaration, it refers to the "current instance"
 of the type, which in this case is :ada:`X`. Thus, we are setting
 :ada:`X.Self` to be :ada:`X'Unchecked_Access`.
 
-Note that using :ada:`<>` in an aggregate can be dangerous, because it can
-leave some components uninitialized. :ada:`<>` means "use the default
-value". If the type of a component is scalar, and there is no
-record-component default, then there is no default value.
+One very important requirement should be noted: the implementation is
+required to build the value of :ada:`X` *in place*; it cannot construct
+the aggregate in a temporary variable and then copy it into :ada:`X`,
+because that would violate the whole point of limited objects |mdash|
+you can't copy them.
 
-For example, if we have an aggregate of type :ada:`String`, like this:
+.. admonition:: Historically
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.String_Box_Init
+    Prior to Ada 2005, aggregates were illegal for limited types. Therefore,
+    we would be faced with a difficult choice: Make the type limited, and
+    initialize it like this:
 
-    procedure Show_String_Box_Init is
-        Uninitialized_String_Const : constant String := (1 .. 10 => <>);
-    begin
-       null;
-    end Show_String_Box_Init;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
-we end up with a 10-character string all of whose characters are invalid
-values. Note that this is no more nor less dangerous than this:
+        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+        with Persons; use Persons;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Dangerous_String
+        procedure Show_Non_Aggregate_Init is
+           X : Limited_Person;
+        begin
+           X.Name := To_Unbounded_String ("John Doe");
+           X.Age := 25;
+        end Show_Non_Aggregate_Init;
 
-    procedure Show_Dangerous_String is
-        Uninitialized_String_Var : String (1 .. 10);  --  no initialization
+    which has the maintenance problem the full coverage rules are supposed to
+    prevent. Or, make the type non-limited, and gain the benefits of
+    aggregates, but lose the ability to prevent copies.
 
-        Uninitialized_String_Const : constant String := Uninitialized_String_Var;
-    begin
-       null;
-    end Show_Dangerous_String;
+    Since Ada 2005, an aggregate is allowed to be limited; we can say:
 
-As always, one must be careful about uninitialized scalar objects.
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
+
+        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+        with Persons; use Persons;
+
+        procedure Show_Aggregate_Init is
+
+           X : aliased Limited_Person :=
+                 (Self      => null, -- Wrong!
+                  Name      => To_Unbounded_String ("John Doe"),
+                  Age       => 25,
+                  Shoe_Size => 10);
+        begin
+           X.Self := X'Unchecked_Access;
+        end Show_Aggregate_Init;
+
+    It seems uncomfortable to set the value of :ada:`Self` to the wrong value
+    (:ada:`null`) and then correct it. It also seems annoying that we have a
+    (correct) default value for :ada:`Self`, but prior to Ada 2005, we
+    couldn't use defaults with aggregates. Since Ada 2005, a new syntax in
+    aggregates is available: :ada:`<>` means "use the default value, if any".
+    Therefore, we can replace :ada:`Self => null` by :ada:`Self => <>`.
+
+.. admonition:: Important
+
+    Note that using :ada:`<>` in an aggregate can be dangerous, because it can
+    leave some components uninitialized. :ada:`<>` means "use the default
+    value". If the type of a component is scalar, and there is no
+    record-component default, then there is no default value.
+
+    For example, if we have an aggregate of type :ada:`String`, like this:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.String_Box_Init
+
+        procedure Show_String_Box_Init is
+            Uninitialized_String_Const : constant String := (1 .. 10 => <>);
+        begin
+           null;
+        end Show_String_Box_Init;
+
+    we end up with a 10-character string all of whose characters are invalid
+    values. Note that this is no more nor less dangerous than this:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Dangerous_String
+
+        procedure Show_Dangerous_String is
+            Uninitialized_String_Var : String (1 .. 10);  --  no initialization
+
+            Uninitialized_String_Const : constant String := Uninitialized_String_Var;
+        begin
+           null;
+        end Show_Dangerous_String;
+
+    As always, one must be careful about uninitialized scalar objects.
 
 
 Constructor functions for limited types
