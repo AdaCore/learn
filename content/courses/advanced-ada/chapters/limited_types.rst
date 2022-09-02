@@ -724,72 +724,77 @@ Ideally, limited and non-limited types should be just the same, except for
 the essential difference: you can't copy limited objects. By allowing
 functions and aggregates for limited types, we're very close to this goal.
 Some languages have a specific feature called *constructor*. In Ada, a
-*constructor* is just a function that creates a new object. Prior to
-Ada 2005, that only worked for non-limited types. For limited types, the
-only way to *construct* on declaration was via default values, which
-limits you to one constructor. And the only way to pass parameters to that
-construction was via discriminants. Consider the following package:
+*constructor* is just a function that creates a new object.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
+.. admonition:: Historically
 
-    with Ada.Containers.Ordered_Sets;
+    Prior to Ada 2005, *constructors* only worked for non-limited types. For
+    limited types, the only way to *construct* on declaration was via default
+    values, which limits you to one constructor. And the only way to pass
+    parameters to that construction was via discriminants.
 
-    package Aux is
-       generic
-          with package OS is new Ada.Containers.Ordered_Sets (<>);
-       function Gen_Singleton_Set (Element : OS.Element_Type) return OS.Set;
-    end Aux;
+    Consider the following package:
 
-    package body Aux is
-       function Gen_Singleton_Set  (Element : OS.Element_Type) return OS.Set is
-       begin
-          return S : OS.Set := OS.Empty_Set do
-             S.Insert (Element);
-          end return;
-       end Gen_Singleton_Set;
-    end Aux;
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
 
-Since Ada 2005, we can say:
+        with Ada.Containers.Ordered_Sets;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
+        package Aux is
+           generic
+              with package OS is new Ada.Containers.Ordered_Sets (<>);
+           function Gen_Singleton_Set (Element : OS.Element_Type) return OS.Set;
+        end Aux;
 
-    with Ada.Containers.Ordered_Sets;
-    with Aux;
+        package body Aux is
+           function Gen_Singleton_Set  (Element : OS.Element_Type) return OS.Set is
+           begin
+              return S : OS.Set := OS.Empty_Set do
+                 S.Insert (Element);
+              end return;
+           end Gen_Singleton_Set;
+        end Aux;
 
-    procedure Show_Set_Constructor is
+    Since Ada 2005, we can say:
 
-       package Integer_Sets is new Ada.Containers.Ordered_Sets
-         (Element_Type => Integer);
-       use Integer_Sets;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
 
-       function Singleton_Set is new Aux.Gen_Singleton_Set (OS => Integer_Sets);
+        with Ada.Containers.Ordered_Sets;
+        with Aux;
 
-       This_Set : Set := Empty_Set;
-       That_Set : Set := Singleton_Set (Element => 42);
-    begin
-       null;
-    end Show_Set_Constructor;
+        procedure Show_Set_Constructor is
 
-whether or not :ada:`Set` is limited. :ada:`This_Set : Set := Empty_Set;`
-seems clearer than:
+           package Integer_Sets is new Ada.Containers.Ordered_Sets
+             (Element_Type => Integer);
+           use Integer_Sets;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
+           function Singleton_Set is new Aux.Gen_Singleton_Set (OS => Integer_Sets);
 
-    with Ada.Containers.Ordered_Sets;
+           This_Set : Set := Empty_Set;
+           That_Set : Set := Singleton_Set (Element => 42);
+        begin
+           null;
+        end Show_Set_Constructor;
 
-    procedure Show_Set_Decl is
+    whether or not :ada:`Set` is limited. :ada:`This_Set : Set := Empty_Set;`
+    seems clearer than:
 
-       package Integer_Sets is new Ada.Containers.Ordered_Sets
-         (Element_Type => Integer);
-       use Integer_Sets;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
 
-       This_Set : Set;
-    begin
-       null;
-    end Show_Set_Decl;
+        with Ada.Containers.Ordered_Sets;
 
-which might mean "default-initialize to the empty set" or might mean
-"leave it uninitialized, and we'll initialize it in later".
+        procedure Show_Set_Decl is
+
+           package Integer_Sets is new Ada.Containers.Ordered_Sets
+             (Element_Type => Integer);
+           use Integer_Sets;
+
+           This_Set : Set;
+        begin
+           null;
+        end Show_Set_Decl;
+
+    which might mean "default-initialize to the empty set" or might mean
+    "leave it uninitialized, and we'll initialize it in later".
 
 Return objects
 --------------
