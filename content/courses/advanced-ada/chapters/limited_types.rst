@@ -897,47 +897,7 @@ of the task's entries, because that would deadlock. That is, the entry
 call would wait until the task reaches an accept statement, which will
 never happen, because the task will never be activated.
 
-Other usages of extended return statements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-While the :ada:`extended_return_statement` was added to the language
-specifically to support limited constructor functions, it comes in handy
-whenever you want a local name for the function result:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Other_Usages
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Show_String_Construct is
-
-       function Make_String (S          : String;
-                             Prefix     : String;
-                             Use_Prefix : Boolean) return String is
-          Length : Natural := S'Length;
-       begin
-          if Use_Prefix then
-             Length := Length + Prefix'Length;
-          end if;
-
-          return Result : String (1 .. Length) do
-
-             --  fill in the characters
-             if Use_Prefix then
-                Result (1 .. Prefix'Length) := Prefix;
-                Result (Prefix'Length + 1 .. Length) := S;
-             else
-                Result := S;
-             end if;
-
-          end return;
-       end Make_String;
-
-       S1 : String := "Ada";
-       S2 : String := "Make_With_";
-    begin
-       Put_Line ("No prefix:   " & Make_String (S1, S2, False));
-       Put_Line ("With prefix: " & Make_String (S1, S2, True));
-    end Show_String_Construct;
 
 Building objects from constructors
 ----------------------------------
