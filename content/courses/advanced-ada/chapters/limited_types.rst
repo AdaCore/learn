@@ -900,11 +900,155 @@ never happen, because the task will never be activated.
 Initialization and function return
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo::
+As mentioned in the previous section, the object of limited type returned by
+the initialization function is created *in place*. In other words, the return
+object is created at the location where the initialization function is being
+called.
 
-    Complete section!
+For example, we can see this when looking at the address of the object
+*returned* by the :ada:`Init` function, which we call to initialize the limited
+type :ada:`Simple_Rec`:
 
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Initialization_Return_Do
 
+    package Limited_Types is
+
+       type Integer_Access is access Integer;
+
+       type Simple_Rec is limited private;
+
+       function Init (I : Integer) return Simple_Rec;
+
+    private
+
+       type Simple_Rec is limited record
+          V : Integer_Access;
+       end record;
+
+    end Limited_Types;
+
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with System;
+    with System.Address_Image;
+
+    package body Limited_Types is
+
+       function Init (I : Integer) return Simple_Rec is
+       begin
+          return E : Simple_Rec do
+             E.V := new Integer'(I);
+
+             Put_Line ("E'Address (Init):  "
+                       & System.Address_Image (E'Address));
+          end return;
+       end Init;
+
+    end Limited_Types;
+
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with System;
+    with System.Address_Image;
+
+    with Limited_Types;         use Limited_Types;
+
+    procedure Show_Limited_Init is
+    begin
+       declare
+          A : Simple_Rec := Init (0);
+       begin
+          Put_Line ("A'Address (local): "
+                    & System.Address_Image (A'Address));
+       end;
+       Put_Line ("----");
+
+       declare
+          B : Simple_Rec := Init (0);
+       begin
+          Put_Line ("B'Address (local): "
+                    & System.Address_Image (B'Address));
+       end;
+    end Show_Limited_Init;
+
+When running this code example and comparing the address of the object :ada:`E`
+in the :ada:`Init` function and the object that is being initialized in the
+:ada:`Show_Limited_Init` procedure, we see that the return object :ada:`E` (of
+the :ada:`Init` function) and the local object in the :ada:`Show_Limited_Init`
+procedure are the same object.
+
+.. admonition:: Important
+
+   When we use non-limited types, we're actually copying the returned object
+   |mdash| which was locally created in the function |mdash| to the object that
+   we're assigning the function to.
+
+   For example, let's modify the previous code and make :ada:`Simple_Rec`
+   non-limited:
+
+       .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Initialization_Return_Copy
+
+        package Non_Limited_Types is
+
+           type Integer_Access is access Integer;
+
+           type Simple_Rec is private;
+
+           function Init (I : Integer) return Simple_Rec;
+
+        private
+
+           type Simple_Rec is record
+              V : Integer_Access;
+           end record;
+
+        end Non_Limited_Types;
+
+        with Ada.Text_IO;           use Ada.Text_IO;
+        with System;
+        with System.Address_Image;
+
+        package body Non_Limited_Types is
+
+           function Init (I : Integer) return Simple_Rec is
+           begin
+              return E : Simple_Rec do
+                 E.V := new Integer'(I);
+
+                 Put_Line ("E'Address (Init):  "
+                           & System.Address_Image (E'Address));
+              end return;
+           end Init;
+
+        end Non_Limited_Types;
+
+        with Ada.Text_IO;           use Ada.Text_IO;
+        with System;
+        with System.Address_Image;
+
+        with Non_Limited_Types;         use Non_Limited_Types;
+
+        procedure Show_Non_Limited_Init_By_Copy is
+           A, B : Simple_Rec;
+        begin
+           declare
+              A : Simple_Rec := Init (0);
+           begin
+              Put_Line ("A'Address (local): "
+                        & System.Address_Image (A'Address));
+           end;
+           Put_Line ("----");
+
+           declare
+              B : Simple_Rec := Init (0);
+           begin
+              Put_Line ("B'Address (local): "
+                        & System.Address_Image (B'Address));
+           end;
+        end Show_Non_Limited_Init_By_Copy;
+
+    In this case, we see that the local object :ada:`E` in the :ada:`Init`
+    function is not the same as the object it's being assigned to in the
+    :ada:`Show_Non_Limited_Init_By_Copy` procedure. In fact, :ada:`E` is being
+    copied to :ada:`A` and :ada:`B`.
 
 
 Building objects from constructors
