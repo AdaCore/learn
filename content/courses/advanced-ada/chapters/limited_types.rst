@@ -897,6 +897,14 @@ of the task's entries, because that would deadlock. That is, the entry
 call would wait until the task reaches an accept statement, which will
 never happen, because the task will never be activated.
 
+Initialization and function return
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. todo::
+
+    Complete section!
+
+
 
 
 Building objects from constructors
@@ -1178,14 +1186,6 @@ code would do:
 
 Therefore, you should be careful and think twice before using
 :ada:`others`.
-
-
-Initialization and function return
-----------------------------------
-
-.. todo::
-
-    Complete section!
 
 
 .. _Adv_Ada_Limited_Types_As_Parameters:
