@@ -434,13 +434,14 @@ Limited types and aggregates
     `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_
     and `Gem #2 <https://www.adacore.com/gems/gem-2>`_.
 
+.. _Adv_Ada_Full_Coverage_Rules_Limited_Types:
 
 Full coverage rules for limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The full coverage rules have been aiding maintenance since Ada 83. Since
-Ada 2005, however, we can also use them for limited types. Suppose we have
-the following limited type:
+Previously, we discussed
+:ref:`full coverage rules <Adv_Ada_Full_Coverage_Rules>`. We can also use them
+for limited types. Suppose we have the following limited type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 

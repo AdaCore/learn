@@ -526,6 +526,10 @@ week or next year". That means you shouldn't use :ada:`others` unless
 you're pretty sure it should apply to all the cases that haven't been
 invented yet.
 
+:ref:`Later on <Adv_Ada_Full_Coverage_Rules_Limited_Types>,`, we'll discuss
+full coverage rules for limited types.
+
+
 Extension Aggregates
 --------------------
 
