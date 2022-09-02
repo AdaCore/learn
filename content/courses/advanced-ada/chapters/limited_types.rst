@@ -799,15 +799,15 @@ Some languages have a specific feature called *constructor*. In Ada, a
 Return objects
 --------------
 
-.. note::
-
-    This section was originally written by Robert A. Duff and published as
-    `Gem #10: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-10>`_.
-
 .. _Adv_Ada_Extended_Return_Statements_Limited:
 
 Extended return statements for limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+    This section was originally written by Robert A. Duff and published as
+    `Gem #10: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-10>`_.
 
 Previously, we discussed
 :ref:`extended return statements <Adv_Ada_Extended_Return_Statements>`.
