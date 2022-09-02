@@ -425,278 +425,69 @@ required.
         end Limited_Types;
 
 
-.. _Adv_Ada_Limited_Types_As_Parameters:
-
-Limited types as parameter
---------------------------
-
-Previously, we saw that
-:ref:`parameters can be passed by copy or by reference <Adv_Ada_Parameter_Modes_Associations>`.
-Also, we discussed the concept of by-copy and by-reference types. *Explicitly*
-limited types are by-reference types. Consequently, parameters of these types
-are always passed by reference.
-
-Here, it's important to understand when a type is explicitly limited and when
-it's not |mdash| using the :ada:`limited` keyword in a part of the declaration
-doesn't necessary ensure this, as we'll see later. Let's start with an example
-of an explicitly limited type:
-
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
-
-    with System;
-
-    package Simple_Recs is
-
-       type Rec is limited record
-          I : Integer;
-       end record;
-
-       procedure Proc (R : in out Rec;
-                       A :    out System.Address);
-
-    end Simple_Recs;
-
-In this example, :ada:`Rec` is a by-reference type because the type declaration
-is an explicit limited record. Therefore, the parameter :ada:`R` of the
-:ada:`Proc` procedure is passed by reference.
-
-We can run the :ada:`Test` application below and compare the address of the
-:ada:`R` object from :ada:`Test` to the address of the :ada:`R` parameter of
-:ada:`Proc` to determine whether both :ada:`R` \s refer to the same object or
-not:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
-
-    package body Simple_Recs is
-
-       procedure Proc (R : in out Rec;
-                       A :    out System.Address) is
-       begin
-          R.I := 0;
-          A   := R'Address;
-       end Proc;
-
-    end Simple_Recs;
-
-    with Ada.Text_IO;           use Ada.Text_IO;
-    with System;                use System;
-    with System.Address_Image;
-    with Simple_Recs;           use Simple_Recs;
-
-    procedure Test is
-       R : Rec;
-
-       AR_Proc, AR_Test : System.Address;
-    begin
-       AR_Proc := R'Address;
-
-       Proc (R, AR_Test);
-
-       Put_Line ("R'Address (Proc): "
-                 & System.Address_Image (AR_Proc));
-       Put_Line ("R'Address (Test): "
-                 & System.Address_Image (AR_Test));
-
-       if AR_Proc = AR_Test then
-          Put_Line ("R was passed by reference.");
-       else
-          Put_Line ("R was passed by copy.");
-       end if;
-
-    end Test;
-
-When running the :ada:`Test` application, we confirm that :ada:`R` was passed
-by reference. Note, however, that the fact that :ada:`R` was passed by
-reference doesn't automatically imply that :ada:`Rec` is a by-reference type:
-the type could have been ambiguous, and the compiler could have just decided to
-pass the parameter by reference in this case. (We'll discuss this ambiguity
-later.)
-
-The :ada:`Rec` type is also explicitly limited when it's declared limited in
-the private type's completion (in the package's private part):
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
-    :class: ada-syntax-only
-
-    with System;
-
-    package Simple_Recs is
-
-       type Rec is limited private;
-
-       procedure Proc (R : in out Rec;
-                       A :    out System.Address);
-
-    private
-
-       type Rec is limited record
-          I : Integer;
-       end record;
-
-    end Simple_Recs;
-
-In this case, :ada:`Rec` is limited both in the partial and in the full view,
-so it's considered explicitly limited.
-
-If we make the full view of the :ada:`Rec` non-limited (by removing the
-:ada:`limited` keyword in the private part), then the :ada:`Rec` type
-isn't explicitly limited anymore:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
-    :class: ada-syntax-only
-
-    with System;
-
-    package Simple_Recs is
-
-       type Rec is limited private;
-
-       procedure Proc (R : in out Rec;
-                       A :    out System.Address);
-
-    private
-
-       type Rec is record
-          I : Integer;
-       end record;
-
-    end Simple_Recs;
-
-Now, even though the :ada:`Rec` type was declared as limited private, the full
-view indicates that it's actually a non-limited type, so it isn't explicitly
-limited. In this case, :ada:`Rec` is neither a by-copy nor a by-reference
-type. Therefore, the decision whether the parameter is passed by reference or
-by copy is made by the compiler.
-
-.. admonition:: In the Ada Reference Manual
-
-    - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`__
-    - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`__
-    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`__
-
-
-Initialization and function return
-----------------------------------
-
-.. todo::
-
-    Complete section!
-
-
-Limited record elements
------------------------
-
-.. todo::
-
-    Complete section!
-
-
-Private implementation of limited types
----------------------------------------
-
-.. todo::
-
-    Complete section!
-
-
 Limited types and aggregates
 ----------------------------
 
 .. note::
 
     This section was originally written by Robert A. Duff and published as
-    `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_,
-    `Gem #2 <https://www.adacore.com/gems/gem-2>`_, and
-    `Gem #3 <https://www.adacore.com/gems/gem-3>`_.
+    `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_
+    and `Gem #2 <https://www.adacore.com/gems/gem-2>`_.
 
-Full coverage rules
-~~~~~~~~~~~~~~~~~~~
+In this section, we focus on using aggregates to initialize limited types.
 
-One interesting feature of Ada is the *full coverage rules* for
-aggregates. For example, suppose we have a record type:
+.. admonition:: Historically
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
+    Prior to Ada 2005, aggregates were illegal for limited types. Therefore,
+    we would be faced with a difficult choice: Make the type limited, and
+    initialize it like this:
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited_Ada95
 
-    package Persons is
-       type Years is new Natural;
+        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
-       type Person is record
-          Name : Ada.Strings.Unbounded.Unbounded_String;
-          Age  : Years;
-       end record;
-    end Persons;
+        package Persons is
 
-We can create an object of the type using an aggregate:
+           type Limited_Person;
+           type Limited_Person_Access is access all Limited_Person;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
+           type Limited_Person is limited record
+              Name      : Unbounded_String;
+              Age       : Natural;
+           end record;
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Persons; use Persons;
+        end Persons;
 
-    procedure Show_Aggregate_Init is
+        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+        with Persons; use Persons;
 
-       X : constant Person :=
-             (Name => To_Unbounded_String ("John Doe"),
-              Age  => 25);
-    begin
-       null;
-    end Show_Aggregate_Init;
+        procedure Show_Non_Aggregate_Init is
+           X : Limited_Person;
+        begin
+           X.Name := To_Unbounded_String ("John Doe");
+           X.Age := 25;
+        end Show_Non_Aggregate_Init;
 
-The full coverage rules say that every component of :ada:`Person` must be
-accounted for in the aggregate. If we later modify type :ada:`Person` by
-adding a component:
+    which has the maintenance problem the full coverage rules are supposed to
+    prevent. Or, make the type non-limited, and gain the benefits of
+    aggregates, but lose the ability to prevent copies.
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-
-    package Persons is
-       type Years is new Natural;
-
-       type Person is record
-          Name      : Unbounded_String;
-          Age       : Natural;
-          Shoe_Size : Positive;
-       end record;
-    end Persons;
-
-and we forget to modify :ada:`X` accordingly, the compiler will remind us.
-Case statements also have full coverage rules, which serve a similar
-purpose.
-
-Of course, we can defeat the full coverage rules by using :ada:`others`
-(usually for array aggregates and case statements, but occasionally useful
-for record aggregates):
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
-
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Persons; use Persons;
-
-    procedure Show_Aggregate_Init_Others is
-
-       X : constant Person :=
-             (Name   => To_Unbounded_String ("John Doe"),
-              others => 25);
-    begin
-       null;
-    end Show_Aggregate_Init_Others;
-
-According to the Ada RM, :ada:`others` here means precisely the same thing
-as :ada:`Age | Shoe_Size`. But that's wrong: what :ada:`others` really
-means is "all the other components, including the ones we might add next
-week or next year". That means you shouldn't use :ada:`others` unless
-you're pretty sure it should apply to all the cases that haven't been
-invented yet.
+.. _Adv_Ada_Full_Coverage_Rules_Limited_Types:
 
 Full coverage rules for limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The full coverage rules have been aiding maintenance since Ada 83. Since
-Ada 2005, however, we can also use them for limited types. Suppose we have
-the following limited type:
+Previously, we discussed
+:ref:`full coverage rules for aggregates <Adv_Ada_Full_Coverage_Rules_Aggregates>`.
+We can also use them for limited types.
+
+.. admonition:: Historically
+
+    The full coverage rules have been aiding maintenance since Ada 83. However,
+    prior to Ada 2005, we couldn't use them for limited types.
+
+Suppose we have the following limited type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
@@ -724,60 +515,7 @@ developers using this package might not be aware of the problem. We could
 also solve that problem with controlled types, but controlled types are
 expensive, and add unnecessary complexity if not needed.
 
-Prior to Ada 2005, aggregates were illegal for limited types. Therefore,
-we would be faced with a difficult choice: Make the type limited, and
-initialize it like this:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
-
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Persons; use Persons;
-
-    procedure Show_Non_Aggregate_Init is
-       X : Limited_Person;
-    begin
-       X.Name := To_Unbounded_String ("John Doe");
-       X.Age := 25;
-    end Show_Non_Aggregate_Init;
-
-which has the maintenance problem the full coverage rules are supposed to
-prevent. Or, make the type non-limited, and gain the benefits of
-aggregates, but lose the ability to prevent copies.
-
-Since Ada 2005, an aggregate is allowed to be limited; we can say:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
-
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Persons; use Persons;
-
-    procedure Show_Aggregate_Init is
-
-       X : aliased Limited_Person :=
-             (Self      => null, -- Wrong!
-
-              Name      => To_Unbounded_String ("John Doe"),
-              Age       => 25,
-              Shoe_Size => 10);
-    begin
-       X.Self := X'Unchecked_Access;
-    end Show_Aggregate_Init;
-
-We'll see what to do about that :ada:`Self => null` soon.
-
-One very important requirement should be noted: the implementation is
-required to build the value of :ada:`X` *in place*; it cannot construct
-the aggregate in a temporary variable and then copy it into :ada:`X`,
-because that would violate the whole point of limited objects |mdash|
-you can't copy them.
-
-It seems uncomfortable to set the value of :ada:`Self` to the wrong value
-(:ada:`null`) and then correct it. It also seems annoying that we have a
-(correct) default value for :ada:`Self`, but prior to Ada 2005, we
-couldn't use defaults with aggregates. Since Ada 2005, a new syntax in
-aggregates is available: :ada:`<>` means "use the default value, if any".
-
-Here, we can say:
+We can initialize objects of limited type with an aggregate. Here, we can say:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
@@ -800,44 +538,93 @@ appears inside the type declaration, it refers to the "current instance"
 of the type, which in this case is :ada:`X`. Thus, we are setting
 :ada:`X.Self` to be :ada:`X'Unchecked_Access`.
 
-Note that using :ada:`<>` in an aggregate can be dangerous, because it can
-leave some components uninitialized. :ada:`<>` means "use the default
-value". If the type of a component is scalar, and there is no
-record-component default, then there is no default value.
+One very important requirement should be noted: the implementation is
+required to build the value of :ada:`X` *in place*; it cannot construct
+the aggregate in a temporary variable and then copy it into :ada:`X`,
+because that would violate the whole point of limited objects |mdash|
+you can't copy them.
 
-For example, if we have an aggregate of type :ada:`String`, like this:
+.. admonition:: Historically
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.String_Box_Init
+    Since Ada 2005, an aggregate is allowed to be limited; we can say:
 
-    procedure Show_String_Box_Init is
-        Uninitialized_String_Const : constant String := (1 .. 10 => <>);
-    begin
-       null;
-    end Show_String_Box_Init;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
-we end up with a 10-character string all of whose characters are invalid
-values. Note that this is no more nor less dangerous than this:
+        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+        with Persons; use Persons;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Dangerous_String
+        procedure Show_Aggregate_Init is
 
-    procedure Show_Dangerous_String is
-        Uninitialized_String_Var : String (1 .. 10);  --  no initialization
+           X : aliased Limited_Person :=
+                 (Self      => null, -- Wrong!
+                  Name      => To_Unbounded_String ("John Doe"),
+                  Age       => 25,
+                  Shoe_Size => 10);
+        begin
+           X.Self := X'Unchecked_Access;
+        end Show_Aggregate_Init;
 
-        Uninitialized_String_Const : constant String := Uninitialized_String_Var;
-    begin
-       null;
-    end Show_Dangerous_String;
+    It seems uncomfortable to set the value of :ada:`Self` to the wrong value
+    (:ada:`null`) and then correct it. It also seems annoying that we have a
+    (correct) default value for :ada:`Self`, but prior to Ada 2005, we
+    couldn't use defaults with aggregates. Since Ada 2005, a new syntax in
+    aggregates is available: :ada:`<>` means "use the default value, if any".
+    Therefore, we can replace :ada:`Self => null` by :ada:`Self => <>`.
 
-As always, one must be careful about uninitialized scalar objects.
+.. admonition:: Important
+
+    Note that using :ada:`<>` in an aggregate can be dangerous, because it can
+    leave some components uninitialized. :ada:`<>` means "use the default
+    value". If the type of a component is scalar, and there is no
+    record-component default, then there is no default value.
+
+    For example, if we have an aggregate of type :ada:`String`, like this:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.String_Box_Init
+
+        procedure Show_String_Box_Init is
+            Uninitialized_String_Const : constant String := (1 .. 10 => <>);
+        begin
+           null;
+        end Show_String_Box_Init;
+
+    we end up with a 10-character string all of whose characters are invalid
+    values. Note that this is no more nor less dangerous than this:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Dangerous_String
+
+        procedure Show_Dangerous_String is
+            Uninitialized_String_Var : String (1 .. 10);  --  no initialization
+
+            Uninitialized_String_Const : constant String := Uninitialized_String_Var;
+        begin
+           null;
+        end Show_Dangerous_String;
+
+    As always, one must be careful about uninitialized scalar objects.
+
 
 Constructor functions for limited types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------
+
+.. note::
+
+    This section was originally written by Robert A. Duff and published as
+    `Gem #3 <https://www.adacore.com/gems/gem-3>`_.
 
 Given that we can use build-in-place aggregates for limited types,
 the obvious next step is to allow such aggregates to be wrapped in an
 abstraction |mdash| namely, to return them from functions. After all,
 interesting types are usually private, and we need some way for clients
 to create and initialize objects.
+
+.. admonition:: Historically
+
+    Prior to Ada 2005, constructor functions (that is, functions that create
+    new objects and return them) were not allowed for limited types. Since
+    Ada 2005, fully-general constructor functions are allowed.
+
+Let's see an example:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
 
@@ -878,10 +665,7 @@ to create and initialize objects.
 
     end P;
 
-Prior to Ada 2005, constructor functions (that is, functions that create
-new objects and return them) were not allowed for limited types. Since
-Ada 2005, fully-general constructor functions are allowed. Given the
-above, clients can say:
+Given the above, clients can say:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
 
@@ -923,9 +707,11 @@ copied! In this case, :ada:`Make_T` will initialize the :ada:`Name`
 component, and create the :ada:`My_Task` and :ada:`My_Prot` components,
 all directly in :ada:`Rumplestiltskin_Is_My_Name`.
 
-Note that :ada:`Rumplestiltskin_Is_My_Name` is constant. Prior to
-Ada 2005, it was impossible to create a constant limited object, because
-there was no way to initialize it.
+.. admonition:: Historically
+
+    Note that :ada:`Rumplestiltskin_Is_My_Name` is constant. Prior to
+    Ada 2005, it was impossible to create a constant limited object, because
+    there was no way to initialize it.
 
 The :ada:`(<>)` on type :ada:`T` means that it has *unknown
 discriminants* from the point of view of the client. This is a trick that
@@ -938,72 +724,77 @@ Ideally, limited and non-limited types should be just the same, except for
 the essential difference: you can't copy limited objects. By allowing
 functions and aggregates for limited types, we're very close to this goal.
 Some languages have a specific feature called *constructor*. In Ada, a
-*constructor* is just a function that creates a new object. Prior to
-Ada 2005, that only worked for non-limited types. For limited types, the
-only way to *construct* on declaration was via default values, which
-limits you to one constructor. And the only way to pass parameters to that
-construction was via discriminants. Consider the following package:
+*constructor* is just a function that creates a new object.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
+.. admonition:: Historically
 
-    with Ada.Containers.Ordered_Sets;
+    Prior to Ada 2005, *constructors* only worked for non-limited types. For
+    limited types, the only way to *construct* on declaration was via default
+    values, which limits you to one constructor. And the only way to pass
+    parameters to that construction was via discriminants.
 
-    package Aux is
-       generic
-          with package OS is new Ada.Containers.Ordered_Sets (<>);
-       function Gen_Singleton_Set (Element : OS.Element_Type) return OS.Set;
-    end Aux;
+    Consider the following package:
 
-    package body Aux is
-       function Gen_Singleton_Set  (Element : OS.Element_Type) return OS.Set is
-       begin
-          return S : OS.Set := OS.Empty_Set do
-             S.Insert (Element);
-          end return;
-       end Gen_Singleton_Set;
-    end Aux;
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
 
-Since Ada 2005, we can say:
+        with Ada.Containers.Ordered_Sets;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
+        package Aux is
+           generic
+              with package OS is new Ada.Containers.Ordered_Sets (<>);
+           function Gen_Singleton_Set (Element : OS.Element_Type) return OS.Set;
+        end Aux;
 
-    with Ada.Containers.Ordered_Sets;
-    with Aux;
+        package body Aux is
+           function Gen_Singleton_Set  (Element : OS.Element_Type) return OS.Set is
+           begin
+              return S : OS.Set := OS.Empty_Set do
+                 S.Insert (Element);
+              end return;
+           end Gen_Singleton_Set;
+        end Aux;
 
-    procedure Show_Set_Constructor is
+    Since Ada 2005, we can say:
 
-       package Integer_Sets is new Ada.Containers.Ordered_Sets
-         (Element_Type => Integer);
-       use Integer_Sets;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
 
-       function Singleton_Set is new Aux.Gen_Singleton_Set (OS => Integer_Sets);
+        with Ada.Containers.Ordered_Sets;
+        with Aux;
 
-       This_Set : Set := Empty_Set;
-       That_Set : Set := Singleton_Set (Element => 42);
-    begin
-       null;
-    end Show_Set_Constructor;
+        procedure Show_Set_Decl is
 
-whether or not :ada:`Set` is limited. :ada:`This_Set : Set := Empty_Set;`
-seems clearer than:
+           package Integer_Sets is new Ada.Containers.Ordered_Sets
+             (Element_Type => Integer);
+           use Integer_Sets;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
+           function Singleton_Set is new Aux.Gen_Singleton_Set (OS => Integer_Sets);
 
-    with Ada.Containers.Ordered_Sets;
+           This_Set : Set := Empty_Set;
+           That_Set : Set := Singleton_Set (Element => 42);
+        begin
+           null;
+        end Show_Set_Decl;
 
-    procedure Show_Set_Decl is
+    whether or not :ada:`Set` is limited. :ada:`This_Set : Set := Empty_Set;`
+    seems clearer than:
 
-       package Integer_Sets is new Ada.Containers.Ordered_Sets
-         (Element_Type => Integer);
-       use Integer_Sets;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
 
-       This_Set : Set;
-    begin
-       null;
-    end Show_Set_Decl;
+        with Ada.Containers.Ordered_Sets;
 
-which might mean "default-initialize to the empty set" or might mean
-"leave it uninitialized, and we'll initialize it in later".
+        procedure Show_Set_Decl is
+
+           package Integer_Sets is new Ada.Containers.Ordered_Sets
+             (Element_Type => Integer);
+           use Integer_Sets;
+
+           This_Set : Set;
+        begin
+           null;
+        end Show_Set_Decl;
+
+    which might mean "default-initialize to the empty set" or might mean
+    "leave it uninitialized, and we'll initialize it in later".
 
 Return objects
 --------------
@@ -1340,7 +1131,7 @@ Default initialization
     This section was originally written by Robert A. Duff and published as
     `Gem #12: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-12>`_.
 
-Prior to Ada 2005, the following style was common:
+Consider the following type declaration:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
 
@@ -1359,26 +1150,8 @@ Prior to Ada 2005, the following style was common:
        procedure Do_Something;
     end Type_Defaults;
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
-
-    package body Type_Defaults is
-
-       Object_100 : constant T :=
-                      (Color => Red, Is_Gnarly => False, Count => 100);
-
-       procedure Do_Something is null;
-
-    end Type_Defaults;
-
-We want :ada:`Object_100` to be a default-initialized :ada:`T`, with
-:ada:`Count` equal to :ada:`100`. It's a little bit annoying that we had
-to write the default values :ada:`Red` and :ada:`False` twice. What if we
-change our mind about :ada:`Red`, and forget to change it in all the
-relevant places?
-
-Since Ada 2005, the :ada:`<>` notation comes to the rescue. If we want to
-say, "make :ada:`Count` equal :ada:`100`, but initialize :ada:`Color` and
-:ada:`Is_Gnarly` to their defaults", we can do this:
+If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
+:ada:`Color` and :ada:`Is_Gnarly` to their defaults", we can do this:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
 
@@ -1390,6 +1163,28 @@ say, "make :ada:`Count` equal :ada:`100`, but initialize :ada:`Color` and
        procedure Do_Something is null;
 
     end Type_Defaults;
+
+.. admonition:: Historically
+
+    Prior to Ada 2005, the following style was common:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
+
+        package body Type_Defaults is
+
+           Object_100 : constant T :=
+                          (Color => Red, Is_Gnarly => False, Count => 100);
+
+           procedure Do_Something is null;
+
+        end Type_Defaults;
+
+    Here, we only wanted :ada:`Object_100` to be a default-initialized
+    :ada:`T`, with :ada:`Count` equal to :ada:`100`. It's a little bit annoying
+    that we had to write the default values :ada:`Red` and :ada:`False` twice.
+    What if we change our mind about :ada:`Red`, and forget to change it in all
+    the relevant places? Since Ada 2005, the :ada:`<>` notation comes to the
+    rescue, as we've just seen.
 
 On the other hand, if we want to say, "make :ada:`Count` equal :ada:`100`,
 but initialize all other components, including the ones we might add next
@@ -1423,3 +1218,179 @@ code would do:
 
 Therefore, you should be careful and think twice before using
 :ada:`others`.
+
+
+Initialization and function return
+----------------------------------
+
+.. todo::
+
+    Complete section!
+
+
+.. _Adv_Ada_Limited_Types_As_Parameters:
+
+Limited types as parameter
+--------------------------
+
+Previously, we saw that
+:ref:`parameters can be passed by copy or by reference <Adv_Ada_Parameter_Modes_Associations>`.
+Also, we discussed the concept of by-copy and by-reference types. *Explicitly*
+limited types are by-reference types. Consequently, parameters of these types
+are always passed by reference.
+
+Here, it's important to understand when a type is explicitly limited and when
+it's not |mdash| using the :ada:`limited` keyword in a part of the declaration
+doesn't necessary ensure this, as we'll see later. Let's start with an example
+of an explicitly limited type:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+
+    with System;
+
+    package Simple_Recs is
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+       procedure Proc (R : in out Rec;
+                       A :    out System.Address);
+
+    end Simple_Recs;
+
+In this example, :ada:`Rec` is a by-reference type because the type declaration
+is an explicit limited record. Therefore, the parameter :ada:`R` of the
+:ada:`Proc` procedure is passed by reference.
+
+We can run the :ada:`Test` application below and compare the address of the
+:ada:`R` object from :ada:`Test` to the address of the :ada:`R` parameter of
+:ada:`Proc` to determine whether both :ada:`R` \s refer to the same object or
+not:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+
+    package body Simple_Recs is
+
+       procedure Proc (R : in out Rec;
+                       A :    out System.Address) is
+       begin
+          R.I := 0;
+          A   := R'Address;
+       end Proc;
+
+    end Simple_Recs;
+
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with System;                use System;
+    with System.Address_Image;
+    with Simple_Recs;           use Simple_Recs;
+
+    procedure Test is
+       R : Rec;
+
+       AR_Proc, AR_Test : System.Address;
+    begin
+       AR_Proc := R'Address;
+
+       Proc (R, AR_Test);
+
+       Put_Line ("R'Address (Proc): "
+                 & System.Address_Image (AR_Proc));
+       Put_Line ("R'Address (Test): "
+                 & System.Address_Image (AR_Test));
+
+       if AR_Proc = AR_Test then
+          Put_Line ("R was passed by reference.");
+       else
+          Put_Line ("R was passed by copy.");
+       end if;
+
+    end Test;
+
+When running the :ada:`Test` application, we confirm that :ada:`R` was passed
+by reference. Note, however, that the fact that :ada:`R` was passed by
+reference doesn't automatically imply that :ada:`Rec` is a by-reference type:
+the type could have been ambiguous, and the compiler could have just decided to
+pass the parameter by reference in this case. (We'll discuss this ambiguity
+later.)
+
+The :ada:`Rec` type is also explicitly limited when it's declared limited in
+the private type's completion (in the package's private part):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+    :class: ada-syntax-only
+
+    with System;
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+       procedure Proc (R : in out Rec;
+                       A :    out System.Address);
+
+    private
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+In this case, :ada:`Rec` is limited both in the partial and in the full view,
+so it's considered explicitly limited.
+
+If we make the full view of the :ada:`Rec` non-limited (by removing the
+:ada:`limited` keyword in the private part), then the :ada:`Rec` type
+isn't explicitly limited anymore:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+    :class: ada-syntax-only
+
+    with System;
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+       procedure Proc (R : in out Rec;
+                       A :    out System.Address);
+
+    private
+
+       type Rec is record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+Now, even though the :ada:`Rec` type was declared as limited private, the full
+view indicates that it's actually a non-limited type, so it isn't explicitly
+limited. In this case, :ada:`Rec` is neither a by-copy nor a by-reference
+type. Therefore, the decision whether the parameter is passed by reference or
+by copy is made by the compiler.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`__
+    - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`__
+    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`__
+
+
+Limited record elements
+-----------------------
+
+.. todo::
+
+    Complete section!
+
+
+Private implementation of limited types
+---------------------------------------
+
+.. todo::
+
+    Complete section!
+
+

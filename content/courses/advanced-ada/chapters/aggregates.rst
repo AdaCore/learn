@@ -436,6 +436,100 @@ Since we're now introducing elements from object-oriented programming, we could
 consider using interfaces instead of null records. We'll discuss this topic
 :ref:`later on in the course <Adv_Ada_Null_Records_Vs_Interfaces>`.
 
+
+.. _Adv_Ada_Full_Coverage_Rules_Aggregates:
+
+Full coverage rules for Aggregates
+----------------------------------
+
+.. note::
+
+    This section was originally written by Robert A. Duff and published as
+    `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_.
+
+One interesting feature of Ada are the *full coverage rules* for
+aggregates. For example, suppose we have a record type:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
+
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    package Persons is
+       type Years is new Natural;
+
+       type Person is record
+          Name : Ada.Strings.Unbounded.Unbounded_String;
+          Age  : Years;
+       end record;
+    end Persons;
+
+We can create an object of the type using an aggregate:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
+
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Persons; use Persons;
+
+    procedure Show_Aggregate_Init is
+
+       X : constant Person :=
+             (Name => To_Unbounded_String ("John Doe"),
+              Age  => 25);
+    begin
+       null;
+    end Show_Aggregate_Init;
+
+The full coverage rules say that every component of :ada:`Person` must be
+accounted for in the aggregate. If we later modify type :ada:`Person` by
+adding a component:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
+
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    package Persons is
+       type Years is new Natural;
+
+       type Person is record
+          Name      : Unbounded_String;
+          Age       : Natural;
+          Shoe_Size : Positive;
+       end record;
+    end Persons;
+
+and we forget to modify :ada:`X` accordingly, the compiler will remind us.
+Case statements also have full coverage rules, which serve a similar
+purpose.
+
+Of course, we can defeat the full coverage rules by using :ada:`others`
+(usually for array aggregates and case statements, but occasionally useful
+for record aggregates):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
+
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Persons; use Persons;
+
+    procedure Show_Aggregate_Init_Others is
+
+       X : constant Person :=
+             (Name   => To_Unbounded_String ("John Doe"),
+              others => 25);
+    begin
+       null;
+    end Show_Aggregate_Init_Others;
+
+According to the Ada RM, :ada:`others` here means precisely the same thing
+as :ada:`Age | Shoe_Size`. But that's wrong: what :ada:`others` really
+means is "all the other components, including the ones we might add next
+week or next year". That means you shouldn't use :ada:`others` unless
+you're pretty sure it should apply to all the cases that haven't been
+invented yet.
+
+Later on, we'll discuss
+:ref:`full coverage rules for limited types <Adv_Ada_Full_Coverage_Rules_Limited_Types>`.
+
+
 Extension Aggregates
 --------------------
 
