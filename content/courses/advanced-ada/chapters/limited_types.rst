@@ -618,6 +618,14 @@ abstraction |mdash| namely, to return them from functions. After all,
 interesting types are usually private, and we need some way for clients
 to create and initialize objects.
 
+.. admonition:: Historically
+
+    Prior to Ada 2005, constructor functions (that is, functions that create
+    new objects and return them) were not allowed for limited types. Since
+    Ada 2005, fully-general constructor functions are allowed.
+
+Let's see an example:
+
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
 
     with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -657,10 +665,7 @@ to create and initialize objects.
 
     end P;
 
-Prior to Ada 2005, constructor functions (that is, functions that create
-new objects and return them) were not allowed for limited types. Since
-Ada 2005, fully-general constructor functions are allowed. Given the
-above, clients can say:
+Given the above, clients can say:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
 
