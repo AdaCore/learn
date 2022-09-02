@@ -98,7 +98,8 @@ the type could have been ambiguous, and the compiler could have just decided to
 pass the parameter by reference in this case. (We'll discuss this ambiguity
 later.)
 
-The :ada:`Rec` type is also explicitly limited when it's declared private:
+The :ada:`Rec` type is also explicitly limited when it's declared limited in
+the private type's completion (in the package's private part):
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
     :class: ada-syntax-only
@@ -120,7 +121,8 @@ The :ada:`Rec` type is also explicitly limited when it's declared private:
 
     end Simple_Recs;
 
-In this case, :ada:`Rec` is limited both in the partial and in the full view.
+In this case, :ada:`Rec` is limited both in the partial and in the full view,
+so it's considered explicitly limited.
 
 If we make the full view of the :ada:`Rec` non-limited (by removing the
 :ada:`limited` keyword in the private part), then the :ada:`Rec` type
