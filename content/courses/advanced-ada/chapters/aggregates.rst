@@ -437,10 +437,10 @@ consider using interfaces instead of null records. We'll discuss this topic
 :ref:`later on in the course <Adv_Ada_Null_Records_Vs_Interfaces>`.
 
 
-.. _Adv_Ada_Full_Coverage_Rules:
+.. _Adv_Ada_Full_Coverage_Rules_Aggregates:
 
-Full coverage rules
--------------------
+Full coverage rules for Aggregates
+----------------------------------
 
 .. note::
 

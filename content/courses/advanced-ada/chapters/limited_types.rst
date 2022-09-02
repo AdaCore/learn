@@ -440,8 +440,9 @@ Full coverage rules for limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Previously, we discussed
-:ref:`full coverage rules <Adv_Ada_Full_Coverage_Rules>`. We can also use them
-for limited types. Suppose we have the following limited type:
+:ref:`full coverage rules for aggregates <Adv_Ada_Full_Coverage_Rules_Aggregates>`.
+We can also use them for limited types. Suppose we have the following limited
+type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
