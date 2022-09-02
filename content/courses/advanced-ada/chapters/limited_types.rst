@@ -580,7 +580,6 @@ Since Ada 2005, an aggregate is allowed to be limited; we can say:
 
        X : aliased Limited_Person :=
              (Self      => null, -- Wrong!
-
               Name      => To_Unbounded_String ("John Doe"),
               Age       => 25,
               Shoe_Size => 10);
