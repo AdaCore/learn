@@ -434,6 +434,45 @@ Limited types and aggregates
     `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_
     and `Gem #2 <https://www.adacore.com/gems/gem-2>`_.
 
+In this section, we focus on using aggregates to initialize limited types.
+
+.. admonition:: Historically
+
+    Prior to Ada 2005, aggregates were illegal for limited types. Therefore,
+    we would be faced with a difficult choice: Make the type limited, and
+    initialize it like this:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited_Ada95
+
+        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+        package Persons is
+
+           type Limited_Person;
+           type Limited_Person_Access is access all Limited_Person;
+
+           type Limited_Person is limited record
+              Name      : Unbounded_String;
+              Age       : Natural;
+           end record;
+
+        end Persons;
+
+        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+        with Persons; use Persons;
+
+        procedure Show_Non_Aggregate_Init is
+           X : Limited_Person;
+        begin
+           X.Name := To_Unbounded_String ("John Doe");
+           X.Age := 25;
+        end Show_Non_Aggregate_Init;
+
+    which has the maintenance problem the full coverage rules are supposed to
+    prevent. Or, make the type non-limited, and gain the benefits of
+    aggregates, but lose the ability to prevent copies.
+
+
 .. _Adv_Ada_Full_Coverage_Rules_Limited_Types:
 
 Full coverage rules for limited types
@@ -441,8 +480,14 @@ Full coverage rules for limited types
 
 Previously, we discussed
 :ref:`full coverage rules for aggregates <Adv_Ada_Full_Coverage_Rules_Aggregates>`.
-We can also use them for limited types. Suppose we have the following limited
-type:
+We can also use them for limited types.
+
+.. admonition:: Historically
+
+    The full coverage rules have been aiding maintenance since Ada 83. However,
+    prior to Ada 2005, we couldn't use them for limited types.
+
+Suppose we have the following limited type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
@@ -461,11 +506,6 @@ type:
        end record;
 
     end Persons;
-
-.. admonition:: Historically
-
-    The full coverage rules have been aiding maintenance since Ada 83. However,
-    prior to Ada 2005, we couldn't use them for limited types.
 
 This type has a self-reference; it doesn't make sense to copy objects,
 because :ada:`Self` would end up pointing to the wrong place. Therefore,
@@ -505,26 +545,6 @@ because that would violate the whole point of limited objects |mdash|
 you can't copy them.
 
 .. admonition:: Historically
-
-    Prior to Ada 2005, aggregates were illegal for limited types. Therefore,
-    we would be faced with a difficult choice: Make the type limited, and
-    initialize it like this:
-
-    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
-
-        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-        with Persons; use Persons;
-
-        procedure Show_Non_Aggregate_Init is
-           X : Limited_Person;
-        begin
-           X.Name := To_Unbounded_String ("John Doe");
-           X.Age := 25;
-        end Show_Non_Aggregate_Init;
-
-    which has the maintenance problem the full coverage rules are supposed to
-    prevent. Or, make the type non-limited, and gain the benefits of
-    aggregates, but lose the ability to prevent copies.
 
     Since Ada 2005, an aggregate is allowed to be limited; we can say:
 
