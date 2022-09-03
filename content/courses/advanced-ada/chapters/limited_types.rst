@@ -901,9 +901,8 @@ Initialization and function return
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As mentioned in the previous section, the object of limited type returned by
-the initialization function is created *in place*. In other words, the return
-object is created at the location where the initialization function is being
-called.
+the initialization function is built *in place*. In other words, the return
+object is built in the object that is the target of the assignment statement.
 
 For example, we can see this when looking at the address of the object
 *returned* by the :ada:`Init` function, which we call to initialize the limited
