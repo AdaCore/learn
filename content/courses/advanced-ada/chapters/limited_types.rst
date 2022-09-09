@@ -799,15 +799,15 @@ Some languages have a specific feature called *constructor*. In Ada, a
 Return objects
 --------------
 
-.. note::
-
-    This section was originally written by Robert A. Duff and published as
-    `Gem #10: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-10>`_.
-
 .. _Adv_Ada_Extended_Return_Statements_Limited:
 
 Extended return statements for limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+    This section was originally written by Robert A. Duff and published as
+    `Gem #10: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-10>`_.
 
 Previously, we discussed
 :ref:`extended return statements <Adv_Ada_Extended_Return_Statements>`.
@@ -897,47 +897,158 @@ of the task's entries, because that would deadlock. That is, the entry
 call would wait until the task reaches an accept statement, which will
 never happen, because the task will never be activated.
 
-Other usages of extended return statements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Initialization and function return
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-While the :ada:`extended_return_statement` was added to the language
-specifically to support limited constructor functions, it comes in handy
-whenever you want a local name for the function result:
+As mentioned in the previous section, the object of limited type returned by
+the initialization function is built *in place*. In other words, the return
+object is built in the object that is the target of the assignment statement.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Other_Usages
+For example, we can see this when looking at the address of the object
+*returned* by the :ada:`Init` function, which we call to initialize the limited
+type :ada:`Simple_Rec`:
 
-    with Ada.Text_IO; use Ada.Text_IO;
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Initialization_Return_Do
 
-    procedure Show_String_Construct is
+    package Limited_Types is
 
-       function Make_String (S          : String;
-                             Prefix     : String;
-                             Use_Prefix : Boolean) return String is
-          Length : Natural := S'Length;
+       type Integer_Access is access Integer;
+
+       type Simple_Rec is limited private;
+
+       function Init (I : Integer) return Simple_Rec;
+
+    private
+
+       type Simple_Rec is limited record
+          V : Integer_Access;
+       end record;
+
+    end Limited_Types;
+
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with System;
+    with System.Address_Image;
+
+    package body Limited_Types is
+
+       function Init (I : Integer) return Simple_Rec is
        begin
-          if Use_Prefix then
-             Length := Length + Prefix'Length;
-          end if;
+          return E : Simple_Rec do
+             E.V := new Integer'(I);
 
-          return Result : String (1 .. Length) do
-
-             --  fill in the characters
-             if Use_Prefix then
-                Result (1 .. Prefix'Length) := Prefix;
-                Result (Prefix'Length + 1 .. Length) := S;
-             else
-                Result := S;
-             end if;
-
+             Put_Line ("E'Address (Init):  "
+                       & System.Address_Image (E'Address));
           end return;
-       end Make_String;
+       end Init;
 
-       S1 : String := "Ada";
-       S2 : String := "Make_With_";
+    end Limited_Types;
+
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with System;
+    with System.Address_Image;
+
+    with Limited_Types;         use Limited_Types;
+
+    procedure Show_Limited_Init is
     begin
-       Put_Line ("No prefix:   " & Make_String (S1, S2, False));
-       Put_Line ("With prefix: " & Make_String (S1, S2, True));
-    end Show_String_Construct;
+       declare
+          A : Simple_Rec := Init (0);
+       begin
+          Put_Line ("A'Address (local): "
+                    & System.Address_Image (A'Address));
+       end;
+       Put_Line ("----");
+
+       declare
+          B : Simple_Rec := Init (0);
+       begin
+          Put_Line ("B'Address (local): "
+                    & System.Address_Image (B'Address));
+       end;
+    end Show_Limited_Init;
+
+When running this code example and comparing the address of the object :ada:`E`
+in the :ada:`Init` function and the object that is being initialized in the
+:ada:`Show_Limited_Init` procedure, we see that the return object :ada:`E` (of
+the :ada:`Init` function) and the local object in the :ada:`Show_Limited_Init`
+procedure are the same object.
+
+.. admonition:: Important
+
+   When we use non-limited types, we're actually copying the returned object
+   |mdash| which was locally created in the function |mdash| to the object that
+   we're assigning the function to.
+
+   For example, let's modify the previous code and make :ada:`Simple_Rec`
+   non-limited:
+
+       .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Initialization_Return_Copy
+
+        package Non_Limited_Types is
+
+           type Integer_Access is access Integer;
+
+           type Simple_Rec is private;
+
+           function Init (I : Integer) return Simple_Rec;
+
+        private
+
+           type Simple_Rec is record
+              V : Integer_Access;
+           end record;
+
+        end Non_Limited_Types;
+
+        with Ada.Text_IO;           use Ada.Text_IO;
+        with System;
+        with System.Address_Image;
+
+        package body Non_Limited_Types is
+
+           function Init (I : Integer) return Simple_Rec is
+           begin
+              return E : Simple_Rec do
+                 E.V := new Integer'(I);
+
+                 Put_Line ("E'Address (Init):  "
+                           & System.Address_Image (E'Address));
+              end return;
+           end Init;
+
+        end Non_Limited_Types;
+
+        with Ada.Text_IO;           use Ada.Text_IO;
+        with System;
+        with System.Address_Image;
+
+        with Non_Limited_Types;         use Non_Limited_Types;
+
+        procedure Show_Non_Limited_Init_By_Copy is
+           A, B : Simple_Rec;
+        begin
+           declare
+              A : Simple_Rec := Init (0);
+           begin
+              Put_Line ("A'Address (local): "
+                        & System.Address_Image (A'Address));
+           end;
+           Put_Line ("----");
+
+           declare
+              B : Simple_Rec := Init (0);
+           begin
+              Put_Line ("B'Address (local): "
+                        & System.Address_Image (B'Address));
+           end;
+        end Show_Non_Limited_Init_By_Copy;
+
+    In this case, we see that the local object :ada:`E` in the :ada:`Init`
+    function is not the same as the object it's being assigned to in the
+    :ada:`Show_Non_Limited_Init_By_Copy` procedure. In fact, :ada:`E` is being
+    copied to :ada:`A` and :ada:`B`.
+
 
 Building objects from constructors
 ----------------------------------
@@ -1218,14 +1329,6 @@ code would do:
 
 Therefore, you should be careful and think twice before using
 :ada:`others`.
-
-
-Initialization and function return
-----------------------------------
-
-.. todo::
-
-    Complete section!
 
 
 .. _Adv_Ada_Limited_Types_As_Parameters:

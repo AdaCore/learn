@@ -418,9 +418,9 @@ object, and then return that object:
        null;
     end Show_Return;
 
-Since Ada 2005, a notation called the :ada:`extended_return_statement`,
-which allows you to declare the result object and return it as part of one
-statement, is available. It looks like this:
+Since Ada 2005, a notation called the extended return statement is available:
+this allows you to declare the result object and return it as part of one
+statement. It looks like this:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Statements.Extended_Return
 
@@ -446,12 +446,63 @@ The return statement here creates :ada:`Result`, initializes it to
 When :ada:`end return` is reached, :ada:`Result` is automatically returned
 as the function result.
 
-In a :ref:`later section <Adv_Ada_Extended_Return_Statements_Limited>`, we'll
-see how extended return statements can be almost essential for limited types.
-
 .. admonition:: In the Ada Reference Manual
 
     - `6.5 Return Statements <http://www.ada-auth.org/standards/12rm/html/RM-6-5.html>`_
+
+
+Other usages of extended return statements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+    This section was originally written by Robert A. Duff and published as
+    `Gem #10: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-10>`_.
+
+While the :ada:`extended_return_statement` was added to the language
+specifically to support
+:ref:`limited constructor functions <Adv_Ada_Extended_Return_Statements_Limited>`,
+it comes in handy whenever you want a local name for the function result:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Other_Usages
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_String_Construct is
+
+       function Make_String (S          : String;
+                             Prefix     : String;
+                             Use_Prefix : Boolean) return String is
+          Length : Natural := S'Length;
+       begin
+          if Use_Prefix then
+             Length := Length + Prefix'Length;
+          end if;
+
+          return Result : String (1 .. Length) do
+
+             --  fill in the characters
+             if Use_Prefix then
+                Result (1 .. Prefix'Length) := Prefix;
+                Result (Prefix'Length + 1 .. Length) := S;
+             else
+                Result := S;
+             end if;
+
+          end return;
+       end Make_String;
+
+       S1 : String := "Ada";
+       S2 : String := "Make_With_";
+    begin
+       Put_Line ("No prefix:   " & Make_String (S1, S2, False));
+       Put_Line ("With prefix: " & Make_String (S1, S2, True));
+    end Show_String_Construct;
+
+In this example, we first calculate the length of the string and store it in
+:ada:`Length`. We then use this information to initialize the return object of
+the :ada:`Make_String` function.
+
 
 ..
     REMOVED! TO BE RE-EVALUATED IN 2022:
