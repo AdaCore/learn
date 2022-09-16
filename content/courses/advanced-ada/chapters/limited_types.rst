@@ -779,9 +779,61 @@ the derived type, we must include it in its full view as well.)
 Record components of limited type
 ---------------------------------
 
-.. todo::
+In this section, we discuss the implications of using components of limited
+type. Let's start by declaring a record component of limited type:
 
-    Complete section!
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Record_Components_Limited_Type
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+    private
+
+       type Int_Rec is limited record
+          V : Integer;
+       end record;
+
+       type Rec is limited record
+          IR : Int_Rec;
+       end record;
+
+    end Simple_Recs;
+
+As soon as we declare a record component of limited type, the whole
+record must be component. In this example, due to the presence of the :ada:`IR`
+component of limited type, :ada:`Rec` must be limited.
+
+In other words, we cannot declare record components of limited type in a
+nonlimited record. For example, if we change the declaration of the :ada:`Rec`
+record from the previous example and declare it as a nonlimited record type, we
+get a compilation error:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Record_Components_Limited_Type
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec is private;
+
+    private
+
+       type Int_Rec is limited record
+          V : Integer;
+       end record;
+
+       type Rec is record
+          IR : Int_Rec;
+       end record;
+
+    end Simple_Recs;
+
+Now, the compiler tells us that :ada:`Rec` should be limited in order to
+accommodate a component of limited type.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.8 Record Types <http://www.ada-auth.org/standards/12rm/html/RM-3-8.html>`_
 
 
 Limited types and aggregates
