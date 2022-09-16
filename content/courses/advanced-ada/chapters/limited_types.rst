@@ -425,12 +425,177 @@ required.
         end Limited_Types;
 
 
+.. _Adv_Ada_Limited_Private_Types:
+
 Limited private types
 ---------------------
 
-.. todo::
+As we've seen in code examples from the previous section, we can apply
+:ref:`encapsulation <Adv_Ada_Type_View>` to limited types. In other words, we
+can declare a type as :ada:`limited private` instead of just :ada:`limited`.
+For example:
 
-    Complete section!
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Private
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+    private
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+In this case, in addition to the fact that assignments are forbidden for
+objects of this type (because :ada:`Rec` is limited), we cannot access the
+record components.
+
+Note that in this example, both partial and full views of the :ada:`Rec`
+record are of limited type. In the next sections, we discuss how the partial
+and full views can have non-matching declarations.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`_
+
+
+Partial and full view of limited types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous example, both partial and full views of the :ada:`Rec` type
+were limited. We may actually declare a type as :ada:`limited private` (in the
+public part of a package), while its full view is nonlimited. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Partial_Full_View
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+       --  Partial view of Rec is limited
+
+    private
+
+       type Rec is record
+       --  Full view of Rec is nonlimited
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+In this case, only the partial view of :ada:`Rec` is limited, while its full
+view is nonlimited.
+
+Note that the opposite |mdash| declaring a type as :ada:`private` and its full
+full view as :ada:`limited private` |mdash| is not possible. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Partial_Full_View
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec is private;
+
+    private
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+As expected, we get a compilation error in this case.
+
+
+Limited and nonlimited in full view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Declaring the full view of a type as limited or nonlimited has implications in
+the way we can use objects of this type in the package body. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Partial_Full_View
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec_Limited_Full is limited private;
+       type Rec_Nonlimited_Full is limited private;
+
+       procedure Copy (From :        Rec_Limited_Full;
+                       To   : in out Rec_Limited_Full);
+       procedure Copy (From :        Rec_Nonlimited_Full;
+                       To   : in out Rec_Nonlimited_Full);
+
+    private
+
+       type Rec_Limited_Full is limited record
+          I : Integer;
+       end record;
+
+       type Rec_Nonlimited_Full is record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+    package body Simple_Recs is
+
+       procedure Copy (From :        Rec_Limited_Full;
+                       To   : in out Rec_Limited_Full) is
+       begin
+          To := From;
+          --  ERROR: assignment is forbidden because
+          --         Rec_Limited_Full is limited in
+          --         its full view.
+       end Copy;
+
+       procedure Copy (From :        Rec_Nonlimited_Full;
+                       To   : in out Rec_Nonlimited_Full) is
+       begin
+          To := From;
+          --  OK: assignment is allowed because
+          --      Rec_Nonlimited_Full is
+          --      nonlimited in its full view.
+       end Copy;
+
+    end Simple_Recs;
+
+Here, both :ada:`Rec_Limited_Full` and :ada:`Rec_Nonlimited_Full` are declared
+as :ada:`private limited`. However, :ada:`Rec_Limited_Full` type is limited in
+its full view, while :ada:`Rec_Nonlimited_Full` is nonlimited. As expected,
+the compiler complains about the :ada:`To := From` assignment in the
+:ada:`Copy` procedure for the :ada:`Rec_Limited_Full` type because its full
+view is limited (so no assignment is possible). Of course, in the case of the
+objects of :ada:`Rec_Nonlimited_Full` type, this assignment is perfectly fine.
+
+
+Tagged limited private types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For tagged private types, the partial and full views must match: if a tagged
+type is limited in the partial view, it must be limited in the full view. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Tagged_Limited_Private_Types
+
+    package Simple_Recs is
+
+       type Rec is tagged limited private;
+
+    private
+
+       type Rec is tagged limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+Here, the tagged :ada:`Rec` type is limited both in its partial and full views.
+Any mismatch in one of the views triggers a compilation error. (As an
+exercise, you may remove any of the :ada:`limited` keywords from the code
+example and try to compile it.)
 
 
 Deriving from limited types
