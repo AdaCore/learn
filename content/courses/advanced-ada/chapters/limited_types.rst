@@ -425,8 +425,8 @@ required.
         end Limited_Types;
 
 
-Private implementation of limited types
----------------------------------------
+Limited private types
+---------------------
 
 .. todo::
 
