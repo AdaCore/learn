@@ -221,7 +221,7 @@ synchronize with it. Specifically,
 - The other task calls the task entry, in a manner similar to a procedure
   call, to synchronize with the entry.
 
-This synchronization between tasks is called *rendezvous*. Let's see an
+This synchronization between tasks is called a *rendezvous*. Let's see an
 example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Rendezvous
