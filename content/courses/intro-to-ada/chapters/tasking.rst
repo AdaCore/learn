@@ -528,8 +528,9 @@ conditions or other concurrent access.
 
 .. admonition:: Important
 
-    Objects can be protected from concurrent access using Ada tasks. In fact, this was
-    the *only* possible way of implementing them in Ada 83 (the first
+    Objects can be protected from concurrent access using Ada tasks.
+    In fact, this was the *only* way of protecting objects from concurrent
+    access in Ada 83 (the first
     version of the Ada language). However, the use of protected objects is
     much simpler than using similar mechanisms implemented using only
     tasks. Therefore, you should use protected objects when your main goal
