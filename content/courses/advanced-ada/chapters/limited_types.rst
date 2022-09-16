@@ -638,11 +638,11 @@ Therefore, we cannot use the assignment operator for objects of
 
     with Simple_Recs; use Simple_Recs;
 
-    procedure Show_Extensions is
+    procedure Show_Derived_Type is
        A, B : Rec_Derived;
     begin
        B := A;
-    end Show_Extensions;
+    end Show_Derived_Type;
 
 Note that we cannot derive a limited type from a nonlimited ancestor:
 
