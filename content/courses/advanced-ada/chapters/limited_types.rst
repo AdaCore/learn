@@ -433,6 +433,13 @@ Limited private types
     Complete section!
 
 
+Deriving from limited types
+---------------------------
+
+.. todo::
+
+    Complete section!
+
 
 Limited record elements
 -----------------------
