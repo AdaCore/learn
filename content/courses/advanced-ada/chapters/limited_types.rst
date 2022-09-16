@@ -607,9 +607,173 @@ example and try to compile it.)
 Deriving from limited types
 ---------------------------
 
-.. todo::
+In this section, we discuss the implications of deriving from limited types.
+As usual, let's start with a simple example:
 
-    Complete section!
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Type
+
+    package Simple_Recs is
+
+       type Rec is limited null record;
+
+       type Rec_Derived is new Rec;
+
+    end Simple_Recs;
+
+In this example, the :ada:`Rec_Derived` type is derived from the :ada:`Rec`
+type. Note that the :ada:`Rec_Derived` type is limited because its ancestor is
+limited, even though the :ada:`limited` keyword doesn't show up in the
+declaration of the :ada:`Rec_Derived` type. Note that we could have actually
+used the :ada:`limited` keyword here:
+
+.. code-block:: ada
+
+       type Rec_Derived is limited new Rec;
+
+Therefore, we cannot use the assignment operator for objects of
+:ada:`Rec_Derived` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Type
+    :class: ada-expect-compile-error
+
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Show_Extensions is
+       A, B : Rec_Derived;
+    begin
+       B := A;
+    end Show_Extensions;
+
+Note that we cannot derive a limited type from a nonlimited ancestor:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Type_Nonlimited_Ancestor
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec is null record;
+
+       type Rec_Derived is limited new Rec;
+
+    end Simple_Recs;
+
+As expected, the compiler indicates that :ada:`Rec` should be of limited type.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`_
+
+
+Deriving from limited private types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Of course, we can also derive from limited private types. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+    private
+
+       type Rec is limited null record;
+
+    end Simple_Recs;
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is new Rec;
+
+       --  OR:
+       --
+       --  type Rec_Derived is
+       --    limited new Rec;
+
+    end Simple_Recs.Ext;
+
+Here, :ada:`Rec_Derived` is a limited type derived from the (limited private)
+:ada:`Rec` type.
+
+Any type derived from a limited type is always limited, even if the full view
+of its ancestor is nonlimited. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+    private
+
+       type Rec is null record;
+
+    end Simple_Recs;
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is limited new Rec;
+
+    end Simple_Recs.Ext;
+
+Here, :ada:`Rec_Derived` is a limited type because the partial view of
+:ada:`Rec` is limited. The fact that the full view of :ada:`Rec` is nonlimited
+doesn't affect the :ada:`Rec_Derived` type.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `7.3 Private Types and Private Extensions <http://www.ada-auth.org/standards/12rm/html/RM-7-3.html>`_
+
+
+Deriving from tagged limited private types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let's look at an example of deriving from tagged limited private types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+
+    package Simple_Recs is
+
+       type Rec is tagged limited private;
+
+    private
+
+       type Rec is tagged limited null record;
+
+    end Simple_Recs;
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is new Rec with private;
+
+    private
+
+       type Rec_Derived is new Rec with null record;
+
+    end Simple_Recs.Ext;
+
+In this example, :ada:`Rec_Derived` is a tagged limited type derived from the
+:ada:`Rec` type.
+
+As explained previously, the derived type (:ada:`Rec_Derived`) is a limited
+type, even though the :ada:`limited` keyword doesn't appear in its
+declaration. We could, of course, include the :ada:`limited` keyword in the
+declaration of :ada:`Rec_Derived`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is limited new Rec with private;
+
+    private
+
+       type Rec_Derived is limited new Rec with null record;
+
+    end Simple_Recs.Ext;
+
+(As expected, if we include the :ada:`limited` keyword in the partial view of
+the derived type, we must include it in its full view as well.)
 
 
 Record components of limited type
