@@ -786,10 +786,6 @@ type. Let's start by declaring a record component of limited type:
 
     package Simple_Recs is
 
-       type Rec is limited private;
-
-    private
-
        type Int_Rec is limited record
           V : Integer;
        end record;
@@ -800,23 +796,19 @@ type. Let's start by declaring a record component of limited type:
 
     end Simple_Recs;
 
-As soon as we declare a record component of limited type, the whole
-record must be component. In this example, due to the presence of the :ada:`IR`
-component of limited type, :ada:`Rec` must be limited.
+As soon as we declare a record component of limited type, the whole record is
+limited. In this example, the :ada:`Rec` record is limited due to the presence
+of the :ada:`IR` component of limited type.
 
-In other words, we cannot declare record components of limited type in a
-nonlimited record. For example, if we change the declaration of the :ada:`Rec`
-record from the previous example and declare it as a nonlimited record type, we
-get a compilation error:
+Also, if we change the declaration of the :ada:`Rec` record from the previous
+example and remove the :ada:`limited` keyword, the type itself remains
+implicitly limited. We can see that when trying to assign to objects of
+:ada:`Rec` type in the :ada:`Show_Implicitly_Limited` procedure:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Record_Components_Limited_Type
     :class: ada-expect-compile-error
 
     package Simple_Recs is
-
-       type Rec is private;
-
-    private
 
        type Int_Rec is limited record
           V : Integer;
@@ -828,8 +820,16 @@ get a compilation error:
 
     end Simple_Recs;
 
-Now, the compiler tells us that :ada:`Rec` should be limited in order to
-accommodate a component of limited type.
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Show_Implicitly_Limited is
+       A, B : Rec;
+    begin
+       B := A;
+    end Show_Implicitly_Limited;
+
+Here, the compiler indicates that the assignment is forbidden because the
+:ada:`Rec` type has a component of limited type.
 
 .. admonition:: In the Ada Reference Manual
 
