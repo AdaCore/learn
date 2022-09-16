@@ -213,7 +213,8 @@ Assignments are forbidden when using objects of limited types. For example:
        B := A;
     end Show_Limited_Assignment;
 
-As expected, we get a compilation error for the :ada:`B := A` statement. If we
+As expected, we get a compilation error for the :ada:`B := A` statement (in the
+:ada:`Show_Limited_Assignment` procedure). If we
 need to copy two objects of limited type, we have to provide a custom procedure
 to do that. For example, we can implement a :ada:`Copy` procedure for the
 :ada:`Simple_Rec` type:
