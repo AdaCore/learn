@@ -441,8 +441,8 @@ Deriving from limited types
     Complete section!
 
 
-Limited record elements
------------------------
+Record components of limited type
+---------------------------------
 
 .. todo::
 
