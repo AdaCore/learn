@@ -730,7 +730,70 @@ Here, :ada:`Rec_Derived` is a limited type because the partial view of
 doesn't affect the :ada:`Rec_Derived` type |mdash| as we can verify with the
 compilation error in the :ada:`Test_Limitedness` procedure.
 
+Note, however, that a derived type becomes nonlimited in the private part or
+the body of a child package if it isn't explicitly limited. For example,
+because we're declaring :ada:`Rec_Derived` as :ada:`is new Rec` in the child
+package (:ada:`Simple_Recs.Ext`), we're saying that :ada:`Rec_Derived` is
+limited *outside* this package, but nonlimited in the :ada:`Simple_Recs.Ext`
+package. We can verify this by copying the code from the :ada:`Test_Limitedness`
+procedure to a new procedure in the body of the :ada:`Simple_Recs.Ext` package:
 
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+
+    package Simple_Recs.Ext
+      with Elaborate_Body is
+
+      --  Rec_Derived is derived from Rec, which is a
+      --  limited private type that is nonlimited in
+      --  its full view.
+      --
+      --  Rec_Derived isn't explicitly limited.
+      --  Therefore, it's nonlimited in the private
+      --  part of Simple_Recs.Ext and its package
+      --  body.
+      --
+      type Rec_Derived is new Rec;
+
+    end Simple_Recs.Ext;
+
+    package body Simple_Recs.Ext is
+
+       procedure Test_Child_Limitedness is
+          Dummy_1, Dummy_2 : Rec_Derived;
+       begin
+          --  Here, Rec_Derived is a nonlimited
+          --  type because Rec is nonlimited in
+          --  its full view.
+
+          Dummy_2 := Dummy_1;
+       end Test_Child_Limitedness;
+
+    end Simple_Recs.Ext;
+
+    --  Copied the code to the
+    --  Test_Child_Limitedness procedure (in the
+    --  body of the Simple_Recs.Ext package) and
+    --  commented it out here.
+    --
+    --  You may uncomment the code to verify
+    --  that Rec_Derived is limited in this
+    --  procedure.
+    --
+
+    --  with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       --  Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       --  Dummy_2 := Dummy_1;
+       null;
+    end Test_Limitedness;
+
+In the :ada:`Test_Child_Limitedness` procedure of the :ada:`Simple_Recs.Ext`
+package, we can use the :ada:`Rec_Derived` as a nonlimited type because its
+ancestor :ada:`Rec` is nonlimited in its full view. (Of course, if we uncomment
+the code in the :ada:`Test_Limitedness` procedure, compilation fails there
+because :ada:`Rec_Derived` is viewed as descending from a limited type.)
 
 
 Deriving from tagged limited private types
