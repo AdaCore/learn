@@ -861,6 +861,76 @@ declaration of :ada:`Rec_Derived`:
 the derived type, we must include it in its full view as well.)
 
 
+Deriving from limited interfaces
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The rules for limited interfaces are different from the ones for limited tagged
+types. In contrast to the rule we've seen in the previous section, a type that
+is derived from a limited type isn't automatically limited. In other words, it
+doesn't inherit the *limitedness* from the interface. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Interface_Limited_Private
+
+    package Simple_Recs is
+
+       type Limited_IF is limited interface;
+
+    end Simple_Recs;
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is new
+         Limited_IF with private;
+
+    private
+
+       type Rec_Derived is new
+         Limited_IF with null record;
+
+    end Simple_Recs.Ext;
+
+    with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
+Here, :ada:`Rec_Derived` is derived from the limited :ada:`Limited_IF`
+interface. As we can see, the :ada:`Test_Limitedness` compiles fine because
+:ada:`Rec_Derived` is nonlimited.
+
+Of course, if we want :ada:`Rec_Derived` to be limited, we can make this
+explicit in the type declaration:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Interface_Limited_Private
+    :class: ada-expect-compile-error
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is limited new
+         Limited_IF with private;
+
+    private
+
+       type Rec_Derived is limited new
+         Limited_IF with null record;
+
+    end Simple_Recs.Ext;
+
+    with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
+Now, compilation of :ada:`Test_Limitedness` fails because :ada:`Rec_Derived` is
+explicitly limited.
+
+
 Record components of limited type
 ---------------------------------
 
