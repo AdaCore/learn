@@ -711,12 +711,6 @@ of its ancestor is nonlimited. For example:
 
     end Simple_Recs;
 
-    package Simple_Recs.Ext is
-
-       type Rec_Derived is limited new Rec;
-
-    end Simple_Recs.Ext;
-
 Here, :ada:`Rec_Derived` is a limited type because the partial view of
 :ada:`Rec` is limited. The fact that the full view of :ada:`Rec` is nonlimited
 doesn't affect the :ada:`Rec_Derived` type.
