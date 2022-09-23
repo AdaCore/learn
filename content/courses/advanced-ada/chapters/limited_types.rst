@@ -661,6 +661,7 @@ As expected, the compiler indicates that :ada:`Rec` should be of limited type.
 
 .. admonition:: In the Ada Reference Manual
 
+    - `7.3 Private Types and Private Extensions <http://www.ada-auth.org/standards/12rm/html/RM-7-3.html>`_
     - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`_
 
 
@@ -720,9 +721,7 @@ Here, :ada:`Rec_Derived` is a limited type because the partial view of
 :ada:`Rec` is limited. The fact that the full view of :ada:`Rec` is nonlimited
 doesn't affect the :ada:`Rec_Derived` type.
 
-.. admonition:: In the Ada Reference Manual
 
-    - `7.3 Private Types and Private Extensions <http://www.ada-auth.org/standards/12rm/html/RM-7-3.html>`_
 
 
 Deriving from tagged limited private types
