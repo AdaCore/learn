@@ -733,26 +733,28 @@ Let's look at an example of deriving from tagged limited private types:
 
     package Simple_Recs is
 
-       type Rec is tagged limited private;
+       type Tagged_Rec is tagged limited private;
 
     private
 
-       type Rec is tagged limited null record;
+       type Tagged_Rec is tagged limited null record;
 
     end Simple_Recs;
 
     package Simple_Recs.Ext is
 
-       type Rec_Derived is new Rec with private;
+       type Rec_Derived is new
+         Tagged_Rec with private;
 
     private
 
-       type Rec_Derived is new Rec with null record;
+       type Rec_Derived is new
+         Tagged_Rec with null record;
 
     end Simple_Recs.Ext;
 
 In this example, :ada:`Rec_Derived` is a tagged limited type derived from the
-:ada:`Rec` type.
+:ada:`Tagged_Rec` type.
 
 As explained previously, the derived type (:ada:`Rec_Derived`) is a limited
 type, even though the :ada:`limited` keyword doesn't appear in its
@@ -763,11 +765,11 @@ declaration of :ada:`Rec_Derived`:
 
     package Simple_Recs.Ext is
 
-       type Rec_Derived is limited new Rec with private;
+       type Rec_Derived is limited new Tagged_Rec with private;
 
     private
 
-       type Rec_Derived is limited new Rec with null record;
+       type Rec_Derived is limited new Tagged_Rec with null record;
 
     end Simple_Recs.Ext;
 
