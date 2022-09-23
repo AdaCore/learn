@@ -670,7 +670,7 @@ Deriving from limited private types
 
 Of course, we can also derive from limited private types. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
 
     package Simple_Recs is
 
@@ -699,7 +699,7 @@ Here, :ada:`Rec_Derived` is a limited type derived from the (limited private)
 Any type derived from a limited type is always limited, even if the full view
 of its ancestor is nonlimited. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
 
     package Simple_Recs is
 
@@ -729,7 +729,7 @@ Deriving from tagged limited private types
 
 Let's look at an example of deriving from tagged limited private types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
 
     package Simple_Recs is
 
@@ -759,7 +759,7 @@ type, even though the :ada:`limited` keyword doesn't appear in its
 declaration. We could, of course, include the :ada:`limited` keyword in the
 declaration of :ada:`Rec_Derived`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
 
     package Simple_Recs.Ext is
 
