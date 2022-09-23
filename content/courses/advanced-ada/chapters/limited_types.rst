@@ -671,6 +671,7 @@ Deriving from limited private types
 Of course, we can also derive from limited private types. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+    :class: ada-expect-compile-error
 
     package Simple_Recs is
 
@@ -693,13 +694,23 @@ Of course, we can also derive from limited private types. For example:
 
     end Simple_Recs.Ext;
 
+    with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
 Here, :ada:`Rec_Derived` is a limited type derived from the (limited private)
-:ada:`Rec` type.
+:ada:`Rec` type. We can verify that :ada:`Rec_Derived` type is limited
+because the compilation of the :ada:`Test_Limitedness` procedure fails.
 
 Any type derived from a limited type is always limited, even if the full view
 of its ancestor is nonlimited. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+    :class: ada-expect-compile-error
 
     package Simple_Recs is
 
@@ -713,7 +724,8 @@ of its ancestor is nonlimited. For example:
 
 Here, :ada:`Rec_Derived` is a limited type because the partial view of
 :ada:`Rec` is limited. The fact that the full view of :ada:`Rec` is nonlimited
-doesn't affect the :ada:`Rec_Derived` type.
+doesn't affect the :ada:`Rec_Derived` type |mdash| as we can verify with the
+compilation error in the :ada:`Test_Limitedness` procedure.
 
 
 
@@ -724,6 +736,7 @@ Deriving from tagged limited private types
 Let's look at an example of deriving from tagged limited private types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+    :class: ada-expect-compile-error
 
     package Simple_Recs is
 
@@ -747,8 +760,17 @@ Let's look at an example of deriving from tagged limited private types:
 
     end Simple_Recs.Ext;
 
+    with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
 In this example, :ada:`Rec_Derived` is a tagged limited type derived from the
-:ada:`Tagged_Rec` type.
+:ada:`Tagged_Rec` type. (Again, we can verify the limitedness of the
+:ada:`Rec_Derived` type with the :ada:`Test_Limitedness` procedure.)
 
 As explained previously, the derived type (:ada:`Rec_Derived`) is a limited
 type, even though the :ada:`limited` keyword doesn't appear in its
@@ -756,6 +778,7 @@ declaration. We could, of course, include the :ada:`limited` keyword in the
 declaration of :ada:`Rec_Derived`:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+    :class: ada-expect-compile-error
 
     package Simple_Recs.Ext is
 
