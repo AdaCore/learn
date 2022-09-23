@@ -668,7 +668,9 @@ As expected, the compiler indicates that :ada:`Rec` should be of limited type.
 Deriving from limited private types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Of course, we can also derive from limited private types. For example:
+Of course, we can also derive from limited private types. However, there are
+more rules in this case than the ones we've seen so far. Let's start with an
+example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
     :class: ada-expect-compile-error
@@ -707,7 +709,8 @@ Here, :ada:`Rec_Derived` is a limited type derived from the (limited private)
 because the compilation of the :ada:`Test_Limitedness` procedure fails.
 
 Any type derived from a limited type is always limited, even if the full view
-of its ancestor is nonlimited. For example:
+of its ancestor is nonlimited. For example, let's modify the full view of
+:ada:`Rec` and make it nonlimited:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
     :class: ada-expect-compile-error
@@ -733,7 +736,8 @@ compilation error in the :ada:`Test_Limitedness` procedure.
 Deriving from tagged limited private types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Let's look at an example of deriving from tagged limited private types:
+The rules for deriving from tagged limited private types are slightly different
+than ones we've seen in the previous section. Let's look at an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
     :class: ada-expect-compile-error
@@ -790,7 +794,7 @@ declaration of :ada:`Rec_Derived`:
 
     end Simple_Recs.Ext;
 
-(As expected, if we include the :ada:`limited` keyword in the partial view of
+(Obviously, if we include the :ada:`limited` keyword in the partial view of
 the derived type, we must include it in its full view as well.)
 
 
