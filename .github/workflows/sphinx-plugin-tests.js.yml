@@ -28,12 +28,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: ada-actions/toolchain
-      uses: ada-actions/toolchain@dev
-      with:
-        distrib: fsf
-        target: native
-        community_year: 2022
+    - name: Install OS Deps
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+        gnat-12 gprbuild
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
