@@ -2,6 +2,12 @@ const path = require('path');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Chunks2JsonPlugin = require('chunks-2-json-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
+
+const myEslintOptions = {
+  extensions: [`js`, `jsx`, `ts`],
+  exclude: [`node_modules`],
+};
 
 const ts_rule = function(env) {
   let staging = false;
@@ -21,7 +27,6 @@ const ts_rule = function(env) {
     use: [
       { loader: 'ts-loader' },
       { loader: 'ifdef-loader', options: ifdef_opts },
-      { loader: 'eslint-loader' },
     ],
     exclude: /node_modules/
   };
@@ -31,7 +36,7 @@ const js_rule = function(env) {
   return {
     enforce: 'pre',
     test: /\.js$/,
-    loader: [
+    use: [
        { loader: 'source-map-loader' },
        { loader: 'babel-loader' }
     ]
@@ -40,8 +45,10 @@ const js_rule = function(env) {
 
 const scss_rule = function(env) {
   const postcss_opts = {
-    plugins: function () {
-      return [ require('autoprefixer') ];
+    postcssOptions: {
+      plugins: function () {
+        return [ require('autoprefixer') ];
+      }
     }
   };
 
@@ -100,7 +107,7 @@ module.exports = function(env) {
   return {
     entry: './src/index.ts',
     output: {
-      filename: 'main.[hash].js',
+      filename: '[name].[hash].js',
       path: path.resolve(__dirname, 'dist', 'html', '_static')
     },
     resolve: {
@@ -128,9 +135,10 @@ module.exports = function(env) {
     plugins: [
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
-        filename: 'style.[hash].css',
+        filename: '[name].[hash].css',
       }),
       new Chunks2JsonPlugin(),
+      new ESLintPlugin(myEslintOptions),
     ]
   };
 };

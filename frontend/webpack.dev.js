@@ -10,16 +10,18 @@ module.exports = function(env) {
 
   const dev_config = {
     mode: 'development',
-    watch: true,
     devServer: {
-      contentBase: [path.join(__dirname, 'dist', 'html'), path.join(__dirname, 'dist')],
-      watchContentBase: true,
+      static: [path.join(__dirname, 'dist', 'html'), path.join(__dirname, 'dist')],
       compress: false,
       host: '0.0.0.0',
       port: 8080,
       hot: true,
       liveReload: false,
-      index: 'index.html',
+      // devMiddleware: {
+      //   index: 'index.html',
+      // },
+    },
+    output: {
       publicPath:  '/_static/'
     },
     devtool: 'source-map',
