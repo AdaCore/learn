@@ -6,9 +6,9 @@ const common = require('./webpack.common.js');
 const terser_config = function(env) {
   const staging = (env && env.staging);
   return {
-    cache: true,
+    // cache: true,
     parallel: true,
-    sourceMap: staging,
+    // sourceMap: staging,
     terserOptions: {
       output: {
         comments: staging,
@@ -23,8 +23,10 @@ module.exports = function(env) {
     mode: 'production',
     optimization: {
       minimizer: [
-        new TerserPlugin(terser_config(env)),
-        new CssMinimizerPlugin({})
+        (compiler) => {
+          new TerserPlugin(terser_config(env)).apply(compiler);
+        },
+        new CssMinimizerPlugin({}),
       ],
     }
   };
