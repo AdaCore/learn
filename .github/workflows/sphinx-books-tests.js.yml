@@ -47,11 +47,10 @@ jobs:
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: ada-actions/toolchain
-      uses: ada-actions/toolchain@ce2021
+      uses: ada-actions/toolchain@dev
       with:
-        distrib: community
+        distrib: fsf
         target: native
-        community_year: 2021
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
