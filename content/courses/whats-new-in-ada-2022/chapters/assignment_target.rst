@@ -40,7 +40,7 @@ As an example, let's calculate some statistics for :ada:`My_Data` array:
 
 To do this, we loop over :ada:`My_Data` elements:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Assignment_Tagged_2
 
    pragma Ada_2022;
    with Ada.Text_IO;
@@ -70,7 +70,7 @@ Each right hand side is evaluated only once, no matter how many :ada:`@`
 symbols it contains. Let's verify this by introducing a function call that
 prints a line each time it's called:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Assignment_Tagged_3
 
    pragma Ada_2022;
    with Ada.Text_IO;
