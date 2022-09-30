@@ -1416,10 +1416,9 @@ declaring an incomplete type (:ada:`type T2;`) before the declaration of
 :ada:`T1`. This, however, doesn't solve all the problems in the code: the
 compiler still doesn't know the size of :ada:`T2`, so we cannot create a
 component of this type. We could, instead, declare an access type and use it
-here, or simply use an anonymous access to :ada:`T2`. By doing this, even
-though the compiler doesn't know the size of :ada:`T2`, it knows the
-size of an access type designating :ada:`T2`, so the record component
-can be of such an access type (anonymous or not).
+here. By doing this, even though the compiler doesn't know the size of
+:ada:`T2`, it knows the size of an access type designating :ada:`T2`, so the
+record component can be of such an access type.
 
 To summarize, in order to solve the compilation error above, we need to:
 
@@ -1435,9 +1434,10 @@ This is the corrected version:
     package Mutually_Dependent is
 
        type T2;
+       type T2_Access is access T2;
 
        type T1 is record
-          B : access T2;
+          B : T2_Access;
        end record;
 
        type T2 is record
@@ -1455,17 +1455,24 @@ code:
     package Mutually_Dependent is
 
        type T1;
+       type T1_Access is access T1;
+
        type T2;
+       type T2_Access is access T2;
 
        type T1 is record
-          B : access T2;
+          B : T2_Access;
        end record;
 
        type T2 is record
-          A : access T1;
+          A : T1_Access;
        end record;
 
     end Mutually_Dependent;
+
+Later on, we'll see that these code examples can be written using
+:ref:`anonymous access types <Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types>`.
+
 
 .. _Adv_Ada_Type_View:
 
