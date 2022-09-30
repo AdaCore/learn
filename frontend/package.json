@@ -86,7 +86,8 @@
     "minimist": "^1.2.2",
     "acorn": "^8.8.0",
     "is-svg": "^4.3.2",
-    "ssri": "^9.0.1"
+    "ssri": "^9.0.1",
+    "whatwg-url": "10"
   },
   "scripts": {
     "dev": "webpack serve --open --config webpack.dev.js",
