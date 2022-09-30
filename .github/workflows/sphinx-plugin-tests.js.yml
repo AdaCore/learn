@@ -33,6 +33,7 @@ jobs:
       with:
         distrib: fsf
         target: native
+        community_year: 2022
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
