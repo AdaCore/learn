@@ -10,7 +10,7 @@ export class ServerWorker {
   private readonly server: string;
   private readonly cb: (data: CheckOutput.FS) => boolean;
   private readonly INTERNAL_ERROR_MESSAGE =
-  'Please report this issue on https://github.com/AdaCore/learn/issues';
+    'Please report this issue on https://github.com/AdaCore/learn/issues';
 
   /**
    * The data processing callback for server data
