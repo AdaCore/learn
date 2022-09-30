@@ -51,7 +51,10 @@ won't fit into memory. However, if you keep intermediate result :ada:`mod
 n` during the m\ :sup:`d` calculation, it will work. Let's write this operation
 as a function:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Ada_2022_Whats_New.Big_Integers
+
+   with Ada.Numerics.Big_Numbers.Big_Integers;
+   use  Ada.Numerics.Big_Numbers.Big_Integers;
 
    --  Calculate M ** D mod N
 
