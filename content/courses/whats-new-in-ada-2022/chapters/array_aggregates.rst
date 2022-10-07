@@ -19,7 +19,7 @@ In Ada 2022, you can use square brackets in array aggregates. Using
 square brackets simplifies writing both empty aggregates and
 single-element aggregates. Consider this:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Ada_2022_Whats_New.Square_Brackets
 
    pragma Ada_2022;
    pragma Extensions_Allowed (On);
@@ -90,14 +90,14 @@ years ago!
 
 Complete code snippet:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Iterated_Component_Association
 
    pragma Ada_2022;
    pragma Extensions_Allowed (On);  --  for square brackets
 
    with Ada.Text_IO;
 
-   procedure Main is
+   procedure Show_Iterated_Component_Association is
 
       type Integer_Array is array (Positive range <>) of Integer;
 
@@ -122,7 +122,7 @@ Complete code snippet:
       Ada.Text_IO.Put_Line (Matrix'Image);
       Ada.Text_IO.Put_Line (Data'Image);
       Ada.Text_IO.Put_Line (Vector_2'Image);
-   end Main;
+   end Show_Iterated_Component_Association;
 
 References
 ----------
