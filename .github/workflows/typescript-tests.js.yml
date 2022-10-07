@@ -46,6 +46,9 @@ jobs:
         sudo tar xzf gprbuild.tar.gz && \
         sudo mv gprbuild-* /usr/local/gprbuild
         sudo rm *.tar.gz
+        sudo echo $PATH
+        sudo echo 'export PATH="/usr/local/gnat/bin:/usr/local/gprbuild/bin:/usr/local/gnatprove/bin:${PATH}"' >> ~/.bashrc
+        sudo source ~/.bashrc
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: Install Python dependencies
