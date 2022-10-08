@@ -36,6 +36,8 @@ Advanced Journey With Ada: A Flight In Progress
 
 .. container:: content-description
 
+    **THIS IS WORK IN PROGRESS!**
+
     This course will teach you advanced topics of the Ada programming language.
     The
     :doc:`Introduction to Ada </courses/intro-to-ada/index>`
