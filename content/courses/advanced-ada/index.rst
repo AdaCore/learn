@@ -58,6 +58,18 @@ Advanced Journey With Ada: A Flight In Progress
 
     This document was reviewed by Patrick Rogers and Tucker Taft.
 
+.. container:: content-changelog
+
+    .. admonition:: CHANGELOG
+
+        *2023-01-01*
+
+        - First draft release including following chapters:
+            - Data Types
+            - Control Flow
+            - Modular Programming
+
+
 .. only:: builder_html
 
     .. container:: ebook-download
@@ -93,15 +105,3 @@ Advanced Journey With Ada: A Flight In Progress
         chapters/multithreading
         chapters/interfacing_external
         chapters/appendices
-
-
-.. container:: content-changelog
-
-    **CHANGELOG**
-
-    *2023-01-01*
-
-    - First draft release including following chapters:
-        - Data Types
-        - Control Flow
-        - Modular Programming
