@@ -7,8 +7,8 @@
 :prev_state: False
 :next_state: False
 
-Advanced Ada
-============
+Advanced Journey With Ada: A Flight In Progress
+===============================================
 
 .. include:: ../global.txt
 
