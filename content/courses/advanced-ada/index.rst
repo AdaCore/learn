@@ -65,6 +65,7 @@ Advanced Journey With Ada: A Flight In Progress
         *2023-01-01*
 
         - First draft release including following chapters:
+
             - Data Types
             - Control Flow
             - Modular Programming
