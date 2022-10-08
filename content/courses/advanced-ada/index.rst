@@ -71,10 +71,13 @@ Advanced Journey With Ada: A Flight In Progress
     chapters/data_types
     chapters/control_flow
     chapters/modular_prog
-    chapters/resource_management
-    chapters/abstraction_oriented_prog
-    chapters/design_by_contracts
-    chapters/initialization
-    chapters/multithreading
-    chapters/interfacing_external
-    chapters/appendices
+
+    .. only:: no_hidden_books
+
+        chapters/resource_management
+        chapters/abstraction_oriented_prog
+        chapters/design_by_contracts
+        chapters/initialization
+        chapters/multithreading
+        chapters/interfacing_external
+        chapters/appendices
