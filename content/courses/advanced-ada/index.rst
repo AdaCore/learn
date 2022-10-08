@@ -62,7 +62,7 @@ Advanced Journey With Ada: A Flight In Progress
 
     .. admonition:: CHANGELOG
 
-        *2023-01-01*
+        *Release 2023-01*
 
         - First draft release including following chapters:
 
