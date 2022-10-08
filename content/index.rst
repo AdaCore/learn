@@ -69,6 +69,7 @@
         :caption: Courses
 
         Introduction to Ada <courses/intro-to-ada/index>
+        Advanced Journey With Ada <courses/advanced-ada/index>
         Introduction to SPARK <courses/intro-to-spark/index>
         What's New in Ada 2022 <courses/whats-new-in-ada-2022/index>
         Ada for the C++ or Java Developer <courses/Ada_For_The_CPP_Java_Developer/index>
@@ -82,7 +83,6 @@
             :maxdepth: 1
             :caption: Upcoming Courses
 
-            Advanced Ada <courses/advanced-ada/index>
             Advanced SPARK <courses/advanced-spark/index>
             Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/index>
 
@@ -148,6 +148,26 @@
                             </a>
                         </div>
 
+            .. container:: frontpage-ebook-and-buttons-block
+
+                .. image:: images/page-1-of-advanced-ada.jpeg
+                    :alt: Advanced Journey With Ada: A Flight In Progress (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/courses/advanced-ada.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
+                                EPUB
+                            </a>
+                        </div>
+
+
+        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -166,9 +186,6 @@
                                 EPUB
                             </a>
                         </div>
-
-
-        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -189,6 +206,8 @@
                         </div>
 
 
+        .. container:: frontpage-ebooks-row
+
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-whats-new-in-ada-2022.jpeg
@@ -206,9 +225,6 @@
                                 EPUB
                             </a>
                         </div>
-
-
-        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -229,6 +245,8 @@
                         </div>
 
 
+        .. container:: frontpage-ebooks-row
+
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
@@ -246,9 +264,6 @@
                                 EPUB
                             </a>
                         </div>
-
-
-        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -268,6 +283,8 @@
                             </a>
                         </div>
 
+
+        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -318,26 +335,6 @@
                                 EPUB
                             </a>
                         </div>
-
-
-            .. container:: frontpage-ebook-and-buttons-block
-
-                .. image:: images/page-1-of-advanced-ada.jpeg
-                    :alt: Advanced Ada (e-book)
-                    :width: 149pt
-
-                .. raw:: html
-
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/advanced-ada.pdf">
-                                PDF
-                            </a>
-
-                            <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
-                                EPUB
-                            </a>
-                        </div>
-
 
             .. container:: frontpage-ebook-and-buttons-block
 
