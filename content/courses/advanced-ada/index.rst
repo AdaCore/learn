@@ -41,10 +41,18 @@ Advanced Journey With Ada: A Flight In Progress
     :doc:`Introduction to Ada </courses/intro-to-ada/index>`
     course is a prerequisite for this course.
 
-    This document was written by Gustavo A. Hoffmann and Robert A. Duff, with
-    contributions from Arnaud Charlet, Emmanuel Briot, Franco Gasperoni,
-    Gary Dismukes, Javier Miranda, Patrick Rogers, Quentin Ochem, Robert Dewar,
-    and Yannick Moy.
+    .. only:: not no_hidden_books
+
+        This document was written by Gustavo A. Hoffmann and Robert A. Duff,
+        with contributions from Franco Gasperoni, Gary Dismukes and
+        Robert Dewar.
+
+    .. only:: no_hidden_books
+
+        This document was written by Gustavo A. Hoffmann and Robert A. Duff,
+        with contributions from Arnaud Charlet, Emmanuel Briot,
+        Franco Gasperoni, Gary Dismukes, Javier Miranda, Patrick Rogers,
+        Quentin Ochem, Robert Dewar, and Yannick Moy.
 
     This document was reviewed by Patrick Rogers and Tucker Taft.
 
