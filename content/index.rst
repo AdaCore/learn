@@ -150,7 +150,7 @@
 
             .. container:: frontpage-ebook-and-buttons-block
 
-                .. image:: images/page-1-of-advanced-ada.jpeg
+                .. image:: images/page-1-of-advanced-ada-temp.jpeg
                     :alt: Advanced Journey With Ada: A Flight In Progress (e-book)
                     :width: 149pt
 
