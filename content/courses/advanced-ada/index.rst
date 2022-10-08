@@ -80,7 +80,11 @@ Advanced Journey With Ada: A Flight In Progress
     chapters/control_flow
     chapters/modular_prog
 
-    .. only:: no_hidden_books
+.. only:: no_hidden_books
+
+    .. toctree::
+        :maxdepth: 4
+        :caption: Contents:
 
         chapters/resource_management
         chapters/abstraction_oriented_prog
