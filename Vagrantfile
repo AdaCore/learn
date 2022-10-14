@@ -20,9 +20,17 @@ $frontend = <<-SHELL
       poppler-utils \
       libjpeg-dev \
       make \
-      gnat \
-      gprbuild \
       yarn
+
+  # Install FSF GNAT
+  # (Required tool: gnatchop)
+  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.1.0-2/gnat-x86_64-linux-12.1.0-2.tar.gz && \
+  tar xzf gnat.tar.gz && \
+  mv gnat-* /usr/local/gnat && \
+  rm *.tar.gz
+
+  echo 'export PATH="/usr/local/gnat/bin:${PATH}"' >> /home/vagrant/.bashrc
+  source /home/vagrant/.bashrc
 
   # Install learn deps
   python3 -m venv /vagrant/venv
