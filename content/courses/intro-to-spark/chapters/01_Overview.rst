@@ -361,7 +361,7 @@ to read or write the underlying allocated memory.
 .. note::
 
    For more details on these limitations, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/language_restrictions.html#language-restrictions>`__.
+   :spark_ugs:`SPARK User's Guide <language_restrictions.html#language-restrictions>`.
 
 Designating SPARK Code
 ---------------------------------------------------------------------
@@ -421,7 +421,7 @@ part.
 .. note::
 
    For more details on the use of :ada:`SPARK_Mode`, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/spark_mode.html#>`__.
+   :spark_ug:`SPARK User's Guide <spark_mode>`.
 
 
 Code Examples / Pitfalls

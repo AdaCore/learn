@@ -529,7 +529,7 @@ contracts.
 .. note::
 
    For more details on ghost code, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/specification_features.html#ghost-code>`__.
+   :spark_ugs:`SPARK User's Guide <specification_features.html#ghost-code>`.
 
 Guide Proof
 ---------------------------------------------------------------------
@@ -548,10 +548,10 @@ assumptions. For this purpose, you can add assertions to break complex
 proofs into smaller steps.
 
 .. todo::
-    
+
     This might confuse people, what is the difference between the
     first two assertions provided here?
-    
+
 .. code-block:: ada
 
     pragma Assert (Assertion_Checked_By_The_Tool);
@@ -655,7 +655,7 @@ Ghost Procedures
 ~~~~~~~~~~~~~~~~
 
 .. todo::
-    
+
     This section still seems very abstract. Can a more concrete example be developed?
 
 Ghost procedures can't affect the value of normal variables, so they're
@@ -666,7 +666,7 @@ set of intermediate assertions.
 
     Hard to understand what this first sentence is trying to express;
     specifically the word "treatment".
-    
+
 Abstracting away the treatment of assertions and ghost variables inside a
 ghost procedure has several advantages. First, you're allowed to use these
 variables in any way you choose in code inside ghost procedures.  This
@@ -918,7 +918,7 @@ last iteration of the loop.
 .. note::
 
    For more details on loop invariants, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/assertion_pragmas.html#loop-invariants>`__.
+   :spark_ugs:`SPARK User's Guide <assertion_pragmas.html#loop-invariants>`.
 
 Finding a good loop invariant can turn out to be quite a challenge.  To
 make this task easier, let's review the four good properties of a good loop
@@ -1064,16 +1064,16 @@ index :ada:`K` is stored at index :ada:`K-1`:
     end Show_Map;
 
 .. todo::
-    
+
     Uncommenting the code did not result in successful analysis.
-    
+
 You need to uncomment the second loop invariant containing the frame condition
 in order to prove the assertion after the loop.
 
 .. note::
 
    For more details on how to write a loop invariant, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/how_to_write_loop_invariants.html>`__.
+   :spark_ugs:`SPARK User's Guide <how_to_write_loop_invariants.html>`.
 
 
 Code Examples / Pitfalls

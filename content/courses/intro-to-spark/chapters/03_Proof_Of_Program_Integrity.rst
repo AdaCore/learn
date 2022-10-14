@@ -228,7 +228,7 @@ neither addition can overflow.
 .. note::
 
    For more details on contextual analysis of subprograms, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/how_to_write_subprogram_contracts.html#contextual-analysis-of-subprograms-without-contracts>`__.
+   :spark_ugs:`SPARK User's Guide <how_to_write_subprogram_contracts.html#contextual-analysis-of-subprograms-without-contracts>`.
 
 The other case involves functions. If we define a function as an expression
 function, with or without contracts, GNATprove uses the expression itself
@@ -257,7 +257,7 @@ GNATprove to successfully verify the overflow check in the addition.
 .. note::
 
    For more details on expression functions, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/specification_features.html#expression-functions>`__.
+   :spark_ugs:`SPARK User's Guide <specification_features.html#expression-functions>`.
 
 Contracts
 ---------------------------------------------------------------------
@@ -339,7 +339,7 @@ detect that its postcondition doesn't hold for all its possible inputs.
 .. note::
 
    For more details on pre and postconditions, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#preconditions>`__.
+   :spark_ugs:`SPARK User's Guide <subprogram_contracts.html#preconditions>`.
 
 Executable Semantics
 ~~~~~~~~~~~~~~~~~~~~
@@ -388,7 +388,7 @@ Ada semantics (the value 1).
 .. note::
 
    For more details on overflow modes, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/overflow_modes.html>`__.
+   :spark_ugs:`SPARK User's Guide <overflow_modes.html>`.
 
 
 Additional Assertions and Contracts
@@ -417,7 +417,7 @@ you must use it with great care.  Here's an example of using it.
 .. note::
 
    For more details on pragma :ada:`Assume`, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/assertion_pragmas.html#pragma-assume>`__.
+   :spark_ugs:`SPARK User's Guide <assertion_pragmas.html#pragma-assume>`.
 
 The :ada:`Contract_Cases` aspect is another construct introduced for
 GNATprove, but which also acts as an assertion during execution. It allows
@@ -451,7 +451,7 @@ be true for each possible set of input values).
 .. note::
 
    For more details on :ada:`Contract_Cases`, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/subprogram_contracts.html#contract-cases>`__.
+   :spark_ugs:`SPARK User's Guide <subprogram_contracts.html#contract-cases>`.
 
 
 .. _Intro_SPARK_Debugging_Failed_Proof_Attempts:
@@ -735,7 +735,7 @@ like Alt-Ergo, CVC4, or Z3.
 .. note::
 
    For more details on how to investigate unproved checks, see the
-   `SPARK User's Guide <https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/how_to_investigate_unproved_checks.html>`__.
+   :spark_ugs:`SPARK User's Guide <how_to_investigate_unproved_checks.html>`.
 
 
 Code Examples / Pitfalls
